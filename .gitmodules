@@ -1,0 +1,3 @@
+[submodule "lib/classes"]
+	path = lib/classes
+	url = git@projectpress.net:classes
