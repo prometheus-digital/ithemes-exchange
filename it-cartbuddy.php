@@ -22,6 +22,7 @@
  * @since 0.1
 */
 if ( ! class_exists( 'IT_CartBuddy' ) ) {
+
 	class IT_CartBuddy {
 
 		var $_version         = '0.1';
@@ -175,6 +176,19 @@ if ( ! class_exists( 'IT_CartBuddy' ) ) {
 		}
 	}
 }
+// Require the core-addon directory that works much like another plugin
+require_once( 'core-addon/core-addon.php' );
 
 // Init plugin
 $it_cartbuddy_plugin = new IT_CartBuddy();
+
+// Debugging
+if ( !function_exists( 'wp_print_r' ) ) { 
+	function wp_print_r( $args, $die = true ) { 
+		$echo = '<pre>' . print_r( $args, true ) . '</pre>';
+		if ( $die )
+			die( $echo );
+		else
+			echo $echo;
+	}   
+}

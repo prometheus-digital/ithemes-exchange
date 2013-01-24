@@ -97,6 +97,13 @@ if ( ! class_exists( 'IT_CartBuddy_Post_Type' ) ) {
 		var $_active_tab = null;
 
 		/**
+		 * Current Screen
+		 * @var string $_current_screen
+		 * @since 0.1
+		*/
+		var $_current_screen = null;
+
+		/**
 		 * Options passed from API call
 		*/
 		var $_options = array();
@@ -121,6 +128,8 @@ if ( ! class_exists( 'IT_CartBuddy_Post_Type' ) ) {
 				add_action( 'init', array( $this, 'register_admin_pages' ), 99 );
 				add_action( 'init', array( $this, 'register_admin_page_tabs' ), 99 );
 				add_action( 'init', array( $this, 'setup_admin_page_tabs' ), 99 );
+				add_action( 'admin_enqueue_scripts', array( $this, 'process_tab_scripts_styles' ) );
+				add_action( 'admin_init', array( $this, 'save_data' ), 1 );
 			}
 		}
 
@@ -210,12 +219,69 @@ if ( ! class_exists( 'IT_CartBuddy_Post_Type' ) ) {
 				$this->_current_page = $_REQUEST['page'];
 				$this->_active_tab = ( ! empty( $_REQUEST['current_tab'] ) ) ? $_REQUEST['current_tab'] : key( $this->_page_tabs[$this->_current_page] );
 				$this->_tabless_self_link = array_shift( explode( '?', $_SERVER['REQUEST_URI'] ) ) . '?post_type=' . $this->_var . '&page=' . $_REQUEST['page'];
-				$this->self_link = $this->_tabless_self_link;
+				$this->_self_link = $this->_tabless_self_link;
 
 				if ( $this->_active_tab != key( $this->_page_tabs[$this->_current_page] ) )
 					$this->_self_link .= '&current_tab=' . urlencode( $this->_active_tab );
+
+
+                $this->_current_post_type  = empty( $_REQUEST['post_type'] ) ? false : $_REQUEST['post_type'];
+                if ( ! empty( $this->_current_post_type ) ) 
+                    $this->_current_screen[] = $this->_current_post_type;
+
+                if ( ! empty( $this->_current_page ) ) 
+                    $this->_current_screen[] = $this->_current_page;
+
+                if ( ! empty( $this->_active_tab ) && $this->_current_page != $this->_active_tab ) 
+                    $this->_current_screen[] = $this->_active_tab;
+
+                if ( is_array( $this->_current_screen ) ) 
+                    $this->_current_screen = implode( '_', $this->_current_screen );
 			}
 
+		}
+
+		/**
+		 * If any embedded or enqueued scripts have been registered, hook into WP here
+		 *
+		 * @since 0.1
+		*/
+		function process_tab_scripts_styles( $hook ) {
+			// Build index for tab
+			$tab = empty( $this->_active_tab ) ? $this->_current_page : $this->_active_tab;
+
+			// Abort if index isn't set for some reason
+			if ( empty( $GLOBALS['it_cartbuddy']['admin_tabs'][$this->_var][$this->_current_page][$tab] ) )
+				return;
+
+			$tab_options = $GLOBALS['it_cartbuddy']['admin_tabs'][$this->_var][$this->_current_page][$tab];
+
+			// Enqueue all enqueued scripts
+			foreach( $tab_options['enqueued_scripts'] as $script ) {
+				if ( empty( $script['handle'] ) || empty( $script['src'] ) )
+					continue;
+				$script['dep'] = empty( $script['dep'] ) ? false : (array) $script['dep'];
+				wp_enqueue_script( $script['handle'], $script['src'], $script['dep'] );
+			}
+
+			// Enqueue all enqueued styles 
+			foreach( $tab_options['enqueued_styles'] as $style ) {
+				if ( empty( $style['handle'] ) || empty( $style['src'] ) )
+					continue;
+				wp_enqueue_style( $style['handle'], $style['src'] );
+			}
+
+			// Embed all embedded scripts
+			foreach( $tab_options['embedded_scripts'] as $script ) {
+				if ( is_callable( $script ) )
+					add_action( 'wp_print_scripts', $script );
+			}
+
+			// Embed all embedded styles 
+			foreach( $tab_options['embedded_styles'] as $style ) {
+				if ( is_callable( $style ) )
+					add_action( 'wp_print_scripts', $style );
+			}
 		}
 
 		/**
@@ -267,7 +333,7 @@ if ( ! class_exists( 'IT_CartBuddy_Post_Type' ) ) {
 		 * @return  void
 		*/
 		function print_admin_page_content() {
-			if ( is_callable( $this->_page_tabs[$this->_current_page][$this->_active_tab]['callback'] ) )
+			if ( ! empty( $this->_page_tabs[$this->_current_page][$this->_active_tab]['callback'] ) && is_callable( $this->_page_tabs[$this->_current_page][$this->_active_tab]['callback'] ) )
 				call_user_func( $this->_page_tabs[$this->_current_page][$this->_active_tab]['callback'] );
 			else{
 				echo '<p>Tab Content callback is missing or uncallable.</p>';
@@ -275,6 +341,44 @@ if ( ! class_exists( 'IT_CartBuddy_Post_Type' ) ) {
 				echo '<textarea style="font-family:monospace;width:90%;min-height:400px;">';
 				include( $this->_parent->_plugin_path . '/lib/core/example-code/add-admin-page-tabs.txt' );
 				echo '</textarea>';
+			}
+		}
+
+		/**
+		 * This saves data for admin pages and product custom values
+		 *
+		*/
+		function save_data() {
+			if ( empty( $_POST ) )
+				return;
+
+				// Pages we want to init this on
+				$pages = apply_filters( 'it_cartbuddy_storage_pages', array_keys( (array) $this->_menu_pages ) );
+				if ( empty( $_REQUEST['post_type'] ) || $this->_var != $_REQUEST['post_type'] ||  empty( $this->_current_page ) || ! in_array( $this->_current_page, $pages ) )
+				return;
+
+			// Check nonce
+			$nonce = apply_filters( 'it_cartbuddy_save_admin_nonce', $this->_current_screen );
+			ITForm::check_nonce( $nonce );
+
+			// Grab the data
+			$data = ITForm::get_post_data();
+			$data['_validated'] = true;
+
+			// Validate data via this filter. return data with $data['_validated'] = false to prevent update.
+			$data = apply_filters( $this->_current_screen . '-validate_saved_data', $data );
+
+			if ( $data['_validated'] ) {
+				unset( $data['_validated'] );
+
+				$storage_options = array(
+					'var'     => $this->_current_screen,
+					'options' => $data,
+				);
+				$storage = cartbuddy( 'save_options', $storage_options );
+				wp_safe_redirect( $this->_self_link );
+			} else {
+				do_action( $this->_current_screen . '-save_with_invalid_data', $data );
 			}
 		}
 	}
