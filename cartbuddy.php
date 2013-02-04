@@ -1,8 +1,8 @@
 <?php
 /*
- * Plugin Name: CartBuddy by iThemes
- * Version: 0.1
- * Description: Turns your WordPress site into a CartBuddy Site
+ * Plugin Name: Cart Buddy by iThemes
+ * Version: 0.2
+ * Description: Turns your WordPress site into a Lean, Mean Selling Machine!
  * Plugin URI: http://ithemes.com/purchase/cartbuddy/
  * Author: iThemes
  * Author URI: http://ithemes.com
@@ -21,15 +21,15 @@
  * @package IT_CartBuddy
  * @since 0.1
 */
-if ( ! class_exists( 'IT_CartBuddy' ) ) {
+if ( ! class_exists( 'IT_Cart_Buddy' ) ) {
 
-	class IT_CartBuddy {
+	class IT_Cart_Buddy {
 
-		var $_version         = '0.1';
+		var $_version         = '0.2';
 		var $_updater         = '1.0.8';
 		var $_wp_minimum      = '3.5';
-		var $_slug            = 'it_cartbuddy';
-		var $_name            = 'CartBuddy';
+		var $_slug            = 'cart_buddy';
+		var $_name            = 'Cart Buddy';
 		var $_series          = '';
 
 		var $_plugin_path     = '';
@@ -47,16 +47,18 @@ if ( ! class_exists( 'IT_CartBuddy' ) ) {
 		 * @uses IT_CartBuddy::set_textdomain()
 		 * @uses IT_CartBuddy::init_cartbuddy()
 		 * @since 0.1
-		 * @return null
+		 * @return void
 		*/
-		function IT_CartBuddy() {
+		function IT_Cart_Buddy() {
 			// Setup Plugin
 			$this->set_plugin_locations();
 			$this->set_textdomain();
 
             // Load supporting libraries
-            require_once( $this->_plugin_path . '/lib/classes/load.php' );
-			add_action( 'init', array( $this, 'load_dependants' ), -99 );
+            require( $this->_plugin_path . '/lib/classes/load.php' );
+			require( $this->_plugin_path . '/lib/framework/load.php' );
+			require( $this->_plugin_path . '/api/load.php' );
+			require( $this->_plugin_path . '/core-addons/load.php' );
 		}
 
 		/**
@@ -66,7 +68,7 @@ if ( ! class_exists( 'IT_CartBuddy' ) ) {
 		 * @uses ABSPATH
 		 * @uses site_url()
 		 * @since 0.1
-		 * @return null
+		 * @return void
 		*/
 		function set_plugin_locations() {
 			$this->_plugin_path          = WP_PLUGIN_DIR . '/' . basename( dirname( __FILE__ ) );
@@ -86,28 +88,17 @@ if ( ! class_exists( 'IT_CartBuddy' ) ) {
 		 *
 		 * @uses load_plugin_textdomain()
 		 * @since 0.1
-		 * @return null
+		 * @return void
 		*/
 		function set_textdomain() {
 			load_plugin_textdomain( 'LION', false, dirname( $this->_plugin_base ) . '/lang/' );
 		}
 
 		/**
-		 * Load the dependant libraries
-		 *
-		 * @since 0.1
-		 * @return  void
-		*/
-		function load_dependants() {
-			require_once( $this->_plugin_path . '/api/load.php' );
-			require_once( $this->_plugin_path . '/lib/framework/load.php' );
-		}
-
-		/**
 		 * This function registers the plugin's vesion of the iThemes updater class
 		 *
-		 * @since 0.2
-		 * @return null
+		 * @since 0.1
+		 * @return void
 		*/
 		function upgrader_register() {
 			$GLOBALS['pb_classes_upgrade_registration_list'][$this->_slug] = $this->_updater;
@@ -116,13 +107,13 @@ if ( ! class_exists( 'IT_CartBuddy' ) ) {
 		/**
 		 * Look through all registered version of upgrade classes and use the latest version
 		 *
-		 * @since 0.2
-		 * @return null
+		 * @since 0.1
+		 * @return void
 		*/
 		function upgrader_select() {
 			if ( ! isset( $GLOBALS[ 'pb_classes_upgrade_registration_list' ] ) ) {
 				//Fallback - Just include this class
-				require_once( $this->_plugin_path . '/lib/updater/updater.php' );
+				require( $this->_plugin_path . '/lib/updater/updater.php' );
 				return;
 			}
 
@@ -138,15 +129,15 @@ if ( ! class_exists( 'IT_CartBuddy' ) ) {
 
 			//If the slugs match, load this version
 			if ( $this->_slug == $plugin_slug ) {
-				require_once( $this->_plugin_path . '/lib/updater/updater.php' );
+				require( $this->_plugin_path . '/lib/updater/updater.php' );
 			}
 		}
 
 		/**
 		 * Initiates our upgrade class
 		 *
-		 * @since 0.2
-		 * @return null
+		 * @since 0.1
+		 * @return void
 		*/
 		function upgrader_instantiate() {
 			
@@ -176,19 +167,6 @@ if ( ! class_exists( 'IT_CartBuddy' ) ) {
 		}
 	}
 }
-// Require the core-addon directory that works much like another plugin
-require_once( 'core-addon/core-addon.php' );
 
 // Init plugin
-$it_cartbuddy_plugin = new IT_CartBuddy();
-
-// Debugging
-if ( !function_exists( 'wp_print_r' ) ) { 
-	function wp_print_r( $args, $die = true ) { 
-		$echo = '<pre>' . print_r( $args, true ) . '</pre>';
-		if ( $die )
-			die( $echo );
-		else
-			echo $echo;
-	}   
-}
+$IT_Cart_Buddy = new IT_Cart_Buddy();

@@ -1,11 +1,11 @@
 <?php
 /**
- * This file loads the CartBuddy Framework
+ * This file loads the Cart Buddy Framework
  *
+ * @since 0.2
+ * @package IT_Cart_Buddy
 */
 
-// Include Post Types Factory
-require_once( $this->_plugin_path . '/lib/framework/class.post-types.php' );
+// Admin Functionality
+require( $this->_plugin_path . '/lib/framework/class.admin.php' );
 
-// Include Taxonomy Factory
-require_once( $this->_plugin_path . '/lib/framework/class.taxonomies.php' );
