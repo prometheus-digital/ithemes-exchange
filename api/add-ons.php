@@ -91,10 +91,11 @@ function it_cart_buddy_register_add_on_set( $slug, $name, $description, $options
 /**
  * Returns an array of registered add-ons
  *
- * @since 0.2
+ * @since 0.2.0
+ * @param array $options  For filtering by category, use $options['category'] = array( 'cat1', 'cat2', 'etc' );
  * @return array  registered add-ons
 */
-function it_cart_buddy_get_add_ons() {
+function it_cart_buddy_get_add_ons( $options=array() ) {
 	if ( empty( $GLOBALS['it_cart_buddy']['add_ons']['registered'] ) )
 		return array();
 	else
@@ -104,7 +105,7 @@ function it_cart_buddy_get_add_ons() {
 /**
  * Returns an array of registered add-on categories
  *
- * @since 0.2
+ * @since 0.2.0
  * @return array  registered add-on categories
 */
 function it_cart_buddy_get_add_on_categories() {
@@ -112,4 +113,44 @@ function it_cart_buddy_get_add_on_categories() {
 		return array();
 	else
 		return $GLOBALS['it_cart_buddy']['add_on_categories'];
+}
+
+/**
+ * Grabs list of currently enabled add-ons
+ *
+ * Can optionally filter by categories
+ *
+ * @since 0.3.0
+ * @param array $options  For filtering by category, use $options['category'] = array( 'cat1', 'cat2', 'etc' );
+ * @uses get_option  it_cart_buddy_enabled_add_ons
+ * @uses it_cart_buddy_filter_add_ons_by_category()
+ * @return array  Enabled add-ons
+*/
+function it_cart_buddy_get_enabled_add_ons( $options=array() ) {
+	// Grab enabled add-ons from options
+	if ( false === $enabled = get_option( 'it_cart_buddy_enabled_add_ons' ) )
+		$enabled = array();
+
+	if ( ! empty( $options['category'] ) )
+		$enabled = it_cart_buddy_filter_add_ons_by_category( $enabled, $options['category'] );
+
+	return empty( $enabled ) ? array() : $enabled;
+}
+
+/**
+ * Takes an array of add-ons and filters by passed category
+ *
+ * @since 0.3.0
+ * @param array $addons  an array of add-ons formatted like $GLOBALS['it_cart_buddy']['add_ons'] array
+ * @param array $categories  contains categories we want filters: array( 'cat1', 'cat2', 'etc' );
+ * @return array  Filtered add-ons
+*/
+function it_cart_buddy_filter_add_ons_by_category( $addons, $categories ) {
+	foreach( $addons as $slug => $params ) {
+		if ( ! empty( $params['options']['category'] ) ) {
+			if ( ! in_array( $params['options']['category'], (array) $categories ) )
+				unset( $addons[$slug] );
+		}
+	}
+	return $addons;
 }

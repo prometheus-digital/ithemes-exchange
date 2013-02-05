@@ -11,6 +11,13 @@ function it_cart_buddy_register_core_add_ons() {
 
 	// An array of add-ons provided by Cart Buddy
 	$add_ons = array(
+		// Manual Payments
+		'manual-payments' => array(
+			'name'        => __( 'Manual Payments', 'LION' ),
+			'description' => __( 'Use this Transaction Method to take payments offline.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/transaction-methods/manual-payments/init.php',
+			'options'     => array( 'category' => 'transaction-methods' ),
+		),
 		// PayPal Standard Transaction Method
 		'paypal-standard'   => array(
 			'name'        => __( 'PayPal Standard', 'LION' ),
@@ -30,7 +37,31 @@ function it_cart_buddy_register_core_add_ons() {
 			'name'        => __( 'Digital Downloads', 'LION' ),
 			'description' => __( 'This adds an item type for distributing digital downloads through Cart Buddy.', 'LION' ),
 			'file'        => dirname( __FILE__ ) . '/items/digital-downloads/init.php',
-			'options'     => array( 'category' => 'items' ),
+			'options'     => array( 
+				'category' => 'items',
+				'labels'   => array(
+					'singular_name' => __( 'Digital Download', 'LION' ),
+				),
+			),
+		),
+		// Membership Levels
+		'memberships' => array(
+			'name'        => __( 'Memberships', 'LION' ),
+			'description' => __( 'Create different levels of access to your site.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/items/memberships/init.php',
+			'options'     => array( 
+				'category' => 'items',
+				'labels'   => array(
+					'singular_name' => __( 'Membership', 'LION' ),
+				),
+			),
+		),
+		// Default Shopping Cart UI 
+		'default-shopping-cart' => array(
+			'name'        => __( 'Default Shopping Cart', 'LION' ),
+			'description' => __( 'This is the default Shopping Cart UI. It is the visual front to Cart Buddy\'s Cart API', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/shopping-carts/default/init.php',
+			'options'     => array( 'category' => 'shopping-carts' ),
 		),
 	);
 	$add_ons = apply_filters( 'it_cart_buddy_core_add_ons', $add_ons );
@@ -59,27 +90,32 @@ function it_cart_buddy_register_core_add_on_categories() {
 	$cats = array(
 		'items' => array(
 			'name'        => __( 'Items', 'LION' ),
-			'description' => __( 'Add-ons responsible for the differing types of items available in Cart Buddy', 'LION' ),
+			'description' => __( 'Add-ons responsible for the differing types of items available in Cart Buddy.', 'LION' ),
 			'options'     => array(),
 		),
 		'transaction-methods' => array(
 			'name'        => __( 'Transaction Methods', 'LION' ),
-			'description' => __( 'Add-ons that create transactions. eg: Stripe, PayPal', 'LION' ),
+			'description' => __( 'Add-ons that create transactions. eg: Stripe, PayPal.', 'LION' ),
+			'options'     => array(),
+		),
+		'shopping-carts' => array(
+			'name'        => __( 'Shopping Cart UIs', 'LION' ),
+			'description' => __( 'Add-ons that provide a UI for the Cart Buddy Cart API.', 'LION' ),
 			'options'     => array(),
 		),
 		'admin' => array(
 			'name'        => __( 'Admin Add-ons', 'LION' ),
-			'description' => __( 'Add-ons that create general purpose admin functionality. eg: Reports, Export', 'LION' ),
+			'description' => __( 'Add-ons that create general purpose admin functionality. eg: Reports, Export.', 'LION' ),
 			'options'     => array(),
 		),
 		'front-end' => array(
 			'name'        => __( 'Front End Add-ons', 'LION' ),
-			'description' => __( 'Add-ons that create general purpose frontend functionality. eg: Widgets, Shortcodes', 'LION' ),
+			'description' => __( 'Add-ons that create general purpose frontend functionality. eg: Widgets, Shortcodes.', 'LION' ),
 			'options'     => array(),
 		),
 		'other' => array(
 			'name'        => __( 'Other', 'LION' ),
-			'description' => __( 'Add-ons that don\'t fit in any other add-on category', 'LION' ),
+			'description' => __( 'Add-ons that don\'t fit in any other add-on category.', 'LION' ),
 			'options'     => array(),
 		),
 	);

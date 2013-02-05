@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: Cart Buddy by iThemes
- * Version: 0.2
+ * Version: 0.3.0
  * Description: Turns your WordPress site into a Lean, Mean Selling Machine!
  * Plugin URI: http://ithemes.com/purchase/cartbuddy/
  * Author: iThemes
@@ -25,7 +25,7 @@ if ( ! class_exists( 'IT_Cart_Buddy' ) ) {
 
 	class IT_Cart_Buddy {
 
-		var $_version         = '0.2';
+		var $_version         = '0.3.0';
 		var $_updater         = '1.0.8';
 		var $_wp_minimum      = '3.5';
 		var $_slug            = 'cart_buddy';
