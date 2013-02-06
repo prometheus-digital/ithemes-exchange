@@ -68,6 +68,8 @@ class IT_Cart_Buddy_Item_Post_Type {
 	 * @return void
 	*/
 	function meta_box_callback( $post ) {
+		$this->setup_post_type_properties( $post );
+
 		if ( $item_types = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'items' ) ) ) ) {
 			foreach( $item_types as $addon_slug => $params ) {
 				do_action( 'it_cart_buddy_item_metabox_callback_' . $addon_slug, $post );
@@ -91,13 +93,37 @@ class IT_Cart_Buddy_Item_Post_Type {
 		if ( 1 == count( $item_add_ons ) ) {
 			$item = reset( $item_add_ons );
 		} else {
-			if ( ! empty( $_GET['it-cart-buddy-item-type'] ) && ! empty( $item_add_ons[$_GET['it-cart-buddy-item-type']] ) )
-				$item = $item_add_ons[$_GET['it-cart-buddy-item-type']];
+			if ( ! empty( $_GET['product_type'] ) && ! empty( $item_add_ons[$_GET['product_type']] ) )
+				$item = $item_add_ons[$_GET['product_type']];
 			else
 				$item['options']['labels']['singular_name'] = 'Item';
 		}
 		$singular = empty( $item['options']['labels']['singular_name'] ) ? $item['name'] : $item['options']['labels']['singular_name'];
 		return apply_filters( 'it_cart_buddy_add_new_item_label-' . $item['slug'], __( 'Add New ', 'LION' ) . $singular );
+	}
+
+	/**
+	 * Add's Item Type vars to this post
+	 *
+	 * @since 0.3.1
+	 * @return void
+	*/
+	function setup_post_type_properties() {
+		global $post, $pagenow;
+
+		// Set the product type from Param or from post_meta
+		$product_type = empty( $_GET['product_type'] ) ? get_post_meta( $post->ID, '_it_cart_buddy_product_type', true ) : $_GET['product_type'];
+
+		// If we're not on the add-new or edit product page, exit. Also, if we're not on the correct post type exit
+		if ( 'post.php' != $pagenow && 'post-new.php' != $pagenow && 'it_cart_buddy_item' != get_post_type( $post ) )
+			return;
+
+		// If this is a new product, tag the product_type from the URL param
+		if ( 'post-new.php' == $pagenow )
+			update_post_meta( $post->ID, '_it_cart_buddy_product_type', $product_type );
+
+		// Add to product type to $post object
+		$post->it_cart_buddy_product_type = $product_type;
 	}
 }
 $IT_Cart_Buddy_Item_Post_Type = new IT_Cart_Buddy_Item_Post_Type();

@@ -8,3 +8,6 @@
 
 // Contains functions for registering / retreiving Add-ons, Add-on categories, and Add-on sets
 include( $this->_plugin_path . '/api/add-ons.php' );
+
+// API functions for Items
+include( $this->_plugin_path . '/api/items.php' );
