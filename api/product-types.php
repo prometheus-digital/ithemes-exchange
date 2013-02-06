@@ -26,7 +26,8 @@ function it_cart_buddy_get_product_type( $post=false ) {
 		$post = get_post( $post );
 
 	if ( is_admin() ) {
-		global $post;
+		if ( ! $post )
+			global $post;
 		$post_type = empty( $post->post_type ) ? false : $post->post_type;
 		$post_type = ( empty( $post_type ) && ! empty( $_GET['post_type'] ) ) ? $_GET['post_type'] : $post_type;
 		if ( 'post-new.php' == $pagenow && 'it_cart_buddy_prod' == $post_type ) {

@@ -23,6 +23,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 	function IT_Cart_Buddy_Product_Post_Type() {
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
 		add_action( 'save_post', array( $this, 'save_product' ) );
+		add_action( 'admin_init', array( $this, 'get_edit_item_label' ) );
 	}
 
 	function init() {
@@ -95,13 +96,54 @@ class IT_Cart_Buddy_Product_Post_Type {
 		if ( 1 == count( $product_add_ons ) ) {
 			$product = reset( $product_add_ons );
 		} else {
-			if ( ! empty( $_GET['product_type'] ) && ! empty( $product_add_ons[$_GET['product_type']] ) )
-				$product = $product_add_ons[$_GET['product_type']];
+			$product_type = it_cart_buddy_get_product_type();
+			if ( ! empty( $product_type ) && ! empty( $product_add_ons[$product_type] ) )
+				$product = $product_add_ons[$product_type];
 			else
 				$product['options']['labels']['singular_name'] = 'Product';
 		}
 		$singular = empty( $product['options']['labels']['singular_name'] ) ? $product['name'] : $product['options']['labels']['singular_name'];
 		return apply_filters( 'it_cart_buddy_add_new_product_label-' . $product['slug'], __( 'Add New ', 'LION' ) . $singular );
+	}
+
+	/**
+	 * Generates the Edit Product Label for a new Product 
+	 *
+	 * Post types have to be registered earlier than we know that type of post is being edited
+	 * so this function inserts the correct label into the $wp_post_types global after post type is registered
+	 *
+	 * @since 0.3.1
+	 * @return string $label Label for edit product page.
+	*/
+	function get_edit_item_label() {
+		global $pagenow, $wp_post_types;
+		$post = empty( $_GET['post'] ) ? false : get_post( $_GET['post'] );
+
+		if ( ! is_admin() || $pagenow != 'post.php' || ! $post )
+			return;
+
+		if ( empty( $wp_post_types['it_cart_buddy_prod'] ) )
+			return;
+			
+		if ( 'it_cart_buddy_prod' != get_post_type( $post ) )
+			return;
+
+		$product_type = it_cart_buddy_get_product_type( $post );
+
+		$product_add_ons = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) );
+		$product = array();
+		if ( 1 == count( $product_add_ons ) ) {
+			$product = reset( $product_add_ons );
+		} else {
+			if ( ! empty( $product_type ) && ! empty( $product_add_ons[$product_type] ) )
+				$product = $product_add_ons[$product_type];
+			else
+				$product['options']['labels']['singular_name'] = 'Product';
+		}
+
+		$singular = empty( $product['options']['labels']['singular_name'] ) ? $product['name'] : $product['options']['labels']['singular_name'];
+		$label = apply_filters( 'it_cart_buddy_edit_product_label-' . $product['slug'], __( 'Edit ', 'LION' ) . $singular );
+		$wp_post_types['it_cart_buddy_prod']->labels->edit_item = $label;
 	}
 
 	/**
