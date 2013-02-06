@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: Cart Buddy by iThemes
- * Version: 0.3.0
+ * Version: 0.3.1
  * Description: Turns your WordPress site into a Lean, Mean Selling Machine!
  * Plugin URI: http://ithemes.com/purchase/cartbuddy/
  * Author: iThemes
@@ -18,14 +18,14 @@
 /**
  * CartBuddy main class.
  *
- * @package IT_CartBuddy
- * @since 0.1
+ * @package IT_Cart_Buddy
+ * @since 0.1.0
 */
 if ( ! class_exists( 'IT_Cart_Buddy' ) ) {
 
 	class IT_Cart_Buddy {
 
-		var $_version         = '0.3.0';
+		var $_version         = '0.3.1';
 		var $_updater         = '1.0.8';
 		var $_wp_minimum      = '3.5';
 		var $_slug            = 'cart_buddy';
@@ -46,7 +46,7 @@ if ( ! class_exists( 'IT_Cart_Buddy' ) ) {
 		 * @uses IT_CartBuddy::set_plugin_locations()
 		 * @uses IT_CartBuddy::set_textdomain()
 		 * @uses IT_CartBuddy::init_cartbuddy()
-		 * @since 0.1
+		 * @since 0.1.0
 		 * @return void
 		*/
 		function IT_Cart_Buddy() {
@@ -67,7 +67,7 @@ if ( ! class_exists( 'IT_Cart_Buddy' ) ) {
 		 * @uses WP_PLUGIN_DIR
 		 * @uses ABSPATH
 		 * @uses site_url()
-		 * @since 0.1
+		 * @since 0.1.0
 		 * @return void
 		*/
 		function set_plugin_locations() {
@@ -87,7 +87,7 @@ if ( ! class_exists( 'IT_Cart_Buddy' ) ) {
 		 * Loads the translation data for WordPress
 		 *
 		 * @uses load_plugin_textdomain()
-		 * @since 0.1
+		 * @since 0.1.0
 		 * @return void
 		*/
 		function set_textdomain() {
@@ -97,7 +97,7 @@ if ( ! class_exists( 'IT_Cart_Buddy' ) ) {
 		/**
 		 * This function registers the plugin's vesion of the iThemes updater class
 		 *
-		 * @since 0.1
+		 * @since 0.1.0
 		 * @return void
 		*/
 		function upgrader_register() {
@@ -107,7 +107,7 @@ if ( ! class_exists( 'IT_Cart_Buddy' ) ) {
 		/**
 		 * Look through all registered version of upgrade classes and use the latest version
 		 *
-		 * @since 0.1
+		 * @since 0.1.0
 		 * @return void
 		*/
 		function upgrader_select() {
@@ -136,7 +136,7 @@ if ( ! class_exists( 'IT_Cart_Buddy' ) ) {
 		/**
 		 * Initiates our upgrade class
 		 *
-		 * @since 0.1
+		 * @since 0.1.0
 		 * @return void
 		*/
 		function upgrader_instantiate() {

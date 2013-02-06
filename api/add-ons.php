@@ -3,7 +3,7 @@
  * API Functions used to register / retrieve Cart Buddy Add-ons
  *
  * @package IT_Cart_Buddy
- * @since 0.2
+ * @since 0.2.0
 */
 
 /**

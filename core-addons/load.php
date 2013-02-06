@@ -2,7 +2,7 @@
 /**
  * Registers all add-ons shipped with Cart Buddy
  *
- * @since 0.2
+ * @since 0.2.0
  * @uses apply_filters()
  * @uses it_cart_buddy_register_add_on()
  * @return void
@@ -81,7 +81,7 @@ add_action( 'plugins_loaded', 'it_cart_buddy_register_core_add_ons' );
 /**
  * Register's Core Cart Buddy Add-on Categories
  *
- * @since 0.2
+ * @since 0.2.0
  * @uses it_cart_buddy_register_add_on_category()
  * @return void
 */

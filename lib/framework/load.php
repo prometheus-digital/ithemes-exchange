@@ -2,7 +2,7 @@
 /**
  * This file loads the Cart Buddy Framework
  *
- * @since 0.2
+ * @since 0.2.0
  * @package IT_Cart_Buddy
 */
 

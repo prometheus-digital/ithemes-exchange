@@ -5,14 +5,14 @@
  * This class manages the admin side of the plugin
  *
  * @package IT_Cart_Buddy
- * @since 0.1
+ * @since 0.1.0
 */
 class IT_Cart_Buddy_Admin {
 
 	/**
 	 * Parent Class
 	 * @var _parent object Parent Class
-	 * @since 0.1
+	 * @since 0.1.0
 	*/
 	var $_parent;
 
@@ -20,7 +20,7 @@ class IT_Cart_Buddy_Admin {
 	 * Class constructor
 	 *
 	 * @uses add_action()
-	 * @since 0.1
+	 * @since 0.1.0
 	 * @return void 
 	*/
 	function IT_Cart_Buddy_Admin( &$parent ) {
@@ -37,12 +37,15 @@ class IT_Cart_Buddy_Admin {
 		// Add actions for iThemes registration
 		add_action( 'admin_menu', array( $this, 'add_cart_buddy_admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'enable_disable_registered_add_on' ) );
+
+		// Redirect to Item selection on Add New if needed
+		add_action( 'admin_init', array( $this, 'redirect_post_new_to_item_selection_screen' ) );
 	}
 
 	/**
 	 * Adds the main Cart Buddy menu item to the WP admin menu
 	 *
-	 * @since 0.2
+	 * @since 0.2.0
 	 * @return void
 	*/
 	function add_cart_buddy_admin_menu() {
@@ -56,7 +59,7 @@ class IT_Cart_Buddy_Admin {
 	/**
 	 * Prints the setup page for cart buddy
 	 *
-	 * @since 0.2
+	 * @since 0.2.0
 	 * @return void
 	*/
 	function print_cart_buddy_setup_page() {
@@ -73,7 +76,7 @@ class IT_Cart_Buddy_Admin {
 	/**
 	 * Prints the add-ons page in the admin area
 	 *
-	 * @since 0.2
+	 * @since 0.2.0
 	 * @return void
 	*/
 	function print_cart_buddy_add_ons_page() {
@@ -125,7 +128,7 @@ class IT_Cart_Buddy_Admin {
 	/**
 	 * Adds a registered Add-on to list of enabled add-ons
 	 *
-	 * @since 0.2
+	 * @since 0.2.0
 	*/
 	function enable_disable_registered_add_on() {
 		$enable_addon = empty( $_GET['it-cart-buddy-enable-addon'] ) ? false : $_GET['it-cart-buddy-enable-addon'];
@@ -150,7 +153,7 @@ class IT_Cart_Buddy_Admin {
 		}
 
 		update_option( 'it_cart_buddy_enabled_add_ons', $enabled );
-		wp_safe_redirect( get_admin_url() . '/admin.php?page=it-cart-buddy-addons' );
+		wp_safe_redirect( admin_url( '/admin.php?page=it-cart-buddy-addons' ) );
 		die();
 	}
 
@@ -203,6 +206,12 @@ class IT_Cart_Buddy_Admin {
 		<?php
 	}
 
+	/**
+	 * Opens the Cart Buddy Admin Menu when viewing the Add New page
+	 *
+	 * @since 0.3.0
+	 * @return string
+	*/
 	function open_cart_buddy_menu_on_post_type_views( $parent_file, $revert=false ) {
 		global $submenu_file, $pagenow;
 		if ( empty( $_GET['post_type'] ) || 'it_cart_buddy_item' != $_GET['post_type'] )
@@ -212,6 +221,27 @@ class IT_Cart_Buddy_Admin {
 			$submenu_file = 'it-cart-buddy-choose-item-type';
 
 		return 'it-cart-buddy';
+	}
+
+	/**
+	 * Redirects post-new.php to it-cart-buddy-choose-item-type when needed
+	 *
+	 * If we have landed on post-new.php?post_type=it_cart_buddy_items without the item-type param
+	 * and with multiple item add-ons enabled.
+	 *
+	 * @since 0.3.1
+	 * @return void
+	*/
+	function redirect_post_new_to_item_selection_screen() {
+		global $pagenow;
+		$item_add_ons = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'items' ) ) );
+
+		if ( count( $item_add_ons ) > 1 && 'post-new.php' == $pagenow && ! empty( $_GET['post_type'] ) && 'it_cart_buddy_item' == $_GET['post_type'] ) {
+			if ( empty( $_GET['addon'] ) ) {
+				wp_safe_redirect( admin_url( 'admin.php?page=it-cart-buddy-choose-item-type' ) );
+				die();
+			}
+		}
 	}
 }
 if ( is_admin() )
