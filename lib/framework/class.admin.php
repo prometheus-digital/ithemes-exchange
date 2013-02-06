@@ -172,7 +172,7 @@ class IT_Cart_Buddy_Admin {
 				case 1 :
 					add_submenu_page( 'it-cart-buddy', 'All Items', 'All Items', $this->admin_menu_capability, 'edit.php?post_type=it_cart_buddy_item' );
 					foreach( $enabled_items as $slug => $params ) {
-						add_submenu_page( 'it-cart-buddy', 'Add Item', 'Add Item', $this->admin_menu_capability, 'post-new.php?post_type=it_cart_buddy_item&addon=' . $slug );
+						add_submenu_page( 'it-cart-buddy', 'Add Item', 'Add Item', $this->admin_menu_capability, 'post-new.php?post_type=it_cart_buddy_item&it-cart-buddy-item-type==' . $slug );
 					}
 					break;
 				default :
@@ -198,7 +198,7 @@ class IT_Cart_Buddy_Admin {
 			<ul>
 			<?php
 			foreach( it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'items' ) ) ) as $slug => $params ) {
-				echo '<li><a href="' . get_site_url() . '/wp-admin/post-new.php?post_type=it_cart_buddy_item&addon=' . $slug . '">' . $params['name'] . '</a>';
+				echo '<li><a href="' . get_site_url() . '/wp-admin/post-new.php?post_type=it_cart_buddy_item&it-cart-buddy-item-type=' . $slug . '">' . $params['name'] . '</a>';
 			}
 			?>
 			</ul>
@@ -237,7 +237,7 @@ class IT_Cart_Buddy_Admin {
 		$item_add_ons = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'items' ) ) );
 
 		if ( count( $item_add_ons ) > 1 && 'post-new.php' == $pagenow && ! empty( $_GET['post_type'] ) && 'it_cart_buddy_item' == $_GET['post_type'] ) {
-			if ( empty( $_GET['addon'] ) ) {
+			if ( empty( $_GET['it-cart-buddy-item-type'] ) ) {
 				wp_safe_redirect( admin_url( 'admin.php?page=it-cart-buddy-choose-item-type' ) );
 				die();
 			}

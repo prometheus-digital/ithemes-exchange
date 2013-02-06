@@ -91,8 +91,8 @@ class IT_Cart_Buddy_Item_Post_Type {
 		if ( 1 == count( $item_add_ons ) ) {
 			$item = reset( $item_add_ons );
 		} else {
-			if ( ! empty( $_GET['addon'] ) && ! empty( $item_add_ons[$_GET['addon']] ) )
-				$item = $item_add_ons[$_GET['addon']];
+			if ( ! empty( $_GET['it-cart-buddy-item-type'] ) && ! empty( $item_add_ons[$_GET['it-cart-buddy-item-type']] ) )
+				$item = $item_add_ons[$_GET['it-cart-buddy-item-type']];
 			else
 				$item['options']['labels']['singular_name'] = 'Item';
 		}
