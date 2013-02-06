@@ -213,13 +213,19 @@ class IT_Cart_Buddy_Admin {
 	 * @return string
 	*/
 	function open_cart_buddy_menu_on_post_type_views( $parent_file, $revert=false ) {
-		global $submenu_file, $pagenow;
-		if ( empty( $_GET['post_type'] ) || 'it_cart_buddy_prod' != $_GET['post_type'] )
+		global $submenu_file, $pagenow, $post;
+
+		if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow )
 			return $parent_file;
 
+		if ( empty( $post->post_type ) || 'it_cart_buddy_prod' != $post->post_type )
+			return $parent_file;
+
+		// Set Add New as bold when on the post-new.php screen
 		if ( 'post-new.php' == $pagenow )
 			$submenu_file = 'it-cart-buddy-choose-product-type';
 
+		// Return it-cart-buddy as the parent (open) menu when on post-new.php and post.php for it_cart_buddy_prod post_types
 		return 'it-cart-buddy';
 	}
 
