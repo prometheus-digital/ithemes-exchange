@@ -10,7 +10,7 @@
  * Register an Add-on with CartBuddy
  *
  * Core ‘category’ options for type of add-on
- * - item                Add-ons that create items. eg: Digital, Membership
+ * - product-type        Add-ons that create product types. eg: Digital, Membership
  * - transaction-method  Add-ons that create transactions. eg: Stripe, Tweet
  * - admin               General purpose admin functionality. eg: Reports, Export
  * - front-end           General purpose front-end functionality. eg: Widgets, Shortcodes

@@ -9,6 +9,6 @@
 // Admin Functionality
 require( $this->_plugin_path . '/lib/framework/class.admin.php' );
 
-// Items Post Type
-require( $this->_plugin_path . '/lib/framework/class.items-post-type.php' );
+// Product Post Type
+require( $this->_plugin_path . '/lib/framework/class.products-post-type.php' );
 

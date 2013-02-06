@@ -31,15 +31,15 @@ class IT_Cart_Buddy_Admin {
 		// Admin Menu Capability
 		$this->admin_menu_capability = apply_filters( 'it_cart_buddy_admin_menu_capability', 'read' );
 
-		// Open cart buddy menu when on add/edit cartbuddy item post type
+		// Open cart buddy menu when on add/edit cartbuddy product post type
 		add_action( 'parent_file', array( $this, 'open_cart_buddy_menu_on_post_type_views' ) );
 
 		// Add actions for iThemes registration
 		add_action( 'admin_menu', array( $this, 'add_cart_buddy_admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'enable_disable_registered_add_on' ) );
 
-		// Redirect to Item selection on Add New if needed
-		add_action( 'admin_init', array( $this, 'redirect_post_new_to_item_selection_screen' ) );
+		// Redirect to Product selection on Add New if needed
+		add_action( 'admin_init', array( $this, 'redirect_post_new_to_product_type_selection_screen' ) );
 	}
 
 	/**
@@ -52,7 +52,7 @@ class IT_Cart_Buddy_Admin {
 		add_menu_page( 'Cart Buddy', 'Cart Buddy', $this->admin_menu_capability, 'it-cart-buddy', array( $this, 'print_cart_buddy_setup_page' ) );
 		add_submenu_page( 'it-cart-buddy', 'Cart Buddy Setup', 'Setup', $this->admin_menu_capability, 'it-cart-buddy-setup', array( $this, 'print_cart_buddy_setup_page' ) );
 		remove_submenu_page( 'it-cart-buddy', 'it-cart-buddy' );
-		$this->add_item_submenus();
+		$this->add_product_submenus();
 		add_submenu_page( 'it-cart-buddy', 'Cart Buddy Add-ons', 'Add-ons', $this->admin_menu_capability, 'it-cart-buddy-addons', array( $this, 'print_cart_buddy_add_ons_page' ) );
 	}
 
@@ -158,47 +158,47 @@ class IT_Cart_Buddy_Admin {
 	}
 
 	/**
-	 * Adds the item submenus based on number of enabled item add-ons
+	 * Adds the product submenus based on number of enabled product-type add-ons
 	 *
 	 * @since 0.3.0
 	 * @return void
 	*/
-	function add_item_submenus() {
-		if ( $enabled_items = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'items' ) ) ) ) {
-			switch ( count($enabled_items) ) {
+	function add_product_submenus() {
+		if ( $enabled_product_types = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) ) ) {
+			switch ( count( $enabled_product_types ) ) {
 				case 0 :
 					return;
 					break;
 				case 1 :
-					add_submenu_page( 'it-cart-buddy', 'All Items', 'All Items', $this->admin_menu_capability, 'edit.php?post_type=it_cart_buddy_item' );
-					foreach( $enabled_items as $slug => $params ) {
-						add_submenu_page( 'it-cart-buddy', 'Add Item', 'Add Item', $this->admin_menu_capability, 'post-new.php?post_type=it_cart_buddy_item&product_type=' . $slug );
+					add_submenu_page( 'it-cart-buddy', 'All Products', 'All Products', $this->admin_menu_capability, 'edit.php?post_type=it_cart_buddy_prod' );
+					foreach( $enabled_product_types as $slug => $params ) {
+						add_submenu_page( 'it-cart-buddy', 'Add Product', 'Add Product', $this->admin_menu_capability, 'post-new.php?post_type=it_cart_buddy_prod&product_type=' . $slug );
 					}
 					break;
 				default :
-					add_submenu_page( 'it-cart-buddy', 'All Items', 'All Items', $this->admin_menu_capability, 'edit.php?post_type=it_cart_buddy_item' );
-					add_submenu_page( 'it-cart-buddy', 'Add Item', 'Add Item', $this->admin_menu_capability, 'it-cart-buddy-choose-item-type', array( $this, 'print_choose_item_type_admin_page' ) );
+					add_submenu_page( 'it-cart-buddy', 'All Products', 'All Products', $this->admin_menu_capability, 'edit.php?post_type=it_cart_buddy_prod' );
+					add_submenu_page( 'it-cart-buddy', 'Add Product', 'Add Product', $this->admin_menu_capability, 'it-cart-buddy-choose-product-type', array( $this, 'print_choose_product_type_admin_page' ) );
 					break;
 			}
 		}
 	}
 
 	/**
-	 * Page content for adding an item type
+	 * Page content for adding a product type
 	 *
 	 * @since 0.3.0
 	 * @return void
 	*/
-	function print_choose_item_type_admin_page() {
+	function print_choose_product_type_admin_page() {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'page' ); ?>
-			<h2>Choose an Item Type to add</h2>
+			<h2>Choose an Product Type to add</h2>
 			<p>Temp UI...</p>
 			<ul>
 			<?php
-			foreach( it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'items' ) ) ) as $slug => $params ) {
-				echo '<li><a href="' . get_site_url() . '/wp-admin/post-new.php?post_type=it_cart_buddy_item&product_type=' . $slug . '">' . $params['name'] . '</a>';
+			foreach( it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) ) as $slug => $params ) {
+				echo '<li><a href="' . get_site_url() . '/wp-admin/post-new.php?post_type=it_cart_buddy_prod&product_type=' . $slug . '">' . $params['name'] . '</a>';
 			}
 			?>
 			</ul>
@@ -214,33 +214,33 @@ class IT_Cart_Buddy_Admin {
 	*/
 	function open_cart_buddy_menu_on_post_type_views( $parent_file, $revert=false ) {
 		global $submenu_file, $pagenow;
-		if ( empty( $_GET['post_type'] ) || 'it_cart_buddy_item' != $_GET['post_type'] )
+		if ( empty( $_GET['post_type'] ) || 'it_cart_buddy_prod' != $_GET['post_type'] )
 			return $parent_file;
 
 		if ( 'post-new.php' == $pagenow )
-			$submenu_file = 'it-cart-buddy-choose-item-type';
+			$submenu_file = 'it-cart-buddy-choose-product-type';
 
 		return 'it-cart-buddy';
 	}
 
 	/**
-	 * Redirects post-new.php to it-cart-buddy-choose-item-type when needed
+	 * Redirects post-new.php to it-cart-buddy-choose-product-type when needed
 	 *
-	 * If we have landed on post-new.php?post_type=it_cart_buddy_items without the item-type param
-	 * and with multiple item add-ons enabled.
+	 * If we have landed on post-new.php?post_type=it_cart_buddy_prod without the product_type param
+	 * and with multiple product-type add-ons enabled.
 	 *
 	 * @since 0.3.1
 	 * @return void
 	*/
-	function redirect_post_new_to_item_selection_screen() {
+	function redirect_post_new_to_product_type_selection_screen() {
 		global $pagenow;
-		$item_add_ons = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'items' ) ) );
-		$post_type    = empty( $_GET['post_type'] ) ? false : $_GET['post_type'];
-		$product_type = empty( $_GET['product_type'] ) ? false : $_GET['product_type'];
+		$product_type_add_ons = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) );
+		$post_type            = empty( $_GET['post_type'] ) ? false : $_GET['post_type'];
+		$product_type         = empty( $_GET['product_type'] ) ? false : $_GET['product_type'];
 
-		if ( count( $item_add_ons ) > 1 && 'post-new.php' == $pagenow && 'it_cart_buddy_item' == $post_type ) {
-			if ( empty( $item_add_ons[$product_type] ) ) {
-				wp_safe_redirect( admin_url( 'admin.php?page=it-cart-buddy-choose-item-type' ) );
+		if ( count( $product_type_add_ons ) > 1 && 'post-new.php' == $pagenow && 'it_cart_buddy_prod' == $post_type ) {
+			if ( empty( $product_type_add_ons[$product_type] ) ) {
+				wp_safe_redirect( admin_url( 'admin.php?page=it-cart-buddy-choose-product-type' ) );
 				die();
 			}
 		}
