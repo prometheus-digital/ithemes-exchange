@@ -22,6 +22,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 	*/
 	function IT_Cart_Buddy_Product_Post_Type() {
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
+		add_action( 'save_post', array( $this, 'save_product' ) );
 	}
 
 	function init() {
@@ -73,6 +74,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 		if ( $product_types = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) ) ) {
 			foreach( $product_types as $addon_slug => $params ) {
 				do_action( 'it_cart_buddy_product_metabox_callback_' . $addon_slug, $post );
+				do_action( 'it_cart_buddy_product_metabox_callback', $post );
 			}
 		}
 	}
@@ -112,7 +114,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 		global $post, $pagenow;
 
 		// Set the product type from Param or from post_meta
-		$product_type = empty( $_GET['product_type'] ) ? get_post_meta( $post->ID, '_it_cart_buddy_product_type', true ) : $_GET['product_type'];
+		$product_type = it_cart_buddy_get_product_type( $post );
 
 		// If we're not on the add-new or edit product page, exit. Also, if we're not on the correct post type exit
 		if ( 'post.php' != $pagenow && 'post-new.php' != $pagenow && 'it_cart_buddy_prod' != get_post_type( $post ) )
@@ -124,6 +126,56 @@ class IT_Cart_Buddy_Product_Post_Type {
 
 		// Add to product type to $post object
 		$post->it_cart_buddy_product_type = $product_type;
+	}
+
+	/**
+	 * Provides specific hooks for when cart buddy products are saved.
+	 *
+	 * This method is hooked to save_post. It provides hooks for add-on developers
+	 * that will only be called when the post being saved is a cart buddy product. 
+	 * It provides the following 4 hooks:
+	 * - it_cart_buddy_save_product_unvalidated                // Runs every time a cart buddy product is saved.
+	 * - it_cart_buddy_save_product_unavalidate-[product-type] // Runs every time a specific cart buddy product type is saved.
+	 * - it_cart_buddy_save_product                            // Runs every time a cart buddy product is saved if not an autosave and if user has permission to save post
+	 * - it_cart_buddy_save_product-[product-type]             // Runs every time a specific cart buddy product-type is saved if not an autosave and if user has permission to save post
+	 *
+	 * @since 0.3.1
+	 * @return void
+	*/
+	function save_product( $post ) { 
+
+		// Exit if not it_cart_buddy_prod post_type
+		if ( ! 'it_cart_buddy_prod' == get_post_type( $post ) ) 
+			return;
+
+		// Grab enabled product add-ons
+		$product_type_addons = it_cart_buddy_get_enabled_add_ons( array( 'category' => 'product-type' ) );
+		
+		// Grab current post's product_type
+		$product_type = it_cart_buddy_get_product_type();
+
+		// These hooks fire off any time a it_cart_buddy_prod post is saved w/o validations
+		do_action( 'it_cart_buddy_save_product_unvalidated', $post );
+		foreach( (array) $product_type_addons as $slug => $params ) { 
+			if ( $slug == $product_type ) { 
+				do_action( 'it_cart_buddy_save_product_unvalidated-' . $slug, $post );
+			}   
+		}   
+
+		// Fire off actions with validations that most instances need to use.
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+			return;
+
+		if ( ! current_user_can( 'edit_post', $post ) ) 
+			return;
+
+		// This is called any time save_post hook
+		do_action( 'it_cart_buddy_save_product', $post );
+		foreach( (array) $product_type_addons as $slug => $params ) { 
+			if ( $slug == $product_type ) { 
+				do_action( 'it_cart_buddy_save_product-' . $slug, $post );
+			}   
+		}   
 	}
 }
 $IT_Cart_Buddy_Product_Post_Type = new IT_Cart_Buddy_Product_Post_Type();

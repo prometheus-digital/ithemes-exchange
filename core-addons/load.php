@@ -63,6 +63,13 @@ function it_cart_buddy_register_core_add_ons() {
 			'file'        => dirname( __FILE__ ) . '/shopping-carts/default/init.php',
 			'options'     => array( 'category' => 'shopping-carts' ),
 		),
+		// Product Type admin Metabox
+		'product-type-metabox' => array(
+			'name'        => __( 'Product Type Metabox', 'LION' ),
+			'description' => __( 'Gives admins the ability to change a Product Type after creation of the Product via a metabox', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/admin/product-type-metabox/init.php',
+			'options'     => array( 'category' => 'admin' ),
+		),
 	);
 	$add_ons = apply_filters( 'it_cart_buddy_core_add_ons', $add_ons );
 
