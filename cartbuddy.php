@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: Cart Buddy by iThemes
- * Version: 0.3.1
+ * Version: 0.3.2
  * Description: Turns your WordPress site into a Lean, Mean Selling Machine!
  * Plugin URI: http://ithemes.com/purchase/cartbuddy/
  * Author: iThemes
@@ -23,7 +23,7 @@
 */
 class IT_Cart_Buddy {
 
-	var $_version         = '0.3.1';
+	var $_version         = '0.3.w';
 	var $_updater         = '1.0.8';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'cart_buddy';
@@ -58,7 +58,7 @@ class IT_Cart_Buddy {
 		require( $this->_plugin_path . '/api/load.php' );
 		require( $this->_plugin_path . '/core-addons/load.php' );
 
-		add_action( 'plugins_loaded', array( $this, 'init_addons' ) );
+		add_action( 'it_libraries_loaded', array( $this, 'init_addons' ) );
 	}
 
 	/**

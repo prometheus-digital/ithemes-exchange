@@ -23,6 +23,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 	function IT_Cart_Buddy_Product_Post_Type() {
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
 		add_action( 'save_post', array( $this, 'save_product' ) );
+		add_action( 'admin_init', array( $this, 'get_add_new_item_label' ) );
 		add_action( 'admin_init', array( $this, 'get_edit_item_label' ) );
 	}
 
@@ -31,7 +32,6 @@ class IT_Cart_Buddy_Product_Post_Type {
 		$labels    = array(
 			'name'          => __( 'Products', 'LION' ),
 			'singular_name' => __( 'Product', 'LION' ),
-			'add_new_item'  => $this->get_add_new_item_label(),
 		);
 		$this->options = array(
 			'labels' => $labels,
@@ -63,19 +63,19 @@ class IT_Cart_Buddy_Product_Post_Type {
 	}
 
 	/**
-	 * Call Back hook
+	 * Call Back hook for product post type admin views
 	 *
 	 * @since 0.3.0
 	 * @uses it_cart_buddy_get_enabled_add_ons()
 	 * @return void
 	*/
 	function meta_box_callback( $post ) {
-		$this->setup_post_type_properties( $post );
+		$product = it_cart_buddy_get_product( $post );
 
 		if ( $product_types = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) ) ) {
 			foreach( $product_types as $addon_slug => $params ) {
-				do_action( 'it_cart_buddy_product_metabox_callback_' . $addon_slug, $post );
-				do_action( 'it_cart_buddy_product_metabox_callback', $post );
+				do_action( 'it_cart_buddy_product_metabox_callback_' . $addon_slug, $product );
+				do_action( 'it_cart_buddy_product_metabox_callback', $product );
 			}
 		}
 	}
@@ -87,12 +87,17 @@ class IT_Cart_Buddy_Product_Post_Type {
 	 * @return string $label Label for add new product page.
 	*/
 	function get_add_new_item_label() {
-		global $pagenow;
+		global $pagenow, $wp_post_types;
 		if ( $pagenow != 'post-new.php' || empty( $_GET['post_type'] ) || 'it_cart_buddy_prod' != $_GET['post_type'] )
 			return apply_filters( 'it_cart_buddy_add_new_product_label', __( 'Add New Product', 'LION' ) );
 
+		if ( empty( $wp_post_types['it_cart_buddy_prod'] ) )
+			return;
+			
 		$product_add_ons = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) );
 		$product = array();
+
+		// Isolate the product type
 		if ( 1 == count( $product_add_ons ) ) {
 			$product = reset( $product_add_ons );
 		} else {
@@ -101,9 +106,11 @@ class IT_Cart_Buddy_Product_Post_Type {
 				$product = $product_add_ons[$product_type];
 			else
 				$product['options']['labels']['singular_name'] = 'Product';
+
 		}
 		$singular = empty( $product['options']['labels']['singular_name'] ) ? $product['name'] : $product['options']['labels']['singular_name'];
-		return apply_filters( 'it_cart_buddy_add_new_product_label-' . $product['slug'], __( 'Add New ', 'LION' ) . $singular );
+		$label = apply_filters( 'it_cart_buddy_add_new_product_label-' . $product['slug'], __( 'Add New ', 'LION' ) . $singular );
+		$wp_post_types['it_cart_buddy_prod']->labels->add_new_item = $label;
 	}
 
 	/**
@@ -144,30 +151,6 @@ class IT_Cart_Buddy_Product_Post_Type {
 		$singular = empty( $product['options']['labels']['singular_name'] ) ? $product['name'] : $product['options']['labels']['singular_name'];
 		$label = apply_filters( 'it_cart_buddy_edit_product_label-' . $product['slug'], __( 'Edit ', 'LION' ) . $singular );
 		$wp_post_types['it_cart_buddy_prod']->labels->edit_item = $label;
-	}
-
-	/**
-	 * Add's Product Type vars to this post
-	 *
-	 * @since 0.3.1
-	 * @return void
-	*/
-	function setup_post_type_properties() {
-		global $post, $pagenow;
-
-		// Set the product type from Param or from post_meta
-		$product_type = it_cart_buddy_get_product_type( $post );
-
-		// If we're not on the add-new or edit product page, exit. Also, if we're not on the correct post type exit
-		if ( 'post.php' != $pagenow && 'post-new.php' != $pagenow && 'it_cart_buddy_prod' != get_post_type( $post ) )
-			return;
-
-		// If this is a new product, tag the product_type from the URL param
-		if ( 'post-new.php' == $pagenow )
-			update_post_meta( $post->ID, '_it_cart_buddy_product_type', $product_type );
-
-		// Add to product type to $post object
-		$post->it_cart_buddy_product_type = $product_type;
 	}
 
 	/**

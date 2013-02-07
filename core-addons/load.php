@@ -16,13 +16,20 @@ function it_cart_buddy_register_core_add_ons() {
 			'name'        => __( 'Manual Payments', 'LION' ),
 			'description' => __( 'Use this Transaction Method to take payments offline.', 'LION' ),
 			'file'        => dirname( __FILE__ ) . '/transaction-methods/manual-payments/init.php',
-			'options'     => array( 'category' => 'transaction-methods' ),
+			'options'     => array( 
+				'category' => 'transaction-methods',
+				'default_meta' => apply_filters( 'it_cart_buddy_register_manual_payments_default_filters', array() ),
+			),
 		),
 		// PayPal Standard Transaction Method
 		'paypal-standard'   => array(
 			'name'        => __( 'PayPal Standard', 'LION' ),
 			'description' => __( 'Process Transactions with the PayPal Standard gateway.', 'LION' ),
 			'file'        => dirname( __FILE__ ) . '/transaction-methods/paypal-standard/init.php',
+			'options'     => array( 
+				'category' => 'transaction-methods',
+				'default_meta' => apply_filters( 'it_cart_buddy_register_paypal_standard_default_filters', array() ),
+			),
 			'options'     => array( 'category' => 'transaction-methods' ),
 		),
 		// Stripe Transaction Method
@@ -30,7 +37,10 @@ function it_cart_buddy_register_core_add_ons() {
 			'name'        => __( 'Stripe', 'LION' ),
 			'description' => __( 'Process Transactions with the Stripe payment gateway.', 'LION' ),
 			'file'        => dirname( __FILE__ ) . '/transaction-methods/stripe/init.php',
-			'options'     => array( 'category' => 'transaction-methods' ),
+			'options'     => array( 
+				'category' => 'transaction-methods',
+				'default_meta' => apply_filters( 'it_cart_buddy_register_stripe_default_filters', array() ),
+			),
 		),
 		// Digital Download Product Types
 		'digital-downloads' => array(
@@ -42,6 +52,9 @@ function it_cart_buddy_register_core_add_ons() {
 				'labels'   => array(
 					'singular_name' => __( 'Digital Download', 'LION' ),
 				),
+				'default_meta' => apply_filters( 'it_cart_buddy_register_digital_downloads_default_filters', array(
+					'file_location' => '',
+				) ),
 			),
 		),
 		// Membership Levels
@@ -54,6 +67,7 @@ function it_cart_buddy_register_core_add_ons() {
 				'labels'   => array(
 					'singular_name' => __( 'Membership', 'LION' ),
 				),
+				'default_meta' => apply_filters( 'it_cart_buddy_register_digital_downloads_default_filters', array() ),
 			),
 		),
 		// Default Shopping Cart UI 
@@ -83,7 +97,7 @@ function it_cart_buddy_register_core_add_ons() {
 		it_cart_buddy_register_add_on( $slug, $name, $description, $file, $options );
 	}
 }
-add_action( 'plugins_loaded', 'it_cart_buddy_register_core_add_ons' );
+add_action( 'it_libraries_loaded', 'it_cart_buddy_register_core_add_ons' );
 
 /**
  * Register's Core Cart Buddy Add-on Categories
@@ -98,7 +112,11 @@ function it_cart_buddy_register_core_add_on_categories() {
 		'product-type' => array(
 			'name'        => __( 'Product Type', 'LION' ),
 			'description' => __( 'Add-ons responsible for the differing types of products available in Cart Buddy.', 'LION' ),
-			'options'     => array(),
+			'options'     => array(
+				'required_meta' => apply_filters( 'it_cart_buddy_register_product_type_required_meta', array(
+					array( 'has_cost', true, __( 'Does this type of product have a cost associated with it?', 'LION' ) ),
+				) ),
+			),
 		),
 		'transaction-methods' => array(
 			'name'        => __( 'Transaction Methods', 'LION' ),
@@ -137,4 +155,4 @@ function it_cart_buddy_register_core_add_on_categories() {
 		it_cart_buddy_register_add_on_category( $slug, $name, $description, $options );
 	}
 }
-add_action( 'plugins_loaded', 'it_cart_buddy_register_core_add_on_categories' );
+add_action( 'it_libraries_loaded', 'it_cart_buddy_register_core_add_on_categories' );

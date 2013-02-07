@@ -15,40 +15,45 @@
 /**
  * Grabs the product type of a product
  *
- * @todo Refactor this mess.
  * @since 0.3.1
  * @return string the product type
 */
 function it_cart_buddy_get_product_type( $post=false ) {
-	global $pagenow;
-	$product_type = $post_type  = false;
-	if ( $post && ! is_object( $post ) )
-		$post = get_post( $post );
+	if ( ! $post )
+		global $post;
 
-	if ( is_admin() ) {
-		if ( ! $post )
-			global $post;
-		$post_type = empty( $post->post_type ) ? false : $post->post_type;
-		$post_type = ( empty( $post_type ) && ! empty( $_GET['post_type'] ) ) ? $_GET['post_type'] : $post_type;
-		if ( 'post-new.php' == $pagenow && 'it_cart_buddy_prod' == $post_type ) {
-			// If we're in the admin on a new product page
-			$product_type = empty( $_GET['product_type'] ) ? false : $_GET['product_type'];
-		} else if ( is_admin() && 'post.php' == $pagenow && 'it_cart_buddy_prod' == $post_type ) {
-			// If we're in the admin on an existing product page
-			if ( 'it_cart_buddy_prod' == $post_type && ! empty( $post->ID ) )
-				$product_type = get_post_meta( $post->ID, '_it_cart_buddy_product_type', true );
-		}
-	} else {
-		if ( ! $post )
-			global $post;
+	// Return value from IT_Cart_Buddy_Product if we are able to locate it
+	$product = it_cart_buddy_get_product( $post );
+	if ( is_object( $product ) && ! empty ( $product->product_type ) )
+		return $product->product_type;
 
-		if ( 'it_cart_buddy_prod' == $post->post_type )
-			$product_type = get_post_meta( $post->ID, '_cart_buddy_product_type', 'true' );
-	}
+	// Return query arg if is present
+	if ( ! empty ( $_GET['product_type'] ) )
+		return $_GET['product_type'];
 
-	if ( empty( $product_type ) )
-		return false;
+	return false;
+}
 
-	return $product_type;
+/**
+ * Returns the options array for a registered product-type
+ *
+ * @since 0.3.2
+ * @param string $product_type  slug for the product-type
+*/
+function it_cart_buddy_get_product_type_options( $product_type ) {
+	if ( $addon = it_cart_buddy_get_add_on( $product_type ) )
+		return $addon['options'];
+	
+	return false;
+}
 
+/**
+ * Retreives a product object by passing it the WP post object or post id
+ *
+ * @since 0.3.2
+ * @param mixed $post  post object or post id
+ * @rturn object IT_Cart_Buddy_Product object for passed post
+*/
+function it_cart_buddy_get_product( $post ) {
+	return new IT_Cart_Buddy_Product( $post );
 }

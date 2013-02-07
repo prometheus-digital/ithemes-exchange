@@ -131,28 +131,27 @@ class IT_Cart_Buddy_Admin {
 	 * @since 0.2.0
 	*/
 	function enable_disable_registered_add_on() {
-		$enable_addon = empty( $_GET['it-cart-buddy-enable-addon'] ) ? false : $_GET['it-cart-buddy-enable-addon'];
+		$enable_addon  = empty( $_GET['it-cart-buddy-enable-addon'] ) ? false : $_GET['it-cart-buddy-enable-addon'];
 		$disable_addon = empty( $_GET['it-cart-buddy-disable-addon'] ) ? false : $_GET['it-cart-buddy-disable-addon'];
-		$registered = it_cart_buddy_get_add_ons();
+
+		if ( ! $enable_addon && ! $disable_addon )
+			return;
+
+		$registered    = it_cart_buddy_get_add_ons();
+
+		// Enable or Disable addon requested by user
+		if ( $enable_addon ) {
+			$enabled = it_cart_buddy_enable_add_on( $enable_addon );
+		} else if ( $disable_addon ) {
+			$enabled = it_cart_buddy_disable_add_on( $disable_addon );
+		}
 		
-		if ( ! $enable_addon && ! $disable_addon ) 
-			return false;
-
-		$enabled = get_option( 'it_cart_buddy_enabled_add_ons' );
-
-		if ( $enable_addon && in_array( $enable_addon, array_keys( $registered ) ) ) {
-			$enabled[$enable_addon] = $registered[$enable_addon];
-		} else if ( $disable_addon && ! empty( $enabled[$disable_addon] ) ) {
-			unset( $enabled[$disable_addon] );
-		}
-
-		// Lets disable any enabled add-ons that aren't registered any more while we're here.
-		foreach( $enabled as $slug => $params ) {
+		// Disable any enabled add-ons that aren't registered any more while we're here.
+		foreach( $enabled as $slug => $file ) {
 			if ( empty( $registered[$slug] ) )
-				unset( $enabled[$slug] );
+				it_cart_buddy_disable_add_on( $slug );
 		}
-
-		update_option( 'it_cart_buddy_enabled_add_ons', $enabled );
+			
 		wp_safe_redirect( admin_url( '/admin.php?page=it-cart-buddy-addons' ) );
 		die();
 	}

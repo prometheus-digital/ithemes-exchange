@@ -12,3 +12,6 @@ require( $this->_plugin_path . '/lib/framework/class.admin.php' );
 // Product Post Type
 require( $this->_plugin_path . '/lib/framework/class.products-post-type.php' );
 
+// Product Object
+require( $this->_plugin_path . '/lib/framework/class.product.php' );
+
