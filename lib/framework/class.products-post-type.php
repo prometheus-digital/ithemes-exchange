@@ -27,6 +27,9 @@ class IT_Cart_Buddy_Product_Post_Type {
 		add_action( 'admin_init', array( $this, 'get_add_new_item_label' ) );
 		add_action( 'admin_init', array( $this, 'get_edit_item_label' ) );
 		add_action( 'it_cart_buddy_save_product_unvalidated', array( $this, 'set_initial_post_product_type' ) );
+		add_filter( 'manage_edit-it_cart_buddy_prod_columns', array( $this, 'add_product_type_column_to_view_all_table' ) );
+		add_filter( 'manage_edit-it_cart_buddy_prod_sortable_columns', array( $this, 'make_product_type_column_sortable' ) );
+		add_filter( 'manage_it_cart_buddy_prod_posts_custom_column', array( $this, 'add_product_type_info_to_view_all_table_rows' ) );
 		add_action( 'it_cart_buddy_add_on_enabled', array( $this, 'maybe_enable_product_type_posts' ) );
 		add_action( 'it_cart_buddy_add_on_disabled', array( $this, 'maybe_disable_product_type_posts' ) );
 	}
@@ -349,6 +352,57 @@ class IT_Cart_Buddy_Product_Post_Type {
 		update_post_meta( $post->ID, '_it_cart_buddy_enabled_status', $post->post_status );
 		$args = array( 'ID' => $post->ID, 'post_status' => '_it_cart_buddy_disab' );
 		wp_update_post( $args );
+	}
+
+	/**
+	 * Adds the product type column to the View All products table
+	 *
+	 * @since 0.3.3
+	 * @param array $existing  exisiting columns array
+	 * @return array  modified columns array
+	*/
+	function add_product_type_column_to_view_all_table( $existing ) {
+		// Insert after title
+		foreach ( (array) $existing as $id => $label ) {
+			$columns[$id] = $label;
+			if ( 'title' == $id )
+				$columns['it_cart_buddy_product_type_column'] = __( 'Product Type', 'LION' );
+		}
+		// Insert at end if title wasn't found
+		if ( empty( $columns['it_cart_buddy_product_type_column'] ) )
+			$columns['it_cart_buddy_product_type_column'] = __( 'Product Type', 'LION' );
+
+		return $columns;
+	}
+
+	/**
+	 * Makes the product_type column added above sortable
+	 *
+	 * @since 0.3.3
+	 * @param array $sortables  existing sortable columns
+	 * @return array  modified sortable columnns
+	*/
+	function make_product_type_column_sortable( $sortables ) {
+		$sortables['it_cart_buddy_product_type_column'] = 'it_cart_buddy_product_type_column';
+		return $sortables;
+	}
+
+	/**
+	 * Adds the product_type of a product to each row of the column added above
+	 *
+	 * @since 0.3.3
+	 * @param string $column  column title
+	 * @param integer $post  post ID
+	 * @return void
+	*/
+	function add_product_type_info_to_view_all_table_rows( $column ) {
+		global $post;
+		if ( 'it_cart_buddy_product_type_column' != $column )
+			return;
+
+		$product = it_cart_buddy_get_product( $post );
+		if ( $product_type = it_cart_buddy_get_add_on( $product->product_type ) )
+			esc_attr_e( $product_type['name'] );
 	}
 }
 $IT_Cart_Buddy_Product_Post_Type = new IT_Cart_Buddy_Product_Post_Type();
