@@ -288,3 +288,59 @@ function it_cart_buddy_disable_add_on( $addon ) {
 	}
 	return false;
 }
+
+/**
+ * Does the given add-on support a specific feature?
+ *
+ * @since 0.3.3
+ * @param string $addon  addon slug
+ * @param string $feature  type of feature we are testing for support
+ * @return boolean
+*/
+function it_cart_buddy_add_on_supports( $addon, $feature ) {
+	$addons = it_cart_buddy_get_add_ons();
+
+	// Return false if add-on is not registered
+	if ( ! isset( $addons[$addon] ) )
+		return false;
+
+	// Return false if feature is not supported
+	if ( empty( $addons[$addon]['options']['supports'][$feature] ) )
+		return false;
+
+	return true;
+}
+
+/**
+ * Returns the requested feature supplied by the add-on
+ *
+ * Each add-on is required to handle request for the feature themselves.
+ * This function will pass the request to the add-on via a WordPress filter
+ * and  return the response provided by that filter.
+ *
+ * eg: A theme may call the following:
+ *
+ *   // Inside theme presenting the product
+ *   if ( it_cart_buddy_add_on_supports( 'digital-downloads-product', 'file_preview' ) ) {
+ *       echo it_cart_buddy_get_add_on_feature( 'digital-downloads-product', 'file_preview', $product );
+ *   }
+ *
+ *   // Inside add-on code:
+ *   function addon_callback( $product ) {
+ *       $preview = add_on_function_to_get_preview( $product );
+ *       return $preview;
+ *   }
+ *   add_filter( 'it_cart_buddy_get_addon_feature-digital-downloads-product-file_preview', 'addon_callback' );
+ *
+ * @since 0.3.3
+ * @param string $addon  addon slug
+ * @param string $feature  type of feature we are testing for support
+ * @return boolean
+*/
+function it_cart_buddy_get_add_on_feature( $addon, $feature, $args=array() ) {
+	$filter = 'it_cart_buddy_get_addon_feature-' . $addon . '-' . $feature;
+	$results = apply_filters( $filter, $args );
+	if ( $results === $args )
+		return 'false';
+	return $results;
+}
