@@ -15,3 +15,7 @@ require( $this->_plugin_path . '/lib/framework/class.products-post-type.php' );
 // Product Object
 require( $this->_plugin_path . '/lib/framework/class.product.php' );
 
+// Sessions
+if ( ! is_admin() )
+	require( $this->_plugin_path . '/lib/framework/class.session.php' );
+

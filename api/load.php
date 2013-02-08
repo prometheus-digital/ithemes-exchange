@@ -11,3 +11,6 @@ include( $this->_plugin_path . '/api/add-ons.php' );
 
 // API functions for Product Type Add-ons
 include( $this->_plugin_path . '/api/product-types.php' );
+
+// Sessions
+include( $this->_plugin_path . '/api/sessions.php' );
