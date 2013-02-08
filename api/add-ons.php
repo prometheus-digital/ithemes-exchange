@@ -260,7 +260,7 @@ function it_cart_buddy_enable_add_on( $addon ) {
 	if ( in_array( $addon, array_keys( $registered ) ) ) {
 		$enabled[$addon] = $registered[$addon]['file'];
 		if ( update_option( 'it_cart_buddy_enabled_add_ons', $enabled ) ) {
-			do_action( 'it_cart_buddy_enabled_plugin', $registered[$addon] );
+			do_action( 'it_cart_buddy_add_on_enabled', $registered[$addon] );
 			return $enabled;
 		}
 	}
@@ -282,7 +282,7 @@ function it_cart_buddy_disable_add_on( $addon ) {
 	if ( ! empty( $enabled[$addon] ) ) {
 		unset( $enabled[$addon] );
 		if ( update_option( 'it_cart_buddy_enabled_add_ons', $enabled ) ) {
-			do_action( 'it_cart_buddy_disabled_plugin', $registered[$addon] );
+			do_action( 'it_cart_buddy_add_on_disabled', $registered[$addon] );
 			return $enabled;
 		}
 	}

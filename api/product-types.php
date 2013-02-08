@@ -57,3 +57,35 @@ function it_cart_buddy_get_product_type_options( $product_type ) {
 function it_cart_buddy_get_product( $post ) {
 	return new IT_Cart_Buddy_Product( $post );
 }
+
+/**
+ * Get IT_Cart_Buddy_Products
+ *
+ * @since 0.3.3
+ * @return array  an array of IT_Cart_Buddy_Product objects
+*/
+function it_cart_buddy_get_products( $args=array() ) {
+	$defaults = array(
+		'post_type' => 'it_cart_buddy_prod',
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+
+	if ( ! empty( $args['product_type'] ) ) {
+		$meta_query = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
+		$meta_query[] = array( 
+			'key'   => '_it_cart_buddy_product_type',
+			'value' => $args['product_type'],
+		);
+		$args['meta_query'] = $meta_query;
+	}
+
+	if ( $products = get_posts( $args ) ) {
+		foreach( $products as $key => $product ) {
+			$products[$key] = it_cart_buddy_get_product( $product );
+		}
+		return $products;
+	}
+
+	return array();
+}

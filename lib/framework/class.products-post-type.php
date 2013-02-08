@@ -25,6 +25,8 @@ class IT_Cart_Buddy_Product_Post_Type {
 		add_action( 'save_post', array( $this, 'save_product' ) );
 		add_action( 'admin_init', array( $this, 'get_add_new_item_label' ) );
 		add_action( 'admin_init', array( $this, 'get_edit_item_label' ) );
+		add_action( 'it_cart_buddy_add_on_enabled', array( $this, 'maybe_enable_product_type_posts' ) );
+		add_action( 'it_cart_buddy_add_on_disabled', array( $this, 'maybe_disable_product_type_posts' ) );
 	}
 
 	function init() {
@@ -201,6 +203,116 @@ class IT_Cart_Buddy_Product_Post_Type {
 				do_action( 'it_cart_buddy_save_product-' . $slug, $post );
 			}   
 		}   
+	}
+
+	/**
+	 * Fires when add-ons are enabled and determines if associated products need to be enabled
+	 *
+	 * @since 0.3.3
+	 * @return void
+	*/
+	function maybe_enable_product_type_posts( $addon ) {
+		$addon_category = empty( $addon['options']['category'] ) ? false : $addon['options']['category'];
+		if ( 'product-type' != $addon_category )
+			return;
+
+		$this->enable_product_type_posts( $addon['slug'] );
+	}
+
+	/**
+	 * When a Product add-on is enabled, re-enable any diabled post products previously created by it.
+	 *
+	 * 1 - Find all product posts for this product type with a post_status of _it_cart_buddy_disabled
+	 * 2 - Foreach product, pass to enable_product_post() method
+	 *
+	 * @since 0.3.3
+	 * @return void
+	*/
+	function enable_product_type_posts( $product_type ) {
+
+		// Grab all products for this product-type
+		$args = array(
+			'post_status'  => '_it_cart_buddy_disabled',
+			'product_type' => $product_type,
+			'number_posts' => -1,
+		);
+		if ( $products = it_cart_buddy_get_products( $args ) ) {
+			foreach( $products as $product ) {
+				$this->enable_product_post( $product );
+			}
+		}
+	}
+
+	/**
+	 * Enable a single product type by changing post_status back to its original status
+	 *
+	 * 1 - Grab the post_status as it was prior to being disabled
+	 * 2 - Delete post_meta holding prior status
+	 * 3 - Change post status back to orginal
+	 *
+	 * @since 0.3.3
+	 * @return void
+	*/
+	function enable_product_post( $post ) {
+		if ( $previous_status = get_post_meta( $post->ID, '_it_cart_buddy_enabled_status', true ) ) {
+			delete_post_meta( $post->ID, '_it_cart_buddy_enabled_status' );
+			$args = array( 'ID' => $post->ID, 'post_status' => $previous_status );
+			wp_update_post( $args );
+		}
+	}
+
+	/**
+	 * Fires when add-ons are disabled and determines if associated products need to be disabled
+	 *
+	 * @since 0.3.3
+	 * @return void
+	*/
+	function maybe_disable_product_type_posts( $addon ) {
+		$addon_category = empty( $addon['options']['category'] ) ? false : $addon['options']['category'];
+		if ( 'product-type' != $addon_category )
+			return;
+
+		$this->disable_product_type_posts( $addon['slug'] );
+	}
+
+	/**
+	 * When a Product Add-on is disabled, prevent it from showing
+	 *
+	 * 1 - Find all product posts for this product type
+	 * 2 - Foreach product, pass to disable_product_post() method
+	 *
+	 * @since 0.3.3
+	 * @return void
+	*/
+	function disable_product_type_posts( $product_type ) {
+
+		// Grab all products for this product-type
+		$args = array(
+			'post_status'  => 'any',
+			'product_type' => $product_type,
+			'number_posts' => -1,
+		);
+		if ( $products = it_cart_buddy_get_products( $args ) ) {
+			foreach( $products as $product ) {
+				$this->disable_product_post( $product );
+			}
+		}
+	}
+
+	/**
+	 * Disable a single product type by changing post_status to _it_cart_buddy_disabled.
+	 *
+	 * Changing the post_status will prevent it from showing in WP queries
+	 * 1 - Save current post_status to post_meta: _it_Cart_buddy_enabled_status
+	 * 2 - Change post status to _it_cart_buddy_disabled
+	 *
+	 * @since 0.3.3
+	 * @return void
+	*/
+	function disable_product_post( $post ) {
+		update_post_meta( $post->ID, '_it_cart_buddy_enabled_status', $post->post_status );
+		$args = array( 'ID' => $post->ID, 'post_status' => '_it_cart_buddy_disabled' );
+		wp_update_post( $args );
 	}
 }
 $IT_Cart_Buddy_Product_Post_Type = new IT_Cart_Buddy_Product_Post_Type();
