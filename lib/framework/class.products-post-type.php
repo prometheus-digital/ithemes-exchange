@@ -22,9 +22,11 @@ class IT_Cart_Buddy_Product_Post_Type {
 	*/
 	function IT_Cart_Buddy_Product_Post_Type() {
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'register_disabled_post_status' ) );
 		add_action( 'save_post', array( $this, 'save_product' ) );
 		add_action( 'admin_init', array( $this, 'get_add_new_item_label' ) );
 		add_action( 'admin_init', array( $this, 'get_edit_item_label' ) );
+		add_action( 'it_cart_buddy_save_product_unvalidated', array( $this, 'set_initial_post_product_type' ) );
 		add_action( 'it_cart_buddy_add_on_enabled', array( $this, 'maybe_enable_product_type_posts' ) );
 		add_action( 'it_cart_buddy_add_on_disabled', array( $this, 'maybe_disable_product_type_posts' ) );
 	}
@@ -144,10 +146,12 @@ class IT_Cart_Buddy_Product_Post_Type {
 		if ( 1 == count( $product_add_ons ) ) {
 			$product = reset( $product_add_ons );
 		} else {
-			if ( ! empty( $product_type ) && ! empty( $product_add_ons[$product_type] ) )
+			if ( ! empty( $product_type ) && ! empty( $product_add_ons[$product_type] ) ) {
 				$product = $product_add_ons[$product_type];
-			else
+			} else {
+				$product['slug'] = '';
 				$product['options']['labels']['singular_name'] = 'Product';
+			}
 		}
 
 		$singular = empty( $product['options']['labels']['singular_name'] ) ? $product['name'] : $product['options']['labels']['singular_name'];
@@ -206,6 +210,38 @@ class IT_Cart_Buddy_Product_Post_Type {
 	}
 
 	/**
+	 * Sets the post product_type on post creation
+	 *
+	 * @since 0.3.3
+	 * @return void
+	*/
+	function set_initial_post_product_type( $post ) {
+		global $pagenow;
+		if ( $product = it_cart_buddy_get_product( $post ) ) {
+			if ( ! empty( $product->product_type ) && ! get_post_meta( $product->ID, '_it_cart_buddy_product_type', true ) )
+				update_post_meta( $product->ID, '_it_cart_buddy_product_type', $product->product_type );
+		}
+	}
+
+	/**
+	 * Register Hidden Disabled Product Post status
+	 *
+	 * @since 0.3.3
+	 * @return void
+	*/
+	function register_disabled_post_status() {
+		$args = array(
+			'label'                     => _x( '_it_cart_buddy_disab', 'Status General Name', 'LION' ),
+			'label_count'               => _n_noop( 'Disabled Product (%s)',  'Disabled Products (%s)', 'LION' ),
+			'public'                    => false,
+			'show_in_admin_all_list'    => false,
+			'show_in_admin_status_list' => false,
+			'exclude_from_search'       => true,
+		);
+		register_post_status( '_it_cart_buddy_disab', $args );
+	}
+
+	/**
 	 * Fires when add-ons are enabled and determines if associated products need to be enabled
 	 *
 	 * @since 0.3.3
@@ -222,7 +258,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 	/**
 	 * When a Product add-on is enabled, re-enable any diabled post products previously created by it.
 	 *
-	 * 1 - Find all product posts for this product type with a post_status of _it_cart_buddy_disabled
+	 * 1 - Find all product posts for this product type with a post_status of _it_cart_buddy_disab
 	 * 2 - Foreach product, pass to enable_product_post() method
 	 *
 	 * @since 0.3.3
@@ -232,7 +268,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 
 		// Grab all products for this product-type
 		$args = array(
-			'post_status'  => '_it_cart_buddy_disabled',
+			'post_status'  => '_it_cart_buddy_disab',
 			'product_type' => $product_type,
 			'number_posts' => -1,
 		);
@@ -300,18 +336,18 @@ class IT_Cart_Buddy_Product_Post_Type {
 	}
 
 	/**
-	 * Disable a single product type by changing post_status to _it_cart_buddy_disabled.
+	 * Disable a single product type by changing post_status to _it_cart_buddy_disab.
 	 *
 	 * Changing the post_status will prevent it from showing in WP queries
 	 * 1 - Save current post_status to post_meta: _it_Cart_buddy_enabled_status
-	 * 2 - Change post status to _it_cart_buddy_disabled
+	 * 2 - Change post status to _it_cart_buddy_disab
 	 *
 	 * @since 0.3.3
 	 * @return void
 	*/
 	function disable_product_post( $post ) {
 		update_post_meta( $post->ID, '_it_cart_buddy_enabled_status', $post->post_status );
-		$args = array( 'ID' => $post->ID, 'post_status' => '_it_cart_buddy_disabled' );
+		$args = array( 'ID' => $post->ID, 'post_status' => '_it_cart_buddy_disab' );
 		wp_update_post( $args );
 	}
 }
