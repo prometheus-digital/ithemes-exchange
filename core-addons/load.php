@@ -52,8 +52,8 @@ function it_cart_buddy_register_core_add_ons() {
 				'labels'   => array(
 					'singular_name' => __( 'Digital Download', 'LION' ),
 				),
-				'default_meta' => apply_filters( 'it_cart_buddy_register_digital_downloads_default_filters', array(
-					'file_location' => '',
+				'supports' => apply_filters( 'it_cart_buddy_register_digital_downloads_supports', array(
+					'downloads' => array(),
 				) ),
 			),
 		),
@@ -67,7 +67,7 @@ function it_cart_buddy_register_core_add_ons() {
 				'labels'   => array(
 					'singular_name' => __( 'Membership', 'LION' ),
 				),
-				'default_meta' => apply_filters( 'it_cart_buddy_register_digital_downloads_default_filters', array() ),
+				'supports' => apply_filters( 'it_cart_buddy_register_digital_downloads_supports', array() ),
 			),
 		),
 		// Default Shopping Cart UI 
@@ -113,8 +113,10 @@ function it_cart_buddy_register_core_add_on_categories() {
 			'name'        => __( 'Product Type', 'LION' ),
 			'description' => __( 'Add-ons responsible for the differing types of products available in Cart Buddy.', 'LION' ),
 			'options'     => array(
-				'required_meta' => apply_filters( 'it_cart_buddy_register_product_type_required_meta', array(
-					array( 'has_cost', true, __( 'Does this type of product have a cost associated with it?', 'LION' ) ),
+				'supports' => apply_filters( 'it_cart_buddy_register_product_type_supports', array(
+					array( 'title', true, __( 'Should the new/edit screen show the Title field?', 'LION' ) ),
+					array( 'editor', true, __( 'Should the new / edit screen show the Content textarea?', 'LION' ) ),
+					array( 'thumbnail', true, __( 'Should the new / edit screen show the Featured Image UI?', 'LION' ) ),
 				) ),
 			),
 		),

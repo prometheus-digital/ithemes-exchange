@@ -57,10 +57,10 @@ function it_cart_buddy_register_add_on( $slug, $name, $description, $file, $opti
 /**
  * Register an Add-on category with CartBuddy
  *
- * When registering an add-on category, you can set required/default meta_keys that any add-on
+ * When registering an add-on category, you can set required/default support features that any add-on
  * in this category will be required to have. If add-ons register in this category without a key
  * they will be provided with a the value registered to the add-on category by default.
- * - eg: $options['required_meta'] = array( 'required_meta_key' => 'default_meta_value' );
+ * - eg: $options['supports'] = array( 'feature' => 'default_value' );
  *
  * @param string $slug         var for identifying the add-on in code
  * @param string $name         name of add-on used in UI
@@ -71,7 +71,7 @@ function it_cart_buddy_register_add_on_category( $slug, $name, $description, $op
 	// Basic Validation
 	$slug                     = empty( $slug ) ? false : sanitize_key( $slug );
 	$name                     = empty( $name ) ? false : sanitize_text_field( $name );
-	$options['required_meta'] = empty( $options['required_meta'] ) ? array() : $options['required_meta'];
+	$options['supports']      = empty( $options['supports'] ) ? array() : $options['supports'];
 
 	if ( ! $slug  )
 		return new WP_Error( 'it_cart_buddy_add_registration_error', __( 'All Cart Buddy Add-ons require a slug paramater.', 'LION' ) );
@@ -87,9 +87,9 @@ function it_cart_buddy_register_add_on_category( $slug, $name, $description, $op
 		'options'     => $options,
 	);
 
-	// If add-ons have previously been registered with this category, merge their registered options with the required_meta 
-	if ( ! empty( $options['required_meta'] ) && count( it_cart_buddy_get_add_ons( array( 'category' => $slug ) ) ) )
-		it_cart_buddy_merge_default_add_on_options( $slug );
+	// If add-ons have previously been registered with this category, merge their registered options with the supports 
+	if ( ! empty( $options['supports'] ) && count( it_cart_buddy_get_add_ons( array( 'category' => $slug ) ) ) )
+		it_cart_buddy_merge_default_add_on_supports( $slug );
 }
 
 /**
@@ -210,7 +210,7 @@ function it_cart_buddy_filter_add_ons_by_category( $addons, $categories ) {
  * @since 0.3.2
  * @return void
 */
-function it_cart_buddy_merge_default_add_on_options( $add_on_category_slug, $add_on_slug=false ) {
+function it_cart_buddy_merge_default_add_on_supports( $add_on_category_slug, $add_on_slug=false ) {
 	$add_on_categories = it_cart_buddy_get_add_on_categories();
 	$add_on            = empty( $add_on_slug ) ? false : it_cart_buddy_get_add_on( $add_on_slug );
 	$add_on_category   = empty( $add_on_categories[$add_on_category_slug] ) ? false : $add_on_categories[$add_on_category_slug];
@@ -218,14 +218,15 @@ function it_cart_buddy_merge_default_add_on_options( $add_on_category_slug, $add
 	// If we weren't passed a category that's been registered yet, return;
 	if ( ! $add_on_category )
 		return;
+
 	// If the category is does not have any required / default options, return;
-	if ( empty( $add_on_category['options']['required_meta'] ) )
+	if ( empty( $add_on_category['options']['supports'] ) )
 		return;
 
 	// Set default required options
-	$required = array();
-	foreach( $add_on_category['options']['required_meta'] as $row => $params ) {
-		$required[$params[0]] = $params[1];
+	$default_supports = array();
+	foreach( $add_on_category['options']['supports'] as $row => $params ) {
+		$default_supports[$params[0]] = $params[1];
 	}
 
 	// Set array of add-ons to perform merges on
@@ -239,8 +240,8 @@ function it_cart_buddy_merge_default_add_on_options( $add_on_category_slug, $add
 
 	// Foreach addon, merge their registered options, with the required/default options for the passed category
 	foreach( $addons as $slug => $params ) {
-		$options = empty( $params['options']['default_meta'] ) ? array() : $params['options']['default_meta'];
-		$GLOBALS['it_cart_buddy']['add_ons']['registered'][$slug]['options']['default_meta'] = ITUtility::merge_defaults( $options, $required );
+		$supports = empty( $params['options']['supports'] ) ? array() : $params['options']['supports'];
+		$GLOBALS['it_cart_buddy']['add_ons']['registered'][$slug]['options']['supports'] = ITUtility::merge_defaults( $supports, $default_supports );
 	}
 
 }
@@ -293,8 +294,8 @@ function it_cart_buddy_disable_add_on( $addon ) {
  * Does the given add-on support a specific feature?
  *
  * @since 0.3.3
- * @param string $addon  addon slug
- * @param string $feature  type of feature we are testing for support
+ * @param string $addon   addon slug
+ * @param string $feature type of feature we are testing for support
  * @return boolean
 */
 function it_cart_buddy_add_on_supports( $addon, $feature ) {
@@ -312,35 +313,41 @@ function it_cart_buddy_add_on_supports( $addon, $feature ) {
 }
 
 /**
- * Returns the requested feature supplied by the add-on
- *
- * Each add-on is required to handle request for the feature themselves.
- * This function will pass the request to the add-on via a WordPress filter
- * and  return the response provided by that filter.
- *
- * eg: A theme may call the following:
- *
- *   // Inside theme presenting the product
- *   if ( it_cart_buddy_add_on_supports( 'digital-downloads-product', 'file_preview' ) ) {
- *       echo it_cart_buddy_get_add_on_feature( 'digital-downloads-product', 'file_preview', $product );
- *   }
- *
- *   // Inside add-on code:
- *   function addon_callback( $product ) {
- *       $preview = add_on_function_to_get_preview( $product );
- *       return $preview;
- *   }
- *   add_filter( 'it_cart_buddy_get_addon_feature-digital-downloads-product-file_preview', 'addon_callback' );
+ * Add's add-on support for a specific feature
  *
  * @since 0.3.3
- * @param string $addon  addon slug
- * @param string $feature  type of feature we are testing for support
- * @return boolean
+ * @param string $addon   the slug for the add-on being targeted
+ * @param string $feature the feature slug that needs to be enabled
+ * @return void
 */
-function it_cart_buddy_get_add_on_feature( $addon, $feature, $args=array() ) {
-	$filter = 'it_cart_buddy_get_addon_feature-' . $addon . '-' . $feature;
-	$results = apply_filters( $filter, $args );
-	if ( $results === $args )
-		return 'false';
-	return $results;
+function it_cart_buddy_add_add_on_support( $addon, $feature ) {
+	$addons = it_cart_buddy_get_add_ons();
+
+	// Return false if add-on is not registered
+	if ( ! isset( $addons[$addon] ) )
+		return false;
+
+	// Set add-on support to true for this add-on / feature combo
+	if ( empty( $addons[$addon]['options'] ) )
+		$GLOBALS['it_cart_buddy']['add_ons']['registered'][$addon]['options']['supports'][$feature] = true;
+}
+
+/**
+ * Remove's add-on support for a specific feature
+ *
+ * @since 0.3.3
+ * @param string $addon   the slug for the add-on being targeted
+ * @param string $feature the feature slug that needs to be enabled
+ * @return void
+*/
+function it_cart_buddy_remove_add_on_support( $addon, $feature ) {
+	$addons = it_cart_buddy_get_add_ons();
+
+	// Return false if add-on is not registered
+	if ( ! isset( $addons[$addon] ) )
+		return false;
+
+	// Set add-on support to false for this add-on / feature combo
+	if ( empty( $addons[$addon]['options'] ) )
+		$GLOBALS['it_cart_buddy']['add_ons']['registered'][$addon]['options']['supports'][$feature] = false;
 }

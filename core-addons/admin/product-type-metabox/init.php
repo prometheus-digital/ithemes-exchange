@@ -75,6 +75,10 @@ class IT_Cart_Buddy_Core_Addon_Product_Type_Meta_Box {
 		if ( empty( $post->ID ) )
 			return;
 
+		$product = it_cart_buddy_get_product( $post );
+		if ( ! $product->ID )
+			return;
+
 		// If there is an updated product type in the POST array, use that. Otherwise, use the url param if not empty.
 		$product_type = empty ( $_POST['_it_cart_buddy_product_type'] ) && ! empty( $_GET['product_type'] ) ? $_GET['product_type'] : $_POST['_it_cart_buddy_product_type'];
 

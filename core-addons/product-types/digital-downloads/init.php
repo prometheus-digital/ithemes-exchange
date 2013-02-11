@@ -5,3 +5,8 @@
  * @package IT_Cart_Buddy
  * @since 0.2.0
 */
+
+if ( is_admin() ) {
+	require( 'add-edit-product.php' );
+}
+

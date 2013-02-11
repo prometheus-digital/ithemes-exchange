@@ -79,12 +79,16 @@ class IT_Cart_Buddy_Product_Post_Type {
 	function meta_box_callback( $post ) {
 		$product = it_cart_buddy_get_product( $post );
 
+		// Add action for current product type
 		if ( $product_types = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) ) ) {
 			foreach( $product_types as $addon_slug => $params ) {
-				do_action( 'it_cart_buddy_product_metabox_callback_' . $addon_slug, $product );
-				do_action( 'it_cart_buddy_product_metabox_callback', $product );
+				if ( $addon_slug == $product->product_type )
+					do_action( 'it_cart_buddy_product_metabox_callback_' . $addon_slug, $product );
 			}
 		}
+
+		// Do action for any product type
+		do_action( 'it_cart_buddy_product_metabox_callback', $product );
 	}
 
 	/**

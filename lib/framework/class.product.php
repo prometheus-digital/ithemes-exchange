@@ -90,6 +90,12 @@ class IT_Cart_Buddy_Product {
 		else
 			add_action( 'init', array( $this, 'set_product_data' ) );
 
+
+		// Set supports for new and edit screens
+		if ( did_action( 'admin_init' ) )
+			$this->set_add_edit_screen_supports();
+		else
+			add_action( 'admin_init', array( $this, 'set_add_edit_screen_supports' ) );
 	}
 
 	/**
@@ -118,12 +124,38 @@ class IT_Cart_Buddy_Product {
 	function set_product_data() {
 		// Get product-type options
 		if ( $product_type_options = it_cart_buddy_get_product_type_options( $this->product_type ) ) {
-			if ( ! empty( $product_type_options['default_meta'] ) ) {
-				foreach( $product_type_options['default_meta'] as $key => $default ) {
+			if ( ! empty( $product_type_options['supports'] ) ) {
+				foreach( $product_type_options['supports'] as $key => $default ) {
 					$stored = get_post_meta( $this->ID, $key, true );
 					$this->product_data[$key] = $stored ? $stored : $default;
 				}
 			}
 		}
+		//echo "<pre>";print_r($this);die();
 	}
+
+    /** 
+     * Sets the supports array for the post_type.
+     *
+     * @since 0.3.3
+    */
+    function set_add_edit_screen_supports() {
+		global $pagenow;
+        $supports = array(
+            'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields',
+            'comments', 'revisions', 'post-formats',
+        );  
+
+        // If is_admin and is post-new.php or post.php, only register supports for current product-type
+        if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow )
+			return; // Don't remove any if not on post-new / or post.php
+
+		if ( $addon = it_cart_buddy_get_add_on( $this->product_type ) ) { 
+			// Remove any supports args that the product add-on does not want.
+			foreach( $supports as $option ) { 
+                if ( empty( $addon['options']['supports'][$option] ) )
+					remove_post_type_support( 'it_cart_buddy_prod', $option );
+            }   
+        }   
+    }  
 }

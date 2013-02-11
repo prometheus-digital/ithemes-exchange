@@ -97,7 +97,6 @@ class IT_Cart_Buddy_Session {
 	function regenerate_session_id() {
 		session_regenerate_id();
 		$_SESSION['it_cart_buddy']['_session'] = $this->_token;
-		echo "regenerated";
 	}
 
 	/**
