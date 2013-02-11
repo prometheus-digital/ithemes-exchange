@@ -53,6 +53,7 @@ class IT_Cart_Buddy_Admin {
 		add_submenu_page( 'it-cart-buddy', 'Cart Buddy Setup', 'Setup', $this->admin_menu_capability, 'it-cart-buddy-setup', array( $this, 'print_cart_buddy_setup_page' ) );
 		remove_submenu_page( 'it-cart-buddy', 'it-cart-buddy' );
 		$this->add_product_submenus();
+		add_submenu_page( 'it-cart-buddy', 'Cart Buddy Transactions', 'Transactions', $this->admin_menu_capability, 'edit.php?post_type=it_cart_buddy_tran' );
 		add_submenu_page( 'it-cart-buddy', 'Cart Buddy Add-ons', 'Add-ons', $this->admin_menu_capability, 'it-cart-buddy-addons', array( $this, 'print_cart_buddy_add_ons_page' ) );
 	}
 
@@ -217,7 +218,7 @@ class IT_Cart_Buddy_Admin {
 		if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow )
 			return $parent_file;
 
-		if ( empty( $post->post_type ) || 'it_cart_buddy_prod' != $post->post_type )
+		if ( empty( $post->post_type ) || ( 'it_cart_buddy_prod' != $post->post_type && 'it_cart_buddy_tran' != $post->post_type ) )
 			return $parent_file;
 
 		// Set Add New as bold when on the post-new.php screen

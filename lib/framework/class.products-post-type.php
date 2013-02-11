@@ -24,8 +24,8 @@ class IT_Cart_Buddy_Product_Post_Type {
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
 		add_action( 'init', array( $this, 'register_disabled_post_status' ) );
 		add_action( 'save_post', array( $this, 'save_product' ) );
-		add_action( 'admin_init', array( $this, 'get_add_new_item_label' ) );
-		add_action( 'admin_init', array( $this, 'get_edit_item_label' ) );
+		add_action( 'admin_init', array( $this, 'set_add_new_item_label' ) );
+		add_action( 'admin_init', array( $this, 'set_edit_item_label' ) );
 		add_action( 'it_cart_buddy_save_product_unvalidated', array( $this, 'set_initial_post_product_type' ) );
 		add_filter( 'manage_edit-it_cart_buddy_prod_columns', array( $this, 'add_product_type_column_to_view_all_table' ) );
 		add_filter( 'manage_edit-it_cart_buddy_prod_sortable_columns', array( $this, 'make_product_type_column_sortable' ) );
@@ -97,7 +97,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 	 * @since 0.3.0
 	 * @return string $label Label for add new product page.
 	*/
-	function get_add_new_item_label() {
+	function set_add_new_item_label() {
 		global $pagenow, $wp_post_types;
 		if ( $pagenow != 'post-new.php' || empty( $_GET['post_type'] ) || 'it_cart_buddy_prod' != $_GET['post_type'] )
 			return apply_filters( 'it_cart_buddy_add_new_product_label', __( 'Add New Product', 'LION' ) );
@@ -133,7 +133,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 	 * @since 0.3.1
 	 * @return string $label Label for edit product page.
 	*/
-	function get_edit_item_label() {
+	function set_edit_item_label() {
 		global $pagenow, $wp_post_types;
 		$post = empty( $_GET['post'] ) ? false : get_post( $_GET['post'] );
 

@@ -123,7 +123,11 @@ function it_cart_buddy_register_core_add_on_categories() {
 		'transaction-methods' => array(
 			'name'        => __( 'Transaction Methods', 'LION' ),
 			'description' => __( 'Add-ons that create transactions. eg: Stripe, PayPal.', 'LION' ),
-			'options'     => array(),
+			'options'     => array(
+				'supports' => apply_filters( 'it_cart_buddy_register_transaction_method_supports', array(
+					array( '', false, '' ),
+				) ),
+			),
 		),
 		'shopping-carts' => array(
 			'name'        => __( 'Shopping Cart UIs', 'LION' ),

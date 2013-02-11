@@ -15,6 +15,12 @@ require( $this->_plugin_path . '/lib/framework/class.products-post-type.php' );
 // Product Object
 require( $this->_plugin_path . '/lib/framework/class.product.php' );
 
+// Transaction Post Type
+require( $this->_plugin_path . '/lib/framework/class.transactions-post-type.php' );
+
+// Transaction Object
+require( $this->_plugin_path . '/lib/framework/class.transaction.php' );
+
 // Sessions
 if ( ! is_admin() )
 	require( $this->_plugin_path . '/lib/framework/class.session.php' );
