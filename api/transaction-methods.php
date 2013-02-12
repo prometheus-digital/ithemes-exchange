@@ -18,12 +18,17 @@
  * @since 0.3.3
  * @return string the transaction method
 */
-function it_cart_buddy_get_transaction_method( $post=false ) {
-	if ( ! $post )
+function it_cart_buddy_get_transaction_method( $transaction=false ) {
+	if ( is_object( $transaction ) && 'IT_Cart_Buddy_Transaction' == get_class( $transaction ) )
+		return $transaction->transaction_method;
+
+	if ( ! $transaction ) {
 		global $post;
+		$transaction = $post;
+	}
 
 	// Return value from IT_Cart_Buddy_Transaction if we are able to locate it
-	$transaction = it_cart_buddy_get_transaction( $post );
+	$transaction = it_cart_buddy_get_transaction( $transaction );
 	if ( is_object( $transaction ) && ! empty ( $transaction->transaction_method ) )
 		return $transaction->transaction_method;
 
@@ -70,14 +75,24 @@ function it_cart_buddy_get_transactions( $args=array() ) {
 	);
 
 	$args = wp_parse_args( $args, $defaults );
+	$meta_query = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
 
+	// Fold in transaction_method
 	if ( ! empty( $args['transaction_method'] ) ) {
-		$meta_query = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
-		$meta_query[] = array( 
+		$args['meta_query'][] = array( 
 			'key'   => '_it_cart_buddy_transaction_method',
 			'value' => $args['transaction_method'],
 		);
-		$args['meta_query'] = $meta_query;
+		unset( $args['transaction_method'] );
+	}
+
+	// Fold in transaction_status
+	if ( ! empty( $args['transaction_status'] ) ) {
+		$args['meta_query'][] = array( 
+			'key'   => 'transaction_status',
+			'value' => $args['transaction_status'],
+		);
+		unset( $args['transaction_status'] );
 	}
 
 	if ( $transactions = get_posts( $args ) ) {
@@ -99,7 +114,8 @@ function it_cart_buddy_get_transactions( $args=array() ) {
 */
 function it_cart_buddy_add_transaction( $args=array() ) {
 	$defaults = array(
-		'post_type'   => 'it_cart_buddy_tran',
+		'post_type'          => 'it_cart_buddy_tran',
+		'transaction-status' => 'pending',
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -115,7 +131,79 @@ function it_cart_buddy_add_transaction( $args=array() ) {
 
 	if ( $transaction_id = wp_insert_post( $args ) ) {
 		update_post_meta( $transaction_id, '_it_cart_buddy_transaction_method', $args['transaction-method'] );
+		update_post_meta( $transaction_id, 'transaction_status', $args['transaction-status'] );
 		do_action( 'it_cart_buddy_add_transaction', $transaction_id );
 		do_action( 'it_cart_buddy_add_transaction-' . $args['transaction-method'], $transaction_id );
 	}
+}
+
+/**
+ * Updates a transaction
+ *
+ * @since 0.3.3
+ * @param array transaction args. Must include ID of a valid transaction post
+ * @return object transaction object
+*/
+function it_cart_buddy_update_transaction( $args ) {
+	$id = empty( $args['id'] ) ? false : $args['id'];
+	$id = ( empty( $id ) && ! empty( $args['ID'] ) ) ? $args['ID']: $id;
+
+	if ( 'it_cart_buddy_tran' != get_post_type( $id ) )
+		return false;
+
+	$args['ID'] = $id;
+
+	$result = wp_update_post( $args );
+	$transaction_method = it_cart_buddy_get_transaction_method( $id );
+
+	do_action( 'it_cart_buddy_update_transaction', $args );
+	do_action( 'it_cart_buddy_update_transaction-' . $transaction_method, $args );
+
+	if ( ! empty( $args['transaction_status'] ) )
+		it_cart_buddy_update_transaction_status( $id, $args['transaction_status'] );
+
+	return $result;
+}
+
+/**
+ * Updates the transaction status of a transaction
+ *
+ * @since 0.3.3
+ * @param mixed $transaction the transaction id or object
+ * @param string $status the new transaction status
+*/
+function it_cart_buddy_update_transaction_status( $transaction, $status ) {
+
+	if ( 'IT_Cart_Buddy_Transaction' != get_class( $transaction ) ) {
+		$transaction = it_cart_buddy_get_transaction( $transaction );
+	}
+
+	if ( ! $transaction->ID )
+		return false;
+
+	$old_status = $transaction->transaction_data['transaction_status'];
+	update_post_meta( $transaction->ID, 'transaction_status', $status );
+	$transaction = it_cart_buddy_get_transaction( $transaction->ID );
+
+	do_action( 'it_cart_buddy_update_transaction_status', $transaction, $old_status );
+	do_action( 'it_cart_buddy_update_transaction_status-' . $transaction->transaction_method, $transaction, $old_status );
+	return $transaction->transaction_data['transaction_status'];
+}
+
+/**
+ * Returns the transaction status for a specific transaction
+ *
+ * @since 0.3.3
+ * @param mixed $transaction the transaction id or object
+ * @return string the transaction status
+*/
+function it_cart_buddy_get_transaction_status( $transaction ) {
+	if ( is_object( $transaction) && 'IT_Cart_Buddy_Transaction' == get_class( $transaction ) )
+		return $transaction->transaction_data['transaction_status'];
+
+	if ( 'it_cart_buddy_tran' != get_post_type( $transaction ) )
+		return;
+
+	$transaction = it_cart_buddy_get_transaction( $transaction );
+	return empty( $transaction->transaction_data['transaction_status'] ) ? false : $transaction->transaction_data['transaction_status'];
 }

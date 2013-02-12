@@ -84,6 +84,13 @@ function it_cart_buddy_register_core_add_ons() {
 			'file'        => dirname( __FILE__ ) . '/admin/product-type-metabox/init.php',
 			'options'     => array( 'category' => 'admin' ),
 		),
+		// Transaction Status admin Metabox
+		'transaction-status-metabox' => array(
+			'name'        => __( 'Transaction Status Metabox', 'LION' ),
+			'description' => __( 'Gives admins the ability to change a Transaction Status via a metabox after creation of the Transaction', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/admin/transaction-status-metabox/init.php',
+			'options'     => array( 'category' => 'admin' ),
+		),
 	);
 	$add_ons = apply_filters( 'it_cart_buddy_core_add_ons', $add_ons );
 
@@ -114,9 +121,9 @@ function it_cart_buddy_register_core_add_on_categories() {
 			'description' => __( 'Add-ons responsible for the differing types of products available in Cart Buddy.', 'LION' ),
 			'options'     => array(
 				'supports' => apply_filters( 'it_cart_buddy_register_product_type_supports', array(
-					array( 'title', true, __( 'Should the new/edit screen show the Title field?', 'LION' ) ),
-					array( 'editor', true, __( 'Should the new / edit screen show the Content textarea?', 'LION' ) ),
-					array( 'thumbnail', true, __( 'Should the new / edit screen show the Featured Image UI?', 'LION' ) ),
+					array( 'title', true ),
+					array( 'editor', true ),
+					array( 'thumbnail', true ),
 				) ),
 			),
 		),
@@ -125,7 +132,15 @@ function it_cart_buddy_register_core_add_on_categories() {
 			'description' => __( 'Add-ons that create transactions. eg: Stripe, PayPal.', 'LION' ),
 			'options'     => array(
 				'supports' => apply_filters( 'it_cart_buddy_register_transaction_method_supports', array(
-					array( '', false, '' ),
+					array( 'title', true ),
+					array( 'transaction_status', 'pending' ),
+					array( 'transaction_statuses', array(
+						'pending'    => _x( 'Pending', 'Transaction Status', 'LION' ),
+						'authorized' => _x( 'Authorized', 'Transaction Status', 'LION' ),
+						'paid'		 => _x( 'Paid', 'Transaction Status', 'LION' ),
+						'refunded'   => _x( 'Refunded', 'Transaction Status', 'LION' ),
+						'voided'     => _x( 'Voided', 'Transaction Status', 'LION' ),
+					) ),
 				) ),
 			),
 		),

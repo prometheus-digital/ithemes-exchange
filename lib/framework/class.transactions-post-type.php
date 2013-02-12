@@ -181,14 +181,14 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 			if ( 'title' == $id )
 				$columns['it_cart_buddy_transaction_method_column'] = __( 'Transaction Method', 'LION' );
 			if ( 'format' == $id )
-				$columns['it_cart_buddy_transaction_status_column'] = __( 'Status', 'LION' );
+				$columns['it_cart_buddy_transaction_status_column'] = __( 'Transaction Status', 'LION' );
 		}
 		// Insert at end if title wasn't found
 		if ( empty( $columns['it_cart_buddy_transaction_method_column'] ) )
 			$columns['it_cart_buddy_transaction_method_column'] = __( 'Transaction Method', 'LION' );
 		// Insert at end if status wasn't found
 		if ( empty( $columns['it_cart_buddy_transaction_status_column'] ) )
-			$columns['it_cart_buddy_transaction_status_column'] = __( 'Status', 'LION' );
+			$columns['it_cart_buddy_transaction_status_column'] = __( 'Transaction Status', 'LION' );
 
 		// Remove Format
 		if ( isset( $columns['format'] ) )
@@ -235,7 +235,10 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 					esc_attr_e( $transaction_method['name'] );
 				break;
 			case 'it_cart_buddy_transaction_status_column' :
-					esc_attr_e( $wp_post_statuses[get_post_status( $post )]->label );
+					$status = it_cart_buddy_get_transaction_status( $post );
+					$method = it_cart_buddy_get_transaction_method( $post );
+					$statuses = it_cart_buddy_get_add_on_support( $method, 'transaction_statuses' );
+					esc_attr_e( $statuses[$status] );
 				break;
 		}
 	}

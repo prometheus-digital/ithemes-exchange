@@ -51,7 +51,7 @@ function it_cart_buddy_register_add_on( $slug, $name, $description, $file, $opti
 
 	// If category is already registered, merge registered with any required / default options for this category.
 	if ( ! empty( $GLOBALS['it_cart_buddy']['add_on_categories'][$options['category']] ) )
-		it_cart_buddy_merge_default_add_on_options( $options['category'], $slug );
+		it_cart_buddy_merge_default_add_on_supports( $options['category'], $slug );
 }
 
 /**
@@ -350,4 +350,22 @@ function it_cart_buddy_remove_add_on_support( $addon, $feature ) {
 	// Set add-on support to false for this add-on / feature combo
 	if ( empty( $addons[$addon]['options'] ) )
 		$GLOBALS['it_cart_buddy']['add_ons']['registered'][$addon]['options']['supports'][$feature] = false;
+}
+
+/**
+ * Return the default values for an add-on support key
+ *
+ * @since 0.3.3
+ * @param string $addon the slug for the add-on being targeted
+ * @param string $feature the feature the slug is targeting
+ * @return mixed the value of the key
+*/
+function it_cart_buddy_get_add_on_support( $addon, $feature ) {
+	$addons = it_cart_buddy_get_add_ons();
+
+	// Return false if add-on is not registered
+	if ( empty( $addons[$addon]['options']['supports'][$feature] ) )
+		return false;
+
+	return $addons[$addon]['options']['supports'][$feature];
 }
