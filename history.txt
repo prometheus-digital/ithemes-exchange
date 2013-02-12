@@ -1,3 +1,8 @@
+0.3.3 - 2012-01-12 - Glenn Ansley
+	Hooks for Product, Transaction create, update
+	Add-on Supports API
+	Transaction API
+	Add-on: Transaction Status Metabox
 0.3.2 - 2013-01-07 - Glenn Ansley
 	Introduced WP_Cart_Buddy_Product class
 	Refactored enable / disable add-ons functionality

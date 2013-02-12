@@ -89,3 +89,32 @@ function it_cart_buddy_get_products( $args=array() ) {
 
 	return array();
 }
+
+/**
+ * Does the passed product have the referenced feature?
+ *
+ * @since 0.3.3
+ * @param mixed $product id or object referncing the object
+ * @param string $feature feature being asked for
+ * @return boolean
+*/
+function it_cart_buddy_product_has_feature( $product, $feature ) {
+	if ( ! is_object( $product ) || 'IT_Cart_Buddy_Product' != get_class( $product ) )
+		$product = it_cart_buddy_get_product( $product );
+
+	// Return false if this isn't a product ID
+	if ( ! $product->ID )
+		return false;
+
+	// Return false if this product doesn't support this feature. Set feature_key if supported.
+	if ( empty( $product->product_supports[$feature]['key'] ) )
+		return false;
+	else
+		$feature_key = $product->product_supports[$feature]['key'];
+
+	// Return true if this product has a value for this feature
+	if ( ! empty ( $product->product_data[$feature_key] ) )
+		return true;
+
+	return false;
+}

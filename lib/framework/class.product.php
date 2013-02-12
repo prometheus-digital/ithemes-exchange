@@ -44,6 +44,11 @@ class IT_Cart_Buddy_Product {
 	*/
 	var $product_type;
 
+	/**
+	 * @param array $product_supports features that this product supports along with defaults
+	 * @since 0.3.3
+	*/
+	var $product_supports;
 
 	/**
 	 * @param array $product_data  any custom data registered by the product-type for this product
@@ -86,9 +91,9 @@ class IT_Cart_Buddy_Product {
 
 		// Set the product data
 		if ( did_action( 'init' ) )
-			$this->set_product_data();
+			$this->set_product_supports_and_data();
 		else
-			add_action( 'init', array( $this, 'set_product_data' ) );
+			add_action( 'init', array( $this, 'set_product_supports_and_data' ) );
 
 
 		// Set supports for new and edit screens
@@ -121,17 +126,27 @@ class IT_Cart_Buddy_Product {
 	 * @ since 0.3.2
 	 * @return void
 	*/
-	function set_product_data() {
+	function set_product_supports_and_data() {
 		// Get product-type options
 		if ( $product_type_options = it_cart_buddy_get_product_type_options( $this->product_type ) ) {
 			if ( ! empty( $product_type_options['supports'] ) ) {
-				foreach( $product_type_options['supports'] as $key => $default ) {
-					$stored = get_post_meta( $this->ID, $key, true );
-					$this->product_data[$key] = $stored ? $stored : $default;
+				foreach( $product_type_options['supports'] as $feature => $params ) {
+
+					// Set the product_supports array
+					$this->product_supports[$feature] = $params;
+
+					// product_data only contains post_meta data
+					if ( 'post_meta' != $params['componant'] )
+						continue;
+
+					// Set product_data to post_meta value or feature devault
+					if ( $value = get_post_meta( $this->ID, $params['key'], true ) )
+						$this->product_data[$params['key']] = $value;
+					else
+						$this->product_data[$params['key']] = $this->product_supports[$feature]['default'];
 				}
 			}
 		}
-		//echo "<pre>";print_r($this);die();
 	}
 
     /** 

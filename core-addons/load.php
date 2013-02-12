@@ -18,7 +18,19 @@ function it_cart_buddy_register_core_add_ons() {
 			'file'        => dirname( __FILE__ ) . '/transaction-methods/manual-payments/init.php',
 			'options'     => array( 
 				'category' => 'transaction-methods',
-				'default_meta' => apply_filters( 'it_cart_buddy_register_manual_payments_default_filters', array() ),
+				'supports' => apply_filters( 'it_cart_buddy_register_manual_payments_default_features', array(
+					'transaction_status' => array(
+						'key'       => '_it_cart_buddy_transaction_status',
+						'componant' => 'post_meta',
+						'options'   => array(
+							'pending'    => _x( 'Pending', 'Transaction Status', 'LION' ),
+							'paid'		 => _x( 'Paid', 'Transaction Status', 'LION' ),
+							'refunded'   => _x( 'Refunded', 'Transaction Status', 'LION' ),
+							'voided'     => _x( 'Voided', 'Transaction Status', 'LION' ),
+						),
+						'default'   => 'pending',
+					)
+				) ),
 			),
 		),
 		// PayPal Standard Transaction Method
@@ -28,7 +40,7 @@ function it_cart_buddy_register_core_add_ons() {
 			'file'        => dirname( __FILE__ ) . '/transaction-methods/paypal-standard/init.php',
 			'options'     => array( 
 				'category' => 'transaction-methods',
-				'default_meta' => apply_filters( 'it_cart_buddy_register_paypal_standard_default_filters', array() ),
+				'supports' => apply_filters( 'it_cart_buddy_register_paypal_standard_default_features', array() ),
 			),
 			'options'     => array( 'category' => 'transaction-methods' ),
 		),
@@ -39,7 +51,7 @@ function it_cart_buddy_register_core_add_ons() {
 			'file'        => dirname( __FILE__ ) . '/transaction-methods/stripe/init.php',
 			'options'     => array( 
 				'category' => 'transaction-methods',
-				'default_meta' => apply_filters( 'it_cart_buddy_register_stripe_default_filters', array() ),
+				'supports' => apply_filters( 'it_cart_buddy_register_stripe_default_features', array() ),
 			),
 		),
 		// Digital Download Product Types
@@ -52,8 +64,7 @@ function it_cart_buddy_register_core_add_ons() {
 				'labels'   => array(
 					'singular_name' => __( 'Digital Download', 'LION' ),
 				),
-				'supports' => apply_filters( 'it_cart_buddy_register_digital_downloads_supports', array(
-					'downloads' => array(),
+				'supports' => apply_filters( 'it_cart_buddy_register_digital_downloads_default_features', array(
 				) ),
 			),
 		),
@@ -67,7 +78,7 @@ function it_cart_buddy_register_core_add_ons() {
 				'labels'   => array(
 					'singular_name' => __( 'Membership', 'LION' ),
 				),
-				'supports' => apply_filters( 'it_cart_buddy_register_digital_downloads_supports', array() ),
+				'supports' => apply_filters( 'it_cart_buddy_register_digital_downloads_default_features', array() ),
 			),
 		),
 		// Default Shopping Cart UI 
@@ -121,9 +132,21 @@ function it_cart_buddy_register_core_add_on_categories() {
 			'description' => __( 'Add-ons responsible for the differing types of products available in Cart Buddy.', 'LION' ),
 			'options'     => array(
 				'supports' => apply_filters( 'it_cart_buddy_register_product_type_supports', array(
-					array( 'title', true ),
-					array( 'editor', true ),
-					array( 'thumbnail', true ),
+					'title' => array(
+						'key'       => 'post_title',
+						'componant' => 'post_type_support',
+						'default'   => false,
+					),
+					'editor' => array(
+						'key'       => 'post_content',
+						'componant' => 'post_type_support',
+						'default'   => false,
+					),
+					'thumbnail' => array(
+						'key'       => '_thumbnail_id',
+						'componant' => 'post_meta',
+						'default'   => false,
+					),
 				) ),
 			),
 		),
@@ -132,15 +155,23 @@ function it_cart_buddy_register_core_add_on_categories() {
 			'description' => __( 'Add-ons that create transactions. eg: Stripe, PayPal.', 'LION' ),
 			'options'     => array(
 				'supports' => apply_filters( 'it_cart_buddy_register_transaction_method_supports', array(
-					array( 'title', true ),
-					array( 'transaction_status', 'pending' ),
-					array( 'transaction_statuses', array(
-						'pending'    => _x( 'Pending', 'Transaction Status', 'LION' ),
-						'authorized' => _x( 'Authorized', 'Transaction Status', 'LION' ),
-						'paid'		 => _x( 'Paid', 'Transaction Status', 'LION' ),
-						'refunded'   => _x( 'Refunded', 'Transaction Status', 'LION' ),
-						'voided'     => _x( 'Voided', 'Transaction Status', 'LION' ),
-					) ),
+					'title' => array(
+						'key'       => 'post_title',
+						'componant' => 'post_type_support',
+						'default'   => false,
+					),
+					'transaction_status' => array(
+						'key'       => '_it_cart_buddy_transaction_status',
+						'componant' => 'post_meta',
+						'options'   => array(
+							'pending'    => _x( 'Pending', 'Transaction Status', 'LION' ),
+							'authorized' => _x( 'Authorized', 'Transaction Status', 'LION' ),
+							'paid'		 => _x( 'Paid', 'Transaction Status', 'LION' ),
+							'refunded'   => _x( 'Refunded', 'Transaction Status', 'LION' ),
+							'voided'     => _x( 'Voided', 'Transaction Status', 'LION' ),
+						),
+						'default'   => 'pending',
+					)
 				) ),
 			),
 		),

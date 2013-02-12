@@ -237,7 +237,8 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 			case 'it_cart_buddy_transaction_status_column' :
 					$status = it_cart_buddy_get_transaction_status( $post );
 					$method = it_cart_buddy_get_transaction_method( $post );
-					$statuses = it_cart_buddy_get_add_on_support( $method, 'transaction_statuses' );
+					$statuses = it_cart_buddy_get_add_on_support( $method, 'transaction_status' );
+					$statuses = $statuses['options'];
 					esc_attr_e( $statuses[$status] );
 				break;
 		}

@@ -89,7 +89,7 @@ function it_cart_buddy_get_transactions( $args=array() ) {
 	// Fold in transaction_status
 	if ( ! empty( $args['transaction_status'] ) ) {
 		$args['meta_query'][] = array( 
-			'key'   => 'transaction_status',
+			'key'   => '_it_cart_buddy_transaction_status',
 			'value' => $args['transaction_status'],
 		);
 		unset( $args['transaction_status'] );
@@ -115,7 +115,7 @@ function it_cart_buddy_get_transactions( $args=array() ) {
 function it_cart_buddy_add_transaction( $args=array() ) {
 	$defaults = array(
 		'post_type'          => 'it_cart_buddy_tran',
-		'transaction-status' => 'pending',
+		'transaction_status' => 'pending',
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -131,7 +131,7 @@ function it_cart_buddy_add_transaction( $args=array() ) {
 
 	if ( $transaction_id = wp_insert_post( $args ) ) {
 		update_post_meta( $transaction_id, '_it_cart_buddy_transaction_method', $args['transaction-method'] );
-		update_post_meta( $transaction_id, 'transaction_status', $args['transaction-status'] );
+		update_post_meta( $transaction_id, '_it_cart_buddy_transaction_status', $args['transaction_status'] );
 		do_action( 'it_cart_buddy_add_transaction', $transaction_id );
 		do_action( 'it_cart_buddy_add_transaction-' . $args['transaction-method'], $transaction_id );
 	}
@@ -159,8 +159,8 @@ function it_cart_buddy_update_transaction( $args ) {
 	do_action( 'it_cart_buddy_update_transaction', $args );
 	do_action( 'it_cart_buddy_update_transaction-' . $transaction_method, $args );
 
-	if ( ! empty( $args['transaction_status'] ) )
-		it_cart_buddy_update_transaction_status( $id, $args['transaction_status'] );
+	if ( ! empty( $args['_it_cart_buddy_transaction_status'] ) )
+		it_cart_buddy_update_transaction_status( $id, $args['_it_cart_buddy_transaction_status'] );
 
 	return $result;
 }
@@ -181,13 +181,13 @@ function it_cart_buddy_update_transaction_status( $transaction, $status ) {
 	if ( ! $transaction->ID )
 		return false;
 
-	$old_status = $transaction->transaction_data['transaction_status'];
-	update_post_meta( $transaction->ID, 'transaction_status', $status );
+	$old_status = $transaction->transaction_data['_it_cart_buddy_transaction_status'];
+	update_post_meta( $transaction->ID, '_it_cart_buddy_transaction_status', $status );
 	$transaction = it_cart_buddy_get_transaction( $transaction->ID );
 
 	do_action( 'it_cart_buddy_update_transaction_status', $transaction, $old_status );
 	do_action( 'it_cart_buddy_update_transaction_status-' . $transaction->transaction_method, $transaction, $old_status );
-	return $transaction->transaction_data['transaction_status'];
+	return $transaction->transaction_data['_it_cart_buddy_transaction_status'];
 }
 
 /**
@@ -199,11 +199,11 @@ function it_cart_buddy_update_transaction_status( $transaction, $status ) {
 */
 function it_cart_buddy_get_transaction_status( $transaction ) {
 	if ( is_object( $transaction) && 'IT_Cart_Buddy_Transaction' == get_class( $transaction ) )
-		return $transaction->transaction_data['transaction_status'];
+		return $transaction->transaction_data['_it_cart_buddy_transaction_status'];
 
 	if ( 'it_cart_buddy_tran' != get_post_type( $transaction ) )
 		return;
 
 	$transaction = it_cart_buddy_get_transaction( $transaction );
-	return empty( $transaction->transaction_data['transaction_status'] ) ? false : $transaction->transaction_data['transaction_status'];
+	return empty( $transaction->transaction_data['_it_cart_buddy_transaction_status'] ) ? false : $transaction->transaction_data['_it_cart_buddy_transaction_status'];
 }

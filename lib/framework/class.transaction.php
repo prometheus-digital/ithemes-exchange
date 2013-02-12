@@ -46,6 +46,12 @@ class IT_Cart_Buddy_Transaction {
 
 
 	/**
+	 * @param array $transaction_supports what features does this transaction support
+	 * @since 0.3.3
+	*/
+	var $transaction_supports;
+
+	/**
 	 * @param array $transaction_data  any custom data registered by the transaction-method for this transaction
 	 * @since 0.3.3
 	*/
@@ -86,9 +92,9 @@ class IT_Cart_Buddy_Transaction {
 
 		// Set the transaction data
 		if ( did_action( 'init' ) )
-			$this->set_transaction_data();
+			$this->set_transaction_supports_and_data();
 		else
-			add_action( 'init', array( $this, 'set_transaction_data' ) );
+			add_action( 'init', array( $this, 'set_transaction_supports_and_data' ) );
 
 
 		// Set supports for new and edit screens
@@ -121,18 +127,28 @@ class IT_Cart_Buddy_Transaction {
 	 * @ since 0.3.2
 	 * @return void
 	*/
-	function set_transaction_data() {
-		// Get transaction-method options
-		if ( $transaction_method_options = it_cart_buddy_get_transaction_method_options( $this->transaction_method ) ) {
-			if ( ! empty( $transaction_method_options['supports'] ) ) {
-				foreach( $transaction_method_options['supports'] as $key => $default ) {
-					$stored = get_post_meta( $this->ID, $key, true );
-					$this->transaction_data[$key] = $stored ? $stored : $default;
-				}
-			}
-		}
-		//echo "<pre>";print_r($this);die();
-	}
+    function set_transaction_supports_and_data() {
+        // Get transaction_method options
+        if ( $transaction_method_options = it_cart_buddy_get_transaction_method_options( $this->transaction_method ) ) { 
+            if ( ! empty( $transaction_method_options['supports'] ) ) { 
+                foreach( $transaction_method_options['supports'] as $feature => $params ) { 
+
+                    // Set the transaction_supports array
+                    $this->transaction_supports[$feature] = $params;
+
+                    // transaction_data only contains post_meta data
+                    if ( 'post_meta' != $params['componant'] )
+                        continue;
+
+                    // Set transaction_data to post_meta value or feature default
+                    if ( $value = get_post_meta( $this->ID, $params['key'], true ) ) 
+                        $this->transaction_data[$params['key']] = $value;
+                    else
+                        $this->transaction_data[$params['key']] = $this->transaction_supports[$feature]['default'];
+                }   
+            }   
+        }   
+    } 
 
     /** 
      * Sets the supports array for the post_type.
