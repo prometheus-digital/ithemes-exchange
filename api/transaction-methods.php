@@ -3,9 +3,9 @@
  * API Functions for Transaction Method Add-ons
  *
  * In addition to the functions found below, Cart Buddy offers the following actions related to transactions
- * - it_cart_buddy_save_transaction_unvalidated                // Runs every time a cart buddy transaction is saved.
+ * - it_cart_buddy_save_transaction_unvalidated		                 // Runs every time a cart buddy transaction is saved.
  * - it_cart_buddy_save_transaction_unavalidate-[transaction-method] // Runs every time a specific cart buddy transaction method is saved.
- * - it_cart_buddy_save_transaction                            // Runs every time a cart buddy transaction is saved if not an autosave and if user has permission to save post
+ * - it_cart_buddy_save_transaction                                  // Runs every time a cart buddy transaction is saved if not an autosave and if user has permission to save post
  * - it_cart_buddy_save_transaction-[transaction-method]             // Runs every time a specific cart buddy transaction method is saved if not an autosave and if user has permission to save transaction
  *
  * @package IT_Cart_Buddy
@@ -88,4 +88,34 @@ function it_cart_buddy_get_transactions( $args=array() ) {
 	}
 
 	return array();
+}
+
+/**
+ * Adds a transaction post_type to WP
+ *
+ * @since 0.3.3
+ * @param array $args same args passed to wp_insert_post plus any additional needed
+ * @return mixed post id or false
+*/
+function it_cart_buddy_add_transaction( $args=array() ) {
+	$defaults = array(
+		'post_type'   => 'it_cart_buddy_tran',
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+
+	// Do we have a transaction method and is it an enabled add-on?
+	$enabled_transaction_methods = (array) it_cart_buddy_get_enabled_add_ons( array( 'category' => 'transaction-methods' ) );
+	if ( empty( $args['transaction-method'] ) || ! in_array( $args['transaction-method'], array_keys( $enabled_transaction_methods ) ) )
+		return false;
+
+	// If we don't have a title, create one
+	if ( empty( $args['post_title'] ) )
+		$args['post_title'] = $args['transaction-method'] . '-' . date( 'Y-m-d-H:i' );
+
+	if ( $transaction_id = wp_insert_post( $args ) ) {
+		update_post_meta( $transaction_id, '_it_cart_buddy_transaction_method', $args['transaction-method'] );
+		do_action( 'it_cart_buddy_add_transaction', $transaction_id );
+		do_action( 'it_cart_buddy_add_transaction-' . $args['transaction-method'], $transaction_id );
+	}
 }

@@ -22,7 +22,6 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 	*/
 	function IT_Cart_Buddy_Transaction_Post_Type() {
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
-		add_action( 'init', array( $this, 'register_custom_post_stati' ) );
 		add_action( 'admin_init', array( $this, 'modify_post_type_features' ) );
 		add_action( 'save_post', array( $this, 'save_transaction' ) );
 		add_filter( 'manage_edit-it_cart_buddy_tran_columns', array( $this, 'add_transaction_method_column_to_view_all_table' ) );
@@ -38,25 +37,35 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 			'edit_item'     => __( 'Edit Transaction', 'LION' ),
 		);
 		$this->options = array(
-			'labels' => $labels,
-			'description' => __( 'A Cart Buddy Post Type for storing all Transactions in the system', 'LION' ),
-			'public'      => false,
-			'show_ui'     => true,
-			'show_in_nav_menus' => false,
-			'show_in_menu'      => false, // We will be adding it manually with various labels based on available product-type add-ons
-			'show_in_admin_bar' => false,
-			'hierarchical'      => false,
-			'supports'          => array( // Support everything but page-attributes for add-on flexibility
-				'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields',
-				'comments', 'revisions', 'post-formats',
-			),
+			'labels'               => $labels,
+			'description'          => __( 'A Cart Buddy Post Type for storing all Transactions in the system', 'LION' ),
+			'public'               => false,
+			'show_ui'              => true,
+			'show_in_nav_menus'    => false,
+			'show_in_menu'         => false, // We will be adding it manually with various labels based on available product-type add-ons
+			'show_in_admin_bar'    => false,
+			'hierarchical'         => false,
 			'register_meta_box_cb' => array( $this, 'meta_box_callback' ),
-			'capability_type' => 'post',
-			'capabilities'      => array(
-				'edit_posts' => true,
-				'create_posts' => false
+			'supports'             => array( // Support everything but page-attributes for add-on flexibility
+				'title',
+				'editor',
+				'author',
+				'thumbnail',
+				'excerpt',
+				'trackbacks',
+				'custom-fields',
+				'comments',
+				'revisions',
+				'post-formats',
 			),
-			'map_meta_cap' => true,
+			'capabilities'         => array(
+				'edit_posts'        => 'edit_posts',
+				'create_posts'      => false,
+				'edit_others_posts' => 'edit_others_posts',
+				'publish_posts'     => 'publish_posts',
+			),
+			'map_meta_cap'         => true,
+			'capability_type'      => 'post',
 		);
 
 		add_action( 'init', array( $this, 'register_the_post_type' ) );
@@ -156,24 +165,6 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 			if ( ! empty( $transaction->transaction_method ) && ! get_post_meta( $transaction->ID, '_it_cart_buddy_transaction_method', true ) )
 				update_post_meta( $transaction->ID, '_it_cart_buddy_transaction_method', $transaction->transaction_method );
 		}
-	}
-
-	/**
-	 * Register Transaction Post status everywhere except for post-new.php, post.php, and edit.php for non-transaction post types.
-	 *
-	 * @since 0.3.3
-	 * @return void
-	*/
-	function register_custom_post_stati() {
-		$args = array(
-			'label'                     => _x( '_it_cart_buddy_trans_pending', 'Pending', 'LION' ),
-			'label_count'               => _n_noop( 'Pending (%s)',  'Pending (%s)', 'LION' ),
-			'public'                    => true,
-			'show_in_admin_all_list'    => true,
-			'show_in_admin_status_list' => true,
-			'exclude_from_search'       => false,
-		);
-		register_post_status( '_it_cart_buddy_trans_pending', $args );
 	}
 
 	/**
