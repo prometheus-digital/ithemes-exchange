@@ -17,3 +17,8 @@ include( $this->_plugin_path . '/api/transaction-methods.php' );
 
 // Sessions
 include( $this->_plugin_path . '/api/sessions.php' );
+
+if ( is_admin() ) {
+	// Admin
+	include( $this->_plugin_path . '/api/admin.php' );
+}
