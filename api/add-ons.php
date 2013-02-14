@@ -261,6 +261,7 @@ function it_cart_buddy_enable_add_on( $addon ) {
 	if ( in_array( $addon, array_keys( $registered ) ) ) {
 		$enabled[$addon] = $registered[$addon]['file'];
 		if ( update_option( 'it_cart_buddy_enabled_add_ons', $enabled ) ) {
+			require( $registered[$addon]['file'] );
 			do_action( 'it_cart_buddy_add_on_enabled', $registered[$addon] );
 			return $enabled;
 		}
