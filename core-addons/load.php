@@ -31,7 +31,7 @@ function it_cart_buddy_register_core_add_ons() {
 						'default'   => 'pending',
 					)
 				) ),
-				'settings-callback' => 'it_cart_buddy_print_manual_payments_settings',
+				'settings-callback' => 'it_cart_buddy_manual_payments_settings_callback',
 			),
 		),
 		// PayPal Standard Transaction Method

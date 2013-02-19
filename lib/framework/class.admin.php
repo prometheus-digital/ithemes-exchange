@@ -28,6 +28,24 @@ class IT_Cart_Buddy_Admin {
 	var $_current_tab;
 
 	/**
+	 * @var object $_storage object for current settings tab 
+	 * @since 0.3.6
+	*/
+	var $_storage;
+
+	/**
+	 * @var string $status_message informative message for current settings tab 
+	 * @since 0.3.6
+	*/
+	var $status_message;
+
+	/**
+	 * @var string $error_message error message for current settings tab 
+	 * @since 0.3.6
+	*/
+	var $error_message;
+
+	/**
 	 * Class constructor
 	 *
 	 * @uses add_action()
@@ -47,6 +65,9 @@ class IT_Cart_Buddy_Admin {
 
 		// Open cart buddy menu when on add/edit cartbuddy product post type
 		add_action( 'parent_file', array( $this, 'open_cart_buddy_menu_on_post_type_views' ) );
+
+		// Load Storage
+		add_action( 'admin_init', array( $this, 'load_storage' ) );
 
 		// Add actions for iThemes registration
 		add_action( 'admin_menu', array( $this, 'add_cart_buddy_admin_menu' ) );
@@ -73,6 +94,23 @@ class IT_Cart_Buddy_Admin {
 	function set_current_properties() {
 		$this->_current_page = empty( $_GET['page'] ) ? false : $_GET['page'];
 		$this->_current_tab = empty( $_GET['tab'] ) ? false : $_GET['tab'];
+	}
+
+	/**
+	 * Loads the storage object
+	 *
+	 * @since 0.3.6
+	 * return void
+	*/
+	function load_storage() {
+		if ( 'it-cart-buddy-settings' != $this->_current_page )
+			return;
+
+		it_classes_load( 'it-storage.php' );
+		$tab = empty( $this->_current_tab ) ? 'general' : $this->_current_tab;
+		$key = 'cart_buddy_settings'  . '_' . $tab;
+
+		$this->_storage = new ITStorage2( $key );
 	}
 
 	/**
@@ -106,8 +144,8 @@ class IT_Cart_Buddy_Admin {
 
 		// Add Add-ons menu item
 		$callback = array( $this, 'print_cart_buddy_add_ons_page' );
-		if ( 'it-cart-buddy-addons' == $this->_current_page && ! empty( $_GET['settings'] ) ) {
-			if ( $addon = it_cart_buddy_get_add_on( $_GET['settings'] ) ) {
+		if ( 'it-cart-buddy-addons' == $this->_current_page && ! empty( $_GET['add_on_settings'] ) ) {
+			if ( $addon = it_cart_buddy_get_add_on( $_GET['add_on_settings'] ) ) {
 				if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) )
 					$callback = $addon['options']['settings-callback'];
 			}
@@ -145,7 +183,7 @@ class IT_Cart_Buddy_Admin {
 	 * @return mixed function or class method name
 	*/
 	function register_email_settings_tab_callback( $default ) {
-		return array( $this, 'print_general_settings_email_page' );
+		return array( $this, 'print_email_settings_page' );
 	}
 
 	/**
@@ -158,65 +196,6 @@ class IT_Cart_Buddy_Admin {
 	function print_email_settings_tab_link( $current_tab ) {
 		$active = 'email' == $current_tab ? 'nav-tab-active' : '';
 		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-cart-buddy-settings&tab=email' ); ?>"><?php _e( 'Email Settings', 'LION' ); ?></a><?php
-	}
-
-	/**
-	 * Prints the email page for cart buddy
-	 *
-	 * @since 0.3.4
-	 * @return void
-	*/
-	function print_general_settings_email_page() {
-		$values = $this->set_email_settings_field_values();
-		?>
-		<div class="wrap">
-			<?php screen_icon( 'page' ); ?>
-			<?php $this->print_general_settings_tabs(); ?>
-			<?php echo do_action( 'it_cart_buddy_general_settings_email_page_top' ); ?>
-			<form action='' method='post'>
-				<?php echo do_action( 'it_cart_buddy_general_settings_email_form_top' ); ?>
-				<table class="form-table">
-					<?php do_action( 'it_cart_buddy_general_settings_email_top' ); ?>
-					<tr valign="top">
-						<th scope="row"><strong>Customer Receipt Emails</strong></th>
-						<td></td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><label for="it_cart_buddy_receipt_email_address"><?php _e( 'Email Address' ) ?></label></th>
-						<td>
-							<input type="text" name="it_cart_buddy_receipt_email_address" value="<?php esc_attr_e( $values['receipt_email_address'] ); ?>" class="normal-text" />
-							<br /><span class="description"><?php _e( 'Email address used for customer receipt emails.', 'LION' ); ?></span>
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><label for="it_cart_buddy_from_email_name"><?php _e( 'Email Name' ) ?></label></th>
-						<td>
-							<input type="text" name="it_cart_buddy_receipt_email_name" value="<?php esc_attr_e( $values['receipt_email_name'] ); ?>" class="normal-text" />
-							<br /><span class="description"><?php _e( 'Name used for account that sends customer receipt emails.', 'LION' ); ?></span>
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><label for="it_cart_buddy_receipt_email_subject"><?php _e( 'Subject Line' ) ?></label></th>
-						<td>
-							<input type="text" name="it_cart_buddy_receipt_email_subject" value="<?php esc_attr_e( $values['receipt_email_subject'] ); ?>" class="normal-text" />
-							<br /><span class="description"><?php _e( 'Subject line used for customer receipt emails.', 'LION' ); ?></span>
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><label for="it_cart_buddy_receipt_email_template"><?php _e( 'Email Template' ) ?></label></th>
-						<td>
-							<textarea name="it_cart_buddy_receipt_email_template" rows="10" cols="30" class="large-text"><?php esc_attr_e( $values['receipt_email_template'] ); ?></textarea>
-						</td>
-					</tr>
-					<?php do_action( 'it_Cart_buddy_general_settings_email_table_bottom' ); ?>
-				</table>
-				<?php wp_nonce_field( 'save-email-settings', 'cart-buddy-email-settings' ); ?>
-				<p class="submit"><input type="submit" value="<?php _e( 'Save Changes', 'LION' ); ?>" class="button button-primary" /></p>
-				<?php do_action( 'it_cart_buddy_general_settings_email_form_bottom' ); ?>
-			</form>
-			<?php do_action( 'it_cart_buddy_general_settings_email_page_bottom' ); ?>
-		</div>
-		<?php
 	}
 
 	/**
@@ -259,93 +238,38 @@ class IT_Cart_Buddy_Admin {
 	 * @return void
 	*/
 	function print_cart_buddy_settings_page() {
-		$values = $this->set_general_settings_field_values();
-		?>
-		<div class="wrap">
-			<?php
-			screen_icon( 'page' );
-			$this->print_general_settings_tabs();
-			?>
-			<?php echo do_action( 'it_cart_buddy_general_settings_page_top' ); ?>
-			<form action='' method='post'>
-				<?php echo do_action( 'it_cart_buddy_general_settings_form_top' ); ?>
-				<table class="form-table">
-					<?php do_action( 'it_cart_buddy_general_settings_table_top' ); ?>
-					<tr valign="top">
-						<th scope="row"><strong><?php _e( 'Company Details', 'LION' ); ?></strong></th>
-						<td></td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><label for="it_cart_buddy_company_name"><?php _e( 'Company Name' ) ?></label></th>
-						<td>
-							<input type="text" name="it_cart_buddy_company_name" value="<?php esc_attr_e( $values['company_name'] ); ?>" class="normal-text" />
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><label for="it_cart_buddy_company_tax_id"><?php _e( 'Company Tax ID' ) ?></label></th>
-						<td>
-							<input type="text" name="it_cart_buddy_company_tax_id" value="<?php esc_attr_e( $values['company_tax_id'] ); ?>" class="normal-text" />
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><label for="it_cart_buddy_company_email"><?php _e( 'Company Email' ) ?></label></th>
-						<td>
-							<input type="text" name="it_cart_buddy_company_email" value="<?php esc_attr_e( $values['company_email'] ); ?>" class="normal-text" />
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><label for="it_cart_buddy_company_phone"><?php _e( 'Company Phone' ) ?></label></th>
-						<td>
-							<input type="text" name="it_cart_buddy_company_phone" value="<?php esc_attr_e( $values['company_phone'] ); ?>" class="normal-text" />
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><label for="it_cart_buddy_company_address"><?php _e( 'Company Address' ) ?></label></th>
-						<td>
-							<textarea name="it_cart_buddy_company_address" rows="5" cols="30" ><?php esc_attr_e( $values['company_address'] ); ?></textarea>
-						</td>
-					</tr>
-					<?php do_action( 'it_cart_buddy_general_settings_before_currency' ); ?>
-					<tr valign="top">
-						<th scope="row"><strong><?php _e( 'Currency Settings', 'LION' ); ?></strong></th>
-						<td></td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><label for="it_cart_buddy_default_currency"><?php _e( 'Default Currency' ) ?></label></th>
-						<td><select name="it_cart_buddy_default_currency" id="it_cart_buddy_default_currency"><?php $this->print_default_currency_select_options( $values['default_currency'] ); ?></select></td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><label for="it_cart_buddy_currency_symbol_position"><?php _e( 'Symbol Position' ) ?></label></th>
-						<td>
-							<select name="it_cart_buddy_currency_symbol_position">
-								<option value="before" <?php selected( $values['currency_symbol_position'], 'before' ); ?>>Before: $10.00</option>
-								<option value="after" <?php selected( $values['currency_symbol_position'], 'after' ); ?>>After: 10.00$</option></select>
-							<br /><span class="description"><?php _e( 'Where should the currency symbol be placed in relation to the price?', 'LION' ); ?></span>
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><label for="it_cart_buddy_currency_thousands_separator"><?php _e( 'Thousands Separator' ) ?></label></th>
-						<td>
-							<input type="text" name="it_cart_buddy_currency_thousands_separator" value="<?php esc_attr_e( $values['currency_thousands_separator'] ); ?>" class="small-text" />
-							<br /><span class="description"><?php _e( 'What character would you like to use to separate thousands when display prices?', 'LION' ); ?></span>
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><label for="it_cart_buddy_currency_decimals_separator"><?php _e( 'Decimals Separator' ) ?></label></th>
-						<td>
-							<input type="text" name="it_cart_buddy_currency_decimals_separator" value="<?php esc_attr_e( $values['currency_decimals_separator'] ); ?>" class="small-text"/>
-							<br /><span class="description"><?php _e( 'What character would you like to use to separate decimals when display prices?', 'LION' ); ?></span>
-						</td>
-					</tr>
-					<?php do_action( 'it_cart_buddy_general_settings_table_bottom' ); ?>
-				</table>
-				<?php wp_nonce_field( 'save-settings', 'cart-buddy-general-settings' ); ?>
-				<p class="submit"><input type="submit" value="<?php _e( 'Save Changes', 'LION' ); ?>" class="button button-primary" /></p>
-				<?php echo do_action( 'it_cart_buddy_general_settings_form_bottom' ); ?>
-			</form>
-			<?php echo do_action( 'it_cart_buddy_general_settings_page_bottom' ); ?>
-		</div>
-		<?php
+		$form_values  = empty( $this->error_message ) ? $this->_storage->load() : ITForm::get_post_data();
+		$form         = new ITForm( $form_values, array( 'prefix' => 'it_cart_buddy_settings' ) );
+		$form_options = array(
+			'id'      => apply_filters( 'it_cart_buddy_settings_form_id', 'it-cart-buddy-settings' ),
+			'enctype' => apply_filters( 'it_cart_buddy_settings_form_enctype', false ),
+		);
+		if ( ! empty ( $this->status_message ) )
+			ITUtility::show_status_message( $this->status_message );
+		if ( ! empty( $this->error_message ) )
+			ITUtility::show_error_message( $this->error_message );
+		include( 'views/admin-settings.php' );
+	}
+
+	/**
+	 * Prints the email page for cart buddy
+	 *
+	 * @since 0.3.4
+	 * @return void
+	*/
+	function print_email_settings_page() {
+		$form_values  = empty( $this->error_message ) ? $this->_storage->load() : ITForm::get_post_data();
+		$form         = new ITForm( $form_values, array( 'prefix' => 'it_cart_buddy_email_settings' ) );
+		$form_options = array(
+			'id'      => apply_filters( 'it_cart_buddy_email_settings_form_id', 'it-cart-buddy-email-settings' ),
+			'enctype' => apply_filters( 'it_cart_buddy_email_settings_form_enctype', false ),
+			'action'  => 'admin.php?page=it-cart-buddy-settings&tab=email',
+		);
+		if ( ! empty ( $this->status_message ) )
+			ITUtility::show_status_message( $this->status_message );
+		if ( ! empty( $this->error_message ) )
+			ITUtility::show_error_message( $this->error_message );
+		include( 'views/admin-email-settings.php' );
 	}
 
 	/**
@@ -357,50 +281,7 @@ class IT_Cart_Buddy_Admin {
 	function print_cart_buddy_add_ons_page() {
 		$registered = it_cart_buddy_get_add_ons();
 		$add_on_cats = it_cart_buddy_get_add_on_categories();
-		?>
-		<div class="wrap">
-			<!-- temp icon --> 
-			<?php screen_icon( 'page' ); ?> 
-			<h2>Cart Buddy Add-Ons</h2>
-
-			<h3>Enabled Add-ons</h3>
-			<?php
-			if ( $enabled = get_option( 'it_cart_buddy_enabled_add_ons' ) ) {
-				foreach( (array) $enabled as $slug => $location ) {
-					if ( empty( $registered[$slug] ) )
-						continue;
-					$params = $registered[$slug];
-					// TEMPORARY UI
-					echo '<div style="height:200px;width:200px;border: 1px solid #444;float:left;margin-right:10px;"><div style="height:20px;background:#999;color:#fff;width:100%;text-align:center;padding:10px 0;">' . $params['name'] . '</div><p style="padding:5px">Category: ' . $add_on_cats[$params['options']['category']]['name'] . '</p><p style="padding:5px;">' . $params['description'] . '</p>';
-					if ( ! empty( $params['options']['settings-callback'] ) && is_callable( $params['options']['settings-callback'] ) )
-						echo '<p><a href="' . admin_url( 'admin.php?page=it-cart-buddy-addons&settings=' . $slug ) . '">Settings</a>';
-					echo '<p style="margin-left:60px;text-align:center;width:75px;background:#999;border:1px solid #777;padding:2px;"><a href="' . get_site_url() . '/wp-admin/admin.php?page=it-cart-buddy-addons&it-cart-buddy-disable-addon=' . $slug . '" style="text-decoration:none;color:#fff;">Disable</a></p></div>';
-				}
-			} else {
-				echo '<p>' . __( 'No Add-ons currently enabled', 'LION' ) . '</p>';
-			}
-			?>
-			<div style="height:1px;clear:both;-top:10px;"></div>
-			<hr />
-
-			<h3>Available Add-ons</h3>
-			<?php
-			$available_addons = false;
-			if ( ( $registered ) ) {
-				foreach( $registered as $slug => $params ) {
-					if ( ! empty( $enabled[$slug] ) )
-						continue;
-
-					$available_addons = true;
-					// TEMPORARY UI
-					echo '<div style="height:200px;width:200px;border: 1px solid #444;float:left;margin-right:10px;"><div style="height:20px;background:#999;color:#fff;width:100%;text-align:center;padding:10px 0;">' . $params['name'] . '</div><p style="padding:5px">Category: ' . $add_on_cats[$params['options']['category']]['name'] . '</p><p style="padding:5px;">' . $params['description'] . '</p><p style="margin-left:60px;text-align:center;width:75px;background:#999;border:1px solid #777;padding:2px;"><a href="' . get_site_url() . '/wp-admin/admin.php?page=it-cart-buddy-addons&it-cart-buddy-enable-addon=' . $slug . '" style="text-decoration:none;color:#fff;">Enable</a></p></div>';
-				}
-			}
-			if ( ! $available_addons )
-				echo '<p>' . __( 'No Add-ons available', 'LION' ) . '</p>';
-			?>
-		</div>
-		<?php
+		include( 'views/admin-add-ons.php' );
 	}
 
 	/**
@@ -437,7 +318,7 @@ class IT_Cart_Buddy_Admin {
 		if ( $enable_addon ) {
 			if ( $enabled = it_cart_buddy_get_add_on( $enable_addon ) )  {
 				if ( ! empty( $enabled['options']['settings-callback'] ) && is_callable( $enabled['options']['settings-callback'] ) )
-					$redirect_to .= '&settings=' . $enable_addon . '&on-enable=1';
+					$redirect_to .= '&add_on_settings=' . $enable_addon . '&on-enable=1';
 			}
 		}
 
@@ -452,20 +333,7 @@ class IT_Cart_Buddy_Admin {
 	 * @return void
 	*/
 	function print_choose_product_type_admin_page() {
-		?>
-		<div class="wrap">
-			<?php screen_icon( 'page' ); ?>
-			<h2>Choose an Product Type to add</h2>
-			<p>Temp UI...</p>
-			<ul>
-			<?php
-			foreach( it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) ) as $slug => $params ) {
-				echo '<li><a href="' . get_site_url() . '/wp-admin/post-new.php?post_type=it_cart_buddy_prod&product_type=' . $slug . '">' . $params['name'] . '</a>';
-			}
-			?>
-			</ul>
-		</div>
-		<?php
+		include( 'views/admin-choose-new-product-type.php' );
 	}
 
 	/**
@@ -517,16 +385,16 @@ class IT_Cart_Buddy_Admin {
 	/**
 	 * Prints select options for the currency type
 	 *
-	 * @since 0.3.4
-	 * return void
+	 * @since 0.3.6
+	 * return array 
 	*/
-	function print_default_currency_select_options() {
+	function get_default_currency_options() {
+		$options = array();
 		$currency_options = it_cart_buddy_get_currency_options();
-		if ( is_array( $currency_options ) ) {
-			foreach( $currency_options as $currency ) {
-				echo '<option value="' . $currency->cc . '">' . ucwords( $currency->name ) . ' (' . $currency->symbol . ')</option>' . "\n";
-			}
+		foreach( (array) $currency_options as $currency ) {
+			$options[$currency->cc] = ucwords( $currency->name ) . ' (' . $currency->symbol . ')'; 
 		}
+		return $options;
 	}
 
 	/**
@@ -543,33 +411,44 @@ class IT_Cart_Buddy_Admin {
 		if ( empty( $_POST ) || 'it-cart-buddy-settings' != $this->_current_page || ! empty( $this->_current_tab ) )
 			return;
 
-		if ( ! wp_verify_nonce( $_POST['cart-buddy-general-settings'], 'save-settings' ) )
-			return false;
+		$settings = wp_parse_args( ITForm::get_post_data(), $this->_storage->load() );
 
-		$settings = get_option( 'it_cart_buddy_general_settings' );
-
-		$updated_settings['company_name']    = stripslashes( $_POST['it_cart_buddy_company_name'] );
-		$updated_settings['company_tax_id']  = stripslashes( $_POST['it_cart_buddy_company_tax_id'] );
-		$updated_settings['company_email']   = stripslashes( $_POST['it_cart_buddy_company_email'] );
-		$updated_settings['company_phone']   = stripslashes( $_POST['it_cart_buddy_company_phone'] );
-		$updated_settings['company_address'] = stripslashes( $_POST['it_cart_buddy_company_address'] );
-
-		$updated_settings['default_currency']             = stripslashes( $_POST['it_cart_buddy_default_currency'] );
-		$updated_settings['currency_symbol_position']     = stripslashes( $_POST['it_cart_buddy_currency_symbol_position'] );
-		$updated_settings['currency_thousands_separator'] = stripslashes( $_POST['it_cart_buddy_currency_thousands_separator'] );
-		$updated_settings['currency_decimals_separator']  = stripslashes( $_POST['it_cart_buddy_currency_decimals_separator'] );
-
-		$settings = wp_parse_args( $updated_settings, $settings );
-		update_option( 'it_cart_buddy_general_settings', $settings );
+		if ( $error_msg = $this->general_settings_are_invalid( $settings ) ) {
+			$this->error_message = $error_msg;
+		} else {
+			$this->_storage->save( $settings );
+			$this->_storage->clear_cache();
+			$this->status_message = __( 'Settings Saved.', 'LION' );
+		}
 	}
 
 	/**
-	 * Save core general settings
+	 * Validate general settings
+	 *
+	 * @since 0.3.6
+	 * @param string $settings submitted settings
+	 * @return false or error message
+	*/
+	function general_settings_are_invalid( $settings ) {
+		if ( ! empty( $settings['company_email'] ) && ! is_email( $settings['company_email'] ) )
+			$errors[] = __( 'Please provide a valid email address.', 'LION' );
+		if ( empty( $settings['currency_thousands_separator'] ) )
+			$errors[] = __( 'Thousands Separator cannot be empty', 'LION' );
+		if ( empty( $settings['currency_decimals_separator'] ) )
+			$errors[] = __( 'Decimals Separator cannot be empty', 'LION' );
+
+		$errors = apply_filters( 'it_cart_buddy_general_settings_validation_errors', $errors );
+		if ( ! empty ( $errors ) )
+			return '<p>' . implode( '<br />', $errors ) . '</p>';
+		else
+			return false;
+	}
+
+	/**
+	 * Save core email tab settings
 	 *
 	 * Validates data and saves to options.
 	 *
-	 * @todo provide feedback to user
-	 * @todo validate data
 	 * @since 0.3.4
 	 * @return void
 	*/
@@ -577,60 +456,38 @@ class IT_Cart_Buddy_Admin {
 		if ( empty( $_POST ) || 'it-cart-buddy-settings' != $this->_current_page || 'email' != $this->_current_tab )
 			return;
 
-		if ( ! wp_verify_nonce( $_POST['cart-buddy-email-settings'], 'save-email-settings' ) )
+		$settings = wp_parse_args( ITForm::get_post_data(), $this->_storage->load() );
+
+		if ( $error_msg = $this->email_settings_are_invalid( $settings ) ) {
+			$this->error_message = $error_msg;
+		} else {
+			$this->_storage->save( $settings );
+			$this->_storage->clear_cache();
+			$this->status_message = __( 'Settings Saved.', 'LION' );
+		}
+	}
+
+	/**
+	 * Validate email settings
+	 *
+	 * @since 0.3.6
+	 * @param string $settings submitted settings
+	 * @return false or error message
+	*/
+	function email_settings_are_invalid( $settings ) {
+		$errors = array();
+		if ( ! empty( $settings['receipt_email_address'] ) && ! is_email( $settings['receipt_email_address'] ) )
+			$errors[] = __( 'Please provide a valid email address.', 'LION' );
+		if ( empty( $settings['receipt_email_name'] ) )
+			$errors[] = __( 'Email Name cannot be empty', 'LION' );
+		if ( empty( $settings['receipt_email_subject'] ) )
+			$errors[] = __( 'Email Subject cannot be empty', 'LION' );
+
+		$errors = apply_filters( 'it_cart_buddy_general_settings_validation_errors', $errors );
+		if ( ! empty ( $errors ) )
+			return '<p>' . implode( '<br />', $errors ) . '</p>';
+		else
 			return false;
-
-		$settings = get_option( 'it_cart_buddy_email_settings' );
-
-		$updated_settings['receipt_email_address']  = stripslashes( $_POST['it_cart_buddy_receipt_email_address'] );
-		$updated_settings['receipt_email_name']     = stripslashes( $_POST['it_cart_buddy_receipt_email_name'] );
-		$updated_settings['receipt_email_subject']  = stripslashes( $_POST['it_cart_buddy_receipt_email_subject'] );
-		$updated_settings['receipt_email_template'] = stripslashes( $_POST['it_cart_buddy_receipt_email_template'] );
-
-		$settings = wp_parse_args( $updated_settings, $settings );
-		update_option( 'it_cart_buddy_email_settings', $settings );
-	}
-
-	/**
-	 * Sets the values for the form fields on the General Settings page
-	 *
-	 * This is a filter hooked to the it_cart_buddy_general_settings_values filter.
-	 *
-	 * @since 0.3.4
-	 * @return void
-	*/
-	function set_general_settings_field_values() {
-		$options = get_option( 'it_cart_buddy_general_settings' );
-
-		$values['company_name']    = empty( $options['company_name'] ) ? '' : $options['company_name'];
-		$values['company_tax_id']  = empty( $options['company_tax_id'] ) ? '' : $options['company_tax_id'];
-		$values['company_email']   = empty( $options['company_email'] ) ? get_option( 'admin_email' ) : $options['company_email'];
-		$values['company_phone']   = empty( $options['company_phone'] ) ? '' : $options['company_phone'];
-		$values['company_address'] = empty( $options['company_address'] ) ? '' : $options['company_address'];
-
-		$values['default_currency']             = empty( $options['default_currency'] ) ? '' : $options['default_currency'];
-		$values['currency_symbol_position']     = empty( $options['currency_symbol_position'] ) ? 'before' : $options['currency_symbol_position'];
-		$values['currency_thousands_separator'] = empty( $options['currency_thousands_separator'] ) ? ',' : $options['currency_thousands_separator'];
-		$values['currency_decimals_separator']  = empty( $options['currency_decimals_separator'] ) ? '.' : $options['currency_decimals_separator'];
-		return apply_filters( 'it_cart_buddy_general_settings_values', $values );
-	}
-
-	/**
-	 * Sets the values for the form fields on the Email Settings page
-	 *
-	 * This is a filter hooked to the it_cart_buddy_email_settings_values filter.
-	 *
-	 * @since 0.3.4
-	 * @return void
-	*/
-	function set_email_settings_field_values() {
-		$options = get_option( 'it_cart_buddy_email_settings' );
-
-		$values['receipt_email_address']  = empty( $options['receipt_email_address'] ) ? '' : $options['receipt_email_address'];
-		$values['receipt_email_name']     = empty( $options['receipt_email_name'] ) ? '' : $options['receipt_email_name'];
-		$values['receipt_email_subject']  = empty( $options['receipt_email_subject'] ) ? '' : $options['receipt_email_subject'];
-		$values['receipt_email_template'] = empty( $options['receipt_email_template'] ) ? '' : $options['receipt_email_template'];
-		return apply_filters( 'it_cart_buddy_email_settings_values', $values );
 	}
 }
 if ( is_admin() )
