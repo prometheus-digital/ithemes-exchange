@@ -21,6 +21,9 @@ include( $this->_plugin_path . '/api/sessions.php' );
 // Storage
 include( $this->_plugin_path . '/api/storage.php' );
 
+// Shopping Cart API
+include( $this->_plugin_path . '/api/carts.php' );
+
 if ( is_admin() ) {
 	// Admin
 	include( $this->_plugin_path . '/api/admin.php' );
