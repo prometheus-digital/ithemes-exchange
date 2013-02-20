@@ -101,6 +101,12 @@ class IT_Cart_Buddy_Manual_Payments_Add_On {
 		$defaults = it_cart_buddy_get_options( 'cart-buddy-addon-manual-payments' );
 		$new_values = wp_parse_args( ITForm::get_post_data(), $defaults );
 
+		// Check nonce
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'cart-buddy-manual-payments-settings' ) ) {
+			$this->error_message = __( 'Error. Please try again', 'LION' );
+			return;
+		}
+
 		$errors = apply_filters( 'it_cart_buddy_add_on_manual_transaction_validate_settings', $this->get_form_errors( $new_values ), $new_values );
 		if ( ! $errors && it_cart_buddy_save_options( 'cart-buddy-addon-manual-payments', $new_values ) ) {
 			ITUtility::show_status_message( __( 'Settings saved.', 'LION' ) );

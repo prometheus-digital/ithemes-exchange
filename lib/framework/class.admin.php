@@ -287,6 +287,12 @@ class IT_Cart_Buddy_Admin {
 		else if ( 'disabled' == $message )
 			ITUtility::show_status_message( __( 'Add-on disabled.', 'LION' ) );
 
+		$error= empty( $_GET['error'] ) ? false : $_GET['error'];
+		if ( 'enabled' == $error )
+			ITUtility::show_error_message( __( 'Error: Add-on not enabled.', 'LION' ) );
+		else if ( 'disabled' == $error )
+			ITUtility::show_error_message( __( 'Error: Add-on not disabled.', 'LION' ) );
+
 		include( 'views/admin-add-ons.php' );
 	}
 
@@ -306,11 +312,19 @@ class IT_Cart_Buddy_Admin {
 
 		// Enable or Disable addon requested by user
 		if ( $enable_addon ) {
-			$enabled = it_cart_buddy_enable_add_on( $enable_addon );
+			if ( $nonce_valid = wp_verify_nonce( $_GET['_wpnonce'], 'cart-buddy-enable-add-on' ) )
+				$enabled = it_cart_buddy_enable_add_on( $enable_addon );
 			$message = 'enabled';
 		} else if ( $disable_addon ) {
-			$enabled = it_cart_buddy_disable_add_on( $disable_addon );
+			if ( $nonce_valid = wp_verify_nonce( $_GET['_wpnonce'], 'cart-buddy-disable-add-on' ) )
+				$enabled = it_cart_buddy_disable_add_on( $disable_addon );
 			$message = 'disabled';
+		}
+
+		// Redirect if nonce not valid
+		if ( ! $nonce_valid ) {
+			wp_safe_redirect( admin_url( '/admin.php?page=it-cart-buddy-addons&error=' . $message ) );
+			die();
 		}
 		
 		// Disable any enabled add-ons that aren't registered any more while we're here.
@@ -421,8 +435,15 @@ class IT_Cart_Buddy_Admin {
 
 		$settings = wp_parse_args( ITForm::get_post_data(), $this->_storage->load() );
 
-		if ( $error_msg = $this->general_settings_are_invalid( $settings ) ) {
-			$this->error_message = $error_msg;
+        // Check nonce
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'cart-buddy-general-settings' ) ) { 
+            $this->error_message = __( 'Error. Please try again', 'LION' );
+            return;
+        } 
+
+		if ( ! empty( $this->error_message ) || $error_msg = $this->general_settings_are_invalid( $settings ) ) {
+			if ( ! empty( $error_msg ) )
+				$this->error_message = $error_msg;
 		} else {
 			$this->_storage->save( $settings );
 			$this->_storage->clear_cache();
@@ -438,6 +459,7 @@ class IT_Cart_Buddy_Admin {
 	 * @return false or error message
 	*/
 	function general_settings_are_invalid( $settings ) {
+		$errors = array();
 		if ( ! empty( $settings['company_email'] ) && ! is_email( $settings['company_email'] ) )
 			$errors[] = __( 'Please provide a valid email address.', 'LION' );
 		if ( empty( $settings['currency_thousands_separator'] ) )
@@ -447,7 +469,7 @@ class IT_Cart_Buddy_Admin {
 
 		$errors = apply_filters( 'it_cart_buddy_general_settings_validation_errors', $errors );
 		if ( ! empty ( $errors ) )
-			return '<p>' . implode( '<br />', $errors ) . '</p>';
+			return implode( '<br />', $errors );
 		else
 			return false;
 	}
@@ -466,8 +488,15 @@ class IT_Cart_Buddy_Admin {
 
 		$settings = wp_parse_args( ITForm::get_post_data(), $this->_storage->load() );
 
-		if ( $error_msg = $this->email_settings_are_invalid( $settings ) ) {
-			$this->error_message = $error_msg;
+        // Check nonce
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'cart-buddy-email-settings' ) ) { 
+            $this->error_message = __( 'Error. Please try again', 'LION' );
+            return;
+        } 
+
+		if ( ! empty( $this->error_message ) || $error_msg = $this->email_settings_are_invalid( $settings ) ) {
+			if ( ! empty( $error_msg ) )
+				$this->error_message = $error_msg;
 		} else {
 			$this->_storage->save( $settings );
 			$this->_storage->clear_cache();
