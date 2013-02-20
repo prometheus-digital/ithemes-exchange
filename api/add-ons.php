@@ -166,7 +166,7 @@ function it_cart_buddy_get_enabled_add_ons( $options=array() ) {
 	$registered = it_cart_buddy_get_add_ons();
 
 	// Grab enabled add-ons from options
-	if ( false === $enabled = get_option( 'it_cart_buddy_enabled_add_ons' ) )
+	if ( false === $enabled = it_cart_buddy_get_options( 'cart_buddy_enabled_add_ons' ) )
 		$enabled = array();
 
 	// Set each enabled with registered params
@@ -256,11 +256,11 @@ function it_cart_buddy_merge_default_add_on_supports( $add_on_category_slug, $ad
 */
 function it_cart_buddy_enable_add_on( $addon ) {
 	$registered = it_cart_buddy_get_add_ons();
-	$enabled = get_option( 'it_cart_buddy_enabled_add_ons' );
+	$enabled = it_cart_buddy_get_options( 'cart_buddy_enabled_add_ons' );
 
 	if ( in_array( $addon, array_keys( $registered ) ) ) {
 		$enabled[$addon] = $registered[$addon]['file'];
-		if ( update_option( 'it_cart_buddy_enabled_add_ons', $enabled ) ) {
+		if ( it_cart_buddy_save_options( 'cart_buddy_enabled_add_ons', $enabled ) ) {
 			require( $registered[$addon]['file'] );
 			do_action( 'it_cart_buddy_add_on_enabled', $registered[$addon] );
 			return $enabled;
@@ -279,11 +279,11 @@ function it_cart_buddy_enable_add_on( $addon ) {
 */
 function it_cart_buddy_disable_add_on( $addon ) {
 	$registered = it_cart_buddy_get_add_ons();
-	$enabled = get_option( 'it_cart_buddy_enabled_add_ons' );
+	$enabled = it_cart_buddy_get_options( 'cart_buddy_enabled_add_ons' );
 
 	if ( ! empty( $enabled[$addon] ) ) {
 		unset( $enabled[$addon] );
-		if ( update_option( 'it_cart_buddy_enabled_add_ons', $enabled ) ) {
+		if ( it_cart_buddy_save_options( 'cart_buddy_enabled_add_ons', $enabled ) ) {
 			do_action( 'it_cart_buddy_add_on_disabled', $registered[$addon] );
 			return $enabled;
 		}

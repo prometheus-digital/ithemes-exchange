@@ -281,6 +281,12 @@ class IT_Cart_Buddy_Admin {
 	function print_cart_buddy_add_ons_page() {
 		$registered = it_cart_buddy_get_add_ons();
 		$add_on_cats = it_cart_buddy_get_add_on_categories();
+		$message = empty( $_GET['message'] ) ? false : $_GET['message'];
+		if ( 'enabled' == $message )
+			ITUtility::show_status_message( __( 'Add-on enabled.', 'LION' ) );
+		else if ( 'disabled' == $message )
+			ITUtility::show_status_message( __( 'Add-on disabled.', 'LION' ) );
+
 		include( 'views/admin-add-ons.php' );
 	}
 
@@ -301,8 +307,10 @@ class IT_Cart_Buddy_Admin {
 		// Enable or Disable addon requested by user
 		if ( $enable_addon ) {
 			$enabled = it_cart_buddy_enable_add_on( $enable_addon );
+			$message = 'enabled';
 		} else if ( $disable_addon ) {
 			$enabled = it_cart_buddy_disable_add_on( $disable_addon );
+			$message = 'disabled';
 		}
 		
 		// Disable any enabled add-ons that aren't registered any more while we're here.
@@ -312,13 +320,13 @@ class IT_Cart_Buddy_Admin {
 				it_cart_buddy_disable_add_on( $slug );
 		}
 			
-		$redirect_to = admin_url( '/admin.php?page=it-cart-buddy-addons' );
+		$redirect_to = admin_url( '/admin.php?page=it-cart-buddy-addons&message=' . $message );
 
 		// Redirect to settings page on activation if it exists
 		if ( $enable_addon ) {
 			if ( $enabled = it_cart_buddy_get_add_on( $enable_addon ) )  {
 				if ( ! empty( $enabled['options']['settings-callback'] ) && is_callable( $enabled['options']['settings-callback'] ) )
-					$redirect_to .= '&add_on_settings=' . $enable_addon . '&on-enable=1';
+					$redirect_to .= '&add_on_settings=' . $enable_addon;
 			}
 		}
 
