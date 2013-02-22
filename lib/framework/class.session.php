@@ -136,16 +136,6 @@ class IT_Cart_Buddy_Session {
 	}
 
 	/**
-	 * Get products
-	 *
-	 * @since 0.3.3
-	 * @return array $_products property
-	*/
-	function get_products() {
-		return $this->_products;
-	}
-
-	/**
 	 * Get Session Data 
 	 *
 	 * @since 0.3.3
@@ -156,32 +146,97 @@ class IT_Cart_Buddy_Session {
 	}
 
 	/**
+	 * Adds sesson data to the array
+	 *
+	 * This will add it directly to the SESSION's data array and reload the object's variable
+	 *
+	 * @since 0.3.7
+	 * @param mixed $data data as passed by the shopping cart
+	 * @param mixed $key optional identifier for the data.
+	 * @return void 
+	*/
+	function add_session_data( $data, $key=false ) {
+
+		if ( ! empty( $key ) )
+			$_SESSION['it_cart_buddy']['data'][$key] = $data;
+		else
+			$_SESSION['it_cart_buddy']['data'][] = $data;
+		$this->load_session_data();
+	}
+
+	/**
+	 * Removes data from session_data array in the PHP Session
+	 *
+	 * @since 0.3.7
+	 * @param mixed $key the array key storing the data 
+	 * @return boolean
+	*/
+	function remove_data( $key ) {
+		if ( isset( $_SESSION['it_cart_buddy']['data'][$key] ) ) {
+			unset( $_SESSION['it_cart_buddy']['data'][$key] );
+			$this->load_session_data();
+			$return true
+		}
+		return false;
+	}
+
+	/**
+	 * Removes all data from the session
+	 *
+	 * @since 0.3.7
+	 * @return array the $_session_data property
+	*/
+	function reset_data() {
+		$_SESSION['it_cart_buddy']['data'] = array();
+		$this->load_session_data();
+		return true;
+	}
+
+	/**
+	 * Get products
+	 *
+	 * @since 0.3.3
+	 * @return array $_products property
+	*/
+	function get_products() {
+		if ( ! empty( $this->_products ) )
+			return $this->_products;
+		return false;
+	}
+
+	/**
 	 * Adds a product to the product array
 	 *
 	 * This will add it directly to the SESSION array and reload the object variable
 	 *
 	 * @since 0.3.3
-	 * @param array $product product data
-	 * @return array the $_products property
+	 * @param mixed $product product data as passed by the shopping cart
+	 * @param mixed $key optional identifier for the product.
+	 * @return void 
 	*/
-	function add_product( $product ) {
-		$_SESSION['it_cart_buddy']['products'][] = $product;
+	function add_product( $product, $key=false ) {
+
+		if ( ! empty( $key ) )
+			$_SESSION['it_cart_buddy']['products'][$key] = $product;
+		else
+			$_SESSION['it_cart_buddy']['products'][] = $product;
 		$this->load_products();
-		return $this->get_products();
 	}
 
 	/**
-	 * Removes a product from the $_products property by its array key
+	 * Removes a product from products array in the PHP Session
 	 *
 	 * @since 0.3.3
-	 * @param mixed $array_key  the array key storing the product
-	 * @return array the $_products property
+	 * @param mixed $key the array key storing the product
+	 * @return boolean
 	*/
-	function remove_product( $array_key ) {
-		if ( isset( $_SESSION['it_cart_buddy']['products'][$array_key] ) )
-			unset( $_SESSION['it_cart_buddy']['products'][$array_key] );
-		$this->load_products();
-		return $this->get_products();
+	function remove_product( $key ) {
+		if ( isset( $_SESSION['it_cart_buddy']['products'][$key] ) ) {
+			unset( $_SESSION['it_cart_buddy']['products'][$key] );
+			$this->load_products();
+			$return true
+		}
+		return false;
 	}
 
 	/**
@@ -193,10 +248,7 @@ class IT_Cart_Buddy_Session {
 	function reset_products() {
 		$_SESSION['it_cart_buddy']['products'] = array();
 		$this->load_products();
-		return $this->get_products();
+		return true;
 	}
-		
-
-function show_session_data() { if ( !isset($_GET['session'] ) ) { return; } echo "<pre>";print_r($this);echo "</pre>"; }
 }
 $GLOBALS['it_cart_buddy']['session'] = new IT_Cart_Buddy_Session();
