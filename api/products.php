@@ -1,13 +1,6 @@
 <?php
 /**
  * API Functions for Product Type Add-ons
- *
- * In addition to the functions found below, Cart Buddy offers the following actions related to products
- * - it_cart_buddy_save_post_unvalidated                // Runs every time a cart buddy product is saved.
- * - it_cart_buddy_save_post_unavalidate-[product-type] // Runs every time a specific cart buddy product type is saved.
- * - it_cart_buddy_save_post                            // Runs every time a cart buddy product is saved if not an autosave and if user has permission to save post
- * - it_cart_buddy_save_post-[product-type]             // Runs every time a specific cart buddy product-type is saved if not an autosave and if user has permission to save post
- *
  * @package IT_Cart_Buddy
  * @since 0.3.1
 */
@@ -41,7 +34,7 @@ function it_cart_buddy_get_product_type( $post=false ) {
  * @param string $product_type  slug for the product-type
 */
 function it_cart_buddy_get_product_type_options( $product_type ) {
-	if ( $addon = it_cart_buddy_get_add_on( $product_type ) )
+	if ( $addon = it_cart_buddy_get_addon( $product_type ) )
 		return $addon['options'];
 	
 	return false;
@@ -55,7 +48,10 @@ function it_cart_buddy_get_product_type_options( $product_type ) {
  * @rturn object IT_Cart_Buddy_Product object for passed post
 */
 function it_cart_buddy_get_product( $post ) {
-	return new IT_Cart_Buddy_Product( $post );
+	$product = new IT_Cart_Buddy_Product( $post );
+	if ( $product->ID )
+		return $product;
+	return false;
 }
 
 /**
@@ -102,8 +98,8 @@ function it_cart_buddy_product_has_feature( $product, $feature ) {
 	if ( ! is_object( $product ) || 'IT_Cart_Buddy_Product' != get_class( $product ) )
 		$product = it_cart_buddy_get_product( $product );
 
-	// Return false if this isn't a product ID
-	if ( ! $product->ID )
+	// Return false if this isn't a product
+	if ( ! $product )
 		return false;
 
 	// Return false if this product doesn't support this feature. Set feature_key if supported.
@@ -117,4 +113,23 @@ function it_cart_buddy_product_has_feature( $product, $feature ) {
 		return true;
 
 	return false;
+}
+
+/**
+ * Returns the feature requested
+ *
+ * @since 0.3.7
+ * @return mixed
+*/
+function it_cart_buddy_get_product_feature( $product, $feature ) {
+	if ( ! is_object( $product ) || 'IT_Cart_Buddy_Product' != get_class( $product ) )
+		$product = it_cart_buddy_get_product( $product );
+
+	// Return false if this isn't a product
+	if ( ! $product )
+		return false;
+	
+	$key = empty( $product->product_supports[$feature]['key'] ) ? false : $product->product_supports[$feature]['key'];
+	$product_feature = empty( $product->product_data[$key] ) ? false : $product->product_data[$key];
+	return apply_filters( 'it_cart_buddy_get_product_feature', $product_feature, $product, $feature );
 }

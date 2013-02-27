@@ -37,7 +37,7 @@ class IT_Cart_Buddy_Core_Addon_Product_Type_Meta_Box {
 	function print_meta_box( $post ) {
 		$product = it_cart_buddy_get_product( $post );
 
-		$enabled              = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) );
+		$enabled              = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
 		$current_product_type = $product->product_type;
 
 		if ( empty( $enabled ) ) {

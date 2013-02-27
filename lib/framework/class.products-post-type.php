@@ -80,7 +80,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 		$product = it_cart_buddy_get_product( $post );
 
 		// Add action for current product type
-		if ( $product_types = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) ) ) {
+		if ( $product_types = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'product-type' ) ) ) ) {
 			foreach( $product_types as $addon_slug => $params ) {
 				if ( $addon_slug == $product->product_type )
 					do_action( 'it_cart_buddy_product_metabox_callback_' . $addon_slug, $product );
@@ -105,7 +105,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 		if ( empty( $wp_post_types['it_cart_buddy_prod'] ) )
 			return;
 			
-		$product_add_ons = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) );
+		$product_add_ons = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
 		$product = array();
 
 		// Isolate the product type
@@ -148,7 +148,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 
 		$product_type = it_cart_buddy_get_product_type( $post );
 
-		$product_add_ons = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) );
+		$product_add_ons = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
 		$product = array();
 		if ( 1 == count( $product_add_ons ) ) {
 			$product = reset( $product_add_ons );
@@ -187,7 +187,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 			return;
 
 		// Grab enabled product add-ons
-		$product_type_addons = it_cart_buddy_get_enabled_add_ons( array( 'category' => 'product-type' ) );
+		$product_type_addons = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) );
 		
 		// Grab current post's product_type
 		$product_type = it_cart_buddy_get_product_type();
@@ -408,7 +408,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 			return;
 
 		$product = it_cart_buddy_get_product( $post );
-		if ( $product_type = it_cart_buddy_get_add_on( $product->product_type ) )
+		if ( $product_type = it_cart_buddy_get_addon( $product->product_type ) )
 			esc_attr_e( $product_type['name'] );
 	}
 }

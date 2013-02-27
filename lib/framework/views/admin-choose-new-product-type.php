@@ -12,7 +12,7 @@
 	<p>Temp UI...</p>
 	<ul>
 	<?php
-	foreach( it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) ) as $slug => $params ) {
+	foreach( it_cart_buddy_get_enabled_addons( array( 'category' => array( 'product-type' ) ) ) as $slug => $params ) {
 		echo '<li><a href="' . get_site_url() . '/wp-admin/post-new.php?post_type=it_cart_buddy_prod&product_type=' . $slug . '">' . $params['name'] . '</a>';
 	}
 	?>

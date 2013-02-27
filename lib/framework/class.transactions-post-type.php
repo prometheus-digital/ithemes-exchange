@@ -92,7 +92,7 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 		$transaction = it_cart_buddy_get_transaction( $post );
 
 		// Add action for current product type
-		if ( $transaction_methods = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'transaction-method' ) ) ) ) {
+		if ( $transaction_methods = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'transaction-method' ) ) ) ) {
 			foreach( $transaction_methods as $addon_slug => $params ) {
 				if ( $addon_slug == $transaction->transaction_method )
 					do_action( 'it_cart_buddy_transaction_metabox_callback_' . $addon_slug, $transaction );
@@ -124,7 +124,7 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 			return;
 
 		// Grab enabled transaction-method add-ons
-		$transaction_method_addons = it_cart_buddy_get_enabled_add_ons( array( 'category' => 'transaction-method' ) );
+		$transaction_method_addons = it_cart_buddy_get_enabled_addons( array( 'category' => 'transaction-method' ) );
 		
 		// Grab current post's transaction-method
 		$transaction_method = it_cart_buddy_get_transaction_method();
@@ -231,13 +231,13 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 		switch( $column ) {
 			case 'it_cart_buddy_transaction_method_column' :
 				$transaction = it_cart_buddy_get_transaction( $post );
-				if ( $transaction_method = it_cart_buddy_get_add_on( $transaction->transaction_method ) )
+				if ( $transaction_method = it_cart_buddy_get_addon( $transaction->transaction_method ) )
 					esc_attr_e( $transaction_method['name'] );
 				break;
 			case 'it_cart_buddy_transaction_status_column' :
 					$status = it_cart_buddy_get_transaction_status( $post );
 					$method = it_cart_buddy_get_transaction_method( $post );
-					$statuses = it_cart_buddy_get_add_on_support( $method, 'transaction_status' );
+					$statuses = it_cart_buddy_get_addon_support( $method, 'transaction_status' );
 					$statuses = $statuses['options'];
 					esc_attr_e( $statuses[$status] );
 				break;

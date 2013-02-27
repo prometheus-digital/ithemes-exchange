@@ -52,7 +52,7 @@ class IT_Cart_Buddy_Session {
 			$this->regenerate_session_id();
 
 		$this->load_products();
-		$this->load_session_data();
+		$this->load_data();
 	}
 
 	/**
@@ -72,7 +72,7 @@ class IT_Cart_Buddy_Session {
 	 * @return void
 	*/
 	function register_hooks() {
-		//add_action( 'init', array( $this, 'show_session_data' ) );
+		//add_action( 'init', array( $this, 'show_data' ) );
 	}
 
 
@@ -130,7 +130,7 @@ class IT_Cart_Buddy_Session {
 	 * @since 0.3.3
 	 * @return void
 	*/
-	private function load_session_data() {
+	private function load_data() {
 		$data = empty( $_SESSION['it_cart_buddy']['data'] ) ? array() : $_SESSION['it_cart_buddy']['data'];
 		$this->_session_data = $data;
 	}
@@ -155,13 +155,30 @@ class IT_Cart_Buddy_Session {
 	 * @param mixed $key optional identifier for the data.
 	 * @return void 
 	*/
-	function add_session_data( $data, $key=false ) {
+	function add_data( $data, $key=false ) {
 
 		if ( ! empty( $key ) )
 			$_SESSION['it_cart_buddy']['data'][$key] = $data;
 		else
 			$_SESSION['it_cart_buddy']['data'][] = $data;
-		$this->load_session_data();
+		$this->load_data();
+	}
+
+	/**
+	 * Updates session data if a valid key is provided
+	 *
+	 * @since 0.3.7
+	 * @param mixed $key which array are we updating? The entire array value for the key will be replaced.
+	 * @return boolean
+	*/
+	function update_data( $key, $data ) {
+		if ( empty( $key ) || ! isset( $this->_session_data[$key] ) )
+			return false;
+
+		$this->remove_data( $key );
+		$this->add_data( $data, $key );
+		
+		return true;
 	}
 
 	/**
@@ -174,8 +191,8 @@ class IT_Cart_Buddy_Session {
 	function remove_data( $key ) {
 		if ( isset( $_SESSION['it_cart_buddy']['data'][$key] ) ) {
 			unset( $_SESSION['it_cart_buddy']['data'][$key] );
-			$this->load_session_data();
-			$return true
+			$this->load_data();
+			return true;
 		}
 		return false;
 	}
@@ -186,9 +203,9 @@ class IT_Cart_Buddy_Session {
 	 * @since 0.3.7
 	 * @return array the $_session_data property
 	*/
-	function reset_data() {
+	function clear_data() {
 		$_SESSION['it_cart_buddy']['data'] = array();
-		$this->load_session_data();
+		$this->load_data();
 		return true;
 	}
 
@@ -224,6 +241,23 @@ class IT_Cart_Buddy_Session {
 	}
 
 	/**
+	 * Updates a product if a valid key is provided
+	 *
+	 * @since 0.3.7
+	 * @param mixed $key which array are we updating? The entire product will be replaced.
+	 * @return boolean
+	*/
+	function update_product( $key, $product ) {
+		if ( empty( $key ) || ! isset( $this->_products[$key] ) )
+			return false;
+
+		$this->remove_product( $key );
+		$this->add_product( $product, $key );
+		
+		return true;
+	}
+
+	/**
 	 * Removes a product from products array in the PHP Session
 	 *
 	 * @since 0.3.3
@@ -234,7 +268,7 @@ class IT_Cart_Buddy_Session {
 		if ( isset( $_SESSION['it_cart_buddy']['products'][$key] ) ) {
 			unset( $_SESSION['it_cart_buddy']['products'][$key] );
 			$this->load_products();
-			$return true
+			return true;
 		}
 		return false;
 	}
@@ -245,7 +279,7 @@ class IT_Cart_Buddy_Session {
 	 * @since 0.3.3
 	 * @return array the $_products_property
 	*/
-	function reset_products() {
+	function clear_products() {
 		$_SESSION['it_cart_buddy']['products'] = array();
 		$this->load_products();
 		return true;

@@ -40,10 +40,10 @@ class IT_Cart_Buddy_Core_Addon_Transaction_Status_Meta_Box {
 		$current_status     = it_cart_buddy_get_transaction_status( $transaction );
 		$transaction_method = it_cart_buddy_get_transaction_method( $transaction );
 
-		if ( ! it_cart_buddy_add_on_supports( $transaction_method, 'transaction_status' ) )
+		if ( ! it_cart_buddy_addon_supports( $transaction_method, 'transaction_status' ) )
 			return;
 
-		$available_statuses  = it_cart_buddy_get_add_on_support( $transaction_method, 'transaction_status' );
+		$available_statuses  = it_cart_buddy_get_addon_support( $transaction_method, 'transaction_status' );
 		$available_statuses = empty( $available_statuses['options'] ) ? array() : $available_statuses['options'];
 
 		if ( count( $available_statuses ) < 2 ) {

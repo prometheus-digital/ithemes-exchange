@@ -6,64 +6,26 @@
  * @package IT_Cart_Buddy
 */
 
-/**
- * Main Class for default Shopping Cart plugin. 
- *
- * Registers all hooks needed for printing shopping cart and for interacting with other add-ons
- *
- * @since 0.3.7
-*/
-class IT_Cart_Buddy_Add_On_Default_Shopping_Cart {
-	
-	/**
-	 * Constructor. Register's hooks
-	 *
-	 * @since 0.3.7
-	 * @return void
-	*/
-	function IT_Cart_Buddy_Add_On_Default_Shopping_Cart() {
+if ( ! is_admin() ) {
+	// Includes
+	include( 'lib.php' );
+	include( 'template-functions.php' );
+	include( 'data-functions.php' );
 
-		if ( ! is_admin() ) {
-			// Frontend
-			add_action( 'it_cart_buddy_print_shopping_cart-default-shopping-cart', array( $this, 'print_shopping_cart' ) );
-			add_action( 'it_cart_buddy_get_shopping_cart_html-default-shopping-cart', array( $this, 'get_shopping_cart_html' ) );
-		} else {
-			// Backend
-		}
-	}
+	// Low Level Cart API Hooks for theme developers. See /api/carts/cart-template_tags.php
+	add_filter( 'it_cart_buddy_get_cart_products-default-shopping-cart', 'it_cart_buddy_default_cart_get_products' );
+	add_filter( 'it_cart_buddy_get_cart_product-default-shopping-cart', 'it_cart_buddy_default_cart_get_product', 10, 2 );
+	add_filter( 'it_cart_buddy_get_cart_get_product_attribute-default-shopping-cart', 'it_cart_buddy_get_product_attribute', 10, 3 );
+	add_filter( 'it_cart_buddy_get_cart_form_vars-default-shopping-cart', 'it_cart_buddy_default_cart_get_form_vars', 10, 2 );
+	add_filter( 'it_cart_buddy_get_cart_total-default-shopping-cart', 'it_cart_buddy_default_cart_get_total' );
 
-	/**
-	 * Prints the shopping cart
-	 *
-	 * @since 0.3.7
-	 * @return void
-	*/
-	function print_shopping_cart() {
-		echo $this->get_shopping_cart_html();
-	}
+	// Cart Data processing hooks
+	add_action( 'template_redirect', 'it_cart_buddy_default_cart_add_product_to_cart' );
+	add_action( 'template_redirect', 'it_cart_buddy_default_cart_empty_cart' );
 
-	/**
-	 * Returns the shopping cart HTML 
-	 *
-	 * @since 0.3.7
-	 * @return string html for the shopping cart 
-	*/
-	function get_shopping_cart_html() {
-
-		$products = it_cart_buddy_get_session_products();
-
-		$html = '';
-		$html .= apply_filters( 'it_cart_buddy_default_shopping_cart-above_cart_div', '' );
-		$html .= '<div class="it_cart_buddy_default_shopping_cart">';
-		if ( count( $products ) < 1 ) {
-			$html .= apply_filters( 'it_cart_buddy_default_shopping_cart-no_items_in_cart', '<p>' . __( 'You have no items in your cart', 'LION' ) . '</p>' );
-		} else {
-			$html .= "<p>This is a shopping cart</p>";
-		}
-		$html .= '</div>';
-		$html .= apply_filters( 'it_cart_buddy_default_shopping_cart-below_cart_div', '' );
-
-		return $html;
-	}
+	// High level Cart API Hooks for theme developers 
+	add_filter( 'it_cart_buddy_get_shopping_cart_html-default-shopping-cart', 'it_cart_buddy_default_cart_get_cart_html', 10, 2 );
+	add_action( 'it_cart_buddy_get_add_to_cart_button-default-shopping-cart', 'it_cart_buddy_default_cart_get_add_to_cart_button', 10, 2 );
+} else {
+	// Backend
 }
-$IT_Cart_Buddy_Add_On_Default_Shopping_Cart = new IT_Cart_Buddy_Add_On_Default_Shopping_Cart();

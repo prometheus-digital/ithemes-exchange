@@ -89,6 +89,9 @@ class IT_Cart_Buddy_Product {
 		// Set the product type
 		$this->set_product_type();
 
+		// Register filters to set values for supported features based on componant type
+		add_filter( 'it_cart_buddy_set_product_data_for_post_meta_componant', array( $this, 'set_feature_value_for_post_meta_componant' ), 10, 3 );
+
 		// Set the product data
 		if ( did_action( 'init' ) )
 			$this->set_product_supports_and_data();
@@ -131,22 +134,43 @@ class IT_Cart_Buddy_Product {
 		if ( $product_type_options = it_cart_buddy_get_product_type_options( $this->product_type ) ) {
 			if ( ! empty( $product_type_options['supports'] ) ) {
 				foreach( $product_type_options['supports'] as $feature => $params ) {
-
 					// Set the product_supports array
 					$this->product_supports[$feature] = $params;
 
-					// product_data only contains post_meta data
-					if ( 'post_meta' != $params['componant'] )
-						continue;
+					// Set the product data via a filter.
+					$value = apply_filters( 'it_cart_buddy_set_product_data_for_' . $params['componant'] . '_componant', false, $this->ID, $params );
 
-					// Set product_data to post_meta value or feature devault
-					if ( $value = get_post_meta( $this->ID, $params['key'], true ) )
-						$this->product_data[$params['key']] = $value;
+					// Set to default if it exists
+					$default = empty( $product_type_options['supports'][$feature]['default'] ) ? false : $product_type_options['supports'][$feature]['default'];
+					if ( empty( $value ) )
+						$this->product_data[$params['key']] = $default;
 					else
-						$this->product_data[$params['key']] = $this->product_supports[$feature]['default'];
+						$this->product_data[$params['key']] = $value;
 				}
 			}
 		}
+	}
+
+	/**
+	 * Sets supported feature values for post_meta componant
+	 *
+	 * @since 0.3.7
+	 * @param string existing value
+	 * @param integer product id
+	 * @param array params for supports array registered with the add-on
+	 * @return mixed value of post_meta
+	*/
+	function set_feature_value_for_post_meta_componant( $existing, $product, $params ) {
+
+		// Return if someone else beat us to it.
+		if ( ! empty( $existing ) )
+			return $existing;
+
+		// Set product_data to post_meta value or feature devault
+		if ( $value = get_post_meta( $product, $params['key'], true ) )
+			return $value;
+
+		return false;
 	}
 
     /** 
@@ -165,7 +189,7 @@ class IT_Cart_Buddy_Product {
         if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow )
 			return; // Don't remove any if not on post-new / or post.php
 
-		if ( $addon = it_cart_buddy_get_add_on( $this->product_type ) ) { 
+		if ( $addon = it_cart_buddy_get_addon( $this->product_type ) ) { 
 			// Remove any supports args that the product add-on does not want.
 			foreach( $supports as $option ) { 
                 if ( empty( $addon['options']['supports'][$option] ) )

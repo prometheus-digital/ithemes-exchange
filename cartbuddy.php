@@ -58,7 +58,7 @@ class IT_Cart_Buddy {
 		require( $this->_plugin_path . '/api/load.php' );
 		require( $this->_plugin_path . '/core-addons/load.php' );
 
-		add_action( 'it_libraries_loaded', array( $this, 'init_addons' ) );
+		add_action( 'it_libraries_loaded', array( $this, 'addons_init' ) );
 	}
 
 	/**
@@ -100,8 +100,8 @@ class IT_Cart_Buddy {
 	 * @since 0.3.1
 	 * @return void
 	*/
-	function init_addons() {
-		if ( $addons = it_cart_buddy_get_enabled_add_ons() ) {
+	function addons_init() {
+		if ( $addons = it_cart_buddy_get_enabled_addons() ) {
 			foreach( (array) $addons as $slug => $params ) {
 				include( $params['file'] );
 			}

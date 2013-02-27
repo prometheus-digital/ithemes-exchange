@@ -13,7 +13,7 @@
 
 	<h3>Enabled Add-ons</h3>
 	<?php
-	if ( $enabled = it_cart_buddy_get_options( 'cart_buddy_enabled_add_ons' ) ) { 
+	if ( $enabled = it_cart_buddy_get_option( 'cart_buddy_enabled_add_ons' ) ) { 
 		foreach( (array) $enabled as $slug => $location ) { 
 			if ( empty( $registered[$slug] ) ) 
 				continue;

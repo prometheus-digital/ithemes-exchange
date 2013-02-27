@@ -7,7 +7,7 @@
  * @uses it_cart_buddy_register_add_on()
  * @return void
 */
-function it_cart_buddy_register_core_add_ons() {
+function it_cart_buddy_register_core_addons() {
 
 	// An array of add-ons provided by Cart Buddy
 	$add_ons = array(
@@ -79,7 +79,9 @@ function it_cart_buddy_register_core_add_ons() {
 				'labels'   => array(
 					'singular_name' => __( 'Membership', 'LION' ),
 				),
-				'supports' => apply_filters( 'it_cart_buddy_register_digital_downloads_default_features', array() ),
+				'supports' => apply_filters( 'it_cart_buddy_register_digital_downloads_default_features', array(
+					'base_price' => false,
+				) ),
 			),
 		),
 		// Default Shopping Cart UI 
@@ -104,7 +106,7 @@ function it_cart_buddy_register_core_add_ons() {
 			'options'     => array( 'category' => 'admin' ),
 		),
 	);
-	$add_ons = apply_filters( 'it_cart_buddy_core_add_ons', $add_ons );
+	$add_ons = apply_filters( 'it_cart_buddy_core_addons', $add_ons );
 
 	// Loop through add-ons and register each one individually
 	foreach( (array) $add_ons as $slug => $params ) {
@@ -113,10 +115,10 @@ function it_cart_buddy_register_core_add_ons() {
 		$file        = empty( $params['file'] )        ? false   : $params['file'];
 		$options     = empty( $params['options'] )     ? array() : (array) $params['options'];
 
-		it_cart_buddy_register_add_on( $slug, $name, $description, $file, $options );
+		it_cart_buddy_register_addon( $slug, $name, $description, $file, $options );
 	}
 }
-add_action( 'it_libraries_loaded', 'it_cart_buddy_register_core_add_ons' );
+add_action( 'it_libraries_loaded', 'it_cart_buddy_register_core_addons' );
 
 /**
  * Register's Core Cart Buddy Add-on Categories
@@ -125,7 +127,7 @@ add_action( 'it_libraries_loaded', 'it_cart_buddy_register_core_add_ons' );
  * @uses it_cart_buddy_register_add_on_category()
  * @return void
 */
-function it_cart_buddy_register_core_add_on_categories() {
+function it_cart_buddy_register_core_addon_categories() {
 	// An array of our core add-on categories
 	$cats = array(
 		'product-type' => array(
@@ -145,6 +147,11 @@ function it_cart_buddy_register_core_add_on_categories() {
 					),
 					'thumbnail' => array(
 						'key'       => '_thumbnail_id',
+						'componant' => 'post_meta',
+						'default'   => false,
+					),
+					'base_price' => array(
+						'key'       => '_it_cart_buddy_base_price',
 						'componant' => 'post_meta',
 						'default'   => false,
 					),
@@ -197,7 +204,7 @@ function it_cart_buddy_register_core_add_on_categories() {
 			'options'     => array(),
 		),
 	);
-	$cats = apply_filters( 'it_cart_buddy_core_add_on_categories', $cats );
+	$cats = apply_filters( 'it_cart_buddy_core_addon_categories', $cats );
 
 	// Loop through categories and register each one individually
 	foreach( (array) $cats as $slug => $params ) {
@@ -205,7 +212,7 @@ function it_cart_buddy_register_core_add_on_categories() {
 		$description = empty( $params['description'] ) ? ''      : $params['description'];
 		$options     = empty( $params['options'] )     ? array() : (array) $params['options'];
 
-		it_cart_buddy_register_add_on_category( $slug, $name, $description, $options );
+		it_cart_buddy_register_addon_category( $slug, $name, $description, $options );
 	}
 }
-add_action( 'it_libraries_loaded', 'it_cart_buddy_register_core_add_on_categories' );
+add_action( 'it_libraries_loaded', 'it_cart_buddy_register_core_addon_categories' );

@@ -18,7 +18,7 @@
  * @param boolean $merge_defaults attempt to merge with default values
  * @return mixed value of passed key
 */
-function it_cart_buddy_get_options( $key, $break_cache=false, $merge_defaults=true ) {
+function it_cart_buddy_get_option( $key, $break_cache=false, $merge_defaults=true ) {
 	$storage = it_cart_buddy_get_storage( $key );
 
 	if ( $break_cache )
@@ -39,7 +39,7 @@ function it_cart_buddy_get_options( $key, $break_cache=false, $merge_defaults=tr
  * @param mixed $value the values to save to the options key
  * @return void
 */
-function it_cart_buddy_save_options( $key, $value ) {
+function it_cart_buddy_save_option( $key, $value ) {
 	$storage = it_cart_buddy_get_storage( $key );
 	return $storage->save( $value );
 }

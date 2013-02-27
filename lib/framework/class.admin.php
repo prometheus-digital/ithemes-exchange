@@ -145,7 +145,7 @@ class IT_Cart_Buddy_Admin {
 		// Add Add-ons menu item
 		$callback = array( $this, 'print_cart_buddy_add_ons_page' );
 		if ( 'it-cart-buddy-addons' == $this->_current_page && ! empty( $_GET['add_on_settings'] ) ) {
-			if ( $addon = it_cart_buddy_get_add_on( $_GET['add_on_settings'] ) ) {
+			if ( $addon = it_cart_buddy_get_addon( $_GET['add_on_settings'] ) ) {
 				if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) )
 					$callback = $addon['options']['settings-callback'];
 			}
@@ -161,7 +161,7 @@ class IT_Cart_Buddy_Admin {
 	*/
 	function add_product_submenus() {
 		// Check for enabled product add-ons. Don't need product pages if we don't have product add-ons enabled
-		if ( $enabled_product_types = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) ) ) {
+		if ( $enabled_product_types = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'product-type' ) ) ) ) {
 			$add_on_count = count( $enabled_product_types );
 			add_submenu_page( 'it-cart-buddy', 'All Products', 'All Products', $this->admin_menu_capability, 'edit.php?post_type=it_cart_buddy_prod' );
 			if ( 1 == $add_on_count ) {
@@ -279,8 +279,8 @@ class IT_Cart_Buddy_Admin {
 	 * @return void
 	*/
 	function print_cart_buddy_add_ons_page() {
-		$registered = it_cart_buddy_get_add_ons();
-		$add_on_cats = it_cart_buddy_get_add_on_categories();
+		$registered = it_cart_buddy_get_addons();
+		$add_on_cats = it_cart_buddy_get_addon_categories();
 		$message = empty( $_GET['message'] ) ? false : $_GET['message'];
 		if ( 'enabled' == $message )
 			ITUtility::show_status_message( __( 'Add-on enabled.', 'LION' ) );
@@ -308,16 +308,16 @@ class IT_Cart_Buddy_Admin {
 		if ( ! $enable_addon && ! $disable_addon )
 			return;
 
-		$registered    = it_cart_buddy_get_add_ons();
+		$registered    = it_cart_buddy_get_addons();
 
 		// Enable or Disable addon requested by user
 		if ( $enable_addon ) {
 			if ( $nonce_valid = wp_verify_nonce( $_GET['_wpnonce'], 'cart-buddy-enable-add-on' ) )
-				$enabled = it_cart_buddy_enable_add_on( $enable_addon );
+				$enabled = it_cart_buddy_enable_addon( $enable_addon );
 			$message = 'enabled';
 		} else if ( $disable_addon ) {
 			if ( $nonce_valid = wp_verify_nonce( $_GET['_wpnonce'], 'cart-buddy-disable-add-on' ) )
-				$enabled = it_cart_buddy_disable_add_on( $disable_addon );
+				$enabled = it_cart_buddy_disable_addon( $disable_addon );
 			$message = 'disabled';
 		}
 
@@ -328,17 +328,17 @@ class IT_Cart_Buddy_Admin {
 		}
 		
 		// Disable any enabled add-ons that aren't registered any more while we're here.
-		$enabled_addons = it_cart_buddy_get_enabled_add_ons();
+		$enabled_addons = it_cart_buddy_get_enabled_addons();
 		foreach( (array) $enabled_addons as $slug => $file ) {
 			if ( empty( $registered[$slug] ) )
-				it_cart_buddy_disable_add_on( $slug );
+				it_cart_buddy_disable_addon( $slug );
 		}
 			
 		$redirect_to = admin_url( '/admin.php?page=it-cart-buddy-addons&message=' . $message );
 
 		// Redirect to settings page on activation if it exists
 		if ( $enable_addon ) {
-			if ( $enabled = it_cart_buddy_get_add_on( $enable_addon ) )  {
+			if ( $enabled = it_cart_buddy_get_addon( $enable_addon ) )  {
 				if ( ! empty( $enabled['options']['settings-callback'] ) && is_callable( $enabled['options']['settings-callback'] ) )
 					$redirect_to .= '&add_on_settings=' . $enable_addon;
 			}
@@ -392,7 +392,7 @@ class IT_Cart_Buddy_Admin {
 	*/
 	function redirect_post_new_to_product_type_selection_screen() {
 		global $pagenow;
-		$product_type_add_ons = it_cart_buddy_get_enabled_add_ons( array( 'category' => array( 'product-type' ) ) );
+		$product_type_add_ons = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
 		$post_type            = empty( $_GET['post_type'] ) ? false : $_GET['post_type'];
 		$product_type         = empty( $_GET['product_type'] ) ? false : $_GET['product_type'];
 

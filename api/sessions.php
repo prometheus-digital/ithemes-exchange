@@ -16,7 +16,7 @@
  * @since 0.3.3
  * @return object  instance of IT_Cart_Buddy_Session
 */
-function it_cart_buddy_session_get() {
+function it_cart_buddy_get_session() {
 
 	// No sessions in the admin
 	if ( is_admin() )
@@ -32,8 +32,8 @@ function it_cart_buddy_session_get() {
  * @since 0.3.3
  * @return array  an array of session_data stored in $_SESSION['it_cart_buddy']
 */
-function it_cart_buddy_session_data_get() {
-	$session = it_cart_buddy_session_get();
+function it_cart_buddy_get_session_data() {
+	$session = it_cart_buddy_get_session();
 	return $session->get_data();
 }
 
@@ -50,10 +50,24 @@ function it_cart_buddy_session_data_get() {
  * @param mixed $key optional identifier for the data.
  * @return void 
 */
-function it_cart_buddy_session_data_add( $data, $key=false ) {
-	$session = it_cart_buddy_session_get();
+function it_cart_buddy_add_session_data( $data, $key=false ) {
+	$session = it_cart_buddy_get_session();
 	$session->add_data( $data, $key );
-	do_action( 'it_cart_buddy_session_data_add', $data, $key );
+	do_action( 'it_cart_buddy_add_session_data', $data, $key );
+}
+
+/**
+ * Updates session data by key
+ *
+ * @since 0.3.7
+ * @param mixed $key key for the data
+ * @param mixed $data updated data
+ * @return void
+*/
+function it_cart_buddy_update_session_data( $key, $data ) {
+	$session = it_cart_buddy_get_session();
+	$session->update_data( $key, $data );
+	do_action( 'it_cart_buddy_update_session_data', $key, $data );
 }
 
 /**
@@ -63,11 +77,11 @@ function it_cart_buddy_session_data_add( $data, $key=false ) {
  * @param mixed $key array key for the data to be removed
  * @return boolean
 */
-function it_cart_buddy_session_data_remove( $key ) {
-	$session = it_cart_buddy_session_get();
+function it_cart_buddy_remove_session_data( $key ) {
+	$session = it_cart_buddy_get_session();
 	$result = $session->remove_data( $key );
 	if ( $result ) {
-		do_action( 'it_cart_buddy_session_data_remove', $key );
+		do_action( 'it_cart_buddy_get_session_data', $key );
 		return true;
 	}
 	return false;
@@ -79,11 +93,11 @@ function it_cart_buddy_session_data_remove( $key ) {
  * @since 0.3.7
  * @return boolean
 */
-function it_cart_buddy_session_data_remove_all() {
+function it_cart_buddy_clear_session_data() {
 	$session = it_cart_buddy_get_session();
-	$result = $session->reset_data();
+	$result = $session->clear_data();
 	if ( $result ) {
-		do_action( 'it_cart_buddy_session_data_remove_all' );
+		do_action( 'it_cart_buddy_clear_session_data' );
 		return true;
 	}
 	return false;
@@ -95,8 +109,8 @@ function it_cart_buddy_session_data_remove_all() {
  * @since 0.3.3
  * @return array  an array of products stored in $_SESSION['it_cart_buddy']
 */
-function it_cart_buddy_session_products_get() {
-	$session = it_cart_buddy_session_get();
+function it_cart_buddy_get_session_products() {
+	$session = it_cart_buddy_get_session();
 	return $session->get_products();
 }
 
@@ -113,10 +127,24 @@ function it_cart_buddy_session_products_get() {
  * @param mixed $key optional identifier for the product.
  * @return void 
 */
-function it_cart_buddy_session_product_add( $product, $key=false ) {
-	$session = it_cart_buddy_session_get();
+function it_cart_buddy_add_session_product( $product, $key=false ) {
+	$session = it_cart_buddy_get_session();
 	$session->add_product( $product, $key );
-	do_action( 'it_cart_buddy_session_product_add', $product, $key );
+	do_action( 'it_cart_buddy_add_session_product', $product, $key );
+}
+
+/**
+ * Updates a session product
+ *
+ * @since 0.3.7
+ * @param mixed $session_product_key key for the product in the cart
+ * @param mixed $product_data updated product data
+ * @return void
+*/
+function it_cart_buddy_update_session_product( $key, $product ) {
+	$session = it_cart_buddy_get_session();
+	$session->update_product( $key, $product );
+	do_action( 'it_cart_buddy_update_session_product', $key, $product );
 }
 
 /**
@@ -126,11 +154,11 @@ function it_cart_buddy_session_product_add( $product, $key=false ) {
  * @param mixed $key array key for the product to be removed
  * @return boolean
 */
-function it_cart_buddy_session_product_remove( $key ) {
-	$session = it_cart_buddy_session_get();
+function it_cart_buddy_remove_session_product( $key ) {
+	$session = it_cart_buddy_get_session();
 	$result = $session->remove_product( $key );
 	if ( $result ) {
-		do_action( 'it_cart_buddy_session_product_remove', $key );
+		do_action( 'it_cart_buddy_remove_session_product', $key );
 		return true;
 	}
 	return false;
@@ -142,11 +170,11 @@ function it_cart_buddy_session_product_remove( $key ) {
  * @since 0.3.3
  * @return boolean
 */
-function it_cart_buddy_session_products_remove_all() {
+function it_cart_buddy_clear_session_products() {
 	$session = it_cart_buddy_get_session();
-	$result = $session->reset_products();
+	$result = $session->clear_products();
 	if ( $result ) {
-		do_action( 'it_cart_buddy_session_products_remove_all' );
+		do_action( 'it_cart_buddy_clear_session_products' );
 		return true;
 	}
 	return false;

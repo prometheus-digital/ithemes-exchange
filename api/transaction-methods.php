@@ -46,7 +46,7 @@ function it_cart_buddy_get_transaction_method( $transaction=false ) {
  * @param string $transaction_method  slug for the transaction-method
 */
 function it_cart_buddy_get_transaction_method_options( $transaction_method ) {
-	if ( $addon = it_cart_buddy_get_add_on( $transaction_method ) )
+	if ( $addon = it_cart_buddy_get_addon( $transaction_method ) )
 		return $addon['options'];
 	
 	return false;
@@ -121,7 +121,7 @@ function it_cart_buddy_add_transaction( $args=array() ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	// Do we have a transaction method and is it an enabled add-on?
-	$enabled_transaction_methods = (array) it_cart_buddy_get_enabled_add_ons( array( 'category' => 'transaction-methods' ) );
+	$enabled_transaction_methods = (array) it_cart_buddy_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
 	if ( empty( $args['transaction-method'] ) || ! in_array( $args['transaction-method'], array_keys( $enabled_transaction_methods ) ) )
 		return false;
 

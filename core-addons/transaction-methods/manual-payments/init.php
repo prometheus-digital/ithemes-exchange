@@ -9,6 +9,8 @@
 /**
  * Call back for settings page
  *
+ * This is set in options array when registering the add-on and called from it_cart_buddy_enable_addon()
+ *
  * @since 0.3.6
  * @return void
 */
@@ -74,7 +76,7 @@ class IT_Cart_Buddy_Manual_Payments_Add_On {
 	}
 
 	function print_settings_page() {
-		$settings = it_cart_buddy_get_options( 'cart-buddy-addon-manual-payments', true );
+		$settings = it_cart_buddy_get_option( 'cart-buddy-addon-manual-payments', true );
 		$form_values  = empty( $this->error_message ) ? $settings : ITForm::get_post_data();
 		$default_status_options = $this->get_default_status_options();
 		$form_options = array(
@@ -98,7 +100,7 @@ class IT_Cart_Buddy_Manual_Payments_Add_On {
 	 * @return void
 	*/
 	function save_settings() {
-		$defaults = it_cart_buddy_get_options( 'cart-buddy-addon-manual-payments' );
+		$defaults = it_cart_buddy_get_option( 'cart-buddy-addon-manual-payments' );
 		$new_values = wp_parse_args( ITForm::get_post_data(), $defaults );
 
 		// Check nonce
@@ -108,7 +110,7 @@ class IT_Cart_Buddy_Manual_Payments_Add_On {
 		}
 
 		$errors = apply_filters( 'it_cart_buddy_add_on_manual_transaction_validate_settings', $this->get_form_errors( $new_values ), $new_values );
-		if ( ! $errors && it_cart_buddy_save_options( 'cart-buddy-addon-manual-payments', $new_values ) ) {
+		if ( ! $errors && it_cart_buddy_save_option( 'cart-buddy-addon-manual-payments', $new_values ) ) {
 			ITUtility::show_status_message( __( 'Settings saved.', 'LION' ) );
 		} else if ( $errors ) {
 			$errors = implode( '<br />', $errors );
@@ -147,7 +149,7 @@ class IT_Cart_Buddy_Manual_Payments_Add_On {
 	 * @return void
 	*/
 	function get_default_status_options() {
-		$add_on = it_cart_buddy_get_add_on( 'manual-payments' );
+		$add_on = it_cart_buddy_get_addon( 'manual-payments' );
 		$options = empty( $add_on['options']['supports']['transaction_status']['options'] ) ? array() : $add_on['options']['supports']['transaction_status']['options'];
 		return $options;
 	}

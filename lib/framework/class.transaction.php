@@ -166,7 +166,7 @@ class IT_Cart_Buddy_Transaction {
         if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow )
 			return; // Don't remove any if not on post-new / or post.php
 
-		if ( $addon = it_cart_buddy_get_add_on( $this->transaction_method ) ) { 
+		if ( $addon = it_cart_buddy_get_addon( $this->transaction_method ) ) { 
 			// Remove any supports args that the transaction add-on does not want.
 			foreach( $supports as $option ) { 
                 if ( empty( $addon['options']['supports'][$option] ) )
