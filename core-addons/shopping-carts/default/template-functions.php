@@ -243,13 +243,18 @@ function it_cart_buddy_default_shopping_cart_get_table_cell( $column, $product )
 			$html = $db_product->post_title;
 			break;
 		case 'product-cost' :
-			$html = '$10';
+			$base_price = it_cart_buddy_get_product_feature( $product['product_id'], 'base_price' );
+			$base_price = apply_filters( 'it_cart_buddy_default_shopping_cart_get_product_base_price', $base_price, $product );
+			$html = '$' . $base_price;
 			break;
 		case 'product-quantity' :
 			$html = '<input type="text" name="product_quantity[' . $product['product_cart_id'] . ']" value="' . $product['count'] . '" size="4"/>';
 			break;
 		case 'product-subtotal' :
-			$html = '$' . 10 * $product['count'];
+			$base_price = it_cart_buddy_get_product_feature( $product['product_id'], 'base_price' );
+			$base_price = apply_filters( 'it_cart_buddy_default_shopping_cart_get_product_base_price', $base_price, $product );
+			$sub_price = apply_filters( 'it_cart_buddy_default_shopping_cart_get_product_subtotal', $base_price * $product['count'], $product );
+			$html = '$' . $sub_price; 
 			break;
 		default :
 			$html = '';
