@@ -22,6 +22,7 @@ if ( ! is_admin() ) {
 	// Cart Data processing hooks
 	add_action( 'template_redirect', 'it_cart_buddy_default_cart_add_product_to_cart' );
 	add_action( 'template_redirect', 'it_cart_buddy_default_cart_empty_cart' );
+	add_action( 'template_redirect', 'it_cart_buddy_default_cart_remove_product_from_cart' );
 
 	// High level Cart API Hooks for theme developers 
 	add_filter( 'it_cart_buddy_get_shopping_cart_html-default-shopping-cart', 'it_cart_buddy_default_cart_get_cart_html', 10, 2 );

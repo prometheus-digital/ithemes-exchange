@@ -7,18 +7,6 @@
 */
 
 /**
- * Empty the default Cart Buddy shopping cart add-on
- *
- * @since 0.3.7
- * @return void
-*/
-function it_cart_buddy_default_cart_empty_cart() {
-	if ( ! empty( $_REQUEST['cart_buddy_empty_cart'] ) )
-		it_cart_buddy_clear_session_products();
-		do_action( 'it_cart_buddy_default_cart-empty_cart' );
-}
-
-/**
  * Adds a product to the shopping cart based on the cart_buddy_add_to_cart query arg
  *
  * @since 0.3.7
@@ -69,5 +57,38 @@ function it_cart_buddy_default_cart_add_product_to_cart() {
 
 		it_cart_buddy_add_session_product( $product, $product_id . '-' . $itemized_hash );
 		do_action( 'it_cart_buddy_default_cart-product_added', $product_id );
+	}
+}
+
+/**
+ * Empty the default Cart Buddy shopping cart add-on
+ *
+ * @since 0.3.7
+ * @return void
+*/
+function it_cart_buddy_default_cart_empty_cart() {
+	if ( ! empty( $_REQUEST['cart_buddy_empty_cart'] ) )
+		it_cart_buddy_clear_session_products();
+		do_action( 'it_cart_buddy_default_cart-empty_cart' );
+}
+
+/**
+ * Removes a single product from the shopping cart
+ *
+ * This function removes a product from the cart. It is called via template_redirect and looks for the product ID in REQUEST
+ * Optionally, theme developers may invoke it directly with the products cart_id
+ *
+ * @since 0.3.7
+ * @param string $product_id optional param to specifcy which product gets deleted
+*/
+function it_cart_buddy_default_cart_remove_product_from_cart( $product_id=false ) {
+	if ( ! $product_id ) {
+		$product_id = empty( $_REQUEST['cart_buddy_remove_product_from_cart'] ) ? false : $_REQUEST['cart_buddy_remove_product_from_cart'];
+	}
+
+	// Remove from the Session
+	if ( $product_id ) {
+		it_cart_buddy_remove_session_product( $product_id );
+		do_action( 'it_cart_buddy_default_cart-removed_product_from_cart', $product_id );
 	}
 }
