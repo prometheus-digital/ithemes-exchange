@@ -40,3 +40,16 @@ function it_cart_buddy_get_add_product_to_shopping_cart_html( $product, $shortco
     $active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
     return apply_filters( 'it_cart_buddy_get_add_product_to_shopping_cart_html-' . $active_cart, '', $product, $shortcode_args, $shortcode_content );
 }
+
+/**
+ * Prints the HTML for the empty cart action
+ *
+ * This prints HTML for a form element. It is assumed that it will be used inside the shopping cart form
+ *
+ * @since 0.3.7
+ * @return string HTML
+*/
+function it_cart_buddy_get_empty_shopping_cart_html() {
+    $active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
+	return apply_filters( 'it_cart_buddy_get_empty_shopping_cart_html-' . $active_cart, '' );
+}

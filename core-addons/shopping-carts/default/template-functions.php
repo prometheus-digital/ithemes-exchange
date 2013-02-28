@@ -246,7 +246,9 @@ function it_cart_buddy_default_shopping_cart_get_table_close() {
  * @return string HTML
 */
 function it_cart_buddy_default_shopping_cart_get_form_close() {
-	$html = '</form>';
+	$html = '';
+	$html .= it_cart_buddy_get_empty_shopping_cart_html();
+	$html .= '</form>';
 	return apply_filters( 'it_cart_buddy_default_shopping_cart_form_footer', $html );
 }
 
@@ -301,10 +303,12 @@ function it_cart_buddy_default_cart_get_add_product_to_cart_html( $existing_html
  * Returns the HTML for empty_cart action
  *
  * @since 0.3.7
+ * @param string $existing exisiting HTML passed through by WP filter. Ignored here.
  * @return string HTML
 */
-function get_empty_cart_button( $existing=false ) {
-	$html = '<input type="submit" name="_empty_cart" value="Empty Cart" />';
+function it_cart_buddy_default_cart_get_empty_cart_button( $existing=false ) {
+	$html = '<input type="submit" name="cart_buddy_empty_cart" value="' . __( 'Empty Cart', 'LION' ) . '" />';
+	apply_filters( 'it_cart_buddy_default_cart_empty_cart_button', $html );
 	return $html;
 }
 
