@@ -112,7 +112,7 @@ function it_cart_buddy_default_cart_update_shopping_cart() {
 	$quantities = empty( $_POST['product_quantity'] ) ? false : (array) $_POST['product_quantity'];
 
 	foreach( $quantities as $product => $quantity ) {
-		if ( ! empty( $cart_products[$product] ) ) {
+		if ( ! empty( $cart_products[$product] ) && is_numeric( $quantity ) ) {
 			$cart_product = $cart_products[$product];
 			if ( empty( $quantity ) || $quantity < 1 ) {
 				it_cart_buddy_remove_session_product( $product );
