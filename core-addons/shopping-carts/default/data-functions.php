@@ -123,3 +123,22 @@ function it_cart_buddy_default_cart_update_shopping_cart() {
 		}
 	}
 }
+
+/**
+ * Returns the cart total
+ *
+ * @since 0.3.7
+ * @param mixed $total existing total passed through by WP filter. Not used here.
+*/
+function it_cart_buddy_default_cart_get_cart_total( $existing ) {
+	$cart_total = 0;
+	if ( $products = it_cart_buddy_get_session_products() ) {
+		foreach( $products as $product ) {
+			$base_price     = it_cart_buddy_get_product_feature( $product['product_id'], 'base_price' );
+			$itemized_price = $product['count'] * $base_price;
+			if ( ! empty( $itemized_price ) )
+				$cart_total += $itemized_price;
+		}
+	}
+	return $cart_total;
+}

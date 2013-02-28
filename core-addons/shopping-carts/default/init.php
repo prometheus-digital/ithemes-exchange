@@ -17,7 +17,7 @@ if ( ! is_admin() ) {
 	add_filter( 'it_cart_buddy_get_cart_product-default-shopping-cart', 'it_cart_buddy_default_cart_get_product', 10, 2 );
 	add_filter( 'it_cart_buddy_get_cart_get_product_attribute-default-shopping-cart', 'it_cart_buddy_get_product_attribute', 10, 3 );
 	add_filter( 'it_cart_buddy_get_cart_form_vars-default-shopping-cart', 'it_cart_buddy_default_cart_get_form_vars', 10, 2 );
-	add_filter( 'it_cart_buddy_get_cart_total-default-shopping-cart', 'it_cart_buddy_default_cart_get_total' );
+	add_filter( 'it_cart_buddy_get_cart_total-default-shopping-cart', 'it_cart_buddy_default_cart_get_cart_total' );
 
 	// Cart Data processing hooks
 	add_action( 'template_redirect', 'it_cart_buddy_default_cart_add_product_to_shopping_cart' );
@@ -31,6 +31,7 @@ if ( ! is_admin() ) {
 	add_filter( 'it_cart_buddy_get_remove_product_from_shopping_cart_html-default-shopping-cart', 'it_cart_buddy_default_cart_get_remove_product_from_shopping_cart_html', 10, 2 );
 	add_filter( 'it_cart_buddy_get_empty_shopping_cart_html-default-shopping-cart', 'it_cart_buddy_default_cart_get_empty_cart_button' );
 	add_filter( 'it_cart_buddy_get_update_shopping_cart_html-default-shopping-cart', 'it_cart_buddy_default_cart_get_update_cart_button' );
+	add_filter( 'it_cart_buddy_get_checkout_shopping_cart_html-default-shopping-cart', 'it_cart_buddy_default_cart_get_checkout_cart_button' );
 } else {
 	// Backend
 }

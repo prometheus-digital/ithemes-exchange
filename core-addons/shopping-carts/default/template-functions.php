@@ -128,6 +128,7 @@ function it_cart_buddy_default_cart_get_cart_html( $args, $content=''  ) {
 	}
 	$html .= it_cart_buddy_default_shopping_cart_get_table_footer();
 	$html .= it_cart_buddy_default_shopping_cart_get_table_close();
+	$html .= it_cart_buddy_default_shopping_cart_get_cart_totals_html();
 	$html .= it_cart_buddy_default_shopping_cart_get_form_close();
 
 	return $html;
@@ -223,6 +224,7 @@ function it_cart_buddy_default_shopping_cart_get_form_close() {
 	$html = '';
 	$html .= it_cart_buddy_get_empty_shopping_cart_html();
 	$html .= '&nbsp;' . it_cart_buddy_get_update_shopping_cart_html();
+	$html .= '&nbsp;' . it_cart_buddy_get_checkout_shopping_cart_html();
 	$html .= '</form>';
 	return apply_filters( 'it_cart_buddy_default_shopping_cart_form_footer', $html );
 }
@@ -313,8 +315,7 @@ function it_cart_buddy_default_cart_get_empty_cart_button( $existing=false ) {
 */
 function it_cart_buddy_default_cart_get_update_cart_button( $existing=false ) {
 	$html = '<input type="submit" name="cart_buddy_update_cart" value="' . __( 'Update Cart', 'LION' ) . '" />';
-	apply_filters( 'it_cart_buddy_default_cart_update_cart_button', $html );
-	return $html;
+	return apply_filters( 'it_cart_buddy_default_cart_update_cart_button', $html );
 }
 
 /**
@@ -323,7 +324,21 @@ function it_cart_buddy_default_cart_get_update_cart_button( $existing=false ) {
  * @since 0.3.7
  * @return string HTML
 */
-function get_checkout_cart_button( $existing=false ) {
-	$html = '<input type="submit" name="_checkout_cart" value="Checkout" />';
+function it_cart_buddy_default_cart_get_checkout_cart_button( $existing=false ) {
+	$html = '<input type="submit" name="cart_buddy_checkout_cart" value="Checkout" />';
+	return apply_filters( 'it_cart_buddy_default_cart_checkout_cart_button', $html );
+}
+
+/**
+ * This prints the html for the cart totals
+ *
+ * @since 0.3.7
+ * @return string HTML
+*/
+function it_cart_buddy_default_shopping_cart_get_cart_totals_html() {
+	$html = '<!-- TEMP UI -->';
+	$html .= '<div id="cart_buddy_cart_totals"><p>';
+	$html .= '<strong>' . __( 'Cart Total', 'LION' ) . '</strong> $' . it_cart_buddy_get_cart_total() . '.00';
+	$html .= '</p></div>';
 	return $html;
 }

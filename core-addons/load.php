@@ -80,7 +80,6 @@ function it_cart_buddy_register_core_addons() {
 					'singular_name' => __( 'Membership', 'LION' ),
 				),
 				'supports' => apply_filters( 'it_cart_buddy_register_digital_downloads_default_features', array(
-					'base_price' => false,
 				) ),
 			),
 		),
