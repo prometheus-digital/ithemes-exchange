@@ -285,10 +285,15 @@ function it_cart_buddy_default_shopping_cart_get_table_cell( $column, $product )
  * Returns HTML for add_to_cart action
  *
  * @since 0.3.7
+ * @param string $existing_html Existing HTML passed through by WP filter. Not used here.
+ * @param mixed $product Product ID in wp_posts table for product post_type
+ * @param array $shortcode_atts attritbutes passed through by WP Shortcode API if invoked by it
+ * @param string $shortcode_contnte content passed through by WP Shortcode API if invoked by it
  * @return string HTML
 */
-function get_add_to_cart_button( $existing, $product ) {
+function it_cart_buddy_default_cart_get_add_product_to_cart_html( $existing_html, $product, $shortcode_atts=array(), $shortcode_content='' ) {
 	$html = '<a href="' . add_query_arg( 'cart_buddy_add_to_cart', $product ) . '">' . __( 'Add to cart', 'LION' ) . '</a>';
+	$html = apply_filters( 'it_cart_buddy_default_shopping_cart_add_product_to_cart_html', $html, $product, $shortcode_atts, $shortcode_content );
 	return $html;
 }
 
