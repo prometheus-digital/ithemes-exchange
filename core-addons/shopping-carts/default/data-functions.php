@@ -12,7 +12,7 @@
  * @since 0.3.7
  * return void
 */
-function it_cart_buddy_default_cart_add_product_to_cart() {
+function it_cart_buddy_default_cart_add_product_to_shopping_cart() {
 	$product_id = empty( $_REQUEST['cart_buddy_add_to_cart'] ) ? false : $_REQUEST['cart_buddy_add_to_cart'];
 	if ( ! $product_id )
 		return;
@@ -66,7 +66,7 @@ function it_cart_buddy_default_cart_add_product_to_cart() {
  * @since 0.3.7
  * @return void
 */
-function it_cart_buddy_default_cart_empty_cart() {
+function it_cart_buddy_default_cart_empty_shopping_cart() {
 	if ( ! empty( $_REQUEST['cart_buddy_empty_cart'] ) )
 		it_cart_buddy_clear_session_products();
 		do_action( 'it_cart_buddy_default_cart-empty_cart' );
@@ -81,7 +81,7 @@ function it_cart_buddy_default_cart_empty_cart() {
  * @since 0.3.7
  * @param string $product_id optional param to specifcy which product gets deleted
 */
-function it_cart_buddy_default_cart_remove_product_from_cart( $product_id=false ) {
+function it_cart_buddy_default_cart_remove_product_from_shopping_cart( $product_id=false ) {
 	if ( ! $product_id ) {
 		$product_id = empty( $_REQUEST['cart_buddy_remove_product_from_cart'] ) ? false : $_REQUEST['cart_buddy_remove_product_from_cart'];
 	}
@@ -90,5 +90,36 @@ function it_cart_buddy_default_cart_remove_product_from_cart( $product_id=false 
 	if ( $product_id ) {
 		it_cart_buddy_remove_session_product( $product_id );
 		do_action( 'it_cart_buddy_default_cart-removed_product_from_cart', $product_id );
+	}
+}
+
+/**
+ * Updates the shopping cart
+ *
+ * This method gets called on template_redirect and fires when the update_cart button has been triggered
+ *
+ * @since 0.3.7
+*/
+function it_cart_buddy_default_cart_update_shopping_cart() {
+	// Check for correct submit button
+	if ( empty( $_POST['cart_buddy_update_cart'] ) )
+		return;
+
+	// Get cart products
+	$cart_products = it_cart_buddy_get_session_products();
+
+	// Update quantities
+	$quantities = empty( $_POST['product_quantity'] ) ? false : (array) $_POST['product_quantity'];
+
+	foreach( $quantities as $product => $quantity ) {
+		if ( ! empty( $cart_products[$product] ) ) {
+			$cart_product = $cart_products[$product];
+			if ( empty( $quantity ) || $quantity < 1 ) {
+				it_cart_buddy_remove_session_product( $product );
+			} else {
+				$cart_product['count'] = $quantity;
+				it_cart_buddy_update_session_product( $product, $cart_product );
+			}
+		}
 	}
 }

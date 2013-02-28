@@ -20,14 +20,17 @@ if ( ! is_admin() ) {
 	add_filter( 'it_cart_buddy_get_cart_total-default-shopping-cart', 'it_cart_buddy_default_cart_get_total' );
 
 	// Cart Data processing hooks
-	add_action( 'template_redirect', 'it_cart_buddy_default_cart_add_product_to_cart' );
-	add_action( 'template_redirect', 'it_cart_buddy_default_cart_empty_cart' );
-	add_action( 'template_redirect', 'it_cart_buddy_default_cart_remove_product_from_cart' );
+	add_action( 'template_redirect', 'it_cart_buddy_default_cart_add_product_to_shopping_cart' );
+	add_action( 'template_redirect', 'it_cart_buddy_default_cart_empty_shopping_cart' );
+	add_action( 'template_redirect', 'it_cart_buddy_default_cart_remove_product_from_shopping_cart' );
+	add_action( 'template_redirect', 'it_cart_buddy_default_cart_update_shopping_cart' );
 
 	// High level Cart API Hooks for theme developers 
 	add_filter( 'it_cart_buddy_get_shopping_cart_html-default-shopping-cart', 'it_cart_buddy_default_cart_get_cart_html', 10, 2 );
 	add_filter( 'it_cart_buddy_get_add_product_to_shopping_cart_html-default-shopping-cart', 'it_cart_buddy_default_cart_get_add_product_to_cart_html', 10, 3 );
+	add_filter( 'it_cart_buddy_get_remove_product_from_shopping_cart_html-default-shopping-cart', 'it_cart_buddy_default_cart_get_remove_product_from_shopping_cart_html', 10, 2 );
 	add_filter( 'it_cart_buddy_get_empty_shopping_cart_html-default-shopping-cart', 'it_cart_buddy_default_cart_get_empty_cart_button' );
+	add_filter( 'it_cart_buddy_get_update_shopping_cart_html-default-shopping-cart', 'it_cart_buddy_default_cart_get_update_cart_button' );
 } else {
 	// Backend
 }

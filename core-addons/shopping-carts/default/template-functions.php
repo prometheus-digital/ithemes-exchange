@@ -132,32 +132,6 @@ function it_cart_buddy_default_cart_get_cart_html( $args, $content=''  ) {
 
 	return $html;
 }
-						/*
-                        <form style="width:800px;" action="" method="post">
-                            <table>
-                                <tr><th></th><th>Product</th><th>Price</th><th>Quantity</th><th><th>Total</th></tr>
-                                <?php 
-                                $form_vars = it_cart_buddy_get_cart_form_vars();
-                                foreach( $products as $product ) { 
-                                    $title      = it_cart_buddy_get_cart_product_attribute( $product['product_id'], 'title' );
-                                    $base_price = it_cart_buddy_get_cart_product_attribute( $product['product_id'], 'base_price' );
-                                    $quantity   = it_cart_buddy_get_cart_product_attribute( $product['product_id'], 'quantity' );
-                                    $subtotal   = it_cart_buddy_get_cart_product_attribute( $product['product_id'], 'sub_total' );
-                                    ?>  
-                                    <tr>
-                                        <td><a href="">&times;</a></td>
-                                        <td><?php echo empty( $title ) ? '---' : $title; ?></td>
-                                        <td><?php echo empty( $base_price ) ? '---' : $base_price; ?></td>
-                                        <td><?php echo empty( $quantity ) ? '---' : $quantity; ?></td>
-                                        <td><?php echo empty( $subtotal ) ? '---' : $subtotal; ?></td>
-                                    </tr>
-                                    <?php
-                                }   
-                                ITUtility::print_r($_SESSION['it_cart_buddy']);
-                                ?>  
-                            </table>
-                        </form>
-						*/
 
 /**
  * Returns the opening form element in HTML
@@ -248,6 +222,7 @@ function it_cart_buddy_default_shopping_cart_get_table_close() {
 function it_cart_buddy_default_shopping_cart_get_form_close() {
 	$html = '';
 	$html .= it_cart_buddy_get_empty_shopping_cart_html();
+	$html .= '&nbsp;' . it_cart_buddy_get_update_shopping_cart_html();
 	$html .= '</form>';
 	return apply_filters( 'it_cart_buddy_default_shopping_cart_form_footer', $html );
 }
@@ -262,7 +237,7 @@ function it_cart_buddy_default_shopping_cart_get_table_cell( $column, $product )
 	$db_product = it_cart_buddy_get_product( $product['product_id'] );
 	switch( $column ) {
 		case 'product-remove' :
-			$html = '<a href="' . add_query_arg( 'cart_buddy_remove_product_from_cart', $product['product_cart_id'] ) . '">&times;</a>';
+			$html = it_cart_buddy_get_remove_product_from_shopping_cart_html( $product['product_cart_id'] );
 			break;
 		case 'product-title' :
 			$html = $db_product->post_title;
@@ -281,6 +256,19 @@ function it_cart_buddy_default_shopping_cart_get_table_cell( $column, $product )
 			break;
 	}
 	return apply_filters( 'it_cart_buddy_default_shopping_cart_table_cell', $html, $column, $product );
+}
+
+/**
+ * Returns HTML link for removing a product from the cart
+ *
+ * @since 0.3.7
+ * @param string $original_html html passed through by WP filter. Ignored here.
+ * @param string $product_id cart product id
+ * @return string HTML
+*/
+function it_cart_buddy_default_cart_get_remove_product_from_shopping_cart_html( $original_html, $product_id ) {
+	$html = '<a href="' . add_query_arg( 'cart_buddy_remove_product_from_cart', $product_id ) . '">&times;</a>';
+	return apply_filters( 'it_cart_buddy_default_cart_remove_product_from_shopping_cart_html', $html, $product_id );
 }
 
 /**
@@ -318,8 +306,9 @@ function it_cart_buddy_default_cart_get_empty_cart_button( $existing=false ) {
  * @since 0.3.7
  * @return string HTML
 */
-function get_update_cart_button( $existing=false ) {
-	$html = '<input type="submit" name="_update_cart" value="Update Cart" />';
+function it_cart_buddy_default_cart_get_update_cart_button( $existing=false ) {
+	$html = '<input type="submit" name="cart_buddy_update_cart" value="' . __( 'Update Cart', 'LION' ) . '" />';
+	apply_filters( 'it_cart_buddy_default_cart_update_cart_button', $html );
 	return $html;
 }
 

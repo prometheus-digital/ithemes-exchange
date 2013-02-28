@@ -53,3 +53,26 @@ function it_cart_buddy_get_empty_shopping_cart_html() {
     $active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
 	return apply_filters( 'it_cart_buddy_get_empty_shopping_cart_html-' . $active_cart, '' );
 }
+
+/**
+ * Prints the HTML to remove a product from the cart
+ *
+ * @since 0.3.7
+ * @param mixed $cart_product_id the id of the product in the cart
+ * @reuturn string HTML
+*/
+function it_cart_buddy_get_remove_product_from_shopping_cart_html( $cart_product_id ) {
+    $active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
+	return apply_filters( 'it_cart_buddy_get_remove_product_from_shopping_cart_html-' . $active_cart, '', $cart_product_id );
+}
+
+/**
+ * Prints the HTML for the Update cart action
+ *
+ * @since 0.3.7
+ * @return string HTML
+*/
+function it_cart_buddy_get_update_shopping_cart_html() {
+    $active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
+	return apply_filters( 'it_cart_buddy_get_update_shopping_cart_html-' . $active_cart, '' );
+}
