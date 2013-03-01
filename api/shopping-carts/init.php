@@ -11,7 +11,10 @@ if ( ! is_admin() ) {
 	include( 'shortcodes.php' );
 
 	// API function to return HTML elements related to the cart
-	include( 'template-functions.php' );
+	include( 'cart-template-functions.php' );
+
+	// API function to return HTML elements related to the checkout page 
+	include( 'checkout-template-functions.php' );
 
 	// Low Level API functions to retreive data about the current cart
 	include( 'data-functions.php' );

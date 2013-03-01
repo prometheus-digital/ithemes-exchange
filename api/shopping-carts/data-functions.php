@@ -16,8 +16,7 @@
  * @return array
 */
 function it_cart_buddy_get_cart_products( $args=array() ) {
-	$active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
-	return apply_filters( 'it_cart_buddy_get_cart_products-' . $active_cart, array(), $args );
+	return apply_filters( 'it_cart_buddy_get_cart_products', array(), $args );
 }
 
 /**
@@ -32,8 +31,7 @@ function it_cart_buddy_get_cart_products( $args=array() ) {
  * @return mixed
 */
 function it_cart_buddy_get_cart_product( $identifier, $args=array() ) {
-	$active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
-	return apply_filters( 'it_cart_buddy_get_cart_product-' . $active_cart, false, $identifier, $args );
+	return apply_filters( 'it_cart_buddy_get_cart_product', false, $identifier, $args );
 }
 
 /**
@@ -46,8 +44,7 @@ function it_cart_buddy_get_cart_product( $identifier, $args=array() ) {
  * @return mixed
 */
 function it_cart_buddy_get_cart_product_attribute( $cart_product, $attribute, $args=array() ) {
-	$active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
-	return apply_filters( 'it_cart_buddy_get_cart_product_attribute-' . $active_cart, false, $cart_product, $attribute, $args );
+	return apply_filters( 'it_cart_buddy_get_cart_product_attribute', false, $cart_product, $attribute, $args );
 }
 
 /**
@@ -60,8 +57,74 @@ function it_cart_buddy_get_cart_product_attribute( $cart_product, $attribute, $a
  * @return mixed array of all form and field vars or a specifc var passed back as a string
 */
 function it_cart_buddy_get_cart_form_vars( $args=array() ) {
-	$active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
-	return apply_filters( 'it_cart_buddy_get_cart_form_vars-' . $active_cart, false, $args );
+	return apply_filters( 'it_cart_buddy_get_cart_form_vars', false, $args );
+}
+
+/**
+ * Returns the title for a product in the cart. 
+ *
+ * The title in the cart may not always be the same as the title in the DB depending on variants / etc
+ *
+ * @since 0.3.7
+ * @param array $product cart product array
+ * @param $args array optional array of args. All cart add-ons will not use this.
+ * return mixed product title
+*/
+function it_cart_buddy_get_cart_product_title( $product, $args=array() ) {
+	return apply_filters( 'it_cart_buddy_get_cart_product_title', false, $product, $args );
+}
+
+/**
+ * Returns the quantity for a product in the cart. 
+ *
+ * @since 0.3.7
+ * @param array $product cart product array
+ * @param $args array optional array of args. All cart add-ons will not use this.
+ * return mixed product quantity
+*/
+function it_cart_buddy_get_cart_product_quantity( $product, $args=array() ) {
+	return apply_filters( 'it_cart_buddy_get_cart_product_quantity', false, $product, $args );
+}
+
+/**
+ * Returns the base price for a product in the cart. 
+ *
+ * This returns the DB price of the product but allows other add-ons to modify it based on
+ * cart product itemized or additional data
+ * eg: variants, coupons, tax, shipping, etc
+ *
+ * @since 0.3.7
+ * @param array $product cart product array
+ * @param $args array optional array of args. All cart add-ons will not use this.
+ * return mixed product base_price 
+*/
+function it_cart_buddy_get_cart_product_base_price( $product, $args=array() ) {
+	return apply_filters( 'it_cart_buddy_get_cart_product_base_price', false, $product, $args );
+}
+
+/**
+ * Returns the subtotal for a product in the cart. 
+ *
+ * Cart price * quantity
+ *
+ * @since 0.3.7
+ * @param array $product cart product array
+ * @param $args array optional array of args. All cart add-ons will not use this.
+ * return mixed product subtotal
+*/
+function it_cart_buddy_get_cart_product_subtotal( $product, $args=array() ) {
+	return apply_filters( 'it_cart_buddy_get_cart_product_subtotal', false, $product, $args );
+}
+
+/**
+ * Returns the subtotal for the cart.
+ *
+ * @since 0.3.7
+ * @param $args array optional array of args. All cart add-ons will not use this.
+ * @return mixed subtotal
+*/
+function it_cart_buddy_get_cart_subtotal( $args=array() ) {
+	return apply_filters( 'it_cart_buddy_get_cart_subtotal', false, $args );
 }
 
 /**
@@ -72,8 +135,7 @@ function it_cart_buddy_get_cart_form_vars( $args=array() ) {
  * @return mixed total
 */
 function it_cart_buddy_get_cart_total( $args=array() ) {
-	$active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
-	return apply_filters( 'it_cart_buddy_get_cart_total-' . $active_cart, false, $args );
+	return apply_filters( 'it_cart_buddy_get_cart_total', false, $args );
 }
 
 /**

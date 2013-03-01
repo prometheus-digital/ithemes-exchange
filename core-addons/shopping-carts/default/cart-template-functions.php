@@ -46,6 +46,7 @@ function it_cart_buddy_default_cart_get_product( $product=false, $product_id ) {
  * This returns an attribute stored in the cart's version of the product, not the database
  *
  * @since 0.3.7
+ * @todo this isn't finished
  * @param mixed $attribute param provided by WP hook. Dicarded here.
  * @param string $product_id the id of the cart product
  * @param string $attribute_key the key for the attribute being requested
@@ -81,30 +82,6 @@ function it_cart_buddy_default_cart_get_form_vars( $form_vars, $args ) {
 		return empty( $vars[$args['key']] ) ? false: $vars[$args['key']];
 	
 	return $vars;
-}
-
-/**
- * Calculates the current carts total
- *
- * @since 0.3.7
- * @param mixed $total values passed from WP filter
- * @return mixed
-*/
-function it_cart_buddy_default_cart_get_total($total=false ) {
-	$cart_products = it_cart_buddy_get_cart_products();
-
-	// Loop through products and grab base price
-	foreach ( $cart_products as $product_id => $properties ) {
-		$product_price = $base_price = $quantity = false;
-		if ( $product = it_cart_buddy_get_cart_product( $product_id ) ) {
-			$base_price = it_cart_buddy_get_cart_product_attribute( $product, 'base_price' );
-			$quantity   = it_cart_buddy_get_cart_product_attribute( $prodcut, 'quanity' );
-
-			if ( $base_price && $quantity )
-				$product_price = $base_price * $quantity;
-		}
-		$product_price = apply_filters( 'it_cart_buddy_cart_product_attribute-base_price', $product_price, $product, $base_price, $quantity );
-	}
 }
 
 /**
@@ -242,21 +219,18 @@ function it_cart_buddy_default_shopping_cart_get_table_cell( $column, $product )
 			$html = it_cart_buddy_get_remove_product_from_shopping_cart_html( $product['product_cart_id'] );
 			break;
 		case 'product-title' :
-			$html = $db_product->post_title;
+			$html = it_cart_buddy_get_cart_product_title( $product );
 			break;
 		case 'product-cost' :
-			$base_price = it_cart_buddy_get_product_feature( $product['product_id'], 'base_price' );
+			$base_price = it_cart_buddy_get_cart_product_base_price( $product );
 			$base_price = apply_filters( 'it_cart_buddy_default_shopping_cart_get_product_base_price', $base_price, $product );
 			$html = '$' . $base_price;
 			break;
 		case 'product-quantity' :
-			$html = '<input type="text" name="product_quantity[' . $product['product_cart_id'] . ']" value="' . $product['count'] . '" size="4"/>';
+			$html = '<input type="text" name="product_quantity[' . $product['product_cart_id'] . ']" value="' . it_cart_buddy_get_cart_product_quantity( $product ) . '" size="4"/>';
 			break;
 		case 'product-subtotal' :
-			$base_price = it_cart_buddy_get_product_feature( $product['product_id'], 'base_price' );
-			$base_price = apply_filters( 'it_cart_buddy_default_shopping_cart_get_product_base_price', $base_price, $product );
-			$sub_price = apply_filters( 'it_cart_buddy_default_shopping_cart_get_product_subtotal', $base_price * $product['count'], $product );
-			$html = '$' . $sub_price; 
+			$html = '$' . it_cart_buddy_get_cart_product_subtotal( $product );
 			break;
 		default :
 			$html = '';
@@ -338,7 +312,7 @@ function it_cart_buddy_default_cart_get_checkout_cart_button( $existing=false ) 
 function it_cart_buddy_default_shopping_cart_get_cart_totals_html() {
 	$html = '<!-- TEMP UI -->';
 	$html .= '<div id="cart_buddy_cart_totals"><p>';
-	$html .= '<strong>' . __( 'Cart Total', 'LION' ) . '</strong> $' . it_cart_buddy_get_cart_total() . '.00';
+	$html .= '<strong>' . __( 'Cart Subtotal', 'LION' ) . '</strong> $' . it_cart_buddy_get_cart_subtotal() . '.00';
 	$html .= '</p></div>';
 	return $html;
 }

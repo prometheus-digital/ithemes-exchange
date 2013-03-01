@@ -18,9 +18,8 @@
  * @param string $shortcode_content content passed from WP Shortcode API if function is being invoked by it.
  * @return string html for the shopping cart
 */
-function it_cart_buddy_get_shopping_cart_html( $shortcode_args=array(), $shortcode_content='' ) {
-    $active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
-    return apply_filters( 'it_cart_buddy_get_shopping_cart_html-' . $active_cart, '', $shortcode_args, $shortcode_content );
+function it_cart_buddy_get_shopping_cart_cart_html( $shortcode_args=array(), $shortcode_content='' ) {
+    return apply_filters( 'it_cart_buddy_get_shopping_cart_cart_html', '', $shortcode_args, $shortcode_content );
 }
 
 /**
@@ -37,8 +36,7 @@ function it_cart_buddy_get_shopping_cart_html( $shortcode_args=array(), $shortco
  * @return string HTML for the button
 */
 function it_cart_buddy_get_add_product_to_shopping_cart_html( $product, $shortcode_args=array(), $shortcode_content=''  ) { 
-    $active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
-    return apply_filters( 'it_cart_buddy_get_add_product_to_shopping_cart_html-' . $active_cart, '', $product, $shortcode_args, $shortcode_content );
+    return apply_filters( 'it_cart_buddy_get_add_product_to_shopping_cart_html', '', $product, $shortcode_args, $shortcode_content );
 }
 
 /**
@@ -50,8 +48,7 @@ function it_cart_buddy_get_add_product_to_shopping_cart_html( $product, $shortco
  * @return string HTML
 */
 function it_cart_buddy_get_empty_shopping_cart_html() {
-    $active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
-	return apply_filters( 'it_cart_buddy_get_empty_shopping_cart_html-' . $active_cart, '' );
+	return apply_filters( 'it_cart_buddy_get_empty_shopping_cart_html', '' );
 }
 
 /**
@@ -62,8 +59,7 @@ function it_cart_buddy_get_empty_shopping_cart_html() {
  * @reuturn string HTML
 */
 function it_cart_buddy_get_remove_product_from_shopping_cart_html( $cart_product_id ) {
-    $active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
-	return apply_filters( 'it_cart_buddy_get_remove_product_from_shopping_cart_html-' . $active_cart, '', $cart_product_id );
+	return apply_filters( 'it_cart_buddy_get_remove_product_from_shopping_cart_html', '', $cart_product_id );
 }
 
 /**
@@ -73,8 +69,7 @@ function it_cart_buddy_get_remove_product_from_shopping_cart_html( $cart_product
  * @return string HTML
 */
 function it_cart_buddy_get_update_shopping_cart_html() {
-    $active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
-	return apply_filters( 'it_cart_buddy_get_update_shopping_cart_html-' . $active_cart, '' );
+	return apply_filters( 'it_cart_buddy_get_update_shopping_cart_html', '' );
 }
 
 /**
@@ -84,6 +79,5 @@ function it_cart_buddy_get_update_shopping_cart_html() {
  * @return string HTML
 */
 function it_cart_buddy_get_checkout_shopping_cart_html() {
-    $active_cart = it_cart_buddy_get_active_shopping_cart( 'slug' );
-	return apply_filters( 'it_cart_buddy_get_checkout_shopping_cart_html-' . $active_cart, '' );
+	return apply_filters( 'it_cart_buddy_get_checkout_shopping_cart_html', '' );
 }

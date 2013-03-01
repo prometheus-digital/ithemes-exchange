@@ -125,20 +125,105 @@ function it_cart_buddy_default_cart_update_shopping_cart() {
 }
 
 /**
- * Returns the cart total
+ * Returns the title for a cart product
+ *
+ * Some shopping cart add-ons may modify this from the DB title to reflect variants / etc
  *
  * @since 0.3.7
- * @param mixed $total existing total passed through by WP filter. Not used here.
+ * @param mixed $existing values passed through by WP filter API. Discarded here.
+ * @param array $product cart product
+ * @return string product title
+*/
+function it_cart_buddy_default_cart_get_cart_product_title( $existing, $product ) {
+	if ( ! $db_product = it_cart_buddy_get_product( $product['product_id'] ) )
+		return false;
+	
+	$title = apply_filters( 'the_title', $db_product->post_title );
+	$title = apply_filters( 'it_cart_buddy_default_shopping_cart_get_cart_product_title', $title, $product );
+	return $title;
+}
+
+/**
+ * Returns the quantity for a cart product
+ *
+ * @since 0.3.7
+ * @param mixed $existing values passed through by WP filter API. Discarded here.
+ * @param array $product cart product
+ * @return integer quantity 
+*/
+function it_cart_buddy_default_cart_get_cart_product_quantity( $existing, $product ) {
+	$count    = empty( $product['count'] ) ? 0 : $product['count'];
+	$quantity = apply_filters( 'it_cart_buddy_default_shopping_cart_get_cart_product_quantity', $count, $product );
+	return $quantity;
+}
+
+/**
+ * Returns the base_price for the cart product
+ *
+ * Other add-ons may modify this on the fly based on the product's itemized_data and additional_data arrays
+ *
+ * @since 0.3.7
+ * @param mixed $existing values passed through by WP filter API. Discarded here.
+ * @param array $product cart product
+ * @return integer quantity 
+*/
+function it_cart_buddy_default_cart_get_cart_product_base_price( $existing, $product ) {
+	if ( ! $db_product = it_cart_buddy_get_product( $product['product_id'] ) )
+		return false;
+
+	// Get the price from the DB
+	$db_base_price = it_cart_buddy_get_product_feature( $db_product, 'base_price' );
+
+	// Pass it through a filter (though it is already in a larger-scoped filter)
+	return apply_filters( 'it_cart_buddy_default_shopping_cart_get_cart_product_base_price', $db_base_price, $product ); 
+}
+
+/**
+ * Returns the subtotal for a cart product
+ *
+ * Base price multiplied by quantity and then passed through a filter
+ *
+ * @since 0.3.7
+ * @param mixex $existing values passed through by WP filter API. Discarded here.
+ * @param array $product cart product
+ * @return mixed subtotal
+*/
+function it_cart_buddy_default_cart_get_cart_product_subtotal( $existing, $product ) {
+	$base_price = it_cart_buddy_get_product_feature( $product['product_id'], 'base_price' );
+	$base_price = apply_filters( 'it_cart_buddy_default_shopping_cart_get_cart_product_base_price', $base_price, $product );
+	$subtotal_price = apply_filters( 'it_cart_buddy_default_shopping_cart_get_cart_product_subtotal', $base_price * $product['count'], $product );
+	return $subtotal_price;
+}
+
+/**
+ * Returns the cart subtotal
+ *
+ * @since 0.3.7
+ * @param mixed $existing existing total passed through by WP filter. Not used here.
+ * @return mixed subtotal of cart
+*/
+function it_cart_buddy_default_cart_get_cart_subtotal( $existing ) {
+	$subtotal = 0;
+	if ( ! $products = it_cart_buddy_get_cart_products() )
+		return 0;
+
+	foreach( (array) $products as $product ) {
+		$subtotal += it_cart_buddy_get_cart_product_subtotal( $product );
+	}
+	return apply_filters( 'it_cart_buddy_default_shopping_cart_get_cart_subtotal', $subtotal );
+}
+
+/**
+ * Returns the cart total
+ *
+ * The cart total is essentailly going to be the sub_total plus whatever motifications other add-ons make to it.
+ * eg: taxes, shipping, discounts, etc.
+ *
+ * @since 0.3.7
+ * @param mixed $existing existing total passed through by WP filter. Not used here.
+ * @return mixed total of cart
 */
 function it_cart_buddy_default_cart_get_cart_total( $existing ) {
-	$cart_total = 0;
-	if ( $products = it_cart_buddy_get_session_products() ) {
-		foreach( $products as $product ) {
-			$base_price     = it_cart_buddy_get_product_feature( $product['product_id'], 'base_price' );
-			$itemized_price = $product['count'] * $base_price;
-			if ( ! empty( $itemized_price ) )
-				$cart_total += $itemized_price;
-		}
-	}
-	return $cart_total;
+	$total = it_cart_buddy_get_cart_subtotal();
+	return apply_filters( 'it_cart_buddy_default_shopping_cart_get_cart_total', $total );
 }
