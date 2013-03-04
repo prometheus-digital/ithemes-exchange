@@ -83,10 +83,17 @@ function it_cart_buddy_register_core_addons() {
 				) ),
 			),
 		),
-		// Default Shopping Cart UI 
+		// Default Customer Management interface
+		'default-customer-management' => array(
+			'name'        => __( 'Default Customer Managment', 'LION' ),
+			'description' => __( 'This is the default Customer Management add-on. It handles registration and profile data.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/customer-management/default/init.php',
+			'options'     => array( 'category' => 'customer-management' ),
+		),
+		// Default Shopping Cart
 		'default-shopping-cart' => array(
 			'name'        => __( 'Default Shopping Cart', 'LION' ),
-			'description' => __( 'This is the default Shopping Cart UI. It is the visual front to Cart Buddy\'s Cart API', 'LION' ),
+			'description' => __( 'This is the default Shopping Cart. It is the visual front to Cart Buddy\'s Cart API', 'LION' ),
 			'file'        => dirname( __FILE__ ) . '/shopping-carts/default/init.php',
 			'options'     => array( 'category' => 'shopping-carts' ),
 		),
@@ -185,6 +192,11 @@ function it_cart_buddy_register_core_addon_categories() {
 		'shopping-carts' => array(
 			'name'        => __( 'Shopping Cart UIs', 'LION' ),
 			'description' => __( 'Add-ons that provide a UI for the Cart Buddy Cart API.', 'LION' ),
+			'options'     => array(),
+		),
+		'customer-management' => array(
+			'name'        => __( 'Customer Management', 'LION' ),
+			'description' => __( 'Add-ons that provide a UI for the Cart Buddy Customer Management.', 'LION' ),
 			'options'     => array(),
 		),
 		'admin' => array(

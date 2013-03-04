@@ -32,6 +32,28 @@ function it_cart_buddy_get_cart_checkout_form_open_html( $args=array() ) {
 }
 
 /**
+ * Returns the form fields requesting customer information at checkout
+ *
+ * @since 0.3.7
+ * @param array $args optional. not used by all add-ons
+ * @return string HTML
+*/
+function it_cart_buddy_get_cart_checkout_customer_form_fields( $args=array() ) {
+	return apply_filters( 'it_cart_buddy_get_cart_checkout_customer_form_fields', '', $args );
+}
+
+/**
+ * Returns the HTML for the order summary
+ *
+ * @since 0.3.7
+ * @param array $args optional. not used by all add-ons
+ * @return string HTML
+*/
+function it_cart_buddy_get_cart_checkout_order_summary( $args=array() ) {
+	return apply_filters( 'it_cart_buddy_get_cart_checkout_order_summary', '', $args );
+}
+
+/**
  * Prints the HTML needed for the place order section of the checkout page
  *
  * @since 0.3.7

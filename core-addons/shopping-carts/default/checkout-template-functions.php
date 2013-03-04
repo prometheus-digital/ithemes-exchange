@@ -20,10 +20,14 @@
 */
 function it_cart_buddy_default_cart_get_checkout_html( $shortcode_atts=array(), $shortcode_content='' ) {
 	$html  = apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html_top', '' );
-	$html .= '<p>Do user login check / registration here if needed</p>';
+
+	// Display the Login form if user is not logged in
+	if ( ! is_user_logged_in() )
+		$html .= it_cart_buddy_get_customer_login_form();
+
 	$html .= it_cart_buddy_get_cart_checkout_form_open_html();
-	$html .= '<p>Print customer info form here</p>';
-	$html .= it_cart_buddy_default_cart_get_checkout_order_summary();
+	$html .= it_cart_buddy_get_cart_checkout_customer_form_fields();
+	$html .= it_cart_buddy_get_cart_checkout_order_summary();
 	$html .= apply_filters( 'it_cart_buddy_default_cart_checkout_before_place_order_html', '' );
 	$html .= it_cart_buddy_get_cart_checkout_place_order();
 	$html .= it_cart_buddy_get_cart_checkout_form_close_html();
@@ -32,12 +36,47 @@ function it_cart_buddy_default_cart_get_checkout_html( $shortcode_atts=array(), 
 }
 
 /**
+ * Prints the Customer checkout form fields
+ *
+ * @since 0.3.7
+ * @return string HTML
+*/
+function it_cart_buddy_default_cart_get_checkout_customer_form_fields() {
+	$form = new ITForm();
+	$fields = it_cart_buddy_get_customer_profile_fields();
+	$html = '';
+	$customer = it_cart_buddy_get_current_customer();
+	ITUtility::print_r($customer);
+	foreach( (array) $fields as $field => $args ) {
+		$function = 'get_' . $args['type'];
+		$var      = empty( $args['var'] ) ? '' : $args['var'];
+		$values   = empty( $args['values'] ) ? array() : (array) $args['values'];
+		$label    = empty( $args['label'] ) ? '' : $args['label'];
+		$value    = empty( $customer->$var ) ? '' : esc_attr( $customer->var );
+		if ( is_callable( array( $form, $function ) ) ) {
+			$html .= '<p class="cart_buddy_profile_field">';
+			$html .= '<label for="' . esc_attr( $var ) . '">' . $label . '</label>';
+			$html .= $form->$function( $var, $values );
+			$html .= '</p>';
+		} else if ( 'password' == $args['type'] ) {
+			$values['type'] = 'password';
+			$html .= '<p class="cart_buddy_profile_field">';
+			$html .= '<label for="' . esc_attr( $var ) . '">' . $label . '</label>';
+			$html .= $form->_get_simple_input( $var, $values, false );
+			$html .= '</p>';
+		}
+	}
+	return apply_filters( 'it_cart_buddy_default_cart_get_checkout_customer_form_fields', $html );
+}
+
+/**
  * Prints the order summary div
  *
  * @since 0.3.7
+ * @param string $summary value passed through by WP filter API. Discarded here.
  * @return html 
 */
-function it_cart_buddy_default_cart_get_checkout_order_summary() {
+function it_cart_buddy_default_cart_get_checkout_order_summary( $summary='' ) {
 	$html  = '';
 	$html .= '<div id="it_cart_buddy_checkout_order_summary">';
 	$html .= '<h3>' . __( 'Order Summary', 'LION' ) . '</h3>';
