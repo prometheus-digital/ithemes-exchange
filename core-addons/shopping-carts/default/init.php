@@ -13,6 +13,9 @@ if ( ! is_admin() ) {
 	include( 'checkout-template-functions.php' );
 	include( 'data-functions.php' );
 
+	// Utility hooks
+	add_action( 'template_redirect', 'it_cart_buddy_default_shopping_cart_redirect_checkout_to_cart' );
+
 	// Low Level Cart API Hooks for theme developers. See /api/carts/cart-template_tags.php
 	add_filter( 'it_cart_buddy_get_cart_products', 'it_cart_buddy_default_cart_get_products', 9 );
 	add_filter( 'it_cart_buddy_get_cart_product', 'it_cart_buddy_default_cart_get_product', 9, 2 );

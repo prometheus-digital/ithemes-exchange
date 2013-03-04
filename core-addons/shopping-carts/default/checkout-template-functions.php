@@ -105,9 +105,12 @@ function it_cart_buddy_default_cart_get_checkout_order_summary_cart_total_table_
  * @return HTML
 */
 function it_cart_buddy_default_cart_get_checkout_place_order_html() {
+    $pages = it_cart_buddy_get_option( 'cart_buddy_settings_pages' );
+    $action = empty( $pages['page_cart'] ) ? false : get_permalink( $pages['page_cart'] );
+
 	$html  = '<h3>' . __( 'Payment Method', 'LION' ) . '</h3>';
 	$html .= '<div id="it-cart-buddy-checkout-place-order-form">';
-	$html .= '<form action="" method="post" >';
+	$html .= '<form action="' . esc_url( $action ) . '" method="post" >';
 	$html .= '<p>' . __( 'Choose a payment method', 'LION' ) . '<br />';
 	$html .= it_cart_buddy_default_cart_get_checkout_transaction_method_option_fields();
 	$html .= '</p>';
