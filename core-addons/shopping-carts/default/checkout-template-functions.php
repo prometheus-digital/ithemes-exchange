@@ -25,7 +25,7 @@ function it_cart_buddy_default_cart_get_checkout_html( $shortcode_atts=array(), 
 	$html .= '<p>Print customer info form here</p>';
 	$html .= it_cart_buddy_default_cart_get_checkout_order_summary_html();
 	$html .= apply_filters( 'it_cart_buddy_default_cart_checkout_before_place_order_html', '' );
-	$html .= it_cart_buddy_default_cart_get_checkout_place_order_html();
+	$html .= it_cart_buddy_get_cart_checkout_place_order_html();
 	$html .= it_cart_buddy_get_cart_checkout_form_close_html();
 	$html .= apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html_bottom', '', $shortcode_atts, $shortcode_content );
 	return apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html', $html, $shortcode_atts, $shortcode_content );

@@ -32,6 +32,17 @@ function it_cart_buddy_get_cart_checkout_form_open_html( $args=array() ) {
 }
 
 /**
+ * Prints the HTML needed for the place order section of the checkout page
+ *
+ * @since 0.3.7
+ * @param array $args optional. not used by all add-ons
+ * @return HTML
+*/
+function it_cart_buddy_get_cart_checkout_place_order_html( $args=array() ) {
+	return apply_filters( 'it_cart_buddy_get_cart_checkout_place_order_html', '', $args );
+}
+
+/**
  * Returns the form close tag for the checkout page
  *
  * @since 0.3.7
