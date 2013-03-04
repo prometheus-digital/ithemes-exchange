@@ -19,16 +19,16 @@
  * @return string html for the shopping cart
 */
 function it_cart_buddy_default_cart_get_checkout_html( $shortcode_atts=array(), $shortcode_content='' ) {
-	$html  = apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html_top', '', $shortcode_atts, $shortcode_content );
+	$html  = apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html_top', '' );
 	$html .= '<p>Do user login check / registration here if needed</p>';
 	$html .= it_cart_buddy_get_cart_checkout_form_open_html();
 	$html .= '<p>Print customer info form here</p>';
-	$html .= it_cart_buddy_default_cart_get_checkout_order_summary_html();
+	$html .= it_cart_buddy_default_cart_get_checkout_order_summary();
 	$html .= apply_filters( 'it_cart_buddy_default_cart_checkout_before_place_order_html', '' );
-	$html .= it_cart_buddy_get_cart_checkout_place_order_html();
+	$html .= it_cart_buddy_get_cart_checkout_place_order();
 	$html .= it_cart_buddy_get_cart_checkout_form_close_html();
-	$html .= apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html_bottom', '', $shortcode_atts, $shortcode_content );
-	return apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html', $html, $shortcode_atts, $shortcode_content );
+	$html .= apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html_bottom', '' );
+	return apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html', $html );
 }
 
 /**
@@ -37,7 +37,7 @@ function it_cart_buddy_default_cart_get_checkout_html( $shortcode_atts=array(), 
  * @since 0.3.7
  * @return html 
 */
-function it_cart_buddy_default_cart_get_checkout_order_summary_html() {
+function it_cart_buddy_default_cart_get_checkout_order_summary() {
 	$html  = '';
 	$html .= '<div id="it_cart_buddy_checkout_order_summary">';
 	$html .= '<h3>' . __( 'Order Summary', 'LION' ) . '</h3>';
@@ -49,7 +49,7 @@ function it_cart_buddy_default_cart_get_checkout_order_summary_html() {
 	$html .= it_cart_buddy_default_cart_get_checkout_order_summary_cart_total_table_row();
 	$html .= '</table>';
 	$html .= '</div>';
-	return apply_filters( 'it_cart_buddy_default_cart_checkout_order_summary_html', $html );
+	return apply_filters( 'it_cart_buddy_default_cart_checkout_order_summary', $html );
 }
 
 /**
@@ -106,7 +106,7 @@ function it_cart_buddy_default_cart_get_checkout_order_summary_cart_total_table_
  * @since 0.3.7
  * @return HTML
 */
-function it_cart_buddy_default_cart_get_checkout_place_order_html() {
+function it_cart_buddy_default_cart_get_checkout_place_order() {
 	$html  = '<h3>' . __( 'Payment Method', 'LION' ) . '</h3>';
 	$html .= '<div id="it-cart-buddy-checkout-place-order-form">';
 	$html .= '<p>' . __( 'Choose a payment method', 'LION' ) . '<br />';
