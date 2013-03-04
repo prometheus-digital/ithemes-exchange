@@ -79,10 +79,15 @@ class IT_Cart_Buddy_Admin {
 		// Save core settings
 		add_action( 'admin_init', array( $this, 'save_core_general_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_core_email_settings' ) );
+		add_action( 'admin_init', array( $this, 'save_core_page_settings' ) );
 
 		// Email settings callback
 		add_filter( 'it_cart_buddy_general_settings_tab_callback-email', array( $this, 'register_email_settings_tab_callback' ) );
 		add_action( 'it_cart_buddy_print_general_settings_tab_links', array( $this, 'print_email_settings_tab_link' ) );
+
+		// Page settings callback
+		add_filter( 'it_cart_buddy_general_settings_tab_callback-pages', array( $this, 'register_pages_settings_tab_callback' ) );
+		add_action( 'it_cart_buddy_print_general_settings_tab_links', array( $this, 'print_pages_settings_tab_link' ) );
 	}
 
 	/**
@@ -199,6 +204,29 @@ class IT_Cart_Buddy_Admin {
 	}
 
 	/**
+	 * Registers the callback for the pages tab
+	 *
+	 * @param mixed default callback for general settings. 
+	 * @since 0.3.7
+	 * @return mixed function or class method name
+	*/
+	function register_pages_settings_tab_callback( $default ) {
+		return array( $this, 'print_pages_settings_page' );
+	}
+
+	/**
+	 * Prints the pages tab for general settings
+	 *
+	 * @since 0.3.7
+	 * @param $current_tab the current tab
+	 * @return void
+	*/
+	function print_pages_settings_tab_link( $current_tab ) {
+		$active = 'pages' == $current_tab ? 'nav-tab-active' : '';
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-cart-buddy-settings&tab=pages' ); ?>"><?php _e( 'Pages', 'LION' ); ?></a><?php
+	}
+
+	/**
 	 * Prints the tabs for the Cart Buddy General Settings
 	 *
 	 * @since 0.3.4
@@ -270,6 +298,27 @@ class IT_Cart_Buddy_Admin {
 		if ( ! empty( $this->error_message ) )
 			ITUtility::show_error_message( $this->error_message );
 		include( 'views/admin-email-settings.php' );
+	}
+
+	/**
+	 * Prints the pages page for cart buddy
+	 *
+	 * @since 0.3.7
+	 * @return void
+	*/
+	function print_pages_settings_page() {
+		$form_values  = empty( $this->error_message ) ? $this->_storage->load() : ITForm::get_post_data();
+		$form         = new ITForm( $form_values, array( 'prefix' => 'it_cart_buddy_page_settings' ) );
+		$form_options = array(
+			'id'      => apply_filters( 'it_cart_buddy_page_settings_form_id', 'it-cart-buddy-page-settings' ),
+			'enctype' => apply_filters( 'it_cart_buddy_page_settings_form_enctype', false ),
+			'action'  => 'admin.php?page=it-cart-buddy-settings&tab=pages',
+		);
+		if ( ! empty ( $this->status_message ) )
+			ITUtility::show_status_message( $this->status_message );
+		if ( ! empty( $this->error_message ) )
+			ITUtility::show_error_message( $this->error_message );
+		include( 'views/admin-page-settings.php' );
 	}
 
 	/**
@@ -420,6 +469,23 @@ class IT_Cart_Buddy_Admin {
 	}
 
 	/**
+	 * Prints the page options for use on page settings form
+	 *
+	 * @since 0.3.7
+	 * @return array wp page ID to page title
+	*/
+	function get_default_page_options() {
+		$options = array();
+		$options[0] = __( 'Select a Page', 'LION' );
+		if ( $page_options = get_pages() ) {
+			foreach( $page_options as $page ) {
+				$options[$page->ID] = get_the_title( $page->ID );
+			}
+		}
+		return $options;
+	}
+
+	/**
 	 * Save core general settings
 	 *
 	 * Validates data and saves to options.
@@ -520,7 +586,54 @@ class IT_Cart_Buddy_Admin {
 		if ( empty( $settings['receipt_email_subject'] ) )
 			$errors[] = __( 'Email Subject cannot be empty', 'LION' );
 
-		$errors = apply_filters( 'it_cart_buddy_general_settings_validation_errors', $errors );
+		$errors = apply_filters( 'it_cart_buddy_email_settings_validation_errors', $errors );
+		if ( ! empty ( $errors ) )
+			return '<p>' . implode( '<br />', $errors ) . '</p>';
+		else
+			return false;
+	}
+
+	/**
+	 * Save core pages tab settings
+	 *
+	 * Validates data and saves to options.
+	 *
+	 * @since 0.3.7
+	 * @return void
+	*/
+	function save_core_page_settings() {
+		if ( empty( $_POST ) || 'it-cart-buddy-settings' != $this->_current_page || 'pages' != $this->_current_tab )
+			return;
+
+		$settings = wp_parse_args( ITForm::get_post_data(), $this->_storage->load() );
+
+        // Check nonce
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'cart-buddy-page-settings' ) ) { 
+            $this->error_message = __( 'Error. Please try again', 'LION' );
+            return;
+        } 
+
+		if ( ! empty( $this->error_message ) || $error_msg = $this->page_settings_are_invalid( $settings ) ) {
+			if ( ! empty( $error_msg ) )
+				$this->error_message = $error_msg;
+		} else {
+			$this->_storage->save( $settings );
+			$this->_storage->clear_cache();
+			$this->status_message = __( 'Settings Saved.', 'LION' );
+		}
+	}
+
+	/**
+	 * Validate page settings
+	 *
+	 * @since 0.3.7
+	 * @param string $settings submitted settings
+	 * @return false or error message
+	*/
+	function page_settings_are_invalid( $settings ) {
+		$errors = array();
+
+		$errors = apply_filters( 'it_cart_buddy_page_settings_validation_errors', $errors );
 		if ( ! empty ( $errors ) )
 			return '<p>' . implode( '<br />', $errors ) . '</p>';
 		else
