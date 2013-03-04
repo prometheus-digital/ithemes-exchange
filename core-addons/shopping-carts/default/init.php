@@ -44,6 +44,8 @@ if ( ! is_admin() ) {
 
 	// High level Checkout API hooks for theme developers
 	add_filter( 'it_cart_buddy_get_cart_checkout_page_html', 'it_cart_buddy_default_cart_get_checkout_html', 9, 2 );
+	add_filter( 'it_cart_buddy_get_cart_checkout_form_open_html', 'it_cart_buddy_default_cart_get_checkout_form_open_html', 9, 2 );
+	add_filter( 'it_cart_buddy_get_cart_checkout_form_close_html', 'it_cart_buddy_default_cart_get_checkout_form_close_html', 9, 2 );
 	add_filter( 'it_cart_buddy_get_cart_checkout_order_button', 'it_cart_buddy_default_cart_get_checkout_order_button', 9, 2 );
 } else {
 	// Backend

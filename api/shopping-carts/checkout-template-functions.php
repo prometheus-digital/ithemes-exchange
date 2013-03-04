@@ -21,6 +21,28 @@ function it_cart_buddy_get_shopping_cart_checkout_page_html( $shortcode_atts=arr
 }
 
 /**
+ * Returns the form open tag for the checkout page
+ *
+ * @since 0.3.7
+ * @param array $args optional. not used by all add-ons
+ * @return string HTML
+*/
+function it_cart_buddy_get_cart_checkout_form_open_html( $args=array() ) {
+	return apply_filters( 'it_cart_buddy_get_cart_checkout_form_open_html', '', $args );
+}
+
+/**
+ * Returns the form close tag for the checkout page
+ *
+ * @since 0.3.7
+ * @param array $args optional. not used by all add-ons
+ * @return string HTML
+*/
+function it_cart_buddy_get_cart_checkout_form_close_html( $args=array() ) {
+	return apply_filters( 'it_cart_buddy_get_cart_checkout_form_close_html', '', $args );
+}
+
+/**
  * Returns the HTML for the order button on the checkout page
  *
  * @since 0.3.7

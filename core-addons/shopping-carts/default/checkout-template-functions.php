@@ -21,10 +21,12 @@
 function it_cart_buddy_default_cart_get_checkout_html( $shortcode_atts=array(), $shortcode_content='' ) {
 	$html  = apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html_top', '', $shortcode_atts, $shortcode_content );
 	$html .= '<p>Do user login check / registration here if needed</p>';
+	$html .= it_cart_buddy_get_cart_checkout_form_open_html();
 	$html .= '<p>Print customer info form here</p>';
 	$html .= it_cart_buddy_default_cart_get_checkout_order_summary_html();
 	$html .= apply_filters( 'it_cart_buddy_default_cart_checkout_before_place_order_html', '' );
 	$html .= it_cart_buddy_default_cart_get_checkout_place_order_html();
+	$html .= it_cart_buddy_get_cart_checkout_form_close_html();
 	$html .= apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html_bottom', '', $shortcode_atts, $shortcode_content );
 	return apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html', $html, $shortcode_atts, $shortcode_content );
 }
@@ -105,19 +107,39 @@ function it_cart_buddy_default_cart_get_checkout_order_summary_cart_total_table_
  * @return HTML
 */
 function it_cart_buddy_default_cart_get_checkout_place_order_html() {
-    $pages = it_cart_buddy_get_option( 'cart_buddy_settings_pages' );
-    $action = empty( $pages['page_cart'] ) ? false : get_permalink( $pages['page_cart'] );
-
 	$html  = '<h3>' . __( 'Payment Method', 'LION' ) . '</h3>';
 	$html .= '<div id="it-cart-buddy-checkout-place-order-form">';
-	$html .= '<form action="' . esc_url( $action ) . '" method="post" >';
 	$html .= '<p>' . __( 'Choose a payment method', 'LION' ) . '<br />';
 	$html .= it_cart_buddy_default_cart_get_checkout_transaction_method_option_fields();
 	$html .= '</p>';
 	$html .= it_cart_buddy_get_cart_checkout_order_button();
-	$html .= '</form>';
 	$html .= '</div>';
 	return apply_filters( 'it_cart_buddy_default_cart_get_checkout_place_order_html', $html );
+}
+
+/**
+ * Returns the opening form tag
+ *
+ * @since 0.3.7
+ * @return HTML
+*/
+function it_cart_buddy_default_cart_get_checkout_form_open_html() {
+    $pages = it_cart_buddy_get_option( 'cart_buddy_settings_pages' );
+    $action = empty( $pages['page_cart'] ) ? false : get_permalink( $pages['page_cart'] );
+
+	$html = '<form action="' . esc_url( $action ) . '" method="post" >';
+	return apply_filters( 'it_cart_buddy_default_cart_get_checkout_form_open_html', $html );
+}
+
+/**
+ * Returns the closing form tag
+ *
+ * @since 0.3.7
+ * @return HTML
+*/
+function it_cart_buddy_default_cart_get_checkout_form_close_html() {
+	$html = '</form>';
+	return apply_filters( 'it_cart_buddy_default_cart_get_checkout_form_close_html', $html );
 }
 
 /**
