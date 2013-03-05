@@ -200,9 +200,9 @@ function it_cart_buddy_default_shopping_cart_get_table_close() {
 */
 function it_cart_buddy_default_shopping_cart_get_form_close() {
 	$html = '';
-	$html .= it_cart_buddy_get_empty_shopping_cart_html();
-	$html .= '&nbsp;' . it_cart_buddy_get_update_shopping_cart_html();
+	$html .= it_cart_buddy_get_update_shopping_cart_html();
 	$html .= '&nbsp;' . it_cart_buddy_get_checkout_shopping_cart_html();
+	$html .= '&nbsp;' . it_cart_buddy_get_empty_shopping_cart_html();
 	$html .= '</form>';
 	return apply_filters( 'it_cart_buddy_default_shopping_cart_form_footer', $html );
 }
