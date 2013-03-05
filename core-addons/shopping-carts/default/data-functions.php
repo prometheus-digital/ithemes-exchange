@@ -133,9 +133,8 @@ function it_cart_buddy_default_cart_proceed_to_checkout() {
 	do_action( 'update_cart' );
 
 	// Redirect to Checkout
-	$pages = it_cart_buddy_get_option( 'cart_buddy_settings_pages' );
-	if ( ! empty( $pages['page_checkout'] ) ) {
-		wp_redirect( get_permalink( $pages['page_checkout'] ) );
+	if ( $checkout = it_cart_buddy_get_page_url( 'checkout' ) ) {
+		wp_redirect( $checkout );
 		die();
 	}
 }

@@ -118,8 +118,7 @@ function it_cart_buddy_default_cart_get_cart_html( $args, $content=''  ) {
  * @return string html for opening form element
 */
 function it_cart_buddy_default_shopping_cart_get_form_open() {
-	$pages = it_cart_buddy_get_option( 'cart_buddy_settings_pages' );
-	$action = empty( $pages['page_cart'] ) ? false : get_permalink( $pages['page_cart'] );
+	$action = it_cart_buddy_get_page_url( 'cart' );
 	$html = '<form action="' . esc_url( $action ) . '" method="post">';
 	return apply_filters( 'it_cart_buddy_default_shopping_cart_form_open', $html );
 }

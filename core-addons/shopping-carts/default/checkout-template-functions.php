@@ -46,13 +46,14 @@ function it_cart_buddy_default_cart_get_checkout_customer_form_fields() {
 	$fields = it_cart_buddy_get_customer_profile_fields();
 	$html = '';
 	$customer = it_cart_buddy_get_current_customer();
-	ITUtility::print_r($customer);
+
 	foreach( (array) $fields as $field => $args ) {
 		$function = 'get_' . $args['type'];
 		$var      = empty( $args['var'] ) ? '' : $args['var'];
 		$values   = empty( $args['values'] ) ? array() : (array) $args['values'];
 		$label    = empty( $args['label'] ) ? '' : $args['label'];
-		$value    = empty( $customer->$var ) ? '' : esc_attr( $customer->var );
+		$value    = empty( $customer[$var] ) ? '' : esc_attr( $customer[$var] );
+		$values['value'] = stripslashes( $value );
 		if ( is_callable( array( $form, $function ) ) ) {
 			$html .= '<p class="cart_buddy_profile_field">';
 			$html .= '<label for="' . esc_attr( $var ) . '">' . $label . '</label>';
@@ -152,6 +153,7 @@ function it_cart_buddy_default_cart_get_checkout_place_order() {
 	$html .= it_cart_buddy_default_cart_get_checkout_transaction_method_option_fields();
 	$html .= '</p>';
 	$html .= it_cart_buddy_get_cart_checkout_order_button();
+	$html .= '&nbsp;<a href="' . it_cart_buddy_get_page_url( 'cart' ) . '">' . __( 'Back to cart', 'LION' ) . '</a>';
 	$html .= '</div>';
 	return apply_filters( 'it_cart_buddy_default_cart_get_checkout_place_order_html', $html );
 }
@@ -163,10 +165,8 @@ function it_cart_buddy_default_cart_get_checkout_place_order() {
  * @return HTML
 */
 function it_cart_buddy_default_cart_get_checkout_form_open_html() {
-    $pages = it_cart_buddy_get_option( 'cart_buddy_settings_pages' );
-    $action = empty( $pages['page_cart'] ) ? false : get_permalink( $pages['page_cart'] );
-
-	$html = '<form action="' . esc_url( $action ) . '" method="post" >';
+    $action = it_cart_buddy_get_page_url( 'checkout' );
+	$html = '<form action="' . $action . '" method="post" >';
 	return apply_filters( 'it_cart_buddy_default_cart_get_checkout_form_open_html', $html );
 }
 

@@ -30,9 +30,8 @@ function it_cart_buddy_default_shopping_cart_get_table_columns() {
  * @return void
 */
 function it_cart_buddy_default_shopping_cart_redirect_checkout_to_cart() {
-	$pages    = it_cart_buddy_get_option( 'cart_buddy_settings_pages' );
-	$cart     = empty( $pages['page_cart'] ) ? false : esc_url( get_permalink( $pages['page_cart'] ) );
-	$checkout = empty( $pages['page_checkout'] ) ? false : $pages['page_checkout'];
+	$cart     = it_cart_buddy_get_page_url( 'cart' );
+	$checkout = it_cart_buddy_get_page_id( 'checkout' );
 
 	if ( ! is_page( $checkout ) )
 		return;

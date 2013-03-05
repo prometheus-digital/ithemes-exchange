@@ -22,12 +22,21 @@ function it_cart_buddy_default_customer_management_get_customer( $existing_data,
 	if ( is_wp_error( $wp_user ) )
 		return false;
 
-	// Init customer array with data object from WP_User object
-	$customer       = get_object_vars( $wp_user->data );
-
 	// Dup id to lowercase just to be nice
-	$customer['id'] = $customer['ID'];
-	ITUtility::print_r( 'WIP' .  __FILE__ . ' | ' . __LINE__ );
+	$customer['id'] = $customer['ID'] = $customer_id;
+
+	// Init customer array with data object from WP_User object
+	$wp_data  = get_object_vars( $wp_user->data );
+	$customer = array_merge( $customer, $wp_data );
+
+	// Default Memeber Managment fields
+	$customer['first_name'] = get_user_meta( $customer_id, 'first_name', true );
+	$customer['last_name']  = get_user_meta( $customer_id, 'last_name', true );
+
+	// Add-ons shouldn't hook into this before we do... but just in case.
+	$customer = ITUtility::merge_defaults( $existing_data, $customer );
+
+	return $customer;
 }
 
 /**

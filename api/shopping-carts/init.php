@@ -18,4 +18,7 @@ if ( ! is_admin() ) {
 
 	// Low Level API functions to retreive data about the current cart
 	include( 'data-functions.php' );
+
+	// Lib
+	include( 'lib.php' );
 }

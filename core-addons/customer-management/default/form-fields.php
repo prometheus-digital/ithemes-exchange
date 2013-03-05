@@ -12,17 +12,17 @@
 function it_cart_buddy_default_customer_management_get_customer_profile_fields( $fields ) {
     $fields['first_name']  = array(
 		'type'  => 'text_box',
-		'var'   => 'cart_buddy_customer_first_name',
+		'var'   => 'first_name',
 		'label' => __( 'First Name', 'LION' ),
 	);
 	$fields['last_name'] = array(
 		'type'  => 'text_box',
-		'var'   => 'cart_buddy_customer_last_name',
+		'var'   => 'last_name',
 		'label' => __( 'Last Name', 'LION' ),
 	);
 	$fields['email'] = array(
 		'type'  => 'text_box',
-		'var'   => 'cart_buddy_customer_email',
+		'var'   => 'user_email',
 		'label' => __( 'Email', 'LION' ),
 	);
 	return apply_filters( 'it_cart_buddy_default_customer_management_profile_fields', $fields );
@@ -39,17 +39,17 @@ function it_cart_buddy_default_customer_management_get_customer_registration_fie
 
     $fields['username']  = array(
 		'type'  => 'text_box',
-		'var'   => 'cart_buddy_customer_username',
+		'var'   => 'user_login',
 		'label' => __( 'Username', 'LION' ),
 	);
 	$fields['password1'] = array(
 		'type'  => 'password',
-		'var'   => 'cart_buddy_customer_password1',
+		'var'   => 'password1',
 		'label' => __( 'Password', 'LION' ),
 	);
 	$fields['password2'] = array(
 		'type'  => 'password',
-		'var'   => 'cart_buddy_customer_password2',
+		'var'   => 'password2',
 		'label' => __( 'Re-type Password', 'LION' ),
 	);
 
