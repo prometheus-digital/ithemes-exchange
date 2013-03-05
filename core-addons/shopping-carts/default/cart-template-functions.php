@@ -250,7 +250,8 @@ function it_cart_buddy_default_shopping_cart_get_table_cell( $column, $product )
  * @return string HTML
 */
 function it_cart_buddy_default_cart_get_remove_product_from_shopping_cart_html( $original_html, $product_id ) {
-	$html = '<a href="' . add_query_arg( 'cart_buddy_remove_product_from_cart', $product_id ) . '">&times;</a>';
+	$var  = it_cart_buddy_get_action_var( 'remove_product_from_cart' );
+	$html = '<a href="' . add_query_arg( esc_attr( $var ), $product_id ) . '">&times;</a>';
 	return apply_filters( 'it_cart_buddy_default_cart_remove_product_from_shopping_cart_html', $html, $product_id );
 }
 
@@ -265,7 +266,8 @@ function it_cart_buddy_default_cart_get_remove_product_from_shopping_cart_html( 
  * @return string HTML
 */
 function it_cart_buddy_default_cart_get_add_product_to_cart_html( $existing_html, $product, $shortcode_atts=array(), $shortcode_content='' ) {
-	$html = '<a href="' . add_query_arg( 'cart_buddy_add_to_cart', $product ) . '">' . __( 'Add to cart', 'LION' ) . '</a>';
+	$var = it_cart_buddy_get_action_var( 'add_product_to_cart' );
+	$html = '<a href="' . add_query_arg( $var, $product ) . '">' . __( 'Add to cart', 'LION' ) . '</a>';
 	$html = apply_filters( 'it_cart_buddy_default_shopping_cart_add_product_to_cart_html', $html, $product, $shortcode_atts, $shortcode_content );
 	return $html;
 }
@@ -278,7 +280,8 @@ function it_cart_buddy_default_cart_get_add_product_to_cart_html( $existing_html
  * @return string HTML
 */
 function it_cart_buddy_default_cart_get_empty_cart_button( $existing=false ) {
-	$html = '<input type="submit" name="cart_buddy_empty_cart" value="' . __( 'Empty Cart', 'LION' ) . '" />';
+	$var = it_cart_buddy_get_action_var( 'empty_cart' );
+	$html = '<input type="submit" name="' . esc_attr( $var ) . '" value="' . __( 'Empty Cart', 'LION' ) . '" />';
 	apply_filters( 'it_cart_buddy_default_cart_empty_cart_button', $html );
 	return $html;
 }
@@ -290,7 +293,8 @@ function it_cart_buddy_default_cart_get_empty_cart_button( $existing=false ) {
  * @return string HTML
 */
 function it_cart_buddy_default_cart_get_update_cart_button( $existing=false ) {
-	$html = '<input type="submit" name="cart_buddy_update_cart" value="' . __( 'Update Cart', 'LION' ) . '" />';
+	$var = it_cart_buddy_get_action_var( 'update_cart' );
+	$html = '<input type="submit" name="' . esc_attr( $var ) . '" value="' . __( 'Update Cart', 'LION' ) . '" />';
 	return apply_filters( 'it_cart_buddy_default_cart_update_cart_button', $html );
 }
 
@@ -301,7 +305,8 @@ function it_cart_buddy_default_cart_get_update_cart_button( $existing=false ) {
  * @return string HTML
 */
 function it_cart_buddy_default_cart_get_checkout_cart_button( $existing=false ) {
-	$html = '<input type="submit" name="cart_buddy_checkout_cart" value="Checkout" />';
+	$var = it_cart_buddy_get_action_var( 'proceed_to_checkout' );
+	$html = '<input type="submit" name="' . esc_attr( $var ) . '" value="' . __( 'Checkout', 'LION' ) . '" />';
 	return apply_filters( 'it_cart_buddy_default_cart_checkout_cart_button', $html );
 }
 

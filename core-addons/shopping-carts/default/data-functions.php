@@ -12,8 +12,8 @@
  * @since 0.3.7
  * return void
 */
-function it_cart_buddy_default_cart_add_product_to_shopping_cart() {
-	$product_id = empty( $_REQUEST['cart_buddy_add_to_cart'] ) ? false : $_REQUEST['cart_buddy_add_to_cart'];
+function it_cart_buddy_default_cart_add_product_to_shopping_cart( $product_id ) {
+
 	if ( ! $product_id )
 		return;
 
@@ -67,9 +67,8 @@ function it_cart_buddy_default_cart_add_product_to_shopping_cart() {
  * @return void
 */
 function it_cart_buddy_default_cart_empty_shopping_cart() {
-	if ( ! empty( $_REQUEST['cart_buddy_empty_cart'] ) )
-		it_cart_buddy_clear_session_products();
-		do_action( 'it_cart_buddy_default_cart-empty_cart' );
+	it_cart_buddy_clear_session_products();
+	do_action( 'it_cart_buddy_default_cart-empty_cart' );
 }
 
 /**
@@ -82,8 +81,9 @@ function it_cart_buddy_default_cart_empty_shopping_cart() {
  * @param string $product_id optional param to specifcy which product gets deleted
 */
 function it_cart_buddy_default_cart_remove_product_from_shopping_cart( $product_id=false ) {
+	$var = it_cart_buddy_get_action_var( 'remove_product_from_cart' );
 	if ( ! $product_id ) {
-		$product_id = empty( $_REQUEST['cart_buddy_remove_product_from_cart'] ) ? false : $_REQUEST['cart_buddy_remove_product_from_cart'];
+		$product_id = empty( $_REQUEST[$var] ) ? false : $_REQUEST[$var];
 	}
 
 	// Remove from the Session
@@ -101,9 +101,6 @@ function it_cart_buddy_default_cart_remove_product_from_shopping_cart( $product_
  * @since 0.3.7
 */
 function it_cart_buddy_default_cart_update_shopping_cart() {
-	// Check for correct submit button
-	if ( empty( $_POST['cart_buddy_update_cart'] ) )
-		return;
 
 	// Get cart products
 	$cart_products = it_cart_buddy_get_session_products();
@@ -121,6 +118,25 @@ function it_cart_buddy_default_cart_update_shopping_cart() {
 				it_cart_buddy_update_session_product( $product, $cart_product );
 			}
 		}
+	}
+}
+
+/**
+ * Advances the user to the checkout screen after updating the cart
+ *
+ * @since 0.3.7
+ * @return void
+*/
+function it_cart_buddy_default_cart_proceed_to_checkout() {
+
+	// Update cart info
+	do_action( 'update_cart' );
+
+	// Redirect to Checkout
+	$pages = it_cart_buddy_get_option( 'cart_buddy_settings_pages' );
+	if ( ! empty( $pages['page_checkout'] ) ) {
+		wp_redirect( get_permalink( $pages['page_checkout'] ) );
+		die();
 	}
 }
 
