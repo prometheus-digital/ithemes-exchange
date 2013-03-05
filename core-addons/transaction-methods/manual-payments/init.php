@@ -6,6 +6,10 @@
  * @package IT_Cart_Buddy
 */
 
+include( 'confirmation-template-functions.php' );
+
+add_filter( 'it_cart_buddy_get_transaction_confirmation_page_html-manual-payments', 'it_cart_buddy_manual_transactions_confirmation_page_html', 9, 3 );
+
 /**
  * Call back for settings page
  *

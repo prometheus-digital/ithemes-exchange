@@ -53,6 +53,7 @@ function it_cart_buddy_get_action_vars() {
 		'purchase_cart'            => 'it_cart_buddy_purchase_cart',
 		'display_message'          => 'it_cart_buddy_message',
 		'display_errors'           => 'it_cart_buddy_errors',
+		'transaction_id'           => 'it_cart_buddy_transaction_id',
 	);
 	return apply_filters( 'it_cart_buddy_get_action_vars', $defaults );
 }

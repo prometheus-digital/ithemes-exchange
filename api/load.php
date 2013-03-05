@@ -23,7 +23,7 @@ include( $this->_plugin_path . '/api/form-actions.php' );
 include( $this->_plugin_path . '/api/products.php' );
 
 // API functions for Transaction Method Add-ons
-include( $this->_plugin_path . '/api/transaction-methods.php' );
+include( $this->_plugin_path . '/api/transaction-methods/init.php' );
 
 // Sessions
 include( $this->_plugin_path . '/api/sessions.php' );
