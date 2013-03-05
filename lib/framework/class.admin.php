@@ -88,6 +88,9 @@ class IT_Cart_Buddy_Admin {
 		// Page settings callback
 		add_filter( 'it_cart_buddy_general_settings_tab_callback-pages', array( $this, 'register_pages_settings_tab_callback' ) );
 		add_action( 'it_cart_buddy_print_general_settings_tab_links', array( $this, 'print_pages_settings_tab_link' ) );
+
+		// General Settings Defaults
+		add_filter( 'it_storage_get_defaults_cart_buddy_settings_general', array( $this, 'set_general_settings_defaults' ) );
 	}
 
 	/**
@@ -257,6 +260,22 @@ class IT_Cart_Buddy_Admin {
 			<p>Definitely replace icon</p>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Sets the general settings default values
+	 *
+	 * @since 0.3.7
+	 * @return array
+	*/
+	function set_general_settings_defaults( $values ) {
+		$defaults = array(
+			'default_currency'             => 'USD',
+			'currency_thousands_separator' => ',',
+			'currency_decimals_separator'  => '.',
+		);
+		$values = ITUtility::merge_defaults( $values, $defaults );
+		return $values;
 	}
 
 	/**
