@@ -266,7 +266,10 @@ function it_cart_buddy_default_cart_get_remove_product_from_shopping_cart_html( 
 */
 function it_cart_buddy_default_cart_get_add_product_to_cart_html( $existing_html, $product, $shortcode_atts=array(), $shortcode_content='' ) {
 	$var = it_cart_buddy_get_action_var( 'add_product_to_cart' );
-	$html = '<a href="' . add_query_arg( $var, $product ) . '">' . __( 'Add to cart', 'LION' ) . '</a>';
+	$html  = '<form action="" method="post">';
+	$html .= '<input type="hidden" name="' . esc_attr( $var ) . '" value="' . esc_attr( $product ) . '" />';
+	$html .= '<input type="submit" name="" value="' . __( 'Add to cart', 'LION' ) . '" />';
+	$html .= '</form>';
 	$html = apply_filters( 'it_cart_buddy_default_shopping_cart_add_product_to_cart_html', $html, $product, $shortcode_atts, $shortcode_content );
 	return $html;
 }
