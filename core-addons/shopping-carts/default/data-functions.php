@@ -17,29 +17,6 @@ function it_cart_buddy_default_cart_get_data() {
 }
 
 /**
- * Update cart transaction id
- *
- * @since 0.3.7
- * @param integer transaction id
- * @return void
-*/
-function it_cart_buddy_default_cart_update_transaction_id( $id ) {
-	it_cart_buddy_update_session_data( 'transaction_id', $id );
-}
-
-/**
- * Returns the cart transaction id
- *
- * @since 0.3.7
- * @return integer transaction_id stored in cart
-*/
-function it_cart_buddy_default_cart_get_cart_transaction_id() {
-	$session_data = it_cart_buddy_get_session_data();
-	$transaction_id = empty( $session_data['transaction_id'] ) ? false : $session_data['transaction_id'];
-	return $transaction_id;
-}
-
-/**
  * Adds a product to the shopping cart based on the cart_buddy_add_to_cart query arg
  *
  * @since 0.3.7
@@ -290,6 +267,7 @@ function it_cart_buddy_default_cart_purchase_cart() {
 	$products = it_cart_buddy_get_cart_products();
 	if ( count( $products ) < 1 ) {
 		do_action( 'it_cart_buddy_error-no_products_to_purchase' );
+		it_cart_buddy_default_cart_notify_failed_transaction( 'no-products' );
 		return false;
 	}
 
@@ -299,6 +277,7 @@ function it_cart_buddy_default_cart_purchase_cart() {
 	$enabled_addons = it_cart_buddy_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
 	if ( ! $requested_transaction_method || empty( $enabled_addons[$requested_transaction_method] ) ) {
 		do_action( 'it_cart_buddy_error-bad_transaction_method_at_purchase', $requested_transaction_method );
+		it_cart_buddy_default_cart_notify_failed_transaction( 'bad-transaction-method' );
 		return false;
 	}
 
@@ -306,6 +285,7 @@ function it_cart_buddy_default_cart_purchase_cart() {
 	$cart_total = number_format( it_cart_buddy_get_cart_total(), 2);
 	if ( $cart_total < 0.01 ) {
 		do_action( 'it_cart_buddy_error-negative_cart_total_on_checkout', $cart_total );
+		it_cart_buddy_default_cart_notify_failed_transaction( 'negative-cart-total' );
 		return false;
 	}
 
@@ -322,21 +302,44 @@ function it_cart_buddy_default_cart_purchase_cart() {
 	$transaction_object->data     = it_cart_buddy_get_cart_data();
 	$transaction_object->total    = $cart_total;
 
+	// Setup actions for success / failure
+	add_action( 'it_cart_buddy_add_transaction_success-' . $requested_transaction_method, 'it_cart_buddy_default_cart_empty_shopping_cart' );
+	add_action( 'it_cart_buddy_add_transaction_success-' . $requested_transaction_method, 'it_cart_buddy_default_cart_do_confirmation_redirect' );
+	add_action( 'it_cart_buddy_add_transaction_failed-' . $requested_transaction_method, 'it_cart_buddy_default_cart_notify_failed_transaction' );
+
 	// Do the transaction
 	it_cart_buddy_do_transaction( $requested_transaction_method, $transaction_object );
 
-	// Get results
-	$transaction_id = it_cart_buddy_get_cart_transaction_id();
-	if ( ! empty( $transaction_id ) ) {
-		/** @todo Empty cart **/
+	// If we made it this far, the transaction failed or the transaction-method add-on did not hook into success/fail actions
+	it_cart_buddy_default_cart_notify_failed_transaction();
+}
+
+/**
+ * Redirect to confirmation page after successfull transaction
+ *
+ * @since 0.3.7
+ * @param integer $transaction_id the transaction id
+ * @return void
+*/
+function it_cart_buddy_default_cart_do_confirmation_redirect( $transaction_id ) {
 		$confirmation_url = it_cart_buddy_get_page_url( 'confirmation' );
 		$transaction_var  = it_cart_buddy_get_action_var( 'transaction_id' );
 		$confirmation_url = add_query_arg( array( $transaction_var => $transaction_id ), $confirmation_url );
 		wp_redirect( $confirmation_url );
 		die();
-	} else {
-		die('transaction failed');
-	}
+}
 
-	ITUtility::print_r($_SESSION['it_cart_buddy']);die();
+/**
+ * Redirects to cart with failed transaction message
+ *
+ * @since 0.3.7
+ * @return void
+*/
+function it_cart_buddy_default_cart_notify_failed_transaction( $message=false ) {
+	$cart_url = it_cart_buddy_get_page_url( 'checkout' );
+	$message_var = it_cart_buddy_get_action_var( 'display_message' );
+	$message = empty( $message ) ? 'failed-transaction' : $message;
+	$url = add_query_arg( array( $message_var => $message ) );
+	wp_redirect( $url );
+	die();
 }

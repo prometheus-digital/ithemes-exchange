@@ -36,8 +36,6 @@ if ( ! is_admin() ) {
 	add_action( 'remove_product_from_cart', 'it_cart_buddy_default_cart_remove_product_from_shopping_cart', 9 );
 	add_action( 'update_cart', 'it_cart_buddy_default_cart_update_shopping_cart', 9 );
 	add_action( 'purchase_cart', 'it_cart_buddy_default_cart_purchase_cart' );
-	add_action( 'it_cart_buddy_update_cart_transaction_id', 'it_cart_buddy_default_cart_update_transaction_id', 9, 2 );
-	add_action( 'it_cart_buddy_get_cart_transaction_id', 'it_cart_buddy_default_cart_get_cart_transaction_id', 9, 2 );
 
 	// High level Cart API Hooks for theme developers 
 	add_filter( 'it_cart_buddy_get_shopping_cart_cart_html', 'it_cart_buddy_default_cart_get_cart_html', 9, 2 );

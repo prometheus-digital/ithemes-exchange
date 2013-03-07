@@ -26,24 +26,3 @@ function it_cart_buddy_get_page_id( $page ) {
 	$id = empty( $pages[$page] ) ? false : (integer) $pages[$page];
 	return apply_filters( 'it_cart_buddy_get_page_id', $id, $page );;
 }
-
-/**
- * Updates a transaction ID for a cart
- *
- * @since 0.3.7
- * @param integer $transaction_id transaction id
- * @return void
-*/
-function it_cart_buddy_update_cart_transaction_id( $transaction_id ) {
-	do_action( 'it_cart_buddy_update_cart_transaction_id', $transaction_id );
-}
-
-/**
- * Retreives the transaction ID stored in the cart
- *
- * @since 0.3.7
- * @return integer transaction_id
-*/
-function it_cart_buddy_get_cart_transaction_id() {
-	return apply_filters( 'it_cart_buddy_get_cart_transaction_id', false );
-}

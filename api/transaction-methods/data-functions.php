@@ -133,10 +133,11 @@ function it_cart_buddy_add_transaction( $args=array() ) {
 	if ( $transaction_id = wp_insert_post( $args ) ) {
 		update_post_meta( $transaction_id, '_it_cart_buddy_transaction_method', $args['transaction-method'] );
 		update_post_meta( $transaction_id, '_it_cart_buddy_transaction_status', $args['transaction_status'] );
-		do_action( 'it_cart_buddy_add_transaction', $transaction_id );
-		do_action( 'it_cart_buddy_add_transaction-' . $args['transaction-method'], $transaction_id );
+		do_action( 'it_cart_buddy_add_transaction_success-' . $args['transaction-method'], $transaction_id );
 		return $transaction_id;
 	}
+	do_action( 'it_cart_buddy_add_transaction_failed-' . $args['transaction-method'], $args );
+	return false;
 }
 
 /**

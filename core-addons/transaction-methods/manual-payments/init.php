@@ -46,13 +46,13 @@ function it_cart_buddy_get_manual_payments_name( $name ) {
  * @since 0.3.7
 */
 function it_cart_buddy_manual_payments_do_transaction( $cart_object ) {
+	// Set transaction type as manual payment
 	$args = array(
 		'transaction-method' => 'manual-payments',
 	);
-	if ( $transaction_id = it_cart_buddy_add_transaction( $args ) )
-		it_cart_buddy_update_cart_transaction_id( $transaction_id );
-	else
-		die('fail');
+
+	// Do transaction
+	$transaction_id = it_cart_buddy_add_transaction( $args );
 }
 
 /**
