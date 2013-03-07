@@ -14,8 +14,10 @@ class IT_Cart_Buddy_Core_Addon_Transaction_Status_Meta_Box {
 	 * @return void
 	*/
 	function IT_Cart_Buddy_Core_Addon_Transaction_Status_Meta_Box() {
-		add_action( 'it_cart_buddy_transaction_metabox_callback', array( $this, 'register_transaction_status_meta_box' ) );
-		add_action( 'it_cart_buddy_save_transaction', array( $this, 'update_transaction_status' ) );
+		if ( is_admin() ) {
+			add_action( 'it_cart_buddy_transaction_metabox_callback', array( $this, 'register_transaction_status_meta_box' ) );
+			add_action( 'it_cart_buddy_save_transaction', array( $this, 'update_transaction_status' ) );
+		}
 	}
 
 	/**

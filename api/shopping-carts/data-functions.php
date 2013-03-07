@@ -9,6 +9,17 @@
 */
 
 /**
+ * Returns an array of all data in the cart
+ *
+ * @since 0.3.7
+ * @param $args array optional array of args. All cart add-ons will not use this.
+ * @return array
+*/
+function it_cart_buddy_get_cart_data( $args=array() ) {
+	return apply_filters( 'it_cart_buddy_get_cart_data', array(), $args );
+}
+
+/**
  * Returns an array of all products in the cart
  *
  * @since 0.3.7

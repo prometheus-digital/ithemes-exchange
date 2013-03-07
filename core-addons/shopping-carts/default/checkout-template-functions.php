@@ -193,11 +193,12 @@ function it_cart_buddy_default_cart_get_checkout_transaction_method_option_field
 	if ( 1 === count( $transaction_methods ) ) {
 		$method = reset( $transaction_methods );
 		$html  = '<p>' . it_cart_buddy_get_transaction_method_name( $method['slug'] ) . '</p>';
+		$html .= '<input type="hidden" name="' . esc_attr( it_cart_buddy_get_action_var( 'transaction_method' ) ) . '" value="' . esc_attr( $method['slug'] ) . '" />';
 	} else {
 		$radios = array();
 		foreach( (array) $transaction_methods as $method ) {
 			$radio = '<label for="transaction-method-' . esc_attr( $method['slug'] ) . '">';
-			$radio .= '<input type="radio" id="transaction-method-' . esc_attr( $method['slug'] ) . '" name="it_cart_buddy_checkout_transaction_method" value="' . esc_attr( $method['slug'] ) . ' " />';
+			$radio .= '<input type="radio" id="transaction-method-' . esc_attr( $method['slug'] ) . '" name="' . it_cart_buddy_get_action_var( 'transaction_method' ) . '" value="' . esc_attr( $method['slug'] ) . '" />';
 			$radio .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . esc_html( it_cart_buddy_get_transaction_method_name( $method['slug'] ) );
 			$radio .= '</label>';
 			$radios[] = $radio;
@@ -216,6 +217,7 @@ function it_cart_buddy_default_cart_get_checkout_transaction_method_option_field
  * @return string HTML button
 */
 function it_cart_buddy_default_cart_get_checkout_order_button() {
-	$html = '<input type="submit" name="it_cart_buddy_place_order" value="' . __( 'Place Order', 'LION' ) . '" />';
+	$html  = '<input type="hidden" name="' . esc_attr( it_cart_buddy_get_action_var( 'purchase_cart' ) ) . '" value=1 />';
+	$html .= '<input type="submit" name="it_cart_buddy_place_order" value="' . __( 'Place Order', 'LION' ) . '" />';
 	return apply_filters( 'it_cart_buddy_default_cart_get_checkout_order_button', $html );
 }

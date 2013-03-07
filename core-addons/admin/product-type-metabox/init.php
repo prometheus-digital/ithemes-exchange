@@ -14,8 +14,10 @@ class IT_Cart_Buddy_Core_Addon_Product_Type_Meta_Box {
 	 * @return void
 	*/
 	function IT_Cart_Buddy_Core_Addon_Product_Type_Meta_Box() {
-		add_action( 'it_cart_buddy_product_metabox_callback', array( $this, 'register_product_type_meta_box' ) );
-		add_action( 'it_cart_buddy_save_product', array( $this, 'update_post_product_type' ) );
+		if ( is_admin() ) {
+			add_action( 'it_cart_buddy_product_metabox_callback', array( $this, 'register_product_type_meta_box' ) );
+			add_action( 'it_cart_buddy_save_product', array( $this, 'update_post_product_type' ) );
+		}
 	}
 
 	/**

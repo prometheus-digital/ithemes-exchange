@@ -115,6 +115,7 @@ function it_cart_buddy_get_transactions( $args=array() ) {
 function it_cart_buddy_add_transaction( $args=array() ) {
 	$defaults = array(
 		'post_type'          => 'it_cart_buddy_tran',
+		'post_status'        => 'publish',
 		'transaction_status' => 'pending',
 	);
 
@@ -134,6 +135,7 @@ function it_cart_buddy_add_transaction( $args=array() ) {
 		update_post_meta( $transaction_id, '_it_cart_buddy_transaction_status', $args['transaction_status'] );
 		do_action( 'it_cart_buddy_add_transaction', $transaction_id );
 		do_action( 'it_cart_buddy_add_transaction-' . $args['transaction-method'], $transaction_id );
+		return $transaction_id;
 	}
 }
 
@@ -220,4 +222,14 @@ function it_cart_buddy_get_transaction_method_name( $slug ) {
 
 	$name = apply_filters( 'it_cart_buddy_get_transaction_method_name-' . $method['slug'], $method['name'] );
 	return $name;
+}
+
+/**
+ * For processing a transaction
+ *
+ * @since 0.3.7
+ * @return mixed
+*/
+function it_cart_buddy_do_transaction( $method, $cart_object ) {
+	do_action( 'it_cart_buddy_do_transaction-' . $method, $cart_object );
 }

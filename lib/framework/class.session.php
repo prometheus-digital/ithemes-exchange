@@ -172,8 +172,6 @@ class IT_Cart_Buddy_Session {
 	 * @return boolean
 	*/
 	function update_data( $key, $data ) {
-		if ( empty( $key ) || ! isset( $this->_session_data[$key] ) )
-			return false;
 
 		$this->remove_data( $key );
 		$this->add_data( $data, $key );

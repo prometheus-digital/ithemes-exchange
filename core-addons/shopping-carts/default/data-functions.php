@@ -7,6 +7,39 @@
 */
 
 /**
+ * Returns all cart data
+ *
+ * @since 0.3.7
+ * @return array
+*/
+function it_cart_buddy_default_cart_get_data() {
+	return it_cart_buddy_get_session_data();
+}
+
+/**
+ * Update cart transaction id
+ *
+ * @since 0.3.7
+ * @param integer transaction id
+ * @return void
+*/
+function it_cart_buddy_default_cart_update_transaction_id( $id ) {
+	it_cart_buddy_update_session_data( 'transaction_id', $id );
+}
+
+/**
+ * Returns the cart transaction id
+ *
+ * @since 0.3.7
+ * @return integer transaction_id stored in cart
+*/
+function it_cart_buddy_default_cart_get_cart_transaction_id() {
+	$session_data = it_cart_buddy_get_session_data();
+	$transaction_id = empty( $session_data['transaction_id'] ) ? false : $session_data['transaction_id'];
+	return $transaction_id;
+}
+
+/**
  * Adds a product to the shopping cart based on the cart_buddy_add_to_cart query arg
  *
  * @since 0.3.7
@@ -241,4 +274,69 @@ function it_cart_buddy_default_cart_get_cart_subtotal( $existing ) {
 function it_cart_buddy_default_cart_get_cart_total( $existing ) {
 	$total = it_cart_buddy_get_cart_subtotal();
 	return apply_filters( 'it_cart_buddy_default_shopping_cart_get_cart_total', $total );
+}
+
+/**
+ * Process checkout
+ *
+ * Formats data and hands it off to the appropriate tranaction method
+ *
+ * @since 0.3.7
+ * @return void
+*/
+function it_cart_buddy_default_cart_purchase_cart() {
+
+	// Verify products exist
+	$products = it_cart_buddy_get_cart_products();
+	if ( count( $products ) < 1 ) {
+		do_action( 'it_cart_buddy_error-no_products_to_purchase' );
+		return false;
+	}
+
+	// Verify transaction method exists
+	$method_var = it_cart_buddy_get_action_var( 'transaction_method' );
+	$requested_transaction_method = empty( $_REQUEST[$method_var] ) ? false : $_REQUEST[$method_var];
+	$enabled_addons = it_cart_buddy_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
+	if ( ! $requested_transaction_method || empty( $enabled_addons[$requested_transaction_method] ) ) {
+		do_action( 'it_cart_buddy_error-bad_transaction_method_at_purchase', $requested_transaction_method );
+		return false;
+	}
+
+	// Verify cart total is a positive number
+	$cart_total = number_format( it_cart_buddy_get_cart_total(), 2);
+	if ( $cart_total < 0.01 ) {
+		do_action( 'it_cart_buddy_error-negative_cart_total_on_checkout', $cart_total );
+		return false;
+	}
+
+	// Add subtotal to each product
+	foreach( $products as $key => $product ) {
+		$products[$key]['product_baseline'] = it_cart_buddy_get_cart_product_base_price( $product );
+		$products[$key]['product_subtotal'] = it_cart_buddy_get_cart_product_subtotal( $product );
+		$products[$key]['product_name']     = it_cart_buddy_get_cart_product_title( $product );
+	}
+
+	// Package it up and send it to the transaction method add-on
+	$transaction_object = new stdClass();
+	$transaction_object->products = $products;
+	$transaction_object->data     = it_cart_buddy_get_cart_data();
+	$transaction_object->total    = $cart_total;
+
+	// Do the transaction
+	it_cart_buddy_do_transaction( $requested_transaction_method, $transaction_object );
+
+	// Get results
+	$transaction_id = it_cart_buddy_get_cart_transaction_id();
+	if ( ! empty( $transaction_id ) ) {
+		/** @todo Empty cart **/
+		$confirmation_url = it_cart_buddy_get_page_url( 'confirmation' );
+		$transaction_var  = it_cart_buddy_get_action_var( 'transaction_id' );
+		$confirmation_url = add_query_arg( array( $transaction_var => $transaction_id ), $confirmation_url );
+		wp_redirect( $confirmation_url );
+		die();
+	} else {
+		die('transaction failed');
+	}
+
+	ITUtility::print_r($_SESSION['it_cart_buddy']);die();
 }

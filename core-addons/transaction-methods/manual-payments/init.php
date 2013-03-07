@@ -10,6 +10,7 @@ include( 'confirmation-template-functions.php' );
 
 add_filter( 'it_cart_buddy_get_transaction_confirmation_page_html-manual-payments', 'it_cart_buddy_manual_transactions_confirmation_page_html', 9, 3 );
 add_filter( 'it_cart_buddy_get_transaction_method_name-manual-payments', 'it_cart_buddy_get_manual_payments_name', 9 );
+add_action( 'it_cart_buddy_do_transaction-manual-payments', 'it_cart_buddy_manual_payments_do_transaction', 9 );
 
 /**
  * Call back for settings page
@@ -37,6 +38,21 @@ function it_cart_buddy_get_manual_payments_name( $name ) {
         $name = $options['manual_payments_title'];
 
     return $name;
+}
+
+/**
+ * Processes the transaction from the cart
+ *
+ * @since 0.3.7
+*/
+function it_cart_buddy_manual_payments_do_transaction( $cart_object ) {
+	$args = array(
+		'transaction-method' => 'manual-payments',
+	);
+	if ( $transaction_id = it_cart_buddy_add_transaction( $args ) )
+		it_cart_buddy_update_cart_transaction_id( $transaction_id );
+	else
+		die('fail');
 }
 
 /**

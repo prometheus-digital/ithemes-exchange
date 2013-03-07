@@ -54,6 +54,7 @@ function it_cart_buddy_get_action_vars() {
 		'display_message'          => 'it_cart_buddy_message',
 		'display_errors'           => 'it_cart_buddy_errors',
 		'transaction_id'           => 'it_cart_buddy_transaction_id',
+		'transaction_method'       => 'it_cart_buddy_transaction_method',
 	);
 	return apply_filters( 'it_cart_buddy_get_action_vars', $defaults );
 }
