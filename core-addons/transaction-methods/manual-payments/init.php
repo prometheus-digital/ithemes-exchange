@@ -9,6 +9,7 @@
 include( 'confirmation-template-functions.php' );
 
 add_filter( 'it_cart_buddy_get_transaction_confirmation_page_html-manual-payments', 'it_cart_buddy_manual_transactions_confirmation_page_html', 9, 3 );
+add_filter( 'it_cart_buddy_get_transaction_method_name-manual-payments', 'it_cart_buddy_get_manual_payments_name', 9 );
 
 /**
  * Call back for settings page
@@ -21,6 +22,21 @@ add_filter( 'it_cart_buddy_get_transaction_confirmation_page_html-manual-payment
 function it_cart_buddy_manual_payments_settings_callback() {
 	$IT_Cart_Buddy_Manual_Payments_Add_On = new IT_Cart_Buddy_Manual_Payments_Add_On();
 	$IT_Cart_Buddy_Manual_Payments_Add_On->print_settings_page();
+}
+
+/**
+ * Replace Manual Payments name with what is set in admin settings
+ *
+ * @since 0.3.7
+ * @param string $name the name passed in from the WP filter API
+ * @return string
+*/
+function it_cart_buddy_get_manual_payments_name( $name ) { 
+    $options = it_cart_buddy_get_option( 'cart-buddy-addon-manual-payments' );
+    if ( ! empty( $options['manual_payments_title'] ) ) 
+        $name = $options['manual_payments_title'];
+
+    return $name;
 }
 
 /**

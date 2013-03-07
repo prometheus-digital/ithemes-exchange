@@ -207,3 +207,17 @@ function it_cart_buddy_get_transaction_status( $transaction ) {
 	$transaction = it_cart_buddy_get_transaction( $transaction );
 	return empty( $transaction->transaction_data['_it_cart_buddy_transaction_status'] ) ? false : $transaction->transaction_data['_it_cart_buddy_transaction_status'];
 }
+
+/**
+ * Returns the transaction method name
+ *
+ * @since 0.3.7
+ * @return string
+*/
+function it_cart_buddy_get_transaction_method_name( $slug ) {
+	if ( ! $method = it_cart_buddy_get_addon( $slug ) )
+		return false;
+
+	$name = apply_filters( 'it_cart_buddy_get_transaction_method_name-' . $method['slug'], $method['name'] );
+	return $name;
+}

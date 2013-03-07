@@ -149,7 +149,6 @@ function it_cart_buddy_default_cart_get_checkout_order_summary_cart_total_table_
 function it_cart_buddy_default_cart_get_checkout_place_order() {
 	$html  = '<h3>' . __( 'Payment Method', 'LION' ) . '</h3>';
 	$html .= '<div id="it-cart-buddy-checkout-place-order-form">';
-	$html .= '<p>' . __( 'Choose a payment method', 'LION' ) . '<br />';
 	$html .= it_cart_buddy_default_cart_get_checkout_transaction_method_option_fields();
 	$html .= '</p>';
 	$html .= it_cart_buddy_get_cart_checkout_order_button();
@@ -191,16 +190,22 @@ function it_cart_buddy_default_cart_get_checkout_transaction_method_option_field
 	if ( ! $transaction_methods = it_cart_buddy_get_enabled_addons( array( 'category' => 'transaction-methods' ) ) )
 		return '<p>' . __( 'No payment add-ons enabled!', 'LION' ) . '</p>';
 
-	$radios = array();
-	foreach( (array) $transaction_methods as $method ) {
-		$radio = '<label for="transaction-method-' . esc_attr( $method['slug'] ) . '">';
-		$radio .= '<input type="radio" id="transaction-method-' . esc_attr( $method['slug'] ) . '" name="it_cart_buddy_checkout_transaction_method" value="' . esc_attr( $method['slug'] ) . ' " />';
-		$radio .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . esc_html( $method['name'] );
-		$radio .= '</label>';
-		$radios[] = $radio;
-	}
+	if ( 1 === count( $transaction_methods ) ) {
+		$method = reset( $transaction_methods );
+		$html  = '<p>' . it_cart_buddy_get_transaction_method_name( $method['slug'] ) . '</p>';
+	} else {
+		$radios = array();
+		foreach( (array) $transaction_methods as $method ) {
+			$radio = '<label for="transaction-method-' . esc_attr( $method['slug'] ) . '">';
+			$radio .= '<input type="radio" id="transaction-method-' . esc_attr( $method['slug'] ) . '" name="it_cart_buddy_checkout_transaction_method" value="' . esc_attr( $method['slug'] ) . ' " />';
+			$radio .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . esc_html( it_cart_buddy_get_transaction_method_name( $method['slug'] ) );
+			$radio .= '</label>';
+			$radios[] = $radio;
+		}
 
-	$html = implode( $radios, '<br />' );
+		$html  = '<p>' . __( 'Choose a payment method', 'LION' ) . '</p>';
+		$html .= implode( $radios, '<br />' );
+	}
 	return apply_filters( 'it_cart_buddy_default_cart_get_checkout_transaction_method_option_fields', $html );
 }
 
