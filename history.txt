@@ -1,3 +1,20 @@
+0.3.7 - 2012-03-08 - Glenn Ansley
+	Use ITStorage2 for settings
+	Use ITForm for admin forms
+	Form validation / feeback for admin settings
+	Add-on Settings API
+	Transaction Methods API
+	Storage API
+	Cart API
+	Default Cart Add-on
+	Refactored Sessions API
+	Manual Payments Add-On 
+	Standardized function names accross codebase
+	Customer Mangement API (WIP)
+	Messaging / Errors API
+	EVERYTHING IS STILL VERY MUCH IN PROGRESS AT THIS POINT
+0.3.6 - 2013-02-15
+	Updated lib/classes to version 2.1.9
 0.3.5 - 2013-02-14 - Glenn Ansley
 	Admin General Settings
 	Admin Email Settings
@@ -26,5 +43,3 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
-0.3.6 - 2013-02-15
-	Updated lib/classes to version 2.1.9
