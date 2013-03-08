@@ -111,6 +111,13 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/admin/transaction-status-metabox/init.php',
 			'options'     => array( 'category' => 'admin' ),
 		),
+		// Base Price
+		'base-price' => array(
+			'name'        => __( 'Product Price', 'LION' ),
+			'description' => __( 'This add-on will associate a monetary price with any product that registers support for basic pricing', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/base-price/init.php',
+			'options'     => array( 'caregory' => 'product-features' ),
+		),
 	);
 	$add_ons = apply_filters( 'it_cart_buddy_core_addons', $add_ons );
 
@@ -202,6 +209,11 @@ function it_cart_buddy_register_core_addon_categories() {
 		'admin' => array(
 			'name'        => __( 'Admin Add-ons', 'LION' ),
 			'description' => __( 'Add-ons that create general purpose admin functionality. eg: Reports, Export.', 'LION' ),
+			'options'     => array(),
+		),
+		'product-features' => array(
+			'name'        => __( 'Product Features', 'LION' ),
+			'description' => __( 'Add-ons that provide optional features to product type add-ons', 'LION' ),
 			'options'     => array(),
 		),
 		'front-end' => array(
