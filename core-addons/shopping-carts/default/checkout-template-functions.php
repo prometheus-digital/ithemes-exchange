@@ -19,7 +19,8 @@
  * @return string html for the shopping cart
 */
 function it_cart_buddy_default_cart_get_checkout_html( $shortcode_atts=array(), $shortcode_content='' ) {
-	$html  = apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html_top', '' );
+	$html  = it_cart_buddy_get_errors_div();
+	$html .= apply_filters( 'it_cart_buddy_default_shopping_cart_checkout_html_top', '' );
 
 	// Display the Login form if user is not logged in
 	if ( ! is_user_logged_in() )

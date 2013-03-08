@@ -16,7 +16,7 @@ function it_cart_buddy_cart_actions() {
 	// Fires whena a product is being added to product to a cart
 	foreach( (array) it_cart_buddy_get_action_vars() as $slug => $var ) {
 		if ( isset( $_REQUEST[$var] ) ) {
-			do_action( $slug, $_REQUEST[$var] );
+			do_action( 'it_cart_buddy_' . $slug, $_REQUEST[$var] );
 		}
 	}
 }
@@ -51,8 +51,8 @@ function it_cart_buddy_get_action_vars() {
 		'proceed_to_checkout'      => 'it_cart_buddy_proceed_to_checkout',
 		'view_cart'                => 'it_cart_buddy_view_cart',
 		'purchase_cart'            => 'it_cart_buddy_purchase_cart',
-		'display_message'          => 'it_cart_buddy_message',
-		'display_errors'           => 'it_cart_buddy_errors',
+		'alert_message'            => 'it_cart_buddy_messages',
+		'error_message'            => 'it_cart_buddy_errors',
 		'transaction_id'           => 'it_cart_buddy_transaction_id',
 		'transaction_method'       => 'it_cart_buddy_transaction_method',
 	);

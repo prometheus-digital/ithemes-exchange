@@ -96,7 +96,8 @@ function it_cart_buddy_default_cart_get_cart_html( $args, $content=''  ) {
 	if ( ! $products )
 		return '<p>' . __( 'Your cart is empty', 'LION' ) . '</p>';
 
-	$html = '';
+	$html  = it_cart_buddy_get_errors_div();
+	$html  = it_cart_buddy_get_alerts_div();
 	$html .= it_cart_buddy_default_shopping_cart_get_form_open();
 	$html .= it_cart_buddy_default_shopping_cart_get_table_open();
 	$html .= it_cart_buddy_default_shopping_cart_get_table_header();
@@ -266,7 +267,8 @@ function it_cart_buddy_default_cart_get_remove_product_from_shopping_cart_html( 
 */
 function it_cart_buddy_default_cart_get_add_product_to_cart_html( $existing_html, $product, $shortcode_atts=array(), $shortcode_content='' ) {
 	$var = it_cart_buddy_get_action_var( 'add_product_to_cart' );
-	$html  = '<form action="" method="post">';
+	$html  = it_cart_buddy_get_alerts_div();
+	$html .= '<form action="" method="post">';
 	$html .= '<input type="hidden" name="' . esc_attr( $var ) . '" value="' . esc_attr( $product ) . '" />';
 	$html .= '<input type="submit" name="" value="' . __( 'Add to cart', 'LION' ) . '" />';
 	$html .= '</form>';

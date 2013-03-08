@@ -36,3 +36,9 @@ include( $this->_plugin_path . '/api/shopping-carts/init.php' );
 
 // Customers
 include( $this->_plugin_path . '/api/customers.php' );
+
+// Errors
+include( $this->_plugin_path . '/api/errors.php' );
+
+// Alerts 
+include( $this->_plugin_path . '/api/alerts.php' );

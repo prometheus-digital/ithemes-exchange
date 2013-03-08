@@ -42,3 +42,34 @@ function it_cart_buddy_default_shopping_cart_redirect_checkout_to_cart() {
 		die();
 	}
 }
+
+/**
+ * Register error messages used with this add-on
+ *
+ * @since 0.3.7
+ * @param array $messages existing messages
+ * @return array
+*/
+function it_cart_buddy_default_shopping_cart_register_error_messages( $messages ) {
+	$messages['bad-transaction-method'] = __( 'Please select a payment method', 'LION' );
+	$messages['failed-transaction']     = __( 'There was an error processing your transaction. Please try again.', 'LION' );
+	$messages['negative-cart-total']    = __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'LION' );
+	$messages['no-products-in-cart']    = __( 'You cannot checkout without any items in your cart.', 'LION' );
+	return $messages;
+}
+add_filter( 'it_cart_buddy_get_error_messages', 'it_cart_buddy_default_shopping_cart_register_error_messages' );
+
+/**
+ * Register alert messages used with this add-on
+ *
+ * @since 0.3.7
+ * @param array $messages existing messages
+ * @return array
+*/
+function it_cart_buddy_default_shopping_cart_register_alert_messages( $messages ) {
+	$messages['cart-updated']          = __( 'Cart Updated.', 'LION' );
+	$messages['product-removed']       = __( 'Product removed from cart.', 'LION' );
+	$messages['product-added-to-cart'] = __( 'Product added to cart', 'LION' );
+	return $messages;
+}
+add_filter( 'it_cart_buddy_get_alert_messages', 'it_cart_buddy_default_shopping_cart_register_alert_messages' );

@@ -55,6 +55,9 @@ function it_cart_buddy_default_cart_add_product_to_shopping_cart( $product_id ) 
 		// Bump the quantity
 		it_cart_buddy_update_session_product( $product_id . '-' . $itemized_hash, $product );
 		do_action( 'it_cart_buddy_default_cart-prouduct_count_updated', $product_id );
+		$url = add_query_arg( array( it_cart_buddy_get_action_var( 'alert_message' ) => 'product-added-to-cart' ) );
+		wp_redirect( $url );
+		die();
 	} else {
 		$product = array(
 			'product_cart_id' => $product_id . '-' . $itemized_hash,
@@ -67,6 +70,9 @@ function it_cart_buddy_default_cart_add_product_to_shopping_cart( $product_id ) 
 
 		it_cart_buddy_add_session_product( $product, $product_id . '-' . $itemized_hash );
 		do_action( 'it_cart_buddy_default_cart-product_added', $product_id );
+		$url = add_query_arg( array( it_cart_buddy_get_action_var( 'alert_message' ) => 'product-added-to-cart' ) );
+		wp_redirect( $url );
+		die();
 	}
 }
 
@@ -100,6 +106,11 @@ function it_cart_buddy_default_cart_remove_product_from_shopping_cart( $product_
 	if ( $product_id ) {
 		it_cart_buddy_remove_session_product( $product_id );
 		do_action( 'it_cart_buddy_default_cart-removed_product_from_cart', $product_id );
+		$var = it_cart_buddy_get_action_var( 'alert_message' );
+		$cart = it_cart_buddy_get_page_url( 'cart' );
+		$url = add_query_arg( array( $var => 'product-removed' ), $cart );
+		wp_redirect( $url );
+		die();
 	}
 }
 
@@ -130,10 +141,10 @@ function it_cart_buddy_default_cart_update_shopping_cart( $show_message=true ) {
 		}
 	}
 
-	$message_var = it_cart_buddy_get_action_var( 'display_message' );
+	$message_var = it_cart_buddy_get_action_var( 'alert_message' );
 	if ( ! empty ( $message_var ) && $show_message ) {
 		$page = it_cart_buddy_get_page_url( 'cart' );
-		$url = add_query_arg( array( $message_var => 1 ), $page );
+		$url = add_query_arg( array( $message_var => 'cart-updated' ), $page );
 		wp_redirect( $url );
 		die();
 	}
@@ -149,7 +160,7 @@ function it_cart_buddy_default_cart_update_shopping_cart( $show_message=true ) {
 function it_cart_buddy_default_cart_proceed_to_checkout() {
 
 	// Update cart info
-	do_action( 'update_cart', false );
+	do_action( 'it_cart_buddy_update_cart', false );
 
 	// Redirect to Checkout
 	if ( $checkout = it_cart_buddy_get_page_url( 'checkout' ) ) {
@@ -276,7 +287,7 @@ function it_cart_buddy_default_cart_purchase_cart() {
 	$products = it_cart_buddy_get_cart_products();
 	if ( count( $products ) < 1 ) {
 		do_action( 'it_cart_buddy_error-no_products_to_purchase' );
-		it_cart_buddy_default_cart_notify_failed_transaction( 'no-products' );
+		it_cart_buddy_default_cart_notify_failed_transaction( 'no-products-in-cart' );
 		return false;
 	}
 
@@ -346,7 +357,7 @@ function it_cart_buddy_default_cart_do_confirmation_redirect( $transaction_id ) 
 */
 function it_cart_buddy_default_cart_notify_failed_transaction( $message=false ) {
 	$cart_url = it_cart_buddy_get_page_url( 'checkout' );
-	$message_var = it_cart_buddy_get_action_var( 'display_message' );
+	$message_var = it_cart_buddy_get_action_var( 'error_message' );
 	$message = empty( $message ) ? 'failed-transaction' : $message;
 	$url = add_query_arg( array( $message_var => $message ) );
 	wp_redirect( $url );
