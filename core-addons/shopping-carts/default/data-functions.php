@@ -132,7 +132,6 @@ function it_cart_buddy_default_cart_update_shopping_cart( $show_message=true ) {
 
 	$message_var = it_cart_buddy_get_action_var( 'display_message' );
 	if ( ! empty ( $message_var ) && $show_message ) {
-		die('here');
 		$page = it_cart_buddy_get_page_url( 'cart' );
 		$url = add_query_arg( array( $message_var => 1 ), $page );
 		wp_redirect( $url );
