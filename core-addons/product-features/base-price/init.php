@@ -11,6 +11,27 @@ if ( is_admin() ) {
 	add_action( 'init', 'it_cart_buddy_base_price_addon_init_base_price_metaboxes' );
 	add_action( 'it_cart_buddy_save_product', 'it_cart_buddy_base_price_addon_save_price_on_product_save' );
 }
+add_action( 'it_cart_buddy_update_product_feature-base_price', 'it_cart_buddy_base_price_addon_save_price', 9, 2 );
+add_filter( 'it_cart_buddy_get_product_feature-base_price', 'it_cart_buddy_base_price_addon_get_price', 9, 2 );
+add_action( 'it_cart_buddy_enabled_addons_loaded', 'it_cart_buddy_init_base_price_addon' );
+
+/**
+ * Register the product and add it to enabled product-type addons
+ *
+ * @since 0.3.8
+*/
+function it_cart_buddy_init_base_price_addon() {
+	// Register the base_price_addon
+	$slug        = 'base_price';
+	$description = 'The base price for a product';
+	it_cart_buddy_register_product_feature( $slug, $description );
+
+	// Add it to all enabled product-type addons
+	$products = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) );
+	foreach( $products as $key => $params ) {
+		it_cart_buddy_add_feature_support_to_product_type( 'base_price', $params['slug'] );
+	}
+}
 
 /**
  * Register's the metabox for any product type that supports the base_price feature
@@ -25,7 +46,7 @@ function it_cart_buddy_base_price_addon_init_base_price_metaboxes() {
 
 	// Loop through product types and register a metabox if it supports base_price
 	foreach( $product_addons as $slug => $args ) {
-		if ( ! empty ( $args['options']['supports']['base_price'] ) )
+		if ( it_cart_buddy_product_type_supports_feature( $slug, 'base_price' ) )
 			add_action( 'it_cart_buddy_product_metabox_callback_' . $slug, 'it_cart_buddy_base_price_addon_register_metabox' );
 	}
 }
@@ -54,11 +75,8 @@ function it_cart_buddy_base_price_addon_print_metabox( $post ) {
 	// Grab the Cart Buddy Product object from the WP $post object
 	$product = it_cart_buddy_get_product( $post );
 
-	// Determine the key for the base_price product feature
-	$base_price_feature_key = empty( $product->product_supports['base_price']['key'] ) ? false : $product->product_supports['base_price']['key'];
-
 	// Set the value of the base_price for this product
-	$product_base_price     = empty( $product->product_data[$base_price_feature_key] ) ? false : $product->product_data[$base_price_feature_key];
+	$product_base_price     = it_cart_buddy_get_product_feature( $product->ID, 'base_price' );
 
 	// Set description
 	$description = __( 'This will be the standard price before discounts, taxes, fees, or any other modifications', 'LION' );
@@ -92,25 +110,19 @@ function it_cart_buddy_base_price_addon_save_price_on_product_save() {
 	if ( ! $product_id )
 		return;
 
-	// Abort if we cant find product type options for this product_type
-	if ( ! $product_type_options = it_cart_buddy_get_product_type_options( $product_type ) )
+	// Abort if this product type doesn't support base_price
+	if ( ! it_cart_buddy_product_type_supports_feature( $product_type, 'base_price' ) )
 		return;
 
-	// Abort if we don't find support for base_price for this product_type
-	$base_price_args = empty( $product_type_options['supports']['base_price'] ) ? false : $product_type_options['supports']['base_price'];
-	if ( ! $base_price_args )
-		return false;
-
 	// Abort if key for base_price option isn't set in POST data
-	if ( ! isset( $_POST[$base_price_args['key']] ) )
+	if ( ! isset( $_POST['_it_cart_buddy_base_price'] ) )
 		return;
 
 	// Get new value from post
-	$new_price = $_POST[$base_price_args['key']];
+	$new_price = $_POST['_it_cart_buddy_base_price'];
 	
 	// Save new value
-	//it_cart_buddy_update_product_feature( $product_id, 'base_price', $new_price );
-	it_cart_buddy_base_price_addon_save_price( $product_id, $new_price );
+	it_cart_buddy_update_product_feature( $product_id, 'base_price', $new_price );
 }
 
 /**
@@ -124,5 +136,18 @@ function it_cart_buddy_base_price_addon_save_price_on_product_save() {
  * @return bolean
 */
 function it_cart_buddy_base_price_addon_save_price( $product_id, $new_price ) {
-	return update_post_meta( $product_id, '_it_cart_buddy_base_price', $new_price );
+	update_post_meta( $product_id, '_it_cart_buddy_base_price', $new_price );
+}
+
+/**
+ * Return the product's base price
+ *
+ * @since 0.3.8
+ * @param mixed $base_price the values passed in by the WP Filter API. Ignored here.
+ * @param integer product_id the WordPress post ID
+ * @return string base_price
+*/
+function it_cart_buddy_base_price_addon_get_price( $base_price, $product_id ) {
+	$base_price = get_post_meta( $product_id, '_it_cart_buddy_base_price', true );
+	return $base_price;
 }

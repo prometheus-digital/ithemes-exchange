@@ -192,7 +192,23 @@ class IT_Cart_Buddy_Product {
 		if ( $addon = it_cart_buddy_get_addon( $this->product_type ) ) { 
 			// Remove any supports args that the product add-on does not want.
 			foreach( $supports as $option ) { 
-                if ( empty( $addon['options']['supports'][$option] ) )
+
+				// Map Core WP post_type supports to our addon names
+				if ( 'title' == $option ) {
+					$cart_buddy_product_feature = 'product_title';
+				} else if ( 'editor' == $option ) {
+					$cart_buddy_product_feature = 'product_description';
+				} else if ( 'author' == $option ) {
+					$cart_buddy_product_feature = 'product_author';
+				} else if ( 'thumbnail' == $option ) {
+					$cart_buddy_product_feature = 'featured_image';
+				} else if ( 'excerpt' == $option ) {
+					$cart_buddy_product_feature = 'product_excerpt';
+				} else {
+					$cart_buddy_product_feature = $option;
+				}
+
+                if ( ! it_cart_buddy_product_type_supports_feature( $this->product_type, $cart_buddy_product_feature ) )
 					remove_post_type_support( 'it_cart_buddy_prod', $option );
             }   
         }   

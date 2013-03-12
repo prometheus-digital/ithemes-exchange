@@ -118,6 +118,34 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/product-features/base-price/init.php',
 			'options'     => array( 'caregory' => 'product-features' ),
 		),
+		// Product description (post_content)
+		'product-description' => array(
+			'name'        => __( 'Product Description', 'LION' ),
+			'description' => __( 'The description of the product. Maps to post_content.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/product-description/init.php',
+			'options'     => array( 'category' => 'product-features' ),
+		),
+		// Product title (post_title)
+		'product-title' => array(
+			'name'        => __( 'Product Title', 'LION' ),
+			'description' => __( 'Enables the WordPress post Title for products.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/product-title/init.php',
+			'options'     => array( 'category' => 'product-features' ),
+		),
+		// Featured Image
+		'featured-image' => array(
+			'name'        => __( 'Featured Image', 'LION' ),
+			'description' => __( 'Enables the WordPress post Featured Image for products.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/featured-image/init.php',
+			'options'     => array( 'category' => 'product-features' ),
+		),
+		// Product Author
+		'product-author' => array(
+			'name'        => __( 'Product Author', 'LION' ),
+			'description' => __( 'Enables the WordPress post Author field for products.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/product-author/init.php',
+			'options'     => array( 'category' => 'product-features' ),
+		),
 	);
 	$add_ons = apply_filters( 'it_cart_buddy_core_addons', $add_ons );
 
@@ -147,28 +175,6 @@ function it_cart_buddy_register_core_addon_categories() {
 			'name'        => __( 'Product Type', 'LION' ),
 			'description' => __( 'Add-ons responsible for the differing types of products available in Cart Buddy.', 'LION' ),
 			'options'     => array(
-				'supports' => apply_filters( 'it_cart_buddy_register_product_type_supports', array(
-					'title' => array(
-						'key'       => 'post_title',
-						'componant' => 'post_type_support',
-						'default'   => false,
-					),
-					'editor' => array(
-						'key'       => 'post_content',
-						'componant' => 'post_type_support',
-						'default'   => false,
-					),
-					'thumbnail' => array(
-						'key'       => '_thumbnail_id',
-						'componant' => 'post_meta',
-						'default'   => false,
-					),
-					'base_price' => array(
-						'key'       => '_it_cart_buddy_base_price',
-						'componant' => 'post_meta',
-						'default'   => false,
-					),
-				) ),
 			),
 		),
 		'transaction-methods' => array(

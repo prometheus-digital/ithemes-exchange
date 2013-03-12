@@ -16,6 +16,9 @@ if ( is_admin() ) {
 // Contains functions for registering / retreiving Add-ons, Add-on categories, and Add-on sets
 include( $this->_plugin_path . '/api/add-ons.php' );
 
+// Product Features
+include( $this->_plugin_path . '/api/product-features.php' );
+
 // Register and retreive orm actions
 include( $this->_plugin_path . '/api/form-actions.php' );
 

@@ -1,0 +1,112 @@
+<?php
+/**
+ * This file contains methods for accessing and updating product features
+ *
+ * @since 0.3.8
+ * @package IT_Cart_Buddy
+*/
+
+/**
+ * Check if a given product has a specific feature *
+ * @since 0.3.8
+ * @param integer $product_id the WordPress post ID for the product
+ * @param string $feature_key the slug for the feature
+ * @return boolean
+*/
+function it_cart_buddy_product_has_feature( $product_id, $feature_key ) {
+	return apply_filters( 'it_cart_buddy_product_has_feature-' . $feature_key, false, $product_id );
+}
+
+/**
+ * Update the given product's feature value
+ *
+ * @since 0.3.8
+ * @param integer $product_id the WordPress post ID for the product
+ * @param string $feature_key the slug for the feature
+ * @param mixed $feature_value the value for the feature
+ * @return boolean
+*/
+function it_cart_buddy_update_product_feature( $product_id, $feature_key, $feature_value ) {
+	do_action( 'it_cart_buddy_update_product_feature-' . $feature_key, $product_id, $feature_value );
+}
+
+/**
+ * Get the value for a feature of a specific product
+ *
+ * @since 0.3.8
+ * @param integer $product_id the WordPress post ID for the product
+ * @param string $feature_key the slug for the feature
+ * @return mixed the value of the feature
+*/
+function it_cart_buddy_get_product_feature( $product_id, $feature_key ) {
+	return apply_filters( 'it_cart_buddy_get_product_feature-' . $feature_key, false, $product_id );
+}
+
+/**
+ * Adds support for a specific product-feature to a specific product-type
+ *
+ * @since 0.3.8
+ * @param string $feature_key the slug for the featuer
+ * @param string $product_type the product-type slug
+ * @return void
+*/
+function it_cart_buddy_add_feature_support_to_product_type( $feature_key, $product_type ) {
+	if ( ! isset( $GLOBALS['it_cart_buddy']['product_features'][$feature_key] ) )
+		return;
+	$GLOBALS['it_cart_buddy']['product_features'][$feature_key]['product_types'][$product_type] = true;
+}
+
+/**
+ * Removes support for a product-feature from a specific product-type
+ *
+ * @since 0.3.8
+ * @param string $feature_key the slug for the feature
+ * @param string $product_type the product-type slug
+ * @return void
+*/
+function it_cart_buddy_remove_feature_support_for_product_type( $feature_key, $product_type ) {
+	if ( isset( $GLOBALS['it_cart_buddy']['product_features'][$feature_key][$product_type] ) )
+		unset( $GLOBALS['it_cart_buddy']['product_features'][$feature_key][$product_type] );
+}
+
+/**
+ * Check if a given product-type supports a specific product feature
+ *
+ * @since 0.3.8
+ * @param string $product_type the product-type slug
+ * @param string $feature_key the slug for the feature
+ * @return boolean
+*/
+function it_cart_buddy_product_type_supports_feature( $product_type, $feature_key ) {
+	$product_features = it_cart_buddy_get_registered_product_features();
+	if ( empty( $product_features[$feature_key] ) )
+		return false;
+
+	if ( empty( $product_features[$feature_key]['product_types'][$product_type] ) )
+		return false;
+
+	return true;
+}
+
+/**
+ * Keeps track of all available product features
+ *
+ * @since 0.3.8
+ * @param slug
+ * @return void
+*/
+function it_cart_buddy_register_product_feature( $slug, $description='', $default_product_types=array() ) {
+	$GLOBALS['it_cart_buddy']['product_features'][$slug]['slug']        = $slug;
+	$GLOBALS['it_cart_buddy']['product_features'][$slug]['description'] = $description;
+}
+
+/**
+ * Returns all registered product_features
+ *
+ * @since 0.3.8
+ * @return array
+*/
+function it_cart_buddy_get_registered_product_features() {
+	$product_features = isset( $GLOBALS['it_cart_buddy']['product_features'] ) ? (array) $GLOBALS['it_cart_buddy']['product_features'] : array();
+	return $product_features;
+}

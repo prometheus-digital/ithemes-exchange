@@ -106,6 +106,7 @@ class IT_Cart_Buddy {
 				include( $params['file'] );
 			}
 		}
+		do_action( 'it_cart_buddy_enabled_addons_loaded' );
 	}
 
 	/**

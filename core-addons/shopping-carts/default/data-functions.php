@@ -217,7 +217,7 @@ function it_cart_buddy_default_cart_get_cart_product_base_price( $existing, $pro
 		return false;
 
 	// Get the price from the DB
-	$db_base_price = it_cart_buddy_get_product_feature( $db_product, 'base_price' );
+	$db_base_price = it_cart_buddy_get_product_feature( $db_product->ID, 'base_price' );
 
 	// Pass it through a filter (though it is already in a larger-scoped filter)
 	return apply_filters( 'it_cart_buddy_default_shopping_cart_get_cart_product_base_price', $db_base_price, $product ); 

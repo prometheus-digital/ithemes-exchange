@@ -48,10 +48,6 @@ function it_cart_buddy_register_addon( $slug, $name, $description, $file, $optio
 		'file'        => $file,
 		'options'     => $options,
 	);
-
-	// If category is already registered, merge registered with any required / default options for this category.
-	if ( ! empty( $GLOBALS['it_cart_buddy']['add_on_categories'][$options['category']] ) )
-		it_cart_buddy_merge_addon_supports_with_defaults( $options['category'], $slug );
 }
 
 /**
@@ -86,10 +82,6 @@ function it_cart_buddy_register_addon_category( $slug, $name, $description, $opt
 		'description' => $description,
 		'options'     => $options,
 	);
-
-	// If add-ons have previously been registered with this category, merge their registered options with the supports 
-	if ( ! empty( $options['supports'] ) && count( it_cart_buddy_get_addons( array( 'category' => $slug ) ) ) )
-		it_cart_buddy_merge_addon_supports_with_defaults( $slug );
 }
 
 /**
@@ -195,62 +187,6 @@ function it_cart_buddy_filter_addons_by_category( $add_ons, $categories ) {
 		}
 	}
 	return $add_ons;
-}
-
-/**
- * Merges required/default add-on options with those registered by the add-on
- *
- * When registering an add-on category, an array of required/default meta_data can be set for all add-ons
- * in that category. This function merges defaults with those registered by specific add-ons. It is called
- * during it_cart_buddy_register_addon if the add-on category already exists. It is also called after 
- * it_cart_buddy_register_addon_category() if an add-on has previously been registered in that category.
- *
- * @since 0.3.2
- * @return void
-*/
-function it_cart_buddy_merge_addon_supports_with_defaults( $add_on_category_slug, $add_on_slug=false ) {
-	$add_on_categories = it_cart_buddy_get_addon_categories();
-	$add_on            = empty( $add_on_slug ) ? false : it_cart_buddy_get_addon( $add_on_slug );
-	$add_on_category   = empty( $add_on_categories[$add_on_category_slug] ) ? false : $add_on_categories[$add_on_category_slug];
-
-	// If we weren't passed a category that's been registered yet, return;
-	if ( ! $add_on_category )
-		return;
-
-	// If the category is does not have any required / default options, return;
-	if ( empty( $add_on_category['options']['supports'] ) )
-		return;
-
-	// Set default required options
-	$default_supports = array();
-	foreach( $add_on_category['options']['supports'] as $feature => $params ) {
-		$default_supports[$feature] = $params;
-	}
-
-	// Set array of add-ons to perform merges on
-	if ( $add_on )
-		$add_ons = array( $add_on['slug'] => $add_on );
-	else
-		$add_ons = it_cart_buddy_get_addons( array( 'category' => array( $add_on_category_slug ) ) );
-
-	// Load ITUtility
-	it_classes_load( 'it-utility.php' );
-
-	// Foreach add_on, merge their registered options, with the default options for the passed category
-	foreach( $add_ons as $slug => $add_on_params ) {
-		$supports = empty( $add_on_params['options']['supports'] ) ? array() : $add_on_params['options']['supports'];
-
-		// Allow add-ons to remove support for a feature supported by its category
-		foreach( $supports as $key => $value ) {
-			if ( empty( $value ) && is_array( $default_supports[$key] ) ) {
-				unset( $default_supports[$key] );
-				unset( $supports[$key] );
-			}
-		}
-		$merged = ITUtility::merge_defaults( $supports, $default_supports );
-		$GLOBALS['it_cart_buddy']['add_ons']['registered'][$slug]['options']['supports'] = $merged;
-	}
-
 }
 
 /**
