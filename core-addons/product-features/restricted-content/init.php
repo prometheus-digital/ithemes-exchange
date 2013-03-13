@@ -9,10 +9,10 @@
 
 if ( is_admin() ) {
 	add_action( 'init', 'it_cart_buddy_restricted_content_addon_init_restricted_content_metaboxes' );
-	add_action( 'it_cart_buddy_save_product', 'it_cart_buddy_restricted_content_addon_save_files_on_product_save' );
+	add_action( 'it_cart_buddy_save_product', 'it_cart_buddy_restricted_content_addon_save_on_product_save' );
 }
-add_action( 'it_cart_buddy_update_product_feature-restricted-content', 'it_cart_buddy_restricted_content_addon_save_files', 9, 2 );
-add_filter( 'it_cart_buddy_get_product_feature-restricted-content', 'it_cart_buddy_restricted_content_addon_get_restricted_content', 9, 2 );
+add_action( 'it_cart_buddy_update_product_feature-restricted-content', 'it_cart_buddy_restricted_content_addon_save', 9, 2 );
+add_filter( 'it_cart_buddy_get_product_feature-restricted-content', 'it_cart_buddy_restricted_content_addon_get_restricted_content_options', 9, 2 );
 add_action( 'it_cart_buddy_enabled_addons_loaded', 'it_cart_buddy_init_restricted_content_addon' );
 
 /**
@@ -58,7 +58,7 @@ function it_cart_buddy_restricted_content_addon_init_restricted_content_metaboxe
  * @return void
 */
 function it_cart_buddy_restricted_content_addon_register_metabox() {
-	add_meta_box( 'it_cart_buddy_restricted_content', __( 'Restricted Content Options', 'LION' ), 'it_cart_buddy_restricted_content_addon_print_metabox', 'it_cart_buddy_prod', 'side' );
+	add_meta_box( 'it_cart_buddy_restricted_content', __( 'Restricted Content Options', 'LION' ), 'it_cart_buddy_restricted_content_addon_print_metabox', 'it_cart_buddy_prod', 'normal', 'high' );
 }
 
 /**
@@ -72,17 +72,20 @@ function it_cart_buddy_restricted_content_addon_print_metabox( $post ) {
 	$product = it_cart_buddy_get_product( $post );
 
 	// Set the value of the product files for this product
-	$restricted_content_options = it_cart_buddy_get_product_feature( $product->ID, 'restricted_content' );
+	$enable_restricted_content = it_cart_buddy_get_product_feature( $product->ID, 'restricted-content' );
 
 	// Set description
-	$description = __( 'This will be the metabox for Restricted Content options. == CHANGE THIS DESCRIPTION ==', 'LION' );
+	$description = __( 'Enabling this option will allow you to restrict other site content based on the purchase of this product.', 'LION' );
 	$description = apply_filters( 'it_cart_buddy_restricted_content_addon_metabox_description', $description, $product );
 
 	// Echo the form field
 	?>
+	<p class="description">
+		<?php esc_html_e( $description ); ?>
+	</p>
+	
 	<p>
-		<span class="description"><?php esc_html_e( $description ); ?></span><br />
-		<input type="text" name="_it_cart_buddy_restricted_content" value="<?php esc_attr_e( $restricted_content_options ); ?>" />
+		<input type="checkbox" name="_it_cart_buddy_enable_restricted_content" value="1" <?php checked( '1', $enable_restricted_content ); ?> /> <?php _e( 'Enable Restricted Content options based on the purchase of this product?', 'LION' ); ?>
 	</p>
 	<?php
 }
@@ -94,7 +97,7 @@ function it_cart_buddy_restricted_content_addon_print_metabox( $post ) {
  * @param object $post wp post object
  * @return void
 */
-function it_cart_buddy_restricted_content_addon_save_files_on_product_save() {
+function it_cart_buddy_restricted_content_addon_save_on_product_save() {
 	// Abort if we can't determine a product type
 	if ( ! $product_type = it_cart_buddy_get_product_type() )
 		return;
@@ -108,15 +111,11 @@ function it_cart_buddy_restricted_content_addon_save_files_on_product_save() {
 	if ( ! it_cart_buddy_product_type_supports_feature( $product_type, 'restricted-content' ) )
 		return;
 
-	// Abort if key for digital restricted content options isn't set in POST data
-	if ( ! isset( $_POST['_it_cart_buddy_restricted_content'] ) )
-		return;
-
 	// Get new value from post
-	$new_value = $_POST['_it_cart_buddy_restricted_content'];
-	
+	$new_value = empty( $_POST['_it_cart_buddy_enable_restricted_content'] ) ? 0 : 1;
+
 	// Save new value
-	it_cart_buddy_update_product_feature( $product_id, 'restricted_content', $new_value );
+	it_cart_buddy_update_product_feature( $product_id, 'restricted-content', $new_value );
 }
 
 /**
@@ -129,19 +128,19 @@ function it_cart_buddy_restricted_content_addon_save_files_on_product_save() {
  * @param mixed $new_value the new  value
  * @return bolean
 */
-function it_cart_buddy_restricted_content_addon_save_files( $product_id, $new_value ) {
-	update_post_meta( $product_id, '_it_cart_buddy_restricted_content', $new_value );
+function it_cart_buddy_restricted_content_addon_save( $product_id, $new_value ) {
+	update_post_meta( $product_id, '_it_cart_buddy_enable_restricted_content', $new_value );
 }
 
 /**
  * Return the product's digital restricted content options
  *
  * @since 0.3.8
- * @param mixed $files the values passed in by the WP Filter API. Ignored here.
+ * @param mixed $options the values passed in by the WP Filter API. Ignored here.
  * @param integer product_id the WordPress post ID
  * @return mixed files
 */
-function it_cart_buddy_restricted_content_addon_get_files( $files, $product_id ) {
-	$files = get_post_meta( $product_id, '_it_cart_buddy_restricted_content', true );
-	return $files;
+function it_cart_buddy_restricted_content_addon_get_restricted_content_options( $options, $product_id ) {
+	$enabled = get_post_meta( $product_id, '_it_cart_buddy_enable_restricted_content', true );
+	return $enabled;
 }

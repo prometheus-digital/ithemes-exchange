@@ -71,13 +71,13 @@ function it_cart_buddy_register_core_addons() {
 		),
 		// Membership Levels
 		'memberships-product-type' => array(
-			'name'        => __( 'Memberships', 'LION' ),
+			'name'        => __( 'Membership Levels', 'LION' ),
 			'description' => __( 'Create different levels of access to your site.', 'LION' ),
 			'file'        => dirname( __FILE__ ) . '/product-types/memberships/init.php',
 			'options'     => array( 
 				'category' => 'product-type',
 				'labels'   => array(
-					'singular_name' => __( 'Membership', 'LION' ),
+					'singular_name' => __( 'Membership Level', 'LION' ),
 				),
 				'supports' => apply_filters( 'it_cart_buddy_register_digital_downloads_default_features', array(
 				) ),
