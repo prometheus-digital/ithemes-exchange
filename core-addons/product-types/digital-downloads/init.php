@@ -7,6 +7,6 @@
 */
 
 if ( is_admin() ) {
-	require( 'add-edit-product.php' );
+//	require( 'add-edit-product.php' );
 }
 

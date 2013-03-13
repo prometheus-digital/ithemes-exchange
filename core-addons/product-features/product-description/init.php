@@ -16,16 +16,17 @@ add_filter( 'it_cart_buddy_get_product_feature-product_description', 'it_cart_bu
  * @since 0.3.8
 */
 function it_cart_buddy_init_product_description_addon() {
-	// Register the product feature
-	$slug        = 'product_description';
-	$description = 'The description of the product';
-	it_cart_buddy_register_product_feature( $slug, $description );
+    // Register the product feature
+    $this_addon  = it_cart_buddy_get_addon( 'product-description' );
+    $slug        = $this_addon['slug'];
+    $description = $this_addon['description'];
+    it_cart_buddy_register_product_feature( $slug, $description );
 
-	// Add it to all enabled product-type addons
-	$products = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) );
-	foreach( $products as $key => $params ) {
-		it_cart_buddy_add_feature_support_to_product_type( 'product_description', $params['slug'] );
-	}
+    // Add it to all enabled product-type addons
+    $products = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) );
+    foreach( $products as $key => $params ) { 
+        it_cart_buddy_add_feature_support_to_product_type( $this_addon['slug'], $params['slug'] );
+    }
 }
 
 /**

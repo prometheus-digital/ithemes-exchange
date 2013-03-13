@@ -56,7 +56,7 @@ function it_cart_buddy_register_core_addons() {
 			),
 		),
 		// Digital Download Product Types
-		'digital-downloads' => array(
+		'digital-downloads-product-type' => array(
 			'name'        => __( 'Digital Downloads', 'LION' ),
 			'description' => __( 'This adds an product type for distributing digital downloads through Cart Buddy.', 'LION' ),
 			'file'        => dirname( __FILE__ ) . '/product-types/digital-downloads/init.php',
@@ -116,7 +116,14 @@ function it_cart_buddy_register_core_addons() {
 			'name'        => __( 'Product Price', 'LION' ),
 			'description' => __( 'This add-on will associate a monetary price with any product that registers support for basic pricing', 'LION' ),
 			'file'        => dirname( __FILE__ ) . '/product-features/base-price/init.php',
-			'options'     => array( 'caregory' => 'product-features' ),
+			'options'     => array( 'category' => 'product-features' ),
+		),
+		// Digital Downloads
+		'digital-downloads' => array(
+			'name'        => __( 'Digital Downloads', 'LION' ),
+			'description' => __( 'This add-on will allow files to be added to products. Once a product is purchase, the customer has access to the files.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/digital-downloads/init.php',
+			'options'     => array( 'category' => 'product-features' ),
 		),
 		// Product description (post_content)
 		'product-description' => array(
@@ -132,18 +139,60 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/product-features/product-title/init.php',
 			'options'     => array( 'category' => 'product-features' ),
 		),
-		// Featured Image
-		'featured-image' => array(
-			'name'        => __( 'Featured Image', 'LION' ),
-			'description' => __( 'Enables the WordPress post Featured Image for products.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/featured-image/init.php',
+		// Product Author
+		'wp-author' => array(
+			'name'        => __( 'WP Post Author', 'LION' ),
+			'description' => __( 'Enables the WordPress post author field for products.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/wp-author/init.php',
 			'options'     => array( 'category' => 'product-features' ),
 		),
-		// Product Author
-		'product-author' => array(
-			'name'        => __( 'Product Author', 'LION' ),
-			'description' => __( 'Enables the WordPress post Author field for products.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/product-author/init.php',
+		// Featured Image
+		'wp-featured-image' => array(
+			'name'        => __( 'WP Featured Image', 'LION' ),
+			'description' => __( 'Enables the WordPress featured image functionality for products.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/wp-featured-image/init.php',
+			'options'     => array( 'category' => 'product-features' ),
+		),
+		// Excerpt
+		'wp-excerpt' => array(
+			'name'        => __( 'WP Excerpts for Products', 'LION' ),
+			'description' => __( 'Enables the WordPress excerpt metabox for products.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/wp-excerpt/init.php',
+			'options'     => array( 'category' => 'product-features' ),
+		),
+		// Custom Fields 
+		'wp-custom-fields' => array(
+			'name'        => __( 'WP Custom Fields', 'LION' ),
+			'description' => __( 'Enables the WordPress custom fields metabox for products.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/wp-custom-fields/init.php',
+			'options'     => array( 'category' => 'product-features' ),
+		),
+		// Product Trackbacks 
+		'wp-trackbacks' => array(
+			'name'        => __( 'WP Trackbacks for Products', 'LION' ),
+			'description' => __( 'Enables the WordPress comments metabox for products.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/wp-trackbacks/init.php',
+			'options'     => array( 'category' => 'product-features' ),
+		),
+		// Product Comments 
+		'wp-comments' => array(
+			'name'        => __( 'WP Comments for Products', 'LION' ),
+			'description' => __( 'Enables the WordPress comments metabox for products.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/wp-comments/init.php',
+			'options'     => array( 'category' => 'product-features' ),
+		),
+		// Revisions 
+		'wp-revisions' => array(
+			'name'        => __( 'WP Revisions for Products', 'LION' ),
+			'description' => __( 'Enables the WordPress revisions metabox for products.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/wp-revisions/init.php',
+			'options'     => array( 'category' => 'product-features' ),
+		),
+		// Post Formats
+		'wp-post-formats' => array(
+			'name'        => __( 'WP Post Formats', 'LION' ),
+			'description' => __( 'Enables the WordPress post formats interface for products.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/wp-post-formats/init.php',
 			'options'     => array( 'category' => 'product-features' ),
 		),
 	);

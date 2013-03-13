@@ -195,15 +195,25 @@ class IT_Cart_Buddy_Product {
 
 				// Map Core WP post_type supports to our addon names
 				if ( 'title' == $option ) {
-					$cart_buddy_product_feature = 'product_title';
+					$cart_buddy_product_feature = 'product-title';
 				} else if ( 'editor' == $option ) {
-					$cart_buddy_product_feature = 'product_description';
+					$cart_buddy_product_feature = 'product-description';
 				} else if ( 'author' == $option ) {
-					$cart_buddy_product_feature = 'product_author';
+					$cart_buddy_product_feature = 'wp-author';
 				} else if ( 'thumbnail' == $option ) {
-					$cart_buddy_product_feature = 'featured_image';
+					$cart_buddy_product_feature = 'wp-featured-image';
 				} else if ( 'excerpt' == $option ) {
-					$cart_buddy_product_feature = 'product_excerpt';
+					$cart_buddy_product_feature = 'wp-excerpt';
+				} else if ( 'trackbacks' == $option ) {
+					$cart_buddy_product_feature = 'wp-trackbacks';
+				} else if ( 'custom-fields' == $option ) {
+					$cart_buddy_product_feature = 'wp-custom-fields';
+				} else if ( 'comments' == $option ) {
+					$cart_buddy_product_feature = 'wp-comments';
+				} else if ( 'revisions' == $option ) {
+					$cart_buddy_product_feature = 'wp-revisions';
+				} else if ( 'post-formats' == $option ) {
+					$cart_buddy_product_feature = 'wp-post-formats';
 				} else {
 					$cart_buddy_product_feature = $option;
 				}
