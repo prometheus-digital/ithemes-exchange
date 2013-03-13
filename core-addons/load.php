@@ -70,7 +70,7 @@ function it_cart_buddy_register_core_addons() {
 			),
 		),
 		// Membership Levels
-		'memberships' => array(
+		'memberships-product-type' => array(
 			'name'        => __( 'Memberships', 'LION' ),
 			'description' => __( 'Create different levels of access to your site.', 'LION' ),
 			'file'        => dirname( __FILE__ ) . '/product-types/memberships/init.php',
@@ -123,6 +123,13 @@ function it_cart_buddy_register_core_addons() {
 			'name'        => __( 'Digital Downloads', 'LION' ),
 			'description' => __( 'This add-on will allow files to be added to products. Once a product is purchase, the customer has access to the files.', 'LION' ),
 			'file'        => dirname( __FILE__ ) . '/product-features/digital-downloads/init.php',
+			'options'     => array( 'category' => 'product-features' ),
+		),
+		// Base Price
+		'restricted-content' => array(
+			'name'        => __( 'Restricted Content', 'LION' ),
+			'description' => __( 'This add-on will allow you to restrict site content based on purchased products.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/restricted-content/init.php',
 			'options'     => array( 'category' => 'product-features' ),
 		),
 		// Product description (post_content)

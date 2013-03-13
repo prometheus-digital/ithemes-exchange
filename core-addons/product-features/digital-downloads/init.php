@@ -27,11 +27,8 @@ function it_cart_buddy_init_digital_downloads_addon() {
     $description = $this_addon['description'];
     it_cart_buddy_register_product_feature( $slug, $description );
 
-    // Add it to all enabled product-type addons
-    $products = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) );
-    foreach( $products as $key => $params ) { 
-        it_cart_buddy_add_feature_support_to_product_type( $this_addon['slug'], $params['slug'] );
-    }   
+    // Add it to the digital-downloads-product type only 
+	it_cart_buddy_add_feature_support_to_product_type( $this_addon['slug'], 'digital-downloads-product-type' );
 }
 
 /**
