@@ -7,9 +7,6 @@
 */
 
 if ( ! is_admin() ) {
-	// Register shortcodes
-	include( 'shortcodes.php' );
-
 	// API function to return HTML elements related to the cart
 	include( 'cart-template-functions.php' );
 
@@ -21,4 +18,7 @@ if ( ! is_admin() ) {
 
 	// Lib
 	include( 'lib.php' );
+
+	// Register shortcodes
+	include( 'shortcodes.php' );
 }

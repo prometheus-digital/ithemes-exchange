@@ -90,13 +90,6 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/customer-management/default/init.php',
 			'options'     => array( 'category' => 'customer-management' ),
 		),
-		// Default Shopping Cart
-		'default-shopping-cart' => array(
-			'name'        => __( 'Default Shopping Cart', 'LION' ),
-			'description' => __( 'This is the default Shopping Cart. It is the visual front to Cart Buddy\'s Cart API', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/shopping-carts/default/init.php',
-			'options'     => array( 'category' => 'shopping-carts' ),
-		),
 		// Product Type admin Metabox
 		'product-type-metabox' => array(
 			'name'        => __( 'Product Type Metabox', 'LION' ),
