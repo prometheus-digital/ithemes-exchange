@@ -8,10 +8,10 @@
 add_action( 'add_meta_boxes', 'it_cart_buddy_restricted_content_addon_add_restricted_content_metabox' );
 add_action( 'admin_init', 'it_cart_buddy_restricted_content_addon_add_restricted_content_metabox' ); // Pre WP 3.0
 add_action( 'save_post', 'it_cart_buddy_restricted_content_addon_save_post_restrictions' );
-add_action( 'admin_print_scripts', 'it_cart_buddy_restricted_content_addon_init_tinymce' );
 add_action( 'admin_print_scripts', 'it_cart_buddy_restricted_content_addon_enqueue_admin_scripts' );
-add_action( 'wp_ajax_it_cart_buddy_restricted_content_addon_get_products', 'it_cart_buddy_restricted_content_addon_print_product_checkboxes' );
-add_action( 'admin_action_it-shopp-protected-content-doing-popup', 'it_cart_buddy_restricted_content_addon_tinymce_popup_intercept' );
+add_action( 'admin_print_scripts', 'it_cart_buddy_restricted_content_addon_init_tinymce' );
+add_action( 'wp_ajax_it_cart_buddy_restricted_content_addon_get_restricted_products', 'it_cart_buddy_restricted_content_addon_print_product_checkboxes' );
+add_action( 'admin_action_it-cart-buddy-restricted-content-addon-doing-popup', 'it_cart_buddy_restricted_content_addon_tinymce_popup_intercept' );
 
 function it_cart_buddy_restricted_content_addon_add_restricted_content_metabox() {
 	// Grab all visible post_types
@@ -39,7 +39,7 @@ function it_cart_buddy_restricted_content_addon_print_metabox_content( $post ) {
 		$redirect_to = get_site_url();
 	?>
 	<p> <?php _e( 'Restrict this page to members who have purchased Cart Buddy products?', 'LION' ); ?></p>
-	<select id="_it_cart_buddy_restricted_content_addon_post_is_protected" name="_it_cart_buddy_restricted_content_addon_post_is_protected">
+	<select id="it_cart_buddy_restricted_content_addon_post_is_protected" name="_it_cart_buddy_restricted_content_addon_post_is_protected">
 		<option value="0" <?php selected( 0, $is_protected ); ?>>No</option>
 		<option value="1" <?php selected( 1, $is_protected ); ?>>Yes</option>
 	</select>
@@ -63,6 +63,7 @@ function it_cart_buddy_restricted_content_addon_print_metabox_content( $post ) {
 function it_cart_buddy_restricted_content_addon_print_product_checkboxes() {
 	// Get all product types
 	$restricted_products = array();
+	$is_ajax             = false;
 	if ( $product_types = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) ) ) {
 		foreach( $product_types as $product_type ) {
 			if ( it_cart_buddy_product_type_supports_feature( $product_type['slug'], 'restricted-content' ) ) {
@@ -78,21 +79,23 @@ function it_cart_buddy_restricted_content_addon_print_product_checkboxes() {
 
 		// Grab products already selected
 		if ( $is_ajax || false === $selected_products = get_post_meta( $post->ID, '_it_cart_buddy_restricted_content_addon_selected_products', true ) ) 
-			$selectd_products = array();
+			$selected_products = array();
 
 		// Loop through products and create checkboxes
 		foreach( $restricted_products as $product ) { 
 			?>  
 			<label for="it_cart_buddy_restricted_content_restrict_product_<?php esc_attr_e( $product->ID ); ?>">
-			<input type="checkbox" id="it_restricted_conent_restrict_product_<?php esc_attr_e( $product->ID ); ?>" name="_it_cart_buddy_restricted_content_addon_selected_prodcuts[]" value="<?php esc_attr_e( $product->ID ); ?>" <?php checked( in_array( $product->ID, $selected_products ) ); ?>>&nbsp;<?php esc_attr_e( apply_filters( 'the_title', $product->post_title ) ); ?>
+			<input type="checkbox" id="it_restricted_conent_restrict_product_<?php esc_attr_e( $product->ID ); ?>" name="_it_cart_buddy_restricted_content_addon_selected_products[]" value="<?php esc_attr_e( $product->ID ); ?>" <?php checked( in_array( $product->ID, $selected_products ) ); ?>>&nbsp;<?php esc_attr_e( apply_filters( 'the_title', $product->post_title ) ); ?>
 			</label><br />
 			<?php
 		}   
-
-		// Die if an ajax request
-		if ( $is_ajax )
-			die();
+	} else {
+		echo "No products found";
 	}
+
+	// Die if an ajax request
+	if ( $is_ajax )
+		die();
 }
 
 /**
@@ -106,8 +109,8 @@ function it_cart_buddy_restricted_content_addon_save_post_restrictions( $post ) 
 		return;
 
 	$redirect_to = empty( $_POST['_it_cart_buddy_restricted_content_addon_post_protected_redirect'] ) ? get_site_url() : esc_url( $_POST['_it_cart_buddy_restricted_content_addon_post_protected_redirect'] );
-	update_post_meta( $post, '_it_cart_buddy_restricted_content_addon_post_is_protected', $_POST['_it_shopp_post_is_protected'] );
-	update_post_meta( $post, '_it_cart_buddy_restricted_content_addon_selected_prodcuts', $_POST['_it_cart_buddy_restricted_content_addon_selected_prodcuts'] );
+	update_post_meta( $post, '_it_cart_buddy_restricted_content_addon_post_is_protected', $_POST['_it_cart_buddy_restricted_content_addon_post_is_protected'] );
+	update_post_meta( $post, '_it_cart_buddy_restricted_content_addon_selected_products', $_POST['_it_cart_buddy_restricted_content_addon_selected_products'] );
 	update_post_meta( $post, '_it_cart_buddy_restricted_content_addon_post_protected_redirect', $redirect_to );
 }
 
@@ -120,9 +123,10 @@ function it_cart_buddy_restricted_content_addon_save_post_restrictions( $post ) 
 */
 function it_cart_buddy_restricted_content_addon_enqueue_admin_scripts() {
 	global $current_screen;
+	$addon_url = ITUtility::get_url_from_file( dirname( __FILE__ ) );
 	if ( 'post' != $current_screen->base )
 		return;
-	wp_enqueue_script( 'it_cart_buddy_restricted_conent_addon_slug-admin-js', $this->_parent->_pluginURL . '/js/admin.js', array( 'jquery' ) );
+	wp_enqueue_script( 'it_cart_buddy_restricted_content_addon-admin-js', $addon_url . '/js/admin.js', array( 'jquery' ) );
 }
 
 /**
@@ -132,7 +136,7 @@ function it_cart_buddy_restricted_content_addon_enqueue_admin_scripts() {
  * @return void
 */
 function it_cart_buddy_restricted_content_addon_tinymce_popup_intercept() {
-	include_once( 'js/dialog.php' );
+	include_once( dirname( __FILE__ ) . '/js/dialog.php' );
 	die();
 }
 
@@ -173,8 +177,9 @@ function it_cart_buddy_restricted_content_addon_init_tinymce () {
  * @return array The updated list of plugins to laod
 */
 function it_cart_buddy_restricted_content_addon_register_mceplugin ( $plugins ) {
+	$addon_url = ITUtility::get_url_from_file( dirname( __FILE__ ) );
 	// Add a changing query string to keep the TinyMCE plugin from being cached & breaking TinyMCE in Safari/Chrome
-	$plugins['ITCartBuddyRestrictedContentAddon'] = 'js/tinymce.js?ver='.time();
+	$plugins['ITCartBuddyRestrictedContentAddon'] = $addon_url . '/js/tinymce.js?ver='.time();
 	return $plugins;
 }
 
