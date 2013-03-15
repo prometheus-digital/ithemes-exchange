@@ -9,33 +9,13 @@
 if ( ! is_admin() ) {
 	// Includes
 	include( 'lib.php' );
-	include( 'cart-template-functions.php' );
 	include( 'checkout-template-functions.php' );
-	include( 'data-functions.php' );
 
 	// Utility hooks
-	add_action( 'it_cart_buddy_proceed_to_checkout', 'it_cart_buddy_default_cart_proceed_to_checkout', 9 );
 	add_action( 'it_cart_buddy_template_redirect', 'it_cart_buddy_default_shopping_cart_redirect_checkout_to_cart' );
 
-	// Low Level Cart API Hooks for theme developers. See /api/carts/cart-template_tags.php
-	add_filter( 'it_cart_buddy_get_cart_data', 'it_cart_buddy_default_cart_get_data', 9 );
-	add_filter( 'it_cart_buddy_get_cart_products', 'it_cart_buddy_default_cart_get_products', 9 );
-	add_filter( 'it_cart_buddy_get_cart_product', 'it_cart_buddy_default_cart_get_product', 9, 2 );
-	add_filter( 'it_cart_buddy_get_cart_get_product_attribute', 'it_cart_buddy_get_product_attribute', 9, 3 );
-	add_filter( 'it_cart_buddy_get_cart_form_vars', 'it_cart_buddy_default_cart_get_form_vars', 9, 2 );
-	add_filter( 'it_cart_buddy_get_cart_product_title', 'it_cart_buddy_default_cart_get_cart_product_title', 9, 2 );
-	add_filter( 'it_cart_buddy_get_cart_product_quantity', 'it_cart_buddy_default_cart_get_cart_product_quantity', 9, 2 );
-	add_filter( 'it_cart_buddy_get_cart_product_base_price', 'it_cart_buddy_default_cart_get_cart_product_base_price', 9, 2 );
-	add_filter( 'it_cart_buddy_get_cart_product_subtotal', 'it_cart_buddy_default_cart_get_cart_product_subtotal', 9, 2 );
-	add_filter( 'it_cart_buddy_get_cart_subtotal', 'it_cart_buddy_default_cart_get_cart_subtotal', 9 );
-	add_filter( 'it_cart_buddy_get_cart_total', 'it_cart_buddy_default_cart_get_cart_total', 9 );
-
 	// Cart Data processing hooks
-	add_action( 'it_cart_buddy_add_product_to_cart', 'it_cart_buddy_default_cart_add_product_to_shopping_cart', 9 );
-	add_action( 'it_cart_buddy_empty_cart', 'it_cart_buddy_default_cart_empty_shopping_cart', 9 );
 	add_action( 'it_cart_buddy_remove_product_from_cart', 'it_cart_buddy_default_cart_remove_product_from_shopping_cart', 9 );
-	add_action( 'it_cart_buddy_update_cart', 'it_cart_buddy_default_cart_update_shopping_cart', 9 );
-	add_action( 'it_cart_buddy_purchase_cart', 'it_cart_buddy_default_cart_purchase_cart' );
 
 	// High level Cart API Hooks for theme developers 
 	add_filter( 'it_cart_buddy_get_shopping_cart_cart_html', 'it_cart_buddy_default_cart_get_cart_html', 9, 2 );

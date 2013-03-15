@@ -77,8 +77,55 @@ function it_cart_buddy_locate_template( $template_names, $load = false, $require
         }   
     }   
 
-    if ( ( true == $load ) && ! empty( $located ) ) 
+    if ( ( true == $load ) && ! empty( $located ) ) {
         load_template( $located, $require_once );
+		it_cart_buddy_unset_template_part_args( rtrim( $template_name, '.php' ) );
+	}
 
     return $located;
+}
+
+/**
+ * Sets some variables for use in template parts
+ *
+ * Stores them in globals, keyed by the template part slug / name
+ *
+ * @since 0.3.8
+ * @param array $args args for the template part.
+ * @param string $slug template part slug
+ * @param string $name optional name of template part
+ * @return void
+*/
+function it_cart_buddy_set_template_part_args( $args, $slug, $name=false ) {
+
+	// Set the slug
+	$key = empty( $name ) ? $slug : $slug . '-' . $name;
+
+	// Store the options
+	$GLOBALS['it_cart_buddy']['template_part_args'][$key] = $args;
+}
+
+/**
+ * Retrieves args for template parts
+ *
+ * @since 0.3.8
+ * @param $template_part key for the template part. File name without .php
+ * @return mixed
+*/
+function it_cart_buddy_get_template_part_args( $template_part ) {
+	$args = empty( $GLOBALS['it_cart_buddy']['template_part_args'][$template_part] ) ? false : $GLOBALS['it_cart_buddy']['template_part_args'][$template_part] ;
+
+	return apply_filters( 'it_cart_buddy_template_part_args-' . $template_part, $args );
+}
+
+/**
+ * This unsets the template part args for a specific template
+ *
+ * @since 0.3.8
+ * @param string $template_name name of template part
+ * @return void
+*/
+function it_cart_buddy_unset_template_part_args( $template_name ) {
+	if ( isset( $GLOBALS['it_cart_buddy']['template_part_args'][$template_name] ) )
+		unset( $GLOBALS['it_cart_buddy']['template_part_args'][$template_name] );
 }

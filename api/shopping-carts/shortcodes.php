@@ -5,23 +5,8 @@
  * @since 0.3.7
  * @package IT_Cart_Buddy
 */
-add_shortcode( 'cart_buddy_shopping_cart', 'it_cart_buddy_get_shopping_cart' );
-add_shortcode( 'cart_buddy_checkout', 'it_cart_buddy_shortcode_shopping_cart_checkout_html' );
-add_shortcode( 'cart_buddy_add_product_to_cart', 'it_cart_buddy_shortcode_add_product_to_shopping_cart_html' );
-
-/**
- * This shortcode is intended to print a complete checkout page
- *
- * Shopping cart addons should hook to this with their cart HTML
- *
- * @since 0.3.7
- * @param array $atts atts passed from WP Shortcode API
- * @param string $content data passed from WP Shortcode API
- * @return string html for checkout page
-*/
-function it_cart_buddy_shortcode_shopping_cart_checkout_html( $atts, $content='' ) {
-	return it_cart_buddy_get_shopping_cart_checkout_page_html( $atts, $content );
-}
+add_shortcode( 'cart_buddy_checkout', 'it_cart_buddy_get_shopping_cart_checkout_page_html' );
+add_shortcode( 'cart_buddy_shopping_cart', 'it_cart_buddy_get_shopping_cart_html' );
 
 /**
  * This shortcode is intended to print an Add to Cart HTML block
@@ -37,11 +22,13 @@ function it_cart_buddy_shortcode_shopping_cart_checkout_html( $atts, $content=''
 function it_cart_buddy_shortcode_add_product_to_shopping_cart_html( $atts, $content='' ) {
     global $post;
     $defaults['product_id'] = empty( $post->ID ) ? 0: $post->ID;
+	$defaults['title']      = __( 'Add to Cart', 'LION' );
 
     // Merge defaults with passed attributes
     $attributes = shortcode_atts( $defaults, $atts );
 
     // Confirm that the given product_id is a product post
     if ( $product = it_cart_buddy_get_product( $attributes['product_id'] ) )
-		return it_cart_buddy_get_add_product_to_shopping_cart_html( $attributes['product_id'], $attributes, $content );
+		return it_cart_buddy_get_add_product_to_shopping_cart_html( $attributes );
 }
+add_shortcode( 'cart_buddy_add_product_to_cart', 'it_cart_buddy_shortcode_add_product_to_shopping_cart_html' );

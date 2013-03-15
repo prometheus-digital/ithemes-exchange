@@ -85,3 +85,31 @@ function it_cart_buddy_get_products( $args=array() ) {
 
 	return array();
 }
+
+/**
+ * Sets a global for the current product's id
+ *
+ * Looks for paramater. If passed param is a vailid product id, it sets that.
+ * If passed param is false or not a product id, it looks for global $post.
+ * If global $post and passed param are not product ids, it is set to false
+ *
+ * @since 0.3.8
+ * @param integer $product_id
+ * @return void
+*/
+function it_cart_buddy_set_the_product_id( $product_id=false ) {
+	if ( $product = it_cart_buddy_get_product( $product_id ) )
+		$GLOBALS['it_cart_buddy']['product_id'] = $product->ID;
+	else
+		$GLOBALS['it_cart_buddy']['product_id'] = false;
+}
+
+/**
+ * Returns the global for the current product's id
+ *
+ * @since 0.3.8
+ * @return mixed product id or false
+*/
+function it_cart_buddy_get_the_product_id() {
+	return empty( $GLOBALS['it_cart_buddy']['product_id'] ) ? false : $GLOBALS['it_cart_buddy']['product_id'];
+}

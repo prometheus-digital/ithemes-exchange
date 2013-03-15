@@ -16,7 +16,7 @@
  * @since 0.3.7
  * @return string html for the shopping cart
 */
-function it_cart_buddy_get_shopping_cart() {
+function it_cart_buddy_get_shopping_cart_html() {
     $html  = it_cart_buddy_get_errors_div();
     $html .= it_cart_buddy_get_alerts_div();
     
@@ -27,80 +27,17 @@ function it_cart_buddy_get_shopping_cart() {
 }
 
 /**
- * Generates an add to cart button
- *
- * Theme developers may use this to print the add_to_cart HTML
- * Shopping cart add-on developers will hook to it for their carts.
- * It is also invoked via a shortcode
- *
- * @since 0.3.7
- * @param mixed $product product ID
- * @param array $shortcode_args args passed from WP Shortcode API if function is being invoked by it.
- * @param string $shortcode_content content passed from WP Shortcode API if function is being invoked by it.
- * @return string HTML for the button
-*/
-function it_cart_buddy_get_add_product_to_shopping_cart_html( $product, $shortcode_args=array(), $shortcode_content=''  ) { 
-    return apply_filters( 'it_cart_buddy_get_add_product_to_shopping_cart_html', '', $product, $shortcode_args, $shortcode_content );
-}
-
-/**
- * Prints the HTML for the empty cart action
- *
- * This prints HTML for a form element. It is assumed that it will be used inside the shopping cart form
- *
- * @since 0.3.7
- * @return string HTML
-*/
-function it_cart_buddy_get_empty_shopping_cart_html() {
-	return apply_filters( 'it_cart_buddy_get_empty_shopping_cart_html', '' );
-}
-
-/**
- * Prints the HTML to remove a product from the cart
+ * Retrieves the HTML to remove a product from the cart
  *
  * @since 0.3.7
  * @param mixed $cart_product_id the id of the product in the cart
  * @reuturn string HTML
 */
-function it_cart_buddy_get_remove_product_from_shopping_cart_html( $cart_product_id ) {
-	return apply_filters( 'it_cart_buddy_get_remove_product_from_shopping_cart_html', '', $cart_product_id );
-}
-
-/**
- * Prints the HTML for the Update cart action
- *
- * @since 0.3.7
- * @return string HTML
-*/
-function it_cart_buddy_get_update_shopping_cart_html() {
-	return apply_filters( 'it_cart_buddy_get_update_shopping_cart_html', '' );
-}
-
-/**
- * Prints the HTML for the checkout cart action
- *
- * @since 0.3.7
- * @return string HTML
-*/
-function it_cart_buddy_get_checkout_shopping_cart_html() {
-	return apply_filters( 'it_cart_buddy_get_checkout_shopping_cart_html', '' );
-}
-
-/**
- * Returns columns for the shopping cart table
- *
- * @since 0.3.8
- * @return array column slugs / labels
-*/
-function it_cart_buddy_get_cart_table_columns() {
-    $columns = array(
-        'product-remove'   => '', 
-        'product-title'    => __( 'Product', 'LION' ),
-        'product-cost'     => __( 'Price', 'LION' ),
-        'product-quantity' => __( 'Quantity', 'LION' ),
-        'product-subtotal' => __( 'Total', 'LION' ),
-    );  
-    return apply_filters( 'it_cart_buddy_get_cart_table_columns', $columns );
+function it_cart_buddy_get_remove_product_from_cart_link( $cart_product_id ) {
+	$GLOBALS['cart_product_id'] = $cart_product_id;
+	ob_start();
+	it_cart_buddy_get_template_part( 'remove-product-from-cart-link' );
+	return ob_get_clean();
 }
 
 /**
@@ -113,7 +50,7 @@ function it_cart_buddy_get_cart_table_product_data( $column, $product ) {
     $db_product = it_cart_buddy_get_product( $product['product_id'] );
     switch( $column ) {
         case 'product-remove' :
-            return it_cart_buddy_get_remove_product_from_shopping_cart_html( $product['product_cart_id'] );
+            return it_cart_buddy_get_remove_product_from_cart_link( $product['product_cart_id'] );
             break;
         case 'product-title' :
             return it_cart_buddy_get_cart_product_title( $product );
@@ -130,4 +67,37 @@ function it_cart_buddy_get_cart_table_product_data( $column, $product ) {
             return '$' . it_cart_buddy_get_cart_product_subtotal( $product );
             break;
     }
+}
+
+/**
+ * Generates an add to cart button
+ *
+ * Theme developers may use this to print the add_to_cart HTML
+ * It is also invoked via a shortcode
+ *
+ * Default args
+ * - product_id Product to add to the cart. If false and viewing a product page, current product will be used
+ * - title Button title
+ *
+ * @since 0.3.7
+ * @param array $args an array of args passed through to the template part
+ * @return string HTML for the button
+*/
+function it_cart_buddy_get_add_product_to_shopping_cart_html( $args=array() ) { 
+
+	// Set some default args for the template part
+	$default_args = array(
+		'action_var' => it_cart_buddy_get_action_var( 'add_product_to_cart' ),
+		'product_id' => false,
+		'title'      => __( 'Add to Cart', 'LION' ),
+	);
+
+	// Merge defaults with incoming args and set template part args
+	$args = wp_parse_args( $args, $default_args );
+	it_cart_buddy_set_template_part_args( $args, 'add-product-to-cart-link' );
+
+	// Do templating
+	ob_start();
+	it_cart_buddy_get_template_part( 'add-product-to-cart-link' );
+	return ob_get_clean();
 }
