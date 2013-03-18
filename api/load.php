@@ -14,34 +14,34 @@ if ( is_admin() ) {
 }
 
 // Contains functions for registering / retreiving Add-ons, Add-on categories, and Add-on sets
-include( $this->_plugin_path . '/api/add-ons.php' );
+include( $this->_plugin_path . '/api/add-ons/init.php' );
 
 // Product Features
-include( $this->_plugin_path . '/api/product-features.php' );
+include( $this->_plugin_path . '/api/product-features/init.php' );
 
-// Register and retreive orm actions
-include( $this->_plugin_path . '/api/form-actions.php' );
+// Register and retreive form actions
+include( $this->_plugin_path . '/api/form-actions/init.php' );
 
-// API functions for Product Type Add-ons
-include( $this->_plugin_path . '/api/products.php' );
+// Product Type Add-ons
+include( $this->_plugin_path . '/api/products/init.php' );
 
-// API functions for Transaction Method Add-ons
+// Transaction Method Add-ons
 include( $this->_plugin_path . '/api/transaction-methods/init.php' );
 
 // Sessions
-include( $this->_plugin_path . '/api/sessions.php' );
+include( $this->_plugin_path . '/api/sessions/init.php' );
 
 // Storage
-include( $this->_plugin_path . '/api/storage.php' );
+include( $this->_plugin_path . '/api/storage/init.php' );
 
 // Shopping Cart API
 include( $this->_plugin_path . '/api/cart/init.php' );
 
 // Customers
-include( $this->_plugin_path . '/api/customers.php' );
+include( $this->_plugin_path . '/api/customers/init.php' );
 
 // Errors
-include( $this->_plugin_path . '/api/errors.php' );
+include( $this->_plugin_path . '/api/errors/init.php' );
 
 // Alerts 
-include( $this->_plugin_path . '/api/alerts.php' );
+include( $this->_plugin_path . '/api/alerts/init.php' );
