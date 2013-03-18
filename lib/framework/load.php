@@ -21,9 +21,6 @@ require( $this->_plugin_path . '/lib/framework/class.transactions-post-type.php'
 // Transaction Object
 require( $this->_plugin_path . '/lib/framework/class.transaction.php' );
 
-// Cart
-require( $this->_plugin_path . '/lib/framework/cart/init.php' );
-
 // Template Functions
 require( $this->_plugin_path . '/lib/framework/template-functions.php' );
 

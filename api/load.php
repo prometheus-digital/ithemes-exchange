@@ -35,7 +35,7 @@ include( $this->_plugin_path . '/api/sessions.php' );
 include( $this->_plugin_path . '/api/storage.php' );
 
 // Shopping Cart API
-include( $this->_plugin_path . '/api/shopping-carts/init.php' );
+include( $this->_plugin_path . '/api/cart/init.php' );
 
 // Customers
 include( $this->_plugin_path . '/api/customers.php' );

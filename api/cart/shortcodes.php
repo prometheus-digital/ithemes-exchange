@@ -5,8 +5,8 @@
  * @since 0.3.7
  * @package IT_Cart_Buddy
 */
-add_shortcode( 'cart_buddy_checkout', 'it_cart_buddy_get_shopping_cart_checkout_page_html' );
 add_shortcode( 'cart_buddy_shopping_cart', 'it_cart_buddy_get_shopping_cart_html' );
+add_shortcode( 'cart_buddy_checkout', 'it_cart_buddy_get_checkout_html' );
 
 /**
  * This shortcode is intended to print an Add to Cart HTML block
