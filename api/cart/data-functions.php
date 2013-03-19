@@ -83,6 +83,11 @@ function it_cart_buddy_add_product_to_shopping_cart( $product_id ) {
 	if ( ! $product = it_cart_buddy_get_product( $product_id ) )
 		return;
 
+	// Verify nonce
+	$nonce_var = apply_filters( 'it_cart_buddy_add_product_to_cart_nonce_var', '_wpnonce' );
+	if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_cart_buddy_add_product_to_cart-' . $product_id ) )
+		return;
+
 	/**
 	 * The default shopping cart organizes products in the cart by product_id and a hash of 'itemized_data'.
 	 * Any data like product variants or pricing mods that should separate products in the cart can be passed through this filter.
