@@ -8,7 +8,7 @@
 
 if ( is_admin() ) {
 	// Admin only
-	include( $this->_plugin_path . '/api/admin.php' );
+	include( $this->_plugin_path . '/api/admin/init.php' );
 } else {
 	// Frontend only
 }
