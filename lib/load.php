@@ -28,6 +28,8 @@ require( $this->_plugin_path . '/lib/transactions/class.transaction.php' );
 require( $this->_plugin_path . '/lib/functions/template-functions.php' );
 
 // Sessions
-if ( ! is_admin() )
+if ( ! is_admin() ) {
 	require( $this->_plugin_path . '/lib/sessions/class.session.php' );
+	require( $this->_plugin_path . '/lib/cart/class.cart.php' );
+}
 
