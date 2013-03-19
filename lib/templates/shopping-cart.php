@@ -53,6 +53,7 @@ $cart_products      = it_cart_buddy_get_cart_products();
 				<p><?php _e( 'Cart Subtotal', 'LION' ); ?>&nbsp; $<?php esc_html_e( it_cart_buddy_get_cart_subtotal() ); ?></p>
 			</div>
 			<?php do_action( 'it-cart-buddy-shopping-cart-form-bottom' ); ?>
+			<?php wp_nonce_field( 'it_cart_buddy_cart_action-' . session_id() ); ?>
 		</form>
 	<?php else: ?>
 		<?php _e( 'Your cart is empty', 'LION' ); ?></p>

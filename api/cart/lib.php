@@ -61,6 +61,8 @@ function it_cart_buddy_register_cart_error_messages( $messages ) {
     $messages['negative-cart-total']    = __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'LION' );
     $messages['no-products-in-cart']    = __( 'You cannot checkout without any items in your cart.', 'LION' );
 	$messages['product-not-removed']    = __( 'Product not removed from cart. Please try again.', 'LION' );
+	$messages['cart-not-emptied']       = __( 'There was an error emptying your cart. Please try again.', 'LION' );
+	$messages['cart-not-updated']       = __( 'There was an error updating your cart. Please try again.', 'LION' );
     return $messages;
 }
 add_filter( 'it_cart_buddy_get_error_messages', 'it_cart_buddy_register_cart_error_messages' );
@@ -74,6 +76,7 @@ add_filter( 'it_cart_buddy_get_error_messages', 'it_cart_buddy_register_cart_err
 */
 function it_cart_buddy_register_cart_alert_messages( $messages ) { 
     $messages['cart-updated']          = __( 'Cart Updated.', 'LION' );
+    $messages['cart-emptied']          = __( 'Cart Emptied', 'LION' );
     $messages['product-removed']       = __( 'Product removed from cart.', 'LION' );
     $messages['product-added-to-cart'] = __( 'Product added to cart', 'LION' );
     return $messages;
