@@ -93,6 +93,7 @@ if ( ! is_user_logged_in() )
 			&nbsp;<a href="<?php esc_attr_e( it_cart_buddy_get_page_url( 'cart' ) ); ?>"><?php _e( 'Back to cart', 'LION' ); ?></a>
 		</p>
 	</div>
+	<?php wp_nonce_field( 'it_cart_buddy_checkout_action-' . session_id() ); ?>
 	<?php do_action( 'it_cart_buddy_checkout_form_bottom' ); ?>
 </form>
 <?php do_action( 'it_cart_buddy_checkout_html_bottom' ); ?>

@@ -379,6 +379,14 @@ function it_cart_buddy_get_cart_total() {
  * @return void
 */
 function it_cart_buddy_purchase_cart() {
+
+	// Verify nonce
+	$nonce_var = apply_filters( 'it_cart_buddy_checkout_action_nonce_var', '_wpnonce' );
+	if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_cart_buddy_checkout_action-' . session_id() ) ) {
+		it_cart_buddy_notify_failed_transaction( 'failed-transaction' );
+		return false;
+	}
+
     // Verify products exist
     $products = it_cart_buddy_get_cart_products();
     if ( count( $products ) < 1 ) {
