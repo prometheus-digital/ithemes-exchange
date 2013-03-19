@@ -166,6 +166,16 @@ function it_cart_buddy_remove_product_from_shopping_cart( $product_id=false ) {
 		$product_id = empty( $_REQUEST[$var] ) ? false : $_REQUEST[$var];
 	}
 
+	// Verify nonce
+	$nonce_var = apply_filters( 'it_cart_buddy_remove_product_from_cart_nonce_var', '_wpnonce' );
+	if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_cart_buddy_remove_product_from_cart-' . $product_id ) ) {
+		$var = it_cart_buddy_get_action_var( 'error_message' );
+		$cart = it_cart_buddy_get_page_url( 'cart' );
+		$url  = add_query_arg( array( $var => 'product-not-removed' ), $cart );
+		wp_redirect( $url );
+		die();
+	}
+
 	// Remove from the Session
 	if ( $product_id ) {
 		it_cart_buddy_remove_session_product( $product_id );

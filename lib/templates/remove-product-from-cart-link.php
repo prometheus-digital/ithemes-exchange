@@ -5,6 +5,7 @@
  * @package IT_Cart_Buddy
 */
 global $cart_product_id;
-$var = it_cart_buddy_get_action_var( 'remove_product_from_cart' );
+$url = add_query_arg( it_cart_buddy_get_action_var( 'remove_product_from_cart' ), $cart_product_id );
+$url = wp_nonce_url( $url, 'it_cart_buddy_remove_product_from_cart-' . $cart_product_id );
 ?>
-<a href="<?php echo add_query_arg( esc_attr( $var ), $cart_product_id ); ?>">&times;</a>
+<a href="<?php echo $url; ?>">&times;</a>

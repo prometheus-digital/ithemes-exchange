@@ -60,6 +60,7 @@ function it_cart_buddy_register_cart_error_messages( $messages ) {
     $messages['failed-transaction']     = __( 'There was an error processing your transaction. Please try again.', 'LION' );
     $messages['negative-cart-total']    = __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'LION' );
     $messages['no-products-in-cart']    = __( 'You cannot checkout without any items in your cart.', 'LION' );
+	$messages['product-not-removed']    = __( 'Product not removed from cart. Please try again.', 'LION' );
     return $messages;
 }
 add_filter( 'it_cart_buddy_get_error_messages', 'it_cart_buddy_register_cart_error_messages' );
