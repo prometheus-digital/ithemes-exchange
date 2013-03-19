@@ -5,7 +5,7 @@
  * @package IT_Cart_Buddy
 */
 $form_action        = it_cart_buddy_get_page_url( 'cart' );
-$update_cart_action = it_cart_buddy_get_action_var( 'update_cart' );
+$update_cart_action = it_cart_buddy_get_action_var( 'update_cart_action' );
 $checkout_action    = it_cart_buddy_get_action_var( 'proceed_to_checkout' );
 $empty_cart_action  = it_cart_buddy_get_action_var( 'empty_cart' );
 $table_columns      = it_cart_buddy_get_cart_table_columns();

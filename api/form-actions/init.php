@@ -46,7 +46,7 @@ function it_cart_buddy_get_action_vars() {
 	$defaults = array(
 		'add_product_to_cart'      => 'it_cart_buddy_add_product_to_cart',
 		'remove_product_from_cart' => 'it_cart_buddy_remove_product_from_cart',
-		'update_cart'              => 'it_cart_buddy_update_cart',
+		'update_cart_action'       => 'it_cart_buddy_update_cart_request',
 		'empty_cart'               => 'it_cart_buddy_empty_cart',
 		'proceed_to_checkout'      => 'it_cart_buddy_proceed_to_checkout',
 		'view_cart'                => 'it_cart_buddy_view_cart',

@@ -67,13 +67,50 @@ function it_cart_buddy_get_cart_table_columns() {
 }
 
 /**
- * Adds a product to the shopping cart based on the cart_buddy_add_to_cart query arg
+ * Listens for $_REQUESTs to add a product to the cart and processes
  *
- * @todo Decouple API function from REQUEST action
- * 
+ * @todo move this function into lib/framework
+ *
+ * @since 0.3.8
+ * @return void
+*/
+function it_cart_buddy_handle_add_product_to_cart_request() {
+	
+	$add_to_cart_var = it_cart_buddy_get_action_var( 'add_product_to_cart' );
+	$product_id = empty( $_REQUEST[$add_to_cart_var] ) ? 0 : $_REQUEST[$add_to_cart_var];
+	$product    = it_cart_buddy_get_product( $product_id );
+
+	// Vefify legit product
+	if ( ! $product )
+		$error = 'bad-product';
+
+	// Verify nonce
+	$nonce_var = apply_filters( 'it_cart_buddy_add_product_to_cart_nonce_var', '_wpnonce' );
+	if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_cart_buddy_add_product_to_cart-' . $product_id ) )
+		$error = 'product-not-added-to-cart';
+	
+	// Add product
+	if ( empty( $error ) && it_cart_buddy_add_product_to_shopping_cart( $product_id ) ) {
+		$url = add_query_arg( array( it_cart_buddy_get_action_var( 'alert_message' ) => 'product-added-to-cart' ) );
+		wp_redirect( $url );
+		die();
+	}
+
+	$error_var = it_cart_buddy_get_action_var( 'error_message' );
+	$error = empty( $error ) ? 'product-not-added-to-cart' : $error;
+	$url  = add_query_arg( array( $error_var => $error ), $cart );
+	wp_redirect( $url );
+	die();
+
+}
+add_action( 'it_cart_buddy_add_product_to_cart', 'it_cart_buddy_handle_add_product_to_cart_request', 9 );
+
+/**
+ * Adds a product to the shopping cart based on the product_id
+ *
  * @since 0.3.7
  * @param $product_id a valid wp post id with a cart buddy product post_typp
- * return void
+ * return boolean 
 */
 function it_cart_buddy_add_product_to_shopping_cart( $product_id ) {
 
@@ -81,11 +118,6 @@ function it_cart_buddy_add_product_to_shopping_cart( $product_id ) {
 		return;
 
 	if ( ! $product = it_cart_buddy_get_product( $product_id ) )
-		return;
-
-	// Verify nonce
-	$nonce_var = apply_filters( 'it_cart_buddy_add_product_to_cart_nonce_var', '_wpnonce' );
-	if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_cart_buddy_add_product_to_cart-' . $product_id ) )
 		return;
 
 	/**
@@ -113,9 +145,7 @@ function it_cart_buddy_add_product_to_shopping_cart( $product_id ) {
 		// Bump the quantity
 		it_cart_buddy_update_session_product( $product_id . '-' . $itemized_hash, $product );
 		do_action( 'it_cart_buddy_cart_prouduct_count_updated', $product_id );
-		$url = add_query_arg( array( it_cart_buddy_get_action_var( 'alert_message' ) => 'product-added-to-cart' ) );
-		wp_redirect( $url );
-		die();
+		return true;
 	} else {
 		$product = array(
 			'product_cart_id' => $product_id . '-' . $itemized_hash,
@@ -128,97 +158,111 @@ function it_cart_buddy_add_product_to_shopping_cart( $product_id ) {
 
 		it_cart_buddy_add_session_product( $product, $product_id . '-' . $itemized_hash );
 		do_action( 'it_cart_buddy_product_added_to_cart', $product_id );
-		$url = add_query_arg( array( it_cart_buddy_get_action_var( 'alert_message' ) => 'product-added-to-cart' ) );
-		wp_redirect( $url );
-		die();
+		return true;
 	}
+	return false;
 }
-add_action( 'it_cart_buddy_add_product_to_cart', 'it_cart_buddy_add_product_to_shopping_cart', 9 );
 
 /**
  * Empty the Cart Buddy shopping cart
  *
- * @todo Decouple API function from REQUEST action
+ * @todo Move this function to /lib/framework
  *
  * @since 0.3.7
  * @return void
 */
-function it_cart_buddy_empty_shopping_cart() {
+function it_cart_buddy_handle_empty_shopping_cart_request() {
+
 	// Verify nonce
 	$nonce_var   = apply_filters( 'it_cart_buddy_cart_action_nonce_var', '_wpnonce' );
 	$error_var   = it_cart_buddy_get_action_var( 'error_message' );
 	$message_var = it_cart_buddy_get_action_var( 'alert_message' );
 	$cart        = it_cart_buddy_get_page_url( 'cart' );
-	if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_cart_buddy_cart_action-' . session_id() ) ) {
+	if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_cart_buddy_cart_action-' . session_id() ) || ! it_cart_buddy_empty_shopping_cart() ) {
 		$url  = add_query_arg( array( $error_var => 'cart-not-emptied' ), $cart );
 		wp_redirect( $url );
 		die();
 	} else {
-		it_cart_buddy_clear_session_products();
-		do_action( 'it_cart_buddy_cart_emptied' );
 		$url = remove_query_arg( $error_var, $cart );
 		$url = add_query_arg( array( $message_var => 'cart-emptied' ), $url );
 		wp_redirect( $url );
 		die();
 	}
 }
-add_action( 'it_cart_buddy_empty_cart', 'it_cart_buddy_empty_shopping_cart', 9 );
+add_action( 'it_cart_buddy_empty_cart', 'it_cart_buddy_handle_empty_shopping_cart_request', 9 );
+
+/**
+ * Empties the cart
+ *
+ * @since 0.3.7
+ * @return boolean
+*/
+function it_cart_buddy_empty_shopping_cart() {
+	if ( it_cart_buddy_clear_session_products() ) {
+		do_action( 'it_cart_buddy_cart_emptied' );
+		return true;
+	}
+	return false;
+}
 
 /**
  * Removes a single product from the shopping cart
  *
- * This function removes a product from the cart. It is called via template_redirect and looks for the product ID in REQUEST
- * Optionally, theme developers may invoke it directly with the products cart_id
+ * This listens for REQUESTS to remove a product from the cart, verifies the request, and passes it along to the correct function
  *
- * @todo Decouple API function from REQUEST action
+ * @todo Move to /lib/framework dir
  *
- * @since 0.3.7
- * @param string $product_id optional param to specifcy which product gets deleted
+ * @since 0.3.8
+ * @return void
 */
-function it_cart_buddy_remove_product_from_shopping_cart( $product_id=false ) {
-	$var = it_cart_buddy_get_action_var( 'remove_product_from_cart' );
-	if ( ! $product_id ) {
-		$product_id = empty( $_REQUEST[$var] ) ? false : $_REQUEST[$var];
-	}
+function it_cart_buddy_handle_remove_product_from_cart_request() {
+	$var        = it_cart_buddy_get_action_var( 'remove_product_from_cart' );
+	$product_id = empty( $_REQUEST[$var] ) ? false : $_REQUEST[$var];
+	$cart_url   = it_cart_buddy_get_page_url( 'cart' );
 
 	// Verify nonce
 	$nonce_var = apply_filters( 'it_cart_buddy_remove_product_from_cart_nonce_var', '_wpnonce' );
-	if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_cart_buddy_remove_product_from_cart-' . $product_id ) ) {
+	if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_cart_buddy_remove_product_from_cart-' . $product_id ) || ! it_cart_buddy_remove_product_from_shopping_cart( $product_id ) ) {
 		$var = it_cart_buddy_get_action_var( 'error_message' );
-		$cart = it_cart_buddy_get_page_url( 'cart' );
-		$url  = add_query_arg( array( $var => 'product-not-removed' ), $cart );
+		$url  = add_query_arg( array( $var => 'product-not-removed' ), $cart_url );
 		wp_redirect( $url );
 		die();
 	}
 
-	// Remove from the Session
-	if ( $product_id ) {
-		it_cart_buddy_remove_session_product( $product_id );
-		do_action( 'it_cart_buddy_default_cart-removed_product_from_cart', $product_id );
-		$var = it_cart_buddy_get_action_var( 'alert_message' );
-		$cart = it_cart_buddy_get_page_url( 'cart' );
-		$url = add_query_arg( array( $var => 'product-removed' ), $cart );
-		wp_redirect( $url );
-		die();
-	}
+	$var = it_cart_buddy_get_action_var( 'alert_message' );
+	$url = add_query_arg( array( $var => 'product-removed' ), $cart_url );
+	wp_redirect( $url );
+	die();
 }
-add_action( 'it_cart_buddy_remove_product_from_cart', 'it_cart_buddy_remove_product_from_shopping_cart', 9 );
+add_action( 'it_cart_buddy_remove_product_from_cart', 'it_cart_buddy_handle_remove_product_from_cart_request', 9 );
 
 /**
- * Updates the shopping cart
- *
- * This method gets called on template_redirect and fires when the update_cart button has been triggered
- *
- * @todo Decouple from form action
- * @todo Decouple messages. Add with hook
+ * Removes a product from the cart
  *
  * @since 0.3.7
+ * @param integer $product_id the shopping_cart_product_id (different from the DB product id)
+ * @return boolean
 */
-function it_cart_buddy_update_shopping_cart( $show_message=true ) {
+function it_cart_buddy_remove_product_from_shopping_cart( $product_id ) {
 
+	if ( it_cart_buddy_remove_session_product( $product_id ) ) {
+		do_action( 'it_cart_buddy_product_removed_from_cart', $product_id );
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Listens for the REQUEST to update the shopping cart, verifies it, and calls the correct function
+ *
+ * @todo Move to /lib/framework director
+ *
+ * @since 0.3.8
+*/
+function it_cart_buddy_handle_update_cart_request() {
 	// Verify nonce
 	$nonce_var = apply_filters( 'it_cart_buddy_cart_action_nonce_var', '_wpnonce' );
-	if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_cart_buddy_cart_action-' . session_id() ) ) {
+	if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_cart_buddy_cart_action-' . session_id() ) || ! it_cart_buddy_update_shopping_cart() ) {
 		$var = it_cart_buddy_get_action_var( 'error_message' );
 		$cart = it_cart_buddy_get_page_url( 'cart' );
 		$url  = add_query_arg( array( $var => 'cart-not-updated' ), $cart );
@@ -226,12 +270,52 @@ function it_cart_buddy_update_shopping_cart( $show_message=true ) {
 		die();
 	}
 
+	$message_var = it_cart_buddy_get_action_var( 'alert_message' );
+	if ( ! empty ( $message_var ) ) {
+		$page = it_cart_buddy_get_page_url( 'cart' );
+		$url = add_query_arg( array( $message_var => 'cart-updated' ), $page );
+		wp_redirect( $url );
+		die();
+	}
+}
+add_action( 'it_cart_buddy_update_cart_action', 'it_cart_buddy_handle_update_cart_request', 9 );
+
+/**
+ * Updates the shopping cart
+ *
+ * This doesn't actually do anything. Add-ons need to hook into here to perform updates. 
+ * Core calls it when the update cart button or the proceed to checkout button is triggered.
+ *
+ * - The only core action hooked to it is the update of product quantity
+ *
+ * @since 0.3.8
+ * @return boolean
+*/
+function it_cart_buddy_update_shopping_cart() {
+	do_action( 'it_cart_buddy_update_cart' );
+	do_action( 'it_cart_buddy_cart_updated' );
+	return true;
+}
+
+/**
+ * Updates the quantity of a product on the update_cart (and proceed to checkout) actions
+ *
+ * @todo move to /lib/framework
+ *
+ * @since 0.3.8
+ * @return void
+*/
+function it_cart_buddy_handle_update_cart_quantity_request() {
+
+	// Get Quantities form REQUEST
+	$quantities = empty( $_POST['product_quantity'] ) ? false : (array) $_POST['product_quantity'];
+	if ( ! $quantities )
+		return;
+
 	// Get cart products
 	$cart_products = it_cart_buddy_get_session_products();
 
 	// Update quantities
-	$quantities = empty( $_POST['product_quantity'] ) ? false : (array) $_POST['product_quantity'];
-
 	foreach( $quantities as $product => $quantity ) {
 		if ( ! empty( $cart_products[$product] ) && is_numeric( $quantity ) ) {
 			$cart_product = $cart_products[$product];
@@ -243,19 +327,13 @@ function it_cart_buddy_update_shopping_cart( $show_message=true ) {
 			}
 		}
 	}
-
-	$message_var = it_cart_buddy_get_action_var( 'alert_message' );
-	if ( ! empty ( $message_var ) && $show_message ) {
-		$page = it_cart_buddy_get_page_url( 'cart' );
-		$url = add_query_arg( array( $message_var => 'cart-updated' ), $page );
-		wp_redirect( $url );
-		die();
-	}
 }
-add_action( 'it_cart_buddy_update_cart', 'it_cart_buddy_update_shopping_cart', 9 );
+add_action( 'it_cart_buddy_update_cart', 'it_cart_buddy_handle_update_cart_quantity_request', 9 );
 
 /**
  * Advances the user to the checkout screen after updating the cart
+ *
+ * @todo move to lib/framework directory
  *
  * @since 0.3.7
  * @return void
