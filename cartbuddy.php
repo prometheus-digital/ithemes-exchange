@@ -53,8 +53,7 @@ class IT_Cart_Buddy {
 		$this->set_textdomain();
 
 		// Load supporting libraries
-		require( $this->_plugin_path . '/lib/classes/load.php' );
-		require( $this->_plugin_path . '/lib/framework/load.php' );
+		require( $this->_plugin_path . '/lib/load.php' );
 		require( $this->_plugin_path . '/api/load.php' );
 		require( $this->_plugin_path . '/core-addons/load.php' );
 

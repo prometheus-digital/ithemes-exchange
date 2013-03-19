@@ -450,13 +450,12 @@ function it_cart_buddy_get_cart_total() {
  * Process checkout
  *
  * Formats data and hands it off to the appropriate tranaction method
- *
- * @todo decouple REQUEST Action from api function
+ * @todo move to /lib/framework directory
  *
  * @since 0.3.7
  * @return void
 */
-function it_cart_buddy_purchase_cart() {
+function it_cart_buddy_handle_purchase_cart_request() {
 
 	// Verify nonce
 	$nonce_var = apply_filters( 'it_cart_buddy_checkout_action_nonce_var', '_wpnonce' );
@@ -515,7 +514,7 @@ function it_cart_buddy_purchase_cart() {
     // If we made it this far, the transaction failed or the transaction-method add-on did not hook into success/fail actions
     it_cart_buddy_notify_failed_transaction();
 }
-add_action( 'it_cart_buddy_purchase_cart', 'it_cart_buddy_purchase_cart' );
+add_action( 'it_cart_buddy_purchase_cart', 'it_cart_buddy_handle_purchase_cart_request' );
 
 /**
  * Redirect to confirmation page after successfull transaction

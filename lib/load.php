@@ -1,0 +1,33 @@
+<?php
+/**
+ * This file loads the Cart Buddy Framework
+ *
+ * @since 0.2.0
+ * @package IT_Cart_Buddy
+*/
+
+// IT Classes
+require( 'classes/load.php' );
+
+// Admin Functionality
+require( $this->_plugin_path . '/lib/admin/class.admin.php' );
+
+// Product Post Type
+require( $this->_plugin_path . '/lib/products/class.products-post-type.php' );
+
+// Product Object
+require( $this->_plugin_path . '/lib/products/class.product.php' );
+
+// Transaction Post Type
+require( $this->_plugin_path . '/lib/transactions/class.transactions-post-type.php' );
+
+// Transaction Object
+require( $this->_plugin_path . '/lib/transactions/class.transaction.php' );
+
+// Template Functions
+require( $this->_plugin_path . '/lib/functions/template-functions.php' );
+
+// Sessions
+if ( ! is_admin() )
+	require( $this->_plugin_path . '/lib/sessions/class.session.php' );
+
