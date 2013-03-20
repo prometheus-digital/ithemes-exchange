@@ -119,10 +119,10 @@ function it_cart_buddy_register_core_addons() {
 			'options'     => array( 'category' => 'product-features' ),
 		),
 		// Base Price
-		'restricted-content' => array(
-			'name'        => __( 'Restricted Content', 'LION' ),
-			'description' => __( 'This add-on will allow you to restrict site content based on purchased products.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/restricted-content/init.php',
+		'protected-content' => array(
+			'name'        => __( 'Protected Content', 'LION' ),
+			'description' => __( 'This add-on will allow you to protect site content based on purchased products.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/protected-content/init.php',
 			'options'     => array( 'category' => 'product-features' ),
 		),
 		// Product description (post_content)
