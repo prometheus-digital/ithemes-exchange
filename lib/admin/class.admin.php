@@ -142,7 +142,7 @@ class IT_Cart_Buddy_Admin {
 		$this->add_product_submenus();
 
 		// Add Transactions menu item
-		add_submenu_page( 'it-cart-buddy', 'Cart Buddy Transactions', 'Transactions', $this->admin_menu_capability, 'edit.php?post_type=it_cart_buddy_tran' );
+		add_submenu_page( 'it-cart-buddy', 'Cart Buddy ' . __( 'Payments', 'LION' ), __( 'Payments', 'LION' ), $this->admin_menu_capability, 'edit.php?post_type=it_cart_buddy_tran' );
 
 		// Add Settings Menu Item
 		$settings_callback = array( $this, 'print_cart_buddy_settings_page' );
@@ -177,8 +177,11 @@ class IT_Cart_Buddy_Admin {
 				$product = reset( $enabled_product_types );
 				add_submenu_page( 'it-cart-buddy', 'Add Product', 'Add Product', $this->admin_menu_capability, 'post-new.php?post_type=it_cart_buddy_prod&product_type=' . $product['slug'] );
 			} else if ( $add_on_count > 1 ) {
-				// If we have more than one product type, make the add link go to product selection page
-				add_submenu_page( 'it-cart-buddy', 'Add Product', 'Add Product', $this->admin_menu_capability, 'it-cart-buddy-choose-product-type', array( $this, 'print_choose_product_type_admin_page' ) );
+				// If we have more than one product type, add them each separately
+				foreach( $enabled_product_types as $type => $params ) {
+					$name = empty( $params['options']['labels']['singular_name'] ) ? 'Product' : esc_attr( $params['options']['labels']['singular_name'] );
+					add_submenu_page( 'it-cart-buddy', 'Add ' . $name, 'Add ' . $name, $this->admin_menu_capability, 'post-new.php?post_type=it_cart_buddy_prod&product_type=' . esc_attr( $params['slug'] ) );
+				}
 			}
 		}
 	}
@@ -414,16 +417,6 @@ class IT_Cart_Buddy_Admin {
 
 		wp_safe_redirect( $redirect_to );
 		die();
-	}
-
-	/**
-	 * Page content for adding a product type
-	 *
-	 * @since 0.3.0
-	 * @return void
-	*/
-	function print_choose_product_type_admin_page() {
-		include( 'views/admin-choose-new-product-type.php' );
 	}
 
 	/**
