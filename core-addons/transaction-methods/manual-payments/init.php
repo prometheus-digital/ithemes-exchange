@@ -8,9 +8,9 @@
 
 include( 'confirmation-template-functions.php' );
 
-add_filter( 'it_cart_buddy_get_transaction_confirmation_page_html-manual-payments', 'it_cart_buddy_manual_transactions_confirmation_page_html', 9, 3 );
 add_filter( 'it_cart_buddy_get_transaction_method_name-manual-payments', 'it_cart_buddy_get_manual_payments_name', 9 );
 add_action( 'it_cart_buddy_do_transaction-manual-payments', 'it_cart_buddy_manual_payments_do_transaction', 9 );
+add_filter( 'it_cart_buddy_possible_template_paths', 'it_cart_buddy_manual_payments_add_template_path' );
 
 /**
  * Call back for settings page
@@ -53,6 +53,18 @@ function it_cart_buddy_manual_payments_do_transaction( $cart_object ) {
 
 	// Do transaction
 	$transaction_id = it_cart_buddy_add_transaction( $args );
+}
+
+/**
+ * Adds manual transactions template path inf on confirmation page
+ *
+ * @since 0.3.8
+ * @return array of possible template paths + manual-payments template path
+*/
+function it_cart_buddy_manual_payments_add_template_path( $paths ) {
+	if ( is_page( it_cart_buddy_get_page_id( 'transaction-confirmation' ) ) )
+		$paths[] = dirname( __FILE__ ) . '/templates/';
+	return $paths;
 }
 
 /**

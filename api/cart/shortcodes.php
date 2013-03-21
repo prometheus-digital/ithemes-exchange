@@ -7,6 +7,7 @@
 */
 add_shortcode( 'cart_buddy_shopping_cart', 'it_cart_buddy_get_shopping_cart_html' );
 add_shortcode( 'cart_buddy_checkout', 'it_cart_buddy_get_checkout_html' );
+add_shortcode( 'cart_buddy_add_product_to_cart', 'it_cart_buddy_shortcode_add_product_to_shopping_cart_html' );
 
 /**
  * This shortcode is intended to print an Add to Cart HTML block
@@ -31,4 +32,3 @@ function it_cart_buddy_shortcode_add_product_to_shopping_cart_html( $atts, $cont
     if ( $product = it_cart_buddy_get_product( $attributes['product_id'] ) )
 		return it_cart_buddy_get_add_product_to_shopping_cart_html( $attributes );
 }
-add_shortcode( 'cart_buddy_add_product_to_cart', 'it_cart_buddy_shortcode_add_product_to_shopping_cart_html' );

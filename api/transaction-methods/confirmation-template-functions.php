@@ -9,13 +9,16 @@
 /**
  * Returns the HTML for the Confirmation Page
  *
+ * Theme developers can call this from a tempalte to produce the confirmation page.
+ * It looks for a transaction_id via paramater or REQUEST and passes it to the template part
+ * Cart Buddy provides a generic template part in its cartbuddy/lib/templates folder but transaction-method add-ons
+ * or theme developers can overwrite it with transactin-confirmation-[addon-slug].php in a registered template directory
+ *
  * @since 0.3.7
+ * @param integer $id transaction id or false
  * @return html
 */
-function it_cart_buddy_get_transaction_confirmation_page_html( $id=false, $shortcode_atts=array(), $shortcode_content='' ) {
-
-	// Base hook
-	$hook = 'it_cart_buddy_get_transaction_confirmation_page_html';
+function it_cart_buddy_get_transaction_confirmation_page_html( $id=false ) {
 
 	// Get var for transaction method
 	$var = it_cart_buddy_get_action_var( 'transaction_id' );
@@ -29,9 +32,10 @@ function it_cart_buddy_get_transaction_confirmation_page_html( $id=false, $short
 	// Grab transaction method
 	$transaction_method = it_cart_buddy_get_transaction_method( $transaction_id );
 
-	// Append transaction method to base hook
-	$hook = empty( $transaction_method ) ? $hook : $hook . '-' . $transaction_method;
+	// Set template part args 
+	it_cart_buddy_set_template_part_args( array( 'transaction_id' => $transaction_id ), 'transaction-confirmation', $transaction_method );
 
-	// Return filtered content
-	return apply_filters( $hook, '', $transaction_id, $shortcode_atts, $shortcode_content );
+	ob_start();
+	it_cart_buddy_get_template_part( 'transaction-confirmation', $transaction_method );
+	return ob_get_clean();
 }

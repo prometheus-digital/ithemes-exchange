@@ -24,9 +24,6 @@ function it_cart_buddy_get_template_part( $slug, $name=null, $load=true ) {
         $templates[] = $slug . '-' . $name . '.php';
     $templates[] = $slug . '.php';
 
-    // Allow template parst to be filtered
-    $templates = apply_filters( 'it_cart_buddy_get_template_part', $templates, $slug, $name );
-
     // Return the part that is found
     return it_cart_buddy_locate_template( $templates, $load, false );
 }
@@ -50,6 +47,26 @@ function it_cart_buddy_locate_template( $template_names, $load = false, $require
     // No file found yet
     $located = false;
 
+	// Define possible template paths
+	$possible_template_paths = array( 
+		trailingslashit( get_stylesheet_directory() ) . 'cart_buddy_templates',
+		trailingslashit( get_template_directory() ) . 'cart_buddy_templates',
+	);
+	
+	// Allow addons to add a template path
+	$possible_template_paths = apply_filters( 'it_cart_buddy_possible_template_paths', $possible_template_paths );
+
+	// Force core cart buddy template folder to be last in array
+	$core_template_path = dirname( dirname( __FILE__ ) ) . '/templates/';
+	if ( $key = array_search( $core_template_path, $possible_template_paths ) )
+		unset( $possible_template_paths[$key] );
+	if ( $key = array_search( untrailingslashit( $core_template_path ), $possible_template_paths ) )
+		unset( $possible_template_paths[$key] );
+	$possible_template_paths[] = $core_template_path;
+
+	// Make sure we don't have multiple elements for the same path
+	$possible_template_paths = array_unique( $possible_template_paths );
+
     // Try to find a template file
     foreach ( (array) $template_names as $template_name ) { 
 
@@ -60,21 +77,14 @@ function it_cart_buddy_locate_template( $template_names, $load = false, $require
         // Trim off any slashes from the template name
         $template_name = ltrim( $template_name, '/' );
 
-        // Check child theme first
-        if ( file_exists( trailingslashit( get_stylesheet_directory() ) . 'cart_buddy_templates/' . $template_name ) ) { 
-            $located = trailingslashit( get_stylesheet_directory() ) . 'cart_buddy_templates/' . $template_name;
-            break;
+		// Loop through possible paths and use first one that is located
+		foreach( $possible_template_paths as $path ) {
+			if ( ! is_file( trailingslashit( $path ) . $template_name ) )
+				continue;
 
-        // Check parent theme next
-        } elseif ( file_exists( trailingslashit( get_template_directory() ) . 'cart_buddy_templates/' . $template_name ) ) { 
-            $located = trailingslashit( get_template_directory() ) . 'cart_buddy_templates/' . $template_name;
-            break;
-
-        // Check templates folder last
-        } elseif ( file_exists( dirname( dirname( __FILE__ ) ) . '/templates/' . $template_name ) ) { 
-            $located = dirname( dirname( __FILE__ ) ) . '/templates/' . $template_name;
-            break;
-        }   
+			$located = trailingslashit( $path ) . $template_name;
+			break 2;
+		}
     }   
 
     if ( ( true == $load ) && ! empty( $located ) ) {

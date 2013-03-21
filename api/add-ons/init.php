@@ -13,7 +13,6 @@
  * - product-type        Add-ons that create product types. eg: Digital, Membership
  * - transaction-method  Add-ons that create transactions. eg: Stripe, Tweet
  * - admin               General purpose admin functionality. eg: Reports, Export
- * - front-end           General purpose front-end functionality. eg: Widgets, Shortcodes
  * - other               Everything else
  *
  * @param string $slug         string for identifying the add-on in code
