@@ -17,8 +17,15 @@ class IT_Cart_Buddy_WP_Post_Supports {
 	function IT_Cart_Buddy_WP_Post_Supports() {
 
 		// WordPress Post Title
-		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'add_title_support_to_products' ) );
+		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_title_support_as_product_feature' ) );
 		add_filter( 'it_cart_buddy_get_product_feature-product_title', array( $this, 'get_title' ), 9, 2 );
+
+		// WordPress Post Author
+		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_author_support_as_product_feature' ) );
+		add_filter( 'it_cart_buddy_get_product_feature-wp-author', array( $this, 'get_wp_author' ), 9, 2 );
+
+		// WordPress Comments metabox
+		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_comments_support_as_product_feature' ) );
 	}
 
 	/**
@@ -26,7 +33,7 @@ class IT_Cart_Buddy_WP_Post_Supports {
 	 *
 	 * @since 0.3.8
 	*/
-	function add_title_support_to_products() {
+	function init_wp_title_support_as_product_feature() {
 		// Register the product feature
 		$slug        = 'product-title';
 		$description = __( 'Adds support for default WordPress Title field', 'LION' );
@@ -49,6 +56,57 @@ class IT_Cart_Buddy_WP_Post_Supports {
 	*/
 	function get_title( $title, $product_id ) { 
 		return get_the_title( $product_id );
+	}
+
+	/**
+	 * Register WP Author as a product feature
+	 *
+	 * While we register this as a product feature, we do not add support for any product types by default.
+	 *
+	 * @since 0.3.8
+     * @return void
+	*/
+	function init_wp_author_support_as_product_feature() {
+		// Register the product feature
+		$slug        = 'wp-author';
+		$description = __( 'Adds support for WP Author field to a specific product', 'LION' );
+		it_cart_buddy_register_product_feature( $slug, $description );
+	}
+
+	/**
+	 * Return the product's wp_author
+	 *
+	 * This returns the authors display name
+	 *
+	 * @since 0.3.8
+	 * @param mixed $wp_author the values passed in by the WP Filter API. Ignored here.
+	 * @param integer product_id the WordPress post ID
+	 * @return string author
+	*/
+	function get_wp_author( $wp_author, $product_id ) {
+		$product = it_cart_buddy_get_product( $product_id );
+		if ( empty( $product->post_author ) )
+			return;
+
+		if ( $author = get_the_author_meta( 'display_name', $product->post_author ) )
+			return $author;
+
+		return false;
+	}
+
+	/**
+	 * Register the WP Comments as a product feature
+	 *
+	 * While we register this as a product feature, we do not add support for any product types by default.
+     *
+	 * @since 0.3.8
+	 * @return void
+	*/
+	function init_wp_comments_support_as_product_feature() {
+		// Register the product feature
+		$slug        = 'wp-comments';
+		$description = __( 'Adds support for the WP Comments field to a specific product type', 'LION' );
+		it_cart_buddy_register_product_feature( $slug, $description );
 	}
 }
 $IT_Cart_Buddy_WP_Post_Supports = new IT_Cart_Buddy_WP_Post_Supports();

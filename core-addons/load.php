@@ -125,13 +125,6 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/product-features/product-description/init.php',
 			'options'     => array( 'category' => 'product-features' ),
 		),
-		// Product Author
-		'wp-author' => array(
-			'name'        => __( 'WP Post Author', 'LION' ),
-			'description' => __( 'Enables the WordPress post author field for products.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/wp-author/init.php',
-			'options'     => array( 'category' => 'product-features' ),
-		),
 		// Featured Image
 		'wp-featured-image' => array(
 			'name'        => __( 'WP Featured Image', 'LION' ),
@@ -158,13 +151,6 @@ function it_cart_buddy_register_core_addons() {
 			'name'        => __( 'WP Trackbacks for Products', 'LION' ),
 			'description' => __( 'Enables the WordPress comments metabox for products.', 'LION' ),
 			'file'        => dirname( __FILE__ ) . '/product-features/wp-trackbacks/init.php',
-			'options'     => array( 'category' => 'product-features' ),
-		),
-		// Product Comments 
-		'wp-comments' => array(
-			'name'        => __( 'WP Comments for Products', 'LION' ),
-			'description' => __( 'Enables the WordPress comments metabox for products.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/wp-comments/init.php',
 			'options'     => array( 'category' => 'product-features' ),
 		),
 		// Revisions 
