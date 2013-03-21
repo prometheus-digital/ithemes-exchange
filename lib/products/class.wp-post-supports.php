@@ -34,6 +34,9 @@ class IT_Cart_Buddy_WP_Post_Supports {
 
 		// WordPress Comments metabox
 		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_comments_support_as_product_feature' ) );
+
+		// WordPress Trackbacks
+		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_trackbacks_as_product_feature' ) );
 	}
 
 	/**
@@ -183,6 +186,21 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		// Register the product feature
 		$slug        = 'wp-comments';
 		$description = __( 'Adds support for the WP Comments field to a specific product type', 'LION' );
+		it_cart_buddy_register_product_feature( $slug, $description );
+	}
+
+	/**
+	 * Register the WP Trackbacks metabox as a product feature
+	 *
+	 * While we register this as a product feature, we do not add support for any product types by default.
+	 *
+	 * @since 0.3.8
+	 * @return void
+	*/
+	function init_wp_trackbacks_as_product_feature() {
+		// Register the product feature
+		$slug        = 'wp-trackbacks';
+		$description = __( 'Adds support for the WP Trackbacks metabox.', 'LION' );
 		it_cart_buddy_register_product_feature( $slug, $description );
 	}
 }

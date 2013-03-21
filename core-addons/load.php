@@ -132,13 +132,6 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/product-features/wp-custom-fields/init.php',
 			'options'     => array( 'category' => 'product-features' ),
 		),
-		// Product Trackbacks 
-		'wp-trackbacks' => array(
-			'name'        => __( 'WP Trackbacks for Products', 'LION' ),
-			'description' => __( 'Enables the WordPress comments metabox for products.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/wp-trackbacks/init.php',
-			'options'     => array( 'category' => 'product-features' ),
-		),
 		// Revisions 
 		'wp-revisions' => array(
 			'name'        => __( 'WP Revisions for Products', 'LION' ),
