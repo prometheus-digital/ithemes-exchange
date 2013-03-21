@@ -28,9 +28,16 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_featured_image_as_product_feature' ) );
 		add_filter( 'it_cart_buddy_get_product_feature-wp-featured-image', array( $this, 'get_featured_image' ), 9, 2 );
 
+		// WordPress Excerpt
+		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_excerpt_as_product_feature' ) );
+		add_filter( 'it_cart_buddy_get_product_feature-wp-excerpt', array( $this, 'get_excerpt' ), 9, 2 );
+
 		// WordPress Post Author
 		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_author_support_as_product_feature' ) );
 		add_filter( 'it_cart_buddy_get_product_feature-wp-author', array( $this, 'get_wp_author' ), 9, 2 );
+
+		// WordPress Post Formats
+		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_post_formats_as_product_feature' ) );
 
 		// WordPress Custom Fields
 		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_custom_fields_as_product_feature' ) );
@@ -40,6 +47,9 @@ class IT_Cart_Buddy_WP_Post_Supports {
 
 		// WordPress Trackbacks
 		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_trackbacks_as_product_feature' ) );
+
+		// WordPress Post Revisions
+		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_revisions_as_product_feature' ) );
 	}
 
 	/**
@@ -217,6 +227,57 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		// Register the product feature
 		$slug        = 'wp-trackbacks';
 		$description = __( 'Adds support for the WP Trackbacks metabox.', 'LION' );
+		it_cart_buddy_register_product_feature( $slug, $description );
+	}
+
+	/**
+	 * Register excerpts as a product feature
+	 *
+	 * @since 0.3.8
+	 * @return void
+	*/
+	function init_wp_excerpt_as_product_feature() {
+		// Register the product feature
+		$slug        = 'wp-excerpt';
+		$description = __( 'Adds support for the WP excerpt of the product', 'LION' );
+		it_cart_buddy_register_product_feature( $slug, $description );
+	}
+
+	/**
+	 * Return the product's excerpt
+	 *
+	 * @since 0.3.8
+	 * @param mixed $excerpt the values passed in by the WP Filter API. Ignored here.
+	 * @param integer product_id the WordPress post ID
+	 * @return string post_excerpt
+	*/
+	function get_excerpt( $excerpt, $product_id ) { 
+		return get_the_excerpt( $product_id );
+	}
+
+	/**
+	 * Register post formats as a product feature
+	 *
+	 * @since 0.3.8
+	 * @return void
+	*/
+	function init_wp_post_formats_as_product_feature() {
+		// Register the product feature
+		$slug        = 'wp-post-formats';
+		$description = __( 'Adds support for WP Post Formats to products', 'LION' );
+		it_cart_buddy_register_product_feature( $slug, $description );
+	}
+
+	/**
+	 * Register the WP Post revisions as a Product Feature
+	 *
+	 * @since 0.3.8
+	 * @return void
+	*/
+	function init_wp_revisions_as_product_feature() {
+		// Register the product feature
+		$slug        = 'wp-revisions';
+		$description = __( 'Adds support for WP Revisions to Product Types', 'LION' );
 		it_cart_buddy_register_product_feature( $slug, $description );
 	}
 }

@@ -111,34 +111,6 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/product-features/digital-downloads/init.php',
 			'options'     => array( 'category' => 'product-features' ),
 		),
-		// Base Price
-		'protected-content' => array(
-			'name'        => __( 'Protected Content', 'LION' ),
-			'description' => __( 'This add-on will allow you to protect site content based on purchased products.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/protected-content/init.php',
-			'options'     => array( 'category' => 'product-features' ),
-		),
-		// Excerpt
-		'wp-excerpt' => array(
-			'name'        => __( 'WP Excerpts for Products', 'LION' ),
-			'description' => __( 'Enables the WordPress excerpt metabox for products.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/wp-excerpt/init.php',
-			'options'     => array( 'category' => 'product-features' ),
-		),
-		// Revisions 
-		'wp-revisions' => array(
-			'name'        => __( 'WP Revisions for Products', 'LION' ),
-			'description' => __( 'Enables the WordPress revisions metabox for products.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/wp-revisions/init.php',
-			'options'     => array( 'category' => 'product-features' ),
-		),
-		// Post Formats
-		'wp-post-formats' => array(
-			'name'        => __( 'WP Post Formats', 'LION' ),
-			'description' => __( 'Enables the WordPress post formats interface for products.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/wp-post-formats/init.php',
-			'options'     => array( 'category' => 'product-features' ),
-		),
 	);
 	$add_ons = apply_filters( 'it_cart_buddy_core_addons', $add_ons );
 
