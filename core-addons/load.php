@@ -125,13 +125,6 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/product-features/product-description/init.php',
 			'options'     => array( 'category' => 'product-features' ),
 		),
-		// Product title (post_title)
-		'product-title' => array(
-			'name'        => __( 'Product Title', 'LION' ),
-			'description' => __( 'Enables the WordPress post Title for products.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/product-title/init.php',
-			'options'     => array( 'category' => 'product-features' ),
-		),
 		// Product Author
 		'wp-author' => array(
 			'name'        => __( 'WP Post Author', 'LION' ),

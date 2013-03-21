@@ -21,6 +21,9 @@ require( $this->_plugin_path . '/lib/products/class.product.php' );
 // Base Price
 require( $this->_plugin_path . '/lib/products/class.products-base-price.php' );
 
+// WP Post Type Supports as Product Features
+require( $this->_plugin_path . '/lib/products/class.wp-post-supports.php' );
+
 // Transaction Post Type
 require( $this->_plugin_path . '/lib/transactions/class.transactions-post-type.php' );
 
