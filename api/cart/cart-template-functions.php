@@ -34,9 +34,12 @@ function it_cart_buddy_get_shopping_cart_html() {
  * @reuturn string HTML
 */
 function it_cart_buddy_get_remove_product_from_cart_link( $cart_product_id ) {
-	$GLOBALS['cart_product_id'] = $cart_product_id;
+
+	// Set template part vars
+	it_cart_buddy_set_template_part_args( array( 'cart_product_id' => $cart_product_id ), 'remove-product-from-cart' );
+
 	ob_start();
-	it_cart_buddy_get_template_part( 'remove-product-from-cart-link' );
+	it_cart_buddy_get_template_part( 'remove-product-from-cart' );
 	return ob_get_clean();
 }
 
@@ -98,6 +101,6 @@ function it_cart_buddy_get_add_product_to_shopping_cart_html( $args=array() ) {
 
 	// Do templating
 	ob_start();
-	it_cart_buddy_get_template_part( 'add-product-to-cart-link' );
+	it_cart_buddy_get_template_part( 'add-product-to-cart' );
 	return ob_get_clean();
 }
