@@ -24,6 +24,10 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_post_content_as_product_feature' ) );
 		add_filter( 'it_cart_buddy_get_product_feature-product_description', array( $this, 'get_product_description' ), 9, 2 );
 
+		// WordPress Featured Image as a Product Feature
+		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_featured_image_as_product_feature' ) );
+		add_filter( 'it_cart_buddy_get_product_feature-wp-featured-image', array( $this, 'get_featured_image' ), 9, 2 );
+
 		// WordPress Post Author
 		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_author_support_as_product_feature' ) );
 		add_filter( 'it_cart_buddy_get_product_feature-wp-author', array( $this, 'get_wp_author' ), 9, 2 );
@@ -96,6 +100,42 @@ class IT_Cart_Buddy_WP_Post_Supports {
 	}
 
 	/**
+	 * Register the WP featured image support as a Product Feature
+	 *
+	 * Register it and tack it onto all registered product-type addons by default
+	 *
+	 * @since 0.3.8
+	 * @return void
+	*/
+	function init_wp_featured_image_as_product_feature() {
+		// Register the product feature
+		$slug        = 'wp-featured-image';
+		$description = __( 'Adds support for WP Featured Image to a specific product type', 'LION' );
+		it_cart_buddy_register_product_feature( $slug, $description );
+
+		// Add it to all enabled product-type addons
+		$product_types = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) );
+		foreach( $product_types as $key => $product_type ) { 
+			it_cart_buddy_add_feature_support_to_product_type( $slug, $product_type['slug'] );
+		}   
+	}
+
+	/**
+	 * Return the product's featured_image
+	 *
+	 * This returns the image, not the ID
+	 *
+	 * @since 0.3.8
+	 * @param mixed $featured_image the values passed in by the WP Filter API. Ignored here.
+	 * @param integer product_id the WordPress post ID
+	 * @return string featured image
+	*/
+	function get_featured_image( $featured_image, $product_id ) { 
+		if ( has_post_thumbnail( $product_id ) ) 
+			return get_the_post_thumbnail( $product_id );
+	}
+
+	/*
 	 * Register WP Author as a product feature
 	 *
 	 * While we register this as a product feature, we do not add support for any product types by default.

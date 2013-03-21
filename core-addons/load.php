@@ -118,13 +118,6 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/product-features/protected-content/init.php',
 			'options'     => array( 'category' => 'product-features' ),
 		),
-		// Featured Image
-		'wp-featured-image' => array(
-			'name'        => __( 'WP Featured Image', 'LION' ),
-			'description' => __( 'Enables the WordPress featured image functionality for products.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/wp-featured-image/init.php',
-			'options'     => array( 'category' => 'product-features' ),
-		),
 		// Excerpt
 		'wp-excerpt' => array(
 			'name'        => __( 'WP Excerpts for Products', 'LION' ),
