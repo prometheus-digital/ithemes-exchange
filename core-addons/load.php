@@ -125,13 +125,6 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/product-features/wp-excerpt/init.php',
 			'options'     => array( 'category' => 'product-features' ),
 		),
-		// Custom Fields 
-		'wp-custom-fields' => array(
-			'name'        => __( 'WP Custom Fields', 'LION' ),
-			'description' => __( 'Enables the WordPress custom fields metabox for products.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/wp-custom-fields/init.php',
-			'options'     => array( 'category' => 'product-features' ),
-		),
 		// Revisions 
 		'wp-revisions' => array(
 			'name'        => __( 'WP Revisions for Products', 'LION' ),

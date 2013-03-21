@@ -32,6 +32,9 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_author_support_as_product_feature' ) );
 		add_filter( 'it_cart_buddy_get_product_feature-wp-author', array( $this, 'get_wp_author' ), 9, 2 );
 
+		// WordPress Custom Fields
+		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_custom_fields_as_product_feature' ) );
+
 		// WordPress Comments metabox
 		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_comments_support_as_product_feature' ) );
 
@@ -172,6 +175,19 @@ class IT_Cart_Buddy_WP_Post_Supports {
 			return $author;
 
 		return false;
+	}
+
+	/**
+	 * Register the product and add it to enabled product-type addons
+	 *
+	 * @since 0.3.8
+	 * @return void
+	*/
+	function init_wp_custom_fields_as_product_feature() {
+		// Register the product feature
+		$slug        = 'wp-custom-fields';
+		$description = __( 'Adds support for WP Custom Fields as a product Feature', 'LION' );
+		it_cart_buddy_register_product_feature( $slug, $description );
 	}
 
 	/**
