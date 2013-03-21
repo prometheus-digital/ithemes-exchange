@@ -18,6 +18,9 @@ require( $this->_plugin_path . '/lib/products/class.products-post-type.php' );
 // Product Object
 require( $this->_plugin_path . '/lib/products/class.product.php' );
 
+// Base Price
+require( $this->_plugin_path . '/lib/products/class.products-base-price.php' );
+
 // Transaction Post Type
 require( $this->_plugin_path . '/lib/transactions/class.transactions-post-type.php' );
 

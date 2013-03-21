@@ -102,7 +102,10 @@ class IT_Cart_Buddy {
 	function addons_init() {
 		if ( $addons = it_cart_buddy_get_enabled_addons() ) {
 			foreach( (array) $addons as $slug => $params ) {
-				include( $params['file'] );
+				if ( is_file( $params['file'] ) )
+					include( $params['file'] );
+				else
+					it_cart_buddy_disable_addon( $slug );
 			}
 		}
 		do_action( 'it_cart_buddy_enabled_addons_loaded' );

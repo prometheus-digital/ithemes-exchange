@@ -104,13 +104,6 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/admin/transaction-status-metabox/init.php',
 			'options'     => array( 'category' => 'admin' ),
 		),
-		// Base Price
-		'base-price' => array(
-			'name'        => __( 'Product Price', 'LION' ),
-			'description' => __( 'This add-on will associate a monetary price with any product that registers support for basic pricing', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/base-price/init.php',
-			'options'     => array( 'category' => 'product-features' ),
-		),
 		// Digital Downloads
 		'digital-downloads' => array(
 			'name'        => __( 'Digital Downloads', 'LION' ),
