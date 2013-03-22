@@ -102,10 +102,15 @@ class IT_Cart_Buddy {
 	function addons_init() {
 		if ( $addons = it_cart_buddy_get_enabled_addons() ) {
 			foreach( (array) $addons as $slug => $params ) {
-				if ( is_file( $params['file'] ) )
+				if ( ! empty( $params['file'] ) && is_file( $params['file'] ) ) {
 					include( $params['file'] );
-				else
+				} else {
 					it_cart_buddy_disable_addon( $slug );
+					if ( is_admin() ) {
+						wp_safe_redirect('admin.php?page=it-cart-buddy-addons&message=addon-auto-disabled-' . $slug );
+						die();
+					}
+				}
 			}
 		}
 		do_action( 'it_cart_buddy_enabled_addons_loaded' );

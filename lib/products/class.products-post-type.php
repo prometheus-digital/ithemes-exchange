@@ -330,7 +330,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 	function disable_product_type_posts( $product_type ) {
 		$post_stati = get_post_stati();
 		if ( isset( $post_stati['_it_cart_buddy_disab'] ) )
-			unset( $post_stati[_it_cart_buddy_disab] );
+			unset( $post_stati['_it_cart_buddy_disab'] );
 
 		// Grab all products for this product-type
 		$args = array(

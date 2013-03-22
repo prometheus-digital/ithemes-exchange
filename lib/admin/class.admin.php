@@ -353,10 +353,15 @@ class IT_Cart_Buddy_Admin {
 		$registered = it_cart_buddy_get_addons();
 		$add_on_cats = it_cart_buddy_get_addon_categories();
 		$message = empty( $_GET['message'] ) ? false : $_GET['message'];
-		if ( 'enabled' == $message )
+		if ( 'enabled' == $message ) {
 			ITUtility::show_status_message( __( 'Add-on enabled.', 'LION' ) );
-		else if ( 'disabled' == $message )
+		} else if ( 'disabled' == $message ) {
 			ITUtility::show_status_message( __( 'Add-on disabled.', 'LION' ) );
+		} else if ( 'addon-auto-disabled-' == substr( $message, 0, 20 ) ) {
+			$addon_slug = substr( $message, 20 );
+			$status_message = __( sprintf( 'CartBuddy has automatically disabled an add-on: %s. This is mostly likely due to it being uninstalled or improperlly registered.', $addon_slug ), 'LION' );
+			ITUtility::show_status_message( $status_message );
+		}
 
 		$error= empty( $_GET['error'] ) ? false : $_GET['error'];
 		if ( 'enabled' == $error )

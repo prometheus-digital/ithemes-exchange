@@ -226,7 +226,7 @@ function it_cart_buddy_disable_addon( $add_on ) {
 	if ( ! empty( $enabled[$add_on] ) ) {
 		unset( $enabled[$add_on] );
 		if ( it_cart_buddy_save_option( 'cart_buddy_enabled_add_ons', $enabled ) ) {
-			if ( ! empty( $registered[$addon] ) )
+			if ( ! empty( $registered[$add_on] ) )
 				do_action( 'it_cart_buddy_add_on_disabled', $registered[$add_on] );
 			return $enabled;
 		}
