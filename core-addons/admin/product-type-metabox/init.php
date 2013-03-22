@@ -77,7 +77,9 @@ class IT_Cart_Buddy_Core_Addon_Product_Type_Meta_Box {
 		if ( empty( $post->ID ) )
 			return;
 
-		$product = it_cart_buddy_get_product( $post );
+		if ( ! $product = it_cart_buddy_get_product( $post ) )
+			return;
+
 		if ( ! $product->ID )
 			return;
 
