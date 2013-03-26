@@ -20,7 +20,9 @@ function it_cart_buddy_protected_content_addon_add_protected_content_metabox() {
 
 		// Add the metabox
 		foreach( $visible_post_types as $post_type ) {
-			add_meta_box( 'it_cart_buddy_protected_content_addon_metabox', __( 'Protect Content', 'LION' ), 'it_cart_buddy_protected_content_addon_print_metabox_content', $post_type, 'side' );
+			$post_type_object = get_post_type_object( $post_type );
+			$singular_name = empty( $post_type_object->labels->singular_name ) ? __( 'post' ) : strtolower( $post_type_object->labels->singular_name );
+			add_meta_box( 'it_cart_buddy_protected_content_addon_metabox', __( sprintf( 'Limit acces to this %s', $singular_name ), 'LION' ), 'it_cart_buddy_protected_content_addon_print_metabox_content', $post_type, 'side' );
 		}
 	}
 }
@@ -37,8 +39,10 @@ function it_cart_buddy_protected_content_addon_print_metabox_content( $post ) {
 	$redirect_to  = get_post_meta( $post->ID, '_it_cart_buddy_protected_content_addon_post_protected_redirect', true );
 	if ( empty( $redirect_to ) )
 		$redirect_to = get_site_url();
+	$post_type_object = get_post_type_object( $post->post_type );
+	$singular_name = empty( $post_type_object->labels->singular_name ) ? __( 'post' ) : strtolower( $post_type_object->labels->singular_name );
 	?>
-	<p> <?php _e( 'Restrict this page to members who have purchased Cart Buddy products that support protected content?', 'LION' ); ?></p>
+	<p> <?php _e( sprintf( 'Restrict this %s to members who have purchased Cart Buddy products that support protected content?', $singular_name ), 'LION' ); ?></p>
 	<select id="it_cart_buddy_protected_content_addon_post_is_protected" name="_it_cart_buddy_protected_content_addon_post_is_protected">
 		<option value="0" <?php selected( 0, $is_protected ); ?>>No</option>
 		<option value="1" <?php selected( 1, $is_protected ); ?>>Yes</option>

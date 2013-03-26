@@ -111,6 +111,13 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/product-features/digital-downloads/init.php',
 			'options'     => array( 'category' => 'product-features' ),
 		),
+		// Protected Content
+		'protected-content' => array(
+			'name'        => __( 'Protected Content', 'LION' ),
+			'description' => __( 'This add-on will allow you to protect site content based on a number of conditions.', 'LION' ),
+			'file'        => dirname( __FILE__ ) . '/product-features/protected-content/init.php',
+			'options'     => array( 'category' => 'product-features' ),
+		),
 	);
 	$add_ons = apply_filters( 'it_cart_buddy_core_addons', $add_ons );
 
