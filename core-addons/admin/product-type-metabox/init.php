@@ -27,7 +27,10 @@ class IT_Cart_Buddy_Core_Addon_Product_Type_Meta_Box {
 	 * @return void
 	*/
 	function register_product_type_meta_box( $post ) {
-		add_meta_box( 'it_cart_buddy_product_type', __( 'Product Type', 'LION' ), array( $this, 'print_meta_box' ), $post->post_type, 'side' );
+		global $pagenow;
+		$product_types = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) );
+		if ( is_array( $product_types ) && count( $product_types ) > 1  && $pagenow != 'post-new.php' )
+			add_meta_box( 'it_cart_buddy_product_type', __( 'Product Type', 'LION' ), array( $this, 'print_meta_box' ), $post->post_type, 'side' );
 	}
 
 	/**
@@ -42,6 +45,7 @@ class IT_Cart_Buddy_Core_Addon_Product_Type_Meta_Box {
 		$enabled              = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
 		$current_product_type = $product->product_type;
 
+		echo '<p class="description">' . __( 'You must save the product after changing this to access new product options.', 'LION' ) . '</p>';
 		if ( empty( $enabled ) ) {
 			echo '<p>' . __( 'You currently have not Product Type add-ons enabled.', 'LION' ) . '</p>';
 		} else if ( count( $enabled ) === 1 ) {
