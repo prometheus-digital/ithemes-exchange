@@ -25,7 +25,7 @@ function it_cart_buddy_get_option( $key, $break_cache=false, $merge_defaults=tru
 		$storage->clear_cache();
 
 	$data = $storage->load( $merge_defaults );
-	if ( isset( $data['storage_version'] ) )
+	if ( is_array( $data) && isset( $data['storage_version'] ) )
 		unset( $data['storage_version'] );
 
 	return $data;

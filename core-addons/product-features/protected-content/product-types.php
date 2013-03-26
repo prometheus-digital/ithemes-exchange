@@ -9,6 +9,7 @@
 
 if ( is_admin() ) {
 	add_action( 'init', 'it_cart_buddy_protected_content_addon_init_protected_content_metaboxes' );
+	add_action( 'it_cart_buddy_save_product', 'it_cart_buddy_save_protected_content_source_products' );
 }
 add_action( 'it_cart_buddy_enabled_addons_loaded', 'it_cart_buddy_init_protected_content_addon' );
 
@@ -55,7 +56,7 @@ function it_cart_buddy_protected_content_addon_init_protected_content_metaboxes(
  * @return void
 */
 function it_cart_buddy_protected_content_addon_register_metabox() {
-	add_meta_box( 'it_cart_buddy_protected_content', __( 'This is a Protected Content Product', 'LION' ), 'it_cart_buddy_protected_content_addon_print_metabox', 'it_cart_buddy_prod', 'side', 'high' );
+	add_meta_box( 'it_cart_buddy_protected_content', __( 'Protected Content Option?', 'LION' ), 'it_cart_buddy_protected_content_addon_print_metabox', 'it_cart_buddy_prod', 'side' );
 }
 
 /**
@@ -72,13 +73,44 @@ function it_cart_buddy_protected_content_addon_print_metabox( $post ) {
 	$enable_protected_content = it_cart_buddy_get_product_feature( $product->ID, 'protected-content' );
 
 	// Set description
-	$description = __( 'You will be able to protect site content based on if a customer has purchased this product.', 'LION' );
-	$description = apply_filters( 'it_cart_buddy_protected_content_addon_metabox_description', $description, $product );
+	$description         = __( 'Would you like the option to protect site content based on whether a customer has purchased this product?', 'LION' );
+	$description         = apply_filters( 'it_cart_buddy_protected_content_addon_metabox_description', $description, $product );
+	$source_products     = it_cart_buddy_get_option( 'protected_source_products', isset( $_POST ) );
+	$is_protected_source = isset( $source_products[$product->ID] ) ? 'yes' : 'no';
 
 	// Echo the form field
 	?>
-	<p class="description">
+	<p>
 		<?php esc_html_e( $description ); ?>
 	</p>
+	<p>
+		<select id="it_cart_buddy_protected_content_source" name="it_cart_buddy_protected_content_source">
+			<option value="no" <?php selected( 'no', $is_protected_source ); ?>><?php _e( 'No', 'LION' ); ?></option>
+			<option value="yes" <?php selected( 'yes', $is_protected_source ); ?>><?php _e( 'Yes', 'LION' ); ?></option>
+		</select>
+	</p>
 	<?php
+}
+
+/**
+ * Updates the list of protected content source products
+ *
+ * @since 0.3.8
+ * @return void
+*/
+function it_cart_buddy_save_protected_content_source_products( $post ) {
+	if ( ! empty( $_POST['it_cart_buddy_protected_content_source'] ) ) {
+		$source_products    = (array) it_cart_buddy_get_option( 'protected_source_products' );
+		$is_existing_source = empty( $source_products[$post] ) ? 'no' : 'yes';
+
+		$new_value = $_POST['it_cart_buddy_protected_content_source'];
+
+		if ( 'no' == $new_value && $is_existing_source )
+			unset( $source_products[$post] );
+		else
+			$source_products[$post] = get_the_title( $post );
+
+		it_cart_buddy_save_option( 'protected_source_products', $source_products );
+			
+	}
 }

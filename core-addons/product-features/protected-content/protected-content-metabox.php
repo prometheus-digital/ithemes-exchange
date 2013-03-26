@@ -66,16 +66,8 @@ function it_cart_buddy_protected_content_addon_print_metabox_content( $post ) {
 */
 function it_cart_buddy_protected_content_addon_print_product_checkboxes() {
 	// Get all product types
-	$protected_products = array();
-	$is_ajax             = false;
-	if ( $product_types = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) ) ) {
-		foreach( $product_types as $product_type ) {
-			if ( it_cart_buddy_product_type_supports_feature( $product_type['slug'], 'protected-content' ) ) {
-				$product_args = array( 'posts_per_page' => -1, 'product_type' => $product_type['slug'] );
-				$protected_products = array_merge( $protected_products, it_cart_buddy_get_products( $product_args ) );
-			}
-		}
-	}
+	$is_ajax            = false;
+	$protected_products = (array) it_cart_buddy_get_option( 'protected_source_products' );
 	
 	if ( ! empty( $protected_products ) ) {
 		global $post;
@@ -86,10 +78,10 @@ function it_cart_buddy_protected_content_addon_print_product_checkboxes() {
 			$selected_products = array();
 
 		// Loop through products and create checkboxes
-		foreach( $protected_products as $product ) { 
+		foreach( $protected_products as $product_id => $product_title ) { 
 			?>  
-			<label for="it_cart_buddy_protected_content_protect_product_<?php esc_attr_e( $product->ID ); ?>">
-			<input type="checkbox" id="it_cart_buddy_protected_content_protect_product_<?php esc_attr_e( $product->ID ); ?>" name="_it_cart_buddy_protected_content_addon_selected_products[]" value="<?php esc_attr_e( $product->ID ); ?>" <?php checked( in_array( $product->ID, $selected_products ) ); ?>>&nbsp;<?php esc_attr_e( apply_filters( 'the_title', $product->post_title ) ); ?>
+			<label for="it_cart_buddy_protected_content_protect_product_<?php esc_attr_e( $product_id ); ?>">
+			<input type="checkbox" id="it_cart_buddy_protected_content_protect_product_<?php esc_attr_e( $product_id ); ?>" name="_it_cart_buddy_protected_content_addon_selected_products[]" value="<?php esc_attr_e( $product_id ); ?>" <?php checked( in_array( $product_id, $selected_products ) ); ?>>&nbsp;<?php esc_attr_e( apply_filters( 'the_title', $product_title ) ); ?>
 			</label><br />
 			<?php
 		}   
