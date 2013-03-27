@@ -83,13 +83,6 @@ function it_cart_buddy_register_core_addons() {
 				) ),
 			),
 		),
-		// Default Customer Management interface
-		'default-customer-management' => array(
-			'name'        => __( 'Default Customer Managment', 'LION' ),
-			'description' => __( 'This is the default Customer Management add-on. It handles registration and profile data.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/customer-management/default/init.php',
-			'options'     => array( 'category' => 'customer-management' ),
-		),
 		// Product Type admin Metabox
 		'product-type-metabox' => array(
 			'name'        => __( 'Product Type Metabox', 'LION' ),

@@ -33,6 +33,9 @@ require( $this->_plugin_path . '/lib/transactions/class.transaction.php' );
 // Template Functions
 require( $this->_plugin_path . '/lib/functions/template-functions.php' );
 
+// Customer Class
+require( $this->_plugin_path . '/lib/customers/class.customer.php' );
+
 // Sessions
 if ( ! is_admin() ) {
 	require( $this->_plugin_path . '/lib/sessions/class.session.php' );

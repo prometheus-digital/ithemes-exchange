@@ -25,24 +25,28 @@ function it_cart_buddy_register_customer( $customer_data, $args=array() ) {
  *
  * @since 0.3.7
  * @param integer $customer_id id for the customer
- * @param array $args optional array of arguments. not used by all add-ons
  * @return mixed customer data
 */
-function it_cart_buddy_get_customer( $customer_id, $args=array() ) {
-	return apply_filters( 'it_cart_buddy_get_customer', false, $customer_id, $args );
+function it_cart_buddy_get_customer( $customer_id ) {
+    // Grab the WP User
+	$customer = new IT_Cart_Buddy_Customer( $customer_id );
+	return apply_filters( 'it_cart_buddy_get_customer', $customer, $customer_id );
 }
 
 /**
  * Get the currently logged in customer or return false
  *
- * Will return customer data formated by the active customer management add-on
- *
  * @since 0.3.7
- * @param array $args optional array of arguments. not used by all add-ons
  * @return mixed customer data
 */
-function it_cart_buddy_get_current_customer( $args=array() ) {
-	return apply_filters( 'it_cart_buddy_get_current_customer', false, $args );
+function it_cart_buddy_get_current_customer() {
+	if ( ! is_user_logged_in() )
+		return false;
+
+	// Get current users's ID
+	$customer_id = get_current_user_id();
+	$customer = it_cart_buddy_get_customer( $customer_id );
+	return apply_filters( 'it_cart_buddy_get_current_customer', $customer );
 }
 
 /**
@@ -74,11 +78,29 @@ function it_cart_buddy_update_customer( $customer_id, $customer_data, $args ) {
  *
  *
  * @since 0.3.7
- * @param array $args optional array of arguments. not used by all add-ons
- * @return mixed return value is determined by the active customer management add-on
+ * @return array
 */
-function it_cart_buddy_get_customer_registration_fields( $args=array() ) {
-	return apply_filters( 'it_cart_buddy_get_customer_registration_fields', array(), $args );
+function it_cart_buddy_get_customer_registration_fields() {
+	$profile_fields = it_cart_buddy_get_customer_profile_fields();
+
+	$fields['username']  = array(
+		'type'  => 'text_box',
+		'var'   => 'user_login',
+		'label' => __( 'Username', 'LION' ),
+	);
+	$fields['password1'] = array(
+		'type'  => 'password',
+		'var'   => 'password1',
+		'label' => __( 'Password', 'LION' ),
+	);
+	$fields['password2'] = array(
+		'type'  => 'password',
+		'var'   => 'password2',
+		'label' => __( 'Re-type Password', 'LION' ),
+	);
+
+	$fields = array_merge( $profile_fields, $fields );
+	return apply_filters( 'it_cart_buddy_get_customer_registration_fields', $fields );
 }
 
 /**
@@ -96,20 +118,38 @@ function it_cart_buddy_get_customer_registration_fields( $args=array() ) {
  * );
  *
  * @since 0.3.7
- * @param array $args optional array of arguments. not used by all add-ons
- * @return mixed return value is determined by the active customer management add-on
+ * @return array 
 */
-function it_cart_buddy_get_customer_profile_fields( $args=array() ) {
-	return apply_filters( 'it_cart_buddy_get_customer_profile_fields', array(), $args );
+function it_cart_buddy_get_customer_profile_fields() {
+	$fields['first_name']  = array(
+		'type'  => 'text_box',
+		'var'   => 'first_name',
+		'label' => __( 'First Name', 'LION' ),
+	);  
+	$fields['last_name'] = array(
+		'type'  => 'text_box',
+		'var'   => 'last_name',
+		'label' => __( 'Last Name', 'LION' ),
+	);  
+	$fields['email'] = array(
+		'type'  => 'text_box',
+		'var'   => 'user_email',
+		'label' => __( 'Email', 'LION' ),
+	);  
+	return apply_filters( 'it_cart_buddy_get_customer_profile_fields', $fields );
 }
 
 /**
  * Returns the customer login form
  *
  * @since 0.3.7
- * @param array $args optional array of arguments. not used by all add-ons
  * @return string HTML
 */
-function it_cart_buddy_get_customer_login_form( $args=array() ) {
-	return apply_filters( 'it_cart_buddy_get_customer_login_form', '', $args );
+function it_cart_buddy_get_customer_login_form() {
+	$args = array(
+		'echo' => false,
+		'form_id' => 'cart_buddy_login_form',
+	);
+	$form = wp_login_form( $args );
+	return apply_filters( 'it_cart_buddy_get_customer_login_form', $form );
 }

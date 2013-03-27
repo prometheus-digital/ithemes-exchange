@@ -46,7 +46,7 @@ function it_cart_buddy_get_cart_checkout_customer_form_fields( $args=array() ) {
         $var      = empty( $args['var'] ) ? '' : $args['var'];
         $values   = empty( $args['values'] ) ? array() : (array) $args['values'];
         $label    = empty( $args['label'] ) ? '' : $args['label'];
-        $value    = empty( $customer[$var] ) ? '' : esc_attr( $customer[$var] );
+        $value    = empty( $customer->data->$var ) ? '' : esc_attr( $customer->data->$var );
         $values['value'] = stripslashes( $value );
         if ( is_callable( array( $form, $function ) ) ) { 
             $html .= '<p class="cart_buddy_profile_field">';
