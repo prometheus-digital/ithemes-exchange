@@ -52,7 +52,7 @@ function it_cart_buddy_manual_payments_do_transaction( $cart_object ) {
 	);
 
 	// Do transaction
-	$transaction_id = it_cart_buddy_add_transaction( $args );
+	$transaction_id = it_cart_buddy_add_transaction( $args, $cart_object );
 }
 
 /**

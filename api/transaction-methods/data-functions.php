@@ -110,9 +110,10 @@ function it_cart_buddy_get_transactions( $args=array() ) {
  *
  * @since 0.3.3
  * @param array $args same args passed to wp_insert_post plus any additional needed
+ * @param object $cart_object passed cart object
  * @return mixed post id or false
 */
-function it_cart_buddy_add_transaction( $args=array() ) {
+function it_cart_buddy_add_transaction( $args=array(), $cart_object=false ) {
 	$defaults = array(
 		'post_type'          => 'it_cart_buddy_tran',
 		'post_status'        => 'publish',
@@ -133,7 +134,8 @@ function it_cart_buddy_add_transaction( $args=array() ) {
 	if ( $transaction_id = wp_insert_post( $args ) ) {
 		update_post_meta( $transaction_id, '_it_cart_buddy_transaction_method', $args['transaction-method'] );
 		update_post_meta( $transaction_id, '_it_cart_buddy_transaction_status', $args['transaction_status'] );
-		do_action( 'it_cart_buddy_add_transaction_success-' . $args['transaction-method'], $transaction_id );
+		update_post_meta( $transaction_id, '_it_cart_buddy_transaction_cart', $cart_object );
+		do_action( 'it_cart_buddy_add_transaction_success-' . $args['transaction-method'], $transaction_id, $cart_object );
 		return $transaction_id;
 	}
 	do_action( 'it_cart_buddy_add_transaction_failed-' . $args['transaction-method'], $args );

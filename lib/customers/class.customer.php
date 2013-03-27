@@ -150,10 +150,11 @@ class IT_Cart_Buddy_Customer {
 	*/
 	function set_purchase_history() {
 		if ( ! empty( $this->transaction_history ) ) {
-			foreach( (array) $this->transaction_history as $key => $details ) {
-				if ( ! empty( $txn->transaction_data['_it_cart_buddy_transaction_products'] ) ) {
-					foreach( (array) $txn->transaction_data['_it_cart_buddy_transaction_products'] as $product ) {
-						$this->purchase_history[$product['id']][] = $product;
+			foreach( (array) $this->transaction_history as $key => $txn ) {
+				if ( ! empty( $txn->transaction_data['_it_cart_buddy_transaction_cart']->products ) ) {
+					foreach( (array) $txn->transaction_data['_it_cart_buddy_transaction_cart']->products as $product ) {
+						$product['transaction_id'] = $txn->ID;
+						$this->purchase_history[$product['product_id']][] = $product;
 					}
 				}
 			}

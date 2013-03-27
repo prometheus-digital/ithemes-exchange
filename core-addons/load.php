@@ -29,7 +29,12 @@ function it_cart_buddy_register_core_addons() {
 							'voided'     => _x( 'Voided', 'Transaction Status', 'LION' ),
 						),
 						'default'   => 'pending',
-					)
+					),
+					'transaction_cart' => array(
+						'key'       => '_it_cart_buddy_transaction_cart',
+						'componant' => 'post_meta',
+						'default'   => false,
+					),
 				) ),
 				'settings-callback' => 'it_cart_buddy_manual_payments_settings_callback',
 			),
