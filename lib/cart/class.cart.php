@@ -272,7 +272,7 @@ class IT_Cart_Buddy_Shopping_Cart {
 		$cart     = it_cart_buddy_get_page_url( 'cart' );
 		$checkout = it_cart_buddy_get_page_id( 'checkout' );
 
-		if ( ! is_page( $checkout ) ) 
+		if ( empty( $checkout ) || ! is_page( $checkout ) ) 
 			return;
 
 		$products = it_cart_buddy_get_cart_products();
