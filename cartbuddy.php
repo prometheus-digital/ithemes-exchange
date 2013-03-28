@@ -188,6 +188,5 @@ class IT_Cart_Buddy {
 		$this->_pluginbuddy_upgrader = new iThemesPluginUpgrade( $args );
 	}
 }
-
 // Init plugin
 $IT_Cart_Buddy = new IT_Cart_Buddy();

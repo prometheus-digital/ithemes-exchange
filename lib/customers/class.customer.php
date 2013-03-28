@@ -160,4 +160,15 @@ class IT_Cart_Buddy_Customer {
 			}
 		}
 	}
+
+	/**
+	 * Returns the purchase history
+	 *
+	 * @since 0.3.8
+	 * @return mixed purchase_history or false
+	*/
+	function get_purchase_history() {
+		$history = empty( $this->purchase_history ) ? false : $this->purchase_history;
+		return apply_filters( 'it_cart_buddy_get_customer_purchase_history', $history, $this->id );
+	}
 }

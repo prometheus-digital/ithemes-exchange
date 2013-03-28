@@ -10,3 +10,4 @@
 // Include code for Cart Buddy Product Types
 include ( 'product-types.php' );
 include ( 'protected-content-metabox.php' );
+include ( 'functions.php' );
