@@ -31,9 +31,7 @@ class IT_Cart_Buddy {
 	var $_series          = '';
 
 	var $_plugin_path     = '';
-	var $_plugin_rel_path = '';
 	var $_plugin_url      = '';
-	var $_self_link       = '';
 	var $_plugin_base     = '';
 
 	/**
@@ -53,9 +51,9 @@ class IT_Cart_Buddy {
 		$this->set_textdomain();
 
 		// Load supporting libraries
-		require( $this->_plugin_path . '/lib/load.php' );
-		require( $this->_plugin_path . '/api/load.php' );
-		require( $this->_plugin_path . '/core-addons/load.php' );
+		require( $this->_plugin_path . 'lib/load.php' );
+		require( $this->_plugin_path . 'api/load.php' );
+		require( $this->_plugin_path . 'core-addons/load.php' );
 
 		add_action( 'it_libraries_loaded', array( $this, 'addons_init' ) );
 	}
@@ -70,15 +68,8 @@ class IT_Cart_Buddy {
 	 * @return void
 	*/
 	function set_plugin_locations() {
-		$this->_plugin_path          = WP_PLUGIN_DIR . '/' . basename( dirname( __FILE__ ) );
-		$this->_plugin_relative_path = ltrim( str_replace( '\\', '/', str_replace( rtrim( ABSPATH, '\\\/' ), '', $this->_plugin_path ) ), '\\\/' );
-		$this->_plugin_url           = site_url() . '/' . $this->_plugin_relative_path;
-
-		// Adjust URL for HTTPS if needed
-		if ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] == 'on' )
-			$this->_plugin_url = str_replace( 'http://', 'https://', $this->_plugin_url );
-
-		$this->_self_link   = array_shift( explode( '?', $_SERVER['REQUEST_URI'] ) ) . '?page=' . $this->_slug;
+		$this->_plugin_path = plugin_dir_path( __FILE__ );
+		$this->_plugin_url  = plugins_url( '', __FILE__ );
 		$this->_plugin_base = plugin_basename( __FILE__  );
 	}
 
@@ -135,7 +126,7 @@ class IT_Cart_Buddy {
 	function upgrader_select() {
 		if ( ! isset( $GLOBALS[ 'pb_classes_upgrade_registration_list' ] ) ) {
 			//Fallback - Just include this class
-			require( $this->_plugin_path . '/lib/updater/updater.php' );
+			require( $this->_plugin_path . 'lib/updater/updater.php' );
 			return;
 		}
 
@@ -151,7 +142,7 @@ class IT_Cart_Buddy {
 
 		//If the slugs match, load this version
 		if ( $this->_slug == $plugin_slug ) {
-			require( $this->_plugin_path . '/lib/updater/updater.php' );
+			require( $this->_plugin_path . 'lib/updater/updater.php' );
 		}
 	}
 
@@ -176,7 +167,7 @@ class IT_Cart_Buddy {
 			'remote_url' => 'http://updater2.ithemes.com/index.php',
 			'version' => $this->_version,
 			'plugin_slug' => $this->_slug,
-			'plugin_path' => plugin_basename( __FILE__ ),
+			'plugin_path' => $this->_plugin_base,
 			'plugin_url' => $this->_plugin_url,
 			'product' => $pb_product,
 			'time' => 43200,
