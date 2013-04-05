@@ -1,3 +1,9 @@
+0.3.8 - 2013-04-05 - Glenn Ansley
+	Customer Class / API
+	Folded cart into Core
+	Folded WP post supports into core
+	Restricted Content / Membership Add-ons
+	Updated lib/classes to version 2.2.0
 0.3.7 - 2012-03-08 - Glenn Ansley
 	Use ITStorage2 for settings
 	Use ITForm for admin forms
@@ -43,5 +49,3 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
-0.3.8 - 2013-04-04
-	Updated lib/classes to version 2.2.0
