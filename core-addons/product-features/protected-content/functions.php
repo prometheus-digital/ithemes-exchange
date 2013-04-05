@@ -314,3 +314,67 @@ function it_cart_buddy_protected_content_get_options( $post_id, $option_key=fals
 
 	return $options;
 }
+
+/**
+ * Returns the protected content based on the content options
+ *
+ * @since 0.3.8
+ * @param $post_id
+ * @return mixed content
+*/
+function it_cart_buddy_protected_content_get_protected_content( $post_id ) {
+	$options = it_cart_buddy_protected_content_get_options( $post_id );
+
+	if ( is_singular() ) {
+		$action = $options['unauthorized_singular_action'];
+		if ( 'excerpt' == $action ) {
+			return get_the_excerpt();
+		} else if ( 'custom_message' == $action ) {
+			return $options['unauthorized_singular_custom_message'];
+		}
+	} else if ( is_search() ) {
+		$action = $options['unauthorized_search_action'];
+		if ( 'excerpt' == $action ) {
+			return get_the_excerpt();
+		} else if ( 'custom_message' == $action ) {
+			return $options['unauthorized_search_custom_message'];
+		}
+	} else if ( is_feed() ) {
+		$action = $options['unauthorized_feed_action'];
+		if ( 'excerpt' == $action ) {
+			return get_the_excerpt();
+		} else if ( 'custom_message' == $action ) {
+			return $options['unauthorized_feed_custom_message'];
+		}
+	} else {
+		$action = $options['unauthorized_archive_action'];
+		if ( 'excerpt' == $action ) {
+			return get_the_excerpt();
+		} else if ( 'custom_message' == $action ) {
+			return $options['unauthorized_archive_custom_message'];
+		}
+	}
+}
+
+/**
+ * Hides content based on protected content options
+ *
+ * @since 0.3.8
+*/
+function it_cart_buddy_protected_content_filter_content_and_excerpt( $existing ) {
+	global $post;
+
+	// Abandon if this post isn't protected based on role or product
+	if ( ! it_cart_buddy_protected_content_is_object_protected( $post->ID ) )
+		return $existing;
+
+	// Abandon if current user can view current object
+	if ( it_cart_buddy_protected_content_current_user_can_access_object( $post->ID ) )
+		return $existing;
+
+	// Get content based on protected content options
+	$content = it_cart_buddy_protected_content_get_protected_content( $post->ID );
+	return empty( $content ) ? $existing : $content;
+}
+add_filter( 'the_excerpt', 'it_cart_buddy_protected_content_filter_content_and_excerpt' );
+add_filter( 'the_content', 'it_cart_buddy_protected_content_filter_content_and_excerpt' );

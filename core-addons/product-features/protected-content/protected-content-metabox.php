@@ -174,7 +174,7 @@ function it_cart_buddy_protected_content_addon_print_metabox_content( $post ) {
 		<div id="it_cart_buddy_protected_content_unauthorized_views" class="it-pc-group who-products who-wp_roles">
 			<div id="it_cart_buddy_protected_content_unauthorized_singular_views">
 				<p>
-					<?php _e( 'What should happen if an unauthorized user tries to access this page directly?', 'LION' ); ?><br />
+					<?php _e( 'What should happen if an unauthorized user accesses this page directly?', 'LION' ); ?><br />
 					<label for="it_cart_buddy_protected_content_unauthorized_single_redirect">
 						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_singular_action" id="it_cart_buddy_protected_content_unauthorized_single_redirect" value="redirect" class="it-pc-selector" data-dependant-classes="unauthorized_single_redirect" <?php checked( 'redirect', $options['unauthorized_singular_action'] ); ?>>
 						&nbsp;<?php _e( 'They get redirected to another URL', 'LION' ); ?>
@@ -200,20 +200,22 @@ function it_cart_buddy_protected_content_addon_print_metabox_content( $post ) {
 			</div>
 			<div id="it_cart_buddy_protected_content_unauthorized_archive_views">
 				<p>
-					<?php _e( 'What should happen when this post is supposed to appear in an archive or category view for unauthorized users?', 'LION' ); ?><br />
+					<?php _e( 'What should happen when this post is appears in an archive or category view for unauthorized users?', 'LION' ); ?><br />
+					<!-- Maybe Later
 					<label for="it_cart_buddy_protected_content_unauthorized_archive_hide">
 						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_archive_action" id="it_cart_buddy_protected_content_unauthorized_archive_hide" value="hide" class="it-pc-selector" <?php checked( 'hide', $options['unauthorized_archive_action'] ); ?>>
 						&nbsp;<?php _e( 'Don\'t show it in the archive', 'LION' ); ?>
 					</label>
 					<br />
+					-->
 					<label for="it_cart_buddy_protected_content_unauthorized_archive_excerpt">
 						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_archive_action" id="it_cart_buddy_protected_content_unauthorized_archive_excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_archive_action'] ); ?>>
-						&nbsp;<?php _e( 'Show the title without a link, followed by the excerpt where available', 'LION' ); ?>
+						&nbsp;<?php _e( 'Show the excerpt if available', 'LION' ); ?>
 					</label>
 					<br />
 					<label for="it_cart_buddy_protected_content_unauthorized_archive_custom_message_radio">
 						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_archive_action" id="it_cart_buddy_protected_content_unauthorized_archive_custom_message_radio" value="custom_message" class="it-pc-selector" data-dependant-classes="unauthorized_archive_custom_message" <?php checked( 'custom_message', $options['unauthorized_archive_action'] ); ?>>
-						&nbsp;<?php _e( 'Show the title without a link and replace the excerpt / content with a custom message', 'LION' ); ?>
+						&nbsp;<?php _e( 'Show a custom message', 'LION' ); ?>
 					</label>
 				</p>
 				<p id="it_cart_buddy_protected_content_unauthorized_archive_custom_message" class="unauthorized_archive_custom_message it-pc-group">
@@ -223,20 +225,22 @@ function it_cart_buddy_protected_content_addon_print_metabox_content( $post ) {
 			</div>
 			<div id="it_cart_buddy_protected_content_unauthorized_search_views">
 				<p>
-					<?php _e( 'What should happen when this post is supposed to appear in search results for unauthorized users?', 'LION' ); ?><br />
+					<?php _e( 'What should happen when this post appears in search results for unauthorized users?', 'LION' ); ?><br />
+					<!-- Maybe Later
 					<label for="it_cart_buddy_protected_content_unauthorized_search_hide">
 						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_search_action" id="it_cart_buddy_protected_content_unauthorized_search_hide" value="hide" class="it-pc-selector" <?php checked( 'hide', $options['unauthorized_search_action'] ); ?>>
 						&nbsp;<?php _e( 'Don\'t show it in the search results', 'LION' ); ?>
 					</label>
 					<br />
+					-->
 					<label for="it_cart_buddy_protected_content_unauthorized_search_excerpt">
 						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_search_action" id="it_cart_buddy_protected_content_unauthorized_search_excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_search_action'] ); ?>>
-						&nbsp;<?php _e( 'Show the title without a link, followed by the excerpt where available', 'LION' ); ?>
+						&nbsp;<?php _e( 'Show the excerpt if available', 'LION' ); ?>
 					</label>
 					<br />
 					<label for="it_cart_buddy_protected_content_unauthorized_search_custom_message">
 						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_search_action" id="it_cart_buddy_protected_content_unauthorized_search_custom_message" value="custom_message" class="it-pc-selector" data-dependant-classes="unauthorized_search_custom_message" <?php checked( 'custom_message', $options['unauthorized_search_action'] ); ?>>
-						&nbsp;<?php _e( 'Show the title without a link and replace the excerpt / content with a custom message', 'LION' ); ?>
+						&nbsp;<?php _e( 'Show a custom message', 'LION' ); ?>
 					</label>
 				</p>
 				<p id="it_cart_buddy_protected_content_unauthorized_search_custom_message" class="unauthorized_search_custom_message it-pc-group">
@@ -246,20 +250,22 @@ function it_cart_buddy_protected_content_addon_print_metabox_content( $post ) {
 			</div>
 			<div id="it_cart_buddy_protected_content_unauthorized_feed_views">
 				<p>
-					<?php _e( 'What should happen when this post is supposed to appear in feed view for unauthorized users?', 'LION' ); ?><br />
+					<?php _e( 'What should happen when this post appears in a feed view for unauthorized users?', 'LION' ); ?><br />
+					<!-- Maybe Later
 					<label for="it_cart_buddy_protected_content_unauthorized_feed_hide">
 						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_feed_action" id="it_cart_buddy_protected_content_unauthorized_feed_hide" value="hide" class="it-pc-selector" <?php checked( 'hide', $options['unauthorized_feed_action'] ); ?>>
 						&nbsp;<?php _e( 'Don\'t show it in the feed views', 'LION' ); ?>
 					</label>
 					<br />
+					-->
 					<label for="it_cart_buddy_protected_content_unauthorized_feed_excerpt">
 						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_feed_action" id="it_cart_buddy_protected_content_unauthorized_feed_excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_feed_action'] ); ?>>
-						&nbsp;<?php _e( 'Show the title without a link, followed by the excerpt where available', 'LION' ); ?>
+						&nbsp;<?php _e( 'Show the excerpt if available', 'LION' ); ?>
 					</label>
 					<br />
 					<label for="it_cart_buddy_protected_content_unauthorized_feed_custom_message">
 						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_feed_action" id="it_cart_buddy_protected_content_unauthorized_feed_custom_message" value="custom_message" class="it-pc-selector" data-dependant-classes="unauthorized_feed_custom_message" <?php checked( 'custom_message', $options['unauthorized_feed_action'] ); ?>>
-						&nbsp;<?php _e( 'Show the title without a link and replace the excerpt / content with a custom message', 'LION' ); ?>
+						&nbsp;<?php _e( 'Show a custom message', 'LION' ); ?>
 					</label>
 				</p>
 				<p id="it_cart_buddy_protected_content_unauthorized_feed_custom_message" class="unauthorized_feed_custom_message it-pc-group">
@@ -375,11 +381,11 @@ function it_cart_buddy_protected_content_addon_get_protected_content_options_for
 		'unauthorized_singular_action'         => 'redirect',
 		'unauthorized_singular_redirect_url'   => get_home_url(),
 		'unauthorized_singular_custom_message' => __( 'Premium Content', 'LION' ),
-		'unauthorized_archive_action'          => 'hide',
+		'unauthorized_archive_action'          => 'excerpt',
 		'unauthorized_archive_custom_message'  => __( 'Premium Content', 'LION' ),
-		'unauthorized_search_action'           => 'hide',
+		'unauthorized_search_action'           => 'excerpt',
 		'unauthorized_search_custom_message'   => __( 'Premium Content', 'LION' ),
-		'unauthorized_feed_action'             => 'hide',
+		'unauthorized_feed_action'             => 'excerpt',
 		'unauthorized_feed_custom_message'     => __( 'Premium Content', 'LION' ),
 	);
 
