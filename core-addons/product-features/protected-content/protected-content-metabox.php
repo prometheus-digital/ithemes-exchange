@@ -112,15 +112,18 @@ function it_cart_buddy_protected_content_addon_print_metabox_content( $post ) {
 					<option value="time-period" data-dependant-classes="when-time_period" <?php selected( 'time-period', $options['when_protected'] ); ?>>
 						<?php _e( 'During a specific time period', 'LION' ); ?>
 					</option>
+					<!-- NOT CURRENTLY AN OPTION. WILL EVENTUALLY DO DRIP CONTENT 
 					<option value="duration-period" data-dependant-classes="when-duration_period" <?php selected( 'duration-period', $options['when_protected'] ); ?>>
 						<?php _e( 'A specific time period after purchasing one of the above products', 'LION' ); ?>
 					</option>
+					-->
 				</select>
 			</p>
 			<div id="it_cart_buddy_protected_content_when_time_period" class="it-pc-group when-time_period">
 				<p>
 					<label for="it_cart_buddy_protected_content_when_time_period_start">
 						<input type="checkbox" name="it_cart_buddy_protected_content_when_time_period_start" class="it-pc-selector" id="it_cart_buddy_protected_content_when_time_period_start" data-dependant-classes="when-time_period_start" <?php checked( 'on', $options['when_time_period_start'] ); ?>/>&nbsp;<?php _e( 'Use a start date', 'LION' ); ?><br />
+					</label>
 					<label for="it_cart_buddy_protected_content_when_time_period_end">
 						<input type="checkbox" name="it_cart_buddy_protected_content_when_time_period_end" class="it-pc-selector" id="it_cart_buddy_protected_content_when_time_period_end" data-dependant-classes="when-time_period_end" <?php checked( 'on', $options['when_time_period_end'] ); ?>/>&nbsp;<?php _e( 'Use an end date', 'LION' ); ?>
 					</label>

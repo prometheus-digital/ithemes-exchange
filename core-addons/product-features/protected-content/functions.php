@@ -65,6 +65,10 @@ function it_cart_buddy_protected_content_current_user_can_access_object( $post_i
 	if ( ! it_cart_buddy_protected_content_current_user_can_access_content_based_on_wp_roles( $post_id ) )
 		return false;
 
+	// Return false if there is a time restraint on viewing
+	if ( ! it_cart_buddy_protected_content_current_user_can_access_content_based_on_current_date( $post_id ) )
+		return false;
+
 	// Return true if we've made it this far
 	return true;
 }
@@ -192,6 +196,105 @@ function it_cart_buddy_protected_content_user_has_valid_purchase_of_product( $us
 			return true;
 	}
 	return false;
+}
+
+/**
+ * This will check to see if there are any time constraints on viewing the content and return true or false
+ *
+ * True if it is customer is able to view. False if not.
+ *
+ * @since 0.3.8
+ * @param integer $post_id
+ * @return boolean
+*/
+function it_cart_buddy_protected_content_current_user_can_access_content_based_on_current_date( $post_id ) {
+	
+	switch ( it_cart_buddy_protected_content_get_options( $post_id, 'when_protected' ) ) {
+		/**
+		NOT CURRENTLY AN OPTION
+		case 'duration-period' :
+			return it_cart_buddy_protected_content_current_user_can_access_content_based_on_purchase_duration( $post_id );
+			break;
+		**/
+		case 'time-period' :
+			return it_cart_buddy_protected_content_current_user_can_access_content_based_on_time_period( $post_id );
+			break;
+		case 'never' :
+		default :
+			return true;
+	}
+}
+
+/**
+ * Return true or false based on the specified time period for the post object
+ *
+ * @since 0.3.8
+ * @param integer $post_id
+ * @return boolean
+*/
+function it_cart_buddy_protected_content_current_user_can_access_content_based_on_time_period( $post_id ) {
+	if ( 'time-period' != it_cart_buddy_protected_content_get_options( $post_id, 'when_protected' ) )
+		return true;
+
+	$start = (boolean) it_cart_buddy_protected_content_get_options( $post_id, 'when_time_period_start' );
+	$end   = (boolean) it_cart_buddy_protected_content_get_options( $post_id, 'when_time_period_end' );
+	$now   = current_time( 'timestamp' );
+
+	$time_start = mysql2date( 'U', it_cart_buddy_protected_content_get_options( $post_id, 'when_time_period_start_date' ) . '00:01:01' );
+	$time_end   = mysql2date( 'U', it_cart_buddy_protected_content_get_options( $post_id, 'when_time_period_end_date' ) . '23:59:00' );
+
+	if ( ! $start || ( $start && '' == it_cart_buddy_protected_content_get_options( $post_id, 'when_time_period_start_date' ) ) )
+		$start_valid = true;
+	else
+		$start_valid = $time_start < $now;
+
+	if ( ! $end || ( $end && '' == it_cart_buddy_protected_content_get_options( $post_id, 'when_time_period_end_date' ) ) )
+		$end_valid = true;
+	else
+		$end_valid = $time_end > $now;
+
+	return $start_valid && $end_valid;
+}
+
+/**
+ * Returns true or false based on the duration since purchase of a product and the protected content options
+ *
+ * NOT CURRENTLY USED
+ *
+ * @since 
+ * @return boolean
+*/
+function DISABLED_MAYBE_LATER_it_cart_buddy_protected_content_current_user_can_access_content_based_on_purchase_duration( $post_id ) {
+	// Return true if this content doesn't have any purchase duration time limits
+	if ( 'duration-period' != it_cart_buddy_protected_content_get_options( $post_id, 'when_protected' ) )
+		return true;
+
+	// We need products to proceed
+	$required_products = it_cart_buddy_protected_content_get_options( $post_id, 'selected_products' );
+	if ( empty( $required_products ) )
+		return false;
+
+	die();
+	$start = (boolean) it_cart_buddy_protected_content_get_options( $post_id, 'when_duration_start' );
+	$end   = (boolean) it_cart_buddy_protected_content_get_options( $post_id, 'when_duration_end' );
+	$now   = current_time( 'timestamp' );
+
+	if ( ! $start && ! $end )
+		return true;
+
+	if ( $start ) {
+		$start_quantity = (int) it_cart_buddy_protected_content_get_options( $post_id, 'when_duration_start_quantity' );
+		$start_units    = it_cart_buddy_protected_content_get_options( $post_id, 'when_duration_start_units' );
+		$start_delay    = strtotime( $start_quantity . ' ' . $start_units, '0' );
+	}
+
+	if ( $end ) {
+		$end_quantity = (int) it_cart_buddy_protected_content_get_options( $post_id, 'when_duration_end_quantity' );
+		$end_units    = it_cart_buddy_protected_content_get_options( $post_id, 'when_duration_end_units' );
+		$end_delay    = strtotime( $end_quantity . ' ' . $end_units, '0' );
+	}
+
+	die();
 }
 
 /**
