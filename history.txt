@@ -43,3 +43,5 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
+0.3.8 - 2013-04-04
+	Updated lib/classes to version 2.2.0
