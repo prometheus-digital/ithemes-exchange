@@ -151,6 +151,12 @@ class IT_Cart_Buddy_Customer {
 	function set_purchase_history() {
 		if ( ! empty( $this->transaction_history ) ) {
 			foreach( (array) $this->transaction_history as $key => $txn ) {
+
+				// Skip this transaction if its got a bad status
+				/** @todo make status API accessable and filterable **/
+				if ( ! in_array( it_cart_buddy_get_transaction_status( $txn->ID ), array( 'pending' ) ) )
+					return;
+
 				if ( ! empty( $txn->transaction_data['_it_cart_buddy_transaction_cart']->products ) ) {
 					foreach( (array) $txn->transaction_data['_it_cart_buddy_transaction_cart']->products as $product ) {
 						$product['transaction_id'] = $txn->ID;

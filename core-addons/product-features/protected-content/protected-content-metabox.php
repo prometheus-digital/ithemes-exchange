@@ -13,6 +13,12 @@ add_action( 'admin_print_scripts', 'it_cart_buddy_protected_content_addon_init_t
 add_action( 'wp_ajax_it_cart_buddy_protected_content_addon_get_protected_products', 'it_cart_buddy_protected_content_addon_print_product_checkboxes' );
 add_action( 'admin_action_it-cart-buddy-protected-content-addon-doing-popup', 'it_cart_buddy_protected_content_addon_tinymce_popup_intercept' );
 
+/**
+ * Registers metabox for protected content
+ *
+ * @since 0.3.8
+ * @return void
+*/
 function it_cart_buddy_protected_content_addon_add_protected_content_metabox() {
 	// Grab all visible post_types
 	if ( $visible_post_types = get_post_types( array( 'public' => true, 'show_in_nav_menus' => true ) ) ) {
@@ -36,222 +42,229 @@ function it_cart_buddy_protected_content_addon_add_protected_content_metabox() {
 */
 function it_cart_buddy_protected_content_addon_print_metabox_content( $post ) {
 	$options = it_cart_buddy_protected_content_addon_get_protected_content_options_for_post_object( $post->ID );
-	
-	$options['is_protected'] = 'products';
-	// Set initial display values
-	$display['protected']['no']       = empty( $options['is_protected'] ) ? '' : 'hide-if-js';
-	$display['protected']['products'] = ( 'products' == $options['is_protected'] ) ? '' : 'hide-if-js';
-	$display['protected']['wp_roles'] = ( 'wp_roles' == $options['is_protected'] ) ? '' : 'hide-if-js';
-
-	$display['ul_dialog']['everyone'] = $display['protected']['no'];
-	$display['ul_dialog']['products'] = $display['protected']['products'];
-	$display['ul_dialog']['wp_roles'] = $display['protected']['wp_roles'];
-
-	$display['ul_dialog']['when']     = empty( $display['protected']['no'] ) ? 'hide-if-js' : '';
-	$display['ul_dialog']['singular'] = empty( $display['protected']['no'] ) ? 'hide-if-js' : '';
-	$display['ul_dialog']['archives'] = empty( $display['protected']['no'] ) ? 'hide-if-js' : '';
-	$display['ul_dialog']['search']   = empty( $display['protected']['no'] ) ? 'hide-if-js' : '';
-	$display['ul_dialog']['feeds']    = empty( $display['protected']['no'] ) ? 'hide-if-js' : '';
-
-	$display['required_products'] = $display['protected']['products'];
 	?>
-	<div id="it_cart_buddy_protected_content_ul_dialog">
-		<ul>
-			<li class="<?php echo $display['ul_dialog']['everyone']; ?>">
-				Everyone can see this post 
-				<a id="edit-is-protected" href="#" class="edit-protected-content-setting"><?php _e( 'edit', 'LION' ); ?></a>
-			</li>
-			<li class="<?php echo $display['ul_dialog']['products']; ?>">
-				Only customers who purchased one of the following products can see this post: 
-				<a href="#" class="edit-protected-content-setting"><?php _e( 'edit', 'LION' ); ?></a>
-				<ul>
-					<li>Product one</li><li>Product two</li>
-				</ul>
-			</li>
-			<li class="<?php echo $display['ul_dialog']['wp_roles']; ?>">
-				Only customers who have one of the following WordPress roles can see this post: 
-				<a href=""><?php _e( 'edit', 'LION' ); ?></a>
-			</li>
-			<li class="<?php echo $display['ul_dialog']['when']; ?>">
-				Authorized viewers can see the post from the time they purchase one of the above products until 30 days after their purchase date. 
-				<a href=""><?php _e( 'edit', 'LION' ); ?></a>
-			</li>
-			<li class="<?php echo $display['ul_dialog']['singular']; ?>">
-				If an unauthorized viewer gets a direct link to this post, they will be redirected to <?php echo get_home_url(); ?> 
-				<a href=""><?php _e( 'edit', 'LION' ); ?></a>
-			</li>
-			<li class="<?php echo $display['ul_dialog']['archives']; ?>">
-				This post will not show up in archive pages if the current viewer is not authorized to see it. 
-				<a href=""><?php _e( 'edit', 'LION' ); ?></a>
-			</li>
-			<li class="<?php echo $display['ul_dialog']['search']; ?>">
-				This post will not show up in search results if the current viewer is not authorized to see it.  
-				<a href=""><?php _e( 'edit', 'LION' ); ?></a>
-			</li>
-			<li class="<?php echo $display['ul_dialog']['feeds']; ?>">
-				This post will not show up in RSS feeds. 
-				<a href=""><?php _e( 'edit', 'LION' ); ?></a>
-			</li>
-		</ul>
-	</div>
-	<div id="it_cart_buddy_protected_content_who_dialog" class="hide-if-js">
-		<p>
-			Who is authorized to see this post? 
-			<select name="it_cart_buddy_protected_content_is_protected" id="it_cart_buddy_protected_content_is_protected">
-				<option value="no" <?php selected( $options['is_protected'], 'no' ); ?>><?php _e( 'Everyone', 'LION' ); ?></option>
-				<option value="products" <?php selected( $options['is_protected'], 'products' ); ?>><?php _e( 'Customers who have purchased specific products', 'LION' ); ?></option>
-				<option value="wp_roles" <?php selected( $options['is_protected'], 'wp_roles' ); ?>><?php _e( 'Customers who have a specific WordPress role', 'LION' ); ?></option>
-			</select>
-		</p>
-		<div id="it_cart_buddy_protected_content_required_products" class="<?php echo $display['required_products']; ?>">
-			<div id="it_cart_buddy_protected_content_all_any_products" class="hide-if-js">
+	<div id="it_cart_buddy_protected_content_container">
+		<div id="it_cart_buddy_protected_content_who_dialog">
+			<p>
+				Who is authorized to see this post? 
+				<select class="it-pc-selector" name="it_cart_buddy_protected_content_is_protected" id="it_cart_buddy_protected_content_is_protected">
+					<option value="no" <?php selected( $options['is_protected'], 'no' ); ?> data-dependant-classes="who-everyone">
+						<?php _e( 'Everyone', 'LION' ); ?>
+					</option>
+					<option value="products" <?php selected( $options['is_protected'], 'products' ); ?> data-dependant-classes="who-products">
+						<?php _e( 'Customers who have purchased specific products', 'LION' ); ?>
+					</option>
+					<option value="wp_roles" <?php selected( $options['is_protected'], 'wp_roles' ); ?> data-dependant-classes="who-wp_roles">
+						<?php _e( 'Customers who have a specific WordPress role', 'LION' ); ?>
+					</option>
+				</select>
+			</p>
+			<div id="it_cart_buddy_protected_content_required_products" class="it-pc-group <?php echo $display['required_products']; ?> who-products">
+				<div id="it_cart_buddy_protected_content_all_any_products">
+					<p>
+						<?php _e( 'Only customers that have purchased', 'LION' ); ?>
+						<select name="it_cart_buddy_protected_content_all_any_products">
+							<option value="all" <?php selected( 'all', $options['all_any_products'] ); ?>><?php _e( 'all', 'LION' ); ?></option>
+							<option value="any" <?php selected( 'any', $options['all_any_products'] ); ?>><?php _e( 'any', 'LION' ); ?></option>
+						</select> 
+						<?php _e( 'of the following products can see this post:', 'LION' ); ?>
+					</p>
+				</div>
+				<div id="it_cart_buddy_protected_content_what_products">
+					<div id="it_cart_buddy_protected_content_what_product_tabs">
+						<a class="it_cart_buddy_protected_content_select_products_link" href="" data-value="search"><?php _e( 'Search for products', 'LION' ); ?></a> | 
+						<a class="it_cart_buddy_protected_content_select_products_link" href="" data-value="browse"><?php _e( 'Browse products', 'LION' ); ?></a>
+					</div>
+					<input type="hidden" id="it_cart_buddy_protected_content_select_products" data-dependant-classes="it_cart_buddy_protected_content_browse_products" class="it-pc-selector" />
+					<div id="it_cart_buddy_protected_content_what_products_search_div" class="it-pc-group it_cart_buddy_protected_content_search_products">
+						<input type="text" id="it_cart_buddy_protected_content_what_products_search_input" /> <input type="button" value="Add" />
+					</div>
+					<div id="it_cart_buddy_protected_content_what_products_browse_div" class="it-pc-group it_cart_buddy_protected_content_browse_products">
+						<?php it_cart_buddy_protected_content_addon_print_product_checkboxes(); ?>
+					</div>
+					<div id="it_cart_buddy_protected_content_what_products_visual_feedback" class="it-pc-group">
+						<div class="tagchecklist"><span><a id="post_tag-check-num-0" class="ntdelbutton">X</a>&nbsp;test</span></div>
+					</div>
+				</div>
+			</div>
+			<div id="it_cart_buddy_protected_content_what_wp_roles" class="it-pc-group who-wp_roles">
 				<p>
-					Only customers that have purchased 
-					<select>
-						<option>all</option>
-						<option>at least one</option>
-					</select> 
-					of the following products can see this post:
+					<?php _e( 'Only users with one of the following checked WordPress roles can see this post:', 'LION' ); ?><br />
+					<?php
+					foreach( (array) get_editable_roles() as $key => $values ) {
+						?>
+						<label for="it_cart_buddy_protected_content_wp_roles_<?php esc_attr_e( $key ); ?>">
+							<input type="checkbox" id="it_cart_buddy_protected_content_wp_roles_<?php esc_attr_e( $key ); ?>" name="it_cart_buddy_protected_content_wp_roles[]" value="<?php esc_attr_e( $key ); ?>" <?php checked( in_array( $key, $options['wp_roles'] ) ); ?>/>&nbsp;<?php esc_attr_e( $values['name'] ); ?>
+						</label><br />
+						<?php
+					}
+					?>
 				</p>
 			</div>
-			<div id="it_cart_buddy_protected_content_what_products" class="hide-if-js">
-				<div id="it_cart_buddy_protected_content_what_product_tabs">Search for products | Browse products</div>
-				<div id="it_cart_buddy_protected_content_what_products_search_div">
-					<input type="text" id="it_cart_buddy_protected_content_what_products_search_input" /> <input type="button" value="Add" />
-				</div>
-				<div id="it_cart_buddy_protected_content_what_products_browse_div">
-					<?php it_cart_buddy_protected_content_addon_print_product_checkboxes(); ?>
-				</div>
-				<div id="it_cart_buddy_protected_content_what_products_visual_feedback">
-					<div class="tagchecklist"><span><a id="post_tag-check-num-0" class="ntdelbutton">X</a>&nbsp;test</span></div>
+		</div>
+		<div id="it_cart_buddy_protected_content_when_dialog" class="it-pc-group who-products who-wp_roles">
+			<p>
+				<?php _e( 'When can authorized viewers see this post?', 'LION' ); ?>
+				<select id="it_cart_buddy_protected_content_when_select" name="it_cart_buddy_protected_content_when_protected" class="it-pc-selector">
+					<option value="never" <?php selected( 'never', $options['when_protected'] ); ?>>
+						<?php _e( 'All the time', 'LION' ); ?>
+					</option>
+					<option value="time-period" data-dependant-classes="when-time_period" <?php selected( 'time-period', $options['when_protected'] ); ?>>
+						<?php _e( 'During a specific time period', 'LION' ); ?>
+					</option>
+					<option value="duration-period" data-dependant-classes="when-duration_period" <?php selected( 'duration-period', $options['when_protected'] ); ?>>
+						<?php _e( 'A specific time period after purchasing one of the above products', 'LION' ); ?>
+					</option>
+				</select>
+			</p>
+			<div id="it_cart_buddy_protected_content_when_time_period" class="it-pc-group when-time_period">
+				<p>
+					<label for="it_cart_buddy_protected_content_when_time_period_start">
+						<input type="checkbox" name="it_cart_buddy_protected_content_when_time_period_start" class="it-pc-selector" id="it_cart_buddy_protected_content_when_time_period_start" data-dependant-classes="when-time_period_start" <?php checked( 'on', $options['when_time_period_start'] ); ?>/>&nbsp;<?php _e( 'Use a start date', 'LION' ); ?><br />
+					<label for="it_cart_buddy_protected_content_when_time_period_end">
+						<input type="checkbox" name="it_cart_buddy_protected_content_when_time_period_end" class="it-pc-selector" id="it_cart_buddy_protected_content_when_time_period_end" data-dependant-classes="when-time_period_end" <?php checked( 'on', $options['when_time_period_end'] ); ?>/>&nbsp;<?php _e( 'Use an end date', 'LION' ); ?>
+					</label>
+				</p>
+				<div>
+					<span class="when-time_period_start it-pc-group"><?php _e( 'This content is only accessible after ', 'LION' ); ?>
+						<input type="text" name="it_cart_buddy_protected_content_when_time_period_start_date" value="<?php esc_attr_e( $options['when_time_period_start_date'] ); ?>" />
+						<br />
+					</span>
+					<span class="when-time_period_end it-pc-group"><?php _e( 'This content is only accessible before ', 'LION' ); ?>
+					<input type="text" name="it_cart_buddy_protected_content_when_time_period_end_date" value="<?php esc_attr_e( $options['when_time_period_end_date'] ); ?>" />
+					</span>
 				</div>
 			</div>
+			<div id="it_cart_buddy_protected_content_when_duration_after_purchase" class="it-pc-group when-duration_period">
+				<p>
+					<label for="it_cart_buddy_protected_content_time_duration_start">	
+						<input type="checkbox" class="it-pc-selector" name="it_cart_buddy_protected_content_when_duration_start" id="it_cart_buddy_protected_content_time_duration_start" data-dependant-classes="when-duration_period_start" <?php checked( 'on', $options['when_duration_start'] ); ?>>&nbsp;<?php _e( 'Use a delayed start', 'LION' ); ?>
+					</label><br />
+					<label for="it_cart_buddy_protected_content_time_duration_end">
+						<input type="checkbox" class="it-pc-selector" name="it_cart_buddy_protected_content_when_duration_end" id="it_cart_buddy_protected_content_time_duration_end" data-dependant-classes="when-duration_period_end" <?php checked( 'on', $options['when_duration_end'] ); ?>>&nbsp;<?php _e( 'Use an expiration period', 'LION' ); ?>
+					</label>
+				</p>
+				<p class="when-duration_period_start it-pc-group">
+					<?php printf( __( 'This content is not available to the customer %suntil%s ', 'LION' ), '<strong>', '</strong>' ); ?>
+					<input name="it_cart_buddy_protected_content_when_duration_start_quantity" value="<?php esc_attr_e( $options['when_duration_start_quantity'] ); ?>" type="text" size="4" /> 
+					<select name="it_cart_buddy_protected_content_when_duration_start_units">
+						<option value="days" <?php selected( 'days', $options['when_duration_start_units'] ); ?>><?php _e( 'day(s)' ); ?></option>
+						<option value="weeks" <?php selected( 'weeks', $options['when_duration_start_units'] ); ?>><?php _e( 'week(s)' ); ?></option>
+						<option value="months" <?php selected( 'months', $options['when_duration_start_units'] ); ?>><?php _e( 'month(s)' ); ?></option>
+						<option value="years" <?php selected( 'years', $options['when_duration_start_units'] ); ?>><?php _e( 'year(s)' ); ?></option>
+					</select>
+					&nbsp;<?php _e( 'from their date of purchase.' ); ?>
+				</p>
+				<p class="when-duration_period_end it-pc-group">
+					<?php printf( __( 'This content is not available to the customer %safter%s ', 'LION' ), '<strong>', '</strong>' ); ?>
+					<input type="text" name="it_cart_buddy_protected_content_when_duration_end_quantity" size="4" value="<?php esc_attr_e( $options['when_duration_end_quantity'] ); ?>"/> 
+					<select name="it_cart_buddy_protected_content_when_duration_end_units">
+						<option value="days" <?php selected( 'days', $options['when_duration_end_units'] ); ?>><?php _e( 'day(s)' ); ?></option>
+						<option value="weeks" <?php selected( 'weeks', $options['when_duration_end_units'] ); ?>><?php _e( 'week(s)' ); ?></option>
+						<option value="months" <?php selected( 'months', $options['when_duration_end_units'] ); ?>><?php _e( 'month(s)' ); ?></option>
+						<option value="years" <?php selected( 'years', $options['when_duration_end_units'] ); ?>><?php _e( 'year(s)' ); ?></option>
+					</select>
+					&nbsp;<?php _e( 'from their date of purchase.' ); ?>
+				</p>
+			</div>
 		</div>
-		<div id="it_cart_buddy_protected_content_what_wp_roles" class="hide-if-js">
-			<p>
-				Only users with one of the following WordPress roles can see this post:<br />
-				<input type="checkbox" name="it_cart_buddy_protected_content_wp_roles[]" value="subscriber" /> Subscriber<br />
-				<input type="checkbox" name="it_cart_buddy_protected_content_wp_roles[]" value="contributor" /> Contributor<br />
-				<input type="checkbox" name="it_cart_buddy_protected_content_wp_roles[]" value="administrator" /> Administrator
-			</p>
+		<div id="it_cart_buddy_protected_content_unauthorized_views" class="it-pc-group who-products who-wp_roles">
+			<div id="it_cart_buddy_protected_content_unauthorized_singular_views">
+				<p>
+					<?php _e( 'What should happen if an unauthorized user tries to access this page directly?', 'LION' ); ?><br />
+					<label for="it_cart_buddy_protected_content_unauthorized_single_redirect">
+						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_singular_action" id="it_cart_buddy_protected_content_unauthorized_single_redirect" value="redirect" class="it-pc-selector" data-dependant-classes="unauthorized_single_redirect" <?php checked( 'redirect', $options['unauthorized_singular_action'] ); ?>>
+						&nbsp;<?php _e( 'They get redirected to another URL', 'LION' ); ?>
+					</label>
+					<br />
+					<label for="it_cart_buddy_protected_content_unauthorized_single_excerpt">
+						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_singular_action" id="it_cart_buddy_protected_content_unauthorized_single_excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_singular_action'] ); ?>>
+						&nbsp;<?php _e( 'They get shown the post excerpt', 'LION' ); ?>
+					</label>
+					<br />
+					<label for="it_cart_buddy_protected_content_unauthorized_single_custom_message">
+						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_singular_action" id="it_cart_buddy_protected_content_unauthorized_single_custom_message" value="custom_message" class="it-pc-selector" data-dependant-classes="unauthorized_single_custom_message" <?php checked( 'custom_message', $options['unauthorized_singular_action'] ); ?>>
+						&nbsp;<?php _e( 'They get shown a custom message', 'LION' ); ?>
+					</label>
+				</p>
+				<p id="it_cart_buddy_protected_content_unauthorized_singular_redirect" class="it-pc-group unauthorized_single_redirect">
+					<?php _e( 'URL to redirect them to: ', 'LION' ); ?><input type="text" name="it_cart_buddy_protected_content_unauthorized_singular_redirect_url" value="<?php esc_attr_e( $options['unauthorized_singular_redirect_url'] ); ?>" />
+				</p>
+				<p id="it_cart_buddy_protected_content_unauthroized_singular_redirect_custom_message" class="it-pc-group unauthorized_single_custom_message">
+					<?php _e( 'Custom Message for singular views:', 'LION' ); ?><br />
+					<textarea name="it_cart_buddy_protected_content_unauthorized_singular_custom_message"><?php esc_html_e( $options['unauthorized_singular_custom_message'] ); ?></textarea>
+				</p>
+			</div>
+			<div id="it_cart_buddy_protected_content_unauthorized_archive_views">
+				<p>
+					<?php _e( 'What should happen when this post is supposed to appear in an archive or category view for unauthorized users?', 'LION' ); ?><br />
+					<label for="it_cart_buddy_protected_content_unauthorized_archive_hide">
+						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_archive_action" id="it_cart_buddy_protected_content_unauthorized_archive_hide" value="hide" class="it-pc-selector" <?php checked( 'hide', $options['unauthorized_archive_action'] ); ?>>
+						&nbsp;<?php _e( 'Don\'t show it in the archive', 'LION' ); ?>
+					</label>
+					<br />
+					<label for="it_cart_buddy_protected_content_unauthorized_archive_excerpt">
+						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_archive_action" id="it_cart_buddy_protected_content_unauthorized_archive_excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_archive_action'] ); ?>>
+						&nbsp;<?php _e( 'Show the title without a link, followed by the excerpt where available', 'LION' ); ?>
+					</label>
+					<br />
+					<label for="it_cart_buddy_protected_content_unauthorized_archive_custom_message_radio">
+						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_archive_action" id="it_cart_buddy_protected_content_unauthorized_archive_custom_message_radio" value="custom_message" class="it-pc-selector" data-dependant-classes="unauthorized_archive_custom_message" <?php checked( 'custom_message', $options['unauthorized_archive_action'] ); ?>>
+						&nbsp;<?php _e( 'Show the title without a link and replace the excerpt / content with a custom message', 'LION' ); ?>
+					</label>
+				</p>
+				<p id="it_cart_buddy_protected_content_unauthorized_archive_custom_message" class="unauthorized_archive_custom_message it-pc-group">
+					<?php _e( 'Custom Message for archive views:', 'LION' ); ?><br />
+					<textarea name="it_cart_buddy_protected_content_unauthorized_archive_custom_message"><?php esc_html_e( $options['unauthorized_archive_custom_message']     ); ?></textarea>
+				</p>
+			</div>
+			<div id="it_cart_buddy_protected_content_unauthorized_search_views">
+				<p>
+					<?php _e( 'What should happen when this post is supposed to appear in search results for unauthorized users?', 'LION' ); ?><br />
+					<label for="it_cart_buddy_protected_content_unauthorized_search_hide">
+						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_search_action" id="it_cart_buddy_protected_content_unauthorized_search_hide" value="hide" class="it-pc-selector" <?php checked( 'hide', $options['unauthorized_search_action'] ); ?>>
+						&nbsp;<?php _e( 'Don\'t show it in the search results', 'LION' ); ?>
+					</label>
+					<br />
+					<label for="it_cart_buddy_protected_content_unauthorized_search_excerpt">
+						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_search_action" id="it_cart_buddy_protected_content_unauthorized_search_excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_search_action'] ); ?>>
+						&nbsp;<?php _e( 'Show the title without a link, followed by the excerpt where available', 'LION' ); ?>
+					</label>
+					<br />
+					<label for="it_cart_buddy_protected_content_unauthorized_search_custom_message">
+						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_search_action" id="it_cart_buddy_protected_content_unauthorized_search_custom_message" value="custom_message" class="it-pc-selector" data-dependant-classes="unauthorized_search_custom_message" <?php checked( 'custom_message', $options['unauthorized_search_action'] ); ?>>
+						&nbsp;<?php _e( 'Show the title without a link and replace the excerpt / content with a custom message', 'LION' ); ?>
+					</label>
+				</p>
+				<p id="it_cart_buddy_protected_content_unauthorized_search_custom_message" class="unauthorized_search_custom_message it-pc-group">
+					<?php _e( 'Custom Message for search results:', 'LION' ); ?><br />
+					<textarea name="it_cart_buddy_protected_content_unauthorized_search_custom_message"><?php esc_html_e( $options['unauthorized_search_custom_message']     ); ?></textarea>
+				</p>
+			</div>
+			<div id="it_cart_buddy_protected_content_unauthorized_feed_views">
+				<p>
+					<?php _e( 'What should happen when this post is supposed to appear in feed view for unauthorized users?', 'LION' ); ?><br />
+					<label for="it_cart_buddy_protected_content_unauthorized_feed_hide">
+						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_feed_action" id="it_cart_buddy_protected_content_unauthorized_feed_hide" value="hide" class="it-pc-selector" <?php checked( 'hide', $options['unauthorized_feed_action'] ); ?>>
+						&nbsp;<?php _e( 'Don\'t show it in the feed views', 'LION' ); ?>
+					</label>
+					<br />
+					<label for="it_cart_buddy_protected_content_unauthorized_feed_excerpt">
+						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_feed_action" id="it_cart_buddy_protected_content_unauthorized_feed_excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_feed_action'] ); ?>>
+						&nbsp;<?php _e( 'Show the title without a link, followed by the excerpt where available', 'LION' ); ?>
+					</label>
+					<br />
+					<label for="it_cart_buddy_protected_content_unauthorized_feed_custom_message">
+						<input type="radio" name="it_cart_buddy_protected_content_unauthorized_feed_action" id="it_cart_buddy_protected_content_unauthorized_feed_custom_message" value="custom_message" class="it-pc-selector" data-dependant-classes="unauthorized_feed_custom_message" <?php checked( 'custom_message', $options['unauthorized_feed_action'] ); ?>>
+						&nbsp;<?php _e( 'Show the title without a link and replace the excerpt / content with a custom message', 'LION' ); ?>
+					</label>
+				</p>
+				<p id="it_cart_buddy_protected_content_unauthorized_feed_custom_message" class="unauthorized_feed_custom_message it-pc-group">
+					<?php _e( 'Custom Message for feed views:', 'LION' ); ?><br />
+					<textarea name="it_cart_buddy_protected_content_unauthorized_feed_custom_message"><?php esc_html_e( $options['unauthorized_feed_custom_message']     ); ?></textarea>
+				</p>
+			</div>
 		</div>
-		</div>
-	<div id="it_cart_buddy_protected_content_when_dialog" class="hide-if-js">
-		<p>
-			When can authorized viewers see this post? 
-			<select>
-				<option>All the time</option>
-				<option>During a specific time period</option>
-				<option>A specific time period after purchasing one of the above products</option>
-			</select>
-		</p>
-		<div id="it_cart_buddy_protected_content_when_time_period">
-			<p>
-				<input type="checkbox"> Use a start date<br />
-				<input type="checkbox"> Use an end date
-			</p>
-			<p>
-				This content is only accessible after <input type="text" /> and before <input type="text" />.
-			</p>
-		</div>
-		<div id="it_cart_buddy_protected_content_when_duration_after_purchase">
-			<p>
-				<input type="checkbox"> Use a delayed start<br />
-				<input type="checkbox"> Use an expiration period
-			</p>
-			<p>
-				This content is not available to the customer <strong>until</strong> <input type="text" size="4" /> 
-				<select>
-					<option>day(s)</option>
-					<option>week(s)</option>
-					<option>month(s)</option>
-					<option>year(s)</option>
-				</select>
-				 from their date of purchase.
-			</p>
-			<p>
-				This content is not available to the customer <strong>after</strong> <input type="text" size="4" /> 
-				<select>
-					<option>day(s)</option>
-					<option>week(s)</option>
-					<option>month(s)</option>
-					<option>year(s)</option>
-				</select>
-				 from their date of purchase.
-			</p>
-		</div>
-	</div>
-	<div id="it_cart_buddy_protected_content_unauthorized_singular_views" class="hide-if-js">
-		<p>
-			What should happen if an unauthorized user tries to access this page directly?<br />
-			<input type="radio">&nbsp;They get redirected to another URL<br />
-			<input type="radio">&nbsp;They get shown the post excerpt<br />
-			<input type="radio">&nbsp;They get shown a custom message
-		</p>
-		<p id="it_cart_buddy_protected_content_unauthorized_singular_redirect">
-			URL to redirect them to: <input type="text" name="it_cart_buddy_protected_content_unauthorized_singular_redirect_url" />
-		</p>
-		<p id="it_cart_buddy_protected_content_unauthroized_singular_redirect_custom_message">
-			Custom Message for singular views:<br />
-			<textarea name="it_cart_buddy_protected_content_unauthorized_singular_custom_message"></textarea>
-		</p>
-	</div>
-	<div id="it_cart_buddy_protected_content_unauthorized_archive_views" class="hide-if-js">
-		<p>
-			What should happen when this post is supposed to appear in an archive or category view for unauthorized users?<br />
-			<input type="radio">&nbsp;Don't show it at all <br />
-			<input type="radio">&nbsp;Show the title without a link and replace the excerpt / content with a custom message
-		</p>
-		<p id="it_cart_buddy_protected_content_unauthorized_archive_custom_message">
-			Custom Message for archive results:<br />
-			<textarea name="it_cart_buddy_protected_content_unauthorized_archive_custom_message"></textarea>
-		</p>
-	</div>
-	<div id="it_cart_buddy_protected_content_unauthorized_search_views" class="hide-if-js">
-		<p>
-			What should happen when this post is supposed to appear in search results for unauthorized users?<br />
-			<input type="radio">&nbsp;Don't show it at all<br />
-			<input type="radio">&nbsp;Show the title without a link and replace the excerpt / content with a custom message
-		</p>
-		<p id="it_cart_buddy_protected_content_unauthorized_search_custom_message">
-			Custom Message for search results:<br />
-			<textarea name="it_cart_buddy_protected_content_unauthorized_search_custom_message"></textarea>
-		</p>
-	</div>
-	<div id="it_cart_buddy_protected_content_unauthorized_feed_views" class="hide-if-js">
-		<p>
-			What should happen when this post is supposed to appear in site feeds (like RSS) for unauthorized users?<br />
-			<input type="radio">&nbsp;Don't show it at all<br />
-			<input type="radio">&nbsp;Show the title without a link and replace the excerpt / content with a custom message
-		</p>
-		<p id="it_cart_buddy_protected_content_unauthorized_feed_custom_message">
-			Custom Message for feed (RSS) results:<br />
-			<textarea name="it_cart_buddy_protected_content_unauthorized_feed_custom_message"></textarea>
-		</p>
-	</div>
-	<?php
-}
-
-function it_cart_buddy_protected_content_addon_print_metabox_content_old( $post ) {
-	$is_protected = get_post_meta( $post->ID, '_it_cart_buddy_protected_content_addon_post_is_protected', true );
-	$redirect_to  = get_post_meta( $post->ID, '_it_cart_buddy_protected_content_addon_post_protected_redirect', true );
-	if ( empty( $redirect_to ) )
-		$redirect_to = get_site_url();
-	$post_type_object = get_post_type_object( $post->post_type );
-	$singular_name = empty( $post_type_object->labels->singular_name ) ? __( 'post' ) : strtolower( $post_type_object->labels->singular_name );
-	?>
-	<p> <?php _e( sprintf( 'Restrict this %s to members who have purchased Cart Buddy products that support protected content?', $singular_name ), 'LION' ); ?></p>
-	<select id="it_cart_buddy_protected_content_addon_post_is_protected" name="_it_cart_buddy_protected_content_addon_post_is_protected">
-		<option value="0" <?php selected( 0, $is_protected ); ?>>No</option>
-		<option value="1" <?php selected( 1, $is_protected ); ?>>Yes</option>
-	</select>
-
-	<div class="hide-if-js" id="it_cart_buddy_protected_content_addon_select_post_restrictions">
-		<p><?php _e( 'A member must have purchased at least one of the checked products below to see this post', 'LION' ); ?></p>
-		<p><?php _e( 'If no products are checked, nobody will have access to this post.', 'LION' ); ?></p>
-		<?php it_cart_buddy_protected_content_addon_print_product_checkboxes(); ?>
-		<p><?php _e( "Where should members who haven't bought one of the above products be redirected?", 'LION' ); ?></p>
-		<input type="text" style="width:100%" name="_it_cart_buddy_protected_content_addon_post_protected_redirect" value="<?php esc_attr_e( esc_url( $redirect_to ) ); ?>" />
 	</div>
 	<?php
 }
@@ -272,14 +285,16 @@ function it_cart_buddy_protected_content_addon_print_product_checkboxes() {
 		$is_ajax = ( ! empty( $_GET['action'] ) && 'it_cart_buddy_protected_content_addon_get_protected_products' == $_GET['action'] ) ? true : false;
 
 		// Grab products already selected
-		if ( $is_ajax || false === $selected_products = get_post_meta( $post->ID, '_it_cart_buddy_protected_content_addon_selected_products', true ) ) 
+		$options = get_post_meta( $post->ID, '_it_cart_buddy_protected_content_options', true );
+		$selected_products = empty( $options['selected_products'] ) ? false : (array) $options['selected_products'];
+		if ( $is_ajax || false === $selected_products )
 			$selected_products = array();
 
 		// Loop through products and create checkboxes
 		foreach( $protected_products as $product_id => $product_title ) { 
 			?>  
 			<label for="it_cart_buddy_protected_content_protect_product_<?php esc_attr_e( $product_id ); ?>">
-			<input type="checkbox" id="it_cart_buddy_protected_content_protect_product_<?php esc_attr_e( $product_id ); ?>" name="_it_cart_buddy_protected_content_addon_selected_products[]" value="<?php esc_attr_e( $product_id ); ?>" <?php checked( in_array( $product_id, $selected_products ) ); ?>>&nbsp;<?php esc_attr_e( apply_filters( 'the_title', $product_title ) ); ?>
+			<input type="checkbox" id="it_cart_buddy_protected_content_protect_product_<?php esc_attr_e( $product_id ); ?>" name="it_cart_buddy_protected_content_selected_products[]" value="<?php esc_attr_e( $product_id ); ?>" <?php checked( in_array( $product_id, $selected_products ) ); ?>>&nbsp;<?php esc_attr_e( apply_filters( 'the_title', $product_title ) ); ?>
 			</label><br />
 			<?php
 		}   
@@ -299,13 +314,30 @@ function it_cart_buddy_protected_content_addon_print_product_checkboxes() {
  * @return void
 */
 function it_cart_buddy_protected_content_addon_save_post_restrictions( $post ) {
-	if ( ! isset( $_POST['_it_cart_buddy_protected_content_addon_post_is_protected'] ) )
+	if ( ! isset( $_POST['it_cart_buddy_protected_content_is_protected'] ) )
 		return;
 
-	$redirect_to = empty( $_POST['_it_cart_buddy_protected_content_addon_post_protected_redirect'] ) ? get_site_url() : esc_url( $_POST['_it_cart_buddy_protected_content_addon_post_protected_redirect'] );
-	update_post_meta( $post, '_it_cart_buddy_protected_content_addon_post_is_protected', $_POST['_it_cart_buddy_protected_content_addon_post_is_protected'] );
-	update_post_meta( $post, '_it_cart_buddy_protected_content_addon_selected_products', $_POST['_it_cart_buddy_protected_content_addon_selected_products'] );
-	update_post_meta( $post, '_it_cart_buddy_protected_content_addon_post_protected_redirect', $redirect_to );
+	$option_keys = array(
+		'is_protected', 'all_any_products', 'when_protected', 'wp_roles', 'selected_products', 
+		'when_time_period_start', 'when_time_period_end', 'when_time_period_start_date', 
+		'when_time_period_end_date', 'when_duration_start', 'when_duration_end', 'when_duration_start_quantity', 'when_duration_start_units', 
+		'when_duration_end_quantity', 'when_duration_end_units', 'unauthorized_singular_action', 
+		'unauthorized_singular_redirect_url', 'unauthorized_singular_custom_message', 
+		'unauthorized_archive_action', 'unauthorized_archive_custom_message', 'unauthorized_search_action', 
+		'unauthorized_search_custom_message', 'unauthorized_feed_action', 'unauthorized_feed_custom_message',
+	);
+
+	$new_options = array();
+	foreach( $option_keys as $key ) {
+		if ( isset( $_POST['it_cart_buddy_protected_content_' . $key] ) )
+			$new_options[$key] = $_POST['it_cart_buddy_protected_content_' . $key];
+	}
+
+	// Validate redirect URL
+	if ( isset( $new_options['unauthorized_singular_redirect_url'] ) && ! esc_url( $new_options['unauthorized_singular_redirect_url'] ) )
+		unset( $new_options['unauthorized_singular_redirect_url'] );
+
+	update_post_meta( $post, '_it_cart_buddy_protected_content_options', $new_options ); 
 }
 
 /**
@@ -327,22 +359,24 @@ function it_cart_buddy_protected_content_addon_get_protected_content_options_for
 		'required_products'                    => array(),
 		'wp_roles'                             => array(),
 		'when_protected'                       => 'never',
-		'when_timeperiod_start'                => false,
-		'when_timeperiod_end'                  => false,
-		'when_timeperiod_start_date'           => date( 'Y-m-d' ),
-		'when_timeperiod_end_date'             => '',
-		'when_duration_start'                  => false,
+		'when_time_period_start'               => true,
+		'when_time_period_end'                 => false,
+		'when_time_period_start_date'          => date( 'Y-m-d' ),
+		'when_time_period_end_date'            => '',
+		'when_duration_start'                  => true,
 		'when_duration_end'                    => false,
-		'when_duration_start_date'             => date( 'Y-m-d' ),
-		'when_duration_end_date'               => '',
+		'when_duration_start_quantity'         => 1,
+		'when_duration_start_units'            => 'months',
+		'when_duration_end_quantity'           => 1,
+		'when_duration_end_units'              => 'months',
 		'unauthorized_singular_action'         => 'redirect',
 		'unauthorized_singular_redirect_url'   => get_home_url(),
-		'unauthorized_singular_custom_message' => '',
-		'unauthorized_archive_action'          => 'custom_message',
+		'unauthorized_singular_custom_message' => __( 'Premium Content', 'LION' ),
+		'unauthorized_archive_action'          => 'hide',
 		'unauthorized_archive_custom_message'  => __( 'Premium Content', 'LION' ),
-		'unauthorized_search_action'           => 'custom_message',
+		'unauthorized_search_action'           => 'hide',
 		'unauthorized_search_custom_message'   => __( 'Premium Content', 'LION' ),
-		'unauthorized_feed_action'             => 'custom_message',
+		'unauthorized_feed_action'             => 'hide',
 		'unauthorized_feed_custom_message'     => __( 'Premium Content', 'LION' ),
 	);
 
@@ -362,6 +396,7 @@ function it_cart_buddy_protected_content_addon_enqueue_admin_scripts() {
 	if ( 'post' != $current_screen->base )
 		return;
 	wp_enqueue_script( 'it_cart_buddy_protected_content_addon-admin-js', $addon_url . '/js/admin.js', array( 'jquery' ) );
+	wp_enqueue_script( 'ithemesNestedFormToggles', $addon_url . '/js/jquery.iThemesNestedFormToggles.js', array( 'jquery' ) );
 }
 
 /**
