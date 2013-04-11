@@ -1,13 +1,13 @@
 <?php
 /**
- * API Functions used to register / retrieve Cart Buddy Add-ons
+ * API Functions used to register / retrieve Exchange Add-ons
  *
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
  * @since 0.2.0
 */
 
 /**
- * Register an Add-on with CartBuddy
+ * Register an Add-on with iThemes Exchange
  *
  * Core ‘category’ options for type of add-on
  * - product-type        Add-ons that create product types. eg: Digital, Membership
@@ -21,26 +21,26 @@
  * @param string $file         init file for add-on
  * @param array  $options      key / value pairs.
 */
-function it_cart_buddy_register_addon( $slug, $name, $description, $file, $options = array() ) {
+function it_exchange_register_addon( $slug, $name, $description, $file, $options = array() ) {
 	// Basic Validation
 	$slug = empty( $slug )       ? false : sanitize_key( $slug );
 	$name = empty( $name )       ? false : sanitize_text_field( $name );
 	$file = file_exists( $file ) ? $file : false;
 
 	if ( ! $slug  )
-		return new WP_Error( 'it_cart_buddy_add_registration_error', __( 'All Cart Buddy Add-ons require a slug paramater.', 'LION' ) );
+		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Excahnge Add-ons require a slug paramater.', 'LION' ) );
 
 	if ( ! $name )
-		return new WP_Error( 'it_cart_buddy_add_registration_error', __( 'All Cart Buddy Add-ons require a name parameter.', 'LION' ) );
+		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Excahnge Add-ons require a name parameter.', 'LION' ) );
 
 	if ( ! $file )
-		return new WP_Error( 'it_cart_buddy_add_registration_error', __( 'All Cart Buddy Add-ons require a file paramater.', 'LION' ) );
+		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Excahnge Add-ons require a file paramater.', 'LION' ) );
 
 	if ( empty( $options['category'] ) )
 		$options['category'] = 'other';
 
 	// Add the add-on to our Global
-	$GLOBALS['it_cart_buddy']['add_ons']['registered'][$slug] = array(
+	$GLOBALS['it_exchange']['add_ons']['registered'][$slug] = array(
 		'slug'        => $slug,
 		'name'        => $name,
 		'description' => $description,
@@ -50,7 +50,7 @@ function it_cart_buddy_register_addon( $slug, $name, $description, $file, $optio
 }
 
 /**
- * Register an Add-on category with CartBuddy
+ * Register an Add-on category with iThemes Exchange
  *
  * When registering an add-on category, you can set required/default support features that any add-on
  * in this category will be required to have. If add-ons register in this category without a key
@@ -62,20 +62,20 @@ function it_cart_buddy_register_addon( $slug, $name, $description, $file, $optio
  * @param string $description  description of the add-on
  * @param array  $options      key / value pairs.
 */
-function it_cart_buddy_register_addon_category( $slug, $name, $description, $options = array() ) {
+function it_exchange_register_addon_category( $slug, $name, $description, $options = array() ) {
 	// Basic Validation
 	$slug                     = empty( $slug ) ? false : sanitize_key( $slug );
 	$name                     = empty( $name ) ? false : sanitize_text_field( $name );
 	$options['supports']      = empty( $options['supports'] ) ? array() : $options['supports'];
 
 	if ( ! $slug  )
-		return new WP_Error( 'it_cart_buddy_add_registration_error', __( 'All Cart Buddy Add-ons require a slug paramater.', 'LION' ) );
+		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Excahnge Add-ons require a slug paramater.', 'LION' ) );
 
 	if ( ! $name )
-		return new WP_Error( 'it_cart_buddy_add_registration_error', __( 'All Cart Buddy Add-ons require a name parameter.', 'LION' ) );
+		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Excahnge Add-ons require a name parameter.', 'LION' ) );
 
 	// Add the add-on to our Global
-	$GLOBALS['it_cart_buddy']['add_on_categories'][$slug] = array(
+	$GLOBALS['it_exchange']['add_on_categories'][$slug] = array(
 		'slug'        => $slug,
 		'name'        => $name,
 		'description' => $description,
@@ -84,14 +84,14 @@ function it_cart_buddy_register_addon_category( $slug, $name, $description, $opt
 }
 
 /**
- * Register a bundle of add-ons as a ‘Set’ with CartBuddy
+ * Register a bundle of add-ons as a ‘Set’ with iThemes Exchange
  *
  * @param string $slug         var for identifying the add-on set in code
  * @param string $name         name of add-on set used in UI
  * @param string $description  description of the add-on set
  * @param array  $options      key / value pairs.
 */
-function it_cart_buddy_register_addon_set( $slug, $name, $description, $options = array() ) {}
+function it_exchange_register_addon_set( $slug, $name, $description, $options = array() ) {}
 
 /**
  * Returns an array of registered add-ons
@@ -100,15 +100,15 @@ function it_cart_buddy_register_addon_set( $slug, $name, $description, $options 
  * @param array $options  For filtering by category, use $options['category'] = array( 'cat1', 'cat2', 'etc' );
  * @return array  registered add-ons
 */
-function it_cart_buddy_get_addons( $options=array() ) {
-	if ( empty( $GLOBALS['it_cart_buddy']['add_ons']['registered'] ) )
+function it_exchange_get_addons( $options=array() ) {
+	if ( empty( $GLOBALS['it_exchange']['add_ons']['registered'] ) )
 		return array();
 	else
-		$add_ons = $GLOBALS['it_cart_buddy']['add_ons']['registered'];
+		$add_ons = $GLOBALS['it_exchange']['add_ons']['registered'];
 
 	// Possibly filter by category
 	if ( ! empty( $options['category'] ) )
-		$add_ons = it_cart_buddy_filter_addons_by_category( $add_ons, $options['category'] );
+		$add_ons = it_exchange_filter_addons_by_category( $add_ons, $options['category'] );
 	
 	return $add_ons;
 }
@@ -120,8 +120,8 @@ function it_cart_buddy_get_addons( $options=array() ) {
  * @param string $slug  the add-on's slug
  * @return array  the add_on array
 */
-function it_cart_buddy_get_addon( $slug ) {
-	if ( $add_ons = it_cart_buddy_get_addons() ) {
+function it_exchange_get_addon( $slug ) {
+	if ( $add_ons = it_exchange_get_addons() ) {
 		if ( ! empty( $add_ons[$slug] ) )
 			return $add_ons[$slug];
 	}
@@ -134,11 +134,11 @@ function it_cart_buddy_get_addon( $slug ) {
  * @since 0.2.0
  * @return array  registered add-on categories
 */
-function it_cart_buddy_get_addon_categories() {
-	if ( empty( $GLOBALS['it_cart_buddy']['add_on_categories'] ) )
+function it_exchange_get_addon_categories() {
+	if ( empty( $GLOBALS['it_exchange']['add_on_categories'] ) )
 		return array();
 	else
-		return $GLOBALS['it_cart_buddy']['add_on_categories'];
+		return $GLOBALS['it_exchange']['add_on_categories'];
 }
 
 /**
@@ -150,12 +150,12 @@ function it_cart_buddy_get_addon_categories() {
  * @param array $options  For filtering by category, use $options['category'] = array( 'cat1', 'cat2', 'etc' );
  * @return array  Enabled add-ons
 */
-function it_cart_buddy_get_enabled_addons( $options=array() ) {
+function it_exchange_get_enabled_addons( $options=array() ) {
 	// Grab all registered add-ons
-	$registered = it_cart_buddy_get_addons();
+	$registered = it_exchange_get_addons();
 
 	// Grab enabled add-ons from options
-	if ( false === $enabled = it_cart_buddy_get_option( 'cart_buddy_enabled_add_ons' ) )
+	if ( false === $enabled = it_exchange_get_option( 'exchange_enabled_add_ons' ) )
 		$enabled = array();
 
 	// Set each enabled with registered params
@@ -165,7 +165,7 @@ function it_cart_buddy_get_enabled_addons( $options=array() ) {
 	}
 
 	if ( ! empty( $options['category'] ) )
-		$enabled = it_cart_buddy_filter_addons_by_category( $enabled, $options['category'] );
+		$enabled = it_exchange_filter_addons_by_category( $enabled, $options['category'] );
 
 	return empty( $enabled ) ? array() : $enabled;
 }
@@ -174,11 +174,11 @@ function it_cart_buddy_get_enabled_addons( $options=array() ) {
  * Takes an array of add-ons and filters by passed category
  *
  * @since 0.3.0
- * @param array $add_ons  an array of add-ons formatted like $GLOBALS['it_cart_buddy']['add_ons'] array
+ * @param array $add_ons  an array of add-ons formatted like $GLOBALS['it_exchange']['add_ons'] array
  * @param array $categories  contains categories we want filters: array( 'cat1', 'cat2', 'etc' );
  * @return array  Filtered add-ons
 */
-function it_cart_buddy_filter_addons_by_category( $add_ons, $categories ) {
+function it_exchange_filter_addons_by_category( $add_ons, $categories ) {
 	foreach( $add_ons as $slug => $params ) {
 		if ( ! empty( $params['options']['category'] ) ) {
 			if ( ! in_array( $params['options']['category'], (array) $categories ) )
@@ -196,15 +196,15 @@ function it_cart_buddy_filter_addons_by_category( $add_ons, $categories ) {
  * @param string $add_on  add_on to enable
  * @return void
 */
-function it_cart_buddy_enable_addon( $add_on ) {
-	$registered = it_cart_buddy_get_addons();
-	$enabled = it_cart_buddy_get_option( 'cart_buddy_enabled_add_ons' );
+function it_exchange_enable_addon( $add_on ) {
+	$registered = it_exchange_get_addons();
+	$enabled = it_exchange_get_option( 'exchange_enabled_add_ons' );
 
 	if ( in_array( $add_on, array_keys( $registered ) ) ) {
 		$enabled[$add_on] = $registered[$add_on]['file'];
-		if ( it_cart_buddy_save_option( 'cart_buddy_enabled_add_ons', $enabled ) ) {
+		if ( it_exchange_save_option( 'exchange_enabled_add_ons', $enabled ) ) {
 			require( $registered[$add_on]['file'] );
-			do_action( 'it_cart_buddy_add_on_enabled', $registered[$add_on] );
+			do_action( 'it_exchange_add_on_enabled', $registered[$add_on] );
 			return $enabled;
 		}
 	}
@@ -219,15 +219,15 @@ function it_cart_buddy_enable_addon( $add_on ) {
  * @param string $add_on  add_on to disable
  * @return void
 */
-function it_cart_buddy_disable_addon( $add_on ) {
-	$registered = it_cart_buddy_get_addons();
-	$enabled = it_cart_buddy_get_option( 'cart_buddy_enabled_add_ons' );
+function it_exchange_disable_addon( $add_on ) {
+	$registered = it_exchange_get_addons();
+	$enabled = it_exchange_get_option( 'exchange_enabled_add_ons' );
 
 	if ( ! empty( $enabled[$add_on] ) ) {
 		unset( $enabled[$add_on] );
-		if ( it_cart_buddy_save_option( 'cart_buddy_enabled_add_ons', $enabled ) ) {
+		if ( it_exchange_save_option( 'exchange_enabled_add_ons', $enabled ) ) {
 			if ( ! empty( $registered[$add_on] ) )
-				do_action( 'it_cart_buddy_add_on_disabled', $registered[$add_on] );
+				do_action( 'it_exchange_add_on_disabled', $registered[$add_on] );
 			return $enabled;
 		}
 	}
@@ -242,8 +242,8 @@ function it_cart_buddy_disable_addon( $add_on ) {
  * @param string $feature type of feature we are testing for support
  * @return boolean
 */
-function it_cart_buddy_addon_supports( $add_on, $feature ) {
-	$add_ons = it_cart_buddy_get_addons();
+function it_exchange_addon_supports( $add_on, $feature ) {
+	$add_ons = it_exchange_get_addons();
 
 	// Return false if add-on is not registered
 	if ( ! isset( $add_ons[$add_on] ) )
@@ -264,8 +264,8 @@ function it_cart_buddy_addon_supports( $add_on, $feature ) {
  * @param string $feature the feature slug that needs to be enabled
  * @return void
 */
-function it_cart_buddy_add_addon_support( $add_on, $feature ) {
-	$add_ons = it_cart_buddy_get_addons();
+function it_exchange_add_addon_support( $add_on, $feature ) {
+	$add_ons = it_exchange_get_addons();
 
 	// Return false if add-on is not registered
 	if ( ! isset( $add_ons[$add_on] ) )
@@ -273,7 +273,7 @@ function it_cart_buddy_add_addon_support( $add_on, $feature ) {
 
 	// Set add-on support to true for this add-on / feature combo
 	if ( empty( $add_ons[$add_on]['options'] ) )
-		$GLOBALS['it_cart_buddy']['add_ons']['registered'][$add_on]['options']['supports'][$feature] = true;
+		$GLOBALS['it_exchange']['add_ons']['registered'][$add_on]['options']['supports'][$feature] = true;
 }
 
 /**
@@ -284,8 +284,8 @@ function it_cart_buddy_add_addon_support( $add_on, $feature ) {
  * @param string $feature the feature slug that needs to be enabled
  * @return void
 */
-function it_cart_buddy_remove_addon_support( $add_on, $feature ) {
-	$add_ons = it_cart_buddy_get_addons();
+function it_exchange_remove_addon_support( $add_on, $feature ) {
+	$add_ons = it_exchange_get_addons();
 
 	// Return false if add-on is not registered
 	if ( ! isset( $add_ons[$add_on] ) )
@@ -293,7 +293,7 @@ function it_cart_buddy_remove_addon_support( $add_on, $feature ) {
 
 	// Set add-on support to false for this add-on / feature combo
 	if ( empty( $add_ons[$add_on]['options'] ) )
-		$GLOBALS['it_cart_buddy']['add_ons']['registered'][$add_on]['options']['supports'][$feature] = false;
+		$GLOBALS['it_exchange']['add_ons']['registered'][$add_on]['options']['supports'][$feature] = false;
 }
 
 /**
@@ -304,8 +304,8 @@ function it_cart_buddy_remove_addon_support( $add_on, $feature ) {
  * @param string $feature the feature the slug is targeting
  * @return mixed the value of the key
 */
-function it_cart_buddy_get_addon_support( $add_on, $feature ) {
-	$add_ons = it_cart_buddy_get_addons();
+function it_exchange_get_addon_support( $add_on, $feature ) {
+	$add_ons = it_exchange_get_addons();
 
 	// Return false if feature isn't recorded
 	if ( empty( $add_ons[$add_on]['options']['supports'][$feature] ) )
