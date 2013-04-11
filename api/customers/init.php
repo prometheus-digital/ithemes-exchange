@@ -3,7 +3,7 @@
  * API functions to deal with customer data and actions
  *
  * @since 0.3.7
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
 /**
@@ -14,8 +14,8 @@
  * @param array $args optional array of arguments. not used by all add-ons
  * @return mixed
 */
-function it_cart_buddy_register_customer( $customer_data, $args=array() ) {
-	return do_action( 'it_cart_buddy_register_customer', $customer_data, $args );
+function it_exchange_register_customer( $customer_data, $args=array() ) {
+	return do_action( 'it_exchange_register_customer', $customer_data, $args );
 }
 
 /**
@@ -27,10 +27,10 @@ function it_cart_buddy_register_customer( $customer_data, $args=array() ) {
  * @param integer $customer_id id for the customer
  * @return mixed customer data
 */
-function it_cart_buddy_get_customer( $customer_id ) {
+function it_exchange_get_customer( $customer_id ) {
     // Grab the WP User
-	$customer = new IT_Cart_Buddy_Customer( $customer_id );
-	return apply_filters( 'it_cart_buddy_get_customer', $customer, $customer_id );
+	$customer = new IT_Exchange_Customer( $customer_id );
+	return apply_filters( 'it_exchange_get_customer', $customer, $customer_id );
 }
 
 /**
@@ -39,14 +39,14 @@ function it_cart_buddy_get_customer( $customer_id ) {
  * @since 0.3.7
  * @return mixed customer data
 */
-function it_cart_buddy_get_current_customer() {
+function it_exchange_get_current_customer() {
 	if ( ! is_user_logged_in() )
 		return false;
 
 	// Get current users's ID
 	$customer_id = get_current_user_id();
-	$customer = it_cart_buddy_get_customer( $customer_id );
-	return apply_filters( 'it_cart_buddy_get_current_customer', $customer );
+	$customer = it_exchange_get_customer( $customer_id );
+	return apply_filters( 'it_exchange_get_current_customer', $customer );
 }
 
 /**
@@ -58,8 +58,8 @@ function it_cart_buddy_get_current_customer() {
  * @param array $args optional array of arguments. not used by all add-ons
  * @return mixed
 */
-function it_cart_buddy_update_customer( $customer_id, $customer_data, $args ) {
-	return add_action( 'it_cart_buddy_update_customer', $customer_id, $customer_data, $args );
+function it_exchange_update_customer( $customer_id, $customer_data, $args ) {
+	return add_action( 'it_exchange_update_customer', $customer_id, $customer_data, $args );
 }
 
 /**
@@ -80,8 +80,8 @@ function it_cart_buddy_update_customer( $customer_id, $customer_data, $args ) {
  * @since 0.3.7
  * @return array
 */
-function it_cart_buddy_get_customer_registration_fields() {
-	$profile_fields = it_cart_buddy_get_customer_profile_fields();
+function it_exchange_get_customer_registration_fields() {
+	$profile_fields = it_exchange_get_customer_profile_fields();
 
 	$fields['username']  = array(
 		'type'  => 'text_box',
@@ -100,7 +100,7 @@ function it_cart_buddy_get_customer_registration_fields() {
 	);
 
 	$fields = array_merge( $profile_fields, $fields );
-	return apply_filters( 'it_cart_buddy_get_customer_registration_fields', $fields );
+	return apply_filters( 'it_exchange_get_customer_registration_fields', $fields );
 }
 
 /**
@@ -120,7 +120,7 @@ function it_cart_buddy_get_customer_registration_fields() {
  * @since 0.3.7
  * @return array 
 */
-function it_cart_buddy_get_customer_profile_fields() {
+function it_exchange_get_customer_profile_fields() {
 	$fields['first_name']  = array(
 		'type'  => 'text_box',
 		'var'   => 'first_name',
@@ -136,7 +136,7 @@ function it_cart_buddy_get_customer_profile_fields() {
 		'var'   => 'user_email',
 		'label' => __( 'Email', 'LION' ),
 	);  
-	return apply_filters( 'it_cart_buddy_get_customer_profile_fields', $fields );
+	return apply_filters( 'it_exchange_get_customer_profile_fields', $fields );
 }
 
 /**
@@ -145,11 +145,11 @@ function it_cart_buddy_get_customer_profile_fields() {
  * @since 0.3.7
  * @return string HTML
 */
-function it_cart_buddy_get_customer_login_form() {
+function it_exchange_get_customer_login_form() {
 	$args = array(
 		'echo' => false,
-		'form_id' => 'cart_buddy_login_form',
+		'form_id' => 'exchange_login_form',
 	);
 	$form = wp_login_form( $args );
-	return apply_filters( 'it_cart_buddy_get_customer_login_form', $form );
+	return apply_filters( 'it_exchange_get_customer_login_form', $form );
 }
