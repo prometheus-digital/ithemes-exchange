@@ -1,12 +1,12 @@
 <?php
 /*
- * Plugin Name: Cart Buddy by iThemes
+ * Plugin Name: iThemes Exchange
  * Version: 0.3.7
  * Description: Turns your WordPress site into a Lean, Mean Selling Machine!
- * Plugin URI: http://ithemes.com/purchase/cartbuddy/
+ * Plugin URI: http://ithemes.com/purchase/ithemes-exchange/
  * Author: iThemes
  * Author URI: http://ithemes.com
- *
+ 
  * Installation:
  * 1. Download and unzip the latest release zip file.
  * 2. If you use the WordPress plugin uploader to install this plugin skip to step 4.
@@ -16,18 +16,18 @@
 */
 
 /**
- * CartBuddy main class.
+ * Exchange main class.
  *
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
  * @since 0.1.0
 */
-class IT_Cart_Buddy {
+class IT_Exchange {
 
 	var $_version         = '0.3.7';
 	var $_updater         = '1.0.8';
 	var $_wp_minimum      = '3.5';
-	var $_slug            = 'cart_buddy';
-	var $_name            = 'Cart Buddy';
+	var $_slug            = 'it-exchange';
+	var $_name            = 'iThemes Exchange';
 	var $_series          = '';
 
 	var $_plugin_path     = '';
@@ -39,13 +39,13 @@ class IT_Cart_Buddy {
 	 *
 	 * Class Constructor. Sets up the environment and then loads admin or enqueues active bar
 	 *
-	 * @uses IT_CartBuddy::set_plugin_locations()
-	 * @uses IT_CartBuddy::set_textdomain()
-	 * @uses IT_CartBuddy::init_cartbuddy()
+	 * @uses IT_Exchange::set_plugin_locations()
+	 * @uses IT_Exchange::set_textdomain()
+	 * @uses IT_Exchange::init_exchange()
 	 * @since 0.1.0
 	 * @return void
 	*/
-	function IT_Cart_Buddy() {
+	function IT_Exchange() {
 		// Setup Plugin
 		$this->set_plugin_locations();
 		$this->set_textdomain();
@@ -91,20 +91,20 @@ class IT_Cart_Buddy {
 	 * @return void
 	*/
 	function addons_init() {
-		if ( $addons = it_cart_buddy_get_enabled_addons() ) {
+		if ( $addons = it_exchange_get_enabled_addons() ) {
 			foreach( (array) $addons as $slug => $params ) {
 				if ( ! empty( $params['file'] ) && is_file( $params['file'] ) ) {
 					include( $params['file'] );
 				} else {
-					it_cart_buddy_disable_addon( $slug );
+					it_exchange_disable_addon( $slug );
 					if ( is_admin() ) {
-						wp_safe_redirect('admin.php?page=it-cart-buddy-addons&message=addon-auto-disabled-' . $slug );
+						wp_safe_redirect('admin.php?page=it-exchange-addons&message=addon-auto-disabled-' . $slug );
 						die();
 					}
 				}
 			}
 		}
-		do_action( 'it_cart_buddy_enabled_addons_loaded' );
+		do_action( 'it_exchange_enabled_addons_loaded' );
 	}
 
 	/**
@@ -180,4 +180,4 @@ class IT_Cart_Buddy {
 	}
 }
 // Init plugin
-$IT_Cart_Buddy = new IT_Cart_Buddy();
+$IT_Exchange = new IT_Exchange();
