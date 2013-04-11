@@ -32,19 +32,19 @@
 	Transaction API
 	Add-on: Transaction Status Metabox
 0.3.2 - 2013-01-07 - Glenn Ansley
-	Introduced WP_Cart_Buddy_Product class
+	Introduced Product class
 	Refactored enable / disable add-ons functionality
 	Introduced required / default meta_data to addon categories, add-ons, and product post_types
 0.3.1 - 2013-01-06 - Glenn Ansley
 	Item Type bug fixes. DocBlock @since fixes
-	Remove class_exists from cartbuddy.php
+	Remove class_exists from it-exchange.php
 	Change admin addon param to product-type
 	Add product_type to object and post_meta
 	Rename Items to Products. Rename files, vars, labels
 	Include add-on files when enabled
 	Add core Product Type Metabox Addon
 	Modify Edit Post label to reflect Product Type being Edited
-	Make sidebar admin menu open to Cart Buddy on Edit Product screen
+	Make sidebar admin menu open to Exhange on Edit Product screen
 0.2.0 - Glenn Ansley
 	API Revamp
 0.1.0 - Glenn Ansley
