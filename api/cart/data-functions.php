@@ -5,7 +5,7 @@
  * The active shopping cart plugin should add the needed hooks below within its codebase.
  *
  * @since 0.3.7
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
 /**
@@ -14,9 +14,9 @@
  * @since 0.3.7
  * @return array
 */
-function it_cart_buddy_get_cart_data() {
-	$data = it_cart_buddy_get_session_data();
-	return apply_filters( 'it_cart_buddy_get_cart_data', $data );
+function it_exchange_get_cart_data() {
+	$data = it_exchange_get_session_data();
+	return apply_filters( 'it_exchange_get_cart_data', $data );
 }
 
 /**
@@ -25,28 +25,28 @@ function it_cart_buddy_get_cart_data() {
  * @since 0.3.7
  * @return array
 */
-function it_cart_buddy_get_cart_products() {
-    $products = it_cart_buddy_get_session_products();
+function it_exchange_get_cart_products() {
+    $products = it_exchange_get_session_products();
 	return ( empty( $products ) || ! array( $products ) ) ? array() : $products;
 }
 
 /**
  * Returns a specific product from the cart.
  *
- * The returned data is not a Cart Buddy Product object. It is a cart-product
+ * The returned data is not a iThemes Exchange Product object. It is a cart-product
  *
  * @since 0.3.7
  * @param mixed $id id for the cart's product data
  * @return mixed
 */
-function it_cart_buddy_get_cart_product( $id ) {
-    if ( ! $products = it_cart_buddy_get_cart_products() )
+function it_exchange_get_cart_product( $id ) {
+    if ( ! $products = it_exchange_get_cart_products() )
         return false;
 
     if ( empty( $products[$id] ) )
         return false;
 
-	return apply_filters( 'it_cart_buddy_get_cart_product', $products[$id], $id );
+	return apply_filters( 'it_exchange_get_cart_product', $products[$id], $id );
 }
 
 /**
@@ -55,7 +55,7 @@ function it_cart_buddy_get_cart_product( $id ) {
  * @since 0.3.8
  * @return array column slugs / labels
 */
-function it_cart_buddy_get_cart_table_columns() {
+function it_exchange_get_cart_table_columns() {
     $columns = array(
         'product-remove'   => '', 
         'product-title'    => __( 'Product', 'LION' ),
@@ -63,29 +63,29 @@ function it_cart_buddy_get_cart_table_columns() {
         'product-quantity' => __( 'Quantity', 'LION' ),
         'product-subtotal' => __( 'Total', 'LION' ),
     );  
-    return apply_filters( 'it_cart_buddy_get_cart_table_columns', $columns );
+    return apply_filters( 'it_exchange_get_cart_table_columns', $columns );
 }
 
 /**
  * Adds a product to the shopping cart based on the product_id
  *
  * @since 0.3.7
- * @param $product_id a valid wp post id with a cart buddy product post_typp
+ * @param $product_id a valid wp post id with a iThemes Exchange product post_typp
  * return boolean 
 */
-function it_cart_buddy_add_product_to_shopping_cart( $product_id ) {
+function it_exchange_add_product_to_shopping_cart( $product_id ) {
 
 	if ( ! $product_id )
 		return;
 
-	if ( ! $product = it_cart_buddy_get_product( $product_id ) )
+	if ( ! $product = it_exchange_get_product( $product_id ) )
 		return;
 
 	/**
 	 * The default shopping cart organizes products in the cart by product_id and a hash of 'itemized_data'.
 	 * Any data like product variants or pricing mods that should separate products in the cart can be passed through this filter.
 	*/
-	$itemized_data = apply_filters( 'it_cart_buddy_add_itemized_data_to_cart_product', array(), $product_id );
+	$itemized_data = apply_filters( 'it_exchange_add_itemized_data_to_cart_product', array(), $product_id );
 
 	if ( ! is_serialized( $itemized_data ) )
 		$itemized_data = maybe_serialize( $itemized_data );
@@ -94,18 +94,18 @@ function it_cart_buddy_add_product_to_shopping_cart( $product_id ) {
 	/**
 	 * Any data that needs to be stored in the cart for this product but that should not trigger a new itemized row in the cart
 	*/
-	$additional_data = apply_filters( 'it_cart_buddy_add_additional_data_to_cart_product', array(), $product_id );
+	$additional_data = apply_filters( 'it_exchange_add_additional_data_to_cart_product', array(), $product_id );
 	if ( ! is_serialized( $additional_data ) )
 		$additional_data = maybe_serialize( $additional_data );
 
 	// If product is in cart already, bump the quanity. Otherwise, add it to the cart
-	$session_products = it_cart_buddy_get_session_products();
+	$session_products = it_exchange_get_session_products();
 	if ( ! empty ($session_products[$product_id . '-' . $itemized_hash] ) ) {
 		$product = $session_products[$product_id . '-' . $itemized_hash];
 		$product['count']++;
 		// Bump the quantity
-		it_cart_buddy_update_session_product( $product_id . '-' . $itemized_hash, $product );
-		do_action( 'it_cart_buddy_cart_prouduct_count_updated', $product_id );
+		it_exchange_update_session_product( $product_id . '-' . $itemized_hash, $product );
+		do_action( 'it_exchange_cart_prouduct_count_updated', $product_id );
 		return true;
 	} else {
 		$product = array(
@@ -117,8 +117,8 @@ function it_cart_buddy_add_product_to_shopping_cart( $product_id ) {
 			'count'           => 1,
 		);
 
-		it_cart_buddy_add_session_product( $product, $product_id . '-' . $itemized_hash );
-		do_action( 'it_cart_buddy_product_added_to_cart', $product_id );
+		it_exchange_add_session_product( $product, $product_id . '-' . $itemized_hash );
+		do_action( 'it_exchange_product_added_to_cart', $product_id );
 		return true;
 	}
 	return false;
@@ -130,9 +130,9 @@ function it_cart_buddy_add_product_to_shopping_cart( $product_id ) {
  * @since 0.3.7
  * @return boolean
 */
-function it_cart_buddy_empty_shopping_cart() {
-	if ( it_cart_buddy_clear_session_products() ) {
-		do_action( 'it_cart_buddy_cart_emptied' );
+function it_exchange_empty_shopping_cart() {
+	if ( it_exchange_clear_session_products() ) {
+		do_action( 'it_exchange_cart_emptied' );
 		return true;
 	}
 	return false;
@@ -145,10 +145,10 @@ function it_cart_buddy_empty_shopping_cart() {
  * @param integer $product_id the shopping_cart_product_id (different from the DB product id)
  * @return boolean
 */
-function it_cart_buddy_remove_product_from_shopping_cart( $product_id ) {
+function it_exchange_remove_product_from_shopping_cart( $product_id ) {
 
-	if ( it_cart_buddy_remove_session_product( $product_id ) ) {
-		do_action( 'it_cart_buddy_product_removed_from_cart', $product_id );
+	if ( it_exchange_remove_session_product( $product_id ) ) {
+		do_action( 'it_exchange_product_removed_from_cart', $product_id );
 		return true;
 	}
 	return false;
@@ -165,9 +165,9 @@ function it_cart_buddy_remove_product_from_shopping_cart( $product_id ) {
  * @since 0.3.8
  * @return boolean
 */
-function it_cart_buddy_update_shopping_cart() {
-	do_action( 'it_cart_buddy_update_cart' );
-	do_action( 'it_cart_buddy_cart_updated' );
+function it_exchange_update_shopping_cart() {
+	do_action( 'it_exchange_update_cart' );
+	do_action( 'it_exchange_cart_updated' );
 	return true;
 }
 
@@ -180,12 +180,12 @@ function it_cart_buddy_update_shopping_cart() {
  * @param array $product cart product
  * @return string product title
 */
-function it_cart_buddy_get_cart_product_title( $product ) {
-    if ( ! $db_product = it_cart_buddy_get_product( $product['product_id'] ) )
+function it_exchange_get_cart_product_title( $product ) {
+    if ( ! $db_product = it_exchange_get_product( $product['product_id'] ) )
         return false;
 
     $title = get_the_title( $db_product->ID );
-    return apply_filters( 'it_cart_buddy_get_cart_product_title', $title, $product );
+    return apply_filters( 'it_exchange_get_cart_product_title', $title, $product );
 }
 
 /**
@@ -195,9 +195,9 @@ function it_cart_buddy_get_cart_product_title( $product ) {
  * @param array $product cart product
  * @return integer quantity 
 */
-function it_cart_buddy_get_cart_product_quantity( $product ) {
+function it_exchange_get_cart_product_quantity( $product ) {
     $count = empty( $product['count'] ) ? 0 : $product['count'];
-    return apply_filters( 'it_cart_buddy_get_cart_product_quantity', $count, $product );
+    return apply_filters( 'it_exchange_get_cart_product_quantity', $count, $product );
 }
 
 /**
@@ -209,14 +209,14 @@ function it_cart_buddy_get_cart_product_quantity( $product ) {
  * @param array $product cart product
  * @return integer quantity 
 */
-function it_cart_buddy_get_cart_product_base_price( $product ) {
-    if ( ! $db_product = it_cart_buddy_get_product( $product['product_id'] ) )
+function it_exchange_get_cart_product_base_price( $product ) {
+    if ( ! $db_product = it_exchange_get_product( $product['product_id'] ) )
         return false;
 
     // Get the price from the DB
-    $db_base_price = it_cart_buddy_get_product_feature( $db_product->ID, 'base_price' );
+    $db_base_price = it_exchange_get_product_feature( $db_product->ID, 'base_price' );
 
-    return apply_filters( 'it_cart_buddy_get_cart_product_base_price', $db_base_price, $product );
+    return apply_filters( 'it_exchange_get_cart_product_base_price', $db_base_price, $product );
 }
 
 /**
@@ -228,10 +228,10 @@ function it_cart_buddy_get_cart_product_base_price( $product ) {
  * @param array $product cart product
  * @return mixed subtotal
 */
-function it_cart_buddy_get_cart_product_subtotal( $product ) {
-    $base_price = it_cart_buddy_get_product_feature( $product['product_id'], 'base_price' );
-    $base_price = apply_filters( 'it_cart_buddy_get_cart_product_base_price', $base_price, $product );
-    $subtotal_price = apply_filters( 'it_cart_buddy_get_cart_product_subtotal', $base_price * $product['count'], $product );
+function it_exchange_get_cart_product_subtotal( $product ) {
+    $base_price = it_exchange_get_product_feature( $product['product_id'], 'base_price' );
+    $base_price = apply_filters( 'it_exchange_get_cart_product_base_price', $base_price, $product );
+    $subtotal_price = apply_filters( 'it_exchange_get_cart_product_subtotal', $base_price * $product['count'], $product );
     return $subtotal_price;
 }
 
@@ -241,15 +241,15 @@ function it_cart_buddy_get_cart_product_subtotal( $product ) {
  * @since 0.3.7
  * @return mixed subtotal of cart
 */
-function it_cart_buddy_get_cart_subtotal() {
+function it_exchange_get_cart_subtotal() {
     $subtotal = 0;
-    if ( ! $products = it_cart_buddy_get_cart_products() )
+    if ( ! $products = it_exchange_get_cart_products() )
         return 0;
 
     foreach( (array) $products as $product ) {
-        $subtotal += it_cart_buddy_get_cart_product_subtotal( $product );
+        $subtotal += it_exchange_get_cart_product_subtotal( $product );
     }
-    return apply_filters( 'it_cart_buddy_get_cart_subtotal', $subtotal );
+    return apply_filters( 'it_exchange_get_cart_subtotal', $subtotal );
 }
 
 /**
@@ -261,9 +261,9 @@ function it_cart_buddy_get_cart_subtotal() {
  * @since 0.3.7
  * @return mixed total of cart
 */
-function it_cart_buddy_get_cart_total() {
-    $total = it_cart_buddy_get_cart_subtotal();
-    return apply_filters( 'it_cart_buddy_get_cart_total', $total );
+function it_exchange_get_cart_total() {
+    $total = it_exchange_get_cart_subtotal();
+    return apply_filters( 'it_exchange_get_cart_total', $total );
 }
 
 /**
@@ -273,9 +273,9 @@ function it_cart_buddy_get_cart_total() {
  * @param integer $transaction_id the transaction id
  * @return void
 */
-function it_cart_buddy_do_confirmation_redirect( $transaction_id ) {
-        $confirmation_url = it_cart_buddy_get_page_url( 'confirmation' );
-        $transaction_var  = it_cart_buddy_get_action_var( 'transaction_id' );
+function it_exchange_do_confirmation_redirect( $transaction_id ) {
+        $confirmation_url = it_exchange_get_page_url( 'confirmation' );
+        $transaction_var  = it_exchange_get_action_var( 'transaction_id' );
         $confirmation_url = add_query_arg( array( $transaction_var => $transaction_id ), $confirmation_url );
         wp_redirect( $confirmation_url );
         die();
@@ -287,9 +287,9 @@ function it_cart_buddy_do_confirmation_redirect( $transaction_id ) {
  * @since 0.3.7
  * @return void
 */
-function it_cart_buddy_notify_failed_transaction( $message=false ) {
-    $cart_url = it_cart_buddy_get_page_url( 'checkout' );
-    $message_var = it_cart_buddy_get_action_var( 'error_message' );
+function it_exchange_notify_failed_transaction( $message=false ) {
+    $cart_url = it_exchange_get_page_url( 'checkout' );
+    $message_var = it_exchange_get_action_var( 'error_message' );
     $message = empty( $message ) ? 'failed-transaction' : $message;
     $url = add_query_arg( array( $message_var => $message ) );
     wp_redirect( $url );

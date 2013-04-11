@@ -3,7 +3,7 @@
  * These functions print HTML elements for the cart
  *
  * @since 0.3.7
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
 /**
@@ -16,12 +16,12 @@
  * @since 0.3.7
  * @return string html for the shopping cart
 */
-function it_cart_buddy_get_shopping_cart_html() {
-    $html  = it_cart_buddy_get_errors_div();
-    $html .= it_cart_buddy_get_alerts_div();
+function it_exchange_get_shopping_cart_html() {
+    $html  = it_exchange_get_errors_div();
+    $html .= it_exchange_get_alerts_div();
     
     ob_start();
-    it_cart_buddy_get_template_part( 'shopping-cart' );
+    it_exchange_get_template_part( 'shopping-cart' );
     $html .= ob_get_clean();
     return $html;
 }
@@ -33,13 +33,13 @@ function it_cart_buddy_get_shopping_cart_html() {
  * @param mixed $cart_product_id the id of the product in the cart
  * @reuturn string HTML
 */
-function it_cart_buddy_get_remove_product_from_cart_link( $cart_product_id ) {
+function it_exchange_get_remove_product_from_cart_link( $cart_product_id ) {
 
 	// Set template part vars
-	it_cart_buddy_set_template_part_args( array( 'cart_product_id' => $cart_product_id ), 'remove-product-from-cart' );
+	it_exchange_set_template_part_args( array( 'cart_product_id' => $cart_product_id ), 'remove-product-from-cart' );
 
 	ob_start();
-	it_cart_buddy_get_template_part( 'remove-product-from-cart' );
+	it_exchange_get_template_part( 'remove-product-from-cart' );
 	return ob_get_clean();
 }
 
@@ -49,25 +49,25 @@ function it_cart_buddy_get_remove_product_from_cart_link( $cart_product_id ) {
  * @since 0.3.8
  * @return string HTML for cell
 */
-function it_cart_buddy_get_cart_table_product_data( $column, $product ) {
-    $db_product = it_cart_buddy_get_product( $product['product_id'] );
+function it_exchange_get_cart_table_product_data( $column, $product ) {
+    $db_product = it_exchange_get_product( $product['product_id'] );
     switch( $column ) {
         case 'product-remove' :
-            return it_cart_buddy_get_remove_product_from_cart_link( $product['product_cart_id'] );
+            return it_exchange_get_remove_product_from_cart_link( $product['product_cart_id'] );
             break;
         case 'product-title' :
-            return it_cart_buddy_get_cart_product_title( $product );
+            return it_exchange_get_cart_product_title( $product );
             break;
         case 'product-cost' :
-            $base_price = it_cart_buddy_get_cart_product_base_price( $product );
-            $base_price = apply_filters( 'it_cart_buddy_default_shopping_cart_get_product_base_price', $base_price, $product );
+            $base_price = it_exchange_get_cart_product_base_price( $product );
+            $base_price = apply_filters( 'it_exchange_default_shopping_cart_get_product_base_price', $base_price, $product );
             return '$' . $base_price;
             break;
         case 'product-quantity' :
-            return '<input type="text" name="product_quantity[' . $product['product_cart_id'] . ']" value="' . it_cart_buddy_get_cart_product_quantity( $product ) . '" size="4"/>';
+            return '<input type="text" name="product_quantity[' . $product['product_cart_id'] . ']" value="' . it_exchange_get_cart_product_quantity( $product ) . '" size="4"/>';
             break;
         case 'product-subtotal' :
-            return '$' . it_cart_buddy_get_cart_product_subtotal( $product );
+            return '$' . it_exchange_get_cart_product_subtotal( $product );
             break;
     }
 }
@@ -86,21 +86,21 @@ function it_cart_buddy_get_cart_table_product_data( $column, $product ) {
  * @param array $args an array of args passed through to the template part
  * @return string HTML for the button
 */
-function it_cart_buddy_get_add_product_to_shopping_cart_html( $args=array() ) { 
+function it_exchange_get_add_product_to_shopping_cart_html( $args=array() ) { 
 
 	// Set some default args for the template part
 	$default_args = array(
-		'action_var' => it_cart_buddy_get_action_var( 'add_product_to_cart' ),
+		'action_var' => it_exchange_get_action_var( 'add_product_to_cart' ),
 		'product_id' => false,
 		'title'      => __( 'Add to Cart', 'LION' ),
 	);
 
 	// Merge defaults with incoming args and set template part args
 	$args = wp_parse_args( $args, $default_args );
-	it_cart_buddy_set_template_part_args( $args, 'add-product-to-cart-link' );
+	it_exchange_set_template_part_args( $args, 'add-product-to-cart-link' );
 
 	// Do templating
 	ob_start();
-	it_cart_buddy_get_template_part( 'add-product-to-cart' );
+	it_exchange_get_template_part( 'add-product-to-cart' );
 	return ob_get_clean();
 }

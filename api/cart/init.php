@@ -3,7 +3,7 @@
  * API functions for shopping cart add-ons
  *
  * @since 0.3.7
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
 if ( ! is_admin() ) {
