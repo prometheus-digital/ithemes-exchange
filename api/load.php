@@ -1,8 +1,8 @@
 <?php
 /**
- * Loads APIs for Cart Buddy
+ * Loads APIs for iThemes Exchange
  *
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
  * @since 0.2.0
 */
 
