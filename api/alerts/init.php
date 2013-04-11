@@ -1,9 +1,8 @@
-<?php
 /**
- * Functions for defining, initiating, and displaying Cart Buddy Alerts
+ * Functions for defining, initiating, and displaying iThemes Exchange Alerts
  *
  * @since 0.3.7
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
 /**
@@ -12,9 +11,9 @@
  * @since 0.3.7
  * @return array
 */
-function it_cart_buddy_get_alert_messages() {
+function it_exchange_get_alert_messages() {
 	$alerts = array();
-	return apply_filters( 'it_cart_buddy_get_alert_messages', $alerts );
+	return apply_filters( 'it_exchange_get_alert_messages', $alerts );
 }
 
 /**
@@ -24,13 +23,13 @@ function it_cart_buddy_get_alert_messages() {
  * @param array $alerts an array of slugs for the alert message being requested
  * @return string the alert message
 */
-function it_cart_buddy_get_alert_message( $alerts=array() ) {
+function it_exchange_get_alert_message( $alerts=array() ) {
 	// Retreive list of all registered alerts
-	$all_alerts = it_cart_buddy_get_alert_messages();
+	$all_alerts = it_exchange_get_alert_messages();
 	$all_alerts = empty( $all_alerts ) ? false : $all_alerts;
 
 	// Grab the alert var
-	$alert_var = it_cart_buddy_get_action_var( 'alert_message' );
+	$alert_var = it_exchange_get_action_var( 'alert_message' );
 
 	// Grab alerts from REQUEST params
 	$request_vars = empty( $_REQUEST[$alert_var] ) ? array() : (array) $_REQUEST[$alert_var];
@@ -71,8 +70,8 @@ function it_cart_buddy_get_alert_message( $alerts=array() ) {
  * @param array $alerts an array of alert message slugs
  * @return string HTML
 */
-function it_cart_buddy_get_alerts_div( $alerts=array() ) {
-	$alerts = it_cart_buddy_get_alert_message( $alerts );
+function it_exchange_get_alerts_div( $alerts=array() ) {
+	$alerts = it_exchange_get_alert_message( $alerts );
 	if ( ! $alerts )
 		return false;
 
@@ -80,25 +79,25 @@ function it_cart_buddy_get_alerts_div( $alerts=array() ) {
 
 	if ( 1 === $count ) {
 		$alert = array_values( $alerts );
-		$alert_message = '<p class="cart-buddy-alerts">' . $alert[0] . '</p>';
+		$alert_message = '<p class="it-exchange-alerts">' . $alert[0] . '</p>';
 	} else {
-		$alert_message = '<ul class="cart-buddy-alerts">';
+		$alert_message = '<ul class="it-exchange-alerts">';
 		foreach( $alerts as $alert ) {
 			$alert_message .= '<li>' . $alert . '</li>';
 		}
 		$alert_message .= '</ul>';
 	}
-	$html = '<div class="cart-buddy-alert-message">' . $alert_message . '</div>';
+	$html = '<div class="it-exchange-alert-message">' . $alert_message . '</div>';
 	return $html;
 }
 
 /**
- * Echos the it_cart_buddy_get_alert_message_div() results
+ * Echos the it_exchange_get_alert_message_div() results
  *
  * @since 0.3.7
  * @param array $alerts an array of alert message slugs
  * @return string HTML
 */
-function it_cart_buddy_alerts_div( $alerts=array() ) {
-	echo it_cart_buddy_get_alerts_div( $alerts );
+function it_exchange_alerts_div( $alerts=array() ) {
+	echo it_exchange_get_alerts_div( $alerts );
 }
