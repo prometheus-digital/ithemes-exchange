@@ -1,9 +1,9 @@
 <?php
 /**
- * Functions for defining, initiating, and displaying Cart Buddy Errors
+ * Functions for defining, initiating, and displaying iThemes Exchange Errors
  *
  * @since 0.3.7
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
 /**
@@ -12,11 +12,11 @@
  * @since 0.3.7
  * @return array
 */
-function it_cart_buddy_get_error_messages() {
+function it_exchange_get_error_messages() {
 	$errors = array(
 		'default' => __( 'There was an error processing your request. Please try again.', 'LION' ),
 	);
-	return apply_filters( 'it_cart_buddy_get_error_messages', $errors );
+	return apply_filters( 'it_exchange_get_error_messages', $errors );
 }
 
 /**
@@ -26,13 +26,13 @@ function it_cart_buddy_get_error_messages() {
  * @param array $errors an array of slugs for the error message being requested
  * @return string the error message
 */
-function it_cart_buddy_get_error_message( $errors=array() ) {
+function it_exchange_get_error_message( $errors=array() ) {
 	// Retreive list of all registered errors
-	$all_errors = it_cart_buddy_get_error_messages();
+	$all_errors = it_exchange_get_error_messages();
 	$all_errors = empty( $all_errors ) ? false : $all_errors;
 
 	// Grab the error var
-	$error_var = it_cart_buddy_get_action_var( 'error_message' );
+	$error_var = it_exchange_get_action_var( 'error_message' );
 
 	// Grab errors from REQUEST params
 	$request_vars = empty( $_REQUEST[$error_var] ) ? array() : (array) $_REQUEST[$error_var];
@@ -73,8 +73,8 @@ function it_cart_buddy_get_error_message( $errors=array() ) {
  * @param array $errors an array of error message slugs
  * @return string HTML
 */
-function it_cart_buddy_get_errors_div( $errors=array() ) {
-	$errors = it_cart_buddy_get_error_message( $errors );
+function it_exchange_get_errors_div( $errors=array() ) {
+	$errors = it_exchange_get_error_message( $errors );
 	if ( ! $errors )
 		return false;
 
@@ -82,25 +82,25 @@ function it_cart_buddy_get_errors_div( $errors=array() ) {
 
 	if ( 1 === $count ) {
 		$error = array_values( $errors );
-		$error_message = '<p class="cart-buddy-errors">' . $error[0] . '</p>';
+		$error_message = '<p class="it-exchange-errors">' . $error[0] . '</p>';
 	} else {
-		$error_message = '<ul class="cart-buddy-errors">';
+		$error_message = '<ul class="it-exchange-errors">';
 		foreach( $errors as $error ) {
 			$error_message .= '<li>' . $error . '</li>';
 		}
 		$error_message .= '</ul>';
 	}
-	$html = '<div class="cart-buddy-error-message">' . $error_message . '</div>';
+	$html = '<div class="it-exchange-error-message">' . $error_message . '</div>';
 	return $html;
 }
 
 /**
- * Echos the it_cart_buddy_get_error_message_div() results
+ * Echos the it_exchange_get_error_message_div() results
  *
  * @since 0.3.7
  * @param array $errors an array of error message slugs
  * @return string HTML
 */
-function it_cart_buddy_errors_div( $errors=array() ) {
-	echo it_cart_buddy_get_errors_div( $errors );
+function it_exchange_errors_div( $errors=array() ) {
+	echo it_exchange_get_errors_div( $errors );
 }
