@@ -1,7 +1,7 @@
 <?php
 /**
  * API Functions for Product Type Add-ons
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
  * @since 0.3.1
 */
 
@@ -11,12 +11,12 @@
  * @since 0.3.1
  * @return string the product type
 */
-function it_cart_buddy_get_product_type( $post=false ) {
+function it_exchange_get_product_type( $post=false ) {
 	if ( ! $post )
 		global $post;
 
-	// Return value from IT_Cart_Buddy_Product if we are able to locate it
-	$product = it_cart_buddy_get_product( $post );
+	// Return value from IT_Exchange_Product if we are able to locate it
+	$product = it_exchange_get_product( $post );
 	if ( is_object( $product ) && ! empty ( $product->product_type ) )
 		return $product->product_type;
 
@@ -33,8 +33,8 @@ function it_cart_buddy_get_product_type( $post=false ) {
  * @since 0.3.2
  * @param string $product_type  slug for the product-type
 */
-function it_cart_buddy_get_product_type_options( $product_type ) {
-	if ( $addon = it_cart_buddy_get_addon( $product_type ) )
+function it_exchange_get_product_type_options( $product_type ) {
+	if ( $addon = it_exchange_get_addon( $product_type ) )
 		return $addon['options'];
 	
 	return false;
@@ -45,24 +45,24 @@ function it_cart_buddy_get_product_type_options( $product_type ) {
  *
  * @since 0.3.2
  * @param mixed $post  post object or post id
- * @rturn object IT_Cart_Buddy_Product object for passed post
+ * @rturn object IT_Exchange_Product object for passed post
 */
-function it_cart_buddy_get_product( $post ) {
-	$product = new IT_Cart_Buddy_Product( $post );
+function it_exchange_get_product( $post ) {
+	$product = new IT_Exchange_Product( $post );
 	if ( $product->ID )
 		return $product;
 	return false;
 }
 
 /**
- * Get IT_Cart_Buddy_Products
+ * Get IT_Exchange_Products
  *
  * @since 0.3.3
- * @return array  an array of IT_Cart_Buddy_Product objects
+ * @return array  an array of IT_Exchange_Product objects
 */
-function it_cart_buddy_get_products( $args=array() ) {
+function it_exchange_get_products( $args=array() ) {
 	$defaults = array(
-		'post_type' => 'it_cart_buddy_prod',
+		'post_type' => 'it_exchange_prod',
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -70,7 +70,7 @@ function it_cart_buddy_get_products( $args=array() ) {
 	if ( ! empty( $args['product_type'] ) ) {
 		$meta_query = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
 		$meta_query[] = array( 
-			'key'   => '_it_cart_buddy_product_type',
+			'key'   => '_it_exchange_product_type',
 			'value' => $args['product_type'],
 		);
 		$args['meta_query'] = $meta_query;
@@ -78,7 +78,7 @@ function it_cart_buddy_get_products( $args=array() ) {
 
 	if ( $products = get_posts( $args ) ) {
 		foreach( $products as $key => $product ) {
-			$products[$key] = it_cart_buddy_get_product( $product );
+			$products[$key] = it_exchange_get_product( $product );
 		}
 		return $products;
 	}
@@ -97,11 +97,11 @@ function it_cart_buddy_get_products( $args=array() ) {
  * @param integer $product_id
  * @return void
 */
-function it_cart_buddy_set_the_product_id( $product_id=false ) {
-	if ( $product = it_cart_buddy_get_product( $product_id ) )
-		$GLOBALS['it_cart_buddy']['product_id'] = $product->ID;
+function it_exchange_set_the_product_id( $product_id=false ) {
+	if ( $product = it_exchange_get_product( $product_id ) )
+		$GLOBALS['it_exchange']['product_id'] = $product->ID;
 	else
-		$GLOBALS['it_cart_buddy']['product_id'] = false;
+		$GLOBALS['it_exchange']['product_id'] = false;
 }
 
 /**
@@ -110,6 +110,6 @@ function it_cart_buddy_set_the_product_id( $product_id=false ) {
  * @since 0.3.8
  * @return mixed product id or false
 */
-function it_cart_buddy_get_the_product_id() {
-	return empty( $GLOBALS['it_cart_buddy']['product_id'] ) ? false : $GLOBALS['it_cart_buddy']['product_id'];
+function it_exchange_get_the_product_id() {
+	return empty( $GLOBALS['it_exchange']['product_id'] ) ? false : $GLOBALS['it_exchange']['product_id'];
 }
