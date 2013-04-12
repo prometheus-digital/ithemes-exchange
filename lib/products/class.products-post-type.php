@@ -42,7 +42,7 @@ class IT_Exchange_Product_Post_Type {
 		);
 		$this->options = array(
 			'labels' => $labels,
-			'description' => __( 'A iThemes Exchange Post Type for storing all Products in the system', 'LION' ),
+			'description' => __( 'An iThemes Exchange Post Type for storing all Products in the system', 'LION' ),
 			'public'      => true,
 			'show_ui'     => true,
 			'show_in_nav_menus' => true,
@@ -170,11 +170,11 @@ class IT_Exchange_Product_Post_Type {
 	 * Provides specific hooks for when iThemes Exchange products are saved.
 	 *
 	 * This method is hooked to save_post. It provides hooks for add-on developers
-	 * that will only be called when the post being saved is a iThemes Exchange product. 
+	 * that will only be called when the post being saved is an iThemes Exchange product. 
 	 * It provides the following 4 hooks:
-	 * - it_exchange_save_product_unvalidated                // Runs every time a iThemes Exchange product is saved.
+	 * - it_exchange_save_product_unvalidated                // Runs every time an iThemes Exchange product is saved.
 	 * - it_exchange_save_product_unavalidate-[product-type] // Runs every time a specific iThemes Exchange product type is saved.
-	 * - it_exchange_save_product                            // Runs every time a iThemes Exchange product is saved if not an autosave and if user has permission to save post
+	 * - it_exchange_save_product                            // Runs every time an iThemes Exchange product is saved if not an autosave and if user has permission to save post
 	 * - it_exchange_save_product-[product-type]             // Runs every time a specific iThemes Exchange product-type is saved if not an autosave and if user has permission to save post
 	 *
 	 * @since 0.3.1

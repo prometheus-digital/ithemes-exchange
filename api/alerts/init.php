@@ -1,3 +1,4 @@
+<?php
 /**
  * Functions for defining, initiating, and displaying iThemes Exchange Alerts
  *

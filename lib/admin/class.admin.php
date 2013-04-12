@@ -129,7 +129,7 @@ class IT_Exchange_Admin {
 	*/
 	function add_exchange_admin_menu() {
 		// Add main iThemes Exchange menu item
-		add_menu_page( 'iThemes Exchange', 'iThemes Exchange', $this->admin_menu_capability, 'it-exchange', array( $this, 'print_exchange_setup_page' ) );
+		add_menu_page( 'iThemes Exchange', 'Exchange', $this->admin_menu_capability, 'it-exchange', array( $this, 'print_exchange_setup_page' ) );
 
 		// Add setup wizard if not complete or if on page
 		if ( 'it-exchange-setup' == $this->_current_page || ! get_option( 'it_exchange_setup_complete' ) )

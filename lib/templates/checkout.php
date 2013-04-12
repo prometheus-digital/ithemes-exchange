@@ -63,7 +63,7 @@ if ( ! is_user_logged_in() )
 	</div>
 
 	<h3><?php _e( 'Payment Method', 'LION' ); ?></h3>
-	<div id="it-cart-buddy-checkout-place-order-form">
+	<div id="it-exchange-checkout-place-order-form">
 		<?php if ( ! $transaction_methods = it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) ) ) : ?>
 			<p><?php _e( 'No payment add-ons enabled!', 'LION' ); ?></p>
 		<?php else : ?>

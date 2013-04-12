@@ -5,7 +5,7 @@
  * @package IT_Exchange
 */
 
-add_shortcode( 'it_exchange_purchase_confirmation', 'it_exchange_shortcode_get_transaction_confirmation_page_html' );
+add_shortcode( 'ithemes_exchange_purchase_confirmation', 'it_exchange_shortcode_get_transaction_confirmation_page_html' );
 
 /**
  * Passes the shortcode call on to the more general function

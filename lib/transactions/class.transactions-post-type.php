@@ -32,13 +32,13 @@ class IT_Exchange_Transaction_Post_Type {
 	function init() {
 		$this->post_type = 'it_exchange_tran';
 		$labels    = array(
-			'name'          => __( 'Transactions', 'LION' ),
-			'singular_name' => __( 'Transaction', 'LION' ),
-			'edit_item'     => __( 'Edit Transaction', 'LION' ),
+			'name'          => __( 'Payments', 'LION' ),
+			'singular_name' => __( 'Payment', 'LION' ),
+			'edit_item'     => __( 'Edit Payment', 'LION' ),
 		);
 		$this->options = array(
 			'labels'               => $labels,
-			'description'          => __( 'An iThemes Exchange Post Type for storing all Transactions in the system', 'LION' ),
+			'description'          => __( 'An iThemes Exchange Post Type for storing all Payments in the system', 'LION' ),
 			'public'               => false,
 			'show_ui'              => true,
 			'show_in_nav_menus'    => false,
@@ -179,16 +179,16 @@ class IT_Exchange_Transaction_Post_Type {
 		foreach ( (array) $existing as $id => $label ) {
 			$columns[$id] = $label;
 			if ( 'title' == $id )
-				$columns['it_exchange_transaction_method_column'] = __( 'Transaction Method', 'LION' );
+				$columns['it_exchange_transaction_method_column'] = __( 'Payment Method', 'LION' );
 			if ( 'format' == $id )
-				$columns['it_exchange_transaction_status_column'] = __( 'Transaction Status', 'LION' );
+				$columns['it_exchange_transaction_status_column'] = __( 'Payment Status', 'LION' );
 		}
 		// Insert at end if title wasn't found
 		if ( empty( $columns['it_exchange_transaction_method_column'] ) )
-			$columns['it_exchange_transaction_method_column'] = __( 'Transaction Method', 'LION' );
+			$columns['it_exchange_transaction_method_column'] = __( 'Payment Method', 'LION' );
 		// Insert at end if status wasn't found
 		if ( empty( $columns['it_exchange_transaction_status_column'] ) )
-			$columns['it_exchange_transaction_status_column'] = __( 'Transaction Status', 'LION' );
+			$columns['it_exchange_transaction_status_column'] = __( 'Payment Status', 'LION' );
 
 		// Remove Format
 		if ( isset( $columns['format'] ) )

@@ -152,7 +152,7 @@ class IT_Exchange_Manual_Payments_Add_On {
 		$new_values = wp_parse_args( ITForm::get_post_data(), $defaults );
 
 		// Check nonce
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-manual-payments-settings' ) ) {
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'it-exchange-manual-payments-settings' ) ) {
 			$this->error_message = __( 'Error. Please try again', 'LION' );
 			return;
 		}

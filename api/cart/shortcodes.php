@@ -5,9 +5,9 @@
  * @since 0.3.7
  * @package IT_Exchange
 */
-add_shortcode( 'it_exchange_shopping_cart', 'it_exchange_get_shopping_cart_html' );
-add_shortcode( 'it_exchange_checkout', 'it_exchange_get_checkout_html' );
-add_shortcode( 'it_exchange_add_product_to_cart', 'it_exchange_shortcode_add_product_to_shopping_cart_html' );
+add_shortcode( 'ithemes_exchange_shopping_cart', 'it_exchange_get_shopping_cart_html' );
+add_shortcode( 'ithemes_exchange_checkout', 'it_exchange_get_checkout_html' );
+add_shortcode( 'ithemes_exchange_add_product_to_cart', 'it_exchange_shortcode_add_product_to_shopping_cart_html' );
 
 /**
  * This shortcode is intended to print an Add to Cart HTML block

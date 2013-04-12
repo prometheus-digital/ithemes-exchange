@@ -33,7 +33,7 @@ function it_exchange_get_cart_products() {
 /**
  * Returns a specific product from the cart.
  *
- * The returned data is not a iThemes Exchange Product object. It is a cart-product
+ * The returned data is not an iThemes Exchange Product object. It is a cart-product
  *
  * @since 0.3.7
  * @param mixed $id id for the cart's product data
@@ -70,7 +70,7 @@ function it_exchange_get_cart_table_columns() {
  * Adds a product to the shopping cart based on the product_id
  *
  * @since 0.3.7
- * @param $product_id a valid wp post id with a iThemes Exchange product post_typp
+ * @param $product_id a valid wp post id with an iThemes Exchange product post_typp
  * return boolean 
 */
 function it_exchange_add_product_to_shopping_cart( $product_id ) {

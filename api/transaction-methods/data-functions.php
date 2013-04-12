@@ -3,9 +3,9 @@
  * API Functions for Transaction Method Add-ons
  *
  * In addition to the functions found below, iThemes Exchange offers the following actions related to transactions
- * - it_exchange_save_transaction_unvalidated		                 // Runs every time a iThemes Exchange transaction is saved.
+ * - it_exchange_save_transaction_unvalidated		                 // Runs every time an iThemes Exchange transaction is saved.
  * - it_exchange_save_transaction_unavalidate-[transaction-method] // Runs every time a specific iThemes Exchange transaction method is saved.
- * - it_exchange_save_transaction                                  // Runs every time a iThemes Exchange transaction is saved if not an autosave and if user has permission to save post
+ * - it_exchange_save_transaction                                  // Runs every time an iThemes Exchange transaction is saved if not an autosave and if user has permission to save post
  * - it_exchange_save_transaction-[transaction-method]             // Runs every time a specific iThemes Exchange transaction method is saved if not an autosave and if user has permission to save transaction
  *
  * @package IT_Exchange
