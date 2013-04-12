@@ -2,7 +2,7 @@
 /**
  * Templating. Lifted from bbpress... kind of
  * @since 0.3.8
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
 /**
@@ -14,7 +14,7 @@
  * @return mixed template
  */
 
-function it_cart_buddy_get_template_part( $slug, $name=null, $load=true ) {
+function it_exchange_get_template_part( $slug, $name=null, $load=true ) {
     // Execute code for this part
     do_action( 'get_template_part_' . $slug, $slug, $name );
 
@@ -25,7 +25,7 @@ function it_cart_buddy_get_template_part( $slug, $name=null, $load=true ) {
     $templates[] = $slug . '.php';
 
     // Return the part that is found
-    return it_cart_buddy_locate_template( $templates, $load, false );
+    return it_exchange_locate_template( $templates, $load, false );
 }
 
 /**
@@ -43,20 +43,20 @@ function it_cart_buddy_get_template_part( $slug, $name=null, $load=true ) {
  * @param boolean $require_once Whether to require_once or require. Default true.
  * @return string The template filename if one is located.
  */
-function it_cart_buddy_locate_template( $template_names, $load = false, $require_once = true ) { 
+function it_exchange_locate_template( $template_names, $load = false, $require_once = true ) { 
     // No file found yet
     $located = false;
 
 	// Define possible template paths
 	$possible_template_paths = array( 
-		trailingslashit( get_stylesheet_directory() ) . 'cart_buddy_templates',
-		trailingslashit( get_template_directory() ) . 'cart_buddy_templates',
+		trailingslashit( get_stylesheet_directory() ) . 'exchange_templates',
+		trailingslashit( get_template_directory() ) . 'exchange_templates',
 	);
 	
 	// Allow addons to add a template path
-	$possible_template_paths = apply_filters( 'it_cart_buddy_possible_template_paths', $possible_template_paths );
+	$possible_template_paths = apply_filters( 'it_exchange_possible_template_paths', $possible_template_paths );
 
-	// Force core cart buddy template folder to be last in array
+	// Force core iThemes Exchange template folder to be last in array
 	$core_template_path = dirname( dirname( __FILE__ ) ) . '/templates/';
 	if ( $key = array_search( $core_template_path, $possible_template_paths ) )
 		unset( $possible_template_paths[$key] );
@@ -89,7 +89,7 @@ function it_cart_buddy_locate_template( $template_names, $load = false, $require
 
     if ( ( true == $load ) && ! empty( $located ) ) {
         load_template( $located, $require_once );
-		it_cart_buddy_unset_template_part_args( rtrim( $template_name, '.php' ) );
+		it_exchange_unset_template_part_args( rtrim( $template_name, '.php' ) );
 	}
 
     return $located;
@@ -106,13 +106,13 @@ function it_cart_buddy_locate_template( $template_names, $load = false, $require
  * @param string $name optional name of template part
  * @return void
 */
-function it_cart_buddy_set_template_part_args( $args, $slug, $name=false ) {
+function it_exchange_set_template_part_args( $args, $slug, $name=false ) {
 
 	// Set the slug
 	$key = empty( $name ) ? $slug : $slug . '-' . $name;
 
 	// Store the options
-	$GLOBALS['it_cart_buddy']['template_part_args'][$key] = $args;
+	$GLOBALS['it_exchange']['template_part_args'][$key] = $args;
 }
 
 /**
@@ -122,10 +122,10 @@ function it_cart_buddy_set_template_part_args( $args, $slug, $name=false ) {
  * @param $template_part key for the template part. File name without .php
  * @return mixed
 */
-function it_cart_buddy_get_template_part_args( $template_part ) {
-	$args = empty( $GLOBALS['it_cart_buddy']['template_part_args'][$template_part] ) ? false : $GLOBALS['it_cart_buddy']['template_part_args'][$template_part] ;
+function it_exchange_get_template_part_args( $template_part ) {
+	$args = empty( $GLOBALS['it_exchange']['template_part_args'][$template_part] ) ? false : $GLOBALS['it_exchange']['template_part_args'][$template_part] ;
 
-	return apply_filters( 'it_cart_buddy_template_part_args-' . $template_part, $args );
+	return apply_filters( 'it_exchange_template_part_args-' . $template_part, $args );
 }
 
 /**
@@ -135,7 +135,7 @@ function it_cart_buddy_get_template_part_args( $template_part ) {
  * @param string $template_name name of template part
  * @return void
 */
-function it_cart_buddy_unset_template_part_args( $template_name ) {
-	if ( isset( $GLOBALS['it_cart_buddy']['template_part_args'][$template_name] ) )
-		unset( $GLOBALS['it_cart_buddy']['template_part_args'][$template_name] );
+function it_exchange_unset_template_part_args( $template_name ) {
+	if ( isset( $GLOBALS['it_exchange']['template_part_args'][$template_name] ) )
+		unset( $GLOBALS['it_exchange']['template_part_args'][$template_name] );
 }
