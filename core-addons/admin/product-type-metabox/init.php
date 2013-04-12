@@ -51,14 +51,14 @@ class IT_Exchange_Core_Addon_Product_Type_Meta_Box {
 		} else if ( count( $enabled ) === 1 ) {
 			$product_type = reset( $enabled );
 			echo '<p>' . esc_attr( $product_type['name'] ) . '</p>';
-			echo '<input type="hidden" name="_it_exchange_product_type" value="' . esc_attr( $product_type['slug'] ) . '" />';
+			echo '<input type="hidden" name="it-exchange-product-type" value="' . esc_attr( $product_type['slug'] ) . '" />';
 			echo '<p class="description">' . __( 'You must have more than 1 product type enabled to make changes here.', 'LION' ) . '</p>';
 		} else {
-			?><div id="it_exchange_product_type_select"><?php
+			?><div id="it-exchange-product-type-select"><?php
 			foreach( $enabled as $slug => $params ) {
 				?>
-				<label for="it_exchange_product_type-<?php esc_attr_e( $slug ); ?>">
-					<input type="radio" id="it_exchange_product_type-<?php esc_attr_e( $slug ); ?>" name="_it_exchange_product_type" <?php checked( $slug, $current_product_type ); ?> value="<?php esc_attr_e( $slug ); ?>" /> <?php esc_attr_e( $params['name'] ); ?><br />
+				<label for="it-exchange-product-type-<?php esc_attr_e( $slug ); ?>">
+					<input type="radio" id="it-exchange-product-type-<?php esc_attr_e( $slug ); ?>" name="it-exchange-product-type" <?php checked( $slug, $current_product_type ); ?> value="<?php esc_attr_e( $slug ); ?>" /> <?php esc_attr_e( $params['name'] ); ?><br />
 				</label>
 				<?php
 			}
@@ -88,7 +88,7 @@ class IT_Exchange_Core_Addon_Product_Type_Meta_Box {
 			return;
 
 		// If there is an updated product type in the POST array, use that. Otherwise, use the url param if not empty.
-		$product_type = empty ( $_POST['_it_exchange_product_type'] ) && ! empty( $_GET['product_type'] ) ? $_GET['product_type'] : $_POST['_it_exchange_product_type'];
+		$product_type = empty ( $_POST['it-exchange-product-type'] ) && ! empty( $_GET['product-type'] ) ? $_GET['product-type'] : $_POST['it-exchange-product-type'];
 
 		// If we have a product_type, update
 		if ( $product_type )

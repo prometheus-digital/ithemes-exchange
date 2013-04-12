@@ -51,11 +51,11 @@ class IT_Exchange_Core_Addon_Transaction_Status_Meta_Box {
 		if ( count( $available_statuses ) < 2 ) {
 			echo '<p>' . __( 'The transaction method used for this transaction does not support changing transaction statuses.', 'LION' ) . '</p>';
 		} else {
-			?><div id="it_exchange_transaction_status_select"><?php
+			?><div id="it-exchange-transaction-status-select"><?php
 			foreach( $available_statuses as $slug => $name ) {
 				?>
-				<label for="it_exchange_transaction_status-<?php esc_attr_e( $slug ); ?>">
-					<input type="radio" id="it_exchange_transaction_status-<?php esc_attr_e( $slug ); ?>" name="_it_exchange_transaction_status" <?php checked( $slug, $current_status ); ?> value="<?php esc_attr_e( $slug ); ?>" /> <?php esc_attr_e( $name ); ?><br />
+				<label for="it-exchange-transaction-status-<?php esc_attr_e( $slug ); ?>">
+					<input type="radio" id="it-exchange-transaction-status-<?php esc_attr_e( $slug ); ?>" name="it-exchange-transaction-status" <?php checked( $slug, $current_status ); ?> value="<?php esc_attr_e( $slug ); ?>" /> <?php esc_attr_e( $name ); ?><br />
 				</label>
 				<?php
 			}
@@ -73,7 +73,7 @@ class IT_Exchange_Core_Addon_Transaction_Status_Meta_Box {
 		$transaction_status = false;
 
 		// Ensure we're posting or return
-		if ( empty( $_POST['_it_exchange_transaction_status'] ) )
+		if ( empty( $_POST['it-exchange-transaction-status'] ) )
 			return;
 
 		// Ensure we have a WP post object or return
@@ -87,7 +87,7 @@ class IT_Exchange_Core_Addon_Transaction_Status_Meta_Box {
 
 		// If we have a product_type, update
 		if ( $transaction )
-			it_exchange_update_transaction_status( $transaction, $_POST['_it_exchange_transaction_status'] );
+			it_exchange_update_transaction_status( $transaction, $_POST['it-exchange-transaction-status'] );
 	}
 }
 global $pagenow;
