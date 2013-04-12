@@ -1,15 +1,15 @@
 <?php
 /**
- * Registers all add-ons shipped with Cart Buddy
+ * Registers all add-ons shipped with iThemes Exchange
  *
  * @since 0.2.0
  * @uses apply_filters()
- * @uses it_cart_buddy_register_add_on()
+ * @uses it_exchange_register_add_on()
  * @return void
 */
-function it_cart_buddy_register_core_addons() {
+function it_exchange_register_core_addons() {
 
-	// An array of add-ons provided by Cart Buddy
+	// An array of add-ons provided by iThemes Exchange
 	$add_ons = array(
 		// Manual Payments
 		'manual-payments' => array(
@@ -18,9 +18,9 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/transaction-methods/manual-payments/init.php',
 			'options'     => array( 
 				'category' => 'transaction-methods',
-				'supports' => apply_filters( 'it_cart_buddy_register_manual_payments_default_features', array(
+				'supports' => apply_filters( 'it_exchange_register_manual_payments_default_features', array(
 					'transaction_status' => array(
-						'key'       => '_it_cart_buddy_transaction_status',
+						'key'       => '_it_exchange_transaction_status',
 						'componant' => 'post_meta',
 						'options'   => array(
 							'pending'    => _x( 'Pending', 'Transaction Status', 'LION' ),
@@ -31,12 +31,12 @@ function it_cart_buddy_register_core_addons() {
 						'default'   => 'pending',
 					),
 					'transaction_cart' => array(
-						'key'       => '_it_cart_buddy_transaction_cart',
+						'key'       => '_it_exchange_transaction_cart',
 						'componant' => 'post_meta',
 						'default'   => false,
 					),
 				) ),
-				'settings-callback' => 'it_cart_buddy_manual_payments_settings_callback',
+				'settings-callback' => 'it_exchange_manual_payments_settings_callback',
 			),
 		),
 		// PayPal Standard Transaction Method
@@ -46,7 +46,7 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/transaction-methods/paypal-standard/init.php',
 			'options'     => array( 
 				'category' => 'transaction-methods',
-				'supports' => apply_filters( 'it_cart_buddy_register_paypal_standard_default_features', array() ),
+				'supports' => apply_filters( 'it_exchange_register_paypal_standard_default_features', array() ),
 			),
 			'options'     => array( 'category' => 'transaction-methods' ),
 		),
@@ -57,20 +57,20 @@ function it_cart_buddy_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/transaction-methods/stripe/init.php',
 			'options'     => array( 
 				'category' => 'transaction-methods',
-				'supports' => apply_filters( 'it_cart_buddy_register_stripe_default_features', array() ),
+				'supports' => apply_filters( 'it_exchange_register_stripe_default_features', array() ),
 			),
 		),
 		// Digital Download Product Types
 		'digital-downloads-product-type' => array(
 			'name'        => __( 'Digital Downloads', 'LION' ),
-			'description' => __( 'This adds an product type for distributing digital downloads through Cart Buddy.', 'LION' ),
+			'description' => __( 'This adds an product type for distributing digital downloads through iThemes Exchange.', 'LION' ),
 			'file'        => dirname( __FILE__ ) . '/product-types/digital-downloads/init.php',
 			'options'     => array( 
 				'category' => 'product-type',
 				'labels'   => array(
 					'singular_name' => __( 'Digital Download', 'LION' ),
 				),
-				'supports' => apply_filters( 'it_cart_buddy_register_digital_downloads_default_features', array(
+				'supports' => apply_filters( 'it_exchange_register_digital_downloads_default_features', array(
 				) ),
 			),
 		),
@@ -84,7 +84,7 @@ function it_cart_buddy_register_core_addons() {
 				'labels'   => array(
 					'singular_name' => __( 'Membership Level', 'LION' ),
 				),
-				'supports' => apply_filters( 'it_cart_buddy_register_digital_downloads_default_features', array(
+				'supports' => apply_filters( 'it_exchange_register_digital_downloads_default_features', array(
 				) ),
 			),
 		),
@@ -117,7 +117,7 @@ function it_cart_buddy_register_core_addons() {
 			'options'     => array( 'category' => 'product-features' ),
 		),
 	);
-	$add_ons = apply_filters( 'it_cart_buddy_core_addons', $add_ons );
+	$add_ons = apply_filters( 'it_exchange_core_addons', $add_ons );
 
 	// Loop through add-ons and register each one individually
 	foreach( (array) $add_ons as $slug => $params ) {
@@ -126,24 +126,24 @@ function it_cart_buddy_register_core_addons() {
 		$file        = empty( $params['file'] )        ? false   : $params['file'];
 		$options     = empty( $params['options'] )     ? array() : (array) $params['options'];
 
-		it_cart_buddy_register_addon( $slug, $name, $description, $file, $options );
+		it_exchange_register_addon( $slug, $name, $description, $file, $options );
 	}
 }
-add_action( 'it_libraries_loaded', 'it_cart_buddy_register_core_addons' );
+add_action( 'it_libraries_loaded', 'it_exchange_register_core_addons' );
 
 /**
- * Register's Core Cart Buddy Add-on Categories
+ * Register's Core iThemes Exchange Add-on Categories
  *
  * @since 0.2.0
- * @uses it_cart_buddy_register_add_on_category()
+ * @uses it_exchange_register_add_on_category()
  * @return void
 */
-function it_cart_buddy_register_core_addon_categories() {
+function it_exchange_register_core_addon_categories() {
 	// An array of our core add-on categories
 	$cats = array(
 		'product-type' => array(
 			'name'        => __( 'Product Type', 'LION' ),
-			'description' => __( 'Add-ons responsible for the differing types of products available in Cart Buddy.', 'LION' ),
+			'description' => __( 'Add-ons responsible for the differing types of products available in iThemes Exchange.', 'LION' ),
 			'options'     => array(
 			),
 		),
@@ -151,14 +151,14 @@ function it_cart_buddy_register_core_addon_categories() {
 			'name'        => __( 'Transaction Methods', 'LION' ),
 			'description' => __( 'Add-ons that create transactions. eg: Stripe, PayPal.', 'LION' ),
 			'options'     => array(
-				'supports' => apply_filters( 'it_cart_buddy_register_transaction_method_supports', array(
+				'supports' => apply_filters( 'it_exchange_register_transaction_method_supports', array(
 					'title' => array(
 						'key'       => 'post_title',
 						'componant' => 'post_type_support',
 						'default'   => false,
 					),
 					'transaction_status' => array(
-						'key'       => '_it_cart_buddy_transaction_status',
+						'key'       => '_it_exchange_transaction_status',
 						'componant' => 'post_meta',
 						'options'   => array(
 							'pending'    => _x( 'Pending', 'Transaction Status', 'LION' ),
@@ -174,12 +174,12 @@ function it_cart_buddy_register_core_addon_categories() {
 		),
 		'shopping-carts' => array(
 			'name'        => __( 'Shopping Cart UIs', 'LION' ),
-			'description' => __( 'Add-ons that provide a UI for the Cart Buddy Cart API.', 'LION' ),
+			'description' => __( 'Add-ons that provide a UI for the iThemes Exchange Cart API.', 'LION' ),
 			'options'     => array(),
 		),
 		'customer-management' => array(
 			'name'        => __( 'Customer Management', 'LION' ),
-			'description' => __( 'Add-ons that provide a UI for the Cart Buddy Customer Management.', 'LION' ),
+			'description' => __( 'Add-ons that provide a UI for the iThemes Exchange Customer Management.', 'LION' ),
 			'options'     => array(),
 		),
 		'admin' => array(
@@ -203,7 +203,7 @@ function it_cart_buddy_register_core_addon_categories() {
 			'options'     => array(),
 		),
 	);
-	$cats = apply_filters( 'it_cart_buddy_core_addon_categories', $cats );
+	$cats = apply_filters( 'it_exchange_core_addon_categories', $cats );
 
 	// Loop through categories and register each one individually
 	foreach( (array) $cats as $slug => $params ) {
@@ -211,7 +211,7 @@ function it_cart_buddy_register_core_addon_categories() {
 		$description = empty( $params['description'] ) ? ''      : $params['description'];
 		$options     = empty( $params['options'] )     ? array() : (array) $params['options'];
 
-		it_cart_buddy_register_addon_category( $slug, $name, $description, $options );
+		it_exchange_register_addon_category( $slug, $name, $description, $options );
 	}
 }
-add_action( 'it_libraries_loaded', 'it_cart_buddy_register_core_addon_categories' );
+add_action( 'it_libraries_loaded', 'it_exchange_register_core_addon_categories' );
