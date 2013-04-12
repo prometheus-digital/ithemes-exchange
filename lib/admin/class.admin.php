@@ -1,13 +1,13 @@
 <?php
 /**
- * CartBuddy admin class.
+ * iThemes Exchange admin class.
  *
  * This class manages the admin side of the plugin
  *
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
  * @since 0.1.0
 */
-class IT_Cart_Buddy_Admin {
+class IT_Exchange_Admin {
 
 	/**
 	 * @var object $_parent parent class
@@ -52,25 +52,25 @@ class IT_Cart_Buddy_Admin {
 	 * @since 0.1.0
 	 * @return void 
 	*/
-	function IT_Cart_Buddy_Admin( &$parent ) {
+	function IT_Exchange_Admin( &$parent ) {
 
 		// Set parent property
 		$this->_parent = $parent;
 
 		// Admin Menu Capability
-		$this->admin_menu_capability = apply_filters( 'it_cart_buddy_admin_menu_capability', 'read' );
+		$this->admin_menu_capability = apply_filters( 'it_exchange_admin_menu_capability', 'read' );
 
 		// Set current properties
 		$this->set_current_properties();
 
-		// Open cart buddy menu when on add/edit cartbuddy product post type
-		add_action( 'parent_file', array( $this, 'open_cart_buddy_menu_on_post_type_views' ) );
+		// Open iThemes Exchange menu when on add/edit iThemes Exchange product post type
+		add_action( 'parent_file', array( $this, 'open_exchange_menu_on_post_type_views' ) );
 
 		// Load Storage
 		add_action( 'admin_init', array( $this, 'load_storage' ) );
 
 		// Add actions for iThemes registration
-		add_action( 'admin_menu', array( $this, 'add_cart_buddy_admin_menu' ) );
+		add_action( 'admin_menu', array( $this, 'add_exchange_admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'enable_disable_registered_add_on' ) );
 
 		// Redirect to Product selection on Add New if needed
@@ -82,15 +82,15 @@ class IT_Cart_Buddy_Admin {
 		add_action( 'admin_init', array( $this, 'save_core_page_settings' ) );
 
 		// Email settings callback
-		add_filter( 'it_cart_buddy_general_settings_tab_callback-email', array( $this, 'register_email_settings_tab_callback' ) );
-		add_action( 'it_cart_buddy_print_general_settings_tab_links', array( $this, 'print_email_settings_tab_link' ) );
+		add_filter( 'it_exchange_general_settings_tab_callback-email', array( $this, 'register_email_settings_tab_callback' ) );
+		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_email_settings_tab_link' ) );
 
 		// Page settings callback
-		add_filter( 'it_cart_buddy_general_settings_tab_callback-pages', array( $this, 'register_pages_settings_tab_callback' ) );
-		add_action( 'it_cart_buddy_print_general_settings_tab_links', array( $this, 'print_pages_settings_tab_link' ) );
+		add_filter( 'it_exchange_general_settings_tab_callback-pages', array( $this, 'register_pages_settings_tab_callback' ) );
+		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_pages_settings_tab_link' ) );
 
 		// General Settings Defaults
-		add_filter( 'it_storage_get_defaults_cart_buddy_settings_general', array( $this, 'set_general_settings_defaults' ) );
+		add_filter( 'it_storage_get_defaults_exchange_settings_general', array( $this, 'set_general_settings_defaults' ) );
 	}
 
 	/**
@@ -111,54 +111,54 @@ class IT_Cart_Buddy_Admin {
 	 * return void
 	*/
 	function load_storage() {
-		if ( 'it-cart-buddy-settings' != $this->_current_page )
+		if ( 'it-exchange-settings' != $this->_current_page )
 			return;
 
 		it_classes_load( 'it-storage.php' );
 		$tab = empty( $this->_current_tab ) ? 'general' : $this->_current_tab;
-		$key = 'cart_buddy_settings'  . '_' . $tab;
+		$key = 'exchange_settings'  . '_' . $tab;
 
 		$this->_storage = new ITStorage2( $key );
 	}
 
 	/**
-	 * Adds the main Cart Buddy menu item to the WP admin menu
+	 * Adds the main iThemes Exchange menu item to the WP admin menu
 	 *
 	 * @since 0.2.0
 	 * @return void
 	*/
-	function add_cart_buddy_admin_menu() {
-		// Add main cart buddy menu item
-		add_menu_page( 'Cart Buddy', 'Cart Buddy', $this->admin_menu_capability, 'it-cart-buddy', array( $this, 'print_cart_buddy_setup_page' ) );
+	function add_exchange_admin_menu() {
+		// Add main iThemes Exchange menu item
+		add_menu_page( 'iThemes Exchange', 'iThemes Exchange', $this->admin_menu_capability, 'it-exchange', array( $this, 'print_exchange_setup_page' ) );
 
 		// Add setup wizard if not complete or if on page
-		if ( 'it-cart-buddy-setup' == $this->_current_page || ! get_option( 'it_cart_buddy_setup_complete' ) )
-			add_submenu_page( 'it-cart-buddy', 'Cart Buddy Setup Wizard', 'Setup Wizard', $this->admin_menu_capability, 'it-cart-buddy-setup', array( $this, 'print_cart_buddy_setup_page' ) );
+		if ( 'it-exchange-setup' == $this->_current_page || ! get_option( 'it_exchange_setup_complete' ) )
+			add_submenu_page( 'it-exchange', 'iThemes Exchange Setup Wizard', 'Setup Wizard', $this->admin_menu_capability, 'it-exchange-setup', array( $this, 'print_exchange_setup_page' ) );
 
-		// Remove default cart buddy sub-menu item created with parent menu item
-		remove_submenu_page( 'it-cart-buddy', 'it-cart-buddy' );
+		// Remove default iThemes Exchange sub-menu item created with parent menu item
+		remove_submenu_page( 'it-exchange', 'it-exchange' );
 
 		// Add the product submenu pages depending on active product add-ons
 		$this->add_product_submenus();
 
 		// Add Transactions menu item
-		add_submenu_page( 'it-cart-buddy', 'Cart Buddy ' . __( 'Payments', 'LION' ), __( 'Payments', 'LION' ), $this->admin_menu_capability, 'edit.php?post_type=it_cart_buddy_tran' );
+		add_submenu_page( 'it-exchange', 'iThemes Exchange ' . __( 'Payments', 'LION' ), __( 'Payments', 'LION' ), $this->admin_menu_capability, 'edit.php?post_type=it_exchange_tran' );
 
 		// Add Settings Menu Item
-		$settings_callback = array( $this, 'print_cart_buddy_settings_page' );
-		if ( 'it-cart-buddy-settings' == $this->_current_page && ! empty( $this->_current_tab ) )
-			$settings_callback = apply_filters( 'it_cart_buddy_general_settings_tab_callback-' . $this->_current_tab, $settings_callback );
-		add_submenu_page( 'it-cart-buddy', 'Cart Buddy Settings', 'Settings', $this->admin_menu_capability, 'it-cart-buddy-settings', $settings_callback );
+		$settings_callback = array( $this, 'print_exchange_settings_page' );
+		if ( 'it-exchange-settings' == $this->_current_page && ! empty( $this->_current_tab ) )
+			$settings_callback = apply_filters( 'it_exchange_general_settings_tab_callback-' . $this->_current_tab, $settings_callback );
+		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->admin_menu_capability, 'it-exchange-settings', $settings_callback );
 
 		// Add Add-ons menu item
-		$callback = array( $this, 'print_cart_buddy_add_ons_page' );
-		if ( 'it-cart-buddy-addons' == $this->_current_page && ! empty( $_GET['add_on_settings'] ) ) {
-			if ( $addon = it_cart_buddy_get_addon( $_GET['add_on_settings'] ) ) {
+		$callback = array( $this, 'print_exchange_add_ons_page' );
+		if ( 'it-exchange-addons' == $this->_current_page && ! empty( $_GET['add_on_settings'] ) ) {
+			if ( $addon = it_exchange_get_addon( $_GET['add_on_settings'] ) ) {
 				if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) )
 					$callback = $addon['options']['settings-callback'];
 			}
 		}
-		add_submenu_page( 'it-cart-buddy', 'Cart Buddy Add-ons', 'Add-ons', $this->admin_menu_capability, 'it-cart-buddy-addons', $callback );
+		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->admin_menu_capability, 'it-exchange-addons', $callback );
 	}
 
 	/**
@@ -169,18 +169,18 @@ class IT_Cart_Buddy_Admin {
 	*/
 	function add_product_submenus() {
 		// Check for enabled product add-ons. Don't need product pages if we don't have product add-ons enabled
-		if ( $enabled_product_types = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'product-type' ) ) ) ) {
+		if ( $enabled_product_types = it_exchange_get_enabled_addons( array( 'category' => array( 'product-type' ) ) ) ) {
 			$add_on_count = count( $enabled_product_types );
-			add_submenu_page( 'it-cart-buddy', 'All Products', 'All Products', $this->admin_menu_capability, 'edit.php?post_type=it_cart_buddy_prod' );
+			add_submenu_page( 'it-exchange', 'All Products', 'All Products', $this->admin_menu_capability, 'edit.php?post_type=it_exchange_prod' );
 			if ( 1 == $add_on_count ) {
 				// If we only have one product-type enabled, add standard post_type pages
 				$product = reset( $enabled_product_types );
-				add_submenu_page( 'it-cart-buddy', 'Add Product', 'Add Product', $this->admin_menu_capability, 'post-new.php?post_type=it_cart_buddy_prod&product_type=' . $product['slug'] );
+				add_submenu_page( 'it-exchange', 'Add Product', 'Add Product', $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&product_type=' . $product['slug'] );
 			} else if ( $add_on_count > 1 ) {
 				// If we have more than one product type, add them each separately
 				foreach( $enabled_product_types as $type => $params ) {
 					$name = empty( $params['options']['labels']['singular_name'] ) ? 'Product' : esc_attr( $params['options']['labels']['singular_name'] );
-					add_submenu_page( 'it-cart-buddy', 'Add ' . $name, 'Add ' . $name, $this->admin_menu_capability, 'post-new.php?post_type=it_cart_buddy_prod&product_type=' . esc_attr( $params['slug'] ) );
+					add_submenu_page( 'it-exchange', 'Add ' . $name, 'Add ' . $name, $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&product_type=' . esc_attr( $params['slug'] ) );
 				}
 			}
 		}
@@ -206,7 +206,7 @@ class IT_Cart_Buddy_Admin {
 	*/
 	function print_email_settings_tab_link( $current_tab ) {
 		$active = 'email' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-cart-buddy-settings&tab=email' ); ?>"><?php _e( 'Email Settings', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=email' ); ?>"><?php _e( 'Email Settings', 'LION' ); ?></a><?php
 	}
 
 	/**
@@ -229,11 +229,11 @@ class IT_Cart_Buddy_Admin {
 	*/
 	function print_pages_settings_tab_link( $current_tab ) {
 		$active = 'pages' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-cart-buddy-settings&tab=pages' ); ?>"><?php _e( 'Pages', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=pages' ); ?>"><?php _e( 'Pages', 'LION' ); ?></a><?php
 	}
 
 	/**
-	 * Prints the tabs for the Cart Buddy General Settings
+	 * Prints the tabs for the iThemes Exchange General Settings
 	 *
 	 * @since 0.3.4
 	 * @return void
@@ -242,23 +242,23 @@ class IT_Cart_Buddy_Admin {
 		$active = empty( $this->_current_tab ) ? 'nav-tab-active' : '';
 		?>
 		<h2 class="nav-tab-wrapper">
-		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-cart-buddy-settings' ); ?>"><?php _e( 'General', 'LION' ); ?></a>
-		<?php do_action( 'it_cart_buddy_print_general_settings_tab_links', $this->_current_tab ); ?>
+		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings' ); ?>"><?php _e( 'General', 'LION' ); ?></a>
+		<?php do_action( 'it_exchange_print_general_settings_tab_links', $this->_current_tab ); ?>
 		</h2>
 		<?php
 	}
 
 	/**
-	 * Prints the setup page for cart buddy
+	 * Prints the setup page for iThemes Exchange
 	 *
 	 * @since 0.2.0
 	 * @return void
 	*/
-	function print_cart_buddy_setup_page() {
+	function print_exchange_setup_page() {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'page' ); ?>
-			<h2>Cart Buddy Setup</h2>
+			<h2>iThemes Exchange Setup</h2>
 			<p>Possibly place setup wizzard here</p>
 			<p>Definitely replace icon</p>
 		</div>
@@ -282,17 +282,17 @@ class IT_Cart_Buddy_Admin {
 	}
 
 	/**
-	 * Prints the settings page for cart buddy
+	 * Prints the settings page for iThemes Exchange
 	 *
 	 * @since 0.3.4
 	 * @return void
 	*/
-	function print_cart_buddy_settings_page() {
+	function print_exchange_settings_page() {
 		$form_values  = empty( $this->error_message ) ? $this->_storage->load() : ITForm::get_post_data();
-		$form         = new ITForm( $form_values, array( 'prefix' => 'it_cart_buddy_settings' ) );
+		$form         = new ITForm( $form_values, array( 'prefix' => 'it_exchange_settings' ) );
 		$form_options = array(
-			'id'      => apply_filters( 'it_cart_buddy_settings_form_id', 'it-cart-buddy-settings' ),
-			'enctype' => apply_filters( 'it_cart_buddy_settings_form_enctype', false ),
+			'id'      => apply_filters( 'it_exchange_settings_form_id', 'it-exchange-settings' ),
+			'enctype' => apply_filters( 'it_exchange_settings_form_enctype', false ),
 		);
 		if ( ! empty ( $this->status_message ) )
 			ITUtility::show_status_message( $this->status_message );
@@ -302,18 +302,18 @@ class IT_Cart_Buddy_Admin {
 	}
 
 	/**
-	 * Prints the email page for cart buddy
+	 * Prints the email page for iThemes Exchange
 	 *
 	 * @since 0.3.4
 	 * @return void
 	*/
 	function print_email_settings_page() {
 		$form_values  = empty( $this->error_message ) ? $this->_storage->load() : ITForm::get_post_data();
-		$form         = new ITForm( $form_values, array( 'prefix' => 'it_cart_buddy_email_settings' ) );
+		$form         = new ITForm( $form_values, array( 'prefix' => 'it_exchange_email_settings' ) );
 		$form_options = array(
-			'id'      => apply_filters( 'it_cart_buddy_email_settings_form_id', 'it-cart-buddy-email-settings' ),
-			'enctype' => apply_filters( 'it_cart_buddy_email_settings_form_enctype', false ),
-			'action'  => 'admin.php?page=it-cart-buddy-settings&tab=email',
+			'id'      => apply_filters( 'it_exchange_email_settings_form_id', 'it-exchange-email-settings' ),
+			'enctype' => apply_filters( 'it_exchange_email_settings_form_enctype', false ),
+			'action'  => 'admin.php?page=it-exchange-settings&tab=email',
 		);
 		if ( ! empty ( $this->status_message ) )
 			ITUtility::show_status_message( $this->status_message );
@@ -323,18 +323,18 @@ class IT_Cart_Buddy_Admin {
 	}
 
 	/**
-	 * Prints the pages page for cart buddy
+	 * Prints the pages page for iThemes Exchange
 	 *
 	 * @since 0.3.7
 	 * @return void
 	*/
 	function print_pages_settings_page() {
 		$form_values  = empty( $this->error_message ) ? $this->_storage->load() : ITForm::get_post_data();
-		$form         = new ITForm( $form_values, array( 'prefix' => 'it_cart_buddy_page_settings' ) );
+		$form         = new ITForm( $form_values, array( 'prefix' => 'it_exchange_page_settings' ) );
 		$form_options = array(
-			'id'      => apply_filters( 'it_cart_buddy_page_settings_form_id', 'it-cart-buddy-page-settings' ),
-			'enctype' => apply_filters( 'it_cart_buddy_page_settings_form_enctype', false ),
-			'action'  => 'admin.php?page=it-cart-buddy-settings&tab=pages',
+			'id'      => apply_filters( 'it_exchange_page_settings_form_id', 'it-exchange-page-settings' ),
+			'enctype' => apply_filters( 'it_exchange_page_settings_form_enctype', false ),
+			'action'  => 'admin.php?page=it-exchange-settings&tab=pages',
 		);
 		if ( ! empty ( $this->status_message ) )
 			ITUtility::show_status_message( $this->status_message );
@@ -349,9 +349,9 @@ class IT_Cart_Buddy_Admin {
 	 * @since 0.2.0
 	 * @return void
 	*/
-	function print_cart_buddy_add_ons_page() {
-		$registered = it_cart_buddy_get_addons();
-		$add_on_cats = it_cart_buddy_get_addon_categories();
+	function print_exchange_add_ons_page() {
+		$registered = it_exchange_get_addons();
+		$add_on_cats = it_exchange_get_addon_categories();
 		$message = empty( $_GET['message'] ) ? false : $_GET['message'];
 		if ( 'enabled' == $message ) {
 			ITUtility::show_status_message( __( 'Add-on enabled.', 'LION' ) );
@@ -359,7 +359,7 @@ class IT_Cart_Buddy_Admin {
 			ITUtility::show_status_message( __( 'Add-on disabled.', 'LION' ) );
 		} else if ( 'addon-auto-disabled-' == substr( $message, 0, 20 ) ) {
 			$addon_slug = substr( $message, 20 );
-			$status_message = __( sprintf( 'CartBuddy has automatically disabled an add-on: %s. This is mostly likely due to it being uninstalled or improperlly registered.', $addon_slug ), 'LION' );
+			$status_message = __( sprintf( 'iThemes Exchange has automatically disabled an add-on: %s. This is mostly likely due to it being uninstalled or improperlly registered.', $addon_slug ), 'LION' );
 			ITUtility::show_status_message( $status_message );
 		}
 
@@ -378,43 +378,43 @@ class IT_Cart_Buddy_Admin {
 	 * @since 0.2.0
 	*/
 	function enable_disable_registered_add_on() {
-		$enable_addon  = empty( $_GET['it-cart-buddy-enable-addon'] ) ? false : $_GET['it-cart-buddy-enable-addon'];
-		$disable_addon = empty( $_GET['it-cart-buddy-disable-addon'] ) ? false : $_GET['it-cart-buddy-disable-addon'];
+		$enable_addon  = empty( $_GET['it-exchange-enable-addon'] ) ? false : $_GET['it-exchange-enable-addon'];
+		$disable_addon = empty( $_GET['it-exchange-disable-addon'] ) ? false : $_GET['it-exchange-disable-addon'];
 
 		if ( ! $enable_addon && ! $disable_addon )
 			return;
 
-		$registered    = it_cart_buddy_get_addons();
+		$registered    = it_exchange_get_addons();
 
 		// Enable or Disable addon requested by user
 		if ( $enable_addon ) {
-			if ( $nonce_valid = wp_verify_nonce( $_GET['_wpnonce'], 'cart-buddy-enable-add-on' ) )
-				$enabled = it_cart_buddy_enable_addon( $enable_addon );
+			if ( $nonce_valid = wp_verify_nonce( $_GET['_wpnonce'], 'exchange-enable-add-on' ) )
+				$enabled = it_exchange_enable_addon( $enable_addon );
 			$message = 'enabled';
 		} else if ( $disable_addon ) {
-			if ( $nonce_valid = wp_verify_nonce( $_GET['_wpnonce'], 'cart-buddy-disable-add-on' ) )
-				$enabled = it_cart_buddy_disable_addon( $disable_addon );
+			if ( $nonce_valid = wp_verify_nonce( $_GET['_wpnonce'], 'exchange-disable-add-on' ) )
+				$enabled = it_exchange_disable_addon( $disable_addon );
 			$message = 'disabled';
 		}
 
 		// Redirect if nonce not valid
 		if ( ! $nonce_valid ) {
-			wp_safe_redirect( admin_url( '/admin.php?page=it-cart-buddy-addons&error=' . $message ) );
+			wp_safe_redirect( admin_url( '/admin.php?page=it-exchange-addons&error=' . $message ) );
 			die();
 		}
 		
 		// Disable any enabled add-ons that aren't registered any more while we're here.
-		$enabled_addons = it_cart_buddy_get_enabled_addons();
+		$enabled_addons = it_exchange_get_enabled_addons();
 		foreach( (array) $enabled_addons as $slug => $file ) {
 			if ( empty( $registered[$slug] ) )
-				it_cart_buddy_disable_addon( $slug );
+				it_exchange_disable_addon( $slug );
 		}
 			
-		$redirect_to = admin_url( '/admin.php?page=it-cart-buddy-addons&message=' . $message );
+		$redirect_to = admin_url( '/admin.php?page=it-exchange-addons&message=' . $message );
 
 		// Redirect to settings page on activation if it exists
 		if ( $enable_addon ) {
-			if ( $enabled = it_cart_buddy_get_addon( $enable_addon ) )  {
+			if ( $enabled = it_exchange_get_addon( $enable_addon ) )  {
 				if ( ! empty( $enabled['options']['settings-callback'] ) && is_callable( $enabled['options']['settings-callback'] ) )
 					$redirect_to .= '&add_on_settings=' . $enable_addon;
 			}
@@ -425,32 +425,32 @@ class IT_Cart_Buddy_Admin {
 	}
 
 	/**
-	 * Opens the Cart Buddy Admin Menu when viewing the Add New page
+	 * Opens the iThemes Exchange Admin Menu when viewing the Add New page
 	 *
 	 * @since 0.3.0
 	 * @return string
 	*/
-	function open_cart_buddy_menu_on_post_type_views( $parent_file, $revert=false ) {
+	function open_exchange_menu_on_post_type_views( $parent_file, $revert=false ) {
 		global $submenu_file, $pagenow, $post;
 
 		if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow )
 			return $parent_file;
 
-		if ( empty( $post->post_type ) || ( 'it_cart_buddy_prod' != $post->post_type && 'it_cart_buddy_tran' != $post->post_type ) )
+		if ( empty( $post->post_type ) || ( 'it_exchange_prod' != $post->post_type && 'it_exchange_tran' != $post->post_type ) )
 			return $parent_file;
 
 		// Set Add New as bold when on the post-new.php screen
 		if ( 'post-new.php' == $pagenow )
-			$submenu_file = 'it-cart-buddy-choose-product-type';
+			$submenu_file = 'it-exchange-choose-product-type';
 
-		// Return it-cart-buddy as the parent (open) menu when on post-new.php and post.php for it_cart_buddy_prod post_types
-		return 'it-cart-buddy';
+		// Return it-exchange as the parent (open) menu when on post-new.php and post.php for it_exchange_prod post_types
+		return 'it-exchange';
 	}
 
 	/**
-	 * Redirects post-new.php to it-cart-buddy-choose-product-type when needed
+	 * Redirects post-new.php to it-exchange-choose-product-type when needed
 	 *
-	 * If we have landed on post-new.php?post_type=it_cart_buddy_prod without the product_type param
+	 * If we have landed on post-new.php?post_type=it_exchange_prod without the product_type param
 	 * and with multiple product-type add-ons enabled.
 	 *
 	 * @since 0.3.1
@@ -458,13 +458,13 @@ class IT_Cart_Buddy_Admin {
 	*/
 	function redirect_post_new_to_product_type_selection_screen() {
 		global $pagenow;
-		$product_type_add_ons = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
+		$product_type_add_ons = it_exchange_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
 		$post_type            = empty( $_GET['post_type'] ) ? false : $_GET['post_type'];
 		$product_type         = empty( $_GET['product_type'] ) ? false : $_GET['product_type'];
 
-		if ( count( $product_type_add_ons ) > 1 && 'post-new.php' == $pagenow && 'it_cart_buddy_prod' == $post_type ) {
+		if ( count( $product_type_add_ons ) > 1 && 'post-new.php' == $pagenow && 'it_exchange_prod' == $post_type ) {
 			if ( empty( $product_type_add_ons[$product_type] ) ) {
-				wp_safe_redirect( admin_url( 'admin.php?page=it-cart-buddy-choose-product-type' ) );
+				wp_safe_redirect( admin_url( 'admin.php?page=it-exchange-choose-product-type' ) );
 				die();
 			}
 		}
@@ -478,7 +478,7 @@ class IT_Cart_Buddy_Admin {
 	*/
 	function get_default_currency_options() {
 		$options = array();
-		$currency_options = it_cart_buddy_get_currency_options();
+		$currency_options = it_exchange_get_currency_options();
 		foreach( (array) $currency_options as $currency ) {
 			$options[$currency->cc] = ucwords( $currency->name ) . ' (' . $currency->symbol . ')'; 
 		}
@@ -513,13 +513,13 @@ class IT_Cart_Buddy_Admin {
 	 * @return void
 	*/
 	function save_core_general_settings() {
-		if ( empty( $_POST ) || 'it-cart-buddy-settings' != $this->_current_page || ! empty( $this->_current_tab ) )
+		if ( empty( $_POST ) || 'it-exchange-settings' != $this->_current_page || ! empty( $this->_current_tab ) )
 			return;
 
 		$settings = wp_parse_args( ITForm::get_post_data(), $this->_storage->load() );
 
         // Check nonce
-        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'cart-buddy-general-settings' ) ) { 
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-general-settings' ) ) { 
             $this->error_message = __( 'Error. Please try again', 'LION' );
             return;
         } 
@@ -550,7 +550,7 @@ class IT_Cart_Buddy_Admin {
 		if ( empty( $settings['currency_decimals_separator'] ) )
 			$errors[] = __( 'Decimals Separator cannot be empty', 'LION' );
 
-		$errors = apply_filters( 'it_cart_buddy_general_settings_validation_errors', $errors );
+		$errors = apply_filters( 'it_exchange_general_settings_validation_errors', $errors );
 		if ( ! empty ( $errors ) )
 			return implode( '<br />', $errors );
 		else
@@ -566,13 +566,13 @@ class IT_Cart_Buddy_Admin {
 	 * @return void
 	*/
 	function save_core_email_settings() {
-		if ( empty( $_POST ) || 'it-cart-buddy-settings' != $this->_current_page || 'email' != $this->_current_tab )
+		if ( empty( $_POST ) || 'it-exchange-settings' != $this->_current_page || 'email' != $this->_current_tab )
 			return;
 
 		$settings = wp_parse_args( ITForm::get_post_data(), $this->_storage->load() );
 
         // Check nonce
-        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'cart-buddy-email-settings' ) ) { 
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-email-settings' ) ) { 
             $this->error_message = __( 'Error. Please try again', 'LION' );
             return;
         } 
@@ -603,7 +603,7 @@ class IT_Cart_Buddy_Admin {
 		if ( empty( $settings['receipt_email_subject'] ) )
 			$errors[] = __( 'Email Subject cannot be empty', 'LION' );
 
-		$errors = apply_filters( 'it_cart_buddy_email_settings_validation_errors', $errors );
+		$errors = apply_filters( 'it_exchange_email_settings_validation_errors', $errors );
 		if ( ! empty ( $errors ) )
 			return '<p>' . implode( '<br />', $errors ) . '</p>';
 		else
@@ -619,13 +619,13 @@ class IT_Cart_Buddy_Admin {
 	 * @return void
 	*/
 	function save_core_page_settings() {
-		if ( empty( $_POST ) || 'it-cart-buddy-settings' != $this->_current_page || 'pages' != $this->_current_tab )
+		if ( empty( $_POST ) || 'it-exchange-settings' != $this->_current_page || 'pages' != $this->_current_tab )
 			return;
 
 		$settings = wp_parse_args( ITForm::get_post_data(), $this->_storage->load() );
 
         // Check nonce
-        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'cart-buddy-page-settings' ) ) { 
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-page-settings' ) ) { 
             $this->error_message = __( 'Error. Please try again', 'LION' );
             return;
         } 
@@ -650,7 +650,7 @@ class IT_Cart_Buddy_Admin {
 	function page_settings_are_invalid( $settings ) {
 		$errors = array();
 
-		$errors = apply_filters( 'it_cart_buddy_page_settings_validation_errors', $errors );
+		$errors = apply_filters( 'it_exchange_page_settings_validation_errors', $errors );
 		if ( ! empty ( $errors ) )
 			return '<p>' . implode( '<br />', $errors ) . '</p>';
 		else
@@ -658,4 +658,4 @@ class IT_Cart_Buddy_Admin {
 	}
 }
 if ( is_admin() )
-	$IT_Cart_Buddy_Admin = new IT_Cart_Buddy_Admin( $this );
+	$IT_Exchange_Admin = new IT_Exchange_Admin( $this );
