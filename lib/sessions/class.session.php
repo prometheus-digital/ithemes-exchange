@@ -3,15 +3,15 @@
  * This file contains the session class
  *
  * @since 0.3.3
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
 /**
- * The IT_Cart_Buddy_Session class holds cart and purchasing details
+ * The IT_Exchange_Session class holds cart and purchasing details
  *
  * @since 0.3.3
 */
-class IT_Cart_Buddy_Session {
+class IT_Exchange_Session {
 
 	/**
 	 * @param string $_token  session token
@@ -31,7 +31,7 @@ class IT_Cart_Buddy_Session {
 	*/
 	private $_session_data;
 	
-	function IT_Cart_Buddy_Session() {
+	function IT_Exchange_Session() {
 		$this->set_session_token();
 		$this->init_session();
 		$this->register_hooks();
@@ -48,7 +48,7 @@ class IT_Cart_Buddy_Session {
 		if ( '' == session_id() )
 			$this->start_php_session();
 
-		if ( empty( $_SESSION['it_cart_buddy']['_session'] ) || $this->_token !== $_SESSION['it_cart_buddy']['_session'] )
+		if ( empty( $_SESSION['it_exchange']['_session'] ) || $this->_token !== $_SESSION['it_exchange']['_session'] )
 			$this->regenerate_session_id();
 
 		$this->load_products();
@@ -84,7 +84,7 @@ class IT_Cart_Buddy_Session {
 	*/
 	function set_session_token() {
 		$token  = ! empty( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
-		$token .= '-it-cart-buddy-' . AUTH_SALT;
+		$token .= '-it-exchange-' . AUTH_SALT;
 		$this->_token = md5( $token );
 	}
 
@@ -96,7 +96,7 @@ class IT_Cart_Buddy_Session {
 	*/
 	function regenerate_session_id() {
 		session_regenerate_id();
-		$_SESSION['it_cart_buddy']['_session'] = $this->_token;
+		$_SESSION['it_exchange']['_session'] = $this->_token;
 	}
 
 	/**
@@ -107,31 +107,31 @@ class IT_Cart_Buddy_Session {
 	 * @return void
 	*/
 	function delete_session( $restart=true ) {
-		if ( ! empty( $_SESSION['it_cart_buddy'] ) )
-			unset( $_SESSION['it_cart_buddy'] );
+		if ( ! empty( $_SESSION['it_exchange'] ) )
+			unset( $_SESSION['it_exchange'] );
 		if ( $restart )
 			$this->init_session();
 	}
 
 	/**
-	 * Loads $_SESSION['it_cart_buddy']['products'] into $this->_products
+	 * Loads $_SESSION['it_exchange']['products'] into $this->_products
 	 *
 	 * @since 0.3.3
 	 * @return void
 	*/
 	private function load_products() {
-		$products = empty( $_SESSION['it_cart_buddy']['products'] ) ? array() : $_SESSION['it_cart_buddy']['products'];
+		$products = empty( $_SESSION['it_exchange']['products'] ) ? array() : $_SESSION['it_exchange']['products'];
 		$this->_products = $products;
 	}
 
 	/**
-	 * Loads $_SESSION['it_cart_buddy']['data'] into $this->_session_data
+	 * Loads $_SESSION['it_exchange']['data'] into $this->_session_data
 	 *
 	 * @since 0.3.3
 	 * @return void
 	*/
 	private function load_data() {
-		$data = empty( $_SESSION['it_cart_buddy']['data'] ) ? array() : $_SESSION['it_cart_buddy']['data'];
+		$data = empty( $_SESSION['it_exchange']['data'] ) ? array() : $_SESSION['it_exchange']['data'];
 		$this->_session_data = $data;
 	}
 
@@ -158,9 +158,9 @@ class IT_Cart_Buddy_Session {
 	function add_data( $data, $key=false ) {
 
 		if ( ! empty( $key ) )
-			$_SESSION['it_cart_buddy']['data'][$key] = $data;
+			$_SESSION['it_exchange']['data'][$key] = $data;
 		else
-			$_SESSION['it_cart_buddy']['data'][] = $data;
+			$_SESSION['it_exchange']['data'][] = $data;
 		$this->load_data();
 	}
 
@@ -187,8 +187,8 @@ class IT_Cart_Buddy_Session {
 	 * @return boolean
 	*/
 	function remove_data( $key ) {
-		if ( isset( $_SESSION['it_cart_buddy']['data'][$key] ) ) {
-			unset( $_SESSION['it_cart_buddy']['data'][$key] );
+		if ( isset( $_SESSION['it_exchange']['data'][$key] ) ) {
+			unset( $_SESSION['it_exchange']['data'][$key] );
 			$this->load_data();
 			return true;
 		}
@@ -202,7 +202,7 @@ class IT_Cart_Buddy_Session {
 	 * @return array the $_session_data property
 	*/
 	function clear_data() {
-		$_SESSION['it_cart_buddy']['data'] = array();
+		$_SESSION['it_exchange']['data'] = array();
 		$this->load_data();
 		return true;
 	}
@@ -232,9 +232,9 @@ class IT_Cart_Buddy_Session {
 	function add_product( $product, $key=false ) {
 
 		if ( ! empty( $key ) )
-			$_SESSION['it_cart_buddy']['products'][$key] = $product;
+			$_SESSION['it_exchange']['products'][$key] = $product;
 		else
-			$_SESSION['it_cart_buddy']['products'][] = $product;
+			$_SESSION['it_exchange']['products'][] = $product;
 		$this->load_products();
 	}
 
@@ -263,8 +263,8 @@ class IT_Cart_Buddy_Session {
 	 * @return boolean
 	*/
 	function remove_product( $key ) {
-		if ( isset( $_SESSION['it_cart_buddy']['products'][$key] ) ) {
-			unset( $_SESSION['it_cart_buddy']['products'][$key] );
+		if ( isset( $_SESSION['it_exchange']['products'][$key] ) ) {
+			unset( $_SESSION['it_exchange']['products'][$key] );
 			$this->load_products();
 			return true;
 		}
@@ -278,9 +278,9 @@ class IT_Cart_Buddy_Session {
 	 * @return array the $_products_property
 	*/
 	function clear_products() {
-		$_SESSION['it_cart_buddy']['products'] = array();
+		$_SESSION['it_exchange']['products'] = array();
 		$this->load_products();
 		return true;
 	}
 }
-$GLOBALS['it_cart_buddy']['session'] = new IT_Cart_Buddy_Session();
+$GLOBALS['it_exchange']['session'] = new IT_Exchange_Session();
