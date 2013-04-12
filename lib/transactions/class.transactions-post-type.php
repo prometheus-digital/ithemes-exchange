@@ -2,16 +2,16 @@
 /**
  * Creates the post type for Transactions
  *
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
  * @since 0.3.3
 */
 
 /**
- * Registers the it_cart_buddy_tran post type
+ * Registers the it_exchange_tran post type
  *
  * @since 0.3.3
 */
-class IT_Cart_Buddy_Transaction_Post_Type {
+class IT_Exchange_Transaction_Post_Type {
 	
 	/**
 	 * Class Constructor
@@ -20,17 +20,17 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 	 * @since 0.3.3
 	 * @return void
 	*/
-	function IT_Cart_Buddy_Transaction_Post_Type() {
+	function IT_Exchange_Transaction_Post_Type() {
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
 		add_action( 'admin_init', array( $this, 'modify_post_type_features' ) );
 		add_action( 'save_post', array( $this, 'save_transaction' ) );
-		add_filter( 'manage_edit-it_cart_buddy_tran_columns', array( $this, 'add_transaction_method_column_to_view_all_table' ) );
-		add_filter( 'manage_edit-it_cart_buddy_tran_sortable_columns', array( $this, 'make_transaction_method_column_sortable' ) );
-		add_filter( 'manage_it_cart_buddy_tran_posts_custom_column', array( $this, 'add_transaction_method_info_to_view_all_table_rows' ) );
+		add_filter( 'manage_edit-it_exchange_tran_columns', array( $this, 'add_transaction_method_column_to_view_all_table' ) );
+		add_filter( 'manage_edit-it_exchange_tran_sortable_columns', array( $this, 'make_transaction_method_column_sortable' ) );
+		add_filter( 'manage_it_exchange_tran_posts_custom_column', array( $this, 'add_transaction_method_info_to_view_all_table_rows' ) );
 	}
 
 	function init() {
-		$this->post_type = 'it_cart_buddy_tran';
+		$this->post_type = 'it_exchange_tran';
 		$labels    = array(
 			'name'          => __( 'Transactions', 'LION' ),
 			'singular_name' => __( 'Transaction', 'LION' ),
@@ -38,7 +38,7 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 		);
 		$this->options = array(
 			'labels'               => $labels,
-			'description'          => __( 'A Cart Buddy Post Type for storing all Transactions in the system', 'LION' ),
+			'description'          => __( 'An iThemes Exchange Post Type for storing all Transactions in the system', 'LION' ),
 			'public'               => false,
 			'show_ui'              => true,
 			'show_in_nav_menus'    => false,
@@ -85,55 +85,55 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 	 * Callback hook for transaction post type admin views
 	 *
 	 * @since 0.3.3
-	 * @uses it_cart_buddy_get_enabled_add_ons()
+	 * @uses it_exchange_get_enabled_add_ons()
 	 * @return void
 	*/
 	function meta_box_callback( $post ) {
-		$transaction = it_cart_buddy_get_transaction( $post );
+		$transaction = it_exchange_get_transaction( $post );
 
 		// Add action for current product type
-		if ( $transaction_methods = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'transaction-method' ) ) ) ) {
+		if ( $transaction_methods = it_exchange_get_enabled_addons( array( 'category' => array( 'transaction-method' ) ) ) ) {
 			foreach( $transaction_methods as $addon_slug => $params ) {
 				if ( $addon_slug == $transaction->transaction_method )
-					do_action( 'it_cart_buddy_transaction_metabox_callback_' . $addon_slug, $transaction );
+					do_action( 'it_exchange_transaction_metabox_callback_' . $addon_slug, $transaction );
 			}
 		}
 
 		// Do action for any product type
-		do_action( 'it_cart_buddy_transaction_metabox_callback', $transaction );
+		do_action( 'it_exchange_transaction_metabox_callback', $transaction );
 	}
 
 	/**
-	 * Provides specific hooks for when cart buddy transactions are saved.
+	 * Provides specific hooks for when iThemes Exchange transactions are saved.
 	 *
 	 * This method is hooked to save_post. It provides hooks for add-on developers
-	 * that will only be called when the post being saved is a cart buddy transaction. 
+	 * that will only be called when the post being saved is an iThemes Exchange transaction. 
 	 * It provides the following 4 hooks:
-	 * - it_cart_buddy_save_transaction_unvalidated                    // Runs every time a cart buddy transaction is saved.
-	 * - it_cart_buddy_save_transaction_unavalidate-[transaction-method] // Runs every time a specific cart buddy transaction type is saved.
-	 * - it_cart_buddy_save_transaction                                // Runs every time a cart buddy transaction is saved if not an autosave and if user has permission to save post
-	 * - it_cart_buddy_save_transaction-[transaction-method]             // Runs every time a specific cart buddy transaction-method is saved if not an autosave and if user has permission to save post
+	 * - it_exchange_save_transaction_unvalidated                    // Runs every time an iThemes Exchange transaction is saved.
+	 * - it_exchange_save_transaction_unavalidate-[transaction-method] // Runs every time a specific iThemes Exchange transaction type is saved.
+	 * - it_exchange_save_transaction                                // Runs every time an iThemes Exchange transaction is saved if not an autosave and if user has permission to save post
+	 * - it_exchange_save_transaction-[transaction-method]             // Runs every time a specific iThemes Exchange transaction-method is saved if not an autosave and if user has permission to save post
 	 *
 	 * @since 0.3.3
 	 * @return void
 	*/
 	function save_transaction( $post ) { 
 
-		// Exit if not it_cart_buddy_prod post_type
-		if ( ! 'it_cart_buddy_tran' == get_post_type( $post ) ) 
+		// Exit if not it_exchange_prod post_type
+		if ( ! 'it_exchange_tran' == get_post_type( $post ) ) 
 			return;
 
 		// Grab enabled transaction-method add-ons
-		$transaction_method_addons = it_cart_buddy_get_enabled_addons( array( 'category' => 'transaction-method' ) );
+		$transaction_method_addons = it_exchange_get_enabled_addons( array( 'category' => 'transaction-method' ) );
 		
 		// Grab current post's transaction-method
-		$transaction_method = it_cart_buddy_get_transaction_method();
+		$transaction_method = it_exchange_get_transaction_method();
 
-		// These hooks fire off any time a it_cart_buddy_tran post is saved w/o validations
-		do_action( 'it_cart_buddy_save_transaction_unvalidated', $post );
+		// These hooks fire off any time a it_exchange_tran post is saved w/o validations
+		do_action( 'it_exchange_save_transaction_unvalidated', $post );
 		foreach( (array) $transaction_method_addons as $slug => $params ) { 
 			if ( $slug == $transaction_method ) { 
-				do_action( 'it_cart_buddy_save_transaction_unvalidated-' . $slug, $post );
+				do_action( 'it_exchange_save_transaction_unvalidated-' . $slug, $post );
 			}   
 		}   
 
@@ -145,10 +145,10 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 			return;
 
 		// This is called any time save_post hook
-		do_action( 'it_cart_buddy_save_transaction', $post );
+		do_action( 'it_exchange_save_transaction', $post );
 		foreach( (array) $transaction_method_addons as $slug => $params ) { 
 			if ( $slug == $transaction_method ) { 
-				do_action( 'it_cart_buddy_save_transaction-' . $slug, $post );
+				do_action( 'it_exchange_save_transaction-' . $slug, $post );
 			}   
 		}   
 	}
@@ -161,9 +161,9 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 	*/
 	function set_initial_post_transaction_method( $post ) {
 		global $pagenow;
-		if ( $transaction = it_cart_buddy_get_transaction( $post ) ) {
-			if ( ! empty( $transaction->transaction_method ) && ! get_post_meta( $transaction->ID, '_it_cart_buddy_transaction_method', true ) )
-				update_post_meta( $transaction->ID, '_it_cart_buddy_transaction_method', $transaction->transaction_method );
+		if ( $transaction = it_exchange_get_transaction( $post ) ) {
+			if ( ! empty( $transaction->transaction_method ) && ! get_post_meta( $transaction->ID, '_it_exchange_transaction_method', true ) )
+				update_post_meta( $transaction->ID, '_it_exchange_transaction_method', $transaction->transaction_method );
 		}
 	}
 
@@ -179,16 +179,16 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 		foreach ( (array) $existing as $id => $label ) {
 			$columns[$id] = $label;
 			if ( 'title' == $id )
-				$columns['it_cart_buddy_transaction_method_column'] = __( 'Transaction Method', 'LION' );
+				$columns['it_exchange_transaction_method_column'] = __( 'Transaction Method', 'LION' );
 			if ( 'format' == $id )
-				$columns['it_cart_buddy_transaction_status_column'] = __( 'Transaction Status', 'LION' );
+				$columns['it_exchange_transaction_status_column'] = __( 'Transaction Status', 'LION' );
 		}
 		// Insert at end if title wasn't found
-		if ( empty( $columns['it_cart_buddy_transaction_method_column'] ) )
-			$columns['it_cart_buddy_transaction_method_column'] = __( 'Transaction Method', 'LION' );
+		if ( empty( $columns['it_exchange_transaction_method_column'] ) )
+			$columns['it_exchange_transaction_method_column'] = __( 'Transaction Method', 'LION' );
 		// Insert at end if status wasn't found
-		if ( empty( $columns['it_cart_buddy_transaction_status_column'] ) )
-			$columns['it_cart_buddy_transaction_status_column'] = __( 'Transaction Status', 'LION' );
+		if ( empty( $columns['it_exchange_transaction_status_column'] ) )
+			$columns['it_exchange_transaction_status_column'] = __( 'Transaction Status', 'LION' );
 
 		// Remove Format
 		if ( isset( $columns['format'] ) )
@@ -213,8 +213,8 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 	 * @return array  modified sortable columnns
 	*/
 	function make_transaction_method_column_sortable( $sortables ) {
-		$sortables['it_cart_buddy_transaction_method_column'] = 'it_cart_buddy_transaction_method_column';
-		$sortables['it_cart_buddy_transaction_status_column'] = 'it_cart_buddy_transaction_status_column';
+		$sortables['it_exchange_transaction_method_column'] = 'it_exchange_transaction_method_column';
+		$sortables['it_exchange_transaction_status_column'] = 'it_exchange_transaction_status_column';
 		return $sortables;
 	}
 
@@ -229,15 +229,15 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 	function add_transaction_method_info_to_view_all_table_rows( $column ) {
 		global $post, $wp_post_statuses;
 		switch( $column ) {
-			case 'it_cart_buddy_transaction_method_column' :
-				$transaction = it_cart_buddy_get_transaction( $post );
-				if ( $transaction_method = it_cart_buddy_get_addon( $transaction->transaction_method ) )
+			case 'it_exchange_transaction_method_column' :
+				$transaction = it_exchange_get_transaction( $post );
+				if ( $transaction_method = it_exchange_get_addon( $transaction->transaction_method ) )
 					esc_attr_e( $transaction_method['name'] );
 				break;
-			case 'it_cart_buddy_transaction_status_column' :
-					$status = it_cart_buddy_get_transaction_status( $post );
-					$method = it_cart_buddy_get_transaction_method( $post );
-					$statuses = it_cart_buddy_get_addon_support( $method, 'transaction_status' );
+			case 'it_exchange_transaction_status_column' :
+					$status = it_exchange_get_transaction_status( $post );
+					$method = it_exchange_get_transaction_method( $post );
+					$statuses = it_exchange_get_addon_support( $method, 'transaction_status' );
 					$statuses = $statuses['options'];
 					esc_attr_e( $statuses[$status] );
 				break;
@@ -245,7 +245,7 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 	}
 
 	/**
-	 * This triggers the method to modify what is included in $_wp_post_type_features for the it_cart_buddy_tran post type
+	 * This triggers the method to modify what is included in $_wp_post_type_features for the it_exchange_tran post type
 	 *
 	 * @since 0.3.3
 	 * @return void
@@ -256,7 +256,7 @@ class IT_Cart_Buddy_Transaction_Post_Type {
 		if ( ! $post )
 			return false;
 
-		it_cart_buddy_get_transaction( $post );
+		it_exchange_get_transaction( $post );
 	}
 }
-$IT_Cart_Buddy_Transaction_Post_Type = new IT_Cart_Buddy_Transaction_Post_Type();
+$IT_Exchange_Transaction_Post_Type = new IT_Exchange_Transaction_Post_Type();

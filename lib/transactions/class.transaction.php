@@ -1,17 +1,17 @@
 <?php
 /**
- * This file holds the class for a Cart Buddy Transaction
+ * This file holds the class for an iThemes Exchange Transaction
  *
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
  * @since 0.3.3
 */
 
 /**
- * Merges a WP Post with Cart Buddy Transaction data
+ * Merges a WP Post with iThemes Exchange Transaction data
  *
  * @since 0.3.3
 */
-class IT_Cart_Buddy_Transaction {
+class IT_Exchange_Transaction {
 
 	// WP Post Type Properties
 	var $ID;
@@ -64,7 +64,7 @@ class IT_Cart_Buddy_Transaction {
 	 * @param mixed $post  wp post id or post object. optional.
 	 * @return void
 	*/
-	function IT_Cart_Buddy_Transaction( $post=false ) {
+	function IT_Exchange_Transaction( $post=false ) {
 		
 		// If not an object, try to grab the WP object
 		if ( ! is_object( $post ) )
@@ -75,12 +75,12 @@ class IT_Cart_Buddy_Transaction {
 			$post = false;
 
 		// Ensure this is a transaction post type
-		if ( 'it_cart_buddy_tran' != get_post_type( $post ) )
+		if ( 'it_exchange_tran' != get_post_type( $post ) )
 			$post = false;
 
 		// Return a WP Error if we don't have the $post object by this point
 		if ( ! $post )
-			return new WP_Error( 'it-cart-buddy-transaction-not-a-wp-post', __( 'The IT_Cart_Buddy_Transaction class must have a WP post object or ID passed to its constructor', 'LION' ) );
+			return new WP_Error( 'it-exchange-transaction-not-a-wp-post', __( 'The IT_Exchange_Transaction class must have a WP post object or ID passed to its constructor', 'LION' ) );
 
 		// Grab the $post object vars and populate this objects vars
 		foreach( (array) get_object_vars( $post ) as $var => $value ) {
@@ -114,7 +114,7 @@ class IT_Cart_Buddy_Transaction {
 	*/
 	function set_transaction_method() {
 		global $pagenow;
-		if ( ! $transaction_method = get_post_meta( $this->ID, '_it_cart_buddy_transaction_method', true ) ) {
+		if ( ! $transaction_method = get_post_meta( $this->ID, '_it_exchange_transaction_method', true ) ) {
 			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['transaction_method'] ) )	
 				$transaction_method = $_GET['transaction_method'];		
 		}
@@ -129,7 +129,7 @@ class IT_Cart_Buddy_Transaction {
 	*/
     function set_transaction_supports_and_data() {
         // Get transaction_method options
-        if ( $transaction_method_options = it_cart_buddy_get_transaction_method_options( $this->transaction_method ) ) { 
+        if ( $transaction_method_options = it_exchange_get_transaction_method_options( $this->transaction_method ) ) { 
             if ( ! empty( $transaction_method_options['supports'] ) ) { 
                 foreach( $transaction_method_options['supports'] as $feature => $params ) { 
 
@@ -166,11 +166,11 @@ class IT_Cart_Buddy_Transaction {
         if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow )
 			return; // Don't remove any if not on post-new / or post.php
 
-		if ( $addon = it_cart_buddy_get_addon( $this->transaction_method ) ) { 
+		if ( $addon = it_exchange_get_addon( $this->transaction_method ) ) { 
 			// Remove any supports args that the transaction add-on does not want.
 			foreach( $supports as $option ) { 
                 if ( empty( $addon['options']['supports'][$option] ) )
-					remove_post_type_support( 'it_cart_buddy_tran', $option );
+					remove_post_type_support( 'it_exchange_tran', $option );
             }   
         }   
     }  
