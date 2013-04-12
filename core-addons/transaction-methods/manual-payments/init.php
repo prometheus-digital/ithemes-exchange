@@ -3,26 +3,26 @@
  * Manual Payments Transaction Method
  *
  * @since 0.3.0
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
 include( 'confirmation-template-functions.php' );
 
-add_filter( 'it_cart_buddy_get_transaction_method_name-manual-payments', 'it_cart_buddy_get_manual_payments_name', 9 );
-add_action( 'it_cart_buddy_do_transaction-manual-payments', 'it_cart_buddy_manual_payments_do_transaction', 9 );
-add_filter( 'it_cart_buddy_possible_template_paths', 'it_cart_buddy_manual_payments_add_template_path' );
+add_filter( 'it_exchange_get_transaction_method_name-manual-payments', 'it_exchange_get_manual_payments_name', 9 );
+add_action( 'it_exchange_do_transaction-manual-payments', 'it_exchange_manual_payments_do_transaction', 9 );
+add_filter( 'it_exchange_possible_template_paths', 'it_exchange_manual_payments_add_template_path' );
 
 /**
  * Call back for settings page
  *
- * This is set in options array when registering the add-on and called from it_cart_buddy_enable_addon()
+ * This is set in options array when registering the add-on and called from it_exchange_enable_addon()
  *
  * @since 0.3.6
  * @return void
 */
-function it_cart_buddy_manual_payments_settings_callback() {
-	$IT_Cart_Buddy_Manual_Payments_Add_On = new IT_Cart_Buddy_Manual_Payments_Add_On();
-	$IT_Cart_Buddy_Manual_Payments_Add_On->print_settings_page();
+function it_exchange_manual_payments_settings_callback() {
+	$IT_Exchange_Manual_Payments_Add_On = new IT_Exchange_Manual_Payments_Add_On();
+	$IT_Exchange_Manual_Payments_Add_On->print_settings_page();
 }
 
 /**
@@ -32,8 +32,8 @@ function it_cart_buddy_manual_payments_settings_callback() {
  * @param string $name the name passed in from the WP filter API
  * @return string
 */
-function it_cart_buddy_get_manual_payments_name( $name ) { 
-    $options = it_cart_buddy_get_option( 'cart-buddy-addon-manual-payments' );
+function it_exchange_get_manual_payments_name( $name ) { 
+    $options = it_exchange_get_option( 'exchange-addon-manual-payments' );
     if ( ! empty( $options['manual_payments_title'] ) ) 
         $name = $options['manual_payments_title'];
 
@@ -45,14 +45,14 @@ function it_cart_buddy_get_manual_payments_name( $name ) {
  *
  * @since 0.3.7
 */
-function it_cart_buddy_manual_payments_do_transaction( $cart_object ) {
+function it_exchange_manual_payments_do_transaction( $cart_object ) {
 	// Set transaction type as manual payment
 	$args = array(
 		'transaction-method' => 'manual-payments',
 	);
 
 	// Do transaction
-	$transaction_id = it_cart_buddy_add_transaction( $args, $cart_object );
+	$transaction_id = it_exchange_add_transaction( $args, $cart_object );
 }
 
 /**
@@ -61,8 +61,8 @@ function it_cart_buddy_manual_payments_do_transaction( $cart_object ) {
  * @since 0.3.8
  * @return array of possible template paths + manual-payments template path
 */
-function it_cart_buddy_manual_payments_add_template_path( $paths ) {
-	if ( is_page( it_cart_buddy_get_page_id( 'transaction-confirmation' ) ) )
+function it_exchange_manual_payments_add_template_path( $paths ) {
+	if ( is_page( it_exchange_get_page_id( 'transaction-confirmation' ) ) )
 		$paths[] = dirname( __FILE__ ) . '/templates/';
 	return $paths;
 }
@@ -71,7 +71,7 @@ function it_cart_buddy_manual_payments_add_template_path( $paths ) {
  * Class for Manual Payments
  * @since 0.3.6
 */
-class IT_Cart_Buddy_Manual_Payments_Add_On {
+class IT_Exchange_Manual_Payments_Add_On {
 
 	/**
 	 * @var boolean $_is_admin true or false
@@ -110,29 +110,29 @@ class IT_Cart_Buddy_Manual_Payments_Add_On {
 	 * @since 0.3.6
 	 * @return void
 	*/
-	function IT_Cart_Buddy_Manual_Payments_Add_On() {
+	function IT_Exchange_Manual_Payments_Add_On() {
 		$this->_is_admin                      = is_admin();
 		$this->_current_page                 = empty( $_GET['page'] ) ? false : $_GET['page'];
 		$this->_current_add_on = empty( $_GET['add_on_settings'] ) ? false : $_GET['add_on_settings'];
 
-		if ( ! empty( $_POST ) && $this->_is_admin && 'it-cart-buddy-addons' == $this->_current_page && 'manual-payments' == $this->_current_add_on ) {
-			add_action( 'it_cart_buddy_save_add_on_settings-manual-payments', array( $this, 'save_settings' ) );
-			do_action( 'it_cart_buddy_save_add_on_settings-manual-payments' );
+		if ( ! empty( $_POST ) && $this->_is_admin && 'it-exchange-addons' == $this->_current_page && 'manual-payments' == $this->_current_add_on ) {
+			add_action( 'it_exchange_save_add_on_settings-manual-payments', array( $this, 'save_settings' ) );
+			do_action( 'it_exchange_save_add_on_settings-manual-payments' );
 		}
 
-		add_filter( 'it_storage_get_defaults_cart-buddy-addon-manual-payments', array( $this, 'set_default_settings' ) );
+		add_filter( 'it_storage_get_defaults_exchange-addon-manual-payments', array( $this, 'set_default_settings' ) );
 	}
 
 	function print_settings_page() {
-		$settings = it_cart_buddy_get_option( 'cart-buddy-addon-manual-payments', true );
+		$settings = it_exchange_get_option( 'exchange-addon-manual-payments', true );
 		$form_values  = empty( $this->error_message ) ? $settings : ITForm::get_post_data();
 		$default_status_options = $this->get_default_status_options();
 		$form_options = array(
-			'id'      => apply_filters( 'it_cart_buddy_add_on_manual_payments', 'it-cart-buddy-add-on-manual-payments-settings' ),
-			'enctype' => apply_filters( 'it_cart_buddy_add_on_manual_payments_settings_form_enctype', false ),
-			'action'  => 'admin.php?page=it-cart-buddy-addons&add_on_settings=manual-payments',
+			'id'      => apply_filters( 'it_exchange_add_on_manual_payments', 'it-exchange-add-on-manual-payments-settings' ),
+			'enctype' => apply_filters( 'it_exchange_add_on_manual_payments_settings_form_enctype', false ),
+			'action'  => 'admin.php?page=it-exchange-addons&add_on_settings=manual-payments',
 		);
-		$form         = new ITForm( $form_values, array( 'prefix' => 'it_cart_buddy_add_on_manual_payments' ) );
+		$form         = new ITForm( $form_values, array( 'prefix' => 'it_exchange_add_on_manual_payments' ) );
 
 		if ( ! empty ( $this->status_message ) )
 			ITUtility::show_status_message( $this->status_message );
@@ -148,17 +148,17 @@ class IT_Cart_Buddy_Manual_Payments_Add_On {
 	 * @return void
 	*/
 	function save_settings() {
-		$defaults = it_cart_buddy_get_option( 'cart-buddy-addon-manual-payments' );
+		$defaults = it_exchange_get_option( 'exchange-addon-manual-payments' );
 		$new_values = wp_parse_args( ITForm::get_post_data(), $defaults );
 
 		// Check nonce
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'cart-buddy-manual-payments-settings' ) ) {
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-manual-payments-settings' ) ) {
 			$this->error_message = __( 'Error. Please try again', 'LION' );
 			return;
 		}
 
-		$errors = apply_filters( 'it_cart_buddy_add_on_manual_transaction_validate_settings', $this->get_form_errors( $new_values ), $new_values );
-		if ( ! $errors && it_cart_buddy_save_option( 'cart-buddy-addon-manual-payments', $new_values ) ) {
+		$errors = apply_filters( 'it_exchange_add_on_manual_transaction_validate_settings', $this->get_form_errors( $new_values ), $new_values );
+		if ( ! $errors && it_exchange_save_option( 'exchange-addon-manual-payments', $new_values ) ) {
 			ITUtility::show_status_message( __( 'Settings saved.', 'LION' ) );
 		} else if ( $errors ) {
 			$errors = implode( '<br />', $errors );
@@ -197,7 +197,7 @@ class IT_Cart_Buddy_Manual_Payments_Add_On {
 	 * @return void
 	*/
 	function get_default_status_options() {
-		$add_on = it_cart_buddy_get_addon( 'manual-payments' );
+		$add_on = it_exchange_get_addon( 'manual-payments' );
 		$options = empty( $add_on['options']['supports']['transaction_status']['options'] ) ? array() : $add_on['options']['supports']['transaction_status']['options'];
 		return $options;
 	}
