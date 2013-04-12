@@ -2,7 +2,7 @@
 /**
  * Hooks for Digital Downloads Add-on
  *
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
  * @since 0.2.0
 */
 
