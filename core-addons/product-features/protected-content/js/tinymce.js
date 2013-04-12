@@ -1,9 +1,9 @@
 (function () {
-    tinymce.create("tinymce.plugins.ITCartBuddyProtectedContentAddon", {
+    tinymce.create("tinymce.plugins.ITExchangeProtectedContentAddon", {
         init: function (a, b) {
-            a.addCommand("mceITCartBuddyProtectedContentAddon", function () {
+            a.addCommand("mceITExchangeProtectedContentAddon", function () {
                 a.windowManager.open({
-                    file: "?action=it-cart-buddy-protected-content-addon-doing-popup",
+                    file: "?action=it-exchange-protected-content-addon-doing-popup",
                     width: 300,
                     height: 400,
                     inline: 1
@@ -11,15 +11,15 @@
                     plugin_url: b
                 })
             });
-            a.addButton("ITCartBuddyProtectedContentAddon", {
-                title: ITCartBuddyProtectedContentAddonDialog.desc,
-                cmd: "mceITCartBuddyProtectedContentAddon",
+            a.addButton("ITExchangeProtectedContentAddon", {
+                title: ITExchangeProtectedContentAddonDialog.desc,
+                cmd: "mceITExchangeProtectedContentAddon",
                 image: b + "/images/lock.png",
             })
         }
     });
-    tinymce.PluginManager.add("ITCartBuddyProtectedContentAddon", tinymce.plugins.ITCartBuddyProtectedContentAddon);
-    if (typeof (tinymce) != "undefined" && typeof (ITCartBuddyProtectedContentAddonDialog) != "undefined") {
-        tinymce.addI18n("en.ITCartBuddyProtectedContentAddon", ITCartBuddyProtectedContentAddonDialog)
+    tinymce.PluginManager.add("ITExchangeProtectedContentAddon", tinymce.plugins.ITExchangeProtectedContentAddon);
+    if (typeof (tinymce) != "undefined" && typeof (ITExchangeProtectedContentAddonDialog) != "undefined") {
+        tinymce.addI18n("en.ITExchangeProtectedContentAddon", ITExchangeProtectedContentAddonDialog)
     }
 })();

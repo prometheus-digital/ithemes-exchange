@@ -4,10 +4,10 @@
  * By default, it registers a metabox on the product's add/edit screen and provides HTML / data for the frontend.
  *
  * @since 0.3.8
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
-// Include code for Cart Buddy Product Types
+// Include code for iThemes Exchange Product Types
 include ( 'product-types.php' );
 include ( 'protected-content-metabox.php' );
 include ( 'functions.php' );

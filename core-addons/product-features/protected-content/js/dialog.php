@@ -56,7 +56,7 @@
 						});
 
 						if (window.tinyMCE) {
-							ed.selection.setContent( '[cart-buddy-protected-content products="' + products.join() + '"]' + selection + '[/cart-buddy-protected-content]' );
+							ed.selection.setContent( '[it-exchange-protected-content products="' + products.join() + '"]' + selection + '[/it-exchange-protected-content]' );
 							tinyMCEPopup.close();
 						}
 					}),
@@ -65,7 +65,7 @@
 						tinyMCEPopup.close();
 					}),
 					
-					checkboxes = $.get("<?php echo wp_nonce_url(admin_url('admin-ajax.php'),'wp_ajax_it_cart_buddy_protected_content_addon_get_products'); ?>&action=it_cart_buddy_protected_content_addon_get_protected_products",{},function (r) { 
+					checkboxes = $.get("<?php echo wp_nonce_url(admin_url('admin-ajax.php'),'wp_ajax_it_exchange_protected_content_addon_get_products'); ?>&action=it_exchange_protected_content_addon_get_protected_products",{},function (r) { 
 						pc.empty().html(r); },'html');
 			});
 		});

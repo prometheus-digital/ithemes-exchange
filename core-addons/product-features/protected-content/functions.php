@@ -6,7 +6,7 @@
  * @since 0.3.8
  * @return void
 */
-function it_cart_buddy_protected_content_maybe_redirect_singular_object() {
+function it_exchange_protected_content_maybe_redirect_singular_object() {
 	global $post;
 
 	// Abandon if this isn't a singular page
@@ -14,20 +14,20 @@ function it_cart_buddy_protected_content_maybe_redirect_singular_object() {
 		return;
 
 	// Abandon if this post isn't protected based on role or product
-	if ( ! it_cart_buddy_protected_content_is_object_protected( $post->ID ) )
+	if ( ! it_exchange_protected_content_is_object_protected( $post->ID ) )
 		return;
 
 	// Abandon if current user can view current object
-	if ( it_cart_buddy_protected_content_current_user_can_access_object( $post->ID ) )
+	if ( it_exchange_protected_content_current_user_can_access_object( $post->ID ) )
 		return;
 
 	// Check to see if this object requires a redirect and send them on their way if it does
-	if ( 'redirect' == it_cart_buddy_protected_content_get_options( $post->ID, 'unauthorized_singular_action' ) ) {
-		wp_redirect( it_cart_buddy_protected_content_get_options( $post->ID, 'unauthorized_singular_redirect_url' ) );
+	if ( 'redirect' == it_exchange_protected_content_get_options( $post->ID, 'unauthorized_singular_action' ) ) {
+		wp_redirect( it_exchange_protected_content_get_options( $post->ID, 'unauthorized_singular_redirect_url' ) );
 		die();
 	}
 }
-add_action( 'template_redirect', 'it_cart_buddy_protected_content_maybe_redirect_singular_object' );
+add_action( 'template_redirect', 'it_exchange_protected_content_maybe_redirect_singular_object' );
 
 /**
  * Is the passed ID marked as being complety protected
@@ -35,8 +35,8 @@ add_action( 'template_redirect', 'it_cart_buddy_protected_content_maybe_redirect
  * @since 0.3.8
  * @return boolean
 */
-function it_cart_buddy_protected_content_is_object_protected( $post_id ) {
-	$options = get_post_meta( $post_id, '_it_cart_buddy_protected_content_options', true );
+function it_exchange_protected_content_is_object_protected( $post_id ) {
+	$options = get_post_meta( $post_id, '_it_exchange_protected_content_options', true );
 	return ! empty( $options['is_protected'] ) && ( 'products' == $options['is_protected'] || 'wp_roles' == $options['is_protected'] );
 }
 
@@ -47,26 +47,26 @@ function it_cart_buddy_protected_content_is_object_protected( $post_id ) {
  * @param integer $post_id id for row in wp_posts table
  * @return boolean
 */
-function it_cart_buddy_protected_content_current_user_can_access_object( $post_id ) {
+function it_exchange_protected_content_current_user_can_access_object( $post_id ) {
 
 	// Return true if object isn't protected
-	if ( ! it_cart_buddy_protected_content_is_object_protected( $post_id ) )
+	if ( ! it_exchange_protected_content_is_object_protected( $post_id ) )
 		return true;
 
 	// Return false if object is protected but user isn't logged into the site
-	if ( ! $current_user = it_cart_buddy_get_current_customer() )
+	if ( ! $current_user = it_exchange_get_current_customer() )
 		return false;
 	
 	// Return false if it is a product based protection and user hasn't purchased correct product(s)
-	if ( ! it_cart_buddy_protected_content_current_user_can_access_content_based_on_purchases( $post_id ) )
+	if ( ! it_exchange_protected_content_current_user_can_access_content_based_on_purchases( $post_id ) )
 		return false;
 
 	// Return false if it is a wp_roles based protection and the user hasn't purchase correct products(s)
-	if ( ! it_cart_buddy_protected_content_current_user_can_access_content_based_on_wp_roles( $post_id ) )
+	if ( ! it_exchange_protected_content_current_user_can_access_content_based_on_wp_roles( $post_id ) )
 		return false;
 
 	// Return false if there is a time restraint on viewing
-	if ( ! it_cart_buddy_protected_content_current_user_can_access_content_based_on_current_date( $post_id ) )
+	if ( ! it_exchange_protected_content_current_user_can_access_content_based_on_current_date( $post_id ) )
 		return false;
 
 	// Return true if we've made it this far
@@ -81,18 +81,18 @@ function it_cart_buddy_protected_content_current_user_can_access_object( $post_i
  * @since 0.3.8
  * @return boolean
 */
-function it_cart_buddy_protected_content_current_user_can_access_content_based_on_purchases( $object_id ) {
+function it_exchange_protected_content_current_user_can_access_content_based_on_purchases( $object_id ) {
 
 	// Return false if current user isn't logged into the site
-	if ( ! $current_user = it_cart_buddy_get_current_customer() )
+	if ( ! $current_user = it_exchange_get_current_customer() )
 		return false;
 
 	// Return true if object isn't being protected based on product purchases
-	if ( 'products' != it_cart_buddy_protected_content_get_options( $object_id, 'is_protected' ) ) 
+	if ( 'products' != it_exchange_protected_content_get_options( $object_id, 'is_protected' ) ) 
 		return true;
 
 	// Return false if object was marked as protected but no products were checked
-	if ( ! $required_products = it_cart_buddy_protected_content_get_required_products_for_protected_object( $object_id ) )
+	if ( ! $required_products = it_exchange_protected_content_get_required_products_for_protected_object( $object_id ) )
 		return false;
 
 	// Get User products. Return false if there is no purchase history
@@ -100,7 +100,7 @@ function it_cart_buddy_protected_content_current_user_can_access_content_based_o
 		return false;
 
 	// Do we need all or any of the products
-	$all_any = it_cart_buddy_protected_content_get_options( $object_id, 'all_any_products' );
+	$all_any = it_exchange_protected_content_get_options( $object_id, 'all_any_products' );
 
 	// At this point we have confirmation that the current user has made transactions in the past and that we have an array of required products
 	// Now we're going to loop through purchased products and compare them to required products.
@@ -115,7 +115,7 @@ function it_cart_buddy_protected_content_current_user_can_access_content_based_o
 		}
 
 		// Loop through all purchases of this product to see if customer has a vailid purchase of it.
-		if ( ! it_cart_buddy_protected_content_user_has_valid_purchase_of_product( $current_user->id, $product_purchases ) ) {
+		if ( ! it_exchange_protected_content_user_has_valid_purchase_of_product( $current_user->id, $product_purchases ) ) {
 			// If false and $any_all is set to 'all', return false because they're missing a valid purchase of a required product
 			if ( 'all' == $all_any )
 				return false;
@@ -150,11 +150,11 @@ function it_cart_buddy_protected_content_current_user_can_access_content_based_o
  * @since 0.3.8
  * @return boolean
 */
-function it_cart_buddy_protected_content_current_user_can_access_content_based_on_wp_roles( $object_id ) {
-	if ( 'wp_roles' != it_cart_buddy_protected_content_get_options( $object_id, 'is_protected' ) )
+function it_exchange_protected_content_current_user_can_access_content_based_on_wp_roles( $object_id ) {
+	if ( 'wp_roles' != it_exchange_protected_content_get_options( $object_id, 'is_protected' ) )
 		return true;
 
-	foreach( (array) it_cart_buddy_protected_content_get_options( $object_id, 'wp_roles' ) as $role ) {
+	foreach( (array) it_exchange_protected_content_get_options( $object_id, 'wp_roles' ) as $role ) {
 		if ( current_user_can( $role ) )
 			return true;
 	}
@@ -168,8 +168,8 @@ function it_cart_buddy_protected_content_current_user_can_access_content_based_o
  * @param integer $post_id the id of a row from the wp_posts table
  * @return mixed an array or false
 */
-function it_cart_buddy_protected_content_get_required_products_for_protected_object( $post_id ) {
-	$products = it_cart_buddy_protected_content_get_options($post_id, 'selected_products' );
+function it_exchange_protected_content_get_required_products_for_protected_object( $post_id ) {
+	$products = it_exchange_protected_content_get_options($post_id, 'selected_products' );
 	return empty( $products ) ? false : $products;
 }
 
@@ -186,10 +186,10 @@ function it_cart_buddy_protected_content_get_required_products_for_protected_obj
  * @param string $any_all does the user need to have purchased all or any of the the products
  * @return boolean
 */
-function it_cart_buddy_protected_content_user_has_valid_purchase_of_product( $user_id, $product_purchases ) {
+function it_exchange_protected_content_user_has_valid_purchase_of_product( $user_id, $product_purchases ) {
 	foreach( (array) $product_purchases as $purchase) {
-		$product_type     = it_cart_buddy_get_product_type( $purchase['product_id'] );
-		$product_is_valid = apply_filters( 'it_cart_buddy_protected_content_is_purchased_product_valid-' . $product_type, true, $user_id, $purchase );
+		$product_type     = it_exchange_get_product_type( $purchase['product_id'] );
+		$product_is_valid = apply_filters( 'it_exchange_protected_content_is_purchased_product_valid-' . $product_type, true, $user_id, $purchase );
 
 		// Exit the foreach once we find a valid product
 		if ( $product_is_valid )
@@ -207,17 +207,17 @@ function it_cart_buddy_protected_content_user_has_valid_purchase_of_product( $us
  * @param integer $post_id
  * @return boolean
 */
-function it_cart_buddy_protected_content_current_user_can_access_content_based_on_current_date( $post_id ) {
+function it_exchange_protected_content_current_user_can_access_content_based_on_current_date( $post_id ) {
 	
-	switch ( it_cart_buddy_protected_content_get_options( $post_id, 'when_protected' ) ) {
+	switch ( it_exchange_protected_content_get_options( $post_id, 'when_protected' ) ) {
 		/**
 		NOT CURRENTLY AN OPTION
 		case 'duration-period' :
-			return it_cart_buddy_protected_content_current_user_can_access_content_based_on_purchase_duration( $post_id );
+			return it_exchange_protected_content_current_user_can_access_content_based_on_purchase_duration( $post_id );
 			break;
 		**/
 		case 'time-period' :
-			return it_cart_buddy_protected_content_current_user_can_access_content_based_on_time_period( $post_id );
+			return it_exchange_protected_content_current_user_can_access_content_based_on_time_period( $post_id );
 			break;
 		case 'never' :
 		default :
@@ -232,23 +232,23 @@ function it_cart_buddy_protected_content_current_user_can_access_content_based_o
  * @param integer $post_id
  * @return boolean
 */
-function it_cart_buddy_protected_content_current_user_can_access_content_based_on_time_period( $post_id ) {
-	if ( 'time-period' != it_cart_buddy_protected_content_get_options( $post_id, 'when_protected' ) )
+function it_exchange_protected_content_current_user_can_access_content_based_on_time_period( $post_id ) {
+	if ( 'time-period' != it_exchange_protected_content_get_options( $post_id, 'when_protected' ) )
 		return true;
 
-	$start = (boolean) it_cart_buddy_protected_content_get_options( $post_id, 'when_time_period_start' );
-	$end   = (boolean) it_cart_buddy_protected_content_get_options( $post_id, 'when_time_period_end' );
+	$start = (boolean) it_exchange_protected_content_get_options( $post_id, 'when_time_period_start' );
+	$end   = (boolean) it_exchange_protected_content_get_options( $post_id, 'when_time_period_end' );
 	$now   = current_time( 'timestamp' );
 
-	$time_start = mysql2date( 'U', it_cart_buddy_protected_content_get_options( $post_id, 'when_time_period_start_date' ) . '00:01:01' );
-	$time_end   = mysql2date( 'U', it_cart_buddy_protected_content_get_options( $post_id, 'when_time_period_end_date' ) . '23:59:00' );
+	$time_start = mysql2date( 'U', it_exchange_protected_content_get_options( $post_id, 'when_time_period_start_date' ) . '00:01:01' );
+	$time_end   = mysql2date( 'U', it_exchange_protected_content_get_options( $post_id, 'when_time_period_end_date' ) . '23:59:00' );
 
-	if ( ! $start || ( $start && '' == it_cart_buddy_protected_content_get_options( $post_id, 'when_time_period_start_date' ) ) )
+	if ( ! $start || ( $start && '' == it_exchange_protected_content_get_options( $post_id, 'when_time_period_start_date' ) ) )
 		$start_valid = true;
 	else
 		$start_valid = $time_start < $now;
 
-	if ( ! $end || ( $end && '' == it_cart_buddy_protected_content_get_options( $post_id, 'when_time_period_end_date' ) ) )
+	if ( ! $end || ( $end && '' == it_exchange_protected_content_get_options( $post_id, 'when_time_period_end_date' ) ) )
 		$end_valid = true;
 	else
 		$end_valid = $time_end > $now;
@@ -264,33 +264,33 @@ function it_cart_buddy_protected_content_current_user_can_access_content_based_o
  * @since 
  * @return boolean
 */
-function DISABLED_MAYBE_LATER_it_cart_buddy_protected_content_current_user_can_access_content_based_on_purchase_duration( $post_id ) {
+function DISABLED_MAYBE_LATER_it_exchange_protected_content_current_user_can_access_content_based_on_purchase_duration( $post_id ) {
 	// Return true if this content doesn't have any purchase duration time limits
-	if ( 'duration-period' != it_cart_buddy_protected_content_get_options( $post_id, 'when_protected' ) )
+	if ( 'duration-period' != it_exchange_protected_content_get_options( $post_id, 'when_protected' ) )
 		return true;
 
 	// We need products to proceed
-	$required_products = it_cart_buddy_protected_content_get_options( $post_id, 'selected_products' );
+	$required_products = it_exchange_protected_content_get_options( $post_id, 'selected_products' );
 	if ( empty( $required_products ) )
 		return false;
 
 	die();
-	$start = (boolean) it_cart_buddy_protected_content_get_options( $post_id, 'when_duration_start' );
-	$end   = (boolean) it_cart_buddy_protected_content_get_options( $post_id, 'when_duration_end' );
+	$start = (boolean) it_exchange_protected_content_get_options( $post_id, 'when_duration_start' );
+	$end   = (boolean) it_exchange_protected_content_get_options( $post_id, 'when_duration_end' );
 	$now   = current_time( 'timestamp' );
 
 	if ( ! $start && ! $end )
 		return true;
 
 	if ( $start ) {
-		$start_quantity = (int) it_cart_buddy_protected_content_get_options( $post_id, 'when_duration_start_quantity' );
-		$start_units    = it_cart_buddy_protected_content_get_options( $post_id, 'when_duration_start_units' );
+		$start_quantity = (int) it_exchange_protected_content_get_options( $post_id, 'when_duration_start_quantity' );
+		$start_units    = it_exchange_protected_content_get_options( $post_id, 'when_duration_start_units' );
 		$start_delay    = strtotime( $start_quantity . ' ' . $start_units, '0' );
 	}
 
 	if ( $end ) {
-		$end_quantity = (int) it_cart_buddy_protected_content_get_options( $post_id, 'when_duration_end_quantity' );
-		$end_units    = it_cart_buddy_protected_content_get_options( $post_id, 'when_duration_end_units' );
+		$end_quantity = (int) it_exchange_protected_content_get_options( $post_id, 'when_duration_end_quantity' );
+		$end_units    = it_exchange_protected_content_get_options( $post_id, 'when_duration_end_units' );
 		$end_delay    = strtotime( $end_quantity . ' ' . $end_units, '0' );
 	}
 
@@ -305,8 +305,8 @@ function DISABLED_MAYBE_LATER_it_cart_buddy_protected_content_current_user_can_a
  * @param string $option_key key being requested from protected content options
  * @return mixed false, single value, or array of values
 */
-function it_cart_buddy_protected_content_get_options( $post_id, $option_key=false ) {
-	if ( false === ( $options = get_post_meta( $post_id, '_it_cart_buddy_protected_content_options', true ) ) )
+function it_exchange_protected_content_get_options( $post_id, $option_key=false ) {
+	if ( false === ( $options = get_post_meta( $post_id, '_it_exchange_protected_content_options', true ) ) )
 		return false;
 
 	if ( $option_key )
@@ -322,8 +322,8 @@ function it_cart_buddy_protected_content_get_options( $post_id, $option_key=fals
  * @param $post_id
  * @return mixed content
 */
-function it_cart_buddy_protected_content_get_protected_content( $post_id ) {
-	$options = it_cart_buddy_protected_content_get_options( $post_id );
+function it_exchange_protected_content_get_protected_content( $post_id ) {
+	$options = it_exchange_protected_content_get_options( $post_id );
 
 	if ( is_singular() ) {
 		$action = $options['unauthorized_singular_action'];
@@ -361,20 +361,20 @@ function it_cart_buddy_protected_content_get_protected_content( $post_id ) {
  *
  * @since 0.3.8
 */
-function it_cart_buddy_protected_content_filter_content_and_excerpt( $existing ) {
+function it_exchange_protected_content_filter_content_and_excerpt( $existing ) {
 	global $post;
 
 	// Abandon if this post isn't protected based on role or product
-	if ( ! it_cart_buddy_protected_content_is_object_protected( $post->ID ) )
+	if ( ! it_exchange_protected_content_is_object_protected( $post->ID ) )
 		return $existing;
 
 	// Abandon if current user can view current object
-	if ( it_cart_buddy_protected_content_current_user_can_access_object( $post->ID ) )
+	if ( it_exchange_protected_content_current_user_can_access_object( $post->ID ) )
 		return $existing;
 
 	// Get content based on protected content options
-	$content = it_cart_buddy_protected_content_get_protected_content( $post->ID );
+	$content = it_exchange_protected_content_get_protected_content( $post->ID );
 	return empty( $content ) ? $existing : $content;
 }
-add_filter( 'the_excerpt', 'it_cart_buddy_protected_content_filter_content_and_excerpt' );
-add_filter( 'the_content', 'it_cart_buddy_protected_content_filter_content_and_excerpt' );
+add_filter( 'the_excerpt', 'it_exchange_protected_content_filter_content_and_excerpt' );
+add_filter( 'the_content', 'it_exchange_protected_content_filter_content_and_excerpt' );
