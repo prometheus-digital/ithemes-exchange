@@ -1,9 +1,9 @@
 <?php
 /**
- * This file loads the Cart Buddy Framework
+ * This file loads the iThemes Exchange Framework
  *
  * @since 0.2.0
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
 // IT Classes
