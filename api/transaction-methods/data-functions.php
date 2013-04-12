@@ -33,8 +33,8 @@ function it_exchange_get_transaction_method( $transaction=false ) {
 		return $transaction->transaction_method;
 
 	// Return query arg if is present
-	if ( ! empty ( $_GET['transaction_method'] ) )
-		return $_GET['transaction_method'];
+	if ( ! empty ( $_GET['transaction-method'] ) )
+		return $_GET['transaction-method'];
 
 	return false;
 }
@@ -135,10 +135,10 @@ function it_exchange_add_transaction( $args=array(), $cart_object=false ) {
 		update_post_meta( $transaction_id, '_it_exchange_transaction_method', $args['transaction-method'] );
 		update_post_meta( $transaction_id, '_it_exchange_transaction_status', $args['transaction_status'] );
 		update_post_meta( $transaction_id, '_it_exchange_transaction_cart', $cart_object );
-		do_action( 'it_exchange_add_transaction_success-' . $args['transaction-method'], $transaction_id, $cart_object );
+		do_action( 'it_exchange_add_transaction_success_' . $args['transaction-method'], $transaction_id, $cart_object );
 		return $transaction_id;
 	}
-	do_action( 'it_exchange_add_transaction_failed-' . $args['transaction-method'], $args );
+	do_action( 'it_exchange_add_transaction_failed_' . $args['transaction-method'], $args );
 	return false;
 }
 
@@ -162,7 +162,7 @@ function it_exchange_update_transaction( $args ) {
 	$transaction_method = it_exchange_get_transaction_method( $id );
 
 	do_action( 'it_exchange_update_transaction', $args );
-	do_action( 'it_exchange_update_transaction-' . $transaction_method, $args );
+	do_action( 'it_exchange_update_transaction_' . $transaction_method, $args );
 
 	if ( ! empty( $args['_it_exchange_transaction_status'] ) )
 		it_exchange_update_transaction_status( $id, $args['_it_exchange_transaction_status'] );
@@ -191,7 +191,7 @@ function it_exchange_update_transaction_status( $transaction, $status ) {
 	$transaction = it_exchange_get_transaction( $transaction->ID );
 
 	do_action( 'it_exchange_update_transaction_status', $transaction, $old_status );
-	do_action( 'it_exchange_update_transaction_status-' . $transaction->transaction_method, $transaction, $old_status );
+	do_action( 'it_exchange_update_transaction_status_' . $transaction->transaction_method, $transaction, $old_status );
 	return $transaction->transaction_data['_it_exchange_transaction_status'];
 }
 
@@ -223,7 +223,7 @@ function it_exchange_get_transaction_method_name( $slug ) {
 	if ( ! $method = it_exchange_get_addon( $slug ) )
 		return false;
 
-	$name = apply_filters( 'it_exchange_get_transaction_method_name-' . $method['slug'], $method['name'] );
+	$name = apply_filters( 'it_exchange_get_transaction_method_name_' . $method['slug'], $method['name'] );
 	return $name;
 }
 
@@ -234,5 +234,5 @@ function it_exchange_get_transaction_method_name( $slug ) {
  * @return mixed
 */
 function it_exchange_do_transaction( $method, $cart_object ) {
-	do_action( 'it_exchange_do_transaction-' . $method, $cart_object );
+	do_action( 'it_exchange_do_transaction_' . $method, $cart_object );
 }

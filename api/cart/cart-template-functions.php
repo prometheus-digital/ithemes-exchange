@@ -46,6 +46,7 @@ function it_exchange_get_remove_product_from_cart_link( $cart_product_id ) {
 /**
  * Generates the content for each table cell in the itemized products cart table
  *
+ * @todo Dollar Signs shouldn't be hardcoded here!
  * @since 0.3.8
  * @return string HTML for cell
 */
@@ -64,7 +65,7 @@ function it_exchange_get_cart_table_product_data( $column, $product ) {
             return '$' . $base_price;
             break;
         case 'product-quantity' :
-            return '<input type="text" name="product_quantity[' . $product['product_cart_id'] . ']" value="' . it_exchange_get_cart_product_quantity( $product ) . '" size="4"/>';
+            return '<input type="text" name="product-quantity[' . $product['product_cart_id'] . ']" value="' . it_exchange_get_cart_product_quantity( $product ) . '" size="4"/>';
             break;
         case 'product-subtotal' :
             return '$' . it_exchange_get_cart_product_subtotal( $product );

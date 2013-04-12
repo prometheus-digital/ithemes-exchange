@@ -85,7 +85,7 @@ function it_exchange_get_customer_registration_fields() {
 
 	$fields['username']  = array(
 		'type'  => 'text_box',
-		'var'   => 'user_login',
+		'var'   => 'user-login',
 		'label' => __( 'Username', 'LION' ),
 	);
 	$fields['password1'] = array(
@@ -112,7 +112,7 @@ function it_exchange_get_customer_registration_fields() {
  * Add-ons calling this function should use ITForm to generate the form fields.
  *
  * $fields['first_name'] = array(
- *    'var'   => 'first_name',
+ *    'var'   => 'first-name',
  *    'type'  => 'text_box',
  *    'label' => 'First Name:',
  * );
@@ -123,17 +123,17 @@ function it_exchange_get_customer_registration_fields() {
 function it_exchange_get_customer_profile_fields() {
 	$fields['first_name']  = array(
 		'type'  => 'text_box',
-		'var'   => 'first_name',
+		'var'   => 'first-name',
 		'label' => __( 'First Name', 'LION' ),
 	);  
 	$fields['last_name'] = array(
 		'type'  => 'text_box',
-		'var'   => 'last_name',
+		'var'   => 'last-name',
 		'label' => __( 'Last Name', 'LION' ),
 	);  
 	$fields['email'] = array(
 		'type'  => 'text_box',
-		'var'   => 'user_email',
+		'var'   => 'user-email',
 		'label' => __( 'Email', 'LION' ),
 	);  
 	return apply_filters( 'it_exchange_get_customer_profile_fields', $fields );

@@ -14,7 +14,7 @@
  * @return boolean
 */
 function it_exchange_product_has_feature( $product_id, $feature_key ) {
-	return apply_filters( 'it_exchange_product_has_feature-' . $feature_key, false, $product_id );
+	return apply_filters( 'it_exchange_product_has_feature_' . $feature_key, false, $product_id );
 }
 
 /**
@@ -27,7 +27,7 @@ function it_exchange_product_has_feature( $product_id, $feature_key ) {
  * @return boolean
 */
 function it_exchange_update_product_feature( $product_id, $feature_key, $feature_value ) {
-	do_action( 'it_exchange_update_product_feature-' . $feature_key, $product_id, $feature_value );
+	do_action( 'it_exchange_update_product_feature_' . $feature_key, $product_id, $feature_value );
 }
 
 /**
@@ -39,7 +39,7 @@ function it_exchange_update_product_feature( $product_id, $feature_key, $feature
  * @return mixed the value of the feature
 */
 function it_exchange_get_product_feature( $product_id, $feature_key ) {
-	return apply_filters( 'it_exchange_get_product_feature-' . $feature_key, false, $product_id );
+	return apply_filters( 'it_exchange_get_product_feature_' . $feature_key, false, $product_id );
 }
 
 /**

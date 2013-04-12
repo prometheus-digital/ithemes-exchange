@@ -241,7 +241,7 @@ class IT_Exchange_Shopping_Cart {
 	function handle_update_cart_quantity_request() {
 
 		// Get Quantities form REQUEST
-		$quantities = empty( $_POST['product_quantity'] ) ? false : (array) $_POST['product_quantity'];
+		$quantities = empty( $_POST['product-quantity'] ) ? false : (array) $_POST['product-quantity'];
 		if ( ! $quantities )
 			return;
 		

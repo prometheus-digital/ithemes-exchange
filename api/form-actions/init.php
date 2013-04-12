@@ -44,17 +44,17 @@ function it_exchange_get_action_var( $var ) {
 function it_exchange_get_action_vars() {
 	// Default vars
 	$defaults = array(
-		'add_product_to_cart'      => 'it_exchange_add_product_to_cart',
-		'remove_product_from_cart' => 'it_exchange_remove_product_from_cart',
-		'update_cart_action'       => 'it_exchange_update_cart_request',
-		'empty_cart'               => 'it_exchange_empty_cart',
-		'proceed_to_checkout'      => 'it_exchange_proceed_to_checkout',
-		'view_cart'                => 'it_exchange_view_cart',
-		'purchase_cart'            => 'it_exchange_purchase_cart',
-		'alert_message'            => 'it_exchange_messages',
-		'error_message'            => 'it_exchange_errors',
-		'transaction_id'           => 'it_exchange_transaction_id',
-		'transaction_method'       => 'it_exchange_transaction_method',
+		'add_product_to_cart'      => 'it-exchange-add-product-to-cart',
+		'remove_product_from_cart' => 'it-exchange-remove-product-from-cart',
+		'update_cart_action'       => 'it-exchange-update-cart-request',
+		'empty_cart'               => 'it-exchange-empty-cart',
+		'proceed_to_checkout'      => 'it-exchange-proceed-to-checkout',
+		'view_cart'                => 'it-exchange-view-cart',
+		'purchase_cart'            => 'it-exchange-purchase-cart',
+		'alert_message'            => 'it-exchange-messages',
+		'error_message'            => 'it-exchange-errors',
+		'transaction_id'           => 'it-exchange-transaction-id',
+		'transaction_method'       => 'it-exchange-transaction-method',
 	);
 	return apply_filters( 'it_exchange_get_action_vars', $defaults );
 }
