@@ -2,10 +2,10 @@
 /**
  * Shortcodes for Transaction Methods go here
  * @since 0.3.7
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
-add_shortcode( 'cart_buddy_purchase_confirmation', 'it_cart_buddy_shortcode_get_transaction_confirmation_page_html' );
+add_shortcode( 'it_exchange_purchase_confirmation', 'it_exchange_shortcode_get_transaction_confirmation_page_html' );
 
 /**
  * Passes the shortcode call on to the more general function
@@ -13,6 +13,6 @@ add_shortcode( 'cart_buddy_purchase_confirmation', 'it_cart_buddy_shortcode_get_
  * @since 0.3.7
  * @return HTML
 */
-function it_cart_buddy_shortcode_get_transaction_confirmation_page_html( $shortcode_atts, $shortcode_content='' ) {
-	return it_cart_buddy_get_transaction_confirmation_page_html();
+function it_exchange_shortcode_get_transaction_confirmation_page_html( $shortcode_atts, $shortcode_content='' ) {
+	return it_exchange_get_transaction_confirmation_page_html();
 }
