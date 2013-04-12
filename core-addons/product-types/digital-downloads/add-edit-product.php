@@ -6,7 +6,7 @@
 */
 
 function it_exchange_register_digital_downloads_metabox( $product ) {
-	add_meta_box( 'it_exchange_digital_downloads', __( 'Downloads', 'LION' ), 'it_exchange_print_digital_downloads_meta_box', 'it_exchange_prod','normal', 'default', array( 'product' => $product ) );
+	add_meta_box( 'it-exchange-digital-downloads', __( 'Downloads', 'LION' ), 'it_exchange_print_digital_downloads_meta_box', 'it_exchange_prod','normal', 'default', array( 'product' => $product ) );
 }
 add_action( 'it_exchange_product_metabox_callback_digital-downloads', 'it_exchange_register_digital_downloads_metabox' );
 
