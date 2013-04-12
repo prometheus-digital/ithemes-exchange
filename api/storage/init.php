@@ -3,7 +3,7 @@
  * Handles storage of options
  *
  * @since 0.3.6
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
 /**
@@ -18,8 +18,8 @@
  * @param boolean $merge_defaults attempt to merge with default values
  * @return mixed value of passed key
 */
-function it_cart_buddy_get_option( $key, $break_cache=false, $merge_defaults=true ) {
-	$storage = it_cart_buddy_get_storage( $key );
+function it_exchange_get_option( $key, $break_cache=false, $merge_defaults=true ) {
+	$storage = it_exchange_get_storage( $key );
 
 	if ( $break_cache )
 		$storage->clear_cache();
@@ -39,8 +39,8 @@ function it_cart_buddy_get_option( $key, $break_cache=false, $merge_defaults=tru
  * @param mixed $value the values to save to the options key
  * @return void
 */
-function it_cart_buddy_save_option( $key, $value ) {
-	$storage = it_cart_buddy_get_storage( $key );
+function it_exchange_save_option( $key, $value ) {
+	$storage = it_exchange_get_storage( $key );
 	return $storage->save( $value );
 }
 
@@ -56,7 +56,7 @@ function it_cart_buddy_save_option( $key, $value ) {
  * @param mixed $args Either a version number (string) or an array of args passed to class constructor for ITStorage2
  * @return object instance of ITStorage2
 */
-function it_cart_buddy_get_storage( $key, $args=array() ) {
+function it_exchange_get_storage( $key, $args=array() ) {
 	it_classes_load( 'it-storage.php' );
 	return new ITStorage2( $key, $args );
 }
