@@ -3,10 +3,10 @@
  * This add-on will enable the product title (post title ) box on the edit add / edit product page
  *
  * @since 0.3.8
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
-class IT_Cart_Buddy_WP_Post_Supports {
+class IT_Exchange_WP_Post_Supports {
 
 	/**
 	 * Constructor. Loads hooks for various post supports
@@ -14,42 +14,42 @@ class IT_Cart_Buddy_WP_Post_Supports {
 	 * @since 0.3.8
 	 * @return void
 	*/
-	function IT_Cart_Buddy_WP_Post_Supports() {
+	function IT_Exchange_WP_Post_Supports() {
 
 		// WordPress Post Title
-		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_title_support_as_product_feature' ) );
-		add_filter( 'it_cart_buddy_get_product_feature-product_title', array( $this, 'get_title' ), 9, 2 );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_title_support_as_product_feature' ) );
+		add_filter( 'it_exchange_get_product_feature-product_title', array( $this, 'get_title' ), 9, 2 );
 
 		// WordPress Post Content (Product Description)
-		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_post_content_as_product_feature' ) );
-		add_filter( 'it_cart_buddy_get_product_feature-product_description', array( $this, 'get_product_description' ), 9, 2 );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_post_content_as_product_feature' ) );
+		add_filter( 'it_exchange_get_product_feature-product_description', array( $this, 'get_product_description' ), 9, 2 );
 
 		// WordPress Featured Image as a Product Feature
-		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_featured_image_as_product_feature' ) );
-		add_filter( 'it_cart_buddy_get_product_feature-wp-featured-image', array( $this, 'get_featured_image' ), 9, 2 );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_featured_image_as_product_feature' ) );
+		add_filter( 'it_exchange_get_product_feature-wp-featured-image', array( $this, 'get_featured_image' ), 9, 2 );
 
 		// WordPress Excerpt
-		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_excerpt_as_product_feature' ) );
-		add_filter( 'it_cart_buddy_get_product_feature-wp-excerpt', array( $this, 'get_excerpt' ), 9, 2 );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_excerpt_as_product_feature' ) );
+		add_filter( 'it_exchange_get_product_feature-wp-excerpt', array( $this, 'get_excerpt' ), 9, 2 );
 
 		// WordPress Post Author
-		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_author_support_as_product_feature' ) );
-		add_filter( 'it_cart_buddy_get_product_feature-wp-author', array( $this, 'get_wp_author' ), 9, 2 );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_author_support_as_product_feature' ) );
+		add_filter( 'it_exchange_get_product_feature-wp-author', array( $this, 'get_wp_author' ), 9, 2 );
 
 		// WordPress Post Formats
-		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_post_formats_as_product_feature' ) );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_post_formats_as_product_feature' ) );
 
 		// WordPress Custom Fields
-		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_custom_fields_as_product_feature' ) );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_custom_fields_as_product_feature' ) );
 
 		// WordPress Comments metabox
-		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_comments_support_as_product_feature' ) );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_comments_support_as_product_feature' ) );
 
 		// WordPress Trackbacks
-		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_trackbacks_as_product_feature' ) );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_trackbacks_as_product_feature' ) );
 
 		// WordPress Post Revisions
-		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'init_wp_revisions_as_product_feature' ) );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_revisions_as_product_feature' ) );
 	}
 
 	/**
@@ -61,12 +61,12 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		// Register the product feature
 		$slug        = 'product-title';
 		$description = __( 'Adds support for default WordPress Title field', 'LION' );
-		it_cart_buddy_register_product_feature( $slug, $description );
+		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
-		$product_types = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) );
+		$product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 		foreach( $product_types as $key => $product_type ) { 
-			it_cart_buddy_add_feature_support_to_product_type( $slug, $product_type['slug'] );
+			it_exchange_add_feature_support_to_product_type( $slug, $product_type['slug'] );
 		}   
 	}
 
@@ -94,12 +94,12 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		// Register the product feature
 		$slug        = 'product-description';
 		$description = __( 'Adds support for the post content area to product types.', 'LION' );
-		it_cart_buddy_register_product_feature( $slug, $description );
+		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
-		$product_types = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) );
+		$product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 		foreach( $product_types as $key => $product_type ) { 
-			it_cart_buddy_add_feature_support_to_product_type( $slug, $product_type['slug'] );
+			it_exchange_add_feature_support_to_product_type( $slug, $product_type['slug'] );
 		}   
 	}
 
@@ -127,12 +127,12 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		// Register the product feature
 		$slug        = 'wp-featured-image';
 		$description = __( 'Adds support for WP Featured Image to a specific product type', 'LION' );
-		it_cart_buddy_register_product_feature( $slug, $description );
+		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
-		$product_types = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) );
+		$product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 		foreach( $product_types as $key => $product_type ) { 
-			it_cart_buddy_add_feature_support_to_product_type( $slug, $product_type['slug'] );
+			it_exchange_add_feature_support_to_product_type( $slug, $product_type['slug'] );
 		}   
 	}
 
@@ -163,7 +163,7 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		// Register the product feature
 		$slug        = 'wp-author';
 		$description = __( 'Adds support for WP Author field to a specific product', 'LION' );
-		it_cart_buddy_register_product_feature( $slug, $description );
+		it_exchange_register_product_feature( $slug, $description );
 	}
 
 	/**
@@ -177,7 +177,7 @@ class IT_Cart_Buddy_WP_Post_Supports {
 	 * @return string author
 	*/
 	function get_wp_author( $wp_author, $product_id ) {
-		$product = it_cart_buddy_get_product( $product_id );
+		$product = it_exchange_get_product( $product_id );
 		if ( empty( $product->post_author ) )
 			return;
 
@@ -197,7 +197,7 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		// Register the product feature
 		$slug        = 'wp-custom-fields';
 		$description = __( 'Adds support for WP Custom Fields as a product Feature', 'LION' );
-		it_cart_buddy_register_product_feature( $slug, $description );
+		it_exchange_register_product_feature( $slug, $description );
 	}
 
 	/**
@@ -212,7 +212,7 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		// Register the product feature
 		$slug        = 'wp-comments';
 		$description = __( 'Adds support for the WP Comments field to a specific product type', 'LION' );
-		it_cart_buddy_register_product_feature( $slug, $description );
+		it_exchange_register_product_feature( $slug, $description );
 	}
 
 	/**
@@ -227,7 +227,7 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		// Register the product feature
 		$slug        = 'wp-trackbacks';
 		$description = __( 'Adds support for the WP Trackbacks metabox.', 'LION' );
-		it_cart_buddy_register_product_feature( $slug, $description );
+		it_exchange_register_product_feature( $slug, $description );
 	}
 
 	/**
@@ -240,7 +240,7 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		// Register the product feature
 		$slug        = 'wp-excerpt';
 		$description = __( 'Adds support for the WP excerpt of the product', 'LION' );
-		it_cart_buddy_register_product_feature( $slug, $description );
+		it_exchange_register_product_feature( $slug, $description );
 	}
 
 	/**
@@ -265,7 +265,7 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		// Register the product feature
 		$slug        = 'wp-post-formats';
 		$description = __( 'Adds support for WP Post Formats to products', 'LION' );
-		it_cart_buddy_register_product_feature( $slug, $description );
+		it_exchange_register_product_feature( $slug, $description );
 	}
 
 	/**
@@ -278,7 +278,7 @@ class IT_Cart_Buddy_WP_Post_Supports {
 		// Register the product feature
 		$slug        = 'wp-revisions';
 		$description = __( 'Adds support for WP Revisions to Product Types', 'LION' );
-		it_cart_buddy_register_product_feature( $slug, $description );
+		it_exchange_register_product_feature( $slug, $description );
 	}
 }
-$IT_Cart_Buddy_WP_Post_Supports = new IT_Cart_Buddy_WP_Post_Supports();
+$IT_Exchange_WP_Post_Supports = new IT_Exchange_WP_Post_Supports();

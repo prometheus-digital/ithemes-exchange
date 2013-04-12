@@ -1,17 +1,17 @@
 <?php
 /**
- * This file holds the class for a Cart Buddy Product
+ * This file holds the class for an iThemes Exchange Product
  *
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
  * @since 0.3.2
 */
 
 /**
- * Merges a WP Post with Cart Buddy Product data
+ * Merges a WP Post with iThemes Exchange Product data
  *
  * @since 0.3.2
 */
-class IT_Cart_Buddy_Product {
+class IT_Exchange_Product {
 
 	// WP Post Type Properties
 	var $ID;
@@ -63,7 +63,7 @@ class IT_Cart_Buddy_Product {
 	 * @param mixed $post  wp post id or post object. optional.
 	 * @return void
 	*/
-	function IT_Cart_Buddy_Product( $post=false ) {
+	function IT_Exchange_Product( $post=false ) {
 		
 		// If not an object, try to grab the WP object
 		if ( ! is_object( $post ) )
@@ -74,12 +74,12 @@ class IT_Cart_Buddy_Product {
 			$post = false;
 
 		// Ensure this is a product post type
-		if ( 'it_cart_buddy_prod' != get_post_type( $post ) )
+		if ( 'it_exchange_prod' != get_post_type( $post ) )
 			$post = false;
 
 		// Return a WP Error if we don't have the $post object by this point
 		if ( ! $post )
-			return new WP_Error( 'it-cart-buddy-product-not-a-wp-post', __( 'The IT_Cart_Buddy_Product class must have a WP post object or ID passed to its constructor', 'LION' ) );
+			return new WP_Error( 'it-exchange-product-not-a-wp-post', __( 'The IT_Exchange_Product class must have a WP post object or ID passed to its constructor', 'LION' ) );
 
 		// Grab the $post object vars and populate this objects vars
 		foreach( (array) get_object_vars( $post ) as $var => $value ) {
@@ -90,7 +90,7 @@ class IT_Cart_Buddy_Product {
 		$this->set_product_type();
 
 		// Register filters to set values for supported features based on componant type
-		add_filter( 'it_cart_buddy_set_product_data_for_post_meta_componant', array( $this, 'set_feature_value_for_post_meta_componant' ), 10, 3 );
+		add_filter( 'it_exchange_set_product_data_for_post_meta_componant', array( $this, 'set_feature_value_for_post_meta_componant' ), 10, 3 );
 
 		// Set the product data
 		if ( did_action( 'init' ) )
@@ -116,7 +116,7 @@ class IT_Cart_Buddy_Product {
 	*/
 	function set_product_type() {
 		global $pagenow;
-		if ( ! $product_type = get_post_meta( $this->ID, '_it_cart_buddy_product_type', true ) ) {
+		if ( ! $product_type = get_post_meta( $this->ID, '_it_exchange_product_type', true ) ) {
 			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['product_type'] ) )	
 				$product_type = $_GET['product_type'];		
 		}
@@ -131,14 +131,14 @@ class IT_Cart_Buddy_Product {
 	*/
 	function set_product_supports_and_data() {
 		// Get product-type options
-		if ( $product_type_options = it_cart_buddy_get_product_type_options( $this->product_type ) ) {
+		if ( $product_type_options = it_exchange_get_product_type_options( $this->product_type ) ) {
 			if ( ! empty( $product_type_options['supports'] ) ) {
 				foreach( $product_type_options['supports'] as $feature => $params ) {
 					// Set the product_supports array
 					$this->product_supports[$feature] = $params;
 
 					// Set the product data via a filter.
-					$value = apply_filters( 'it_cart_buddy_set_product_data_for_' . $params['componant'] . '_componant', false, $this->ID, $params );
+					$value = apply_filters( 'it_exchange_set_product_data_for_' . $params['componant'] . '_componant', false, $this->ID, $params );
 
 					// Set to default if it exists
 					$default = empty( $product_type_options['supports'][$feature]['default'] ) ? false : $product_type_options['supports'][$feature]['default'];
@@ -189,37 +189,37 @@ class IT_Cart_Buddy_Product {
         if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow )
 			return; // Don't remove any if not on post-new / or post.php
 
-		if ( $addon = it_cart_buddy_get_addon( $this->product_type ) ) { 
+		if ( $addon = it_exchange_get_addon( $this->product_type ) ) { 
 			// Remove any supports args that the product add-on does not want.
 			foreach( $supports as $option ) { 
 
 				// Map Core WP post_type supports to our addon names
 				if ( 'title' == $option ) {
-					$cart_buddy_product_feature = 'product-title';
+					$exchange_product_feature = 'product-title';
 				} else if ( 'editor' == $option ) {
-					$cart_buddy_product_feature = 'product-description';
+					$exchange_product_feature = 'product-description';
 				} else if ( 'author' == $option ) {
-					$cart_buddy_product_feature = 'wp-author';
+					$exchange_product_feature = 'wp-author';
 				} else if ( 'thumbnail' == $option ) {
-					$cart_buddy_product_feature = 'wp-featured-image';
+					$exchange_product_feature = 'wp-featured-image';
 				} else if ( 'excerpt' == $option ) {
-					$cart_buddy_product_feature = 'wp-excerpt';
+					$exchange_product_feature = 'wp-excerpt';
 				} else if ( 'trackbacks' == $option ) {
-					$cart_buddy_product_feature = 'wp-trackbacks';
+					$exchange_product_feature = 'wp-trackbacks';
 				} else if ( 'custom-fields' == $option ) {
-					$cart_buddy_product_feature = 'wp-custom-fields';
+					$exchange_product_feature = 'wp-custom-fields';
 				} else if ( 'comments' == $option ) {
-					$cart_buddy_product_feature = 'wp-comments';
+					$exchange_product_feature = 'wp-comments';
 				} else if ( 'revisions' == $option ) {
-					$cart_buddy_product_feature = 'wp-revisions';
+					$exchange_product_feature = 'wp-revisions';
 				} else if ( 'post-formats' == $option ) {
-					$cart_buddy_product_feature = 'wp-post-formats';
+					$exchange_product_feature = 'wp-post-formats';
 				} else {
-					$cart_buddy_product_feature = $option;
+					$exchange_product_feature = $option;
 				}
 
-                if ( ! it_cart_buddy_product_type_supports_feature( $this->product_type, $cart_buddy_product_feature ) )
-					remove_post_type_support( 'it_cart_buddy_prod', $option );
+                if ( ! it_exchange_product_type_supports_feature( $this->product_type, $exchange_product_feature ) )
+					remove_post_type_support( 'it_exchange_prod', $option );
             }   
         }   
     }  

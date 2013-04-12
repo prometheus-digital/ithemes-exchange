@@ -2,16 +2,16 @@
 /**
  * Creates the post type for Products
  *
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
  * @since 0.3.0
 */
 
 /**
- * Registers the it_cart_buddy_prod post type
+ * Registers the it_exchange_prod post type
  *
  * @since 0.3.0
 */
-class IT_Cart_Buddy_Product_Post_Type {
+class IT_Exchange_Product_Post_Type {
 	
 	/**
 	 * Class Constructor
@@ -20,29 +20,29 @@ class IT_Cart_Buddy_Product_Post_Type {
 	 * @since 0.3.0
 	 * @return void
 	*/
-	function IT_Cart_Buddy_Product_Post_Type() {
+	function IT_Exchange_Product_Post_Type() {
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
 		add_action( 'init', array( $this, 'register_disabled_post_status' ) );
 		add_action( 'save_post', array( $this, 'save_product' ) );
 		add_action( 'admin_init', array( $this, 'set_add_new_item_label' ) );
 		add_action( 'admin_init', array( $this, 'set_edit_item_label' ) );
-		add_action( 'it_cart_buddy_save_product_unvalidated', array( $this, 'set_initial_post_product_type' ) );
-		add_filter( 'manage_edit-it_cart_buddy_prod_columns', array( $this, 'add_product_type_column_to_view_all_table' ) );
-		add_filter( 'manage_edit-it_cart_buddy_prod_sortable_columns', array( $this, 'make_product_type_column_sortable' ) );
-		add_filter( 'manage_it_cart_buddy_prod_posts_custom_column', array( $this, 'add_product_type_info_to_view_all_table_rows' ) );
-		add_action( 'it_cart_buddy_add_on_enabled', array( $this, 'maybe_enable_product_type_posts' ) );
-		add_action( 'it_cart_buddy_add_on_disabled', array( $this, 'maybe_disable_product_type_posts' ) );
+		add_action( 'it_exchange_save_product_unvalidated', array( $this, 'set_initial_post_product_type' ) );
+		add_filter( 'manage_edit-it_exchange_prod_columns', array( $this, 'add_product_type_column_to_view_all_table' ) );
+		add_filter( 'manage_edit-it_exchange_prod_sortable_columns', array( $this, 'make_product_type_column_sortable' ) );
+		add_filter( 'manage_it_exchange_prod_posts_custom_column', array( $this, 'add_product_type_info_to_view_all_table_rows' ) );
+		add_action( 'it_exchange_add_on_enabled', array( $this, 'maybe_enable_product_type_posts' ) );
+		add_action( 'it_exchange_add_on_disabled', array( $this, 'maybe_disable_product_type_posts' ) );
 	}
 
 	function init() {
-		$this->post_type = 'it_cart_buddy_prod';
+		$this->post_type = 'it_exchange_prod';
 		$labels    = array(
 			'name'          => __( 'Products', 'LION' ),
 			'singular_name' => __( 'Product', 'LION' ),
 		);
 		$this->options = array(
 			'labels' => $labels,
-			'description' => __( 'A Cart Buddy Post Type for storing all Products in the system', 'LION' ),
+			'description' => __( 'A iThemes Exchange Post Type for storing all Products in the system', 'LION' ),
 			'public'      => true,
 			'show_ui'     => true,
 			'show_in_nav_menus' => true,
@@ -73,22 +73,22 @@ class IT_Cart_Buddy_Product_Post_Type {
 	 * Call Back hook for product post type admin views
 	 *
 	 * @since 0.3.0
-	 * @uses it_cart_buddy_get_enabled_add_ons()
+	 * @uses it_exchange_get_enabled_add_ons()
 	 * @return void
 	*/
 	function meta_box_callback( $post ) {
-		$product = it_cart_buddy_get_product( $post );
+		$product = it_exchange_get_product( $post );
 
 		// Add action for current product type
-		if ( $product_types = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'product-type' ) ) ) ) {
+		if ( $product_types = it_exchange_get_enabled_addons( array( 'category' => array( 'product-type' ) ) ) ) {
 			foreach( $product_types as $addon_slug => $params ) {
 				if ( $addon_slug == $product->product_type )
-					do_action( 'it_cart_buddy_product_metabox_callback_' . $addon_slug, $product );
+					do_action( 'it_exchange_product_metabox_callback_' . $addon_slug, $product );
 			}
 		}
 
 		// Do action for any product type
-		do_action( 'it_cart_buddy_product_metabox_callback', $product );
+		do_action( 'it_exchange_product_metabox_callback', $product );
 	}
 
 	/**
@@ -99,20 +99,20 @@ class IT_Cart_Buddy_Product_Post_Type {
 	*/
 	function set_add_new_item_label() {
 		global $pagenow, $wp_post_types;
-		if ( $pagenow != 'post-new.php' || empty( $_GET['post_type'] ) || 'it_cart_buddy_prod' != $_GET['post_type'] )
-			return apply_filters( 'it_cart_buddy_add_new_product_label', __( 'Add New Product', 'LION' ) );
+		if ( $pagenow != 'post-new.php' || empty( $_GET['post_type'] ) || 'it_exchange_prod' != $_GET['post_type'] )
+			return apply_filters( 'it_exchange_add_new_product_label', __( 'Add New Product', 'LION' ) );
 
-		if ( empty( $wp_post_types['it_cart_buddy_prod'] ) )
+		if ( empty( $wp_post_types['it_exchange_prod'] ) )
 			return;
 			
-		$product_add_ons = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
+		$product_add_ons = it_exchange_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
 		$product = array();
 
 		// Isolate the product type
 		if ( 1 == count( $product_add_ons ) ) {
 			$product = reset( $product_add_ons );
 		} else {
-			$product_type = it_cart_buddy_get_product_type();
+			$product_type = it_exchange_get_product_type();
 			if ( ! empty( $product_type ) && ! empty( $product_add_ons[$product_type] ) )
 				$product = $product_add_ons[$product_type];
 			else
@@ -120,8 +120,8 @@ class IT_Cart_Buddy_Product_Post_Type {
 
 		}
 		$singular = empty( $product['options']['labels']['singular_name'] ) ? $product['name'] : $product['options']['labels']['singular_name'];
-		$label = apply_filters( 'it_cart_buddy_add_new_product_label-' . $product['slug'], __( 'Add New ', 'LION' ) . $singular );
-		$wp_post_types['it_cart_buddy_prod']->labels->add_new_item = $label;
+		$label = apply_filters( 'it_exchange_add_new_product_label-' . $product['slug'], __( 'Add New ', 'LION' ) . $singular );
+		$wp_post_types['it_exchange_prod']->labels->add_new_item = $label;
 	}
 
 	/**
@@ -140,15 +140,15 @@ class IT_Cart_Buddy_Product_Post_Type {
 		if ( ! is_admin() || $pagenow != 'post.php' || ! $post )
 			return;
 
-		if ( empty( $wp_post_types['it_cart_buddy_prod'] ) )
+		if ( empty( $wp_post_types['it_exchange_prod'] ) )
 			return;
 			
-		if ( 'it_cart_buddy_prod' != get_post_type( $post ) )
+		if ( 'it_exchange_prod' != get_post_type( $post ) )
 			return;
 
-		$product_type = it_cart_buddy_get_product_type( $post );
+		$product_type = it_exchange_get_product_type( $post );
 
-		$product_add_ons = it_cart_buddy_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
+		$product_add_ons = it_exchange_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
 		$product = array();
 		if ( 1 == count( $product_add_ons ) ) {
 			$product = reset( $product_add_ons );
@@ -162,41 +162,41 @@ class IT_Cart_Buddy_Product_Post_Type {
 		}
 
 		$singular = empty( $product['options']['labels']['singular_name'] ) ? $product['name'] : $product['options']['labels']['singular_name'];
-		$label = apply_filters( 'it_cart_buddy_edit_product_label-' . $product['slug'], __( 'Edit ', 'LION' ) . $singular );
-		$wp_post_types['it_cart_buddy_prod']->labels->edit_item = $label;
+		$label = apply_filters( 'it_exchange_edit_product_label-' . $product['slug'], __( 'Edit ', 'LION' ) . $singular );
+		$wp_post_types['it_exchange_prod']->labels->edit_item = $label;
 	}
 
 	/**
-	 * Provides specific hooks for when cart buddy products are saved.
+	 * Provides specific hooks for when iThemes Exchange products are saved.
 	 *
 	 * This method is hooked to save_post. It provides hooks for add-on developers
-	 * that will only be called when the post being saved is a cart buddy product. 
+	 * that will only be called when the post being saved is a iThemes Exchange product. 
 	 * It provides the following 4 hooks:
-	 * - it_cart_buddy_save_product_unvalidated                // Runs every time a cart buddy product is saved.
-	 * - it_cart_buddy_save_product_unavalidate-[product-type] // Runs every time a specific cart buddy product type is saved.
-	 * - it_cart_buddy_save_product                            // Runs every time a cart buddy product is saved if not an autosave and if user has permission to save post
-	 * - it_cart_buddy_save_product-[product-type]             // Runs every time a specific cart buddy product-type is saved if not an autosave and if user has permission to save post
+	 * - it_exchange_save_product_unvalidated                // Runs every time a iThemes Exchange product is saved.
+	 * - it_exchange_save_product_unavalidate-[product-type] // Runs every time a specific iThemes Exchange product type is saved.
+	 * - it_exchange_save_product                            // Runs every time a iThemes Exchange product is saved if not an autosave and if user has permission to save post
+	 * - it_exchange_save_product-[product-type]             // Runs every time a specific iThemes Exchange product-type is saved if not an autosave and if user has permission to save post
 	 *
 	 * @since 0.3.1
 	 * @return void
 	*/
 	function save_product( $post ) { 
 
-		// Exit if not it_cart_buddy_prod post_type
-		if ( ! 'it_cart_buddy_prod' == get_post_type( $post ) ) 
+		// Exit if not it_exchange_prod post_type
+		if ( ! 'it_exchange_prod' == get_post_type( $post ) ) 
 			return;
 
 		// Grab enabled product add-ons
-		$product_type_addons = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) );
+		$product_type_addons = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 		
 		// Grab current post's product_type
-		$product_type = it_cart_buddy_get_product_type();
+		$product_type = it_exchange_get_product_type();
 
-		// These hooks fire off any time a it_cart_buddy_prod post is saved w/o validations
-		do_action( 'it_cart_buddy_save_product_unvalidated', $post );
+		// These hooks fire off any time a it_exchange_prod post is saved w/o validations
+		do_action( 'it_exchange_save_product_unvalidated', $post );
 		foreach( (array) $product_type_addons as $slug => $params ) { 
 			if ( $slug == $product_type ) { 
-				do_action( 'it_cart_buddy_save_product_unvalidated-' . $slug, $post );
+				do_action( 'it_exchange_save_product_unvalidated-' . $slug, $post );
 			}   
 		}   
 
@@ -208,10 +208,10 @@ class IT_Cart_Buddy_Product_Post_Type {
 			return;
 
 		// This is called any time save_post hook
-		do_action( 'it_cart_buddy_save_product', $post );
+		do_action( 'it_exchange_save_product', $post );
 		foreach( (array) $product_type_addons as $slug => $params ) { 
 			if ( $slug == $product_type ) { 
-				do_action( 'it_cart_buddy_save_product-' . $slug, $post );
+				do_action( 'it_exchange_save_product-' . $slug, $post );
 			}   
 		}   
 	}
@@ -224,9 +224,9 @@ class IT_Cart_Buddy_Product_Post_Type {
 	*/
 	function set_initial_post_product_type( $post ) {
 		global $pagenow;
-		if ( $product = it_cart_buddy_get_product( $post ) ) {
-			if ( ! empty( $product->product_type ) && ! get_post_meta( $product->ID, '_it_cart_buddy_product_type', true ) )
-				update_post_meta( $product->ID, '_it_cart_buddy_product_type', $product->product_type );
+		if ( $product = it_exchange_get_product( $post ) ) {
+			if ( ! empty( $product->product_type ) && ! get_post_meta( $product->ID, '_it_exchange_product_type', true ) )
+				update_post_meta( $product->ID, '_it_exchange_product_type', $product->product_type );
 		}
 	}
 
@@ -238,14 +238,14 @@ class IT_Cart_Buddy_Product_Post_Type {
 	*/
 	function register_disabled_post_status() {
 		$args = array(
-			'label'                     => _x( '_it_cart_buddy_disab', 'Status General Name', 'LION' ),
+			'label'                     => _x( '_it_exchange_disab', 'Status General Name', 'LION' ),
 			'label_count'               => _n_noop( 'Disabled Product (%s)',  'Disabled Products (%s)', 'LION' ),
 			'public'                    => false,
 			'show_in_admin_all_list'    => false,
 			'show_in_admin_status_list' => false,
 			'exclude_from_search'       => true,
 		);
-		register_post_status( '_it_cart_buddy_disab', $args );
+		register_post_status( '_it_exchange_disab', $args );
 	}
 
 	/**
@@ -265,7 +265,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 	/**
 	 * When a Product add-on is enabled, re-enable any diabled post products previously created by it.
 	 *
-	 * 1 - Find all product posts for this product type with a post_status of _it_cart_buddy_disab
+	 * 1 - Find all product posts for this product type with a post_status of _it_exchange_disab
 	 * 2 - Foreach product, pass to enable_product_post() method
 	 *
 	 * @since 0.3.3
@@ -275,11 +275,11 @@ class IT_Cart_Buddy_Product_Post_Type {
 
 		// Grab all products for this product-type
 		$args = array(
-			'post_status'  => '_it_cart_buddy_disab',
+			'post_status'  => '_it_exchange_disab',
 			'product_type' => $product_type,
 			'number_posts' => -1,
 		);
-		if ( $products = it_cart_buddy_get_products( $args ) ) {
+		if ( $products = it_exchange_get_products( $args ) ) {
 			foreach( $products as $product ) {
 				$this->enable_product_post( $product );
 			}
@@ -297,8 +297,8 @@ class IT_Cart_Buddy_Product_Post_Type {
 	 * @return void
 	*/
 	function enable_product_post( $post ) {
-		if ( $previous_status = get_post_meta( $post->ID, '_it_cart_buddy_enabled_status', true ) ) {
-			delete_post_meta( $post->ID, '_it_cart_buddy_enabled_status' );
+		if ( $previous_status = get_post_meta( $post->ID, '_it_exchange_enabled_status', true ) ) {
+			delete_post_meta( $post->ID, '_it_exchange_enabled_status' );
 			$args = array( 'ID' => $post->ID, 'post_status' => $previous_status );
 			wp_update_post( $args );
 		}
@@ -329,8 +329,8 @@ class IT_Cart_Buddy_Product_Post_Type {
 	*/
 	function disable_product_type_posts( $product_type ) {
 		$post_stati = get_post_stati();
-		if ( isset( $post_stati['_it_cart_buddy_disab'] ) )
-			unset( $post_stati['_it_cart_buddy_disab'] );
+		if ( isset( $post_stati['_it_exchange_disab'] ) )
+			unset( $post_stati['_it_exchange_disab'] );
 
 		// Grab all products for this product-type
 		$args = array(
@@ -338,7 +338,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 			'product_type' => $product_type,
 			'number_posts' => -1,
 		);
-		if ( $products = it_cart_buddy_get_products( $args ) ) {
+		if ( $products = it_exchange_get_products( $args ) ) {
 			foreach( $products as $product ) {
 				$this->disable_product_post( $product );
 			}
@@ -346,18 +346,18 @@ class IT_Cart_Buddy_Product_Post_Type {
 	}
 
 	/**
-	 * Disable a single product type by changing post_status to _it_cart_buddy_disab.
+	 * Disable a single product type by changing post_status to _it_exchange_disab.
 	 *
 	 * Changing the post_status will prevent it from showing in WP queries
-	 * 1 - Save current post_status to post_meta: _it_Cart_buddy_enabled_status
-	 * 2 - Change post status to _it_cart_buddy_disab
+	 * 1 - Save current post_status to post_meta: _it_exchange_enabled_status
+	 * 2 - Change post status to _it_exchange_disab
 	 *
 	 * @since 0.3.3
 	 * @return void
 	*/
 	function disable_product_post( $post ) {
-		update_post_meta( $post->ID, '_it_cart_buddy_enabled_status', $post->post_status );
-		$args = array( 'ID' => $post->ID, 'post_status' => '_it_cart_buddy_disab' );
+		update_post_meta( $post->ID, '_it_exchange_enabled_status', $post->post_status );
+		$args = array( 'ID' => $post->ID, 'post_status' => '_it_exchange_disab' );
 		wp_update_post( $args );
 	}
 
@@ -373,11 +373,11 @@ class IT_Cart_Buddy_Product_Post_Type {
 		foreach ( (array) $existing as $id => $label ) {
 			$columns[$id] = $label;
 			if ( 'title' == $id )
-				$columns['it_cart_buddy_product_type_column'] = __( 'Product Type', 'LION' );
+				$columns['it_exchange_product_type_column'] = __( 'Product Type', 'LION' );
 		}
 		// Insert at end if title wasn't found
-		if ( empty( $columns['it_cart_buddy_product_type_column'] ) )
-			$columns['it_cart_buddy_product_type_column'] = __( 'Product Type', 'LION' );
+		if ( empty( $columns['it_exchange_product_type_column'] ) )
+			$columns['it_exchange_product_type_column'] = __( 'Product Type', 'LION' );
 
 		return $columns;
 	}
@@ -390,7 +390,7 @@ class IT_Cart_Buddy_Product_Post_Type {
 	 * @return array  modified sortable columnns
 	*/
 	function make_product_type_column_sortable( $sortables ) {
-		$sortables['it_cart_buddy_product_type_column'] = 'it_cart_buddy_product_type_column';
+		$sortables['it_exchange_product_type_column'] = 'it_exchange_product_type_column';
 		return $sortables;
 	}
 
@@ -404,12 +404,12 @@ class IT_Cart_Buddy_Product_Post_Type {
 	*/
 	function add_product_type_info_to_view_all_table_rows( $column ) {
 		global $post;
-		if ( 'it_cart_buddy_product_type_column' != $column )
+		if ( 'it_exchange_product_type_column' != $column )
 			return;
 
-		$product = it_cart_buddy_get_product( $post );
-		if ( $product_type = it_cart_buddy_get_addon( $product->product_type ) )
+		$product = it_exchange_get_product( $post );
+		if ( $product_type = it_exchange_get_addon( $product->product_type ) )
 			esc_attr_e( $product_type['name'] );
 	}
 }
-$IT_Cart_Buddy_Product_Post_Type = new IT_Cart_Buddy_Product_Post_Type();
+$IT_Exchange_Product_Post_Type = new IT_Exchange_Product_Post_Type();

@@ -4,11 +4,11 @@
  * By default, it registers a metabox on the product's add/edit screen and provides HTML / data for the frontend.
  *
  * @since 0.3.8
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
 
-class IT_Cart_Buddy_Base_Price {
+class IT_Exchange_Base_Price {
 
 	/**
 	 * Constructor. Registers hooks
@@ -16,14 +16,14 @@ class IT_Cart_Buddy_Base_Price {
 	 * @since 0.3.8
 	 * @return void
 	*/
-	function IT_Cart_Buddy_Base_Price() {
+	function IT_Exchange_Base_Price() {
 		if ( is_admin() ) {
 			add_action( 'init', array( $this, 'init_base_price_metaboxes' ) );
-			add_action( 'it_cart_buddy_save_product', array( $this, 'save_base_price_on_product_save' ) );
+			add_action( 'it_exchange_save_product', array( $this, 'save_base_price_on_product_save' ) );
 		}
-		add_action( 'it_cart_buddy_update_product_feature-base_price', array( $this, 'save_base_price' ), 9, 2 );
-		add_filter( 'it_cart_buddy_get_product_feature-base_price', array( $this, 'get_base_price' ), 9, 2 );
-		add_action( 'it_cart_buddy_enabled_addons_loaded', array( $this, 'add_base_price_support_to_product_types' ) );
+		add_action( 'it_exchange_update_product_feature-base_price', array( $this, 'save_base_price' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature-base_price', array( $this, 'get_base_price' ), 9, 2 );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_base_price_support_to_product_types' ) );
 	}
 
 	/**
@@ -35,12 +35,12 @@ class IT_Cart_Buddy_Base_Price {
 		// Register the base_price_addon
 		$slug        = 'base_price';
 		$description = 'The base price for a product';
-		it_cart_buddy_register_product_feature( $slug, $description );
+		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
-		$products = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) );
+		$products = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 		foreach( $products as $key => $params ) {
-			it_cart_buddy_add_feature_support_to_product_type( 'base_price', $params['slug'] );
+			it_exchange_add_feature_support_to_product_type( 'base_price', $params['slug'] );
 		}
 	}
 
@@ -52,26 +52,26 @@ class IT_Cart_Buddy_Base_Price {
 	*/
 	function init_base_price_metaboxes() {
 		// Abord if there are not product addon's currently enabled.
-		if ( ! $product_addons = it_cart_buddy_get_enabled_addons( array( 'category' => 'product-type' ) ) )
+		if ( ! $product_addons = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) )
 			return;
 
 		// Loop through product types and register a metabox if it supports base_price
 		foreach( $product_addons as $slug => $args ) {
-			if ( it_cart_buddy_product_type_supports_feature( $slug, 'base_price' ) )
-				add_action( 'it_cart_buddy_product_metabox_callback_' . $slug, array( $this, 'register_metabox' ) );
+			if ( it_exchange_product_type_supports_feature( $slug, 'base_price' ) )
+				add_action( 'it_exchange_product_metabox_callback_' . $slug, array( $this, 'register_metabox' ) );
 		}
 	}
 
 	/**
 	 * Registers the price metabox for a specific product type
 	 *
-	 * Hooked to it_cart_buddy_product_metabox_callback_[product-type] where product type supports base_price
+	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports base_price
 	 *
 	 * @since 0.3.8
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it_cart_buddy_base_price', __( 'Base Price', 'LION' ), array( $this, 'print_metabox' ), 'it_cart_buddy_prod', 'side' );
+		add_meta_box( 'it_exchange_base_price', __( 'Base Price', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'side' );
 	}
 
 	/**
@@ -83,21 +83,21 @@ class IT_Cart_Buddy_Base_Price {
 	 * @return void
 	*/
 	function print_metabox( $post ) {
-		// Grab the Cart Buddy Product object from the WP $post object
-		$product = it_cart_buddy_get_product( $post );
+		// Grab the iThemes Exchange Product object from the WP $post object
+		$product = it_exchange_get_product( $post );
 
 		// Set the value of the base_price for this product
-		$product_base_price     = it_cart_buddy_get_product_feature( $product->ID, 'base_price' );
+		$product_base_price     = it_exchange_get_product_feature( $product->ID, 'base_price' );
 
 		// Set description
 		$description = __( 'This will be the standard price before discounts, taxes, fees, or any other modifications', 'LION' );
-		$description = apply_filters( 'it_cart_buddy_base_price_addon_metabox_description', $description );
+		$description = apply_filters( 'it_exchange_base_price_addon_metabox_description', $description );
 
 		// Echo the form field
 		?>
 		<p>
 			<span class="description"><?php esc_html_e( $description ); ?></span><br />
-			<input type="text" name="_it_cart_buddy_base_price" value="<?php esc_attr_e( $product_base_price ); ?>" />
+			<input type="text" name="_it_exchange_base_price" value="<?php esc_attr_e( $product_base_price ); ?>" />
 		</p>
 		<?php
 	}
@@ -113,7 +113,7 @@ class IT_Cart_Buddy_Base_Price {
 	*/
 	function save_base_price_on_product_save() {
 		// Abort if we can't determine a product type
-		if ( ! $product_type = it_cart_buddy_get_product_type() )
+		if ( ! $product_type = it_exchange_get_product_type() )
 			return;
 
 		// Abort if we don't have a product ID
@@ -122,18 +122,18 @@ class IT_Cart_Buddy_Base_Price {
 			return;
 
 		// Abort if this product type doesn't support base_price
-		if ( ! it_cart_buddy_product_type_supports_feature( $product_type, 'base_price' ) )
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'base_price' ) )
 			return;
 
 		// Abort if key for base_price option isn't set in POST data
-		if ( ! isset( $_POST['_it_cart_buddy_base_price'] ) )
+		if ( ! isset( $_POST['_it_exchange_base_price'] ) )
 			return;
 
 		// Get new value from post
-		$new_price = $_POST['_it_cart_buddy_base_price'];
+		$new_price = $_POST['_it_exchange_base_price'];
 		
 		// Save new value
-		it_cart_buddy_update_product_feature( $product_id, 'base_price', $new_price );
+		it_exchange_update_product_feature( $product_id, 'base_price', $new_price );
 	}
 
 	/**
@@ -147,7 +147,7 @@ class IT_Cart_Buddy_Base_Price {
 	 * @return bolean
 	*/
 	function save_base_price( $product_id, $new_price ) {
-		update_post_meta( $product_id, '_it_cart_buddy_base_price', $new_price );
+		update_post_meta( $product_id, '_it_exchange_base_price', $new_price );
 	}
 
 	/**
@@ -159,8 +159,8 @@ class IT_Cart_Buddy_Base_Price {
 	 * @return string base_price
 	*/
 	function get_base_price( $base_price, $product_id ) {
-		$base_price = get_post_meta( $product_id, '_it_cart_buddy_base_price', true );
+		$base_price = get_post_meta( $product_id, '_it_exchange_base_price', true );
 		return $base_price;
 	}
 }
-$IT_Cart_Buddy_Base_Price = new IT_Cart_Buddy_Base_Price();
+$IT_Exchange_Base_Price = new IT_Exchange_Base_Price();
