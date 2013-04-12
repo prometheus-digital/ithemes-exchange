@@ -189,7 +189,7 @@ function it_exchange_protected_content_get_required_products_for_protected_objec
 function it_exchange_protected_content_user_has_valid_purchase_of_product( $user_id, $product_purchases ) {
 	foreach( (array) $product_purchases as $purchase) {
 		$product_type     = it_exchange_get_product_type( $purchase['product_id'] );
-		$product_is_valid = apply_filters( 'it_exchange_protected_content_is_purchased_product_valid-' . $product_type, true, $user_id, $purchase );
+		$product_is_valid = apply_filters( 'it_exchange_protected_content_is_purchased_product_valid_' . $product_type, true, $user_id, $purchase );
 
 		// Exit the foreach once we find a valid product
 		if ( $product_is_valid )

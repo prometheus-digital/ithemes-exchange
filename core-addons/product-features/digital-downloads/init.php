@@ -11,8 +11,8 @@ if ( is_admin() ) {
 	add_action( 'init', 'it_exchange_digital_downloads_addon_init_digital_downloads_metaboxes' );
 	add_action( 'it_exchange_save_product', 'it_exchange_digital_downloads_addon_save_files_on_product_save' );
 }
-add_action( 'it_exchange_update_product_feature-digital-downloads', 'it_exchange_digital_downloads_addon_save_files', 9, 2 );
-add_filter( 'it_exchange_get_product_feature-digital-downloads', 'it_exchange_digital_downloads_addon_get_digital_downloads', 9, 2 );
+add_action( 'it_exchange_update_product_feature_digital-downloads', 'it_exchange_digital_downloads_addon_save_files', 9, 2 );
+add_filter( 'it_exchange_get_product_feature_digital-downloads', 'it_exchange_digital_downloads_addon_get_digital_downloads', 9, 2 );
 add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_init_digital_downloads_addon' );
 
 /**
@@ -82,7 +82,7 @@ function it_exchange_digital_downloads_addon_print_metabox( $post ) {
 	?>
 	<p>
 		<span class="description"><?php esc_html_e( $description ); ?></span><br />
-		<input type="text" name="_it_exchange_digital_downloads" value="<?php esc_attr_e( $product_downloads ); ?>" />
+		<input type="text" name="it-exchange-digital-downloads" value="<?php esc_attr_e( $product_downloads ); ?>" />
 	</p>
 	<?php
 }
@@ -109,11 +109,11 @@ function it_exchange_digital_downloads_addon_save_files_on_product_save() {
 		return;
 
 	// Abort if key for digital downloads option isn't set in POST data
-	if ( ! isset( $_POST['_it_exchange_digital_downloads'] ) )
+	if ( ! isset( $_POST['it-exchange-digital-downloads'] ) )
 		return;
 
 	// Get new value from post
-	$new_value = $_POST['_it_exchange_digital_downloads'];
+	$new_value = $_POST['it-exchange-digital-downloads'];
 	
 	// Save new value
 	it_exchange_update_product_feature( $product_id, 'digital_downloads', $new_value );

@@ -11,7 +11,7 @@ add_action( 'save_post', 'it_exchange_protected_content_addon_save_post_restrict
 add_action( 'admin_print_scripts', 'it_exchange_protected_content_addon_enqueue_admin_scripts' );
 add_action( 'admin_print_scripts', 'it_exchange_protected_content_addon_init_tinymce' );
 add_action( 'wp_ajax_it_exchange_protected_content_addon_get_protected_products', 'it_exchange_protected_content_addon_print_product_checkboxes' );
-add_action( 'admin_action_it-exchange-protected-content-addon-doing-popup', 'it_exchange_protected_content_addon_tinymce_popup_intercept' );
+add_action( 'admin_action_it_exchange_protected_content_addon_doing_popup', 'it_exchange_protected_content_addon_tinymce_popup_intercept' );
 
 /**
  * Registers metabox for protected content
@@ -43,58 +43,58 @@ function it_exchange_protected_content_addon_add_protected_content_metabox() {
 function it_exchange_protected_content_addon_print_metabox_content( $post ) {
 	$options = it_exchange_protected_content_addon_get_protected_content_options_for_post_object( $post->ID );
 	?>
-	<div id="it_exchange_protected_content_container">
-		<div id="it_exchange_protected_content_who_dialog">
+	<div id="it-exchange-protected-content-container">
+		<div id="it-exchange-protected-content-who-dialog">
 			<p>
 				Who is authorized to see this post? 
-				<select class="it-pc-selector" name="it_exchange_protected_content_is_protected" id="it_exchange_protected_content_is_protected">
+				<select class="it-pc-selector" name="it-exchange-protected-content-is-protected">
 					<option value="no" <?php selected( $options['is_protected'], 'no' ); ?> data-dependant-classes="who-everyone">
 						<?php _e( 'Everyone', 'LION' ); ?>
 					</option>
 					<option value="products" <?php selected( $options['is_protected'], 'products' ); ?> data-dependant-classes="who-products">
 						<?php _e( 'Customers who have purchased specific products', 'LION' ); ?>
 					</option>
-					<option value="wp_roles" <?php selected( $options['is_protected'], 'wp_roles' ); ?> data-dependant-classes="who-wp_roles">
+					<option value="wp-roles" <?php selected( $options['is_protected'], 'wp_roles' ); ?> data-dependant-classes="who-wp-roles">
 						<?php _e( 'Customers who have a specific WordPress role', 'LION' ); ?>
 					</option>
 				</select>
 			</p>
-			<div id="it_exchange_protected_content_required_products" class="it-pc-group <?php echo $display['required_products']; ?> who-products">
-				<div id="it_exchange_protected_content_all_any_products">
+			<div class="it-pc-group <?php echo $display['required_products']; ?> who-products">
+				<div>
 					<p>
 						<?php _e( 'Only customers that have purchased', 'LION' ); ?>
-						<select name="it_exchange_protected_content_all_any_products">
+						<select name="it-exchange-protected-content-all-any-products">
 							<option value="all" <?php selected( 'all', $options['all_any_products'] ); ?>><?php _e( 'all', 'LION' ); ?></option>
 							<option value="any" <?php selected( 'any', $options['all_any_products'] ); ?>><?php _e( 'any', 'LION' ); ?></option>
 						</select> 
 						<?php _e( 'of the following products can see this post:', 'LION' ); ?>
 					</p>
 				</div>
-				<div id="it_exchange_protected_content_what_products">
-					<div id="it_exchange_protected_content_what_product_tabs">
-						<a class="it_exchange_protected_content_select_products_link" href="" data-value="search"><?php _e( 'Search for products', 'LION' ); ?></a> | 
-						<a class="it_exchange_protected_content_select_products_link" href="" data-value="browse"><?php _e( 'Browse products', 'LION' ); ?></a>
+				<div>
+					<div>
+						<a class="it-exchange-protected-content-select-products-link" href="" data-value="search"><?php _e( 'Search for products', 'LION' ); ?></a> | 
+						<a class="it-exchange-protected-content-select-products-link" href="" data-value="browse"><?php _e( 'Browse products', 'LION' ); ?></a>
 					</div>
-					<input type="hidden" id="it_exchange_protected_content_select_products" data-dependant-classes="it_exchange_protected_content_browse_products" class="it-pc-selector" />
-					<div id="it_exchange_protected_content_what_products_search_div" class="it-pc-group it_exchange_protected_content_search_products">
-						<input type="text" id="it_exchange_protected_content_what_products_search_input" /> <input type="button" value="Add" />
+					<input type="hidden" data-dependant-classes="it-exchange-protected-content-browse-products" class="it-pc-selector" />
+					<div class="it-pc-group it-exchange-protected-content-search-products">
+						<input type="text" id="it-exchange-protected-content-what-products-search-input" /> <input type="button" value="<?php _e( 'Add', 'LION' ); ?>" />
 					</div>
-					<div id="it_exchange_protected_content_what_products_browse_div" class="it-pc-group it_exchange_protected_content_browse_products">
+					<div class="it-pc-group it-exchange-protected-content-browse-products">
 						<?php it_exchange_protected_content_addon_print_product_checkboxes(); ?>
 					</div>
-					<div id="it_exchange_protected_content_what_products_visual_feedback" class="it-pc-group">
+					<div class="it-pc-group">
 						<div class="tagchecklist"><span><a id="post_tag-check-num-0" class="ntdelbutton">X</a>&nbsp;test</span></div>
 					</div>
 				</div>
 			</div>
-			<div id="it_exchange_protected_content_what_wp_roles" class="it-pc-group who-wp_roles">
+			<div class="it-pc-group who-wp-roles">
 				<p>
 					<?php _e( 'Only users with one of the following checked WordPress roles can see this post:', 'LION' ); ?><br />
 					<?php
 					foreach( (array) get_editable_roles() as $key => $values ) {
 						?>
-						<label for="it_exchange_protected_content_wp_roles_<?php esc_attr_e( $key ); ?>">
-							<input type="checkbox" id="it_exchange_protected_content_wp_roles_<?php esc_attr_e( $key ); ?>" name="it_exchange_protected_content_wp_roles[]" value="<?php esc_attr_e( $key ); ?>" <?php checked( in_array( $key, $options['wp_roles'] ) ); ?>/>&nbsp;<?php esc_attr_e( $values['name'] ); ?>
+						<label for="it-exchange-protected-content-wp-roles-<?php esc_attr_e( $key ); ?>">
+							<input type="checkbox" id="it-exchange-protected-content-wp-roles-<?php esc_attr_e( $key ); ?>" name="it-exchange-protected-content-wp-roles[]" value="<?php esc_attr_e( $key ); ?>" <?php checked( in_array( $key, $options['wp_roles'] ) ); ?>/>&nbsp;<?php esc_attr_e( $values['name'] ); ?>
 						</label><br />
 						<?php
 					}
@@ -102,55 +102,55 @@ function it_exchange_protected_content_addon_print_metabox_content( $post ) {
 				</p>
 			</div>
 		</div>
-		<div id="it_exchange_protected_content_when_dialog" class="it-pc-group who-products who-wp_roles">
+		<div class="it-pc-group who-products who-wp-roles">
 			<p>
 				<?php _e( 'When can authorized viewers see this post?', 'LION' ); ?>
-				<select id="it_exchange_protected_content_when_select" name="it_exchange_protected_content_when_protected" class="it-pc-selector">
+				<select id="it-exchange-protected-content-when-select" name="it-exchange-protected-content-when-protected" class="it-pc-selector">
 					<option value="never" <?php selected( 'never', $options['when_protected'] ); ?>>
 						<?php _e( 'All the time', 'LION' ); ?>
 					</option>
-					<option value="time-period" data-dependant-classes="when-time_period" <?php selected( 'time-period', $options['when_protected'] ); ?>>
+					<option value="time-period" data-dependant-classes="when-time-period" <?php selected( 'time-period', $options['when_protected'] ); ?>>
 						<?php _e( 'During a specific time period', 'LION' ); ?>
 					</option>
 					<!-- NOT CURRENTLY AN OPTION. WILL EVENTUALLY DO DRIP CONTENT 
-					<option value="duration-period" data-dependant-classes="when-duration_period" <?php selected( 'duration-period', $options['when_protected'] ); ?>>
+					<option value="duration-period" data-dependant-classes="when-duration-period" <?php selected( 'duration-period', $options['when_protected'] ); ?>>
 						<?php _e( 'A specific time period after purchasing one of the above products', 'LION' ); ?>
 					</option>
 					-->
 				</select>
 			</p>
-			<div id="it_exchange_protected_content_when_time_period" class="it-pc-group when-time_period">
+			<div class="it-pc-group when-time-period">
 				<p>
-					<label for="it_exchange_protected_content_when_time_period_start">
-						<input type="checkbox" name="it_exchange_protected_content_when_time_period_start" class="it-pc-selector" id="it_exchange_protected_content_when_time_period_start" data-dependant-classes="when-time_period_start" <?php checked( 'on', $options['when_time_period_start'] ); ?>/>&nbsp;<?php _e( 'Use a start date', 'LION' ); ?><br />
+					<label for="it-exchange-protected-content-when-time-period-start">
+						<input type="checkbox" name="it-exchange-protected-content-when-time-period-start" class="it-pc-selector" id="it-exchange-protected-content-when-time-period-start" data-dependant-classes="when-time-period-start" <?php checked( 'on', $options['when_time_period_start'] ); ?>/>&nbsp;<?php _e( 'Use a start date', 'LION' ); ?><br />
 					</label>
-					<label for="it_exchange_protected_content_when_time_period_end">
-						<input type="checkbox" name="it_exchange_protected_content_when_time_period_end" class="it-pc-selector" id="it_exchange_protected_content_when_time_period_end" data-dependant-classes="when-time_period_end" <?php checked( 'on', $options['when_time_period_end'] ); ?>/>&nbsp;<?php _e( 'Use an end date', 'LION' ); ?>
+					<label for="it-exchange-protected-content-when-time-period-end">
+						<input type="checkbox" name="it-exchange-protected-content-when-time-period-end" class="it-pc-selector" id="it-exchange-protected-content-when-time-period-end" data-dependant-classes="when-time-period-end" <?php checked( 'on', $options['when_time_period_end'] ); ?>/>&nbsp;<?php _e( 'Use an end date', 'LION' ); ?>
 					</label>
 				</p>
 				<div>
-					<span class="when-time_period_start it-pc-group"><?php _e( 'This content is only accessible after ', 'LION' ); ?>
-						<input type="text" name="it_exchange_protected_content_when_time_period_start_date" value="<?php esc_attr_e( $options['when_time_period_start_date'] ); ?>" />
+					<span class="when-time-period-start it-pc-group"><?php _e( 'This content is only accessible after ', 'LION' ); ?>
+						<input type="text" name="it-exchange-protected-content-when-time-period-start-date" value="<?php esc_attr_e( $options['when_time_period_start_date'] ); ?>" />
 						<br />
 					</span>
-					<span class="when-time_period_end it-pc-group"><?php _e( 'This content is only accessible before ', 'LION' ); ?>
-					<input type="text" name="it_exchange_protected_content_when_time_period_end_date" value="<?php esc_attr_e( $options['when_time_period_end_date'] ); ?>" />
+					<span class="when-time-period-end it-pc-group"><?php _e( 'This content is only accessible before ', 'LION' ); ?>
+					<input type="text" name="it-exchange-protected-content-when-time-period-end-date" value="<?php esc_attr_e( $options['when_time_period_end_date'] ); ?>" />
 					</span>
 				</div>
 			</div>
-			<div id="it_exchange_protected_content_when_duration_after_purchase" class="it-pc-group when-duration_period">
+			<div id="it-exchange-protected-content-when-duration-after-purchase" class="it-pc-group when-duration-period">
 				<p>
-					<label for="it_exchange_protected_content_time_duration_start">	
-						<input type="checkbox" class="it-pc-selector" name="it_exchange_protected_content_when_duration_start" id="it_exchange_protected_content_time_duration_start" data-dependant-classes="when-duration_period_start" <?php checked( 'on', $options['when_duration_start'] ); ?>>&nbsp;<?php _e( 'Use a delayed start', 'LION' ); ?>
+					<label for="it-exchange-protected-content-time-duration-start">	
+						<input type="checkbox" class="it-pc-selector" name="it-exchange-protected-content-when-duration-start" id="it-exchange-protected-content-time-duration-start" data-dependant-classes="when-duration-period-start" <?php checked( 'on', $options['when_duration_start'] ); ?>>&nbsp;<?php _e( 'Use a delayed start', 'LION' ); ?>
 					</label><br />
-					<label for="it_exchange_protected_content_time_duration_end">
-						<input type="checkbox" class="it-pc-selector" name="it_exchange_protected_content_when_duration_end" id="it_exchange_protected_content_time_duration_end" data-dependant-classes="when-duration_period_end" <?php checked( 'on', $options['when_duration_end'] ); ?>>&nbsp;<?php _e( 'Use an expiration period', 'LION' ); ?>
+					<label for="it-exchange-protected-content_time-duration-end">
+						<input type="checkbox" class="it-pc-selector" name="it-exchange-protected-content-when-duration-end" id="it-exchange-protected-content-time-duration-end" data-dependant-classes="when-duration-period-end" <?php checked( 'on', $options['when-duration-end'] ); ?>>&nbsp;<?php _e( 'Use an expiration period', 'LION' ); ?>
 					</label>
 				</p>
-				<p class="when-duration_period_start it-pc-group">
+				<p class="when-duration-period-start it-pc-group">
 					<?php printf( __( 'This content is not available to the customer %suntil%s ', 'LION' ), '<strong>', '</strong>' ); ?>
-					<input name="it_exchange_protected_content_when_duration_start_quantity" value="<?php esc_attr_e( $options['when_duration_start_quantity'] ); ?>" type="text" size="4" /> 
-					<select name="it_exchange_protected_content_when_duration_start_units">
+					<input name="it-exchange-protected-content-when-duration-start-quantity" value="<?php esc_attr_e( $options['when_duration_start_quantity'] ); ?>" type="text" size="4" /> 
+					<select name="it-exchange-protected-content-when-duration-start-units">
 						<option value="days" <?php selected( 'days', $options['when_duration_start_units'] ); ?>><?php _e( 'day(s)' ); ?></option>
 						<option value="weeks" <?php selected( 'weeks', $options['when_duration_start_units'] ); ?>><?php _e( 'week(s)' ); ?></option>
 						<option value="months" <?php selected( 'months', $options['when_duration_start_units'] ); ?>><?php _e( 'month(s)' ); ?></option>
@@ -158,10 +158,10 @@ function it_exchange_protected_content_addon_print_metabox_content( $post ) {
 					</select>
 					&nbsp;<?php _e( 'from their date of purchase.' ); ?>
 				</p>
-				<p class="when-duration_period_end it-pc-group">
+				<p class="when-duration-period-end it-pc-group">
 					<?php printf( __( 'This content is not available to the customer %safter%s ', 'LION' ), '<strong>', '</strong>' ); ?>
-					<input type="text" name="it_exchange_protected_content_when_duration_end_quantity" size="4" value="<?php esc_attr_e( $options['when_duration_end_quantity'] ); ?>"/> 
-					<select name="it_exchange_protected_content_when_duration_end_units">
+					<input type="text" name="it-exchange-protected-content-when-duration-end-quantity" size="4" value="<?php esc_attr_e( $options['when_duration_end_quantity'] ); ?>"/> 
+					<select name="it-exchange-protected-content-when-duration-end-units">
 						<option value="days" <?php selected( 'days', $options['when_duration_end_units'] ); ?>><?php _e( 'day(s)' ); ?></option>
 						<option value="weeks" <?php selected( 'weeks', $options['when_duration_end_units'] ); ?>><?php _e( 'week(s)' ); ?></option>
 						<option value="months" <?php selected( 'months', $options['when_duration_end_units'] ); ?>><?php _e( 'month(s)' ); ?></option>
@@ -171,106 +171,106 @@ function it_exchange_protected_content_addon_print_metabox_content( $post ) {
 				</p>
 			</div>
 		</div>
-		<div id="it_exchange_protected_content_unauthorized_views" class="it-pc-group who-products who-wp_roles">
-			<div id="it_exchange_protected_content_unauthorized_singular_views">
+		<div id="it-exchange-protected-content-unauthorized-views" class="it-pc-group who-products who-wp-roles">
+			<div id="it-exchange-protected-content-unauthorized-singular-views">
 				<p>
 					<?php _e( 'What should happen if an unauthorized user accesses this page directly?', 'LION' ); ?><br />
-					<label for="it_exchange_protected_content_unauthorized_single_redirect">
-						<input type="radio" name="it_exchange_protected_content_unauthorized_singular_action" id="it_exchange_protected_content_unauthorized_single_redirect" value="redirect" class="it-pc-selector" data-dependant-classes="unauthorized_single_redirect" <?php checked( 'redirect', $options['unauthorized_singular_action'] ); ?>>
+					<label for="it-exchange-protected-content-unauthorized-single-redirect">
+						<input type="radio" name="it-exchange-protected-content-unauthorized-singular-action" id="it-exchange-protected-content-unauthorized-single-redirect" value="redirect" class="it-pc-selector" data-dependant-classes="unauthorized-single-redirect" <?php checked( 'redirect', $options['unauthorized-singular-action'] ); ?>>
 						&nbsp;<?php _e( 'They get redirected to another URL', 'LION' ); ?>
 					</label>
 					<br />
-					<label for="it_exchange_protected_content_unauthorized_single_excerpt">
-						<input type="radio" name="it_exchange_protected_content_unauthorized_singular_action" id="it_exchange_protected_content_unauthorized_single_excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_singular_action'] ); ?>>
+					<label for="it-exchange-protected-content-unauthorized-single-excerpt">
+						<input type="radio" name="it-exchange-protected-content-unauthorized-singular-action" id="it-exchange-protected-content-unauthorized-single-excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_singular_action'] ); ?>>
 						&nbsp;<?php _e( 'They get shown the post excerpt', 'LION' ); ?>
 					</label>
 					<br />
-					<label for="it_exchange_protected_content_unauthorized_single_custom_message">
-						<input type="radio" name="it_exchange_protected_content_unauthorized_singular_action" id="it_exchange_protected_content_unauthorized_single_custom_message" value="custom_message" class="it-pc-selector" data-dependant-classes="unauthorized_single_custom_message" <?php checked( 'custom_message', $options['unauthorized_singular_action'] ); ?>>
+					<label for="it-exchange-protected-content-unauthorized-single-custom-message">
+						<input type="radio" name="it-exchange-protected-content-unauthorized-singular-action" id="it-exchange-protected-content-unauthorized-single-custom-message" value="custom-message" class="it-pc-selector" data-dependant-classes="unauthorized-single-custom-message" <?php checked( 'custom-message', $options['unauthorized_singular_action'] ); ?>>
 						&nbsp;<?php _e( 'They get shown a custom message', 'LION' ); ?>
 					</label>
 				</p>
-				<p id="it_exchange_protected_content_unauthorized_singular_redirect" class="it-pc-group unauthorized_single_redirect">
-					<?php _e( 'URL to redirect them to: ', 'LION' ); ?><input type="text" name="it_exchange_protected_content_unauthorized_singular_redirect_url" value="<?php esc_attr_e( $options['unauthorized_singular_redirect_url'] ); ?>" />
+				<p id="it-exchange-protected-content-unauthorized-singular-redirect" class="it-pc-group unauthorized-single-redirect">
+					<?php _e( 'URL to redirect them to: ', 'LION' ); ?><input type="text" name="it-exchange-protected-content-unauthorized-singular-redirect-url" value="<?php esc_attr_e( $options['unauthorized_singular_redirect_url'] ); ?>" />
 				</p>
-				<p id="it_exchange_protected_content_unauthroized_singular_redirect_custom_message" class="it-pc-group unauthorized_single_custom_message">
+				<p id="it-exchange-protected-content-unauthroized-singular-redirect-custom-message" class="it-pc-group unauthorized-single-custom-message">
 					<?php _e( 'Custom Message for singular views:', 'LION' ); ?><br />
-					<textarea name="it_exchange_protected_content_unauthorized_singular_custom_message"><?php esc_html_e( $options['unauthorized_singular_custom_message'] ); ?></textarea>
+					<textarea name="it-exchange-protected-content-unauthorized-singular-custom-message"><?php esc_html_e( $options['unauthorized_singular_custom_message'] ); ?></textarea>
 				</p>
 			</div>
-			<div id="it_exchange_protected_content_unauthorized_archive_views">
+			<div>
 				<p>
 					<?php _e( 'What should happen when this post is appears in an archive or category view for unauthorized users?', 'LION' ); ?><br />
 					<!-- Maybe Later
-					<label for="it_exchange_protected_content_unauthorized_archive_hide">
-						<input type="radio" name="it_exchange_protected_content_unauthorized_archive_action" id="it_exchange_protected_content_unauthorized_archive_hide" value="hide" class="it-pc-selector" <?php checked( 'hide', $options['unauthorized_archive_action'] ); ?>>
+					<label for="it-exchange-protected-content-unauthorized-archive-hide">
+						<input type="radio" name="it-exchange-protected-content-unauthorized-archive-action" id="it-exchange-protected-content-unauthorized-archive-hide" value="hide" class="it-pc-selector" <?php checked( 'hide', $options['unauthorized_archive_action'] ); ?>>
 						&nbsp;<?php _e( 'Don\'t show it in the archive', 'LION' ); ?>
 					</label>
 					<br />
 					-->
-					<label for="it_exchange_protected_content_unauthorized_archive_excerpt">
-						<input type="radio" name="it_exchange_protected_content_unauthorized_archive_action" id="it_exchange_protected_content_unauthorized_archive_excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_archive_action'] ); ?>>
+					<label for="it-exchange-protected-content-unauthorized-archive-excerpt">
+						<input type="radio" name="it-exchange-protected-content-unauthorized-archive-action" id="it-exchange-protected-content-unauthorized-archive-excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_archive_action'] ); ?>>
 						&nbsp;<?php _e( 'Show the excerpt if available', 'LION' ); ?>
 					</label>
 					<br />
-					<label for="it_exchange_protected_content_unauthorized_archive_custom_message_radio">
-						<input type="radio" name="it_exchange_protected_content_unauthorized_archive_action" id="it_exchange_protected_content_unauthorized_archive_custom_message_radio" value="custom_message" class="it-pc-selector" data-dependant-classes="unauthorized_archive_custom_message" <?php checked( 'custom_message', $options['unauthorized_archive_action'] ); ?>>
+					<label for="it-exchange-protected-content-unauthorized-archive-custom-message-radio">
+						<input type="radio" name="it-exchange-protected-content-unauthorized-archive-action" id="it-exchange-protected-content-unauthorized-archive-custom-message-radio" value="custom-message" class="it-pc-selector" data-dependant-classes="unauthorized-archive-custom-message" <?php checked( 'custom-message', $options['unauthorized_archive_action'] ); ?>>
 						&nbsp;<?php _e( 'Show a custom message', 'LION' ); ?>
 					</label>
 				</p>
-				<p id="it_exchange_protected_content_unauthorized_archive_custom_message" class="unauthorized_archive_custom_message it-pc-group">
+				<p id="it-exchange-protected-content-unauthorized-archive-custom-message" class="unauthorized-archive-custom-message it-pc-group">
 					<?php _e( 'Custom Message for archive views:', 'LION' ); ?><br />
-					<textarea name="it_exchange_protected_content_unauthorized_archive_custom_message"><?php esc_html_e( $options['unauthorized_archive_custom_message']     ); ?></textarea>
+					<textarea name="it-exchange-protected-content-unauthorized-archive-custom-message"><?php esc_html_e( $options['unauthorized_archive_custom_message']     ); ?></textarea>
 				</p>
 			</div>
-			<div id="it_exchange_protected_content_unauthorized_search_views">
+			<div id="it-exchange-protected-content-unauthorized-search-views">
 				<p>
 					<?php _e( 'What should happen when this post appears in search results for unauthorized users?', 'LION' ); ?><br />
 					<!-- Maybe Later
-					<label for="it_exchange_protected_content_unauthorized_search_hide">
-						<input type="radio" name="it_exchange_protected_content_unauthorized_search_action" id="it_exchange_protected_content_unauthorized_search_hide" value="hide" class="it-pc-selector" <?php checked( 'hide', $options['unauthorized_search_action'] ); ?>>
+					<label for="it-exchange-protected-content-unauthorized-search-hide">
+						<input type="radio" name="it-exchange-protected-content-unauthorized-search-action" id="it-exchange-protected-content-unauthorized-search-hide" value="hide" class="it-pc-selector" <?php checked( 'hide', $options['unauthorized_search_action'] ); ?>>
 						&nbsp;<?php _e( 'Don\'t show it in the search results', 'LION' ); ?>
 					</label>
 					<br />
 					-->
-					<label for="it_exchange_protected_content_unauthorized_search_excerpt">
-						<input type="radio" name="it_exchange_protected_content_unauthorized_search_action" id="it_exchange_protected_content_unauthorized_search_excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_search_action'] ); ?>>
+					<label for="it-exchange-protected-content-unauthorized-search-excerpt">
+						<input type="radio" name="it-exchange-protected-content-unauthorized-search-action" id="it-exchange-protected-content-unauthorized-search-excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_search_action'] ); ?>>
 						&nbsp;<?php _e( 'Show the excerpt if available', 'LION' ); ?>
 					</label>
 					<br />
-					<label for="it_exchange_protected_content_unauthorized_search_custom_message">
-						<input type="radio" name="it_exchange_protected_content_unauthorized_search_action" id="it_exchange_protected_content_unauthorized_search_custom_message" value="custom_message" class="it-pc-selector" data-dependant-classes="unauthorized_search_custom_message" <?php checked( 'custom_message', $options['unauthorized_search_action'] ); ?>>
+					<label for="it-exchange-protected-content-unauthorized-search-custom-message">
+						<input type="radio" name="it-exchange-protected-content-unauthorized-search-action" id="it-exchange-protected-content-unauthorized-search-custom-message" value="custom-message" class="it-pc-selector" data-dependant-classes="unauthorized-search-custom-message" <?php checked( 'custom-message', $options['unauthorized_search_action'] ); ?>>
 						&nbsp;<?php _e( 'Show a custom message', 'LION' ); ?>
 					</label>
 				</p>
-				<p id="it_exchange_protected_content_unauthorized_search_custom_message" class="unauthorized_search_custom_message it-pc-group">
+				<p id="it-exchange-protected-content-unauthorized-search-custom-message" class="unauthorized-search-custom-message it-pc-group">
 					<?php _e( 'Custom Message for search results:', 'LION' ); ?><br />
-					<textarea name="it_exchange_protected_content_unauthorized_search_custom_message"><?php esc_html_e( $options['unauthorized_search_custom_message']     ); ?></textarea>
+					<textarea name="it-exchange-protected-content-unauthorized-search-custom-message"><?php esc_html_e( $options['unauthorized_search_custom-message']     ); ?></textarea>
 				</p>
 			</div>
-			<div id="it_exchange_protected_content_unauthorized_feed_views">
+			<div id="it-exchange-protected-content-unauthorized-feed-views">
 				<p>
 					<?php _e( 'What should happen when this post appears in a feed view for unauthorized users?', 'LION' ); ?><br />
 					<!-- Maybe Later
-					<label for="it_exchange_protected_content_unauthorized_feed_hide">
-						<input type="radio" name="it_exchange_protected_content_unauthorized_feed_action" id="it_exchange_protected_content_unauthorized_feed_hide" value="hide" class="it-pc-selector" <?php checked( 'hide', $options['unauthorized_feed_action'] ); ?>>
+					<label for="it-exchange-protected-content-unauthorized-feed-hide">
+						<input type="radio" name="it-exchange-protected-content-unauthorized-feed-action" id="it-exchange-protected-content-unauthorized-feed-hide" value="hide" class="it-pc-selector" <?php checked( 'hide', $options['unauthorized_feed_action'] ); ?>>
 						&nbsp;<?php _e( 'Don\'t show it in the feed views', 'LION' ); ?>
 					</label>
 					<br />
 					-->
-					<label for="it_exchange_protected_content_unauthorized_feed_excerpt">
-						<input type="radio" name="it_exchange_protected_content_unauthorized_feed_action" id="it_exchange_protected_content_unauthorized_feed_excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_feed_action'] ); ?>>
+					<label for="it-exchange-protected-content-unauthorized-feed-excerpt">
+						<input type="radio" name="it-exchange-protected-content-unauthorized-feed-action" id="it-exchange-protected-content-unauthorized-feed-excerpt" value="excerpt" class="it-pc-selector" <?php checked( 'excerpt', $options['unauthorized_feed_action'] ); ?>>
 						&nbsp;<?php _e( 'Show the excerpt if available', 'LION' ); ?>
 					</label>
 					<br />
-					<label for="it_exchange_protected_content_unauthorized_feed_custom_message">
-						<input type="radio" name="it_exchange_protected_content_unauthorized_feed_action" id="it_exchange_protected_content_unauthorized_feed_custom_message" value="custom_message" class="it-pc-selector" data-dependant-classes="unauthorized_feed_custom_message" <?php checked( 'custom_message', $options['unauthorized_feed_action'] ); ?>>
+					<label for="it-exchange-protected-content-unauthorized-feed-custom-message">
+						<input type="radio" name="it-exchange-protected-content-unauthorized-feed-action" id="it-exchange-protected-content-unauthorized-feed-custom-message" value="custom-message" class="it-pc-selector" data-dependant-classes="unauthorized-feed-custom-message" <?php checked( 'custom-message', $options['unauthorized_feed_action'] ); ?>>
 						&nbsp;<?php _e( 'Show a custom message', 'LION' ); ?>
 					</label>
 				</p>
-				<p id="it_exchange_protected_content_unauthorized_feed_custom_message" class="unauthorized_feed_custom_message it-pc-group">
+				<p id="it-exchange-protected-content-unauthorized-feed-custom-message" class="unauthorized-feed-custom-message it-pc-group">
 					<?php _e( 'Custom Message for feed views:', 'LION' ); ?><br />
-					<textarea name="it_exchange_protected_content_unauthorized_feed_custom_message"><?php esc_html_e( $options['unauthorized_feed_custom_message']     ); ?></textarea>
+					<textarea name="it-exchange-protected-content-unauthorized-feed-custom-message"><?php esc_html_e( $options['unauthorized_feed_custom_message']     ); ?></textarea>
 				</p>
 			</div>
 		</div>
@@ -302,8 +302,8 @@ function it_exchange_protected_content_addon_print_product_checkboxes() {
 		// Loop through products and create checkboxes
 		foreach( $protected_products as $product_id => $product_title ) { 
 			?>  
-			<label for="it_exchange_protected_content_protect_product_<?php esc_attr_e( $product_id ); ?>">
-			<input type="checkbox" id="it_exchange_protected_content_protect_product_<?php esc_attr_e( $product_id ); ?>" name="it_exchange_protected_content_selected_products[]" value="<?php esc_attr_e( $product_id ); ?>" <?php checked( in_array( $product_id, $selected_products ) ); ?>>&nbsp;<?php esc_attr_e( apply_filters( 'the_title', $product_title ) ); ?>
+			<label for="it-exchange-protected-content-protect-product-<?php esc_attr_e( $product_id ); ?>">
+			<input type="checkbox" id="it-exchange-protected-content-protect-product-<?php esc_attr_e( $product_id ); ?>" name="it-exchange-protected-content-selected-products[]" value="<?php esc_attr_e( $product_id ); ?>" <?php checked( in_array( $product_id, $selected_products ) ); ?>>&nbsp;<?php esc_attr_e( apply_filters( 'the_title', $product_title ) ); ?>
 			</label><br />
 			<?php
 		}   
@@ -323,23 +323,23 @@ function it_exchange_protected_content_addon_print_product_checkboxes() {
  * @return void
 */
 function it_exchange_protected_content_addon_save_post_restrictions( $post ) {
-	if ( ! isset( $_POST['it_exchange_protected_content_is_protected'] ) )
+	if ( ! isset( $_POST['it-exchange-protected-content-is-protected'] ) )
 		return;
 
 	$option_keys = array(
-		'is_protected', 'all_any_products', 'when_protected', 'wp_roles', 'selected_products', 
-		'when_time_period_start', 'when_time_period_end', 'when_time_period_start_date', 
-		'when_time_period_end_date', 'when_duration_start', 'when_duration_end', 'when_duration_start_quantity', 'when_duration_start_units', 
-		'when_duration_end_quantity', 'when_duration_end_units', 'unauthorized_singular_action', 
-		'unauthorized_singular_redirect_url', 'unauthorized_singular_custom_message', 
-		'unauthorized_archive_action', 'unauthorized_archive_custom_message', 'unauthorized_search_action', 
-		'unauthorized_search_custom_message', 'unauthorized_feed_action', 'unauthorized_feed_custom_message',
+		'is-protected', 'all-any-products', 'when-protected', 'wp-roles', 'selected-products', 
+		'when-time-period-start', 'when-time-period-end', 'when-time-period-start-date', 
+		'when-time-period-end-date', 'when-duration-start', 'when-duration-end', 'when-duration-start-quantity', 'when-duration-start-units', 
+		'when-duration-end-quantity', 'when-duration-end-units', 'unauthorized-singular-action', 
+		'unauthorized-singular-redirect-url', 'unauthorized-singular-custom-message', 
+		'unauthorized-archive-action', 'unauthorized-archive-custom-message', 'unauthorized-search-action', 
+		'unauthorized-search-custom-message', 'unauthorized-feed-action', 'unauthorized-feed-custom-message',
 	);
 
 	$new_options = array();
 	foreach( $option_keys as $key ) {
-		if ( isset( $_POST['it_exchange_protected_content_' . $key] ) )
-			$new_options[$key] = $_POST['it_exchange_protected_content_' . $key];
+		if ( isset( $_POST['it-exchange-protected-content-' . $key] ) )
+			$new_options[$key] = $_POST['it-exchange-protected-content-' . $key];
 	}
 
 	// Validate redirect URL

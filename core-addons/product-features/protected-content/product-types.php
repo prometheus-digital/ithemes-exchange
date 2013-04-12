@@ -84,7 +84,7 @@ function it_exchange_protected_content_addon_print_metabox( $post ) {
 		<?php esc_html_e( $description ); ?>
 	</p>
 	<p>
-		<select id="it_exchange_protected_content_source" name="it_exchange_protected_content_source">
+		<select id="it-exchange-protected-content-source" name="it-exchange-protected-content-source">
 			<option value="no" <?php selected( 'no', $is_protected_source ); ?>><?php _e( 'No', 'LION' ); ?></option>
 			<option value="yes" <?php selected( 'yes', $is_protected_source ); ?>><?php _e( 'Yes', 'LION' ); ?></option>
 		</select>
@@ -99,11 +99,11 @@ function it_exchange_protected_content_addon_print_metabox( $post ) {
  * @return void
 */
 function it_exchange_save_protected_content_source_products( $post ) {
-	if ( ! empty( $_POST['it_exchange_protected_content_source'] ) ) {
+	if ( ! empty( $_POST['it-exchange-protected-content-source'] ) ) {
 		$source_products    = (array) it_exchange_get_option( 'protected_source_products' );
 		$is_existing_source = empty( $source_products[$post] ) ? 'no' : 'yes';
 
-		$new_value = $_POST['it_exchange_protected_content_source'];
+		$new_value = $_POST['it-exchange-protected-content-source'];
 
 		if ( 'no' == $new_value && $is_existing_source )
 			unset( $source_products[$post] );
