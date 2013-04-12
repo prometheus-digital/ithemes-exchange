@@ -2,15 +2,15 @@
 /**
  * Contains the class or the customer object
  * @since 0.3.8
- * @package IT_Cart_Buddy
+ * @package IT_Exchange
 */
 
 /**
- * The IT_Cart_Buddy_Customer class holds all important data for a specific customer
+ * The IT_Exchange_Customer class holds all important data for a specific customer
  *
  * @since 0.3.8
 */
-class IT_Cart_Buddy_Customer {
+class IT_Exchange_Customer {
 	
 	/**
 	 * @var integer $id the customer id. corresponds with the WP user id
@@ -49,7 +49,7 @@ class IT_Cart_Buddy_Customer {
 	 * @param integer $id customer id
 	 * @return mixed false if no customer is found. self if customer is located
 	*/
-	function IT_Cart_Buddy_Customer( $id ) {
+	function IT_Exchange_Customer( $id ) {
 		// Set the ID
 		$this->id = $id;
 
@@ -106,7 +106,7 @@ class IT_Cart_Buddy_Customer {
 		$data->first_name = get_user_meta( $this->id, 'first_name', true );
 		$data->last_name  = get_user_meta( $this->id, 'last_name', true );
 
-		$data = apply_filters( 'it_cart_buddy_set_customer_data', $data, $this->id );
+		$data = apply_filters( 'it_exchange_set_customer_data', $data, $this->id );
 		$this->data = $data;
 	}
 
@@ -139,7 +139,7 @@ class IT_Cart_Buddy_Customer {
 		);
 		
 		// Set all user transactions
-		$this->transaction_history = it_cart_buddy_get_transactions( $args );
+		$this->transaction_history = it_exchange_get_transactions( $args );
 	}
 
 	/**
@@ -154,11 +154,11 @@ class IT_Cart_Buddy_Customer {
 
 				// Skip this transaction if its got a bad status
 				/** @todo make status API accessable and filterable **/
-				if ( ! in_array( it_cart_buddy_get_transaction_status( $txn->ID ), array( 'pending' ) ) )
+				if ( ! in_array( it_exchange_get_transaction_status( $txn->ID ), array( 'pending' ) ) )
 					return;
 
-				if ( ! empty( $txn->transaction_data['_it_cart_buddy_transaction_cart']->products ) ) {
-					foreach( (array) $txn->transaction_data['_it_cart_buddy_transaction_cart']->products as $product ) {
+				if ( ! empty( $txn->transaction_data['_it_exchange_transaction_cart']->products ) ) {
+					foreach( (array) $txn->transaction_data['_it_exchange_transaction_cart']->products as $product ) {
 						$product['transaction_id'] = $txn->ID;
 						$this->purchase_history[$product['product_id']][] = $product;
 					}
@@ -175,6 +175,6 @@ class IT_Cart_Buddy_Customer {
 	*/
 	function get_purchase_history() {
 		$history = empty( $this->purchase_history ) ? false : $this->purchase_history;
-		return apply_filters( 'it_cart_buddy_get_customer_purchase_history', $history, $this->id );
+		return apply_filters( 'it_exchange_get_customer_purchase_history', $history, $this->id );
 	}
 }
