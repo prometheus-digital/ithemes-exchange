@@ -21,8 +21,8 @@ class IT_Exchange_Base_Price {
 			add_action( 'init', array( $this, 'init_base_price_metaboxes' ) );
 			add_action( 'it_exchange_save_product', array( $this, 'save_base_price_on_product_save' ) );
 		}
-		add_action( 'it_exchange_update_product_feature-base_price', array( $this, 'save_base_price' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature-base_price', array( $this, 'get_base_price' ), 9, 2 );
+		add_action( 'it_exchange_update_product_feature_base_price', array( $this, 'save_base_price' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_base_price', array( $this, 'get_base_price' ), 9, 2 );
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_base_price_support_to_product_types' ) );
 	}
 

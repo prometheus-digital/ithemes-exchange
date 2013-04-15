@@ -120,7 +120,7 @@ class IT_Exchange_Product_Post_Type {
 
 		}
 		$singular = empty( $product['options']['labels']['singular_name'] ) ? $product['name'] : $product['options']['labels']['singular_name'];
-		$label = apply_filters( 'it_exchange_add_new_product_label-' . $product['slug'], __( 'Add New ', 'LION' ) . $singular );
+		$label = apply_filters( 'it_exchange_add_new_product_label_' . $product['slug'], __( 'Add New ', 'LION' ) . $singular );
 		$wp_post_types['it_exchange_prod']->labels->add_new_item = $label;
 	}
 
@@ -162,7 +162,7 @@ class IT_Exchange_Product_Post_Type {
 		}
 
 		$singular = empty( $product['options']['labels']['singular_name'] ) ? $product['name'] : $product['options']['labels']['singular_name'];
-		$label = apply_filters( 'it_exchange_edit_product_label-' . $product['slug'], __( 'Edit ', 'LION' ) . $singular );
+		$label = apply_filters( 'it_exchange_edit_product_label_' . $product['slug'], __( 'Edit ', 'LION' ) . $singular );
 		$wp_post_types['it_exchange_prod']->labels->edit_item = $label;
 	}
 
@@ -196,7 +196,7 @@ class IT_Exchange_Product_Post_Type {
 		do_action( 'it_exchange_save_product_unvalidated', $post );
 		foreach( (array) $product_type_addons as $slug => $params ) { 
 			if ( $slug == $product_type ) { 
-				do_action( 'it_exchange_save_product_unvalidated-' . $slug, $post );
+				do_action( 'it_exchange_save_product_unvalidated_' . $slug, $post );
 			}   
 		}   
 
@@ -211,7 +211,7 @@ class IT_Exchange_Product_Post_Type {
 		do_action( 'it_exchange_save_product', $post );
 		foreach( (array) $product_type_addons as $slug => $params ) { 
 			if ( $slug == $product_type ) { 
-				do_action( 'it_exchange_save_product-' . $slug, $post );
+				do_action( 'it_exchange_save_product_' . $slug, $post );
 			}   
 		}   
 	}

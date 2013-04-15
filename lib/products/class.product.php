@@ -117,8 +117,8 @@ class IT_Exchange_Product {
 	function set_product_type() {
 		global $pagenow;
 		if ( ! $product_type = get_post_meta( $this->ID, '_it_exchange_product_type', true ) ) {
-			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['product_type'] ) )	
-				$product_type = $_GET['product_type'];		
+			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['product-type'] ) )	
+				$product_type = $_GET['product-type'];
 		}
 		$this->product_type = $product_type;
 	}

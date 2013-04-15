@@ -18,23 +18,23 @@ class IT_Exchange_WP_Post_Supports {
 
 		// WordPress Post Title
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_title_support_as_product_feature' ) );
-		add_filter( 'it_exchange_get_product_feature-product_title', array( $this, 'get_title' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_product_title', array( $this, 'get_title' ), 9, 2 );
 
 		// WordPress Post Content (Product Description)
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_post_content_as_product_feature' ) );
-		add_filter( 'it_exchange_get_product_feature-product_description', array( $this, 'get_product_description' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_product_description', array( $this, 'get_product_description' ), 9, 2 );
 
 		// WordPress Featured Image as a Product Feature
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_featured_image_as_product_feature' ) );
-		add_filter( 'it_exchange_get_product_feature-wp-featured-image', array( $this, 'get_featured_image' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_wp-featured-image', array( $this, 'get_featured_image' ), 9, 2 );
 
 		// WordPress Excerpt
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_excerpt_as_product_feature' ) );
-		add_filter( 'it_exchange_get_product_feature-wp-excerpt', array( $this, 'get_excerpt' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_wp-excerpt', array( $this, 'get_excerpt' ), 9, 2 );
 
 		// WordPress Post Author
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_author_support_as_product_feature' ) );
-		add_filter( 'it_exchange_get_product_feature-wp-author', array( $this, 'get_wp_author' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_wp-author', array( $this, 'get_wp_author' ), 9, 2 );
 
 		// WordPress Post Formats
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_post_formats_as_product_feature' ) );
