@@ -89,7 +89,7 @@ if ( ! is_user_logged_in() )
 
 		<p>
 			<input type="hidden" name="<?php esc_attr_e( it_exchange_get_action_var( 'purchase_cart' ) ); ?>" value=1 />
-			<input type="submit" name="it_exchange_place_order" value="<?php _e( 'Place Order', 'LION' ); ?>" />
+			<input type="submit" name="it-exchange-place-order" value="<?php _e( 'Place Order', 'LION' ); ?>" />
 			&nbsp;<a href="<?php esc_attr_e( it_exchange_get_page_url( 'cart' ) ); ?>"><?php _e( 'Back to cart', 'LION' ); ?></a>
 		</p>
 	</div>
