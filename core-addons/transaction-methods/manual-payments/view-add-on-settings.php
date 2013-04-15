@@ -14,23 +14,23 @@
 		<table class="form-table">
 			<?php do_action( 'it_exchange_manual_payments_settings_table_top' ); ?>
 			<tr valign="top">
-				<th scope="row"><label for="it_exchange_manual_payments_title"><?php _e( 'Title' ) ?></label></th>
+				<th scope="row"><label for="it-exchange-manual-payments-title"><?php _e( 'Title' ) ?></label></th>
 				<td>
-					<?php $form->add_text_box( 'manual_payments_title', array( 'class' => 'normal-text' ) ); ?>
+					<?php $form->add_text_box( 'manual-payments-title', array( 'class' => 'normal-text' ) ); ?>
 					<br /><span class="description"><?php _e( 'What would you like to title this payment option? eg: Check', 'LION' ); ?></span>
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="it_exchange_manual_payments_instructions"><?php _e( 'Instructions after purchase' ) ?></label></th>
+				<th scope="row"><label for="it-exchange-manual-payments-instructions"><?php _e( 'Instructions after purchase' ) ?></label></th>
 				<td>
-					<?php $form->add_text_area( 'manual_payments_instructions', array( 'cols' => 50, 'rows' => 5, 'class' => 'normal-text' ) ); ?>
+					<?php $form->add_text_area( 'manual-payments-instructions', array( 'cols' => 50, 'rows' => 5, 'class' => 'normal-text' ) ); ?>
 					<br /><span class="description"><?php _e( 'Use this field to give your customers instructions for payment after purchase.', 'LION' ); ?></span>
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="it_exchange_manual_payments_default_status"><?php _e( 'Default Payment Status' ) ?></label></th>
+				<th scope="row"><label for="it-exchange-manual-payments-default-status"><?php _e( 'Default Payment Status' ) ?></label></th>
 				<td>
-					<?php $form->add_drop_down( 'manual_payments_default_status', $default_status_options ); ?>
+					<?php $form->add_drop_down( 'manual-payments-default-status', $default_status_options ); ?>
 				</td>
 			</tr>
 			<?php do_action( 'it_exchange_manual_payments_settings_table_bottom' ); ?>

@@ -8,8 +8,8 @@
 
 include( 'confirmation-template-functions.php' );
 
-add_filter( 'it_exchange_get_transaction_method_name-manual-payments', 'it_exchange_get_manual_payments_name', 9 );
-add_action( 'it_exchange_do_transaction-manual-payments', 'it_exchange_manual_payments_do_transaction', 9 );
+add_filter( 'it_exchange_get_transaction_method_name_manual-payments', 'it_exchange_get_manual_payments_name', 9 );
+add_action( 'it_exchange_do_transaction_manual-payments', 'it_exchange_manual_payments_do_transaction', 9 );
 add_filter( 'it_exchange_possible_template_paths', 'it_exchange_manual_payments_add_template_path' );
 
 /**
@@ -86,7 +86,7 @@ class IT_Exchange_Manual_Payments_Add_On {
 	var $_current_page;
 
 	/**
-	 * @var string $_current_add_on Current $_GET['add_on_settings'] value
+	 * @var string $_current_add_on Current $_GET['add-on-settings'] value
 	 * @since 0.3.6
 	*/
 	var $_current_add_on;
@@ -113,14 +113,14 @@ class IT_Exchange_Manual_Payments_Add_On {
 	function IT_Exchange_Manual_Payments_Add_On() {
 		$this->_is_admin                      = is_admin();
 		$this->_current_page                 = empty( $_GET['page'] ) ? false : $_GET['page'];
-		$this->_current_add_on = empty( $_GET['add_on_settings'] ) ? false : $_GET['add_on_settings'];
+		$this->_current_add_on = empty( $_GET['add-on-settings'] ) ? false : $_GET['add-on-settings'];
 
 		if ( ! empty( $_POST ) && $this->_is_admin && 'it-exchange-addons' == $this->_current_page && 'manual-payments' == $this->_current_add_on ) {
-			add_action( 'it_exchange_save_add_on_settings-manual-payments', array( $this, 'save_settings' ) );
-			do_action( 'it_exchange_save_add_on_settings-manual-payments' );
+			add_action( 'it_exchange_save_add_on_settings_manual-payments', array( $this, 'save_settings' ) );
+			do_action( 'it_exchange_save_add_on_settings_manual-payments' );
 		}
 
-		add_filter( 'it_storage_get_defaults_exchange-addon-manual-payments', array( $this, 'set_default_settings' ) );
+		add_filter( 'it_storage_get_defaults_exchange_addon_manual-payments', array( $this, 'set_default_settings' ) );
 	}
 
 	function print_settings_page() {
@@ -130,9 +130,9 @@ class IT_Exchange_Manual_Payments_Add_On {
 		$form_options = array(
 			'id'      => apply_filters( 'it_exchange_add_on_manual_payments', 'it-exchange-add-on-manual-payments-settings' ),
 			'enctype' => apply_filters( 'it_exchange_add_on_manual_payments_settings_form_enctype', false ),
-			'action'  => 'admin.php?page=it-exchange-addons&add_on_settings=manual-payments',
+			'action'  => 'admin.php?page=it-exchange-addons&add-on-settings=manual-payments',
 		);
-		$form         = new ITForm( $form_values, array( 'prefix' => 'it_exchange_add_on_manual_payments' ) );
+		$form         = new ITForm( $form_values, array( 'prefix' => 'it-exchange-add-on-manual-payments' ) );
 
 		if ( ! empty ( $this->status_message ) )
 			ITUtility::show_status_message( $this->status_message );
