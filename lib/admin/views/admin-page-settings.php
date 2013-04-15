@@ -21,21 +21,21 @@
 			<td></td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it_exchange_page_cart"><?php _e( 'Cart' ) ?></label></th>
+			<th scope="row"><label for="it-exchange-page-cart"><?php _e( 'Cart' ) ?></label></th>
 			<td>
 				<?php $form->add_drop_down( 'cart', $this->get_default_page_options() ); ?>
 				<br /><span class="description"><?php _e( 'What page will contain the shopping cart?', 'LION' ); ?></span>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it_exchange_page_checkout"><?php _e( 'Checkout' ) ?></label></th>
+			<th scope="row"><label for="it-exchange-page-checkout"><?php _e( 'Checkout' ) ?></label></th>
 			<td>
 				<?php $form->add_drop_down( 'checkout', $this->get_default_page_options() ); ?>
 				<br /><span class="description"><?php _e( 'What page will contain the shopping checkout form?', 'LION' ); ?></span>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it_exchange_page_confirmation"><?php _e( 'Confirmation' ) ?></label></th>
+			<th scope="row"><label for="it-exchange-page-confirmation"><?php _e( 'Confirmation' ) ?></label></th>
 			<td>
 				<?php $form->add_drop_down( 'confirmation', $this->get_default_page_options() ); ?>
 				<br /><span class="description"><?php _e( 'What page will contain the purchase confirmation?', 'LION' ); ?></span>

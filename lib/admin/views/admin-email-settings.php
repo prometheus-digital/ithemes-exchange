@@ -21,28 +21,28 @@
 			<td></td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it_exchange_receipt_email_address"><?php _e( 'Email Address' ) ?></label></th>
+			<th scope="row"><label for="it-exchange-receipt-email-address"><?php _e( 'Email Address' ) ?></label></th>
 			<td>
-				<?php $form->add_text_box( 'receipt_email_address', array( 'class' => 'normal-text' ) ); ?>
+				<?php $form->add_text_box( 'receipt-email-address', array( 'class' => 'normal-text' ) ); ?>
 				<br /><span class="description"><?php _e( 'Email address used for customer receipt emails.', 'LION' ); ?></span>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it_exchange_from_email_name"><?php _e( 'Email Name' ) ?></label></th>
+			<th scope="row"><label for="it-exchange-from-email-name"><?php _e( 'Email Name' ) ?></label></th>
 			<td>
-				<?php $form->add_text_box( 'receipt_email_name', array( 'class' => 'normal-text' ) ); ?>
+				<?php $form->add_text_box( 'receipt-email-name', array( 'class' => 'normal-text' ) ); ?>
 				<br /><span class="description"><?php _e( 'Name used for account that sends customer receipt emails.', 'LION' ); ?></span>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it_exchange_receipt_email_subject"><?php _e( 'Subject Line' ) ?></label></th>
+			<th scope="row"><label for="it-exchange-receipt-email-subject"><?php _e( 'Subject Line' ) ?></label></th>
 			<td>
-				<?php $form->add_text_box( 'receipt_email_subject', array( 'class' => 'normal-text' ) ); ?>
+				<?php $form->add_text_box( 'receipt-email-subject', array( 'class' => 'normal-text' ) ); ?>
 				<br /><span class="description"><?php _e( 'Subject line used for customer receipt emails.', 'LION' ); ?></span>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it_exchange_receipt_email_template"><?php _e( 'Email Template' ) ?></label></th>
+			<th scope="row"><label for="it-exchange-receipt-email-template"><?php _e( 'Email Template' ) ?></label></th>
 			<td>
 				<?php $form->add_text_area( 'receipt_email_template', array( 'rows' => 10, 'cols' => 30, 'class' => 'large-text' ) ); ?>
 			</td>

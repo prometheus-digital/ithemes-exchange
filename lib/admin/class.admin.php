@@ -82,11 +82,11 @@ class IT_Exchange_Admin {
 		add_action( 'admin_init', array( $this, 'save_core_page_settings' ) );
 
 		// Email settings callback
-		add_filter( 'it_exchange_general_settings_tab_callback-email', array( $this, 'register_email_settings_tab_callback' ) );
+		add_filter( 'it_exchange_general_settings_tab_callback_email', array( $this, 'register_email_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_email_settings_tab_link' ) );
 
 		// Page settings callback
-		add_filter( 'it_exchange_general_settings_tab_callback-pages', array( $this, 'register_pages_settings_tab_callback' ) );
+		add_filter( 'it_exchange_general_settings_tab_callback_pages', array( $this, 'register_pages_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_pages_settings_tab_link' ) );
 
 		// General Settings Defaults
@@ -147,13 +147,13 @@ class IT_Exchange_Admin {
 		// Add Settings Menu Item
 		$settings_callback = array( $this, 'print_exchange_settings_page' );
 		if ( 'it-exchange-settings' == $this->_current_page && ! empty( $this->_current_tab ) )
-			$settings_callback = apply_filters( 'it_exchange_general_settings_tab_callback-' . $this->_current_tab, $settings_callback );
+			$settings_callback = apply_filters( 'it_exchange_general_settings_tab_callback_' . $this->_current_tab, $settings_callback );
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->admin_menu_capability, 'it-exchange-settings', $settings_callback );
 
 		// Add Add-ons menu item
 		$callback = array( $this, 'print_exchange_add_ons_page' );
-		if ( 'it-exchange-addons' == $this->_current_page && ! empty( $_GET['add_on_settings'] ) ) {
-			if ( $addon = it_exchange_get_addon( $_GET['add_on_settings'] ) ) {
+		if ( 'it-exchange-addons' == $this->_current_page && ! empty( $_GET['add-on-settings'] ) ) {
+			if ( $addon = it_exchange_get_addon( $_GET['add-on-settings'] ) ) {
 				if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) )
 					$callback = $addon['options']['settings-callback'];
 			}
@@ -416,7 +416,7 @@ class IT_Exchange_Admin {
 		if ( $enable_addon ) {
 			if ( $enabled = it_exchange_get_addon( $enable_addon ) )  {
 				if ( ! empty( $enabled['options']['settings-callback'] ) && is_callable( $enabled['options']['settings-callback'] ) )
-					$redirect_to .= '&add_on_settings=' . $enable_addon;
+					$redirect_to .= '&add-on-settings=' . $enable_addon;
 			}
 		}
 
