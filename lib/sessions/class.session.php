@@ -72,7 +72,6 @@ class IT_Exchange_Session {
 	 * @return void
 	*/
 	function register_hooks() {
-		//add_action( 'init', array( $this, 'show_data' ) );
 	}
 
 
