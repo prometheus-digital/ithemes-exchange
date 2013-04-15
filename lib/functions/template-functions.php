@@ -125,7 +125,7 @@ function it_exchange_set_template_part_args( $args, $slug, $name=false ) {
 function it_exchange_get_template_part_args( $template_part ) {
 	$args = empty( $GLOBALS['it_exchange']['template_part_args'][$template_part] ) ? false : $GLOBALS['it_exchange']['template_part_args'][$template_part] ;
 
-	return apply_filters( 'it_exchange_template_part_args-' . $template_part, $args );
+	return apply_filters( 'it_exchange_template_part_args_' . $template_part, $args );
 }
 
 /**
