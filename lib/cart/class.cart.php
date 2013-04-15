@@ -45,7 +45,7 @@ class IT_Exchange_Shopping_Cart {
 
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_add_product_to_cart_nonce_var', '_wpnonce' );
-		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_exchange_add_product_to_cart-' . $product_id ) )
+		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-add-product-to-cart-' . $product_id ) )
 			$error = 'product-not-added-to-cart';
 
 		// Add product
@@ -76,7 +76,7 @@ class IT_Exchange_Shopping_Cart {
 		$message_var = it_exchange_get_action_var( 'alert_message' );
 		$cart        = it_exchange_get_page_url( 'cart' );
 		if ( empty( $_REQUEST[$nonce_var] ) 
-				|| ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_exchange_cart_action-' . session_id() ) 
+				|| ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) 
 				|| ! it_exchange_empty_shopping_cart()
 		) {
 			$url  = add_query_arg( array( $error_var => 'cart-not-emptied' ), $cart );
@@ -107,7 +107,7 @@ class IT_Exchange_Shopping_Cart {
 
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_remove_product_from_cart_nonce_var', '_wpnonce' );
-		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_exchange_remove_product_from_cart-' . $product_id ) || ! it_exchange_remove_product_from_shopping_cart( $product_id ) ) {
+		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-remove-product-from-cart-' . $product_id ) || ! it_exchange_remove_product_from_shopping_cart( $product_id ) ) {
 			$var = it_exchange_get_action_var( 'error_message' );
 			$url  = add_query_arg( array( $var => 'product-not-removed' ), $cart_url );
 			wp_redirect( $url );
@@ -129,7 +129,7 @@ class IT_Exchange_Shopping_Cart {
 	function handle_update_cart_request() {
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
-		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_exchange_cart_action-' . session_id() ) || ! it_exchange_update_shopping_cart() ) {
+		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) || ! it_exchange_update_shopping_cart() ) {
 			$var = it_exchange_get_action_var( 'error_message' );
 			$cart = it_exchange_get_page_url( 'cart' );
 			$url  = add_query_arg( array( $var => 'cart-not-updated' ), $cart );
@@ -176,7 +176,7 @@ class IT_Exchange_Shopping_Cart {
 
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_checkout_action_nonce_var', '_wpnonce' );
-		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it_exchange_checkout_action-' . session_id() ) ) {
+		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-checkout-action-' . session_id() ) ) {
 			it_exchange_notify_failed_transaction( 'failed-transaction' );
 			return false;
 		}
@@ -194,7 +194,7 @@ class IT_Exchange_Shopping_Cart {
 		$requested_transaction_method = empty( $_REQUEST[$method_var] ) ? false : $_REQUEST[$method_var];
 		$enabled_addons = it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
 		if ( ! $requested_transaction_method || empty( $enabled_addons[$requested_transaction_method] ) ) {
-			do_action( 'it_exchange_error-bad_transaction_method_at_purchase', $requested_transaction_method );
+			do_action( 'it_exchange_error_bad_transaction_method_at_purchase', $requested_transaction_method );
 			it_exchange_notify_failed_transaction( 'bad-transaction-method' );
 			return false;
 		}
@@ -202,7 +202,7 @@ class IT_Exchange_Shopping_Cart {
 		// Verify cart total is a positive number
 		$cart_total = number_format( it_exchange_get_cart_total(), 2);
 		if ( $cart_total < 0.01 ) {
-			do_action( 'it_exchange_error-negative_cart_total_on_checkout', $cart_total );
+			do_action( 'it_exchange_error_negative_cart_total_on_checkout', $cart_total );
 			it_exchange_notify_failed_transaction( 'negative-cart-total' );
 			return false;
 		}
@@ -221,9 +221,9 @@ class IT_Exchange_Shopping_Cart {
 		$transaction_object->total    = $cart_total;
 
 		// Setup actions for success / failure
-		add_action( 'it_exchange_add_transaction_success-' . $requested_transaction_method, 'it_exchange_empty_shopping_cart' );
-		add_action( 'it_exchange_add_transaction_success-' . $requested_transaction_method, 'it_exchange_do_confirmation_redirect' );
-		add_action( 'it_exchange_add_transaction_failed-' . $requested_transaction_method, 'it_exchange_notify_failed_transaction' );
+		add_action( 'it_exchange_add_transaction_success_' . $requested_transaction_method, 'it_exchange_empty_shopping_cart' );
+		add_action( 'it_exchange_add_transaction_success_' . $requested_transaction_method, 'it_exchange_do_confirmation_redirect' );
+		add_action( 'it_exchange_add_transaction_failed_' . $requested_transaction_method, 'it_exchange_notify_failed_transaction' );
 
 		// Do the transaction
 		it_exchange_do_transaction( $requested_transaction_method, $transaction_object );
@@ -241,7 +241,7 @@ class IT_Exchange_Shopping_Cart {
 	function handle_update_cart_quantity_request() {
 
 		// Get Quantities form REQUEST
-		$quantities = empty( $_POST['product-quantity'] ) ? false : (array) $_POST['product-quantity'];
+		$quantities = empty( $_REQUEST['product-quantity'] ) ? false : (array) $_REQUEST['product-quantity'];
 		if ( ! $quantities )
 			return;
 		
