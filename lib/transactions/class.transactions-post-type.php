@@ -133,7 +133,7 @@ class IT_Exchange_Transaction_Post_Type {
 		do_action( 'it_exchange_save_transaction_unvalidated', $post );
 		foreach( (array) $transaction_method_addons as $slug => $params ) { 
 			if ( $slug == $transaction_method ) { 
-				do_action( 'it_exchange_save_transaction_unvalidated-' . $slug, $post );
+				do_action( 'it_exchange_save_transaction_unvalidated_' . $slug, $post );
 			}   
 		}   
 
@@ -148,7 +148,7 @@ class IT_Exchange_Transaction_Post_Type {
 		do_action( 'it_exchange_save_transaction', $post );
 		foreach( (array) $transaction_method_addons as $slug => $params ) { 
 			if ( $slug == $transaction_method ) { 
-				do_action( 'it_exchange_save_transaction-' . $slug, $post );
+				do_action( 'it_exchange_save_transaction_' . $slug, $post );
 			}   
 		}   
 	}

@@ -115,8 +115,8 @@ class IT_Exchange_Transaction {
 	function set_transaction_method() {
 		global $pagenow;
 		if ( ! $transaction_method = get_post_meta( $this->ID, '_it_exchange_transaction_method', true ) ) {
-			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['transaction_method'] ) )	
-				$transaction_method = $_GET['transaction_method'];		
+			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['transaction-method'] ) )	
+				$transaction_method = $_GET['transaction-method'];		
 		}
 		$this->transaction_method = $transaction_method;
 	}
