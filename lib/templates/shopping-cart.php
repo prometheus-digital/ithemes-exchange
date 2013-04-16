@@ -53,7 +53,7 @@ $cart_products      = it_exchange_get_cart_products();
 				<p><?php _e( 'Cart Subtotal', 'LION' ); ?>&nbsp; $<?php esc_html_e( it_exchange_get_cart_subtotal() ); ?></p>
 			</div>
 			<?php do_action( 'it_exchange_shopping_cart_form_bottom' ); ?>
-			<?php wp_nonce_field( 'it_exchange_cart_action_' . session_id() ); ?>
+			<?php wp_nonce_field( 'it-exchange-cart-action-' . session_id() ); ?>
 		</form>
 	<?php else: ?>
 		<?php _e( 'Your cart is empty', 'LION' ); ?></p>

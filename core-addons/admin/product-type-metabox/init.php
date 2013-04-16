@@ -88,7 +88,9 @@ class IT_Exchange_Core_Addon_Product_Type_Meta_Box {
 			return;
 
 		// If there is an updated product type in the POST array, use that. Otherwise, use the url param if not empty.
-		$product_type = empty ( $_POST['it-exchange-product-type'] ) && ! empty( $_GET['product-type'] ) ? $_GET['product-type'] : $_POST['it-exchange-product-type'];
+		$product_type = empty ( $_POST['it-exchange-product-type'] ) && ! empty( $_GET['it-exchange-product-type'] ) ? $_GET['it-exchange-product-type'] : false;
+		if ( ! empty( $_POST['it-exchange-product-type'] ) )
+			$product_type = $_POST['it-exchange-product-type'];
 
 		// If we have a product_type, update
 		if ( $product_type )

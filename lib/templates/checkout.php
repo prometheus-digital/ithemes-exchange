@@ -93,7 +93,7 @@ if ( ! is_user_logged_in() )
 			&nbsp;<a href="<?php esc_attr_e( it_exchange_get_page_url( 'cart' ) ); ?>"><?php _e( 'Back to cart', 'LION' ); ?></a>
 		</p>
 	</div>
-	<?php wp_nonce_field( 'it_exchange_checkout_action-' . session_id() ); ?>
+	<?php wp_nonce_field( 'it-exchange-checkout-action-' . session_id() ); ?>
 	<?php do_action( 'it_exchange_checkout_form_bottom' ); ?>
 </form>
 <?php do_action( 'it_exchange_checkout_html_bottom' ); ?>

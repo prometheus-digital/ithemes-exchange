@@ -120,7 +120,7 @@ class IT_Exchange_Manual_Payments_Add_On {
 			do_action( 'it_exchange_save_add_on_settings_manual-payments' );
 		}
 
-		add_filter( 'it_storage_get_defaults_exchange_addon_manual-payments', array( $this, 'set_default_settings' ) );
+		add_filter( 'it_storage_get_defaults_exchange-addon-manual-payments', array( $this, 'set_default_settings' ) );
 	}
 
 	function print_settings_page() {
@@ -178,13 +178,13 @@ class IT_Exchange_Manual_Payments_Add_On {
 	*/
 	function get_form_errors( $values ) {
 		$errors = array();
-		if ( empty( $values['manual_payments_title'] ) )
+		if ( empty( $values['manual-payments-title'] ) )
 			$errors[] = __( 'The Title field cannot be left blank', 'LION' );
-		if ( empty( $values['manual_payments_instructions'] ) )
+		if ( empty( $values['manual-payments-instructions'] ) )
 			$errors[] = __( 'Please leave some instructions for customers checking out with this transaction method', 'LION' );
 
 		$valid_status_options = $this->get_default_status_options();
-		if ( empty( $values['manual_payments_default_status'] ) || empty( $valid_status_options[$values['manual_payments_default_status']] ) )
+		if ( empty( $values['manual-payments-default-status'] ) || empty( $valid_status_options[$values['manual-payments-default-status']] ) )
 			$errors[] = __( 'Please select a valid default transaction status.', 'LION' );
 
 		return $errors;
@@ -209,9 +209,9 @@ class IT_Exchange_Manual_Payments_Add_On {
 	 * @return array settings
 	*/
 	function set_default_settings( $defaults ) {
-		$defaults['manual_payments_title']          = __( 'Pay with check', 'LION' );
-		$defaults['manual_payments_instructions']   = __( 'Thank you for your order. We will contact you shortly for payment.', 'LION' );
-		$defaults['manual_payments_default_status'] = 'pending';
+		$defaults['manual-payments-title']          = __( 'Pay with check', 'LION' );
+		$defaults['manual-payments-instructions']   = __( 'Thank you for your order. We will contact you shortly for payment.', 'LION' );
+		$defaults['manual-payments-default-status'] = 'pending';
 		return $defaults;
 	}
 }

@@ -17,6 +17,6 @@ if ( ! $args['product_id'] )
 	<?php do_action( 'it_exchange_add_product_to_cart_form_top', $args['product_id'] ); ?>
 	<input type="submit" name="" value="<?php  esc_attr_e( $args['title'] ); ?>" />
 	<?php do_action( 'it_exchange_add_product_to_cart_form_bottom', $args['product_id'] ); ?>
-	<?php wp_nonce_field( 'it_exchange_add_product_to_cart-' . $args['product_id'] ); ?>
+	<?php wp_nonce_field( 'it-exchange-add-product-to-cart-' . $args['product_id'] ); ?>
 </form>
 <?php do_action( 'it_exchange_add_product_to_cart_form_after', $args['product_id'] ); ?>

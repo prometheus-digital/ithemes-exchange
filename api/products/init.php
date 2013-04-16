@@ -21,8 +21,8 @@ function it_exchange_get_product_type( $post=false ) {
 		return $product->product_type;
 
 	// Return query arg if is present
-	if ( ! empty ( $_GET['product-type'] ) )
-		return $_GET['product-type'];
+	if ( ! empty ( $_GET['it-exchange-product-type'] ) )
+		return $_GET['it-exchange-product-type'];
 
 	return false;
 }

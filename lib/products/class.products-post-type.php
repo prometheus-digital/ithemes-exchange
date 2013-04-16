@@ -27,6 +27,8 @@ class IT_Exchange_Product_Post_Type {
 		add_action( 'admin_init', array( $this, 'set_add_new_item_label' ) );
 		add_action( 'admin_init', array( $this, 'set_edit_item_label' ) );
 		add_action( 'it_exchange_save_product_unvalidated', array( $this, 'set_initial_post_product_type' ) );
+		add_action( 'admin_head-edit.php', array( $this, 'modify_post_new_file' ) );
+		add_action( 'admin_head-post.php', array( $this, 'modify_post_new_file' ) );
 		add_filter( 'manage_edit-it_exchange_prod_columns', array( $this, 'add_product_type_column_to_view_all_table' ) );
 		add_filter( 'manage_edit-it_exchange_prod_sortable_columns', array( $this, 'make_product_type_column_sortable' ) );
 		add_filter( 'manage_it_exchange_prod_posts_custom_column', array( $this, 'add_product_type_info_to_view_all_table_rows' ) );
@@ -246,6 +248,20 @@ class IT_Exchange_Product_Post_Type {
 			'exclude_from_search'       => true,
 		);
 		register_post_status( '_it_exchange_disab', $args );
+	}
+
+	
+	/**
+	 * Modifies the value of $post_new_file to change the link attached to the Add New button next to the H2 on all / edit products
+	 *
+	 * @since 0.3.10
+	 * @return void
+	*/
+	function modify_post_new_file() {
+		global $current_screen, $post_new_file;
+		$product_type = it_exchange_get_product_type();
+		if ( ! empty( $post_new_file) && ! empty( $product_type ) && ( 'edit-it_exchange_prod' == $current_screen->id || 'it_exchange_prod' == $current_screen->id ) )
+			$post_new_file = add_query_arg( array( 'it-exchange-product-type' => $product_type ), $post_new_file );
 	}
 
 	/**

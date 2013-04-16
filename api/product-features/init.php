@@ -79,6 +79,7 @@ function it_exchange_remove_feature_support_for_product_type( $feature_key, $pro
 */
 function it_exchange_product_type_supports_feature( $product_type, $feature_key ) {
 	$product_features = it_exchange_get_registered_product_features();
+
 	if ( empty( $product_features[$feature_key] ) )
 		return false;
 

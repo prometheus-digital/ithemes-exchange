@@ -117,8 +117,8 @@ class IT_Exchange_Product {
 	function set_product_type() {
 		global $pagenow;
 		if ( ! $product_type = get_post_meta( $this->ID, '_it_exchange_product_type', true ) ) {
-			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['product-type'] ) )	
-				$product_type = $_GET['product-type'];
+			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['it-exchange-product-type'] ) )	
+				$product_type = $_GET['it-exchange-product-type'];
 		}
 		$this->product_type = $product_type;
 	}
@@ -218,8 +218,9 @@ class IT_Exchange_Product {
 					$exchange_product_feature = $option;
 				}
 
-                if ( ! it_exchange_product_type_supports_feature( $this->product_type, $exchange_product_feature ) )
+                if ( ! it_exchange_product_type_supports_feature( $this->product_type, $exchange_product_feature ) ) {
 					remove_post_type_support( 'it_exchange_prod', $option );
+				}
             }   
         }   
     }  

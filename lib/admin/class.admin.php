@@ -175,12 +175,12 @@ class IT_Exchange_Admin {
 			if ( 1 == $add_on_count ) {
 				// If we only have one product-type enabled, add standard post_type pages
 				$product = reset( $enabled_product_types );
-				add_submenu_page( 'it-exchange', 'Add Product', 'Add Product', $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&product_type=' . $product['slug'] );
+				add_submenu_page( 'it-exchange', 'Add Product', 'Add Product', $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . $product['slug'] );
 			} else if ( $add_on_count > 1 ) {
 				// If we have more than one product type, add them each separately
 				foreach( $enabled_product_types as $type => $params ) {
 					$name = empty( $params['options']['labels']['singular_name'] ) ? 'Product' : esc_attr( $params['options']['labels']['singular_name'] );
-					add_submenu_page( 'it-exchange', 'Add ' . $name, 'Add ' . $name, $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&product_type=' . esc_attr( $params['slug'] ) );
+					add_submenu_page( 'it-exchange', 'Add ' . $name, 'Add ' . $name, $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . esc_attr( $params['slug'] ) );
 				}
 			}
 		}
@@ -273,9 +273,9 @@ class IT_Exchange_Admin {
 	*/
 	function set_general_settings_defaults( $values ) {
 		$defaults = array(
-			'default_currency'             => 'USD',
-			'currency_thousands_separator' => ',',
-			'currency_decimals_separator'  => '.',
+			'default-currency'             => 'USD',
+			'currency-thousands-separator' => ',',
+			'currency-decimals-separator'  => '.',
 		);
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;
@@ -460,7 +460,7 @@ class IT_Exchange_Admin {
 		global $pagenow;
 		$product_type_add_ons = it_exchange_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
 		$post_type            = empty( $_GET['post_type'] ) ? false : $_GET['post_type'];
-		$product_type         = empty( $_GET['product_type'] ) ? false : $_GET['product_type'];
+		$product_type         = empty( $_GET['it-exchange-product-type'] ) ? false : $_GET['it-exchange-product-type'];
 
 		if ( count( $product_type_add_ons ) > 1 && 'post-new.php' == $pagenow && 'it_exchange_prod' == $post_type ) {
 			if ( empty( $product_type_add_ons[$product_type] ) ) {

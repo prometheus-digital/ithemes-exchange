@@ -21,7 +21,7 @@
 			// TEMPORARY UI
 			echo '<div style="height:200px;width:200px;border: 1px solid #444;float:left;margin-right:10px;"><div style="height:20px;background:#999;color:#fff;width:100%;text-align:center;padding:10px 0;">' . $params['name'] . '</div><p style="padding:5px">Category: ' . $add_on_cats[$params['options']['category']]['name'] . '</p><p style="padding:5px;">' . $params['description'] . '</p>';
 			if ( ! empty( $params['options']['settings-callback'] ) && is_callable( $params['options']['settings-callback'] ) ) 
-				echo '<p><a href="' . admin_url( 'admin.php?page=it-exchange-addons&add_on_settings=' . $slug ) . '">Settings</a>';
+				echo '<p><a href="' . admin_url( 'admin.php?page=it-exchange-addons&add-on-settings=' . $slug ) . '">Settings</a>';
 			echo '<p style="margin-left:60px;text-align:center;width:75px;background:#999;border:1px solid #777;padding:2px;"><a href="' . wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-disable-addon=' . $slug, 'exchange-disable-add-on' ) . '" style="text-decoration:none;color:#fff;">Disable</a></p></div>';
 		}   
 	} else {
