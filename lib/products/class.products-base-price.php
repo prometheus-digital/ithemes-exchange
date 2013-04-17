@@ -24,6 +24,7 @@ class IT_Exchange_Base_Price {
 		add_action( 'it_exchange_update_product_feature_base_price', array( $this, 'save_base_price' ), 9, 2 );
 		add_filter( 'it_exchange_get_product_feature_base_price', array( $this, 'get_base_price' ), 9, 2 );
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_base_price_support_to_product_types' ) );
+		add_filter( 'it_exchange_product_has_feature_base_price', array( $this, 'product_has_base_price') , 9, 2 );
 	}
 
 	/**
@@ -161,6 +162,22 @@ class IT_Exchange_Base_Price {
 	function get_base_price( $base_price, $product_id ) {
 		$base_price = get_post_meta( $product_id, '_it_exchange_base_price', true );
 		return $base_price;
+	}
+
+	/**
+	 * Does the product have a base price?
+	 *
+	 * @since 0.4.0
+	 * @param mixed $result Not used by core
+	 * @param integer $product_id
+	 * @return boolean
+	*/
+	function product_has_base_price( $result, $product_id ) {
+		// Does this product type support base price?
+		$product_type = it_exchange_get_product_type( $product_id );
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'base_price' ) ) 
+			return false;
+		return (boolean) $this->get_base_price( false, $product_id );
 	}
 }
 $IT_Exchange_Base_Price = new IT_Exchange_Base_Price();

@@ -7,7 +7,8 @@
 */
 
 /**
- * Check if a given product has a specific feature *
+ * Check if a given product has a specific feature 
+ *
  * @since 0.3.8
  * @param integer $product_id the WordPress post ID for the product
  * @param string $feature_key the slug for the feature
@@ -36,10 +37,11 @@ function it_exchange_update_product_feature( $product_id, $feature_key, $feature
  * @since 0.3.8
  * @param integer $product_id the WordPress post ID for the product
  * @param string $feature_key the slug for the feature
+ * @param array $options
  * @return mixed the value of the feature
 */
-function it_exchange_get_product_feature( $product_id, $feature_key ) {
-	return apply_filters( 'it_exchange_get_product_feature_' . $feature_key, false, $product_id );
+function it_exchange_get_product_feature( $product_id, $feature_key, $options=array() ) {
+	return apply_filters( 'it_exchange_get_product_feature_' . $feature_key, false, $product_id, $options );
 }
 
 /**
@@ -111,3 +113,4 @@ function it_exchange_get_registered_product_features() {
 	$product_features = isset( $GLOBALS['it_exchange']['product_features'] ) ? (array) $GLOBALS['it_exchange']['product_features'] : array();
 	return $product_features;
 }
+

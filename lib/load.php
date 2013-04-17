@@ -33,8 +33,14 @@ require( $this->_plugin_path . 'lib/transactions/class.transaction.php' );
 // Template Functions
 require( $this->_plugin_path . 'lib/functions/template-functions.php' );
 
+// Other Functions
+require( $this->_plugin_path . 'lib/functions/functions.php' );
+
 // Customer Class
 require( $this->_plugin_path . 'lib/customers/class.customer.php' );
+
+// API
+require( $this->_plugin_path . 'lib/api/class.api.php' );
 
 // Sessions
 if ( ! is_admin() ) {

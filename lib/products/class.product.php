@@ -195,15 +195,15 @@ class IT_Exchange_Product {
 
 				// Map Core WP post_type supports to our addon names
 				if ( 'title' == $option ) {
-					$exchange_product_feature = 'product-title';
+					$exchange_product_feature = 'title';
 				} else if ( 'editor' == $option ) {
-					$exchange_product_feature = 'product-description';
+					$exchange_product_feature = 'extended-description';
 				} else if ( 'author' == $option ) {
-					$exchange_product_feature = 'wp-author';
+					$exchange_product_feature = 'author';
 				} else if ( 'thumbnail' == $option ) {
-					$exchange_product_feature = 'wp-featured-image';
+					$exchange_product_feature = 'featured-image';
 				} else if ( 'excerpt' == $option ) {
-					$exchange_product_feature = 'wp-excerpt';
+					$exchange_product_feature = 'description';
 				} else if ( 'trackbacks' == $option ) {
 					$exchange_product_feature = 'wp-trackbacks';
 				} else if ( 'custom-fields' == $option ) {

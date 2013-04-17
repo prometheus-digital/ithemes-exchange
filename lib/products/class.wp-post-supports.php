@@ -18,19 +18,23 @@ class IT_Exchange_WP_Post_Supports {
 
 		// WordPress Post Title
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_title_support_as_product_feature' ) );
-		add_filter( 'it_exchange_get_product_feature_product_title', array( $this, 'get_title' ), 9, 2 );
+		add_filter( 'it_exchange_product_has_feature_title', array( $this, 'has_title' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_title', array( $this, 'get_title' ), 9, 2 );
 
-		// WordPress Post Content (Product Description)
+		// WordPress Post Content (Extended Description)
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_post_content_as_product_feature' ) );
-		add_filter( 'it_exchange_get_product_feature_product_description', array( $this, 'get_product_description' ), 9, 2 );
+		add_filter( 'it_exchange_product_has_feature_extended-description', array( $this, 'has_extended_description' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_extended-description', array( $this, 'get_extended_description' ), 9, 2 );
 
 		// WordPress Featured Image as a Product Feature
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_featured_image_as_product_feature' ) );
-		add_filter( 'it_exchange_get_product_feature_wp-featured-image', array( $this, 'get_featured_image' ), 9, 2 );
+		add_filter( 'it_exchange_product_has_feature_featured-image', array( $this, 'has_featured_image' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_featured-image', array( $this, 'get_featured_image' ), 9, 3 );
 
-		// WordPress Excerpt
+		// WordPress Excerpt (Primary Description)
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_excerpt_as_product_feature' ) );
-		add_filter( 'it_exchange_get_product_feature_wp-excerpt', array( $this, 'get_excerpt' ), 9, 2 );
+		add_filter( 'it_exchange_product_has_feature_description', array( $this, 'has_description' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_description', array( $this, 'get_description' ), 9, 2 );
 
 		// WordPress Post Author
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_author_support_as_product_feature' ) );
@@ -59,7 +63,7 @@ class IT_Exchange_WP_Post_Supports {
 	*/
 	function init_wp_title_support_as_product_feature() {
 		// Register the product feature
-		$slug        = 'product-title';
+		$slug        = 'title';
 		$description = __( 'Adds support for default WordPress Title field', 'LION' );
 		it_exchange_register_product_feature( $slug, $description );
 
@@ -83,6 +87,20 @@ class IT_Exchange_WP_Post_Supports {
 	}
 
 	/**
+	 * Return boolean if the current product has a title
+	 *
+	 * @since 0.4.0
+	 * @return boolean
+	*/
+	function has_title( $result, $product_id ) {
+		// Does product type support it?
+		$product_type = it_exchange_get_product_type( $product_id );
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'title' ) ) 
+			return false;
+		return (boolean) $this->get_title( $result, $product_id );
+	}
+
+	/**
 	 * Register the WP post_content as a Product Feature (product description)
 	 *
 	 * Register it and tack it onto all registered product-type addons by default
@@ -92,7 +110,7 @@ class IT_Exchange_WP_Post_Supports {
 	*/
 	function init_wp_post_content_as_product_feature() {
 		// Register the product feature
-		$slug        = 'product-description';
+		$slug        = 'extended-description';
 		$description = __( 'Adds support for the post content area to product types.', 'LION' );
 		it_exchange_register_product_feature( $slug, $description );
 
@@ -111,8 +129,25 @@ class IT_Exchange_WP_Post_Supports {
 	 * @param integer product_id the WordPress post ID
 	 * @return string post_content (product descritpion) 
 	*/
-	function get_product_description( $description, $product_id ) { 
-		return get_the_content( $product_id );
+	function get_extended_description( $description, $product_id ) { 
+		if ( $product = it_exchange_get_product( $product_id ) ) {
+			return apply_filters( 'the_content', $product->post_content );
+		}
+		return false;
+	}
+
+	/**
+	 * Return boolean if the current product has an extended description
+	 *
+	 * @since 0.4.0
+	 * @return boolean
+	*/
+	function has_extended_description( $result, $product_id ) {
+		// Does product type support it?
+		$product_type = it_exchange_get_product_type( $product_id );
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'extended-description' ) ) 
+			return false;
+		return (boolean) $this->get_extended_description( $result, $product_id );
 	}
 
 	/**
@@ -125,7 +160,7 @@ class IT_Exchange_WP_Post_Supports {
 	*/
 	function init_wp_featured_image_as_product_feature() {
 		// Register the product feature
-		$slug        = 'wp-featured-image';
+		$slug        = 'featured-image';
 		$description = __( 'Adds support for WP Featured Image to a specific product type', 'LION' );
 		it_exchange_register_product_feature( $slug, $description );
 
@@ -146,9 +181,24 @@ class IT_Exchange_WP_Post_Supports {
 	 * @param integer product_id the WordPress post ID
 	 * @return string featured image
 	*/
-	function get_featured_image( $featured_image, $product_id ) { 
+	function get_featured_image( $featured_image, $product_id, $options=array() ) { 
+		$size = empty( $options['size'] ) ? 'thumbnail' : $options['size'];
 		if ( has_post_thumbnail( $product_id ) ) 
-			return get_the_post_thumbnail( $product_id );
+			return get_the_post_thumbnail( $product_id, $size );
+	}
+
+	/**
+	 * Return boolean if the current product has a featured image
+	 *
+	 * @since 0.4.0
+	 * @return boolean
+	*/
+	function has_featured_image( $result, $product_id ) {
+		// Does product type support it?
+		$product_type = it_exchange_get_product_type( $product_id );
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'featured-image' ) ) 
+			return false;
+		return (boolean) $this->get_featured_image( $result, $product_id );
 	}
 
 	/*
@@ -238,9 +288,15 @@ class IT_Exchange_WP_Post_Supports {
 	*/
 	function init_wp_excerpt_as_product_feature() {
 		// Register the product feature
-		$slug        = 'wp-excerpt';
+		$slug        = 'description';
 		$description = __( 'Adds support for the WP excerpt of the product', 'LION' );
 		it_exchange_register_product_feature( $slug, $description );
+
+		// Add it to all enabled product-type addons
+		$product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
+		foreach( $product_types as $key => $product_type ) { 
+			it_exchange_add_feature_support_to_product_type( $slug, $product_type['slug'] );
+		}   
 	}
 
 	/**
@@ -251,8 +307,25 @@ class IT_Exchange_WP_Post_Supports {
 	 * @param integer product_id the WordPress post ID
 	 * @return string post_excerpt
 	*/
-	function get_excerpt( $excerpt, $product_id ) { 
-		return get_the_excerpt( $product_id );
+	function get_description( $excerpt, $product_id ) { 
+		if ( $product = it_exchange_get_product( $product_id ) ) {
+			return apply_filters( 'the_excerpt', $product->post_excerpt);
+		}
+		return false;
+	}
+
+	/**
+	 * Return boolean if the current product has an description
+	 *
+	 * @since 0.4.0
+	 * @return boolean
+	*/
+	function has_description( $result, $product_id ) {
+		// Does product type support it?
+		$product_type = it_exchange_get_product_type( $product_id );
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'description' ) ) 
+			return false;
+		return (boolean) $this->get_description( $result, $product_id );
 	}
 
 	/**
