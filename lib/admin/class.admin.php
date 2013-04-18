@@ -76,6 +76,10 @@ class IT_Exchange_Admin {
 		// Redirect to Product selection on Add New if needed
 		add_action( 'admin_init', array( $this, 'redirect_post_new_to_product_type_selection_screen' ) );
 
+		// Force 1 column view on add / edit products
+		add_filter( 'screen_layout_columns', array( $this, 'modify_add_edit_page_layout' ) );
+		add_filter( 'get_user_option_screen_layout_it_exchange_prod', '__return_true' ); // __return_true returns '1' :)
+
 		// Save core settings
 		add_action( 'admin_init', array( $this, 'save_core_general_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_core_email_settings' ) );
@@ -655,6 +659,18 @@ class IT_Exchange_Admin {
 			return '<p>' . implode( '<br />', $errors ) . '</p>';
 		else
 			return false;
+	}
+
+	/**
+	 * Set the max columns option for the add / edit product page.
+	 *
+	 * @param $columns Existing array of how many colunns to show for a post type
+	 * @since 0.4.0
+	 * @return array Filtered array
+	*/
+	function modify_add_edit_page_layout( $columns ) {
+		$columns['it_exchange_prod'] = 1;
+		return $columns;
 	}
 }
 if ( is_admin() )
