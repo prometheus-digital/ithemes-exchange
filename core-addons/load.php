@@ -102,13 +102,6 @@ function it_exchange_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/admin/transaction-status-metabox/init.php',
 			'options'     => array( 'category' => 'admin' ),
 		),
-		// Digital Downloads
-		'digital-downloads' => array(
-			'name'        => __( 'Digital Downloads', 'LION' ),
-			'description' => __( 'This add-on will allow files to be added to products. Once a product is purchase, the customer has access to the files.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/digital-downloads/init.php',
-			'options'     => array( 'category' => 'product-features' ),
-		),
 		// Protected Content
 		'protected-content' => array(
 			'name'        => __( 'Protected Content', 'LION' ),
