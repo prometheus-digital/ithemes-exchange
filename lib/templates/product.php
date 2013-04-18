@@ -5,7 +5,6 @@
  * @since 0.4.0
  */
 ?>
-
 	<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 		<header class="entry-header">
 
@@ -14,8 +13,6 @@
 			<?php it_exchange( 'product', 'title' ); ?>
 
 			<?php it_exchange( 'product', 'base-price' ); ?>
-
-			<?php it_exchange( 'product', 'description' ); ?>
 
 			<?php it_exchange( 'product', 'extended-description' ); ?>
 

@@ -31,10 +31,10 @@ class IT_Exchange_WP_Post_Supports {
 		add_filter( 'it_exchange_product_has_feature_featured-image', array( $this, 'has_featured_image' ), 9, 2 );
 		add_filter( 'it_exchange_get_product_feature_featured-image', array( $this, 'get_featured_image' ), 9, 3 );
 
-		// WordPress Excerpt (Primary Description)
+		// WordPress Excerpt
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_excerpt_as_product_feature' ) );
-		add_filter( 'it_exchange_product_has_feature_description', array( $this, 'has_description' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_description', array( $this, 'get_description' ), 9, 2 );
+		add_filter( 'it_exchange_product_has_feature_wp-excerpt', array( $this, 'has_excerpt' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_wp-excerpt', array( $this, 'get_excerpt' ), 9, 2 );
 
 		// WordPress Post Author
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_author_support_as_product_feature' ) );
@@ -288,15 +288,9 @@ class IT_Exchange_WP_Post_Supports {
 	*/
 	function init_wp_excerpt_as_product_feature() {
 		// Register the product feature
-		$slug        = 'description';
+		$slug        = 'wp-excerpt';
 		$description = __( 'Adds support for the WP excerpt of the product', 'LION' );
 		it_exchange_register_product_feature( $slug, $description );
-
-		// Add it to all enabled product-type addons
-		$product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
-		foreach( $product_types as $key => $product_type ) { 
-			it_exchange_add_feature_support_to_product_type( $slug, $product_type['slug'] );
-		}   
 	}
 
 	/**
@@ -307,7 +301,7 @@ class IT_Exchange_WP_Post_Supports {
 	 * @param integer product_id the WordPress post ID
 	 * @return string post_excerpt
 	*/
-	function get_description( $excerpt, $product_id ) { 
+	function get_excerpt( $excerpt, $product_id ) { 
 		if ( $product = it_exchange_get_product( $product_id ) ) {
 			return apply_filters( 'the_excerpt', $product->post_excerpt);
 		}
@@ -315,17 +309,17 @@ class IT_Exchange_WP_Post_Supports {
 	}
 
 	/**
-	 * Return boolean if the current product has an description
+	 * Return boolean if the current product has an excerpt
 	 *
 	 * @since 0.4.0
 	 * @return boolean
 	*/
-	function has_description( $result, $product_id ) {
+	function has_excerpt( $result, $product_id ) {
 		// Does product type support it?
 		$product_type = it_exchange_get_product_type( $product_id );
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'description' ) ) 
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'wp-excerpt' ) ) 
 			return false;
-		return (boolean) $this->get_description( $result, $product_id );
+		return (boolean) $this->get_excerpt( $result, $product_id );
 	}
 
 	/**

@@ -203,7 +203,7 @@ class IT_Exchange_Product {
 				} else if ( 'thumbnail' == $option ) {
 					$exchange_product_feature = 'featured-image';
 				} else if ( 'excerpt' == $option ) {
-					$exchange_product_feature = 'description';
+					$exchange_product_feature = 'wp-excerpt';
 				} else if ( 'trackbacks' == $option ) {
 					$exchange_product_feature = 'wp-trackbacks';
 				} else if ( 'custom-fields' == $option ) {

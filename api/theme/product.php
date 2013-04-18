@@ -22,7 +22,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	var $_tag_map = array(
 		'found'                  => 'found',
 		'title'                  => 'title',
-		'excerpt'	             => 'description',
+		'excerpt'	             => 'excerpt',
 		'description'            => 'description',
 		'content'                => 'extended_description',
 		'extendeddescription'    => 'extended_description',
@@ -185,6 +185,18 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 			return $result;
 		}
+		return false;
+	}
+
+	/**
+	 * The product's WP excerpt
+	 *
+	 * @since 0.4.0
+	 * @return string
+	*/
+	function excerpt( $options=array() ) {
+		if ( it_exchange_product_has_feature( $this->product->ID, 'wp-excerpt' ) )
+			return it_exchange_get_product_feature( $this->product->ID, 'wp-excerpt' );
 		return false;
 	}
 
