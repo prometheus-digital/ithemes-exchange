@@ -1,6 +1,8 @@
-/**
-#it-exchange-add-edit-product-interface {
-	background: transparent;
+/** -----------------------------------------------------:[ admin ui reset ]:---------- */
+#it-exchange-add-edit-product-interface,
+#it-exchange-add-edit-product-interface .postbox,
+#it-exchange-add-edit-product-interface .inside {
+	background: none;
 	border: 0;
 }
 #it-exchange-add-edit-product-interface div.handlediv,
@@ -8,29 +10,29 @@
 	display: none;
 }
 
-#it-exchange-product-title,
-#it_exchange_base_price,
-#it-exchange-product-description {
-	width: 300px;
+/** -----------------------------------------------------:[ normal fields ]:---------- */
+#it_exchange_normal-sortables label {
+	font-weight: bold;
+}
+#it_exchange_normal-sortables input,
+#it_exchange_normal-sortables textarea {
+	width: 100%;
+}
+#it-exchange-product-title {
 	float: left;
-	background: transparent;
-	border: 0;
+	width: 70%;
 }
-
-#postimagediv {
-	width: 300px;
-	float: right;
+#it_exchange_base_price {
+	float: left;
+	width: 30%;
 }
-
-#it-exchange-product-title .inside {
-	padding: 0;
-}
-
 #it-exchange-product-description {
-	clear:left;
+	clear: both;
+	width: 100%;
 }
 
-#it-exchange-advanced-div {
-	clear:both;
+/** -----------------------------------------------------:[ advanced ]:---------- */
+#it-exchange-advanced-div,
+#it_exchange_advanced-sortables {
+	display: none !important;
 }
-**/
