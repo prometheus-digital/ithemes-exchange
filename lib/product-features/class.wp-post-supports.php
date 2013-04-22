@@ -25,6 +25,7 @@ class IT_Exchange_WP_Post_Supports {
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_post_content_as_product_feature' ) );
 		add_filter( 'it_exchange_product_has_feature_extended-description', array( $this, 'has_extended_description' ), 9, 2 );
 		add_filter( 'it_exchange_get_product_feature_extended-description', array( $this, 'get_extended_description' ), 9, 2 );
+		add_action( 'admin_init', array( $this, 'init_extended_description_metaboxes' ) );
 
 		// WordPress Featured Image as a Product Feature
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_featured_image_as_product_feature' ) );
@@ -121,8 +122,74 @@ class IT_Exchange_WP_Post_Supports {
 		}   
 	}
 
+	/** 
+	 * Register's the metabox for any product type that supports the extended-description 
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function init_extended_description_metaboxes() {
+		// Abort if there are not product addon's currently enabled.
+		if ( ! $product_addons = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ) 
+			return;
+
+		// Loop through product types and register a metabox if it supports the feature 
+		foreach( $product_addons as $slug => $args ) { 
+			if ( it_exchange_product_type_supports_feature( $slug, 'extended-description' ) ) 
+				add_action( 'it_exchange_product_metabox_callback_' . $slug, array( $this, 'register_extended_description_metabox' ) );
+		}   
+	}
+
 	/**
-	 * Return the product's description
+	 * Registers the feature metabox for a specific product type
+	 *
+	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports the feature 
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function register_extended_description_metabox() {
+		add_meta_box( 'it-exchange-product-extended-description', __( 'Extended Description', 'LION' ), array( $this, 'print_extended_description_metabox' ), 'it_exchange_prod', 'it_exchange_advanced', 'high' );
+	}
+
+	/**
+	 * This echos the extended-description metabox.
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function print_extended_description_metabox( $post ) {
+		global $post_ID;
+		$post_ID = isset($post_ID) ? (int) $post_ID : 0;
+		?>
+		<div id="postdivrich" class="postarea edit-form-section">
+
+		<?php wp_editor($post->post_content, 'content', array('dfw' => true, 'tabfocus_elements' => 'insert-media-button,save-post', 'editor_height' => 360) ); ?>
+
+		<table id="post-status-info" cellspacing="0"><tbody><tr>
+			<td id="wp-word-count"><?php printf( __( 'Word count: %s' ), '<span class="word-count">0</span>' ); ?></td>
+			<td class="autosave-info">
+			<span class="autosave-message">&nbsp;</span>
+		<?php   
+			if ( 'auto-draft' != $post->post_status ) {
+				echo '<span id="last-edit">';
+				if ( $last_id = get_post_meta($post_ID, '_edit_last', true) ) {
+					$last_user = get_userdata($last_id);
+					printf(__('Last edited by %1$s on %2$s at %3$s'), esc_html( $last_user->display_name ), mysql2date(get_option('date_format'), $post->post_modified), mysql2date(get_option('time_format'), $post->post_modified));
+				} else {
+					printf(__('Last edited on %1$s at %2$s'), mysql2date(get_option('date_format'), $post->post_modified), mysql2date(get_option('time_format'), $post->post_modified));
+				}
+				echo '</span>';
+			} ?>    
+			</td> 
+		</tr></tbody></table>
+
+		</div>
+		<?php
+	}
+
+	/**
+	 * Return the product's extended description
 	 *
 	 * @since 0.3.8
 	 * @param mixed $description the values passed in by the WP Filter API. Ignored here.

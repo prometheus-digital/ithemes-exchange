@@ -53,7 +53,8 @@ function it_exchange_get_product_feature( $product_id, $feature_key, $options=ar
  * @return void
 */
 function it_exchange_add_feature_support_to_product_type( $feature_key, $product_type ) {
-	if ( ! isset( $GLOBALS['it_exchange']['product_features'][$feature_key] ) )
+	$_feature_key = str_replace( 'temp_disabled_', '', $feature_key );
+	if ( ! isset( $GLOBALS['it_exchange']['product_features'][$_feature_key] ) )
 		return;
 	$GLOBALS['it_exchange']['product_features'][$feature_key]['product_types'][$product_type] = true;
 }
@@ -67,8 +68,8 @@ function it_exchange_add_feature_support_to_product_type( $feature_key, $product
  * @return void
 */
 function it_exchange_remove_feature_support_for_product_type( $feature_key, $product_type ) {
-	if ( isset( $GLOBALS['it_exchange']['product_features'][$feature_key][$product_type] ) )
-		unset( $GLOBALS['it_exchange']['product_features'][$feature_key][$product_type] );
+	if ( isset( $GLOBALS['it_exchange']['product_features'][$feature_key]['product_types'][$product_type] ) )
+		$GLOBALS['it_exchange']['product_features'][$feature_key]['product_types'][$product_type] = false;
 }
 
 /**

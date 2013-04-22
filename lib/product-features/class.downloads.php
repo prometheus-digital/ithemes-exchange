@@ -21,9 +21,10 @@ class IT_Exchange_Product_Feature_Downloads {
 			add_action( 'init', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		}
+		add_action( 'init', array( $this, 'register_downloads_post_type' ) );
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
 		add_action( 'it_exchange_update_product_feature_downloads', array( $this, 'save_feature' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_downloads', array( $this, 'get_feature' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_downloads', array( $this, 'get_feature' ), 9, 3 );
 		add_filter( 'it_exchange_product_has_feature_downloads', array( $this, 'product_has_feature') , 9, 2 );
 	}
 
@@ -72,7 +73,7 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-downloads', __( 'Product Downloads', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'normal' );
+		add_meta_box( 'it-exchange-product-downloads', __( 'Product Downloads', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_advanced', 'low' );
 	}
 
 	/**
@@ -86,7 +87,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		$product = it_exchange_get_product( $post );
 
 		// Set the value of the feature for this product
-		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'downloads' );
+		$existing_downloads = it_exchange_get_product_feature( $product->ID, 'downloads' );
 
 		// Set description
 		$description = __( 'Attach any file here that you want delivered to the customer after purchasing this product', 'LION' );
@@ -94,6 +95,39 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// Echo the form field
 		echo $description;
+		
+		/** @todo Temporary UI **/
+		?>
+		<br />**UGLY TEMP UI**
+		<p>
+			<strong>Add Download</strong><br />
+			<input type="text" name="it-exchange-digital-downloads[0][source]" /> URL<br />
+			<input type="text" name="it-exchange-digital-downloads[0][name]" /> Name<br />
+			<input type="text" name="it-exchange-digital-downloads[0][limit]" /> Download Limit<br />
+			<input type="text" name="it-exchange-digital-downloads[0][expiration]" /> Expiration<br />
+		</p>
+		<hr />
+		<strong>Exisiting Downloads</strong>
+		<?php
+		if ( ! empty( $existing_downloads ) ) {
+			?>
+			<table>
+			<tr style="text-align:left;"><th>Delete</th><th>Name</th><th>Download Limit</th><th>Expiration</th></tr>
+			<?php
+			foreach( $existing_downloads as $download ) {
+				echo '<tr>';
+				echo '<td>';
+					echo '<input type="checkbox" name="it-exchange-delete-download[]" value="' . esc_attr( $download['id'] ) . '" />';
+				echo '</td>';
+				echo '<td>' . esc_attr( $download['name'] ) . '</td>';
+				echo '<td>' . esc_attr( $download['limit'] ) . '</td>';
+				echo '<td>' . esc_attr( $download['expiration'] ) . '</td>';
+				echo '</tr>';
+			}
+			echo '</table>';
+		} else {
+			echo '<p>No existing downloads</p>';
+		}
 	}
 
 	/**
@@ -119,15 +153,39 @@ class IT_Exchange_Product_Feature_Downloads {
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'downloads' ) )
 			return;
 
+		$to_delete = empty( $_POST['it-exchange-delete-download'] ) ? array() : (array) $_POST['it-exchange-delete-download'];
+
+		foreach( $to_delete as $download_id ) {
+			wp_delete_post( $download_id );
+		}
+
 		// Abort if key for downloads option isn't set in POST data
-		if ( ! isset( $_POST['_it-exchange-downloads'] ) )
+		if ( ! isset( $_POST['it-exchange-digital-downloads'] ) )
 			return;
 
-		// Get new value from post
-		$new_value = $_POST['_it-exchange-downloads'];
-		
-		// Save new value
-		it_exchange_update_product_feature( $product_id, 'downloads', $new_feature );
+		// Grab existing data
+		//$existing_downloads = $this->get_downloads_for_product( $product_id );
+
+		// Save Data
+		foreach ( (array) $_POST['it-exchange-digital-downloads'] as $file ) {
+
+			$source     = empty( $file['source'] ) ? false : $file['source'];
+			$name       = empty( $file['name'] ) ? false : $file['name'];
+			$limit      = empty( $file['limit'] ) ? false : $file['limit'];
+			$expiration = empty( $file['expiration'] ) ? false : $file['expiration'];
+
+			$data = array(
+				'product_id' => $product_id,
+				'source'     => $source,
+				'name'       => $name,
+				'limit'      => $limit,
+				'expiration' => $expiration,
+			);
+
+			if ( ! empty( $product_id ) && ! empty( $source ) && ! empty( $name ) )
+				it_exchange_update_product_feature( $product_id, 'downloads', $data );
+		}
+
 	}
 
 	/**
@@ -141,7 +199,19 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_value ) {
-		update_post_meta( $product_id, '_it-exchange-downloads', $new_value );
+
+		$data = array(
+			'post_type'   => 'it_exchange_download',
+			'post_status' => 'publish',
+			'post_title'  => $new_value['name'],
+			'post_parent' => $new_value['product_id'],
+		);
+
+		remove_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
+		if ( $download_id = wp_insert_post( $data ) ) {
+			update_post_meta( $download_id, '_it-exchange-download-info', $new_value );
+		}
+		add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 	}
 
 	/**
@@ -152,9 +222,34 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * @param integer product_id the WordPress post ID
 	 * @return string product feature
 	*/
-	function get_feature( $existing, $product_id ) {
-		$value = get_post_meta( $product_id, '_it-exchange-downloads', true );
-		return $value;
+	function get_feature( $existing, $product_id, $options ) {
+		//$value = get_post_meta( $product_id, '_it-exchange-downloads', false );
+
+		$args = array(
+			'post_parent' => $product_id,
+			'post_type'   => 'it_exchange_download',
+			'post_status' => 'publish',
+		);
+
+		if ( $download_posts = get_posts( $args ) ) {
+			$downloads = array();
+			foreach( $download_posts as $post ) {
+				$post_meta  = get_post_meta( $post->ID, '_it-exchange-download-info', true );
+				$source     = empty( $post_meta['source'] ) ? false : $post_meta['source'];
+				$limit      = empty( $post_meta['limit'] ) ? false : $post_meta['limit'];
+				$expiration = empty( $post_meta['expiration'] ) ? false : $post_meta['expiration'];
+
+				$downloads[$post->ID] = array(
+					'id' => $post->ID,
+					'name' => $post->post_title,
+					'source' => $source,
+					'limit'    => $limit,
+					'expiration' => $expiration,
+				);
+			}
+			return $downloads;
+		}
+		return false;
 	}
 
 	/**
@@ -172,5 +267,34 @@ class IT_Exchange_Product_Feature_Downloads {
 			return false;
 		return (boolean) $this->get_feature( false, $product_id );
 	}
+
+	/**
+	 * Registers the downloads post type
+	 *
+	 * @since 0.4.0
+	 * @since return void
+	*/
+	function register_downloads_post_type() {
+		$post_type = 'it_exchange_download';
+		$labels    = array(
+			'name'          => __( 'Exchange Downloads', 'LION' ),
+			'singular_name' => __( 'Download', 'LION' ),
+		);  
+		$options = array(
+			'labels' => $labels,
+			'description' => __( 'An iThemes Exchange Post Type for storing all Downloads in the system', 'LION' ),
+			'public'      => false,
+			'show_ui'     => false,
+			'show_in_nav_menus' => false,
+			'show_in_menu'      => false,
+			'show_in_admin_bar' => false,
+			'hierarchical'      => false,
+			'supports'          => array( // Support everything but page-attributes for add-on flexibility
+				'title', 'editor', 'author', 'custom-fields',
+			),  
+			'register_meta_box_cb' => array( $this, 'meta_box_callback' ),
+		);  
+		register_post_type( $post_type, $options );
+    }
 }
 $IT_Exchange_Product_Feature_Downloads = new IT_Exchange_Product_Feature_Downloads();

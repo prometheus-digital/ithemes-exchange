@@ -18,8 +18,14 @@ require( $this->_plugin_path . 'lib/products/class.products-post-type.php' );
 // Product Object
 require( $this->_plugin_path . 'lib/products/class.product.php' );
 
+// Product Feature: Tilte
+require( $this->_plugin_path . 'lib/product-features/class.title.php' );
+
 // Product Feature: Base Price
 require( $this->_plugin_path . 'lib/product-features/class.base-price.php' );
+
+// Product Feature: Product Description
+require( $this->_plugin_path . 'lib/product-features/class.description.php' );
 
 // Product Feature: Downloads
 require( $this->_plugin_path . 'lib/product-features/class.downloads.php' );
@@ -30,11 +36,14 @@ require( $this->_plugin_path . 'lib/product-features/class.purchase-message.php'
 // Product Feature: Product Availability 
 require( $this->_plugin_path . 'lib/product-features/class.product-availability.php' );
 
-// Product Feature: Quantity and Inventory
-require( $this->_plugin_path . 'lib/product-features/class.quantity-inventory.php' );
+// Product Feature: Quantity
+require( $this->_plugin_path . 'lib/product-features/class.quantity.php' );
 
-// WP Post Type Supports as Product Features
-require( $this->_plugin_path . 'lib/products/class.wp-post-supports.php' );
+// Product Feature: Inventory
+require( $this->_plugin_path . 'lib/product-features/class.inventory.php' );
+
+// Product Features: WP Post Type Supports as Product Features
+require( $this->_plugin_path . 'lib/product-features/class.wp-post-supports.php' );
 
 // Transaction Post Type
 require( $this->_plugin_path . 'lib/transactions/class.transactions-post-type.php' );

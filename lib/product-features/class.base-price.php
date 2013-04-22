@@ -72,7 +72,7 @@ class IT_Exchange_Base_Price {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it_exchange_base_price', __( 'Base Price', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'side' );
+		add_meta_box( 'it_exchange_base_price', __( 'Base Price', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal' );
 	}
 
 	/**
@@ -91,7 +91,7 @@ class IT_Exchange_Base_Price {
 		$product_base_price     = it_exchange_get_product_feature( $product->ID, 'base_price' );
 
 		// Set description
-		$description = __( 'This will be the standard price before discounts, taxes, fees, or any other modifications', 'LION' );
+		$description = __( 'Price', 'LION' );
 		$description = apply_filters( 'it_exchange_base_price_addon_metabox_description', $description );
 
 		// Echo the form field

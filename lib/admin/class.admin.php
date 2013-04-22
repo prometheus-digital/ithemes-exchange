@@ -76,6 +76,9 @@ class IT_Exchange_Admin {
 		// Redirect to Product selection on Add New if needed
 		add_action( 'admin_init', array( $this, 'redirect_post_new_to_product_type_selection_screen' ) );
 
+		// Init our custom add/edit layout interface
+		add_action( 'admin_init', array( $this, 'setup_add_edit_product_screen_layout' ) );
+
 		// Force 1 column view on add / edit products
 		add_filter( 'screen_layout_columns', array( $this, 'modify_add_edit_page_layout' ) );
 		add_filter( 'get_user_option_screen_layout_it_exchange_prod', '__return_true' ); // __return_true returns '1' :)
@@ -671,6 +674,154 @@ class IT_Exchange_Admin {
 	function modify_add_edit_page_layout( $columns ) {
 		$columns['it_exchange_prod'] = 1;
 		return $columns;
+	}
+
+	/**
+	 * Inits the add / edit product layout
+	 *
+	 * @since 0.4.0
+	 * @param array $filter_var Don't modify this. Always return it.
+	 * @return void
+	*/
+	function setup_add_edit_product_screen_layout() {
+		global $pagenow, $post;
+		$post_type = empty( $_REQUEST['post_type'] ) ? false : $_REQUEST['post_type'];
+		$post_type = empty( $post_type ) && ! empty( $_REQUEST['post'] ) ? $_REQUEST['post'] : $post_type;
+		$post_type = is_numeric( $post_type ) ? get_post_type( $post_type ) : $post_type;
+
+		if ( ( 'post-new.php' != $pagenow && 'post.php' != $pagenow ) || 'it_exchange_prod' != $post_type )
+			return;
+
+		// Enqueue styles
+		wp_enqueue_style( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-edit-product.css' );
+
+		// Temporarially remove post support for post_formats and title
+		add_filter( 'post_updated_messages', array( $this, 'temp_remove_theme_supports' ) ); 
+
+		// Register layout metabox
+		add_action( 'do_meta_boxes', array( $this, 'register_custom_layout_metabox' ), 999, 2 );
+
+		// Setup custom add / edit product layout
+		add_action( 'submitpost_box', array( $this, 'init_add_edit_product_screen_layout' ) );
+
+	}
+
+	/**
+	 * Temporarily Remove support for post_formats and title
+	 *
+	 * @since 0.4.0
+	 * @param array $messages We're hijacking a hook. Never modify. Always return
+	 * @return void
+	*/
+	function temp_remove_theme_supports( $messages ) {
+		$product_type = it_exchange_get_product_type();
+
+		if ( it_exchange_product_type_supports_feature( $product_type, 'wp-post-formats' ) ) {
+			it_exchange_remove_feature_support_for_product_type( 'wp-post-formats', $product_type );
+			it_exchange_add_feature_support_to_product_type( 'temp_disabled_wp-post-formats', $product_type );
+		}
+		if ( it_exchange_product_type_supports_feature( $product_type, 'title' ) ) {
+			it_exchange_remove_feature_support_for_product_type( 'title', $product_type );
+			it_exchange_add_feature_support_to_product_type( 'temp_disabled_title', $product_type );
+		}
+		if ( it_exchange_product_type_supports_feature( $product_type, 'extended-description' ) ) {
+			it_exchange_remove_feature_support_for_product_type( 'extended-description', $product_type );
+			it_exchange_add_feature_support_to_product_type( 'temp_disabled_extended-description', $product_type );
+		}
+		return $messages;
+	}
+
+	/**
+	 * Adds the custom layout metabox
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function register_custom_layout_metabox( $post_type, $context ) {
+		if ( 'it_exchange_prod' != $post_type && 'side' != $context )
+			return;
+
+		$id       = 'it-exchange-add-edit-product-interface';
+		$title    = __( 'Product Details', 'LION' ); // Not used
+		$callback = array( $this, 'do_add_edit_product_screen_layout' );
+		add_meta_box( $id, $title, $callback, 'it_exchange_prod', 'side', 'high' );
+	}
+
+	/**
+	 * Setup the custom screen by shifting meta boxes around in preparation for our meta box
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function init_add_edit_product_screen_layout() {
+		global $wp_meta_boxes;
+		$product_type = it_exchange_get_product_type();
+
+		// Init it_exchange_advanced_low context
+		$wp_meta_boxes['it_exchange_prod']['it_exchange_advanced_low'] = array();
+		$custom_layout = array();
+
+		// Remove our layout metabox
+		if ( ! empty( $wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface'] ) ) {
+			$custom_layout = $wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface'];
+			unset( $wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface'] );
+		}
+
+		
+		// Loop through side, normal, and advanced contexts and move all metaboxes to it_exchange_advanced_low context
+		foreach( array( 'side', 'normal', 'advanced' ) as $context ) {
+			if ( ! empty ( $wp_meta_boxes['it_exchange_prod'][$context] ) ) {
+				foreach( $wp_meta_boxes['it_exchange_prod'][$context] as $priority => $boxes ) {
+					if ( ! isset( $wp_meta_boxes['it_exchange_prod']['it_exchange_advanced']['low'] ) )
+						 $wp_meta_boxes['it_exchange_prod']['it_exchange_advanced']['low']= array();
+					$wp_meta_boxes['it_exchange_prod']['it_exchange_advanced']['low'] = array_merge(
+						$wp_meta_boxes['it_exchange_prod']['it_exchange_advanced']['low'], 
+						$wp_meta_boxes['it_exchange_prod'][$context][$priority]
+					);
+				}
+
+				$wp_meta_boxes['it_exchange_prod'][$context] = array();
+			}
+		}
+
+		// Add our custom layout back to side / high
+		if ( ! empty( $custom_layout ) )
+			$wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface'] = $custom_layout;
+
+		update_user_option( get_current_user_id(), 'meta-box-order_it_exchange_prod', array() );
+
+
+		// Add any temporarially disabled features back
+		if ( it_exchange_product_type_supports_feature( $product_type, 'temp_disabled_wp-post-formats' ) ) {
+			it_exchange_remove_feature_support_for_product_type( 'temp_disabled_wp-post-formats', $product_type );
+			it_exchange_add_feature_support_to_product_type( 'wp-post-formats', $product_type );
+		}
+		if ( it_exchange_product_type_supports_feature( $product_type, 'temp_disabled_title' ) ) {
+			it_exchange_remove_feature_support_for_product_type( 'temp_disabled_title', $product_type );
+			it_exchange_add_feature_support_to_product_type( 'title', $product_type );
+		}
+		if ( it_exchange_product_type_supports_feature( $product_type, 'temp_disabled_extended-description' ) ) {
+			it_exchange_remove_feature_support_for_product_type( 'temp_disabled_extended-description', $product_type );
+			it_exchange_add_feature_support_to_product_type( 'extended-description', $product_type );
+		}
+
+		// Move Featured Image to top
+		if ( it_exchange_product_type_supports_feature( $product_type, 'featured-image' ) ) {
+			add_meta_box('postimagediv', __('Featured Image'), 'post_thumbnail_meta_box', 'it_exchange_prod', 'it_exchange_normal' );
+		}
+	}
+
+	/**
+	 * This prints the iThemes Exchange add / edit product custom layout interface (a fancy meta box)
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function do_add_edit_product_screen_layout( $post ) {
+
+		do_meta_boxes( 'it_exchange_prod', 'it_exchange_normal', $post );
+		echo '<div id="it-exchange-advanced-div"><strong>Advanced below here</strong><hr /></div>';
+		do_meta_boxes( 'it_exchange_prod', 'it_exchange_advanced', $post );
 	}
 }
 if ( is_admin() )

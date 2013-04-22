@@ -8,7 +8,7 @@
 */
 
 
-class IT_Exchange_Product_Feature_Quantity_Inventory {
+class IT_Exchange_Product_Feature_Inventory {
 
 	/**
 	 * Constructor. Registers hooks
@@ -16,15 +16,15 @@ class IT_Exchange_Product_Feature_Quantity_Inventory {
 	 * @since 0.4.0
 	 * @return void
 	*/
-	function IT_Exchange_Product_Feature_Quantity_Inventory() {
+	function IT_Exchange_Product_Feature_Inventory() {
 		if ( is_admin() ) {
 			add_action( 'init', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		}
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
-		add_action( 'it_exchange_update_product_feature_quantity-inventory', array( $this, 'save_feature' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_quantity-inventory', array( $this, 'get_feature' ), 9, 2 );
-		add_filter( 'it_exchange_product_has_feature_quantity-inventory', array( $this, 'product_has_feature') , 9, 2 );
+		add_action( 'it_exchange_update_product_feature_inventory', array( $this, 'save_feature' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_inventory', array( $this, 'get_feature' ), 9, 2 );
+		add_filter( 'it_exchange_product_has_feature_inventory', array( $this, 'product_has_feature') , 9, 2 );
 	}
 
 	/**
@@ -34,14 +34,14 @@ class IT_Exchange_Product_Feature_Quantity_Inventory {
 	*/
 	function add_feature_support_to_product_types() {
 		// Register the product feature
-		$slug        = 'quantity-inventory';
-		$description = __( 'The max quantity and inventory settings for a product.', 'LION' );
+		$slug        = 'inventory';
+		$description = __( 'The current inventory number', 'LION' );
 		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
 		$products = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 		foreach( $products as $key => $params ) {
-			it_exchange_add_feature_support_to_product_type( 'quantity-inventory', $params['slug'] );
+			it_exchange_add_feature_support_to_product_type( 'inventory', $params['slug'] );
 		}
 	}
 
@@ -58,7 +58,7 @@ class IT_Exchange_Product_Feature_Quantity_Inventory {
 
 		// Loop through product types and register a metabox if it supports the feature 
 		foreach( $product_addons as $slug => $args ) {
-			if ( it_exchange_product_type_supports_feature( $slug, 'quantity-inventory' ) )
+			if ( it_exchange_product_type_supports_feature( $slug, 'inventory' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $slug, array( $this, 'register_metabox' ) );
 		}
 	}
@@ -72,7 +72,7 @@ class IT_Exchange_Product_Feature_Quantity_Inventory {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-quantity-inventory', __( 'Product Quantity and Inventory', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'normal' );
+		add_meta_box( 'it-exchange-product-inventory', __( 'Product Inventory', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'normal' );
 	}
 
 	/**
@@ -86,14 +86,19 @@ class IT_Exchange_Product_Feature_Quantity_Inventory {
 		$product = it_exchange_get_product( $post );
 
 		// Set the value of the feature for this product
-		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'quantity-inventory' );
+		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'inventory' );
 
 		// Set description
-		$description = __( 'Use these settings to indicate the maximum quanity available to a customer and the product\'s inventory.', 'LION' );
-		$description = apply_filters( 'it_exchange_product_quantity-inventory_metabox_description', $description );
+		$description = __( 'Use this to set the product\'s current inventory number.', 'LION' );
+		$description = apply_filters( 'it_exchange_product_inventory_metabox_description', $description );
 
 		// Echo the form field
 		echo $description;
+		?>
+		<p>
+			<input type="text" name="it-exchange-product-inventory" value="<?php esc_attr_e( $product_feature_value ); ?>" /> Current Inventory
+		</p>
+		<?php
 	}
 
 	/**
@@ -116,18 +121,18 @@ class IT_Exchange_Product_Feature_Quantity_Inventory {
 			return;
 
 		// Abort if this product type doesn't support this feature 
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'quantity-inventory' ) )
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'inventory' ) )
 			return;
 
 		// Abort if key for feature option isn't set in POST data
-		if ( ! isset( $_POST['_it-exchange-quantity-inventory'] ) )
+		if ( ! isset( $_POST['it-exchange-product-inventory'] ) )
 			return;
 
 		// Get new value from post
-		$new_value = $_POST['_it-exchange-quantity-inventory'];
+		$new_value = $_POST['it-exchange-product-inventory'];
 		
 		// Save new value
-		it_exchange_update_product_feature( $product_id, 'quantity-inventory', $new_feature );
+		it_exchange_update_product_feature( $product_id, 'inventory', $new_value );
 	}
 
 	/**
@@ -141,7 +146,7 @@ class IT_Exchange_Product_Feature_Quantity_Inventory {
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_value ) {
-		update_post_meta( $product_id, '_it-exchange-quantity-inventory', $new_value );
+		update_post_meta( $product_id, '_it-exchange-product-inventory', $new_value );
 	}
 
 	/**
@@ -153,7 +158,7 @@ class IT_Exchange_Product_Feature_Quantity_Inventory {
 	 * @return string product feature
 	*/
 	function get_feature( $existing, $product_id ) {
-		$value = get_post_meta( $product_id, '_it-exchange-quantity-inventory', true );
+		$value = get_post_meta( $product_id, '_it-exchange-product-inventory', true );
 		return $value;
 	}
 
@@ -168,9 +173,9 @@ class IT_Exchange_Product_Feature_Quantity_Inventory {
 	function product_has_feature( $result, $product_id ) {
 		// Does this product type support feature?
 		$product_type = it_exchange_get_product_type( $product_id );
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'quantity-inventory' ) ) 
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'inventory' ) ) 
 			return false;
 		return (boolean) $this->get_feature( false, $product_id );
 	}
 }
-$IT_Exchange_Product_Feature_Quantity_Inventory = new IT_Exchange_Product_Feature_Quantity_Inventory();
+$IT_Exchange_Product_Feature_Inventory = new IT_Exchange_Product_Feature_Inventory();

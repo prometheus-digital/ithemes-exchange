@@ -1,0 +1,36 @@
+/**
+#it-exchange-add-edit-product-interface {
+	background: transparent;
+	border: 0;
+}
+#it-exchange-add-edit-product-interface div.handlediv,
+#it-exchange-add-edit-product-interface h3 {
+	display: none;
+}
+
+#it-exchange-product-title,
+#it_exchange_base_price,
+#it-exchange-product-description {
+	width: 300px;
+	float: left;
+	background: transparent;
+	border: 0;
+}
+
+#postimagediv {
+	width: 300px;
+	float: right;
+}
+
+#it-exchange-product-title .inside {
+	padding: 0;
+}
+
+#it-exchange-product-description {
+	clear:left;
+}
+
+#it-exchange-advanced-div {
+	clear:both;
+}
+**/

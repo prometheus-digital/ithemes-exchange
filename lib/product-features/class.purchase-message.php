@@ -94,6 +94,11 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 
 		// Echo the form field
 		echo $description;
+		?>
+		<p>
+		<textarea name="it-exchange-product-purchase-message"><?php echo esc_textarea( $product_feature_value ); ?></textarea>
+		</p>
+		<?php
 	}
 
 	/**
@@ -120,14 +125,14 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 			return;
 
 		// Abort if key for feature option isn't set in POST data
-		if ( ! isset( $_POST['_it-exchange-purchase-message'] ) )
+		if ( ! isset( $_POST['it-exchange-product-purchase-message'] ) )
 			return;
 
 		// Get new value from post
-		$new_value = $_POST['_it-exchange-purchase-message'];
+		$new_value = $_POST['it-exchange-product-purchase-message'];
 		
 		// Save new value
-		it_exchange_update_product_feature( $product_id, 'purchase-message', $new_feature );
+		it_exchange_update_product_feature( $product_id, 'purchase-message', $new_value );
 	}
 
 	/**
@@ -141,7 +146,7 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_value ) {
-		update_post_meta( $product_id, '_it-exchange-purchase-message', $new_value );
+		update_post_meta( $product_id, 'it-exchange-product-purchase-message', $new_value );
 	}
 
 	/**
@@ -153,7 +158,7 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 	 * @return string product feature
 	*/
 	function get_feature( $existing, $product_id ) {
-		$value = get_post_meta( $product_id, '_it-exchange-purchase-message', true );
+		$value = get_post_meta( $product_id, 'it-exchange-product-purchase-message', true );
 		return $value;
 	}
 
