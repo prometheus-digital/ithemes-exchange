@@ -8,14 +8,48 @@
 	<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 		<header class="entry-header">
 
-			<?php it_exchange( 'product.featured-image' ); ?>
+			<?php if ( it_exchange( 'product', 'has-featured-image' ) ) : ?>
+				<p><strong>Featured Image</strong><br /><?php it_exchange( 'product.featured-image' ); ?></p>
+			<?php endif; ?>
 
-			<?php it_exchange( 'product', 'title' ); ?>
+			<?php if ( it_exchange( 'product', 'has-title' ) ) : ?>
+				<p><strong>Title</strong><br /><?php it_exchange( 'product', 'title' ); ?></p>
+			<?php endif; ?>
 
-			<?php it_exchange( 'product', 'base-price' ); ?>
+			<?php if ( it_exchange( 'product', 'has-base-price' ) ) : ?>
+				<p><strong>Base Price</strong><br /><?php it_exchange( 'product', 'base-price' ); ?></p>
+			<?php endif; ?>
 
-			<?php it_exchange( 'product', 'extended-description' ); ?>
+			<?php if ( it_exchange( 'product', 'has-description' ) ) : ?>
+				<p><strong>Description</strong><br /><?php it_exchange( 'product', 'description' ); ?></p>
+			<?php endif; ?>
 
+			<?php if ( it_exchange( 'product', 'has-extended-description' ) ) : ?>
+				<p><strong>Extended Description</strong><br /><?php it_exchange( 'product', 'extended-description' ); ?></p>
+			<?php endif; ?>
+
+			<?php if ( it_exchange( 'product', 'has-downloads' ) ) : ?>
+				<?php $testcount = 0; ?>
+				<?php while( it_exchange( 'product', 'downloads' ) ): ?>
+					<em>Download</em>: <?php it_exchange( 'download', 'title' ); ?><br />
+				<?php endwhile; ?>
+			<?php endif; ?>
+
+			<?php if ( it_exchange( 'product', 'has-inventory' ) ) : ?>
+				<p><strong>Inventory</strong><br /><?php it_exchange( 'product', 'inventory' ); ?></p>
+			<?php endif; ?>
+
+			<?php if ( it_exchange( 'product', 'has-quantity' ) ) : ?>
+				<p><strong>Max Quantity Per Purcahse</strong><br /><?php it_exchange( 'product', 'quantity' ); ?></p>
+			<?php endif; ?>
+
+			<?php if ( it_exchange( 'product', 'has-availability', 'type=start' ) ) : ?>
+				<p><strong>Product Start Availability</strong><br /><?php it_exchange( 'product', 'availability', 'type=start' ); ?></p>
+			<?php endif; ?>
+
+			<?php if ( it_exchange( 'product', 'has-availability', 'type=end' ) ) : ?>
+				<p><strong>Product End Availability</strong><br /><?php it_exchange( 'product', 'availability', 'type=end' ); ?></p>
+			<?php endif; ?>
 
 		</header><!-- .entry-header -->
 

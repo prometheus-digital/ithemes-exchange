@@ -22,9 +22,9 @@ class IT_Exchange_Product_Feature_Product_Availability {
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		}
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
-		add_action( 'it_exchange_update_product_feature_product-availability', array( $this, 'save_feature' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_product-availability', array( $this, 'get_feature' ), 9, 2 );
-		add_filter( 'it_exchange_product_has_feature_product-availability', array( $this, 'product_has_feature') , 9, 2 );
+		add_action( 'it_exchange_update_product_feature_availability', array( $this, 'save_feature' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_availability', array( $this, 'get_feature' ), 9, 3 );
+		add_filter( 'it_exchange_product_has_feature_availability', array( $this, 'product_has_feature') , 9, 3 );
 	}
 
 	/**
@@ -34,14 +34,14 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	*/
 	function add_feature_support_to_product_types() {
 		// Register the product feature
-		$slug        = 'product-availability';
+		$slug        = 'availability';
 		$description = __( 'Availability to purchase the product.', 'LION' );
 		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
 		$products = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 		foreach( $products as $key => $params ) {
-			it_exchange_add_feature_support_to_product_type( 'product-availability', $params['slug'] );
+			it_exchange_add_feature_support_to_product_type( 'availability', $params['slug'] );
 		}
 	}
 
@@ -58,7 +58,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 
 		// Loop through product types and register a metabox if it supports the feature 
 		foreach( $product_addons as $slug => $args ) {
-			if ( it_exchange_product_type_supports_feature( $slug, 'product-availability' ) )
+			if ( it_exchange_product_type_supports_feature( $slug, 'availability' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $slug, array( $this, 'register_metabox' ) );
 		}
 	}
@@ -86,13 +86,13 @@ class IT_Exchange_Product_Feature_Product_Availability {
 		$product = it_exchange_get_product( $post );
 
 		// Set the value of the feature for this product
-		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'product-availability' );
+		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'availability' );
 		$start = empty( $product_feature_value['start'] ) ? '' : $product_feature_value['start'];
 		$end   = empty( $product_feature_value['end'] ) ? '' : $product_feature_value['end'];
 
 		// Set description
 		$description = __( 'Use these settings to determine when a product is available to purchase.', 'LION' );
-		$description = apply_filters( 'it_exchange_product_product-availability_metabox_description', $description );
+		$description = apply_filters( 'it_exchange_product_availability_metabox_description', $description );
 
 		// Echo the form field
 		echo $description;
@@ -124,7 +124,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 			return;
 
 		// Abort if this product type doesn't support this feature 
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'product-availability' ) )
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'availability' ) )
 			return;
 
 		// Abort if key for feature option isn't set in POST data
@@ -141,7 +141,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 		);
 		
 		// Save new value
-		it_exchange_update_product_feature( $product_id, 'product-availability', $new_value );
+		it_exchange_update_product_feature( $product_id, 'availability', $new_value );
 	}
 
 	/**
@@ -166,8 +166,18 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	 * @param integer product_id the WordPress post ID
 	 * @return string product feature
 	*/
-	function get_feature( $existing, $product_id ) {
+	function get_feature( $existing, $product_id, $options ) {
+		$defaults['type'] = 'both';
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
 		$value = get_post_meta( $product_id, '_it-exchange-product-availability', true );
+
+		if ( 'start' == $options['type'] )
+			return $value['start'];
+		else if ( 'end' == $options['type'] )
+			return $value['end'];
+
+		// This will be returned if value of type was both or anything other than start / end
 		return $value;
 	}
 
@@ -179,12 +189,15 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	 * @param integer $product_id
 	 * @return boolean
 	*/
-	function product_has_feature( $result, $product_id ) {
+	function product_has_feature( $result, $product_id, $options ) {
+		$defaults['type'] = 'both';
+		$options = ITUtility::merge_defaults( $defaults, $options );
+
 		// Does this product type support feature?
 		$product_type = it_exchange_get_product_type( $product_id );
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'product-availability' ) ) 
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'availability' ) ) 
 			return false;
-		return (boolean) $this->get_feature( false, $product_id );
+		return (boolean) $this->get_feature( false, $product_id, $options );
 	}
 }
 $IT_Exchange_Product_Feature_Product_Availability = new IT_Exchange_Product_Feature_Product_Availability();

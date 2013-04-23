@@ -222,7 +222,7 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * @param integer product_id the WordPress post ID
 	 * @return string product feature
 	*/
-	function get_feature( $existing, $product_id, $options ) {
+	function get_feature( $existing, $product_id ) {
 		//$value = get_post_meta( $product_id, '_it-exchange-downloads', false );
 
 		$args = array(

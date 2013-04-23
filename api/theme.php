@@ -72,11 +72,19 @@ function it_exchange() {
 	// Strip hypens from method name
 	$tag = str_replace ( '-', '', $tag );
 
-	// Strip get prefix from requested method 
+	// Strip get prefix from requested method and set flags
 	if ( 'get' == substr( $tag, 0, 3 ) ) { 
 		$tag = substr( $tag, 3 );
 		$get = true;
 	}   
+
+	// Strip has prefix from request method and set flags
+	if ( 'has' == substr( $tag, 0, 3 ) ) { 
+		$tag = substr( $tag, 3 );
+		$options['has'] = true;
+	} else {
+		$options['has'] = false;
+	}
 
 	// Set object
 	if ( ! is_object( $object ) ) {

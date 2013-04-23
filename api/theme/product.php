@@ -20,22 +20,22 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	var $_tag_map = array(
-		'found'                  => 'found',
-		'title'                  => 'title',
-		'excerpt'	             => 'excerpt',
-		'description'            => 'description',
-		'content'                => 'extended_description',
-		'extendeddescription'    => 'extended_description',
-		'author'                 => 'author',
-		'baseprice'              => 'base_price',
-		'quantity'               => 'quantity',
-		'inventory'              => 'inventory',
-		'availabilitydatesstart' => 'available_start',
-		'availabilitydatesend'   => 'availability_dates_end',
-		'isavailable'            => 'is_available',
-		'image'                  => 'featured_image',
-		'productimage'           => 'featured_image',
-		'featuredimage'          => 'featured_image',
+		'found'               => 'found',
+		'title'               => 'title',
+		'excerpt'	          => 'excerpt',
+		'description'         => 'description',
+		'content'             => 'extended_description',
+		'extendeddescription' => 'extended_description',
+		'author'              => 'author',
+		'baseprice'           => 'base_price',
+		'quantity'            => 'quantity',
+		'inventory'           => 'inventory',
+		'availability'        => 'availability',
+		'isavailable'         => 'is_available',
+		'image'               => 'featured_image',
+		'productimage'        => 'featured_image',
+		'featuredimage'       => 'featured_image',
+		'downloads'           => 'downloads',
 	);
 
 	/**
@@ -86,6 +86,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function title( $options=array() ) {
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'title' );
+
 		if ( it_exchange_product_has_feature( $this->product->ID, 'title' ) ) {
 
 			$result   = '';
@@ -93,7 +98,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$defaults = array(
 				'before' => '<h1 class="entry-title">',
 				'after'  => '</h1>',
-				'format' => 'html',
+				'format' => 'raw',
 			);
 
 			$options = ITUtility::merge_defaults( $options, $defaults );
@@ -119,6 +124,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	*/
 	function base_price( $options=array() ) {
 
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'base_price' );
+
 		if ( it_exchange_product_has_feature( $this->product->ID, 'base_price' ) ) {
 
 			$result     = '';
@@ -126,7 +135,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$defaults   = array(
 				'before' => '<span class="it-exchange-base-price">',
 				'after'  => '</span>',
-				'format' => 'html',
+				'format' => 'raw',
 			);
 
 			$options = ITUtility::merge_defaults( $options, $defaults );
@@ -152,6 +161,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function description( $options=array() ) {
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'description' );
+
 		if ( it_exchange_product_has_feature( $this->product->ID, 'description' ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'description' );
 		return false;
@@ -165,13 +179,18 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function extended_description( $options=array() ) {
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'extended-description' );
+
 		if ( it_exchange_product_has_feature( $this->product->ID, 'extended-description' ) ) {
 			$result        = false;
 			$extended_desc = it_exchange_get_product_feature( $this->product->ID, 'extended-description' );
 			$defaults      = array(
 				'before' => '<div class="entry-content">',
 				'after'  => '</div>',
-				'format' => 'html',
+				'format' => 'raw',
 			);
 			$options      = ITUtility::merge_defaults( $options, $defaults );
 
@@ -195,6 +214,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function excerpt( $options=array() ) {
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'wp-excerpt' );
+
 		if ( it_exchange_product_has_feature( $this->product->ID, 'wp-excerpt' ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'wp-excerpt' );
 		return false;
@@ -207,6 +231,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function author( $options=array() ) {
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'author' );
+
 		if ( it_exchange_product_has_feature( $this->product->ID, 'author' ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'author' );
 		return false;
@@ -219,6 +248,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return integer 
 	*/
 	function quantity( $options=array() ) {
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'quantity' );
+
 		if ( it_exchange_product_has_feature( $this->product->ID, 'quantity' ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'quantity' );
 		return false;
@@ -231,29 +265,37 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return integer 
 	*/
 	function inventory( $options=array() ) {
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'inventory' );
+
 		if ( it_exchange_product_has_feature( $this->product->ID, 'inventory' ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'inventory' );
 		return false;
 	}
 
 	/**
-	 * The product's start date for purchase availability
+	 * The product's dates purchase availability
+	 *
+	 * Use type of 'start', 'end', 'both' in options
 	 *
 	 * @since 0.4.0
 	 * @return string
 	*/
-	function availability_dates_start( $options=array() ) {
+	function availability( $options=array() ) {
 
-	}
+		$defaults = array(
+			'type' => 'start',
+		);
+		$options  = ITUtility::merge_defaults( $options, $defaults );
 
-	/**
-	 * The product's end date for purchase availability
-	 *
-	 * @since 0.4.0
-	 * @return string
-	*/
-	function availability_dates_end( $options=array() ) {
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'availability', $options );
 
+		if ( it_exchange_product_has_feature( $this->product->ID, 'availability', $options ) )
+			return it_exchange_get_product_feature( $this->product->ID, 'availability', $options );
+		return false;
 	}
 
 	/**
@@ -263,7 +305,6 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function is_available( $options=array() ) {
-
 	}
 
 	/**
@@ -274,6 +315,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function featured_image( $options=array() ) {
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'featured-image' );
+
 		if ( it_exchange_product_has_feature( $this->product->ID, 'featured-image' ) ) {
 
 			$defaults = array(
@@ -283,6 +329,66 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$options = ITUtility::merge_defaults( $options, $defaults );
 			$img = it_exchange_get_product_feature( $this->product->ID, 'featured-image', $options );
 			return $img;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns downloads for product. 
+	 *
+	 * If has option is true, returns boolean
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return boolean
+	*/
+	function downloads( $options=array() ) {
+
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'downloads' );
+
+		// If we made it here, we're doing a loop of downloads for the current product.
+		// This will init/reset the downloads global and loop through them. the /api/theme/download.php file will handle the downloads.
+		$GLOBALS['it_exchange']['downloads'] = it_exchange_get_product_feature( $this->product->ID, 'downloads' );
+
+		if ( ! isset( $GLOBALS['it_exchange']['downloads_pointer'] ) ) {
+			$downloads = $GLOBALS['it_exchange']['downloads'];
+			reset( $downloads );
+			$GLOBALS['it_exchange']['downloads_pointer'] = key( $downloads );
+			return current( $downloads );
+		} else if ( false === $GLOBALS['it_exchange']['downloads_pointer'] ) {
+			return false;
+		} else {
+			$downloads = $GLOBALS['it_exchange']['downloads'];
+			$prev =  $GLOBALS['it_exchange']['downloads_pointer'];
+			while( $prev !== key( $downloads ) && end( $downloads ) !== current( $downloads ) ) {
+				next( $downloads );
+			}
+			$GLOBALS['it_exchange']['downloads_pointer'] = next( $downloads ) ? key( $downloads ) : false;
+			return current( $downloads );
+		}
+
+		$GLOBALS['it_exchange']['downloads_pointer'] = false;
+		return false;
+	}
+
+	/**
+	 * The product's max allowed quantity per purchase
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return string
+	*/
+	function lllquantity( $options=array() ) {
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'quantity' );
+
+		if ( it_exchange_product_has_feature( $this->product->ID, 'quantity' ) ) {
+
+			$quantity = it_exchange_get_product_feature( $this->product->ID, 'quantity', $options );
+			return $quantity;
 		}
 		return false;
 	}
