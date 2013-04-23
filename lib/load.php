@@ -27,6 +27,9 @@ require( $this->_plugin_path . 'lib/product-features/class.base-price.php' );
 // Product Feature: Product Description
 require( $this->_plugin_path . 'lib/product-features/class.description.php' );
 
+// Product Feature: Product Images 
+require( $this->_plugin_path . 'lib/product-features/class.product-images.php' );
+
 // Product Feature: Downloads
 require( $this->_plugin_path . 'lib/product-features/class.downloads.php' );
 

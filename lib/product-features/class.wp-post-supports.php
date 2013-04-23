@@ -230,12 +230,6 @@ class IT_Exchange_WP_Post_Supports {
 		$slug        = 'featured-image';
 		$description = __( 'Adds support for WP Featured Image to a specific product type', 'LION' );
 		it_exchange_register_product_feature( $slug, $description );
-
-		// Add it to all enabled product-type addons
-		$product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
-		foreach( $product_types as $key => $product_type ) { 
-			it_exchange_add_feature_support_to_product_type( $slug, $product_type['slug'] );
-		}   
 	}
 
 	/**

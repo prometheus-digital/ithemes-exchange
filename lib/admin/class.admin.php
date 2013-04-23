@@ -696,7 +696,10 @@ class IT_Exchange_Admin {
 		wp_enqueue_style( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-edit-product.css' );
 
 		// Enqueue scripts
-		wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', array( 'jquery' ) );
+		wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', array( 'jquery-ui-sortable' ) );
+
+		// Enqueue Media library scripts and styles
+		wp_enqueue_media();
 
 		// Temporarially remove post support for post_formats and title
 		add_filter( 'post_updated_messages', array( $this, 'temp_remove_theme_supports' ) ); 
