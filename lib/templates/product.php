@@ -29,10 +29,13 @@
 			<?php endif; ?>
 
 			<?php if ( it_exchange( 'product', 'has-downloads' ) ) : ?>
-				<?php $testcount = 0; ?>
+				<p><strong>Downloads</strong><br />
 				<?php while( it_exchange( 'product', 'downloads' ) ): ?>
-					<em>Download</em>: <?php it_exchange( 'download', 'title' ); ?><br />
+					<em>Download</em>: <?php it_exchange( 'download', 'title' ); ?> | 
+					<?php it_exchange( 'download', 'limit' ); ?> | <?php it_exchange( 'download', 'expiration' ); ?>
+					<br />
 				<?php endwhile; ?>
+				</p>
 			<?php endif; ?>
 
 			<?php if ( it_exchange( 'product', 'has-inventory' ) ) : ?>

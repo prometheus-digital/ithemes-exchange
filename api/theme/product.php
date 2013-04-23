@@ -351,24 +351,24 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// This will init/reset the downloads global and loop through them. the /api/theme/download.php file will handle the downloads.
 		$GLOBALS['it_exchange']['downloads'] = it_exchange_get_product_feature( $this->product->ID, 'downloads' );
 
-		if ( ! isset( $GLOBALS['it_exchange']['downloads_pointer'] ) ) {
+		if ( ! isset( $GLOBALS['it_exchange']['current_download_key'] ) ) {
 			$downloads = $GLOBALS['it_exchange']['downloads'];
 			reset( $downloads );
-			$GLOBALS['it_exchange']['downloads_pointer'] = key( $downloads );
+			$GLOBALS['it_exchange']['current_download_key'] = key( $downloads );
 			return current( $downloads );
-		} else if ( false === $GLOBALS['it_exchange']['downloads_pointer'] ) {
+		} else if ( false === $GLOBALS['it_exchange']['current_download_key'] ) {
 			return false;
 		} else {
 			$downloads = $GLOBALS['it_exchange']['downloads'];
-			$prev =  $GLOBALS['it_exchange']['downloads_pointer'];
+			$prev =  $GLOBALS['it_exchange']['current_download_key'];
 			while( $prev !== key( $downloads ) && end( $downloads ) !== current( $downloads ) ) {
 				next( $downloads );
 			}
-			$GLOBALS['it_exchange']['downloads_pointer'] = next( $downloads ) ? key( $downloads ) : false;
+			$GLOBALS['it_exchange']['current_download_key'] = next( $downloads ) ? key( $downloads ) : false;
 			return current( $downloads );
 		}
 
-		$GLOBALS['it_exchange']['downloads_pointer'] = false;
+		$GLOBALS['it_exchange']['current_download_key'] = false;
 		return false;
 	}
 

@@ -7,6 +7,7 @@ include( $this->_plugin_path . '/api/theme/cart.php' );
 include( $this->_plugin_path . '/api/theme/checkout.php' );
 include( $this->_plugin_path . '/api/theme/confirmation.php' );
 include( $this->_plugin_path . '/api/theme/product.php' );
+include( $this->_plugin_path . '/api/theme/download.php' );
 
 /**
  * Defines the main it_exchange function
@@ -96,13 +97,8 @@ function it_exchange() {
 		if ( ! is_callable( array( $class_name, 'get_api_context' ) ) )
 			die('not callable'.__FILE__. ' : ' . __LINE__); /** @todo register an error **/
 
-		// Is the object already created and stored in the GLOBALS array?
-		if ( ! empty( $GLOBALS['it_exchange'][$class_name] ) && is_object( $GLOBALS['it_exchange'][$class_name] ) ) {
-			$object = $GLOBALS['it_exchange'][$class_name];
-		} else {
-			$object = new $class_name();
-			$GLOBALS['it_exchange'][$class_name] = $object;
-		}
+		// Set the object
+		$object = new $class_name();
 	}
 
 	// Is the requested tag mapped to a method
