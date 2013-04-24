@@ -20,17 +20,39 @@
 }
 #it-exchange-product-title {
 	float: left;
-	width: 70%;
+	width: 50%;
 }
 #it_exchange_base_price {
 	float: left;
-	width: 30%;
+	width: 20%;
 }
 #it-exchange-product-description {
-	clear: both;
-	width: 100%;
+	float: left;
+	width: 70%;
 }
 
+/** -----------------------------------------------------:[ product images ]:---------- */
+#it-exchange-product-images {
+	max-width: 450px;
+	float: left;
+	width: 30%;
+}
+#it-exchange-product-images li {
+	box-sizing: border-box;
+	float: left;
+	width: 33%;
+	height: 100px;
+	margin-right: 2px;
+	border: 3px dashed red;
+}
+#it-exchange-product-images li:first-child {
+	width: 100%;
+	height: 450px;
+	float: none;
+}
+#it-exchange-product-images li:nth-child(3n+4) {
+	margin-right: 0;
+}
 /** -----------------------------------------------------:[ advanced ]:---------- */
 #it-exchange-advanced-div,
 #it_exchange_advanced-sortables {

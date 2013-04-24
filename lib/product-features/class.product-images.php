@@ -82,8 +82,16 @@ class IT_Exchange_Product_Feature_Product_Images {
 	 * @return void
 	*/
 	function print_metabox( $post ) {
-		// Meta box content goes here. I guess you're going to have to save stuff via ajax
-		// Just use post_meta for now with _it-exchange-[whatever you need]. I'm going to fold all these post metas together before launch.
+		?>
+			<ul>
+				<li>Main Image</li>
+				<li>Thumbnail</li>
+				<li>Thumbnail</li>
+				<li>Thumbnail</li>
+				<li>Thumbnail</li>
+				<li class="add-new-image"><a href>Add New</a></li>
+			</ul>
+		<?php
 	}
 
 	/** 
