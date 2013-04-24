@@ -1,12 +1,17 @@
 /** -----------------------------------------------------:[ admin ui reset ]:---------- */
-#it-exchange-add-edit-product-interface,
-#it-exchange-add-edit-product-interface .postbox,
-#it-exchange-add-edit-product-interface .inside {
+#it-exchange-add-edit-product-interface-main,
+#it-exchange-add-edit-product-interface-side,
+#it-exchange-add-edit-product-interface-main .postbox,
+#it-exchange-add-edit-product-interface-side .postbox,
+#it-exchange-add-edit-product-interface-main .inside,
+#it-exchange-add-edit-product-interface-side .inside {
 	background: none;
 	border: 0;
 }
-#it-exchange-add-edit-product-interface div.handlediv,
-#it-exchange-add-edit-product-interface h3 {
+#it-exchange-add-edit-product-interface-main div.handlediv,
+#it-exchange-add-edit-product-interface-side div.handlediv,
+#it-exchange-add-edit-product-interface-main h3,
+#it-exchange-add-edit-product-interface-side h3 {
 	display: none;
 }
 

@@ -72,7 +72,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-images', __( 'Product Images', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal' );
+		add_meta_box( 'it-exchange-product-images', __( 'Product Images', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_side', 'default' );
 	}
 
 	/**

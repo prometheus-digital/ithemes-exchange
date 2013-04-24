@@ -79,9 +79,9 @@ class IT_Exchange_Admin {
 		// Init our custom add/edit layout interface
 		add_action( 'admin_init', array( $this, 'setup_add_edit_product_screen_layout' ) );
 
-		// Force 1 column view on add / edit products
+		// Force 2 column view on add / edit products
 		add_filter( 'screen_layout_columns', array( $this, 'modify_add_edit_page_layout' ) );
-		add_filter( 'get_user_option_screen_layout_it_exchange_prod', '__return_true' ); // __return_true returns '1' :)
+		add_filter( 'get_user_option_screen_layout_it_exchange_prod', 'update_user_column_options' ); // __return_true returns '1' :)
 
 		// Save core settings
 		add_action( 'admin_init', array( $this, 'save_core_general_settings' ) );
@@ -667,13 +667,25 @@ class IT_Exchange_Admin {
 	/**
 	 * Set the max columns option for the add / edit product page.
 	 *
-	 * @param $columns Existing array of how many colunns to show for a post type
 	 * @since 0.4.0
+	 *
+	 * @param $columns Existing array of how many colunns to show for a post type
 	 * @return array Filtered array
 	*/
 	function modify_add_edit_page_layout( $columns ) {
-		$columns['it_exchange_prod'] = 1;
+		$columns['it_exchange_prod'] = 2;
 		return $columns;
+	}
+
+	/**
+	 * Updates the user options for number of columns to use on add / edit product views
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return 2
+	*/
+	function update_user_column_options( $existing ) {
+		return 2;
 	}
 
 	/**
@@ -747,9 +759,14 @@ class IT_Exchange_Admin {
 		if ( 'it_exchange_prod' != $post_type && 'side' != $context )
 			return;
 
-		$id       = 'it-exchange-add-edit-product-interface';
-		$title    = __( 'Product Details', 'LION' ); // Not used
-		$callback = array( $this, 'do_add_edit_product_screen_layout' );
+		$id       = 'it-exchange-add-edit-product-interface-main';
+		$title    = __( 'Main Product Interface', 'LION' ); // Not used
+		$callback = array( $this, 'do_add_edit_product_screen_layout_main' );
+		add_meta_box( $id, $title, $callback, 'it_exchange_prod', 'normal', 'high' );
+
+		$id       = 'it-exchange-add-edit-product-interface-side';
+		$title    = __( 'Side Product Interface', 'LION' ); // Not used
+		$callback = array( $this, 'do_add_edit_product_screen_layout_side' );
 		add_meta_box( $id, $title, $callback, 'it_exchange_prod', 'side', 'high' );
 	}
 
@@ -767,12 +784,15 @@ class IT_Exchange_Admin {
 		$wp_meta_boxes['it_exchange_prod']['it_exchange_advanced_low'] = array();
 		$custom_layout = array();
 
-		// Remove our layout metabox
-		if ( ! empty( $wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface'] ) ) {
-			$custom_layout = $wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface'];
-			unset( $wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface'] );
+		// Remove our layout metaboxes
+		if ( ! empty( $wp_meta_boxes['it_exchange_prod']['normal']['high']['it-exchange-add-edit-product-interface-main'] ) ) {
+			$custom_layout_normal = $wp_meta_boxes['it_exchange_prod']['normal']['high']['it-exchange-add-edit-product-interface-main'];
+			unset( $wp_meta_boxes['it_exchange_prod']['normal']['high']['it-exchange-add-edit-product-interface-main'] );
 		}
-
+		if ( ! empty( $wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface-side'] ) ) {
+			$custom_layout_side = $wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface-side'];
+			unset( $wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface-side'] );
+		}
 		
 		// Loop through side, normal, and advanced contexts and move all metaboxes to it_exchange_advanced_low context
 		foreach( array( 'side', 'normal', 'advanced' ) as $context ) {
@@ -790,9 +810,11 @@ class IT_Exchange_Admin {
 			}
 		}
 
-		// Add our custom layout back to side / high
-		if ( ! empty( $custom_layout ) )
-			$wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface'] = $custom_layout;
+		// Add our custom layout back to normal/side high
+		if ( ! empty( $custom_layout_normal ) )
+			$wp_meta_boxes['it_exchange_prod']['normal']['high']['it-exchange-add-edit-product-interface-main'] = $custom_layout_normal;
+		if ( ! empty( $custom_layout_side ) )
+			$wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface-side'] = $custom_layout_side;
 
 		update_user_option( get_current_user_id(), 'meta-box-order_it_exchange_prod', array() );
 
@@ -811,9 +833,13 @@ class IT_Exchange_Admin {
 			it_exchange_add_feature_support_to_product_type( 'extended-description', $product_type );
 		}
 
-		// Move Featured Image to top
+		// Move publish to the bottom of normal
+		remove_meta_box( 'submitdiv', __( 'Publish' ), 'post_submit_meta_box', null, 'it_exchange_advanced', 'core' );
+		add_meta_box( 'submitdiv', __( 'Publish' ), 'post_submit_meta_box', null, 'it_exchange_side', 'high' );
+
+		// Move Featured Image to top of side if supported
 		if ( it_exchange_product_type_supports_feature( $product_type, 'featured-image' ) ) {
-			add_meta_box('postimagediv', __('Featured Image'), 'post_thumbnail_meta_box', 'it_exchange_prod', 'it_exchange_normal' );
+			add_meta_box('postimagediv', __('Featured Image'), 'post_thumbnail_meta_box', 'it_exchange_prod', 'it_exchange_side' );
 		}
 	}
 
@@ -823,11 +849,19 @@ class IT_Exchange_Admin {
 	 * @since 0.4.0
 	 * @return void
 	*/
-	function do_add_edit_product_screen_layout( $post ) {
-
+	function do_add_edit_product_screen_layout_main( $post ) {
 		do_meta_boxes( 'it_exchange_prod', 'it_exchange_normal', $post );
-		echo '<div id="it-exchange-advanced-div"><strong>Advanced below here</strong><hr /></div>';
 		do_meta_boxes( 'it_exchange_prod', 'it_exchange_advanced', $post );
+	}
+
+	/**
+	 * This prints the iThemes Exchange a / edit product custom layout interface for the side column
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function do_add_edit_product_screen_layout_side( $post ) {
+		do_meta_boxes( 'it_exchange_prod', 'it_exchange_side', $post );
 	}
 }
 if ( is_admin() )
