@@ -713,6 +713,9 @@ class IT_Exchange_Admin {
 		// Enqueue Media library scripts and styles
 		wp_enqueue_media();
 
+		// Adds class to wrap div
+		add_action( 'admin_head', array( $this, 'add_edit_product_append_wrap_classes' ) );
+
 		// Temporarially remove post support for post_formats and title
 		add_filter( 'post_updated_messages', array( $this, 'temp_remove_theme_supports' ) ); 
 
@@ -722,6 +725,21 @@ class IT_Exchange_Admin {
 		// Setup custom add / edit product layout
 		add_action( 'submitpost_box', array( $this, 'init_add_edit_product_screen_layout' ) );
 
+	}
+
+	/**
+	 * Adds an additional class to the wrap div for add / edit products
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function add_edit_product_append_wrap_classes() {
+		global $post_format_set_class;
+		$classes = explode( ' ', $post_format_set_class );
+		$classes[] = 'it-exchange-add-edit-product';
+		$classes = array_filter( $classes );
+		$post_format_set_class = implode( $classes );
 	}
 
 	/**
