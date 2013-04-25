@@ -56,9 +56,26 @@ class IT_Exchange_Product_Post_Type {
 				'comments', 'revisions', 'post-formats',
 			),
 			'register_meta_box_cb' => array( $this, 'meta_box_callback' ),
+			'rewrite' => array(
+				'slug' => 'product',
+			),
 		);
 
+		add_action( 'init', array( $this, 'set_rewrite_slug' ), 9 );
 		add_action( 'init', array( $this, 'register_the_post_type' ) );
+	}
+
+	/**
+	 * Set rewrite rules according to settings
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function set_rewrite_slug() {
+		$pages = it_exchange_get_option( 'exchange_settings_pages', true );
+		if ( ! empty( $pages['product'] ) )
+			$this->options['rewrite']['slug'] = $pages['product'];
 	}
 
 	/**

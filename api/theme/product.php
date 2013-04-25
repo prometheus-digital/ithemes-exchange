@@ -22,6 +22,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	var $_tag_map = array(
 		'found'               => 'found',
 		'title'               => 'title',
+		'permalink'           => 'permalink',
 		'excerpt'	          => 'excerpt',
 		'description'         => 'description',
 		'content'             => 'extended_description',
@@ -114,6 +115,37 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			return $result;
 		}
 		return false;
+	}
+
+	/**
+	 * The permalink
+	 *
+	 * @since 0.4.0
+	 * @return mixed
+	*/
+	function permalink( $options=array() ) {
+		$permalink = empty( $this->product->ID ) ? false : get_permalink( $this->product->ID );
+
+		if ( $options['has'] )
+			return (boolean) $permalink;
+
+		$result = '';
+		$defaults   = array(
+			'before' => '<a href="',
+			'after'  => '">' . it_exchange( 'product', 'get-title' ) . '</a>',
+			'format' => 'raw',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		if ( 'html' == $options['format'] )
+			$result .= $options['before'];
+
+		$result .= $permalink;
+
+		if ( 'html' == $options['format'] )
+			$result .= $options['after'];
+
+		return $result;
 	}
 
 	/**
@@ -344,52 +376,27 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	*/
 	function downloads( $options=array() ) {
 
+        // Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'downloads' );
 
 		// If we made it here, we're doing a loop of downloads for the current product.
-		// This will init/reset the downloads global and loop through them. the /api/theme/download.php file will handle the downloads.
-		$GLOBALS['it_exchange']['downloads'] = it_exchange_get_product_feature( $this->product->ID, 'downloads' );
-
-		if ( ! isset( $GLOBALS['it_exchange']['current_download_key'] ) ) {
-			$downloads = $GLOBALS['it_exchange']['downloads'];
-			reset( $downloads );
-			$GLOBALS['it_exchange']['current_download_key'] = key( $downloads );
-			return current( $downloads );
-		} else if ( false === $GLOBALS['it_exchange']['current_download_key'] ) {
-			return false;
+		// This will init/reset the downloads global and loop through them. the /api/theme/download.php file will handle individual downloads.
+		if ( empty( $GLOBALS['it_exchange']['downloads'] ) ) { 
+			$GLOBALS['it_exchange']['downloads'] = it_exchange_get_product_feature( $this->product->ID, 'downloads' );
+			$GLOBALS['it_exchange']['download'] = reset( $GLOBALS['it_exchange']['downloads'] );
+			return true;
 		} else {
-			$downloads = $GLOBALS['it_exchange']['downloads'];
-			$prev =  $GLOBALS['it_exchange']['current_download_key'];
-			while( $prev !== key( $downloads ) && end( $downloads ) !== current( $downloads ) ) {
-				next( $downloads );
-			}
-			$GLOBALS['it_exchange']['current_download_key'] = next( $downloads ) ? key( $downloads ) : false;
-			return current( $downloads );
-		}
-
-		$GLOBALS['it_exchange']['current_download_key'] = false;
-		return false;
-	}
-
-	/**
-	 * The product's max allowed quantity per purchase
-	 *
-	 * @since 0.4.0
-	 *
-	 * @return string
-	*/
-	function lllquantity( $options=array() ) {
-
-		// Return boolean if has flag was set
-		if ( $options['has'] )
-			return it_exchange_product_has_feature( $this->product->ID, 'quantity' );
-
-		if ( it_exchange_product_has_feature( $this->product->ID, 'quantity' ) ) {
-
-			$quantity = it_exchange_get_product_feature( $this->product->ID, 'quantity', $options );
-			return $quantity;
-		}
+			if ( next( $GLOBALS['it_exchange']['downloads'] ) ) { 
+				$GLOBALS['it_exchange']['download'] = current( $GLOBALS['it_exchange']['downloads'] );
+				return true;
+			} else {
+				$GLOBALS['it_exchange']['download'] = false;
+				return false;
+			}   
+		}   
+		end( $GLOBALS['it_exchange']['downloads'] );
+		$GLOBALS['it_exchange']['download'] = false;
 		return false;
 	}
 }

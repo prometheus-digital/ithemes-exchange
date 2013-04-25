@@ -72,7 +72,7 @@ class IT_Exchange_Base_Price {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it_exchange_base_price', __( 'Base Price', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal' );
+		add_meta_box( 'it_exchange_base_price', __( 'Base Price', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'high' );
 	}
 
 	/**

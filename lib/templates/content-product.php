@@ -6,7 +6,7 @@
  */
 ?>
 	<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-		<header class="entry-header">
+		<div class="entry-content">
 
 			<?php if ( it_exchange( 'product', 'has-featured-image' ) ) : ?>
 				<p><strong>Featured Image</strong><br /><?php it_exchange( 'product.featured-image' ); ?></p>
@@ -54,10 +54,6 @@
 				<p><strong>Product End Availability</strong><br /><?php it_exchange( 'product', 'availability', 'type=end' ); ?></p>
 			<?php endif; ?>
 
-		</header><!-- .entry-header -->
-
-		<div class="entry-content">
-			<?php the_content( __( 'Continue reading <span class="meta-nav">&rarr;</span>', 'twentytwelve' ) ); ?>
 		</div><!-- .entry-content -->
 
 		<footer class="entry-meta">

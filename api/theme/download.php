@@ -43,8 +43,7 @@ class IT_Theme_API_Download implements IT_Theme_API {
 	*/
 	function IT_Theme_API_Download() {
 		// Set the current global download as a property
-		$key = empty( $GLOBALS['it_exchange']['current_download_key'] ) ? false : $GLOBALS['it_exchange']['current_download_key'];
-		$this->download = empty( $GLOBALS['it_exchange']['downloads'][$key] ) ? false : $GLOBALS['it_exchange']['downloads'][$key];
+		$this->download = empty( $GLOBALS['it_exchange']['download'] ) ? false : $GLOBALS['it_exchange']['download'];
 	}
 
 	/**

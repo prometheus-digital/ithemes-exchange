@@ -6,6 +6,70 @@
 */
 
 /**
+ * Sets up the store
+ *
+ * @since 0.4.0
+ *
+ * @return void
+*/
+function it_exchange_setup_frontend() {
+
+	// Abort if not none of the above is true ($is_account covers everything below it)
+	if ( ! $is_store && ! $is_product && ! $is_account )
+		return;
+
+	// Load Template
+	if ( $is_product ) {
+		// Do we find an Exchange supported template file?
+		if ( $template = it_exchange_locate_template( 'product' ) )
+			return $template;
+
+		// If we can't find one, grab the theme's page template an set filters to call our own template_parts
+		if ( $template = get_page_template() ) {
+			add_filter( 'the_content', 'it_exchange_insert_template_part_for_single' );
+			return $template;
+		}
+	} else if ( $is_store ) {
+		die( 'show store' );
+	} else if ( ! $account ) {
+		die( 'no access' );
+	} else if ( $is_profile_edit ) {
+		die('editing profile for ' . $account );
+	} else if ( $is_profile ) {
+		die( 'show profile for ' . $account );
+	} else if ( $is_downloads ) {
+		/** THIS IS VERY UGLY. I WILL FIND A DIFFERENT WAY TO DO THIS **/
+		global $wp_query;
+		//ITUtility::print_r($wp_query);
+		$wp_query->post_count = 1;
+		$wp_query->posts = array();
+		$wp_query->post->ID = 'it-exchange-customer-downloads';
+		$wp_query->post->post_title = __( 'Downloads', 'LION' );
+		$wp_query->post->post_name = 'it-exchange-customer-downloads';
+		$wp_query->post->post_content = 'Downloads will go here!!!';
+		$wp_query->post->guid = get_home_url() . '/?' . $pages['account'] . '=' . $account . '&' . $pages['downloads'] . '=1';
+		$wp_query->posts[] = $wp_query->post;
+		$wp_query->is_home = false;
+		// Do we find an Exchange supported template file?
+		if ( $template = it_exchange_locate_template( 'downloads' ) )
+			return $template;
+
+		// If we can't find one, grab the theme's page template an set filters to call our own template_parts
+		if ( $template = get_page_template() ) {
+			//add_filter( 'the_content', 'it_exchange_insert_template_part_for_downloads' );
+			return $template;
+		}
+		die( 'show downloads for ' . $account );
+	} else if ( $is_purchases ) {
+		die( 'show purchases for ' . $account );
+	} else if ( $is_account && $account ) {
+		die('show account dash for ' . $account );
+	}
+
+}
+//add_filter( 'template_include', 'it_exchange_setup_frontend' );
+
+/**
  * Retrieves a template part
  *
  * @since 0.3.8
@@ -25,7 +89,7 @@ function it_exchange_get_template_part( $slug, $name=null, $load=true ) {
     $templates[] = $slug . '.php';
 
     // Return the part that is found
-    return it_exchange_locate_template( $templates, $load, false );
+    return it_exchange_locate_template( $templates, $load, $load );
 }
 
 /**
@@ -49,8 +113,8 @@ function it_exchange_locate_template( $template_names, $load = false, $require_o
 
 	// Define possible template paths
 	$possible_template_paths = array( 
-		trailingslashit( get_stylesheet_directory() ) . 'exchange_templates',
-		trailingslashit( get_template_directory() ) . 'exchange_templates',
+		trailingslashit( get_stylesheet_directory() ) . 'exchange',
+		trailingslashit( get_template_directory() ) . 'exchange',
 	);
 	
 	// Allow addons to add a template path
