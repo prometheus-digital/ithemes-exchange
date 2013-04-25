@@ -3,9 +3,7 @@
  * Loads the theme api
 */
 
-include( $this->_plugin_path . '/api/theme/cart.php' );
-include( $this->_plugin_path . '/api/theme/checkout.php' );
-include( $this->_plugin_path . '/api/theme/confirmation.php' );
+include( $this->_plugin_path . '/api/theme/store.php' );
 include( $this->_plugin_path . '/api/theme/product.php' );
 include( $this->_plugin_path . '/api/theme/download.php' );
 
