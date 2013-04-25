@@ -72,7 +72,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-images', __( 'Product Images', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal' );
+		add_meta_box( 'it-exchange-product-images', __( 'Product Images', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_side', 'default' );
 	}
 
 	/**
@@ -82,8 +82,16 @@ class IT_Exchange_Product_Feature_Product_Images {
 	 * @return void
 	*/
 	function print_metabox( $post ) {
-		// Meta box content goes here. I guess you're going to have to save stuff via ajax
-		// Just use post_meta for now with _it-exchange-[whatever you need]. I'm going to fold all these post metas together before launch.
+		?>
+			<ul>
+				<li>Main Image</li>
+				<li>Thumbnail</li>
+				<li>Thumbnail</li>
+				<li>Thumbnail</li>
+				<li>Thumbnail</li>
+				<li class="add-new-image"><a href>Add New</a></li>
+			</ul>
+		<?php
 	}
 
 	/** 
