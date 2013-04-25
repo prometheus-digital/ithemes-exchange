@@ -14,49 +14,98 @@
 #it-exchange-add-edit-product-interface-side h3 {
 	display: none;
 }
-
-/** -----------------------------------------------------:[ normal fields ]:---------- */
+.wrap #poststuff #post-body.columns-2 {
+	margin-right: 420px;
+}
+.wrap #post-body.columns-2 #postbox-container-1 {
+	margin-right: -420px;
+	width: 400px;
+}
+.wrap .postbox .inside {
+	padding: 0;
+}
+.wrap .postbox {
+	min-width: 0;
+}
+/** -----------------------------------------------------:[ temporary ]:---------- */
+#submitdiv {
+	display: none !important;
+}
+/** -----------------------------------------------------:[ normal ]:---------- */
+#it-exchange-add-edit-product-interface-main {
+	margin: 0;
+}
 #it_exchange_normal-sortables label {
 	font-weight: bold;
+	font-size: 13px;
+	display: block;
+	color: #4e5559;
+	margin-bottom: 10px;
 }
 #it_exchange_normal-sortables input,
 #it_exchange_normal-sortables textarea {
+	box-sizing: border-box;
 	width: 100%;
+	padding: 10px;
+	border: 1px solid #d6d6d6;
+	border-radius: 2px;
+	font-family: 'Helvetica Neue';
+	font-size: 24px;
+	line-height: 1.2;
+	color: #4e5559;
 }
 #it-exchange-product-title {
 	float: left;
-	width: 50%;
+	width: 80%;
+}
+#it-exchange-product-title .inside {
+	padding-right: 3em;
 }
 #it_exchange_base_price {
 	float: left;
 	width: 20%;
 }
+#it_exchange_base_price input {
+	text-align: right;
+}
 #it-exchange-product-description {
-	float: left;
-	width: 70%;
+	clear: both;
+	width: 100%;
 }
 
-/** -----------------------------------------------------:[ product images ]:---------- */
+/** -----------------------------------------------------:[ side ]:---------- */
 #it-exchange-product-images {
-	max-width: 450px;
+	max-width: 400px;
 	float: left;
-	width: 30%;
+	width: 100%;
+}
+#it-exchange-product-images img {
+	max-width: 100%;
+	height:auto;
+	display:block;
 }
 #it-exchange-product-images li {
 	box-sizing: border-box;
+	overflow: hidden;
 	float: left;
-	width: 33%;
-	height: 100px;
-	margin-right: 2px;
-	border: 3px dashed red;
+	width: 130px;
+	height: 130px;
+	margin-right: 5px;
 }
 #it-exchange-product-images li:first-child {
 	width: 100%;
-	height: 450px;
+	height: auto;
 	float: none;
 }
+
 #it-exchange-product-images li:nth-child(3n+4) {
 	margin-right: 0;
+}
+#it-exchange-product-images #it-exchange-add-new-image {
+	border: 2px dashed #AAA;
+}
+#it-exchange-product-images #it-exchange-add-new-image:first-child {
+	height: 450px;
 }
 /** -----------------------------------------------------:[ advanced ]:---------- */
 #it-exchange-advanced-div,

@@ -83,10 +83,8 @@ class IT_Exchange_Product_Feature_Product_Description {
 	*/
 	function print_metabox( $post ) {
 		?>
-		<label for="it-exchange-product-description-field">
-			Product Description
-		</label><br />
-		<textarea name="it-exchange-product-description" id="it-exchange-product-description-field" placeholder="<?php echo apply_filters( 'enter_description_here', __( 'Enter description...' ), $post ); ?>"><?php echo esc_html( htmlspecialchars( $this->get_feature ( false, $post->ID ) ) ); ?></textarea>
+		<label for="it-exchange-product-description-field">Product Description</label>
+		<textarea name="it-exchange-product-description" id="it-exchange-product-description-field" rows="<?php echo apply_filters( 'enter_description_here', '10' ); ?>" placeholder="<?php echo apply_filters( 'enter_description_here', __( 'Enter description...' ), $post ); ?>"><?php echo esc_html( htmlspecialchars( $this->get_feature ( false, $post->ID ) ) ); ?></textarea>
 		<?php
 	}
 

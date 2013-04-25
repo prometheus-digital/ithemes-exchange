@@ -83,13 +83,8 @@ class IT_Exchange_Product_Feature_Product_Images {
 	*/
 	function print_metabox( $post ) {
 		?>
-			<ul>
-				<li>Main Image</li>
-				<li>Thumbnail</li>
-				<li>Thumbnail</li>
-				<li>Thumbnail</li>
-				<li>Thumbnail</li>
-				<li class="add-new-image"><a href>Add New</a></li>
+			<ul id="it-exchange-product-images">
+				<li id="it-exchange-add-new-image"><a href>Add New</a></li>
 			</ul>
 		<?php
 	}
