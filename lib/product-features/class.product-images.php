@@ -83,9 +83,13 @@ class IT_Exchange_Product_Feature_Product_Images {
 	*/
 	function print_metabox( $post ) {
 		?>
-			<ul id="it-exchange-product-images">
-				<li id="it-exchange-add-new-image"><a href>Add New</a></li>
-			</ul>
+			<label for="it-exchange-product-images-field">Images</label>
+			<div id="it-exchange-product-images">
+				<div id="it-exchange-feature-image"></div>
+				<ul id="it-exchange-gallery-images">
+					<li id="it-exchange-add-new-image" class="disable-sorting"><a href>Add New</a></li>
+				</ul>
+			</div>
 		<?php
 	}
 

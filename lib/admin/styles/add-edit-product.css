@@ -31,16 +31,17 @@
 #submitdiv {
 	display: none !important;
 }
-/** -----------------------------------------------------:[ normal ]:---------- */
-#it-exchange-add-edit-product-interface-main {
-	margin: 0;
-}
-#it_exchange_normal-sortables label {
+/** -----------------------------------------------------:[ global (page) ]:---------- */
+.it-exchange-add-edit-product label {
 	font-weight: bold;
 	font-size: 13px;
 	display: block;
 	color: #4e5559;
 	margin-bottom: 10px;
+}
+/** -----------------------------------------------------:[ normal ]:---------- */
+#it-exchange-add-edit-product-interface-main {
+	margin: 0;
 }
 #it_exchange_normal-sortables input,
 #it_exchange_normal-sortables textarea {
@@ -74,39 +75,62 @@
 }
 
 /** -----------------------------------------------------:[ side ]:---------- */
-#it-exchange-product-images {
-	max-width: 400px;
-	float: left;
+#it-exchange-feature-image {
 	width: 100%;
+	height: auto;
+} 
+#it-exchange-feature-image a {
+	display: block;
+	padding-right: 15px;
 }
-#it-exchange-product-images img {
+#it-exchange-feature-image img,
+#it-exchange-gallery-images img {
 	max-width: 100%;
 	height:auto;
 	display:block;
 }
-#it-exchange-product-images li {
+#it-exchange-gallery-images {
+	max-width: 400px;
+	float: left;
+	width: 100%;
+}
+#it-exchange-gallery-images a {
+	display: block;
+	padding-right: 5px;
+	cursor: move;
+}
+#it-exchange-gallery-images .disable-sorting a {
+	cursor: pointer;
+}
+#it-exchange-gallery-images li {
 	box-sizing: border-box;
 	overflow: hidden;
+	margin-bottom: 0;
 	float: left;
 	width: 130px;
 	height: 130px;
-	margin-right: 5px;
 }
-#it-exchange-product-images li:first-child {
+#it-exchange-gallery-images .ui-sortable-helper {
+	opacity: .7;
+}
+#it-exchange-gallery-images #it-exchange-add-new-image {
+	width: 125px;
+}
+#it-exchange-gallery-images #it-exchange-add-new-image a {
+	display: block;
+	border: 2px dashed #AAA;
+	height: 120px;
+}
+#it-exchange-gallery-images #it-exchange-add-new-image:first-child {
 	width: 100%;
-	height: auto;
-	float: none;
+	height: 250px;
+}
+#it-exchange-gallery-images #it-exchange-add-new-image:first-child a {
+	display: block;
+	width: auto;
+	height: 220px;
 }
 
-#it-exchange-product-images li:nth-child(3n+4) {
-	margin-right: 0;
-}
-#it-exchange-product-images #it-exchange-add-new-image {
-	border: 2px dashed #AAA;
-}
-#it-exchange-product-images #it-exchange-add-new-image:first-child {
-	height: 450px;
-}
 /** -----------------------------------------------------:[ advanced ]:---------- */
 #it-exchange-advanced-div,
 #it_exchange_advanced-sortables {
