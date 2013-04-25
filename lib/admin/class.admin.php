@@ -98,6 +98,9 @@ class IT_Exchange_Admin {
 
 		// General Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_general', array( $this, 'set_general_settings_defaults' ) );
+
+		// Page Settings Defaults
+		add_filter( 'it_storage_get_defaults_exchange_settings_pages', array( $this, 'set_pages_settings_defaults' ) );
 	}
 
 	/**
@@ -351,6 +354,27 @@ class IT_Exchange_Admin {
 	}
 
 	/**
+	 * Sets the Pages settings default values
+	 *
+	 * @since 0.4.0
+	 * @return array
+	*/
+	function set_pages_settings_defaults( $values ) {
+		$defaults = array(
+			'store'        => 'store',
+			'product'      => 'product',
+			'account'      => 'account',
+			'profile'      => 'profile',
+			'profile-edit' => 'edit',
+			'downloads'    => 'downloads',
+			'purchases'    => 'purchases',
+			'log-in'       => 'log-in',
+		);
+		$values = ITUtility::merge_defaults( $values, $defaults );
+		return $values;
+	}
+
+	/**
 	 * Prints the add-ons page in the admin area
 	 *
 	 * @since 0.2.0
@@ -493,23 +517,6 @@ class IT_Exchange_Admin {
 	}
 
 	/**
-	 * Prints the page options for use on page settings form
-	 *
-	 * @since 0.3.7
-	 * @return array wp page ID to page title
-	*/
-	function get_default_page_options() {
-		$options = array();
-		$options[0] = __( 'Select a Page', 'LION' );
-		if ( $page_options = get_pages() ) {
-			foreach( $page_options as $page ) {
-				$options[$page->ID] = get_the_title( $page->ID );
-			}
-		}
-		return $options;
-	}
-
-	/**
 	 * Save core general settings
 	 *
 	 * Validates data and saves to options.
@@ -637,6 +644,9 @@ class IT_Exchange_Admin {
             return;
         } 
 
+		// Trim all settings
+		$settings = array_map( 'sanitize_title', $settings );
+
 		if ( ! empty( $this->error_message ) || $error_msg = $this->page_settings_are_invalid( $settings ) ) {
 			if ( ! empty( $error_msg ) )
 				$this->error_message = $error_msg;
@@ -644,6 +654,8 @@ class IT_Exchange_Admin {
 			$this->_storage->save( $settings );
 			$this->_storage->clear_cache();
 			$this->status_message = __( 'Settings Saved.', 'LION' );
+			// Flush the rewrite rules
+			flush_rewrite_rules();
 		}
 	}
 
@@ -656,6 +668,10 @@ class IT_Exchange_Admin {
 	*/
 	function page_settings_are_invalid( $settings ) {
 		$errors = array();
+
+		// Make sure they aren't empty
+		if ( empty( $settings['store'] ) )
+			$errors[] = __( 'Store slug cannot be empty', 'LION' );
 
 		$errors = apply_filters( 'it_exchange_page_settings_validation_errors', $errors );
 		if ( ! empty ( $errors ) )

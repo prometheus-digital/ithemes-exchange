@@ -70,7 +70,7 @@ class IT_Exchange_Product_Feature_Product_Title {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-title', __( 'Title', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal' );
+		add_meta_box( 'it-exchange-product-title', __( 'Title', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'high' );
 	}
 
 	/**
