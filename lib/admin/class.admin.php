@@ -377,6 +377,12 @@ class IT_Exchange_Admin {
 			'purchases-slug'    => 'purchases',
 			'log-in-name'       => __( 'Log In', 'LION' ),
 			'log-in-slug'       => 'log-in',
+			'cart-name'         => __( 'Shopping Cart', 'LION' ),
+			'cart-slug'         => 'cart',
+			'checkout-name'     => __( 'Checkout', 'LION' ),
+			'checkout-slug'     => 'checkout',
+			'confirmation-name' => __( 'Thanks you for your purchase', 'LION' ),
+			'confirmation-slug' => 'confirmation',
 		);
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;

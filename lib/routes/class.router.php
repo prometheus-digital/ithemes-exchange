@@ -110,6 +110,42 @@ class IT_Exchange_Router {
 	public $_log_in_name;
 
 	/**
+	 * @var string $_cart_slug slug for the cart page
+	 * @since 0.4.0
+	*/
+	public $_cart_slug;
+
+	/**
+	 * @var string $_cart_name name for the cart page
+	 * @since 0.4.0
+	*/
+	public $_cart_name;
+
+	/**
+	 * @var string $_checkout_slug slug for the checkout page
+	 * @since 0.4.0
+	*/
+	public $_checkout_slug;
+
+	/**
+	 * @var string $_checkout_name name for the checkout page
+	 * @since 0.4.0
+	*/
+	public $_checkout_name;
+
+	/**
+	 * @var string $_confirmation_slug slug for the confirmation page
+	 * @since 0.4.0
+	*/
+	public $_confirmation_slug;
+
+	/**
+	 * @var string $_confirmation_name name for the confirmation page
+	 * @since 0.4.0
+	*/
+	public $_confirmation_name;
+
+	/**
 	 * @var boolean $_is_store is this a store page?
 	 * @since 0.4.0
 	*/
@@ -156,6 +192,24 @@ class IT_Exchange_Router {
 	 * @since 0.4.0
 	*/
 	public $_is_downloads = false;
+
+	/**
+	 * @var boolean $_is_cart is this the cart page?
+	 * @since 0.4.0
+	*/
+	public $_is_cart = false;
+
+	/**
+	 * @var boolean $_is_checkout is this the checkout page?
+	 * @since 0.4.0
+	*/
+	public $_is_checkout = false;
+
+	/**
+	 * @var boolean $_is_confirmation is this the confirmation page?
+	 * @since 0.4.0
+	*/
+	public $_is_confirmation = false;
 
 	/**
 	 * @var $_account the WP username for the current user
@@ -216,6 +270,12 @@ class IT_Exchange_Router {
 		$this->_purchases_name    = $slugs['purchases-name'];
 		$this->_log_in_slug       = $slugs['log-in-slug'];
 		$this->_log_in_name       = $slugs['log-in-name'];
+		$this->_cart_slug	      = $slugs['cart-slug'];
+		$this->_cart_name         = $slugs['cart-name'];
+		$this->_checkout_slug     = $slugs['checkout-slug'];
+		$this->_checkout_name     = $slugs['checkout-name'];
+		$this->_confirmation_slug = $slugs['confirmation-slug'];
+		$this->_confirmation_name = $slugs['confirmation-name'];
 	}
 
 	/**
@@ -234,12 +294,21 @@ class IT_Exchange_Router {
 		$this->_is_downloads    = (boolean) get_query_var( $this->_downloads_slug );
 		$this->_is_purchases    = (boolean) get_query_var( $this->_purchases_slug );
 		$this->_is_log_in       = (boolean) get_query_var( $this->_log_in_slug );
+		$this->_is_cart         = (boolean) get_query_var( $this->_cart_slug );
+		$this->_is_checkout     = (boolean) get_query_var( $this->_checkout_slug );
+		$this->_is_confirmation = (boolean) get_query_var( $this->_confirmation_slug );
 
 		// Set current view property
 		if ( $this->_is_log_in ) {
 			$this->_current_view = 'log-in';
 		} else if ( $this->_is_purchases ) {
 			$this->_current_view = 'purchases';
+		} else if ( $this->_is_cart ) {
+			$this->_current_view = 'cart';
+		} else if ( $this->_is_checkout ) {
+			$this->_current_view = 'checkout';
+		} else if ( $this->_is_confirmation ) {
+			$this->_current_view = 'confirmation';
 		} else if ( $this->_is_downloads ) {
 			$this->_current_view = 'downloads';
 		} else if ( $this->_is_profile_edit ) {
@@ -371,6 +440,9 @@ class IT_Exchange_Router {
 			$this->_downloads_slug,
 			$this->_purchases_slug,
 			$this->_log_in_slug,
+			$this->_cart_slug,
+			$this->_checkout_slug,
+			$this->_confirmation_slug,
 		);
 		return array_merge( $vars, $existing );
 	}
@@ -408,6 +480,15 @@ class IT_Exchange_Router {
 			// Account
 			$this->_account_slug . '/([^/]+)/?$' => 'index.php?' . $this->_account_slug . '=$matches[1]',
 			$this->_account_slug => 'index.php?' . $this->_account_slug . '=1',
+
+			// Cart
+			$this->_store_slug . '/' . $this->_cart_slug => 'index.php?' . $this->_cart_slug . '=1',
+
+			// Checkout
+			$this->_store_slug . '/' . $this->_checkout_slug => 'index.php?' . $this->_checkout_slug . '=1',
+
+			// Confirmation
+			$this->_store_slug . '/' . $this->_confirmation_slug . '/([^/]+)/?$' => 'index.php?' . $this->_confirmation_slug . '=$matches[1]',
 
 			// Store
 			$this->_store_slug  => 'index.php?' . $this->_store_slug . '=1',
