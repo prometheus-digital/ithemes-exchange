@@ -142,9 +142,14 @@ class IT_Exchange_Casper {
 	 *
 	 * @since 0.4.0
 	 *
+	 * @todo make this wrap a common function to share with IT_Exchange_Nav_Menu_Meta_Box class
 	 * @return string
 	*/
 	function get_guid() {
+
+		/*********************************************************************************
+		 IF THIS METHOD CHANGES, CHANGE IDENTICAL METHOD IN lib/routes/class.nav-menus.php
+		***********************************************************************************/
 		$current_view_as_slug = '_' . str_replace( '-', '_', $this->_current_view ) . '_slug';
 		$base = trailingslashit( get_home_url() );
 		$base = '';
