@@ -74,40 +74,12 @@ function it_exchange_register_core_addons() {
 				) ),
 			),
 		),
-		// Membership Levels
-		'memberships-product-type' => array(
-			'name'        => __( 'Membership Levels', 'LION' ),
-			'description' => __( 'Create different levels of access to your site.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-types/memberships/init.php',
-			'options'     => array( 
-				'category' => 'product-type',
-				'labels'   => array(
-					'singular_name' => __( 'Membership Level', 'LION' ),
-				),
-				'supports' => apply_filters( 'it_exchange_register_digital_downloads_default_features', array(
-				) ),
-			),
-		),
-		// Product Type admin Metabox
-		'product-type-metabox' => array(
-			'name'        => __( 'Product Type Metabox', 'LION' ),
-			'description' => __( 'Gives admins the ability to change a Product Type after creation of the Product via a metabox', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/admin/product-type-metabox/init.php',
-			'options'     => array( 'category' => 'admin' ),
-		),
 		// Transaction Status admin Metabox
 		'transaction-status-metabox' => array(
 			'name'        => __( 'Transaction Status Metabox', 'LION' ),
 			'description' => __( 'Gives admins the ability to change a Transaction Status via a metabox after creation of the Transaction', 'LION' ),
 			'file'        => dirname( __FILE__ ) . '/admin/transaction-status-metabox/init.php',
 			'options'     => array( 'category' => 'admin' ),
-		),
-		// Protected Content
-		'protected-content' => array(
-			'name'        => __( 'Protected Content', 'LION' ),
-			'description' => __( 'This add-on will allow you to protect site content based on a number of conditions.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-features/protected-content/init.php',
-			'options'     => array( 'category' => 'product-features' ),
 		),
 	);
 	$add_ons = apply_filters( 'it_exchange_core_addons', $add_ons );
