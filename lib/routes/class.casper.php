@@ -59,7 +59,7 @@ class IT_Exchange_Casper {
 		$this->_wp_query->post->post_date = current_time( 'mysql' );
 		$this->_wp_query->post->post_date_gmt = current_time( 'mysql', 1 );
 		$this->_wp_query->post->post_content = $this->get_content();
-		$this->_wp_query->post->post_title = ucfirst( $this->_current_view );
+		$this->_wp_query->post->post_title = $this->get_title();
 		$this->_wp_query->post->post_excerpt = '';
 		$this->_wp_query->post->post_status = 'publish';
 		$this->_wp_query->post->comment_status = false;
@@ -124,6 +124,19 @@ class IT_Exchange_Casper {
 		$content = ob_get_clean();
 		return $content;
 	}
+
+	/**
+	 * Generates a title for the ghost page
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return string
+	*/
+	function get_title() {
+		$var_name = '_' . str_replace( '-', '_', $this->_current_view ) . '_name';
+		return $this->_router->$var_name;
+	}
+
 	/**
 	 * Creates a guid based on the current view
 	 *

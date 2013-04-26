@@ -14,34 +14,64 @@
 class IT_Exchange_Router {
 
 	/**
-	 * @var string $_store slug for the store
+	 * @var string $_store_slug slug for the store
 	 * @since 0.4.0
 	*/
 	public $_store_slug;
 
 	/**
-	 * @var string $_product slug for products
+	 * @var string $_store_name name for the store
+	 * @since 0.4.0
+	*/
+	public $_store_name;
+
+	/**
+	 * @var string $_product_slug slug for products
 	 * @since 0.4.0
 	*/
 	public $_product_slug;
 
 	/**
-	 * @var string $_account slug for the account page
+	 * @var string $_product_name name for products
+	 * @since 0.4.0
+	*/
+	public $_product_name;
+
+	/**
+	 * @var string $_account_slug slug for the account page
 	 * @since 0.4.0
 	*/
 	public $_account_slug;
 
 	/**
-	 * @var string $_profile slug for the profile slug
+	 * @var string $_account_name name for the account page
+	 * @since 0.4.0
+	*/
+	public $_account_name;
+
+	/**
+	 * @var string $_profile_slug slug for the profile slug
 	 * @since 0.4.0
 	*/
 	public $_profile_slug;
 
 	/**
-	 * @var string $_profile_edit slug for the profile_edit page
+	 * @var string $_profile_name name for the profile slug
+	 * @since 0.4.0
+	*/
+	public $_profile_name;
+
+	/**
+	 * @var string $_profile_edit_slug slug for the profile_edit page
 	 * @since 0.4.0
 	*/
 	public $_profile_edit_slug;
+
+	/**
+	 * @var string $_profile_edit_name name for the profile_edit page
+	 * @since 0.4.0
+	*/
+	public $_profile_edit_name;
 
 	/**
 	 * @var string $_downloads_slug slug for the downloads page
@@ -50,16 +80,34 @@ class IT_Exchange_Router {
 	public $_downloads_slug;
 
 	/**
+	 * @var string $_downloads_name name for the downloads page
+	 * @since 0.4.0
+	*/
+	public $_downloads_name;
+
+	/**
 	 * @var string $_purchases_slug slug for the purchases page
 	 * @since 0.4.0
 	*/
 	public $_purchases_slug;
 
 	/**
+	 * @var string $_purchases_name name for the purchases page
+	 * @since 0.4.0
+	*/
+	public $_purchases_name;
+
+	/**
 	 * @var string $_log_in_slug slug for the purchases page
 	 * @since 0.4.0
 	*/
 	public $_log_in_slug;
+
+	/**
+	 * @var string $_log_in_name name for the purchases page
+	 * @since 0.4.0
+	*/
+	public $_log_in_name;
 
 	/**
 	 * @var boolean $_is_store is this a store page?
@@ -130,10 +178,10 @@ class IT_Exchange_Router {
 	*/
 	function IT_Exchange_Router() {
 		if ( is_admin() ) {
-			add_action( 'init', array( $this, 'set_slugs' ) );
+			add_action( 'init', array( $this, 'set_slugs_and_names' ) );
 			add_filter( 'rewrite_rules_array', array( $this, 'register_rewrite_rules' ) );
 		} else {
-			add_action( 'init', array( $this, 'set_slugs' ) );
+			add_action( 'init', array( $this, 'set_slugs_and_names' ) );
 			add_action( 'template_redirect', array( $this, 'set_environment' ), 8 );
 			add_action( 'template_redirect', array( $this, 'set_account' ), 9 );
 
@@ -150,16 +198,24 @@ class IT_Exchange_Router {
 	 *
 	 * @return void
 	*/
-	function set_slugs() {
+	function set_slugs_and_names() {
 		$slugs = it_exchange_get_option( 'exchange_settings_pages' );	
-		$this->_store_slug        = $slugs['store'];
-		$this->_product_slug      = $slugs['product'];
-		$this->_account_slug      = $slugs['account'];
-		$this->_profile_slug      = $slugs['profile'];
-		$this->_profile_edit_slug = $slugs['profile-edit'];
-		$this->_downloads_slug    = $slugs['downloads'];
-		$this->_purchases_slug    = $slugs['purchases'];
-		$this->_log_in_slug       = $slugs['log-in'];
+		$this->_store_slug        = $slugs['store-slug'];
+		$this->_store_name        = $slugs['store-name'];
+		$this->_product_slug      = $slugs['product-slug'];
+		$this->_product_name      = $slugs['product-name'];
+		$this->_account_slug      = $slugs['account-slug'];
+		$this->_account_name      = $slugs['account-name'];
+		$this->_profile_slug      = $slugs['profile-slug'];
+		$this->_profile_name      = $slugs['profile-name'];
+		$this->_profile_edit_slug = $slugs['profile-edit-slug'];
+		$this->_profile_edit_name = $slugs['profile-edit-name'];
+		$this->_downloads_slug    = $slugs['downloads-slug'];
+		$this->_downloads_name    = $slugs['downloads-name'];
+		$this->_purchases_slug    = $slugs['purchases-slug'];
+		$this->_purchases_name    = $slugs['purchases-name'];
+		$this->_log_in_slug       = $slugs['log-in-slug'];
+		$this->_log_in_name       = $slugs['log-in-name'];
 	}
 
 	/**

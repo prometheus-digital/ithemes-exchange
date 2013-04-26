@@ -17,63 +17,120 @@
 	<table class="form-table">
 		<?php do_action( 'it_exchange_general_settings_page_top' ); ?>
 		<tr valign="top">
-			<th scope="row"><strong>Page Settings</strong></th>
-			<td></td>
+			<th scope="row"><?php _e( 'Page', 'LION' ); ?></th>
+			<th scope="row"><?php _e( 'Page Title', 'LION' ); ?></th>
+			<th scope="row"><?php _e( 'Page Slug', 'LION' ); ?></th>
+			<th scope="row"><?php _e( 'Example URL', 'LION' ); ?></th>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it-exchange-page-store"><?php _e( 'Store Slug' ) ?></label></th>
 			<td>
-				<?php $form->add_text_box( 'store', array( 'class' => 'normal-text' ) ); ?>
-				<br /><span class="description"><?php _e( sprintf( 'The URL for your store: %s', '<br />' . get_home_url() . '/' . esc_attr( $form->get_option( 'store' ) ) . '/' ), 'LION' ); ?></span>
+				<label for="it-exchange-page-store"><?php _e( 'Store Slug' ) ?></label>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'store-name', array( 'class' => 'normal-text' ) ); ?>
+			<td>
+				<?php $form->add_text_box( 'store-slug', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/'; ?>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it-exchange-page-product"><?php _e( 'Single Product' ) ?></label></th>
 			<td>
-				<?php $form->add_text_box( 'product', array( 'class' => 'normal-text' ) ); ?>
-				<br /><span class="description"><?php _e( sprintf( 'The URL for a single product: %s', '<br />' . get_home_url() . '/' . esc_attr( $form->get_option( 'product' ) ) . '/shiny-widget/' ), 'LION' ); ?></span>
+				<label for="it-exchange-page-product"><?php _e( 'Single Product' ) ?></label>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'product-name', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'product-slug', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'product-slug' ) ) . '/shiny-widget/'; ?>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it-exchange-page-account"><?php _e( 'Account Slug' ) ?></label></th>
 			<td>
-				<?php $form->add_text_box( 'account', array( 'class' => 'normal-text' ) ); ?>
-				<br /><span class="description"><?php _e( sprintf( 'The URL for your customer account dashbaord: %s', '<br />' . get_home_url() . '/' . esc_attr( $form->get_option( 'account' ) ) . '/' ), 'LION' ); ?></span>
+				<label for="it-exchange-page-account"><?php _e( 'Account Page' ) ?></label>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'account-name', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'account-slug', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'account-slug' ) ) . '/'; ?>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it-exchange-page-profile"><?php _e( 'Profile Slug' ) ?></label></th>
 			<td>
-				<?php $form->add_text_box( 'profile', array( 'class' => 'normal-text' ) ); ?>
-				<br /><span class="description"><?php _e( sprintf( 'The URL for your customer profiles: %s', '<br />' . get_home_url() . '/' . esc_attr( $form->get_option( 'account' ) ) . '/' . esc_attr( $form->get_option( 'profile' ) ) . '/' ), 'LION' ); ?></span>
+				<label for="it-exchange-page-profile"><?php _e( 'Profile Page' ) ?></label>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'profile-name', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'profile-slug', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'account-slug' ) ) . '/' . esc_attr( $form->get_option( 'profile-slug' ) ) . '/'; ?>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it-exchange-page-profile-edit"><?php _e( 'Edit Profile Slug' ) ?></label></th>
 			<td>
-				<?php $form->add_text_box( 'profile-edit', array( 'class' => 'normal-text' ) ); ?>
-				<br /><span class="description"><?php _e( sprintf( 'The URL used by your customers to edit thier profiles: %s', '<br />' . get_home_url() . '/' . esc_attr( $form->get_option( 'account' ) ) . '/' . esc_attr( $form->get_option( 'profile' ) ) . '/' . esc_attr( $form->get_option( 'profile-edit' ) ) . '/' ), 'LION' ); ?></span>
+				<label for="it-exchange-page-profile-edit"><?php _e( 'Edit Profile' ) ?></label>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'profile-edit-name', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'profile-edit-slug', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'account-slug' ) ) . '/' . esc_attr( $form->get_option( 'profile-slug' ) ) . '/' . esc_attr( $form->get_option( 'profile-edit-slug' ) ) . '/'; ?>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it-exchange-page-profile-log-in"><?php _e( 'Customer Log in Slug' ) ?></label></th>
 			<td>
-				<?php $form->add_text_box( 'log-in', array( 'class' => 'normal-text' ) ); ?>
-				<br /><span class="description"><?php _e( sprintf( 'The URL used by your customers to log in to your store: %s', '<br />' . get_home_url() . '/' . esc_attr( $form->get_option( 'account' ) ) . '/' .  esc_attr( $form->get_option( 'log-in' ) ) . '/' ), 'LION' ); ?></span>
+				<label for="it-exchange-page-log-in"><?php _e( 'Customer Log in' ) ?></label>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'log-in-name', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'log-in-slug', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'account-slug' ) ) . '/' .  esc_attr( $form->get_option( 'log-in-slug' ) ) . '/'; ?>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it-exchange-page-profile-purchases"><?php _e( 'Customer Purchases Slug' ) ?></label></th>
 			<td>
-				<?php $form->add_text_box( 'purchases', array( 'class' => 'normal-text' ) ); ?>
-				<br /><span class="description"><?php _e( sprintf( 'The URL used by your customers to view their purchases: %s', '<br />' . get_home_url() . '/' . esc_attr( $form->get_option( 'account' ) ) . '/' .  esc_attr( $form->get_option( 'purchases' ) ) . '/' ), 'LION' ); ?></span>
+				<label for="it-exchange-page-profile-purchases"><?php _e( 'Customer Purchases' ) ?></label>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'purchases-name', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'purchases-slug', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'account-slug' ) ) . '/' .  esc_attr( $form->get_option( 'purchases-slug' ) ) . '/'; ?>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it-exchange-page-profile-downloads"><?php _e( 'Customer Downloads Slug' ) ?></label></th>
 			<td>
-				<?php $form->add_text_box( 'downloads', array( 'class' => 'normal-text' ) ); ?>
-				<br /><span class="description"><?php _e( sprintf( 'The URL used by your customers to view their downloads: %s', '<br />' . get_home_url() . '/' . esc_attr( $form->get_option( 'account' ) ) . '/' . esc_attr( $form->get_option( 'downloads' ) ) . '/' ), 'LION' ); ?></span>
+				<label for="it-exchange-page-profile-downloads"><?php _e( 'Customer Downloads' ) ?></label>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'downloads-name', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'downloads-slug', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'account-slug' ) ) . '/' . esc_attr( $form->get_option( 'downloads-slug' ) ) . '/'; ?>
 			</td>
 		</tr>
 		<?php do_action( 'it_exchange_general_settings_page_table_bottom' ); ?>

@@ -361,14 +361,22 @@ class IT_Exchange_Admin {
 	*/
 	function set_pages_settings_defaults( $values ) {
 		$defaults = array(
-			'store'        => 'store',
-			'product'      => 'product',
-			'account'      => 'account',
-			'profile'      => 'profile',
-			'profile-edit' => 'edit',
-			'downloads'    => 'downloads',
-			'purchases'    => 'purchases',
-			'log-in'       => 'log-in',
+			'store-name'        => __( 'Store', 'LION' ),
+			'store-slug'        => 'store',
+			'product-name'      => __( 'Product', 'LION' ),
+			'product-slug'      => 'product',
+			'account-name'      => __( 'Account', 'LION' ),
+			'account-slug'      => 'account',
+			'profile-name'      => __( 'Profile', 'LION' ),
+			'profile-slug'      => 'profile',
+			'profile-edit-name' => __( 'Edit Profile', 'LION' ),
+			'profile-edit-slug' => 'edit',
+			'downloads-name'    => __( 'Downloads', 'LION' ),
+			'downloads-slug'    => 'downloads',
+			'purchases-name'    => __( 'Purchases', 'LION' ),
+			'purchases-slug'    => 'purchases',
+			'log-in-name'       => __( 'Log In', 'LION' ),
+			'log-in-slug'       => 'log-in',
 		);
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;
@@ -644,8 +652,13 @@ class IT_Exchange_Admin {
             return;
         } 
 
-		// Trim all settings
-		$settings = array_map( 'sanitize_title', $settings );
+		// Trim all slug settings
+		foreach( $settings as $key => $value ) {
+			if ( 'slug' == substr( $key, -4 ) )
+				$settings[$key] = sanitize_title( $value );
+			else
+				$settings[$key] = trim($value);
+		}
 
 		if ( ! empty( $this->error_message ) || $error_msg = $this->page_settings_are_invalid( $settings ) ) {
 			if ( ! empty( $error_msg ) )
@@ -669,9 +682,12 @@ class IT_Exchange_Admin {
 	function page_settings_are_invalid( $settings ) {
 		$errors = array();
 
-		// Make sure they aren't empty
-		if ( empty( $settings['store'] ) )
-			$errors[] = __( 'Store slug cannot be empty', 'LION' );
+		foreach( $settings as $setting => $value ) {
+			if ( 'storage_version' == $setting )
+				continue;
+			if ( empty( $value ) )
+				$errors = array( __( 'Page settings cannot be left blank.', 'LION' ) );
+		}
 
 		$errors = apply_filters( 'it_exchange_page_settings_validation_errors', $errors );
 		if ( ! empty ( $errors ) )
