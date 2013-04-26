@@ -158,12 +158,12 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		// Return boolean if has flag was set
 		if ( $options['has'] )
-			return it_exchange_product_has_feature( $this->product->ID, 'base_price' );
+			return it_exchange_product_has_feature( $this->product->ID, 'base-price' );
 
-		if ( it_exchange_product_has_feature( $this->product->ID, 'base_price' ) ) {
+		if ( it_exchange_product_has_feature( $this->product->ID, 'base-price' ) ) {
 
 			$result     = '';
-			$base_price = it_exchange_get_product_feature( $this->product->ID, 'base_price' );
+			$base_price = it_exchange_get_product_feature( $this->product->ID, 'base-price' );
 			$defaults   = array(
 				'before' => '<span class="it-exchange-base-price">',
 				'after'  => '</span>',

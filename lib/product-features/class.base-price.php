@@ -21,10 +21,10 @@ class IT_Exchange_Base_Price {
 			add_action( 'init', array( $this, 'init_base_price_metaboxes' ) );
 			add_action( 'it_exchange_save_product', array( $this, 'save_base_price_on_product_save' ) );
 		}
-		add_action( 'it_exchange_update_product_feature_base_price', array( $this, 'save_base_price' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_base_price', array( $this, 'get_base_price' ), 9, 2 );
+		add_action( 'it_exchange_update_product_feature_base-price', array( $this, 'save_base_price' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_base-price', array( $this, 'get_base_price' ), 9, 2 );
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_base_price_support_to_product_types' ) );
-		add_filter( 'it_exchange_product_has_feature_base_price', array( $this, 'product_has_base_price') , 9, 2 );
+		add_filter( 'it_exchange_product_has_feature_base-price', array( $this, 'product_has_base_price') , 9, 2 );
 	}
 
 	/**
@@ -33,20 +33,20 @@ class IT_Exchange_Base_Price {
 	 * @since 0.3.8
 	*/
 	function add_base_price_support_to_product_types() {
-		// Register the base_price_addon
-		$slug        = 'base_price';
+		// Register the base-price_addon
+		$slug        = 'base-price';
 		$description = 'The base price for a product';
 		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
 		$products = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 		foreach( $products as $key => $params ) {
-			it_exchange_add_feature_support_to_product_type( 'base_price', $params['slug'] );
+			it_exchange_add_feature_support_to_product_type( 'base-price', $params['slug'] );
 		}
 	}
 
 	/**
-	 * Register's the metabox for any product type that supports the base_price feature
+	 * Register's the metabox for any product type that supports the base-price feature
 	 *
 	 * @since 0.3.8
 	 * @return void
@@ -56,9 +56,9 @@ class IT_Exchange_Base_Price {
 		if ( ! $product_addons = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) )
 			return;
 
-		// Loop through product types and register a metabox if it supports base_price
+		// Loop through product types and register a metabox if it supports base-price
 		foreach( $product_addons as $slug => $args ) {
-			if ( it_exchange_product_type_supports_feature( $slug, 'base_price' ) )
+			if ( it_exchange_product_type_supports_feature( $slug, 'base-price' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $slug, array( $this, 'register_metabox' ) );
 		}
 	}
@@ -66,19 +66,17 @@ class IT_Exchange_Base_Price {
 	/**
 	 * Registers the price metabox for a specific product type
 	 *
-	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports base_price
+	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports base-price
 	 *
 	 * @since 0.3.8
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it_exchange_base_price', __( 'Base Price', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'high' );
+		add_meta_box( 'it-exchange-base-price', __( 'Base Price', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'high' );
 	}
 
 	/**
 	 * This echos the base price metabox.
-	 *
-	 * It uses queries the product object for the key the base price is stored in. This allows for some product-types to store base_price elswere if they so choose
 	 *
 	 * @since 0.3.8
 	 * @return void
@@ -87,17 +85,17 @@ class IT_Exchange_Base_Price {
 		// Grab the iThemes Exchange Product object from the WP $post object
 		$product = it_exchange_get_product( $post );
 
-		// Set the value of the base_price for this product
-		$product_base_price     = it_exchange_get_product_feature( $product->ID, 'base_price' );
+		// Set the value of the base-price for this product
+		$product_base_price = it_exchange_get_product_feature( $product->ID, 'base-price' );
 
 		// Set description
 		$description = __( 'Price', 'LION' );
-		$description = apply_filters( 'it_exchange_base_price_addon_metabox_description', $description );
+		$description = apply_filters( 'it_exchange_base-price_addon_metabox_description', $description );
 
 		// Echo the form field
 		?>
-			<label for="_it_exchange_base_price"><?php esc_html_e( $description ); ?></label>
-			<input type="text" name="_it_exchange_base_price" value="<?php esc_attr_e( $product_base_price ); ?>" />
+			<label for="it-exchange-base-price"><?php esc_html_e( $description ); ?></label>
+			<input type="text" name="it-exchange-base-price" value="<?php esc_attr_e( $product_base_price ); ?>" />
 		<?php
 	}
 
@@ -120,19 +118,19 @@ class IT_Exchange_Base_Price {
 		if ( ! $product_id )
 			return;
 
-		// Abort if this product type doesn't support base_price
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'base_price' ) )
+		// Abort if this product type doesn't support base-price
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'base-price' ) )
 			return;
 
-		// Abort if key for base_price option isn't set in POST data
-		if ( ! isset( $_POST['_it_exchange_base_price'] ) )
+		// Abort if key for base-price option isn't set in POST data
+		if ( ! isset( $_POST['it-exchange-base-price'] ) )
 			return;
 
 		// Get new value from post
-		$new_price = $_POST['_it_exchange_base_price'];
+		$new_price = $_POST['it-exchange-base-price'];
 		
 		// Save new value
-		it_exchange_update_product_feature( $product_id, 'base_price', $new_price );
+		it_exchange_update_product_feature( $product_id, 'base-price', $new_price );
 	}
 
 	/**
@@ -146,7 +144,7 @@ class IT_Exchange_Base_Price {
 	 * @return bolean
 	*/
 	function save_base_price( $product_id, $new_price ) {
-		update_post_meta( $product_id, '_it_exchange_base_price', $new_price );
+		update_post_meta( $product_id, '_it-exchange-base-price', $new_price );
 	}
 
 	/**
@@ -155,10 +153,10 @@ class IT_Exchange_Base_Price {
 	 * @since 0.3.8
 	 * @param mixed $base_price the values passed in by the WP Filter API. Ignored here.
 	 * @param integer product_id the WordPress post ID
-	 * @return string base_price
+	 * @return string base-price
 	*/
 	function get_base_price( $base_price, $product_id ) {
-		$base_price = get_post_meta( $product_id, '_it_exchange_base_price', true );
+		$base_price = get_post_meta( $product_id, '_it-exchange-base-price', true );
 		return $base_price;
 	}
 
@@ -173,7 +171,7 @@ class IT_Exchange_Base_Price {
 	function product_has_base_price( $result, $product_id ) {
 		// Does this product type support base price?
 		$product_type = it_exchange_get_product_type( $product_id );
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'base_price' ) ) 
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'base-price' ) ) 
 			return false;
 		return (boolean) $this->get_base_price( false, $product_id );
 	}

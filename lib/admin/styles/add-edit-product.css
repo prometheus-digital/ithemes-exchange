@@ -62,11 +62,11 @@
 #it-exchange-product-title .inside {
 	padding-right: 3em;
 }
-#it_exchange_base_price {
+#it-exchange-base-price {
 	float: left;
 	width: 20%;
 }
-#it_exchange_base_price input {
+#it-exchange-base-price input {
 	text-align: right;
 }
 #it-exchange-product-description {
