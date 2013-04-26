@@ -107,7 +107,7 @@
 		</tr>
 		<tr valign="top">
 			<td>
-				<label for="it-exchange-page-profile-purchases"><?php _e( 'Customer Purchases' ) ?></label>
+				<label for="it-exchange-page-purchases"><?php _e( 'Customer Purchases' ) ?></label>
 			</td>
 			<td>
 				<?php $form->add_text_box( 'purchases-name', array( 'class' => 'normal-text' ) ); ?>
@@ -121,7 +121,7 @@
 		</tr>
 		<tr valign="top">
 			<td>
-				<label for="it-exchange-page-profile-downloads"><?php _e( 'Customer Downloads' ) ?></label>
+				<label for="it-exchange-page-downloads"><?php _e( 'Customer Downloads' ) ?></label>
 			</td>
 			<td>
 				<?php $form->add_text_box( 'downloads-name', array( 'class' => 'normal-text' ) ); ?>
@@ -131,6 +131,48 @@
 			</td>
 			<td>
 				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'account-slug' ) ) . '/' . esc_attr( $form->get_option( 'downloads-slug' ) ) . '/'; ?>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td>
+				<label for="it-exchange-page-cart"><?php _e( 'Shopping Cart' ) ?></label>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'cart-name', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'cart-slug', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/' . esc_attr( $form->get_option( 'cart-slug' ) ) . '/'; ?>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td>
+				<label for="it-exchange-page-checkout"><?php _e( 'Checkout' ) ?></label>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'checkout-name', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'checkout-slug', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/' . esc_attr( $form->get_option( 'checkout-slug' ) ) . '/'; ?>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td>
+				<label for="it-exchange-page-confirmation"><?php _e( 'Purchase Confirmation' ) ?></label>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'confirmation-name', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'confirmation-slug', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/' . esc_attr( $form->get_option( 'confirmation-slug' ) ) . '/'; ?>
 			</td>
 		</tr>
 		<?php do_action( 'it_exchange_general_settings_page_table_bottom' ); ?>
