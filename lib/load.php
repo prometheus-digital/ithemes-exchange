@@ -73,5 +73,7 @@ require( $this->_plugin_path . 'lib/routes/class.router.php' );
 if ( ! is_admin() ) {
 	require( $this->_plugin_path . 'lib/sessions/class.session.php' );
 	require( $this->_plugin_path . 'lib/cart/class.cart.php' );
+} else {
+	require( $this->_plugin_path . 'lib/routes/class.nav-menus.php' );
 }
 
