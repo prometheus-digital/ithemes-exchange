@@ -262,6 +262,7 @@ class IT_Exchange_Router {
 		} else {
 			add_action( 'template_redirect', array( $this, 'set_environment' ), 8 );
 			add_action( 'template_redirect', array( $this, 'set_account' ), 9 );
+			add_action( 'template_redirect', array( $this, 'protect_pages' ) );
 
 			add_filter( 'query_vars', array( $this, 'register_query_vars' ) );
 			add_filter( 'template_include', array( $this, 'fetch_template' ) );
@@ -389,6 +390,57 @@ class IT_Exchange_Router {
 			$account = false;
 
 		$this->_account = $account;
+	}
+
+	/**
+	 * Redirects users away from pages they don't have permission to view
+	 *
+	 * @since 0.4.0
+	 *
+	 * @todo Make this more robust. Give it an API
+	 * @return void
+	*/
+	function protect_pages() {
+
+		// If user is an admin, abandon this. They can see it all
+		if ( current_user_can( 'administrator' ) )
+			return;
+
+		// Set pages that we want to protect in one way or another
+		$pages_to_protect = array(
+			'account', 'profile', 'profile-edit', 'downloads', 'purchases', 'reports',
+		);
+
+		// Abandon if not a proteced page
+		if ( ! in_array( $this->_current_view, $pages_to_protect ) )
+			return;
+
+		// Get current user
+		$user = it_exchange_get_current_customer();
+
+		// If user ins't logged in, redirect
+		if ( empty( $user ) ) {
+			wp_redirect( it_exchange_get_page_url( 'log-in' ) );
+			die();
+		}
+
+		// If trying to view reports and not an admin, redirect
+		if ( 'reports' == $this->_current_view && ! current_user_can( 'administrator' ) ) {
+			if ( ! $user )
+				wp_redirect( it_exchange_get_page_url( 'log-in' ) );
+			else
+				wp_redirect( it_exchange_get_page_url( 'account' ) );
+			die();
+		}
+
+		// If current user isn't an admin and doesn't match the account, redirect
+		if ( $this->_account !=  $user->data->user_login && ! current_user_can( 'administrator' ) ) {
+			if ( ! $user )
+				wp_redirect( it_exchange_get_page_url( 'log-in' ) );
+			else
+				wp_redirect( it_exchange_get_page_url( 'store' ) );
+			die();
+		}
 	}
 
 	/**

@@ -97,7 +97,7 @@ function  it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 		$base = add_query_arg( array( $pages['account-slug'] => 1 ), $base );
 
 	$account_name = get_query_var( 'account' );
-	if ( $account_name && '1' != $account_name ) {
+	if ( $account_name && '1' != $account_name && 'log-in' != $page ) {
 		if ( $permalinks ) {
 			$base = trailingslashit( $base . $account_name );
 		} else {
