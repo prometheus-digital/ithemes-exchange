@@ -37,6 +37,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		'productimage'        => 'featured_image',
 		'featuredimage'       => 'featured_image',
 		'downloads'           => 'downloads',
+		'addtocart'           => 'add_to_cart',
+		'buynow'              => 'buy_now',
 	);
 
 	/**
@@ -398,5 +400,15 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		end( $GLOBALS['it_exchange']['downloads'] );
 		$GLOBALS['it_exchange']['download'] = false;
 		return false;
+	}
+
+	/**
+	 * Returns add_to_cart field or field_name
+	 *
+	 * @since 0.4.0
+	 * @return string
+	*/
+	function add_to_cart( $options=array() ) {
+		return 'add to cart for ' . $this->product->post_title . ' goes here';
 	}
 }

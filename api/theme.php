@@ -6,6 +6,7 @@
 include( $this->_plugin_path . '/api/theme/store.php' );
 include( $this->_plugin_path . '/api/theme/product.php' );
 include( $this->_plugin_path . '/api/theme/download.php' );
+include( $this->_plugin_path . '/api/theme/cart.php' );
 
 /**
  * Defines the main it_exchange function
@@ -93,7 +94,7 @@ function it_exchange() {
 
 		// Does the class exist and return an iThemes Exchange theme API context?
 		if ( ! is_callable( array( $class_name, 'get_api_context' ) ) )
-			die('not callable'.__FILE__. ' : ' . __LINE__); /** @todo register an error **/
+			die('not callable: '.$class_name . ' ' .__FILE__. ' : ' . __LINE__); /** @todo register an error **/
 
 		// Set the object
 		$object = new $class_name();

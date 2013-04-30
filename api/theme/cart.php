@@ -1,107 +1,91 @@
 <?php
 /**
- * These functions print HTML elements for the cart
+ * Cart class for THEME API
  *
- * @since 0.3.7
- * @package IT_Exchange
+ * @since 0.4.0
 */
 
-/**
- * This function returns the HTML for the shopping cart
- *
- * Theme developers may use this to print the shopping cart code.
- * Shopping cart add-on developers will hook to it for their carts.
- * It is also invoked via a shortcode
- *
- * @since 0.3.7
- * @return string html for the shopping cart
-*/
-function it_exchange_get_shopping_cart_html() {
-    $html  = it_exchange_get_errors_div();
-    $html .= it_exchange_get_alerts_div();
-    
-    ob_start();
-    it_exchange_get_template_part( 'shopping-cart' );
-    $html .= ob_get_clean();
-    return $html;
-}
+class IT_Theme_API_Cart implements IT_Theme_API {
+	
+	/**
+	 * API context
+	 * @var string $_context
+	 * @since 0.4.0
+	*/
+	private $_context = 'cart';
 
-/**
- * Retrieves the HTML to remove a product from the cart
- *
- * @since 0.3.7
- * @param mixed $cart_product_id the id of the product in the cart
- * @reuturn string HTML
-*/
-function it_exchange_get_remove_product_from_cart_link( $cart_product_id ) {
-
-	// Set template part vars
-	it_exchange_set_template_part_args( array( 'cart_product_id' => $cart_product_id ), 'remove-product-from-cart' );
-
-	ob_start();
-	it_exchange_get_template_part( 'remove-product-from-cart' );
-	return ob_get_clean();
-}
-
-/**
- * Generates the content for each table cell in the itemized products cart table
- *
- * @todo Dollar Signs shouldn't be hardcoded here!
- * @since 0.3.8
- * @return string HTML for cell
-*/
-function it_exchange_get_cart_table_product_data( $column, $product ) {
-    $db_product = it_exchange_get_product( $product['product_id'] );
-    switch( $column ) {
-        case 'product-remove' :
-            return it_exchange_get_remove_product_from_cart_link( $product['product_cart_id'] );
-            break;
-        case 'product-title' :
-            return it_exchange_get_cart_product_title( $product );
-            break;
-        case 'product-cost' :
-            $base_price = it_exchange_get_cart_product_base_price( $product );
-            $base_price = apply_filters( 'it_exchange_default_shopping_cart_get_product_base_price', $base_price, $product );
-            return '$' . $base_price;
-            break;
-        case 'product-quantity' :
-            return '<input type="text" name="product-quantity[' . $product['product_cart_id'] . ']" value="' . it_exchange_get_cart_product_quantity( $product ) . '" size="4"/>';
-            break;
-        case 'product-subtotal' :
-            return '$' . it_exchange_get_cart_product_subtotal( $product );
-            break;
-    }
-}
-
-/**
- * Generates an add to cart button
- *
- * Theme developers may use this to print the add_to_cart HTML
- * It is also invoked via a shortcode
- *
- * Default args
- * - product_id Product to add to the cart. If false and viewing a product page, current product will be used
- * - title Button title
- *
- * @since 0.3.7
- * @param array $args an array of args passed through to the template part
- * @return string HTML for the button
-*/
-function it_exchange_get_add_product_to_shopping_cart_html( $args=array() ) { 
-
-	// Set some default args for the template part
-	$default_args = array(
-		'action_var' => it_exchange_get_action_var( 'add_product_to_cart' ),
-		'product_id' => false,
-		'title'      => __( 'Add to Cart', 'LION' ),
+	/**
+	 * Maps api tags to methods
+	 * @var array $_tag_map
+	 * @since 0.4.0
+	*/
+	public $_tag_map = array(
+		'cartitems' => 'cart_items',
+		'formopen'  => 'form_open',
+		'formclose' => 'form_close',
+		'update'    => 'update_cart',
+		'checkout'  => 'checkout_cart',
+		'empty'     => 'empty_cart',
 	);
 
-	// Merge defaults with incoming args and set template part args
-	$args = wp_parse_args( $args, $default_args );
-	it_exchange_set_template_part_args( $args, 'add-product-to-cart-link' );
+	/**
+	 * Constructor
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function IT_Theme_API_Cart() {
+	}
 
-	// Do templating
-	ob_start();
-	it_exchange_get_template_part( 'add-product-to-cart' );
-	return ob_get_clean();
+	/**
+	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
+	 *
+	 * @since 0.4.0
+	 * 
+	 * @return string
+	*/
+	function get_api_context() {
+		return $this->_context;
+	}
+
+	/**
+	 * This loops through the cart session products and updates the cart-item global.
+	 *
+	 * It return false when it reaches the last item 
+	 * If the has flag has been passed, it just returns a boolean
+	 *
+	 * @since 0.4.0
+	 * @return string
+	*/
+	function cart_items( $options=array() ) {
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return count( it_exchange_get_cart_products() ) > 0 ;
+
+		// If we made it here, we're doing a loop of products for the current cart.
+		// We're USING the accessing the SESSION directly to make looping easier.
+		// This will init/reset the SESSION products and loop through them. the /api/theme/cart-item.php file will handle individual products.
+		if ( empty( $_SESSION['it_exchange']['cart_item'] ) ) {
+			$_SESSION['it_exchange']['cart-item'] = reset( $_SESSION['it_exchange']['products'] );
+			return true;
+		} else {
+			if ( next( $_SESSION['it_exchange']['products'] ) ) {
+				$_SESSION['it_exchange']['cart-item'] = current( $_SESSION['it_exchange']['products'] );
+				return true;
+			} else {
+				$_SESSION['it_exchange']['cart-item'] = false;
+				return false;
+			}
+		}
+		end( $_SESSION['it_exchange']['products'] );
+		$_SESSION['it_exchange']['cart-item'] = false;
+		return false;
+	}
+
+	function form_open( $options=array() ) { return 'form open'; }
+	function form_close( $options=array() ) { return 'form close'; }
+	function update_cart( $options=array() ) { return 'update cart'; }
+	function checkout_cart( $options=array() ) { return 'checkout cart'; }
+	function empty_cart( $options=array() ) { return 'empty cart'; }
 }
