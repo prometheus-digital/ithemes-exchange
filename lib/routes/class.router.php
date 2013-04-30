@@ -218,10 +218,16 @@ class IT_Exchange_Router {
 	public $_account = false;
 
 	/**
-	 * @var $_current_view the current Exchange frontend view
+	 * @var string $_current_view the current Exchange frontend view
 	 * @since 0.4.0
 	*/
 	public $_current_view = false;
+
+	/**
+	 * @var boolean $_pretty_permalinks are pretty permalinks set in WP Settings?
+	 * @since 0.4.0
+	*/
+	public $_pretty_permalinks = false;
 
 	/**
 	 * Constructor
@@ -231,11 +237,11 @@ class IT_Exchange_Router {
 	 * @return void
 	*/
 	function IT_Exchange_Router() {
+		add_action( 'init', array( $this, 'set_slugs_and_names' ) );
+		add_action( 'init', array( $this, 'set_pretty_permalinks_boolean' ) );
 		if ( is_admin() ) {
-			add_action( 'init', array( $this, 'set_slugs_and_names' ) );
 			add_filter( 'rewrite_rules_array', array( $this, 'register_rewrite_rules' ) );
 		} else {
-			add_action( 'init', array( $this, 'set_slugs_and_names' ) );
 			add_action( 'template_redirect', array( $this, 'set_environment' ), 8 );
 			add_action( 'template_redirect', array( $this, 'set_account' ), 9 );
 
@@ -276,6 +282,18 @@ class IT_Exchange_Router {
 		$this->_checkout_name     = $slugs['checkout-name'];
 		$this->_confirmation_slug = $slugs['confirmation-slug'];
 		$this->_confirmation_name = $slugs['confirmation-name'];
+	}
+
+	/**
+	 * Sets the pretty permalinks boolean
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function set_pretty_permalinks_boolean() {
+		$permalinks = get_option( 'permalink_structure' );
+		$this->_pretty_permalinks = ! empty( $permalinks );
 	}
 
 	/**
@@ -456,6 +474,7 @@ class IT_Exchange_Router {
 	 * @return array modified rewrite rules
 	*/
 	function register_rewrite_rules( $existing ) {
+		$this->set_slugs_and_names();
 		$new_rules = array(
 			// Edit Profile
 			$this->_account_slug . '/([^/]+)/' . $this->_profile_slug . '/' . $this->_profile_edit_slug => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_profile_edit_slug . '=1', 
@@ -492,7 +511,7 @@ class IT_Exchange_Router {
 
 			// Store
 			$this->_store_slug  => 'index.php?' . $this->_store_slug . '=1',
-		);  
+		);
 		return array_merge( $new_rules, $existing );
 	}
 }

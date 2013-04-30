@@ -113,77 +113,52 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 					<span class="spinner"></span>
 				</span>
 			</p>
-			<?php
-		}
+		</div>
+		<?php
+	}
 
-		/**
- 		 * Sets up the menu item for the walker
-		 *
-		 * @since 0.4.0
-		 * @return object
-		*/
-		function setup_menu_item( $menu_item ) {
-			include_once( 'class.casper.php' );
-			$type = empty( $menu_item->type ) ? false : $menu_item->type;
-			if ( 'it-exchange-ghost-page' != $type )
-				return $menu_item;
-
-			$menu_item->ID = $menu_item->slug;
-			$menu_item->db_id = 0;
-			$menu_item->menu_item_parent = 0;
-			$menu_item->object_id = $menu_item->slug;
-			$menu_item->post_parent = (int) 0;
-			$menu_item->type = 'custom';
-
-			$menu_item->object = $menu_item->name;
-			$menu_item->type_label = $menu_item->name;
-
-			$menu_item->title = $menu_item->name;
-			$menu_item->url = $this->get_url( $menu_item->setting, $menu_item->slug );
-			$menu_item->target = ''; 
-			$menu_item->attr_title = ''; 
-			$menu_item->description = 'test';
-			$menu_item->classes = array();
-			$menu_item->xfn = ''; 
-
+	/**
+	 * Sets up the menu item for the walker
+	 *
+	 * @since 0.4.0
+	 * @return object
+	*/
+	function setup_menu_item( $menu_item ) {
+		$type = empty( $menu_item->type ) ? false : $menu_item->type;
+		if ( 'it-exchange-ghost-page' != $type )
 			return $menu_item;
-		}
 
-		/** 
-		 * Creates a guid based on the current view
-		 *
-		 * @since 0.4.0
-		 *
-		 * @todo make this wrap a common function to share with IT_Exchange_Nav_Menu_Meta_Box class
-		 * @return string
-		*/
-		function get_url( $setting, $slug ) {
+		$menu_item->ID = $menu_item->slug;
+		$menu_item->db_id = 0;
+		$menu_item->menu_item_parent = 0;
+		$menu_item->object_id = $menu_item->slug;
+		$menu_item->post_parent = (int) 0;
+		$menu_item->type = 'custom';
 
-			/*********************************************************************************
-			 IF THIS METHOD CHANGES, CHANGE IDENTICAL METHOD IN lib/routes/class.casper.php
-			***********************************************************************************/
+		$menu_item->object = $menu_item->name;
+		$menu_item->type_label = $menu_item->name;
 
-			$pages = it_exchange_get_option( 'exchange_settings_pages' );
-			$base = trailingslashit( get_home_url() );
+		$menu_item->title = $menu_item->name;
+		$menu_item->url = $this->get_url( $menu_item->setting );
+		$menu_item->target = ''; 
+		$menu_item->attr_title = ''; 
+		$menu_item->description = 'test';
+		$menu_item->classes = array();
+		$menu_item->xfn = 'it-exchange-' . esc_attr( $menu_item->setting ); 
 
-			if ( 'store' == $setting )
-				return trailingslashit( $base . $slug );
+		return $menu_item;
+	}
 
-			if ( 'cart' == $setting )
-				return trailingslashit( $base . $pages['store-slug'] . '/' . $slug );
-
-			if ( 'checkout' == $setting )
-				return trailingslashit( $base . $pages['store-slug'] . '/' . $slug );
-
-			$base = trailingslashit( $base . $pages['account-slug'] );
-
-			if ( 'profile-edit' == $setting )
-				return trailingslashit( $base . $pages['profile-slug'] . '/' . $pages['profile-edit-slug'] );
-
-			if ( 'account' == $setting )
-				return $base;
-			else
-				return trailingslashit( $base . $slug );
-    } 
+	/** 
+	 * Creates a guid based on the current view
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param string $setting setting page
+	 * @return string
+	*/
+	function get_url( $setting ) {
+		return it_exchange_get_page_url( $setting );
+	}
 }
 $IT_Exchange_Nav_Menu_Meta_Box = new IT_Exchange_Nav_Menu_Meta_Box();

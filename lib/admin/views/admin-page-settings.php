@@ -32,7 +32,7 @@
 				<?php $form->add_text_box( 'store-slug', array( 'class' => 'normal-text' ) ); ?>
 			</td>
 			<td>
-				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/'; ?>
+				<?php echo it_exchange_get_page_url( 'store' ); ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -60,7 +60,7 @@
 				<?php $form->add_text_box( 'account-slug', array( 'class' => 'normal-text' ) ); ?>
 			</td>
 			<td>
-				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'account-slug' ) ) . '/'; ?>
+				<?php echo it_exchange_get_page_url( 'account' ); ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -74,7 +74,7 @@
 				<?php $form->add_text_box( 'profile-slug', array( 'class' => 'normal-text' ) ); ?>
 			</td>
 			<td>
-				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'account-slug' ) ) . '/' . esc_attr( $form->get_option( 'profile-slug' ) ) . '/'; ?>
+				<?php echo it_exchange_get_page_url( 'profile' ); ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -88,7 +88,7 @@
 				<?php $form->add_text_box( 'profile-edit-slug', array( 'class' => 'normal-text' ) ); ?>
 			</td>
 			<td>
-				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'account-slug' ) ) . '/' . esc_attr( $form->get_option( 'profile-slug' ) ) . '/' . esc_attr( $form->get_option( 'profile-edit-slug' ) ) . '/'; ?>
+				<?php echo it_exchange_get_page_url( 'profile-edit' ); ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -102,7 +102,7 @@
 				<?php $form->add_text_box( 'log-in-slug', array( 'class' => 'normal-text' ) ); ?>
 			</td>
 			<td>
-				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'account-slug' ) ) . '/' .  esc_attr( $form->get_option( 'log-in-slug' ) ) . '/'; ?>
+				<?php echo it_exchange_get_page_url( 'log-in' ); ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -116,7 +116,7 @@
 				<?php $form->add_text_box( 'purchases-slug', array( 'class' => 'normal-text' ) ); ?>
 			</td>
 			<td>
-				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'account-slug' ) ) . '/' .  esc_attr( $form->get_option( 'purchases-slug' ) ) . '/'; ?>
+				<?php echo it_exchange_get_page_url( 'purchases' ); ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -130,7 +130,7 @@
 				<?php $form->add_text_box( 'downloads-slug', array( 'class' => 'normal-text' ) ); ?>
 			</td>
 			<td>
-				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'account-slug' ) ) . '/' . esc_attr( $form->get_option( 'downloads-slug' ) ) . '/'; ?>
+				<?php echo it_exchange_get_page_url( 'downloads' ); ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -144,7 +144,7 @@
 				<?php $form->add_text_box( 'cart-slug', array( 'class' => 'normal-text' ) ); ?>
 			</td>
 			<td>
-				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/' . esc_attr( $form->get_option( 'cart-slug' ) ) . '/'; ?>
+				<?php echo it_exchange_get_page_url( 'cart' ); ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -158,7 +158,7 @@
 				<?php $form->add_text_box( 'checkout-slug', array( 'class' => 'normal-text' ) ); ?>
 			</td>
 			<td>
-				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/' . esc_attr( $form->get_option( 'checkout-slug' ) ) . '/'; ?>
+				<?php echo it_exchange_get_page_url( 'checkout' ); ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -172,7 +172,7 @@
 				<?php $form->add_text_box( 'confirmation-slug', array( 'class' => 'normal-text' ) ); ?>
 			</td>
 			<td>
-				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/' . esc_attr( $form->get_option( 'confirmation-slug' ) ) . '/'; ?>
+				<?php echo it_exchange_get_page_url( 'confirmation' ); ?>
 			</td>
 		</tr>
 		<?php do_action( 'it_exchange_general_settings_page_table_bottom' ); ?>

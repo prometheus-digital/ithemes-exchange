@@ -74,8 +74,10 @@ class IT_Exchange_Product_Post_Type {
 	*/
 	function set_rewrite_slug() {
 		$pages = it_exchange_get_option( 'exchange_settings_pages', true );
-		if ( ! empty( $pages['product'] ) )
-			$this->options['rewrite']['slug'] = $pages['product'];
+		if ( ! empty( $pages['product-slug'] ) ) {
+			$this->options['rewrite']['slug'] = $pages['product-slug'];
+			$this->options['query_var'] = $pages['product-slug'];
+		}
 	}
 
 	/**
@@ -86,6 +88,12 @@ class IT_Exchange_Product_Post_Type {
 	*/
 	function register_the_post_type() {
 		register_post_type( $this->post_type, $this->options );
+
+		/** @todo find a better way to do this. Option set when exchange page slugs updated **/
+		if ( false !== get_option( '_it-exchange-flush-rewrites', false ) ) {
+			delete_option( '_it-exchange-flush-rewrites' );
+			flush_rewrite_rules();
+		}
 	}
 
 	/**

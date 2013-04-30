@@ -146,26 +146,6 @@ class IT_Exchange_Casper {
 	 * @return string
 	*/
 	function get_guid() {
-
-		/*********************************************************************************
-		 IF THIS METHOD CHANGES, CHANGE IDENTICAL METHOD IN lib/routes/class.nav-menus.php
-		***********************************************************************************/
-		$current_view_as_slug = '_' . str_replace( '-', '_', $this->_current_view ) . '_slug';
-		$base = trailingslashit( get_home_url() );
-		$base = '';
-		if ( 'store' == $this->_current_view )
-			return trailingslashit( $base . $this->_router->_store_slug );
-
-		$base = trailingslashit( $base . $this->_router->_account_slug );
-		if ( $this->_router->_account )
-			$base = trailingslashit( $base . $this->_router->_account );
-
-		if ( 'profile-edit' == $this->_current_view )
-			return trailingslashit( $base . $this->_router->_profile_slug . '/' . $this->_router->_profile_edit_slug );
-
-		if ( 'account' == $this->_current_view )
-			return $base;
-		else
-			return trailingslashit( $base . $this->_router->$current_view_as_slug );
+		return it_exchange_get_page_url( str_replace( '_', '-', $this->_current_view ) );
 	}
 }

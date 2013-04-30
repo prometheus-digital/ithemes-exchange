@@ -58,3 +58,64 @@ function it_exchange_get_action_vars() {
 	);
 	return apply_filters( 'it_exchange_get_action_vars', $defaults );
 }
+
+/**
+ * Get permalink for ghost page
+ *
+ * @since 0.4.0
+ *
+ * @param string $page page setting
+ * @return string url
+*/
+function  it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
+	$pages = it_exchange_get_option( 'exchange_settings_pages', $clear_settings_cache );
+	$page_slug = $pages[$page . '-slug'];
+	$page_name = $pages[$page . '-name'];
+	$permalinks = (boolean) get_option( 'permalink_structure' );
+	$base = trailingslashit( get_home_url() );
+
+	if ( 'store' == $page ) {
+		if ( $permalinks )
+			return trailingslashit( $base . $page_slug );
+		else
+			return add_query_arg( array( $page_slug => 1 ), $base );
+	}
+
+	if ( in_array( $page, array( 'cart', 'checkout', 'confirmation' ) ) ) {
+		if ( $permalinks )
+			return trailingslashit( $base . $pages['store-slug'] . '/' . $page_slug );
+		else
+			return add_query_arg( array( $pages['store-slug'] => 1, $page_slug => 1 ), $base );
+	}
+
+	if ( $permalinks )
+		$base = trailingslashit( $base . $pages['account-slug'] );
+	else
+		$base = add_query_arg( array( $pages['account-slug'] => 1 ), $base );
+
+	$account_name = get_query_var( 'account' );
+	if ( $account_name && '1' != $account_name ) {
+		if ( $permalinks ) {
+			$base = trailingslashit( $base . $account_name );
+		} else {
+			$base = remove_query_arg( $pages['account-slug'], $base );
+			$base = add_query_arg( array( $pages['account-slug'] => $account_name ), $base );
+		}
+	}
+
+	if ( 'profile-edit' == $page ) {
+		if ( $permalinks )
+			return trailingslashit( $base . $pages['profile-slug'] . '/' . $pages['profile-edit-slug'] );
+		else
+			return add_query_arg( array( $pages['profile-slug'] => 1,  $pages['profile-edit-slug'] => 1 ), $base );
+	}
+
+	if ( 'account' == $page ) {
+		return $base;
+	} else {
+		if ( $permalinks )
+			return trailingslashit( $base . $page_slug );
+		else
+			return add_query_arg( array( $page_slug => 1 ), $base );
+	}
+}

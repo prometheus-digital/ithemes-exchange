@@ -101,6 +101,9 @@ class IT_Exchange_Admin {
 
 		// Page Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_pages', array( $this, 'set_pages_settings_defaults' ) );
+
+		// Update existing nav menu post_type entries when permalink structure is changed
+		add_action( 'update_option_permalink_structure', array( $this, 'maybe_update_ghost_pages_in_wp_nav_menus' ) );
 	}
 
 	/**
@@ -673,8 +676,56 @@ class IT_Exchange_Admin {
 			$this->_storage->save( $settings );
 			$this->_storage->clear_cache();
 			$this->status_message = __( 'Settings Saved.', 'LION' );
+
 			// Flush the rewrite rules
 			flush_rewrite_rules();
+
+			/** @todo Find a way around this. This is for updating product slugs **/
+			add_option( '_it-exchange-flush-rewrites', true );
+
+			// Maybe update Ghost Page nav urls
+			$this->maybe_update_ghost_pages_in_wp_nav_menus();
+		}
+	}
+
+	/**
+	 * Update URLs in nav menus
+	 *
+	 * If WP permalinks are updated or if Exchange page slugs are updated in settings, look for nav menu items, and update URLs
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function maybe_update_ghost_pages_in_wp_nav_menus() {
+		// We can't depend on params passed by action because we call this from elsewhere as well
+		$using_permalinks = (boolean) get_option( 'permalink_structure' );
+		$pages = it_exchange_get_option( 'exchange_settings_pages', true );
+		$args = array(
+			'post_type' => 'nav_menu_item',
+			'posts_per_page' => -1,
+			'meta_query' =>
+				array( 
+					'key' => '_menu_item_xfn',
+					'value' => 'it-exchange-',
+					'compare' => 'LIKE',
+				)
+		);
+		$nav_post_items = get_posts( $args );
+
+		// Loop through found posts and see if URL has changed since it was created.
+		foreach( $nav_post_items as $key => $item ) {
+			$page = get_post_meta( $item->ID, '_menu_item_xfn', true );
+			$page = substr( $page, 12 );
+			if ( empty( $pages[$page . '-slug'] ) )
+				continue;
+
+			$current_url = get_post_meta( $item->ID, '_menu_item_url', true );
+			$page_url = it_exchange_get_page_url( $page, true );
+
+			// If URL is different, update it.
+			if ( $current_url != $page_url )
+				update_post_meta( $item->ID, '_menu_item_url', $page_url );
 		}
 	}
 
