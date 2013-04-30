@@ -81,7 +81,7 @@ class IT_Exchange_Admin {
 
 		// Force 2 column view on add / edit products
 		add_filter( 'screen_layout_columns', array( $this, 'modify_add_edit_page_layout' ) );
-		add_filter( 'get_user_option_screen_layout_it_exchange_prod', 'update_user_column_options' ); // __return_true returns '1' :)
+		add_filter( 'get_user_option_screen_layout_it_exchange_prod', array( $this, 'update_user_column_options' ) );
 
 		// Save core settings
 		add_action( 'admin_init', array( $this, 'save_core_general_settings' ) );
