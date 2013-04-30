@@ -305,7 +305,7 @@ class IT_Exchange_Router {
 	*/
 	function set_environment() {
 		$this->_is_store        = (boolean) get_query_var( $this->_store_slug );
-		$this->_is_product      = (boolean) get_query_var( 'it_exchange_prod' );
+		$this->_is_product      = (boolean) get_query_var( $this->_product_slug );
 		$this->_is_account      = (boolean) get_query_var( $this->_account_slug );
 		$this->_is_profile      = (boolean) get_query_var( $this->_profile_slug );
 		$this->_is_profile_edit = (boolean) get_query_var( $this->_profile_edit_slug );
