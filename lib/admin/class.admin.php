@@ -384,8 +384,10 @@ class IT_Exchange_Admin {
 			'cart-slug'         => 'cart',
 			'checkout-name'     => __( 'Checkout', 'LION' ),
 			'checkout-slug'     => 'checkout',
-			'confirmation-name' => __( 'Thanks you for your purchase', 'LION' ),
+			'confirmation-name' => __( 'Thank you', 'LION' ),
 			'confirmation-slug' => 'confirmation',
+			'reports-name'      => __( 'Admin Reports', 'LION' ),
+			'reports-slug'      => 'reports',
 		);
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;

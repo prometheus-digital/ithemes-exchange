@@ -146,6 +146,18 @@ class IT_Exchange_Router {
 	public $_confirmation_name;
 
 	/**
+	 * @var string $_reports_slug slug for the reports page
+	 * @since 0.4.0
+	*/
+	public $_reports_slug;
+
+	/**
+	 * @var string $_reports_name name for the reports page
+	 * @since 0.4.0
+	*/
+	public $_reports_name;
+
+	/**
 	 * @var boolean $_is_store is this a store page?
 	 * @since 0.4.0
 	*/
@@ -218,6 +230,12 @@ class IT_Exchange_Router {
 	public $_account = false;
 
 	/**
+	 * @var boolean $_is_reports is this the reports page?
+	 * @since 0.4.0
+	*/
+	public $_is_reports = false;
+
+	/**
 	 * @var string $_current_view the current Exchange frontend view
 	 * @since 0.4.0
 	*/
@@ -282,6 +300,8 @@ class IT_Exchange_Router {
 		$this->_checkout_name     = $slugs['checkout-name'];
 		$this->_confirmation_slug = $slugs['confirmation-slug'];
 		$this->_confirmation_name = $slugs['confirmation-name'];
+		$this->_reports_slug      = $slugs['reports-slug'];
+		$this->_reports_name      = $slugs['reports-name'];
 	}
 
 	/**
@@ -315,6 +335,7 @@ class IT_Exchange_Router {
 		$this->_is_cart         = (boolean) get_query_var( $this->_cart_slug );
 		$this->_is_checkout     = (boolean) get_query_var( $this->_checkout_slug );
 		$this->_is_confirmation = (boolean) get_query_var( $this->_confirmation_slug );
+		$this->_is_reports      = (boolean) get_query_var( $this->_reports_slug );
 
 		// Set current view property
 		if ( $this->_is_log_in ) {
@@ -323,6 +344,8 @@ class IT_Exchange_Router {
 			$this->_current_view = 'purchases';
 		} else if ( $this->_is_cart ) {
 			$this->_current_view = 'cart';
+		} else if ( $this->_is_reports ) {
+			$this->_current_view = 'reports';
 		} else if ( $this->_is_checkout ) {
 			$this->_current_view = 'checkout';
 		} else if ( $this->_is_confirmation ) {
@@ -461,6 +484,7 @@ class IT_Exchange_Router {
 			$this->_cart_slug,
 			$this->_checkout_slug,
 			$this->_confirmation_slug,
+			$this->_reports_slug,
 		);
 		return array_merge( $vars, $existing );
 	}
@@ -508,6 +532,9 @@ class IT_Exchange_Router {
 
 			// Confirmation
 			$this->_store_slug . '/' . $this->_confirmation_slug . '/([^/]+)/?$' => 'index.php?' . $this->_confirmation_slug . '=$matches[1]',
+
+			// Admin Reports
+			$this->_store_slug . '/' . $this->_reports_slug => 'index.php?' . $this->_reports_slug . '=1',
 
 			// Store
 			$this->_store_slug  => 'index.php?' . $this->_store_slug . '=1',

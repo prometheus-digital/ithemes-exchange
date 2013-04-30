@@ -177,44 +177,16 @@
 		</tr>
 		<tr valign="top">
 			<td>
-				<label for="it-exchange-page-cart"><?php _e( 'Shopping Cart' ) ?></label>
+				<label for="it-exchange-page-reports"><?php _e( 'Admin Reports' ) ?></label>
 			</td>
 			<td>
-				<?php $form->add_text_box( 'cart-name', array( 'class' => 'normal-text' ) ); ?>
+				<?php $form->add_text_box( 'reports-name', array( 'class' => 'normal-text' ) ); ?>
 			</td>
 			<td>
-				<?php $form->add_text_box( 'cart-slug', array( 'class' => 'normal-text' ) ); ?>
+				<?php $form->add_text_box( 'reports-slug', array( 'class' => 'normal-text' ) ); ?>
 			</td>
 			<td>
-				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/' . esc_attr( $form->get_option( 'cart-slug' ) ) . '/'; ?>
-			</td>
-		</tr>
-		<tr valign="top">
-			<td>
-				<label for="it-exchange-page-checkout"><?php _e( 'Checkout' ) ?></label>
-			</td>
-			<td>
-				<?php $form->add_text_box( 'checkout-name', array( 'class' => 'normal-text' ) ); ?>
-			</td>
-			<td>
-				<?php $form->add_text_box( 'checkout-slug', array( 'class' => 'normal-text' ) ); ?>
-			</td>
-			<td>
-				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/' . esc_attr( $form->get_option( 'checkout-slug' ) ) . '/'; ?>
-			</td>
-		</tr>
-		<tr valign="top">
-			<td>
-				<label for="it-exchange-page-confirmation"><?php _e( 'Purchase Confirmation' ) ?></label>
-			</td>
-			<td>
-				<?php $form->add_text_box( 'confirmation-name', array( 'class' => 'normal-text' ) ); ?>
-			</td>
-			<td>
-				<?php $form->add_text_box( 'confirmation-slug', array( 'class' => 'normal-text' ) ); ?>
-			</td>
-			<td>
-				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/' . esc_attr( $form->get_option( 'confirmation-slug' ) ) . '/'; ?>
+				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/' . esc_attr( $form->get_option( 'reports-slug' ) ) . '/'; ?>
 			</td>
 		</tr>
 		<?php do_action( 'it_exchange_general_settings_page_table_bottom' ); ?>

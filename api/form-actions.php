@@ -74,6 +74,7 @@ function  it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 	$permalinks = (boolean) get_option( 'permalink_structure' );
 	$base = trailingslashit( get_home_url() );
 
+	// Store needs to be first
 	if ( 'store' == $page ) {
 		if ( $permalinks )
 			return trailingslashit( $base . $page_slug );
@@ -81,13 +82,15 @@ function  it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 			return add_query_arg( array( $page_slug => 1 ), $base );
 	}
 
-	if ( in_array( $page, array( 'cart', 'checkout', 'confirmation' ) ) ) {
+	// Any URLS in store breadcrumb need to come next
+	if ( in_array( $page, array( 'cart', 'checkout', 'confirmation', 'reports' ) ) ) {
 		if ( $permalinks )
 			return trailingslashit( $base . $pages['store-slug'] . '/' . $page_slug );
 		else
 			return add_query_arg( array( $pages['store-slug'] => 1, $page_slug => 1 ), $base );
 	}
 
+	// Replace account value with name if user is logged in
 	if ( $permalinks )
 		$base = trailingslashit( $base . $pages['account-slug'] );
 	else
