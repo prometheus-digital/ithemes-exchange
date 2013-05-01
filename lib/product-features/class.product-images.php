@@ -87,7 +87,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 			<div id="it-exchange-product-images">
 				<div id="it-exchange-feature-image"></div>
 				<ul id="it-exchange-gallery-images">
-					<li id="it-exchange-add-new-image" class="disable-sorting"><a href>Add New</a></li>
+					<li id="it-exchange-add-new-image" class="disable-sorting empty"><a href>Add New</a></li>
 				</ul>
 			</div>
 		<?php

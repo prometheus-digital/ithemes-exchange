@@ -78,9 +78,13 @@
 	width: 100%;
 	height: auto;
 } 
+#it-exchange-feature-image.over img {
+	opacity: .5;
+}
 #it-exchange-feature-image a {
 	display: block;
-	padding-right: 15px;
+	margin-right: 5px;
+	background: #000;
 }
 #it-exchange-feature-image img,
 #it-exchange-gallery-images img {
@@ -95,8 +99,12 @@
 }
 #it-exchange-gallery-images a {
 	display: block;
-	padding-right: 5px;
+	overflow: hidden;
 	cursor: move;
+	outline: none;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	box-shadow: #888 0 0 3px;
 }
 #it-exchange-gallery-images .disable-sorting a {
 	cursor: pointer;
@@ -106,29 +114,49 @@
 	overflow: hidden;
 	margin-bottom: 0;
 	float: left;
-	width: 130px;
-	height: 130px;
+	width: 33.3333333%;
+	height: auto;
 }
-#it-exchange-gallery-images .ui-sortable-helper {
-	opacity: .7;
+#it-exchange-gallery-images .sorting-placeholder a {
+	background: ;
+}
+#it-exchange-gallery-images .sorting-placeholder img {
+	opacity: .2;
+}
+#it-exchange-gallery-images .ui-sortable-helper a {
+	background: #000;
+	border: 3px solid #3487B4;
+	border-radius: 2px;
+	box-shadow: #888 0 0 10px, inset #fff 0 0 0 1px;
+}
+#it-exchange-gallery-images .ui-sortable-helper img {
+	opacity: .5;
 }
 #it-exchange-gallery-images #it-exchange-add-new-image {
 	width: 125px;
 }
+/*#it-exchange-gallery-images .sorting-placeholder span,
 #it-exchange-gallery-images #it-exchange-add-new-image a {
 	display: block;
-	border: 2px dashed #AAA;
 	height: 120px;
 }
-#it-exchange-gallery-images #it-exchange-add-new-image:first-child {
+#it-exchange-gallery-images .sorting-placeholder span {
+	margin-right: 5px;
+	border: 2px dashed red;
+}
+#it-exchange-gallery-images #it-exchange-add-new-image a {
+	border: 2px dashed #AAA;
+}
+#it-exchange-gallery-images #it-exchange-add-new-image.empty {
 	width: 100%;
 	height: 250px;
 }
-#it-exchange-gallery-images #it-exchange-add-new-image:first-child a {
+#it-exchange-gallery-images #it-exchange-add-new-image.empty a {
 	display: block;
 	width: auto;
 	height: 220px;
 }
+*/
 
 /** -----------------------------------------------------:[ advanced ]:---------- */
 #it-exchange-advanced-div,
