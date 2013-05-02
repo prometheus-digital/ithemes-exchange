@@ -104,7 +104,7 @@ class IT_Exchange_Admin {
 
 		// Update existing nav menu post_type entries when permalink structure is changed
 		add_action( 'update_option_permalink_structure', array( $this, 'maybe_update_ghost_pages_in_wp_nav_menus' ) );
-		
+
 		// Remove Quick Edit
 		add_filter( 'post_row_actions', array( $this, 'it_exchange_remove_quick_edit' ), 10, 2 );
 	}
@@ -1062,20 +1062,19 @@ class IT_Exchange_Admin {
 	 * @return array
 	*/
 	function it_exchange_remove_quick_edit( $actions, $post ) {
-		
+
 		$it_exchange_post_types = apply_filters( 'it_exchange_post_types', 
-									array(
-											'it_exchange_download',
-											'it_exchange_prod',
-											'it_exchange_tran',
-										) 
-									);
-		
+			array(
+				'it_exchange_download',
+				'it_exchange_prod',
+				'it_exchange_tran',
+			) 
+		);
+
 		if ( in_array( $post->post_type, $it_exchange_post_types ) ) 
 			unset( $actions['inline hide-if-no-js'] ); //unset the Quick Edit action
-			
+
 		return $actions;
-		
 	}
 
 }
