@@ -21,7 +21,7 @@
 function it_exchange_get_transaction_confirmation_page_html( $id=false ) {
 
 	// Get var for transaction method
-	$var = it_exchange_get_action_var( 'transaction_id' );
+	$var = it_exchange_get_field_name( 'transaction_id' );
 
 	// Set transaction ID from REQUEST if it exists
 	$transaction_id = empty( $_REQUEST[$var] ) ? false : $_REQUEST[$var];

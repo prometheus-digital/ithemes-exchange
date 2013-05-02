@@ -15,16 +15,26 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	*/
 	function IT_Exchange_Shopping_Cart() {
-		add_action( 'it_exchange_add_product_to_cart', array( $this, 'handle_add_product_to_cart_request' ), 9 );
-		add_action( 'it_exchange_empty_cart', array( $this, 'handle_empty_shopping_cart_request' ), 9 );
-		add_action( 'it_exchange_remove_product_from_cart', array( $this, 'handle_remove_product_from_cart_request' ), 9 );
-		add_action( 'it_exchange_update_cart', array( $this, 'handle_update_cart_quantity_request' ), 9 );
-		add_action( 'it_exchange_update_cart_action', array( $this, 'handle_update_cart_request' ), 9 );
-		add_action( 'it_exchange_purchase_cart', array( $this, 'handle_purchase_cart_request' ) );
-		add_action( 'it_exchange_proceed_to_checkout', array( $this, 'proceed_to_checkout' ), 9 );
-		add_action( 'template_redirect', array( $this, 'redirect_checkout_if_empty_cart' ) );
-		add_action( 'template_redirect', array( $this, 'register_cart_error_messages' ) );
-		add_filter( 'template_redirect', array( $this, 'register_cart_notice_messages' ) );
+		add_filter( 'it_exchange_get_error_messages', array( $this, 'register_cart_error_messages' ) );
+		add_filter( 'it_exchange_get_alert_messages', array( $this, 'register_cart_notice_messages' ) );
+		
+		add_action( 'template_redirect', array( $this, 'handle_it_exchange_cart_function' ) );
+	}
+	
+	/**
+	 * Handles $_REQUESTs and submits them to the cart for processing
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function handle_it_exchange_cart_function() {
+		
+		$this->redirect_checkout_if_empty_cart(); //if on checkout but have empty cart, redirect
+		
+		// make sure we're on a cart/checkout page
+		if ( isset( $_REQUEST['it-exchange-action'] ) )
+			call_user_func( array( $this, 'handle_' . esc_attr( $_REQUEST['it-exchange-action'] ) . '_request' ) );
+		
 	}
 
 	/**
@@ -35,7 +45,7 @@ class IT_Exchange_Shopping_Cart {
 	*/
 	function handle_add_product_to_cart_request() {
 
-		$add_to_cart_var = it_exchange_get_action_var( 'add_product_to_cart' );
+		$add_to_cart_var = it_exchange_get_field_name( 'add_product_to_cart' );
 		$product_id = empty( $_REQUEST[$add_to_cart_var] ) ? 0 : $_REQUEST[$add_to_cart_var];
 		$product    = it_exchange_get_product( $product_id );
 
@@ -50,12 +60,12 @@ class IT_Exchange_Shopping_Cart {
 
 		// Add product
 		if ( empty( $error ) && it_exchange_add_product_to_shopping_cart( $product_id ) ) {
-			$url = add_query_arg( array( it_exchange_get_action_var( 'alert_message' ) => 'product-added-to-cart' ) );
+			$url = add_query_arg( array( it_exchange_get_field_name( 'alert_message' ) => 'product-added-to-cart' ) );
 			wp_redirect( $url );
 			die();
 		}
 
-		$error_var = it_exchange_get_action_var( 'error_message' );
+		$error_var = it_exchange_get_field_name( 'error_message' );
 		$error = empty( $error ) ? 'product-not-added-to-cart' : $error;
 		$url  = add_query_arg( array( $error_var => $error ), $cart );
 		wp_redirect( $url );
@@ -72,8 +82,8 @@ class IT_Exchange_Shopping_Cart {
 
 		// Verify nonce
 		$nonce_var   = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
-		$error_var   = it_exchange_get_action_var( 'error_message' );
-		$message_var = it_exchange_get_action_var( 'alert_message' );
+		$error_var   = it_exchange_get_field_name( 'error_message' );
+		$message_var = it_exchange_get_field_name( 'alert_message' );
 		$cart        = it_exchange_get_page_url( 'cart' );
 		if ( empty( $_REQUEST[$nonce_var] ) 
 				|| ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) 
@@ -101,20 +111,20 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	*/
 	function handle_remove_product_from_cart_request() {
-		$var        = it_exchange_get_action_var( 'remove_product_from_cart' );
+		$var        = it_exchange_get_field_name( 'remove_product_from_cart' );
 		$product_id = empty( $_REQUEST[$var] ) ? false : $_REQUEST[$var];
 		$cart_url   = it_exchange_get_page_url( 'cart' );
 
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_remove_product_from_cart_nonce_var', '_wpnonce' );
 		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-remove-product-from-cart-' . $product_id ) || ! it_exchange_remove_product_from_shopping_cart( $product_id ) ) {
-			$var = it_exchange_get_action_var( 'error_message' );
+			$var = it_exchange_get_field_name( 'error_message' );
 			$url  = add_query_arg( array( $var => 'product-not-removed' ), $cart_url );
 			wp_redirect( $url );
 			die();
 		}
 
-		$var = it_exchange_get_action_var( 'alert_message' );
+		$var = it_exchange_get_field_name( 'alert_message' );
 		$url = add_query_arg( array( $var => 'product-removed' ), $cart_url );
 		wp_redirect( $url );
 		die();
@@ -130,14 +140,14 @@ class IT_Exchange_Shopping_Cart {
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
 		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) || ! it_exchange_update_shopping_cart() ) {
-			$var = it_exchange_get_action_var( 'error_message' );
+			$var = it_exchange_get_field_name( 'error_message' );
 			$cart = it_exchange_get_page_url( 'cart' );
 			$url  = add_query_arg( array( $var => 'cart-not-updated' ), $cart );
 			wp_redirect( $url );
 			die();
 		}
 
-		$message_var = it_exchange_get_action_var( 'alert_message' );
+		$message_var = it_exchange_get_field_name( 'alert_message' );
 		if ( ! empty ( $message_var ) ) {
 			$page = it_exchange_get_page_url( 'cart' );
 			$url = add_query_arg( array( $message_var => 'cart-updated' ), $page );
@@ -190,7 +200,7 @@ class IT_Exchange_Shopping_Cart {
 		}
 
 		// Verify transaction method exists
-		$method_var = it_exchange_get_action_var( 'transaction_method' );
+		$method_var = it_exchange_get_field_name( 'transaction_method' );
 		$requested_transaction_method = empty( $_REQUEST[$method_var] ) ? false : $_REQUEST[$method_var];
 		$enabled_addons = it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
 		if ( ! $requested_transaction_method || empty( $enabled_addons[$requested_transaction_method] ) ) {

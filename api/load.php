@@ -21,7 +21,7 @@ include( $this->_plugin_path . 'api/addons.php' );
 include( $this->_plugin_path . 'api/product-features.php' );
 
 // Register and retreive form actions
-include( $this->_plugin_path . 'api/form-actions.php' );
+include( $this->_plugin_path . 'api/misc.php' );
 
 // Product Type Add-ons
 include( $this->_plugin_path . 'api/products.php' );

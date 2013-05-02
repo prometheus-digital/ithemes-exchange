@@ -275,7 +275,7 @@ function it_exchange_get_cart_total() {
 */
 function it_exchange_do_confirmation_redirect( $transaction_id ) {
         $confirmation_url = it_exchange_get_page_url( 'confirmation' );
-        $transaction_var  = it_exchange_get_action_var( 'transaction_id' );
+        $transaction_var  = it_exchange_get_field_name( 'transaction_id' );
         $confirmation_url = add_query_arg( array( $transaction_var => $transaction_id ), $confirmation_url );
         wp_redirect( $confirmation_url );
         die();
@@ -289,7 +289,7 @@ function it_exchange_do_confirmation_redirect( $transaction_id ) {
 */
 function it_exchange_notify_failed_transaction( $message=false ) {
     $cart_url = it_exchange_get_page_url( 'checkout' );
-    $message_var = it_exchange_get_action_var( 'error_message' );
+    $message_var = it_exchange_get_field_name( 'error_message' );
     $message = empty( $message ) ? 'failed-transaction' : $message;
     $url = add_query_arg( array( $message_var => $message ) );
     wp_redirect( $url );

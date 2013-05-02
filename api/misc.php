@@ -6,44 +6,26 @@
 */
 
 /**
- * Fires a WP action hook when any of the registered iThemes Exchange link / form action are set 
+ * Returns a field name used in links and forms
  *
- * @since 0.3.7
- * @reutn void
-*/
-function it_exchange_cart_actions() {
-	
-	// Fires whena a product is being added to product to a cart
-	foreach( (array) it_exchange_get_action_vars() as $slug => $var ) {
-		if ( isset( $_REQUEST[$var] ) ) {
-			do_action( 'it_exchange_' . $slug, $_REQUEST[$var] );
-		}
-	}
-}
-add_action( 'template_redirect', 'it_exchange_cart_actions' );
-
-/**
- * Returns an action var used in links and forms
- *
- * @since 0.3.7
+ * @since 0.4.0
  * @param string $var var being requested
  * @return string var used in links / forms for different actions
 */
-function it_exchange_get_action_var( $var ) {
-	$vars = it_exchange_get_action_vars();
-	$value  = empty( $vars[$var] ) ? false : $vars[$var];
-	return apply_filters( 'it_exchange_get_action_var', $value, $var );
+function it_exchange_get_field_name( $var ) {
+	$field_names = it_exchange_get_field_names();
+	return empty( $field_names[$var] ) ? false : $field_names[$var];
 }
 
 /**
- * Returns an array of all action vars registered with iThemes Exchange
+ * Returns an array of all field names registered with iThemes Exchange
  *
- * @since 0.3.7
+ * @since 0.4.0
  * @return array
 */
-function it_exchange_get_action_vars() {
-	// Default vars
-	$defaults = array(
+function it_exchange_get_field_names() {
+	// required field names
+	$required = array(
 		'add_product_to_cart'      => 'it-exchange-add-product-to-cart',
 		'remove_product_from_cart' => 'it-exchange-remove-product-from-cart',
 		'update_cart_action'       => 'it-exchange-update-cart-request',
@@ -56,7 +38,8 @@ function it_exchange_get_action_vars() {
 		'transaction_id'           => 'it-exchange-transaction-id',
 		'transaction_method'       => 'it-exchange-transaction-method',
 	);
-	return apply_filters( 'it_exchange_get_action_vars', $defaults );
+	//We don't want users to modify the core vars, but we should let them add new ones.
+	return array_merge( $required, apply_filters( 'it_exchange_default_field_names', array() ) );
 }
 
 /**
@@ -67,7 +50,7 @@ function it_exchange_get_action_vars() {
  * @param string $page page setting
  * @return string url
 */
-function  it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
+function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 	$pages = it_exchange_get_option( 'exchange_settings_pages', $clear_settings_cache );
 	$page_slug = $pages[$page . '-slug'];
 	$page_name = $pages[$page . '-name'];

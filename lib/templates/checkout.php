@@ -72,14 +72,14 @@ if ( ! is_user_logged_in() )
 				<p>
 					<?php echo it_exchange_get_transaction_method_name( $method['slug'] ); ?>
 				</p>
-				<input type="hidden" name="<?php esc_attr_e( it_exchange_get_action_var( 'transaction_method' ) ); ?>" value="<?php esc_attr_e( $method['slug'] ); ?>" />
+				<input type="hidden" name="<?php esc_attr_e( it_exchange_get_field_name( 'transaction_method' ) ); ?>" value="<?php esc_attr_e( $method['slug'] ); ?>" />
 			<?php else : ?>
 				<p>
 					<?php _e( 'Choose a payment method', 'LION' ); ?>
 					<?php foreach( (array) $transaction_methods as $method ) : ?>
 						<br />
 						<label for="transaction-method-<?php esc_attr_e( $method['slug'] ); ?>">
-							<input type="radio" id="transaction-method-<?php esc_attr_e( $method['slug'] ); ?>" name="<?php esc_attr_e( it_exchange_get_action_var( 'transaction_method' ) ); ?>" value="<?php esc_attr_e( $method['slug'] ); ?>" />
+							<input type="radio" id="transaction-method-<?php esc_attr_e( $method['slug'] ); ?>" name="<?php esc_attr_e( it_exchange_get_field_name( 'transaction_method' ) ); ?>" value="<?php esc_attr_e( $method['slug'] ); ?>" />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo esc_html( it_exchange_get_transaction_method_name( $method['slug'] ) ); ?>
 						</label>
 					<?php endforeach; ?>
@@ -88,7 +88,7 @@ if ( ! is_user_logged_in() )
 		<?php endif; ?>
 
 		<p>
-			<input type="hidden" name="<?php esc_attr_e( it_exchange_get_action_var( 'purchase_cart' ) ); ?>" value=1 />
+			<input type="hidden" name="<?php esc_attr_e( it_exchange_get_field_name( 'purchase_cart' ) ); ?>" value=1 />
 			<input type="submit" name="it-exchange-place-order" value="<?php _e( 'Place Order', 'LION' ); ?>" />
 			&nbsp;<a href="<?php esc_attr_e( it_exchange_get_page_url( 'cart' ) ); ?>"><?php _e( 'Back to cart', 'LION' ); ?></a>
 		</p>

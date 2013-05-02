@@ -5,9 +5,9 @@
  * @package IT_Exchange
 */
 $form_action        = it_exchange_get_page_url( 'cart' );
-$update_cart_action = it_exchange_get_action_var( 'update_cart_action' );
-$checkout_action    = it_exchange_get_action_var( 'proceed_to_checkout' );
-$empty_cart_action  = it_exchange_get_action_var( 'empty_cart' );
+$update_cart_action = it_exchange_get_field_name( 'update_cart_action' );
+$checkout_action    = it_exchange_get_field_name( 'proceed_to_checkout' );
+$empty_cart_action  = it_exchange_get_field_name( 'empty_cart' );
 $table_columns      = it_exchange_get_cart_table_columns();
 $cart_products      = it_exchange_get_cart_products();
 ?>
