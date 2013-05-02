@@ -73,7 +73,7 @@ class IT_Exchange_Product_Post_Type {
 	 * @return void
 	*/
 	function set_rewrite_slug() {
-		$pages = it_exchange_get_option( 'exchange_settings_pages', true );
+		$pages = it_exchange_get_option( 'settings_pages', true );
 		if ( ! empty( $pages['product-slug'] ) ) {
 			$this->options['rewrite']['slug'] = $pages['product-slug'];
 			$this->options['query_var'] = $pages['product-slug'];

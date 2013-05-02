@@ -278,7 +278,7 @@ class IT_Exchange_Router {
 	 * @return void
 	*/
 	function set_slugs_and_names() {
-		$slugs = it_exchange_get_option( 'exchange_settings_pages' );	
+		$slugs                    = it_exchange_get_option( 'settings_pages' );	
 		$this->_store_slug        = $slugs['store-slug'];
 		$this->_store_name        = $slugs['store-name'];
 		$this->_product_slug      = $slugs['product-slug'];

@@ -28,12 +28,6 @@ class IT_Exchange_Admin {
 	var $_current_tab;
 
 	/**
-	 * @var object $_storage object for current settings tab 
-	 * @since 0.3.6
-	*/
-	var $_storage;
-
-	/**
 	 * @var string $status_message informative message for current settings tab 
 	 * @since 0.3.6
 	*/
@@ -65,9 +59,6 @@ class IT_Exchange_Admin {
 
 		// Open iThemes Exchange menu when on add/edit iThemes Exchange product post type
 		add_action( 'parent_file', array( $this, 'open_exchange_menu_on_post_type_views' ) );
-
-		// Load Storage
-		add_action( 'admin_init', array( $this, 'load_storage' ) );
 
 		// Add actions for iThemes registration
 		add_action( 'admin_menu', array( $this, 'add_exchange_admin_menu' ) );
@@ -118,23 +109,6 @@ class IT_Exchange_Admin {
 	function set_current_properties() {
 		$this->_current_page = empty( $_GET['page'] ) ? false : $_GET['page'];
 		$this->_current_tab = empty( $_GET['tab'] ) ? false : $_GET['tab'];
-	}
-
-	/**
-	 * Loads the storage object
-	 *
-	 * @since 0.3.6
-	 * return void
-	*/
-	function load_storage() {
-		if ( 'it-exchange-settings' != $this->_current_page )
-			return;
-
-		it_classes_load( 'it-storage.php' );
-		$tab = empty( $this->_current_tab ) ? 'general' : $this->_current_tab;
-		$key = 'exchange_settings'  . '_' . $tab;
-
-		$this->_storage = new ITStorage2( $key );
 	}
 
 	/**
@@ -304,7 +278,9 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function print_exchange_settings_page() {
-		$form_values  = empty( $this->error_message ) ? $this->_storage->load() : ITForm::get_post_data();
+		$flush_cache  = ! empty( $_POST );
+		$settings     = it_exchange_get_option( 'settings_general', $flush_cache );
+		$form_values  = empty( $this->error_message ) ? $settings : ITForm::get_post_data();
 		$form         = new ITForm( $form_values, array( 'prefix' => 'it_exchange_settings' ) );
 		$form_options = array(
 			'id'      => apply_filters( 'it_exchange_settings_form_id', 'it-exchange-settings' ),
@@ -324,7 +300,9 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function print_email_settings_page() {
-		$form_values  = empty( $this->error_message ) ? $this->_storage->load() : ITForm::get_post_data();
+		$flush_cache  = ! empty( $_POST );
+		$settings     = it_exchange_get_option( 'settings_email', $flush_cache );
+		$form_values  = empty( $this->error_message ) ? $settings : ITForm::get_post_data();
 		$form         = new ITForm( $form_values, array( 'prefix' => 'it_exchange_email_settings' ) );
 		$form_options = array(
 			'id'      => apply_filters( 'it_exchange_email_settings_form_id', 'it-exchange-email-settings' ),
@@ -345,7 +323,9 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function print_pages_settings_page() {
-		$form_values  = empty( $this->error_message ) ? $this->_storage->load() : ITForm::get_post_data();
+		$flush_cache  = ! empty( $_POST );
+		$settings     = it_exchange_get_option( 'settings_pages', $flush_cache );
+		$form_values  = empty( $this->error_message ) ? $settings : ITForm::get_post_data();
 		$form         = new ITForm( $form_values, array( 'prefix' => 'it_exchange_page_settings' ) );
 		$form_options = array(
 			'id'      => apply_filters( 'it_exchange_page_settings_form_id', 'it-exchange-page-settings' ),
@@ -552,7 +532,7 @@ class IT_Exchange_Admin {
 		if ( empty( $_POST ) || 'it-exchange-settings' != $this->_current_page || ! empty( $this->_current_tab ) )
 			return;
 
-		$settings = wp_parse_args( ITForm::get_post_data(), $this->_storage->load() );
+		$settings = wp_parse_args( ITForm::get_post_data(), it_exchange_get_option( 'settings_general' ) );
 
         // Check nonce
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-general-settings' ) ) { 
@@ -564,8 +544,7 @@ class IT_Exchange_Admin {
 			if ( ! empty( $error_msg ) )
 				$this->error_message = $error_msg;
 		} else {
-			$this->_storage->save( $settings );
-			$this->_storage->clear_cache();
+			it_exchange_save_option( 'settings_general', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
 	}
@@ -579,11 +558,11 @@ class IT_Exchange_Admin {
 	*/
 	function general_settings_are_invalid( $settings ) {
 		$errors = array();
-		if ( ! empty( $settings['company_email'] ) && ! is_email( $settings['company_email'] ) )
+		if ( ! empty( $settings['company-email'] ) && ! is_email( $settings['company-email'] ) )
 			$errors[] = __( 'Please provide a valid email address.', 'LION' );
-		if ( empty( $settings['currency_thousands_separator'] ) )
+		if ( empty( $settings['currency-thousands-separator'] ) )
 			$errors[] = __( 'Thousands Separator cannot be empty', 'LION' );
-		if ( empty( $settings['currency_decimals_separator'] ) )
+		if ( empty( $settings['currency-decimals-separator'] ) )
 			$errors[] = __( 'Decimals Separator cannot be empty', 'LION' );
 
 		$errors = apply_filters( 'it_exchange_general_settings_validation_errors', $errors );
@@ -605,7 +584,7 @@ class IT_Exchange_Admin {
 		if ( empty( $_POST ) || 'it-exchange-settings' != $this->_current_page || 'email' != $this->_current_tab )
 			return;
 
-		$settings = wp_parse_args( ITForm::get_post_data(), $this->_storage->load() );
+		$settings = wp_parse_args( ITForm::get_post_data(), it_exchange_get_option( 'settings_email' ) );
 
         // Check nonce
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-email-settings' ) ) { 
@@ -617,8 +596,7 @@ class IT_Exchange_Admin {
 			if ( ! empty( $error_msg ) )
 				$this->error_message = $error_msg;
 		} else {
-			$this->_storage->save( $settings );
-			$this->_storage->clear_cache();
+			it_exchange_save_option( 'settings_email', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
 	}
@@ -658,7 +636,7 @@ class IT_Exchange_Admin {
 		if ( empty( $_POST ) || 'it-exchange-settings' != $this->_current_page || 'pages' != $this->_current_tab )
 			return;
 
-		$settings = wp_parse_args( ITForm::get_post_data(), $this->_storage->load() );
+		$settings = wp_parse_args( ITForm::get_post_data(), it_exchange_get_option( 'settings_pages' ) );
 
         // Check nonce
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-page-settings' ) ) { 
@@ -678,8 +656,7 @@ class IT_Exchange_Admin {
 			if ( ! empty( $error_msg ) )
 				$this->error_message = $error_msg;
 		} else {
-			$this->_storage->save( $settings );
-			$this->_storage->clear_cache();
+			it_exchange_save_option( 'settings_pages', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 
 			// Flush the rewrite rules
@@ -705,7 +682,7 @@ class IT_Exchange_Admin {
 	function maybe_update_ghost_pages_in_wp_nav_menus() {
 		// We can't depend on params passed by action because we call this from elsewhere as well
 		$using_permalinks = (boolean) get_option( 'permalink_structure' );
-		$pages = it_exchange_get_option( 'exchange_settings_pages', true );
+		$pages = it_exchange_get_option( 'settings_pages', true );
 		$args = array(
 			'post_type' => 'nav_menu_item',
 			'posts_per_page' => -1,
@@ -745,8 +722,6 @@ class IT_Exchange_Admin {
 		$errors = array();
 
 		foreach( $settings as $setting => $value ) {
-			if ( 'storage_version' == $setting )
-				continue;
 			if ( empty( $value ) )
 				$errors = array( __( 'Page settings cannot be left blank.', 'LION' ) );
 		}

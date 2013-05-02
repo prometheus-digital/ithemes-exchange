@@ -33,7 +33,7 @@ function it_exchange_manual_payments_settings_callback() {
  * @return string
 */
 function it_exchange_get_manual_payments_name( $name ) { 
-    $options = it_exchange_get_option( 'exchange-addon-manual-payments' );
+    $options = it_exchange_get_option( 'addon_manual_payments' );
     if ( ! empty( $options['manual_payments_title'] ) ) 
         $name = $options['manual_payments_title'];
 
@@ -120,11 +120,11 @@ class IT_Exchange_Manual_Payments_Add_On {
 			do_action( 'it_exchange_save_add_on_settings_manual-payments' );
 		}
 
-		add_filter( 'it_storage_get_defaults_exchange-addon-manual-payments', array( $this, 'set_default_settings' ) );
+		add_filter( 'it_storage_get_defaults_exchange_addon_manual_payments', array( $this, 'set_default_settings' ) );
 	}
 
 	function print_settings_page() {
-		$settings = it_exchange_get_option( 'exchange-addon-manual-payments', true );
+		$settings = it_exchange_get_option( 'addon_manual_payments', true );
 		$form_values  = empty( $this->error_message ) ? $settings : ITForm::get_post_data();
 		$default_status_options = $this->get_default_status_options();
 		$form_options = array(
@@ -148,7 +148,7 @@ class IT_Exchange_Manual_Payments_Add_On {
 	 * @return void
 	*/
 	function save_settings() {
-		$defaults = it_exchange_get_option( 'exchange-addon-manual-payments' );
+		$defaults = it_exchange_get_option( 'addon_manual_payments' );
 		$new_values = wp_parse_args( ITForm::get_post_data(), $defaults );
 
 		// Check nonce
@@ -158,7 +158,7 @@ class IT_Exchange_Manual_Payments_Add_On {
 		}
 
 		$errors = apply_filters( 'it_exchange_add_on_manual_transaction_validate_settings', $this->get_form_errors( $new_values ), $new_values );
-		if ( ! $errors && it_exchange_save_option( 'exchange-addon-manual-payments', $new_values ) ) {
+		if ( ! $errors && it_exchange_save_option( 'addon_manual_payments', $new_values ) ) {
 			ITUtility::show_status_message( __( 'Settings saved.', 'LION' ) );
 		} else if ( $errors ) {
 			$errors = implode( '<br />', $errors );

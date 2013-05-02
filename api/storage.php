@@ -58,5 +58,6 @@ function it_exchange_save_option( $key, $value ) {
 */
 function it_exchange_get_storage( $key, $args=array() ) {
 	it_classes_load( 'it-storage.php' );
+	$key = 'exchange_' . $key;
 	return new ITStorage2( $key, $args );
 }

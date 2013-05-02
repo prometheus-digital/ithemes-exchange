@@ -155,7 +155,7 @@ function it_exchange_get_enabled_addons( $options=array() ) {
 	$registered = it_exchange_get_addons();
 
 	// Grab enabled add-ons from options
-	if ( false === $enabled = it_exchange_get_option( 'exchange_enabled_add_ons' ) )
+	if ( false === $enabled = it_exchange_get_option( 'enabled_add_ons' ) )
 		$enabled = array();
 
 	// Set each enabled with registered params
@@ -198,11 +198,11 @@ function it_exchange_filter_addons_by_category( $add_ons, $categories ) {
 */
 function it_exchange_enable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
-	$enabled = it_exchange_get_option( 'exchange_enabled_add_ons' );
+	$enabled = it_exchange_get_option( 'enabled_add_ons' );
 
 	if ( in_array( $add_on, array_keys( $registered ) ) ) {
 		$enabled[$add_on] = $registered[$add_on]['file'];
-		if ( it_exchange_save_option( 'exchange_enabled_add_ons', $enabled ) ) {
+		if ( it_exchange_save_option( 'enabled_add_ons', $enabled ) ) {
 			require( $registered[$add_on]['file'] );
 			do_action( 'it_exchange_add_on_enabled', $registered[$add_on] );
 			return $enabled;
@@ -221,11 +221,11 @@ function it_exchange_enable_addon( $add_on ) {
 */
 function it_exchange_disable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
-	$enabled = it_exchange_get_option( 'exchange_enabled_add_ons' );
+	$enabled = it_exchange_get_option( 'enabled_add_ons' );
 
 	if ( ! empty( $enabled[$add_on] ) ) {
 		unset( $enabled[$add_on] );
-		if ( it_exchange_save_option( 'exchange_enabled_add_ons', $enabled ) ) {
+		if ( it_exchange_save_option( 'enabled_add_ons', $enabled ) ) {
 			if ( ! empty( $registered[$add_on] ) )
 				do_action( 'it_exchange_add_on_disabled', $registered[$add_on] );
 			return $enabled;

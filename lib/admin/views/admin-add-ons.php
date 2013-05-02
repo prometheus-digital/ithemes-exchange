@@ -13,7 +13,7 @@
 
 	<h3>Enabled Add-ons</h3>
 	<?php
-	if ( $enabled = it_exchange_get_option( 'exchange_enabled_add_ons' ) ) { 
+	if ( $enabled = it_exchange_get_option( 'enabled_add_ons' ) ) { 
 		foreach( (array) $enabled as $slug => $location ) { 
 			if ( empty( $registered[$slug] ) ) 
 				continue;

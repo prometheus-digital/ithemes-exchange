@@ -302,7 +302,7 @@ function it_exchange_notify_failed_transaction( $message=false ) {
  * @return integer the WordPress page id if it exists.
 */
 function it_exchange_get_page_id( $page ) {
-	$pages = it_exchange_get_option( 'exchange_settings_pages' );
+	$pages = it_exchange_get_option( 'settings_pages' );
 	$id = empty( $pages[$page] ) ? false : (integer) $pages[$page];
 	return apply_filters( 'it_exchange_get_page_id', $id, $page );;
 }
