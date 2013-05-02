@@ -236,3 +236,14 @@ function it_exchange_get_transaction_method_name( $slug ) {
 function it_exchange_do_transaction( $method, $cart_object ) {
 	do_action( 'it_exchange_do_transaction_' . $method, $cart_object );
 }
+
+/**
+ * Returns an array of transaction statuses that translate as good for delivery
+ *
+ * @since 0.4.0
+ *
+ * @return array
+*/
+function it_exchange_get_successfull_transaction_stati( $transaction_method ) {
+	return apply_filters( 'it_exchange_get_successufll_transaction_stati_' . $transaction_method, array() );
+}
