@@ -1,4 +1,18 @@
 <?php
+
+
+
+
+/**
+ ################# THIS WHOLE FILE NEEDS TO BE REFACTORED TO WORK WITH THE NEW api/theme.php API. ############
+                  ################# THIS WAS A CARTBUDDY IMPLEMENTATION ############
+*/
+
+
+
+
+
+
 /**
  * This file contains functions useful for building a checkout page
  * @since 0.3.7

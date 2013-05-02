@@ -23,8 +23,8 @@ class IT_Exchange_Shopping_Cart {
 		add_action( 'it_exchange_purchase_cart', array( $this, 'handle_purchase_cart_request' ) );
 		add_action( 'it_exchange_proceed_to_checkout', array( $this, 'proceed_to_checkout' ), 9 );
 		add_action( 'template_redirect', array( $this, 'redirect_checkout_if_empty_cart' ) );
-		add_filter( 'it_exchange_get_error_messages', array( $this, 'register_cart_error_messages' ) );
-		add_filter( 'it_exchange_get_alert_messages', array( $this, 'register_cart_alert_messages' ) );
+		add_action( 'template_redirect', array( $this, 'register_cart_error_messages' ) );
+		add_filter( 'template_redirect', array( $this, 'register_cart_notice_messages' ) );
 	}
 
 	/**
@@ -283,36 +283,43 @@ class IT_Exchange_Shopping_Cart {
 	}
 
 	/**
-	 * Register error messages used with this add-on
+	 * Add errors if needed
 	 *
 	 * @since 0.3.8
-	 * @param array $messages existing messages
 	 * @return array
 	*/
-	function register_cart_error_messages( $messages ) {
-		$messages['bad-transaction-method'] = __( 'Please select a payment method', 'LION' );
-		$messages['failed-transaction']     = __( 'There was an error processing your transaction. Please try again.', 'LION' );
-		$messages['negative-cart-total']    = __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'LION' );
-		$messages['no-products-in-cart']    = __( 'You cannot checkout without any items in your cart.', 'LION' );
-		$messages['product-not-removed']    = __( 'Product not removed from cart. Please try again.', 'LION' );
-		$messages['cart-not-emptied']       = __( 'There was an error emptying your cart. Please try again.', 'LION' );
-		$messages['cart-not-updated']       = __( 'There was an error updating your cart. Please try again.', 'LION' );
-		return $messages;
+	function register_cart_error_messages() {
+		$errors['bad-transaction-method'] = __( 'Please select a payment method', 'LION' );
+		$errors['failed-transaction']     = __( 'There was an error processing your transaction. Please try again.', 'LION' );
+		$errors['negative-cart-total']    = __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'LION' );
+		$errors['no-products-in-cart']    = __( 'You cannot checkout without any items in your cart.', 'LION' );
+		$errors['product-not-removed']    = __( 'Product not removed from cart. Please try again.', 'LION' );
+		$errors['cart-not-emptied']       = __( 'There was an error emptying your cart. Please try again.', 'LION' );
+		$errors['cart-not-updated']       = __( 'There was an error updating your cart. Please try again.', 'LION' );
+
+		foreach( $errors as $var => $error ) {
+			if ( ! empty( $_REQUEST[$var] ) ) {
+				it_exchange_add_error( $error );
+			}
+		}
 	}
 
 	/**
-	 * Register alert messages used with this add-on
+	 * Register notice messages used with the cart
 	 *
-	 * @since 0.3.8
-	 * @param array $messages existing messages
+	 * @since 0.4.0
 	 * @return array
 	*/
-	function register_cart_alert_messages( $messages ) {
-		$messages['cart-updated']          = __( 'Cart Updated.', 'LION' );
-		$messages['cart-emptied']          = __( 'Cart Emptied', 'LION' );
-		$messages['product-removed']       = __( 'Product removed from cart.', 'LION' );
-		$messages['product-added-to-cart'] = __( 'Product added to cart', 'LION' );
-		return $messages;
+	function register_cart_notice_messages() {
+		$notices['cart-updated']          = __( 'Cart Updated.', 'LION' );
+		$notices['cart-emptied']          = __( 'Cart Emptied', 'LION' );
+		$notices['product-removed']       = __( 'Product removed from cart.', 'LION' );
+		$notices['product-added-to-cart'] = __( 'Product added to cart', 'LION' );
+
+		foreach( $notices as $var => $notice ) {
+			if ( ! empty( $_REQUEST[$var] ) )
+				it_exchange_add_notice( $notice );
+		}
 	}
 }
 

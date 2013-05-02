@@ -7,6 +7,7 @@ include( $this->_plugin_path . '/api/theme/store.php' );
 include( $this->_plugin_path . '/api/theme/product.php' );
 include( $this->_plugin_path . '/api/theme/download.php' );
 include( $this->_plugin_path . '/api/theme/cart.php' );
+include( $this->_plugin_path . '/api/theme/messages.php' );
 
 /**
  * Defines the main it_exchange function
