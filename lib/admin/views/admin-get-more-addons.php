@@ -52,7 +52,7 @@
 				if ( $addon['sale'] ) 
 					echo '<div class="sale-price">' . $addon['sale'] . '</div>';
 					
-				echo '<div class="add-on-buy-now"><a href="#">' . __( 'Buy Now', 'LION' ) . '</a></div>';
+				echo '<div class="add-on-buy-now"><a href="' . $addon['addon_url'] . '">' . __( 'Buy Now', 'LION' ) . '</a></div>';
 			}
 				
 			echo '</div>';
