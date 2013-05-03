@@ -91,6 +91,7 @@ class IT_Exchange {
 	 * @return void
 	*/
 	function addons_init() {
+		$registered = it_exchange_get_addons();
 		if ( $addons = it_exchange_get_enabled_addons() ) {
 			foreach( (array) $addons as $slug => $params ) {
 				if ( ! empty( $params['file'] ) && is_file( $params['file'] ) ) {
@@ -98,7 +99,7 @@ class IT_Exchange {
 				} else {
 					it_exchange_disable_addon( $slug );
 					if ( is_admin() ) {
-						wp_safe_redirect('admin.php?page=it-exchange-addons&message=addon-auto-disabled-' . $slug );
+						wp_safe_redirect('admin.php?page=it-exchange-addons&message=addon-auto-disabled-' . $addon );
 						die();
 					}
 				}

@@ -13,86 +13,89 @@ function it_exchange_register_core_addons() {
 	$add_ons = array(
 		// Manual Payments
 		'manual-payments' => array(
-			'name'        => __( 'Manual Payments', 'LION' ),
-			'description' => __( 'Use this Transaction Method to take payments offline.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/transaction-methods/manual-payments/init.php',
-			'options'     => array( 
-				'category' => 'transaction-methods',
-				'supports' => apply_filters( 'it_exchange_register_manual_payments_default_features', array(
-					'transaction_status' => array(
-						'key'       => '_it_exchange_transaction_status',
-						'componant' => 'post_meta',
-						'options'   => array(
-							'pending'    => _x( 'Pending', 'Transaction Status', 'LION' ),
-							'paid'		 => _x( 'Paid', 'Transaction Status', 'LION' ),
-							'refunded'   => _x( 'Refunded', 'Transaction Status', 'LION' ),
-							'voided'     => _x( 'Voided', 'Transaction Status', 'LION' ),
-						),
-						'default'   => 'pending',
+			'name'        	=> __( 'Manual Payments', 'LION' ),
+			'description' 	=> __( 'Use this Transaction Method to take payments offline.', 'LION' ),
+			'author'		=> 'iThemes',
+			'author_url'	=> 'http://ithemes.com',
+			'file'        	=> dirname( __FILE__ ) . '/transaction-methods/manual-payments/init.php',
+			'category' 		=> 'transaction-methods',
+			'tag' 			=> 'core',
+			'supports' 		=> apply_filters( 'it_exchange_register_manual_payments_default_features', array(
+				'transaction_status' => array(
+					'key'       => '_it_exchange_transaction_status',
+					'componant' => 'post_meta',
+					'options'   => array(
+						'pending'    => _x( 'Pending', 'Transaction Status', 'LION' ),
+						'paid'		 => _x( 'Paid', 'Transaction Status', 'LION' ),
+						'refunded'   => _x( 'Refunded', 'Transaction Status', 'LION' ),
+						'voided'     => _x( 'Voided', 'Transaction Status', 'LION' ),
 					),
-					'transaction_cart' => array(
-						'key'       => '_it_exchange_transaction_cart',
-						'componant' => 'post_meta',
-						'default'   => false,
-					),
-				) ),
-				'settings-callback' => 'it_exchange_manual_payments_settings_callback',
-			),
+					'default'   => 'pending',
+				),
+				'transaction_cart' => array(
+					'key'       => '_it_exchange_transaction_cart',
+					'componant' => 'post_meta',
+					'default'   => false,
+				),
+			) ),
+			'settings-callback' => 'it_exchange_manual_payments_settings_callback',
 		),
 		// PayPal Standard Transaction Method
-		'paypal-standard'   => array(
-			'name'        => __( 'PayPal Standard', 'LION' ),
-			'description' => __( 'Process Transactions with the PayPal Standard gateway.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/transaction-methods/paypal-standard/init.php',
-			'options'     => array( 
-				'category' => 'transaction-methods',
-				'supports' => apply_filters( 'it_exchange_register_paypal_standard_default_features', array() ),
-			),
-			'options'     => array( 'category' => 'transaction-methods' ),
+		'paypal-standard' => array(
+			'name'        	=> __( 'PayPal Standard', 'LION' ),
+			'description' 	=> __( 'Process Transactions with the PayPal Standard gateway.', 'LION' ),
+			'author'		=> 'iThemes',
+			'author_url'	=> 'http://ithemes.com',
+			'icon'          => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/transaction-methods/paypal-standard/paypal.jpg' ),
+			'file'        	=> dirname( __FILE__ ) . '/transaction-methods/paypal-standard/init.php',
+			'category' 		=> 'transaction-methods',
+			'tag' 			=> 'core',
+			'supports' 		=> apply_filters( 'it_exchange_register_paypal_standard_default_features', array() ),
 		),
 		// Stripe Transaction Method
-		'stripe'   => array(
-			'name'        => __( 'Stripe', 'LION' ),
-			'description' => __( 'Process Transactions with the Stripe payment gateway.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/transaction-methods/stripe/init.php',
-			'options'     => array( 
-				'category' => 'transaction-methods',
-				'supports' => apply_filters( 'it_exchange_register_stripe_default_features', array() ),
-			),
+		'stripe' => array(
+			'name'        	=> __( 'Stripe', 'LION' ),
+			'description' 	=> __( 'Process Transactions with the Stripe payment gateway.', 'LION' ),
+			'author'		=> 'iThemes',
+			'author_url'	=> 'http://ithemes.com',
+			'icon'          => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/transaction-methods/stripe/stripe.jpg' ),
+			'file'        	=> dirname( __FILE__ ) . '/transaction-methods/stripe/init.php',
+			'category' 		=> 'transaction-methods',
+			'tag' 			=> 'core',
+			'supports' 		=> apply_filters( 'it_exchange_register_stripe_default_features', array() ),
 		),
 		// Digital Download Product Types
 		'digital-downloads-product-type' => array(
-			'name'        => __( 'Digital Downloads', 'LION' ),
-			'description' => __( 'This adds an product type for distributing digital downloads through iThemes Exchange.', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/product-types/digital-downloads/init.php',
-			'options'     => array( 
-				'category' => 'product-type',
-				'labels'   => array(
-					'singular_name' => __( 'Digital Download', 'LION' ),
-				),
-				'supports' => apply_filters( 'it_exchange_register_digital_downloads_default_features', array(
-				) ),
+			'name'        	=> __( 'Digital Downloads', 'LION' ),
+			'description' 	=> __( 'This adds an product type for distributing digital downloads through iThemes Exchange.', 'LION' ),
+			'author'		=> 'iThemes',
+			'author_url'	=> 'http://ithemes.com',
+			'file'        	=> dirname( __FILE__ ) . '/product-types/digital-downloads/init.php',
+			'category' 		=> 'product-type',
+			'tag' 			=> 'core',
+			'labels'   		=> array(
+				'singular_name' => __( 'Digital Download', 'LION' ),
 			),
+			'supports' => apply_filters( 'it_exchange_register_digital_downloads_default_features', array(
+			) ),
 		),
 		// Transaction Status admin Metabox
 		'transaction-status-metabox' => array(
-			'name'        => __( 'Transaction Status Metabox', 'LION' ),
-			'description' => __( 'Gives admins the ability to change a Transaction Status via a metabox after creation of the Transaction', 'LION' ),
-			'file'        => dirname( __FILE__ ) . '/admin/transaction-status-metabox/init.php',
-			'options'     => array( 'category' => 'admin' ),
+			'name'        	=> __( 'Transaction Status Metabox', 'LION' ),
+			'description' 	=> __( 'Gives admins the ability to change a Transaction Status via a metabox after creation of the Transaction', 'LION' ),
+			'author'		=> 'iThemes',
+			'author_url'	=> 'http://ithemes.com',
+			'file'        	=> dirname( __FILE__ ) . '/admin/transaction-status-metabox/init.php',
+			'category' 		=> 'admin',
+			'tag' 			=> 'core',
 		),
 	);
 	$add_ons = apply_filters( 'it_exchange_core_addons', $add_ons );
 
 	// Loop through add-ons and register each one individually
-	foreach( (array) $add_ons as $slug => $params ) {
-		$name        = empty( $params['name'] )        ? false   : $params['name'];
-		$description = empty( $params['description'] ) ? ''      : $params['description'];
-		$file        = empty( $params['file'] )        ? false   : $params['file'];
-		$options     = empty( $params['options'] )     ? array() : (array) $params['options'];
-
-		it_exchange_register_addon( $slug, $name, $description, $file, $options );
-	}
+	foreach( (array) $add_ons as $slug => $params )
+		it_exchange_register_addon( $slug, $params );
+	
 }
 add_action( 'it_libraries_loaded', 'it_exchange_register_core_addons' );
 

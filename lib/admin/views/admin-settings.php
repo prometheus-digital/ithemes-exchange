@@ -9,11 +9,11 @@
 	<?php
 	screen_icon( 'page' );
 	$this->print_general_settings_tabs();
-	echo do_action( 'it_exchange_general_settings_page_top' );
+	do_action( 'it_exchange_general_settings_page_top' );
 
 	$form->start_form( $form_options, 'exchange-general-settings' );
 	?>
-		<?php echo do_action( 'it_exchange_general_settings_form_top', $form ); ?>
+		<?php do_action( 'it_exchange_general_settings_form_top', $form ); ?>
 		<table class="form-table">
 			<?php do_action( 'it_exchange_general_settings_table_top', $form ); ?>
 			<tr valign="top">
@@ -88,8 +88,8 @@
 			<?php do_action( 'it_exchange_general_settings_table_bottom', $form ); ?>
 		</table>
 		<p class="submit"><input type="submit" value="<?php _e( 'Save Changes', 'LION' ); ?>" class="button button-primary" /></p>
-		<?php echo do_action( 'it_exchange_general_settings_form_bottom', $form ); ?>
+		<?php do_action( 'it_exchange_general_settings_form_bottom', $form ); ?>
 	<?php $form->end_form(); ?>
-	<?php echo do_action( 'it_exchange_general_settings_page_bottom' ); ?>
+	<?php do_action( 'it_exchange_general_settings_page_bottom' ); ?>
 </div>
 <?php
