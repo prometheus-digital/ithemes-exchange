@@ -40,10 +40,14 @@
 	
 	if ( !empty( $addons ) ) { 
 	
+		$default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/default-add-on-icon.png' );
+		
 		foreach( (array) $addons as $addon ) {
 		
+			$icon = empty( $addon['options']['icon'] ) ? $default_icon : $addon['options']['icon'];
+		
 			echo '<div class="add-on-block">';
-			echo '<div class="add-on-icon"><img src="' . $addon['icon'] . '" /></div>';
+			echo '<div class="add-on-icon"><img src="' . $icon . '" /></div>';
 			echo '<h4>' . $addon['name'] . '</h4>';
 			echo '<span class="add-on-author">by <a href="' . $addon['author_url'] . '">' . $addon['author'] . '</a></span>';
 			echo '<span class="add-on-tag">' . $addon['options']['tag'] . '</span>';

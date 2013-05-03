@@ -42,7 +42,7 @@ function it_exchange_register_addon( $slug, $params ) {
 	if ( ! $file )
 		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Excahnge Add-ons require a file paramater.', 'LION' ) );
 	
-	$allowed_keys = array( 'category', 'tag', 'supports', 'labels', 'supports', 'settings-callback' );
+	$allowed_keys = array( 'category', 'tag', 'supports', 'labels', 'supports', 'settings-callback', 'icon' );
 	
 	foreach ( $params as $key => $value )
 		if ( in_array( $key, $allowed_keys ) )
@@ -169,6 +169,7 @@ function it_exchange_get_addon_categories() {
 function it_exchange_get_enabled_addons( $options=array() ) {
 	// Grab all registered add-ons
 	$registered = it_exchange_get_addons();
+	$enabled = array();
 
 	// Grab enabled add-ons from options
 	if ( false === $enabled_addons = it_exchange_get_option( 'enabled_add_ons' ) )
@@ -199,6 +200,7 @@ function it_exchange_get_enabled_addons( $options=array() ) {
 function it_exchange_get_disabled_addons( $options=array() ) {
 	// Grab all registered add-ons
 	$registered = it_exchange_get_addons();
+	$disable = array();
 
 	// Grab enabled add-ons from options
 	if ( false === $enabled_addons = it_exchange_get_option( 'enabled_add_ons' ) )
@@ -347,14 +349,14 @@ function is_it_exchange_addon_installed( $add_on ) {
 */
 function it_exchange_disable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
-	$enabled = it_exchange_get_option( 'enabled_add_ons' );
-
-	if ( ! empty( $enabled[$add_on] ) ) {
-		unset( $enabled[$add_on] );
-		if ( it_exchange_save_option( 'enabled_add_ons', $enabled ) ) {
+	$enabled_addons = it_exchange_get_option( 'enabled_add_ons' );
+	
+	if ( $key = array_search( $add_on, $enabled_addons ) ) {
+		unset( $enabled_addons[$key] );
+		if ( it_exchange_save_option( 'enabled_add_ons', $enabled_addons ) ) {
 			if ( ! empty( $registered[$add_on] ) )
 				do_action( 'it_exchange_add_on_disabled', $registered[$add_on] );
-			return $enabled;
+			return $enabled_addons;
 		}
 	}
 	return false;
