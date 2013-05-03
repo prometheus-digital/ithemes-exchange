@@ -147,11 +147,17 @@ class IT_Exchange_Admin {
 		if ( 'it-exchange-settings' == $this->_current_page && ! empty( $this->_current_tab ) )
 			$settings_callback = apply_filters( 'it_exchange_general_settings_tab_callback_' . $this->_current_tab, $settings_callback );
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->admin_menu_capability, 'it-exchange-settings', $settings_callback );
-
+		
 		// Add Add-ons menu item
 		$add_ons_callback = array( $this, 'print_exchange_add_ons_page' );
-		if ( 'it-exchange-addons' == $this->_current_page && ! empty( $this->_current_tab ) )
+		if ( 'it-exchange-addons' == $this->_current_page && ! empty( $this->_current_tab ) ) {
+			
 			$add_ons_callback = apply_filters( 'it_exchange_add_ons_tab_callback_' . $this->_current_tab, $add_ons_callback );
+		}
+		if ( !empty( $_GET['add-on-settings'] ) && $addon = it_exchange_get_addon( $_GET['add-on-settings'] ) ) {
+			if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) )
+				$add_ons_callback = $addon['options']['settings-callback'];
+		}
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->admin_menu_capability, 'it-exchange-addons', $add_ons_callback );
 	}
 
