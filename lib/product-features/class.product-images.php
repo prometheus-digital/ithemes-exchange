@@ -85,7 +85,10 @@ class IT_Exchange_Product_Feature_Product_Images {
 		?>
 			<label for="it-exchange-product-images-field">Images</label>
 			<div id="it-exchange-product-images">
-				<div id="it-exchange-feature-image"></div>
+				<div id="it-exchange-feature-image">
+					<div class="feature-image"></div>
+					<div class="replace-feature-image"><span>Replace featured image</span></div>
+				</div>
 				<ul id="it-exchange-gallery-images">
 					<li id="it-exchange-add-new-image" class="disable-sorting empty"><a href>Add New</a></li>
 				</ul>

@@ -29,6 +29,7 @@
 }
 /** -----------------------------------------------------:[ temporary ]:---------- */
 #submitdiv {
+	
 }
 /** -----------------------------------------------------:[ global (page) ]:---------- */
 .it-exchange-add-edit-product label {
@@ -77,9 +78,29 @@
 #it-exchange-feature-image {
 	width: 100%;
 	height: auto;
+	position: relative;
 } 
-#it-exchange-feature-image.over img {
-	opacity: .5;
+#it-exchange-feature-image .replace-feature-image {
+	opacity: 0
+}
+#it-exchange-feature-image .replace-feature-image {
+	 position: absolute;
+	 top: 0;
+	 bottom: 0;
+	 right: 5px;
+	 left: 0;
+	 background: rgba(0,0,0,.6); 
+}
+#it-exchange-feature-image .replace-feature-image span {
+	position: absolute;
+	left: 50px;
+	right: 50px;
+	padding: 15px 0;
+	border: 3px solid #FFF;
+	border-radius: 3px;
+	text-align: center;
+	font-size: 16px;
+	color: #FFF;
 }
 #it-exchange-feature-image a {
 	display: block;
