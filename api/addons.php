@@ -351,7 +351,7 @@ function it_exchange_disable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
 	$enabled_addons = it_exchange_get_option( 'enabled_add_ons' );
 	
-	if ( $key = array_search( $add_on, $enabled_addons ) ) {
+	if ( false !== $key = array_search( $add_on, $enabled_addons ) ) {
 		unset( $enabled_addons[$key] );
 		if ( it_exchange_save_option( 'enabled_add_ons', $enabled_addons ) ) {
 			if ( ! empty( $registered[$add_on] ) )

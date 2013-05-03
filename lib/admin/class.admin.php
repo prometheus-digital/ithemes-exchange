@@ -495,6 +495,7 @@ class IT_Exchange_Admin {
 	function enable_disable_registered_add_on() {
 		$enable_addon  = empty( $_GET['it-exchange-enable-addon'] ) ? false : $_GET['it-exchange-enable-addon'];
 		$disable_addon = empty( $_GET['it-exchange-disable-addon'] ) ? false : $_GET['it-exchange-disable-addon'];
+		$tab = empty( $_GET['tab'] ) ? false : $_GET['tab'];
 
 		if ( ! $enable_addon && ! $disable_addon )
 			return;
@@ -514,7 +515,7 @@ class IT_Exchange_Admin {
 
 		// Redirect if nonce not valid
 		if ( ! $nonce_valid ) {
-			wp_safe_redirect( admin_url( '/admin.php?page=it-exchange-addons&error=' . $message ) );
+			wp_safe_redirect( admin_url( '/admin.php?page=it-exchange-addons&tab=' . $tab . '&error=' . $message ) );
 			die();
 		}
 		
@@ -525,7 +526,7 @@ class IT_Exchange_Admin {
 				it_exchange_disable_addon( $slug );
 		}
 			
-		$redirect_to = admin_url( '/admin.php?page=it-exchange-addons&message=' . $message );
+		$redirect_to = admin_url( '/admin.php?page=it-exchange-addons&tab=' . $tab . '&message=' . $message );
 
 		// Redirect to settings page on activation if it exists
 		if ( $enable_addon ) {

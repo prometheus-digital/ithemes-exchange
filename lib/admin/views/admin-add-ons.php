@@ -57,9 +57,9 @@
 				echo '<div class="add-on-settings"><a href="' . admin_url( 'admin.php?page=it-exchange-addons&add-on-settings=' . $addon['slug'] ) . '">S</a></div>';
 			
 			if ( is_it_exchange_addon_enabled( $addon['slug'] ) )
-				echo '<div class="add-on-disable"><a href="' . wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-disable-addon=' . $addon['slug'], 'exchange-disable-add-on' ) . '">Disable</a></div>';
+				echo '<div class="add-on-disable"><a href="' . wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-disable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-disable-add-on' ) . '">Disable</a></div>';
 			else
-				echo '<div class="add-on-enable"><a href="' . wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-enable-addon=' . $addon['slug'], 'exchange-enable-add-on' ) . '">Enable</a></div>';
+				echo '<div class="add-on-enable"><a href="' . wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-enable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-enable-add-on' ) . '">Enable</a></div>';
 				
 			echo '</div>';
 			
