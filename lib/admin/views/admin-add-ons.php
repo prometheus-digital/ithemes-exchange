@@ -8,44 +8,65 @@
 ?>
 <div class="wrap">
 	<!-- temp icon --> 
-	<?php screen_icon( 'page' ); ?>  
-	<h2>iThemes Exchange Add-Ons</h2>
-
-	<h3>Enabled Add-ons</h3>
+	<?php screen_icon( 'page' );  ?>
+    
+	<h2>Add-ons</h2>
+    <p><?php _e( 'Add-Ons are features that you can add or remove depending on your needs. Selling your stuff should only be as complicated as you need it to be. Visit the Get More tab to see what else Exchange can do.', 'LION' ); ?></p>
+    
 	<?php
-	if ( $enabled = it_exchange_get_option( 'enabled_add_ons' ) ) { 
-		foreach( (array) $enabled as $slug => $location ) { 
-			if ( empty( $registered[$slug] ) ) 
-				continue;
-			$params = $registered[$slug];
-			// TEMPORARY UI
-			echo '<div style="height:200px;width:200px;border: 1px solid #444;float:left;margin-right:10px;"><div style="height:20px;background:#999;color:#fff;width:100%;text-align:center;padding:10px 0;">' . $params['name'] . '</div><p style="padding:5px">Category: ' . $add_on_cats[$params['options']['category']]['name'] . '</p><p style="padding:5px;">' . $params['description'] . '</p>';
-			if ( ! empty( $params['options']['settings-callback'] ) && is_callable( $params['options']['settings-callback'] ) ) 
-				echo '<p><a href="' . admin_url( 'admin.php?page=it-exchange-addons&add-on-settings=' . $slug ) . '">Settings</a>';
-			echo '<p style="margin-left:60px;text-align:center;width:75px;background:#999;border:1px solid #777;padding:2px;"><a href="' . wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-disable-addon=' . $slug, 'exchange-disable-add-on' ) . '" style="text-decoration:none;color:#fff;">Disable</a></p></div>';
+	$this->print_add_ons_page_tabs(); 
+	do_action( 'it_exchange_add_ons_page_top' );
+	?>
+
+	<?php
+	$tab = !empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'all';
+	
+	switch ( $tab ) {
+	
+		case 'enabled':
+			$addons = it_exchange_get_enabled_addons();
+			break;
+			
+		case 'disabled':
+			$addons = it_exchange_get_disabled_addons();
+			break;
+			
+		case 'all':
+		default:
+			$addons = it_exchange_get_addons();
+			break;
+		
+	}
+	
+	if ( !empty( $addons ) ) { 
+	
+		foreach( (array) $addons as $addon ) {
+		
+			echo '<div class="add-on-block">';
+			echo '<div class="add-on-icon"><img src="' . $addon['icon'] . '" /></div>';
+			echo '<h4>' . $addon['name'] . '</h4>';
+			echo '<span class="add-on-author">by <a href="' . $addon['author_url'] . '">' . $addon['author'] . '</a></span>';
+			echo '<span class="add-on-tag">' . $addon['options']['tag'] . '</span>';
+			echo '<p class="add-on-description">' . $addon['description'] . '</p>';
+
+			if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) ) 
+				echo '<div class="add-on-settings"><a href="' . admin_url( 'admin.php?page=it-exchange-addons&add-on-settings=' . $addon['slug'] ) . '">S</a></div>';
+			
+			if ( is_it_exchange_addon_enabled( $addon['slug'] ) )
+				echo '<div class="add-on-disable"><a href="' . wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-disable-addon=' . $addon['slug'], 'exchange-disable-add-on' ) . '">Disable</a></div>';
+			else
+				echo '<div class="add-on-enable"><a href="' . wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-enable-addon=' . $addon['slug'], 'exchange-enable-add-on' ) . '">Enable</a></div>';
+				
+			echo '</div>';
+			
 		}   
+		
 	} else {
+		
 		echo '<p>' . __( 'No Add-ons currently enabled', 'LION' ) . '</p>';
-	}   
-	?>  
-	<div style="height:1px;clear:both;-top:10px;"></div>
-	<hr />
-
-	<h3>Available Add-ons</h3>
-	<?php
-	$available_addons = false;
-	if ( ( $registered ) ) { 
-		foreach( $registered as $slug => $params ) { 
-			if ( ! empty( $enabled[$slug] ) ) 
-				continue;
-
-			$available_addons = true;
-			// TEMPORARY UI
-			echo '<div style="height:200px;width:200px;border: 1px solid #444;float:left;margin-right:10px;"><div style="height:20px;background:#999;color:#fff;width:100%;text-align:center;padding:10px 0;">' . $params['name'] . '</div><p style="padding:5px">Category: ' . $add_on_cats[$params['options']['category']]['name'] . '</p><p style="padding:5px;">' . $params['description'] . '</p><p style="margin-left:60px;text-align:center;width:75px;background:#999;border:1px solid #777;padding:2px;"><a href="' . wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-enable-addon=' . $slug, 'exchange-enable-add-on' ) . '" style="text-decoration:none;color:#fff;">Enable</a></p></div>';
-		}   
-	}   
-	if ( ! $available_addons )
-		echo '<p>' . __( 'No Add-ons available', 'LION' ) . '</p>';
-	?>  
+		
+	}
+	 
+	?> 
 </div>
 <?php

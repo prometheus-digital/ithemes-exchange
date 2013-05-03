@@ -11,7 +11,7 @@ if ( is_admin() ) {
 	include( $this->_plugin_path . 'api/admin.php' );
 } else {
 	// Frontend only
-	include( $this->_plugin_path . '/api/theme.php' );
+	include( $this->_plugin_path . 'api/theme.php' );
 }
 
 // Contains functions for registering / retreiving Add-ons, Add-on categories, and Add-on sets

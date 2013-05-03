@@ -92,6 +92,12 @@ class IT_Exchange_Admin {
 
 		// Page Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_pages', array( $this, 'set_pages_settings_defaults' ) );
+		
+		// Add-On Page Filters
+		add_action( 'it_exchange_print_add_ons_page_tab_links', array( $this, 'print_enabled_add_ons_tab_link' ) );
+		add_action( 'it_exchange_print_add_ons_page_tab_links', array( $this, 'print_disabled_add_ons_tab_link' ) );
+		add_filter( 'it_exchange_add_ons_tab_callback_get-more', array( $this, 'register_get_more_add_ons_tab_callback' ) );
+		add_action( 'it_exchange_print_add_ons_page_tab_links', array( $this, 'print_get_more_add_ons_tab_link' ) );
 
 		// Update existing nav menu post_type entries when permalink structure is changed
 		add_action( 'update_option_permalink_structure', array( $this, 'maybe_update_ghost_pages_in_wp_nav_menus' ) );
@@ -141,14 +147,10 @@ class IT_Exchange_Admin {
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->admin_menu_capability, 'it-exchange-settings', $settings_callback );
 
 		// Add Add-ons menu item
-		$callback = array( $this, 'print_exchange_add_ons_page' );
-		if ( 'it-exchange-addons' == $this->_current_page && ! empty( $_GET['add-on-settings'] ) ) {
-			if ( $addon = it_exchange_get_addon( $_GET['add-on-settings'] ) ) {
-				if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) )
-					$callback = $addon['options']['settings-callback'];
-			}
-		}
-		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->admin_menu_capability, 'it-exchange-addons', $callback );
+		$add_ons_callback = array( $this, 'print_exchange_add_ons_page' );
+		if ( 'it-exchange-addons' == $this->_current_page && ! empty( $this->_current_tab ) )
+			$add_ons_callback = apply_filters( 'it_exchange_add_ons_tab_callback_' . $this->_current_tab, $add_ons_callback );
+		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->admin_menu_capability, 'it-exchange-addons', $add_ons_callback );
 	}
 
 	/**
@@ -236,6 +238,85 @@ class IT_Exchange_Admin {
 		<?php do_action( 'it_exchange_print_general_settings_tab_links', $this->_current_tab ); ?>
 		</h2>
 		<?php
+	}
+
+	/**
+	 * Prints the tabs for the iThemes Exchange Add-ons Page
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function print_add_ons_page_tabs() {
+		$active = empty( $this->_current_tab ) ? 'nav-tab-active' : '';
+		?>
+		<h2 class="nav-tab-wrapper">
+		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons' ); ?>"><?php _e( 'All', 'LION' ); ?></a>
+		<?php do_action( 'it_exchange_print_add_ons_page_tab_links', $this->_current_tab ); ?>
+		</h2>
+		<?php
+	}
+	
+	/**
+	 * Prints the enabled tab for the Add-ons Page
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function print_enabled_add_ons_tab_link( $current_tab ) {
+		$active = 'enabled' == $current_tab ? 'nav-tab-active' : '';
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&tab=enabled' ); ?>"><?php _e( 'Enabled', 'LION' ); ?></a><?php
+	}
+	
+	/**
+	 * Prints the disabled tab for the Add-ons Page
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function print_disabled_add_ons_tab_link( $current_tab ) {
+		$active = 'disabled' == $current_tab ? 'nav-tab-active' : '';
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&tab=disabled' ); ?>"><?php _e( 'Disabled', 'LION' ); ?></a><?php
+	}
+
+	/**
+	 * Registers the callback for the get more add-ons tab
+	 *
+	 * @param mixed default callback for add-ons page. 
+	 * @since 0.4.0
+	 * @return mixed function or class method name
+	*/
+	function register_get_more_add_ons_tab_callback( $default ) {
+		return array( $this, 'print_get_more_add_ons_page' );
+	}
+	
+	/**
+	 * Prints the enabled add ons page for iThemes Exchange
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function print_get_more_add_ons_page() {
+		$add_on_cats = it_exchange_get_addon_categories();
+		$message = empty( $_GET['message'] ) ? false : $_GET['message'];
+		if ( 'installed' == $message )
+			ITUtility::show_status_message( __( 'Add-on installed.', 'LION' ) );
+
+		$error = empty( $_GET['error'] ) ? false : $_GET['error'];
+		if ( 'installed' == $error )
+			ITUtility::show_error_message( __( 'Error: Add-on not installed.', 'LION' ) );
+
+		include( 'views/admin-get-more-addons.php' );
+	}
+	
+	/**
+	 * Prints the Get More tab for the Add-ons Page
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function print_get_more_add_ons_tab_link( $current_tab ) {
+		$active = 'get-more' == $current_tab ? 'nav-tab-active' : '';
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&tab=get-more' ); ?>"><?php _e( 'Get More', 'LION' ); ?></a><?php
 	}
 
 	/**
@@ -383,7 +464,6 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function print_exchange_add_ons_page() {
-		$registered = it_exchange_get_addons();
 		$add_on_cats = it_exchange_get_addon_categories();
 		$message = empty( $_GET['message'] ) ? false : $_GET['message'];
 		if ( 'enabled' == $message ) {
@@ -438,7 +518,7 @@ class IT_Exchange_Admin {
 		
 		// Disable any enabled add-ons that aren't registered any more while we're here.
 		$enabled_addons = it_exchange_get_enabled_addons();
-		foreach( (array) $enabled_addons as $slug => $file ) {
+		foreach( (array) $enabled_addons as $slug => $params ) {
 			if ( empty( $registered[$slug] ) )
 				it_exchange_disable_addon( $slug );
 		}

@@ -10,9 +10,9 @@
 	<?php
 	screen_icon( 'page' );
 	$this->print_general_settings_tabs();
-	echo do_action( 'it_exchange_general_settings_page_page_top' );
+	do_action( 'it_exchange_general_settings_page_page_top' );
 	$form->start_form( $form_options, 'exchange-page-settings' );
-	echo do_action( 'it_exchange_general_settings_page_form_top' );
+	do_action( 'it_exchange_general_settings_page_form_top' );
 	?>
 	<table class="form-table">
 		<?php do_action( 'it_exchange_general_settings_page_top' ); ?>

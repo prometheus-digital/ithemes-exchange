@@ -8,9 +8,9 @@
 ?>  
 <div class="wrap">
 	<h2>Manual Payment Settings</h2>
-	<?php echo do_action( 'it_exchange_manual_payments_settings_page_top' ); ?>
+	<?php do_action( 'it_exchange_manual_payments_settings_page_top' ); ?>
 	<?php $form->start_form( $form_options, 'it-exchange-manual-payments-settings' ); ?>
-		<?php echo do_action( 'it_exchange_manual_payments_settings_form_top' ); ?>
+		<?php do_action( 'it_exchange_manual_payments_settings_form_top' ); ?>
 		<table class="form-table">
 			<?php do_action( 'it_exchange_manual_payments_settings_table_top' ); ?>
 			<tr valign="top">
