@@ -263,6 +263,7 @@ class IT_Exchange_Router {
 			add_action( 'template_redirect', array( $this, 'set_environment' ), 8 );
 			add_action( 'template_redirect', array( $this, 'set_account' ), 9 );
 			add_action( 'template_redirect', array( $this, 'protect_pages' ) );
+			add_action( 'template_redirect', array( $this, 'set_wp_query_vars' ) );
 
 			add_filter( 'query_vars', array( $this, 'register_query_vars' ) );
 			add_filter( 'template_include', array( $this, 'fetch_template' ) );
@@ -390,6 +391,17 @@ class IT_Exchange_Router {
 			$account = false;
 
 		$this->_account = $account;
+	}
+
+	/**
+	 * Adds some custom query vars to WP_Query
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function set_wp_query_vars() {
+		set_query_var( 'it_exchange_view', $this->_current_view );
 	}
 
 	/**

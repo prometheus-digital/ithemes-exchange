@@ -8,10 +8,34 @@
 class IT_Exchange_Super_Widget extends WP_Widget {
 	
 	/**
+	 * @var array $pages exchange pages options
+	 * @since 0.4.0
+	*/
+	var $pages;
+
+	/**
+	 * @var boolean $using_permalinks are permalinks set in WP settings?
+	 * @since 0.4.0
+	*/
+	var $using_permalinks;
+
+	/**
+	 * @var array $valid_states a filterable list of valid super widget states
+	 * @since 0.4.0
+	*/
+	var $valid_states;
+
+	/**
 	 * @var string $state the current state of the widget
 	 * @since 0.4.0
 	*/
-	var $state;
+	var $state = false;
+
+	/**
+	 * @var string $it_exchange_view current view set by class.router.php
+	 * @since 0.4.0
+	*/
+	var $it_exchange_view;
 
 	/**
 	 * Constructor: Init
@@ -28,8 +52,14 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		);
 		parent::__construct( $id_base, $name, $options );
 
-		$this->set_state();
-		$this->enqueue_scripts();
+		if ( ! is_admin() ) {
+			$this->set_pages();
+			$this->set_using_permalinks();
+			$this->set_valid_states();
+			add_action( 'template_redirect', array( $this, 'load_ajax' ), 1 );
+			add_action( 'template_redirect', array( $this, 'set_state' ), 11 );
+			add_action( 'template_redirect', array( $this, 'enqueue_scripts' ), 11 );
+		}
 	}
 
 	/**
@@ -43,13 +73,27 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	*/
 	function widget( $args, $instance ) {
 		if ( ! $this->get_state() )
-			return '';
+			return false;
 
+		// Some JS we're going to need
+		?>
+		<script type="text/javascript">
+			var itExchangeSWAjaxURL = '<?php echo esc_js( get_home_url() . '?it-exchange-sw-ajax=1' );?>';
+		</script>
+		<?php
 		// Print widget
-		echo '<div class="it-exchange-super-widget-' . esc_attr( $this->get_state() ) . '">';
-			echo $args['before_widget'];
-				it_exchange_get_template_part( 'super-widget', $this->get_state() );
-			echo '</div>';
+		echo $args['before_widget'];
+			?>
+			<p>
+				Temp menu for testing states<br />
+				<?php foreach( $this->valid_states as $state ) : ?>
+					<a class="it-exchange-test-load-state-via-ajax" data-it-exchange-sw-state="<?php esc_attr_e( $state ); ?>" href="?ite-sw-state=<?php esc_attr_e( $state ); ?>"><?php esc_attr_e( $state ); ?></a><br />
+				<?php endforeach; ?>
+			</p>
+			<div class="it-exchange-super-widget it-exchange-super-widget-<?php esc_attr( $this->get_state() ); ?>">
+				<?php it_exchange_get_template_part( 'super-widget', $this->get_state() ); ?>
+			</div>
+			<?php
 		echo $args['after_widget'];
 	}
 
@@ -84,14 +128,27 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Sets the current state of the widget
+	 * Load the ajax script if requested
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param string $state optional. requested state. default is false.
-	 * @return false;
+	 * @return void
 	*/
-	function set_state( $state=false ) {
+	function load_ajax() {
+		if ( ! empty( $_GET['it-exchange-sw-ajax'] ) ) {
+			include( dirname( __FILE__ ) . '/ajax.php' );
+			die();
+		}
+	}
+
+	/**
+	 * Grabs an array of valid states for the super widget
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return array
+	*/
+	function set_valid_states() {
 		$valid_states = array(
 			'registration',
 			'login',
@@ -101,20 +158,48 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			'confirmation',
 		);
 		$valid_states = apply_filters( 'it_exchange_super_widget_valid_states', $valid_states );
+		$this->valid_states = (array) $valid_states;
+	}
+	
+	/**
+	 * Set the page options
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function set_pages() {
+		$this->pages = it_exchange_get_option( 'settings_pages' );
+	}
 
-		// Set state from param if passed and valid
-		if ( $state && in_array( $state, $valid_states ) ) {
+	/**
+	 * Determines if we are using permalinks or not
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function set_using_permalinks() {
+		$this->using_permalinks = (boolean) get_option( 'permalink_structure' );
+	}
+
+	/**
+	 * Sets the current state of the widget
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return false;
+	*/
+	function set_state() {
+
+		// Get state from REQUEST
+		$state = empty( $_REQUEST['ite-sw-state'] ) ? false : $_REQUEST['ite-sw-state'];
+
+		// If state is empty and we're on a product page, set state to 'purchase'
+		$state = empty( $state ) && 'product' == get_query_var( 'it_exchange_view' ) ? 'purchase' : $state;
+
+		if ( $state && in_array( $state, $this->valid_states ) )
 			$this->state = $state;
-			return;
-		}
-
-		// State wasn't passed to the method
-		$state = $this->determine_state();
-		if ( $state && in_array( $state, $valid_states ) )
-			$this->state = $state;
-
-		// Return false if no valid state was found
-		return false;
 	}
 
 	/**
@@ -125,17 +210,9 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	function enqueue_scripts() {
 		if ( ! $this->get_state() )
 			return;
-	}
 
-	/**
-	 * Determines the current state of the widget based on the current query_vars
-	 *
-	 * @since 0.4.0
-	 *
-	 * @return string state of widget
-	*/
-	function determine_state() {
-		return 'purchase';
+		$script_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/js/super-widget.js' );
+		wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery' ), false, true );
 	}
 
 	/**
