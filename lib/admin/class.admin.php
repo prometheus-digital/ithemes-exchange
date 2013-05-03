@@ -68,6 +68,8 @@ class IT_Exchange_Admin {
 		add_action( 'admin_init', array( $this, 'redirect_post_new_to_product_type_selection_screen' ) );
 
 		// Init our custom add/edit layout interface
+		add_action( 'admin_enqueue_scripts', array( $this, 'it_exchange_admin_wp_enqueue_scripts' ) );
+		add_action( 'admin_print_styles', array( $this, 'it_exchange_admin_wp_enqueue_styles' ) );
 		add_action( 'admin_init', array( $this, 'setup_add_edit_product_screen_layout' ) );
 
 		// Force 2 column view on add / edit products
@@ -836,6 +838,93 @@ class IT_Exchange_Admin {
 	function update_user_column_options( $existing ) {
 		return 2;
 	}
+	
+	/**
+	 * Inits the scripts used by IT Exchange dashboard
+	 *
+	 * @since 0.4.0
+	 * @param string $hook_suffix The current page hook we're on.
+	 * @return void
+	*/
+	function it_exchange_admin_wp_enqueue_scripts( $hook_suffix ) {
+		
+		//echo "<pre>" . $hook_suffix . "</pre>";
+	
+		if ( isset( $_REQUEST['post_type'] ) ) {
+			
+			$post_type = $_REQUEST['post_type'];
+			
+		} else {
+			
+			if ( isset( $_REQUEST['post'] ) )
+				$post_id = (int) $_REQUEST['post'];
+			elseif ( isset( $_REQUEST['post_ID'] ) )
+				$post_id = (int) $_REQUEST['post_ID'];
+			else
+				$post_id = 0;
+			
+			if ( $post_id )
+				$post = get_post( $post_id );
+			
+			if ( isset( $post ) && !empty( $post ) )
+				$post_type = $post->post_type;
+			
+		}
+		
+		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
+				
+			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', array( 'jquery-ui-sortable', 'jquery-ui-droppable' ) );
+			
+		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
+			
+			wp_enqueue_script( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-ons.js', array( 'jquery-ui-sortable', 'jquery-ui-droppable' ) );
+			
+		}
+		
+	}
+	
+	/**
+	 * Inits the scripts used by IT Exchange dashboard
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function it_exchange_admin_wp_enqueue_styles() {
+	
+		global $hook_suffix;
+	
+		if ( isset( $_REQUEST['post_type'] ) ) {
+			
+			$post_type = $_REQUEST['post_type'];
+			
+		} else {
+			
+			if ( isset( $_REQUEST['post'] ) )
+				$post_id = (int) $_REQUEST['post'];
+			elseif ( isset( $_REQUEST['post_ID'] ) )
+				$post_id = (int) $_REQUEST['post_ID'];
+			else
+				$post_id = 0;
+			
+			if ( $post_id )
+				$post = get_post( $post_id );
+			
+			if ( isset( $post ) && !empty( $post ) )
+				$post_type = $post->post_type;
+			
+		}
+		
+		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
+				
+			wp_enqueue_style( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-edit-product.css' );
+			
+		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
+			
+			wp_enqueue_style( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-ons.css' );
+			
+		}
+			
+	}
 
 	/**
 	 * Inits the add / edit product layout
@@ -852,12 +941,6 @@ class IT_Exchange_Admin {
 
 		if ( ( 'post-new.php' != $pagenow && 'post.php' != $pagenow ) || 'it_exchange_prod' != $post_type )
 			return;
-
-		// Enqueue styles
-		wp_enqueue_style( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-edit-product.css' );
-
-		// Enqueue scripts
-		wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', array( 'jquery-ui-sortable', 'jquery-ui-droppable' ) );
 
 		// Enqueue Media library scripts and styles
 		wp_enqueue_media();
