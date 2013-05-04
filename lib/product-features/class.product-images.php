@@ -90,7 +90,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 					<div class="replace-feature-image"><span>Replace featured image</span></div>
 				</div>
 				<ul id="it-exchange-gallery-images">
-					<li id="it-exchange-add-new-image" class="disable-sorting empty"><a href>Add New</a></li>
+					<li id="it-exchange-add-new-image" class="disable-sorting empty"><a href><span>Add Images</span></a></li>
 				</ul>
 			</div>
 		<?php
