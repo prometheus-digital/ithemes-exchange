@@ -61,6 +61,7 @@ class IT_Exchange_Admin {
 		add_action( 'parent_file', array( $this, 'open_exchange_menu_on_post_type_views' ) );
 
 		// Add actions for iThemes registration
+		add_action( 'admin_notices', array( $this, 'add_wizard_nag' ) );
 		add_action( 'admin_menu', array( $this, 'add_exchange_admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'enable_disable_registered_add_on' ) );
 
@@ -192,6 +193,21 @@ class IT_Exchange_Admin {
 	}
 
 	/**
+	 * Adds the nag to the top of the admin screens if not complete
+	 *
+	 * @since 0.4.0
+	*/
+	function add_wizard_nag() {
+		if ( ! empty( $_GET['it-exchange-dismiss-wizard-nag'] ) )
+			update_option( 'it-exchange-hide-wizard-nag', true );
+
+		if ( true == (boolean) get_option( 'it-exchange-hide-wizard-nag' ) )
+			return;
+
+		include( 'views/admin-wizard-notice.php' );
+	}
+
+	/**
 	 * Adds the main iThemes Exchange menu item to the WP admin menu
 	 *
 	 * @since 0.2.0
@@ -201,12 +217,9 @@ class IT_Exchange_Admin {
 		// Add main iThemes Exchange menu item
 		add_menu_page( 'iThemes Exchange', 'Exchange', $this->admin_menu_capability, 'it-exchange', array( $this, 'print_exchange_setup_page' ) );
 
-		// Add setup wizard if not complete or if on page
-		if ( 'it-exchange-setup' == $this->_current_page || ! get_option( 'it_exchange_setup_complete' ) )
+		// Add setup wizard page without menu item unless we're viewing it.
+		if ( 'it-exchange-setup' == $this->_current_page )
 			add_submenu_page( 'it-exchange', 'iThemes Exchange Setup Wizard', 'Setup Wizard', $this->admin_menu_capability, 'it-exchange-setup', array( $this, 'print_exchange_setup_page' ) );
-
-		// Remove default iThemes Exchange sub-menu item created with parent menu item
-		remove_submenu_page( 'it-exchange', 'it-exchange' );
 
 		// Add the product submenu pages depending on active product add-ons
 		$this->add_product_submenus();
@@ -231,6 +244,10 @@ class IT_Exchange_Admin {
 				$add_ons_callback = $addon['options']['settings-callback'];
 		}
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->admin_menu_capability, 'it-exchange-addons', $add_ons_callback );
+
+		// Remove default iThemes Exchange sub-menu item created with parent menu item
+		remove_submenu_page( 'it-exchange', 'it-exchange' );
+
 	}
 
 	/**
