@@ -181,15 +181,27 @@ class IT_Exchange {
 	}
 }
 
+/**
+ * Loads Exchange after plugins have been enabled
+ *
+ * @since 0.4.0
+ *
+ * @return void
+*/
 function load_it_exchange() {	
 	// Init plugin
 	$IT_Exchange = new IT_Exchange();
 }
 add_action( 'plugins_loaded', 'load_it_exchange' );
 
+/**
+ * This flushes the rewrite rules for us on activation
+ *
+ * @since 0.4.0
+ *
+ * @return void
+*/
 function it_flush_rewrite_rules() {
-	// ATTENTION: This is *only* done during plugin activation hook in this example!
-	// You should *NEVER EVER* do this on every page load!!
 	flush_rewrite_rules();
 }
 register_activation_hook( __FILE__, 'it_flush_rewrite_rules' );
