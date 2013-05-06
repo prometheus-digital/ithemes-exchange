@@ -21,7 +21,8 @@ class IT_Exchange_Product_Post_Type {
 	 * @return void
 	*/
 	function IT_Exchange_Product_Post_Type() {
-		add_action( 'plugins_loaded', array( $this, 'init' ) );
+		$this->init();
+		
 		add_action( 'init', array( $this, 'register_disabled_post_status' ) );
 		add_action( 'save_post', array( $this, 'save_product' ) );
 		add_action( 'admin_init', array( $this, 'set_add_new_item_label' ) );

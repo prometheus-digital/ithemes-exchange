@@ -21,7 +21,8 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return void
 	*/
 	function IT_Exchange_Transaction_Post_Type() {
-		add_action( 'plugins_loaded', array( $this, 'init' ) );
+		$this->init();
+		
 		add_action( 'admin_init', array( $this, 'modify_post_type_features' ) );
 		add_action( 'save_post', array( $this, 'save_transaction' ) );
 		add_filter( 'manage_edit-it_exchange_tran_columns', array( $this, 'add_transaction_method_column_to_view_all_table' ) );
