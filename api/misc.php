@@ -105,3 +105,28 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 			return add_query_arg( array( $page_slug => 1 ), $base );
 	}
 }
+
+if ( !function_exists( 'wp_nav_menu_disabled_check' ) ) {
+		
+	/**
+	 * From WordPress 3.6.0 for back-compat
+	 * Check whether to disable the Menu Locations meta box submit button
+	 *
+	 * @since 0.4.0
+	 *
+	 * @uses global $one_theme_location_no_menus to determine if no menus exist
+	 * @uses disabled() to output the disabled attribute in $other_attributes param in submit_button()
+	 *
+	 * @param int|string $nav_menu_selected_id (id, name or slug) of the currently-selected menu
+	 * @return string Disabled attribute if at least one menu exists, false if not
+	*/
+	function wp_nav_menu_disabled_check( $nav_menu_selected_id ) {
+		global $one_theme_location_no_menus;
+	
+		if ( $one_theme_location_no_menus )
+			return false;
+	
+		return disabled( $nav_menu_selected_id, 0 );
+	}
+
+}
