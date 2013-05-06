@@ -35,6 +35,9 @@ img {
 	height: auto;
 	display: block;
 }
+.screen-layout, .columns-prefs {
+	display: none;
+}
 /** -----------------------------------------------------:[ temporary ]:---------- */
 #submitdiv {
 	
