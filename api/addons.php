@@ -229,7 +229,7 @@ function it_exchange_get_disabled_addons( $options=array() ) {
 */
 function it_exchange_get_more_addons( $options=array() ) {
 	// Grab all registered add-ons
-	$remote_get = wp_remote_get( 'http://lew.internal.ithemes.com/add-ons.json' );
+	$remote_get = wp_remote_get( 'https://api.ithemes.com/exchange/addons/' );
 	
 	$addons = json_decode( $remote_get['body'], true );
 
