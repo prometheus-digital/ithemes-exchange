@@ -2,13 +2,11 @@
 /**
  * This file prints the content added to the user-edit.php WordPress page
  *
- * @since 0.3.6
+ * @since 0.4.0
  * @package IT_Exchange
 */
 ?>
-<div class="wrap">
-	<!-- temp icon --> 
-	<?php screen_icon( 'page' );  ?>
+<div id="it-exchange-member-options">
     
 	<h2>iThemes Exchange <?php _e( 'Options', 'LION' ); ?></h2>
     

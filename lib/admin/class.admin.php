@@ -156,7 +156,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_products_user_edit_tab_link( $current_tab ) {
 		$active = ( 'products' === $current_tab || false === $current_tab ) ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'products' ); ?>"><?php _e( 'Products', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'products' ); ?>#it-exchange-member-options"><?php _e( 'Products', 'LION' ); ?></a><?php
 	}
 	
 	/**
@@ -167,7 +167,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_transactions_user_edit_tab_link( $current_tab ) {
 		$active = 'transactions' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'transactions' ); ?>"><?php _e( 'Transactions', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'transactions' ); ?>#it-exchange-member-options"><?php _e( 'Transactions', 'LION' ); ?></a><?php
 	}
 	
 	/**
@@ -178,7 +178,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_activity_user_edit_tab_link( $current_tab ) {
 		$active = 'activity' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'activity' ); ?>"><?php _e( 'Activity', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'activity' ); ?>#it-exchange-member-options"><?php _e( 'Activity', 'LION' ); ?></a><?php
 	}
 
 	/**
