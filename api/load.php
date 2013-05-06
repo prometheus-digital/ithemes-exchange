@@ -49,3 +49,6 @@ include( $this->_plugin_path . 'api/errors.php' );
 
 // Notices 
 include( $this->_plugin_path . 'api/notices.php' );
+
+// Coupons
+include( $this->_plugin_path . 'api/coupons.php' );

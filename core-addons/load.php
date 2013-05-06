@@ -91,6 +91,19 @@ function it_exchange_register_core_addons() {
 			'supports'      => apply_filters( 'it_exchange_register_multi_item_cart_default_features', array(
 			) ),
 		),
+		// Basic Coupons
+		'it-basic-coupons' => array(
+			'name'        	=> __( 'Basic Coupons', 'LION' ),
+			'description' 	=> __( 'This add-on allows you to generate basic coupons that apply to all products in your store.', 'LION' ),
+			'author'		=> 'iThemes',
+			'author_url'	=> 'http://ithemes.com',
+			'file'        	=> dirname( __FILE__ ) . '/product-features/basic-coupons/init.php',
+			'category' 		=> 'coupons',
+			'tag' 			=> 'core',
+			'supports'      => apply_filters( 'it_exchange_register_basic_coupons_default_features', array(
+			) ),
+		),
+		// Transaction Status admin Metabox
 		// Transaction Status admin Metabox
 		'transaction-status-metabox' => array(
 			'name'        	=> __( 'Transaction Status Metabox', 'LION' ),
