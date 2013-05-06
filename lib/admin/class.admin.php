@@ -108,10 +108,13 @@ class IT_Exchange_Admin {
 		// Remove Quick Edit
 		add_filter( 'post_row_actions', array( $this, 'it_exchange_remove_quick_edit' ), 10, 2 );
 	
-	
 		// User Edit
 		add_action( 'edit_user_profile', array( $this, 'it_exchange_edit_user_profile' ) );
 		add_action( 'show_user_profile', array( $this, 'it_exchange_edit_user_profile' ) );
+			
+		add_action('personal_options_update', array( $this, 'it_exchange_edit_user_profile_update' ) );
+		add_action('edit_user_profile_update',  array( $this, 'it_exchange_edit_user_profile_update' ) );
+	
 	}
 
 	/**
@@ -124,6 +127,7 @@ class IT_Exchange_Admin {
 		
 		if ( current_user_can( 'administrator' ) ) {
 			
+			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_info_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_products_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_transactions_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_activity_user_edit_tab_link' ) );
@@ -132,6 +136,20 @@ class IT_Exchange_Admin {
 		
 		}
 
+	}
+	
+	/**
+	 * Save iThemes Exchange User Meta Options to user-edit.php
+	 *
+	 * @since 0.4.0
+	 * @param int $user_id User ID of meta we're saving
+	 * @return void
+	*/
+	function it_exchange_edit_user_profile_update( $user_id ) {
+	
+		if ( isset( $_REQUEST['it_exchange_customer_note'] ) )
+			update_user_meta( $user_id, '_it_exchange_customer_note', $_REQUEST['it_exchange_customer_note'] );			
+		
 	}
 
 	/**
@@ -149,13 +167,24 @@ class IT_Exchange_Admin {
 	}
 	
 	/**
-	 * Prints the transactions tab for the user-edit.php Page
+	 * Prints the info tab for the user-edit.php Page
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function print_info_user_edit_tab_link( $current_tab ) {
+		$active = ( 'info' === $current_tab || false === $current_tab ) ? 'nav-tab-active' : '';
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'info' ); ?>#it-exchange-member-options"><?php _e( 'Info', 'LION' ); ?></a><?php
+	}
+	
+	/**
+	 * Prints the products tab for the user-edit.php Page
 	 *
 	 * @since 0.4.0
 	 * @return void
 	*/
 	function print_products_user_edit_tab_link( $current_tab ) {
-		$active = ( 'products' === $current_tab || false === $current_tab ) ? 'nav-tab-active' : '';
+		$active = ( 'products' === $current_tab ) ? 'nav-tab-active' : '';
 		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'products' ); ?>#it-exchange-member-options"><?php _e( 'Products', 'LION' ); ?></a><?php
 	}
 	

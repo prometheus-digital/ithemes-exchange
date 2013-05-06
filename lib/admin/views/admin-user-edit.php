@@ -16,28 +16,38 @@
 	?>
 
 	<?php
-	$tab = !empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'products';
+	
+	if ( empty( $_REQUEST['user_id'] ) )
+		$user_id = get_current_user_id();
+	else
+		$user_id = $_REQUEST['user_id'];
+		
+	$tab = !empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'info';
 	
 	switch ( $tab ) {
+		
+		case 'info':
+		default:
+			$list = array();
+			break;
+			
+		case 'products':
+			$list = it_exchange_get_users_products( $user_id );
+			break;
 			
 		case 'transactions':
-			$list = it_exchange_get_users_transactions();
+			$list = it_exchange_get_users_transactions( $user_id );
 			break;
 			
 		case 'activity':
-			$list = it_exchange_get_users_activity();
-			break;
-	
-		case 'products':
-		default:
-			$list = it_exchange_get_users_products();
+			$list = it_exchange_get_users_activity( $user_id );
 			break;
 		
 	}
 	
-	if ( !empty( $list ) ) { 
-		
-		echo '<div class="user-edit-block ' . $tab . '-user-edit-block">';
+	echo '<div class="user-edit-block ' . $tab . '-user-edit-block">';
+	
+	if ( !empty( $list ) && 'info' !== $tab ) { 
 		
 		echo '<div class="heading-row">';
 		foreach( (array) $list[0] as $heading ) {
@@ -58,14 +68,18 @@
 			echo '</div>';
 			
 		}   
-		
-		echo '</div>';
 	
+	} else if ( 'info' === $tab ) {
+		
+		echo '<textarea name="it_exchange_customer_note" cols="30" rows="5">' . get_user_meta( $user_id, '_it_exchange_customer_note', true ) . '</textarea>';
+		
 	} else {
 		
 		echo '<p>' . __( 'Nothing to show here.', 'LION' ) . '</p>';
 		
 	}
+	
+	echo '</div>';
 	 
 	?> 
 </div>
