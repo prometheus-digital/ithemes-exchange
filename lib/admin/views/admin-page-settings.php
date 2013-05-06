@@ -199,4 +199,3 @@
 	do_action( 'it_exchange_general_settings_page_page_bottom' );
 	?>
 </div>
-<?php

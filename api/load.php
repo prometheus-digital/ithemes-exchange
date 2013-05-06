@@ -17,6 +17,9 @@ if ( is_admin() ) {
 // Contains functions for registering / retreiving Add-ons, Add-on categories, and Add-on sets
 include( $this->_plugin_path . 'api/addons.php' );
 
+// API Functions used to register / retrieve Exchange User information
+include( $this->_plugin_path . 'api/users.php' );
+
 // Product Features
 include( $this->_plugin_path . 'api/product-features.php' );
 

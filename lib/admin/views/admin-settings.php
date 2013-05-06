@@ -92,4 +92,3 @@
 	<?php $form->end_form(); ?>
 	<?php do_action( 'it_exchange_general_settings_page_bottom' ); ?>
 </div>
-<?php

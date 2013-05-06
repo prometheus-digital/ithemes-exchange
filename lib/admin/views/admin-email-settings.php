@@ -57,4 +57,3 @@
 	do_action( 'it_exchange_general_settings_email_page_bottom' );
 	?>
 </div>
-<?php

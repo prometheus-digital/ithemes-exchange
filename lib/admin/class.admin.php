@@ -106,6 +106,78 @@ class IT_Exchange_Admin {
 
 		// Remove Quick Edit
 		add_filter( 'post_row_actions', array( $this, 'it_exchange_remove_quick_edit' ), 10, 2 );
+	
+	
+		// User Edit
+		add_action( 'edit_user_profile', array( $this, 'it_exchange_edit_user_profile' ) );
+		add_action( 'show_user_profile', array( $this, 'it_exchange_edit_user_profile' ) );
+	}
+
+	/**
+	 * Adds iThemes Exchange User Meta Options to user-edit.php
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function it_exchange_edit_user_profile() {
+		
+		if ( current_user_can( 'administrator' ) ) {
+			
+			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_products_user_edit_tab_link' ) );
+			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_transactions_user_edit_tab_link' ) );
+			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_activity_user_edit_tab_link' ) );
+				
+			include( 'views/admin-user-edit.php' );
+		
+		}
+
+	}
+
+	/**
+	 * Prints the tabs for the iThemes Exchange Add-ons Page
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function print_user_edit_page_tabs() {
+		?>
+		<h2 class="nav-tab-wrapper">
+		<?php do_action( 'it_exchange_print_user_edit_page_tab_links', $this->_current_tab ); ?>
+		</h2>
+		<?php
+	}
+	
+	/**
+	 * Prints the transactions tab for the user-edit.php Page
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function print_products_user_edit_tab_link( $current_tab ) {
+		$active = ( 'products' === $current_tab || false === $current_tab ) ? 'nav-tab-active' : '';
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'products' ); ?>"><?php _e( 'Products', 'LION' ); ?></a><?php
+	}
+	
+	/**
+	 * Prints the transactions tab for the user-edit.php Page
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function print_transactions_user_edit_tab_link( $current_tab ) {
+		$active = 'transactions' == $current_tab ? 'nav-tab-active' : '';
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'transactions' ); ?>"><?php _e( 'Transactions', 'LION' ); ?></a><?php
+	}
+	
+	/**
+	 * Prints the activity tab for the user-edit.php Page
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function print_activity_user_edit_tab_link( $current_tab ) {
+		$active = 'activity' == $current_tab ? 'nav-tab-active' : '';
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'activity' ); ?>"><?php _e( 'Activity', 'LION' ); ?></a><?php
 	}
 
 	/**
