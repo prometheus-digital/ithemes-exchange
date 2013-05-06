@@ -79,6 +79,18 @@ function it_exchange_register_core_addons() {
 			'supports' => apply_filters( 'it_exchange_register_digital_downloads_default_features', array(
 			) ),
 		),
+		// Multi item cart
+		'multi-item-cart-option' => array(
+			'name'        	=> __( 'Multi-item Cart', 'LION' ),
+			'description' 	=> __( 'Enabling this add-on allows your customers to purchase multiple products with one transaction. There are no settings for this add-on.', 'LION' ),
+			'author'		=> 'iThemes',
+			'author_url'	=> 'http://ithemes.com',
+			'file'        	=> dirname( __FILE__ ) . '/admin/multi-item-cart/init.php',
+			'category' 		=> 'admin',
+			'tag' 			=> 'core',
+			'supports'      => apply_filters( 'it_exchange_register_multi_item_cart_default_features', array(
+			) ),
+		),
 		// Transaction Status admin Metabox
 		'transaction-status-metabox' => array(
 			'name'        	=> __( 'Transaction Status Metabox', 'LION' ),
