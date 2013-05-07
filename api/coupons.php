@@ -53,3 +53,36 @@ function it_exchange_get_coupon( $post ) {
 		return $coupon;
 	return false;
 }
+
+/**
+ * Adds a coupon post_type to WP
+ *
+ * @since 0.4.0
+ * @param array $args same args passed to wp_insert_post plus any additional needed
+ * @param object $cart_object passed cart object
+ * @return mixed post id or false
+*/
+function it_exchange_add_coupon( $args=array(), $cart_object=false ) { 
+	$defaults = array(
+		'post_type'          => 'it_exchange_coupon',
+		'post_status'        => 'publish',
+	);  
+
+	$post_meta = empty( $args['post_meta'] ) ? array() : $args['post_meta'];
+	unset( $args['post_meta'] );
+	$args = wp_parse_args( $args, $defaults );
+
+	// If we don't have a title, return false
+	if ( empty( $args['post_title'] ) ) 
+		return false;
+
+	if ( $coupon_id = wp_insert_post( $args ) ) { 
+		foreach ( (array) $post_meta as $key => $value ) {
+			update_post_meta( $coupon_id, $key, $value );
+		}
+		do_action( 'it_exchange_add_coupon_success', $coupon_id, $cart_object );
+		return $coupon_id;
+	}   
+	do_action( 'it_exchange_add_coupon_failed', $args );
+	return false;
+}
