@@ -18,11 +18,14 @@ require( $this->_plugin_path . 'lib/products/class.products-post-type.php' );
 // Product Object
 require( $this->_plugin_path . 'lib/products/class.product.php' );
 
-// Product Feature: Tilte
+// Product Feature: Title
 require( $this->_plugin_path . 'lib/product-features/class.title.php' );
 
 // Product Feature: Base Price
 require( $this->_plugin_path . 'lib/product-features/class.base-price.php' );
+
+// Product Feature: Visibility
+require( $this->_plugin_path . 'lib/product-features/class.visibility.php' );
 
 // Product Feature: Product Description
 require( $this->_plugin_path . 'lib/product-features/class.description.php' );

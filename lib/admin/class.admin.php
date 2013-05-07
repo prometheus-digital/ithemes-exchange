@@ -1218,6 +1218,8 @@ class IT_Exchange_Admin {
 	*/
 	function post_submit_meta_box($post) {
 		global $action;
+		
+		//return post_submit_meta_box( $post );
 
 		$post_type = $post->post_type;
 		$post_type_object = get_post_type_object($post_type);
@@ -1243,7 +1245,8 @@ class IT_Exchange_Admin {
 			</div>
 
 			<?php $post_status = ( 'auto-draft' == $post->post_status ) ? 'draft' : $post->post_status; ?>
-			<input type="hidden" name='post_status' id='post_status' value='<?php esc_attr( $post_status ); ?>'>
+			<input type="hidden" name='post_status' id='post_status' value='<?php echo esc_attr( $post_status ); ?>'>
+            <input type="hidden" name="hidden_post_status" id="hidden_post_status" value="<?php echo esc_attr( $post_status ); ?>" />
 
 			<?php 
 			if ( 'private' == $post->post_status ) {
@@ -1254,7 +1257,7 @@ class IT_Exchange_Admin {
 				$visibility = 'public';
 			}
 			?>
-			<input type="hidden" name="hidden_post_password" id="hidden-post-password" value="<?php echo esc_attr($post->post_password); ?>" />
+			<input type="hidden" name="hidden_post_password" id="hidden-post-password" value="<?php echo esc_attr( $post->post_password ); ?>" />
 			<input type="hidden" name="hidden_post_visibility" id="hidden-post-visibility" value="<?php echo esc_attr( $visibility ); ?>" />
 
 			<div id="delete-action">
