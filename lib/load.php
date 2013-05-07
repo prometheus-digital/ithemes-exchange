@@ -18,7 +18,7 @@ require( $this->_plugin_path . 'lib/products/class.products-post-type.php' );
 // Product Object
 require( $this->_plugin_path . 'lib/products/class.product.php' );
 
-// Product Feature: Tilte
+// Product Feature: Title
 require( $this->_plugin_path . 'lib/product-features/class.title.php' );
 
 // Product Feature: Base Price
@@ -27,11 +27,14 @@ require( $this->_plugin_path . 'lib/product-features/class.base-price.php' );
 // Product Feature: Product Description
 require( $this->_plugin_path . 'lib/product-features/class.description.php' );
 
-// Product Feature: Product Images 
-require( $this->_plugin_path . 'lib/product-features/class.product-images.php' );
-
 // Product Feature: Downloads
 require( $this->_plugin_path . 'lib/product-features/class.downloads.php' );
+
+// Product Feature: Visibility
+require( $this->_plugin_path . 'lib/product-features/class.product-status.php' );
+
+// Product Feature: Product Images 
+require( $this->_plugin_path . 'lib/product-features/class.product-images.php' );
 
 // Product Feature: Purchase Message 
 require( $this->_plugin_path . 'lib/product-features/class.purchase-message.php' );

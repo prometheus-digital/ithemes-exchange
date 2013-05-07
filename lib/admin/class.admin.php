@@ -95,7 +95,7 @@ class IT_Exchange_Admin {
 
 		// Page Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_pages', array( $this, 'set_pages_settings_defaults' ) );
-		
+
 		// Add-On Page Filters
 		add_action( 'it_exchange_print_add_ons_page_tab_links', array( $this, 'print_enabled_add_ons_tab_link' ) );
 		add_action( 'it_exchange_print_add_ons_page_tab_links', array( $this, 'print_disabled_add_ons_tab_link' ) );
@@ -107,14 +107,12 @@ class IT_Exchange_Admin {
 
 		// Remove Quick Edit
 		add_filter( 'post_row_actions', array( $this, 'it_exchange_remove_quick_edit' ), 10, 2 );
-	
+
 		// User Edit
 		add_action( 'edit_user_profile', array( $this, 'it_exchange_edit_user_profile' ) );
 		add_action( 'show_user_profile', array( $this, 'it_exchange_edit_user_profile' ) );
-			
 		add_action('personal_options_update', array( $this, 'it_exchange_edit_user_profile_update' ) );
 		add_action('edit_user_profile_update',  array( $this, 'it_exchange_edit_user_profile_update' ) );
-	
 	}
 
 	/**
@@ -124,20 +122,16 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function it_exchange_edit_user_profile() {
-		
 		if ( current_user_can( 'administrator' ) ) {
-			
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_info_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_products_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_transactions_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_activity_user_edit_tab_link' ) );
-				
-			include( 'views/admin-user-edit.php' );
-		
-		}
 
+			include( 'views/admin-user-edit.php' );
+		}
 	}
-	
+
 	/**
 	 * Save iThemes Exchange User Meta Options to user-edit.php
 	 *
@@ -146,10 +140,8 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function it_exchange_edit_user_profile_update( $user_id ) {
-	
 		if ( isset( $_REQUEST['it_exchange_customer_note'] ) )
-			update_user_meta( $user_id, '_it_exchange_customer_note', $_REQUEST['it_exchange_customer_note'] );			
-		
+			update_user_meta( $user_id, '_it_exchange_customer_note', $_REQUEST['it_exchange_customer_note'] );
 	}
 
 	/**
@@ -165,7 +157,7 @@ class IT_Exchange_Admin {
 		</h2>
 		<?php
 	}
-	
+
 	/**
 	 * Prints the info tab for the user-edit.php Page
 	 *
@@ -176,7 +168,7 @@ class IT_Exchange_Admin {
 		$active = ( 'info' === $current_tab || false === $current_tab ) ? 'nav-tab-active' : '';
 		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'info' ); ?>#it-exchange-member-options"><?php _e( 'Info', 'LION' ); ?></a><?php
 	}
-	
+
 	/**
 	 * Prints the products tab for the user-edit.php Page
 	 *
@@ -187,7 +179,7 @@ class IT_Exchange_Admin {
 		$active = ( 'products' === $current_tab ) ? 'nav-tab-active' : '';
 		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'products' ); ?>#it-exchange-member-options"><?php _e( 'Products', 'LION' ); ?></a><?php
 	}
-	
+
 	/**
 	 * Prints the transactions tab for the user-edit.php Page
 	 *
@@ -198,7 +190,7 @@ class IT_Exchange_Admin {
 		$active = 'transactions' == $current_tab ? 'nav-tab-active' : '';
 		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'transactions' ); ?>#it-exchange-member-options"><?php _e( 'Transactions', 'LION' ); ?></a><?php
 	}
-	
+
 	/**
 	 * Prints the activity tab for the user-edit.php Page
 	 *
@@ -261,11 +253,10 @@ class IT_Exchange_Admin {
 		if ( 'it-exchange-settings' == $this->_current_page && ! empty( $this->_current_tab ) )
 			$settings_callback = apply_filters( 'it_exchange_general_settings_tab_callback_' . $this->_current_tab, $settings_callback );
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->admin_menu_capability, 'it-exchange-settings', $settings_callback );
-		
+
 		// Add Add-ons menu item
 		$add_ons_callback = array( $this, 'print_exchange_add_ons_page' );
 		if ( 'it-exchange-addons' == $this->_current_page && ! empty( $this->_current_tab ) ) {
-			
 			$add_ons_callback = apply_filters( 'it_exchange_add_ons_tab_callback_' . $this->_current_tab, $add_ons_callback );
 		}
 		if ( !empty( $_GET['add-on-settings'] ) && $addon = it_exchange_get_addon( $_GET['add-on-settings'] ) ) {
@@ -381,7 +372,7 @@ class IT_Exchange_Admin {
 		</h2>
 		<?php
 	}
-	
+
 	/**
 	 * Prints the enabled tab for the Add-ons Page
 	 *
@@ -392,7 +383,7 @@ class IT_Exchange_Admin {
 		$active = 'enabled' == $current_tab ? 'nav-tab-active' : '';
 		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&tab=enabled' ); ?>"><?php _e( 'Enabled', 'LION' ); ?></a><?php
 	}
-	
+
 	/**
 	 * Prints the disabled tab for the Add-ons Page
 	 *
@@ -414,7 +405,7 @@ class IT_Exchange_Admin {
 	function register_get_more_add_ons_tab_callback( $default ) {
 		return array( $this, 'print_get_more_add_ons_page' );
 	}
-	
+
 	/**
 	 * Prints the enabled add ons page for iThemes Exchange
 	 *
@@ -433,7 +424,7 @@ class IT_Exchange_Admin {
 
 		include( 'views/admin-get-more-addons.php' );
 	}
-	
+
 	/**
 	 * Prints the Get More tab for the Add-ons Page
 	 *
@@ -642,14 +633,14 @@ class IT_Exchange_Admin {
 			wp_safe_redirect( admin_url( '/admin.php?page=it-exchange-addons&tab=' . $tab . '&error=' . $message ) );
 			die();
 		}
-		
+
 		// Disable any enabled add-ons that aren't registered any more while we're here.
 		$enabled_addons = it_exchange_get_enabled_addons();
 		foreach( (array) $enabled_addons as $slug => $params ) {
 			if ( empty( $registered[$slug] ) )
 				it_exchange_disable_addon( $slug );
 		}
-			
+
 		$redirect_to = admin_url( '/admin.php?page=it-exchange-addons&tab=' . $tab . '&message=' . $message );
 
 		// Redirect to settings page on activation if it exists
@@ -963,7 +954,7 @@ class IT_Exchange_Admin {
 	function update_user_column_options( $existing ) {
 		return 2;
 	}
-	
+
 	/**
 	 * Inits the scripts used by IT Exchange dashboard
 	 *
@@ -972,42 +963,32 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function it_exchange_admin_wp_enqueue_scripts( $hook_suffix ) {
-		
-		//echo "<pre>" . $hook_suffix . "</pre>";
-	
 		if ( isset( $_REQUEST['post_type'] ) ) {
-			
 			$post_type = $_REQUEST['post_type'];
-			
 		} else {
-			
 			if ( isset( $_REQUEST['post'] ) )
 				$post_id = (int) $_REQUEST['post'];
 			elseif ( isset( $_REQUEST['post_ID'] ) )
 				$post_id = (int) $_REQUEST['post_ID'];
 			else
 				$post_id = 0;
-			
+
 			if ( $post_id )
 				$post = get_post( $post_id );
-			
+
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
-			
 		}
-		
+
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
-				
-			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', array( 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs' ) );
-			
+			$deps = array( 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs' );
+			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', $deps );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
-			
-			wp_enqueue_script( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-ons.js', array( 'jquery-ui-sortable', 'jquery-ui-droppable' ) );
-			
+			$deps = array( 'jquery-ui-sortable' );
+			wp_enqueue_script( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-ons.js', $deps );
 		}
-		
 	}
-	
+
 	/**
 	 * Inits the scripts used by IT Exchange dashboard
 	 *
@@ -1015,40 +996,31 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function it_exchange_admin_wp_enqueue_styles() {
-	
 		global $hook_suffix;
-	
+
 		if ( isset( $_REQUEST['post_type'] ) ) {
-			
 			$post_type = $_REQUEST['post_type'];
-			
 		} else {
-			
-			if ( isset( $_REQUEST['post'] ) )
+			if ( isset( $_REQUEST['post'] ) ) {
 				$post_id = (int) $_REQUEST['post'];
-			elseif ( isset( $_REQUEST['post_ID'] ) )
+			} else if ( isset( $_REQUEST['post_ID'] ) ) {
 				$post_id = (int) $_REQUEST['post_ID'];
-			else
+			} else {
 				$post_id = 0;
-			
+			}
+
 			if ( $post_id )
 				$post = get_post( $post_id );
-			
+
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
-			
 		}
-		
+
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
-				
 			wp_enqueue_style( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-edit-product.css' );
-			
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
-			
 			wp_enqueue_style( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-ons.css' );
-			
 		}
-			
 	}
 
 	/**
@@ -1168,7 +1140,7 @@ class IT_Exchange_Admin {
 			$custom_layout_side = $wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface-side'];
 			unset( $wp_meta_boxes['it_exchange_prod']['side']['high']['it-exchange-add-edit-product-interface-side'] );
 		}
-		
+
 		// Loop through side, normal, and advanced contexts and move all metaboxes to it_exchange_advanced_low context
 		foreach( array( 'side', 'normal', 'advanced' ) as $context ) {
 			if ( ! empty ( $wp_meta_boxes['it_exchange_prod'][$context] ) ) {
@@ -1208,10 +1180,6 @@ class IT_Exchange_Admin {
 			it_exchange_add_feature_support_to_product_type( 'extended-description', $product_type );
 		}
 
-		// Move publish to the bottom of normal
-		remove_meta_box( 'submitdiv', __( 'Publish' ), 'post_submit_meta_box', null, 'it_exchange_advanced', 'core' );
-		add_meta_box( 'submitdiv', __( 'Publish' ), array( $this, 'post_submit_meta_box' ), null, 'it_exchange_side', 'high' );
-
 		// Move Featured Image to top of side if supported
 		if ( it_exchange_product_type_supports_feature( $product_type, 'featured-image' ) ) {
 			add_meta_box('postimagediv', __('Featured Image'), 'post_thumbnail_meta_box', 'it_exchange_prod', 'it_exchange_side' );
@@ -1237,84 +1205,6 @@ class IT_Exchange_Admin {
 	*/
 	function do_add_edit_product_screen_layout_side( $post ) {
 		do_meta_boxes( 'it_exchange_prod', 'it_exchange_side', $post );
-	}
-
-	/**
-	 * This is a modified version of core WP's post_submit_meta_box() function found in wp-admin/includes/meta-boxes.php
-	 *
-	 * @since 0.4.0
-	 *
-	 * @return void
-	*/
-	function post_submit_meta_box($post) {
-		global $action;
-
-		$post_type = $post->post_type;
-		$post_type_object = get_post_type_object($post_type);
-		$can_publish = current_user_can($post_type_object->cap->publish_posts);
-		?>
-		<div class="submitbox" id="submitpost">
-
-			<?php // Hidden submit button early on so that the browser chooses the right button when form is submitted with Return key ?>
-			<div style="display:none;">
-				<?php submit_button( __( 'Save' ), 'button', 'save' ); ?>
-			</div>
-
-			<div id="save-action">
-				<?php 
-				if ( 'publish' != $post->post_status && 'future' != $post->post_status && 'pending' != $post->post_status ) {
-					$style = ( 'private' == $post->post_status ) ? 'style="display:none"' : ''; ?>
-					<input <?php echo $style; ?> type="submit" name="save" id="save-post" value="<?php esc_attr_e('Save Draft'); ?>" class="button" />
-					<?php 
-				} else if ( 'pending' == $post->post_status && $can_publish ) { ?>
-					<input type="submit" name="save" id="save-post" value="<?php esc_attr_e('Save as Pending'); ?>" class="button" /><?php
-				} 
-				?>
-			</div>
-
-			<?php $post_status = ( 'auto-draft' == $post->post_status ) ? 'draft' : $post->post_status; ?>
-			<input type="hidden" name='post_status' id='post_status' value='<?php esc_attr( $post_status ); ?>'>
-
-			<?php 
-			if ( 'private' == $post->post_status ) {
-				$visibility = 'private';
-			} elseif ( !empty( $post->post_password ) ) {
-				$visibility = 'password';
-			} else {
-				$visibility = 'public';
-			}
-			?>
-			<input type="hidden" name="hidden_post_password" id="hidden-post-password" value="<?php echo esc_attr($post->post_password); ?>" />
-			<input type="hidden" name="hidden_post_visibility" id="hidden-post-visibility" value="<?php echo esc_attr( $visibility ); ?>" />
-
-			<div id="delete-action">
-				<?php
-				if ( current_user_can( "delete_post", $post->ID ) ) {
-					if ( !EMPTY_TRASH_DAYS )
-						$delete_text = __('Delete Permanently');
-					else
-						$delete_text = __('Move to Trash');
-					?>
-					<a class="submitdelete deletion" href="<?php echo get_delete_post_link($post->ID); ?>"><?php echo $delete_text; ?></a><?php
-				} ?>
-			</div>
-
-			<div id="publishing-action">
-				<?php
-				if ( !in_array( $post->post_status, array('publish') ) || 0 == $post->ID ) {
-					if ( $can_publish ) : ?>
-						<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Publish') ?>" />
-						<?php submit_button( __( 'Publish' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) );
-					endif;
-				} else { ?>
-					<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Update') ?>" />
-					<input name="save" type="submit" class="button button-primary button-large" id="publish" accesskey="p" value="<?php esc_attr_e('Update') ?>" />
-					<?php
-				} ?>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<?php
 	}
 	
 	/**

@@ -21,19 +21,59 @@ class IT_Exchange_Product_Post_Type {
 	 * @return void
 	*/
 	function IT_Exchange_Product_Post_Type() {
-		add_action( 'plugins_loaded', array( $this, 'init' ) );
-		add_action( 'init', array( $this, 'register_disabled_post_status' ) );
+		$this->init();
+		
+		add_action( 'init', array( $this, 'register_post_status' ) );
 		add_action( 'save_post', array( $this, 'save_product' ) );
 		add_action( 'admin_init', array( $this, 'set_add_new_item_label' ) );
 		add_action( 'admin_init', array( $this, 'set_edit_item_label' ) );
 		add_action( 'it_exchange_save_product_unvalidated', array( $this, 'set_initial_post_product_type' ) );
 		add_action( 'admin_head-edit.php', array( $this, 'modify_post_new_file' ) );
 		add_action( 'admin_head-post.php', array( $this, 'modify_post_new_file' ) );
-		add_filter( 'manage_edit-it_exchange_prod_columns', array( $this, 'add_product_type_column_to_view_all_table' ) );
-		add_filter( 'manage_edit-it_exchange_prod_sortable_columns', array( $this, 'make_product_type_column_sortable' ) );
-		add_filter( 'manage_it_exchange_prod_posts_custom_column', array( $this, 'add_product_type_info_to_view_all_table_rows' ) );
+		add_filter( 'manage_edit-it_exchange_prod_columns', array( $this, 'it_exchange_product_columns' ), 999 );
+		add_filter( 'manage_edit-it_exchange_prod_sortable_columns', array( $this, 'it_exchange_product_sortable_columns' ) );
+		add_filter( 'manage_it_exchange_prod_posts_custom_column', array( $this, 'it_exchange_prod_posts_custom_column_info' ) );
 		add_action( 'it_exchange_add_on_enabled', array( $this, 'maybe_enable_product_type_posts' ) );
 		add_action( 'it_exchange_add_on_disabled', array( $this, 'maybe_disable_product_type_posts' ) );
+		
+		add_filter( 'request', array( $this, 'modify_wp_query_request_on_edit_php' ) );		
+	}
+	
+	/*
+	 * Modify sort of products in edit.php for custom columns
+	 */
+	function modify_wp_query_request_on_edit_php( $request ) {
+		
+		global $hook_suffix;
+		
+		//ITDebug::print_r( $request );
+		
+		if ( 'edit.php' === $hook_suffix ) {
+			
+			if ( 'it_exchange_prod' === $request['post_type'] && isset( $request['orderby'] ) ) {
+				
+				switch( $request['orderby'] ) {
+				
+					case 'it_exchange_product_price':
+						$request['orderby'] = 'meta_value_num';
+						$request['meta_key'] = '_it-exchange-base-price';
+						break;
+				
+					case 'it_exchange_product_show_in_store':
+						$request['orderby'] = 'meta_value';
+						$request['meta_key'] = '_it-exchange-visibility';
+						break;
+					
+				}
+				
+			}
+		
+		}
+		
+		//ITDebug::print_r( $request );
+		
+		return $request;
+		
 	}
 
 	function init() {
@@ -210,7 +250,7 @@ class IT_Exchange_Product_Post_Type {
 	function save_product( $post ) { 
 
 		// Exit if not it_exchange_prod post_type
-		if ( ! 'it_exchange_prod' == get_post_type( $post ) ) 
+		if ( ! 'it_exchange_prod' === get_post_type( $post ) ) 
 			return;
 
 		// Grab enabled product add-ons
@@ -263,7 +303,7 @@ class IT_Exchange_Product_Post_Type {
 	 * @since 0.3.3
 	 * @return void
 	*/
-	function register_disabled_post_status() {
+	function register_post_status() {
 		$args = array(
 			'label'                     => _x( '_it_exchange_disab', 'Status General Name', 'LION' ),
 			'label_count'               => _n_noop( 'Disabled Product (%s)',  'Disabled Products (%s)', 'LION' ),
@@ -409,16 +449,12 @@ class IT_Exchange_Product_Post_Type {
 	 * @param array $existing  exisiting columns array
 	 * @return array  modified columns array
 	*/
-	function add_product_type_column_to_view_all_table( $existing ) {
-		// Insert after title
-		foreach ( (array) $existing as $id => $label ) {
-			$columns[$id] = $label;
-			if ( 'title' == $id )
-				$columns['it_exchange_product_type_column'] = __( 'Product Type', 'LION' );
-		}
-		// Insert at end if title wasn't found
-		if ( empty( $columns['it_exchange_product_type_column'] ) )
-			$columns['it_exchange_product_type_column'] = __( 'Product Type', 'LION' );
+	function it_exchange_product_columns( $existing ) {
+		$columns['cb'] = '<input type="checkbox" />';
+		$columns['title'] = __( 'Title', 'LION' );
+		$columns['it_exchange_product_price'] = __( 'Price', 'LION' );
+		$columns['it_exchange_product_show_in_store'] = __( 'Show in Store', 'LION' );
+		$columns['it_exchange_product_purchases'] = __( 'Purchases', 'LION' );
 
 		return $columns;
 	}
@@ -430,8 +466,10 @@ class IT_Exchange_Product_Post_Type {
 	 * @param array $sortables  existing sortable columns
 	 * @return array  modified sortable columnns
 	*/
-	function make_product_type_column_sortable( $sortables ) {
-		$sortables['it_exchange_product_type_column'] = 'it_exchange_product_type_column';
+	function it_exchange_product_sortable_columns( $sortables ) {
+		$sortables['it_exchange_product_price'] = 'it_exchange_product_price';
+		$sortables['it_exchange_product_show_in_store'] = 'it_exchange_product_show_in_store';
+		$sortables['it_exchange_product_purchases'] = 'it_exchange_product_purchases';
 		return $sortables;
 	}
 
@@ -443,14 +481,26 @@ class IT_Exchange_Product_Post_Type {
 	 * @param integer $post  post ID
 	 * @return void
 	*/
-	function add_product_type_info_to_view_all_table_rows( $column ) {
+	function it_exchange_prod_posts_custom_column_info( $column ) {
+		
 		global $post;
-		if ( 'it_exchange_product_type_column' != $column )
-			return;
 
 		$product = it_exchange_get_product( $post );
-		if ( $product_type = it_exchange_get_addon( $product->product_type ) )
-			esc_attr_e( $product_type['name'] );
+		
+		switch( $column ) {
+		
+			case 'it_exchange_product_price':
+				esc_attr_e( it_exchange_get_product_feature( $post->ID, 'base-price' ) );
+				break;
+			case 'it_exchange_product_show_in_store':
+				print_r( it_exchange_get_product_feature( $post->ID, 'visibility' ) );
+				break;
+			case 'it_exchange_product_purchases':
+				esc_attr_e( it_exchange_get_product_feature( $post->ID, 'purchases' ) );
+				break;
+			
+		}
+		
 	}
 }
 $IT_Exchange_Product_Post_Type = new IT_Exchange_Product_Post_Type();
