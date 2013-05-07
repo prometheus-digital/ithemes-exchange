@@ -170,6 +170,13 @@ class IT_Exchange_Product_Visibility {
 		<div class="clear"></div>
 		</div>
         
+		<div id="major-advanced-action">
+		<div id="advanced-action">
+		<a class="advanced-status-option-link" href="#"><?php _e( 'Advanced', 'LION' ); ?></a>
+		</div>
+        
+		<div id="advanced-status-options">
+        
 		<div id="misc-publishing-actions">
 		<div class="misc-pub-section"><label for="post_status"><?php _e('Status:') ?></label>
 		<span id="post-status-display">
@@ -288,6 +295,8 @@ class IT_Exchange_Product_Visibility {
 		<?php } ?>
 		</div><!-- .misc-pub-section -->
 		<div class="clear"></div>
+        </div>
+        </div>
         </div>
         
 		</div>
