@@ -58,7 +58,6 @@ class IT_Exchange_Coupon_Post_Type {
 			), // We're going to build our own add / edit screen
 			'capabilities'         => array(
 				'edit_posts'        => 'edit_posts',
-				'create_posts'      => false,
 				'edit_others_posts' => 'edit_others_posts',
 				'publish_posts'     => 'publish_posts',
 			),

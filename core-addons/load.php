@@ -97,7 +97,7 @@ function it_exchange_register_core_addons() {
 			'description' 	=> __( 'This add-on allows you to generate basic coupons that apply to all products in your store.', 'LION' ),
 			'author'		=> 'iThemes',
 			'author_url'	=> 'http://ithemes.com',
-			'file'        	=> dirname( __FILE__ ) . '/product-features/basic-coupons/init.php',
+			'file'        	=> dirname( __FILE__ ) . '/coupons/basic-coupons/init.php',
 			'category' 		=> 'coupons',
 			'tag' 			=> 'core',
 			'supports'      => apply_filters( 'it_exchange_register_basic_coupons_default_features', array(

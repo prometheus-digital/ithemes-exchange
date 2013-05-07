@@ -75,6 +75,9 @@ require( $this->_plugin_path . 'lib/routes/class.router.php' );
 // Super Widget
 require( $this->_plugin_path . 'lib/super-widget/class.super-widget.php' );
 
+// Coupons
+require( $this->_plugin_path . 'lib/coupons/class.coupons-post-type.php' );
+
 // Sessions
 if ( ! is_admin() ) {
 	require( $this->_plugin_path . 'lib/sessions/class.session.php' );
