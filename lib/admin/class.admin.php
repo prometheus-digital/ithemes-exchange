@@ -998,7 +998,7 @@ class IT_Exchange_Admin {
 		
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
 				
-			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', array( 'jquery-ui-sortable', 'jquery-ui-droppable' ) );
+			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', array( 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs' ) );
 			
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
 			
