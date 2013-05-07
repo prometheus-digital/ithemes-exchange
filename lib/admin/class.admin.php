@@ -1245,8 +1245,8 @@ class IT_Exchange_Admin {
 			</div>
 
 			<?php $post_status = ( 'auto-draft' == $post->post_status ) ? 'draft' : $post->post_status; ?>
-			<input type="hidden" name='post_status' id='post_status' value='<?php echo esc_attr( $post_status ); ?>'>
-            <input type="hidden" name="hidden_post_status" id="hidden_post_status" value="<?php echo esc_attr( $post_status ); ?>" />
+			<input type="hidden" name='post_status' id='post_status' value='<?php esc_attr_e( $post_status ); ?>'>
+            <input type="hidden" name="hidden_post_status" id="hidden_post_status" value="<?php esc_attr_e( $post_status ); ?>" />
 
 			<?php 
 			if ( 'private' == $post->post_status ) {
