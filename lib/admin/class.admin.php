@@ -1178,10 +1178,6 @@ class IT_Exchange_Admin {
 			it_exchange_add_feature_support_to_product_type( 'extended-description', $product_type );
 		}
 
-		// Move publish to the bottom of normal
-		remove_meta_box( 'submitdiv', __( 'Publish' ), 'post_submit_meta_box', null, 'it_exchange_advanced', 'core' );
-		add_meta_box( 'submitdiv', __( 'Publish' ), array( $this, 'post_submit_meta_box' ), null, 'it_exchange_side', 'high' );
-
 		// Move Featured Image to top of side if supported
 		if ( it_exchange_product_type_supports_feature( $product_type, 'featured-image' ) ) {
 			add_meta_box('postimagediv', __('Featured Image'), 'post_thumbnail_meta_box', 'it_exchange_prod', 'it_exchange_side' );
@@ -1208,88 +1204,7 @@ class IT_Exchange_Admin {
 	function do_add_edit_product_screen_layout_side( $post ) {
 		do_meta_boxes( 'it_exchange_prod', 'it_exchange_side', $post );
 	}
-
-	/**
-	 * This is a modified version of core WP's post_submit_meta_box() function found in wp-admin/includes/meta-boxes.php
-	 *
-	 * @since 0.4.0
-	 *
-	 * @return void
-	*/
-	function post_submit_meta_box($post) {
-		global $action;
-		
-		//return post_submit_meta_box( $post );
-
-		$post_type = $post->post_type;
-		$post_type_object = get_post_type_object($post_type);
-		$can_publish = current_user_can($post_type_object->cap->publish_posts);
-		?>
-		<div class="submitbox" id="submitpost">
-
-			<?php // Hidden submit button early on so that the browser chooses the right button when form is submitted with Return key ?>
-			<div style="display:none;">
-				<?php submit_button( __( 'Save' ), 'button', 'save' ); ?>
-			</div>
-
-			<div id="save-action">
-				<?php 
-				if ( 'publish' != $post->post_status && 'future' != $post->post_status && 'pending' != $post->post_status ) {
-					$style = ( 'private' == $post->post_status ) ? 'style="display:none"' : ''; ?>
-					<input <?php echo $style; ?> type="submit" name="save" id="save-post" value="<?php esc_attr_e('Save Draft'); ?>" class="button" />
-					<?php 
-				} else if ( 'pending' == $post->post_status && $can_publish ) { ?>
-					<input type="submit" name="save" id="save-post" value="<?php esc_attr_e('Save as Pending'); ?>" class="button" /><?php
-				} 
-				?>
-			</div>
-
-			<?php $post_status = ( 'auto-draft' == $post->post_status ) ? 'draft' : $post->post_status; ?>
-			<input type="hidden" name='post_status' id='post_status' value='<?php esc_attr_e( $post_status ); ?>'>
-            <input type="hidden" name="hidden_post_status" id="hidden_post_status" value="<?php esc_attr_e( $post_status ); ?>" />
-
-			<?php 
-			if ( 'private' == $post->post_status ) {
-				$visibility = 'private';
-			} elseif ( !empty( $post->post_password ) ) {
-				$visibility = 'password';
-			} else {
-				$visibility = 'public';
-			}
-			?>
-			<input type="hidden" name="hidden_post_password" id="hidden-post-password" value="<?php echo esc_attr( $post->post_password ); ?>" />
-			<input type="hidden" name="hidden_post_visibility" id="hidden-post-visibility" value="<?php echo esc_attr( $visibility ); ?>" />
-
-			<div id="delete-action">
-				<?php
-				if ( current_user_can( "delete_post", $post->ID ) ) {
-					if ( !EMPTY_TRASH_DAYS )
-						$delete_text = __('Delete Permanently');
-					else
-						$delete_text = __('Move to Trash');
-					?>
-					<a class="submitdelete deletion" href="<?php echo get_delete_post_link($post->ID); ?>"><?php echo $delete_text; ?></a><?php
-				} ?>
-			</div>
-
-			<div id="publishing-action">
-				<?php
-				if ( !in_array( $post->post_status, array('publish') ) || 0 == $post->ID ) {
-					if ( $can_publish ) : ?>
-						<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Publish') ?>" />
-						<?php submit_button( __( 'Publish' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) );
-					endif;
-				} else { ?>
-					<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Update') ?>" />
-					<input name="save" type="submit" class="button button-primary button-large" id="publish" accesskey="p" value="<?php esc_attr_e('Update') ?>" />
-					<?php
-				} ?>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<?php
-	}
-
+	
 	/**
 	 * Removed Quick Edit action from IT Exchange Post Types
 	 *

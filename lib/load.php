@@ -24,11 +24,11 @@ require( $this->_plugin_path . 'lib/product-features/class.title.php' );
 // Product Feature: Base Price
 require( $this->_plugin_path . 'lib/product-features/class.base-price.php' );
 
-// Product Feature: Visibility
-require( $this->_plugin_path . 'lib/product-features/class.visibility.php' );
-
 // Product Feature: Product Description
 require( $this->_plugin_path . 'lib/product-features/class.description.php' );
+
+// Product Feature: Visibility
+require( $this->_plugin_path . 'lib/product-features/class.product-status.php' );
 
 // Product Feature: Product Images 
 require( $this->_plugin_path . 'lib/product-features/class.product-images.php' );
