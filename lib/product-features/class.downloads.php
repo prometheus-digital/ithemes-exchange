@@ -13,6 +13,7 @@ class IT_Exchange_Product_Feature_Downloads {
 	/**
 	 * Constructor. Registers hooks
 	 *
+	 * @todo Add support for product has feature support API
 	 * @since 0.4.0
 	 * @return void
 	*/
@@ -95,39 +96,31 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// Echo the form field
 		echo $description;
-		
-		/** @todo Temporary UI **/
-		?>
-		<br />**UGLY TEMP UI**
-		<p>
-			<strong>Add Download</strong><br />
-			<input type="text" name="it-exchange-digital-downloads[0][source]" /> URL<br />
-			<input type="text" name="it-exchange-digital-downloads[0][name]" /> Name<br />
-			<input type="text" name="it-exchange-digital-downloads[0][limit]" /> Download Limit<br />
-			<input type="text" name="it-exchange-digital-downloads[0][expiration]" /> Expiration<br />
-		</p>
-		<hr />
-		<strong>Exisiting Downloads</strong>
-		<?php
+
+		// Loop through existing Downloads
+		echo '<div class="it-exchange-existing-digital-downloads">';
 		if ( ! empty( $existing_downloads ) ) {
-			?>
-			<table>
-			<tr style="text-align:left;"><th>Delete</th><th>Name</th><th>Download Limit</th><th>Expiration</th></tr>
-			<?php
-			foreach( $existing_downloads as $download ) {
-				echo '<tr>';
-				echo '<td>';
-					echo '<input type="checkbox" name="it-exchange-delete-download[]" value="' . esc_attr( $download['id'] ) . '" />';
-				echo '</td>';
-				echo '<td>' . esc_attr( $download['name'] ) . '</td>';
-				echo '<td>' . esc_attr( $download['limit'] ) . '</td>';
-				echo '<td>' . esc_attr( $download['expiration'] ) . '</td>';
-				echo '</tr>';
+			foreach( $existing_downloads as $id => $data ) {
+				?>
+				<div class="it-exchange-digital-download-item">
+					<input type="text" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][name]" value="<?php esc_attr_e( $data['name'] ); ?>" />
+					<input type="text" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][source]" value="<?php esc_attr_e( $data['source'] ); ?>" />
+					<input id="it-exchange-digital-downloads-delete-<?php esc_attr_e( $id ); ?>" type="checkbox" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][delete]" value="true" />
+					<a href="#" class="it-exchange-delete-digital-download" data-checkbox-id="it-exchange-digital-downloads-delete-<?php esc_attr_e( $id ); ?>">&times;</a>
+				</div>
+				<?php
 			}
-			echo '</table>';
-		} else {
-			echo '<p>No existing downloads</p>';
 		}
+		?>
+		</div>
+		<div class="it-exchange-add-new-digital-download">
+			<div class="it-exchange-new-digital-download-item">
+				<input type="text" name="it-exchange-new-digital-download[0][name]" autocomplete="off" placeholder="<?php esc_attr_e( __( 'Download Name', 'LION' ) ); ?>" value="" />
+				<input type="text" name="it-exchange-digital-downloads[0][source]" autocomplete="off" placeholder="<?php esc_attr_e( __( 'Source File URL', 'LION' ) ); ?>" value="" />
+				<a href="#" class="it-exchange-delete-new-digital-download">&times;</a>
+			</div>
+		</div>
+		<?php
 	}
 
 	/**
