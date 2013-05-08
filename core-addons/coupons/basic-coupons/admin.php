@@ -171,8 +171,6 @@ add_action( 'admin_init', 'it_exchange_basic_coupons_redirect_core_add_edit_scre
  * @return void;
 */
 function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
-	$flush_cache  = ! empty( $_POST );
-
 	// Setup add / edit variables
 	$post_id = empty( $_GET['post'] ) ? false : $_GET['post'];
 	$heading = $post_id ? __( 'Edit Coupon', 'LION' ) : __( 'Add Coupon', 'LION' );
