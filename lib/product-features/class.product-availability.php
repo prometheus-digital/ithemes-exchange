@@ -198,7 +198,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 		// Does this product type support base price?
 		if ( false === $this->product_supports_feature( false, $product_id ) )
 			return false;
-		return (boolean) $this->get_feature( false, $product_id );
+		return (boolean) $this->get_feature( false, $product_id, $options );
 	}
 
 	/**

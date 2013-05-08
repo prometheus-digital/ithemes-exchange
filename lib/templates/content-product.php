@@ -81,7 +81,7 @@
 					&& 0 < it_exchange( 'product', 'inventory' ) ) )
 				it_exchange( 'product', 'add-to-cart', 'format=html' ); 
 			else
-				it_exchange( 'product', 'sold-out', 'format=html' ); 
+				echo "no"; //it_exchange( 'product', 'sold-out', 'format=html' ); 
 			?>
 
 		</div><!-- .entry-content -->
