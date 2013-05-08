@@ -96,7 +96,33 @@ img {
 
 /** -----------------------------------------------------:[ side sortables ]:---------- */
 
-/** ---:[ #it-exchange-product-images ]:--- */
+/** ---:[ submit box ]:--- */
+#it-exchange-submit-box {
+	padding: 10px;
+	border: 1px solid #DEDEDE;
+	border-radius: 3px;
+	overflow: hidden;
+}
+#it-exchange-submit-box .publishing-actions {
+	overflow: hidden;
+	margin-bottom: 10px;
+}
+#it-exchange-submit-box .publishing-actions  #save-action input {
+	margin-right: 5px;
+}
+#it-exchange-submit-box .publishing-actions .preview {
+	float: left;
+}
+#it-exchange-submit-box .modifying-actions{clear:both;overflow: hidden;}
+#it-exchange-submit-box .modifying-actions #advanced-action{float:left;line-height: 25px;}
+#it-exchange-submit-box .modifying-actions #delete-action{float:right;}
+#it-exchange-submit-box .modifying-actions #delete-action .submitdelete{color:#f00;border-bottom-color:#f00;}
+#it-exchange-submit-box .modifying-actions #delete-action .submitdelete:hover{color:#fff;background-color:#f00;border-bottom-color:#f00;}
+
+#it-exchange-submit-box .advanced-actions{clear:both;margin-top:5px;padding-top:10px;border-top:1px solid #F1F1F1;}
+#it-exchange-submit-box .advanced-actions .misc-pub-section{float:left;width:50%;border-bottom:0;}
+
+/** ---:[ product-images ]:--- */
 #it-exchange-product-images li .remove-item{position:absolute;z-index:101;top:5px;right:5px;padding:0 5px 1px;border:1px solid #FFF;border-radius:2px;color:#FFF;opacity:0;}
 #it-exchange-product-images li:hover .remove-item{opacity:1;}
 #it-exchange-product-images li .remove-item:hover{cursor:pointer;background:#FFF;color:#565656;}
