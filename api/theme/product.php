@@ -89,12 +89,17 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function title( $options=array() ) {
+		
+		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $this->product->ID, 'title' );
 
 		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'title' );
 
-		if ( it_exchange_product_has_feature( $this->product->ID, 'title' ) ) {
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'title' )	
+				&& it_exchange_product_has_feature( $this->product->ID, 'title' ) ) {
 
 			$result   = '';
 			$title    = it_exchange_get_product_feature( $this->product->ID, 'title' );
@@ -127,7 +132,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	*/
 	function permalink( $options=array() ) {
 		$permalink = empty( $this->product->ID ) ? false : get_permalink( $this->product->ID );
-
+			
 		if ( $options['has'] )
 			return (boolean) $permalink;
 
@@ -159,10 +164,15 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	function base_price( $options=array() ) {
 
 		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $this->product->ID, 'base-price' );
+			
+		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'base-price' );
 
-		if ( it_exchange_product_has_feature( $this->product->ID, 'base-price' ) ) {
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'base-price' )
+				&& it_exchange_product_has_feature( $this->product->ID, 'base-price' ) ) {
 
 			$result     = '';
 			$base_price = it_exchange_get_product_feature( $this->product->ID, 'base-price' );
@@ -197,10 +207,15 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	function description( $options=array() ) {
 
 		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $this->product->ID, 'description' );
+			
+		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'description' );
 
-		if ( it_exchange_product_has_feature( $this->product->ID, 'description' ) )
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'description' )
+				&& it_exchange_product_has_feature( $this->product->ID, 'description' ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'description' );
 		return false;
 	}
@@ -215,10 +230,15 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	function extended_description( $options=array() ) {
 
 		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $this->product->ID, 'extended-description' );
+			
+		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'extended-description' );
 
-		if ( it_exchange_product_has_feature( $this->product->ID, 'extended-description' ) ) {
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'extendeddescription' )
+				&& it_exchange_product_has_feature( $this->product->ID, 'extended-description' ) ) {
 			$result        = false;
 			$extended_desc = it_exchange_get_product_feature( $this->product->ID, 'extended-description' );
 			$defaults      = array(
@@ -250,10 +270,15 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	function excerpt( $options=array() ) {
 
 		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $this->product->ID, 'wp-excerpt' );
+
+		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'wp-excerpt' );
 
-		if ( it_exchange_product_has_feature( $this->product->ID, 'wp-excerpt' ) )
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'wp-excerpt' )
+				&& it_exchange_product_has_feature( $this->product->ID, 'wp-excerpt' ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'wp-excerpt' );
 		return false;
 	}
@@ -267,10 +292,15 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	function author( $options=array() ) {
 
 		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $this->product->ID, 'author' );
+
+		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'author' );
 
-		if ( it_exchange_product_has_feature( $this->product->ID, 'author' ) )
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'author' )
+				&& it_exchange_product_has_feature( $this->product->ID, 'author' ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'author' );
 		return false;
 	}
@@ -284,10 +314,15 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	function quantity( $options=array() ) {
 
 		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $this->product->ID, 'quantity' );
+
+		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'quantity' );
 
-		if ( it_exchange_product_has_feature( $this->product->ID, 'quantity' ) )
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'quantity' )
+				&& it_exchange_product_has_feature( $this->product->ID, 'quantity' ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'quantity' );
 		return false;
 	}
@@ -301,10 +336,15 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	function inventory( $options=array() ) {
 
 		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $this->product->ID, 'inventory' );
+
+		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'inventory' );
 
-		if ( it_exchange_product_has_feature( $this->product->ID, 'inventory' ) )
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'inventory' )
+				&& it_exchange_product_has_feature( $this->product->ID, 'inventory' ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'inventory' );
 		return false;
 	}
@@ -324,10 +364,15 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		);
 		$options  = ITUtility::merge_defaults( $options, $defaults );
 
+		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $this->product->ID, 'availability' );
+
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'availability', $options );
 
-		if ( it_exchange_product_has_feature( $this->product->ID, 'availability', $options ) )
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'availability' )
+				&& it_exchange_product_has_feature( $this->product->ID, 'availability', $options ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'availability', $options );
 		return false;
 	}
@@ -337,6 +382,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 *
 	 * @since 0.4.0
 	 * @return string
+	 * @todo this whole function needs to be written!
 	*/
 	function is_available( $options=array() ) {
 	}
@@ -351,10 +397,15 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	function featured_image( $options=array() ) {
 
 		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $this->product->ID, 'featured-image' );
+
+		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'featured-image' );
 
-		if ( it_exchange_product_has_feature( $this->product->ID, 'featured-image' ) ) {
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'featured-image' )
+				&& it_exchange_product_has_feature( $this->product->ID, 'featured-image' ) ) {
 
 			$defaults = array(
 				'size' => 'post-thumbnail',
@@ -373,10 +424,15 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * If has option is true, returns boolean
 	 *
 	 * @since 0.4.0
+	 * @todo this looks incomplete to Lew... check later
 	 *
 	 * @return boolean
 	*/
 	function downloads( $options=array() ) {
+
+		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $this->product->ID, 'downloads' );
 
         // Return boolean if has flag was set
 		if ( $options['has'] )

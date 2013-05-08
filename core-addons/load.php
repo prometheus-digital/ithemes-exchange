@@ -77,6 +77,7 @@ function it_exchange_register_core_addons() {
 				'singular_name' => __( 'Digital Download', 'LION' ),
 			),
 			'supports' => apply_filters( 'it_exchange_register_digital_downloads_default_features', array(
+				'inventory'	=> false,
 			) ),
 		),
 		// Multi item cart

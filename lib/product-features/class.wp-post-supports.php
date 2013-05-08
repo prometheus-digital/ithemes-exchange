@@ -13,6 +13,7 @@ class IT_Exchange_WP_Post_Supports {
 	 *
 	 * @since 0.3.8
 	 * @return void
+	 * @todo remove it_exchange_enabled_addons_loaded action???
 	*/
 	function IT_Exchange_WP_Post_Supports() {
 

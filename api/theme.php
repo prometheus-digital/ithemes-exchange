@@ -87,6 +87,14 @@ function it_exchange() {
 		$options['has'] = false;
 	}
 
+	// Strip has prefix from request method and set flags
+	if ( 'supports' == substr( $tag, 0, 8 ) ) { 
+		$tag = substr( $tag, 8 );
+		$options['supports'] = true;
+	} else {
+		$options['supports'] = false;
+	}
+
 	// Set object
 	if ( ! is_object( $object ) ) {
 

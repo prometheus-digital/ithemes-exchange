@@ -15,16 +15,18 @@ class IT_Exchange_Product_Visibility {
 	 *
 	 * @since 0.4.0
 	 * @return void
+	 * @todo remove it_exchange_enabled_addons_loaded action???
 	*/
 	function IT_Exchange_Product_Visibility() {
 		if ( is_admin() ) {
-			add_action( 'init', array( $this, 'init_visibility_metaboxes' ) );
-			add_action( 'it_exchange_save_product', array( $this, 'save_visibility_on_product_save' ) );
+			add_action( 'init', array( $this, 'init_feature_metaboxes' ) );
+			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		}
-		add_action( 'it_exchange_update_product_feature_visibility', array( $this, 'save_visibility' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_visibility', array( $this, 'get_visibility' ), 9, 2 );
-		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_visibility_support_to_product_types' ) );
-		add_filter( 'it_exchange_product_has_feature_visibility', array( $this, 'product_has_visibility') , 9, 2 );
+		add_action( 'it_exchange_update_product_feature_visibility', array( $this, 'save_feature' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_visibility', array( $this, 'get_feature' ), 9, 2 );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
+		add_filter( 'it_exchange_product_has_feature_visibility', array( $this, 'product_has_feature') , 9, 2 );
+		add_filter( 'it_exchange_product_supports_feature_visibility', array( $this, 'product_supports_feature') , 9, 2 );
 	}
 
 	/**
@@ -32,7 +34,7 @@ class IT_Exchange_Product_Visibility {
 	 *
 	 * @since 0.4.0
 	*/
-	function add_visibility_support_to_product_types() {
+	function add_feature_support_to_product_types() {
 		// Register the visibility_addon
 		$slug        = 'visibility';
 		$description = 'The visibility of a product';
@@ -51,7 +53,7 @@ class IT_Exchange_Product_Visibility {
 	 * @since 0.4.0
 	 * @return void
 	*/
-	function init_visibility_metaboxes() {
+	function init_feature_metaboxes() {
 		// Abord if there are not product addon's currently enabled.
 		if ( ! $product_addons = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) )
 			return;
@@ -282,7 +284,7 @@ class IT_Exchange_Product_Visibility {
 	 * @param object $post wp post object
 	 * @return void
 	*/
-	function save_visibility_on_product_save() {
+	function save_feature_on_product_save() {
 		// Abort if we can't determine a product type
 		if ( ! $product_type = it_exchange_get_product_type() )
 			return;
@@ -317,7 +319,7 @@ class IT_Exchange_Product_Visibility {
 	 * @param mixed $new_visibility the new visibility
 	 * @return bolean
 	*/
-	function save_visibility( $product_id, $new_visibility ) {
+	function save_feature( $product_id, $new_visibility ) {
 		update_post_meta( $product_id, '_it-exchange-visibility', $new_visibility );
 	}
 
@@ -329,7 +331,7 @@ class IT_Exchange_Product_Visibility {
 	 * @param integer product_id the WordPress post ID
 	 * @return string visibility
 	*/
-	function get_visibility( $visibility, $product_id ) {
+	function get_feature( $visibility, $product_id ) {
 		$visibility = get_post_meta( $product_id, '_it-exchange-visibility', true );
 		return $visibility;
 	}
@@ -342,12 +344,28 @@ class IT_Exchange_Product_Visibility {
 	 * @param integer $product_id
 	 * @return boolean
 	*/
-	function product_has_visibility( $result, $product_id ) {
-		// Does this product type support Visibility?
-		$product_type = it_exchange_get_product_type( $product_id );
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'visibility' ) ) 
+	function product_has_feature( $result, $product_id ) {
+		// Does this product type support base price?
+		if ( false === $this->product_supports_feature( false, $product_id ) )
 			return false;
-		return (boolean) $this->get_visibility( false, $product_id );
+		return (boolean) $this->get_feature( false, $product_id );
+	}
+
+	/**
+	 * Does the product support this feature?
+	 *
+	 * This is different than if it has the feature, a product can 
+	 * support a feature but might not have the feature set.
+	 *
+	 * @since 0.4.0
+	 * @param mixed $result Not used by core
+	 * @param integer $product_id
+	 * @return boolean
+	*/
+	function product_supports_feature( $result, $product_id ) {
+		// Does this product type support base price?
+		$product_type = it_exchange_get_product_type( $product_id );
+		return it_exchange_product_type_supports_feature( $product_type, 'visibility' );
 	}
 }
 $IT_Exchange_Product_Visibility = new IT_Exchange_Product_Visibility();

@@ -7,6 +7,19 @@
 */
 
 /**
+ * Check if a given product supports a specific feature 
+ *
+ * @since 0.3.8
+ * @param integer $product_id the WordPress post ID for the product
+ * @param string $feature_key the slug for the feature
+ * @param array $options
+ * @return boolean
+*/
+function it_exchange_product_supports_feature( $product_id, $feature_key, $options=array() ) {
+	return apply_filters( 'it_exchange_product_supports_feature_' . $feature_key, false, $product_id, $options );
+}
+
+/**
  * Check if a given product has a specific feature 
  *
  * @since 0.3.8
@@ -90,6 +103,9 @@ function it_exchange_product_type_supports_feature( $product_type, $feature_key 
 	if ( empty( $product_features[$feature_key]['product_types'][$product_type] ) )
 		return false;
 
+	
+	ITDebug::print_r( $product_type . ' ' . $feature_key );
+	
 	return true;
 }
 
