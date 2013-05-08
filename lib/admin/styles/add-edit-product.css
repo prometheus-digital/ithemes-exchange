@@ -115,12 +115,13 @@ img {
 #it-exchange-product-images li .remove-item{position:absolute;z-index:101;top:5px;right:5px;padding:0 5px 1px;border:1px solid #FFF;border-radius:2px;color:#FFF;opacity:0;}
 #it-exchange-product-images li:hover .remove-item{opacity:1;}
 #it-exchange-product-images li .remove-item:hover{cursor:pointer;background:#FFF;color:#565656;}
-#it-exchange-product-images li a .overlay{content:' ';position:absolute;z-index:100;top:0;bottom:0;right:5px;left:0;background:#000;opacity:0;-webkit-transition:opacity .2s linear;transition:opacity .2s linear;}
+#it-exchange-product-images li a .overlay{content:' ';position:absolute;z-index:100;top:0;bottom:0;right:0;left:0;background:#000;opacity:0;-webkit-transition:opacity .2s linear;transition:opacity .2s linear;}
 #it-exchange-product-images li:hover a .overlay{opacity:.4;}
 
 #it-exchange-feature-image{width:100%;height:auto;position:relative;}
 #it-exchange-feature-image li .remove-item{display:none;}
 #it-exchange-feature-image a{display:block;margin-right:5px;}
+#it-exchange-feature-image li a .overlay {right:5px;}
 #it-exchange-feature-image .replace-feature-image{opacity:0;display:none;}
 #it-exchange-feature-image .replace-feature-image{position:absolute;top:0;bottom:0;right:5px;left:0;background:rgba(0,0,0,.6);}
 #it-exchange-feature-image .replace-feature-image span{position:absolute;left:50px;right:50px;padding:15px 0;border:3px solid #FFF;border-radius:3px;text-align:center;font-size:16px;color:#FFF;}
@@ -149,6 +150,8 @@ img {
 #it-exchange-advanced-tabs .ui-tabs-nav{float:left;width:20%;}
 #it-exchange-advanced-tabs .ui-tabs-panel{float:right;width:80%;border-left:1px solid #DEDEDE;border-radius:0 4px 4px 0;}
 #it-exchange-advanced-tabs .ui-tabs-panel .inner{padding:20px;background:#FFF;border-radius:0 4px 4px 0;}
+#it-exchange-advanced-tabs .ui-tabs-panel .inner *:first-child{margin-top:0;padding-top:0;}
+#it-exchange-advanced-tabs .ui-tabs-panel .inner textarea{width:100%;}
 
 #it-exchange-advanced-tab-nav .ui-state-default{outline:none;margin-bottom:0;border-width:1px 0 1px;border-style:solid;border-color:transparent;}
 #it-exchange-advanced-tab-nav .ui-state-default:first-child{border-top:0;border-radius:4px 0 0 0;}
@@ -157,3 +160,8 @@ img {
 #it-exchange-advanced-tab-nav .ui-state-default a:hover{background:#EEE;}
 #it-exchange-advanced-tab-nav .ui-state-active{position:relative;margin-right:-2px;background:#FFF;border-color:#DEDEDE;}
 #it-exchange-advanced-tab-nav .ui-state-active a:hover{background:#FFF;}
+
+/** ---:[ fixes ]:--- */
+#it-exchange-advanced-tabs .wp-switch-editor {
+	height: 26px;
+}
