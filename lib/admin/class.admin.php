@@ -443,14 +443,7 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function print_exchange_setup_page() {
-		?>
-		<div class="wrap">
-			<?php screen_icon( 'page' ); ?>
-			<h2>iThemes Exchange Setup</h2>
-			<p>Possibly place setup wizzard here</p>
-			<p>Definitely replace icon</p>
-		</div>
-		<?php
+		include( 'views/admin-wizard.php' );
 	}
 
 	/**
