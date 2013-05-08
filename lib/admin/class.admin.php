@@ -443,6 +443,18 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function print_exchange_setup_page() {
+		$flush_cache  = ! empty( $_POST );
+		$settings     = it_exchange_get_option( 'settings_general', $flush_cache );
+		$form_values  = empty( $this->error_message ) ? $settings : ITForm::get_post_data();
+		$form         = new ITForm( $form_values, array( 'prefix' => 'it_exchange_settings' ) );
+		$form_options = array(
+			'id'      => apply_filters( 'it_exchange_settings_form_id', 'it-exchange-settings' ),
+			'enctype' => apply_filters( 'it_exchange_settings_form_enctype', false ),
+		);
+		if ( ! empty ( $this->status_message ) )
+			ITUtility::show_status_message( $this->status_message );
+		if ( ! empty( $this->error_message ) )
+			ITUtility::show_error_message( $this->error_message );
 		include( 'views/admin-wizard.php' );
 	}
 

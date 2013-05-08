@@ -201,7 +201,18 @@ add_action( 'plugins_loaded', 'load_it_exchange' );
  *
  * @return void
 */
-function it_flush_rewrite_rules() {
+function it_exchange_activation_hook() {
 	flush_rewrite_rules();
+    add_option('it_exchange_redirect_on_activation', true);
 }
-register_activation_hook( __FILE__, 'it_flush_rewrite_rules' );
+register_activation_hook( __FILE__, 'it_exchange_activation_hook' );
+
+function it_exchange_redirect_on_activation() {
+	if ( get_option( 'it_exchange_redirect_on_activation', false ) ) {
+		
+        delete_option('it_exchange_redirect_on_activation');
+		wp_safe_redirect('admin.php?page=it-exchange-setup' );
+		
+    }
+}
+add_action('admin_init', 'it_exchange_redirect_on_activation');
