@@ -102,9 +102,6 @@ function it_exchange_product_type_supports_feature( $product_type, $feature_key 
 
 	if ( empty( $product_features[$feature_key]['product_types'][$product_type] ) )
 		return false;
-
-	
-	ITDebug::print_r( $product_type . ' ' . $feature_key );
 	
 	return true;
 }

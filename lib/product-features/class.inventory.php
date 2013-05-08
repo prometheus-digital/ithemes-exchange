@@ -22,7 +22,7 @@ class IT_Exchange_Product_Feature_Inventory {
 			add_action( 'init', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		}
-		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
+		//add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
 		add_action( 'it_exchange_update_product_feature_inventory', array( $this, 'save_feature' ), 9, 2 );
 		add_filter( 'it_exchange_get_product_feature_inventory', array( $this, 'get_feature' ), 9, 2 );
 		add_filter( 'it_exchange_product_has_feature_inventory', array( $this, 'product_has_feature') , 9, 2 );
@@ -176,7 +176,7 @@ class IT_Exchange_Product_Feature_Inventory {
 		// Does this product type support base price?
 		if ( false === $this->product_supports_feature( false, $product_id ) )
 			return false;
-		return (boolean) $this->get_feature( false, $product_id );
+		return ( false === $this->get_feature( false, $product_id ) ) ? false : true;
 	}
 
 	/**

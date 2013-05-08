@@ -343,8 +343,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'inventory' );
 
-		if ( it_exchange_product_supports_feature( $this->product->ID, 'inventory' )
-				&& it_exchange_product_has_feature( $this->product->ID, 'inventory' ) )
+		if ( false !== it_exchange_product_supports_feature( $this->product->ID, 'inventory' )
+				&& false !== it_exchange_product_has_feature( $this->product->ID, 'inventory' ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'inventory' );
 		return false;
 	}

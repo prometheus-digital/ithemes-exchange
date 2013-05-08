@@ -76,12 +76,13 @@
 				<p><strong>Product End Availability</strong><br /><?php it_exchange( 'product', 'availability', 'type=end' ); ?></p>
 			<?php endif; ?>
 
-			<?php 
-			if ( ( it_exchange( 'supports', 'has-inventory' ) 
-					&& 0 < it_exchange( 'product', 'inventory' ) ) )
+			<?php
+			if ( ( it_exchange( 'product', 'supports-inventory' ) 
+				&& 0 < it_exchange( 'product', 'inventory', 'return=true' ) ) 
+					|| ( !it_exchange( 'product', 'supports-inventory' ) ) )
 				it_exchange( 'product', 'add-to-cart', 'format=html' ); 
 			else
-				echo "no"; //it_exchange( 'product', 'sold-out', 'format=html' ); 
+				echo "SOLD OUT!" 
 			?>
 
 		</div><!-- .entry-content -->
