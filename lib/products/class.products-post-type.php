@@ -35,47 +35,16 @@ class IT_Exchange_Product_Post_Type {
 		add_filter( 'manage_it_exchange_prod_posts_custom_column', array( $this, 'it_exchange_prod_posts_custom_column_info' ) );
 		add_action( 'it_exchange_add_on_enabled', array( $this, 'maybe_enable_product_type_posts' ) );
 		add_action( 'it_exchange_add_on_disabled', array( $this, 'maybe_disable_product_type_posts' ) );
-		
 		add_filter( 'request', array( $this, 'modify_wp_query_request_on_edit_php' ) );		
 	}
 	
-	/*
-	 * Modify sort of products in edit.php for custom columns
-	 */
-	function modify_wp_query_request_on_edit_php( $request ) {
-		
-		global $hook_suffix;
-		
-		//ITDebug::print_r( $request );
-		
-		if ( 'edit.php' === $hook_suffix ) {
-			
-			if ( 'it_exchange_prod' === $request['post_type'] && isset( $request['orderby'] ) ) {
-				
-				switch( $request['orderby'] ) {
-				
-					case 'it_exchange_product_price':
-						$request['orderby'] = 'meta_value_num';
-						$request['meta_key'] = '_it-exchange-base-price';
-						break;
-				
-					case 'it_exchange_product_show_in_store':
-						$request['orderby'] = 'meta_value';
-						$request['meta_key'] = '_it-exchange-visibility';
-						break;
-					
-				}
-				
-			}
-		
-		}
-		
-		//ITDebug::print_r( $request );
-		
-		return $request;
-		
-	}
-
+	/**
+	 * Sets up the object
+	 *
+	 * @since 0.3.0
+	 *
+	 * @return void
+	*/
 	function init() {
 		$this->post_type = 'it_exchange_prod';
 		$labels    = array(
@@ -450,11 +419,11 @@ class IT_Exchange_Product_Post_Type {
 	 * @return array  modified columns array
 	*/
 	function it_exchange_product_columns( $existing ) {
-		$columns['cb'] = '<input type="checkbox" />';
-		$columns['title'] = __( 'Title', 'LION' );
-		$columns['it_exchange_product_price'] = __( 'Price', 'LION' );
+		$columns['cb']                                = '<input type="checkbox" />';
+		$columns['title']                             = __( 'Title', 'LION' );
+		$columns['it_exchange_product_price']         = __( 'Price', 'LION' );
 		$columns['it_exchange_product_show_in_store'] = __( 'Show in Store', 'LION' );
-		$columns['it_exchange_product_purchases'] = __( 'Purchases', 'LION' );
+		$columns['it_exchange_product_purchases']     = __( 'Purchases', 'LION' );
 
 		return $columns;
 	}
@@ -467,9 +436,9 @@ class IT_Exchange_Product_Post_Type {
 	 * @return array  modified sortable columnns
 	*/
 	function it_exchange_product_sortable_columns( $sortables ) {
-		$sortables['it_exchange_product_price'] = 'it_exchange_product_price';
-		$sortables['it_exchange_product_show_in_store'] = 'it_exchange_product_show_in_store';
-		$sortables['it_exchange_product_purchases'] = 'it_exchange_product_purchases';
+		$sortables['it_exchange_product_price']         = 'it-exchange-product-price';
+		$sortables['it_exchange_product_show_in_store'] = 'it-exchange-product-show-in-store';
+		$sortables['it_exchange_product_purchases']     = 'it-exchange-product-purchases';
 		return $sortables;
 	}
 
@@ -482,13 +451,10 @@ class IT_Exchange_Product_Post_Type {
 	 * @return void
 	*/
 	function it_exchange_prod_posts_custom_column_info( $column ) {
-		
 		global $post;
-
 		$product = it_exchange_get_product( $post );
 		
 		switch( $column ) {
-		
 			case 'it_exchange_product_price':
 				esc_attr_e( it_exchange_get_product_feature( $post->ID, 'base-price' ) );
 				break;
@@ -498,9 +464,35 @@ class IT_Exchange_Product_Post_Type {
 			case 'it_exchange_product_purchases':
 				esc_attr_e( it_exchange_get_product_feature( $post->ID, 'purchases' ) );
 				break;
-			
+		}
+	}
+
+	/**
+	 * Modify sort of products in edit.php for custom columns
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param string $request original request
+	 */
+	function modify_wp_query_request_on_edit_php( $request ) {
+		global $hook_suffix;
+		
+		if ( 'edit.php' === $hook_suffix ) {
+			if ( 'it_exchange_prod' === $request['post_type'] && isset( $request['orderby'] ) ) {
+				switch( $request['orderby'] ) {
+					case 'it-exchange-product-price':
+						$request['orderby'] = 'meta_value_num';
+						$request['meta_key'] = '_it-exchange-base-price';
+						break;
+					case 'it-exchange-product-show-in-store':
+						$request['orderby'] = 'meta_value';
+						$request['meta_key'] = '_it-exchange-visibility';
+						break;
+				}
+			}
 		}
 		
+		return $request;
 	}
 }
 $IT_Exchange_Product_Post_Type = new IT_Exchange_Product_Post_Type();

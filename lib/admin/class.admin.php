@@ -1216,11 +1216,12 @@ class IT_Exchange_Admin {
 	*/
 	function it_exchange_remove_quick_edit( $actions, $post ) {
 
-		$it_exchange_post_types = apply_filters( 'it_exchange_post_types', 
+		$it_exchange_post_types = apply_filters( 'it_exchange_remove_quick_edit_from_post_types', 
 			array(
 				'it_exchange_download',
 				'it_exchange_prod',
 				'it_exchange_tran',
+				'it_exchange_coupon',
 			) 
 		);
 
