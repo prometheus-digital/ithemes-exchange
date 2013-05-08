@@ -134,8 +134,10 @@ img {
 #it-exchange-advanced-tabs .ui-tabs-panel{float:right;width:80%;border-left:1px solid #DEDEDE;border-radius:0 4px 4px 0;}
 #it-exchange-advanced-tabs .ui-tabs-panel .inner{padding:20px;background:#FFF;border-radius:0 4px 4px 0;}
 
-#it-exchange-advanced-tab-nav .ui-state-default{padding:10px;outline:none;}
+#it-exchange-advanced-tab-nav .ui-state-default{outline:none;margin-bottom:0;}
 #it-exchange-advanced-tab-nav .ui-state-default:first-child{border-top:0;border-radius:4px 0 0 0;}
-#it-exchange-advanced-tab-nav .ui-state-default:last-child{margin-bottom:0;border-radius:0 0 0 0;}
-#it-exchange-advanced-tab-nav .ui-state-default a{outline:none;text-decoration:none;color:#747474;}
+#it-exchange-advanced-tab-nav .ui-state-default:last-child{border-bottom:0;border-radius:0 0 0 4px;}
+#it-exchange-advanced-tab-nav .ui-state-default a{outline:none;padding:10px;display:block;text-decoration:none;color:#747474;-webkit-transition:background .2s linear;transition:background .2s linear;}
+#it-exchange-advanced-tab-nav .ui-state-default a:hover{background:#EEE;}
 #it-exchange-advanced-tab-nav .ui-state-active{position:relative;margin-right:-2px;background:#FFF;border:1px solid #DEDEDE;border-left:0;border-right:0;}
+#it-exchange-advanced-tab-nav .ui-state-active a:hover{background:#FFF;}
