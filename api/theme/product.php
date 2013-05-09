@@ -465,6 +465,21 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function add_to_cart( $options=array() ) {
-		return 'add to cart for ' . $this->product->post_title . ' goes here';
+		
+		$defaults = array(
+			'format'	=> 'html'
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
+		extract( $options );
+		
+		switch( $format ) {
+		
+			case 'html':
+			default:
+				return '<a href="' . add_query_arg( 'add-to-cart', $this->product->ID, it_exchange_get_page_url( 'cart' ) ). '">' . __( 'Add to Cart', 'LION' ) . '</a>';
+				break;
+			
+		}
 	}
 }
