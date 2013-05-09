@@ -150,7 +150,7 @@ img {
 #it-exchange-advanced-tabs .ui-tabs-nav{float:left;width:20%;}
 #it-exchange-advanced-tabs .ui-tabs-panel{float:right;width:80%;border-left:1px solid #DEDEDE;border-radius:0 4px 4px 0;}
 #it-exchange-advanced-tabs .ui-tabs-panel .inner{padding:20px;background:#FFF;border-radius:0 4px 4px 0;}
-#it-exchange-advanced-tabs .ui-tabs-panel .inner *:first-child{margin-top:0;padding-top:0;}
+#it-exchange-advanced-tabs .ui-tabs-panel .inner > *:first-child{margin-top:0;padding-top:0;}
 #it-exchange-advanced-tabs .ui-tabs-panel .inner textarea{width:100%;}
 
 #it-exchange-advanced-tab-nav .ui-state-default{outline:none;margin-bottom:0;border-width:1px 0 1px;border-style:solid;border-color:transparent;}
