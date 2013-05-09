@@ -27,6 +27,7 @@ class IT_Exchange_Product_Feature_Quantity {
 		add_filter( 'it_exchange_get_product_feature_quantity', array( $this, 'get_feature' ), 9, 2 );
 		add_filter( 'it_exchange_product_has_feature_quantity', array( $this, 'product_has_feature') , 9, 2 );
 		add_filter( 'it_exchange_product_supports_feature_quantity', array( $this, 'product_supports_feature') , 9, 2 );
+		add_filter( 'it_exchange_default_field_names', array( $this, 'set_quantity_vars' ) );
 	}
 
 	/**
@@ -90,17 +91,34 @@ class IT_Exchange_Product_Feature_Quantity {
 		// Set the value of the feature for this product
 		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'quantity' );
 
-		// Set description
-		$description = __( 'Use these settings to indicate the maximum quanity available to a customer per purchase.', 'LION' );
-		$description = apply_filters( 'it_exchange_product_quantity_metabox_description', $description );
-
-		// Echo the form field
-		echo $description;
+		// Allow quantity?
+		$allow_quantity = get_post_meta( $product->ID, '_it_exchange_product_allow_quantity', true );
+		if ( ! in_array( $allow_quantity, array( 'yes', 'no' ) ) )
+			$allow_quantity = 'yes';
 		?>
 		<p>
-			<input type="text" name="it-exchange-product-quantity" value="<?php esc_attr_e( $product_feature_value ); ?>" /> Max per purchase<br />
+			<input type="checkbox" name="it-exchange-product-allow-quantity" <?php echo checked( 'yes', $allow_quantity ); ?> value="yes" />
+			&nbsp;<?php _e( 'Check this to allow customers to modify they quanity they want to purchase.' ); ?>
+		</p>
+		<p>
+			<?php _e( 'What is the maximum quantity a customer and choose when purchasing this product? Leave blank for unlimited.', 'LION' ); ?>
+			<input type="text" name="it-exchange-product-quantity" value="<?php esc_attr_e( $product_feature_value ); ?>" />
 		</p>
 		<?php
+	}
+
+	/**
+	 * Sets the quantity query_var
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $vars sent in through filter
+	 * @return array
+	*/
+	function set_quantity_vars( $vars ) {
+		$vars['product_quantity']     = 'it-exchange-product-quantity';
+		$vars['product_max_quantity'] = 'it-exchange-product-max-quantity';
+		return $vars;
 	}
 
 	/**
@@ -125,6 +143,12 @@ class IT_Exchange_Product_Feature_Quantity {
 		// Abort if this product type doesn't support this feature 
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'quantity' ) )
 			return;
+
+		// Save option for checkbox allowing quantity
+		if ( empty( $_POST['it-exchange-product-allow-quantity'] ) )
+			update_post_meta( $product_id, '_it_exchange_product_allow_quantity', 'no' );
+		else
+			update_post_meta( $product_id, '_it_exchange_product_allow_quantity', $_POST['it-exchange-product-allow-quantity'] );
 
 		// Abort if key for feature option isn't set in POST data
 		if ( ! isset( $_POST['it-exchange-product-quantity'] ) )
@@ -160,8 +184,10 @@ class IT_Exchange_Product_Feature_Quantity {
 	 * @return string product feature
 	*/
 	function get_feature( $existing, $product_id ) {
-		$value = get_post_meta( $product_id, '_it-exchange-product-quantity', true );
-		return $value;
+		if ( it_exchange_product_supports_feature( $product_id, 'quantity' ) ) { 
+			return get_post_meta( $product_id, '_it-exchange-product-quantity', true );
+		}
+		return false;
 	}
 
 	/**
@@ -193,7 +219,15 @@ class IT_Exchange_Product_Feature_Quantity {
 	function product_supports_feature( $result, $product_id ) {
 		// Does this product type support this feature?
 		$product_type = it_exchange_get_product_type( $product_id );
-		return it_exchange_product_type_supports_feature( $product_type, 'quantity' );
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'quantity' ) )
+			return false;
+
+
+		// Determine if this product has turned off product quantity
+		if ( 'no' == get_post_meta( $product_id, '_it_exchange_product_allow_quantity', true ) )
+			return false;
+
+		return true;
 	}
 }
 $IT_Exchange_Product_Feature_Quantity = new IT_Exchange_Product_Feature_Quantity();

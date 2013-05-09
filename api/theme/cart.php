@@ -64,7 +64,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			return count( it_exchange_get_cart_products() ) > 0 ;
 
 		// If we made it here, we're doing a loop of products for the current cart.
-		// We're USING the accessing the SESSION directly to make looping easier.
+		// We're accessing the SESSION directly to make looping easier.
 		// This will init/reset the SESSION products and loop through them. the /api/theme/cart-item.php file will handle individual products.
 		if ( empty( $_SESSION['it_exchange']['cart_item'] ) ) {
 			$_SESSION['it_exchange']['cart-item'] = reset( $_SESSION['it_exchange']['products'] );

@@ -237,28 +237,24 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'extended-description' );
 
-		if ( it_exchange_product_supports_feature( $this->product->ID, 'extendeddescription' )
-				&& it_exchange_product_has_feature( $this->product->ID, 'extended-description' ) ) {
-			$result        = false;
-			$extended_desc = it_exchange_get_product_feature( $this->product->ID, 'extended-description' );
-			$defaults      = array(
-				'before' => '<div class="entry-content">',
-				'after'  => '</div>',
-				'format' => 'raw',
-			);
-			$options      = ITUtility::merge_defaults( $options, $defaults );
+		$result        = false;
+		$extended_desc = it_exchange_get_product_feature( $this->product->ID, 'extended-description' );
+		$defaults      = array(
+			'before' => '<div class="entry-content">',
+			'after'  => '</div>',
+			'format' => 'raw',
+		);
+		$options      = ITUtility::merge_defaults( $options, $defaults );
 
-			if ( 'html' == $options['format'] )
-				$result .= $options['before'];
+		if ( 'html' == $options['format'] )
+			$result .= $options['before'];
 
-			$result .= $extended_desc;
+		$result .= $extended_desc;
 
-			if ( 'html' == $options['format'] )
-				$result .= $options['after'];
+		if ( 'html' == $options['format'] )
+			$result .= $options['after'];
 
-			return $result;
-		}
-		return false;
+		return $result;
 	}
 
 	/**
@@ -321,10 +317,37 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'quantity' );
 
-		if ( it_exchange_product_supports_feature( $this->product->ID, 'quantity' )
-				&& it_exchange_product_has_feature( $this->product->ID, 'quantity' ) )
-			return it_exchange_get_product_feature( $this->product->ID, 'quantity' );
-		return false;
+		// Set options
+		$defaults      = array(
+			'before'      => '',
+			'after'       => '',
+			'format'      => 'html',
+			'class'       => 'product-quantity',
+		);
+		$options   = ITUtility::merge_defaults( $options, $defaults );
+
+		$class     = empty( $options['class'] ) ? '' : ' class="' . esc_attr( $options['class'] ) .'"';
+		$var_key   = it_exchange_get_field_name( 'product_quantity' );
+
+		// Is the checkbox on add/edit products unchecked to allow quantities greater than 1
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'quantity' ) )
+			$max_quantity = it_exchange_get_product_feature( $this->product->ID, 'quantity' );
+		else
+			return '';
+		$max_quantity = empty( $max_quantity ) ? '0' : $max_quantity;
+
+		// Return requested format
+		switch ( $options['format'] ) {
+			case 'max-quantity' :
+				return $max_quantity;
+				break;
+			case 'html' :
+			default :
+				$html  = '<input' . $class . ' type="text" name="' . esc_attr( $var_key ) . '" value="1" />' . "\n";
+				$html .= '<input type="hidden" name="' . it_exchange_get_field_name( 'product_max_quantity' ) . '[' . esc_attr( $this->product->ID ) . ']" value="' . ( $max_quantity ) . '" />';
+				return $html;
+				break;
+		}
 	}
 
 	/**
@@ -461,25 +484,87 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	/**
 	 * Returns add_to_cart field or field_name
 	 *
+	 * Format options:
+	 * - form: (default) includes quanity select if available to product type and product
+	 * - button: returns an HTML button
+	 * - link: returns an HTML anchor tag
+	 * - var-key: returns the query_var needed to build your own button or link.
+	 * - var-value: returns the query_var value needed to build your own button or link
+	 * 
+	 * Format examples
+	 * - Form: <?php it_exchange( 'product', 'add-to-cart' ); ?> // returns form. We do all the checks for you. include quanity options if product_type and product support it. Check inventory, etc.
+	 * - Button: <?php it_exchange( 'product', 'add-to-cart', 'format=button' ); ?> // returns button and hidden field without form
+	 * - Link: <?php it_exchange( 'product', 'add-to-cart', 'data=link' ); ?> // returns button
+	 * - Custom link: <a href="?<?php it_exchange( 'product', 'add-to-cart', 'format=var-key' ); ?>=it_exchange( 'product', 'add-to-cart', 'format=var-value' ); ?>">Add to cart</a>
+	 *
+	 * Other options:
+	 * - class: a CSS class applied to button or links
+	 * - title: Link title or Button value
+	 * - button-type: submit or button. Default is submit
+	 * - button-name: default is false. No name attribute is provided when false
+	 *
 	 * @since 0.4.0
 	 * @return string
 	*/
 	function add_to_cart( $options=array() ) {
+
+		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return true;
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return true;
 		
-		$defaults = array(
-			'format'	=> 'html'
+		// Parse options
+		$result        = false;
+
+		$defaults      = array(
+			'before'      => '',
+			'after'       => '',
+			'format'      => 'form',
+			'class'       => 'add-product-to-cart',
+			'title'       => __( 'Add to cart', 'LION' ),
+			'button-type' => 'submit',
+			'button-name' => false,
 		);
-		$options = ITUtility::merge_defaults( $options, $defaults );
-		
-		extract( $options );
-		
-		switch( $format ) {
-		
-			case 'html':
+		$options   = ITUtility::merge_defaults( $options, $defaults );
+
+		$class         = empty( $options['class'] ) ? '' : ' class="' . esc_attr( $options['class'] ) .'"';
+		$var_key       = it_exchange_get_field_name( 'add_product_to_cart' );
+		$var_value     = $this->product->ID;
+		$button_name   = empty( $options['button-name'] ) ? '' : ' name="' . esc_attr( $options['button-name'] ) . '"';
+		$hidden_fields = '<input type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
+		$button        = '<input' . $button_name . ' type="' . esc_attr( $options['button-type'] ) . '" value="' . $options['title'] . '"' . $class . ' />';
+		/** @todo Maybe add nonce_field. Will have to code for it in api/cart.php though. **/
+
+		// Generate correct output
+		switch( $options['format'] ) {
+
+			case 'var-key':
+				return esc_attr( $var_key );
+				break;
+			case 'var-value':
+				return esc_attr( $var_value );
+				break;
+			case 'button' :
+				return $hidden_fields . $button;
+				break;
+			case 'link' :
+				$url = add_query_arg( array( $var_key => $var_value ) );
+				return '<a' . $class . 'href="' . $url . '">' . $options['link_title'] . '</a>';
+				break;
+			case 'form' :
+				$output  = '<form action="" method="post">';
+				$output .= it_exchange( 'product', 'get-quantity' );
+				$output .= $hidden_fields;
+				$output .= $button;
+				$output .= '</form>';
 			default:
-				return '<a href="' . add_query_arg( 'add-to-cart', $this->product->ID, it_exchange_get_page_url( 'cart' ) ). '">' . __( 'Add to Cart', 'LION' ) . '</a>';
 				break;
 			
 		}
+
+		return $output;
 	}
 }
