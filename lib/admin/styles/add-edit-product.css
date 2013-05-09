@@ -59,42 +59,29 @@ img {
 	margin-bottom: 10px;
 }
 /** -----------------------------------------------------:[ normal ]:---------- */
-#it-exchange-add-edit-product-interface-main {
-	margin: 0;
-}
+#it-exchange-add-edit-product-interface-main{margin:0;}
 #it_exchange_normal-sortables input,
-#it_exchange_normal-sortables textarea {
-	box-sizing: border-box;
-	width: 100%;
-	padding: 10px;
-	border: 1px solid #d6d6d6;
-	border-radius: 2px;
-	font-size: 16px;
-	font-family: 'Helvetica Neue';
-	line-height: 1.2;
-	color: #4e5559;
-}
-#it_exchange_normal-sortables input {
-	font-size: 24px;
-}
-#it-exchange-product-title {
-	float: left;
-	width: 80%;
-}
-#it-exchange-product-title .inside {
-	padding-right: 3em;
-}
-#it-exchange-base-price {
-	float: left;
-	width: 20%;
-}
-#it-exchange-base-price input {
-	text-align: right;
-}
-#it-exchange-product-description {
-	clear: both;
-	width: 100%;
-}
+#it_exchange_normal-sortables textarea{box-sizing:border-box;width:100%;padding:10px;border:1px solid #d6d6d6;border-radius:2px;font-size:16px;font-family:'Helvetica Neue';line-height:1.2;color:#4e5559;}
+#it_exchange_normal-sortables input{font-size:24px;}
+#it_exchange_normal-sortables #it-exchange-product-title{float:left;width:80%;}
+#it_exchange_normal-sortables #it-exchange-product-title .inside{padding-right:3em;}
+#it_exchange_normal-sortables #it-exchange-base-price{float:left;width:20%;}
+#it_exchange_normal-sortables #it-exchange-base-price input{text-align:right;}
+#it_exchange_normal-sortables #it-exchange-product-description{clear:both;width:100%;}
+
+#it-exchange-product-downloads input{font-size:14px;}
+#it-exchange-product-downloads .downloads-list-wrapper{overflow:hidden;border:1px solid #DEDEDE;}
+#it-exchange-product-downloads .downloads-label-add{overflow:hidden;}
+#it-exchange-product-downloads .downloads-label-add label{float:left;}
+#it-exchange-product-downloads .downloads-label-add .download-add-new{float:right;}
+#it-exchange-product-downloads .columns-wrapper{clear:both;overflow:hidden;border-top:1px solid #DEDEDE;}
+#it-exchange-product-downloads .downloads-list-titles .columns-wrapper{border-top:0;}
+#it-exchange-product-downloads .column{float:left;padding:10px;}
+#it-exchange-product-downloads .col-1-12{width:8.3333333%;}
+#it-exchange-product-downloads .col-2-12{width:16.6666667%;}
+#it-exchange-product-downloads .col-3-12{width:25%;}
+#it-exchange-product-downloads .col-4-12{width:33.3333333%;}
+#it-exchange-product-downloads .col-5-12{width:41.6666667%;}
 
 /** -----------------------------------------------------:[ side sortables ]:---------- */
 
