@@ -222,7 +222,7 @@ class IT_Exchange_Admin {
 		if ( ! empty( $_GET['it-exchange-dismiss-wizard-nag'] ) )
 			update_option( 'it-exchange-hide-wizard-nag', true );
 
-		if ( true == (boolean) get_option( 'it-exchange-hide-wizard-nag' ) )
+		if ( true == (boolean) get_option( 'it-exchange-hide-wizard-nag' ) && empty( $_GET['it-exchange-show-wizard-link'] ) )
 			return;
 
 		include( 'views/admin-wizard-notice.php' );
