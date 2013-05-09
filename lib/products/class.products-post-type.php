@@ -97,12 +97,6 @@ class IT_Exchange_Product_Post_Type {
 	*/
 	function register_the_post_type() {
 		register_post_type( $this->post_type, $this->options );
-
-		/** @todo find a better way to do this. Option set when exchange page slugs updated **/
-		if ( false !== get_option( '_it-exchange-flush-rewrites', false ) ) {
-			delete_option( '_it-exchange-flush-rewrites' );
-			flush_rewrite_rules();
-		}
 	}
 
 	/**

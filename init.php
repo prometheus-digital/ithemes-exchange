@@ -195,22 +195,44 @@ function load_it_exchange() {
 add_action( 'plugins_loaded', 'load_it_exchange' );
 
 /**
- * This flushes the rewrite rules for us on activation
+ * Sets up options to perform after activation
  *
  * @since 0.4.0
  *
  * @return void
 */
 function it_exchange_activation_hook() {
-	flush_rewrite_rules();
-    add_option('it_exchange_redirect_on_activation', true);
+    add_option('_it-exchange-register-activation-hook', true);
+    add_option('_it-exchange-flush-rewrites', true);
 }
 register_activation_hook( __FILE__, 'it_exchange_activation_hook' );
 
-function it_exchange_redirect_on_activation() {
-	if ( get_option( 'it_exchange_redirect_on_activation', false ) ) {
-        delete_option('it_exchange_redirect_on_activation');
+/**
+ * Redirect users to the IT Exchange Setup page upon activation.
+ *
+ * @since 0.4.0
+ *
+ * @return void
+*/
+function it_exchange_register_activation_hook() {
+	if ( false !== get_option( '_it-exchange-register-activation-hook', false ) ) {
+        delete_option('_it-exchange-register-activation-hook');
 		wp_safe_redirect('admin.php?page=it-exchange-setup' );
     }
 }
-add_action('admin_init', 'it_exchange_redirect_on_activation');
+add_action('admin_init', 'it_exchange_register_activation_hook');
+
+/**
+ * This flushes the rewrite rules for us on activation
+ *
+ * @since 0.4.0
+ *
+ * @return void
+*/
+function it_exchange_flush_rewrite_rules() {
+	if ( false !== get_option( '_it-exchange-flush-rewrites', false ) ) {
+		delete_option( '_it-exchange-flush-rewrites' );
+		flush_rewrite_rules();
+	}
+}
+add_action( 'admin_init', 'it_exchange_flush_rewrite_rules', 99 );

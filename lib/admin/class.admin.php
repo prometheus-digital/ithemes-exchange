@@ -861,11 +861,7 @@ class IT_Exchange_Admin {
 		} else {
 			it_exchange_save_option( 'settings_pages', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
-
-			// Flush the rewrite rules
-			flush_rewrite_rules();
-
-			/** @todo Find a way around this. This is for updating product slugs **/
+			
 			add_option( '_it-exchange-flush-rewrites', true );
 
 			// Maybe update Ghost Page nav urls
