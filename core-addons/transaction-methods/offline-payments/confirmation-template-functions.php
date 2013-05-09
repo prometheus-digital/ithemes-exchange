@@ -14,7 +14,7 @@
  * @return string HTML
 */
 function it_exchange_manual_transactions_get_instructions( $transaction_id=false ) {
-	$options = it_exchange_get_option( 'it-exchange-addon-manual-payments' );
-	$instructions = empty( $options['manual_payments_instructions'] ) ? false : esc_html( $options['manual_payments_instructions'] );
+	$options = it_exchange_get_option( 'it-exchange-addon-offline-payments' );
+	$instructions = empty( $options['offline_payments_instructions'] ) ? false : esc_html( $options['offline_payments_instructions'] );
 	return apply_filters( 'it_exchange_get_manual_transactions_instructions', $instructions, $transaction_id );
 }

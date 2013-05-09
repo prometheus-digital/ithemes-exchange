@@ -18,7 +18,7 @@
 	Cart API
 	Default Cart Add-on
 	Refactored Sessions API
-	Manual Payments Add-On 
+	Offline Add-On 
 	Standardized function names accross codebase
 	Customer Mangement API (WIP)
 	Messaging / Errors API

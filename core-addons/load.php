@@ -11,16 +11,16 @@ function it_exchange_register_core_addons() {
 
 	// An array of add-ons provided by iThemes Exchange
 	$add_ons = array(
-		// Manual Payments
-		'manual-payments' => array(
-			'name'        	=> __( 'Manual Payments', 'LION' ),
+		// Offline
+		'offline-payments' => array(
+			'name'        	=> __( 'Offline', 'LION' ),
 			'description' 	=> __( 'Use this Transaction Method to take payments offline.', 'LION' ),
 			'author'		=> 'iThemes',
 			'author_url'	=> 'http://ithemes.com',
-			'file'        	=> dirname( __FILE__ ) . '/transaction-methods/manual-payments/init.php',
+			'file'        	=> dirname( __FILE__ ) . '/transaction-methods/offline-payments/init.php',
 			'category' 		=> 'transaction-methods',
 			'tag' 			=> 'core',
-			'supports' 		=> apply_filters( 'it_exchange_register_manual_payments_default_features', array(
+			'supports' 		=> apply_filters( 'it_exchange_register_offline_payments_default_features', array(
 				'transaction_status' => array(
 					'key'       => '_it_exchange_transaction_status',
 					'componant' => 'post_meta',
@@ -38,7 +38,7 @@ function it_exchange_register_core_addons() {
 					'default'   => false,
 				),
 			) ),
-			'settings-callback' => 'it_exchange_manual_payments_settings_callback',
+			'settings-callback' => 'it_exchange_offline_payments_settings_callback',
 		),
 		// PayPal Standard Transaction Method
 		'paypal-standard' => array(

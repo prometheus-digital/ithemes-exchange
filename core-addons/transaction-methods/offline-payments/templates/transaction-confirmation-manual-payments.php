@@ -4,7 +4,7 @@
  * @since 0.3.8
  * @package IT_Exchange
 */
-$args = it_exchange_get_template_part_args( 'transaction-confirmation-manual-payments' );
+$args = it_exchange_get_template_part_args( 'transaction-confirmation-offline-payments' );
 $transaction_id = empty( $args['transaction_id'] ) ? 0 : $args['transaction_id'];
 ?>
 <h3>Details</h3>

@@ -219,7 +219,7 @@ class IT_Exchange_Admin {
 	 * @since 0.4.0
 	*/
 	function add_wizard_nag() {
-		if ( ! empty( $_GET['it-exchange-dismiss-wizard-nag'] ) )
+		if ( ! empty( $_REQUEST['it_exchange_settings-it-exchange-dismiss-wizard-nag'] ) )
 			update_option( 'it-exchange-hide-wizard-nag', true );
 
 		if ( true == (boolean) get_option( 'it-exchange-hide-wizard-nag' ) && empty( $_GET['it-exchange-show-wizard-link'] ) )
