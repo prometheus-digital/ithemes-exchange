@@ -77,12 +77,16 @@
 			<?php endif; ?>
 
 			<?php
-			if ( ( it_exchange( 'product', 'supports-inventory' ) 
-				&& 0 < it_exchange( 'product', 'inventory', 'return=true' ) ) 
-					|| ( !it_exchange( 'product', 'supports-inventory' ) ) )
-				it_exchange( 'product', 'add-to-cart', 'format=html' ); 
-			else
-				echo "SOLD OUT!" 
+			if ( ( it_exchange( 'product', 'supports-inventory' ) ) ) {
+				if ( it_exchange( 'product', 'has-inventory' ) ) {
+					echo '<p># in stock: ' . it_exchange( 'product', 'get-inventory' ) . '<p>';
+					it_exchange( 'product', 'add-to-cart', 'format=html' ); 
+				} else { 
+					echo 'SOLD OUT!'; 
+				}
+			} else {
+				it_exchange( 'product', 'add-to-cart' );
+			}
 			?>
 
 		</div><!-- .entry-content -->
