@@ -195,7 +195,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 		$defaults['type'] = 'both';
 		$options = ITUtility::merge_defaults( $defaults, $options );
 
-		// Does this product type support base price?
+		// Does this product type support this feature?
 		if ( false === $this->product_supports_feature( false, $product_id ) )
 			return false;
 		return (boolean) $this->get_feature( false, $product_id, $options );
@@ -213,7 +213,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	 * @return boolean
 	*/
 	function product_supports_feature( $result, $product_id ) {
-		// Does this product type support base price?
+		// Does this product type support this feature?
 		$product_type = it_exchange_get_product_type( $product_id );
 		return it_exchange_product_type_supports_feature( $product_type, 'availability' );
 	}
