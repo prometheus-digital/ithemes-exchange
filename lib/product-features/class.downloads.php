@@ -103,6 +103,7 @@ class IT_Exchange_Product_Feature_Downloads {
 			foreach( $existing_downloads as $id => $data ) {
 				?>
 				<div class="it-exchange-digital-download-item">
+					<input type="hidden" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][id]" value="<?php esc_attr_e( $data['id'] ); ?>" />
 					<input type="text" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][name]" value="<?php esc_attr_e( $data['name'] ); ?>" />
 					<input type="text" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][source]" value="<?php esc_attr_e( $data['source'] ); ?>" />
 					<input id="it-exchange-digital-downloads-delete-<?php esc_attr_e( $id ); ?>" type="checkbox" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][delete]" value="true" />
@@ -116,7 +117,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		<div class="it-exchange-add-new-digital-download">
 			<div class="it-exchange-new-digital-download-item">
 				<input type="text" name="it-exchange-new-digital-download[0][name]" autocomplete="off" placeholder="<?php esc_attr_e( __( 'Download Name', 'LION' ) ); ?>" value="" />
-				<input type="text" name="it-exchange-digital-downloads[0][source]" autocomplete="off" placeholder="<?php esc_attr_e( __( 'Source File URL', 'LION' ) ); ?>" value="" />
+				<input type="text" name="it-exchange-new-digital-download[0][source]" autocomplete="off" placeholder="<?php esc_attr_e( __( 'Source File URL', 'LION' ) ); ?>" value="" />
 				<a href="#" class="it-exchange-delete-new-digital-download">&times;</a>
 			</div>
 		</div>
@@ -125,8 +126,6 @@ class IT_Exchange_Product_Feature_Downloads {
 
 	/**
 	 * This saves the downloads value
-	 *
-	 * @todo Convert to use product feature API
 	 *
 	 * @since 0.3.8
 	 * @param object $post wp post object
@@ -146,39 +145,40 @@ class IT_Exchange_Product_Feature_Downloads {
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'downloads' ) )
 			return;
 
-		$to_delete = empty( $_POST['it-exchange-delete-download'] ) ? array() : (array) $_POST['it-exchange-delete-download'];
-
-		foreach( $to_delete as $download_id ) {
-			wp_delete_post( $download_id );
+		// Save new downloads
+		if ( ! empty( $_POST['it-exchange-new-digital-download'] ) ) {
+			foreach( (array) $_POST['it-exchange-new-digital-download'] as $download ) {
+				$data = array(
+					'product_id' => $product_id,
+					'source'     => empty( $download['source'] ) ? false : trim( $download['source'] ),
+					'name'       => empty( $download['name'] ) ? false : trim( $download['name'] ),
+				);
+				
+				// Save the data via the API
+				if ( ! empty( $product_id ) && ! empty( $data['source'] ) && ! empty( $data['name'] ) )
+					it_exchange_update_product_feature( $product_id, 'downloads', $data );
+			}
 		}
 
-		// Abort if key for downloads option isn't set in POST data
-		if ( ! isset( $_POST['it-exchange-digital-downloads'] ) )
-			return;
-
-		// Grab existing data
-		//$existing_downloads = $this->get_downloads_for_product( $product_id );
-
-		// Save Data
-		foreach ( (array) $_POST['it-exchange-digital-downloads'] as $file ) {
-
-			$source     = empty( $file['source'] ) ? false : $file['source'];
-			$name       = empty( $file['name'] ) ? false : $file['name'];
-			$limit      = empty( $file['limit'] ) ? false : $file['limit'];
-			$expiration = empty( $file['expiration'] ) ? false : $file['expiration'];
+		// Update or delete existing downloads 
+		foreach ( (array) $_POST['it-exchange-digital-downloads'] as $download ) {
+			// Check for delete
+			if ( ! empty( $download['delete'] ) ) {
+				// Skip trash. Straight to oblivion. 
+				wp_delete_post( $download['id'], true );
+				continue;
+			}
 
 			$data = array(
-				'product_id' => $product_id,
-				'source'     => $source,
-				'name'       => $name,
-				'limit'      => $limit,
-				'expiration' => $expiration,
+				'product_id'  => $product_id,
+				'download_id' => empty( $download['id'] ) ? false : trim( $download['id'] ),
+				'source'      => empty( $download['source'] ) ? false : trim( $download['source'] ),
+				'name'        => empty( $download['name'] ) ? false : trim( $download['name'] ),
 			);
 
-			if ( ! empty( $product_id ) && ! empty( $source ) && ! empty( $name ) )
+			if ( ! empty( $product_id ) && ! empty( $data['source'] ) && ! empty( $data['name'] ) && ! empty( $data['download_id'] ) )
 				it_exchange_update_product_feature( $product_id, 'downloads', $data );
 		}
-
 	}
 
 	/**
@@ -193,6 +193,7 @@ class IT_Exchange_Product_Feature_Downloads {
 	*/
 	function save_feature( $product_id, $new_value ) {
 
+		// Format data coming from $new_value
 		$data = array(
 			'post_type'   => 'it_exchange_download',
 			'post_status' => 'publish',
@@ -200,10 +201,17 @@ class IT_Exchange_Product_Feature_Downloads {
 			'post_parent' => $new_value['product_id'],
 		);
 
+		// Add download id if we're updating an existing one.
+		if ( ! empty( $new_value['download_id'] ) )
+			$data['ID'] = $new_value['download_id'];
+
+		// Remove our save_post action so we don't hit and endless loop
 		remove_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		if ( $download_id = wp_insert_post( $data ) ) {
+			// Save the download
 			update_post_meta( $download_id, '_it-exchange-download-info', $new_value );
 		}
+		// Add our action back
 		add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 	}
 
@@ -229,15 +237,15 @@ class IT_Exchange_Product_Feature_Downloads {
 			foreach( $download_posts as $post ) {
 				$post_meta  = get_post_meta( $post->ID, '_it-exchange-download-info', true );
 				$source     = empty( $post_meta['source'] ) ? false : $post_meta['source'];
-				$limit      = empty( $post_meta['limit'] ) ? false : $post_meta['limit'];
-				$expiration = empty( $post_meta['expiration'] ) ? false : $post_meta['expiration'];
+				//$limit      = empty( $post_meta['limit'] ) ? false : $post_meta['limit'];
+				//$expiration = empty( $post_meta['expiration'] ) ? false : $post_meta['expiration'];
 
 				$downloads[$post->ID] = array(
-					'id' => $post->ID,
-					'name' => $post->post_title,
+					'id'     => $post->ID,
+					'name'   => $post->post_title,
 					'source' => $source,
-					'limit'    => $limit,
-					'expiration' => $expiration,
+					//'limit'    => $limit,
+					//'expiration' => $expiration,
 				);
 			}
 			return $downloads;
