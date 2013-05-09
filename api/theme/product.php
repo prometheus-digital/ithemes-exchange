@@ -534,8 +534,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$var_key       = it_exchange_get_field_name( 'add_product_to_cart' );
 		$var_value     = $this->product->ID;
 		$button_name   = empty( $options['button-name'] ) ? '' : ' name="' . esc_attr( $options['button-name'] ) . '"';
-		$hidden_fields = '<input type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
 		$button        = '<input' . $button_name . ' type="' . esc_attr( $options['button-type'] ) . '" value="' . $options['title'] . '"' . $class . ' />';
+
+		$hidden_fields  = '<input type="hidden" name="it-exchange-action" value="add_product_to_cart" />';
+		$hidden_fields .= wp_nonce_field( 'it-exchange-add-product-to-cart-' . $this->product->ID, '_wpnonce', true, false );
+		$hidden_fields .= '<input type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
 		/** @todo Maybe add nonce_field. Will have to code for it in api/cart.php though. **/
 
 		// Generate correct output

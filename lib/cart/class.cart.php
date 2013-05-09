@@ -30,7 +30,7 @@ class IT_Exchange_Shopping_Cart {
 		
 		$this->redirect_checkout_if_empty_cart(); //if on checkout but have empty cart, redirect
 		
-		// make sure we're on a cart/checkout page
+		// Grab action and process it.
 		if ( isset( $_REQUEST['it-exchange-action'] ) )
 			call_user_func( array( $this, 'handle_' . esc_attr( $_REQUEST['it-exchange-action'] ) . '_request' ) );
 		
