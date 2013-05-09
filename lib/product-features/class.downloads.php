@@ -13,9 +13,9 @@ class IT_Exchange_Product_Feature_Downloads {
 	/**
 	 * Constructor. Registers hooks
 	 *
-	 * @todo Add support for product has feature support API
 	 * @since 0.4.0
 	 * @return void
+	 * @todo remove it_exchange_enabled_addons_loaded action???
 	*/
 	function IT_Exchange_Product_Feature_Downloads() {
 		if ( is_admin() ) {
@@ -27,6 +27,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		add_action( 'it_exchange_update_product_feature_downloads', array( $this, 'save_feature' ), 9, 2 );
 		add_filter( 'it_exchange_get_product_feature_downloads', array( $this, 'get_feature' ), 9, 3 );
 		add_filter( 'it_exchange_product_has_feature_downloads', array( $this, 'product_has_feature') , 9, 2 );
+		add_filter( 'it_exchange_product_supports_feature_downloads', array( $this, 'product_supports_feature') , 9, 2 );
 	}
 
 	/**
@@ -262,11 +263,27 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * @return boolean
 	*/
 	function product_has_feature( $result, $product_id ) {
-		// Does this product type support feature?
-		$product_type = it_exchange_get_product_type( $product_id );
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'downloads' ) ) 
+		// Does this product type support base price?
+		if ( false === $this->product_supports_feature( false, $product_id ) )
 			return false;
 		return (boolean) $this->get_feature( false, $product_id );
+	}
+
+	/**
+	 * Does the product support this feature?
+	 *
+	 * This is different than if it has the feature, a product can 
+	 * support a feature but might not have the feature set.
+	 *
+	 * @since 0.4.0
+	 * @param mixed $result Not used by core
+	 * @param integer $product_id
+	 * @return boolean
+	*/
+	function product_supports_feature( $result, $product_id ) {
+		// Does this product type support base price?
+		$product_type = it_exchange_get_product_type( $product_id );
+		return it_exchange_product_type_supports_feature( $product_type, 'downloads' );
 	}
 
 	/**
