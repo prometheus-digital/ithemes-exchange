@@ -194,6 +194,11 @@ function load_it_exchange() {
 }
 add_action( 'plugins_loaded', 'load_it_exchange' );
 
+function load_it_exchange_sessions() {
+	require( plugin_dir_path( __FILE__ ) . 'lib/sessions/class.session.php' );
+}
+add_action( 'wp', 'load_it_exchange_sessions' );
+
 /**
  * Sets up options to perform after activation
  *
@@ -236,3 +241,8 @@ function it_exchange_flush_rewrite_rules() {
 	}
 }
 add_action( 'admin_init', 'it_exchange_flush_rewrite_rules', 99 );
+
+function lew_testing() {
+	ITDebug::print_r( $GLOBALS['it_exchange']['session'] );
+}
+add_action( 'init', 'lew_testing' );
