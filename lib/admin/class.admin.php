@@ -81,6 +81,7 @@ class IT_Exchange_Admin {
 		add_action( 'admin_init', array( $this, 'save_core_general_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_core_email_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_core_page_settings' ) );
+		add_action( 'admin_init', array( $this, 'save_core_wizard_settings' ) );
 
 		// Email settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_email', array( $this, 'register_email_settings_tab_callback' ) );
@@ -219,10 +220,13 @@ class IT_Exchange_Admin {
 	 * @since 0.4.0
 	*/
 	function add_wizard_nag() {
-		if ( ! empty( $_REQUEST['it_exchange_settings-it-exchange-dismiss-wizard-nag'] ) )
+		if ( ! empty( $_REQUEST['it_exchange_settings-dismiss-wizard-nag'] ) )
 			update_option( 'it-exchange-hide-wizard-nag', true );
+			
+		if ( isset( $_GET['it-exchange-show-wizard-link'] ) )
+			delete_option( 'it-exchange-hide-wizard-nag' );
 
-		if ( true == (boolean) get_option( 'it-exchange-hide-wizard-nag' ) && empty( $_GET['it-exchange-show-wizard-link'] ) )
+		if ( true == (boolean) get_option( 'it-exchange-hide-wizard-nag' ) )
 			return;
 
 		include( 'views/admin-wizard-notice.php' );
@@ -750,6 +754,53 @@ class IT_Exchange_Admin {
 			it_exchange_save_option( 'settings_general', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
+	}
+
+	/**
+	 * Save core general settings from Wizard and performs action for other addons to handle saving
+	 *
+	 * Validates data and saves to options.
+	 *
+	 * @todo provide feedback to user
+	 * @todo validate data
+	 * @since 0.3.4
+	 * @return void
+	*/
+	function save_core_wizard_settings() {
+		if ( !( isset( $_REQUEST['it_exchange_settings-wizard-submitted'] ) && 'it-exchange-setup' === $this->_current_page ) )
+			return;
+			
+		$general_settings = array();
+		
+		$default_wizard_general_settings = apply_filters( 'default_wizard_general_settings', array( 'company-email', 'default-currency' ) );
+		
+		foreach( $default_wizard_general_settings as $var ) {
+		
+			if ( isset( $_REQUEST['it_exchange_settings-' . $var] ) ) {
+				$general_settings[$var] = $_REQUEST['it_exchange_settings-' . $var];	
+			}
+			
+		}
+
+		$settings = wp_parse_args( $general_settings, it_exchange_get_option( 'settings_general' ) );
+
+		if ( ! empty( $this->error_message ) || $error_msg = $this->general_settings_are_invalid( $settings ) ) {
+			
+			if ( ! empty( $error_msg ) ) {
+				
+				$this->error_message = $error_msg;
+				return;
+				
+			}
+				
+		} else {
+			it_exchange_save_option( 'settings_general', $settings );
+			$this->status_message = __( 'Settings Saved.', 'LION' );
+		}
+		
+		do_action( 'it_exchange_save_wizard_settings' );
+		
+		wp_safe_redirect( 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=digital-downloads-product-type' );
 	}
 
 	/**

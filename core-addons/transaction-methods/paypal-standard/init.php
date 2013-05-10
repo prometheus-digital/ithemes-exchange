@@ -24,4 +24,4 @@ function paypal_web_standard_wizard_settings( $form ) {
 	</div>
 	<?php
 }
-add_action( 'it_exchange_setup_wizard_transaction_settings', 'paypal_web_standard_wizard_settings' );
+add_action( 'it_exchange_print_wizard_settings', 'paypal_web_standard_wizard_settings' );
