@@ -32,7 +32,6 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		'purchasequantity'    => 'purchase_quantity',
 		'inventory'           => 'inventory',
 		'availability'        => 'availability',
-		'isavailable'         => 'is_available',
 		'image'               => 'featured_image',
 		'productimage'        => 'featured_image',
 		'featuredimage'       => 'featured_image',
@@ -385,7 +384,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	/**
 	 * The product's dates purchase availability
 	 *
-	 * Use type of 'start', 'end', 'both' in options
+	 * Use type of 'start', 'end', 'both', either in options
 	 *
 	 * @since 0.4.0
 	 * @return string
@@ -404,20 +403,9 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'availability', $options );
 
-		if ( it_exchange_product_supports_feature( $this->product->ID, 'availability' )
-				&& it_exchange_product_has_feature( $this->product->ID, 'availability', $options ) )
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'availability', $options ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'availability', $options );
 		return false;
-	}
-
-	/**
-	 * Is the product currently available to purchase? 
-	 *
-	 * @since 0.4.0
-	 * @return string
-	 * @todo this whole function needs to be written!
-	*/
-	function is_available( $options=array() ) {
 	}
 
 	/**
