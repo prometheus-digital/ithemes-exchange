@@ -29,7 +29,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		'extendeddescription' => 'extended_description',
 		'author'              => 'author',
 		'baseprice'           => 'base_price',
-		'quantity'            => 'quantity',
+		'purchasequantity'    => 'purchase_quantity',
 		'inventory'           => 'inventory',
 		'availability'        => 'availability',
 		'isavailable'         => 'is_available',
@@ -302,36 +302,36 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	}
 
 	/**
-	 * The product quantity (max purchase option by customer) 
+	 * The product purchase quantity (max purchase option by customer) 
 	 *
 	 * @since 0.4.0
 	 * @return integer 
 	*/
-	function quantity( $options=array() ) {
+	function purchase_quantity( $options=array() ) {
 
 		// Return boolean if has flag was set
 		if ( $options['supports'] )
-			return it_exchange_product_supports_feature( $this->product->ID, 'quantity' );
+			return it_exchange_product_supports_feature( $this->product->ID, 'purchase-quantity' );
 
 		// Return boolean if has flag was set
 		if ( $options['has'] )
-			return it_exchange_product_has_feature( $this->product->ID, 'quantity' );
+			return it_exchange_product_has_feature( $this->product->ID, 'purchase-quantity' );
 
 		// Set options
 		$defaults      = array(
 			'before'      => '',
 			'after'       => '',
 			'format'      => 'html',
-			'class'       => 'product-quantity',
+			'class'       => 'product-purchase-quantity',
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
 		$class     = empty( $options['class'] ) ? '' : ' class="' . esc_attr( $options['class'] ) .'"';
-		$var_key   = it_exchange_get_field_name( 'product_quantity' );
+		$var_key   = it_exchange_get_field_name( 'product_purchase_quantity' );
 
 		// Is the checkbox on add/edit products unchecked to allow quantities greater than 1
-		if ( it_exchange_product_supports_feature( $this->product->ID, 'quantity' ) )
-			$max_quantity = it_exchange_get_product_feature( $this->product->ID, 'quantity' );
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'purchase-quantity' ) )
+			$max_quantity = it_exchange_get_product_feature( $this->product->ID, 'purchase-quantity' );
 		else
 			return '';
 		$max_quantity = empty( $max_quantity ) ? '0' : $max_quantity;
@@ -344,7 +344,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			case 'html' :
 			default :
 				$html  = '<input' . $class . ' type="text" name="' . esc_attr( $var_key ) . '" value="1" />' . "\n";
-				$html .= '<input type="hidden" name="' . it_exchange_get_field_name( 'product_max_quantity' ) . '[' . esc_attr( $this->product->ID ) . ']" value="' . ( $max_quantity ) . '" />';
+				$html .= '<input type="hidden" name="' . it_exchange_get_field_name( 'product_max_purchase_quantity' ) . '[' . esc_attr( $this->product->ID ) . ']" value="' . ( $max_quantity ) . '" />';
 				return $html;
 				break;
 		}
@@ -559,7 +559,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				break;
 			case 'form' :
 				$output  = '<form action="" method="post">';
-				$output .= it_exchange( 'product', 'get-quantity' );
+				$output .= it_exchange( 'product', 'get-purchase-quantity' );
 				$output .= $hidden_fields;
 				$output .= $button;
 				$output .= '</form>';

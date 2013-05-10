@@ -64,8 +64,8 @@
 				<p><strong>Inventory</strong><br /><?php it_exchange( 'product', 'inventory' ); ?></p>
 			<?php endif; ?>
 
-			<?php if ( it_exchange( 'product', 'has-quantity' ) ) : ?>
-				<p><strong>Max Quantity Per Purcahse</strong><br /><?php it_exchange( 'product', 'quantity' ); ?></p>
+			<?php if ( it_exchange( 'product', 'supports-purchase-quantity' ) ) : ?>
+				<p><strong>Max Quantity Per Purcahse</strong><br /><?php it_exchange( 'product', 'purchase-quantity', 'format=max-quantity' ); ?></p>
 			<?php endif; ?>
 
 			<?php if ( it_exchange( 'product', 'has-availability', 'type=start' ) ) : ?>

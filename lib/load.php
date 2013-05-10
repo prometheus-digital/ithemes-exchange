@@ -43,7 +43,7 @@ require( $this->_plugin_path . 'lib/product-features/class.purchase-message.php'
 require( $this->_plugin_path . 'lib/product-features/class.product-availability.php' );
 
 // Product Feature: Quantity
-require( $this->_plugin_path . 'lib/product-features/class.quantity.php' );
+require( $this->_plugin_path . 'lib/product-features/class.purchase-quantity.php' );
 
 // Product Feature: Inventory
 require( $this->_plugin_path . 'lib/product-features/class.inventory.php' );

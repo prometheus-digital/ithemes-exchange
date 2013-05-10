@@ -8,26 +8,25 @@
 */
 
 
-class IT_Exchange_Product_Feature_Quantity {
+class IT_Exchange_Product_Feature_Purchase_Quantity {
 
 	/**
 	 * Constructor. Registers hooks
 	 *
 	 * @since 0.4.0
 	 * @return void
-	 * @todo remove it_exchange_enabled_addons_loaded action???
 	*/
-	function IT_Exchange_Product_Feature_Quantity() {
+	function IT_Exchange_Product_Feature_Purchase_Quantity() {
 		if ( is_admin() ) {
 			add_action( 'init', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		}
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
-		add_action( 'it_exchange_update_product_feature_quantity', array( $this, 'save_feature' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_quantity', array( $this, 'get_feature' ), 9, 2 );
-		add_filter( 'it_exchange_product_has_feature_quantity', array( $this, 'product_has_feature') , 9, 2 );
-		add_filter( 'it_exchange_product_supports_feature_quantity', array( $this, 'product_supports_feature') , 9, 2 );
-		add_filter( 'it_exchange_default_field_names', array( $this, 'set_quantity_vars' ) );
+		add_action( 'it_exchange_update_product_feature_purchase-quantity', array( $this, 'save_feature' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_purchase-quantity', array( $this, 'get_feature' ), 9, 2 );
+		add_filter( 'it_exchange_product_has_feature_purchase-quantity', array( $this, 'product_has_feature') , 9, 2 );
+		add_filter( 'it_exchange_product_supports_feature_purchase-quantity', array( $this, 'product_supports_feature') , 9, 2 );
+		add_filter( 'it_exchange_default_field_names', array( $this, 'set_purchase_quantity_vars' ) );
 	}
 
 	/**
@@ -37,14 +36,14 @@ class IT_Exchange_Product_Feature_Quantity {
 	*/
 	function add_feature_support_to_product_types() {
 		// Register the product feature
-		$slug        = 'quantity';
+		$slug        = 'purchase-quantity';
 		$description = __( 'The max quantity available per purchase settings for a product.', 'LION' );
 		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
 		$products = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 		foreach( $products as $key => $params ) {
-			it_exchange_add_feature_support_to_product_type( 'quantity', $params['slug'] );
+			it_exchange_add_feature_support_to_product_type( 'purchase-quantity', $params['slug'] );
 		}
 	}
 
@@ -61,7 +60,7 @@ class IT_Exchange_Product_Feature_Quantity {
 
 		// Loop through product types and register a metabox if it supports the feature 
 		foreach( $product_addons as $slug => $args ) {
-			if ( it_exchange_product_type_supports_feature( $slug, 'quantity' ) )
+			if ( it_exchange_product_type_supports_feature( $slug, 'purchase-quantity' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $slug, array( $this, 'register_metabox' ) );
 		}
 	}
@@ -75,7 +74,7 @@ class IT_Exchange_Product_Feature_Quantity {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-quantity', __( 'Product Quantity', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'normal' );
+		add_meta_box( 'it-exchange-product-purchase-quantity', __( 'Purchase Quantity', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'normal' );
 	}
 
 	/**
@@ -89,7 +88,7 @@ class IT_Exchange_Product_Feature_Quantity {
 		$product = it_exchange_get_product( $post );
 
 		// Set the value of the feature for this product
-		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'quantity' );
+		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'purchase-quantity' );
 
 		// Allow quantity?
 		$allow_quantity = get_post_meta( $product->ID, '_it_exchange_product_allow_quantity', true );
@@ -108,14 +107,14 @@ class IT_Exchange_Product_Feature_Quantity {
 	}
 
 	/**
-	 * Sets the quantity query_var
+	 * Sets the purchase quantity query_var
 	 *
 	 * @since 0.4.0
 	 *
 	 * @param array $vars sent in through filter
 	 * @return array
 	*/
-	function set_quantity_vars( $vars ) {
+	function set_purchase_quantity_vars( $vars ) {
 		$vars['product_quantity']     = 'it-exchange-product-quantity';
 		$vars['product_max_quantity'] = 'it-exchange-product-max-quantity';
 		return $vars;
@@ -141,7 +140,7 @@ class IT_Exchange_Product_Feature_Quantity {
 			return;
 
 		// Abort if this product type doesn't support this feature 
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'quantity' ) )
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'purchase-quantity' ) )
 			return;
 
 		// Save option for checkbox allowing quantity
@@ -158,7 +157,7 @@ class IT_Exchange_Product_Feature_Quantity {
 		$new_value = $_POST['it-exchange-product-quantity'];
 		
 		// Save new value
-		it_exchange_update_product_feature( $product_id, 'quantity', $new_value );
+		it_exchange_update_product_feature( $product_id, 'purchase-quantity', $new_value );
 	}
 
 	/**
@@ -184,7 +183,7 @@ class IT_Exchange_Product_Feature_Quantity {
 	 * @return string product feature
 	*/
 	function get_feature( $existing, $product_id ) {
-		if ( it_exchange_product_supports_feature( $product_id, 'quantity' ) ) { 
+		if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) ) { 
 			return get_post_meta( $product_id, '_it-exchange-product-quantity', true );
 		}
 		return false;
@@ -219,7 +218,7 @@ class IT_Exchange_Product_Feature_Quantity {
 	function product_supports_feature( $result, $product_id ) {
 		// Does this product type support this feature?
 		$product_type = it_exchange_get_product_type( $product_id );
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'quantity' ) )
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'purchase-quantity' ) )
 			return false;
 
 
@@ -230,4 +229,4 @@ class IT_Exchange_Product_Feature_Quantity {
 		return true;
 	}
 }
-$IT_Exchange_Product_Feature_Quantity = new IT_Exchange_Product_Feature_Quantity();
+$IT_Exchange_Product_Feature_Purchase_Quantity = new IT_Exchange_Product_Feature_Purchase_Quantity();
