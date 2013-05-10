@@ -13,7 +13,7 @@
     
 	<h2>iThemes Exchange <?php _e( 'Setup', 'LION' ); ?></h2>
 
-	<?php $form->start_form( $form_options, 'it-exchange-setup' ); ?>
+	<?php $form->start_form( $form_options, 'exchange-general-settings' ); ?>
 	<div class="it-exchange-wizard">
 		<div class="fields">
         	<div class="field payments">
@@ -28,13 +28,13 @@
 					
 				}
 				?>
-                <li class="payoption other-payoption inactive">Other</li>
+                <li class="payoption other-payoption inactive"><?php _e( 'Other', 'LION' ) ?></li>
             </div>
 			<div class="field other-wizard hide-if-js">
 				<p><?php _e( 'Want something better? Buy one of our luxiorious and sexy plugins at <a href="http://ithemes.com" target="_blank">iThemes</a>.', 'LION' ); ?></p>
 				<p><?php _e( 'Then, install it and activate it in the WordPress plugin manager, come back to this screen and finish setting up your store!', 'LION' ); ?></p>
 			</div>
-            <?php do_action( 'it_exchange_setup_wizard_transaction_settings', $form ); ?>
+            <?php do_action( 'it_exchange_print_wizard_settings', $form ); ?>
 			<div class="field company-email">
             	<h2><?php _e( 'General', 'LION' ); ?></h2>
 				<label for="company-email"><?php _e( 'E-mail Notifications', 'LION' ); ?> <span class="tip" title="<?php _e( 'The E-mail address you should receive notifcations to, from your store.', 'LION' ); ?>">i</span></label>
@@ -54,7 +54,8 @@
 			<br>
 
 			<?php $form->add_submit( 'submit', __( 'Start Selling!', 'LION' ) ); ?>
-			<?php $form->add_hidden( 'it-exchange-dismiss-wizard-nag', true ); ?>
+			<?php $form->add_hidden( 'dismiss-wizard-nag', true ); ?>
+			<?php $form->add_hidden( 'wizard-submitted', true ); ?>
 		</div>
         <div class="add-on-banner">
             <a class="addon-banner" href="#" target="_blank">

@@ -220,7 +220,7 @@ function it_exchange_register_activation_hook() {
 		wp_safe_redirect('admin.php?page=it-exchange-setup' );
     }
 }
-add_action('admin_init', 'it_exchange_register_activation_hook');
+add_action( 'admin_init', 'it_exchange_register_activation_hook' );
 
 /**
  * This flushes the rewrite rules for us on activation

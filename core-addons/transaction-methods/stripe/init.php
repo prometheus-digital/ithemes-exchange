@@ -29,4 +29,4 @@ function stripe_wizard_settings( $form ) {
 	</div>
 	<?php
 }
-add_action( 'it_exchange_setup_wizard_transaction_settings', 'stripe_wizard_settings' );
+add_action( 'it_exchange_print_wizard_settings', 'stripe_wizard_settings' );
