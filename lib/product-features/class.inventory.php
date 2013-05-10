@@ -23,10 +23,8 @@ class IT_Exchange_Product_Feature_Inventory {
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		}
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
-		add_action( 'it_exchange_update_product_feature_inventory', array( $this, 'save_feature' ), 9, 2 );
-		add_action( 'it_exchange_update_product_feature_enable_inventory', array( $this, 'save_enable_inventory_feature' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_enable_inventory', array( $this, 'get_enable_inventory_feature' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_inventory', array( $this, 'get_feature' ), 9, 2 );
+		add_action( 'it_exchange_update_product_feature_inventory', array( $this, 'save_feature' ), 9, 3 );
+		add_filter( 'it_exchange_get_product_feature_inventory', array( $this, 'get_feature' ), 9, 3 );
 		add_filter( 'it_exchange_product_has_feature_inventory', array( $this, 'product_has_feature') , 9, 2 );
 		add_filter( 'it_exchange_product_supports_feature_inventory', array( $this, 'product_supports_feature') , 9, 2 );
 	}
@@ -90,7 +88,7 @@ class IT_Exchange_Product_Feature_Inventory {
 		$product = it_exchange_get_product( $post );
 
 		// Set the value of the feature for this product
-		$product_feature_enable_value = it_exchange_get_product_feature( $product->ID, 'enable_inventory' );
+		$product_feature_enable_value = it_exchange_get_product_feature( $product->ID, 'inventory', array( 'setting' => 'enabled' ) );
 		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'inventory' );
 
 		// Set description
@@ -101,7 +99,7 @@ class IT_Exchange_Product_Feature_Inventory {
 		echo $description;
 		?>
 		<p>
-			<input type="checkbox" name="it-exchange-enable-product-inventory" <?php checked( 'on' === $product_feature_enable_value ); ?>" /> <?php _e( 'Enable Inventory Tracking for this Product', 'LION' ); ?>
+			<input type="checkbox" name="it-exchange-enable-product-inventory" <?php checked( 'yes', $product_feature_enable_value ); ?> /> <?php _e( 'Enable Inventory Tracking for this Product', 'LION' ); ?>
 			<input type="text" name="it-exchange-product-inventory" value="<?php esc_attr_e( $product_feature_value ); ?>" /> <?php _e( 'Current Inventory', 'LION' ); ?>
 		</p>
 		<?php
@@ -130,10 +128,11 @@ class IT_Exchange_Product_Feature_Inventory {
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'inventory' ) )
 			return;
 
-		if ( isset( $_POST['it-exchange-enable-product-inventory'] ) )
-			it_exchange_update_product_feature( $product_id, 'enable-inventory', 'on' );
-		else
-			it_exchange_update_product_feature( $product_id, 'enable-inventory', 'off' );
+        // Save option for checkbox allowing quantity
+        if ( empty( $_POST['it-exchange-enable-product-inventory'] ) )
+			it_exchange_update_product_feature( $product_id, 'inventory', 'no', array( 'setting' => 'enabled' ) );
+        else
+			it_exchange_update_product_feature( $product_id, 'inventory', 'yes', array( 'setting' => 'enabled' ) );
 		
 		if ( isset( $_POST['it-exchange-product-inventory'] ) )
 			it_exchange_update_product_feature( $product_id, 'inventory', $_POST['it-exchange-product-inventory'] );
@@ -151,34 +150,25 @@ class IT_Exchange_Product_Feature_Inventory {
 	 * @param mixed $new_value the new value 
 	 * @return bolean
 	*/
-	function save_feature( $product_id, $new_value ) {
-		update_post_meta( $product_id, '_it-exchange-product-inventory', $new_value );
-	}
+	function save_feature( $product_id, $new_value, $options=array() ) {
+		// Using options to determine if we're setting the enabled setting or the actual max_number setting
+		$defaults = array(
+			'setting' => 'inventory',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
 
-	/**
-	 * This updates the feature for a product
-	 *
-	 * @todo Validate product id and new value 
-	 *
-	 * @since 0.4.0
-	 * @param integer $product_id the product id
-	 * @param mixed $new_value the new value 
-	 * @return bolean
-	*/
-	function save_enable_inventory_feature( $product_id, $new_value ) {
-		update_post_meta( $product_id, '_it-exchange-product-enable-inventory', $new_value );
-	}
-
-	/**
-	 * Return the product's features
-	 *
-	 * @since 0.4.0
-	 * @param mixed $existing the values passed in by the WP Filter API. Ignored here.
-	 * @param integer product_id the WordPress post ID
-	 * @return string product feature
-	*/
-	function get_feature( $existing, $product_id ) {
-		return get_post_meta( $product_id, '_it-exchange-product-inventory', true );
+		// Only accept settings for max_number (default) or 'enabled' (checkbox)
+		if ( 'inventory' == $options['setting'] ) {
+			$new_value = absint( $new_value );
+			update_post_meta( $product_id, '_it-exchange-product-inventory', $new_value );
+			return true;
+		} else if ( 'enabled' == $options['setting'] ) {
+			// Enabled setting must be yes or no.
+			if ( ! in_array( $new_value, array( 'yes', 'no' ) ) )
+				$new_value = 'yes';
+			update_post_meta( $product_id, '_it-exchange-product-enable-inventory', $new_value );
+			return true;
+		}
 	}
 
 	/**
@@ -189,8 +179,24 @@ class IT_Exchange_Product_Feature_Inventory {
 	 * @param integer product_id the WordPress post ID
 	 * @return string product feature
 	*/
-	function get_enable_inventory_feature( $existing, $product_id ) {
-		return get_post_meta( $product_id, '_it-exchange-product-enable-inventory', true );
+	function get_feature( $existing, $product_id, $options=array() ) {
+
+        // Using options to determine if we're getting the enabled setting or the actual inventory number
+        $defaults = array(
+            'setting' => 'inventory',
+        );  
+        $options = ITUtility::merge_defaults( $options, $defaults );
+
+        if ( 'enabled' == $options['setting'] ) { 
+            $enabled = get_post_meta( $product_id, '_it-exchange-product-enable-inventory', true );
+            if ( ! in_array( $enabled, array( 'yes', 'no' ) ) ) 
+                $enabled = 'yes';
+            return $enabled;
+        } else if ( 'inventory' == $options['setting'] ) { 
+            if ( it_exchange_product_supports_feature( $product_id, 'inventory' ) ) 
+                return get_post_meta( $product_id, '_it-exchange-product-inventory', true );
+        }   
+        return false;
 	}
 
 	/**
@@ -205,7 +211,7 @@ class IT_Exchange_Product_Feature_Inventory {
 		// Does this product type support this feature?
 		if ( false === $this->product_supports_feature( false, $product_id ) )
 			return false;
-		return ( false === $this->get_feature( false, $product_id ) ) ? false : true;
+		return (boolean) $this->get_feature( false, $product_id );
 	}
 
 	/**
@@ -222,13 +228,12 @@ class IT_Exchange_Product_Feature_Inventory {
 	function product_supports_feature( $result, $product_id ) {
 		// Does this product type support this feature?
 		$product_type = it_exchange_get_product_type( $product_id );
-		if ( it_exchange_product_type_supports_feature( $product_type, 'inventory' ) )
-			if ( 'on' === get_post_meta( $product_id, '_it-exchange-product-enable-inventory', true ) )
+		if ( it_exchange_product_type_supports_feature( $product_type, 'inventory' ) ) {
+			if ( 'yes' === it_exchange_get_product_feature( $product_id, 'inventory', array( 'setting' => 'enabled' ) ) )
 				return true;
-			else
-				return false;
-		else
+		} else {
 			return false;
+		}
 	}
 }
 $IT_Exchange_Product_Feature_Inventory = new IT_Exchange_Product_Feature_Inventory();

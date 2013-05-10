@@ -41,8 +41,8 @@ function it_exchange_product_has_feature( $product_id, $feature_key, $options=ar
  * @param mixed $feature_value the value for the feature
  * @return boolean
 */
-function it_exchange_update_product_feature( $product_id, $feature_key, $feature_value ) {
-	do_action( 'it_exchange_update_product_feature_' . $feature_key, $product_id, $feature_value );
+function it_exchange_update_product_feature( $product_id, $feature_key, $feature_value, $options=array() ) {
+	do_action( 'it_exchange_update_product_feature_' . $feature_key, $product_id, $feature_value, $options );
 }
 
 /**

@@ -113,8 +113,8 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 	 * @return array
 	*/
 	function set_purchase_quantity_vars( $vars ) {
-		$vars['product_quantity']     = 'it-exchange-product-quantity';
-		$vars['product_max_quantity'] = 'it-exchange-product-max-quantity';
+		$vars['product_purchase_quantity']     = 'it-exchange-product-purchase-quantity';
+		$vars['product_max_purchase_quantity'] = 'it-exchange-product-max-purchase-quantity';
 		return $vars;
 	}
 
@@ -143,9 +143,9 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 
 		// Save option for checkbox allowing quantity
 		if ( empty( $_POST['it-exchange-product-allow-quantity'] ) )
-			update_post_meta( $product_id, '_it_exchange_product_allow_quantity', 'no' );
+			it_exchange_update_product_feature( $product_id, 'quantity', 'no', array( 'setting' => 'enabled' ) );
 		else
-			update_post_meta( $product_id, '_it_exchange_product_allow_quantity', $_POST['it-exchange-product-allow-quantity'] );
+			it_exchange_update_product_feature( $product_id, 'quantity', 'yes', array( 'setting' => 'enabled' ) );
 
 		// Abort if key for feature option isn't set in POST data
 		if ( ! isset( $_POST['it-exchange-product-quantity'] ) )
@@ -179,11 +179,13 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 		if ( 'max_number' == $options['setting'] ) {
 			$new_value = absint( $new_value );
 			update_post_meta( $product_id, '_it-exchange-product-quantity', $new_value );
+			return true;
 		} else if ( 'enabled' == $options['setting'] ) {
 			// Enabled setting must be yes or no.
 			if ( ! in_array( $new_value, array( 'yes', 'no' ) ) )
 				$new_value = 'yes';
 			update_post_meta( $product_id, '_it_exchange_product_allow_quantity', $new_value );
+			return true;
 		}
 		return false;
 	}

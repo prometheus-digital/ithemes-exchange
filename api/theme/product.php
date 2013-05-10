@@ -336,6 +336,16 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			return '';
 		$max_quantity = empty( $max_quantity ) ? '0' : $max_quantity;
 
+		// Lets do some inventory checking and make sure that if we're supporing inventory, that we don't allow max to be greater than inventory
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ) {
+			// If we support inventory, but we don't have any, and we've been passed the HTML format, return empty string
+			if ( ! $inventory = it_exchange_get_product_feature( $this->product->ID, 'inventory' ) )
+				return '';
+				
+			if ( (int) $max_quantity > 0 && (int) $max_quantity > $inventory )
+				$max_quantity = $inventory;
+		}
+
 		// Return requested format
 		switch ( $options['format'] ) {
 			case 'max-quantity' :
@@ -530,6 +540,9 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
+		// If we are tracking inventory, lets make sure we have some available
+		$product_in_stock = it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ? it_exchange_product_has_feature( $this->product->ID, 'inventory' ) : true;
+
 		$class         = empty( $options['class'] ) ? '' : ' class="' . esc_attr( $options['class'] ) .'"';
 		$var_key       = it_exchange_get_field_name( 'add_product_to_cart' );
 		$var_value     = $this->product->ID;
@@ -545,25 +558,32 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		switch( $options['format'] ) {
 
 			case 'var-key':
-				return esc_attr( $var_key );
+				$output = esc_attr( $var_key );
 				break;
 			case 'var-value':
-				return esc_attr( $var_value );
+				$output = esc_attr( $var_value );
 				break;
 			case 'button' :
-				return $hidden_fields . $button;
+				$output = $hidden_fields . $button;
 				break;
 			case 'link' :
 				$url = add_query_arg( array( $var_key => $var_value ) );
-				return '<a' . $class . 'href="' . $url . '">' . $options['link_title'] . '</a>';
+				$output = '<a' . $class . 'href="' . $url . '">' . $options['link_title'] . '</a>';
 				break;
 			case 'form' :
 				$output  = '<form action="" method="post">';
 				$output .= it_exchange( 'product', 'get-purchase-quantity' );
 				$output .= $hidden_fields;
-				$output .= $button;
+
+				// Don't show the add-to-cart button if we don't have inventory
+				if ( $product_in_stock )
+					$output .= $button;
+				else
+					$output .= apply_filters( 'it-exchange-out-of-stock-label', __( 'Out of stock', 'LION' ), $this->product );
 				$output .= '</form>';
+				break;
 			default:
+				$output = false;
 				break;
 			
 		}
