@@ -22,8 +22,8 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		}
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
-		add_action( 'it_exchange_update_product_feature_purchase-quantity', array( $this, 'save_feature' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_purchase-quantity', array( $this, 'get_feature' ), 9, 2 );
+		add_action( 'it_exchange_update_product_feature_purchase-quantity', array( $this, 'save_feature' ), 9, 3 );
+		add_filter( 'it_exchange_get_product_feature_purchase-quantity', array( $this, 'get_feature' ), 9, 3 );
 		add_filter( 'it_exchange_product_has_feature_purchase-quantity', array( $this, 'product_has_feature') , 9, 2 );
 		add_filter( 'it_exchange_product_supports_feature_purchase-quantity', array( $this, 'product_supports_feature') , 9, 2 );
 		add_filter( 'it_exchange_default_field_names', array( $this, 'set_purchase_quantity_vars' ) );
@@ -91,9 +91,7 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'purchase-quantity' );
 
 		// Allow quantity?
-		$allow_quantity = get_post_meta( $product->ID, '_it_exchange_product_allow_quantity', true );
-		if ( ! in_array( $allow_quantity, array( 'yes', 'no' ) ) )
-			$allow_quantity = 'yes';
+		$allow_quantity = it_exchange_get_product_feature( $product->ID, 'purchase-quantity', array( 'setting' => 'enabled' ) );
 		?>
 		<p>
 			<input type="checkbox" name="it-exchange-product-allow-quantity" <?php echo checked( 'yes', $allow_quantity ); ?> value="yes" />
@@ -170,8 +168,24 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 	 * @param mixed $new_value the new value 
 	 * @return bolean
 	*/
-	function save_feature( $product_id, $new_value ) {
-		update_post_meta( $product_id, '_it-exchange-product-quantity', $new_value );
+	function save_feature( $product_id, $new_value, $options=array() ) {
+		// Using options to determine if we're setting the enabled setting or the actual max_number setting
+		$defaults = array(
+			'setting' => 'max_number',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		// Only accept settings for max_number (default) or 'enabled' (checkbox)
+		if ( 'max_number' == $options['setting'] ) {
+			$new_value = absint( $new_value );
+			update_post_meta( $product_id, '_it-exchange-product-quantity', $new_value );
+		} else if ( 'enabled' == $options['setting'] ) {
+			// Enabled setting must be yes or no.
+			if ( ! in_array( $new_value, array( 'yes', 'no' ) ) )
+				$new_value = 'yes';
+			update_post_meta( $product_id, '_it_exchange_product_allow_quantity', $new_value );
+		}
+		return false;
 	}
 
 	/**
@@ -182,9 +196,21 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 	 * @param integer product_id the WordPress post ID
 	 * @return string product feature
 	*/
-	function get_feature( $existing, $product_id ) {
-		if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) ) { 
-			return get_post_meta( $product_id, '_it-exchange-product-quantity', true );
+	function get_feature( $existing, $product_id, $options=array() ) {
+		// Using options to determine if we're getting the enabled setting or the actual max_number setting
+		$defaults = array(
+			'setting' => 'max_number',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		if ( 'enabled' == $options['setting'] ) {
+			$enabled = get_post_meta( $product_id, '_it_exchange_product_allow_quantity', true );
+			if ( ! in_array( $enabled, array( 'yes', 'no' ) ) )
+				$enabled = 'yes';
+			return $enabled;
+		} else if ( 'max_number' == $options['setting'] ) {
+			if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) )
+				return get_post_meta( $product_id, '_it-exchange-product-quantity', true );
 		}
 		return false;
 	}
@@ -223,7 +249,7 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 
 
 		// Determine if this product has turned off product quantity
-		if ( 'no' == get_post_meta( $product_id, '_it_exchange_product_allow_quantity', true ) )
+		if ( 'no' == it_exchange_get_product_feature( $product_id, 'purchase-quantity', array( 'setting' => 'enabled' ) ) )
 			return false;
 
 		return true;
