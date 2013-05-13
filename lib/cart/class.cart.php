@@ -255,17 +255,17 @@ class IT_Exchange_Shopping_Cart {
 			return;
 		
 		// Get cart products
-		$cart_products = it_exchange_get_session_products();
+		$cart_products = it_exchange_get_session_type( 'products' );
 
 		// Update quantities
 		foreach( $quantities as $product => $quantity ) {
 			if ( ! empty( $cart_products[$product] ) && is_numeric( $quantity ) ) {
 				$cart_product = $cart_products[$product];
 				if ( empty( $quantity ) || $quantity < 1 ) {
-					it_exchange_remove_session_product( $product );
+					it_exchange_unset_session_type( 'products', $product );
 				} else {
 					$cart_product['count'] = $quantity;
-					it_exchange_update_session_product( $product, $cart_product );
+					it_exchange_update_session_type( 'products', $product, $cart_product );
 				}
 			}
 		}

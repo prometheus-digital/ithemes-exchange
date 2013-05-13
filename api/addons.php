@@ -213,7 +213,8 @@ function it_exchange_get_disabled_addons( $options=array() ) {
 	if ( ! empty( $options['category'] ) )
 		$disabled = it_exchange_filter_addons_by_category( $disabled, $options['category'] );
 
-	ksort( $disabled );
+	if ( ! empty( $disabled ) )
+		ksort( $disabled );
 	
 	return empty( $disabled ) ? array() : $disabled;
 }
@@ -249,6 +250,8 @@ function it_exchange_get_more_addons( $options=array() ) {
  * @return array  Restorted add-ons array
 */
 function it_exchange_featured_addons_on_top( $addons ) {
+	
+	$sorted_addons = array();
 	
 	foreach( $addons as $slug => $addon ) {
 	
