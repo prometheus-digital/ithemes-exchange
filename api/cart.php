@@ -101,10 +101,24 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 
 	// If product is in cart already, bump the quanity. Otherwise, add it to the cart
 	$session_products = it_exchange_get_session_products();
+
 	if ( ! empty ($session_products[$product_id . '-' . $itemized_hash] ) ) {
 		$product = $session_products[$product_id . '-' . $itemized_hash];
-		$product['count']++;
-		// Bump the quantity
+
+		// If we don't support purchase quanity, quanity will always be 1
+		if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) ) {
+			// Get max quantity setting
+			$max_purchase_quantity = it_exchange_get_product_feature( $product_id, 'purchase-quantity' );
+
+			// If we support it but don't have it, quantity is unlimited
+			if ( ! $max_purchase_quantity )
+				$product['count'] = $product['count'] + $quantity;
+			else
+				$product['count'] = ( ( $product['count'] + $quantity ) > $max_purchase_quantity ) ? $max_purchase_quantity : $quantity + $product['count'];
+		} else {
+			$product['count'] = 1;
+		}
+		// Update session data
 		it_exchange_update_session_product( $product_id . '-' . $itemized_hash, $product );
 		do_action( 'it_exchange_cart_prouduct_count_updated', $product_id );
 		return true;
