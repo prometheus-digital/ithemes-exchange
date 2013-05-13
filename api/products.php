@@ -113,3 +113,45 @@ function it_exchange_set_the_product_id( $product_id=false ) {
 function it_exchange_get_the_product_id() {
 	return empty( $GLOBALS['it_exchange']['product_id'] ) ? false : $GLOBALS['it_exchange']['product_id'];
 }
+
+/**
+ * Is the product availabel based on start and end availability dates
+ *
+ * @since 0.4.0
+ *
+ * @param int $product_id Product ID
+ * @return boolean
+*/
+function it_exchange_is_product_available( $product_id=false ) {
+	if ( ! it_exchange_get_product( $product_id ) )
+		return false;
+	
+	$past_start_date = true;
+	$before_end_date = true;
+	$now_start = strtotime( date( 'Y-m-d 00:00:00' ) );
+	$now_end = strtotime( date( 'Y-m-d 23:59:59' ) );
+
+	// Check start time
+	if ( 
+		it_exchange( 'product', 'supports-availability', 'type=start' ) &&  
+		it_exchange( 'product', 'has-availability', 'type=start' )   
+	) { 
+		$start_date = strtotime( it_exchange_get_product_feature( $product_id, 'availability', array( 'type' => 'start' ) ) . ' 00:00:00' );
+		if ( $now_start < $start_date )
+			$past_start_date = false;
+
+	}   
+
+	// Check end time
+	if ( 
+		it_exchange( 'product', 'supports-availability', 'type=end' ) &&  
+		it_exchange( 'product', 'has-availability', 'type=end' )   
+	) { 
+		$end_date = strtotime( it_exchange_get_product_feature( $product_id, 'availability', array( 'type' => 'end' ) ) . ' 23:59:59' );
+		if ( $now_end > $end_date )
+			$before_end_date = false;
+	}   
+
+	return $past_start_date && $before_end_date;
+
+}

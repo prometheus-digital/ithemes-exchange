@@ -32,6 +32,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		'purchasequantity'    => 'purchase_quantity',
 		'inventory'           => 'inventory',
 		'availability'        => 'availability',
+		'isavailable'         => 'is_available',
 		'image'               => 'featured_image',
 		'productimage'        => 'featured_image',
 		'featuredimage'       => 'featured_image',
@@ -340,6 +341,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			// If we support inventory, but we don't have any, and we've been passed the HTML format, return empty string
 			if ( ! $inventory = it_exchange_get_product_feature( $this->product->ID, 'inventory' ) )
 				return '';
+
+		// Lets check product availability and return and empty string if its not available.
+		if ( ! it_exchange( 'product', 'is-available' ) )
+			return '';
 				
 			if ( (int) $max_quantity > 0 && (int) $max_quantity > $inventory )
 				$max_quantity = $inventory;
@@ -405,7 +410,18 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		if ( it_exchange_product_supports_feature( $this->product->ID, 'availability', $options ) )
 			return it_exchange_get_product_feature( $this->product->ID, 'availability', $options );
-		return false;
+		return true;
+	}
+
+	/**
+	 * Uses start and end availability dates to now to determine if the product is currently available
+	 *
+     * @since 0.4.0
+	 *
+	 * @return boolean
+	*/
+	function is_available( $options=array() ) {
+		return it_exchange_is_product_available( $this->product->ID );
 	}
 
 	/**
@@ -531,6 +547,9 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// If we are tracking inventory, lets make sure we have some available
 		$product_in_stock = it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ? it_exchange_product_has_feature( $this->product->ID, 'inventory' ) : true;
 
+		// If we're supporting availability dates, check that
+		$product_is_available = it_exchange( 'product', 'is-available' );
+
 		$class         = empty( $options['class'] ) ? '' : ' class="' . esc_attr( $options['class'] ) .'"';
 		$var_key       = it_exchange_get_field_name( 'add_product_to_cart' );
 		$var_value     = $this->product->ID;
@@ -540,7 +559,6 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$hidden_fields  = '<input type="hidden" name="it-exchange-action" value="add_product_to_cart" />';
 		$hidden_fields .= wp_nonce_field( 'it-exchange-add-product-to-cart-' . $this->product->ID, '_wpnonce', true, false );
 		$hidden_fields .= '<input type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
-		/** @todo Maybe add nonce_field. Will have to code for it in api/cart.php though. **/
 
 		// Generate correct output
 		switch( $options['format'] ) {
@@ -564,10 +582,13 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				$output .= $hidden_fields;
 
 				// Don't show the add-to-cart button if we don't have inventory
-				if ( $product_in_stock )
+				if ( $product_in_stock && $product_is_available ) {
 					$output .= $button;
-				else
-					$output .= apply_filters( 'it-exchange-out-of-stock-label', __( 'Out of stock', 'LION' ), $this->product );
+				} else if ( ! $product_is_available ) {
+					$output .= apply_filters( 'it_exchange_product_not_available_label', __( 'This product is not available for purchase', 'LION' ), $this->product );
+				} else {
+					$output .= apply_filters( 'it_exchange_out_of_stock_label', __( 'Out of stock', 'LION' ), $this->product );
+				}
 				$output .= '</form>';
 				break;
 			default:
