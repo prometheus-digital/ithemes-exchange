@@ -1076,7 +1076,7 @@ class IT_Exchange_Admin {
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
 			wp_enqueue_style( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-ons.css' );
 		} else if ( 'exchange_page_it-exchange-setup' === $hook_suffix ) {
-			wp_enqueue_script( 'it-exchange-wizard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/wizard.css' );
+			wp_enqueue_style( 'it-exchange-wizard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/wizard.css' );
 		}
 	}
 
