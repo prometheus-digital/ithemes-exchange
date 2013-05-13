@@ -6,70 +6,66 @@
  * @package IT_Exchange
 */
 ?>
-<div class="wrap">
-	<!-- temp icon --> 
+<div id="it-exchange-add-ons-wrap" class="wrap">
 	<?php screen_icon( 'page' );  ?>
-    
 	<h2>Add-ons</h2>
-    <p><?php _e( 'Add-Ons are features that you can add or remove depending on your needs. Selling your stuff should only be as complicated as you need it to be. Visit the Get More tab to see what else Exchange can do.', 'LION' ); ?></p>
-    
+	<p class="top-description"><?php _e( 'Add-Ons are features that you can add or remove depending on your needs. Selling your stuff should only be as complicated as you need it to be. Visit the Get More tab to see what else Exchange can do.', 'LION' ); ?></p>
+	
+	<?php $this->print_add_ons_page_tabs(); ?>
+	<?php do_action( 'it_exchange_add_ons_page_top' ); ?>
+
 	<?php
-	$this->print_add_ons_page_tabs(); 
-	do_action( 'it_exchange_add_ons_page_top' );
+		$tab = ! empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'all';
+		
+		switch ( $tab ) {
+			case 'enabled':
+				$addons = it_exchange_get_enabled_addons();
+				break;
+			
+			case 'disabled':
+				$addons = it_exchange_get_disabled_addons();
+				break;
+			
+			case 'all':
+			default:
+				$addons = it_exchange_get_addons();
+				break;
+		}
 	?>
-
-	<?php
-	$tab = !empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'all';
-	
-	switch ( $tab ) {
-	
-		case 'enabled':
-			$addons = it_exchange_get_enabled_addons();
-			break;
+	<div class="add-ons-wrapper">
+		<?php if ( ! empty( $addons ) ) : ?>
 			
-		case 'disabled':
-			$addons = it_exchange_get_disabled_addons();
-			break;
+			<?php $default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/default-add-on-icon.png' ); ?>
 			
-		case 'all':
-		default:
-			$addons = it_exchange_get_addons();
-			break;
-		
-	}
-	
-	if ( !empty( $addons ) ) { 
-	
-		$default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/default-add-on-icon.png' );
-		
-		foreach( (array) $addons as $addon ) {
-		
-			$icon = empty( $addon['options']['icon'] ) ? $default_icon : $addon['options']['icon'];
-		
-			echo '<div class="add-on-block">';
-			echo '<div class="add-on-icon"><img src="' . $icon . '" /></div>';
-			echo '<h4>' . $addon['name'] . '</h4>';
-			echo '<span class="add-on-author">by <a href="' . $addon['author_url'] . '">' . $addon['author'] . '</a></span>';
-			echo '<span class="add-on-tag">' . $addon['options']['tag'] . '</span>';
-			echo '<p class="add-on-description">' . $addon['description'] . '</p>';
-
-			if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) ) 
-				echo '<div class="add-on-settings"><a href="' . admin_url( 'admin.php?page=it-exchange-addons&add-on-settings=' . $addon['slug'] ) . '">S</a></div>';
-			
-			if ( is_it_exchange_addon_enabled( $addon['slug'] ) )
-				echo '<div class="add-on-disable"><a href="' . wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-disable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-disable-add-on' ) . '">Disable</a></div>';
-			else
-				echo '<div class="add-on-enable"><a href="' . wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-enable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-enable-add-on' ) . '">Enable</a></div>';
-				
-			echo '</div>';
-			
-		}   
-		
-	} else {
-		
-		echo '<p>' . __( 'No Add-ons currently enabled', 'LION' ) . '</p>';
-		
-	}
-	 
-	?> 
+			<?php foreach( (array) $addons as $addon ) : ?>
+				<?php $icon = empty( $addon['options']['icon'] ) ? $default_icon : $addon['options']['icon']; ?>
+				<div class="add-on-block">
+					<div class="add-on-icon">
+						<div class="image-wrapper">
+							<img src="<?php echo $icon; ?>" alt="" />
+						</div>
+					</div>
+					<div class="add-on-info">
+						<h4><?php echo $addon['name']; ?></h4>
+						<span class="add-on-author">by <a href="<?php echo $addon['author_url']; ?>"><?php echo $addon['author']; ?></a></span>
+						<span class="add-on-tag"><?php echo $addon['options']['tag']; ?></span>
+						<p class="add-on-description"><?php echo $addon['description']; ?></p>
+					</div>
+					<div class="add-on-actions">
+						<?php if ( is_it_exchange_addon_enabled( $addon['slug'] ) ) : ?>
+							<div class="add-on-enabled"><a href="<?php echo wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-disable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-disable-add-on' ); ?>" data-text-disable="&times;&nbsp; Disable" data-text-enabled="&#x2714;&nbsp; Enabled">&#x2714;&nbsp; Enabled</a></div>
+						<?php else : ?>
+							<div class="add-on-disabled"><a href="<?php echo wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-enable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-enable-add-on' ); ?>" data-text-enable="&#x2714;&nbsp; Enable" data-text-disabled="&times;&nbsp; Disabled">-&nbsp; Disabled</a></div>
+						<?php endif; ?>
+						
+						<?php if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) ) : ?>
+							<div class="add-on-settings"><a href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&add-on-settings=' . $addon['slug'] ); ?>">S</a></div>
+						<?php endif; ?>
+					</div>
+				</div>
+			<?php endforeach; ?> 
+		<?php else : ?>
+			<p><?php __( 'No Add-ons currently enabled', 'LION' ); ?></p>
+		<?php endif; ?>
+	</div>
 </div>
