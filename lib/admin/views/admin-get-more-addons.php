@@ -26,9 +26,12 @@
 			
 			<?php $default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/default-add-on-icon.png' ); ?>
 			
-			<?php foreach( (array) $addons as $addon ) : ?>
+			<?php 
+				$count = 0;
+				foreach( (array) $addons as $addon ) : ?>
 				<?php if ( ! is_it_exchange_addon_installed( $addon['slug'] ) ) : ?>
 					<?php
+						
 						if ( $addon['featured'] )
 							$class .= ' featured';
 						
@@ -64,8 +67,13 @@
 							<?php  endif; ?>
 						</div>
 					</div>
+                <?php $count++; ?>
 				<?php endif; ?>
 			<?php endforeach; ?>
+            <?php 
+				if ( 0 === $count )
+					 _e( 'You have all iThemes Exchange currently has to offer. Got an idea for an add-on that would make your life easier? <a href="http://ithemes.com/contact/">E-mail us</a>.', 'LION' );
+			?>
 		<?php else : ?>
 			<p><?php __( 'No Add-ons in the store.', 'LION' ); ?></p>
 		<?php endif; ?>
