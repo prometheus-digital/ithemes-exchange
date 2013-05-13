@@ -137,15 +137,15 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 		if ( ! $product_id )
 			return;
 
+		// Save option for checkbox allowing quantity
+		if ( empty( $_POST['it-exchange-product-allow-quantity'] ) )
+			it_exchange_update_product_feature( $product_id, 'purchase-quantity', 'no', array( 'setting' => 'enabled' ) );
+		else
+			it_exchange_update_product_feature( $product_id, 'purchase-quantity', 'yes', array( 'setting' => 'enabled' ) );
+
 		// Abort if this product type doesn't support this feature 
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'purchase-quantity' ) )
 			return;
-
-		// Save option for checkbox allowing quantity
-		if ( empty( $_POST['it-exchange-product-allow-quantity'] ) )
-			it_exchange_update_product_feature( $product_id, 'quantity', 'no', array( 'setting' => 'enabled' ) );
-		else
-			it_exchange_update_product_feature( $product_id, 'quantity', 'yes', array( 'setting' => 'enabled' ) );
 
 		// Abort if key for feature option isn't set in POST data
 		if ( ! isset( $_POST['it-exchange-product-quantity'] ) )
