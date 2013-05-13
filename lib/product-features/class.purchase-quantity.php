@@ -91,16 +91,17 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'purchase-quantity' );
 
 		// Allow quantity?
-		$allow_quantity = it_exchange_get_product_feature( $product->ID, 'purchase-quantity', array( 'setting' => 'enabled' ) );
+		$product_feature_enable_value = it_exchange_get_product_feature( $product->ID, 'purchase-quantity', array( 'setting' => 'enabled' ) );
+		
 		?>
-		<p>
-			<input type="checkbox" name="it-exchange-product-allow-quantity" <?php echo checked( 'yes', $allow_quantity ); ?> value="yes" />
-			&nbsp;<?php _e( 'Check this to allow customers to modify they quanity they want to purchase.' ); ?>
-		</p>
-		<p>
-			<?php _e( 'What is the maximum quantity a customer and choose when purchasing this product? Leave blank for unlimited.', 'LION' ); ?>
-			<input type="text" name="it-exchange-product-quantity" value="<?php esc_attr_e( $product_feature_value ); ?>" />
-		</p>
+			<p>
+				<input type="checkbox" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-quantity" <?php echo checked( 'yes', $product_feature_enable_value ); ?> value="yes" />
+				&nbsp;<?php _e( 'Check this to allow customers to modify they quanity they want to purchase.' ); ?>
+			</p>
+			<p class="it-exchange-enable-product-quantity<?php echo ( $product_feature_enable_value == 'no' ) ? ' hide-if-js' : '' ?>">
+				<?php _e( 'What is the maximum quantity a customer and choose when purchasing this product? Leave blank for unlimited.', 'LION' ); ?>
+				<input type="text" name="it-exchange-product-quantity" value="<?php esc_attr_e( $product_feature_value ); ?>" />
+			</p>
 		<?php
 	}
 
@@ -138,7 +139,7 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 			return;
 
 		// Save option for checkbox allowing quantity
-		if ( empty( $_POST['it-exchange-product-allow-quantity'] ) )
+		if ( empty( $_POST['it-exchange-enable-product-quantity'] ) )
 			it_exchange_update_product_feature( $product_id, 'purchase-quantity', 'no', array( 'setting' => 'enabled' ) );
 		else
 			it_exchange_update_product_feature( $product_id, 'purchase-quantity', 'yes', array( 'setting' => 'enabled' ) );

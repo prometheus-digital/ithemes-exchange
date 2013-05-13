@@ -98,17 +98,22 @@ class IT_Exchange_Product_Feature_Product_Availability {
 		$description = __( 'Use these settings to determine when a product is available to purchase.', 'LION' );
 		$description = apply_filters( 'it_exchange_product_availability_metabox_description', $description );
 
-		// Echo the form field
-		echo $description;
 		?>
-		<p>
-			<input type="checkbox" name="it-exchange-enable-product-availability-start" value="yes" <?php checked( 'yes', $start_enabled ); ?> />&nbsp;<?php _e( 'Use a start date', 'LION' ); ?>
-			<input type="checkbox" name="it-exchange-enable-product-availability-end" value="yes" <?php checked( 'yes', $end_enabled ); ?> />&nbsp;<?php _e( 'Use an end start date', 'LION' ); ?>
-		</p>
-		<p>
-			<input type="text" name="it-exchange-product-availability-start" value="<?php esc_attr_e( $start_date ); ?>" /> Start Date<br />
-			<input type="text" name="it-exchange-product-availability-end" value="<?php esc_attr_e( $end_date ); ?>" /> End Date<br />
-		</p>
+			<?php if ( $description ) : ?>
+				<p class="intro-description"><?php echo $description; ?></p>
+			<?php endif; ?>
+			<p>
+				<input type="checkbox" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-start" value="yes" <?php checked( 'yes', $start_enabled ); ?> />&nbsp;<?php _e( 'Use a start date', 'LION' ); ?>
+				<input type="checkbox" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-end" value="yes" <?php checked( 'yes', $end_enabled ); ?> />&nbsp;<?php _e( 'Use an end start date', 'LION' ); ?>
+			</p>
+			<p>
+				<span class="it-exchange-enable-product-availability-start<?php echo ( $start_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
+					<input type="text" name="it-exchange-product-availability-start" value="<?php esc_attr_e( $start_date ); ?>" /> Start Date<br />
+				</span>
+				<span class="it-exchange-enable-product-availability-end<?php echo ( $end_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
+					<input type="text" name="it-exchange-product-availability-end" value="<?php esc_attr_e( $end_date ); ?>" /> End Date<br />
+				</span>
+			</p>
 		<?php
 	}
 

@@ -94,12 +94,13 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 		$description = __( 'Any text placed here will be appeneded to the receipt when this product is purchased', 'LION' );
 		$description = apply_filters( 'it_exchange_product_purchase-message_metabox_description', $description );
 
-		// Echo the form field
-		echo $description;
 		?>
-		<p>
-		<textarea name="it-exchange-product-purchase-message"><?php echo esc_textarea( $product_feature_value ); ?></textarea>
-		</p>
+			<?php if ( $description ) : ?>
+				<p class="intro-description"><?php echo $description; ?></p>
+			<?php endif; ?>
+			<p>
+				<textarea name="it-exchange-product-purchase-message"><?php echo esc_textarea( $product_feature_value ); ?></textarea>
+			</p>
 		<?php
 	}
 
