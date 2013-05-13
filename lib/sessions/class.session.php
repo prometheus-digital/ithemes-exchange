@@ -155,7 +155,6 @@ class IT_Exchange_Session {
 	 * @return void 
 	*/
 	function add_data( $data, $key=false ) {
-
 		if ( ! empty( $key ) )
 			$_SESSION['it_exchange']['data'][$key] = $data;
 		else
