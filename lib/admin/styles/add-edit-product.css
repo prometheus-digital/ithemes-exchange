@@ -31,11 +31,6 @@
 * {
 	box-sizing: border-box;
 }
-img {
-	max-width: 100%;
-	height: auto;
-	display: block;
-}
 .screen-layout, .columns-prefs {
 	display: none;
 }
@@ -75,16 +70,20 @@ img {
 #it-exchange-product-downloads .downloads-label-add label{float:left;margin-bottom:0;margin-top:8px;}
 #it-exchange-product-downloads .downloads-label-add .download-add-new{float:right;margin-bottom:10px;}
 #it-exchange-product-downloads .download-remove{text-align:right;}
-#it-exchange-product-downloads .download-remove a{box-sizing:content-box;display:inline-block;opacity:.5;width:20px;height:19px;margin-top:12px;margin-right:12px;padding-top:1px;border:2px solid #E1797A;border-radius:50%;font-size:14px;text-decoration:none;text-align:center;color:#E1797A;-webkit-transition:opacity .2s linear;transition:opacity .2s linear;}
-#it-exchange-product-downloads .download-remove a:hover{opacity:1;}
+#it-exchange-product-downloads .download-remove a{box-sizing:content-box;display:inline-block;opacity:0;width:20px;height:19px;margin-top:12px;margin-right:12px;padding-top:1px;border:2px solid #999;border-radius:50%;font-size:14px;text-decoration:none;text-align:center;color:#999;-webkit-transition:all .2s linear;transition:all .2s linear;}
+#it-exchange-product-downloads .download-item:hover .it-exchange-delete-digital-download{opacity:1;}
 #it-exchange-product-downloads .download-remove a:active{outline:none;opacity:.8;}
+#it-exchange-product-downloads .download-remove .it-exchange-delete-digital-download:hover{border-color:#E1797A;color:#E1797A;}
 #it-exchange-product-downloads .columns-wrapper{clear:both;overflow:hidden;border-top:1px solid #DEDEDE;}
 #it-exchange-product-downloads .downloads-list-titles .column{padding:10px 15px;font-weight:bold;}
 #it-exchange-product-downloads .downloads-list-titles .columns-wrapper{border-top:0;}
-#it-exchange-product-downloads .column{float:left;}
+#it-exchange-product-downloads .download-name input{font-weight:bold;color:#267599;}
+#it-exchange-product-downloads .column{position:relative;float:left;}
 #it-exchange-product-downloads .col-1-12{width:8.3333333%;}
-#it-exchange-product-downloads .col-5-12{width:41.6666667%;}
-#it-exchange-product-downloads .col-6-12{width:50%;}
+#it-exchange-product-downloads .col-4-12{width:33.3333333%;}
+#it-exchange-product-downloads .col-7-12{width:58.3333333%;}
+#it-exchange-product-downloads .download-source:hover a{opacity:1;}
+#it-exchange-product-downloads .download-source a{opacity:0;position:absolute;top:6px;right:8px;padding:10px;background:#FFF;text-decoration:none;}
 #it-exchange-product-downloads input.not-empty{border-color:transparent;}
 #it-exchange-product-downloads input.not-empty:hover{border-color:#D6D6D6;}
 #it-exchange-product-downloads input.not-empty:focus{border-color:#D6D6D6;}
@@ -110,6 +109,7 @@ img {
 #it-exchange-product-images li .remove-item:hover{cursor:pointer;background:#FFF;color:#565656;}
 #it-exchange-product-images li a .overlay{content:' ';position:absolute;z-index:100;top:0;bottom:0;right:0;left:0;background:#000;opacity:0;-webkit-transition:opacity .2s linear;transition:opacity .2s linear;}
 #it-exchange-product-images li:hover a .overlay{opacity:.4;}
+#it-exchange-product-images img{max-width:100%;height:auto;display:block;}
 
 #it-exchange-feature-image{width:100%;height:auto;position:relative;}
 #it-exchange-feature-image li .remove-item{display:none;}
