@@ -200,7 +200,7 @@ function it_exchange_get_enabled_addons( $options=array() ) {
 function it_exchange_get_disabled_addons( $options=array() ) {
 	// Grab all registered add-ons
 	$registered = it_exchange_get_addons();
-	$disable = array();
+	$disabled = array();
 
 	// Grab enabled add-ons from options
 	if ( false === $enabled_addons = it_exchange_get_option( 'enabled_add_ons' ) )
