@@ -4,7 +4,7 @@
  *
  * @since 0.4.0
  * @package IT_Exchange
- * @todo saving settings for various other addons in wizard... using IT Forms?
+ * @todo update the Stripe links
 */
 ?>
 <div class="wrap">
@@ -28,12 +28,26 @@
 					
 				}
 				?>
-                <li class="payoption other-payoption inactive"><?php _e( 'Other', 'LION' ) ?></li>
+            	<?php if ( !is_it_exchange_addon_enabled( 'stripe' ) ) { ?>
+                <li class="payoption stripe-payoption inactive"><img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/stripe.png' ); ?>" /></li>
+           		<?php } ?>
             </div>
-			<div class="field other-wizard hide-if-js">
-				<p><?php _e( 'Want something better? Buy one of our luxiorious and sexy plugins at <a href="http://ithemes.com" target="_blank">iThemes</a>.', 'LION' ); ?></p>
-				<p><?php _e( 'Then, install it and activate it in the WordPress plugin manager, come back to this screen and finish setting up your store!', 'LION' ); ?></p>
+            <?php if ( !is_it_exchange_addon_enabled( 'stripe' ) ) { ?>
+			<div class="field stripe-wizard hide-if-js">
+				<h2><?php _e( 'Stripe', 'LION' ); ?></h2>
+				<p><?php _e( 'To use Stripe, you need to install the <a href="http://ithemes.com/">Stripe premium add-on</a>', 'LION' ); ?></p>
+                <div class="activate-stripe">
+                	<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/plugin32.png' ); ?>" />
+                    <p><?php _e( 'I have the Stripe add-on and just need to activate it.', 'LION' ); ?></p>
+                    <p><a href="plugins.php"><?php _e( 'Go to the plugin page to activate Stripe', 'LION' ); ?></a></p>
+                </div>
+                <div class="buy-stripe">
+                	<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/icon32.png' ); ?>" />
+                    <p><?php _e( "I don't have the Stripe add-on yet, but I want to use Stripe.", 'LION' ); ?></p>
+                    <p><a href="http://ithemes.com/"><?php _e( 'Buy the Stripe Add-On', 'LION' ); ?></a></p>
+                </div>
 			</div>
+            <?php } ?>
             <?php do_action( 'it_exchange_print_wizard_settings', $form ); ?>
 			<div class="field company-email">
             	<h2><?php _e( 'General', 'LION' ); ?></h2>
