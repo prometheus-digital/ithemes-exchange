@@ -213,7 +213,8 @@ function it_exchange_get_disabled_addons( $options=array() ) {
 	if ( ! empty( $options['category'] ) )
 		$disabled = it_exchange_filter_addons_by_category( $disabled, $options['category'] );
 
-	ksort( $disabled );
+	if ( ! empty( $disabled ) )
+		ksort( $disabled );
 	
 	return empty( $disabled ) ? array() : $disabled;
 }
