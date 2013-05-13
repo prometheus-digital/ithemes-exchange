@@ -11,7 +11,7 @@
 			Remove from cart field name: <?php it_exchange( 'cart-item', 'remove', 'format=field-name' ) ?><br />
 			Title: <?php it_exchange( 'cart-item', 'title' ) ?><br />
 			Quantity as field: <?php it_exchange( 'cart-item', 'quantity', 'format=form-field' ) ?><br />
-			Cost: <?php it_exchange( 'cart-item', 'cost' ) ?><br />
+			Price: <?php it_exchange( 'cart-item', 'price' ) ?><br />
 			<hr />
 		<?php endwhile; ?>
 

@@ -23,6 +23,8 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		'cartitems' => 'cart_items',
 		'formopen'  => 'form_open',
 		'formclose' => 'form_close',
+		'subtotal'  => 'sub_total',
+		'total'     => 'total',
 		'update'    => 'update_cart',
 		'checkout'  => 'checkout_cart',
 		'empty'     => 'empty_cart',
@@ -66,7 +68,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		// If we made it here, we're doing a loop of products for the current cart.
 		// We're accessing the SESSION directly to make looping easier.
 		// This will init/reset the SESSION products and loop through them. the /api/theme/cart-item.php file will handle individual products.
-		if ( empty( $_SESSION['it_exchange']['cart_item'] ) ) {
+		if ( empty( $_SESSION['it_exchange']['cart-item'] ) ) {
 			$_SESSION['it_exchange']['cart-item'] = reset( $_SESSION['it_exchange']['products'] );
 			return true;
 		} else {
@@ -83,9 +85,34 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		return false;
 	}
 
-	function form_open( $options=array() ) { return 'form open'; }
-	function form_close( $options=array() ) { return 'form close'; }
-	function update_cart( $options=array() ) { return 'update cart'; }
-	function checkout_cart( $options=array() ) { return 'checkout cart'; }
-	function empty_cart( $options=array() ) { return 'empty cart'; }
+	/**
+	 * Prints the opening form field tag for the cart
+	 * @todo: Not Production Ready. Beef this up
+	 * @since 0.4.0
+	*/
+	function form_open( $options=array() ) {
+		return '<form action="" method="post" >';
+	}
+
+	/**
+	 * Prints the closing form field
+	 *
+	 * @todo Not Production Ready. Beef this up!
+	 * @since 0.4.0
+	*/
+	function form_close( $options=array() ) {
+		return '</form>';
+	}
+
+	/**
+	 * Returns the update cart button / varname
+	 *
+	 * @todo Not production ready.
+	 * @since 0.4.0
+	*/
+	function update_cart( $options=array() ) { return 'update cart button goes here'; }
+	function checkout_cart( $options=array() ) { return 'checkout cart goes here'; }
+	function empty_cart( $options=array() ) { return 'empty cart goes here'; }
+	function sub_total( $options=array() ) { return 'subtotal goes here'; }
+	function total( $options=array() ) { return 'total goes here' ; }
 }

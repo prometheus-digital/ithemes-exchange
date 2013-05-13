@@ -7,6 +7,7 @@ include( $this->_plugin_path . '/api/theme/store.php' );
 include( $this->_plugin_path . '/api/theme/product.php' );
 include( $this->_plugin_path . '/api/theme/download.php' );
 include( $this->_plugin_path . '/api/theme/cart.php' );
+include( $this->_plugin_path . '/api/theme/cart-item.php' );
 include( $this->_plugin_path . '/api/theme/messages.php' );
 
 /**
@@ -100,6 +101,8 @@ function it_exchange() {
 
 		// Set the class name based on params
 		$class_name = 'IT_Theme_API_' . ucfirst( strtolower( $context ) );
+		if ( 'IT_Theme_API_Cart-item' == $class_name )
+			$class_name = 'IT_Theme_API_Cart_Item';
 
 		// Does the class exist and return an iThemes Exchange theme API context?
 		if ( ! is_callable( array( $class_name, 'get_api_context' ) ) )
