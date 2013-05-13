@@ -99,8 +99,8 @@ class IT_Exchange_Product_Feature_Inventory {
 		echo $description;
 		?>
 		<p>
-			<input type="checkbox" name="it-exchange-enable-product-inventory" <?php checked( 'yes', $product_feature_enable_value ); ?> /> <?php _e( 'Enable Inventory Tracking for this Product', 'LION' ); ?>
-			<input type="text" name="it-exchange-product-inventory" value="<?php esc_attr_e( $product_feature_value ); ?>" /> <?php _e( 'Current Inventory', 'LION' ); ?>
+			<input type="checkbox" name="it-exchange-enable-product-inventory" <?php checked( 'yes', $product_feature_enable_value ); ?> /> <?php _e( 'Enable Inventory Tracking for this Product', 'LION' ); ?><br />
+			<?php _e( 'Current Inventory', 'LION' ); ?>&nbsp;<input type="text" name="it-exchange-product-inventory" value="<?php esc_attr_e( $product_feature_value ); ?>" />
 		</p>
 		<?php
 	}
@@ -190,7 +190,7 @@ class IT_Exchange_Product_Feature_Inventory {
         if ( 'enabled' == $options['setting'] ) { 
             $enabled = get_post_meta( $product_id, '_it-exchange-product-enable-inventory', true );
             if ( ! in_array( $enabled, array( 'yes', 'no' ) ) ) 
-                $enabled = 'yes';
+                $enabled = 'no';
             return $enabled;
         } else if ( 'inventory' == $options['setting'] ) { 
             if ( it_exchange_product_supports_feature( $product_id, 'inventory' ) ) 

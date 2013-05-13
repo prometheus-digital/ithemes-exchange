@@ -22,3 +22,8 @@
 .add-on-block .add-on-actions .add-on-disabled a:hover{background:#aae854;background:-webkit-linear-gradient( #aae854 0%,#a0db4e 100% );box-shadow:0 1px 0 #84b243;color:#3f4e29;}
 .add-on-block .add-on-actions .add-on-settings a{background:#ebebeb url('../images/gear.png') center center no-repeat;box-shadow:0 1px 0 #c9c9c9;color:transparent;margin-right:10px;width:10px;}
 .add-on-block .add-on-actions .add-on-settings a:hover{opacity:.8;}
+.add-on-block .add-on-actions .add-on-price{width:130px;float:right;text-align:center;margin-bottom:10px;}
+.add-on-block .add-on-actions .add-on-price span{font-size:24px;font-weight:lighter;text-align:center;color:#8f989b;}
+.add-on-block .add-on-actions .add-on-buy-now{float:right;clear:right;}
+.add-on-block .add-on-actions .add-on-buy-now a:hover{background:#bbf767;color:#40591e;}
+.add-on-block.sale .add-on-actions .add-on-price .regular-price{color:#f19b9b;text-decoration:line-through;}

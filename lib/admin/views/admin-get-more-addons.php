@@ -6,64 +6,68 @@
  * @package IT_Exchange
 */
 ?>
-<div class="wrap">
-	<!-- temp icon --> 
+<div id="it-exchange-add-ons-wrap" class="wrap">
 	<?php screen_icon( 'page' );  ?>
-    
+	
 	<h2>Add-ons</h2>
-    <p><?php _e( 'Add-Ons are features that you can add or remove depending on your needs. Selling your stuff should only be as complicated as you need it to be. Visit the Get More tab to see what else Exchange can do.', 'LION' ); ?></p>
-    
+	<p class="top-description"><?php _e( 'Add-Ons are features that you can add or remove depending on your needs. Selling your stuff should only be as complicated as you need it to be. Visit the Get More tab to see what else Exchange can do.', 'LION' ); ?></p>
+	
 	<?php
-	$this->print_add_ons_page_tabs(); 
-	do_action( 'it_exchange_add_ons_page_top' );
-	
-	$addons = it_exchange_get_more_addons();
-	$addons = it_exchange_featured_addons_on_top( $addons );
-
-	if ( !empty( $addons ) ) { 
-	
+		$this->print_add_ons_page_tabs(); 
+		do_action( 'it_exchange_add_ons_page_top' );
+		
+		$addons = it_exchange_get_more_addons();
+		$addons = it_exchange_featured_addons_on_top( $addons );
+		
 		$class = '';
-	
-		foreach( (array) $addons as $addon ) {
-		
-			if ( $addon['featured'] )
-				$class .= ' featured';
+	?>
+	<div class="add-ons-wrapper">
+		<?php if ( ! empty( $addons ) ) : ?>
 			
-			if ( $addon['new'] )
-				$class .= ' new';
-				
-			if ( $addon['sale'] )
-				$class .= ' sale';
-				
-			if ( is_it_exchange_addon_installed( $addon['slug'] ) )
-				$class .= ' install';
-		
-			echo '<div class="add-on-block' . $class . '">';
-			echo '<div class="add-on-icon"><img src="' . $addon['icon'] . '" /></div>';
-			echo '<h4>' . $addon['name'] . '</h4>';
-			echo '<span class="add-on-author">by <a href="' . $addon['author_url'] . '">' . $addon['author'] . '</a></span>';
-			echo '<p class="add-on-description">' . $addon['description'] . '</p>';
+			<?php $default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/default-add-on-icon.png' ); ?>
 			
-			if ( is_it_exchange_addon_installed( $addon['slug'] ) )
-				echo '<div class="add-on-installed">Installed</div>';
-			else {
-				echo '<div class="regular-price ' . $class . '">' . $addon['price'] . '</div>';
-				
-				if ( $addon['sale'] ) 
-					echo '<div class="sale-price">' . $addon['sale'] . '</div>';
-					
-				echo '<div class="add-on-buy-now"><a href="' . $addon['addon_url'] . '">' . __( 'Buy Now', 'LION' ) . '</a></div>';
-			}
-				
-			echo '</div>';
-			
-		}   
-		
-	} else {
-		
-		echo '<p>' . __( 'No Add-ons currently enabled', 'LION' ) . '</p>';
-		
-	}
-	 
-	?> 
+			<?php foreach( (array) $addons as $addon ) : ?>
+				<?php if ( ! is_it_exchange_addon_installed( $addon['slug'] ) ) : ?>
+					<?php
+						if ( $addon['featured'] )
+							$class .= ' featured';
+						
+						if ( $addon['new'] )
+							$class .= ' new';
+						
+						if ( $addon['sale'] )
+							$class .= ' sale';
+					?>
+					<?php $icon = empty( $addon['options']['icon'] ) ? $default_icon : $addon['options']['icon']; ?>
+					<div class="add-on-block <?php echo $class; ?>">
+						<div class="add-on-icon">
+							<div class="image-wrapper">
+								<img src="<?php echo $icon; ?>" alt="" />
+							</div>
+						</div>
+						<div class="add-on-info">
+							<h4><?php echo $addon['name']; ?></h4>
+							<span class="add-on-author">by <a href="<?php echo $addon['author_url']; ?>"><?php echo $addon['author']; ?></a></span>
+							<p class="add-on-description"><?php echo $addon['description']; ?></p>
+						</div>
+						<div class="add-on-actions">
+							<?php if ( is_it_exchange_addon_installed( $addon['slug'] ) ) : ?>
+								<div class="add-on-installed">Installed</div>
+							<?php else : ?>
+								<div class="add-on-price">
+									<span class="regular-price"><?php echo $addon['price']; ?></span>
+									<?php if ( $addon['sale'] ) : ?>
+										<span class="sale-price"><?php echo $addon['sale']; ?></span>
+									<?php endif; ?>
+								</div>
+								<div class="add-on-buy-now"><a href="<?php echo $addon['addon_url']; ?>"><?php _e( 'Buy Now', 'LION' )  ?></a></div>
+							<?php  endif; ?>
+						</div>
+					</div>
+				<?php endif; ?>
+			<?php endforeach; ?>
+		<?php else : ?>
+			<p><?php __( 'No Add-ons in the store.', 'LION' ); ?></p>
+		<?php endif; ?>
+	</div> 
 </div>
