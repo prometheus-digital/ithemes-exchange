@@ -61,7 +61,7 @@ class IT_Theme_API_Store implements IT_Theme_API {
 		// If we made it here, we're doing a loop of products for the current query.
 		// This will init/reset the products global and loop through them. the /api/theme/product.php file will handle individual products.
 		if ( empty( $GLOBALS['it_exchange']['products'] ) ) {
-			$GLOBALS['it_exchange']['products'] = it_exchange_get_products();
+			$GLOBALS['it_exchange']['products'] = it_exchange_get_products( array( 'posts_per_page' => -1 ) );
 			$GLOBALS['it_exchange']['product'] = reset( $GLOBALS['it_exchange']['products'] );
 			return true;
 		} else {

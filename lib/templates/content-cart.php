@@ -8,10 +8,11 @@
 <?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
 	<?php it_exchange( 'cart', 'form-open' ); ?>
 		<?php while( it_exchange( 'cart', 'cart-items' ) ) : ?>
-			Remove from cart field name: <?php it_exchange( 'cart-item', 'remove', 'format=field-name' ) ?><br />
+			Remove from cart: <?php it_exchange( 'cart-item', 'remove' ) ?><br />
 			Title: <?php it_exchange( 'cart-item', 'title' ) ?><br />
 			Quantity as field: <?php it_exchange( 'cart-item', 'quantity', 'format=form-field' ) ?><br />
 			Price: <?php it_exchange( 'cart-item', 'price' ) ?><br />
+			Product Subtotal: <?php it_exchange( 'cart-item', 'subtotal' ); ?>
 			<hr />
 		<?php endwhile; ?>
 

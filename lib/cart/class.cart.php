@@ -47,6 +47,8 @@ class IT_Exchange_Shopping_Cart {
 		$add_to_cart_var = it_exchange_get_field_name( 'add_product_to_cart' );
 		$product_id = empty( $_REQUEST[$add_to_cart_var] ) ? 0 : $_REQUEST[$add_to_cart_var];
 		$product    = it_exchange_get_product( $product_id );
+		$quantity_var    = it_exchange_get_field_name( 'product_purchase_quantity' );
+		$requested_quantity = empty( $_REQUEST[$quantity_var] ) ? 1 : absint( $_REQUEST[$quantity_var] );
 
 		// Vefify legit product
 		if ( ! $product )
@@ -58,7 +60,7 @@ class IT_Exchange_Shopping_Cart {
 			$error = 'product-not-added-to-cart';
 
 		// Add product
-		if ( empty( $error ) && it_exchange_add_product_to_shopping_cart( $product_id ) ) {
+		if ( empty( $error ) && it_exchange_add_product_to_shopping_cart( $product_id, $requested_quantity ) ) {
 			$url = add_query_arg( array( it_exchange_get_field_name( 'alert_message' ) => 'product-added-to-cart' ) );
 			wp_redirect( $url );
 			die();

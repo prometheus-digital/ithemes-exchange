@@ -70,10 +70,11 @@ function it_exchange_get_cart_table_columns() {
  * Adds a product to the shopping cart based on the product_id
  *
  * @since 0.3.7
- * @param $product_id a valid wp post id with an iThemes Exchange product post_typp
+ * @param string $product_id a valid wp post id with an iThemes Exchange product post_typp
+ * @param int $quantity (optional) how many?
  * return boolean 
 */
-function it_exchange_add_product_to_shopping_cart( $product_id ) {
+function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 
 	if ( ! $product_id )
 		return;
@@ -108,13 +109,23 @@ function it_exchange_add_product_to_shopping_cart( $product_id ) {
 		do_action( 'it_exchange_cart_prouduct_count_updated', $product_id );
 		return true;
 	} else {
+
+		// If we don't support purchase quanity, quanity will always be 1
+		if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) ) {
+			// Get max quantity setting
+			$max_purchase_quantity = it_exchange_get_product_feature( $product_id, 'purchase-quantity' ); 
+			$count = ( $quantity > $max_purchase_quantity ) ? $max_purchase_quantity : $quantity;
+		} else {
+			$count = 1;
+		}
+
 		$product = array(
 			'product_cart_id' => $product_id . '-' . $itemized_hash,
 			'product_id'      => $product_id,
 			'itemized_data'   => $itemized_data,
 			'additional_data' => $additional_data,
 			'itemized_hash'   => $itemized_hash,
-			'count'           => 1,
+			'count'           => $count,
 		);
 
 		it_exchange_add_session_product( $product, $product_id . '-' . $itemized_hash );
@@ -209,12 +220,15 @@ function it_exchange_get_cart_product_quantity( $product ) {
  * @param array $product cart product
  * @return integer quantity 
 */
-function it_exchange_get_cart_product_base_price( $product ) {
+function it_exchange_get_cart_product_base_price( $product, $format=true ) {
     if ( ! $db_product = it_exchange_get_product( $product['product_id'] ) )
         return false;
 
     // Get the price from the DB
-    $db_base_price = it_exchange_get_product_feature( $db_product->ID, 'base_price' );
+    $db_base_price = it_exchange_get_product_feature( $db_product->ID, 'base-price' );
+
+	if ( $format )
+		$db_base_price = it_exchange_format_price( $db_base_price );
 
     return apply_filters( 'it_exchange_get_cart_product_base_price', $db_base_price, $product );
 }
@@ -228,10 +242,13 @@ function it_exchange_get_cart_product_base_price( $product ) {
  * @param array $product cart product
  * @return mixed subtotal
 */
-function it_exchange_get_cart_product_subtotal( $product ) {
-    $base_price = it_exchange_get_product_feature( $product['product_id'], 'base_price' );
-    $base_price = apply_filters( 'it_exchange_get_cart_product_base_price', $base_price, $product );
+function it_exchange_get_cart_product_subtotal( $product, $format=true ) {
+	$base_price = it_exchange_get_cart_product_base_price( $product, false );
     $subtotal_price = apply_filters( 'it_exchange_get_cart_product_subtotal', $base_price * $product['count'], $product );
+
+	if ( $format )
+		$subtotal_price = it_exchange_format_price( $subtotal_price );
+
     return $subtotal_price;
 }
 
@@ -241,15 +258,20 @@ function it_exchange_get_cart_product_subtotal( $product ) {
  * @since 0.3.7
  * @return mixed subtotal of cart
 */
-function it_exchange_get_cart_subtotal() {
+function it_exchange_get_cart_subtotal( $format=true ) {
     $subtotal = 0;
     if ( ! $products = it_exchange_get_cart_products() )
         return 0;
 
     foreach( (array) $products as $product ) {
-        $subtotal += it_exchange_get_cart_product_subtotal( $product );
+        $subtotal += it_exchange_get_cart_product_subtotal( $product, false );
     }
-    return apply_filters( 'it_exchange_get_cart_subtotal', $subtotal );
+    $subtotal = apply_filters( 'it_exchange_get_cart_subtotal', $subtotal );
+
+	if ( $format )
+		$subtotal = it_exchange_format_price( $subtotal );
+
+	return $subtotal;
 }
 
 /**
@@ -261,9 +283,13 @@ function it_exchange_get_cart_subtotal() {
  * @since 0.3.7
  * @return mixed total of cart
 */
-function it_exchange_get_cart_total() {
-    $total = it_exchange_get_cart_subtotal();
-    return apply_filters( 'it_exchange_get_cart_total', $total );
+function it_exchange_get_cart_total( $format=true ) {
+    $total = apply_filters( 'it_exchange_get_cart_total', it_exchange_get_cart_subtotal() );
+
+	if ( $format )
+		$total = it_exchange_format_price( $total );
+
+	return $total;
 }
 
 /**

@@ -250,7 +250,6 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'purchase-quantity' ) )
 			return false;
 
-
 		// Determine if this product has turned off product quantity
 		if ( 'no' == it_exchange_get_product_feature( $product_id, 'purchase-quantity', array( 'setting' => 'enabled' ) ) )
 			return false;
