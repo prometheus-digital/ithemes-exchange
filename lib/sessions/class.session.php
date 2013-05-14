@@ -207,7 +207,6 @@ class IT_Exchange_Session {
 
 	/**
 	 * Get products
-<<<<<<< HEAD
 	 *
 	 * @since 0.3.3
 	 * @return array $_products property
@@ -240,40 +239,6 @@ class IT_Exchange_Session {
 	/**
 	 * Updates a product if a valid key is provided
 	 *
-=======
-	 *
-	 * @since 0.3.3
-	 * @return array $_products property
-	*/
-	function get_products() {
-		if ( ! empty( $this->_products ) )
-			return $this->_products;
-		return false;
-	}
-
-	/**
-	 * Adds a product to the product array
-	 *
-	 * This will add it directly to the SESSION array and reload the object variable
-	 *
-	 * @since 0.3.3
-	 * @param mixed $product product data as passed by the shopping cart
-	 * @param mixed $key optional identifier for the product.
-	 * @return void 
-	*/
-	function add_product( $product, $key=false ) {
-
-		if ( ! empty( $key ) )
-			$_SESSION['it_exchange']['products'][$key] = $product;
-		else
-			$_SESSION['it_exchange']['products'][] = $product;
-		$this->load_products();
-	}
-
-	/**
-	 * Updates a product if a valid key is provided
-	 *
->>>>>>> Revert "working WP Sessions"
 	 * @since 0.3.7
 	 * @param mixed $key which array are we updating? The entire product will be replaced.
 	 * @return boolean
