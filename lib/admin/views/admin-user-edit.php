@@ -4,6 +4,7 @@
  *
  * @since 0.4.0
  * @package IT_Exchange
+ * @todo get the transaction extra buttons to work
 */
 ?>
 <div id="it-exchange-member-options">
@@ -22,17 +23,13 @@
 	else
 		$user_id = $_REQUEST['user_id'];
 		
-	$tab = !empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'info';
+	$tab = !empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'products';
 	
 	switch ( $tab ) {
-		
-		case 'info':
-		default:
-			$list = array();
-			break;
 			
 		case 'products':
 			$list = it_exchange_get_users_products( $user_id );
+		default:
 			break;
 			
 		case 'transactions':
@@ -41,6 +38,10 @@
 			
 		case 'activity':
 			$list = it_exchange_get_users_activity( $user_id );
+			break;
+		
+		case 'info':
+			$list = array();
 			break;
 		
 	}
@@ -61,17 +62,38 @@
 			
 			echo '<div class="item-row">';
 			foreach ( (array) $item_details as $detail ) {
+				
+				if ( is_array( $detail ) ) {
 					
-				echo '<span class="item">' . $detail . '</span> ';
-			
+					foreach( $detail as $action => $label ) {
+						
+						echo '<input type="button" name="it_exchange_' . $action . '" value="' . $label . '" /> ';
+						
+					}
+				
+				} else {
+					
+					echo '<span class="item">' . $detail . '</span> ';
+				
+				}
+				
 			}
 			echo '</div>';
 			
 		}   
+		
+		if ( 'transactions' === $tab ) {
+		
+			echo '<input type="button" name="add_it_exchange_transaction" value="' . __( 'Add Manual Transaction', 'LION' ) . '" />';
+			
+		}
 	
 	} else if ( 'info' === $tab ) {
 		
+		echo '<h3>' . __( 'Notes', 'LION' ) . '</h3>';
 		echo '<textarea name="it_exchange_customer_note" cols="30" rows="5">' . get_user_meta( $user_id, '_it_exchange_customer_note', true ) . '</textarea>';
+		//Justin change the # for the proper dimensions from get_avatar and remove this comment
+		echo '<div class="avatar">' . get_avatar( $user_id, 128 ) . '</div>'; 
 		
 	} else {
 		

@@ -47,12 +47,18 @@ function it_exchange_get_users_transactions( $user_id = NULL  ) {
 	$headings = array(
 					__( 'Product', 'LION' ),
 					__( 'Total', 'LION' ),
+					__( 'Actions', 'LION' ),
 				);
+	$actions_array = array( 
+						'view' => 'View', 
+						'resent' => 'Resent Confirmation Email', 
+						'refund' => 'Refund', 
+						'cancel' => 'Cancel' );
 				
-	$list[] = array( 'My Great Ebook', '$14.00' );
-	$list[] = array( 'My Awesome Ebook', '$14.00' );
-	$list[] = array( 'The Old Couch', '$200.00' );
-	$list[] = array( 'My Firstborn', '$32,000.00' );
+	$list[] = array( 'My Great Ebook', '$14.00', $actions_array );
+	$list[] = array( 'My Awesome Ebook', '$14.00', $actions_array );
+	$list[] = array( 'The Old Couch', '$200.00', $actions_array );
+	$list[] = array( 'My Firstborn', '$32,000.00', $actions_array );
 				
 	return array( $headings, $list );
 }
