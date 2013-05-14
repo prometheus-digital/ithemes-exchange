@@ -1040,7 +1040,8 @@ class IT_Exchange_Admin {
 			$deps = array( 'jquery-ui-sortable' );
 			wp_enqueue_script( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-ons.js', $deps );
 		} else if ( 'exchange_page_it-exchange-setup' === $hook_suffix ) {
-			wp_enqueue_script( 'it-exchange-wizard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/wizard.js' );
+			$deps = array( 'jquery-ui-tooltip' );
+			wp_enqueue_script( 'it-exchange-wizard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/wizard.js', $deps );
 		}
 	}
 

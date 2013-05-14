@@ -16,7 +16,7 @@
 function stripe_wizard_settings( $form ) {
 	?>	
 	<div class="field stripe-wizard hide-if-js">
-		<h2><?php _e( 'Stripe Account Information', 'LION' ); ?></h2>
+		<h3><?php _e( 'Stripe Account Information', 'LION' ); ?></h3>
 		<p><?php _e( 'Do not have a Stripe account yet? <a href="http://stripe.com" target="_blank">Go set one up here</a>.', 'LION' ); ?></p>
 		<label for="stripe-live-secret-key"><?php _e( 'Live Secret Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
 		<?php $form->add_text_box( 'stripe-live-secret-key' ); ?>

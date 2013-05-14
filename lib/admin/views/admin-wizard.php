@@ -16,35 +16,35 @@
 		<div class="it-exchange-wizard">
 			<div class="fields">
 				<div class="field payments">
-					<p><?php _e( 'How will you be accepting payments?', 'LION' ); ?> <span class="tip" title="How you gonna get dat muh-nay?">i</span></p>
+					<label><?php _e( 'How will you be accepting payments?', 'LION' ); ?> <span class="tip" title="How you gonna get dat muh-nay?">i</span></label>
 					<ul>
 						<?php
 							$addons = it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
 							foreach( (array) $addons as $addon ) {
 								$icon = empty( $addon['options']['icon'] ) ? $addon['name'] : '<img src="' . $addon['options']['icon'] . '" />';
-								echo '<li class="payoption ' . $addon['slug'] . '-payoption">' . $icon . '</li>';
+								echo '<li class="payoption ' . $addon['slug'] . '-payoption" data-toggle="' . $addon['slug'] . '-wizard">' . $icon . '</li>';
 							}
 						?>
 						
 						<?php if ( ! is_it_exchange_addon_enabled( 'stripe' ) ) : ?>
-							<li class="payoption stripe-payoption inactive"><img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/stripe.png' ); ?>" /></li>
+							<li class="payoption stripe-payoption inactive" data-toggle="stripe-wizard"><img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/stripe.png' ); ?>" /><span>$</span></li>
 						<?php endif; ?>
 					</ul>
 				</div>
 				
 				<?php if ( ! is_it_exchange_addon_enabled( 'stripe' ) ) : ?>
-					<div class="field stripe-wizard hide-if-js">
-						<h2><?php _e( 'Stripe', 'LION' ); ?></h2>
-						<p><?php _e( 'To use Stripe, you need to install the <a href="http://ithemes.com/">Stripe premium add-on</a>', 'LION' ); ?></p>
-						<div class="activate-stripe">
+					<div class="field stripe-wizard inactive hide-if-js">
+						<h3><?php _e( 'Stripe', 'LION' ); ?></h3>
+						<p><?php _e( 'To use Stripe, you need to install the Stripe premium add-on.', 'LION' ); ?></p>
+						<div class="stripe-action activate-stripe">
 							<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/plugin32.png' ); ?>" />
-							<p><?php _e( 'I have the Stripe add-on and just need to activate it.', 'LION' ); ?></p>
-							<p><a href="plugins.php"><?php _e( 'Go to the plugin page to activate Stripe', 'LION' ); ?></a></p>
+							<p><?php _e( 'I have the Stripe add-on and just need to install and/or activate it.', 'LION' ); ?></p>
+							<p><a href="<?php echo admin_url( 'plugins.php' ); ?>" target="_self"><?php _e( 'Go to the plugins page', 'LION' ); ?></a></p>
 						</div>
-						<div class="buy-stripe">
+						<div class="stripe-action buy-stripe">
 							<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/icon32.png' ); ?>" />
 							<p><?php _e( "I don't have the Stripe add-on yet, but I want to use Stripe.", 'LION' ); ?></p>
-							<p><a href="http://ithemes.com/"><?php _e( 'Buy the Stripe Add-On', 'LION' ); ?></a></p>
+							<p><a href="http://ithemes.com/" target="_blank"><?php _e( 'Buy the Stripe Add-On', 'LION' ); ?></a></p>
 						</div>
 					</div>
 				<?php endif; ?>
@@ -52,7 +52,7 @@
 				<?php do_action( 'it_exchange_print_wizard_settings', $form ); ?>
 				
 				<div class="field company-email">
-					<h2><?php _e( 'General', 'LION' ); ?></h2>
+					<h3><?php _e( 'General', 'LION' ); ?></h3>
 					<label for="company-email"><?php _e( 'E-mail Notifications', 'LION' ); ?> <span class="tip" title="<?php _e( 'The E-mail address you should receive notifcations to, from your store.', 'LION' ); ?>">i</span></label>
 					<?php $form->add_text_box( 'company-email', get_bloginfo( 'admin_email' ) ); ?>
 					<?php $form->add_check_box( 'exchange-notifications' ); ?>
