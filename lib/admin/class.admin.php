@@ -719,8 +719,8 @@ class IT_Exchange_Admin {
 	function get_default_currency_options() {
 		$options = array();
 		$currency_options = it_exchange_get_currency_options();
-		foreach( (array) $currency_options as $currency ) {
-			$options[$currency->cc] = ucwords( $currency->name ) . ' (' . $currency->symbol . ')'; 
+		foreach( (array) $currency_options as $cc => $currency ) {
+			$options[$cc] = ucwords( $currency['name'] ) . ' (' . $currency['symbol'] . ')'; 
 		}
 		return $options;
 	}
