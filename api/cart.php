@@ -82,6 +82,10 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 	if ( ! $product = it_exchange_get_product( $product_id ) )
 		return;
 
+	$quantity = absint( (int) $quantity );
+	if ( $quantity < 1 )
+		return false;
+
 	/**
 	 * The default shopping cart organizes products in the cart by product_id and a hash of 'itemized_data'.
 	 * Any data like product variants or pricing mods that should separate products in the cart can be passed through this filter.
@@ -105,10 +109,7 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 	if ( ! empty ($session_products[$product_id . '-' . $itemized_hash] ) ) {
 		$product = $session_products[$product_id . '-' . $itemized_hash];
 
-		// If we don't support purchase quanity, quanity will always be 1
-		if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) ) {
-			// Get max quantity setting
-			$max_purchase_quantity = it_exchange_get_product_feature( $product_id, 'purchase-quantity' );
+		return it_exchange_update_cart_product_quantity( $product_id . '-' . $itemized_hash, $quantity );
 
 			// If we support it but don't have it, quantity is unlimited
 			if ( ! $max_purchase_quantity )
@@ -122,13 +123,15 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 		it_exchange_update_session_product( $product_id . '-' . $itemized_hash, $product );
 		do_action( 'it_exchange_cart_prouduct_count_updated', $product_id );
 		return true;
+
 	} else {
 
 		// If we don't support purchase quanity, quanity will always be 1
 		if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) ) {
+
 			// Get max quantity setting
 			$max_purchase_quantity = it_exchange_get_product_feature( $product_id, 'purchase-quantity' ); 
-			$count = ( $quantity > $max_purchase_quantity ) ? $max_purchase_quantity : $quantity;
+			$count = ( $max_purchase_quantity && $quantity > $max_purchase_quantity ) ? $max_purchase_quantity : $quantity;
 		} else {
 			$count = 1;
 		}
@@ -147,6 +150,52 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 		return true;
 	}
 	return false;
+}
+
+/** 
+ * Updates the quantity for a specific cart item
+ *
+ * @since 0.4.0
+
+ * @param int $cart_product_id the product ID prepended to the itemized hash by a hyphen
+ * @param int $quantity the incoming quantity
+ * @param boolean $add_to_existing if set to false, it replaces the existing.
+ * @return void
+*/
+function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, $add_to_existing=true ) {
+	// Get cart products
+	$cart_products = it_exchange_get_session_products();
+
+	// Update Quantity
+	if ( ! empty( $cart_products[$cart_product_id] ) && is_numeric( $quantity ) ) { 
+		$cart_product = $cart_products[$cart_product_id];
+		if ( empty( $quantity ) || $quantity < 1 ) { 
+			it_exchange_remove_session_product( $cart_product_id );
+		} else {
+
+			// If we don't support purchase quanity, quanity will always be 1
+			if ( it_exchange_product_supports_feature( $cart_product['product_id'], 'purchase-quantity' ) ) {
+				// Get max quantity setting
+				$max_purchase_quantity = it_exchange_get_product_feature( $cart_product['product_id'], 'purchase-quantity' );
+
+				// Zero out existing if we're not adding incoming quantity to it.
+				if ( ! $add_to_existing )
+					$cart_product['count'] = 0;
+
+				// If we support it but don't have it, quantity is unlimited
+				if ( ! $max_purchase_quantity )
+					$cart_product['count'] = $cart_product['count'] + $quantity;
+				else
+					$cart_product['count'] = ( ( $cart_product['count'] + $quantity ) > $max_purchase_quantity ) ? $max_purchase_quantity : $quantity + $cart_product['count'];
+			} else {
+				$cart_product['count'] = 1;
+			}
+
+			it_exchange_update_session_product( $cart_product_id, $cart_product );
+			do_action( 'it_exchange_cart_prouduct_count_updated', $cart_product_id );
+			return true;
+		}   
+	}   
 }
 
 /**
@@ -172,28 +221,6 @@ function it_exchange_empty_shopping_cart() {
 */
 function it_exchange_remove_product_from_shopping_cart( $product_id ) {
 
-	if ( it_exchange_remove_session_product( $product_id ) ) {
-		do_action( 'it_exchange_product_removed_from_cart', $product_id );
-		return true;
-	}
-	return false;
-}
-
-/**
- * Updates the shopping cart
- *
- * This doesn't actually do anything. Add-ons need to hook into here to perform updates. 
- * Core calls it when the update cart button or the proceed to checkout button is triggered.
- *
- * - The only core action hooked to it is the update of product quantity
- *
- * @since 0.3.8
- * @return boolean
-*/
-function it_exchange_update_shopping_cart() {
-	do_action( 'it_exchange_update_cart' );
-	do_action( 'it_exchange_cart_updated' );
-	return true;
 }
 
 /**
@@ -345,4 +372,17 @@ function it_exchange_get_page_id( $page ) {
 	$pages = it_exchange_get_option( 'settings_pages' );
 	$id = empty( $pages[$page] ) ? false : (integer) $pages[$page];
 	return apply_filters( 'it_exchange_get_page_id', $id, $page );;
+}
+
+/**
+ * Returns the nonce field for the cart
+ *
+ * @todo if we use WP_Session, replace session_id with cookie value
+ * @since 0.4.0
+ *
+ * @return string
+*/
+function it_exchange_get_cart_nonce_field() {
+	$var = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
+	return wp_nonce_field( 'it-exchange-cart-action-' . session_id(), $var, true, false );
 }

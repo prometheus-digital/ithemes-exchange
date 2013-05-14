@@ -20,14 +20,15 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	public $_tag_map = array(
-		'cartitems' => 'cart_items',
-		'formopen'  => 'form_open',
-		'formclose' => 'form_close',
-		'subtotal'  => 'sub_total',
-		'total'     => 'total',
-		'update'    => 'update_cart',
-		'checkout'  => 'checkout_cart',
-		'empty'     => 'empty_cart',
+		'cartitems'  => 'cart_items',
+		'formopen'   => 'form_open',
+		'noncefield' => 'nonce_field',
+		'formclose'  => 'form_close',
+		'subtotal'   => 'sub_total',
+		'total'      => 'total',
+		'update'     => 'update_cart',
+		'checkout'   => 'checkout_cart',
+		'empty'      => 'empty_cart',
 	);
 
 	/**
@@ -95,13 +96,35 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	}
 
 	/**
+	 * Returns the nonce form field
+	 *
+	 * @since 0.4.0
+	*/
+	function nonce_field( $options=array() ) {
+		return it_exchange_get_cart_nonce_field();
+	}
+
+	/**
 	 * Prints the closing form field
 	 *
 	 * @todo Not Production Ready. Beef this up!
 	 * @since 0.4.0
 	*/
 	function form_close( $options=array() ) {
-		return '</form>';
+		$defaults = array(
+			'before'        => '',
+			'after'         => '',
+			'include-nonce' => true,
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
+		$output = $options['before'];
+		if ( $options['include-nonce'] )
+			$output .= it_exchange_get_cart_nonce_field();
+
+		$output .= '</form>';
+		$output .= $options['after'];
+		return $output;
 	}
 
 	/**
@@ -110,9 +133,88 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	 * @todo Not production ready.
 	 * @since 0.4.0
 	*/
-	function update_cart( $options=array() ) { return 'update cart button goes here'; }
-	function checkout_cart( $options=array() ) { return 'checkout cart goes here'; }
-	function empty_cart( $options=array() ) { return 'empty cart goes here'; }
+	function update_cart( $options=array() ) {
+		$defaults = array(
+			'before' => '',
+			'after'  => '',
+			'class'  => 'it-exchange-update-cart',
+			'format' => 'button',
+			'label'  => __( 'Update Cart', 'LION' ),
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		$var = it_exchange_get_field_name( 'update_cart_action' );
+
+		switch( $options['format'] ) {
+			case 'var' :
+				return $var;
+				break;
+			case 'button' :
+			default :
+				$output  = $options['before'];
+				$output .= '<input type="submit" class="' . esc_attr( $options['class'] ). '" name="' . esc_attr( $var ) . '" value="' . esc_attr( $options['label'] ) . '" />';
+				$output .= $options['after'];
+				break;
+		}
+		return $output;
+	}
+
+	function checkout_cart( $options=array() ) {
+		$defaults = array(
+			'before' => '',
+			'after'  => '',
+			'class'  => 'it-exchange-checkout-cart',
+			'format' => 'button',
+			'label'  => __( 'Checkout', 'LION' ),
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		$var = it_exchange_get_field_name( 'proceed_to_checkout' );
+
+		switch( $options['format'] ) {
+			case 'var' :
+				return $var;
+				break;
+			case 'button' :
+			default :
+				$output  = $options['before'];
+				$output .= '<input type="submit" class="' . esc_attr( $options['class'] ). '" name="' . esc_attr( $var ) . '" value="' . esc_attr( $options['label'] ) . '" />';
+				$output .= $options['after'];
+				break;
+		}
+		return $output;
+	}
+	function empty_cart( $options=array() ) {
+		$defaults = array(
+			'before' => '',
+			'after'  => '',
+			'class'  => 'it-exchange-empty-cart',
+			'format' => 'button',
+			'label'  => __( 'Empty Cart', 'LION' ),
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		$var = it_exchange_get_field_name( 'empty_cart' );
+
+		switch( $options['format'] ) {
+			case 'var' :
+				return $var;
+				break;
+			case 'link' :
+				$url = add_query_arg( $var, 1);
+				$output  = $options['before'];
+				$output .= '<a href="' . $url . '" class="' . esc_attr( $options['class'] ) . '">' . esc_attr( $options['label'] ) . '</a>';
+				$output .= $options['after'];
+				break;
+			case 'button' :
+			default :
+				$output  = $options['before'];
+				$output .= '<input type="submit" class="' . esc_attr( $options['class'] ). '" name="' . esc_attr( $var ) . '" value="' . esc_attr( $options['label'] ) . '" />';
+				$output .= $options['after'];
+				break;
+		}
+		return $output;
+	}
 
 	function sub_total( $options=array() ) {
 		return it_exchange_get_cart_subtotal();	

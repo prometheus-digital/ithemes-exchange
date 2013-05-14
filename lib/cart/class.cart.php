@@ -31,9 +31,38 @@ class IT_Exchange_Shopping_Cart {
 		$this->redirect_checkout_if_empty_cart(); //if on checkout but have empty cart, redirect
 		
 		// Grab action and process it.
-		if ( isset( $_REQUEST['it-exchange-action'] ) )
+		if ( isset( $_REQUEST['it-exchange-action'] ) ) {
 			call_user_func( array( $this, 'handle_' . esc_attr( $_REQUEST['it-exchange-action'] ) . '_request' ) );
+			return;
+		}
+
+		// Possibly Handle Remove Product Request
+		$remove_from_cart_var = it_exchange_get_field_name( 'remove_product_from_cart' );
+		if ( ! empty( $_REQUEST[$remove_from_cart_var] ) ) {
+			$this->handle_remove_product_from_cart_request();
+			return;
+		}
+
+		// Possibly Handle Update Cart Request
+		$update_cart_var = it_exchange_get_field_name( 'update_cart_action' );
+		if ( ! empty( $_REQUEST[$update_cart_var] ) ) {
+			$this->handle_update_cart_request();
+			return;
+		}
+
+		// Possibly Handle Proceed to checkout
+		$proceed_var = it_exchange_get_field_name( 'proceed_to_checkout' );
+		if ( ! empty( $_REQUEST[$proceed_var] ) ) {
+			$this->proceed_to_checkout();
+			return;
+		}
 		
+		// Possibly Handle Empty Cart request
+		$empty_var = it_exchange_get_field_name( 'empty_cart' );
+		if ( ! empty( $_REQUEST[$empty_var] ) ) {
+			$this->handle_empty_shopping_cart_request();
+			return;
+		}
 	}
 
 	/**
@@ -80,7 +109,6 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	*/
 	function handle_empty_shopping_cart_request() {
-
 		// Verify nonce
 		$nonce_var   = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
 		$error_var   = it_exchange_get_field_name( 'error_message' );
@@ -112,6 +140,7 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	*/
 	function handle_remove_product_from_cart_request() {
+		die('remove_product_from_cart');
 		$var        = it_exchange_get_field_name( 'remove_product_from_cart' );
 		$product_id = empty( $_REQUEST[$var] ) ? false : $_REQUEST[$var];
 		$cart_url   = it_exchange_get_page_url( 'cart' );
@@ -140,13 +169,23 @@ class IT_Exchange_Shopping_Cart {
 	function handle_update_cart_request() {
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
-		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) || ! it_exchange_update_shopping_cart() ) {
+		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) ) {
 			$var = it_exchange_get_field_name( 'error_message' );
 			$cart = it_exchange_get_page_url( 'cart' );
 			$url  = add_query_arg( array( $var => 'cart-not-updated' ), $cart );
 			wp_redirect( $url );
 			die();
 		}
+
+		// Are we updating any quantities
+		$var_name = it_exchange_get_field_name( 'product_purchase_quantity' );
+		if ( ! empty( $_REQUEST[$var_name] ) ) {
+			foreach( (array) $_REQUEST[$var_name] as $cart_product_id => $quantity ) {
+				it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, false );
+			}
+		}
+
+		do_action( 'it_exchange_update_cart' );
 
 		$message_var = it_exchange_get_field_name( 'alert_message' );
 		if ( ! empty ( $message_var ) ) {
@@ -164,6 +203,7 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	*/
 	function proceed_to_checkout() {
+		die('checkout');
 
 		// Update cart info
 		do_action( 'it_exchange_update_cart', false );
@@ -241,36 +281,6 @@ class IT_Exchange_Shopping_Cart {
 
 		// If we made it this far, the transaction failed or the transaction-method add-on did not hook into success/fail actions
 		it_exchange_notify_failed_transaction();
-	}
-
-	/**
-	 * Updates the quantity of a product on the update_cart (and proceed to checkout) actions
-	 *
-	 * @since 0.3.8
-	 * @return void
-	*/
-	function handle_update_cart_quantity_request() {
-
-		// Get Quantities form REQUEST
-		$quantities = empty( $_REQUEST['product-quantity'] ) ? false : (array) $_REQUEST['product-quantity'];
-		if ( ! $quantities )
-			return;
-		
-		// Get cart products
-		$cart_products = it_exchange_get_session_products();
-
-		// Update quantities
-		foreach( $quantities as $product => $quantity ) {
-			if ( ! empty( $cart_products[$product] ) && is_numeric( $quantity ) ) {
-				$cart_product = $cart_products[$product];
-				if ( empty( $quantity ) || $quantity < 1 ) {
-					it_exchange_remove_session_product( $product );
-				} else {
-					$cart_product['count'] = $quantity;
-					it_exchange_update_session_product( $product, $cart_product );
-				}
-			}
-		}
 	}
 
 	/**
