@@ -283,7 +283,7 @@ function it_exchange_get_currency_options() {
 		'TZS' => array( 'symbol' => 'TZS', 'name' => __( 'Tanzanian shilling', 'LION' ) ),
 		'UAH' => array( 'symbol' => 'UAH', 'name' => __( 'Ukrainian hryvnia', 'LION' ) ),
 		'UGX' => array( 'symbol' => 'USh', 'name' => __( 'Ugandan shilling', 'LION' ) ),
-		'USD' => array( 'symbol' => 'US$', 'name' => __( 'United States dollar', 'LION' ) ),
+		'USD' => array( 'symbol' => '$', 'name' => __( 'United States dollar', 'LION' ) ),
 		'UYU' => array( 'symbol' => '$U', 'name' => __( 'Uruguayan peso', 'LION' ) ),
 		'UZS' => array( 'symbol' => 'UZS', 'name' => __( 'Uzbekistani som', 'LION' ) ),
 		'VEB' => array( 'symbol' => 'Bs', 'name' => __( 'Venezuelan bolivar', 'LION' ) ),
