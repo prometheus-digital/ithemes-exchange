@@ -192,11 +192,7 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
  * @return boolean
 */
 function it_exchange_empty_shopping_cart() {
-	if ( it_exchange_clear_session_products() ) {
-		do_action( 'it_exchange_cart_emptied' );
-		return true;
-	}
-	return false;
+	it_exchange_clear_session_products();
 }
 
 /**

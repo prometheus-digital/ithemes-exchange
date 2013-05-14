@@ -114,19 +114,18 @@ class IT_Exchange_Shopping_Cart {
 		$error_var   = it_exchange_get_field_name( 'error_message' );
 		$message_var = it_exchange_get_field_name( 'alert_message' );
 		$cart        = it_exchange_get_page_url( 'cart' );
-		if ( empty( $_REQUEST[$nonce_var] ) 
-				|| ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) 
-				|| ! it_exchange_empty_shopping_cart()
-		) {
+		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) ) {
 			$url  = add_query_arg( array( $error_var => 'cart-not-emptied' ), $cart );
 			wp_redirect( $url );
 			die();
-		} else {
-			$url = remove_query_arg( $error_var, $cart );
-			$url = add_query_arg( array( $message_var => 'cart-emptied' ), $url );
-			wp_redirect( $url );
-			die();
 		}
+
+		it_exchange_empty_shopping_cart();
+
+		$url = remove_query_arg( $error_var, $cart );
+		$url = add_query_arg( array( $message_var => 'cart-emptied' ), $url );
+		wp_redirect( $url );
+		die();
 	}
 
 	/**
@@ -169,7 +168,7 @@ class IT_Exchange_Shopping_Cart {
 	 * @since 0.3.8
 	 * @return void
 	*/
-	function handle_update_cart_request() {
+	function handle_update_cart_request( $redirect=true ) {
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
 		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) ) {
@@ -191,7 +190,7 @@ class IT_Exchange_Shopping_Cart {
 		do_action( 'it_exchange_update_cart' );
 
 		$message_var = it_exchange_get_field_name( 'alert_message' );
-		if ( ! empty ( $message_var ) ) {
+		if ( ! empty ( $message_var ) && $redirect ) {
 			$page = it_exchange_get_page_url( 'cart' );
 			$url = add_query_arg( array( $message_var => 'cart-updated' ), $page );
 			wp_redirect( $url );
@@ -206,10 +205,9 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	*/
 	function proceed_to_checkout() {
-		die('checkout');
 
-		// Update cart info
-		do_action( 'it_exchange_update_cart', false );
+		// Update cart info before redirecting. 
+		$this->handle_update_cart_request( false );
 
 		// Redirect to Checkout
 		if ( $checkout = it_exchange_get_page_url( 'checkout' ) ) {
