@@ -1,2 +1,35 @@
-/* CSS Document */
+/** -----------------------------------------------------:[ general ]:---------- */
+.it-exchange-wizard .field {
+	clear: both;
+}
+.it-exchange-wizard label {
+	display: block;
+	font-size: 13px;
+	font-weight: bold;
+	color: #3d4142;
+	margin-bottom: 5px;
+	margin-left: 2px;
+}
 
+/** -----------------------------------------------------:[ payments ]:---------- */
+.it-exchange-wizard .payments li {
+	width: 110px;
+	height: 30px;
+	padding: 2em 1.25em 1.5em;
+	text-align: center;
+	font-size: 18px;
+	font-weight: bold;
+	background: #fff;
+	color: #333;
+	border: 1px solid #d6d6d6;
+	border-radius: 4px;
+	float: left;
+	margin-right: 1em;
+	cursor: pointer;
+	-webkit-transition: all .1s linear;
+	-moz-transition: all .1s linear 0s;
+	position: relative;
+}
+.it-exchange-wizard .company-email {
+	
+}
