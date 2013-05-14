@@ -60,8 +60,18 @@ function it_exchange_parse_options( $options ) {
  * Formats a price based on settings
  *
  * @since 0.4.0
+ * @todo possibly get this working with LC_MONETARY and money_format()
  * @return string
 */
 function it_exchange_format_price( $price ) {
-	return '$' . $price;
+	$before = ''; $after = '';
+	
+	$settings = it_exchange_get_option( 'settings_general' );
+	
+	if ( 'before' === $settings['currency-symbol-position'] )
+		$before = $settings['default-currency'];
+	else
+		$after = $settings['default-currency'];
+	
+	return $before . ' ' . number_format ( $price, 2, $settings['currency-decimals-separator'], $settings['currency-thousands-separator'] ) . ' ' . $after;
 }
