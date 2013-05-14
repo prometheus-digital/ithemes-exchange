@@ -33,7 +33,7 @@ class IT_Exchange_Session {
 			require( 'wp_session_manager/class-wp-session.php' );
 			require( 'wp_session_manager/wp-session.php' );
 		}
-				
+		
 		if ( empty( $this->_session_data ) )
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 		else
@@ -48,7 +48,6 @@ class IT_Exchange_Session {
 	 * @return void
 	 */
 	function init() {
-	
 		$this->_session = WP_Session::get_instance();
 		return $this->_session;
 	}
