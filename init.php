@@ -15,9 +15,6 @@
  *
 */
 
-// Start Session Tracking
-require( plugin_dir_path( __FILE__ ) . 'lib/sessions/class.session.php' );
-
 /**
  * Exchange main class.
  *
