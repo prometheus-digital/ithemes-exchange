@@ -140,18 +140,21 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	*/
 	function handle_remove_product_from_cart_request() {
-		die('remove_product_from_cart');
-		$var        = it_exchange_get_field_name( 'remove_product_from_cart' );
-		$product_id = empty( $_REQUEST[$var] ) ? false : $_REQUEST[$var];
-		$cart_url   = it_exchange_get_page_url( 'cart' );
+		$var         = it_exchange_get_field_name( 'remove_product_from_cart' );
+		$product_ids = empty( $_REQUEST[$var] ) ? array() : $_REQUEST[$var];
+		$cart_url    = it_exchange_get_page_url( 'cart' );
 
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_remove_product_from_cart_nonce_var', '_wpnonce' );
-		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-remove-product-from-cart-' . $product_id ) || ! it_exchange_remove_product_from_shopping_cart( $product_id ) ) {
+		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) ) {
 			$var = it_exchange_get_field_name( 'error_message' );
 			$url  = add_query_arg( array( $var => 'product-not-removed' ), $cart_url );
 			wp_redirect( $url );
 			die();
+		}
+
+		foreach( (array) $product_ids as $product_id ) {
+			it_exchange_remove_product_from_shopping_cart( $product_id );
 		}
 
 		$var = it_exchange_get_field_name( 'alert_message' );

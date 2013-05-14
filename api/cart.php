@@ -206,8 +206,8 @@ function it_exchange_empty_shopping_cart() {
  * @param integer $product_id the shopping_cart_product_id (different from the DB product id)
  * @return boolean
 */
-function it_exchange_remove_product_from_shopping_cart( $product_id ) {
-
+function it_exchange_remove_product_from_shopping_cart( $cart_product_id ) {
+	it_exchange_remove_session_product( $cart_product_id );
 }
 
 /**
