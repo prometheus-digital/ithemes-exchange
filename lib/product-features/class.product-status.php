@@ -220,7 +220,7 @@ class IT_Exchange_Product_Visibility {
 					</div>
 					
 					<div class="misc-pub-section">
-						<label for="it-exchange-visibility"><?php _e('Visibility:','LION') ?></label>
+						<label for="visibility"><?php _e('Visibility:','LION') ?></label>
 						<span id="product-visibility-display">
 							<?php
 								switch ( $product_visibility ) {

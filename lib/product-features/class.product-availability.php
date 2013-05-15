@@ -103,15 +103,15 @@ class IT_Exchange_Product_Feature_Product_Availability {
 				<p class="intro-description"><?php echo $description; ?></p>
 			<?php endif; ?>
 			<p>
-				<input type="checkbox" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-start" value="yes" <?php checked( 'yes', $start_enabled ); ?> />&nbsp;<?php _e( 'Use a start date', 'LION' ); ?>
-				<input type="checkbox" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-end" value="yes" <?php checked( 'yes', $end_enabled ); ?> />&nbsp;<?php _e( 'Use an end start date', 'LION' ); ?>
+				<input type="checkbox" id="it-exchange-checkbox-enable"  class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-start" value="yes" <?php checked( 'yes', $start_enabled ); ?> />&nbsp;<label for="it-exchange-checkbox-enable"><?php _e( 'Use a start date', 'LION' ); ?></label>
+				<input type="checkbox" id="it-exchange-checkbox-enable" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-end" value="yes" <?php checked( 'yes', $end_enabled ); ?> />&nbsp;<label for="it-exchange-checkbox-enable"><?php _e( 'Use an end start date', 'LION' ); ?></label>
 			</p>
 			<p>
 				<span class="it-exchange-enable-product-availability-start<?php echo ( $start_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
-					<input type="text" name="it-exchange-product-availability-start" value="<?php esc_attr_e( $start_date ); ?>" /> Start Date<br />
+					<input type="text" id="it-exchange-product-availability-start" name="it-exchange-product-availability-start" value="<?php esc_attr_e( $start_date ); ?>" /> <label for="it-exchange-product-availability-start"><?php _e( 'Start Date', 'LION' ); ?></label><br />
 				</span>
 				<span class="it-exchange-enable-product-availability-end<?php echo ( $end_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
-					<input type="text" name="it-exchange-product-availability-end" value="<?php esc_attr_e( $end_date ); ?>" /> End Date<br />
+					<input type="text" id="it-exchange-product-availability-end" name="it-exchange-product-availability-end" value="<?php esc_attr_e( $end_date ); ?>" /> <label for="it-exchange-product-availability-end"><?php _e( 'End Date', 'LION' ); ?></label><br />
 				</span>
 			</p>
 		<?php

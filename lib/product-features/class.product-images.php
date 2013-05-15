@@ -85,7 +85,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 	*/
 	function print_metabox( $post ) {
 		?>
-			<label for="it-exchange-product-images-field">Images</label>
+			<label for="product-images-field">Images</label>
 			<div id="it-exchange-product-images">
 				<div id="it-exchange-feature-image">
 					<ul class="feature-image"></ul>

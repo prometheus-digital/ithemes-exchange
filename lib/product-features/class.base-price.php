@@ -96,8 +96,8 @@ class IT_Exchange_Base_Price {
 
 		// Echo the form field
 		?>
-			<label for="it-exchange-base-price"><?php esc_html_e( $description ); ?></label>
-			<input type="text" name="it-exchange-base-price" value="<?php esc_attr_e( $product_base_price ); ?>" />
+			<label for="base-price"><?php esc_html_e( $description ); ?></label>
+			<input type="text" id="base-price" name="it-exchange-base-price" value="<?php esc_attr_e( $product_base_price ); ?>" />
 		<?php
 	}
 

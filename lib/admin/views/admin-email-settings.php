@@ -21,30 +21,30 @@
 			<td></td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it-exchange-receipt-email-address"><?php _e( 'Email Address' ) ?></label></th>
+			<th scope="row"><label for="receipt-email-address"><?php _e( 'Email Address' ) ?></label></th>
 			<td>
 				<?php $form->add_text_box( 'receipt-email-address', array( 'class' => 'normal-text' ) ); ?>
 				<br /><span class="description"><?php _e( 'Email address used for customer receipt emails.', 'LION' ); ?></span>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it-exchange-from-email-name"><?php _e( 'Email Name' ) ?></label></th>
+			<th scope="row"><label for="receipt-email-name"><?php _e( 'Email Name' ) ?></label></th>
 			<td>
 				<?php $form->add_text_box( 'receipt-email-name', array( 'class' => 'normal-text' ) ); ?>
 				<br /><span class="description"><?php _e( 'Name used for account that sends customer receipt emails.', 'LION' ); ?></span>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it-exchange-receipt-email-subject"><?php _e( 'Subject Line' ) ?></label></th>
+			<th scope="row"><label for="receipt-email-subject"><?php _e( 'Subject Line' ) ?></label></th>
 			<td>
 				<?php $form->add_text_box( 'receipt-email-subject', array( 'class' => 'normal-text' ) ); ?>
 				<br /><span class="description"><?php _e( 'Subject line used for customer receipt emails.', 'LION' ); ?></span>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="it-exchange-receipt-email-template"><?php _e( 'Email Template' ) ?></label></th>
+			<th scope="row"><label for="receipt-email-template"><?php _e( 'Email Template' ) ?></label></th>
 			<td>
-				<?php $form->add_text_area( 'receipt_email_template', array( 'rows' => 10, 'cols' => 30, 'class' => 'large-text' ) ); ?>
+				<?php $form->add_text_area( 'receipt-email-template', array( 'rows' => 10, 'cols' => 30, 'class' => 'large-text' ) ); ?>
 			</td>
 		</tr>
 		<?php do_action( 'it_exchange_general_settings_email_table_bottom' ); ?>
