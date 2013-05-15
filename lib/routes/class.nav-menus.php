@@ -50,7 +50,7 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 
 			$page = substr( $key, 0, -5 );
 
-			if ( 'product' == $page || 'confirmation' == $page )
+			if ( in_array( $page, array( 'product', 'confirmation', 'log-out' ) ) )
 				continue;
 
 			$page_slug = empty( $value ) ? false : $value;

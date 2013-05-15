@@ -93,6 +93,20 @@
 		</tr>
 		<tr valign="top">
 			<td>
+				<label for="log-in-name"><?php _e( 'Customer Log out' ) ?></label>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'log-out-name', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php $form->add_text_box( 'log-out-slug', array( 'class' => 'normal-text' ) ); ?>
+			</td>
+			<td>
+				<?php echo it_exchange_get_page_url( 'log-out' ); ?>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td>
 				<label for="purchases-name"><?php _e( 'Customer Purchases' ) ?></label>
 			</td>
 			<td>

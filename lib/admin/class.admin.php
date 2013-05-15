@@ -568,6 +568,8 @@ class IT_Exchange_Admin {
 			'purchases-slug'    => 'purchases',
 			'log-in-name'       => __( 'Log In', 'LION' ),
 			'log-in-slug'       => 'log-in',
+			'log-out-name'      => __( 'Log Out', 'LION' ),
+			'log-out-slug'      => 'log-out',
 			'cart-name'         => __( 'Shopping Cart', 'LION' ),
 			'cart-slug'         => 'cart',
 			'checkout-name'     => __( 'Checkout', 'LION' ),

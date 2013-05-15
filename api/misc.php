@@ -80,7 +80,7 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 		$base = add_query_arg( array( $pages['account-slug'] => 1 ), $base );
 
 	$account_name = get_query_var( 'account' );
-	if ( $account_name && '1' != $account_name && 'log-in' != $page ) {
+	if ( $account_name && '1' != $account_name && ( 'log-in' != $page && 'log-out' != $page ) ) {
 		if ( $permalinks ) {
 			$base = trailingslashit( $base . $account_name );
 		} else {
@@ -98,6 +98,53 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 			return add_query_arg( array( $page_slug => 1 ), $base );
 	}
 }
+
+/**
+ * Get name for ghost page
+ *
+ * @since 0.4.0
+ *
+ * @param string $page page setting
+ * @return string url
+*/
+function it_exchange_get_page_name( $page, $clear_settings_cache=false ) {
+	$pages = it_exchange_get_option( 'settings_pages', $clear_settings_cache );
+	$page_name = $pages[$page . '-name'];
+	
+	return $page_name;
+}
+
+/**
+ * Get name for ghost page
+ *
+ * @since 0.4.0
+ * @todo re-evaluate whether or not we want to proceed with this hackery.
+ * @todo verify without permalinks!
+ *
+ * @param string $page page setting
+ * @return string url
+*/
+function ithemes_exchange_wp_get_nav_menu_items_filter( $items, $menu, $args ) {
+	
+	if ( is_user_logged_in() ) {
+		
+		foreach ( $items as $item ) {
+			
+			if ( $item->url == it_exchange_get_page_url( 'log-in' ) ) {
+				
+				$item->url = it_exchange_get_page_url( 'log-out' );
+				$item->title = it_exchange_get_page_name( 'log-out' );
+				
+			}
+	
+		}
+	
+	}
+	
+	return $items;
+	
+}
+add_filter( 'wp_get_nav_menu_items', 'ithemes_exchange_wp_get_nav_menu_items_filter', 10, 3 );
 
 if ( !function_exists( 'wp_nav_menu_disabled_check' ) ) {
 		

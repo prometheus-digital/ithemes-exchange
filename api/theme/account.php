@@ -1,6 +1,6 @@
 <?php
 /**
- * Cart class for THEME API
+ * Account class for THEME API
  *
  * @since 0.4.0
 */
@@ -146,7 +146,8 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	*/
 	function firstname( $options=array() ) {
 		$defaults      = array(
-			'format'      => 'html',
+			'format' => 'html',
+			'label'  => __( 'First Name', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
@@ -165,9 +166,12 @@ class IT_Theme_API_Account implements IT_Theme_API {
 			case 'field-value':
 				$output = $field_value;
 			
+			case 'label':
+				$output = $options['label'];
+			
 			case 'html':
 			default:
-				$output = '<label for="' . $field_id. '">' . __( 'First Name', 'LION' ) . '</label>';
+				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
 				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
 			
 		}
@@ -184,6 +188,7 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	function lastname( $options=array() ) {
 		$defaults      = array(
 			'format'      => 'html',
+			'label'  => __( 'Last Name', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
@@ -202,9 +207,12 @@ class IT_Theme_API_Account implements IT_Theme_API {
 			case 'field-value':
 				$output = $field_value;
 			
+			case 'label':
+				$output = $options['label'];
+			
 			case 'html':
 			default:
-				$output = '<label for="' . $field_id. '">' . __( 'Last Name', 'LION' ) . '</label>';
+				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
 				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
 			
 		}
@@ -221,6 +229,7 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	function email( $options=array() ) {
 		$defaults      = array(
 			'format'      => 'html',
+			'label'  => __( 'Email', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
@@ -239,9 +248,12 @@ class IT_Theme_API_Account implements IT_Theme_API {
 			case 'field-value':
 				$output = $field_value;
 			
+			case 'label':
+				$output = $options['label'];
+			
 			case 'html':
 			default:
-				$output = '<label for="' . $field_id. '">' . __( 'Email', 'LION' ) . '</label>';
+				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
 				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
 			
 		}
@@ -258,6 +270,7 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	function website( $options=array() ) {
 		$defaults      = array(
 			'format'      => 'html',
+			'label'  => __( 'Website', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
@@ -276,9 +289,12 @@ class IT_Theme_API_Account implements IT_Theme_API {
 			case 'field-value':
 				$output = $field_value;
 			
+			case 'label':
+				$output = $options['label'];
+			
 			case 'html':
 			default:
-				$output = '<label for="' . $field_id. '">' . __( 'Website', 'LION' ) . '</label>';
+				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
 				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
 			
 		}
@@ -295,6 +311,7 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	function password1( $options=array() ) {
 		$defaults      = array(
 			'format'      => 'html',
+			'label'  => __( 'Password', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
@@ -309,9 +326,12 @@ class IT_Theme_API_Account implements IT_Theme_API {
 			case 'field-name':
 				$output = $field_name;
 			
+			case 'label':
+				$output = $options['label'];
+			
 			case 'html':
 			default:
-				$output = '<label for="user-password2">' . __( 'Password', 'LION' ) . '</label>';
+				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
 				$output .= '<input type="password" id="' . $field_id. '" name="' . $field_name. '" value="" />';
 			
 		}
@@ -327,7 +347,8 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	*/
 	function password2( $options=array() ) {
 		$defaults      = array(
-			'format'      => 'html',
+			'format' => 'html',
+			'label'  => __( 'Confirm Password', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
@@ -342,9 +363,12 @@ class IT_Theme_API_Account implements IT_Theme_API {
 			case 'field-name':
 				$output = $field_name;
 			
+			case 'label':
+				$output = $options['label'];
+			
 			case 'html':
 			default:
-				$output = '<label for="' . $field_id. '">' . __( 'Confirm Password', 'LION' ) . '</label>';
+				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
 				$output .= '<input type="password" id="' . $field_id. '" name="' . $field_name. '" value="" />';
 			
 		}
@@ -360,7 +384,8 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	*/
 	function save( $options=array() ) {
 		$defaults      = array(
-			'format'      => 'html',
+			'format' => 'html',
+			'label'  =>  __( 'Save Profile', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
@@ -375,9 +400,12 @@ class IT_Theme_API_Account implements IT_Theme_API {
 			case 'field-name':
 				$output = $field_name;
 			
+			case 'label':
+				$output = $options['label'];
+			
 			case 'html':
 			default:
-				$output = '<input type="submit" id="' . $field_id. '" name="' . $field_name. '" value="Save Profile" />';
+				$output = '<input type="submit" id="' . $field_id. '" name="' . $field_name. '" value="' . $options['label'] . '" />';
 			
 		}
 		

@@ -102,6 +102,18 @@ class IT_Exchange_Router {
 	 * @since 0.4.0
 	*/
 	public $_log_in_name;
+	
+	/**
+	 * @var string $_log_out_slug slug for the purchases page
+	 * @since 0.4.0
+	*/
+	public $_log_out_slug;
+
+	/**
+	 * @var string $_log_out_name name for the purchases page
+	 * @since 0.4.0
+	*/
+	public $_log_out_name;
 
 	/**
 	 * @var string $_cart_slug slug for the cart page
@@ -188,6 +200,12 @@ class IT_Exchange_Router {
 	public $_is_log_in = false;
 
 	/**
+	 * @var boolean $_is_log_out is this the log inpage?
+	 * @since 0.4.0
+	*/
+	public $_is_log_out = false;
+
+	/**
 	 * @var boolean $_is_downloads is this the downloads page?
 	 * @since 0.4.0
 	*/
@@ -251,6 +269,7 @@ class IT_Exchange_Router {
 			add_action( 'template_redirect', array( $this, 'set_environment' ), 8 );
 			add_action( 'template_redirect', array( $this, 'set_account' ), 9 );
 			add_action( 'template_redirect', array( $this, 'protect_pages' ) );
+			add_action( 'template_redirect', array( $this, 'login_out_page_redirect' ) );
 			add_action( 'template_redirect', array( $this, 'set_wp_query_vars' ) );
 
 			add_filter( 'query_vars', array( $this, 'register_query_vars' ) );
@@ -282,6 +301,8 @@ class IT_Exchange_Router {
 		$this->_purchases_name    = $slugs['purchases-name'];
 		$this->_log_in_slug       = $slugs['log-in-slug'];
 		$this->_log_in_name       = $slugs['log-in-name'];
+		$this->_log_out_slug       = $slugs['log-out-slug'];
+		$this->_log_out_name       = $slugs['log-out-name'];
 		$this->_cart_slug	      = $slugs['cart-slug'];
 		$this->_cart_name         = $slugs['cart-name'];
 		$this->_checkout_slug     = $slugs['checkout-slug'];
@@ -319,6 +340,7 @@ class IT_Exchange_Router {
 		$this->_is_downloads    = (boolean) get_query_var( $this->_downloads_slug );
 		$this->_is_purchases    = (boolean) get_query_var( $this->_purchases_slug );
 		$this->_is_log_in       = (boolean) get_query_var( $this->_log_in_slug );
+		$this->_is_log_out      = (boolean) get_query_var( $this->_log_out_slug );
 		$this->_is_cart         = (boolean) get_query_var( $this->_cart_slug );
 		$this->_is_checkout     = (boolean) get_query_var( $this->_checkout_slug );
 		$this->_is_confirmation = (boolean) get_query_var( $this->_confirmation_slug );
@@ -327,6 +349,8 @@ class IT_Exchange_Router {
 		// Set current view property
 		if ( $this->_is_log_in ) {
 			$this->_current_view = 'log-in';
+		} else if ( $this->_is_log_out ) {
+			$this->_current_view = 'log-out';
 		} else if ( $this->_is_purchases ) {
 			$this->_current_view = 'purchases';
 		} else if ( $this->_is_cart ) {
@@ -389,6 +413,27 @@ class IT_Exchange_Router {
 	*/
 	function set_wp_query_vars() {
 		set_query_var( 'it_exchange_view', $this->_current_view );
+	}
+	
+	/**
+	 * Redirects users away from login page if they're already logged in
+	 * or Redirects to /store/ if they log out.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function login_out_page_redirect() {
+		if ( is_user_logged_in() && 'log-in' == $this->_current_view ) {
+			wp_redirect( it_exchange_get_page_url( 'profile' ) );
+			die();
+		} else if ( is_user_logged_in() && 'log-out' == $this->_current_view ) {
+			wp_redirect( str_replace( '&amp;', '&', wp_logout_url( it_exchange_get_page_url( 'store' ) ) ) );
+			die();
+		} else if ( ! is_user_logged_in() && 'log-out' == $this->_current_view ) {
+			wp_redirect( it_exchange_get_page_url( 'log-in' ) );
+			die();
+		}
 	}
 
 	/**
@@ -532,6 +577,7 @@ class IT_Exchange_Router {
 			$this->_downloads_slug,
 			$this->_purchases_slug,
 			$this->_log_in_slug,
+			$this->_log_out_slug,
 			$this->_cart_slug,
 			$this->_checkout_slug,
 			$this->_confirmation_slug,
@@ -552,8 +598,10 @@ class IT_Exchange_Router {
 		$this->set_slugs_and_names();
 		$new_rules = array(
 			// Log in
-			$this->_account_slug . '/([^/]+)/' . $this->_log_in_slug => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_log_in_slug . '=1',
 			$this->_account_slug . '/' . $this->_log_in_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_log_in_slug . '=1',
+			
+			// Log out
+			$this->_account_slug . '/' . $this->_log_out_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_log_out_slug . '=1',
 
 			// Purchases
 			$this->_account_slug  . '/([^/]+)/' . $this->_purchases_slug => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_purchases_slug . '=1',

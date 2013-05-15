@@ -10,6 +10,7 @@ include( $this->_plugin_path . '/api/theme/cart.php' );
 include( $this->_plugin_path . '/api/theme/cart-item.php' );
 include( $this->_plugin_path . '/api/theme/messages.php' );
 include( $this->_plugin_path . '/api/theme/account.php' );
+include( $this->_plugin_path . '/api/theme/login.php' );
 
 /**
  * Defines the main it_exchange function
@@ -115,7 +116,7 @@ function it_exchange() {
 
 	// Is the requested tag mapped to a method
 	if ( empty( $object->_tag_map[$tag] ) )
-		die( 'unmapped method for context' ); /** @todo register an error **/
+		die( 'unmapped method for context: ' . $tag ); /** @todo register an error **/
 	else
 		$method = $object->_tag_map[$tag];
 
