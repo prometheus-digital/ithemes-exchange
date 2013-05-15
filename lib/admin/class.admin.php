@@ -1042,6 +1042,9 @@ class IT_Exchange_Admin {
 		} else if ( 'exchange_page_it-exchange-setup' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip' );
 			wp_enqueue_script( 'it-exchange-wizard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/wizard.js', $deps );
+		} else if ( 'exchange_page_it-exchange-add-basic-coupon' === $hook_suffix || 'exchange_page_it-exchange-edit-basic-coupon' === $hook_suffix ) {
+			$deps = array( 'jquery-ui-tooltip', 'jquery-ui-datepicker' );
+			wp_enqueue_script( 'it-exchange-coupons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/coupons.js', $deps );
 		}
 	}
 
@@ -1078,6 +1081,8 @@ class IT_Exchange_Admin {
 			wp_enqueue_style( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-ons.css' );
 		} else if ( 'exchange_page_it-exchange-setup' === $hook_suffix ) {
 			wp_enqueue_style( 'it-exchange-wizard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/wizard.css' );
+		} else if ( 'exchange_page_it-exchange-add-basic-coupon' === $hook_suffix || 'exchange_page_it-exchange-edit-basic-coupon' === $hook_suffix ) {
+			wp_enqueue_style( 'it-exchange-coupons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/coupons.css' );
 		}
 	}
 

@@ -1,0 +1,29 @@
+/** -----------------------------------------------------:[ general ]:---------- */
+/*
+	NOTE Possibly place this in a global CSS.
+*/
+.tip{display:inline-block;text-align:center;background:#d7f7a9;border:1px solid #b4d18c;border:1px solid transparent;color:#8fd034;border-radius:50%;font-family: sans-serif;font-size:8px;line-height:1.6;height:12px;width:12px;cursor:pointer;margin:2px 0 0 5px;-webkit-transition:all .1s linear;-moz-transition:all .1s lin}
+.tip:hover{background:#a6de56;border-color:#a6df57;color:#334940;}
+.ui-tooltip2{box-shadow:0 0 12px rgba(0,0,0,0.05);background:#F3FCE6;border:1px solid #D8E9C1;border-radius:4px;font-family:'Helvetica Neue';font-size:13px;}
+.ui-tooltip{box-shadow:none;background:rgba(166,222,86,0.9);color:#334940;border:none;border-radius:4px;padding:11px 14px;font-size:13px;line-height:1.4;}
+
+.it-exchange-add-basic-coupon label{display:block;font-size:13px;font-weight:bold;color:#3d4142;margin-bottom:5px;margin-left:2px;}
+.it-exchange-add-basic-coupon input[type="text"],
+.it-exchange-add-basic-coupon input[type="email"],
+.it-exchange-add-basic-coupon input[type="password"],
+.it-exchange-add-basic-coupon textarea{background:#fff;border:1px solid #d6d6d6;border-radius:3px;font-size:18px;padding:10px;color:#3d4142;width:260px;}
+.it-exchange-add-basic-coupon input[type="text"]:focus,
+.it-exchange-add-basic-coupon input[type="email"]:focus,
+.it-exchange-add-basic-coupon input[type="password"]:focus,
+.it-exchange-add-basic-coupon textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
+
+.it-exchange-add-basic-coupon .field{margin-top:20px;}
+
+/** -----------------------------------------------------:[ form ]:---------- */
+.it-exchange-add-basic-coupon .amount input{max-width:80px;text-align:right;}
+
+.it-exchange-add-basic-coupon .coupon-code .dice{cursor:pointer;}
+
+.it-exchange-add-basic-coupon .date{overflow:hidden;}
+.it-exchange-add-basic-coupon .date div{float:left;}
+.it-exchange-add-basic-coupon .date .start-date{margin-right:15px;}

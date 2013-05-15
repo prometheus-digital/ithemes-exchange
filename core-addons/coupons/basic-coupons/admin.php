@@ -223,34 +223,35 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 					<label for="name"><?php _e( 'Name', 'LION' ); ?> <span class="tip" title="<?php _e( 'What do you want to call this coupon? Just for your reference.', 'LION' ); ?>">i</span></label>
 					<?php $form->add_text_box( 'name' ); ?>
 				</div>
-				<div class="field code">
+				<div class="field coupon-code">
 					<label for="code"><?php _e( 'Code', 'LION' ); ?> <span class="tip" title="<?php _e( 'Try something cool like EXCHANGERULEZ5000! Or click the dice to generate a random code.', 'LION' ); ?>">i</span></label>
 					<?php $form->add_text_box( 'code', array( 'class' => 'emptycode' ) ); ?>
-					<img class="dice" src="<?php echo esc_attr( ITUtility::get_url_from_file( dirname( __FILE__ ) ) ); ?>/images/dice-t.png" />
+					<a href class="dice"><img src="<?php echo esc_attr( ITUtility::get_url_from_file( dirname( __FILE__ ) ) ); ?>/images/dice-t.png" /></a>
 				</div>
 				
 				<div class="clearfix"></div>
 				<br>
 				<div class="field amount">
 					<label for="amount-number"><?php _e( 'Amount', 'LION' ); ?></label>
-					<?php $form->add_text_box( 'amount-number' ); ?>
+					<?php $form->add_text_box( 'amount-number', array( 'type' => 'number' ) ); ?>
 					<?php $form->add_drop_down( 'amount-type', array( '%' => __( '% Percent', 'LION' ), '$' => '$ USD' ) ); ?>
 				</div>
-
-				<div class="field date field-float">
-					<label for="start-date"><?php _e( 'Start Date', 'LION' ); ?></label>
-					<?php $form->add_text_box( 'start-date', array( 'class' => 'datepicker' ) ); ?>
+				
+				<div class="field date">
+					<div class="start-date">
+						<label for="start-date"><?php _e( 'Start Date', 'LION' ); ?></label>
+						<?php $form->add_text_box( 'start-date', array( 'class' => 'datepicker' ) ); ?>
+					</div>
+					<div class="end-date">
+						<label for="end-date"><?php _e( 'End Date', 'LION' ); ?></label>
+						<?php $form->add_text_box( 'end-date', array( 'class' => 'datepicker' ) ); ?>
+					</div>
 				</div>
-
-				<div class="field date field-float">
-					<label for="end-date"><?php _e( 'End Date', 'LION' ); ?></label>
-					<?php $form->add_text_box( 'end-date', array( 'class' => 'datepicker' ) ); ?>
+				
+				<div class="field">
+					<?php $form->add_submit( 'cancel', array( 'class' => 'button-large button', 'value' => __( 'Cancel', 'LION' ) ) ); ?>
+					<?php $form->add_submit( 'submit', array( 'class' => 'button-large button-primary button', 'value' => __( 'Save', 'LION' ) ) ); ?>
 				</div>
-
-				<div class="clearfix"></div>
-
-				<?php $form->add_submit( 'cancel', __( 'Cancel', 'LION' ) ); ?>
-				<?php $form->add_submit( 'submit', __( 'Save', 'LION' ) ); ?>
 			</div>
 		</div>
 		<?php
