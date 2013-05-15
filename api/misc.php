@@ -89,13 +89,6 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 		}
 	}
 
-	if ( 'profile-edit' == $page ) {
-		if ( $permalinks )
-			return trailingslashit( $base . $pages['profile-slug'] . '/' . $pages['profile-edit-slug'] );
-		else
-			return add_query_arg( array( $pages['profile-slug'] => 1,  $pages['profile-edit-slug'] => 1 ), $base );
-	}
-
 	if ( 'account' == $page ) {
 		return $base;
 	} else {

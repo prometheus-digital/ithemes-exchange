@@ -9,6 +9,7 @@ include( $this->_plugin_path . '/api/theme/download.php' );
 include( $this->_plugin_path . '/api/theme/cart.php' );
 include( $this->_plugin_path . '/api/theme/cart-item.php' );
 include( $this->_plugin_path . '/api/theme/messages.php' );
+include( $this->_plugin_path . '/api/theme/account.php' );
 
 /**
  * Defines the main it_exchange function
@@ -31,6 +32,7 @@ function it_exchange() {
 	$options = array(
 		'echo'   => true,
 		'return' => false,
+		'format' => 'html',
 	);
 	$get     = false;
 	

@@ -50,6 +50,7 @@ class IT_Exchange_Customer {
 	 * @return mixed false if no customer is found. self if customer is located
 	*/
 	function IT_Exchange_Customer( $id ) {
+		
 		// Set the ID
 		$this->id = $id;
 
@@ -103,8 +104,8 @@ class IT_Exchange_Customer {
 		foreach( (array) $wp_user_data as $key => $value ) {
 			$data->$key = $value;
 		}
-		$data->first_name = get_user_meta( $this->id, 'first_name', true );
-		$data->last_name  = get_user_meta( $this->id, 'last_name', true );
+		$data->first_name   = get_user_meta( $this->id, 'first_name', true );
+		$data->last_name    = get_user_meta( $this->id, 'last_name', true );
 
 		$data = apply_filters( 'it_exchange_set_customer_data', $data, $this->id );
 		$this->data = $data;

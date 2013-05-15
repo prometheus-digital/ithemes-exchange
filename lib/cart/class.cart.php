@@ -15,8 +15,8 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	*/
 	function IT_Exchange_Shopping_Cart() {
-		add_filter( 'template_redirect', array( $this, 'register_cart_error_messages' ) );
-		add_filter( 'template_redirect', array( $this, 'register_cart_notice_messages' ) );
+		add_action( 'template_redirect', array( $this, 'register_cart_error_messages' ) );
+		add_action( 'template_redirect', array( $this, 'register_cart_notice_messages' ) );
 		add_action( 'template_redirect', array( $this, 'handle_it_exchange_cart_function' ) );
 	}
 	

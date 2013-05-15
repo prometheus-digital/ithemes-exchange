@@ -50,6 +50,12 @@ class IT_Exchange_Router {
 	public $_account_name;
 
 	/**
+	 * @var string $_customer_name name for the account page
+	 * @since 0.4.0
+	*/
+	public $_customer_name;
+
+	/**
 	 * @var string $_profile_slug slug for the profile slug
 	 * @since 0.4.0
 	*/
@@ -60,18 +66,6 @@ class IT_Exchange_Router {
 	 * @since 0.4.0
 	*/
 	public $_profile_name;
-
-	/**
-	 * @var string $_profile_edit_slug slug for the profile_edit page
-	 * @since 0.4.0
-	*/
-	public $_profile_edit_slug;
-
-	/**
-	 * @var string $_profile_edit_name name for the profile_edit page
-	 * @since 0.4.0
-	*/
-	public $_profile_edit_name;
 
 	/**
 	 * @var string $_downloads_slug slug for the downloads page
@@ -182,12 +176,6 @@ class IT_Exchange_Router {
 	public $_is_profile = false;
 
 	/**
-	 * @var boolean $_is_profile_edit is this the profile edit page?
-	 * @since 0.4.0
-	*/
-	public $_is_profile_edit = false;
-
-	/**
 	 * @var boolean $_is_purchases is this the purchases page?
 	 * @since 0.4.0
 	*/
@@ -288,8 +276,6 @@ class IT_Exchange_Router {
 		$this->_account_name      = $slugs['account-name'];
 		$this->_profile_slug      = $slugs['profile-slug'];
 		$this->_profile_name      = $slugs['profile-name'];
-		$this->_profile_edit_slug = $slugs['profile-edit-slug'];
-		$this->_profile_edit_name = $slugs['profile-edit-name'];
 		$this->_downloads_slug    = $slugs['downloads-slug'];
 		$this->_downloads_name    = $slugs['downloads-name'];
 		$this->_purchases_slug    = $slugs['purchases-slug'];
@@ -330,7 +316,6 @@ class IT_Exchange_Router {
 		$this->_is_product      = (boolean) get_query_var( $this->_product_slug );
 		$this->_is_account      = (boolean) get_query_var( $this->_account_slug );
 		$this->_is_profile      = (boolean) get_query_var( $this->_profile_slug );
-		$this->_is_profile_edit = (boolean) get_query_var( $this->_profile_edit_slug );
 		$this->_is_downloads    = (boolean) get_query_var( $this->_downloads_slug );
 		$this->_is_purchases    = (boolean) get_query_var( $this->_purchases_slug );
 		$this->_is_log_in       = (boolean) get_query_var( $this->_log_in_slug );
@@ -354,8 +339,6 @@ class IT_Exchange_Router {
 			$this->_current_view = 'confirmation';
 		} else if ( $this->_is_downloads ) {
 			$this->_current_view = 'downloads';
-		} else if ( $this->_is_profile_edit ) {
-			$this->_current_view = 'profile-edit';
 		} else if ( $this->_is_profile ) {
 			$this->_current_view = 'profile';
 		} else if ( $this->_is_account ) {
@@ -375,22 +358,26 @@ class IT_Exchange_Router {
 	 * @return void
 	*/
 	function set_account() {
-		// Set false if not viewing an account based page: account, profile, profile-edit, downloads, purchases, log-in
+		// Return if not viewing an account based page: account, profile, downloads, purchases, log-in
 		if ( ! $this->_is_account )
-			$this->_account = false;
-
-		// Get current customer
-		$customer = it_exchange_get_current_customer();
-		$customer_name = empty( $customer->wp_user->data->user_login ) ? false : $customer->wp_user->data->user_login;
-
-		// Get requested account
+			return;
+		
 		$account = get_query_var( $this->_account_slug );
-		if ( 1 == $account && $customer_name )
-			$account = $customer_name;
-		if ( 1 == $account )
-			$account = false;
 
-		$this->_account = $account;
+		if ( 1 == $account ) {
+		
+			$customer_id = get_current_user_id();
+			
+		} else {
+			
+			$customer = get_user_by( 'login', $account );
+			$customer_id = $customer->ID;
+			
+		}
+		
+		$this->_account = $customer_id;
+		set_query_var( 'account', $customer_id );
+		
 	}
 
 	/**
@@ -420,37 +407,38 @@ class IT_Exchange_Router {
 
 		// Set pages that we want to protect in one way or another
 		$pages_to_protect = array(
-			'account', 'profile', 'profile-edit', 'downloads', 'purchases', 'reports',
+			'account', 'profile', 'downloads', 'purchases', 'reports',
 		);
 
 		// Abandon if not a proteced page
 		if ( ! in_array( $this->_current_view, $pages_to_protect ) )
 			return;
 
-		// Get current user
-		$user = it_exchange_get_current_customer();
-
-		// If user ins't logged in, redirect
-		if ( empty( $user ) ) {
+		// If user isn't logged in, redirect
+		if ( !is_user_logged_in() ) {
 			wp_redirect( it_exchange_get_page_url( 'log-in' ) );
 			die();
 		}
 
+		// Get current user
+		$user_id = get_current_user_id();
+
 		// If trying to view reports and not an admin, redirect
 		if ( 'reports' == $this->_current_view && ! current_user_can( 'administrator' ) ) {
-			if ( ! $user )
-				wp_redirect( it_exchange_get_page_url( 'log-in' ) );
-			else
-				wp_redirect( it_exchange_get_page_url( 'account' ) );
+			wp_redirect( it_exchange_get_page_url( 'account' ) );
+			die();
+		}
+
+		// If trying to view reports and not an admin, redirect
+		if ( in_array( $this->_current_view, $pages_to_protect ) 
+				&& $this->_account != $user_id && ! current_user_can( 'administrator' ) ) {
+			wp_redirect( it_exchange_get_page_url( $this->_current_view ) );
 			die();
 		}
 
 		// If current user isn't an admin and doesn't match the account, redirect
-		if ( $this->_account !=  $user->data->user_login && ! current_user_can( 'administrator' ) ) {
-			if ( ! $user )
-				wp_redirect( it_exchange_get_page_url( 'log-in' ) );
-			else
-				wp_redirect( it_exchange_get_page_url( 'store' ) );
+		if ( $this->_account != $user_id && ! current_user_can( 'administrator' ) ) {
+			wp_redirect( it_exchange_get_page_url( 'store' ) );
 			die();
 		}
 	}
@@ -541,7 +529,6 @@ class IT_Exchange_Router {
 			$this->_store_slug,
 			$this->_account_slug,
 			$this->_profile_slug,
-			$this->_profile_edit_slug,
 			$this->_downloads_slug,
 			$this->_purchases_slug,
 			$this->_log_in_slug,
@@ -564,29 +551,25 @@ class IT_Exchange_Router {
 	function register_rewrite_rules( $existing ) {
 		$this->set_slugs_and_names();
 		$new_rules = array(
-			// Edit Profile
-			$this->_account_slug . '/([^/]+)/' . $this->_profile_slug . '/' . $this->_profile_edit_slug => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_profile_edit_slug . '=1', 
-			$this->_account_slug . '/' . $this->_profile_slug . '/' . $this->_profile_edit_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_profile_edit_slug . '=1',
-
 			// Log in
 			$this->_account_slug . '/([^/]+)/' . $this->_log_in_slug => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_log_in_slug . '=1',
 			$this->_account_slug . '/' . $this->_log_in_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_log_in_slug . '=1',
 
 			// Purchases
-			$this->_account_slug . '/([^/]+)/' . $this->_purchases_slug => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_purchases_slug . '=1',
+			$this->_account_slug  . '/([^/]+)/' . $this->_purchases_slug => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_purchases_slug . '=1',
 			$this->_account_slug . '/' . $this->_purchases_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_purchases_slug . '=1',
 
 			// Downloads 
-			$this->_account_slug . '/([^/]+)/' . $this->_downloads_slug => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_downloads_slug . '=1',
+			$this->_account_slug  . '/([^/]+)/' . $this->_downloads_slug => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_downloads_slug . '=1',
 			$this->_account_slug . '/' . $this->_downloads_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_downloads_slug . '=1',
 
 			// Profile
-			$this->_account_slug . '/([^/]+)/' . $this->_profile_slug => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_profile_slug . '=1',
+			$this->_account_slug  . '/([^/]+)/' . $this->_profile_slug  => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_profile_slug . '=1',
 			$this->_account_slug . '/' . $this->_profile_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_profile_slug . '=1',
 
 			// Account
-			$this->_account_slug . '/([^/]+)/?$' => 'index.php?' . $this->_account_slug . '=$matches[1]',
-			$this->_account_slug => 'index.php?' . $this->_account_slug . '=1',
+			$this->_account_slug . '/([^/]+)/?$' => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_profile_slug . '=1',
+			$this->_account_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_profile_slug . '=1',
 
 			// Cart
 			$this->_store_slug . '/' . $this->_cart_slug => 'index.php?' . $this->_cart_slug . '=1',

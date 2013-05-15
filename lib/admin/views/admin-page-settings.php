@@ -79,20 +79,6 @@
 		</tr>
 		<tr valign="top">
 			<td>
-				<label for="it-exchange-page-profile-edit"><?php _e( 'Edit Profile' ) ?></label>
-			</td>
-			<td>
-				<?php $form->add_text_box( 'profile-edit-name', array( 'class' => 'normal-text' ) ); ?>
-			</td>
-			<td>
-				<?php $form->add_text_box( 'profile-edit-slug', array( 'class' => 'normal-text' ) ); ?>
-			</td>
-			<td>
-				<?php echo it_exchange_get_page_url( 'profile-edit' ); ?>
-			</td>
-		</tr>
-		<tr valign="top">
-			<td>
 				<label for="it-exchange-page-log-in"><?php _e( 'Customer Log in' ) ?></label>
 			</td>
 			<td>

@@ -44,7 +44,12 @@ function it_exchange_get_current_customer() {
 		return false;
 
 	// Get current users's ID
-	$customer_id = get_current_user_id();
+	$current_id = get_current_user_id();
+	$customer_id = get_query_var( 'account' );
+	
+	if ( $current_id !== $customer_id && !current_user_can( 'administrator' ) )
+		$customer_id = $current_id;
+		
 	$customer = it_exchange_get_customer( $customer_id );
 	return apply_filters( 'it_exchange_get_current_customer', $customer );
 }
@@ -153,3 +158,32 @@ function it_exchange_get_customer_login_form() {
 	$form = wp_login_form( $args );
 	return apply_filters( 'it_exchange_get_customer_login_form', $form );
 }
+
+/**
+ * Handles $_REQUESTs and submits them to the profile for processing
+ *
+ * @since 0.4.0
+ * @return void
+*/
+function handle_it_exchange_save_profile_action() {
+	
+	// Grab action and process it.
+	if ( isset( $_REQUEST['it-exchange-save-profile'] ) ) {
+
+		//WordPress builtin
+		require_once(ABSPATH . 'wp-admin/includes/user.php');
+		$customer = it_exchange_get_current_customer();
+		$result = edit_user( $customer->id );
+		
+		if ( is_wp_error( $result ) ) {
+			it_exchange_add_error( $result->get_error_message() );
+		} else {
+			it_exchange_add_notice( __( 'Successfully saved profile!', 'LION' ) );
+		}
+		
+	}
+	
+}
+//add_action( 'template_redirect', array( 'IT_Exchange_Customer', 'register_profile_error_messages' ) );
+//add_action( 'template_redirect', array( 'IT_Exchange_Customer', 'register_profile_notice_messages' ) );
+add_action( 'template_redirect', 'handle_it_exchange_save_profile_action' );

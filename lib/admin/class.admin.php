@@ -562,8 +562,6 @@ class IT_Exchange_Admin {
 			'account-slug'      => 'account',
 			'profile-name'      => __( 'Profile', 'LION' ),
 			'profile-slug'      => 'profile',
-			'profile-edit-name' => __( 'Edit Profile', 'LION' ),
-			'profile-edit-slug' => 'edit',
 			'downloads-name'    => __( 'Downloads', 'LION' ),
 			'downloads-slug'    => 'downloads',
 			'purchases-name'    => __( 'Purchases', 'LION' ),
