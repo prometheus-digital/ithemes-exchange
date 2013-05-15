@@ -32,7 +32,6 @@ function it_exchange() {
 	$options = array(
 		'echo'   => true,
 		'return' => false,
-		'format' => 'html',
 	);
 	$get     = false;
 	

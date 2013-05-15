@@ -71,7 +71,7 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	 * @since 0.4.0
 	 * @return string
 	*/
-	function form_open( $options=array() ) {
+	function form_open( $options=array() ) {		
 		$output = '<form action="" method="post" >';
 		$output .= '<input type="hidden" name="user_id" value="' . $this->_customer->data->ID . '" >';
 		return $output;
@@ -84,6 +84,11 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	 * @return string
 	*/
 	function username( $options=array() ) {
+		$defaults      = array(
+			'format'      => 'html',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
 		$field_value = $this->_customer->data->user_login;
 		$label = '<label>' . $field_value . '</label>';
 
@@ -109,6 +114,11 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	 * @return string
 	*/
 	function accountmenu( $options=array() ) {
+		$defaults      = array(
+			'format'      => 'html',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
 		$output = '';
 		
 		$output .= '<a href="">Downloads</a>';
@@ -135,6 +145,11 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	 * @return string
 	*/
 	function firstname( $options=array() ) {
+		$defaults      = array(
+			'format'      => 'html',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
 		$field_id = 'first_name';
 		$field_name = $field_id;
 		$field_value = $this->_customer->data->first_name;
@@ -167,6 +182,11 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	 * @return string
 	*/
 	function lastname( $options=array() ) {
+		$defaults      = array(
+			'format'      => 'html',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
 		$field_id = 'last_name';
 		$field_name = $field_id;
 		$field_value = $this->_customer->data->last_name;
@@ -199,6 +219,11 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	 * @return string
 	*/
 	function email( $options=array() ) {
+		$defaults      = array(
+			'format'      => 'html',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
 		$field_id = 'email';
 		$field_name = $field_id;
 		$field_value = $this->_customer->data->user_email;
@@ -231,6 +256,11 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	 * @return string
 	*/
 	function website( $options=array() ) {
+		$defaults      = array(
+			'format'      => 'html',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
 		$field_id = 'url';
 		$field_name = $field_id;
 		$field_value = $this->_customer->data->user_url;
@@ -263,6 +293,11 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	 * @return string
 	*/
 	function password1( $options=array() ) {
+		$defaults      = array(
+			'format'      => 'html',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
 		$field_id = 'pass1';
 		$field_name = $field_id;
 		
@@ -291,6 +326,11 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	 * @return string
 	*/
 	function password2( $options=array() ) {
+		$defaults      = array(
+			'format'      => 'html',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
 		$field_id = 'pass2';
 		$field_name = $field_id;
 		
@@ -319,6 +359,11 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	 * @return string
 	*/
 	function save( $options=array() ) {
+		$defaults      = array(
+			'format'      => 'html',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
 		$field_id = 'it-exchange-save-profile';
 		$field_name = $field_id;
 		

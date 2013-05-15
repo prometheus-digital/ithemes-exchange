@@ -103,12 +103,12 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 			$result   = '';
 			$title    = it_exchange_get_product_feature( $this->product->ID, 'title' );
+			
 			$defaults = array(
 				'before' => '<h1 class="entry-title">',
 				'after'  => '</h1>',
-				'format' => 'raw',
+				'format' => 'html',
 			);
-
 			$options = ITUtility::merge_defaults( $options, $defaults );
 
 			if ( 'html' == $options['format'] )
@@ -140,7 +140,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$defaults   = array(
 			'before' => '<a href="',
 			'after'  => '">' . it_exchange( 'product', 'get-title' ) . '</a>',
-			'format' => 'raw',
+			'format' => 'html',
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -179,9 +179,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$defaults   = array(
 				'before' => '<span class="it-exchange-base-price">',
 				'after'  => '</span>',
-				'format' => 'raw',
+				'format' => 'html',
 			);
-
 			$options = ITUtility::merge_defaults( $options, $defaults );
 
 			if ( 'html' == $options['format'] )
@@ -242,7 +241,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$defaults      = array(
 			'before' => '<div class="entry-content">',
 			'after'  => '</div>',
-			'format' => 'raw',
+			'format' => 'html',
 		);
 		$options      = ITUtility::merge_defaults( $options, $defaults );
 
@@ -577,6 +576,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				$output = '<a' . $class . 'href="' . $url . '">' . $options['link_title'] . '</a>';
 				break;
 			case 'form' :
+			default:
 				$output  = '<form action="" method="post">';
 				$output .= it_exchange( 'product', 'get-purchase-quantity' );
 				$output .= $hidden_fields;
@@ -590,9 +590,6 @@ class IT_Theme_API_Product implements IT_Theme_API {
 					$output .= apply_filters( 'it_exchange_out_of_stock_label', __( 'Out of stock', 'LION' ), $this->product );
 				}
 				$output .= '</form>';
-				break;
-			default:
-				$output = false;
 				break;
 			
 		}
