@@ -15,7 +15,7 @@
 */
 function it_exchange_get_coupons( $options=array() ) {
     $defaults = array(
-        'post_type' => 'it_exchange_coupons',
+        'post_type' => 'it_exchange_coupon',
     );  
 
     $options = wp_parse_args( $options, $defaults );
@@ -85,4 +85,73 @@ function it_exchange_add_coupon( $args=array(), $cart_object=false ) {
 	}   
 	do_action( 'it_exchange_add_coupon_failed', $args );
 	return false;
+}
+
+/**
+ * Dow we support a specific type of coupon
+ *
+ * Ask the addon
+ *
+ * @since 0.4.0
+ *
+ * @param string $type the type of coupon
+ * @return boolean
+*/
+function it_exchange_supports_coupon_type( $type ) {
+	return (boolean) apply_filters( 'it_exchange_supports_' . $type . '_coupons', false );
+}
+
+/**
+ * Return the currently applied coupons
+ *
+ * We're going to ask the add-ons for this info. Default is no.
+ *
+ * @since 0.4.0
+ *
+ * @param string $type the type of coupon to check for
+ * @return boolean
+*/
+function it_exchange_get_applied_coupons( $type ) {
+	return apply_filters( 'it_exchange_get_applied_' . $type . '_coupons', false );
+}
+
+/**
+ * Are we accepting any more of the passed coupon type
+ *
+ * We're going to ask the add-ons for this info. Default is no.
+ *
+ * @since 0.4.0
+ *
+ * @param string $type the type of coupon to check for
+ * @return boolean
+*/
+function it_exchange_accepting_coupon_type( $type ) {
+	return (boolean) apply_filters( 'it_exchange_accepting_' . $type . '_coupons', false );
+}
+
+/**
+ * Retreive the field for applying a coupon type
+ *
+ * We're going to ask the add-ons for this info. Default is an empty string
+ *
+ * @since 0.4.0
+ *
+ * @param string $type the type of coupon to check for
+ * @param array $options
+ * @return boolean
+*/
+function it_exchange_get_coupon_type_apply_field( $type, $options=array() ) {
+	return apply_filters( 'it_exchange_apply_' . $type . '_coupon_field', '', $options );
+}
+
+/**
+ * Generates the remove a coupon that has been applied
+ *
+ * @since 0.4.0
+ *
+ * @return string
+*/
+function it_exchange_get_remove_coupon_html( $type, $code, $options=array() ) {
+	$options['code'] = $code;
+	return apply_filters( 'it_exchange_remove_' . $type . '_coupon_html', '', $code, $options );
 }

@@ -20,6 +20,27 @@ function it_exchange_get_cart_data() {
 }
 
 /**
+ * Updates the data
+ *
+ * @since 0.4.0
+ * @return void
+*/
+function it_exchange_update_cart_data( $key, $data ) {
+	it_exchange_update_session_data( $key, $data );
+	do_action( 'it_exchange_update_cart_data', $key, $data );
+}
+
+/**
+ * Removes cart data by key
+ *
+ * @since 0.4.0
+*/
+function it_exchange_remove_cart_data( $key ) {
+	it_exchange_remove_session_data( $key );
+	do_action( 'it_exchange_remove_cart_data', $key );
+}
+
+/**
  * Returns an array of all products in the cart
  *
  * @since 0.3.7
@@ -47,23 +68,6 @@ function it_exchange_get_cart_product( $id ) {
         return false;
 
 	return apply_filters( 'it_exchange_get_cart_product', $products[$id], $id );
-}
-
-/**
- * Returns columns for the shopping cart table
- *
- * @since 0.3.8
- * @return array column slugs / labels
-*/
-function it_exchange_get_cart_table_columns() {
-    $columns = array(
-        'product-remove'   => '', 
-        'product-title'    => __( 'Product', 'LION' ),
-        'product-cost'     => __( 'Price', 'LION' ),
-        'product-quantity' => __( 'Quantity', 'LION' ),
-        'product-subtotal' => __( 'Total', 'LION' ),
-    );  
-    return apply_filters( 'it_exchange_get_cart_table_columns', $columns );
 }
 
 /**
@@ -193,6 +197,7 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
 */
 function it_exchange_empty_shopping_cart() {
 	it_exchange_clear_session_products();
+	do_action( 'it_exchange_empty_shopping_cart' );
 }
 
 /**

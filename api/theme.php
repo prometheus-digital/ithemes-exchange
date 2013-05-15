@@ -11,6 +11,7 @@ include( $this->_plugin_path . '/api/theme/cart-item.php' );
 include( $this->_plugin_path . '/api/theme/messages.php' );
 include( $this->_plugin_path . '/api/theme/account.php' );
 include( $this->_plugin_path . '/api/theme/login.php' );
+include( $this->_plugin_path . '/api/theme/coupons.php' );
 
 /**
  * Defines the main it_exchange function
