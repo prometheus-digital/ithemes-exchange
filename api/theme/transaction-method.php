@@ -61,6 +61,6 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 	 * @return mixed
 	*/
 	function make_payment( $options=array() ) {
-		return 'Pay with ' . $this->_transaction_method['name'];
+		return it_exchange_get_transaction_method_make_payment_button( $this->_transaction_method['slug'], $options );
 	}
 }

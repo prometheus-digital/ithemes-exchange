@@ -93,6 +93,19 @@ function it_exchange_offline_payments_add_template_path( $paths ) {
 }
 
 /**
+ * Returns the button for making the payment
+ *
+ * @since 0.4.0
+ *
+ * @param array $options
+ * @return string
+*/
+function it_exchange_offline_payments_addon_make_payment_button( $options ) {
+	return '<input type="button" value="Offline Payments? Really?" />';
+}
+add_filter( 'it_exchange_get_offline-payments_make_payment_button', 'it_exchange_offline_payments_addon_make_payment_button', 10, 2 );
+
+/**
  * Class for Offline
  * @since 0.3.6
 */
@@ -308,4 +321,5 @@ class IT_Exchange_Offline_Payments_Add_On {
 		$defaults['offline-payments-default-status'] = 'pending';
 		return $defaults;
 	}
+
 }

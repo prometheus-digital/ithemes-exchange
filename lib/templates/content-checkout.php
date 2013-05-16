@@ -50,7 +50,7 @@
 </div>
 
 <div class="it-exchange-payment-methods">
-	<?php if ( ! it_exchange( 'checkout', 'get-transaction-methods' ) ) : ?>
+	<?php if ( ! it_exchange( 'checkout', 'has-transaction-methods' ) ) : ?>
 		<p><?php _e( 'No Payment add-ons enabled.', 'LION' ); ?></p>
 	<?php else : ?>
 		<?php while( it_exchange( 'checkout', 'transaction-methods' ) ) : ?>

@@ -14,7 +14,7 @@
  * @param object $form Current IT Form object
  * @return void
 */
-function paypal_web_standard_wizard_settings( $form ) {
+function it_excahnge_paypal_web_standard_wizard_settings( $form ) {
 	?>	
 	<div class="field paypal-standard-wizard hide-if-js">
 		<h3><?php _e( 'PayPal Account Information', 'LION' ); ?></h3>
@@ -24,4 +24,17 @@ function paypal_web_standard_wizard_settings( $form ) {
 	</div>
 	<?php
 }
-add_action( 'it_exchange_print_wizard_settings', 'paypal_web_standard_wizard_settings' );
+add_action( 'it_exchange_print_wizard_settings', 'it_exchange_paypal_web_standard_wizard_settings' );
+
+/**
+ * Returns the button for making the payment
+ *
+ * @since 0.4.0
+ *
+ * @param array $options
+ * @return string
+*/
+function it_exchange_paypal_standard_addon_make_payment_button( $options ) { 
+	return '<input type="button" value="' . __( 'PayPal Sucks', 'LION' ) . '" />';
+}
+add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_paypal_standard_addon_make_payment_button', 10, 2 );

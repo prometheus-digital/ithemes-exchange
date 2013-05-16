@@ -13,7 +13,7 @@
  * @param object $form Current IT Form object
  * @return void
 */
-function stripe_wizard_settings( $form ) {
+function it_exchange_stripe_wizard_settings( $form ) {
 	?>	
 	<div class="field stripe-wizard hide-if-js">
 		<h3><?php _e( 'Stripe Account Information', 'LION' ); ?></h3>
@@ -29,4 +29,17 @@ function stripe_wizard_settings( $form ) {
 	</div>
 	<?php
 }
-add_action( 'it_exchange_print_wizard_settings', 'stripe_wizard_settings' );
+add_action( 'it_exchange_print_wizard_settings', 'it_exchange_stripe_wizard_settings' );
+
+/**
+ * Returns the button for making the payment
+ *
+ * @since 0.4.0
+ *
+ * @param array $options
+ * @return string
+*/
+function it_exchange_stripe_addon_make_payment_button( $options ) { 
+    return '<input type="button" value="' . __( 'Stripe Rules!', 'LION' ) . '" />';
+}
+add_filter( 'it_exchange_get_stripe_make_payment_button', 'it_exchange_stripe_addon_make_payment_button', 10, 2 );

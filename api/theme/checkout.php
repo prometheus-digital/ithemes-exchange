@@ -54,10 +54,9 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 	 * @return mixed
 	*/
 	function transaction_methods( $options=array() ) {
-
 		// Do we have any transaction methods
 		if ( ! empty( $options['has'] ) )
-			return (boolean) it_exchange_get_enabled_addons( array( 'category' => 'transaction-method' ) );
+			return (boolean) it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
 
 		// If we made it here, we're doing a loop of applied coupons
 		// This will init/reset the applied_coupons global and loop through them.
@@ -88,6 +87,20 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 	 * @return mixed
 	*/
 	function cancel( $options=array() ) {
-		return 'cancel action';
+		$defaults = array(
+			'before' => '',
+			'after'  => '',
+			'format' => 'link',
+			'label'  => __( 'Cancel', 'LION' ),
+			'class'  => 'it-exchange-cancel-checkout',
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		$url = it_exchange_get_page_url ( 'cart' );
+
+		if ( 'link' == $options['format'] )
+			return $options['before'] . '<a class="' . esc_attr( $options['class'] ) . '" href="' . $url . '">' . $options['label'] . '</a>' . $options['after'];
+
+		return $url;
 	}
 }
