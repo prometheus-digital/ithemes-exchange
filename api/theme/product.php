@@ -37,7 +37,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		'productimage'        => 'featured_image',
 		'featuredimage'       => 'featured_image',
 		'downloads'           => 'downloads',
-		'addtocart'           => 'add_to_cart',
+		'purchaseoptions'     => 'purchase_options',
 		'buynow'              => 'buy_now',
 	);
 
@@ -519,7 +519,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @since 0.4.0
 	 * @return string
 	*/
-	function add_to_cart( $options=array() ) {
+	function purchase_options( $options=array() ) {
 
 		// Return boolean if has flag was set
 		if ( $options['supports'] )
