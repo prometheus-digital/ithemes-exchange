@@ -394,8 +394,10 @@ class IT_Exchange_Router {
 			
 		} else {
 			
-			$customer = get_user_by( 'login', $account );
-			$customer_id = $customer->ID;
+			if ( $customer = get_user_by( 'login', $account ) )
+				$customer_id = $customer->ID;
+			else
+				$customer_id = false;
 			
 		}
 		
@@ -503,6 +505,16 @@ class IT_Exchange_Router {
 		// Return existing if this isn't an Exchange frontend view
 		if ( ! $this->_current_view )
 			return $existing;
+			
+		// Set pages that we want to protect in one way or another
+		$profile_pages = array(
+			'account', 'profile', 'downloads', 'purchases',
+		);
+				
+		if ( in_array( $this->_current_view, $profile_pages ) ) {
+			if ( ! $this->_account )
+				return get_404_template();
+		}
 
 		// Return the iThemes Exchange Template if one is found
 		if ( $template = it_exchange_locate_template( $this->_current_view ) )
