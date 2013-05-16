@@ -1057,9 +1057,6 @@ class IT_Exchange_Admin {
 	function it_exchange_admin_wp_enqueue_styles() {
 		global $hook_suffix;
 
-		// Global CSS
-		wp_enqueue_style( 'it-exchange-global-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/admin.css' );
-
 		if ( isset( $_REQUEST['post_type'] ) ) {
 			$post_type = $_REQUEST['post_type'];
 		} else {
@@ -1077,6 +1074,9 @@ class IT_Exchange_Admin {
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
 		}
+		
+		if ( preg_match('|(it_exchange)|i', str_replace( '-', '_', $hook_suffix ) ) || ( isset( $post_type ) && preg_match('|(it_exchange)|i', str_replace( '-', '_', $post_type ) ) ) )
+			wp_enqueue_style( 'it-exchange-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/admin.css' );
 
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			wp_enqueue_style( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-edit-product.css' );
