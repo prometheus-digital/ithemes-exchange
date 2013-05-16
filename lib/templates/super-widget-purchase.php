@@ -1,5 +1,4 @@
 <?php if ( it_exchange( 'product', 'found' ) ) : ?>
-	Title: <?php it_exchange( 'product.title' ); ?><br />
-	<?php it_exchange( 'product.add-to-cart' ); ?>
+	<?php it_exchange( 'product', 'base-price' ); ?><br />
+	<?php it_exchange( 'product', 'purchase-options' ); ?>
 <?php endif; ?>
-<p>Purchase form will go here</p>
