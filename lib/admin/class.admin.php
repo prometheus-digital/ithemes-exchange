@@ -112,8 +112,8 @@ class IT_Exchange_Admin {
 		// User Edit
 		add_filter( 'user_row_actions', array( $this, 'it_exchange_user_row_actions' ), 10, 2 );
 		add_action( 'all_admin_notices', array( $this, 'it_exchange_user_edit_load' ) );
-		add_action( 'edit_user_profile', array( $this, 'it_exchange_edit_user_profile' ) );
-		add_action( 'show_user_profile', array( $this, 'it_exchange_edit_user_profile' ) );
+		add_action( 'show_user_profile', array( $this, 'it_exchange_user_profile' ) );
+		add_action( 'edit_user_profile', array( $this, 'it_exchange_user_profile' ) );
 	}
 
 	/**
@@ -128,6 +128,19 @@ class IT_Exchange_Admin {
 	
 		return $actions;
 	}
+	
+	/**
+	 * Adds iThemes Exchange User Meta page to user-edit.php
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function it_exchange_user_profile( $profileuser ) {
+						
+		if ( current_user_can('edit_users') )
+			include( 'views/admin-user-profile.php' );
+	
+	}
 
 	/**
 	 * Adds iThemes Exchange User Meta page to user-edit.php
@@ -137,6 +150,7 @@ class IT_Exchange_Admin {
 	*/
 	function it_exchange_user_edit_load() {
 		
+		//A little hacky
 		global $pagenow;
 		
 		if ( 'user-edit.php' === $pagenow && !empty( $_REQUEST['it_exchange'] ) 
@@ -154,20 +168,7 @@ class IT_Exchange_Admin {
 		}
 		
 	}
-
-	/**
-	 * Adds iThemes Exchange User Meta Options to user-edit.php
-	 *
-	 * @since 0.4.0
-	 * @return void
-	*/
-	function it_exchange_edit_user_profile() {
-		if ( current_user_can( 'administrator' ) ) {
-			echo '<h2>' . __( 'iThemes Exchange Customer Data', 'LION' ) . '</h2>';
-			echo "<a class='it-exchange-cust-info' href='" . esc_url( add_query_arg( array( 'wp_http_referer' => urlencode( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'it_exchange' => 1 ), get_edit_user_link( $user_object->ID ) ) ) . "'>" . __( 'Customer Data', 'LION' ) . "</a>";
-		}
-	}
-
+	
 	/**
 	 * Save iThemes Exchange User Meta Options to user-edit.php
 	 *
