@@ -51,7 +51,7 @@
 #it-exchange-product-downloads .col-1-12{width:4.3333333%;}
 #it-exchange-product-downloads .col-4-12{width:33.3333333%;}
 #it-exchange-product-downloads .col-7-12{width:62.3333333%;}
-#it-exchange-product-downloads .download-source a{position:absolute;top:6px;right:18px;padding:10px;background:#FFF;text-decoration:none;}
+#it-exchange-product-downloads .download-source a{position:absolute;top:6px;margin-left:-70px;padding:10px;background:#FFF;text-decoration:none;}
 #it-exchange-product-downloads input.not-empty{border-color:transparent;}
 #it-exchange-product-downloads input.not-empty:hover{border-color:#D6D6D6;}
 #it-exchange-product-downloads input.not-empty:focus{border-color:#D6D6D6;}
@@ -89,12 +89,10 @@
 
 #it-exchange-gallery-images{max-width:400px;float:left;width:100%;}
 #it-exchange-gallery-images li{overflow:hidden;position:relative;margin-bottom:0;float:left;width:33.3333333%;height:auto;}
-#it-exchange-gallery-images li:nth-child(3n+1){clear:left;}
 #it-exchange-gallery-images li a{display:block;overflow:hidden;position:relative;cursor:move;outline:none;margin-right:5px;margin-bottom:5px;background:#FFF;border:1px solid #D6D6D6;}
 #it-exchange-product-images li .remove-item{right:10px;}
 #it-exchange-gallery-images.sorting li .remove-item{display:none;}
 #it-exchange-gallery-images .disable-sorting a{cursor:pointer;}
-#it-exchange-gallery-images .sorting-placeholder a{background:;}
 #it-exchange-gallery-images .sorting-placeholder img{opacity:.2;}
 #it-exchange-gallery-images .ui-sortable-helper a{border:3px solid #3487B4;border-radius:2px;box-shadow:#888 0 0 10px,inset #fff 0 0 0 1px;}
 #it-exchange-gallery-images #it-exchange-add-new-image{text-align:center;}
