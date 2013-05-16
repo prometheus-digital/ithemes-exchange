@@ -32,6 +32,9 @@
 			<?php endwhile; ?>
 		</div>
 
+		<hr />
+		Sub-total: <?php it_exchange( 'cart', 'subtotal' ); ?>
+		<hr />
 		<?php 
 		// Do we have a coupon add-on enabled that supports cart coupons
 		if ( it_exchange( 'coupons', 'supported', 'type=cart' ) ) { 
@@ -45,9 +48,7 @@
 				while( it_exchange( 'coupons', 'applied', 'type=cart' ) ) {
 					?>
 					<li class='coupon'>
-						<?php it_exchange( 'coupons', 'code' ); ?>:
-						<?php it_exchange( 'coupons', 'discount' ); ?>
-						<?php it_exchange( 'coupons', 'remove', 'type=cart' ); ?>
+						<?php it_exchange( 'coupons', 'code' ); ?>:&nbsp;<?php it_exchange( 'coupons', 'discount' ); ?>&nbsp;<?php it_exchange( 'coupons', 'remove', 'type=cart' ); ?>
 					</li>
 					<?php
 				}
@@ -63,7 +64,6 @@
 		}
 		?>
 		<hr />
-		Sub-total: <?php it_exchange( 'cart', 'subtotal' ); ?><br />
 		Total: <?php it_exchange( 'cart', 'total' ); ?><br />
 		<hr />
 		<?php it_exchange( 'cart', 'update' ); ?><br/>

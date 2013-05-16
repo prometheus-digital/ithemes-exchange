@@ -139,7 +139,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$result = '';
 		$defaults   = array(
 			'before' => '<a href="',
-			'after'  => '">' . it_exchange( 'product', 'get-title' ) . '</a>',
+			'after'  => '">' . it_exchange( 'product', 'get-title', 'format=' ) . '</a>',
 			'format' => 'html',
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );

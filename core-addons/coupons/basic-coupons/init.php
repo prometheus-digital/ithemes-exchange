@@ -216,3 +216,28 @@ function it_exchange_basic_coupons_apply_discount_to_cart_total( $total ) {
 	return $total;
 }
 add_filter( 'it_exchange_get_cart_total', 'it_exchange_basic_coupons_apply_discount_to_cart_total' );
+
+/**
+ * Remove coupon from cart
+ *
+ * @todo redirect with feedback?
+ * @since 0.4.0
+ *
+ * @return void
+*/
+function it_exchange_basic_coupons_remove_coupon_from_cart() {
+	$var = it_exchange_get_field_name( 'remove_coupon' ) . '-cart';
+	if ( empty( $_REQUEST[$var] ) )
+		return;
+
+	$coupons = it_exchange_get_applied_coupons( 'cart' );
+	foreach( (array) $coupons as $code => $data ) {
+		if ( in_array( $code, $_REQUEST[$var] ) )
+			unset( $coupons[$code] );
+	}
+
+	// Unset coupons
+	it_exchange_update_cart_data( 'basic_coupons', $coupons );
+
+}
+add_action( 'template_redirect', 'it_exchange_basic_coupons_remove_coupon_from_cart', 9 );
