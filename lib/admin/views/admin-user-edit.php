@@ -7,9 +7,22 @@
  * @todo get the transaction extra buttons to work
 */
 ?>
-<div id="it-exchange-member-options">
+<div id="profile-page" class="wrap">
+
+    <?php screen_icon(); ?>
+    <?php
+	
+	if ( empty( $_REQUEST['user_id'] ) )
+		$user_id = get_current_user_id();
+	else
+		$user_id = $_REQUEST['user_id'];
+		
+	$user_object = get_userdata( $user_id );
+	
+	?>
     
-	<h2>iThemes Exchange <?php _e( 'Options', 'LION' ); ?></h2>
+	<h2><?php echo $user_object->display_name; ?> <a href="<?php echo esc_url( add_query_arg( 'wp_http_referer', urlencode( stripslashes_deep( $_SERVER['REQUEST_URI'] ) ), get_edit_user_link( $user_object->ID ) ) ); ?>" class="edit-user"><?php echo esc_html_x( 'Edit User', 'LION' ); ?></a>
+</h2>
     
 	<?php
 	$this->print_user_edit_page_tabs(); 
@@ -17,11 +30,6 @@
 	?>
 
 	<?php
-	
-	if ( empty( $_REQUEST['user_id'] ) )
-		$user_id = get_current_user_id();
-	else
-		$user_id = $_REQUEST['user_id'];
 		
 	$tab = !empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'products';
 	

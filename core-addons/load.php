@@ -13,7 +13,7 @@ function it_exchange_register_core_addons() {
 	$add_ons = array(
 		// Offline
 		'offline-payments' => array(
-			'name'        	=> __( 'Offline', 'LION' ),
+			'name'        	=> __( 'Offline Payments', 'LION' ),
 			'description' 	=> __( 'Use this Transaction Method to take payments offline.', 'LION' ),
 			'author'		=> 'iThemes',
 			'author_url'	=> 'http://ithemes.com',

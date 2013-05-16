@@ -247,3 +247,18 @@ function it_exchange_do_transaction( $method, $cart_object ) {
 function it_exchange_get_successfull_transaction_stati( $transaction_method ) {
 	return apply_filters( 'it_exchange_get_successufll_transaction_stati_' . $transaction_method, array() );
 }
+
+/**
+ * Returns the make-payment action
+ *
+ * Leans on tranasction_method to actually provide it.
+ *
+ * @since 0.4.0
+ *
+ * @param string $tranasction_method slug registered with addon
+ * @param array $options
+ * @return mixed
+*/
+function it_exchange_get_transaction_method_make_payment_button ( $transaction_method, $options=array() ) {
+	return apply_filters( 'it_exchange_get_' . $transaction_method . '_make_payment_button', '', $options );
+}

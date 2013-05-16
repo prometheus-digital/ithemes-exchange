@@ -110,29 +110,65 @@ class IT_Exchange_Admin {
 		add_filter( 'post_row_actions', array( $this, 'it_exchange_remove_quick_edit' ), 10, 2 );
 
 		// User Edit
-		add_action( 'edit_user_profile', array( $this, 'it_exchange_edit_user_profile' ) );
-		add_action( 'show_user_profile', array( $this, 'it_exchange_edit_user_profile' ) );
-		add_action('personal_options_update', array( $this, 'it_exchange_edit_user_profile_update' ) );
-		add_action('edit_user_profile_update',  array( $this, 'it_exchange_edit_user_profile_update' ) );
+		add_filter( 'user_row_actions', array( $this, 'it_exchange_user_row_actions' ), 10, 2 );
+		add_action( 'all_admin_notices', array( $this, 'it_exchange_user_edit_load' ) );
+		add_action( 'show_user_profile', array( $this, 'it_exchange_user_profile' ) );
+		add_action( 'edit_user_profile', array( $this, 'it_exchange_user_profile' ) );
 	}
 
 	/**
-	 * Adds iThemes Exchange User Meta Options to user-edit.php
+	 * Adds iThemes Exchange User row action to users.php row actions
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/	
+	function it_exchange_user_row_actions( $actions, $user_object ) {
+
+		$actions['it_exchange'] = "<a class='it-exchange-cust-info' href='" . esc_url( add_query_arg( array( 'wp_http_referer' => urlencode( stripslashes_deep( $_SERVER['REQUEST_URI'] ) ), 'it_exchange' => 1 ), get_edit_user_link( $user_object->ID ) ) ) . "'>" . __( 'Customer Data', 'LION' ) . "</a>";
+	
+		return $actions;
+	}
+	
+	/**
+	 * Adds iThemes Exchange User Meta page to user-edit.php
 	 *
 	 * @since 0.4.0
 	 * @return void
 	*/
-	function it_exchange_edit_user_profile() {
-		if ( current_user_can( 'administrator' ) ) {
+	function it_exchange_user_profile( $profileuser ) {
+						
+		if ( current_user_can('edit_users') )
+			include( 'views/admin-user-profile.php' );
+	
+	}
+
+	/**
+	 * Adds iThemes Exchange User Meta page to user-edit.php
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function it_exchange_user_edit_load() {
+		
+		//A little hacky
+		global $pagenow;
+		
+		if ( 'user-edit.php' === $pagenow && !empty( $_REQUEST['it_exchange'] ) 
+				&& current_user_can('edit_users') ) {
+			
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_products_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_transactions_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_activity_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_info_user_edit_tab_link' ) );
-
+			
 			include( 'views/admin-user-edit.php' );
+			include( ABSPATH . 'wp-admin/admin-footer.php');
+			die();
+			
 		}
+		
 	}
-
+	
 	/**
 	 * Save iThemes Exchange User Meta Options to user-edit.php
 	 *
