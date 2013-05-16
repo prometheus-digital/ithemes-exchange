@@ -4,55 +4,25 @@
 #it-exchange-add-edit-product-interface-main .postbox,
 #it-exchange-add-edit-product-interface-side .postbox,
 #it-exchange-add-edit-product-interface-main .inside,
-#it-exchange-add-edit-product-interface-side .inside {
-	background: none;
-	border: 0;
-}
+#it-exchange-add-edit-product-interface-side .inside{background:none;border:0;}
 #normal-sortables div.handlediv,
 #side-sortables div.handlediv,
 #it-exchange-add-edit-product-interface-main > .hndle,
 #it_exchange_normal-sortables .hndle,
-#side-sortables .hndle {
-	display: none;
-}
-.wrap #poststuff #post-body.columns-2 {
-	margin-right: 420px;
-}
-.wrap #post-body.columns-2 #postbox-container-1 {
-	margin-right: -420px;
-	width: 400px;
-}
-.wrap .postbox .inside {
-	padding: 0;
-}
-.wrap .postbox {
-	min-width: 0;
-}
-* {
-	box-sizing: border-box;
-}
-.screen-layout, .columns-prefs {
-	display: none;
-}
+#side-sortables .hndle{display:none;}
+.wrap #poststuff #post-body.columns-2{margin-right:420px;}
+.wrap #post-body.columns-2 #postbox-container-1{margin-right:-420px;width:400px;}
+.wrap .postbox .inside{padding:0;}
+.wrap .postbox{min-width:0;}
+*{box-sizing:border-box;}
+.screen-layout,.columns-prefs{display:none;}
+
 /** -----------------------------------------------------:[ temporary ]:---------- */
-#submitdiv {
-	
-}
-.it-button {
-	padding: 10px 12px;
-	box-shadow: inset #CCCCCC 0 -1px;
-	background: #EDEDED;
-	border-radius: 3px;
-	color: #606060;
-	font-size: 14px;
-}
+.it-button{padding:10px 12px;box-shadow:inset #CCCCCC 0 -1px;background:#EDEDED;border-radius:3px;color:#606060;font-size:14px;}
+
 /** -----------------------------------------------------:[ global (page) ]:---------- */
-#poststuff label {
-	font-weight: bold;
-	font-size: 13px;
-	display: block;
-	margin-bottom: 10px;
-}
+#poststuff label{font-weight:bold;font-size:13px;display:block;margin-bottom:10px;}
+
 /** -----------------------------------------------------:[ normal ]:---------- */
 #it-exchange-add-edit-product-interface-main{margin:0;}
 #it_exchange_normal-sortables input,
@@ -71,19 +41,17 @@
 #it-exchange-product-downloads .downloads-label-add .download-add-new{float:right;margin-bottom:10px;}
 #it-exchange-product-downloads .download-remove{text-align:right;}
 #it-exchange-product-downloads .download-remove a{box-sizing:content-box;display:inline-block;opacity:0;width:20px;height:19px;margin-top:12px;margin-right:12px;padding-top:1px;border:2px solid #999;border-radius:50%;font-size:14px;text-decoration:none;text-align:center;color:#999;-webkit-transition:all .2s linear;transition:all .2s linear;}
-#it-exchange-product-downloads .download-item:hover .it-exchange-delete-digital-download{opacity:1;}
+#it-exchange-product-downloads .download-item:hover .download-remove .it-exchange-delete-new-digital-download{opacity:1;}
 #it-exchange-product-downloads .download-remove a:active{outline:none;opacity:.8;}
 #it-exchange-product-downloads .download-remove .it-exchange-delete-digital-download:hover{border-color:#E1797A;color:#E1797A;}
 #it-exchange-product-downloads .columns-wrapper{clear:both;overflow:hidden;border-top:1px solid #DEDEDE;}
 #it-exchange-product-downloads .downloads-list-titles .column{padding:10px 15px;font-weight:bold;}
 #it-exchange-product-downloads .downloads-list-titles .columns-wrapper{border-top:0;}
-#it-exchange-product-downloads .download-name input{font-weight:bold;color:#267599;}
 #it-exchange-product-downloads .column{position:relative;float:left;}
-#it-exchange-product-downloads .col-1-12{width:8.3333333%;}
+#it-exchange-product-downloads .col-1-12{width:4.3333333%;}
 #it-exchange-product-downloads .col-4-12{width:33.3333333%;}
-#it-exchange-product-downloads .col-7-12{width:58.3333333%;}
-#it-exchange-product-downloads .download-source:hover a{opacity:1;}
-#it-exchange-product-downloads .download-source a{opacity:0;position:absolute;top:6px;right:12px;padding:10px;background:#FFF;text-decoration:none;}
+#it-exchange-product-downloads .col-7-12{width:62.3333333%;}
+#it-exchange-product-downloads .download-source a{position:absolute;top:6px;right:18px;padding:10px;background:#FFF;text-decoration:none;}
 #it-exchange-product-downloads input.not-empty{border-color:transparent;}
 #it-exchange-product-downloads input.not-empty:hover{border-color:#D6D6D6;}
 #it-exchange-product-downloads input.not-empty:focus{border-color:#D6D6D6;}

@@ -109,8 +109,25 @@ class IT_Exchange_Product_Feature_Downloads {
 					</div>
 				</div>
 				<div class="downloads-list">
+					<!-- New download items start. -->
+					<div class="download-item download-item-clone columns-wrapper hidden">
+						<div class="download-name column col-4-12">
+							<input type="text" name="" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'Name', 'LION' ) ); ?>" value="" />
+						</div>
+						<div class="download-source column col-7-12">
+							<input type="url" name="" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'LION' ) ); ?>" value="" />
+							<a href class="it-exchange-upload-digital-download">Upload</a>
+						</div>
+						<div class="download-remove column col-1-12">
+							<a href="#" class="it-exchange-delete-new-digital-download">&times;</a>
+						</div>
+					</div>
+					<!-- New download items end. -->
 					<?php if ( empty( $existing_downloads ) ) : ?>
-						<div id="download-item-0" class="download-item columns-wrapper">
+						<script type="text/javascript" charset="utf-8">
+							var it_exchange_new_download_interation = 1;
+						</script>
+						<div class="download-item columns-wrapper" id="download-item-0">
 							<div class="download-name column col-4-12">
 								<input type="text" name="it-exchange-digital-downloads-new[0][name]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'Name', 'LION' ) ); ?>" value="" />
 							</div>
@@ -122,10 +139,10 @@ class IT_Exchange_Product_Feature_Downloads {
 								<a href="#" class="it-exchange-delete-new-digital-download">&times;</a>
 							</div>
 						</div>
-						<script type="text/javascript" charset="utf-8">
-							var it_exchange_new_download_interation = 1;
-						</script>
 					<?php else : ?>
+						<script type="text/javascript" charset="utf-8">
+							var it_exchange_new_download_interation = 0;
+						</script>
 						<?php foreach( $existing_downloads as $id => $data ) : ?>
 							<div id="download-item-<?php esc_attr_e( $id ); ?>" class="download-item download-exists columns-wrapper">
 								<input type="hidden" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][id]" value="<?php esc_attr_e( $data['id'] ); ?>" />
@@ -142,25 +159,7 @@ class IT_Exchange_Product_Feature_Downloads {
 								</div>
 							</div>
 						<?php endforeach; ?>
-						<script type="text/javascript" charset="utf-8">
-							var it_exchange_new_download_interation = 0;
-						</script>
 					<?php endif; ?>
-					
-					<!-- New ITEM start -->
-					<div class="download-item download-item-clone columns-wrapper hidden">
-						<div class="download-name column col-4-12">
-							<input type="text" name="" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'Name', 'LION' ) ); ?>" value="" />
-						</div>
-						<div class="download-source column col-7-12">
-							<input type="url" name="" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'LION' ) ); ?>" value="" />
-							<a href class="it-exchange-upload-digital-download">Upload</a>
-						</div>
-						<div class="download-remove column col-1-12">
-							<a href="#" class="it-exchange-delete-digital-download">&times;</a>
-						</div>
-					</div>
-					<!-- New ITEM END -->
 				</div>
 			</div>
 		<?php
