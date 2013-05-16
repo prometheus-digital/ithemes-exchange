@@ -267,9 +267,9 @@ class IT_Exchange_Router {
 			add_filter( 'rewrite_rules_array', array( $this, 'register_rewrite_rules' ) );
 		} else {
 			add_action( 'template_redirect', array( $this, 'set_environment' ), 8 );
-			add_action( 'template_redirect', array( $this, 'set_account' ), 9 );
-			add_action( 'template_redirect', array( $this, 'protect_pages' ) );
-			add_action( 'template_redirect', array( $this, 'login_out_page_redirect' ) );
+			add_action( 'template_redirect', array( $this, 'login_out_page_redirect' ), 9 );
+			add_action( 'template_redirect', array( $this, 'set_account' ), 10 );
+			add_action( 'template_redirect', array( $this, 'protect_pages' ), 11 );
 			add_action( 'template_redirect', array( $this, 'set_wp_query_vars' ) );
 
 			add_filter( 'query_vars', array( $this, 'register_query_vars' ) );

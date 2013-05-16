@@ -146,7 +146,7 @@ function ithemes_exchange_wp_get_nav_menu_items_filter( $items, $menu, $args ) {
 }
 add_filter( 'wp_get_nav_menu_items', 'ithemes_exchange_wp_get_nav_menu_items_filter', 10, 3 );
 
-if ( !function_exists( 'wp_nav_menu_disabled_check' ) ) {
+if ( !function_exists( 'wp_nav_menu_disabled_check' ) && version_compare( $GLOBALS['wp_version'], '3.6', '<' ) ) {
 		
 	/**
 	 * From WordPress 3.6.0 for back-compat
