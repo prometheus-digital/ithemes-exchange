@@ -200,3 +200,19 @@ function it_exchange_base_coupons_remove_cart_coupon_html( $incoming=false, $cod
 	}
 }
 add_filter( 'it_exchange_remove_cart_coupon_html', 'it_exchange_base_coupons_remove_cart_coupon_html', 10, 3 );
+
+/**
+ * Modify the cart total to reflect coupons
+ *
+ * @since 0.4.0
+ *
+ * @return price
+*/
+function it_exchange_basic_coupons_apply_discount_to_cart_total( $total ) {
+	$coupons = it_exchange_get_applied_coupons( 'cart' );
+	foreach( (array) $coupons as $coupon ) {
+		$total = ( '%' == $coupon['amount_type'] ) ? $total - ( ( $coupon['amount_number'] / 100 ) * $total ) : $total - $coupon['amount_number'];
+	}
+	return $total;
+}
+add_filter( 'it_exchange_get_cart_total', 'it_exchange_basic_coupons_apply_discount_to_cart_total' );

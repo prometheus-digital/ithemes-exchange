@@ -220,6 +220,6 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		return it_exchange_get_cart_subtotal();	
 	}
 	function total( $options=array() ) {
-		return it_exchange_get_cart_subtotal();	
+		return it_exchange_get_cart_total();	
 	}
 }

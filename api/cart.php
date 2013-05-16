@@ -313,7 +313,7 @@ function it_exchange_get_cart_subtotal( $format=true ) {
  * @return mixed total of cart
 */
 function it_exchange_get_cart_total( $format=true ) {
-    $total = apply_filters( 'it_exchange_get_cart_total', it_exchange_get_cart_subtotal() );
+	$total = apply_filters( 'it_exchange_get_cart_total', it_exchange_get_cart_subtotal( false ) );
 
 	if ( $format )
 		$total = it_exchange_format_price( $total );
