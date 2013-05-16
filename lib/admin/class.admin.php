@@ -1057,6 +1057,9 @@ class IT_Exchange_Admin {
 	function it_exchange_admin_wp_enqueue_styles() {
 		global $hook_suffix;
 
+		// Global CSS
+		wp_enqueue_style( 'it-exchange-global-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/admin.css' );
+
 		if ( isset( $_REQUEST['post_type'] ) ) {
 			$post_type = $_REQUEST['post_type'];
 		} else {
