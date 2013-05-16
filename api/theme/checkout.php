@@ -1,80 +1,93 @@
 <?php
-
-
-
-
 /**
- ################# THIS WHOLE FILE NEEDS TO BE REFACTORED TO WORK WITH THE NEW api/theme.php API. ############
-                  ################# THIS WAS A CARTBUDDY IMPLEMENTATION ############
-*/
-
-
-
-
-
-
-/**
- * This file contains functions useful for building a checkout page
- * @since 0.3.7
+ * Theme API class for Checkout
  * @package IT_Exchange
+ * @since 0.4.0
 */
 
-/**
- * This will print the chekcout page HTML
- *
- * Heavy lifing it done by the active shopping cart add-on
- * This is a highlevel function that may also be called by a shortcode.
- *
- * @since 0.3.7
- * @param array $shortcode_atts atts passed from WP Shortcode API if function is being invoked by it.
- * @param string $shortcode_content content passed from WP Shortcode API if function is being invoked by it.
- * @return string html for the shopping cart
-*/
-function it_exchange_get_checkout_html() {
-	$html  = it_exchange_get_errors_div();
-	$html .= it_exchange_get_alerts_div();
+class IT_Theme_API_Checkout implements IT_Theme_API {
+	
+	/** 
+	 * API context
+	 * @var string $_context
+	 * @since 0.4.0
+	*/
+	private $_context = 'checkout';
 
-	ob_start();
-	it_exchange_get_template_part( 'checkout' );
-	$html .= ob_get_clean();
-	return $html;
-}
+	/** 
+	 * Maps api tags to methods
+	 * @var array $_tag_map
+	 * @since 0.4.0
+	*/
+	public $_tag_map = array(
+		'transactionmethods' => 'transaction_methods',
+		'cancel'             => 'cancel',
+	);  
 
-/**
- * Returns the form fields requesting customer information at checkout
- *
- * @todo make this a tempalte
- *
- * @since 0.3.7
- * @param array $args optional. not used by all add-ons
- * @return string HTML
-*/
-function it_exchange_get_cart_checkout_customer_form_fields( $args=array() ) {
-    $form = new ITForm();
-    $fields = it_exchange_get_customer_profile_fields();
-    $html = ''; 
-    $customer = it_exchange_get_current_customer();
+	/** 
+	 * Constructor
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function IT_Theme_API_Checkout() {
+	}   
 
-    foreach( (array) $fields as $field => $args ) { 
-        $function = 'get_' . $args['type'];
-        $var      = empty( $args['var'] ) ? '' : $args['var'];
-        $values   = empty( $args['values'] ) ? array() : (array) $args['values'];
-        $label    = empty( $args['label'] ) ? '' : $args['label'];
-        $value    = empty( $customer->data->$var ) ? '' : esc_attr( $customer->data->$var );
-        $values['value'] = stripslashes( $value );
-        if ( is_callable( array( $form, $function ) ) ) { 
-            $html .= '<p class="it-exchange-profile-field">';
-            $html .= '<label for="' . esc_attr( $var ) . '">' . $label . '</label>';
-            $html .= $form->$function( $var, $values );
-            $html .= '</p>';
-        } else if ( 'password' == $args['type'] ) { 
-            $values['type'] = 'password';
-            $html .= '<p class="it-exchange-profile-field">';
-            $html .= '<label for="' . esc_attr( $var ) . '">' . $label . '</label>';
-            $html .= $form->_get_simple_input( $var, $values, false );
-            $html .= '</p>';
-        }   
-    }
+	/**
+	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
+	 *
+	 * @since 0.4.0
+	 * 
+	 * @return string
+	*/
+	function get_api_context() {
+		return $this->_context;
+	}
 
-	return $html;
+	/**
+	 * Sets up transaction method loop
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $options
+	 * @return mixed
+	*/
+	function transaction_methods( $options=array() ) {
+
+		// Do we have any transaction methods
+		if ( ! empty( $options['has'] ) )
+			return (boolean) it_exchange_get_enabled_addons( array( 'category' => 'transaction-method' ) );
+
+		// If we made it here, we're doing a loop of applied coupons
+		// This will init/reset the applied_coupons global and loop through them.
+		if ( empty( $GLOBALS['it_exchange']['transaction_methods'] ) ) { 
+			$GLOBALS['it_exchange']['transaction_methods'] = it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
+			$GLOBALS['it_exchange']['transaction_method'] = reset( $GLOBALS['it_exchange']['transaction_methods'] );
+			return true;
+		} else {
+			if ( next( $GLOBALS['it_exchange']['transaction_methods'] ) ) { 
+				$GLOBALS['it_exchange']['transaction_method'] = current( $GLOBALS['it_exchange']['transaction_methods'] );
+				return true;
+			} else {
+				$GLOBALS['it_exchange']['transaction_method'] = false;
+				return false;
+			}   
+		}   
+		end( $GLOBALS['it_exchange']['transaction_methods'] );
+		$GLOBALS['it_exchange']['transaction_method'] = false;
+		return false;
+	}
+
+	/**
+	 * Returns data/html for cancel action
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $options
+	 * @return mixed
+	*/
+	function cancel( $options=array() ) {
+		return 'cancel action';
+	}
 }
