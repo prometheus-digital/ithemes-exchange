@@ -226,25 +226,23 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 				<div class="field coupon-code">
 					<label for="code"><?php _e( 'Code', 'LION' ); ?> <span class="tip" title="<?php _e( 'Try something cool like EXCHANGERULEZ5000! Or click the dice to generate a random code.', 'LION' ); ?>">i</span></label>
 					<?php $form->add_text_box( 'code', array( 'class' => 'emptycode' ) ); ?>
-					<a href class="dice"><img src="<?php echo esc_attr( ITUtility::get_url_from_file( dirname( __FILE__ ) ) ); ?>/images/dice-t.png" /></a>
+					<a href class="dice" title="Generate a random code."><img src="<?php echo esc_attr( ITUtility::get_url_from_file( dirname( __FILE__ ) ) ); ?>/images/dice-t.png" /></a>
 				</div>
 				
-				<div class="clearfix"></div>
-				<br>
 				<div class="field amount">
 					<label for="amount-number"><?php _e( 'Amount', 'LION' ); ?></label>
 					<?php $form->add_text_box( 'amount-number', array( 'type' => 'number' ) ); ?>
 					<?php $form->add_drop_down( 'amount-type', array( '%' => __( '% Percent', 'LION' ), '$' => '$ USD' ) ); ?>
 				</div>
 				
-				<div class="field date">
+				<div class="field date" data-alert="<?php _e( 'Please select an end date that is after the start date.', 'LION' ); ?>">
 					<div class="start-date">
 						<label for="start-date"><?php _e( 'Start Date', 'LION' ); ?></label>
-						<?php $form->add_text_box( 'start-date', array( 'class' => 'datepicker' ) ); ?>
+						<?php $form->add_text_box( 'start-date', array( 'class' => 'datepicker', 'data-append' => 'end-date' ) ); ?>
 					</div>
 					<div class="end-date">
 						<label for="end-date"><?php _e( 'End Date', 'LION' ); ?></label>
-						<?php $form->add_text_box( 'end-date', array( 'class' => 'datepicker' ) ); ?>
+						<?php $form->add_text_box( 'end-date', array( 'class' => 'datepicker', 'data-append' => 'start-date' ) ); ?>
 					</div>
 				</div>
 				
