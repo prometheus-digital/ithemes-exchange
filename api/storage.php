@@ -45,6 +45,18 @@ function it_exchange_save_option( $key, $value ) {
 }
 
 /**
+ * Clear the cache for a key
+ *
+ * @since 0.4.0
+ *
+ * @return void
+*/
+function it_exchange_clear_option_cache( $key ) {
+	$storage = it_exchange_get_storage( $key );
+	$storage->clear_cache();
+}
+
+/**
  * Return the ITStorage object for a given key
  *
  * $args options:

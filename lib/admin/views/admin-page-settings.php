@@ -189,6 +189,32 @@
 				<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/' . esc_attr( $form->get_option( 'reports-slug' ) ) . '/'; ?>
 			</td>
 		</tr>
+		<?php
+		// Allow add-ons to create their own ghost pages
+		$add_on_ghost_pages = apply_filters( 'it_exchange_add_ghost_pages', array(), $this );
+		foreach( (array) $add_on_ghost_pages as $page => $data ) {
+			if ( empty( $data['include_in_settings_pages'] ) )
+				continue;
+			$slug = $data['slug'];
+			$name = $data['name'];
+			?>
+			<tr valign="top">
+				<td>
+					<label for="<?php esc_attr_e( $slug ); ?>-name"><?php _e( $name ); ?></label>
+				</td>
+				<td>
+					<?php $form->add_text_box( $slug . '-name', array( 'class' => 'normal-text' ) ); ?>
+				</td>
+				<td>
+					<?php $form->add_text_box( $slug . '-slug', array( 'class' => 'normal-text' ) ); ?>
+				</td>
+				<td>
+					<?php echo it_exchange_get_page_url( $slug ); ?>
+				</td>
+			</tr>
+			<?php
+		}
+		?>
 		<?php do_action( 'it_exchange_general_settings_page_table_bottom' ); ?>
 	</table>
 	<?php wp_nonce_field( 'save-page-settings', 'exchange-page-settings' ); ?>

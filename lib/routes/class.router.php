@@ -116,30 +116,6 @@ class IT_Exchange_Router {
 	public $_log_out_name;
 
 	/**
-	 * @var string $_cart_slug slug for the cart page
-	 * @since 0.4.0
-	*/
-	public $_cart_slug;
-
-	/**
-	 * @var string $_cart_name name for the cart page
-	 * @since 0.4.0
-	*/
-	public $_cart_name;
-
-	/**
-	 * @var string $_checkout_slug slug for the checkout page
-	 * @since 0.4.0
-	*/
-	public $_checkout_slug;
-
-	/**
-	 * @var string $_checkout_name name for the checkout page
-	 * @since 0.4.0
-	*/
-	public $_checkout_name;
-
-	/**
 	 * @var string $_confirmation_slug slug for the confirmation page
 	 * @since 0.4.0
 	*/
@@ -210,18 +186,6 @@ class IT_Exchange_Router {
 	 * @since 0.4.0
 	*/
 	public $_is_downloads = false;
-
-	/**
-	 * @var boolean $_is_cart is this the cart page?
-	 * @since 0.4.0
-	*/
-	public $_is_cart = false;
-
-	/**
-	 * @var boolean $_is_checkout is this the checkout page?
-	 * @since 0.4.0
-	*/
-	public $_is_checkout = false;
 
 	/**
 	 * @var boolean $_is_confirmation is this the confirmation page?
@@ -303,20 +267,18 @@ class IT_Exchange_Router {
 		$this->_log_in_name       = $slugs['log-in-name'];
 		$this->_log_out_slug      = $slugs['log-out-slug'];
 		$this->_log_out_name      = $slugs['log-out-name'];
-		$this->_cart_slug	      = $slugs['cart-slug'];
-		$this->_cart_name         = $slugs['cart-name'];
-		$this->_checkout_slug     = $slugs['checkout-slug'];
-		$this->_checkout_name     = $slugs['checkout-name'];
 		$this->_confirmation_slug = $slugs['confirmation-slug'];
 		$this->_confirmation_name = $slugs['confirmation-name'];
 		$this->_reports_slug      = $slugs['reports-slug'];
 		$this->_reports_name      = $slugs['reports-name'];
 
 		// Allow add-ons to create their own ghost pages
-		$add_on_ghost_pages       = apply_filters( 'it_exchange_add_ghost_pages', array() );
+		$add_on_ghost_pages = apply_filters( 'it_exchange_add_ghost_pages', array() );
 		foreach( (array) $add_on_ghost_pages as $page => $data ) {
-			$slug = '_' . $data['slug'];
-			$this->$slug = $data['name'];
+			$slug = '_' . $data['slug'] . '_slug';
+			$name = '_' . $data['slug'] . '_name';
+			$this->$slug = $slugs[$data['slug'] . '-slug'];
+			$this->$name = $slugs[$data['slug'] . '-name'];
 		}
 	}
 
@@ -348,8 +310,6 @@ class IT_Exchange_Router {
 		$this->_is_purchases    = (boolean) get_query_var( $this->_purchases_slug );
 		$this->_is_log_in       = (boolean) get_query_var( $this->_log_in_slug );
 		$this->_is_log_out      = (boolean) get_query_var( $this->_log_out_slug );
-		$this->_is_cart         = (boolean) get_query_var( $this->_cart_slug );
-		$this->_is_checkout     = (boolean) get_query_var( $this->_checkout_slug );
 		$this->_is_confirmation = (boolean) get_query_var( $this->_confirmation_slug );
 		$this->_is_reports      = (boolean) get_query_var( $this->_reports_slug );
 
@@ -357,8 +317,8 @@ class IT_Exchange_Router {
 		$add_on_ghost_pages     = apply_filters( 'it_exchange_add_ghost_pages', array() );
 		foreach( (array) $add_on_ghost_pages as $page => $data ) {
 			$is_property        = '_is_' . $data['slug'];
-			$slug_property      = '_' . $data['slug'];
-			$this->$is_property = (boolean) get_query_var( $this->$slug_property;
+			$slug_property      = '_' . $data['slug'] . '_slug';
+			$this->$is_property = (boolean) get_query_var( $this->$slug_property );
 		}
 
 		// Set current view property
@@ -368,12 +328,8 @@ class IT_Exchange_Router {
 			$this->_current_view = 'log-out';
 		} else if ( $this->_is_purchases ) {
 			$this->_current_view = 'purchases';
-		} else if ( $this->_is_cart ) {
-			$this->_current_view = 'cart';
 		} else if ( $this->_is_reports ) {
 			$this->_current_view = 'reports';
-		} else if ( $this->_is_checkout ) {
-			$this->_current_view = 'checkout';
 		} else if ( $this->_is_confirmation ) {
 			$this->_current_view = 'confirmation';
 		} else if ( $this->_is_downloads ) {
@@ -614,16 +570,14 @@ class IT_Exchange_Router {
 			$this->_purchases_slug,
 			$this->_log_in_slug,
 			$this->_log_out_slug,
-			$this->_cart_slug,
-			$this->_checkout_slug,
 			$this->_confirmation_slug,
 			$this->_reports_slug,
 		);
 
 		// Allow add-ons to create their own ghost pages
-		$add_on_ghost_pages     = apply_filters( 'it_exchange_add_ghost_pages', array() );
+		$add_on_ghost_pages = apply_filters( 'it_exchange_add_ghost_pages', array() );
 		foreach( (array) $add_on_ghost_pages as $page => $data ) {
-			$slug = '_' . $data['slug'];
+			$slug = '_' . $data['slug'] . '_slug';
 			$vars[] = $this->$slug;
 		}
 		
@@ -663,12 +617,6 @@ class IT_Exchange_Router {
 			$this->_account_slug . '/([^/]+)/?$' => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_profile_slug . '=1',
 			$this->_account_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_profile_slug . '=1',
 
-			// Cart
-			$this->_store_slug . '/' . $this->_cart_slug => 'index.php?' . $this->_cart_slug . '=1',
-
-			// Checkout
-			$this->_store_slug . '/' . $this->_checkout_slug => 'index.php?' . $this->_checkout_slug . '=1',
-
 			// Confirmation
 			$this->_store_slug . '/' . $this->_confirmation_slug . '/([^/]+)/?$' => 'index.php?' . $this->_confirmation_slug . '=$matches[1]',
 
@@ -683,12 +631,13 @@ class IT_Exchange_Router {
 		$existing =  array_merge( $new_rules, $existing );
 
 		// Allow add-ons to create their own ghost pages
-		throwan error here so i know where to start. have to figure the best way to make this filterable.
-		$add_on_ghost_pages     = apply_filters( 'it_exchange_add_ghost_pages', array() );
+		$add_on_ghost_pages = apply_filters( 'it_exchange_add_ghost_pages', array() );
 		foreach( (array) $add_on_ghost_pages as $page => $data ) {
-			$slug = '_' . $data['slug'];
-			$vars[] = $this->$slug;
+			if ( ! empty ( $data['rewrites'] ) && is_array( $data['rewrites'] ) )
+				$existing = array_merge( $data['rewrites'], $existing );
 		}
+
+		return $existing;
 	}
 }
 $IT_Exchange_Router = new IT_Exchange_Router();

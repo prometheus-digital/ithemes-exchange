@@ -57,6 +57,13 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 	$permalinks = (boolean) get_option( 'permalink_structure' );
 	$base = trailingslashit( get_home_url() );
 
+	// Allow add-ons to create their own ghost pages
+	$add_on_ghost_pages = apply_filters( 'it_exchange_add_ghost_pages', array() );
+	foreach( (array) $add_on_ghost_pages as $addon_page => $data ) {
+		if ( $page == $addon_page && ! empty ( $data['url'] ) )
+			return $data['url'];
+	}
+
 	// Store needs to be first
 	if ( 'store' == $page ) {
 		if ( $permalinks )
@@ -66,7 +73,7 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 	}
 
 	// Any URLS in store breadcrumb need to come next
-	if ( in_array( $page, array( 'cart', 'checkout', 'confirmation', 'reports' ) ) ) {
+	if ( in_array( $page, array( 'confirmation', 'reports' ) ) ) {
 		if ( $permalinks )
 			return trailingslashit( $base . $pages['store-slug'] . '/' . $page_slug );
 		else
