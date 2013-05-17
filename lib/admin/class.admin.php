@@ -1122,6 +1122,8 @@ class IT_Exchange_Admin {
 			wp_enqueue_style( 'it-exchange-wizard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/wizard.css' );
 		} else if ( 'exchange_page_it-exchange-add-basic-coupon' === $hook_suffix || 'exchange_page_it-exchange-edit-basic-coupon' === $hook_suffix ) {
 			wp_enqueue_style( 'it-exchange-coupons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/coupons.css' );
+		} else if ( 'exchange_page_it-exchange-settings' === $hook_suffix ) {
+			wp_enqueue_style( 'it-exchange-settings', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/settings.css' );
 		}
 	}
 
