@@ -69,20 +69,21 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		// If we made it here, we're doing a loop of products for the current cart.
 		// We're accessing the SESSION directly to make looping easier.
 		// This will init/reset the SESSION products and loop through them. the /api/theme/cart-item.php file will handle individual products.
-		if ( empty( $_SESSION['it_exchange']['cart-item'] ) ) {
-			$_SESSION['it_exchange']['cart-item'] = reset( $_SESSION['it_exchange']['products'] );
+		if ( empty( $GLOBALS['it_exchange']['cart-item'] ) ) {
+			$GLOBALS['it_exchange']['products'] = it_exchange_get_cart_products();
+			$GLOBALS['it_exchange']['cart-item'] = reset( $GLOBALS['it_exchange']['products'] );
 			return true;
 		} else {
-			if ( next( $_SESSION['it_exchange']['products'] ) ) {
-				$_SESSION['it_exchange']['cart-item'] = current( $_SESSION['it_exchange']['products'] );
+			if ( next( $GLOBALS['it_exchange']['products'] ) ) {
+				$GLOBALS['it_exchange']['cart-item'] = current( $GLOBALS['it_exchange']['products'] );
 				return true;
 			} else {
-				$_SESSION['it_exchange']['cart-item'] = false;
+				$GLOBALS['it_exchange']['cart-item'] = false;
 				return false;
 			}
 		}
-		end( $_SESSION['it_exchange']['products'] );
-		$_SESSION['it_exchange']['cart-item'] = false;
+		end( $GLOBALS['it_exchange']['products'] );
+		$GLOBALS['it_exchange']['cart-item'] = false;
 		return false;
 	}
 

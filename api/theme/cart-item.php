@@ -42,7 +42,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	 * @return void
 	*/
 	function IT_Theme_API_Cart_Item() {
-		$this->_cart_item = empty( $_SESSION['it_exchange']['cart-item'] ) ? false : $_SESSION['it_exchange']['cart-item'];
+		$this->_cart_item = empty( $GLOBALS['it_exchange']['cart-item'] ) ? false : $GLOBALS['it_exchange']['cart-item'];
 	}
 
 	/**

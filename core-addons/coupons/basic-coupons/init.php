@@ -72,8 +72,8 @@ add_filter( 'it_exchange_supports_cart_coupons', 'it_exchange_basic_coupons_supp
  * @return boolean
 */
 function it_exchange_basic_coupons_applied_cart_coupons( $incoming=false ) {
-	$cart_data = it_exchange_get_cart_data();
-	return empty( $cart_data['basic_coupons'] ) ? false : $cart_data['basic_coupons'];
+	$cart_data = it_exchange_get_cart_data( 'basic_coupons' );
+	return empty( $cart_data ) ? false : $cart_data;
 }
 add_filter( 'it_exchange_get_applied_cart_coupons', 'it_exchange_basic_coupons_applied_cart_coupons' );
 
