@@ -21,6 +21,13 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * @var string
 	 */
 	private $session_id;
+	
+	/**
+	 * Option Key of the current session.
+	 *
+	 * @var string
+	 */
+	private $option_key;
 
 	/**
 	 * Unix timestamp when session expires.
@@ -64,7 +71,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * create a new session with that ID.
 	 *
 	 * @param $session_id
-	 * @uses apply_filters Calls `wp_session_expiration` to determine how long until sessions expire.
+	 * @uses apply_filters Calls `it_exchange_db_session_expiration` to determine how long until sessions expire.
 	 */
 	protected function __construct() {
 		if ( isset( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ) {
@@ -78,12 +85,14 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 			// Update the session expiration if we're past the variant time
 			if ( time() > $this->exp_variant ) {
 				$this->set_expiration();
-				update_option( "_wp_session_expires_{$this->session_id}", $this->expires );
+				update_option( "_it_exchange_db_session_expires_{$this->session_id}", $this->expires );
 			}
 		} else {
 			$this->session_id = $this->generate_id();
 			$this->set_expiration();
 		}
+	
+		$this->option_key = '_it_exchange_db_session_' . $this->session_id;
 
 		$this->read_data();
 
@@ -98,19 +107,19 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * writing to the database on every page load for active sessions and only updates the expiration
 	 * time if we're nearing when the session actually expires.
 	 *
-	 * By default, the expiration time is set to 30 minutes.
+	 * By default, the expiration time is set to 24 hours.
 	 * By default, the expiration variant is set to 24 minutes.
 	 *
 	 * As a result, the session expiration time - at a maximum - will only be written to the database once
-	 * every 24 minutes.  After 30 minutes, the session will have been expired. No cookie will be sent by
+	 * every 24 minutes.  After 24 hours, the session will have been expired. No cookie will be sent by
 	 * the browser, and the old session will be queued for deletion by the garbage collector.
 	 *
-	 * @uses apply_filters Calls `wp_session_expiration_variant` to get the max update window for session data.
-	 * @uses apply_filters Calls `wp_session_expiration` to get the standard expiration time for sessions.
+	 * @uses apply_filters Calls `it_exchange_db_session_expiration_variant` to get the max update window for session data.
+	 * @uses apply_filters Calls `it_exchange_db_session_expiration` to get the standard expiration time for sessions.
 	 */
 	private function set_expiration() {
-		$this->exp_variant = time() + intval( apply_filters( 'wp_session_expiration_variant', 24 * 60 ) );
-		$this->expires = time() + intval( apply_filters( 'wp_session_expiration', 30 * 60 ) );
+		$this->exp_variant = time() + intval( apply_filters( 'it_exchange_db_session_expiration_variant', 24 * 60 ) );
+		$this->expires = time() + intval( apply_filters( 'it_exchange_db_session_expiration', 24 * 60 * 60 ) );
 	}
 
 	/**
@@ -133,7 +142,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * @return array
 	 */
 	private function read_data() {
-		$this->container = get_option( "_wp_session_{$this->session_id}", array() );
+		$this->container = get_option( $this->option_key, array() );
 
 		return $this->container;
 	}
@@ -142,14 +151,12 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * Write the data from the current session to the data storage system.
 	 */
 	public function write_data() {
-		$option_key = "_wp_session_{$this->session_id}";
-
 		// Only write the collection to the DB if it's changed.
 		if ( $this->dirty ) {
-			if ( false === get_option( $option_key ) ) {
-				add_option( "_wp_session_{$this->session_id}", $this->container, '', 'no' );
+			if ( false === get_option( $this->option_key ) ) {
+				add_option( $this->option_key, $this->container, '', 'no' );
 			} else {
-				update_option( "_wp_session_{$this->session_id}", $this->container );
+				update_option( $this->option_key, $this->container );
 			}
 		}
 	}
@@ -188,7 +195,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 */
 	public function regenerate_id( $delete_old = false ) {
 		if ( $delete_old ) {
-			delete_option( "_wp_session_{$this->session_id}" );
+			delete_option( $this->option_key );
 		}
 
 		$this->session_id = $this->generate_id();

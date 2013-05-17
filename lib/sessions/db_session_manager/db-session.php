@@ -14,17 +14,17 @@
  *
  * @return int
  */
-function wp_session_cache_expire() {
-	$wp_session = IT_Exchange_DB_Sessions::get_instance();
+function it_exchange_db_session_cache_expire() {
+	$it_exchange_db_session = IT_Exchange_DB_Sessions::get_instance();
 
-	return $wp_session->cache_expiration();
+	return $it_exchange_db_session->cache_expiration();
 }
 
 /**
- * Alias of wp_session_write_close()
+ * Alias of it_exchange_db_session_write_close()
  */
-function wp_session_commit() {
-	wp_session_write_close();
+function it_exchange_db_session_commit() {
+	it_exchange_db_session_write_close();
 }
 
 /**
@@ -32,10 +32,10 @@ function wp_session_commit() {
  *
  * @param string $data
  */
-function wp_session_decode( $data ) {
-	$wp_session = IT_Exchange_DB_Sessions::get_instance();
+function it_exchange_db_session_decode( $data ) {
+	$it_exchange_db_session = IT_Exchange_DB_Sessions::get_instance();
 
-	return $wp_session->json_in( $data );
+	return $it_exchange_db_session->json_in( $data );
 }
 
 /**
@@ -43,10 +43,10 @@ function wp_session_decode( $data ) {
  *
  * @return string
  */
-function wp_session_encode() {
-	$wp_session = IT_Exchange_DB_Sessions::get_instance();
+function it_exchange_db_session_encode() {
+	$it_exchange_db_session = IT_Exchange_DB_Sessions::get_instance();
 
-	return $wp_session->json_out();
+	return $it_exchange_db_session->json_out();
 }
 
 /**
@@ -56,10 +56,10 @@ function wp_session_encode() {
  *
  * @return bool
  */
-function wp_session_regenerate_id( $delete_old_session = false ) {
-	$wp_session = IT_Exchange_DB_Sessions::get_instance();
+function it_exchange_db_session_regenerate_id( $delete_old_session = false ) {
+	$it_exchange_db_session = IT_Exchange_DB_Sessions::get_instance();
 
-	$wp_session->regenerate_id( $delete_old_session );
+	$it_exchange_db_session->regenerate_id( $delete_old_session );
 
 	return true;
 }
@@ -67,27 +67,27 @@ function wp_session_regenerate_id( $delete_old_session = false ) {
 /**
  * Start new or resume existing session.
  *
- * Resumes an existing session based on a value sent by the _wp_session cookie.
+ * Resumes an existing session based on a value sent by the _it_exchange_db_session cookie.
  *
  * @return bool
  */
-function wp_session_start() {
-	$wp_session = IT_Exchange_DB_Sessions::get_instance();
-	do_action( 'wp_session_start' );
+function it_exchange_db_session_start() {
+	$it_exchange_db_session = IT_Exchange_DB_Sessions::get_instance();
+	do_action( 'it_exchange_db_session_start' );
 
-	return $wp_session->session_started();
+	return $it_exchange_db_session->session_started();
 }
-add_action( 'plugins_loaded', 'wp_session_start' );
+add_action( 'plugins_loaded', 'it_exchange_db_session_start' );
 
 /**
  * Return the current session status.
  *
  * @return int
  */
-function wp_session_status() {
-	$wp_session = IT_Exchange_DB_Sessions::get_instance();
+function it_exchange_db_session_status() {
+	$it_exchange_db_session = IT_Exchange_DB_Sessions::get_instance();
 
-	if ( $wp_session->session_started() ) {
+	if ( $it_exchange_db_session->session_started() ) {
 		return PHP_SESSION_ACTIVE;
 	}
 
@@ -97,22 +97,22 @@ function wp_session_status() {
 /**
  * Unset all session variables.
  */
-function wp_session_unset() {
-	$wp_session = IT_Exchange_DB_Sessions::get_instance();
+function it_exchange_db_session_unset() {
+	$it_exchange_db_session = IT_Exchange_DB_Sessions::get_instance();
 
-	$wp_session->reset();
+	$it_exchange_db_session->reset();
 }
 
 /**
  * Write session data and end session
  */
-function wp_session_write_close() {
-	$wp_session = IT_Exchange_DB_Sessions::get_instance();
+function it_exchange_db_session_write_close() {
+	$it_exchange_db_session = IT_Exchange_DB_Sessions::get_instance();
 
-	$wp_session->write_data();
-	do_action( 'wp_session_commit' );
+	$it_exchange_db_session->write_data();
+	do_action( 'it_exchange_db_session_commit' );
 }
-add_action( 'shutdown', 'wp_session_write_close' );
+add_action( 'shutdown', 'it_exchange_db_session_write_close' );
 
 /**
  * Clean up expired sessions by removing data and their expiration entries from
@@ -121,7 +121,7 @@ add_action( 'shutdown', 'wp_session_write_close' );
  * This method should never be called directly and should instead be triggered as part
  * of a scheduled task or cron job.
  */
-function wp_session_cleanup() {
+function it_exchange_db_session_cleanup() {
 	global $wpdb;
 
 	if ( defined( 'WP_SETUP_CONFIG' ) ) {
@@ -129,7 +129,7 @@ function wp_session_cleanup() {
 	}
 
 	if ( ! defined( 'WP_INSTALLING' ) ) {
-		$expiration_keys = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE '_wp_session_expires_%'" );
+		$expiration_keys = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE '_it_exchange_db_session_expires_%'" );
 
 		foreach( $expiration_keys as $expiration ) {
 			// If the session has expired
@@ -138,23 +138,22 @@ function wp_session_cleanup() {
 				$session_id = substr( $expiration->option_name, 20 );
 
 				delete_option( $expiration->option_name );
-				delete_option( "_wp_session_{$session_id}" );
+				delete_option( "_it_exchange_db_session_{$session_id}" );
 			}
 		}
 	}
 
 	// Allow other plugins to hook in to the garbage collection process.
-	do_action( 'wp_session_cleanup' );
+	do_action( 'it_exchange_db_session_cleanup' );
 }
-add_action( 'wp_session_garbage_collection', 'wp_session_cleanup' );
+add_action( 'it_exchange_db_session_garbage_collection', 'it_exchange_db_session_cleanup' );
 
 /**
  * Register the garbage collector as a twice daily event.
  */
-function wp_session_register_garbage_collection() {
-	if ( ! wp_next_scheduled( 'wp_session_garbage_collection' ) ) {
-		wp_schedule_event( time(), 'twicedaily', 'wp_session_garbage_collection' );
+function it_exchange_db_session_register_garbage_collection() {
+	if ( ! wp_next_scheduled( 'it_exchange_db_session_garbage_collection' ) ) {
+		wp_schedule_event( time(), 'twicedaily', 'it_exchange_db_session_garbage_collection' );
 	}
 }
-add_action( 'wp', 'wp_session_register_garbage_collection' );
-?>
+add_action( 'wp', 'it_exchange_db_session_register_garbage_collection' );
