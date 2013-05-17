@@ -20,21 +20,30 @@ class IT_Exchange_Session {
 	private $_session;
 	
 	function IT_Exchange_Session() {
-		$this->init();
+		if( ! defined( 'IT_EXCHANGE_SESSION_COOKIE' ) )
+			define( 'IT_EXCHANGE_SESSION_COOKIE', '_it_exchange' );
+		
+		if ( ! class_exists( 'Recursive_ArrayAccess' ) )
+			require_once( 'db_session_manager/class-recursive-arrayaccess.php' );
+		
+		// Only include the functionality if it's not pre-defined.
+		if ( ! class_exists( 'IT_Exchange_DB_Sessions' ) ) {
+			require_once( 'db_session_manager/class-db-session.php' );
+			require_once( 'db_session_manager/db-session.php' );
+		}
+
+		if ( empty( $this->_session ) )
+			add_action( 'plugins_loaded', array( $this, 'init' ) );
+		else
+			add_action( 'init', array( $this, 'init' ) );
 	}
 	
 	function init() {
-		if ( '' == session_id() )
-			session_start();
-			
-		$session = empty( $_SESSION['it_exchange'] ) ? array() : $_SESSION['it_exchange'];
-		$this->_session = $session;
+		$this->_session = IT_Exchange_DB_Sessions::get_instance();
+		return $this->_session;
 	}
 	
 	function get_session_data( $key = false ) {
-		$session = empty( $_SESSION['it_exchange'] ) ? array() : $_SESSION['it_exchange'];
-		
-		
 		if ( isset( $key ) ) {
 			
 			$key = sanitize_key( $key );
@@ -51,8 +60,6 @@ class IT_Exchange_Session {
 	}
 	
 	function add_session_data( $key, $data ) {
-		$session = empty( $_SESSION['it_exchange'] ) ? array() : $_SESSION['it_exchange'];
-		
 		$key = sanitize_key( $key );
 		
 		if ( !empty( $this->_session[$key] ) ) {
@@ -61,23 +68,15 @@ class IT_Exchange_Session {
 		} else {
 			$this->_session[$key] = maybe_serialize( (array)$data );
 		}
-		
-		$_SESSION['it_exchange'] = $this->_session;
 	}
 	
 	function update_session_data( $key, $data ) {
-		$session = empty( $_SESSION['it_exchange'] ) ? array() : $_SESSION['it_exchange'];
-		
 		$key = sanitize_key( $key );
 		
 		$this->_session[$key] = maybe_serialize( (array)$data );
-		
-		$_SESSION['it_exchange'] = $this->_session;
 	}
 	
 	function clear_session_data( $key = false ) {
-		$session = empty( $_SESSION['it_exchange'] ) ? array() : $_SESSION['it_exchange'];
-		
 		if ( ! $key ) {
 				
 			$key = sanitize_key( $key );
@@ -86,15 +85,11 @@ class IT_Exchange_Session {
 				unset( $this->_session[$key] );
 		
 		}
-		
-		$_SESSION['it_exchange'] = $this->_session;
 	}
 	
 	function clear_session( $hard = false ) {		
 		if ( $hard )
 			$this->init();
-		
-		$_SESSION['it_exchange'] = $this->_session = array();
 	}
 }
 $GLOBALS['it_exchange']['session'] = new IT_Exchange_Session();
