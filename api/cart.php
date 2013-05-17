@@ -14,8 +14,8 @@
  * @since 0.3.7
  * @return array
 */
-function it_exchange_get_cart_data() {
-	$data = it_exchange_get_session_data();
+function it_exchange_get_cart_data( $key = false ) {
+	$data = it_exchange_get_session_data( $key );
 	return apply_filters( 'it_exchange_get_cart_data', $data );
 }
 
@@ -27,7 +27,7 @@ function it_exchange_get_cart_data() {
 */
 function it_exchange_update_cart_data( $key, $data ) {
 	it_exchange_update_session_data( $key, $data );
-	do_action( 'it_exchange_update_cart_data', $key, $data );
+	do_action( 'it_exchange_update_cart_data', $data, $key );
 }
 
 /**
@@ -36,7 +36,7 @@ function it_exchange_update_cart_data( $key, $data ) {
  * @since 0.4.0
 */
 function it_exchange_remove_cart_data( $key ) {
-	it_exchange_remove_session_data( $key );
+	it_exchange_clear_session_data( $key );
 	do_action( 'it_exchange_remove_cart_data', $key );
 }
 
@@ -47,8 +47,52 @@ function it_exchange_remove_cart_data( $key ) {
  * @return array
 */
 function it_exchange_get_cart_products() {
-    $products = it_exchange_get_session_products();
+    $products = it_exchange_get_session_data( 'products' );
 	return ( empty( $products ) || ! array( $products ) ) ? array() : $products;
+}
+
+/**
+ * Inserts product into the cart session
+ *
+ * @since 0.4.0
+ * @return array
+*/
+function it_exchange_add_cart_product( $cart_product_id, $product ) {
+    it_exchange_add_session_data( 'products', array( $cart_product_id => $product ) );
+	do_action( 'it_exchange_add_cart_product', $product );
+	
+}
+
+/**
+ * Updates product into the cart session
+ *
+ * @since 0.4.0
+ * @return array
+*/
+function it_exchange_update_cart_product( $cart_product_id, $product ) {
+	$products = it_exchange_get_session_data( 'products' );
+	if ( isset( $products[$cart_product_id] ) ) {
+		$products[$cart_product_id] = $product;
+    	it_exchange_update_session_data( 'products', $products );
+	} else {
+		it_exchange_add_cart_product( $cart_product_id, $product );
+	}
+	do_action( 'it_exchange_update_cart_product', $cart_product_id, $product, $products );
+}
+
+/**
+ * Deletes product from the cart session
+ *
+ * @since 0.4.0
+ * @return array
+*/
+function it_exchange_delete_cart_product( $cart_product_id ) {
+	$products = it_exchange_get_session_data( 'products' );
+	if ( isset( $products[$cart_product_id] ) ) {
+		unset( $products[$cart_product_id] );
+    	it_exchange_update_session_data( 'products', $products );
+	}
+	do_action( 'it_exchange_delete_cart_product', $cart_product_id, $products );
 }
 
 /**
@@ -108,7 +152,7 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 		$additional_data = maybe_serialize( $additional_data );
 
 	// If product is in cart already, bump the quanity. Otherwise, add it to the cart
-	$session_products = it_exchange_get_session_products();
+	$session_products = it_exchange_get_cart_products();
 
 	if ( ! empty ($session_products[$product_id . '-' . $itemized_hash] ) ) {
 		$product = $session_products[$product_id . '-' . $itemized_hash];
@@ -136,7 +180,7 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 			'count'           => $count,
 		);
 
-		it_exchange_add_session_product( $product, $product_id . '-' . $itemized_hash );
+		it_exchange_add_cart_product( $product_id . '-' . $itemized_hash, $product );
 		do_action( 'it_exchange_product_added_to_cart', $product_id );
 		return true;
 	}
@@ -155,13 +199,13 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 */
 function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, $add_to_existing=true ) {
 	// Get cart products
-	$cart_products = it_exchange_get_session_products();
+	$cart_products = it_exchange_get_cart_products();
 
 	// Update Quantity
 	if ( ! empty( $cart_products[$cart_product_id] ) && is_numeric( $quantity ) ) { 
 		$cart_product = $cart_products[$cart_product_id];
 		if ( empty( $quantity ) || $quantity < 1 ) { 
-			it_exchange_remove_session_product( $cart_product_id );
+			it_exchange_delete_cart_product( $cart_product_id );
 		} else {
 
 			// If we don't support purchase quanity, quanity will always be 1
@@ -182,7 +226,7 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
 				$cart_product['count'] = 1;
 			}
 
-			it_exchange_update_session_product( $cart_product_id, $cart_product );
+			it_exchange_update_cart_product( $cart_product_id, $cart_product );
 			do_action( 'it_exchange_cart_prouduct_count_updated', $cart_product_id );
 			return true;
 		}   
@@ -196,19 +240,8 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
  * @return boolean
 */
 function it_exchange_empty_shopping_cart() {
-	it_exchange_clear_session_products();
+	it_exchange_clear_session_data( 'products' );
 	do_action( 'it_exchange_empty_shopping_cart' );
-}
-
-/**
- * Removes a product from the cart
- *
- * @since 0.3.7
- * @param integer $product_id the shopping_cart_product_id (different from the DB product id)
- * @return boolean
-*/
-function it_exchange_remove_product_from_shopping_cart( $cart_product_id ) {
-	it_exchange_remove_session_product( $cart_product_id );
 }
 
 /**

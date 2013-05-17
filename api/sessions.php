@@ -32,9 +32,9 @@ function it_exchange_get_session() {
  * @since 0.3.3
  * @return array  an array of session_data stored in $_SESSION['it_exchange']
 */
-function it_exchange_get_session_data() {
+function it_exchange_get_session_data( $key = false ) {
 	$session = it_exchange_get_session();
-	return $session->get_data();
+	return maybe_unserialize( $session->get_session_data( $key ) );
 }
 
 /**
@@ -50,9 +50,9 @@ function it_exchange_get_session_data() {
  * @param mixed $key optional identifier for the data.
  * @return void 
 */
-function it_exchange_add_session_data( $data, $key=false ) {
+function it_exchange_add_session_data( $key, $data ) {
 	$session = it_exchange_get_session();
-	$session->add_data( $data, $key );
+	$session->add_session_data( $key, $data );
 	do_action( 'it_exchange_add_session_data', $data, $key );
 }
 
@@ -66,25 +66,19 @@ function it_exchange_add_session_data( $data, $key=false ) {
 */
 function it_exchange_update_session_data( $key, $data ) {
 	$session = it_exchange_get_session();
-	$session->update_data( $key, $data );
-	do_action( 'it_exchange_update_session_data', $key, $data );
+	$session->update_session_data( $key, $data );
+	do_action( 'it_exchange_update_session_data', $data, $key );
 }
 
 /**
- * Removes data from the session if the passed key exists
+ * Removes all data from the session key
  *
  * @since 0.3.7
- * @param mixed $key array key for the data to be removed
  * @return boolean
 */
-function it_exchange_remove_session_data( $key ) {
+function it_exchange_clear_session_data( $key = false ) {
 	$session = it_exchange_get_session();
-	$result = $session->remove_data( $key );
-	if ( $result ) {
-		do_action( 'it_exchange_get_session_data', $key );
-		return true;
-	}
-	return false;
+	$session->clear_session_data( $key );
 }
 
 /**
@@ -93,89 +87,7 @@ function it_exchange_remove_session_data( $key ) {
  * @since 0.3.7
  * @return boolean
 */
-function it_exchange_clear_session_data() {
+function it_exchange_clear_session() {
 	$session = it_exchange_get_session();
-	$result = $session->clear_data();
-	if ( $result ) {
-		do_action( 'it_exchange_clear_session_data' );
-		return true;
-	}
-	return false;
-}
-
-/**
- * Returns products array from current session
- *
- * @since 0.3.3
- * @return array  an array of products stored in $_SESSION['it_exchange']
-*/
-function it_exchange_get_session_products() {
-	$session = it_exchange_get_session();
-	return $session->get_products();
-}
-
-/**
- * Adds a product to the iThemes Exchange Session.
- *
- * This simply adds an item to the products array of the PHP Session.
- * Shopping cart plugins are responsible for managing the structure of the products
- * If a key is passed, it will be used as the key in the products array. Otherwise, the products array will just be
- * incremented. eg: ['products'][] = $product;
- *
- * @since 0.3.3
- * @param mixed $product product data as passed by the shopping cart
- * @param mixed $key optional identifier for the product.
- * @return void 
-*/
-function it_exchange_add_session_product( $product, $key=false ) {
-	$session = it_exchange_get_session();
-	$session->add_product( $product, $key );
-	do_action( 'it_exchange_add_session_product', $product, $key );
-}
-
-/**
- * Updates a session product
- *
- * @since 0.3.7
- * @param mixed $session_product_key key for the product in the cart
- * @param mixed $product_data updated product data
- * @return void
-*/
-function it_exchange_update_session_product( $key, $product ) {
-	$session = it_exchange_get_session();
-	$session->update_product( $key, $product );
-	do_action( 'it_exchange_update_session_product', $key, $product );
-}
-
-/**
- * Removes a product from the session if the passed key exists
- *
- * @since 0.3.3
- * @param mixed $key array key for the product to be removed
- * @return boolean
-*/
-function it_exchange_remove_session_product( $key ) {
-	$session = it_exchange_get_session();
-	$result = $session->remove_product( $key );
-	if ( $result ) {
-		do_action( 'it_exchange_remove_session_product', $key );
-		return true;
-	}
-	return false;
-}
-
-/**
- * Removes all products from the session
- *
- * @since 0.3.3
- * @return boolean
-*/
-function it_exchange_clear_session_products() {
-	$session = it_exchange_get_session();
-	$result = $session->clear_products();
-	if ( $result ) {
-		do_action( 'it_exchange_clear_session_products' );
-		return true;
-	}
-	return false;
+	$session->clear_session();
 }

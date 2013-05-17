@@ -5,6 +5,7 @@
  * @package IT_Exchange
 */
 ?>
+
 <?php if ( it_exchange( 'messages', 'has-errors' ) ) : ?>
 	<ul class='notices'>
 		<?php while( it_exchange( 'messages', 'errors' ) ) : ?>
@@ -31,7 +32,7 @@
 				<div class="cart-item-remove"><?php it_exchange( 'cart-item', 'remove' ) ?></div>
 			<?php endwhile; ?>
 		</div>
-
+        
 		<hr />
 		Sub-total: <?php it_exchange( 'cart', 'subtotal' ); ?>
 		<hr />

@@ -139,9 +139,9 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	*/
 	function handle_remove_product_from_cart_request() {
-		$var         = it_exchange_get_field_name( 'remove_product_from_cart' );
-		$product_ids = empty( $_REQUEST[$var] ) ? array() : $_REQUEST[$var];
-		$cart_url    = it_exchange_get_page_url( 'cart' );
+		$var             = it_exchange_get_field_name( 'remove_product_from_cart' );
+		$car_product_ids = empty( $_REQUEST[$var] ) ? array() : $_REQUEST[$var];
+		$cart_url        = it_exchange_get_page_url( 'cart' );
 
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_remove_product_from_cart_nonce_var', '_wpnonce' );
@@ -152,8 +152,8 @@ class IT_Exchange_Shopping_Cart {
 			die();
 		}
 
-		foreach( (array) $product_ids as $product_id ) {
-			it_exchange_remove_product_from_shopping_cart( $product_id );
+		foreach( (array) $car_product_ids as $car_product_id ) {
+			it_exchange_delete_cart_product( $car_product_id );
 		}
 
 		$var = it_exchange_get_field_name( 'alert_message' );
