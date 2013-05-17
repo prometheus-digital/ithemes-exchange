@@ -76,8 +76,6 @@
 				<p><strong>Product End Availability</strong><br /><?php it_exchange( 'product', 'availability', 'type=end' ); ?></p>
 			<?php endif; ?>
 
-			<?php it_exchange( 'product', 'purchase-options' ); ?>
-
 		</div><!-- .entry-content -->
 
 		<footer class="entry-meta">
