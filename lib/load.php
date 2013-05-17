@@ -51,7 +51,6 @@ require( $this->_plugin_path . 'lib/coupons/class.coupon.php' );
 
 // Sessions
 if ( ! is_admin() ) {
-	require( $this->_plugin_path . 'lib/sessions/class.session.php' );
 	require( $this->_plugin_path . 'lib/cart/class.cart.php' );
 } else {
 	require( $this->_plugin_path . 'lib/routes/class.nav-menus.php' );
