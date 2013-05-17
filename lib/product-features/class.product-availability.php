@@ -104,7 +104,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 			<?php endif; ?>
 			<p>
 				<input type="checkbox" id="it-exchange-checkbox-enable"  class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-start" value="yes" <?php checked( 'yes', $start_enabled ); ?> />&nbsp;<label for="it-exchange-checkbox-enable"><?php _e( 'Use a start date', 'LION' ); ?></label>
-				<input type="checkbox" id="it-exchange-checkbox-enable" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-end" value="yes" <?php checked( 'yes', $end_enabled ); ?> />&nbsp;<label for="it-exchange-checkbox-enable"><?php _e( 'Use an end start date', 'LION' ); ?></label>
+				<input type="checkbox" id="it-exchange-checkbox-enable" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-end" value="yes" <?php checked( 'yes', $end_enabled ); ?> />&nbsp;<label for="it-exchange-checkbox-enable"><?php _e( 'Use an end date', 'LION' ); ?></label>
 			</p>
 			<p>
 				<span class="it-exchange-enable-product-availability-start<?php echo ( $start_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
@@ -127,6 +127,9 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	 * @return void
 	*/
 	function save_feature_on_product_save() {
+		
+		$new_value = array();
+		
 		// Abort if we can't determine a product type
 		if ( ! $product_type = it_exchange_get_product_type() )
 			return;
@@ -147,13 +150,21 @@ class IT_Exchange_Product_Feature_Product_Availability {
 			return;
 
 		// Get new value from post
-		$new_start = empty( $_POST['it-exchange-product-availability-start'] ) ? '' : $_POST['it-exchange-product-availability-start'];
-		$new_end   = empty( $_POST['it-exchange-product-availability-end'] ) ? '' : $_POST['it-exchange-product-availability-end'];
-
-		$new_value = array( 
-			'start' => $new_start, 
-			'end'   => $new_end,
-		);
+		$avail['start'] = empty( $_POST['it-exchange-product-availability-start'] ) ? '' : $_POST['it-exchange-product-availability-start'];
+		$avail['end']   = empty( $_POST['it-exchange-product-availability-end'] ) ? '' : $_POST['it-exchange-product-availability-end'];
+		
+		foreach( $avail as $key => $val ) {	
+			
+			if ( strtotime( $val ) ) {			
+			
+				 $date = date_parse( $val );
+				 
+				 if ( checkdate( $date['month'], $date['day'], $date['year'] ) )
+					 $new_value[$key] = $avail[$key];
+				 
+			}
+				 
+		}
 		
 		// Save new value
 		it_exchange_update_product_feature( $product_id, 'availability', $new_value );

@@ -96,7 +96,7 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 		?>
 			<p>
 				<input type="checkbox" id="it-exchange-checkbox-enable" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-quantity" <?php echo checked( 'yes', $product_feature_enable_value ); ?> value="yes" />
-				&nbsp;<label for="it-exchange-checkbox-enable"><?php _e( 'Check this to allow customers to modify they quanity they want to purchase.' ); ?></label>
+				&nbsp;<label for="it-exchange-checkbox-enable"><?php _e( 'Check this to allow customers to modify they quanity they want to purchase.', 'LION' ); ?></label>
 			</p>
 			<p class="it-exchange-enable-product-quantity<?php echo ( $product_feature_enable_value == 'no' ) ? ' hide-if-js' : '' ?>">
 				<?php _e( 'What is the maximum quantity a customer and choose when purchasing this product? Leave blank for unlimited.', 'LION' ); ?>
@@ -149,14 +149,8 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 			return;
 
 		// Abort if key for feature option isn't set in POST data
-		if ( ! isset( $_POST['it-exchange-product-quantity'] ) )
-			return;
-
-		// Get new value from post
-		$new_value = $_POST['it-exchange-product-quantity'];
-		
-		// Save new value
-		it_exchange_update_product_feature( $product_id, 'purchase-quantity', $new_value );
+		if ( !empty( $_POST['it-exchange-product-quantity'] ) )
+			it_exchange_update_product_feature( $product_id, 'purchase-quantity', (integer)$_POST['it-exchange-product-quantity'] );
 	}
 
 	/**

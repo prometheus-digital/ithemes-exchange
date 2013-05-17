@@ -138,9 +138,8 @@ class IT_Exchange_Product_Feature_Inventory {
         else
 			it_exchange_update_product_feature( $product_id, 'inventory', 'yes', array( 'setting' => 'enabled' ) );
 		
-		if ( isset( $_POST['it-exchange-product-inventory'] ) )
-			it_exchange_update_product_feature( $product_id, 'inventory', $_POST['it-exchange-product-inventory'] );
-			return;
+		if ( !empty( $_POST['it-exchange-product-inventory'] ) )
+			it_exchange_update_product_feature( $product_id, 'inventory', (integer)$_POST['it-exchange-product-inventory'] );
 		
 	}
 

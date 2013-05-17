@@ -187,8 +187,8 @@ class IT_Exchange_Product_Feature_Downloads {
 			return;
 
 		// Save new downloads
-		if ( ! empty( $_POST['it-exchange-new-digital-download'] ) ) {
-			foreach( (array) $_POST['it-exchange-new-digital-download'] as $download ) {
+		if ( ! empty( $_POST['it-exchange-digital-downloads-new'] ) ) {
+			foreach( (array) $_POST['it-exchange-digital-downloads-new'] as $download ) {
 				$data = array(
 					'product_id' => $product_id,
 					'source'     => empty( $download['source'] ) ? false : trim( $download['source'] ),
@@ -201,24 +201,26 @@ class IT_Exchange_Product_Feature_Downloads {
 			}
 		}
 
-		// Update or delete existing downloads 
-		foreach ( (array) $_POST['it-exchange-digital-downloads'] as $download ) {
-			// Check for delete
-			if ( ! empty( $download['delete'] ) ) {
-				// Skip trash. Straight to oblivion. 
-				wp_delete_post( $download['id'], true );
-				continue;
+		if ( ! empty( $_POST['it-exchange-digital-downloads'] ) ) {
+			// Update or delete existing downloads 
+			foreach ( (array) $_POST['it-exchange-digital-downloads'] as $download ) {
+				// Check for delete
+				if ( ! empty( $download['delete'] ) ) {
+					// Skip trash. Straight to oblivion. 
+					wp_delete_post( $download['id'], true );
+					continue;
+				}
+	
+				$data = array(
+					'product_id'  => $product_id,
+					'download_id' => empty( $download['id'] ) ? false : trim( $download['id'] ),
+					'source'      => empty( $download['source'] ) ? false : trim( $download['source'] ),
+					'name'        => empty( $download['name'] ) ? false : trim( $download['name'] ),
+				);
+	
+				if ( ! empty( $product_id ) && ! empty( $data['source'] ) && ! empty( $data['name'] ) && ! empty( $data['download_id'] ) )
+					it_exchange_update_product_feature( $product_id, 'downloads', $data );
 			}
-
-			$data = array(
-				'product_id'  => $product_id,
-				'download_id' => empty( $download['id'] ) ? false : trim( $download['id'] ),
-				'source'      => empty( $download['source'] ) ? false : trim( $download['source'] ),
-				'name'        => empty( $download['name'] ) ? false : trim( $download['name'] ),
-			);
-
-			if ( ! empty( $product_id ) && ! empty( $data['source'] ) && ! empty( $data['name'] ) && ! empty( $data['download_id'] ) )
-				it_exchange_update_product_feature( $product_id, 'downloads', $data );
 		}
 	}
 
