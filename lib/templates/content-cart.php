@@ -5,7 +5,6 @@
  * @package IT_Exchange
 */
 ?>
-
 <?php if ( it_exchange( 'messages', 'has-errors' ) ) : ?>
 	<ul class='notices'>
 		<?php while( it_exchange( 'messages', 'errors' ) ) : ?>

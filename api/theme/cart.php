@@ -176,6 +176,11 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			case 'var' :
 				return $var;
 				break;
+			case 'super-widget' :
+				$url = add_query_arg( 'ite-sw-state', 'checkout' );
+				$output  = $options['before'];
+				$output .= '<a href="' . $url . '">' . esc_attr( $options['label'] ) . '</a>';
+				break;
 			case 'button' :
 			default :
 				$output  = $options['before'];

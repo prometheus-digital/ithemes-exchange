@@ -68,23 +68,25 @@ class IT_Exchange_Session {
 		} else {
 			$this->_session[$key] = maybe_serialize( (array)$data );
 		}
+		it_exchange_db_session_commit();
 	}
 	
 	function update_session_data( $key, $data ) {
 		$key = sanitize_key( $key );
-		
 		$this->_session[$key] = maybe_serialize( (array)$data );
+		it_exchange_db_session_commit();
 	}
 	
-	function clear_session_data( $key = false ) {
-		if ( ! $key ) {
-				
+	function clear_session_data( $key=false ) {
+		if ( $key ) {
 			$key = sanitize_key( $key );
 			
-			if ( isset( $this->_session[$key] ) )
+			if ( isset( $this->_session[$key] ) ) {
 				unset( $this->_session[$key] );
-		
+				it_exchange_db_session_commit();
+			}
 		}
+		$this->_session[$key] = $this->_session[$key];
 	}
 	
 	function clear_session( $hard = false ) {		

@@ -48,8 +48,6 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	 * @return void
 	*/
 	function IT_Theme_API_Registration() {
-		if ( is_user_logged_in() )
-			$this->_customer = it_exchange_get_current_customer();
 	}
 
 	/**
@@ -117,11 +115,11 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 				$output = $field_name;
 			
 			case 'label':
-				$output = $options['label'];
+				$output = esc_attr( $options['label'] );
 			
 			case 'html':
 			default:
-				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
+				$output = '<label for="' . $field_id. '">' . esc_attr( $options['label'] ) . '</label>';
 				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="" />';
 			
 		}
@@ -144,26 +142,22 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 		
 		$field_id = 'first_name';
 		$field_name = $field_id;
-		$field_value = $this->_customer->data->first_name;
 		
 		switch( $options['format'] ) {
 			
 			case 'field-id':
 				$output = $field_id;
-			
+				break;
 			case 'field-name':
 				$output = $field_name;
-			
-			case 'field-value':
-				$output = $field_value;
-			
+				break;
 			case 'label':
-				$output = $options['label'];
-			
+				$output = esc_attr( $options['label'] );
+				break;
 			case 'html':
 			default:
-				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
-				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
+				$output = '<label for="' . $field_id . '">' . esc_attr( $options['label'] ) . '</label>';
+				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="" />';
 			
 		}
 		
@@ -185,7 +179,6 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 		
 		$field_id = 'last_name';
 		$field_name = $field_id;
-		$field_value = $this->_customer->data->last_name;
 		
 		switch( $options['format'] ) {
 			
@@ -195,16 +188,13 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'field-name':
 				$output = $field_name;
 			
-			case 'field-value':
-				$output = $field_value;
-			
 			case 'label':
 				$output = $options['label'];
 			
 			case 'html':
 			default:
-				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
-				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
+				$output = '<label for="' . $field_id . '">' . $options['label'] . '</label>';
+				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="" />';
 			
 		}
 		
@@ -226,7 +216,6 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 		
 		$field_id = 'email';
 		$field_name = $field_id;
-		$field_value = $this->_customer->data->user_email;
 		
 		switch( $options['format'] ) {
 			
@@ -236,16 +225,13 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'field-name':
 				$output = $field_name;
 			
-			case 'field-value':
-				$output = $field_value;
-			
 			case 'label':
-				$output = $options['label'];
+				$output = esc_attr( $options['label'] );
 			
 			case 'html':
 			default:
-				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
-				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
+				$output = '<label for="' . $field_id . '">' . esc_attr( $options['label'] ) . '</label>';
+				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="" />';
 			
 		}
 		
@@ -277,12 +263,12 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 				$output = $field_name;
 			
 			case 'label':
-				$output = $options['label'];
+				$output = esc_attr( $options['label'] );
 			
 			case 'html':
 			default:
-				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
-				$output .= '<input type="password" id="' . $field_id. '" name="' . $field_name. '" value="" />';
+				$output = '<label for="' . $field_id. '">' . esc_attr( $options['label'] ) . '</label>';
+				$output .= '<input type="password" id="' . $field_id . '" name="' . $field_name. '" value="" />';
 			
 		}
 		
@@ -310,17 +296,16 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'field-id':
 				$output = $field_id;
 			
-
 			case 'field-name':
 				$output = $field_name;
 			
 			case 'label':
-				$output = $options['label'];
+				$output = esc_attr( $options['label'] );
 			
 			case 'html':
 			default:
-				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
-				$output .= '<input type="password" id="' . $field_id. '" name="' . $field_name. '" value="" />';
+				$output = '<label for="' . $field_id . '">' . $options['label'] . '</label>';
+				$output .= '<input type="password" id="' . $field_id . '" name="' . $field_name. '" value="" />';
 			
 		}
 		
@@ -352,14 +337,13 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 				$output = $field_name;
 			
 			case 'label':
-				$output = $options['label'];
+				$output = esc_attr( $options['label'] );
 			
 			case 'html':
 			default:
-				$output = '<input type="submit" id="' . $field_id. '" name="' . $field_name. '" value="' . $options['label'] . '" />';
+				$output = '<input type="submit" id="' . $field_id . '" name="' . $field_name . '" value="' . esc_attr( $options['label'] ) . '" />';
 			
 		}
-		
 		return $output;
 	}
 	
@@ -391,11 +375,11 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 		switch( $options['format'] ) {
 			
 			case 'label':
-				$output = $options['label'];
+				$output = esc_attr( $options['label'] );
 			
 			case 'html':
 			default:
-				$output = '<h1>' . $options['label'] . '</h1>';
+				$output = '<h1>' . esc_attr( $options['label'] ) . '</h1>';
 			
 		}
 		

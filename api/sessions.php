@@ -75,7 +75,7 @@ function it_exchange_update_session_data( $key, $data ) {
  * @since 0.3.7
  * @return boolean
 */
-function it_exchange_clear_session_data( $key = false ) {
+function it_exchange_clear_session_data( $key=false ) {
 	$session = it_exchange_get_session();
 	$session->clear_session_data( $key );
 }
@@ -86,7 +86,7 @@ function it_exchange_clear_session_data( $key = false ) {
  * @since 0.3.7
  * @return boolean
 */
-function it_exchange_clear_session() {
+function it_exchange_clear_session( $hard=false ) {
 	$session = it_exchange_get_session();
-	$session->clear_session();
+	$session->clear_session( $hard );
 }

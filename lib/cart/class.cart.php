@@ -66,6 +66,45 @@ class IT_Exchange_Shopping_Cart {
 	}
 
 	/**
+	 * Listens for $_REQUESTs to buy a product now
+	 *
+	 * @since 0.3.8
+	 * @return void
+	*/
+	function handle_buy_now_request() {
+
+		$buy_now_var = it_exchange_get_field_name( 'buy_now' );
+		$product_id = empty( $_REQUEST[$buy_now_var] ) ? 0 : $_REQUEST[$buy_now_var];
+		$product    = it_exchange_get_product( $product_id );
+		$quantity_var    = it_exchange_get_field_name( 'product_purchase_quantity' );
+		$requested_quantity = empty( $_REQUEST[$quantity_var] ) ? 1 : absint( $_REQUEST[$quantity_var] );
+
+		// Vefify legit product
+		if ( ! $product )
+			$error = 'bad-product';
+
+		// Verify nonce
+		$nonce_var = apply_filters( 'it_exchange_purchase_product_nonce_var', '_wpnonce' );
+		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-purchase-product-' . $product_id ) )
+			$error = 'product-not-added-to-cart';
+
+		// Add product
+		if ( empty( $error ) && it_exchange_add_product_to_shopping_cart( $product_id, $requested_quantity ) ) {
+			$sw_state = is_user_logged_in() ? 'checkout' : 'login';
+			$url = ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_page_url( 'checkout' ) ) ? it_exchange_get_page_url( 'checkout' ) : add_query_arg( 'ite-sw-state', $sw_state ); 
+			$url = add_query_arg( array( it_exchange_get_field_name( 'alert_message' ) => 'buying-product' ), $url );
+			wp_redirect( $url );
+			die();
+		}
+
+		$error_var = it_exchange_get_field_name( 'error_message' );
+		$error = empty( $error ) ? 'product-not-added-to-cart' : $error;
+		$url  = add_query_arg( array( $error_var => $error ), $cart );
+		wp_redirect( $url );
+		die();
+	}
+
+	/**
 	 * Listens for $_REQUESTs to add a product to the cart and processes
 	 *
 	 * @since 0.3.8
@@ -84,8 +123,8 @@ class IT_Exchange_Shopping_Cart {
 			$error = 'bad-product';
 
 		// Verify nonce
-		$nonce_var = apply_filters( 'it_exchange_add_product_to_cart_nonce_var', '_wpnonce' );
-		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-add-product-to-cart-' . $product_id ) )
+		$nonce_var = apply_filters( 'it_exchange_purchase_product_nonce_var', '_wpnonce' );
+		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-purchase-product-' . $product_id ) )
 			$error = 'product-not-added-to-cart';
 
 		// Add product

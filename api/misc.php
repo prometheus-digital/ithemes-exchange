@@ -27,6 +27,7 @@ function it_exchange_get_field_names() {
 	// required field names
 	$required = array(
 		'add_product_to_cart'      => 'it-exchange-add-product-to-cart',
+		'buy_now'                  => 'it-exchange-buy-now',
 		'remove_product_from_cart' => 'it-exchange-remove-product-from-cart',
 		'update_cart_action'       => 'it-exchange-update-cart-request',
 		'empty_cart'               => 'it-exchange-empty-cart',
@@ -63,6 +64,10 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 		if ( $page == $addon_page && ! empty ( $data['url'] ) )
 			return $data['url'];
 	}
+
+	// Process SuperWidget links
+	if ( it_exchange_in_superwidget() )
+		return add_query_arg( 'ite-sw-state', $page_slug );
 
 	// Store needs to be first
 	if ( 'store' == $page ) {

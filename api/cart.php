@@ -151,9 +151,33 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 	if ( ! is_serialized( $additional_data ) )
 		$additional_data = maybe_serialize( $additional_data );
 
-	// If product is in cart already, bump the quanity. Otherwise, add it to the cart
+	// Doe we have anything in the cart already?
 	$session_products = it_exchange_get_cart_products();
 
+	/**
+	 * If multi-item carts are allowed, don't do antying here.
+	 * If multi-item carts are NOT allowed and this is a different item, empty the cart before proceeding.
+	 * If item being added to cart is already in cart, preserve that item so that quanity will be bumpped.
+	*/
+	if ( ! it_exchange_is_multi_item_cart_allowed() ) {
+		if ( ! empty( $session_products ) ) {
+			// Preserve the current item being added if its already in the cart
+			if ( ! empty( $session_products[$product_id . '-' . $itemized_hash] ) )
+				$preserve_for_quantity_bump = $session_products[$product_id . '-' . $itemized_hash];
+
+			// Empty the cart to ensure only one item
+			it_exchange_empty_shopping_cart();
+
+			// Add the existing item back if found
+			if ( ! empty( $preserve_for_quantity_bump ) )
+				it_exchange_add_cart_product( $preserve_for_quantity_bump['product_cart_id'], $preserve_for_quantity_bump );
+
+			// Reset the session products
+			$session_products = it_exchange_get_cart_products();
+		}
+	}
+
+	// If product is in cart already, bump the quanity. Otherwise, add it to the cart
 	if ( ! empty ($session_products[$product_id . '-' . $itemized_hash] ) ) {
 		$product = $session_products[$product_id . '-' . $itemized_hash];
 
@@ -242,6 +266,18 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
 function it_exchange_empty_shopping_cart() {
 	it_exchange_clear_session_data( 'products' );
 	do_action( 'it_exchange_empty_shopping_cart' );
+}
+
+/**
+ * Are multi item carts allowed?
+ *
+ * Default is no. Addons must tell us yes as well as provide any pages needed for a cart / checkout / etc.
+ *
+ * @since 0.4.0
+ * @return boolean
+*/
+function it_exchange_is_multi_item_cart_allowed() {
+	return apply_filters( 'it_exchange_multi_item_cart_allowed', false );
 }
 
 /**

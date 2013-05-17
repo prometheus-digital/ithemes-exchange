@@ -314,13 +314,13 @@ function it_exchange_enable_addon( $add_on ) {
  * Checks if an add-on is enabled
  *
  * @since 0.4.0
- * @param string $add_on  add_on slug to check
+ * @param string $add_on_slug  add_on slug to check
  * @return bool
 */
-function is_it_exchange_addon_enabled( $add_on ) {
-	$enabled = it_exchange_get_option( 'enabled_add_ons' );
+function is_it_exchange_addon_enabled( $add_on_slug ) {
+	$enabled = array_keys( it_exchange_get_enabled_addons() );
 
-	if ( in_array( $add_on, $enabled ) )
+	if ( in_array( $add_on_slug, $enabled ) )
 		return true;
 		
 	return false;

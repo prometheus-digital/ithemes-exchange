@@ -16,5 +16,5 @@
 	</div>
 	<hr />
 	<div class="it-exchange-cart-subtotal"><?php _e( 'Sub-total:', 'LION' ); ?> <?php it_exchange( 'cart', 'subtotal' ); ?></div>
-	<div class="it-exchange-checkout-link"><a href="<?php echo it_exchange_get_page_url( 'checkout' ); ?>"><?php _e( 'Checkout', 'LION' ); ?></a></div>
+	<div class="it-exchange-checkout-link"><?php it_exchange( 'cart', 'checkout', 'format=super-widget' ); ?></div>
 <?php endif; ?>

@@ -62,3 +62,9 @@ function it_exchange_register_multi_item_cart_checkout_rewrites( $existing ) {
 	return $existing;
 }
 add_filter( 'it_exchange_add_ghost_pages', 'it_exchange_register_multi_item_cart_checkout_rewrites' );
+
+/**
+ * Enables multi item carts
+ * @since 0.4.0
+*/
+add_filter( 'it_exchange_multi_item_cart_allowed', '__return_true' );

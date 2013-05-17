@@ -6,7 +6,6 @@
 */
 ?>
 <div class="login">
-	
 	<?php it_exchange( 'login', 'formopen' ); ?>
 	
 	<?php if ( it_exchange( 'messages', 'has-errors' ) ) : ?>
@@ -26,20 +25,23 @@
 	<?php endif; ?>
 	
 	<div class="user-name">
-	<?php it_exchange( 'login', 'username' ); ?>
+		<?php it_exchange( 'login', 'username' ); ?>
 	</div>
 	<div class="password">
-	<?php it_exchange( 'login', 'password' ); ?>
+		<?php it_exchange( 'login', 'password' ); ?>
 	</div>
 	<div class="rememberme">
-	<?php it_exchange( 'login', 'remember-me' ); ?>
+		<?php it_exchange( 'login', 'remember-me' ); ?>
 	</div>
 
 	<?php it_exchange( 'login', 'login-button' ); ?>
 	
 	<div class="recover_url">
-	<?php it_exchange( 'login', 'recover-url' ); ?>
+		<?php it_exchange( 'login', 'recover-url' ); ?>
 	</div>
 	
+		<div class="register_url">
+			<a href="<?php echo it_exchange_get_page_url( 'registration' ); ?>"><?php _e( 'Register', 'LION' ); ?></a>
+		</div>
     <?php it_exchange( 'login', 'form-close' ); ?>
 </div>

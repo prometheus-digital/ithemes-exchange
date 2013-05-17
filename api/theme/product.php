@@ -39,6 +39,9 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		'downloads'           => 'downloads',
 		'purchaseoptions'     => 'purchase_options',
 		'buynow'              => 'buy_now',
+		'addtocart'           => 'add_to_cart',
+		'buynowvar'           => 'buy_now_var',
+		'addtocartvar'        => 'add_to_cart_var',
 	);
 
 	/**
@@ -495,33 +498,28 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	}
 
 	/**
-	 * Returns add_to_cart field or field_name
+	 * Returns the buy now or add_to_cart form. Or both.
 	 *
-	 * Format options:
-	 * - form: (default) includes quanity select if available to product type and product
-	 * - button: returns an HTML button
-	 * - link: returns an HTML anchor tag
-	 * - var-key: returns the query_var needed to build your own button or link.
-	 * - var-value: returns the query_var value needed to build your own button or link
-	 * 
-	 * Format examples
-	 * - Form: <?php it_exchange( 'product', 'add-to-cart' ); ?> // returns form. We do all the checks for you. include quanity options if product_type and product support it. Check inventory, etc.
-	 * - Button: <?php it_exchange( 'product', 'add-to-cart', 'format=button' ); ?> // returns button and hidden field without form
-	 * - Link: <?php it_exchange( 'product', 'add-to-cart', 'data=link' ); ?> // returns button
-	 * - Custom link: <a href="?<?php it_exchange( 'product', 'add-to-cart', 'format=var-key' ); ?>=it_exchange( 'product', 'add-to-cart', 'format=var-value' ); ?>">Add to cart</a>
-	 *
-	 * Other options:
-	 * - class: a CSS class applied to button or links
-	 * - title: Link title or Button value
-	 * - button-type: submit or button. Default is submit
-	 * - button-name: default is false. No name attribute is provided when false
+	 * Options:
+	 * - buy-now-before:          Gets added before the buy-now form
+	 * - buy-now-after:           Gets added after the buy-now form
+	 * - buy-now-class:           A CSS class applied to the buy-now button
+	 * - buy-now-label:           The HTML value of the buy now button.
+	 * - buy-now-button-type:     The button-type: submit or button. Default is submit
+	 * - buy-now-button-name:     The default is false. No name attribute is provided when false
+	 * - add-to-cart-before:      Gets added before the buy-now form
+	 * - add-to-cart-after:       Gets added after the buy-now form
+	 * - add-to-cart-class:       A CSS class applied to the buy-now button
+	 * - add-to-cart-label:       The HTML value of the buy now button.
+	 * - add-to-cart-button-type: The button-type: submit or button. Default is submit
+	 * - add-to-cart-button-name: The default is false. No name attribute is provided when false
 	 *
 	 * @since 0.4.0
 	 * @return string
 	*/
 	function purchase_options( $options=array() ) {
 
-		// Return boolean if has flag was set
+		// Return boolean if has flag was set. Just keeping this here since its in all other product.php methods
 		if ( $options['supports'] )
 			return true;
 
@@ -533,13 +531,21 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$result        = false;
 
 		$defaults      = array(
-			'before'      => '',
-			'after'       => '',
-			'format'      => 'form',
-			'class'       => 'add-product-to-cart',
-			'title'       => __( 'Add to cart', 'LION' ),
-			'button-type' => 'submit',
-			'button-name' => false,
+			'type'                    => false,
+			'buy-now-before'          => '',
+			'buy-now-after'           => '',
+			'buy-now-class'           => false,
+			'buy-now-label'           => __( 'Buy Now', 'LION' ),
+			'buy-now-button-type'     => 'submit',
+			'buy-now-button-name'     => false,
+			'add-to-cart-before'      => '',
+			'add-to-cart-after'       => '',
+			'add-to-cart-class'       => false,
+			'add-to-cart-label'       => __( 'Add to Cart', 'LION' ),
+			'add-to-cart-button-type' => 'submit',
+			'add-to-cart-button-name' => false,
+			'out-of-stock-text'       => __( 'Out of stock.', 'LION' ),
+			'not-available--text'     => __( 'Product not available right now.', 'LION' ),
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
@@ -549,51 +555,220 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// If we're supporting availability dates, check that
 		$product_is_available = it_exchange( 'product', 'is-available' );
 
-		$class         = empty( $options['class'] ) ? '' : ' class="' . esc_attr( $options['class'] ) .'"';
-		$var_key       = it_exchange_get_field_name( 'add_product_to_cart' );
-		$var_value     = $this->product->ID;
-		$button_name   = empty( $options['button-name'] ) ? '' : ' name="' . esc_attr( $options['button-name'] ) . '"';
-		$button        = '<input' . $button_name . ' type="' . esc_attr( $options['button-type'] ) . '" value="' . $options['title'] . '"' . $class . ' />';
+		// Do we have multi-item cart add-on enabled?
+		$multi_item_cart = it_exchange_is_multi_item_cart_allowed();
 
-		$hidden_fields  = '<input type="hidden" name="it-exchange-action" value="add_product_to_cart" />';
-		$hidden_fields .= wp_nonce_field( 'it-exchange-add-product-to-cart-' . $this->product->ID, '_wpnonce', true, false );
-		$hidden_fields .= '<input type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
+		// Init empty hidden field variables
+		$buy_now_hidden_fields = $add_to_cart_hidden_fields = '';
 
-		// Generate correct output
-		switch( $options['format'] ) {
+		$output = '';
 
-			case 'var-key':
-				$output = esc_attr( $var_key );
-				break;
-			case 'var-value':
-				$output = esc_attr( $var_value );
-				break;
-			case 'button' :
-				$output = $hidden_fields . $button;
-				break;
-			case 'link' :
-				$url = add_query_arg( array( $var_key => $var_value ) );
-				$output = '<a' . $class . 'href="' . $url . '">' . $options['link_title'] . '</a>';
-				break;
-			case 'form' :
-			default:
-				$output  = '<form action="" method="post">';
-				$output .= it_exchange( 'product', 'get-purchase-quantity' );
-				$output .= $hidden_fields;
+		// Set buy-now options
+		$options['before']      = $options['buy-now-before'];
+		$options['after']       = $options['buy-now-after'];
+		$options['class']       = $options['buy-now-class'];
+		$options['label']       = $options['buy-now-label'];
+		$options['button-type'] = $options['buy-now-button-type'];
+		$options['button-name'] = $options['buy-now-button-name'];
 
-				// Don't show the add-to-cart button if we don't have inventory
-				if ( $product_in_stock && $product_is_available ) {
-					$output .= $button;
-				} else if ( ! $product_is_available ) {
-					$output .= apply_filters( 'it_exchange_product_not_available_label', __( 'This product is not available for purchase', 'LION' ), $this->product );
-				} else {
-					$output .= apply_filters( 'it_exchange_out_of_stock_label', __( 'Out of stock', 'LION' ), $this->product );
-				}
-				$output .= '</form>';
-				break;
-			
-		}
+		// Add buy-now form to output if product is available for purchase and template asked for it.
+		if ( $product_in_stock && $product_is_available && ( empty( $options['type'] ) || 'buy-now' == $options['type'] ) )
+			$output .= it_exchange( 'product', 'get-buy-now', $options );
 
+		// Set add-to-cart options
+		$options['before']      = $options['add-to-cart-before'];
+		$options['after']       = $options['add-to-cart-after'];
+		$options['class']       = $options['add-to-cart-class'];
+		$options['label']       = $options['add-to-cart-label'];
+		$options['button-type'] = $options['add-to-cart-button-type'];
+		$options['button-name'] = $options['add-to-cart-button-name'];
+
+		// Add add-to-cart form to output if product is available for purchase and template asked for it.
+		if ( $product_in_stock && $product_is_available && $multi_item_cart && ( empty( $options['type'] ) || 'add-to-cart' == $options['type'] ) )
+			$output .= it_exchange( 'product', 'get-add-to-cart', $options );
+
+		// Return output
 		return $output;
+	}
+
+	function buy_now( $options=array() ) {
+
+		// Return boolean if has flag was set. Just keeping this here since its in all other product.php methods
+		if ( $options['supports'] )
+			return true;
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return true;
+		
+		// Parse options
+		$result        = false;
+
+		$defaults      = array(
+			'before'              => '',
+			'after'               => '',
+			'class'               => false,
+			'label'               => __( 'Buy Now', 'LION' ),
+			'button-type'         => 'submit',
+			'button-name'         => false,
+			'out-of-stock-text'   => __( 'Out of stock.', 'LION' ),
+			'not-available--text' => __( 'Product not available right now.', 'LION' ),
+		);
+		$options   = ITUtility::merge_defaults( $options, $defaults );
+
+		// If we are tracking inventory, lets make sure we have some available
+		$product_in_stock = it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ? it_exchange_product_has_feature( $this->product->ID, 'inventory' ) : true;
+
+		// If we're supporting availability dates, check that
+		$product_is_available = it_exchange( 'product', 'is-available' );
+
+		$output = '';
+
+		$class          = empty( $options['class'] ) ? 'buy-now-button' : 'buy-now-button ' . esc_attr( $options['class'] );
+		$var_key        = it_exchange_get_field_name( 'buy_now' );
+		$var_value      = $this->product->ID;
+		$button_name    = empty( $options['button-name'] ) ? '' : ' name="' . esc_attr( $options['button-name'] ) . '"';
+		$button         = '<input' . $button_name . ' type="' . esc_attr( $options['button-type'] ) . '" value="' . esc_attr( $options['label'] ) . '" class="' . esc_attr( $class ) . '" />';
+		$hidden_fields  = '<input type="hidden" name="it-exchange-action" value="buy_now" />';
+		$hidden_fields .= '<input type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
+		$hidden_fields .= wp_nonce_field( 'it-exchange-purchase-product-' . $this->product->ID, '_wpnonce', true, false );
+		
+		if ( ! $product_in_stock )
+			return '<p>' . esc_attr( $options['out-of-stock-label'] ) . '</p>';
+
+		if ( ! $product_is_available )
+			return '<p>' . esc_attr( $options['not-available-text'] ) . '</p>';
+
+		$result  = '<form action="" method="post">';
+		$result .= $hidden_fields;
+		$result .= it_exchange( 'product', 'get-purchase-quantity' );
+		$result .= $button;
+		$result .= '</form>';
+
+		return $result;
+	}
+
+	function add_to_cart( $options=array() ) {
+
+		// Return boolean if has flag was set. Just keeping this here since its in all other product.php methods
+		if ( $options['supports'] )
+			return true;
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return true;
+		
+		// Parse options
+		$result        = false;
+
+		$defaults      = array(
+			'before'              => '',
+			'after'               => '',
+			'class'               => false,
+			'label'               => __( 'Add to Cart', 'LION' ),
+			'button-type'         => 'submit',
+			'button-name'         => false,
+			'out-of-stock-text'   => __( 'Out of stock.', 'LION' ),
+			'not-available--text' => __( 'Product not available right now.', 'LION' ),
+		);
+		$options   = ITUtility::merge_defaults( $options, $defaults );
+
+		// If we are tracking inventory, lets make sure we have some available
+		$product_in_stock = it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ? it_exchange_product_has_feature( $this->product->ID, 'inventory' ) : true;
+
+		// If we're supporting availability dates, check that
+		$product_is_available = it_exchange( 'product', 'is-available' );
+
+		// Do we have multi-item cart add-on enabled?
+		$multi_item_cart = it_exchange_is_multi_item_cart_allowed();
+
+		// Init empty hidden field variables
+		$buy_now_hidden_fields = $add_to_cart_hidden_fields = '';
+
+		$class          = empty( $options['class'] ) ? 'add-to-cart-button' : 'add-to-cart-button ' . esc_attr( $options['class'] );
+		$var_key        = it_exchange_get_field_name( 'add_product_to_cart' );
+		$var_value      = $this->product->ID;
+		$button_name    = empty( $options['button-name'] ) ? '' : ' name="' . esc_attr( $options['button-name'] ) . '"';
+		$button         = '<input' . $button_name . ' type="' . esc_attr( $options['button-type'] ) . '" value="' . esc_attr( $options['label'] ) . '" class="' . esc_attr( $class ) . '" />';
+		$hidden_fields  = '<input type="hidden" name="it-exchange-action" value="add_product_to_cart" />';
+		$hidden_fields .= '<input type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
+		$hidden_fields .= wp_nonce_field( 'it-exchange-purchase-product-' . $this->product->ID, '_wpnonce', true, false );
+		
+		if ( ! $product_in_stock )
+			return '<p>' . esc_attr( $options['out-of-stock-label'] ) . '</p>';
+
+		if ( ! $product_is_available )
+			return '<p>' . esc_attr( $options['not-available-text'] ) . '</p>';
+
+		if ( ! $multi_item_cart )
+			return '';
+
+		$result  = '<form action="" method="post">';
+		$result .= $hidden_fields;
+		$result .= it_exchange( 'product', 'get-purchase-quantity' );
+		$result .= $button;
+		$result .= '</form>';
+
+		return $result;
+	}
+
+	/**
+	 * Returns a buy_now var
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $options
+	 * @return string
+	*/
+	function buy_now_var( $options ) {
+
+		// Return boolean if has flag was set.
+		if ( $options['supports'] )
+			return true;
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return true;
+		
+		// Parse options
+		$defaults      = array(
+			'format'      => 'key',
+		);
+		$options   = ITUtility::merge_defaults( $options, $defaults );
+
+		if ( 'key' == $format )
+			return it_exchange_get_field_name( 'buy_now' );
+		else
+			return $this->product->ID;
+	}
+
+	/**
+	 * Returns a add_to_cart var
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $options
+	 * @return string
+	*/
+	function add_to_cart_var( $options ) {
+
+		// Return boolean if has flag was set.
+		if ( $options['supports'] )
+			return true;
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return true;
+		
+		// Parse options
+		$defaults = array(
+			'format' => 'key',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		if ( 'key' == $format )
+			return it_exchange_get_field_name( 'add_product_to_cart' );
+		else
+			return $this->product->ID;
 	}
 }

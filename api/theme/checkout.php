@@ -96,7 +96,11 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
-		$url = it_exchange_get_page_url ( 'cart' );
+		// Set URL
+		if ( it_exchange_in_superwidget() || ! it_exchange_is_multi_item_cart_allowed() )
+			$url = add_query_arg( 'ite-sw-state', 'cart' );
+		else
+			$url = it_exchange_get_page_url ( 'cart' );
 
 		if ( 'link' == $options['format'] )
 			return $options['before'] . '<a class="' . esc_attr( $options['class'] ) . '" href="' . $url . '">' . $options['label'] . '</a>' . $options['after'];
