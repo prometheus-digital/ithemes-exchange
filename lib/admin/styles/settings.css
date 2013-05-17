@@ -1,0 +1,4 @@
+/** -----------------------------------------------------:[ page settings ]:---------- */
+#it-exchange-page-settings thead th{color:#AAA;text-transform:uppercase;}
+#it-exchange-page-settings tbody td:nth-child(1){vertical-align:middle;}
+#it-exchange-page-settings tbody td:nth-child(4){font-size:14px;color:#AAA;vertical-align:middle;}
