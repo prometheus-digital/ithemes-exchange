@@ -23,7 +23,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		'found'               => 'found',
 		'title'               => 'title',
 		'permalink'           => 'permalink',
-		'excerpt'	          => 'excerpt',
+		'excerpt'             => 'excerpt',
 		'description'         => 'description',
 		'content'             => 'extended_description',
 		'extendeddescription' => 'extended_description',

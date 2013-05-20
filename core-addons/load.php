@@ -80,6 +80,16 @@ function it_exchange_register_core_addons() {
 				'inventory'	=> false,
 			) ),
 		),
+		// Featured Product Widget
+		'featured-product-widget' => array(
+			'name'        	=> __( 'Featured Product Widget', 'LION' ),
+			'description' 	=> __( 'Creates a WordPress widget to display featured products in WordPress sidebars.', 'LION' ),
+			'author'		=> 'iThemes',
+			'author_url'	=> 'http://ithemes.com',
+			'file'        	=> dirname( __FILE__ ) . '/widgets/featured-product-widget/init.php',
+			'category' 		=> 'widgets',
+			'tag' 			=> 'core',
+		),
 		// Multi item cart
 		'multi-item-cart-option' => array(
 			'name'        	=> __( 'Multi-item Cart', 'LION' ),
