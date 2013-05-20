@@ -265,7 +265,8 @@ class IT_Exchange_Admin {
 		if ( true == (boolean) get_option( 'it-exchange-hide-wizard-nag' ) )
 			return;
 
-		include( 'views/admin-wizard-notice.php' );
+		if ( 'it-exchange-setup' != $this->_current_page )
+			include( 'views/admin-wizard-notice.php' );
 	}
 
 	/**
