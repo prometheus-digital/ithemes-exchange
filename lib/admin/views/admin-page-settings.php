@@ -27,7 +27,7 @@
 		<tbody>
 			<tr valign="top">
 				<td>
-					<label for="store-name"><?php _e( 'Store Slug' ) ?></label>
+					<label for="store-name"><?php _e( 'Store Slug', 'LION' ) ?></label>
 				</td>
 				<td>
 					<?php $form->add_text_box( 'store-name', array( 'class' => 'normal-text' ) ); ?>
@@ -40,7 +40,7 @@
 			</tr>
 			<tr valign="top">
 				<td>
-					<label for="product-name"><?php _e( 'Single Product' ) ?></label>
+					<label for="product-name"><?php _e( 'Single Product', 'LION' ) ?></label>
 				</td>
 				<td>
 					<?php $form->add_text_box( 'product-name', array( 'class' => 'normal-text' ) ); ?>
@@ -54,7 +54,7 @@
 			</tr>
 			<tr valign="top">
 				<td>
-					<label for="account-name"><?php _e( 'Account Page' ) ?></label>
+					<label for="account-name"><?php _e( 'Account Page', 'LION' ) ?></label>
 				</td>
 				<td>
 					<?php $form->add_text_box( 'account-name', array( 'class' => 'normal-text' ) ); ?>
@@ -68,7 +68,7 @@
 			</tr>
 			<tr valign="top">
 				<td>
-					<label for="profile-name"><?php _e( 'Profile Page' ) ?></label>
+					<label for="profile-name"><?php _e( 'Profile Page', 'LION' ) ?></label>
 				</td>
 				<td>
 					<?php $form->add_text_box( 'profile-name', array( 'class' => 'normal-text' ) ); ?>
@@ -82,7 +82,21 @@
 			</tr>
 			<tr valign="top">
 				<td>
-					<label for="log-in-name"><?php _e( 'Customer Log in' ) ?></label>
+					<label for="registration-name"><?php _e( 'Customer Registration', 'LION' ) ?></label>
+				</td>
+				<td>
+					<?php $form->add_text_box( 'registration-name', array( 'class' => 'normal-text' ) ); ?>
+				</td>
+				<td>
+					<?php $form->add_text_box( 'registration-slug', array( 'class' => 'normal-text' ) ); ?>
+				</td>
+				<td>
+					<?php echo it_exchange_get_page_url( 'registration', 'LION' ); ?>
+				</td>
+			</tr>
+			<tr valign="top">
+				<td>
+					<label for="log-in-name"><?php _e( 'Customer Log in', 'LION' ) ?></label>
 				</td>
 				<td>
 					<?php $form->add_text_box( 'log-in-name', array( 'class' => 'normal-text' ) ); ?>
@@ -96,7 +110,7 @@
 			</tr>
 			<tr valign="top">
 				<td>
-					<label for="log-in-name"><?php _e( 'Customer Log out' ) ?></label>
+					<label for="log-in-name"><?php _e( 'Customer Log out', 'LION' ) ?></label>
 				</td>
 				<td>
 					<?php $form->add_text_box( 'log-out-name', array( 'class' => 'normal-text' ) ); ?>
@@ -110,7 +124,7 @@
 			</tr>
 			<tr valign="top">
 				<td>
-					<label for="purchases-name"><?php _e( 'Customer Purchases' ) ?></label>
+					<label for="purchases-name"><?php _e( 'Customer Purchases', 'LION' ) ?></label>
 				</td>
 				<td>
 					<?php $form->add_text_box( 'purchases-name', array( 'class' => 'normal-text' ) ); ?>
@@ -124,7 +138,7 @@
 			</tr>
 			<tr valign="top">
 				<td>
-					<label for="downloads-name"><?php _e( 'Customer Downloads' ) ?></label>
+					<label for="downloads-name"><?php _e( 'Customer Downloads', 'LION' ) ?></label>
 				</td>
 				<td>
 					<?php $form->add_text_box( 'downloads-name', array( 'class' => 'normal-text' ) ); ?>
@@ -138,7 +152,7 @@
 			</tr>
 			<tr valign="top">
 				<td>
-					<label for="confirmation-name"><?php _e( 'Purchase Confirmation' ) ?></label>
+					<label for="confirmation-name"><?php _e( 'Purchase Confirmation', 'LION' ) ?></label>
 				</td>
 				<td>
 					<?php $form->add_text_box( 'confirmation-name', array( 'class' => 'normal-text' ) ); ?>
@@ -152,7 +166,7 @@
 			</tr>
 			<tr valign="top">
 				<td>
-					<label for="reports-name"><?php _e( 'Admin Reports' ) ?></label>
+					<label for="reports-name"><?php _e( 'Admin Reports', 'LION' ) ?></label>
 				</td>
 				<td>
 					<?php $form->add_text_box( 'reports-name', array( 'class' => 'normal-text' ) ); ?>

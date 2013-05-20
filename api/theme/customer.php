@@ -1,18 +1,18 @@
 <?php
 /**
- * Account class for THEME API
+ * Customer class for THEME API
  *
  * @since 0.4.0
 */
 
-class IT_Theme_API_Account implements IT_Theme_API {
+class IT_Theme_API_Customer implements IT_Theme_API {
 	
 	/**
 	 * API context
 	 * @var string $_context
 	 * @since 0.4.0
 	*/
-	private $_context = 'account';
+	private $_context = 'customer';
 	
 	/**
 	 * Current customer being viewed
@@ -33,7 +33,6 @@ class IT_Theme_API_Account implements IT_Theme_API {
 		'avatar'      => 'avatar',
 		'firstname'   => 'firstname',
 		'lastname'    => 'lastname',
-		'username'    => 'username',
 		'email'       => 'email',
 		'website'     => 'website',
 		'password1'   => 'password1',
@@ -49,7 +48,7 @@ class IT_Theme_API_Account implements IT_Theme_API {
 	 * @todo get working for admins looking at other users profiles
 	 * @return void
 	*/
-	function IT_Theme_API_Account() {
+	function IT_Theme_API_Customer() {
 		if ( is_user_logged_in() )
 			$this->_customer = it_exchange_get_current_customer();
 	}

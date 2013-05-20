@@ -8,7 +8,7 @@
 
 <div class="customer-info">
     
-    <?php it_exchange( 'account', 'formopen' ); ?>
+    <?php it_exchange( 'customer', 'formopen' ); ?>
     
     <?php if ( it_exchange( 'messages', 'has-errors' ) ) : ?>
         <ul class='errors'>
@@ -27,38 +27,38 @@
     <?php endif; ?>
     
     <div class="user-name">
-    <?php it_exchange( 'account', 'username' ); ?>
+    <?php it_exchange( 'customer', 'username' ); ?>
     </div>
     <div class="account-menu-nav">
-    <?php it_exchange( 'account', 'accountmenu' ); ?>
+    <?php it_exchange( 'customer', 'accountmenu' ); ?>
     </div>
     <div class="customer-avatar">
-    <?php it_exchange( 'account', 'avatar' ); ?>
+    <?php it_exchange( 'customer', 'avatar' ); ?>
     </div>
     <div class="first-name">
-    <?php it_exchange( 'account', 'firstname' ); ?>
+    <?php it_exchange( 'customer', 'firstname' ); ?>
     </div>
     <div class="last-name">
-    <?php it_exchange( 'account', 'lastname' ); ?>
+    <?php it_exchange( 'customer', 'lastname' ); ?>
     </div>
     <div class="user-name">
-    <?php it_exchange( 'account', 'username' ); ?>
+    <?php it_exchange( 'customer', 'username' ); ?>
     </div>
     <div class="email-name">
-    <?php it_exchange( 'account', 'email' ); ?>
+    <?php it_exchange( 'customer', 'email' ); ?>
     </div>
     <div class="website">
-    <?php it_exchange( 'account', 'website' ); ?>
+    <?php it_exchange( 'customer', 'website' ); ?>
     </div>
     <div class="password1">
-    <?php it_exchange( 'account', 'password1' ); ?>
+    <?php it_exchange( 'customer', 'password1' ); ?>
     </div>
     <div class="password2">
-    <?php it_exchange( 'account', 'password2' ); ?>
+    <?php it_exchange( 'customer', 'password2' ); ?>
     </div>
 
-    <?php it_exchange( 'account', 'save' ); ?>
+    <?php it_exchange( 'customer', 'save' ); ?>
     
-    <?php it_exchange( 'account', 'formclose' ); ?>
+    <?php it_exchange( 'customer', 'formclose' ); ?>
 
 </div><!-- .customer-info -->

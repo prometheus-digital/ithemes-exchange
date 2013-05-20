@@ -510,6 +510,7 @@ class IT_Exchange_Admin {
 			'default-currency'             => 'USD',
 			'currency-thousands-separator' => ',',
 			'currency-decimals-separator'  => '.',
+			'site-registration'            => 'it',
 		);
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;
@@ -599,6 +600,8 @@ class IT_Exchange_Admin {
 			'account-slug'      => 'account',
 			'profile-name'      => __( 'Profile', 'LION' ),
 			'profile-slug'      => 'profile',
+			'registration-name' => __( 'Registration', 'LION' ),
+			'registration-slug' => 'registration',
 			'downloads-name'    => __( 'Downloads', 'LION' ),
 			'downloads-slug'    => 'downloads',
 			'purchases-name'    => __( 'Purchases', 'LION' ),

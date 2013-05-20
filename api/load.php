@@ -52,6 +52,3 @@ include( $this->_plugin_path . 'api/notices.php' );
 
 // Coupons
 include( $this->_plugin_path . 'api/coupons.php' );
-
-// Shopping Cart API
-include( $this->_plugin_path . 'api/account.php' );

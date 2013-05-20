@@ -184,6 +184,44 @@ function handle_it_exchange_save_profile_action() {
 	}
 	
 }
-//add_action( 'template_redirect', array( 'IT_Exchange_Customer', 'register_profile_error_messages' ) );
-//add_action( 'template_redirect', array( 'IT_Exchange_Customer', 'register_profile_notice_messages' ) );
-add_action( 'template_redirect', 'handle_it_exchange_save_profile_action' );
+add_action( 'template_redirect', 'handle_it_exchange_save_profile_action', 5 );
+
+/**
+ * Handles $_REQUESTs and submits them to the registration for processing
+ *
+ * @since 0.4.0
+ * @return void
+*/
+function handle_it_exchange_customer_registration_action() {
+	
+	// Grab action and process it.
+	if ( isset( $_REQUEST['it-exchange-register-customer'] ) ) {
+
+		require_once(ABSPATH . 'wp-admin/includes/user.php');
+		$result = edit_user();
+		
+		if ( is_wp_error( $result ) )
+			return it_exchange_add_error( $result->get_error_message());
+		
+		$user_id = $result;
+			
+		//else
+		
+		$creds = array( 
+				'user_login'    => $_REQUEST['user_login'],
+				'user_password' => $_REQUEST['pass1'],
+				);
+		
+		$result = wp_signon( $creds );
+		
+		if ( is_wp_error( $result ) )
+			return it_exchange_add_error( $result->get_error_message() );
+			
+		wp_new_user_notification( $user_id, $_REQUEST['pass1'] );
+			
+		wp_safe_redirect( it_exchange_get_page_url( 'profile' ) );
+		
+	}
+	
+}
+add_action( 'template_redirect', 'handle_it_exchange_customer_registration_action', 5 );

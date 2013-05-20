@@ -68,6 +68,18 @@ class IT_Exchange_Router {
 	public $_profile_name;
 
 	/**
+	 * @var string $_registration_slug slug for the registration slug
+	 * @since 0.4.0
+	*/
+	public $_registration_slug;
+
+	/**
+	 * @var string $_registration_name name for the registration slug
+	 * @since 0.4.0
+	*/
+	public $_registration_name;
+
+	/**
 	 * @var string $_downloads_slug slug for the downloads page
 	 * @since 0.4.0
 	*/
@@ -164,6 +176,12 @@ class IT_Exchange_Router {
 	public $_is_profile = false;
 
 	/**
+	 * @var boolean $_is_registration is the the registration page?
+	 * @since 0.4.0
+	*/
+	public $_is_registration = false;
+
+	/**
 	 * @var boolean $_is_purchases is this the purchases page?
 	 * @since 0.4.0
 	*/
@@ -231,6 +249,7 @@ class IT_Exchange_Router {
 			add_filter( 'rewrite_rules_array', array( $this, 'register_rewrite_rules' ) );
 		} else {
 			add_action( 'template_redirect', array( $this, 'set_environment' ), 8 );
+			add_action( 'template_redirect', array( $this, 'registration_redirect' ), 9 );
 			add_action( 'template_redirect', array( $this, 'login_out_page_redirect' ), 9 );
 			add_action( 'template_redirect', array( $this, 'set_account' ), 10 );
 			add_action( 'template_redirect', array( $this, 'protect_pages' ), 11 );
@@ -259,6 +278,8 @@ class IT_Exchange_Router {
 		$this->_account_name      = $slugs['account-name'];
 		$this->_profile_slug      = $slugs['profile-slug'];
 		$this->_profile_name      = $slugs['profile-name'];
+		$this->_registration_slug = $slugs['registration-slug'];
+		$this->_registration_name = $slugs['registration-name'];
 		$this->_downloads_slug    = $slugs['downloads-slug'];
 		$this->_downloads_name    = $slugs['downloads-name'];
 		$this->_purchases_slug    = $slugs['purchases-slug'];
@@ -306,6 +327,7 @@ class IT_Exchange_Router {
 		$this->_is_product      = (boolean) get_query_var( $this->_product_slug );
 		$this->_is_account      = (boolean) get_query_var( $this->_account_slug );
 		$this->_is_profile      = (boolean) get_query_var( $this->_profile_slug );
+		$this->_is_registration = (boolean) get_query_var( $this->_registration_slug );
 		$this->_is_downloads    = (boolean) get_query_var( $this->_downloads_slug );
 		$this->_is_purchases    = (boolean) get_query_var( $this->_purchases_slug );
 		$this->_is_log_in       = (boolean) get_query_var( $this->_log_in_slug );
@@ -334,6 +356,8 @@ class IT_Exchange_Router {
 			$this->_current_view = 'confirmation';
 		} else if ( $this->_is_downloads ) {
 			$this->_current_view = 'downloads';
+		} else if ( $this->_is_registration ) {
+			$this->_current_view = 'registration';
 		} else if ( $this->_is_profile ) {
 			$this->_current_view = 'profile';
 		} else if ( $this->_is_account ) {
@@ -417,6 +441,22 @@ class IT_Exchange_Router {
 			die();
 		}
 	}
+	
+	/**
+	 * Redirects users away from registration page if they're already logged in
+	 * except for Administrators, because they might want to see the registration page.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function registration_redirect() {
+		if ( is_user_logged_in() && 'registration' == $this->_current_view 
+			&& ! current_user_can( 'administrator' ) ) {
+			wp_redirect( it_exchange_get_page_url( 'profile' ) );
+			die();
+		}
+	}
 
 	/**
 	 * Redirects users away from pages they don't have permission to view
@@ -490,7 +530,7 @@ class IT_Exchange_Router {
 		$profile_pages = array(
 			'account', 'profile', 'downloads', 'purchases',
 		);
-				
+						
 		if ( in_array( $this->_current_view, $profile_pages ) ) {
 			if ( ! $this->_account )
 				return get_404_template();
@@ -566,6 +606,7 @@ class IT_Exchange_Router {
 			$this->_store_slug,
 			$this->_account_slug,
 			$this->_profile_slug,
+			$this->_registration_slug,
 			$this->_downloads_slug,
 			$this->_purchases_slug,
 			$this->_log_in_slug,
@@ -612,11 +653,14 @@ class IT_Exchange_Router {
 			// Profile
 			$this->_account_slug  . '/([^/]+)/' . $this->_profile_slug  => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_profile_slug . '=1',
 			$this->_account_slug . '/' . $this->_profile_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_profile_slug . '=1',
+			
+			// Registration
+			$this->_account_slug  . '/' . $this->_registration_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_registration_slug . '=1',
 
 			// Account
 			$this->_account_slug . '/([^/]+)/?$' => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_profile_slug . '=1',
 			$this->_account_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_profile_slug . '=1',
-
+			
 			// Confirmation
 			$this->_store_slug . '/' . $this->_confirmation_slug . '/([^/]+)/?$' => 'index.php?' . $this->_confirmation_slug . '=$matches[1]',
 
