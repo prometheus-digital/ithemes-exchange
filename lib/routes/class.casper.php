@@ -38,6 +38,7 @@ class IT_Exchange_Casper {
 	function IT_Exchange_Casper( $current_view, IT_Exchange_Router $router ) {
 		if ( 'product' == $current_view )
 			throw new Exception( 'IT_Exchange_Casper should not be constructed with $current_view set as product' );
+
 		$this->_current_view = $current_view;
 		$this->_router = $router;
 		$this->_wp_query = $GLOBALS['wp_query'];
@@ -81,9 +82,9 @@ class IT_Exchange_Casper {
 
 		$this->_wp_query->posts = array( $this->_wp_query->post );
 		$this->_wp_query->found_posts = 1;
-		$this->_wp_query->is_single = false;
+		$this->_wp_query->is_single = false; //false -- so comments_template() doesn't add comments
 		$this->_wp_query->is_preview = false;
-		$this->_wp_query->is_page = true;
+		$this->_wp_query->is_page = false; //false -- so comments_template() doesn't add comments
 		$this->_wp_query->is_archive = false;
 		$this->_wp_query->is_date = false;
 		$this->_wp_query->is_year = false;
@@ -109,6 +110,7 @@ class IT_Exchange_Casper {
 		$this->_wp_query->is_post_type_archive = false;
 
 		$GLOBALS['wp_query'] = $this->_wp_query;
+		
 	}
 
 	/**
