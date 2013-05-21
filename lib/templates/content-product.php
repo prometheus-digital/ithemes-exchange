@@ -7,28 +7,8 @@
 ?>
 	<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 		<div class="entry-content">
-
-			<?php it_exchange_add_error( 'this is an error!' ); ?>
-			<?php if ( it_exchange( 'messages', 'has-errors' ) ) : ?>
-				<ul class='errors'>
-				<?php while( it_exchange( 'messages', 'errors' ) ) : ?>
-					<li><?php it_exchange( 'messages', 'error' ); ?></li>
-				<?php endwhile; ?>
-				</ul>
-			<?php else: ?>
-				<p>No errors!</p>
-			<?php endif; ?>
-
-			<?php it_exchange_add_notice( 'This is a notice!' ); ?>
-			<?php if ( it_exchange( 'messages', 'has-notices' ) ) : ?>
-				<ul class='notices'>
-				<?php while( it_exchange( 'messages', 'notices' ) ) : ?>
-					<li><?php it_exchange( 'messages', 'notice' ); ?></li>
-				<?php endwhile; ?>
-				</ul>
-			<?php else: ?>
-				<p>No notices!</p>
-			<?php endif; ?>
+			
+			<?php it_exchange_get_template_part( 'messages' ); ?>
 
 			<?php if ( it_exchange( 'product', 'has-featured-image' ) ) : ?>
 				<p><strong>Featured Image</strong><br /><?php it_exchange( 'product.featured-image' ); ?></p>

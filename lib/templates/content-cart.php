@@ -5,20 +5,7 @@
  * @package IT_Exchange
 */
 ?>
-<?php if ( it_exchange( 'messages', 'has-errors' ) ) : ?>
-	<ul class='notices'>
-		<?php while( it_exchange( 'messages', 'errors' ) ) : ?>
-			<li><?php it_exchange( 'messages', 'error' ); ?></li>
-		<?php endwhile; ?>
-	</ul>
-<?php endif; ?>
-<?php if ( it_exchange( 'messages', 'has-notices' ) ) : ?>
-	<ul class='notices'>
-		<?php while( it_exchange( 'messages', 'notices' ) ) : ?>
-			<li><?php it_exchange( 'messages', 'notice' ); ?></li>
-		<?php endwhile; ?>
-	</ul>
-<?php endif; ?>
+<?php it_exchange_get_template_part( 'messages' ); ?>
 
 <?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
 	<?php it_exchange( 'cart', 'form-open' ); ?>
