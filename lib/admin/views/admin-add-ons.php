@@ -48,7 +48,9 @@
 					<div class="add-on-info">
 						<h4><?php echo $addon['name']; ?></h4>
 						<span class="add-on-author">by <a href="<?php echo $addon['author_url']; ?>"><?php echo $addon['author']; ?></a></span>
+                        <?php if ( !empty( $addon['options']['tag'] ) ) { ?>
 						<span class="add-on-tag"><?php echo $addon['options']['tag']; ?></span>
+                        <?php } ?>
 						<p class="add-on-description"><?php echo $addon['description']; ?></p>
 					</div>
 					<div class="add-on-actions">

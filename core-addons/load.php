@@ -61,8 +61,8 @@ function it_exchange_register_core_addons() {
 			'icon'          => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/transaction-methods/stripe/stripe.png' ),
 			'file'        	=> dirname( __FILE__ ) . '/transaction-methods/stripe/init.php',
 			'category' 		=> 'transaction-methods',
-			'tag' 			=> 'core',
 			'supports' 		=> apply_filters( 'it_exchange_register_stripe_default_features', array() ),
+			'settings-callback' => 'it_exchange_stripe_settings_callback',
 		),
 		// Digital Download Product Types
 		'digital-downloads-product-type' => array(

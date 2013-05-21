@@ -14,7 +14,7 @@
  * @param object $form Current IT Form object
  * @return void
 */
-function it_excahnge_paypal_web_standard_wizard_settings( $form ) {
+function it_exchange_paypal_web_standard_wizard_settings( $form ) {
 	?>	
 	<div class="field paypal-standard-wizard hide-if-js">
 		<h3><?php _e( 'PayPal Account Information', 'LION' ); ?></h3>

@@ -49,7 +49,7 @@
 					<?php $form->add_text_box( 'product-slug', array( 'class' => 'normal-text' ) ); ?>
 				</td>
 				<td>
-					<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'product-slug' ) ) . '/shiny-widget/'; ?>
+					<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'product-slug' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
