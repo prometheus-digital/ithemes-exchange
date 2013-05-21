@@ -1114,7 +1114,7 @@ class IT_Exchange_Admin {
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
 		}
-		
+
 		if ( preg_match('|(it_exchange)|i', str_replace( '-', '_', $hook_suffix ) ) || ( isset( $post_type ) && preg_match('|(it_exchange)|i', str_replace( '-', '_', $post_type ) ) ) )
 			wp_enqueue_style( 'it-exchange-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/admin.css' );
 
@@ -1128,6 +1128,8 @@ class IT_Exchange_Admin {
 			wp_enqueue_style( 'it-exchange-coupons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/coupons.css' );
 		} else if ( 'exchange_page_it-exchange-settings' === $hook_suffix ) {
 			wp_enqueue_style( 'it-exchange-settings', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/settings.css' );
+		} else if ( 'user-edit.php' === $hook_suffix && isset( $_REQUEST['it_exchange'] ) ) {
+			wp_enqueue_style( 'it-exchange-customer-info', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/customer-info.css' );
 		}
 	}
 

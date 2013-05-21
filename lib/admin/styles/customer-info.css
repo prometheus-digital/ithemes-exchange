@@ -1,0 +1,38 @@
+/** -----------------------------------------------------:[ reset ]:---------- */
+.wrap .nav-tab-wrapper{padding-left:6px;border-bottom:0;}
+.wrap .top-description{color:#676c6e;font-size:14px;line-height:1.5;max-width:800px;}
+
+/** -----------------------------------------------------:[ user block ]:---------- */
+.user-edit-block{background:#FFF;border:1px solid #CCC;border-radius:3px;font-size:14px;}
+.user-edit-block .block-row{overflow:hidden;}
+.user-edit-block .block-column{float:left;}
+.user-edit-block .block-column span {display: block;}
+.user-edit-block .heading-column span{padding:10px;color:#747474;}
+.user-edit-block .item-row{border-top:1px solid #CCC;}
+.user-edit-block .item-row:nth-child(2n+2){background:#FCFCFC;}
+.user-edit-block .item-column span{padding:15px;}
+.user-edit-block .item-column input{margin-top:11px;}
+
+/** -----------------------------------------------------:[ products ]:---------- */
+.products-user-edit-block .block-column-1{width:60%;}
+.products-user-edit-block .block-column-2{width:20%;}
+.products-user-edit-block .block-column-3{width:20%;}
+
+/** -----------------------------------------------------:[ transactions ]:---------- */
+.transactions-user-edit-block .block-column-1{width:40%;}
+.transactions-user-edit-block .block-column-2{width:20%;}
+.transactions-user-edit-block .block-column-3{width:40%;}
+.add-manual-transaction{margin-top:15px;}
+
+/** -----------------------------------------------------:[ activity ]:---------- */
+.activity-user-edit-block .block-column-1{width:80%;}
+.activity-user-edit-block .block-column-2{width:20%;}
+
+/** -----------------------------------------------------:[ activity ]:---------- */
+.info-user-edit-block{overflow:hidden;}
+.info-user-edit-block div{float:left;}
+.info-user-edit-block .notes{width:80%;max-width:700px;margin:15px;}
+.info-user-edit-block .notes label{display:block;font-size:13px;font-weight:bold;color:#3d4142;margin-bottom:5px;}
+.info-user-edit-block .notes textarea{width:100%;}
+.info-user-edit-block .avatar{width:20%;max-width:80px;overflow:hidden;margin-top:15px;border-radius:50%;}
+.info-user-edit-block .avatar img{display:block;width:100%;height:auto;border-radius:50%;}
