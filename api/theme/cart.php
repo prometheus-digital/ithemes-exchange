@@ -173,6 +173,10 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 
 		$var = it_exchange_get_field_name( 'proceed_to_checkout' );
 
+		// If we're in the superwidget, we need to use that format.
+		if ( it_exchange_in_superwidget() )
+			$options['format'] = 'super-widget';
+
 		switch( $options['format'] ) {
 			case 'var' :
 				return $var;
@@ -202,6 +206,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		$var = it_exchange_get_field_name( 'empty_cart' );
+		$nonce_var   = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
 
 		switch( $options['format'] ) {
 			case 'var' :
@@ -209,6 +214,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				break;
 			case 'link' :
 				$url = add_query_arg( $var, 1);
+				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . session_id() ), $url );
 				$output  = $options['before'];
 				$output .= '<a href="' . $url . '" class="' . esc_attr( $options['class'] ) . '">' . esc_attr( $options['label'] ) . '</a>';
 				$output .= $options['after'];

@@ -18,5 +18,6 @@
 	</div>
 	<hr />
 	<div class="it-exchange-cart-subtotal"><?php _e( 'Sub-total:', 'LION' ); ?> <?php it_exchange( 'cart', 'subtotal' ); ?></div>
-	<div class="it-exchange-checkout-link"><?php it_exchange( 'cart', 'checkout', 'format=super-widget' ); ?></div>
+	<div class="it-exchange-checkout-link"><?php it_exchange( 'cart', 'checkout' ); ?></div>
+	<div class="it-exchnange-cancel"><?php it_exchange( 'cart', 'empty', 'format=link&label=' . __( 'Cancel', 'LION' ) ); ?></div>
 <?php endif; ?>

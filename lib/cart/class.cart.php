@@ -152,9 +152,15 @@ class IT_Exchange_Shopping_Cart {
 		$nonce_var   = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
 		$error_var   = it_exchange_get_field_name( 'error_message' );
 		$message_var = it_exchange_get_field_name( 'alert_message' );
-		$cart        = it_exchange_get_page_url( 'cart' );
+
+		if ( it_exchange_is_multi_item_cart_allowed() )
+			$cart = it_exchange_get_page_url( 'cart' );
+		else
+			$cart = false;
+
 		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) ) {
-			$url  = add_query_arg( array( $error_var => 'cart-not-emptied' ), $cart );
+			$url = add_query_arg( array( $error_var => 'cart-not-emptied' ), $cart );
+			$url = remove_query_arg( it_exchange_get_field_name( 'empty_cart' ), $url );
 			wp_redirect( $url );
 			die();
 		}
@@ -163,6 +169,7 @@ class IT_Exchange_Shopping_Cart {
 
 		$url = remove_query_arg( $error_var, $cart );
 		$url = add_query_arg( array( $message_var => 'cart-emptied' ), $url );
+		$url = remove_query_arg( it_exchange_get_field_name( 'empty_cart' ), $cart );
 		wp_redirect( $url );
 		die();
 	}

@@ -226,6 +226,10 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 				$state = 'product';
 		}
 
+		// If cart is empty and requested state is checkout, make state product or false
+		if ( ! $items_in_cart && ( 'checkout' == $state || 'cart' == $state ) )
+			$state = $product_page ? 'product' : false;
+
 		// If user is not logged in and state is checkout, redirect to login
 		if ( ! $user_logged_in ) {
 			if ( 'checkout' == $requested_state )
