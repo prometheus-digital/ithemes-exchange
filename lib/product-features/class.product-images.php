@@ -137,6 +137,7 @@ class IT_Exchange_Product_Feature_Product_Images {
                 
             } else {
                 ?>
+                <div id="it-exchange-feature-image" class="ui-droppable">
                 <ul class="feature-image"></ul>
                 <div class="replace-feature-image"><span>Replace featured image</span></div>
                 </div>
