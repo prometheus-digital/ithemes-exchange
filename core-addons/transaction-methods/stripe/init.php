@@ -54,19 +54,28 @@ add_action( 'it_exchange_save_wizard_settings', 'stripe_save_wizard_settings' );
  * @return string
 */
 function it_exchange_stripe_addon_make_payment_button( $options ) { 
-	$data = it_exchange_get_cart_data();
 	
-	ITDebug::print_r( $data );
+	$general_settings = it_exchange_get_option( 'settings_general' );
+	$stripe_settings = it_exchange_get_option( 'addon_stripe' );
+	
+	$publishable_key = ( $stripe_settings['stripe-test-mode'] ) ? $stripe_settings['stripe-test-publishable-key'] : $stripe_settings['stripe-live-publishable-key'];
+
+	$products = it_exchange_get_cart_data( 'products' );
+	
+	foreach( $products as $product ) {
+		
+		$description[] = it_exchange_get_cart_product_title( $product ) . ' x' . it_exchange_get_cart_product_quantity( $product ) . ' = ' . it_exchange_get_cart_product_subtotal( $product );
+		
+	}
 	
 	return '<script
-  src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
-  data-key="pk_test_SWKa1Yir0c7Euen5rHNQBX3q"
-  data-amount="2000"
-  data-name="Demo Site"
-  data-description="2 widgets ($20.00)"
-  data-currency="usd"
-  data-image="/128x128.png">
-</script>';
+			  src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
+			  data-key="' . $publishable_key . '"
+			  data-amount="' . number_format( it_exchange_get_cart_total( false ), 2, '', '' ) . '"
+			  data-name="' . $general_settings['company-name'] . '"
+			  data-description="' . join( ', ', $description ) . '"
+			  data-currency="' . $stripe_settings['stripe-currency'] . '">
+			</script>';
 }
 add_filter( 'it_exchange_get_stripe_make_payment_button', 'it_exchange_stripe_addon_make_payment_button', 10, 2 );
 
@@ -175,7 +184,7 @@ class IT_Exchange_Stripe_Add_On {
         <label for="stripe-test-publishable-key"><?php _e( 'Test Publishable Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
         <?php $form->add_text_box( 'stripe-test-publishable-key' ); ?>
         <label for="stripe-currency"><?php _e( 'Currency', 'LION' ); ?> <span class="tip" title="<?php _e( 'What currency does your store accept?', 'LION' ); ?>">i</span></label>
-        <?php $form->add_drop_down( 'stripe-currency', get_default_currency_options() ); ?>
+        <?php $form->add_drop_down( 'stripe-currency', $this->get_default_currency_options() ); ?>
         <?php	
 	}
 
@@ -262,6 +271,10 @@ class IT_Exchange_Stripe_Add_On {
 			if ( empty( $values['stripe-test-publishable-key'] ) )
 				$errors[] = __( 'Please include your Stripe Test Publishable Key', 'LION' );
 		}
+		
+		$valid_status_options = $this->get_default_currency_options();
+		if ( empty( $values['stripe-currency'] ) || empty( $valid_status_options[$values['stripe-currency']] ) )
+			$errors[] = __( 'Please select a valid currency', 'LION' );
 
 		return $errors;
 	}

@@ -44,7 +44,7 @@ class IT_Exchange_Session {
 	}
 	
 	function get_session_data( $key = false ) {
-		if ( isset( $key ) ) {
+		if ( $key ) {
 			
 			$key = sanitize_key( $key );
 			
