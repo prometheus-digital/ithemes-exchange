@@ -11,7 +11,9 @@
 			<div class="cart-item-title"><?php it_exchange( 'cart-item', 'title' ) ?></div>
 			<div class="cart-item-quantity"><?php it_exchange( 'cart-item', 'quantity', 'format=var_value' ) ?></div>
 			<div class="cart-item-subtotal"><?php it_exchange( 'cart-item', 'subtotal' ); ?></div>
-			<div class="cart-item-remove"><?php it_exchange( 'cart-item', 'remove' ); ?></div>
+			<?php if ( it_exchange( 'cart', 'supports-multiple-items' ) ) : ?>
+				<div class="cart-item-remove"><?php it_exchange( 'cart-item', 'remove' ); ?></div>
+			<?php endif; ?>
 		<?php endwhile; ?>
 	</div>
 	<hr />

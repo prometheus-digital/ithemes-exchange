@@ -20,15 +20,16 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	public $_tag_map = array(
-		'cartitems'  => 'cart_items',
-		'formopen'   => 'form_open',
-		'noncefield' => 'nonce_field',
-		'formclose'  => 'form_close',
-		'subtotal'   => 'sub_total',
-		'total'      => 'total',
-		'update'     => 'update_cart',
-		'checkout'   => 'checkout_cart',
-		'empty'      => 'empty_cart',
+		'cartitems'     => 'cart_items',
+		'formopen'      => 'form_open',
+		'noncefield'    => 'nonce_field',
+		'formclose'     => 'form_close',
+		'subtotal'      => 'sub_total',
+		'total'         => 'total',
+		'update'        => 'update_cart',
+		'checkout'      => 'checkout_cart',
+		'empty'         => 'empty_cart',
+		'multipleitems' => 'multiple_items',
 	);
 
 	/**
@@ -222,10 +223,29 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		return $output;
 	}
 
+	/**
+	 * @todo add options and docblock
+	*/
 	function sub_total( $options=array() ) {
 		return it_exchange_get_cart_subtotal();	
 	}
+	
+	/**
+	 * @todo add options and docblock
+	*/
 	function total( $options=array() ) {
 		return it_exchange_get_cart_total();	
+	}
+
+	/**
+	 * Does the cart support multiple items?
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $options
+	 * @return boolean
+	*/
+	function multiple_items( $options=array() ) {
+		return it_exchange_is_multi_item_cart_allowed();
 	}
 }
