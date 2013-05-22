@@ -93,14 +93,19 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 			'format' => 'link',
 			'label'  => __( 'Cancel', 'LION' ),
 			'class'  => 'it-exchange-cancel-checkout',
+			'focus'  => false
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		// Set URL
-		if ( it_exchange_in_superwidget() || ! it_exchange_is_multi_item_cart_allowed() )
-			$url = add_query_arg( 'ite-sw-state', 'cart' );
-		else
+		if ( it_exchange_in_superwidget() || ! it_exchange_is_multi_item_cart_allowed() ) {
+			// Get clean url without any exchange query args
+			$url = clean_it_exchange_query_args();
+			$url = add_query_arg( 'ite-sw-state', 'cart', $url );
+			$url = in_array( $options['focus'], array( 'coupon', 'quantity' ) ) ? add_query_arg( it_exchange_get_field_name( 'sw_cart_focus' ), $options['focus'], $url ) : $url;
+		} else {
 			$url = it_exchange_get_page_url ( 'cart' );
+		}
 
 		if ( 'link' == $options['format'] )
 			return $options['before'] . '<a class="' . esc_attr( $options['class'] ) . '" href="' . $url . '">' . $options['label'] . '</a>' . $options['after'];

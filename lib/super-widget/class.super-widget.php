@@ -216,8 +216,8 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		if ( $items_in_cart && ! $multi_item_cart ) {
 			
 			// Don't set state to cart if on one of the following requested states
-			if ( 'checkout' != $requested_state && 'login-in' != $requested_state && 'registration' != $requested_state )
-				$state = 'cart';
+			if ( 'cart' != $requested_state && 'login' != $requested_state && 'registration' != $requested_state )
+				$state = 'checkout';
 
 			// If we're on a product page other than the product that is in the cart, set state to 'product'
 			$cart_product = reset( it_exchange_get_cart_products() );

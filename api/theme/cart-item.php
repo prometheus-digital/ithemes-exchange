@@ -90,7 +90,8 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 			case 'link' :
 			default :
 				$nonce_var = apply_filters( 'it_exchange_remove_product_from_cart_nonce_var', '_wpnonce' );
-				$url = add_query_arg( $var_key, $var_value );
+				$url = clean_it_exchange_query_args();
+				$url = add_query_arg( $var_key, $var_value, $url );
 				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . session_id() ), $url ); 
 				$output = $options['before'] . '<a href="' . $url . '" class="' . esc_attr( $options['class'] ) . '" >' . esc_attr( $options['label'] ) . '</a>' . $options['after'];
 			break;

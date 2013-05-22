@@ -195,6 +195,7 @@ function it_exchange_base_coupons_remove_cart_coupon_html( $incoming=false, $cod
 	if ( 'checkbox' == $options['format'] ) {
 		return '<input type="checkbox" class="' . esc_attr( $options['class'] ) . '" name="' . esc_attr( $var ) . '[]" value="' . esc_attr( $options['code'] ) . '" />&nbsp;' . esc_attr( $options['label'] );	
 	} else {
+		$url = clean_it_exchange_query_args( array( it_exchange_get_field_name( 'sw_cart_focus' ) ) );
 		$url = add_query_arg( $var . '[]', $options['code'] );
 		return '<a class="' . esc_attr( $options['class'] ) . '" href="' . $url . '">' . esc_attr( $options['label'] ) . '</a>';
 	}
@@ -238,6 +239,15 @@ function it_exchange_basic_coupons_remove_coupon_from_cart() {
 
 	// Unset coupons
 	it_exchange_update_cart_data( 'basic_coupons', $coupons );
+
+	if ( it_exchange_is_multi_item_cart_allowed() )
+		$url = it_exchange_get_page_url( 'cart' );
+	else
+		$url = clean_it_exchange_query_args( array( it_exchange_get_field_name( 'sw_cart_focus' ) ) );
+
+	wp_redirect( $url );
+	die();
+
 
 }
 add_action( 'template_redirect', 'it_exchange_basic_coupons_remove_coupon_from_cart', 9 );

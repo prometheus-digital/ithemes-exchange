@@ -30,6 +30,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		'checkout'      => 'checkout_cart',
 		'empty'         => 'empty_cart',
 		'multipleitems' => 'multiple_items',
+		'focus'         => 'focus',
 	);
 
 	/**
@@ -182,7 +183,9 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				return $var;
 				break;
 			case 'super-widget' :
-				$url = add_query_arg( 'ite-sw-state', 'checkout' );
+				// Get clean URL without any exchange query args
+				$url = clean_it_exchange_query_args();
+				$url = add_query_arg( 'ite-sw-state', 'checkout', $url );
 				$output  = $options['before'];
 				$output .= '<a href="' . $url . '">' . esc_attr( $options['label'] ) . '</a>';
 				break;
@@ -213,7 +216,9 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				return $var;
 				break;
 			case 'link' :
-				$url = add_query_arg( $var, 1);
+				// Get clean url without any exchange query args
+				$url = clean_it_exchange_query_args();
+				$url = add_query_arg( $var, 1, $url );
 				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . session_id() ), $url );
 				$output  = $options['before'];
 				$output .= '<a href="' . $url . '" class="' . esc_attr( $options['class'] ) . '">' . esc_attr( $options['label'] ) . '</a>';
@@ -253,5 +258,30 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	*/
 	function multiple_items( $options=array() ) {
 		return it_exchange_is_multi_item_cart_allowed();
+	}
+
+	/**
+	 * Return the current focus if indicated
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return string
+	*/
+	function focus( $options=array() ) {
+		$defaults = array(
+			'type'  => false,
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		$focus_key = it_exchange_get_field_name( 'sw_cart_focus' );
+
+		// Get the focus from REQUEST
+		$focus = empty( $_REQUEST[$focus_key] ) ? false : $_REQUEST[$focus_key];
+
+		// Return true if $focus is false or if $options['type'] is false
+		if ( ! $options['type'] || ! $focus )
+			return true;
+
+		// return boolean if focus == type
+		return $focus == $options['type'];
 	}
 }

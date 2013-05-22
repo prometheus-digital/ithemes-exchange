@@ -19,9 +19,7 @@
 			<?php endwhile; ?>
 		</div>
         
-		<hr />
-		Sub-total: <?php it_exchange( 'cart', 'subtotal' ); ?>
-		<hr />
+		<?php _e( 'Sub-total:', 'LION' ); ?> <?php it_exchange( 'cart', 'subtotal' ); ?>
 		<?php 
 		// Do we have a coupon add-on enabled that supports cart coupons
 		if ( it_exchange( 'coupons', 'supported', 'type=cart' ) ) { 
@@ -51,7 +49,7 @@
 		}
 		?>
 		<hr />
-		Total: <?php it_exchange( 'cart', 'total' ); ?><br />
+		<?php _e( 'Total:', 'LION' ); ?> <?php it_exchange( 'cart', 'total' ); ?><br />
 		<hr />
 		<?php it_exchange( 'cart', 'update' ); ?><br/>
 		<?php it_exchange( 'cart', 'checkout' ); ?><br/>

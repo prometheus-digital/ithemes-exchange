@@ -38,6 +38,7 @@ function it_exchange_get_field_names() {
 		'error_message'            => 'it-exchange-errors',
 		'transaction_id'           => 'it-exchange-transaction-id',
 		'transaction_method'       => 'it-exchange-transaction-method',
+		'sw_cart_focus'            => 'ite-sw-cart-focus',
 	);
 	//We don't want users to modify the core vars, but we should let them add new ones.
 	return array_merge( $required, apply_filters( 'it_exchange_default_field_names', array() ) );
@@ -66,8 +67,11 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 	}
 
 	// Process SuperWidget links
-	if ( it_exchange_in_superwidget() )
-		return add_query_arg( 'ite-sw-state', $page_slug );
+	if ( it_exchange_in_superwidget() ) {
+		// Get current URL without exchange query args
+		$url = clean_it_exchange_query_args();
+		return add_query_arg( 'ite-sw-state', $page_slug, $url );
+	}
 
 	// Store needs to be first
 	if ( 'store' == $page ) {
@@ -109,6 +113,42 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 		else
 			return add_query_arg( array( $page_slug => 1 ), $base );
 	}
+}
+
+/**
+ * Grabs the current URL, removes all registerd exchnage query_args from it
+ *
+ * Exempts args in first paramater
+ * Cleans additional args in second paramater
+ *
+ * @since 0.4.0
+ *
+ * @param array $exempt optional array of query args not to clean
+ * @param array $additional opitonal array of params to clean even if not found in register params
+ * @return string
+*/
+function clean_it_exchange_query_args( $exempt=array(), $additional=array() ) {
+	// Get registered
+	$registered = array_values( (array) it_exchange_get_field_names() );
+	$registered = array_merge( $registered, (array) array_values( $additional ) );
+
+	// Additional args
+	$registered[] = '_wpnonce';
+	$registered[] = apply_filters( 'it_exchange_purchase_product_nonce_var' , '_wpnonce' );
+	$registered[] = apply_filters( 'it_exchange_cart_action_nonce_var' , '_wpnonce' );
+	$registered[] = apply_filters( 'it_exchange_remove_product_from_cart_nonce_var' , '_wpnonce' );
+	$registered[] = apply_filters( 'it_exchange_checkout_action_nonce_var' , '_wpnonce' );
+	$registered[] = 'it-exchange-basic-coupons-remove-coupon-cart';
+
+	$registered = array_unique( $registered );
+
+	$url = false;
+	foreach( $registered as $key => $param ) {
+		if ( ! in_array( $param, $exempt ) )
+			$url = remove_query_arg( $param, $url );
+	}
+
+	return $url;
 }
 
 /**
