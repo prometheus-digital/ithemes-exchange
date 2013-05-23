@@ -601,7 +601,7 @@ class IT_Exchange_Router {
 
 		// If this is a single product and no iThemes Exchange template was found, and no theme template was found, set some filters
 		if ( 'product' == $this->_current_view ) {
-			if ( $theme_singular = get_single_template() )
+			if ( $theme_singular = get_query_template( 'single', array( 'single-it_exchange_prod.php' ) ) )
 				return $theme_singular;
 			else
 				$this->add_single_product_filters();
