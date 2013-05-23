@@ -104,6 +104,17 @@ class IT_Exchange_Product {
 			$this->set_add_edit_screen_supports();
 		else
 			add_action( 'admin_init', array( $this, 'set_add_edit_screen_supports' ) );
+			
+		//We want to do this sooner than 10
+		add_filter( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_to_product' ), 5, 2 );
+	}
+	
+	function add_transaction_to_product( $transaction_object, $transaction_id ) {
+	
+		add_post_meta( $this->ID, '_it_exchange_transaction_id', $transaction_id );
+	
+		return $transaction_object;
+			
 	}
 
 	/**

@@ -27,12 +27,16 @@ function it_exchange_stripe_wizard_settings( $form ) {
 }
 add_action( 'it_exchange_print_wizard_settings', 'it_exchange_stripe_wizard_settings' );
 
-function it_exchange_process_stripe_transaction( $status ) {
+function it_exchange_process_stripe_transaction( $status, $transaction_object ) {
 
-	// If the $status has already been set, another payment gateway has modified it
-	// We may need to rethink this...
-	if ( false !== $status )
+	if ( $status ) //if this has been modified as true already, return.
 		return $status;
+	
+	// Verify nonce
+	if ( !empty( $_REQUEST['_stripe_nonce'] ) && !wp_verify_nonce( $_REQUEST['_stripe_nonce'], 'stripe-checkout' ) ) {
+		it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'LION' ) );
+		return false;
+	}
 	
 	if ( !empty( $_POST['stripeToken'] ) ) {
 			
@@ -46,13 +50,11 @@ function it_exchange_process_stripe_transaction( $status ) {
 	
 			$token = $_POST['stripeToken'];
 			
-			$customer = it_exchange_get_current_customer();
+			$it_exchange_customer = it_exchange_get_current_customer();
 			
-			if ( $stripe_id = it_exchange_get_stripe_customer_id( $customer->id ) )
+			if ( $stripe_id = it_exchange_get_stripe_customer_id( $it_exchange_customer->id ) )
 				$stripe_customer = Stripe_Customer::retrieve( $stripe_id );
-				
-			ITDebug::print_r( $stripe_customer );
-		
+						
 			// If this user isn't an existing Stripe User, create a new Stripe ID for them...
 			if ( !empty( $stripe_customer ) ) {
 				
@@ -68,16 +70,16 @@ function it_exchange_process_stripe_transaction( $status ) {
 				
 				$stripe_customer = Stripe_Customer::create( $customer_array );
 				
-				it_exchange_set_stripe_customer_id( $customer->id, $stripe_customer->id );
+				it_exchange_set_stripe_customer_id( $it_exchange_customer->id, $stripe_customer->id );
 				
 			}
 					
 			// Now that we have a valid Customer ID, charge them!
 			$charge = Stripe_Charge::create(array(
 				'customer' 		=> $stripe_customer->id,
-				'amount'   		=> number_format( it_exchange_get_cart_total( false ), 2, '', '' ),
+				'amount'   		=> number_format( $transaction_object->total, 2, '', '' ),
 				'currency' 		=> $general_settings['default-currency'],
-				'description'	=> it_exchange_get_cart_description(),
+				'description'	=> $transaction_object->description,
 			));
 			
 		}
@@ -87,15 +89,15 @@ function it_exchange_process_stripe_transaction( $status ) {
 			return false;
 				
 		}
-	
-		return true;
+		
+		return it_exchange_add_transaction( 'stripe', $charge->id, 'completed', $it_exchange_customer->id, $transaction_object );
 		
 	}
 
-	return false;
+	return it_exchange_add_message( 'error', __( 'Unknown error. Please try again later.', 'LION' ) );
 	
 }
-add_filter( 'it_exchange_process_transaction', 'it_exchange_process_stripe_transaction' );
+add_action( 'it_exchange_do_transaction_stripe', 'it_exchange_process_stripe_transaction', 10, 2 );
 
 function it_exchange_get_stripe_customer_id( $customer_id ) {
 	return get_user_meta( $customer_id, 'it_exchange_stripe_id', true );
@@ -165,6 +167,8 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 	$products = it_exchange_get_cart_data( 'products' );
 	
 	$payment_form = '<form action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
+	$payment_form .= '<input type="hidden" name="it-exchange-transaction-method" value="stripe" />';
+	$payment_form .= wp_nonce_field( 'stripe-checkout', '_stripe_nonce', true, false );
 	
 	$payment_form .= '<div class="hide-if-no-js">';
 	$payment_form .= '<script

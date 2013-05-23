@@ -48,6 +48,19 @@ function it_exchange_get_current_customer() {
 }
 
 /**
+ * Get the currently logged in customer ID or return false
+ *
+ * @since 0.4.0
+ * @return mixed customer data
+*/
+function it_exchange_get_current_customer_id() {
+	if ( ! is_user_logged_in() )
+		return false;
+		
+	return get_current_user_id();
+}
+
+/**
  * Update a customer's data
  *
  * @since 0.3.7

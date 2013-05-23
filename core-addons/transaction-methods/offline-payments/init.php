@@ -9,7 +9,7 @@
 include( 'confirmation-template-functions.php' );
 
 add_filter( 'it_exchange_get_transaction_method_name_offline-payments', 'it_exchange_get_offline_payments_name', 9 );
-add_action( 'it_exchange_do_transaction_offline-payments', 'it_exchange_offline_payments_do_transaction', 9 );
+add_action( 'it_exchange_do_transaction_offline-payments', 'it_exchange_offline_payments_do_transaction', 10, 2 );
 add_filter( 'it_exchange_possible_template_paths', 'it_exchange_offline_payments_add_template_path' );
 
 /**
@@ -70,14 +70,11 @@ function it_exchange_get_offline_payments_name( $name ) {
  *
  * @since 0.3.7
 */
-function it_exchange_offline_payments_do_transaction( $cart_object ) {
-	// Set transaction type as manual payment
-	$args = array(
-		'transaction-method' => 'offline-payments',
-	);
-
+function it_exchange_offline_payments_do_transaction( $status, $transaction_object ) {
+	if ( $status ) //if this has been modified as true already, return.
+		return $status;
 	// Do transaction
-	$transaction_id = it_exchange_add_transaction( $args, $cart_object );
+	return it_exchange_add_transaction( 'offline-payments', time(), 'pending', false, $transaction_object );
 }
 
 /**

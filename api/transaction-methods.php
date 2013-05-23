@@ -110,35 +110,34 @@ function it_exchange_get_transactions( $args=array() ) {
  *
  * @since 0.3.3
  * @param array $args same args passed to wp_insert_post plus any additional needed
- * @param object $cart_object passed cart object
+ * @param object $transaction_object passed cart object
  * @return mixed post id or false
 */
-function it_exchange_add_transaction( $args=array(), $cart_object=false ) {
+function it_exchange_add_transaction( $method, $method_id, $status = 'pending', $customer_id = false, $transaction_object, $args = array() ) {
 	$defaults = array(
 		'post_type'          => 'it_exchange_tran',
 		'post_status'        => 'publish',
-		'transaction_status' => 'pending',
 	);
-
 	$args = wp_parse_args( $args, $defaults );
-
-	// Do we have a transaction method and is it an enabled add-on?
-	$enabled_transaction_methods = (array) it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
-	if ( empty( $args['transaction-method'] ) || ! in_array( $args['transaction-method'], array_keys( $enabled_transaction_methods ) ) )
-		return false;
+	
+	if ( !$customer_id )
+		$customer_id = it_exchange_get_current_customer_id();
 
 	// If we don't have a title, create one
 	if ( empty( $args['post_title'] ) )
-		$args['post_title'] = $args['transaction-method'] . '-' . date( 'Y-m-d-H:i' );
+		$args['post_title'] = $method . '-' . $method_id . '-' . date_i18n( 'Y-m-d-H:i:s' );
 
 	if ( $transaction_id = wp_insert_post( $args ) ) {
-		update_post_meta( $transaction_id, '_it_exchange_transaction_method', $args['transaction-method'] );
-		update_post_meta( $transaction_id, '_it_exchange_transaction_status', $args['transaction_status'] );
-		update_post_meta( $transaction_id, '_it_exchange_transaction_cart', $cart_object );
-		do_action( 'it_exchange_add_transaction_success_' . $args['transaction-method'], $transaction_id, $cart_object );
+		update_post_meta( $transaction_id, '_it_exchange_transaction_method',    $method );
+		update_post_meta( $transaction_id, '_it_exchange_transaction_method_id', $method_id );
+		update_post_meta( $transaction_id, '_it_exchange_transaction_status',    $status );
+		update_post_meta( $transaction_id, '_it_exchange_customer_id',           $customer_id );
+		update_post_meta( $transaction_id, '_it_exchange_transaction_object',    $transaction_object );
+		
+		$transaction_object = apply_filters( 'it_exchange_add_transaction_success', $transaction_object, $transaction_id );
 		return $transaction_id;
 	}
-	do_action( 'it_exchange_add_transaction_failed_' . $args['transaction-method'], $args );
+	do_action( 'it_exchange_add_transaction_failed', $args, $transaction_object );
 	return false;
 }
 
@@ -233,8 +232,8 @@ function it_exchange_get_transaction_method_name( $slug ) {
  * @since 0.3.7
  * @return mixed
 */
-function it_exchange_do_transaction( $method, $cart_object ) {
-	do_action( 'it_exchange_do_transaction_' . $method, $cart_object );
+function it_exchange_do_transaction( $method, $transaction_object ) {
+	return apply_filters( 'it_exchange_do_transaction_' . $method, false, $transaction_object );
 }
 
 /**

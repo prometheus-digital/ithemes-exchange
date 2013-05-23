@@ -430,21 +430,6 @@ function it_exchange_do_confirmation_redirect( $transaction_id ) {
 }
 
 /**
- * Redirects to cart with failed transaction message
- *
- * @since 0.3.7
- * @return void
-*/
-function it_exchange_notify_failed_transaction( $message=false ) {
-    $cart_url = it_exchange_get_page_url( 'checkout' );
-    $message_var = it_exchange_get_field_name( 'error_message' );
-    $message = empty( $message ) ? 'failed-transaction' : $message;
-    $url = add_query_arg( array( $message_var => $message ) );
-    wp_redirect( $url );
-    die();
-}
-
-/**
  * Return the ID of a specific iThemes Exchange page as set in options
  *
  * @return integer the WordPress page id if it exists.

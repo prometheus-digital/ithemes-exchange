@@ -550,16 +550,23 @@ class IT_Exchange_Router {
 	function process_transaction() {
 				
 		if ( is_user_logged_in() && 'transaction' == $this->_current_view ) {
+						
+			$transaction_id = apply_filters( 'it_exchange_process_transaction', false );
 			
-			$processed_status = apply_filters( 'it_exchange_process_transaction', false );
-			
-			if ( $processed_status ) {
+			if ( $transaction_id ) {
 				
-				wp_redirect( it_exchange_get_page_url( 'confirmation' ) );
+				it_exchange_empty_shopping_cart();
+				
+				$confirmation_url = it_exchange_get_page_url( 'confirmation' );
+				$transaction_var  = it_exchange_get_field_name( 'transaction_id' );
+				$confirmation_url = add_query_arg( array( $transaction_var => $transaction_id ), $confirmation_url );
+				wp_redirect( $confirmation_url );
+				die();
 				
 			} else {
 					
 				wp_redirect( it_exchange_get_page_url( 'checkout' ) );
+				die();
 				
 			}
 			

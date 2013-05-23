@@ -28,6 +28,39 @@ class IT_Exchange_Product_Feature_Downloads {
 		add_filter( 'it_exchange_get_product_feature_downloads', array( $this, 'get_feature' ), 9, 3 );
 		add_filter( 'it_exchange_product_has_feature_downloads', array( $this, 'product_has_feature') , 9, 2 );
 		add_filter( 'it_exchange_product_supports_feature_downloads', array( $this, 'product_supports_feature') , 9, 2 );
+			
+		//We want to do this sooner than 10
+		add_filter( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_hash_to_product' ), 5, 2 );
+	}
+	
+	function add_transaction_hash_to_product( $transaction_object, $transaction_id ) {
+			
+		foreach( $transaction_object->products as $object ) {
+			
+			
+			// If this is a downloadable product, generate a hash
+			if ( $this->product_has_feature( 'false', $object['product_id'] ) ) {
+						
+				$existing_downloads = it_exchange_get_product_feature( $object->product_id, 'downloads' );
+				
+				foreach( $existing_downloads as $id => $data ) {
+
+					while ( !in_array( $hash = wp_hash( time() ), (array)get_post_meta( $id, '_it_exchange_download_hashes' ) ) ) {
+						
+						add_post_meta( $id, '_it_exchange_download_hashes', $hash );
+						
+					}
+					
+					$object['product_download_hashes'][$hash] = $id;
+					
+				}
+				
+			}
+			
+		}
+	
+		return $transaction_object;
+			
 	}
 
 	/**

@@ -15,9 +15,8 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	*/
 	function IT_Exchange_Shopping_Cart() {
-		add_action( 'template_redirect', array( $this, 'register_cart_error_messages' ) );
-		add_action( 'template_redirect', array( $this, 'register_cart_notice_messages' ) );
 		add_action( 'template_redirect', array( $this, 'handle_it_exchange_cart_function' ) );
+		add_filter( 'it_exchange_process_transaction', array( $this, 'handle_purchase_cart_request' ) );
 	}
 	
 	/**
@@ -288,44 +287,41 @@ class IT_Exchange_Shopping_Cart {
 	 * Formats data and hands it off to the appropriate tranaction method
 	 *
 	 * @since 0.3.8
+	 * @param bool $status
 	 * @return boolean 
 	*/
-	function handle_purchase_cart_request() {
-
-		// Verify nonce
-		$nonce_var = apply_filters( 'it_exchange_checkout_action_nonce_var', '_wpnonce' );
-		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-checkout-action-' . session_id() ) ) {
-			it_exchange_notify_failed_transaction( 'failed-transaction' );
-			return false;
-		}
+	function handle_purchase_cart_request( $status ) {
+		
+		if ( $status ) //if this has been modified as true already, return.
+			return $status;
 
 		// Verify products exist
 		$products = it_exchange_get_cart_products();
 		if ( count( $products ) < 1 ) {
 			do_action( 'it_exchange_error-no_products_to_purchase' );
-			it_exchange_notify_failed_transaction( 'no-products-in-cart' );
+			it_exchange_add_message( 'error', $this->get_cart_message( 'no-products-in-cart' ) );
 			return false;
 		}
-
+		
 		// Verify transaction method exists
 		$method_var = it_exchange_get_field_name( 'transaction_method' );
 		$requested_transaction_method = empty( $_REQUEST[$method_var] ) ? false : $_REQUEST[$method_var];
 		$enabled_addons = it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
 		if ( ! $requested_transaction_method || empty( $enabled_addons[$requested_transaction_method] ) ) {
 			do_action( 'it_exchange_error_bad_transaction_method_at_purchase', $requested_transaction_method );
-			it_exchange_notify_failed_transaction( 'bad-transaction-method' );
+			it_exchange_add_message( 'error', $this->get_cart_message( 'bad-transaction-method' ) );
 			return false;
 		}
 
 		// Verify cart total is a positive number
-		$cart_total = number_format( it_exchange_get_cart_total(), 2);
-		if ( $cart_total < 0.01 ) {
+		$cart_total = number_format( it_exchange_get_cart_total( false ), 2, '.', '' );
+		if ( number_format( $cart_total, 2, '', '' ) < 0 ) {
 			do_action( 'it_exchange_error_negative_cart_total_on_checkout', $cart_total );
-			it_exchange_notify_failed_transaction( 'negative-cart-total' );
+			it_exchange_add_message( 'error', $this->get_cart_message( 'negative-cart-total' ) );
 			return false;
 		}
 
-		// Add subtotal to each product
+		// Add totals to each product
 		foreach( $products as $key => $product ) {
 			$products[$key]['product_baseline'] = it_exchange_get_cart_product_base_price( $product );
 			$products[$key]['product_subtotal'] = it_exchange_get_cart_product_subtotal( $product );
@@ -334,20 +330,15 @@ class IT_Exchange_Shopping_Cart {
 
 		// Package it up and send it to the transaction method add-on
 		$transaction_object = new stdClass();
-		$transaction_object->products = $products;
-		$transaction_object->data     = it_exchange_get_cart_data();
-		$transaction_object->total    = $cart_total;
-
-		// Setup actions for success / failure
-		add_action( 'it_exchange_add_transaction_success_' . $requested_transaction_method, 'it_exchange_empty_shopping_cart' );
-		add_action( 'it_exchange_add_transaction_success_' . $requested_transaction_method, 'it_exchange_do_confirmation_redirect' );
-		add_action( 'it_exchange_add_transaction_failed_' . $requested_transaction_method, 'it_exchange_notify_failed_transaction' );
+		$transaction_object->products    = $products;
+		$transaction_object->cart_data   = it_exchange_get_cart_data();
+		$transaction_object->total       = $cart_total;
+		$transaction_object->description = it_exchange_get_cart_description();
+		
+		$transaction_object = apply_filters( 'it_exchange_handle_purchase_cart_request_transaction_object', $transaction_object );
 
 		// Do the transaction
-		it_exchange_do_transaction( $requested_transaction_method, $transaction_object );
-
-		// If we made it this far, the transaction failed or the transaction-method add-on did not hook into success/fail actions
-		it_exchange_notify_failed_transaction();
+		return it_exchange_do_transaction( $requested_transaction_method, $transaction_object );
 	}
 
 	/**
@@ -369,45 +360,42 @@ class IT_Exchange_Shopping_Cart {
 			die();
 		}   
 	}
-
+	
 	/**
-	 * Add errors if needed
+	 * Gets message for given key
 	 *
-	 * @since 0.3.8
-	 * @return array
+	 * @since 0.4.0
+	 * @param string $key
+	 * @return string
 	*/
-	function register_cart_error_messages() {
-		$errors['bad-transaction-method'] = __( 'Please select a payment method', 'LION' );
-		$errors['failed-transaction']     = __( 'There was an error processing your transaction. Please try again.', 'LION' );
-		$errors['negative-cart-total']    = __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'LION' );
-		$errors['no-products-in-cart']    = __( 'You cannot checkout without any items in your cart.', 'LION' );
-		$errors['product-not-removed']    = __( 'Product not removed from cart. Please try again.', 'LION' );
-		$errors['cart-not-emptied']       = __( 'There was an error emptying your cart. Please try again.', 'LION' );
-		$errors['cart-not-updated']       = __( 'There was an error updating your cart. Please try again.', 'LION' );
-
-		foreach( $errors as $var => $error ) {
-			if ( ! empty( $_REQUEST[$var] ) ) {
-				it_exchange_add_message( 'error', $error );
-			}
-		}
+	function get_cart_message( $key ) {
+	
+		$message = $this->default_cart_messages();
+		
+		return ( !empty( $message[$key] ) ) ? $message[$key] : __( 'Unknown error. Please try again.', 'LION' );;
+		
 	}
 
 	/**
-	 * Register notice messages used with the cart
+	 * Sets up default messages
 	 *
 	 * @since 0.4.0
 	 * @return array
 	*/
-	function register_cart_notice_messages() {
-		$notices['cart-updated']          = __( 'Cart Updated.', 'LION' );
-		$notices['cart-emptied']          = __( 'Cart Emptied', 'LION' );
-		$notices['product-removed']       = __( 'Product removed from cart.', 'LION' );
-		$notices['product-added-to-cart'] = __( 'Product added to cart', 'LION' );
-
-		foreach( $notices as $var => $notice ) {
-			if ( ! empty( $_REQUEST[$var] ) )
-				it_exchange_add_message( 'notice', $notice );
-		}
+	function default_cart_messages() {
+		$messages['bad-transaction-method'] = __( 'Please select a payment method', 'LION' );
+		$messages['failed-transaction']     = __( 'There was an error processing your transaction. Please try again.', 'LION' );
+		$messages['negative-cart-total']    = __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'LION' );
+		$messages['no-products-in-cart']    = __( 'You cannot checkout without any items in your cart.', 'LION' );
+		$messages['product-not-removed']    = __( 'Product not removed from cart. Please try again.', 'LION' );
+		$messages['cart-not-emptied']       = __( 'There was an error emptying your cart. Please try again.', 'LION' );
+		$messages['cart-not-updated']       = __( 'There was an error updating your cart. Please try again.', 'LION' );
+		$messages['cart-updated']          = __( 'Cart Updated.', 'LION' );
+		$messages['cart-emptied']          = __( 'Cart Emptied', 'LION' );
+		$messages['product-removed']       = __( 'Product removed from cart.', 'LION' );
+		$messages['product-added-to-cart'] = __( 'Product added to cart', 'LION' );
+		
+		return apply_filters( 'it_exchange_default_cart_messages', $messages );
 	}
 }
 
