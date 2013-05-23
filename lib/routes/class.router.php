@@ -599,9 +599,13 @@ class IT_Exchange_Router {
 		if ( $template = it_exchange_locate_template( $this->_current_view ) )
 			return $template;
 
-		// If this is a single product and no iThemes Exchange template was found, set some filters
-		if ( 'product' == $this->_current_view )
-			$this->add_single_product_filters();
+		// If this is a single product and no iThemes Exchange template was found, and no theme template was found, set some filters
+		if ( 'product' == $this->_current_view ) {
+			if ( $theme_singular = get_single_template() )
+				return $theme_singular;
+			else
+				$this->add_single_product_filters();
+		}
 
 		// If no iThemes Exchange Template was found, use the theme's page template
 		if ( $template = get_page_template() )
