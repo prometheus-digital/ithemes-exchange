@@ -14,11 +14,11 @@
  * @param string $notice the message you want displayed
 */
 function it_exchange_add_notice( $notice ) {
-	$notices = (boolean) it_exchange_get_notices() ? it_exchange_get_notices() : array();
+	$notices = it_exchange_has_notices() ? it_exchange_get_notices() : array();
 	$notice = trim( $notice );
 	if ( ! empty( $notice ) )
 		$notices[] = $notice;
-	$GLOBALS['it_exchange']['notices'] = $notices;
+	it_exchange_update_session_data( 'notices', $errors );
 }
 
 /**
@@ -29,5 +29,20 @@ function it_exchange_add_notice( $notice ) {
  * @return array an array of strings
 */
 function it_exchange_get_notices() {
-	return empty( $GLOBALS['it_exchange']['notices'] ) ? array() : (array) $GLOBALS['it_exchange']['notices'];
+	$notices = it_exchange_get_session_data( 'notices' );
+	$GLOBALS['it_exchange']['notices'] = empty( $notices ) ? array() : $notices;
+	return $notices;
+}
+
+/**
+ * Checkes if notices exist
+ *
+ * @since 0.4.0
+ *
+ * @return boolean
+*/
+function it_exchange_has_notices() {
+	$notices = it_exchange_get_session_data( 'notices' );
+	$GLOBALS['it_exchange']['notices'] = empty( $notices ) ? array() : $notices;
+	return (bool) $notices;
 }

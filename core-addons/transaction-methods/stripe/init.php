@@ -5,6 +5,9 @@
  * @since 0.4.0
 */
 
+// Initialized Stripe...
+require_once('stripe-api/lib/Stripe.php');
+
 /**
  * Outputs wizard settings for Stripe
  *
@@ -23,6 +26,84 @@ function it_exchange_stripe_wizard_settings( $form ) {
 	<?php
 }
 add_action( 'it_exchange_print_wizard_settings', 'it_exchange_stripe_wizard_settings' );
+
+function it_exchange_process_stripe_transaction( $status ) {
+
+	// If the $status has already been set, another payment gateway has modified it
+	// We may need to rethink this...
+	if ( false !== $status )
+		return $status;
+	
+	if ( !empty( $_POST['stripeToken'] ) ) {
+			
+		try {
+				
+			$general_settings = it_exchange_get_option( 'settings_general' );
+			$settings = it_exchange_get_option( 'addon_stripe' );
+		
+			$secret_key = ( $settings['stripe-test-mode'] ) ? $settings['stripe-test-secret-key'] : $settings['stripe-live-secret-key'];
+			Stripe::setApiKey( $secret_key );
+	
+			$token = $_POST['stripeToken'];
+			
+			$customer = it_exchange_get_current_customer();
+			
+			if ( $stripe_id = it_exchange_get_stripe_customer_id( $customer->id ) )
+				$stripe_customer = Stripe_Customer::retrieve( $stripe_id );
+				
+			ITDebug::print_r( $stripe_customer );
+		
+			// If this user isn't an existing Stripe User, create a new Stripe ID for them...
+			if ( !empty( $stripe_customer ) ) {
+				
+				$stripe_customer->card = $token;
+				$stripe_customer->save();
+				
+			} else {
+		
+				$customer_array = array(
+						'email' => $customer->data->user_email,
+						'card'  => $token,
+				);
+				
+				$stripe_customer = Stripe_Customer::create( $customer_array );
+				
+				it_exchange_set_stripe_customer_id( $customer->id, $stripe_customer->id );
+				
+			}
+					
+			// Now that we have a valid Customer ID, charge them!
+			$charge = Stripe_Charge::create(array(
+				'customer' 		=> $stripe_customer->id,
+				'amount'   		=> '40000',
+				'currency' 		=> $general_settings['default-currency'],
+				'description'	=> $description,
+			));
+			
+		}
+		catch ( Exception $e ) {
+			
+			it_exchange_add_error( $e->getMessage() );
+			return false;
+				
+		}
+	
+		return true;
+		
+	}
+
+	return false;
+	
+}
+add_filter( 'it_exchange_process_transaction', 'it_exchange_process_stripe_transaction' );
+
+function it_exchange_get_stripe_customer_id( $customer_id ) {
+	return get_user_meta( $customer_id, 'it_exchange_stripe_id', true );
+}
+
+function it_exchange_set_stripe_customer_id( $customer_id, $stripe_id ) {
+	return add_user_meta( $customer_id, 'it_exchange_stripe_id', $stripe_id );
+}
 
 function it_exchange_stripe_settings_callback() {
 	$IT_Exchange_Stripe_Add_On = new IT_Exchange_Stripe_Add_On();
@@ -51,7 +132,7 @@ add_action( 'it_exchange_save_wizard_settings', 'stripe_save_wizard_settings' );
  * @since 0.4.0
  *
  * @param array $options
- * @return string
+ * @return string HTML button
 */
 function it_exchange_stripe_addon_make_payment_button( $options ) { 
 	
@@ -68,16 +149,47 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 		
 	}
 	
-	return '<script
-			  src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
-			  data-key="' . $publishable_key . '"
-			  data-amount="' . number_format( it_exchange_get_cart_total( false ), 2, '', '' ) . '"
-			  data-name="' . $general_settings['company-name'] . '"
-			  data-description="' . join( ', ', $description ) . '"
-			  data-currency="' . $stripe_settings['stripe-currency'] . '">
-			</script>';
+	$payment_form = '<form action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
+	
+	$payment_form .= '<div class="hide-if-no-js">';
+	$payment_form .= '<script
+						  src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
+						  data-key="' . $publishable_key . '"
+						  data-amount="' . number_format( it_exchange_get_cart_total( false ), 2, '', '' ) . '"
+						  data-name="' . $general_settings['company-name'] . '"
+						  data-description="' . join( ', ', $description ) . '"
+						  data-currency="' . $general_settings['default-currency'] . '">
+						</script>';
+			
+	$payment_form .= '</form>';
+	$payment_form .= '</div>';
+	
+	$payment_form .= '<div class="hide-if-js">';
+	
+	$payment_form .= '<h3>' . __( 'JavaScript disabled: Stripe Payment Gateway cannot be loaded!', 'LION' ) . '</h3>';
+	
+	$payment_form .= '</div>';
+	
+	return $payment_form;
 }
 add_filter( 'it_exchange_get_stripe_make_payment_button', 'it_exchange_stripe_addon_make_payment_button', 10, 2 );
+
+/**
+ * Filters default currencies to only display those supported by Stripe
+ *
+ * @since 0.4.0
+ * 
+ * @param array $default_currencies Array of default currencies supplied by iThemes Exchange
+ * @return array filtered list of currencies only supported by Stripe
+ */
+function it_exchange_get_stripe_currency_options( $default_currencies ) {
+	
+	$stripe_currencies = IT_Exchange_Stripe_Add_On::get_supported_currency_options();
+	
+	return array_intersect_key( $default_currencies, $stripe_currencies );
+	
+}
+add_filter( 'it_exchange_get_currency_options', 'it_exchange_get_stripe_currency_options' );
 
 /**
  * Class for Stripe
@@ -132,7 +244,7 @@ class IT_Exchange_Stripe_Add_On {
 			do_action( 'it_exchange_save_add_on_settings_stripe' );
 		}
 
-		add_filter( 'it_storage_get_defaults_exchange_addon_stripe', array( $this, 'set_default_settings' ) );
+		//add_filter( 'it_storage_get_defaults_exchange_addon_stripe', array( $this, 'set_default_settings' ) );
 	}
 
 	function print_settings_page() {
@@ -166,6 +278,9 @@ class IT_Exchange_Stripe_Add_On {
 	}
 	
 	function get_stripe_payment_form_table( $form, $settings = array() ) {	
+		
+		$general_settings = it_exchange_get_option( 'settings_general' );
+		
 		if ( !empty( $settings ) )
 			foreach ( $settings as $key => $var )
 				$form->set_option( $key, $var );
@@ -183,8 +298,16 @@ class IT_Exchange_Stripe_Add_On {
         <?php $form->add_text_box( 'stripe-test-secret-key' ); ?>
         <label for="stripe-test-publishable-key"><?php _e( 'Test Publishable Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
         <?php $form->add_text_box( 'stripe-test-publishable-key' ); ?>
-        <label for="stripe-currency"><?php _e( 'Currency', 'LION' ); ?> <span class="tip" title="<?php _e( 'What currency does your store accept?', 'LION' ); ?>">i</span></label>
-        <?php $form->add_drop_down( 'stripe-currency', $this->get_default_currency_options() ); ?>
+        <?php
+		
+			if ( !in_array( $general_settings['default-currency'], $this->get_supported_currency_options() ) ) {
+			
+				echo '<h3>' . sprintf( __( 'You are currently using a currency that is not supported by Stripe. <a href="%s">Please update your currency settings</a>.', 'LION' ), add_query_arg( 'page', 'it-exchange-settings' ) ) . '</h3>';
+				
+			}
+			
+		?>
+        
         <?php	
 	}
 
@@ -271,10 +394,6 @@ class IT_Exchange_Stripe_Add_On {
 			if ( empty( $values['stripe-test-publishable-key'] ) )
 				$errors[] = __( 'Please include your Stripe Test Publishable Key', 'LION' );
 		}
-		
-		$valid_status_options = $this->get_default_currency_options();
-		if ( empty( $values['stripe-currency'] ) || empty( $valid_status_options[$values['stripe-currency']] ) )
-			$errors[] = __( 'Please select a valid currency', 'LION' );
 
 		return $errors;
 	}
@@ -285,9 +404,8 @@ class IT_Exchange_Stripe_Add_On {
 	 * @since 0.4.0
 	 * @return void
 	*/
-	function get_default_currency_options() {
-		$add_on = it_exchange_get_addon( 'stripe' );
-		$options = array( 'usd' => __( 'US Dollars', 'LION' ), 'can' => __( 'Canadian Dollars', 'LION' )  );
+	function get_supported_currency_options() {
+		$options = array( 'USD' => __( 'US Dollar' ), 'CAD' => __( 'Canadian Dollar' ) );
 		return $options;
 	}
 
@@ -298,7 +416,6 @@ class IT_Exchange_Stripe_Add_On {
 	 * @return array settings
 	*/
 	function set_default_settings( $defaults ) {
-		$defaults['stripe-default-currency'] = 'usd';
 		return $defaults;
 	}
 

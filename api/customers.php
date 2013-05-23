@@ -42,15 +42,8 @@ function it_exchange_get_customer( $customer_id ) {
 function it_exchange_get_current_customer() {
 	if ( ! is_user_logged_in() )
 		return false;
-
-	// Get current users's ID
-	$current_id = get_current_user_id();
-	$customer_id = get_query_var( 'account' );
-	
-	if ( $current_id !== $customer_id && !current_user_can( 'administrator' ) )
-		$customer_id = $current_id;
 		
-	$customer = it_exchange_get_customer( $customer_id );
+	$customer = it_exchange_get_customer( get_current_user_id() );
 	return apply_filters( 'it_exchange_get_current_customer', $customer );
 }
 

@@ -56,8 +56,8 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 	*/
 	function IT_Theme_API_Messages() {
 		// Set the current has_ properties
-		$this->_has_errors   = (boolean) it_exchange_get_errors();
-		$this->_has_notices  = (boolean) it_exchange_get_notices();
+		$this->_has_errors   = it_exchange_has_errors();
+		$this->_has_notices  = it_exchange_has_notices();
 		$this->_has_messages = $this->_has_errors || $this->_has_errors;
 	}
 
@@ -102,6 +102,7 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 		}   
 		end( $GLOBALS['it_exchange']['errors'] );
 		$GLOBALS['it_exchange']['error'] = false;
+		it_exchange_clear_session_data( 'errors' );
 		return false;
 	}
 
@@ -150,6 +151,7 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 		}   
 		end( $GLOBALS['it_exchange']['notices'] );
 		$GLOBALS['it_exchange']['notice'] = false;
+		it_exchange_clear_session_data( 'notices' );
 		return false;
 	}
 

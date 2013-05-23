@@ -594,6 +594,8 @@ class IT_Exchange_Admin {
 		$defaults = array(
 			'store-name'        => __( 'Store', 'LION' ),
 			'store-slug'        => 'store',
+			'transaction-name'  => __( 'Transaction', 'LION' ),
+			'transaction-slug'  => 'transaction',
 			'product-name'      => __( 'Product', 'LION' ),
 			'product-slug'      => 'product',
 			'account-name'      => __( 'Account', 'LION' ),

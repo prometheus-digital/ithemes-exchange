@@ -14,11 +14,11 @@
  * @param string $error the message you want displayed
 */
 function it_exchange_add_error( $error ) {
-	$errors = (boolean) it_exchange_get_errors() ? it_exchange_get_errors(): array();
+	$errors = it_exchange_has_errors() ? it_exchange_get_errors(): array();
 	$error = trim( $error );
 	if ( ! empty( $error ) )
 		$errors[] = $error;
-	$GLOBALS['it_exchange']['errors'] = $errors;
+	it_exchange_update_session_data( 'errors', $errors );
 }
 
 /**
@@ -29,5 +29,20 @@ function it_exchange_add_error( $error ) {
  * @return array an array of strings
 */
 function it_exchange_get_errors() {
-	return empty( $GLOBALS['it_exchange']['errors'] ) ? array() : (array) $GLOBALS['it_exchange']['errors'];
+	$errors = it_exchange_get_session_data( 'errors' );
+	$GLOBALS['it_exchange']['errors'] = empty( $errors ) ? array() : $errors;
+	return $errors;
+}
+
+/**
+ * Checkes if errors exist
+ *
+ * @since 0.4.0
+ *
+ * @return boolean
+*/
+function it_exchange_has_errors() {
+	$errors = it_exchange_get_session_data( 'errors' );
+	$GLOBALS['it_exchange']['errors'] = empty( $errors ) ? array() : $errors;
+	return (bool) $errors;
 }

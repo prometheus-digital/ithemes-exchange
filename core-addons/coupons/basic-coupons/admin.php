@@ -106,7 +106,7 @@ function it_exchange_basic_coupons_data_is_valid() {
 	if ( ! is_numeric( $data['amount-number'] ) || trim( $data['amount-number'] ) < 1 )
 		it_exchange_add_error( __( 'Coupon Discount must be a postive number', 'LION' ) );
 
-	return (boolean) ! it_exchange_get_errors();
+	return !it_exchange_has_errors();
 }
 
 /**

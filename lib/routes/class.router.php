@@ -24,6 +24,18 @@ class IT_Exchange_Router {
 	 * @since 0.4.0
 	*/
 	public $_store_name;
+	
+	/**
+	 * @var string $_transaction_slug slug for processing transactions
+	 * @since 0.4.0
+	*/
+	public $_transaction_slug;
+
+	/**
+	 * @var string $_transaction_name name for processing transactions
+	 * @since 0.4.0
+	*/
+	public $_transaction_name;
 
 	/**
 	 * @var string $_product_slug slug for products
@@ -158,6 +170,12 @@ class IT_Exchange_Router {
 	public $_is_store = false;
 
 	/**
+	 * @var boolean $_is_transaction is this the transaction page?
+	 * @since 0.4.0
+	*/
+	public $_is_transaction = false;
+
+	/**
 	 * @var boolean $_is_product is this a single product page?
 	 * @since 0.4.0
 	*/
@@ -253,6 +271,7 @@ class IT_Exchange_Router {
 			add_action( 'template_redirect', array( $this, 'login_out_page_redirect' ), 9 );
 			add_action( 'template_redirect', array( $this, 'set_account' ), 10 );
 			add_action( 'template_redirect', array( $this, 'protect_pages' ), 11 );
+			add_action( 'template_redirect', array( $this, 'process_transaction' ), 12 );
 			add_action( 'template_redirect', array( $this, 'set_wp_query_vars' ) );
 
 			add_filter( 'query_vars', array( $this, 'register_query_vars' ) );
@@ -272,6 +291,8 @@ class IT_Exchange_Router {
 		$slugs                    = it_exchange_get_option( 'settings_pages' );	
 		$this->_store_slug        = $slugs['store-slug'];
 		$this->_store_name        = $slugs['store-name'];
+		$this->_transaction_slug  = $slugs['transaction-slug'];;
+		$this->_transaction_name  = $slugs['transaction-name'];
 		$this->_product_slug      = $slugs['product-slug'];
 		$this->_product_name      = $slugs['product-name'];
 		$this->_account_slug      = $slugs['account-slug'];
@@ -324,6 +345,7 @@ class IT_Exchange_Router {
 	*/
 	function set_environment() {
 		$this->_is_store        = (boolean) get_query_var( $this->_store_slug );
+		$this->_is_transaction  = (boolean) get_query_var( $this->_transaction_slug );
 		$this->_is_product      = (boolean) get_query_var( $this->_product_slug );
 		$this->_is_account      = (boolean) get_query_var( $this->_account_slug );
 		$this->_is_profile      = (boolean) get_query_var( $this->_profile_slug );
@@ -364,6 +386,8 @@ class IT_Exchange_Router {
 			$this->_current_view = 'account';
 		} else if ( $this->_is_product ) {
 			$this->_current_view = 'product';
+		} else if ( $this->_is_transaction ) {
+			$this->_current_view = 'transaction';
 		} else if ( $this->_is_store ) {
 			$this->_current_view = 'store';
 		}
@@ -509,6 +533,37 @@ class IT_Exchange_Router {
 			die();
 		}
 	}
+	
+	/**
+	 * Redirects users to confirmation page if the transaction was successful
+	 * or to the checkout page if there was a failure.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @todo Make this more robust. Give it an API
+	 * @return void
+	*/
+	function process_transaction() {
+				
+		if ( is_user_logged_in() && 'transaction' == $this->_current_view ) {
+			
+			$processed_status = apply_filters( 'it_exchange_process_transaction', false );
+			
+			if ( $processed_status ) {
+				
+				wp_redirect( it_exchange_get_page_url( 'confirmation' ) );
+				
+			} else {
+					
+				wp_redirect( it_exchange_get_page_url( 'checkout' ) );
+				
+			}
+			
+			die();
+			
+		}
+		
+	}
 
 	/**
 	 * Determines which template file should be used for the current frontend view.
@@ -604,6 +659,7 @@ class IT_Exchange_Router {
 	function register_query_vars( $existing ) {
 		$vars = array(
 			$this->_store_slug,
+			$this->_transaction_slug,
 			$this->_account_slug,
 			$this->_profile_slug,
 			$this->_registration_slug,
@@ -662,10 +718,13 @@ class IT_Exchange_Router {
 			$this->_account_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_profile_slug . '=1',
 			
 			// Confirmation
-			$this->_store_slug . '/' . $this->_confirmation_slug . '/([^/]+)/?$' => 'index.php?' . $this->_confirmation_slug . '=$matches[1]',
+			$this->_store_slug . '/' . $this->_confirmation_slug . '/([^/]+)/?$' => 'index.php?' . $this->_store_slug . '=1&' . $this->_confirmation_slug . '=$matches[1]',
 
 			// Admin Reports
-			$this->_store_slug . '/' . $this->_reports_slug => 'index.php?' . $this->_reports_slug . '=1',
+			$this->_store_slug . '/' . $this->_reports_slug => 'index.php?' . $this->_store_slug . '=1&' . $this->_reports_slug . '=1',
+			
+			// Transaction
+			$this->_store_slug . '/' . $this->_transaction_slug  => 'index.php?' . $this->_store_slug . '=1&' . $this->_transaction_slug . '=1',
 
 			// Store
 			$this->_store_slug  => 'index.php?' . $this->_store_slug . '=1',
