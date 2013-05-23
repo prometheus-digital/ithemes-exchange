@@ -477,7 +477,6 @@ class IT_Exchange_Router {
 	function registration_redirect() {
 		if ( is_user_logged_in() && 'registration' == $this->_current_view 
 			&& ! current_user_can( 'administrator' ) ) {
-			die('here');
 			wp_redirect( it_exchange_get_page_url( 'profile' ) );
 			die();
 		}
