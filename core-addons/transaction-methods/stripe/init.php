@@ -127,6 +127,27 @@ function stripe_save_wizard_settings() {
 add_action( 'it_exchange_save_wizard_settings', 'stripe_save_wizard_settings' );
 
 /**
+ * Default settings for stripe
+ *
+ * @since 0.4.0
+ *
+ * @param array $values
+ * @return array
+*/
+function it_exchange_stripe_addon_default_settings( $values ) {
+	$defaults = array(
+		'stripe-test-mode'            => false,
+		'stripe-live-secret-key'      => '',
+		'stripe-live-publishable-key' => '', 
+		'stripe-test-secret-key'      => '',
+		'stripe-test-publishable-key' => '', 
+	);   
+	$values = ITUtility::merge_defaults( $values, $defaults );
+	return $values;
+}
+add_filter( 'it_storage_get_defaults_exchange_addon_stripe', 'it_exchange_stripe_addon_default_settings' );
+
+/**
  * Returns the button for making the payment
  *
  * @since 0.4.0
