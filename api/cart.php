@@ -391,6 +391,30 @@ function it_exchange_get_cart_total( $format=true ) {
 }
 
 /**
+ * Returns the cart description
+ *
+ * The cart description is essentailly going to be a list of all products being purchased
+ *
+ * @since 0.4.0
+ * @return mixed total of cart
+*/
+function it_exchange_get_cart_description() {
+    $description = array();
+    if ( ! $products = it_exchange_get_cart_products() )
+        return 0;
+
+    foreach( (array) $products as $product ) {
+        $string = it_exchange_get_cart_product_title( $product );
+		if (  1 < $count = it_exchange_get_cart_product_quantity( $product ) )
+			$string .= ' (x' . $count . ')';
+		$description[] = $string;
+    }
+    $description = apply_filters( 'it_exchange_get_cart_description', join( ', ', $description ), $description );
+
+	return $description;
+}
+
+/**
  * Redirect to confirmation page after successfull transaction
  *
  * @since 0.3.7

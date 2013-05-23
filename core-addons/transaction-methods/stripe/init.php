@@ -75,9 +75,9 @@ function it_exchange_process_stripe_transaction( $status ) {
 			// Now that we have a valid Customer ID, charge them!
 			$charge = Stripe_Charge::create(array(
 				'customer' 		=> $stripe_customer->id,
-				'amount'   		=> '40000',
+				'amount'   		=> number_format( it_exchange_get_cart_total( false ), 2, '', '' ),
 				'currency' 		=> $general_settings['default-currency'],
-				'description'	=> $description,
+				'description'	=> it_exchange_get_cart_description(),
 			));
 			
 		}
@@ -164,12 +164,6 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 
 	$products = it_exchange_get_cart_data( 'products' );
 	
-	foreach( $products as $product ) {
-		
-		$description[] = it_exchange_get_cart_product_title( $product ) . ' x' . it_exchange_get_cart_product_quantity( $product ) . ' = ' . it_exchange_get_cart_product_subtotal( $product );
-		
-	}
-	
 	$payment_form = '<form action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
 	
 	$payment_form .= '<div class="hide-if-no-js">';
@@ -178,7 +172,7 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 						  data-key="' . $publishable_key . '"
 						  data-amount="' . number_format( it_exchange_get_cart_total( false ), 2, '', '' ) . '"
 						  data-name="' . $general_settings['company-name'] . '"
-						  data-description="' . join( ', ', $description ) . '"
+						  data-description="' . it_exchange_get_cart_description() . '"
 						  data-currency="' . $general_settings['default-currency'] . '">
 						</script>';
 			
