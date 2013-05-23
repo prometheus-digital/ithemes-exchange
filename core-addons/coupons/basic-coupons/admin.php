@@ -187,7 +187,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		$values['end-date']      = $coupon->end_date;
 	}
 
-	$errors = it_exchange_get_messages( 'errors' );
+	$errors = it_exchange_get_messages( 'error' );
 	if ( ! empty( $errors ) ) {
 		foreach( $errors as $error ) {
 			ITUtility::show_error_message( $error );

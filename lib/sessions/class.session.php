@@ -64,7 +64,7 @@ class IT_Exchange_Session {
 		
 		if ( !empty( $this->_session[$key] ) ) {
 			$current_data = maybe_unserialize( $this->_session[$key] );
-			$this->_session[$key] = maybe_serialize( array_merge( $current_data, $data ) );
+			$this->_session[$key] = maybe_serialize( array_merge( $current_data, (array)$data ) );
 		} else {
 			$this->_session[$key] = maybe_serialize( (array)$data );
 		}

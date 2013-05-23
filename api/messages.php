@@ -15,7 +15,7 @@
  * @param string $message the message you want displayed
 */
 function it_exchange_add_message( $type, $message ) {
-	it_exchange_update_session_data( $type, $message );
+	it_exchange_add_session_data( $type, $message );
 }
 
 /**

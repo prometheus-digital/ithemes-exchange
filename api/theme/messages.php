@@ -56,8 +56,8 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 	*/
 	function IT_Theme_API_Messages() {
 		// Set the current has_ properties
-		$this->_has_errors   = it_exchange_has_messages( 'errors' );
-		$this->_has_notices  = it_exchange_has_messages( 'notices' );
+		$this->_has_errors   = it_exchange_has_messages( 'error' );
+		$this->_has_notices  = it_exchange_has_messages( 'notice' );
 		$this->_has_messages = $this->_has_errors || $this->_has_errors;
 	}
 
@@ -89,7 +89,7 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 		// If we made it here, we're doing a loop of errors
 		// This will init/reset the errors global and loop through them. The error method will return the current one
 		if ( ! isset( $GLOBALS['it_exchange']['error'] ) && $this->_has_errors ) { 
-			$GLOBALS['it_exchange']['errors'] = it_exchange_get_messages( 'errors' );
+			$GLOBALS['it_exchange']['errors'] = it_exchange_get_messages( 'error' );
 			$GLOBALS['it_exchange']['error'] = reset( $GLOBALS['it_exchange']['errors'] );
 			return true;
 		} else {
@@ -99,7 +99,7 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 			} else {
 				end( $GLOBALS['it_exchange']['errors'] );
 				$GLOBALS['it_exchange']['error'] = false;
-				it_exchange_clear_messages( 'errors' );
+				it_exchange_clear_messages( 'error' );
 				return false;
 			}   
 		}
@@ -139,7 +139,7 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 		// If we made it here, we're doing a loop of notices
 		// This will init/reset the notices global and loop through them. The notice method will return the current one
 		if ( ! isset( $GLOBALS['it_exchange']['notice'] ) && $this->_has_notices ) { 
-			$GLOBALS['it_exchange']['notices'] = it_exchange_get_messages( 'notices' );
+			$GLOBALS['it_exchange']['notices'] = it_exchange_get_messages( 'notice' );
 			$GLOBALS['it_exchange']['notice'] = reset( $GLOBALS['it_exchange']['notices'] );
 			return true;
 		} else {
@@ -149,7 +149,7 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 			} else {
 				end( $GLOBALS['it_exchange']['notices'] );
 				$GLOBALS['it_exchange']['notice'] = false;
-				it_exchange_clear_messages( 'notices' );
+				it_exchange_clear_messages( 'notice' );
 				return false;
 			}   
 		}
