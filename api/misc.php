@@ -39,6 +39,10 @@ function it_exchange_get_field_names() {
 		'transaction_id'           => 'it-exchange-transaction-id',
 		'transaction_method'       => 'it-exchange-transaction-method',
 		'sw_cart_focus'            => 'ite-sw-cart-focus',
+		'sw_ajax_call'             => 'it-exchange-sw-ajax',
+		'sw_ajax_action'           => 'sw-action',
+		'sw_ajax_product'          => 'sw-product',
+		'sw_ajax_quantity'         => 'sw-quantity',
 	);
 	//We don't want users to modify the core vars, but we should let them add new ones.
 	return array_merge( $required, apply_filters( 'it_exchange_default_field_names', array() ) );

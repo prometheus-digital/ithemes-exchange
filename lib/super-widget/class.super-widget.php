@@ -77,12 +77,17 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 
 		// Flag that we're in the superwidget
 		$GLOBALS['it_exchange']['in_superwidget'] = $instance;
+		if ( ! empty( $GLOBALS['wp_query']->queried_object->ID ) && it_exchange_get_product( $GLOBALS['wp_query']->queried_object->ID ) )
+			$product_id = $GLOBALS['wp_query']->queried_object->ID;
+		else
+			$product_id = false;
 
 		// Some JS we're going to need
 		?>
 		<script type="text/javascript">
 			var itExchangeSWAjaxURL = '<?php echo esc_js( get_home_url() . '?it-exchange-sw-ajax=1' );?>';
 			var itExchangeSWState = '<?php echo esc_js( $this->get_state() ); ?>';
+			var itExchangeSWOnProductPage = '<?php echo esc_js( $product_id ); ?>';
 		</script>
 		<?php
 		// Print widget

@@ -630,7 +630,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$button_name    = empty( $options['button-name'] ) ? '' : ' name="' . esc_attr( $options['button-name'] ) . '"';
 		$button         = '<input' . $button_name . ' type="' . esc_attr( $options['button-type'] ) . '" value="' . esc_attr( $options['label'] ) . '" class="' . esc_attr( $class ) . '" />';
 		$hidden_fields  = '<input type="hidden" name="it-exchange-action" value="buy_now" />';
-		$hidden_fields .= '<input type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
+		$hidden_fields .= '<input class="buy-now-product-id" type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
 		$hidden_fields .= wp_nonce_field( 'it-exchange-purchase-product-' . $this->product->ID, '_wpnonce', true, false );
 		
 		if ( ! $product_in_stock )
@@ -639,7 +639,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( ! $product_is_available )
 			return '<p>' . esc_attr( $options['not-available-text'] ) . '</p>';
 
-		$result  = '<form action="" method="post">';
+		$result  = '<form action="" method="post" class="it-exchange-sw-purchase-options it-exchange-sw-buy-now">';
 		$result .= $hidden_fields;
 		$result .= it_exchange( 'product', 'get-purchase-quantity' );
 		$result .= $button;
@@ -691,7 +691,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$button_name    = empty( $options['button-name'] ) ? '' : ' name="' . esc_attr( $options['button-name'] ) . '"';
 		$button         = '<input' . $button_name . ' type="' . esc_attr( $options['button-type'] ) . '" value="' . esc_attr( $options['label'] ) . '" class="' . esc_attr( $class ) . '" />';
 		$hidden_fields  = '<input type="hidden" name="it-exchange-action" value="add_product_to_cart" />';
-		$hidden_fields .= '<input type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
+		$hidden_fields .= '<input class="add-to-cart-product-id" type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
 		$hidden_fields .= wp_nonce_field( 'it-exchange-purchase-product-' . $this->product->ID, '_wpnonce', true, false );
 		
 		if ( ! $product_in_stock )
@@ -703,7 +703,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( ! $multi_item_cart )
 			return '';
 
-		$result  = '<form action="" method="post">';
+		$result  = '<form action="" method="post" class="it-exchange-sw-purchase-options it-exchange-sw-add-to-cart">';
 		$result .= $hidden_fields;
 		$result .= it_exchange( 'product', 'get-purchase-quantity' );
 		$result .= $button;
