@@ -563,17 +563,13 @@ class IT_Exchange_Router {
 				wp_redirect( $confirmation_url );
 				die();
 				
-			} else {
-					
-				wp_redirect( it_exchange_get_page_url( 'checkout' ) );
-				die();
-				
 			}
-			
-			die();
 			
 		}
 		
+		wp_redirect( it_exchange_get_page_url( 'checkout' ) );
+		die();
+	
 	}
 
 	/**
