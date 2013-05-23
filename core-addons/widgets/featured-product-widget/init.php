@@ -18,6 +18,8 @@ class IT_Exchange_Featured_Product extends WP_Widget {
 				'description' => __( 'Displays a product as featured in WordPress sidebars.', 'LION' ),
 			)
 		);
+		if ( ! is_admin() )
+			add_filter( 'it_exchange_possible_template_paths', array( $this, 'register_template_directory' ) );
 	}
 
 	/**
@@ -98,5 +100,19 @@ class IT_Exchange_Featured_Product extends WP_Widget {
 		</p>
 		<?php 
 	}
+
+	/** 
+	 * Register template directory so that exchange can locate the default template part
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $existing existing locations
+	 * @return array
+	*/
+	function register_template_directory( $existing ) { 
+		$directory = dirname( __FILE__ ) . '/templates';
+		$existing[] = $directory;
+		return $existing;
+	} 
 }
 add_action( 'widgets_init', create_function( '', 'register_widget( "it_exchange_featured_product" );' ) );

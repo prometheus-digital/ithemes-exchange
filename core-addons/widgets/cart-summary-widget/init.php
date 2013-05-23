@@ -18,7 +18,8 @@ class IT_Exchange_Cart_Summary extends WP_Widget {
 				'description' => __( 'Displays the iThemes Exchange cart summary.', 'LION' ),
 			)
 		);
-		add_filter( 'it_exchange_possible_template_paths', array( $this, 'register_template_directory' ) );
+		if ( ! is_admin() )
+			add_filter( 'it_exchange_possible_template_paths', array( $this, 'register_template_directory' ) );
 	}
 
 	/**

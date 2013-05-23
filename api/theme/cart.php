@@ -176,18 +176,27 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 
 		// If we're in the superwidget, we need to use that format.
 		if ( it_exchange_in_superwidget() )
-			$options['format'] = 'super-widget';
+			$options['format'] = 'link';
 
 		switch( $options['format'] ) {
 			case 'var' :
 				return $var;
 				break;
-			case 'super-widget' :
-				// Get clean URL without any exchange query args
-				$url = clean_it_exchange_query_args();
-				$url = add_query_arg( 'ite-sw-state', 'checkout', $url );
+			case 'link' :
+				$url = '';
+				// Tack on the superwidget state if in it.
+				if ( it_exchange_in_superwidget() ) {
+					// Get clean URL without any exchange query args
+					$url = clean_it_exchange_query_args();
+					$url = add_query_arg( 'ite-sw-state', 'checkout', $url );
+				} else {
+					if ( it_exchange_is_multi_item_cart_allowed() )
+						$url = it_exchange_get_page_url( 'checkout' );
+				}
+
 				$output  = $options['before'];
 				$output .= '<a href="' . $url . '">' . esc_attr( $options['label'] ) . '</a>';
+				$output .= $options['after'];
 				break;
 			case 'button' :
 			default :

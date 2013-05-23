@@ -14,8 +14,12 @@
 		<?php endwhile; ?>
 	</div>
 	<div class="it-exchange-cart-total"><?php _e( 'Total:', 'LION' ); ?> <?php it_exchange( 'cart', 'total' ); ?></div>
-	<div class="it-exchange-cart-link"><?php it_exchange( 'checkout', 'cancel', 'label=' . __( 'View cart', 'LION' ) ); ?></div>
-	<div class="it-exchange-checkout-link"><?php it_exchange( 'cart', 'checkout' ); ?></div>
+	<?php if ( ! get_query_var( 'cart' ) && it_exchange_is_multi_item_cart_allowed() ) : ?>
+		<div class="it-exchange-cart-link"><?php it_exchange( 'checkout', 'cancel', 'label=' . __( 'View cart', 'LION' ) ); ?></div>
+	<?php endif; ?>
+	<?php if ( ! get_query_var( 'checkout' ) && it_exchange_is_multi_item_cart_allowed() ) : ?>
+		<div class="it-exchange-checkout-link"><?php it_exchange( 'cart', 'checkout', 'format=link' ); ?></div>
+	<?php endif; ?>
 <?php else : ?>
 	<div class="it-exchange-no-items"><?php _e( 'Cart is empty', 'LION' ); ?></div>
 <?php endif; ?>
