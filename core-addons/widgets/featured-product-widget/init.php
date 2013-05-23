@@ -12,8 +12,8 @@ class IT_Exchange_Featured_Product extends WP_Widget {
 	 */
 	public function __construct() {
 		parent::__construct(
-			'it_exchnage_featured_product',
-			'Exchange Featured Product',
+			'it_exchange_featured_product',
+			__( 'Exchange Featured Product', 'LION' ),
 			array(
 				'description' => __( 'Displays a product as featured in WordPress sidebars.', 'LION' ),
 			)

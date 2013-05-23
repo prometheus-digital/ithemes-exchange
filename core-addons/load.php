@@ -90,6 +90,16 @@ function it_exchange_register_core_addons() {
 			'category' 		=> 'widgets',
 			'tag' 			=> 'core',
 		),
+		// Cart Summary Widget
+		'cart-summary-widget' => array(
+			'name'        	=> __( 'Cart Summary Widget', 'LION' ),
+			'description' 	=> __( 'Creates a WordPress widget to display the cart summary in WordPress sidebars.', 'LION' ),
+			'author'		=> 'iThemes',
+			'author_url'	=> 'http://ithemes.com',
+			'file'        	=> dirname( __FILE__ ) . '/widgets/cart-summary-widget/init.php',
+			'category' 		=> 'widgets',
+			'tag' 			=> 'core',
+		),
 		// Multi item cart
 		'multi-item-cart-option' => array(
 			'name'        	=> __( 'Multi-item Cart', 'LION' ),
