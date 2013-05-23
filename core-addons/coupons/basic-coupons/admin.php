@@ -98,15 +98,15 @@ function it_exchange_basic_coupons_data_is_valid() {
 
 	$data = ITForm::get_post_data();
 	if ( empty( $data['name'] ) )
-		it_exchange_add_error( __( 'Coupon Name cannot be left empty', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Coupon Name cannot be left empty', 'LION' ) );
 	if ( empty( $data['code'] ) )
-		it_exchange_add_error( __( 'Coupon Code cannot be left empty', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Coupon Code cannot be left empty', 'LION' ) );
 	if ( empty( $data['amount-number'] ) )
-		it_exchange_add_error( __( 'Coupon Discount cannot be left empty', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Coupon Discount cannot be left empty', 'LION' ) );
 	if ( ! is_numeric( $data['amount-number'] ) || trim( $data['amount-number'] ) < 1 )
-		it_exchange_add_error( __( 'Coupon Discount must be a postive number', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Coupon Discount must be a postive number', 'LION' ) );
 
-	return !it_exchange_has_errors();
+	return !it_exchange_has_message( 'errors' );
 }
 
 /**
@@ -187,7 +187,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		$values['end-date']      = $coupon->end_date;
 	}
 
-	$errors = it_exchange_get_errors();
+	$errors = it_exchange_get_messages( 'errors' );
 	if ( ! empty( $errors ) ) {
 		foreach( $errors as $error ) {
 			ITUtility::show_error_message( $error );

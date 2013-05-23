@@ -44,11 +44,8 @@ include( $this->_plugin_path . 'api/cart.php' );
 // Customers
 include( $this->_plugin_path . 'api/customers.php' );
 
-// Errors
-include( $this->_plugin_path . 'api/errors.php' );
-
-// Notices 
-include( $this->_plugin_path . 'api/notices.php' );
+// Messages
+include( $this->_plugin_path . 'api/messages.php' );
 
 // Coupons
 include( $this->_plugin_path . 'api/coupons.php' );

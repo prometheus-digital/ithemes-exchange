@@ -83,7 +83,7 @@ function it_exchange_process_stripe_transaction( $status ) {
 		}
 		catch ( Exception $e ) {
 			
-			it_exchange_add_error( $e->getMessage() );
+			it_exchange_add_message( 'error', $e->getMessage() );
 			return false;
 				
 		}

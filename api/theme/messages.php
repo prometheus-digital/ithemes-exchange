@@ -56,8 +56,8 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 	*/
 	function IT_Theme_API_Messages() {
 		// Set the current has_ properties
-		$this->_has_errors   = it_exchange_has_errors();
-		$this->_has_notices  = it_exchange_has_notices();
+		$this->_has_errors   = it_exchange_has_messages( 'errors' );
+		$this->_has_notices  = it_exchange_has_messages( 'notices' );
 		$this->_has_messages = $this->_has_errors || $this->_has_errors;
 	}
 
@@ -89,6 +89,7 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 		// If we made it here, we're doing a loop of errors
 		// This will init/reset the errors global and loop through them. The error method will return the current one
 		if ( ! isset( $GLOBALS['it_exchange']['error'] ) && $this->_has_errors ) { 
+			$GLOBALS['it_exchange']['errors'] = it_exchange_get_messages( 'errors' );
 			$GLOBALS['it_exchange']['error'] = reset( $GLOBALS['it_exchange']['errors'] );
 			return true;
 		} else {
@@ -96,13 +97,13 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 				$GLOBALS['it_exchange']['error'] = current( $GLOBALS['it_exchange']['errors'] );
 				return true;
 			} else {
+				end( $GLOBALS['it_exchange']['errors'] );
 				$GLOBALS['it_exchange']['error'] = false;
+				it_exchange_clear_messages( 'errors' );
 				return false;
 			}   
-		}   
-		end( $GLOBALS['it_exchange']['errors'] );
-		$GLOBALS['it_exchange']['error'] = false;
-		it_exchange_clear_session_data( 'errors' );
+		}
+		
 		return false;
 	}
 
@@ -138,6 +139,7 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 		// If we made it here, we're doing a loop of notices
 		// This will init/reset the notices global and loop through them. The notice method will return the current one
 		if ( ! isset( $GLOBALS['it_exchange']['notice'] ) && $this->_has_notices ) { 
+			$GLOBALS['it_exchange']['notices'] = it_exchange_get_messages( 'notices' );
 			$GLOBALS['it_exchange']['notice'] = reset( $GLOBALS['it_exchange']['notices'] );
 			return true;
 		} else {
@@ -145,13 +147,13 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 				$GLOBALS['it_exchange']['notice'] = current( $GLOBALS['it_exchange']['notices'] );
 				return true;
 			} else {
+				end( $GLOBALS['it_exchange']['notices'] );
 				$GLOBALS['it_exchange']['notice'] = false;
+				it_exchange_clear_messages( 'notices' );
 				return false;
 			}   
-		}   
-		end( $GLOBALS['it_exchange']['notices'] );
-		$GLOBALS['it_exchange']['notice'] = false;
-		it_exchange_clear_session_data( 'notices' );
+		}
+		
 		return false;
 	}
 

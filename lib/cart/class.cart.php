@@ -387,7 +387,7 @@ class IT_Exchange_Shopping_Cart {
 
 		foreach( $errors as $var => $error ) {
 			if ( ! empty( $_REQUEST[$var] ) ) {
-				it_exchange_add_error( $error );
+				it_exchange_add_message( 'error', $error );
 			}
 		}
 	}
@@ -406,7 +406,7 @@ class IT_Exchange_Shopping_Cart {
 
 		foreach( $notices as $var => $notice ) {
 			if ( ! empty( $_REQUEST[$var] ) )
-				it_exchange_add_notice( $notice );
+				it_exchange_add_message( 'notice', $notice );
 		}
 	}
 }

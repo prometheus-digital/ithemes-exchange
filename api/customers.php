@@ -169,9 +169,9 @@ function handle_it_exchange_save_profile_action() {
 		$result = edit_user( $customer->id );
 		
 		if ( is_wp_error( $result ) ) {
-			it_exchange_add_error( $result->get_error_message() );
+			it_exchange_add_message( 'error', $result->get_error_message() );
 		} else {
-			it_exchange_add_notice( __( 'Successfully saved profile!', 'LION' ) );
+			it_exchange_add_message( 'notice', __( 'Successfully saved profile!', 'LION' ) );
 		}
 		
 	}
@@ -194,7 +194,7 @@ function handle_it_exchange_customer_registration_action() {
 		$result = edit_user();
 		
 		if ( is_wp_error( $result ) )
-			return it_exchange_add_error( $result->get_error_message());
+			return it_exchange_add_message( 'error', $result->get_error_message());
 		
 		$user_id = $result;
 			
@@ -208,7 +208,7 @@ function handle_it_exchange_customer_registration_action() {
 		$result = wp_signon( $creds );
 		
 		if ( is_wp_error( $result ) )
-			return it_exchange_add_error( $result->get_error_message() );
+			return it_exchange_add_message( 'error', $result->get_error_message() );
 			
 		wp_new_user_notification( $user_id, $_REQUEST['pass1'] );
 			
