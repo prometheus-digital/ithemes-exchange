@@ -9,3 +9,11 @@
 .download .download-info{float:left;width:80%;}
 .download .download-info h4{margin-top:0;}
 .download .download-info span + span{margin-left:1em;}
+
+/** -----------------------------------------------------:[ profile ]:---------- */
+.customer-info label{display:block;margin-top:1em;}
+.customer-name,
+.customer-password{overflow:hidden;}
+.customer-name div,
+.customer-password div{float:left;}
+.customer-save{margin-top:1em;}
