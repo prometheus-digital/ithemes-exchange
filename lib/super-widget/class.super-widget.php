@@ -215,7 +215,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		// If cart has item in it and multi-item cart is disabled, and we're not on a product page or the product page is the same as the item in the cart, show cart
 		if ( $items_in_cart && ! $multi_item_cart ) {
 			
-			// Don't set state to cart if on one of the following requested states
+			// Don't set state to checkout if on one of the following requested states
 			if ( 'cart' != $requested_state && 'login' != $requested_state && 'registration' != $requested_state )
 				$state = 'checkout';
 
@@ -232,7 +232,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 
 		// If user is not logged in and state is checkout, redirect to login
 		if ( ! $user_logged_in ) {
-			if ( 'checkout' == $requested_state )
+			if ( 'checkout' == $state )
 				$state = 'login';
 		}
 

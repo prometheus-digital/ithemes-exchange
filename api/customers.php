@@ -201,9 +201,9 @@ function handle_it_exchange_customer_registration_action() {
 		//else
 		
 		$creds = array( 
-				'user_login'    => $_REQUEST['user_login'],
-				'user_password' => $_REQUEST['pass1'],
-				);
+			'user_login'    => $_REQUEST['user_login'],
+			'user_password' => $_REQUEST['pass1'],
+		);
 		
 		$result = wp_signon( $creds );
 		
@@ -212,7 +212,11 @@ function handle_it_exchange_customer_registration_action() {
 			
 		wp_new_user_notification( $user_id, $_REQUEST['pass1'] );
 			
-		wp_safe_redirect( it_exchange_get_page_url( 'profile' ) );
+		$reg_page = it_exchange_get_page_url( 'registration' );
+		// Set redirect to profile page if they were on the registration page
+		$redirect = ( trailingslashit( $reg_page ) == trailingslashit( wp_get_referer() ) ) ? it_exchange_get_page_url( 'profile' ) : clean_it_exchange_query_args( array(), array( 'ite-sw-state' ) );
+		wp_redirect( $redirect );
+		die();
 		
 	}
 	
