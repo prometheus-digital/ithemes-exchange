@@ -1,2 +1,11 @@
-/** Here we are **/
-* { color: red; }
+/**
+ * Structural styles for of iThemes Exchange elements.
+*/
+
+/** -----------------------------------------------------:[ downloads ]:---------- */
+.download{clear:both;}
+.download .download-get{float:right;width:20%;}
+.download .download-get a{float:right;}
+.download .download-info{float:left;width:80%;}
+.download .download-info h4{margin-top:0;}
+.download .download-info span + span{margin-left:1em;}
