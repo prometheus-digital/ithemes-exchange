@@ -77,3 +77,15 @@ function it_exchange_format_price( $price ) {
 	
 	return $before . number_format ( $price, 2, $settings['currency-decimals-separator'], $settings['currency-thousands-separator'] ) . $after;
 }
+
+/**
+ * Loads the frontend CSS on all exchange pages
+ *
+ * @since 0.4.0
+ *
+ * @return void
+*/
+function it_exchange_load_frontend_css( $current_view ) {
+	wp_enqueue_style( 'it-exchange-frontend-css', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange.css' ) );
+}
+add_action( 'it_exchange_template_redirect', 'it_exchange_load_frontend_css' );

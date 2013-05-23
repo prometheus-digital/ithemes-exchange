@@ -400,6 +400,10 @@ class IT_Exchange_Router {
 			if ( $this->$is_property )
 				$this->_current_view = $current_view;
 		}
+
+		// Add hook for things that need to be done when on an exchange page
+		if ( $this->_current_view )
+			do_action( 'it_exchange_template_redirect', $this->_current_view );
 	}
 
 	/**
