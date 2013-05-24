@@ -102,6 +102,7 @@ class IT_Exchange_Transaction {
 			$this->set_add_edit_screen_supports();
 		else
 			add_action( 'admin_init', array( $this, 'set_add_edit_screen_supports' ) );
+			
 	}
 
 	/**
@@ -119,6 +120,52 @@ class IT_Exchange_Transaction {
 				$transaction_method = $_GET['transaction-method'];		
 		}
 		$this->transaction_method = $transaction_method;
+	}
+
+	/**
+	 * Gets the transaction_status property.
+	 *
+	 * If the custom value is already set, it uses that.
+	 * If the custom value is not set and we're on post-add.php, check for a URL param
+	 *
+	 * @since 0.4.0
+	*/
+	function get_transaction_status() {
+		return get_post_meta( $this->ID, '_it_exchange_transaction_status', true );
+	}
+	
+	/**
+	 * Updates the transaction_status property.
+	 *
+	 * If the custom value is already set, it uses that.
+	 * If the custom value is not set and we're on post-add.php, check for a URL param
+	 *
+	 * @since 0.4.0
+	*/
+	function update_transaction_status( $new_status ) {
+		update_post_meta( $this->ID, '_it_exchange_transaction_status', $new_status );
+	}
+	
+	/**
+	 * Add the transaction refund amount.
+	 *
+	 * @since 0.4.0
+	*/
+	function add_transaction_refund( $refund ) {
+		$args = array(
+			'amount' => $refund,
+			'date'   => date_i18n( 'Y-m-d H:i:s' ),
+		);
+		add_post_meta( $thid->ID, '_it_exchange_transaction_refunds', $args );
+	}
+	
+	/**
+	 * Get the transaction refunds.
+	 *
+	 * @since 0.4.0
+	*/
+	function get_transaction_refunds() {
+		return get_post_meta( $this->ID, '_it_exchange_transaction_refunds' );
 	}
 
 	/**

@@ -238,9 +238,7 @@ class IT_Exchange_Transaction_Post_Type {
 			case 'it_exchange_transaction_status_column' :
 					$status = it_exchange_get_transaction_status( $post );
 					$method = it_exchange_get_transaction_method( $post );
-					$statuses = it_exchange_get_addon_support( $method, 'transaction_status' );
-					$statuses = $statuses['options'];
-					esc_attr_e( $statuses[$status] );
+					esc_attr_e( apply_filters( 'it_exchange_transaction_status_label_' . $method, $status ) );
 				break;
 		}
 	}

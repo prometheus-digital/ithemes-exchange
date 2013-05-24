@@ -13,6 +13,27 @@
 */
 
 /**
+ * Hook for processing webhooks from services like PayPal IPN, Stripe, etc.
+ *
+ * @since 0.4.0
+*/
+function it_exchange_process_webhooks() {
+	
+	$webhook_keys = apply_filters( 'it_exchange_webhook_keys', array() );
+	
+	foreach( $webhook_keys as $key ) {
+	
+		if ( !empty( $_REQUEST[$key] ) )
+			do_action( 'it_exchange_webhook_' . $key, $_REQUEST );
+		
+	}
+	
+	do_action( 'it_exchange_webhooks_processed' );
+	
+}
+add_action( 'wp', 'it_exchange_process_webhooks' );
+
+/**
  * Grabs the transaction method of a transaction
  *
  * @since 0.3.3
@@ -202,14 +223,17 @@ function it_exchange_update_transaction_status( $transaction, $status ) {
  * @return string the transaction status
 */
 function it_exchange_get_transaction_status( $transaction ) {
-	if ( is_object( $transaction) && 'IT_Exchange_Transaction' == get_class( $transaction ) )
-		return $transaction->transaction_data['_it_exchange_transaction_status'];
+	if ( is_object( $transaction ) && 'IT_Exchange_Transaction' == get_class( $transaction ) )
+		return $transaction->get_transaction_status();
 
-	if ( 'it_exchange_tran' != get_post_type( $transaction ) )
-		return;
+	if ( ! $transaction ) {
+		global $post;
+		$transaction = $post;
+	}
 
+	// Return value from IT_Exchange_Transaction if we are able to locate it
 	$transaction = it_exchange_get_transaction( $transaction );
-	return empty( $transaction->transaction_data['_it_exchange_transaction_status'] ) ? false : $transaction->transaction_data['_it_exchange_transaction_status'];
+	return $transaction->get_transaction_status();
 }
 
 /**

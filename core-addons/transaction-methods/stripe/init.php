@@ -56,20 +56,24 @@ function it_exchange_process_stripe_transaction( $status, $transaction_object ) 
 				$stripe_customer = Stripe_Customer::retrieve( $stripe_id );
 				
 			// If the user has been deleted from Stripe, we need to create a new Stripe ID.
-			if ( !empty( $stripe_customer ) )
+			if ( !empty( $stripe_customer ) ) {
+				
 				if ( true === $stripe_customer->deleted )
 					$stripe_customer = array();
+					
+			}
 						
 			// If this user isn't an existing Stripe User, create a new Stripe ID for them...
 			if ( !empty( $stripe_customer ) ) {
 				
 				$stripe_customer->card = $token;
+				$stripe_customer->email = $it_exchange_customer->data->user_email;
 				$stripe_customer->save();
 				
 			} else {
 		
 				$customer_array = array(
-						'email' => $customer->data->user_email,
+						'email' => $it_exchange_customer->data->user_email,
 						'card'  => $token,
 				);
 				
@@ -96,7 +100,7 @@ function it_exchange_process_stripe_transaction( $status, $transaction_object ) 
 				
 		}
 		
-		return it_exchange_add_transaction( 'stripe', $charge->id, 'completed', $it_exchange_customer->id, $transaction_object );
+		return it_exchange_add_transaction( 'stripe', $charge->id, 'succeeded', $it_exchange_customer->id, $transaction_object );
 		
 	}
 
@@ -107,11 +111,11 @@ function it_exchange_process_stripe_transaction( $status, $transaction_object ) 
 add_action( 'it_exchange_do_transaction_stripe', 'it_exchange_process_stripe_transaction', 10, 2 );
 
 function it_exchange_get_stripe_customer_id( $customer_id ) {
-	return get_user_meta( $customer_id, 'it_exchange_stripe_id', true );
+	return get_user_meta( $customer_id, '_it_exchange_stripe_id', true );
 }
 
 function it_exchange_set_stripe_customer_id( $customer_id, $stripe_id ) {
-	return add_user_meta( $customer_id, 'it_exchange_stripe_id', $stripe_id );
+	return update_user_meta( $customer_id, '_it_exchange_stripe_id', $stripe_id );
 }
 
 function it_exchange_stripe_settings_callback() {
@@ -217,6 +221,161 @@ function it_exchange_get_stripe_currency_options( $default_currencies ) {
 }
 add_filter( 'it_exchange_get_currency_options', 'it_exchange_get_stripe_currency_options' );
 
+
+function it_exchange_stripe_webhook_key( $webhooks ) {
+
+	$webhooks[] = apply_filters( 'it_exchange_stripe_webhook', 'it_exchange_stripe' );
+	
+	return $webhooks;
+	
+}
+add_filter( 'it_exchange_webhook_keys', 'it_exchange_stripe_webhook_key' );
+
+/**
+ * Processes webhooks for Stripe
+ *
+ * @since 0.4.0
+ * @todo actually handle the exceptions 
+ *
+ * @param array $request really just passing  $_REQUEST
+ */
+function it_exchange_stripe_process_webhook( $request ) {
+
+	$general_settings = it_exchange_get_option( 'settings_general' );
+	$settings = it_exchange_get_option( 'addon_stripe' );
+	
+	$secret_key = ( $settings['stripe-test-mode'] ) ? $settings['stripe-test-secret-key'] : $settings['stripe-live-secret-key'];
+	Stripe::setApiKey( $secret_key );
+
+	$body = @file_get_contents('php://input');
+	$stripe_event = json_decode( $body );
+	
+	$f = fopen( 'webhooks.txt', 'a' );
+	fwrite( $f, print_r( $stripe_event, true ) );
+	fclose( $f );
+	
+	// for extra security, retrieve from the Stripe API
+	if ( isset( $stripe_event->id ) ) {
+				
+		try {
+			
+			if ( isset( $stripe_event->customer ) )
+				$stripe_id = $stripe_event->customer;
+				
+			$stripe_object = $stripe_event->data->object;
+
+			//https://stripe.com/docs/api#event_types
+			switch( $stripe_event->type ) :
+
+				case 'charge.succeeded' :
+					it_exchange_update_transaction_status_for_stripe( $stripe_object->id, 'succeeded' );
+					break;
+				case 'charge.failed' :
+					it_exchange_update_transaction_status_for_stripe( $stripe_object->id, 'failed' );
+					break;
+				case 'charge.refunded' :
+					if ( $stripe_object->refunded )
+						it_exchange_update_transaction_status_for_stripe( $stripe_object->id, 'refunded' );
+					else
+						it_exchange_update_transaction_status_for_stripe( $stripe_object->id, 'partial-refund' );
+					
+					it_ecxhange_add_refund_to_transaction_for_stripe( $stripe_object->id, $stripe_object->amount_refunded );
+						
+					break;
+				case 'charge.dispute.created' :
+				case 'charge.dispute.updated' :
+				case 'charge.dispute.closed' :
+					it_exchange_update_transaction_status_for_stripe( $stripe_object->charge, $stripe_object->status );
+					break;
+				case 'customer.deleted' :
+					it_exchange_delete_stripe_id_from_customer( $stripe_object->id );
+					break;
+
+			endswitch;
+
+		} catch ( Exception $e ) {
+			
+			// What are we going to do here?
+			
+		}
+	}
+	
+}
+add_action( 'it_exchange_webhook_it_exchange_stripe', 'it_exchange_stripe_process_webhook' );
+
+function it_exchange_get_transaction_from_stripe_id( $stripe_id ) {
+	$args = array(
+		'meta_key'    => '_it_exchange_transaction_method_id',
+		'meta_value'  => $stripe_id,
+		'numberposts' => 1, //we should only have one, so limit to 1
+	);
+	return it_exchange_get_transactions( $args );
+}
+
+function it_exchange_update_transaction_status_for_stripe( $stripe_id, $new_status ) {
+	$transactions = it_exchange_get_transaction_from_stripe_id( $stripe_id );
+	foreach( $transactions as $transaction ) { //really only one
+		$current_status = $transaction->get_transaction_status();
+		if ( $new_status !== $current_status )
+			$transaction->update_transaction_status( $new_status );
+	}	
+}
+
+function it_ecxhange_add_refund_to_transaction_for_stripe( $stripe_id, $refund ) {
+	$transactions = it_exchange_get_transaction_from_stripe_id( $stripe_id );
+	foreach( $transactions as $transaction ) { //really only one
+		$refunds = $transaction->get_transaction_refunds();
+		
+		$refunded_amount = 0;
+		foreach( $refunds as $refund_meta ) {
+			$refunded_amount += number_format( $refund_meta['amount'], '2', '', '' );
+		}
+		
+		// In Stripe the Refund is the total amount that has been refunded, not just this transaction
+		$this_refund = $refund - $refunded_amount;
+		
+		$transaction->add_transaction_refund( number_format( $this_refund, '2', '.', '' ) );
+	}	
+	
+}
+
+function it_exchange_delete_stripe_id_from_customer( $stripe_id ) {
+	$transactions = it_exchange_get_transaction_from_stripe_id( $stripe_id );
+	foreach( $transactions as $transaction ) { //really only one
+		$customer_id = get_post_meta( $transaction->ID, '_it_exchange_customer_id', true );
+		if ( false !== $current_stripe_id = it_exchange_get_stripe_customer_id( $customer_id ) ) {
+			
+			if ( $current_stripe_id === $stripe_id )
+				delete_user_meta( $customer_id, '_it_exchange_stripe_id' );
+				
+		}
+	}	
+}
+
+function it_exchange_transaction_status_label_stripe( $status ) {
+
+	switch ( $status ) {
+	
+		case 'succeeded':
+			return __( 'Paid', 'LION' );
+		case 'refunded':
+			return __( 'Refunded', 'LION' );
+		case 'partial-refund':
+			return __( 'Partially Refunded', 'LION' );
+		case 'needs_response':
+			return __( 'Disputed: Stripe needs a response', 'LION' );
+		case 'under_review':
+			return __( 'Disputed: Under review', 'LION' );
+		case 'won':
+			return __( 'Disputed: Won, Paid', 'LION' );
+		default:
+			return __( 'Unknown', 'LION' );
+		
+	}
+	
+}
+add_filter( 'it_exchange_transaction_status_label_stripe', 'it_exchange_transaction_status_label_stripe' );
+
 /**
  * Class for Stripe
  * @since 0.4.0
@@ -271,6 +430,7 @@ class IT_Exchange_Stripe_Add_On {
 		}
 
 		//add_filter( 'it_storage_get_defaults_exchange_addon_stripe', array( $this, 'set_default_settings' ) );
+		
 	}
 
 	function print_settings_page() {
@@ -333,6 +493,10 @@ class IT_Exchange_Stripe_Add_On {
 			}
 			
 		?>
+        <h5><?php _e( 'Stripe Webhooks', 'LION' ); ?></h5>
+        <p><?php _e( 'Webhooks can be configured in the <a href="https://manage.stripe.com/account/webhooks">webhook settings section</a> of the Stripe dashboard. Clicking Add URL will reveal a form to add a new URL for receiving webhooks.', 'LION' ); ?></p>
+        <p><?php _e( 'Please log into your account and add this URL to your Webhooks so iThemes Exchange is notified of things like refunds, payments, etc.', 'LION' ); ?></p>
+        <code><?php echo get_site_url(); ?>/?<?php echo apply_filters( 'it_exchange_stripe_webhook', 'it_exchange_stripe' ); ?>=1</code>
         
         <?php	
 	}
