@@ -219,7 +219,7 @@ function it_exchange_base_coupons_remove_cart_coupon_html( $incoming=false, $cod
 	} else {
 		$url = clean_it_exchange_query_args( array( it_exchange_get_field_name( 'sw_cart_focus' ) ) );
 		$url = add_query_arg( $var . '[]', $options['code'] );
-		return '<a class="' . esc_attr( $options['class'] ) . '" href="' . $url . '">' . esc_attr( $options['label'] ) . '</a>';
+		return '<a data-coupon-code="' . esc_attr( $options['code'] ) . '" class="' . esc_attr( $options['class'] ) . '" href="' . $url . '">' . esc_attr( $options['label'] ) . '</a>';
 	}
 }
 add_filter( 'it_exchange_remove_cart_coupon_html', 'it_exchange_base_coupons_remove_cart_coupon_html', 10, 3 );
@@ -248,19 +248,14 @@ add_filter( 'it_exchange_get_cart_total', 'it_exchange_basic_coupons_apply_disco
  *
  * @return void
 */
-function it_exchange_basic_coupons_remove_coupon_from_cart() {
+function it_exchange_basic_coupons_handle_remove_coupon_from_cart_request() {
 	$var = it_exchange_get_field_name( 'remove_coupon' ) . '-cart';
 	if ( empty( $_REQUEST[$var] ) )
 		return;
 
-	$coupons = it_exchange_get_applied_coupons( 'cart' );
-	foreach( (array) $coupons as $code => $data ) {
-		if ( in_array( $code, $_REQUEST[$var] ) )
-			unset( $coupons[$code] );
+	foreach( (array) $_REQUEST[$var] as $code ) {
+		it_exchange_remove_coupon( 'cart', $code );
 	}
-
-	// Unset coupons
-	it_exchange_update_cart_data( 'basic_coupons', $coupons );
 
 	if ( it_exchange_is_multi_item_cart_allowed() )
 		$url = it_exchange_get_page_url( 'cart' );
@@ -269,7 +264,27 @@ function it_exchange_basic_coupons_remove_coupon_from_cart() {
 
 	wp_redirect( $url );
 	die();
-
-
 }
-add_action( 'template_redirect', 'it_exchange_basic_coupons_remove_coupon_from_cart', 9 );
+add_action( 'template_redirect', 'it_exchange_basic_coupons_handle_remove_coupon_from_cart_request', 9 );
+
+/**
+ * Removes a coupon from the cart
+ *
+ * @param boolean $result default result passed by apply_filters
+ * @param string $coupon_code code of coupon to be removed
+ * @return boolean
+*/
+function it_exchange_basic_coupons_remove_coupon_from_cart( $result, $options=array() ) {
+	$coupon_code = empty( $options['code'] ) ? false : $options['code'];
+	if ( empty( $coupon_code ) )
+		return false;
+
+	$coupons = it_exchange_get_applied_coupons( 'cart' );
+	if ( isset( $coupons[$coupon_code] ) )
+		unset( $coupons[$coupon_code] );
+
+	// Unset coupons
+	it_exchange_update_cart_data( 'basic_coupons', $coupons );
+	return true;
+}
+add_filter( 'it_exchange_remove_coupon_for_cart', 'it_exchange_basic_coupons_remove_coupon_from_cart', 10, 2 );
