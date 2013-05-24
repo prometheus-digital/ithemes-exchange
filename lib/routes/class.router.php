@@ -636,8 +636,10 @@ class IT_Exchange_Router {
 		}
 
 		// If no iThemes Exchange Template was found, use the theme's page template
-		if ( $template = get_page_template() )
+		if ( $template = get_page_template() ) {
+			remove_filter( 'the_content', 'wpautop' );
 			return $template;
+		}
 
 		// If nothing was found here, the theme has issues. Just return whatever template WP was going to use
 		return $existing;
