@@ -118,12 +118,32 @@ add_filter( 'it_exchange_apply_cart_coupon_field', 'it_exchange_base_coupons_app
  *
  * @return void
 */
-function it_exchange_basic_coupons_apply_coupon_to_cart() {
+function it_exchange_basic_coupons_handle_coupon_on_cart_update() {
 	$var = it_exchange_get_field_name( 'apply_coupon' ) . '-cart';
 
 	// Abort if no coupon code was added
 	if ( ! $coupon_code = empty( $_REQUEST[$var] ) ? false : $_REQUEST[$var] )
 		return;
+
+	it_exchange_apply_coupon( 'cart', $coupon_code );
+}
+add_action( 'it_exchange_update_cart', 'it_exchange_basic_coupons_handle_coupon_on_cart_update' );
+
+/**
+ * Applies a coupon code to a cart if it exists and is valid
+ *
+ * @since 0.4.0
+ *
+ * @param boolean $result this is default to false. gets set by apply_filters
+ * @param array $options - must contain coupon key
+ * @return boolean
+*/
+function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
+
+	// Set coupon code. Return false if one is not available
+	$coupon_code = empty( $options['code'] ) ? false : $options['code'];
+	if ( empty( $coupon_code ) )
+		return false;
 
 	// Abort if no coupon code matches and falls within dates
 	$args = array(
@@ -135,7 +155,7 @@ function it_exchange_basic_coupons_apply_coupon_to_cart() {
 		),
 	);
 	if ( ! $coupons = it_exchange_get_coupons( $args ) )
-		return;
+		return false;
 
 	$coupon = reset( $coupons );
 
@@ -143,7 +163,7 @@ function it_exchange_basic_coupons_apply_coupon_to_cart() {
 	$start_okay = empty( $coupon->start_date ) || strtotime( $coupon->start_date ) <= strtotime( date( 'Y-m-d' ) );
 	$end_okay   = empty( $coupon->end_date ) || strtotime( $coupon->end_date ) >= strtotime( date( 'Y-m-d' ) );
 	if ( ! $start_okay || ! $end_okay )
-		return;
+		return false;
 
 	// Format data for session
 	$coupon = array(
@@ -159,8 +179,10 @@ function it_exchange_basic_coupons_apply_coupon_to_cart() {
 	// Add to session data
 	$data = array( $coupon['code'] => $coupon );
 	it_exchange_update_cart_data( 'basic_coupons', $data );
+
+	return true;
 }
-add_action( 'it_exchange_update_cart', 'it_exchange_basic_coupons_apply_coupon_to_cart' );
+add_action( 'it_exchange_apply_coupon_to_cart', 'it_exchange_basic_coupons_apply_to_cart', 10, 2 );
 
 /**
  * Clear cart coupons when cart is emptied
