@@ -92,10 +92,12 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 			'after'  => '',
 			'format' => 'link',
 			'label'  => __( 'Cancel', 'LION' ),
-			'class'  => 'it-exchange-cancel-checkout',
+			'class'  => '',
 			'focus'  => false
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		$class = empty( $options['class'] ) ? 'it-exchange-cancel-checkout' : 'it-exchange-cancel-checkout ' . $options['class'];
 
 		// Set URL
 		if ( it_exchange_in_superwidget() || ! it_exchange_is_multi_item_cart_allowed() ) {
@@ -108,7 +110,7 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 		}
 
 		if ( 'link' == $options['format'] )
-			return $options['before'] . '<a class="' . esc_attr( $options['class'] ) . '" href="' . $url . '">' . $options['label'] . '</a>' . $options['after'];
+			return $options['before'] . '<a class="' . esc_attr( $class ) . '" href="' . $url . '">' . $options['label'] . '</a>' . $options['after'];
 
 		return $url;
 	}

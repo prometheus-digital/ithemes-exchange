@@ -15,6 +15,7 @@ $action   = empty( $_GET['sw-action'] ) ? false : esc_attr( $_GET['sw-action'] )
 $state    = empty( $_GET['state'] ) ? false : esc_attr( $_GET['state'] );
 $product  = empty( $_GET['sw-product'] ) ? false : absint( $_GET['sw-product'] );
 $quantity = empty( $_GET['sw-quantity'] ) ? false : absint( $_GET['sw-quantity'] );
+$focus    = empty( $_GET['ite-sw-cart-focus'] ) ? false : esc_attr( $_GET['ite-sw-cart-focus'] );
 
 if ( 'get-state' == $action && $state ) {
 	if ( $product )
