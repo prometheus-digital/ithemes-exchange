@@ -155,3 +155,37 @@ function it_exchange_get_remove_coupon_html( $type, $code, $options=array() ) {
 	$options['code'] = $code;
 	return apply_filters( 'it_exchange_remove_' . $type . '_coupon_html', '', $code, $options );
 }
+
+/**
+ * Apply a coupon
+ *
+ * We're going to ask the add-ons to do this for us.
+ *
+ * @since 0.4.0
+ *
+ * @param string $type the type of coupon to check for
+ * @param string $code the coupon code
+ * @param array $options
+ * @return boolean
+*/
+function it_exchange_apply_coupon( $type, $code, $options=array() ) {
+	$options['code'] = $code;
+	return apply_filters( 'it_exchange_apply_coupon_to_' . $type, 'false', $options );
+}
+
+/**
+ * Remove a coupon
+ *
+ * We're going to ask the add-ons to do this for us.
+ *
+ * @since 0.4.0
+ *
+ * @param string $type the type of coupon to check for
+ * @param string $code the coupon code
+ * @param array $options
+ * @return boolean
+*/
+function it_exchange_remove_coupon( $type, $code, $options=array() ) {
+	$options['code'] = $code;
+	return apply_filters( 'it_exchange_remove_coupon_for_' . $type, 'false', $options );
+}

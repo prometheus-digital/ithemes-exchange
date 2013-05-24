@@ -226,7 +226,7 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
 	$cart_products = it_exchange_get_cart_products();
 
 	// Update Quantity
-	if ( ! empty( $cart_products[$cart_product_id] ) && is_numeric( $quantity ) ) { 
+	if ( ! empty( $cart_products[$cart_product_id] ) && is_numeric( $quantity ) ) {
 		$cart_product = $cart_products[$cart_product_id];
 		if ( empty( $quantity ) || $quantity < 1 ) { 
 			it_exchange_delete_cart_product( $cart_product_id );

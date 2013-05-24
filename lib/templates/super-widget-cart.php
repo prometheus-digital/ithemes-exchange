@@ -32,7 +32,7 @@
 		if ( it_exchange( 'coupons', 'accepting', 'type=cart' ) ) {   
 			_e( 'Coupon Code?', 'LION' );
 			it_exchange( 'coupons', 'apply', 'type=cart' );
-			it_exchange( 'cart', 'update', 'label=' . __( 'Apply Coupon', 'LION' ) );
+			it_exchange( 'cart', 'update', 'class=it-exchange-apply-coupon-button&label=' . __( 'Apply Coupon', 'LION' ) );
 		}   
 		?>
 		<?php
@@ -52,7 +52,7 @@
 			<?php endwhile; ?>
 		</div>
 		<div class="it-exchange-cart-subtotal"><?php _e( 'Sub-total:', 'LION' ); ?> <?php it_exchange( 'cart', 'subtotal' ); ?></div>
-		<div class="it-exchange-cart-update"><?php it_exchange( 'cart', 'update' ); ?></div>
+		<div class="it-exchange-cart-update"><?php it_exchange( 'cart', 'update', 'class=it-exchange-update-quantity-button&label=' . __( 'Update Quantity', 'LION' ) ); ?></div>
 	<?php endif; ?>
 	<div class="it-exchange-cart-total"><?php _e( 'Total:', 'LION' ); ?> <?php it_exchange( 'cart', 'total' ); ?></div>
 	<div class="it-exchange-checkout-link"><?php it_exchange( 'cart', 'checkout' ); ?></div>

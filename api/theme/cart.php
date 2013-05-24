@@ -95,7 +95,8 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	function form_open( $options=array() ) {
-		return '<form action="" method="post" >';
+		$class = it_exchange_in_superwidget() ? 'it-exchange-sw-update-cart' : 'it-exchange-update-cart';
+		return '<form action="" method="post" class="' . $class . '">';
 	}
 
 	/**
