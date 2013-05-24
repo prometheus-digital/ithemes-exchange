@@ -577,11 +577,17 @@ class IT_Exchange_Router {
 				it_exchange_empty_shopping_cart();
 				
 				$confirmation_url = it_exchange_get_page_url( 'confirmation' );
+
 				$transaction_var  = it_exchange_get_field_name( 'transaction_id' );
-				$confirmation_url = add_query_arg( array( $transaction_var => $transaction_id ), $confirmation_url );
+
+				if ( $this->_pretty_permalinks ) {
+					$confirmation_url = trailingslashit( $confirmation_url ) . $transaction_id;
+				} else {
+					$confirmation_url = remove_query_arg( $this->_confirmation_slug, $confirmation_url );
+					$confirmation_url = add_query_arg( $this->_confirmation_slug, $transaction_id, $confirmation_url );
+				}
 				wp_redirect( $confirmation_url );
 				die();
-				
 			}
 			
 			wp_redirect( it_exchange_get_page_url( 'checkout' ) );
