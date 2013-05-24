@@ -10,6 +10,25 @@
 .download .download-info h4{margin-top:0;}
 .download .download-info span + span{margin-left:1em;}
 
+/** -----------------------------------------------------:[ it-exchange-purchases ]:---------- */
+.it-exchange-purchase,
+.it-exchange-purchase .it-exchange-purchase-top,
+.it-exchange-purchase .item-info{overflow:hidden;}
+.it-exchange-purchase{margin-bottom:2em;padding-bottom:2em;}
+
+.it-exchange-purchase-top{margin-bottom:1em;}
+.it-exchange-purchase-top .it-exchange-purchase-total{float:right;}
+
+.it-exchange-purchase-items .item-info{margin-bottom:1em;}
+.it-exchange-purchase-items .item-thumbnail,
+.it-exchange-purchase-items .item-data{float:left;}
+.it-exchange-purchase-items .item-thumbnail{width:10%;}
+.it-exchange-purchase-items .item-thumbnail img{margin:0;}
+.it-exchange-purchase-items .item-data{width:90%;}
+.it-exchange-purchase-items .item-data h4{margin:0;margin-left:2em;}
+.it-exchange-purchase-items .item-data p{margin-left:2em;}
+.it-exchange-purchase-items .item-data .item-price{font-weight:normal;}
+
 /** -----------------------------------------------------:[ profile ]:---------- */
 .customer-info label{display:block;margin-top:1em;}
 .customer-name,
