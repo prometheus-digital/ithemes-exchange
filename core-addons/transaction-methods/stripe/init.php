@@ -54,6 +54,11 @@ function it_exchange_process_stripe_transaction( $status, $transaction_object ) 
 			
 			if ( $stripe_id = it_exchange_get_stripe_customer_id( $it_exchange_customer->id ) )
 				$stripe_customer = Stripe_Customer::retrieve( $stripe_id );
+				
+			// If the user has been deleted from Stripe, we need to create a new Stripe ID.
+			if ( !empty( $stripe_customer ) )
+				if ( true === $stripe_customer->deleted )
+					$stripe_customer = array();
 						
 			// If this user isn't an existing Stripe User, create a new Stripe ID for them...
 			if ( !empty( $stripe_customer ) ) {
@@ -68,6 +73,7 @@ function it_exchange_process_stripe_transaction( $status, $transaction_object ) 
 						'card'  => $token,
 				);
 				
+				// Creates a new Stripe ID for this customer
 				$stripe_customer = Stripe_Customer::create( $customer_array );
 				
 				it_exchange_set_stripe_customer_id( $it_exchange_customer->id, $stripe_customer->id );
@@ -94,7 +100,8 @@ function it_exchange_process_stripe_transaction( $status, $transaction_object ) 
 		
 	}
 
-	return it_exchange_add_message( 'error', __( 'Unknown error. Please try again later.', 'LION' ) );
+	it_exchange_add_message( 'error', __( 'Unknown error. Please try again later.', 'LION' ) );
+	return false;
 	
 }
 add_action( 'it_exchange_do_transaction_stripe', 'it_exchange_process_stripe_transaction', 10, 2 );
