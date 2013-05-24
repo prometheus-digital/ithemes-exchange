@@ -271,6 +271,7 @@ class IT_Exchange_Router {
 			add_action( 'template_redirect', array( $this, 'login_out_page_redirect' ), 9 );
 			add_action( 'template_redirect', array( $this, 'set_account' ), 10 );
 			add_action( 'template_redirect', array( $this, 'protect_pages' ), 11 );
+			add_action( 'template_redirect', array( $this, 'prevent_empty_checkouts' ), 11 );
 			add_action( 'template_redirect', array( $this, 'process_transaction' ), 12 );
 			add_action( 'template_redirect', array( $this, 'set_wp_query_vars' ) );
 
@@ -538,6 +539,24 @@ class IT_Exchange_Router {
 		}
 	}
 	
+	/**
+	 * Redirect away from checkout if cart is empty
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function prevent_empty_checkouts() {
+		if ( 'checkout' != $this->_current_view )
+			return;
+
+		if ( ! it_exchange_get_cart_products() ) {
+			wp_redirect( it_exchange_get_page_url( 'cart' ) );
+			die();
+		}
+
+	}
+
 	/**
 	 * Redirects users to confirmation page if the transaction was successful
 	 * or to the checkout page if there was a failure.
