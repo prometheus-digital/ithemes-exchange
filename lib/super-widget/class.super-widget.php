@@ -88,6 +88,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			var itExchangeSWAjaxURL = '<?php echo esc_js( get_home_url() . '?it-exchange-sw-ajax=1' );?>';
 			var itExchangeSWState = '<?php echo esc_js( $this->get_state() ); ?>';
 			var itExchangeSWOnProductPage = '<?php echo esc_js( $product_id ); ?>';
+			var ITExchangeSWMultiItemCart = '<?php echo esc_js( it_exchange_is_multi_item_cart_allowed() ); ?>';
 		</script>
 		<?php
 		// Print widget

@@ -25,7 +25,7 @@ if ( 'get-state' == $action && $state ) {
 }
 
 // Buy Now action
-if ( 'buy-now' == $action && $product && $quantity ) {
+if ( ( 'add-to-cart' == $action || 'buy-now' == $action ) && $product && $quantity ) {
 	if ( it_exchange_add_product_to_shopping_cart( $product, $quantity ) )
 		die(1);
 	die(0);
