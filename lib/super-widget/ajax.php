@@ -28,7 +28,12 @@ $cart_product = empty( $_GET['sw-cart-product'] ) ? false : esc_attr( $_GET['sw-
 if ( 'get-state' == $action && $state ) {
 	if ( $product )
 		$GLOBALS['it_exchange']['product'] = it_exchange_get_product( $product );
-	it_exchange_get_template_part( 'super-widget', $state );
+
+	// Force Log-in if asking for cart and user isn't logged in.
+	if ( ! is_user_logged_in() )
+		it_exchange_get_template_part( 'super-widget', 'login' );
+	else
+		it_exchange_get_template_part( 'super-widget', $state );
 	die();
 }
 
