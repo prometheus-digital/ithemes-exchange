@@ -15,6 +15,8 @@ include( $this->_plugin_path . '/api/theme/registration.php' );
 include( $this->_plugin_path . '/api/theme/coupons.php' );
 include( $this->_plugin_path . '/api/theme/checkout.php' );
 include( $this->_plugin_path . '/api/theme/transaction-method.php' );
+include( $this->_plugin_path . '/api/theme/transactions.php' );
+include( $this->_plugin_path . '/api/theme/transaction.php' );
 
 /**
  * Defines the main it_exchange function

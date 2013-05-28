@@ -176,6 +176,8 @@ class IT_Exchange_Transaction {
 	*/
     function set_transaction_supports_and_data() {
         // Get transaction_method options
+
+		/****** @todo THIS WAS OLD CARTBUDDY. WAS SUPPOSED TO BE 'FLEXIBLE' BUT I DON'T LIKE IT. ***/
         if ( $transaction_method_options = it_exchange_get_transaction_method_options( $this->transaction_method ) ) { 
             if ( ! empty( $transaction_method_options['supports'] ) ) { 
                 foreach( $transaction_method_options['supports'] as $feature => $params ) { 
@@ -195,7 +197,21 @@ class IT_Exchange_Transaction {
                 }   
             }   
         }   
-    } 
+		/** END OF OLD. BEGINNING OF TEMP **/
+
+		// Set status
+		$this->status = get_post_meta( $this->ID, '_it_exchange_transaction_status', true );
+
+		// Set refunds
+		$this->refunds = $this->get_transaction_refunds();
+
+		// Set customer ID
+		$this->customer_id = get_post_meta( $this->ID, '_it_exchange_customer_id', true );
+
+		// Set Cart information
+		$this->cart_details = get_post_meta( $this->ID, '_it_exchange_transaction_object', true );
+	}
+
 
     /** 
      * Sets the supports array for the post_type.

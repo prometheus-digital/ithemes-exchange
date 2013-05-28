@@ -95,6 +95,12 @@ function it_exchange_get_transactions( $args=array() ) {
 		'post_type' => 'it_exchange_tran',
 	);
 
+	// Different defaults depending on where we are.
+	if ( $transaction_hash = get_query_var('confirmation') ) {
+		if ( $transaction_id = it_exchange_get_transaction_id_from_hash( $transaction_hash ) )
+			$defaults['p'] = $transaction_id;
+	}
+
 	$args = wp_parse_args( $args, $defaults );
 	$meta_query = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
 
