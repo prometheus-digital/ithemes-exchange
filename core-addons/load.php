@@ -51,6 +51,7 @@ function it_exchange_register_core_addons() {
 			'category' 		=> 'transaction-methods',
 			'tag' 			=> 'core',
 			'supports' 		=> apply_filters( 'it_exchange_register_paypal_standard_default_features', array() ),
+			'settings-callback' => 'it_exchange_paypal_standard_settings_callback',
 		),
 		// Stripe Transaction Method
 		'stripe' => array(

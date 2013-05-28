@@ -250,10 +250,6 @@ function it_exchange_stripe_process_webhook( $request ) {
 	$body = @file_get_contents('php://input');
 	$stripe_event = json_decode( $body );
 	
-	$f = fopen( 'webhooks.txt', 'a' );
-	fwrite( $f, print_r( $stripe_event, true ) );
-	fclose( $f );
-	
 	// for extra security, retrieve from the Stripe API
 	if ( isset( $stripe_event->id ) ) {
 				
@@ -428,8 +424,6 @@ class IT_Exchange_Stripe_Add_On {
 			add_action( 'it_exchange_save_add_on_settings_stripe', array( $this, 'save_settings' ) );
 			do_action( 'it_exchange_save_add_on_settings_stripe' );
 		}
-
-		//add_filter( 'it_storage_get_defaults_exchange_addon_stripe', array( $this, 'set_default_settings' ) );
 		
 	}
 
@@ -597,16 +591,6 @@ class IT_Exchange_Stripe_Add_On {
 	function get_supported_currency_options() {
 		$options = array( 'USD' => __( 'US Dollar' ), 'CAD' => __( 'Canadian Dollar' ) );
 		return $options;
-	}
-
-	/**
-	 * Sets the default options for manual payment settings
-	 *
-	 * @since 0.4.0
-	 * @return array settings
-	*/
-	function set_default_settings( $defaults ) {
-		return $defaults;
 	}
 
 }
