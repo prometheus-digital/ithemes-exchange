@@ -25,7 +25,10 @@ function it_exchange_add_message( $type, $message ) {
  *
  * @param string $type Type of message you want displayed
 */
-function it_exchange_get_messages( $type ) {
+function it_exchange_get_messages( $type, $clear=true ) {
+	$messages = it_exchange_get_session_data( $type );
+	if ( $clear )
+		it_exchange_clear_messages();
 	return it_exchange_get_session_data( $type );
 }
 
@@ -37,7 +40,7 @@ function it_exchange_get_messages( $type ) {
  * @param string $type Type of message you want displayed
 */
 function it_exchange_has_messages( $type ) {
-	return (bool) it_exchange_get_session_data( $type );
+	return (bool) it_exchange_get_session_data( $type, false );
 }
 
 /**

@@ -23,6 +23,13 @@ $focus        = empty( $_GET['ite-sw-cart-focus'] ) ? false : esc_attr( $_GET['i
 $coupon_type  = empty( $_GET['sw-coupon-type'] ) ? false : esc_attr( $_GET['sw-coupon-type'] );
 $coupon       = empty( $_GET['sw-coupon-code'] ) ? false : esc_attr( $_GET['sw-coupon-code'] );
 $cart_product = empty( $_GET['sw-cart-product'] ) ? false : esc_attr( $_GET['sw-cart-product'] );
+$un           = empty( $_GET['sw-un'] ) ? false : esc_attr( $_GET['sw-un'] );
+$pw           = empty( $_GET['sw-p1'] ) ? false : esc_attr( $_GET['sw-p1'] );
+$remember     = empty( $_GET['sw-remember'] ) ? false : esc_attr( $_GET['sw-remember'] );
+$fn           = empty( $_GET['sw-fn'] ) ? false : esc_attr( $_GET['sw-fn'] );
+$ln           = empty( $_GET['sw-ln'] ) ? false : esc_attr( $_GET['sw-ln'] );
+$em           = empty( $_GET['sw-em'] ) ? false : esc_attr( $_GET['sw-em'] );
+$p2           = empty( $_GET['sw-p2'] ) ? false : esc_attr( $_GET['sw-p2'] );
 
 // Update the state HTML of the widget
 if ( 'get-state' == $action && $state ) {
@@ -30,7 +37,7 @@ if ( 'get-state' == $action && $state ) {
 		$GLOBALS['it_exchange']['product'] = it_exchange_get_product( $product );
 
 	// Force Log-in if asking for cart and user isn't logged in.
-	if ( ! is_user_logged_in() )
+	if ( ! is_user_logged_in() && 'cart' == $state )
 		it_exchange_get_template_part( 'super-widget', 'login' );
 	else
 		it_exchange_get_template_part( 'super-widget', $state );
@@ -69,6 +76,45 @@ if ( 'update-quantity' == $action && $quantity && $cart_product ) {
 	if ( it_exchange_update_cart_product_quantity( $cart_product, $quantity, false ) )
 		die(1);
 	die(0);
+}
+
+// Login
+if ( 'login' == $action ) {
+	$creds['user_login'] = $un;
+	$creds['user_password']  = $pw;
+	$creds['remember']   = $remember;
+
+	$user = wp_signon( $creds, false );
+	if ( ! is_wp_error( $user ) ) {
+		it_exchange_add_message( 'notice', __( 'Logged in as ', 'LION' ) . $user->user_login );
+		die('1');
+	} else {
+		it_exchange_add_message( 'error', $user->get_error_message() );
+		die('0');
+	}
+}
+
+// Register a new user
+if ( 'register' == $action ) {
+	$user_data['user_login'] = $un;
+	$user_data['first_name'] = $fn;
+	$user_data['last_name']  = $ln;
+	$user_data['email']      = $em;
+	$user_data['pass1']      = $pw;
+	$user_data['pass2']      = $p2;
+
+	$user = it_exchange_register_user( $user_data );
+	if ( ! is_wp_error( $user ) ) {
+		$creds['user_login']    = $un;
+		$creds['user_password'] = $pw;
+		$creds['remember']      = false;
+		if ( $user = wp_signon( $creds, false ) )
+			it_exchange_add_message( 'notice', __( 'Registered and logged in as ', 'LION' ) . $user->user_login );
+		die('1');
+	} else {
+		it_exchange_add_message( 'error', $user->get_error_message() );
+		die('0');
+	}
 }
 
 die('bad state');

@@ -32,7 +32,8 @@ class IT_Theme_API_Login implements IT_Theme_API {
 		'password'    => 'password',
 		'rememberme'  => 'remember_me',
 		'loginbutton' => 'login_button',
-		'recoverurl'  => 'recover_url',
+		'recover'     => 'recover',
+		'register'    => 'register',
 		'formclose'   => 'form_close',
 	);
 
@@ -64,12 +65,15 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	 * @return string
 	*/
 	function form_open( $options=array() ) {
-		$defaults      = array(
-			'redirect'      => it_exchange_in_superwidget() ? clean_it_exchange_query_args() : it_exchange_get_page_url( 'profile' ),
+		$defaults = array(
+			'redirect' => it_exchange_in_superwidget() ? clean_it_exchange_query_args() : it_exchange_get_page_url( 'profile' ),
+			'class'    => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		$class= empty( $options['class'] ) ? 'it-exchange-sw-log-in' : 'it-exchange-sw-log-in ' . esc_attr( $class );
 		
-		return '<form id="loginform" action="' . wp_login_url( $options['redirect'] ) . '" method="post">';
+		return '<form id="loginform" class="' . $class . '" action="' . wp_login_url( $options['redirect'] ) . '" method="post">';
 	}
 	
 	/**
@@ -225,15 +229,17 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	 * @since 0.4.0
 	 * @return string
 	*/
-	function recover_url( $options=array() ) {
+	function recover( $options=array() ) {
 		$defaults      = array(
 			'format'   => 'html',
 			'label'    => __( 'Lost your password?', 'LION' ),
+			'class'  => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
 		$field_id = 'wp-submit';
 		$field_name = $field_id;
+		$class = empty( $options['class'] ) ? 'it-exchange-sw-lost-pass-link' : 'it-exchange-sw-lost-pass-link ' . $options['class'];
 		
 		switch( $options['format'] ) {
 			
@@ -241,20 +247,59 @@ class IT_Theme_API_Login implements IT_Theme_API {
 				$output = $options['label_recover'];
 				
 			case 'url':
-				$output = wp_lostpassword_url();
+				$output = esc_attr( wp_lostpassword_url() );
 			
 			case 'label':
 				$output = $options['label'];
 			
 			case 'html':
 			default:
-				$output = '<a href="' . wp_lostpassword_url() . '">' . $options['label'] . '</a>';
+				$output = '<a class="' . esc_attr( $class ) . '" href="' . esc_attr( wp_lostpassword_url() ) . '">' . esc_attr( $options['label'] ) . '</a>';
 			
 		}
 		
 		return $output;
 	}
 	
+	/**
+	 * Outputs the registration link by default. 
+	 *
+	 * Can also output the registration URL
+	 *
+	 * @since 0.4.0
+	 * @return string
+	*/
+	function register( $options=array() ) {
+		$defaults = array(
+			'format' => 'html',
+			'label'  => __( 'Register', 'LION' ),
+			'class'  => false,
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
+		$field_id = 'wp-submit';
+		$field_name = $field_id;
+		$class = empty( $options['class'] ) ? 'it-exchange-sw-register-link' : 'it-exchange-sw-register-link ' . $options['class'];
+		
+		switch( $options['format'] ) {
+			
+			case 'text':
+				$output = $options['label_recover'];
+				
+			case 'url':
+				$output = it_exchange_get_page_url( 'registration' );
+			
+			case 'label':
+				$output = $options['label'];
+			
+			case 'html':
+			default:
+				$output = '<a class="' . esc_attr( $class ) . '" href="' . it_exchange_get_page_url( 'registration' ) . '">' . esc_attr( $options['label'] ) . '</a>';
+			
+		}
+		
+		return $output;
+	}
 	/**
 	 * Outputs the profile page end of form
 	 *

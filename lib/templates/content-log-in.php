@@ -8,26 +8,30 @@
 
 <div class="login">
     
-    <?php it_exchange( 'login', 'formopen' ); ?>
+    <?php it_exchange( 'login', 'form-open' ); ?>
     
 	<?php it_exchange_get_template_part( 'messages' ); ?>
     
     <div class="user-name">
-    <?php it_exchange( 'login', 'username' ); ?>
+		<?php it_exchange( 'login', 'username' ); ?>
     </div>
     <div class="password">
-    <?php it_exchange( 'login', 'password' ); ?>
+		<?php it_exchange( 'login', 'password' ); ?>
     </div>
     <div class="rememberme">
-    <?php it_exchange( 'login', 'rememberme' ); ?>
+		<?php it_exchange( 'login', 'rememberme' ); ?>
     </div>
 
-    <?php it_exchange( 'login', 'loginbutton' ); ?>
+    <?php it_exchange( 'login', 'login-button' ); ?>
     
     <div class="recover_url">
-    <?php it_exchange( 'login', 'recoverurl' ); ?>
+		<?php it_exchange( 'login', 'recover' ); ?>
     </div>
     
-    <?php it_exchange( 'login', 'formclose' ); ?>
+    <div class="register_url">
+		<?php it_exchange( 'login', 'register' ); ?>
+    </div>
+    
+    <?php it_exchange( 'login', 'form-close' ); ?>
 
 </div><!-- .customer-info -->

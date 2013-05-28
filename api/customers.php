@@ -193,8 +193,30 @@ function handle_it_exchange_save_profile_action() {
 add_action( 'template_redirect', 'handle_it_exchange_save_profile_action', 5 );
 
 /**
+ * Register's an exchange user
+ *
+ * @since 0.4.0
+ * @param array $user_data optional. Overwrites POST data
+ * @return mixed WP_Error or WP_User object
+*/
+function it_exchange_register_user( $user_data=array() ) {
+
+	// Include WP file
+	require_once( ABSPATH . 'wp-admin/includes/user.php' );
+
+	// If any data was passed in through param, inject into POST variable
+	foreach( $user_data as $key => $value ) {
+		$_POST[$key] = $value;
+	}
+
+	// Register user via WP function
+	return edit_user();
+}
+
+/**
  * Handles $_REQUESTs and submits them to the registration for processing
  *
+ * @todo Move to to lib/customers
  * @since 0.4.0
  * @return void
 */
@@ -203,8 +225,7 @@ function handle_it_exchange_customer_registration_action() {
 	// Grab action and process it.
 	if ( isset( $_REQUEST['it-exchange-register-customer'] ) ) {
 
-		require_once(ABSPATH . 'wp-admin/includes/user.php');
-		$result = edit_user();
+		$result = it_exchange_register_user();
 		
 		if ( is_wp_error( $result ) )
 			return it_exchange_add_message( 'error', $result->get_error_message());

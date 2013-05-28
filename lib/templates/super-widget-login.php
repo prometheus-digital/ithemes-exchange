@@ -37,11 +37,11 @@
 	<?php it_exchange( 'login', 'login-button' ); ?>
 	
 	<div class="recover_url">
-		<?php it_exchange( 'login', 'recover-url' ); ?>
+		<?php it_exchange( 'login', 'recover' ); ?>
 	</div>
 	
 		<div class="register_url">
-			<a href="<?php echo it_exchange_get_page_url( 'registration' ); ?>"><?php _e( 'Register', 'LION' ); ?></a>
+			<?php it_exchange( 'login', 'register' ); ?>
 		</div>
     <?php it_exchange( 'login', 'form-close' ); ?>
 </div>

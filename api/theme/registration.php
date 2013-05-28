@@ -86,7 +86,14 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	 * @return string
 	*/
 	function form_open( $options=array() ) {		
-		$output = '<form action="" method="post" >';
+		$defaults = array(
+			'class'  => false,
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		$default_class = it_exchange_in_superwidget() ? 'it-exchange-sw-register' : 'it-exchange-register';
+		$class= empty( $options['class'] ) ? $default_class : $default_class . ' ' . esc_attr( $options['class'] );
+		$output = '<form class="' . $class . '" action="" method="post" >';
 		return $output;
 	}
 	

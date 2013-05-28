@@ -1,3 +1,4 @@
+<?php it_exchange_get_template_part( 'messages' ); ?>
 <div class="it-exchange-order-total">
 	<?php _e( 'Order Total:', 'LION' ); ?> <?php it_exchange( 'cart', 'total' ); ?>
 	<br /><?php it_exchange( 'cart', 'empty', 'format=link&label=' . __( 'Cancel Purchase', 'LION' ) ); ?>
