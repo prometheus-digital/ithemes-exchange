@@ -28,8 +28,8 @@ function it_exchange_add_message( $type, $message ) {
 function it_exchange_get_messages( $type, $clear=true ) {
 	$messages = it_exchange_get_session_data( $type );
 	if ( $clear )
-		it_exchange_clear_messages();
-	return it_exchange_get_session_data( $type );
+		it_exchange_clear_messages( $type );
+	return $messages;
 }
 
 /**
