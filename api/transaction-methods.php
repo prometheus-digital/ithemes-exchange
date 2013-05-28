@@ -154,12 +154,62 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		update_post_meta( $transaction_id, '_it_exchange_transaction_status',    $status );
 		update_post_meta( $transaction_id, '_it_exchange_customer_id',           $customer_id );
 		update_post_meta( $transaction_id, '_it_exchange_transaction_object',    $transaction_object );
+
+		// Transaction Hash for confirmation lookup
+		update_post_meta( $transaction_id, '_it_exchange_transaction_hash', it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) );
 		
 		$transaction_object = apply_filters( 'it_exchange_add_transaction_success', $transaction_object, $transaction_id );
 		return $transaction_id;
 	}
 	do_action( 'it_exchange_add_transaction_failed', $args, $transaction_object );
 	return false;
+}
+
+/**
+ * Generates a unique transaction ID for receipts
+ *
+ * @since 0.4.0
+ *
+ * @param integer   $transaction_id the wp_post ID for the transaction
+ * @param interger  $user_id the wp_users ID for the customer
+ * @return string
+*/
+function it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) {
+	// Targeted hash
+	$hash = md5( $transaction_id . $customer_id . wp_generate_password( 12, false ) );
+	if ( it_exchange_get_transaction_id_from_hash( $hash ) )
+		$hash = it_exchange_generate_transaction_hash( $transaction_id, $customer_id );
+	
+	return apply_filters( 'it_exchange_generate_transaction_hash', $hash, $transaction_id, $customer_id );
+}
+
+/**
+ * Returns a transaction ID based on the hash
+ *
+ * @since 0.4.0
+ *
+ * @param string $hash
+ * @return integer transaction id
+*/
+function it_exchange_get_transaction_id_from_hash( $hash ) {
+	global $wpdb;
+	if ( $transaction_id = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = %s LIMIT 1;", '_it_exchange_transaction_hash', $hash ) ) ) {
+		return $transaction_id;
+	}
+
+	return false;
+}
+
+/**
+ * Returns the transaction hash from an ID
+ *
+ * @since 0.4.0
+ *
+ * @param integer $id transaction_id
+ * @return mixed ID or false
+*/
+function it_exchange_get_transaction_hash( $id ) {
+	return get_post_meta( $id, '_it_exchange_transaction_hash', true );
 }
 
 /**

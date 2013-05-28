@@ -71,7 +71,7 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 	}
 
 	// Process SuperWidget links
-	if ( it_exchange_in_superwidget() ) {
+	if ( it_exchange_in_superwidget() && $page_slug != 'transaction' ) {
 		// Get current URL without exchange query args
 		$url = clean_it_exchange_query_args();
 		return add_query_arg( 'ite-sw-state', $page_slug, $url );

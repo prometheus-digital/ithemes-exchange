@@ -568,26 +568,28 @@ class IT_Exchange_Router {
 	*/
 	function process_transaction() {
 				
-		if ( is_user_logged_in() && 'transaction' == $this->_current_view ) {
-						
-			$transaction_id = apply_filters( 'it_exchange_process_transaction', false );
-			
-			if ( $transaction_id ) {
-				
-				it_exchange_empty_shopping_cart();
-				
-				$confirmation_url = it_exchange_get_page_url( 'confirmation' );
+		if ( 'transaction' == $this->_current_view ) {
 
-				$transaction_var  = it_exchange_get_field_name( 'transaction_id' );
+			if ( is_user_logged_in() ) {
+				$transaction_id = apply_filters( 'it_exchange_process_transaction', false );
+				
+				if ( $transaction_id ) {
 
-				if ( $this->_pretty_permalinks ) {
-					$confirmation_url = trailingslashit( $confirmation_url ) . $transaction_id;
-				} else {
-					$confirmation_url = remove_query_arg( $this->_confirmation_slug, $confirmation_url );
-					$confirmation_url = add_query_arg( $this->_confirmation_slug, $transaction_id, $confirmation_url );
+					$transaction_hash = it_exchange_get_transaction_hash( $transaction_id );
+					
+					it_exchange_empty_shopping_cart();
+					
+					$confirmation_url = it_exchange_get_page_url( 'confirmation' );
+
+					if ( $this->_pretty_permalinks ) {
+						$confirmation_url = trailingslashit( $confirmation_url ) . $transaction_hash;
+					} else {
+						$confirmation_url = remove_query_arg( $this->_confirmation_slug, $confirmation_url );
+						$confirmation_url = add_query_arg( $this->_confirmation_slug, $transaction_hash, $confirmation_url );
+					}
+					wp_redirect( $confirmation_url );
+					die();
 				}
-				wp_redirect( $confirmation_url );
-				die();
 			}
 			
 			wp_redirect( it_exchange_get_page_url( 'checkout' ) );

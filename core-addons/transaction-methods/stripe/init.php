@@ -33,12 +33,12 @@ function it_exchange_process_stripe_transaction( $status, $transaction_object ) 
 		return $status;
 	
 	// Verify nonce
-	if ( !empty( $_REQUEST['_stripe_nonce'] ) && !wp_verify_nonce( $_REQUEST['_stripe_nonce'], 'stripe-checkout' ) ) {
+	if ( ! empty( $_REQUEST['_stripe_nonce'] ) && ! wp_verify_nonce( $_REQUEST['_stripe_nonce'], 'stripe-checkout' ) ) {
 		it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'LION' ) );
 		return false;
 	}
 	
-	if ( !empty( $_POST['stripeToken'] ) ) {
+	if ( ! empty( $_POST['stripeToken'] ) ) {
 			
 		try {
 				
@@ -56,7 +56,7 @@ function it_exchange_process_stripe_transaction( $status, $transaction_object ) 
 				$stripe_customer = Stripe_Customer::retrieve( $stripe_id );
 				
 			// If the user has been deleted from Stripe, we need to create a new Stripe ID.
-			if ( !empty( $stripe_customer ) ) {
+			if ( ! empty( $stripe_customer ) ) {
 				
 				if ( true === $stripe_customer->deleted )
 					$stripe_customer = array();
@@ -64,7 +64,7 @@ function it_exchange_process_stripe_transaction( $status, $transaction_object ) 
 			}
 						
 			// If this user isn't an existing Stripe User, create a new Stripe ID for them...
-			if ( !empty( $stripe_customer ) ) {
+			if ( ! empty( $stripe_customer ) ) {
 				
 				$stripe_customer->card = $token;
 				$stripe_customer->email = $it_exchange_customer->data->user_email;
