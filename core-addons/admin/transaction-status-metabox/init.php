@@ -41,6 +41,9 @@ class IT_Exchange_Core_Addon_Transaction_Status_Meta_Box {
 
 		$current_status     = it_exchange_get_transaction_status( $transaction );
 		$transaction_method = it_exchange_get_transaction_method( $transaction );
+		
+		ITDebug::print_r( get_post_meta( $transaction->ID, '_it_exchange_transaction_status', true ) );
+		ITDebug::print_r( get_post_meta( $transaction->ID, '_it_exchange_transaction_refunds' ) );
 
 		if ( ! it_exchange_addon_supports( $transaction_method, 'transaction_status' ) )
 			return;

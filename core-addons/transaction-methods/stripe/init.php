@@ -38,7 +38,7 @@ function it_exchange_process_stripe_transaction( $status, $transaction_object ) 
 		return false;
 	}
 	
-	if ( ! empty( $_POST['stripeToken'] ) ) {
+	if ( isset( $_POST['stripeToken'] ) && ! empty( $_POST['stripeToken'] ) ) {
 			
 		try {
 				
@@ -102,9 +102,11 @@ function it_exchange_process_stripe_transaction( $status, $transaction_object ) 
 		
 		return it_exchange_add_transaction( 'stripe', $charge->id, 'succeeded', $it_exchange_customer->id, $transaction_object );
 		
-	}
+	} else {
 
-	it_exchange_add_message( 'error', __( 'Unknown error. Please try again later.', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Unknown error. Please try again later.', 'LION' ) );
+	
+	}
 	return false;
 	
 }
@@ -250,7 +252,6 @@ function it_exchange_stripe_process_webhook( $request ) {
 	$body = @file_get_contents('php://input');
 	$stripe_event = json_decode( $body );
 	
-	// for extra security, retrieve from the Stripe API
 	if ( isset( $stripe_event->id ) ) {
 				
 		try {
