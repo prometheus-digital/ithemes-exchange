@@ -14,6 +14,7 @@
 				<div class="cart-items cart-table">
 					<?php while ( it_exchange( 'cart', 'cart-items' ) ) : ?>
 						<div class="cart-item cart-row">
+							<!-- NOTE This will need the product image API -->
 							<div class="cart-item-thumbnail cart-column">
 								<div class="cart-column-inner">
 									<img src="http://placehold.it/80x80" />
@@ -21,7 +22,7 @@
 							</div>
 							<div class="cart-item-title cart-column">
 								<div class="cart-column-inner">
-									<?php it_exchange( 'cart-item', 'title' ) ?>
+									<a href="http://permalink-to-cart.item"><?php it_exchange( 'cart-item', 'title' ) ?></a>
 								</div>
 							</div>
 							<div class="cart-item-quantity cart-column">
@@ -68,25 +69,35 @@
 				<?php endif; ?>
 			</div>
 			
-			<div class="cart-totals">
-				<?php _e( 'Total:', 'LION' ); ?> <?php it_exchange( 'cart', 'total' ); ?><br />
-				<?php _e( 'Sub-total:', 'LION' ); ?> <?php it_exchange( 'cart', 'subtotal' ); ?><br/>
-				<?php _e( 'Coupons:', 'LION' ); ?> <?php it_exchange( 'coupons', 'total-discount', 'type=cart' ); ?>
+			<div class="cart-totals-wrapper">
+				<div class="cart-totals">
+					<div class="totals-column totals-titles cart-column">
+						<p><?php _e( 'Subtotal', 'LION' ); ?></p>
+						<p><?php _e( 'Savings', 'LION' ); ?></p>
+						<p><?php _e( 'Total', 'LION' ); ?></p>
+					</div>
+					<div class="totals-column totals-amounts cart-column">
+						<p class="cart-subtotal"><?php it_exchange( 'cart', 'subtotal' ); ?></p>
+						<p class="cart-discount"><?php it_exchange( 'coupons', 'total-discount', 'type=cart' ); ?></p>
+						<p class="cart-total"><?php it_exchange( 'cart', 'total' ); ?><br /></p>
+					</div>
+				</div>
 			</div>
 			
 			<div class="cart-apply-coupons">
 				<?php if ( it_exchange( 'coupons', 'supported', 'type=cart' ) && it_exchange( 'coupons', 'accepting', 'type=cart' ) ) : ?>
-					<?php _e( 'Coupon Code?', 'LION' ); ?>
 					<?php it_exchange( 'coupons', 'apply', 'type=cart' ); ?>
 					<?php it_exchange( 'cart', 'update', 'label=' . __( 'Apply Coupon', 'LION' ) ); ?>
 				<?php endif; ?>
 			</div>
 			
-			<?php it_exchange( 'cart', 'update' ); ?><br/>
-			<?php it_exchange( 'cart', 'checkout' ); ?><br/>
-			<?php it_exchange( 'cart', 'empty' ); ?><br/>
+			<div class="cart-actions">
+				<?php it_exchange( 'cart', 'update' ); ?>
+				<?php it_exchange( 'cart', 'empty' ); ?>
+				<?php it_exchange( 'cart', 'checkout' ); ?>
+			</div>
 		</div>
 	<?php it_exchange( 'cart', 'form-close' ); ?>
-<?php else: ?>
+<?php else : ?>
 	<p><?php _e( 'There are no items in your cart', 'LION' ); ?></p>
 <?php endif; ?>

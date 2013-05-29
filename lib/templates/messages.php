@@ -6,8 +6,8 @@
 /*
 	NOTE These are added merely for testing purposes and need to be removed when finished.
 */
-it_exchange_add_message( 'error', 'this is an error!' );
-it_exchange_add_message( 'notice', 'This is a notice!' );
+// it_exchange_add_message( 'error', 'this is an error!' );
+// it_exchange_add_message( 'notice', 'This is a notice!' );
 ?>
 <?php if ( it_exchange( 'messages', 'has-errors' ) ) : ?>
 	<ul class="messages errors">
