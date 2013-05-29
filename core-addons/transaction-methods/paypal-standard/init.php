@@ -32,6 +32,10 @@ function it_exchange_process_paypal_standard_transaction( $status, $transaction_
 
 	if ( $status ) //if this has been modified as true already, return.
 		return $status;
+		
+	ITDebug::print_r( $_REQUEST );
+	ITDebug::print_r( $transaction_object );
+	die();
 	
 }
 add_action( 'it_exchange_do_transaction_paypal-standard', 'it_exchange_process_paypal_standard_transaction', 10, 2 );
@@ -137,7 +141,7 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 	$L_BUTTONVARS[] = 'shipping=0';
 	$L_BUTTONVARS[] = 'email=' . $it_exchange_customer->data->user_email;
 	$L_BUTTONVARS[] = 'notify_url=' . get_site_url() . '/?' . apply_filters( 'it_exchange_paypal-standard_webhook', 'it_exchange_paypal_standard' ) . '=1';
-	$L_BUTTONVARS[] = 'return=' . it_exchange_get_page_url( 'cart' );
+	$L_BUTTONVARS[] = 'return=' . it_exchange_get_page_url( 'transaction' );
 	$L_BUTTONVARS[] = 'cancel_return=' . it_exchange_get_page_url( 'cart' );
 	
 	$count = 0;
