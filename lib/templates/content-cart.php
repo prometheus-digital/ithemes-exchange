@@ -70,7 +70,8 @@
 			
 			<div class="cart-totals">
 				<?php _e( 'Total:', 'LION' ); ?> <?php it_exchange( 'cart', 'total' ); ?><br />
-				<?php _e( 'Sub-total:', 'LION' ); ?> <?php it_exchange( 'cart', 'subtotal' ); ?>
+				<?php _e( 'Sub-total:', 'LION' ); ?> <?php it_exchange( 'cart', 'subtotal' ); ?><br/>
+				<?php _e( 'Coupons:', 'LION' ); ?> <?php it_exchange( 'coupons', 'total-discount', 'type=cart' ); ?>
 			</div>
 			
 			<div class="cart-apply-coupons">

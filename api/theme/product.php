@@ -101,6 +101,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'title' );
 
+		// Repeats checks for when flags were not passed.
 		if ( it_exchange_product_supports_feature( $this->product->ID, 'title' )	
 				&& it_exchange_product_has_feature( $this->product->ID, 'title' ) ) {
 

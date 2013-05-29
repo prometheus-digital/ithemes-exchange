@@ -254,7 +254,7 @@ class IT_Exchange_Shopping_Cart {
 
 		$message_var = it_exchange_get_field_name( 'alert_message' );
 		if ( ! empty ( $message_var ) && $redirect ) {
-			$url = remove_query_arg( $error_var, $cart );
+			$url = remove_query_arg( $message_var, $cart );
 			$url = add_query_arg( array( $message_var => 'cart-updated' ), $url );
 			$url = remove_query_arg( it_exchange_get_field_name( 'empty_cart' ), $url );
 			

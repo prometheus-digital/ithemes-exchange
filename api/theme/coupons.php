@@ -20,13 +20,14 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	var $_tag_map = array(
-		'supported' => 'is_supported',
-		'applied'   => 'applied',
-		'accepting' => 'accepting',
-		'apply'     => 'apply',
-		'code'      => 'code',
-		'discount'  => 'discount',
-		'remove'    => 'remove',
+		'supported'      => 'is_supported',
+		'applied'        => 'applied',
+		'accepting'      => 'accepting',
+		'apply'          => 'apply',
+		'code'           => 'code',
+		'discount'       => 'discount',
+		'totaldiscount'  => 'total_discount',
+		'remove'         => 'remove',
 	);
 
 	/**
@@ -213,6 +214,14 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 
 	function discount( $options=array() ) {
 		return $this->coupon['amount_number'] . ' ' . $this->coupon['amount_type'];
+	}
+
+	function total_discount( $options=array() ) {
+		$defaults = array(
+			'type' => 'cart',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		return it_exchange_get_total_coupons_discount( $options['type'] );
 	}
 
 	/**

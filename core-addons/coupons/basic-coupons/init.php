@@ -233,12 +233,36 @@ add_filter( 'it_exchange_remove_cart_coupon_html', 'it_exchange_base_coupons_rem
 */
 function it_exchange_basic_coupons_apply_discount_to_cart_total( $total ) {
 	$coupons = it_exchange_get_applied_coupons( 'cart' );
-	foreach( (array) $coupons as $coupon ) {
-		$total = ( '%' == $coupon['amount_type'] ) ? $total - ( ( $coupon['amount_number'] / 100 ) * $total ) : $total - $coupon['amount_number'];
-	}
+	$total_discount = it_exchange_get_total_coupons_discount( 'cart' );
+	$total = $total - $total_discount;
 	return $total;
 }
 add_filter( 'it_exchange_get_cart_total', 'it_exchange_basic_coupons_apply_discount_to_cart_total' );
+
+/**
+ * Returns the total discount from applied coupons
+ *
+ * @since 0.4.0
+ *
+ * @param string $total existing value passed in by WP filter
+ * @return string
+*/
+function it_exchange_basic_coupons_get_total_discount_for_cart( $discount, $options=array() ) {
+    $defaults = array(
+        'format_price' => true,
+    );  
+    $options = ITUtility::merge_defaults( $options, $defaults );
+
+	$coupons = it_exchange_get_applied_coupons( 'cart' );
+	$subtotal = it_exchange_get_cart_subtotal();
+	foreach( (array) $coupons as $coupon ) {
+		$discount = ( '%' == $coupon['amount_type'] ) ? $discount + ( ( $coupon['amount_number'] / 100 ) * $subtotal ) : $discount + $coupon['amount_number'];
+	}
+	if ( $options['format_price'] )
+		$discount = it_exchange_format_price( $discount );
+	return $discount;
+}
+add_filter( 'it_exchange_get_total_discount_for_cart', 'it_exchange_basic_coupons_get_total_discount_for_cart', 10, 2 );
 
 /**
  * Remove coupon from cart

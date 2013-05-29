@@ -189,3 +189,19 @@ function it_exchange_remove_coupon( $type, $code, $options=array() ) {
 	$options['code'] = $code;
 	return apply_filters( 'it_exchange_remove_coupon_for_' . $type, 'false', $options );
 }
+
+/**
+ * Returns the total discount for all applied coupons combined
+ *
+ * @since 0.4.0
+ *
+ * @param string $type the type of coupon to check for
+ * @param array $options
+*/
+function it_exchange_get_total_coupons_discount( $type, $options=array() ) {
+	$defaults = array(
+		'format_price' => true,
+	);
+	$options = ITUtility::merge_defaults( $options, $defaults );
+	return apply_filters( 'it_exchange_get_total_discount_for_' . $type, false, $options );
+}
