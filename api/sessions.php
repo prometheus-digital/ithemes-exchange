@@ -17,10 +17,6 @@
  * @return object  instance of IT_Exchange_Session
 */
 function it_exchange_get_session() {
-	// No sessions in the admin
-	if ( is_admin() )
-		return;
-
 	$session = empty( $GLOBALS['it_exchange']['session'] ) ? false : $GLOBALS['it_exchange']['session'];
 	return $session;
 }
