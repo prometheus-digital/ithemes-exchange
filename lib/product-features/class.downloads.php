@@ -222,13 +222,15 @@ class IT_Exchange_Product_Feature_Downloads {
 		$previous_downloads = it_exchange_get_product_feature( $product_id, 'downloads' );
 		
 		//Delete Non-Existant Downloads
-		foreach( $previous_downloads as $download_id => $data ) {
-			if ( !array_key_exists( $download_id, $_POST['it-exchange-digital-downloads'] ) )
-				wp_delete_post( $download_id, true );
+		if ( !empty( $previous_downloads ) && is_array( $previous_downloads ) ) {
+			foreach( $previous_downloads as $download_id => $data ) {
+				if ( !array_key_exists( $download_id, $_POST['it-exchange-digital-downloads'] ) )
+					wp_delete_post( $download_id, true );
+			}
 		}
 
 		//Add/Update Existnat Downloads
-		if ( ! empty( $_POST['it-exchange-digital-downloads'] ) ) {
+		if ( ! empty( $_POST['it-exchange-digital-downloads'] ) && is_array( $_POST['it-exchange-digital-downloads'] ) ) {
 			foreach ( (array) $_POST['it-exchange-digital-downloads'] as $download ) {
 	
 				$data = array(

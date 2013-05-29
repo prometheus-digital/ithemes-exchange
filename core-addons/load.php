@@ -136,6 +136,32 @@ function it_exchange_register_core_addons() {
 			'category' 		=> 'admin',
 			'tag' 			=> 'core',
 		),
+		// Category Taxonomy
+		'category-taxonomy-type' => array(
+			'name'        	=> __( 'Product Categories', 'LION' ),
+			'description' 	=> __( 'This adds a category taxonomy for all products in iThemes Exchange.', 'LION' ),
+			'author'		=> 'iThemes',
+			'author_url'	=> 'http://ithemes.com',
+			'file'        	=> dirname( __FILE__ ) . '/product-features/categories/init.php',
+			'category' 		=> 'taxonomy-type',
+			'tag' 			=> 'core',
+			'labels'   		=> array(
+				'singular_name' => __( 'Product Category', 'LION' ),
+			),
+		),
+		// Category Taxonomy
+		'tag-taxonomy-type' => array(
+			'name'        	=> __( 'Product Tags', 'LION' ),
+			'description' 	=> __( 'This adds a tag taxonomy for all products in iThemes Exchange.', 'LION' ),
+			'author'		=> 'iThemes',
+			'author_url'	=> 'http://ithemes.com',
+			'file'        	=> dirname( __FILE__ ) . '/product-features/tags/init.php',
+			'category' 		=> 'taxonomy-type',
+			'tag' 			=> 'core',
+			'labels'   		=> array(
+				'singular_name' => __( 'Product Tag', 'LION' ),
+			),
+		),
 	);
 	$add_ons = apply_filters( 'it_exchange_core_addons', $add_ons );
 
