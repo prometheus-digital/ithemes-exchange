@@ -162,10 +162,10 @@ class IT_Exchange_Product_Feature_Downloads {
 						</script>
 						<div class="download-item columns-wrapper" id="download-item-0">
 							<div class="download-name column col-4-12">
-								<input type="text" name="it-exchange-digital-downloads-new[0][name]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'Name', 'LION' ) ); ?>" value="" />
+								<input type="text" name="it-exchange-digital-downloads[0][name]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'Name', 'LION' ) ); ?>" value="" />
 							</div>
 							<div class="download-source column col-7-12">
-								<input type="url" name="it-exchange-digital-downloads-new[0][source]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'LION' ) ); ?>" value="" />
+								<input type="url" name="it-exchange-digital-downloads[0][source]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'LION' ) ); ?>" value="" />
 								<a href class="it-exchange-upload-digital-download">Upload</a>
 							</div>
 							<div class="download-remove column col-1-12">
@@ -218,31 +218,18 @@ class IT_Exchange_Product_Feature_Downloads {
 		// Abort if this product type doesn't support downloads
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'downloads' ) )
 			return;
-
-		// Save new downloads
-		if ( ! empty( $_POST['it-exchange-digital-downloads-new'] ) ) {
-			foreach( (array) $_POST['it-exchange-digital-downloads-new'] as $download ) {
-				$data = array(
-					'product_id' => $product_id,
-					'source'     => empty( $download['source'] ) ? false : trim( $download['source'] ),
-					'name'       => empty( $download['name'] ) ? false : trim( $download['name'] ),
-				);
-				
-				// Save the data via the API
-				if ( ! empty( $product_id ) && ! empty( $data['source'] ) && ! empty( $data['name'] ) )
-					it_exchange_update_product_feature( $product_id, 'downloads', $data );
-			}
+		
+		$previous_downloads = it_exchange_get_product_feature( $product_id, 'downloads' );
+		
+		//Delete Non-Existant Downloads
+		foreach( $previous_downloads as $download_id => $data ) {
+			if ( !array_key_exists( $download_id, $_POST['it-exchange-digital-downloads'] ) )
+				wp_delete_post( $download_id, true );
 		}
 
+		//Add/Update Existnat Downloads
 		if ( ! empty( $_POST['it-exchange-digital-downloads'] ) ) {
-			// Update or delete existing downloads 
 			foreach ( (array) $_POST['it-exchange-digital-downloads'] as $download ) {
-				// Check for delete
-				if ( ! empty( $download['delete'] ) ) {
-					// Skip trash. Straight to oblivion. 
-					wp_delete_post( $download['id'], true );
-					continue;
-				}
 	
 				$data = array(
 					'product_id'  => $product_id,
@@ -251,10 +238,12 @@ class IT_Exchange_Product_Feature_Downloads {
 					'name'        => empty( $download['name'] ) ? false : trim( $download['name'] ),
 				);
 	
-				if ( ! empty( $product_id ) && ! empty( $data['source'] ) && ! empty( $data['name'] ) && ! empty( $data['download_id'] ) )
+				if ( ! empty( $product_id ) && ! empty( $data['source'] ) && ! empty( $data['name'] ) )
 					it_exchange_update_product_feature( $product_id, 'downloads', $data );
+					
 			}
 		}
+		
 	}
 
 	/**
