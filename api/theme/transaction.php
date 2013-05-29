@@ -53,7 +53,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	}
 
 	/**
-	 * Returns the title element / var based on format option
+	 * Returns the transaction status
 	 *
 	 * @since 0.4.0
 	 *
@@ -67,5 +67,22 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		return $options['before'] . it_exchange_get_transaction_status( $this->_transaction ) . $options['after'];
+	}
+
+	/**
+	 * Returns the transaction date
+	 *
+	 * @since 0.4.0
+	 *
+	*/
+	function date( $options=array() ) {
+		// Set options
+		$defaults      = array(
+			'before' => '', 
+			'after'  => '', 
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		return $options['before'] . it_exchange_get_transaction_date( $this->_transaction ) . $options['after'];
 	}
 }
