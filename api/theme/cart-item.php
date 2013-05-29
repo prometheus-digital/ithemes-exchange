@@ -146,7 +146,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 			default :
 				$output  = $options['before'];
 				if ( it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'purchase-quantity' ) ) {
-					$output .= '<input type="text" data-cart-product-id="' . esc_attr( $this->_cart_item['product_cart_id'] ) . '" name="' . esc_attr( $var_key ) . '[' . esc_attr( $this->_cart_item['product_cart_id'] ) . ']" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />';
+					$output .= '<input type="number" min="1" data-cart-product-id="' . esc_attr( $this->_cart_item['product_cart_id'] ) . '" name="' . esc_attr( $var_key ) . '[' . esc_attr( $this->_cart_item['product_cart_id'] ) . ']" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />';
 				} else {
 					$output .= '1';
 					$output .= '<input type="hidden" name="' . esc_attr( $var_key ) . '[' . esc_attr( $this->_cart_item['product_cart_id'] ) . ']" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />';

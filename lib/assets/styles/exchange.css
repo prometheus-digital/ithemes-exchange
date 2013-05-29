@@ -36,3 +36,22 @@
 .customer-name div,
 .customer-password div{float:left;}
 .customer-save{margin-top:1em;}
+
+/** -----------------------------------------------------:[ cart ]:---------- */
+#it-exchange-cart{overflow:hidden;}
+#it-exchange-cart *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+#it-exchange-cart .cart-table{display:table;width:100%;border:1px solid #DDD;border-bottom:none;border-collapse:collapse;}
+#it-exchange-cart .cart-row{display:table-row;overflow:hidden;width:100%;border-bottom:1px solid #DDD;margin:10px;}
+#it-exchange-cart .cart-column{display:table-cell;vertical-align:middle;}
+#it-exchange-cart .cart-column-inner{padding:10px;}
+#it-exchange-cart .cart-item-thumbnail{width:10%;}
+#it-exchange-cart .cart-item-thumbnail img{display:block;}
+#it-exchange-cart .cart-item-title{width:50%;}
+#it-exchange-cart .cart-item-quantity{width:10%;}
+#it-exchange-cart .cart-item-quantity input{width:100%;}
+#it-exchange-cart .cart-item-subtotal{text-align:right;width:25%;}
+#it-exchange-cart .cart-remove{text-align:right;width:5%;}
+#it-exchange-cart .cart-coupons{bo}
+#it-exchange-cart .cart-coupons.cart-table{border-top:0;}
+#it-exchange-cart .cart-coupon-code{width:60%;padding-left:10%;}
+#it-exchange-cart .cart-coupon-discount{width:25%;text-align:right;}
