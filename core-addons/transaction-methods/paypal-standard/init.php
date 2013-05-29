@@ -75,21 +75,21 @@ add_action( 'it_exchange_save_wizard_settings', 'paypal_standard_save_wizard_set
 */
 function it_exchange_paypal_standard_addon_default_settings( $values ) {
 	$defaults = array(
-		'paypal_standard-sandbox-mode'            => false,
-		'paypal_standard-live-email-address'      => '',
-		'paypal_standard-live-api-username'       => '',
-		'paypal_standard-live-api-password'       => '',
-		'paypal_standard-live-api-signature'      => '',
-		'paypal_standard-live-pdt-identity-token' => '',
-		'paypal_standard-sandbox-email-address'   => '',
-		'paypal_standard-sandbox-api-username'    => '',
-		'paypal_standard-sandbox-api-password'    => '',
-		'paypal_standard-sandbox-api-signature'   => '',
+		'sandbox-mode'            => false,
+		'live-email-address'      => '',
+		'live-api-username'       => '',
+		'live-api-password'       => '',
+		'live-api-signature'      => '',
+		'live-pdt-identity-token' => '',
+		'sandbox-email-address'   => '',
+		'sandbox-api-username'    => '',
+		'sandbox-api-password'    => '',
+		'sandbox-api-signature'   => '',
 	);   
 	$values = ITUtility::merge_defaults( $values, $defaults );
 	return $values;
 }
-add_filter( 'it_storage_get_defaults_exchange_addon_paypal-standard', 'it_exchange_paypal_standard_addon_default_settings' );
+add_filter( 'it_storage_get_defaults_exchange_addon_paypal_standard', 'it_exchange_paypal_standard_addon_default_settings' );
 
 /**
  * Returns the button for making the payment
@@ -102,14 +102,14 @@ add_filter( 'it_storage_get_defaults_exchange_addon_paypal-standard', 'it_exchan
 function it_exchange_paypal_standard_addon_make_payment_button( $options ) { 
 	
 	$general_settings = it_exchange_get_option( 'settings_general' );
-	$paypal_settings = it_exchange_get_option( 'addon_paypal_standard' );
+	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard' );
 	
 	$payment_form = '';
 	
-	$paypal_api_url        = ( $paypal_settings['sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
-	$paypal_email        = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-email-address'] : $paypal_settings['live-email-address'];
-	$paypal_api_username = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-username'] : $paypal_settings['live-api-username'];
-	$paypal_api_password = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-password'] : $paypal_settings['live-api-password'];
+	$paypal_api_url       = ( $paypal_settings['sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
+	$paypal_email         = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-email-address'] : $paypal_settings['live-email-address'];
+	$paypal_api_username  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-username'] : $paypal_settings['live-api-username'];
+	$paypal_api_password  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-password'] : $paypal_settings['live-api-password'];
 	$paypal_api_signature = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-signature'] : $paypal_settings['live-api-signature'];
 
 	$it_exchange_customer = it_exchange_get_current_customer();
