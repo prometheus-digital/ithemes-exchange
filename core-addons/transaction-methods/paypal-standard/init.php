@@ -303,7 +303,7 @@ function it_exchange_paypal_standard_process_webhook( $request ) {
 					it_exchange_update_transaction_status_for_paypal_standard( $request['txn_id'], $request['payment_status'] );
 					break;
 				case 'Refunded' :
-					it_exchange_update_transaction_status_for_paypal_standard( $request['parent_txn_id'], $request['reason_code'] );
+					it_exchange_update_transaction_status_for_paypal_standard( $request['parent_txn_id'], $request['payment_status'] );
 					it_ecxhange_add_refund_to_transaction_for_paypal_standard( $request['parent_txn_id'], $request['mc_gross'] );
 				case 'Reversed' :
 					it_exchange_update_transaction_status_for_paypal_standard( $request['parent_txn_id'], $request['reason_code'] );		
@@ -368,6 +368,7 @@ function it_exchange_transaction_status_label_paypal_standard( $status ) {
 		case 'Success':
 			return __( 'Paid', 'LION' );
 		case 'Refunded':
+		case 'refund':
 			return __( 'Refund', 'LION' );
 		case 'buyer_complaint':
 			return __( 'Buyer Complaint', 'LION' );

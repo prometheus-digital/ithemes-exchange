@@ -156,7 +156,7 @@ class IT_Exchange_Transaction {
 			'amount' => $refund,
 			'date'   => date_i18n( 'Y-m-d H:i:s' ),
 		);
-		add_post_meta( $thid->ID, '_it_exchange_transaction_refunds', $args );
+		add_post_meta( $this->ID, '_it_exchange_transaction_refunds', $args );
 	}
 	
 	/**
