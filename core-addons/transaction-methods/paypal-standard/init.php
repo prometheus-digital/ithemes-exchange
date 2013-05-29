@@ -175,12 +175,10 @@ function it_exchange_paypal_standard_addon_default_settings( $values ) {
 		'live-api-username'          => '',
 		'live-api-password'          => '',
 		'live-api-signature'         => '',
-		'live-pdt-identity-token'    => '',
 		'sandbox-email-address'      => '',
 		'sandbox-api-username'       => '',
 		'sandbox-api-password'       => '',
 		'sandbox-api-signature'      => '',
-		'sandbox-pdt-identity-token' => '',
 	);   
 	$values = ITUtility::merge_defaults( $values, $defaults );
 	return $values;
@@ -503,11 +501,6 @@ class IT_Exchange_PayPal_Standard_Add_On {
         <code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
         <h5><?php _e( 'PayPal Payment Data Transfer (PDT) Identity Token', 'LION' ); ?></h5>
         <p><?php _e( 'PayPal PDT must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
-        <p><?php _e( 'Turn the PDT feature ON and paste the PDT Identity Token here.', 'LION' ); ?></p>
-        <label for="live-pdt-identity-token"><?php _e( 'PayPal PDT Identity Token', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› Website Payment Preferences.', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'live-pdt-identity-token' ); ?>
-        <label for="sandbox-pdt-identity-token"><?php _e( 'PayPal Sandbox PDT Identity Token', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› Website Payment Preferences.', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'sandbox-pdt-identity-token' ); ?>
         
         <?php	
 	}
@@ -595,8 +588,6 @@ class IT_Exchange_PayPal_Standard_Add_On {
 			$errors[] = __( 'Please include your PayPal API password', 'LION' );
 		if ( empty( $values['live-api-signature'] ) )
 			$errors[] = __( 'Please include your PayPal API signature', 'LION' );
-		if ( empty( $values['live-pdt-identity-token'] ) )
-			$errors[] = __( 'Please include your PayPal PDT Identity Token', 'LION' );
 			
 		if ( !empty( $values['sandbox-mode' ] ) ) {
 			if ( empty( $values['sandbox-email-address'] ) )
@@ -607,8 +598,6 @@ class IT_Exchange_PayPal_Standard_Add_On {
 				$errors[] = __( 'Please include your PayPal Sandbox API password', 'LION' );
 			if ( empty( $values['sandbox-api-signature'] ) )
 				$errors[] = __( 'Please include your PayPal Sandbox API signature', 'LION' );
-			if ( empty( $values['sandbox-pdt-identity-token'] ) )
-				$errors[] = __( 'Please include your PayPal PDT Identity Token', 'LION' );
 		}
 
 		return $errors;
