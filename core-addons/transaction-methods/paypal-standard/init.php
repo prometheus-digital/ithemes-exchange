@@ -33,70 +33,91 @@ function it_exchange_process_paypal_standard_transaction( $status, $transaction_
 	if ( $status ) //if this has been modified as true already, return.
 		return $status;
 
-	if ( !empty( $_REQUEST['tx'] ) && !empty( $_REQUEST['amt'] ) && !empty( $_REQUEST['st'] ) ) {
-	
-		try {
-				
-			$general_settings = it_exchange_get_option( 'settings_general' );
-			$paypal_settings = it_exchange_get_option( 'addon_paypal_standard' );
-			
-			$it_exchange_customer = it_exchange_get_current_customer();
+	if ( !empty( $_REQUEST['it-exchange-transaction-method'] ) && 'paypal-standard' === $_REQUEST['it-exchange-transaction-method'] ) {
 		
-			$paypal_api_url       = ( $paypal_settings['sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
-	$paypal_api_username  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-username'] : $paypal_settings['live-api-username'];
-	$paypal_api_password  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-password'] : $paypal_settings['live-api-password'];
-	$paypal_api_signature = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-signature'] : $paypal_settings['live-api-signature'];
-			
+		if ( !empty( $_REQUEST['tx'] ) ) //if PDT is enabled
 			$transaction_id = $_REQUEST['tx'];
-			$transaction_status = 'pending';
-
-			$request = array(
-				'USER'	        => trim( $paypal_api_username ),
-				'PWD'	        => trim( $paypal_api_password ),
-				'SIGNATURE'	    => trim( $paypal_api_signature ),
-				'VERSION'       => '96.0', //The PayPal API version
-				'METHOD'	    => 'GetTransactionDetails',
-				'TRANSACTIONID' => $transaction_id,
-			);
-				
-			$response = wp_remote_post( $paypal_api_url, array( 'body' => $request ) );
+		else if ( !empty( $_REQUEST['txn_id'] ) ) //if PDT is not enabled
+			$transaction_id = $_REQUEST['txn_id'];
+		else
+			$transaction_id = NULL;
 			
-			if ( !is_wp_error( $response ) ) {
+		if ( !empty( $_REQUEST['amt'] ) ) //if PDT is enabled
+			$transaction_amount = $_REQUEST['amt'];
+		else if ( !empty( $_REQUEST['mc_gross'] ) ) //if PDT is not enabled
+			$transaction_amount = $_REQUEST['mc_gross'];
+		else
+			$transaction_amount = NULL;
+			
+		if ( !empty( $_REQUEST['st'] ) ) //if PDT is enabled
+			$transaction_status = $_REQUEST['st'];
+		else if ( !empty( $_REQUEST['payment_status'] ) ) //if PDT is not enabled
+			$transaction_status = $_REQUEST['payment_status'];
+		else
+			$transaction_status = NULL;
+			
+		
+		if ( !empty( $transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
+		
+			try {
+					
+				$general_settings = it_exchange_get_option( 'settings_general' );
+				$paypal_settings = it_exchange_get_option( 'addon_paypal_standard' );
 				
-				$array = array();
-				parse_str( wp_remote_retrieve_body( $response ), $array );
-
-				ITDebug::print_r( $array ); die();
+				$it_exchange_customer = it_exchange_get_current_customer();
+			
+				$paypal_api_url       = ( $paypal_settings['sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
+				$paypal_api_username  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-username'] : $paypal_settings['live-api-username'];
+				$paypal_api_password  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-password'] : $paypal_settings['live-api-password'];
+				$paypal_api_signature = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-signature'] : $paypal_settings['live-api-signature'];
+					
+				$request = array(
+					'USER'	        => trim( $paypal_api_username ),
+					'PWD'	        => trim( $paypal_api_password ),
+					'SIGNATURE'	    => trim( $paypal_api_signature ),
+					'VERSION'       => '96.0', //The PayPal API version
+					'METHOD'	    => 'GetTransactionDetails',
+					'TRANSACTIONID' => $transaction_id,
+				);
+					
+				$response = wp_remote_post( $paypal_api_url, array( 'body' => $request ) );
 				
-				it_exchange_set_paypal_standard_customer_id( $it_exchange_customer->id, $PAYERID );
-				it_exchange_set_paypal_standard_customer_email( $it_exchange_customer->id, $EMAIL );
-				$transaction_status = $PAYMENTSTATUS;
+				if ( !is_wp_error( $response ) ) {
+					
+					$array = array();
+					parse_str( wp_remote_retrieve_body( $response ) );
+					
+					it_exchange_set_paypal_standard_customer_id( $it_exchange_customer->id, $PAYERID );
+					it_exchange_set_paypal_standard_customer_email( $it_exchange_customer->id, $EMAIL );
+					$transaction_status = $PAYMENTSTATUS;
+					
+					if ( $transaction_id != $TRANSACTIONID )
+						throw new Exception( __( 'Error: Transaction IDs do not match! %s, %s', 'LION' ) );
+					
+					if ( number_format( $AMT, '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) )
+						throw new Exception( __( 'Error: Amount charged is not the same as the cart total!', 'LION' ) );
+	
+				} else {
+					
+					throw new Exception( $response->get_error_message() );
+	
+				}
 				
-				if ( $TRANSACTIONID !== $transaction_id )
-					throw new Exception( __( 'Error: Transaction IDs do not match!', 'LION' ) );
+			}
+			catch ( Exception $e ) {
 				
-				if ( number_format( $AMT, '2', '', '' ) !== number_format( $transaction_object->total, '2', '', '' ) )
-					throw new Exception( __( 'Error: Amount charged is not the same as the cart total!', 'LION' ) );
-
-			} else {
-				
-				throw new Exception( $response->get_error_message() );
-
+				it_exchange_add_message( 'error', $e->getMessage() );
+				return false;
+					
 			}
 			
-		}
-		catch ( Exception $e ) {
+			return it_exchange_add_transaction( 'paypal-standard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
 			
-			it_exchange_add_message( 'error', $e->getMessage() );
-			return false;
-				
 		}
-		
-		return it_exchange_add_transaction( 'paypal-stanard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
+	
+		it_exchange_add_message( 'error', __( 'Unknown error. Please try again later.', 'LION' ) );
 		
 	}
-
-	it_exchange_add_message( 'error', __( 'Unknown error. Please try again later.', 'LION' ) );
 	return false;
 	
 }
@@ -265,9 +286,37 @@ function it_exchange_paypal_standard_process_webhook( $request ) {
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard' );
 	
-	$f = fopen( 'paypal-ipn.txt', 'a' );
-	fwrite( $f, print_r( $request, true ) );
-	fclose( $f );
+	// for extra security, retrieve from the Stripe API
+	if ( isset( $request['txn_id'] ) ) {
+				
+		try {
+			
+			if ( isset( $stripe_event->customer ) )
+				$stripe_id = $stripe_event->customer;
+				
+			$stripe_object = $stripe_event->data->object;
+
+			//https://stripe.com/docs/api#event_types
+			switch( $request['payment_status'] ) :
+
+				case 'Completed' :
+					it_exchange_update_transaction_status_for_paypal_standard( $request['txn_id'], $request['payment_status'] );
+					break;
+				case 'Refunded' :
+					it_exchange_update_transaction_status_for_paypal_standard( $request['parent_txn_id'], $request['reason_code'] );
+					it_ecxhange_add_refund_to_transaction_for_paypal_standard( $request['parent_txn_id'], $request['mc_gross'] );
+				case 'Reversed' :
+					it_exchange_update_transaction_status_for_paypal_standard( $request['parent_txn_id'], $request['reason_code'] );		
+					break;
+
+			endswitch;
+
+		} catch ( Exception $e ) {
+			
+			// What are we going to do here?
+			
+		}
+	}
 	
 }
 add_action( 'it_exchange_webhook_it_exchange_paypal-standard', 'it_exchange_paypal_standard_process_webhook' );
@@ -293,16 +342,7 @@ function it_exchange_update_transaction_status_for_paypal_standard( $paypal_stan
 function it_ecxhange_add_refund_to_transaction_for_paypal_standard( $paypal_standard_id, $refund ) {
 	$transactions = it_exchange_get_transaction_from_paypal_standard_id( $paypal_standard_id );
 	foreach( $transactions as $transaction ) { //really only one
-		$refunds = $transaction->get_transaction_refunds();
-		
-		$refunded_amount = 0;
-		foreach( $refunds as $refund_meta ) {
-			$refunded_amount += number_format( $refund_meta['amount'], '2', '', '' );
-		}
-		
-		$this_refund = $refund - $refunded_amount;
-		
-		$transaction->add_transaction_refund( number_format( $this_refund, '2', '.', '' ) );
+		$transaction->add_transaction_refund( number_format( abs( $refund ), '2', '.', '' ) );
 	}	
 	
 }
@@ -324,18 +364,13 @@ function it_exchange_transaction_status_label_paypal_standard( $status ) {
 
 	switch ( $status ) {
 	
-		case 'succeeded':
+		case 'Completed':
+		case 'Success':
 			return __( 'Paid', 'LION' );
-		case 'refunded':
-			return __( 'Refunded', 'LION' );
-		case 'partial-refund':
-			return __( 'Partially Refunded', 'LION' );
-		case 'needs_response':
-			return __( 'Disputed: Stripe needs a response', 'LION' );
-		case 'under_review':
-			return __( 'Disputed: Under review', 'LION' );
-		case 'won':
-			return __( 'Disputed: Won, Paid', 'LION' );
+		case 'Refunded':
+			return __( 'Refund', 'LION' );
+		case 'buyer_complaint':
+			return __( 'Buyer Complaint', 'LION' );
 		default:
 			return __( 'Unknown', 'LION' );
 		
