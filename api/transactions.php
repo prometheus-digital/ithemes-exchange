@@ -81,6 +81,9 @@ function it_exchange_get_transaction_method_options( $transaction_method ) {
  * @rturn object IT_Exchange_Transaction object for passed post
 */
 function it_exchange_get_transaction( $post ) {
+	if ( is_object( $post ) && 'IT_Exchange_Transaction' == get_class( $post ) )
+		return $post;
+
 	return new IT_Exchange_Transaction( $post );
 }
 
@@ -262,13 +265,12 @@ function it_exchange_update_transaction_status( $transaction, $status ) {
 	if ( ! $transaction->ID )
 		return false;
 
-	$old_status = $transaction->transaction_data['_it_exchange_transaction_status'];
-	update_post_meta( $transaction->ID, '_it_exchange_transaction_status', $status );
-	$transaction = it_exchange_get_transaction( $transaction->ID );
+	$old_status = $transaction->get_status();
+	$transaction->update_status( $status );
 
 	do_action( 'it_exchange_update_transaction_status', $transaction, $old_status );
 	do_action( 'it_exchange_update_transaction_status_' . $transaction->transaction_method, $transaction, $old_status );
-	return $transaction->transaction_data['_it_exchange_transaction_status'];
+	return $transaction->get_status();
 }
 
 /**
@@ -279,17 +281,114 @@ function it_exchange_update_transaction_status( $transaction, $status ) {
  * @return string the transaction status
 */
 function it_exchange_get_transaction_status( $transaction ) {
-	if ( is_object( $transaction ) && 'IT_Exchange_Transaction' == get_class( $transaction ) )
-		return $transaction->get_transaction_status();
+    $transaction = new IT_Exchange_Transaction( $transaction );
+    if ( $transaction->ID )
+        return $transaction;
+    return false;
+}
 
-	if ( ! $transaction ) {
-		global $post;
-		$transaction = $post;
+/**
+ * Returns the label for a transaction status (provided by addon)
+ *
+ * @since 0.4.0
+ *
+ * @param string $transaction_method the transaction method
+ * @param string $status the transaction status
+ * @return string
+*/
+function it_exchange_get_transaction_status_label( $transaction ){
+	$transaction = it_exchange_get_transaction( $transaction );
+	return apply_filters( 'it_exchange_transaction_status_label_' . $transaction->transaction_method, $transaction->status );
+}
+
+/**
+ * Return the transaction date
+ *
+ * @since 0.4.0
+ *
+ * @param mixed   $transaction ID or object
+ * @param string  $format php date format
+ * @param boolean $gmt return the gmt date?
+ * @return string date
+*/
+function it_exchange_get_transaction_date( $transaction, $format=false, $gmt=false ) {
+	$format = empty( $format ) ? get_option( 'date_format' ) : $format;
+
+	// Try to locate the IT_Exchange_Transaction object from the var
+	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
+		if ( $date = $transaction->get_date() )
+			return date_i18n( $format, strtotime( $date ), $gmt );
 	}
 
-	// Return value from IT_Exchange_Transaction if we are able to locate it
-	$transaction = it_exchange_get_transaction( $transaction );
-	return $transaction->get_transaction_status();
+	return false;
+}
+
+/**
+ * Return the transaction total
+ *
+ * @since 0.4.0
+ *
+ * @param mixed   $transaction ID or object
+ * @param string  $format php date format
+ * @param boolean $gmt return the gmt date?
+ * @return string date
+*/
+function it_exchange_get_transaction_total( $transaction, $format_currency=true ) {
+
+	// Try to locate the IT_Exchange_Transaction object from the var
+	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
+		if ( $total = $transaction->get_total() )
+			return $format_currency ? it_exchange_format_price( $total ) : $total;
+	}
+
+	return false;
+}
+
+/**
+ * Returns an array of product objects as they existed when added to the transaction
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction id or objec
+ * @return array
+*/
+function it_exchange_get_transaction_products( $transaction ) {
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
+		return array();
+
+	if ( ! $transaction_products = $transaction->get_products() )
+		return array();
+
+	// Loop through the products, grab the IT_Exchange_Product object, and update with transaction data
+	$products = array();
+	foreach( $transaction_products as $key => $product ) {
+		$db_prod                  = it_exchange_get_product( $product['product_id'] );
+		$db_prod->cart_id         = $product['product_cart_id'];
+		$db_prod->cart_name       = $product['product_name'];
+		$db_prod->base_price      = $product['product_base_price'];
+		$db_prod->subtotal        = $product['product_subtotal'];
+		$db_prod->itemized_data   = $product['itemized_data'];
+		$db_prod->additional_data = $product['additional_data'];
+		$db_prod->count           = $product['count'];
+ITUtility::print_r($db_prod);die( 'DIED IN ' . __FILE__ . ' on line ' . __LINE__);
+		$products[$product['product_cart_id']] = $db_prod;
+	}
+	return $products;
+}
+
+/**
+ * Returns a specific product from a transaction based on the product_cart_id
+ *
+ * @since 0.4.0
+ *
+ * @param string $product_cart_id 
+ * @return object
+*/
+function it_exchange_get_transaction_product( $transaction, $product_cart_id ) {
+	if ( ! $products = it_exchnage_get_transaction_products( $transaction ) )
+		return false;
+
+	return empty( $products[$product_cart_id] ) ? false : $products[$product_cart_id];
 }
 
 /**

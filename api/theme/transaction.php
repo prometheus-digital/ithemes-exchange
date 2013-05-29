@@ -27,7 +27,10 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	public $_tag_map = array(
-		'status' => 'status',
+		'status'   => 'status',
+		'date'     => 'date',
+		'total'    => 'total',
+		'products' => 'products',
 	);
 
 	/**
@@ -66,7 +69,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
-		return $options['before'] . it_exchange_get_transaction_status( $this->_transaction ) . $options['after'];
+		return $options['before'] . it_exchange_get_transaction_status_label( $this->_transaction ) . $options['after'];
 	}
 
 	/**
@@ -74,15 +77,72 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @since 0.4.0
 	 *
+	 * @param array $options output options
+	 * @return string
 	*/
 	function date( $options=array() ) {
 		// Set options
 		$defaults      = array(
 			'before' => '', 
 			'after'  => '', 
+			'format' => get_option('date_format'),
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
-		return $options['before'] . it_exchange_get_transaction_date( $this->_transaction ) . $options['after'];
+		return $options['before'] . it_exchange_get_transaction_date( $this->_transaction, $options['format'] ) . $options['after'];
 	}
+
+	/**
+	 * Returns the transaction total
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $options output options
+	 * @return string
+	*/
+	function total( $options=array() ) {
+		// Set options
+		$defaults      = array(
+			'before'          => '', 
+			'after'           => '', 
+			'format_currency' => true,
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
+		return $options['before'] . it_exchange_get_transaction_total( $this->_transaction, $options['format_currency'] ) . $options['after'];
+	}
+
+    /** 
+     * This loops through the products GLOBAL and updates the product global.
+     *
+     * It return false when it reaches the last product
+     * If the has flag has been passed, it just returns a boolean
+     *
+     * @since 0.4.0
+     * @return string
+    */
+    function products( $options=array() ) { 
+        // Return boolean if has flag was set
+        if ( $options['has'] )
+            return count( it_exchange_get_transaction_products( $this->_transaction ) ) > 0 ; 
+
+        // If we made it here, we're doing a loop of products for the current query.
+        // This will init/reset the products global and loop through them. the /api/theme/product.php file will handle individual products.
+        if ( empty( $GLOBALS['it_exchange']['products'] ) ) { 
+            $GLOBALS['it_exchange']['products'] = it_exchange_get_transaction_products( $this->_transaction );
+            $GLOBALS['it_exchange']['product'] = reset( $GLOBALS['it_exchange']['products'] );
+            return true;
+        } else {
+            if ( next( $GLOBALS['it_exchange']['products'] ) ) { 
+                $GLOBALS['it_exchange']['product'] = current( $GLOBALS['it_exchange']['products'] );
+                return true;
+            } else {
+                $GLOBALS['it_exchange']['product'] = false;
+                return false;
+            }   
+        }   
+        end( $GLOBALS['it_exchange']['products'] );
+        $GLOBALS['it_exchange']['product'] = false;
+        return false;
+    }
 }

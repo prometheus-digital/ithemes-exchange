@@ -321,10 +321,15 @@ class IT_Exchange_Shopping_Cart {
 			return false;
 		}
 
+		// Grab default currency
+		$settings = it_exchange_get_option( 'settings_general' );
+		$currency = $settings['default-currency'];
+		unset( $settings );
+
 		// Add totals to each product
 		foreach( $products as $key => $product ) {
-			$products[$key]['product_baseline'] = it_exchange_get_cart_product_base_price( $product );
-			$products[$key]['product_subtotal'] = it_exchange_get_cart_product_subtotal( $product );
+			$products[$key]['product_base_price'] = it_exchange_get_cart_product_base_price( $product, false );
+			$products[$key]['product_subtotal'] = it_exchange_get_cart_product_subtotal( $product, false );
 			$products[$key]['product_name']     = it_exchange_get_cart_product_title( $product );
 		}
 
@@ -333,6 +338,7 @@ class IT_Exchange_Shopping_Cart {
 		$transaction_object->products    = $products;
 		$transaction_object->cart_data   = it_exchange_get_cart_data();
 		$transaction_object->total       = $cart_total;
+		$transaction_object->currency    = $currency;
 		$transaction_object->description = it_exchange_get_cart_description();
 		
 		$transaction_object = apply_filters( 'it_exchange_handle_purchase_cart_request_transaction_object', $transaction_object );

@@ -130,10 +130,10 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 0.4.0
 	*/
-	function get_transaction_status() {
+	function get_status() {
 		return get_post_meta( $this->ID, '_it_exchange_transaction_status', true );
 	}
-	
+
 	/**
 	 * Updates the transaction_status property.
 	 *
@@ -142,10 +142,59 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 0.4.0
 	*/
-	function update_transaction_status( $new_status ) {
+	function update_status( $new_status ) {
 		update_post_meta( $this->ID, '_it_exchange_transaction_status', $new_status );
 	}
 	
+	/**
+	 * Gets the date property.
+	 *
+	 * If the custom value is already set, it uses that.
+	 * If the custom value is not set and we're on post-add.php, check for a URL param
+	 *
+	 * @since 0.4.0
+	*/
+	function get_date( $gmt=false ) {
+		if ( $gmt )
+			return $this->post_date_gmt;
+
+		return $this->post_date;
+	}
+
+	/**
+	 * Returns the transaction total
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return string
+	*/
+	function get_total() {
+		return empty( $this->cart_details->total ) ? false : $this->cart_details->total;
+	}
+
+	/**
+	 * Returns the transaction currency
+	 *
+	 * @since 0.4.0
+	 * @return string
+	*/
+	function get_currency() {
+		$settings = it_exchange_get_option( 'settings_general' );
+		$default_currency = $settings['default-currency'];
+		return empty( $this->cart_details->currency ) ? $default_currency : $this->cart_details->currency;
+	}
+
+	/**
+	 * Returns the products array
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return array
+	*/
+	function get_products() {
+		return empty( $this->cart_details->products ) ? array() : $this->cart_details->products;
+	}
+
 	/**
 	 * Add the transaction refund amount.
 	 *
@@ -200,7 +249,7 @@ class IT_Exchange_Transaction {
 		/** END OF OLD. BEGINNING OF TEMP **/
 
 		// Set status
-		$this->status = get_post_meta( $this->ID, '_it_exchange_transaction_status', true );
+		$this->status = $this->get_status();
 
 		// Set refunds
 		$this->refunds = $this->get_transaction_refunds();

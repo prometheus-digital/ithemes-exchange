@@ -237,7 +237,7 @@ if ( !function_exists( 'wp_nav_menu_disabled_check' ) && version_compare( $GLOBA
  * @todo Better anticipate wp_error
 */
 function it_exchange_get_currency_options() {
-	
+	// Country Code => array( symbol, name )
 	$currencies = array(
 		'AED' => array( 'symbol' => '\u062f.\u0625;', 'name' => __( 'UAE dirham', 'LION' ) ),
 		'AFN' => array( 'symbol' => 'Afs', 'name' => __( 'Afghan afghani', 'LION' ) ),
@@ -401,10 +401,15 @@ function it_exchange_get_currency_options() {
 	return apply_filters( 'it_exchange_get_currency_options', $currencies );
 }
 
-function it_exchange_get_currency_symbol( $cc ) {
-	
+/**
+ * Returns the currency symbol based on the currency key
+ *
+ * @since 0.4.0
+ *
+ * @param string $country_code country code for the currency
+ * @return string
+*/
+function it_exchange_get_currency_symbol( $country_code ) {
 	$currencies = it_exchange_get_currency_options();
-	
-	return !empty( $currencies[$cc] ) ? $currencies[$cc] : '$';
-	
+	return ! empty( $currencies[$country_code] ) ? $currencies[$country_code] : '$';
 }

@@ -67,7 +67,6 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	 * @return string
 	*/
 	function exist( $options=array() ) {
-
 		// This will init/reset the transactions global and loop through them. the /api/theme/transaction.php file will handle individual transactions.
 		if ( empty( $GLOBALS['it_exchange']['transactions'] ) ) {
 			$GLOBALS['it_exchange']['transactions'] = it_exchange_get_transactions( array( 'posts_per_page' => -1 ) );

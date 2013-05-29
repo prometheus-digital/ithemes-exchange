@@ -33,34 +33,34 @@ class IT_Exchange_Product_Feature_Downloads {
 		add_filter( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_hash_to_product' ), 5, 2 );
 	}
 	
+	/**
+	 * Adds transaction hashes to the products in a transaction.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param object the cart data
+	 * @param integer the transaction id
+	 * @return updated cart data with the download hashes
+	*/
 	function add_transaction_hash_to_product( $transaction_object, $transaction_id ) {
 			
-		foreach( $transaction_object->products as $object ) {
-			
-			
+		foreach( (array) $transaction_object->products as $object ) {
 			// If this is a downloadable product, generate a hash
 			if ( $this->product_has_feature( 'false', $object['product_id'] ) ) {
 						
-				$existing_downloads = it_exchange_get_product_feature( $object->product_id, 'downloads' );
+				// Grab existing downloads for each product in transaction
+				$existing_downloads = it_exchange_get_product_feature( $object['product_id'], 'downloads' );
 				
+				// Loop through downloads and create hash for each
 				foreach( $existing_downloads as $id => $data ) {
-
 					while ( !in_array( $hash = wp_hash( time() ), (array)get_post_meta( $id, '_it_exchange_download_hashes' ) ) ) {
-						
 						add_post_meta( $id, '_it_exchange_download_hashes', $hash );
-						
 					}
-					
 					$object['product_download_hashes'][$hash] = $id;
-					
 				}
-				
 			}
-			
 		}
-	
 		return $transaction_object;
-			
 	}
 
 	/**

@@ -236,9 +236,7 @@ class IT_Exchange_Transaction_Post_Type {
 					esc_attr_e( $transaction_method['name'] );
 				break;
 			case 'it_exchange_transaction_status_column' :
-					$status = it_exchange_get_transaction_status( $post );
-					$method = it_exchange_get_transaction_method( $post );
-					esc_attr_e( apply_filters( 'it_exchange_transaction_status_label_' . $method, $status ) );
+					esc_attr_e( it_exchange_get_transaction_status_label( $post ) );
 				break;
 		}
 	}
