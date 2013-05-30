@@ -500,7 +500,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 					}
 					break;
 				
-				case 'main': //really just the first image
+				case 'featured': //really just the first image
 					if ( !empty( $product_images ) ) {
 						$output = '<div id="it-exchange-product-images-gallery">';
 					
