@@ -19,7 +19,8 @@ class IT_Exchange_Product_Visibility {
 	*/
 	function IT_Exchange_Product_Visibility() {
 		if ( is_admin() ) {
-			add_action( 'init', array( $this, 'init_feature_metaboxes' ) );
+			add_action( 'load-post-new.php', array( $this, 'init_feature_metaboxes' ) );
+			add_action( 'load-post.php', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		}
 		add_action( 'it_exchange_update_product_feature_visibility', array( $this, 'save_feature' ), 9, 2 );
@@ -54,15 +55,36 @@ class IT_Exchange_Product_Visibility {
 	 * @return void
 	*/
 	function init_feature_metaboxes() {
-		// Abord if there are not product addon's currently enabled.
-		if ( ! $product_addons = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) )
-			return;
+		
+		global $post;
+		
+		if ( isset( $_REQUEST['post_type'] ) ) {
+			$post_type = $_REQUEST['post_type'];
+		} else {
+			if ( isset( $_REQUEST['post'] ) )
+				$post_id = (int) $_REQUEST['post'];
+			elseif ( isset( $_REQUEST['post_ID'] ) )
+				$post_id = (int) $_REQUEST['post_ID'];
+			else
+				$post_id = 0;
 
-		// Loop through product types and register a metabox if it supports visibility
-		foreach( $product_addons as $slug => $args ) {
-			if ( it_exchange_product_type_supports_feature( $slug, 'visibility' ) )
-				add_action( 'it_exchange_product_metabox_callback_' . $slug, array( $this, 'register_metabox' ) );
+			if ( $post_id )
+				$post = get_post( $post_id );
+
+			if ( isset( $post ) && !empty( $post ) )
+				$post_type = $post->post_type;
 		}
+			
+		if ( !empty( $_REQUEST['it-exchange-product-type'] ) )
+			$product_type = $_REQUEST['it-exchange-product-type'];
+		else
+			$product_type = it_exchange_get_product_type( $post );
+		
+		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
+			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'visibility' ) )
+				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_metabox' ) );
+		}
+		
 	}
 
 	/**

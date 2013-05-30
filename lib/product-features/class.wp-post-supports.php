@@ -26,7 +26,8 @@ class IT_Exchange_WP_Post_Supports {
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_post_content_as_product_feature' ) );
 		add_filter( 'it_exchange_product_has_feature_extended-description', array( $this, 'has_extended_description' ), 9, 2 );
 		add_filter( 'it_exchange_get_product_feature_extended-description', array( $this, 'get_extended_description' ), 9, 2 );
-		add_action( 'admin_init', array( $this, 'init_extended_description_metaboxes' ) );
+		add_action( 'load-post-new.php', array( $this, 'init_extended_description_metaboxes' ) );
+		add_action( 'load-post.php', array( $this, 'init_extended_description_metaboxes' ) );
 
 		// WordPress Featured Image as a Product Feature
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_featured_image_as_product_feature' ) );
@@ -130,15 +131,35 @@ class IT_Exchange_WP_Post_Supports {
 	 * @return void
 	*/
 	function init_extended_description_metaboxes() {
-		// Abort if there are not product addon's currently enabled.
-		if ( ! $product_addons = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ) 
-			return;
+		
+		global $post;
+		
+		if ( isset( $_REQUEST['post_type'] ) ) {
+			$post_type = $_REQUEST['post_type'];
+		} else {
+			if ( isset( $_REQUEST['post'] ) )
+				$post_id = (int) $_REQUEST['post'];
+			elseif ( isset( $_REQUEST['post_ID'] ) )
+				$post_id = (int) $_REQUEST['post_ID'];
+			else
+				$post_id = 0;
 
-		// Loop through product types and register a metabox if it supports the feature 
-		foreach( $product_addons as $slug => $args ) { 
-			if ( it_exchange_product_type_supports_feature( $slug, 'extended-description' ) ) 
-				add_action( 'it_exchange_product_metabox_callback_' . $slug, array( $this, 'register_extended_description_metabox' ) );
-		}   
+			if ( $post_id )
+				$post = get_post( $post_id );
+
+			if ( isset( $post ) && !empty( $post ) )
+				$post_type = $post->post_type;
+		}
+			
+		if ( !empty( $_REQUEST['it-exchange-product-type'] ) )
+			$product_type = $_REQUEST['it-exchange-product-type'];
+		else
+			$product_type = it_exchange_get_product_type( $post );
+		
+		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
+			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'extended-description' ) )
+				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_extended_description_metabox' ) );
+		}
 	}
 
 	/**

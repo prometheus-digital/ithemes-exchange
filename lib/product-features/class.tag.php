@@ -8,7 +8,7 @@
 */
 
 
-class IT_Exchange_Product_Feature_Product_Category {
+class IT_Exchange_Product_Feature_Product_Tag {
 
 	/**
 	 * Constructor. Registers hooks
@@ -17,13 +17,13 @@ class IT_Exchange_Product_Feature_Product_Category {
 	 * @return void
 	 * @todo remove it_exchange_enabled_addons_loaded action???
 	*/
-	function IT_Exchange_Product_Feature_Product_Category() {
+	function IT_Exchange_Product_Feature_Product_Tag() {
 		if ( is_admin() ) {
 			add_action( 'load-post-new.php', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'load-post.php', array( $this, 'init_feature_metaboxes' ) );
 		}
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
-		add_filter( 'it_exchange_product_supports_feature_category', array( $this, 'product_supports_feature') , 9, 2 );
+		add_filter( 'it_exchange_product_supports_feature_tag', array( $this, 'product_supports_feature') , 9, 2 );
 	}
 
 	/**
@@ -33,14 +33,15 @@ class IT_Exchange_Product_Feature_Product_Category {
 	*/
 	function add_feature_support_to_product_types() {
 		// Register the product feature
-		$slug        = 'category';
-		$description = 'Categories of the product';
+		$slug        = 'tag';
+		$description = 'Tags of the product';
 		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
 		$products = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 		foreach( $products as $key => $params ) {
-			it_exchange_add_feature_support_to_product_type( $slug, $params['slug'] );
+			if ( 'books-product-type' !== $params['slug'] )
+				it_exchange_add_feature_support_to_product_type( $slug, $params['slug'] );
 		}
 	}
 
@@ -77,8 +78,8 @@ class IT_Exchange_Product_Feature_Product_Category {
 			$product_type = it_exchange_get_product_type( $post );
 		
 		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
-			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'category' ) )
-				register_taxonomy_for_object_type( 'it_exchange_category', 'it_exchange_prod' );
+			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'tag' ) )
+				register_taxonomy_for_object_type( 'it_exchange_tag', 'it_exchange_prod' );
 		}
 		
 	}
@@ -97,7 +98,7 @@ class IT_Exchange_Product_Feature_Product_Category {
 	function product_supports_feature( $result, $product_id ) {
 		// Does this product type support this feature?
 		$product_type = it_exchange_get_product_type( $product_id );
-		return it_exchange_product_type_supports_feature( $product_type, 'category' );
+		return it_exchange_product_type_supports_feature( $product_type, 'tag' );
 	}
 }
-$IT_Exchange_Product_Feature_Product_Category = new IT_Exchange_Product_Feature_Product_Category();
+$IT_Exchange_Product_Feature_Product_Tag = new IT_Exchange_Product_Feature_Product_Tag();
