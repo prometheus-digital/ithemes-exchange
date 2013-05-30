@@ -1,6 +1,5 @@
 <?php
 /**
- * This add-on will enable the product title (post title ) box on the edit add / edit product page
  *
  * @since 0.3.8
  * @package IT_Exchange
@@ -16,24 +15,16 @@ class IT_Exchange_WP_Post_Supports {
 	 * @todo remove it_exchange_enabled_addons_loaded action???
 	*/
 	function IT_Exchange_WP_Post_Supports() {
-
-		// WordPress Post Title
-		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_title_support_as_product_feature' ) );
-		add_filter( 'it_exchange_product_has_feature_title', array( $this, 'has_title' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_title', array( $this, 'get_title' ), 9, 2 );
-
+		
 		// WordPress Post Content (Extended Description)
+		if ( is_admin() ) {
+			add_action( 'load-post-new.php', array( $this, 'init_extended_description_metaboxes' ) );
+			add_action( 'load-post.php', array( $this, 'init_extended_description_metaboxes' ) );
+		}
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_post_content_as_product_feature' ) );
 		add_filter( 'it_exchange_product_has_feature_extended-description', array( $this, 'has_extended_description' ), 9, 2 );
 		add_filter( 'it_exchange_get_product_feature_extended-description', array( $this, 'get_extended_description' ), 9, 2 );
-		add_action( 'load-post-new.php', array( $this, 'init_extended_description_metaboxes' ) );
-		add_action( 'load-post.php', array( $this, 'init_extended_description_metaboxes' ) );
-
-		// WordPress Featured Image as a Product Feature
-		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_featured_image_as_product_feature' ) );
-		add_filter( 'it_exchange_product_has_feature_featured-image', array( $this, 'has_featured_image' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_featured-image', array( $this, 'get_featured_image' ), 9, 3 );
-
+		
 		// WordPress Excerpt
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_excerpt_as_product_feature' ) );
 		add_filter( 'it_exchange_product_has_feature_wp-excerpt', array( $this, 'has_excerpt' ), 9, 2 );
@@ -57,50 +48,6 @@ class IT_Exchange_WP_Post_Supports {
 
 		// WordPress Post Revisions
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_revisions_as_product_feature' ) );
-	}
-
-	/**
-	 * Register the product and add it to enabled product-type addons
-	 *
-	 * @since 0.3.8
-	*/
-	function init_wp_title_support_as_product_feature() {
-		// Register the product feature
-		$slug        = 'title';
-		$description = __( 'Adds support for default WordPress Title field', 'LION' );
-		it_exchange_register_product_feature( $slug, $description );
-
-		// Add it to all enabled product-type addons
-		$product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
-		foreach( $product_types as $key => $product_type ) { 
-			it_exchange_add_feature_support_to_product_type( $slug, $product_type['slug'] );
-		}   
-	}
-
-	/**
-	 * Return the product's title
-	 *
-	 * @since 0.3.8
-	 * @param mixed $title the values passed in by the WP Filter API. Ignored here.
-	 * @param integer product_id the WordPress post ID
-	 * @return string post_title
-	*/
-	function get_title( $title, $product_id ) { 
-		return get_the_title( $product_id );
-	}
-
-	/**
-	 * Return boolean if the current product has a title
-	 *
-	 * @since 0.4.0
-	 * @return boolean
-	*/
-	function has_title( $result, $product_id ) {
-		// Does product type support it?
-		$product_type = it_exchange_get_product_type( $product_id );
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'title' ) ) 
-			return false;
-		return (boolean) $this->get_title( $result, $product_id );
 	}
 
 	/**
@@ -237,51 +184,6 @@ class IT_Exchange_WP_Post_Supports {
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'extended-description' ) ) 
 			return false;
 		return (boolean) $this->get_extended_description( $result, $product_id );
-	}
-
-	/**
-	 * Register the WP featured image support as a Product Feature
-	 *
-	 * Register it and tack it onto all registered product-type addons by default
-	 *
-	 * @since 0.3.8
-	 * @return void
-	*/
-	function init_wp_featured_image_as_product_feature() {
-		// Register the product feature
-		$slug        = 'featured-image';
-		$description = __( 'Adds support for WP Featured Image to a specific product type', 'LION' );
-		it_exchange_register_product_feature( $slug, $description );
-	}
-
-	/**
-	 * Return the product's featured_image
-	 *
-	 * This returns the image, not the ID
-	 *
-	 * @since 0.3.8
-	 * @param mixed $featured_image the values passed in by the WP Filter API. Ignored here.
-	 * @param integer product_id the WordPress post ID
-	 * @return string featured image
-	*/
-	function get_featured_image( $featured_image, $product_id, $options=array() ) { 
-		$size = empty( $options['size'] ) ? 'thumbnail' : $options['size'];
-		if ( has_post_thumbnail( $product_id ) ) 
-			return get_the_post_thumbnail( $product_id, $size );
-	}
-
-	/**
-	 * Return boolean if the current product has a featured image
-	 *
-	 * @since 0.4.0
-	 * @return boolean
-	*/
-	function has_featured_image( $result, $product_id ) {
-		// Does product type support it?
-		$product_type = it_exchange_get_product_type( $product_id );
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'featured-image' ) ) 
-			return false;
-		return (boolean) $this->get_featured_image( $result, $product_id );
 	}
 
 	/*
