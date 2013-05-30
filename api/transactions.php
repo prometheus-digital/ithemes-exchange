@@ -324,6 +324,27 @@ function it_exchange_get_transaction_date( $transaction, $format=false, $gmt=fal
 }
 
 /**
+ * Return the transaction subtotal
+ *
+ * @since 0.4.0
+ *
+ * @param mixed   $transaction ID or object
+ * @param string  $format php date format
+ * @param boolean $gmt return the gmt date?
+ * @return string date
+*/
+function it_exchange_get_transaction_subtotal( $transaction, $format_currency=true ) {
+
+	// Try to locate the IT_Exchange_Transaction object from the var
+	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
+		if ( $subtotal = $transaction->get_subtotal() )
+			return $format_currency ? it_exchange_format_price( $subtotal ) : $total;
+	}
+
+	return false;
+}
+
+/**
  * Return the transaction total
  *
  * @since 0.4.0
@@ -345,6 +366,54 @@ function it_exchange_get_transaction_total( $transaction, $format_currency=true 
 }
 
 /**
+ * Return the currency used in the transaction
+ *
+ * @since 0.4.0
+ *
+ * @param mixed   $transaction ID or object
+ * @return string date
+*/
+function it_exchange_get_transaction_currency( $transaction ) {
+
+	// Try to locate the IT_Exchange_Transaction object from the var
+	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
+		$currency = $transaction->get_currency();
+	}
+
+	return empty( $currency ) ? false: $currency;
+}
+
+/**
+ * Returns an array of all coupons applied to a given transaction
+ *
+ * @since 0.4.0
+ *
+ * @param mixed   $transaction ID or object
+ * @return string date
+*/
+function it_exchange_get_transaction_coupons( $transaction ) {
+
+	// Try to locate the IT_Exchange_Transaction object from the var
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
+		return false;
+
+	return $transaction->get_coupons();
+}
+
+/**
+ * Return the total discount of all coupons applied to a given transaction
+ *
+ * @since 0.4.0
+ *
+ * @param mixed   $transaction ID or object
+ * @return string date
+*/
+function it_exchange_get_transaction_coupons_total_discount( $transaction ) {
+	if ( ! $coupons = it_exchange_get_transaction_coupons( $transaction ) )
+		return false;
+}
+
+/**
  * Returns the customer object associated with a transaction
  *
  * @since 0.4.0
@@ -357,6 +426,52 @@ function it_exchange_get_transaction_customer( $transaction ) {
 		return empty( $transaction->customer_id ) ? false : it_exchange_get_customer( $transaction->customer_id );
 	}
 	return false;
+}
+
+/**
+ * Returns the transaction customer's Display Name
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @return string
+*/
+function it_exchange_get_transaction_customer_display_name( $transaction ) {
+	if ( ! $customer = it_exchange_get_transaction_customer( $transaction ) )
+		return __( 'Unknown', 'LION' );
+
+	return empty( $customer->wp_user->display_name ) ? __( 'Unknown', 'LION' ) : $customer->wp_user->display_name;	
+}
+
+/**
+ * Returns the transaction customer's email 
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @return string
+*/
+function it_exchange_get_transaction_customer_email( $transaction ) {
+	if ( ! $customer = it_exchange_get_transaction_customer( $transaction ) )
+		return __( 'Unknown', 'LION' );
+
+	return empty( $customer->wp_user->user_email ) ? __( 'Unknown', 'LION' ) : $customer->wp_user->user_email;	
+}
+
+/**
+ * Returns the transaction customer's profile URL
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @return string
+*/
+function it_exchange_get_transaction_customer_admin_profile_url( $transaction ) {
+	if ( ! $customer = it_exchange_get_transaction_customer( $transaction ) )
+		return __( 'Unknown', 'LION' );
+
+	$url = add_query_arg( array( 'user_id' => $customer->id, 'it_exchange' => 1 ), get_admin_url() . '/user-edit.php' );	
+	return $url;
 }
 
 /**
@@ -407,17 +522,32 @@ function it_exchange_get_transaction_product( $transaction, $product_cart_id ) {
 }
 
 /**
- * Returns the transaction method name
+ * Returns the transaction method name from the add-on's slug
  *
  * @since 0.3.7
  * @return string
 */
-function it_exchange_get_transaction_method_name( $slug ) {
+function it_exchange_get_transaction_method_name_from_slug( $slug ) {
 	if ( ! $method = it_exchange_get_addon( $slug ) )
 		return false;
 
 	$name = apply_filters( 'it_exchange_get_transaction_method_name_' . $method['slug'], $method['name'] );
 	return $name;
+}
+
+/**
+ * Returns the name of a transaction method used for a specific transaction
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @return string
+*/
+function it_exchange_get_transaction_method_name( $transaction ) {
+	if ( ! $slug = it_exchange_get_transaction_method( $transaction ) )
+		return false;
+
+	return it_exchange_get_transaction_method_name_from_slug( $slug );
 }
 
 /**

@@ -162,6 +162,22 @@ class IT_Exchange_Transaction {
 	}
 
 	/**
+	 * Returns the transaction subtotal - subtotal of all items.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return string
+	*/
+	function get_subtotal() {
+		$products = $this->get_products();
+		$subtotal = 0;
+		foreach( (array) $products as $key => $data ) {
+			$subtotal += $data['product_subtotal'];
+		}
+		return empty( $subtotal ) ? false : $subtotal;
+	}
+
+	/**
 	 * Returns the transaction total
 	 *
 	 * @since 0.4.0
@@ -184,6 +200,17 @@ class IT_Exchange_Transaction {
 		return empty( $this->cart_details->currency ) ? $default_currency : $this->cart_details->currency;
 	}
 
+	/**
+	 * Returns the coupons applied to this transaction if they exist
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return string
+	*/
+	function get_coupons() {
+		ITUtility::print_r($this);die( __FILE__ . ' || ' . __LINE__ );
+		return empty( $this->cart_details->total ) ? false : $this->cart_details->total;
+	}
 	/**
 	 * Returns the products array
 	 *

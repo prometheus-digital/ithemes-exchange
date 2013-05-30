@@ -28,6 +28,7 @@ class IT_Exchange_Transaction_Post_Type {
 		add_filter( 'manage_edit-it_exchange_tran_columns', array( $this, 'modify_all_transactions_table_columns' ) );
 		add_filter( 'manage_edit-it_exchange_tran_sortable_columns', array( $this, 'make_transaction_custom_columns_sortable' ) );
 		add_filter( 'manage_it_exchange_tran_posts_custom_column', array( $this, 'add_transaction_method_info_to_view_all_table_rows' ) );
+		add_filter( 'it_exchange_transaction_metabox_callback', array( $this, 'register_transaction_details_admin_metabox' ) );
 	}
 
 	function init() {
@@ -180,6 +181,12 @@ class IT_Exchange_Transaction_Post_Type {
 		// Add a filter to replace the title text with the Date
 		add_filter( 'the_title', array( $this, 'replace_transaction_title_with_date' ) );
 
+		// Remove Checkbox - adding it back below
+		if ( isset( $existing['cb'] ) ) {
+			$check = $existing['cb'];
+			unset( $existing['cb'] );
+		}
+
 		// Remove Title - adding it back below
 		if ( isset( $existing['title'] ) )
 			unset( $existing['title'] );
@@ -202,8 +209,9 @@ class IT_Exchange_Transaction_Post_Type {
 
 		// All Core should be removed at this point. Build ours back (including date from core)
 		$exchange_columns = array(
-			'title' => __( 'Date', 'LION' ),
-			'it_exchange_transaction_total_column'   => __( 'Payment Total', 'LION' ),
+			'cb'                                      => $check,
+			'title'                                   => __( 'Date', 'LION' ),
+			'it_exchange_transaction_total_column'    => __( 'Payment Total', 'LION' ),
 			'it_exchange_transaction_status_column'   => __( 'Payment Status', 'LION' ),
 			'it_exchange_transaction_customer_column' => __( 'Customer', 'LION' ),
 			'it_exchange_transaction_method_column'   => __( 'Payment Method', 'LION' ),
@@ -235,10 +243,11 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return array  modified sortable columnns
 	*/
 	function make_transaction_custom_columns_sortable( $sortables ) {
-		$sortables['it_exchange_transaction_method_column'] = 'it_exchange_transaction_method_column';
-		$sortables['it_exchange_transaction_status_column'] = 'it_exchange_transaction_status_column';
+		$sortables['title']                                   = array( 'date', true );
+		$sortables['it_exchange_transaction_method_column']   = 'it_exchange_transaction_method_column';
+		$sortables['it_exchange_transaction_status_column']   = 'it_exchange_transaction_status_column';
 		$sortables['it_exchange_transaction_customer_column'] = 'it_exchange_transaction_customer_column';
-		$sortables['it_exchange_transaction_total_column'] = 'it_exchange_transaction_total_column';
+		$sortables['it_exchange_transaction_total_column']    = 'it_exchange_transaction_total_column';
 		return $sortables;
 	}
 
@@ -255,8 +264,7 @@ class IT_Exchange_Transaction_Post_Type {
 		$transaction = it_exchange_get_transaction( $post );
 		switch( $column ) {
 			case 'it_exchange_transaction_method_column' :
-				if ( $transaction_method = it_exchange_get_addon( $transaction->transaction_method ) )
-					esc_attr_e( $transaction_method['name'] );
+				esc_attr_e( it_exchange_get_transaction_method_name( $transaction ) );
 				break;
 			case 'it_exchange_transaction_status_column' :
 				esc_attr_e( it_exchange_get_transaction_status_label( $post ) );
@@ -287,8 +295,65 @@ class IT_Exchange_Transaction_Post_Type {
 
 		it_exchange_get_transaction( $post );
 	}
+
+	/**
+	 * Registers the transaction details meta box
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param object $post post object
+	 * @return void
+	*/
+	function register_transaction_details_admin_metabox( $post ) {
+		$title     = __( 'Transaction Details', 'LION' );
+		$callback  = array( $this, 'print_transaction_details_metabox' );
+		$post_type = 'it_exchange_tran';
+		add_meta_box( 'it-exchange-transaction-details', $title, $callback, $post_type, 'normal', 'high' );
+	}
+
+	/**
+	 * Prints the transaction details metabox
+	 *
+	 * @since 0.4.0
+	 * @param object $post post object
+	 * @return void
+	*/
+	function print_transaction_details_metabox( $post ) {
+		?>
+		<div class="customer_data">
+			<p>
+				<strong><?php _e( 'Customer', 'LION' ); ?></strong><br />
+				<?php esc_attr_e( it_exchange_get_transaction_customer_display_name( $post ) ); ?><br />
+				<?php esc_attr_e( it_exchange_get_transaction_customer_email( $post ) ); ?><br />
+				<a href="<?php esc_attr_e( it_exchange_get_transaction_customer_admin_profile_url( $post ) ); ?>">
+					<?php _e( 'Full Profile', 'LION' ); ?>
+				</a>
+			</p>
+		</div>
+		<hr />
+		<div>
+			<p>
+				<strong><?php _e( 'Transaction', 'LION' ); ?></strong><br />
+				<?php _e( 'ID: ', 'LION' ); ?> <?php esc_attr_e( $post->ID ); ?><br />
+				<?php _e( 'Date: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_date( $post ) ); ?><br />
+				<?php _e( 'Status: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?><br />
+				<?php _e( 'Method: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?><br />
+				<?php _e( 'Currency: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_currency( $post ) ); ?><br />
+				<?php _e( 'Subtotal: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?><br />
+
+				<?php
+				if ( $coupons = it_exchange_get_transaction_coupons( $post ) ) {
+					echo 'Coupon(s):<ul>';
+					foreach ( $coupons as $coupon => $data ) {
+						echo '<li>' . $coupon['code'] . ': ' . $coupon['amount'] . ' ' . $coupon['type'] . '</li>';
+					}
+					echo '</ul>';
+					echo 'Total Discount from Coupons: ' . it_exchange_get_transaction_coupons_total_discount( $post ) . '<br />';
+				}
+				?>
+				<?php _e( 'Total: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post ) ); ?><br />
+			</p>
+		<?php
+	}
 }
 $IT_Exchange_Transaction_Post_Type = new IT_Exchange_Transaction_Post_Type();
-function testers( $title ) {
-	return 'Glenn';
-}

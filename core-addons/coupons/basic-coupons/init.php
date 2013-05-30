@@ -34,7 +34,7 @@ function it_exchange_basic_coupons_add_meta_data_to_coupon_object( $data, $objec
 	// Return data
 	return $data;
 }
-add_filter( 'it_excahnge_coupon_additional_data', 'it_exchange_basic_coupons_add_meta_data_to_coupon_object', 9, 2 );
+add_filter( 'it_exchange_coupon_additional_data', 'it_exchange_basic_coupons_add_meta_data_to_coupon_object', 9, 2 );
 
 /**
  * Add field names

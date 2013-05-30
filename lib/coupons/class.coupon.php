@@ -75,7 +75,7 @@ class IT_Exchange_Coupon {
 		}
 
 		// Set additional properties
-		$additional_properties = apply_filters( 'it_excahnge_coupon_additional_data', array(), $post );
+		$additional_properties = apply_filters( 'it_exchange_coupon_additional_data', array(), $post );
 		foreach( $additional_properties as $key => $value ) {
 			$this->$key = $value;
 		}

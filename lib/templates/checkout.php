@@ -70,7 +70,7 @@ if ( ! is_user_logged_in() )
 			<?php if ( 1 === count( $transaction_methods ) ) : ?>
 				<?php $method = reset( $transaction_methods ); ?>
 				<p>
-					<?php echo it_exchange_get_transaction_method_name( $method['slug'] ); ?>
+					<?php echo it_exchange_get_transaction_method_name_from_slug( $method['slug'] ); ?>
 				</p>
 				<input type="hidden" name="<?php esc_attr_e( it_exchange_get_field_name( 'transaction_method' ) ); ?>" value="<?php esc_attr_e( $method['slug'] ); ?>" />
 			<?php else : ?>
@@ -80,7 +80,7 @@ if ( ! is_user_logged_in() )
 						<br />
 						<label for="transaction-method-<?php esc_attr_e( $method['slug'] ); ?>">
 							<input type="radio" id="transaction-method-<?php esc_attr_e( $method['slug'] ); ?>" name="<?php esc_attr_e( it_exchange_get_field_name( 'transaction_method' ) ); ?>" value="<?php esc_attr_e( $method['slug'] ); ?>" />
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo esc_html( it_exchange_get_transaction_method_name( $method['slug'] ) ); ?>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo esc_html( it_exchange_get_transaction_method_name_from_slug( $method['slug'] ) ); ?>
 						</label>
 					<?php endforeach; ?>
 				</p>

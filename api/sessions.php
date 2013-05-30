@@ -27,7 +27,7 @@ function it_exchange_get_session() {
  * @since 0.3.3
  * @return array  an array of session_data stored in $_SESSION['it_exchange']
 */
-function it_exchange_get_session_data( $key = false ) {
+function it_exchange_get_session_data( $key=false ) {
 	$session = it_exchange_get_session();
 	return maybe_unserialize( $session->get_session_data( $key ) );
 }
