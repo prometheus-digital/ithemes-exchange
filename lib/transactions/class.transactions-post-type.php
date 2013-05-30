@@ -25,8 +25,8 @@ class IT_Exchange_Transaction_Post_Type {
 		
 		add_action( 'admin_init', array( $this, 'modify_post_type_features' ) );
 		add_action( 'save_post', array( $this, 'save_transaction' ) );
-		add_filter( 'manage_edit-it_exchange_tran_columns', array( $this, 'add_transaction_method_column_to_view_all_table' ) );
-		add_filter( 'manage_edit-it_exchange_tran_sortable_columns', array( $this, 'make_transaction_method_column_sortable' ) );
+		add_filter( 'manage_edit-it_exchange_tran_columns', array( $this, 'modify_all_transactions_table_columns' ) );
+		add_filter( 'manage_edit-it_exchange_tran_sortable_columns', array( $this, 'make_transaction_custom_columns_sortable' ) );
 		add_filter( 'manage_it_exchange_tran_posts_custom_column', array( $this, 'add_transaction_method_info_to_view_all_table_rows' ) );
 	}
 
@@ -175,52 +175,59 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @param array $existing  exisiting columns array
 	 * @return array  modified columns array
 	*/
-	function add_transaction_method_column_to_view_all_table( $existing ) {
-		// Insert after title
-		foreach ( (array) $existing as $id => $label ) {
-			$columns[$id] = $label;
-			if ( 'title' == $id )
-				$columns['it_exchange_transaction_method_column'] = __( 'Payment Method', 'LION' );
-			if ( 'format' == $id )
-				$columns['it_exchange_transaction_status_column'] = __( 'Payment Status', 'LION' );
-		}
-		// Insert at end if title wasn't found
-		if ( empty( $columns['it_exchange_transaction_method_column'] ) )
-			$columns['it_exchange_transaction_method_column'] = __( 'Payment Method', 'LION' );
-		// Insert at end if status wasn't found
-		if ( empty( $columns['it_exchange_transaction_status_column'] ) )
-			$columns['it_exchange_transaction_status_column'] = __( 'Payment Status', 'LION' );
+	function modify_all_transactions_table_columns( $existing ) {
+
+		// Remove Title
+		if ( isset( $existing['title'] ) )
+			unset( $existing['title'] );
 
 		// Remove Format
-		if ( isset( $columns['format'] ) )
-			unset( $columns['format'] );
+		if ( isset( $existing['format'] ) )
+			unset( $existing['format'] );
 
 		// Remove Author 
-		if ( isset( $columns['author'] ) )
-			unset( $columns['author'] );
+		if ( isset( $existing['author'] ) )
+			unset( $existing['author'] );
 
 		// Remove Comments 
-		if ( isset( $columns['comments'] ) )
-			unset( $columns['comments'] );
+		if ( isset( $existing['comments'] ) )
+			unset( $existing['comments'] );
 
+		// Remove Date
+		if ( isset( $existing['date'] ) )
+			unset( $existing['date'] );
+
+		// All Core should be removed at this point. Build ours back (including date from core)
+		$exchange_columns = array(
+			'date' => __( 'Date', 'LION' ),
+			'it_exchange_transaction_total_column'   => __( 'Payment Total', 'LION' ),
+			'it_exchange_transaction_status_column'   => __( 'Payment Status', 'LION' ),
+			'it_exchange_transaction_customer_column' => __( 'Customer', 'LION' ),
+			'it_exchange_transaction_method_column'   => __( 'Payment Method', 'LION' ),
+		);
+
+		// Merge ours back with existing to preserve any 3rd party columns
+		$columns = array_merge( $exchange_columns, $existing );
 		return $columns;
 	}
 
 	/**
-	 * Makes the transaction_method column added above sortable
+	 * Makes some of the custom transaction columns added above sortable
 	 *
 	 * @since 0.3.3
 	 * @param array $sortables  existing sortable columns
 	 * @return array  modified sortable columnns
 	*/
-	function make_transaction_method_column_sortable( $sortables ) {
+	function make_transaction_custom_columns_sortable( $sortables ) {
 		$sortables['it_exchange_transaction_method_column'] = 'it_exchange_transaction_method_column';
 		$sortables['it_exchange_transaction_status_column'] = 'it_exchange_transaction_status_column';
+		$sortables['it_exchange_transaction_customer_column'] = 'it_exchange_transaction_customer_column';
+		$sortables['it_exchange_transaction_total_column'] = 'it_exchange_transaction_total_column';
 		return $sortables;
 	}
 
 	/**
-	 * Adds the transaction_method of a transaction to each row of the column added above
+	 * Adds the values to each row of the custom columns added above
 	 *
 	 * @since 0.3.3
 	 * @param string $column  column title
@@ -229,14 +236,23 @@ class IT_Exchange_Transaction_Post_Type {
 	*/
 	function add_transaction_method_info_to_view_all_table_rows( $column ) {
 		global $post, $wp_post_statuses;
+		$transaction = it_exchange_get_transaction( $post );
 		switch( $column ) {
 			case 'it_exchange_transaction_method_column' :
-				$transaction = it_exchange_get_transaction( $post );
 				if ( $transaction_method = it_exchange_get_addon( $transaction->transaction_method ) )
 					esc_attr_e( $transaction_method['name'] );
 				break;
 			case 'it_exchange_transaction_status_column' :
-					esc_attr_e( it_exchange_get_transaction_status_label( $post ) );
+				esc_attr_e( it_exchange_get_transaction_status_label( $post ) );
+				break;
+			case 'it_exchange_transaction_customer_column' :
+				if ( $customer = it_exchange_get_transaction_customer( $transaction ) )
+					esc_attr_e( empty( $customer->wp_user->display_name ) ? $customer->wp_user->user_login : $customer->wp_user->display_name );
+				else
+					esc_attr_e( __( 'Unknown', 'LION' ) );
+				break;
+			case 'it_exchange_transaction_total_column' :
+				esc_attr_e( it_exchange_get_transaction_total( $transaction ) );		
 				break;
 		}
 	}

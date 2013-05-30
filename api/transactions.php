@@ -345,6 +345,21 @@ function it_exchange_get_transaction_total( $transaction, $format_currency=true 
 }
 
 /**
+ * Returns the customer object associated with a transaction
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @return object
+*/
+function it_exchange_get_transaction_customer( $transaction ) {
+	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
+		return empty( $transaction->customer_id ) ? false : it_exchange_get_customer( $transaction->customer_id );
+	}
+	return false;
+}
+
+/**
  * Returns an array of product objects as they existed when added to the transaction
  *
  * @since 0.4.0
