@@ -232,7 +232,24 @@ class IT_Exchange_Transaction_Post_Type {
 	*/
 	function replace_transaction_title_with_date( $title ) {
 		global $post;
-		return it_exchange_get_transaction_date( $post, 'Y-m-d h:i' );
+
+		if ( '0000-00-00 00:00:00' == $post->post_date ) {
+			$t_time = $h_time = __( 'Unknown', 'LION' );
+			$time_diff = 0; 
+		} else {
+			$t_time = get_the_time( __( 'Y/m/d g:i:s A' ) ); 
+			$m_time = $post->post_date;
+			$time = get_post_time( 'G', true, $post );
+
+			$time_diff = time() - $time;
+
+			if ( $time_diff > 0 && $time_diff < DAY_IN_SECONDS )
+				$h_time = sprintf( __( '%s ago' ), human_time_diff( $time ) ); 
+			else 
+				$h_time = mysql2date( __( 'Y/m/d' ), $m_time );
+		}
+
+		return $h_time;
 	}
 
 	/**
