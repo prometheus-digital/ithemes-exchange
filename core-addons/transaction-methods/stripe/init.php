@@ -312,9 +312,9 @@ function it_exchange_get_transaction_from_stripe_id( $stripe_id ) {
 function it_exchange_update_transaction_status_for_stripe( $stripe_id, $new_status ) {
 	$transactions = it_exchange_get_transaction_from_stripe_id( $stripe_id );
 	foreach( $transactions as $transaction ) { //really only one
-		$current_status = $transaction->get_transaction_status();
+		$current_status = it_exchange_get_transaction_status( $transaction );
 		if ( $new_status !== $current_status )
-			$transaction->update_transaction_status( $new_status );
+			it_exchange_update_transaction_status( $transaction, $new_status );
 	}	
 }
 

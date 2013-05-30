@@ -416,6 +416,21 @@ function it_exchange_get_transaction_coupons_total_discount( $transaction ) {
 }
 
 /**
+ * Grab refunds for a transaction
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @return array
+*/
+function it_exchange_get_transaction_refunds( $transaction ) {
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
+		return false;
+
+	return $transaction->get_transaction_refunds();
+}
+
+/**
  * Returns the customer object associated with a transaction
  *
  * @since 0.4.0

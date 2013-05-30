@@ -370,6 +370,14 @@ class IT_Exchange_Transaction_Post_Type {
 				?>
 				<?php _e( 'Total: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post ) ); ?><br />
 			</p>
+
+			<p>
+				<strong><?php _e( 'Refunds', 'LION' ); ?></strong><br/>
+				<?php 
+				if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) {
+					ITUtility::print_r($refunds);die();	
+				}
+				?>
 		<?php
 	}
 }
