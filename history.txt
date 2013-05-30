@@ -8,7 +8,6 @@
 	Folded WP post supports into core
 	Restricted Content / Membership Add-ons
 	Updated lib/classes to version 2.2.0
-	Testers
 0.3.7 - 2012-03-08 - Glenn Ansley
 	Use ITStorage2 for settings
 	Use ITForm for admin forms
