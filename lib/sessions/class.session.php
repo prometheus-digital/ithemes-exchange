@@ -38,20 +38,34 @@ class IT_Exchange_Session {
 			add_action( 'init', array( $this, 'init' ) );
 	}
 	
+	/**
+	 * Inits the DB Sessions and returns the object
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return object
+	*/
 	function init() {
 		$this->_session = IT_Exchange_DB_Sessions::get_instance();
 		return $this->_session;
 	}
-	
-	function get_session_data( $key = false ) {
+
+	/**
+	 * Returns session data
+	 *
+	 * All data or optionaly, data for a specific key
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param string $key data key
+	 * @return mixed. serialized string
+	*/
+	function get_session_data( $key=false ) {
 		if ( $key ) {
-			
 			$key = sanitize_key( $key );
 			
 			if ( $key && !empty( $this->_session[$key] ) )
 				return $this->_session[$key];
-			
-		
 		} else {
 			return $this->_session;
 		}
@@ -59,10 +73,19 @@ class IT_Exchange_Session {
 		return array();	
 	}
 	
+	/**
+	 * Adds data to the session, associated with a specific key
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param string $key key for the data
+	 * @param mixed  $data data to be stored. will be serialized if not already
+	 * @return void
+	*/
 	function add_session_data( $key, $data ) {
 		$key = sanitize_key( $key );
 		
-		if ( !empty( $this->_session[$key] ) ) {
+		if ( ! empty( $this->_session[$key] ) ) {
 			$current_data = maybe_unserialize( $this->_session[$key] );
 			$this->_session[$key] = maybe_serialize( array_merge( $current_data, (array)$data ) );
 		} else {
@@ -71,12 +94,28 @@ class IT_Exchange_Session {
 		it_exchange_db_session_commit();
 	}
 	
+	/**
+	 * Updates session data by key
+	 *
+	 * @since 0.4.0
+	 * @param string $key key for the data
+	 * @param mixed  $data data to be stored. will be serialized if not already
+	 * @return void
+	*/
 	function update_session_data( $key, $data ) {
 		$key = sanitize_key( $key );
 		$this->_session[$key] = maybe_serialize( (array)$data );
 		it_exchange_db_session_commit();
 	}
 	
+	/**
+	 * Deletes session data. All or by key.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param string $key
+	 * @return void
+	*/
 	function clear_session_data( $key=false ) {
 		if ( $key ) {
 			$key = sanitize_key( $key );
@@ -89,7 +128,12 @@ class IT_Exchange_Session {
 		$this->_session[$key] = $this->_session[$key];
 	}
 	
-	function clear_session( $hard = false ) {		
+	/**
+	 * Clears all session data
+	 *
+	 * @since 0.4.0
+	*/
+	function clear_session( $hard=false ) {		
 		if ( $hard )
 			$this->init();
 	}
