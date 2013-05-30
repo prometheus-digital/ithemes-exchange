@@ -534,15 +534,18 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				case 'featured': //really just the first image
 					if ( !empty( $product_images ) ) {
 						$output = '<div id="it-exchange-product-images-gallery">';
-					
+						
+						$img_url = wp_get_attachment_url( $product_images[0] );
+						$img_thumb_url = wp_get_attachment_thumb_url( $product_images[0] );
+						
 						if ( 'thumbnail' === $options['size'] )
-							$img_url = wp_get_attachment_thumb_url( $product_images[0] );
+							$img_src = $img_thumb_url;
 						else
-							$img_url = wp_get_attachment_url( $product_images[0] );
+							$img_src = $img_url;
 			
 						$output .= '<div id="it-exchange-feature-image-' . $product_images[0] . '" class="it-exchange-featured-image">';
 						$output .= '<div class="featured-image-wrapper">';
-						$output .= '   <img alt="" src="' . $img_url . '">';
+						$output .= '   <img alt="" src="' . $img_src . '" data-src-large="' . $img_url . '" data-src-thumb="' . $img_thumb_url . '">';
 						$output .= '</div>';
 						$output .= '</div>';
 						
@@ -556,11 +559,12 @@ class IT_Theme_API_Product implements IT_Theme_API {
 								
 						$output .=  '<ul id="it-exchange-gallery-images">';
 						foreach( $product_images as $image_id ) {
-						
-							$img_url = wp_get_attachment_thumb_url( $image_id );
+							
+							$img_url = wp_get_attachment_url( $product_images[0] );
+							$img_thumb_url = wp_get_attachment_thumb_url( $product_images[0] );
 							
 							$output .=  '  <li class="it-exchange-product-image-thumb-' . $image_id . '">';
-							$output .=  '      <img alt="" src=" ' . $img_url . '">';
+							$output .=  '      <img alt="" src=" ' . $img_thumb_url . '" data-src-large="' . $img_url . '" data-src-thumb="' . $img_thumb_url . '">';
 							$output .=  '  </li>';
 							
 						}
@@ -574,26 +578,28 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				default:
 					if ( !empty( $product_images ) ) {
 						$output = '<div id="it-exchange-product-images-gallery">';
-					
+						
 						$img_url = wp_get_attachment_url( $product_images[0] );
+						$img_thumb_url = wp_get_attachment_thumb_url( $product_images[0] );
 						
 						$output .= '<div id="it-exchange-feature-image-' . $product_images[0] . '" class="it-exchange-featured-image">';
 						$output .= '<div class="featured-image-wrapper">';
-						$output .= '   <img alt="" src="' . $img_url . '">';
+						$output .= '   <img alt="" src="' . $img_url . '" data-src-large="' . $img_url . '" data-src-thumb="' . $img_thumb_url . '">';
 						$output .= '</div>';
 						$output .= '</div>';
 						
 						unset( $product_images[0] ); //we don't want this listed below
 						
 						if ( !empty( $product_images ) ){
-								
+							
 							$output .=  '<ul id="it-exchange-gallery-images">';
 							foreach( $product_images as $image_id ) {
-							
-								$img_url = wp_get_attachment_thumb_url( $image_id );
+								
+								$img_url = wp_get_attachment_url( $image_id );
+								$img_thumb_url = wp_get_attachment_thumb_url( $image_id );
 								
 								$output .=  '  <li class="it-exchange-product-image-thumb-' . $image_id . '">';
-								$output .=  '      <img alt="" src=" ' . $img_url . '">';
+								$output .=  '      <img alt="" src=" ' . $img_thumb_url . '" data-src-large="' . $img_url . '" data-src-thumb="' . $img_thumb_url . '">';
 								$output .=  '  </li>';
 								
 							}
