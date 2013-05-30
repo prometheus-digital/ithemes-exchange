@@ -34,7 +34,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		'availability'        => 'availability',
 		'isavailable'         => 'is_available',
 		'images'              => 'product_images',
-		'productimages'       => 'product_images',
+		'gallery'             => 'product_gallery',
 		'featuredimage'       => 'featured_image',
 		'downloads'           => 'downloads',
 		'purchaseoptions'     => 'purchase_options',
@@ -480,25 +480,56 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 			$defaults = array(
 				'size'   => 'thumbnail', //thumbnail/post-thumbnail, large
-				'format' => 'gallery', //gallery, images
+			);
+			$options = ITUtility::merge_defaults( $options, $defaults );
+			$output = array();
+	
+			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
+
+			foreach( $product_images as $image ) {
+				if ( 'thumbnail' === $options['size'] )
+					$img_url = wp_get_attachment_thumb_url( $product_images[0] );
+				else
+					$img_url = wp_get_attachment_url( $product_images[0] );
+					
+				$output[] = $img_url;
+			}
+			
+			return $output;
+		}
+		return false;
+	}
+
+	/**
+	 * The product's product image gallery
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return string
+	*/
+	function product_gallery( $options=array() ) {
+
+		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $this->product->ID, 'product-images' );
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'product-images' );
+
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'product-images' )
+				&& it_exchange_product_has_feature( $this->product->ID, 'product-images' ) ) {
+
+			$defaults = array(
+				'size'   => 'thumbnail', //thumbnail/post-thumbnail, large
+				'output' => 'gallery', //gallery, featured, or thumbnails
 			);
 			$options = ITUtility::merge_defaults( $options, $defaults );
 			$output = NULL;
 	
 			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
 
-			switch( $options['format'] ) {
-				
-				case 'images': //array of image URLs
-					foreach( $product_images as $image ) {
-						if ( 'thumbnail' === $options['size'] )
-							$img_url = wp_get_attachment_thumb_url( $product_images[0] );
-						else
-							$img_url = wp_get_attachment_url( $product_images[0] );
-							
-						$output[] = $img_url;
-					}
-					break;
+			switch( $options['output'] ) {
 				
 				case 'featured': //really just the first image
 					if ( !empty( $product_images ) ) {
@@ -521,10 +552,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 					}
 					break;
 				
-				case 'thumbnails': //really just thumbnails
+				case 'thumbnails': //just thumbnails
 					if ( !empty( $product_images ) ) {
 						$output = '<div id="it-exchange-product-images-gallery">';
-									
+								
 						$output .=  '<ul id="it-exchange-gallery-images">';
 						foreach( $product_images as $image_id ) {
 						
