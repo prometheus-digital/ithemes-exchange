@@ -11,7 +11,11 @@
 			<?php it_exchange_get_template_part( 'messages' ); ?>
 
 			<?php if ( it_exchange( 'product', 'has-featured-image' ) ) : ?>
-				<p><strong>Featured Image</strong><br /><?php it_exchange( 'product.featured-image' ); ?></p>
+				<p><strong>Featured Image</strong><br /><?php it_exchange( 'product', 'featured-image' ); ?></p>
+			<?php endif; ?>
+            
+			<?php if ( it_exchange( 'product', 'has-product-images' ) ) : ?>
+				<p><strong>Product Images</strong><br /><?php it_exchange( 'product', 'product-images' ); ?></p>
 			<?php endif; ?>
 
 			<?php if ( it_exchange( 'product', 'has-title' ) ) : ?>

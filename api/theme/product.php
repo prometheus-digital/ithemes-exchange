@@ -14,7 +14,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	*/
 	private $_context = 'product';
 
-	/**
+	/**u
 	 * Maps api tags to methods
 	 * @var array $_tag_map
 	 * @since 0.4.0
@@ -33,8 +33,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		'inventory'           => 'inventory',
 		'availability'        => 'availability',
 		'isavailable'         => 'is_available',
-		'image'               => 'featured_image',
-		'productimage'        => 'featured_image',
+		'images'              => 'product_images',
+		'productimages'       => 'product_images',
 		'featuredimage'       => 'featured_image',
 		'downloads'           => 'downloads',
 		'purchaseoptions'     => 'purchase_options',
@@ -454,6 +454,132 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$options = ITUtility::merge_defaults( $options, $defaults );
 			$img = it_exchange_get_product_feature( $this->product->ID, 'featured-image', $options );
 			return $img;
+		}
+		return false;
+	}
+
+	/**
+	 * The product's product images
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return string
+	*/
+	function product_images( $options=array() ) {
+
+		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $this->product->ID, 'product-images' );
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $this->product->ID, 'product-images' );
+
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'product-images' )
+				&& it_exchange_product_has_feature( $this->product->ID, 'product-images' ) ) {
+
+			$defaults = array(
+				'size'   => 'thumbnail', //thumbnail/post-thumbnail, large
+				'format' => 'gallery', //gallery, images
+			);
+			$options = ITUtility::merge_defaults( $options, $defaults );
+			$output = NULL;
+	
+			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
+
+			switch( $options['format'] ) {
+				
+				case 'images': //array of image URLs
+					foreach( $product_images as $image ) {
+						if ( 'thumbnail' === $options['size'] )
+							$img_url = wp_get_attachment_thumb_url( $product_images[0] );
+						else
+							$img_url = wp_get_attachment_url( $product_images[0] );
+							
+						$output[] = $img_url;
+					}
+					break;
+				
+				case 'main': //really just the first image
+					if ( !empty( $product_images ) ) {
+						$output = '<div id="it-exchange-product-images-gallery">';
+					
+						if ( 'thumbnail' === $options['size'] )
+							$img_url = wp_get_attachment_thumb_url( $product_images[0] );
+						else
+							$img_url = wp_get_attachment_url( $product_images[0] );
+			
+						$output .= '<div id="it-exchange-product-image">';
+						$output .= '<ul class="product-image">';
+						$output .= '  <li  class="it-exchange-product-image-' . $product_images[0] . '">';
+						$output .= '      <img alt="" src=" ' . $img_url . '">';
+						$output .= '  </li>';
+						$output .= '</ul>';
+						$output .= '</div>';
+						
+						$output .= '</div>';
+					}
+					break;
+				
+				case 'thumbnails': //really just thumbnails
+					if ( !empty( $product_images ) ) {
+						$output = '<div id="it-exchange-product-images-gallery">';
+									
+						$output .=  '<ul id="it-exchange-gallery-images">';
+						foreach( $product_images as $image_id ) {
+						
+							$img_url = wp_get_attachment_thumb_url( $image_id );
+							
+							$output .=  '  <li class="it-exchange-product-image-thumb-' . $image_id . '">';
+							$output .=  '      <img alt="" src=" ' . $img_url . '">';
+							$output .=  '  </li>';
+							
+						}
+						$output .=  '</ul>';
+
+						$output .= '</div>';
+					}
+					break;
+			
+				case 'gallery':
+				default:
+					if ( !empty( $product_images ) ) {
+						$output = '<div id="it-exchange-product-images-gallery">';
+					
+						$img_url = wp_get_attachment_url( $product_images[0] );
+			
+						$output .= '<div id="it-exchange-product-image">';
+						$output .= '<ul class="product-image">';
+						$output .= '  <li  class="it-exchange-product-image-' . $product_images[0] . '">';
+						$output .= '      <img alt="" src=" ' . $img_url . '">';
+						$output .= '  </li>';
+						$output .= '</ul>';
+						$output .= '</div>';
+						
+						unset( $product_images[0] ); //we don't want this listed below
+						
+						if ( !empty( $product_images ) ){
+								
+							$output .=  '<ul id="it-exchange-gallery-images">';
+							foreach( $product_images as $image_id ) {
+							
+								$img_url = wp_get_attachment_thumb_url( $image_id );
+								
+								$output .=  '  <li class="it-exchange-product-image-thumb-' . $image_id . '">';
+								$output .=  '      <img alt="" src=" ' . $img_url . '">';
+								$output .=  '  </li>';
+								
+							}
+							$output .=  '</ul>';
+						
+						}
+						
+					}
+					break;
+				
+			}			
+			
+			return $output;
 		}
 		return false;
 	}
