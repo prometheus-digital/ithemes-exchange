@@ -409,8 +409,10 @@ function it_exchange_get_transaction_coupons( $transaction ) {
  * @return string date
 */
 function it_exchange_get_transaction_coupons_total_discount( $transaction ) {
-	if ( ! $coupons = it_exchange_get_transaction_coupons( $transaction ) )
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
 		return false;
+
+	return $transaction->get_coupons_total_discount();
 }
 
 /**

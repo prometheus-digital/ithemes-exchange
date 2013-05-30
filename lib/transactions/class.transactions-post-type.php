@@ -361,8 +361,8 @@ class IT_Exchange_Transaction_Post_Type {
 				<?php
 				if ( $coupons = it_exchange_get_transaction_coupons( $post ) ) {
 					echo 'Coupon(s):<ul>';
-					foreach ( $coupons as $coupon => $data ) {
-						echo '<li>' . $coupon['code'] . ': ' . $coupon['amount'] . ' ' . $coupon['type'] . '</li>';
+					foreach ( $coupons as $type => $coupon ) {
+						echo '<li>' . it_exchange_get_transaction_coupon_summary( $type, $coupon ) . '</li>';
 					}
 					echo '</ul>';
 					echo 'Total Discount from Coupons: ' . it_exchange_get_transaction_coupons_total_discount( $post ) . '<br />';

@@ -10,6 +10,18 @@ if ( is_admin() ) {
 }
 
 /**
+ * Register the cart coupon type
+ *
+ * @since 0.4.0
+ *
+ * @return void
+*/
+function it_exchange_basic_coupons_register_coupon_type() {
+	it_exchange_register_coupon_type( 'cart' );
+}
+add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_basic_coupons_register_coupon_type' );
+
+/**
  * Adds meta data for Basic Coupons to the coupon object
  *
  * @since 0.4.0
@@ -312,3 +324,42 @@ function it_exchange_basic_coupons_remove_coupon_from_cart( $result, $options=ar
 	return true;
 }
 add_filter( 'it_exchange_remove_coupon_for_cart', 'it_exchange_basic_coupons_remove_coupon_from_cart', 10, 2 );
+
+/**
+ * Returns the summary needed for a transaction
+ *
+ * @since 0.4.0
+ *
+ * @param string $summary passed in by WP filter. Ignored here.
+ * @param mixed  $transaction_coupon the coupon data stored in the transaction
+ * @return string summary
+*/
+function it_exchange_basic_coupons_transaction_summary( $summary, $transaction_coupon ) {
+	$transaction_coupon = reset( $transaction_coupon );
+	$id     = empty( $transaction_coupon['id'] )            ? false : $transaction_coupon['id'];
+	$title  = empty( $transaction_coupon['title'] )         ? false : $transaction_coupon['title'];
+	$code   = empty( $transaction_coupon['code'] )          ? false : $transaction_coupon['code'];
+	$number = empty( $transaction_coupon['amount_number'] ) ? false : $transaction_coupon['amount_number'];
+	$type   = empty( $transaction_coupon['amount_type'] )   ? false : $transaction_coupon['amount_type'];
+	$start  = empty( $transaction_coupon['start_date'] )    ? false : $transaction_coupon['start_date'];
+	$end    = empty( $transaction_coupon['end_date'] )      ? false : $transaction_coupon['end_date'];
+
+	$url = trailingslashit( get_admin_url() ) . 'admin.php';
+	$url = add_query_arg( array( 'page' => 'it-exchange-edit-basic-coupon', 'post' => $id ), $url );
+
+	$link = '<a href="' . $url . '">' . __( 'View Coupon', 'LION' ) . '</a>';
+
+	$string = '';
+	if ( $title )
+		$string .= $title . ': ';
+	if ( $code )
+		$string .= $code . ' | ';
+
+	if ( $number && $type )
+		$string .= implode( '', array( $number, $type ) ) . ' | ';
+
+	$string .= ' ' . $link;
+
+	return $string;
+}
+add_filter( 'it_exchange_get_transaction_cart_coupon_summary', 'it_exchange_basic_coupons_transaction_summary', 10, 2 );

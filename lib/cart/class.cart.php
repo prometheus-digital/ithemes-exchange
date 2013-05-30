@@ -335,13 +335,14 @@ class IT_Exchange_Shopping_Cart {
 
 		// Package it up and send it to the transaction method add-on
 		$transaction_object = new stdClass();
-		$transaction_object->products    = $products;
-		$transaction_object->cart_data   = it_exchange_get_cart_data();
-		$transaction_object->total       = $cart_total;
-		$transaction_object->currency    = $currency;
-		$transaction_object->description = it_exchange_get_cart_description();
-		
-		$transaction_object = apply_filters( 'it_exchange_handle_purchase_cart_request_transaction_object', $transaction_object );
+		$transaction_object->total                  = $cart_total;
+		$transaction_object->currency               = $currency;
+		$transaction_object->description            = it_exchange_get_cart_description();
+		$transaction_object->products               = $products;
+		$transaction_object->coupons                = it_exchange_get_applied_coupons();
+		$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount();
+
+		$transaction_object = apply_filters( 'it_exchange_transaction_object', $transaction_object, $requested_transaction_method );
 
 		// Do the transaction
 		return it_exchange_do_transaction( $requested_transaction_method, $transaction_object );

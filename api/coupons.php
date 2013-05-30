@@ -88,6 +88,35 @@ function it_exchange_add_coupon( $args=array(), $cart_object=false ) {
 }
 
 /**
+ * Register a coupon type if it doesn't already exist
+ *
+ * Add-ons should call this.
+ *
+ * @since 0.4.0
+ *
+ * @param string $type type of coupon
+ * @return void
+*/
+function it_exchange_register_coupon_type( $type ) {
+	if ( empty( $GLOBALS['it_exchange']['coupon_types'] ) )
+		$GLOBALS['it_exchange']['coupon_types'] = array();
+
+	if ( ! in_array( $type, $GLOBALS['it_exchange']['coupon_types'] ) )
+		$GLOBALS['it_exchange']['coupon_types'][] = $type;
+}
+
+/**
+ * Returns a list of all registered coupon types
+ *
+ * @since 0.4.0
+ *
+ * @return array
+*/
+function it_exchange_get_coupon_types() {
+	return empty( $GLOBALS['it_exchange']['coupon_types'] ) ? array() : (array) $GLOBALS['it_exchange']['coupon_types'];
+}
+
+/**
  * Dow we support a specific type of coupon
  *
  * Ask the addon
@@ -111,7 +140,19 @@ function it_exchange_supports_coupon_type( $type ) {
  * @param string $type the type of coupon to check for
  * @return boolean
 */
-function it_exchange_get_applied_coupons( $type ) {
+function it_exchange_get_applied_coupons( $type=false ) {
+
+	// Get all if type not set
+	if ( ! $type ) {
+		$applied = array();
+		foreach( it_exchange_get_coupon_types() as $type ) {
+			if ( $coupons = it_exchange_get_applied_coupons( $type ) )
+				$applied = array_merge( $applied, array( $type => $coupons ) );
+		}
+		return empty( $applied ) ? false : $applied;
+	}
+
+	// If type was set, return just the applied coupons for the type
 	return apply_filters( 'it_exchange_get_applied_' . $type . '_coupons', false );
 }
 
@@ -198,10 +239,39 @@ function it_exchange_remove_coupon( $type, $code, $options=array() ) {
  * @param string $type the type of coupon to check for
  * @param array $options
 */
-function it_exchange_get_total_coupons_discount( $type, $options=array() ) {
+function it_exchange_get_total_coupons_discount( $type=false, $options=array() ) {
 	$defaults = array(
 		'format_price' => true,
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
+
+	// Get all if type not set
+	if ( ! $type ) {
+		$total = 0;
+		foreach( it_exchange_get_coupon_types() as $type ) {
+			if ( $discount = it_exchange_get_total_coupons_discount( $type, array( 'format_price' => false ) ) )
+				$total += $discount;
+		}
+
+		if ( $options['format_price'] )
+			$total = it_exchange_format_price( $total );
+		return empty( $total ) ? false : $total;
+	}
+
 	return apply_filters( 'it_exchange_get_total_discount_for_' . $type, false, $options );
+}
+
+/**
+ * Returns a summary of the coupon details.
+ *
+ * We rely on the add-on to give us this data since different add-ons may store the data different.
+ *
+ * @since 0.4.0
+ *
+ * @param string $slug the slug of the add-on responsible for creating the coupon
+ * @param mixed $transaction_coupon
+ * @return string
+*/
+function it_exchange_get_transaction_coupon_summary( $type, $transaction_coupon ) {
+	return apply_filters( 'it_exchange_get_transaction_' . $type . '_coupon_summary', __( 'Coupon Data not found:', 'LION' ) . ' ' . $type, $transaction_coupon );
 }

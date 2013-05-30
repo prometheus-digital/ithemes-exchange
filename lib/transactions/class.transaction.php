@@ -208,9 +208,20 @@ class IT_Exchange_Transaction {
 	 * @return string
 	*/
 	function get_coupons() {
-		ITUtility::print_r($this);die( __FILE__ . ' || ' . __LINE__ );
-		return empty( $this->cart_details->total ) ? false : $this->cart_details->total;
+		return empty( $this->cart_details->coupons ) ? false : $this->cart_details->coupons;
 	}
+
+	/**
+	 * Returns the total discount applied by the coupons
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return string
+	*/
+	function get_coupons_total_discount() {
+		return empty( $this->cart_details->coupons_total_discount ) ? false : $this->cart_details->coupons_total_discount;
+	}
+
 	/**
 	 * Returns the products array
 	 *
