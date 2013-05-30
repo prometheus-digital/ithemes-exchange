@@ -14,8 +14,8 @@
 				<p><strong>Featured Image</strong><br /><?php it_exchange( 'product', 'featured-image' ); ?></p>
 			<?php endif; ?>
             
-			<?php if ( it_exchange( 'product', 'has-product-images' ) ) : ?>
-				<p><strong>Product Images</strong><br /><?php it_exchange( 'product', 'product-images' ); ?></p>
+			<?php if ( it_exchange( 'product', 'has-images' ) ) : ?>
+				<p><strong>Product Images</strong><br /><?php it_exchange( 'product', 'images' ); ?></p>
 			<?php endif; ?>
 
 			<?php if ( it_exchange( 'product', 'has-title' ) ) : ?>
