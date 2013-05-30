@@ -372,10 +372,12 @@ class IT_Exchange_Transaction_Post_Type {
 			</p>
 
 			<p>
-				<strong><?php _e( 'Refunds', 'LION' ); ?></strong><br/>
 				<?php 
 				if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) {
-					ITUtility::print_r($refunds);die();	
+					?><strong><?php _e( 'Refunds', 'LION' ); ?></strong><br/><?php
+					foreach ( $refunds as $refund ) {
+						echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ) . '<br />';
+					}
 				}
 				?>
 		<?php

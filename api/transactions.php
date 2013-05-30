@@ -416,6 +416,21 @@ function it_exchange_get_transaction_coupons_total_discount( $transaction ) {
 }
 
 /**
+ * Adds a refund to a transaction
+ *
+ * @since 0.4.0
+ *
+ * @param string $method slug for transaction_method
+ * @param mixed $options
+*/
+function it_exchange_add_refund_to_transaction( $transaction, $amount, $date=false, $options=array() ) {
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
+		return false;
+
+	$transaction->add_refund( $amount, $date, $options );
+}
+
+/**
  * Grab refunds for a transaction
  *
  * @since 0.4.0

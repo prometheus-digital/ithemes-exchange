@@ -63,7 +63,7 @@ function it_exchange_register_core_addons() {
 			'file'        	=> dirname( __FILE__ ) . '/transaction-methods/stripe/init.php',
 			'category' 		=> 'transaction-methods',
 			'supports' 		=> apply_filters( 'it_exchange_register_stripe_default_features', array() ),
-			'settings-callback' => 'it_exchange_stripe_settings_callback',
+			'settings-callback' => 'it_exchange_stripe_addon_settings_callback',
 		),
 		// Digital Download Product Types
 		'digital-downloads-product-type' => array(

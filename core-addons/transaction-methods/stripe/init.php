@@ -25,11 +25,20 @@ function it_exchange_stripe_wizard_settings( $form ) {
 	</div>
 	<?php
 }
-add_action( 'it_exchange_print_wizard_settings', 'it_exchange_stripe_wizard_settings' );
+add_action( 'it_exchange_print_wizard_settings', 'it_exchange_stripe_addon_print_wizard_settings' );
 
+/**
+ * This proccesses a stripe transaction.
+ *
+ * @since 0.4.0
+ *
+ * @param string $status passed by WP filter.
+ * @param object $transaction_object The transaction object
+*/
 function it_exchange_process_stripe_transaction( $status, $transaction_object ) {
-
-	if ( $status ) //if this has been modified as true already, return.
+ 
+	// If this has been modified as true already, return.
+	if ( $status )
 		return $status;
 	
 	// Verify nonce
@@ -38,94 +47,107 @@ function it_exchange_process_stripe_transaction( $status, $transaction_object ) 
 		return false;
 	}
 	
-	if ( isset( $_POST['stripeToken'] ) && ! empty( $_POST['stripeToken'] ) ) {
+	// Make sure we have the correct $_POST argument
+	if ( ! empty( $_POST['stripeToken'] ) ) {
 			
 		try {
 				
 			$general_settings = it_exchange_get_option( 'settings_general' );
-			$settings = it_exchange_get_option( 'addon_stripe' );
-		
+			$settings         = it_exchange_get_option( 'addon_stripe' );
+
 			$secret_key = ( $settings['stripe-test-mode'] ) ? $settings['stripe-test-secret-key'] : $settings['stripe-live-secret-key'];
 			Stripe::setApiKey( $secret_key );
 	
+			// Set stripe token
 			$token = $_POST['stripeToken'];
 			
+			// Set stripe customer from WP customer ID
 			$it_exchange_customer = it_exchange_get_current_customer();
-			
-			if ( $stripe_id = it_exchange_get_stripe_customer_id( $it_exchange_customer->id ) )
+			if ( $stripe_id = it_exchange_stripe_addon_get_stripe_customer_id( $it_exchange_customer->id ) )
 				$stripe_customer = Stripe_Customer::retrieve( $stripe_id );
 				
 			// If the user has been deleted from Stripe, we need to create a new Stripe ID.
 			if ( ! empty( $stripe_customer ) ) {
-				
 				if ( true === $stripe_customer->deleted )
 					$stripe_customer = array();
-					
 			}
-						
+
 			// If this user isn't an existing Stripe User, create a new Stripe ID for them...
 			if ( ! empty( $stripe_customer ) ) {
-				
 				$stripe_customer->card = $token;
 				$stripe_customer->email = $it_exchange_customer->data->user_email;
 				$stripe_customer->save();
-				
 			} else {
-		
 				$customer_array = array(
-						'email' => $it_exchange_customer->data->user_email,
-						'card'  => $token,
+					'email' => $it_exchange_customer->data->user_email,
+					'card'  => $token,
 				);
 				
 				// Creates a new Stripe ID for this customer
 				$stripe_customer = Stripe_Customer::create( $customer_array );
-				
-				it_exchange_set_stripe_customer_id( $it_exchange_customer->id, $stripe_customer->id );
-				
+
+				it_exchange_stripe_addon_set_stripe_customer_id( $it_exchange_customer->id, $stripe_customer->id );
 			}
 					
 			// Now that we have a valid Customer ID, charge them!
 			$charge = Stripe_Charge::create(array(
-				'customer' 		=> $stripe_customer->id,
-				'amount'   		=> number_format( $transaction_object->total, 2, '', '' ),
-				'currency' 		=> $general_settings['default-currency'],
-				'description'	=> $transaction_object->description,
+				'customer'    => $stripe_customer->id,
+				'amount'      => number_format( $transaction_object->total, 2, '', '' ),
+				'currency'    => $general_settings['default-currency'],
+				'description' => $transaction_object->description,
 			));
-			
 		}
 		catch ( Exception $e ) {
-			
 			it_exchange_add_message( 'error', $e->getMessage() );
 			return false;
-				
 		}
-		
 		return it_exchange_add_transaction( 'stripe', $charge->id, 'succeeded', $it_exchange_customer->id, $transaction_object );
-		
 	} else {
-
 		it_exchange_add_message( 'error', __( 'Unknown error. Please try again later.', 'LION' ) );
-	
 	}
 	return false;
 	
 }
 add_action( 'it_exchange_do_transaction_stripe', 'it_exchange_process_stripe_transaction', 10, 2 );
 
-function it_exchange_get_stripe_customer_id( $customer_id ) {
+/**
+ * Grab the stripe customer ID for a WP user
+ *
+ * @since 0.4.0
+ *
+ * @param integer $customer_id the WP customer ID
+ * @return integer
+*/
+function it_exchange_stripe_addon_get_stripe_customer_id( $customer_id ) {
 	return get_user_meta( $customer_id, '_it_exchange_stripe_id', true );
 }
 
-function it_exchange_set_stripe_customer_id( $customer_id, $stripe_id ) {
+/**
+ * Add the stripe customer ID as user meta on a WP user
+ *
+ * @since 0.4.0
+ *
+ * @param integer $customer_id the WP user ID
+ * @param integer $stripe_id the stripe customer ID
+ * @return boolean
+*/
+function it_exchange_stripe_addon_set_stripe_customer_id( $customer_id, $stripe_id ) {
 	return update_user_meta( $customer_id, '_it_exchange_stripe_id', $stripe_id );
 }
 
-function it_exchange_stripe_settings_callback() {
+/**
+ * This is the function registered in the options array when it_exchange_register_addon was called for stripe
+ *
+ * It tells Exchange where to find the settings page
+ *
+ * @return void
+*/
+function it_exchange_stripe_addon_settings_callback() {
 	$IT_Exchange_Stripe_Add_On = new IT_Exchange_Stripe_Add_On();
 	$IT_Exchange_Stripe_Add_On->print_settings_page();
 }
 
-function stripe_print_wizard_settings( $form ) {
+function it_exchange_stripe_addon_print_wizard_settings( $form ) {
 	$IT_Exchange_Stripe_Add_On = new IT_Exchange_Stripe_Add_On();
 	$settings = it_exchange_get_option( 'addon_stripe', true );
 	?>
@@ -135,11 +157,18 @@ function stripe_print_wizard_settings( $form ) {
 	<?php
 }
 
-function stripe_save_wizard_settings() {
+/**
+ * Saves stripe settings when the Wizard is saved
+ *
+ * @since 0.4.0
+ *
+ * @return void
+*/
+function it_exchange_stripe_addon_save_wizard_settings() {
 	$IT_Exchange_Stripe_Add_On = new IT_Exchange_Stripe_Add_On();
 	$IT_Exchange_Stripe_Add_On->stripe_save_wizard_settings();
 }
-add_action( 'it_exchange_save_wizard_settings', 'stripe_save_wizard_settings' );
+add_action( 'it_exchange_save_wizard_settings', 'it_exchange_stripe_addon_save_wizard_settings' );
 
 /**
  * Default settings for stripe
@@ -215,21 +244,23 @@ add_filter( 'it_exchange_get_stripe_make_payment_button', 'it_exchange_stripe_ad
  * @return array filtered list of currencies only supported by Stripe
  */
 function it_exchange_get_stripe_currency_options( $default_currencies ) {
-	
 	$stripe_currencies = IT_Exchange_Stripe_Add_On::get_supported_currency_options();
-	
 	return array_intersect_key( $default_currencies, $stripe_currencies );
-	
 }
 add_filter( 'it_exchange_get_currency_options', 'it_exchange_get_stripe_currency_options' );
 
 
+/**
+ * Adds the stripe webhook key to the global array of keys to listen for
+ *
+ * @since 0.4.0
+ *
+ * @param array $webhooks existing
+ * @return array
+*/
 function it_exchange_stripe_webhook_key( $webhooks ) {
-
 	$webhooks[] = apply_filters( 'it_exchange_stripe_webhook', 'it_exchange_stripe' );
-	
 	return $webhooks;
-	
 }
 add_filter( 'it_exchange_webhook_keys', 'it_exchange_stripe_webhook_key' );
 
@@ -276,7 +307,7 @@ function it_exchange_stripe_process_webhook( $request ) {
 					else
 						it_exchange_update_transaction_status_for_stripe( $stripe_object->id, 'partial-refund' );
 					
-					it_ecxhange_add_refund_to_transaction_for_stripe( $stripe_object->id, $stripe_object->amount_refunded );
+					it_exchange_stripe_addon_add_refund_to_transaction( $stripe_object->id, $stripe_object->amount_refunded );
 						
 					break;
 				case 'charge.dispute.created' :
@@ -300,6 +331,14 @@ function it_exchange_stripe_process_webhook( $request ) {
 }
 add_action( 'it_exchange_webhook_it_exchange_stripe', 'it_exchange_stripe_process_webhook' );
 
+/**
+ * Grab a transaction from the stripe transaction ID
+ *
+ * @since 0.4.0
+ *
+ * @param integer $stripe_id id of stripe transaction
+ * @return transaction object
+*/
 function it_exchange_get_transaction_from_stripe_id( $stripe_id ) {
 	$args = array(
 		'meta_key'    => '_it_exchange_transaction_method_id',
@@ -309,6 +348,15 @@ function it_exchange_get_transaction_from_stripe_id( $stripe_id ) {
 	return it_exchange_get_transactions( $args );
 }
 
+/**
+ * Updates a stripe transaction status based on stripe ID
+ *
+ * @since 0.4.0
+ *
+ * @param integer $stripe_id id of stripe transaction
+ * @param string $new_status new status
+ * @return void
+*/
 function it_exchange_update_transaction_status_for_stripe( $stripe_id, $new_status ) {
 	$transactions = it_exchange_get_transaction_from_stripe_id( $stripe_id );
 	foreach( $transactions as $transaction ) { //really only one
@@ -318,12 +366,21 @@ function it_exchange_update_transaction_status_for_stripe( $stripe_id, $new_stat
 	}	
 }
 
-function it_ecxhange_add_refund_to_transaction_for_stripe( $stripe_id, $refund ) {
+/**
+ * Adds a refund to post_meta for a stripe transaction
+ *
+ * @todo SOmething isn't working here
+ * @since 0.4.0
+*/
+function it_exchange_stripe_addon_add_refund_to_transaction( $stripe_id, $refund ) { //$stripe_id, $refund ) {
+
+	// Grab transaction
 	$transactions = it_exchange_get_transaction_from_stripe_id( $stripe_id );
 	foreach( $transactions as $transaction ) { //really only one
-		$refunds = $transaction->get_transaction_refunds();
+
+		$refunds = it_exchange_get_transaction_refunds( $transaction );
 		
-		$refunded_amount = 0;
+		$refunded_amount = number_format( 0, '2', '', '' );;
 		foreach( $refunds as $refund_meta ) {
 			$refunded_amount += number_format( $refund_meta['amount'], '2', '', '' );
 		}
@@ -331,16 +388,23 @@ function it_ecxhange_add_refund_to_transaction_for_stripe( $stripe_id, $refund )
 		// In Stripe the Refund is the total amount that has been refunded, not just this transaction
 		$this_refund = $refund - $refunded_amount;
 		
-		$transaction->add_transaction_refund( number_format( $this_refund, '2', '.', '' ) );
-	}	
+		it_exchange_add_refund_to_transaction( $transaction, number_format( $this_refund, '2', '', '' ) );
+	}
 	
 }
 
+/**
+ * Removes a stripe Customer ID from a WP user
+ *
+ * @since 0.4.0
+ *
+ * @param integer $stripe_id the id of the stripe transaction
+*/
 function it_exchange_delete_stripe_id_from_customer( $stripe_id ) {
 	$transactions = it_exchange_get_transaction_from_stripe_id( $stripe_id );
 	foreach( $transactions as $transaction ) { //really only one
 		$customer_id = get_post_meta( $transaction->ID, '_it_exchange_customer_id', true );
-		if ( false !== $current_stripe_id = it_exchange_get_stripe_customer_id( $customer_id ) ) {
+		if ( false !== $current_stripe_id = it_exchange_stripe_addon_get_stripe_customer_id( $customer_id ) ) {
 			
 			if ( $current_stripe_id === $stripe_id )
 				delete_user_meta( $customer_id, '_it_exchange_stripe_id' );

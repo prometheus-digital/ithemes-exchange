@@ -238,10 +238,12 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 0.4.0
 	*/
-	function add_transaction_refund( $refund ) {
+	function add_refund( $refund, $date=false, $options=array() ) {
+		$date = empty( $date ) ? date_i18n( 'Y-m-d H:i:s' ) : $date;
 		$args = array(
-			'amount' => $refund,
-			'date'   => date_i18n( 'Y-m-d H:i:s' ),
+			'amount'  => $refund,
+			'date'    => $date,
+			'options' => $options,
 		);
 		add_post_meta( $this->ID, '_it_exchange_transaction_refunds', $args );
 	}
