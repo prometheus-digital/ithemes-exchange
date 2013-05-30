@@ -540,12 +540,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 						else
 							$img_url = wp_get_attachment_url( $product_images[0] );
 			
-						$output .= '<div id="it-exchange-product-image">';
-						$output .= '<ul class="product-image">';
-						$output .= '  <li  class="it-exchange-product-image-' . $product_images[0] . '">';
-						$output .= '      <img alt="" src=" ' . $img_url . '">';
-						$output .= '  </li>';
-						$output .= '</ul>';
+						$output .= '<div id="it-exchange-feature-image-' . $product_images[0] . '" class="it-exchange-featured-image">';
+						$output .= '<div class="featured-image-wrapper">';
+						$output .= '   <img alt="" src="' . $img_url . '">';
+						$output .= '</div>';
 						$output .= '</div>';
 						
 						$output .= '</div>';
@@ -578,13 +576,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 						$output = '<div id="it-exchange-product-images-gallery">';
 					
 						$img_url = wp_get_attachment_url( $product_images[0] );
-			
-						$output .= '<div id="it-exchange-product-image">';
-						$output .= '<ul class="product-image">';
-						$output .= '  <li  class="it-exchange-product-image-' . $product_images[0] . '">';
-						$output .= '      <img alt="" src=" ' . $img_url . '">';
-						$output .= '  </li>';
-						$output .= '</ul>';
+						
+						$output .= '<div id="it-exchange-feature-image-' . $product_images[0] . '" class="it-exchange-featured-image">';
+						$output .= '<div class="featured-image-wrapper">';
+						$output .= '   <img alt="" src="' . $img_url . '">';
+						$output .= '</div>';
 						$output .= '</div>';
 						
 						unset( $product_images[0] ); //we don't want this listed below
@@ -604,7 +600,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 							$output .=  '</ul>';
 						
 						}
-						
+						$output .= '</div>';
 					}
 					break;
 				
