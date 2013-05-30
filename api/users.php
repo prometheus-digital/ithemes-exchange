@@ -2,6 +2,7 @@
 /**
  * API Functions used to register / retrieve Exchange User information
  *
+ * @todo This entire file needs to be rolled into /api/customers.php
  * @package IT_Exchange
  * @since 0.4.0
 */
