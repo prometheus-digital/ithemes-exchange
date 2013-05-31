@@ -229,7 +229,7 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 	$L_BUTTONVARS[] = 'no_shipping=1';
 	$L_BUTTONVARS[] = 'shipping=0';
 	$L_BUTTONVARS[] = 'email=' . $it_exchange_customer->data->user_email;
-	$L_BUTTONVARS[] = 'notify_url=' . get_site_url() . '/?' . apply_filters( 'it_exchange_paypal-standard_webhook', 'it_exchange_paypal-standard' ) . '=1';
+	$L_BUTTONVARS[] = 'notify_url=' . get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard' ) . '=1';
 	$L_BUTTONVARS[] = 'return=' . it_exchange_get_page_url( 'transaction' ) . '?it-exchange-transaction-method=paypal-standard';
 	$L_BUTTONVARS[] = 'rm=2'; //Return  Method - https://developer.paypal.com/webapps/developer/docs/classic/button-manager/integration-guide/ButtonManagerHTMLVariables/
 	$L_BUTTONVARS[] = 'cancel_return=' . it_exchange_get_page_url( 'cart' );
@@ -263,18 +263,19 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_paypal_standard_addon_make_payment_button', 10, 2 );
 
 /**
- * Adds the paypal webhook key to the global array of keys to listen for
+ * Adds the paypal webhook to the global array of keys to listen for
  *
  * @since 0.4.0
  *
  * @param array $webhooks existing
  * @return array
 */
-function it_exchange_paypal_addon_register_webhook_key() {
-    $key = apply_filters( 'it_exchange_paypal-standard_webhook', 'it_exchange_paypal-standard' );
-    it_exchange_register_webhook( $key );
+function it_exchange_paypal_addon_register_webhook() {
+    $key   = 'paypal-standard';
+	$param = apply_filters( 'it_exchange_paypal-standard_webhook', 'it_exchange_paypal-standard' );
+    it_exchange_register_webhook( $key, $param );
 }
-add_filter( 'init', 'it_exchange_paypal_addon_register_webhook_key' );
+add_filter( 'init', 'it_exchange_paypal_addon_register_webhook' );
 
 /**
  * Processes webhooks for PayPal Web Standard
@@ -499,7 +500,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
         <h5><?php _e( 'PayPal Instant Payment Notification (IPN)', 'LION' ); ?></h5>
         <p><?php _e( 'PayPal IPN must be configured in Account Profile -› Instant Payment Notification Preferences in your PayPal Account', 'LION' ); ?></p>
         <p><?php _e( 'Please log into your account and add this URL to your IPN Settings so iThemes Exchange is notified of things like refunds, payments, etc.', 'LION' ); ?></p>
-        <code><?php echo get_site_url(); ?>/?<?php echo apply_filters( 'it_exchange_paypal-standard_webhook', 'it_exchange_paypal_standard' ); ?>=1</code>
+        <code><?php echo get_site_url(); ?>/?<?php esc_attr_e( it_exchange_get_webhook( 'paypal-standard' ) ); ?>=1</code>
         <h5><?php _e( 'PayPal Auto Return', 'LION' ); ?></h5>
         <p><?php _e( 'PayPal Auto Return must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
         <p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'LION' ); ?></p>

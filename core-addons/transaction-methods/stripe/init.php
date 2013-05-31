@@ -258,8 +258,9 @@ add_filter( 'it_exchange_get_currency_options', 'it_exchange_get_stripe_currency
  * @return array
 */
 function it_exchange_stripe_addon_register_webhook_key() {
-	$key = apply_filters( 'it_exchange_stripe_addon_webhook', 'it_exchange_stripe' );
-	it_exchange_register_webhook( $key );
+	$key   = 'stripe';
+	$param = apply_filters( 'it_exchange_stripe_addon_webhook', 'it_exchange_stripe' );
+	it_exchange_register_webhook( $key, $param );
 }
 add_filter( 'init', 'it_exchange_stripe_addon_register_webhook_key' );
 
@@ -558,7 +559,7 @@ class IT_Exchange_Stripe_Add_On {
         <h5><?php _e( 'Stripe Webhooks', 'LION' ); ?></h5>
         <p><?php _e( 'Webhooks can be configured in the <a href="https://manage.stripe.com/account/webhooks">webhook settings section</a> of the Stripe dashboard. Clicking Add URL will reveal a form to add a new URL for receiving webhooks.', 'LION' ); ?></p>
         <p><?php _e( 'Please log into your account and add this URL to your Webhooks so iThemes Exchange is notified of things like refunds, payments, etc.', 'LION' ); ?></p>
-        <code><?php echo get_site_url(); ?>/?<?php echo apply_filters( 'it_exchange_stripe_webhook', 'it_exchange_stripe' ); ?>=1</code>
+        <code><?php echo get_site_url(); ?>/?<?php esc_attr_e( it_exchange_get_webhook( 'stripe' ) ); ?>=1</code>
         
         <?php	
 	}

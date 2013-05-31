@@ -604,8 +604,8 @@ function it_exchange_get_transaction_method_make_payment_button ( $transaction_m
  * @since 0.4.0
  * @return array
 */
-function it_exchange_get_webhook_keys() {
-	return empty( $GLOBALS['it_exchange']['webhook_keys'] ) ? array() : (array) $GLOBALS['it_exchange']['webhook_keys'];
+function it_exchange_get_webhooks() {
+	return empty( $GLOBALS['it_exchange']['webhooks'] ) ? array() : (array) $GLOBALS['it_exchange']['webhooks'];
 }
 
 /**
@@ -613,13 +613,23 @@ function it_exchange_get_webhook_keys() {
  *
  * @since 0.4.0
  *
- * @param string $webhook_key the query param we're listening for
+ * @param string $key   the addon slug or ID
+ * @param string $param the REQUEST param we are listening for
  * @return void
 */
-function it_exchange_register_webhook( $webhook_key ) {
-	$registered_keys = it_exchange_get_webhook_keys();
-	if ( ! in_array( $webhook_key, $registered_keys ) )
-		$registered_keys[] = $webhook_key;
+function it_exchange_register_webhook( $key, $param ) {
+	$GLOBALS['it_exchange']['webhooks'][$key] = $param;
+}
 
-	$GLOBALS['it_exchange']['webhook_keys'] = $registered_keys;
+/**
+ * Grab a specific registered webhook / IPN param
+ *
+ * @since 0.4.0
+ *
+ * @param string $key the key for the param we are looking for
+ * @return string or false 
+*/
+function it_exchange_get_webhook( $key ) {
+	$webhooks = it_exchange_get_webhooks();
+	return empty( $GLOBALS['it_exchange']['webhooks'][$key] ) ? false : $GLOBALS['it_exchange']['webhooks'][$key];
 }

@@ -94,12 +94,15 @@ add_action( 'it_exchange_template_redirect', 'it_exchange_load_frontend_css' );
  * @since 0.4.0
 */
 function it_exchange_process_webhooks() {
-    $webhook_keys = it_exchange_get_webhook_keys();
 
-    foreach( $webhook_keys as $key ) { 
+	// Grab registered webhooks
+    $webhooks = it_exchange_get_webhooks();
+
+	// Loop through them and init callbacks
+    foreach( $webhooks as $key => $param ) { 
     
-        if ( !empty( $_REQUEST[$key] ) ) 
-            do_action( 'it_exchange_webhook_' . $key, $_REQUEST );
+        if ( ! empty( $_REQUEST[$param] ) ) 
+            do_action( 'it_exchange_webhook_' . $param, $_REQUEST );
     
     }   
     do_action( 'it_exchange_webhooks_processed' );
