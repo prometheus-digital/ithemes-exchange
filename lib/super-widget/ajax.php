@@ -18,7 +18,7 @@ $GLOBALS['it_exchange']['in_superwidget'] = true;
 $action       = empty( $_GET['sw-action'] ) ? false : esc_attr( $_GET['sw-action'] );
 $state        = empty( $_GET['state'] ) ? false : esc_attr( $_GET['state'] );
 $product      = empty( $_GET['sw-product'] ) ? false : absint( $_GET['sw-product'] );
-$quantity     = empty( $_GET['sw-quantity'] ) ? false : absint( $_GET['sw-quantity'] );
+$quantity     = empty( $_GET['sw-quantity'] ) ? 1 : absint( $_GET['sw-quantity'] );
 $focus        = empty( $_GET['ite-sw-cart-focus'] ) ? false : esc_attr( $_GET['ite-sw-cart-focus'] );
 $coupon_type  = empty( $_GET['sw-coupon-type'] ) ? false : esc_attr( $_GET['sw-coupon-type'] );
 $coupon       = empty( $_GET['sw-coupon-code'] ) ? false : esc_attr( $_GET['sw-coupon-code'] );
@@ -118,11 +118,6 @@ if ( 'register' == $action ) {
 }
 
 die('bad state');
-
-
-
-
-
 
 /**
  * Just for fun

@@ -44,7 +44,7 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 		// Add it to all enabled product-type addons
 		$products = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 		foreach( $products as $key => $params ) {
-			it_exchange_add_feature_support_to_product_type( 'purchase-quantity', $params['slug'] );
+				it_exchange_add_feature_support_to_product_type( 'purchase-quantity', $params['slug'] );
 		}
 	}
 
@@ -81,7 +81,7 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 			$product_type = it_exchange_get_product_type( $post );
 		
 		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
-			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'product-quantity' ) )
+			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'purchase-quantity' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_metabox' ) );
 		}
 		

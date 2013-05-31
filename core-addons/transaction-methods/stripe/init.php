@@ -49,7 +49,7 @@ function it_exchange_stripe_addon_process_transaction( $status, $transaction_obj
 				
 			// If the user has been deleted from Stripe, we need to create a new Stripe ID.
 			if ( ! empty( $stripe_customer ) ) {
-				if ( true === $stripe_customer->deleted )
+				if ( isset( $stripe_customer->deleted ) && true === $stripe_customer->deleted )
 					$stripe_customer = array();
 			}
 

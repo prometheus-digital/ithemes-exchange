@@ -81,7 +81,7 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 			$product_type = it_exchange_get_product_type( $post );
 		
 		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
-			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'product-message' ) )
+			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'purchase-message' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_metabox' ) );
 		}
 		

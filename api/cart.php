@@ -123,7 +123,7 @@ function it_exchange_get_cart_product( $id ) {
  * return boolean 
 */
 function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
-
+		
 	if ( ! $product_id )
 		return;
 
@@ -132,7 +132,7 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 
 	$quantity = absint( (int) $quantity );
 	if ( $quantity < 1 )
-		return false;
+		$quantity = 1; //we're going to assume they want at least 1 item
 
 	/**
 	 * The default shopping cart organizes products in the cart by product_id and a hash of 'itemized_data'.
