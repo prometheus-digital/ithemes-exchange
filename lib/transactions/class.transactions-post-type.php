@@ -211,10 +211,10 @@ class IT_Exchange_Transaction_Post_Type {
 		$exchange_columns = array(
 			'cb'                                      => $check,
 			'title'                                   => __( 'Cart Description', 'LION' ),
-			'it_exchange_transaction_total_column'    => __( 'Payment Total', 'LION' ),
-			'it_exchange_transaction_status_column'   => __( 'Payment Status', 'LION' ),
+			'it_exchange_transaction_total_column'    => __( 'Total', 'LION' ),
+			'it_exchange_transaction_status_column'   => __( 'Status', 'LION' ),
 			'it_exchange_transaction_customer_column' => __( 'Customer', 'LION' ),
-			'it_exchange_transaction_method_column'   => __( 'Payment Method', 'LION' ),
+			'it_exchange_transaction_method_column'   => __( 'Method', 'LION' ),
 			'date'                                    => __( 'Date', 'LION' ),
 		);
 
