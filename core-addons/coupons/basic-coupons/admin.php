@@ -106,7 +106,7 @@ function it_exchange_basic_coupons_data_is_valid() {
 	if ( ! is_numeric( $data['amount-number'] ) || trim( $data['amount-number'] ) < 1 )
 		it_exchange_add_message( 'error', __( 'Coupon Discount must be a postive number', 'LION' ) );
 
-	return !it_exchange_has_message( 'errors' );
+	return ! it_exchange_has_messages( 'errors' );
 }
 
 /**
@@ -142,6 +142,7 @@ function it_exchange_basic_coupons_redirect_core_add_edit_screens() {
 	$pagenow   = empty( $GLOBALS['pagenow'] ) ? false : $GLOBALS['pagenow'];
 	$post_type = empty( $_GET['post_type'] ) ? false : $_GET['post_type'];
 	$post_id   = empty( $_GET['post'] ) ? false : $_GET['post'];
+	$action    = empty( $_GET['action'] ) ? false : $_GET['action'];
 
 	if ( ! $pagenow || ( 'post-new.php' != $pagenow && 'post.php' != $pagenow ) ) 
 		return;
@@ -153,6 +154,9 @@ function it_exchange_basic_coupons_redirect_core_add_edit_screens() {
 	}
 
 	// Redirect for edit screen
+	if ( in_array( $action, array( 'delete', 'trash', 'untrash' ) ) )
+		return;
+
 	$coupon = new IT_Exchange_Coupon( $post_id );
 	if ( 'post.php' == $pagenow ) {
 		if ( $post_id && 'it_exchange_coupon' == $coupon->post_type ) {
