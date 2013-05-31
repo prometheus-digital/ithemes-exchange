@@ -64,10 +64,8 @@ function it_exchange_parse_options( $options ) {
  * @return string
 */
 function it_exchange_format_price( $price ) {
-	$before = ''; $after = '';
-	
+	$before = $after = '';
 	$settings = it_exchange_get_option( 'settings_general' );
-	
 	$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
 	
 	if ( 'before' === $settings['currency-symbol-position'] )

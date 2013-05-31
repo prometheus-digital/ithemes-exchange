@@ -422,9 +422,12 @@ class IT_Exchange_Transaction_Post_Type {
 	*/
 	function print_transaction_refund_details_metabox( $post ) {
 		$refunds = it_exchange_get_transaction_refunds( $post );
+		$total_refund = 0;
 		foreach ( $refunds as $refund ) {
+			$total_refund += $refund['amount'];
 			echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ) . '<br />';
 		}
+		echo 'Total Refund: ' . it_exchange_format_price( $total_refund );
 	}
 }
 $IT_Exchange_Transaction_Post_Type = new IT_Exchange_Transaction_Post_Type();
