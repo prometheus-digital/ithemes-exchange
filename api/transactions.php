@@ -517,11 +517,16 @@ function it_exchange_get_transaction_customer_email( $transaction ) {
  * @param mixed $transaction ID or object
  * @return string
 */
-function it_exchange_get_transaction_customer_admin_profile_url( $transaction ) {
+function it_exchange_get_transaction_customer_admin_profile_url( $transaction, $options=array() ) {
 	if ( ! $customer = it_exchange_get_transaction_customer( $transaction ) )
 		return __( 'Unknown', 'LION' );
 
-	$url = add_query_arg( array( 'user_id' => $customer->id, 'it_exchange' => 1 ), get_admin_url() . '/user-edit.php' );	
+	$defaults = array(
+		'tab' => 'transactions',
+	);
+	$options = ITUtility::merge_defaults( $options, $defaults );
+
+	$url = add_query_arg( array( 'user_id' => $customer->id, 'it_exchange' => 1, 'tab' => $options['tab'] ), get_admin_url() . 'user-edit.php' );	
 	return $url;
 }
 
