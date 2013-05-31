@@ -9,25 +9,6 @@
 require_once('stripe-api/lib/Stripe.php');
 
 /**
- * Outputs wizard settings for Stripe
- *
- * @since 0.4.0
- * @todo make this better, probably
- * @param object $form Current IT Form object
- * @return void
-*/
-function it_exchange_stripe_addon_print_wizard_settings( $form ) {
-	$IT_Exchange_Stripe_Add_On = new IT_Exchange_Stripe_Add_On();
-	$settings = it_exchange_get_option( 'addon_stripe', true );
-	?>
-	<div class="field stripe-wizard hide-if-js">
-    <?php $IT_Exchange_Stripe_Add_On->get_stripe_payment_form_table( $form, $settings ); ?>
-	</div>
-	<?php
-}
-add_action( 'it_exchange_print_wizard_settings', 'it_exchange_stripe_addon_print_wizard_settings' );
-
-/**
  * This proccesses a stripe transaction.
  *
  * @since 0.4.0
@@ -148,8 +129,11 @@ function it_exchange_stripe_addon_settings_callback() {
 }
 
 /**
- * This is the function prints the payment form on the Wizard Settings screen
+ * Outputs wizard settings for Stripe
  *
+ * @since 0.4.0
+ * @todo make this better, probably
+ * @param object $form Current IT Form object
  * @return void
 */
 function it_exchange_stripe_addon_print_wizard_settings( $form ) {
@@ -161,6 +145,7 @@ function it_exchange_stripe_addon_print_wizard_settings( $form ) {
 	</div>
 	<?php
 }
+add_action( 'it_exchange_print_wizard_settings', 'it_exchange_stripe_addon_print_wizard_settings' );
 
 /**
  * Saves stripe settings when the Wizard is saved
