@@ -245,7 +245,7 @@ add_filter( 'it_exchange_remove_cart_coupon_html', 'it_exchange_base_coupons_rem
 */
 function it_exchange_basic_coupons_apply_discount_to_cart_total( $total ) {
 	$coupons = it_exchange_get_applied_coupons( 'cart' );
-	$total_discount = it_exchange_get_total_coupons_discount( 'cart' );
+	$total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ) );
 	$total = $total - $total_discount;
 	return $total;
 }
