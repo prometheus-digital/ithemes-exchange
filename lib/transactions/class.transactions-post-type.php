@@ -179,7 +179,7 @@ class IT_Exchange_Transaction_Post_Type {
 	function modify_all_transactions_table_columns( $existing ) {
 
 		// Add a filter to replace the title text with the Date
-		add_filter( 'the_title', array( $this, 'replace_transaction_title_with_date' ) );
+		add_filter( 'the_title', array( $this, 'replace_transaction_title_with_cart_description' ) );
 
 		// Remove Checkbox - adding it back below
 		if ( isset( $existing['cb'] ) ) {
@@ -210,11 +210,12 @@ class IT_Exchange_Transaction_Post_Type {
 		// All Core should be removed at this point. Build ours back (including date from core)
 		$exchange_columns = array(
 			'cb'                                      => $check,
-			'title'                                   => __( 'Date', 'LION' ),
+			'title'                                   => __( 'Cart Description', 'LION' ),
 			'it_exchange_transaction_total_column'    => __( 'Payment Total', 'LION' ),
 			'it_exchange_transaction_status_column'   => __( 'Payment Status', 'LION' ),
 			'it_exchange_transaction_customer_column' => __( 'Customer', 'LION' ),
 			'it_exchange_transaction_method_column'   => __( 'Payment Method', 'LION' ),
+			'date'                                    => __( 'Date', 'LION' ),
 		);
 
 		// Merge ours back with existing to preserve any 3rd party columns
@@ -223,33 +224,17 @@ class IT_Exchange_Transaction_Post_Type {
 	}
 
 	/**
-	 * Replace the title with the date
+	 * Replace the title with the cart description
 	 *
 	 * @since 0.4.0
 	 *
 	 * @param string $title the real title
 	 * @return string
 	*/
-	function replace_transaction_title_with_date( $title ) {
+	function replace_transaction_title_with_cart_description( $title ) {
 		global $post;
-
-		if ( '0000-00-00 00:00:00' == $post->post_date ) {
-			$t_time = $h_time = __( 'Unknown', 'LION' );
-			$time_diff = 0; 
-		} else {
-			$t_time = get_the_time( __( 'Y/m/d g:i:s A' ) ); 
-			$m_time = $post->post_date;
-			$time = get_post_time( 'G', true, $post );
-
-			$time_diff = time() - $time;
-
-			if ( $time_diff > 0 && $time_diff < DAY_IN_SECONDS )
-				$h_time = sprintf( __( '%s ago' ), human_time_diff( $time ) ); 
-			else 
-				$h_time = mysql2date( __( 'Y/m/d' ), $m_time );
-		}
-
-		return $h_time;
+		$transaction = it_exchange_get_transaction($post);
+		return $transaction->cart_details->description;
 	}
 
 	/**
