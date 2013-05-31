@@ -87,3 +87,21 @@ function it_exchange_load_frontend_css( $current_view ) {
 	wp_enqueue_style( 'it-exchange-frontend-css', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange.css' ) );
 }
 add_action( 'it_exchange_template_redirect', 'it_exchange_load_frontend_css' );
+
+/**
+ * Hook for processing webhooks from services like PayPal IPN, Stripe, etc.
+ *
+ * @since 0.4.0
+*/
+function it_exchange_process_webhooks() {
+    $webhook_keys = it_exchange_get_webhook_keys();
+
+    foreach( $webhook_keys as $key ) { 
+    
+        if ( !empty( $_REQUEST[$key] ) ) 
+            do_action( 'it_exchange_webhook_' . $key, $_REQUEST );
+    
+    }   
+    do_action( 'it_exchange_webhooks_processed' );
+}
+add_action( 'wp', 'it_exchange_process_webhooks' );

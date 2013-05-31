@@ -249,7 +249,6 @@ function it_exchange_get_stripe_currency_options( $default_currencies ) {
 }
 add_filter( 'it_exchange_get_currency_options', 'it_exchange_get_stripe_currency_options' );
 
-
 /**
  * Adds the stripe webhook key to the global array of keys to listen for
  *
@@ -258,11 +257,11 @@ add_filter( 'it_exchange_get_currency_options', 'it_exchange_get_stripe_currency
  * @param array $webhooks existing
  * @return array
 */
-function it_exchange_stripe_webhook_key( $webhooks ) {
-	$webhooks[] = apply_filters( 'it_exchange_stripe_webhook', 'it_exchange_stripe' );
-	return $webhooks;
+function it_exchange_stripe_addon_register_webhook_key() {
+	$key = apply_filters( 'it_exchange_stripe_addon_webhook', 'it_exchange_stripe' );
+	it_exchange_register_webhook( $key );
 }
-add_filter( 'it_exchange_webhook_keys', 'it_exchange_stripe_webhook_key' );
+add_filter( 'init', 'it_exchange_stripe_addon_register_webhook_key' );
 
 /**
  * Processes webhooks for Stripe
