@@ -5,7 +5,7 @@
  * @package iThemes Exchange
  * @since 0.4.0
  */
- 
+
 if ( !function_exists( 'create_it_exchange_categories' ) ) {
 		
 	/**
@@ -14,7 +14,7 @@ if ( !function_exists( 'create_it_exchange_categories' ) ) {
 	 * @since 1.0.0
 	 * @uses register_taxonomy()
 	 */
-	function create_it_exchange_categories() {
+	function it_exchange_categories_addon_create() {
 		
 	  $labels = array(
 			'name' 				=> __( 'Product Categories', 'LION' ),
@@ -42,11 +42,31 @@ if ( !function_exists( 'create_it_exchange_categories' ) ) {
 		);
 		
 	}
-	add_action( 'init', 'create_it_exchange_categories', 0 );
+	add_action( 'init', 'it_exchange_categories_addon_create', 0 );
 
 }
 
-if ( !function_exists( 'it_exchange_categories_add_menu_item' ) ) {
+if ( !function_exists( 'it_exchange_category_addon_widget_init' ) ) {
+
+	/**
+	 * Register all of the default WordPress widgets on startup.
+	 *
+	 * Calls 'widgets_init' action after all of the WordPress widgets have been
+	 * registered.
+	 *
+	 * @since 2.2.0
+	 */
+	function it_exchange_category_addon_widget_init() {
+	
+		include( 'class.category-widget.php' );
+		register_widget('IT_Exchange_Category_Widget');
+	
+	}
+	add_action( 'widgets_init', 'it_exchange_category_addon_widget_init', 1 );
+	
+}
+
+if ( !function_exists( 'it_exchange_categories_addon_add_menu_item' ) ) {
 			
 	/**
 	 * This adds a menu item to the Exchange menu pointing to the WP All [post_type] table
@@ -55,10 +75,10 @@ if ( !function_exists( 'it_exchange_categories_add_menu_item' ) ) {
 	 *
 	 * @return void
 	*/
-	function it_exchange_categories_add_menu_item() {
-		$url = add_query_arg( array( 'taxonomy' => 'it_exchange_category' ), 'edit-tags.php' );
+	function it_exchange_categories_addon_add_menu_item() {
+		$url = add_query_arg( array( 'taxonomy' => 'it_exchange_category', 'post_type' => 'it_exchange_prod' ), 'edit-tags.php' );
 		add_submenu_page( 'it-exchange', __( 'Product Categories', 'LION' ), __( 'Product Categories', 'LION' ), 'update_plugins', $url );
 	}
-	add_action( 'admin_menu', 'it_exchange_categories_add_menu_item' );
+	add_action( 'admin_menu', 'it_exchange_categories_addon_add_menu_item' );
 
 }

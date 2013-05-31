@@ -33,7 +33,7 @@ if ( !function_exists( 'create_it_exchange_tags' ) ) {
 			'it_exchange_tag', 
 			array(), //do not add to any post type (yet) 
 			array(
-				'hierarchical' 	=> true,
+				'hierarchical' 	=> false,
 				'labels' 		=> $labels,
 				'show_ui' 		=> true,
 				'query_var' 	=> true,
@@ -56,7 +56,7 @@ if ( !function_exists( 'it_exchange_tags_add_menu_item' ) ) {
 	 * @return void
 	*/
 	function it_exchange_tags_add_menu_item() {
-		$url = add_query_arg( array( 'taxonomy' => 'it_exchange_tag' ), 'edit-tags.php' );
+		$url = add_query_arg( array( 'taxonomy' => 'it_exchange_tag', 'post_type' => 'it_exchange_prod' ), 'edit-tags.php' );
 		add_submenu_page( 'it-exchange', __( 'Product Tags', 'LION' ), __( 'Product Tags', 'LION' ), 'update_plugins', $url );
 	}
 	add_action( 'admin_menu', 'it_exchange_tags_add_menu_item' );
