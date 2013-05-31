@@ -573,20 +573,18 @@ class IT_Exchange_Router {
 			if ( is_user_logged_in() ) {
 				$transaction_id = apply_filters( 'it_exchange_process_transaction', false );
 				
+				// If we made a transaction
 				if ( $transaction_id ) {
 
-					$transaction_hash = it_exchange_get_transaction_hash( $transaction_id );
-					
+					// Clear the cart
 					it_exchange_empty_shopping_cart();
 					
-					$confirmation_url = it_exchange_get_page_url( 'confirmation' );
-
-					if ( $this->_pretty_permalinks ) {
-						$confirmation_url = trailingslashit( $confirmation_url ) . $transaction_hash;
-					} else {
-						$confirmation_url = remove_query_arg( $this->_confirmation_slug, $confirmation_url );
-						$confirmation_url = add_query_arg( $this->_confirmation_slug, $transaction_hash, $confirmation_url );
-					}
+					// Grab the transaction confirmation URL. fall back to store if confirmation url fails
+					$confirmation_url = it_exchange_get_transaction_confirmation_url( $transaction_id );
+					if ( empty( $confirmation_url ) )
+						$confirmation_url = it_exchange_get_page_url( 'store' );
+					
+					// Redirect
 					wp_redirect( $confirmation_url );
 					die();
 				}

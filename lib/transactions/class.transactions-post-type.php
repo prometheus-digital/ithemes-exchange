@@ -363,15 +363,17 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return void
 	*/
 	function print_transaction_details_metabox( $post ) {
+		$confirmation_url = it_exchange_get_transaction_confirmation_url( $post->ID );
 		?>
 		<div>
-			<?php _e( 'ID: ', 'LION' ); ?> <?php esc_attr_e( $post->ID ); ?><br />
-			<?php _e( 'Date: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_date( $post ) ); ?><br />
-			<?php _e( 'Status: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?><br />
-			<?php _e( 'Method: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?><br />
-			<?php _e( 'Currency: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_currency( $post ) ); ?><br />
-			<?php _e( 'Subtotal: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?><br />
-			<?php _e( 'Total: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post ) ); ?><br />
+			<?php _e( 'ID:', 'LION' ); ?> <?php esc_attr_e( $post->ID ); ?><br />
+			<?php _e( 'Date:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_date( $post ) ); ?><br />
+			<?php _e( 'Status:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?><br />
+			<?php _e( 'Method:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?><br />
+			<?php _e( 'Currency:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_currency( $post ) ); ?><br />
+			<?php _e( 'Subtotal:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?><br />
+			<?php _e( 'Total:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post ) ); ?><br />
+			<?php printf( __( '%sView Frontend Confirmation%s', 'LION' ), '<a target="_blank" href="' . $confirmation_url . '">', '</a>' ); ?>
 		</div>
 		<?php
 	}

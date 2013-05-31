@@ -633,3 +633,31 @@ function it_exchange_get_webhook( $key ) {
 	$webhooks = it_exchange_get_webhooks();
 	return empty( $GLOBALS['it_exchange']['webhooks'][$key] ) ? false : $GLOBALS['it_exchange']['webhooks'][$key];
 }
+
+/**
+ * Get the confirmation URL for a transaction
+ *
+ * @since 0.4.0
+ *
+ * @param integer $transaction_id id of the transaction
+ * @return string url
+*/
+function it_exchange_get_transaction_confirmation_url( $transaction_id ) {
+
+	// If we can't grab the hash, return false
+	if ( ! $transaction_hash = it_exchange_get_transaction_hash( $transaction_id ) )
+		return false;
+
+	// Get base page URL
+	$confirmation_url = it_exchange_get_page_url( 'confirmation' );
+
+	if ( '' != get_option( 'permalink_structure' ) ) {
+		$confirmation_url = trailingslashit( $confirmation_url ) . $transaction_hash;
+	} else {
+		$pages = it_exchange_get_option( 'settings_pages' );
+		$slug  = $pages['confirmation-slug'];
+		$confirmation_url = remove_query_arg( $slug, $confirmation_url );
+		$confirmation_url = add_query_arg( $slug, $transaction_hash, $confirmation_url );
+	}
+	return $confirmation_url;
+}
