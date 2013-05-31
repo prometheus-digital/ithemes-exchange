@@ -182,10 +182,16 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 0.4.0
 	 *
+	 * @param boolean $without_refunds if true, the original total before refunds will be given
 	 * @return string
 	*/
-	function get_total() {
-		return empty( $this->cart_details->total ) ? false : $this->cart_details->total;
+	function get_total( $subtract_refunds=true ) {
+		$total = empty( $this->cart_details->total ) ? false : $this->cart_details->total;
+
+		if ( $total && $subtract_refunds && $refunds_total = it_exchange_get_transaction_refunds_total( $this->ID ) )
+			$total = $total - $refunds_total;
+
+		return apply_filters( 'it_exchange_get_transaction_total', $total, $this->ID );
 	}
 
 	/**

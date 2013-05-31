@@ -330,16 +330,16 @@ function it_exchange_get_transaction_subtotal( $transaction, $format_currency=tr
  * @since 0.4.0
  *
  * @param mixed   $transaction ID or object
- * @param string  $format php date format
- * @param boolean $gmt return the gmt date?
+ * @param boolean $format format the price?
+ * @param boolean $subtract_refunds if refunds are present, subtract the difference?
  * @return string date
 */
-function it_exchange_get_transaction_total( $transaction, $format_currency=true ) {
+function it_exchange_get_transaction_total( $transaction, $format_currency=true, $subtract_refunds=true ) {
 
 	// Try to locate the IT_Exchange_Transaction object from the var
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
-		if ( $total = $transaction->get_total() )
-			return $format_currency ? it_exchange_format_price( $total ) : $total;
+		$total = $transaction->get_total( $subtract_refunds );
+		return $format_currency ? it_exchange_format_price( $total ) : $total;
 	}
 
 	return false;
@@ -423,6 +423,23 @@ function it_exchange_get_transaction_refunds( $transaction ) {
 		return false;
 
 	return $transaction->get_transaction_refunds();
+}
+
+/**
+ * Returns the a sum of all the applied refund amounts for this transaction
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @return numeric
+*/
+function it_exchange_get_transaction_refunds_total( $transaction ) {
+	$refunds = it_exchange_get_transaction_refunds( $transaction );
+	$total_refund = 0;
+	foreach ( $refunds as $refund ) {
+		$total_refund += $refund['amount'];
+	}
+	return $total_refund;
 }
 
 /**

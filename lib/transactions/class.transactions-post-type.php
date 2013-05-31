@@ -372,7 +372,12 @@ class IT_Exchange_Transaction_Post_Type {
 			<?php _e( 'Method:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?><br />
 			<?php _e( 'Currency:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_currency( $post ) ); ?><br />
 			<?php _e( 'Subtotal:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?><br />
-			<?php _e( 'Total:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post ) ); ?><br />
+			<?php if ( it_exchange_get_transaction_refunds( $post ) ) : ?>
+				<?php _e( 'Original Total:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post, true, false ) ); ?><br />
+				<?php _e( 'Total after Refunds:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post ) ); ?><br />
+			<?php else : ?>
+				<?php _e( 'Total:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post ) ); ?><br />
+			<?php endif; ?>
 			<?php printf( __( '%sView Frontend Confirmation%s', 'LION' ), '<a target="_blank" href="' . $confirmation_url . '">', '</a>' ); ?>
 		</div>
 		<?php
@@ -409,12 +414,10 @@ class IT_Exchange_Transaction_Post_Type {
 	*/
 	function print_transaction_refund_details_metabox( $post ) {
 		$refunds = it_exchange_get_transaction_refunds( $post );
-		$total_refund = 0;
 		foreach ( $refunds as $refund ) {
-			$total_refund += $refund['amount'];
 			echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ) . '<br />';
 		}
-		echo 'Total Refund: ' . it_exchange_format_price( $total_refund );
+		echo 'Total Refund: ' . it_exchange_format_price( it_exchange_get_transaction_refunds_total( $post ) );
 	}
 }
 $IT_Exchange_Transaction_Post_Type = new IT_Exchange_Transaction_Post_Type();
