@@ -147,6 +147,11 @@ function it_exchange_stripe_addon_settings_callback() {
 	$IT_Exchange_Stripe_Add_On->print_settings_page();
 }
 
+/**
+ * This is the function prints the payment form on the Wizard Settings screen
+ *
+ * @return void
+*/
 function it_exchange_stripe_addon_print_wizard_settings( $form ) {
 	$IT_Exchange_Stripe_Add_On = new IT_Exchange_Stripe_Add_On();
 	$settings = it_exchange_get_option( 'addon_stripe', true );
@@ -286,9 +291,6 @@ function it_exchange_stripe_process_webhook( $request ) {
 	if ( isset( $stripe_event->id ) ) {
 				
 		try {
-			
-			if ( isset( $stripe_event->customer ) )
-				$stripe_id = $stripe_event->customer;
 				
 			$stripe_object = $stripe_event->data->object;
 
@@ -307,7 +309,7 @@ function it_exchange_stripe_process_webhook( $request ) {
 					else
 						it_exchange_update_transaction_status_for_stripe( $stripe_object->id, 'partial-refund' );
 					
-					it_exchange_stripe_addon_add_refund_to_transaction( $stripe_object->id, $stripe_object->amount_refunded );
+					it_exchange_add_refund_to_transaction_for_stripe( $stripe_object->id, $stripe_object->amount_refunded );
 						
 					break;
 				case 'charge.dispute.created' :
@@ -369,10 +371,9 @@ function it_exchange_update_transaction_status_for_stripe( $stripe_id, $new_stat
 /**
  * Adds a refund to post_meta for a stripe transaction
  *
- * @todo SOmething isn't working here
  * @since 0.4.0
 */
-function it_exchange_stripe_addon_add_refund_to_transaction( $stripe_id, $refund ) {
+function it_exchange_add_refund_to_transaction_for_stripe( $stripe_id, $refund ) {
 
 	// Stripe money format comes in as cents. Divide by 100.
 	$refund = ( $refund / 100 );
@@ -417,6 +418,14 @@ function it_exchange_delete_stripe_id_from_customer( $stripe_id ) {
 	}	
 }
 
+/**
+ * Gets the interpretted transaction status from valid stripe transaction statuses
+ *
+ * @since 0.4.0
+ *
+ * @param string $status the string of the stripe transaction
+ * @return string translaction transaction status
+*/
 function it_exchange_transaction_status_label_stripe( $status ) {
 
 	switch ( $status ) {

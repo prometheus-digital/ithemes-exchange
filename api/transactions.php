@@ -512,7 +512,7 @@ function it_exchange_get_transaction_products( $transaction ) {
 		$db_prod->itemized_data   = $product['itemized_data'];
 		$db_prod->additional_data = $product['additional_data'];
 		$db_prod->count           = $product['count'];
-ITUtility::print_r($db_prod);die( 'DIED IN ' . __FILE__ . ' on line ' . __LINE__);
+//ITUtility::print_r($db_prod);die( 'DIED IN ' . __FILE__ . ' on line ' . __LINE__);
 		$products[$product['product_cart_id']] = $db_prod;
 	}
 	return $products;
