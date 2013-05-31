@@ -3,35 +3,15 @@
  * API Functions for Transaction Method Add-ons
  *
  * In addition to the functions found below, iThemes Exchange offers the following actions related to transactions
- * - it_exchange_save_transaction_unvalidated		                 // Runs every time an iThemes Exchange transaction is saved.
- * - it_exchange_save_transaction_unavalidate-[transaction-method] // Runs every time a specific iThemes Exchange transaction method is saved.
- * - it_exchange_save_transaction                                  // Runs every time an iThemes Exchange transaction is saved if not an autosave and if user has permission to save post
- * - it_exchange_save_transaction-[transaction-method]             // Runs every time a specific iThemes Exchange transaction method is saved if not an autosave and if user has permission to save transaction
+ * - it_exchange_save_transaction_unvalidated                       // Runs every time a transaction is saved.
+ * - it_exchange_save_transaction_unavalidated-[txn-method] // Runs every time a specific transaction method is saved.
+ * - it_exchange_save_transaction                           // Runs every time a transaction is saved if not an autosave and if user has permission to save post
+ * - it_exchange_save_transaction-[txn-method]             // Runs every time a specific transaction method is saved if not an autosave and if user has permission to save transaction
  *
  * @package IT_Exchange
  * @since 0.3.3
 */
 
-/**
- * Hook for processing webhooks from services like PayPal IPN, Stripe, etc.
- *
- * @since 0.4.0
-*/
-function it_exchange_process_webhooks() {
-	
-	$webhook_keys = apply_filters( 'it_exchange_webhook_keys', array() );
-	
-	foreach( $webhook_keys as $key ) {
-	
-		if ( !empty( $_REQUEST[$key] ) )
-			do_action( 'it_exchange_webhook_' . $key, $_REQUEST );
-		
-	}
-	
-	do_action( 'it_exchange_webhooks_processed' );
-	
-}
-add_action( 'wp', 'it_exchange_process_webhooks' );
 
 /**
  * Grabs the transaction method of a transaction
@@ -616,4 +596,30 @@ function it_exchange_get_successfull_transaction_stati( $transaction_method ) {
 */
 function it_exchange_get_transaction_method_make_payment_button ( $transaction_method, $options=array() ) {
 	return apply_filters( 'it_exchange_get_' . $transaction_method . '_make_payment_button', '', $options );
+}
+
+/**
+ * Grab all registered webhook / IPN keys
+ *
+ * @since 0.4.0
+ * @return array
+*/
+function it_exchange_get_webhook_keys() {
+	return empty( $GLOBALS['it_exchange']['webhook_keys'] ) ? array() : (array) $GLOBALS['it_exchange']['webhook_keys'];
+}
+
+/**
+ * Register a webhook / IPN key
+ *
+ * @since 0.4.0
+ *
+ * @param string $webhook_key the query param we're listening for
+ * @return void
+*/
+function it_exchange_register_webhook( $webhook_key ) {
+	$registered_keys = it_exchange_get_webhook_keys();
+	if ( ! in_array( $webhook_key, $registered_keys ) )
+		$registered_keys[] = $webhook_key;
+
+	$GLOBALS['it_exchange']['webhook_keys'] = $registered_keys;
 }

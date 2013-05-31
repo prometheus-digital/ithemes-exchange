@@ -262,14 +262,19 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 }
 add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_paypal_standard_addon_make_payment_button', 10, 2 );
 
-function it_exchange_paypal_standard_webhook_key( $webhooks ) {
-
-	$webhooks[] = apply_filters( 'it_exchange_paypal-standard_webhook', 'it_exchange_paypal-standard' );
-	
-	return $webhooks;
-	
+/**
+ * Adds the paypal webhook key to the global array of keys to listen for
+ *
+ * @since 0.4.0
+ *
+ * @param array $webhooks existing
+ * @return array
+*/
+function it_exchange_paypal_addon_register_webhook_key() {
+    $key = apply_filters( 'it_exchange_paypal-standard_webhook', 'it_exchange_paypal-standard' );
+    it_exchange_register_webhook( $key );
 }
-add_filter( 'it_exchange_webhook_keys', 'it_exchange_paypal_standard_webhook_key' );
+add_filter( 'init', 'it_exchange_paypal_addon_register_webhook_key' );
 
 /**
  * Processes webhooks for PayPal Web Standard
