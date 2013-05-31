@@ -486,11 +486,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	
 			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
 
-			foreach( $product_images as $image ) {
+			foreach( $product_images as $image_id ) {
 				if ( 'thumbnail' === $options['size'] )
-					$img_url = wp_get_attachment_thumb_url( $product_images[0] );
+					$img_url = wp_get_attachment_thumb_url( $image_id );
 				else
-					$img_url = wp_get_attachment_url( $product_images[0] );
+					$img_url = wp_get_attachment_url( $image_id );
 					
 				$output[] = $img_url;
 			}
@@ -560,8 +560,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 						$output .=  '<ul id="it-exchange-gallery-images">';
 						foreach( $product_images as $image_id ) {
 							
-							$img_url = wp_get_attachment_url( $product_images[0] );
-							$img_thumb_url = wp_get_attachment_thumb_url( $product_images[0] );
+							$img_url = wp_get_attachment_url( $image_id );
+							$img_thumb_url = wp_get_attachment_thumb_url( $image_id );
 							
 							$output .=  '  <li class="it-exchange-product-image-thumb-' . $image_id . '">';
 							$output .=  '      <img alt="" src=" ' . $img_thumb_url . '" data-src-large="' . $img_url . '" data-src-thumb="' . $img_thumb_url . '">';
