@@ -105,6 +105,15 @@ function it_exchange_get_transactions( $args=array() ) {
 		unset( $args['transaction_status'] );
 	}
 
+	// Fold in customer 
+	if ( ! empty( $args['customer_id'] ) ) {
+		$args['meta_query'][] = array( 
+			'key'   => '_it_exchange_customer_id',
+			'value' => $args['customer_id'],
+		);
+		unset( $args['customer_id'] );
+	}
+
 	if ( $transactions = get_posts( $args ) ) {
 		foreach( $transactions as $key => $transaction ) {
 			$transactions[$key] = it_exchange_get_transaction( $transaction );
@@ -443,6 +452,19 @@ function it_exchange_get_transaction_refunds_total( $transaction ) {
 }
 
 /**
+ * Returns the transaction description
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @return string
+*/
+function it_exchange_get_transaction_description( $transaction ) {
+	if ( $transaction = it_exchange_get_transaction( $transaction ) )
+		return $transaction->get_description();
+}
+
+/**
  * Returns the customer object associated with a transaction
  *
  * @since 0.4.0
@@ -529,7 +551,6 @@ function it_exchange_get_transaction_products( $transaction ) {
 		$db_prod->itemized_data   = $product['itemized_data'];
 		$db_prod->additional_data = $product['additional_data'];
 		$db_prod->count           = $product['count'];
-//ITUtility::print_r($db_prod);die( 'DIED IN ' . __FILE__ . ' on line ' . __LINE__);
 		$products[$product['product_cart_id']] = $db_prod;
 	}
 	return $products;

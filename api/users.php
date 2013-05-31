@@ -34,37 +34,6 @@ function it_exchange_get_users_products( $user_id = NULL ) {
 }
 
 /**
- * Return the list of transactions associated with a given user
- *
- * @since 0.4.0
- * @param int $user_id the user ID of user being viewed
- * @return array List of transaction
-*/
-function it_exchange_get_users_transactions( $user_id = NULL  ) {
-	
-	if ( is_null( $user_id ) )
-		$user_id = get_current_user_id();
-		
-	$headings = array(
-					__( 'Product', 'LION' ),
-					__( 'Total', 'LION' ),
-					__( 'Actions', 'LION' ),
-				);
-	$actions_array = array( 
-						'view' => 'View', 
-						'resent' => 'Resent Confirmation Email', 
-						'refund' => 'Refund', 
-						'cancel' => 'Cancel' );
-				
-	$list[] = array( 'My Great Ebook', '$14.00', $actions_array );
-	$list[] = array( 'My Awesome Ebook', '$14.00', $actions_array );
-	$list[] = array( 'The Old Couch', '$200.00', $actions_array );
-	$list[] = array( 'My Firstborn', '$32,000.00', $actions_array );
-				
-	return array( $headings, $list );
-}
-
-/**
  * Return the list of activities associated with a given user
  *
  * @since 0.4.0

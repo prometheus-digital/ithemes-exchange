@@ -74,6 +74,26 @@ function it_exchange_update_customer( $customer_id, $customer_data, $args ) {
 }
 
 /**
+ * Returns all customer transactions
+ *
+ * @since 0.4.0
+ *
+ * @param integer ID customer id
+ * @return array
+*/
+function it_exchange_get_customer_transactions( $customer_id ) {
+	if ( ! $customer = it_exchange_get_customer( $customer_id ) )
+		return array();
+
+	// Get transactions args
+	$args = array(
+		'numberposts' => -1, 
+		'customer_id' => $customer->id,
+	);
+	return it_exchange_get_transactions( $args );
+}
+
+/**
  * Returns an array of form fields for customer registration 
  *
  * Add-ons hooking onto this need to return an array with the following schema so that 

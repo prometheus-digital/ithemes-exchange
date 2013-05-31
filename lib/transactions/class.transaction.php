@@ -207,6 +207,16 @@ class IT_Exchange_Transaction {
 	}
 
 	/**
+	 * Returns the description
+	 *
+	 * @since 0.4.0
+	 * @return string
+	*/
+	function get_description() {
+		return empty( $this->cart_details->description ) ? false : $this->cart_details->description;
+	}
+
+	/**
 	 * Returns the coupons applied to this transaction if they exist
 	 *
 	 * @since 0.4.0

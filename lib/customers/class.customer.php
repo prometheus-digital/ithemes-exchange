@@ -74,8 +74,8 @@ class IT_Exchange_Customer {
 	function init() {
 		$this->set_wp_user();
 		$this->set_customer_data();
-		$this->set_transaction_history();
-		$this->set_purchase_history();
+		//$this->set_transaction_history();
+		//$this->set_purchase_history();
 		
 		//We want to do this last
 		add_filter( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_to_user' ), 999, 2 );
@@ -146,13 +146,8 @@ class IT_Exchange_Customer {
 		if ( ! $this->is_wp_user() )
 			return;
 
-		$args = array(
-			'numberposts' => -1,
-			'post_author' => $this->id,
-		);
-		
 		// Set all user transactions
-		$this->transaction_history = it_exchange_get_transactions( $args );
+		$this->transaction_history = it_exchange_get_customer_transactions( $this->id );
 	}
 
 	/**

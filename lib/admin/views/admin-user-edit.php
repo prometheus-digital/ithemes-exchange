@@ -41,7 +41,33 @@
 				break;
 				
 			case 'transactions':
-				$list = it_exchange_get_users_transactions( $user_id );
+				if ( empty( $user_id ) ) 
+					$user_id = get_current_user_id();
+				
+				$headings = array(
+					__( 'Description', 'LION' ),
+					__( 'Total', 'LION' ),
+					__( 'Actions', 'LION' ),
+				);  
+
+				$list = array();
+				$transactions = it_exchange_get_customer_transactions( $user_id );
+				foreach( it_exchange_get_customer_transactions( $user_id ) as $transaction ) {
+					$view_url   = get_admin_url() . '/post.php?action=edit&post=' . esc_attr( $transaction->ID );
+					$resend_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'resend', 'id' => $transaction->ID ) );
+					$resend_url = remove_query_arg( 'wp_http_referer', $resend_url );
+					$refund_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'refund', 'id' => $transaction->ID ) );
+					$refund_url = remove_query_arg( 'wp_http_referer', $refund_url );
+					$actions_array = array( 
+						$view_url   => 'View',
+						$resend_url => 'Resend Confirmation Email',
+						$refund_url => 'Refund',
+					);
+					$description = it_exchange_get_transaction_description( $transaction );
+					$price       = it_exchange_get_transaction_total( $transaction );
+					$list[]      = array( $description, $price, $actions_array );
+				}
+				$list = array( $headings, $list );
 				break;
 				
 			case 'activity':
@@ -73,7 +99,10 @@
 						<?php if ( is_array( $detail ) ) : ?>
 							<div class="item-column block-column block-column-<?php echo $column; ?>">
 								<?php foreach ( $detail as $action => $label ) : ?>
+									<a class="button" href="<?php esc_attr_e( $action ); ?>"><?php esc_attr_e( $label ); ?></a>
+									<!--
 									<input type="button" class="button" name="it_exchange_<?php echo $action; ?>" value="<?php echo $label; ?>" /> 
+									-->
 								<?php endforeach; ?>
 							</div>
 						<?php else : ?>
