@@ -322,10 +322,52 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return void
 	*/
 	function register_transaction_details_admin_metabox( $post ) {
+		// Customer Details
+		$title     = __( 'Customer Details', 'LION' );
+		$callback  = array( $this, 'print_transaction_customer_details_metabox' );
+		$post_type = 'it_exchange_tran';
+		add_meta_box( 'it-exchange-transaction-customer-details', $title, $callback, $post_type, 'normal', 'high' );
+		
+		// Transaction Details
 		$title     = __( 'Transaction Details', 'LION' );
 		$callback  = array( $this, 'print_transaction_details_metabox' );
 		$post_type = 'it_exchange_tran';
 		add_meta_box( 'it-exchange-transaction-details', $title, $callback, $post_type, 'normal', 'high' );
+
+		// Coupons metabox if coupons were used
+		if ( it_exchange_get_transaction_coupons( $post ) ) {
+			$title     = __( 'Coupons Used', 'LION' );
+			$callback  = array( $this, 'print_transaction_coupon_details_metabox' );
+			$post_type = 'it_exchange_tran';
+			add_meta_box( 'it-exchange-transaction-coupon-details', $title, $callback, $post_type, 'normal', 'high' );
+		}
+
+		// Refunds metabox if refunds have been applied
+		if ( it_exchange_get_transaction_refunds( $post ) ) {
+			$title     = __( 'Refunds Issued', 'LION' );
+			$callback  = array( $this, 'print_transaction_refund_details_metabox' );
+			$post_type = 'it_exchange_tran';
+			add_meta_box( 'it-exchange-transaction-refund-details', $title, $callback, $post_type, 'normal', 'high' );
+		}
+	}
+
+	/**
+	 * Prints the customer details metabox
+	 *
+	 * @since 0.4.0
+	 * @param object $post post object
+	 * @return void
+	*/
+	function print_transaction_customer_details_metabox( $post ) {
+		?>
+		<div class="customer_data">
+			<?php esc_attr_e( it_exchange_get_transaction_customer_display_name( $post ) ); ?><br />
+			<?php esc_attr_e( it_exchange_get_transaction_customer_email( $post ) ); ?><br />
+			<a href="<?php esc_attr_e( it_exchange_get_transaction_customer_admin_profile_url( $post ) ); ?>">
+				<?php _e( 'Full Profile', 'LION' ); ?>
+			</a>
+		</div>
+		<?php
 	}
 
 	/**
@@ -337,50 +379,52 @@ class IT_Exchange_Transaction_Post_Type {
 	*/
 	function print_transaction_details_metabox( $post ) {
 		?>
-		<div class="customer_data">
-			<p>
-				<strong><?php _e( 'Customer', 'LION' ); ?></strong><br />
-				<?php esc_attr_e( it_exchange_get_transaction_customer_display_name( $post ) ); ?><br />
-				<?php esc_attr_e( it_exchange_get_transaction_customer_email( $post ) ); ?><br />
-				<a href="<?php esc_attr_e( it_exchange_get_transaction_customer_admin_profile_url( $post ) ); ?>">
-					<?php _e( 'Full Profile', 'LION' ); ?>
-				</a>
-			</p>
-		</div>
-		<hr />
 		<div>
-			<p>
-				<strong><?php _e( 'Transaction', 'LION' ); ?></strong><br />
-				<?php _e( 'ID: ', 'LION' ); ?> <?php esc_attr_e( $post->ID ); ?><br />
-				<?php _e( 'Date: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_date( $post ) ); ?><br />
-				<?php _e( 'Status: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?><br />
-				<?php _e( 'Method: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?><br />
-				<?php _e( 'Currency: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_currency( $post ) ); ?><br />
-				<?php _e( 'Subtotal: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?><br />
-
-				<?php
-				if ( $coupons = it_exchange_get_transaction_coupons( $post ) ) {
-					echo 'Coupon(s):<ul>';
-					foreach ( $coupons as $type => $coupon ) {
-						echo '<li>' . it_exchange_get_transaction_coupon_summary( $type, $coupon ) . '</li>';
-					}
-					echo '</ul>';
-					echo 'Total Discount from Coupons: ' . it_exchange_get_transaction_coupons_total_discount( $post ) . '<br />';
-				}
-				?>
-				<?php _e( 'Total: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post ) ); ?><br />
-			</p>
-
-			<p>
-				<?php 
-				if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) {
-					?><strong><?php _e( 'Refunds', 'LION' ); ?></strong><br/><?php
-					foreach ( $refunds as $refund ) {
-						echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ) . '<br />';
-					}
-				}
-				?>
+			<?php _e( 'ID: ', 'LION' ); ?> <?php esc_attr_e( $post->ID ); ?><br />
+			<?php _e( 'Date: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_date( $post ) ); ?><br />
+			<?php _e( 'Status: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?><br />
+			<?php _e( 'Method: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?><br />
+			<?php _e( 'Currency: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_currency( $post ) ); ?><br />
+			<?php _e( 'Subtotal: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?><br />
+			<?php _e( 'Total: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post ) ); ?><br />
+		</div>
 		<?php
+	}
+
+	/**
+	 * Prints the transaction coupons details metabox
+	 *
+	 * Only registered if coupons were used with this transaction
+	 *
+	 * @since 0.4.0
+	 * @param object $post post object
+	 * @return void
+	*/
+	function print_transaction_coupon_details_metabox( $post ) {
+		$coupons = it_exchange_get_transaction_coupons( $post );
+
+		echo '<ul>';
+		foreach ( $coupons as $type => $coupon ) {
+			echo '<li>' . it_exchange_get_transaction_coupon_summary( $type, $coupon ) . '</li>';
+		}
+		echo '</ul>';
+		echo 'Total Discount from Coupons: ' . it_exchange_get_transaction_coupons_total_discount( $post ) . '<br />';
+	}
+
+	/**
+	 * Prints the transaction Refund details metabox
+	 *
+	 * Only registered if refunds were applied to this transaction
+	 *
+	 * @since 0.4.0
+	 * @param object $post post object
+	 * @return void
+	*/
+	function print_transaction_refund_details_metabox( $post ) {
+		$refunds = it_exchange_get_transaction_refunds( $post );
+		foreach ( $refunds as $refund ) {
+			echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ) . '<br />';
+		}
 	}
 }
 $IT_Exchange_Transaction_Post_Type = new IT_Exchange_Transaction_Post_Type();
