@@ -372,7 +372,10 @@ function it_exchange_update_transaction_status_for_stripe( $stripe_id, $new_stat
  * @todo SOmething isn't working here
  * @since 0.4.0
 */
-function it_exchange_stripe_addon_add_refund_to_transaction( $stripe_id, $refund ) { //$stripe_id, $refund ) {
+function it_exchange_stripe_addon_add_refund_to_transaction( $stripe_id, $refund ) {
+
+	// Stripe money format comes in as cents. Divide by 100.
+	$refund = ( $refund / 100 );
 
 	// Grab transaction
 	$transactions = it_exchange_get_transaction_from_stripe_id( $stripe_id );
@@ -380,15 +383,16 @@ function it_exchange_stripe_addon_add_refund_to_transaction( $stripe_id, $refund
 
 		$refunds = it_exchange_get_transaction_refunds( $transaction );
 		
-		$refunded_amount = number_format( 0, '2', '', '' );;
-		foreach( $refunds as $refund_meta ) {
-			$refunded_amount += number_format( $refund_meta['amount'], '2', '', '' );
+		$refunded_amount = number_format( 0, 0, '', '' );
+		foreach( ( array) $refunds as $refund_meta ) {
+			$refunded_amount += $refund_meta['amount'];
 		}
 		
 		// In Stripe the Refund is the total amount that has been refunded, not just this transaction
 		$this_refund = $refund - $refunded_amount;
 		
-		it_exchange_add_refund_to_transaction( $transaction, number_format( $this_refund, '2', '', '' ) );
+		// This refund is already formated on the way in. Don't reformat.
+		it_exchange_add_refund_to_transaction( $transaction, $this_refund );
 	}
 	
 }
