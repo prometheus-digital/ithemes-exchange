@@ -16,7 +16,7 @@ require_once('stripe-api/lib/Stripe.php');
  * @param object $form Current IT Form object
  * @return void
 */
-function it_exchange_stripe_wizard_settings( $form ) {
+function it_exchange_stripe_addon_print_wizard_settings( $form ) {
 	$IT_Exchange_Stripe_Add_On = new IT_Exchange_Stripe_Add_On();
 	$settings = it_exchange_get_option( 'addon_stripe', true );
 	?>
@@ -35,7 +35,7 @@ add_action( 'it_exchange_print_wizard_settings', 'it_exchange_stripe_addon_print
  * @param string $status passed by WP filter.
  * @param object $transaction_object The transaction object
 */
-function it_exchange_process_stripe_transaction( $status, $transaction_object ) {
+function it_exchange_stripe_addon_process_transaction( $status, $transaction_object ) {
  
 	// If this has been modified as true already, return.
 	if ( $status )
@@ -108,7 +108,7 @@ function it_exchange_process_stripe_transaction( $status, $transaction_object ) 
 	return false;
 	
 }
-add_action( 'it_exchange_do_transaction_stripe', 'it_exchange_process_stripe_transaction', 10, 2 );
+add_action( 'it_exchange_do_transaction_stripe', 'it_exchange_stripe_addon_process_transaction', 10, 2 );
 
 /**
  * Grab the stripe customer ID for a WP user
@@ -248,11 +248,11 @@ add_filter( 'it_exchange_get_stripe_make_payment_button', 'it_exchange_stripe_ad
  * @param array $default_currencies Array of default currencies supplied by iThemes Exchange
  * @return array filtered list of currencies only supported by Stripe
  */
-function it_exchange_get_stripe_currency_options( $default_currencies ) {
+function it_exchange_stripe_addon_get_currency_options( $default_currencies ) {
 	$stripe_currencies = IT_Exchange_Stripe_Add_On::get_supported_currency_options();
 	return array_intersect_key( $default_currencies, $stripe_currencies );
 }
-add_filter( 'it_exchange_get_currency_options', 'it_exchange_get_stripe_currency_options' );
+add_filter( 'it_exchange_get_currency_options', 'it_exchange_stripe_addon_get_currency_options' );
 
 /**
  * Adds the stripe webhook key to the global array of keys to listen for
@@ -277,7 +277,7 @@ add_filter( 'init', 'it_exchange_stripe_addon_register_webhook_key' );
  *
  * @param array $request really just passing  $_REQUEST
  */
-function it_exchange_stripe_process_webhook( $request ) {
+function it_exchange_stripe_addon_process_webhook( $request ) {
 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_stripe' );
@@ -298,27 +298,27 @@ function it_exchange_stripe_process_webhook( $request ) {
 			switch( $stripe_event->type ) :
 
 				case 'charge.succeeded' :
-					it_exchange_update_transaction_status_for_stripe( $stripe_object->id, 'succeeded' );
+					it_exchange_stripe_addon_update_transaction_status( $stripe_object->id, 'succeeded' );
 					break;
 				case 'charge.failed' :
-					it_exchange_update_transaction_status_for_stripe( $stripe_object->id, 'failed' );
+					it_exchange_stripe_addon_update_transaction_status( $stripe_object->id, 'failed' );
 					break;
 				case 'charge.refunded' :
 					if ( $stripe_object->refunded )
-						it_exchange_update_transaction_status_for_stripe( $stripe_object->id, 'refunded' );
+						it_exchange_stripe_addon_update_transaction_status( $stripe_object->id, 'refunded' );
 					else
-						it_exchange_update_transaction_status_for_stripe( $stripe_object->id, 'partial-refund' );
+						it_exchange_stripe_addon_update_transaction_status( $stripe_object->id, 'partial-refund' );
 					
-					it_exchange_add_refund_to_transaction_for_stripe( $stripe_object->id, $stripe_object->amount_refunded );
+					it_exchange_stripe_addon_add_refund_to_transaction( $stripe_object->id, $stripe_object->amount_refunded );
 						
 					break;
 				case 'charge.dispute.created' :
 				case 'charge.dispute.updated' :
 				case 'charge.dispute.closed' :
-					it_exchange_update_transaction_status_for_stripe( $stripe_object->charge, $stripe_object->status );
+					it_exchange_stripe_addon_update_transaction_status( $stripe_object->charge, $stripe_object->status );
 					break;
 				case 'customer.deleted' :
-					it_exchange_delete_stripe_id_from_customer( $stripe_object->id );
+					it_exchange_stripe_addon_delete_stripe_id_from_customer( $stripe_object->id );
 					break;
 
 			endswitch;
@@ -331,7 +331,7 @@ function it_exchange_stripe_process_webhook( $request ) {
 	}
 	
 }
-add_action( 'it_exchange_webhook_it_exchange_stripe', 'it_exchange_stripe_process_webhook' );
+add_action( 'it_exchange_webhook_it_exchange_stripe', 'it_exchange_stripe_addon_process_webhook' );
 
 /**
  * Grab a transaction from the stripe transaction ID
@@ -341,7 +341,7 @@ add_action( 'it_exchange_webhook_it_exchange_stripe', 'it_exchange_stripe_proces
  * @param integer $stripe_id id of stripe transaction
  * @return transaction object
 */
-function it_exchange_get_transaction_from_stripe_id( $stripe_id ) {
+function it_exchange_stripe_addon_get_transaction_id( $stripe_id ) {
 	$args = array(
 		'meta_key'    => '_it_exchange_transaction_method_id',
 		'meta_value'  => $stripe_id,
@@ -359,8 +359,8 @@ function it_exchange_get_transaction_from_stripe_id( $stripe_id ) {
  * @param string $new_status new status
  * @return void
 */
-function it_exchange_update_transaction_status_for_stripe( $stripe_id, $new_status ) {
-	$transactions = it_exchange_get_transaction_from_stripe_id( $stripe_id );
+function it_exchange_stripe_addon_update_transaction_status( $stripe_id, $new_status ) {
+	$transactions = it_exchange_stripe_addon_get_transaction_id( $stripe_id );
 	foreach( $transactions as $transaction ) { //really only one
 		$current_status = it_exchange_get_transaction_status( $transaction );
 		if ( $new_status !== $current_status )
@@ -373,13 +373,13 @@ function it_exchange_update_transaction_status_for_stripe( $stripe_id, $new_stat
  *
  * @since 0.4.0
 */
-function it_exchange_add_refund_to_transaction_for_stripe( $stripe_id, $refund ) {
+function it_exchange_stripe_addon_add_refund_to_transaction( $stripe_id, $refund ) {
 
 	// Stripe money format comes in as cents. Divide by 100.
 	$refund = ( $refund / 100 );
 
 	// Grab transaction
-	$transactions = it_exchange_get_transaction_from_stripe_id( $stripe_id );
+	$transactions = it_exchange_stripe_addon_get_transaction_id( $stripe_id );
 	foreach( $transactions as $transaction ) { //really only one
 
 		$refunds = it_exchange_get_transaction_refunds( $transaction );
@@ -405,8 +405,8 @@ function it_exchange_add_refund_to_transaction_for_stripe( $stripe_id, $refund )
  *
  * @param integer $stripe_id the id of the stripe transaction
 */
-function it_exchange_delete_stripe_id_from_customer( $stripe_id ) {
-	$transactions = it_exchange_get_transaction_from_stripe_id( $stripe_id );
+function it_exchange_stripe_addon_delete_stripe_id_from_customer( $stripe_id ) {
+	$transactions = it_exchange_stripe_addon_get_transaction_id( $stripe_id );
 	foreach( $transactions as $transaction ) { //really only one
 		$customer_id = get_post_meta( $transaction->ID, '_it_exchange_customer_id', true );
 		if ( false !== $current_stripe_id = it_exchange_stripe_addon_get_stripe_customer_id( $customer_id ) ) {
@@ -426,7 +426,7 @@ function it_exchange_delete_stripe_id_from_customer( $stripe_id ) {
  * @param string $status the string of the stripe transaction
  * @return string translaction transaction status
 */
-function it_exchange_transaction_status_label_stripe( $status ) {
+function it_exchange_stripe_addon_transaction_status_label( $status ) {
 
 	switch ( $status ) {
 	
@@ -448,7 +448,7 @@ function it_exchange_transaction_status_label_stripe( $status ) {
 	}
 	
 }
-add_filter( 'it_exchange_transaction_status_label_stripe', 'it_exchange_transaction_status_label_stripe' );
+add_filter( 'it_exchange_transaction_status_label_stripe', 'it_exchange_stripe_addon_transaction_status_label' );
 
 /**
  * Class for Stripe

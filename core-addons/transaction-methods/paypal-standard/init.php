@@ -17,7 +17,7 @@ define( 'PAYPAL_NVP_API_LIVE_URL', 'https://api-3t.paypal.com/nvp' );
  * @param object $form Current IT Form object
  * @return void
 */
-function it_exchange_paypal_standard_wizard_settings( $form ) {
+function it_exchange_paypal_standard_addon_wizard_settings( $form ) {
 	$IT_Exchange_PayPal_Standard_Add_On = new IT_Exchange_PayPal_Standard_Add_On();
 	$settings = it_exchange_get_option( 'addon_paypal_standard', true );
 	?>
@@ -26,7 +26,7 @@ function it_exchange_paypal_standard_wizard_settings( $form ) {
 	</div>
 	<?php
 }
-add_action( 'it_exchange_print_wizard_settings', 'it_exchange_paypal_standard_wizard_settings' );
+add_action( 'it_exchange_print_wizard_settings', 'it_exchange_paypal_standard_addon_wizard_settings' );
 
 /**
  * This proccesses a paypal transaction.
@@ -36,7 +36,7 @@ add_action( 'it_exchange_print_wizard_settings', 'it_exchange_paypal_standard_wi
  * @param string $status passed by WP filter.
  * @param object $transaction_object The transaction object
 */
-function it_exchange_process_paypal_standard_transaction( $status, $transaction_object ) {
+function it_exchange_process_paypal_standard_addon_transaction( $status, $transaction_object ) {
 
 	if ( $status ) //if this has been modified as true already, return.
 		return $status;
@@ -95,8 +95,8 @@ function it_exchange_process_paypal_standard_transaction( $status, $transaction_
 					$array = array();
 					parse_str( wp_remote_retrieve_body( $response ) );
 					
-					it_exchange_set_paypal_standard_customer_id( $it_exchange_customer->id, $PAYERID );
-					it_exchange_set_paypal_standard_customer_email( $it_exchange_customer->id, $EMAIL );
+					it_exchange_set_paypal_standard_addon_customer_id( $it_exchange_customer->id, $PAYERID );
+					it_exchange_set_paypal_standard_addon_customer_email( $it_exchange_customer->id, $EMAIL );
 					$transaction_status = $PAYMENTSTATUS;
 					
 					if ( $transaction_id != $TRANSACTIONID )
@@ -129,7 +129,7 @@ function it_exchange_process_paypal_standard_transaction( $status, $transaction_
 	return false;
 	
 }
-add_action( 'it_exchange_do_transaction_paypal-standard', 'it_exchange_process_paypal_standard_transaction', 10, 2 );
+add_action( 'it_exchange_do_transaction_paypal-standard', 'it_exchange_process_paypal_standard_addon_transaction', 10, 2 );
 
 /**
  * Grab the paypal customer ID for a WP user
@@ -139,7 +139,7 @@ add_action( 'it_exchange_do_transaction_paypal-standard', 'it_exchange_process_p
  * @param integer $customer_id the WP customer ID
  * @return string
 */
-function it_exchange_get_paypal_standard_customer_id( $customer_id ) {
+function it_exchange_get_paypal_standard_addon_customer_id( $customer_id ) {
 	return get_user_meta( $customer_id, '_it_exchange_paypal_standard_id', true );
 }
 
@@ -152,7 +152,7 @@ function it_exchange_get_paypal_standard_customer_id( $customer_id ) {
  * @param integer $paypal_standard_id the paypal customer ID
  * @return boolean
 */
-function it_exchange_set_paypal_standard_customer_id( $customer_id, $paypal_standard_id ) {
+function it_exchange_set_paypal_standard_addon_customer_id( $customer_id, $paypal_standard_id ) {
 	return update_user_meta( $customer_id, '_it_exchange_paypal_standard_id', $paypal_standard_id );
 }
 
@@ -164,7 +164,7 @@ function it_exchange_set_paypal_standard_customer_id( $customer_id, $paypal_stan
  * @param integer $customer_id the WP customer ID
  * @return string
 */
-function it_exchange_get_paypal_standard_customer_email( $customer_id ) {
+function it_exchange_get_paypal_standard_addon_customer_email( $customer_id ) {
 	return get_user_meta( $customer_id, '_it_exchange_paypal_standard_email', true );
 }
 
@@ -177,7 +177,7 @@ function it_exchange_get_paypal_standard_customer_email( $customer_id ) {
  * @param string $paypal_standard_email the paypal customer email
  * @return boolean
 */
-function it_exchange_set_paypal_standard_customer_email( $customer_id, $paypal_standard_email ) {
+function it_exchange_set_paypal_standard_addon_customer_email( $customer_id, $paypal_standard_email ) {
 	return update_user_meta( $customer_id, '_it_exchange_paypal_standard_email', $paypal_standard_email );
 }
 
@@ -215,11 +215,11 @@ function paypal_standard_print_wizard_settings( $form ) {
  *
  * @return void
 */
-function paypal_standard_save_wizard_settings() {
+function it_exchange_paypal_standard_addon_save_wizard_settings() {
 	$IT_Exchange_PayPal_Standard_Add_On = new IT_Exchange_PayPal_Standard_Add_On();
 	$IT_Exchange_PayPal_Standard_Add_On->paypal_standard_save_wizard_settings();
 }
-add_action( 'it_exchange_save_wizard_settings', 'paypal_standard_save_wizard_settings' );
+add_action( 'it_exchange_save_wizard_settings', 'it_exchange_paypal_standard_addon_save_wizard_settings' );
 
 /**
  * Default settings for paypal_standard
@@ -346,7 +346,7 @@ add_filter( 'init', 'it_exchange_paypal_addon_register_webhook' );
  *
  * @param array $request really just passing  $_REQUEST
  */
-function it_exchange_paypal_standard_process_webhook( $request ) {
+function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard' );
@@ -359,13 +359,13 @@ function it_exchange_paypal_standard_process_webhook( $request ) {
 			switch( $request['payment_status'] ) :
 
 				case 'Completed' :
-					it_exchange_update_transaction_status_for_paypal_standard( $request['txn_id'], $request['payment_status'] );
+					it_exchange_paypal_standard_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] );
 					break;
 				case 'Refunded' :
-					it_exchange_update_transaction_status_for_paypal_standard( $request['parent_txn_id'], $request['payment_status'] );
-					it_exchange_add_refund_to_transaction_for_paypal_standard( $request['parent_txn_id'], $request['mc_gross'] );
+					it_exchange_paypal_standard_addon_update_transaction_status( $request['parent_txn_id'], $request['payment_status'] );
+					it_exchange_paypal_standard_addon_add_refund_to_transaction( $request['parent_txn_id'], $request['mc_gross'] );
 				case 'Reversed' :
-					it_exchange_update_transaction_status_for_paypal_standard( $request['parent_txn_id'], $request['reason_code'] );		
+					it_exchange_paypal_standard_addon_update_transaction_status( $request['parent_txn_id'], $request['reason_code'] );		
 					break;
 
 			endswitch;
@@ -378,7 +378,7 @@ function it_exchange_paypal_standard_process_webhook( $request ) {
 	}
 	
 }
-add_action( 'it_exchange_webhook_it_exchange_paypal-standard', 'it_exchange_paypal_standard_process_webhook' );
+add_action( 'it_exchange_webhook_it_exchange_paypal-standard', 'it_exchange_paypal_standard_addon_process_webhook' );
 
 /**
  * Grab a transaction from the paypal transaction ID
@@ -388,7 +388,7 @@ add_action( 'it_exchange_webhook_it_exchange_paypal-standard', 'it_exchange_payp
  * @param integer $paypal_standard_id id of paypal transaction
  * @return transaction object
 */
-function it_exchange_get_transaction_from_paypal_standard_id( $paypal_standard_id ) {
+function it_exchange_paypal_standard_addon_get_transaction_id( $paypal_standard_id ) {
 	$args = array(
 		'meta_key'    => '_it_exchange_transaction_method_id',
 		'meta_value'  => $paypal_standard_id,
@@ -406,8 +406,8 @@ function it_exchange_get_transaction_from_paypal_standard_id( $paypal_standard_i
  * @param string $new_status new status
  * @return void
 */
-function it_exchange_update_transaction_status_for_paypal_standard( $paypal_standard_id, $new_status ) {
-	$transactions = it_exchange_get_transaction_from_paypal_standard_id( $paypal_standard_id );
+function it_exchange_paypal_standard_addon_update_transaction_status( $paypal_standard_id, $new_status ) {
+	$transactions = it_exchange_paypal_standard_addon_get_transaction_id( $paypal_standard_id );
 	foreach( $transactions as $transaction ) { //really only one
 		$current_status = it_exchange_get_transaction_status( $transaction );
 		if ( $new_status !== $current_status )
@@ -420,32 +420,12 @@ function it_exchange_update_transaction_status_for_paypal_standard( $paypal_stan
  *
  * @since 0.4.0
 */
-function it_exchange_add_refund_to_transaction_for_paypal_standard( $paypal_standard_id, $refund ) {
-	$transactions = it_exchange_get_transaction_from_paypal_standard_id( $paypal_standard_id );
+function it_exchange_paypal_standard_addon_add_refund_to_transaction( $paypal_standard_id, $refund ) {
+	$transactions = it_exchange_paypal_standard_addon_get_transaction_id( $paypal_standard_id );
 	foreach( $transactions as $transaction ) { //really only one
 		it_exchange_add_refund_to_transaction( $transaction, number_format( abs( $refund ), '2', '.', '' ) );
 	}	
 	
-}
-
-/**
- * Removes a paypal Customer ID from a WP user
- *
- * @since 0.4.0
- *
- * @param integer $paypal_standard_id the id of the paypal transaction
-*/
-function it_exchange_delete_paypal_standard_id_from_customer( $paypal_standard_id ) {
-	$transactions = it_exchange_get_transaction_from_paypal_standard_id( $paypal_standard_id );
-	foreach( $transactions as $transaction ) { //really only one
-		$customer_id = get_post_meta( $transaction->ID, '_it_exchange_customer_id', true );
-		if ( false !== $current_paypal_standard_id = it_exchange_get_paypal_standard_customer_id( $customer_id ) ) {
-			
-			if ( $current_paypal_standard_id === $paypal_standard_id )
-				delete_user_meta( $customer_id, '_it_exchange_paypal_standard_id' );
-				
-		}
-	}	
 }
 
 /**
@@ -456,7 +436,7 @@ function it_exchange_delete_paypal_standard_id_from_customer( $paypal_standard_i
  * @param string $status the string of the paypal transaction
  * @return string translaction transaction status
 */
-function it_exchange_transaction_status_label_paypal_standard( $status ) {
+function it_exchange_paypal_standard_addon_transaction_status_label( $status ) {
 
 	switch ( $status ) {
 	
@@ -474,7 +454,7 @@ function it_exchange_transaction_status_label_paypal_standard( $status ) {
 	}
 	
 }
-add_filter( 'it_exchange_transaction_status_label_paypal-standard', 'it_exchange_transaction_status_label_paypal_standard' );
+add_filter( 'it_exchange_transaction_status_label_paypal-standard', 'it_exchange_paypal_standard_addon_transaction_status_label' );
 
 /**
  * Class for Stripe
