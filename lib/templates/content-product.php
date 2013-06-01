@@ -18,9 +18,18 @@
 				<p><strong>Product Images</strong><br /><?php it_exchange( 'product', 'images' ); ?></p>
 			<?php endif; ?>
 
-			<?php if ( it_exchange( 'product', 'has-title' ) ) : ?>
-				<p><strong>Title</strong><br /><?php it_exchange( 'product', 'title' ); ?></p>
-			<?php endif; ?>
+			<?php 
+			/**
+			 * We do not use title in default template-part because if this is being called, it's probably
+			 * being loaded in the the_content filter on the default theme's page.php template file.
+			 * If you need the title, copy this file to /your-theme-folder/exchange/content-product.php and add the title to it.
+			 *
+			 * eg:
+			 * <?php if ( it_exchange( 'product', 'has-title' ) ) : ?>
+			 *     <div class='title'><?php it_exchange( 'product', 'title' ); ?></div>
+			 * <?php endif; ?>
+			*/
+			?>
 
 			<?php if ( it_exchange( 'product', 'has-base-price' ) ) : ?>
 				<p><strong>Base Price</strong><br /><?php it_exchange( 'product', 'base-price' ); ?></p>
