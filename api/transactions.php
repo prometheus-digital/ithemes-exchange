@@ -531,6 +531,21 @@ function it_exchange_get_transaction_customer_admin_profile_url( $transaction, $
 }
 
 /**
+ * Get Transaction Order Number
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction id or object
+ * @return string
+*/
+function it_exchange_get_transaction_order_number( $transaction ) {
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
+		return false;
+	$order_number = __( 'Order ', 'LION' ) . sprintf( '%06d', $transaction->ID );
+	return apply_filters( 'it_exchange_get_transaction_order_number', $order_number, $transaction );
+}
+
+/**
  * Returns an array of product objects as they existed when added to the transaction
  *
  * @since 0.4.0

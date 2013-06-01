@@ -179,7 +179,7 @@ class IT_Exchange_Transaction_Post_Type {
 	function modify_all_transactions_table_columns( $existing ) {
 
 		// Add a filter to replace the title text with the Date
-		add_filter( 'the_title', array( $this, 'replace_transaction_title_with_cart_description' ) );
+		add_filter( 'the_title', array( $this, 'replace_transaction_title_with_order_number' ) );
 
 		// Remove Checkbox - adding it back below
 		if ( isset( $existing['cb'] ) ) {
@@ -210,7 +210,7 @@ class IT_Exchange_Transaction_Post_Type {
 		// All Core should be removed at this point. Build ours back (including date from core)
 		$exchange_columns = array(
 			'cb'                                      => $check,
-			'title'                                   => __( 'Cart Description', 'LION' ),
+			'title'                                   => __( 'Order Number', 'LION' ),
 			'it_exchange_transaction_total_column'    => __( 'Total', 'LION' ),
 			'it_exchange_transaction_status_column'   => __( 'Status', 'LION' ),
 			'it_exchange_transaction_customer_column' => __( 'Customer', 'LION' ),
@@ -224,17 +224,17 @@ class IT_Exchange_Transaction_Post_Type {
 	}
 
 	/**
-	 * Replace the title with the cart description
+	 * Replace the title with the order_number
 	 *
 	 * @since 0.4.0
 	 *
 	 * @param string $title the real title
 	 * @return string
 	*/
-	function replace_transaction_title_with_cart_description( $title ) {
+	function replace_transaction_title_with_order_number( $title ) {
 		global $post;
 		$transaction = it_exchange_get_transaction($post);
-		return $transaction->cart_details->description;
+		return it_exchange_get_transaction_order_number( $post );
 	}
 
 	/**
@@ -245,7 +245,6 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return array  modified sortable columnns
 	*/
 	function make_transaction_custom_columns_sortable( $sortables ) {
-		$sortables['title']                                   = array( 'date', true );
 		$sortables['it_exchange_transaction_method_column']   = 'it_exchange_transaction_method_column';
 		$sortables['it_exchange_transaction_status_column']   = 'it_exchange_transaction_status_column';
 		$sortables['it_exchange_transaction_customer_column'] = 'it_exchange_transaction_customer_column';
@@ -366,7 +365,7 @@ class IT_Exchange_Transaction_Post_Type {
 		$confirmation_url = it_exchange_get_transaction_confirmation_url( $post->ID );
 		?>
 		<div>
-			<?php _e( 'ID:', 'LION' ); ?> <?php esc_attr_e( $post->ID ); ?><br />
+			<?php _e( 'Order Number:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_order_number( $post ) ); ?><br />
 			<?php _e( 'Date:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_date( $post ) ); ?><br />
 			<?php _e( 'Status:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?><br />
 			<?php _e( 'Method:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?><br />
