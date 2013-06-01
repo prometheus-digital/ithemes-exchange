@@ -323,7 +323,7 @@ class IT_Exchange_Transaction_Post_Type {
 			$title     = __( 'Coupons Used', 'LION' );
 			$callback  = array( $this, 'print_transaction_coupon_details_metabox' );
 			$post_type = 'it_exchange_tran';
-			add_meta_box( 'it-exchange-transaction-coupon-details', $title, $callback, $post_type, 'normal', 'high' );
+			add_meta_box( 'it-exchange-transaction-coupon-details', $title, $callback, $post_type, 'side' );
 		}
 
 		// Refunds metabox if refunds have been applied
@@ -331,8 +331,14 @@ class IT_Exchange_Transaction_Post_Type {
 			$title     = __( 'Refunds Issued', 'LION' );
 			$callback  = array( $this, 'print_transaction_refund_details_metabox' );
 			$post_type = 'it_exchange_tran';
-			add_meta_box( 'it-exchange-transaction-refund-details', $title, $callback, $post_type, 'normal', 'high' );
+			add_meta_box( 'it-exchange-transaction-refund-details', $title, $callback, $post_type, 'side' );
 		}
+
+		// Product Details
+		$title     = __( 'Product Details', 'LION' );
+		$callback  = array( $this, 'print_product_details_metabox' );
+		$post_type = 'it_exchange_tran';
+		add_meta_box( 'it-exchange-product-details', $title, $callback, $post_type, 'normal' );
 	}
 
 	/**
@@ -417,6 +423,21 @@ class IT_Exchange_Transaction_Post_Type {
 			echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ) . '<br />';
 		}
 		echo 'Total Refund: ' . it_exchange_format_price( it_exchange_get_transaction_refunds_total( $post ) );
+	}
+
+	/**
+	 * Prints the transaction Products details metabox
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param object $post post object
+	 * @return void
+	*/
+	function print_product_details_metabox( $post ) {
+		$products = it_exchange_get_transaction_products( $post );
+		foreach ( $products as $product ) {
+			echo it_exchange_get_product_feature( $product, 'title' ) . '<br />';
+		}
 	}
 }
 $IT_Exchange_Transaction_Post_Type = new IT_Exchange_Transaction_Post_Type();
