@@ -37,6 +37,20 @@
 #it-exchange-customer .customer-password div{float:left;}
 #it-exchange-customer .customer-save{margin-top:1em;}
 
+/** -----------------------------------------------------:[ product ]:---------- */
+#it-exchange-product .product-columns.has-images{overflow:hidden;}
+#it-exchange-product .has-images .product-column{float:left;}
+#it-exchange-product .has-images .product-info{width:60%;}
+#it-exchange-product .has-images .product-info .product-column-inner{margin-right:2em;}
+#it-exchange-product .has-images .product-images{width:40%;}
+
+/** ----------------------------------------:[ gallery ]:--- */
+#it-exchange-product #it-exchange-gallery-images{list-style:none;}
+#it-exchange-product #it-exchange-gallery-images li{margin:0;float:left;width:25%;}
+
+/** ----------------------------------------:[ advanced ]:--- */
+#it-exchange-product .product-advanced-content{margin-top:2em;}
+
 /** -----------------------------------------------------:[ cart ]:---------- */
 #it-exchange-cart{overflow:hidden;}
 #it-exchange-cart *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}

@@ -5,73 +5,66 @@
  * @since 0.4.0
  */
 ?>
-	<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-		<div class="entry-content">
+
+<?php it_exchange_get_template_part( 'messages' ); ?>
+
+<div id="it-exchange-product">
+	<div class="product-standard-content product-columns <?php echo ( it_exchange( 'product', 'has-images' ) ) ? ' has-images' : ''; ?>">
+		<div class="product-column product-info">
+			<div class="product-column-inner">
+				<?php if ( it_exchange( 'product', 'has-base-price' ) ) : ?>
+					<div class="product-price">
+						<p><?php it_exchange( 'product', 'base-price' ); ?></p>
+					</div>
+				<?php endif; ?>
 			
-			<?php it_exchange_get_template_part( 'messages' ); ?>
+				<?php if ( it_exchange( 'product', 'has-description' ) ) : ?>
+					<div class="product-description">
+						<?php it_exchange( 'product', 'description' ); ?>
+					</div>
+				<?php endif; ?>
+			</div>
+		</div>
+		<?php if ( it_exchange( 'product', 'has-images' ) ) : ?>
+			<div class="product-column product-images">
+				<div class="product-column-inner">
+					<?php it_exchange( 'product', 'gallery' ); ?>
+				</div>
+			</div>
+		<?php endif; ?>
+	</div>
 
-			<?php if ( it_exchange( 'product', 'has-featured-image' ) ) : ?>
-				<p><strong>Featured Image</strong><br /><?php it_exchange( 'product', 'featured-image' ); ?></p>
-			<?php endif; ?>
-            
-			<?php if ( it_exchange( 'product', 'has-images' ) ) : ?>
-				<p><strong>Product Images</strong><br /><?php it_exchange( 'product', 'images' ); ?></p>
-			<?php endif; ?>
+	<div class="product-advanced-content">
+		<?php if ( it_exchange( 'product', 'has-extended-description' ) ) : ?>
+			<div class="extended-description">
+				<?php it_exchange( 'product', 'extended-description' ); ?>
+			</div>
+		<?php endif; ?>
+		
+		<?php if ( it_exchange( 'product', 'has-downloads' ) ) : ?>
+			<p><strong>Downloads</strong><br />
+			<?php while( it_exchange( 'product', 'downloads' ) ): ?>
+				<em>Download</em>: <?php it_exchange( 'download', 'title' ); ?> | 
+				<?php it_exchange( 'download', 'limit' ); ?> | <?php it_exchange( 'download', 'expiration' ); ?>
+				<br />
+			<?php endwhile; ?>
+			</p>
+		<?php endif; ?>
 
-			<?php 
-			/**
-			 * We do not use title in default template-part because if this is being called, it's probably
-			 * being loaded in the the_content filter on the default theme's page.php template file.
-			 * If you need the title, copy this file to /your-theme-folder/exchange/content-product.php and add the title to it.
-			 *
-			 * eg:
-			 * <?php if ( it_exchange( 'product', 'has-title' ) ) : ?>
-			 *     <div class='title'><?php it_exchange( 'product', 'title' ); ?></div>
-			 * <?php endif; ?>
-			*/
-			?>
+		<?php if ( it_exchange( 'product', 'has-inventory' ) ) : ?>
+			<p><strong>Inventory</strong><br /><?php it_exchange( 'product', 'inventory' ); ?></p>
+		<?php endif; ?>
 
-			<?php if ( it_exchange( 'product', 'has-base-price' ) ) : ?>
-				<p><strong>Base Price</strong><br /><?php it_exchange( 'product', 'base-price' ); ?></p>
-			<?php endif; ?>
+		<?php if ( it_exchange( 'product', 'supports-purchase-quantity' ) ) : ?>
+			<p><strong>Max Quantity Per Purcahse</strong><br /><?php it_exchange( 'product', 'purchase-quantity', 'format=max-quantity' ); ?></p>
+		<?php endif; ?>
 
-			<?php if ( it_exchange( 'product', 'has-description' ) ) : ?>
-				<p><strong>Description</strong><br /><?php it_exchange( 'product', 'description' ); ?></p>
-			<?php endif; ?>
+		<?php if ( it_exchange( 'product', 'has-availability', 'type=start' ) ) : ?>
+			<p><strong>Product Start Availability</strong><br /><?php it_exchange( 'product', 'availability', 'type=start' ); ?></p>
+		<?php endif; ?>
 
-			<?php if ( it_exchange( 'product', 'has-extended-description' ) ) : ?>
-				<p><strong>Extended Description</strong><br /><?php it_exchange( 'product', 'extended-description' ); ?></p>
-			<?php endif; ?>
-
-			<?php if ( it_exchange( 'product', 'has-downloads' ) ) : ?>
-				<p><strong>Downloads</strong><br />
-				<?php while( it_exchange( 'product', 'downloads' ) ): ?>
-					<em>Download</em>: <?php it_exchange( 'download', 'title' ); ?> | 
-					<?php it_exchange( 'download', 'limit' ); ?> | <?php it_exchange( 'download', 'expiration' ); ?>
-					<br />
-				<?php endwhile; ?>
-				</p>
-			<?php endif; ?>
-
-			<?php if ( it_exchange( 'product', 'has-inventory' ) ) : ?>
-				<p><strong>Inventory</strong><br /><?php it_exchange( 'product', 'inventory' ); ?></p>
-			<?php endif; ?>
-
-			<?php if ( it_exchange( 'product', 'supports-purchase-quantity' ) ) : ?>
-				<p><strong>Max Quantity Per Purcahse</strong><br /><?php it_exchange( 'product', 'purchase-quantity', 'format=max-quantity' ); ?></p>
-			<?php endif; ?>
-
-			<?php if ( it_exchange( 'product', 'has-availability', 'type=start' ) ) : ?>
-				<p><strong>Product Start Availability</strong><br /><?php it_exchange( 'product', 'availability', 'type=start' ); ?></p>
-			<?php endif; ?>
-
-			<?php if ( it_exchange( 'product', 'has-availability', 'type=end' ) ) : ?>
-				<p><strong>Product End Availability</strong><br /><?php it_exchange( 'product', 'availability', 'type=end' ); ?></p>
-			<?php endif; ?>
-
-		</div><!-- .entry-content -->
-
-		<footer class="entry-meta">
-			<?php edit_post_link( __( 'Edit', 'LION' ), '<span class="edit-link">', '</span>' ); ?>
-		</footer><!-- .entry-meta -->
-	</article><!-- #post -->
+		<?php if ( it_exchange( 'product', 'has-availability', 'type=end' ) ) : ?>
+			<p><strong>Product End Availability</strong><br /><?php it_exchange( 'product', 'availability', 'type=end' ); ?></p>
+		<?php endif; ?>
+	</div>
+</div>
