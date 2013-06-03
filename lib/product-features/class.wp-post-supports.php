@@ -167,6 +167,7 @@ class IT_Exchange_WP_Post_Supports {
 	*/
 	function get_extended_description( $description, $product_id ) { 
 		if ( $product = it_exchange_get_product( $product_id ) ) {
+			remove_filter( 'the_content', array( $GLOBALS['IT_Exchange_Router'], 'fallback_filter_for_page_template' ) );
 			return apply_filters( 'the_content', $product->post_content );
 		}
 		return false;

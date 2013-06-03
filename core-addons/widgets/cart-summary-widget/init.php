@@ -19,7 +19,7 @@ class IT_Exchange_Cart_Summary extends WP_Widget {
 			)
 		);
 		if ( ! is_admin() )
-			add_filter( 'it_exchange_possible_template_paths', array( $this, 'register_template_directory' ) );
+			add_filter( 'it_exchange_possible_template_paths', array( $this, 'register_template_directory' ), 10, 2 );
 	}
 
 	/**
@@ -86,9 +86,11 @@ class IT_Exchange_Cart_Summary extends WP_Widget {
 	 * @param array $existing existing locations
 	 * @return array
 	*/
-	function register_template_directory( $existing ) {
-		$directory = dirname( __FILE__ ) . '/templates';
-		$existing[] = $directory;
+	function register_template_directory( $existing, $template_names=array() ) {
+		if ( in_array( 'cart-summary-widget', $template_names ) ) {
+			$directory = dirname( __FILE__ ) . '/templates';
+			$existing[] = $directory;
+		}
 		return $existing;
 	}
 }

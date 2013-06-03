@@ -624,31 +624,29 @@ class IT_Exchange_Router {
 	 * @return string a template file
 	*/
 	function fetch_template( $existing ) {
+
 		// Return existing if this isn't an Exchange frontend view
 		if ( ! $this->_current_view )
 			return $existing;
-			
+
 		// Set pages that we want to protect in one way or another
 		$profile_pages = array(
 			'account', 'profile', 'downloads', 'purchases',
 		);
-						
+
 		if ( in_array( $this->_current_view, $profile_pages ) ) {
 			if ( ! $this->_account )
 				return get_404_template();
 		}
 
 		// Return the iThemes Exchange Template if one is found
-		if ( $template = it_exchange_locate_template( $this->_current_view ) )
+		if ( $template = it_exchange_locate_template( $this->_current_view . '.php' ) )
 			return $template;
 
-		// If this is a single product and no iThemes Exchange template was found, and no theme template was found, set some filters
-		if ( 'product' == $this->_current_view ) {
-			if ( $theme_singular = get_query_template( 'single', array( 'single-it_exchange_prod.php' ) ) )
-				return $theme_singular;
-			else
-				$this->add_single_product_filters();
-		}
+		// If no iThemes Exchange template was found by it_exchange_location_template and we've viewing a product
+		// then were'e going to need to set a filter
+		if ( 'product' == $this->_current_view )
+			add_filter( 'the_content', array( $this, 'fallback_filter_for_page_template' ) );
 
 		// If no iThemes Exchange Template was found, use the theme's page template
 		if ( $template = get_page_template() ) {
@@ -677,27 +675,20 @@ class IT_Exchange_Router {
 	}
 
 	/**
-	 * This adds some fiters that are needed if viewing a single product w/o iThemes Exchange template files in the active theme or theme parent
+	 * This substitutes the themes content for our content-[$this->_current_view] template part.
 	 *
-	 * @since 0.4.0
+	 * This only gets fired off if we couldn't find an exchange specific template file for the current view.
+	 * If that happens, we use the theme's page.php template and filter the_content with our template part for that view.
 	 *
-	 * @return void
-	*/
-	function add_single_product_filters() {
-		add_filter( 'the_content', array( $this, 'single_product_content_filter' ) );
-	}
-
-	/**
-	 * This substitutes the themes content for our content-product template part
-	 *
+	 * @todo Figure out the global reset hack
 	 * @since 0.4.0
 	 *
 	 * @param string $content exising default content
 	 * @param string content generated from template part
 	*/
-	function single_product_content_filter() {
+	function fallback_filter_for_page_template( $content ) {
 		ob_start();
-		it_exchange_get_template_part( 'content', 'product' );
+		it_exchange_get_template_part( 'content', $this->_current_view );
 		return  ob_get_clean();
 	}
 
@@ -796,4 +787,5 @@ class IT_Exchange_Router {
 		return $existing;
 	}
 }
+global $IT_Exchange_Router;
 $IT_Exchange_Router = new IT_Exchange_Router();
