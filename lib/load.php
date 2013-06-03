@@ -49,6 +49,9 @@ require( $this->_plugin_path . 'lib/super-widget/class.super-widget.php' );
 require( $this->_plugin_path . 'lib/coupons/class.coupons-post-type.php' );
 require( $this->_plugin_path . 'lib/coupons/class.coupon.php' );
 
+// Email Notifications
+require( $this->_plugin_path . 'lib/email-notifications/class.email-notifications.php' );
+
 // Sessions
 if ( ! is_admin() ) {
 	require( $this->_plugin_path . 'lib/cart/class.cart.php' );

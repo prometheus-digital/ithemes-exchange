@@ -93,6 +93,9 @@ class IT_Exchange_Admin {
 
 		// General Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_general', array( $this, 'set_general_settings_defaults' ) );
+		
+		// Email Settings Defaults
+		add_filter( 'it_storage_get_defaults_exchange_settings_email', array( $this, 'set_email_settings_defaults' ) );
 
 		// Page Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_pages', array( $this, 'set_pages_settings_defaults' ) );
@@ -511,6 +514,24 @@ class IT_Exchange_Admin {
 			'currency-thousands-separator' => ',',
 			'currency-decimals-separator'  => '.',
 			'site-registration'            => 'it',
+			'company-email'                => get_bloginfo( 'admin_email' ),
+		);
+		$values = ITUtility::merge_defaults( $values, $defaults );
+		return $values;
+	}
+	
+	/**
+	 * Sets the email settings default values
+	 *
+	 * @since 0.4.0
+	 * @return array
+	*/
+	function set_email_settings_defaults( $values ) {
+		$defaults = array(
+			'receipt-email-address'  => 'USD',
+			'receipt-email-name'     => get_bloginfo( 'admin_email' ),
+			'receipt-email-subject'  => sprintf( __( 'Receipt for Purchase: %s', 'LION' ), '{receipt_id}' ),
+			'receipt-email-template' => '',
 		);
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;
@@ -880,13 +901,13 @@ class IT_Exchange_Admin {
 		if ( empty( $_POST ) || 'it-exchange-settings' != $this->_current_page || 'email' != $this->_current_tab )
 			return;
 
-		$settings = wp_parse_args( ITForm::get_post_data(), it_exchange_get_option( 'settings_email' ) );
-
         // Check nonce
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-email-settings' ) ) { 
             $this->error_message = __( 'Error. Please try again', 'LION' );
             return;
-        } 
+        }
+
+		$settings = wp_parse_args( ITForm::get_post_data(), it_exchange_get_option( 'settings_email' ) );
 
 		if ( ! empty( $this->error_message ) || $error_msg = $this->email_settings_are_invalid( $settings ) ) {
 			if ( ! empty( $error_msg ) )
@@ -906,12 +927,30 @@ class IT_Exchange_Admin {
 	*/
 	function email_settings_are_invalid( $settings ) {
 		$errors = array();
-		if ( ! empty( $settings['receipt_email_address'] ) && ! is_email( $settings['receipt_email_address'] ) )
+		if ( empty( $settings['receipt-email-address'] ) 
+			|| ( !empty( $settings['receipt-email-address'] ) && ! is_email( $settings['receipt-email-address'] ) ) )
 			$errors[] = __( 'Please provide a valid email address.', 'LION' );
-		if ( empty( $settings['receipt_email_name'] ) )
+		if ( empty( $settings['receipt-email-name'] ) )
 			$errors[] = __( 'Email Name cannot be empty', 'LION' );
-		if ( empty( $settings['receipt_email_subject'] ) )
+		if ( empty( $settings['receipt-email-subject'] ) )
 			$errors[] = __( 'Email Subject cannot be empty', 'LION' );
+		if ( empty( $settings['receipt-email-template'] ) )
+			$errors[] = __( 'Email Template cannot be empty', 'LION' );
+			
+		if ( !empty( $settings['notification-email-address'] ) ) {
+			
+			$emails = split( ',', $settings['notification-email-address'] );
+			
+			foreach( $emails as $email ) {
+			
+				if ( !is_email( trim( $email ) ) ) {
+					$errors[] = __( 'Invalid email address in Sales Notification Email Address', 'LION' );
+					break;
+				}
+				
+			}
+			
+		}
 
 		$errors = apply_filters( 'it_exchange_email_settings_validation_errors', $errors );
 		if ( ! empty ( $errors ) )

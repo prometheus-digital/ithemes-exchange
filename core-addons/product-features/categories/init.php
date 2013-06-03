@@ -31,7 +31,7 @@ if ( !function_exists( 'create_it_exchange_categories' ) ) {
 	
 		register_taxonomy(
 			'it_exchange_category', 
-			array(), //do not add to any post type (yet)
+			array( 'it_exchange_prod' ),
 			array(
 				'hierarchical' 	=> true,
 				'labels' 		=> $labels,
