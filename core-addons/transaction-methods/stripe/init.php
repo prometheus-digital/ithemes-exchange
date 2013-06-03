@@ -215,11 +215,18 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 	$payment_form .= '</form>';
 	$payment_form .= '</div>';
 	
+	/*
+	 * Going to remove this for now. It should be
+	 * the responsibility of the site owner to
+	 * notify if Javascript is disabled, but I will
+	 * revisit this in case we want to a notifications.
+	 * 
 	$payment_form .= '<div class="hide-if-js">';
 	
 	$payment_form .= '<h3>' . __( 'JavaScript disabled: Stripe Payment Gateway cannot be loaded!', 'LION' ) . '</h3>';
 	
 	$payment_form .= '</div>';
+	*/
 	
 	return $payment_form;
 }
