@@ -68,8 +68,6 @@ class IT_Exchange_Product_Post_Type {
 			'rewrite' => array(
 				'slug' => 'product',
 			),
-			//'taxonomies' => array( 'it_exchange_category', 'it_exchange_tag' ),
-			'taxonomies' => array(),
 		);
 
 		add_action( 'init', array( $this, 'set_rewrite_slug' ), 9 );

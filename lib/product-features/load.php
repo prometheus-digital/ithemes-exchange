@@ -14,12 +14,6 @@ require( $this->_plugin_path . 'lib/product-features/class.base-price.php' );
 // Product Feature: Product Description
 require( $this->_plugin_path . 'lib/product-features/class.description.php' );
 
-// Product Feature: Category Taxonomy
-require( $this->_plugin_path . 'lib/product-features/class.category.php' );
-
-// Product Feature: Tag Taxonomy
-require( $this->_plugin_path . 'lib/product-features/class.tag.php' );
-
 // Product Feature: Downloads
 require( $this->_plugin_path . 'lib/product-features/class.downloads.php' );
 

@@ -156,7 +156,8 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		// Transaction Hash for confirmation lookup
 		update_post_meta( $transaction_id, '_it_exchange_transaction_hash', it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) );
 		
-		$transaction_object = apply_filters( 'it_exchange_add_transaction_success', $transaction_object, $transaction_id );
+		$transaction_object = apply_filters( 'it_exchange_add_transaction_success', $transaction_object, $transaction_id, $customer_id );
+		do_action( 'it_exchange_add_transaction_completed', $transaction_object, $transaction_id, $customer_id );
 		return $transaction_id;
 	}
 	do_action( 'it_exchange_add_transaction_failed', $args, $transaction_object );

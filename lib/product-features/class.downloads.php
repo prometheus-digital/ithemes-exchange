@@ -31,7 +31,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		add_filter( 'it_exchange_product_supports_feature_downloads', array( $this, 'product_supports_feature') , 9, 2 );
 			
 		//We want to do this sooner than 10
-		add_filter( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_hash_to_product' ), 5, 2 );
+		add_filter( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_hash_to_product' ), 5, 3 );
 	}
 	
 	/**
@@ -43,7 +43,7 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * @param integer the transaction id
 	 * @return updated cart data with the download hashes
 	*/
-	function add_transaction_hash_to_product( $transaction_object, $transaction_id ) {
+	function add_transaction_hash_to_product( $transaction_object, $transaction_id, $customer_id ) {
 			
 		foreach( (array) $transaction_object->products as $object ) {
 			// If this is a downloadable product, generate a hash
