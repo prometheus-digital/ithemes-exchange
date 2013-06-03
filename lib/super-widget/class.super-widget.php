@@ -103,7 +103,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 				<?php endforeach; ?>
 			</p>
 			-->
-			<div class="it-exchange-super-widget it-exchange-super-widget-<?php esc_attr( $this->get_state() ); ?>">
+			<div class="it-exchange-super-widget it-exchange-super-widget-<?php esc_attr_e( $this->get_state() ); ?>">
 				<?php it_exchange_get_template_part( 'super-widget', $this->get_state() ); ?>
 			</div>
 			<?php
