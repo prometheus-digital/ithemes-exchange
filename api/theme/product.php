@@ -109,19 +109,18 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$title    = it_exchange_get_product_feature( $this->product->ID, 'title' );
 			
 			$defaults = array(
-				'before' => '<h1 class="entry-title">',
-				'after'  => '</h1>',
+				'wrap'   => 'h1',
 				'format' => 'html',
 			);
 			$options = ITUtility::merge_defaults( $options, $defaults );
 
 			if ( 'html' == $options['format'] )
-				$result .= $options['before'];
+				$result .= '<' . $options['wrap'] . ' class="entry-title">';
 
 			$result .= $title;
 
 			if ( 'html' == $options['format'] )
-				$result .= $options['after'];
+				$result .= '</' . $options['wrap'] . '>';
 
 			return $result;
 		}
