@@ -25,7 +25,7 @@ function it_exchange_get_template_part( $slug, $name=null, $load=true ) {
     $templates[] = $slug . '.php';
 
     // Return the part that is found
-    return it_exchange_locate_template( $templates, $load, false, true );
+    return it_exchange_locate_template( $templates, $load, $load );
 }
 
 /**
@@ -43,43 +43,26 @@ function it_exchange_get_template_part( $slug, $name=null, $load=true ) {
  * @param boolean $require_once Whether to require_once or require. Default true.
  * @return string The template filename if one is located.
  */
-function it_exchange_locate_template( $template_names, $load=false, $require_once=true, $template_part=false ) {
+function it_exchange_locate_template( $template_names, $load = false, $require_once = true ) { 
     // No file found yet
     $located = false;
 
-	// If template_names is product, add core single-it_exchange_prod to array
-	$template_names = (array) $template_names;
-	if ( in_array( 'product.php', $template_names ) && ! in_array( 'single-it_exchange_prod.php', $template_names ) )
-		$template_names[] = 'single-it_exchange_prod.php';
-
-	// Add exchange to list of template names
-	if ( ! in_array( 'exchange.php', $template_names ) )
-		$template_names[] = 'exchange.php';
-
 	// Define possible template paths
 	$possible_template_paths = array( 
-		// Exchange directory
 		trailingslashit( get_stylesheet_directory() ) . 'exchange',
 		trailingslashit( get_template_directory() ) . 'exchange',
-
-		// Theme directories
-		untrailingslashit( get_stylesheet_directory() ),
-		untrailingslashit( get_template_directory() ),
 	);
 	
-	// Allow addons to add a template path for template parts
-	if ( $template_part )
-		$possible_template_paths = apply_filters( 'it_exchange_possible_template_paths', $possible_template_paths, $template_names );
+	// Allow addons to add a template path
+	$possible_template_paths = apply_filters( 'it_exchange_possible_template_paths', $possible_template_paths );
 
-	// If looking for a template part, add core iThemes Exchange template folder. Also, force to be last in array
-	if ( $template_part ) {
-		$core_template_path = dirname( dirname( __FILE__ ) ) . '/templates/';
-		if ( $key = array_search( $core_template_path, $possible_template_paths ) )
-			unset( $possible_template_paths[$key] );
-		if ( $key = array_search( untrailingslashit( $core_template_path ), $possible_template_paths ) )
-			unset( $possible_template_paths[$key] );
-		$possible_template_paths[] = $core_template_path;
-	}
+	// Force core iThemes Exchange template folder to be last in array
+	$core_template_path = dirname( dirname( __FILE__ ) ) . '/templates/';
+	if ( $key = array_search( $core_template_path, $possible_template_paths ) )
+		unset( $possible_template_paths[$key] );
+	if ( $key = array_search( untrailingslashit( $core_template_path ), $possible_template_paths ) )
+		unset( $possible_template_paths[$key] );
+	$possible_template_paths[] = $core_template_path;
 
 	// Make sure we don't have multiple elements for the same path
 	$possible_template_paths = array_unique( $possible_template_paths );
@@ -96,16 +79,9 @@ function it_exchange_locate_template( $template_names, $load=false, $require_onc
 
 		// Loop through possible paths and use first one that is located
 		foreach( $possible_template_paths as $path ) {
-
-			// Don't look for single-it_exchange_prod inside /exchange folder
-			if ( '/exchange/' == substr( trailingslashit( $path ), -10 ) && in_array( $template_name, array( 'single-it_exchange_prod.php', 'exchange.php' ) ) )
-				continue;
-			
-			// If file doesn't exist, keep looking
 			if ( ! is_file( trailingslashit( $path ) . $template_name ) )
 				continue;
 
-			// If we made it here, the file was found
 			$located = trailingslashit( $path ) . $template_name;
 			break 2;
 		}

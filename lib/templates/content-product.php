@@ -5,7 +5,6 @@
  * @since 0.4.0
  */
 ?>
-
 <?php it_exchange_get_template_part( 'messages' ); ?>
 
 <div id="it-exchange-product">

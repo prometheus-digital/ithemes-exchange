@@ -609,27 +609,31 @@ class IT_Exchange_Router {
 	 * @return string a template file
 	*/
 	function fetch_template( $existing ) {
-
 		// Return existing if this isn't an Exchange frontend view
 		if ( ! $this->_current_view )
 			return $existing;
-
+			
 		// Set pages that we want to protect in one way or another
 		$profile_pages = array(
 			'account', 'profile', 'downloads', 'purchases',
 		);
-
+						
 		if ( in_array( $this->_current_view, $profile_pages ) ) {
 			if ( ! $this->_account )
 				return get_404_template();
 		}
 
 		// Return the iThemes Exchange Template if one is found
-		if ( $template = it_exchange_locate_template( $this->_current_view . '.php' ) )
+		if ( $template = it_exchange_locate_template( $this->_current_view ) )
 			return $template;
 
-		// If no iThemes Exchange template was found by it_exchange_location_template, set some filters and use page.php
-		add_filter( 'the_content', array( $this, 'fallback_filter_for_page_template' ) );
+		// If this is a single product and no iThemes Exchange template was found, and no theme template was found, set some filters
+		if ( 'product' == $this->_current_view ) {
+			if ( $theme_singular = get_query_template( 'single', array( 'single-it_exchange_prod.php' ) ) )
+				return $theme_singular;
+			else
+				$this->add_single_product_filters();
+		}
 
 		// If no iThemes Exchange Template was found, use the theme's page template
 		if ( $template = get_page_template() ) {
@@ -658,25 +662,27 @@ class IT_Exchange_Router {
 	}
 
 	/**
-	 * This substitutes the themes content for our content-[$this->_current_view] template part.
+	 * This adds some fiters that are needed if viewing a single product w/o iThemes Exchange template files in the active theme or theme parent
 	 *
-	 * This only gets fired off if we couldn't find an exchange specific template file for the current view.
-	 * If that happens, we use the theme's page.php template and filter the_content with our template part for that view.
+	 * @since 0.4.0
 	 *
-	 * @todo Figure out the global reset hack
+	 * @return void
+	*/
+	function add_single_product_filters() {
+		add_filter( 'the_content', array( $this, 'single_product_content_filter' ) );
+	}
+
+	/**
+	 * This substitutes the themes content for our content-product template part
+	 *
 	 * @since 0.4.0
 	 *
 	 * @param string $content exising default content
 	 * @param string content generated from template part
 	*/
-	function fallback_filter_for_page_template() {
-		// Reset Product GLOBALS if on the store page
-		if ( 'store' == $this->_current_view ) {
-			if ( ! empty( $GLOBALS['it_exchange']['products'] ) ) unset( $GLOBALS['it_exchange']['products'] );
-			if ( ! empty( $GLOBALS['it_exchange']['product'] ) ) unset( $GLOBALS['it_exchange']['product'] );
-		}
+	function single_product_content_filter() {
 		ob_start();
-		it_exchange_get_template_part( 'content', $this->_current_view );
+		it_exchange_get_template_part( 'content', 'product' );
 		return  ob_get_clean();
 	}
 
@@ -775,5 +781,4 @@ class IT_Exchange_Router {
 		return $existing;
 	}
 }
-global $IT_Exchange_Router;
 $IT_Exchange_Router = new IT_Exchange_Router();

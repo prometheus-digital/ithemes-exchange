@@ -19,7 +19,7 @@ class IT_Exchange_Featured_Product extends WP_Widget {
 			)
 		);
 		if ( ! is_admin() )
-			add_filter( 'it_exchange_possible_template_paths', array( $this, 'register_template_directory' ), 10, 2 );
+			add_filter( 'it_exchange_possible_template_paths', array( $this, 'register_template_directory' ) );
 	}
 
 	/**
@@ -109,11 +109,9 @@ class IT_Exchange_Featured_Product extends WP_Widget {
 	 * @param array $existing existing locations
 	 * @return array
 	*/
-	function register_template_directory( $existing, $template_names=array() ) { 
-		if ( in_array( 'featured-product-widget', $template_names ) ) {
-			$directory = dirname( __FILE__ ) . '/templates';
-			$existing[] = $directory;
-		}
+	function register_template_directory( $existing ) { 
+		$directory = dirname( __FILE__ ) . '/templates';
+		$existing[] = $directory;
 		return $existing;
 	} 
 }
