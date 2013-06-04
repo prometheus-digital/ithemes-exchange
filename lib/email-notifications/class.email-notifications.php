@@ -342,7 +342,7 @@ class IT_Exchange_Email_notifications {
 	 * @return string Replaced value
 	*/
 	function replace_receipt_link_tag( $args ) {
-		return 'replace_receipt_link_tag';
+		return it_exchange_get_transaction_confirmation_url( $this->transaction_id );
 	}
 	
 }
