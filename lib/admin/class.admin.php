@@ -528,8 +528,8 @@ class IT_Exchange_Admin {
 	*/
 	function set_email_settings_defaults( $values ) {
 		$defaults = array(
-			'receipt-email-address'  => 'USD',
-			'receipt-email-name'     => get_bloginfo( 'admin_email' ),
+			'receipt-email-address'  => get_bloginfo( 'admin_email' ),
+			'receipt-email-name'     => get_bloginfo( 'name' ),
 			'receipt-email-subject'  => sprintf( __( 'Receipt for Purchase: %s', 'LION' ), '{receipt_id}' ),
 			'receipt-email-template' => __( "Hello {name},
 
