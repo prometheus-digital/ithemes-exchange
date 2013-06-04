@@ -20,6 +20,17 @@ global $wp_version;
 	<table class="form-table">
 		<?php do_action( 'it_exchange_general_settings_email_top' ); ?>
 		<tr valign="top">
+			<th scope="row"><strong><?php _e( 'Admin Notifications', 'LION' ); ?></strong></th>
+			<td></td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><label for="notification-email-address"><?php _e( 'Sales Notification Email Address', 'LION' ) ?></label></th>
+			<td>
+			<?php $form->add_text_box( 'notification-email-address', array( 'class' => 'large-text' ) ); ?>
+            <br /><span class="description"><?php _e( 'Enter the email address(es) that should receive a notification anytime a sale is made, coma seperated', 'LION' ); ?></span>
+            </td>
+		</tr>
+		<tr valign="top">
 			<th scope="row"><strong><?php _e( 'Customer Receipt Emails', 'LION' ); ?></strong></th>
 			<td></td>
 		</tr>
@@ -78,13 +89,6 @@ global $wp_version;
 				?>
 				</p>
 			</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row"><label for="notification-email-address"><?php _e( 'Sales Notification Email Address', 'LION' ) ?></label></th>
-			<td>
-			<?php $form->add_text_box( 'notification-email-address', array( 'class' => 'large-text' ) ); ?>
-            <br /><span class="description"><?php _e( 'Enter the email address(es) that should receive a notification anytime a sale is made, coma seperated', 'LION' ); ?></span>
-            </td>
 		</tr>
 		<?php do_action( 'it_exchange_general_settings_email_table_bottom' ); ?>
 	</table>
