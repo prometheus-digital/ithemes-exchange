@@ -39,7 +39,7 @@ class IT_Exchange_Email_notifications {
 	function transaction_completed_notification( $transaction ) {
 		
 		$this->transaction_id     = $transaction;
-		$this->customer_id        = it_exchange_get_transaction_customer_id( $this->transaction );
+		$this->customer_id        = it_exchange_get_transaction_customer_id( $this->transaction_id );
 		$this->user               = get_userdata( $this->customer_id );
 		
 		$settings = it_exchange_get_option( 'settings_email' );	
@@ -241,7 +241,7 @@ class IT_Exchange_Email_notifications {
 				$table .= '  <tr>';
 				$table .= '    <td>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'product_name' ) ) . '</td>';
 				$table .= '    <td>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'count' ) ) . '</td>';
-				$table .= '    <td>' . it_exchange_format_price( esc_attr( $product, 'product_subtotal' ) )  . '</td>';
+				$table .= '    <td>' . esc_attr( it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ) ) )  . '</td>';
 				$table .= '  <tr>';
 			}
 		}
@@ -292,7 +292,7 @@ class IT_Exchange_Email_notifications {
 	 * @return string Replaced value
 	*/
 	function replace_payment_id_tag( $args ) {
-		return it_exchange_get_gateway_method_id_for_transaction( $this->transaction_id ); 
+		return it_exchange_get_gateway_id_for_transaction( $this->transaction_id ); 
 	}
 	
 	/**
