@@ -539,7 +539,7 @@ class IT_Exchange_Stripe_Add_On {
 				<?php $this->get_stripe_payment_form_table( $form, $form_values ); ?>
 				<?php do_action( 'it_exchange_stripe_settings_form_bottom' ); ?>
 				<p class="submit">
-					<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary' ) ); ?>
+					<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary button-large' ) ); ?>
 				</p>
 			<?php $form->end_form(); ?>
 			<?php do_action( 'it_exchange_stripe_settings_page_bottom' ); ?>
@@ -556,33 +556,43 @@ class IT_Exchange_Stripe_Add_On {
 				$form->set_option( $key, $var );
 				
 		?>
-		<h3><?php _e( 'Stripe Payment Settings', 'LION' ); ?></h3>
-        <p><?php _e( 'Do not have a Stripe account yet? <a href="http://stripe.com" target="_blank">Go set one up here</a>.', 'LION' ); ?></p>
-        <label for="stripe-test-mode"><?php _e( 'Enable Stripe Test Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Enable Stripe Test Mode', 'LION' ); ?>">i</span></label>
-        <?php $form->add_check_box( 'stripe-test-mode' ); ?>
-        <label for="stripe-live-secret-key"><?php _e( 'Live Secret Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'stripe-live-secret-key' ); ?>
-        <label for="stripe-live-publishable-key"><?php _e( 'Live Publishable Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'stripe-live-publishable-key' ); ?>
-        <label for="stripe-test-secret-key"><?php _e( 'Test Secret Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'stripe-test-secret-key' ); ?>
-        <label for="stripe-test-publishable-key"><?php _e( 'Test Publishable Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'stripe-test-publishable-key' ); ?>
-        <?php
-		
-			if ( !in_array( $general_settings['default-currency'], $this->get_supported_currency_options() ) ) {
+		<div class="it-exchange-addon-settings it-exchange-stripe-addon-settings">
+			<h3><?php _e( 'Stripe Payment Settings', 'LION' ); ?></h3>
+			<p><?php _e( 'Do not have a Stripe account yet? <a href="http://stripe.com" target="_blank">Go set one up here</a>.', 'LION' ); ?></p>
+			<?php
+				if ( ! in_array( $general_settings['default-currency'], $this->get_supported_currency_options() ) ) {
 			
-				echo '<h3>' . sprintf( __( 'You are currently using a currency that is not supported by Stripe. <a href="%s">Please update your currency settings</a>.', 'LION' ), add_query_arg( 'page', 'it-exchange-settings' ) ) . '</h3>';
+					echo '<h4>' . sprintf( __( 'You are currently using a currency that is not supported by Stripe. <a href="%s">Please update your currency settings</a>.', 'LION' ), add_query_arg( 'page', 'it-exchange-settings' ) ) . '</h4>';
 				
-			}
+				}
 			
-		?>
-        <h5><?php _e( 'Stripe Webhooks', 'LION' ); ?></h5>
-        <p><?php _e( 'Webhooks can be configured in the <a href="https://manage.stripe.com/account/webhooks">webhook settings section</a> of the Stripe dashboard. Clicking Add URL will reveal a form to add a new URL for receiving webhooks.', 'LION' ); ?></p>
-        <p><?php _e( 'Please log into your account and add this URL to your Webhooks so iThemes Exchange is notified of things like refunds, payments, etc.', 'LION' ); ?></p>
-        <code><?php echo get_site_url(); ?>/?<?php esc_attr_e( it_exchange_get_webhook( 'stripe' ) ); ?>=1</code>
-        
-        <?php	
+			?>
+			<p>
+				<label for="stripe-live-secret-key"><?php _e( 'Live Secret Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'stripe-live-secret-key' ); ?>
+			</p>
+			<p>
+				<label for="stripe-live-publishable-key"><?php _e( 'Live Publishable Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'stripe-live-publishable-key' ); ?>
+			</p>
+			<p>
+				<label for="stripe-test-secret-key"><?php _e( 'Test Secret Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'stripe-test-secret-key' ); ?>
+			</p>
+			<p>
+				<label for="stripe-test-publishable-key"><?php _e( 'Test Publishable Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'stripe-test-publishable-key' ); ?>
+			</p>
+			<p>
+				<?php $form->add_check_box( 'stripe-test-mode' ); ?>
+				<label for="stripe-test-mode"><?php _e( 'Enable Stripe Test Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Enable Stripe Test Mode', 'LION' ); ?>">i</span></label>
+			</p>
+			<h5><?php _e( 'Stripe Webhooks', 'LION' ); ?></h5>
+			<p><?php _e( 'Webhooks can be configured in the <a href="https://manage.stripe.com/account/webhooks">webhook settings section</a> of the Stripe dashboard. Clicking Add URL will reveal a form to add a new URL for receiving webhooks.', 'LION' ); ?></p>
+			<p><?php _e( 'Please log into your account and add this URL to your Webhooks so iThemes Exchange is notified of things like refunds, payments, etc.', 'LION' ); ?></p>
+			<code><?php echo get_site_url(); ?>/?<?php esc_attr_e( it_exchange_get_webhook( 'stripe' ) ); ?>=1</code>
+		</div>
+		<?php
 	}
 
 	/**
