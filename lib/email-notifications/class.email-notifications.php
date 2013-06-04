@@ -15,6 +15,7 @@ class IT_Exchange_Email_notifications {
 	private $transaction_object;
 	private $transaction_id;
 	private $customer_id;
+	private $user;
 
 	/**
 	 * Constructor. Sets up the class
@@ -51,7 +52,9 @@ class IT_Exchange_Email_notifications {
 		$headers[] = 'charset=utf-8';
 		
 		$subject = $this->replace_template_tags( $settings['receipt-email-subject'] );
-		$body = $this->body_header() . wpautop( $this->replace_template_tags( $settings['receipt-email-template'] ) ) . $this->body_footer();
+		$body  = $this->body_header();
+		$body .= wpautop( $this->replace_template_tags( $settings['receipt-email-template'] ) );
+		$body .= $this->body_footer();
 		
 		wp_mail( $this->user->user_email, strip_tags( $subject ), $body, $headers );
 		
@@ -97,8 +100,8 @@ class IT_Exchange_Email_notifications {
 	*/
 	function body_footer() {
 		
-		$output .= '</body>';
-		$output  = '</html>';
+		$output  = '</body>';
+		$output .= '</html>';
 		
 		return apply_filters( 'it_exchange_email_notification_body_footer', $output );
 		
@@ -137,14 +140,12 @@ class IT_Exchange_Email_notifications {
 		//Value = callback function
 		$defaults = array(
 			'{download_list}'  => array( $this, 'replace_download_list_tag' ),
-			'{file_urls}'      => array( $this, 'replace_file_urls_tag' ),
 			'{name}'           => array( $this, 'replace_name_tag' ),
 			'{fullname}'       => array( $this, 'replace_fullname_tag' ),
 			'{username}'       => array( $this, 'replace_username_tag' ),
+			'{order_table}'    => array( $this, 'replace_order_table_tag' ),
 			'{purchase_date}'  => array( $this, 'replace_purchase_date_tag' ),
-			'{subtotal}'       => array( $this, 'replace_subtotal_tag' ),
 			'{total}'          => array( $this, 'replace_total_tag' ),
-			'{price}'          => array( $this, 'replace_price_tag' ),
 			'{payment_id}'     => array( $this, 'replace_payment_id_tag' ),
 			'{receipt_id}'     => array( $this, 'replace_receipt_id_tag' ),
 			'{payment_method}' => array( $this, 'replace_payment_method_tag' ),
@@ -166,18 +167,6 @@ class IT_Exchange_Email_notifications {
 	*/
 	function replace_download_list_tag( $args ) {
 		return 'replace_download_list_tag';
-	}
-	
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_notifications
-	 * @return string Replaced value
-	*/
-	function replace_file_urls_tag( $args ) {
-		return 'replace_file_urls_tag';
 	}
 	
 	/**
@@ -236,6 +225,50 @@ class IT_Exchange_Email_notifications {
 	 * @param object $args of IT_Exchange_Email_notifications
 	 * @return string Replaced value
 	*/
+	function replace_order_table_tag( $args ) {
+		
+		$table  = '<table>';
+		
+		$table .= ' <thead>';
+		$table .= '  <tr>';
+		$table .= '    <th>' . __( 'Product', 'LION' ) . '</th>';
+		$table .= '    <th>' . __( 'Quantity', 'LION' ) . '</th>';
+		$table .= '    <th>' . __( 'Total Price', 'LION' ) . '</th>';
+		$table .= '  <tr>';
+		$table .= ' </thead>';
+		
+		$table .= ' <tbody>';
+		foreach ( $this->transaction_object->products as $product ) {
+			
+			$table .= '  <tr>';
+			$table .= '    <td>' . $product['product_name'] . '</td>';
+			$table .= '    <td>' . $product['count'] . '</td>';
+			$table .= '    <td>' . it_exchange_format_price( $product['product_subtotal'] )  . '</td>';
+			$table .= '  <tr>';
+		
+		}
+		$table .= ' </tbody>';
+		
+		$table .= ' <tfoot>';
+		$table .= '  <tr>';
+		$table .= '    <td colspan="2">' . __( 'Total', 'LION' ) . '</td>';
+		$table .= '    <td>' . it_exchange_get_transaction_total( $this->transaction_id, true ) . '</td>';
+		$table .= '  <tr>';
+		$table .= ' </tfoot>';
+		
+		$table .= '</table>';
+		
+		return $table;
+	}
+	
+	/**
+	 * Replacement Tag
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param object $args of IT_Exchange_Email_notifications
+	 * @return string Replaced value
+	*/
 	function replace_purchase_date_tag( $args ) {
 		return it_exchange_get_transaction_date( $this->transaction_object );
 	}
@@ -248,32 +281,8 @@ class IT_Exchange_Email_notifications {
 	 * @param object $args of IT_Exchange_Email_notifications
 	 * @return string Replaced value
 	*/
-	function replace_subtotal_tag( $args ) {
-		return 'replace_subtotal_tag';
-	}
-	
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_notifications
-	 * @return string Replaced value
-	*/
 	function replace_total_tag( $args ) {
-		return $this->transaction_object->total;	
-	}
-	
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_notifications
-	 * @return string Replaced value
-	*/
-	function replace_price_tag( $args ) {
-		return 'replace_price_tag';
+		return it_exchange_get_transaction_total( $this->transaction_id, true );	
 	}
 	
 	/**
@@ -297,7 +306,7 @@ class IT_Exchange_Email_notifications {
 	 * @return string Replaced value
 	*/
 	function replace_receipt_id_tag( $args ) {
-		return $this->transaction_id;		
+		return it_exchange_get_transaction_order_number( $this->transaction_id );		
 	}
 	
 	/**
