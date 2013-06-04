@@ -21,7 +21,7 @@
 /** -----------------------------------------------------:[ transactions ]:---------- */
 .transactions-user-edit-block .block-column-1{width:40%;}
 .transactions-user-edit-block .block-column-2{width:20%;}
-.transactions-user-edit-block .block-column-3{width:40%;}
+.transactions-user-edit-block .block-column-3{width:40%;padding-top:11px;}
 .add-manual-transaction{margin-top:15px;}
 
 /** -----------------------------------------------------:[ activity ]:---------- */
