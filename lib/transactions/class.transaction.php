@@ -246,7 +246,11 @@ class IT_Exchange_Transaction {
 	 * @return array
 	*/
 	function get_products() {
-		return empty( $this->cart_details->products ) ? array() : $this->cart_details->products;
+		$products = empty( $this->cart_details->products ) ? array() : $this->cart_details->products;
+		foreach( $products as $product ) {
+			
+		}
+		return apply_filters( 'it_exchange_get_transaction_products', $products, $this->ID );
 	}
 
 	/**
@@ -314,9 +318,21 @@ class IT_Exchange_Transaction {
 		$this->customer_id = get_post_meta( $this->ID, '_it_exchange_customer_id', true );
 
 		// Set Cart information
-		$this->cart_details = get_post_meta( $this->ID, '_it_exchange_transaction_object', true );
+		$this->cart_details = get_post_meta( $this->ID, '_it_exchange_cart_object', true );
+
+		// Gateway ID for the transaction
+		$this->gateway_id_for_transaction = get_post_meta( $this->ID, '_it_exchange_transaction_method_id', true );
 	}
 
+	/**
+	 * Returns the transaction ID used by the gateway
+	 *
+	 * @since 0.4.0
+	 * @return mixed
+	*/
+	function get_gateway_id_for_transaction() {
+		return empty( $this->gateway_id_for_transaction ) ? false : $this->gateway_id_for_transaction;
+	}
 
     /** 
      * Sets the supports array for the post_type.

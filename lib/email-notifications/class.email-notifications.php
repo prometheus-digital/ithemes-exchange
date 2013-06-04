@@ -12,7 +12,6 @@
 */
 class IT_Exchange_Email_notifications {
 	
-	private $transaction_object;
 	private $transaction_id;
 	private $customer_id;
 	private $user;
@@ -24,7 +23,7 @@ class IT_Exchange_Email_notifications {
 	*/
 	function IT_Exchange_Email_notifications() {
 		
-		add_action( 'it_exchange_add_transaction_completed', array( $this, 'transaction_completed_notification' ), 20, 3 );
+		add_action( 'it_exchange_add_transaction_success', array( $this, 'transaction_completed_notification' ), 20 );
 		
 	}
 	
@@ -33,16 +32,15 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $transaction_object The transaction object
-	 * @param int $transaction_id The transaction ID
+	 * @param mixed $transaction ID or object
 	 * @param int $customer_id The customer ID
+	 * @return void
 	*/
-	function transaction_completed_notification( $transaction_object, $transaction_id, $customer_id ) {
+	function transaction_completed_notification( $transaction ) {
 		
-		$this->transaction_object = $transaction_object;
-		$this->transaction_id     = $transaction_id;
-		$this->customer_id        = $customer_id;
-		$this->user               = get_userdata( $customer_id );
+		$this->transaction_id     = $transaction;
+		$this->customer_id        = it_exchange_get_transaction_customer_id( $this->transaction );
+		$this->user               = get_userdata( $this->customer_id );
 		
 		$settings = it_exchange_get_option( 'settings_email' );	
 		
@@ -195,7 +193,7 @@ class IT_Exchange_Email_notifications {
 	 * @param object $args of IT_Exchange_Email_notifications
 	 * @return string Replaced value
 	*/
-	function replace_fullname_tag( $args ) {		
+	function replace_fullname_tag( $args ) {
 		if ( !empty( $this->user->first_name ) ) {
 			$fullname = $this->user->first_name . ' ' . $this->user->last_name;
 		} else {
@@ -238,14 +236,14 @@ class IT_Exchange_Email_notifications {
 		$table .= ' </thead>';
 		
 		$table .= ' <tbody>';
-		foreach ( $this->transaction_object->products as $product ) {
-			
-			$table .= '  <tr>';
-			$table .= '    <td>' . $product['product_name'] . '</td>';
-			$table .= '    <td>' . $product['count'] . '</td>';
-			$table .= '    <td>' . it_exchange_format_price( $product['product_subtotal'] )  . '</td>';
-			$table .= '  <tr>';
-		
+		if ( $products = it_exchange_get_transaction_products( $this->transaction_id ) ) {
+			foreach ( $products as $product ) {
+				$table .= '  <tr>';
+				$table .= '    <td>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'product_name' ) ) . '</td>';
+				$table .= '    <td>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'count' ) ) . '</td>';
+				$table .= '    <td>' . it_exchange_format_price( esc_attr( $product, 'product_subtotal' ) )  . '</td>';
+				$table .= '  <tr>';
+			}
 		}
 		$table .= ' </tbody>';
 		
@@ -270,7 +268,7 @@ class IT_Exchange_Email_notifications {
 	 * @return string Replaced value
 	*/
 	function replace_purchase_date_tag( $args ) {
-		return it_exchange_get_transaction_date( $this->transaction_object );
+		return it_exchange_get_transaction_date( $this->transaction_id );
 	}
 	
 	/**
@@ -294,7 +292,7 @@ class IT_Exchange_Email_notifications {
 	 * @return string Replaced value
 	*/
 	function replace_payment_id_tag( $args ) {
-		return get_post_meta( $this->transaction_id, '_it_exchange_transaction_method_id', true );
+		return it_exchange_get_gateway_method_id_for_transaction( $this->transaction_id ); 
 	}
 	
 	/**
@@ -318,7 +316,7 @@ class IT_Exchange_Email_notifications {
 	 * @return string Replaced value
 	*/
 	function replace_payment_method_tag( $args ) {
-		return it_exchange_get_transaction_method( $this->transaction_object );
+		return it_exchange_get_transaction_method( $this->transaction_id );
 	}
 	
 	/**

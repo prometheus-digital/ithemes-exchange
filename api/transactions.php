@@ -129,10 +129,10 @@ function it_exchange_get_transactions( $args=array() ) {
  *
  * @since 0.3.3
  * @param array $args same args passed to wp_insert_post plus any additional needed
- * @param object $transaction_object passed cart object
+ * @param object $cart_object passed cart object
  * @return mixed post id or false
 */
-function it_exchange_add_transaction( $method, $method_id, $status = 'pending', $customer_id = false, $transaction_object, $args = array() ) {
+function it_exchange_add_transaction( $method, $method_id, $status = 'pending', $customer_id = false, $cart_object, $args = array() ) {
 	$defaults = array(
 		'post_type'          => 'it_exchange_tran',
 		'post_status'        => 'publish',
@@ -151,13 +151,17 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		update_post_meta( $transaction_id, '_it_exchange_transaction_method_id', $method_id );
 		update_post_meta( $transaction_id, '_it_exchange_transaction_status',    $status );
 		update_post_meta( $transaction_id, '_it_exchange_customer_id',           $customer_id );
-		update_post_meta( $transaction_id, '_it_exchange_transaction_object',    $transaction_object );
+		update_post_meta( $transaction_id, '_it_exchange_cart_object',           $cart_object );
 
 		// Transaction Hash for confirmation lookup
 		update_post_meta( $transaction_id, '_it_exchange_transaction_hash', it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) );
 		
+		/**
+		HEAD
 		$transaction_object = apply_filters( 'it_exchange_add_transaction_success', $transaction_object, $transaction_id, $customer_id );
 		do_action( 'it_exchange_add_transaction_completed', $transaction_object, $transaction_id, $customer_id );
+		**/
+		do_action( 'it_exchange_add_transaction_success', $transaction_id );
 		return $transaction_id;
 	}
 	do_action( 'it_exchange_add_transaction_failed', $args, $transaction_object );
@@ -180,6 +184,22 @@ function it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) 
 		$hash = it_exchange_generate_transaction_hash( $transaction_id, $customer_id );
 	
 	return apply_filters( 'it_exchange_generate_transaction_hash', $hash, $transaction_id, $customer_id );
+}
+
+/**
+ * Return the transaction ID provided by the gateway (transaction method)
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @return mixed
+*/
+function it_exchange_get_gateway_id_for_transaction( $transaction ) {
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
+		return;
+
+	$gateway_transaction_id = $transaction->get_gateway_id_for_transaction();
+	return apply_filters( 'it_exchange_get_gateway_id_for_transaction', $gateway_transaction_id, $transaction );
 }
 
 /**
@@ -496,6 +516,21 @@ function it_exchange_get_transaction_customer_display_name( $transaction ) {
 }
 
 /**
+ * Returns the transaction customer's ID
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @return string
+*/
+function it_exchange_get_transaction_customer_id( $transaction ) {
+	if ( ! $customer = it_exchange_get_transaction_customer( $transaction ) )
+		return 0;
+
+	return empty( $customer->wp_user->ID ) ? 0 : $customer->wp_user->ID;	
+}
+
+/**
  * Returns the transaction customer's email 
  *
  * @since 0.4.0
@@ -561,20 +596,8 @@ function it_exchange_get_transaction_products( $transaction ) {
 	if ( ! $transaction_products = $transaction->get_products() )
 		return array();
 
-	// Loop through the products, grab the IT_Exchange_Product object, and update with transaction data
-	$products = array();
-	foreach( $transaction_products as $key => $product ) {
-		$db_prod                  = it_exchange_get_product( $product['product_id'] );
-		$db_prod->cart_id         = $product['product_cart_id'];
-		$db_prod->cart_name       = $product['product_name'];
-		$db_prod->base_price      = $product['product_base_price'];
-		$db_prod->subtotal        = $product['product_subtotal'];
-		$db_prod->itemized_data   = $product['itemized_data'];
-		$db_prod->additional_data = $product['additional_data'];
-		$db_prod->count           = $product['count'];
-		$products[$product['product_cart_id']] = $db_prod;
-	}
-	return $products;
+	// There is a filter in transaction class: it_exchange_get_transaction_products
+	return $transaction_products;
 }
 
 /**
@@ -590,6 +613,27 @@ function it_exchange_get_transaction_product( $transaction, $product_cart_id ) {
 		return false;
 
 	return empty( $products[$product_cart_id] ) ? false : $products[$product_cart_id];
+}
+
+/**
+ * Returns data from the transaction product
+ *
+ * @since 0.4.0
+ *
+ * @param object $transaction_product
+ *
+*/
+function it_exchange_get_transaction_product_feature( $product, $feature ) {
+	$return = false;
+	switch ( $feature ) {
+		case 'title' :
+		case 'name' :
+			if ( ! empty( $product['product_name'] ) )
+				$return = apply_filters( 'the_title', $product['product_name'] );
+			break;
+	}
+
+	return apply_filters( 'it_exchange_get_transaction_product_feature', $return, $product, $feature );
 }
 
 /**
@@ -702,7 +746,6 @@ function it_exchange_get_webhook( $key ) {
  * @return string url
 */
 function it_exchange_get_transaction_confirmation_url( $transaction_id ) {
-
 	// If we can't grab the hash, return false
 	if ( ! $transaction_hash = it_exchange_get_transaction_hash( $transaction_id ) )
 		return false;
