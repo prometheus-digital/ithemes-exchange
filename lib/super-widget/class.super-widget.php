@@ -58,7 +58,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			$this->set_valid_states();
 			add_action( 'template_redirect', array( $this, 'load_ajax' ), 1 );
 			add_action( 'template_redirect', array( $this, 'set_state' ), 11 );
-			add_action( 'template_redirect', array( $this, 'enqueue_scripts' ), 11 );
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 11 );
 		}
 	}
 

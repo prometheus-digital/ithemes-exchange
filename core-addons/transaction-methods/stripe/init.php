@@ -8,6 +8,11 @@
 // Initialized Stripe...
 require_once('stripe-api/lib/Stripe.php');
 
+function it_exchange_stripe_addon_enqueue_script() {
+	wp_enqueue_script( 'stripe', 'https://checkout.stripe.com/v2/checkout.js', array( 'jquery' ) );
+}
+add_action( 'wp_enqueue_scripts', 'it_exchange_stripe_addon_enqueue_script' );
+
 /**
  * This proccesses a stripe transaction.
  *
@@ -198,19 +203,34 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 
 	$products = it_exchange_get_cart_data( 'products' );
 	
-	$payment_form = '<form action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
+	$payment_form = '<form id="stripe_form" action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
 	$payment_form .= '<input type="hidden" name="it-exchange-transaction-method" value="stripe" />';
 	$payment_form .= wp_nonce_field( 'stripe-checkout', '_stripe_nonce', true, false );
 	
 	$payment_form .= '<div class="hide-if-no-js">';
-	$payment_form .= '<script
-						  src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
-						  data-key="' . $publishable_key . '"
-						  data-amount="' . number_format( it_exchange_get_cart_total( false ), 2, '', '' ) . '"
-						  data-name="' . $general_settings['company-name'] . '"
-						  data-description="' . it_exchange_get_cart_description() . '"
-						  data-currency="' . $general_settings['default-currency'] . '">
-						</script>';
+	$payment_form .= '<input type="submit" id="customButton" name="stripe_purchase" value="' . __( 'Purchase', 'LION' ) .'" />';
+	$payment_form .= '
+		<script>
+		jQuery(\'#customButton\').click(function(){
+		  var token = function(res){
+			var $stripeToken = jQuery(\'<input type=hidden name=stripeToken />\').val(res.id);
+			jQuery(\'form#stripe_form\').append($stripeToken).submit();
+		  };
+		
+		  StripeCheckout.open({
+			key:         "' . $publishable_key . '",
+			amount:      "' . number_format( it_exchange_get_cart_total( false ), 2, '', '' ) . '",
+			currency:    "' . $general_settings['default-currency'] . '",
+			name:        "' . $general_settings['company-name'] . '",
+			description: "' . it_exchange_get_cart_description() . '",
+			panelLabel:  "Checkout",
+			token:       token
+		  });
+		
+		  return false;
+		});
+		</script>
+	';
 			
 	$payment_form .= '</form>';
 	$payment_form .= '</div>';
