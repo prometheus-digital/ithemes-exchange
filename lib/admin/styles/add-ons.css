@@ -30,4 +30,4 @@
 
 /** -----------------------------------------------------:[ addon settings ]:---------- */
 .it-exchange-addon-settings label{display:block;margin:1.5em 0 .5em;font-weight:bold;}
-.it-exchange-paypal-addon-settings .sandbox-mode label{display:inline;margin-left:.5em;}
+.it-exchange-addon-settings input[type='checkbox'] + label{display:inline;margin-left:.5em;}
