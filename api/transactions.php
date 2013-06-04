@@ -625,15 +625,13 @@ function it_exchange_get_transaction_product( $transaction, $product_cart_id ) {
 */
 function it_exchange_get_transaction_product_feature( $product, $feature ) {
 	$return = false;
-	switch ( $feature ) {
-		case 'title' :
-		case 'name' :
-			if ( ! empty( $product['product_name'] ) )
-				$return = apply_filters( 'the_title', $product['product_name'] );
-			break;
-	}
 
-	return apply_filters( 'it_exchange_get_transaction_product_feature', $return, $product, $feature );
+	if ( 'title' == $feature || 'name' == $feature )
+		$feature = 'product_name';
+
+	$feature_value = isset( $product[$feature] ) ? $product[$feature] : '';
+
+	return apply_filters( 'it_exchange_get_transaction_product_feature', $feature_value, $product, $feature );
 }
 
 /**
