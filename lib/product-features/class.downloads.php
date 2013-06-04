@@ -31,7 +31,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		add_filter( 'it_exchange_product_supports_feature_downloads', array( $this, 'product_supports_feature') , 9, 2 );
 			
 		//We want to do this sooner than 10
-		add_filter( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_hash_to_product' ), 5, 3 );
+		add_action( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_hash_to_product' ), 5 );
 	}
 	
 	/**
@@ -43,25 +43,37 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * @param integer the transaction id
 	 * @return updated cart data with the download hashes
 	*/
-	function add_transaction_hash_to_product( $transaction_object, $transaction_id, $customer_id ) {
-			
-		foreach( (array) $transaction_object->products as $object ) {
-			// If this is a downloadable product, generate a hash
-			if ( $this->product_has_feature( 'false', $object['product_id'] ) ) {
+	function add_transaction_hash_to_product( $transaction_id ) {
+		// Grab all products purchased with this transaction
+		$products = it_exchange_get_transaction_products( $transaction_id );
+		foreach( $products as $key => $transaction_product ) {
+			// If this is a downloadable product, generate a hash for each download unique to this transaction
+			if ( $this->product_has_feature( 'false', $transaction_product['product_id'] ) ) {
 						
 				// Grab existing downloads for each product in transaction
-				$existing_downloads = it_exchange_get_product_feature( $object['product_id'], 'downloads' );
+				$existing_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' );
 				
 				// Loop through downloads and create hash for each
-				foreach( $existing_downloads as $id => $data ) {
-					while ( !in_array( $hash = wp_hash( time() ), (array)get_post_meta( $id, '_it_exchange_download_hashes' ) ) ) {
-						add_post_meta( $id, '_it_exchange_download_hashes', $hash );
+				foreach( $existing_downloads as $download_id => $download_data ) {
+					if ( $hash = it_exchange_create_download_hash( $download_id ) ) {
+
+						// Create initial hash data package
+						$hash_data = array(
+							'hash' => $hash,
+							'transaction_id'  => $transaction_id,
+							'product_id'      => $transaction_product['product_id'],
+							'customer_id'     => it_exchange_get_transaction_customer_id( $transaction_id ),
+							'expiration_date' => '2013-12-31', /** @todo change this! */
+							'download_limit'  => '10', /** @todo change this! */
+							'downloads'       => '0', /** @todo change this! */
+						); 
+
+						// Add hash and data to DB as file post_meta
+						$pm_id = it_exchange_add_download_hash_data( $download_id, $hash, $hash_data );
 					}
-					$object['product_download_hashes'][$hash] = $id;
 				}
 			}
 		}
-		return $transaction_object;
 	}
 
 	/**

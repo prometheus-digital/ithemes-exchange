@@ -78,7 +78,11 @@ class IT_Exchange_Customer {
 		//$this->set_purchase_history();
 		
 		//We want to do this last
+		/**
+		HEAD
 		add_filter( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_to_user' ), 999, 3 );
+		**/
+		add_action( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_to_user' ), 999 );
 	}
 
 	/**
@@ -114,16 +118,16 @@ class IT_Exchange_Customer {
 		$this->data = $data;
 	}
 	
-	function add_transaction_to_user( $transaction_object, $transaction_id, $customer_id ) {
-		
-		if ( empty( $this->id ) )
-			$this->id = $customer_id;
-	
+    /** 
+     * Tack transaction_id to user_meta of customer
+     *
+     * @since 0.4.0
+     *
+     * @param integer $transaction_id id of the transaction
+     * @return void
+    */
+	function add_transaction_to_user( $transaction_id ) {
 		add_user_meta( $this->id, '_it_exchange_transaction_id', $transaction_id );
-		add_user_meta( $this->id, '_it_exchange_transaction_object_' . $transaction_id, $transaction_object );
-		
-		return $transaction_object;
-		
 	}
 
 	/**

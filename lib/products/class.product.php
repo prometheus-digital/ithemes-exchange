@@ -106,15 +106,20 @@ class IT_Exchange_Product {
 			add_action( 'admin_init', array( $this, 'set_add_edit_screen_supports' ) );
 			
 		//We want to do this sooner than 10
-		add_filter( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_to_product' ), 5, 3 );
+		add_action( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_to_product' ), 5 );
 	}
 	
-	function add_transaction_to_product( $transaction_object, $transaction_id, $customer_id ) {
-	
+	/**
+	 * Tack transaction_id to post_meta for product
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param object $cart_object data passed to the transaction_method from the cart
+	 * @param integer $transaction_id id of the transaction
+	 * @return void
+	*/
+	function add_transaction_to_product( $transaction_id ) {
 		add_post_meta( $this->ID, '_it_exchange_transaction_id', $transaction_id );
-	
-		return $transaction_object;
-			
 	}
 
 	/**
