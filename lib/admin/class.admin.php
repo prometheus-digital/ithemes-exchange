@@ -531,7 +531,11 @@ class IT_Exchange_Admin {
 			'receipt-email-address'  => 'USD',
 			'receipt-email-name'     => get_bloginfo( 'admin_email' ),
 			'receipt-email-subject'  => sprintf( __( 'Receipt for Purchase: %s', 'LION' ), '{receipt_id}' ),
-			'receipt-email-template' => '',
+			'receipt-email-template' => __( "Hello {name},
+
+Thank you for your order. Your order's details are below.
+<h1>Order: #{receipt_id}</h1>
+{order_table}", 'LION' ),
 		);
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;
