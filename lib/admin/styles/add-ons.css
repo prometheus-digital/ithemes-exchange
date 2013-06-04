@@ -27,3 +27,7 @@
 .add-on-block .add-on-actions .add-on-buy-now{float:right;clear:right;}
 .add-on-block .add-on-actions .add-on-buy-now a:hover{background:#bbf767;color:#40591e;}
 .add-on-block.sale .add-on-actions .add-on-price .regular-price{color:#f19b9b;text-decoration:line-through;}
+
+/** -----------------------------------------------------:[ addon settings ]:---------- */
+.it-exchange-addon-settings label{display:block;margin:1.5em 0 .5em;font-weight:bold;}
+.it-exchange-paypal-addon-settings .sandbox-mode label{display:inline;margin-left:.5em;}

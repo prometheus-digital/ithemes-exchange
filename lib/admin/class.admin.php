@@ -1122,7 +1122,7 @@ Thank you for your order. Your order's details are below.
 			$deps = array( 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs' );
 			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', $deps );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
-			$deps = array( 'jquery-ui-sortable' );
+			$deps = array( 'jquery-ui-tooltip', 'jquery-ui-sortable' );
 			wp_enqueue_script( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-ons.js', $deps );
 		} else if ( 'exchange_page_it-exchange-setup' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip' );

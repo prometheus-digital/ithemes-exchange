@@ -532,7 +532,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 				<?php $this->get_paypal_standard_payment_form_table( $form, $form_values ); ?>
 				<?php do_action( 'it_exchange_paypal-standard_settings_form_bottom' ); ?>
 				<p class="submit">
-					<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary' ) ); ?>
+					<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary button-large' ) ); ?>
 				</p>
 			<?php $form->end_form(); ?>
 			<?php do_action( 'it_exchange_paypal-standard_settings_page_bottom' ); ?>
@@ -549,38 +549,57 @@ class IT_Exchange_PayPal_Standard_Add_On {
 				$form->set_option( $key, $var );
 				
 		?>
-		<h3><?php _e( 'PayPal Web Standard Payment Settings', 'LION' ); ?></h3>
-        <p><?php _e( 'Do not have a PayPal account yet? <a href="http://paypal.com" target="_blank">Go set one up here</a>.', 'LION' ); ?></p>
-        <label for="sandbox-mode"><?php _e( 'Enable PayPal Sandbox Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Enable PayPal Sandbox Mode', 'LION' ); ?>">i</span></label>
-        <?php $form->add_check_box( 'sandbox-mode' ); ?>
-        <label for="live-email-address"><?php _e( 'PayPal Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'live-email-address' ); ?>
-        <label for="live-api-username"><?php _e( 'PayPal API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'live-api-username' ); ?>
-        <label for="live-api-password"><?php _e( 'PayPal API Password', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'live-api-password' ); ?>
-        <label for="live-api-signature"><?php _e( 'PayPal API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'live-api-signature' ); ?>
-        <label for="sandbox-email-address"><?php _e( 'PayPal Sandbox Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'sandbox-email-address' ); ?>
-        <label for="sandbox-api-username"><?php _e( 'PayPal Sandbox API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'sandbox-api-username' ); ?>
-        <label for="sandbox-api-password"><?php _e( 'PayPal Sandbox API Password', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'sandbox-api-password' ); ?>
-        <label for="sandbox-api-signature"><?php _e( 'PayPal Sandbox API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
-        <?php $form->add_text_box( 'sandbox-api-signature' ); ?>
-        <h5><?php _e( 'PayPal Instant Payment Notification (IPN)', 'LION' ); ?></h5>
-        <p><?php _e( 'PayPal IPN must be configured in Account Profile -› Instant Payment Notification Preferences in your PayPal Account', 'LION' ); ?></p>
-        <p><?php _e( 'Please log into your account and add this URL to your IPN Settings so iThemes Exchange is notified of things like refunds, payments, etc.', 'LION' ); ?></p>
-        <code><?php echo get_site_url(); ?>/?<?php esc_attr_e( it_exchange_get_webhook( 'paypal-standard' ) ); ?>=1</code>
-        <h5><?php _e( 'PayPal Auto Return', 'LION' ); ?></h5>
-        <p><?php _e( 'PayPal Auto Return must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
-        <p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'LION' ); ?></p>
-        <code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
-        <h5><?php _e( 'PayPal Payment Data Transfer (PDT) Identity Token', 'LION' ); ?></h5>
-        <p><?php _e( 'PayPal PDT must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
-        
-        <?php	
+		<div class="it-exchange-addon-settings it-exchange-paypal-addon-settings">
+			<h3><?php _e( 'PayPal Web Standard Payment Settings', 'LION' ); ?></h3>
+			<p><?php _e( 'Do not have a PayPal account yet? <a href="http://paypal.com" target="_blank">Go set one up here</a>.', 'LION' ); ?></p>
+			<p>
+				<label for="live-email-address"><?php _e( 'PayPal Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'live-email-address' ); ?>
+			</p>
+			<p>
+				<label for="live-api-username"><?php _e( 'PayPal API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'live-api-username' ); ?>
+			</p>
+			<p>
+				<label for="live-api-password"><?php _e( 'PayPal API Password', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'live-api-password' ); ?>
+			</p>
+			<p>
+				<label for="live-api-signature"><?php _e( 'PayPal API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'live-api-signature' ); ?>
+			</p>
+			<p>
+				<label for="sandbox-email-address"><?php _e( 'PayPal Sandbox Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'sandbox-email-address' ); ?>
+			</p>
+			<p>
+				<label for="sandbox-api-username"><?php _e( 'PayPal Sandbox API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'sandbox-api-username' ); ?>
+			</p>
+			<p>
+				<label for="sandbox-api-password"><?php _e( 'PayPal Sandbox API Password', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'sandbox-api-password' ); ?>
+			</p>
+			<p>
+				<label for="sandbox-api-signature"><?php _e( 'PayPal Sandbox API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'sandbox-api-signature' ); ?>
+			</p>
+			<p class="sandbox-mode">
+				<?php $form->add_check_box( 'sandbox-mode' ); ?>
+				<label for="sandbox-mode"><?php _e( 'Enable PayPal Sandbox Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Enable PayPal Sandbox Mode', 'LION' ); ?>">i</span></label>
+			</p>
+			<h5><?php _e( 'PayPal Instant Payment Notification (IPN)', 'LION' ); ?></h5>
+			<p><?php _e( 'PayPal IPN must be configured in Account Profile -› Instant Payment Notification Preferences in your PayPal Account', 'LION' ); ?></p>
+			<p><?php _e( 'Please log into your account and add this URL to your IPN Settings so iThemes Exchange is notified of things like refunds, payments, etc.', 'LION' ); ?></p>
+			<code><?php echo get_site_url(); ?>/?<?php esc_attr_e( it_exchange_get_webhook( 'paypal-standard' ) ); ?>=1</code>
+			<h5><?php _e( 'PayPal Auto Return', 'LION' ); ?></h5>
+			<p><?php _e( 'PayPal Auto Return must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
+			<p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'LION' ); ?></p>
+			<code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
+			<h5><?php _e( 'PayPal Payment Data Transfer (PDT) Identity Token', 'LION' ); ?></h5>
+			<p><?php _e( 'PayPal PDT must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
+		</div>
+		<?php
 	}
 
 	/**
