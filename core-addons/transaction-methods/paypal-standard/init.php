@@ -584,7 +584,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 				<label for="sandbox-api-signature"><?php _e( 'PayPal Sandbox API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'sandbox-api-signature' ); ?>
 			</p>
-			<p class="sandbox-mode">
+			<p>
 				<?php $form->add_check_box( 'sandbox-mode' ); ?>
 				<label for="sandbox-mode"><?php _e( 'Enable PayPal Sandbox Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Enable PayPal Sandbox Mode', 'LION' ); ?>">i</span></label>
 			</p>
