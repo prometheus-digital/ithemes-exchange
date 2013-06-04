@@ -58,4 +58,3 @@ if ( ! is_admin() ) {
 } else {
 	require( $this->_plugin_path . 'lib/routes/class.nav-menus.php' );
 }
-
