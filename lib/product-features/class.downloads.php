@@ -25,7 +25,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		}
 		add_action( 'init', array( $this, 'register_downloads_post_type' ) );
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
-		add_action( 'it_exchange_update_product_feature_downloads', array( $this, 'save_feature' ), 9, 2 );
+		add_action( 'it_exchange_update_product_feature_downloads', array( $this, 'save_feature' ), 9, 3 );
 		add_filter( 'it_exchange_get_product_feature_downloads', array( $this, 'get_feature' ), 9, 3 );
 		add_filter( 'it_exchange_product_has_feature_downloads', array( $this, 'product_has_feature') , 9, 2 );
 		add_filter( 'it_exchange_product_supports_feature_downloads', array( $this, 'product_supports_feature') , 9, 2 );
@@ -63,8 +63,7 @@ class IT_Exchange_Product_Feature_Downloads {
 							'transaction_id'  => $transaction_id,
 							'product_id'      => $transaction_product['product_id'],
 							'customer_id'     => it_exchange_get_transaction_customer_id( $transaction_id ),
-							'expiration_date' => '2013-12-31', /** @todo change this! */
-							'download_limit'  => '10', /** @todo change this! */
+							'download_limit'  => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'limit' ) ),
 							'downloads'       => '0', /** @todo change this! */
 						); 
 
@@ -157,6 +156,9 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// Set the value of the feature for this product
 		$existing_downloads = it_exchange_get_product_feature( $product->ID, 'downloads' );
+
+		// Download limit
+		$download_limit = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'limit' ) );
 		?>
 			<div class="downloads-label-add">
 				<label>Files</label>
@@ -229,6 +231,9 @@ class IT_Exchange_Product_Feature_Downloads {
 					<?php endif; ?>
 				</div>
 			</div>
+			<div class="download-limit">
+				<?php _e( 'Download Limit:', 'LION' ); ?> <input type="input" name="it-exchange-digital-downloads-download-limit" value="<?php esc_attr_e( $download_limit ); ?>" />
+			</div>
 		<?php
 	}
 
@@ -253,6 +258,11 @@ class IT_Exchange_Product_Feature_Downloads {
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'downloads' ) )
 			return;
 		
+		// Update Download limit
+		$download_limit = isset( $_POST['it-exchange-digital-downloads-download-limit'] ) ? $_POST['it-exchange-digital-downloads-download-limit'] : 0;
+		it_exchange_update_product_feature( $product_id, 'downloads', $download_limit, array( 'setting' => 'limit' ) );
+
+		// Grab previously saved downloads
 		$previous_downloads = it_exchange_get_product_feature( $product_id, 'downloads' );
 		
 		//Delete Non-Existant Downloads
@@ -263,7 +273,7 @@ class IT_Exchange_Product_Feature_Downloads {
 			}
 		}
 
-		//Add/Update Existnat Downloads
+		//Add/Update Existant Downloads
 		if ( ! empty( $_POST['it-exchange-digital-downloads'] ) && is_array( $_POST['it-exchange-digital-downloads'] ) ) {
 			foreach ( (array) $_POST['it-exchange-digital-downloads'] as $download ) {
 	
@@ -292,28 +302,38 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * @param mixed $new_value the new value 
 	 * @return bolean
 	*/
-	function save_feature( $product_id, $new_value ) {
+	function save_feature( $product_id, $new_value, $options=array() ) {
 
-		// Format data coming from $new_value
-		$data = array(
-			'post_type'   => 'it_exchange_download',
-			'post_status' => 'publish',
-			'post_title'  => $new_value['name'],
-			'post_parent' => $new_value['product_id'],
-		);
+        // Using options to determine if we're setting the download limit or adding/updating files
+        $defaults = array(
+            'setting' => 'files',
+        );
+        $options = ITUtility::merge_defaults( $options, $defaults );
 
-		// Add download id if we're updating an existing one.
-		if ( ! empty( $new_value['download_id'] ) )
-			$data['ID'] = $new_value['download_id'];
+		if ( 'files' == $options['setting'] ) {
+			// Format data coming from $new_value
+			$data = array(
+				'post_type'   => 'it_exchange_download',
+				'post_status' => 'publish',
+				'post_title'  => $new_value['name'],
+				'post_parent' => $new_value['product_id'],
+			);
 
-		// Remove our save_post action so we don't hit and endless loop
-		remove_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
-		if ( $download_id = wp_insert_post( $data ) ) {
-			// Save the download
-			update_post_meta( $download_id, '_it-exchange-download-info', $new_value );
+			// Add download id if we're updating an existing one.
+			if ( ! empty( $new_value['download_id'] ) )
+				$data['ID'] = $new_value['download_id'];
+
+			// Remove our save_post action so we don't hit and endless loop
+			remove_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
+			if ( $download_id = wp_insert_post( $data ) ) {
+				// Save the download
+				update_post_meta( $download_id, '_it-exchange-download-info', $new_value );
+			}
+			// Add our action back
+			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
+		} else if ( 'limit' == $options['setting'] ) {
+			update_post_meta( $product_id, '_it-exchange-download-limit', $new_value );	
 		}
-		// Add our action back
-		add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 	}
 
 	/**
@@ -324,32 +344,39 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * @param integer product_id the WordPress post ID
 	 * @return string product feature
 	*/
-	function get_feature( $existing, $product_id ) {
-		//$value = get_post_meta( $product_id, '_it-exchange-downloads', false );
+	function get_feature( $existing, $product_id, $options=array() ) {
 
-		$args = array(
-			'post_parent' => $product_id,
-			'post_type'   => 'it_exchange_download',
-			'post_status' => 'publish',
-		);
+        // Using options to determine if we're getting the download limit or adding/updating files
+        $defaults = array(
+            'setting' => 'files',
+        );
+        $options = ITUtility::merge_defaults( $options, $defaults );
 
-		if ( $download_posts = get_posts( $args ) ) {
-			$downloads = array();
-			foreach( $download_posts as $post ) {
-				$post_meta  = get_post_meta( $post->ID, '_it-exchange-download-info', true );
-				$source     = empty( $post_meta['source'] ) ? false : $post_meta['source'];
-				//$limit      = empty( $post_meta['limit'] ) ? false : $post_meta['limit'];
-				//$expiration = empty( $post_meta['expiration'] ) ? false : $post_meta['expiration'];
+		if ( 'files' == $options['setting'] ) {
+			$args = array(
+				'post_parent' => $product_id,
+				'post_type'   => 'it_exchange_download',
+				'post_status' => 'publish',
+			);
 
-				$downloads[$post->ID] = array(
-					'id'     => $post->ID,
-					'name'   => $post->post_title,
-					'source' => $source,
-					//'limit'    => $limit,
-					//'expiration' => $expiration,
-				);
+			if ( $download_posts = get_posts( $args ) ) {
+				$downloads = array();
+				foreach( $download_posts as $post ) {
+					$post_meta  = get_post_meta( $post->ID, '_it-exchange-download-info', true );
+					$source     = empty( $post_meta['source'] ) ? false : $post_meta['source'];
+					$limit      = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'limit' ) ); 
+
+					$downloads[$post->ID] = array(
+						'id'     => $post->ID,
+						'name'   => $post->post_title,
+						'source' => $source,
+						'limit'    => $limit,
+					);
+				}
+				return $downloads;
 			}
-			return $downloads;
+		} else if ( 'limit' == $options['setting'] ) {
+			return get_post_meta( $product_id, '_it-exchange-download-limit', true );
 		}
 		return false;
 	}
