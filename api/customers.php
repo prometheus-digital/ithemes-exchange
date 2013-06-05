@@ -94,6 +94,38 @@ function it_exchange_get_customer_transactions( $customer_id ) {
 }
 
 /**
+ * Returns all customer products purchased across various transactions
+ *
+ * @since 0.4.0
+ *
+ * @param integer $customer_id the WP id of the customer
+ * @return array
+*/
+function it_exchange_get_customer_products( $customer_id ) {
+	// All products are attached to a transaction
+	$transactions = it_exchange_get_customer_transactions( $customer_id );
+	
+	// Loop through transactions and build array of products
+	$products = array();
+	foreach( $transactions as $transaction ) {
+
+		// strip array values from each product to prevent ovewriting multiple purchases of same product
+		$transaction_products = (array) array_values( it_exchange_get_transaction_products( $transaction ) );
+
+		// Add transaction ID to each products array
+		foreach( $transaction_products as $key => $data ) {
+			$transaction_products[$key]['transaction_id'] = $transaction->ID;
+		}
+
+		// Merge with previously queried
+		$products = array_merge( $products, $transaction_products );
+	}
+
+	// Return
+	return $products;
+}
+
+/**
  * Returns an array of form fields for customer registration 
  *
  * Add-ons hooking onto this need to return an array with the following schema so that 

@@ -14,9 +14,10 @@
 .user-edit-block .item-column input{margin-top:11px;}
 
 /** -----------------------------------------------------:[ products ]:---------- */
-.products-user-edit-block .block-column-1{width:60%;}
+.products-user-edit-block .block-column-1{width:40%;}
 .products-user-edit-block .block-column-2{width:20%;}
 .products-user-edit-block .block-column-3{width:20%;}
+.products-user-edit-block .block-column-4{width:20%;}
 
 /** -----------------------------------------------------:[ transactions ]:---------- */
 .transactions-user-edit-block .block-column-1{width:40%;}

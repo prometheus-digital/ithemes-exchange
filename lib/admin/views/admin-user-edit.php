@@ -33,16 +33,41 @@
 	<?php
 		
 		$tab = ! empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'products';
+		$user_id = empty( $user_id ) ? get_current_user_id() : $user_id;
 		
 		switch ( $tab ) {
 			case 'products':
-				$list = it_exchange_get_users_products( $user_id );
 			default:
+				$headings = array(
+					__( 'Products', 'LION' ),
+					__( 'Transaction', 'LION' ),
+					__( 'Expiration', 'LION' ),
+					__( 'Download Remaining', 'LION' ),
+				);
+
+				$list     = array();
+				foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
+					// Build Product Link
+					$product_id   = $product['product_id'];
+					$product_url  = get_admin_url() . '/post.php?action=edit&post=' . esc_attr( $product_id );
+					$product_name = it_exchange_get_transaction_product_feature( $product, 'product_name' );
+					$product_link = '<a href="' . $product_url . '">' . $product_name . '</a>';
+
+					// Build Transaction Link
+					$transaction_id     = it_exchange_get_transaction_product_feature( $product, 'transaction_id' );
+					$transaction_url    = get_admin_url() . '/post.php?action=edit&post=' . esc_attr( $transaction_id );
+					$transaction_number = it_exchange_get_transaction_order_number( $transaction_id );
+					$transaction_link   = '<a href="' . $transaction_url . '">' . $transaction_number . '</a>';
+					$list[] = array(
+						$product_link,
+						$transaction_link,
+						it_exchange_get_transaction_product_feature( $product, 'expiration_date' ),
+						it_exchange_get_transaction_product_feature( $product, 'download_limit' ),
+					);
+				}
+				$list = array( $headings, $list );
 				break;
-				
 			case 'transactions':
-				if ( empty( $user_id ) ) 
-					$user_id = get_current_user_id();
 				
 				$headings = array(
 					__( 'Description', 'LION' ),
@@ -51,8 +76,7 @@
 				);  
 
 				$list = array();
-				$transactions = it_exchange_get_customer_transactions( $user_id );
-				foreach( it_exchange_get_customer_transactions( $user_id ) as $transaction ) {
+				foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transaction ) {
 					$view_url   = get_admin_url() . '/post.php?action=edit&post=' . esc_attr( $transaction->ID );
 					$resend_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'resend', 'id' => $transaction->ID ) );
 					$resend_url = remove_query_arg( 'wp_http_referer', $resend_url );
