@@ -868,7 +868,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'button-type'         => 'submit',
 			'button-name'         => false,
 			'out-of-stock-text'   => __( 'Out of stock.', 'LION' ),
-			'not-available-text' => __( 'Product not available right now.', 'LION' ),
+			'not-available-text'  => __( 'Product not available right now.', 'LION' ),
 			'edit-quantity'       => true
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
