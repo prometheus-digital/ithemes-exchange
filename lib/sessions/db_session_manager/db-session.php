@@ -2,6 +2,15 @@
 /**
  * WordPress session managment.
  *
+ * ############### WP Session Manager ##########
+ * ## This is a lightly modified version of WP Session Manager by Eric Mann
+ * ## Author: http://twitter.com/ericmann 
+ * ## Donate link: http://jumping-duck.com/wordpress/plugins 
+ * ## Github link: https://github.com/ericmann/wp-session-manager
+ * ## Requires at least: WordPress 3.4.2
+ * ## License: GPLv2 or later License URI: http://www.gnu.org/licenses/gpl-2.0.html 
+ * #############################################
+ *
  * Standardizes WordPress session data and uses either database transients or in-memory caching
  * for storing user session information.
  *

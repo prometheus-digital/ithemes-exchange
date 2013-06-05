@@ -2,6 +2,15 @@
 /**
  * This file contains the session class
  *
+ * ############### WP Session Manager ##########
+ * ## This is a wrapper to our lightly modified version of WP Session Manager by Eric Mann
+ * ## Author: http://twitter.com/ericmann 
+ * ## Donate link: http://jumping-duck.com/wordpress/plugins 
+ * ## Github link: https://github.com/ericmann/wp-session-manager
+ * ## Requires at least: WordPress 3.4.2
+ * ## License: GPLv2 or later License URI: http://www.gnu.org/licenses/gpl-2.0.html 
+ * #############################################
+ *
  * @since 0.3.3
  * @package IT_Exchange
 */
