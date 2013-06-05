@@ -214,6 +214,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			'after'  => '',
 			'class'  => 'it-exchange-empty-cart',
 			'format' => 'button',
+			'title'  => 'Empty Cart',
 			'label'  => __( 'Empty Cart', 'LION' ),
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -231,7 +232,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				$url = add_query_arg( $var, 1, $url );
 				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . session_id() ), $url );
 				$output  = $options['before'];
-				$output .= '<a href="' . $url . '" class="' . esc_attr( $options['class'] ) . '">' . esc_attr( $options['label'] ) . '</a>';
+				$output .= '<a href="' . $url . '" class="' . esc_attr( $options['class'] ) . '" title="' . esc_attr( $options['title'] ) . '">' . esc_attr( $options['label'] ) . '</a>';
 				$output .= $options['after'];
 				break;
 			case 'button' :
