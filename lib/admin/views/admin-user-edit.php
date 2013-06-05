@@ -22,10 +22,28 @@
 		<?php echo $user_object->display_name; ?>
 		<a href="<?php echo esc_url( add_query_arg( 'wp_http_referer', urlencode( stripslashes_deep( $_SERVER['REQUEST_URI'] ) ), get_edit_user_link( $user_object->ID ) ) ); ?>" class="edit-user add-new-h2"><?php echo esc_html_x( 'Edit User', 'LION' ); ?></a>
 	</h2>
+	<?php
+	// Show update messages
+	if ( $notices = it_exchange_get_messages( 'notice' ) ) {
+		foreach( $notices as $notice ) {
+			ITUtility::show_status_message( $notice );
+		}
+		it_exchange_clear_messages( 'notice' );
+	}
+	// Show errror messages
+	if ( $errors = it_exchange_get_messages( 'error' ) ) {
+		foreach( $errors as $error ) {
+			ITUtility::show_error_message( $error );
+		}
+		it_exchange_clear_messages( 'error' );
+	}
+	?>
 	
 	<p class="top-description"><?php echo sprintf( __( 'Here you can view %1$s\'s customer information. Click the Edit User link to go back to %1$s\'s edit user page.', 'LION' ), $user_object->display_name ); ?></p>
 	
 	<?php
+
+		// Print tabs
 		$this->print_user_edit_page_tabs(); 
 		do_action( 'it_exchange_user_edit_page_top' );
 	?>
@@ -46,11 +64,25 @@
 
 				$list = array();
 				foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transaction ) {
+					// View URL
 					$view_url   = get_admin_url() . '/post.php?action=edit&post=' . esc_attr( $transaction->ID );
+					$view_url   = remove_query_arg( 'it-exchange-customer-transaction-action', $view_url );
+					$view_url   = remove_query_arg( '_wpnonce', $view_url );
+
+					// Resend URL
 					$resend_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'resend', 'id' => $transaction->ID ) );
 					$resend_url = remove_query_arg( 'wp_http_referer', $resend_url );
+					$resend_url = wp_nonce_url( $resend_url, 'it-exchange-resend-confirmation-' . $transaction->ID );
+					$resend_url = remove_query_arg( 'it-exchange-customer-transaction-action', $resend_url );
+					$resend_url = remove_query_arg( '_wpnonce', $resend_url );
+
+					// Refund URL
 					$refund_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'refund', 'id' => $transaction->ID ) );
 					$refund_url = remove_query_arg( 'wp_http_referer', $refund_url );
+					$refund_url = remove_query_arg( 'it-exchange-customer-transaction-action', $refund_url );
+					$refund_url = remove_query_arg( '_wpnonce', $refund_url );
+
+					// Actions array
 					$actions_array = array( 
 						$view_url   => 'View',
 						$resend_url => 'Resend Confirmation Email',

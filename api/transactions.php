@@ -30,7 +30,7 @@ function it_exchange_get_transaction_method( $transaction=false ) {
 
 	// Return value from IT_Exchange_Transaction if we are able to locate it
 	$transaction = it_exchange_get_transaction( $transaction );
-	if ( is_object( $transaction ) && ! empty ( $transaction->transaction_method ) )
+	if ( is_object( $transaction ) && ! empty ( $transaction->transaction_method ) && ! is_null( $transaction->transaction_method ) )
 		return $transaction->transaction_method;
 
 	// Return query arg if is present

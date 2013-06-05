@@ -22,11 +22,59 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	*/
 	function IT_Exchange_Email_Notifications() {
-		
+		// Send emails on successfull transaction
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'send_purchase_emails' ), 20 );
-		
+
+		// Send emails when admin requests a resend
+		add_action( 'admin_init', array( $this, 'handle_resend_confirmation_email_requests' ) );
 	}
 	
+	/**
+	 * Listens for the resend email request and passes along to send_purchase_emails
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function handle_resend_confirmation_email_requests() {
+		// Abort if not requested
+		if ( empty( $_GET[ 'it-exchange-customer-transaction-action' ] ) || $_GET[ 'it-exchange-customer-transaction-action' ] != 'resend' )
+			return;
+
+		// Abort if no transaction or invalid transaction was passed
+		$transaction = it_exchange_get_transaction( $_GET['id'] );
+		if ( empty( $transaction->ID ) ) {
+			it_exchange_add_message( 'error', __( 'Invalid transaction. Confirmation email not sent.', 'LION' ) );
+			$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
+			wp_redirect( $url );
+			die();
+		}
+
+		// Abort if nonce is bad
+		$nonce = empty( $_GET['_wpnonce'] ) ? false : $_GET['_wpnonce'];
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'it-exchange-resend-confirmation-' . $transaction->ID ) ) {
+			it_exchange_add_message( 'error', __( 'Confirmation Email not sent. Please try again.', 'LION' ) );
+			$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
+			wp_redirect( $url );
+			die();
+		}
+
+		// Abort if user doesn't have permission
+		if ( ! current_user_can( 'administrator' ) ) {
+			it_exchange_add_message( 'error', __( 'You do not have permission to resend confirmation emails.', 'LION' ) );
+			$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
+			wp_redirect( $url );
+			die();
+		}
+
+		// Resend w/o admin notification
+		$this->send_purchase_emails( $transaction, false );
+		it_exchange_add_message( 'notice', __( 'Confirmation email resent', 'LION' ) );
+		$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
+		wp_redirect( $url );
+		die();
+	}
+
 	/**
 	 * Process the transaction and send appropriate emails
 	 *
@@ -37,8 +85,12 @@ class IT_Exchange_Email_Notifications {
 	 * @return void
 	*/
 	function send_purchase_emails( $transaction, $send_admin_email=true ) {
+
+		$transaction = it_exchange_get_transaction( $transaction );
+		if ( empty( $transaction->ID ) )
+			return;
 		
-		$this->transaction_id     = $transaction;
+		$this->transaction_id     = $transaction->ID;
 		$this->customer_id        = it_exchange_get_transaction_customer_id( $this->transaction_id );
 		$this->user               = get_userdata( $this->customer_id );
 		
