@@ -212,12 +212,26 @@ class IT_Exchange_Email_Notifications {
 	 * Replacement Tag
 	 *
 	 * @since 0.4.0
+	 * @todo better way to get this URL????
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
 	function replace_download_list_tag( $args ) {
-		return 'replace_download_list_tag';
+		$output = '';
+		
+		$hashes = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
+				
+		if ( !empty( $hashes ) ) {
+			$output .= '<ul>';
+			foreach( $hashes as $product_id => $file_hashes ) {
+				foreach( $file_hashes as $hash )
+					$output .= '<li>' . site_url() . '?it-exchange-download=' . $hash . '</li>';	
+			}
+			$output .= '</ul>';
+		}
+		
+		return $output;
 	}
 	
 	/**
