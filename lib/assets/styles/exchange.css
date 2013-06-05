@@ -74,3 +74,20 @@
 #it-exchange-cart .cart-totals .totals-titles{text-align:right;padding:10px 20px;}
 #it-exchange-cart .cart-apply-coupons,
 #it-exchange-cart .cart-actions{clear:both;display:block;margin-top:1em;text-align:right;}
+
+/** -----------------------------------------------------:[ super widget ]:---------- */
+.it-exchange-super-widget{width:100%;overflow:hidden;border:1px solid #F6F6F6;}
+.it-exchange-super-widget *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+.it-exchange-super-widget a{text-decoration:none;}
+.it-exchange-super-widget .cart-items-wrapper{background:#F6F6F6;}
+.it-exchange-super-widget .cart-items-wrapper .cart-item{padding:1em;}
+.it-exchange-super-widget .cart-items-wrapper .cart-item a{float:right;}
+.it-exchange-super-widget .cart-items-wrapper .cart-item .item-info{font-size:.8em;margin-top:1em;}
+.it-exchange-super-widget .cart-items-wrapper .cart-item .item-info input{max-width:50px;text-align:center;}
+.it-exchange-super-widget .total-cancel-wrapper{overflow:hidden;padding:1em;background:#F6F6F6;}
+.it-exchange-super-widget .it-exchange-empty-cart{float:right;text-decoration:none;}
+.it-exchange-super-widget .coupons-quantity-wrapper,
+.it-exchange-super-widget .payment-methods-wrapper{padding:1em;}
+.it-exchange-super-widget .payment-methods-wrapper input{width:100%;}
+.it-exchange-super-widget .coupons-quantity-wrapper{padding-top:0;font-size:.8em;text-align:center;}
+.it-exchange-super-widget .coupons-wrapper{padding:1em;}

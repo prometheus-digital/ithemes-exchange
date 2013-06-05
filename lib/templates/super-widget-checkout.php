@@ -1,20 +1,39 @@
-<?php it_exchange_get_template_part( 'messages' ); ?>
-<div class="it-exchange-order-total">
-	<?php _e( 'Order Total:', 'LION' ); ?> <?php it_exchange( 'cart', 'total' ); ?>
-	<br /><?php it_exchange( 'cart', 'empty', 'format=link&label=' . __( 'Cancel Purchase', 'LION' ) ); ?>
-	<?php if ( it_exchange( 'coupons', 'accepting', 'type=cart' ) || it_exchange( 'coupons', 'has-applied', 'type=cart' ) ) : ?>
-		<?php $label = (boolean) it_exchange( 'coupons', 'has-applied', 'type=cart' ) ? __( 'View Coupons', 'LION' ) : __( 'Add Coupon', 'LION' ); ?>
-		<br /><?php it_exchange( 'checkout', 'cancel', 'class=sw-cart-focus-coupons&focus=coupon&label=' . $label ); ?>
-	<?php endif; ?>
-	<?php $label = it_exchange_is_multi_item_cart_allowed() ? __( 'View cart', 'LION' ) : __( 'Update Quantity', 'LION' ); ?>
-	<br /><?php it_exchange( 'checkout', 'cancel', 'class=sw-cart-focus-quantity&focus=quantity&label=' . $label ); ?>
+<div class="cart-items-wrapper">
+	<!--
+		NOTE Still have to workout the multi-item cart markup.
+	-->
+	<?php while( it_exchange( 'cart', 'cart-items' ) ) : ?>
+		<div class="cart-item">
+			<div class="title-remove">
+				<?php it_exchange( 'cart-item', 'title' ) ?>
+				<?php it_exchange( 'cart-item', 'remove' ); ?>
+			</div>
+			<div class="item-info">
+				<?php if ( it_exchange( 'cart-item', 'get-quantity', array( 'format' => 'var_value' ) ) > 1 ) : ?>
+					 <?php it_exchange( 'cart-item', 'price' ); ?> &times; <?php it_exchange( 'cart-item', 'quantity', array( 'format' => 'var_value' ) ); ?> &#61; <?php it_exchange( 'cart', 'total' ); ?>
+				 <?php else : ?>
+					 <?php it_exchange( 'cart-item', 'price' ); ?>
+				<?php endif; ?>
+			</div>
+		</div>
+	<?php endwhile; ?>
 </div>
-<div class="it-exchange-payment-methods">
-    <?php if ( ! it_exchange( 'checkout', 'has-transaction-methods' ) ) : ?>
-        <p><?php _e( 'No Payment add-ons enabled.', 'LION' ); ?></p>
-    <?php else : ?>
-        <?php while( it_exchange( 'checkout', 'transaction-methods' ) ) : ?>
-            <?php it_exchange( 'transaction-method', 'make-payment' ); ?>
-        <?php endwhile; ?>
-    <?php endif; ?>
+
+<div class="payment-methods-wrapper">
+	<?php if ( ! it_exchange( 'checkout', 'has-transaction-methods' ) ) : ?>
+		<p><?php _e( 'No payment add-ons enabled.', 'LION' ); ?></p>
+	<?php else : ?>
+		<?php while( it_exchange( 'checkout', 'transaction-methods' ) ) : ?>
+			<?php it_exchange( 'transaction-method', 'make-payment' ); ?>
+		<?php endwhile; ?>
+	<?php endif; ?>
+</div>
+
+<div class="coupons-quantity-wrapper">
+	<?php if ( it_exchange( 'coupons', 'accepting', 'type=cart' ) || it_exchange( 'coupons', 'has-applied', 'type=cart' ) ) : ?>
+		<?php $label = (boolean) it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ? __( 'Coupons', 'LION' ) : __( 'Coupon', 'LION' ); ?>
+		<?php it_exchange( 'checkout', 'cancel', 'class=sw-cart-focus-coupons&focus=coupon&label=' . $label ); ?>
+	<?php endif; ?>
+	
+	<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-quantity', 'focus' => 'quantity', 'label' => it_exchange_is_multi_item_cart_allowed() ? __( ' | View Cart', 'LION' ) : __( ' | Quantity', 'LION' ) ) ); ?>
 </div>
