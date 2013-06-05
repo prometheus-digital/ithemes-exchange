@@ -6,11 +6,11 @@
 */
 
 /**
- * The IT_Exchange_Email_notifications class is for sending out email notification using wp_mail()
+ * The IT_Exchange_Email_Notifications class is for sending out email notification using wp_mail()
  *
  * @since 0.4.0
 */
-class IT_Exchange_Email_notifications {
+class IT_Exchange_Email_Notifications {
 	
 	private $transaction_id;
 	private $customer_id;
@@ -21,9 +21,9 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	*/
-	function IT_Exchange_Email_notifications() {
+	function IT_Exchange_Email_Notifications() {
 		
-		add_action( 'it_exchange_add_transaction_success', array( $this, 'transaction_completed_notification' ), 20 );
+		add_action( 'it_exchange_add_transaction_success', array( $this, 'send_purchase_emails' ), 20 );
 		
 	}
 	
@@ -36,7 +36,7 @@ class IT_Exchange_Email_notifications {
 	 * @param int $customer_id The customer ID
 	 * @return void
 	*/
-	function transaction_completed_notification( $transaction ) {
+	function send_purchase_emails( $transaction, $send_admin_email=true ) {
 		
 		$this->transaction_id     = $transaction;
 		$this->customer_id        = it_exchange_get_transaction_customer_id( $this->transaction_id );
@@ -56,7 +56,8 @@ class IT_Exchange_Email_notifications {
 		
 		wp_mail( $this->user->user_email, strip_tags( $subject ), $body, $headers );
 		
-		if ( !empty( $settings['notification-email-address'] ) ) {
+		// Send admin notification if param is true and email is provided in settings
+		if ( $send_admin_email && ! empty( $settings['notification-email-address'] ) ) {
 			
 			$emails = split( ',', $settings['notification-email-address'] );
 			
@@ -160,7 +161,7 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $args of IT_Exchange_Email_notifications
+	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
 	function replace_download_list_tag( $args ) {
@@ -172,7 +173,7 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $args of IT_Exchange_Email_notifications
+	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
 	function replace_name_tag( $args ) {
@@ -190,7 +191,7 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $args of IT_Exchange_Email_notifications
+	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
 	function replace_fullname_tag( $args ) {
@@ -208,7 +209,7 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $args of IT_Exchange_Email_notifications
+	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
 	function replace_username_tag( $args ) {
@@ -220,7 +221,7 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $args of IT_Exchange_Email_notifications
+	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
 	function replace_order_table_tag( $args ) {
@@ -264,7 +265,7 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $args of IT_Exchange_Email_notifications
+	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
 	function replace_purchase_date_tag( $args ) {
@@ -276,7 +277,7 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $args of IT_Exchange_Email_notifications
+	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
 	function replace_total_tag( $args ) {
@@ -288,7 +289,7 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $args of IT_Exchange_Email_notifications
+	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
 	function replace_payment_id_tag( $args ) {
@@ -300,7 +301,7 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $args of IT_Exchange_Email_notifications
+	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
 	function replace_receipt_id_tag( $args ) {
@@ -312,7 +313,7 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $args of IT_Exchange_Email_notifications
+	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
 	function replace_payment_method_tag( $args ) {
@@ -324,7 +325,7 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $args of IT_Exchange_Email_notifications
+	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
 	function replace_sitename_tag( $args ) {
@@ -336,7 +337,7 @@ class IT_Exchange_Email_notifications {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $args of IT_Exchange_Email_notifications
+	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
 	function replace_receipt_link_tag( $args ) {
@@ -344,4 +345,4 @@ class IT_Exchange_Email_notifications {
 	}
 	
 }
-$IT_Exchange_Email_notifications = new IT_Exchange_Email_notifications();
+$IT_Exchange_Email_Notifications = new IT_Exchange_Email_Notifications();
