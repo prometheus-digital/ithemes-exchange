@@ -640,10 +640,11 @@ class IT_Exchange_Product_Post_Type {
 		
 		switch( $column ) {
 			case 'it_exchange_product_price':
-				esc_attr_e( it_exchange_get_product_feature( $post->ID, 'base-price' ) );
+				esc_attr_e( it_exchange_format_price( it_exchange_get_product_feature( $post->ID, 'base-price' ) ) );
 				break;
 			case 'it_exchange_product_show_in_store':
-				print_r( it_exchange_get_product_feature( $post->ID, 'visibility' ) );
+				$product_visibility = get_post_meta( $post->ID, '_it-exchange-visibility', true );
+				echo ucwords( $product_visibility );
 				break;
 			case 'it_exchange_product_purchases':
 				esc_attr_e( it_exchange_get_product_feature( $post->ID, 'purchases' ) );
