@@ -721,21 +721,23 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$result        = false;
 
 		$defaults      = array(
-			'type'                    => false,
-			'buy-now-before'          => '',
-			'buy-now-after'           => '',
-			'buy-now-class'           => false,
-			'buy-now-label'           => __( 'Buy Now', 'LION' ),
-			'buy-now-button-type'     => 'submit',
-			'buy-now-button-name'     => false,
-			'add-to-cart-before'      => '',
-			'add-to-cart-after'       => '',
-			'add-to-cart-class'       => false,
-			'add-to-cart-label'       => __( 'Add to Cart', 'LION' ),
-			'add-to-cart-button-type' => 'submit',
-			'add-to-cart-button-name' => false,
-			'out-of-stock-text'       => __( 'Out of stock.', 'LION' ),
-			'not-available--text'     => __( 'Product not available right now.', 'LION' ),
+			'type'                      => false,
+			'buy-now-before'            => '',
+			'buy-now-after'             => '',
+			'buy-now-class'             => false,
+			'buy-now-label'             => __( 'Buy Now', 'LION' ),
+			'buy-now-button-type'       => 'submit',
+			'buy-now-button-name'       => false,
+			'buy-now-edit-quantity'     => true,
+			'add-to-cart-before'        => '',
+			'add-to-cart-after'         => '',
+			'add-to-cart-class'         => false,
+			'add-to-cart-label'         => __( 'Add to Cart', 'LION' ),
+			'add-to-cart-button-type'   => 'submit',
+			'add-to-cart-button-name'   => false,
+			'add-to-cart-edit-quantity' => true,
+			'out-of-stock-text'         => __( 'Out of stock.', 'LION' ),
+			'not-available-text'        => __( 'Product not available right now.', 'LION' ),
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
@@ -754,24 +756,27 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$output = '';
 
 		// Set buy-now options
-		$options['before']      = $options['buy-now-before'];
-		$options['after']       = $options['buy-now-after'];
-		$options['class']       = $options['buy-now-class'];
-		$options['label']       = $options['buy-now-label'];
-		$options['button-type'] = $options['buy-now-button-type'];
-		$options['button-name'] = $options['buy-now-button-name'];
+		$options['before']        = $options['buy-now-before'];
+		$options['after']         = $options['buy-now-after'];
+		$options['class']         = $options['buy-now-class'];
+		$options['label']         = $options['buy-now-label'];
+		$options['button-type']   = $options['buy-now-button-type'];
+		$options['button-name']   = $options['buy-now-button-name'];
+		$options['button-name']   = $options['buy-now-button-name'];
+		$options['edit-quantity'] = $options['buy-now-edit-quantity'];
 
 		// Add buy-now form to output if product is available for purchase and template asked for it.
 		if ( $product_in_stock && $product_is_available && ( empty( $options['type'] ) || 'buy-now' == $options['type'] ) )
 			$output .= it_exchange( 'product', 'get-buy-now', $options );
 
 		// Set add-to-cart options
-		$options['before']      = $options['add-to-cart-before'];
-		$options['after']       = $options['add-to-cart-after'];
-		$options['class']       = $options['add-to-cart-class'];
-		$options['label']       = $options['add-to-cart-label'];
-		$options['button-type'] = $options['add-to-cart-button-type'];
-		$options['button-name'] = $options['add-to-cart-button-name'];
+		$options['before']        = $options['add-to-cart-before'];
+		$options['after']         = $options['add-to-cart-after'];
+		$options['class']         = $options['add-to-cart-class'];
+		$options['label']         = $options['add-to-cart-label'];
+		$options['button-type']   = $options['add-to-cart-button-type'];
+		$options['button-name']   = $options['add-to-cart-button-name'];
+		$options['edit-quantity'] = $options['add-to-cart-edit-quantity'];
 
 		// Add add-to-cart form to output if product is available for purchase and template asked for it.
 		if ( $product_in_stock && $product_is_available && $multi_item_cart && ( empty( $options['type'] ) || 'add-to-cart' == $options['type'] ) )
@@ -802,7 +807,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'button-type'         => 'submit',
 			'button-name'         => false,
 			'out-of-stock-text'   => __( 'Out of stock.', 'LION' ),
-			'not-available-text' => __( 'Product not available right now.', 'LION' ),
+			'not-available-text'  => __( 'Product not available right now.', 'LION' ),
+			'edit-quantity'       => true
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
@@ -831,7 +837,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		$result  = '<form action="" method="post" class="it-exchange-sw-purchase-options it-exchange-sw-buy-now">';
 		$result .= $hidden_fields;
-		$result .= it_exchange( 'product', 'get-purchase-quantity' );
+		
+		if ( $options['edit-quantity'] == true )
+			$result .= it_exchange( 'product', 'get-purchase-quantity' );
+		
 		$result .= $button;
 		$result .= '</form>';
 
@@ -859,7 +868,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'button-type'         => 'submit',
 			'button-name'         => false,
 			'out-of-stock-text'   => __( 'Out of stock.', 'LION' ),
-			'not-available--text' => __( 'Product not available right now.', 'LION' ),
+			'not-available-text' => __( 'Product not available right now.', 'LION' ),
+			'edit-quantity'       => true
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
@@ -895,7 +905,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		$result  = '<form action="" method="post" class="it-exchange-sw-purchase-options it-exchange-sw-add-to-cart">';
 		$result .= $hidden_fields;
-		$result .= it_exchange( 'product', 'get-purchase-quantity' );
+		
+		if ( $options['edit-quantity'] == true )
+			$result .= it_exchange( 'product', 'get-purchase-quantity' );
+		
 		$result .= $button;
 		$result .= '</form>';
 
