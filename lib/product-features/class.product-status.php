@@ -261,9 +261,7 @@ class IT_Exchange_Product_Visibility {
 							<div id="product-visibility-select" class="hide-if-js">
 								<input type="hidden" name="hidden_it-exchange-visibility" id="hidden_it-exchange-visibility" value="<?php echo esc_attr( ('hidden' == $post->post_status ) ? 'hidden' : $product_visibility); ?>" />
 								<select name='it-exchange-visibility' id='it-exchange-visibility'>
-									<?php if ( 'visible' == $product_visibility ) : ?>
 										<option<?php selected( $product_visibility, 'visible' ); ?> value='visible'><?php _e('Show in Store','LION') ?></option>
-									<?php endif; ?>
 										<option<?php selected( $product_visibility, 'hidden' ); ?> value='hidden'><?php _e('Hide from Store') ?></option>
 								</select>
 								<a href="#product_visibility" class="save-product_visibility hide-if-no-js button"><?php _e('OK'); ?></a>
