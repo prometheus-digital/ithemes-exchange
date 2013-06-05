@@ -172,11 +172,12 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 	*/
 	function apply( $options=array() ) {
 			$defaults = array(
-				'type'   => false,
-				'format' => 'form-field',
-				'class'  => 'apply-coupon',
-				'before' => '',
-				'after'  => '',
+				'type'        => false,
+				'format'      => 'form-field',
+				'class'       => 'apply-coupon',
+				'placeholder' => __( 'Coupon Code', 'LION' ),
+				'before'      => '',
+				'after'       => '',
 			);
 			$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -199,7 +200,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 				return $var;
 
 			// Return the field
-			$field = it_exchange_get_coupon_type_apply_field( $options['type'], array( 'class' => $options['class'] ) );
+			$field = it_exchange_get_coupon_type_apply_field( $options['type'], array( 'class' => $options['class'], 'placeholder' => $options['placeholder'] ) );
 			
 			if ( $field )
 				return $options['before'] . $field . $options['after'];

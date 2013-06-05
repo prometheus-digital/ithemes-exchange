@@ -114,12 +114,13 @@ add_filter( 'it_exchange_accepting_cart_coupons', 'it_exchange_basic_coupons_acc
 */
 function it_exchange_base_coupons_apply_cart_coupon_field( $incoming=false, $options=array() ) {
 	$defaults = array(
-		'class' => 'apply-coupon',
+		'class'       => 'apply-coupon',
+		'placeholder' => __( 'Coupon Code', 'LION' ),
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );	
 
 	$var = it_exchange_get_field_name( 'apply_coupon' ) . '-cart';
-	return '<input type="text" class="' . esc_attr( $options['class'] ) . '" name="' . esc_attr( $var ) . '" value="" />';	
+	return '<input type="text" class="' . esc_attr( $options['class'] ) . '" name="' . esc_attr( $var ) . '" placeholder="' . esc_attr( $options['placeholder'] ) . '" value="" />';	
 }
 add_filter( 'it_exchange_apply_cart_coupon_field', 'it_exchange_base_coupons_apply_cart_coupon_field', 10, 2 );
 
