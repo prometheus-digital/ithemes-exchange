@@ -406,7 +406,7 @@ function it_exchange_get_cart_description() {
     foreach( (array) $products as $product ) {
         $string = it_exchange_get_cart_product_title( $product );
 		if (  1 < $count = it_exchange_get_cart_product_quantity( $product ) )
-			$string .= ' (x' . $count . ')';
+			$string .= ' (' . $count . ')';
 		$description[] = $string;
     }
     $description = apply_filters( 'it_exchange_get_cart_description', join( ', ', $description ), $description );
