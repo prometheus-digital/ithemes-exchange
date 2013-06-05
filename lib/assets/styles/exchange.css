@@ -76,7 +76,7 @@
 #it-exchange-cart .cart-actions{clear:both;display:block;margin-top:1em;text-align:right;}
 
 /** -----------------------------------------------------:[ super widget ]:---------- */
-.it-exchange-super-widget{width:100%;overflow:hidden;border:1px solid #F6F6F6;}
+.it-exchange-super-widget{width:100%;background:#FFF;overflow:hidden;border:1px solid #F6F6F6;background:#FFF;}
 .it-exchange-super-widget *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 .it-exchange-super-widget a{text-decoration:none;}
 .it-exchange-super-widget .cart-items-wrapper{background:#F6F6F6;}
