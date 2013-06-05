@@ -29,6 +29,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		add_filter( 'it_exchange_get_product_feature_downloads', array( $this, 'get_feature' ), 9, 3 );
 		add_filter( 'it_exchange_product_has_feature_downloads', array( $this, 'product_has_feature') , 9, 2 );
 		add_filter( 'it_exchange_product_supports_feature_downloads', array( $this, 'product_supports_feature') , 9, 2 );
+		add_filter( 'template_redirect', array( $this, 'handle_download_pickup_request' ) );
 			
 		//We want to do this sooner than 10
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_hash_to_product' ), 5 );
@@ -62,6 +63,7 @@ class IT_Exchange_Product_Feature_Downloads {
 							'hash' => $hash,
 							'transaction_id'  => $transaction_id,
 							'product_id'      => $transaction_product['product_id'],
+							'file_id'         => $download_id,
 							'customer_id'     => it_exchange_get_transaction_customer_id( $transaction_id ),
 							'download_limit'  => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'limit' ) ),
 							'downloads'       => '0', /** @todo change this! */
@@ -441,5 +443,36 @@ class IT_Exchange_Product_Feature_Downloads {
 		);  
 		register_post_type( $post_type, $options );
     }
+
+	/**
+	 * If a pickup request is made for a download, do our thing
+	 *
+	 * 1) Confirm the download hash is legit
+	 * 2) Confirm the download hash belongs to the current user
+	 * 3) Confirm the download limit isn't up
+	 * 4) Deliver the file
+	 * 5) Update meta data like download count and download limit
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function handle_download_pickup_request() {
+		// Abort if not looking for a download
+		if ( empty( $_GET['it-exchange-download'] ) )
+			return;
+
+		// Abort with message if hash isn't found
+		if ( ! $hash_data = it_exchange_get_download_data_from_hash( $_GET['it-exchange-download'] ) ) {
+			it_exchange_add_message( 'error', __( 'Download not found', 'LION' ) );
+			$url = apply_filters( 'it_exchange_download_error_url', it_exchange_get_page_url( 'store' ) );
+			wp_redirect( $url );
+			die();
+		}
+
+		// Unserialize
+		$hash_data = maybe_unserialize( $hash_data );
+		ITUtility::print_r( $hash_data );
+	}
 }
 $IT_Exchange_Product_Feature_Downloads = new IT_Exchange_Product_Feature_Downloads();
