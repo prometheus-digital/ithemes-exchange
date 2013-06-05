@@ -36,6 +36,50 @@
 		$user_id = empty( $user_id ) ? get_current_user_id() : $user_id;
 		
 		switch ( $tab ) {
+			case 'transactions':
+				
+				$headings = array(
+					__( 'Description', 'LION' ),
+					__( 'Total', 'LION' ),
+					__( 'Actions', 'LION' ),
+				);  
+
+				$list = array();
+				foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transaction ) {
+					$view_url   = get_admin_url() . '/post.php?action=edit&post=' . esc_attr( $transaction->ID );
+					$resend_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'resend', 'id' => $transaction->ID ) );
+					$resend_url = remove_query_arg( 'wp_http_referer', $resend_url );
+					$refund_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'refund', 'id' => $transaction->ID ) );
+					$refund_url = remove_query_arg( 'wp_http_referer', $refund_url );
+					$actions_array = array( 
+						$view_url   => 'View',
+						$resend_url => 'Resend Confirmation Email',
+						$refund_url => 'Refund',
+					);
+					$description = it_exchange_get_transaction_description( $transaction );
+					$price       = it_exchange_get_transaction_total( $transaction );
+					$list[]      = array( $description, $price, $actions_array );
+				}
+				$list = array( $headings, $list );
+				break;
+				
+			case 'activity':
+				$headings = array(
+					__( 'Event', 'LION' ),
+					__( 'Date/Time', 'LION' ),
+				);  
+								
+				$list[] = array( 'My Great Ebook', '3/11/13 8:43pm' );
+				$list[] = array( 'My Awesome Ebook', '3/9/13 3:15pm' );
+				$list[] = array( 'The Old Couch', '3/7/13 2:55am' );
+				$list[] = array( 'My Firstborn', '2/6/13 12:32pm' );
+								
+				$list = array( $headings, $list );
+				break;
+				
+			case 'info':
+				$list = array();
+				break;
 			case 'products':
 			default:
 				$headings = array(
@@ -78,40 +122,6 @@
 					);
 				}
 				$list = array( $headings, $list );
-				break;
-			case 'transactions':
-				
-				$headings = array(
-					__( 'Description', 'LION' ),
-					__( 'Total', 'LION' ),
-					__( 'Actions', 'LION' ),
-				);  
-
-				$list = array();
-				foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transaction ) {
-					$view_url   = get_admin_url() . '/post.php?action=edit&post=' . esc_attr( $transaction->ID );
-					$resend_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'resend', 'id' => $transaction->ID ) );
-					$resend_url = remove_query_arg( 'wp_http_referer', $resend_url );
-					$refund_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'refund', 'id' => $transaction->ID ) );
-					$refund_url = remove_query_arg( 'wp_http_referer', $refund_url );
-					$actions_array = array( 
-						$view_url   => 'View',
-						$resend_url => 'Resend Confirmation Email',
-						$refund_url => 'Refund',
-					);
-					$description = it_exchange_get_transaction_description( $transaction );
-					$price       = it_exchange_get_transaction_total( $transaction );
-					$list[]      = array( $description, $price, $actions_array );
-				}
-				$list = array( $headings, $list );
-				break;
-				
-			case 'activity':
-				$list = it_exchange_get_users_activity( $user_id );
-				break;
-				
-			case 'info':
-				$list = array();
 				break;
 		}
 	?>
