@@ -58,11 +58,23 @@
 					$transaction_url    = get_admin_url() . '/post.php?action=edit&post=' . esc_attr( $transaction_id );
 					$transaction_number = it_exchange_get_transaction_order_number( $transaction_id );
 					$transaction_link   = '<a href="' . $transaction_url . '">' . $transaction_number . '</a>';
+
+					// Build Downloads list
+					$downloads_list = array();
+					if ( $downloads = it_exchange_get_product_feature( $product['product_id'], 'downloads' ) ) {
+						foreach ( $downloads as $download ) {
+							$remaining = it_exchange_get_download_data_from_transaction_product( $transaction_id, $product, $download['id'], 'download_limit' );
+							$downloads_list[] = apply_filters( 'the_title', $download['name'] ) . ' (' . $remaining . ')';
+						}
+						$downloads_list = implode( '<br />', $downloads_list );
+					} else {
+						$downloads_list = __( 'No downloads found', 'LION' );
+					}
 					$list[] = array(
 						$product_link,
 						$transaction_link,
-						it_exchange_get_transaction_product_feature( $product, 'expiration_date' ),
-						it_exchange_get_transaction_product_feature( $product, 'download_limit' ),
+						'2013-12-31',
+						$downloads_list,
 					);
 				}
 				$list = array( $headings, $list );
