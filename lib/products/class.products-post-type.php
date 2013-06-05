@@ -116,9 +116,195 @@ class IT_Exchange_Product_Post_Type {
 					do_action( 'it_exchange_product_metabox_callback_' . $addon_slug, $product );
 			}
 		}
+		
+		remove_meta_box( 'submitdiv', __( 'Publish' ), 'post_submit_meta_box', null, 'it_exchange_advanced', 'core' );
+		add_meta_box( 'submitdiv', __( 'Publish' ), array( $this, 'post_submit_meta_box' ), 'it_exchange_prod', 'it_exchange_side', 'high' );
 
 		// Do action for any product type
 		do_action( 'it_exchange_product_metabox_callback', $product );
+	}
+	
+	function post_submit_meta_box( $post ) {
+			
+		global $action;
+	
+		$post_type = $post->post_type;
+		$post_type_object = get_post_type_object($post_type);
+		$can_publish = current_user_can($post_type_object->cap->publish_posts);
+		
+		// Grab the iThemes Exchange Product object from the WP $post object
+		$product = it_exchange_get_product( $post );
+
+		// Set the value of the visibility for this product
+		$product_visibility = get_post_meta( $post->ID, '_it-exchange-visibility', true );
+		
+		?>
+        <div id="it-exchange-submit-box">
+			<?php do_action('post_submitbox_start'); ?>
+			<div style="display:none;">
+				<?php submit_button( __( 'Save' ), 'button', 'save' ); ?>
+			</div>
+			<div class="publishing-actions">
+				<div id="save-action">
+					<?php if ( 'publish' != $post->post_status && 'future' != $post->post_status && 'pending' != $post->post_status ) : ?>
+						<input <?php if ( 'private' == $post->post_status ) { ?>style="display:none"<?php } ?> type="submit" name="save" id="save-post" value="<?php esc_attr_e( 'Save Draft' ); ?>" class="button button-large" />
+					<?php elseif ( 'pending' == $post->post_status && $can_publish ) : ?>
+						<input type="submit" name="save" id="save-post" value="<?php esc_attr_e('Save as Pending'); ?>" class="button button-large" />
+					<?php endif; ?>
+					<span class="spinner"></span>
+				</div>
+				<?php if ( $post_type_object->public ) : ?>
+					<div id="preview-action">
+						<?php
+							if ( 'publish' == $post->post_status ) {
+								$preview_link = esc_url( get_permalink( $post->ID ) );
+								$preview_button = __( 'Preview Changes' );
+							} else {
+								$preview_link = set_url_scheme( get_permalink( $post->ID ) );
+								$preview_link = esc_url( apply_filters( 'preview_post_link', add_query_arg( 'preview', 'true', $preview_link ) ) );
+								$preview_button = __( 'Preview' );
+							}
+						?>
+						<a class="preview button button-large" href="<?php echo $preview_link; ?>" target="wp-preview" id="post-preview"><?php echo $preview_button; ?></a>
+						<input type="hidden" name="wp-preview" id="wp-preview" value="" />
+					</div>
+				<?php endif; ?>
+				<div id="publishing-action">
+					<span class="spinner"></span>
+					<?php if ( ! in_array( $post->post_status, array( 'publish', 'future', 'private' ) ) || 0 == $post->ID ) : ?>
+						<?php if ( $can_publish ) : ?>
+							<?php if ( !empty($post->post_date_gmt) && time() < strtotime( $post->post_date_gmt . ' +0000' ) ) : ?>
+								<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e( 'Schedule' ) ?>" />
+								<?php submit_button( __( 'Schedule' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) ); ?>
+							<?php else : ?>
+								<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Publish') ?>" />
+								<?php submit_button( __( 'Publish' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) ); ?>
+							<?php endif; ?>
+						<?php else : ?>
+							<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Submit for Review') ?>" />
+							<?php submit_button( __( 'Submit for Review' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) ); ?>
+						<?php endif; ?>
+					<?php else : ?>
+						<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e( 'Update' ) ?>" />
+						<input name="save" type="submit" class="button button-primary button-large" id="publish" accesskey="p" value="<?php esc_attr_e( 'Update' ) ?>" />
+					<?php endif; ?>
+				</div>
+			</div>
+			<div class="modifying-actions">
+				<div id="advanced-action">
+					<a class="advanced-status-option-link advanced-hidden" href data-hidden="<?php _e( 'Show Advanced', 'LION' ); ?>" data-visible="<?php _e( 'Hide Advanced', 'LION' ); ?>"><?php _e( 'Show Advanced', 'LION' ); ?></a>
+				</div>
+				<div id="delete-action">
+					<?php if ( current_user_can( "delete_post", $post->ID ) ) : ?>
+						<?php
+							if ( ! EMPTY_TRASH_DAYS )
+								$delete_text = __( 'Delete Permanently' );
+							else
+								$delete_text = __('Move to Trash');
+						?>
+						<a class="submitdelete deletion" href="<?php echo get_delete_post_link( $post->ID ); ?>"><?php echo $delete_text; ?></a>
+					<?php endif; ?>
+				</div>
+			</div>
+			<div class="advanced-actions hide-if-js">
+				<div id="misc-publishing-actions">
+					<div class="misc-pub-section">
+						<label for="post_status"><?php _e( 'Status:' ) ?></label>
+						<span id="post-status-display">
+							<?php
+								switch ( $post->post_status ) {
+									case 'private':
+										_e('Privately Published');
+										break;
+									case 'publish':
+										_e('Published');
+										break;
+									case 'future':
+										_e('Scheduled');
+										break;
+									case 'pending':
+										_e('Pending Review');
+										break;
+									case 'draft':
+									case 'auto-draft':
+										_e('Draft');
+										break;
+								}
+							?>
+						</span>
+						<?php if ( 'publish' == $post->post_status || 'private' == $post->post_status || $can_publish ) : ?>
+							<a href="#post_status" <?php if ( 'private' == $post->post_status ) { ?>style="display:none;" <?php } ?>class="edit-post-status hide-if-no-js"><?php _e( 'Edit', 'LION' ) ?></a>
+							<div id="post-status-select" class="hide-if-js">
+								<input type="hidden" name="hidden_post_status" id="hidden_post_status" value="<?php echo esc_attr( ('auto-draft' == $post->post_status ) ? 'draft' : $post->post_status); ?>" />
+								<select name='post_status' id='post_status'>
+									<?php if ( 'publish' == $post->post_status ) : ?>
+										<option<?php selected( $post->post_status, 'publish' ); ?> value='publish'><?php _e( 'Published', 'LION' ); ?></option>
+									<?php endif; ?>
+										<option<?php selected( $post->post_status, 'pending' ); ?> value='pending'><?php _e( 'Pending Review', 'LION' ); ?></option>
+									<?php if ( 'auto-draft' == $post->post_status ) : ?>
+										<option<?php selected( $post->post_status, 'auto-draft' ); ?> value='draft'><?php _e( 'Draft', 'LION' ); ?></option>
+									<?php else : ?>
+										<option<?php selected( $post->post_status, 'draft' ); ?> value='draft'><?php _e('Draft') ?></option>
+									<?php endif; ?>
+								</select>
+								 <a href="#post_status" class="save-post-status hide-if-no-js button"><?php _e('OK'); ?></a>
+								 <a href="#post_status" class="cancel-post-status hide-if-no-js"><?php _e('Cancel'); ?></a>
+							 </div>
+						<?php endif; ?>
+					</div>
+					
+					<div class="misc-pub-section">
+						<label for="visibility"><?php _e( 'Visibility:', 'LION' ) ?></label>
+						<span id="product-visibility-display">
+							<?php
+								switch ( $product_visibility ) {
+									case 'hidden':
+										_e( 'Hide from Store', 'LION' );
+										break;
+									case 'visible':
+									default:
+										_e( 'Show in Store', 'LION' );
+										break;
+								}
+							?>
+						</span>
+						<?php if ( 'visible' == $product_visibility || 'hidden' == $product_visibility || $can_publish ) : ?>
+							<a href="#product_visibility" class="edit-product-visibility hide-if-no-js"><?php _e('Edit') ?></a>
+							<div id="product-visibility-select" class="hide-if-js">
+								<input type="hidden" name="hidden_it-exchange-visibility" id="hidden_it-exchange-visibility" value="<?php echo esc_attr( ('hidden' == $post->post_status ) ? 'hidden' : $product_visibility); ?>" />
+								<select name='it-exchange-visibility' id='it-exchange-visibility'>
+										<option<?php selected( $product_visibility, 'visible' ); ?> value='visible'><?php _e( 'Show in Store', 'LION' ) ?></option>
+										<option<?php selected( $product_visibility, 'hidden' ); ?> value='hidden'><?php _e( 'Hide from Store', 'LION' ) ?></option>
+								</select>
+								<a href="#product_visibility" class="save-product_visibility hide-if-no-js button"><?php _e('OK'); ?></a>
+								<a href="#product_visibility" class="cancel-product_visibility hide-if-no-js"><?php _e('Cancel'); ?></a>
+							</div>
+						<?php endif; ?>
+					</div>
+					
+					<?php
+						if ( 'private' == $post->post_status ) {
+							$post->post_password = '';
+							$visibility = 'private';
+							$visibility_trans = __( 'Private' );
+						} elseif ( !empty( $post->post_password ) ) {
+							$visibility = 'password';
+							$visibility_trans = __('Password protected');
+						} elseif ( $post_type == 'post' && is_sticky( $post->ID ) ) {
+							$visibility = 'public';
+							$visibility_trans = __('Public, Sticky');
+						} else {
+							$visibility = 'public';
+							$visibility_trans = __('Public');
+						}
+					?>
+					<input type="hidden" name="hidden_post_visibility" id="hidden-post-visibility" value="<?php echo esc_attr( $visibility ); ?>" />
+					
+					<?php do_action('post_submitbox_misc_actions'); ?>
+				</div>
+			</div>
+		</div>
+		<?php
 	}
 
 	/**
@@ -208,13 +394,24 @@ class IT_Exchange_Product_Post_Type {
 	 * - it_exchange_save_product-[product-type]             // Runs every time a specific iThemes Exchange product-type is saved if not an autosave and if user has permission to save post
 	 *
 	 * @since 0.3.1
+	 * @param int $post_id WordPress Post ID
 	 * @return void
 	*/
-	function save_product( $post ) { 
+	function save_product( $post_id ) { 
 
 		// Exit if not it_exchange_prod post_type
-		if ( ! 'it_exchange_prod' === get_post_type( $post ) ) 
+		if ( ! 'it_exchange_prod' === get_post_type( $post_id ) ) 
+			return; 
+
+		// Fire off actions with validations that most instances need to use.
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
 			return;
+
+		if ( ! current_user_can( 'edit_post', $post_id ) ) 
+			return;  
+				
+		if ( isset( $_POST['it-exchange-visibility'] ) )
+			update_post_meta( $post_id, '_it-exchange-visibility', $_POST['it-exchange-visibility'] );
 
 		// Grab enabled product add-ons
 		$product_type_addons = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
@@ -223,27 +420,20 @@ class IT_Exchange_Product_Post_Type {
 		$product_type = it_exchange_get_product_type();
 
 		// These hooks fire off any time a it_exchange_prod post is saved w/o validations
-		do_action( 'it_exchange_save_product_unvalidated', $post );
+		do_action( 'it_exchange_save_product_unvalidated', $post_id );
 		foreach( (array) $product_type_addons as $slug => $params ) { 
 			if ( $slug == $product_type ) { 
-				do_action( 'it_exchange_save_product_unvalidated_' . $slug, $post );
+				do_action( 'it_exchange_save_product_unvalidated_' . $slug, $post_id );
 			}   
-		}   
-
-		// Fire off actions with validations that most instances need to use.
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
-			return;
-
-		if ( ! current_user_can( 'edit_post', $post ) ) 
-			return;
-
+		}  
+		
 		// This is called any time save_post hook
-		do_action( 'it_exchange_save_product', $post );
+		do_action( 'it_exchange_save_product', $post_id );
 		foreach( (array) $product_type_addons as $slug => $params ) { 
 			if ( $slug == $product_type ) { 
-				do_action( 'it_exchange_save_product_' . $slug, $post );
+				do_action( 'it_exchange_save_product_' . $slug, $post_id );
 			}   
-		}   
+		} 
 	}
 
 	/**

@@ -63,6 +63,7 @@ function it_exchange_get_product( $post ) {
 function it_exchange_get_products( $args=array() ) {
 	$defaults = array(
 		'post_type' => 'it_exchange_prod',
+		'show_hidden' => false,
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -72,6 +73,16 @@ function it_exchange_get_products( $args=array() ) {
 		$meta_query[] = array( 
 			'key'   => '_it_exchange_product_type',
 			'value' => $args['product_type'],
+		);
+		$args['meta_query'] = $meta_query;
+	}
+	
+	if ( !$args['show_hidden'] ) {
+		$meta_query = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
+		$meta_query[] = array( 
+			'key'     => '_it-exchange-visibility',
+			'value'   => 'hidden',
+			'compare' => 'NOT LIKE',
 		);
 		$args['meta_query'] = $meta_query;
 	}
@@ -115,7 +126,7 @@ function it_exchange_get_the_product_id() {
 }
 
 /**
- * Is the product availabel based on start and end availability dates
+ * Is the product available based on start and end availability dates
  *
  * @since 0.4.0
  *
@@ -153,5 +164,27 @@ function it_exchange_is_product_available( $product_id=false ) {
 	}   
 
 	return $past_start_date && $before_end_date;
+
+}
+
+/**
+ * Is the product visible based on start and end availability dates
+ *
+ * @since 0.4.0
+ *
+ * @param int $product_id Product ID
+ * @return boolean
+*/
+function it_exchange_is_product_visible( $product_id=false ) {
+	if ( ! it_exchange_get_product( $product_id ) )
+		return false;
+
+	// Check start time
+	if ( it_exchange( 'product', 'has-visibility' ) ) { 
+		if ( 'hidden' === get_post_meta( $product_id, '_it-exchange-visibility', true ) )
+			return false;
+	}
+
+	return true;
 
 }

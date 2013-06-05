@@ -33,6 +33,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		'inventory'           => 'inventory',
 		'availability'        => 'availability',
 		'isavailable'         => 'is_available',
+		'visibility'          => 'visibility',
+		'isvisible'           => 'is_visible',
 		'images'              => 'product_images',
 		'gallery'             => 'product_gallery',
 		'featuredimage'       => 'featured_image',
@@ -134,6 +136,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return mixed
 	*/
 	function permalink( $options=array() ) {
+		
 		$permalink = empty( $this->product->ID ) ? false : get_permalink( $this->product->ID );
 			
 		if ( $options['has'] )
@@ -156,6 +159,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$result .= $options['after'];
 
 		return $result;
+	
 	}
 
 	/**
@@ -424,6 +428,33 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	*/
 	function is_available( $options=array() ) {
 		return it_exchange_is_product_available( $this->product->ID );
+	}
+
+	/**
+	 * The product's dates purchase availability
+	 *
+	 * Use type of 'start', 'end', 'both', either in options
+	 *
+	 * @since 0.4.0
+	 * @return string
+	*/
+	function visibility( $options=array() ) {
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return ( false !== get_post_meta( $product_id, '_it-exchange-visibility', true ) );
+
+		return get_post_meta( $product_id, '_it-exchange-visibility', true );
+	}
+
+	/**
+	 * Uses start and end availability dates to now to determine if the product is currently available
+	 *
+     * @since 0.4.0
+	 *
+	 * @return boolean
+	*/
+	function is_visible( $options=array() ) {
+		return it_exchange_is_product_visible( $this->product->ID );
 	}
 
 	/**
