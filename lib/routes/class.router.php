@@ -503,7 +503,7 @@ class IT_Exchange_Router {
 
 		// Set pages that we want to protect in one way or another
 		$pages_to_protect = array(
-			'account', 'profile', 'downloads', 'purchases', 'reports',
+			'account', 'profile', 'downloads', 'purchases', 'reports', 'confirmation',
 		);
 
 		// Abandon if not a proteced page

@@ -223,6 +223,7 @@ class IT_Exchange_Email_Notifications {
 		$hashes = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
 				
 		if ( !empty( $hashes ) ) {
+			$output .= '<h2>' . __( 'Downloads available with this purchase.', 'LION' ) . '</h2>';
 			$output .= '<ul>';
 			foreach( $hashes as $product_id => $file_hashes ) {
 				foreach( $file_hashes as $hash )
