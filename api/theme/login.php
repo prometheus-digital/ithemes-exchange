@@ -76,7 +76,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 		// Grab redirect var from session
 		$login_redirect = it_exchange_get_session_data( 'login_redirect' );
 		if ( ! empty( $login_redirect ) ) {
-			$options['redirect'] = reset( it_exchange_get_session_data( 'login_redirect' ) );
+			$options['redirect'] = reset( $login_redirect );
 			it_exchange_clear_session_data( 'login_redirect' );
 		}
 

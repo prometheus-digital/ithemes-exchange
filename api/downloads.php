@@ -216,3 +216,79 @@ function it_exchange_clear_transaction_hash_index( $transaction ) {
 	delete_post_meta( $transaction->ID, '_it_exchange_download_hash_index' );
 	return true;
 }
+
+/** 
+ * Serves a file from its URL
+ *
+ * Uses wp_remote_get to locate the file and force download.
+ * If download_info array is passed, it will increment the download count
+ *
+ * @since 0.4.0
+ *
+ * @param string $url URL of the file we're serving
+ * @param array  $download_info optional. if this came from a hash, send all the associated data with it.
+ * @return void;
+*/
+function it_exchange_serve_download_file( $url, $download_info=array() ) { 
+	/** 
+	 * Allow addons to override this.
+	 * If you override this, you need to tick the download counts with it_exchange_increment_download_count( $download_info )
+	*/
+	do_action( 'it_exchange_serve_download_file', $url, $download_info );
+
+	// Attempt to grab file
+	$filename = basename( $url );
+	if ( $response = wp_remote_get( $url ) ) { 
+		if ( ! is_wp_error( $response ) ) { 
+			$valid_response_codes = array(
+				200,
+			);  
+			$valid_response_codes = apply_filters( 'it_exchange_valid_response_codes_for_downloadable_files', $valid_response_codes, $download_info );
+			if ( in_array( wp_remote_retrieve_response_code( $response ), (array) $valid_response_codes ) ) { 
+
+				// Increment Download count if not Admin
+				it_exchange_increment_download_count( $download_info );
+
+				// Get Resource Headers
+				$headers = wp_remote_retrieve_headers( $response );
+
+				// White list of headers to pass from original resource
+				$passthru_headers = array(
+					'accept-ranges',
+					'content-length',
+					'content-type',
+				);  
+				apply_filters( 'it_exchange_file_download_passthru_headers', $passthru_headers, $download_info );
+
+				// Set Headers for download from original resource
+				foreach ( (array) $passthru_headers as $header ) { 
+					if ( isset( $headers[$header] ) ) 
+						header( esc_attr( $header ) . ': ' . esc_attr( $headers[$header] ) );
+				}   
+
+				// Force download
+				header( 'Content-disposition: attachment; filename="' . $filename . '"' );
+
+				// Deliver file
+				echo wp_remote_retrieve_body( $response );
+				die();
+			}
+			die( __( 'Download Error: Invalid response', 'LION' ) );
+		} else {
+			die( __( 'Download Error:', 'LION' ) . ' ' . $response->get_error_message() );
+		}
+	}
+}
+
+/**
+ * Increments download counts
+ *
+ * @since 0.4.0
+ *
+ * @param array   $download_info file hash data
+ * @param boolean $increment_admin_downloads Default is false
+ * @return void
+*/
+function it_exchange_increment_download_count( $download_info, $increment_admin_downloads=false ) {
+
+}

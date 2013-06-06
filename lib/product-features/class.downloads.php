@@ -472,7 +472,32 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// Unserialize
 		$hash_data = maybe_unserialize( $hash_data );
-		ITUtility::print_r( $hash_data );
+
+		// If user isn't logged in, redirect them to login and bring them back when complete
+		if ( ! is_user_logged_in() ) {
+			$redirect_url = site_url() . '?it-exchange-download=' . $hash_data['hash'];
+			it_exchange_add_session_data( 'login_redirect', $redirect_url );
+			wp_redirect( it_exchange_get_page_url( 'log-in' ) );
+			die();
+		}
+
+		// If user doesn't belong to the download, and isn't an admin, send them to their downloads page.
+		$customer = it_exchange_get_current_customer();
+		if ( empty( $customer->id ) || ( $customer->id != $hash_data['customer_id'] && ! current_user_can( 'administrator' ) ) ) {
+			$redirect_url = apply_filters( 'it_exchange_redirect_no_permission_to_pickup_file', it_exchange_get_page_url( 'downloads' ) );
+			wp_redirect( $redirect_url );
+			die();
+		}
+
+		// Grab the download info
+		$download_info = get_post_meta( $hash_data['file_id'], '_it-exchange-download-info', true );
+		$source        = empty( $download_info['source'] ) ? false : $download_info['source'];
+
+		// If source was set, try to serve the file
+		if ( $source ) {
+			it_exchange_serve_download_file( $source, $download_info );
+		}
+		die();
 	}
 }
 $IT_Exchange_Product_Feature_Downloads = new IT_Exchange_Product_Feature_Downloads();
