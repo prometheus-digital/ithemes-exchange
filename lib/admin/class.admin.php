@@ -161,7 +161,6 @@ class IT_Exchange_Admin {
 			
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_products_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_transactions_user_edit_tab_link' ) );
-			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_activity_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_info_user_edit_tab_link' ) );
 			
 			include( 'views/admin-user-edit.php' );
@@ -218,17 +217,6 @@ class IT_Exchange_Admin {
 	function print_transactions_user_edit_tab_link( $current_tab ) {
 		$active = 'transactions' == $current_tab ? 'nav-tab-active' : '';
 		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'transactions' ); ?>#it-exchange-member-options"><?php _e( 'Transactions', 'LION' ); ?></a><?php
-	}
-
-	/**
-	 * Prints the activity tab for the user-edit.php Page
-	 *
-	 * @since 0.4.0
-	 * @return void
-	*/
-	function print_activity_user_edit_tab_link( $current_tab ) {
-		$active = 'activity' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'activity' ); ?>#it-exchange-member-options"><?php _e( 'Activity', 'LION' ); ?></a><?php
 	}
 
 	/**

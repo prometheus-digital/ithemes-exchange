@@ -55,7 +55,6 @@
 		
 		switch ( $tab ) {
 			case 'transactions':
-				
 				$headings = array(
 					__( 'Description', 'LION' ),
 					__( 'Total', 'LION' ),
@@ -94,26 +93,10 @@
 				}
 				$list = array( $headings, $list );
 				break;
-				
-			case 'activity':
-				$headings = array(
-					__( 'Event', 'LION' ),
-					__( 'Date/Time', 'LION' ),
-				);  
-								
-				$list[] = array( 'My Great Ebook', '3/11/13 8:43pm' );
-				$list[] = array( 'My Awesome Ebook', '3/9/13 3:15pm' );
-				$list[] = array( 'The Old Couch', '3/7/13 2:55am' );
-				$list[] = array( 'My Firstborn', '2/6/13 12:32pm' );
-								
-				$list = array( $headings, $list );
-				break;
-				
 			case 'info':
 				$list = array();
 				break;
 			case 'products':
-			default:
 				$headings = array(
 					__( 'Products', 'LION' ),
 					__( 'Transaction', 'LION' ),
@@ -155,6 +138,8 @@
 				}
 				$list = array( $headings, $list );
 				break;
+			default :
+				$list = apply_filters( 'it_exchange_print_user_edit_page_content', '', $tab );
 		}
 	?>
 	
