@@ -221,14 +221,13 @@ function it_exchange_clear_transaction_hash_index( $transaction ) {
  * Serves a file from its URL
  *
  * Uses wp_remote_get to locate the file and force download.
- * If download_info array is passed, it will increment the download count
  *
  * @since 0.4.0
  *
- * @param array  $download_info download hash data
+ * @param array $download_info download hash data
  * @return void;
 */
-function it_exchange_serve_download_file( $hash_data ) { 
+function it_exchange_serve_product_download( $hash_data ) { 
 
 	// Grab the download info
 	$download_info = get_post_meta( $hash_data['file_id'], '_it-exchange-download-info', true );

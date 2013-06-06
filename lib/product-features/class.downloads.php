@@ -490,7 +490,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		}
 
 		// Attempt to serve the file
-		it_exchange_serve_download_file( $hash_data );
+		it_exchange_serve_product_download( $hash_data );
 		die();
 	}
 }
