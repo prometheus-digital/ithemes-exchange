@@ -3,6 +3,7 @@
 		NOTE Still have to workout the multi-item cart markup.
 	-->
 	<?php while( it_exchange( 'cart', 'cart-items' ) ) : ?>
+		<?php $can_edit_purchase_quantity = it_exchange( 'cart-item', 'supports-purchase-quantity' ); ?>
 		<div class="cart-item">
 			<div class="title-remove">
 				<?php it_exchange( 'cart-item', 'title' ) ?>
@@ -35,5 +36,7 @@
 		<?php it_exchange( 'checkout', 'cancel', 'class=sw-cart-focus-coupons&focus=coupon&label=' . $label ); ?>
 	<?php endif; ?>
 	
-	<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-quantity', 'focus' => 'quantity', 'label' => it_exchange_is_multi_item_cart_allowed() ? __( ' | View Cart', 'LION' ) : __( ' | Quantity', 'LION' ) ) ); ?>
+	<?php if ( $can_edit_purchase_quantity ) : ?>
+		<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-quantity', 'focus' => 'quantity', 'label' => it_exchange_is_multi_item_cart_allowed() ? __( ' | View Cart', 'LION' ) : __( ' | Quantity', 'LION' ) ) ); ?>
+	<?php endif; ?>
 </div>

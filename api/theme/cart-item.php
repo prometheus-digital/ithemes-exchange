@@ -27,11 +27,12 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	public $_tag_map = array(
-		'title'    => 'title',
-		'remove'   => 'remove',
-		'quantity' => 'quantity',
-		'price'    => 'price',
-		'subtotal' => 'sub_total',
+		'title'            => 'title',
+		'remove'           => 'remove',
+		'quantity'         => 'quantity',
+		'price'            => 'price',
+		'subtotal'         => 'sub_total',
+		'purchasequantity' => 'supports_purchase_quantity',
 	);
 
 	/**
@@ -178,5 +179,15 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	*/
 	function sub_total( $options=array() ) {
 		return it_exchange_get_cart_product_subtotal( $this->_cart_item );
+	}
+
+	/**
+	 * Returns boolean. Does this cart item support a purcahse quantity
+	 *
+	 * @since 0.4.0
+	 *
+	*/
+	function supports_purchase_quantity( $options=array() ) {
+		return it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'purchase-quantity' );
 	}
 }
