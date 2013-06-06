@@ -133,6 +133,7 @@ class IT_Exchange_Base_Price {
 	 * @return void
 	*/
 	function save_feature_on_product_save() {
+		
 		// Abort if we can't determine a product type
 		if ( ! $product_type = it_exchange_get_product_type() )
 			return;
@@ -149,9 +150,11 @@ class IT_Exchange_Base_Price {
 		// Abort if key for base-price option isn't set in POST data
 		if ( ! isset( $_POST['it-exchange-base-price'] ) )
 			return;
-
-		// Get new value from post
-		$new_price = $_POST['it-exchange-base-price'];
+			
+		if ( !empty( $_POST['it-exchange-base-price'] ) )
+			$new_price = $_POST['it-exchange-base-price'];
+		else
+			$new_price = 0;
 		
 		// Save new value
 		it_exchange_update_product_feature( $product_id, 'base-price', $new_price );
