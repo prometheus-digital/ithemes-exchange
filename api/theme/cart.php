@@ -173,7 +173,8 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
-		$var = it_exchange_get_field_name( 'proceed_to_checkout' );
+		$class = ( 'it-exchange-checkout-cart' != $options['class'] ) ? 'it-exchange-checkout-cart ' . esc_attr( $options['class'] ) : $options['class'];
+		$var   = it_exchange_get_field_name( 'proceed_to_checkout' );
 
 		// If we're in the superwidget, we need to use that format.
 		if ( it_exchange_in_superwidget() )
@@ -196,13 +197,13 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				}
 
 				$output  = $options['before'];
-				$output .= '<a href="' . $url . '">' . esc_attr( $options['label'] ) . '</a>';
+				$output .= '<a href="' . $url . '" class="' . $class . '" name="' . esc_attr( $var ) . '">' . esc_attr( $options['label'] ) . '</a>';
 				$output .= $options['after'];
 				break;
 			case 'button' :
 			default :
 				$output  = $options['before'];
-				$output .= '<input type="submit" class="' . esc_attr( $options['class'] ). '" name="' . esc_attr( $var ) . '" value="' . esc_attr( $options['label'] ) . '" />';
+				$output .= '<input type="submit" class="' . $class . '" name="' . esc_attr( $var ) . '" value="' . esc_attr( $options['label'] ) . '" />';
 				$output .= $options['after'];
 				break;
 		}

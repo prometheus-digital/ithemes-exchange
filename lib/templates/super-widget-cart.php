@@ -56,16 +56,20 @@
 		<?php endif; ?>
 		
 		<div class="coupons-quantity-wrapper">
-			<?php if ( ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) && ! it_exchange( 'cart', 'focus', array( 'type' => 'coupon' ) ) ) : ?>
-				<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-coupon', 'focus' => 'coupon', 'label' => (boolean) it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ? __( 'Coupons', 'LION' ) : __( 'Coupon', 'LION' ) ) ); ?>
+			<?php if ( ! it_exchange_is_multi_item_cart_allowed() ) : ?>
+				<?php it_exchange( 'cart', 'checkout', array( 'label' => __( 'Cancel', 'LION' ) ) ); ?>
 			<?php else : ?>
-				<?php it_exchange( 'cart', 'checkout' ); ?>
-			<?php endif; ?>
-			
-			<?php if ( it_exchange( 'cart', 'focus', 'type=quantity' ) ) : ?>
-				 | <?php it_exchange( 'cart', 'checkout' ); ?>
-			<?php else : ?>
-				<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-quantity', 'focus' => 'quantity', 'label' => it_exchange_is_multi_item_cart_allowed() ? __( ' | View Cart', 'LION' ) : __( ' | Quantity', 'LION' ) ) ); ?>
+				<?php if ( ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) && ! it_exchange( 'cart', 'focus', array( 'type' => 'coupon' ) ) ) : ?>
+					<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-coupon', 'focus' => 'coupon', 'label' => (boolean) it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ? __( 'Coupons', 'LION' ) : __( 'Coupon', 'LION' ) ) ); ?>
+				<?php else : ?>
+					<?php it_exchange( 'cart', 'checkout' ); ?>
+				<?php endif; ?>
+				
+				<?php if ( it_exchange( 'cart', 'focus', 'type=quantity' ) ) : ?>
+					 | <?php it_exchange( 'cart', 'checkout' ); ?>
+				<?php else : ?>
+					<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-quantity', 'focus' => 'quantity', 'label' => it_exchange_is_multi_item_cart_allowed() ? __( ' | View Cart', 'LION' ) : __( ' | Quantity', 'LION' ) ) ); ?>
+				<?php endif; ?>
 			<?php endif; ?>
 		</div>
 		
