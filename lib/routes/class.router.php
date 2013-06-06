@@ -538,7 +538,7 @@ class IT_Exchange_Router {
 				$transaction_id = it_exchange_get_transaction_id_from_hash( $transaction_hash );
 			
 			if ( !it_exchange_customer_has_transaction( $transaction_id, $user_id ) ) {
-				$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_non_admin_requests_confirmation', it_exchange_get_page_url( 'account' ) );
+				$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_non_admin_requests_confirmation', it_exchange_get_page_url( 'purchases' ) );
 				wp_redirect( $redirect_url );
 				die();
 			}
