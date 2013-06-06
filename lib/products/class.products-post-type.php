@@ -478,22 +478,29 @@ class IT_Exchange_Product_Post_Type {
 	 * @return void
 	*/
 	function modify_post_new_file() {
+		
 		global $current_screen, $post_new_file;
-		$product_type = it_exchange_get_product_type();
 
-		// Hackery. The 'Add New button in the H2 isn't going to work if we have multiple product types
-		$product_addons = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
-		$hide_it = '<style type="text/css">.add-new-h2 { display:none; }</style>';
-		if ( empty( $product_type ) && ( count( $product_addons ) > 1  ) ) {
-			echo $hide_it;
-		} else if ( empty( $product_type ) && ! it_exchange_get_products() ) {
-			// If we made it here, we only have one product type, but there are no products. Won't happen that often.
-			$product_addon = reset( array_keys( $product_addons ) );
-			$product_type = empty( $product_addon ) ? false : $product_addon;
+		if ( 'edit-it_exchange_prod' == $current_screen->id || 'it_exchange_prod' == $current_screen->id ) {
+			
+			$product_type = it_exchange_get_product_type();
+			
+			// Hackery. The 'Add New button in the H2 isn't going to work if we have multiple product types
+			$product_addons = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
+			$hide_it = '<style type="text/css">.add-new-h2 { display:none; }</style>';
+			if ( empty( $product_type ) && ( count( $product_addons ) > 1  ) ) {
+				echo $hide_it;
+			} else if ( empty( $product_type ) && ! it_exchange_get_products() ) {
+				// If we made it here, we only have one product type, but there are no products. Won't happen that often.
+				$product_addon = reset( array_keys( $product_addons ) );
+				$product_type = empty( $product_addon ) ? false : $product_addon;
+			}
+	
+			if ( ! empty( $post_new_file) && ! empty( $product_type ) )
+				$post_new_file = add_query_arg( array( 'it-exchange-product-type' => $product_type ), $post_new_file );
+			
 		}
-
-		if ( ! empty( $post_new_file) && ! empty( $product_type ) && ( 'edit-it_exchange_prod' == $current_screen->id || 'it_exchange_prod' == $current_screen->id ) )
-			$post_new_file = add_query_arg( array( 'it-exchange-product-type' => $product_type ), $post_new_file );
+		
 	}
 
 	/**
