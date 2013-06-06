@@ -61,6 +61,8 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	/**
 	 * Outputs the login page start of form
 	 *
+	 * @todo why is get_session coming back as an array
+	 *
 	 * @since 0.4.0
 	 * @return string
 	*/
@@ -70,6 +72,13 @@ class IT_Theme_API_Login implements IT_Theme_API {
 			'class'    => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		// Grab redirect var from session
+		$login_redirect = it_exchange_get_session_data( 'login_redirect' );
+		if ( ! empty( $login_redirect ) ) {
+			$options['redirect'] = reset( it_exchange_get_session_data( 'login_redirect' ) );
+			it_exchange_clear_session_data( 'login_redirect' );
+		}
 
 		$class= empty( $options['class'] ) ? 'it-exchange-sw-log-in' : 'it-exchange-sw-log-in ' . esc_attr( $class );
 		

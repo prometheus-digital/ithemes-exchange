@@ -503,8 +503,9 @@ class IT_Exchange_Router {
 
 		// Set pages that we want to protect in one way or another
 		$pages_to_protect = array(
-			'account', 'profile', 'downloads', 'purchases', 'reports', 'confirmation',
+			'checkout', 'account', 'profile', 'downloads', 'purchases', 'reports', 'confirmation',
 		);
+		$pages_to_protect = apply_filters( 'it_exchange_pages_to_protect', $pages_to_protect );
 
 		// Abandon if not a proteced page
 		if ( ! in_array( $this->_current_view, $pages_to_protect ) )
@@ -512,7 +513,10 @@ class IT_Exchange_Router {
 
 		// If user isn't logged in, redirect
 		if ( !is_user_logged_in() ) {
-			wp_redirect( it_exchange_get_page_url( 'log-in' ) );
+			if ( $this->_current_view != 'log-in' )
+				it_exchange_add_session_data( 'login_redirect', it_exchange_get_page_url( $this->_current_view ) );
+			$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_not_logged_in', it_exchange_get_page_url( 'log-in' ) );
+			wp_redirect( $redirect_url );
 			die();
 		}
 
@@ -521,20 +525,16 @@ class IT_Exchange_Router {
 
 		// If trying to view reports and not an admin, redirect
 		if ( 'reports' == $this->_current_view && ! current_user_can( 'administrator' ) ) {
-			wp_redirect( it_exchange_get_page_url( 'account' ) );
+			$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_non_admin_requests_reports', it_exchange_get_page_url( 'account' ) );
+			wp_redirect( $redirect_url );
 			die();
 		}
 
-		// If trying to view reports and not an admin, redirect
+		// If trying to view account and not an admin, and not the owner, redirect
 		if ( in_array( $this->_current_view, $pages_to_protect ) 
 				&& $this->_account != $user_id && ! current_user_can( 'administrator' ) ) {
-			wp_redirect( it_exchange_get_page_url( $this->_current_view ) );
-			die();
-		}
-
-		// If current user isn't an admin and doesn't match the account, redirect
-		if ( $this->_account != $user_id && ! current_user_can( 'administrator' ) ) {
-			wp_redirect( it_exchange_get_page_url( 'store' ) );
+			$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_non_admin_requests_account' , it_exchange_get_page_url( 'store' ) );
+			wp_redirect( $redirect_url );
 			die();
 		}
 	}
