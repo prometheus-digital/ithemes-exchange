@@ -188,7 +188,7 @@ class IT_Exchange_Transaction {
 	function get_total( $subtract_refunds=true ) {
 		$total = empty( $this->cart_details->total ) ? false : $this->cart_details->total;
 
-		if ( $total && $subtract_refunds && $refunds_total = it_exchange_get_transaction_refunds_total( $this->ID ) )
+		if ( $total && $subtract_refunds && $refunds_total = it_exchange_get_transaction_refunds_total( $this->ID, false ) )
 			$total = $total - $refunds_total;
 
 		return apply_filters( 'it_exchange_get_transaction_total', $total, $this->ID );

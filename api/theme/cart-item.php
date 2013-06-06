@@ -74,7 +74,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 			'class'  => 'remove-cart-item',
 			'label'  => __( '&times;', 'LION' ),
 		);  
-		$options   = ITUtility::merge_defaults( $options, $defaults );
+		$options = ITUtility::merge_defaults( $options, $defaults );
 		$var_key = it_exchange_get_field_name( 'remove_product_from_cart' );
 		$var_value = $this->_cart_item['product_cart_id'];
 
@@ -132,7 +132,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 			'class'  => 'product-cart-quantity',
 			'label'  => '',
 		);  
-		$options   = ITUtility::merge_defaults( $options, $defaults );
+		$options = ITUtility::merge_defaults( $options, $defaults );
 		$var_key = it_exchange_get_field_name( 'product_purchase_quantity' );
 		$var_value = it_exchange_get_cart_product_quantity( $this->_cart_item );
 

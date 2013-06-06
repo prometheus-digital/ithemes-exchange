@@ -327,7 +327,7 @@ class IT_Exchange_Transaction_Post_Type {
 		}
 
 		// Refunds metabox if refunds have been applied
-		if ( it_exchange_get_transaction_refunds( $post ) ) {
+		if ( it_exchange_has_transaction_refunds( $post ) ) {
 			$title     = __( 'Refunds Issued', 'LION' );
 			$callback  = array( $this, 'print_transaction_refund_details_metabox' );
 			$post_type = 'it_exchange_tran';
@@ -377,7 +377,7 @@ class IT_Exchange_Transaction_Post_Type {
 			<?php _e( 'Method:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?><br />
 			<?php _e( 'Currency:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_currency( $post ) ); ?><br />
 			<?php _e( 'Subtotal:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?><br />
-			<?php if ( it_exchange_get_transaction_refunds( $post ) ) : ?>
+			<?php if ( it_exchange_has_transaction_refunds( $post ) ) : ?>
 				<?php _e( 'Original Total:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post, true, false ) ); ?><br />
 				<?php _e( 'Total after Refunds:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post ) ); ?><br />
 			<?php else : ?>
@@ -422,7 +422,7 @@ class IT_Exchange_Transaction_Post_Type {
 		foreach ( $refunds as $refund ) {
 			echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ) . '<br />';
 		}
-		echo 'Total Refund: ' . it_exchange_format_price( it_exchange_get_transaction_refunds_total( $post ) );
+		echo 'Total Refund: ' . it_exchange_get_transaction_refunds_total( $post );
 	}
 
 	/**

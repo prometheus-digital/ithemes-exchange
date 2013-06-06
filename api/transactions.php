@@ -348,7 +348,7 @@ function it_exchange_get_transaction_subtotal( $transaction, $format_currency=tr
 	// Try to locate the IT_Exchange_Transaction object from the var
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
 		if ( $subtotal = $transaction->get_subtotal() )
-			return $format_currency ? it_exchange_format_price( $subtotal ) : $total;
+			return $format_currency ? it_exchange_format_price( $subtotal ) : $subtotal;
 	}
 
 	return false;
@@ -416,13 +416,14 @@ function it_exchange_get_transaction_coupons( $transaction ) {
  * @since 0.4.0
  *
  * @param mixed   $transaction ID or object
+ * @param bool $format Format the price
  * @return string date
 */
-function it_exchange_get_transaction_coupons_total_discount( $transaction ) {
+function it_exchange_get_transaction_coupons_total_discount( $transaction, $format = true ) {
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
 		return false;
 
-	return $transaction->get_coupons_total_discount();
+	return ( $format ) ? it_exchange_format_price( $transaction->get_coupons_total_discount() ) : $transaction->get_coupons_total_discount();
 }
 
 /**
@@ -456,20 +457,36 @@ function it_exchange_get_transaction_refunds( $transaction ) {
 }
 
 /**
+ * Checks if there are refunds for a transaction
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @return array
+*/
+function it_exchange_has_transaction_refunds( $transaction ) {
+	if ( $transaction = it_exchange_get_transaction( $transaction ) )
+		return true;
+	
+	return false;
+}
+
+/**
  * Returns the a sum of all the applied refund amounts for this transaction
  *
  * @since 0.4.0
  *
  * @param mixed $transaction ID or object
+ * @param bool $format Format the price
  * @return numeric
 */
-function it_exchange_get_transaction_refunds_total( $transaction ) {
+function it_exchange_get_transaction_refunds_total( $transaction, $format = true ) {
 	$refunds = it_exchange_get_transaction_refunds( $transaction );
 	$total_refund = 0;
 	foreach ( $refunds as $refund ) {
 		$total_refund += $refund['amount'];
 	}
-	return $total_refund;
+	return ( $format ) ? it_exchange_format_price( $total_refund ) : $total_refund;
 }
 
 /**
@@ -562,7 +579,7 @@ function it_exchange_get_transaction_customer_admin_profile_url( $transaction, $
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
 
-	$url = add_query_arg( array( 'user_id' => $customer->id, 'it_exchange' => 1, 'tab' => $options['tab'] ), get_admin_url() . 'user-edit.php' );	
+	$url = add_query_arg( array( 'user_id' => $customer->id, 'it_exchange_customer_data' => 1, 'tab' => $options['tab'] ), get_admin_url() . 'user-edit.php' );	
 	return $url;
 }
 
