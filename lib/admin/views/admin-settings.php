@@ -74,14 +74,14 @@
 			<tr valign="top">
 				<th scope="row"><label for="currency-thousands-separator"><?php _e( 'Thousands Separator', 'LION' ) ?></label></th>
 				<td>
-					<?php $form->add_text_box( 'currency-thousands-separator', array( 'class' => 'small-text' ) ); ?>
+					<?php $form->add_text_box( 'currency-thousands-separator', array( 'class' => 'small-text', 'maxlength' => '1' ) ); ?>
 					<br /><span class="description"><?php _e( 'What character would you like to use to separate thousands when display prices?', 'LION' ); ?></span>
 				</td>
 			</tr>
 			<tr valign="top">
 				<th scope="row"><label for="currency-decimals-separator"><?php _e( 'Decimals Separator', 'LION' ) ?></label></th>
 				<td>
-					<?php $form->add_text_box( 'currency-decimals-separator', array( 'class' => 'small-text' ) ); ?>
+					<?php $form->add_text_box( 'currency-decimals-separator', array( 'class' => 'small-text', 'maxlength' => '1' ) ); ?>
 					<br /><span class="description"><?php _e( 'What character would you like to use to separate decimals when display prices?', 'LION' ); ?></span>
 				</td>
 			</tr>
