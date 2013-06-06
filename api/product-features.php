@@ -39,9 +39,10 @@ function it_exchange_product_has_feature( $product_id, $feature_key, $options=ar
  * @param integer $product_id the WordPress post ID for the product
  * @param string $feature_key the slug for the feature
  * @param mixed $feature_value the value for the feature
+ * @param array $options the options for the feature
  * @return boolean
 */
-function it_exchange_update_product_feature( $product_id, $feature_key, $feature_value, $options=array() ) {
+function it_exchange_update_product_feature( $product_id, $feature_key, $feature_value, $options=array() ) {	
 	do_action( 'it_exchange_update_product_feature_' . $feature_key, $product_id, $feature_value, $options );
 }
 

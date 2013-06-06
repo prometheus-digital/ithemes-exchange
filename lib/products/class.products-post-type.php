@@ -35,7 +35,21 @@ class IT_Exchange_Product_Post_Type {
 		add_filter( 'manage_it_exchange_prod_posts_custom_column', array( $this, 'it_exchange_prod_posts_custom_column_info' ) );
 		add_action( 'it_exchange_add_on_enabled', array( $this, 'maybe_enable_product_type_posts' ) );
 		add_action( 'it_exchange_add_on_disabled', array( $this, 'maybe_disable_product_type_posts' ) );
-		add_filter( 'request', array( $this, 'modify_wp_query_request_on_edit_php' ) );		
+		add_filter( 'request', array( $this, 'modify_wp_query_request_on_edit_php' ) );
+		add_filter( 'wp_insert_post_empty_content', array( $this, 'wp_insert_post_empty_content' ), 20, 2 );
+	}
+	
+	function wp_insert_post_empty_content( $maybe_empty, $postarr ) {
+		
+		if ( !empty( $postarr['action'] ) && 'editpost' === $postarr['action']
+			&& !empty( $postarr['post_type'] ) && 'it_exchange_prod' === $postarr['post_type'] ) {
+				
+			return false;
+		
+		}
+		
+		return $maybe_empty;
+		
 	}
 	
 	/**
