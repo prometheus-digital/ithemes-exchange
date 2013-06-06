@@ -94,6 +94,36 @@ function it_exchange_get_customer_transactions( $customer_id ) {
 }
 
 /**
+ * Returns all customer transactions
+ *
+ * @since 0.4.0
+ *
+ * @param integer ID transaction id
+ * @param integer ID customer id
+ * @return array
+*/
+function it_exchange_customer_has_transaction( $transaction_id, $customer_id = NULL ) {
+	
+	if ( is_null( $customer_id ) ) {
+		
+		$customer = it_exchange_get_current_customer();
+		
+	} else {
+		
+		if ( ! $customer = it_exchange_get_customer( $customer_id ) )
+			return array();
+			
+	}
+
+	// Get transactions args
+	$args = array(
+		'numberposts' => -1, 
+		'customer_id' => $customer->id,
+	);
+	return $customer->has_transaction( $transaction_id );
+}
+
+/**
  * Returns all customer products purchased across various transactions
  *
  * @since 0.4.0
