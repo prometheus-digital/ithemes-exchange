@@ -98,9 +98,8 @@ class IT_Exchange_Shopping_Cart {
 			die();
 		}
 
-		$error_var = it_exchange_get_field_name( 'error_message' );
 		$error = empty( $error ) ? 'product-not-added-to-cart' : $error;
-		$url  = add_query_arg( array( $error_var => $error ), $cart );
+		it_exchange_add_message( 'error', __( 'Product not added to cart', 'LION' ) );
 		wp_redirect( $url );
 		die();
 	}
@@ -131,9 +130,11 @@ class IT_Exchange_Shopping_Cart {
 
 		// Add product
 		if ( empty( $error ) && it_exchange_add_product_to_shopping_cart( $product_id, $requested_quantity ) ) {
+			$sw_state = is_user_logged_in() ? 'cart' : 'login';
 			// Get current URL without exchange query args
 			$url = clean_it_exchange_query_args();
-			$url = add_query_arg( array( it_exchange_get_field_name( 'alert_message' ) => 'product-added-to-cart' ), $url );
+			$url = ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_page_url( 'cart' ) ) ? it_exchange_get_page_url( 'cart' ) : add_query_arg( 'ite-sw-state', $sw_state, $url ); 
+			it_exchange_add_message( 'notice', __( 'Product added to cart', 'LION' ) );
 			wp_redirect( $url );
 			die();
 		}
