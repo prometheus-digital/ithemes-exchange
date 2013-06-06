@@ -127,7 +127,7 @@ class IT_Exchange_Admin {
 	*/	
 	function it_exchange_user_row_actions( $actions, $user_object ) {
 
-		$actions['it_exchange'] = "<a class='it-exchange-cust-info' href='" . esc_url( add_query_arg( array( 'wp_http_referer' => urlencode( stripslashes_deep( $_SERVER['REQUEST_URI'] ) ), 'it_exchange' => 1 ), get_edit_user_link( $user_object->ID ) ) ) . "'>" . __( 'Customer Data', 'LION' ) . "</a>";
+		$actions['it_exchange'] = "<a class='it-exchange-cust-info' href='" . esc_url( add_query_arg( array( 'wp_http_referer' => urlencode( stripslashes_deep( $_SERVER['REQUEST_URI'] ) ), 'it_exchange_customer_data' => 1 ), get_edit_user_link( $user_object->ID ) ) ) . "'>" . __( 'Customer Data', 'LION' ) . "</a>";
 	
 		return $actions;
 	}
@@ -156,7 +156,7 @@ class IT_Exchange_Admin {
 		//A little hacky
 		global $pagenow;
 		
-		if ( 'user-edit.php' === $pagenow && !empty( $_REQUEST['it_exchange'] ) 
+		if ( in_array( $pagenow, array( 'user-edit.php', 'profile.php' ) ) && !empty( $_REQUEST['it_exchange_customer_data'] ) 
 				&& current_user_can('edit_users') ) {
 			
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_products_user_edit_tab_link' ) );
