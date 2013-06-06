@@ -396,7 +396,7 @@ function it_exchange_stripe_addon_add_refund_to_transaction( $stripe_id, $refund
 
 		$refunds = it_exchange_get_transaction_refunds( $transaction );
 		
-		$refunded_amount = number_format( 0, 0, '', '' );
+		$refunded_amount = 0;
 		foreach( ( array) $refunds as $refund_meta ) {
 			$refunded_amount += $refund_meta['amount'];
 		}
