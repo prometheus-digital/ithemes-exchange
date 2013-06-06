@@ -489,14 +489,8 @@ class IT_Exchange_Product_Feature_Downloads {
 			die();
 		}
 
-		// Grab the download info
-		$download_info = get_post_meta( $hash_data['file_id'], '_it-exchange-download-info', true );
-		$source        = empty( $download_info['source'] ) ? false : $download_info['source'];
-
-		// If source was set, try to serve the file
-		if ( $source ) {
-			it_exchange_serve_download_file( $source, $download_info );
-		}
+		// Attempt to serve the file
+		it_exchange_serve_download_file( $hash_data );
 		die();
 	}
 }

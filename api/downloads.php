@@ -225,16 +225,21 @@ function it_exchange_clear_transaction_hash_index( $transaction ) {
  *
  * @since 0.4.0
  *
- * @param string $url URL of the file we're serving
- * @param array  $download_info optional. if this came from a hash, send all the associated data with it.
+ * @param array  $download_info download hash data
  * @return void;
 */
-function it_exchange_serve_download_file( $url, $download_info=array() ) { 
+function it_exchange_serve_download_file( $hash_data ) { 
+
+	// Grab the download info
+	$download_info = get_post_meta( $hash_data['file_id'], '_it-exchange-download-info', true );
+	$url           = empty( $download_info['source'] ) ? false : $download_info['source'];
+
 	/** 
 	 * Allow addons to override this.
 	 * If you override this, you need to tick the download counts with it_exchange_increment_download_count( $download_info )
 	*/
-	do_action( 'it_exchange_serve_download_file', $url, $download_info );
+	do_action( 'it_exchange_serve_download_file', $download_info );
+
 
 	// Attempt to grab file
 	$filename = basename( $url );
