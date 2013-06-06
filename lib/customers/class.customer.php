@@ -129,6 +129,19 @@ class IT_Exchange_Customer {
 	function add_transaction_to_user( $transaction_id ) {
 		add_user_meta( $this->id, '_it_exchange_transaction_id', $transaction_id );
 	}
+	
+    /** 
+     * Tack transaction_id to user_meta of customer
+     *
+     * @since 0.4.0
+     *
+     * @param integer $transaction_id id of the transaction
+     * @return void
+    */
+	function has_transaction( $transaction_id ) {
+		$transaction_ids = get_user_meta( $this->id, '_it_exchange_transaction_id' );
+		return ( in_array( $transaction_id, $transaction_ids ) );
+	}
 
 	/**
 	 * Returns true or false based on whether the $id property is a WP User id

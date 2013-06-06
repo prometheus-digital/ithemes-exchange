@@ -529,6 +529,23 @@ class IT_Exchange_Router {
 			wp_redirect( $redirect_url );
 			die();
 		}
+				
+		if ( 'confirmation' === $this->_current_view  ) {
+			
+			$customer = it_exchange_get_customer( $user_id ); 
+			
+			$transaction_id = false;
+			
+			if ( $transaction_hash = get_query_var('confirmation') )
+				$transaction_id = it_exchange_get_transaction_id_from_hash( $transaction_hash );
+			
+			if ( $transaction_id && !$customer->has_transaction( $transaction_id ) ) {
+				$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_non_admin_requests_confirmation', it_exchange_get_page_url( 'account' ) );
+				wp_redirect( $redirect_url );
+				die();
+			}
+			
+		}
 
 		// If trying to view account and not an admin, and not the owner, redirect
 		if ( in_array( $this->_current_view, $pages_to_protect ) 
