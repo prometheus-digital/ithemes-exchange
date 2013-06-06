@@ -73,7 +73,7 @@ function it_exchange_format_price( $price ) {
 	else
 		$after = $currency['symbol'];
 	
-	return $before . number_format ( $price, 2, $settings['currency-decimals-separator'], $settings['currency-thousands-separator'] ) . $after;
+	return $before . number_format( $price, 2, $settings['currency-decimals-separator'], $settings['currency-thousands-separator'] ) . $after;
 }
 
 /**
