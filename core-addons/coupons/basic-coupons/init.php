@@ -267,7 +267,8 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount, $opti
     $options = ITUtility::merge_defaults( $options, $defaults );
 
 	$coupons = it_exchange_get_applied_coupons( 'cart' );
-	$subtotal = it_exchange_get_cart_subtotal();
+	$subtotal = it_exchange_get_cart_subtotal( false );
+	
 	foreach( (array) $coupons as $coupon ) {
 		$discount = ( '%' == $coupon['amount_type'] ) ? $discount + ( ( $coupon['amount_number'] / 100 ) * $subtotal ) : $discount + $coupon['amount_number'];
 	}
