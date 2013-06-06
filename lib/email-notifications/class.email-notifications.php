@@ -226,8 +226,8 @@ class IT_Exchange_Email_Notifications {
 			$output .= '<h2>' . __( 'Downloads available with this purchase.', 'LION' ) . '</h2>';
 			$output .= '<ul>';
 			foreach( $hashes as $product_id => $file_hashes ) {
-				foreach( $file_hashes as $hash )
-					$output .= '<li>' . site_url() . '?it-exchange-download=' . $hash . '</li>';	
+				foreach( $file_hashes as $file_id => $hash )
+					$output .= '<li><a href="' . site_url() . '?it-exchange-download=' . $hash . '">' . get_the_title( $file_id ) . '</a></li>';	
 			}
 			$output .= '</ul>';
 		}
