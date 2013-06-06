@@ -365,3 +365,20 @@ function it_exchange_basic_coupons_transaction_summary( $summary, $transaction_c
 	return $string;
 }
 add_filter( 'it_exchange_get_transaction_cart_coupon_summary', 'it_exchange_basic_coupons_transaction_summary', 10, 2 );
+
+/**
+ * Returns the coupon discount type
+ *
+ * @since 0.4.0
+ *
+ * @param string $method default type passed by WP filters. Not used here.
+ * @param array $options includes the ID we're looking for.
+ * @return string
+*/
+function it_exchange_basic_coupons_get_dicount_method( $method, $options=array() ) {
+	if ( empty( $options['id'] ) || ! $coupon = it_exchange_get_coupon( $options['id'] ) )
+		return false;
+
+	return empty( $coupon->amount_type ) ? false : $coupon->amount_type;
+}
+add_filter( 'it_exchange_get_coupon_discount_method', 'it_exchange_basic_coupons_get_dicount_method', 10, 2 );

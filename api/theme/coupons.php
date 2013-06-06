@@ -28,6 +28,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 		'discount'       => 'discount',
 		'totaldiscount'  => 'total_discount',
 		'remove'         => 'remove',
+		'discountmethod' => 'discount_method',
 	);
 
 	/**
@@ -379,6 +380,44 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 				$result .= $options['before'];
 
 			$result .= $expiration;
+
+			if ( 'html' == $options['format'] )
+				$result .= $options['after'];
+
+			return $result;
+		}
+		return false;
+	}
+
+	/**
+	 * The coupon Discount Method if the coupon addon provides one
+	 *
+	 * @since 0.4.0
+	 * @return string
+	*/
+	function discount_method( $options=array() ) {
+
+		$method = it_exchange_get_coupon_discount_method( $this->coupon['id'] );
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return ! empty( $method );
+
+		if ( ! empty( $method ) ) {
+
+			$result     = '';
+			$defaults   = array(
+				'before' => '<span class="coupon-method">',
+				'after'  => '</span>',
+				'format' => 'raw',
+			);
+
+			$options = ITUtility::merge_defaults( $options, $defaults );
+
+			if ( 'html' == $options['format'] )
+				$result .= $options['before'];
+
+			$result .= $method;
 
 			if ( 'html' == $options['format'] )
 				$result .= $options['after'];

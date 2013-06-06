@@ -262,6 +262,21 @@ function it_exchange_get_total_coupons_discount( $type=false, $options=array() )
 }
 
 /**
+ * Get coupon dicount method.
+ *
+ * Will return false if coupon addon doesn't provide this data
+ *
+ * @since 0.4.0
+ *
+ * @param integer $coupon_id the coupon id
+ * @param array   $options optional.
+*/
+function it_exchange_get_coupon_discount_method( $coupon_id, $options=array() ) {
+	$options['id'] = $coupon_id;
+	return apply_filters( 'it_exchange_get_coupon_discount_method', false, $options );
+}
+
+/**
  * Returns a summary of the coupon details.
  *
  * We rely on the add-on to give us this data since different add-ons may store the data different.
