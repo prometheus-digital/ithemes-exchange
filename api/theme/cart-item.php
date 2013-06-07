@@ -71,12 +71,14 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 			'before' => '', 
 			'after'  => '', 
 			'format' => 'html',
-			'class'  => 'remove-cart-item',
+			'class'  => false,
 			'label'  => __( '&times;', 'LION' ),
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		$var_key = it_exchange_get_field_name( 'remove_product_from_cart' );
 		$var_value = $this->_cart_item['product_cart_id'];
+		$core_class = it_exchange_is_multi_item_cart_allowed() ? 'remove-cart-item' : 'it-exchange-empty-cart';
+		$class = empty( $options['class'] ) ? $core_class : $core_class . ' ' . esc_attr( $options['class'] );
 
 		switch ( $options['format'] ) {
 			case 'var_key' :
@@ -86,7 +88,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 				$output = $var_value;
 				break;
 			case 'checkbox' :
-				$output = $options['before'] . '<input type="checkbox" name="' . esc_attr( $var_key ) . '[]" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />' . $options['label'] . $options['after'];
+				$output = $options['before'] . '<input type="checkbox" name="' . esc_attr( $var_key ) . '[]" value="' . esc_attr( $var_value ) . '" class="' . $class . '" />' . $options['label'] . $options['after'];
 				break;
 			case 'link' :
 			default :
@@ -94,7 +96,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 				$url = clean_it_exchange_query_args();
 				$url = add_query_arg( $var_key, $var_value, $url );
 				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . session_id() ), $url ); 
-				$output = $options['before'] . '<a href="' . $url . '" class="' . esc_attr( $options['class'] ) . '" >' . esc_attr( $options['label'] ) . '</a>' . $options['after'];
+				$output = $options['before'] . '<a href="' . $url . '" class="' . $class . '" >' . esc_attr( $options['label'] ) . '</a>' . $options['after'];
 			break;
 		}
 		return $output;
