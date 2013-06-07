@@ -70,20 +70,22 @@ global $wp_version;
                 ?>
                 <p class="description">
                 <?php 
-				_e( 'Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'LION' ); 
+				_e( 'Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available shortcode functions:', 'LION' ); 
+				echo '<br />';
+				printf( __( 'You call these shortcode functions like this: %s', 'LION' ), '[it_exchange_email show=order_table option=purchase_message]' ); 
 				echo '<ul>';
-				echo '<li>{download_list} - ' . __( 'A list of download links for each download purchased', 'LION' ) . '</li>';
-				echo '<li>{name} - ' . __( "The buyer's first name", 'LION' ) . '</li>';
-				echo '<li>{fullname} - ' . __( "The buyer's full name, first and last", 'LION' ) . '</li>';
-				echo '<li>{username} - ' . __( "The buyer's user name on the site, if they registered an account", 'LION' ) . '</li>';
-				echo '<li>{order_table} - ' . __( 'A table of the order details', 'LION' ) . '</li>';
-				echo '<li>{purchase_date} - ' . __( 'The date of the purchase', 'LION' ) . '</li>';
-				echo '<li>{total} - ' . __( 'The total price of the purchase', 'LION' ) . '</li>';
-				echo '<li>{payment_id} - ' . __( 'The unique ID number for this purchase', 'LION' ) . '</li>';
-				echo '<li>{receipt_id} - ' . __( 'The unique ID number for this transaction', 'LION' ) . '</li>';
-				echo '<li>{payment_method} - ' . __( 'The method of payment used for this purchase', 'LION' ) . '</li>';
-				echo '<li>{sitename} - ' . __( 'Your site name', 'LION' ) . '</li>';
-				echo '<li>{receipt_link} - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'LION' ) . '</li>';
+				echo '<li>download_list - ' . __( 'A list of download links for each download purchased', 'LION' ) . '</li>';
+				echo '<li>name - ' . __( "The buyer's first name", 'LION' ) . '</li>';
+				echo '<li>fullname - ' . __( "The buyer's full name, first and last", 'LION' ) . '</li>';
+				echo '<li>username - ' . __( "The buyer's user name on the site, if they registered an account", 'LION' ) . '</li>';
+				echo '<li>order_table - ' . __( 'A table of the order details. Accept "purchase_message" option.', 'LION' ) . '</li>';
+				echo '<li>purchase_date - ' . __( 'The date of the purchase', 'LION' ) . '</li>';
+				echo '<li>total - ' . __( 'The total price of the purchase', 'LION' ) . '</li>';
+				echo '<li>payment_id - ' . __( 'The unique ID number for this purchase', 'LION' ) . '</li>';
+				echo '<li>receipt_id - ' . __( 'The unique ID number for this transaction', 'LION' ) . '</li>';
+				echo '<li>payment_method - ' . __( 'The method of payment used for this purchase', 'LION' ) . '</li>';
+				echo '<li>sitename - ' . __( 'Your site name', 'LION' ) . '</li>';
+				echo '<li>receipt_link - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'LION' ) . '</li>';
 				do_action( 'it_exchange_email_template_tags_list' );
 				echo '</ul>';
 				?>

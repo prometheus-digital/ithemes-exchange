@@ -114,15 +114,15 @@ class IT_Exchange_Email_Notifications {
 			
 			$subject = apply_filters(
 				'admin_purchase_email_notification_subject',
-				sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'LION' ), '{receipt_id}' )
+				sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'LION' ), '[it_exchange_email show=receipt_id]' )
 			);
 			
 			$body = apply_filters(
 				'admin_purchase_email_notification_body',
-				__( "Your friend {fullname} just bought all this awesomeness from your store!
+				__( "Your friend [it_exchange_email show=fullname] just bought all this awesomeness from your store!
 
-<h1>{receipt_id}</h1>
-{order_table}", 'LION' )
+<h1>[it_exchange_email show=receipt_id]</h1>
+[it_exchange_email show=order_table]", 'LION' )
 			);
 				
 			$subject = do_shortcode( $subject );
