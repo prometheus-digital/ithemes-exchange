@@ -20,28 +20,28 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 *
 	 * @var string
 	 */
-	private $session_id;
+	protected $session_id;
 	
 	/**
 	 * Option Key of the current session.
 	 *
 	 * @var string
 	 */
-	private $option_key;
+	protected $option_key;
 
 	/**
 	 * Unix timestamp when session expires.
 	 *
 	 * @var int
 	 */
-	private $expires;
+	protected $expires;
 
 	/**
 	 * Unix timestamp indicating when the expiration time needs to be reset.
 	 *
 	 * @var int
 	 */
-	private $exp_variant;
+	protected $exp_variant;
 
 	/**
 	 * Singleton instance.
@@ -117,9 +117,9 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * @uses apply_filters Calls `it_exchange_db_session_expiration_variant` to get the max update window for session data.
 	 * @uses apply_filters Calls `it_exchange_db_session_expiration` to get the standard expiration time for sessions.
 	 */
-	private function set_expiration() {
-		$this->exp_variant = time() + intval( apply_filters( 'it_exchange_db_session_expiration_variant', 24 * 60 ) );
-		$this->expires = time() + intval( apply_filters( 'it_exchange_db_session_expiration', 24 * 60 * 60 ) );
+	protected function set_expiration() {
+		$this->exp_variant = time() + (int) apply_filters( 'it_exchange_db_session_expiration_variant', 24 * 60 );
+		$this->expires = time() + (int) apply_filters( 'it_exchange_db_session_expiration', 24 * 60 * 60 );
 	}
 
 	/**
@@ -127,7 +127,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 *
 	 * @return string
 	 */
-	private function generate_id() {
+	protected function generate_id() {
 		require_once( ABSPATH . 'wp-includes/class-phpass.php');
 		$hasher = new PasswordHash( 8, false );
 
@@ -141,7 +141,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 *
 	 * @return array
 	 */
-	private function read_data() {
+	protected function read_data() {
 		$this->container = get_option( $this->option_key, array() );
 
 		return $this->container;
@@ -155,6 +155,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 		if ( $this->dirty ) {
 			if ( false === get_option( $this->option_key ) ) {
 				add_option( $this->option_key, $this->container, '', 'no' );
+				add_option( "_it_exchange_db_session_expires_{$this->session_id}", $this->expires, '', 'no' );
 			} else {
 				update_option( $this->option_key, $this->container );
 			}
