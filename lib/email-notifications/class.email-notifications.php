@@ -27,6 +27,9 @@ class IT_Exchange_Email_Notifications {
 
 		// Send emails when admin requests a resend
 		add_action( 'admin_init', array( $this, 'handle_resend_confirmation_email_requests' ) );
+		
+		add_shortcode( 'it_exchange_email', array( $this, 'ithemes_exchange_email_notification_shortcode' ) );
+
 	}
 	
 	/**
@@ -90,9 +93,9 @@ class IT_Exchange_Email_Notifications {
 		if ( empty( $transaction->ID ) )
 			return;
 		
-		$this->transaction_id     = $transaction->ID;
-		$this->customer_id        = it_exchange_get_transaction_customer_id( $this->transaction_id );
-		$this->user               = get_userdata( $this->customer_id );
+		$this->transaction_id 	= $transaction->ID;
+		$this->customer_id 		= it_exchange_get_transaction_customer_id( $this->transaction_id );
+		$this->user 			= get_userdata( $this->customer_id );
 		
 		$settings = it_exchange_get_option( 'settings_email' );	
 		
@@ -101,9 +104,8 @@ class IT_Exchange_Email_Notifications {
 		$headers[] = 'Content-Type: text/html';
 		$headers[] = 'charset=utf-8';
 		
-		$subject = $this->replace_template_tags( $settings['receipt-email-subject'] );
-		$body  = $this->body_header() . wpautop( $this->replace_template_tags( $settings['receipt-email-template'] ) ) . $this->body_footer();
-
+		$subject = do_shortcode( $settings['receipt-email-subject'] );
+		$body    = $this->body_header() . wpautop( do_shortcode( $settings['receipt-email-template'] ) ) . $this->body_footer();
 		
 		wp_mail( $this->user->user_email, strip_tags( $subject ), $body, $headers );
 		
@@ -123,9 +125,9 @@ class IT_Exchange_Email_Notifications {
 {order_table}", 'LION' )
 			);
 				
-			$subject = $this->replace_template_tags( $subject );
+			$subject = do_shortcode( $subject );
 			
-			$body  = $this->body_header() . wpautop( $this->replace_template_tags( $body ) ) . $this->body_footer();
+			$body  = $this->body_header() . wpautop( do_shortcode( $body ) ) . $this->body_footer();
 			
 			$emails = split( ',', $settings['notification-email-address'] );
 			
@@ -175,25 +177,6 @@ class IT_Exchange_Email_Notifications {
 	}
 	
 	/**
-	 * Replace template tags with actual data
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param string $text String to be replaced
-	 * @return string Replaced string
-	*/
-	function replace_template_tags( $text ) {
-	
-		$tags = $this->get_template_tags();
-		
-		foreach( $tags as $tag => $callback )
-			$text = str_replace( $tag, call_user_func_array( $callback, array( $this ) ), $text );
-		
-		return $text;
-		
-	}
-	
-	/**
 	 * Get available template tags
 	 * Array of tags (key) and callback functions (value)
 	 *
@@ -201,27 +184,52 @@ class IT_Exchange_Email_Notifications {
 	 *
 	 * @return array available replacement template tags
 	*/
-	function get_template_tags() {
+	function get_shortcode_functions() {
 	
 		//Key = replacement tag
 		//Value = callback function
-		$defaults = array(
-			'{download_list}'  => array( $this, 'replace_download_list_tag' ),
-			'{name}'           => array( $this, 'replace_name_tag' ),
-			'{fullname}'       => array( $this, 'replace_fullname_tag' ),
-			'{username}'       => array( $this, 'replace_username_tag' ),
-			'{order_table}'    => array( $this, 'replace_order_table_tag' ),
-			'{purchase_date}'  => array( $this, 'replace_purchase_date_tag' ),
-			'{total}'          => array( $this, 'replace_total_tag' ),
-			'{payment_id}'     => array( $this, 'replace_payment_id_tag' ),
-			'{receipt_id}'     => array( $this, 'replace_receipt_id_tag' ),
-			'{payment_method}' => array( $this, 'replace_payment_method_tag' ),
-			'{sitename}'       => array( $this, 'replace_sitename_tag' ),
-			'{receipt_link}'   => array( $this, 'replace_receipt_link_tag' ),
+		$shortcode_functions = array(
+			'download_list'  => 'it_exchange_replace_download_list_tag',
+			'name'           => 'it_exchange_replace_name_tag',
+			'fullname'       => 'it_exchange_replace_fullname_tag',
+			'username'       => 'it_exchange_replace_username_tag',
+			'order_table'    => 'it_exchange_replace_order_table_tag',
+			'purchase_date'  => 'it_exchange_replace_purchase_date_tag',
+			'total'          => 'it_exchange_replace_total_tag',
+			'payment_id'     => 'it_exchange_replace_payment_id_tag',
+			'receipt_id'     => 'it_exchange_replace_receipt_id_tag',
+			'payment_method' => 'it_exchange_replace_payment_method_tag',
+			'sitename'       => 'it_exchange_replace_sitename_tag',
+			'receipt_link'   => 'it_exchange_replace_receipt_link_tag',
 		);
 		
-		return apply_filters( 'it_exchange_email_notification_template_tags', $defaults );
+		return apply_filters( 'it_exchange_email_notification_shortcode_functions', $shortcode_functions );
 		
+	}
+	
+	/**
+	 * This shortcode is intended to print an email arguments for email templates
+	 *
+	 * @since 0.4.0
+	 * @param array $atts attributess passed from WP Shortcode API
+	 * @param string $content data passed from WP Shortcode API
+	 * @return string html for the 'Add to Shopping Cart' HTML
+	*/
+	function ithemes_exchange_email_notification_shortcode( $atts, $content='' ) {
+		
+		$supported_pairs = array(
+			'show'    => '',
+			'options' => '',
+		);
+		// Merge supported_pairs with passed attributes
+		extract( shortcode_atts( $supported_pairs, $atts ) );
+		
+		$shortcode_functions = $this->get_shortcode_functions();
+			
+		if ( !empty( $shortcode_functions[$show] ) )
+			return call_user_func( array( $this, $shortcode_functions[$show] ), $this, split( ',', $options ) );
+		else
+			return;
 	}
 	
 	/**
@@ -233,7 +241,7 @@ class IT_Exchange_Email_Notifications {
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
-	function replace_download_list_tag( $args ) {
+	function it_exchange_replace_download_list_tag( $args, $options = NULL ) {
 		$output = '';
 		
 		$hashes = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
@@ -259,7 +267,7 @@ class IT_Exchange_Email_Notifications {
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
-	function replace_name_tag( $args ) {
+	function it_exchange_replace_name_tag( $args, $options = NULL ) {
 		if ( !empty( $this->user->first_name ) ) {
 			$name = $this->user->first_name;
 		} else {
@@ -277,7 +285,7 @@ class IT_Exchange_Email_Notifications {
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
-	function replace_fullname_tag( $args ) {
+	function it_exchange_replace_fullname_tag( $args, $options = NULL ) {
 		if ( !empty( $this->user->first_name ) ) {
 			$fullname = $this->user->first_name . ' ' . $this->user->last_name;
 		} else {
@@ -295,7 +303,7 @@ class IT_Exchange_Email_Notifications {
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
-	function replace_username_tag( $args ) {
+	function it_exchange_replace_username_tag( $args, $options = NULL ) {
 		return $this->user->user_login;
 	}
 	
@@ -307,7 +315,10 @@ class IT_Exchange_Email_Notifications {
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
-	function replace_order_table_tag( $args ) {
+	function it_exchange_replace_order_table_tag( $args, $options = NULL ) {
+		
+		if ( in_array( 'purchase_message', $options ) )
+			$purchase_message_on = true;
 		
 		$table  = '<table>';
 		
@@ -323,7 +334,13 @@ class IT_Exchange_Email_Notifications {
 		if ( $products = it_exchange_get_transaction_products( $this->transaction_id ) ) {
 			foreach ( $products as $product ) {
 				$table .= '  <tr>';
-				$table .= '    <td>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'product_name' ) ) . '</td>';
+				$table .= '    <td>';
+				$table .= esc_attr( it_exchange_get_transaction_product_feature( $product, 'product_name' ) );
+				
+				if ( $purchase_message_on )
+					$table .= '<p>' . esc_attr( it_exchange_get_product_feature( $product['product_id'], 'purchase-message' ) ) . '</p>'; 
+				
+				$table .= '</td>';
 				$table .= '    <td>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'count' ) ) . '</td>';
 				$table .= '    <td>' . esc_attr( it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ) ) )  . '</td>';
 				$table .= '  <tr>';
@@ -351,7 +368,7 @@ class IT_Exchange_Email_Notifications {
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
-	function replace_purchase_date_tag( $args ) {
+	function it_exchange_replace_purchase_date_tag( $args, $options = NULL ) {
 		return it_exchange_get_transaction_date( $this->transaction_id );
 	}
 	
@@ -363,7 +380,7 @@ class IT_Exchange_Email_Notifications {
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
-	function replace_total_tag( $args ) {
+	function it_exchange_replace_total_tag( $args, $options = NULL ) {
 		return it_exchange_get_transaction_total( $this->transaction_id, true );	
 	}
 	
@@ -375,7 +392,7 @@ class IT_Exchange_Email_Notifications {
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
-	function replace_payment_id_tag( $args ) {
+	function it_exchange_replace_payment_id_tag( $args, $options = NULL ) {
 		return it_exchange_get_gateway_id_for_transaction( $this->transaction_id ); 
 	}
 	
@@ -387,7 +404,7 @@ class IT_Exchange_Email_Notifications {
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
-	function replace_receipt_id_tag( $args ) {
+	function it_exchange_replace_receipt_id_tag( $args, $options = NULL ) {
 		return it_exchange_get_transaction_order_number( $this->transaction_id );		
 	}
 	
@@ -399,7 +416,7 @@ class IT_Exchange_Email_Notifications {
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
-	function replace_payment_method_tag( $args ) {
+	function it_exchange_replace_payment_method_tag( $args, $options = NULL ) {
 		return it_exchange_get_transaction_method( $this->transaction_id );
 	}
 	
@@ -411,7 +428,7 @@ class IT_Exchange_Email_Notifications {
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
-	function replace_sitename_tag( $args ) {
+	function it_exchange_replace_sitename_tag( $args, $options = NULL ) {
 		return get_bloginfo( 'name' );
 	}
 	
@@ -423,7 +440,7 @@ class IT_Exchange_Email_Notifications {
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
 	*/
-	function replace_receipt_link_tag( $args ) {
+	function it_exchange_replace_receipt_link_tag( $args, $options = NULL ) {
 		return it_exchange_get_transaction_confirmation_url( $this->transaction_id );
 	}
 	
