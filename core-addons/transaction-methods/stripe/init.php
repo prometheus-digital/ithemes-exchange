@@ -623,12 +623,12 @@ class IT_Exchange_Stripe_Add_On {
 	}
 	
 	function stripe_save_wizard_settings() {
-		if ( !isset( $_REQUEST['it_exchange_settings-wizard-submitted'] ) )
+		if ( empty( $_REQUEST['it_exchange_settings-wizard-submitted'] ) )
 			return;
 			
 		$stripe_settings = array();
 		
-		$default_wizard_stripe_settings = apply_filters( 'default_wizard_stripe_settings', array( 'stripe-title', 'stripe-instructions', 'stripe-default-status' ) );
+		$default_wizard_stripe_settings = apply_filters( 'default_wizard_stripe_settings', array( 'stripe-live-secret-key', 'stripe-live-publishable-key', 'stripe-test-secret-key', 'stripe-test-publishable-key', 'stripe-test-mode' ) );
 		
 		foreach( $default_wizard_stripe_settings as $var ) {
 		
