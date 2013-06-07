@@ -236,7 +236,12 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 				<div class="field amount">
 					<label for="amount-number"><?php _e( 'Amount', 'LION' ); ?></label>
 					<?php $form->add_text_box( 'amount-number', array( 'type' => 'number' ) ); ?>
-					<?php $form->add_drop_down( 'amount-type', array( '%' => __( '% Percent', 'LION' ), '$' => '$ USD' ) ); ?>
+					<?php 
+					$settings = it_exchange_get_option( 'settings_general' );
+					$currency = $settings['default-currency'];
+					$symbol   = it_exchange_get_currency_symbol( $currency );
+					?>
+					<?php $form->add_drop_down( 'amount-type', array( '%' => __( '% Percent', 'LION' ), 'amount' => $symbol['symbol']. ' ' . $currency ) ); ?>
 				</div>
 				
 				<div class="field date" data-alert="<?php _e( 'Please select an end date that is after the start date.', 'LION' ); ?>">
@@ -333,7 +338,7 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 			esc_attr_e( $coupon->code );
 			break;
 		case 'it_exchange_coupon_discount':
-			echo esc_attr( $coupon->amount_number ) . ' ' . esc_attr( $coupon->amount_type );
+			echo esc_attr( it_exchange_get_coupon_discount_label( $coupon ) );
 			break;
 		case 'it_exchange_coupon_start_date':
 			esc_attr_e( $coupon->start_date );

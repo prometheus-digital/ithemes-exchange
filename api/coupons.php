@@ -48,7 +48,7 @@ function it_exchange_get_coupons( $options=array() ) {
  * @rturn object IT_Exchange_Coupon object for passed post
 */
 function it_exchange_get_coupon( $post ) {
-	$coupon = new IT_Exchange_Coupon( $post );
+	$coupon = ( is_object( $post ) && 'IT_Exchange_Coupon' == get_class( $post ) ) ? $post : new IT_Exchange_Coupon( $post );
 	if ( $coupon->ID )
 		return $coupon;
 	return false;
@@ -274,6 +274,24 @@ function it_exchange_get_total_coupons_discount( $type=false, $options=array() )
 function it_exchange_get_coupon_discount_method( $coupon_id, $options=array() ) {
 	$options['id'] = $coupon_id;
 	return apply_filters( 'it_exchange_get_coupon_discount_method', false, $options );
+}
+
+/**
+ * Get coupon discount label
+ *
+ * ie: $10.00 / 10%
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $coupon id or object
+ * @param options optional
+ * @return string
+*/
+function it_exchange_get_coupon_discount_label( $coupon, $options=array() ) {
+	if ( ! $coupon = it_exchange_get_coupon( $coupon ) )
+		return '';
+	$options['coupon'] = $coupon;
+	return apply_filters( 'it_exchange_get_coupon_discount_label', '', $options );
 }
 
 /**

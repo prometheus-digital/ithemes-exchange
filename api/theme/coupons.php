@@ -26,6 +26,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 		'apply'          => 'apply',
 		'code'           => 'code',
 		'discount'       => 'discount',
+		'discountlabel'  => 'discount_label',
 		'totaldiscount'  => 'total_discount',
 		'remove'         => 'remove',
 		'discountmethod' => 'discount_method',
@@ -216,6 +217,28 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 
 	function discount( $options=array() ) {
 		return $this->coupon['amount_number'] . ' ' . $this->coupon['amount_type'];
+	}
+
+	/**
+	 * Returns the coupon discount label
+	 *
+	 * ie: $10.00 or 10%
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $options optional
+	 * @return string
+	*/
+	function discount_label( $options=array() ) {
+		$defaults = array(
+			'before' => '',
+			'after'  => '',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		if ( $label = it_exchange_get_coupon_discount_label( $this->coupon['id'] ) )
+			return $options['before'] . $label . $options['after'];
+
+		return '';
 	}
 
 	function total_discount( $options=array() ) {

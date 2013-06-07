@@ -279,6 +279,27 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount, $opti
 add_filter( 'it_exchange_get_total_discount_for_cart', 'it_exchange_basic_coupons_get_total_discount_for_cart', 10, 2 );
 
 /**
+ * Returns the coupon discount label
+ *
+ * @since 0.4.0
+ *
+ * @param string $label   incoming from WP filter. Not used here.
+ * @param array  $options $options['coupon'] should have the coupon object
+ * @return string
+*/
+function it_exchange_basic_coupons_get_discount_label( $label, $options=array() ) {
+	$coupon = empty( $options['coupon']->ID ) ? false : $options['coupon'];
+	if ( ! $coupon )
+		return '';
+
+	if( 'amount' == $coupon->amount_type )
+		return it_exchange_format_price( $coupon->amount_number );
+	else
+		return $coupon->amount_number . $coupon->amount_type;
+}
+add_filter( 'it_exchange_get_coupon_discount_label', 'it_exchange_basic_coupons_get_discount_label', 10, 2 );
+
+/**
  * Remove coupon from cart
  *
  * @todo redirect with feedback?
