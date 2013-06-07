@@ -638,6 +638,7 @@ class IT_Exchange_Product_Post_Type {
 	 * @return array  modified columns array
 	*/
 	function it_exchange_product_columns( $existing ) {
+		add_filter( 'the_excerpt', array( $this, 'replace_excerpt_in_products_table_with_description' ) );
 		$columns['cb']                                = '<input type="checkbox" />';
 		$columns['title']                             = __( 'Title', 'LION' );
 		$columns['it_exchange_product_price']         = __( 'Price', 'LION' );
@@ -645,6 +646,23 @@ class IT_Exchange_Product_Post_Type {
 		$columns['it_exchange_product_purchases']     = __( 'Purchases', 'LION' );
 
 		return $columns;
+	}
+
+	/**
+	 * Replace the excerpt with the product description (our version of excerpt) in the admin All Products table when mode is 'excerpt'
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param string $excerpt existing excerpt passed in by WP filter
+	 * @return string
+	*/
+	function replace_excerpt_in_products_table_with_description( $excerpt ) {
+		global $post;
+		if ( it_exchange_product_has_feature( $post->ID, 'description' ) )
+			$excerpt = it_exchange_get_product_feature( $post->ID, 'description' );
+		else
+			$excerpt = '';
+		return $excerpt;
 	}
 
 	/**
