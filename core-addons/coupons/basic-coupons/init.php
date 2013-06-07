@@ -57,7 +57,7 @@ add_filter( 'it_exchange_coupon_additional_data', 'it_exchange_basic_coupons_add
  * @return array
 */
 function it_exchange_basic_coupons_register_field_names( $names ) {
-	$names['apply_coupon'] = 'it-exchange-basic-coupons-apply-coupon';
+	$names['apply_coupon']  = 'it-exchange-basic-coupons-apply-coupon';
 	$names['remove_coupon'] = 'it-exchange-basic-coupons-remove-coupon';
 	return $names;
 }
@@ -117,10 +117,9 @@ function it_exchange_base_coupons_apply_cart_coupon_field( $incoming=false, $opt
 		'class'       => 'apply-coupon',
 		'placeholder' => __( 'Coupon Code', 'LION' ),
 	);
-	$options = ITUtility::merge_defaults( $options, $defaults );	
-
+	$options = ITUtility::merge_defaults( $options, $defaults );
 	$var = it_exchange_get_field_name( 'apply_coupon' ) . '-cart';
-	return '<input type="text" class="' . esc_attr( $options['class'] ) . '" name="' . esc_attr( $var ) . '" placeholder="' . esc_attr( $options['placeholder'] ) . '" value="" />';	
+	return '<input type="text" class="' . esc_attr( $options['class'] ) . '" name="' . esc_attr( $var ) . '" placeholder="' . esc_attr( $options['placeholder'] ) . '" value="" />';
 }
 add_filter( 'it_exchange_apply_cart_coupon_field', 'it_exchange_base_coupons_apply_cart_coupon_field', 10, 2 );
 
@@ -160,8 +159,8 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 
 	// Abort if no coupon code matches and falls within dates
 	$args = array(
-		'meta_query' => array( 
-			array( 
+		'meta_query' => array(
+			array(
 				'key' => '_it-basic-code',
 				'value' => $coupon_code,
 			),
@@ -223,12 +222,12 @@ function it_exchange_base_coupons_remove_cart_coupon_html( $incoming=false, $cod
 		'format' => 'link',
 		'label'  => __( '&times;', 'LION' ),
 	);
-	$options = ITUtility::merge_defaults( $options, $defaults );	
+	$options = ITUtility::merge_defaults( $options, $defaults );
 
 	$var = it_exchange_get_field_name( 'remove_coupon' ) . '-cart';
 
 	if ( 'checkbox' == $options['format'] ) {
-		return '<input type="checkbox" class="' . esc_attr( $options['class'] ) . '" name="' . esc_attr( $var ) . '[]" value="' . esc_attr( $options['code'] ) . '" />&nbsp;' . esc_attr( $options['label'] );	
+		return '<input type="checkbox" class="' . esc_attr( $options['class'] ) . '" name="' . esc_attr( $var ) . '[]" value="' . esc_attr( $options['code'] ) . '" />&nbsp;' . esc_attr( $options['label'] );
 	} else {
 		$url = clean_it_exchange_query_args( array( it_exchange_get_field_name( 'sw_cart_focus' ) ) );
 		$url = add_query_arg( $var . '[]', $options['code'] );
@@ -261,14 +260,14 @@ add_filter( 'it_exchange_get_cart_total', 'it_exchange_basic_coupons_apply_disco
  * @return string
 */
 function it_exchange_basic_coupons_get_total_discount_for_cart( $discount, $options=array() ) {
-    $defaults = array(
-        'format_price' => true,
-    );  
-    $options = ITUtility::merge_defaults( $options, $defaults );
+	$defaults = array(
+		'format_price' => true,
+	);
+	$options = ITUtility::merge_defaults( $options, $defaults );
 
 	$coupons = it_exchange_get_applied_coupons( 'cart' );
 	$subtotal = it_exchange_get_cart_subtotal( false );
-	
+
 	foreach( (array) $coupons as $coupon ) {
 		$discount = ( '%' == $coupon['amount_type'] ) ? $discount + ( ( $coupon['amount_number'] / 100 ) * $subtotal ) : $discount + $coupon['amount_number'];
 	}
@@ -359,6 +358,7 @@ add_filter( 'it_exchange_remove_coupon_for_cart', 'it_exchange_basic_coupons_rem
 */
 function it_exchange_basic_coupons_transaction_summary( $summary, $transaction_coupon ) {
 	$transaction_coupon = reset( $transaction_coupon );
+
 	$id     = empty( $transaction_coupon['id'] )            ? false : $transaction_coupon['id'];
 	$title  = empty( $transaction_coupon['title'] )         ? false : $transaction_coupon['title'];
 	$code   = empty( $transaction_coupon['code'] )          ? false : $transaction_coupon['code'];

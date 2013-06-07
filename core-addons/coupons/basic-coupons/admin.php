@@ -35,7 +35,7 @@ add_action( 'admin_print_scripts', 'it_exchange_basic_coupons_enqueue_js_css' );
 
 /**
  * Saves a coupon
- * 
+ *
  * @since 0.4.0
  *
  * @return void
@@ -95,7 +95,6 @@ add_action( 'admin_init', 'it_exchange_basic_coupons_save_coupon' );
  * @return boolean
 */
 function it_exchange_basic_coupons_data_is_valid() {
-
 	$data = ITForm::get_post_data();
 	if ( empty( $data['name'] ) )
 		it_exchange_add_message( 'error', __( 'Coupon Name cannot be left empty', 'LION' ) );
@@ -144,7 +143,7 @@ function it_exchange_basic_coupons_redirect_core_add_edit_screens() {
 	$post_id   = empty( $_GET['post'] ) ? false : $_GET['post'];
 	$action    = empty( $_GET['action'] ) ? false : $_GET['action'];
 
-	if ( ! $pagenow || ( 'post-new.php' != $pagenow && 'post.php' != $pagenow ) ) 
+	if ( ! $pagenow || ( 'post-new.php' != $pagenow && 'post.php' != $pagenow ) )
 		return;
 
 	// Redirect for add new screen
@@ -209,7 +208,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		'id'      => apply_filters( 'it-exchange-basic-coupons_form_id', 'it-exchange-basic-coupons' ),
 		'enctype' => apply_filters( 'it-exchange-basic-coupons_enctype', false ),
 		'action'  => $form_action,
-	);   
+	);
 	?>
 	<div class="wrap">
 		<?php
@@ -236,7 +235,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 				<div class="field amount">
 					<label for="amount-number"><?php _e( 'Amount', 'LION' ); ?></label>
 					<?php $form->add_text_box( 'amount-number', array( 'type' => 'number' ) ); ?>
-					<?php 
+					<?php
 					$settings = it_exchange_get_option( 'settings_general' );
 					$currency = $settings['default-currency'];
 					$symbol   = it_exchange_get_currency_symbol( $currency );
@@ -294,12 +293,12 @@ add_action( 'admin_head', 'it_exchange_basic_coupons_remove_submeu_links' );
  * @return array  modified columns array
 */
 function it_exchange_basic_coupons_product_columns( $existing ) {
-	$columns['cb'] = '<input type="checkbox" />';
+	$columns['cb']    = '<input type="checkbox" />';
 	$columns['title'] = __( 'Title', 'LION' );
-	$columns['it_exchange_coupon_code'] = __( 'Coupon Code', 'LION' );
-	$columns['it_exchange_coupon_discount'] = __( 'Discount', 'LION' );
+	$columns['it_exchange_coupon_code']       = __( 'Coupon Code', 'LION' );
+	$columns['it_exchange_coupon_discount']   = __( 'Discount', 'LION' );
 	$columns['it_exchange_coupon_start_date'] = __( 'Start Date', 'LION' );
-	$columns['it_exchange_coupon_end_date'] = __( 'End Date', 'LION' );
+	$columns['it_exchange_coupon_end_date']   = __( 'End Date', 'LION' );
 
 	return $columns;
 }
@@ -317,6 +316,7 @@ function it_exchange_basic_coupons_sortable_columns( $sortables ) {
 	$sortables['it_exchange_coupon_discount']   = 'it-exchange-coupon-discount';
 	$sortables['it_exchange_coupon_start_date'] = 'it-exchange-coupon-start-date';
 	$sortables['it_exchange_coupon_end_date']   = 'it-exchange-coupon-end-date';
+
 	return $sortables;
 }
 add_filter( 'manage_edit-it_exchange_coupon_sortable_columns', 'it_exchange_basic_coupons_sortable_columns' );
@@ -364,19 +364,19 @@ function it_exchange_basic_coupons_modify_wp_query_request_on_edit_php( $request
 		if ( 'it_exchange_coupon' === $request['post_type'] && isset( $request['orderby'] ) ) {
 			switch( $request['orderby'] ) {
 				case 'it-exchange-coupon-code' :
-					$request['orderby'] = 'meta_value';
+					$request['orderby']  = 'meta_value';
 					$request['meta_key'] = '_it-basic-code';
 					break;
 				case 'it-exchange-coupon-discount':
-					$request['orderby'] = 'meta_value_num';
+					$request['orderby']  = 'meta_value_num';
 					$request['meta_key'] = '_it-basic-amount-number';
 					break;
 				case 'it-exchange-coupon-start-date':
-					$request['orderby'] = 'meta_value_date';
+					$request['orderby']  = 'meta_value_date';
 					$request['meta_key'] = '_it-basic-start-date';
 					break;
 				case 'it-exchange-coupon-end-deate':
-					$request['orderby'] = 'meta_value_date';
+					$request['orderby']  = 'meta_value_date';
 					$request['meta_key'] = '_it-basic-end-date';
 					break;
 			}

@@ -38,10 +38,9 @@ class IT_Exchange_Core_Addon_Transaction_Status_Meta_Box {
 	*/
 	function print_meta_box( $post ) {
 		$transaction = it_exchange_get_transaction( $post );
-
-		$current_status     = it_exchange_get_transaction_status( $transaction );
+		$current_status = it_exchange_get_transaction_status( $transaction );
 		$transaction_method = it_exchange_get_transaction_method( $transaction );
-		
+
 		ITDebug::print_r( get_post_meta( $transaction->ID, '_it_exchange_transaction_status', true ) );
 		ITDebug::print_r( get_post_meta( $transaction->ID, '_it_exchange_transaction_refunds' ) );
 
@@ -67,7 +66,7 @@ class IT_Exchange_Core_Addon_Transaction_Status_Meta_Box {
 	}
 
 	/**
-	 * Updates the post_meta that holds the transaction_status 
+	 * Updates the post_meta that holds the transaction_status
 	 *
 	 * @since 0.3.3
 	 * @return void
@@ -95,4 +94,4 @@ class IT_Exchange_Core_Addon_Transaction_Status_Meta_Box {
 }
 global $pagenow;
 if ( is_admin() && 'post.php' == $pagenow )
-	new IT_Exchange_Core_Addon_Transaction_Status_Meta_Box(); 
+	new IT_Exchange_Core_Addon_Transaction_Status_Meta_Box();
