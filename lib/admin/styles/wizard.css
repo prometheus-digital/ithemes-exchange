@@ -46,9 +46,12 @@
 .it-exchange-wizard .general-settings-wizard label[for="company-email"]{margin-top:15px;}
 .it-exchange-wizard .general-settings-wizard input[type="text"]{display:block;}
 .it-exchange-wizard .general-settings-wizard #exchange-notifications{display:inline-block;margin-left:1px;}
-.it-exchange-wizard .general-settings-wizard #exchange-notifications,
-.it-exchange-wizard .general-settings-wizard label[for="exchange-notifications"]{margin-top:10px;}
-.it-exchange-wizard .general-settings-wizard label[for="exchange-notifications"]{display:inline-block;font-weight:normal;margin-top:19px;}
+.it-exchange-wizard .general-settings-wizard p {
+	margin-top: 20px;
+}
+.it-exchange-wizard .general-settings-wizard label[for="exchange-notifications"] {
+	font-weight: normal;
+}
 .it-exchange-wizard .general-settings-wizard .default-currency{margin-top:20px;}
 
 /** -----------------------------------------------------:[ banner ]:---------- */

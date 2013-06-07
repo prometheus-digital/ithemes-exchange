@@ -55,20 +55,25 @@
 					<h3><?php _e( 'General', 'LION' ); ?></h3>
 					<label for="company-email"><?php _e( 'E-mail Notifications', 'LION' ); ?> <span class="tip" title="<?php _e( 'The E-mail address you should receive notifcations to, from your store.', 'LION' ); ?>">i</span></label>
 					<?php $form->add_text_box( 'company-email', array( 'value' => get_bloginfo( 'admin_email' ), 'class' => 'clearfix' ) ); ?>
-					<?php $form->add_check_box( 'exchange-notifications' ); ?>
-					<label for="exchange-notifications"><?php _e( 'Get e-mail updates from us about iThemes Exchange', 'LION' ); ?> <span class="tip" title="<?php _e( "We'll send you updates, discounts on add-ons and other iThemes products, and our eternal love.", 'LION' ); ?>">i</span></label>
+					<p>
+						<?php $form->add_check_box( 'exchange-notifications' ); ?>
+						<label for="exchange-notifications"><?php _e( 'Get e-mail updates from us about iThemes Exchange', 'LION' ); ?> <span class="tip" title="<?php _e( "We'll send you updates, discounts on add-ons and other iThemes products, and our eternal love.", 'LION' ); ?>">i</span></label>
+					</p>
 					<div class="default-currency">
 						<label for="default-currency"><?php _e( 'Currency', 'LION' ); ?> <span class="tip" title="<?php _e( 'Select the currenc you plan on using in your store.', 'LION' ); ?>">i</span></label>
 						<?php $form->add_drop_down( 'default-currency', $this->get_default_currency_options() ); ?>
 					</div>
 				</div>
 				
+				<!-- 
+				NOTE: We are removing this for now, but will probably add this later.
 				<div class="field add-on-banner">
 					<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/icon32.png' ); ?>" />
 					<p><?php _e( 'You\'re almost ready to start selling digital products using PayPal and iThemes Exchange.', 'LION' ); ?></p>
 					<p><strong><?php _e( 'Remember, if you want to do more with Exchange, check out our Add-Ons Library.', 'LION' ); ?></strong></p>
 					<a class="get-add-ons " href="javascript:void(0);" target="_blank"><span><?php _e( "Get Add-Ons", 'LION' ); ?></span></a>
 				</div>
+				-->
 				
 				<div class="field submit-wrapper">
 					<?php $form->add_submit( 'submit', __( 'Start Selling!', 'LION' ) ); ?>
