@@ -29,6 +29,7 @@ class IT_Exchange_Transaction_Post_Type {
 		add_filter( 'manage_edit-it_exchange_tran_sortable_columns', array( $this, 'make_transaction_custom_columns_sortable' ) );
 		add_filter( 'manage_it_exchange_tran_posts_custom_column', array( $this, 'add_transaction_method_info_to_view_all_table_rows' ) );
 		add_filter( 'it_exchange_transaction_metabox_callback', array( $this, 'register_transaction_details_admin_metabox' ) );
+		add_filter( 'post_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
 	}
 
 	function init() {
@@ -36,7 +37,7 @@ class IT_Exchange_Transaction_Post_Type {
 		$labels    = array(
 			'name'          => __( 'Payments', 'LION' ),
 			'singular_name' => __( 'Payment', 'LION' ),
-			'edit_item'     => __( 'Edit Payment', 'LION' ),
+			'edit_item'     => __( 'Payment Details', 'LION' ),
 		);
 		$this->options = array(
 			'labels'               => $labels,
@@ -71,6 +72,15 @@ class IT_Exchange_Transaction_Post_Type {
 		);
 
 		add_action( 'init', array( $this, 'register_the_post_type' ) );
+	}
+	
+	function rename_edit_to_details( $actions, $post ) {
+		
+		if ( 'it_exchange_tran' === $post->post_type ) 
+		$actions['edit'] = '<a href="' . get_edit_post_link( $post->ID, true ) . '" title="' . esc_attr( __( 'View the transaction details', 'LION' ) ) . '">' . __( 'Details', 'LION' ) . '</a>';
+		
+		return $actions;
+		
 	}
 
 	/**

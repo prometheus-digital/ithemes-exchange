@@ -22,7 +22,7 @@ function it_exchange_paypal_standard_addon_wizard_settings( $form ) {
 	$settings = it_exchange_get_option( 'addon_paypal_standard', true );
 	?>
 	<div class="field paypal-standard-wizard hide-if-js">
-    <?php $IT_Exchange_PayPal_Standard_Add_On->get_paypal_standard_payment_form_table( $form, $settings ); ?>
+	<?php $IT_Exchange_PayPal_Standard_Add_On->get_paypal_standard_payment_form_table( $form, $settings ); ?>
 	</div>
 	<?php
 }
@@ -42,92 +42,91 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 		return $status;
 
 	if ( !empty( $_REQUEST['it-exchange-transaction-method'] ) && 'paypal-standard' === $_REQUEST['it-exchange-transaction-method'] ) {
-		
+
 		if ( !empty( $_REQUEST['tx'] ) ) //if PDT is enabled
 			$transaction_id = $_REQUEST['tx'];
 		else if ( !empty( $_REQUEST['txn_id'] ) ) //if PDT is not enabled
 			$transaction_id = $_REQUEST['txn_id'];
 		else
 			$transaction_id = NULL;
-			
+
 		if ( !empty( $_REQUEST['amt'] ) ) //if PDT is enabled
 			$transaction_amount = $_REQUEST['amt'];
 		else if ( !empty( $_REQUEST['mc_gross'] ) ) //if PDT is not enabled
 			$transaction_amount = $_REQUEST['mc_gross'];
 		else
 			$transaction_amount = NULL;
-			
+
 		if ( !empty( $_REQUEST['st'] ) ) //if PDT is enabled
 			$transaction_status = $_REQUEST['st'];
 		else if ( !empty( $_REQUEST['payment_status'] ) ) //if PDT is not enabled
 			$transaction_status = $_REQUEST['payment_status'];
 		else
 			$transaction_status = NULL;
-			
-		
+
 		if ( !empty( $transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
-		
+
 			try {
-					
+
 				$general_settings = it_exchange_get_option( 'settings_general' );
 				$paypal_settings = it_exchange_get_option( 'addon_paypal_standard' );
-				
+
 				$it_exchange_customer = it_exchange_get_current_customer();
-			
+
 				$paypal_api_url       = ( $paypal_settings['sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
 				$paypal_api_username  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-username'] : $paypal_settings['live-api-username'];
 				$paypal_api_password  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-password'] : $paypal_settings['live-api-password'];
 				$paypal_api_signature = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-signature'] : $paypal_settings['live-api-signature'];
-					
+
 				$request = array(
-					'USER'	        => trim( $paypal_api_username ),
-					'PWD'	        => trim( $paypal_api_password ),
-					'SIGNATURE'	    => trim( $paypal_api_signature ),
+					'USER'          => trim( $paypal_api_username ),
+					'PWD'           => trim( $paypal_api_password ),
+					'SIGNATURE'     => trim( $paypal_api_signature ),
 					'VERSION'       => '96.0', //The PayPal API version
-					'METHOD'	    => 'GetTransactionDetails',
+					'METHOD'        => 'GetTransactionDetails',
 					'TRANSACTIONID' => $transaction_id,
 				);
-					
+
 				$response = wp_remote_post( $paypal_api_url, array( 'body' => $request ) );
-				
+
 				if ( !is_wp_error( $response ) ) {
-					
+
 					$array = array();
 					parse_str( wp_remote_retrieve_body( $response ) );
-					
+
 					it_exchange_set_paypal_standard_addon_customer_id( $it_exchange_customer->id, $PAYERID );
 					it_exchange_set_paypal_standard_addon_customer_email( $it_exchange_customer->id, $EMAIL );
 					$transaction_status = $PAYMENTSTATUS;
-					
+
 					if ( $transaction_id != $TRANSACTIONID )
 						throw new Exception( __( 'Error: Transaction IDs do not match! %s, %s', 'LION' ) );
-					
+
 					if ( number_format( $AMT, '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) )
 						throw new Exception( __( 'Error: Amount charged is not the same as the cart total!', 'LION' ) );
-	
+
 				} else {
-					
+
 					throw new Exception( $response->get_error_message() );
-	
+
 				}
-				
+
 			}
 			catch ( Exception $e ) {
-				
+
 				it_exchange_add_message( 'error', $e->getMessage() );
 				return false;
-					
+
 			}
-			
+
 			return it_exchange_add_transaction( 'paypal-standard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
-			
+
 		}
-	
+
 		it_exchange_add_message( 'error', __( 'Unknown error. Please try again later.', 'LION' ) );
-		
+
 	}
 	return false;
-	
+
 }
 add_action( 'it_exchange_do_transaction_paypal-standard', 'it_exchange_process_paypal_standard_addon_transaction', 10, 2 );
 
@@ -203,7 +202,7 @@ function paypal_standard_print_wizard_settings( $form ) {
 	$settings = it_exchange_get_option( 'addon_paypal_standard', true );
 	?>
 	<div class="field paypal_standard-wizard hide-if-js">
-    <?php $IT_Exchange_PayPal_Standard_Add_On->get_paypal_standard_payment_form_table( $form, $settings ); ?>
+	<?php $IT_Exchange_PayPal_Standard_Add_On->get_paypal_standard_payment_form_table( $form, $settings ); ?>
 	</div>
 	<?php
 }
@@ -240,7 +239,7 @@ function it_exchange_paypal_standard_addon_default_settings( $values ) {
 		'paypal-standard-sandbox-api-password'  => '',
 		'paypal-standard-sandbox-api-signature' => '',
 		'paypal-standard-sandbox-mode'          => false,
-	);   
+	);
 	$values = ITUtility::merge_defaults( $values, $defaults );
 	return $values;
 }
@@ -254,13 +253,13 @@ add_filter( 'it_storage_get_defaults_exchange_addon_paypal_standard', 'it_exchan
  * @param array $options
  * @return string HTML button
 */
-function it_exchange_paypal_standard_addon_make_payment_button( $options ) { 
-	
+function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
+
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard' );
-	
+
 	$payment_form = '';
-	
+
 	$paypal_api_url       = ( $paypal_settings['paypal-standard-sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
 	$paypal_email         = ( $paypal_settings['paypal-standard-sandbox-mode'] ) ? $paypal_settings['paypal-standard-sandbox-email-address'] : $paypal_settings['paypal-standard-live-email-address'];
 	$paypal_api_username  = ( $paypal_settings['paypal-standard-sandbox-mode'] ) ? $paypal_settings['paypal-standard-sandbox-api-username'] : $paypal_settings['paypal-standard-live-api-username'];
@@ -268,19 +267,19 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 	$paypal_api_signature = ( $paypal_settings['paypal-standard-sandbox-mode'] ) ? $paypal_settings['paypal-standard-sandbox-api-signature'] : $paypal_settings['paypal-standard-live-api-signature'];
 
 	$it_exchange_customer = it_exchange_get_current_customer();
-		
+
 	$button_request = array(
-		'USER'	        => trim( $paypal_api_username ),
-		'PWD'	        => trim( $paypal_api_password ),
-		'SIGNATURE'	    => trim( $paypal_api_signature ),
-		'VERSION'       => '96.0', //The PayPal API version
-		'METHOD'	    => 'BMCreateButton',
-		'BUTTONCODE'    => 'ENCRYPTED',
-		'BUTTONTYPE'    => 'BUYNOW',
-		'BUTTONIMAGE'   => 'REG',
-		'BUYNOWTEXT'    => 'PAYNOW',
+		'USER'        => trim( $paypal_api_username ),
+		'PWD'         => trim( $paypal_api_password ),
+		'SIGNATURE'   => trim( $paypal_api_signature ),
+		'VERSION'     => '96.0', //The PayPal API version
+		'METHOD'      => 'BMCreateButton',
+		'BUTTONCODE'  => 'ENCRYPTED',
+		'BUTTONTYPE'  => 'BUYNOW',
+		'BUTTONIMAGE' => 'REG',
+		'BUYNOWTEXT'  => 'PAYNOW',
 	);
-	
+
 	$L_BUTTONVARS[] = 'business=' . $paypal_email;
 	$L_BUTTONVARS[] = 'item_name=' . $general_settings['company-name'] . ' ' . __( 'Shopping Cart', 'LION' );
 	$L_BUTTONVARS[] = 'amount=' . number_format( it_exchange_get_cart_total( false ), 2, '.', '' );
@@ -294,31 +293,31 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 	$L_BUTTONVARS[] = 'return=' . it_exchange_get_page_url( 'transaction' ) . '?it-exchange-transaction-method=paypal-standard';
 	$L_BUTTONVARS[] = 'rm=2'; //Return  Method - https://developer.paypal.com/webapps/developer/docs/classic/button-manager/integration-guide/ButtonManagerHTMLVariables/
 	$L_BUTTONVARS[] = 'cancel_return=' . it_exchange_get_page_url( 'cart' );
-	
+
 	$count = 0;
 	foreach( $L_BUTTONVARS as $L_BUTTONVAR ) {
-		
+
 		$button_request['L_BUTTONVAR' . $count] = $L_BUTTONVAR;
 		$count++;
-		
+
 	}
-		
+
 	$response = wp_remote_post( $paypal_api_url, array( 'body' => $button_request ) );
-			
+
 	if ( !is_wp_error( $response ) ) {
-		
+
 		parse_str( wp_remote_retrieve_body( $response ) );
-		
+
 		if ( !empty( $ACK ) && 'Success' === $ACK ) {
-			
+
 			if ( !empty( $WEBSITECODE ) )
 				$payment_form = str_replace( array( "\r\n", "\r", "\n" ), '', $WEBSITECODE );
 				//Strip out the newline characters because parse_str/PayPal adds a \n to the encrypted code, whic breaks the digital ID
-			
+
 		}
-		
+
 	}
-	
+
 	return $payment_form;
 }
 add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_paypal_standard_addon_make_payment_button', 10, 2 );
@@ -332,9 +331,9 @@ add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_
  * @return array
 */
 function it_exchange_paypal_addon_register_webhook() {
-    $key   = 'paypal-standard';
+	$key   = 'paypal-standard';
 	$param = apply_filters( 'it_exchange_paypal-standard_webhook', 'it_exchange_paypal-standard' );
-    it_exchange_register_webhook( $key, $param );
+	it_exchange_register_webhook( $key, $param );
 }
 add_filter( 'init', 'it_exchange_paypal_addon_register_webhook' );
 
@@ -342,7 +341,7 @@ add_filter( 'init', 'it_exchange_paypal_addon_register_webhook' );
  * Processes webhooks for PayPal Web Standard
  *
  * @since 0.4.0
- * @todo actually handle the exceptions 
+ * @todo actually handle the exceptions
  *
  * @param array $request really just passing  $_REQUEST
  */
@@ -350,10 +349,10 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard' );
-	
+
 	// for extra security, retrieve from the Stripe API
 	if ( isset( $request['txn_id'] ) ) {
-				
+
 		try {
 
 			switch( $request['payment_status'] ) :
@@ -365,18 +364,18 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 					it_exchange_paypal_standard_addon_update_transaction_status( $request['parent_txn_id'], $request['payment_status'] );
 					it_exchange_paypal_standard_addon_add_refund_to_transaction( $request['parent_txn_id'], $request['mc_gross'] );
 				case 'Reversed' :
-					it_exchange_paypal_standard_addon_update_transaction_status( $request['parent_txn_id'], $request['reason_code'] );		
+					it_exchange_paypal_standard_addon_update_transaction_status( $request['parent_txn_id'], $request['reason_code'] );
 					break;
 
 			endswitch;
 
 		} catch ( Exception $e ) {
-			
+
 			// What are we going to do here?
-			
+
 		}
 	}
-	
+
 }
 add_action( 'it_exchange_webhook_it_exchange_paypal-standard', 'it_exchange_paypal_standard_addon_process_webhook' );
 
@@ -412,7 +411,7 @@ function it_exchange_paypal_standard_addon_update_transaction_status( $paypal_st
 		$current_status = it_exchange_get_transaction_status( $transaction );
 		if ( $new_status !== $current_status )
 			it_exchange_update_transaction_status( $transaction, $new_status );
-	}	
+	}
 }
 
 /**
@@ -424,8 +423,8 @@ function it_exchange_paypal_standard_addon_add_refund_to_transaction( $paypal_st
 	$transactions = it_exchange_paypal_standard_addon_get_transaction_id( $paypal_standard_id );
 	foreach( $transactions as $transaction ) { //really only one
 		it_exchange_add_refund_to_transaction( $transaction, number_format( abs( $refund ), '2', '.', '' ) );
-	}	
-	
+	}
+
 }
 
 /**
@@ -439,7 +438,7 @@ function it_exchange_paypal_standard_addon_add_refund_to_transaction( $paypal_st
 function it_exchange_paypal_standard_addon_transaction_status_label( $status ) {
 
 	switch ( $status ) {
-	
+
 		case 'Completed':
 		case 'Success':
 			return __( 'Paid', 'LION' );
@@ -450,9 +449,9 @@ function it_exchange_paypal_standard_addon_transaction_status_label( $status ) {
 			return __( 'Buyer Complaint', 'LION' );
 		default:
 			return __( 'Unknown', 'LION' );
-		
+
 	}
-	
+
 }
 add_filter( 'it_exchange_transaction_status_label_paypal-standard', 'it_exchange_paypal_standard_addon_transaction_status_label' );
 
@@ -493,7 +492,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 	var $error_message;
 
 	/**
- 	 * Class constructor
+	 * Class constructor
 	 *
 	 * Sets up the class.
 	 * @since 0.4.0
@@ -507,7 +506,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		if ( ! empty( $_POST ) && $this->_is_admin && 'it-exchange-addons' == $this->_current_page && 'paypal-standard' == $this->_current_add_on ) {
 			$this->save_settings();
 		}
-		
+
 	}
 
 	function print_settings_page() {
@@ -519,12 +518,12 @@ class IT_Exchange_PayPal_Standard_Add_On {
 			'action'  => 'admin.php?page=it-exchange-addons&add-on-settings=paypal-standard',
 		);
 		$form         = new ITForm( $form_values, array( 'prefix' => 'it-exchange-add-on-paypal_standard' ) );
-	
+
 		if ( ! empty ( $this->status_message ) )
 			ITUtility::show_status_message( $this->status_message );
 		if ( ! empty( $this->error_message ) )
 			ITUtility::show_error_message( $this->error_message );
-		
+
 		?>
 		<div class="wrap">
 			<?php $form->start_form( $form_options, 'it-exchange-paypal-standard-settings' ); ?>
@@ -539,15 +538,15 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		</div>
 		<?php
 	}
-	
-	function get_paypal_standard_payment_form_table( $form, $settings = array() ) {	
-		
+
+	function get_paypal_standard_payment_form_table( $form, $settings = array() ) {
+
 		$general_settings = it_exchange_get_option( 'settings_general' );
-		
+
 		if ( !empty( $settings ) )
 			foreach ( $settings as $key => $var )
 				$form->set_option( $key, $var );
-				
+
 		?>
 		<div class="it-exchange-addon-settings it-exchange-paypal-addon-settings">
 			<h3><?php _e( 'PayPal Web Standard Payment Settings', 'LION' ); ?></h3>
@@ -611,7 +610,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 	function save_settings() {
 		$defaults = it_exchange_get_option( 'addon_paypal_standard' );
 		$new_values = wp_parse_args( ITForm::get_post_data(), $defaults );
-		
+
 		// Check nonce
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'it-exchange-paypal-standard-settings' ) ) {
 			$this->error_message = __( 'Error. Please try again', 'LION' );
@@ -631,39 +630,41 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		do_action( 'it_exchange_save_add_on_settings_paypal-standard' );
 
 	}
-	
+
 	function paypal_standard_save_wizard_settings() {
 		if ( empty( $_REQUEST['it_exchange_settings-wizard-submitted'] ) )
 			return;
-			
+
 		$paypal_standard_settings = array();
-		
+
 		$default_wizard_paypal_standard_settings = apply_filters( 'default_wizard_paypal-standard_settings', array( 'paypal-standard-live-email-address', 'paypal-standard-live-api-username', 'paypal-standard-live-api-password', 'paypal-standard-live-api-signature', 'paypal-standard-sandbox-email-address', 'paypal-standard-sandbox-api-username', 'paypal-standard-sandbox-api-password', 'paypal-standard-sandbox-api-signature',  'paypal-standard-sandbox-mode', ) );
-		
+
 		foreach( $default_wizard_paypal_standard_settings as $var ) {
-		
+
 			if ( isset( $_REQUEST['it_exchange_settings-' . $var] ) ) {
-				$paypal_standard_settings[$var] = $_REQUEST['it_exchange_settings-' . $var];	
+				$paypal_standard_settings[$var] = $_REQUEST['it_exchange_settings-' . $var];
 			}
-			
+
 		}
-		
+
 		$settings = wp_parse_args( $paypal_standard_settings, it_exchange_get_option( 'addon_paypal_standard' ) );
-		
+
 		if ( ! empty( $this->error_message ) || $error_msg = $this->get_form_errors( $settings ) ) {
-			
+
 			if ( ! empty( $error_msg ) ) {
-				
+
 				$this->error_message = $error_msg;
 				return;
-				
+
 			}
-				
+
 		} else {
+
 			it_exchange_save_option( 'addon_paypal_standard', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
+
 		}
-		
+
 	}
 
 	/**
@@ -675,7 +676,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 	 * @return void
 	*/
 	function get_form_errors( $values ) {
-				
+
 		$errors = array();
 		if ( empty( $values['paypal-standard-live-email-address'] ) )
 			$errors[] = __( 'Please include your PayPal Email Address', 'LION' );
@@ -685,7 +686,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 			$errors[] = __( 'Please include your PayPal API password', 'LION' );
 		if ( empty( $values['paypal-standard-live-api-signature'] ) )
 			$errors[] = __( 'Please include your PayPal API signature', 'LION' );
-			
+
 		if ( !empty( $values['paypal-standard-sandbox-mode' ] ) ) {
 			if ( empty( $values['paypal-standard-sandbox-email-address'] ) )
 				$errors[] = __( 'Please include your PayPal Sandbox Email Address', 'LION' );
