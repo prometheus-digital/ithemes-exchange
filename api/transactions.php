@@ -594,7 +594,7 @@ function it_exchange_get_transaction_customer_admin_profile_url( $transaction, $
 function it_exchange_get_transaction_order_number( $transaction ) {
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
 		return false;
-	$order_number = __( 'Order ', 'LION' ) . sprintf( '%06d', $transaction->ID );
+	$order_number = __( 'Order #', 'LION' ) . sprintf( '%06d', $transaction->ID );
 	return apply_filters( 'it_exchange_get_transaction_order_number', $order_number, $transaction );
 }
 

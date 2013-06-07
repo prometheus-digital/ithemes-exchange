@@ -524,7 +524,7 @@ class IT_Exchange_Admin {
 			'receipt-email-template'     => __( "Hello {name},
 
 Thank you for your order. Your order's details are below.
-<h1>Order: #{receipt_id}</h1>
+<h1>{receipt_id}</h1>
 {order_table}
 {download_list}", 'LION' ),
 		);
