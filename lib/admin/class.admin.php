@@ -499,6 +499,7 @@ class IT_Exchange_Admin {
 	function set_general_settings_defaults( $values ) {
 		$defaults = array(
 			'default-currency'             => 'USD',
+			'currency-symbol-position'     => 'before',
 			'currency-thousands-separator' => ',',
 			'currency-decimals-separator'  => '.',
 			'site-registration'            => 'it',

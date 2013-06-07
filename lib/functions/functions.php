@@ -68,11 +68,11 @@ function it_exchange_format_price( $price ) {
 	$settings = it_exchange_get_option( 'settings_general' );
 	$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
 	
-	if ( 'before' === $settings['currency-symbol-position'] )
-		$before = $currency['symbol'];
-	else
+	if ( 'after' === $settings['currency-symbol-position'] )
 		$after = $currency['symbol'];
-	
+	else
+		$before = $currency['symbol'];
+			
 	return $before . number_format( $price, 2, $settings['currency-decimals-separator'], $settings['currency-thousands-separator'] ) . $after;
 }
 
