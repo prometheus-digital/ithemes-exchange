@@ -854,6 +854,22 @@ Thank you for your order. Your order's details are below.
 			it_exchange_save_option( 'settings_general', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
+				
+		if ( !empty( $_REQUEST['it_exchange_settings-exchange-notifications'] )
+			&& !empty( $_REQUEST['it_exchange_settings-company-email'] ) 
+			&& is_email( trim( $_REQUEST['it_exchange_settings-company-email'] ) ) ) {
+		
+			$mailchimp = 'http://ithemes.us2.list-manage.com/subscribe/post?u=7acf83c7a47b32c740ad94a4e&amp;id=9da0741ac0';
+			
+			$query = array(
+				'body' => array(
+					'EMAIL' => trim( $_REQUEST['it_exchange_settings-company-email'] ),
+				),
+			);
+		
+			wp_remote_post( $mailchimp, $query );
+			
+		}
 		
 		do_action( 'it_exchange_save_wizard_settings' );
 		
