@@ -46,7 +46,7 @@
 		
 			<?php if ( $can_edit_purchase_quantity ) : ?>
 				<div class="cart-action update-quantity">
-					<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-quantity', 'focus' => 'quantity', 'label' => it_exchange_is_multi_item_cart_allowed() ? __( 'View Cart', 'LION' ) : __( 'Quantity', 'LION' ) ) ); ?>
+					<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-quantity', 'focus' => 'quantity', 'label' => __( 'Quantity', 'LION' ) ) ); ?>
 				</div>
 			<?php endif; ?>
 		</div>

@@ -30,6 +30,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		'checkout'      => 'checkout_cart',
 		'empty'         => 'empty_cart',
 		'multipleitems' => 'multiple_items',
+		'itemcount'     => 'item_count',
 		'focus'         => 'focus',
 	);
 
@@ -270,6 +271,17 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	*/
 	function multiple_items( $options=array() ) {
 		return it_exchange_is_multi_item_cart_allowed();
+	}
+
+	/**
+	 * Returns the number of items in the cart
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return integer
+	*/
+	function item_count() {
+		return it_exchange_get_cart_products_count();
 	}
 
 	/**

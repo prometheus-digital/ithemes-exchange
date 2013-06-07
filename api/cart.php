@@ -310,6 +310,17 @@ function it_exchange_get_cart_product_quantity( $product ) {
 }
 
 /**
+ * Returns the number of items in the cart (not including quantity for individual items)
+ *
+ * @since 0.4.0
+ *
+ * @return integer
+*/
+function it_exchange_get_cart_products_count() {
+	return absint( count( it_exchange_get_cart_products() ) );
+}
+
+/**
  * Returns the base_price for the cart product
  *
  * Other add-ons may modify this on the fly based on the product's itemized_data and additional_data arrays

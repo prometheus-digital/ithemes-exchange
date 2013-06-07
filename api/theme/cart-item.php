@@ -77,7 +77,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		$var_key = it_exchange_get_field_name( 'remove_product_from_cart' );
 		$var_value = $this->_cart_item['product_cart_id'];
-		$core_class = it_exchange_is_multi_item_cart_allowed() ? 'remove-cart-item' : 'it-exchange-empty-cart';
+		$core_class = ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_cart_products_count() > 1 ) ? 'remove-cart-item' : 'it-exchange-empty-cart';
 		$class = empty( $options['class'] ) ? $core_class : $core_class . ' ' . esc_attr( $options['class'] );
 
 		switch ( $options['format'] ) {

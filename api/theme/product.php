@@ -766,7 +766,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$options['edit-quantity'] = $options['buy-now-edit-quantity'];
 
 		// Add buy-now form to output if product is available for purchase and template asked for it.
-		if ( $product_in_stock && $product_is_available && ( empty( $options['type'] ) || 'buy-now' == $options['type'] ) )
+		if ( $product_in_stock && $product_is_available && ( empty( $options['type'] ) && ! it_exchange_get_cart_products_count() || 'buy-now' == $options['type'] ) )
 			$output .= it_exchange( 'product', 'get-buy-now', $options );
 
 		// Set add-to-cart options
