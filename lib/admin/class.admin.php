@@ -519,14 +519,16 @@ class IT_Exchange_Admin {
 		$defaults = array(
 			'receipt-email-address'      => get_bloginfo( 'admin_email' ),
 			'receipt-email-name'         => get_bloginfo( 'name' ),
-			'receipt-email-subject'      => sprintf( __( 'Receipt for Purchase: %s', 'LION' ), '{receipt_id}' ),
+			'receipt-email-subject'      => sprintf( __( 'Receipt for Purchase: %s', 'LION' ), '[it_exchange_email show=receipt_id]' ),
 			'notification-email-address' => get_bloginfo( 'admin_email' ),
-			'receipt-email-template'     => __( "Hello {name},
+			'receipt-email-template'     => sprintf( __( "Hello %s,
 
 Thank you for your order. Your order's details are below.
-<h1>{receipt_id}</h1>
-{order_table}
-{download_list}", 'LION' ),
+%s
+
+%s
+
+%s", 'LION' ), '[it_exchange_email show=name]', '[it_exchange_email show=receipt_id]', '[it_exchange_email show=order_table options=purchase_message]', '[it_exchange_email show=download_list]' ),
 		);
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;
