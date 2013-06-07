@@ -28,6 +28,19 @@ function it_exchange_get_product_type( $post=false ) {
 }
 
 /**
+ * Returns the name for a registered product-type
+ *
+ * @since 0.3.2
+ * @param string $product_type  slug for the product-type
+*/
+function it_exchange_get_product_type_name( $product_type ) {
+	if ( $addon = it_exchange_get_addon( $product_type ) )
+		return $addon['name'];
+	
+	return false;
+}
+
+/**
  * Returns the options array for a registered product-type
  *
  * @since 0.3.2
@@ -67,12 +80,19 @@ function it_exchange_get_products( $args=array() ) {
 	);
 
 	$args = wp_parse_args( $args, $defaults );
-
+	
 	if ( ! empty( $args['product_type'] ) ) {
 		$meta_query = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
 		$meta_query[] = array( 
 			'key'   => '_it_exchange_product_type',
 			'value' => $args['product_type'],
+		);
+		$args['meta_query'] = $meta_query;
+	} else { //we only want to get enabled product-type products
+		$meta_query = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
+		$meta_query[] = array( 
+			'key'   => '_it_exchange_product_type',
+			'value' => array_keys( it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ),
 		);
 		$args['meta_query'] = $meta_query;
 	}

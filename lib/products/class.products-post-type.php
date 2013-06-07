@@ -37,8 +37,41 @@ class IT_Exchange_Product_Post_Type {
 		add_action( 'it_exchange_add_on_disabled', array( $this, 'maybe_disable_product_type_posts' ) );
 		add_filter( 'request', array( $this, 'modify_wp_query_request_on_edit_php' ) );
 		add_filter( 'wp_insert_post_empty_content', array( $this, 'wp_insert_post_empty_content' ), 20, 2 );
+
+		if ( is_admin() && !empty( $_REQUEST['post_type'] ) && 'it_exchange_prod' === $_REQUEST['post_type'] )
+			add_action( 'pre_get_posts', array( $this, 'remove_disabled_product_types_from_admin_list' ) );
+
 	}
 	
+	/**
+	 * Removed disabled product-types from the list
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function remove_disabled_product_types_from_admin_list( $query ) {
+		
+		if ( is_admin() && !empty( $query->post_type ) && 'it_exchange_prod' === $query->post_type ) {
+					
+			$meta_query = array(
+				'key'   => '_it_exchange_product_type',
+				'value' => array_keys( it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ),
+			);
+	
+			$query->set( 'tax_query', array( $meta_query )  );
+			
+		}
+		
+	}
+	
+	/**
+	 * Allows empty title/description/excerpt products to be published to WP
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
 	function wp_insert_post_empty_content( $maybe_empty, $postarr ) {
 		
 		if ( !empty( $postarr['action'] ) && 'editpost' === $postarr['action']
@@ -644,6 +677,9 @@ class IT_Exchange_Product_Post_Type {
 		$columns['it_exchange_product_price']         = __( 'Price', 'LION' );
 		$columns['it_exchange_product_show_in_store'] = __( 'Show in Store', 'LION' );
 		$columns['it_exchange_product_purchases']     = __( 'Purchases', 'LION' );
+		
+		if ( 1 < count( it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ) )
+			$columns['it_exchange_product_type']          = __( 'Product Type', 'LION' );
 
 		return $columns;
 	}
@@ -676,6 +712,10 @@ class IT_Exchange_Product_Post_Type {
 		$sortables['it_exchange_product_price']         = 'it-exchange-product-price';
 		$sortables['it_exchange_product_show_in_store'] = 'it-exchange-product-show-in-store';
 		$sortables['it_exchange_product_purchases']     = 'it-exchange-product-purchases';
+
+		//This will only show up if there are multiple product-type addons
+		$sortables['it_exchange_product_type']     = 'it-exchange-product-type';
+		
 		return $sortables;
 	}
 
@@ -702,6 +742,9 @@ class IT_Exchange_Product_Post_Type {
 			case 'it_exchange_product_purchases':
 				esc_attr_e( it_exchange_get_product_feature( $post->ID, 'purchases' ) );
 				break;
+			case 'it_exchange_product_type':
+				esc_attr_e( it_exchange_get_product_type_name( it_exchange_get_product_type( $post ) ) );
+				break;
 		}
 	}
 
@@ -725,6 +768,10 @@ class IT_Exchange_Product_Post_Type {
 					case 'it-exchange-product-show-in-store':
 						$request['orderby'] = 'meta_value';
 						$request['meta_key'] = '_it-exchange-visibility';
+						break;
+					case 'it-exchange-product-type':
+						$request['orderby'] = 'meta_value';
+						$request['meta_key'] = '_it-exchange-product-type';
 						break;
 				}
 			}
