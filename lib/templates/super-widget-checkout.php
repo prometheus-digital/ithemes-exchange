@@ -17,7 +17,7 @@
 					<?php if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ): ?>
 		 				<div class="cart-discount">
 		 					<?php while( it_exchange( 'coupons', 'applied', array( 'type' => 'cart' ) ) ) : ?>
-								<?php it_exchange( 'coupons', 'discount' ); ?> <?php _e( 'OFF', 'LION' ); ?> &#61; <?php it_exchange( 'cart', 'total' ); ?>
+								<?php it_exchange( 'coupons', 'discount-label' ); ?> <?php _e( 'OFF', 'LION' ); ?> &#61; <?php it_exchange( 'cart', 'total' ); ?>
 		 					<?php endwhile; ?>
 						</div>
 	 				<?php endif; ?>
