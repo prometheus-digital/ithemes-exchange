@@ -13,6 +13,8 @@ input[type="email"]:focus,
 input[type="password"]:focus,
 textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
 
+input[type="checkbox"] + label{display:inline !important;}
+
 /** -----------------------------------------------------:[ datepicker ]:---------- */
 .ui-datepicker{overflow:hidden;display:none;background:#FFF;border-radius:2px;box-shadow:0 4px 20px rgba(0,0,0,.2);font-size:16px;}
 .ui-datepicker *,
