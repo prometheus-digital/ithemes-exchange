@@ -1,6 +1,6 @@
 <?php
 /**
- * This add-on will associate files with any product that registers support for digital-downloads 
+ * This add-on will associate files with any product that registers support for digital-downloads
  * By default, it registers a metabox on the product's add/edit screen and provides HTML / data for the frontend.
  *
  * @since 0.3.8
@@ -21,13 +21,13 @@ add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_init_digital_downl
  * @since 0.3.8
 */
 function it_exchange_init_digital_downloads_addon() {
-    // Register the product feature
-    $this_addon  = it_exchange_get_addon( 'digital-downloads' );
-    $slug        = $this_addon['slug'];
-    $description = $this_addon['description'];
-    it_exchange_register_product_feature( $slug, $description );
+	// Register the product feature
+	$this_addon  = it_exchange_get_addon( 'digital-downloads' );
+	$slug        = $this_addon['slug'];
+	$description = $this_addon['description'];
+	it_exchange_register_product_feature( $slug, $description );
 
-    // Add it to the digital-downloads-product type only 
+	// Add it to the digital-downloads-product type only
 	it_exchange_add_feature_support_to_product_type( $this_addon['slug'], 'digital-downloads-product-type' );
 }
 
@@ -42,7 +42,7 @@ function it_exchange_digital_downloads_addon_init_digital_downloads_metaboxes() 
 	if ( ! $product_addons = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) )
 		return;
 
-	// Loop through product types and register a metabox if it supports digital-downloads 
+	// Loop through product types and register a metabox if it supports digital-downloads
 	foreach( $product_addons as $slug => $args ) {
 		if ( it_exchange_product_type_supports_feature( $slug, 'digital-downloads' ) )
 			add_action( 'it_exchange_product_metabox_callback_' . $slug, 'it_exchange_digital_downloads_addon_register_metabox' );
@@ -52,7 +52,7 @@ function it_exchange_digital_downloads_addon_init_digital_downloads_metaboxes() 
 /**
  * Registers the downloads metabox for a specific product type
  *
- * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports digital_downloads 
+ * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports digital_downloads
  *
  * @since 0.3.8
  * @return void
@@ -114,7 +114,7 @@ function it_exchange_digital_downloads_addon_save_files_on_product_save() {
 
 	// Get new value from post
 	$new_value = $_POST['it-exchange-digital-downloads'];
-	
+
 	// Save new value
 	it_exchange_update_product_feature( $product_id, 'digital_downloads', $new_value );
 }
@@ -122,7 +122,7 @@ function it_exchange_digital_downloads_addon_save_files_on_product_save() {
 /**
  * This updates the product files for a product
  *
- * @todo Validate product id and new value 
+ * @todo Validate product id and new value
  *
  * @since 0.3.8
  * @param integer $product_id the product id
