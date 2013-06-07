@@ -440,37 +440,41 @@ class IT_Exchange_Transaction_Post_Type {
 			// Grab the version of the product currently in the DB
 			$db_product = it_exchange_get_product( $transaction_product );
 
-			// Grab all downloads associated with this product
-			$downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' );
-
 			// Echo the product's title
-			echo it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) . '<br />';
+			echo '<p>' . it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) . '</p>';
 
-			// Loop through the downloads, print their title and their meta data
-			foreach( $downloads as $download_id => $download_data ) {
-				echo '<p>';
-				// Download Title
-				echo get_the_title( $download_id ) . '<br />';
-
-				// Expiration date if it exists
-				$expiration_date = it_exchange_get_download_data_from_transaction_product( $post->ID, $transaction_product, $download_id, 'expiration_date' );
-
-				// Download limit (number of downloads remaining for this hash)
-				$download_limit  = it_exchange_get_download_data_from_transaction_product( $post->ID, $transaction_product, $download_id, 'download_limit' );
-
-				// Download count (how many times has the download already been downloaded)
-				$download_count  = it_exchange_get_download_data_from_transaction_product( $post->ID, $transaction_product, $download_id, 'downloads' );
-
-				if ( $expiration_date )
-					echo 'Expiration Date: ' . esc_attr( $expiration_date ) . '<br />';
-
-				if ( $download_limit )
-					echo 'Downloads Remaining: ' . esc_attr( $download_limit ) . '<br />';
-
-				if ( $downloads )
-					echo 'Downloads Count: ' . esc_attr( $download_count ) . '<br />';
-
-				echo '</p>';
+			// Grab all downloads associated with this product
+			if ( $downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) {
+				// Loop through the downloads, print their title and their meta data
+				foreach( $downloads as $download_id => $download_data ) {
+					echo '<p>';
+					// Download Title
+					echo get_the_title( $download_id ) . '<br />';
+	
+					// Expiration date if it exists
+					$expiration_date = it_exchange_get_download_data_from_transaction_product( $post->ID, $transaction_product, $download_id, 'expiration_date' );
+	
+					// Download limit (number of downloads remaining for this hash)
+					$download_limit  = it_exchange_get_download_data_from_transaction_product( $post->ID, $transaction_product, $download_id, 'download_limit' );
+	
+					// Download count (how many times has the download already been downloaded)
+					$download_count  = it_exchange_get_download_data_from_transaction_product( $post->ID, $transaction_product, $download_id, 'downloads' );
+	
+					if ( $expiration_date )
+						echo __( 'Expiration Date:', 'LION' ) . ' ' . esc_attr( $expiration_date ) . '<br />';
+	
+					if ( $download_limit )
+						echo __( 'Downloads Remaining:', 'LION' ) . ' ' . esc_attr( $download_limit ) . '<br />';
+	
+					if ( $downloads )
+						echo __( 'Downloads Count:', 'LION' ) . ' ' . esc_attr( $download_count ) . '<br />';
+	
+					echo '</p>';
+				}
+			} else {
+			
+				echo '<p>' . __( 'This product does not contain any downloads', 'LION' ) . '</p>';
+				
 			}
 		}
 	}
