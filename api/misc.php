@@ -227,6 +227,34 @@ if ( !function_exists( 'wp_nav_menu_disabled_check' ) && version_compare( $GLOBA
 
 }
 
+/**
+ * Is the the current view
+ *
+ * @since 0.4.0
+ *
+ * @param string $view the exchange view were checking for
+ * @return boolean
+*/
+function it_exchange_is_view( $view ) {
+	global $wpdb;
+	// Get query var
+	$query_var = get_query_var( $view );
+
+	// Return true if set and not product
+	if ( $query_var && 'product' != $view )
+		return true;
+
+	// Are we doing AJAX, if so, grab product ID from it.
+	if ( ! empty( $_GET['it-exchange-sw-ajax'] ) && ! empty( $_GET['sw-product'] ) ) {
+		return (boolean) it_exchange_get_product( $_GET['sw-product'] );
+	} else {
+		// Try to get the post from the slug
+		$sql = $wpdb->prepare( 'SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = "it_exchange_prod" AND post_status = "publish" AND post_name = "%s"', $query_var );
+		if ( $id = $wpdb->get_var( $sql ) )
+			return true;
+	}
+	return false;
+}
 
 /**
  * Returns currency data

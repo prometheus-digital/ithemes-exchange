@@ -58,7 +58,7 @@
 				</div>
 			<?php endif; ?>
 			
-			<?php if ( ! it_exchange_is_multi_item_cart_allowed() ) : ?>
+			<?php if ( ! it_exchange_is_multi_item_cart_allowed() || ( it_exchange_is_multi_item_cart_allowed() && it_exchange( 'cart', 'get-item-count' ) < 2 ) ) : ?>
 				<div class="cart-actions-wrapper">
 					<div class="cart-action cancel-action">
 						<?php it_exchange( 'cart', 'checkout', array( 'label' => __( 'Cancel', 'LION' ), 'class' => 'cancel-update' ) ); ?>

@@ -95,14 +95,6 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		// Print widget
 		echo $args['before_widget'];
 			?>
-			<!--
-			<p>
-				Temp menu for testing states<br />
-				<?php foreach( $this->valid_states as $state ) : ?>
-					<a class="it-exchange-test-load-state-via-ajax" data-it-exchange-sw-state="<?php esc_attr_e( $state ); ?>" href="?ite-sw-state=<?php esc_attr_e( $state ); ?>"><?php esc_attr_e( $state ); ?></a><br />
-				<?php endforeach; ?>
-			</p>
-			-->
 			<div class="it-exchange-super-widget it-exchange-super-widget-<?php esc_attr_e( $this->get_state() ); ?>">
 				<?php it_exchange_get_template_part( 'super-widget', $this->get_state() ); ?>
 			</div>
@@ -212,19 +204,23 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		// Get state from REQUEST
 		$requested_state = empty( $_REQUEST['ite-sw-state'] ) ? false : $_REQUEST['ite-sw-state'];
 		$user_logged_in = is_user_logged_in();
-		$multi_item_cart = it_exchange_is_multi_item_cart_allowed();
+		$multi_item_cart_allowed = it_exchange_is_multi_item_cart_allowed();
 		$items_in_cart = (bool) it_exchange_get_cart_products();
 		$product_page = 'product' == get_query_var( 'it_exchange_view' );
 
 		// Set state to requested state
 		$state = $requested_state;
 
-		// If cart has item in it and multi-item cart is disabled, and we're not on a product page or the product page is the same as the item in the cart, show cart
-		if ( $items_in_cart && ! $multi_item_cart ) {
+		// If cart has item in SW and multi-item cart is disabled, and we're not on a product page or the product page is the same as the item in the cart, show cart
+		if ( $items_in_cart ) {
 			
 			// Don't set state to checkout if on one of the following requested states
-			if ( 'cart' != $requested_state && 'login' != $requested_state && 'registration' != $requested_state )
-				$state = 'checkout';
+			if ( 'cart' != $requested_state && 'login' != $requested_state && 'registration' != $requested_state ) {
+				if ( $multi_item_cart_allowed )
+					$state = 'product';
+				else
+					$state = 'checkout';
+			}
 
 			// If we're on a product page other than the product that is in the cart, set state to 'product'
 			$cart_product = reset( it_exchange_get_cart_products() );
