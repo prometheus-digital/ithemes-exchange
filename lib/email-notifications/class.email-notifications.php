@@ -102,9 +102,8 @@ class IT_Exchange_Email_Notifications {
 		$headers[] = 'charset=utf-8';
 		
 		$subject = $this->replace_template_tags( $settings['receipt-email-subject'] );
-		$body  = $this->body_header();
-		$body .= wpautop( $this->replace_template_tags( $settings['receipt-email-template'] ) );
-		$body .= $this->body_footer();
+		$body  = $this->body_header() . wpautop( $this->replace_template_tags( $settings['receipt-email-template'] ) ) . $this->body_footer();
+
 		
 		wp_mail( $this->user->user_email, strip_tags( $subject ), $body, $headers );
 		
@@ -123,10 +122,10 @@ class IT_Exchange_Email_Notifications {
 <h1>{receipt_id}</h1>
 {order_table}", 'LION' )
 			);
+				
+			$subject = $this->replace_template_tags( $subject );
 			
-			$body  = $this->body_header();
-			$body .= wpautop( $body );
-			$body .= $this->body_footer();
+			$body  = $this->body_header() . wpautop( $this->replace_template_tags( $body ) ) . $this->body_footer();
 			
 			$emails = split( ',', $settings['notification-email-address'] );
 			
