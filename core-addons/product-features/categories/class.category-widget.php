@@ -50,17 +50,17 @@ class IT_Exchange_Category_Widget extends WP_Widget {
 /* ]]> */
 </script>
 
-<?php
+		<?php
 		} else {
-?>
+		?>
 			<ul>
-<?php
+			<?php
 			$cat_args['title_li'] = '';
 			$cat_args['taxonomy'] = 'it_exchange_category';
 			wp_list_categories(apply_filters('it_exchange_widget_categories_args', $cat_args));
-?>
+			?>
 			</ul>
-<?php
+		<?php
 		}
 
 		echo $after_widget;
@@ -83,7 +83,7 @@ class IT_Exchange_Category_Widget extends WP_Widget {
 		$count = isset($instance['count']) ? (bool) $instance['count'] :false;
 		$hierarchical = isset( $instance['hierarchical'] ) ? (bool) $instance['hierarchical'] : false;
 		$dropdown = isset( $instance['dropdown'] ) ? (bool) $instance['dropdown'] : false;
-?>
+		?>
 		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'LION' ); ?></label>
 		<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></p>
 
