@@ -43,19 +43,19 @@ function it_exchange_register_multi_item_cart_checkout_rewrites( $existing ) {
 	}
 
 	$custom = array(
-		'cart' => array(
-			'slug'     => 'cart',
-			'name'     => __( 'Shopping Cart', 'LION' ),
-			'rewrites' => $cart_rewrites,
+		'cart'     => array(
+			'slug'                      => 'cart',
+			'name'                      => __( 'Shopping Cart', 'LION' ),
+			'rewrites'                  => $cart_rewrites,
 			'include_in_settings_pages' => true,
-			'url'      => $cart_url,
+			'url'                       => $cart_url,
 		),
 		'checkout' => array(
-			'slug'     => 'checkout',
-			'name'     => __( 'Checkout', 'LION' ),
-			'rewrites' => $checkout_rewrites,
+			'slug'                      => 'checkout',
+			'name'                      => __( 'Checkout', 'LION' ),
+			'rewrites'                  => $checkout_rewrites,
 			'include_in_settings_pages' => true,
-			'url'      => $checkout_url,
+			'url'                       => $checkout_url,
 		),
 	);
 	$existing = array_merge( $custom, $existing );

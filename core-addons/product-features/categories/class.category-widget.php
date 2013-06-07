@@ -53,13 +53,13 @@ class IT_Exchange_Category_Widget extends WP_Widget {
 <?php
 		} else {
 ?>
-		<ul>
+			<ul>
 <?php
-		$cat_args['title_li'] = '';
-		$cat_args['taxonomy'] = 'it_exchange_category';
-		wp_list_categories(apply_filters('it_exchange_widget_categories_args', $cat_args));
+			$cat_args['title_li'] = '';
+			$cat_args['taxonomy'] = 'it_exchange_category';
+			wp_list_categories(apply_filters('it_exchange_widget_categories_args', $cat_args));
 ?>
-		</ul>
+			</ul>
 <?php
 		}
 
@@ -67,11 +67,11 @@ class IT_Exchange_Category_Widget extends WP_Widget {
 	}
 
 	function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
-		$instance['title'] = strip_tags($new_instance['title']);
-		$instance['count'] = !empty($new_instance['count']) ? 1 : 0;
+		$instance                 = $old_instance;
+		$instance['title']        = strip_tags($new_instance['title']);
+		$instance['count']        = !empty($new_instance['count']) ? 1 : 0;
 		$instance['hierarchical'] = !empty($new_instance['hierarchical']) ? 1 : 0;
-		$instance['dropdown'] = !empty($new_instance['dropdown']) ? 1 : 0;
+		$instance['dropdown']     = !empty($new_instance['dropdown']) ? 1 : 0;
 
 		return $instance;
 	}

@@ -7,7 +7,7 @@
  */
 
 if ( !function_exists( 'create_it_exchange_categories' ) ) {
-		
+
 	/**
 	 * Registers iThemes Exchange Product Category Taxonomy
 	 *
@@ -15,32 +15,32 @@ if ( !function_exists( 'create_it_exchange_categories' ) ) {
 	 * @uses register_taxonomy()
 	 */
 	function it_exchange_categories_addon_create() {
-		
-	  $labels = array(
-			'name' 				=> __( 'Product Categories', 'LION' ),
-			'singular_name' 	=> __( 'Product Category', 'LION' ),
-			'search_items'		=> __( 'Search Product Categories', 'LION' ),
-			'all_items' 		=> __( 'All Product Categories', 'LION' ), 
-			'parent_item' 		=> __( 'Parent Product Categories', 'LION' ),
+
+		$labels = array(
+			'name'              => __( 'Product Categories', 'LION' ),
+			'singular_name'     => __( 'Product Category', 'LION' ),
+			'search_items'      => __( 'Search Product Categories', 'LION' ),
+			'all_items'         => __( 'All Product Categories', 'LION' ),
+			'parent_item'       => __( 'Parent Product Categories', 'LION' ),
 			'parent_item_colon' => __( 'Parent Product Categories:', 'LION' ),
-			'edit_item' 		=> __( 'Edit Product Categories', 'LION' ), 
-			'update_item' 		=> __( 'Update Product Categories', 'LION' ),
-			'add_new_item' 		=> __( 'Add New Product Categories', 'LION' ),
-			'new_item_name' 	=> __( 'New Product Category', 'LION' ),			
-		); 	
-	
+			'edit_item'         => __( 'Edit Product Categories', 'LION' ),
+			'update_item'       => __( 'Update Product Categories', 'LION' ),
+			'add_new_item'      => __( 'Add New Product Categories', 'LION' ),
+			'new_item_name'     => __( 'New Product Category', 'LION' ),
+		);
+
 		register_taxonomy(
-			'it_exchange_category', 
+			'it_exchange_category',
 			array( 'it_exchange_prod' ),
 			array(
-				'hierarchical' 	=> true,
-				'labels' 		=> $labels,
-				'show_ui' 		=> true,
-				'query_var' 	=> true,
-				'rewrite' 		=> array( 'slug' => 'product-category' ),
+				'hierarchical' => true,
+				'labels'       => $labels,
+				'show_ui'      => true,
+				'query_var'    => true,
+				'rewrite'      => array( 'slug' => 'product-category' ),
 			)
 		);
-		
+
 	}
 	add_action( 'init', 'it_exchange_categories_addon_create', 0 );
 
@@ -57,17 +57,17 @@ if ( !function_exists( 'it_exchange_category_addon_widget_init' ) ) {
 	 * @since 2.2.0
 	 */
 	function it_exchange_category_addon_widget_init() {
-	
+
 		include( 'class.category-widget.php' );
 		register_widget('IT_Exchange_Category_Widget');
-	
+
 	}
 	add_action( 'widgets_init', 'it_exchange_category_addon_widget_init', 1 );
-	
+
 }
 
 if ( !function_exists( 'it_exchange_categories_addon_add_menu_item' ) ) {
-			
+
 	/**
 	 * This adds a menu item to the Exchange menu pointing to the WP All [post_type] table
 	 *
