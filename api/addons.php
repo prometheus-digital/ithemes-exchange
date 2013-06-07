@@ -304,6 +304,7 @@ function it_exchange_enable_addon( $add_on ) {
 		if ( it_exchange_save_option( 'enabled_add_ons', $enabled ) ) {
 			require( $registered[$add_on]['file'] );
 			do_action( 'it_exchange_add_on_enabled', $registered[$add_on] );
+			update_option( '_it-exchange-flush-rewrites', true );
 			return $enabled;
 		}
 	}
@@ -359,6 +360,7 @@ function it_exchange_disable_addon( $add_on ) {
 		if ( it_exchange_save_option( 'enabled_add_ons', $enabled_addons ) ) {
 			if ( ! empty( $registered[$add_on] ) )
 				do_action( 'it_exchange_add_on_disabled', $registered[$add_on] );
+			update_option( '_it-exchange-flush-rewrites', true );
 			return $enabled_addons;
 		}
 	}
