@@ -1182,7 +1182,7 @@ Thank you for your order. Your order's details are below.
 			wp_enqueue_style( 'it-exchange-coupons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/coupons.css' );
 		} else if ( 'exchange_page_it-exchange-settings' === $hook_suffix ) {
 			wp_enqueue_style( 'it-exchange-settings', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/settings.css' );
-		} else if ( 'user-edit.php' === $hook_suffix && isset( $_REQUEST['it_exchange_customer_data'] ) ) {
+		} else if ( ( 'profile.php' === $hook_suffix || 'user-edit.php' === $hook_suffix ) && isset( $_REQUEST['it_exchange_customer_data'] ) ) {
 			wp_enqueue_style( 'it-exchange-customer-info', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/customer-info.css' );
 		}
 	}
