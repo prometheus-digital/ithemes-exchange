@@ -38,7 +38,7 @@ function offline_payments_print_wizard_settings( $form ) {
 	$settings = it_exchange_get_option( 'addon_offline_payments', true );
 	?>
 	<div class="field offline-payments-wizard hide-if-js">
-    <?php $IT_Exchange_Offline_Payments_Add_On->get_offline_payment_form_table( $form, $settings ); ?>
+	<?php $IT_Exchange_Offline_Payments_Add_On->get_offline_payment_form_table( $form, $settings ); ?>
 	</div>
 	<?php
 }
@@ -57,12 +57,12 @@ add_action( 'it_exchange_save_wizard_settings', 'offline_payments_save_wizard_se
  * @param string $name the name passed in from the WP filter API
  * @return string
 */
-function it_exchange_get_offline_payments_name( $name ) { 
-    $options = it_exchange_get_option( 'addon_offline_payments' );
-    if ( ! empty( $options['offline_payments_title'] ) ) 
-        $name = $options['offline_payments_title'];
+function it_exchange_get_offline_payments_name( $name ) {
+	$options = it_exchange_get_option( 'addon_offline_payments' );
+	if ( ! empty( $options['offline_payments_title'] ) )
+		$name = $options['offline_payments_title'];
 
-    return $name;
+	return $name;
 }
 
 /**
@@ -146,8 +146,8 @@ class IT_Exchange_Offline_Payments_Add_On {
 	 * @return void
 	*/
 	function IT_Exchange_Offline_Payments_Add_On() {
-		$this->_is_admin                      = is_admin();
-		$this->_current_page                 = empty( $_GET['page'] ) ? false : $_GET['page'];
+		$this->_is_admin       = is_admin();
+		$this->_current_page   = empty( $_GET['page'] ) ? false : $_GET['page'];
 		$this->_current_add_on = empty( $_GET['add-on-settings'] ) ? false : $_GET['add-on-settings'];
 
 		if ( ! empty( $_POST ) && $this->_is_admin && 'it-exchange-addons' == $this->_current_page && 'offline-payments' == $this->_current_add_on ) {
@@ -166,7 +166,7 @@ class IT_Exchange_Offline_Payments_Add_On {
 			'enctype' => apply_filters( 'it_exchange_add_on_offline_payments_settings_form_enctype', false ),
 			'action'  => 'admin.php?page=it-exchange-addons&add-on-settings=offline-payments',
 		);
-		$form         = new ITForm( $form_values, array( 'prefix' => 'it-exchange-add-on-offline-payments' ) );
+		$form = new ITForm( $form_values, array( 'prefix' => 'it-exchange-add-on-offline-payments' ) );
 
 		if ( ! empty ( $this->status_message ) )
 			ITUtility::show_status_message( $this->status_message );
@@ -174,14 +174,14 @@ class IT_Exchange_Offline_Payments_Add_On {
 			ITUtility::show_error_message( $this->error_message );
 		include( 'view-add-on-settings.php' );
 	}
-	
+
 	function get_offline_payment_form_table( $form, $settings = array() ) {
 		$default_status_options = IT_Exchange_Offline_Payments_Add_On::get_default_status_options();
-	
+
 		if ( !empty( $settings ) )
 			foreach ( $settings as $key => $var )
 				$form->set_option( $key, $var );
-				
+
 		?>
 		<h3><?php _e( 'Offline Payment Settings', 'LION' ); ?></h3>
 		<table class="form-table">
@@ -237,39 +237,39 @@ class IT_Exchange_Offline_Payments_Add_On {
 			$this->status_message = __( 'Settings not saved.', 'LION' );
 		}
 	}
-	
+
 	function offline_payments_save_wizard_settings() {
 		if ( !isset( $_REQUEST['it_exchange_settings-wizard-submitted'] ) )
 			return;
-			
+
 		$offline_payments_settings = array();
-		
+
 		$default_wizard_offline_payments_settings = apply_filters( 'default_wizard_offline_payments_settings', array( 'offline-payments-title', 'offline-payments-instructions', 'offline-payments-default-status' ) );
-		
+
 		foreach( $default_wizard_offline_payments_settings as $var ) {
-		
+
 			if ( isset( $_REQUEST['it_exchange_settings-' . $var] ) ) {
-				$offline_payments_settings[$var] = $_REQUEST['it_exchange_settings-' . $var];	
+				$offline_payments_settings[$var] = $_REQUEST['it_exchange_settings-' . $var];
 			}
-			
+
 		}
-		
+
 		$settings = wp_parse_args( $offline_payments_settings, it_exchange_get_option( 'addon_offline_payments' ) );
-		
+
 		if ( ! empty( $this->error_message ) || $error_msg = $this->get_form_errors( $settings ) ) {
-			
+
 			if ( ! empty( $error_msg ) ) {
-				
+
 				$this->error_message = $error_msg;
 				return;
-				
+
 			}
-				
+
 		} else {
 			it_exchange_save_option( 'addon_offline_payments', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
-		
+
 	}
 
 	/**
