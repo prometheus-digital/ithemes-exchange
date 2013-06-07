@@ -22,36 +22,36 @@ add_action( 'wp_enqueue_scripts', 'it_exchange_stripe_addon_enqueue_script' );
  * @param object $transaction_object The transaction object
 */
 function it_exchange_stripe_addon_process_transaction( $status, $transaction_object ) {
- 
+
 	// If this has been modified as true already, return.
 	if ( $status )
 		return $status;
-	
+
 	// Verify nonce
 	if ( ! empty( $_REQUEST['_stripe_nonce'] ) && ! wp_verify_nonce( $_REQUEST['_stripe_nonce'], 'stripe-checkout' ) ) {
 		it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'LION' ) );
 		return false;
 	}
-	
+
 	// Make sure we have the correct $_POST argument
 	if ( ! empty( $_POST['stripeToken'] ) ) {
-			
+
 		try {
-				
+
 			$general_settings = it_exchange_get_option( 'settings_general' );
 			$settings         = it_exchange_get_option( 'addon_stripe' );
 
 			$secret_key = ( $settings['stripe-test-mode'] ) ? $settings['stripe-test-secret-key'] : $settings['stripe-live-secret-key'];
 			Stripe::setApiKey( $secret_key );
-	
+
 			// Set stripe token
 			$token = $_POST['stripeToken'];
-			
+
 			// Set stripe customer from WP customer ID
 			$it_exchange_customer = it_exchange_get_current_customer();
 			if ( $stripe_id = it_exchange_stripe_addon_get_stripe_customer_id( $it_exchange_customer->id ) )
 				$stripe_customer = Stripe_Customer::retrieve( $stripe_id );
-				
+
 			// If the user has been deleted from Stripe, we need to create a new Stripe ID.
 			if ( ! empty( $stripe_customer ) ) {
 				if ( isset( $stripe_customer->deleted ) && true === $stripe_customer->deleted )
@@ -68,13 +68,13 @@ function it_exchange_stripe_addon_process_transaction( $status, $transaction_obj
 					'email' => $it_exchange_customer->data->user_email,
 					'card'  => $token,
 				);
-				
+
 				// Creates a new Stripe ID for this customer
 				$stripe_customer = Stripe_Customer::create( $customer_array );
 
 				it_exchange_stripe_addon_set_stripe_customer_id( $it_exchange_customer->id, $stripe_customer->id );
 			}
-					
+
 			// Now that we have a valid Customer ID, charge them!
 			$charge = Stripe_Charge::create(array(
 				'customer'    => $stripe_customer->id,
@@ -92,7 +92,7 @@ function it_exchange_stripe_addon_process_transaction( $status, $transaction_obj
 		it_exchange_add_message( 'error', __( 'Unknown error. Please try again later.', 'LION' ) );
 	}
 	return false;
-	
+
 }
 add_action( 'it_exchange_do_transaction_stripe', 'it_exchange_stripe_addon_process_transaction', 10, 2 );
 
@@ -146,7 +146,7 @@ function it_exchange_stripe_addon_print_wizard_settings( $form ) {
 	$settings = it_exchange_get_option( 'addon_stripe', true );
 	?>
 	<div class="field stripe-wizard hide-if-js">
-    <?php $IT_Exchange_Stripe_Add_On->get_stripe_payment_form_table( $form, $settings ); ?>
+		<?php $IT_Exchange_Stripe_Add_On->get_stripe_payment_form_table( $form, $settings ); ?>
 	</div>
 	<?php
 }
@@ -177,10 +177,10 @@ function it_exchange_stripe_addon_default_settings( $values ) {
 	$defaults = array(
 		'stripe-test-mode'            => false,
 		'stripe-live-secret-key'      => '',
-		'stripe-live-publishable-key' => '', 
+		'stripe-live-publishable-key' => '',
 		'stripe-test-secret-key'      => '',
-		'stripe-test-publishable-key' => '', 
-	);   
+		'stripe-test-publishable-key' => '',
+	);
 	$values = ITUtility::merge_defaults( $values, $defaults );
 	return $values;
 }
@@ -194,19 +194,19 @@ add_filter( 'it_storage_get_defaults_exchange_addon_stripe', 'it_exchange_stripe
  * @param array $options
  * @return string HTML button
 */
-function it_exchange_stripe_addon_make_payment_button( $options ) { 
-	
+function it_exchange_stripe_addon_make_payment_button( $options ) {
+
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$stripe_settings = it_exchange_get_option( 'addon_stripe' );
 	
 	$publishable_key = ( $stripe_settings['stripe-test-mode'] ) ? $stripe_settings['stripe-test-publishable-key'] : $stripe_settings['stripe-live-publishable-key'];
 
 	$products = it_exchange_get_cart_data( 'products' );
-	
+
 	$payment_form = '<form id="stripe_form" action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
 	$payment_form .= '<input type="hidden" name="it-exchange-transaction-method" value="stripe" />';
 	$payment_form .= wp_nonce_field( 'stripe-checkout', '_stripe_nonce', true, false );
-	
+
 	$payment_form .= '<div class="hide-if-no-js">';
 	$payment_form .= '<input type="submit" id="customButton" name="stripe_purchase" value="' . __( 'Purchase', 'LION' ) .'" />';
 	$payment_form .= '
@@ -216,7 +216,7 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 			var $stripeToken = jQuery(\'<input type=hidden name=stripeToken />\').val(res.id);
 			jQuery(\'form#stripe_form\').append($stripeToken).submit();
 		  };
-		
+
 		  StripeCheckout.open({
 			key:         "' . $publishable_key . '",
 			amount:      "' . number_format( it_exchange_get_cart_total( false ), 2, '', '' ) . '",
@@ -226,28 +226,28 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 			panelLabel:  "Checkout",
 			token:       token
 		  });
-		
+
 		  return false;
 		});
 		</script>
 	';
-			
+
 	$payment_form .= '</form>';
 	$payment_form .= '</div>';
-	
+
 	/*
 	 * Going to remove this for now. It should be
 	 * the responsibility of the site owner to
 	 * notify if Javascript is disabled, but I will
 	 * revisit this in case we want to a notifications.
-	 * 
+	 *
 	$payment_form .= '<div class="hide-if-js">';
-	
+
 	$payment_form .= '<h3>' . __( 'JavaScript disabled: Stripe Payment Gateway cannot be loaded!', 'LION' ) . '</h3>';
-	
+
 	$payment_form .= '</div>';
 	*/
-	
+
 	return $payment_form;
 }
 add_filter( 'it_exchange_get_stripe_make_payment_button', 'it_exchange_stripe_addon_make_payment_button', 10, 2 );
@@ -256,7 +256,7 @@ add_filter( 'it_exchange_get_stripe_make_payment_button', 'it_exchange_stripe_ad
  * Filters default currencies to only display those supported by Stripe
  *
  * @since 0.4.0
- * 
+ *
  * @param array $default_currencies Array of default currencies supplied by iThemes Exchange
  * @return array filtered list of currencies only supported by Stripe
  */
@@ -285,7 +285,7 @@ add_filter( 'init', 'it_exchange_stripe_addon_register_webhook_key' );
  * Processes webhooks for Stripe
  *
  * @since 0.4.0
- * @todo actually handle the exceptions 
+ * @todo actually handle the exceptions
  *
  * @param array $request really just passing  $_REQUEST
  */
@@ -293,17 +293,17 @@ function it_exchange_stripe_addon_process_webhook( $request ) {
 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_stripe' );
-	
+
 	$secret_key = ( $settings['stripe-test-mode'] ) ? $settings['stripe-test-secret-key'] : $settings['stripe-live-secret-key'];
 	Stripe::setApiKey( $secret_key );
 
 	$body = @file_get_contents('php://input');
 	$stripe_event = json_decode( $body );
-	
+
 	if ( isset( $stripe_event->id ) ) {
-				
+
 		try {
-				
+
 			$stripe_object = $stripe_event->data->object;
 
 			//https://stripe.com/docs/api#event_types
@@ -320,9 +320,9 @@ function it_exchange_stripe_addon_process_webhook( $request ) {
 						it_exchange_stripe_addon_update_transaction_status( $stripe_object->id, 'refunded' );
 					else
 						it_exchange_stripe_addon_update_transaction_status( $stripe_object->id, 'partial-refund' );
-					
+
 					it_exchange_stripe_addon_add_refund_to_transaction( $stripe_object->id, $stripe_object->amount_refunded );
-						
+
 					break;
 				case 'charge.dispute.created' :
 				case 'charge.dispute.updated' :
@@ -336,12 +336,12 @@ function it_exchange_stripe_addon_process_webhook( $request ) {
 			endswitch;
 
 		} catch ( Exception $e ) {
-			
+
 			// What are we going to do here?
-			
+
 		}
 	}
-	
+
 }
 add_action( 'it_exchange_webhook_it_exchange_stripe', 'it_exchange_stripe_addon_process_webhook' );
 
@@ -377,7 +377,7 @@ function it_exchange_stripe_addon_update_transaction_status( $stripe_id, $new_st
 		$current_status = it_exchange_get_transaction_status( $transaction );
 		if ( $new_status !== $current_status )
 			it_exchange_update_transaction_status( $transaction, $new_status );
-	}	
+	}
 }
 
 /**
@@ -395,19 +395,19 @@ function it_exchange_stripe_addon_add_refund_to_transaction( $stripe_id, $refund
 	foreach( $transactions as $transaction ) { //really only one
 
 		$refunds = it_exchange_get_transaction_refunds( $transaction );
-		
+
 		$refunded_amount = 0;
 		foreach( ( array) $refunds as $refund_meta ) {
 			$refunded_amount += $refund_meta['amount'];
 		}
-		
+
 		// In Stripe the Refund is the total amount that has been refunded, not just this transaction
 		$this_refund = $refund - $refunded_amount;
-		
+
 		// This refund is already formated on the way in. Don't reformat.
 		it_exchange_add_refund_to_transaction( $transaction, $this_refund );
 	}
-	
+
 }
 
 /**
@@ -422,12 +422,12 @@ function it_exchange_stripe_addon_delete_stripe_id_from_customer( $stripe_id ) {
 	foreach( $transactions as $transaction ) { //really only one
 		$customer_id = get_post_meta( $transaction->ID, '_it_exchange_customer_id', true );
 		if ( false !== $current_stripe_id = it_exchange_stripe_addon_get_stripe_customer_id( $customer_id ) ) {
-			
+
 			if ( $current_stripe_id === $stripe_id )
 				delete_user_meta( $customer_id, '_it_exchange_stripe_id' );
-				
+
 		}
-	}	
+	}
 }
 
 /**
@@ -441,7 +441,7 @@ function it_exchange_stripe_addon_delete_stripe_id_from_customer( $stripe_id ) {
 function it_exchange_stripe_addon_transaction_status_label( $status ) {
 
 	switch ( $status ) {
-	
+
 		case 'succeeded':
 			return __( 'Paid', 'LION' );
 		case 'refunded':
@@ -456,9 +456,9 @@ function it_exchange_stripe_addon_transaction_status_label( $status ) {
 			return __( 'Disputed: Won, Paid', 'LION' );
 		default:
 			return __( 'Unknown', 'LION' );
-		
+
 	}
-	
+
 }
 add_filter( 'it_exchange_transaction_status_label_stripe', 'it_exchange_stripe_addon_transaction_status_label' );
 
@@ -499,22 +499,22 @@ class IT_Exchange_Stripe_Add_On {
 	var $error_message;
 
 	/**
- 	 * Class constructor
+	 * Class constructor
 	 *
 	 * Sets up the class.
 	 * @since 0.4.0
 	 * @return void
 	*/
 	function IT_Exchange_Stripe_Add_On() {
-		$this->_is_admin                      = is_admin();
-		$this->_current_page                 = empty( $_GET['page'] ) ? false : $_GET['page'];
+		$this->_is_admin       = is_admin();
+		$this->_current_page   = empty( $_GET['page'] ) ? false : $_GET['page'];
 		$this->_current_add_on = empty( $_GET['add-on-settings'] ) ? false : $_GET['add-on-settings'];
 
 		if ( ! empty( $_POST ) && $this->_is_admin && 'it-exchange-addons' == $this->_current_page && 'stripe' == $this->_current_add_on ) {
 			add_action( 'it_exchange_save_add_on_settings_stripe', array( $this, 'save_settings' ) );
 			do_action( 'it_exchange_save_add_on_settings_stripe' );
 		}
-		
+
 	}
 
 	function print_settings_page() {
@@ -526,12 +526,12 @@ class IT_Exchange_Stripe_Add_On {
 			'action'  => 'admin.php?page=it-exchange-addons&add-on-settings=stripe',
 		);
 		$form         = new ITForm( $form_values, array( 'prefix' => 'it-exchange-add-on-stripe' ) );
-	
+
 		if ( ! empty ( $this->status_message ) )
 			ITUtility::show_status_message( $this->status_message );
 		if ( ! empty( $this->error_message ) )
 			ITUtility::show_error_message( $this->error_message );
-		
+
 		?>
 		<div class="wrap">
 			<?php $form->start_form( $form_options, 'it-exchange-stripe-settings' ); ?>
@@ -546,26 +546,26 @@ class IT_Exchange_Stripe_Add_On {
 		</div>
 		<?php
 	}
-	
-	function get_stripe_payment_form_table( $form, $settings = array() ) {	
-		
+
+	function get_stripe_payment_form_table( $form, $settings = array() ) {
+
 		$general_settings = it_exchange_get_option( 'settings_general' );
-		
+
 		if ( !empty( $settings ) )
 			foreach ( $settings as $key => $var )
 				$form->set_option( $key, $var );
-				
+
 		?>
 		<div class="it-exchange-addon-settings it-exchange-stripe-addon-settings">
 			<h3><?php _e( 'Stripe Payment Settings', 'LION' ); ?></h3>
 			<p><?php _e( 'Do not have a Stripe account yet? <a href="http://stripe.com" target="_blank">Go set one up here</a>.', 'LION' ); ?></p>
 			<?php
 				if ( ! in_array( $general_settings['default-currency'], $this->get_supported_currency_options() ) ) {
-			
+
 					echo '<h4>' . sprintf( __( 'You are currently using a currency that is not supported by Stripe. <a href="%s">Please update your currency settings</a>.', 'LION' ), add_query_arg( 'page', 'it-exchange-settings' ) ) . '</h4>';
-				
+
 				}
-			
+
 			?>
 			<p>
 				<label for="stripe-live-secret-key"><?php _e( 'Live Secret Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
@@ -621,39 +621,39 @@ class IT_Exchange_Stripe_Add_On {
 			$this->status_message = __( 'Settings not saved.', 'LION' );
 		}
 	}
-	
+
 	function stripe_save_wizard_settings() {
 		if ( empty( $_REQUEST['it_exchange_settings-wizard-submitted'] ) )
 			return;
-			
+
 		$stripe_settings = array();
-		
+
 		$default_wizard_stripe_settings = apply_filters( 'default_wizard_stripe_settings', array( 'stripe-live-secret-key', 'stripe-live-publishable-key', 'stripe-test-secret-key', 'stripe-test-publishable-key', 'stripe-test-mode' ) );
-		
+
 		foreach( $default_wizard_stripe_settings as $var ) {
-		
+
 			if ( isset( $_REQUEST['it_exchange_settings-' . $var] ) ) {
 				$stripe_settings[$var] = $_REQUEST['it_exchange_settings-' . $var];	
 			}
-			
+
 		}
-		
+
 		$settings = wp_parse_args( $stripe_settings, it_exchange_get_option( 'addon_stripe' ) );
-		
+
 		if ( ! empty( $this->error_message ) || $error_msg = $this->get_form_errors( $settings ) ) {
-			
+
 			if ( ! empty( $error_msg ) ) {
-				
+
 				$this->error_message = $error_msg;
 				return;
-				
+
 			}
-				
+
 		} else {
 			it_exchange_save_option( 'addon_stripe', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
-		
+
 	}
 
 	/**
@@ -665,13 +665,13 @@ class IT_Exchange_Stripe_Add_On {
 	 * @return void
 	*/
 	function get_form_errors( $values ) {
-				
+
 		$errors = array();
 		if ( empty( $values['stripe-live-secret-key'] ) )
 			$errors[] = __( 'Please include your Stripe Live Secret Key', 'LION' );
 		if ( empty( $values['stripe-live-publishable-key'] ) )
 			$errors[] = __( 'Please include your Stripe Live Publishable Key', 'LION' );
-			
+
 		if ( !empty( $values['stripe-test-mode' ] ) ) {
 			if ( empty( $values['stripe-test-secret-key'] ) )
 				$errors[] = __( 'Please include your Stripe Test Secret Key', 'LION' );
