@@ -96,7 +96,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 
 		$this->read_data();
 
-		setcookie( IT_EXCHANGE_SESSION_COOKIE, $this->session_id . '||' . $this->expires . '||' . $this->exp_variant , $this->expires, COOKIEPATH, COOKIE_DOMAIN );
+		$this->set_cookie();
 	}
 
 	/**
@@ -120,6 +120,13 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	protected function set_expiration() {
 		$this->exp_variant = time() + (int) apply_filters( 'it_exchange_db_session_expiration_variant', 24 * 60 );
 		$this->expires = time() + (int) apply_filters( 'it_exchange_db_session_expiration', 24 * 60 * 60 );
+	}
+
+	/**
+	 * Set the session cookie
+	 */
+	protected function set_cookie() {
+		setcookie( IT_EXCHANGE_SESSION_COOKIE, $this->session_id . '||' . $this->expires . '||' . $this->exp_variant , $this->expires, COOKIEPATH, COOKIE_DOMAIN );
 	}
 
 	/**
@@ -201,7 +208,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 
 		$this->session_id = $this->generate_id();
 
-		setcookie( IT_EXCHANGE_SESSION_COOKIE, $this->session_id . '||' . $this->expires . '||' . $this->exp_variant , $this->expires, COOKIEPATH, COOKIE_DOMAIN );
+		$this->set_cookie();
 	}
 
 	/**
