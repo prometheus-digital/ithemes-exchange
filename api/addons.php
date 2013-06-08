@@ -20,18 +20,18 @@
 */
 function it_exchange_register_addon( $slug, $params ) {
 
-	$name 			= empty( $params['name'] ) 			? false 	: $params['name'];
-	$author 		= empty( $params['author'] ) 		? false 	: $params['author'];
-	$author_url		= empty( $params['author_url'] ) 	? false 	: $params['author_url'];
-	$description 	= empty( $params['description'] ) 	? '' 		: $params['description'];
-	$file 			= empty( $params['file'] ) 			? false 	: $params['file'];
-	$options 		= empty( $params['options'] ) 		? array() 	: (array) $params['options'];
+	$name         = empty( $params['name'] )        ? false   : $params['name'];
+	$author       = empty( $params['author'] )      ? false   : $params['author'];
+	$author_url   = empty( $params['author_url'] )  ? false   : $params['author_url'];
+	$description  = empty( $params['description'] ) ? ''      : $params['description'];
+	$file         = empty( $params['file'] )        ? false   : $params['file'];
+	$options      = empty( $params['options'] )     ? array() : (array) $params['options'];
 	
 	// Basic Validation
-	$slug 	= empty( $slug ) 		? false : sanitize_key( $slug );
-	$name 	= empty( $name ) 		? false : sanitize_text_field( $name );
-	$author = empty( $author ) 		? false : sanitize_text_field( $author );
-	$file 	= file_exists( $file ) 	? $file : false;
+	$slug   = empty( $slug )        ? false : sanitize_key( $slug );
+	$name   = empty( $name )        ? false : sanitize_text_field( $name );
+	$author = empty( $author )      ? false : sanitize_text_field( $author );
+	$file   = file_exists( $file )  ? $file : false;
 
 	if ( ! $slug  )
 		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Excahnge Add-ons require a slug paramater.', 'LION' ) );
@@ -123,9 +123,9 @@ function it_exchange_get_addons( $options=array() ) {
 	// Possibly filter by category
 	if ( ! empty( $options['category'] ) )
 		$add_ons = it_exchange_filter_addons_by_category( $add_ons, $options['category'] );
-	
+
 	ksort( $add_ons );
-	
+
 	return $add_ons;
 }
 
@@ -205,7 +205,7 @@ function it_exchange_get_disabled_addons( $options=array() ) {
 	// Grab enabled add-ons from options
 	if ( false === $enabled_addons = it_exchange_get_option( 'enabled_add_ons' ) )
 		$enabled_addons = array();
-		
+
 	foreach ( $registered as $slug => $params )
 		if ( !in_array( $slug, $enabled_addons ) )
 			$disabled[$slug] = $params;
@@ -215,7 +215,7 @@ function it_exchange_get_disabled_addons( $options=array() ) {
 
 	if ( ! empty( $disabled ) )
 		ksort( $disabled );
-	
+
 	return empty( $disabled ) ? array() : $disabled;
 }
 
@@ -231,14 +231,14 @@ function it_exchange_get_disabled_addons( $options=array() ) {
 function it_exchange_get_more_addons( $options=array() ) {
 	// Grab all registered add-ons
 	$remote_get = wp_remote_get( 'https://api.ithemes.com/exchange/addons/' );
-	
+
 	$addons = json_decode( $remote_get['body'], true );
 
 	if ( ! empty( $options['category'] ) )
 		$addons = it_exchange_filter_addons_by_category( $addons, $options['category'] );
 
 	ksort( $addons );
-	
+
 	return empty( $addons ) ? array() : $addons;
 }
 
@@ -250,22 +250,22 @@ function it_exchange_get_more_addons( $options=array() ) {
  * @return array  Restorted add-ons array
 */
 function it_exchange_featured_addons_on_top( $addons ) {
-	
+
 	$sorted_addons = array();
-	
+
 	foreach( $addons as $slug => $addon ) {
-	
+
 		if ( true === $addon['featured'] ) {
-			
+
 			$sorted_addons[$slug] = $addon;
 			unset( $addons[$slug] );
-			
+
 		}
-		
+
 	}
 
 	ksort( $sorted_addons );
-	
+
 	return array_merge( $sorted_addons, $addons );
 }
 
@@ -323,7 +323,7 @@ function is_it_exchange_addon_enabled( $add_on_slug ) {
 
 	if ( in_array( $add_on_slug, $enabled ) )
 		return true;
-		
+
 	return false;
 }
 
@@ -339,7 +339,7 @@ function is_it_exchange_addon_installed( $add_on ) {
 
 	if ( array_key_exists( $add_on, $installed ) )
 		return true;
-		
+
 	return false;
 }
 
@@ -354,7 +354,7 @@ function is_it_exchange_addon_installed( $add_on ) {
 function it_exchange_disable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
 	$enabled_addons = it_exchange_get_option( 'enabled_add_ons' );
-	
+
 	if ( false !== $key = array_search( $add_on, $enabled_addons ) ) {
 		unset( $enabled_addons[$key] );
 		if ( it_exchange_save_option( 'enabled_add_ons', $enabled_addons ) ) {

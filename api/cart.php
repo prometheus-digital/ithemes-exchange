@@ -47,7 +47,7 @@ function it_exchange_remove_cart_data( $key ) {
  * @return array
 */
 function it_exchange_get_cart_products() {
-    $products = it_exchange_get_session_data( 'products' );
+	$products = it_exchange_get_session_data( 'products' );
 	return ( empty( $products ) || ! array( $products ) ) ? array() : $products;
 }
 
@@ -58,9 +58,8 @@ function it_exchange_get_cart_products() {
  * @return array
 */
 function it_exchange_add_cart_product( $cart_product_id, $product ) {
-    it_exchange_add_session_data( 'products', array( $cart_product_id => $product ) );
+	it_exchange_add_session_data( 'products', array( $cart_product_id => $product ) );
 	do_action( 'it_exchange_add_cart_product', $product );
-	
 }
 
 /**
@@ -73,7 +72,7 @@ function it_exchange_update_cart_product( $cart_product_id, $product ) {
 	$products = it_exchange_get_session_data( 'products' );
 	if ( isset( $products[$cart_product_id] ) ) {
 		$products[$cart_product_id] = $product;
-    	it_exchange_update_session_data( 'products', $products );
+		it_exchange_update_session_data( 'products', $products );
 	} else {
 		it_exchange_add_cart_product( $cart_product_id, $product );
 	}
@@ -90,7 +89,7 @@ function it_exchange_delete_cart_product( $cart_product_id ) {
 	$products = it_exchange_get_session_data( 'products' );
 	if ( isset( $products[$cart_product_id] ) ) {
 		unset( $products[$cart_product_id] );
-    	it_exchange_update_session_data( 'products', $products );
+		it_exchange_update_session_data( 'products', $products );
 	}
 	do_action( 'it_exchange_delete_cart_product', $cart_product_id, $products );
 }
@@ -105,11 +104,11 @@ function it_exchange_delete_cart_product( $cart_product_id ) {
  * @return mixed
 */
 function it_exchange_get_cart_product( $id ) {
-    if ( ! $products = it_exchange_get_cart_products() )
-        return false;
+	if ( ! $products = it_exchange_get_cart_products() )
+		return false;
 
-    if ( empty( $products[$id] ) )
-        return false;
+	if ( empty( $products[$id] ) )
+		return false;
 
 	return apply_filters( 'it_exchange_get_cart_product', $products[$id], $id );
 }
@@ -120,10 +119,10 @@ function it_exchange_get_cart_product( $id ) {
  * @since 0.3.7
  * @param string $product_id a valid wp post id with an iThemes Exchange product post_typp
  * @param int $quantity (optional) how many?
- * return boolean 
+ * return boolean
 */
 function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
-		
+
 	if ( ! $product_id )
 		return;
 
@@ -211,7 +210,7 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 	return false;
 }
 
-/** 
+/**
  * Updates the quantity for a specific cart item
  *
  * @since 0.4.0
@@ -228,7 +227,7 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
 	// Update Quantity
 	if ( ! empty( $cart_products[$cart_product_id] ) && is_numeric( $quantity ) ) {
 		$cart_product = $cart_products[$cart_product_id];
-		if ( empty( $quantity ) || $quantity < 1 ) { 
+		if ( empty( $quantity ) || $quantity < 1 ) {
 			it_exchange_delete_cart_product( $cart_product_id );
 		} else {
 
@@ -253,8 +252,8 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
 			it_exchange_update_cart_product( $cart_product_id, $cart_product );
 			do_action( 'it_exchange_cart_prouduct_count_updated', $cart_product_id );
 			return true;
-		}   
-	}   
+		}
+	}
 }
 
 /**
@@ -290,11 +289,11 @@ function it_exchange_is_multi_item_cart_allowed() {
  * @return string product title
 */
 function it_exchange_get_cart_product_title( $product ) {
-    if ( ! $db_product = it_exchange_get_product( $product['product_id'] ) )
-        return false;
+	if ( ! $db_product = it_exchange_get_product( $product['product_id'] ) )
+		return false;
 
-    $title = get_the_title( $db_product->ID );
-    return apply_filters( 'it_exchange_get_cart_product_title', $title, $product );
+	$title = get_the_title( $db_product->ID );
+	return apply_filters( 'it_exchange_get_cart_product_title', $title, $product );
 }
 
 /**
@@ -302,11 +301,11 @@ function it_exchange_get_cart_product_title( $product ) {
  *
  * @since 0.3.7
  * @param array $product cart product
- * @return integer quantity 
+ * @return integer quantity
 */
 function it_exchange_get_cart_product_quantity( $product ) {
-    $count = empty( $product['count'] ) ? 0 : $product['count'];
-    return apply_filters( 'it_exchange_get_cart_product_quantity', $count, $product );
+	$count = empty( $product['count'] ) ? 0 : $product['count'];
+	return apply_filters( 'it_exchange_get_cart_product_quantity', $count, $product );
 }
 
 /**
@@ -327,19 +326,19 @@ function it_exchange_get_cart_products_count() {
  *
  * @since 0.3.7
  * @param array $product cart product
- * @return integer quantity 
+ * @return integer quantity
 */
 function it_exchange_get_cart_product_base_price( $product, $format=true ) {
-    if ( ! $db_product = it_exchange_get_product( $product['product_id'] ) )
-        return false;
+	if ( ! $db_product = it_exchange_get_product( $product['product_id'] ) )
+		return false;
 
-    // Get the price from the DB
-    $db_base_price = it_exchange_get_product_feature( $db_product->ID, 'base-price' );
+	// Get the price from the DB
+	$db_base_price = it_exchange_get_product_feature( $db_product->ID, 'base-price' );
 
 	if ( $format )
 		$db_base_price = it_exchange_format_price( $db_base_price );
 
-    return apply_filters( 'it_exchange_get_cart_product_base_price', $db_base_price, $product );
+	return apply_filters( 'it_exchange_get_cart_product_base_price', $db_base_price, $product );
 }
 
 /**
@@ -353,12 +352,12 @@ function it_exchange_get_cart_product_base_price( $product, $format=true ) {
 */
 function it_exchange_get_cart_product_subtotal( $product, $format=true ) {
 	$base_price = it_exchange_get_cart_product_base_price( $product, false );
-    $subtotal_price = apply_filters( 'it_exchange_get_cart_product_subtotal', $base_price * $product['count'], $product );
+	$subtotal_price = apply_filters( 'it_exchange_get_cart_product_subtotal', $base_price * $product['count'], $product );
 
 	if ( $format )
 		$subtotal_price = it_exchange_format_price( $subtotal_price );
 
-    return $subtotal_price;
+	return $subtotal_price;
 }
 
 /**
@@ -368,14 +367,14 @@ function it_exchange_get_cart_product_subtotal( $product, $format=true ) {
  * @return mixed subtotal of cart
 */
 function it_exchange_get_cart_subtotal( $format=true ) {
-    $subtotal = 0;
-    if ( ! $products = it_exchange_get_cart_products() )
-        return 0;
+	$subtotal = 0;
+	if ( ! $products = it_exchange_get_cart_products() )
+		return 0;
 
-    foreach( (array) $products as $product ) {
-        $subtotal += it_exchange_get_cart_product_subtotal( $product, false );
-    }
-    $subtotal = apply_filters( 'it_exchange_get_cart_subtotal', $subtotal );
+	foreach( (array) $products as $product ) {
+		$subtotal += it_exchange_get_cart_product_subtotal( $product, false );
+	}
+	$subtotal = apply_filters( 'it_exchange_get_cart_subtotal', $subtotal );
 
 	if ( $format )
 		$subtotal = it_exchange_format_price( $subtotal );
@@ -410,17 +409,17 @@ function it_exchange_get_cart_total( $format=true ) {
  * @return mixed total of cart
 */
 function it_exchange_get_cart_description() {
-    $description = array();
-    if ( ! $products = it_exchange_get_cart_products() )
-        return 0;
+	$description = array();
+	if ( ! $products = it_exchange_get_cart_products() )
+		return 0;
 
-    foreach( (array) $products as $product ) {
-        $string = it_exchange_get_cart_product_title( $product );
+	foreach( (array) $products as $product ) {
+		$string = it_exchange_get_cart_product_title( $product );
 		if (  1 < $count = it_exchange_get_cart_product_quantity( $product ) )
 			$string .= ' (' . $count . ')';
 		$description[] = $string;
-    }
-    $description = apply_filters( 'it_exchange_get_cart_description', join( ', ', $description ), $description );
+	}
+	$description = apply_filters( 'it_exchange_get_cart_description', join( ', ', $description ), $description );
 
 	return $description;
 }
@@ -433,11 +432,11 @@ function it_exchange_get_cart_description() {
  * @return void
 */
 function it_exchange_do_confirmation_redirect( $transaction_id ) {
-        $confirmation_url = it_exchange_get_page_url( 'confirmation' );
-        $transaction_var  = it_exchange_get_field_name( 'transaction_id' );
-        $confirmation_url = add_query_arg( array( $transaction_var => $transaction_id ), $confirmation_url );
-        wp_redirect( $confirmation_url );
-        die();
+	$confirmation_url = it_exchange_get_page_url( 'confirmation' );
+	$transaction_var  = it_exchange_get_field_name( 'transaction_id' );
+	$confirmation_url = add_query_arg( array( $transaction_var => $transaction_id ), $confirmation_url );
+	wp_redirect( $confirmation_url );
+	die();
 }
 
 /**
