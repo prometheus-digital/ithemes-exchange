@@ -43,7 +43,7 @@ function it_exchange_get_session_data( $key=false ) {
  * @since 0.3.7
  * @param mixed $data data as passed by the shopping cart
  * @param mixed $key optional identifier for the data.
- * @return void 
+ * @return void
 */
 function it_exchange_add_session_data( $key, $data ) {
 	$session = it_exchange_get_session();

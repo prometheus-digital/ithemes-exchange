@@ -49,7 +49,7 @@ function it_exchange_get_product_type_name( $product_type ) {
 function it_exchange_get_product_type_options( $product_type ) {
 	if ( $addon = it_exchange_get_addon( $product_type ) )
 		return $addon['options'];
-	
+
 	return false;
 }
 
@@ -80,7 +80,7 @@ function it_exchange_get_products( $args=array() ) {
 	);
 
 	$args = wp_parse_args( $args, $defaults );
-	
+
 	if ( ! empty( $args['product_type'] ) ) {
 		$meta_query = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
 		$meta_query[] = array( 
@@ -156,32 +156,32 @@ function it_exchange_get_the_product_id() {
 function it_exchange_is_product_available( $product_id=false ) {
 	if ( ! it_exchange_get_product( $product_id ) )
 		return false;
-	
+
 	$past_start_date = true;
 	$before_end_date = true;
 	$now_start = strtotime( date( 'Y-m-d 00:00:00' ) );
 	$now_end = strtotime( date( 'Y-m-d 23:59:59' ) );
 
 	// Check start time
-	if ( 
-		it_exchange( 'product', 'supports-availability', 'type=start' ) &&  
-		it_exchange( 'product', 'has-availability', 'type=start' )   
-	) { 
+	if (
+		it_exchange( 'product', 'supports-availability', 'type=start' ) &&
+		it_exchange( 'product', 'has-availability', 'type=start' )
+	) {
 		$start_date = strtotime( it_exchange_get_product_feature( $product_id, 'availability', array( 'type' => 'start' ) ) . ' 00:00:00' );
 		if ( $now_start < $start_date )
 			$past_start_date = false;
 
-	}   
+	}
 
 	// Check end time
-	if ( 
-		it_exchange( 'product', 'supports-availability', 'type=end' ) &&  
-		it_exchange( 'product', 'has-availability', 'type=end' )   
-	) { 
+	if (
+		it_exchange( 'product', 'supports-availability', 'type=end' ) &&
+		it_exchange( 'product', 'has-availability', 'type=end' )
+	) {
 		$end_date = strtotime( it_exchange_get_product_feature( $product_id, 'availability', array( 'type' => 'end' ) ) . ' 23:59:59' );
 		if ( $now_end > $end_date )
 			$before_end_date = false;
-	}   
+	}
 
 	return $past_start_date && $before_end_date;
 
@@ -200,7 +200,7 @@ function it_exchange_is_product_visible( $product_id=false ) {
 		return false;
 
 	// Check start time
-	if ( it_exchange( 'product', 'has-visibility' ) ) { 
+	if ( it_exchange( 'product', 'has-visibility' ) ) {
 		if ( 'hidden' === get_post_meta( $product_id, '_it-exchange-visibility', true ) )
 			return false;
 	}
