@@ -61,7 +61,7 @@ function it_exchange() {
 			// This is cool. It allows options to be passed as an array or in URL param format
 			$options = it_exchange_parse_options( $params['three'] );
 		}
-	} else if ( false !== strpos( $params['one'], '.' ) ) { 
+	} else if ( false !== strpos( $params['one'], '.' ) ) {
 		// When first param is the object.method string format
 		list( $context, $tag ) = explode( '.', strtolower( $params['one'] ) );
 		// Parse options if present
@@ -77,19 +77,19 @@ function it_exchange() {
 			// This is cool. It allows options to be passed as an array or in URL param format
 			$options = it_exchange_parse_options( $params['three'] );
 		}
-	}   
+	}
 
 	// Strip hypens from method name
 	$tag = str_replace ( '-', '', $tag );
 
 	// Strip get prefix from requested method and set flags
-	if ( 'get' == substr( $tag, 0, 3 ) ) { 
+	if ( 'get' == substr( $tag, 0, 3 ) ) {
 		$tag = substr( $tag, 3 );
 		$get = true;
 	}   
 
 	// Strip has prefix from request method and set flags
-	if ( 'has' == substr( $tag, 0, 3 ) ) { 
+	if ( 'has' == substr( $tag, 0, 3 ) ) {
 		$tag = substr( $tag, 3 );
 		$options['has'] = true;
 	} else {
@@ -97,7 +97,7 @@ function it_exchange() {
 	}
 
 	// Strip has prefix from request method and set flags
-	if ( 'supports' == substr( $tag, 0, 8 ) ) { 
+	if ( 'supports' == substr( $tag, 0, 8 ) ) {
 		$tag = substr( $tag, 8 );
 		$options['supports'] = true;
 	} else {
@@ -149,12 +149,12 @@ function it_exchange() {
 	}
 
 	// Always return a boolean if the result is boolean
-	if ( is_bool( $result ) ) 
+	if ( is_bool( $result ) )
 		return $result;
 
 	// Return result without printing if requested
 	if ( $get
-			|| ( isset( $options['return'] ) && it_exchange_str_true( $options['return'] ) ) 
+			|| ( isset( $options['return'] ) && it_exchange_str_true( $options['return'] ) )
 			|| ( isset( $options['echo'] ) && ! it_exchange_str_true( $options['echo'] ) )
 		)
 		return $result;
@@ -165,7 +165,7 @@ function it_exchange() {
 	else 
 		return $result;
 
-    return true;
+	return true;
 }
 
 /**
