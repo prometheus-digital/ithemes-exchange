@@ -42,7 +42,7 @@ function it_exchange_get_customer( $customer_id ) {
 function it_exchange_get_current_customer() {
 	if ( ! is_user_logged_in() )
 		return false;
-		
+
 	$customer = it_exchange_get_customer( get_current_user_id() );
 	return apply_filters( 'it_exchange_get_current_customer', $customer );
 }
@@ -56,7 +56,7 @@ function it_exchange_get_current_customer() {
 function it_exchange_get_current_customer_id() {
 	if ( ! is_user_logged_in() )
 		return false;
-		
+
 	return get_current_user_id();
 }
 
@@ -87,7 +87,7 @@ function it_exchange_get_customer_transactions( $customer_id ) {
 
 	// Get transactions args
 	$args = array(
-		'numberposts' => -1, 
+		'numberposts' => -1,
 		'customer_id' => $customer->id,
 	);
 	return it_exchange_get_transactions( $args );
@@ -103,16 +103,16 @@ function it_exchange_get_customer_transactions( $customer_id ) {
  * @return array
 */
 function it_exchange_customer_has_transaction( $transaction_id, $customer_id = NULL ) {
-	
+
 	if ( is_null( $customer_id ) ) {
-		
+
 		$customer = it_exchange_get_current_customer();
-		
+
 	} else {
-		
+
 		if ( ! $customer = it_exchange_get_customer( $customer_id ) )
 			return array();
-			
+
 	}
 
 	// Get transactions args
@@ -134,7 +134,7 @@ function it_exchange_customer_has_transaction( $transaction_id, $customer_id = N
 function it_exchange_get_customer_products( $customer_id ) {
 	// All products are attached to a transaction
 	$transactions = it_exchange_get_customer_transactions( $customer_id );
-	
+
 	// Loop through transactions and build array of products
 	$products = array();
 	foreach( $transactions as $transaction ) {
@@ -162,7 +162,7 @@ function it_exchange_get_customer_products( $customer_id ) {
  * @return void
 */
 function handle_it_exchange_save_profile_action() {
-	
+
 	// Grab action and process it.
 	if ( isset( $_REQUEST['it-exchange-save-profile'] ) ) {
 
@@ -211,38 +211,38 @@ function it_exchange_register_user( $user_data=array() ) {
  * @return void
 */
 function handle_it_exchange_customer_registration_action() {
-	
+
 	// Grab action and process it.
 	if ( isset( $_REQUEST['it-exchange-register-customer'] ) ) {
 
 		$result = it_exchange_register_user();
-		
+
 		if ( is_wp_error( $result ) )
 			return it_exchange_add_message( 'error', $result->get_error_message());
-		
+
 		$user_id = $result;
-			
+
 		//else
-		
-		$creds = array( 
+
+		$creds = array(
 			'user_login'    => $_REQUEST['user_login'],
 			'user_password' => $_REQUEST['pass1'],
 		);
-		
+
 		$result = wp_signon( $creds );
-		
+
 		if ( is_wp_error( $result ) )
 			return it_exchange_add_message( 'error', $result->get_error_message() );
-			
+
 		wp_new_user_notification( $user_id, $_REQUEST['pass1'] );
-			
+
 		$reg_page = it_exchange_get_page_url( 'registration' );
 		// Set redirect to profile page if they were on the registration page
 		$redirect = ( trailingslashit( $reg_page ) == trailingslashit( wp_get_referer() ) ) ? it_exchange_get_page_url( 'profile' ) : clean_it_exchange_query_args( array(), array( 'ite-sw-state' ) );
 		wp_redirect( $redirect );
 		die();
-		
+
 	}
-	
+
 }
 add_action( 'template_redirect', 'handle_it_exchange_customer_registration_action', 5 );
