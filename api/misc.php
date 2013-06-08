@@ -181,29 +181,29 @@ function it_exchange_get_page_name( $page, $clear_settings_cache=false ) {
  * @return string url
 */
 function ithemes_exchange_wp_get_nav_menu_items_filter( $items, $menu, $args ) {
-	
+
 	if ( is_user_logged_in() ) {
-		
+
 		foreach ( $items as $item ) {
-			
+
 			if ( $item->url == it_exchange_get_page_url( 'log-in' ) ) {
-				
+
 				$item->url = it_exchange_get_page_url( 'log-out' );
 				$item->title = it_exchange_get_page_name( 'log-out' );
-				
+
 			}
-	
+
 		}
-	
+
 	}
-	
+
 	return $items;
-	
+
 }
 add_filter( 'wp_get_nav_menu_items', 'ithemes_exchange_wp_get_nav_menu_items_filter', 10, 3 );
 
 if ( !function_exists( 'wp_nav_menu_disabled_check' ) && version_compare( $GLOBALS['wp_version'], '3.5.1', '<=' ) ) {
-		
+
 	/**
 	 * From WordPress 3.6.0 for back-compat
 	 * Check whether to disable the Menu Locations meta box submit button
@@ -218,10 +218,10 @@ if ( !function_exists( 'wp_nav_menu_disabled_check' ) && version_compare( $GLOBA
 	*/
 	function wp_nav_menu_disabled_check( $nav_menu_selected_id ) {
 		global $one_theme_location_no_menus;
-	
+
 		if ( $one_theme_location_no_menus )
 			return false;
-	
+
 		return disabled( $nav_menu_selected_id, 0 );
 	}
 
@@ -411,7 +411,6 @@ function it_exchange_get_currency_options() {
 		'UYU' => array( 'symbol' => '$U', 'name' => __( 'Uruguayan peso', 'LION' ) ),
 		'UZS' => array( 'symbol' => 'UZS', 'name' => __( 'Uzbekistani som', 'LION' ) ),
 		'VEB' => array( 'symbol' => 'Bs', 'name' => __( 'Venezuelan bolivar', 'LION' ) ),
-
 		'VND' => array( 'symbol' => '\u20ab', 'name' => __( 'Vietnamese dong', 'LION' ) ),
 		'VUV' => array( 'symbol' => 'VT', 'name' => __( 'Vanuatu vatu', 'LION' ) ),
 		'WST' => array( 'symbol' => 'WS$', 'name' => __( 'Samoan tala', 'LION' ) ),
