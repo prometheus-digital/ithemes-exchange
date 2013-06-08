@@ -19,14 +19,14 @@ function it_exchange_create_download_hash( $download_id ) {
 	$hash = wp_hash( time() . $download_id );
 
 	// Confirm it doesn't exist. Retry if we find hash already exists
-	while ( get_post_meta( $download_id, '_download_hash_' . $hash ) ) { 
+	while ( get_post_meta( $download_id, '_download_hash_' . $hash ) ) {
 		$hash = wp_hash( time() . $download_id );
 	}
 
 	return $hash;
 }
 
-/** 
+/**
  * Adds metadata associated with a transaction to the download
  *
  * Doesn't work if hash already exists
@@ -54,7 +54,7 @@ function it_exchange_add_download_hash_data( $download_id, $hash, $hash_data ) {
 	return false;
 }
 
-/** 
+/**
  * Updates meta-data associated with a specific file hash
  *
  * Hash has to already exist
@@ -73,7 +73,7 @@ function it_exchange_update_download_hash_data( $hash, $data ) {
 	ITUtility::print_r($old_data);die();
 }
 
-/** 
+/**
  * Get a requested file hash
  *
  * @since 0.4.0
@@ -217,7 +217,7 @@ function it_exchange_clear_transaction_hash_index( $transaction ) {
 	return true;
 }
 
-/** 
+/**
  * Serves a file from its URL
  *
  * Uses wp_remote_get to locate the file and force download.
@@ -227,13 +227,13 @@ function it_exchange_clear_transaction_hash_index( $transaction ) {
  * @param array $download_info download hash data
  * @return void;
 */
-function it_exchange_serve_product_download( $hash_data ) { 
+function it_exchange_serve_product_download( $hash_data ) {
 
 	// Grab the download info
 	$download_info = get_post_meta( $hash_data['file_id'], '_it-exchange-download-info', true );
 	$url           = empty( $download_info['source'] ) ? false : $download_info['source'];
 
-	/** 
+	/**
 	 * Allow addons to override this.
 	 * If you override this, you need to tick the download counts with it_exchange_increment_download_count( $download_info )
 	*/
@@ -242,13 +242,13 @@ function it_exchange_serve_product_download( $hash_data ) {
 
 	// Attempt to grab file
 	$filename = basename( $url );
-	if ( $response = wp_remote_get( $url ) ) { 
-		if ( ! is_wp_error( $response ) ) { 
+	if ( $response = wp_remote_get( $url ) ) {
+		if ( ! is_wp_error( $response ) ) {
 			$valid_response_codes = array(
 				200,
-			);  
+			);
 			$valid_response_codes = apply_filters( 'it_exchange_valid_response_codes_for_downloadable_files', $valid_response_codes, $download_info );
-			if ( in_array( wp_remote_retrieve_response_code( $response ), (array) $valid_response_codes ) ) { 
+			if ( in_array( wp_remote_retrieve_response_code( $response ), (array) $valid_response_codes ) ) {
 
 				// Increment Download count if not Admin
 				it_exchange_increment_download_count( $download_info );
@@ -261,14 +261,14 @@ function it_exchange_serve_product_download( $hash_data ) {
 					'accept-ranges',
 					'content-length',
 					'content-type',
-				);  
+				);
 				apply_filters( 'it_exchange_file_download_passthru_headers', $passthru_headers, $download_info );
 
 				// Set Headers for download from original resource
-				foreach ( (array) $passthru_headers as $header ) { 
-					if ( isset( $headers[$header] ) ) 
+				foreach ( (array) $passthru_headers as $header ) {
+					if ( isset( $headers[$header] ) )
 						header( esc_attr( $header ) . ': ' . esc_attr( $headers[$header] ) );
-				}   
+				}
 
 				// Force download
 				header( 'Content-disposition: attachment; filename="' . $filename . '"' );
