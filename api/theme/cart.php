@@ -168,13 +168,14 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		$defaults = array(
 			'before' => '',
 			'after'  => '',
-			'class'  => 'it-exchange-checkout-cart',
+			'class'  => false,
 			'format' => 'button',
 			'label'  => __( 'Checkout', 'LION' ),
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
-		$class = ( 'it-exchange-checkout-cart' != $options['class'] ) ? 'it-exchange-checkout-cart ' . esc_attr( $options['class'] ) : $options['class'];
+		$class = empty( $options['class'] ) ? 'it-exchange-checkout-cart' : 'it-exchange-checkout-cart ' . esc_attr( $options['class'] );
+		$class = ( it_exchange_get_cart_products_count() < 2 ) ? $class : $class . ' no-sw-js';
 		$var   = it_exchange_get_field_name( 'proceed_to_checkout' );
 
 		// If we're in the superwidget, we need to use that format.
@@ -188,7 +189,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			case 'link' :
 				$url = '';
 				// Tack on the superwidget state if in it.
-				if ( it_exchange_in_superwidget() ) {
+				if ( it_exchange_in_superwidget() && it_exchange_get_cart_products_count() < 2 ) {
 					// Get clean URL without any exchange query args
 					$url = clean_it_exchange_query_args();
 					$url = add_query_arg( 'ite-sw-state', 'checkout', $url );
