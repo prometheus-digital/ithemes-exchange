@@ -57,6 +57,12 @@ if ( 'empty-cart' == $action ) {
 	die(1);
 }
 
+// Remove item from cart
+if ( 'remove-from-cart' == $action && ! empty( $cart_product ) ) {
+	it_exchange_delete_cart_product( $cart_product );
+}
+
+
 // Apply a coupon
 if ( 'apply-coupon' == $action && $coupon && $coupon_type ) {
 	if ( it_exchange_apply_coupon( $coupon_type, $coupon ) )

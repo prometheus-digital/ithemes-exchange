@@ -75,6 +75,10 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 			'label'  => __( '&times;', 'LION' ),
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		// Force link in SuperWidget
+		$options['format'] = it_exchange_in_superwidget() ? 'link' : $options['format'];
+
 		$var_key = it_exchange_get_field_name( 'remove_product_from_cart' );
 		$var_value = $this->_cart_item['product_cart_id'];
 		$core_class = ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_cart_products_count() > 1 ) ? 'remove-cart-item' : 'it-exchange-empty-cart';
@@ -92,11 +96,12 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 				break;
 			case 'link' :
 			default :
+				$data = it_exchange_in_superwidget() ? 'data-cart-product-id="' . esc_attr( $var_value ) . '" ' : '';
 				$nonce_var = apply_filters( 'it_exchange_remove_product_from_cart_nonce_var', '_wpnonce' );
 				$url = clean_it_exchange_query_args();
 				$url = add_query_arg( $var_key, $var_value, $url );
 				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . session_id() ), $url ); 
-				$output = $options['before'] . '<a href="' . $url . '" class="' . $class . '" >' . esc_attr( $options['label'] ) . '</a>' . $options['after'];
+				$output = $options['before'] . '<a href="' . $url . '" ' . $data . 'class="' . $class . '" >' . esc_attr( $options['label'] ) . '</a>' . $options['after'];
 			break;
 		}
 		return $output;
