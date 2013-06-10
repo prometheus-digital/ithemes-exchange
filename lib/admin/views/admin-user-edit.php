@@ -123,7 +123,9 @@
 					$downloads_list = array();
 					if ( $downloads = it_exchange_get_product_feature( $product['product_id'], 'downloads' ) ) {
 						foreach ( $downloads as $download ) {
-							$remaining = it_exchange_get_download_data_from_transaction_product( $transaction_id, $product, $download['id'], 'download_limit' );
+							$remaining = 'Line ' . __LINE__;
+							// Change this function
+							//$remaining = it_exchange_get_download_data_from_transaction_product( $transaction_id, $product, $download['id'], 'download_limit' );
 							$downloads_list[] = apply_filters( 'the_title', $download['name'] ) . ' (' . $remaining . ')';
 						}
 						$downloads_list = implode( '<br />', $downloads_list );

@@ -51,26 +51,33 @@ class IT_Exchange_Product_Feature_Downloads {
 			// If this is a downloadable product, generate a hash for each download unique to this transaction
 			if ( $this->product_has_feature( 'false', $transaction_product['product_id'] ) ) {
 						
+				// Quantity
+				$count = $transaction_product['count'];
+
 				// Grab existing downloads for each product in transaction
 				$existing_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' );
-				
-				// Loop through downloads and create hash for each
+				// Loop through downloads and create hash for each ( multiplied by quantity )
 				foreach( $existing_downloads as $download_id => $download_data ) {
-					if ( $hash = it_exchange_create_download_hash( $download_id ) ) {
+					// One for each count
+					for( $i=0;$i<$count;$i++ ) {
+						if ( $hash = it_exchange_create_download_hash( $download_id ) ) {
+							// Create initial hash data package
+							$hash_data = array(
+								'hash' => $hash,
+								'transaction_id' => $transaction_id,
+								'product_id'     => $transaction_product['product_id'],
+								'file_id'        => $download_id,
+								'customer_id'    => it_exchange_get_transaction_customer_id( $transaction_id ),
+								'expires'        => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expires' ) ),
+								'expire_int'    => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-int' ) ),
+								'expire_units'  => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-units' ) ),
+								'download_limit' => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'limit' ) ),
+								'downloads'      => '0', /** @todo change this! */
+							); 
 
-						// Create initial hash data package
-						$hash_data = array(
-							'hash' => $hash,
-							'transaction_id'  => $transaction_id,
-							'product_id'      => $transaction_product['product_id'],
-							'file_id'         => $download_id,
-							'customer_id'     => it_exchange_get_transaction_customer_id( $transaction_id ),
-							'download_limit'  => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'limit' ) ),
-							'downloads'       => '0', /** @todo change this! */
-						); 
-
-						// Add hash and data to DB as file post_meta
-						$pm_id = it_exchange_add_download_hash_data( $download_id, $hash, $hash_data );
+							// Add hash and data to DB as file post_meta
+							$pm_id = it_exchange_add_download_hash_data( $download_id, $hash, $hash_data );
+						}
 					}
 				}
 			}
@@ -453,7 +460,7 @@ class IT_Exchange_Product_Feature_Downloads {
 						'source'         => $source,
 						'expires'        => $expires,
 						'expire_int'     => $expire_int,
-						'expire_units'   => $expire_unit,
+						'expire_units'   => $expire_units,
 						'download_limit' => $download_limit,
 					);
 				}
@@ -561,9 +568,6 @@ class IT_Exchange_Product_Feature_Downloads {
 			wp_redirect( $url );
 			die();
 		}
-
-		// Unserialize
-		$hash_data = maybe_unserialize( $hash_data );
 
 		// If user isn't logged in, redirect them to login and bring them back when complete
 		if ( ! is_user_logged_in() ) {

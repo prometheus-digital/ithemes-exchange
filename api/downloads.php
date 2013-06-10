@@ -86,7 +86,7 @@ function it_exchange_get_download_data_from_hash( $hash ) {
 	$meta_key = '_download_hash_' . $hash;
 	$sql = $wpdb->prepare( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = %s LIMIT 1;", $meta_key );
 	if ( $data = $wpdb->get_var( $sql ) )
-		return $data;
+		return maybe_unserialize( $data );
 
 	return false;
 }
@@ -99,10 +99,9 @@ function it_exchange_get_download_data_from_hash( $hash ) {
  * @param  mixed   $transaction transaction ID or object
  * @param  array   $transaction_product this is the product array found in cart_details property in the transaction object
  * @param  integer $download_id the id of the download attached to the product passed in param 2
- * @param  string  $data_key optional key for specific download data
  * @return mixed   array of all data or a specific key
 */
-function it_exchange_get_download_data_from_transaction_product( $transaction, $transaction_product, $download_id, $data_key=false ) {
+function it_exchange_get_download_hashes_for_transaction_product( $transaction, $transaction_product, $download_id ) {
 	// Grab the transaction or return false
 	if ( false === ( $transaction = it_exchange_get_transaction( $transaction ) ) )
 		return false;
@@ -115,22 +114,7 @@ function it_exchange_get_download_data_from_transaction_product( $transaction, $
 	$transaction_hash_index = it_exchange_get_transaction_download_hash_index( $transaction->ID );
 
 	// If the requested download / product / transaction combination is in the hash_index, use that to look up the hash data
-	if ( ! empty( $transaction_hash_index[$product_id][$download_id] ) 
-		&& $hash_data = it_exchange_get_download_data_from_hash( $transaction_hash_index[$product_id][$download_id] ) ) {
-
-		// Unserialize the hash data
-		$hash_data = maybe_unserialize( $hash_data );
-
-		// Return a single key if requested and set
-		if ( ! empty( $data_key ) )
-			return isset( $hash_data[$data_key] ) ? $hash_data[$data_key] : false;
-
-		// Return the whole array if no key was requested
-		return $hash_data;
-	}
-
-	// Return false if we made it this far
-	return false;
+	return empty( $transaction_hash_index[$product_id][$download_id] ) ? array() : $transaction_hash_index[$product_id][$download_id];
 }
 
 /**
@@ -165,7 +149,10 @@ function it_exchange_update_transaction_download_hash_index( $transaction, $prod
 	$hash_index = (array) it_exchange_get_transaction_download_hash_index( $transaction );
 
 	// Add hash to existing hash index
-	$hash_index[$product][$download_id] = $hash;
+	if ( empty( $hash_index[$product][$download_id] ) || ! is_array( $hash_index[$product][$download_id] ) )
+		$hash_index[$product][$download_id] = array();
+
+	$hash_index[$product][$download_id][] = $hash;
 
 	// Update hash index
 	update_post_meta( $transaction->ID, '_it_exchange_download_hash_index', $hash_index );
@@ -173,7 +160,7 @@ function it_exchange_update_transaction_download_hash_index( $transaction, $prod
 }
 
 /**
- * Deletes a has from a transaction index
+ * Deletes a hash from a transaction index
  *
  * This function doesn't care what product its attached to. If it finds it, it deletes it.
  *
@@ -191,8 +178,10 @@ function it_exchange_delete_hash_from_transaction_hash_index( $transaction, $has
 	
 	// Delete if it exists
 	foreach( $hash_index as $product ) {
-		if ( in_array( $hash, $product ) )
-			unset( $hash_index[$product][$hash] );
+		foreach( $product as $download => $hashes ) {
+			if ( in_array( $hash, $download ) )
+				unset( $hash_index[$product][$download][$hash] );
+		}
 	}
 
 	// Update
@@ -215,6 +204,26 @@ function it_exchange_clear_transaction_hash_index( $transaction ) {
 
 	delete_post_meta( $transaction->ID, '_it_exchange_download_hash_index' );
 	return true;
+}
+
+/**
+ * Convert 5 months or 30 days to date from transaction
+ *
+ * @since 0.4.0
+ *
+ * @param array $hash_data from download hash
+ * @param string $purchase_date post_date from transaction post_type
+ * @param string $date_foramt optional. the format to display the date in.
+ * @return string
+*/
+function it_exchange_get_download_expiration_date_from_settings( $hash_data, $purchase_date, $date_format=false ) {
+	if ( empty( $hash_data['expire_int'] ) || empty( $hash_data['expire_units'] ) )
+		return __( 'Download doesn\'t expire', 'LION' );
+
+	$date_format = empty( $date_format ) ? get_option( 'date_format' ) : $date_format;
+
+	$expiration_time = strtotime( $purchase_date. '+' . esc_attr( $hash_data['expire_int'] ) . ' ' . esc_attr( $hash_data['expire_units'] ) );
+	return date_i18n( $date_format, $expiration_time );
 }
 
 /**

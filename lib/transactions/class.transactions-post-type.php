@@ -448,6 +448,8 @@ class IT_Exchange_Transaction_Post_Type {
 		$transaction_products = it_exchange_get_transaction_products( $post );
 		$hashes   = it_exchange_get_transaction_download_hash_index( $post );
 		foreach ( $transaction_products as $transaction_product ) {
+			$product_id = $transaction_product['product_id'];
+
 			// Grab the version of the product currently in the DB
 			$db_product = it_exchange_get_product( $transaction_product );
 
@@ -462,30 +464,42 @@ class IT_Exchange_Transaction_Post_Type {
 					// Download Title
 					echo get_the_title( $download_id ) . '<br />';
 	
-					// Expiration date if it exists
-					$expiration_date = it_exchange_get_download_data_from_transaction_product( $post->ID, $transaction_product, $download_id, 'expiration_date' );
+					// Give expiration details per hash created (1 for each quantity purchased)
+					$hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $post->ID, $transaction_product, $download_id );
+
+					foreach( (array) $hashes_for_product_transaction as $hash ) {
+						echo '<p>';
+						$hash_data = it_exchange_get_download_data_from_hash( $hash );
+
+						$expires        = empty( $hash_data['expires'] ) ? false : $hash_data['expires'];
+						$expire_int     = empty( $hash_data['expire_int'] ) ? false : $hash_data['expire_int'];
+						$expire_units   = empty( $hash_data['expire_units'] ) ? false : $hash_data['expire_units'];
+						$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
+						$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
 	
-					// Download limit (number of downloads remaining for this hash)
-					$download_limit  = it_exchange_get_download_data_from_transaction_product( $post->ID, $transaction_product, $download_id, 'download_limit' );
-	
-					// Download count (how many times has the download already been downloaded)
-					$download_count  = it_exchange_get_download_data_from_transaction_product( $post->ID, $transaction_product, $download_id, 'downloads' );
-	
-					if ( $expiration_date )
-						echo __( 'Expiration Date:', 'LION' ) . ' ' . esc_attr( $expiration_date ) . '<br />';
-	
-					if ( $download_limit )
-						echo __( 'Downloads Remaining:', 'LION' ) . ' ' . esc_attr( $download_limit ) . '<br />';
-	
-					if ( $downloads )
-						echo __( 'Downloads Count:', 'LION' ) . ' ' . esc_attr( $download_count ) . '<br />';
+						echo $hash . '<br />';
+						if ( $expires ) {
+							echo __( 'Expires: ', 'LION' ) . ' ' . esc_attr( it_exchange_get_download_expiration_date_from_settings( $hash_data, $post->post_date ) ).'<br/>';
+
+						} else {
+							_e( 'Doesn\'t exipre', 'LION' );
+						}
+
+						echo __( 'Download Limit:', 'LION' ) . ' ' . esc_attr( $download_limit ) . '<br />';
+						if ( $download_limit )
+							echo __( 'Downloads Remaining:', 'LION' ) . ' ' . ( $download_limit - $downloads ) . '<br />';
+						else
+							echo esc_attr( $download_limit ) . '<br />';
+						echo __( 'Download Count:', 'LION' ) . ' ' . esc_attr( $downloads ) . '<br />';
+
+						echo '</p>';
+					}
 	
 					echo '</p>';
+					echo '<hr />';
 				}
 			} else {
-			
 				echo '<p>' . __( 'This product does not contain any downloads', 'LION' ) . '</p>';
-				
 			}
 		}
 	}
