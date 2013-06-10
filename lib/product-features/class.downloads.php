@@ -144,6 +144,7 @@ class IT_Exchange_Product_Feature_Downloads {
 	*/
 	function register_metabox() {
 		add_meta_box( 'it-exchange-product-downloads', __( 'Product Downloads', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'low' );
+		add_meta_box( 'it-exchange-product-downloads-expiration', __( 'Downloads Expiration', 'LION' ), array( $this, 'print_expirations_metabox' ), 'it_exchange_prod', 'it_exchange_advanced' );
 	}
 
 	/**
@@ -158,15 +159,6 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// Set the value of the feature for this product
 		$existing_downloads = it_exchange_get_product_feature( $product->ID, 'downloads' );
-
-		// Download expires 
-		$download_expires = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expires' ) );
-		// Download exipre-int
-		$download_expire_int = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expire-int' ) );
-		// Download expire-units 
-		$download_expire_units = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expire-units' ) );
-		// Download limit
-		$download_limit = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'limit' ) );
 		?>
 			<div class="downloads-label-add">
 				<label>Files</label>
@@ -239,18 +231,65 @@ class IT_Exchange_Product_Feature_Downloads {
 					<?php endif; ?>
 				</div>
 			</div>
-			<div class="download-expires">
-				<?php _e( 'Download Expires:', 'LION' ); ?> <input type="input" name="it-exchange-digital-downloads-expires" value="<?php esc_attr_e( $download_expires ); ?>" />
-			</div>
-			<div class="download-expire-int">
-				<?php _e( 'Expire Int:', 'LION' ); ?> <input type="input" name="it-exchange-digital-downloads-expire-int" value="<?php esc_attr_e( $download_expire_int ); ?>" />
-			</div>
-			<div class="download-expire-units">
-				<?php _e( 'Expire Units:', 'LION' ); ?> <input type="input" name="it-exchange-digital-downloads-expire-units" value="<?php esc_attr_e( $download_expire_units ); ?>" />
-			</div>
-			<div class="download-limit">
-				<?php _e( 'Download Limit:', 'LION' ); ?> <input type="input" name="it-exchange-digital-downloads-download-limit" value="<?php esc_attr_e( $download_limit ); ?>" />
-			</div>
+		<?php
+	}
+
+	/**
+	 * This echos the downloads expiration metabox.
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function print_expirations_metabox( $post ) {
+		// Grab the iThemes Exchange Product object from the WP $post object
+		$product = it_exchange_get_product( $post );
+
+		// Download expires 
+		$download_expires = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expires' ) );
+		// Download exipre-int
+		$download_expire_int = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expire-int' ) );
+		// Download expire-units 
+		$download_expire_units = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expire-units' ) );
+		// Download limit
+		$download_limit = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'limit' ) );
+
+		?>
+		<div class="download-expires">
+			<?php _e( 'Download Expires:', 'LION' ); ?> <input type="checkbox" name="it-exchange-digital-downloads-expires" value="1" <?php checked( "1", $download_expires ); ?> />
+		</div>
+		<div class="download-expire-int">
+			<?php _e( 'Expire Int:', 'LION' ); ?> <input type="input" name="it-exchange-digital-downloads-expire-int" value="<?php esc_attr_e( $download_expire_int ); ?>" />
+		</div>
+		<div class="download-expire-units">
+			<?php _e( 'Expire Units:', 'LION' ); ?>
+			<select name="it-exchange-digital-downloads-expire-units">
+				<?php
+				$units = array(
+					'hours'     => __( 'Hours', 'LION' ),
+					'days'      => __( 'Days', 'LION' ),
+					'weeks'     => __( 'Weeks', 'LION' ),
+					'months'    => __( 'Months', 'LION' ),
+					'years'     => __( 'Years', 'LION' ),
+				);
+				foreach( $units as $unit => $unit_label ) { ?>
+					<option value="<?php esc_attr_e( $unit ); ?>" <?php selected( $unit, $download_expire_units ); ?>><?php esc_attr_e( $unit_label ); ?></option>
+				<?php } ?>
+			</select>
+		</div>
+		<div class="download-limit">
+			<?php _e( 'Download Limit:', 'LION' ); ?>
+			<select name="it-exchange-digital-downloads-download-limit">
+				<?php
+				$options = array( 0 => __( 'Unlimited', 'LION' ) );
+				for ( $i=1;$i<=20;$i++ ) {
+					$options[$i] = $i;
+				}
+				$options = apply_filters( 'it_exchange_download_limit_options', $options, $product );
+				foreach( $options as $limit_value => $limit_label ) : ?>
+					<option value="<?php esc_attr_e( $limit_value ); ?>" <?php selected( $limit_value, $download_limit ); ?>><?php esc_attr_e( $limit_label); ?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
 		<?php
 	}
 
@@ -363,7 +402,6 @@ class IT_Exchange_Product_Feature_Downloads {
 		} else {
 			$meta = get_post_meta( $product_id, '_it-exchange-download-meta', true );
 			if ( 'limit' == $options['setting'] ) {
-				$new_value = ( __( 'Unlimited', 'LION' ) == $new_value ) ? 0 : $new_value;
 				$meta['download-limit'] = $new_value;
 			} else if ( 'expires' == $options['setting'] ) {
 				$meta['expires'] = (boolean) $new_value;
@@ -423,10 +461,10 @@ class IT_Exchange_Product_Feature_Downloads {
 			}
 		} else if ( 'limit' == $options['setting'] ) {
 			$meta = get_post_meta( $product_id, '_it-exchange-download-meta', true );
-			return empty( $meta['download-limit'] ) ? __( 'Unlimited', 'LION' ) : absint( $meta['download-limit'] );
+			return empty( $meta['download-limit'] ) ? 0 : absint( $meta['download-limit'] );
 		} else if ( 'expires' == $options['setting'] ) {
 			$meta = get_post_meta( $product_id, '_it-exchange-download-meta', true );
-			return (boolean) $meta['expires'];
+			return ! empty( $meta['expires'] );
 		} else if ( 'expire-int' == $options['setting'] ) {
 			$meta = get_post_meta( $product_id, '_it-exchange-download-meta', true );
 			return empty( $meta['expire-int'] ) ? 30 : absint( $meta['expire-int'] );
