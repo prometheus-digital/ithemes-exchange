@@ -363,7 +363,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				break;
 			case 'html' :
 			default :
-				$html  = '<input' . $class . ' type="text" name="' . esc_attr( $var_key ) . '" value="1" />' . "\n";
+				$html  = '<input' . $class . ' type="number" name="' . esc_attr( $var_key ) . '" value="1" min="1" />' . "\n";
 				$html .= '<input type="hidden" name="' . it_exchange_get_field_name( 'product_max_purchase_quantity' ) . '[' . esc_attr( $this->product->ID ) . ']" value="' . ( $max_quantity ) . '" />';
 				return $html;
 				break;
