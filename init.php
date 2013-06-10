@@ -57,6 +57,7 @@ class IT_Exchange {
 		require( $this->_plugin_path . 'api/load.php' );
 		require( $this->_plugin_path . 'core-addons/load.php' );
 
+		do_action( 'it_exchange_loaded' );
 		add_action( 'it_libraries_loaded', array( $this, 'addons_init' ) );
 	}
 

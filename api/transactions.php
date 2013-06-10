@@ -291,9 +291,9 @@ function it_exchange_update_transaction_status( $transaction, $status ) {
  * @return string the transaction status
 */
 function it_exchange_get_transaction_status( $transaction ) {
-    $transaction = new IT_Exchange_Transaction( $transaction );
-    if ( $transaction->ID )
-        return $transaction;
+    $transaction = it_exchange_get_transaction( $transaction );
+    if ( !empty( $transaction->status ) )
+        return $transaction->status;
     return false;
 }
 

@@ -38,17 +38,17 @@ class IT_Exchange_Core_Addon_Transaction_Status_Meta_Box {
 	*/
 	function print_meta_box( $post ) {
 		$transaction = it_exchange_get_transaction( $post );
-		$current_status = it_exchange_get_transaction_status( $transaction );
 		$transaction_method = it_exchange_get_transaction_method( $transaction );
 
 		if ( ! it_exchange_addon_supports( $transaction_method, 'transaction_status' ) )
 			return;
-		
+			
+		$current_status = it_exchange_get_transaction_status( $transaction );
 		$available_statuses = it_exchange_get_addon_support( $transaction_method, 'transaction_status' );
 		$available_statuses = empty( $available_statuses['options'] ) ? array() : $available_statuses['options'];
 
 		if ( count( $available_statuses ) < 2 ) {
-			esc_attr_e( it_exchange_get_transaction_status_label( $post ) );
+			esc_attr_e( it_exchange_get_transaction_status_label( $transaction ) );
 		} else {
 			?><div id="it-exchange-transaction-status-select"><?php
 			foreach( $available_statuses as $slug => $name ) {
