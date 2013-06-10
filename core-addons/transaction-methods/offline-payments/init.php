@@ -213,6 +213,33 @@ function it_exchange_transaction_instructions_offline_payments( $instructions ) 
 add_filter( 'it_exchange_transaction_instructions_offline-payments', 'it_exchange_transaction_instructions_offline_payments' );
 
 /**
+ * Gets the interpretted transaction status from valid stripe transaction statuses
+ *
+ * @since 0.4.0
+ *
+ * @param string $status the string of the stripe transaction
+ * @return string translaction transaction status
+*/
+function it_exchange_offline_payments_addon_transaction_status_label( $status ) {
+
+	switch ( $status ) {
+
+		case 'succeeded':
+		case 'paid':
+			return __( 'Paid', 'LION' );
+		case 'refunded':
+			return __( 'Refunded', 'LION' );
+		case 'pending':
+			return __( 'Pending', 'LION' );
+		case 'voided':
+			return __( 'Voided', 'LION' );
+
+	}
+
+}
+add_filter( 'it_exchange_transaction_status_label_offline-payments', 'it_exchange_offline_payments_addon_transaction_status_label' );
+
+/**
  * Class for Offline
  * @since 0.3.6
 */
