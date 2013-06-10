@@ -6,7 +6,7 @@
 */
 
 class IT_Theme_API_Cart_Item implements IT_Theme_API {
-	
+
 	/**
 	 * API context
 	 * @var string $_context
@@ -50,7 +50,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
 	 * @since 0.4.0
-	 * 
+	 *
 	 * @return string
 	*/
 	function get_api_context() {
@@ -68,12 +68,12 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 
 		// Set options
 		$defaults      = array(
-			'before' => '', 
-			'after'  => '', 
+			'before' => '',
+			'after'  => '',
 			'format' => 'html',
 			'class'  => false,
 			'label'  => __( '&times;', 'LION' ),
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		// Force link in SuperWidget
@@ -116,9 +116,9 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	function title( $options=array() ) {
 		// Set options
 		$defaults      = array(
-			'before' => '', 
-			'after'  => '', 
-		);  
+			'before' => '',
+			'after'  => '',
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		return $options['before'] . it_exchange_get_cart_product_title( $this->_cart_item ) . $options['after'];
@@ -132,13 +132,13 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	*/
 	function quantity( $options=array() ) {
 		// Set options
-		$defaults      = array(
-			'before' => '', 
-			'after'  => '', 
+		$defaults = array(
+			'before' => '',
+			'after'  => '',
 			'format' => 'text-field',
 			'class'  => 'product-cart-quantity',
 			'label'  => '',
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		$var_key = it_exchange_get_field_name( 'product_purchase_quantity' );
 		$var_value = it_exchange_get_cart_product_quantity( $this->_cart_item );
