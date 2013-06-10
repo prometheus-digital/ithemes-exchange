@@ -14,6 +14,21 @@ function it_exchange_stripe_addon_enqueue_script() {
 add_action( 'wp_enqueue_scripts', 'it_exchange_stripe_addon_enqueue_script' );
 
 /**
+ * Stripe URL to perform refunds
+ *
+ * @since 0.4.0
+ *
+ * @param string $url passed by WP filter.
+ * @param string $url transaction URL
+*/
+function it_exchange_refund_url_for_stripe( $url ) {
+
+	return 'https://manage.stripe.com/';
+	
+}
+add_filter( 'it_exchange_refund_url_for_stripe', 'it_exchange_refund_url_for_stripe' );
+
+/**
  * This proccesses a stripe transaction.
  *
  * @since 0.4.0

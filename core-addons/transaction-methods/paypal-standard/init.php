@@ -29,6 +29,20 @@ function it_exchange_paypal_standard_addon_wizard_settings( $form ) {
 add_action( 'it_exchange_print_wizard_settings', 'it_exchange_paypal_standard_addon_wizard_settings' );
 
 /**
+ * Stripe URL to perform refunds
+ *
+ * @since 0.4.0
+ *
+ * @param string $url passed by WP filter.
+ * @param string $url transaction URL
+*/
+function it_exchange_refund_url_for_paypal_standard( $url ) {
+
+	return 'https://paypal.com/';
+	
+}
+add_filter( 'it_exchange_refund_url_for_paypal-standard', 'it_exchange_refund_url_for_paypal_standard' );
+/**
  * This proccesses a paypal transaction.
  *
  * @since 0.4.0

@@ -80,12 +80,13 @@
 					$refund_url = remove_query_arg( 'wp_http_referer', $refund_url );
 					$refund_url = remove_query_arg( 'it-exchange-customer-transaction-action', $refund_url );
 					$refund_url = remove_query_arg( '_wpnonce', $refund_url );
+					$refund_url = apply_filters( 'it_exchange_refund_url_for_' . it_exchange_get_transaction_method( $transaction ), $refund_url );
 
 					// Actions array
 					$actions_array = array( 
-						$view_url   => 'View',
-						$resend_url => 'Resend Confirmation Email',
-						$refund_url => 'Refund',
+						$view_url   => __( 'View', 'LION' ),
+						$resend_url => __( 'Resend Confirmation Email', 'LION' ),
+						$refund_url =>  sprintf( __( 'Refund from %s', 'LION' ), it_exchange_get_transaction_method_name( $transaction ) ),
 					);
 					$description = it_exchange_get_transaction_description( $transaction );
 					$price       = it_exchange_get_transaction_total( $transaction );
