@@ -317,6 +317,8 @@ class IT_Exchange_Email_Notifications {
 	*/
 	function it_exchange_replace_order_table_tag( $args, $options = NULL ) {
 		
+		$purchase_message_on = false;
+		
 		if ( in_array( 'purchase_message', $options ) )
 			$purchase_message_on = true;
 		

@@ -50,7 +50,7 @@ function it_exchange_register_core_addons() {
 			'file'              => dirname( __FILE__ ) . '/transaction-methods/paypal-standard/init.php',
 			'category'          => 'transaction-methods',
 			'tag'               => 'core',
-			'supports'          => apply_filters( 'it_exchange_register_paypal_standard_default_features', array() ),
+			'supports'          => array( 'transaction_status' => true ),
 			'settings-callback' => 'it_exchange_paypal_standard_settings_callback',
 		),
 		// Stripe Transaction Method
@@ -62,7 +62,7 @@ function it_exchange_register_core_addons() {
 			'icon'              => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/transaction-methods/stripe/stripe.png' ),
 			'file'              => dirname( __FILE__ ) . '/transaction-methods/stripe/init.php',
 			'category'          => 'transaction-methods',
-			'supports'          => apply_filters( 'it_exchange_register_stripe_default_features', array() ),
+			'supports'          => array( 'transaction_status' => true ),
 			'settings-callback' => 'it_exchange_stripe_addon_settings_callback',
 		),
 		// Digital Download Product Types

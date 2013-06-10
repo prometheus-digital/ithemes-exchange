@@ -41,17 +41,14 @@ class IT_Exchange_Core_Addon_Transaction_Status_Meta_Box {
 		$current_status = it_exchange_get_transaction_status( $transaction );
 		$transaction_method = it_exchange_get_transaction_method( $transaction );
 
-		ITDebug::print_r( get_post_meta( $transaction->ID, '_it_exchange_transaction_status', true ) );
-		ITDebug::print_r( get_post_meta( $transaction->ID, '_it_exchange_transaction_refunds' ) );
-
 		if ( ! it_exchange_addon_supports( $transaction_method, 'transaction_status' ) )
 			return;
-
-		$available_statuses  = it_exchange_get_addon_support( $transaction_method, 'transaction_status' );
+		
+		$available_statuses = it_exchange_get_addon_support( $transaction_method, 'transaction_status' );
 		$available_statuses = empty( $available_statuses['options'] ) ? array() : $available_statuses['options'];
 
 		if ( count( $available_statuses ) < 2 ) {
-			echo '<p>' . __( 'The transaction method used for this transaction does not support changing transaction statuses.', 'LION' ) . '</p>';
+			esc_attr_e( it_exchange_get_transaction_status_label( $post ) );
 		} else {
 			?><div id="it-exchange-transaction-status-select"><?php
 			foreach( $available_statuses as $slug => $name ) {

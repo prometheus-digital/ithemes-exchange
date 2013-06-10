@@ -303,12 +303,24 @@ function it_exchange_get_transaction_status( $transaction ) {
  * @since 0.4.0
  *
  * @param string $transaction_method the transaction method
- * @param string $status the transaction status
  * @return string
 */
 function it_exchange_get_transaction_status_label( $transaction ){
 	$transaction = it_exchange_get_transaction( $transaction );
 	return apply_filters( 'it_exchange_transaction_status_label_' . $transaction->transaction_method, $transaction->status );
+}
+
+/**
+ * Returns the instructions for a transaction instructions (provided by addon)
+ *
+ * @since 0.4.0
+ *
+ * @param string $transaction_method the transaction method
+ * @return string
+*/
+function it_exchange_get_transaction_instructions( $transaction ){
+	$transaction = it_exchange_get_transaction( $transaction );
+	return apply_filters( 'it_exchange_transaction_instructions_' . $transaction->transaction_method, '' );
 }
 
 /**
