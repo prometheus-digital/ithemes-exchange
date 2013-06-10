@@ -6,7 +6,7 @@
 */
 
 class IT_Theme_API_Cart implements IT_Theme_API {
-	
+
 	/**
 	 * API context
 	 * @var string $_context
@@ -48,7 +48,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
 	 * @since 0.4.0
-	 * 
+	 *
 	 * @return string
 	*/
 	function get_api_context() {
@@ -58,7 +58,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	/**
 	 * This loops through the cart session products and updates the cart-item global.
 	 *
-	 * It return false when it reaches the last item 
+	 * It return false when it reaches the last item
 	 * If the has flag has been passed, it just returns a boolean
 	 *
 	 * @since 0.4.0
@@ -120,9 +120,9 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			'before'        => '',
 			'after'         => '',
 			'include-nonce' => true,
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$output = $options['before'];
 		if ( $options['include-nonce'] )
 			$output .= it_exchange_get_cart_nonce_field();
@@ -145,7 +145,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			'class'  => 'it-exchange-update-cart',
 			'format' => 'button',
 			'label'  => __( 'Update Cart', 'LION' ),
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		$var = it_exchange_get_field_name( 'update_cart_action' );
@@ -171,7 +171,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			'class'  => false,
 			'format' => 'button',
 			'label'  => __( 'Checkout', 'LION' ),
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		$class = empty( $options['class'] ) ? 'it-exchange-checkout-cart' : 'it-exchange-checkout-cart ' . esc_attr( $options['class'] );
@@ -219,7 +219,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			'format' => 'button',
 			'title'  => 'Empty Cart',
 			'label'  => __( 'Empty Cart', 'LION' ),
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		$var = it_exchange_get_field_name( 'empty_cart' );
@@ -252,14 +252,14 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	 * @todo add options and docblock
 	*/
 	function sub_total( $options=array() ) {
-		return it_exchange_get_cart_subtotal();	
+		return it_exchange_get_cart_subtotal();
 	}
-	
+
 	/**
 	 * @todo add options and docblock
 	*/
 	function total( $options=array() ) {
-		return it_exchange_get_cart_total();	
+		return it_exchange_get_cart_total();
 	}
 
 	/**
@@ -295,7 +295,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	function focus( $options=array() ) {
 		$defaults = array(
 			'type'  => false,
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		$focus_key = it_exchange_get_field_name( 'sw_cart_focus' );
 
