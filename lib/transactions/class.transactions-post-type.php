@@ -316,6 +316,9 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return void
 	*/
 	function register_transaction_details_admin_metabox( $post ) {
+		// Remove Publish metabox
+		remove_meta_box( 'submitdiv', 'it_exchange_tran', 'side' );
+
 		// Customer Details
 		$title     = __( 'Customer Details', 'LION' );
 		$callback  = array( $this, 'print_transaction_customer_details_metabox' );
