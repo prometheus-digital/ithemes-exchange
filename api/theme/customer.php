@@ -6,14 +6,14 @@
 */
 
 class IT_Theme_API_Customer implements IT_Theme_API {
-	
+
 	/**
 	 * API context
 	 * @var string $_context
 	 * @since 0.4.0
 	*/
 	private $_context = 'customer';
-	
+
 	/**
 	 * Current customer being viewed
 	 * @var string $_customer
@@ -57,7 +57,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
 	 * @since 0.4.0
-	 * 
+	 *
 	 * @return string
 	*/
 	function get_api_context() {
@@ -70,12 +70,12 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @since 0.4.0
 	 * @return string
 	*/
-	function form_open( $options=array() ) {		
+	function form_open( $options=array() ) {
 		$output = '<form action="" method="post" >';
 		$output .= '<input type="hidden" name="user_id" value="' . $this->_customer->data->ID . '" >';
 		return $output;
 	}
-	
+
 	/**
 	 * Outputs the customer's username data
 	 *
@@ -83,28 +83,28 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @return string
 	*/
 	function username( $options=array() ) {
-		$defaults      = array(
-			'format'      => 'html',
+		$defaults = array(
+			'format' => 'html',
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_value = $this->_customer->data->user_login;
 		$label = '<label>' . $field_value . '</label>';
 
 		switch( $options['format'] ) {
-			
+
 			case 'label':
 				$output = $label;
-			
+
 			case 'html':
 			default:
 				$output = $label;
-			
+
 		}
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * Outputs the customer's account menu data
 	 *
@@ -113,20 +113,20 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @return string
 	*/
 	function accountmenu( $options=array() ) {
-		$defaults      = array(
-			'format'      => 'html',
+		$defaults = array(
+			'format' => 'html',
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$output = '';
-		
+
 		$output .= '<a href="">Downloads</a>';
 		$output .= '<a href="">Purchases</a>';
 		$output .= '<a href="">Profile</a>';
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * Outputs the customer's avatar data
 	 *
@@ -136,7 +136,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	function avatar( $options=array() ) {
 		return get_avatar( $this->_customer->data->ID, apply_filters( 'it_exchange_avatar_size', '128' ), apply_filters( 'it_exchange_default_avatar', 'blank' ) );
 	}
-	
+
 	/**
 	 * Outputs the customer's first name data
 	 *
@@ -144,40 +144,40 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @return string
 	*/
 	function firstname( $options=array() ) {
-		$defaults      = array(
+		$defaults = array(
 			'format' => 'html',
 			'label'  => __( 'First Name', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id = 'first_name';
 		$field_name = $field_id;
 		$field_value = $this->_customer->data->first_name;
-		
+
 		switch( $options['format'] ) {
-			
+
 			case 'field-id':
 				$output = $field_id;
-			
+
 			case 'field-name':
 				$output = $field_name;
-			
+
 			case 'field-value':
 				$output = $field_value;
-			
+
 			case 'label':
 				$output = $options['label'];
-			
+
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
 				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
-			
+
 		}
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * Outputs the customer's last name data
 	 *
@@ -185,40 +185,40 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @return string
 	*/
 	function lastname( $options=array() ) {
-		$defaults      = array(
-			'format'      => 'html',
+		$defaults = array(
+			'format' => 'html',
 			'label'  => __( 'Last Name', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id = 'last_name';
 		$field_name = $field_id;
 		$field_value = $this->_customer->data->last_name;
-		
+
 		switch( $options['format'] ) {
-			
+
 			case 'field-id':
 				$output = $field_id;
-			
+
 			case 'field-name':
 				$output = $field_name;
-			
+
 			case 'field-value':
 				$output = $field_value;
-			
+
 			case 'label':
 				$output = $options['label'];
-			
+
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
 				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
-			
+
 		}
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * Outputs the customer's email data
 	 *
@@ -226,40 +226,40 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @return string
 	*/
 	function email( $options=array() ) {
-		$defaults      = array(
-			'format'      => 'html',
+		$defaults = array(
+			'format' => 'html',
 			'label'  => __( 'Email', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id = 'email';
 		$field_name = $field_id;
 		$field_value = $this->_customer->data->user_email;
-		
+
 		switch( $options['format'] ) {
-			
+
 			case 'field-id':
 				$output = $field_id;
-			
+
 			case 'field-name':
 				$output = $field_name;
-			
+
 			case 'field-value':
 				$output = $field_value;
-			
+
 			case 'label':
 				$output = $options['label'];
-			
+
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
 				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
-			
+
 		}
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * Outputs the customer's website data
 	 *
@@ -267,40 +267,40 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @return string
 	*/
 	function website( $options=array() ) {
-		$defaults      = array(
-			'format'      => 'html',
+		$defaults = array(
+			'format' => 'html',
 			'label'  => __( 'Website', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id = 'url';
 		$field_name = $field_id;
 		$field_value = $this->_customer->data->user_url;
-		
+
 		switch( $options['format'] ) {
-			
+
 			case 'field-id':
 				$output = $field_id;
-			
+
 			case 'field-name':
 				$output = $field_name;
-			
+
 			case 'field-value':
 				$output = $field_value;
-			
+
 			case 'label':
 				$output = $options['label'];
-			
+
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
 				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
-			
+
 		}
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * Outputs the customer's password(1) input data
 	 *
@@ -308,36 +308,36 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @return string
 	*/
 	function password1( $options=array() ) {
-		$defaults      = array(
-			'format'      => 'html',
+		$defaults = array(
+			'format' => 'html',
 			'label'  => __( 'Password', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id = 'pass1';
 		$field_name = $field_id;
-		
+
 		switch( $options['format'] ) {
-			
+
 			case 'field-id':
 				$output = $field_id;
-			
+
 			case 'field-name':
 				$output = $field_name;
-			
+
 			case 'label':
 				$output = $options['label'];
-			
+
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
 				$output .= '<input type="password" id="' . $field_id. '" name="' . $field_name. '" value="" />';
-			
+
 		}
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * Outputs the customer's password(2) input data
 	 *
@@ -345,36 +345,36 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @return string
 	*/
 	function password2( $options=array() ) {
-		$defaults      = array(
+		$defaults = array(
 			'format' => 'html',
 			'label'  => __( 'Confirm Password', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id = 'pass2';
 		$field_name = $field_id;
-		
+
 		switch( $options['format'] ) {
-			
+
 			case 'field-id':
 				$output = $field_id;
-			
+
 			case 'field-name':
 				$output = $field_name;
-			
+
 			case 'label':
 				$output = $options['label'];
-			
+
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
 				$output .= '<input type="password" id="' . $field_id. '" name="' . $field_name. '" value="" />';
-			
+
 		}
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * Outputs the profile page save button
 	 *
@@ -382,35 +382,35 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @return string
 	*/
 	function save( $options=array() ) {
-		$defaults      = array(
+		$defaults = array(
 			'format' => 'html',
 			'label'  =>  __( 'Save Profile', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id = 'it-exchange-save-profile';
 		$field_name = $field_id;
-		
+
 		switch( $options['format'] ) {
-			
+
 			case 'field-id':
 				$output = $field_id;
-			
+
 			case 'field-name':
 				$output = $field_name;
-			
+
 			case 'label':
 				$output = $options['label'];
-			
+
 			case 'html':
 			default:
 				$output = '<input type="submit" id="' . $field_id. '" name="' . $field_name. '" value="' . $options['label'] . '" />';
-			
+
 		}
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * Outputs the profile page end of form
 	 *
