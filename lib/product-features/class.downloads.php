@@ -144,6 +144,7 @@ class IT_Exchange_Product_Feature_Downloads {
 	*/
 	function register_metabox() {
 		add_meta_box( 'it-exchange-product-downloads', __( 'Product Downloads', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'low' );
+		add_meta_box( 'it-exchange-product-downloads-expiration', __( 'Downloads Expiration', 'LION' ), array( $this, 'print_expirations_metabox' ), 'it_exchange_prod', 'it_exchange_advanced' );
 	}
 
 	/**
@@ -158,9 +159,6 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// Set the value of the feature for this product
 		$existing_downloads = it_exchange_get_product_feature( $product->ID, 'downloads' );
-
-		// Download limit
-		$download_limit = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'limit' ) );
 		?>
 			<div class="downloads-label-add">
 				<label>Files</label>
@@ -233,9 +231,65 @@ class IT_Exchange_Product_Feature_Downloads {
 					<?php endif; ?>
 				</div>
 			</div>
-			<div class="download-limit">
-				<?php _e( 'Download Limit:', 'LION' ); ?> <input type="input" name="it-exchange-digital-downloads-download-limit" value="<?php esc_attr_e( $download_limit ); ?>" />
-			</div>
+		<?php
+	}
+
+	/**
+	 * This echos the downloads expiration metabox.
+	 *
+	 * @since 0.4.0
+	 * @return void
+	*/
+	function print_expirations_metabox( $post ) {
+		// Grab the iThemes Exchange Product object from the WP $post object
+		$product = it_exchange_get_product( $post );
+
+		// Download expires 
+		$download_expires = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expires' ) );
+		// Download exipre-int
+		$download_expire_int = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expire-int' ) );
+		// Download expire-units 
+		$download_expire_units = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expire-units' ) );
+		// Download limit
+		$download_limit = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'limit' ) );
+
+		?>
+		<div class="download-expires">
+			<?php _e( 'Download Expires:', 'LION' ); ?> <input type="checkbox" name="it-exchange-digital-downloads-expires" value="1" <?php checked( "1", $download_expires ); ?> />
+		</div>
+		<div class="download-expire-int">
+			<?php _e( 'Expire Int:', 'LION' ); ?> <input type="input" name="it-exchange-digital-downloads-expire-int" value="<?php esc_attr_e( $download_expire_int ); ?>" />
+		</div>
+		<div class="download-expire-units">
+			<?php _e( 'Expire Units:', 'LION' ); ?>
+			<select name="it-exchange-digital-downloads-expire-units">
+				<?php
+				$units = array(
+					'hours'     => __( 'Hours', 'LION' ),
+					'days'      => __( 'Days', 'LION' ),
+					'weeks'     => __( 'Weeks', 'LION' ),
+					'months'    => __( 'Months', 'LION' ),
+					'years'     => __( 'Years', 'LION' ),
+				);
+				foreach( $units as $unit => $unit_label ) { ?>
+					<option value="<?php esc_attr_e( $unit ); ?>" <?php selected( $unit, $download_expire_units ); ?>><?php esc_attr_e( $unit_label ); ?></option>
+				<?php } ?>
+			</select>
+		</div>
+		<div class="download-limit">
+			<?php _e( 'Download Limit:', 'LION' ); ?>
+			<select name="it-exchange-digital-downloads-download-limit">
+				<?php
+				$options = array( 0 => __( 'Unlimited', 'LION' ) );
+				for ( $i=1;$i<=20;$i++ ) {
+					$options[$i] = $i;
+				}
+				$options = apply_filters( 'it_exchange_download_limit_options', $options, $product );
+				foreach( $options as $limit_value => $limit_label ) : ?>
+					<option value="<?php esc_attr_e( $limit_value ); ?>" <?php selected( $limit_value, $download_limit ); ?>><?php esc_attr_e( $limit_label); ?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
 		<?php
 	}
 
@@ -260,7 +314,19 @@ class IT_Exchange_Product_Feature_Downloads {
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'downloads' ) )
 			return;
 		
-		// Update Download limit
+		// Update Expires Meta
+		$expires= isset( $_POST['it-exchange-digital-downloads-expires'] ) ? $_POST['it-exchange-digital-downloads-expires'] : 0;
+		it_exchange_update_product_feature( $product_id, 'downloads', $expires, array( 'setting' => 'expires' ) );
+
+		// Update Expire Int Meta
+		$expire_int = isset( $_POST['it-exchange-digital-downloads-expire-int'] ) ? $_POST['it-exchange-digital-downloads-expire-int'] : 30;
+		it_exchange_update_product_feature( $product_id, 'downloads', $expire_int, array( 'setting' => 'expire-int' ) );
+
+		// Update Expire Units Meta
+		$expire_units = isset( $_POST['it-exchange-digital-downloads-expire-units'] ) ? $_POST['it-exchange-digital-downloads-expire-units'] : 'days';
+		it_exchange_update_product_feature( $product_id, 'downloads', $expire_units, array( 'setting' => 'expire-units' ) );
+
+		// Update Download limit Meta
 		$download_limit = isset( $_POST['it-exchange-digital-downloads-download-limit'] ) ? $_POST['it-exchange-digital-downloads-download-limit'] : 0;
 		it_exchange_update_product_feature( $product_id, 'downloads', $download_limit, array( 'setting' => 'limit' ) );
 
@@ -333,8 +399,18 @@ class IT_Exchange_Product_Feature_Downloads {
 			}
 			// Add our action back
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
-		} else if ( 'limit' == $options['setting'] ) {
-			update_post_meta( $product_id, '_it-exchange-download-limit', $new_value );	
+		} else {
+			$meta = get_post_meta( $product_id, '_it-exchange-download-meta', true );
+			if ( 'limit' == $options['setting'] ) {
+				$meta['download-limit'] = $new_value;
+			} else if ( 'expires' == $options['setting'] ) {
+				$meta['expires'] = (boolean) $new_value;
+			} else if ( 'expire-int' == $options['setting'] ) {
+				$meta['expire-int'] = $new_value;
+			} else if ( 'expire-units' == $options['setting'] ) {
+				$meta['expire-units'] = $new_value;
+			}
+			update_post_meta( $product_id, '_it-exchange-download-meta', $meta );	
 		}
 	}
 
@@ -364,21 +440,37 @@ class IT_Exchange_Product_Feature_Downloads {
 			if ( $download_posts = get_posts( $args ) ) {
 				$downloads = array();
 				foreach( $download_posts as $post ) {
-					$post_meta  = get_post_meta( $post->ID, '_it-exchange-download-info', true );
-					$source     = empty( $post_meta['source'] ) ? false : $post_meta['source'];
-					$limit      = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'limit' ) ); 
+					$post_meta      = get_post_meta( $post->ID, '_it-exchange-download-info', true );
+					$source         = empty( $post_meta['source'] ) ? false : $post_meta['source'];
+					$expires        = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expires' ) ); 
+					$expire_int     = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire_int' ) ); 
+					$expire_units   = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire_units' ) ); 
+					$download_limit = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'download_limit' ) ); 
 
 					$downloads[$post->ID] = array(
-						'id'     => $post->ID,
-						'name'   => $post->post_title,
-						'source' => $source,
-						'limit'    => $limit,
+						'id'             => $post->ID,
+						'name'           => $post->post_title,
+						'source'         => $source,
+						'expires'        => $expires,
+						'expire_int'     => $expire_int,
+						'expire_units'   => $expire_unit,
+						'download_limit' => $download_limit,
 					);
 				}
 				return $downloads;
 			}
 		} else if ( 'limit' == $options['setting'] ) {
-			return get_post_meta( $product_id, '_it-exchange-download-limit', true );
+			$meta = get_post_meta( $product_id, '_it-exchange-download-meta', true );
+			return empty( $meta['download-limit'] ) ? 0 : absint( $meta['download-limit'] );
+		} else if ( 'expires' == $options['setting'] ) {
+			$meta = get_post_meta( $product_id, '_it-exchange-download-meta', true );
+			return ! empty( $meta['expires'] );
+		} else if ( 'expire-int' == $options['setting'] ) {
+			$meta = get_post_meta( $product_id, '_it-exchange-download-meta', true );
+			return empty( $meta['expire-int'] ) ? 30 : absint( $meta['expire-int'] );
+		} else if ( 'expire-units' == $options['setting'] ) {
+			$meta = get_post_meta( $product_id, '_it-exchange-download-meta', true );
+			return empty( $meta['expire-units'] ) ? 'days' : $meta['expire-units'];
 		}
 		return false;
 	}
@@ -391,11 +483,11 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * @param integer $product_id
 	 * @return boolean
 	*/
-	function product_has_feature( $result, $product_id ) {
+	function product_has_feature( $result, $product_id, $options=array() ) {
 		// Does this product type support this feature?
-		if ( false === $this->product_supports_feature( false, $product_id ) )
+		if ( false === $this->product_supports_feature( false, $product_id, $options ) )
 			return false;
-		return (boolean) $this->get_feature( false, $product_id );
+		return (boolean) $this->get_feature( false, $product_id, $options );
 	}
 
 	/**
