@@ -6,7 +6,7 @@
 */
 
 class IT_Theme_API_Coupons implements IT_Theme_API {
-	
+
 	/**
 	 * API context
 	 * @var string $_context
@@ -55,7 +55,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
 	 * @since 0.4.0
-	 * 
+	 *
 	 * @return string
 	*/
 	function get_api_context() {
@@ -118,12 +118,12 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 
 			// If we made it here, we're doing a loop of applied coupons
 			// This will init/reset the applied_coupons global and loop through them.
-			if ( empty( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] ) ) { 
+			if ( empty( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] ) ) {
 				$GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] = it_exchange_get_applied_coupons( $options['type'] );
 				$GLOBALS['it_exchange']['coupon'] = reset( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] );
 				return true;
 			} else {
-				if ( next( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] ) ) { 
+				if ( next( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] ) ) {
 					$GLOBALS['it_exchange']['coupon'] = current( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] );
 					return true;
 				} else {
@@ -203,12 +203,11 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 
 			// Return the field
 			$field = it_exchange_get_coupon_type_apply_field( $options['type'], array( 'class' => $options['class'], 'placeholder' => $options['placeholder'] ) );
-			
+
 			if ( $field )
 				return $options['before'] . $field . $options['after'];
 			else
 				return '';
-		
 	}
 
 	function code( $options=array() ) {
@@ -339,7 +338,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 	}
 
 	/**
-	 * The coupon Limit 
+	 * The coupon Limit
 	 *
 	 * @since 0.4.0
 	 * @return string
