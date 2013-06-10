@@ -27,10 +27,11 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	public $_tag_map = array(
-		'status'   => 'status',
-		'date'     => 'date',
-		'total'    => 'total',
-		'products' => 'products',
+		'status'       => 'status',
+		'date'         => 'date',
+		'total'        => 'total',
+		'products'     => 'products',
+		'instructions' => 'instructions',
 	);
 
 	/**
@@ -70,6 +71,23 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		return $options['before'] . it_exchange_get_transaction_status_label( $this->_transaction ) . $options['after'];
+	}
+
+	/**
+	 * Returns the transaction status
+	 *
+	 * @since 0.4.0
+	 *
+	*/
+	function instructions( $options=array() ) {
+		// Set options
+		$defaults      = array(
+			'before' => '', 
+			'after'  => '', 
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		return $options['before'] . it_exchange_get_transaction_instructions( $this->_transaction ) . $options['after'];
 	}
 
 	/**
