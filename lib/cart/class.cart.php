@@ -341,7 +341,7 @@ class IT_Exchange_Shopping_Cart {
 		$transaction_object->description            = it_exchange_get_cart_description();
 		$transaction_object->products               = $products;
 		$transaction_object->coupons                = it_exchange_get_applied_coupons();
-		$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount();
+		$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
 
 		$transaction_object = apply_filters( 'it_exchange_transaction_object', $transaction_object, $requested_transaction_method );
 

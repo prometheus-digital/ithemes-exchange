@@ -233,6 +233,8 @@ function it_exchange_offline_payments_addon_transaction_status_label( $status ) 
 			return __( 'Pending', 'LION' );
 		case 'voided':
 			return __( 'Voided', 'LION' );
+		default:
+			return __( 'Unknown', 'LION' );
 
 	}
 
