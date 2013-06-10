@@ -693,6 +693,20 @@ function it_exchange_get_transaction_method_name( $transaction ) {
 }
 
 /**
+ * Returns the name of a transaction method used for a specific transaction
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @return string
+*/
+
+function it_exchange_get_transaction_method_id( $transaction ){
+	$transaction = it_exchange_get_transaction( $transaction );
+	return get_post_meta( $transaction->ID, '_it_exchange_transaction_method_id', true );
+}
+
+/**
  * For processing a transaction
  *
  * @since 0.3.7

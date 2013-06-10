@@ -385,6 +385,7 @@ class IT_Exchange_Transaction_Post_Type {
 			<?php _e( 'Date:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_date( $post ) ); ?><br />
 			<?php _e( 'Status:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?><br />
 			<?php _e( 'Method:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?><br />
+			<?php _e( 'Method ID:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_method_id( $post ) ); ?><br />
 			<?php _e( 'Currency:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_currency( $post ) ); ?><br />
 			<?php _e( 'Subtotal:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?><br />
 			<?php if ( it_exchange_has_transaction_refunds( $post ) ) : ?>
