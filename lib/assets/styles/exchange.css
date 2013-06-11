@@ -37,6 +37,10 @@
 #it-exchange-customer .customer-password div{float:left;}
 #it-exchange-customer .customer-save{margin-top:1em;}
 
+/** ----------------------------------------:[ customer navigation ]:--- */
+#it-exchange-customer-menu{list-style:none;}
+#it-exchange-customer-menu li{display:inline;padding:0;margin:0 1em 0 0;}
+
 /** -----------------------------------------------------:[ product ]:---------- */
 #it-exchange-product .product-columns.has-images{overflow:hidden;}
 #it-exchange-product .has-images .product-column{float:left;}

@@ -437,7 +437,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
-		$nav  = '<ul class="customer_nav_menu">';
+		$nav  = '<ul id="it-exchange-customer-menu">';
 		
 		foreach( split( ',', $options['pages'] ) as $page_slug ) {
 			
