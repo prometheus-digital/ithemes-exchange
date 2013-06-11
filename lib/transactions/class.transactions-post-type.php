@@ -377,21 +377,38 @@ class IT_Exchange_Transaction_Post_Type {
 	function print_transaction_details_metabox( $post ) {
 		$confirmation_url = it_exchange_get_transaction_confirmation_url( $post->ID );
 		?>
-		<div class="customer-data">
-			<div class="customer-avatar"><?php echo get_avatar( it_exchange_get_transaction_customer_id( $post->ID ), 80 ); ?></div>
-			<div class="customer-display-name"><?php esc_attr_e( it_exchange_get_transaction_customer_display_name( $post ) ); ?></div>
-			<div class="customer-email"><?php esc_attr_e( it_exchange_get_transaction_customer_email( $post ) ); ?></div>
-			<div class="customer-profile">
-				<a href="<?php esc_attr_e( it_exchange_get_transaction_customer_admin_profile_url( $post ) ); ?>">
-					<?php _e( 'View Customer Profile', 'LION' ); ?>
-				</a>
-			</div>
+		<div class="transaction-stamp hidden <?php esc_attr_e( strtolower( it_exchange_get_transaction_status_label( $post ) ) ); ?>">
+			<?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?>
 		</div>
-
-		<div class="transaction-summary">
-			<div class="transaction-order-number"><?php esc_attr_e( it_exchange_get_transaction_order_number( $post ) ); ?></div>
-			<div class="transaction-date"><?php esc_attr_e( it_exchange_get_transaction_date( $post ) ); ?></div>
-			<div class="transaction-status"><?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?></div>
+		
+		<div class="customer-data column-wrapper">
+			<div class="customer-avatar">
+				<?php echo get_avatar( it_exchange_get_transaction_customer_id( $post->ID ), 80 ); ?>
+			</div>
+			<div class="transaction-summary">
+				<div class="transaction-order-number">
+					<?php esc_attr_e( it_exchange_get_transaction_order_number( $post ) ); ?>
+				</div>
+				<div class="transaction-date">
+					<?php esc_attr_e( it_exchange_get_transaction_date( $post ) ); ?>
+				</div>
+				<div class="transaction-status <?php esc_attr_e( strtolower( it_exchange_get_transaction_status_label( $post ) ) ); ?>">
+					<?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?>
+				</div>
+			</div>
+			<div class="customer-info">
+				<h2 class="customer-display-name">
+					<?php esc_attr_e( it_exchange_get_transaction_customer_display_name( $post ) ); ?>
+				</h2>
+				<div class="customer-email">
+					<?php esc_attr_e( it_exchange_get_transaction_customer_email( $post ) ); ?>
+				</div>
+				<div class="customer-profile">
+					<a href="<?php esc_attr_e( it_exchange_get_transaction_customer_admin_profile_url( $post ) ); ?>">
+						<?php _e( 'View Customer Data', 'LION' ); ?>
+					</a>
+				</div>
+			</div>
 		</div>
 
 		<div class="products">
@@ -411,17 +428,23 @@ class IT_Exchange_Transaction_Post_Type {
 				?>
 				<div class="product">
 					<div class="product-header">
-						<div class="product-title"><?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?></div>
-						<div class="product-subtotal"><?php esc_attr_e( it_exchange_format_price( it_exchange_get_transaction_product_feature( $transaction_product, 'product_subtotal' ) ) ); ?></div>
+						<div class="product-title">
+							<?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?>
+						</div>
+						<div class="product-subtotal">
+							<?php esc_attr_e( it_exchange_format_price( it_exchange_get_transaction_product_feature( $transaction_product, 'product_subtotal' ) ) ); ?>
+						</div>
 					</div>
 
 					<div class="product-details product-details-<?php esc_attr_e( $transaction_product['product_id'] ); ?>">
 						<?php
 						if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) {
 							foreach( $product_downloads as $download_id => $download_data ) {
-								?>
+							?>
 								<div class="product-download product-download-<?php esc_attr_e( $download_id ); ?>">
-									<div class="product-download-title"><?php esc_attr_e( get_the_title( $download_id ) ); ?></div>
+									<div class="product-download-title">
+										<?php esc_attr_e( get_the_title( $download_id ) ); ?>
+									</div>
 									<div class="product-download-hashes">
 										<?php
 										$hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $post->ID, $transaction_product, $download_id );
@@ -435,7 +458,9 @@ class IT_Exchange_Transaction_Post_Type {
 											$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
 											?>
 											<div class="product-download-hash">
-												<div class="product-download-hash-hash"><?php esc_attr_e( $hash ); ?></div>
+												<div class="product-download-hash-hash">
+													<?php esc_attr_e( $hash ); ?>
+												</div>
 												<div class="product-download-hash-expires">
 													<?php
 													if ( $expires )
@@ -466,12 +491,13 @@ class IT_Exchange_Transaction_Post_Type {
 										?>
 									</div>
 								</div>
-							</div>
 							<?php
 							}
 						} else {
 							?>
-							<div class="no-product-downloads"><?php _e( 'This product does not contain any downloads', 'LION' ); ?></div> 
+							<div class="no-product-downloads">
+								<?php _e( 'This product does not contain any downloads', 'LION' ); ?>
+							</div> 
 							<?php
 						}
 						?>

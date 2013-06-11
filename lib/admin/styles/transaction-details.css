@@ -1,5 +1,33 @@
-#poststuff:before{
-	content: 'lib/admin/styles/transaction-details.css loaded';
-	clear:left;
-	color: red;
+/** -----------------------------------------------------:[ reset ]:---------- */
+.handlediv,
+.hndle {
+	display: none;
+}
+#it-exchange-transaction-details {
+	background: none;
+}
+#it-exchange-transaction-details .inside {
+	margin: 0;
+	padding: 0;
+}
+#it-exchange-transaction-details * {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+/** -----------------------------------------------------:[ transaction ]:---------- */
+#it-exchange-transaction-details{max-width:760px;}
+#it-exchange-transaction-details .column-wrapper{overflow:hidden;padding:2em;}
+#it-exchange-transaction-details .column{float:left;}
+#it-exchange-transaction-details .customer-display-name{display:inline;margin-top:0;line-height:1;}
+#it-exchange-transaction-details .customer-avatar{float:left;}
+#it-exchange-transaction-details .customer-info{margin-left:95px;}
+#it-exchange-transaction-details .customer-profile{margin-top:1.4em;}
+#it-exchange-transaction-details .customer-profile a{text-decoration:none;}
+#it-exchange-transaction-details .transaction-summary{float:right;text-align:right;}
+#it-exchange-transaction-details .transaction-order-number{font-weight:bold;font-size:1.8em;letter-spacing:2px;margin-bottom:5px;}
+#it-exchange-transaction-details .transaction-status{margin-top:1em;font-size:1.2em;}
+#it-exchange-transaction-details .transaction-status.paid {
+	color: #7EB03B;
 }
