@@ -92,23 +92,6 @@ function it_exchange_register_core_addons() {
 				'inventory'     => false,
 			) ),
 		),
-		// REMOVE BOOKS HEREHEREHERE
-		// Books Product Types
-		'books-product-type' => array(
-			'name'        => __( 'Books', 'LION' ),
-			'description' => __( 'This adds an product type for distributing books through iThemes Exchange.', 'LION' ),
-			'author'      => 'iThemes',
-			'author_url'  => 'http://ithemes.com',
-			'file'        => dirname( __FILE__ ) . '/product-types/books/init.php',
-			'category'    => 'product-type',
-			'tag'         => 'core',
-			'labels'      => array(
-				'singular_name' => __( 'Book', 'LION' ),
-			),
-			'supports'    => apply_filters( 'it_exchange_register_book_default_features', array(
-				'inventory'     => false,
-			) ),
-		),
 		// Featured Product Widget
 		'featured-product-widget' => array(
 			'name'        => __( 'Featured Product Widget', 'LION' ),
