@@ -26,7 +26,6 @@ require( plugin_dir_path( __FILE__ ) . 'lib/sessions/class.session.php' );
 class IT_Exchange {
 
 	var $_version         = '0.3.10';
-	var $_updater         = '1.0.8';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'it-exchange';
 	var $_name            = 'iThemes Exchange';
@@ -109,78 +108,6 @@ class IT_Exchange {
 			}
 		}
 		do_action( 'it_exchange_enabled_addons_loaded' );
-	}
-
-	/**
-	 * This function registers the plugin's vesion of the iThemes updater class
-	 *
-	 * @since 0.1.0
-	 * @return void
-	*/
-	function upgrader_register() {
-		$GLOBALS['pb_classes_upgrade_registration_list'][$this->_slug] = $this->_updater;
-	}
-
-	/**
-	 * Look through all registered version of upgrade classes and use the latest version
-	 *
-	 * @since 0.1.0
-	 * @return void
-	*/
-	function upgrader_select() {
-		if ( ! isset( $GLOBALS[ 'pb_classes_upgrade_registration_list' ] ) ) {
-			//Fallback - Just include this class
-			require( $this->_plugin_path . 'lib/updater/updater.php' );
-			return;
-		}
-
-		//Go through each global and find the highest updater version and the plugin slug
-		$updater_version = 0;
-		$plugin_slug = '';
-		foreach ( $GLOBALS['pb_classes_upgrade_registration_list'] as $var => $version ) {
-			if ( version_compare( $version, $updater_version, '>=' ) ) {
-				$updater_version = $version;
-				$plugin_slug = $var;
-			}
-		}
-
-		//If the slugs match, load this version
-		if ( $this->_slug == $plugin_slug ) {
-			require( $this->_plugin_path . 'lib/updater/updater.php' );
-		}
-	}
-
-	/**
-	 * Initiates our upgrade class
-	 *
-	 * @since 0.1.0
-	 * @return void
-	*/
-	function upgrader_instantiate() {
-		
-		$pb_product = strtolower( $this->_slug );
-		$pb_product = str_replace( 'ithemes-', '', $pb_product );
-		$pb_product = str_replace( 'pluginbuddy-', '', $pb_product );
-		$pb_product = str_replace( 'pluginbuddy_', '', $pb_product );
-		$pb_product = str_replace( 'pb_thumbsup', '', $pb_product );
-		$pb_product = str_replace( 'it_', '', $pb_product );
-		$pb_product = str_replace( 'it-', '', $pb_product );
-		
-		$args = array(
-			'parent' => $this, 
-			'remote_url' => 'http://updater2.ithemes.com/index.php',
-			'version' => $this->_version,
-			'plugin_slug' => $this->_slug,
-			'plugin_path' => $this->_plugin_base,
-			'plugin_url' => $this->_plugin_url,
-			'product' => $pb_product,
-			'time' => 43200,
-			'return_format' => 'json',
-			'method' => 'POST',
-			'upgrade_action' => 'check'
-		);
-
-		$this->_pluginbuddy_upgrader = new iThemesPluginUpgrade( $args );
 	}
 }
 
