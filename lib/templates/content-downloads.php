@@ -5,6 +5,8 @@
 ?>
 
 <div id="it-exchange-downloads">
+	<?php it_exchange( 'customer', 'menu' ); ?>
+
 	<div class="downloads-wrapper">
 		<div class="download">
 			<div class="download-get">

@@ -39,6 +39,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		'password2'   => 'password2',
 		'save'        => 'save',
 		'formclose'   => 'form_close',
+		'menu'        => 'menu',
 	);
 
 	/**
@@ -419,5 +420,36 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	*/
 	function form_close( $options=array() ) {
 		return '</form>';
+	}
+
+	/**
+	 * Outputs the customer menu
+	 * Default: profile / purchases / downloads
+	 *
+	 * @since 0.4.0
+	 * @return string
+	*/
+	function menu( $options=array() ) {
+		
+		$defaults = array(
+			'format' => 'html',
+			'pages'  => 'profile,purchases,downloads',
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
+		$nav  = '<ul class="customer_nav_menu">';
+		
+		foreach( split( ',', $options['pages'] ) as $page_slug ) {
+			
+			$page_slug = trim( $page_slug );
+		
+			$nav .= '<li><a href="' . it_exchange_get_page_url( $page_slug ) . '">' . it_exchange_get_page_name( $page_slug ) . '</a>';
+		
+		}
+		
+		$nav .= '</ul>';
+		
+		return $nav;
+		
 	}
 }
