@@ -8,7 +8,7 @@
 */
 ?>
 <div id="profile-page" class="wrap">
-	<?php screen_icon(); ?>
+
 	<?php
 		if ( empty( $_REQUEST['user_id'] ) )
 			$user_id = get_current_user_id();
@@ -17,6 +17,25 @@
 		
 		$user_object = get_userdata( $user_id );
 	?>
+
+	<?php
+	
+	if ( !empty( $_POST['_it_exchange_customer_info_nonce'] ) && !wp_verify_nonce( $_POST['_it_exchange_customer_info_nonce'], 'update-it-exchange-customer-info' ) ) {	
+	
+		it_exchange_get_add_message( 'error', __( 'Error verifying security token. Please try again.', 'LION' ) );	
+		
+	} else {
+		
+		if ( isset( $_REQUEST['it_exchange_customer_note'] ) )
+			update_user_meta( $user_id, '_it_exchange_customer_note', $_REQUEST['it_exchange_customer_note'] );
+		
+	}
+	
+	?>
+
+    <form action="" method="post">
+            
+	<?php screen_icon(); ?>
 	
 	<h2>
 		<?php echo $user_object->display_name; ?>
@@ -184,15 +203,24 @@
 				<label for="it_exchange_customer_note"><?php _e( 'Notes', 'LION' ); ?></label>
 				<textarea name="it_exchange_customer_note" cols="30" rows="10"><?php echo get_user_meta( $user_id, '_it_exchange_customer_note', true ); ?></textarea>
 			</div>
-			<div class="avatar"><?php echo get_avatar( $user_id, 160 ); ?></div>
+            <div class="avatar"><?php echo get_avatar( $user_id, 160 ); ?></div>
 		<?php else : ?>
 			<p><?php _e( 'Nothing to show here.', 'LION' ) ?></p>
 		<?php endif; ?>
 	</div>
 	
-	<?php if ( 'transactions' === $tab ) : ?>
+	<?php if ( 'transactions' === $tab && false ) : ?>
 		<div class="add-manual-transaction">
 			<input type="button" class="button button-large" name="add_it_exchange_transaction" value="<?php _e( 'Add Manual Transaction', 'LION' ) ?>" />
 		</div>
+    <?php elseif ( 'info' === $tab ) : ?>
+        <div class="update-user-info">
+            <input type="submit" class="button button-large" name="update_it_exchange_customer" value="<?php _e( 'Update Customer Info', 'LION' ) ?>" />
+        </div>
 	<?php endif; ?>
+    
+    <?php wp_nonce_field( 'update-it-exchange-customer-info', '_it_exchange_customer_info_nonce' ); ?>
+    
+     </form>
+     
 </div>
