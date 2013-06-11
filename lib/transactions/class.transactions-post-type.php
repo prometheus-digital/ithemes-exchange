@@ -389,7 +389,7 @@ class IT_Exchange_Transaction_Post_Type {
 		</div>
 
 		<div class="transaction-summary">
-			<div class="transaction-order-number"><?php _e( '#', 'LION' ); ?><?php esc_attr_e( it_exchange_get_transaction_order_number( $post ) ); ?></div>
+			<div class="transaction-order-number"><?php esc_attr_e( it_exchange_get_transaction_order_number( $post ) ); ?></div>
 			<div class="transaction-date"><?php esc_attr_e( it_exchange_get_transaction_date( $post ) ); ?></div>
 			<div class="transaction-status"><?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?></div>
 		</div>

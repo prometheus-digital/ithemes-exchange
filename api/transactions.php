@@ -603,10 +603,16 @@ function it_exchange_get_transaction_customer_admin_profile_url( $transaction, $
  * @param mixed $transaction id or object
  * @return string
 */
-function it_exchange_get_transaction_order_number( $transaction ) {
+function it_exchange_get_transaction_order_number( $transaction, $prefix='#' ) {
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
 		return false;
-	$order_number = __( 'Order #', 'LION' ) . sprintf( '%06d', $transaction->ID );
+
+	// Translate default prefix
+	$prefix = ( '#' == $prefix ) ? __( '#', 'LION' ) : $prefix;
+
+	$order_number = sprintf( '%06d', $transaction->ID );
+	$order_number = empty( $prefix ) ? $order_number : $prefix . $order_number;
+
 	return apply_filters( 'it_exchange_get_transaction_order_number', $order_number, $transaction );
 }
 
