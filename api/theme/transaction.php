@@ -89,7 +89,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	}
 
 	/**
-	 * Returns the transaction status
+	 * Returns the transaction instructions 
 	 *
 	 * @since 0.4.0
 	 *
@@ -189,9 +189,10 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 		// Set defaults
 		$defaults = array(
-			'wrap'      => false,
-			'format'    => 'html',
-			'attribute' => false,
+			'wrap'         => false,
+			'format'       => 'html',
+			'attribute'    => false,
+			'format_price' => true,
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -200,8 +201,17 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			return '';
 
 		// Return empty string if empty
-		if ( ! $attribute = it_exchange_get_transaction_product_feature( $this->_transaction_product, $options['attribute'] ) )
+		if ( 'description' == $options['attribute'] ) {
+			$attribute = it_exchange_get_product_feature( $this->_transaction_product['product_id'], 'description' );
+			if ( empty( $attribute ) )
+				return '';
+		} else if ( ! $attribute = it_exchange_get_transaction_product_feature( $this->_transaction_product, $options['attribute'] ) ) {
 			return '';
+		}
+
+		// Format price
+		if ( (boolean) $options['format_price'] && in_array( $options['attribute'], array( 'product_subtotal', 'product_base_price' ) ) )
+			$attribute = it_exchange_format_price( $attribute );
 
 		$open_wrap  = empty( $options['wrap'] ) ? '' : '<' . esc_attr( $options['wrap'] ) . ' class="entry-title">';
 		$close_wrap = empty( $options['wrap'] ) ? '' : '</' . esc_attr( $options['wrap'] ) . '>';

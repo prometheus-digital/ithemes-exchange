@@ -3,7 +3,6 @@
  * The default template for displaying a customer downloads.
  */
 ?>
-
 <div id="it-exchange-downloads">
 	<?php it_exchange( 'customer', 'menu' ); ?>
 

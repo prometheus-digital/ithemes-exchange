@@ -457,9 +457,7 @@ function it_exchange_stripe_addon_delete_stripe_id_from_customer( $stripe_id ) {
  * @return string translaction transaction status
 */
 function it_exchange_stripe_addon_transaction_status_label( $status ) {
-
 	switch ( $status ) {
-
 		case 'succeeded':
 			return __( 'Paid', 'LION' );
 		case 'refunded':
@@ -474,9 +472,7 @@ function it_exchange_stripe_addon_transaction_status_label( $status ) {
 			return __( 'Disputed: Won, Paid', 'LION' );
 		default:
 			return __( 'Unknown', 'LION' );
-
 	}
-
 }
 add_filter( 'it_exchange_transaction_status_label_stripe', 'it_exchange_stripe_addon_transaction_status_label' );
 
