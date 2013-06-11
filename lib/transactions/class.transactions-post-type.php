@@ -381,11 +381,11 @@ class IT_Exchange_Transaction_Post_Type {
 			<?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?>
 		</div>
 		
-		<div class="customer-data column-wrapper">
-			<div class="customer-avatar">
+		<div class="customer-data spacing-wrapper">
+			<div class="customer-avatar left">
 				<?php echo get_avatar( it_exchange_get_transaction_customer_id( $post->ID ), 80 ); ?>
 			</div>
-			<div class="transaction-summary">
+			<div class="transaction-data right">
 				<div class="transaction-order-number">
 					<?php esc_attr_e( it_exchange_get_transaction_order_number( $post ) ); ?>
 				</div>
@@ -412,50 +412,50 @@ class IT_Exchange_Transaction_Post_Type {
 		</div>
 
 		<div class="products">
+			<div class="products-header spacing-wrapper">
+				<span><?php _e( 'Products', 'LION' ); ?></span>
+				<span class="right"><?php _e( 'Amount', 'LION' ); ?></span>
+			</div>
 			<?php
-			// Grab products attached to transaction
-			$transaction_products = it_exchange_get_transaction_products( $post );
-
-			// Grab all hashes attached to transaction
-			$hashes   = it_exchange_get_transaction_download_hash_index( $post );
-
-			// Loop through products
-			foreach ( $transaction_products as $transaction_product ) {
-				$product_id = $transaction_product['product_id'];
-
-				// Grab the version of the product currently in the DB
-				$db_product = it_exchange_get_product( $transaction_product );
+				// Grab products attached to transaction
+				$transaction_products = it_exchange_get_transaction_products( $post );
+			
+				// Grab all hashes attached to transaction
+				$hashes   = it_exchange_get_transaction_download_hash_index( $post );
+			?>
+			
+			<?php foreach ( $transaction_products as $transaction_product ) : ?>
+				<?php
+					$product_id = $transaction_product['product_id'];
+					
+					$db_product = it_exchange_get_product( $transaction_product );
 				?>
-				<div class="product">
-					<div class="product-header">
-						<div class="product-title">
+				<div class="product spacing-wrapper">
+					<div class="product-header clearfix">
+						<div class="product-title left">
 							<?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?>
 						</div>
-						<div class="product-subtotal">
+						<div class="product-subtotal right">
 							<?php esc_attr_e( it_exchange_format_price( it_exchange_get_transaction_product_feature( $transaction_product, 'product_subtotal' ) ) ); ?>
 						</div>
 					</div>
-
-					<div class="product-details product-details-<?php esc_attr_e( $transaction_product['product_id'] ); ?>">
-						<?php
-						if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) {
-							foreach( $product_downloads as $download_id => $download_data ) {
-							?>
+					<div class="product-details">
+						<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : ?>
+							<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
 								<div class="product-download product-download-<?php esc_attr_e( $download_id ); ?>">
 									<div class="product-download-title">
 										<?php esc_attr_e( get_the_title( $download_id ) ); ?>
 									</div>
 									<div class="product-download-hashes">
-										<?php
-										$hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $post->ID, $transaction_product, $download_id );
-
-										foreach( (array) $hashes_for_product_transaction as $hash ) {
-											$hash_data = it_exchange_get_download_data_from_hash( $hash );
-											$expires        = empty( $hash_data['expires'] ) ? false : $hash_data['expires'];
-											$expire_int     = empty( $hash_data['expire_int'] ) ? false : $hash_data['expire_int'];
-											$expire_units   = empty( $hash_data['expire_units'] ) ? false : $hash_data['expire_units'];
-											$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
-											$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
+										<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $post->ID, $transaction_product, $download_id ); ?>
+										<?php foreach( (array) $hashes_for_product_transaction as $hash ) : ?>
+											<?php
+												$hash_data = it_exchange_get_download_data_from_hash( $hash );
+												$expires        = empty( $hash_data['expires'] ) ? false : $hash_data['expires'];
+												$expire_int     = empty( $hash_data['expire_int'] ) ? false : $hash_data['expire_int'];
+												$expire_units   = empty( $hash_data['expire_units'] ) ? false : $hash_data['expire_units'];
+												$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
+												$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
 											?>
 											<div class="product-download-hash">
 												<div class="product-download-hash-hash">
@@ -463,18 +463,18 @@ class IT_Exchange_Transaction_Post_Type {
 												</div>
 												<div class="product-download-hash-expires">
 													<?php
-													if ( $expires )
-														echo __( 'Expires on', 'LION' ) . ' ' . esc_attr( it_exchange_get_download_expiration_date_from_settings( $hash_data, $post->post_date ) );
-													else
-														_e( "Doesn't exipre", 'LION' );
+														if ( $expires )
+															echo __( 'Expires on', 'LION' ) . ' ' . esc_attr( it_exchange_get_download_expiration_date_from_settings( $hash_data, $post->post_date ) );
+														else
+															_e( "Doesn't exipre", 'LION' );
 													?>
 												</div>
 												<div class="product-download-hash-download-limit">
 													<?php
-													if ( $download_limit )
-														printf( __( 'Limited to %d total download(s)', 'LION' ), $download_limit );
-													else
-														_e( 'Unlimited downloads', 'LION' );
+														if ( $download_limit )
+															printf( __( 'Limited to %d total download(s)', 'LION' ), $download_limit );
+														else
+															_e( 'Unlimited downloads', 'LION' );
 													?>
 												</div>
 												<?php if ( $download_limit ) : ?>
@@ -486,36 +486,28 @@ class IT_Exchange_Transaction_Post_Type {
 													<?php printf( __( 'This file has been downloaded %d time(s) for this hash', 'LION' ), $downloads ); ?>
 												</div>
 											</div>
-											<?php
-										}
-										?>
+										<?php endforeach; ?>
 									</div>
 								</div>
-							<?php
-							}
-						} else {
-							?>
+							<?php endforeach; ?>
+						<?php else : ?>
 							<div class="no-product-downloads">
 								<?php _e( 'This product does not contain any downloads', 'LION' ); ?>
 							</div> 
-							<?php
-						}
-						?>
-					<div>
+						<?php endif; ?>
+					</div>
 				</div>
-				<?php
-			} ?>
-			</div>
+			<?php endforeach; ?>
 		</div>
 
-		<div class="transaction-costs">
-			<div class="transaction-costs-subtotal">
-				<div class="transaction-costs-subtotal-label"><?php _e( 'Subtotal', 'LION' ); ?></div>
+		<div class="transaction-costs clearfix spacing-wrapper">
+			<div class="transaction-costs-subtotal right clearfix">
+				<div class="transaction-costs-subtotal-label left"><?php _e( 'Subtotal', 'LION' ); ?></div>
 				<div class="transaction-costs-subtotal-price"><?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?></div>
 			</div>
 
 			<?php if ( $coupons = it_exchange_get_transaction_coupons( $post ) ) : ?>
-				<div class="transaction-costs-coupons">
+				<div class="transaction-costs-coupons right">
 					<?php
 					foreach ( $coupons as $type => $coupon ) {
 						?>
@@ -531,7 +523,7 @@ class IT_Exchange_Transaction_Post_Type {
 			<?php endif; ?>
 
 			<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
-				<div class="transaction-costs-refunds">
+				<div class="transaction-costs-refunds right">
 					<?php
 					foreach ( $refunds as $refund ) {
 						?>
@@ -549,18 +541,18 @@ class IT_Exchange_Transaction_Post_Type {
 			<?php endif; ?>
 		</div>
 
-		<div class="transaction-summary">
-			<div class="transaction-summary-payment-method">
-				<div class="transaction-summary-payment-method-label"><?php _e( 'Payment Method', 'LION' ); ?></div>
-				<div class="transaction-summary-payment-method-name"><?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?></div>
+		<div class="transaction-summary clearfix spacing-wrapper">
+			<div class="payment-method left">
+				<div class="payment-method-label"><?php _e( 'Payment Method', 'LION' ); ?></div>
+				<div class="payment-method-name"><?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?></div>
 			</div>
-			<div class="transaction-summary-payment-total">
-				<div class="transaction-summary-payment-total-label"><?php _e( 'Total', 'LION' ); ?></div>
-				<div class="transaction-summary-payment-total-amount"><?php _e( it_exchange_get_transaction_total( $post ) ); ?></div>
+			<div class="payment-total right clearfix">
+				<div class="payment-total-label left"><?php _e( 'Total', 'LION' ); ?></div>
+				<div class="payment-total-amount"><?php _e( it_exchange_get_transaction_total( $post ) ); ?></div>
 
 				<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
-					<div class="transaction-summary-payment-original-total-label"><?php _e( 'Total before refunds', 'LION' ); ?></div>
-					<div class="transaction-summary-payment-original-total-amount"><?php _e( it_exchange_get_transaction_total( $post, true, false ) ); ?></div>
+					<div class="payment-original-total-label left"><?php _e( 'Total before refunds', 'LION' ); ?></div>
+					<div class="payment-original-total-amount"><?php _e( it_exchange_get_transaction_total( $post, true, false ) ); ?></div>
 				<?php endif; ?>
 			</div>
 		</div>
