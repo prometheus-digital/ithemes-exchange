@@ -54,9 +54,9 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * @return void
 	*/
 	function IT_Theme_API_Transaction() {
-		$this->_transaction         = empty( $GLOBALS['it_exchange']['transaction'] ) ? false : $GLOBALS['it_exchange']['transaction'];
-		$this->_transaction_product = empty( $GLOBALS['it_exchange']['transaction_product'] ) ? false : $GLOBALS['it_exchange']['transaction_product'];
-		$this->_transaction_product_download = empty( $GLOBALS['it_exchange']['transaction_product_download'] ) ? false : $GLOBALS['it_exchange']['transaction_product_download'];
+		$this->_transaction                       = empty( $GLOBALS['it_exchange']['transaction'] ) ? false : $GLOBALS['it_exchange']['transaction'];
+		$this->_transaction_product               = empty( $GLOBALS['it_exchange']['transaction_product'] ) ? false : $GLOBALS['it_exchange']['transaction_product'];
+		$this->_transaction_product_download      = empty( $GLOBALS['it_exchange']['transaction_product_download'] ) ? false : $GLOBALS['it_exchange']['transaction_product_download'];
 		$this->_transaction_product_download_hash = empty( $GLOBALS['it_exchange']['transaction_product_download_hash'] ) ? false : $GLOBALS['it_exchange']['transaction_product_download_hash'];
 	}
 
@@ -227,22 +227,25 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		if ( ! empty( $options['has'] ) )
 			return it_exchange_product_has_feature( $this->_transaction_product['product_id'], 'downloads' );
 
+		// Set product id
+		$product_id = $this->_transaction_product['product_id'];
+
         // If we made it here, we're doing a loop of transaction_product_downloads for the current query.
         // This will init/reset the transaction_product_downloads global and loop through them.
-        if ( empty( $GLOBALS['it_exchange']['transaction_product_downloads'] ) ) { 
-            $GLOBALS['it_exchange']['transaction_product_downloads'] = it_exchange_get_product_feature( $this->_transaction_product['product_id'], 'downloads' );
-            $GLOBALS['it_exchange']['transaction_product_download'] = reset( $GLOBALS['it_exchange']['transaction_product_downloads'] );
+        if ( empty( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] ) ) { 
+            $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] = it_exchange_get_product_feature( $product_id, 'downloads' );
+            $GLOBALS['it_exchange']['transaction_product_download'] = reset( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] );
             return true;
         } else {
-            if ( next( $GLOBALS['it_exchange']['transaction_product_downloads'] ) ) { 
-                $GLOBALS['it_exchange']['transaction_product_download'] = current( $GLOBALS['it_exchange']['transaction_product_downloads'] );
+            if ( next( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] ) ) { 
+                $GLOBALS['it_exchange']['transaction_product_download'] = current( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] );
                 return true;
             } else {
                 $GLOBALS['it_exchange']['transaction_product_download'] = false;
                 return false;
             }   
         }   
-        end( $GLOBALS['it_exchange']['transaction_product_downloads'] );
+        end( $GLOBALS['it_exchange']['transaction_product_downloads'][$prodcut_id] );
         $GLOBALS['it_exchange']['transaction_product_download'] = false;
         return false;
 	}
@@ -269,22 +272,25 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		if ( ! empty( $options['has'] ) )
 			return (boolean) it_exchange_get_download_hashes_for_transaction_product( $this->_transaction, $this->_transaction_product, $this->_transaction_product_download['id'] ); 
 
+		// Download ID
+		$download_id = $this->_transaction_product_download['id'];
+
 		// If we made it here, we're doing a loop of transaction_product_download_hashes for the current query.
         // This will init/reset the transaction_product_download_hashes global and loop through them.
-        if ( empty( $GLOBALS['it_exchange']['transaction_product_download_hashes'] ) ) { 
-            $GLOBALS['it_exchange']['transaction_product_download_hashes'] = it_exchange_get_download_hashes_for_transaction_product( $this->_transaction, $this->_transaction_product, $this->_transaction_product_download['id'] );
-            $GLOBALS['it_exchange']['transaction_product_download_hash'] = reset( $GLOBALS['it_exchange']['transaction_product_download_hashes'] );
+        if ( empty( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] ) ) { 
+            $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] = it_exchange_get_download_hashes_for_transaction_product( $this->_transaction, $this->_transaction_product, $download_id );
+            $GLOBALS['it_exchange']['transaction_product_download_hash'] = reset( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] );
             return true;
         } else {
-            if ( next( $GLOBALS['it_exchange']['transaction_product_download_hashes'] ) ) { 
-                $GLOBALS['it_exchange']['transaction_product_download_hash'] = current( $GLOBALS['it_exchange']['transaction_product_download_hashes'] );
+            if ( next( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] ) ) { 
+                $GLOBALS['it_exchange']['transaction_product_download_hash'] = current( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] );
                 return true;
             } else {
                 $GLOBALS['it_exchange']['transaction_product_download_hash'] = false;
                 return false;
             }   
         }   
-        end( $GLOBALS['it_exchange']['transaction_product_download_hashes'] );
+        end( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] );
         $GLOBALS['it_exchange']['transaction_product_download_hash'] = false;
         return false;
 	}
