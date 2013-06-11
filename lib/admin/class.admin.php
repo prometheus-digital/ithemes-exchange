@@ -1211,6 +1211,9 @@ Thank you for your order. Your order's details are below.
 		// Enqueue Media library scripts and styles
 		wp_enqueue_media();
 
+		// Remove screen options from products
+		add_filter('screen_options_show_screen', '__return_false');
+
 		// Adds class to wrap div
 		add_action( 'admin_head', array( $this, 'add_edit_product_append_wrap_classes' ) );
 
