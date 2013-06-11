@@ -64,6 +64,7 @@ class IT_Exchange_Admin {
 		add_action( 'admin_notices', array( $this, 'add_wizard_nag' ) );
 		add_action( 'admin_menu', array( $this, 'add_exchange_admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'enable_disable_registered_add_on' ) );
+		add_action( 'admin_init', array( $this, 'enable_required_add_ons' ) );
 
 		// Redirect to Product selection on Add New if needed
 		add_action( 'admin_init', array( $this, 'redirect_post_new_to_product_type_selection_screen' ) );
@@ -669,6 +670,31 @@ Thank you for your order. Your order's details are below.
 			ITUtility::show_error_message( __( 'Error: Add-on not disabled.', 'LION' ) );
 
 		include( 'views/admin-add-ons.php' );
+	}
+	
+	/**
+	 * Enable all addons tagged as "required"
+	 *
+	 * @since 0.4.0
+	*/
+	function enable_required_add_ons() {
+		$registered = it_exchange_get_addons();
+		$enabled    = it_exchange_get_enabled_addons();
+		
+		foreach ( $registered as $slug => $params ) {
+			
+			if ( !empty( $params['options']['tag'] ) && 'required' === $params['options']['tag'] ) {
+				
+				if ( empty( $enabled[$slug] ) ) {
+					
+					$enabled_addon = it_exchange_enable_addon( $slug );
+					
+				}
+				
+			}
+					
+		}
+		
 	}
 
 	/**

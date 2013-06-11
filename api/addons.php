@@ -318,7 +318,7 @@ function it_exchange_enable_addon( $add_on ) {
  * @param string $add_on_slug  add_on slug to check
  * @return bool
 */
-function is_it_exchange_addon_enabled( $add_on_slug ) {
+function it_exchange_is_addon_enabled( $add_on_slug ) {
 	$enabled = array_keys( it_exchange_get_enabled_addons() );
 
 	if ( in_array( $add_on_slug, $enabled ) )
@@ -334,7 +334,7 @@ function is_it_exchange_addon_enabled( $add_on_slug ) {
  * @param string $add_on  add_on slug to check
  * @return bool
 */
-function is_it_exchange_addon_installed( $add_on ) {
+function it_exchange_is_addon_installed( $add_on ) {
 	$installed = it_exchange_get_addons();
 
 	if ( array_key_exists( $add_on, $installed ) )

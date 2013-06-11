@@ -40,6 +40,17 @@ function it_exchange_register_core_addons() {
 			) ),
 			'settings-callback' => 'it_exchange_offline_payments_settings_callback',
 		),
+		//For situations when the Cart Total is 0 (free), we still want to record the transaction!
+		'zero-sum-checkout' => array(
+			'name'              => __( 'Zero Sum Checkout', 'LION' ),
+			'description'       => __( 'Used for processing 0 sum checkout (free).', 'LION' ),
+			'author'            => 'iThemes',
+			'author_url'        => 'http://ithemes.com',
+			'file'              => dirname( __FILE__ ) . '/transaction-methods/zero-sum-checkout/init.php',
+			'category'          => 'transaction-methods',
+			'tag'               => 'required',
+			'supports'          => array( 'transaction_status' => true ),
+		),
 		// PayPal Standard Transaction Method
 		'paypal-standard' => array(
 			'name'              => __( 'PayPal Standard', 'LION' ),

@@ -38,6 +38,14 @@
 			<?php $default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/default-add-on-icon.png' ); ?>
 			
 			<?php foreach( (array) $addons as $addon ) : ?>
+            	
+				<?php
+				
+				if ( !empty( $addon['options']['tag'] ) && 'required' === $addon['options']['tag'] )
+					continue;
+				
+				?>
+            	
 				<?php $icon = empty( $addon['options']['icon'] ) ? $default_icon : $addon['options']['icon']; ?>
 				<div class="add-on-block">
 					<div class="add-on-icon">
@@ -54,7 +62,7 @@
 						<p class="add-on-description"><?php echo $addon['description']; ?></p>
 					</div>
 					<div class="add-on-actions">
-						<?php if ( is_it_exchange_addon_enabled( $addon['slug'] ) ) : ?>
+						<?php if ( it_exchange_is_addon_enabled( $addon['slug'] ) ) : ?>
 							<div class="add-on-enabled"><a href="<?php echo wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-disable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-disable-add-on' ); ?>" data-text-disable="&times;&nbsp; Disable" data-text-enabled="&#x2714;&nbsp; Enabled">&#x2714;&nbsp; Enabled</a></div>
 						<?php else : ?>
 							<div class="add-on-disabled"><a href="<?php echo wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-enable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-enable-add-on' ); ?>" data-text-enable="&#x2714;&nbsp; Enable" data-text-disabled="&times;&nbsp; Disabled">-&nbsp; Disabled</a></div>

@@ -269,6 +269,9 @@ add_filter( 'it_storage_get_defaults_exchange_addon_paypal_standard', 'it_exchan
 */
 function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 
+	if ( 0 >= it_exchange_get_cart_total( false ) )
+		return;
+		
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard' );
 

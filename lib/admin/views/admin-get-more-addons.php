@@ -29,7 +29,7 @@
 			<?php 
 				$count = 0;
 				foreach( (array) $addons as $addon ) : ?>
-				<?php if ( ! is_it_exchange_addon_installed( $addon['slug'] ) ) : ?>
+				<?php if ( ! it_exchange_is_addon_installed( $addon['slug'] ) ) : ?>
 					<?php
 						
 						if ( $addon['featured'] )
@@ -54,7 +54,7 @@
 							<p class="add-on-description"><?php echo $addon['description']; ?></p>
 						</div>
 						<div class="add-on-actions">
-							<?php if ( is_it_exchange_addon_installed( $addon['slug'] ) ) : ?>
+							<?php if ( it_exchange_is_addon_installed( $addon['slug'] ) ) : ?>
 								<div class="add-on-installed">Installed</div>
 							<?php else : ?>
 								<div class="add-on-price">

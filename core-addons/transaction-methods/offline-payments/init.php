@@ -6,10 +6,6 @@
  * @package IT_Exchange
 */
 
-add_filter( 'it_exchange_get_transaction_method_name_offline-payments', 'it_exchange_get_offline_payments_name', 9 );
-add_action( 'it_exchange_do_transaction_offline-payments', 'it_exchange_offline_payments_do_transaction', 10, 2 );
-add_filter( 'it_exchange_possible_template_paths', 'it_exchange_offline_payments_add_template_path' );
-
 /**
  * Call back for settings page
  *
@@ -133,6 +129,9 @@ function it_exchange_verify_offline_transaction_unique_uniqid( $uniqid ) {
  * @return string
 */
 function it_exchange_offline_payments_addon_make_payment_button( $options ) {
+	
+	if ( 0 >= it_exchange_get_cart_total( false ) )
+		return;
 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$stripe_settings = it_exchange_get_option( 'addon_offline_payments' );
@@ -178,18 +177,7 @@ function it_exchange_get_offline_payments_name( $name ) {
 		$name = $options['offline-payments-title'];
 	return $name;
 }
-
-/**
- * Processes the transaction from the cart
- *
- * @since 0.3.7
-*/
-function it_exchange_offline_payments_do_transaction( $status, $transaction_object ) {
-	if ( $status ) //if this has been modified as true already, return.
-		return $status;
-	// Do transaction
-	return it_exchange_add_transaction( 'offline-payments', time(), 'pending', false, $transaction_object );
-}
+add_filter( 'it_exchange_get_transaction_method_name_offline-payments', 'it_exchange_get_offline_payments_name', 9 );
 
 /**
  * Adds manual transactions template path inf on confirmation page
@@ -202,6 +190,7 @@ function it_exchange_offline_payments_add_template_path( $paths ) {
 		$paths[] = dirname( __FILE__ ) . '/templates/';
 	return $paths;
 }
+add_filter( 'it_exchange_possible_template_paths', 'it_exchange_offline_payments_add_template_path' );
 
 function it_exchange_transaction_instructions_offline_payments( $instructions ) {
 	$options = it_exchange_get_option( 'addon_offline_payments' );

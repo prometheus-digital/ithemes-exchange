@@ -211,6 +211,9 @@ add_filter( 'it_storage_get_defaults_exchange_addon_stripe', 'it_exchange_stripe
 */
 function it_exchange_stripe_addon_make_payment_button( $options ) {
 
+	if ( 0 >= it_exchange_get_cart_total( false ) )
+		return;
+		
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$stripe_settings = it_exchange_get_option( 'addon_stripe' );
 	
