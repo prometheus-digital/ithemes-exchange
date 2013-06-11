@@ -1,0 +1,5 @@
+#poststuff:before{
+	content: 'lib/admin/styles/transaction-details.css loaded';
+	clear:left;
+	color: red;
+}

@@ -1130,6 +1130,9 @@ Thank you for your order. Your order's details are below.
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			$deps = array( 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs' );
 			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', $deps );
+		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type ) {
+			$deps = array();
+			wp_enqueue_script( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/transaction-details.js', $deps );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip', 'jquery-ui-sortable' );
 			wp_enqueue_script( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-ons.js', $deps );
@@ -1174,6 +1177,8 @@ Thank you for your order. Your order's details are below.
 
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			wp_enqueue_style( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-edit-product.css' );
+		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type ) {
+			wp_enqueue_style( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/transaction-details.css' );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
 			wp_enqueue_style( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-ons.css' );
 		} else if ( 'exchange_page_it-exchange-setup' === $hook_suffix ) {
