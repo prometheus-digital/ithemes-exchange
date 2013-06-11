@@ -23,13 +23,18 @@ class IT_Exchange_Transaction_Post_Type {
 	function IT_Exchange_Transaction_Post_Type() {
 		$this->init();
 		
-		add_action( 'admin_init', array( $this, 'modify_post_type_features' ) );
 		add_action( 'save_post', array( $this, 'save_transaction' ) );
-		add_filter( 'manage_edit-it_exchange_tran_columns', array( $this, 'modify_all_transactions_table_columns' ) );
-		add_filter( 'manage_edit-it_exchange_tran_sortable_columns', array( $this, 'make_transaction_custom_columns_sortable' ) );
-		add_filter( 'manage_it_exchange_tran_posts_custom_column', array( $this, 'add_transaction_method_info_to_view_all_table_rows' ) );
-		add_filter( 'it_exchange_transaction_metabox_callback', array( $this, 'register_transaction_details_admin_metabox' ) );
-		add_filter( 'post_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
+
+		if ( is_admin() ) {
+			add_action( 'admin_init', array( $this, 'modify_post_type_features' ) );
+			add_filter( 'manage_edit-it_exchange_tran_columns', array( $this, 'modify_all_transactions_table_columns' ) );
+			add_filter( 'manage_edit-it_exchange_tran_sortable_columns', array( $this, 'make_transaction_custom_columns_sortable' ) );
+			add_filter( 'manage_it_exchange_tran_posts_custom_column', array( $this, 'add_transaction_method_info_to_view_all_table_rows' ) );
+			add_filter( 'it_exchange_transaction_metabox_callback', array( $this, 'register_transaction_details_admin_metabox' ) );
+			add_filter( 'post_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
+			add_filter( 'screen_layout_columns', array( $this, 'modify_details_page_layout' ) ); 
+			add_filter( 'get_user_option_screen_layout_it_exchange_tran', array( $this, 'update_user_column_options' ) );
+		}
 	}
 
 	function init() {
@@ -74,6 +79,15 @@ class IT_Exchange_Transaction_Post_Type {
 		add_action( 'init', array( $this, 'register_the_post_type' ) );
 	}
 	
+	/**
+	 * Change 'Edit Transaction' to 'View Details' in All Payments Table
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $actions actions array
+	 * @param object $post wp_post object
+	 * @return array
+	*/
 	function rename_edit_to_details( $actions, $post ) {
 		
 		if ( 'it_exchange_tran' === $post->post_type ) 
@@ -82,6 +96,30 @@ class IT_Exchange_Transaction_Post_Type {
 		return $actions;
 		
 	}
+
+    /**
+     * Set the max columns option for the add / edit product page.
+     *
+     * @since 0.4.0
+     *
+     * @param $columns Existing array of how many colunns to show for a post type
+     * @return array Filtered array
+    */
+    function modify_details_page_layout( $columns ) {
+        $columns['it_exchange_tran'] = 1;
+        return $columns;
+    }
+
+    /**
+     * Updates the user options for number of columns to use on transaction details page
+     *
+     * @since 0.4.0
+     *
+     * @return 2
+    */
+    function update_user_column_options( $existing ) {
+        return 1;
+    }
 
 	/**
 	 * Actually registers the post type
@@ -319,58 +357,12 @@ class IT_Exchange_Transaction_Post_Type {
 		// Remove Publish metabox
 		remove_meta_box( 'submitdiv', 'it_exchange_tran', 'side' );
 
-		// Customer Details
-		$title     = __( 'Customer Details', 'LION' );
-		$callback  = array( $this, 'print_transaction_customer_details_metabox' );
-		$post_type = 'it_exchange_tran';
-		add_meta_box( 'it-exchange-transaction-customer-details', $title, $callback, $post_type, 'normal', 'high' );
-		
 		// Transaction Details
 		$title     = __( 'Transaction Details', 'LION' );
 		$callback  = array( $this, 'print_transaction_details_metabox' );
 		$post_type = 'it_exchange_tran';
 		add_meta_box( 'it-exchange-transaction-details', $title, $callback, $post_type, 'normal', 'high' );
 
-		// Coupons metabox if coupons were used
-		if ( it_exchange_get_transaction_coupons( $post ) ) {
-			$title     = __( 'Coupons Used', 'LION' );
-			$callback  = array( $this, 'print_transaction_coupon_details_metabox' );
-			$post_type = 'it_exchange_tran';
-			add_meta_box( 'it-exchange-transaction-coupon-details', $title, $callback, $post_type, 'side' );
-		}
-
-		// Refunds metabox if refunds have been applied
-		if ( it_exchange_has_transaction_refunds( $post ) ) {
-			$title     = __( 'Refunds Issued', 'LION' );
-			$callback  = array( $this, 'print_transaction_refund_details_metabox' );
-			$post_type = 'it_exchange_tran';
-			add_meta_box( 'it-exchange-transaction-refund-details', $title, $callback, $post_type, 'side' );
-		}
-
-		// Product Details
-		$title     = __( 'Product Details', 'LION' );
-		$callback  = array( $this, 'print_product_details_metabox' );
-		$post_type = 'it_exchange_tran';
-		add_meta_box( 'it-exchange-product-details', $title, $callback, $post_type, 'normal' );
-	}
-
-	/**
-	 * Prints the customer details metabox
-	 *
-	 * @since 0.4.0
-	 * @param object $post post object
-	 * @return void
-	*/
-	function print_transaction_customer_details_metabox( $post ) {
-		?>
-		<div class="customer_data">
-			<?php esc_attr_e( it_exchange_get_transaction_customer_display_name( $post ) ); ?><br />
-			<?php esc_attr_e( it_exchange_get_transaction_customer_email( $post ) ); ?><br />
-			<a href="<?php esc_attr_e( it_exchange_get_transaction_customer_admin_profile_url( $post ) ); ?>">
-				<?php _e( 'Full Profile', 'LION' ); ?>
-			</a>
-		</div>
-		<?php
 	}
 
 	/**
@@ -383,128 +375,168 @@ class IT_Exchange_Transaction_Post_Type {
 	function print_transaction_details_metabox( $post ) {
 		$confirmation_url = it_exchange_get_transaction_confirmation_url( $post->ID );
 		?>
-		<div>
-			<?php _e( 'Order Number:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_order_number( $post ) ); ?><br />
-			<?php _e( 'Date:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_date( $post ) ); ?><br />
-			<?php _e( 'Status:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?><br />
-			<?php _e( 'Method:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?><br />
-			<?php _e( 'Method ID:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_method_id( $post ) ); ?><br />
-			<?php _e( 'Currency:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_currency( $post ) ); ?><br />
-			<?php _e( 'Subtotal:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?><br />
-			<?php if ( it_exchange_has_transaction_refunds( $post ) ) : ?>
-				<?php _e( 'Original Total:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post, true, false ) ); ?><br />
-				<?php _e( 'Total after Refunds:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post ) ); ?><br />
-			<?php else : ?>
-				<?php _e( 'Total:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_transaction_total( $post ) ); ?><br />
+		<div class="customer-data">
+			<div class="customer-avatar"><?php echo get_avatar( it_exchange_get_transaction_customer_id( $post->ID ), 80 ); ?></div>
+			<div class="customer-display-name"><?php esc_attr_e( it_exchange_get_transaction_customer_display_name( $post ) ); ?></div>
+			<div class="customer-email"><?php esc_attr_e( it_exchange_get_transaction_customer_email( $post ) ); ?></div>
+			<div class="customer-profile">
+				<a href="<?php esc_attr_e( it_exchange_get_transaction_customer_admin_profile_url( $post ) ); ?>">
+					<?php _e( 'View Customer Profile', 'LION' ); ?>
+				</a>
+			</div>
+		</div>
+
+		<div class="transaction-summary">
+			<div class="transaction-order-number"><?php _e( '#', 'LION' ); ?><?php esc_attr_e( it_exchange_get_transaction_order_number( $post ) ); ?></div>
+			<div class="transaction-date"><?php esc_attr_e( it_exchange_get_transaction_date( $post ) ); ?></div>
+			<div class="transaction-status"><?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?></div>
+		</div>
+
+		<div class="products">
+			<?php
+			// Grab products attached to transaction
+			$transaction_products = it_exchange_get_transaction_products( $post );
+
+			// Grab all hashes attached to transaction
+			$hashes   = it_exchange_get_transaction_download_hash_index( $post );
+
+			// Loop through products
+			foreach ( $transaction_products as $transaction_product ) {
+				$product_id = $transaction_product['product_id'];
+
+				// Grab the version of the product currently in the DB
+				$db_product = it_exchange_get_product( $transaction_product );
+				?>
+				<div class="product">
+					<div class="product-header">
+						<div class="product-title"><?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?></div>
+						<div class="product-subtotal"><?php esc_attr_e( it_exchange_format_price( it_exchange_get_transaction_product_feature( $transaction_product, 'product_subtotal' ) ) ); ?></div>
+					</div>
+
+					<div class="product-details product-details-<?php esc_attr_e( $transaction_product['product_id'] ); ?>">
+						<?php
+						if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) {
+							foreach( $product_downloads as $download_id => $download_data ) {
+								?>
+								<div class="product-download product-download-<?php esc_attr_e( $download_id ); ?>">
+									<div class="product-download-title"><?php esc_attr_e( get_the_title( $download_id ) ); ?></div>
+									<div class="product-download-hashes">
+										<?php
+										$hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $post->ID, $transaction_product, $download_id );
+
+										foreach( (array) $hashes_for_product_transaction as $hash ) {
+											$hash_data = it_exchange_get_download_data_from_hash( $hash );
+											$expires        = empty( $hash_data['expires'] ) ? false : $hash_data['expires'];
+											$expire_int     = empty( $hash_data['expire_int'] ) ? false : $hash_data['expire_int'];
+											$expire_units   = empty( $hash_data['expire_units'] ) ? false : $hash_data['expire_units'];
+											$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
+											$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
+											?>
+											<div class="product-download-hash">
+												<div class="product-download-hash-hash"><?php esc_attr_e( $hash ); ?></div>
+												<div class="product-download-hash-expires">
+													<?php
+													if ( $expires )
+														echo __( 'Expires on', 'LION' ) . ' ' . esc_attr( it_exchange_get_download_expiration_date_from_settings( $hash_data, $post->post_date ) );
+													else
+														_e( "Doesn't exipre", 'LION' );
+													?>
+												</div>
+												<div class="product-download-hash-download-limit">
+													<?php
+													if ( $download_limit )
+														printf( __( 'Limited to %d total download(s)', 'LION' ), $download_limit );
+													else
+														_e( 'Unlimited downloads', 'LION' );
+													?>
+												</div>
+												<?php if ( $download_limit ) : ?>
+													<div class="product-download-hash-downloads-remaining">
+														<?php echo ( $download_limit - $downloads ) . ' '. __( 'downloads remaining for this hash', 'LION' ); ?>
+													</div>
+												<?php endif; ?>
+												<div class="product-download-hash-download-count">
+													<?php printf( __( 'This file has been downloaded %d time(s) for this hash', 'LION' ), $downloads ); ?>
+												</div>
+											</div>
+											<?php
+										}
+										?>
+									</div>
+								</div>
+							</div>
+							<?php
+							}
+						} else {
+							?>
+							<div class="no-product-downloads"><?php _e( 'This product does not contain any downloads', 'LION' ); ?></div> 
+							<?php
+						}
+						?>
+					<div>
+				</div>
+				<?php
+			}
+			?>
+		</div>
+
+		<div class="transaction-costs">
+			<div class="transaction-costs-subtotal">
+				<div class="transaction-costs-subtotal-label"><?php _e( 'Subtotal', 'LION' ); ?></div>
+				<div class="transaction-costs-subtotal-price"><?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?></div>
+			</div>
+
+			<?php if ( $coupons = it_exchange_get_transaction_coupons( $post ) ) : ?>
+				<div class="transaction-costs-coupons">
+					<?php
+					foreach ( $coupons as $type => $coupon ) {
+						?>
+						<div class="transaction-cost-coupon">
+							<?php esc_attr_e( it_exchange_get_transaction_coupon_summary( $type, $coupon ) ); ?>
+						</div>
+						<?php
+					}
+					?>
+					<div class="transaction-costs-coupon-total-label"><?php _e( 'Total Discount', 'LION' ); ?></div>
+					<div class="transaction-costs-coupon-total-amount"><?php esc_attr( it_exchange_get_transaction_coupons_total_discount( $post ) ); ?></div>
+				</div>
 			<?php endif; ?>
-			<?php printf( __( '%sView Frontend Confirmation%s', 'LION' ), '<a target="_blank" href="' . $confirmation_url . '">', '</a>' ); ?>
+
+			<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
+				<div class="transaction-costs-refunds">
+					<?php
+					foreach ( $refunds as $refund ) {
+						?>
+						<div class="transaction-costs-refund">
+							<?php echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ); ?>
+						</div>
+						<?php
+					}
+					?>
+					<div class="transaction-costs-refund-total">
+						<div class="transaction-costs-refund-total-label"><?php _e( 'Total Refund', 'LION' ); ?></div>
+						<div class="transaction-costs-refund-total-amount"><?php esc_attr_e( it_exchange_get_transaction_refunds_total( $post ) ); ?></div>
+					</div>
+				</div>
+			<?php endif; ?>
+		</div>
+
+		<div class="transaction-summary">
+			<div class="transaction-summary-payment-method">
+				<div class="transaction-summary-payment-method-label"><?php _e( 'Payment Method', 'LION' ); ?></div>
+				<div class="transaction-summary-payment-method-name"><?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?></div>
+			</div>
+			<div class="transaction-summary-payment-total">
+				<div class="transaction-summary-payment-total-label"><?php _e( 'Total', 'LION' ); ?></div>
+				<div class="transaction-summary-payment-total-amount"><?php _e( it_exchange_get_transaction_total( $post ) ); ?></div>
+
+				<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
+					<div class="transaction-summary-payment-original-total-label"><?php _e( 'Total before refunds', 'LION' ); ?></div>
+					<div class="transaction-summary-payment-original-total-amount"><?php _e( it_exchange_get_transaction_total( $post, true, false ) ); ?></div>
+				<?php endif; ?>
+			</div>
 		</div>
 		<?php
-	}
-
-	/**
-	 * Prints the transaction coupons details metabox
-	 *
-	 * Only registered if coupons were used with this transaction
-	 *
-	 * @since 0.4.0
-	 * @param object $post post object
-	 * @return void
-	*/
-	function print_transaction_coupon_details_metabox( $post ) {
-		$coupons = it_exchange_get_transaction_coupons( $post );
-
-		echo '<ul>';
-		foreach ( $coupons as $type => $coupon ) {
-			echo '<li>' . it_exchange_get_transaction_coupon_summary( $type, $coupon ) . '</li>';
-		}
-		echo '</ul>';
-		echo 'Total Discount from Coupons: ' . it_exchange_get_transaction_coupons_total_discount( $post ) . '<br />';
-	}
-
-	/**
-	 * Prints the transaction Refund details metabox
-	 *
-	 * Only registered if refunds were applied to this transaction
-	 *
-	 * @since 0.4.0
-	 * @param object $post post object
-	 * @return void
-	*/
-	function print_transaction_refund_details_metabox( $post ) {
-		$refunds = it_exchange_get_transaction_refunds( $post );
-		foreach ( $refunds as $refund ) {
-			echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ) . '<br />';
-		}
-		echo 'Total Refund: ' . it_exchange_get_transaction_refunds_total( $post );
-	}
-
-	/**
-	 * Prints the transaction Products details metabox
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $post post object
-	 * @return void
-	*/
-	function print_product_details_metabox( $post ) {
-		$transaction_products = it_exchange_get_transaction_products( $post );
-		$hashes   = it_exchange_get_transaction_download_hash_index( $post );
-		foreach ( $transaction_products as $transaction_product ) {
-			$product_id = $transaction_product['product_id'];
-
-			// Grab the version of the product currently in the DB
-			$db_product = it_exchange_get_product( $transaction_product );
-
-			// Echo the product's title
-			echo '<p>' . it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) . '</p>';
-
-			// Grab all downloads associated with this product
-			if ( $downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) {
-				// Loop through the downloads, print their title and their meta data
-				foreach( $downloads as $download_id => $download_data ) {
-					echo '<p>';
-					// Download Title
-					echo get_the_title( $download_id ) . '<br />';
-	
-					// Give expiration details per hash created (1 for each quantity purchased)
-					$hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $post->ID, $transaction_product, $download_id );
-
-					foreach( (array) $hashes_for_product_transaction as $hash ) {
-						echo '<p>';
-						$hash_data = it_exchange_get_download_data_from_hash( $hash );
-
-						$expires        = empty( $hash_data['expires'] ) ? false : $hash_data['expires'];
-						$expire_int     = empty( $hash_data['expire_int'] ) ? false : $hash_data['expire_int'];
-						$expire_units   = empty( $hash_data['expire_units'] ) ? false : $hash_data['expire_units'];
-						$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
-						$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
-	
-						echo $hash . '<br />';
-						if ( $expires ) {
-							echo __( 'Expires: ', 'LION' ) . ' ' . esc_attr( it_exchange_get_download_expiration_date_from_settings( $hash_data, $post->post_date ) ).'<br/>';
-
-						} else {
-							_e( 'Doesn\'t exipre', 'LION' );
-						}
-
-						echo __( 'Download Limit:', 'LION' ) . ' ' . esc_attr( $download_limit ) . '<br />';
-						if ( $download_limit )
-							echo __( 'Downloads Remaining:', 'LION' ) . ' ' . ( $download_limit - $downloads ) . '<br />';
-						else
-							echo esc_attr( $download_limit ) . '<br />';
-						echo __( 'Download Count:', 'LION' ) . ' ' . esc_attr( $downloads ) . '<br />';
-
-						echo '</p>';
-					}
-	
-					echo '</p>';
-					echo '<hr />';
-				}
-			} else {
-				echo '<p>' . __( 'This product does not contain any downloads', 'LION' ) . '</p>';
-			}
-		}
 	}
 }
 $IT_Exchange_Transaction_Post_Type = new IT_Exchange_Transaction_Post_Type();

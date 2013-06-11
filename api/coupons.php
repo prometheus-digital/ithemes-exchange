@@ -37,7 +37,7 @@ function it_exchange_get_coupons( $options=array() ) {
 		return $coupons;
 	}
 
-	return array();
+	return false;
 }
 
 /**
