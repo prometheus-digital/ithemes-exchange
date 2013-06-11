@@ -504,8 +504,8 @@ class IT_Exchange_Transaction_Post_Type {
 					<div>
 				</div>
 				<?php
-			}
-			?>
+			} ?>
+			</div>
 		</div>
 
 		<div class="transaction-costs">
