@@ -5,6 +5,8 @@
 ?>
 
 <div class="it-exchange-purchases-wrapper">
+	<?php it_exchange( 'customer', 'menu' ); ?>
+    
 	<div class="it-exchange-purchase">
 		<div class="it-exchange-purchase-top">
 			<span class="it-exchange-purchase-date"><strong>5/12/13</strong></span> <span class="it-exchange-purchase-status">- Pending</span> <span class="it-exchange-purchase-total"><strong>$14.00</strong></span>

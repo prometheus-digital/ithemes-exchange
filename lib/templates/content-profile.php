@@ -11,6 +11,8 @@
 ?>
 
 <div id="it-exchange-customer">
+	<?php it_exchange( 'customer', 'menu' ); ?>
+    
 	<div class="customer-info">
 		<?php it_exchange( 'customer', 'formopen' ); ?>
 			<?php it_exchange_get_template_part( 'messages' ); ?>
