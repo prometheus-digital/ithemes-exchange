@@ -93,7 +93,7 @@
 .it-exchange-super-widget .total-cancel-wrapper{overflow:hidden;padding:1em;background:#F6F6F6;}
 .it-exchange-super-widget .it-exchange-empty-cart{float:right;text-decoration:none;}
 .it-exchange-super-widget .payment-methods-wrapper{padding:1em;border-bottom:1px solid #F0F0F0;}
-.it-exchange-super-widget .payment-methods-wrapper input{width:100%;}
+.it-exchange-super-widget .payment-methods-wrapper input[type="submit"]{width:100%;}
 .it-exchange-super-widget .cart-actions-wrapper{overflow:hidden;font-size:.8em;text-align:center;}
 .it-exchange-super-widget .cart-actions-wrapper .cart-action{float:left;width:100%;padding:1em;}
 .it-exchange-super-widget .two-actions .cart-action{width:50%;}
