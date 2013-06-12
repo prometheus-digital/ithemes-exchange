@@ -446,3 +446,19 @@ function it_exchange_get_addon_support( $add_on, $feature ) {
 
 	return apply_filters( 'it_exchange_get_addon_support', $add_ons[$add_on]['options']['supports'][$feature], $add_on, $feature );
 }
+
+/**
+ * Returns true if addon is in ithemes-exchange/core-addons directory
+ *
+ * @since 0.4.0
+ *
+ * @param string $slug the addon slug
+ * @return boolean
+*/
+function it_exchange_is_core_addon( $slug ) {
+	$addon = it_exchange_get_addon( $slug );
+	if ( empty( $addon['file'] ) )
+		return false;
+
+	return ( 'ithemes-exchange/core-addons/' == substr( plugin_basename( $addon['file'] ), 0, 29 ) );
+}
