@@ -242,23 +242,45 @@ class IT_Exchange_Email_Notifications {
 	 * @return string Replaced value
 	*/
 	function it_exchange_replace_download_list_tag( $args, $options = NULL ) {
-		$output = '';
-		
-		$hash_index = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
-				
-		if ( !empty( $hash_index ) ) {
-			$output .= '<h2>' . __( 'Downloads available with this purchase.', 'LION' ) . '</h2>';
-			$output .= '<ul>';
-			foreach( $hash_index as $product_id => $file_hashes ) {
-				foreach( $file_hashes as $file_id => $hashes )
-					foreach( $hashes as $hash ) {
-						$output .= '<li><a href="' . site_url() . '?it-exchange-download=' . $hash . '">' . get_the_title( $file_id ) . '</a></li>';	
-					}
-			}
-			$output .= '</ul>';
-		}
-		
-		return $output;
+		ob_start();
+		// Grab products attached to transaction
+		$transaction_products = it_exchange_get_transaction_products( $args->transaction_id );
+
+		// Grab all hashes attached to transaction
+		$hashes   = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
+		?>
+		<?php foreach ( $transaction_products as $transaction_product ) : ?>
+			<?php
+				$product_id = $transaction_product['product_id'];
+				$db_product = it_exchange_get_product( $transaction_product );
+			?>
+			<h3><?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?></h3>
+				<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : ?>
+					<?php $count = it_exchange_get_transaction_product_feature( $transaction_product, 'count' ); ?>
+					<?php if ( $count > 1 ) : ?>
+						<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
+						<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%sEach link has its own download limits.%sYou can view the details on you %sdownloads%s page.', 'LION' ), $count, '<br />', '<br />', '<a href="' . $downloads_url . '">', '</a>' ); ?></p>
+					<?php endif; ?>
+					<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
+						<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $args->transaction_id, $transaction_product, $download_id ); ?>
+						<h4><?php esc_attr_e( get_the_title( $download_id ) ); ?></h4>
+						<ul class="download-hashes">
+							<?php foreach( (array) $hashes_for_product_transaction as $hash ) : ?>
+								<?php
+								$hash_data      = it_exchange_get_download_data_from_hash( $hash );
+								$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
+								$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
+								?>
+								<li>
+									<?php esc_attr_e( $hash ); ?> : <a href="<?php echo site_url() . '?it-exchange-download=' . $hash; ?>"><?php _e( 'Download link', 'LION' ); ?></a>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					<?php endforeach; ?>
+				<?php endif; ?>
+		<?php endforeach; ?>
+		<?php	
+		return ob_get_clean();
 	}
 	
 	/**
