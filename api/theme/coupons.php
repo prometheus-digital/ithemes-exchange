@@ -99,41 +99,40 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 	 * @return boolean
 	*/
 	function applied( $options=array() ) {
-			$defaults = array(
-				'type' => false,
-			);
-			$options = ITUtility::merge_defaults( $options, $defaults );
+		$defaults = array(
+			'type' => false,
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
 
-			// Return false if no type option is set
-			if ( ! $options['type'] )
-				return false;
+		// Return false if no type option is set
+		if ( ! $options['type'] )
+			return false;
 
-			// Return false if no coupons add-on is enabled
-			if ( ! (boolean) it_exchange_get_enabled_addons( array( 'category' => 'coupons' ) ) )
-				return false;
+		// Return false if no coupons add-on is enabled
+		if ( ! (boolean) it_exchange_get_enabled_addons( array( 'category' => 'coupons' ) ) )
+			return false;
 
-			// Do we have any applied coupons
-			if ( ! empty( $options['has'] ) )
-				return (boolean) it_exchange_get_applied_coupons( $options['type'] );
+		// Do we have any applied coupons
+		if ( ! empty( $options['has'] ) )
+			return (boolean) it_exchange_get_applied_coupons( $options['type'] );
 
-			// If we made it here, we're doing a loop of applied coupons
-			// This will init/reset the applied_coupons global and loop through them.
-			if ( empty( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] ) ) {
-				$GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] = it_exchange_get_applied_coupons( $options['type'] );
-				$GLOBALS['it_exchange']['coupon'] = reset( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] );
+		// If we made it here, we're doing a loop of applied coupons
+		// This will init/reset the applied_coupons global and loop through them.
+		if ( empty( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] ) ) {
+			$GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] = it_exchange_get_applied_coupons( $options['type'] );
+			$GLOBALS['it_exchange']['coupon'] = reset( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] );
+			return true;
+		} else {
+			if ( next( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] ) ) {
+				$GLOBALS['it_exchange']['coupon'] = current( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] );
 				return true;
 			} else {
-				if ( next( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] ) ) {
-					$GLOBALS['it_exchange']['coupon'] = current( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] );
-					return true;
-				} else {
-					$GLOBALS['it_exchange']['coupon'] = false;
-					return false;
-				}   
+				$GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] = array();
+				end( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] );
+				$GLOBALS['it_exchange']['coupon'] = false;
+				return false;
 			}   
-			end( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] );
-			$GLOBALS['it_exchange']['coupon'] = false;
-			return false;
+		}
 	}
 
 	/**

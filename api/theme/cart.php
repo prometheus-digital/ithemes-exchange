@@ -81,13 +81,12 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				$GLOBALS['it_exchange']['cart-item'] = current( $GLOBALS['it_exchange']['products'] );
 				return true;
 			} else {
+				$GLOBALS['it_exchange']['products'] = array();
+				end( $GLOBALS['it_exchange']['products'] );
 				$GLOBALS['it_exchange']['cart-item'] = false;
 				return false;
 			}
 		}
-		end( $GLOBALS['it_exchange']['products'] );
-		$GLOBALS['it_exchange']['cart-item'] = false;
-		return false;
 	}
 
 	/**

@@ -77,12 +77,11 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 				$GLOBALS['it_exchange']['transaction'] = current( $GLOBALS['it_exchange']['transactions'] );
 				return true;
 			} else {
+				$GLOBALS['it_exchange']['transactions'] = array();
+				end( $GLOBALS['it_exchange']['transactions'] );
 				$GLOBALS['it_exchange']['transaction'] = false;
 				return false;
 			}
 		}
-		end( $GLOBALS['it_exchange']['transactions'] );
-		$GLOBALS['it_exchange']['transaction'] = false;
-		return false;
 	}
 }

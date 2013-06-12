@@ -170,13 +170,12 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
                 $GLOBALS['it_exchange']['transaction_product'] = current( $GLOBALS['it_exchange']['transaction_products'] );
                 return true;
             } else {
+				$GLOBALS['it_exchange']['transaction_products'] = array();
+        		end( $GLOBALS['it_exchange']['transaction_products'] );
                 $GLOBALS['it_exchange']['transaction_product'] = false;
                 return false;
             }   
-        }   
-        end( $GLOBALS['it_exchange']['transaction_products'] );
-        $GLOBALS['it_exchange']['transaction_product'] = false;
-        return false;
+        }
     }
 
 	/** 
@@ -186,7 +185,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * @return string
 	*/
 	function product_attribute( $options=array() ) { 
-
+	
 		// Set defaults
 		$defaults = array(
 			'wrap'         => false,
@@ -253,13 +252,12 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
                 $GLOBALS['it_exchange']['transaction_product_download'] = current( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] );
                 return true;
             } else {
+				$GLOBALS['it_exchange']['transaction_product_downloads'][$prodcut_id] = array();
+				end( $GLOBALS['it_exchange']['transaction_product_downloads'][$prodcut_id] );
                 $GLOBALS['it_exchange']['transaction_product_download'] = false;
                 return false;
             }   
         }   
-        end( $GLOBALS['it_exchange']['transaction_product_downloads'][$prodcut_id] );
-        $GLOBALS['it_exchange']['transaction_product_download'] = false;
-        return false;
 	}
 
 	function product_download( $options=array() ) {
@@ -299,13 +297,12 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
                 $GLOBALS['it_exchange']['transaction_product_download_hash'] = current( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] );
                 return true;
             } else {
+				$GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] = array();
+				end( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] );
                 $GLOBALS['it_exchange']['transaction_product_download_hash'] = false;
                 return false;
             }   
-        }   
-        end( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] );
-        $GLOBALS['it_exchange']['transaction_product_download_hash'] = false;
-        return false;
+        }
 	}
 
 	function product_download_hash( $options=array() ) {

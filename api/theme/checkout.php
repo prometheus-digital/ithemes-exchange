@@ -69,13 +69,12 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 				$GLOBALS['it_exchange']['transaction_method'] = current( $GLOBALS['it_exchange']['transaction_methods'] );
 				return true;
 			} else {
+				$GLOBALS['it_exchange']['transaction_methods'] = array();
+				end( $GLOBALS['it_exchange']['transaction_methods'] );
 				$GLOBALS['it_exchange']['transaction_method'] = false;
 				return false;
 			}
 		}
-		end( $GLOBALS['it_exchange']['transaction_methods'] );
-		$GLOBALS['it_exchange']['transaction_method'] = false;
-		return false;
 	}
 
 	/**

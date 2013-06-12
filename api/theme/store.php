@@ -69,12 +69,11 @@ class IT_Theme_API_Store implements IT_Theme_API {
 				$GLOBALS['it_exchange']['product'] = current( $GLOBALS['it_exchange']['products'] );
 				return true;
 			} else {
+				$GLOBALS['it_exchange']['products'] = array();
+				end( $GLOBALS['it_exchange']['products'] );
 				$GLOBALS['it_exchange']['product'] = false;
 				return false;
 			}
 		}
-		end( $GLOBALS['it_exchange']['products'] );
-		$GLOBALS['it_exchange']['product'] = false;
-		return false;
 	}
 }

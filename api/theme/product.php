@@ -678,13 +678,12 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				$GLOBALS['it_exchange']['download'] = current( $GLOBALS['it_exchange']['downloads'] );
 				return true;
 			} else {
+				$GLOBALS['it_exchange']['downloads'] = array();
+				end( $GLOBALS['it_exchange']['downloads'] );
 				$GLOBALS['it_exchange']['download'] = false;
 				return false;
 			}   
-		}   
-		end( $GLOBALS['it_exchange']['downloads'] );
-		$GLOBALS['it_exchange']['download'] = false;
-		return false;
+		}
 	}
 
 	/**
