@@ -262,13 +262,17 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		?>
 		<div class="download-expires">
-			<?php _e( 'Download Expires:', 'LION' ); ?> <input type="checkbox" name="it-exchange-digital-downloads-expires" value="1" <?php checked( "1", $download_expires ); ?> />
+			<div class="download-expires-checkbox">
+				<input type="checkbox" name="it-exchange-digital-downloads-expires" value="1" <?php checked( "1", $download_expires ); ?> />
+			</div>
+			<div class="download-expires-label">
+				<?php _e( 'Download link expire?', 'LION' ); ?> 
+			</div>
 		</div>
 		<div class="download-expire-int">
-			<?php _e( 'Expire Int:', 'LION' ); ?> <input type="input" name="it-exchange-digital-downloads-expire-int" value="<?php esc_attr_e( $download_expire_int ); ?>" />
+			<input type="input" name="it-exchange-digital-downloads-expire-int" value="<?php esc_attr_e( $download_expire_int ); ?>" />
 		</div>
 		<div class="download-expire-units">
-			<?php _e( 'Expire Units:', 'LION' ); ?>
 			<select name="it-exchange-digital-downloads-expire-units">
 				<?php
 				$units = array(
@@ -284,18 +288,22 @@ class IT_Exchange_Product_Feature_Downloads {
 			</select>
 		</div>
 		<div class="download-limit">
-			<?php _e( 'Download Limit:', 'LION' ); ?>
-			<select name="it-exchange-digital-downloads-download-limit">
-				<?php
-				$options = array( 0 => __( 'Unlimited', 'LION' ) );
-				for ( $i=1;$i<=20;$i++ ) {
-					$options[$i] = $i;
-				}
-				$options = apply_filters( 'it_exchange_download_limit_options', $options, $product );
-				foreach( $options as $limit_value => $limit_label ) : ?>
-					<option value="<?php esc_attr_e( $limit_value ); ?>" <?php selected( $limit_value, $download_limit ); ?>><?php esc_attr_e( $limit_label); ?></option>
-				<?php endforeach; ?>
-			</select>
+			<div class="download-limit-label">
+				<?php _e( 'Download Limit', 'LION' ); ?>
+			</div>
+			<div class="download-limit-select">
+				<select name="it-exchange-digital-downloads-download-limit">
+					<?php
+					$options = array( 0 => __( 'Unlimited', 'LION' ) );
+					for ( $i=1;$i<=20;$i++ ) {
+						$options[$i] = $i;
+					}
+					$options = apply_filters( 'it_exchange_download_limit_options', $options, $product );
+					foreach( $options as $limit_value => $limit_label ) : ?>
+						<option value="<?php esc_attr_e( $limit_value ); ?>" <?php selected( $limit_value, $download_limit ); ?>><?php esc_attr_e( $limit_label); ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
 		</div>
 		<?php
 	}
