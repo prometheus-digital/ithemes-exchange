@@ -6,7 +6,8 @@
 */
 
 // Initialized Stripe...
-require_once('stripe-api/lib/Stripe.php');
+if ( !class_exists( 'Stripe' ) )
+	require_once('stripe-api/lib/Stripe.php');
 
 function it_exchange_stripe_addon_enqueue_script() {
 	wp_enqueue_script( 'stripe', 'https://checkout.stripe.com/v2/checkout.js', array( 'jquery' ) );
