@@ -252,8 +252,8 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
                 $GLOBALS['it_exchange']['transaction_product_download'] = current( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] );
                 return true;
             } else {
-				$GLOBALS['it_exchange']['transaction_product_downloads'][$prodcut_id] = array();
-				end( $GLOBALS['it_exchange']['transaction_product_downloads'][$prodcut_id] );
+				$GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] = array();
+				end( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] );
                 $GLOBALS['it_exchange']['transaction_product_download'] = false;
                 return false;
             }   

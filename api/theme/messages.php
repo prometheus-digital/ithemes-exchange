@@ -97,7 +97,7 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 				$GLOBALS['it_exchange']['error'] = current( $GLOBALS['it_exchange']['errors'] );
 				return true;
 			} else {
-				$GLOBALS['it_exchange']['error'] = false;
+				$GLOBALS['it_exchange']['errors'] = false;
 				end( $GLOBALS['it_exchange']['errors'] );
 				it_exchange_clear_messages( 'error' );
 				return false;
@@ -147,7 +147,7 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 				$GLOBALS['it_exchange']['notice'] = current( $GLOBALS['it_exchange']['notices'] );
 				return true;
 			} else {
-				$GLOBALS['it_exchange']['notice'] = false;
+				$GLOBALS['it_exchange']['notices'] = array();
 				end( $GLOBALS['it_exchange']['notices'] );
 				it_exchange_clear_messages( 'notice' );
 				return false;
