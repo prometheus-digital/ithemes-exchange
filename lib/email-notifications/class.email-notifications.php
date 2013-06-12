@@ -244,14 +244,16 @@ class IT_Exchange_Email_Notifications {
 	function it_exchange_replace_download_list_tag( $args, $options = NULL ) {
 		$output = '';
 		
-		$hashes = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
+		$hash_index = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
 				
-		if ( !empty( $hashes ) ) {
+		if ( !empty( $hash_index ) ) {
 			$output .= '<h2>' . __( 'Downloads available with this purchase.', 'LION' ) . '</h2>';
 			$output .= '<ul>';
-			foreach( $hashes as $product_id => $file_hashes ) {
-				foreach( $file_hashes as $file_id => $hash )
-					$output .= '<li><a href="' . site_url() . '?it-exchange-download=' . $hash . '">' . get_the_title( $file_id ) . '</a></li>';	
+			foreach( $hash_index as $product_id => $file_hashes ) {
+				foreach( $file_hashes as $file_id => $hashes )
+					foreach( $hashes as $hash ) {
+						$output .= '<li><a href="' . site_url() . '?it-exchange-download=' . $hash . '">' . get_the_title( $file_id ) . '</a></li>';	
+					}
 			}
 			$output .= '</ul>';
 		}
