@@ -27,7 +27,8 @@
 .it-exchange-purchase-items .item-data{width:90%;}
 .it-exchange-purchase-items .item-data h4{margin:0;margin-left:2em;}
 .it-exchange-purchase-items .item-data p{margin-left:2em;}
-.it-exchange-purchase-items .item-data .item-price{font-weight:normal;}
+.it-exchange-purchase-items .item-data .item-price,
+.it-exchange-purchase-items .item-data .item-quantity{font-weight:normal;}
 
 /** -----------------------------------------------------:[ profile ]:---------- */
 #it-exchange-customer .customer-info label{display:block;margin-top:1em;}
