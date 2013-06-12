@@ -11,18 +11,11 @@
  *
  * @since 0.4.0
  *
- * @param integer $download_id the WP post ID for the download
  * @return string the hash
 */
-function it_exchange_create_download_hash( $download_id ) {
-	// Initial attempt at creating unique hash
-	$hash = wp_hash( time() . $download_id );
-
-	// Confirm it doesn't exist. Retry if we find hash already exists
-	while ( get_post_meta( $download_id, '_download_hash_' . $hash ) ) {
-		$hash = wp_hash( time() . $download_id );
-	}
-
+function it_exchange_create_download_hash() {
+	$hash = wp_hash( microtime( true ) . uniqid() );
+	apply_filters( 'it_exchange_generate_download_hash', $hash );
 	return $hash;
 }
 
