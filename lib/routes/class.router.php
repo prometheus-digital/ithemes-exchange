@@ -266,10 +266,10 @@ class IT_Exchange_Router {
 		if ( is_admin() ) {
 			add_filter( 'rewrite_rules_array', array( $this, 'register_rewrite_rules' ) );
 		} else {
-			add_action( 'template_redirect', array( $this, 'set_environment' ), 8 );
+			add_action( 'template_redirect', array( $this, 'set_environment' ), 1 );
+			add_action( 'template_redirect', array( $this, 'set_account' ), 2 );
 			add_action( 'template_redirect', array( $this, 'registration_redirect' ), 9 );
 			add_action( 'template_redirect', array( $this, 'login_out_page_redirect' ), 9 );
-			add_action( 'template_redirect', array( $this, 'set_account' ), 10 );
 			add_action( 'template_redirect', array( $this, 'protect_pages' ), 11 );
 			add_action( 'template_redirect', array( $this, 'prevent_empty_checkouts' ), 11 );
 			add_action( 'template_redirect', array( $this, 'process_transaction' ), 12 );
@@ -348,16 +348,16 @@ class IT_Exchange_Router {
 		$this->_is_store        = (boolean) get_query_var( $this->_store_slug );
 		$this->_is_transaction  = (boolean) get_query_var( $this->_transaction_slug );
 		$this->_is_product      = (boolean) get_query_var( $this->_product_slug );
+		$this->_is_registration = (boolean) get_query_var( $this->_registration_slug );
 		$this->_is_account      = (boolean) get_query_var( $this->_account_slug );
 		$this->_is_profile      = (boolean) get_query_var( $this->_profile_slug );
-		$this->_is_registration = (boolean) get_query_var( $this->_registration_slug );
 		$this->_is_downloads    = (boolean) get_query_var( $this->_downloads_slug );
 		$this->_is_purchases    = (boolean) get_query_var( $this->_purchases_slug );
 		$this->_is_log_in       = (boolean) get_query_var( $this->_log_in_slug );
 		$this->_is_log_out      = (boolean) get_query_var( $this->_log_out_slug );
 		$this->_is_confirmation = (boolean) get_query_var( $this->_confirmation_slug );
 		$this->_is_reports      = (boolean) get_query_var( $this->_reports_slug );
-
+		
 		// Allow add-ons to create their own ghost pages
 		$add_on_ghost_pages     = apply_filters( 'it_exchange_add_ghost_pages', array() );
 		foreach( (array) $add_on_ghost_pages as $page => $data ) {
@@ -415,8 +415,9 @@ class IT_Exchange_Router {
 	 * @return void
 	*/
 	function set_account() {
+		
 		// Return if not viewing an account based page: account, profile, downloads, purchases, log-in
-		if ( ! $this->_is_account )
+		if ( ! ( $this->_is_account || $this->_is_profile || $this->_is_downloads || $this->_is_purchases ) )
 			return;
 		
 		$account = get_query_var( $this->_account_slug );
@@ -424,6 +425,10 @@ class IT_Exchange_Router {
 		if ( 1 == $account ) {
 		
 			$customer_id = get_current_user_id();
+			
+		} else if ( $account == (int)$account ) {
+		
+			$customer_id = $account;
 			
 		} else {
 			
@@ -542,6 +547,8 @@ class IT_Exchange_Router {
 				wp_redirect( $redirect_url );
 				die();
 			}
+			
+			return;
 			
 		}
 
