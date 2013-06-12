@@ -4,8 +4,8 @@
 
 /** -----------------------------------------------------:[ downloads ]:---------- */
 #it-exchange-downloads .download{clear:both;}
-#it-exchange-downloads .download .download-get{float:right;width:20%;}
-#it-exchange-downloads .download .download-get a{float:right;}
+#it-exchange-downloads .download .download-product{float:right;width:20%;}
+#it-exchange-downloads .download .download-product a{float:right;}
 #it-exchange-downloads .download .download-info{float:left;width:80%;}
 #it-exchange-downloads .download .download-info h4{margin-top:0;}
 #it-exchange-downloads .download .download-info span + span{margin-left:1em;}

@@ -205,6 +205,8 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			$attribute = it_exchange_get_product_feature( $this->_transaction_product['product_id'], 'description' );
 			if ( empty( $attribute ) )
 				return '';
+		} else if ( 'confirmation-url' == $options['attribute'] ) {
+			$attribute = it_exchange_get_transaction_confirmation_url( $this->_transaction->ID );
 		} else if ( ! $attribute = it_exchange_get_transaction_product_feature( $this->_transaction_product, $options['attribute'] ) ) {
 			return '';
 		}
@@ -267,8 +269,9 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		if ( empty( $options['attribute'] ) )
 			return false;
 
-		if ( 'title' == $options['attribute'] || 'name' == $options['attribute'] )
+		if ( 'title' == $options['attribute'] || 'name' == $options['attribute'] ) {
 			$value = get_the_title( $this->_transaction_product_download['id'] );
+		}
 
 		return $value;
 	}
