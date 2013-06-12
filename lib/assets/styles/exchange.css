@@ -9,7 +9,7 @@
 #it-exchange-downloads .download .download-info{float:left;width:80%;}
 #it-exchange-downloads .download .download-info h4{margin-top:0;}
 #it-exchange-downloads .download .download-info span + span{margin-left:1em;}
-
+#it-exchange-downloads span{margin-left:1em;}
 /** -----------------------------------------------------:[ purchases ]:---------- */
 .it-exchange-purchase,
 .it-exchange-purchase .it-exchange-purchase-top,
