@@ -52,7 +52,7 @@ function it_exchange_register_addon( $slug, $params ) {
 		$options['category'] = 'other';
 
 	// Add the add-on to our Global
-	$GLOBALS['it_exchange']['add_ons']['registered'][$slug] = array(
+	$GLOBALS['it_exchange']['add_ons']['registered'][$slug] = apply_filters( 'it_exchange_register_addon', array(
 		'slug' 			=> $slug,
 		'name' 			=> $name,
 		'author' 		=> $author,
@@ -60,7 +60,9 @@ function it_exchange_register_addon( $slug, $params ) {
 		'description' 	=> $description,
 		'file' 			=> $file,
 		'options' 		=> $options,
-	);
+	) );
+	
+	
 }
 
 /**
@@ -89,23 +91,13 @@ function it_exchange_register_addon_category( $slug, $name, $description, $optio
 		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Excahnge Add-ons require a name parameter.', 'LION' ) );
 
 	// Add the add-on to our Global
-	$GLOBALS['it_exchange']['add_on_categories'][$slug] = array(
+	$GLOBALS['it_exchange']['add_on_categories'][$slug] = apply_filters( 'it_exchange_register_addon_category', array(
 		'slug'        => $slug,
 		'name'        => $name,
 		'description' => $description,
 		'options'     => $options,
-	);
+	) );
 }
-
-/**
- * Register a bundle of add-ons as a ‘Set’ with iThemes Exchange
- *
- * @param string $slug         var for identifying the add-on set in code
- * @param string $name         name of add-on set used in UI
- * @param string $description  description of the add-on set
- * @param array  $options      key / value pairs.
-*/
-function it_exchange_register_addon_set( $slug, $name, $description, $options = array() ) {}
 
 /**
  * Returns an array of registered add-ons
@@ -126,7 +118,7 @@ function it_exchange_get_addons( $options=array() ) {
 
 	ksort( $add_ons );
 
-	return $add_ons;
+	return apply_filters( 'it_exchange_get_addons', $add_ons, $options );
 }
 
 /**
@@ -141,7 +133,7 @@ function it_exchange_get_addon( $slug ) {
 		if ( ! empty( $add_ons[$slug] ) )
 			return $add_ons[$slug];
 	}
-	return false;
+	return apply_filters( 'it_exchange_get_addon', false, $slug, $add_ons );
 }
 
 /**
@@ -152,9 +144,11 @@ function it_exchange_get_addon( $slug ) {
 */
 function it_exchange_get_addon_categories() {
 	if ( empty( $GLOBALS['it_exchange']['add_on_categories'] ) )
-		return array();
+		$categories = array() ;
 	else
-		return $GLOBALS['it_exchange']['add_on_categories'];
+		$categories = $GLOBALS['it_exchange']['add_on_categories'];
+		
+	return apply_filters( 'it_exchange_get_addon_categories', $categories );
 }
 
 /**
@@ -185,7 +179,7 @@ function it_exchange_get_enabled_addons( $options=array() ) {
 
 	ksort( $enabled );
 
-	return empty( $enabled ) ? array() : $enabled;
+	return apply_filters( 'it_exchange_get_enabled_addons', empty( $enabled ) ? array() : $enabled, $options );
 }
 
 /**
@@ -216,7 +210,7 @@ function it_exchange_get_disabled_addons( $options=array() ) {
 	if ( ! empty( $disabled ) )
 		ksort( $disabled );
 
-	return empty( $disabled ) ? array() : $disabled;
+	return apply_filters( 'it_exchange_get_disabled_addons', empty( $disabled ) ? array() : $disabled, $options );
 }
 
 /**
@@ -239,7 +233,7 @@ function it_exchange_get_more_addons( $options=array() ) {
 
 	ksort( $addons );
 
-	return empty( $addons ) ? array() : $addons;
+	return apply_filters( 'it_exchange_get_more_addons', empty( $addons ) ? array() : $addons, $options );
 }
 
 /**
@@ -266,7 +260,7 @@ function it_exchange_featured_addons_on_top( $addons ) {
 
 	ksort( $sorted_addons );
 
-	return array_merge( $sorted_addons, $addons );
+	return apply_filters( 'it_exchange_get_more_addons', array_merge( $sorted_addons, $addons ), $addons );
 }
 
 /**
@@ -284,7 +278,7 @@ function it_exchange_filter_addons_by_category( $add_ons, $categories ) {
 				unset( $add_ons[$slug] );
 		}
 	}
-	return $add_ons;
+	return apply_filters( 'it_exchange_filter_addons_by_category', $add_ons, $categories );
 }
 
 /**
@@ -293,22 +287,24 @@ function it_exchange_filter_addons_by_category( $add_ons, $categories ) {
  * @todo Add nonce
  * @since 0.3.2
  * @param string $add_on  add_on to enable
- * @return void
+ * @return bool
 */
 function it_exchange_enable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
-	$enabled = it_exchange_get_option( 'enabled_add_ons' );
+	$enabled_add_ons = it_exchange_get_option( 'enabled_add_ons' );
+	$success = false;
 
 	if ( in_array( $add_on, array_keys( $registered ) ) ) {
-		$enabled[] = $add_on;
-		if ( it_exchange_save_option( 'enabled_add_ons', $enabled ) ) {
+		$enabled_add_ons[] = $add_on;
+		if ( it_exchange_save_option( 'enabled_add_ons', $enabled_add_ons ) ) {
 			require( $registered[$add_on]['file'] );
 			do_action( 'it_exchange_add_on_enabled', $registered[$add_on] );
 			update_option( '_it-exchange-flush-rewrites', true );
-			return $enabled;
+			$success = true;
 		}
 	}
-	return false;
+	
+	return apply_filters( 'it_exchange_enable_addon', $success, $add_on );
 }
 
 /**
@@ -320,11 +316,12 @@ function it_exchange_enable_addon( $add_on ) {
 */
 function it_exchange_is_addon_enabled( $add_on_slug ) {
 	$enabled = array_keys( it_exchange_get_enabled_addons() );
+	$success = false;
 
 	if ( in_array( $add_on_slug, $enabled ) )
-		return true;
+		$success = true;
 
-	return false;
+	return apply_filters( 'it_exchange_is_addon_enabled', $success, $add_on_slug );
 }
 
 /**
@@ -334,13 +331,14 @@ function it_exchange_is_addon_enabled( $add_on_slug ) {
  * @param string $add_on  add_on slug to check
  * @return bool
 */
-function it_exchange_is_addon_installed( $add_on ) {
+function it_exchange_is_addon_installed( $add_on_slug ) {
 	$installed = it_exchange_get_addons();
+	$success = false;
 
-	if ( array_key_exists( $add_on, $installed ) )
-		return true;
+	if ( array_key_exists( $add_on_slug, $installed ) )
+		$success = true;
 
-	return false;
+	return apply_filters( 'it_exchange_is_addon_installed', $success, $add_on_slug );
 }
 
 /**
@@ -348,12 +346,13 @@ function it_exchange_is_addon_installed( $add_on ) {
  *
  * @todo Add nonce
  * @since 0.3.2
- * @param string $add_on  add_on to disable
- * @return void
+ * @param string $add_on add_on to disable
+ * @return bool
 */
 function it_exchange_disable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
 	$enabled_addons = it_exchange_get_option( 'enabled_add_ons' );
+	$success = false;
 
 	if ( false !== $key = array_search( $add_on, $enabled_addons ) ) {
 		unset( $enabled_addons[$key] );
@@ -361,10 +360,11 @@ function it_exchange_disable_addon( $add_on ) {
 			if ( ! empty( $registered[$add_on] ) )
 				do_action( 'it_exchange_add_on_disabled', $registered[$add_on] );
 			update_option( '_it-exchange-flush-rewrites', true );
-			return $enabled_addons;
+			$success = true;
 		}
 	}
-	return false;
+	
+	return apply_filters( 'it_exchange_is_addon_installed', $success, $add_on );
 }
 
 /**
@@ -373,7 +373,7 @@ function it_exchange_disable_addon( $add_on ) {
  * @since 0.3.3
  * @param string $add_on   add_on slug
  * @param string $feature type of feature we are testing for support
- * @return boolean
+ * @return bool
 */
 function it_exchange_addon_supports( $add_on, $feature ) {
 	$add_ons = it_exchange_get_addons();
@@ -444,5 +444,5 @@ function it_exchange_get_addon_support( $add_on, $feature ) {
 	if ( empty( $add_ons[$add_on]['options']['supports'][$feature] ) )
 		return false;
 
-	return $add_ons[$add_on]['options']['supports'][$feature];
+	return apply_filters( 'it_exchange_get_addon_support', $add_ons[$add_on]['options']['supports'][$feature], $add_on, $feature );
 }

@@ -157,8 +157,8 @@ class IT_Exchange_Admin {
 		//A little hacky
 		global $pagenow;
 		
-		if ( in_array( $pagenow, array( 'user-edit.php', 'profile.php' ) ) && !empty( $_REQUEST['it_exchange_customer_data'] ) 
-				&& current_user_can('edit_users') ) {
+		if ( in_array( $pagenow, array( 'user-edit.php', 'profile.php' ) ) 
+			&& !empty( $_REQUEST['it_exchange_customer_data'] )  && current_user_can('edit_users') ) {
 			
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_products_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_transactions_user_edit_tab_link' ) );

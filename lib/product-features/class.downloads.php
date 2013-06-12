@@ -458,9 +458,9 @@ class IT_Exchange_Product_Feature_Downloads {
 					$post_meta      = get_post_meta( $post->ID, '_it-exchange-download-info', true );
 					$source         = empty( $post_meta['source'] ) ? false : $post_meta['source'];
 					$expires        = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expires' ) ); 
-					$expire_int     = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire_int' ) ); 
-					$expire_units   = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire_units' ) ); 
-					$download_limit = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'download_limit' ) ); 
+					$expire_int     = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire-int' ) ); 
+					$expire_units   = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire-units' ) ); 
+					$download_limit = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'limit' ) ); 
 
 					$downloads[$post->ID] = array(
 						'id'             => $post->ID,
@@ -486,6 +486,9 @@ class IT_Exchange_Product_Feature_Downloads {
 		} else if ( 'expire-units' == $options['setting'] ) {
 			$meta = get_post_meta( $product_id, '_it-exchange-download-meta', true );
 			return empty( $meta['expire-units'] ) ? 'days' : $meta['expire-units'];
+		} else if ( 'limit' == $options['setting'] ) {
+			$meta = get_post_meta( $product_id, '_it-exchange-download-meta', true );
+			return empty( $meta['download-limit'] ) ? 'days' : $meta['download-limit'];
 		}
 		return false;
 	}

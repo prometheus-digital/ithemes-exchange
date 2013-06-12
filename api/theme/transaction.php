@@ -281,7 +281,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		if ( empty( $this->_transaction_product['product_id'] ) || empty( $this->_transaction_product_download ) )
 			return false;
 
-		// Return boolean if we'er just checking
+		// Return boolean if we're just checking
 		if ( ! empty( $options['has'] ) )
 			return (boolean) it_exchange_get_download_hashes_for_transaction_product( $this->_transaction, $this->_transaction_product, $this->_transaction_product_download['id'] ); 
 
