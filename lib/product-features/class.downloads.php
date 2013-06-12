@@ -268,34 +268,28 @@ class IT_Exchange_Product_Feature_Downloads {
 		$download_expire_units = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expire-units' ) );
 		// Download limit
 		$download_limit = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'limit' ) );
-
 		?>
-		<div class="download-expires">
-			<div class="download-expires-checkbox">
-				<input type="checkbox" name="it-exchange-digital-downloads-expires" value="1" <?php checked( "1", $download_expires ); ?> />
-			</div>
-			<div class="download-expires-label">
-				<?php _e( 'Download link expire?', 'LION' ); ?> 
-			</div>
-		</div>
-		<div class="download-expire-int">
-			<input type="input" name="it-exchange-digital-downloads-expire-int" value="<?php esc_attr_e( $download_expire_int ); ?>" />
-		</div>
-		<div class="download-expire-units">
-			<select name="it-exchange-digital-downloads-expire-units">
-				<?php
-				$units = array(
-					'hours'     => __( 'Hours', 'LION' ),
-					'days'      => __( 'Days', 'LION' ),
-					'weeks'     => __( 'Weeks', 'LION' ),
-					'months'    => __( 'Months', 'LION' ),
-					'years'     => __( 'Years', 'LION' ),
-				);
-				foreach( $units as $unit => $unit_label ) { ?>
-					<option value="<?php esc_attr_e( $unit ); ?>" <?php selected( $unit, $download_expire_units ); ?>><?php esc_attr_e( $unit_label ); ?></option>
-				<?php } ?>
-			</select>
-		</div>
+
+		<?php _e( 'Download links', 'LION' ); ?> 
+		<select name="it-exchange-digital-downloads-expires" id="it-exchange-digital-downloads-expires">
+			<option value="0" <?php selected( 0, $download_expires ); ?>><?php _e( 'do not expire', 'LION' ); ?></option>
+			<option value="1" <?php selected( 1, $download_expires ); ?>><?php _e( 'expire', 'LION' ); ?></option>
+		</select>
+		<?php _e( 'after', 'LION' ); ?> 
+		<input type="input" name="it-exchange-digital-downloads-expire-int" value="<?php esc_attr_e( $download_expire_int ); ?>" />
+		<select name="it-exchange-digital-downloads-expire-units">
+			<?php
+			$units = array(
+				'hours'     => __( 'Hours', 'LION' ),
+				'days'      => __( 'Days', 'LION' ),
+				'weeks'     => __( 'Weeks', 'LION' ),
+				'months'    => __( 'Months', 'LION' ),
+				'years'     => __( 'Years', 'LION' ),
+			);
+			foreach( $units as $unit => $unit_label ) { ?>
+				<option value="<?php esc_attr_e( $unit ); ?>" <?php selected( $unit, $download_expire_units ); ?>><?php esc_attr_e( $unit_label ); ?></option>
+			<?php } ?>
+		</select>
 		<div class="download-limit">
 			<div class="download-limit-label">
 				<?php _e( 'Download Limit', 'LION' ); ?>
