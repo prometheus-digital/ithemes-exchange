@@ -179,7 +179,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 */
 function it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) {
 	// Targeted hash
-	$hash = md5( $transaction_id . $customer_id . wp_generate_password( 12, false ) );
+	$hash = wp_hash( time() . $transaction_id . $customer_id );
 	if ( it_exchange_get_transaction_id_from_hash( $hash ) )
 		$hash = it_exchange_generate_transaction_hash( $transaction_id, $customer_id );
 	
