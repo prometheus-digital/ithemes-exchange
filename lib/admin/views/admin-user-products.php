@@ -97,7 +97,7 @@ foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
                             $download_data = it_exchange_get_download_data( $download_id, $download_hash );
                             
                             if ( !empty( $download_data ) ) {
-                            
+								                            
                                 echo '<ul>';
                                 echo '<li>' . $download_data['hash'] . '</li>';
                                 
@@ -106,8 +106,8 @@ foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
                                 else
                                     echo '<li>' . __( 'Unlimited Downloads', 'LION' ) . '</li>';
                                     
-                                if ( !empty( $download_data['expires'] ) )
-                                    echo '<li>' . sprintf( __( 'Expires %s', 'LION' ), date_i18n( get_option( 'date_format' ), $download_data['expires'] ) ) . '</li>';
+                                if ( $expires = it_exchange_get_download_expiration_date( $download_data ) )
+                                    echo '<li>' . sprintf( __( 'Expires %s', 'LION' ), $expires ) . '</li>';
                                 else
                                     echo '<li>' . __( 'Never Expires', 'LION' ) . '</li>';
                                 

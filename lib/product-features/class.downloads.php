@@ -62,12 +62,12 @@ class IT_Exchange_Product_Feature_Downloads {
 					for( $i=0;$i<$count;$i++ ) {
 						if ( $hash = it_exchange_create_download_hash( $download_id ) ) {
 							
-							$expires = false;
+							$expire_time = false;
 							
 							if ( it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expires' ) ) ) {
 									$int = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-int' ) );
 									$units = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-units' ) );
-									$expires = strtotime( '+' . $int . ' ' . $units );
+									$expire_time = strtotime( '+' . $int . ' ' . $units );
 							}
 							
 							// Create initial hash data package
@@ -77,7 +77,10 @@ class IT_Exchange_Product_Feature_Downloads {
 								'product_id'     => $transaction_product['product_id'],
 								'file_id'        => $download_id,
 								'customer_id'    => it_exchange_get_transaction_customer_id( $transaction_id ),
-								'expires'        => $expires,
+								'expires'        => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expires' ) ),
+								'expire_int'    => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-int' ) ),
+								'expire_units'   => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-int' ) ),
+								'expire_time'    => $expire_time,
 								'download_limit' => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'limit' ) ),
 								'downloads'      => '0', /** @todo change this! */
 							); 

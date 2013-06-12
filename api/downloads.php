@@ -230,6 +230,25 @@ function it_exchange_clear_transaction_hash_index( $transaction ) {
 }
 
 /**
+ * Get expire_time
+ *
+ * @since 0.4.0
+ *
+ * @param array $hash_data from download hash
+ * @param string $purchase_date post_date from transaction post_type
+ * @param string $date_foramt optional. the format to display the date in.
+ * @return string
+*/
+function it_exchange_get_download_expiration_date( $hash_data, $date_format=false ) {
+	if ( empty( $hash_data['expire_time'] ) )
+		return false;
+
+	$date_format = empty( $date_format ) ? get_option( 'date_format' ) : $date_format;
+
+	return date_i18n( $date_format, $hash_data['expire_time'] );
+}
+
+/**
  * Convert 5 months or 30 days to date from transaction
  *
  * @since 0.4.0
@@ -241,7 +260,7 @@ function it_exchange_clear_transaction_hash_index( $transaction ) {
 */
 function it_exchange_get_download_expiration_date_from_settings( $hash_data, $purchase_date, $date_format=false ) {
 	if ( empty( $hash_data['expire_int'] ) || empty( $hash_data['expire_units'] ) )
-		return __( 'Download doesn\'t expire', 'LION' );
+		return __( "Download doesn't expire", 'LION' );
 
 	$date_format = empty( $date_format ) ? get_option( 'date_format' ) : $date_format;
 

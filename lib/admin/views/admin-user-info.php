@@ -36,12 +36,10 @@ if ( !empty( $_POST['_it_exchange_customer_info_nonce'] ) && !wp_verify_nonce( $
     <div class="avatar"><?php echo get_avatar( $user_id, 160 ); ?></div>
 </div>
 
+<?php wp_nonce_field( 'update-it-exchange-customer-info', '_it_exchange_customer_info_nonce' ); ?>
+
 <div class="update-user-info">
     <input type="submit" class="button button-large" name="update_it_exchange_customer" value="<?php _e( 'Update Customer Info', 'LION' ) ?>" />
 </div>
 
-<?php wp_nonce_field( 'update-it-exchange-customer-info', '_it_exchange_customer_info_nonce' ); ?>
-
 </form>
-     
-</div>

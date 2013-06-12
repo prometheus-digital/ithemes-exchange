@@ -451,9 +451,6 @@ class IT_Exchange_Transaction_Post_Type {
 										<?php foreach( (array) $hashes_for_product_transaction as $hash ) : ?>
 											<?php
 												$hash_data = it_exchange_get_download_data_from_hash( $hash );
-												$expires        = empty( $hash_data['expires'] ) ? false : $hash_data['expires'];
-												$expire_int     = empty( $hash_data['expire_int'] ) ? false : $hash_data['expire_int'];
-												$expire_units   = empty( $hash_data['expire_units'] ) ? false : $hash_data['expire_units'];
 												$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
 												$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
 											?>
@@ -463,10 +460,10 @@ class IT_Exchange_Transaction_Post_Type {
 												</div>
 												<div class="product-download-hash-expires">
 													<?php
-														if ( $expires )
-															echo __( 'Expires on', 'LION' ) . ' ' . esc_attr( it_exchange_get_download_expiration_date_from_settings( $hash_data, $post->post_date ) );
+														if ( $expires = it_exchange_get_download_expiration_date( $hash_data ) )
+															printf( __( 'Expires on %s', 'LION' ), $expires );
 														else
-															_e( "Doesn't exipre", 'LION' );
+															_e( "Doesn't expire", 'LION' );
 													?>
 												</div>
 												<div class="product-download-hash-download-limit">
