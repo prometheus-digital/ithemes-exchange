@@ -1,3 +1,7 @@
+0.3.12 - 2013-06-11 - Packaging Bot
+	Updated lib/classes to version 2.3.1
+0.3.11 - 2013-04-17 - Packaging Bot
+	Updated lib/classes to version 2.3.0
 0.3.10 - 2013-04-16 - Glenn Ansley
 	Standardized all form fields with hyphens and WP hooks with underscores
 0.3.9 - 2013-04-12 - Glenn Ansley
@@ -53,5 +57,3 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
-0.3.11 - 2013-04-17 - Packaging Bot
-	Updated lib/classes to version 2.3.0
