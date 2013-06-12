@@ -439,7 +439,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		
 		$nav  = '<ul id="it-exchange-customer-menu">';
 		
-		foreach( split( ',', $options['pages'] ) as $page_slug ) {
+		foreach( explode( ',', $options['pages'] ) as $page_slug ) {
 			
 			$page_slug = trim( $page_slug );
 			$class = it_exchange_is_view( $page_slug ) ? ' class="current"' : '';

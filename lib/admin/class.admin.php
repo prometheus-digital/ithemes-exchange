@@ -978,7 +978,7 @@ Thank you for your order. Your order's details are below.
 			
 		if ( !empty( $settings['notification-email-address'] ) ) {
 			
-			$emails = split( ',', $settings['notification-email-address'] );
+			$emails = explode( ',', $settings['notification-email-address'] );
 			
 			foreach( $emails as $email ) {
 			
