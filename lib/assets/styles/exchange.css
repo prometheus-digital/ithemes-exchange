@@ -10,7 +10,7 @@
 #it-exchange-downloads .download .download-info h4{margin-top:0;}
 #it-exchange-downloads .download .download-info span + span{margin-left:1em;}
 
-/** -----------------------------------------------------:[ it-exchange-purchases ]:---------- */
+/** -----------------------------------------------------:[ purchases ]:---------- */
 .it-exchange-purchase,
 .it-exchange-purchase .it-exchange-purchase-top,
 .it-exchange-purchase .item-info{overflow:hidden;}
@@ -80,6 +80,9 @@
 #it-exchange-cart .cart-totals .totals-titles{text-align:right;padding:10px 20px;}
 #it-exchange-cart .cart-apply-coupons,
 #it-exchange-cart .cart-actions{clear:both;display:block;margin-top:1em;text-align:right;}
+
+/** -----------------------------------------------------:[ confirmation ]:---------- */
+#it-exchange-confirmation span{margin-left:1em;}
 
 /** -----------------------------------------------------:[ super widget ]:---------- */
 .it-exchange-super-widget{width:100%;background:#FFF;overflow:hidden;}

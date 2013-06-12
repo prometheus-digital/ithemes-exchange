@@ -1168,6 +1168,8 @@ Thank you for your order. Your order's details are below.
 		} else if ( 'exchange_page_it-exchange-add-basic-coupon' === $hook_suffix || 'exchange_page_it-exchange-edit-basic-coupon' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip', 'jquery-ui-datepicker' );
 			wp_enqueue_script( 'it-exchange-coupons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/coupons.js', $deps );
+		} else if ( ( 'profile.php' === $hook_suffix || 'user-edit.php' === $hook_suffix ) && isset( $_REQUEST['it_exchange_customer_data'] ) ) {
+			wp_enqueue_script( 'it-exchange-customer-info', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/customer-info.js' );
 		}
 	}
 
