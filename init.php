@@ -26,7 +26,7 @@ require( plugin_dir_path( __FILE__ ) . 'lib/sessions/class.session.php' );
 */
 class IT_Exchange {
 
-	var $_version         = '0.3.10';
+	var $_version         = '0.3.12';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'it-exchange';
 	var $_name            = 'iThemes Exchange';
