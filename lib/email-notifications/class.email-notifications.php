@@ -129,7 +129,7 @@ class IT_Exchange_Email_Notifications {
 			
 			$body  = $this->body_header() . wpautop( do_shortcode( $body ) ) . $this->body_footer();
 			
-			$emails = split( ',', $settings['notification-email-address'] );
+			$emails = explode( ',', $settings['notification-email-address'] );
 			
 			foreach ( $emails as $email ) {
 				
@@ -227,7 +227,7 @@ class IT_Exchange_Email_Notifications {
 		$shortcode_functions = $this->get_shortcode_functions();
 			
 		if ( !empty( $shortcode_functions[$show] ) )
-			return call_user_func( array( $this, $shortcode_functions[$show] ), $this, split( ',', $options ) );
+			return call_user_func( array( $this, $shortcode_functions[$show] ), $this, explode( ',', $options ) );
 		else
 			return;
 	}
