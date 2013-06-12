@@ -60,7 +60,7 @@ foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transacti
 		<?php foreach ( (array) $headings as $heading ) : ?>
 			<?php $column++ ?>
 			<div class="heading-column block-column block-column-<?php echo $column; ?>">
-				<span class="heading"><?php echo $heading; ?></span>
+				<p class="heading"><?php echo $heading; ?></p>
 			</div>
 		<?php endforeach; ?>
 	</div>
@@ -80,7 +80,7 @@ foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transacti
 					</div>
 				<?php else : ?>
 					<div class="item-column block-column block-column-<?php echo $column; ?>">
-						<span class="item"><?php echo $detail; ?></span>
+						<p class="item"><?php echo $detail; ?></p>
 					</div>
 				<?php endif; ?>
 			<?php endforeach; ?>
