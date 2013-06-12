@@ -29,10 +29,10 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	public $_tag_map = array(
 		'formopen'    => 'form_open',
 		'username'    => 'username',
-		'accountmenu' => 'accountmenu',
+		'accountmenu' => 'account_menu',
 		'avatar'      => 'avatar',
-		'firstname'   => 'firstname',
-		'lastname'    => 'lastname',
+		'firstname'   => 'first_name',
+		'lastname'    => 'last_name',
 		'email'       => 'email',
 		'website'     => 'website',
 		'password1'   => 'password1',
@@ -113,7 +113,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @todo need to revisit when we figure out the relationship between addons and user nav
 	 * @return string
 	*/
-	function accountmenu( $options=array() ) {
+	function account_menu( $options=array() ) {
 		$defaults = array(
 			'format' => 'html',
 		);
@@ -144,7 +144,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @since 0.4.0
 	 * @return string
 	*/
-	function firstname( $options=array() ) {
+	function first_name( $options=array() ) {
 		$defaults = array(
 			'format' => 'html',
 			'label'  => __( 'First Name', 'LION' ),
@@ -185,7 +185,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @since 0.4.0
 	 * @return string
 	*/
-	function lastname( $options=array() ) {
+	function last_name( $options=array() ) {
 		$defaults = array(
 			'format' => 'html',
 			'label'  => __( 'Last Name', 'LION' ),
@@ -442,8 +442,9 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		foreach( split( ',', $options['pages'] ) as $page_slug ) {
 			
 			$page_slug = trim( $page_slug );
+			$class = it_exchange_is_view( $page_slug ) ? ' class="current"' : '';
 		
-			$nav .= '<li><a href="' . it_exchange_get_page_url( $page_slug ) . '">' . it_exchange_get_page_name( $page_slug ) . '</a>';
+			$nav .= '<li' . $class . '><a href="' . it_exchange_get_page_url( $page_slug ) . '">' . it_exchange_get_page_name( $page_slug ) . '</a>';
 		
 		}
 		
