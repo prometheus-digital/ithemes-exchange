@@ -48,11 +48,6 @@
 		// Print tabs
 		$this->print_user_edit_page_tabs(); 
 		do_action( 'it_exchange_user_edit_page_top' );
-	?>
-	
-	<div class="user-edit-block <?php echo $tab; ?>-user-edit-block">
-	
-	<?php
 		
 		$tab = ! empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'products';
 		$user_id = empty( $user_id ) ? get_current_user_id() : $user_id;
@@ -73,7 +68,5 @@
 		}
 
 	?>
-    
-	</div>
      
 </div>

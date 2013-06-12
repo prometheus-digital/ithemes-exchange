@@ -247,9 +247,6 @@ class IT_Exchange_Transaction {
 	*/
 	function get_products() {
 		$products = empty( $this->cart_details->products ) ? array() : $this->cart_details->products;
-		foreach( $products as $product ) {
-			
-		}
 		return apply_filters( 'it_exchange_get_transaction_products', $products, $this->ID );
 	}
 

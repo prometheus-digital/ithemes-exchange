@@ -72,6 +72,29 @@ function it_exchange_update_download_hash_data( $hash, $data ) {
 	/** @todo finish this **/
 	ITUtility::print_r($old_data);die();
 }
+/**
+ * Get a requested file hash
+ *
+ * @since 0.4.0
+ *
+ * @param string $hash The hash holding the meta for the file
+ * @return array hash data
+*/
+function it_exchange_get_download_info( $download_id ) {
+	return get_post_meta( $download_id, '_it-exchange-download-info', true );
+}
+
+/**
+ * Get a requested file hash
+ *
+ * @since 0.4.0
+ *
+ * @param string $hash The hash holding the meta for the file
+ * @return array hash data
+*/
+function it_exchange_get_download_data( $download_id, $hash ) {
+	return get_post_meta( $download_id, '_download_hash_' . $hash, true );
+}
 
 /**
  * Get a requested file hash
