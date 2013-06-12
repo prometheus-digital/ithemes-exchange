@@ -443,10 +443,10 @@ class IT_Exchange_Transaction_Post_Type {
 						<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : ?>
 							<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
 								<div class="product-download product-download-<?php esc_attr_e( $download_id ); ?>">
-									<div class="product-download-title">
+									<h4 class="product-download-title">
 										<?php esc_attr_e( get_the_title( $download_id ) ); ?>
-									</div>
-									<div class="product-download-hashes">
+									</h4>
+									<ul class="download-hashes">
 										<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $post->ID, $transaction_product, $download_id ); ?>
 										<?php foreach( (array) $hashes_for_product_transaction as $hash ) : ?>
 											<?php
@@ -454,37 +454,38 @@ class IT_Exchange_Transaction_Post_Type {
 												$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
 												$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
 											?>
-											<div class="product-download-hash">
-												<div class="product-download-hash-hash">
+											<li class="product-download-hash">
+												<span class="hash">
 													<?php esc_attr_e( $hash ); ?>
-												</div>
-												<div class="product-download-hash-expires">
+												</span>
+												<span class="expires">
 													<?php
 														if ( $expires = it_exchange_get_download_expiration_date( $hash_data ) )
 															printf( __( 'Expires on %s', 'LION' ), $expires );
 														else
 															_e( "Doesn't expire", 'LION' );
 													?>
-												</div>
-												<div class="product-download-hash-download-limit">
+												</span>
+												<span class="limit">
 													<?php
 														if ( $download_limit )
 															printf( __( 'Limited to %d total download(s)', 'LION' ), $download_limit );
 														else
 															_e( 'Unlimited downloads', 'LION' );
 													?>
-												</div>
+												</span>
+												
 												<?php if ( $download_limit ) : ?>
-													<div class="product-download-hash-downloads-remaining">
-														<?php echo ( $download_limit - $downloads ) . ' '. __( 'downloads remaining for this hash', 'LION' ); ?>
-													</div>
+													<p class="remaining">
+														<?php echo ( $download_limit - $downloads ) . ' '. __( 'Downloads Remaining', 'LION' ); ?>
+													</p>
 												<?php endif; ?>
-												<div class="product-download-hash-download-count">
-													<?php printf( __( 'This file has been downloaded %d time(s) for this hash', 'LION' ), $downloads ); ?>
-												</div>
-											</div>
+												<p class="count">
+													<?php printf( __( 'Downloaded %d Time(s)', 'LION' ), $downloads ); ?>
+												</p>
+											</li>
 										<?php endforeach; ?>
-									</div>
+									</ul>
 								</div>
 							<?php endforeach; ?>
 						<?php else : ?>
