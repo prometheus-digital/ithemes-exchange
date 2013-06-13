@@ -162,7 +162,7 @@ function it_exchange_get_addon_categories() {
 */
 function it_exchange_get_enabled_addons( $options=array() ) {
  	$defaults = array(
-		'required' => true,
+		'show_required' => true,
 	);
 	$options = wp_parse_args( $options, $defaults );
 	
@@ -177,7 +177,9 @@ function it_exchange_get_enabled_addons( $options=array() ) {
 	// Set each enabled with registered params
 	foreach ( $enabled_addons as $addon )
 		if ( ! empty( $registered[$addon] ) )
-			if ( true === $options['required'] && ( !empty( $registered[$addon]['options']['tag'] ) && 'required' !== $registered[$addon]['options']['tag'] ) )
+			if ( $options['show_required'] )
+				$enabled[$addon] = $registered[$addon];
+			else if ( empty( $registered[$addon]['options']['tag'] ) || 'required' !== $registered[$addon]['options']['tag'] )
 				$enabled[$addon] = $registered[$addon];
 
 	if ( ! empty( $options['category'] ) )
