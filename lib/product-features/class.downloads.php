@@ -70,6 +70,9 @@ class IT_Exchange_Product_Feature_Downloads {
 						
 						$hash = it_exchange_create_download_hash();
 						
+						error_log( $expire_time );
+						error_log( date_i18n( 'Y/m/d', $expire_time ) );
+						
 						// Create initial hash data package
 						$hash_data = array(
 							'hash'           => $hash,
@@ -79,7 +82,7 @@ class IT_Exchange_Product_Feature_Downloads {
 							'customer_id'    => it_exchange_get_transaction_customer_id( $transaction_id ),
 							'expires'        => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expires' ) ),
 							'expire_int'     => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-int' ) ),
-							'expire_units'   => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-int' ) ),
+							'expire_units'   => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-units' ) ),
 							'expire_time'    => $expire_time,
 							'download_limit' => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'limit' ) ),
 							'downloads'      => '0', /** @todo change this! */
@@ -603,6 +606,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		// If user doesn't belong to the download, and isn't an admin, send them to their downloads page.
 		$customer = it_exchange_get_current_customer();
 		if ( empty( $customer->id ) || ( $customer->id != $hash_data['customer_id'] && ! current_user_can( 'administrator' ) ) ) {
+			it_exchange_add_message( 'error', __( 'You are not allowed to download this file.', 'LION' ) );
 			$redirect_url = apply_filters( 'it_exchange_redirect_no_permission_to_pickup_file', it_exchange_get_page_url( 'downloads' ) );
 			wp_redirect( $redirect_url );
 			die();
@@ -610,13 +614,15 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// If download limit has been met, redirect to their downloads page
 		if ( ! empty( $hash_data['download_limit'] ) && $hash_data['downloads'] >= $hash_data['download_limit'] ) {
+			it_exchange_add_message( 'error', __( 'Download limit reached. Unable to download this file.', 'LION' ) );
 			$redirect_url = apply_filters( 'it_exchange_redirect_no_permission_to_pickup_file', it_exchange_get_page_url( 'downloads' ) );
 			wp_redirect( $redirect_url );
 			die();
 		}
 
 		// If download expiration has passed, redirect to their downloads page
-		if ( ! empty( $hash_data['expires'] ) && $hash_data['expire_time'] > ( strtotime( 'tomorrow', time() ) -1 ) ) {
+		if ( ! empty( $hash_data['expires'] ) && $hash_data['expire_time'] < ( strtotime( 'tomorrow' ) ) ) {
+			it_exchange_add_message( 'error', __( 'Download expiration reached. Unable to download this file.', 'LION' ) );
 			$redirect_url = apply_filters( 'it_exchange_redirect_no_permission_to_pickup_file', it_exchange_get_page_url( 'downloads' ) );
 			wp_redirect( $redirect_url );
 			die();

@@ -97,8 +97,8 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 				$GLOBALS['it_exchange']['error'] = current( $GLOBALS['it_exchange']['errors'] );
 				return true;
 			} else {
-				$GLOBALS['it_exchange']['errors'] = false;
 				end( $GLOBALS['it_exchange']['errors'] );
+				$GLOBALS['it_exchange']['errors'] = array();
 				it_exchange_clear_messages( 'error' );
 				return false;
 			}   

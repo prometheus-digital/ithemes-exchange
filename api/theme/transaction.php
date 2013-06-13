@@ -326,8 +326,9 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			$options['attribute'] = 'downloads';
 
 		if ( 'expiration-date' == $options['attribute'] ) {
+		
 			$date_format = empty( $options['date-format'] ) ? false : $options['date-format'];
-			$date = it_exchange_get_download_expiration_date_from_settings( $hash_data, $this->_transaction->post_date, $date_format );
+			$date = it_exchange_get_download_expiration_date( $hash_data, $date_format );
 			$value = empty( $date ) ? false : $date;
 		} else if ( 'downloads-remaining' == $options['attribute'] ) {
 			$limit = empty( $hash_data['download_limit'] ) ? __( 'Unlimited Downloads', 'LION' ) : absint( $hash_data['download_limit'] );

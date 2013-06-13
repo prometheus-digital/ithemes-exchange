@@ -4,6 +4,7 @@
  */
 ?>
 <div id="it-exchange-downloads">
+	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php it_exchange( 'customer', 'menu' ); ?>
 
 	<?php if ( it_exchange( 'transactions', 'found' ) ) : ?>
