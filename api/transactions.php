@@ -77,7 +77,7 @@ function it_exchange_get_transactions( $args=array() ) {
 	$defaults = array(
 		'post_type' => 'it_exchange_tran',
 	);
-
+	
 	// Different defaults depending on where we are.
 	if ( $transaction_hash = get_query_var('confirmation') ) {
 		if ( $transaction_id = it_exchange_get_transaction_id_from_hash( $transaction_hash ) )
@@ -87,37 +87,37 @@ function it_exchange_get_transactions( $args=array() ) {
 	}
 
 	$args = wp_parse_args( $args, $defaults );
-	$meta_query = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
+	$args['meta_query'] = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
 
 	// Fold in transaction_method
 	if ( ! empty( $args['transaction_method'] ) ) {
-		$args['meta_query'][] = array( 
+		$meta_query = array( 
 			'key'   => '_it_exchange_transaction_method',
 			'value' => $args['transaction_method'],
 		);
-		unset( $args['transaction_method'] );
+		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
 	}
 
 	// Fold in transaction_status
 	if ( ! empty( $args['transaction_status'] ) ) {
-		$args['meta_query'][] = array( 
+		$meta_query = array( 
 			'key'   => '_it_exchange_transaction_status',
 			'value' => $args['transaction_status'],
 		);
-		unset( $args['transaction_status'] );
+		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
 	}
 
 	// Fold in customer 
 	if ( ! empty( $args['customer_id'] ) ) {
-		$args['meta_query'][] = array( 
+		$meta_query = array( 
 			'key'   => '_it_exchange_customer_id',
 			'value' => $args['customer_id'],
 		);
-		unset( $args['customer_id'] );
+		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
 	}
 
-	if ( $transactions = get_posts( $args ) ) {
-		foreach( $transactions as $key => $transaction ) {
+	if ( $get_transactions = get_posts( $args ) ) {
+		foreach( $get_transactions as $key => $transaction ) {
 			$transactions[$key] = it_exchange_get_transaction( $transaction );
 		}
 		return $transactions;

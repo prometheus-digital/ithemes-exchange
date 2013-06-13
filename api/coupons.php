@@ -17,20 +17,19 @@ function it_exchange_get_coupons( $options=array() ) {
 	$defaults = array(
 		'post_type' => 'it_exchange_coupon',
 	);
-
-	$options = wp_parse_args( $options, $defaults );
+	$args = wp_parse_args( $options, $defaults );
+	$args['meta_query'] = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
 
 	// Add filter to only retreive coupons added by a specific add-on
-	if ( ! empty( $options['added_by'] ) ) {
-		$meta_query = empty( $options['meta_query'] ) ? array() : $options['meta_query'];
-		$meta_query[] = array(
+	if ( ! empty( $args['added_by'] ) ) {
+		$meta_query = array(
 			'key'   => '_it_exchange_added_by',
 			'value' => $options['addon-slug'],
 		);
-		$options['meta_query'] = $meta_query;
+		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
 	}
 
-	if ( $coupons = get_posts( $options ) ) {
+	if ( $coupons = get_posts( $args ) ) {
 		foreach( $coupons as $key => $coupon ) {
 			$coupons[$key] = it_exchange_get_coupon( $coupon );
 		}

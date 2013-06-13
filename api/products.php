@@ -80,31 +80,29 @@ function it_exchange_get_products( $args=array() ) {
 	);
 
 	$args = wp_parse_args( $args, $defaults );
+	$args['meta_query'] = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
 
 	if ( ! empty( $args['product_type'] ) ) {
-		$meta_query = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
-		$meta_query[] = array( 
+		$meta_query = array( 
 			'key'   => '_it_exchange_product_type',
 			'value' => $args['product_type'],
 		);
-		$args['meta_query'] = $meta_query;
+		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
 	} else { //we only want to get enabled product-type products
-		$meta_query = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
-		$meta_query[] = array( 
+		$meta_query = array( 
 			'key'   => '_it_exchange_product_type',
 			'value' => array_keys( it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ),
 		);
-		$args['meta_query'] = $meta_query;
+		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
 	}
 	
 	if ( !$args['show_hidden'] ) {
-		$meta_query = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
-		$meta_query[] = array( 
+		$meta_query = array( 
 			'key'     => '_it-exchange-visibility',
 			'value'   => 'hidden',
 			'compare' => 'NOT LIKE',
 		);
-		$args['meta_query'] = $meta_query;
+		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
 	}
 
 	if ( $products = get_posts( $args ) ) {

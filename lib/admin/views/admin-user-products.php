@@ -44,8 +44,7 @@ foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
 		'transaction_link' => $transaction_link,
 		'downloads'        => $downloads,
 	);
-}
-	
+}	
 ?>
 
 <div class="user-edit-block <?php echo $tab; ?>-user-edit-block">
