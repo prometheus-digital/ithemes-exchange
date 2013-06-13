@@ -72,6 +72,7 @@ class IT_Exchange_Admin {
 		// Init our custom add/edit layout interface
 		add_action( 'admin_enqueue_scripts', array( $this, 'it_exchange_admin_wp_enqueue_scripts' ) );
 		add_action( 'admin_print_styles', array( $this, 'it_exchange_admin_wp_enqueue_styles' ) );
+		add_action( 'admin_init', array( $this, 'remove_third_party_metaboxes' ) );
 		add_action( 'admin_init', array( $this, 'setup_add_edit_product_screen_layout' ) );
 
 		// Force 2 column view on add / edit products
@@ -1221,6 +1222,27 @@ Thank you for your order. Your order's details are below.
 	}
 
 	/**
+	 * Remvoe third party metaboxes if we absolutely have to blacklist them.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function remove_third_party_metaboxes() {
+		global $pagenow, $post;
+		$post_type = empty( $_REQUEST['post_type'] ) ? false : $_REQUEST['post_type'];
+		$post_type = empty( $post_type ) && ! empty( $_REQUEST['post'] ) ? $_REQUEST['post'] : $post_type;
+		$post_type = is_numeric( $post_type ) ? get_post_type( $post_type ) : $post_type;
+
+		// For Transaction Details Page
+		if ( ( 'post-new.php' == $pagenow || 'post.php' == $pagenow ) && 'it_exchange_tran' == $post_type ) {
+			// Remove builder meta box
+			if ( 'builder' == strtolower( get_option( 'template' ) ) ) 
+				add_filter( 'builder_layout_filter_non_layout_post_types', array( $this, 'remove_builder_custom_layout_box' ) );
+		}
+	}
+
+	/**
 	 * Inits the add / edit product layout
 	 *
 	 * @since 0.4.0
@@ -1431,6 +1453,17 @@ Thank you for your order. Your order's details are below.
 		return $actions;
 	}
 
+	/** 
+	 * Add it_exchange_tran post type to Builder blacklist for Custom Layouts meta box
+	 *
+	 * @param array $post_types An array of post types that will not include the builder custom layout
+	 * @since 0.4.0
+	 * @return array
+	*/
+	function remove_builder_custom_layout_box( $post_types ) { 
+		$post_types[] = 'it_exchange_tran';
+		return $post_types;
+	}
 }
 if ( is_admin() )
 	$IT_Exchange_Admin = new IT_Exchange_Admin( $this );
