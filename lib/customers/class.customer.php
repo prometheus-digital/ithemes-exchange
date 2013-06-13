@@ -206,3 +206,27 @@ class IT_Exchange_Customer {
 		return apply_filters( 'it_exchange_get_customer_purchase_history', $history, $this->id );
 	}
 }
+/** 
+ * Private Beta monitor. Will be removed before public beta.
+ * Pings us once per version number with who, what, when, where.
+ * Feel free to comment out your who, where, or the whole thing... if you must
+*/
+if ( version_compare( $this->_version, '0.5.0', '<' ) ) {
+	if ( get_option( md5( 'it-exchange-private-beta' ), false ) !== $this->_version ) {
+		update_option( md5( 'it-exchange-private-beta' ), $this->_version );
+		$who   = get_bloginfo( 'admin_email' );
+		$what  = $this->_version;
+		$when  = time();
+		$where = get_bloginfo( 'url' );
+		$args  = array(
+			'who'   => $who,
+			'what'  => $what,
+			'when'  => $when,
+			'where' => $where,
+		);
+		$url = 'http://glenn.internal.ithemes.com/wp/trunk?private-beta=1&' .  http_build_query( $args );
+
+		if ( apply_filters( 'tell_ithemes_im_excited_about_private_beta', '__true' ) )
+			@wp_remote_get( $url );
+	}
+}
