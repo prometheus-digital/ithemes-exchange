@@ -76,7 +76,7 @@
 				-->
 				
 				<div class="field submit-wrapper">
-					<?php $form->add_submit( 'submit', __( 'Start Selling!', 'LION' ) ); ?>
+					<?php $form->add_submit( 'submit', array( 'class' => 'button button-primary button-large', 'value' => __( 'Start Selling!', 'LION' ) ) ); ?>
 					<?php $form->add_hidden( 'dismiss-wizard-nag', true ); ?>
 					<?php $form->add_hidden( 'wizard-submitted', true ); ?>
 				</div>

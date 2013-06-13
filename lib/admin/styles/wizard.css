@@ -41,12 +41,8 @@
 .it-exchange-wizard .general-settings-wizard label[for="company-email"]{margin-top:15px;}
 .it-exchange-wizard .general-settings-wizard input[type="text"]{display:block;}
 .it-exchange-wizard .general-settings-wizard #exchange-notifications{display:inline-block;margin-left:1px;}
-.it-exchange-wizard .general-settings-wizard p {
-	margin-top: 20px;
-}
-.it-exchange-wizard .general-settings-wizard label[for="exchange-notifications"] {
-	font-weight: normal;
-}
+.it-exchange-wizard .general-settings-wizard p{margin-top:20px;}
+.it-exchange-wizard .general-settings-wizard label[for="exchange-notifications"]{font-weight:normal;}
 .it-exchange-wizard .general-settings-wizard .default-currency{margin-top:20px;}
 
 /** -----------------------------------------------------:[ banner ]:---------- */
@@ -56,6 +52,3 @@
 .it-exchange-wizard .add-on-banner a{position:relative;display:inline-block;margin-top:10px;margin-left:50px;padding:10px 15px;background:#334940;border-radius:20px;color:#A6E054;text-decoration:none;box-shadow:0 4px 0 -2px #425E52;-webkit-transition:all .1s ease;-moz-transition:all .1s ease;transition:all .1s ease;}
 .it-exchange-wizard .add-on-banner a:hover{background:#A6E054;color:#334940;}
 .it-exchange-wizard .add-on-banner a:active{outline:none;position:relative;top:2px;box-shadow:0 2px 0 -1px #283732;}
-
-/** -----------------------------------------------------:[ submit ]:---------- */
-.it-exchange-wizard .submit-wrapper input{line-height:0;padding:18px;font-size:14px;text-shadow:1px 1px #1D698E;}
