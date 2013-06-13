@@ -3,6 +3,7 @@
  * Loads APIs for iThemes Exchange
  *
  * @package IT_Exchange
+ * @todo perhaps only load addons that are enabled?
  * @since 0.2.0
 */
 

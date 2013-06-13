@@ -16,6 +16,7 @@
 */
 function it_exchange_add_message( $type, $message ) {
 	it_exchange_add_session_data( $type, $message );
+	do_action( 'it_exchange_add_message', $type, $message );
 }
 
 /**
@@ -29,7 +30,7 @@ function it_exchange_get_messages( $type, $clear=true ) {
 	$messages = it_exchange_get_session_data( $type );
 	if ( $clear )
 		it_exchange_clear_messages( $type );
-	return $messages;
+	return apply_filters( 'it_exchange_get_messages', $messages, $type, $clear );
 }
 
 /**
@@ -40,7 +41,7 @@ function it_exchange_get_messages( $type, $clear=true ) {
  * @param string $type Type of message you want displayed
 */
 function it_exchange_has_messages( $type ) {
-	return (bool) it_exchange_get_session_data( $type, false );
+	return (bool) apply_filters( 'it_exchange_has_messages', it_exchange_get_session_data( $type, false ), $type );
 }
 
 /**
@@ -51,5 +52,6 @@ function it_exchange_has_messages( $type ) {
  * @param string $type Type of message you want displayed
 */
 function it_exchange_clear_messages( $type ) {
-	return (bool) it_exchange_clear_session_data( $type );
+	it_exchange_clear_session_data( $type );
+	do_action( 'it_exchange_clear_messages', $type );
 }

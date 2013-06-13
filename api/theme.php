@@ -1,7 +1,7 @@
 <?php
 /**
  * Loads the theme api
-*/
+ */
 
 include( $this->_plugin_path . '/api/theme/store.php' );
 include( $this->_plugin_path . '/api/theme/product.php' );
@@ -22,7 +22,8 @@ include( $this->_plugin_path . '/api/theme/transaction.php' );
  * Defines the main it_exchange function
  *
  * @since 0.4.0
-*/
+ * @todo add actions/filters
+ */
 function it_exchange() {
 
 	// Set array keys for possible params

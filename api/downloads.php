@@ -7,7 +7,7 @@
 */
 
 /**
- * Generate a unique hash for file downloads
+ * Generate a unique hash for file downloads, with microtime and uniqid this should always be unique
  *
  * @since 0.4.0
  *
@@ -15,8 +15,7 @@
 */
 function it_exchange_create_download_hash() {
 	$hash = str_replace( '.', '', microtime( true ) . uniqid() ); //Remove the period from microtime, cause it's ugly
-	apply_filters( 'it_exchange_generate_download_hash', $hash );
-	return $hash;
+	return apply_filters( 'it_exchange_generate_download_hash', $hash );
 }
 
 /**
@@ -41,7 +40,7 @@ function it_exchange_add_download_hash_data( $download_id, $hash, $hash_data ) {
 		// Update the hash index for the transaction
 		it_exchange_update_transaction_download_hash_index( $hash_data['transaction_id'], $hash_data['product_id'], $download_id, $hash );
 
-		return $pm_id;
+		return apply_filters( 'it_exchange_add_download_hash_data', $pm_id, $download_id, $hash, $hash_data  );
 	}
 
 	return false;
@@ -55,21 +54,21 @@ function it_exchange_add_download_hash_data( $download_id, $hash, $hash_data ) {
  * @since 0.4.0
  *
  * @param string $hash
- * @param array $data
- * @return array updated data
+ * @param array $hash_data
 */
-function it_exchange_update_download_hash_data( $hash, $data ) {
-	if ( ! $old_data = it_exchange_get_download_data_from_hash( $hash ) )
+function it_exchange_update_download_hash_data( $hash, $hash_data ) {
+	if ( ! $old_data = it_exchange_get_download_data_from_hash( $hash_data ) )
 		return;
 
 	// Not allowed to change a couple key vars
-	$data['hash']        = $old_data['hash'];
-	$data['product_id']  = $old_data['product_id'];
-	$data['file_id']     = $old_data['file_id'];
-	$data['customer_id'] = $old_data['customer_id'];
+	$hash_data['hash']        = $old_data['hash'];
+	$hash_data['product_id']  = $old_data['product_id'];
+	$hash_data['file_id']     = $old_data['file_id'];
+	$hash_data['customer_id'] = $old_data['customer_id'];
 
-	update_post_meta( $data['file_id'], '_download_hash_' . $hash, $data );
-
+	update_post_meta( $hash_data['file_id'], '_download_hash_' . $hash, $hash_data );
+	
+	do_action( 'it_exchange_update_download_hash_data', $hash, $hash_data );
 }
 /**
  * Get a requested file hash
@@ -80,7 +79,7 @@ function it_exchange_update_download_hash_data( $hash, $data ) {
  * @return array hash data
 */
 function it_exchange_get_download_info( $download_id ) {
-	return get_post_meta( $download_id, '_it-exchange-download-info', true );
+	return apply_filters( 'it_exchange_get_download_info', get_post_meta( $download_id, '_it-exchange-download-info', true ), $download_id );
 }
 
 /**
@@ -92,7 +91,7 @@ function it_exchange_get_download_info( $download_id ) {
  * @return array hash data
 */
 function it_exchange_get_download_data( $download_id, $hash ) {
-	return get_post_meta( $download_id, '_download_hash_' . $hash, true );
+	return apply_filters( 'it_exchange_get_download_data', get_post_meta( $download_id, '_download_hash_' . $hash, true ), $download_id, $hash );
 }
 
 /**
@@ -108,7 +107,7 @@ function it_exchange_get_download_data_from_hash( $hash ) {
 	$meta_key = '_download_hash_' . $hash;
 	$sql = $wpdb->prepare( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = %s LIMIT 1;", $meta_key );
 	if ( $data = $wpdb->get_var( $sql ) )
-		return maybe_unserialize( $data );
+		return apply_filters( 'it_exchange_get_download_data_from_hash', maybe_unserialize( $data ), $hash );
 
 	return false;
 }
@@ -136,7 +135,8 @@ function it_exchange_get_download_hashes_for_transaction_product( $transaction, 
 	$transaction_hash_index = it_exchange_get_transaction_download_hash_index( $transaction->ID );
 
 	// If the requested download / product / transaction combination is in the hash_index, use that to look up the hash data
-	return empty( $transaction_hash_index[$product_id][$download_id] ) ? array() : $transaction_hash_index[$product_id][$download_id];
+	$hashes = empty( $transaction_hash_index[$product_id][$download_id] ) ? array() : $transaction_hash_index[$product_id][$download_id];
+	return apply_filters( 'it_exchange_get_download_hashes_for_transaction_product', $hashes, $transaction, $transaction_product, $download_id );
 }
 
 /**
@@ -149,8 +149,7 @@ function it_exchange_get_download_hashes_for_transaction_product( $transaction, 
 */
 function it_exchange_get_transaction_download_hash_index( $transaction ) {
 	$transaction = it_exchange_get_transaction( $transaction );
-	$hash_index = get_post_meta( $transaction->ID, '_it_exchange_download_hash_index', true );
-	return empty( $hash_index ) ? array() : $hash_index;
+	return apply_filters( 'it_exchange_get_transaction_download_hash_index', get_post_meta( $transaction->ID, '_it_exchange_download_hash_index', true ), $transaction );
 }
 
 /**
@@ -160,7 +159,7 @@ function it_exchange_get_transaction_download_hash_index( $transaction ) {
  * @param array   $transaction_product this is the product array found in cart_details property in the transaction object
  * @param integer $download_id         the id of the download attached to the product passed in param 2
  * @param string  $hash                the has we're adding to the index
- * @return boolean
+ * @return boolean true for success | false for failure
 */
 function it_exchange_update_transaction_download_hash_index( $transaction, $product, $download_id, $hash ) {
 	// Grab transaction object
@@ -177,8 +176,7 @@ function it_exchange_update_transaction_download_hash_index( $transaction, $prod
 	$hash_index[$product][$download_id][] = $hash;
 
 	// Update hash index
-	update_post_meta( $transaction->ID, '_it_exchange_download_hash_index', $hash_index );
-	return true;
+	return update_post_meta( $transaction->ID, '_it_exchange_download_hash_index', $hash_index );
 }
 
 /**
@@ -188,7 +186,7 @@ function it_exchange_update_transaction_download_hash_index( $transaction, $prod
  *
  * @param mixed  $transaction the ID or object
  * @param string $hash        the hash we're looking for
- * @return boolean
+ * @return boolean true for success | false for failure
 */
 function it_exchange_delete_hash_from_transaction_hash_index( $transaction, $hash ) {
 	// Grab transaction object
@@ -207,8 +205,7 @@ function it_exchange_delete_hash_from_transaction_hash_index( $transaction, $has
 	}
 
 	// Update
-	update_post_meta( $transaction->ID, '_it_exchange_download_hash_index', $hash_index );
-	return true;
+	return update_post_meta( $transaction->ID, '_it_exchange_download_hash_index', $hash_index );
 }
 
 /**
@@ -244,13 +241,15 @@ function it_exchange_get_download_expiration_date( $hash_data, $date_format=fals
 
 	$date_format = empty( $date_format ) ? get_option( 'date_format' ) : $date_format;
 
-	return date_i18n( $date_format, $hash_data['expire_time'] );
+	return apply_filters( 'it_exchange_get_download_expiration_date', date_i18n( $date_format, $hash_data['expire_time'] ), $hash_data, $date_format );
 }
 
 /**
  * Convert 5 months or 30 days to date from transaction
  *
  * @since 0.4.0
+ * @todo reevaluate this function, it's not really being used anywhere, but the data exists
+ * we might want to remove this functionality entirely
  *
  * @param array $hash_data from download hash
  * @param string $purchase_date post_date from transaction post_type
@@ -264,7 +263,7 @@ function it_exchange_get_download_expiration_date_from_settings( $hash_data, $pu
 	$date_format = empty( $date_format ) ? get_option( 'date_format' ) : $date_format;
 
 	$expiration_time = strtotime( $purchase_date. '+' . esc_attr( $hash_data['expire_int'] ) . ' ' . esc_attr( $hash_data['expire_units'] ) );
-	return date_i18n( $date_format, $expiration_time );
+	return apply_filters( 'it_exchange_get_download_expiration_date_from_settings', date_i18n( $date_format, $expiration_time ), $hash_data, $purchase_date, $date_format );
 }
 
 /**
@@ -275,10 +274,8 @@ function it_exchange_get_download_expiration_date_from_settings( $hash_data, $pu
  * @since 0.4.0
  *
  * @param array $download_info download hash data
- * @return void;
 */
 function it_exchange_serve_product_download( $hash_data ) {
-
 	// Grab the download info
 	$download_info = get_post_meta( $hash_data['file_id'], '_it-exchange-download-info', true );
 	$url           = empty( $download_info['source'] ) ? false : $download_info['source'];
@@ -288,7 +285,6 @@ function it_exchange_serve_product_download( $hash_data ) {
 	 * If you override this, you need to tick the download counts with it_exchange_increment_download_count( $download_info )
 	*/
 	do_action( 'it_exchange_serve_download_file', $download_info );
-
 
 	// Attempt to grab file
 	$filename = basename( $url );
@@ -349,4 +345,5 @@ function it_exchange_increment_download_count( $hash_data, $increment_admin_down
 
 	$hash_data['downloads']++;
 	it_exchange_update_download_hash_data( $hash_data['hash'], $hash_data );
+	do_action( 'it_exchange_increment_download_count', $hash_data, $increment_admin_downloads );
 }

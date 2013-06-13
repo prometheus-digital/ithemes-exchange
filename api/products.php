@@ -18,13 +18,13 @@ function it_exchange_get_product_type( $post=false ) {
 	// Return value from IT_Exchange_Product if we are able to locate it
 	$product = it_exchange_get_product( $post );
 	if ( is_object( $product ) && ! empty ( $product->product_type ) )
-		return $product->product_type;
+		return apply_filters( 'it_exchange_get_product_type', $product->product_type, $post );
 
 	// Return query arg if is present
 	if ( ! empty ( $_GET['it-exchange-product-type'] ) )
-		return $_GET['it-exchange-product-type'];
+		return apply_filters( 'it_exchange_get_product_type', $_GET['it-exchange-product-type'], $post );
 
-	return false;
+	return apply_filters( 'it_exchange_get_product_type', false, $post );
 }
 
 /**
@@ -35,9 +35,9 @@ function it_exchange_get_product_type( $post=false ) {
 */
 function it_exchange_get_product_type_name( $product_type ) {
 	if ( $addon = it_exchange_get_addon( $product_type ) )
-		return $addon['name'];
+		return apply_filters( 'it_exchange_get_product_type_name', $addon['name'], $product_type );
 	
-	return false;
+	return apply_filters( 'it_exchange_get_product_type_name', false, $product_type );
 }
 
 /**
@@ -48,9 +48,9 @@ function it_exchange_get_product_type_name( $product_type ) {
 */
 function it_exchange_get_product_type_options( $product_type ) {
 	if ( $addon = it_exchange_get_addon( $product_type ) )
-		return $addon['options'];
+		return apply_filters( 'it_exchange_get_product_type_options', $addon['options'], $product_type );
 
-	return false;
+	return apply_filters( 'it_exchange_get_product_type_options', false, $product_type );
 }
 
 /**
@@ -63,8 +63,8 @@ function it_exchange_get_product_type_options( $product_type ) {
 function it_exchange_get_product( $post ) {
 	$product = new IT_Exchange_Product( $post );
 	if ( $product->ID )
-		return $product;
-	return false;
+		return apply_filters( 'it_exchange_get_product', $product, $post );
+	return apply_filters( 'it_exchange_get_product', false, $post );
 }
 
 /**
@@ -78,7 +78,6 @@ function it_exchange_get_products( $args=array() ) {
 		'post_type' => 'it_exchange_prod',
 		'show_hidden' => false,
 	);
-
 	$args = wp_parse_args( $args, $defaults );
 	$args['meta_query'] = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
 
@@ -109,10 +108,9 @@ function it_exchange_get_products( $args=array() ) {
 		foreach( $products as $key => $product ) {
 			$products[$key] = it_exchange_get_product( $product );
 		}
-		return $products;
 	}
 
-	return array();
+	return apply_filters( 'it_exchange_get_products', $products, $options );
 }
 
 /**
@@ -131,6 +129,8 @@ function it_exchange_set_the_product_id( $product_id=false ) {
 		$GLOBALS['it_exchange']['product_id'] = $product->ID;
 	else
 		$GLOBALS['it_exchange']['product_id'] = false;
+		
+	do_action( 'it_exchange_set_the_product_id', $product_id );
 }
 
 /**
@@ -140,7 +140,8 @@ function it_exchange_set_the_product_id( $product_id=false ) {
  * @return mixed product id or false
 */
 function it_exchange_get_the_product_id() {
-	return empty( $GLOBALS['it_exchange']['product_id'] ) ? false : $GLOBALS['it_exchange']['product_id'];
+	$product_id = empty( $GLOBALS['it_exchange']['product_id'] ) ? false : $GLOBALS['it_exchange']['product_id'];
+	return apply_filters( 'it_exchange_get_the_product_id', $product_id );
 }
 
 /**
@@ -182,7 +183,6 @@ function it_exchange_is_product_available( $product_id=false ) {
 	}
 
 	return $past_start_date && $before_end_date;
-
 }
 
 /**
@@ -200,9 +200,9 @@ function it_exchange_is_product_visible( $product_id=false ) {
 	// Check start time
 	if ( it_exchange( 'product', 'has-visibility' ) ) {
 		if ( 'hidden' === get_post_meta( $product_id, '_it-exchange-visibility', true ) )
-			return false;
+			return apply_filters( 'it_exchange_is_product_visible', false, $product_id );
 	}
 
-	return true;
+	return apply_filters( 'it_exchange_is_product_visible', true, $product_id );
 
 }

@@ -28,7 +28,7 @@ function it_exchange_get_option( $key, $break_cache=false, $merge_defaults=true 
 	if ( is_array( $data) && isset( $data['storage_version'] ) )
 		unset( $data['storage_version'] );
 
-	return $data;
+	return apply_filters( 'it_exchange_get_option', $data, $key, $break_cache, $merge_defaults );
 }
 
 /**
@@ -41,7 +41,7 @@ function it_exchange_get_option( $key, $break_cache=false, $merge_defaults=true 
 */
 function it_exchange_save_option( $key, $value ) {
 	$storage = it_exchange_get_storage( $key );
-	return $storage->save( $value );
+	return apply_filters( 'it_exchange_save_option', $storage->save( $value ), $key, $value );
 }
 
 /**
@@ -54,6 +54,7 @@ function it_exchange_save_option( $key, $value ) {
 function it_exchange_clear_option_cache( $key ) {
 	$storage = it_exchange_get_storage( $key );
 	$storage->clear_cache();
+	do_action( 'it_exchange_clear_option_cache', $key );
 }
 
 /**
@@ -71,5 +72,5 @@ function it_exchange_clear_option_cache( $key ) {
 function it_exchange_get_storage( $key, $args=array() ) {
 	it_classes_load( 'it-storage.php' );
 	$key = 'exchange_' . $key;
-	return new ITStorage2( $key, $args );
+	return apply_filters( 'it_exchange_get_storage', new ITStorage2( $key, $args ), $key, $args );
 }

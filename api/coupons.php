@@ -33,23 +33,23 @@ function it_exchange_get_coupons( $options=array() ) {
 		foreach( $coupons as $key => $coupon ) {
 			$coupons[$key] = it_exchange_get_coupon( $coupon );
 		}
-		return $coupons;
 	}
 
-	return false;
+	return apply_filters( 'it_exchange_get_coupons', $coupons, $options );
 }
 
 /**
  * Retreives a coupon object by passing it the WP post object or post id
  *
  * @since 0.4.0
+ * @todo check if is_wp_error, add error message, return coupon w/ filter.
  * @param mixed $post post object or post id
  * @rturn object IT_Exchange_Coupon object for passed post
 */
 function it_exchange_get_coupon( $post ) {
 	$coupon = ( is_object( $post ) && 'IT_Exchange_Coupon' == get_class( $post ) ) ? $post : new IT_Exchange_Coupon( $post );
 	if ( $coupon->ID )
-		return $coupon;
+		return apply_filters( 'it_exchange_get_coupon', $coupon, $post );
 	return false;
 }
 
@@ -102,6 +102,8 @@ function it_exchange_register_coupon_type( $type ) {
 
 	if ( ! in_array( $type, $GLOBALS['it_exchange']['coupon_types'] ) )
 		$GLOBALS['it_exchange']['coupon_types'][] = $type;
+		
+	do_action( 'it_exchange_register_coupon_type', $type );
 }
 
 /**
@@ -112,7 +114,11 @@ function it_exchange_register_coupon_type( $type ) {
  * @return array
 */
 function it_exchange_get_coupon_types() {
-	return empty( $GLOBALS['it_exchange']['coupon_types'] ) ? array() : (array) $GLOBALS['it_exchange']['coupon_types'];
+	
+	$coupon_types = empty( $GLOBALS['it_exchange']['coupon_types'] ) ? array() : (array) $GLOBALS['it_exchange']['coupon_types'];
+	
+	return apply_filters( 'it_exchange_get_coupon_types', $coupon_types );
+	
 }
 
 /**
