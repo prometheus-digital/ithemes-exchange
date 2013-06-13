@@ -19,7 +19,7 @@
 					<label><?php _e( 'How will you be accepting payments?', 'LION' ); ?> <span class="tip" title="How you gonna get dat muh-nay?">i</span></label>
 					<ul>
 						<?php
-							$addons = it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
+							$addons = it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods', 'required' => false ) );
 							foreach( (array) $addons as $addon ) {
 								$icon = empty( $addon['options']['icon'] ) ? $addon['name'] : '<img src="' . $addon['options']['icon'] . '" />';
 								echo '<li class="payoption ' . $addon['slug'] . '-payoption" data-toggle="' . $addon['slug'] . '-wizard">' . $icon . '</li>';
