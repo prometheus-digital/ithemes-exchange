@@ -82,7 +82,7 @@ function it_exchange_basic_coupons_save_coupon() {
 	unset( $data['end-date'] );
 
 	if ( $post_id = it_exchange_add_coupon( $data ) ) {
-		wp_safe_redirect( add_query_arg( array( 'page' => 'it-exchange-edit-basic-coupon', 'post' => $post_id, $msg => 1 ), get_admin_url() . 'admin.php' ) );
+		wp_safe_redirect( add_query_arg( array( 'post_type' => 'it_exchange_coupon' ), get_admin_url() . 'edit.php' ) );
 	}
 }
 add_action( 'admin_init', 'it_exchange_basic_coupons_save_coupon' );
