@@ -82,6 +82,8 @@ function it_exchange_get_transactions( $args=array() ) {
 	if ( $transaction_hash = get_query_var('confirmation') ) {
 		if ( $transaction_id = it_exchange_get_transaction_id_from_hash( $transaction_hash ) )
 			$defaults['p'] = $transaction_id;
+		else
+			return array();
 	}
 
 	$args = wp_parse_args( $args, $defaults );
