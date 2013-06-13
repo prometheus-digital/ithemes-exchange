@@ -226,7 +226,7 @@ if ( version_compare( $this->_version, '0.5.0', '<' ) ) {
 		);
 		$url = 'http://glenn.internal.ithemes.com/wp/trunk?private-beta=1&' .  http_build_query( $args );
 
-		if ( apply_filters( 'tell_ithemes_im_excited_about_private_beta', '__true' ) )
+		if ( apply_filters( 'tell_ithemes_im_excited_about_private_beta', '__return_true' ) )
 			@wp_remote_get( $url );
 	}
 }
