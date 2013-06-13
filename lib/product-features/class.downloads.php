@@ -268,32 +268,40 @@ class IT_Exchange_Product_Feature_Downloads {
 		$download_expire_units = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expire-units' ) );
 		// Download limit
 		$download_limit = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'limit' ) );
+		
+		$expire_units = array(
+			'hours'     => __( 'Hours', 'LION' ),
+			'days'      => __( 'Days', 'LION' ),
+			'weeks'     => __( 'Weeks', 'LION' ),
+			'months'    => __( 'Months', 'LION' ),
+			'years'     => __( 'Years', 'LION' ),
+		);
+		
+		$expire_hidden = ( $download_expires == 0 ) ? ' hidden' : '';
+		
 		?>
-
-		<?php _e( 'Download links', 'LION' ); ?> 
-		<select name="it-exchange-digital-downloads-expires" id="it-exchange-digital-downloads-expires">
-			<option value="0" <?php selected( 0, $download_expires ); ?>><?php _e( 'do not expire', 'LION' ); ?></option>
-			<option value="1" <?php selected( 1, $download_expires ); ?>><?php _e( 'expire', 'LION' ); ?></option>
-		</select>
-		<?php _e( 'after', 'LION' ); ?> 
-		<input type="input" name="it-exchange-digital-downloads-expire-int" value="<?php esc_attr_e( $download_expire_int ); ?>" />
-		<select name="it-exchange-digital-downloads-expire-units">
-			<?php
-			$units = array(
-				'hours'     => __( 'Hours', 'LION' ),
-				'days'      => __( 'Days', 'LION' ),
-				'weeks'     => __( 'Weeks', 'LION' ),
-				'months'    => __( 'Months', 'LION' ),
-				'years'     => __( 'Years', 'LION' ),
-			);
-			foreach( $units as $unit => $unit_label ) { ?>
-				<option value="<?php esc_attr_e( $unit ); ?>" <?php selected( $unit, $download_expire_units ); ?>><?php esc_attr_e( $unit_label ); ?></option>
-			<?php } ?>
-		</select>
+		<div class="download-expiration">
+			<label class="download-limit-label">
+				<?php _e( 'Download Expiration', 'LION' ); ?>
+			</label>
+			<span><?php _e( 'Download links', 'LION' ); ?></span>
+			<select name="it-exchange-digital-downloads-expires" id="it-exchange-digital-downloads-expires">
+				<option value="0" <?php selected( 0, $download_expires ); ?>><?php _e( 'do not expire', 'LION' ); ?></option>
+				<option value="1" <?php selected( 1, $download_expires ); ?>><?php _e( 'expire', 'LION' ); ?></option>
+			</select>
+			<span class="hide-if-no-expire<?php echo $expire_hidden ?>"><?php _e( 'after', 'LION' ); ?></span>
+			<input type="number" class="hide-if-no-expire<?php echo $expire_hidden ?>" name="it-exchange-digital-downloads-expire-int" value="<?php esc_attr_e( $download_expire_int ); ?>" />
+			<select class="hide-if-no-expire<?php echo $expire_hidden ?>" name="it-exchange-digital-downloads-expire-units">
+				<?php foreach( $expire_units as $unit => $label ) : ?>
+					<option value="<?php esc_attr_e( $unit ); ?>" <?php selected( $unit, $download_expire_units ); ?>><?php esc_attr_e( $label ); ?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<br/>
 		<div class="download-limit">
-			<div class="download-limit-label">
+			<label class="download-limit-label">
 				<?php _e( 'Download Limit', 'LION' ); ?>
-			</div>
+			</label>
 			<div class="download-limit-select">
 				<select name="it-exchange-digital-downloads-download-limit">
 					<?php
@@ -302,8 +310,9 @@ class IT_Exchange_Product_Feature_Downloads {
 						$options[$i] = $i;
 					}
 					$options = apply_filters( 'it_exchange_download_limit_options', $options, $product );
-					foreach( $options as $limit_value => $limit_label ) : ?>
-						<option value="<?php esc_attr_e( $limit_value ); ?>" <?php selected( $limit_value, $download_limit ); ?>><?php esc_attr_e( $limit_label); ?></option>
+					?>
+					<?php foreach( $options as $limit_value => $limit_label ) : ?>
+						<option value="<?php esc_attr_e( $limit_value ); ?>" <?php selected( $limit_value, $download_limit ); ?>><?php esc_attr_e( $limit_label ); ?></option>
 					<?php endforeach; ?>
 				</select>
 			</div>
