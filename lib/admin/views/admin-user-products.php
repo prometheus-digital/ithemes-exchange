@@ -84,7 +84,7 @@ foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
 												<span class="hash"><?php echo $download_data['hash'] ?></span>
 												
 												<?php if ( ! empty( $download_data['download_limit'] ) ) : ?>
-													<span class="limit"><?php echo sprintf( __( '%s of %s downloads remaining', 'LION' ), $download_data['downloads'], $download_data['download_limit'] ); ?></span>
+													<span class="limit"><?php echo sprintf( __( '%s of %s downloads remaining', 'LION' ), $download_data['download_limit'] - $download_data['downloads'], $download_data['download_limit'] ); ?></span>
 												<?php else : ?>
 													<span class="limit"><?php _e( 'Unlimited Downloads', 'LION' );  ?>
 												<?php endif; ?>
