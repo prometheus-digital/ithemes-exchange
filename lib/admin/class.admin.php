@@ -1201,8 +1201,12 @@ Thank you for your order. Your order's details are below.
 				$post_type = $post->post_type;
 		}
 
+		// All WP Admin pages
+		wp_enqueue_style( 'it-exchange-wp-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/wp-admin.css' );
+
+		// All admin exchange pages
 		if ( preg_match('|(it_exchange)|i', str_replace( '-', '_', $hook_suffix ) ) || ( isset( $post_type ) && preg_match('|(it_exchange)|i', str_replace( '-', '_', $post_type ) ) ) )
-			wp_enqueue_style( 'it-exchange-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/admin.css' );
+			wp_enqueue_style( 'it-exchange-exchange-only-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/exchange-admin.css' );
 
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			wp_enqueue_style( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-edit-product.css' );
