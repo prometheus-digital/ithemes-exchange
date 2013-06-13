@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: iThemes Exchange
- * Version: 0.3.12
+ * Version: 0.4.0
  * Description: Turns your WordPress site into a Lean, Mean Selling Machine!
  * Plugin URI: http://ithemes.com/purchase/ithemes-exchange/
  * Author: iThemes
@@ -16,8 +16,6 @@
  *
 */
 
-require( plugin_dir_path( __FILE__ ) . 'lib/sessions/class.session.php' );
-
 /**
  * Exchange main class.
  *
@@ -26,7 +24,7 @@ require( plugin_dir_path( __FILE__ ) . 'lib/sessions/class.session.php' );
 */
 class IT_Exchange {
 
-	var $_version         = '0.3.12';
+	var $_version         = '0.4.0';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'it-exchange';
 	var $_name            = 'iThemes Exchange';
@@ -179,3 +177,4 @@ function ithemes_ithemes_exchange_updater_register( $updater ) {
 }
 add_action( 'ithemes_updater_register', 'ithemes_ithemes_exchange_updater_register' );
 require( dirname( __FILE__ ) . '/lib/updater/load.php' );
+require( plugin_dir_path( __FILE__ ) . 'lib/sessions/class.session.php' );
