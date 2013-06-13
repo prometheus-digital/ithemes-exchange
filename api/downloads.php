@@ -62,8 +62,14 @@ function it_exchange_update_download_hash_data( $hash, $data ) {
 	if ( ! $old_data = it_exchange_get_download_data_from_hash( $hash ) )
 		return;
 
-	/** @todo finish this **/
-	ITUtility::print_r($old_data);die();
+	// Not allowed to change a couple key vars
+	$data['hash']        = $old_data['hash'];
+	$data['product_id']  = $old_data['product_id'];
+	$data['file_id']     = $old_data['file_id'];
+	$data['customer_id'] = $old_data['customer_id'];
+
+	update_post_meta( $data['file_id'], '_download_hash_' . $hash, $data );
+
 }
 /**
  * Get a requested file hash
@@ -295,7 +301,7 @@ function it_exchange_serve_product_download( $hash_data ) {
 			if ( in_array( wp_remote_retrieve_response_code( $response ), (array) $valid_response_codes ) ) {
 
 				// Increment Download count if not Admin
-				it_exchange_increment_download_count( $download_info );
+				it_exchange_increment_download_count( $hash_data );
 
 				// Get Resource Headers
 				$headers = wp_remote_retrieve_headers( $response );
@@ -333,10 +339,14 @@ function it_exchange_serve_product_download( $hash_data ) {
  *
  * @since 0.4.0
  *
- * @param array   $download_info file hash data
+ * @param array   $hash_data file hash data
  * @param boolean $increment_admin_downloads Default is false
  * @return void
 */
-function it_exchange_increment_download_count( $download_info, $increment_admin_downloads=false ) {
+function it_exchange_increment_download_count( $hash_data, $increment_admin_downloads=false ) {
+	if ( current_user_can( 'administrator' ) && $increment_admin_downloads )
+		return;
 
+	$hash_data['downloads']++;
+	it_exchange_update_download_hash_data( $hash_data['hash'], $hash_data );
 }
