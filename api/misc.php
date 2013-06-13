@@ -14,7 +14,8 @@
 */
 function it_exchange_get_field_name( $var ) {
 	$field_names = it_exchange_get_field_names();
-	return empty( $field_names[$var] ) ? false : $field_names[$var];
+	$field_name = empty( $field_names[$var] ) ? false : $field_names[$var];
+	return apply_filters( 'it_exchange_get_field_name', $field_name, $var );
 }
 
 /**
@@ -45,13 +46,14 @@ function it_exchange_get_field_names() {
 		'sw_ajax_quantity'         => 'sw-quantity',
 	);
 	//We don't want users to modify the core vars, but we should let them add new ones.
-	return array_merge( $required, apply_filters( 'it_exchange_default_field_names', array() ) );
+	return apply_filters( 'it_exchange_get_field_names', array_merge( $required, apply_filters( 'it_exchange_default_field_names', array() ) ) );
 }
 
 /**
  * Get permalink for ghost page
  *
  * @since 0.4.0
+ * @todo add filters/actions
  *
  * @param string $page page setting
  * @return string url
@@ -120,12 +122,13 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 }
 
 /**
- * Grabs the current URL, removes all registerd exchnage query_args from it
+ * Grabs the current URL, removes all registerd exchange query_args from it
  *
  * Exempts args in first paramater
  * Cleans additional args in second paramater
  *
  * @since 0.4.0
+ * @todo shouldn't this be named it_exchange_clean_query_args
  *
  * @param array $exempt optional array of query args not to clean
  * @param array $additional opitonal array of params to clean even if not found in register params
@@ -152,7 +155,7 @@ function clean_it_exchange_query_args( $exempt=array(), $additional=array() ) {
 			$url = remove_query_arg( $param, $url );
 	}
 
-	return $url;
+	return apply_filters( 'clean_it_exchange_query_args', $url );
 }
 
 /**
@@ -167,7 +170,7 @@ function it_exchange_get_page_name( $page, $clear_settings_cache=false ) {
 	$pages = it_exchange_get_option( 'settings_pages', $clear_settings_cache );
 	$page_name = $pages[$page . '-name'];
 	
-	return $page_name;
+	return apply_filters( 'it_exchange_get_page_name', $page_name, $page, $clear_settings_cache );
 }
 
 /**
@@ -197,7 +200,7 @@ function ithemes_exchange_wp_get_nav_menu_items_filter( $items, $menu, $args ) {
 
 	}
 
-	return $items;
+	return apply_filters( 'ithemes_exchange_wp_get_nav_menu_items_filter', $items, $menu, $args );
 
 }
 add_filter( 'wp_get_nav_menu_items', 'ithemes_exchange_wp_get_nav_menu_items_filter', 10, 3 );
@@ -231,6 +234,7 @@ if ( !function_exists( 'wp_nav_menu_disabled_check' ) && version_compare( $GLOBA
  * Is the the current view
  *
  * @since 0.4.0
+ * @todo add filters/actions
  *
  * @param string $view the exchange view were checking for
  * @return boolean
@@ -438,5 +442,6 @@ function it_exchange_get_currency_options() {
 */
 function it_exchange_get_currency_symbol( $country_code ) {
 	$currencies = it_exchange_get_currency_options();
-	return ! empty( $currencies[$country_code] ) ? $currencies[$country_code] : '$';
+	$symbol = empty( $currencies[$country_code] ) ? '$' : $currencies[$country_code];
+	return apply_filters( 'it_exchange_get_currency_symbol', $symbol );
 }

@@ -85,12 +85,14 @@ function it_exchange_add_feature_support_to_product_type( $feature_key, $product
 function it_exchange_remove_feature_support_for_product_type( $feature_key, $product_type ) {
 	if ( isset( $GLOBALS['it_exchange']['product_features'][$feature_key]['product_types'][$product_type] ) )
 		$GLOBALS['it_exchange']['product_features'][$feature_key]['product_types'][$product_type] = false;
+	do_action( 'it_exchange_remove_feature_support_for_product_type', $feature_key, $product_type );
 }
 
 /**
  * Check if a given product-type supports a specific product feature
  *
  * @since 0.3.8
+ * @todo add filters/actions
  * @param string $product_type the product-type slug
  * @param string $feature_key the slug for the feature
  * @return boolean
@@ -117,6 +119,7 @@ function it_exchange_product_type_supports_feature( $product_type, $feature_key 
 function it_exchange_register_product_feature( $slug, $description='', $default_product_types=array() ) {
 	$GLOBALS['it_exchange']['product_features'][$slug]['slug']        = $slug;
 	$GLOBALS['it_exchange']['product_features'][$slug]['description'] = $description;
+	do_action( 'it_exchange_register_product_feature', $slug, $description, $default_product_types );
 }
 
 /**
@@ -127,6 +130,5 @@ function it_exchange_register_product_feature( $slug, $description='', $default_
 */
 function it_exchange_get_registered_product_features() {
 	$product_features = isset( $GLOBALS['it_exchange']['product_features'] ) ? (array) $GLOBALS['it_exchange']['product_features'] : array();
-	return $product_features;
+	return apply_filters( 'it_exchange_get_registered_product_features', $product_features );
 }
-

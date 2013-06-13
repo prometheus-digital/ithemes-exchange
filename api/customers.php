@@ -57,20 +57,21 @@ function it_exchange_get_current_customer_id() {
 	if ( ! is_user_logged_in() )
 		return false;
 
-	return get_current_user_id();
+	return apply_filters( 'it_exchange_get_current_customer_id', get_current_user_id() );
 }
 
 /**
  * Update a customer's data
  *
  * @since 0.3.7
+ * @todo this isn't being called from anywhere in core and doesn't run anything, remove?
  * @param integer $customer_id id for the customer
  * @param mixed $customer_data data to be updated
  * @param array $args optional array of arguments. not used by all add-ons
  * @return mixed
 */
 function it_exchange_update_customer( $customer_id, $customer_data, $args ) {
-	return add_action( 'it_exchange_update_customer', $customer_id, $customer_data, $args );
+	return do_action( 'it_exchange_update_customer', $customer_id, $customer_data, $args );
 }
 
 /**
@@ -90,7 +91,7 @@ function it_exchange_get_customer_transactions( $customer_id ) {
 		'numberposts' => -1,
 		'customer_id' => $customer->id,
 	);
-	return it_exchange_get_transactions( $args );
+	return apply_filters( 'it_exchange_get_customer_transactions', it_exchange_get_transactions( $args ), $customer_id, $args );
 }
 
 /**
@@ -104,23 +105,17 @@ function it_exchange_get_customer_transactions( $customer_id ) {
 */
 function it_exchange_customer_has_transaction( $transaction_id, $customer_id = NULL ) {
 
-	if ( is_null( $customer_id ) ) {
-
+	if ( is_null( $customer_id ) )
 		$customer = it_exchange_get_current_customer();
-
-	} else {
-
-		if ( ! $customer = it_exchange_get_customer( $customer_id ) )
-			return array();
-
-	}
+	else if ( ! $customer = it_exchange_get_customer( $customer_id ) )
+		return array();
 
 	// Get transactions args
 	$args = array(
 		'numberposts' => -1, 
 		'customer_id' => $customer->id,
 	);
-	return $customer->has_transaction( $transaction_id );
+	return apply_filters( 'it_exchange_customer_has_transaction', $customer->has_transaction( $transaction_id ), $transaction_id, $customer_id );
 }
 
 /**
@@ -152,7 +147,7 @@ function it_exchange_get_customer_products( $customer_id ) {
 	}
 
 	// Return
-	return $products;
+	return apply_filters( 'it_exchange_get_customer_products', $products, $customer_id );
 }
 
 /**
@@ -176,6 +171,8 @@ function handle_it_exchange_save_profile_action() {
 		} else {
 			it_exchange_add_message( 'notice', __( 'Successfully saved profile!', 'LION' ) );
 		}
+	
+		do_action( 'handle_it_exchange_save_profile_action' );
 		
 	}
 	
@@ -198,6 +195,8 @@ function it_exchange_register_user( $user_data=array() ) {
 	foreach( $user_data as $key => $value ) {
 		$_POST[$key] = $value;
 	}
+	
+	do_action( 'it_exchange_register_user' );
 
 	// Register user via WP function
 	return edit_user();
@@ -215,6 +214,8 @@ function handle_it_exchange_customer_registration_action() {
 	// Grab action and process it.
 	if ( isset( $_REQUEST['it-exchange-register-customer'] ) ) {
 
+		do_action( 'before_handle_it_exchange_customer_registration_action' );
+		
 		$result = it_exchange_register_user();
 
 		if ( is_wp_error( $result ) )
@@ -239,6 +240,10 @@ function handle_it_exchange_customer_registration_action() {
 		$reg_page = it_exchange_get_page_url( 'registration' );
 		// Set redirect to profile page if they were on the registration page
 		$redirect = ( trailingslashit( $reg_page ) == trailingslashit( wp_get_referer() ) ) ? it_exchange_get_page_url( 'profile' ) : clean_it_exchange_query_args( array(), array( 'ite-sw-state' ) );
+
+		do_action( 'handle_it_exchange_customer_registration_action' );
+		do_action( 'after_handle_it_exchange_customer_registration_action' );
+		
 		wp_redirect( $redirect );
 		die();
 

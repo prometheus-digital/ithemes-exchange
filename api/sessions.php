@@ -18,7 +18,7 @@
 */
 function it_exchange_get_session() {
 	$session = empty( $GLOBALS['it_exchange']['session'] ) ? false : $GLOBALS['it_exchange']['session'];
-	return $session;
+	return apply_filters( 'it_exchange_get_session', $session );
 }
 
 /**
@@ -29,7 +29,7 @@ function it_exchange_get_session() {
 */
 function it_exchange_get_session_data( $key=false ) {
 	$session = it_exchange_get_session();
-	return maybe_unserialize( $session->get_session_data( $key ) );
+	return apply_filters( 'it_exchange_get_session_data', maybe_unserialize( $session->get_session_data( $key ) ), $key );
 }
 
 /**
@@ -74,6 +74,7 @@ function it_exchange_update_session_data( $key, $data ) {
 function it_exchange_clear_session_data( $key=false ) {
 	$session = it_exchange_get_session();
 	$session->clear_session_data( $key );
+	do_action( 'it_exchange_clear_session_data', $key );
 }
 
 /**
@@ -85,4 +86,5 @@ function it_exchange_clear_session_data( $key=false ) {
 function it_exchange_clear_session( $hard=false ) {
 	$session = it_exchange_get_session();
 	$session->clear_session( $hard );
+	do_action( 'it_exchange_clear_session', $hard );
 }
