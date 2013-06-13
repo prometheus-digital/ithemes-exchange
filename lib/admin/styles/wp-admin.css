@@ -1,1 +1,7 @@
-/* Enqueued on all WP Admin pages */
+/** -----------------------------------------------------:[ menu icon ]:---------- */
+#toplevel_page_it-exchange .wp-menu-image{background-image:url('../images/e-menu16g.png');background-size:16px 16px;background-position:6px 7px !important;}
+#toplevel_page_it-exchange.wp-has-current-submenu .wp-menu-image{background-image:url('../images/e-menu16c.png');}
+@media print, (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
+#toplevel_page_it-exchange .wp-menu-image{background-image:url('../images/e-menu32g.png');background-size:16px 16px;background-position:6px 7px !important;}
+#toplevel_page_it-exchange.wp-has-current-submenu .wp-menu-image{background-image:url('../images/e-menu32c.png');}
+}
