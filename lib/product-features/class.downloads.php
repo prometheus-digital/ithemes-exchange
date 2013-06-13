@@ -599,6 +599,20 @@ class IT_Exchange_Product_Feature_Downloads {
 			die();
 		}
 
+		// If download limit has been met, redirect to their downloads page
+		if ( ! empty( $hash_data['download_limit'] ) && $hash_data['downloads'] >= $hash_data['download_limit'] ) {
+			$redirect_url = apply_filters( 'it_exchange_redirect_no_permission_to_pickup_file', it_exchange_get_page_url( 'downloads' ) );
+			wp_redirect( $redirect_url );
+			die();
+		}
+
+		// If download expiration has passed, redirect to their downloads page
+		if ( ! empty( $hash_data['expires'] ) && $hash_data['expire_time'] > ( strtotime( 'tomorrow', time() ) -1 ) ) {
+			$redirect_url = apply_filters( 'it_exchange_redirect_no_permission_to_pickup_file', it_exchange_get_page_url( 'downloads' ) );
+			wp_redirect( $redirect_url );
+			die();
+		}
+
 		// Attempt to serve the file
 		it_exchange_serve_product_download( $hash_data );
 		die();
