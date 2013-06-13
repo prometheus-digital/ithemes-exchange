@@ -18,7 +18,7 @@
 		$user_object = get_userdata( $user_id );
 	?>
             
-	<?php screen_icon(); ?>
+	<?php screen_icon( 'it-exchange' ); ?>
 	
 	<h2>
 		<?php echo $user_object->display_name; ?>

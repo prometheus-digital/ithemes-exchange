@@ -7,7 +7,7 @@
 ?>
 <div class="wrap">
 	<?php
-	screen_icon( 'page' );
+	screen_icon( 'it-exchange' );
 	$this->print_general_settings_tabs();
 	do_action( 'it_exchange_general_settings_page_top' );
 

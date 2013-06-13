@@ -1,3 +1,16 @@
+/** -----------------------------------------------------:[ icon ]:---------- */
+#icon-it-exchange-coupons {
+	background: url('../images/coupon32.png') no-repeat;
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1),only screen and (min-device-pixel-ratio: 2),only screen and (min-resolution: 192dpi),only screen and (min-resolution: 2dppx) { 
+	#icon-it-exchange-coupons {
+		background: url('../images/coupon64.png') no-repeat;
+		background-size: cover;
+		width: 32px;
+		height: 32px;
+	}
+}
+
 /** -----------------------------------------------------:[ general ]:---------- */
 .it-exchange-add-basic-coupon label{display:block;font-size:13px;font-weight:bold;color:#3d4142;margin-bottom:5px;margin-left:2px;}
 .it-exchange-add-basic-coupon input[type="text"],

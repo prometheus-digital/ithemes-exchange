@@ -8,7 +8,7 @@
 */
 ?>
 <div class="wrap">
-	<?php screen_icon( 'page' );  ?>
+	<?php screen_icon( 'it-exchange' );  ?>
 	
 	<h2>iThemes Exchange <?php _e( 'Setup', 'LION' ); ?></h2>
 	

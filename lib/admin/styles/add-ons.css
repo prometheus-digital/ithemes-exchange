@@ -1,3 +1,16 @@
+/** -----------------------------------------------------:[ icon ]:---------- */
+#icon-it-exchange-add-ons {
+	background: url('../images/addons32.png') no-repeat;
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1),only screen and (min-device-pixel-ratio: 2),only screen and (min-resolution: 192dpi),only screen and (min-resolution: 2dppx) { 
+	#icon-it-exchange-add-ons {
+		background: url('../images/addons64.png') no-repeat;
+		background-size: cover;
+		width: 32px;
+		height: 32px;
+	}
+}
+
 /** -----------------------------------------------------:[ reset ]:---------- */
 #it-exchange-add-ons-wrap .nav-tab-wrapper{padding-left:6px;border-bottom:0;}
 #it-exchange-add-ons-wrap .nav-tab-wrapper .nav-tab:first-child{margin-right:0;}

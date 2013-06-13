@@ -1,3 +1,25 @@
+/** -----------------------------------------------------:[ icons ]:---------- */
+#icon-it-exchange {
+	background: url('../images/e32.png') no-repeat;
+}
+.icon32-posts-it_exchange_coupon {
+	background: url('../images/coupon32.png') no-repeat;
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1),only screen and (min-device-pixel-ratio: 2),only screen and (min-resolution: 192dpi),only screen and (min-resolution: 2dppx) {
+	#icon-it-exchange {
+		background: url('../images/e64.png') no-repeat;
+	}
+	.icon32-posts-it_exchange_coupon {
+		background: url('../images/coupon64.png') no-repeat;
+	}
+	#icon-it-exchange,
+	.icon32-posts-it_exchange_coupon {
+		background-size: cover;
+		width: 32px;
+		height: 32px;
+	}
+}
+
 /** -----------------------------------------------------:[ tooltip ]:---------- */
 .tip{display:inline-block;text-align:center;background:#d7f7a9;border:1px solid #b4d18c;border:1px solid transparent;color:#8fd034;border-radius:50%;font-family: sans-serif;font-size:8px;line-height:1.6;height:12px;width:12px;cursor:pointer;margin:2px 0 0 5px;-webkit-transition:all .1s linear;-moz-transition:all .1s lin}
 .tip:hover{background:#a6de56;border-color:#a6df57;color:#334940;}

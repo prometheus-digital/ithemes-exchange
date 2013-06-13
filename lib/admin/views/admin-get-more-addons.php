@@ -7,7 +7,7 @@
 */
 ?>
 <div id="it-exchange-add-ons-wrap" class="wrap">
-	<?php screen_icon( 'page' );  ?>
+	<?php screen_icon( 'it-exchange-add-ons' );  ?>
 	
 	<h2>Add-ons</h2>
 	<p class="top-description"><?php _e( 'Add-Ons are features that you can add or remove depending on your needs. Selling your stuff should only be as complicated as you need it to be. Visit the Get More tab to see what else Exchange can do.', 'LION' ); ?></p>
@@ -70,10 +70,12 @@
                 <?php $count++; ?>
 				<?php endif; ?>
 			<?php endforeach; ?>
-            <?php 
-				if ( 0 === $count )
-					 _e( 'You have all iThemes Exchange currently has to offer. Got an idea for an add-on that would make your life easier? <a href="http://ithemes.com/contact/">E-mail us</a>.', 'LION' );
-			?>
+			<p>
+				<?php 
+					if ( 0 === $count )
+						_e( 'You have all iThemes Exchange currently has to offer. Got an idea for an add-on that would make your life easier? <a href="http://ithemes.com/contact/">E-mail us</a>.', 'LION' );
+				?>
+			</p>
 		<?php else : ?>
 			<p><?php __( 'No Add-ons in the store.', 'LION' ); ?></p>
 		<?php endif; ?>

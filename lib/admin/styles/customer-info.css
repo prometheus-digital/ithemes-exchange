@@ -1,3 +1,16 @@
+/** -----------------------------------------------------:[ icons ]:---------- */
+#icon-it-exchange {
+	background: url('../images/e32.png') no-repeat;
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1),only screen and (min-device-pixel-ratio: 2),only screen and (min-resolution: 192dpi),only screen and (min-resolution: 2dppx) {
+	#icon-it-exchange {
+		background: url('../images/e64.png') no-repeat;
+		background-size: cover;
+		width: 32px;
+		height: 32px;
+	}
+}
+
 /** -----------------------------------------------------:[ reset ]:---------- */
 .wrap .nav-tab-wrapper{padding-left:6px;border-bottom:0;}
 .wrap .top-description{color:#676c6e;font-size:14px;line-height:1.5;max-width:800px;}
