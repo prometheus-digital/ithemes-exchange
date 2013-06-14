@@ -1,3 +1,24 @@
+0.4.2 - 2013-06-14 - Glenn Ansley
+	Add ablity to customize Stripe 'Purchase' button text
+	Add ability to close Wizard nag
+	Add feedback when coupon is applied (or isn't applied)
+	Auto-enable Digital Downloads Product Type when Wizard is saved
+	Add setting to bottom of General Settings page that deletes ALL DATA. Only shows up if WP_DEBUG is defined as true
+	Add coupons icon to all coupons screen
+	Add placeholder in Add/Edit product Currency field.
+	Fix error where prices with commas, currency symbols don't save correclty when adding products.
+	Fix PHP error on offline-payment checkout.
+	Add transaction cleared for delivery hook to offline payments
+	Add transaction is cleared for delivery hook to zero_sum_checkout
+	Add transaction_is_cleared_for_delivery hook to paypal_standard
+	Fixed but in it_exchange_get_transaction_status.
+	Added function to return when Stripe transactions are valid for delivery.
+	Prevent downloads from happening if transaction is not valid for delivery.
+	Add ability to only return transactions cleared for delivery when requesting all transactions tied to a product
+	Add purchase count to all products 'Purchases' column
+	Remove false warning about incorrect currency for Stripe
+	Removed admin.php, not being used/called
+	Add loads of filters and actions in api/ functions
 0.4.1 - 2013-06-13 - Glenn Ansley
 	Remove zero-sum transaction from wizard
 	Admin icons
