@@ -71,7 +71,7 @@ function it_exchange_offline_payments_addon_process_transaction( $status, $trans
 		// Get customer ID data
 		$it_exchange_customer = it_exchange_get_current_customer();
 
-		return it_exchange_add_transaction( 'offline-payments', $uniqid, $settings['default-status'], $it_exchange_customer->id, $transaction_object );
+		return it_exchange_add_transaction( 'offline-payments', $uniqid, $settings['offline-payments-default-status'], $it_exchange_customer->id, $transaction_object );
 		
 	}
 	
@@ -202,7 +202,7 @@ function it_exchange_transaction_instructions_offline_payments( $instructions ) 
 add_filter( 'it_exchange_transaction_instructions_offline-payments', 'it_exchange_transaction_instructions_offline_payments' );
 
 /**
- * Gets the interpretted transaction status from valid stripe transaction statuses
+ * Gets the interpretted transaction status from valid transaction statuses
  *
  * @since 0.4.0
  *
@@ -212,23 +212,40 @@ add_filter( 'it_exchange_transaction_instructions_offline-payments', 'it_exchang
 function it_exchange_offline_payments_addon_transaction_status_label( $status ) {
 
 	switch ( $status ) {
-
 		case 'succeeded':
 		case 'paid':
 			return __( 'Paid', 'LION' );
+			break;
 		case 'refunded':
 			return __( 'Refunded', 'LION' );
+			break;
 		case 'pending':
 			return __( 'Pending', 'LION' );
+			break;
 		case 'voided':
 			return __( 'Voided', 'LION' );
+			break;
 		default:
 			return __( 'Unknown', 'LION' );
-
 	}
 
 }
 add_filter( 'it_exchange_transaction_status_label_offline-payments', 'it_exchange_offline_payments_addon_transaction_status_label' );
+
+/**
+ * Returns a boolean. Is this transaction a status that warrants delivery of any products attached to it?
+ *
+ * @since 0.4.2
+ *
+ * @param boolean $cleared passed in through WP filter. Ignored here.
+ * @param object $transaction
+ * @return boolean
+*/
+function it_exchange_offline_payments_transaction_is_cleared_for_delivery( $cleared, $transaction ) { 
+    $valid_stati = array( 'succeeded', 'paid' );
+    return in_array( it_exchange_get_transaction_status( $transaction ), $valid_stati );
+}
+add_filter( 'it_exchange_offline-payments_transaction_is_cleared_for_delivery', 'it_exchange_offline_payments_transaction_is_cleared_for_delivery', 10, 2 );
 
 /**
  * Class for Offline
