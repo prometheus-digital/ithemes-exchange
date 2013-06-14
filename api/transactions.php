@@ -731,14 +731,21 @@ function it_exchange_do_transaction( $method, $transaction_object ) {
 }
 
 /**
- * Returns an array of transaction statuses that translate as good for delivery
+ * Does the given transaction have a status that warants delivery of product(s)
  *
- * @since 0.4.0
+ * Returns true/false. Rely on transaction method addon to give us that. Default is false.
  *
- * @return array
+ * @since 0.4.2
+ *
+ * @param mixed $transaction id or object
+ * @return boolean 
 */
-function it_exchange_get_successfull_transaction_stati( $transaction_method ) {
-	return apply_filters( 'it_exchange_get_successufll_transaction_stati_' . $transaction_method, array() );
+function it_exchange_transaction_is_cleared_for_delivery( $transaction ) {
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
+		return false;
+
+	$transaction_method = $transaction->transaction_method;
+	return apply_filters( 'it_exchange_transaction_is_cleared_for_delivery_' . $transaction_method, false, $transaction );
 }
 
 /**

@@ -211,14 +211,16 @@ function it_exchange_is_product_visible( $product_id=false ) {
 /**
  * Returns an array of all transactions for a product
  *
- * @since 0.4.0
+ * @since 0.4.2
  *
  * @todo beef this up. right now it just gets counts. we need to give options for valid transactions / etc.
+ *
  * @param mixed $product the product ID or object
  * @param string $type do you want an array of ids or an array of objects returned
+ * @param boolen $only_cleared_for_delivery defaults to true. Only return transactions cleared for delivery or return all
  * @return array
 */
-function it_exchange_get_transactions_for_product( $product, $type='objects' ) {
+function it_exchange_get_transactions_for_product( $product, $type='objects', $only_cleared_for_delivery=true ) {
 	if ( ! $product = it_exchange_get_product( $product ) )
 		return array();
 	
@@ -226,13 +228,17 @@ function it_exchange_get_transactions_for_product( $product, $type='objects' ) {
 	$transaction_ids = get_post_meta( $product->ID, '_it_exchange_transaction_id' );
 	$transaction_ids = array_unique ( $transaction_ids );
 
-	$transactions = ( 'ids' == $type ) ? $transaction_ids : array();
+	$transactions = array();
+	foreach( $transaction_ids as $key => $id ) {
+		if ( ! $only_cleared_for_delivery || ( $only_cleared_for_delivery && it_exchange_transaction_is_cleared_for_delivery( $id ) ) )
+			$transaction = $id;
+		else
+			continue;
 
-	if ( 'objects' == $type ) {
-		foreach( $transaction_ids as $id ) {
-			if ( $transaction = it_exchange_get_transaction( $id ) )
-				$transactions[] = $transaction;
-		}
+		if ( 'objects' == $type && $transaction_obj = it_exchange_get_transaction( $transaction ) )
+				$transaction = $transaction_obj;
+
+		$transactions[] = $transaction;
 	}
 	return apply_filters( 'it_exchange_get_transactions_for_product', $transactions, $product, $type );
 }
