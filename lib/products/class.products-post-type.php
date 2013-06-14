@@ -740,7 +740,7 @@ class IT_Exchange_Product_Post_Type {
 				echo ucwords( $product_visibility );
 				break;
 			case 'it_exchange_product_purchases':
-				esc_attr_e( it_exchange_get_product_feature( $post->ID, 'purchases' ) );
+				esc_attr_e( count( it_exchange_get_transactions_for_product( $post->ID, 'ids' ) ) );
 				break;
 			case 'it_exchange_product_type':
 				esc_attr_e( it_exchange_get_product_type_name( it_exchange_get_product_type( $post ) ) );
