@@ -854,30 +854,26 @@ Thank you for your order. Your order's details are below.
 	 * @return void
 	*/
 	function save_core_wizard_settings() {
+
+		// Abandon if not saving wizard
 		if ( !( isset( $_REQUEST['it_exchange_settings-wizard-submitted'] ) && 'it-exchange-setup' === $this->_current_page ) )
 			return;
 			
+		// Grab general settings
 		$general_settings = array();
-		
 		$default_wizard_general_settings = apply_filters( 'default_wizard_general_settings', array( 'company-email', 'default-currency' ) );
 		
 		foreach( $default_wizard_general_settings as $var ) {
-		
-			if ( isset( $_REQUEST['it_exchange_settings-' . $var] ) ) {
+			if ( isset( $_REQUEST['it_exchange_settings-' . $var] ) )
 				$general_settings[$var] = $_REQUEST['it_exchange_settings-' . $var];	
-			}
-			
 		}
 
 		$settings = wp_parse_args( $general_settings, it_exchange_get_option( 'settings_general' ) );
-
 		if ( ! empty( $this->error_message ) || $error_msg = $this->general_settings_are_invalid( $settings ) ) {
 			
 			if ( ! empty( $error_msg ) ) {
-				
 				$this->error_message = $error_msg;
 				return;
-				
 			}
 				
 		} else {
@@ -885,24 +881,23 @@ Thank you for your order. Your order's details are below.
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
 				
+		// Signup for mailchimp if checkbox was checked
 		if ( !empty( $_REQUEST['it_exchange_settings-exchange-notifications'] )
 			&& !empty( $_REQUEST['it_exchange_settings-company-email'] ) 
 			&& is_email( trim( $_REQUEST['it_exchange_settings-company-email'] ) ) ) {
 		
 			$mailchimp = 'http://ithemes.us2.list-manage.com/subscribe/post?u=7acf83c7a47b32c740ad94a4e&amp;id=9da0741ac0';
-			
 			$query = array(
 				'body' => array(
 					'EMAIL' => trim( $_REQUEST['it_exchange_settings-company-email'] ),
 				),
 			);
-		
 			wp_remote_post( $mailchimp, $query );
-			
 		}
 		
+		// Auto enable digital downloads
+		it_exchange_enable_addon( 'digital-downloads-product-type' );
 		do_action( 'it_exchange_save_wizard_settings' );
-		
 		wp_safe_redirect( 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=digital-downloads-product-type' );
 	}
 
