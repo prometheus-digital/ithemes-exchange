@@ -95,7 +95,7 @@ function it_exchange_get_products( $args=array() ) {
 		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
 	}
 	
-	if ( !$args['show_hidden'] ) {
+	if ( ! $args['show_hidden'] ) {
 		$meta_query = array( 
 			'key'     => '_it-exchange-visibility',
 			'value'   => 'hidden',

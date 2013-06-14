@@ -108,3 +108,117 @@ function it_exchange_process_webhooks() {
     do_action( 'it_exchange_webhooks_processed' );
 }
 add_action( 'wp', 'it_exchange_process_webhooks' );
+
+/**
+ * Add reset exchange button to settings page if WP_Debug is on
+ *
+ * @since 0.4.2
+ *
+ * @param object $form the ITForm object for the settings form
+ * @return void
+*/
+function it_exchange_add_plugin_reset_checkbox_to_settings( $form ) {
+	if ( it_exchange_has_messages( 'notice' ) ) {
+		foreach ( it_exchange_get_messages( 'notice' ) as $notice ) {
+			ITUtility::show_status_message( $notice );
+		}
+	}
+
+	if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG )
+		return;
+
+	// Never check this by default.
+	$form->set_option( 'reset-exchange', 0 );
+	?>
+	<tr valign="top">
+		<th scope="row"><label for="reset-exchange"><?php _e( 'Reset Exchange', 'LION' ) ?></label></th>
+		<td>
+			<?php $form->add_check_box( 'reset-exchange' ); ?>
+			<label for="reset-exchange"><?php _e( 'Reset ALL data', 'LION' ) ?></label><br />
+			<span class="description"><?php _e( 'Checking this box will rest ALL settings and DELETE ALL DATA.', 'LION' ); ?></span>
+		</td>
+	</tr>
+	<?php
+}
+add_action( 'it_exchange_general_settings_table_bottom', 'it_exchange_add_plugin_reset_checkbox_to_settings' );
+
+/**
+ * This function resets Exchange
+ *
+ * Deletes all Products
+ * Deletes all transactions
+ * Deletes all core settings
+ * Fires a hook so that addons can do the same.
+ *
+ * @since 0.4.2
+ * @return void
+*/
+function it_exchange_reset_everything() {
+
+	// Don't do anything if WP_DEBUG isn't true
+	if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG )
+		return;
+
+	// Don't do anything if we're not on the settings page
+	if ( empty( $GLOBALS['pagenow'] ) || 'admin.php' != $GLOBALS['pagenow'] || empty( $_GET['page'] ) || 'it-exchange-settings' != $_GET['page'] )
+		return;
+
+	// Don't do anything if the nonce doesn't validate
+	$nonce = empty( $_POST['_wpnonce'] ) ? false : $_POST['_wpnonce'];
+	if ( ! wp_verify_nonce( $nonce, 'exchange-general-settings' ) )
+		return;
+
+	// Don't do anything if the checkbox wasnt' checked
+	$data = ITForm::get_post_data();
+	if ( empty( $data['reset-exchange'] ) )
+		return;
+
+	// Delete all Products 
+	while( $products = it_exchange_get_products( array( 'posts_per_page' => 20 ) ) ) {
+		foreach ( $products as $product ) {
+			wp_delete_post( $product->ID, true );
+		}
+	}
+	// Delete all Transactions
+	while( $transactions = it_exchange_get_transactions( array( 'posts_per_page' => 20 ) ) ) {
+		foreach ( $transactions as $transaction ) {
+			wp_delete_post( $transaction->ID, true );
+		}
+	}
+	// Delete all Transactions
+	while( $coupons = it_exchange_get_coupons( array( 'posts_per_page' => 20 ) ) ) {
+		foreach ( $coupons as $coupon ) {
+			wp_delete_post( $coupon->ID, true );
+		}
+	}
+	// Delete all Downloads (post types, not files uploaded to WP Media Library
+	while( $downloads = get_posts( array( 'post_type' => 'it_exchange_download', 'post_status' => 'any' ) ) ) {
+		foreach ( $downloads as $download ) {
+			wp_delete_post( $download->ID, true );
+		}
+	}
+
+	// Delete all core settings
+	$settings_keys = array(
+		'it-storage-exchange_addon_offline_payments',
+		'it-storage-exchange_addon_paypal_standard',
+		'it-storage-exchange_addon_stripe',
+		'it-storage-exchange_addon_zero_sum_checkout',
+		'it-storage-exchange_enabled_add_ons',
+		'it-storage-exchange_settings_email',
+		'it-storage-exchange_settings_general',
+		'it-storage-exchange_settings_pages',
+		'it-exchange-hide-wizard-nag',
+		'widget_it-exchange-super-widget',
+	);
+	foreach( $settings_keys as $option ) {
+		delete_option( $option );
+	}
+
+	
+	// Log message and redirect
+	it_exchange_add_message( 'notice', __( 'Exchange has been reset. All data has been deleted.', 'LION' ) );
+	wp_safe_redirect( add_query_arg( 'page', 'it-exchange-settings', trailingslashit( get_admin_url() ) . 'admin.php' ) );
+	die();
+}
+add_action( 'admin_init', 'it_exchange_reset_everything' );
