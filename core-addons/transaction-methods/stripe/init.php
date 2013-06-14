@@ -575,12 +575,8 @@ class IT_Exchange_Stripe_Add_On {
 			<h3><?php _e( 'Stripe Payment Settings', 'LION' ); ?></h3>
 			<p><?php _e( 'Do not have a Stripe account yet? <a href="http://stripe.com" target="_blank">Go set one up here</a>.', 'LION' ); ?></p>
 			<?php
-				if ( ! in_array( $general_settings['default-currency'], $this->get_supported_currency_options() ) ) {
-
+				if ( ! in_array( $general_settings['default-currency'], array_keys( $this->get_supported_currency_options() ) ) )
 					echo '<h4>' . sprintf( __( 'You are currently using a currency that is not supported by Stripe. <a href="%s">Please update your currency settings</a>.', 'LION' ), add_query_arg( 'page', 'it-exchange-settings' ) ) . '</h4>';
-
-				}
-
 			?>
 			<p>
 				<label for="stripe-live-secret-key"><?php _e( 'Live Secret Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
