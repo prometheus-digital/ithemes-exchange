@@ -216,7 +216,7 @@ function it_exchange_get_remove_coupon_html( $type, $code, $options=array() ) {
 */
 function it_exchange_apply_coupon( $type, $code, $options=array() ) {
 	$options['code'] = $code;
-	return apply_filters( 'it_exchange_apply_coupon_to_' . $type, 'false', $options );
+	return apply_filters( 'it_exchange_apply_coupon_to_' . $type, false, $options );
 }
 
 /**

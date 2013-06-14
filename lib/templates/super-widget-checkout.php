@@ -1,3 +1,4 @@
+<?php it_exchange_get_template_part( 'messages' ); ?>
 <div class="it-exchange-sw-processing">
 	<div class="cart-items-wrapper">
 		<?php while( it_exchange( 'cart', 'cart-items' ) ) : ?>

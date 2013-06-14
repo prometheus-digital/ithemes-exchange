@@ -154,8 +154,10 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 
 	// Set coupon code. Return false if one is not available
 	$coupon_code = empty( $options['code'] ) ? false : $options['code'];
-	if ( empty( $coupon_code ) )
+	if ( empty( $coupon_code ) ) {
+		it_exchange_add_message( 'error', __( 'Invalid coupon', 'LION' ) );
 		return false;
+	}
 
 	// Abort if no coupon code matches and falls within dates
 	$args = array(
@@ -166,16 +168,20 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 			),
 		),
 	);
-	if ( ! $coupons = it_exchange_get_coupons( $args ) )
+	if ( ! $coupons = it_exchange_get_coupons( $args ) ) {
+		it_exchange_add_message( 'error', __( 'Invalid coupon', 'LION' ) );
 		return false;
+	}
 
 	$coupon = reset( $coupons );
 
 	// Abort if not within start and end dates
 	$start_okay = empty( $coupon->start_date ) || strtotime( $coupon->start_date ) <= strtotime( date( 'Y-m-d' ) );
 	$end_okay   = empty( $coupon->end_date ) || strtotime( $coupon->end_date ) >= strtotime( date( 'Y-m-d' ) );
-	if ( ! $start_okay || ! $end_okay )
+	if ( ! $start_okay || ! $end_okay ) {
+		it_exchange_add_message( 'error', __( 'Invalid coupon', 'LION' ) );
 		return false;
+	}
 
 	// Format data for session
 	$coupon = array(
@@ -192,6 +198,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	$data = array( $coupon['code'] => $coupon );
 	it_exchange_update_cart_data( 'basic_coupons', $data );
 
+	it_exchange_add_message( 'notice', __( 'Coupon applied', 'LION' ) );
 	return true;
 }
 add_action( 'it_exchange_apply_coupon_to_cart', 'it_exchange_basic_coupons_apply_to_cart', 10, 2 );
