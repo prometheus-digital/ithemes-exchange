@@ -104,13 +104,14 @@ function it_exchange_get_products( $args=array() ) {
 		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
 	}
 
+	$products = false;
 	if ( $products = get_posts( $args ) ) {
 		foreach( $products as $key => $product ) {
 			$products[$key] = it_exchange_get_product( $product );
 		}
 	}
 
-	return apply_filters( 'it_exchange_get_products', $products, $options );
+	return apply_filters( 'it_exchange_get_products', $products, $args );
 }
 
 /**

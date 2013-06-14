@@ -9,7 +9,6 @@
 
 if ( is_admin() ) {
 	// Admin only
-	include( $this->_plugin_path . 'api/admin.php' );
 } else {
 	// Frontend only
 	include( $this->_plugin_path . 'api/theme.php' );

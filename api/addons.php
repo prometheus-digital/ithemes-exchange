@@ -468,5 +468,6 @@ function it_exchange_is_core_addon( $slug ) {
 	if ( empty( $addon['file'] ) )
 		return false;
 
+	// Don't add a filter here.
 	return ( 'ithemes-exchange/core-addons/' == substr( plugin_basename( $addon['file'] ), 0, 29 ) );
 }
