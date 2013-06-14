@@ -454,23 +454,65 @@ function it_exchange_paypal_standard_addon_add_refund_to_transaction( $paypal_st
 */
 function it_exchange_paypal_standard_addon_transaction_status_label( $status ) {
 
-	switch ( $status ) {
+	switch ( strtolower( $status ) ) {
 
-		case 'Completed':
-		case 'Success':
+		case 'completed':
+		case 'success':
+		case 'canceled_reversal':
+		case 'processed' :
 			return __( 'Paid', 'LION' );
-		case 'Refunded':
+			break;
+		case 'refunded':
 		case 'refund':
 			return __( 'Refund', 'LION' );
+			break;
+		case 'reversed':
+			return __( 'Reversed', 'LION' );
+			break;
 		case 'buyer_complaint':
 			return __( 'Buyer Complaint', 'LION' );
+			break;
+		case 'denied' :
+			return __( 'Denied', 'LION' );
+			break;
+		case 'expired' :
+			return __( 'Expired', 'LION' );
+			break;
+		case 'failed' :
+			return __( 'Failed', 'LION' );
+			break;
+		case 'pending' :
+			return __( 'Pending', 'LION' );
+			break;
+		case 'voided' :
+			return __( 'Voided', 'LION' );
+			break;
 		default:
 			return __( 'Unknown', 'LION' );
-
 	}
 
 }
 add_filter( 'it_exchange_transaction_status_label_paypal-standard', 'it_exchange_paypal_standard_addon_transaction_status_label' );
+
+/**
+ * Returns a boolean. Is this transaction a status that warrants delivery of any products attached to it?
+ *
+ * @since 0.4.2
+ *
+ * @param boolean $cleared passed in through WP filter. Ignored here.
+ * @param object $transaction
+ * @return boolean
+*/
+function it_exchange_paypal_standard_transaction_is_cleared_for_delivery( $cleared, $transaction ) { 
+    $valid_stati = array( 
+		'completed',
+		'success',
+		'canceled_reversal',
+		'processed',
+	);
+    return in_array( strtolower( it_exchange_get_transaction_status( $transaction ) ), $valid_stati );
+}
+add_filter( 'it_exchange_paypal-standard_transaction_is_cleared_for_delivery', 'it_exchange_paypal_standard_transaction_is_cleared_for_delivery', 10, 2 );
 
 /**
  * Class for Stripe
@@ -717,5 +759,4 @@ class IT_Exchange_PayPal_Standard_Add_On {
 
 		return $errors;
 	}
-
 }
