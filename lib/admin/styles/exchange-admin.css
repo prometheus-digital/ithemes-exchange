@@ -2,14 +2,14 @@
 #icon-it-exchange {
 	background: url('../images/e32.png') no-repeat;
 }
-.icon32-posts-it_exchange_coupon {
+#icon-it-exchange.icon32-posts-it_exchange_coupon {
 	background: url('../images/coupon32.png') no-repeat;
 }
 @media print, (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
 	#icon-it-exchange {
 		background: url('../images/e64.png') no-repeat;
 	}
-	.icon32-posts-it_exchange_coupon {
+	#icon-it-exchange.icon32-posts-it_exchange_coupon {
 		background: url('../images/coupon64.png') no-repeat;
 	}
 	#icon-it-exchange,
