@@ -57,11 +57,15 @@
 		-webkit-transition:  all .1s linear;
 		-moz-transition:  all .1s linear 0s;
 	}
+	.it-exchange-wizard-notice a.dismiss {
+		right: 22px;
+	}
 </style>
 <div class="it-exchange-wizard-notice">
 	<?php
 	$wizard_link    = add_query_arg( array( 'page' => 'it-exchange-setup' ), admin_url( 'admin.php' ) );
-	$wizard_dismiss = add_query_arg( array( 'it-exchange-dismiss-wizard-nag' => true ) );
+	$wizard_dismiss = add_query_arg( array( 'it_exchange_settings-dismiss-wizard-nag' => true ) );
 	echo __( 'iThemes Exchange is now installed.', 'LION' ) . ' <a href="' . $wizard_link . '">' . __( 'Go to Quick Setup', 'LION' ) . '</a>';
 	?>
+	<a class="dismiss" href="<?php esc_attr_e( $wizard_dismiss ); ?>">&times;</a>
 </div>
