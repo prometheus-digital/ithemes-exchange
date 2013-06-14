@@ -110,7 +110,7 @@ class IT_Exchange_Base_Price {
 		$product = it_exchange_get_product( $post );
 
 		// Set the value of the base-price for this product
-		$product_base_price = it_exchange_get_product_feature( $product->ID, 'base-price' );
+		$product_base_price = ( '' == it_exchange_get_product_feature( $product->ID, 'base-price' ) ) ? '' : it_exchange_format_price( it_exchange_get_product_feature( $product->ID, 'base-price' ) );
 
 		// Set description
 		$description = __( 'Price', 'LION' );
@@ -119,7 +119,7 @@ class IT_Exchange_Base_Price {
 		// Echo the form field
 		?>
 			<label for="base-price"><?php esc_html_e( $description ); ?></label>
-			<input type="text" id="base-price" name="it-exchange-base-price" value="<?php esc_attr_e( $product_base_price ); ?>" />
+			<input type="text" placeholder="<?php esc_attr_e( it_exchange_format_price( '0.00' ) ); ?>" id="base-price" name="it-exchange-base-price" value="<?php esc_attr_e( $product_base_price ); ?>" />
 		<?php
 	}
 
@@ -171,6 +171,7 @@ class IT_Exchange_Base_Price {
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_price ) {
+		$new_price = preg_replace("/[^0-9.]/", '', $new_price );
 		update_post_meta( $product_id, '_it-exchange-base-price', $new_price );
 	}
 
