@@ -191,11 +191,12 @@ add_action( 'it_exchange_save_wizard_settings', 'it_exchange_stripe_addon_save_w
 */
 function it_exchange_stripe_addon_default_settings( $values ) {
 	$defaults = array(
-		'stripe-test-mode'            => false,
-		'stripe-live-secret-key'      => '',
-		'stripe-live-publishable-key' => '',
-		'stripe-test-secret-key'      => '',
-		'stripe-test-publishable-key' => '',
+		'stripe-test-mode'             => false,
+		'stripe-live-secret-key'       => '',
+		'stripe-live-publishable-key'  => '',
+		'stripe-test-secret-key'       => '',
+		'stripe-test-publishable-key'  => '',
+		'stripe-purchase-button-label' => __( 'Purchase', 'LION' ),
 	);
 	$values = ITUtility::merge_defaults( $values, $defaults );
 	return $values;
@@ -222,12 +223,12 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 
 	$products = it_exchange_get_cart_data( 'products' );
 
-	$payment_form = '<form id="stripe_form" action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
+	$payment_form = '<form id="stripe_form" action="' . esc_attr( it_exchange_get_page_url( 'transaction' ) ) . '" method="post">';
 	$payment_form .= '<input type="hidden" name="it-exchange-transaction-method" value="stripe" />';
 	$payment_form .= wp_nonce_field( 'stripe-checkout', '_stripe_nonce', true, false );
 
 	$payment_form .= '<div class="hide-if-no-js">';
-	$payment_form .= '<input type="submit" id="customButton" name="stripe_purchase" value="' . __( 'Purchase', 'LION' ) .'" />';
+	$payment_form .= '<input type="submit" id="customButton" name="stripe_purchase" value="' . esc_attr( $stripe_settings['stripe-purchase-button-label'] ) .'" />';
 	$payment_form .= '
 		<script>
 		jQuery(\'#customButton\').click(function(){
@@ -237,11 +238,11 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 		  };
 
 		  StripeCheckout.open({
-			key:         "' . $publishable_key . '",
-			amount:      "' . number_format( it_exchange_get_cart_total( false ), 2, '', '' ) . '",
-			currency:    "' . $general_settings['default-currency'] . '",
-			name:        "' . $general_settings['company-name'] . '",
-			description: "' . it_exchange_get_cart_description() . '",
+			key:         "' . esc_js( $publishable_key ) . '",
+			amount:      "' . esc_js( number_format( it_exchange_get_cart_total( false ), 2, '', '' ) ) . '",
+			currency:    "' . esc_js( $general_settings['default-currency'] ) . '",
+			name:        "' . esc_js( empty( $general_settings['company-name'] ) ? '' : $general_settings['company_name'] ) . '",
+			description: "' . esc_js( it_exchange_get_cart_description() ) . '",
 			panelLabel:  "Checkout",
 			token:       token
 		  });
@@ -607,6 +608,10 @@ class IT_Exchange_Stripe_Add_On {
 			<p>
 				<label for="stripe-test-publishable-key"><?php _e( 'Test Publishable Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'stripe-test-publishable-key' ); ?>
+			</p>
+			<p>
+				<label for="stripe-purchase-button-label"><?php _e( 'Purchase Button Label', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the text inside the button your customers will press to purchase with Stripe', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'stripe-purchase-button-label' ); ?>
 			</p>
 			<p>
 				<?php $form->add_check_box( 'stripe-test-mode' ); ?>
