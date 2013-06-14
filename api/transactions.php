@@ -287,9 +287,8 @@ function it_exchange_update_transaction_status( $transaction, $status ) {
 */
 function it_exchange_get_transaction_status( $transaction ) {
     $transaction = it_exchange_get_transaction( $transaction );
-    if ( !empty( $transaction->status ) )
-        return apply_filters( $transaction->status, $transaction );
-    return apply_filters( false, $transaction );
+	$transaction_status = empty( $transaction->status ) ? false : $transaction->status;
+    return apply_filters( 'it_exchange_get_transaction_status', $transaction_status, $transaction );
 }
 
 /**
@@ -744,8 +743,8 @@ function it_exchange_transaction_is_cleared_for_delivery( $transaction ) {
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
 		return false;
 
-	$transaction_method = $transaction->transaction_method;
-	return apply_filters( 'it_exchange_transaction_is_cleared_for_delivery_' . $transaction_method, false, $transaction );
+	$transaction_method = it_exchange_get_transaction_method( $transaction );
+	return apply_filters( 'it_exchange_' . $transaction_method . '_transaction_is_cleared_for_delivery', false, $transaction );
 }
 
 /**

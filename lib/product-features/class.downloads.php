@@ -603,6 +603,14 @@ class IT_Exchange_Product_Feature_Downloads {
 			die();
 		}
 
+		// If transaction isn't cleared for delivery of product, don't give them the refund
+		if ( ! it_exchange_transaction_is_cleared_for_delivery( $hash_data['transaction_id'] ) ) {
+			it_exchange_add_message( 'error', __( 'The transaction this download is attached to is not valid for download', 'LION' ) );
+			$redirect_url = apply_filters( 'it_exchange_redirect_transaction_not_cleared_to_pickup_file', it_exchange_get_page_url( 'downloads' ) );
+			wp_redirect( $redirect_url );
+			die();
+		}
+
 		// If user doesn't belong to the download, and isn't an admin, send them to their downloads page.
 		$customer = it_exchange_get_current_customer();
 		if ( empty( $customer->id ) || ( $customer->id != $hash_data['customer_id'] && ! current_user_can( 'administrator' ) ) ) {

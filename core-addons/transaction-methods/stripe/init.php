@@ -478,6 +478,21 @@ function it_exchange_stripe_addon_transaction_status_label( $status ) {
 add_filter( 'it_exchange_transaction_status_label_stripe', 'it_exchange_stripe_addon_transaction_status_label' );
 
 /**
+ * Returns a boolean. Is this transaction a status that warrants delivery of any products attached to it?
+ *
+ * @since 0.4.2
+ *
+ * @param boolean $cleared passed in through WP filter. Ignored here.
+ * @param object $transaction
+ * @return boolean
+*/
+function it_exchange_stripe_transaction_is_cleared_for_delivery( $cleared, $transaction ) {
+	$valid_stati = array( 'succeeded', 'partial-refund', 'won' );
+	return in_array( it_exchange_get_transaction_status( $transaction ), $valid_stati );
+}
+add_filter( 'it_exchange_stripe_transaction_is_cleared_for_delivery', 'it_exchange_stripe_transaction_is_cleared_for_delivery', 10, 2 );
+
+/**
  * Class for Stripe
  * @since 0.4.0
 */
@@ -529,7 +544,6 @@ class IT_Exchange_Stripe_Add_On {
 			add_action( 'it_exchange_save_add_on_settings_stripe', array( $this, 'save_settings' ) );
 			do_action( 'it_exchange_save_add_on_settings_stripe' );
 		}
-
 	}
 
 	function print_settings_page() {
