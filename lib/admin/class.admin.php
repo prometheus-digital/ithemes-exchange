@@ -1158,6 +1158,14 @@ Thank you for your order. Your order's details are below.
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip', 'jquery-ui-sortable' );
 			wp_enqueue_script( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-ons.js', $deps );
+		} else if ( 'exchange_page_it-exchange-settings' === $hook_suffix ) {
+			if ( empty( $_GET['tab'] ) ) {
+				wp_enqueue_script( 'it-exchange-settings-general', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/settings-general.js' );
+				wp_localize_script( 'it-exchange-settings-general', 'settingsGenearlL10n', array(
+						'delteConfirmationText'  => __( 'You have checked the option to "Reset ALL data". Are you should you want to delete all Exchange products, transactions, and settings?', 'LION' ),
+					)
+				);
+			}
 		} else if ( 'exchange_page_it-exchange-setup' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip' );
 			wp_enqueue_script( 'it-exchange-wizard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/wizard.js', $deps );
