@@ -1,4 +1,4 @@
-0.4.3 - 2013-06-17 - Glenn Ansley
+0.4.3 - 2013-06-17 - Glenn Ansley - Lew Ayotte
 	Fix bug where first post humbnail showing up on random pages
 	Differentiate between live-mode and test-mode for Stripe IDs, to prevent 'No such customer' errors when switching between the two
 	Removed uneeded customer data description text
@@ -19,7 +19,7 @@
 		* it_exchange_theme_api\n
 		* it_exchange_theme_api_{tag}\n
 		* it_exchange_theme_api_{tag}_{method}
-0.4.2 - 2013-06-14 - Glenn Ansley
+0.4.2 - 2013-06-14 - Glenn Ansley, Lew Ayotte
 	Add ablity to customize Stripe 'Purchase' button text
 	Add ability to close Wizard nag
 	Add feedback when coupon is applied (or isn't applied)
@@ -40,10 +40,10 @@
 	Remove false warning about incorrect currency for Stripe
 	Removed admin.php, not being used/called
 	Add loads of filters and actions in api/ functions
-0.4.1 - 2013-06-13 - Glenn Ansley
+0.4.1 - 2013-06-13 - Glenn Ansley, Lew Ayotte
 	Remove zero-sum transaction from wizard
 	Admin icons
-0.4.0 - 2013-06-12 - Glenn Ansley
+0.4.0 - 2013-06-12 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Matt Danner
 	All the things since 0.3.10
 	Excluding Packging Bot updates
 	Private Beta
