@@ -57,6 +57,7 @@ class IT_Exchange_Casper {
 		$this->_wp_query->nopaging = true;
 		$this->_wp_query->post_count = 1;
 
+		$this->_wp_query->post->ID = 0;
 		$this->_wp_query->post->post_date = current_time( 'mysql' );
 		$this->_wp_query->post->post_date_gmt = current_time( 'mysql', 1 );
 		$this->_wp_query->post->post_content = $this->get_content();
