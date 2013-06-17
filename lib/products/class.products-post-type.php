@@ -23,7 +23,6 @@ class IT_Exchange_Product_Post_Type {
 	function IT_Exchange_Product_Post_Type() {
 		$this->init();
 		
-		add_action( 'init', array( $this, 'register_post_status' ) );
 		add_action( 'save_post', array( $this, 'save_product' ) );
 		add_action( 'admin_init', array( $this, 'set_add_new_item_label' ) );
 		add_action( 'admin_init', array( $this, 'set_edit_item_label' ) );
@@ -33,8 +32,6 @@ class IT_Exchange_Product_Post_Type {
 		add_filter( 'manage_edit-it_exchange_prod_columns', array( $this, 'it_exchange_product_columns' ), 999 );
 		add_filter( 'manage_edit-it_exchange_prod_sortable_columns', array( $this, 'it_exchange_product_sortable_columns' ) );
 		add_filter( 'manage_it_exchange_prod_posts_custom_column', array( $this, 'it_exchange_prod_posts_custom_column_info' ) );
-		add_action( 'it_exchange_add_on_enabled', array( $this, 'maybe_enable_product_type_posts' ) );
-		add_action( 'it_exchange_add_on_disabled', array( $this, 'maybe_disable_product_type_posts' ) );
 		add_filter( 'request', array( $this, 'modify_wp_query_request_on_edit_php' ) );
 		add_filter( 'wp_insert_post_empty_content', array( $this, 'wp_insert_post_empty_content' ), 20, 2 );
 
@@ -51,18 +48,19 @@ class IT_Exchange_Product_Post_Type {
 	 * @return void
 	*/
 	function remove_disabled_product_types_from_admin_list( $query ) {
-		
-		if ( is_admin() && !empty( $query->post_type ) && 'it_exchange_prod' === $query->post_type ) {
-					
-			$meta_query = array(
+		$post_type = $query->get( 'post_type' );
+		if ( is_admin() && ! empty( $post_type ) && 'it_exchange_prod' == $post_type ) {
+
+			// Preserve existing meta_query
+			$meta_query = $query->get( 'meta_query' );
+			
+			// Add ours to existing
+			$meta_query[] = array(
 				'key'   => '_it_exchange_product_type',
 				'value' => array_keys( it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ),
 			);
-	
-			$query->set( 'tax_query', array( $meta_query )  );
-			
+			$query->set( 'meta_query', $meta_query );
 		}
-		
 	}
 	
 	/**
@@ -500,25 +498,6 @@ class IT_Exchange_Product_Post_Type {
 	}
 
 	/**
-	 * Register Hidden Disabled Product Post status
-	 *
-	 * @since 0.3.3
-	 * @return void
-	*/
-	function register_post_status() {
-		$args = array(
-			'label'                     => _x( '_it_exchange_disab', 'Status General Name', 'LION' ),
-			'label_count'               => _n_noop( 'Disabled Product (%s)',  'Disabled Products (%s)', 'LION' ),
-			'public'                    => false,
-			'show_in_admin_all_list'    => false,
-			'show_in_admin_status_list' => false,
-			'exclude_from_search'       => true,
-		);
-		register_post_status( '_it_exchange_disab', $args );
-	}
-
-	
-	/**
 	 * Modifies the value of $post_new_file to change the link attached to the Add New button next to the H2 on all / edit products
 	 *
 	 * I'm not proud of this. Don't copy it. ^gta
@@ -550,119 +529,6 @@ class IT_Exchange_Product_Post_Type {
 			
 		}
 		
-	}
-
-	/**
-	 * Fires when add-ons are enabled and determines if associated products need to be enabled
-	 *
-	 * @since 0.3.3
-	 * @return void
-	*/
-	function maybe_enable_product_type_posts( $addon ) {
-		$addon_category = empty( $addon['options']['category'] ) ? false : $addon['options']['category'];
-		if ( 'product-type' != $addon_category )
-			return;
-
-		$this->enable_product_type_posts( $addon['slug'] );
-	}
-
-	/**
-	 * When a Product add-on is enabled, re-enable any diabled post products previously created by it.
-	 *
-	 * 1 - Find all product posts for this product type with a post_status of _it_exchange_disab
-	 * 2 - Foreach product, pass to enable_product_post() method
-	 *
-	 * @since 0.3.3
-	 * @return void
-	*/
-	function enable_product_type_posts( $product_type ) {
-
-		// Grab all products for this product-type
-		$args = array(
-			'post_status'  => '_it_exchange_disab',
-			'product_type' => $product_type,
-			'number_posts' => -1,
-		);
-		if ( $products = it_exchange_get_products( $args ) ) {
-			foreach( $products as $product ) {
-				$this->enable_product_post( $product );
-			}
-		}
-	}
-
-	/**
-	 * Enable a single product type by changing post_status back to its original status
-	 *
-	 * 1 - Grab the post_status as it was prior to being disabled
-	 * 2 - Delete post_meta holding prior status
-	 * 3 - Change post status back to orginal
-	 *
-	 * @since 0.3.3
-	 * @return void
-	*/
-	function enable_product_post( $post ) {
-		if ( $previous_status = get_post_meta( $post->ID, '_it_exchange_enabled_status', true ) ) {
-			delete_post_meta( $post->ID, '_it_exchange_enabled_status' );
-			$args = array( 'ID' => $post->ID, 'post_status' => $previous_status );
-			wp_update_post( $args );
-		}
-	}
-
-	/**
-	 * Fires when add-ons are disabled and determines if associated products need to be disabled
-	 *
-	 * @since 0.3.3
-	 * @return void
-	*/
-	function maybe_disable_product_type_posts( $addon ) {
-		$addon_category = empty( $addon['options']['category'] ) ? false : $addon['options']['category'];
-		if ( 'product-type' != $addon_category )
-			return;
-
-		$this->disable_product_type_posts( $addon['slug'] );
-	}
-
-	/**
-	 * When a Product Add-on is disabled, prevent it from showing
-	 *
-	 * 1 - Find all product posts for this product type
-	 * 2 - Foreach product, pass to disable_product_post() method
-	 *
-	 * @since 0.3.3
-	 * @return void
-	*/
-	function disable_product_type_posts( $product_type ) {
-		$post_stati = get_post_stati();
-		if ( isset( $post_stati['_it_exchange_disab'] ) )
-			unset( $post_stati['_it_exchange_disab'] );
-
-		// Grab all products for this product-type
-		$args = array(
-			'post_status'  => array_keys( $post_stati ),
-			'product_type' => $product_type,
-			'number_posts' => -1,
-		);
-		if ( $products = it_exchange_get_products( $args ) ) {
-			foreach( $products as $product ) {
-				$this->disable_product_post( $product );
-			}
-		}
-	}
-
-	/**
-	 * Disable a single product type by changing post_status to _it_exchange_disab.
-	 *
-	 * Changing the post_status will prevent it from showing in WP queries
-	 * 1 - Save current post_status to post_meta: _it_exchange_enabled_status
-	 * 2 - Change post status to _it_exchange_disab
-	 *
-	 * @since 0.3.3
-	 * @return void
-	*/
-	function disable_product_post( $post ) {
-		update_post_meta( $post->ID, '_it_exchange_enabled_status', $post->post_status );
-		$args = array( 'ID' => $post->ID, 'post_status' => '_it_exchange_disab' );
-		wp_update_post( $args );
 	}
 
 	/**
