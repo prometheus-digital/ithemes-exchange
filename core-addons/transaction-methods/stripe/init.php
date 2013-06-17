@@ -100,9 +100,6 @@ function it_exchange_stripe_addon_process_transaction( $status, $transaction_obj
 			));
 		}
 		catch ( Exception $e ) {
-			$f = fopen( 'stripe.txt', 'a' );
-			fwrite( $f, print_r( $e, true ) );
-			fclose( $f );
 			it_exchange_add_message( 'error', $e->getMessage() );
 			return false;
 		}
