@@ -196,7 +196,7 @@ class IT_Exchange_Product_Post_Type {
 					<?php if ( 'publish' != $post->post_status && 'future' != $post->post_status && 'pending' != $post->post_status ) : ?>
 						<input <?php if ( 'private' == $post->post_status ) { ?>style="display:none"<?php } ?> type="submit" name="save" id="save-post" value="<?php esc_attr_e( 'Save Draft' ); ?>" class="button button-large" />
 					<?php elseif ( 'pending' == $post->post_status && $can_publish ) : ?>
-						<input type="submit" name="save" id="save-post" value="<?php esc_attr_e('Save as Pending'); ?>" class="button button-large" />
+						<input type="submit" name="save" id="save-post" value="<?php esc_attr_e( 'Save as Pending' ); ?>" class="button button-large" />
 					<?php endif; ?>
 					<span class="spinner"></span>
 				</div>
@@ -205,14 +205,16 @@ class IT_Exchange_Product_Post_Type {
 						<?php
 							if ( 'publish' == $post->post_status ) {
 								$preview_link = esc_url( get_permalink( $post->ID ) );
-								$preview_button = __( 'Preview Changes' );
+								$preview_button = __( 'View Product', 'LION' );
+								$preview_id = 'post-view';
 							} else {
 								$preview_link = set_url_scheme( get_permalink( $post->ID ) );
 								$preview_link = esc_url( apply_filters( 'preview_post_link', add_query_arg( 'preview', 'true', $preview_link ) ) );
-								$preview_button = __( 'Preview' );
+								$preview_button = __( 'Preview Product', 'LION' );
+								$preview_id = 'post-preview';
 							}
 						?>
-						<a class="preview button button-large" href="<?php echo $preview_link; ?>" target="wp-preview" id="post-preview"><?php echo $preview_button; ?></a>
+						<a class="preview button button-large" href="<?php echo $preview_link; ?>" target="wp-preview" id="<?php echo $preview_id; ?>"><?php echo $preview_button; ?></a>
 						<input type="hidden" name="wp-preview" id="wp-preview" value="" />
 					</div>
 				<?php endif; ?>
