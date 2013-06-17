@@ -1,3 +1,24 @@
+0.4.3 - 2013-06-17 - Glenn Ansley
+	Fix bug where first post humbnail showing up on random pages
+	Differentiate between live-mode and test-mode for Stripe IDs, to prevent 'No such customer' errors when switching between the two
+	Removed uneeded customer data description text
+	Fixed stripe company name error
+	Added column for order number to transactions tab of customer info
+	Removed error_log() call in downloads class
+	Filter out products from disable product types on All Products screen.\n
+	Remove several functions not needed anymore.
+	Change privew button to View and Save when product has already been published
+	Auto-enable all non-core add-ons
+	Don't register add-ons more than once
+	Make Disable link for non-core add-ons point to plugins.php page
+	Modified router for is_product to work to view drafts
+	Squash bug where email defaults aren't available to product notification if email page hasn't been saved.
+	Add filter to RESET ALL settings array so admin can filter out some settings from being reset
+	JS alert to confirm Exchange data reset
+	Add new filters for theme API:
+		* it_exchange_theme_api\n
+		* it_exchange_theme_api_{tag}\n
+		* it_exchange_theme_api_{tag}_{method}
 0.4.2 - 2013-06-14 - Glenn Ansley
 	Add ablity to customize Stripe 'Purchase' button text
 	Add ability to close Wizard nag
