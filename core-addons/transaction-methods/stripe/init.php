@@ -100,6 +100,9 @@ function it_exchange_stripe_addon_process_transaction( $status, $transaction_obj
 			));
 		}
 		catch ( Exception $e ) {
+			$f = fopen( 'stripe.txt', 'a' );
+			fwrite( $f, print_r( $e, true ) );
+			fclose( $f );
 			it_exchange_add_message( 'error', $e->getMessage() );
 			return false;
 		}
@@ -121,7 +124,10 @@ add_action( 'it_exchange_do_transaction_stripe', 'it_exchange_stripe_addon_proce
  * @return integer
 */
 function it_exchange_stripe_addon_get_stripe_customer_id( $customer_id ) {
-	return get_user_meta( $customer_id, '_it_exchange_stripe_id', true );
+	$settings = it_exchange_get_option( 'addon_stripe' );
+	$mode     = ( $settings['stripe-test-mode'] ) ? '_test_mode' : '_live_mode';
+			
+	return get_user_meta( $customer_id, '_it_exchange_stripe_id' . $mode, true );
 }
 
 /**
@@ -134,7 +140,10 @@ function it_exchange_stripe_addon_get_stripe_customer_id( $customer_id ) {
  * @return boolean
 */
 function it_exchange_stripe_addon_set_stripe_customer_id( $customer_id, $stripe_id ) {
-	return update_user_meta( $customer_id, '_it_exchange_stripe_id', $stripe_id );
+	$settings = it_exchange_get_option( 'addon_stripe' );
+	$mode     = ( $settings['stripe-test-mode'] ) ? '_test_mode' : '_live_mode';
+			
+	return update_user_meta( $customer_id, '_it_exchange_stripe_id' . $mode, $stripe_id );
 }
 
 /**
@@ -438,13 +447,16 @@ function it_exchange_stripe_addon_add_refund_to_transaction( $stripe_id, $refund
  * @param integer $stripe_id the id of the stripe transaction
 */
 function it_exchange_stripe_addon_delete_stripe_id_from_customer( $stripe_id ) {
+	$settings = it_exchange_get_option( 'addon_stripe' );
+	$mode     = ( $settings['stripe-test-mode'] ) ? '_test_mode' : '_live_mode';
+	
 	$transactions = it_exchange_stripe_addon_get_transaction_id( $stripe_id );
 	foreach( $transactions as $transaction ) { //really only one
 		$customer_id = get_post_meta( $transaction->ID, '_it_exchange_customer_id', true );
 		if ( false !== $current_stripe_id = it_exchange_stripe_addon_get_stripe_customer_id( $customer_id ) ) {
 
 			if ( $current_stripe_id === $stripe_id )
-				delete_user_meta( $customer_id, '_it_exchange_stripe_id' );
+				delete_user_meta( $customer_id, '_it_exchange_stripe_id' . $mode );
 
 		}
 	}
