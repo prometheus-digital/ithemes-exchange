@@ -39,33 +39,28 @@
 		}
 		it_exchange_clear_messages( 'error' );
 	}
-	?>
-	
-	<p class="top-description"><?php echo sprintf( __( 'Here you can view %1$s\'s customer information. Click the Edit User link to go back to %1$s\'s edit user page.', 'LION' ), $user_object->display_name ); ?></p>
-	
-	<?php
 
-		// Print tabs
-		$this->print_user_edit_page_tabs(); 
-		do_action( 'it_exchange_user_edit_page_top' );
-		
-		$tab = ! empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'products';
-		$user_id = empty( $user_id ) ? get_current_user_id() : $user_id;
-		
-		switch ( $tab ) {
-			case 'transactions':
-				include( 'admin-user-transactions.php' );
-				break;
-			case 'info':
-				include( 'admin-user-info.php' );
-				break;
-			case 'products':
-				include( 'admin-user-products.php' );
-				break;
-			default :
-				do_action( 'it_exchange_print_user_edit_page_content', $tab );
-				break;
-		}
+	// Print tabs
+	$this->print_user_edit_page_tabs(); 
+	do_action( 'it_exchange_user_edit_page_top' );
+	
+	$tab = ! empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'products';
+	$user_id = empty( $user_id ) ? get_current_user_id() : $user_id;
+	
+	switch ( $tab ) {
+		case 'transactions':
+			include( 'admin-user-transactions.php' );
+			break;
+		case 'info':
+			include( 'admin-user-info.php' );
+			break;
+		case 'products':
+			include( 'admin-user-products.php' );
+			break;
+		default :
+			do_action( 'it_exchange_print_user_edit_page_content', $tab );
+			break;
+	}
 
 	?>
      
