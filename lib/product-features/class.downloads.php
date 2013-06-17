@@ -70,9 +70,6 @@ class IT_Exchange_Product_Feature_Downloads {
 						
 						$hash = it_exchange_create_download_hash();
 						
-						error_log( $expire_time );
-						error_log( date_i18n( 'Y/m/d', $expire_time ) );
-						
 						// Create initial hash data package
 						$hash_data = array(
 							'hash'           => $hash,

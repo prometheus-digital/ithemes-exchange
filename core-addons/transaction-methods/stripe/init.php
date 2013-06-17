@@ -241,7 +241,7 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 			key:         "' . esc_js( $publishable_key ) . '",
 			amount:      "' . esc_js( number_format( it_exchange_get_cart_total( false ), 2, '', '' ) ) . '",
 			currency:    "' . esc_js( $general_settings['default-currency'] ) . '",
-			name:        "' . esc_js( empty( $general_settings['company-name'] ) ? '' : $general_settings['company_name'] ) . '",
+			name:        "' . esc_js( empty( $general_settings['company-name'] ) ? '' : $general_settings['company-name'] ) . '",
 			description: "' . esc_js( it_exchange_get_cart_description() ) . '",
 			panelLabel:  "Checkout",
 			token:       token

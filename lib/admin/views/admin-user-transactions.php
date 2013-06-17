@@ -17,6 +17,7 @@ $user_object = get_userdata( $user_id );
 $headings = array(
 	__( 'Description', 'LION' ),
 	__( 'Total', 'LION' ),
+	__( 'Order Number', 'LION' ),
 	__( 'Actions', 'LION' ),
 );  
 
@@ -40,6 +41,11 @@ foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transacti
 	$refund_url = remove_query_arg( 'it-exchange-customer-transaction-action', $refund_url );
 	$refund_url = remove_query_arg( '_wpnonce', $refund_url );
 	$refund_url = apply_filters( 'it_exchange_refund_url_for_' . it_exchange_get_transaction_method( $transaction ), $refund_url );
+	
+	// Build Transaction Link
+	$transaction_url    = get_admin_url() . '/post.php?action=edit&post=' . esc_attr( $transaction->ID );
+	$transaction_number = it_exchange_get_transaction_order_number( $transaction->ID );
+	$transaction_link   = '<a href="' . $transaction_url . '">' . $transaction_number . '</a>';
 
 	// Actions array
 	$actions_array = array( 
@@ -47,9 +53,9 @@ foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transacti
 		$resend_url => __( 'Resend Confirmation Email', 'LION' ),
 		$refund_url =>  sprintf( __( 'Refund from %s', 'LION' ), it_exchange_get_transaction_method_name( $transaction ) ),
 	);
-	$description = it_exchange_get_transaction_description( $transaction );
-	$price       = it_exchange_get_transaction_total( $transaction );
-	$list[]      = array( $description, $price, $actions_array );
+	$description  = it_exchange_get_transaction_description( $transaction );
+	$price        = it_exchange_get_transaction_total( $transaction );
+	$list[]       = array( $description, $price, $transaction_link, $actions_array );
 }
 ?>
 

@@ -44,9 +44,10 @@
 
 /** -----------------------------------------------------:[ transactions ]:---------- */
 .user-edit-block.transactions-user-edit-block .heading-column {padding-top: 0;}
-.transactions-user-edit-block .block-column-1{width:40%;}
-.transactions-user-edit-block .block-column-2{width:20%;}
-.transactions-user-edit-block .block-column-3{width:40%;padding-top:11px;}
+.transactions-user-edit-block .block-column-1{width:30%;}
+.transactions-user-edit-block .block-column-2{width:15%;}
+.transactions-user-edit-block .block-column-3{width:15%;}
+.transactions-user-edit-block .block-column-4{width:40%;padding-top:11px;}
 .add-manual-transaction{margin-top:15px;}
 
 /** -----------------------------------------------------:[ activity ]:---------- */
