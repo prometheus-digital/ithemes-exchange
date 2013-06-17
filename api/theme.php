@@ -1,8 +1,13 @@
 <?php
 /**
  * Loads the theme api
+ *
+ * The Theme API is a higher level API than the rest of the files in this directory.
+ * - To use the theme API, call it_exchange( 'context', 'method', array( 'optional' => 'options' ) );
+ * - Contexts are mapped to classes included in this file. ie: store, product, customer.
+ * - Methods are held found within each class and contain various options for output. 
+ * - All theme API calls print data by default. To return the data, prefix it with 'get-'. ie: it_exchange( 'product', 'get-title' );
  */
-
 include( $this->_plugin_path . '/api/theme/store.php' );
 include( $this->_plugin_path . '/api/theme/product.php' );
 include( $this->_plugin_path . '/api/theme/download.php' );
@@ -136,6 +141,11 @@ function it_exchange() {
 
 	// Get the results from the class method
 	$result = call_user_func( array( $object, strtolower( $method ) ), $options );
+
+	// Filters
+	$result = apply_filters( 'it_exchange_theme_api', $result, $tag, strtolower( $method ), $options );
+	$result = apply_filters( 'it_exchange_theme_api_' . $tag, $result, strtolower( $method ), $options );
+	$result = apply_filters( 'it_exchange_theme_api_' . $tag . '_' . strtolower( $method ), $result, $options );
 
 	// Force boolean result
 	if ( isset( $options['is'] ) ) {
