@@ -93,6 +93,14 @@ class IT_Exchange {
 	*/
 	function addons_init() {
 		$registered = it_exchange_get_addons();
+
+		// Auto enable all 3rd party addons
+		foreach( $registered as $slug => $params ) {
+			if ( ! it_exchange_is_core_addon( $slug ) )
+				it_exchange_enable_addon( $slug );
+		}
+
+		// Init all enabled addons
 		if ( $addons = it_exchange_get_enabled_addons() ) {
 			foreach( (array) $addons as $slug => $params ) {
 				if ( ! empty( $params['file'] ) && is_file( $params['file'] ) ) {

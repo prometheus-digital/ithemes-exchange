@@ -61,8 +61,6 @@ function it_exchange_register_addon( $slug, $params ) {
 		'file' 			=> $file,
 		'options' 		=> $options,
 	) );
-	
-	
 }
 
 /**
@@ -302,7 +300,7 @@ function it_exchange_enable_addon( $add_on ) {
 	$enabled_add_ons = it_exchange_get_option( 'enabled_add_ons' );
 	$success = false;
 
-	if ( in_array( $add_on, array_keys( $registered ) ) ) {
+	if ( in_array( $add_on, array_keys( $registered ) ) && ! isset( $enabled_addons[$add_on] ) ) {
 		$enabled_add_ons[] = $add_on;
 		if ( it_exchange_save_option( 'enabled_add_ons', $enabled_add_ons ) ) {
 			require( $registered[$add_on]['file'] );
