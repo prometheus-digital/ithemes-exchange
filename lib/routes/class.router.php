@@ -347,7 +347,6 @@ class IT_Exchange_Router {
 	function set_environment() {
 		$this->_is_store        = (boolean) get_query_var( $this->_store_slug );
 		$this->_is_transaction  = (boolean) get_query_var( $this->_transaction_slug );
-		$this->_is_product      = (boolean) get_query_var( $this->_product_slug );
 		$this->_is_registration = (boolean) get_query_var( $this->_registration_slug );
 		$this->_is_account      = (boolean) get_query_var( $this->_account_slug );
 		$this->_is_profile      = (boolean) get_query_var( $this->_profile_slug );
@@ -357,6 +356,13 @@ class IT_Exchange_Router {
 		$this->_is_log_out      = (boolean) get_query_var( $this->_log_out_slug );
 		$this->_is_confirmation = (boolean) get_query_var( $this->_confirmation_slug );
 		$this->_is_reports      = (boolean) get_query_var( $this->_reports_slug );
+		
+		$post_type = get_query_var( 'post_type' );
+		if ( (boolean) get_query_var( $this->_product_slug )
+			|| ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) )
+			$this->_is_product = true;
+		else
+			$this->_is_product = false;
 		
 		// Allow add-ons to create their own ghost pages
 		$add_on_ghost_pages     = apply_filters( 'it_exchange_add_ghost_pages', array() );
@@ -649,7 +655,7 @@ class IT_Exchange_Router {
 		// Return the iThemes Exchange Template if one is found
 		if ( $template = it_exchange_locate_template( $this->_current_view . '.php' ) )
 			return $template;
-
+		
 		// If no iThemes Exchange template was found by it_exchange_location_template and we've viewing a product
 		// then were'e going to need to set a filter
 		if ( 'product' == $this->_current_view )
@@ -696,7 +702,7 @@ class IT_Exchange_Router {
 	function fallback_filter_for_page_template( $content ) {
 		ob_start();
 		it_exchange_get_template_part( 'content', $this->_current_view );
-		return  ob_get_clean();
+		return ob_get_clean();
 	}
 
 	/**
