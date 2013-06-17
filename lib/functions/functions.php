@@ -211,7 +211,7 @@ function it_exchange_reset_everything() {
 		'it-exchange-hide-wizard-nag',
 		'widget_it-exchange-super-widget',
 	);
-	$delete_all_settings_keys = apply_filters( 'it_exchange_reset_all_settings_keys', $settings_keys );
+	$settings_keys = apply_filters( 'it_exchange_reset_all_settings_keys', $settings_keys );
 	foreach( $settings_keys as $option ) {
 		delete_option( $option );
 	}

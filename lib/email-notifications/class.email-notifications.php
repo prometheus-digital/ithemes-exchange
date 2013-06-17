@@ -98,6 +98,15 @@ class IT_Exchange_Email_Notifications {
 		$this->user 			= get_userdata( $this->customer_id );
 		
 		$settings = it_exchange_get_option( 'settings_email' );	
+
+		// Edge case where sale is made before admin visits email settings.
+		if ( empty( $settings['receipt-email-name'] ) && ! isset( $IT_Exchange_Admin ) ) {
+			global $IT_Exchange;
+			include_once( dirname( dirname( __FILE__ ) ) . '/admin/class.admin.php' );
+		//	$IT_Exchange_Admin = new IT_Exchange_Admin( $IT_Exchange );
+			add_filter( 'it_storage_get_defaults_exchange_settings_email', array( 'IT_Exchange_Admin', 'set_email_settings_defaults' ) );
+			$settings = it_exchange_get_option( 'settings_email', true );	
+		}
 		
 		$headers[] = 'From: ' . $settings['receipt-email-name'] . ' <' . $settings['receipt-email-address'] . '>';
 		$headers[] = 'MIME-Version: 1.0';
