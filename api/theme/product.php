@@ -868,7 +868,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'button-name'         => false,
 			'out-of-stock-text'   => __( 'Out of stock.', 'LION' ),
 			'not-available-text'  => __( 'Product not available right now.', 'LION' ),
-			'edit-quantity'       => true
+			'edit-quantity'       => true,
+			'max-quantity-text'   => __( 'Max Quantity Reached', 'LION' ),
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
@@ -893,8 +894,28 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$hidden_fields .= '<input class="add-to-cart-product-id" type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
 		$hidden_fields .= wp_nonce_field( 'it-exchange-purchase-product-' . $this->product->ID, '_wpnonce', true, false );
 		
+		
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'purchase-quantity' ) && it_exchange_product_has_feature( $this->product->ID, 'purchase-quantity' ) ) {
+				
+			$quantity = it_exchange_get_cart_product_quantity_by_product_id( $this->product->ID );
+			$max_quantity = it_exchange_get_product_feature( $this->product->ID, 'purchase-quantity' );
+			
+			if ( $quantity < $max_quantity )
+				$can_add_more = true;
+			else
+				$can_add_more = false;
+		
+		} else {
+		
+			$can_add_more = true;
+			
+		}
+		
+		if ( !$can_add_more )
+			return '<p>' . esc_attr( $options['max-quantity-text'] ) . '</p>';
+		
 		if ( ! $product_in_stock )
-			return '<p>' . esc_attr( $options['out-of-stock-label'] ) . '</p>';
+			return '<p>' . esc_attr( $options['out-of-stock-text'] ) . '</p>';
 
 		if ( ! $product_is_available )
 			return '<p>' . esc_attr( $options['not-available-text'] ) . '</p>';

@@ -309,6 +309,24 @@ function it_exchange_get_cart_product_quantity( $product ) {
 }
 
 /**
+ * Returns the quantity for a cart product
+ *
+ * @since 0.4.4
+ * @param int $product ID
+ * @return integer quantity
+*/
+function it_exchange_get_cart_product_quantity_by_product_id( $product_id ) {
+	$products = it_exchange_get_cart_products();
+	
+	foreach ( $products as $product ) {
+		if ( $product['product_id'] == $product_id )
+			return $product['count'];
+	}
+	
+	return 0;
+}
+
+/**
  * Returns the number of items in the cart (not including quantity for individual items)
  *
  * @since 0.4.0

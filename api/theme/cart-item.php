@@ -33,6 +33,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 		'price'            => 'price',
 		'subtotal'         => 'sub_total',
 		'purchasequantity' => 'supports_purchase_quantity',
+		'permalink'        => 'permalink',
 	);
 
 	/**
@@ -115,7 +116,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	*/
 	function title( $options=array() ) {
 		// Set options
-		$defaults      = array(
+		$defaults = array(
 			'before' => '',
 			'after'  => '',
 		);
@@ -196,5 +197,15 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	*/
 	function supports_purchase_quantity( $options=array() ) {
 		return it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'purchase-quantity' );
+	}
+	
+	/**
+	 * Returns URL for cart item
+	 *
+	 * @since 0.4.4
+	 *
+	*/
+	function permalink( $options=array() ) {
+		return get_permalink( $this->_cart_item['product_id'] );
 	}
 }

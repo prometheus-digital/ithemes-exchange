@@ -22,7 +22,7 @@
 							</div>
 							<div class="cart-item-title cart-column">
 								<div class="cart-column-inner">
-									<a href="http://permalink-to-cart.item"><?php it_exchange( 'cart-item', 'title' ) ?></a>
+									<a href="<?php it_exchange( 'cart-item', 'permalink' ) ?>"><?php it_exchange( 'cart-item', 'title' ) ?></a>
 								</div>
 							</div>
 							<div class="cart-item-quantity cart-column">
