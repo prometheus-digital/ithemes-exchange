@@ -257,8 +257,10 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		if ( ! $this->get_state() )
 			return;
 
-		$script_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/js/super-widget.js' );
-		wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery' ), false, true );
+		if ( is_active_widget( false, false, $this->id_base, true ) ) {
+			$script_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/js/super-widget.js' );
+			wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery' ), false, true );
+		}
 	}
 
 	/**
