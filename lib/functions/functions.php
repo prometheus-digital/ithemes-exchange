@@ -84,9 +84,9 @@ function it_exchange_format_price( $price ) {
  * @return void
 */
 function it_exchange_load_frontend_css( $current_view ) {
-	wp_enqueue_style( 'it-exchange-frontend-css', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange.css' ) );
+	wp_enqueue_style( 'it-exchange-frontend', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange.css' ) );
 }
-add_action( 'it_exchange_template_redirect', 'it_exchange_load_frontend_css' );
+add_action( 'wp_enqueue_scripts', 'it_exchange_load_frontend_css' );
 
 /**
  * Hook for processing webhooks from services like PayPal IPN, Stripe, etc.

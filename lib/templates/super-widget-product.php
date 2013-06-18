@@ -2,7 +2,7 @@
 	<div class="it-exchange-sw-selecting">
 		<?php if ( it_exchange( 'cart', 'get-item-count' ) && it_exchange_is_multi_item_cart_allowed() ) : ?>
 			<div class="item-count">
-				<?php printf( __( 'You have %s item(s) in your <a href="%s">cart</a>', 'LION' ), it_exchange( 'cart', 'get-item-count' ), it_exchange_get_page_url( 'cart' ) ); ?>
+				<?php printf( __( 'You have %s item(s) in your <a href="%s">%s</a>', 'LION' ), it_exchange( 'cart', 'get-item-count' ), it_exchange_get_page_url( 'cart' ), strtolower( it_exchange_get_page_name( 'cart' ) ) ); ?>
 			</div>
 		<?php endif; ?>
 	
