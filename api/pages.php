@@ -29,14 +29,41 @@ function it_exchange_get_pages( $break_cache=false ) {
  * @return string url
 */
 function it_exchange_get_page_name( $page, $break_cache=false ) { 
-	$pages = it_exchange_get_pages( $break_cache );
-	$page_name = $pages[$page . '-name'];
-	
+	$pages     = it_exchange_get_pages( $break_cache );
+	$page_name = empty( $pages[$page . '-name'] ) ? false : $pages[$page . '-name'];
 	return apply_filters( 'it_exchange_get_page_name', $page_name, $page, $break_cache );
 }
 
 /**
- * Is the the current view
+ * Get editable slug for ghost page
+ *
+ * @since 0.4.4
+ *
+ * @param string $page page setting
+ * @return string
+*/
+function it_exchange_get_page_slug( $page, $break_cache=false ) { 
+	$pages     = it_exchange_get_pages( $break_cache );
+	$page_slug = empty( $pages[$page . '-slug'] ) ? false : $pages[$page . '-slug'];
+	return apply_filters( 'it_exchange_get_page_slug', $page_slug, $page, $break_cache );
+}
+
+/**
+ * Is the page using a ghost page?
+ *
+ * @since 0.4.4
+ *
+ * @param string $page page setting
+ * @return boolean
+*/
+function it_exchange_is_page_ghost_page( $page, $break_cache=false ) {
+	$pages     = it_exchange_get_pages( $break_cache );
+	$is_ghost  = ! empty( $pages[$page . '-use-ghost']; )
+	return apply_filters( 'it_exchange_is_page_ghost_page', $is_ghost, $page, $break_cache );
+}
+
+/**
+ * Is the the current page what we're looking for? 
  *
  * @since 0.4.0
  * @todo add filters/actions
@@ -44,7 +71,7 @@ function it_exchange_get_page_name( $page, $break_cache=false ) {
  * @param string $view the exchange view were checking for
  * @return boolean
 */
-function it_exchange_is_view( $view ) {
+function it_exchange_is_product( $view ) {
 	global $wpdb;
 	// Get query var
 	$query_var = get_query_var( $view );

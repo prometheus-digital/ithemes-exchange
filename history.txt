@@ -40,10 +40,10 @@
 	Remove false warning about incorrect currency for Stripe
 	Removed admin.php, not being used/called
 	Add loads of filters and actions in api/ functions
-0.4.1 - 2013-06-13 - Glenn Ansley, Lew Ayotte
+0.4.1 - 2013-06-13 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich
 	Remove zero-sum transaction from wizard
 	Admin icons
-0.4.0 - 2013-06-12 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Matt Danner
+0.4.0 - 2013-06-12 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich, Matt Danner
 	All the things since 0.3.10
 	Excluding Packging Bot updates
 	Private Beta

@@ -6,7 +6,7 @@
 			</div>
 		<?php endif; ?>
 	
-		<?php if ( it_exchange_is_view( 'product' ) ) : ?>
+		<?php if ( it_exchange_is_page( 'product' ) ) : ?>
 			<div class="purchase-options">
 				<?php it_exchange( 'product', 'purchase-options', array( 'edit-quantity' => false ) ); ?>
 			</div>
