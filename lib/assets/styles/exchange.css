@@ -39,8 +39,8 @@
 #it-exchange-customer .customer-save{margin-top:1em;}
 
 /** ----------------------------------------:[ customer navigation ]:--- */
-#it-exchange-customer-menu{list-style:none;}
-#it-exchange-customer-menu li{display:inline;padding:0;margin:0 1em 0 0;}
+#it-exchange-customer-menu{list-style:none;margin:0;padding:0;}
+#it-exchange-customer-menu li{display:inline;padding:0;margin:0 1em 1em 0;}
 #it-exchange-customer-menu li.current{font-weight:bold;}
 
 /** -----------------------------------------------------:[ product ]:---------- */
