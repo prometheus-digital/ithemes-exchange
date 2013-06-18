@@ -164,20 +164,6 @@
 					<?php echo it_exchange_get_page_url( 'confirmation' ); ?>
 				</td>
 			</tr>
-			<tr valign="top">
-				<td>
-					<label for="reports-name"><?php _e( 'Admin Reports', 'LION' ) ?></label>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'reports-name', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'reports-slug', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'store-slug' ) ) . '/' . esc_attr( $form->get_option( 'reports-slug' ) ) . '/'; ?>
-				</td>
-			</tr>
 			<?php
 			// Allow add-ons to create their own ghost pages
 			$add_on_ghost_pages = apply_filters( 'it_exchange_add_ghost_pages', array(), $this );

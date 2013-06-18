@@ -152,18 +152,6 @@ class IT_Exchange_Router {
 	public $_confirmation_name;
 
 	/**
-	 * @var string $_reports_slug slug for the reports page
-	 * @since 0.4.0
-	*/
-	public $_reports_slug;
-
-	/**
-	 * @var string $_reports_name name for the reports page
-	 * @since 0.4.0
-	*/
-	public $_reports_name;
-
-	/**
 	 * @var boolean $_is_store is this a store page?
 	 * @since 0.4.0
 	*/
@@ -236,12 +224,6 @@ class IT_Exchange_Router {
 	public $_account = false;
 
 	/**
-	 * @var boolean $_is_reports is this the reports page?
-	 * @since 0.4.0
-	*/
-	public $_is_reports = false;
-
-	/**
 	 * @var string $_current_view the current Exchange frontend view
 	 * @since 0.4.0
 	*/
@@ -312,8 +294,6 @@ class IT_Exchange_Router {
 		$this->_log_out_name      = $slugs['log-out-name'];
 		$this->_confirmation_slug = $slugs['confirmation-slug'];
 		$this->_confirmation_name = $slugs['confirmation-name'];
-		$this->_reports_slug      = $slugs['reports-slug'];
-		$this->_reports_name      = $slugs['reports-name'];
 
 		// Allow add-ons to create their own ghost pages
 		$add_on_ghost_pages = apply_filters( 'it_exchange_add_ghost_pages', array() );
@@ -355,7 +335,6 @@ class IT_Exchange_Router {
 		$this->_is_log_in       = (boolean) get_query_var( $this->_log_in_slug );
 		$this->_is_log_out      = (boolean) get_query_var( $this->_log_out_slug );
 		$this->_is_confirmation = (boolean) get_query_var( $this->_confirmation_slug );
-		$this->_is_reports      = (boolean) get_query_var( $this->_reports_slug );
 		
 		$post_type = get_query_var( 'post_type' );
 		if ( (boolean) get_query_var( $this->_product_slug )
@@ -379,8 +358,6 @@ class IT_Exchange_Router {
 			$this->_current_view = 'log-out';
 		} else if ( $this->_is_purchases ) {
 			$this->_current_view = 'purchases';
-		} else if ( $this->_is_reports ) {
-			$this->_current_view = 'reports';
 		} else if ( $this->_is_confirmation ) {
 			$this->_current_view = 'confirmation';
 		} else if ( $this->_is_downloads ) {
@@ -514,7 +491,7 @@ class IT_Exchange_Router {
 
 		// Set pages that we want to protect in one way or another
 		$pages_to_protect = array(
-			'checkout', 'account', 'profile', 'downloads', 'purchases', 'reports', 'confirmation',
+			'checkout', 'account', 'profile', 'downloads', 'purchases', 'confirmation',
 		);
 		$pages_to_protect = apply_filters( 'it_exchange_pages_to_protect', $pages_to_protect );
 
@@ -537,13 +514,6 @@ class IT_Exchange_Router {
 
 		// Get current user
 		$user_id = get_current_user_id();
-
-		// If trying to view reports and not an admin, redirect
-		if ( 'reports' == $this->_current_view && ! current_user_can( 'administrator' ) ) {
-			$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_non_admin_requests_reports', it_exchange_get_page_url( 'account' ) );
-			wp_redirect( $redirect_url );
-			die();
-		}
 				
 		if ( 'confirmation' === $this->_current_view  ) {
 			
@@ -729,7 +699,6 @@ class IT_Exchange_Router {
 			$this->_log_in_slug,
 			$this->_log_out_slug,
 			$this->_confirmation_slug,
-			$this->_reports_slug,
 		);
 
 		// Allow add-ons to create their own ghost pages
@@ -781,9 +750,6 @@ class IT_Exchange_Router {
 			// Confirmation
 			$this->_store_slug . '/' . $this->_confirmation_slug . '/([^/]+)/?$' => 'index.php?' . $this->_store_slug . '=1&' . $this->_confirmation_slug . '=$matches[1]',
 
-			// Admin Reports
-			$this->_store_slug . '/' . $this->_reports_slug => 'index.php?' . $this->_store_slug . '=1&' . $this->_reports_slug . '=1',
-			
 			// Transaction
 			$this->_store_slug . '/' . $this->_transaction_slug  => 'index.php?' . $this->_store_slug . '=1&' . $this->_transaction_slug . '=1',
 

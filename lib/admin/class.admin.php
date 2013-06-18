@@ -638,8 +638,6 @@ Thank you for your order. Your order's details are below.
 			'checkout-slug'     => 'checkout',
 			'confirmation-name' => __( 'Thank you', 'LION' ),
 			'confirmation-slug' => 'confirmation',
-			'reports-name'      => __( 'Admin Reports', 'LION' ),
-			'reports-slug'      => 'reports',
 		);
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;

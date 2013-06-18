@@ -60,7 +60,7 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 				continue;
 
 			$object          = new stdClass();
-			$object->type = 'it-exchange-ghost-page';
+			$object->type    = 'it-exchange-ghost-page';
 			$object->name    = $page_name;
 			$object->setting = $page;
 			$object->slug    = $page_slug;
