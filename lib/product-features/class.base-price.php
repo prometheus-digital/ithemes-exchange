@@ -119,7 +119,7 @@ class IT_Exchange_Base_Price {
 		// Echo the form field
 		?>
 			<label for="base-price"><?php esc_html_e( $description ); ?></label>
-			<input type="text" placeholder="<?php esc_attr_e( it_exchange_format_price( '0.00' ) ); ?>" id="base-price" name="it-exchange-base-price" value="<?php esc_attr_e( $product_base_price ); ?>" />
+			<input type="text" placeholder="<?php esc_attr_e( it_exchange_format_price( '0.00' ) ); ?>" id="base-price" name="it-exchange-base-price" value="<?php esc_attr_e( $product_base_price ); ?>" tabindex="2" />
 		<?php
 	}
 
