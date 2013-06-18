@@ -14,4 +14,4 @@ class IT_Exchange_API_Setup {
 		}
 	}
 }
-new IT_Exchange_API_Setup();
+//new IT_Exchange_API_Setup();

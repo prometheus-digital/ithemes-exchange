@@ -23,6 +23,7 @@ class IT_Exchange_Product_Post_Type {
 	function IT_Exchange_Product_Post_Type() {
 		$this->init();
 		
+		add_action( 'init', array( $this, 'load_product' ) );
 		add_action( 'save_post', array( $this, 'save_product' ) );
 		add_action( 'admin_init', array( $this, 'set_add_new_item_label' ) );
 		add_action( 'admin_init', array( $this, 'set_edit_item_label' ) );
@@ -38,6 +39,15 @@ class IT_Exchange_Product_Post_Type {
 		if ( is_admin() && !empty( $_REQUEST['post_type'] ) && 'it_exchange_prod' === $_REQUEST['post_type'] )
 			add_action( 'pre_get_posts', array( $this, 'remove_disabled_product_types_from_admin_list' ) );
 
+	}
+	
+	function load_product() {
+		if ( ! is_admin() ) {
+			if ( is_singular( 'it_exchange_prod' ) ) {
+				global $post;
+				$GLOBALS['it_exchange']['product'] = it_exchange_get_product( $post );
+			}
+		}	
 	}
 	
 	/**
