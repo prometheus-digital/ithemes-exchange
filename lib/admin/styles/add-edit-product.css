@@ -116,6 +116,14 @@
 #it-exchange-advanced-tabs .ui-tabs-panel .inner > *:first-child{margin-top:0;padding-top:0;}
 #it-exchange-advanced-tabs .ui-tabs-panel .inner textarea{width:100%;}
 #it-exchange-advanced-tabs #it-exchange-product-purchase-quantity input[type="text"]{display:block;margin-top:1em;}
+#it-exchange-advanced-tabs  input[type="text"],
+#it-exchange-advanced-tabs  input[type="email"],
+#it-exchange-advanced-tabs  input[type="password"],
+#it-exchange-advanced-tabs  textarea{background:#fff;border:1px solid #d6d6d6;border-radius:3px;font-size:18px;padding:10px;color:#3d4142;width:260px;}
+#it-exchange-advanced-tabs  input[type="text"]:focus,
+#it-exchange-advanced-tabs  input[type="email"]:focus,
+#it-exchange-advanced-tabs  input[type="password"]:focus,
+#it-exchange-advanced-tabs  textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
 
 #it-exchange-advanced-tab-nav .ui-state-default{outline:none;margin-bottom:0;border-width:1px 0 1px;border-style:solid;border-color:transparent;}
 #it-exchange-advanced-tab-nav .ui-state-default:first-child{border-top:0;border-radius:4px 0 0 0;}

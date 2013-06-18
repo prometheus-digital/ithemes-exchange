@@ -1,4 +1,4 @@
-/** -----------------------------------------------------:[ icons ]:---------- */
+	/** -----------------------------------------------------:[ icons ]:---------- */
 #icon-it-exchange {
 	background: url('../images/e32.png') no-repeat;
 }
@@ -25,15 +25,7 @@
 .tip:hover{background:#a6de56;border-color:#a6df57;color:#334940;}
 .ui-tooltip{position:absolute;z-index:9999;max-width:300px;box-shadow:none;background:rgba(166,222,86,0.9);color:#334940;border:none;border-radius:4px;padding:11px 14px;font-size:13px;line-height:1.4;}
 
-/** -----------------------------------------------------:[ input styles ]:---------- */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-textarea{background:#fff;border:1px solid #d6d6d6;border-radius:3px;font-size:18px;padding:10px;color:#3d4142;width:260px;}
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
+/** -----------------------------------------------------:[ input fix ]:---------- */
 input[type="checkbox"] + label{display:inline !important;}
 
 /** -----------------------------------------------------:[ datepicker ]:---------- */
