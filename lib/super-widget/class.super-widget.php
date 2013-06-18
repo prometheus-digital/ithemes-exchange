@@ -165,6 +165,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			'checkout',
 			'product',
 			'confirmation',
+			'browsing', //browsing non-IT Exchange pages
 		);
 		$valid_states = apply_filters( 'it_exchange_super_widget_valid_states', $valid_states );
 		$this->valid_states = (array) $valid_states;
@@ -202,20 +203,17 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	function set_state() {
 
 		// Get state from REQUEST
-		$requested_state = empty( $_REQUEST['ite-sw-state'] ) ? false : $_REQUEST['ite-sw-state'];
+		$state = empty( $_REQUEST['ite-sw-state'] ) ? false : $_REQUEST['ite-sw-state'];
 		$user_logged_in = is_user_logged_in();
 		$multi_item_cart_allowed = it_exchange_is_multi_item_cart_allowed();
 		$items_in_cart = (bool) it_exchange_get_cart_products();
-		$product_page = 'product' == get_query_var( 'it_exchange_view' );
-
-		// Set state to requested state
-		$state = $requested_state;
+		$it_exchange_view = get_query_var( 'it_exchange_view' );
 
 		// If cart has item in SW and multi-item cart is disabled, and we're not on a product page or the product page is the same as the item in the cart, show cart
 		if ( $items_in_cart ) {
 			
 			// Don't set state to checkout if on one of the following requested states
-			if ( 'cart' != $requested_state && 'login' != $requested_state && 'registration' != $requested_state ) {
+			if ( 'cart' != $state && 'login' != $state && 'registration' != $state ) {
 				if ( $multi_item_cart_allowed )
 					$state = 'product';
 				else
@@ -225,13 +223,17 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			// If we're on a product page other than the product that is in the cart, set state to 'product'
 			$cart_product = reset( it_exchange_get_cart_products() );
 			$current_product = empty( $GLOBALS['post'] ) ? false : it_exchange_get_product( $GLOBALS['post'] );
-			if ( $product_page && ! empty( $current_product->ID ) && ! empty( $cart_product['product_id'] ) && $current_product->ID != $cart_product['product_id'] )
+			if ( 'product' === $it_exchange_view && ! empty( $current_product->ID ) && ! empty( $cart_product['product_id'] ) && $current_product->ID != $cart_product['product_id'] )
 				$state = 'product';
 		}
+			
+		// If we're not on a product, cart, or checkout page, we're browsing the site
+		if ( !in_array( $it_exchange_view, array( 'product', 'cart', 'checkout', 'registration', 'log-in' ) ) )
+			$state = 'browsing';
 
 		// If cart is empty and requested state is checkout, make state product or false
 		if ( ! $items_in_cart && ( 'checkout' == $state || 'cart' == $state ) )
-			$state = $product_page ? 'product' : false;
+			$state = 'product' === $it_exchange_view ? 'product' : false;
 
 		// If user is not logged in and state is checkout, redirect to login
 		if ( ! $user_logged_in ) {
@@ -240,7 +242,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		}
 
 		// If state is empty and we're on a product page, set state to 'purchase'
-		if ( ! $state && $product_page )
+		if ( ! $state && 'product' === $it_exchange_view )
 			$state = 'product';
 
 		// Validate state
