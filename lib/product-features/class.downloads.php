@@ -204,7 +204,7 @@ class IT_Exchange_Product_Feature_Downloads {
 							<a href class="it-exchange-upload-digital-download">Upload</a>
 						</div>
 						<div class="download-remove column col-1-12">
-							<a href="#" class="it-exchange-delete-new-digital-download">&times;</a>
+							<a href="#" class="it-exchange-delete-digital-download">&times;</a>
 						</div>
 					</div>
 					<!-- New download items end. -->
@@ -221,7 +221,7 @@ class IT_Exchange_Product_Feature_Downloads {
 								<a href class="it-exchange-upload-digital-download">Upload</a>
 							</div>
 							<div class="download-remove column col-1-12">
-								<a href="#" class="it-exchange-delete-new-digital-download">&times;</a>
+								<a href="#" class="it-exchange-delete-digital-download">&times;</a>
 							</div>
 						</div>
 					<?php else : ?>

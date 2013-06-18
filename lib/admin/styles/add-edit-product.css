@@ -42,7 +42,7 @@
 #it-exchange-product-downloads .downloads-label-add .download-add-new{float:right;margin-bottom:10px;}
 #it-exchange-product-downloads .download-remove{text-align:right;}
 #it-exchange-product-downloads .download-remove a{box-sizing:content-box;display:inline-block;opacity:0;width:20px;height:19px;margin-top:12px;margin-right:12px;padding-top:1px;border:2px solid #999;border-radius:50%;font-size:14px;text-decoration:none;text-align:center;color:#999;-webkit-transition:all .2s linear;transition:all .2s linear;}
-#it-exchange-product-downloads .download-item:hover .download-remove .it-exchange-delete-new-digital-download{opacity:1;}
+#it-exchange-product-downloads .download-item:hover .download-remove .it-exchange-delete-digital-download{opacity:1;}
 #it-exchange-product-downloads .download-remove a:active{outline:none;opacity:.8;}
 #it-exchange-product-downloads .download-remove .it-exchange-delete-digital-download:hover{border-color:#E1797A;color:#E1797A;}
 #it-exchange-product-downloads .columns-wrapper{clear:both;overflow:hidden;border-top:1px solid #DEDEDE;}
