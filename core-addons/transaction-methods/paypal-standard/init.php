@@ -286,15 +286,16 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 	$it_exchange_customer = it_exchange_get_current_customer();
 
 	$button_request = array(
-		'USER'        => trim( $paypal_api_username ),
-		'PWD'         => trim( $paypal_api_password ),
-		'SIGNATURE'   => trim( $paypal_api_signature ),
-		'VERSION'     => '96.0', //The PayPal API version
-		'METHOD'      => 'BMCreateButton',
-		'BUTTONCODE'  => 'ENCRYPTED',
-		'BUTTONTYPE'  => 'BUYNOW',
-		'BUTTONIMAGE' => 'REG',
-		'BUYNOWTEXT'  => 'PAYNOW',
+		'USER'           => trim( $paypal_api_username ),
+		'PWD'            => trim( $paypal_api_password ),
+		'SIGNATURE'      => trim( $paypal_api_signature ),
+		'VERSION'        => '96.0', //The PayPal API version
+		'METHOD'         => 'BMCreateButton',
+		'BUTTONCODE'     => 'ENCRYPTED',
+		'BUTTONTYPE'     => 'BUYNOW',
+		'BUTTONIMAGE'    => 'REG',
+	//	'BUTTONIMAGEURL' => '', //Use either BUTTONIMAGE or BUTTONIMAGEURL -- not both!
+		'BUYNOWTEXT'     => 'PAYNOW',
 	);
 
 	$L_BUTTONVARS[] = 'business=' . $paypal_email;
