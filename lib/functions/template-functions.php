@@ -49,22 +49,14 @@ function it_exchange_locate_template( $template_names, $load=false, $require_onc
 
 	// If template_names is product, add core single-it_exchange_prod to array
 	$template_names = (array) $template_names;
-	if ( in_array( 'product.php', $template_names ) && ! in_array( 'single-it_exchange_prod.php', $template_names ) )
+	if ( ! $template_part && in_array( 'product.php', $template_names ) && ! in_array( 'single-it_exchange_prod.php', $template_names ) )
 		$template_names[] = 'single-it_exchange_prod.php';
-
-	// Add exchange to list of template names
-	if ( ! in_array( 'exchange.php', $template_names ) )
-		$template_names[] = 'exchange.php';
 
 	// Define possible template paths
 	$possible_template_paths = array( 
 		// Exchange directory
 		trailingslashit( get_stylesheet_directory() ) . 'exchange',
 		trailingslashit( get_template_directory() ) . 'exchange',
-
-		// Theme directories
-		untrailingslashit( get_stylesheet_directory() ),
-		untrailingslashit( get_template_directory() ),
 	);
 	
 	// Allow addons to add a template path for template parts
@@ -81,10 +73,14 @@ function it_exchange_locate_template( $template_names, $load=false, $require_onc
 		$possible_template_paths[] = $core_template_path;
 	}
 
+	// Add page.php to default non-template-part $template_names if $template_names does not include product.php
+	if ( ! $template_part && ! in_array( 'product.php', $template_names ) )
+		$template_names[] = 'page.php';
+
 	// Make sure we don't have multiple elements for the same path
 	$possible_template_paths = array_unique( $possible_template_paths );
 
-    // Try to find a template file
+    // Try to find an exchange template file
     foreach ( (array) $template_names as $template_name ) { 
 
         // Continue if template is empty
@@ -98,7 +94,7 @@ function it_exchange_locate_template( $template_names, $load=false, $require_onc
 		foreach( $possible_template_paths as $path ) {
 
 			// Don't look for single-it_exchange_prod inside /exchange folder
-			if ( '/exchange/' == substr( trailingslashit( $path ), -10 ) && in_array( $template_name, array( 'single-it_exchange_prod.php', 'exchange.php' ) ) )
+			if ( '/exchange/' == substr( trailingslashit( $path ), -10 ) && 'single-it_exchange_prod.php' == $template_name )
 				continue;
 			
 			// If file doesn't exist, keep looking
