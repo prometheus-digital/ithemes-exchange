@@ -189,7 +189,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	}
 
 	/**
-	 * Returns boolean. Does this cart item support a purcahse quantity
+	 * Returns boolean. Does this cart item support a purchase quantity
 	 *
 	 * @since 0.4.0
 	 *

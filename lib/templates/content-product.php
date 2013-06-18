@@ -55,7 +55,7 @@
 		<?php endif; ?>
 
 		<?php if ( it_exchange( 'product', 'supports-purchase-quantity' ) ) : ?>
-			<p><strong>Max Quantity Per Purcahse</strong><br /><?php it_exchange( 'product', 'purchase-quantity', 'format=max-quantity' ); ?></p>
+			<p><strong>Max Quantity Per Purchase</strong><br /><?php it_exchange( 'product', 'purchase-quantity', 'format=max-quantity' ); ?></p>
 		<?php endif; ?>
 
 		<?php if ( it_exchange( 'product', 'has-availability', 'type=start' ) ) : ?>
