@@ -17,5 +17,122 @@ function it_exchange_get_pages( $break_cache=false ) {
 	if ( ! $pages = it_exchange_get_option( 'settings_pages', $break_cache ) )
 		$pages = array();
 
-	return apply_filters( 'it_exchange_get_pages', $pages );
+	return apply_filters( 'it_exchange_get_pages', $pages, $break_cache );
+}
+
+/**
+ * Get name for ghost page
+ *
+ * @since 0.4.0
+ *
+ * @param string $page page setting
+ * @return string url
+*/
+function it_exchange_get_page_name( $page, $break_cache=false ) { 
+	$pages = it_exchange_get_pages( $break_cache );
+	$page_name = $pages[$page . '-name'];
+	
+	return apply_filters( 'it_exchange_get_page_name', $page_name, $page, $break_cache );
+}
+
+/**
+ * Is the the current view
+ *
+ * @since 0.4.0
+ * @todo add filters/actions
+ *
+ * @param string $view the exchange view were checking for
+ * @return boolean
+*/
+function it_exchange_is_view( $view ) {
+	global $wpdb;
+	// Get query var
+	$query_var = get_query_var( $view );
+
+	// Return true if set and not product
+	if ( $query_var && 'product' != $view )
+		return true;
+
+	// Are we doing AJAX, if so, grab product ID from it.
+	if ( ! empty( $_GET['it-exchange-sw-ajax'] ) && ! empty( $_GET['sw-product'] ) ) {
+		return (boolean) it_exchange_get_product( $_GET['sw-product'] );
+	} else {
+		// Try to get the post from the slug
+		$sql = $wpdb->prepare( 'SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = "it_exchange_prod" AND post_status = "publish" AND post_name = "%s"', $query_var );
+		if ( $id = $wpdb->get_var( $sql ) )
+			return true;
+	}
+	return false;
+}
+
+/**
+ * Get permalink for ghost page
+ *
+ * @since 0.4.0
+ * @todo add filters/actions
+ *
+ * @param string $page page setting
+ * @return string url
+*/
+function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
+	$pages = it_exchange_get_pages( $clear_settings_cache );
+	$page_slug = $pages[$page . '-slug'];
+	$page_name = $pages[$page . '-name'];
+	$permalinks = (boolean) get_option( 'permalink_structure' );
+	$base = trailingslashit( get_home_url() );
+
+	// Allow add-ons to create their own ghost pages
+	$add_on_ghost_pages = apply_filters( 'it_exchange_add_ghost_pages', array() );
+	foreach( (array) $add_on_ghost_pages as $addon_page => $data ) {
+		if ( $page == $addon_page && ! empty ( $data['url'] ) )
+			return $data['url'];
+	}
+
+	// Process SuperWidget links
+	if ( it_exchange_in_superwidget() && $page_slug != 'transaction' ) {
+		// Get current URL without exchange query args
+		$url = clean_it_exchange_query_args();
+		return add_query_arg( 'ite-sw-state', $page_slug, $url );
+	}
+
+	// Store needs to be first
+	if ( 'store' == $page ) {
+		if ( $permalinks )
+			return trailingslashit( $base . $page_slug );
+		else
+			return add_query_arg( array( $page_slug => 1 ), $base );
+	}
+
+	// Any URLS in store breadcrumb need to come next
+	if ( in_array( $page, array( 'confirmation', 'transaction' ) ) ) {
+		if ( $permalinks )
+			return trailingslashit( $base . $pages['store-slug'] . '/' . $page_slug );
+		else
+			return add_query_arg( array( $pages['store-slug'] => 1, $page_slug => 1 ), $base );
+	}
+
+	// Replace account value with name if user is logged in
+	if ( $permalinks )
+		$base = trailingslashit( $base . $pages['account-slug'] );
+	else
+		$base = add_query_arg( array( $pages['account-slug'] => 1 ), $base );
+
+	$account_name = get_query_var( 'account' );
+	if ( $account_name && '1' != $account_name && ( 'log-in' != $page && 'log-out' != $page ) ) {
+		if ( $permalinks ) {
+			$base = trailingslashit( $base . $account_name );
+		} else {
+			$base = remove_query_arg( $pages['account-slug'], $base );
+			$base = add_query_arg( array( $pages['account-slug'] => $account_name ), $base );
+		}
+	}
+
+	if ( 'account' == $page ) {
+		return $base;
+	} else {
+		if ( $permalinks )
+			return trailingslashit( $base . $page_slug );
+		else
+			return add_query_arg( array( $page_slug => 1 ), $base );
+	}
 }
