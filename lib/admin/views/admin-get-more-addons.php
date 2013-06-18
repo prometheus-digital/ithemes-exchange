@@ -19,19 +19,18 @@
 		$addons = it_exchange_get_more_addons();
 		$addons = it_exchange_featured_addons_on_top( $addons );
 		
+		$default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/default-add-on-icon.png' );
+		
 		$class = '';
 	?>
+	
 	<div class="add-ons-wrapper">
 		<?php if ( ! empty( $addons ) ) : ?>
-			
-			<?php $default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/default-add-on-icon.png' ); ?>
-			
 			<?php 
 				$count = 0;
 				foreach( (array) $addons as $addon ) : ?>
 				<?php if ( ! it_exchange_is_addon_installed( $addon['slug'] ) ) : ?>
 					<?php
-						
 						if ( $addon['featured'] )
 							$class .= ' featured';
 						
@@ -63,21 +62,40 @@
 										<span class="sale-price"><?php echo $addon['sale']; ?></span>
 									<?php endif; ?>
 								</div>
-								<div class="add-on-buy-now"><a href="<?php echo $addon['addon_url']; ?>"><?php _e( 'Buy Now', 'LION' )  ?></a></div>
+								<div class="add-on-buy-now">
+									<a href="<?php echo $addon['addon_url']; ?>"><?php _e( 'Buy Now', 'LION' )  ?></a>
+								</div>
 							<?php  endif; ?>
 						</div>
 					</div>
-                <?php $count++; ?>
+				<?php $count++; ?>
 				<?php endif; ?>
 			<?php endforeach; ?>
-			<p>
-				<?php 
-					if ( 0 === $count )
-						_e( 'You have all iThemes Exchange currently has to offer. Got an idea for an add-on that would make your life easier? <a href="http://ithemes.com/contact/">E-mail us</a>.', 'LION' );
-				?>
-			</p>
+			
+			<?php if ( 0 === $count ) : ?>
+				<div class="addons-achievement">
+					<div class="achievement-notice">
+						<span><?php _e( 'ACHIEVEMENT UNLOCKED', 'LION' ) ?></span>
+						<span><?php _e( 'Aquired all Exchange Add-Ons', 'LION' ) ?></span>
+					</div>
+					<h2><?php echo sprintf( __( 'You have all %s currently has to offer!', 'LION' ), 'iThemes Exchange' ); ?></h2>
+					<p><?php _e( 'Got and idea for an add-on that would make life easier?', 'LION' ); ?></p>
+					<a class="it-exchange-button" href="http://ithemes.com/contact"><?php _e( 'Send us a message', 'LION' ); ?></a>
+					
+					<div class="email-signup">
+						<p><?php _e( 'Sign up to be notified via email when new Add-Ons and updates are released.', 'LION' ); ?></p>
+						<form action="" method="get" accept-charset="utf-8">
+							<input type="text" name="" value="">
+							<input class="it-exchange-button" type="submit" value="Subscribe">
+						</form>
+					</div>
+				</div>
+			<?php endif; ?>
+			
 		<?php else : ?>
-			<p><?php __( 'No Add-ons in the store.', 'LION' ); ?></p>
+			<div class="no-addons-found">
+				<p><?php echo sprintf( __( 'Looks like there\'s a problem loading available add-ons. Go to %s to check out other available add-ons.', 'LION' ), '<a href="http://ithemes.com/exchange">iThemes Exchange</a>' ); ?></p>
+			</div>
 		<?php endif; ?>
 	</div> 
 </div>
