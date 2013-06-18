@@ -35,7 +35,7 @@
 					<?php $form->add_text_box( 'store-slug', array( 'class' => 'normal-text' ) ); ?>
 				</td>
 				<td>
-					<?php echo it_exchange_get_page_url( 'store' ); ?>
+					<?php esc_attr_e( it_exchange_get_page_url( 'store' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -63,7 +63,7 @@
 					<?php $form->add_text_box( 'account-slug', array( 'class' => 'normal-text' ) ); ?>
 				</td>
 				<td>
-					<?php echo it_exchange_get_page_url( 'account' ); ?>
+					<?php esc_attr_e( it_exchange_get_page_url( 'account' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -77,7 +77,7 @@
 					<?php $form->add_text_box( 'profile-slug', array( 'class' => 'normal-text' ) ); ?>
 				</td>
 				<td>
-					<?php echo it_exchange_get_page_url( 'profile' ); ?>
+					<?php esc_attr_e( it_exchange_get_page_url( 'profile' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -91,7 +91,7 @@
 					<?php $form->add_text_box( 'registration-slug', array( 'class' => 'normal-text' ) ); ?>
 				</td>
 				<td>
-					<?php echo it_exchange_get_page_url( 'registration', 'LION' ); ?>
+					<?php esc_attr_e( it_exchange_get_page_url( 'registration', 'LION' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -105,7 +105,7 @@
 					<?php $form->add_text_box( 'log-in-slug', array( 'class' => 'normal-text' ) ); ?>
 				</td>
 				<td>
-					<?php echo it_exchange_get_page_url( 'log-in' ); ?>
+					<?php esc_attr_e( it_exchange_get_page_url( 'log-in' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -119,7 +119,7 @@
 					<?php $form->add_text_box( 'log-out-slug', array( 'class' => 'normal-text' ) ); ?>
 				</td>
 				<td>
-					<?php echo it_exchange_get_page_url( 'log-out' ); ?>
+					<?php esc_attr_e( it_exchange_get_page_url( 'log-out' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -133,7 +133,7 @@
 					<?php $form->add_text_box( 'purchases-slug', array( 'class' => 'normal-text' ) ); ?>
 				</td>
 				<td>
-					<?php echo it_exchange_get_page_url( 'purchases' ); ?>
+					<?php esc_attr_e( it_exchange_get_page_url( 'purchases' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -147,7 +147,7 @@
 					<?php $form->add_text_box( 'downloads-slug', array( 'class' => 'normal-text' ) ); ?>
 				</td>
 				<td>
-					<?php echo it_exchange_get_page_url( 'downloads' ); ?>
+					<?php esc_attr_e( it_exchange_get_page_url( 'downloads' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -161,7 +161,7 @@
 					<?php $form->add_text_box( 'confirmation-slug', array( 'class' => 'normal-text' ) ); ?>
 				</td>
 				<td>
-					<?php echo it_exchange_get_page_url( 'confirmation' ); ?>
+					<?php esc_attr_e( it_exchange_get_page_url( 'confirmation' ) ); ?>
 				</td>
 			</tr>
 			<?php
@@ -184,7 +184,7 @@
 						<?php $form->add_text_box( $slug . '-slug', array( 'class' => 'normal-text' ) ); ?>
 					</td>
 					<td>
-						<?php echo it_exchange_get_page_url( $slug ); ?>
+						<?php esc_attr_e( it_exchange_get_page_url( $slug ) ); ?>
 					</td>
 				</tr>
 				<?php
