@@ -328,13 +328,13 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 		if ( !empty( $ACK ) && 'Success' === $ACK ) {
 
 			if ( !empty( $WEBSITECODE ) )
-				$payment_form = str_replace( array( "\r\n", "\r", "\n" ), '', $WEBSITECODE );
+				$payment_form = str_replace( array( "\r\n", "\r", "\n" ), '', stripslashes( $WEBSITECODE ) );
 				//Strip out the newline characters because parse_str/PayPal adds a \n to the encrypted code, whic breaks the digital ID
 
 		}
 
 	}
-
+	
 	return $payment_form;
 }
 add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_paypal_standard_addon_make_payment_button', 10, 2 );
