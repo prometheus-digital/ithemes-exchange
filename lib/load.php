@@ -36,9 +36,6 @@ require( $this->_plugin_path . 'lib/functions/functions.php' );
 // Customer Class
 require( $this->_plugin_path . 'lib/customers/class.customer.php' );
 
-// API
-require( $this->_plugin_path . 'lib/api/class.api.php' );
-
 // Router
 require( $this->_plugin_path . 'lib/routes/class.router.php' );
 

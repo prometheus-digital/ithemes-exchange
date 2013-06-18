@@ -58,7 +58,7 @@ function it_exchange_get_page_slug( $page, $break_cache=false ) {
 */
 function it_exchange_is_page_ghost_page( $page, $break_cache=false ) {
 	$pages     = it_exchange_get_pages( $break_cache );
-	$is_ghost  = ! empty( $pages[$page . '-use-ghost']; )
+	$is_ghost  = ! empty( $pages[$page . '-use-ghost'] );
 	return apply_filters( 'it_exchange_is_page_ghost_page', $is_ghost, $page, $break_cache );
 }
 

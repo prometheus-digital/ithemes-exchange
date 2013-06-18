@@ -23,7 +23,7 @@ class IT_Exchange_Product_Post_Type {
 	function IT_Exchange_Product_Post_Type() {
 		$this->init();
 		
-		add_action( 'init', array( $this, 'load_product' ) );
+		add_action( 'template_redirect', array( $this, 'load_product' ) );
 		add_action( 'save_post', array( $this, 'save_product' ) );
 		add_action( 'admin_init', array( $this, 'set_add_new_item_label' ) );
 		add_action( 'admin_init', array( $this, 'set_edit_item_label' ) );
@@ -41,6 +41,11 @@ class IT_Exchange_Product_Post_Type {
 
 	}
 	
+	/**
+	 * Load IT Exchange Product if looking at a single product page
+	 *
+	 * @since 0.4.4
+	*/
 	function load_product() {
 		if ( ! is_admin() ) {
 			if ( is_singular( 'it_exchange_prod' ) ) {
