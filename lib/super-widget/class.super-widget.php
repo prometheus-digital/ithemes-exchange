@@ -178,7 +178,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 * @return void
 	*/
 	function set_pages() {
-		$this->pages = it_exchange_get_option( 'settings_pages' );
+		$this->pages = it_exchange_get_pages();
 	}
 
 	/**

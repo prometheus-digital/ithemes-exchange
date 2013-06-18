@@ -59,7 +59,7 @@ function it_exchange_get_field_names() {
  * @return string url
 */
 function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
-	$pages = it_exchange_get_option( 'settings_pages', $clear_settings_cache );
+	$pages = it_exchange_get_pages( $clear_settings_cache );
 	$page_slug = $pages[$page . '-slug'];
 	$page_name = $pages[$page . '-name'];
 	$permalinks = (boolean) get_option( 'permalink_structure' );
@@ -167,7 +167,7 @@ function clean_it_exchange_query_args( $exempt=array(), $additional=array() ) {
  * @return string url
 */
 function it_exchange_get_page_name( $page, $clear_settings_cache=false ) {
-	$pages = it_exchange_get_option( 'settings_pages', $clear_settings_cache );
+	$pages = it_exchange_get_pages( $clear_settings_cache );
 	$page_name = $pages[$page . '-name'];
 	
 	return apply_filters( 'it_exchange_get_page_name', $page_name, $page, $clear_settings_cache );

@@ -49,3 +49,6 @@ include( $this->_plugin_path . 'api/coupons.php' );
 
 // Downloads
 include( $this->_plugin_path . 'api/downloads.php' );
+
+// Pages 
+include( $this->_plugin_path . 'api/pages.php' );

@@ -589,7 +589,7 @@ Thank you for your order. Your order's details are below.
 	*/
 	function print_pages_settings_page() {
 		$flush_cache  = ! empty( $_POST );
-		$settings     = it_exchange_get_option( 'settings_pages', $flush_cache );
+		$settings     = it_exchange_get_pages( true );
 		$form_values  = empty( $this->error_message ) ? $settings : ITForm::get_post_data();
 		$form         = new ITForm( $form_values, array( 'prefix' => 'it_exchange_page_settings' ) );
 		$form_options = array(
@@ -1004,7 +1004,7 @@ Thank you for your order. Your order's details are below.
 		if ( empty( $_POST ) || 'it-exchange-settings' != $this->_current_page || 'pages' != $this->_current_tab )
 			return;
 
-		$settings = wp_parse_args( ITForm::get_post_data(), it_exchange_get_option( 'settings_pages' ) );
+		$settings = wp_parse_args( ITForm::get_post_data(), it_exchange_get_pages() );
 
         // Check nonce
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-page-settings' ) ) { 
@@ -1046,7 +1046,7 @@ Thank you for your order. Your order's details are below.
 	function maybe_update_ghost_pages_in_wp_nav_menus() {
 		// We can't depend on params passed by action because we call this from elsewhere as well
 		$using_permalinks = (boolean) get_option( 'permalink_structure' );
-		$pages = it_exchange_get_option( 'settings_pages', true );
+		$pages = it_exchange_get_pages( true );
 		$args = array(
 			'post_type' => 'nav_menu_item',
 			'posts_per_page' => -1,

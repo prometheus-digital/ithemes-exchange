@@ -7,7 +7,7 @@
 // No settings. This is either enabled or disabled.
 
 function it_exchange_register_multi_item_cart_checkout_rewrites( $existing ) {
-	$pages    = it_exchange_get_option( 'settings_pages' );
+	$pages    = it_exchange_get_pages();
 	$rewrites = array();
 	$url      = '';
 

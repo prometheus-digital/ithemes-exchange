@@ -41,7 +41,7 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 	*/
 	function print_meta_box( $object ) {
 		global $nav_menu_selected_id;
-		$pages = it_exchange_get_option( 'settings_pages' );
+		$pages = it_exchange_get_pages();
 
 		$terms = array();
 		foreach( $pages as $key => $value ) {
