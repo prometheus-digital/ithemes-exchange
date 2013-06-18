@@ -529,6 +529,10 @@ class IT_Exchange_Router {
 			$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_not_logged_in', it_exchange_get_page_url( 'log-in' ) );
 			wp_redirect( $redirect_url );
 			die();
+		} else if ( 'checkout' === $this->_current_view ) {
+		
+			return; //We just want to make sure users are logged in to see the checkout page
+			
 		}
 
 		// Get current user
