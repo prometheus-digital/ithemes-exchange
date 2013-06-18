@@ -58,7 +58,7 @@ function it_exchange_get_page_slug( $page, $break_cache=false ) {
 */
 function it_exchange_is_page_ghost_page( $page, $break_cache=false ) {
 	$pages     = it_exchange_get_pages( $break_cache );
-	$is_ghost  = ! empty( $pages[$page . '-use-ghost'] );
+	$is_ghost  = ! empty( $pages[$page . '-ghost'] );
 	return apply_filters( 'it_exchange_is_page_ghost_page', $is_ghost, $page, $break_cache );
 }
 
@@ -68,16 +68,16 @@ function it_exchange_is_page_ghost_page( $page, $break_cache=false ) {
  * @since 0.4.0
  * @todo add filters/actions
  *
- * @param string $view the exchange view were checking for
+ * @param string $page the exchange page were checking for
  * @return boolean
 */
-function it_exchange_is_product( $view ) {
+function it_exchange_is_page( $page ) {
 	global $wpdb;
 	// Get query var
-	$query_var = get_query_var( $view );
+	$query_var = get_query_var( $page );
 
 	// Return true if set and not product
-	if ( $query_var && 'product' != $view )
+	if ( $query_var && 'product' != $page )
 		return true;
 
 	// Are we doing AJAX, if so, grab product ID from it.
