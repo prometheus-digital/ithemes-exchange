@@ -1,4 +1,29 @@
-0.4.3 - 2013-06-17 - Glenn Ansley - Lew Ayotte
+0.4.4 - 2013-06-18 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich
+	Removed lib/api/class.api.php
+	Renamed it_exchange_is_view() to it_exchange_is_page()
+	Added it_exchange_get_page_slug()
+	Added it_exchange_is_page_ghost_page()
+	Remove 'Add to cart' option when max quanity has been reached.
+	Use esc_attr_e on page URLs on admin Page Settings tab.
+	Move page related functions from api/misc.php to api/pages.php
+	Added additional margin to the wizard nag to avoid collision with Screen Options and Help tabs.
+	Reset customer menu padding and margin.
+	Make Product Images and Product Descrition even on Add / Edit products page.
+	Added a tabindex to the normal sortable items
+	Removed some unneeded code from the add-edit-product.js file.
+    Add new API file: api/pages.php.
+	Add new function it_exchnage_get_pages()
+	Replace all instances of it_exchange_get_option( 'settings_pages') with it_exchange_get_pages()
+	Fixed Delete Download button not appearing properly for existing downloads
+	Fixed purcahse typos
+	Do not load SuperWidget JS if SuperWidget is not active
+	Removed admin reports from Page Settings
+	Modified PayPal button
+	Remove exchange.php from valid template names to look for in locate_template function.
+	Don't look for exchange template files in root theme or root themeparent folders (only in themefolder/exchange)
+	Added stripslashes to PayPal button output.
+	Dont't redirect non-admins to /store after checkout
+0.4.3 - 2013-06-17 - Glenn Ansley, Lew Ayotte
 	Fix bug where first post humbnail showing up on random pages
 	Differentiate between live-mode and test-mode for Stripe IDs, to prevent 'No such customer' errors when switching between the two
 	Removed uneeded customer data description text
