@@ -15,7 +15,7 @@
 		font-size: 14px;
 		line-height: 1.6;
 		padding: 1em .75em 1em 4em;
-		margin: 1em 1em 1em 0;
+		margin: 2.5em 1em 1em 0;
 		color: #44654e;
 	}
 	.it-exchange-wizard-notice a {
