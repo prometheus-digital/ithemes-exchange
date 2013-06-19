@@ -19,172 +19,44 @@
 		<thead>
 			<tr valign="top">
 				<th scope="row"><?php _e( 'Page', 'LION' ); ?></th>
+				<th scope="row"><?php _e( 'Page Type', 'LION' ); ?></th>
 				<th scope="row"><?php _e( 'Page Title', 'LION' ); ?></th>
 				<th scope="row"><?php _e( 'Page Slug', 'LION' ); ?></th>
-				<!-- <th scope="row"><?php _e( 'Example URL', 'LION' ); ?></th> -->
 			</tr>
 		</thead>
 		<tbody>
-			<tr valign="top">
-				<td>
-					<label for="store-name"><?php _e( 'Store Slug', 'LION' ) ?></label>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'store-name', array( 'class' => 'normal-text' ) ); ?>
-				<td>
-					<?php $form->add_text_box( 'store-slug', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php esc_attr_e( it_exchange_get_page_url( 'store' ) ); ?>
-				</td>
-			</tr>
-			<tr valign="top">
-				<td>
-					<label for="product-name"><?php _e( 'Single Product', 'LION' ) ?></label>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'product-name', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'product-slug', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php echo get_home_url() . '/' . esc_attr( $form->get_option( 'product-slug' ) ); ?>
-				</td>
-			</tr>
-			<tr valign="top">
-				<td>
-					<label for="account-name"><?php _e( 'Account Page', 'LION' ) ?></label>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'account-name', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'account-slug', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php esc_attr_e( it_exchange_get_page_url( 'account' ) ); ?>
-				</td>
-			</tr>
-			<tr valign="top">
-				<td>
-					<label for="profile-name"><?php _e( 'Profile Page', 'LION' ) ?></label>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'profile-name', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'profile-slug', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php esc_attr_e( it_exchange_get_page_url( 'profile' ) ); ?>
-				</td>
-			</tr>
-			<tr valign="top">
-				<td>
-					<label for="registration-name"><?php _e( 'Customer Registration', 'LION' ) ?></label>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'registration-name', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'registration-slug', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php esc_attr_e( it_exchange_get_page_url( 'registration', 'LION' ) ); ?>
-				</td>
-			</tr>
-			<tr valign="top">
-				<td>
-					<label for="log-in-name"><?php _e( 'Customer Log in', 'LION' ) ?></label>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'log-in-name', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'log-in-slug', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php esc_attr_e( it_exchange_get_page_url( 'log-in' ) ); ?>
-				</td>
-			</tr>
-			<tr valign="top">
-				<td>
-					<label for="log-in-name"><?php _e( 'Customer Log out', 'LION' ) ?></label>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'log-out-name', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'log-out-slug', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php esc_attr_e( it_exchange_get_page_url( 'log-out' ) ); ?>
-				</td>
-			</tr>
-			<tr valign="top">
-				<td>
-					<label for="purchases-name"><?php _e( 'Customer Purchases', 'LION' ) ?></label>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'purchases-name', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'purchases-slug', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php esc_attr_e( it_exchange_get_page_url( 'purchases' ) ); ?>
-				</td>
-			</tr>
-			<tr valign="top">
-				<td>
-					<label for="downloads-name"><?php _e( 'Customer Downloads', 'LION' ) ?></label>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'downloads-name', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'downloads-slug', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php esc_attr_e( it_exchange_get_page_url( 'downloads' ) ); ?>
-				</td>
-			</tr>
-			<tr valign="top">
-				<td>
-					<label for="confirmation-name"><?php _e( 'Purchase Confirmation', 'LION' ) ?></label>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'confirmation-name', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php $form->add_text_box( 'confirmation-slug', array( 'class' => 'normal-text' ) ); ?>
-				</td>
-				<td>
-					<?php esc_attr_e( it_exchange_get_page_url( 'confirmation' ) ); ?>
-				</td>
-			</tr>
 			<?php
-			// Allow add-ons to create their own ghost pages
-			$add_on_ghost_pages = apply_filters( 'it_exchange_add_ghost_pages', array(), $this );
-			foreach( (array) $add_on_ghost_pages as $page => $data ) {
-				if ( empty( $data['include_in_settings_pages'] ) )
-					continue;
-				$slug = $data['slug'];
-				$name = $data['name'];
+			$pages = it_exchange_get_registered_pages();
+			foreach( $pages as $page => $data ) {
+				$options = array();
+				$url = '';
 				?>
 				<tr valign="top">
 					<td>
-						<label for="<?php esc_attr_e( $slug ); ?>-name"><?php _e( $name ); ?></label>
+						<label for="<?php esc_attr_e( $page ); ?>-name"><?php esc_attr_e( $data['settings-name'] ); ?></label>
+						<br /><span class="page-var">(<?php esc_attr_e( $page ); ?>)</span>
 					</td>
 					<td>
-						<?php $form->add_text_box( $slug . '-name', array( 'class' => 'normal-text' ) ); ?>
+						<?php 
+						$options['exchange'] = __( 'Exchange', 'LION' );
+						if ( 'product' != $page )
+							$options['wordpress'] = __( 'WordPress', 'LION' );
+						if ( $data['optional'] )
+							$options['disabled'] = __( 'Disabled', 'LION' );
+						?>
+						<?php $form->add_drop_down( $page . '-type', $options ); ?>
 					</td>
 					<td>
-						<?php $form->add_text_box( $slug . '-slug', array( 'class' => 'normal-text' ) ); ?>
+						<?php $form->add_text_box( $page . '-name', array( 'class' => 'normal-text' ) ); ?>
+						<?php $form->add_hidden( $page . '-wpid', array( 'class' => 'normal-text' ) ); ?>
 					</td>
 					<td>
-						<?php esc_attr_e( it_exchange_get_page_url( $slug ) ); ?>
+						<?php $form->add_text_box( $page . '-slug', array( 'class' => 'normal-text' ) ); ?>
+						<?php $url = esc_attr( it_exchange_get_page_url( $page ) );
+						if ( 'product' == $page )
+							$url = ( false == get_option( 'permalink_structure' ) ) ? get_home_url() . '?' . esc_attr( $form->get_option( 'product-slug' ) ) . '=product-name' : get_home_url() . '/' . esc_attr( $form->get_option( 'product-slug' ) ) . '/product-name';
+						?>
+						<br /><?php echo $url; ?>
 					</td>
 				</tr>
 				<?php

@@ -186,7 +186,7 @@ add_filter( 'it_exchange_get_transaction_method_name_offline-payments', 'it_exch
  * @return array of possible template paths + offline-payments template path
 */
 function it_exchange_offline_payments_add_template_path( $paths ) {
-	if ( is_page( it_exchange_get_page_id( 'transaction-confirmation' ) ) )
+	if ( it_exchange_is_page( 'confirmation' ) )
 		$paths[] = dirname( __FILE__ ) . '/templates/';
 	return $paths;
 }

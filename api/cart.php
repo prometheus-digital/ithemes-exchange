@@ -458,17 +458,6 @@ function it_exchange_do_confirmation_redirect( $transaction_id ) {
 }
 
 /**
- * Return the ID of a specific iThemes Exchange page as set in options
- *
- * @return integer the WordPress page id if it exists.
-*/
-function it_exchange_get_page_id( $page ) {
-	$pages = it_exchange_get_pages();
-	$id = empty( $pages[$page] ) ? false : (integer) $pages[$page];
-	return apply_filters( 'it_exchange_get_page_id', $id, $page );;
-}
-
-/**
  * Returns the nonce field for the cart
  *
  * @todo if we use WP_Session, replace session_id with cookie value

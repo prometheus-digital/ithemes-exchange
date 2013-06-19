@@ -820,8 +820,7 @@ function it_exchange_get_transaction_confirmation_url( $transaction_id ) {
 	if ( '' != get_option( 'permalink_structure' ) ) {
 		$confirmation_url = trailingslashit( $confirmation_url ) . $transaction_hash;
 	} else {
-		$pages = it_exchange_get_pages();
-		$slug  = $pages['confirmation-slug'];
+		$slug             = it_exchange_get_page_slug( 'confirmation' );
 		$confirmation_url = remove_query_arg( $slug, $confirmation_url );
 		$confirmation_url = add_query_arg( $slug, $transaction_hash, $confirmation_url );
 	}

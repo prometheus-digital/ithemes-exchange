@@ -14,210 +14,6 @@
 class IT_Exchange_Router {
 
 	/**
-	 * @var string $_store_slug slug for the store
-	 * @since 0.4.0
-	*/
-	public $_store_slug;
-
-	/**
-	 * @var string $_store_name name for the store
-	 * @since 0.4.0
-	*/
-	public $_store_name;
-	
-	/**
-	 * @var string $_transaction_slug slug for processing transactions
-	 * @since 0.4.0
-	*/
-	public $_transaction_slug;
-
-	/**
-	 * @var string $_transaction_name name for processing transactions
-	 * @since 0.4.0
-	*/
-	public $_transaction_name;
-
-	/**
-	 * @var string $_product_slug slug for products
-	 * @since 0.4.0
-	*/
-	public $_product_slug;
-
-	/**
-	 * @var string $_product_name name for products
-	 * @since 0.4.0
-	*/
-	public $_product_name;
-
-	/**
-	 * @var string $_account_slug slug for the account page
-	 * @since 0.4.0
-	*/
-	public $_account_slug;
-
-	/**
-	 * @var string $_account_name name for the account page
-	 * @since 0.4.0
-	*/
-	public $_account_name;
-
-	/**
-	 * @var string $_customer_name name for the account page
-	 * @since 0.4.0
-	*/
-	public $_customer_name;
-
-	/**
-	 * @var string $_profile_slug slug for the profile slug
-	 * @since 0.4.0
-	*/
-	public $_profile_slug;
-
-	/**
-	 * @var string $_profile_name name for the profile slug
-	 * @since 0.4.0
-	*/
-	public $_profile_name;
-
-	/**
-	 * @var string $_registration_slug slug for the registration slug
-	 * @since 0.4.0
-	*/
-	public $_registration_slug;
-
-	/**
-	 * @var string $_registration_name name for the registration slug
-	 * @since 0.4.0
-	*/
-	public $_registration_name;
-
-	/**
-	 * @var string $_downloads_slug slug for the downloads page
-	 * @since 0.4.0
-	*/
-	public $_downloads_slug;
-
-	/**
-	 * @var string $_downloads_name name for the downloads page
-	 * @since 0.4.0
-	*/
-	public $_downloads_name;
-
-	/**
-	 * @var string $_purchases_slug slug for the purchases page
-	 * @since 0.4.0
-	*/
-	public $_purchases_slug;
-
-	/**
-	 * @var string $_purchases_name name for the purchases page
-	 * @since 0.4.0
-	*/
-	public $_purchases_name;
-
-	/**
-	 * @var string $_log_in_slug slug for the purchases page
-	 * @since 0.4.0
-	*/
-	public $_log_in_slug;
-
-	/**
-	 * @var string $_log_in_name name for the purchases page
-	 * @since 0.4.0
-	*/
-	public $_log_in_name;
-	
-	/**
-	 * @var string $_log_out_slug slug for the purchases page
-	 * @since 0.4.0
-	*/
-	public $_log_out_slug;
-
-	/**
-	 * @var string $_log_out_name name for the purchases page
-	 * @since 0.4.0
-	*/
-	public $_log_out_name;
-
-	/**
-	 * @var string $_confirmation_slug slug for the confirmation page
-	 * @since 0.4.0
-	*/
-	public $_confirmation_slug;
-
-	/**
-	 * @var string $_confirmation_name name for the confirmation page
-	 * @since 0.4.0
-	*/
-	public $_confirmation_name;
-
-	/**
-	 * @var boolean $_is_store is this a store page?
-	 * @since 0.4.0
-	*/
-	public $_is_store = false;
-
-	/**
-	 * @var boolean $_is_transaction is this the transaction page?
-	 * @since 0.4.0
-	*/
-	public $_is_transaction = false;
-
-	/**
-	 * @var boolean $_is_product is this a single product page?
-	 * @since 0.4.0
-	*/
-	public $_is_product = false;
-
-	/**
-	 * @var boolean is this the account page?
-	 * @since 0.4.0
-	*/
-	public $_is_account = false;
-
-	/**
-	 * @var boolean $_is_profile is the the profile page?
-	 * @since 0.4.0
-	*/
-	public $_is_profile = false;
-
-	/**
-	 * @var boolean $_is_registration is the the registration page?
-	 * @since 0.4.0
-	*/
-	public $_is_registration = false;
-
-	/**
-	 * @var boolean $_is_purchases is this the purchases page?
-	 * @since 0.4.0
-	*/
-	public $_is_purchases = false;
-
-	/**
-	 * @var boolean $_is_log_in is this the log inpage?
-	 * @since 0.4.0
-	*/
-	public $_is_log_in = false;
-
-	/**
-	 * @var boolean $_is_log_out is this the log inpage?
-	 * @since 0.4.0
-	*/
-	public $_is_log_out = false;
-
-	/**
-	 * @var boolean $_is_downloads is this the downloads page?
-	 * @since 0.4.0
-	*/
-	public $_is_downloads = false;
-
-	/**
-	 * @var boolean $_is_confirmation is this the confirmation page?
-	 * @since 0.4.0
-	*/
-	public $_is_confirmation = false;
-
-	/**
 	 * @var $_account the WP username for the current user
 	 * @since 0.4.0
 	*/
@@ -271,37 +67,14 @@ class IT_Exchange_Router {
 	 * @return void
 	*/
 	function set_slugs_and_names() {
-		$slugs                    = it_exchange_get_pages();
-		$this->_store_slug        = $slugs['store-slug'];
-		$this->_store_name        = $slugs['store-name'];
-		$this->_transaction_slug  = $slugs['transaction-slug'];;
-		$this->_transaction_name  = $slugs['transaction-name'];
-		$this->_product_slug      = $slugs['product-slug'];
-		$this->_product_name      = $slugs['product-name'];
-		$this->_account_slug      = $slugs['account-slug'];
-		$this->_account_name      = $slugs['account-name'];
-		$this->_profile_slug      = $slugs['profile-slug'];
-		$this->_profile_name      = $slugs['profile-name'];
-		$this->_registration_slug = $slugs['registration-slug'];
-		$this->_registration_name = $slugs['registration-name'];
-		$this->_downloads_slug    = $slugs['downloads-slug'];
-		$this->_downloads_name    = $slugs['downloads-name'];
-		$this->_purchases_slug    = $slugs['purchases-slug'];
-		$this->_purchases_name    = $slugs['purchases-name'];
-		$this->_log_in_slug       = $slugs['log-in-slug'];
-		$this->_log_in_name       = $slugs['log-in-name'];
-		$this->_log_out_slug      = $slugs['log-out-slug'];
-		$this->_log_out_name      = $slugs['log-out-name'];
-		$this->_confirmation_slug = $slugs['confirmation-slug'];
-		$this->_confirmation_name = $slugs['confirmation-name'];
 
-		// Allow add-ons to create their own ghost pages
-		$add_on_ghost_pages = apply_filters( 'it_exchange_add_ghost_pages', array() );
-		foreach( (array) $add_on_ghost_pages as $page => $data ) {
-			$slug = '_' . $data['slug'] . '_slug';
-			$name = '_' . $data['slug'] . '_name';
-			$this->$slug = $slugs[$data['slug'] . '-slug'];
-			$this->$name = $slugs[$data['slug'] . '-name'];
+		// Core pages
+		$core_pages = it_exchange_get_pages( false, array( 'type' => 'exchange' ) );
+		foreach( (array) $core_pages as $page => $data ) {
+			$slug = '_' . $page . '_slug';
+			$name = '_' . $page . '_name';
+			$this->$slug = it_exchange_get_page_slug( $page );
+			$this->$name = it_exchange_get_page_name( $page );
 		}
 	}
 
@@ -325,16 +98,13 @@ class IT_Exchange_Router {
 	 * @return void
 	*/
 	function set_environment() {
-		$this->_is_store        = (boolean) get_query_var( $this->_store_slug );
-		$this->_is_transaction  = (boolean) get_query_var( $this->_transaction_slug );
-		$this->_is_registration = (boolean) get_query_var( $this->_registration_slug );
-		$this->_is_account      = (boolean) get_query_var( $this->_account_slug );
-		$this->_is_profile      = (boolean) get_query_var( $this->_profile_slug );
-		$this->_is_downloads    = (boolean) get_query_var( $this->_downloads_slug );
-		$this->_is_purchases    = (boolean) get_query_var( $this->_purchases_slug );
-		$this->_is_log_in       = (boolean) get_query_var( $this->_log_in_slug );
-		$this->_is_log_out      = (boolean) get_query_var( $this->_log_out_slug );
-		$this->_is_confirmation = (boolean) get_query_var( $this->_confirmation_slug );
+		$pages      = it_exchange_get_pages( false, array( 'type' => 'exchange' ) );
+		foreach( (array) $pages as $page => $data ) {
+			if ( 'product' == $page )
+				continue;
+			$property = '_is_' . $page;
+			$this->$property = it_exchange_is_page( $page );
+		}
 		
 		$post_type = get_query_var( 'post_type' );
 		if ( (boolean) get_query_var( $this->_product_slug )
@@ -343,46 +113,12 @@ class IT_Exchange_Router {
 		else
 			$this->_is_product = false;
 		
-		// Allow add-ons to create their own ghost pages
-		$add_on_ghost_pages     = apply_filters( 'it_exchange_add_ghost_pages', array() );
-		foreach( (array) $add_on_ghost_pages as $page => $data ) {
-			$is_property        = '_is_' . $data['slug'];
-			$slug_property      = '_' . $data['slug'] . '_slug';
-			$this->$is_property = (boolean) get_query_var( $this->$slug_property );
-		}
-
 		// Set current view property
-		if ( $this->_is_log_in ) {
-			$this->_current_view = 'log-in';
-		} else if ( $this->_is_log_out ) {
-			$this->_current_view = 'log-out';
-		} else if ( $this->_is_purchases ) {
-			$this->_current_view = 'purchases';
-		} else if ( $this->_is_confirmation ) {
-			$this->_current_view = 'confirmation';
-		} else if ( $this->_is_downloads ) {
-			$this->_current_view = 'downloads';
-		} else if ( $this->_is_registration ) {
-			$this->_current_view = 'registration';
-		} else if ( $this->_is_profile ) {
-			$this->_current_view = 'profile';
-		} else if ( $this->_is_account ) {
-			$this->_current_view = 'account';
-		} else if ( $this->_is_product ) {
-			$this->_current_view = 'product';
-		} else if ( $this->_is_transaction ) {
-			$this->_current_view = 'transaction';
-		} else if ( $this->_is_store ) {
-			$this->_current_view = 'store';
-		}
-
-		// Allow add-ons to create their own ghost pages
-		$add_on_ghost_pages     = apply_filters( 'it_exchange_add_ghost_pages', array() );
-		foreach( (array) $add_on_ghost_pages as $page => $data ) {
-			$is_property        = '_is_' . $data['slug'];
-			$current_view       = $data['slug'];
-			if ( $this->$is_property )
-				$this->_current_view = $current_view;
+		foreach( $pages as $page => $data ) {
+			$property = '_is_' . $page;
+			if ( $this->$property ) {
+				$this->_current_view = $page;
+			}
 		}
 
 		// Add hook for things that need to be done when on an exchange page
@@ -398,7 +134,6 @@ class IT_Exchange_Router {
 	 * @return void
 	*/
 	function set_account() {
-		
 		// Return if not viewing an account based page: account, profile, downloads, purchases, log-in
 		if ( ! ( $this->_is_account || $this->_is_profile || $this->_is_downloads || $this->_is_purchases ) )
 			return;
@@ -688,31 +423,24 @@ class IT_Exchange_Router {
 	 * @return array modified query vars
 	*/
 	function register_query_vars( $existing ) {
-		$vars = array(
-			$this->_store_slug,
-			$this->_transaction_slug,
-			$this->_account_slug,
-			$this->_profile_slug,
-			$this->_registration_slug,
-			$this->_downloads_slug,
-			$this->_purchases_slug,
-			$this->_log_in_slug,
-			$this->_log_out_slug,
-			$this->_confirmation_slug,
-		);
+		$pages = it_exchange_get_pages( false, array( 'type' => 'exchange' ) );
+		$vars  = array();
 
-		// Allow add-ons to create their own ghost pages
-		$add_on_ghost_pages = apply_filters( 'it_exchange_add_ghost_pages', array() );
-		foreach( (array) $add_on_ghost_pages as $page => $data ) {
-			$slug = '_' . $data['slug'] . '_slug';
-			$vars[] = $this->$slug;
+		foreach( $pages as $page => $data ) {
+			if ( 'product' == $page )
+				continue;
+			if ( $var = it_exchange_get_page_slug( $page ) )
+				$vars[] = $var;
 		}
-		
-		return array_merge( $vars, $existing );
+		$new_vars = array_merge( $vars, $existing );
+		return $new_vars;
 	}
 
 	/**
 	 * Registers our custom rewrite rules based on slug settings
+	 *
+	 * Loop through all the pages, grabbing their rewrite rules, grouped by order
+	 * Then add to existing array of rewrites
 	 *
 	 * @since 0.4.0
 	 *
@@ -721,54 +449,46 @@ class IT_Exchange_Router {
 	*/
 	function register_rewrite_rules( $existing ) {
 		$this->set_slugs_and_names();
+		/*
 		$new_rules = array(
-			// Log in
-			$this->_account_slug . '/' . $this->_log_in_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_log_in_slug . '=1',
-			
-			// Log out
-			$this->_account_slug . '/' . $this->_log_out_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_log_out_slug . '=1',
-
-			// Purchases
-			$this->_account_slug  . '/([^/]+)/' . $this->_purchases_slug => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_purchases_slug . '=1',
-			$this->_account_slug . '/' . $this->_purchases_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_purchases_slug . '=1',
-
-			// Downloads 
-			$this->_account_slug  . '/([^/]+)/' . $this->_downloads_slug => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_downloads_slug . '=1',
-			$this->_account_slug . '/' . $this->_downloads_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_downloads_slug . '=1',
-
-			// Profile
-			$this->_account_slug  . '/([^/]+)/' . $this->_profile_slug  => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_profile_slug . '=1',
-			$this->_account_slug . '/' . $this->_profile_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_profile_slug . '=1',
-			
-			// Registration
-			$this->_account_slug  . '/' . $this->_registration_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_registration_slug . '=1',
-
-			// Account
-			$this->_account_slug . '/([^/]+)/?$' => 'index.php?' . $this->_account_slug . '=$matches[1]&' . $this->_profile_slug . '=1',
-			$this->_account_slug => 'index.php?' . $this->_account_slug . '=1&' . $this->_profile_slug . '=1',
-			
-			// Confirmation
-			$this->_store_slug . '/' . $this->_confirmation_slug . '/([^/]+)/?$' => 'index.php?' . $this->_store_slug . '=1&' . $this->_confirmation_slug . '=$matches[1]',
-
 			// Transaction
 			$this->_store_slug . '/' . $this->_transaction_slug  => 'index.php?' . $this->_store_slug . '=1&' . $this->_transaction_slug . '=1',
-
-			// Store
-			$this->_store_slug  => 'index.php?' . $this->_store_slug . '=1',
 		);
-		
-		// Merge core Exchange rewrites with core WP rewrites
-		$existing =  array_merge( $new_rules, $existing );
+		*/
+		// Core Pages
+		$pages = it_exchange_get_pages( true, array( 'type' => 'exchange' ) );
+		$prioritized_rewrites = array();
 
-		// Allow add-ons to create their own ghost pages
-		$add_on_ghost_pages = apply_filters( 'it_exchange_add_ghost_pages', array() );
-		foreach( (array) $add_on_ghost_pages as $page => $data ) {
-			if ( ! empty ( $data['rewrites'] ) && is_array( $data['rewrites'] ) )
-				$existing = array_merge( $data['rewrites'], $existing );
+		// Loop through and group rewrite callbacks by priority
+		foreach( $pages as $page => $data ) {
+			// Grab priority of rewrites and store in prioritized_rewrites array
+			if ( ! empty( $data['rewrite-rules'] ) && is_array( $data['rewrite-rules'] ) ) {
+				$priority = absint( $data['rewrite-rules'][0] );
+				// Make sure priority key already exists
+				if ( ! isset( $prioritized_rewrites[$priority] ) || ! is_array( $prioritized_rewrites[$priority] ) ) {
+					$prioritized_rewrites[$priority] = array();
+				}
+				// Add rules for page to prioritized array
+				if ( ! empty( $data['rewrite-rules'][1] ) && is_callable( $data['rewrite-rules'][1] ) ) {
+					$rules = call_user_func( $data['rewrite-rules'][1], $page );
+					if ( ! empty( $rules ) && is_array( $rules ) )
+						$prioritized_rewrites[$priority][] = $rules;
+				}
+			}
+		}
+
+		// Reverse sort prioritized by keys
+		krsort( $prioritized_rewrites );
+
+		// Loop through priority array and apply rules
+		foreach( $prioritized_rewrites as $priority => $rewrites ) {
+			foreach( $rewrites as $rewrite ) {
+				$existing = array_merge( $rewrite, $existing );
+			}
 		}
 
 		return $existing;
 	}
 }
-global $IT_Exchange_Router;
+global $IT_Exchange_Router; // We need it inside casper
 $IT_Exchange_Router = new IT_Exchange_Router();

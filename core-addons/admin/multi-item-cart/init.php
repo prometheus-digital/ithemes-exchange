@@ -6,62 +6,77 @@
 */
 // No settings. This is either enabled or disabled.
 
-function it_exchange_register_multi_item_cart_checkout_rewrites( $existing ) {
-	$pages    = it_exchange_get_pages();
-	$rewrites = array();
-	$url      = '';
+function it_exchange_register_multi_item_cart_pages() {
 
-	// Cart Defaults
-	if ( empty( $pages['cart-slug'] ) ) {
-		$pages['cart-slug'] = 'cart';
-		$pages['cart-name'] = __( 'Shopping Cart', 'LION' );
-		it_exchange_save_option( 'settings_pages', $pages );
-		it_exchange_clear_option_cache( 'settings_pages' );
-	}
+    // Cart
+    $options = array(
+        'slug'          => 'cart',
+        'name'          => __( 'Shopping Cart', 'LION' ),
+        'rewrite-rules' => array( 215, 'it_exchange_multi_item_cart_get_page_rewrites' ),
+        'url'           => 'it_exchange_multi_item_cart_get_page_urls',
+        'settings-name' => __( 'Customer Shopping Cart', 'LION' ),
+        'type'          => 'exchange',
+        'menu'          => true,
+        'optional'      => true,
+    );  
+    it_exchange_register_page( 'cart', $options );
 
-	// Checkout Defaults
-	if ( empty( $pages['checkout-slug'] ) ) {
-		$pages['checkout-slug'] = 'checkout';
-		$pages['checkout-name'] = __( 'Checkout', 'LION' );
-		it_exchange_save_option( 'settings_pages', $pages );
-		it_exchange_clear_option_cache( 'settings_pages' );
-	}
+    // Checkout 
+    $options = array(
+        'slug'          => 'checkout',
+        'name'          => __( 'Checkout', 'LION' ),
+        'rewrite-rules' => array( 216, 'it_exchange_multi_item_cart_get_page_rewrites' ),
+        'url'           => 'it_exchange_multi_item_cart_get_page_urls',
+        'settings-name' => __( 'Customer Checkout', 'LION' ),
+        'type'          => 'exchange',
+        'menu'          => true,
+        'optional'      => true,
+    );  
+    it_exchange_register_page( 'checkout', $options );
+}
+add_action( 'init', 'it_exchange_register_multi_item_cart_pages' );
 
-	// Set cart rewrite rules
-	$cart_rewrites = array( $pages['store-slug'] . '/' . $pages['cart-slug'] => 'index.php?' . $pages['cart-slug'] . '=1', );
+/**
+ * Returns rewrites for cart and checkout pages
+ *
+ * @since 0.4.4
+ *
+ * @param string page
+ * @return array
+*/
+function it_exchange_multi_item_cart_get_page_rewrites( $page ) {
+    $slug       = it_exchange_get_page_slug( $page );
+    $store_slug = it_exchange_get_page_slug( 'store' );
+	return array( $store_slug . '/' . $slug => 'index.php?' . $slug . '=1', );
+}
 
-	// Set checkout rewrite rules
-	$checkout_rewrites = array( $pages['store-slug'] . '/' . $pages['checkout-slug'] => 'index.php?' . $pages['checkout-slug'] . '=1', );
+/**
+ * Returns URL for cart and checkout pages
+ *
+ * @since 0.4.4
+ *
+ * @param string page
+ * @return array
+*/
+function it_exchange_multi_item_cart_get_page_urls( $page ) {
+	// Get slugs
+	$slug       = it_exchange_get_page_slug( $page );
+	$store_slug = it_exchange_get_page_slug( 'store' );
 
 	// Set cart and page urls
 	if ( (boolean) get_option( 'permalink_structure' ) ) {
-		$cart_url     = trailingslashit( get_home_url() . '/' . $pages['store-slug'] . '/' . $pages['cart-slug'] );
-		$checkout_url = trailingslashit( get_home_url() . '/' . $pages['store-slug'] . '/' . $pages['checkout-slug'] );
+		$cart_url     = trailingslashit( get_home_url() . '/' . $store_slug . '/' . $slug );
+		$checkout_url = trailingslashit( get_home_url() . '/' . $store_slug . '/' . $slug );
 	} else {
-		$cart_url     = add_query_arg( $pages['cart-slug'], 1, get_home_url() );
-		$checkout_url = add_query_arg( $pages['checkout-slug'], 1, get_home_url() );
+		$cart_url     = add_query_arg( $slug, 1, get_home_url() );
+		$checkout_url = add_query_arg( $slug, 1, get_home_url() );
 	}
 
-	$custom = array(
-		'cart'     => array(
-			'slug'                      => 'cart',
-			'name'                      => __( 'Shopping Cart', 'LION' ),
-			'rewrites'                  => $cart_rewrites,
-			'include_in_settings_pages' => true,
-			'url'                       => $cart_url,
-		),
-		'checkout' => array(
-			'slug'                      => 'checkout',
-			'name'                      => __( 'Checkout', 'LION' ),
-			'rewrites'                  => $checkout_rewrites,
-			'include_in_settings_pages' => true,
-			'url'                       => $checkout_url,
-		),
-	);
-	$existing = array_merge( $custom, $existing );
-	return $existing;
+	if ( 'cart' == $page )
+		return $cart_url;
+	else if ( 'checkout' == $page )
+		return $checkout_url;
 }
-add_filter( 'it_exchange_add_ghost_pages', 'it_exchange_register_multi_item_cart_checkout_rewrites' );
 
 /**
  * Enables multi item carts

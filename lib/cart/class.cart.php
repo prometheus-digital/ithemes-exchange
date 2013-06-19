@@ -357,7 +357,7 @@ class IT_Exchange_Shopping_Cart {
 	*/
 	function redirect_checkout_if_empty_cart() {
 		$cart     = it_exchange_get_page_url( 'cart' );
-		$checkout = it_exchange_get_page_id( 'checkout' );
+		$checkout = it_exchange_get_page_url( 'checkout' );
 
 		if ( empty( $checkout ) || ! is_page( $checkout ) ) 
 			return;

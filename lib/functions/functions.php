@@ -223,3 +223,312 @@ function it_exchange_reset_everything() {
 	die();
 }
 add_action( 'admin_init', 'it_exchange_reset_everything' );
+
+/**
+ * Register core pages
+ *
+ * @since 0.4.4
+ *
+ * @return void
+*/
+function it_exchange_register_core_pages() {
+	// Product
+	$options = array(
+		'slug'          => 'product',
+		'name'          => __( 'Product', 'LION' ),
+		'rewrite-rules' => false, //array( 10, 'it_exchange_get_core_page_rewrites' ),
+		'url'           => 'it_exchange_get_core_page_urls', 
+		'settings-name' => __( 'Single Product', 'LION' ),
+		'type'			=> 'exchange',
+		'menu'			=> false,
+		'optional'      => false,
+	);
+	it_exchange_register_page( 'product', $options );
+
+	// Store
+	$options = array(
+		'slug'          => 'store',
+		'name'          => __( 'Store', 'LION' ),
+		'rewrite-rules' => array( 230, 'it_exchange_get_core_page_rewrites' ),
+		'url'           => 'it_exchange_get_core_page_urls', 
+		'settings-name' => __( 'Store Page', 'LION' ),
+		'type'			=> 'exchange',
+		'menu'			=> true,
+		'optional'      => true,
+	);
+	it_exchange_register_page( 'store', $options );
+
+	// Transaction
+	$options = array(
+		'slug'          => 'transaction',
+		'name'          => __( 'Transaction', 'LION' ),
+		'rewrite-rules' => array( 210, 'it_exchange_get_core_page_rewrites' ),
+		'url'           => 'it_exchange_get_core_page_urls', 
+		'settings-name' => __( 'Transaction', 'LION' ),
+		'type'			=> 'exchange',
+		'menu'			=> false,
+		'optional'      => false,
+	);
+	it_exchange_register_page( 'transaction', $options );
+
+	// Customer Registration
+	$options = array(
+		'slug'          => 'registration',
+		'name'          => __( 'Registration', 'LION' ),
+		'rewrite-rules' => array( 105, 'it_exchange_get_core_page_rewrites' ),
+		'url'           => 'it_exchange_get_core_page_urls', 
+		'settings-name' => __( 'Customer Registration', 'LION' ),
+		'type'			=> 'exchange',
+		'menu'			=> true,
+		'optional'      => true,
+	);
+	it_exchange_register_page( 'registration', $options );
+
+	// Account
+	$options = array(
+		'slug'          => 'account',
+		'name'          => __( 'Account', 'LION' ),
+		'rewrite-rules' => array( 135, 'it_exchange_get_core_page_rewrites' ),
+		'url'           => 'it_exchange_get_core_page_urls', 
+		'settings-name' => __( 'Account Page', 'LION' ),
+		'type'			=> 'exchange',
+		'menu'			=> true,
+		'optional'      => false,
+	);
+	it_exchange_register_page( 'account', $options );
+
+	// Profile
+	$options = array(
+		'slug'          => 'profile',
+		'name'          => __( 'Profile', 'LION' ),
+		'rewrite-rules' => array( 130, 'it_exchange_get_core_page_rewrites' ),
+		'url'           => 'it_exchange_get_core_page_urls', 
+		'settings-name' => __( 'Profile Page', 'LION' ),
+		'type'			=> 'exchange',
+		'menu'			=> true,
+		'optional'      => true,
+	);
+	it_exchange_register_page( 'profile', $options );
+
+	// Downloads
+	$options = array(
+		'slug'          => 'downloads',
+		'name'          => __( 'Downloads', 'LION' ),
+		'rewrite-rules' => array( 125, 'it_exchange_get_core_page_rewrites' ),
+		'url'           => 'it_exchange_get_core_page_urls', 
+		'settings-name' => __( 'Customer Downloads', 'LION' ),
+		'type'			=> 'exchange',
+		'menu'			=> true,
+		'optional'      => true,
+	);
+	it_exchange_register_page( 'downloads', $options );
+
+	// Purchases
+	$options = array(
+		'slug'          => 'purchases',
+		'name'          => __( 'Purchases', 'LION' ),
+		'rewrite-rules' => array( 120, 'it_exchange_get_core_page_rewrites' ),
+		'url'           => 'it_exchange_get_core_page_urls', 
+		'settings-name' => __( 'Product Base', 'LION' ),
+		'type'			=> 'exchange',
+		'menu'			=> true,
+		'optional'      => true,
+	);
+	it_exchange_register_page( 'purchases', $options );
+
+	// Log In
+	$options = array(
+		'slug'          => 'log-in',
+		'name'          => __( 'Log In', 'LION' ),
+		'rewrite-rules' => array( 110, 'it_exchange_get_core_page_rewrites' ),
+		'url'           => 'it_exchange_get_core_page_urls', 
+		'settings-name' => __( 'Customer Log In', 'LION' ),
+		'type'			=> 'exchange',
+		'menu'			=> true,
+		'optional'      => true,
+	);
+	it_exchange_register_page( 'log_in', $options );
+
+	// Log Out
+	$options = array(
+		'slug'          => 'log-out',
+		'name'          => __( 'Log Out', 'LION' ),
+		'rewrite-rules' => array( 115, 'it_exchange_get_core_page_rewrites' ),
+		'url'           => 'it_exchange_get_core_page_urls', 
+		'settings-name' => __( 'Customer Log Out', 'LION' ),
+		'type'			=> 'exchange',
+		'menu'			=> true,
+		'optional'      => true,
+	);
+	it_exchange_register_page( 'log_out', $options );
+
+	// Confirmation 
+	$options = array(
+		'slug'          => 'confirmation',
+		'name'          => __( 'Thank you', 'LION' ),
+		'rewrite-rules' => array( 205, 'it_exchange_get_core_page_rewrites' ),
+		'url'           => 'it_exchange_get_core_page_urls', 
+		'settings-name' => __( 'Purchase Confirmation', 'LION' ),
+		'type'			=> 'exchange',
+		'menu'			=> false,
+		'optional'      => false,
+	);
+	it_exchange_register_page( 'confirmation', $options );
+}
+add_action( 'it_libraries_loaded', 'it_exchange_register_core_pages' );
+
+/**
+ * Returns rewrites for core pages
+ *
+ * @since 0.4.4
+ *
+ * @param string page
+ * @return array
+*/
+function it_exchange_get_core_page_rewrites( $page ) {
+	$slug = it_exchange_get_page_slug( $page );
+	switch( $page ) {
+		case 'store' :
+			$rewrites = array(
+				$slug => 'index.php?' . $slug . '=1',
+			);
+			return $rewrites;
+			break;
+		case 'account' :
+			$profile_slug = it_exchange_get_page_slug( 'profile' );
+			$rewrites = array(
+				$slug . '/([^/]+)/?$' => 'index.php?' . $slug . '=$matches[1]&' . $profile_slug . '=1',
+				$slug => 'index.php?' . $slug . '=1&' . $profile_slug . '=1',
+			);
+			return $rewrites;
+			break;
+		case 'profile' :
+			$account_slug = it_exchange_get_page_slug( 'account' );
+			$rewrites = array(
+				$account_slug  . '/([^/]+)/' . $slug  => 'index.php?' . $account_slug . '=$matches[1]&' . $slug . '=1',
+				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
+			);
+			return $rewrites;
+			break;
+		case 'registration' :
+			$account_slug = it_exchange_get_page_slug( 'account' );
+			$rewrites = array(
+				$account_slug  . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
+			);
+			return $rewrites;
+			break;
+		case 'log_in' :
+			$account_slug = it_exchange_get_page_slug( 'account' );
+			$rewrites = array(
+				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
+			);
+			return $rewrites;
+			break;
+		case 'log_out' :
+			$account_slug = it_exchange_get_page_slug( 'account' );
+			$rewrites = array(
+				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
+			);
+			return $rewrites;
+			break;
+		case 'purchases' :
+			$account_slug = it_exchange_get_page_slug( 'account' );
+			$rewrites = array(
+				$account_slug  . '/([^/]+)/' . $slug => 'index.php?' . $account_slug . '=$matches[1]&' . $slug . '=1',
+				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
+			);
+			return $rewrites;
+			break;
+		case 'downloads' :
+			$account_slug = it_exchange_get_page_slug( 'account' );
+			$rewrites = array(
+				$account_slug  . '/([^/]+)/' . $slug => 'index.php?' . $account_slug . '=$matches[1]&' . $slug . '=1',
+				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
+			);
+			return $rewrites;
+			break;
+		case 'confirmation' :
+			$store_slug = it_exchange_get_page_slug( 'store' );
+			$rewrites = array( 
+				$store_slug . '/' . $slug . '/([^/]+)/?$' => 'index.php?' . $store_slug . '=1&' . $slug . '=$matches[1]',
+			);
+			return $rewrites;
+			break;
+		case 'transaction' :
+			$store_slug = it_exchange_get_page_slug( 'store' );
+			$rewrites = array(
+				$store_slug . '/' . $slug  => 'index.php?' . $store_slug . '=1&' . $slug . '=1',
+			);
+			return $rewrites;
+			break;
+	}
+	return false;
+}
+
+/**
+ * Returns URL for core pages
+ *
+ * @since 0.4.4
+ *
+ * @param string page
+ * @return array
+*/
+function it_exchange_get_core_page_urls( $page ) {
+    $slug       = it_exchange_get_page_slug( $page );
+    $permalinks = (boolean) get_option( 'permalink_structure' );
+    $base       = trailingslashit( get_home_url() );
+
+	// Proccess superwidget links
+	if ( it_exchange_in_superwidget() && $slug != 'transaction' ) { 
+		// Get current URL without exchange query args
+		$url = it_exchange_clean_query_args();
+		return add_query_arg( 'ite-sw-state', $slug, $url );
+	}
+
+	switch ( $page ) {
+		// Store
+		case 'store' :
+			if ( $permalinks )
+				return trailingslashit( $base . $slug );
+			else
+				return add_query_arg( array( $slug => 1 ), $base );
+			break;
+		// Anything that is a subpage of store
+		case 'confirmation' :
+		case 'transaction' :
+			$store_slug = it_exchange_get_page_slug( 'store' );
+			if ( $permalinks )
+				return trailingslashit( $base . $store_slug . '/' . $slug );
+			else
+				return add_query_arg( array( $store_slug => 1, $slug => 1 ), $base );
+			break;
+		// Anything else
+		default :
+			$account_slug = it_exchange_get_page_slug( 'account' );
+			// Replace account value with name if user is logged in
+			if ( $permalinks )
+				$base = trailingslashit( $base . $account_slug );
+			else
+				$base = add_query_arg( array( $account_slug => 1 ), $base );
+
+			$account_name = get_query_var( 'account' );
+			if ( $account_name && '1' != $account_name && ( 'log_in' != $page && 'log_out' != $page ) ) {
+				if ( $permalinks ) {
+					$base = trailingslashit( $base . $account_name );
+				} else {
+					$base = remove_query_arg( $account_slug, $base );
+					$base = add_query_arg( array( $account_slug => $account_name ), $base );
+				}
+			}
+
+			if ( 'account' == $page ) {
+				return $base;
+			} else {
+				if ( $permalinks )
+					return trailingslashit( $base . $slug );
+				else
+					return add_query_arg( array( $slug => 1 ), $base );
+			}
+			break;
+    } 
+}

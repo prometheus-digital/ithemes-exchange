@@ -136,8 +136,9 @@ class IT_Exchange_Casper {
 	 * @return string
 	*/
 	function get_title() {
-		$var_name = '_' . str_replace( '-', '_', $this->_current_view ) . '_name';
-		return $this->_router->$var_name;
+		if ( ! $name = it_exchange_get_page_name( $this->_current_view ) )
+			return '';
+		return $name;
 	}
 
 	/**

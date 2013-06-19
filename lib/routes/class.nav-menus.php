@@ -44,17 +44,13 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 		$pages = it_exchange_get_pages();
 
 		$terms = array();
-		foreach( $pages as $key => $value ) {
-			if ( '-slug' != substr( $key, -5 ) )
+		foreach( $pages as $page => $data ) {
+
+			if ( in_array( $page, array( 'product', 'confirmation', 'log_out' ) ) )
 				continue;
 
-			$page = substr( $key, 0, -5 );
-
-			if ( in_array( $page, array( 'product', 'confirmation', 'log-out' ) ) )
-				continue;
-
-			$page_slug = empty( $value ) ? false : $value;
-			$page_name = empty( $pages[$page . '-name'] ) ? false : $pages[$page . '-name'];
+			$page_slug = it_exchange_get_page_slug( $page );
+			$page_name = it_exchange_get_page_name( $page );
 
 			if ( ! $page_slug || ! $page_name )
 				continue;

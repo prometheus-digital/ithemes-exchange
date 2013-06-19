@@ -222,13 +222,13 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			// If we're on a product page other than the product that is in the cart, set state to 'product'
 			$cart_product = reset( it_exchange_get_cart_products() );
 			$current_product = empty( $GLOBALS['post'] ) ? false : it_exchange_get_product( $GLOBALS['post'] );
-			if ( 'product' === $it_exchange_view && ! empty( $current_product->ID ) && ! empty( $cart_product['product_id'] ) && $current_product->ID != $cart_product['product_id'] )
+			if ( 'product' == $it_exchange_view && ! empty( $current_product->ID ) && ! empty( $cart_product['product_id'] ) && $current_product->ID != $cart_product['product_id'] )
 				$state = 'product';
 		}
 
 		// If cart is empty and requested state is checkout, make state product or false
 		if ( ! $items_in_cart && ( 'checkout' == $state || 'cart' == $state ) )
-			$state = 'product' === $it_exchange_view ? 'product' : false;
+			$state = 'product' == $it_exchange_view ? 'product' : false;
 
 		// If user is not logged in and state is checkout, redirect to login
 		if ( ! $user_logged_in ) {
@@ -237,7 +237,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		}
 
 		// If state is empty and we're on a product page, set state to 'purchase'
-		if ( ! $state && 'product' === $it_exchange_view )
+		if ( ! $state && 'product' == $it_exchange_view )
 			$state = 'product';
 
 		// Validate state

@@ -613,7 +613,16 @@ Order: %s
 	*/
 	function print_pages_settings_page() {
 		$flush_cache  = ! empty( $_POST );
-		$settings     = it_exchange_get_pages( true );
+		$pages    = it_exchange_get_pages( $flush_cache );
+		$settings = array();
+
+		// Setup form field values for each page
+		foreach( $pages as $page => $data ) {
+			$settings[$page . '-slug'] = it_exchange_get_page_slug( $page );
+			$settings[$page . '-name'] = it_exchange_get_page_name( $page );
+			$settings[$page . '-type'] = it_exchange_get_page_type( $page );
+			$settings[$page . '-wpid'] = it_exchange_get_page_wpid( $page );
+		}
 		$form_values  = empty( $this->error_message ) ? $settings : ITForm::get_post_data();
 		$form         = new ITForm( $form_values, array( 'prefix' => 'it_exchange_page_settings' ) );
 		$form_options = array(
@@ -635,34 +644,13 @@ Order: %s
 	 * @return array
 	*/
 	function set_pages_settings_defaults( $values ) {
-		$defaults = array(
-			'store-name'        => __( 'Store', 'LION' ),
-			'store-slug'        => 'store',
-			'transaction-name'  => __( 'Transaction', 'LION' ),
-			'transaction-slug'  => 'transaction',
-			'product-name'      => __( 'Product', 'LION' ),
-			'product-slug'      => 'product',
-			'account-name'      => __( 'Account', 'LION' ),
-			'account-slug'      => 'account',
-			'profile-name'      => __( 'Profile', 'LION' ),
-			'profile-slug'      => 'profile',
-			'registration-name' => __( 'Registration', 'LION' ),
-			'registration-slug' => 'registration',
-			'downloads-name'    => __( 'Downloads', 'LION' ),
-			'downloads-slug'    => 'downloads',
-			'purchases-name'    => __( 'Purchases', 'LION' ),
-			'purchases-slug'    => 'purchases',
-			'log-in-name'       => __( 'Log In', 'LION' ),
-			'log-in-slug'       => 'log-in',
-			'log-out-name'      => __( 'Log Out', 'LION' ),
-			'log-out-slug'      => 'log-out',
-			'cart-name'         => __( 'Shopping Cart', 'LION' ),
-			'cart-slug'         => 'cart',
-			'checkout-name'     => __( 'Checkout', 'LION' ),
-			'checkout-slug'     => 'checkout',
-			'confirmation-name' => __( 'Thank you', 'LION' ),
-			'confirmation-slug' => 'confirmation',
-		);
+		$registered = it_exchange_get_registered_pages();
+		$defaults = array();
+		foreach( $registered as $page => $options ) {
+			$defaults[$page . '-name'] = $options['name'];
+			$defaults[$page . '-slug'] = $options['slug'];
+			$defaults[$page . '-type'] = $options['type'];
+		}
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;
 	}
@@ -1035,7 +1023,18 @@ Order: %s
 		if ( empty( $_POST ) || 'it-exchange-settings' != $this->_current_page || 'pages' != $this->_current_tab )
 			return;
 
-		$settings = wp_parse_args( ITForm::get_post_data(), it_exchange_get_pages() );
+		// Grab page settings from DB
+		$existing = it_exchange_get_pages( true );
+		$settings = array();
+
+		// Format for settings form
+		foreach( $existing as $page => $data ) {
+			$settings[$page . '-slug'] = it_exchange_get_page_slug( $page );
+			$settings[$page . '-name'] = it_exchange_get_page_name( $page );
+			$settings[$page . '-type'] = it_exchange_get_page_type( $page );
+			$settings[$page . '-wpid'] = it_exchange_get_page_wpid( $page );
+		}
+		$settings = wp_parse_args( ITForm::get_post_data(), $settings );
 
         // Check nonce
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-page-settings' ) ) { 
@@ -1094,7 +1093,7 @@ Order: %s
 		foreach( $nav_post_items as $key => $item ) {
 			$page = get_post_meta( $item->ID, '_menu_item_xfn', true );
 			$page = substr( $page, 12 );
-			if ( empty( $pages[$page . '-slug'] ) )
+			if ( ! it_exchange_get_page_slug( $page ) )
 				continue;
 
 			$current_url = get_post_meta( $item->ID, '_menu_item_url', true );
@@ -1117,8 +1116,9 @@ Order: %s
 		$errors = array();
 
 		foreach( $settings as $setting => $value ) {
-			if ( empty( $value ) )
+			if ( empty( $value ) ) {
 				$errors = array( __( 'Page settings cannot be left blank.', 'LION' ) );
+			}
 		}
 
 		$errors = apply_filters( 'it_exchange_page_settings_validation_errors', $errors );
