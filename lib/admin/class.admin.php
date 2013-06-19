@@ -863,7 +863,7 @@ Thank you for your order. Your order's details are below.
 		
 		foreach( $default_wizard_general_settings as $var ) {
 			if ( isset( $_REQUEST['it_exchange_settings-' . $var] ) )
-				$general_settings[$var] = $_REQUEST['it_exchange_settings-' . $var];	
+				$general_settings[$var] = $_REQUEST['it_exchange_settings-' . $var];
 		}
 
 		$settings = wp_parse_args( $general_settings, it_exchange_get_option( 'settings_general' ) );
@@ -895,6 +895,13 @@ Thank you for your order. Your order's details are below.
 		
 		// Auto enable digital downloads
 		it_exchange_enable_addon( 'digital-downloads-product-type' );
+		
+		if ( !empty( $_REQUEST['it-exchange-transaction-methods'] ) ) {
+			foreach( $_REQUEST['it-exchange-transaction-methods'] as $add_on ) {
+				it_exchange_enable_addon( $add_on );
+			}
+		}
+
 		do_action( 'it_exchange_save_wizard_settings' );
 		wp_safe_redirect( 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=digital-downloads-product-type' );
 	}

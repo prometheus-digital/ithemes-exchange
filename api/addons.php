@@ -105,10 +105,26 @@ function it_exchange_register_addon_category( $slug, $name, $description, $optio
  * @return array  registered add-ons
 */
 function it_exchange_get_addons( $options=array() ) {
+ 	$defaults = array(
+		'show_required' => true,
+	);
+	$options = wp_parse_args( $options, $defaults );
+	
 	if ( empty( $GLOBALS['it_exchange']['add_ons']['registered'] ) )
 		return array();
 	else
 		$add_ons = $GLOBALS['it_exchange']['add_ons']['registered'];
+	
+	$temp_add_ons = $add_ons;
+	
+	foreach ( $add_ons as $key => $addon ) {
+		
+		if ( !$options['show_required'] && !empty( $addon['options']['tag'] ) && 'required' === $addon['options']['tag'] )
+			unset( $temp_add_ons[$key] );
+			
+	}
+			
+	$add_ons = $temp_add_ons;
 
 	// Possibly filter by category
 	if ( ! empty( $options['category'] ) )
@@ -117,6 +133,25 @@ function it_exchange_get_addons( $options=array() ) {
 	ksort( $add_ons );
 
 	return apply_filters( 'it_exchange_get_addons', $add_ons, $options );
+}
+
+/**
+ * We do not want to permanently enable all these addons, we just need to load them one time temporarily
+ *
+ * @since 0.4.5
+ * @param array $add_ons
+*/
+function it_exchange_temporarily_load_addons( $add_ons ) {
+	$enabled_addons = it_exchange_get_enabled_addons();
+	
+	// Init all enabled addons
+	foreach( (array) $add_ons as $slug => $params ) {
+		if( !isset( $enabled_addons[$slug] ) ) {
+			if ( ! empty( $params['file'] ) && is_file( $params['file'] ) ) {
+				include( $params['file'] );
+			}
+		}
+	}
 }
 
 /**
@@ -161,6 +196,7 @@ function it_exchange_get_addon_categories() {
 function it_exchange_get_enabled_addons( $options=array() ) {
  	$defaults = array(
 		'show_required' => true,
+		'break_cache'   => false,
 	);
 	$options = wp_parse_args( $options, $defaults );
 	
@@ -169,16 +205,20 @@ function it_exchange_get_enabled_addons( $options=array() ) {
 	$enabled = array();
 
 	// Grab enabled add-ons from options
-	if ( false === $enabled_addons = it_exchange_get_option( 'enabled_add_ons' ) )
+	if ( false === $enabled_addons = it_exchange_get_option( 'enabled_add_ons', $options['break_cache'] ) )
 		$enabled_addons = array();
 
 	// Set each enabled with registered params
-	foreach ( $enabled_addons as $addon )
-		if ( ! empty( $registered[$addon] ) )
-			if ( $options['show_required'] )
-				$enabled[$addon] = $registered[$addon];
-			else if ( empty( $registered[$addon]['options']['tag'] ) || 'required' !== $registered[$addon]['options']['tag'] )
-				$enabled[$addon] = $registered[$addon];
+	if ( !empty( $enabled_addons ) ) {
+		foreach ( $enabled_addons as $addon => $junk ) {
+			if ( ! empty( $registered[$addon] ) ) {
+				if ( $options['show_required'] )
+					$enabled[$addon] = $registered[$addon];
+				else if ( empty( $registered[$addon]['options']['tag'] ) || 'required' !== $registered[$addon]['options']['tag'] )
+					$enabled[$addon] = $registered[$addon];
+			}
+		}
+	}
 
 	if ( ! empty( $options['category'] ) )
 		$enabled = it_exchange_filter_addons_by_category( $enabled, $options['category'] );
@@ -297,18 +337,24 @@ function it_exchange_filter_addons_by_category( $add_ons, $categories ) {
 */
 function it_exchange_enable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
-	$enabled_add_ons = it_exchange_get_option( 'enabled_add_ons' );
+	$enabled_add_ons = it_exchange_get_enabled_addons( array( 'break_cache' => true ));
 	$success = false;
+	
+	error_log( $add_on );
 
-	if ( in_array( $add_on, array_keys( $registered ) ) && ! isset( $enabled_addons[$add_on] ) ) {
-		$enabled_add_ons[] = $add_on;
+	if ( isset( $registered[$add_on] ) && ! isset( $enabled_add_ons[$add_on] ) ) {
+		$enabled_add_ons[$add_on] = $registered[$add_on];
 		if ( it_exchange_save_option( 'enabled_add_ons', $enabled_add_ons ) ) {
-			require( $registered[$add_on]['file'] );
+			include( $registered[$add_on]['file'] );
 			do_action( 'it_exchange_add_on_enabled', $registered[$add_on] );
 			update_option( '_it-exchange-flush-rewrites', true );
 			$success = true;
 		}
 	}
+	
+	$f = fopen( 'addons.txt', 'a' );
+	fwrite( $f, print_r( $enabled_add_ons, true ) );
+	fclose( $f );
 	
 	return apply_filters( 'it_exchange_enable_addon', $success, $add_on );
 }
@@ -357,11 +403,11 @@ function it_exchange_is_addon_installed( $add_on_slug ) {
 */
 function it_exchange_disable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
-	$enabled_addons = it_exchange_get_option( 'enabled_add_ons' );
+	$enabled_addons = it_exchange_get_enabled_addons();
 	$success = false;
 
-	if ( false !== $key = array_search( $add_on, $enabled_addons ) ) {
-		unset( $enabled_addons[$key] );
+	if ( !empty( $enabled_addons[$add_on] ) ) {
+		unset( $enabled_addons[$add_on] );
 		if ( it_exchange_save_option( 'enabled_add_ons', $enabled_addons ) ) {
 			if ( ! empty( $registered[$add_on] ) )
 				do_action( 'it_exchange_add_on_disabled', $registered[$add_on] );
@@ -369,6 +415,7 @@ function it_exchange_disable_addon( $add_on ) {
 			$success = true;
 		}
 	}
+
 	
 	return apply_filters( 'it_exchange_is_addon_installed', $success, $add_on );
 }

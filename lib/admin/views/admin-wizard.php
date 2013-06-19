@@ -19,20 +19,21 @@
 					<label><?php _e( 'How will you be accepting payments?', 'LION' ); ?> <span class="tip" title="How you gonna get dat muh-nay?">i</span></label>
 					<ul>
 						<?php
-							$addons = it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods', 'show_required' => false ) );
+							$addons = it_exchange_get_addons( array( 'category' => 'transaction-methods', 'show_required' => false ) );
+							it_exchange_temporarily_load_addons( $addons );
 							foreach( (array) $addons as $addon ) {
 								$icon = empty( $addon['options']['icon'] ) ? $addon['name'] : '<img src="' . $addon['options']['icon'] . '" />';
-								echo '<li class="payoption ' . $addon['slug'] . '-payoption" data-toggle="' . $addon['slug'] . '-wizard">' . $icon . '</li>';
+								echo '<li class="payoption ' . $addon['slug'] . '-payoption" transaction-method="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">' . $icon . '</li>';
 							}
 						?>
 						
-						<?php if ( ! it_exchange_is_addon_enabled( 'stripe' ) ) : ?>
+						<?php if ( ! it_exchange_is_addon_installed( 'stripe' ) ) : ?>
 							<li class="payoption stripe-payoption inactive" data-toggle="stripe-wizard"><img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/stripe.png' ); ?>" /><span>$</span></li>
 						<?php endif; ?>
 					</ul>
 				</div>
 				
-				<?php if ( ! it_exchange_is_addon_enabled( 'stripe' ) ) : ?>
+				<?php if ( ! it_exchange_is_addon_installed( 'stripe' ) ) : ?>
 					<div class="field stripe-wizard inactive hide-if-js">
 						<h3><?php _e( 'Stripe', 'LION' ); ?></h3>
 						<p><?php _e( 'To use Stripe, you need to install the Stripe premium add-on.', 'LION' ); ?></p>
