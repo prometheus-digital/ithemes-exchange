@@ -91,7 +91,7 @@
 .it-exchange-super-widget .it-exchange-sw-processing{border:1px solid #F0F0F0;}
 .it-exchange-super-widget *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 .it-exchange-super-widget a{text-decoration:none;}
-.it-exchange-super-widget .it-exchange-sw-selecting .item-count{padding:1em;text-align:center;border-bottom:1px solid #F0F0F0;}
+.it-exchange-super-widget .item-count{padding:1em;text-align:center;border-bottom:1px solid #F0F0F0;}
 .it-exchange-super-widget .it-exchange-sw-selecting .purchase-options{padding:1em;}
 .it-exchange-super-widget .it-exchange-sw-selecting input{width:100%;}
 .it-exchange-super-widget .cart-items-wrapper{background:#F6F6F6;}
