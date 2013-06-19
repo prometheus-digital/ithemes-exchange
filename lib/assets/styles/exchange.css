@@ -82,6 +82,12 @@
 #it-exchange-cart .cart-apply-coupons,
 #it-exchange-cart .cart-actions{clear:both;display:block;margin-top:1em;text-align:right;}
 
+/** ----------------------------------------:[ login form ]:--- */
+.it-exchange-sw-log-in > div{margin-bottom:1em;}
+.it-exchange-sw-log-in label{display:block;font-size:.8em;}
+.it-exchange-sw-log-in .rememberme label{display:inline;}
+.it-exchange-sw-log-in .recover_url{margin-top:1em;margin-bottom:.4em;}
+
 /** -----------------------------------------------------:[ confirmation ]:---------- */
 #it-exchange-confirmation span{margin-left:1em;}
 
@@ -91,9 +97,13 @@
 .it-exchange-super-widget .it-exchange-sw-processing{border:1px solid #F0F0F0;}
 .it-exchange-super-widget *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 .it-exchange-super-widget a{text-decoration:none;}
-.it-exchange-super-widget .item-count{padding:1em;text-align:center;border-bottom:1px solid #F0F0F0;}
+.it-exchange-super-widget p {text-align: center;}
+.it-exchange-super-widget p:last-child {margin-bottom:0;}
+.widget .it-exchange-super-widget p.cart-empty {margin:1em;}
+.it-exchange-super-widget .item-count{padding:1em;text-align:center;border-bottom:1px solid #F0F0F0;line-height: 1.5;}
 .it-exchange-super-widget .it-exchange-sw-selecting .purchase-options{padding:1em;}
-.it-exchange-super-widget .it-exchange-sw-selecting input{width:100%;}
+.it-exchange-super-widget .it-exchange-sw-selecting .buy-now-button,
+.it-exchange-super-widget .it-exchange-sw-selecting .add-to-cart-button{width:100%;}
 .it-exchange-super-widget .cart-items-wrapper{background:#F6F6F6;}
 .it-exchange-super-widget .cart-items-wrapper .cart-item{padding:1em;border-bottom:1px solid #F0F0F0;}
 .it-exchange-super-widget .cart-items-wrapper .cart-item a{float:right;}

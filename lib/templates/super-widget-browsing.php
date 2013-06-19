@@ -18,6 +18,6 @@
 			<?php endif; ?>
 		<?php it_exchange( 'cart', 'form-close' ); ?>
 	<?php else: ?>
-		<?php printf( __( 'Your %s is empty', 'LION' ), strtolower( it_exchange_get_page_name( 'cart' ) ) ); ?>
+		<p class="cart-empty"><?php printf( __( 'Your %s is empty', 'LION' ), strtolower( it_exchange_get_page_name( 'cart' ) ) ); ?></p>
 	<?php endif; ?>
 </div>
