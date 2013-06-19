@@ -91,6 +91,7 @@ function it_exchange_register_core_addons() {
 			'supports'    => apply_filters( 'it_exchange_register_digital_downloads_default_features', array(
 				'inventory'     => false,
 			) ),
+			'settings-callback' => 'it_exchange_digital_downloads_settings_callback',
 		),
 		// Featured Product Widget
 		/**
