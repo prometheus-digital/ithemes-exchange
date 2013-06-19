@@ -1,3 +1,23 @@
+0.4.5 - 2012-06-19 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+	Adjusted line height on product description.
+	Added some styles to the messages on the super widget.
+	Adjust add-ons activate buttons style.
+	Added download title name automatically if title is empty when entering WP Media Gallery.
+	SuperWidget CSS Tweaks
+	Fixed item-count bug in SuperWidget cart
+	Added color to text on super widget
+	Enqueue basic_coupon scripts in addon code, not core code
+	Fixed edit-quantity invalid index in product.php theme API
+	Added admin notification email customization on Email settings
+	Added 'back to add-ons' link for add on settings pages
+	Fixed erroneous validate filter call for addons
+	Allow store owners to remove requirement for users to log in before downloading their products
+	Fixed tabbing issue on Products page
+	Changed it_exchange_is_addon_installed() to it_exchange_is_addon_registered()
+	Renamed function clean_it_exchange_query_args() to it_exchange_clean_query_args()
+	Show available core transaction methods inside wizard.
+	Activate transaction methods on wizard save
+	Style Get More Addons tab when empty
 0.4.4 - 2013-06-18 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich
 	Removed lib/api/class.api.php
 	Renamed it_exchange_is_view() to it_exchange_is_page()
