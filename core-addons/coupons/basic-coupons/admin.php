@@ -23,16 +23,30 @@ function it_exchange_basic_coupons_enqueue_js_css() {
 	// Enqueue JS / CSS based on current filter
 	if ( 'admin_print_scripts' == $current_filter ) {
 		// JS
-		$deps = array( 'jquery' );
-		wp_enqueue_script( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/add-edit-coupon.js', $deps );
+		$deps = array( 'jquery', 'jquery-ui-tooltip', 'jquery-ui-datepicker' );
+		wp_enqueue_script( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-coupon.js', $deps );
 	} else if ( 'admin_print_styles' == $current_filter ) {
 		// CSS
-		wp_enqueue_style( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/add-edit-coupon.css' );
+		$deps = array( 'jquery-ui-tooltip', 'jquery-ui-datepicker' );
+		wp_enqueue_style( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/add-edit-coupon.css' );
 	}
 }
 add_action( 'admin_print_styles', 'it_exchange_basic_coupons_enqueue_js_css' );
 add_action( 'admin_print_scripts', 'it_exchange_basic_coupons_enqueue_js_css' );
-
+	
+/**
+ * Adds Basic Coupons post type to list of post type to remove the quick edit
+ *
+ * @since 0.4.5
+ *
+ * @return array list of post types
+*/
+function it_exchange_remove_quick_edit_from_basic_coupons( $post_types ) {
+	$post_types[] = 'it_exchange_coupon';
+	return $post_types;
+}
+add_filter( 'it_exchange_remove_quick_edit_from_post_types', 'it_exchange_remove_quick_edit_from_basic_coupons', 10 );
+		
 /**
  * Saves a coupon
  *
