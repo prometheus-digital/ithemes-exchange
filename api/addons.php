@@ -339,8 +339,6 @@ function it_exchange_enable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
 	$enabled_add_ons = it_exchange_get_enabled_addons( array( 'break_cache' => true ));
 	$success = false;
-	
-	error_log( $add_on );
 
 	if ( isset( $registered[$add_on] ) && ! isset( $enabled_add_ons[$add_on] ) ) {
 		$enabled_add_ons[$add_on] = $registered[$add_on];
@@ -351,10 +349,6 @@ function it_exchange_enable_addon( $add_on ) {
 			$success = true;
 		}
 	}
-	
-	$f = fopen( 'addons.txt', 'a' );
-	fwrite( $f, print_r( $enabled_add_ons, true ) );
-	fclose( $f );
 	
 	return apply_filters( 'it_exchange_enable_addon', $success, $add_on );
 }
