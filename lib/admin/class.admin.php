@@ -119,6 +119,22 @@ class IT_Exchange_Admin {
 		add_action( 'all_admin_notices', array( $this, 'it_exchange_user_edit_load' ) );
 		add_action( 'show_user_profile', array( $this, 'it_exchange_user_profile' ) );
 		add_action( 'edit_user_profile', array( $this, 'it_exchange_user_profile' ) );
+		
+		add_action( 'it_exchange_addon_settings_page_bottom', array( $this, 'return_to_addons' ) );
+	}
+	
+	/**
+	 * Adds link to bottom of addons settings pages to return to the addons pages
+	 *
+	 * @since 0.4.5
+	 * @return void
+	*/
+	function return_to_addons() {
+		
+		$url = add_query_arg( 'page', 'it-exchange-addons', admin_url( 'admin.php' ) );
+		
+		echo '<p><a href="' . $url . '">&larr; ' . __( 'Back to Add-ons', 'LION' ) . '</a></p>';
+		
 	}
 
 	/**

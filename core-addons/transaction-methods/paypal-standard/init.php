@@ -595,6 +595,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 				</p>
 			<?php $form->end_form(); ?>
 			<?php do_action( 'it_exchange_paypal-standard_settings_page_bottom' ); ?>
+			<?php do_action( 'it_exchange_addon_settings_page_bottom' ); ?>
 		</div>
 		<?php
 	}
@@ -677,7 +678,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 			return;
 		}
 
-		$errors = apply_filters( 'it_exchange_add_on_manual_transaction_validate_settings', $this->get_form_errors( $new_values ), $new_values );
+		$errors = apply_filters( 'it_exchange_add_on_paypal_standard_validate_settings', $this->get_form_errors( $new_values ), $new_values );
 		if ( ! $errors && it_exchange_save_option( 'addon_paypal_standard', $new_values ) ) {
 			ITUtility::show_status_message( __( 'Settings saved.', 'LION' ) );
 		} else if ( $errors ) {

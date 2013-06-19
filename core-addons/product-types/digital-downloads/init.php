@@ -121,6 +121,7 @@ class IT_Exchange_Digital_Downloads_Add_On {
 				</p>
 			<?php $form->end_form(); ?>
 			<?php do_action( 'it_exchange_digital_downloads_settings_page_bottom' ); ?>
+			<?php do_action( 'it_exchange_addon_settings_page_bottom' ); ?>
 		</div>
 		<?php
 	}
@@ -168,7 +169,7 @@ class IT_Exchange_Digital_Downloads_Add_On {
 	}
 
 	/**
-	 * Sets the default options for manual payment settings
+	 * Sets the default options for digital downloads payment settings
 	 *
 	 * @since 0.4.5
 	 * @return array settings

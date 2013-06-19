@@ -352,6 +352,7 @@ class IT_Exchange_Offline_Payments_Add_On {
 				</td>
 			</tr>
 			<?php do_action( 'it_exchange_offline_payments_settings_table_bottom' ); ?>
+			<?php do_action( 'it_exchange_addon_settings_page_bottom' ); ?>
 		</table>
 		<?php
 	}
