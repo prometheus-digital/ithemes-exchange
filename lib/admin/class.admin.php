@@ -1155,7 +1155,7 @@ Thank you for your order. Your order's details are below.
 		}
 
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
-			$deps = array( 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs' );
+			$deps = array( 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs', 'autosave' );
 			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', $deps );
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {
 			$deps = array();
