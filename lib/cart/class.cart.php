@@ -92,7 +92,7 @@ class IT_Exchange_Shopping_Cart {
 		if ( empty( $error ) && it_exchange_add_product_to_shopping_cart( $product_id, $requested_quantity ) ) {
 			$sw_state = is_user_logged_in() ? 'checkout' : 'login';
 			// Get current URL without exchange query args
-			$url = clean_it_exchange_query_args();
+			$url = it_exchange_clean_query_args();
 			$url = ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_page_url( 'checkout' ) ) ? it_exchange_get_page_url( 'checkout' ) : add_query_arg( 'ite-sw-state', $sw_state, $url ); 
 			wp_redirect( $url );
 			die();
@@ -132,7 +132,7 @@ class IT_Exchange_Shopping_Cart {
 		if ( empty( $error ) && it_exchange_add_product_to_shopping_cart( $product_id, $requested_quantity ) ) {
 			$sw_state = is_user_logged_in() ? 'cart' : 'login';
 			// Get current URL without exchange query args
-			$url = clean_it_exchange_query_args();
+			$url = it_exchange_clean_query_args();
 			$url = ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_page_url( 'cart' ) ) ? it_exchange_get_page_url( 'cart' ) : add_query_arg( 'ite-sw-state', $sw_state, $url ); 
 			it_exchange_add_message( 'notice', __( 'Product added to cart', 'LION' ) );
 			wp_redirect( $url );
@@ -161,7 +161,7 @@ class IT_Exchange_Shopping_Cart {
 		if ( it_exchange_is_multi_item_cart_allowed() )
 			$cart = it_exchange_get_page_url( 'cart' );
 		else
-			$cart = clean_it_exchange_query_args();
+			$cart = it_exchange_clean_query_args();
 
 		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) ) {
 			$url = add_query_arg( array( $error_var => 'cart-not-emptied' ), $cart );
@@ -197,7 +197,7 @@ class IT_Exchange_Shopping_Cart {
 		if ( it_exchange_is_multi_item_cart_allowed() )
 			$cart_url = it_exchange_get_page_url( 'cart' );
 		else
-			$cart_url = clean_it_exchange_query_args();
+			$cart_url = it_exchange_clean_query_args();
 
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_remove_product_from_cart_nonce_var', '_wpnonce' );
@@ -230,7 +230,7 @@ class IT_Exchange_Shopping_Cart {
 		if ( it_exchange_is_multi_item_cart_allowed() ) {
 			$cart = it_exchange_get_page_url( 'cart' );
 		} else {
-			$cart = clean_it_exchange_query_args( array( it_exchange_get_field_name( 'sw_cart_focus' ) ) );
+			$cart = it_exchange_clean_query_args( array( it_exchange_get_field_name( 'sw_cart_focus' ) ) );
 			if ( it_exchange_in_superwidget() )
 				$cart = add_query_arg( 'ite-sw-state', 'cart', $cart );
 		}

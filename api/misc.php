@@ -56,13 +56,12 @@ function it_exchange_get_field_names() {
  * Cleans additional args in second paramater
  *
  * @since 0.4.0
- * @todo shouldn't this be named it_exchange_clean_query_args
  *
  * @param array $exempt optional array of query args not to clean
  * @param array $additional opitonal array of params to clean even if not found in register params
  * @return string
 */
-function clean_it_exchange_query_args( $exempt=array(), $additional=array() ) {
+function it_exchange_clean_query_args( $exempt=array(), $additional=array() ) {
 	// Get registered
 	$registered = array_values( (array) it_exchange_get_field_names() );
 	$registered = array_merge( $registered, (array) array_values( $additional ) );
@@ -83,7 +82,7 @@ function clean_it_exchange_query_args( $exempt=array(), $additional=array() ) {
 			$url = remove_query_arg( $param, $url );
 	}
 
-	return apply_filters( 'clean_it_exchange_query_args', $url );
+	return apply_filters( 'it_exchange_clean_query_args', $url );
 }
 
 /**

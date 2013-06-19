@@ -68,7 +68,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	*/
 	function form_open( $options=array() ) {
 		$defaults = array(
-			'redirect' => it_exchange_in_superwidget() ? clean_it_exchange_query_args() : it_exchange_get_page_url( 'profile' ),
+			'redirect' => it_exchange_in_superwidget() ? it_exchange_clean_query_args() : it_exchange_get_page_url( 'profile' ),
 			'class'    => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );

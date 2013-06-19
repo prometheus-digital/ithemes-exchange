@@ -239,7 +239,7 @@ function handle_it_exchange_customer_registration_action() {
 
 		$reg_page = it_exchange_get_page_url( 'registration' );
 		// Set redirect to profile page if they were on the registration page
-		$redirect = ( trailingslashit( $reg_page ) == trailingslashit( wp_get_referer() ) ) ? it_exchange_get_page_url( 'profile' ) : clean_it_exchange_query_args( array(), array( 'ite-sw-state' ) );
+		$redirect = ( trailingslashit( $reg_page ) == trailingslashit( wp_get_referer() ) ) ? it_exchange_get_page_url( 'profile' ) : it_exchange_clean_query_args( array(), array( 'ite-sw-state' ) );
 
 		do_action( 'handle_it_exchange_customer_registration_action' );
 		do_action( 'after_handle_it_exchange_customer_registration_action' );

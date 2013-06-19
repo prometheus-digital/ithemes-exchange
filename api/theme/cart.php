@@ -190,7 +190,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				// Tack on the superwidget state if in it.
 				if ( it_exchange_in_superwidget() && it_exchange_get_cart_products_count() < 2 ) {
 					// Get clean URL without any exchange query args
-					$url = clean_it_exchange_query_args();
+					$url = it_exchange_clean_query_args();
 					$url = add_query_arg( 'ite-sw-state', 'checkout', $url );
 				} else {
 					if ( it_exchange_is_multi_item_cart_allowed() )
@@ -230,7 +230,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				break;
 			case 'link' :
 				// Get clean url without any exchange query args
-				$url = clean_it_exchange_query_args();
+				$url = it_exchange_clean_query_args();
 				$url = add_query_arg( $var, 1, $url );
 				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . session_id() ), $url );
 				$output  = $options['before'];

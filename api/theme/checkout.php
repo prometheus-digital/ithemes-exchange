@@ -101,7 +101,7 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 		// Set URL
 		if ( it_exchange_in_superwidget() && it_exchange_get_cart_products_count() < 2 ) {
 			// Get clean url without any exchange query args
-			$url = clean_it_exchange_query_args();
+			$url = it_exchange_clean_query_args();
 			$url = add_query_arg( 'ite-sw-state', 'cart', $url );
 			$url = in_array( $options['focus'], array( 'coupon', 'quantity' ) ) ? add_query_arg( it_exchange_get_field_name( 'sw_cart_focus' ), $options['focus'], $url ) : $url;
 		} else {
