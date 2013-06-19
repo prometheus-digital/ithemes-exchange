@@ -15,6 +15,8 @@
  * - admin               General purpose admin functionality. eg: Reports, Export
  * - other               Everything else
  *
+ * @since 0.2.0
+ *
  * @param string $slug         string for identifying the add-on in code
  * @param array $params        key / value pairs.
 */
@@ -71,6 +73,8 @@ function it_exchange_register_addon( $slug, $params ) {
  * they will be provided with a the value registered to the add-on category by default.
  * - eg: $options['supports'] = array( 'feature' => 'default_value' );
  *
+ * @since 0.2.0
+ *
  * @param string $slug         var for identifying the add-on in code
  * @param string $name         name of add-on used in UI
  * @param string $description  description of the add-on
@@ -101,37 +105,33 @@ function it_exchange_register_addon_category( $slug, $name, $description, $optio
  * Returns an array of registered add-ons
  *
  * @since 0.2.0
+ *
  * @param array $options  For filtering by category, use $options['category'] = array( 'cat1', 'cat2', 'etc' );
  * @return array  registered add-ons
 */
 function it_exchange_get_addons( $options=array() ) {
- 	$defaults = array(
+	$defaults = array(
 		'show_required' => true,
 	);
 	$options = wp_parse_args( $options, $defaults );
-	
+
 	if ( empty( $GLOBALS['it_exchange']['add_ons']['registered'] ) )
 		return array();
 	else
 		$add_ons = $GLOBALS['it_exchange']['add_ons']['registered'];
-	
-	$temp_add_ons = $add_ons;
-	
+
+	// Loop through addons and filter out required if not set to show.
 	foreach ( $add_ons as $key => $addon ) {
-		
-		if ( !$options['show_required'] && !empty( $addon['options']['tag'] ) && 'required' === $addon['options']['tag'] )
-			unset( $temp_add_ons[$key] );
-			
+		if ( ! $options['show_required'] && ! empty( $addon['options']['tag'] ) && 'required' === $addon['options']['tag'] )
+			unset( $add_ons[$key] );
+
 	}
-			
-	$add_ons = $temp_add_ons;
 
 	// Possibly filter by category
 	if ( ! empty( $options['category'] ) )
 		$add_ons = it_exchange_filter_addons_by_category( $add_ons, $options['category'] );
 
 	ksort( $add_ons );
-
 	return apply_filters( 'it_exchange_get_addons', $add_ons, $options );
 }
 
@@ -139,14 +139,16 @@ function it_exchange_get_addons( $options=array() ) {
  * We do not want to permanently enable all these addons, we just need to load them one time temporarily
  *
  * @since 0.4.5
+ *
  * @param array $add_ons
+ * @return void
 */
 function it_exchange_temporarily_load_addons( $add_ons ) {
 	$enabled_addons = it_exchange_get_enabled_addons();
-	
+
 	// Init all enabled addons
 	foreach( (array) $add_ons as $slug => $params ) {
-		if( !isset( $enabled_addons[$slug] ) ) {
+		if( ! isset( $enabled_addons[$slug] ) ) {
 			if ( ! empty( $params['file'] ) && is_file( $params['file'] ) ) {
 				include( $params['file'] );
 			}
@@ -158,6 +160,7 @@ function it_exchange_temporarily_load_addons( $add_ons ) {
  * Returns a specific add-on by its slug
  *
  * @since 0.3.2
+ *
  * @param string $slug  the add-on's slug
  * @return array  the add_on array
 */
@@ -173,6 +176,7 @@ function it_exchange_get_addon( $slug ) {
  * Returns an array of registered add-on categories
  *
  * @since 0.2.0
+ *
  * @return array  registered add-on categories
 */
 function it_exchange_get_addon_categories() {
@@ -190,11 +194,12 @@ function it_exchange_get_addon_categories() {
  * Can optionally filter by categories
  *
  * @since 0.3.0
+ *
  * @param array $options  For filtering by category, use $options['category'] = array( 'cat1', 'cat2', 'etc' );
  * @return array  Enabled add-ons
 */
 function it_exchange_get_enabled_addons( $options=array() ) {
- 	$defaults = array(
+	$defaults = array(
 		'show_required' => true,
 		'break_cache'   => false,
 	);
@@ -209,8 +214,8 @@ function it_exchange_get_enabled_addons( $options=array() ) {
 		$enabled_addons = array();
 
 	// Set each enabled with registered params
-	if ( !empty( $enabled_addons ) ) {
-		foreach ( $enabled_addons as $addon => $junk ) {
+	if ( ! empty( $enabled_addons ) ) {
+		foreach ( $enabled_addons as $addon => $params ) {
 			if ( ! empty( $registered[$addon] ) ) {
 				if ( $options['show_required'] )
 					$enabled[$addon] = $registered[$addon];
@@ -224,7 +229,6 @@ function it_exchange_get_enabled_addons( $options=array() ) {
 		$enabled = it_exchange_filter_addons_by_category( $enabled, $options['category'] );
 
 	ksort( $enabled );
-
 	return apply_filters( 'it_exchange_get_enabled_addons', empty( $enabled ) ? array() : $enabled, $options );
 }
 
@@ -234,6 +238,7 @@ function it_exchange_get_enabled_addons( $options=array() ) {
  * Can optionally filter by categories
  *
  * @since 0.4.0
+ *
  * @param array $options  For filtering by category, use $options['category'] = array( 'cat1', 'cat2', 'etc' );
  * @return array  Disabled add-ons
 */
@@ -247,7 +252,7 @@ function it_exchange_get_disabled_addons( $options=array() ) {
 		$enabled_addons = array();
 
 	foreach ( $registered as $slug => $params )
-		if ( !in_array( $slug, $enabled_addons ) )
+		if ( ! in_array( $slug, $enabled_addons ) )
 			$disabled[$slug] = $params;
 
 	if ( ! empty( $options['category'] ) )
@@ -265,6 +270,7 @@ function it_exchange_get_disabled_addons( $options=array() ) {
  * Can optionally filter by categories
  *
  * @since 0.4.0
+ *
  * @param array $options  For filtering by category, use $options['category'] = array( 'cat1', 'cat2', 'etc' );
  * @return array  All add-ons available from iThemes
 */
@@ -286,6 +292,7 @@ function it_exchange_get_more_addons( $options=array() ) {
  * Resorts addon list from get_more_addons so featured add-ons are on top
  *
  * @since 0.4.0
+ *
  * @param array $addons  Current add-on array from it_exchange_get_more_addons()
  * @return array  Restorted add-ons array
 */
@@ -294,18 +301,13 @@ function it_exchange_featured_addons_on_top( $addons ) {
 	$sorted_addons = array();
 
 	foreach( $addons as $slug => $addon ) {
-
 		if ( true === $addon['featured'] ) {
-
 			$sorted_addons[$slug] = $addon;
 			unset( $addons[$slug] );
-
 		}
-
 	}
 
 	ksort( $sorted_addons );
-
 	return apply_filters( 'it_exchange_get_more_addons', array_merge( $sorted_addons, $addons ), $addons );
 }
 
@@ -313,6 +315,7 @@ function it_exchange_featured_addons_on_top( $addons ) {
  * Takes an array of add-ons and filters by passed category
  *
  * @since 0.3.0
+ *
  * @param array $add_ons  an array of add-ons formatted like $GLOBALS['it_exchange']['add_ons'] array
  * @param array $categories  contains categories we want filters: array( 'cat1', 'cat2', 'etc' );
  * @return array  Filtered add-ons
@@ -332,12 +335,13 @@ function it_exchange_filter_addons_by_category( $add_ons, $categories ) {
  *
  * @todo Add nonce
  * @since 0.3.2
+ *
  * @param string $add_on  add_on to enable
  * @return bool
 */
 function it_exchange_enable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
-	$enabled_add_ons = it_exchange_get_enabled_addons( array( 'break_cache' => true ));
+	$enabled_add_ons = it_exchange_get_enabled_addons( array( 'break_cache' => true ) );
 	$success = false;
 
 	if ( isset( $registered[$add_on] ) && ! isset( $enabled_add_ons[$add_on] ) ) {
@@ -349,7 +353,7 @@ function it_exchange_enable_addon( $add_on ) {
 			$success = true;
 		}
 	}
-	
+
 	return apply_filters( 'it_exchange_enable_addon', $success, $add_on );
 }
 
@@ -357,8 +361,9 @@ function it_exchange_enable_addon( $add_on ) {
  * Checks if an add-on is enabled
  *
  * @since 0.4.0
+ *
  * @param string $add_on_slug  add_on slug to check
- * @return bool
+ * @return boolean
 */
 function it_exchange_is_addon_enabled( $add_on_slug ) {
 	$enabled = array_keys( it_exchange_get_enabled_addons() );
@@ -371,20 +376,21 @@ function it_exchange_is_addon_enabled( $add_on_slug ) {
 }
 
 /**
- * Checks if an add-on is installed
+ * Checks if an add-on is registered 
  *
  * @since 0.4.0
+ *
  * @param string $add_on  add_on slug to check
  * @return bool
 */
-function it_exchange_is_addon_installed( $add_on_slug ) {
+function it_exchange_is_addon_registered( $add_on_slug ) {
 	$installed = it_exchange_get_addons();
 	$success = false;
 
 	if ( array_key_exists( $add_on_slug, $installed ) )
 		$success = true;
 
-	return apply_filters( 'it_exchange_is_addon_installed', $success, $add_on_slug );
+	return apply_filters( 'it_exchange_is_addon_registered', $success, $add_on_slug );
 }
 
 /**
@@ -392,6 +398,7 @@ function it_exchange_is_addon_installed( $add_on_slug ) {
  *
  * @todo Add nonce
  * @since 0.3.2
+ *
  * @param string $add_on add_on to disable
  * @return bool
 */
@@ -400,7 +407,7 @@ function it_exchange_disable_addon( $add_on ) {
 	$enabled_addons = it_exchange_get_enabled_addons();
 	$success = false;
 
-	if ( !empty( $enabled_addons[$add_on] ) ) {
+	if ( ! empty( $enabled_addons[$add_on] ) ) {
 		unset( $enabled_addons[$add_on] );
 		if ( it_exchange_save_option( 'enabled_add_ons', $enabled_addons ) ) {
 			if ( ! empty( $registered[$add_on] ) )
@@ -410,14 +417,14 @@ function it_exchange_disable_addon( $add_on ) {
 		}
 	}
 
-	
-	return apply_filters( 'it_exchange_is_addon_installed', $success, $add_on );
+	return $success;
 }
 
 /**
  * Does the given add-on support a specific feature?
  *
  * @since 0.3.3
+ *
  * @param string $add_on   add_on slug
  * @param string $feature type of feature we are testing for support
  * @return bool
@@ -440,6 +447,7 @@ function it_exchange_addon_supports( $add_on, $feature ) {
  * Add's add-on support for a specific feature
  *
  * @since 0.3.3
+ *
  * @param string $add_on   the slug for the add-on being targeted
  * @param string $feature the feature slug that needs to be enabled
  * @return void
@@ -460,6 +468,7 @@ function it_exchange_add_addon_support( $add_on, $feature ) {
  * Remove's add-on support for a specific feature
  *
  * @since 0.3.3
+ *
  * @param string $add_on   the slug for the add-on being targeted
  * @param string $feature the feature slug that needs to be enabled
  * @return void
@@ -480,6 +489,7 @@ function it_exchange_remove_addon_support( $add_on, $feature ) {
  * Return the default values for an add-on support key
  *
  * @since 0.3.3
+ *
  * @param string $add_on the slug for the add-on being targeted
  * @param string $feature the feature the slug is targeting
  * @return mixed the value of the key

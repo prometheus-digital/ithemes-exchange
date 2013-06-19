@@ -29,7 +29,7 @@
 			<?php 
 				$count = 0;
 				foreach( (array) $addons as $addon ) : ?>
-				<?php if ( ! it_exchange_is_addon_installed( $addon['slug'] ) ) : ?>
+				<?php if ( ! it_exchange_is_addon_registered( $addon['slug'] ) ) : ?>
 					<?php
 						if ( $addon['featured'] )
 							$class .= ' featured';
@@ -49,12 +49,12 @@
 						</div>
 						<div class="add-on-info">
 							<h4><?php echo $addon['name']; ?></h4>
-							<span class="add-on-author">by <a href="<?php echo $addon['author_url']; ?>"><?php echo $addon['author']; ?></a></span>
+							<span class="add-on-author"><?php _e( 'by', 'LION' ); ?> <a href="<?php echo $addon['author_url']; ?>"><?php echo $addon['author']; ?></a></span>
 							<p class="add-on-description"><?php echo $addon['description']; ?></p>
 						</div>
 						<div class="add-on-actions">
-							<?php if ( it_exchange_is_addon_installed( $addon['slug'] ) ) : ?>
-								<div class="add-on-installed">Installed</div>
+							<?php if ( it_exchange_is_addon_registered( $addon['slug'] ) ) : ?>
+								<div class="add-on-installed"><?php _e( 'Installed', 'LION' ); ?></div>
 							<?php else : ?>
 								<div class="add-on-price">
 									<span class="regular-price"><?php echo $addon['price']; ?></span>

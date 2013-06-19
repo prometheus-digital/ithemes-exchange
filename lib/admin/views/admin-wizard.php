@@ -27,13 +27,13 @@
 							}
 						?>
 						
-						<?php if ( ! it_exchange_is_addon_installed( 'stripe' ) ) : ?>
+						<?php if ( ! it_exchange_is_addon_registered( 'stripe' ) ) : ?>
 							<li class="payoption stripe-payoption inactive" data-toggle="stripe-wizard"><img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/stripe.png' ); ?>" /><span>$</span></li>
 						<?php endif; ?>
 					</ul>
 				</div>
 				
-				<?php if ( ! it_exchange_is_addon_installed( 'stripe' ) ) : ?>
+				<?php if ( ! it_exchange_is_addon_registered( 'stripe' ) ) : ?>
 					<div class="field stripe-wizard inactive hide-if-js">
 						<h3><?php _e( 'Stripe', 'LION' ); ?></h3>
 						<p><?php _e( 'To use Stripe, you need to install the Stripe premium add-on.', 'LION' ); ?></p>
