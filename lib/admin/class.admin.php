@@ -1198,9 +1198,6 @@ Order: %s
 		} else if ( 'exchange_page_it-exchange-setup' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip' );
 			wp_enqueue_script( 'it-exchange-wizard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/wizard.js', $deps );
-		} else if ( 'exchange_page_it-exchange-add-basic-coupon' === $hook_suffix || 'exchange_page_it-exchange-edit-basic-coupon' === $hook_suffix ) {
-			$deps = array( 'jquery-ui-tooltip', 'jquery-ui-datepicker' );
-			wp_enqueue_script( 'it-exchange-coupons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/coupons.js', $deps );
 		} else if ( ( 'profile.php' === $hook_suffix || 'user-edit.php' === $hook_suffix ) && isset( $_REQUEST['it_exchange_customer_data'] ) ) {
 			wp_enqueue_script( 'it-exchange-customer-info', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/customer-info.js' );
 		}
@@ -1248,8 +1245,6 @@ Order: %s
 			wp_enqueue_style( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-ons.css' );
 		} else if ( 'exchange_page_it-exchange-setup' === $hook_suffix ) {
 			wp_enqueue_style( 'it-exchange-wizard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/wizard.css' );
-		} else if ( 'exchange_page_it-exchange-add-basic-coupon' === $hook_suffix || 'exchange_page_it-exchange-edit-basic-coupon' === $hook_suffix ) {
-			wp_enqueue_style( 'it-exchange-coupons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/coupons.css' );
 		} else if ( 'exchange_page_it-exchange-settings' === $hook_suffix ) {
 			wp_enqueue_style( 'it-exchange-settings', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/settings.css' );
 		} else if ( ( 'profile.php' === $hook_suffix || 'user-edit.php' === $hook_suffix ) && isset( $_REQUEST['it_exchange_customer_data'] ) ) {
@@ -1479,7 +1474,6 @@ Order: %s
 				'it_exchange_download',
 				'it_exchange_prod',
 				'it_exchange_tran',
-				'it_exchange_coupon',
 			) 
 		);
 
