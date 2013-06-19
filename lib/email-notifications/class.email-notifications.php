@@ -121,22 +121,9 @@ class IT_Exchange_Email_Notifications {
 		// Send admin notification if param is true and email is provided in settings
 		if ( $send_admin_email && ! empty( $settings['notification-email-address'] ) ) {
 			
-			$subject = apply_filters(
-				'admin_purchase_email_notification_subject',
-				sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'LION' ), '[it_exchange_email show=receipt_id]' )
-			);
 			
-			$body = apply_filters(
-				'admin_purchase_email_notification_body',
-				__( "Your friend [it_exchange_email show=fullname] just bought all this awesomeness from your store!
-
-<h1>[it_exchange_email show=receipt_id]</h1>
-[it_exchange_email show=order_table]", 'LION' )
-			);
-				
-			$subject = do_shortcode( $subject );
-			
-			$body  = $this->body_header() . wpautop( do_shortcode( $body ) ) . $this->body_footer();
+			$subject = do_shortcode( $settings['admin-email-subject'] );
+			$body    = $this->body_header() . wpautop( do_shortcode( $settings['admin-email-template'] ) ) . $this->body_footer();
 			
 			$emails = explode( ',', $settings['notification-email-address'] );
 			

@@ -535,14 +535,22 @@ class IT_Exchange_Admin {
 	*/
 	function set_email_settings_defaults( $values ) {
 		$defaults = array(
-			'receipt-email-address'      => get_bloginfo( 'admin_email' ),
-			'receipt-email-name'         => get_bloginfo( 'name' ),
+			'notification-email-address' => esc_attr( get_bloginfo( 'admin_email' ) ),
+			'admin-email-address'      => esc_attr( get_bloginfo( 'admin_email' ) ),
+			'admin-email-name'         => esc_attr( get_bloginfo( 'name' ) ),
+			'admin-email-subject'      => sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'LION' ), '[it_exchange_email show=receipt_id]' ),
+			'admin-email-template'     => sprintf( __( "Your friend %s just bought all this awesomeness from your store!
+
+Order: %s
+
+%s", 'LION' ), '[it_exchange_email show=fullname]', '[it_exchange_email show=receipt_id]', '[it_exchange_email show=order_table]' ),
+			'receipt-email-address'      => esc_attr( get_bloginfo( 'admin_email' ) ),
+			'receipt-email-name'         => esc_attr( get_bloginfo( 'name' ) ),
 			'receipt-email-subject'      => sprintf( __( 'Receipt for Purchase: %s', 'LION' ), '[it_exchange_email show=receipt_id]' ),
-			'notification-email-address' => get_bloginfo( 'admin_email' ),
 			'receipt-email-template'     => sprintf( __( "Hello %s,
 
 Thank you for your order. Your order's details are below.
-%s
+Order: %s
 
 %s
 
