@@ -7,6 +7,16 @@
 #it-exchange-add-ons-wrap .nav-tab-wrapper .nav-tab:first-child{margin-right:0;}
 #it-exchange-add-ons-wrap .top-description{color:#676c6e;font-size:14px;line-height:1.5;max-width:800px;}
 
+.it-exchange-addon-settings label{display:block;font-size:13px;font-weight:bold;color:#3d4142;margin-bottom:5px;margin-left:2px;}
+.it-exchange-addon-settings input[type="text"],
+.it-exchange-addon-settings input[type="email"],
+.it-exchange-addon-settings input[type="password"],
+.it-exchange-addon-settings textarea{background:#fff;border:1px solid #d6d6d6;border-radius:3px;font-size:18px;padding:10px;color:#3d4142;width:260px;}
+.it-exchange-addon-settings input[type="text"]:focus,
+.it-exchange-addon-settings input[type="email"]:focus,
+.it-exchange-addon-settings input[type="password"]:focus,
+.it-exchange-addon-settings textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
+
 /** -----------------------------------------------------:[ addons ]:---------- */
 #it-exchange-add-ons-wrap .add-ons-wrapper{background:#FFF;border:1px solid #CCC;border-radius:3px;}
 #it-exchange-add-ons-wrap .add-on-block{overflow:hidden;padding:30px;border-bottom:1px solid #CCC;}
