@@ -36,8 +36,8 @@ if ( 'get-state' == $action && $state ) {
 	if ( $product )
 		$GLOBALS['it_exchange']['product'] = it_exchange_get_product( $product );
 
-	// Force Log-in if asking for cart and user isn't logged in.
-	if ( ! is_user_logged_in() && 'cart' == $state )
+	// Force Log-in if asking for checkout and user isn't logged in.
+	if ( ! is_user_logged_in() && 'checkout' == $state )
 		it_exchange_get_template_part( 'super-widget', 'login' );
 	else
 		it_exchange_get_template_part( 'super-widget', $state );
