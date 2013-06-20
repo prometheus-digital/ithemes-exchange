@@ -1,8 +1,10 @@
 /** -----------------------------------------------------:[ icon ]:---------- */
+#icon-it-exchange.icon32-posts-it_exchange_coupon,
 #icon-it-exchange-coupons {
 	background: url('../images/coupon32.png') no-repeat;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1),only screen and (min-device-pixel-ratio: 2),only screen and (min-resolution: 192dpi),only screen and (min-resolution: 2dppx) { 
+	#icon-it-exchange.icon32-posts-it_exchange_coupon,
 	#icon-it-exchange-coupons {
 		background: url('../images/coupon64.png') no-repeat;
 		background-size: cover;

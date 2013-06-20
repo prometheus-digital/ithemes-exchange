@@ -16,19 +16,18 @@ function it_exchange_basic_coupons_enqueue_js_css() {
 	$screen         = get_current_screen();
 	$current_filter = current_filter();
 
-	// Abort if not adding or editing coupon
-	if ( 'exchange_page_it-exchange-edit-basic-coupon' != $screen->base || 'exchange_page_it-exchange-edit-basic-coupon' != $screen->base )
-		return;
-
-	// Enqueue JS / CSS based on current filter
-	if ( 'admin_print_scripts' == $current_filter ) {
-		// JS
-		$deps = array( 'jquery', 'jquery-ui-tooltip', 'jquery-ui-datepicker' );
-		wp_enqueue_script( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-coupon.js', $deps );
-	} else if ( 'admin_print_styles' == $current_filter ) {
-		// CSS
-		$deps = array( 'jquery-ui-tooltip', 'jquery-ui-datepicker' );
-		wp_enqueue_style( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/add-edit-coupon.css' );
+	// Abort if not adding, editing or on the coupons list screen.
+	if ( 'exchange_page_it-exchange-edit-basic-coupon' == $screen->base || 'exchange_page_it-exchange-add-basic-coupon' == $screen->base || 'edit-it_exchange_coupon' == $screen->id ) {
+		// Enqueue JS / CSS based on current filter
+		if ( 'admin_print_scripts' == $current_filter ) {
+			// JS
+			$deps = array( 'jquery', 'jquery-ui-tooltip', 'jquery-ui-datepicker' );
+			wp_enqueue_script( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-coupon.js', $deps );
+		} else if ( 'admin_print_styles' == $current_filter ) {
+			// CSS
+			$deps = array( 'jquery-ui-tooltip', 'jquery-ui-datepicker' );
+			wp_enqueue_style( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/add-edit-coupon.css' );
+		}
 	}
 }
 add_action( 'admin_print_styles', 'it_exchange_basic_coupons_enqueue_js_css' );
