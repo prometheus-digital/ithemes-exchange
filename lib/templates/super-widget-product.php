@@ -8,7 +8,7 @@
 	
 		<?php if ( it_exchange_is_page( 'product' ) ) : ?>
 			<div class="purchase-options">
-				<?php it_exchange( 'product', 'purchase-options', array( 'edit-quantity' => false ) ); ?>
+				<?php it_exchange( 'product', 'purchase-options', array( 'add-to-cart-edit-quantity' => false, 'buy-now-edit-quantity' => false ) ); ?>
 			</div>
 		<?php endif; ?>
 	</div>

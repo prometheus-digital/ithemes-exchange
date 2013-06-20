@@ -836,7 +836,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$result  = '<form action="" method="post" class="it-exchange-sw-purchase-options it-exchange-sw-buy-now">';
 		$result .= $hidden_fields;
 		
-		if ( $options['edit-quantity'] == true )
+		if ( $options['edit-quantity'] )
 			$result .= it_exchange( 'product', 'get-purchase-quantity' );
 		
 		$result .= $button;
@@ -925,7 +925,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$result  = '<form action="" method="post" class="it-exchange-sw-purchase-options it-exchange-sw-add-to-cart">';
 		$result .= $hidden_fields;
 		
-		if ( $options['edit-quantity'] == true )
+		if ( $options['edit-quantity'] )
 			$result .= it_exchange( 'product', 'get-purchase-quantity' );
 		
 		$result .= $button;
