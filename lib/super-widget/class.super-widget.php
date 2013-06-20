@@ -165,7 +165,6 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			'checkout',
 			'product',
 			'confirmation',
-			'browsing', //browsing non-IT Exchange pages
 		);
 		$valid_states = apply_filters( 'it_exchange_super_widget_valid_states', $valid_states );
 		$this->valid_states = (array) $valid_states;
@@ -226,10 +225,6 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			if ( 'product' === $it_exchange_view && ! empty( $current_product->ID ) && ! empty( $cart_product['product_id'] ) && $current_product->ID != $cart_product['product_id'] )
 				$state = 'product';
 		}
-			
-		// If we're not on a product, cart, or checkout page, we're browsing the site
-		if ( !in_array( $it_exchange_view, array( 'product', 'cart', 'checkout', 'registration', 'log-in' ) ) )
-			$state = 'browsing';
 
 		// If cart is empty and requested state is checkout, make state product or false
 		if ( ! $items_in_cart && ( 'checkout' == $state || 'cart' == $state ) )
