@@ -131,7 +131,7 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 	}
 
 	// Any URLS in store breadcrumb need to come next
-	if ( in_array( $page, array( 'confirmation', 'transaction' ) ) ) {
+	if ( in_array( $page, array( 'cart', 'checkout', 'confirmation', 'transaction' ) ) ) {
 		if ( $permalinks )
 			return trailingslashit( $base . $pages['store-slug'] . '/' . $page_slug );
 		else
