@@ -135,9 +135,11 @@ class IT_Exchange_Router {
 	*/
 	function set_account() {
 		// Return if not viewing an account based page: account, profile, downloads, purchases, log-in
-		if ( ! ( $this->_is_account || $this->_is_profile || $this->_is_downloads || $this->_is_purchases ) )
+		$account_based_rooms = array( 'account', 'profile', 'downloads', 'purchases' );
+		$account_based_rooms = apply_filters( 'it_exchange_account_based_rooms', $account_based_rooms );
+		if ( ! in_array( $this->_current_view, $account_based_rooms ) )
 			return;
-		
+
 		$account = get_query_var( $this->_account_slug );
 
 		if ( 1 == $account ) {
