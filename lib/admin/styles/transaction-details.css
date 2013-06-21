@@ -33,11 +33,14 @@
 #it-exchange-transaction-details .product-details li p{margin-left:1em;}
 
 #it-exchange-transaction-details .transaction-costs{margin-top:2em;border-top:1px solid #DFDFDF;border-bottom:1px solid #DFDFDF;}
-#it-exchange-transaction-details .transaction-costs .right{font-size:1.2em;width:100%;max-width:150px;}
-#it-exchange-transaction-details .transaction-costs .left{font-size:.8em;font-weight:bold;line-height:1.6em;}
-#it-exchange-transaction-details .transaction-summary{/* */}
-#it-exchange-transaction-details .transaction-summary .right{width:100%;max-width:150px;}
+#it-exchange-transaction-details .transaction-costs .right{font-size:1.2em;width:100%;max-width:250px;}
+#it-exchange-transaction-details .transaction-costs .left{font-size:.8em;font-weight:bold;line-height:1.6em;width:60%;}
+#it-exchange-transaction-details .transaction-costs .transaction-costs-refunds{clear:right;}
+#it-exchange-transaction-details .transaction-summary .right{width:100%;max-width:250px;}
 #it-exchange-transaction-details .transaction-summary div{font-size:1.2em;}
-#it-exchange-transaction-details .transaction-summary .right .left{font-size:.8em;font-weight:bold;line-height:1.6em;}
+#it-exchange-transaction-details .transaction-summary .right .left{font-size:.8em;font-weight:bold;line-height:1.6em;width:60%;}
 #it-exchange-transaction-details .payment-total-amount{color:#7EB03B;font-weight:100;}
 #it-exchange-transaction-details .payment-method .payment-method-label{font-size:.8em ;font-weight:bold;}
+#it-exchange-transaction-details .payment-original-total-label,
+#it-exchange-transaction-details .payment-original-total-amount{margin-top:1em;color:#999;}
+#it-exchange-transaction-details .payment-original-total-label{margin-top:1.416666667em;}

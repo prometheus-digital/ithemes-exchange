@@ -450,7 +450,9 @@ class IT_Exchange_Transaction_Post_Type {
 									<h4 class="product-download-title">
 										<?php esc_attr_e( get_the_title( $download_id ) ); ?>
 									</h4>
-									<ul class="download-hashes">
+									<!--
+									NOTE Removing this as it was not in the mock up. However, I'd hate to delete the work I've don in case we want to change this later. - Koop
+									<ul class="download-hashes hidden">
 										<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $post->ID, $transaction_product, $download_id ); ?>
 										<?php foreach( (array) $hashes_for_product_transaction as $hash ) : ?>
 											<?php
@@ -490,6 +492,8 @@ class IT_Exchange_Transaction_Post_Type {
 											</li>
 										<?php endforeach; ?>
 									</ul>
+									ENDNOTE
+									-->
 								</div>
 							<?php endforeach; ?>
 						<?php else : ?>
@@ -523,23 +527,20 @@ class IT_Exchange_Transaction_Post_Type {
 					<div class="transaction-costs-coupon-total-amount"><?php esc_attr( it_exchange_get_transaction_coupons_total_discount( $post ) ); ?></div>
 				</div>
 			<?php endif; ?>
-
+			
 			<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
 				<div class="transaction-costs-refunds right">
-					<?php
-					foreach ( $refunds as $refund ) {
-						?>
-						<div class="transaction-costs-refund">
-							<?php echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ); ?>
-						</div>
-						<?php
-					}
-					?>
 					<div class="transaction-costs-refund-total">
-						<div class="transaction-costs-refund-total-label"><?php _e( 'Total Refund', 'LION' ); ?></div>
+						<div class="transaction-costs-refund-total-label left"><?php _e( 'Total Refund', 'LION' ); ?></div>
 						<div class="transaction-costs-refund-total-amount"><?php esc_attr_e( it_exchange_get_transaction_refunds_total( $post ) ); ?></div>
 					</div>
 				</div>
+				<label><strong><?php _e( 'Refunds', 'LION' ); ?></strong></label>
+				<?php foreach ( $refunds as $refund ) : ?>
+					<div class="transaction-costs-refund">
+						<?php echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ); ?>
+					</div>
+				<?php endforeach; ?>
 			<?php endif; ?>
 		</div>
 
