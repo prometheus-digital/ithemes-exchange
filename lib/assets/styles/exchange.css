@@ -93,7 +93,7 @@
 
 /** -----------------------------------------------------:[ super widget ]:---------- */
 .it-exchange-super-widget{width:100%;background:#FFF;color:#111;overflow:hidden;}
-.it-exchange-super-widget .it-exchange-sw-selecting,
+.it-exchange-super-widget .it-exchange-sw-product,
 .it-exchange-super-widget .it-exchange-sw-processing{border:1px solid #F0F0F0;}
 .it-exchange-super-widget *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 .it-exchange-super-widget a{text-decoration:none;}
@@ -101,9 +101,9 @@
 .it-exchange-super-widget p:last-child {margin-bottom:0;}
 .widget .it-exchange-super-widget p.cart-empty {margin:1em;}
 .it-exchange-super-widget .item-count{padding:1em;text-align:center;border-bottom:1px solid #F0F0F0;line-height: 1.5;}
-.it-exchange-super-widget .it-exchange-sw-selecting .purchase-options{padding:1em;}
-.it-exchange-super-widget .it-exchange-sw-selecting .buy-now-button,
-.it-exchange-super-widget .it-exchange-sw-selecting .add-to-cart-button{width:100%;}
+.it-exchange-super-widget .it-exchange-sw-product .purchase-options{padding:1em;}
+.it-exchange-super-widget .it-exchange-sw-product .buy-now-button,
+.it-exchange-super-widget .it-exchange-sw-product .add-to-cart-button{width:100%;}
 .it-exchange-super-widget .cart-items-wrapper{background:#F6F6F6;}
 .it-exchange-super-widget .cart-items-wrapper .cart-item{padding:1em;border-bottom:1px solid #F0F0F0;}
 .it-exchange-super-widget .cart-items-wrapper .cart-item a{float:right;}

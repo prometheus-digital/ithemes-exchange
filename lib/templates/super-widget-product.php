@@ -1,5 +1,5 @@
 <?php if ( it_exchange( 'product', 'found' ) ) : ?>
-	<div class="it-exchange-sw-selecting">
+	<div class="it-exchange-sw-product it-exchange-sw-processing-product">
 		<?php if ( ( $count = it_exchange( 'cart', 'get-item-count' ) ) && it_exchange_is_multi_item_cart_allowed() ) : ?>
 			<div class="item-count">
 				<?php if ( $count === 1 ) : ?>

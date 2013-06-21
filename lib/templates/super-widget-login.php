@@ -5,7 +5,7 @@
  * @package IT_Exchange
 */
 ?>
-<div class="login">
+<div class="login it-exchange-sw-processing-login">
 	<?php it_exchange( 'login', 'formopen' ); ?>
 	
 	<?php if ( it_exchange( 'messages', 'has-errors' ) ) : ?>

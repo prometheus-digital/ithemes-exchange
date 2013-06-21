@@ -1,4 +1,4 @@
-<div class="it-exchange-sw-processing">
+<div class="it-exchange-sw-processing it-exchange-sw-processing-cart">
 	<?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
 		<?php it_exchange( 'cart', 'form-open' ); ?>
 			<!-- <div class="total-cancel-wrapper">

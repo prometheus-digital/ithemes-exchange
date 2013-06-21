@@ -753,7 +753,13 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$buy_now_hidden_fields = $add_to_cart_hidden_fields = '';
 
 		$output = '';
-
+		
+		if ( !$product_in_stock )
+			return __( 'Product is currently out of stock.', 'LION' );
+			
+		if ( !$product_is_available )
+			return __( 'Product is currently not available.', 'LION' );
+	
 		// Set buy-now options
 		$options['before']        = $options['buy-now-before'];
 		$options['after']         = $options['buy-now-after'];
@@ -762,9 +768,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$options['button-type']   = $options['buy-now-button-type'];
 		$options['button-name']   = $options['buy-now-button-name'];
 		$options['edit-quantity'] = $options['buy-now-edit-quantity'];
-
-		// Add buy-now form to output if product is available for purchase and template asked for it.
-		if ( $product_in_stock && $product_is_available && ( empty( $options['type'] ) && ! it_exchange_get_cart_products_count() || 'buy-now' == $options['type'] ) )
+		
+		// Add add-to-cart form to output if not multicart or is multicart and no products in cart
+		// and/or template asked for it
+		if ( ( ! $multi_item_cart || ( $multi_item_cart && 0 === it_exchange_get_cart_products_count() ) )
+			 && ( empty( $options['type'] ) || 'buy-now' == $options['type'] ) )
 			$output .= it_exchange( 'product', 'get-buy-now', $options );
 
 		// Set add-to-cart options
@@ -776,10 +784,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$options['button-name']   = $options['add-to-cart-button-name'];
 		$options['edit-quantity'] = $options['add-to-cart-edit-quantity'];
 
-		// Add add-to-cart form to output if product is available for purchase and template asked for it.
-		if ( $product_in_stock && $product_is_available && $multi_item_cart && ( empty( $options['type'] ) || 'add-to-cart' == $options['type'] ) )
+		// Add add-to-cart form to output if multicart and/or template asked for it.
+		if ( $multi_item_cart 
+			&& ( empty( $options['type'] ) || 'add-to-cart' == $options['type'] ) )
 			$output .= it_exchange( 'product', 'get-add-to-cart', $options );
-
+		
 		// Return output
 		return $output;
 	}

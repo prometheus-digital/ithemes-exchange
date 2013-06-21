@@ -1,5 +1,5 @@
 <?php it_exchange_get_template_part( 'messages' ); ?>
-<div class="it-exchange-sw-processing">
+<div class="it-exchange-sw-processing it-exchange-sw-processing-checkout">
 	<div class="cart-items-wrapper">
 		<?php while( it_exchange( 'cart', 'cart-items' ) ) : ?>
 			<?php $can_edit_purchase_quantity = it_exchange( 'cart-item', 'supports-purchase-quantity' ) && ( it_exchange_get_cart_products_count() < 2 ); ?>

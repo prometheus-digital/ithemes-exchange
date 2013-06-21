@@ -6,7 +6,7 @@
  */
 ?>
 
-<div class="registration-info">
+<div class="registration-info it-exchange-sw-processing-registration">
 
 	<?php if ( it_exchange( 'registration', 'is-enabled' ) ) { ?>
 		
