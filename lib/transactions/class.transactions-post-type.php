@@ -514,18 +514,21 @@ class IT_Exchange_Transaction_Post_Type {
 
 			<?php if ( $coupons = it_exchange_get_transaction_coupons( $post ) ) : ?>
 				<div class="transaction-costs-coupons right">
-					<?php
-					foreach ( $coupons as $type => $coupon ) {
-						?>
-						<div class="transaction-cost-coupon">
-							<?php esc_attr_e( it_exchange_get_transaction_coupon_summary( $type, $coupon ) ); ?>
-						</div>
-						<?php
-					}
-					?>
-					<div class="transaction-costs-coupon-total-label"><?php _e( 'Total Discount', 'LION' ); ?></div>
-					<div class="transaction-costs-coupon-total-amount"><?php esc_attr( it_exchange_get_transaction_coupons_total_discount( $post ) ); ?></div>
+					<div class="transaction-costs-coupon-total-label left"><?php _e( 'Total Discount', 'LION' ); ?></div>
+					<div class="transaction-costs-coupon-total-amount"><?php esc_attr_e( it_exchange_get_transaction_coupons_total_discount( $post ) ); ?></div>
 				</div>
+				<label><strong><?php _e( 'Coupons', 'LION' ); ?></strong></label>
+				<?php foreach ( $coupons as $type => $coupon ) : ?>
+					<?php foreach ( $coupon as $data ) : ?>
+						<div class="transaction-cost-coupon">
+							<span class="code"><?php echo $data['code'] ?></span>
+							<!--
+								NOTE Plan to edit this later when more variables are added to the output of the coupon. - Koop
+							-->
+							<!-- <span class="code amount"><?php echo $data['amount_number'] ?><?php echo $data['amount_type'] ?></span> -->
+						</div>
+					<?php endforeach; ?>
+				<?php endforeach; ?>
 			<?php endif; ?>
 			
 			<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
@@ -535,12 +538,14 @@ class IT_Exchange_Transaction_Post_Type {
 						<div class="transaction-costs-refund-total-amount"><?php esc_attr_e( it_exchange_get_transaction_refunds_total( $post ) ); ?></div>
 					</div>
 				</div>
-				<label><strong><?php _e( 'Refunds', 'LION' ); ?></strong></label>
-				<?php foreach ( $refunds as $refund ) : ?>
-					<div class="transaction-costs-refund">
-						<?php echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ); ?>
-					</div>
-				<?php endforeach; ?>
+				<div class="transaction-refunds-list">
+					<label><strong><?php _e( 'Refunds', 'LION' ); ?></strong></label>
+					<?php foreach ( $refunds as $refund ) : ?>
+						<div class="transaction-costs-refund">
+							<span class="code"><?php echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ); ?></span>
+						</div>
+					<?php endforeach; ?>
+				</div>
 			<?php endif; ?>
 		</div>
 

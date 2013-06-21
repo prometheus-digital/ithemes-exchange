@@ -35,7 +35,11 @@
 #it-exchange-transaction-details .transaction-costs{margin-top:2em;border-top:1px solid #DFDFDF;border-bottom:1px solid #DFDFDF;}
 #it-exchange-transaction-details .transaction-costs .right{font-size:1.2em;width:100%;max-width:250px;}
 #it-exchange-transaction-details .transaction-costs .left{font-size:.8em;font-weight:bold;line-height:1.6em;width:60%;}
+#it-exchange-transaction-details .transaction-costs .transaction-costs-coupons,
 #it-exchange-transaction-details .transaction-costs .transaction-costs-refunds{clear:right;}
+#it-exchange-transaction-details .transaction-costs .transaction-refunds-list {
+	margin-top: 1em;
+}
 #it-exchange-transaction-details .transaction-summary .right{width:100%;max-width:250px;}
 #it-exchange-transaction-details .transaction-summary div{font-size:1.2em;}
 #it-exchange-transaction-details .transaction-summary .right .left{font-size:.8em;font-weight:bold;line-height:1.6em;width:60%;}
