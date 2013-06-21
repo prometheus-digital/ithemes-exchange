@@ -25,10 +25,10 @@ function it_exchange_get_pages( $break_cache=false, $options=array() ) {
 	// Merge DB data with registered defaults
 	foreach( $registered as $page => $default_params ) {
 		$db_params = array();
-		$db_params['slug'] = $pages[$page . '-slug'];
-		$db_params['name'] = $pages[$page . '-name'];
-		$db_params['type'] = $pages[$page . '-type'];
-		$db_params['wpid'] = $pages[$page . '-wpid'];
+		$db_params['slug'] = empty( $pages[$page . '-slug'] ) ? 0 : $pages[$page . '-slug'];
+		$db_params['name'] = empty( $pages[$page . '-name'] ) ? 0 : $pages[$page . '-name'];
+		$db_params['type'] = empty( $pages[$page . '-type'] ) ? 0 : $pages[$page . '-type'];
+		$db_params['wpid'] = empty( $pages[$page . '-wpid'] ) ? 0 : $pages[$page . '-wpid'];
 		$merged[$page] = ITUtility::merge_defaults( $db_params, $default_params );
 	}
 
