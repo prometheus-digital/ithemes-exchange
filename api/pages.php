@@ -117,7 +117,7 @@ function it_exchange_is_page( $page ) {
 	global $wpdb;
 
 	// Get slug for page
-	$slug = ( 'product' == $page ) ? 'it_exchange_prod' : it_exchange_get_page_slug( $page );
+	$slug = it_exchange_get_page_slug( $page );
 
 	// Get query var
 	if ( ! $query_var = get_query_var( $slug ) )

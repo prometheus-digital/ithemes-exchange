@@ -143,10 +143,11 @@ class IT_Exchange_Product_Post_Type {
 	*/
 	function set_rewrite_slug() {
 		$pages = it_exchange_get_pages( true );
-		if ( ! empty( $pages['product-slug'] ) ) {
-			$this->options['rewrite']['slug'] = $pages['product-slug'];
-			$this->options['query_var'] = $pages['product-slug'];
-		}
+		if ( ! $slug = it_exchange_get_page_slug( 'product', true ) )
+			return;
+
+		$this->options['rewrite']['slug'] = $slug;
+		$this->options['query_var'] = $slug;
 	}
 
 	/**
