@@ -650,6 +650,7 @@ Order: %s
 			$defaults[$page . '-name'] = $options['name'];
 			$defaults[$page . '-slug'] = $options['slug'];
 			$defaults[$page . '-type'] = $options['type'];
+			$defaults[$page . '-wpid'] = $options['wpid'];
 		}
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;
@@ -1036,6 +1037,13 @@ Order: %s
 		}
 		$settings = wp_parse_args( ITForm::get_post_data(), $settings );
 
+			
+		// If WordPress page is set to 0 somehow, use exchange page
+		foreach( $existing as $page => $data ) {
+			if ( 'wordpress' == $settings[$page . '-type'] && empty( $settings[$page . '-wpid'] ) )
+				$settings[$page . '-type'] = 'exchange';
+		}
+
         // Check nonce
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-page-settings' ) ) { 
             $this->error_message = __( 'Error. Please try again', 'LION' );
@@ -1116,7 +1124,8 @@ Order: %s
 		$errors = array();
 
 		foreach( $settings as $setting => $value ) {
-			if ( empty( $value ) ) {
+			// *-wpid comes back as 0 when not set.
+			if ( ! isset( $value ) || '' == $value ) {
 				$errors = array( __( 'Page settings cannot be left blank.', 'LION' ) );
 			}
 		}
@@ -1160,7 +1169,6 @@ Order: %s
 	 * @return void
 	*/
 	function it_exchange_admin_wp_enqueue_scripts( $hook_suffix ) {
-		//ITDebug::print_r( $hook_suffix );
 		if ( isset( $_REQUEST['post_type'] ) ) {
 			$post_type = $_REQUEST['post_type'];
 		} else {
@@ -1237,6 +1245,7 @@ Order: %s
 		if ( preg_match('|(it_exchange)|i', str_replace( '-', '_', $hook_suffix ) ) || ( isset( $post_type ) && preg_match('|(it_exchange)|i', str_replace( '-', '_', $post_type ) ) ) )
 			wp_enqueue_style( 'it-exchange-exchange-only-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/exchange-admin.css' );
 
+		// Specific Exchange pages
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			wp_enqueue_style( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-edit-product.css' );
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {

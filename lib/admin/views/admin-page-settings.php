@@ -26,7 +26,8 @@
 		</thead>
 		<tbody>
 			<?php
-			$pages = it_exchange_get_registered_pages();
+			$pages    = it_exchange_get_registered_pages();
+			$wp_pages = array_merge( array( 0 => __( 'Select a Page', 'LION' ) ), it_exchange_get_wp_pages() );
 			foreach( $pages as $page => $data ) {
 				$options = array();
 				$url = '';
@@ -48,7 +49,7 @@
 					</td>
 					<td>
 						<?php $form->add_text_box( $page . '-name', array( 'class' => 'normal-text' ) ); ?>
-						<?php $form->add_hidden( $page . '-wpid', array( 'class' => 'normal-text' ) ); ?>
+						<?php $form->add_drop_down( $page . '-wpid', $wp_pages ); ?>
 					</td>
 					<td>
 						<?php $form->add_text_box( $page . '-slug', array( 'class' => 'normal-text' ) ); ?>
@@ -57,6 +58,7 @@
 							$url = ( false == get_option( 'permalink_structure' ) ) ? get_home_url() . '?' . esc_attr( $form->get_option( 'product-slug' ) ) . '=product-name' : get_home_url() . '/' . esc_attr( $form->get_option( 'product-slug' ) ) . '/product-name';
 						?>
 						<br /><?php echo $url; ?>
+						<br /><?php echo "<code>[it-exchange-page page='" . esc_attr( $page ) . "']</code>"; ?>
 					</td>
 				</tr>
 				<?php

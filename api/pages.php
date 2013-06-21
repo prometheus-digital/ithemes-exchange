@@ -24,7 +24,11 @@ function it_exchange_get_pages( $break_cache=false, $options=array() ) {
 
 	// Merge DB data with registered defaults
 	foreach( $registered as $page => $default_params ) {
-		$db_params = empty( $pages[$page] ) ? array() : $pages[$page];
+		$db_params = array();
+		$db_params['slug'] = $pages[$page . '-slug'];
+		$db_params['name'] = $pages[$page . '-name'];
+		$db_params['type'] = $pages[$page . '-type'];
+		$db_params['wpid'] = $pages[$page . '-wpid'];
 		$merged[$page] = ITUtility::merge_defaults( $db_params, $default_params );
 	}
 
@@ -83,7 +87,7 @@ function it_exchange_get_page_type( $page, $break_cache=false ) {
 */
 function it_exchange_get_page_wpid( $page, $break_cache=false ) { 
 	$pages     = it_exchange_get_pages( $break_cache );
-	$page_wpid = empty( $pages[$page]['wpid'] ) ? '-1' : $pages[$page]['wpid'];
+	$page_wpid = empty( $pages[$page]['wpid'] ) ? '0' : $pages[$page]['wpid'];
 	return apply_filters( 'it_exchange_get_page_wpid', $page_wpid, $page, $break_cache );
 }
 /**
@@ -201,6 +205,7 @@ function it_exchange_register_page( $page, $options ) {
 	$defaults = array(
 		'settings-name' => ucwords( $options['name'] ),
 		'type'          => 'exchange',
+		'wpid'          => 0,
 		'menu'          => true,
 		'optional'      => true,
 	);
@@ -233,4 +238,27 @@ function it_exchange_get_registered_pages( $options=array() ) {
 		}
 	}
 	return $pages;
+}
+
+/**
+ * Returns an array of WP page IDs to page names
+ *
+ * @since 0.4.0
+ *
+ * @return array
+*/
+function it_exchange_get_wp_pages( $options=array() ) {
+	$defaults = array(
+		'post_type' => 'page',
+		'posts_per_page' => -1,
+	);
+	$options = ITUtility::merge_defaults( $options, $defaults );
+
+	if ( ! $pages = get_posts( $options ) )
+		$return = array();
+
+	foreach( $pages as $page ) {
+		$return[$page->ID] = get_the_title( $page->ID );
+	}
+	return apply_filters( 'it_exchange_get_wp_pages', $return, $options );	
 }
