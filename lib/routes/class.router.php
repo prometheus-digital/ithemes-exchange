@@ -69,7 +69,7 @@ class IT_Exchange_Router {
 	function set_slugs_and_names() {
 
 		// Core pages
-		$core_pages = it_exchange_get_pages( false, array( 'type' => 'exchange' ) );
+		$core_pages = it_exchange_get_pages( false );
 		foreach( (array) $core_pages as $page => $data ) {
 			$slug = '_' . $page . '_slug';
 			$name = '_' . $page . '_name';
@@ -98,9 +98,9 @@ class IT_Exchange_Router {
 	 * @return void
 	*/
 	function set_environment() {
-		$pages      = it_exchange_get_pages( false, array( 'type' => 'exchange' ) );
+		$pages      = it_exchange_get_pages( false );
 		foreach( (array) $pages as $page => $data ) {
-			if ( 'product' == $page )
+			if ( 'product' == $page || 'disabled' == it_exchange_get_page_type( $page ) )
 				continue;
 			$property = '_is_' . $page;
 			$this->$property = it_exchange_is_page( $page );
@@ -120,7 +120,7 @@ class IT_Exchange_Router {
 				$this->_current_view = $page;
 			}
 		}
-
+ITUtility::print_r($this);
 		// Add hook for things that need to be done when on an exchange page
 		if ( $this->_current_view )
 			do_action( 'it_exchange_template_redirect', $this->_current_view );
@@ -425,11 +425,11 @@ class IT_Exchange_Router {
 	 * @return array modified query vars
 	*/
 	function register_query_vars( $existing ) {
-		$pages = it_exchange_get_pages( false, array( 'type' => 'exchange' ) );
+		$pages = it_exchange_get_pages( false );
 		$vars  = array();
 
 		foreach( $pages as $page => $data ) {
-			if ( 'product' == $page )
+			if ( 'product' == $page || 'disabled' == it_exchange_get_page_type( $page ) )
 				continue;
 			if ( $var = it_exchange_get_page_slug( $page ) )
 				$vars[] = $var;
@@ -451,13 +451,8 @@ class IT_Exchange_Router {
 	*/
 	function register_rewrite_rules( $existing ) {
 		$this->set_slugs_and_names();
-		/*
-		$new_rules = array(
-			// Transaction
-			$this->_store_slug . '/' . $this->_transaction_slug  => 'index.php?' . $this->_store_slug . '=1&' . $this->_transaction_slug . '=1',
-		);
-		*/
-		// Core Pages
+
+		// We only want pages that are exchange types for rewrites
 		$pages = it_exchange_get_pages( true, array( 'type' => 'exchange' ) );
 		$prioritized_rewrites = array();
 

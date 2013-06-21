@@ -27,7 +27,7 @@
 		<tbody>
 			<?php
 			$pages    = it_exchange_get_registered_pages();
-			$wp_pages = array_merge( array( 0 => __( 'Select a Page', 'LION' ) ), it_exchange_get_wp_pages() );
+			$wp_pages = array( 0 => __( 'Select a Page', 'LION' ) )+it_exchange_get_wp_pages();
 			foreach( $pages as $page => $data ) {
 				$options = array();
 				$url = '';

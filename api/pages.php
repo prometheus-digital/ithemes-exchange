@@ -116,10 +116,21 @@ function it_exchange_is_page_ghost_page( $page, $break_cache=false ) {
 function it_exchange_is_page( $page ) {
 	global $wpdb;
 
-	// Get slug for page
+	// Page Data
+	$type = it_exchange_get_page_type( $page );
 	$slug = it_exchange_get_page_slug( $page );
 
-	// Get query var
+	// If type is disabled, return false
+	if ( 'disabled' == $type )
+		return false;
+
+	// If type is wordpress, pass it on to the wordpress function
+	if ( 'wordpress' == $type ) {
+		$wpid = it_exchange_get_page_wpid( $page );
+		return is_page( $wpid );
+	}
+
+	// If we made it here, page is exchange type. Get query var
 	if ( ! $query_var = get_query_var( $slug ) )
 		return false;
 
@@ -249,16 +260,18 @@ function it_exchange_get_registered_pages( $options=array() ) {
 */
 function it_exchange_get_wp_pages( $options=array() ) {
 	$defaults = array(
-		'post_type' => 'page',
+		'post_type'      => 'page',
 		'posts_per_page' => -1,
+		'order'          => 'ASC',
+		'orderby'        => 'title',
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
 
 	if ( ! $pages = get_posts( $options ) )
-		$return = array();
+		$returnval = array();
 
 	foreach( $pages as $page ) {
-		$return[$page->ID] = get_the_title( $page->ID );
+		$returnval[$page->ID] = get_the_title( $page->ID );
 	}
-	return apply_filters( 'it_exchange_get_wp_pages', $return, $options );	
+	return apply_filters( 'it_exchange_get_wp_pages', $returnval, $options );	
 }
