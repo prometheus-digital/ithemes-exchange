@@ -76,7 +76,7 @@
 				<div class="addons-achievement">
 					<div class="achievement-notice">
 						<span><?php _e( 'ACHIEVEMENT UNLOCKED', 'LION' ) ?></span>
-						<span><?php _e( 'Aquired all Exchange Add-Ons', 'LION' ) ?></span>
+						<span><?php _e( 'Acquired all Exchange Add-Ons', 'LION' ) ?></span>
 					</div>
 					<h2><?php echo sprintf( __( 'You have all %s currently has to offer!', 'LION' ), 'iThemes Exchange' ); ?></h2>
 					<p><?php _e( 'Got and idea for an add-on that would make life easier?', 'LION' ); ?></p>
