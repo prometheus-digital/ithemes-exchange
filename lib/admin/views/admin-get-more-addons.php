@@ -80,7 +80,7 @@
 					</div>
 					<h2><?php echo sprintf( __( 'You have all %s currently has to offer!', 'LION' ), 'iThemes Exchange' ); ?></h2>
 					<p><?php _e( 'Got and idea for an add-on that would make life easier?', 'LION' ); ?></p>
-					<a class="it-exchange-button" href="http://ithemes.com/contact"><?php _e( 'Send us a message', 'LION' ); ?></a>
+					<a class="it-exchange-button" target="_blank" href="http://ithemes.com/contact"><?php _e( 'Send us a message', 'LION' ); ?></a>
 					
 					<div class="email-signup">
 						<p><?php _e( 'Sign up to be notified via email when new Add-Ons and updates are released.', 'LION' ); ?></p>
