@@ -39,13 +39,25 @@
 					</td>
 					<td>
 						<?php 
+						// Build options. Everyone gets Exchange
 						$options['exchange'] = __( 'Exchange', 'LION' );
+
+						// Products don't get WordPress
 						if ( 'product' != $page )
 							$options['wordpress'] = __( 'WordPress', 'LION' );
+
+						// Only optional pages get Disabled
 						if ( $data['optional'] )
 							$options['disabled'] = __( 'Disabled', 'LION' );
+						
+						// If count is 1, just print it and create a hidden field
+						if ( count( $options ) < 2 ) {
+							$form->add_hidden( $page . '-type' );
+							esc_attr_e( reset( array_values( $options ) ) );
+						} else {
+							$form->add_drop_down( $page . '-type', $options );
+						}
 						?>
-						<?php $form->add_drop_down( $page . '-type', $options ); ?>
 					</td>
 					<td>
 						<?php $form->add_text_box( $page . '-name', array( 'class' => 'normal-text' ) ); ?>
@@ -58,7 +70,11 @@
 							$url = ( false == get_option( 'permalink_structure' ) ) ? get_home_url() . '?' . esc_attr( $form->get_option( 'product-slug' ) ) . '=product-name' : get_home_url() . '/' . esc_attr( $form->get_option( 'product-slug' ) ) . '/product-name';
 						?>
 						<br /><?php echo $url; ?>
-						<br /><?php echo "<code>[it-exchange-page page='" . esc_attr( $page ) . "']</code>"; ?>
+						<?php
+						if ( 'product' != $page ) {
+							echo "<br /><code>[it-exchange-page page='" . esc_attr( $page ) . "']</code>";
+						}
+						?>
 					</td>
 				</tr>
 				<?php
