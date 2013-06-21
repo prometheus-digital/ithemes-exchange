@@ -1,4 +1,33 @@
-0.4.5 - 2012-06-19 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+0.4.6 - 2013-06-21 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+	Fix spelling of acquired in get more add-ons blank view.
+	Get more add-ons view: make contact form button open in new window.
+	More transaction details tweeks.
+	Buy-now button/add-to-cart button displaying properly for multi-item-cart/single-item-cart
+	Added some classes to help me troubleshoot more
+	Added company name default
+	Cleaning up the transaction details (removing product download hashes and styling the refunds).
+	Fix product rewrite slug i hosed with new page API
+	Make it possible to filter pages by type in it_exchnage_get_pages()
+	Fix bug introduced with new page API that was preventing the SW from showing up on product pages.
+	Don't delete superwidget on Exchange Reset.
+	Delete posts regardless of post status in Exchange Reset.
+	Delete sessions in Exchange Reset.
+	Don't print dropdown on Page Settings screen if only one type is available.
+	Don't print shortcode for Products
+	Check for array indexes before grabbing value from them in api/pages.php
+	Put all needed elements in place an Page Settings page.
+	Save and update new page settings
+	Introducing it_exchange_register_page() and supporting casts.
+	Starting work on updated Settings --> Pages screen.
+	Remove product(s) from cart summary and replace with product/products based on count
+	If multi-item cart is enabled and user hits Add-to-Cart, load the cart state if not logged in but load the Checkout state if logged in.
+	Fix bug where I was forcing login checks for cart instead of checkout by accident
+	Cart and Checkout should be subs of store, not account in get_page_url().
+	Fix option keys for hiding quantity field in SW product template
+	Added some styles to the add-on settings screen.
+	Removing my browsing state from the SuperWidget
+	Fixed coupons styles and javascript bug.
+0.4.5 - 2013-06-19 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
 	Adjusted line height on product description.
 	Added some styles to the messages on the super widget.
 	Adjust add-ons activate buttons style.
@@ -50,7 +79,7 @@
 	Fixed stripe company name error
 	Added column for order number to transactions tab of customer info
 	Removed error_log() call in downloads class
-	Filter out products from disable product types on All Products screen.\n
+	Filter out products from disable product types on All Products screen.
 	Remove several functions not needed anymore.
 	Change privew button to View and Save when product has already been published
 	Auto-enable all non-core add-ons
@@ -61,8 +90,8 @@
 	Add filter to RESET ALL settings array so admin can filter out some settings from being reset
 	JS alert to confirm Exchange data reset
 	Add new filters for theme API:
-		* it_exchange_theme_api\n
-		* it_exchange_theme_api_{tag}\n
+		* it_exchange_theme_api
+		* it_exchange_theme_api_{tag}
 		* it_exchange_theme_api_{tag}_{method}
 0.4.2 - 2013-06-14 - Glenn Ansley, Lew Ayotte
 	Add ablity to customize Stripe 'Purchase' button text
