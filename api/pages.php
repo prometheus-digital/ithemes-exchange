@@ -233,7 +233,7 @@ function it_exchange_get_registered_pages( $options=array() ) {
 	$pages = empty( $GLOBALS['it_exchange']['registered_pages'] ) ? array() : (array) $GLOBALS['it_exchange']['registered_pages'];
 	if ( ! empty( $options['type'] ) ) {
 		foreach( $pages as $page => $page_options ) {
-			if ( $options['type'] != $page_options['type'] )
+			if ( $options['type'] != it_exchange_get_page_type( $page ) )
 				unset( $pages[$page] );
 		}
 	}
