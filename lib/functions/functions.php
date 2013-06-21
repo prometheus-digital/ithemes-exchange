@@ -174,19 +174,19 @@ function it_exchange_reset_everything() {
 		return;
 
 	// Delete all Products 
-	while( $products = it_exchange_get_products( array( 'posts_per_page' => 20 ) ) ) {
+	while( $products = it_exchange_get_products( array( 'posts_per_page' => 20, 'post_status' => 'any' ) ) ) {
 		foreach ( $products as $product ) {
 			wp_delete_post( $product->ID, true );
 		}
 	}
 	// Delete all Transactions
-	while( $transactions = it_exchange_get_transactions( array( 'posts_per_page' => 20 ) ) ) {
+	while( $transactions = it_exchange_get_transactions( array( 'posts_per_page' => 20, 'post_status' => 'any' ) ) ) {
 		foreach ( $transactions as $transaction ) {
 			wp_delete_post( $transaction->ID, true );
 		}
 	}
 	// Delete all Transactions
-	while( $coupons = it_exchange_get_coupons( array( 'posts_per_page' => 20 ) ) ) {
+	while( $coupons = it_exchange_get_coupons( array( 'posts_per_page' => 20, 'post_status' => 'any' ) ) ) {
 		foreach ( $coupons as $coupon ) {
 			wp_delete_post( $coupon->ID, true );
 		}
@@ -197,6 +197,8 @@ function it_exchange_reset_everything() {
 			wp_delete_post( $download->ID, true );
 		}
 	}
+	// Delete all session data for everyone
+	it_exchange_db_delete_all_sessions();
 
 	// Delete all core settings
 	$settings_keys = array(
@@ -209,7 +211,6 @@ function it_exchange_reset_everything() {
 		'it-storage-exchange_settings_general',
 		'it-storage-exchange_settings_pages',
 		'it-exchange-hide-wizard-nag',
-		'widget_it-exchange-super-widget',
 	);
 	$settings_keys = apply_filters( 'it_exchange_reset_all_settings_keys', $settings_keys );
 	foreach( $settings_keys as $option ) {
