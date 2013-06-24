@@ -296,7 +296,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 				$output = it_exchange_get_page_url( 'registration' );
 			
 			case 'label':
-				$output = $options['label'];
+				$output = esc_attr( $options['label'] );
 			
 			case 'html':
 			default:

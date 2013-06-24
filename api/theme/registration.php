@@ -362,7 +362,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	 * @return string
 	*/
 	function cancel( $options=array() ) {
-		$defaults      = array(
+		$defaults = array(
 			'format' => 'html',
 			'label'  =>  __( 'Cancel', 'LION' ),
 			'class'  => false,
@@ -383,7 +383,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			
 			case 'html':
 			default:
-				$output = '<a class="' . esc_attr( $class ) . '" href="' . it_exchange_get_page_url( 'log_in' ) . '">' . $options['label'] . '</a>';
+				$output = '<a class="' . esc_attr( $class ) . '" href="' . it_exchange_get_page_url( 'log_in' ) . '">' .esc_attr( $options['label'] ) . '</a>';
 			
 		}
 		return $output;

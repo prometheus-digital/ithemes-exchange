@@ -39,9 +39,9 @@
 	<div class="recover_url">
 		<?php it_exchange( 'login', 'recover' ); ?>
 	</div>
-	
-		<div class="register_url">
-			<?php it_exchange( 'login', 'register' ); ?>
-		</div>
+
+    <div class="register_url">
+        <?php it_exchange( 'login', 'register' ); ?>
+    </div>
     <?php it_exchange( 'login', 'form-close' ); ?>
 </div>
