@@ -109,7 +109,7 @@
 
 /** -----------------------------------------------------:[ advanced ]:---------- */
 .js #it_exchange_advanced-sortables .postbox{display:none;}
-#it-exchange-advanced-tabs{margin-top: 10px;background:#F5F5F5;border-radius:4px;border:1px solid #DEDEDE;opacity:0;}
+#it-exchange-advanced-tabs{margin-top: 10px;background:#F5F5F5;border-radius:4px;border:1px solid #DEDEDE;}
 #it-exchange-advanced-tabs:after{content:' ';display:block;clear:both;visibility:hidden;line-height:0;height:0;}
 #it-exchange-advanced-tabs .ui-tabs-nav{float:left;width:20%;}
 #it-exchange-advanced-tabs .ui-tabs-panel{float:right;width:80%;border-left:1px solid #DEDEDE;border-radius:0 4px 4px 0;}
