@@ -36,6 +36,8 @@ class IT_Exchange_Casper {
 	 * @return void
 	*/
 	function IT_Exchange_Casper( $current_view, IT_Exchange_Pages $pages ) {
+		if ( 'product' == $current_view )
+			throw new Exception( 'IT_Exchange_Casper should not be constructed when $current_view is "product".' );
 		if ( 'exchange' != it_exchange_get_page_type( $current_view ) )
 			throw new Exception( 'IT_Exchange_Casper should not be constructed when $current_view is not an "exchange" page type.' );
 
