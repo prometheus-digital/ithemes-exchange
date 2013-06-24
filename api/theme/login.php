@@ -34,6 +34,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 		'loginbutton' => 'login_button',
 		'recover'     => 'recover',
 		'register'    => 'register',
+		'cancel'      => 'cancel',
 		'formclose'   => 'form_close',
 	);
 
@@ -306,6 +307,46 @@ class IT_Theme_API_Login implements IT_Theme_API {
 		
 		return $output;
 	}
+	
+	/**
+	 * Outputs the login page cancel button
+	 *
+	 * @since 0.4.8
+	 * @return string
+	*/
+	function cancel( $options=array() ) {
+		$defaults = array(
+			'format' => 'html',
+			'label'  =>  __( 'Cancel', 'LION' ),
+			'class'  => false,
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
+		$field_id = 'it-exchange-cancel-login-customer';
+		$field_name = $field_id;
+		$class = empty( $options['class'] ) ? 'it-exchange-sw-cancel-login-link' : 'it-exchange-sw-cancel-login-link ' . $options['class'];
+		
+		if ( it_exchange_is_multi_item_cart_allowed() )
+			$page = 'cart';
+		else
+			$page = 'product';
+		
+		switch( $options['format'] ) {
+				
+			case 'url':
+				$output = it_exchange_get_page_url( $page );
+			
+			case 'label':
+				$output = esc_attr( $options['label'] );
+			
+			case 'html':
+			default:
+				$output = '<a class="' . esc_attr( $class ) . '" href="' . it_exchange_get_page_url( $page ) . '">' .esc_attr( $options['label'] ) . '</a>';
+			
+		}
+		return $output;
+	}
+	
 	/**
 	 * Outputs the profile page end of form
 	 *

@@ -356,7 +356,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	}
 	
 	/**
-	 * Outputs the profile page cancel button
+	 * Outputs the registration page cancel button
 	 *
 	 * @since 0.4.6
 	 * @return string

@@ -178,23 +178,23 @@ function it_exchange_is_page( $page ) {
 		return is_page( $wpid );
 	}
 
-	// If we made it here, page is exchange type. Get query var
-	if ( ! $query_var = get_query_var( $slug ) )
+	if ( ! empty( $_GET['it-exchange-sw-ajax'] ) && ! empty( $_GET['sw-product'] ) ) {
+		// Are we doing AJAX, if so, grab product ID from it.
+		return (boolean) it_exchange_get_product( $_GET['sw-product'] );
+	} else if ( ! $query_var = get_query_var( $slug ) ) {
+		// If we made it here, page is exchange type. Get query var
 		return false;
+	}
 
 	// Return true if set and not product
-	if ( $query_var && 'product' != $page )
+	if ( $query_var && 'product' != $page  )
 		return true;
 
-	// Are we doing AJAX, if so, grab product ID from it.
-	if ( ! empty( $_GET['it-exchange-sw-ajax'] ) && ! empty( $_GET['sw-product'] ) ) {
-		return (boolean) it_exchange_get_product( $_GET['sw-product'] );
-	} else {
-		// Try to get the post from the slug
-		$sql = $wpdb->prepare( 'SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = "it_exchange_prod" AND post_status = "publish" AND post_name = "%s"', $query_var );
-		if ( $id = $wpdb->get_var( $sql ) )
-			return true;
-	}
+	// Try to get the post from the slug
+	$sql = $wpdb->prepare( 'SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = "it_exchange_prod" AND post_status = "publish" AND post_name = "%s"', $query_var );
+	if ( $id = $wpdb->get_var( $sql ) )
+		return true;
+		
 	return false;
 }
 

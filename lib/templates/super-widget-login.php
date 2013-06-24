@@ -43,5 +43,9 @@
     <div class="register_url">
         <?php it_exchange( 'login', 'register' ); ?>
     </div>
+
+    <div class="cancel_url">
+        <?php it_exchange( 'login', 'cancel' ); ?>
+    </div>
     <?php it_exchange( 'login', 'form-close' ); ?>
 </div>
