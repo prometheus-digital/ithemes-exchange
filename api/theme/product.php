@@ -468,23 +468,52 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		// Return boolean if has flag was set
 		if ( $options['supports'] )
-			return it_exchange_product_supports_feature( $this->product->ID, 'featured-image' );
+			return it_exchange_product_supports_feature( $this->product->ID, 'product-images' );
 
 		// Return boolean if has flag was set
 		if ( $options['has'] )
-			return it_exchange_product_has_feature( $this->product->ID, 'featured-image' );
+			return it_exchange_product_has_feature( $this->product->ID, 'product-images' );
 
-		if ( it_exchange_product_supports_feature( $this->product->ID, 'featured-image' )
-				&& it_exchange_product_has_feature( $this->product->ID, 'featured-image' ) ) {
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'product-images' )
+				&& it_exchange_product_has_feature( $this->product->ID, 'product-images' ) ) {
 
 			$defaults = array(
-				'size' => 'post-thumbnail',
+				'size' => 'thumbnail'
 			);
-
+			
 			$options = ITUtility::merge_defaults( $options, $defaults );
-			$img = it_exchange_get_product_feature( $this->product->ID, 'featured-image', $options );
-			return $img;
+			$output = array();
+
+			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
+			
+			foreach( $product_images as $image_id ) {
+				$feature_image = array(
+					'id'    => $image_id,
+					'thumb' => wp_get_attachment_thumb_url( $image_id ),
+					'large' => wp_get_attachment_url( $image_id )
+				);
+				
+				break;
+			}
+			
+			if ( 'thumbnail' === $options['size'] )
+				$img_src = $feature_image['thumb'];
+			else
+				$img_src = $feature_image['large'];
+			
+			ob_start();
+				?>
+				<div id="it-exchange-feature-image-<?php echo $feature_image['id'] ?>" class="it-exchange-featured-image">
+					<div class="featured-image-wrapper">
+						<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>" data-src-thumb="<?php echo $feature_image['thumb'] ?>">
+					</div>
+				</div>
+				<?php
+			$output = ob_get_clean();
+			
+			return $output;
 		}
+		
 		return false;
 	}
 
@@ -508,21 +537,19 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( it_exchange_product_supports_feature( $this->product->ID, 'product-images' )
 				&& it_exchange_product_has_feature( $this->product->ID, 'product-images' ) ) {
 
-			$defaults = array(
-				'size'   => 'thumbnail', //thumbnail/post-thumbnail, large
-			);
+			$defaults = array();
+			
 			$options = ITUtility::merge_defaults( $options, $defaults );
 			$output = array();
-	
-			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
 
+			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
+			
 			foreach( $product_images as $image_id ) {
-				if ( 'thumbnail' === $options['size'] )
-					$img_url = wp_get_attachment_thumb_url( $image_id );
-				else
-					$img_url = wp_get_attachment_url( $image_id );
-					
-				$output[] = $img_url;
+				$output[] = array(
+					'id'    => $image_id,
+					'thumb' => wp_get_attachment_thumb_url( $image_id ),
+					'full' => wp_get_attachment_url( $image_id )
+				);
 			}
 			
 			return $output;
