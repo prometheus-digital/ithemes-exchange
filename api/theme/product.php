@@ -548,7 +548,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				$output[] = array(
 					'id'    => $image_id,
 					'thumb' => wp_get_attachment_thumb_url( $image_id ),
-					'full' => wp_get_attachment_url( $image_id )
+					'full'  => wp_get_attachment_url( $image_id )
 				);
 			}
 			
