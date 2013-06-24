@@ -1099,6 +1099,7 @@ Order: %s
 		$nav_post_items = get_posts( $args );
 
 		// Loop through found posts and see if URL has changed since it was created.
+		$GLOBALS['it_exchange']['updating_nav'] = true;
 		foreach( $nav_post_items as $key => $item ) {
 			$page = get_post_meta( $item->ID, '_menu_item_xfn', true );
 			$page = substr( $page, 12 );
@@ -1112,6 +1113,7 @@ Order: %s
 			if ( $current_url != $page_url )
 				update_post_meta( $item->ID, '_menu_item_url', $page_url );
 		}
+		$GLOBALS['it_exchange']['updating_nav'] = false;
 	}
 
 	/**
