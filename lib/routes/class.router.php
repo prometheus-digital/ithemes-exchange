@@ -120,7 +120,7 @@ class IT_Exchange_Router {
 				$this->_current_view = $page;
 			}
 		}
-ITUtility::print_r($this);
+
 		// Add hook for things that need to be done when on an exchange page
 		if ( $this->_current_view )
 			do_action( 'it_exchange_template_redirect', $this->_current_view );
@@ -350,7 +350,7 @@ ITUtility::print_r($this);
 	function fetch_template( $existing ) {
 
 		// Return existing if this isn't an Exchange frontend view
-		if ( ! $this->_current_view )
+		if ( ! $this->_current_view || 'exchange' != it_exchange_get_page_type( $this->_current_view ) )
 			return $existing;
 
 		// Set pages that we want to protect in one way or another
@@ -391,9 +391,11 @@ ITUtility::print_r($this);
 	 * @return string 
 	*/
 	function load_casper( $template ) {
-		if ( $this->_current_view && 'product' != $this->_current_view ) {
-			require( dirname( __FILE__ ) . '/class.casper.php' );
-			new IT_Exchange_Casper( $this->_current_view, $this );
+		if ( $this->_current_view ) {
+			if ( 'exchange' == it_exchange_get_page_type( $this->_current_view ) ) {
+				require( dirname( __FILE__ ) . '/class.casper.php' );
+				new IT_Exchange_Casper( $this->_current_view, $this );
+			}
 		}
 		return $template;
 	}

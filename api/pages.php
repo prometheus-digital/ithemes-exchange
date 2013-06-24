@@ -45,7 +45,15 @@ function it_exchange_get_pages( $break_cache=false, $options=array() ) {
 */
 function it_exchange_get_page_name( $page, $break_cache=false ) { 
 	$pages     = it_exchange_get_pages( $break_cache );
-	$page_name = empty( $pages[$page]['name'] ) ? false : $pages[$page]['name'];
+	$type      = it_exchange_get_page_type( $page );
+	$page_name = false;
+
+	if ( 'exchange' == $type ) {
+		$page_name = empty( $pages[$page]['name'] ) ? false : $pages[$page]['name'];
+	} else if ( 'wordpress' == $type ) {
+		$wpid = it_exchange_get_page_wpid( $page );
+		$page_name = get_the_title( $wpid );
+	}
 	return apply_filters( 'it_exchange_get_page_name', $page_name, $page, $break_cache );
 }
 
@@ -59,7 +67,15 @@ function it_exchange_get_page_name( $page, $break_cache=false ) {
 */
 function it_exchange_get_page_slug( $page, $break_cache=false ) { 
 	$pages     = it_exchange_get_pages( $break_cache );
-	$page_slug = empty( $pages[$page]['slug'] ) ? false : $pages[$page]['slug'];
+	$type      = it_exchange_get_page_type( $page );
+	$page_slug = false;
+	if ( 'exchange' == $type ) {
+		$page_slug = empty( $pages[$page]['slug'] ) ? false : $pages[$page]['slug'];
+	} else if ( 'wordpress' == $type ) {
+		$wpid = it_exchange_get_page_wpid( $page );
+		if ( $wp_page = get_page( $wpid ) )
+			$page_slug = $wp_page->post_name;
+	}
 	return apply_filters( 'it_exchange_get_page_slug', $page_slug, $page, $break_cache );
 }
 
