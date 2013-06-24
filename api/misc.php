@@ -95,20 +95,20 @@ function it_exchange_clean_query_args( $exempt=array(), $additional=array() ) {
  * @param string $page page setting
  * @return string url
 */
-function ithemes_exchange_wp_get_nav_menu_items_filter( $items, $menu, $args ) {
+function it_exchange_wp_get_nav_menu_items_filter( $items, $menu, $args ) {
 	if ( is_user_logged_in() ) {
 		foreach ( $items as $item ) {
-			if ( $item->url == it_exchange_get_page_url( 'log-in' ) ) {
+			if ( $item->url == it_exchange_get_page_url( 'log_in' ) ) {
 
-				$item->url = it_exchange_get_page_url( 'log-out' );
-				$item->title = it_exchange_get_page_name( 'log-out' );
+				$item->url = it_exchange_get_page_url( 'log_out' );
+				$item->title = it_exchange_get_page_name( 'log_out' );
 			}
 		}
 	}
 	return apply_filters( 'it_exchange_wp_get_nav_menu_items_filter', $items, $menu, $args );
 
 }
-add_filter( 'wp_get_nav_menu_items', 'ithemes_exchange_wp_get_nav_menu_items_filter', 10, 3 );
+add_filter( 'wp_get_nav_menu_items', 'it_exchange_wp_get_nav_menu_items_filter', 10, 3 );
 
 if ( ! function_exists( 'wp_nav_menu_disabled_check' ) && version_compare( $GLOBALS['wp_version'], '3.5.1', '<=' ) ) {
 
