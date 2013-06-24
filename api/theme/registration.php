@@ -36,6 +36,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 		'password1'        => 'password1',
 		'password2'        => 'password2',
 		'save'             => 'save',
+		'cancel'           => 'cancel',
 		'formclose'        => 'form_close',
 		'disabledmessage'  => 'disabled_message',
 	);
@@ -349,6 +350,40 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<input type="submit" id="' . $field_id . '" name="' . $field_name . '" value="' . esc_attr( $options['label'] ) . '" />';
+			
+		}
+		return $output;
+	}
+	
+	/**
+	 * Outputs the profile page cancel button
+	 *
+	 * @since 0.4.6
+	 * @return string
+	*/
+	function cancel( $options=array() ) {
+		$defaults      = array(
+			'format' => 'html',
+			'label'  =>  __( 'Cancel', 'LION' ),
+			'class'  => false,
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
+		$field_id = 'it-exchange-cancel-register-customer';
+		$field_name = $field_id;
+		$class = empty( $options['class'] ) ? 'it-exchange-sw-cancel-register-link' : 'it-exchange-sw-cancel-register-link ' . $options['class'];
+		
+		switch( $options['format'] ) {
+				
+			case 'url':
+				$output = it_exchange_get_page_url( 'log_in' );
+			
+			case 'label':
+				$output = esc_attr( $options['label'] );
+			
+			case 'html':
+			default:
+				$output = '<a class="' . esc_attr( $class ) . '" href="' . it_exchange_get_page_url( 'log_in' ) . '">' . $options['label'] . '</a>';
 			
 		}
 		return $output;

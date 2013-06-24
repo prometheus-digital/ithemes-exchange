@@ -291,9 +291,6 @@ class IT_Theme_API_Login implements IT_Theme_API {
 		$class = empty( $options['class'] ) ? 'it-exchange-sw-register-link' : 'it-exchange-sw-register-link ' . $options['class'];
 		
 		switch( $options['format'] ) {
-			
-			case 'text':
-				$output = $options['label_recover'];
 				
 			case 'url':
 				$output = it_exchange_get_page_url( 'registration' );

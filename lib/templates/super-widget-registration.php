@@ -48,6 +48,7 @@
 		</div>
 
 		<?php it_exchange( 'registration', 'save' ); ?>
+		<?php it_exchange( 'registration', 'cancel' ); ?>
 		
 	<?php it_exchange( 'registration', 'form-close' ); ?>
 	
