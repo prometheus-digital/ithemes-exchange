@@ -533,3 +533,24 @@ function it_exchange_get_core_page_urls( $page ) {
 			break;
     } 
 }
+
+/**
+ * Creates a shortcode that returns content template parts for pages
+ *
+ * @since 0.4.8
+ *
+ * @param array $atts attributes passed in via shortcode arguments
+ * @return string the template part
+*/
+function it_exchange_add_page_shortcode( $atts ) {
+	$defaults = array(
+		'page' => false,
+	);
+	$atts = shortcode_atts( $defaults, $atts );
+
+	if ( empty( $atts['page'] ) )
+		return false;
+
+	return it_exchange_get_template_part( 'content', $atts['page'] );
+}
+add_shortcode( 'it-exchange-page', 'it_exchange_add_page_shortcode' );
