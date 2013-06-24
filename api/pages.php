@@ -48,7 +48,8 @@ function it_exchange_get_page_name( $page, $break_cache=false ) {
 	$type      = it_exchange_get_page_type( $page );
 	$page_name = false;
 
-	if ( 'exchange' == $type ) {
+	// Return the exchagne page settings if type is exchange or if we're on the page settings tab.
+	if ( 'exchange' == $type || ( is_admin() && ! empty( $_GET['page'] ) && $_GET['page'] == 'it-exchange-settings' && ! empty( $_GET['tab'] ) && 'pages' == $_GET['tab'] ) ) {
 		$page_name = empty( $pages[$page]['name'] ) ? false : $pages[$page]['name'];
 	} else if ( 'wordpress' == $type ) {
 		$wpid = it_exchange_get_page_wpid( $page );
@@ -69,7 +70,8 @@ function it_exchange_get_page_slug( $page, $break_cache=false ) {
 	$pages     = it_exchange_get_pages( $break_cache );
 	$type      = it_exchange_get_page_type( $page );
 	$page_slug = false;
-	if ( 'exchange' == $type ) {
+	// Return the exchagne page settings if type is exchange or if we're on the page settings tab.
+	if ( 'exchange' == $type || ( is_admin() && ! empty( $_GET['page'] ) && $_GET['page'] == 'it-exchange-settings' && ! empty( $_GET['tab'] ) && 'pages' == $_GET['tab'] ) ) {
 		$page_slug = empty( $pages[$page]['slug'] ) ? false : $pages[$page]['slug'];
 	} else if ( 'wordpress' == $type ) {
 		$wpid = it_exchange_get_page_wpid( $page );
