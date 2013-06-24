@@ -1,3 +1,5 @@
+0.4.7 - 2013-06-21 - Packaging Bot
+	Updated lib/updater to version 1.0.2
 0.4.6 - 2013-06-21 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
 	Fix spelling of acquired in get more add-ons blank view.
 	Get more add-ons view: make contact form button open in new window.
@@ -180,5 +182,3 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
-0.4.7 - 2013-06-21 - Packaging Bot
-	Updated lib/updater to version 1.0.2

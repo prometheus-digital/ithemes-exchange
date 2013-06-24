@@ -24,7 +24,7 @@
 */
 class IT_Exchange {
 
-	var $_version         = '0.4.6';
+	var $_version         = '0.4.7';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'it-exchange';
 	var $_name            = 'iThemes Exchange';
