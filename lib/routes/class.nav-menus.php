@@ -154,7 +154,7 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 	 * @return string
 	*/
 	function get_url( $setting ) {
-		return it_exchange_get_page_url( $setting );
+		return it_exchange_get_page_url( $setting, true );
 	}
 }
 $IT_Exchange_Nav_Menu_Meta_Box = new IT_Exchange_Nav_Menu_Meta_Box();
