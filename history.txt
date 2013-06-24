@@ -1,3 +1,28 @@
+0.4.8 - 2013-06024 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+	Remove transaction from page settings tab
+	Missing space? What missing space?
+	Changed the product images output and fixed the product feature-image call.
+	Added cancel link to login, fixed empty_cart functionality in JS/AJAX
+	Don't load capser on product pages. Oops
+	Cleaned up product images HTML output and added ability to remove featured image.
+	Replace missed Router reference with Pages. Fixes missing product information on single product views.
+	Removed slide for advanced tabs.
+	Added tooltip to downloads limit and expiration labels.
+	Make shortcodes work on WP type pages.
+	Rename routes to pages and class.router.php to class.pages.php
+	Change nav menu URLs when switching from exchange page type to wordpress or vice-versa
+	Fix login/logout vars in it_exchange_wp_get_nav_menu_items
+	Break page cache when building nav menu items
+	Return WP url if page type is set to 'wordpress'
+	Don't load WP slug and name on settings page
+	Don't load casper if page type is not 'exchange'
+	WordPress Pages as options
+	Fix bug related to identifying subpages of account page
+	Cancel link on registration template for superwidget now works
+	Fixed log_in redirect to profile page.
+	Renamed log-in.php template to log_in.php because IT slug changed from - to _
+	Working on registration cancel button
+	Tweaks to the version var and history after packaging bot did its thing.
 0.4.7 - 2013-06-21 - Packaging Bot
 	Updated lib/updater to version 1.0.2
 0.4.6 - 2013-06-21 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
