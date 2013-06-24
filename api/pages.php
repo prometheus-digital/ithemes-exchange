@@ -108,6 +108,36 @@ function it_exchange_get_page_wpid( $page, $break_cache=false ) {
 	$page_wpid = empty( $pages[$page]['wpid'] ) ? '0' : $pages[$page]['wpid'];
 	return apply_filters( 'it_exchange_get_page_wpid', $page_wpid, $page, $break_cache );
 }
+
+/**
+ * Get permalink for ghost page
+ *
+ * @since 0.4.0
+ * @todo add filters/actions
+ *
+ * @param string $page page setting
+ * @return string url
+*/
+function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
+    $pages    = it_exchange_get_pages( $clear_settings_cache );
+	$type     = it_exchange_get_page_type( $page );
+	$page_url = false;
+
+	// Return the exchange page settings if type is exchange or if we're on the page settings tab.
+	if ( 'exchange' == $type || ( is_admin() && ! empty( $_GET['page'] ) && $_GET['page'] == 'it-exchange-settings' && ! empty( $_GET['tab'] ) && 'pages' == $_GET['tab'] ) ) {
+		if ( empty( $pages[$page]['url'] ) || ! is_callable( $pages[$page]['url'] ) )
+			return false;
+
+		if ( ! $page_url = call_user_func( $pages[$page]['url'], $page ) )
+			return false;
+	} else if ( 'wordpress' == $type ) {
+		if ( $wpid = it_exchange_get_page_wpid( $page ) )
+			return get_permalink( $wpid );
+	}
+
+    return $page_url;
+}
+
 /**
  * Is the page using a ghost page?
  *
@@ -166,27 +196,6 @@ function it_exchange_is_page( $page ) {
 			return true;
 	}
 	return false;
-}
-
-/**
- * Get permalink for ghost page
- *
- * @since 0.4.0
- * @todo add filters/actions
- *
- * @param string $page page setting
- * @return string url
-*/
-function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
-    $pages = it_exchange_get_pages( $clear_settings_cache );
-
-    if ( empty( $pages[$page]['url'] ) || ! is_callable( $pages[$page]['url'] ) )
-        return false;
-
-    if ( ! $url = call_user_func( $pages[$page]['url'], $page ) )
-        return false;
-
-    return $url;
 }
 
 /**
