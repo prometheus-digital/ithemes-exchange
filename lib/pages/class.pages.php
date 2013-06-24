@@ -392,7 +392,7 @@ class IT_Exchange_Pages {
 	*/
 	function load_casper( $template ) {
 		if ( $this->_current_view ) {
-			if ( 'exchange' == it_exchange_get_page_type( $this->_current_view ) ) {
+			if ( 'product' != $this->_current_view && 'exchange' == it_exchange_get_page_type( $this->_current_view ) ) {
 				require( dirname( __FILE__ ) . '/class.casper.php' );
 				new IT_Exchange_Casper( $this->_current_view, $this );
 			}
