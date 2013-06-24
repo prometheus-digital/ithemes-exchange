@@ -108,22 +108,22 @@ class IT_Exchange_Product_Feature_Product_Images {
 	function print_metabox( $post ) {
 		// Grab the iThemes Exchange Product object from the WP $post object
 		$product = it_exchange_get_product( $post );
-
+		
 		$product_images = it_exchange_get_product_feature( $product->ID, 'product-images' );
 		?>
-        
-        <label for="product-images-field">Images</label>
-        <div id="it-exchange-product-images">
+		
+		<label for="product-images-field">Images</label>
+		<div id="it-exchange-product-images">
 			<?php
-            if ( !empty( $product_images ) ) {
-                
-                $thumb = wp_get_attachment_thumb_url( $product_images[0] );
-                $large = wp_get_attachment_url( $product_images[0] );
-                $src = $large;
-    
-                echo '<div id="it-exchange-feature-image" class="ui-droppable">';
-                echo '<ul class="feature-image">';
-                echo '  <li id="' . $product_images[0] . '">';
+			if ( ! empty( $product_images ) ) {
+				
+				$thumb = wp_get_attachment_thumb_url( $product_images[0] );
+				$large = wp_get_attachment_url( $product_images[0] );
+				$src = $large;
+				
+				echo '<div id="it-exchange-feature-image" class="ui-droppable">';
+				echo '<ul class="feature-image">';
+				echo '  <li id="' . $product_images[0] . '">';
 				echo '    <a class="image-edit" href="">';
 				echo '      <img alt="" data-thumb="' . $thumb . '" data-large="' . $large . '" src=" ' . $src . '">';
 				echo '      <span class="overlay"></span>';
@@ -131,19 +131,19 @@ class IT_Exchange_Product_Feature_Product_Images {
 				echo '    <span class="remove-item">×</span>';
 				echo '    <input type="hidden" value="' . $product_images[0] . '" name="it-exchange-product-images[]">';
 				echo '  </li>';
-                echo '</ul>';
-                echo '<div class="replace-feature-image"><span>Replace featured image</span></div>';
-                echo '</div>';
+				echo '</ul>';
+				echo '<div class="replace-feature-image"><span>Replace featured image</span></div>';
+				echo '</div>';
 				
-                unset( $product_images[0] ); //we don't want this listed below
-                
-                echo '<ul id="it-exchange-gallery-images" class="ui-sortable">';
-                foreach( $product_images as $image_id ) {
-                    
-                    $thumb = wp_get_attachment_thumb_url( $image_id );
-                    $large = wp_get_attachment_url( $image_id );
-                    $src = $thumb;
-                    
+				unset( $product_images[0] ); //we don't want this listed below
+				
+				echo '<ul id="it-exchange-gallery-images" class="ui-sortable">';
+				foreach( $product_images as $image_id ) {
+					
+					$thumb = wp_get_attachment_thumb_url( $image_id );
+					$large = wp_get_attachment_url( $image_id );
+					$src = $thumb;
+					
 					echo '  <li id="' . $image_id . '">';
 					echo '    <a class="image-edit" href="">';
 					echo '      <img alt="" data-thumb="' . $thumb . '" data-large="' . $large . '" src=" ' . $src . '">';
@@ -152,25 +152,25 @@ class IT_Exchange_Product_Feature_Product_Images {
 					echo '    <span class="remove-item">×</span>';
 					echo '    <input type="hidden" value="' . $image_id . '" name="it-exchange-product-images[]">';
 					echo '  </li>';
-                    
-                }
-                echo '<li id="it-exchange-add-new-image" class="disable-sorting"><a href><span>Add Images</span></a></li>';
-                echo '</ul>';
-                
-            } else {
-                ?>
-                <div id="it-exchange-feature-image" class="ui-droppable">
-                <ul class="feature-image"></ul>
-                <div class="replace-feature-image"><span>Replace featured image</span></div>
-                </div>
-                <ul id="it-exchange-gallery-images">
-                    <li id="it-exchange-add-new-image" class="disable-sorting empty"><a href><span>Add Images</span></a></li>
-                </ul>
-                <?php
-            };
-            ?>
-        </div>
-    	<?php
+					
+				}
+				echo '<li id="it-exchange-add-new-image" class="disable-sorting"><a href><span>Add Images</span></a></li>';
+				echo '</ul>';
+				
+			} else {
+				?>
+				<div id="it-exchange-feature-image" class="ui-droppable">
+				<ul class="feature-image"></ul>
+				<div class="replace-feature-image"><span>Replace featured image</span></div>
+				</div>
+				<ul id="it-exchange-gallery-images">
+					<li id="it-exchange-add-new-image" class="disable-sorting empty"><a href><span>Add Images</span></a></li>
+				</ul>
+				<?php
+			}
+			?>
+		</div>
+		<?php
 	}
 
 	/** 
