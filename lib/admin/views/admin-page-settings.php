@@ -29,6 +29,13 @@
 			$pages    = it_exchange_get_registered_pages();
 			$wp_pages = array( 0 => __( 'Select a Page', 'LION' ) )+it_exchange_get_wp_pages();
 			foreach( $pages as $page => $data ) {
+				/**
+				 * Don't show options for transactions at all.
+				 * @todo remove transaction from pages and use query args
+				*/
+				if ( 'transaction' == $page ) 
+					continue
+
 				$options = array();
 				$url = '';
 				?>
