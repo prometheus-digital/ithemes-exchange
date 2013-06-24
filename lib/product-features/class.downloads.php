@@ -283,6 +283,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		<div class="download-expiration">
 			<label class="download-limit-label">
 				<?php _e( 'Download Expiration', 'LION' ); ?>
+				<span class="tip" title="Changing this value only applies to future purchases">i</span>
 			</label>
 			<span><?php _e( 'Download links', 'LION' ); ?></span>
 			<select name="it-exchange-digital-downloads-expires" id="it-exchange-digital-downloads-expires">
@@ -301,6 +302,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		<div class="download-limit">
 			<label class="download-limit-label">
 				<?php _e( 'Download Limit', 'LION' ); ?>
+				<span class="tip" title="Changing this value only applies to future purchases">i</span>
 			</label>
 			<div class="download-limit-select">
 				<select name="it-exchange-digital-downloads-download-limit">
