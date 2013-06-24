@@ -182,13 +182,13 @@ class IT_Exchange_Router {
 	 * @return void
 	*/
 	function login_out_page_redirect() {
-		if ( is_user_logged_in() && 'log-in' == $this->_current_view ) {
+		if ( is_user_logged_in() && 'log_in' == $this->_current_view ) {
 			wp_redirect( it_exchange_get_page_url( 'profile' ) );
 			die();
-		} else if ( is_user_logged_in() && 'log-out' == $this->_current_view ) {
+		} else if ( is_user_logged_in() && 'log_out' == $this->_current_view ) {
 			wp_redirect( str_replace( '&amp;', '&', wp_logout_url( it_exchange_get_page_url( 'store' ) ) ) );
 			die();
-		} else if ( ! is_user_logged_in() && 'log-out' == $this->_current_view ) {
+		} else if ( ! is_user_logged_in() && 'log_out' == $this->_current_view ) {
 			wp_redirect( it_exchange_get_page_url( 'log-in' ) );
 			die();
 		}
