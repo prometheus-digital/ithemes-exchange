@@ -36,8 +36,8 @@ require( $this->_plugin_path . 'lib/functions/functions.php' );
 // Customer Class
 require( $this->_plugin_path . 'lib/customers/class.customer.php' );
 
-// Router
-require( $this->_plugin_path . 'lib/routes/class.router.php' );
+// Pages
+require( $this->_plugin_path . 'lib/pages/class.pages.php' );
 
 // Super Widget
 require( $this->_plugin_path . 'lib/super-widget/class.super-widget.php' );
@@ -53,5 +53,5 @@ require( $this->_plugin_path . 'lib/email-notifications/class.email-notification
 if ( ! is_admin() ) {
 	require( $this->_plugin_path . 'lib/cart/class.cart.php' );
 } else {
-	require( $this->_plugin_path . 'lib/routes/class.nav-menus.php' );
+	require( $this->_plugin_path . 'lib/pages/class.nav-menus.php' );
 }

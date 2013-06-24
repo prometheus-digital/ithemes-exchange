@@ -7,11 +7,11 @@
 */
 
 /**
- * Router Class. Registers rewrite rules and associated logic
+ * Pages Class. Registers rewrite rules and associated logic
  *
  * @since 0.4.0
 */
-class IT_Exchange_Router {
+class IT_Exchange_Pages {
 
 	/**
 	 * @var $_account the WP username for the current user
@@ -38,7 +38,7 @@ class IT_Exchange_Router {
 	 *
 	 * @return void
 	*/
-	function IT_Exchange_Router() {
+	function IT_Exchange_Pages() {
 		add_action( 'init', array( $this, 'set_slugs_and_names' ) );
 		add_action( 'init', array( $this, 'set_pretty_permalinks_boolean' ) );
 		if ( is_admin() ) {
@@ -489,5 +489,5 @@ class IT_Exchange_Router {
 		return $existing;
 	}
 }
-global $IT_Exchange_Router; // We need it inside casper
-$IT_Exchange_Router = new IT_Exchange_Router();
+global $IT_Exchange_Pages; // We need it inside casper
+$IT_Exchange_Pages = new IT_Exchange_Pages();

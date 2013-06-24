@@ -32,7 +32,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	var $state = false;
 
 	/**
-	 * @var string $it_exchange_view current view set by class.router.php
+	 * @var string $it_exchange_view current view set by class.pages.php
 	 * @since 0.4.0
 	*/
 	var $it_exchange_view;

@@ -23,24 +23,24 @@ class IT_Exchange_Casper {
 	private $_current_view;
 
 	/**
-	 * @var object $_router the current instance of our IT_Exchange_Router class
+	 * @var object $_pages the current instance of our IT_Exchange_Pages class
 	 * @since 0.4.0
 	*/
-	private $_router;
+	private $_pages;
 
 	/**
-	 * Constructor. Sets $_current_view and $_router properties.
+	 * Constructor. Sets $_current_view and $_pages properties.
 	 *
 	 * @since 0.4.0
 	 *
 	 * @return void
 	*/
-	function IT_Exchange_Casper( $current_view, IT_Exchange_Router $router ) {
+	function IT_Exchange_Casper( $current_view, IT_Exchange_Pages $pages ) {
 		if ( 'exchange' != it_exchange_get_page_type( $current_view ) )
 			throw new Exception( 'IT_Exchange_Casper should not be constructed when $current_view is not an "exchange" page type.' );
 
 		$this->_current_view = $current_view;
-		$this->_router = $router;
+		$this->_pages = $pages;
 		$this->_wp_query = $GLOBALS['wp_query'];
 		$this->modify_wp_query();
 	}
