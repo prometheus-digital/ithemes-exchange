@@ -801,9 +801,13 @@ Order: %s
 		$post_type            = empty( $_GET['post_type'] ) ? false : $_GET['post_type'];
 		$product_type         = empty( $_GET['it-exchange-product-type'] ) ? false : $_GET['it-exchange-product-type'];
 
+		if ( ! empty( $product_type ) )
+			return;
+
 		if ( count( $product_type_add_ons ) > 1 && 'post-new.php' == $pagenow && 'it_exchange_prod' == $post_type ) {
-			if ( empty( $product_type_add_ons[$product_type] ) ) {
-				wp_safe_redirect( admin_url( 'admin.php?page=it-exchange-choose-product-type' ) );
+			$product_type_add_ons = reset( $product_type_add_ons );
+			if ( ! empty( $product_type_add_ons['slug'] ) ) {
+				wp_safe_redirect( add_query_arg( 'it-exchange-product-type', $product_type_add_ons['slug'] ) );
 				die();
 			}
 		}

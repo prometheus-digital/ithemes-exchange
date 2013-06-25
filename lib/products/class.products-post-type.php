@@ -35,6 +35,7 @@ class IT_Exchange_Product_Post_Type {
 		add_filter( 'manage_it_exchange_prod_posts_custom_column', array( $this, 'it_exchange_prod_posts_custom_column_info' ) );
 		add_filter( 'request', array( $this, 'modify_wp_query_request_on_edit_php' ) );
 		add_filter( 'wp_insert_post_empty_content', array( $this, 'wp_insert_post_empty_content' ), 20, 2 );
+		add_filter( 'post_updated_messages', array( $this, 'product_updated_messages' ) );
 
 		if ( is_admin() && !empty( $_REQUEST['post_type'] ) && 'it_exchange_prod' === $_REQUEST['post_type'] )
 			add_action( 'pre_get_posts', array( $this, 'remove_disabled_product_types_from_admin_list' ) );
@@ -110,6 +111,8 @@ class IT_Exchange_Product_Post_Type {
 		$labels    = array(
 			'name'          => __( 'Products', 'LION' ),
 			'singular_name' => __( 'Product', 'LION' ),
+			'edit_item'     => __( 'Edit Product', 'LION' ),
+			'view_item'     => __( 'View Product', 'LION' ),
 		);
 		$this->options = array(
 			'labels' => $labels,
@@ -118,7 +121,7 @@ class IT_Exchange_Product_Post_Type {
 			'show_ui'     => true,
 			'show_in_nav_menus' => true,
 			'show_in_menu'      => false, // We will be adding it manually with various labels based on available product-type add-ons
-			'show_in_admin_bar' => false,
+			'show_in_admin_bar' => true,
 			'hierarchical'      => false,
 			'supports'          => array( // Support everything but page-attributes for add-on flexibility
 				'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields',
@@ -663,5 +666,35 @@ class IT_Exchange_Product_Post_Type {
 		
 		return $request;
 	}
+
+	/**
+	 * Modify the product updated messages
+	 *
+	 * @since 0.4.9
+	 *
+	 * @param array $messages existing messages
+	 * @return array
+	*/
+	function product_updated_messages( $messages ) {
+		global $post;
+		$post_ID = $post->ID;
+		$messages['it_exchange_prod'] = array( 
+			 1 => sprintf( __('Product updated. <a href="%s">View product</a>'), esc_url( get_permalink($post_ID) ) ),
+			 2 => __('Custom field updated.'),
+			 3 => __('Custom field deleted.'),
+			 4 => __('Product updated.'),
+			/* translators: %s: date and time of the revision */
+			 5 => isset($_GET['revision']) ? sprintf( __('Product restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			 6 => sprintf( __('Product published. <a href="%s">View product</a>'), esc_url( get_permalink($post_ID) ) ),
+			 7 => __('Product saved.'),
+			 8 => sprintf( __('Product submitted. <a target="_blank" href="%s">Preview product</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+			 9 => sprintf( __('Product scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview product</a>'),
+				// translators: Publish box date format, see http://php.net/date
+				date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+			10 => sprintf( __('Product draft updated. <a target="_blank" href="%s">Preview product</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) )
+		);
+		return $messages;
+	}
+
 }
 $IT_Exchange_Product_Post_Type = new IT_Exchange_Product_Post_Type();
