@@ -13,6 +13,11 @@
 							<?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'title', 'wrap' => 'h3' ) ); ?>
 							<?php if ( it_exchange( 'transaction', 'has-product-downloads' ) ) : ?>
 								<div class="transaction-product-downloads">
+									<?php if ( ! it_exchange( 'transaction', 'get-cleared-for-delivery' ) ) : ?>
+										<p>
+											<?php _e( 'The status for this transaction does not grant access to downlodable files. Once the transaction is updated to an appoved status, you will receive a follup email with your download     links.', 'LION' ); ?>
+										</p>
+									<?php endif; ?>
 									<?php while( it_exchange( 'transaction', 'product-downloads' ) ) : ?>
 										<div class="transaction-product-download">
 											<h4 class="transaction-product-download-titile">
@@ -43,10 +48,12 @@
 																	<?php _e( 'Unlimited downloads', 'LION' ); ?>
 																</span>
 															<?php endif; ?>
-															<?php if ( !it_exchange( 'transaction', 'get-product-download-hash', array( 'attribute' => 'download-limit' ) ) || it_exchange( 'transaction', 'get-product-download-hash', array( 'attribute' => 'downloads-remaining' ) ) ) : ?>
-																<span>
-																	<a href="<?php it_exchange( 'transaction', 'product-download-hash', array( 'attribute' => 'download-url' ) ); ?>"><?php _e( 'Download Now', 'LION' ); ?></a>
-																</span>
+															<?php if ( ! it_exchange( 'transaction', 'get-product-download-hash', array( 'attribute' => 'download-limit' ) ) || it_exchange( 'transaction', 'get-product-download-hash', array( 'attribute' => 'downloads-remaining' ) ) ) : ?>
+																<?php if ( it_exchange( 'transaction', 'get-cleared-for-delivery' ) ) : ?>
+																	<span>
+																		<a href="<?php it_exchange( 'transaction', 'product-download-hash', array( 'attribute' => 'download-url' ) ); ?>"><?php _e( 'Download Now', 'LION' ); ?></a>
+																	</span>
+																<?php endif; ?>
 															<?php endif; ?>
 														</li>
 													<?php endwhile; ?>

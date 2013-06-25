@@ -27,16 +27,17 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	public $_tag_map = array(
-		'status'                 => 'status',
-		'date'                   => 'date',
-		'total'                  => 'total',
-		'instructions'           => 'instructions',
-		'products'               => 'products',
-		'productattribute'       => 'product_attribute',
-		'productdownloads'       => 'product_downloads',
-		'productdownload'        => 'product_download',
-		'productdownloadhashes'  => 'product_download_hashes',
-		'productdownloadhash'    => 'product_download_hash',
+		'status'                => 'status',
+		'date'                  => 'date',
+		'total'                 => 'total',
+		'instructions'          => 'instructions',
+		'products'              => 'products',
+		'productattribute'      => 'product_attribute',
+		'productdownloads'      => 'product_downloads',
+		'productdownload'       => 'product_download',
+		'productdownloadhashes' => 'product_download_hashes',
+		'productdownloadhash'   => 'product_download_hash',
+		'clearedfordelivery'    => 'cleared_for_delivery',
 	);
 
 	/**
@@ -177,6 +178,18 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
             }   
         }
     }
+
+	/**
+	 * Returns boolean is the transaction cleared for delivery or not
+	 *
+	 * @since 0.4.10
+	 *
+	 * @param array $options
+	 * @return boolean
+	*/
+	function cleared_for_delivery( $options=array() ) {
+		return it_exchange_transaction_is_cleared_for_delivery( $this->_transaction->ID );
+	}
 
 	/** 
 	 * The product title
