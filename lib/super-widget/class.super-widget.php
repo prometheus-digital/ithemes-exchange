@@ -74,7 +74,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	function widget( $args, $instance ) {
 		if ( ! $this->get_state() )
 			return false;
-
+		
 		// Flag that we're in the superwidget
 		$GLOBALS['it_exchange']['in_superwidget'] = $instance;
 		if ( ! empty( $GLOBALS['wp_query']->queried_object->ID ) && it_exchange_get_product( $GLOBALS['wp_query']->queried_object->ID ) )
@@ -224,6 +224,11 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			if ( 'checkout' == $state )
 				$state = 'login';
 		}
+		
+		if ( empty( $state ) && 'product' == $it_exchange_view  )
+			$state = 'product';
+		else
+			$state = 'cart';
 
 		// Validate state
 		if ( $state && in_array( $state, $this->valid_states ) )
