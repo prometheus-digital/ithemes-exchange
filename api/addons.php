@@ -251,8 +251,9 @@ function it_exchange_get_disabled_addons( $options=array() ) {
 	if ( false === $enabled_addons = it_exchange_get_option( 'enabled_add_ons' ) )
 		$enabled_addons = array();
 
+	// Loop through registered addons
 	foreach ( $registered as $slug => $params )
-		if ( ! in_array( $slug, $enabled_addons ) )
+		if ( ! in_array( $slug, array_keys( $enabled_addons ) ) )
 			$disabled[$slug] = $params;
 
 	if ( ! empty( $options['category'] ) )
