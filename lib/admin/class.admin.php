@@ -911,8 +911,14 @@ Order: %s
 			wp_remote_post( $mailchimp, $query );
 		}
 		
-		// Auto enable digital downloads
-		it_exchange_enable_addon( 'digital-downloads-product-type' );
+		// Auto enable any core add-ons we want enabled on setup.
+		$auto_enabled_addons = array(
+			'digital-downloads-product-type',
+			'basic-reporting',
+		);
+		foreach( $auto_enabled_addons as $addon ) {
+			it_exchange_enable_addon( $addon );
+		}
 		
 		if ( !empty( $_REQUEST['it-exchange-transaction-methods'] ) ) {
 			foreach( $_REQUEST['it-exchange-transaction-methods'] as $add_on ) {

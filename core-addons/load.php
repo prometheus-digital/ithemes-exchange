@@ -130,7 +130,7 @@ function it_exchange_register_core_addons() {
 			) ),
 		),
 		// Basic Reporting Dashboard Widget
-		'multi-item-cart-option' => array(
+		'basic-reporting' => array(
 			'name'        => __( 'Basic Reporting Dashboard Widget', 'LION' ),
 			'description' => __( 'Adds a widget to the Admin dashboard to give basic sells statistics.', 'LION' ),
 			'author'      => 'iThemes',
