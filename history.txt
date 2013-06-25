@@ -1,3 +1,10 @@
+0.4.10 - 2013-06-25 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+	Don't print download links on Confirmation page or Downloads page if transaction is not cleared for delivery fixed default state issue
+	Added it_exchange_is_current_product_in_cart() to check if current product being viewed is in the cart already
+	Added view_cart() to output a View Cart button on the SW (or anywhere else)
+	Fixed log-in to log_in for casper
+	Don't include file links in email if the transaction hasn't been cleared for delivery.
+	Reformatted the pages settings page to work with the workflow and styles of @brad's mockup.
 0.4.9 - 2013-06-25 - Packaging Bot
 	Updated lib/classes to version 2.3.2
 	Set defaults before asking for download setting in the event that admin hasn't visited settings page.
