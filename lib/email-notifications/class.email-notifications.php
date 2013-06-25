@@ -257,21 +257,26 @@ class IT_Exchange_Email_Notifications {
 						<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
 						<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%sEach link has its own download limits.%sYou can view the details on you %sdownloads%s page.', 'LION' ), $count, '<br />', '<br />', '<a href="' . $downloads_url . '">', '</a>' ); ?></p>
 					<?php endif; ?>
+					<?php if ( ! it_exchange_transaction_is_cleared_for_delivery( $args->transaction_id ) ) : ?>
+						<p><?php _e( 'The status for this transaction does not grant access to downlodable files. Once the transaction is updated to an appoved status, you will receive a follup email with your download links.', 'LION' ); ?></p>
+					<?php endif; ?>
 					<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
 						<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $args->transaction_id, $transaction_product, $download_id ); ?>
 						<h4><?php esc_attr_e( get_the_title( $download_id ) ); ?></h4>
-						<ul class="download-hashes">
-							<?php foreach( (array) $hashes_for_product_transaction as $hash ) : ?>
-								<?php
-								$hash_data      = it_exchange_get_download_data_from_hash( $hash );
-								$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
-								$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
-								?>
-								<li>
-									<?php esc_attr_e( $hash ); ?> : <a href="<?php echo site_url() . '?it-exchange-download=' . $hash; ?>"><?php _e( 'Download link', 'LION' ); ?></a>
-								</li>
-							<?php endforeach; ?>
-						</ul>
+						<?php if ( it_exchange_transaction_is_cleared_for_delivery( $args->transaction_id ) ) : ?>
+							<ul class="download-hashes">
+								<?php foreach( (array) $hashes_for_product_transaction as $hash ) : ?>
+									<?php
+									$hash_data      = it_exchange_get_download_data_from_hash( $hash );
+									$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
+									$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
+									?>
+									<li>
+										<?php esc_attr_e( $hash ); ?> : <a href="<?php echo site_url() . '?it-exchange-download=' . $hash; ?>"><?php _e( 'Download link', 'LION' ); ?></a>
+									</li>
+								<?php endforeach; ?>
+							</ul>
+						<?php endif; ?>
 					<?php endforeach; ?>
 				<?php endif; ?>
 		<?php endforeach; ?>
