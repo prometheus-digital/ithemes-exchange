@@ -25,7 +25,7 @@ function it_exchange_get_template_part( $slug, $name=null, $load=true ) {
     $templates[] = $slug . '.php';
 
     // Return the part that is found
-    return it_exchange_locate_template( $templates, $load, true, true );
+    return it_exchange_locate_template( $templates, $load, false, true );
 }
 
 /**
