@@ -129,6 +129,18 @@ function it_exchange_register_core_addons() {
 			'supports'    => apply_filters( 'it_exchange_register_multi_item_cart_default_features', array(
 			) ),
 		),
+		// Basic Reporting Dashboard Widget
+		'multi-item-cart-option' => array(
+			'name'        => __( 'Basic Reporting Dashboard Widget', 'LION' ),
+			'description' => __( 'Adds a widget to the Admin dashboard to give basic sells statistics.', 'LION' ),
+			'author'      => 'iThemes',
+			'author_url'  => 'http://ithemes.com',
+			'file'        => dirname( __FILE__ ) . '/admin/basic-reporting/init.php',
+			'category'    => 'admin',
+			'tag'         => 'core',
+			'supports'    => apply_filters( 'it_exchange_register_basic_reporting_default_features', array(
+			) ),
+		),
 		// Basic Coupons
 		'it-basic-coupons' => array(
 			'name'        => __( 'Basic Coupons', 'LION' ),
@@ -141,7 +153,6 @@ function it_exchange_register_core_addons() {
 			'supports'    => apply_filters( 'it_exchange_register_basic_coupons_default_features', array(
 			) ),
 		),
-		// Transaction Status admin Metabox
 		// Transaction Status admin Metabox
 		'transaction-status-metabox' => array(
 			'name'        => __( 'Transaction Status Metabox', 'LION' ),
@@ -165,7 +176,7 @@ function it_exchange_register_core_addons() {
 				'singular_name' => __( 'Product Category', 'LION' ),
 			),
 		),
-		// Category Taxonomy
+		// Tag Taxonomy
 		'tag-taxonomy-type' => array(
 			'name'        => __( 'Product Tags', 'LION' ),
 			'description' => __( 'This adds a tag taxonomy for all products in iThemes Exchange.', 'LION' ),

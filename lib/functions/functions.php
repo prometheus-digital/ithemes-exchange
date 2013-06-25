@@ -554,3 +554,32 @@ function it_exchange_add_page_shortcode( $atts ) {
 	return it_exchange_get_template_part( 'content', $atts['page'] );
 }
 add_shortcode( 'it-exchange-page', 'it_exchange_add_page_shortcode' );
+
+/**
+ * Adds date retraints to query posts.
+ *
+ * This function isn't applied to any queries by default. Certain functions like those in the basic_reporting addon add it as a filter and remove it.
+ *
+ * @since 0.4.9
+ *
+ * @param string $where the where clause of the query
+ * @return string
+*/
+function it_exchange_filter_where_clause_for_all_queries( $where='' ) {
+
+	// If this filter has been added, we expect one of the following two GLOBALS to have been set
+	$start_date = empty( $GLOBALS['it_exchange']['where_start'] ) ? false : $GLOBALS['it_exchange']['where_start'];
+	$end_date   = empty( $GLOBALS['it_exchange']['where_end'] ) ? false : $GLOBALS['it_exchange']['where_end'];
+
+	// Return without doing anything if neither start or end are set
+	if ( ! $start_date && ! $end_date )
+		return $where;
+
+	if ( $start_date )
+		$where .= $GLOBALS['wpdb']->prepare( ' AND post_date >= %s', $start_date );
+	
+	if ( $end_date )
+		$where .= $GLOBALS['wpdb']->prepare( ' AND post_date <= %s', $end_date );
+	
+	return $where;
+}
