@@ -1215,6 +1215,8 @@ Order: %s
 						'delteConfirmationText'  => __( 'You have checked the option to "Reset ALL data". Are you should you want to delete all Exchange products, transactions, and settings?', 'LION' ),
 					)
 				);
+			} else if ( $_GET['tab'] == 'pages') {
+				wp_enqueue_script( 'it-exchange-settings-pages', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/settings-pages.js' );
 			}
 		} else if ( 'exchange_page_it-exchange-setup' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip' );

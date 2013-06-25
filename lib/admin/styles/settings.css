@@ -1,4 +1,16 @@
 /** -----------------------------------------------------:[ page settings ]:---------- */
-#it-exchange-page-settings thead th{color:#AAA;text-transform:uppercase;}
-#it-exchange-page-settings tbody td:nth-child(1){vertical-align:middle;}
-#it-exchange-page-settings tbody td:nth-child(4){font-size:14px;color:#AAA;vertical-align:middle;}
+#it-exchange-page-settings *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+#it-exchange-page-settings .it-column{float:left;margin:.5em 0;}
+#it-exchange-page-settings .it-column > .it-column{margin:0;}
+#it-exchange-page-settings .ps-header{margin-top:1em;}
+#it-exchange-page-settings .ps-header span{color:#AAA;text-transform:uppercase;}
+#it-exchange-page-settings .it-row{overflow:hidden;}
+#it-exchange-page-settings .it-column{}
+#it-exchange-page-settings .it-column.column-1{width:20%;}
+#it-exchange-page-settings .it-column.column-2{width:40%;}
+#it-exchange-page-settings .it-column.column-2 .column-2-half{width:50%;}
+#it-exchange-page-settings .it-column.column-2 .column-2-full{width:100%;margin-top:1em;}
+#it-exchange-page-settings .it-column.column-2 .column-2-full div{display:inline-block;padding:1em;background:#F6F6F6;border-radius:4px;}
+#it-exchange-page-settings .it-column.column-2 .column-2-full code{display:inline-block;margin-top:1em;padding:.3em;background:#FFF;}
+#it-exchange-page-settings .it-column.column-3{width:40%;}
+#it-exchange-page-settings .it-column.column-3 .url{color:#AAA;}
