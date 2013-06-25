@@ -1,3 +1,13 @@
+0.4.9 - 2013-06-25 - Packaging Bot
+	Updated lib/classes to version 2.3.2
+	Set defaults before asking for download setting in the event that admin hasn't visited settings page.
+	Auto-enable Basic Reporting when Wizard is saved
+	Add Basic Reporting Widget as a core add-on.
+	Added function to lib/functions/functions.php that allows us to restrict any it_exchange_get_[products|transactions|coupons|downloads|etc] to a date span
+	Add 'Add Product', 'View Product', and 'Edit Product' to WP Admin Bar
+	Fix but where enabled plugins were being returned by it_exchange_get_disabled_plugins()
+	Fix bug where template parts were not loading correctly from directories outside of exchange/lib/templates
+	Create new template part for store-product
 0.4.8 - 2013-06024 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
 	Remove transaction from page settings tab
 	Missing space? What missing space?
@@ -207,5 +217,3 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
-0.4.9 - 2013-06-25 - Packaging Bot
-	Updated lib/classes to version 2.3.2
