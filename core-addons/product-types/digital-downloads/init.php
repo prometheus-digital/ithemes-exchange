@@ -100,7 +100,7 @@ class IT_Exchange_Digital_Downloads_Add_On {
 				<?php 
 				do_action( 'it_exchange_digital_downloads_settings_form_top' );
                 		
-				if ( !empty( $settings ) )
+				if ( ! empty( $settings ) )
 					foreach ( $settings as $key => $var )
 						$form->set_option( $key, $var );
 		
