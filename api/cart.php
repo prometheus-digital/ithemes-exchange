@@ -114,6 +114,30 @@ function it_exchange_get_cart_product( $id ) {
 }
 
 /**
+ * Checks if the current product being viewd is in the cart
+ *
+ * @since 0.4.10
+ * @return bool true if in cart|false if not
+*/
+function it_exchange_is_current_product_in_cart() {
+	$product_id = false;
+	$cart_products = it_exchange_get_cart_products();
+	$product = empty( $GLOBALS['post'] ) ? false : it_exchange_get_product( $GLOBALS['post'] );
+	
+	if ( ! empty( $product ) )
+		$product_id = $product->ID;
+	else if ( ! empty( $_GET['sw-product'] ) )
+		$product_id = $_GET['sw-product'];
+	
+	foreach( $cart_products as $cart_product ) {
+		if ( $product_id == $cart_product['product_id'] )
+			return true;
+	}
+		
+	return false;
+}
+
+/**
  * Adds a product to the shopping cart based on the product_id
  *
  * @since 0.3.7

@@ -1,5 +1,9 @@
 <?php it_exchange_get_template_part( 'messages' ); ?>
+
 <div class="it-exchange-sw-processing it-exchange-sw-processing-checkout">
+
+<?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
+
 	<div class="cart-items-wrapper">
 		<?php while( it_exchange( 'cart', 'cart-items' ) ) : ?>
 			<?php $can_edit_purchase_quantity = it_exchange( 'cart-item', 'supports-purchase-quantity' ) && ( it_exchange_get_cart_products_count() < 2 ); ?>
@@ -63,4 +67,7 @@
 			<?php endif; ?>
 		</div>
 	<?php endif; ?>
+<?php else: ?>
+<?php printf( __( '%s Empty', 'LION' ), it_exchange_get_page_name( 'cart' ) ); ?>
+<?php endif; ?>
 </div>

@@ -28,6 +28,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		'total'         => 'total',
 		'update'        => 'update_cart',
 		'checkout'      => 'checkout_cart',
+		'viewcart'      => 'view_cart',
 		'empty'         => 'empty_cart',
 		'multipleitems' => 'multiple_items',
 		'itemcount'     => 'item_count',
@@ -163,6 +164,11 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		return $output;
 	}
 
+	/**
+	 * Returns the checkout cart button / varname
+	 *
+	 * @since 0.4.0
+	*/
 	function checkout_cart( $options=array() ) {
 		$defaults = array(
 			'before' => '',
@@ -188,7 +194,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			case 'link' :
 				$url = '';
 				// Tack on the superwidget state if in it.
-				if ( it_exchange_in_superwidget() && it_exchange_get_cart_products_count() < 2 ) {
+				if ( it_exchange_in_superwidget() && 2 > it_exchange_get_cart_products_count() ) {
 					// Get clean URL without any exchange query args
 					$url = it_exchange_clean_query_args();
 					$url = add_query_arg( 'ite-sw-state', 'checkout', $url );
@@ -210,6 +216,57 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		}
 		return $output;
 	}
+
+	/**
+	 * Returns the view cart button / varname
+	 *
+	 * @since 0.4.10
+	*/
+	function view_cart( $options=array() ) {
+		$defaults = array(
+			'before' => '',
+			'after'  => '',
+			'class'  => false,
+			'format' => 'button',
+			'label'  => __( 'View Cart', 'LION' ),
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		$class = empty( $options['class'] ) ? 'it-exchange-view-cart' : 'it-exchange-view-cart ' . esc_attr( $options['class'] );
+		$class = ( it_exchange_get_cart_products_count() < 2 ) ? $class : $class . ' no-sw-js';
+		$var   = it_exchange_get_field_name( 'view_cart' );
+
+		// If we're in the superwidget, we need to use that format.
+		if ( it_exchange_in_superwidget() )
+			$options['format'] = 'link';
+
+		switch( $options['format'] ) {
+			case 'var' :
+				return $var;
+				break;
+			case 'link' :
+				$url = '';
+				$url = it_exchange_get_page_url( 'cart' );
+
+				$output  = $options['before'];
+				$output .= '<a href="' . $url . '" class="' . $class . '" name="' . esc_attr( $var ) . '">' . esc_attr( $options['label'] ) . '</a>';
+				$output .= $options['after'];
+				break;
+			case 'button' :
+			default :
+				$output  = $options['before'];
+				$output .= '<input type="submit" class="' . $class . '" name="' . esc_attr( $var ) . '" value="' . esc_attr( $options['label'] ) . '" />';
+				$output .= $options['after'];
+				break;
+		}
+		return $output;
+	}
+	
+	/**
+	 * Returns the empty cart button / varname
+	 *
+	 * @since 0.4.0
+	*/
 	function empty_cart( $options=array() ) {
 		$defaults = array(
 			'before' => '',
@@ -301,9 +358,9 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		// Get the focus from REQUEST
 		$focus = empty( $_REQUEST[$focus_key] ) ? false : $_REQUEST[$focus_key];
 
-		// Return true if $focus is false or if $options['type'] is false
+		// Return false if $focus is false or if $options['type'] is false
 		if ( ! $options['type'] || ! $focus )
-			return true;
+			return false;
 
 		// return boolean if focus == type
 		return $focus == $options['type'];

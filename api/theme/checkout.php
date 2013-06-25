@@ -99,7 +99,7 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 		$class = empty( $options['class'] ) ? 'it-exchange-cancel-checkout' : 'it-exchange-cancel-checkout ' . $options['class'];
 
 		// Set URL
-		if ( it_exchange_in_superwidget() && it_exchange_get_cart_products_count() < 2 ) {
+		if ( it_exchange_in_superwidget() && 2 > it_exchange_get_cart_products_count() ) {
 			// Get clean url without any exchange query args
 			$url = it_exchange_clean_query_args();
 			$url = add_query_arg( 'ite-sw-state', 'cart', $url );
