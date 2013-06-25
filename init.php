@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: iThemes Exchange
- * Version: 0.4.8
+ * Version: 0.4.9
  * Description: Turns your WordPress site into a Lean, Mean Selling Machine!
  * Plugin URI: http://ithemes.com/purchase/ithemes-exchange/
  * Author: iThemes
