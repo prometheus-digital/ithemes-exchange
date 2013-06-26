@@ -592,3 +592,19 @@ function it_exchange_filter_where_clause_for_all_queries( $where='' ) {
 	
 	return $where;
 }
+
+/**
+ * Clear the sessions when multi-item carts are enabled
+ *
+ * @todo replace when we introduce on enable an on diable hooks
+ *
+ * @since 0.4.11
+ *
+ * @param string $addon name of addon being enabled.
+ * @return void
+*/
+function it_exchange_clear_sessions_when_multi_item_cart_is_enabled( $addon_slug ) {
+	if ( 'multi-item-cart-option' == $addon_slug['slug'] )
+		it_exchange_db_delete_all_sessions();
+}
+add_action( 'it_exchange_add_on_enabled', 'it_exchange_clear_sessions_when_multi_item_cart_is_enabled' );
