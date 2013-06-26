@@ -1235,6 +1235,10 @@ Order: %s
 				);
 			} else if ( $_GET['tab'] == 'pages') {
 				wp_enqueue_script( 'it-exchange-settings-pages', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/settings-pages.js' );
+				wp_localize_script( 'it-exchange-settings-pages', 'settingsGenearlL10n', array(
+						'emptyWPPage'  => __( 'Please make sure all WordPress page types have a WordPress page selected.', 'LION' ),
+					)
+				);
 			}
 		} else if ( 'exchange_page_it-exchange-setup' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip' );
