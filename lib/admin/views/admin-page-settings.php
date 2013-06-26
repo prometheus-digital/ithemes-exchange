@@ -76,7 +76,8 @@
 							// If count is 1, just print it and create a hidden field
 							if ( count( $options ) < 2 ) {
 								$form->add_hidden( $page . '-type' );
-								esc_attr_e( reset( array_values( $options ) ) );
+								$options = array_values( $options );
+								esc_attr_e( $options[0] );
 							} else {
 								$form->add_drop_down( $page . '-type', $options );
 							}
