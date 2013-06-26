@@ -52,7 +52,7 @@ global $wp_version;
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="receipt-email-template"><?php _e( 'Notification Email Template', 'LION' ) ?></label></th>
+			<th scope="row"><label for="admin-email-template"><?php _e( 'Notification Email Template', 'LION' ) ?></label></th>
 			<td>
 				<?php
                 if ( $wp_version >= 3.3 && function_exists( 'wp_editor' ) ) {
