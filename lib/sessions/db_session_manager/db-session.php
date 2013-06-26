@@ -180,7 +180,7 @@ function it_exchange_db_delete_all_sessions() {
 	}
 
 	if ( ! defined( 'WP_INSTALLING' ) ) {
-		$expiration_keys = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE '_it_exchange_db_session_expires_%'" );
+		$expiration_keys = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_it_exchange_db_session_%'" );
 
 		foreach( $expiration_keys as $expiration ) {
 			// Get the session ID by parsing the option_name
