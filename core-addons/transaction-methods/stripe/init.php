@@ -618,11 +618,11 @@ class IT_Exchange_Stripe_Add_On {
 				<label for="stripe-live-publishable-key"><?php _e( 'Live Publishable Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'stripe-live-publishable-key' ); ?>
 			</p>
-			<p>
+			<p class="hide-if-wizard">
 				<label for="stripe-test-secret-key"><?php _e( 'Test Secret Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'stripe-test-secret-key' ); ?>
 			</p>
-			<p>
+			<p class="hide-if-wizard">
 				<label for="stripe-test-publishable-key"><?php _e( 'Test Publishable Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'stripe-test-publishable-key' ); ?>
 			</p>
@@ -630,7 +630,7 @@ class IT_Exchange_Stripe_Add_On {
 				<label for="stripe-purchase-button-label"><?php _e( 'Purchase Button Label', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the text inside the button your customers will press to purchase with Stripe', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'stripe-purchase-button-label' ); ?>
 			</p>
-			<p>
+			<p class="hide-if-wizard">
 				<?php $form->add_check_box( 'stripe-test-mode' ); ?>
 				<label for="stripe-test-mode"><?php _e( 'Enable Stripe Test Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Enable Stripe Test Mode', 'LION' ); ?>">i</span></label>
 			</p>

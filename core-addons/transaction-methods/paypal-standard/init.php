@@ -628,23 +628,23 @@ class IT_Exchange_PayPal_Standard_Add_On {
 				<label for="paypal-standard-live-api-signature"><?php _e( 'PayPal API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-live-api-signature' ); ?>
 			</p>
-			<p>
+			<p class="hide-if-wizard">
 				<label for="paypal-standard-sandbox-email-address"><?php _e( 'PayPal Sandbox Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-sandbox-email-address' ); ?>
 			</p>
-			<p>
+			<p class="hide-if-wizard">
 				<label for="paypal-standard-sandbox-api-username"><?php _e( 'PayPal Sandbox API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-sandbox-api-username' ); ?>
 			</p>
-			<p>
+			<p class="hide-if-wizard">
 				<label for="paypal-standard-sandbox-api-password"><?php _e( 'PayPal Sandbox API Password', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-sandbox-api-password' ); ?>
 			</p>
-			<p>
+			<p class="hide-if-wizard">
 				<label for="paypal-standard-sandbox-api-signature"><?php _e( 'PayPal Sandbox API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-sandbox-api-signature' ); ?>
 			</p>
-			<p>
+			<p class="hide-if-wizard">
 				<?php $form->add_check_box( 'paypal-standard-sandbox-mode' ); ?>
 				<label for="paypal-standard-sandbox-mode"><?php _e( 'Enable PayPal Sandbox Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Enable PayPal Sandbox Mode', 'LION' ); ?>">i</span></label>
 			</p>

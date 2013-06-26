@@ -14,6 +14,7 @@
 .it-exchange-wizard input[type="email"]:focus,
 .it-exchange-wizard input[type="password"]:focus,
 .it-exchange-wizard textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
+.it-exchange-wizard .hide-if-wizard{display: none;}
 
 .it-exchange-wizard .tip{display:inline-block;text-align:center;background:#d7f7a9;border:1px solid #b4d18c;border:1px solid transparent;color:#8fd034;border-radius:50%;font-size:8px;line-height:1.6;height:12px;width:12px;cursor:pointer;margin:2px 0 0 5px;-webkit-transition:all .1s linear;-moz-transition:all .1s lin}
 .it-exchange-wizard .tip:hover{background:#a6de56;border-color:#a6df57;color:#334940;}
