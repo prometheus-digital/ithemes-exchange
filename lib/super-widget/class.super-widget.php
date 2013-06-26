@@ -210,7 +210,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		
 		if ( $items_in_cart ) {
 		
-			if ( 'product' == $it_exchange_view )
+			if ( 'product' == $it_exchange_view && ! it_exchange_is_current_product_in_cart() )
 				$state = 'product';
 			else if ( $multi_item_cart_allowed )
 				$state = 'cart';
