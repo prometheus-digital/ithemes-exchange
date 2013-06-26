@@ -227,12 +227,14 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		
 		if ( empty( $state ) && 'product' == $it_exchange_view  )
 			$state = 'product';
-		else
+		else if ( empty( $state ) )
 			$state = 'cart';
 
 		// Validate state
 		if ( $state && in_array( $state, $this->valid_states ) )
 			$this->state = $state;
+			
+		error_log( 'function -> ' . $state );
 			
 	}
 

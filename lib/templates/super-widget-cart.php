@@ -68,7 +68,7 @@
                 <?php if ( it_exchange( 'cart', 'focus', 'type=quantity' ) ) : ?>
                     <div class="cart-actions-wrapper">
                         <div class="cart-action cancel-update">
-                        <?php it_exchange( 'cart', 'checkout', array( 'class' => 'sw-cart-focus-checkout', 'focus' => 'checkout', 'label' =>  __( 'Return to Checkout', 'LION' ) ) ); ?>
+						<?php it_exchange( 'cart', 'update', 'class=it-exchange-update-quantity-button&label=' . __( 'Update Quantity', 'LION' ) ); ?>
                         </div>
                     </div>
                 <?php endif; ?>
