@@ -1,3 +1,43 @@
+0.4.11 - 2013-06-26 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Chris Jean, Ty Carlson
+	Dump sessions when multi-item cart is enabled.
+	Update to Store Template
+	Styling for Store template
+	Update to Store template
+	Update to the product gallery and featured images
+	Fix typo in theme API for downloads
+	Fixed issue where enabling/disabling an Add-on from the All tab in Settings > Add-ons caused the All tab to be inactive.
+	Don't enqueue coupons if screen object is missing.
+	Added initial Store template a couple markup changes to Product template
+	Fixed how the "Notification Email Template" label in Settings > Email Settings pointed to the input for "Email Template".
+	Forced the $price passed to it_exchange_format_price to 0 if it is not numeric. This removes a warning on the All Products listing if an empty string was saved as the price.
+	Added hide-if-super-widget CSS class/functionality, so purchase options can appear on product page with no super-widget enabled
+	More product gallery awesomeness.
+	Remaining localization for JS
+	JS localization for add/edit products
+	Fix for product refresh removing item from superwidget for single-item carts
+	Pushing up changes to the product gallery.
+	Remove no-debug query arg from SW Ajax calls
+	Modifying the quantity JS/AJAX
+	Moving coupon output outside of cart-item while loop
+	Removing debug code
+	Fix bad labels for Product Slug and Purchases on Settings --> Pages tab
+	Prevent Page Settings from saving if page is WordPress type but has no WordPress page selected
+	Fix for coupons input not appearing when no coupons added
+	Fix for quantity issue in SW / single item cart
+	Fix strict warning on Settings --> Pages tab
+	Change unlmited purchase quantity feedback in theme API for products from 0 to 'Unlimited' by default.
+	Fix bug preventing deletion of all sessions when Exchange Reset option is checked
+	Fix missing exipraiton and download limit theme API functions
+	Setup MailChimp form submission on get-more-addons page
+	Fix menus error for WP version 3.5.2
+	Resend customer email when a transaction status is updated from not cleared to ship to cleared to ship.
+	Allow transaction methods to register ability to manually change transaction status.
+	Add ability to change transaction status to bottom of transaction details if allowed by transaction method.
+	Set return to addons link to only show on add-on settings page... was showing on wizard in some cases
+	Added filters for modifying purchase notification email templates
+	Check get e-mail updates from us about iThemes Exchange automatically
+	Hide test/sandbox mode fields on wizard
+	Remove static call to non-static method in Stripe add-on
 0.4.10 - 2013-06-25 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
 	Don't print download links on Confirmation page or Downloads page if transaction is not cleared for delivery fixed default state issue
 	Added it_exchange_is_current_product_in_cart() to check if current product being viewed is in the cart already
