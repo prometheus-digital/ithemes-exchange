@@ -131,9 +131,15 @@ class IT_Exchange_Admin {
 	*/
 	function return_to_addons() {
 		
-		$url = add_query_arg( 'page', 'it-exchange-addons', admin_url( 'admin.php' ) );
+		global $hook_suffix;
 		
-		echo '<p><a href="' . $url . '">&larr; ' . __( 'Back to Add-ons', 'LION' ) . '</a></p>';
+		if ( 'exchange_page_it-exchange-addons' == $hook_suffix ) { //only show on add-on-settings pages
+			
+			$url = add_query_arg( 'page', 'it-exchange-addons', admin_url( 'admin.php' ) );
+			
+			echo '<p><a href="' . $url . '">&larr; ' . __( 'Back to Add-ons', 'LION' ) . '</a></p>';
+		
+		}
 		
 	}
 
