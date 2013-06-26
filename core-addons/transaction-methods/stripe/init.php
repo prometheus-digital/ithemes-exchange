@@ -287,7 +287,8 @@ add_filter( 'it_exchange_get_stripe_make_payment_button', 'it_exchange_stripe_ad
  * @return array filtered list of currencies only supported by Stripe
  */
 function it_exchange_stripe_addon_get_currency_options( $default_currencies ) {
-	$stripe_currencies = IT_Exchange_Stripe_Add_On::get_supported_currency_options();
+	$IT_Exchange_Stripe_Add_On = new IT_Exchange_Stripe_Add_On();
+	$stripe_currencies = $IT_Exchange_Stripe_Add_On->get_supported_currency_options();
 	return array_intersect_key( $default_currencies, $stripe_currencies );
 }
 add_filter( 'it_exchange_get_currency_options', 'it_exchange_stripe_addon_get_currency_options' );
