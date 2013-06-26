@@ -1,4 +1,14 @@
 0.4.11 - 2013-06-26 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Chris Jean, Ty Carlson
+	Fixed Dashboard menu Add Product entry so that it is highlighted when on that page.
+	Fixed Dashboard menu Product Categories and Product Tags entries so that the Exchange menu expands when on those pages.
+	Fixed Upload link position on the Download Source on the Add/Edit Product Screen.
+	Fixed bug where super widget error/notice messages were inheriting styles not intended for them
+	Fixed bug where advanced section item’s inner height was not getting set correctly.
+	Fixed a bug with the checkboxes on the add/edit product screen.
+	Fixed function name typo: changed it_exchange_basic_coupons_remove_submeu_links to it_exchange_basic_coupons_remove_submenu_links.
+	Added some styles to the empty cart state.
+	Added a few resets to the gallery.
+	Adds Error/Notice Message styling
 	Dump sessions when multi-item cart is enabled.
 	Update to Store Template
 	Styling for Store template
