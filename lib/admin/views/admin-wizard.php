@@ -57,7 +57,7 @@
 					<label for="company-email"><?php _e( 'E-mail Notifications', 'LION' ); ?> <span class="tip" title="<?php _e( 'The E-mail address you should receive notifcations to, from your store.', 'LION' ); ?>">i</span></label>
 					<?php $form->add_text_box( 'company-email', array( 'value' => get_bloginfo( 'admin_email' ), 'class' => 'clearfix' ) ); ?>
 					<p>
-						<?php $form->add_check_box( 'exchange-notifications' ); ?>
+						<?php $form->add_check_box( 'exchange-notifications', array( 'checked' => true ) ); ?>
 						<label for="exchange-notifications"><?php _e( 'Get e-mail updates from us about iThemes Exchange', 'LION' ); ?> <span class="tip" title="<?php _e( "We'll send you updates, discounts on add-ons and other iThemes products, and our eternal love.", 'LION' ); ?>">i</span></label>
 					</p>
 					<div class="default-currency">
