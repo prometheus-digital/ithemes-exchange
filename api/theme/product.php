@@ -752,6 +752,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		$defaults      = array(
 			'type'                      => false,
+			'class'                     => false,
 			'buy-now-before'            => '',
 			'buy-now-after'             => '',
 			'buy-now-class'             => false,
@@ -790,11 +791,13 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			
 		if ( !$product_is_available )
 			return __( 'Product is currently not available.', 'LION' );
+			
+		$class = $options['class'];
 	
 		// Set buy-now options
 		$options['before']        = $options['buy-now-before'];
 		$options['after']         = $options['buy-now-after'];
-		$options['class']         = $options['buy-now-class'];
+		$options['class']         = $class . ' ' . $options['buy-now-class'];
 		$options['label']         = $options['buy-now-label'];
 		$options['button-type']   = $options['buy-now-button-type'];
 		$options['button-name']   = $options['buy-now-button-name'];
@@ -809,7 +812,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// Set add-to-cart options
 		$options['before']        = $options['add-to-cart-before'];
 		$options['after']         = $options['add-to-cart-after'];
-		$options['class']         = $options['add-to-cart-class'];
+		$options['class']         = $class . ' ' . $options['add-to-cart-class'];
 		$options['label']         = $options['add-to-cart-label'];
 		$options['button-type']   = $options['add-to-cart-button-type'];
 		$options['button-name']   = $options['add-to-cart-button-name'];
@@ -873,7 +876,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( ! $product_is_available )
 			return '<p>' . esc_attr( $options['not-available-text'] ) . '</p>';
 
-		$result  = '<form action="" method="post" class="it-exchange-sw-purchase-options it-exchange-sw-buy-now">';
+		$result  = '<form action="" method="post" class="it-exchange-sw-purchase-options it-exchange-sw-buy-now ' . esc_attr( $class ) . '">';
 		$result .= $hidden_fields;
 		
 		if ( $options['edit-quantity'] )
@@ -962,7 +965,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( ! $multi_item_cart )
 			return '';
 
-		$result  = '<form action="" method="post" class="it-exchange-sw-purchase-options it-exchange-sw-add-to-cart">';
+		$result  = '<form action="" method="post" class="it-exchange-sw-purchase-options it-exchange-sw-add-to-cart ' . esc_attr( $class ) . '">';
 		$result .= $hidden_fields;
 		
 		if ( $options['edit-quantity'] )
