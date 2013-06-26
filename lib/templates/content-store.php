@@ -13,8 +13,8 @@
 			<?php while( it_exchange( 'store', 'products' ) ) : ?>
 				<li class="it-exchange-product">
 					<a class="it-exchange-product-permalink" href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'url') ); ?>">
-						<?php if ( it_exchange( 'product', 'has-featuredimage' ) ) : ?>
-							<?php it_exchange( 'product', 'featuredimage', array( 'size' => 'large' ) ); ?>
+						<?php if ( it_exchange( 'product', 'has-featured-image' ) ) : ?>
+							<?php it_exchange( 'product', 'featured-image', array( 'size' => 'large' ) ); ?>
 						<?php endif; ?>
 					</a>
 					<div class="it-exchange-product-details">
