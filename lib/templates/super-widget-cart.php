@@ -117,9 +117,9 @@
     <?php endif; ?>
 
 <?php elseif ( ! it_exchange_is_page( 'product' ) ) : ?>
-
-    <?php printf( __( 'Your %s is empty', 'LION' ), strtolower( it_exchange_get_page_name( 'cart' ) ) ); ?>
-
+	<div class="empty-cart">
+		<p><?php _e( 'Your cart is empty', 'LION' ) ?></p>
+	</div>
 <?php endif; ?>
 
 </div>
