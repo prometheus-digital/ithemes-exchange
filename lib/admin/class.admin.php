@@ -1220,6 +1220,15 @@ Order: %s
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			$deps = array( 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs', 'jquery-ui-tooltip', 'autosave' );
 			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', $deps );
+			wp_localize_script( 'it-exchange-add-edit-product', 'addEditProductL10n', array(
+					'mediaManagerTitle' => __( 'Select Images', 'LION' ),
+					'largerThan150'     => __( 'You must upload an image larger than 150x150.', 'LION' ),
+					'editMediaManagerTitle' => __( 'Edit Image', 'LION' ),
+					'uploadSource' => __( 'Upload Source', 'LION' ),
+					'insert' => __( 'Insert', 'LION' ),
+					'advanced' => __( 'Advanced', 'LION' ),
+				)
+			);
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {
 			$deps = array();
 			wp_enqueue_script( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/transaction-details.js', $deps );
