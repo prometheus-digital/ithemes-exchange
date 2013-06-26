@@ -31,9 +31,6 @@ $ln           = empty( $_GET['sw-ln'] ) ? false : esc_attr( $_GET['sw-ln'] );
 $em           = empty( $_GET['sw-em'] ) ? false : esc_attr( $_GET['sw-em'] );
 $p2           = empty( $_GET['sw-p2'] ) ? false : esc_attr( $_GET['sw-p2'] );
 
-error_log( $action );
-error_log( $state );
-
 // Update the state HTML of the widget
 if ( 'get-state' == $action && $state ) {
 	if ( $product )

@@ -234,8 +234,6 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		if ( $state && in_array( $state, $this->valid_states ) )
 			$this->state = $state;
 			
-		error_log( 'function -> ' . $state );
-			
 	}
 
 	/**
