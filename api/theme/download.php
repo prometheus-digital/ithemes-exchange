@@ -117,29 +117,30 @@ class IT_Theme_API_Download implements IT_Theme_API {
 		if ( $options['has'] )
 			return ! empty( $this->download['limit'] );
 
-		if ( ! empty( $this->download['limit'] ) ) {
+		$result   = '';
+		$limit    = $this->download['download_limit'];
 
-			$result   = '';
-			$limit    = $this->download['limit'];
-			$defaults = array(
-				'before' => '<span class="download-limit">',
-				'after'  => '</span>',
-				'format' => 'raw',
-			);
+		$defaults = array(
+			'before' => '<span class="download-limit">',
+			'after'  => '</span>',
+			'format' => 'raw',
+			'unlimited-label' => __( 'Unlmited', 'LION' ),
+		);
 
-			$options = ITUtility::merge_defaults( $options, $defaults );
+		$options = ITUtility::merge_defaults( $options, $defaults );
 
-			if ( 'html' == $options['format'] )
-				$result .= $options['before'];
+		if ( empty( $limit ) )
+			$limit = $options['unlimited-label'];
 
-			$result .= $limit;
+		if ( 'html' == $options['format'] )
+			$result .= $options['before'];
 
-			if ( 'html' == $options['format'] )
-				$result .= $options['after'];
+		$result .= $limit;
 
-			return $result;
-		}
-		return false;
+		if ( 'html' == $options['format'] )
+			$result .= $options['after'];
+
+		return $result;
 	}
 
 	/**
@@ -154,28 +155,31 @@ class IT_Theme_API_Download implements IT_Theme_API {
 		if ( $options['has'] )
 			return ! empty( $this->download['expiration'] );
 
-		if ( ! empty( $this->download['expiration'] ) ) {
+		$result     = '';
+		$expiration = $this->download['expires'];
+		$defaults   = array(
+			'before'              => '<span class="download-expiration">',
+			'after'               => '</span>',
+			'format'              => 'raw',
+			'never-expires-label' => __( 'Never expires', 'LION' ),
+			'template'            => __( '%d %s after purchase', 'LION' ),
+		);
 
-			$result     = '';
-			$expiration = $this->download['expiration'];
-			$defaults   = array(
-				'before' => '<span class="download-expiration">',
-				'after'  => '</span>',
-				'format' => 'raw',
-			);
+		$options = ITUtility::merge_defaults( $options, $defaults );
 
-			$options = ITUtility::merge_defaults( $options, $defaults );
+		if ( empty( $expiration ) )
+			$expiration = $options['never-expires-label'];
+		else
+			$expiration = sprintf( $options['template'], $this->download['expire_int'], $this->download['expire_units'] );
 
-			if ( 'html' == $options['format'] )
-				$result .= $options['before'];
+		if ( 'html' == $options['format'] )
+			$result .= $options['before'];
 
-			$result .= $expiration;
+		$result .= $expiration;
 
-			if ( 'html' == $options['format'] )
-				$result .= $options['after'];
+		if ( 'html' == $options['format'] )
+			$result .= $options['after'];
 
-			return $result;
-		}
-		return false;
+		return $result;
 	}
 }
