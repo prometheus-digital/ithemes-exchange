@@ -478,7 +478,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				&& it_exchange_product_has_feature( $this->product->ID, 'product-images' ) ) {
 
 			$defaults = array(
-				'size' => 'thumbnail'
+				'size' => 'large'
 			);
 			
 			$options = ITUtility::merge_defaults( $options, $defaults );
@@ -486,15 +486,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
 			
-			foreach( $product_images as $image_id ) {
-				$feature_image = array(
-					'id'    => $image_id,
-					'thumb' => wp_get_attachment_thumb_url( $image_id ),
-					'large' => wp_get_attachment_url( $image_id )
-				);
-				
-				break;
-			}
+			$feature_image = array(
+				'id'    =>  $product_images[0],
+				'thumb' => wp_get_attachment_thumb_url( $product_images[0] ),
+				'large' => wp_get_attachment_url( $product_images[0] )
+			);
 			
 			if ( 'thumbnail' === $options['size'] )
 				$img_src = $feature_image['thumb'];
@@ -502,13 +498,13 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				$img_src = $feature_image['large'];
 			
 			ob_start();
-				?>
-				<div id="it-exchange-feature-image-<?php echo $feature_image['id'] ?>" class="it-exchange-featured-image">
+			?>
+				<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
 					<div class="featured-image-wrapper">
-						<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>" data-src-thumb="<?php echo $feature_image['thumb'] ?>">
+						<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>" data-src-thumb="<?php echo $feature_image['thumb'] ?>" />
 					</div>
 				</div>
-				<?php
+			<?php
 			$output = ob_get_clean();
 			
 			return $output;
@@ -578,61 +574,46 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				&& it_exchange_product_has_feature( $this->product->ID, 'product-images' ) ) {
 
 			$defaults = array(
-				'size'   => 'thumbnail', //thumbnail/post-thumbnail, large
-				'output' => 'gallery', //gallery, featured, or thumbnails
+				'size'   => 'thumbnail', // thumbnail or large
+				'output' => 'gallery',   // gallery or thumbnails
+				'zoom'   => 'hover',      // hover or click
+				'switch' => 'click'      // hover or click
 			);
+			
 			$options = ITUtility::merge_defaults( $options, $defaults );
 			$output = NULL;
-	
+			
 			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
-
+			
 			switch( $options['output'] ) {
 				
-				case 'featured': //really just the first image
+				case 'thumbnails' :
 					if ( !empty( $product_images ) ) {
-						$output = '<div id="it-exchange-product-images-gallery">';
+						ob_start();
+						?>
+							<div class="it-exchange-product-images-gallery-<?php echo get_the_id(); ?> it-exchange-product-images-gallery it-exchange-gallery-thumbnails">
+								<?php if ( count( $product_images ) > 1 ) : ?>
+									<ul class="it-exchange-thumbnail-images-<?php echo get_the_ID(); ?> it-exchange-thumbnail-images">
+										<?php foreach( $product_images as $image_id ) : ?>
+											<?php
+												$img_url = wp_get_attachment_url( $image_id );
+												$img_thumb_url = wp_get_attachment_thumb_url( $image_id );
+											?>
+											<li class="it-exchange-product-image-thumb-<?php echo $image_id; ?>">
+												<span><img alt="" src="<?php echo $img_thumb_url; ?>" data-src-large="<?php echo $img_url; ?>" data-src-thumb="<?php echo $img_thumb_url; ?>"></span>
+											</li>
+										<?php endforeach; ?>
+									</ul>
+								<?php endif; ?>
+							</div>
+						<?php
+						$output = ob_get_clean();
 						
-						$img_url = wp_get_attachment_url( $product_images[0] );
-						$img_thumb_url = wp_get_attachment_thumb_url( $product_images[0] );
-						
-						if ( 'thumbnail' === $options['size'] )
-							$img_src = $img_thumb_url;
-						else
-							$img_src = $img_url;
-			
-						$output .= '<div id="it-exchange-feature-image-' . $product_images[0] . '" class="it-exchange-featured-image">';
-						$output .= '<div class="featured-image-wrapper">';
-						$output .= '   <img alt="" src="' . $img_src . '" data-src-large="' . $img_url . '" data-src-thumb="' . $img_thumb_url . '">';
-						$output .= '</div>';
-						$output .= '</div>';
-						
-						$output .= '</div>';
 					}
-					break;
+				break;
 				
-				case 'thumbnails': //just thumbnails
-					if ( !empty( $product_images ) ) {
-						$output = '<div id="it-exchange-product-images-gallery">';
-								
-						$output .=  '<ul id="it-exchange-gallery-images">';
-						foreach( $product_images as $image_id ) {
-							
-							$img_url = wp_get_attachment_url( $image_id );
-							$img_thumb_url = wp_get_attachment_thumb_url( $image_id );
-							
-							$output .=  '  <li class="it-exchange-product-image-thumb-' . $image_id . '">';
-							$output .=  '      <img alt="" src=" ' . $img_thumb_url . '" data-src-large="' . $img_url . '" data-src-thumb="' . $img_thumb_url . '">';
-							$output .=  '  </li>';
-							
-						}
-						$output .=  '</ul>';
-
-						$output .= '</div>';
-					}
-					break;
-			
-				case 'gallery':
-				default:
+				case 'gallery' :
+				default :
 					if ( ! empty( $product_images ) ) {
 						
 						$feature_img_src = wp_get_attachment_url( $product_images[0] );
@@ -640,14 +621,14 @@ class IT_Theme_API_Product implements IT_Theme_API {
 						
 						ob_start();
 						?>
-							<div id="it-exchange-product-images-gallery">
-								<div id="it-exchange-feature-image-<?php echo get_the_ID(); ?>" class="it-exchange-featured-image">
+							<div class="it-exchange-product-images-gallery-<?php echo get_the_id(); ?> it-exchange-product-images-gallery it-exchange-gallery-full" data-zoom="<?php echo $options['zoom']; ?>" data-switch="<?php echo $options['switch']; ?>">
+								<div class="it-exchange-feature-image-<?php echo get_the_ID(); ?> it-exchange-featured-image">
 									<div class="featured-image-wrapper">
 										<img alt="" src="<?php echo $feature_img_src ?>" data-src-large="<?php echo $feature_img_src ?>" data-src-thumb="<?php echo $feature_img_thumb_src ?>">
 									</div>
 								</div>
 								<?php if ( count( $product_images ) > 1 ) : ?>
-									<ul id="it-exchange-thumbnail-images-<?php echo get_the_ID(); ?>" class="it-exchange-thumbnail-images">
+									<ul class="it-exchange-thumbnail-images-<?php echo get_the_ID(); ?> it-exchange-thumbnail-images">
 										<?php $img_iteration = 0; ?>
 										<?php foreach( $product_images as $image_id ) : ?>
 											<?php
