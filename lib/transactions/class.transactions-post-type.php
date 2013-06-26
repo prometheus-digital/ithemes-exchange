@@ -34,6 +34,7 @@ class IT_Exchange_Transaction_Post_Type {
 			add_filter( 'post_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
 			add_filter( 'screen_layout_columns', array( $this, 'modify_details_page_layout' ) ); 
 			add_filter( 'get_user_option_screen_layout_it_exchange_tran', array( $this, 'update_user_column_options' ) );
+			add_action( 'wp_ajax_it-exchange-update-transaction-status', array( $this, 'ajax_update_status' ) );
 		}
 	}
 
@@ -565,6 +566,71 @@ class IT_Exchange_Transaction_Post_Type {
 			</div>
 		</div>
 		<?php
+		if ( it_exchange_transaction_status_can_be_manually_changed( $post ) ) : 
+			?>
+			<div class="transaction-status-update clearfix spacing-wrapper">
+				<div class="update-status-label left"><?php _e( 'Change Status', 'LION' ); ?></div>
+				<div class="update-status-setting right">
+					<select id='it-exchange-update-transaction-status'>
+						<?php
+						if ( $options = it_exchange_get_status_options_for_transaction( $post ) ) {
+							$current_status = it_exchange_get_transaction_status( $post );
+							foreach( $options as $key => $label ) {
+								$status_label = it_exchange_get_transaction_status_label( $post, array( 'status' => $key ) );
+								?>
+								<option value="<?php esc_attr_e( $key ); ?>" <?php selected( $key, $current_status ); ?>>
+									<?php esc_attr_e( $status_label ); ?>
+								</option>
+								<?php
+							}
+						}
+						?>
+					</select>
+					<?php wp_nonce_field( 'update-transaction-status' . $post->ID, 'it-exchange-update-transaction-nonce' ); ?>
+					<input type="hidden" id="it-exchange-update-transaction-current-status" value="<?php esc_attr_e( $current_status ); ?>" />
+					<input type="hidden" id="it-exchange-update-transaction-id" value="<?php esc_attr_e( $post->ID ); ?>" />
+					<div class="hidden" id="it-exchange-update-transaction-status-failed"><?php _e( 'Transaction status not updated', 'LION' ); ?></div>
+					<div class="hidden" id="it-exchange-update-transaction-status-success"><?php _e( 'Transaction status updated', 'LION' ); ?></div>
+				</div>
+			</div>
+			<?php
+		endif;
+	}
+
+	/**
+	 * Update transaction status on AJAX calls
+	 *
+	 * @since 0.4.11
+	 *
+	 * @return void
+	*/
+	function ajax_update_status() {
+		$transaction_id = empty( $_POST['it-exchange-transaction-id'] ) ? false: absint( $_POST['it-exchange-transaction-id'] );
+		$nonce          = empty( $_POST['it-exchange-nonce'] ) ? false: $_POST['it-exchange-nonce'];
+		$current_status = empty( $_POST['it-exchange-current-status'] ) ? false : $_POST['it-exchange-current-status'];
+		$new_status     = empty( $_POST['it-exchange-new-status'] ) ? false : $_POST['it-exchange-new-status'];
+
+		// Fail if we don't have all the data
+		if ( ! $transaction_id || ! $nonce || ! $current_status || ! $new_status )
+			die( 'failed' );
+
+		// Fail if we don't have a valid nonce
+		if ( ! wp_verify_nonce( $nonce, 'update-transaction-status' . $transaction_id ) )
+			die( 'failed' );
+
+		// Fail if status is the same as old status
+		if ( $current_status == $new_status )
+			die( 'failed' );
+
+		// Fail if transaction isn't found
+		if ( ! $transaction = it_exchange_get_transaction( $transaction_id ) )
+			die( 'failed' );
+
+		// Attempt to change status
+		if ( $current_status != it_exchange_update_transaction_status( $transaction, $new_status ) )
+			die( 'success' );
+		else
+			die ('failed' );
 	}
 }
 $IT_Exchange_Transaction_Post_Type = new IT_Exchange_Transaction_Post_Type();

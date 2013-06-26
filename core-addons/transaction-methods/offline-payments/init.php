@@ -7,6 +7,26 @@
 */
 
 /**
+ * Mark this transaction method as okay to manually change transactions
+ *
+ * @since 0.4.11
+*/
+add_filter( 'it_exchange_offline-payments_transaction_status_can_be_manually_changed', '__return_true' );
+
+/**
+ * Returns status options
+ *
+ * @since 0.3.6
+ * @return void
+*/
+function it_exchange_offline_payments_get_default_status_options() {
+	$add_on = it_exchange_get_addon( 'offline-payments' );
+	$options = empty( $add_on['options']['supports']['transaction_status']['options'] ) ? array() : $add_on['options']['supports']['transaction_status']['options'];
+	return $options;
+}
+add_filter( 'it_exchange_get_status_options_for_offline-payments_transaction', 'it_exchange_offline_payments_get_default_status_options' );
+
+/**
  * Call back for settings page
  *
  * This is set in options array when registering the add-on and called from it_exchange_enable_addon()
@@ -321,7 +341,7 @@ class IT_Exchange_Offline_Payments_Add_On {
 	}
 
 	function get_offline_payment_form_table( $form, $settings = array() ) {
-		$default_status_options = IT_Exchange_Offline_Payments_Add_On::get_default_status_options();
+		$default_status_options = it_exchange_offline_payments_get_default_status_options();
 
 		if ( !empty( $settings ) )
 			foreach ( $settings as $key => $var )
@@ -433,23 +453,11 @@ class IT_Exchange_Offline_Payments_Add_On {
 		if ( empty( $values['offline-payments-instructions'] ) )
 			$errors[] = __( 'Please leave some instructions for customers checking out with this transaction method', 'LION' );
 
-		$valid_status_options = $this->get_default_status_options();
+		$valid_status_options = it_exchange_offline_payments_get_default_status_options();
 		if ( empty( $values['offline-payments-default-status'] ) || empty( $valid_status_options[$values['offline-payments-default-status']] ) )
 			$errors[] = __( 'Please select a valid default transaction status.', 'LION' );
 
 		return $errors;
-	}
-
-	/**
-	 * Prints HTML options for default status
-	 *
-	 * @since 0.3.6
-	 * @return void
-	*/
-	function get_default_status_options() {
-		$add_on = it_exchange_get_addon( 'offline-payments' );
-		$options = empty( $add_on['options']['supports']['transaction_status']['options'] ) ? array() : $add_on['options']['supports']['transaction_status']['options'];
-		return $options;
 	}
 
 	/**
@@ -464,5 +472,4 @@ class IT_Exchange_Offline_Payments_Add_On {
 		$defaults['offline-payments-default-status'] = 'pending';
 		return $defaults;
 	}
-
 }

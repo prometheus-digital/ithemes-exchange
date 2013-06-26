@@ -293,16 +293,35 @@ function it_exchange_get_transaction_status( $transaction ) {
 }
 
 /**
+ * Grab a list of all possible transactions stati
+ *
+ * @since 0.4.11
+ *
+ * @param mixed $transaction transaction id or object
+ * @return array
+*/
+function it_exchange_get_status_options_for_transaction( $transaction ) {
+	if ( ! $method = it_exchange_get_transaction_method( $transaction ) )
+		return array();
+	return apply_filters( 'it_exchange_get_status_options_for_' . $method . '_transaction', array(), $transaction );
+}
+
+/**
  * Returns the label for a transaction status (provided by addon)
  *
  * @since 0.4.0
  *
  * @param string $transaction_method the transaction method
+ * @param array $options
  * @return string
 */
-function it_exchange_get_transaction_status_label( $transaction ){
+function it_exchange_get_transaction_status_label( $transaction, $options=array() ){
 	$transaction = it_exchange_get_transaction( $transaction );
-	return apply_filters( 'it_exchange_transaction_status_label_' . $transaction->transaction_method, $transaction->status );
+	$defaults = array(
+		'status' => it_exchange_get_transaction_status( $transaction ),
+	);
+	$options = ITUtility::merge_defaults( $options, $defaults );
+	return apply_filters( 'it_exchange_transaction_status_label_' . $transaction->transaction_method, $options['status'], $options );
 }
 
 /**
@@ -827,4 +846,18 @@ function it_exchange_get_transaction_confirmation_url( $transaction_id ) {
 	}
 	
 	return apply_filters( 'it_exchange_get_transaction_confirmation_url', $confirmation_url, $transaction_id );
+}
+
+/**
+ * Can this transaction status be manually updated?
+ *
+ * @since 0.4.11
+ *
+ * @param mixed $transaction the id or object
+ * @return boolean
+*/
+function it_exchange_transaction_status_can_be_manually_changed( $transaction ) {
+	if( ! $method = it_exchange_get_transaction_method( $transaction ) )
+		return false;
+	return apply_filters( 'it_exchange_' . $method . '_transaction_status_can_be_manually_changed', false );
 }
