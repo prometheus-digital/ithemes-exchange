@@ -20,7 +20,7 @@
 					<div class="it-exchange-product-details">
 						<?php it_exchange( 'product', 'title' ); ?>
 						<?php it_exchange( 'product', 'baseprice' ); ?>
-						<a href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'text') ); ?>">View Details</a>
+						<a class="it-exchange-product-details-link" href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'url') ); ?>">View Details</a>
 					</div>
 				</li>
 			<?php endwhile; ?>
