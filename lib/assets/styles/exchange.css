@@ -131,3 +131,12 @@
 .it-exchange-super-widget .messages li{padding:.8em 0;}
 .it-exchange-super-widget .messages.notices li{background:#ECFFDA;color:#768B5E;}
 .it-exchange-super-widget .messages.errors li{background:#FFF0F0;color:#DB4343;}
+
+/** -----------------------------------------------------:[ store ]:---------- */
+#it-exchange-store .it-exchange-products {margin: 0;padding: 0;}
+#it-exchange-store .it-exchange-products li {list-style: none;display: block;float:left;width: 45%;margin: 0 0 5em 0;vertical-align: top;}
+#it-exchange-store .it-exchange-products li:nth-child(2n+1) {margin-right: 5%;clear:both;}
+#it-exchange-store .it-exchange-product-details {padding: 1em;overflow:hidden;}
+#it-exchange-store h1.entry-title {font-size: 1.5em;margin: .5em 0;padding: 0;}
+#it-exchange-store .it-exchange-base-price {font-size: 1.25em;float:left;}
+#it-exchange-store .it-exchange-product-details-link {float:right;line-height: 2;}
