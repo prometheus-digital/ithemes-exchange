@@ -288,7 +288,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
  *
  * @return void
 */
-function it_exchange_basic_coupons_remove_submeu_links() {
+function it_exchange_basic_coupons_remove_submenu_links() {
 	if ( ! empty( $GLOBALS['submenu']['it-exchange'] ) ) {
 		foreach( $GLOBALS['submenu']['it-exchange'] as $key => $sub ) {
 			if ( 'it-exchange-add-basic-coupon' == $sub[2] || 'it-exchange-edit-basic-coupon' == $sub[2] ) {
@@ -300,7 +300,7 @@ function it_exchange_basic_coupons_remove_submeu_links() {
 		}
 	}
 }
-add_action( 'admin_head', 'it_exchange_basic_coupons_remove_submeu_links' );
+add_action( 'admin_head', 'it_exchange_basic_coupons_remove_submenu_links' );
 
 /**
  * Adds the coupon specific columns to the View All Coupons table
