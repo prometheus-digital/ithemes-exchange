@@ -52,8 +52,8 @@
 #it-exchange-product .has-images .product-images{width:40%;}
 
 /** ----------------------------------------:[ gallery ]:--- */
-#it-exchange-product #it-exchange-gallery-images{list-style:none;}
-#it-exchange-product #it-exchange-gallery-images li{margin:0;float:left;width:25%;}
+#it-exchange-product #it-exchange-product-images-gallery .it-exchange-thumbnail-images{list-style:none;}
+#it-exchange-product #it-exchange-product-images-gallery .it-exchange-thumbnail-images li{margin:0;float:left;width:25%;}
 
 /** ----------------------------------------:[ advanced ]:--- */
 #it-exchange-product .product-advanced-content{margin-top:2em;}

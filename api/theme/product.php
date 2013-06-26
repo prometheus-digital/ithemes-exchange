@@ -325,11 +325,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		// Set options
 		$defaults      = array(
-			'before'          => '',
-			'after'           => '',
-			'format'          => 'html',
-			'class'           => 'product-purchase-quantity',
-			'unlimited-label' => __( 'Unlimited', 'LION' ),
+			'before'      => '',
+			'after'       => '',
+			'format'      => 'html',
+			'class'       => 'product-purchase-quantity',
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
@@ -341,7 +340,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$max_quantity = it_exchange_get_product_feature( $this->product->ID, 'purchase-quantity' );
 		else
 			return '';
-		$max_quantity = empty( $max_quantity ) ? $options['unlimited-label'] : $max_quantity;
+		$max_quantity = empty( $max_quantity ) ? '0' : $max_quantity;
 
 		// Lets do some inventory checking and make sure that if we're supporing inventory, that we don't allow max to be greater than inventory
 		if ( it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ) {
@@ -566,7 +565,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function product_gallery( $options=array() ) {
-
+		
 		// Return boolean if has flag was set
 		if ( $options['supports'] )
 			return it_exchange_product_supports_feature( $this->product->ID, 'product-images' );
@@ -634,41 +633,38 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			
 				case 'gallery':
 				default:
-					if ( !empty( $product_images ) ) {
-						$output = '<div id="it-exchange-product-images-gallery">';
+					if ( ! empty( $product_images ) ) {
 						
-						$img_url = wp_get_attachment_url( $product_images[0] );
-						$img_thumb_url = wp_get_attachment_thumb_url( $product_images[0] );
+						$feature_img_src = wp_get_attachment_url( $product_images[0] );
+						$feature_img_thumb_src = wp_get_attachment_thumb_url( $product_images[0] );
 						
-						$output .= '<div id="it-exchange-feature-image-' . $product_images[0] . '" class="it-exchange-featured-image">';
-						$output .= '<div class="featured-image-wrapper">';
-						$output .= '   <img alt="" src="' . $img_url . '" data-src-large="' . $img_url . '" data-src-thumb="' . $img_thumb_url . '">';
-						$output .= '</div>';
-						$output .= '</div>';
-						
-						unset( $product_images[0] ); //we don't want this listed below
-						
-						if ( !empty( $product_images ) ){
-							
-							$output .=  '<ul id="it-exchange-gallery-images">';
-							foreach( $product_images as $image_id ) {
-								
-								$img_url = wp_get_attachment_url( $image_id );
-								$img_thumb_url = wp_get_attachment_thumb_url( $image_id );
-								
-								$output .=  '  <li class="it-exchange-product-image-thumb-' . $image_id . '">';
-								$output .=  '      <img alt="" src=" ' . $img_thumb_url . '" data-src-large="' . $img_url . '" data-src-thumb="' . $img_thumb_url . '">';
-								$output .=  '  </li>';
-								
-							}
-							$output .=  '</ul>';
-						
-						}
-						$output .= '</div>';
+						ob_start();
+						?>
+							<div id="it-exchange-product-images-gallery">
+								<div id="it-exchange-feature-image-<?php echo get_the_ID(); ?>" class="it-exchange-featured-image">
+									<div class="featured-image-wrapper">
+										<img alt="" src="<?php echo $feature_img_src ?>" data-src-large="<?php echo $feature_img_src ?>" data-src-thumb="<?php echo $feature_img_thumb_src ?>">
+									</div>
+								</div>
+								<?php if ( count( $product_images ) > 1 ) : ?>
+									<ul id="it-exchange-thumbnail-images-<?php echo get_the_ID(); ?>" class="it-exchange-thumbnail-images">
+										<?php foreach( $product_images as $image_id ) : ?>
+											<?php
+												$img_url = wp_get_attachment_url( $image_id );
+												$img_thumb_url = wp_get_attachment_thumb_url( $image_id );
+											?>
+											<li class="it-exchange-product-image-thumb-<?php echo $image_id; ?>">
+												<img alt="" src="<?php echo $img_thumb_url; ?>" data-src-large="<?php echo $img_url; ?>" data-src-thumb="<?php echo $img_thumb_url; ?>">
+											</li>
+										<?php endforeach; ?>
+									</ul>
+								<?php endif; ?>
+							</div>
+						<?php
+						$output = ob_get_clean();
 					}
-					break;
-				
-			}			
+				break;
+			}
 			
 			return $output;
 		}
