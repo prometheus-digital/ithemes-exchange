@@ -114,7 +114,9 @@ class IT_Exchange_Email_Notifications {
 		$headers[] = 'charset=utf-8';
 		
 		$subject = do_shortcode( $settings['receipt-email-subject'] );
-		$body    = $this->body_header() . wpautop( do_shortcode( $settings['receipt-email-template'] ) ) . $this->body_footer();
+		$body    = apply_filters( 'send_purchase_emails_body', $settings['receipt-email-template'] );
+		$body    = apply_filters( 'send_purchase_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body );
+		$body    = $this->body_header() . wpautop( do_shortcode( $body ) ) . $this->body_footer();
 		
 		wp_mail( $this->user->user_email, strip_tags( $subject ), $body, $headers );
 		
@@ -123,7 +125,9 @@ class IT_Exchange_Email_Notifications {
 			
 			
 			$subject = do_shortcode( $settings['admin-email-subject'] );
-			$body    = $this->body_header() . wpautop( do_shortcode( $settings['admin-email-template'] ) ) . $this->body_footer();
+			$body    = apply_filters( 'send_admin_emails_body', $settings['admin-email-template'] );
+			$body    = apply_filters( 'send_admin_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body );
+			$body    = $this->body_header() . wpautop( do_shortcode( $body ) ) . $this->body_footer();
 			
 			$emails = explode( ',', $settings['notification-email-address'] );
 			

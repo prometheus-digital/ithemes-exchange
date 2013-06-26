@@ -17,6 +17,7 @@
  * Grabs the transaction method of a transaction
  *
  * @since 0.3.3
+ * @param mixed Transaction ID or IT_Exchange_Transaction object
  * @return string the transaction method
  */
 function it_exchange_get_transaction_method( $transaction=false ) {
