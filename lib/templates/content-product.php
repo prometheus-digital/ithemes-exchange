@@ -42,11 +42,15 @@
 		
 		<?php if ( it_exchange( 'product', 'has-downloads' ) ) : ?>
 			<p><strong>Downloads</strong><br />
-			<?php while( it_exchange( 'product', 'downloads' ) ): ?>
-				<em>Download</em>: <?php it_exchange( 'download', 'title' ); ?> | 
-				<?php it_exchange( 'download', 'limit' ); ?> | <?php it_exchange( 'download', 'expiration' ); ?>
-				<br />
-			<?php endwhile; ?>
+			<ul>
+				<?php while( it_exchange( 'product', 'downloads' ) ): ?>
+					<li>
+						<em>Download</em>: <?php it_exchange( 'download', 'title' ); ?><br>
+						<em>Limit</em>: <?php it_exchange( 'download', 'limit', array( 'unlimited-label' => 'Unlimited' ) ); ?><br>
+						<em>Expiration: </em><?php it_exchange( 'download', 'expiration', array( 'never-expires-label' => 'Never Expires' ) ); ?>
+					</li>
+				<?php endwhile; ?>
+			</ul>
 			</p>
 		<?php endif; ?>
 
@@ -55,15 +59,15 @@
 		<?php endif; ?>
 
 		<?php if ( it_exchange( 'product', 'supports-purchase-quantity' ) ) : ?>
-			<p><strong>Max Quantity Per Purchase</strong><br /><?php it_exchange( 'product', 'purchase-quantity', 'format=max-quantity' ); ?></p>
+			<p><strong>Max Quantity Per Purchase</strong><br /><?php it_exchange( 'product', 'purchase-quantity', array( 'format' => 'max-quantity' ) ); ?></p>
 		<?php endif; ?>
 
 		<?php if ( it_exchange( 'product', 'has-availability', 'type=start' ) ) : ?>
-			<p><strong>Product Start Availability</strong><br /><?php it_exchange( 'product', 'availability', 'type=start' ); ?></p>
+			<p><strong>Product Start Availability</strong><br /><?php it_exchange( 'product', 'availability', array('type' => 'start' ) ); ?></p>
 		<?php endif; ?>
 
 		<?php if ( it_exchange( 'product', 'has-availability', 'type=end' ) ) : ?>
-			<p><strong>Product End Availability</strong><br /><?php it_exchange( 'product', 'availability', 'type=end' ); ?></p>
+			<p><strong>Product End Availability</strong><br /><?php it_exchange( 'product', 'availability', array('type' => 'end' ) ); ?></p>
 		<?php endif; ?>
         
 		<?php it_exchange( 'product', 'purchase-options', array( 'class' => 'hide-if-super-widget' ) ); ?>

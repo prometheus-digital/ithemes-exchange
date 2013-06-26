@@ -1,6 +1,30 @@
+<?php
+/**
+ * The default template for displaying the iThemes Exchange store
+ */
+?>
+
 <?php it_exchange_get_template_part( 'messages' ); ?>
-<?php if ( it_exchange( 'store', 'has-products' ) ) : ?>
-	<?php while( it_exchange( 'store', 'products' ) ) : ?>
-		<?php it_exchange_get_template_part( 'store', 'product' ); ?>
-	<?php endwhile; ?>
-<?php endif; ?>
+
+<div id="it-exchange-store">
+	<ul class="it-exchange-products">
+	
+		<?php if ( it_exchange( 'store', 'has-products' ) ) : ?>
+			<?php while( it_exchange( 'store', 'products' ) ) : ?>
+				<li class="it-exchange-product">
+					<a class="it-exchange-product-permalink" href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'url') ); ?>">
+						<?php if ( it_exchange( 'product', 'has-featuredimage' ) ) : ?>
+							<?php it_exchange( 'product', 'featuredimage', array( 'size' => 'large' ) ); ?>
+						<?php endif; ?>
+					</a>
+					<div class="it-exchange-product-details">
+						<?php it_exchange( 'product', 'title' ); ?>
+						<?php it_exchange( 'product', 'baseprice' ); ?>
+						<a href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'text') ); ?>">View Details</a>
+					</div>
+				</li>
+			<?php endwhile; ?>
+		<?php endif; ?>
+		
+	</ul>
+</div>
