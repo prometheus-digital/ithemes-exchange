@@ -125,8 +125,8 @@ class IT_Exchange_Product_Feature_Product_Availability {
 				<p class="intro-description"><?php echo $description; ?></p>
 			<?php endif; ?>
 			<p>
-				<input type="checkbox" id="it-exchange-checkbox-enable"  class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-start" value="yes" <?php checked( 'yes', $start_enabled ); ?> />&nbsp;<label for="it-exchange-checkbox-enable"><?php _e( 'Use a start date', 'LION' ); ?></label>
-				<input type="checkbox" id="it-exchange-checkbox-enable" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-end" value="yes" <?php checked( 'yes', $end_enabled ); ?> />&nbsp;<label for="it-exchange-checkbox-enable"><?php _e( 'Use an end date', 'LION' ); ?></label>
+				<input type="checkbox" id="it-exchange-enable-product-availability-start"  class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-start" value="yes" <?php checked( 'yes', $start_enabled ); ?> />&nbsp;<label for="it-exchange-enable-product-availability-start"><?php _e( 'Use a start date', 'LION' ); ?></label>
+				<input type="checkbox" id="it-exchange-enable-product-availability-end" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-end" value="yes" <?php checked( 'yes', $end_enabled ); ?> />&nbsp;<label for="it-exchange-enable-product-availability-end"><?php _e( 'Use an end date', 'LION' ); ?></label>
 			</p>
 			<p>
 				<span class="it-exchange-enable-product-availability-start<?php echo ( $start_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
