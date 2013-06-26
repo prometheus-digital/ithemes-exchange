@@ -83,10 +83,16 @@ function it_exchange_format_price( $price ) {
  *
  * @return void
 */
-function it_exchange_load_frontend_css( $current_view ) {
-	wp_enqueue_style( 'it-exchange-frontend', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange.css' ) );
+function it_exchange_load_public_scripts( $current_view ) {
+	wp_register_script( 'jquery-zoom', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.zoom.min.js' ), array( 'jquery' ), NULL, true );
+	
+	if ( is_singular( 'it_exchange_prod' ) ) {
+		wp_enqueue_script( 'it-exchange-product-public-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/exchange-product.js' ), array( 'jquery-zoom' ), NULL, true );
+	}
+	
+	wp_enqueue_style( 'it-exchange-public-css', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange.css' ) );
 }
-add_action( 'wp_enqueue_scripts', 'it_exchange_load_frontend_css' );
+add_action( 'wp_enqueue_scripts', 'it_exchange_load_public_scripts' );
 
 /**
  * Hook for processing webhooks from services like PayPal IPN, Stripe, etc.

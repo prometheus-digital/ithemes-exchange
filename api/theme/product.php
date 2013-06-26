@@ -648,14 +648,21 @@ class IT_Theme_API_Product implements IT_Theme_API {
 								</div>
 								<?php if ( count( $product_images ) > 1 ) : ?>
 									<ul id="it-exchange-thumbnail-images-<?php echo get_the_ID(); ?>" class="it-exchange-thumbnail-images">
+										<?php $img_iteration = 0; ?>
 										<?php foreach( $product_images as $image_id ) : ?>
 											<?php
+												if ( $img_iteration == 0 )
+													$img_class = 'current';
+												else
+													$img_class = '';
+												
 												$img_url = wp_get_attachment_url( $image_id );
 												$img_thumb_url = wp_get_attachment_thumb_url( $image_id );
 											?>
 											<li class="it-exchange-product-image-thumb-<?php echo $image_id; ?>">
-												<img alt="" src="<?php echo $img_thumb_url; ?>" data-src-large="<?php echo $img_url; ?>" data-src-thumb="<?php echo $img_thumb_url; ?>">
+												<span class="<?php echo $img_class; ?>"><img alt="" src="<?php echo $img_thumb_url; ?>" data-src-large="<?php echo $img_url; ?>" data-src-thumb="<?php echo $img_thumb_url; ?>"></span>
 											</li>
+											<?php $img_iteration++; ?>
 										<?php endforeach; ?>
 									</ul>
 								<?php endif; ?>
