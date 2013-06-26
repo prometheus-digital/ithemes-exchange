@@ -905,16 +905,10 @@ Order: %s
 				
 		// Signup for mailchimp if checkbox was checked
 		if ( !empty( $_REQUEST['it_exchange_settings-exchange-notifications'] )
-			&& !empty( $_REQUEST['it_exchange_settings-company-email'] ) 
-			&& is_email( trim( $_REQUEST['it_exchange_settings-company-email'] ) ) ) {
+			&& !empty( $_REQUEST['it_exchange_settings-company-email'] ) ) {
+			
+			$this->mail_chimp_signup( $_REQUEST['it_exchange_settings-company-email'] );
 		
-			$mailchimp = 'http://ithemes.us2.list-manage.com/subscribe/post?u=7acf83c7a47b32c740ad94a4e&amp;id=9da0741ac0';
-			$query = array(
-				'body' => array(
-					'EMAIL' => trim( $_REQUEST['it_exchange_settings-company-email'] ),
-				),
-			);
-			wp_remote_post( $mailchimp, $query );
 		}
 		
 		// Auto enable any core add-ons we want enabled on setup.
@@ -934,6 +928,24 @@ Order: %s
 
 		do_action( 'it_exchange_save_wizard_settings' );
 		wp_safe_redirect( 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=digital-downloads-product-type' );
+	}
+	
+	public function mail_chimp_signup( $email ) {
+		
+		$email = trim( $email );
+	
+		if ( is_email( $email ) ) {
+				
+			$mailchimp = 'http://ithemes.us2.list-manage.com/subscribe/post?u=7acf83c7a47b32c740ad94a4e&amp;id=9da0741ac0';
+			$query = array(
+				'body' => array(
+					'EMAIL' => $email,
+				),
+			);
+			wp_remote_post( $mailchimp, $query );
+		
+		}
+		
 	}
 
 	/**

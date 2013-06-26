@@ -83,9 +83,16 @@
 					<a class="it-exchange-button" target="_blank" href="http://ithemes.com/contact"><?php _e( 'Send us a message', 'LION' ); ?></a>
 					
 					<div class="email-signup">
-						<p><?php _e( 'Sign up to be notified via email when new Add-Ons and updates are released.', 'LION' ); ?></p>
-						<form action="" method="get" accept-charset="utf-8">
-							<input type="text" name="" value="">
+                    	<?php 
+						if ( ! empty( $_REQUEST['optin-email'] ) ) {
+						
+							IT_Exchange_Admin::mail_chimp_signup( $_REQUEST['optin-email'] );
+						
+						}
+						?>
+						<form action="" method="post" accept-charset="utf-8">
+                            <p><label for="optin-email"><?php _e( 'Sign up to be notified via email when new Add-Ons and updates are released.', 'LION' ); ?></label></p>
+							<input type="text" name="optin-email" value="<?php echo get_bloginfo( 'admin_email' ); ?>">
 							<input class="it-exchange-button" type="submit" value="Subscribe">
 						</form>
 					</div>
