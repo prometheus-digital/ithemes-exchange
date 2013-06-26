@@ -785,8 +785,12 @@ Order: %s
 			return $parent_file;
 
 		// Set Add New as bold when on the post-new.php screen
-		if ( 'post-new.php' == $pagenow )
-			$submenu_file = 'it-exchange-choose-product-type';
+		if ( 'post-new.php' == $pagenow ) {
+			if ( ! empty( $_GET['it-exchange-product-type'] ) )
+				$submenu_file = "post-new.php?post_type=it_exchange_prod&it-exchange-product-type={$_GET['it-exchange-product-type']}";
+			else
+				$submenu_file = 'it-exchange-choose-product-type';
+		}
 
 		// Return it-exchange as the parent (open) menu when on post-new.php and post.php for it_exchange_prod post_types
 		return 'it-exchange';
