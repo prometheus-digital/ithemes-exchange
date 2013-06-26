@@ -420,7 +420,7 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function print_add_ons_page_tabs() {
-		$active = empty( $this->_current_tab ) ? 'nav-tab-active' : '';
+		$active = ( empty( $this->_current_tab ) || 'all' == $this->_current_tab ) ? 'nav-tab-active' : '';
 		?>
 		<h2 class="nav-tab-wrapper">
 		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons' ); ?>"><?php _e( 'All', 'LION' ); ?></a>
