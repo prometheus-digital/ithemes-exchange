@@ -36,6 +36,15 @@
                             </div>
                         </div>
                     <?php endwhile; ?>
+                    
+                    <?php if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ): ?>
+                        <div class="cart-discount">
+                            <?php while( it_exchange( 'coupons', 'applied', array( 'type' => 'cart' ) ) ) : ?>
+                                <?php it_exchange( 'coupons', 'discount-label' ); ?> <?php _e( 'OFF', 'LION' ); ?> &#61; <?php it_exchange( 'cart', 'total' ); ?>
+                            <?php endwhile; ?>
+                        </div>
+                    <?php endif; ?>
+                    
                 </div>
             
                 <?php if ( it_exchange( 'coupons', 'supported', array( 'type' => 'cart' ) ) && it_exchange( 'cart', 'focus', array( 'type' => 'coupon' ) ) ) : ?>

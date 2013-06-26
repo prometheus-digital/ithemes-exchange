@@ -18,17 +18,17 @@
 					 <?php else : ?>
 						 <?php it_exchange( 'cart-item', 'price' ); ?>
 					<?php endif; ?>
-				
-					<?php if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ): ?>
-		 				<div class="cart-discount">
-		 					<?php while( it_exchange( 'coupons', 'applied', array( 'type' => 'cart' ) ) ) : ?>
-								<?php it_exchange( 'coupons', 'discount-label' ); ?> <?php _e( 'OFF', 'LION' ); ?> &#61; <?php it_exchange( 'cart', 'total' ); ?>
-		 					<?php endwhile; ?>
-						</div>
-	 				<?php endif; ?>
 				</div>
 			</div>
 		<?php endwhile; ?>
+        
+        <?php if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ): ?>
+            <div class="cart-discount">
+                <?php while( it_exchange( 'coupons', 'applied', array( 'type' => 'cart' ) ) ) : ?>
+                    <?php it_exchange( 'coupons', 'discount-label' ); ?> <?php _e( 'OFF', 'LION' ); ?> &#61; <?php it_exchange( 'cart', 'total' ); ?>
+                <?php endwhile; ?>
+            </div>
+        <?php endif; ?>
 	</div>
 
 	<?php if ( ! it_exchange_is_multi_item_cart_allowed() || ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_cart_products_count() < 2 ) ) : ?>
