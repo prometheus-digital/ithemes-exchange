@@ -122,7 +122,7 @@ class IT_Exchange_Product_Feature_Inventory {
 				<p class="intro-description"><?php echo $description; ?></p>
 			<?php endif; ?>
 			<p>
-				<input type="checkbox" id="it-exchange-checkbox-enable" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-inventory" <?php checked( 'yes', $product_feature_enable_value ); ?> /> <label for="it-exchange-checkbox-enable"><?php _e( 'Enable Inventory Tracking for this Product', 'LION' ); ?></label><br />
+				<input type="checkbox" id="it-exchange-enable-product-inventory" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-inventory" <?php checked( 'yes', $product_feature_enable_value ); ?> /> <label for="it-exchange-enable-product-inventory"><?php _e( 'Enable Inventory Tracking for this Product', 'LION' ); ?></label><br />
 			</p>
 			<p class="it-exchange-enable-product-inventory<?php echo ( $product_feature_enable_value == 'no' ) ? ' hide-if-js' : '' ?>">
 				<label for="it-exchange-product-inventory"><?php _e( 'Current Inventory', 'LION' ); ?></label>
