@@ -132,7 +132,8 @@ function it_exchange_get_coupon_types() {
  * @return boolean
 */
 function it_exchange_supports_coupon_type( $type ) {
-	return (boolean) apply_filters( 'it_exchange_supports_' . $type . '_coupons', false );
+	$types = it_exchange_get_coupon_types();
+	return (bool) in_array( $type, $types );
 }
 
 /**

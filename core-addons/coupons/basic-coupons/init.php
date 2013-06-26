@@ -64,18 +64,6 @@ function it_exchange_basic_coupons_register_field_names( $names ) {
 add_filter( 'it_exchange_default_field_names', 'it_exchange_basic_coupons_register_field_names' ); 
 
 /**
- * Register support for cart coupons if we have at least one
- *
- * @since 0.4.0
- *
- * @return void
-*/
-function it_exchange_basic_coupons_supports_cart_coupons() {
-	return (boolean) it_exchange_get_coupons();
-}
-add_filter( 'it_exchange_supports_cart_coupons', 'it_exchange_basic_coupons_supports_cart_coupons' );
-
-/**
  * Returns applied cart coupons
  *
  * @since 0.4.0
