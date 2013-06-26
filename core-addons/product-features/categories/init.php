@@ -76,9 +76,27 @@ if ( !function_exists( 'it_exchange_categories_addon_add_menu_item' ) ) {
 	 * @return void
 	*/
 	function it_exchange_categories_addon_add_menu_item() {
-		$url = add_query_arg( array( 'taxonomy' => 'it_exchange_category', 'post_type' => 'it_exchange_prod' ), 'edit-tags.php' );
+		$url = "edit-tags.php?taxonomy=it_exchange_category&amp;post_type=it_exchange_prod";
 		add_submenu_page( 'it-exchange', __( 'Product Categories', 'LION' ), __( 'Product Categories', 'LION' ), 'update_plugins', $url );
 	}
 	add_action( 'admin_menu', 'it_exchange_categories_addon_add_menu_item' );
 
 }
+
+if ( !function_exists( 'it_exchange_categories_addon_fix_menu_parent_file' ) ) { 
+
+	/**
+	 * This fixed the $parent_file variable so that the Exchange top-level menu expands when on the Product Tags page
+	 *
+	 * @since 0.4.11
+	 *
+	 * @return void
+	*/
+	function it_exchange_categories_addon_fix_menu_parent_file() {
+		if ( 'it_exchange_category' == $_GET['taxonomy'] )
+			$GLOBALS['parent_file'] = 'it-exchange';
+	}
+	add_action( 'admin_head-edit-tags.php', 'it_exchange_categories_addon_fix_menu_parent_file' );
+
+}
+
