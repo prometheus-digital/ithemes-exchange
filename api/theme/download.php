@@ -124,7 +124,7 @@ class IT_Theme_API_Download implements IT_Theme_API {
 			'before' => '<span class="download-limit">',
 			'after'  => '</span>',
 			'format' => 'raw',
-			'unlimited-label' => __( 'Unlmited', 'LION' ),
+			'unlimited-label' => __( 'Unlimited', 'LION' ),
 		);
 
 		$options = ITUtility::merge_defaults( $options, $defaults );
