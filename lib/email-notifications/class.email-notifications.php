@@ -28,6 +28,9 @@ class IT_Exchange_Email_Notifications {
 		// Send emails when admin requests a resend
 		add_action( 'admin_init', array( $this, 'handle_resend_confirmation_email_requests' ) );
 		
+		// Resends email notifications when status is changed from one that's not cleared for delivery to one that is cleared
+		add_action( 'it_exchange_update_transaction_status', array( $this, 'resend_if_transaction_status_gets_cleared_for_delivery' ), 10, 3 );
+
 		add_shortcode( 'it_exchange_email', array( $this, 'ithemes_exchange_email_notification_shortcode' ) );
 
 	}
@@ -474,6 +477,24 @@ class IT_Exchange_Email_Notifications {
 	function it_exchange_replace_receipt_link_tag( $args, $options = NULL ) {
 		return it_exchange_get_transaction_confirmation_url( $this->transaction_id );
 	}
-	
+
+	/**
+	 * Resends the email to the customer if the transaction status was changed from not cleared for delivery to cleared.
+	 *
+	 * @since 0.4.11
+	 *
+	 * @param object $transaction the transaction object
+	 * @param string $old_status the status it was just changed from
+	 * @param boolean $old_status_cleared was the old status cleared for delivery?
+	 * @return void
+	*/
+	function resend_if_transaction_status_gets_cleared_for_delivery( $transaction, $old_status, $old_status_cleared ) {
+		// Using ->ID here so that get_transaction forces a reload and doesn't use the old object with the old status
+		$new_status = it_exchange_get_transaction_status( $transaction->ID );
+		$new_status_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction->ID );
+
+		if ( ( $new_status != $old_status ) && ! $old_status_cleared && $new_status_cleared )
+			$this->send_purchase_emails( $transaction, false );
+	}
 }
 $IT_Exchange_Email_Notifications = new IT_Exchange_Email_Notifications();
