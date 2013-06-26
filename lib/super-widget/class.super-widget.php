@@ -100,6 +100,9 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			</div>
 			<?php
 		echo $args['after_widget'];
+		
+		$css_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/css/hide-if-super-widget.css' );
+		wp_enqueue_style( 'it-exchange-hide-if-super-widget', $css_url );
 
 		// Remove superwidget flag
 		if ( isset( $GLOBALS['it_exchange']['in_superwidget'] ) )
