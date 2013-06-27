@@ -234,29 +234,26 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 	$payment_form .= wp_nonce_field( 'stripe-checkout', '_stripe_nonce', true, false );
 
 	$payment_form .= '<div class="hide-if-no-js">';
-	$payment_form .= '<input type="submit" id="customButton" name="stripe_purchase" value="' . esc_attr( $stripe_settings['stripe-purchase-button-label'] ) .'" />';
-	$payment_form .= '
-		<script>
-		jQuery(\'#customButton\').click(function(){
-		  var token = function(res){
-			var $stripeToken = jQuery(\'<input type=hidden name=stripeToken />\').val(res.id);
-			jQuery(\'form#stripe_form\').append($stripeToken).submit();
-		  };
+	$payment_form .= '<input type="submit" class="it-exchange-stripe-payment-button" name="stripe_purchase" value="' . esc_attr( $stripe_settings['stripe-purchase-button-label'] ) .'" />';
 
-		  StripeCheckout.open({
-			key:         "' . esc_js( $publishable_key ) . '",
-			amount:      "' . esc_js( number_format( it_exchange_get_cart_total( false ), 2, '', '' ) ) . '",
-			currency:    "' . esc_js( $general_settings['default-currency'] ) . '",
-			name:        "' . esc_js( empty( $general_settings['company-name'] ) ? '' : $general_settings['company-name'] ) . '",
-			description: "' . esc_js( it_exchange_get_cart_description() ) . '",
-			panelLabel:  "Checkout",
-			token:       token
-		  });
-
-		  return false;
-		});
-		</script>
-	';
+	$payment_form .= '<script>' . "\n";
+	$payment_form .= '	jQuery(".it-exchange-stripe-payment-button").click(function(){' . "\n";
+	$payment_form .= '	  var token = function(res){' . "\n";
+	$payment_form .= '		var $stripeToken = jQuery("<input type=hidden name=stripeToken />").val(res.id);' . "\n";
+	$payment_form .= '		jQuery("form#stripe_form").append($stripeToken).submit();' . "\n";
+	$payment_form .= '	  };' . "\n";
+	$payment_form .= '	  StripeCheckout.open({' . "\n";
+	$payment_form .= '		key:         "' . esc_js( $publishable_key ) . '",' . "\n";
+	$payment_form .= '		amount:      "' . esc_js( number_format( it_exchange_get_cart_total( false ), 2, '', '' ) ) . '",' . "\n";
+	$payment_form .= '		currency:    "' . esc_js( $general_settings['default-currency'] ) . '",' . "\n";
+	$payment_form .= '		name:        "' . empty( $general_settings['company-name'] ) ? '' : esc_js( $general_settings['company-name'] ) . '",' . "\n";
+	$payment_form .= '		description: "' . esc_js( it_exchange_get_cart_description() ) . '",' . "\n";
+	$payment_form .= '		panelLabel:  "Checkout",' . "\n";
+	$payment_form .= '		token:       token' . "\n";
+	$payment_form .= '	  });' . "\n";
+	$payment_form .= '	  return false;' . "\n";
+	$payment_form .= '	});' . "\n";
+	$payment_form .= '</script>' . "\n";
 
 	$payment_form .= '</form>';
 	$payment_form .= '</div>';
