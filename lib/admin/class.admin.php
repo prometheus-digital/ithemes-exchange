@@ -66,8 +66,9 @@ class IT_Exchange_Admin {
 		add_action( 'admin_init', array( $this, 'enable_disable_registered_add_on' ) );
 		add_action( 'admin_init', array( $this, 'enable_required_add_ons' ) );
 
-		// Redirect to Product selection on Add New if needed
+		// Admin Product Redirects 
 		add_action( 'admin_init', array( $this, 'redirect_post_new_to_product_type_selection_screen' ) );
+		add_action( 'admin_init', array( $this, 'bounce_user_to_all_products_if_directly_accessing_disabled_product_type' ) );
 
 		// Init our custom add/edit layout interface
 		add_action( 'admin_enqueue_scripts', array( $this, 'it_exchange_admin_wp_enqueue_scripts' ) );
@@ -695,25 +696,20 @@ Order: %s
 	 * Enable all addons tagged as "required"
 	 *
 	 * @since 0.4.0
+	 *
+	 * @return void
 	*/
 	function enable_required_add_ons() {
 		$registered = it_exchange_get_addons();
 		$enabled    = it_exchange_get_enabled_addons();
 		
 		foreach ( $registered as $slug => $params ) {
-			
 			if ( !empty( $params['options']['tag'] ) && 'required' === $params['options']['tag'] ) {
-				
 				if ( empty( $enabled[$slug] ) ) {
-					
 					$enabled_addon = it_exchange_enable_addon( $slug );
-					
 				}
-				
 			}
-					
 		}
-		
 	}
 
 	/**
@@ -1330,6 +1326,48 @@ Order: %s
 			// Remove builder meta box
 			if ( 'builder' == strtolower( get_option( 'template' ) ) ) 
 				add_filter( 'builder_layout_filter_non_layout_post_types', array( $this, 'remove_builder_custom_layout_box' ) );
+		}
+	}
+
+	/**
+	 * Does not allow users to land on the add/edit page of a disabled product type
+	 *
+	 * @since 0.4.12
+	 *
+	 * @return void
+	*/
+	function bounce_user_to_all_products_if_directly_accessing_disabled_product_type() {
+		global $pagenow, $post;
+		$post_type = empty( $_REQUEST['post_type'] ) ? false : $_REQUEST['post_type'];
+		$post_type = empty( $post_type ) && ! empty( $_REQUEST['post'] ) ? $_REQUEST['post'] : $post_type;
+		$post_type = is_numeric( $post_type ) ? get_post_type( $post_type ) : $post_type;
+		$redirect  = false;
+
+		if ( ( 'post-new.php' != $pagenow && 'post.php' != $pagenow ) || 'it_exchange_prod' != $post_type )
+			return;
+			
+		// Redirect if no product-type addons are enabled
+		if ( ! $enabled_product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ) {
+			$redirect = add_query_arg( 'page', 'it-exchange-settings', get_admin_url() . 'admin.php' );;
+			wp_redirect( $redirect );
+			die();
+		}
+
+		$enabled_product_types = array_keys( (array) $enabled_product_types );
+		// Redirect if were creating a new product for a product type that's not enabled
+		if ( 'post-new.php' == $pagenow && ! in_array( it_exchange_get_product_type(), $enabled_product_types ) && empty( $_POST ) && empty( $_GET['action'] ) )
+			$redirect = add_query_arg( 'post_type', 'it_exchange_prod', get_admin_url() . 'edit.php' );
+
+		// Redirect if on edit product that is part of a disabled product-type addon
+		if ( 'post.php' == $pagenow && empty( $_POST ) && empty( $_GET['action'] ) || ( ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) ) {
+			$post_id = empty( $_GET['post'] ) ? false : $_GET['post'];
+			if ( ! in_array( it_exchange_get_product_type( $post_id ), $enabled_product_types ) )
+				$redirect = add_query_arg( 'post_type', 'it_exchange_prod', get_admin_url() . 'edit.php' );
+		}
+
+		if ( $redirect ) {
+			wp_redirect( $redirect );
+			die();
 		}
 	}
 
