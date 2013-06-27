@@ -672,32 +672,34 @@ class IT_Exchange_Stripe_Add_On {
 
 		$stripe_settings = array();
 
-		$default_wizard_stripe_settings = apply_filters( 'default_wizard_stripe_settings', array( 'stripe-live-secret-key', 'stripe-live-publishable-key', 'stripe-test-secret-key', 'stripe-test-publishable-key', 'stripe-test-mode' ) );
+		// Fields to save
+		$fields = array(
+			'stripe-live-secret-key',
+			'stripe-live-publishable-key',
+			'stripe-test-secret-key',
+			'stripe-test-publishable-key',
+			'stripe-test-mode',
+			'stripe-purchase-button-label',
+		);
+		$default_wizard_stripe_settings = apply_filters( 'default_wizard_stripe_settings', $fields );
 
 		foreach( $default_wizard_stripe_settings as $var ) {
-
 			if ( isset( $_REQUEST['it_exchange_settings-' . $var] ) ) {
 				$stripe_settings[$var] = $_REQUEST['it_exchange_settings-' . $var];	
 			}
-
 		}
 
 		$settings = wp_parse_args( $stripe_settings, it_exchange_get_option( 'addon_stripe' ) );
 
 		if ( ! empty( $this->error_message ) || $error_msg = $this->get_form_errors( $settings ) ) {
-
 			if ( ! empty( $error_msg ) ) {
-
 				$this->error_message = $error_msg;
 				return;
-
 			}
-
 		} else {
 			it_exchange_save_option( 'addon_stripe', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
-
 	}
 
 	/**
