@@ -16,7 +16,7 @@
 					<div class="cart-item cart-row">
 						<div class="cart-item-thumbnail cart-column">
 							<div class="cart-column-inner">
-								<img src="http://placehold.it/80x80" />
+								<?php it_exchange( 'cart-item', 'featured-image' ); ?>
 							</div>
 						</div>
 						<div class="cart-item-title cart-column">
