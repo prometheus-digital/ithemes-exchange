@@ -167,12 +167,14 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 			it_exchange_update_product_feature( $product_id, 'purchase-quantity', 'yes', array( 'setting' => 'enabled' ) );
 
 		// Abort if this product type doesn't support this feature 
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'purchase-quantity' ) )
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'purchase-quantity' ) || empty( $_POST['it-exchange-enable-product-quantity']  ))
 			return;
 
-		// Abort if key for feature option isn't set in POST data
-		if ( !empty( $_POST['it-exchange-product-quantity'] ) )
-			it_exchange_update_product_feature( $product_id, 'purchase-quantity', (integer)$_POST['it-exchange-product-quantity'] );
+		// If the value is empty (0), delete the key, otherwise save
+		if ( empty( $_POST['it-exchange-product-quantity'] ) )
+			delete_post_meta( $product_id, '_it-exchange-product-quantity' );
+		else
+			it_exchange_update_product_feature( $product_id, 'purchase-quantity', absint( $_POST['it-exchange-product-quantity'] ) );
 	}
 
 	/**
@@ -216,6 +218,10 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 	 * @return string product feature
 	*/
 	function get_feature( $existing, $product_id, $options=array() ) {
+		// Is the the add / edit product page?
+		$current_screen = is_admin() ? get_current_screen(): false;
+		$editing_product = ( ! empty( $current_screen->id ) && 'it_exchange_prod' == $current_screen->id );
+
 		// Using options to determine if we're getting the enabled setting or the actual max_number setting
 		$defaults = array(
 			'setting' => 'max_number',
@@ -228,7 +234,8 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 				$enabled = 'yes';
 			return $enabled;
 		} else if ( 'max_number' == $options['setting'] ) {
-			if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) )
+			// Return the value if supported or on add/edit screen
+			if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) || $editing_product )
 				return get_post_meta( $product_id, '_it-exchange-product-quantity', true );
 		}
 		return false;
