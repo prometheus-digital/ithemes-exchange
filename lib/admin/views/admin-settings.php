@@ -97,9 +97,7 @@
                 	<label for="site-registration-it"><?php _e( 'Use Exchange Registration Only', 'LION' ) ?></label>
                     <br />
 					<?php $form->add_radio( 'site-registration', array( 'value' => 'wp' ) ); ?>
-                	<label for="site-registration-wp"><?php _e( 'Use WordPress Registration Setting', 'LION' ) ?></label>
-                    <br />
-                    <span class="description"><?php _e( 'Will require you to update your WordPress general settings.', 'LION' ); ?></span>
+                	<label for="site-registration-wp"><?php _e( 'Use WordPress Registration Setting', 'LION' ) ?></label><span class="tip" title="<?php _e( 'In order to use this setting, you will need to allow Membership by checking the Anyone can register checkbox on the Settings &raquo; General admin page.', 'LION' ); ?>">i</span>
 				</td>
 			</tr>
 			<?php do_action( 'it_exchange_general_settings_table_bottom', $form ); ?>
