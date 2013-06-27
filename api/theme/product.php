@@ -523,31 +523,46 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function product_images( $options=array() ) {
-
+		
 		// Return boolean if has flag was set
 		if ( $options['supports'] )
 			return it_exchange_product_supports_feature( $this->product->ID, 'product-images' );
-
+		
 		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'product-images' );
-
+		
 		if ( it_exchange_product_supports_feature( $this->product->ID, 'product-images' )
 				&& it_exchange_product_has_feature( $this->product->ID, 'product-images' ) ) {
-
-			$defaults = array();
+					
+			$defaults = array(
+				'size' => 'all'
+			);
 			
 			$options = ITUtility::merge_defaults( $options, $defaults );
 			$output = array();
-
+			
+			$image_sizes = get_intermediate_image_sizes();
+			
 			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
 			
 			foreach( $product_images as $image_id ) {
-				$output[] = array(
-					'id'    => $image_id,
-					'thumb' => wp_get_attachment_thumb_url( $image_id ),
-					'full'  => wp_get_attachment_url( $image_id )
-				);
+				foreach ( $image_sizes as $size ) {
+					$images[$size] = wp_get_attachment_image_src( $image_id, $size );
+				}
+			}
+			
+			$images['full'] = wp_get_attachment_image_src( $image_id, 'full' );
+			
+			if ( $options['size'] == 'all' ) {
+				$output = $images;
+			} else {
+				if ( isset( $images[ $options['size'] ] ) )
+					$output = $images[ $options['size'] ];
+				else if ( $options['size'] == 'full' )
+					$output = $images['full'];
+				else 
+					$output = __( 'Unregisterd image size.', 'LION' );
 			}
 			
 			return $output;
