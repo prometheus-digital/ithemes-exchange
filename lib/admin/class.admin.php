@@ -1497,6 +1497,9 @@ Order: %s
 		if ( it_exchange_product_type_supports_feature( $product_type, 'featured-image' ) ) {
 			add_meta_box('postimagediv', __('Featured Image'), 'post_thumbnail_meta_box', 'it_exchange_prod', 'it_exchange_side' );
 		}
+
+		do_action( 'it_exchange_add_edit_product_screen_layout_set', $product_type );
+		do_action( 'it_exchange_add_edit_product_screen_layout_set_for_' . $product_type, $product_type );
 	}
 
 	/**
