@@ -325,10 +325,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		// Set options
 		$defaults      = array(
-			'before'      => '',
-			'after'       => '',
-			'format'      => 'html',
-			'class'       => 'product-purchase-quantity',
+			'before'          => '',
+			'after'           => '',
+			'format'          => 'html',
+			'class'           => 'product-purchase-quantity',
+			'unlimited-label' => __( 'Unlimited', 'LION' ),
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
@@ -340,7 +341,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$max_quantity = it_exchange_get_product_feature( $this->product->ID, 'purchase-quantity' );
 		else
 			return '';
-		$max_quantity = empty( $max_quantity ) ? '0' : $max_quantity;
+		$max_quantity = empty( $max_quantity ) ? $options['unlimited-label'] : $max_quantity;
 
 		// Lets do some inventory checking and make sure that if we're supporing inventory, that we don't allow max to be greater than inventory
 		if ( it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ) {
