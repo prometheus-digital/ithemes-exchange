@@ -86,13 +86,14 @@ function it_exchange_get_products( $args=array() ) {
 			'key'   => '_it_exchange_product_type',
 			'value' => $args['product_type'],
 		);
-		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
+		$args['meta_query'][] = $meta_query;
 	} else { //we only want to get enabled product-type products
 		$meta_query = array( 
 			'key'   => '_it_exchange_product_type',
+			'compare' => 'IN',
 			'value' => array_keys( it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ),
 		);
-		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
+		$args['meta_query'][] = $meta_query;
 	}
 	
 	if ( ! $args['show_hidden'] ) {
@@ -101,7 +102,7 @@ function it_exchange_get_products( $args=array() ) {
 			'value'   => 'hidden',
 			'compare' => 'NOT LIKE',
 		);
-		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
+		$args['meta_query'][] = $meta_query;
 	}
 
 	$products = false;
