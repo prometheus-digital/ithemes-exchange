@@ -130,10 +130,10 @@ class IT_Exchange_Product_Feature_Product_Availability {
 			</p>
 			<p>
 				<span class="it-exchange-enable-product-availability-start<?php echo ( $start_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
-					<input type="text" id="it-exchange-product-availability-start" name="it-exchange-product-availability-start" value="<?php esc_attr_e( $start_date ); ?>" /> <label for="it-exchange-product-availability-start"><?php _e( 'Start Date', 'LION' ); ?></label><br />
+					<input type="text" class="datepicker" id="it-exchange-product-availability-start" name="it-exchange-product-availability-start" value="<?php esc_attr_e( $start_date ); ?>" /> <label for="it-exchange-product-availability-start"><?php _e( 'Start Date', 'LION' ); ?></label><br />
 				</span>
 				<span class="it-exchange-enable-product-availability-end<?php echo ( $end_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
-					<input type="text" id="it-exchange-product-availability-end" name="it-exchange-product-availability-end" value="<?php esc_attr_e( $end_date ); ?>" /> <label for="it-exchange-product-availability-end"><?php _e( 'End Date', 'LION' ); ?></label><br />
+					<input type="text" class="datepicker" id="it-exchange-product-availability-end" name="it-exchange-product-availability-end" value="<?php esc_attr_e( $end_date ); ?>" /> <label for="it-exchange-product-availability-end"><?php _e( 'End Date', 'LION' ); ?></label><br />
 				</span>
 			</p>
 		<?php
