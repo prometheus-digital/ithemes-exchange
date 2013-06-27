@@ -46,7 +46,7 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 		$terms = array();
 		foreach( $pages as $page => $data ) {
 
-			if ( in_array( $page, array( 'product', 'confirmation', 'log_out' ) ) )
+			if ( in_array( $page, array( 'transaction', 'product', 'confirmation', 'log_out' ) ) )
 				continue;
 
 			$page_slug = it_exchange_get_page_slug( $page );
