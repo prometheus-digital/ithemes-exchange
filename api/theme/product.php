@@ -40,6 +40,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		'featuredimage'       => 'featured_image',
 		'downloads'           => 'downloads',
 		'purchaseoptions'     => 'purchase_options',
+		'superwidget'         => 'superwidget',
 		'buynow'              => 'buy_now',
 		'addtocart'           => 'add_to_cart',
 		'buynowvar'           => 'buy_now_var',
@@ -807,6 +808,42 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		
 		// Return output
 		return $output;
+	}
+
+	/**
+	 * Outputs the super widget.
+	 *
+	 * Options:
+	 * - class : HTML Class to add to div surrounding the super widget
+	 *
+	 * @since 0.4.0
+	 * @params array $options
+	 * @return void
+	*/
+	function superwidget( $options=array() ) {
+
+		// Return boolean if has flag was set. Just keeping this here since its in all other product.php methods
+		if ( $options['supports'] )
+			return true;
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return true;
+		
+		// Parse options
+		$result        = false;
+
+		$defaults      = array(
+			'class'    => false,
+		);
+		$options   = ITUtility::merge_defaults( $options, $defaults );
+		
+		$args['before_widget'] = '<div class="it-exchange-product-sw ' . esc_attr( $options['class'] ) . '">';	
+		$args['after_widget'] = '</div>';			
+		$args['enqueue_hide_script'] = false;
+		
+		the_widget( 'IT_Exchange_Super_Widget', array(), $args );
+		
 	}
 
 	function buy_now( $options=array() ) {

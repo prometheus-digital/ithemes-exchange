@@ -74,6 +74,11 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	function widget( $args, $instance ) {
 		if ( ! $this->get_state() )
 			return false;
+			
+		$defaults = array(
+			'enqueue_hide_script' => true,
+		);
+		$args = wp_parse_args( $args, $defaults );
 		
 		// Flag that we're in the superwidget
 		$GLOBALS['it_exchange']['in_superwidget'] = $instance;
@@ -101,8 +106,10 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			<?php
 		echo $args['after_widget'];
 		
-		$css_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/css/hide-if-super-widget.css' );
-		wp_enqueue_style( 'it-exchange-hide-if-super-widget', $css_url );
+		if ( $args['enqueue_hide_script'] ) {
+			$css_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/css/hide-if-super-widget.css' );
+			wp_enqueue_style( 'it-exchange-hide-if-super-widget', $css_url );
+		}
 
 		// Remove superwidget flag
 		if ( isset( $GLOBALS['it_exchange']['in_superwidget'] ) )
