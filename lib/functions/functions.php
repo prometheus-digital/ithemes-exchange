@@ -88,6 +88,8 @@ function it_exchange_format_price( $price ) {
 */
 function it_exchange_load_public_scripts( $current_view ) {
 
+	$settings = it_exchange_get_option( 'settings_general' );
+
 	// jQuery Zoom
 	wp_register_script( 'jquery-zoom', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.zoom.min.js' ), array( 'jquery' ), false, true );
 	
@@ -97,7 +99,8 @@ function it_exchange_load_public_scripts( $current_view ) {
 	}
 	
 	// Frontend Style 
-	wp_enqueue_style( 'it-exchange-public-css', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange.css' ) );
+	if ( empty( $settings['disable-exchange-theme-styles'] ) )
+		wp_enqueue_style( 'it-exchange-public-css', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange.css' ) );
 
 	// Parent theme /exchange/style.css if it exists
 	$parent_theme_css = get_template_directory() . '/exchange/style.css';
@@ -147,12 +150,16 @@ function it_exchange_add_plugin_reset_checkbox_to_settings( $form ) {
 		}
 	}
 
-	if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG )
+	if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG || ! current_user_can( 'administrator' ) )
 		return;
 
 	// Never check this by default.
 	$form->set_option( 'reset-exchange', 0 );
 	?>
+	<tr valign="top">
+		<th scope="row"><strong><?php _e( 'Dangerous Settings', 'LION' ); ?></strong></th>
+		<td></td>
+	</tr>
 	<tr valign="top">
 		<th scope="row"><label for="reset-exchange"><?php _e( 'Reset Exchange', 'LION' ) ?></label></th>
 		<td>

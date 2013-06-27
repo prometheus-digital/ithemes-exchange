@@ -100,6 +100,37 @@
                 	<label for="site-registration-wp"><?php _e( 'Use WordPress Registration Setting', 'LION' ) ?></label><span class="tip" title="<?php _e( 'In order to use this setting, you will need to allow Membership by checking the Anyone can register checkbox on the Settings &raquo; General admin page.', 'LION' ); ?>">i</span>
 				</td>
 			</tr>
+            <?php do_action( 'it_exchange_general_settings_before_settings_styles', $form ); ?>
+			<tr valign="top">
+				<th scope="row"><strong><?php _e( 'Stylesheet Settings', 'LION' ); ?></strong></th>
+				<td></td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><label for="site-registration"><?php _e( 'Exchange Styles', 'LION' ) ?></label></th>
+				<td>
+					<?php $form->add_check_box( 'disable-exchange-theme-styles' ); ?>
+                	<label for="disable-exchange-theme-styles"><?php _e( 'Disable Exchange Theme Styles?', 'LION' ) ?></label>
+					<span class="tip" title="<?php _e( 'Disabing theme styles will turn off all default styling outside of our SuperWidget.', 'LION' ); ?>">i</span>
+					<br />
+					<?php $form->add_check_box( 'disable-exchange-superwidget-styles' ); ?>
+                	<label for="disable-exchange-superwidget-styles"><?php _e( 'Disable Exchange SuperWidget Styles?', 'LION' ) ?></label>
+					<span class="tip" title="<?php _e( 'Disabing SuperWidget styles will turn off all default styling inside our SuperWidget.', 'LION' ); ?>">i</span>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><label for="custom-styles"><?php _e( 'Custom Styles', 'LION' ) ?></label></th>
+				<td>
+					<?php _e( 'If they exist, the following files will be loaded in order after core Exchange stylesheets:', 'LION' ); ?><br />
+					<span class="description">
+						<?php
+						$parent = get_template_directory() . '/exchange/style.css';
+						$child  = get_stylesheet_directory() . '/exchange/style.css';
+						$custom_style_locations[$parent] = '&#151;&nbsp;&nbsp;' . $parent;
+						$custom_style_locations[$child]  = '&#151;&nbsp;&nbsp;' . $child;
+						echo implode( $custom_style_locations, '<br />' );
+						?>
+					</span>
+				</td>
 			<?php do_action( 'it_exchange_general_settings_table_bottom', $form ); ?>
 		</table>
 		<p class="submit"><input type="submit" value="<?php _e( 'Save Changes', 'LION' ); ?>" class="button button-primary" /></p>
