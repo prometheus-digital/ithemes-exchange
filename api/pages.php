@@ -123,6 +123,14 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
 	$type     = it_exchange_get_page_type( $page );
 	$page_url = false;
 
+	// If page is disabled, attempt to redirect to store. If store is disabled, redirect to site home.
+	if ( $type == 'disabled' && $page != 'store' ) {
+		$page = 'store';
+		$type = it_exchange_get_page_type( 'store' );
+	} else if ( 'disabled' == $type && 'store' == $page ) {
+		return get_home_url();
+	}
+
 	// Return the exchange page settings if type is exchange or if we're on the page settings tab.
 	if ( 'exchange' == $type || ( is_admin() && ! empty( $_GET['page'] ) && $_GET['page'] == 'it-exchange-settings' && ! empty( $_GET['tab'] ) && 'pages' == $_GET['tab'] && empty( $GLOBALS['it_exchange']['updating_nav'] ) ) ) {
 		if ( empty( $pages[$page]['url'] ) || ! is_callable( $pages[$page]['url'] ) )

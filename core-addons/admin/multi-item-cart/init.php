@@ -45,9 +45,22 @@ add_action( 'init', 'it_exchange_register_multi_item_cart_pages', 9 );
  * @return array
 */
 function it_exchange_multi_item_cart_get_page_rewrites( $page ) {
-    $slug       = it_exchange_get_page_slug( $page );
-    $store_slug = it_exchange_get_page_slug( 'store' );
-	return array( $store_slug . '/' . $slug => 'index.php?' . $slug . '=1', );
+    $slug           = it_exchange_get_page_slug( $page );
+    $store_slug     = it_exchange_get_page_slug( 'store' );
+	$store_disabled = ( 'disabled' == it_exchange_get_page_type( 'store' ) );
+
+	// Don't use store if its disabled
+	$store_segment  = $store_disabled ? '' : $store_slug . '/';
+
+	// If we're using WP, add the WP slug to rewrites and return.
+	if ( 'wordpress' == it_exchange_get_page_type( 'store' ) ) {
+		$store = get_page( it_exchange_get_page_wpid( 'store' ) );
+		$page_slug = $store->post_name;
+		return array( $page_slug . '/' . $slug => 'index.php?' . $slug . '=1', );
+	}
+
+
+	return array( $store_segment . $slug => 'index.php?' . $slug . '=1', );
 }
 
 /**
@@ -60,13 +73,17 @@ function it_exchange_multi_item_cart_get_page_rewrites( $page ) {
 */
 function it_exchange_multi_item_cart_get_page_urls( $page ) {
 	// Get slugs
-	$slug       = it_exchange_get_page_slug( $page );
-	$store_slug = it_exchange_get_page_slug( 'store' );
+	$slug           = it_exchange_get_page_slug( $page );
+	$store_slug     = it_exchange_get_page_slug( 'store' );
+	$store_disabled = ( 'disabled' == it_exchange_get_page_type( 'store' ) );
+
+	// Don't use store if its disabled
+	$store_segment  = $store_disabled ? '/' : '/' . $store_slug . '/';
 
 	// Set cart and page urls
 	if ( (boolean) get_option( 'permalink_structure' ) ) {
-		$cart_url     = trailingslashit( get_home_url() . '/' . $store_slug . '/' . $slug );
-		$checkout_url = trailingslashit( get_home_url() . '/' . $store_slug . '/' . $slug );
+		$cart_url     = trailingslashit( get_home_url() . $store_segment . $slug );
+		$checkout_url = trailingslashit( get_home_url() . $store_segment . $slug );
 	} else {
 		$cart_url     = add_query_arg( $slug, 1, get_home_url() );
 		$checkout_url = add_query_arg( $slug, 1, get_home_url() );

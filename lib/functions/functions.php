@@ -427,6 +427,13 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			break;
 		case 'account' :
 			$profile_slug = it_exchange_get_page_slug( 'profile' );
+
+			// If we're using WP as acount page type, add the WP slug to rewrites and return.
+			if ( 'wordpress' == it_exchange_get_page_type( 'account' ) ) {
+				$account = get_page( it_exchange_get_page_wpid( 'account' ) );
+				$slug = $account->post_name;
+			}
+
 			$rewrites = array(
 				$slug . '/([^/]+)/?$' => 'index.php?' . $slug . '=$matches[1]&' . $profile_slug . '=1',
 				$slug => 'index.php?' . $slug . '=1&' . $profile_slug . '=1',
@@ -435,6 +442,13 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			break;
 		case 'profile' :
 			$account_slug = it_exchange_get_page_slug( 'account' );
+
+			// If we're using WP as acount page type, add the WP slug to rewrites and return.
+			if ( 'wordpress' == it_exchange_get_page_type( 'account' ) ) {
+				$account = get_page( it_exchange_get_page_wpid( 'account' ) );
+				$account_slug = $account->post_name;
+			}
+
 			$rewrites = array(
 				$account_slug  . '/([^/]+)/' . $slug  => 'index.php?' . $account_slug . '=$matches[1]&' . $slug . '=1',
 				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
@@ -443,6 +457,13 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			break;
 		case 'registration' :
 			$account_slug = it_exchange_get_page_slug( 'account' );
+
+			// If we're using WP as acount page type, add the WP slug to rewrites and return.
+			if ( 'wordpress' == it_exchange_get_page_type( 'account' ) ) {
+				$account = get_page( it_exchange_get_page_wpid( 'account' ) );
+				$account_slug = $account->post_name;
+			}
+
 			$rewrites = array(
 				$account_slug  . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
 			);
@@ -450,6 +471,13 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			break;
 		case 'log_in' :
 			$account_slug = it_exchange_get_page_slug( 'account' );
+
+			// If we're using WP as acount page type, add the WP slug to rewrites and return.
+			if ( 'wordpress' == it_exchange_get_page_type( 'account' ) ) {
+				$account = get_page( it_exchange_get_page_wpid( 'account' ) );
+				$account_slug = $account->post_name;
+			}
+
 			$rewrites = array(
 				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
 			);
@@ -457,6 +485,13 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			break;
 		case 'log_out' :
 			$account_slug = it_exchange_get_page_slug( 'account' );
+
+			// If we're using WP as acount page type, add the WP slug to rewrites and return.
+			if ( 'wordpress' == it_exchange_get_page_type( 'account' ) ) {
+				$account = get_page( it_exchange_get_page_wpid( 'account' ) );
+				$account_slug = $account->post_name;
+			}
+
 			$rewrites = array(
 				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
 			);
@@ -464,6 +499,13 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			break;
 		case 'purchases' :
 			$account_slug = it_exchange_get_page_slug( 'account' );
+
+			// If we're using WP as acount page type, add the WP slug to rewrites and return.
+			if ( 'wordpress' == it_exchange_get_page_type( 'account' ) ) {
+				$account = get_page( it_exchange_get_page_wpid( 'account' ) );
+				$account_slug = $account->post_name;
+			}
+
 			$rewrites = array(
 				$account_slug  . '/([^/]+)/' . $slug => 'index.php?' . $account_slug . '=$matches[1]&' . $slug . '=1',
 				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
@@ -472,6 +514,13 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			break;
 		case 'downloads' :
 			$account_slug = it_exchange_get_page_slug( 'account' );
+
+			// If we're using WP as acount page type, add the WP slug to rewrites and return.
+			if ( 'wordpress' == it_exchange_get_page_type( 'account' ) ) {
+				$account = get_page( it_exchange_get_page_wpid( 'account' ) );
+				$account_slug = $account->post_name;
+			}
+
 			$rewrites = array(
 				$account_slug  . '/([^/]+)/' . $slug => 'index.php?' . $account_slug . '=$matches[1]&' . $slug . '=1',
 				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
@@ -479,16 +528,14 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			return $rewrites;
 			break;
 		case 'confirmation' :
-			$store_slug = it_exchange_get_page_slug( 'store' );
 			$rewrites = array( 
-				$store_slug . '/' . $slug . '/([^/]+)/?$' => 'index.php?' . $store_slug . '=1&' . $slug . '=$matches[1]',
+				$slug . '/([^/]+)/?$' => 'index.php?' . $slug . '=$matches[1]',
 			);
 			return $rewrites;
 			break;
 		case 'transaction' :
-			$store_slug = it_exchange_get_page_slug( 'store' );
 			$rewrites = array(
-				$store_slug . '/' . $slug  => 'index.php?' . $store_slug . '=1&' . $slug . '=1',
+				$slug  => 'index.php?' . $slug . '=1',
 			);
 			return $rewrites;
 			break;
@@ -527,15 +574,22 @@ function it_exchange_get_core_page_urls( $page ) {
 		// Anything that is a subpage of store
 		case 'confirmation' :
 		case 'transaction' :
-			$store_slug = it_exchange_get_page_slug( 'store' );
 			if ( $permalinks )
-				return trailingslashit( $base . $store_slug . '/' . $slug );
+				return trailingslashit( $base . $slug );
 			else
-				return add_query_arg( array( $store_slug => 1, $slug => 1 ), $base );
+				return add_query_arg( array( $slug => 1 ), $base );
 			break;
 		// Anything else
 		default :
-			$account_slug = it_exchange_get_page_slug( 'account' );
+
+			// Account Slug
+			if ( 'wordpress' == it_exchange_get_page_type( 'account' ) ) {
+				$account_page = get_page( it_exchange_get_page_wpid( 'account' ) );
+				$account_slug = $account_page->post_name;
+			} else {
+				$account_slug = it_exchange_get_page_slug( 'account' );
+			}
+
 			// Replace account value with name if user is logged in
 			if ( $permalinks )
 				$base = trailingslashit( $base . $account_slug );
@@ -577,6 +631,9 @@ function it_exchange_add_page_shortcode( $atts ) {
 		'page' => false,
 	);
 	$atts = shortcode_atts( $defaults, $atts );
+
+	if ( 'account' == $atts['page'] )
+		$atts['page'] = 'profile';
 
 	if ( empty( $atts['page'] ) )
 		return false;

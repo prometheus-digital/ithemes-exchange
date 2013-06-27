@@ -538,10 +538,12 @@ class IT_Exchange_Admin {
 	/**
 	 * Sets the email settings default values
 	 *
+	 * static so we can access it from email_notifications w/o loading entire class
+	 *
 	 * @since 0.4.0
 	 * @return array
 	*/
-	function set_email_settings_defaults( $values ) {
+	static function set_email_settings_defaults( $values ) {
 		$defaults = array(
 			'notification-email-address' => esc_attr( get_bloginfo( 'admin_email' ) ),
 			'admin-email-address'      => esc_attr( get_bloginfo( 'admin_email' ) ),
@@ -1131,8 +1133,9 @@ Order: %s
 		foreach( $nav_post_items as $key => $item ) {
 			$page = get_post_meta( $item->ID, '_menu_item_xfn', true );
 			$page = substr( $page, 12 );
-			if ( ! it_exchange_get_page_slug( $page ) )
-				continue;
+
+			//if ( ! it_exchange_get_page_slug( $page ) )
+			//	continue;
 
 			$current_url = get_post_meta( $item->ID, '_menu_item_url', true );
 			$page_url = it_exchange_get_page_url( $page, true );
