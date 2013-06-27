@@ -106,18 +106,6 @@
 				<td></td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="site-registration"><?php _e( 'Exchange Styles', 'LION' ) ?></label></th>
-				<td>
-					<?php $form->add_check_box( 'disable-exchange-theme-styles' ); ?>
-                	<label for="disable-exchange-theme-styles"><?php _e( 'Disable Exchange Theme Styles?', 'LION' ) ?></label>
-					<span class="tip" title="<?php _e( 'Disabing theme styles will turn off all default styling outside of our SuperWidget.', 'LION' ); ?>">i</span>
-					<br />
-					<?php $form->add_check_box( 'disable-exchange-superwidget-styles' ); ?>
-                	<label for="disable-exchange-superwidget-styles"><?php _e( 'Disable Exchange SuperWidget Styles?', 'LION' ) ?></label>
-					<span class="tip" title="<?php _e( 'Disabing SuperWidget styles will turn off all default styling inside our SuperWidget.', 'LION' ); ?>">i</span>
-				</td>
-			</tr>
-			<tr valign="top">
 				<th scope="row"><label for="custom-styles"><?php _e( 'Custom Styles', 'LION' ) ?></label></th>
 				<td>
 					<?php _e( 'If they exist, the following files will be loaded in order after core Exchange stylesheets:', 'LION' ); ?><br />

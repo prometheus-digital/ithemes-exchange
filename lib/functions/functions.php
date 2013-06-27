@@ -88,8 +88,6 @@ function it_exchange_format_price( $price ) {
 */
 function it_exchange_load_public_scripts( $current_view ) {
 
-	$settings = it_exchange_get_option( 'settings_general' );
-
 	// jQuery Zoom
 	wp_register_script( 'jquery-zoom', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.zoom.min.js' ), array( 'jquery' ), false, true );
 	
@@ -99,7 +97,7 @@ function it_exchange_load_public_scripts( $current_view ) {
 	}
 	
 	// Frontend Style 
-	if ( empty( $settings['disable-exchange-theme-styles'] ) )
+	if ( ! apply_filters( 'it_exchange_disable_frontend_stylesheet', false ) )
 		wp_enqueue_style( 'it-exchange-public-css', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange.css' ) );
 
 	// Parent theme /exchange/style.css if it exists
