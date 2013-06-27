@@ -539,7 +539,8 @@ class IT_Exchange_Product_Post_Type {
 				echo $hide_it;
 			} else if ( empty( $product_type ) && ! it_exchange_get_products() ) {
 				// If we made it here, we only have one product type, but there are no products. Won't happen that often.
-				$product_addon = reset( array_keys( $product_addons ) );
+				$product_addon = array_keys( $product_addons );
+				$product_addon = $product_addon[0];
 				$product_type = empty( $product_addon ) ? false : $product_addon;
 			}
 	
