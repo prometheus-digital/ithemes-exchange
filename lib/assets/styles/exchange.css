@@ -90,12 +90,6 @@
 #it-exchange-cart .cart-apply-coupons,
 #it-exchange-cart .cart-actions{clear:both;display:block;margin-top:1em;text-align:right;}
 
-/** ----------------------------------------:[ login form ]:--- */
-.it-exchange-sw-log-in > div{margin-bottom:1em;}
-.it-exchange-sw-log-in label{display:block;font-size:.8em;}
-.it-exchange-sw-log-in .rememberme label{display:inline;}
-.it-exchange-sw-log-in .recover_url{margin-top:1em;margin-bottom:.4em;}
-
 /** -----------------------------------------------------:[ confirmation ]:---------- */
 #it-exchange-confirmation span{margin-left:1em;}
 
