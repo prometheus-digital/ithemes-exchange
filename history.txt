@@ -1,3 +1,39 @@
+0.4.12 - 2013-06-27 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Chris Jean, Ty Carlson
+	Remove stylesheet settings from Main settings. Add filters for not enqueuing stylesheet: it_exchange_disable_frontend_stylesheet, it_exchange_disable_super_widget_stylesheet
+	Applied CSS to coupons section of Super Widget.
+	Added registration styles to the super widget.
+	Fixed the hover jump on featured image.
+	Advanced <label> corrections
+	Added the feature-image to the checkout template.
+	Changed currency unicode characters to their HTML entity equivalent.
+	Remove transcation page from WP menu UI
+	Add Featured Image and Product Images to cart-item API
+	Remove PHP strict warning when products are trashed
+	Added message to Store template if no products are found
+	Fix bug preventing save of custom stripe button text from wizard
+	Remove superwidget class from non-superwidget login form
+	Multiple spelling corrections in product feature meta boxes
+	Fix multiple bugs that cause Exchange to explode if someone disables the store page or uses a WordPress page for store or account
+	You can now get all the images (with all registered image sizes) for a product.
+	Modified stripe purchase button to use class instead of ID so Stripe functions normally when two buttons appear on a page (even if the others are hidden)
+	Fix bug where visibility meta_query was overwriting disabled product meta_query
+	Bounce customers who directly access disabled product type single URL to the store.
+	Bounce users away from admin screens for products belonging to Disabled Product Types
+	Added missing docblock from zero-sum-checkout, I think someone else already added a bunch anyway
+	Removed !multi-cart requirement for registration/login/etc in SW... these are needed for multi-item carts that only have one items
+	Update itExchangeIsUserLoggedIn in JS when logging in is successful
+	Product Tag JS/AJAX now working on Product Edit page
+	Move SupwerWidget CSS to its on file.
+	Provide ability to disable default Exchange theme CSS in settings (non SW).
+	Provide ability to disable default Exchange SW CSS in settings.
+	Add details about custom stylesheets in settings.
+	Add heading titled 'Dangerou
+	Modified product content to output the super widget, not just the purchase options, definitely important for single item carts
+	If parent theme exists and has /exchange/style.css, enqueue it after exchange styles.
+	If child theme is different than parent theme and has /exchange/style.css, enqueue it after exchange and parent styles.
+	Delete purchase quantity value when left blank while editing.
+	Get purchase quantity when on edit screen even if not enabled to preserve setting
+	Add hook that gets called after our product screen layout is setup
 0.4.11 - 2013-06-26 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Chris Jean, Ty Carlson
 	Fixed Dashboard menu Add Product entry so that it is highlighted when on that page.
 	Fixed Dashboard menu Product Categories and Product Tags entries so that the Exchange menu expands when on those pages.
