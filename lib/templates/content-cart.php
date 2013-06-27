@@ -14,10 +14,9 @@
 				<div class="cart-items cart-table">
 					<?php while ( it_exchange( 'cart', 'cart-items' ) ) : ?>
 						<div class="cart-item cart-row">
-							<!-- NOTE This will need the product image API -->
 							<div class="cart-item-thumbnail cart-column">
 								<div class="cart-column-inner">
-									<img src="http://placehold.it/80x80" />
+									<?php it_exchange( 'cart-item', 'featured-image' ); ?>
 								</div>
 							</div>
 							<div class="cart-item-title cart-column">

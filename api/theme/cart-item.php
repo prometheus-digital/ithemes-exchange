@@ -34,6 +34,8 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 		'subtotal'         => 'sub_total',
 		'purchasequantity' => 'supports_purchase_quantity',
 		'permalink'        => 'permalink',
+		'featuredimage'    => 'featured_image',
+		'images'           => 'product_images',
 	);
 
 	/**
@@ -207,5 +209,124 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	*/
 	function permalink( $options=array() ) {
 		return get_permalink( $this->_cart_item['product_id'] );
+	}
+
+	/**
+	 * The product's product images
+	 *
+	 * @since 0.4.12
+	 *
+	 * @return string
+	*/
+	function product_images( $options=array() ) {
+
+		// Get the real product item or return empty
+		if ( ! $product_id = empty( $this->_cart_item['product_id'] ) ? false : $this->_cart_item['product_id'] )
+			return false;
+
+		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $product_id, 'product-images' );
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $product_id, 'product-images' );
+
+		if ( it_exchange_product_supports_feature( $product_id, 'product-images' )
+				&& it_exchange_product_has_feature( $product_id, 'product-images' ) ) {
+
+			$defaults = array(
+				'size' => 'all'
+			);
+
+			$options = ITUtility::merge_defaults( $options, $defaults );
+			$output = array();
+
+			$image_sizes = get_intermediate_image_sizes();
+
+			$product_images = it_exchange_get_product_feature( $product_id, 'product-images' );
+
+			foreach( $product_images as $image_id ) {
+				foreach ( $image_sizes as $size ) {
+					$images[$size] = wp_get_attachment_image_src( $image_id, $size );
+				}
+			}
+
+			$images['full'] = wp_get_attachment_image_src( $image_id, 'full' );
+
+			if ( $options['size'] == 'all' ) {
+				$output = $images;
+			} else {
+				if ( isset( $images[ $options['size'] ] ) )
+					$output = $images[ $options['size'] ];
+				else if ( $options['size'] == 'full' )
+					$output = $images['full'];
+				else
+					$output = __( 'Unregisterd image size.', 'LION' );
+			}
+
+			return $output;
+		}
+		return false;
+	}
+
+	/**
+	 * The product's featured image
+	 *
+	 * @since 0.4.12
+	 *
+	 * @return string
+	*/
+	function featured_image( $options=array() ) {
+
+		// Get the real product item or return empty
+		if ( ! $product_id = empty( $this->_cart_item['product_id'] ) ? false : $this->_cart_item['product_id'] )
+			return false;
+
+		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $product_id, 'product-images' );
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $product_id, 'product-images' );
+
+		if ( it_exchange_product_supports_feature( $product_id, 'product-images' )
+				&& it_exchange_product_has_feature( $product_id, 'product-images' ) ) {
+
+			$defaults = array(
+				'size' => 'thumb'
+			);
+
+			$options = ITUtility::merge_defaults( $options, $defaults );
+			$output = array();
+
+			$product_images = it_exchange_get_product_feature( $product_id, 'product-images' );
+
+			$feature_image = array(
+				'id'    =>  $product_images[0],
+				'thumb' => wp_get_attachment_thumb_url( $product_images[0] ),
+				'large' => wp_get_attachment_url( $product_images[0] )
+			);
+
+			if ( 'thumbnail' === $options['size'] )
+				$img_src = $feature_image['thumb'];
+			else
+				$img_src = $feature_image['large'];
+
+			ob_start();
+			?>
+				<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
+					<div class="featured-image-wrapper">
+						<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>" data-src-thumb="<?php echo $feature_image['thumb'] ?>" />
+					</div>
+				</div>
+			<?php
+			$output = ob_get_clean();
+
+			return $output;
+		}
+
+		return false;
 	}
 }
