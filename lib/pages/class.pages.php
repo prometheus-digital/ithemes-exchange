@@ -222,6 +222,16 @@ class IT_Exchange_Pages {
 	*/
 	function protect_pages() {
 
+		// Don't give access to single product views if product is disabled
+		if ( 'product' == $this->_current_view ) {
+			$enabled_product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
+			$product_type = it_exchange_get_product_type();
+			if ( ! in_array( $product_type, array_keys( $enabled_product_types ) ) ) {
+				wp_redirect( it_exchange_get_page_url( 'store' ) );
+				die();
+			}
+		}
+
 		// If user is an admin, abandon this. They can see it all
 		if ( current_user_can( 'administrator' ) )
 			return;
