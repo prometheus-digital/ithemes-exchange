@@ -87,13 +87,27 @@ function it_exchange_format_price( $price ) {
  * @return void
 */
 function it_exchange_load_public_scripts( $current_view ) {
-	wp_register_script( 'jquery-zoom', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.zoom.min.js' ), array( 'jquery' ), NULL, true );
+
+	// jQuery Zoom
+	wp_register_script( 'jquery-zoom', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.zoom.min.js' ), array( 'jquery' ), false, true );
 	
+	// Frontend Product JS
 	if ( is_singular( 'it_exchange_prod' ) ) {
-		wp_enqueue_script( 'it-exchange-product-public-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/exchange-product.js' ), array( 'jquery-zoom' ), NULL, true );
+		wp_enqueue_script( 'it-exchange-product-public-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/exchange-product.js' ), array( 'jquery-zoom' ), false, true );
 	}
 	
+	// Frontend Style 
 	wp_enqueue_style( 'it-exchange-public-css', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange.css' ) );
+
+	// Parent theme /exchange/style.css if it exists
+	$parent_theme_css = get_template_directory() . '/exchange/style.css';
+    if ( is_file( $parent_theme_css ) )
+		wp_enqueue_style( 'it-exchange-parent-theme-css', ITUtility::get_url_from_file( $parent_theme_css ) );
+
+	// Child theme /exchange/style.css if it exists
+	$child_theme_css = get_stylesheet_directory() . '/exchange/style.css';
+    if ( is_file( $child_theme_css ) && ( $parent_theme_css != $child_theme_css || ! is_file( $parent_theme_css ) ) )
+		wp_enqueue_style( 'it-exchange-child-theme-css', ITUtility::get_url_from_file( $child_theme_css ) );
 }
 add_action( 'wp_enqueue_scripts', 'it_exchange_load_public_scripts' );
 
