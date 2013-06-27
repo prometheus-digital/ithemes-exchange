@@ -61,6 +61,14 @@ function it_exchange_get_zero_sum_checkout_transaction_uniqid() {
 	return $uniqid;
 }
 
+/**
+ * Verifies if Unique ID is actually Unique
+ *
+ * @since 0.4.2
+ *
+ * @param string $unique id
+ * @return boolean true if it is, false otherwise
+*/
 function it_exchange_verify_zero_sum_checkout_transaction_unique_uniqid( $uniqid ) {
 	if ( !empty( $uniqid ) ) { //verify we get a valid 32 character md5 hash
 		
@@ -111,19 +119,6 @@ function it_exchange_zero_sum_checkout_addon_make_payment_button( $options ) {
 	$payment_form .= '<input type="submit" id="zero-sum-checkout-button" name="zero_sum_checkout_purchase" value="' . apply_filters( 'zero_sum_checkout_button_label', 'Complete Purchase' ) .'" />';
 
 	$payment_form .= '</form>';
-
-	/*
-	 * Going to remove this for now. It should be
-	 * the responsibility of the site owner to
-	 * notify if Javascript is disabled, but I will
-	 * revisit this in case we want to a notifications.
-	 *
-	$payment_form .= '<div class="hide-if-js">';
-
-	$payment_form .= '<h3>' . __( 'JavaScript disabled: Stripe Payment Gateway cannot be loaded!', 'LION' ) . '</h3>';
-
-	$payment_form .= '</div>';
-	*/
 
 	return $payment_form;
 	
