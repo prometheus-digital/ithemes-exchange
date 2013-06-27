@@ -24,6 +24,8 @@
 					</div>
 				</li>
 			<?php endwhile; ?>
+		<?php else : ?>
+			<p>No Products Found</p>
 		<?php endif; ?>
 		
 	</ul>
