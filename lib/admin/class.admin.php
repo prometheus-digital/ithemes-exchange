@@ -1308,6 +1308,8 @@ Order: %s
 			wp_enqueue_style( 'it-exchange-settings', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/settings.css' );
 		} else if ( ( 'profile.php' === $hook_suffix || 'user-edit.php' === $hook_suffix ) && isset( $_REQUEST['it_exchange_customer_data'] ) ) {
 			wp_enqueue_style( 'it-exchange-customer-info', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/customer-info.css' );
+		} else if ( 'index.php' === $hook_suffix ) {
+			wp_enqueue_style( 'it-exchange-dashboard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/dashboard.css' );
 		}
 	}
 
