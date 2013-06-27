@@ -53,7 +53,8 @@
 
 /** ----------------------------------------:[ gallery ]:--- */
 #it-exchange-product .it-exchange-product-images-gallery img{display:block;margin:0;padding:0;max-width:100%;border:0;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
-#it-exchange-product .it-exchange-product-images-gallery .it-exchange-featured-image .featured-image-wrapper:hover{border:1px solid #EEE;cursor:crosshair;}
+#it-exchange-product .it-exchange-product-images-gallery .it-exchange-featured-image .featured-image-wrapper {border:1px solid transparent;}
+#it-exchange-product .it-exchange-product-images-gallery .it-exchange-featured-image .featured-image-wrapper:hover{border-color:#EEE;cursor:crosshair;}
 #it-exchange-product .it-exchange-product-images-gallery .it-exchange-thumbnail-images{list-style:none;margin:0;padding:0;}
 #it-exchange-product .it-exchange-product-images-gallery .it-exchange-thumbnail-images li{margin:0;float:left;width:33.33333%;cursor:pointer;}
 #it-exchange-product .it-exchange-product-images-gallery .it-exchange-thumbnail-images li span{display:block;margin-top:10px;border:1px solid #EEE;}
