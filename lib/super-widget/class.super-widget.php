@@ -252,12 +252,20 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 * @since 0.4.0
 	*/
 	function enqueue_scripts() {
+		$settings = it_exchange_get_option( 'settings_general' );
+
 		if ( ! $this->get_state() )
 			return;
 
 		if ( is_active_widget( false, false, $this->id_base, true ) ) {
 			$script_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/js/super-widget.js' );
 			wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery' ), false, true );
+
+			// Styles if set
+			$css_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/css/frontend-global.css' );
+			if ( empty( $settings['disable-exchange-superwidget-styles'] ) )
+				wp_enqueue_style( 'it-exchange-super-widget-frontend-global', $css_url );
+
 		}
 	}
 
