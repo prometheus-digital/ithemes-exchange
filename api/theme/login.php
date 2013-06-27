@@ -81,7 +81,10 @@ class IT_Theme_API_Login implements IT_Theme_API {
 			it_exchange_clear_session_data( 'login_redirect' );
 		}
 
-		$class= empty( $options['class'] ) ? 'it-exchange-sw-log-in' : 'it-exchange-sw-log-in ' . esc_attr( $class );
+		if ( it_exchange_in_superwidget() )
+			$class= empty( $options['class'] ) ? 'it-exchange-sw-log-in' : 'it-exchange-sw-log-in ' . esc_attr( $class );
+		else
+			$class= empty( $options['class'] ) ? 'it-exchange-log-in' : 'it-exchange-log-in ' . esc_attr( $class );
 		
 		return '<form id="loginform" class="' . $class . '" action="' . wp_login_url( $options['redirect'] ) . '" method="post">';
 	}
