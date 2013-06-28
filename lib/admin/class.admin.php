@@ -52,7 +52,7 @@ class IT_Exchange_Admin {
 		$this->_parent = $parent;
 
 		// Admin Menu Capability
-		$this->admin_menu_capability = apply_filters( 'it_exchange_admin_menu_capability', 'read' );
+		$this->admin_menu_capability = apply_filters( 'it_exchange_admin_menu_capability', 'activate_plugins' );
 
 		// Set current properties
 		$this->set_current_properties();
