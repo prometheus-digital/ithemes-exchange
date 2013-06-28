@@ -310,3 +310,5 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
+0.4.13 - 2013-06-28 - Packaging Bot
+	Updated lib/classes to version 2.3.3
