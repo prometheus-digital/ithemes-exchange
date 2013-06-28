@@ -103,8 +103,6 @@ class IT_Exchange_Email_Notifications {
 		
 		$settings = it_exchange_get_option( 'settings_email' );	
 		
-		ITUtility::print_r( $settings );
-		
 		// Edge case where sale is made before admin visits email settings.
 		if ( empty( $settings['receipt-email-name'] ) && ! isset( $IT_Exchange_Admin ) ) {
 			global $IT_Exchange;
@@ -125,8 +123,6 @@ class IT_Exchange_Email_Notifications {
 		$body    = $this->body_header() . '<div>' . wpautop( do_shortcode( $body ) ) . '</div>' . $this->body_footer();
 		
 		wp_mail( $this->user->user_email, strip_tags( $subject ), $body, $headers );
-		
-die( $body );
 		
 		// Send admin notification if param is true and email is provided in settings
 		if ( $send_admin_email && ! empty( $settings['notification-email-address'] ) ) {
@@ -194,7 +190,11 @@ die( $body );
 			</head>
 			<body>
 				<center>
-		<?php
+					<table>
+						<tbody>
+							<tr>
+								<td>
+							<?php
 		
 		$output = ob_get_clean();
 		
@@ -211,6 +211,10 @@ die( $body );
 	*/
 	function body_footer() {
 		
+		$output = '</td>';
+		$output = '</tr>';
+		$output = '</tbody>';
+		$output = '</table>';
 		$output = '</center>';
 		$output .= '</body>';
 		$output .= '</html>';
