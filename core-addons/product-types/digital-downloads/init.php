@@ -96,7 +96,13 @@ class IT_Exchange_Digital_Downloads_Add_On {
 
 		?>
 		<div class="wrap">
+			<?php screen_icon( 'it-exchange' ); ?>
+			<h2><?php _e( 'Digital Downloads Settings', 'LION' ); ?></h2>
+
+			<?php do_action( 'it_exchange_digital_downloads_settings_page_top' ); ?>
+			<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
 			<?php $form->start_form( $form_options, 'it-exchange-digitald-downloads-settings' ); ?>
+
 				<?php 
 				do_action( 'it_exchange_digital_downloads_settings_form_top' );
                 		
@@ -106,10 +112,9 @@ class IT_Exchange_Digital_Downloads_Add_On {
 		
 				?>
 				<div class="it-exchange-addon-settings it-exchange-digital-downloads-addon-settings">
-					<h3><?php _e( 'Digital Downloads Settings', 'LION' ); ?></h3>
 					<p>
 						<?php $form->add_check_box( 'require-user-login' ); ?>
-						<label for="require-user-login"><?php _e( 'Require Users to Log In before downloading their products?', 'LION' ); ?> <span class="tip" title="<?php _e( 'If unchecked, users can simply download their products using their download links', 'LION' ); ?>">i</span></label>
+						<?php _e( 'Require Users to Log In before downloading their products?', 'LION' ); ?> <span class="tip" title="<?php _e( 'If unchecked, users can simply download their products using their download links', 'LION' ); ?>">i</span>
 					</p>
 				</div>
 				<?php

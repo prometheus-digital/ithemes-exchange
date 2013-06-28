@@ -586,6 +586,12 @@ class IT_Exchange_PayPal_Standard_Add_On {
 
 		?>
 		<div class="wrap">
+			<?php screen_icon( 'it-exchange' ); ?>
+			<h2><?php _e( 'PayPal Standard Settings', 'LION' ); ?></h2>
+
+			<?php do_action( 'it_exchange_paypal-standard_settings_page_top' ); ?>
+			<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
+
 			<?php $form->start_form( $form_options, 'it-exchange-paypal-standard-settings' ); ?>
 				<?php do_action( 'it_exchange_paypal-standard_settings_form_top' ); ?>
 				<?php $this->get_paypal_standard_payment_form_table( $form, $form_values ); ?>
@@ -610,7 +616,6 @@ class IT_Exchange_PayPal_Standard_Add_On {
 
 		?>
 		<div class="it-exchange-addon-settings it-exchange-paypal-addon-settings">
-			<h3><?php _e( 'PayPal Web Standard Payment Settings', 'LION' ); ?></h3>
 			<p><?php _e( 'Do not have a PayPal account yet? <a href="http://paypal.com" target="_blank">Go set one up here</a>.', 'LION' ); ?></p>
 			<p>
 				<label for="paypal-standard-live-email-address"><?php _e( 'PayPal Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>

@@ -348,7 +348,6 @@ class IT_Exchange_Offline_Payments_Add_On {
 				$form->set_option( $key, $var );
 
 		?>
-		<h3><?php _e( 'Offline Payment Settings', 'LION' ); ?></h3>
 		<table class="form-table">
 			<?php do_action( 'it_exchange_offline_payments_settings_table_top' ); ?>
 			<tr valign="top">

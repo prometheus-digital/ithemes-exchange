@@ -583,6 +583,11 @@ class IT_Exchange_Stripe_Add_On {
 
 		?>
 		<div class="wrap">
+            <?php screen_icon( 'it-exchange' ); ?>
+            <h2><?php _e( 'Stripe Settings', 'LION' ); ?></h2>
+
+            <?php do_action( 'it_exchange_stripe_settings_page_top' ); ?>
+            <?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
 			<?php $form->start_form( $form_options, 'it-exchange-stripe-settings' ); ?>
 				<?php do_action( 'it_exchange_stripe_settings_form_top' ); ?>
 				<?php $this->get_stripe_payment_form_table( $form, $form_values ); ?>
@@ -607,7 +612,6 @@ class IT_Exchange_Stripe_Add_On {
 
 		?>
 		<div class="it-exchange-addon-settings it-exchange-stripe-addon-settings">
-			<h3><?php _e( 'Stripe Payment Settings', 'LION' ); ?></h3>
 			<p><?php _e( 'Do not have a Stripe account yet? <a href="http://stripe.com" target="_blank">Go set one up here</a>.', 'LION' ); ?></p>
 			<?php
 				if ( ! in_array( $general_settings['default-currency'], array_keys( $this->get_supported_currency_options() ) ) )

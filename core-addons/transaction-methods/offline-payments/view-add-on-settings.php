@@ -7,6 +7,12 @@
 */
 ?>
 <div class="wrap">
+	<?php screen_icon( 'it-exchange' ); ?>
+	<h2><?php _e( 'Offline Payments Settings', 'LION' ); ?></h2>
+
+	<?php do_action( 'it_exchange_offline-payments_settings_page_top' ); ?>
+	<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
+
 	<?php $form->start_form( $form_options, 'it-exchange-offline-payments-settings' ); ?>
 		<?php do_action( 'it_exchange_offline_payments_settings_form_top' ); ?>
 		<?php $this->get_offline_payment_form_table( $form ); ?>

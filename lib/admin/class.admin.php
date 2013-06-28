@@ -121,7 +121,7 @@ class IT_Exchange_Admin {
 		add_action( 'show_user_profile', array( $this, 'it_exchange_user_profile' ) );
 		add_action( 'edit_user_profile', array( $this, 'it_exchange_user_profile' ) );
 		
-		add_action( 'it_exchange_addon_settings_page_bottom', array( $this, 'return_to_addons' ) );
+		add_action( 'it_exchange_addon_settings_page_top', array( $this, 'return_to_addons' ) );
 	}
 	
 	/**
@@ -131,17 +131,10 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function return_to_addons() {
-		
-		global $hook_suffix;
-		
-		if ( 'exchange_page_it-exchange-addons' == $hook_suffix ) { //only show on add-on-settings pages
-			
+		if ( ! empty( $GLOBALS['hook_suffix'] ) && 'exchange_page_it-exchange-addons' == $GLOBALS['hook_suffix'] ) { //only show on add-on-settings pages
 			$url = add_query_arg( 'page', 'it-exchange-addons', admin_url( 'admin.php' ) );
-			
-			echo '<p><a href="' . $url . '">&larr; ' . __( 'Back to Add-ons', 'LION' ) . '</a></p>';
-		
+			echo '<div class="it-exchange-return-to-addons"><p><a href="' . $url . '">&larr; ' . __( 'Back to Add-ons', 'LION' ) . '</a></p></div>';
 		}
-		
 	}
 
 	/**
