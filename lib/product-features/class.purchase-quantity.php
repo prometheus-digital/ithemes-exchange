@@ -121,9 +121,10 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 				&nbsp;<label for="it-exchange-enable-product-quantity"><?php _e( 'Check this to allow customers to modify the quantity they want to purchase.', 'LION' ); ?></label>
 			</p>
 			<p class="it-exchange-enable-product-quantity<?php echo ( $product_feature_enable_value == 'no' ) ? ' hide-if-js' : '' ?>">
-				<?php _e( 'What is the maximum quantity a customer can set when purchasing this product? Leave blank for unlimited.', 'LION' ); ?>
-				<input type="text" name="it-exchange-product-quantity" value="<?php esc_attr_e( $product_feature_value ); ?>" />
+				<?php _e( 'What is the maximum quantity a customer can set when purchasing this product?', 'LION' ); ?>
 			</p>
+            <input type="text" name="it-exchange-product-quantity" value="<?php esc_attr_e( $product_feature_value ); ?>" />
+            <p class="description"><?php _e( 'Leave blank for unlimited.', 'LION' ); ?></p>
 		<?php
 	}
 

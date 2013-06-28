@@ -348,6 +348,7 @@ class IT_Exchange_Offline_Payments_Add_On {
 				$form->set_option( $key, $var );
 
 		?>
+        <p><?php _e( 'Offline payments allow you the option to allow people to buy your products from your site but to pay via check or cash. Transactions can be set as pending until you get paid.', 'LION' ); ?></p>
 		<table class="form-table">
 			<?php do_action( 'it_exchange_offline_payments_settings_table_top' ); ?>
 			<tr valign="top">

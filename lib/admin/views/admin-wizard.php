@@ -16,7 +16,7 @@
 		<div class="it-exchange-wizard">
 			<div class="fields">
 				<div class="field payments">
-					<label><?php _e( 'How will you be accepting payments?', 'LION' ); ?> <span class="tip" title="How you gonna get dat muh-nay?">i</span></label>
+					<label><?php _e( 'How will you be accepting payments? Choose one.', 'LION' ); ?><span class="tip" title="<?php _e( "Choose your preferred payment gateway for processing transactions. You can select more than one option but it's not recommended.", 'LION' ); ?>">i</span></label>
 					<ul>
 						<?php
 							$addons = it_exchange_get_addons( array( 'category' => 'transaction-methods', 'show_required' => false ) );
@@ -54,14 +54,14 @@
 				
 				<div class="field general-settings-wizard">
 					<h3><?php _e( 'General', 'LION' ); ?></h3>
-					<label for="company-email"><?php _e( 'E-mail Notifications', 'LION' ); ?> <span class="tip" title="<?php _e( 'The E-mail address you should receive notifcations to, from your store.', 'LION' ); ?>">i</span></label>
+					<label for="company-email"><?php _e( 'E-mail Notifications', 'LION' ); ?> <span class="tip" title="<?php _e( 'At what email address would you like to receive store notifications?', 'LION' ); ?>">i</span></label>
 					<?php $form->add_text_box( 'company-email', array( 'value' => get_bloginfo( 'admin_email' ), 'class' => 'clearfix' ) ); ?>
 					<p>
 						<?php $form->add_check_box( 'exchange-notifications', array( 'checked' => true ) ); ?>
-						<label for="exchange-notifications"><?php _e( 'Get e-mail updates from us about iThemes Exchange', 'LION' ); ?> <span class="tip" title="<?php _e( "We'll send you updates, discounts on add-ons and other iThemes products, and our eternal love.", 'LION' ); ?>">i</span></label>
+						<label for="exchange-notifications"><?php _e( 'Get e-mail updates from us about iThemes Exchange', 'LION' ); ?> <span class="tip" title="<?php _e( 'Subscribe to get iThemes Exchange news, updates, discounts and swag &hellip; oh, and our endless love.', 'LION' ); ?>">i</span></label>
 					</p>
 					<div class="default-currency">
-						<label for="default-currency"><?php _e( 'Currency', 'LION' ); ?> <span class="tip" title="<?php _e( 'Select the currenc you plan on using in your store.', 'LION' ); ?>">i</span></label>
+						<label for="default-currency"><?php _e( 'Currency', 'LION' ); ?><span class="tip" title="<?php _e( 'Select the currency you plan to use in your store.', 'LION' ); ?>">i</span></label>
 						<?php $form->add_drop_down( 'default-currency', $this->get_default_currency_options() ); ?>
 					</div>
 				</div>

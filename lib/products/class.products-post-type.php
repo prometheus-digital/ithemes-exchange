@@ -564,6 +564,7 @@ class IT_Exchange_Product_Post_Type {
 		$columns['title']                             = __( 'Title', 'LION' );
 		$columns['it_exchange_product_price']         = __( 'Price', 'LION' );
 		$columns['it_exchange_product_show_in_store'] = __( 'Show in Store', 'LION' );
+		$columns['it_exchange_product_inventory']     = __( 'Inventory', 'LION' );
 		$columns['it_exchange_product_purchases']     = __( 'Purchases', 'LION' );
 		
 		if ( 1 < count( it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ) )
@@ -599,6 +600,7 @@ class IT_Exchange_Product_Post_Type {
 	function it_exchange_product_sortable_columns( $sortables ) {
 		$sortables['it_exchange_product_price']         = 'it-exchange-product-price';
 		$sortables['it_exchange_product_show_in_store'] = 'it-exchange-product-show-in-store';
+		$sortables['it_exchange_product_inventory']     = 'it-exchange-product-inventory';
 		$sortables['it_exchange_product_purchases']     = 'it-exchange-product-purchases';
 
 		//This will only show up if there are multiple product-type addons
@@ -627,6 +629,9 @@ class IT_Exchange_Product_Post_Type {
 				$product_visibility = get_post_meta( $post->ID, '_it-exchange-visibility', true );
 				echo ucwords( $product_visibility );
 				break;
+			case 'it_exchange_product_inventory':
+				esc_attr_e( it_exchange_get_product_feature( $post->ID, 'inventory' ) );
+				break;
 			case 'it_exchange_product_purchases':
 				esc_attr_e( count( it_exchange_get_transactions_for_product( $post->ID, 'ids' ) ) );
 				break;
@@ -640,6 +645,7 @@ class IT_Exchange_Product_Post_Type {
 	 * Modify sort of products in edit.php for custom columns
 	 *
 	 * @since 0.4.0
+	 * @todo sortable by inventory and purchases?
 	 *
 	 * @param string $request original request
 	 */

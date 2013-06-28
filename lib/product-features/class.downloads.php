@@ -177,19 +177,19 @@ class IT_Exchange_Product_Feature_Downloads {
 		$existing_downloads = it_exchange_get_product_feature( $product->ID, 'downloads' );
 		?>
 			<div class="downloads-label-add">
-				<label>Files</label>
+				<label><?php _e( 'Files', 'LION' ); ?> <span class="tip" title="<?php _e( 'If you are selling digital products (like music or ebooks) you will upload those here.', 'LION' ); ?>">i</span></label>
 				<div class="download-add-new right">
-					<a href class="button">Add New</a>
+					<a href class="button"><?php _e( 'Add New', 'LION' ); ?></a>
 				</div>
 			</div>
 			<div class="downloads-list-wrapper">
 				<div class="downloads-list-titles">
 					<div class="download-item columns-wrapper">
 						<div class="download-name column col-4-12">
-							<span>Name</span>
+							<span><?php _e( 'Name', 'LION' ); ?></span>
 						</div>
 						<div class="download-source column col-7-12">
-							<span>Source</span>
+							<span><?php _e( 'Source', 'LION' ); ?></span>
 						</div>
 					</div>
 				</div>
@@ -201,7 +201,7 @@ class IT_Exchange_Product_Feature_Downloads {
 						</div>
 						<div class="download-source column col-7-12">
 							<input type="url" name="" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'LION' ) ); ?>" value="" />
-							<a href class="it-exchange-upload-digital-download">Upload</a>
+							<a href class="it-exchange-upload-digital-download"><?php _e( 'Upload', 'LION' ); ?></a>
 						</div>
 						<div class="download-remove column col-1-12">
 							<a href="#" class="it-exchange-delete-digital-download">&times;</a>
@@ -218,7 +218,7 @@ class IT_Exchange_Product_Feature_Downloads {
 							</div>
 							<div class="download-source column col-7-12">
 								<input type="url" name="it-exchange-digital-downloads[0][source]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'LION' ) ); ?>" value="" />
-								<a href class="it-exchange-upload-digital-download">Upload</a>
+								<a href class="it-exchange-upload-digital-download"><?php _e( 'Upload', 'LION' ); ?></a>
 							</div>
 							<div class="download-remove column col-1-12">
 								<a href="#" class="it-exchange-delete-digital-download">&times;</a>
@@ -236,7 +236,7 @@ class IT_Exchange_Product_Feature_Downloads {
 								</div>
 								<div class="download-source column col-7-12">
 									<input type="text" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][source]" class="not-empty" value="<?php esc_attr_e( $data['source'] ); ?>" />
-									<a href class="it-exchange-upload-digital-download">Upload</a>
+									<a href class="it-exchange-upload-digital-download"><?php _e( 'Upload', 'LION' ); ?></a>
 								</div>
 								<div class="download-remove column col-1-12">
 									<input id="it-exchange-digital-downloads-delete-<?php esc_attr_e( $id ); ?>" class="hide-if-js" type="checkbox" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][delete]" value="true" />
@@ -283,7 +283,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		<div class="download-expiration">
 			<label class="download-limit-label" for="it-exchange-digital-downloads-expire">
 				<?php _e( 'Download Expiration', 'LION' ); ?>
-				<span class="tip" title="Changing this value only applies to future purchases">i</span>
+				<span class="tip" title="<?php _e( 'Changing this value only applies to future purchases', 'LION' ); ?>">i</span>
 			</label>
 			<span><?php _e( 'Download links', 'LION' ); ?></span>
 			<select name="it-exchange-digital-downloads-expires" id="it-exchange-digital-downloads-expires">
@@ -302,7 +302,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		<div class="download-limit">
 			<label class="download-limit-label" for="it-exchange-digital-downloads-download-limit">
 				<?php _e( 'Download Limit', 'LION' ); ?>
-				<span class="tip" title="Changing this value only applies to future purchases">i</span>
+				<span class="tip" title="<?php _e( 'How many times customers can download the file(s).', 'LION' ); ?>">i</span>
 			</label>
 			<div class="download-limit-select">
 				<select name="it-exchange-digital-downloads-download-limit" id="it-exchange-digital-downloads-download-limit">
