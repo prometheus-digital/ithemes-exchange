@@ -21,7 +21,12 @@ add_filter( 'it_exchange_offline-payments_transaction_status_can_be_manually_cha
 */
 function it_exchange_offline_payments_get_default_status_options() {
 	$add_on = it_exchange_get_addon( 'offline-payments' );
-	$options = empty( $add_on['options']['supports']['transaction_status']['options'] ) ? array() : $add_on['options']['supports']['transaction_status']['options'];
+	$options = array(
+		'pending'  => _x( 'Pending', 'Transaction Status', 'LION' ),
+		'paid'     => _x( 'Paid', 'Transaction Status', 'LION' ),
+		'refunded' => _x( 'Refunded', 'Transaction Status', 'LION' ),
+		'voided'   => _x( 'Voided', 'Transaction Status', 'LION' ),
+	);
 	return $options;
 }
 add_filter( 'it_exchange_get_status_options_for_offline-payments_transaction', 'it_exchange_offline_payments_get_default_status_options' );
@@ -64,7 +69,7 @@ function offline_payments_save_wizard_settings() {
 }
 add_action( 'it_exchange_save_wizard_settings', 'offline_payments_save_wizard_settings' );
 /**
- * This proccesses a stripe transaction.
+ * This proccesses an offline transaction.
  *
  * @since 0.4.0
  *

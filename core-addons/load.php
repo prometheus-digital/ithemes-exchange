@@ -20,24 +20,6 @@ function it_exchange_register_core_addons() {
 			'file'              => dirname( __FILE__ ) . '/transaction-methods/offline-payments/init.php',
 			'category'          => 'transaction-methods',
 			'tag'               => 'core',
-			'supports'          => apply_filters( 'it_exchange_register_offline_payments_default_features', array(
-				'transaction_status' => array(
-					'key'       => '_it_exchange_transaction_status',
-					'componant' => 'post_meta',
-					'options'   => array(
-						'pending'  => _x( 'Pending', 'Transaction Status', 'LION' ),
-						'paid'     => _x( 'Paid', 'Transaction Status', 'LION' ),
-						'refunded' => _x( 'Refunded', 'Transaction Status', 'LION' ),
-						'voided'   => _x( 'Voided', 'Transaction Status', 'LION' ),
-					),
-					'default'   => 'pending',
-				),
-				'transaction_cart' => array(
-					'key'       => '_it_exchange_transaction_cart',
-					'componant' => 'post_meta',
-					'default'   => false,
-				),
-			) ),
 			'settings-callback' => 'it_exchange_offline_payments_settings_callback',
 		),
 		//For situations when the Cart Total is 0 (free), we still want to record the transaction!
@@ -49,7 +31,9 @@ function it_exchange_register_core_addons() {
 			'file'              => dirname( __FILE__ ) . '/transaction-methods/zero-sum-checkout/init.php',
 			'category'          => 'transaction-methods',
 			'tag'               => 'required',
+			/*
 			'supports'          => array( 'transaction_status' => true ),
+			*/
 		),
 		// PayPal Standard Transaction Method
 		'paypal-standard' => array(
@@ -61,7 +45,6 @@ function it_exchange_register_core_addons() {
 			'file'              => dirname( __FILE__ ) . '/transaction-methods/paypal-standard/init.php',
 			'category'          => 'transaction-methods',
 			'tag'               => 'core',
-			'supports'          => array( 'transaction_status' => true ),
 			'settings-callback' => 'it_exchange_paypal_standard_settings_callback',
 		),
 		// Stripe Transaction Method
@@ -73,7 +56,6 @@ function it_exchange_register_core_addons() {
 			'icon'              => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/transaction-methods/stripe/stripe.png' ),
 			'file'              => dirname( __FILE__ ) . '/transaction-methods/stripe/init.php',
 			'category'          => 'transaction-methods',
-			'supports'          => array( 'transaction_status' => true ),
 			'settings-callback' => 'it_exchange_stripe_addon_settings_callback',
 		),
 		// Digital Download Product Types

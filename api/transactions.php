@@ -42,19 +42,6 @@ function it_exchange_get_transaction_method( $transaction=false ) {
 }
 
 /**
- * Returns the options array for a registered transaction-method
- *
- * @since 0.3.3
- * @param string $transaction_method  slug for the transaction-method
-*/
-function it_exchange_get_transaction_method_options( $transaction_method ) {
-	if ( $addon = it_exchange_get_addon( $transaction_method ) )
-		return apply_filters( 'it_exchange_get_transaction_method_options', $addon['options'], $transaction_method );
-	
-	return apply_filters( 'it_exchange_get_transaction_method_options', false, $transaction_method );
-}
-
-/**
  * Retreives a transaction object by passing it the WP post object or post id
  *
  * @since 0.3.3
@@ -305,6 +292,22 @@ function it_exchange_get_status_options_for_transaction( $transaction ) {
 	if ( ! $method = it_exchange_get_transaction_method( $transaction ) )
 		return array();
 	return apply_filters( 'it_exchange_get_status_options_for_' . $method . '_transaction', array(), $transaction );
+}
+
+/**
+ * Return the default transaction status for a transaction
+ *
+ * Leans on transaction methods to do the work
+ *
+ * @since 0.4.11
+ *
+ * @param mixed $transaction id or object
+ * @return param
+*/
+function it_exchange_get_default_transaction_status( $transaction ) {
+	if ( $method = it_exchange_get_transaction_method( $transaction ) )
+		return false;
+	return apply_filters( 'it_exchange_get_default_transaction_status_for_' . $method, false );
 }
 
 /**

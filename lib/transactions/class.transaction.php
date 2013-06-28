@@ -281,29 +281,6 @@ class IT_Exchange_Transaction {
 	 * @return void
 	*/
     function set_transaction_supports_and_data() {
-        // Get transaction_method options
-
-		/****** @todo THIS WAS OLD CARTBUDDY. WAS SUPPOSED TO BE 'FLEXIBLE' BUT I DON'T LIKE IT. ***/
-        if ( $transaction_method_options = it_exchange_get_transaction_method_options( $this->transaction_method ) ) { 
-            if ( ! empty( $transaction_method_options['supports'] ) ) { 
-                foreach( $transaction_method_options['supports'] as $feature => $params ) { 
-
-                    // Set the transaction_supports array
-                    $this->transaction_supports[$feature] = $params;
-
-                    // transaction_data only contains post_meta data
-                    if ( 'post_meta' != $params['componant'] )
-                        continue;
-
-                    // Set transaction_data to post_meta value or feature default
-                    if ( $value = get_post_meta( $this->ID, $params['key'], true ) ) 
-                        $this->transaction_data[$params['key']] = $value;
-                    else
-                        $this->transaction_data[$params['key']] = $this->transaction_supports[$feature]['default'];
-                }   
-            }   
-        }   
-		/** END OF OLD. BEGINNING OF TEMP **/
 
 		// Set status
 		$this->status = $this->get_status();
@@ -319,6 +296,8 @@ class IT_Exchange_Transaction {
 
 		// Gateway ID for the transaction
 		$this->gateway_id_for_transaction = get_post_meta( $this->ID, '_it_exchange_transaction_method_id', true );
+
+		do_action( 'it_exchange_set_transaction_supports_and_data', $this->ID );
 	}
 
 	/**

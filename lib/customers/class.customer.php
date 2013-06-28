@@ -74,14 +74,8 @@ class IT_Exchange_Customer {
 	function init() {
 		$this->set_wp_user();
 		$this->set_customer_data();
-		//$this->set_transaction_history();
-		//$this->set_purchase_history();
 		
 		//We want to do this last
-		/**
-		HEAD
-		add_filter( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_to_user' ), 999, 3 );
-		**/
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_to_user' ), 999 );
 	}
 
@@ -151,48 +145,6 @@ class IT_Exchange_Customer {
 	*/
 	function is_wp_user() {
 		return (bool) $this->wp_user;
-	}
-
-	/**
-	 * Sets an array of all transactions the customer has ever created.
-	 *
-	 * set_purchase_history() will use this
-	 *
-	 * @since 0.3.8
-	 * @return void
-	*/
-	function set_transaction_history() {
-
-		if ( ! $this->is_wp_user() )
-			return;
-
-		// Set all user transactions
-		$this->transaction_history = it_exchange_get_customer_transactions( $this->id );
-	}
-
-	/**
-	 * Sets an array of products purchased by product_id
-	 *
-	 * @since 0.3.8
-	 * @return void
-	*/
-	function set_purchase_history() {
-		if ( ! empty( $this->transaction_history ) ) {
-			foreach( (array) $this->transaction_history as $key => $txn ) {
-
-				// Skip this transaction if its got a bad status
-				/** @todo make status API accessable and filterable **/
-				if ( ! in_array( it_exchange_get_transaction_status( $txn->ID ), array( 'pending' ) ) )
-					return;
-
-				if ( ! empty( $txn->transaction_data['_it_exchange_transaction_cart']->products ) ) {
-					foreach( (array) $txn->transaction_data['_it_exchange_transaction_cart']->products as $product ) {
-						$product['transaction_id'] = $txn->ID;
-						$this->purchase_history[$product['product_id']][] = $product;
-					}
-				}
-			}
-		}
 	}
 
 	/**
