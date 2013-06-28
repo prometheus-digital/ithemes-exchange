@@ -126,15 +126,18 @@ class IT_Exchange_Product_Feature_Product_Availability {
 			<?php endif; ?>
 			<p>
 				<input type="checkbox" id="it-exchange-enable-product-availability-start"  class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-start" value="yes" <?php checked( 'yes', $start_enabled ); ?> />&nbsp;<label for="it-exchange-enable-product-availability-start"><?php _e( 'Use a start date', 'LION' ); ?></label>
+				&nbsp;
 				<input type="checkbox" id="it-exchange-enable-product-availability-end" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-end" value="yes" <?php checked( 'yes', $end_enabled ); ?> />&nbsp;<label for="it-exchange-enable-product-availability-end"><?php _e( 'Use an end date', 'LION' ); ?></label>
 			</p>
 			<p>
-				<span class="it-exchange-enable-product-availability-start<?php echo ( $start_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
-					<input type="text" class="datepicker" id="it-exchange-product-availability-start" name="it-exchange-product-availability-start" value="<?php esc_attr_e( $start_date ); ?>" /> <label for="it-exchange-product-availability-start"><?php _e( 'Start Date', 'LION' ); ?></label><br />
-				</span>
-				<span class="it-exchange-enable-product-availability-end<?php echo ( $end_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
-					<input type="text" class="datepicker" id="it-exchange-product-availability-end" name="it-exchange-product-availability-end" value="<?php esc_attr_e( $end_date ); ?>" /> <label for="it-exchange-product-availability-end"><?php _e( 'End Date', 'LION' ); ?></label><br />
-				</span>
+				<p class="it-exchange-enable-product-availability-start<?php echo ( $start_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
+					<label for="it-exchange-product-availability-start"><?php _e( 'Start Date', 'LION' ); ?></label>
+					<input type="text" class="datepicker" id="it-exchange-product-availability-start" name="it-exchange-product-availability-start" value="<?php esc_attr_e( $start_date ); ?>" />
+				</p>
+				<p class="it-exchange-enable-product-availability-end<?php echo ( $end_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
+					<label for="it-exchange-product-availability-end"><?php _e( 'End Date', 'LION' ); ?></label>
+					<input type="text" class="datepicker" id="it-exchange-product-availability-end" name="it-exchange-product-availability-end" value="<?php esc_attr_e( $end_date ); ?>" />
+				</p>
 			</p>
 		<?php
 	}
