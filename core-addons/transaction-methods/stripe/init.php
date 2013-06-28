@@ -234,7 +234,7 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 
 	$products = it_exchange_get_cart_data( 'products' );
 
-	$payment_form = '<form id="stripe_form" action="' . esc_attr( it_exchange_get_page_url( 'transaction' ) ) . '" method="post">';
+	$payment_form = '<form class="stripe_form" action="' . esc_attr( it_exchange_get_page_url( 'transaction' ) ) . '" method="post">';
 	$payment_form .= '<input type="hidden" name="it-exchange-transaction-method" value="stripe" />';
 	$payment_form .= wp_nonce_field( 'stripe-checkout', '_stripe_nonce', true, false );
 
@@ -245,7 +245,8 @@ function it_exchange_stripe_addon_make_payment_button( $options ) {
 	$payment_form .= '	jQuery(".it-exchange-stripe-payment-button").click(function(){' . "\n";
 	$payment_form .= '	  var token = function(res){' . "\n";
 	$payment_form .= '		var $stripeToken = jQuery("<input type=hidden name=stripeToken />").val(res.id);' . "\n";
-	$payment_form .= '		jQuery("form#stripe_form").append($stripeToken).submit();' . "\n";
+	$payment_form .= '		jQuery("form.stripe_form").append($stripeToken).submit();' . "\n";
+	$payment_form .= '		it_exchange_stripe_processing_payment_popup();' . "\n";
 	$payment_form .= '	  };' . "\n";
 	$payment_form .= '	  StripeCheckout.open({' . "\n";
 	$payment_form .= '		key:         "' . esc_js( $publishable_key ) . '",' . "\n";

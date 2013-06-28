@@ -30,8 +30,7 @@
 					<div class="it-exchange-purchase-items">
 						<div class="item-info">
 							<div class="item-thumbnail">
-								<!-- This will be replaced with a theme API call at some point during beta -->
-								<img src="http://placehold.it/150x150"/>
+								<?php it_exchange( 'transaction', 'product-featured-image' ); ?>
 							</div>
 							<div class="item-data">
 								<h4>

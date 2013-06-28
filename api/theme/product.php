@@ -853,7 +853,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 		
-		$args['before_widget'] = '<div class="it-exchange-product-sw ' . esc_attr( $options['class'] ) . '">';	
+		$args['before_widget'] = '<div class="it-exchange-product-sw single-product-super-widget ' . esc_attr( $options['class'] ) . '">';	
 		$args['after_widget'] = '</div>';			
 		$args['enqueue_hide_script'] = false;
 		
