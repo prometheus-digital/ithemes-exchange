@@ -125,7 +125,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 				echo '<ul class="feature-image">';
 				echo '  <li id="' . $product_images[0] . '">';
 				echo '    <a class="image-edit" href="">';
-				echo '      <img alt="" data-thumb="' . $thumb . '" data-large="' . $large . '" src=" ' . $src . '">';
+				echo '      <img alt="Featured Image" data-thumb="' . $thumb . '" data-large="' . $large . '" src=" ' . $src . '">';
 				echo '      <span class="overlay"></span>';
 				echo '    </a>';
 				echo '    <span class="remove-item">×</span>';

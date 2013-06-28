@@ -9,6 +9,7 @@
  * The IT_Exchange_Email_Notifications class is for sending out email notification using wp_mail()
  *
  * @since 0.4.0
+ * @todo add shortcodes for company tax, name, and  phone and email blah blah blah
 */
 class IT_Exchange_Email_Notifications {
 	

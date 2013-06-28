@@ -129,8 +129,9 @@ class IT_Exchange_Product_Feature_Inventory {
 			</p>
 			<p class="it-exchange-enable-product-inventory<?php echo ( $product_feature_enable_value == 'no' ) ? ' hide-if-js' : '' ?>">
 				<label for="it-exchange-product-inventory"><?php _e( 'Current Inventory', 'LION' ); ?></label>
-				<input type="number" id="it-exchange-product-inventory" name="it-exchange-product-inventory" value="<?php esc_attr_e( $product_feature_value ); ?>" />
-			</p>
+            </p>
+            <input type="number" id="it-exchange-product-inventory" name="it-exchange-product-inventory" value="<?php esc_attr_e( $product_feature_value ); ?>" />
+            <p class="description"><?php _e( 'Leave blank for unlimited.', 'LION' ); ?></p>
 		<?php
 	}
 

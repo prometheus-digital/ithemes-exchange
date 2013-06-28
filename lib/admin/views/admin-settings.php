@@ -28,19 +28,20 @@
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="company-tax-id"><?php _e( 'Company Tax ID', 'LION' ) ?></label></th>
+				<th scope="row"><label for="company-tax-id"><?php _e( 'Company Tax ID', 'LION' ) ?> <span class="tip" title="<?php _e( 'In the U.S., this is your Federal Tax ID Number', 'LION' ); ?>">i</span></label></th>
 				<td>
 					<?php $form->add_text_box( 'company-tax-id', array( 'class' => 'normal-text' ) ); ?>
+                    <p class="description"><a href="http://www.irs.gov/Businesses/Small-Businesses-&amp;-Self-Employed/Employer-ID-Numbers-(EINs)-" target="_blank"><?php _e( 'Click here for more info about obtaining a Tax ID', 'LION' ); ?></a></p>
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="company-email"><?php _e( 'Company Email', 'LION' ) ?></label></th>
+				<th scope="row"><label for="company-email"><?php _e( 'Company Email', 'LION' ) ?> <span class="tip" title="<?php _e( 'Where do you want customer inquiries to go?', 'LION' ); ?>">i</span></label></th>
 				<td>
 					<?php $form->add_text_box( 'company-email', array( 'class' => 'normal-text' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="company-phone"><?php _e( 'Company Phone', 'LION' ) ?></label></th>
+				<th scope="row"><label for="company-phone"><?php _e( 'Company Phone', 'LION' ) ?> <span class="tip" title="<?php _e( 'This is your main customer service lice.', 'LION' ); ?>">i</span></label></th>
 				<td>
 					<?php $form->add_text_box( 'company-phone', array( 'class' => 'normal-text' ) ); ?>
 				</td>
@@ -75,14 +76,14 @@
 				<th scope="row"><label for="currency-thousands-separator"><?php _e( 'Thousands Separator', 'LION' ) ?></label></th>
 				<td>
 					<?php $form->add_text_box( 'currency-thousands-separator', array( 'class' => 'small-text', 'maxlength' => '1' ) ); ?>
-					<br /><span class="description"><?php _e( 'What character would you like to use to separate thousands when display prices?', 'LION' ); ?></span>
+					<br /><span class="description"><?php _e( 'What character would you like to use to separate thousands when displaying prices?', 'LION' ); ?></span>
 				</td>
 			</tr>
 			<tr valign="top">
 				<th scope="row"><label for="currency-decimals-separator"><?php _e( 'Decimals Separator', 'LION' ) ?></label></th>
 				<td>
 					<?php $form->add_text_box( 'currency-decimals-separator', array( 'class' => 'small-text', 'maxlength' => '1' ) ); ?>
-					<br /><span class="description"><?php _e( 'What character would you like to use to separate decimals when display prices?', 'LION' ); ?></span>
+					<br /><span class="description"><?php _e( 'What character would you like to use to separate decimals when displaying prices?', 'LION' ); ?></span>
 				</td>
 			</tr>
             <?php do_action( 'it_exchange_general_settings_before_settings_registration', $form ); ?>

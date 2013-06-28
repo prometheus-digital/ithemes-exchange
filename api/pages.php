@@ -26,6 +26,7 @@ function it_exchange_get_pages( $break_cache=false, $options=array() ) {
 	foreach( $registered as $page => $default_params ) {
 		$db_params = array();
 		$db_params['slug'] = empty( $pages[$page . '-slug'] ) ? 0 : $pages[$page . '-slug'];
+		$db_params['tip']  = empty( $pages[$page . '-tip'] )  ? 0 : $pages[$page . '-tip'];
 		$db_params['name'] = empty( $pages[$page . '-name'] ) ? 0 : $pages[$page . '-name'];
 		$db_params['type'] = empty( $pages[$page . '-type'] ) ? 0 : $pages[$page . '-type'];
 		$db_params['wpid'] = empty( $pages[$page . '-wpid'] ) ? 0 : $pages[$page . '-wpid'];
@@ -251,6 +252,7 @@ function it_exchange_register_page( $page, $options ) {
 	$defaults = array(
 		'settings-name' => ucwords( $options['name'] ),
 		'type'          => 'exchange',
+		'tip'			=> empty( $options['tip'] ) ? '' : $options['tip'],
 		'wpid'          => 0,
 		'menu'          => true,
 		'optional'      => true,

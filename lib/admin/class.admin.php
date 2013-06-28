@@ -321,6 +321,8 @@ class IT_Exchange_Admin {
 				$add_ons_callback = $addon['options']['settings-callback'];
 		}
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->admin_menu_capability, 'it-exchange-addons', $add_ons_callback );
+		
+		add_submenu_page( 'it-exchange', __( 'Help', 'LION' ), __( 'Help', 'LION' ), $this->admin_menu_capability, 'it-exchange-help', array( $this, 'print_help_page' ) );
 
 		// Remove default iThemes Exchange sub-menu item created with parent menu item
 		remove_submenu_page( 'it-exchange', 'it-exchange' );
@@ -491,6 +493,16 @@ class IT_Exchange_Admin {
 	function print_get_more_add_ons_tab_link( $current_tab ) {
 		$active = 'get-more' == $current_tab ? 'nav-tab-active' : '';
 		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&tab=get-more' ); ?>"><?php _e( 'Get More', 'LION' ); ?></a><?php
+	}
+	
+	/**
+	 * Prints the help/support page for iThemes Exchange
+	 *
+	 * @since 0.4.14
+	 * @return void
+	*/
+	function print_help_page() {
+		include( 'views/admin-help.php' );
 	}
 
 	/**
@@ -1224,12 +1236,13 @@ Order: %s
 			$deps = array( 'post', 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'autosave' );
 			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', $deps );
 			wp_localize_script( 'it-exchange-add-edit-product', 'addEditProductL10n', array(
-					'mediaManagerTitle' => __( 'Select Images', 'LION' ),
-					'largerThan150'     => __( 'You must upload an image larger than 150x150.', 'LION' ),
+					'mediaManagerTitle'     => __( 'Select Images', 'LION' ),
+					'largerThan150'         => __( 'You must upload an image larger than 150x150.', 'LION' ),
 					'editMediaManagerTitle' => __( 'Edit Image', 'LION' ),
-					'uploadSource' => __( 'Upload Source', 'LION' ),
-					'insert' => __( 'Insert', 'LION' ),
-					'advanced' => __( 'Advanced', 'LION' ),
+					'uploadSource'          => __( 'Upload Source', 'LION' ),
+					'insert'                => __( 'Insert', 'LION' ),
+					'advanced'              => __( 'Advanced', 'LION' ),
+					'advanced_tooltip'      => __( 'We want to keep things simple for you - so we put the kitchen sink here in the Advanced button &hellip; click it to add more info about your product.', 'LION' ),
 				)
 			);
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {

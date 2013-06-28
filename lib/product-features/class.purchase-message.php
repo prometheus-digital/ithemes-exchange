@@ -113,7 +113,7 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'purchase-message' );
 
 		// Set description
-		$description = __( 'Any text placed here will be appended to the receipt when this product is purchased.', 'LION' );
+		$description = __( 'Any text placed here will be appended to the receipt when this product is purchased. You might want to use this to add special instructions for particular products.', 'LION' );
 		$description = apply_filters( 'it_exchange_product_purchase-message_metabox_description', $description );
 
 		?>
