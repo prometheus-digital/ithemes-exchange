@@ -153,16 +153,6 @@ function it_exchange_register_core_addons() {
 			'supports'    => apply_filters( 'it_exchange_register_basic_coupons_default_features', array(
 			) ),
 		),
-		// Transaction Status admin Metabox
-		'transaction-status-metabox' => array(
-			'name'        => __( 'Transaction Status Metabox', 'LION' ),
-			'description' => __( 'Gives admins the ability to change a Transaction Status via a metabox after creation of the Transaction', 'LION' ),
-			'author'      => 'iThemes',
-			'author_url'  => 'http://ithemes.com',
-			'file'        => dirname( __FILE__ ) . '/admin/transaction-status-metabox/init.php',
-			'category'    => 'admin',
-			'tag'         => 'core',
-		),
 		// Category Taxonomy
 		'category-taxonomy-type' => array(
 			'name'        => __( 'Product Categories', 'LION' ),
