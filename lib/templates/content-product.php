@@ -32,6 +32,8 @@
 						<?php it_exchange( 'product', 'description' ); ?>
 					</div>
 				<?php endif; ?>
+				
+				<?php it_exchange( 'product', 'super-widget' ); ?>
 			</div>
 		</div>
 		<?php if ( it_exchange( 'product', 'has-images' ) ) : ?>
@@ -79,7 +81,5 @@
 		<?php if ( it_exchange( 'product', 'has-availability', 'type=end' ) ) : ?>
 			<p><strong>Product End Availability</strong><br /><?php it_exchange( 'product', 'availability', array('type' => 'end' ) ); ?></p>
 		<?php endif; ?>
-		
-		<?php it_exchange( 'product', 'super-widget' ); ?>
 	</div>
 </div>
