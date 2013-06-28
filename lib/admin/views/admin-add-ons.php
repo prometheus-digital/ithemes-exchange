@@ -19,16 +19,16 @@
 		
 		switch ( $tab ) {
 			case 'enabled':
-				$addons = it_exchange_get_enabled_addons();
+				$addons = it_exchange_get_enabled_addons( array( 'show_required' => false ) );
 				break;
 			
 			case 'disabled':
-				$addons = it_exchange_get_disabled_addons();
+				$addons = it_exchange_get_disabled_addons( array( 'show_required' => false ) );
 				break;
 			
 			case 'all':
 			default:
-				$addons = it_exchange_get_addons();
+				$addons = it_exchange_get_addons( array( 'show_required' => false ) );
 				break;
 		}
 	?>
@@ -76,7 +76,33 @@
 				</div>
 			<?php endforeach; ?> 
 		<?php else : ?>
-			<p><?php __( 'No Add-ons currently enabled', 'LION' ); ?></p>
+			<?php 
+			if ( 'all' == $tab ) {
+				$vars = array( 
+					'target' => add_query_arg( 'tab', 'get-more' ),
+					'text'   => __( 'No add-ons installed. How\'d you do that?', 'LION' ),
+					'link'   => __( 'Go get some now', 'LION' )
+				);
+			} else if ( 'enabled' == $tab ) {
+				$vars = array( 
+					'target' => add_query_arg( 'tab', 'disabled' ),
+					'text'   => __( 'No add-ons are currently enabled', 'LION' ),
+					'link'   => __( 'Go enable some now', 'LION' )
+				);
+			} else if ( 'disabled' == $tab ) {
+				$vars = array( 
+					'target' => add_query_arg( 'tab', 'get-more' ),
+					'text'   => __( 'All add-ons are currently enabled', 'LION' ),
+					'link'   => __( 'Go get more', 'LION' )
+				);
+			}
+			?>
+			<div class="addons-achievement">
+				<h2><?php echo $vars['text']; ?></h2>
+				<p>
+					<a href="<?php echo $vars['target']; ?>" class="it-exchange-button"><?php echo $vars['link'] ?></a>
+				</p>
+			</div>
 		<?php endif; ?>
 	</div>
 </div>
