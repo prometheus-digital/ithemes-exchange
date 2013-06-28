@@ -1,3 +1,33 @@
+0.4.14 - 2013-06-28 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Ty Carlson, Cory Miller
+	Add descrption to postslug div
+	Fix broken div in inventory metabox
+	Changed markup and styling of Single Product page template
+	Remove Featured Product and Cart Summary code from core
+	Remove 'product-supports' options from addon registration requirements for transaction details
+	Clean up Product Availability metabox fields
+	Remove Transaction Status metabox. Replaced with AJAX update status earlier this week
+	Confirmation Email modifcations
+	Localize strings on help page
+	Use exchange logo on help page
+	Standardized addon settings pages. Maybe made them look a tiny bit prettier.
+	Cory's Wish List :) -- 1) added a bunch of tips, 2) Updated Pages to include  'tips' data, 3) fixed some strings that weren't i18n
+	Empty addon tab messages
+	Always enqueue SW JS in product super-widgets
+	Changes to superwidget to handle processing payment popup better
+	Change single-product-super-widget class name
+	Add featured image to theme API for transaction products.
+	Add featured image call to /lib/templates/content-purchases.php
+	Fix bug that prevent SW stying from enqueuing when embeded in product template
+	Change default Exchange permissions from read to activate_plugins (this is filterable)
+	Added processing dialog to stripe payment upon submit
+	Change log_in template part to login
+	Modifying version var and history.txt after packaging bot did its thing
+	Fix to quantity to pay attention to current context of current super widget
+	Changed coupon field to work on submit, not just button click
+	Update inventory when purchases are made
+	Standardize docblocs in default templates.
+	Added max value to the item quantity to prevent the iterator from exceeding the max quantity for that item.
+	Styled up the dashboard widget.
 0.4.13 - 2013-06-28 - Packaging Bot
 	Updated lib/classes to version 2.3.3
 0.4.12 - 2013-06-27 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Chris Jean, Ty Carlson
