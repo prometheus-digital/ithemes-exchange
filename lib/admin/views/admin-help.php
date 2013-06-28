@@ -7,7 +7,7 @@
 ?>
 <div class="wrap">
 
-<?php screen_icon( 'it-exchange-help' );  ?>
+<?php screen_icon( 'it-exchange' );  ?>
 <h2><?php _e( 'Help and Resources', 'LION' ); ?></h2>
 
 <p>We built <a title="iThemes Exchange" href="http://ithemes.com/exchange/" target="_blank">iThemes Exchange</a> to make ecommerce easier, but ecommerce isn't always easy.</p>
