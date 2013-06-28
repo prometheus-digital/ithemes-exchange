@@ -92,17 +92,19 @@ class IT_Exchange_Email_Notifications {
 	 * @return void
 	*/
 	function send_purchase_emails( $transaction, $send_admin_email=true ) {
-
+		
 		$transaction = it_exchange_get_transaction( $transaction );
 		if ( empty( $transaction->ID ) )
 			return;
 		
-		$this->transaction_id 	= $transaction->ID;
-		$this->customer_id 		= it_exchange_get_transaction_customer_id( $this->transaction_id );
-		$this->user 			= get_userdata( $this->customer_id );
+		$this->transaction_id = $transaction->ID;
+		$this->customer_id    = it_exchange_get_transaction_customer_id( $this->transaction_id );
+		$this->user           = get_userdata( $this->customer_id );
 		
 		$settings = it_exchange_get_option( 'settings_email' );	
-
+		
+		ITUtility::print_r( $settings );
+		
 		// Edge case where sale is made before admin visits email settings.
 		if ( empty( $settings['receipt-email-name'] ) && ! isset( $IT_Exchange_Admin ) ) {
 			global $IT_Exchange;
@@ -120,13 +122,14 @@ class IT_Exchange_Email_Notifications {
 		$subject = do_shortcode( $settings['receipt-email-subject'] );
 		$body    = apply_filters( 'send_purchase_emails_body', $settings['receipt-email-template'] );
 		$body    = apply_filters( 'send_purchase_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body );
-		$body    = $this->body_header() . wpautop( do_shortcode( $body ) ) . $this->body_footer();
+		$body    = $this->body_header() . '<div>' . wpautop( do_shortcode( $body ) ) . '</div>' . $this->body_footer();
 		
 		wp_mail( $this->user->user_email, strip_tags( $subject ), $body, $headers );
 		
+die( $body );
+		
 		// Send admin notification if param is true and email is provided in settings
 		if ( $send_admin_email && ! empty( $settings['notification-email-address'] ) ) {
-			
 			
 			$subject = do_shortcode( $settings['admin-email-subject'] );
 			$body    = apply_filters( 'send_admin_emails_body', $settings['admin-email-template'] );
@@ -136,13 +139,41 @@ class IT_Exchange_Email_Notifications {
 			$emails = explode( ',', $settings['notification-email-address'] );
 			
 			foreach ( $emails as $email ) {
-				
 				wp_mail( trim( $email ), strip_tags( $subject ), $body, $headers );
-			
 			}
 		
 		}
 
+	}
+	
+	/**
+	 * Adds email styles in the header.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return string HTML header styles
+	*/
+	function email_styles() {
+		ob_start();
+		?>
+			<style type="text/css">
+				#outlook a {
+					padding:0;
+				}
+				html {
+					background-color: #EBEBEB;
+				}
+				body {
+					text-align: left;
+				}
+				
+			</style>
+		<?php
+		
+		$output = ob_get_clean();
+		
+		return apply_filters( 'it_exchange_email_notification_email_styles', $output );
+		
 	}
 	
 	/**
@@ -153,12 +184,19 @@ class IT_Exchange_Email_Notifications {
 	 * @return string HTML header
 	*/
 	function body_header() {
+		ob_start();
+		?>
+			<html>
+			<head>
+				<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+				<title></title>
+				<?php echo $this->email_styles(); ?>
+			</head>
+			<body>
+				<center>
+		<?php
 		
-		$output  = '<html>';
-		$output .= '<head>';
-		$output .= '	<style type="text/css">#outlook a { padding: 0; }</style>';
-		$output .= '</head>';
-		$output .= '<body>';
+		$output = ob_get_clean();
 		
 		return apply_filters( 'it_exchange_email_notification_body_header', $output );
 		
@@ -173,7 +211,8 @@ class IT_Exchange_Email_Notifications {
 	*/
 	function body_footer() {
 		
-		$output  = '</body>';
+		$output = '</center>';
+		$output .= '</body>';
 		$output .= '</html>';
 		
 		return apply_filters( 'it_exchange_email_notification_body_footer', $output );
@@ -229,7 +268,7 @@ class IT_Exchange_Email_Notifications {
 		extract( shortcode_atts( $supported_pairs, $atts ) );
 		
 		$shortcode_functions = $this->get_shortcode_functions();
-			
+		
 		if ( !empty( $shortcode_functions[$show] ) )
 			return call_user_func( array( $this, $shortcode_functions[$show] ), $this, explode( ',', $options ) );
 		else
@@ -288,7 +327,8 @@ class IT_Exchange_Email_Notifications {
 					<?php endforeach; ?>
 				<?php endif; ?>
 		<?php endforeach; ?>
-		<?php	
+		<?php
+		
 		return ob_get_clean();
 	}
 	
@@ -349,13 +389,24 @@ class IT_Exchange_Email_Notifications {
 	 * @return string Replaced value
 	*/
 	function it_exchange_replace_order_table_tag( $args, $options = NULL ) {
+		ob_start();
+		?>
+		<table border="0" cellspacing="5" cellpadding="5">
+			<thead>
+				<tr>
+					<td><h3></h3></td>
+				</tr>
+			</thead>
+		</table>
+		<?php
+		$table = ob_get_clean();
 		
 		$purchase_message_on = false;
 		
 		if ( in_array( 'purchase_message', $options ) )
 			$purchase_message_on = true;
 		
-		$table  = '<table>';
+		$table  .= '<table>';
 		
 		$table .= ' <thead>';
 		$table .= '  <tr>';
