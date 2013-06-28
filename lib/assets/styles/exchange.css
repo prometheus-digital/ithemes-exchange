@@ -31,6 +31,12 @@
 .it-exchange-purchase-items .item-data .item-price,
 .it-exchange-purchase-items .item-data .item-quantity{font-weight:normal;}
 
+/** -----------------------------------------------------:[ login ]:---------- */
+#it-exchange-customer .login label{display:block;margin-top:1em;}
+#it-exchange-customer .login input[type="checkbox"]{margin:2em .5em 2em 0;}
+#it-exchange-customer .login input[type="checkbox"] + label{display:inline;}
+#it-exchange-customer .login #wp-submit{margin-bottom:2em;}
+
 /** -----------------------------------------------------:[ profile ]:---------- */
 #it-exchange-customer .customer-info label{display:block;margin-top:1em;}
 #it-exchange-customer .customer-name,
