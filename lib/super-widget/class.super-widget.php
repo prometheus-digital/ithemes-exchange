@@ -58,7 +58,6 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			$this->set_valid_states();
 			add_action( 'template_redirect', array( $this, 'load_ajax' ), 1 );
 			add_action( 'template_redirect', array( $this, 'set_state' ), 11 );
-			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 11 );
 		}
 	}
 
@@ -115,6 +114,10 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			$css_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/css/single-product-super-widget.css' );
 			wp_enqueue_style( 'it-exchange-single-product-super-widget', $css_url );
 		}
+
+		// JS
+		$script_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/js/super-widget.js' );
+		wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery' ), false, true );
 
 		// Remove superwidget flag
 		if ( isset( $GLOBALS['it_exchange']['in_superwidget'] ) )
@@ -249,23 +252,6 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		if ( $state && in_array( $state, $this->valid_states ) )
 			$this->state = $state;
 			
-	}
-
-	/**
-	 * Enqueue scripts if needed
-	 *
-	 * @since 0.4.0
-	*/
-	function enqueue_scripts() {
-
-		if ( ! $this->get_state() )
-			return;
-
-		if ( is_active_widget( false, false, $this->id_base, true ) ) {
-			$script_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/js/super-widget.js' );
-			wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery' ), false, true );
-
-		}
 	}
 
 	/**
