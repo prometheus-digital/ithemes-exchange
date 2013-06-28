@@ -36,6 +36,7 @@ class IT_Exchange_Product_Post_Type {
 		add_filter( 'request', array( $this, 'modify_wp_query_request_on_edit_php' ) );
 		add_filter( 'wp_insert_post_empty_content', array( $this, 'wp_insert_post_empty_content' ), 20, 2 );
 		add_filter( 'post_updated_messages', array( $this, 'product_updated_messages' ) );
+		add_action( 'it_exchange_add_edit_product_screen_layout_setup', array( $this, 'replace_core_slug_metabox' ) );
 
 		if ( is_admin() && !empty( $_REQUEST['post_type'] ) && 'it_exchange_prod' === $_REQUEST['post_type'] )
 			add_action( 'pre_get_posts', array( $this, 'remove_disabled_product_types_from_admin_list' ) );
@@ -703,5 +704,30 @@ class IT_Exchange_Product_Post_Type {
 		return $messages;
 	}
 
+	/**
+	 * Unregisters core slug metabox and registers ours
+	 *
+	 * @since 0.4.13
+	 * @return void
+	*/
+	function replace_core_slug_metabox() {
+		remove_meta_box( 'slugdiv', 'it_exchange_prod', 'it_exchange_advanced', 'low' );
+		add_meta_box( 'slugdiv', __( 'Product Slug', 'LION' ), array( $this, 'post_slug_meta_box' ), 'it_exchange_prod', 'it_exchange_advanced', 'low' );
+	}
+	/**
+	 * Modifed version of slugmetabox with description
+	 *
+	 * @since 0.4.13
+	 *
+	 * @return void
+	*/
+	function post_slug_meta_box( $post ) {  
+		?>   
+		<label class="" for="post_name">
+			<?php _e( 'Product Slug', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the final part of the product\'s URL. WordPress will auto-create it for you.', 'LION' ); ?>">i</span>
+		</label>
+		<input name="post_name" type="text" size="13" id="post_name" value="<?php echo esc_attr( apply_filters('editable_slug', $post->post_name) ); ?>" />
+		<?php
+	}
 }
 $IT_Exchange_Product_Post_Type = new IT_Exchange_Product_Post_Type();
