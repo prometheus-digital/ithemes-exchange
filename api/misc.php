@@ -98,10 +98,10 @@ function it_exchange_clean_query_args( $exempt=array(), $additional=array() ) {
 function it_exchange_wp_get_nav_menu_items_filter( $items, $menu, $args ) {
 	if ( is_user_logged_in() ) {
 		foreach ( $items as $item ) {
-			if ( $item->url == it_exchange_get_page_url( 'log_in' ) ) {
+			if ( $item->url == it_exchange_get_page_url( 'login' ) ) {
 
-				$item->url = it_exchange_get_page_url( 'log_out' );
-				$item->title = it_exchange_get_page_name( 'log_out' );
+				$item->url = it_exchange_get_page_url( 'logout' );
+				$item->title = it_exchange_get_page_name( 'logout' );
 			}
 		}
 	}

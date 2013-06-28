@@ -606,7 +606,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		if ( ! empty( $settings['require-user-login'] ) && ! is_user_logged_in() ) {
 			$redirect_url = site_url() . '?it-exchange-download=' . $hash_data['hash'];
 			it_exchange_add_session_data( 'login_redirect', $redirect_url );
-			wp_redirect( it_exchange_get_page_url( 'log-in' ) );
+			wp_redirect( it_exchange_get_page_url( 'login' ) );
 			die();
 		}
 

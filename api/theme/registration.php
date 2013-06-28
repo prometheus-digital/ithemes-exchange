@@ -376,14 +376,14 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 		switch( $options['format'] ) {
 				
 			case 'url':
-				$output = it_exchange_get_page_url( 'log_in' );
+				$output = it_exchange_get_page_url( 'login' );
 			
 			case 'label':
 				$output = esc_attr( $options['label'] );
 			
 			case 'html':
 			default:
-				$output = '<a class="' . esc_attr( $class ) . '" href="' . it_exchange_get_page_url( 'log_in' ) . '">' .esc_attr( $options['label'] ) . '</a>';
+				$output = '<a class="' . esc_attr( $class ) . '" href="' . it_exchange_get_page_url( 'login' ) . '">' .esc_attr( $options['label'] ) . '</a>';
 			
 		}
 		return $output;

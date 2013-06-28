@@ -376,7 +376,7 @@ function it_exchange_register_core_pages() {
 		'menu'			=> true,
 		'optional'      => true,
 	);
-	it_exchange_register_page( 'log_in', $options );
+	it_exchange_register_page( 'login', $options );
 
 	// Log Out
 	$options = array(
@@ -389,7 +389,7 @@ function it_exchange_register_core_pages() {
 		'menu'			=> true,
 		'optional'      => true,
 	);
-	it_exchange_register_page( 'log_out', $options );
+	it_exchange_register_page( 'logout', $options );
 
 	// Confirmation 
 	$options = array(
@@ -467,7 +467,7 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			);
 			return $rewrites;
 			break;
-		case 'log_in' :
+		case 'login' :
 			$account_slug = it_exchange_get_page_slug( 'account' );
 
 			// If we're using WP as acount page type, add the WP slug to rewrites and return.
@@ -481,7 +481,7 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			);
 			return $rewrites;
 			break;
-		case 'log_out' :
+		case 'logout' :
 			$account_slug = it_exchange_get_page_slug( 'account' );
 
 			// If we're using WP as acount page type, add the WP slug to rewrites and return.
@@ -595,7 +595,7 @@ function it_exchange_get_core_page_urls( $page ) {
 				$base = add_query_arg( array( $account_slug => 1 ), $base );
 
 			$account_name = get_query_var( 'account' );
-			if ( $account_name && '1' != $account_name && ( 'log_in' != $page && 'log_out' != $page ) ) {
+			if ( $account_name && '1' != $account_name && ( 'login' != $page && 'logout' != $page ) ) {
 				if ( $permalinks ) {
 					$base = trailingslashit( $base . $account_name );
 				} else {

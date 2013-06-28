@@ -136,7 +136,7 @@ class IT_Exchange_Pages {
 	 * @return void
 	*/
 	function set_account() {
-		// Return if not viewing an account based page: account, profile, downloads, purchases, log-in
+		// Return if not viewing an account based page: account, profile, downloads, purchases, login
 		$account_based_rooms = array( 'account', 'profile', 'downloads', 'purchases' );
 		$account_based_rooms = apply_filters( 'it_exchange_account_based_rooms', $account_based_rooms );
 		if ( ! in_array( $this->_current_view, $account_based_rooms ) )
@@ -186,14 +186,14 @@ class IT_Exchange_Pages {
 	 * @return void
 	*/
 	function login_out_page_redirect() {
-		if ( is_user_logged_in() && 'log_in' == $this->_current_view ) {
+		if ( is_user_logged_in() && 'login' == $this->_current_view ) {
 			wp_redirect( it_exchange_get_page_url( 'profile' ) );
 			die();
-		} else if ( is_user_logged_in() && 'log_out' == $this->_current_view ) {
+		} else if ( is_user_logged_in() && 'logout' == $this->_current_view ) {
 			wp_redirect( str_replace( '&amp;', '&', wp_logout_url( it_exchange_get_page_url( 'store' ) ) ) );
 			die();
-		} else if ( ! is_user_logged_in() && 'log_out' == $this->_current_view ) {
-			wp_redirect( it_exchange_get_page_url( 'log-in' ) );
+		} else if ( ! is_user_logged_in() && 'logout' == $this->_current_view ) {
+			wp_redirect( it_exchange_get_page_url( 'login' ) );
 			die();
 		}
 	}
@@ -250,9 +250,9 @@ class IT_Exchange_Pages {
 
 		// If user isn't logged in, redirect
 		if ( !is_user_logged_in() ) {
-			if ( $this->_current_view != 'log_in' )
+			if ( $this->_current_view != 'login' )
 				it_exchange_add_session_data( 'login_redirect', it_exchange_get_page_url( $this->_current_view ) );
-			$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_not_logged_in', it_exchange_get_page_url( 'log_in' ) );
+			$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_not_logged_in', it_exchange_get_page_url( 'login' ) );
 			wp_redirect( $redirect_url );
 			die();
 		} else if ( 'checkout' === $this->_current_view ) {
