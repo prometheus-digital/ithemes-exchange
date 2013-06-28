@@ -1,3 +1,5 @@
+0.4.13 - 2013-06-28 - Packaging Bot
+	Updated lib/classes to version 2.3.3
 0.4.12 - 2013-06-27 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Chris Jean, Ty Carlson
 	Remove stylesheet settings from Main settings. Add filters for not enqueuing stylesheet: it_exchange_disable_frontend_stylesheet, it_exchange_disable_super_widget_stylesheet
 	Applied CSS to coupons section of Super Widget.
