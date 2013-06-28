@@ -29,14 +29,14 @@
 			</div>
 			<div class="it-column column-2">
 				<div class="it-column column-2-half">
-					<span><?php _e( 'Page Type', 'LION' ); ?></span>
+					<span><?php _e( 'Page Type', 'LION' ); ?></span> <span class="tip" title="<?php _e( 'You have 3 options for Page Types for where and how your store pages are displayed: Exchange (by default & recommended), WordPress (where you can use shortcodes to embed &amp; have max control) or Disabled (if you do not want or care about certain features in this list).', 'LION' ); ?>">i</span>
 				</div>
 				<div class="it-column column-2-half">
 					<span><?php _e( 'Page Title', 'LION' ); ?></span>
 				</div>
 			</div>
 			<div class="it-column column-3">
-				<span><?php _e( 'Page Slug', 'LION' ); ?></span>
+				<span><?php _e( 'Page Slug', 'LION' ); ?></span> <span class="tip" title="<?php _e( 'If these URL examples do not look right, go to Settings / Permalinks and click "Post name" and Save and they will be more obvious what they do.', 'LION' ); ?>">i</span>
 			</div>
 		</div>
 		<?php foreach ( $pages as $page => $data ) : ?>
@@ -53,7 +53,7 @@
 			?>
 			<div class="it-row">
 				<div class="it-column column-1">
-					<span><?php esc_attr_e( $data['settings-name'] ); ?></span>
+					<span><?php esc_attr_e( $data['settings-name'] ); ?><?php if ( ! empty( $data['tip'] ) ) echo '<span class="tip" title="' . esc_attr( $data['tip'] ) . '">i</span>'; ?></span>
 					<!--
 						Do we need this page var? - KOOP
 						<span class="page-var"><?php esc_attr_e( $page ); ?></span>
@@ -78,6 +78,7 @@
 								$form->add_hidden( $page . '-type' );
 								$options = array_values( $options );
 								esc_attr_e( $options[0] );
+								echo '<span class="tip" title="' . __( 'This has to be Exchange, sorry.', 'LION' ) . '">i</span>';
 							} else {
 								$form->add_drop_down( $page . '-type', $options );
 							}

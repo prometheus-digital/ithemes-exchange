@@ -611,11 +611,16 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		?>
 		<div class="it-exchange-addon-settings it-exchange-paypal-addon-settings">
 			<h3><?php _e( 'PayPal Web Standard Payment Settings', 'LION' ); ?></h3>
+            <p><?php _e( 'To get PayPal setup for your ecommerce site, you will need to do a couple of things in PayPal first.<br /><br />
+
+<a href="http://ithemes.com/tutorial/category/exchange" target="_blank">Video: Getting PayPal Setup with Exchange</a>', 'LION' ); ?></p>
 			<p><?php _e( 'Do not have a PayPal account yet? <a href="http://paypal.com" target="_blank">Go set one up here</a>.', 'LION' ); ?></p>
+            <h4><?php _e( 'Step 1. Fill out your PayPal email address', 'LION' ); ?></h4>
 			<p>
 				<label for="paypal-standard-live-email-address"><?php _e( 'PayPal Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-live-email-address' ); ?>
 			</p>
+            <h4><?php _e( 'Step 2. Fill out your PayPal API credentials', 'LION' ); ?></h4>
 			<p>
 				<label for="paypal-standard-live-api-username"><?php _e( 'PayPal API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-live-api-username' ); ?>
@@ -648,15 +653,15 @@ class IT_Exchange_PayPal_Standard_Add_On {
 				<?php $form->add_check_box( 'paypal-standard-sandbox-mode' ); ?>
 				<label for="paypal-standard-sandbox-mode"><?php _e( 'Enable PayPal Sandbox Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Enable PayPal Sandbox Mode', 'LION' ); ?>">i</span></label>
 			</p>
-			<h5><?php _e( 'PayPal Instant Payment Notification (IPN)', 'LION' ); ?></h5>
+            <h4><?php _e( 'Step 3. Setup PayPal Instant Payment Notifications (IPN)', 'LION' ); ?></h4>
 			<p><?php _e( 'PayPal IPN must be configured in Account Profile -› Instant Payment Notification Preferences in your PayPal Account', 'LION' ); ?></p>
 			<p><?php _e( 'Please log into your account and add this URL to your IPN Settings so iThemes Exchange is notified of things like refunds, payments, etc.', 'LION' ); ?></p>
 			<code><?php echo get_site_url(); ?>/?<?php esc_attr_e( it_exchange_get_webhook( 'paypal-standard' ) ); ?>=1</code>
-			<h5><?php _e( 'PayPal Auto Return', 'LION' ); ?></h5>
+            <h4><?php _e( 'Step 4. Setup PayPal Auto Return', 'LION' ); ?></h4>
 			<p><?php _e( 'PayPal Auto Return must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
 			<p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'LION' ); ?></p>
 			<code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
-			<h5><?php _e( 'PayPal Payment Data Transfer (PDT) Identity Token', 'LION' ); ?></h5>
+            <h4><?php _e( 'Step 5. Setup PayPal Payment Data Transfer (PDT)', 'LION' ); ?></h4>
 			<p><?php _e( 'PayPal PDT must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
 		</div>
 		<?php

@@ -27,7 +27,7 @@ global $wp_version;
 			<th scope="row"><label for="notification-email-address"><?php _e( 'Sales Notification Email Address', 'LION' ) ?></label></th>
 			<td>
 			<?php $form->add_text_box( 'notification-email-address', array( 'class' => 'large-text' ) ); ?>
-            <br /><span class="description"><?php _e( 'Enter the email address(es) that should receive a notification anytime a sale is made, coma seperated', 'LION' ); ?></span>
+            <br /><span class="description"><?php _e( 'Enter the email address(es) that should receive a notification anytime a sale is made, comma separated', 'LION' ); ?></span>
             </td>
 		</tr>
 		<tr valign="top">
@@ -73,15 +73,15 @@ global $wp_version;
 				echo '<li>download_list - ' . __( 'A list of download links for each download purchased', 'LION' ) . '</li>';
 				echo '<li>name - ' . __( "The buyer's first name", 'LION' ) . '</li>';
 				echo '<li>fullname - ' . __( "The buyer's full name, first and last", 'LION' ) . '</li>';
-				echo '<li>username - ' . __( "The buyer's user name on the site, if they registered an account", 'LION' ) . '</li>';
-				echo '<li>order_table - ' . __( 'A table of the order details. Accept "purchase_message" option.', 'LION' ) . '</li>';
+				echo '<li>username - ' . __( "The buyer's username on the site, if they registered an account", 'LION' ) . '</li>';
+				echo '<li>order_table - ' . __( 'A table of the order details. Accepts "purchase_message" option.', 'LION' ) . '</li>';
 				echo '<li>purchase_date - ' . __( 'The date of the purchase', 'LION' ) . '</li>';
 				echo '<li>total - ' . __( 'The total price of the purchase', 'LION' ) . '</li>';
 				echo '<li>payment_id - ' . __( 'The unique ID number for this purchase', 'LION' ) . '</li>';
 				echo '<li>receipt_id - ' . __( 'The unique ID number for this transaction', 'LION' ) . '</li>';
 				echo '<li>payment_method - ' . __( 'The method of payment used for this purchase', 'LION' ) . '</li>';
 				echo '<li>sitename - ' . __( 'Your site name', 'LION' ) . '</li>';
-				echo '<li>receipt_link - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'LION' ) . '</li>';
+				echo '<li>receipt_link - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the email correctly.', 'LION' ) . '</li>';
 				do_action( 'it_exchange_email_template_tags_list' );
 				echo '</ul>';
 				?>
@@ -135,7 +135,7 @@ global $wp_version;
 				echo '<li>download_list - ' . __( 'A list of download links for each download purchased', 'LION' ) . '</li>';
 				echo '<li>name - ' . __( "The buyer's first name", 'LION' ) . '</li>';
 				echo '<li>fullname - ' . __( "The buyer's full name, first and last", 'LION' ) . '</li>';
-				echo '<li>username - ' . __( "The buyer's user name on the site, if they registered an account", 'LION' ) . '</li>';
+				echo '<li>username - ' . __( "The buyer's username on the site, if they registered an account", 'LION' ) . '</li>';
 				echo '<li>order_table - ' . __( 'A table of the order details. Accept "purchase_message" option.', 'LION' ) . '</li>';
 				echo '<li>purchase_date - ' . __( 'The date of the purchase', 'LION' ) . '</li>';
 				echo '<li>total - ' . __( 'The total price of the purchase', 'LION' ) . '</li>';
@@ -143,7 +143,7 @@ global $wp_version;
 				echo '<li>receipt_id - ' . __( 'The unique ID number for this transaction', 'LION' ) . '</li>';
 				echo '<li>payment_method - ' . __( 'The method of payment used for this purchase', 'LION' ) . '</li>';
 				echo '<li>sitename - ' . __( 'Your site name', 'LION' ) . '</li>';
-				echo '<li>receipt_link - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'LION' ) . '</li>';
+				echo '<li>receipt_link - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the email correctly.', 'LION' ) . '</li>';
 				do_action( 'it_exchange_email_template_tags_list' );
 				echo '</ul>';
 				?>
