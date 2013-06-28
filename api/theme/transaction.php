@@ -37,6 +37,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		'productdownload'       => 'product_download',
 		'productdownloadhashes' => 'product_download_hashes',
 		'productdownloadhash'   => 'product_download_hash',
+		'productfeaturedimage'  => 'product_featured_image',
 		'clearedfordelivery'    => 'cleared_for_delivery',
 	);
 
@@ -355,5 +356,65 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		}
 
 		return $value;
+	}
+
+	/** 
+	 * The product's featured image
+	 *
+	 * @since 0.4.12
+	 *
+	 * @return string
+	*/
+	function product_featured_image( $options=array() ) { 
+
+		// Get the real product item or return empty
+		if ( ! $product_id = empty( $this->_transaction_product['product_id'] ) ? false : $this->_transaction_product['product_id'] )
+			return false;
+
+		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $product_id, 'product-images' );
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $product_id, 'product-images' );
+
+		if ( it_exchange_product_supports_feature( $product_id, 'product-images' )
+				&& it_exchange_product_has_feature( $product_id, 'product-images' ) ) { 
+
+			$defaults = array(
+				'size' => 'thumb'
+			);  
+
+			$options = ITUtility::merge_defaults( $options, $defaults );
+			$output = array();
+
+			$product_images = it_exchange_get_product_feature( $product_id, 'product-images' );
+
+			$feature_image = array(
+				'id'    =>  $product_images[0],
+				'thumb' => wp_get_attachment_thumb_url( $product_images[0] ),
+				'large' => wp_get_attachment_url( $product_images[0] ),
+			);  
+
+			if ( 'thumbnail' === $options['size'] )
+				$img_src = $feature_image['thumb'];
+			else
+				$img_src = $feature_image['large'];
+
+			ob_start();
+			?>  
+				<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
+					<div class="featured-image-wrapper">
+						<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>" data-src-thumb="<?php echo $feature_image['thumb'] ?>" />
+					</div>
+				</div>
+			<?php
+			$output = ob_get_clean();
+
+			return $output;
+		}   
+
+		return false;
 	}
 }
