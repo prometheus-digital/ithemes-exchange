@@ -28,6 +28,9 @@ class IT_Exchange_Product_Feature_Inventory {
 		add_filter( 'it_exchange_get_product_feature_inventory', array( $this, 'get_feature' ), 9, 3 );
 		add_filter( 'it_exchange_product_has_feature_inventory', array( $this, 'product_has_feature') , 9, 2 );
 		add_filter( 'it_exchange_product_supports_feature_inventory', array( $this, 'product_supports_feature') , 9, 2 );
+
+		// Decrease inventory on purchase
+		add_action( 'it_exchange_add_transaction_success', array( $this, 'decrease_inventory_on_purchase' ) );
 	}
 
 	/**
@@ -260,5 +263,30 @@ class IT_Exchange_Product_Feature_Inventory {
 			return false;
 		}
 	}
+
+	/**
+	 * Decreases inventory at purchase
+	 *
+	 * @since 0.4.13
+	 *
+	 * @param interger $transaction_id the id of the transaction
+	 * @return void
+	*/
+	function decrease_inventory_on_purchase( $transaction_id ) {
+		if ( ! $products = it_exchange_get_transaction_products( $transaction_id ) )
+			return;
+
+		// Loop through products
+		foreach( $products as $cart_id => $data ) {
+			if ( ! it_exchange_product_supports_feature( $data['product_id'], 'inventory' ) )
+				continue;
+
+			$count     = $data['count'];
+			$inventory = it_exchange_get_product_feature( $data['product_id'], 'inventory' );
+			$updated   = absint( $inventory - $count );
+			it_exchange_update_product_feature( $data['product_id'], 'inventory', $updated );
+		}
+	}
+
 }
 $IT_Exchange_Product_Feature_Inventory = new IT_Exchange_Product_Feature_Inventory();
