@@ -105,6 +105,11 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			</div>
 			<?php
 		echo $args['after_widget'];
+
+		// Styles if set
+		$css_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/css/frontend-global.css' );
+		if ( ! apply_filters( 'it_exchange_disable_super_widget_stylesheet', false ) )
+				wp_enqueue_style( 'it-exchange-super-widget-frontend-global', $css_url );
 		
 		if ( $args['enqueue_hide_script'] ) {
 			$css_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/css/hide-if-super-widget.css' );
@@ -259,11 +264,6 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		if ( is_active_widget( false, false, $this->id_base, true ) ) {
 			$script_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/js/super-widget.js' );
 			wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery' ), false, true );
-
-			// Styles if set
-			$css_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/css/frontend-global.css' );
-			if ( ! apply_filters( 'it_exchange_disable_super_widget_stylesheet', false ) )
-				wp_enqueue_style( 'it-exchange-super-widget-frontend-global', $css_url );
 
 		}
 	}
