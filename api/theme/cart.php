@@ -96,7 +96,13 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	function form_open( $options=array() ) {
+		$defaults = array(
+			'class' => false,
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
 		$class = it_exchange_in_superwidget() ? 'it-exchange-sw-update-cart' : 'it-exchange-update-cart';
+		$class = empty( $options['class'] ) ? $class : $class . ' ' . esc_attr( $options['class'] );
 		return '<form action="" method="post" class="' . $class . '">';
 	}
 
@@ -357,6 +363,10 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 
 		// Get the focus from REQUEST
 		$focus = empty( $_REQUEST[$focus_key] ) ? false : $_REQUEST[$focus_key];
+
+		// Return the focus if option is false and focus is set
+		if ( empty( $options['type'] ) && ! empty( $focus ) )
+			return $focus;
 
 		// Return false if $focus is false or if $options['type'] is false
 		if ( ! $options['type'] || ! $focus )

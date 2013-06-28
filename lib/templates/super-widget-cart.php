@@ -5,12 +5,12 @@
 <?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
 	
 	<?php if ( ( it_exchange_is_page( 'product' ) && it_exchange_is_current_product_in_cart() )
-			|| it_exchange( 'cart', 'focus', array( 'type' => 'coupon' ) )
-			|| it_exchange( 'cart', 'focus', array( 'type' => 'quantity' ) ) ) : ?>
+			|| it_exchange( 'cart', 'get-focus', array( 'type' => 'coupon' ) )
+			|| it_exchange( 'cart', 'get-focus', array( 'type' => 'quantity' ) ) ) : ?>
     
         <?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
             
-            <?php it_exchange( 'cart', 'form-open' ); ?>
+            <?php it_exchange( 'cart', 'form-open', array( 'class' => 'it-exchange-sw-update-cart-' . it_exchange( 'cart', 'get-focus' ) ) ); ?>
                         
                 <div class="cart-items-wrapper">
                     <?php while( it_exchange( 'cart', 'cart-items' ) ) : ?>
