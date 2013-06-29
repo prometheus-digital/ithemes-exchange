@@ -296,7 +296,6 @@ add_filter( 'it_exchange_get_coupon_discount_label', 'it_exchange_basic_coupons_
 /**
  * Remove coupon from cart
  *
- * @todo redirect with feedback?
  * @since 0.4.0
  *
  * @return void
@@ -315,6 +314,7 @@ function it_exchange_basic_coupons_handle_remove_coupon_from_cart_request() {
 	else
 		$url = it_exchange_clean_query_args( array( it_exchange_get_field_name( 'sw_cart_focus' ) ) );
 
+	it_exchange_add_message( 'notice', __( 'Coupon removed', 'LION' ) );
 	wp_redirect( $url );
 	die();
 }

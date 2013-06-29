@@ -219,7 +219,6 @@ class IT_Exchange_Pages {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @todo Make this more robust. Give it an API
 	 * @return void
 	*/
 	function protect_pages() {
@@ -312,7 +311,6 @@ class IT_Exchange_Pages {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @todo Make this more robust. Give it an API
 	 * @return void
 	*/
 	function process_transaction() {
@@ -416,7 +414,6 @@ class IT_Exchange_Pages {
 	 * This only gets fired off if we couldn't find an exchange specific template file for the current view.
 	 * If that happens, we use the theme's page.php template and filter the_content with our template part for that view.
 	 *
-	 * @todo Figure out the global reset hack
 	 * @since 0.4.0
 	 *
 	 * @param string $content exising default content

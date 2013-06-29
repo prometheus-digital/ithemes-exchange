@@ -16,7 +16,6 @@
 ?>
 
 <?php it_exchange_get_template_part( 'messages' ); ?>
-
 <div id="it-exchange-product">
 	<div class="product-standard-content product-columns <?php echo ( it_exchange( 'product', 'has-images' ) ) ? ' has-images' : ''; ?>">
 		<div class="product-column product-info">

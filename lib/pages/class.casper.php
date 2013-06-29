@@ -148,7 +148,6 @@ class IT_Exchange_Casper {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @todo make this wrap a common function to share with IT_Exchange_Nav_Menu_Meta_Box class
 	 * @return string
 	*/
 	function get_guid() {

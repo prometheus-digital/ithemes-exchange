@@ -247,9 +247,9 @@ function it_exchange_get_download_expiration_date( $hash_data, $date_format=fals
 /**
  * Convert 5 months or 30 days to date from transaction
  *
+ * Not currently used but will be used when admin can reset dates.
+ *
  * @since 0.4.0
- * @todo reevaluate this function, it's not really being used anywhere, but the data exists
- * we might want to remove this functionality entirely
  *
  * @param array $hash_data from download hash
  * @param string $purchase_date post_date from transaction post_type

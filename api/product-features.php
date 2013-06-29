@@ -92,7 +92,7 @@ function it_exchange_remove_feature_support_for_product_type( $feature_key, $pro
  * Check if a given product-type supports a specific product feature
  *
  * @since 0.3.8
- * @todo add filters/actions
+ *
  * @param string $product_type the product-type slug
  * @param string $feature_key the slug for the feature
  * @return boolean

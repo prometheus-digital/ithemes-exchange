@@ -27,7 +27,6 @@ include( $this->_plugin_path . '/api/theme/transaction.php' );
  * Defines the main it_exchange function
  *
  * @since 0.4.0
- * @todo add actions/filters
  */
 function it_exchange() {
 
@@ -48,10 +47,11 @@ function it_exchange() {
 	);
 	$get     = false;
 	
-	/** @todo log error **/
 	// Die if we don't have any args
-	if ( $num_args < 1 )
+	if ( $num_args < 1 ) {
+		it_exchange_add_message( 'error', sprintf( __( 'Coding Error: Incorrect number of args passed to %s', 'LION' ), 'it_exchange()' ) );
 		return;
+	}
 
 	$passed_params = func_get_args();
 	$params = array_combine( array_slice( $params, 0, $num_args ), $passed_params );
@@ -115,29 +115,34 @@ function it_exchange() {
 
 		// Set the class name based on params
 		$class_name = 'IT_Theme_API_' . ucfirst( strtolower( $context ) );
-		/** @todo remove lazy conditionals and do it programatically **/
 		if ( 'IT_Theme_API_Cart-item' == $class_name )
 			$class_name = 'IT_Theme_API_Cart_Item';
 		if ( 'IT_Theme_API_Transaction-method' == $class_name )
 			$class_name = 'IT_Theme_API_Transaction_Method';
 
 		// Does the class exist and return an iThemes Exchange theme API context?
-		if ( ! is_callable( array( $class_name, 'get_api_context' ) ) )
-			die('not callable: '.$class_name . ' ' .__FILE__. ' : ' . __LINE__); /** @todo register an error **/
+		if ( ! is_callable( array( $class_name, 'get_api_context' ) ) ) {
+			it_exchange_add_message( 'error', sprintf( __( 'Coding Error: <em>%s</em> is not a valid Exchange theme API context', 'LION' ), $context ) );
+			return;
+		}
 
 		// Set the object
 		$object = new $class_name();
 	}
 
 	// Is the requested tag mapped to a method
-	if ( empty( $object->_tag_map[$tag] ) )
-		die( 'unmapped method for context: ' . $tag ); /** @todo register an error **/
-	else
+	if ( empty( $object->_tag_map[$tag] ) ) {
+		it_exchange_add_message( 'error', sprintf( __( 'Coding Error: <em>%s</em> in not a mapped method inside the <em>%s</em> Exchange theme API class', 'LION' ), $tag, $class_name ) );
+		return false;
+	} else {
 		$method = $object->_tag_map[$tag];
+	}
 
 	// Does the method called exist on this class?
-	if ( ! is_callable( array( $object, strtolower( $method ) ) ) )
-		die('method not callable: ' . $method . ': ' . $context ); /** @todo register an error **/
+	if ( ! is_callable( array( $object, strtolower( $method ) ) ) ) {
+		it_exchange_add_message( 'error', sprintf( __( 'Coding Error: <em>%s</em> in not a callable method inside the <em>%s</em> Exchange theme API class', 'LION' ), $method, $class_name ) );
+		return false;
+	}
 
 	// Get the results from the class method
 	$result = call_user_func( array( $object, strtolower( $method ) ), $options );
