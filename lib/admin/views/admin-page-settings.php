@@ -16,8 +16,9 @@
 		$form->start_form( $form_options, 'exchange-page-settings' );
 		do_action( 'it_exchange_general_settings_page_form_top' );
 		
-		$pages    = it_exchange_get_registered_pages();
-		$wp_pages = array( 0 => __( 'Select a Page', 'LION' ) ) + it_exchange_get_wp_pages();
+		$general_settings = it_exchange_get_option( 'settings_general' );
+		$pages            = it_exchange_get_registered_pages();
+		$wp_pages         = array( 0 => __( 'Select a Page', 'LION' ) ) + it_exchange_get_wp_pages();
 	?>
 	
 	<?php do_action( 'it_exchange_general_settings_page_top' ); ?>
@@ -69,6 +70,10 @@
 							if ( 'product' != $page )
 								$options['wordpress'] = __( 'WordPress', 'LION' );
 							
+							// If on registration, we force disabled if WP option is disabled
+							if ( 'registration' == $page && ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) ) )
+								unset( $options );
+
 							// Only optional pages get Disabled
 							if ( $data['optional'] )
 								$options['disabled'] = __( 'Disabled', 'LION' );
@@ -78,7 +83,10 @@
 								$form->add_hidden( $page . '-type' );
 								$options = array_values( $options );
 								esc_attr_e( $options[0] );
-								echo '<span class="tip" title="' . __( 'This has to be Exchange, sorry.', 'LION' ) . '">i</span>';
+								if ( 'registration' == $page )
+									echo '<span class="tip" title="' . __( 'You\'ll need to turn registration on in WordPress settings or override the WordPress settings in Exchange to use this, sorry.', 'LION' ) . '">i</span>';
+								else
+									echo '<span class="tip" title="' . __( 'This has to be Exchange, sorry.', 'LION' ) . '">i</span>';
 							} else {
 								$form->add_drop_down( $page . '-type', $options );
 							}
