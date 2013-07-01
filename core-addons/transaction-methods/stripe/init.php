@@ -186,11 +186,14 @@ add_action( 'it_exchange_print_wizard_settings', 'it_exchange_stripe_addon_print
  *
  * @return void
 */
-function it_exchange_stripe_addon_save_wizard_settings() {
+function it_exchange_stripe_addon_save_wizard_settings( $errors ) {
+	if ( ! empty( $errors ) )
+		return $errors;
+		
 	$IT_Exchange_Stripe_Add_On = new IT_Exchange_Stripe_Add_On();
-	$IT_Exchange_Stripe_Add_On->stripe_save_wizard_settings();
+	return $IT_Exchange_Stripe_Add_On->stripe_save_wizard_settings();
 }
-add_action( 'it_exchange_save_wizard_settings', 'it_exchange_stripe_addon_save_wizard_settings' );
+add_action( 'it_exchange_save_transaction_method_wizard_settings', 'it_exchange_stripe_addon_save_wizard_settings' );
 
 /**
  * Default settings for stripe
@@ -710,15 +713,16 @@ class IT_Exchange_Stripe_Add_On {
 
 		$settings = wp_parse_args( $stripe_settings, it_exchange_get_option( 'addon_stripe' ) );
 
-		if ( ! empty( $this->error_message ) || $error_msg = $this->get_form_errors( $settings ) ) {
-			if ( ! empty( $error_msg ) ) {
-				$this->error_message = $error_msg;
-				return;
-			}
+		if ( $error_msg = $this->get_form_errors( $settings ) ) {
+
+			return $error_msg;
+
 		} else {
 			it_exchange_save_option( 'addon_stripe', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
+		
+		return;
 	}
 
 	/**
@@ -729,7 +733,7 @@ class IT_Exchange_Stripe_Add_On {
 	 * @since 0.4.0
 	 * @return void
 	*/
-	function get_form_errors( $values ) {
+	public function get_form_errors( $values ) {
 
 		$errors = array();
 		if ( empty( $values['stripe-live-secret-key'] ) )

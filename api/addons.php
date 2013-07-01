@@ -150,7 +150,7 @@ function it_exchange_temporarily_load_addons( $add_ons ) {
 	foreach( (array) $add_ons as $slug => $params ) {
 		if( ! isset( $enabled_addons[$slug] ) ) {
 			if ( ! empty( $params['file'] ) && is_file( $params['file'] ) ) {
-				include( $params['file'] );
+				include_once( $params['file'] );
 			}
 		}
 	}

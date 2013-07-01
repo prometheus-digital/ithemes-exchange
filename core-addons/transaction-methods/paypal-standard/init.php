@@ -228,11 +228,14 @@ function paypal_standard_print_wizard_settings( $form ) {
  *
  * @return void
 */
-function it_exchange_paypal_standard_addon_save_wizard_settings() {
+function it_exchange_paypal_standard_addon_save_wizard_settings( $errors ) {
+	if ( ! empty( $errors ) )
+		return $errors;
+	
 	$IT_Exchange_PayPal_Standard_Add_On = new IT_Exchange_PayPal_Standard_Add_On();
-	$IT_Exchange_PayPal_Standard_Add_On->paypal_standard_save_wizard_settings();
+	return $IT_Exchange_PayPal_Standard_Add_On->paypal_standard_save_wizard_settings();
 }
-add_action( 'it_exchange_save_wizard_settings', 'it_exchange_paypal_standard_addon_save_wizard_settings' );
+add_action( 'it_exchange_save_transaction_method_wizard_settings', 'it_exchange_paypal_standard_addon_save_wizard_settings' );
 
 /**
  * Default settings for paypal_standard
@@ -726,22 +729,17 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		}
 
 		$settings = wp_parse_args( $paypal_standard_settings, it_exchange_get_option( 'addon_paypal_standard' ) );
+		
+		if ( $error_msg = $this->get_form_errors( $settings ) ) {
 
-		if ( ! empty( $this->error_message ) || $error_msg = $this->get_form_errors( $settings ) ) {
-
-			if ( ! empty( $error_msg ) ) {
-
-				$this->error_message = $error_msg;
-				return;
-
-			}
+			return $error_msg;
 
 		} else {
-
 			it_exchange_save_option( 'addon_paypal_standard', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
-
 		}
+		
+		return;
 
 	}
 
