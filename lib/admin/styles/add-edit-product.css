@@ -42,7 +42,7 @@
 #it-exchange-product-downloads .downloads-label-add label{float:left;margin-bottom:0;margin-top:8px;}
 #it-exchange-product-downloads .downloads-label-add .download-add-new{float:right;margin-bottom:10px;}
 #it-exchange-product-downloads .download-remove{text-align:right;}
-#it-exchange-product-downloads .download-remove a{box-sizing:content-box;display:inline-block;opacity:0;width:20px;height:19px;margin-top:12px;margin-right:12px;padding-top:1px;border:2px solid #999;border-radius:50%;font-size:14px;text-decoration:none;text-align:center;color:#999;-webkit-transition:all .2s linear;transition:all .2s linear;}
+#it-exchange-product-downloads .download-remove a{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;display:inline-block;opacity:0;width:20px;height:20px;margin-top:12px;margin-right:12px;border:2px solid #999;border-radius:50%;font-size:14px;line-height:1.3em;text-decoration:none;text-align:center;color:#999;-webkit-transition:all .2s linear;transition:all .2s linear;}
 #it-exchange-product-downloads .download-item:hover .download-remove .it-exchange-delete-digital-download{opacity:1;}
 #it-exchange-product-downloads .download-remove a:active{outline:none;opacity:.8;}
 #it-exchange-product-downloads .download-remove .it-exchange-delete-digital-download:hover{border-color:#E1797A;color:#E1797A;}
@@ -117,16 +117,16 @@
 #it-exchange-advanced-tabs .ui-tabs-panel .inner > *:first-child{margin-top:0;padding-top:0;}
 #it-exchange-advanced-tabs .ui-tabs-panel .inner textarea{width:100%;}
 #it-exchange-advanced-tabs #it-exchange-product-purchase-quantity input[type="text"]{display:block;margin-top:1em;}
-#it-exchange-advanced-tabs  input[type="text"],
-#it-exchange-advanced-tabs  input[type="email"],
-#it-exchange-advanced-tabs  input[type="password"],
-#it-exchange-advanced-tabs  input[type="number"],
-#it-exchange-advanced-tabs  textarea{background:#fff;border:1px solid #d6d6d6;border-radius:3px;font-size:18px;padding:10px;color:#3d4142;width:260px;}
-#it-exchange-advanced-tabs  input[type="text"]:focus,
-#it-exchange-advanced-tabs  input[type="email"]:focus,
-#it-exchange-advanced-tabs  input[type="password"]:focus,
-#it-exchange-advanced-tabs  input[type="number"]:focus,
-#it-exchange-advanced-tabs  textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
+#it-exchange-advanced-tabs input[type="text"],
+#it-exchange-advanced-tabs input[type="email"],
+#it-exchange-advanced-tabs input[type="password"],
+#it-exchange-advanced-tabs input[type="number"],
+#it-exchange-advanced-tabs textarea{background:#fff;border:1px solid #d6d6d6;border-radius:3px;font-size:18px;padding:10px;color:#3d4142;width:260px;}
+#it-exchange-advanced-tabs input[type="text"]:focus,
+#it-exchange-advanced-tabs input[type="email"]:focus,
+#it-exchange-advanced-tabs input[type="password"]:focus,
+#it-exchange-advanced-tabs input[type="number"]:focus,
+#it-exchange-advanced-tabs textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
 
 #it-exchange-advanced-tab-nav .ui-state-default{outline:none;margin-bottom:0;border-width:1px 0 1px;border-style:solid;border-color:transparent;}
 #it-exchange-advanced-tab-nav .ui-state-default:first-child{border-top:0;border-radius:4px 0 0 0;}
