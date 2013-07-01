@@ -116,26 +116,26 @@ class IT_Exchange_Product_Feature_Product_Images {
 			<?php
 			if ( ! empty( $product_images ) ) {
 				
-				$thumb = wp_get_attachment_thumb_url( $product_images[0] );
-				$large = wp_get_attachment_url( $product_images[0] );
+				$image = array_shift( $product_images ); //get the first element from the array
+				
+				$thumb = wp_get_attachment_thumb_url( $image );
+				$large = wp_get_attachment_url( $image );
 				$src = $large;
 				
 				echo '<div id="it-exchange-feature-image" class="ui-droppable">';
 				echo '<ul class="feature-image">';
-				echo '  <li id="' . $product_images[0] . '">';
+				echo '  <li id="' . $image . '">';
 				echo '    <a class="image-edit" href="">';
 				echo '      <img alt="Featured Image" data-thumb="' . $thumb . '" data-large="' . $large . '" src=" ' . $src . '">';
 				echo '      <span class="overlay"></span>';
 				echo '    </a>';
 				echo '    <span class="remove-item">×</span>';
-				echo '    <input type="hidden" value="' . $product_images[0] . '" name="it-exchange-product-images[]">';
+				echo '    <input type="hidden" value="' . $image . '" name="it-exchange-product-images[]">';
 				echo '  </li>';
 				echo '</ul>';
 				echo '<div class="replace-feature-image"><span>Replace featured image</span></div>';
 				echo '</div>';
-				
-				unset( $product_images[0] ); //we don't want this listed below
-				
+								
 				echo '<ul id="it-exchange-gallery-images" class="ui-sortable">';
 				foreach( $product_images as $image_id ) {
 					
@@ -197,6 +197,8 @@ class IT_Exchange_Product_Feature_Product_Images {
 		// Abort if key for feature option isn't set in POST data
 		if ( !empty( $_POST['it-exchange-product-images'] ) ) 
 			it_exchange_update_product_feature( $product_id, 'product-images', $_POST['it-exchange-product-images'] );
+		else
+			it_exchange_update_product_feature( $product_id, 'product-images', array() );
 	}
 
 	/**
