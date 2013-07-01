@@ -1183,7 +1183,14 @@ Order: %s
 	function page_settings_are_invalid( $settings ) {
 		$errors = array();
 
+		$used_slugs = array();
 		foreach( $settings as $setting => $value ) {
+			// Check for unique slugs
+			if ( 'slug' == substr( $setting, -4 ) && in_array( $value, $used_slugs ) )
+				$errors = array( __( 'Please make sure all your page slugs are unique.', 'LION' ) );
+			else if ( 'exchange' == $settings[substr( $setting, 0, -4 ) . 'type'] )
+				$used_slugs[] = $value;
+
 			// *-wpid comes back as 0 when not set.
 			if ( ! isset( $value ) || '' == $value ) {
 				$errors = array( __( 'Page settings cannot be left blank.', 'LION' ) );
