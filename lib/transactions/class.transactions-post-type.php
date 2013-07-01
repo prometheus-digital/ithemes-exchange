@@ -569,7 +569,10 @@ class IT_Exchange_Transaction_Post_Type {
 		if ( it_exchange_transaction_status_can_be_manually_changed( $post ) ) : 
 			?>
 			<div class="transaction-status-update clearfix spacing-wrapper">
-				<div class="update-status-label left"><?php _e( 'Change Status', 'LION' ); ?></div>
+				<div class="update-status-label left">
+					<?php _e( 'Change Status', 'LION' ); ?>
+					<span class="tip" title="<?php _e( 'The customer will receive an email When this is changed from a status that is not cleared for delivery to a status that is cleared for delivery', 'LION' ); ?>">i</span>
+				</div>
 				<div class="update-status-setting right">
 					<select id='it-exchange-update-transaction-status'>
 						<?php
