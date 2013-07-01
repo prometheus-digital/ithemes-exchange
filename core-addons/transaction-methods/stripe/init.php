@@ -602,6 +602,9 @@ class IT_Exchange_Stripe_Add_On {
 		<?php
 	}
 
+	/**
+	 * @todo verify video link
+	 */
 	function get_stripe_payment_form_table( $form, $settings = array() ) {
 
 		$general_settings = it_exchange_get_option( 'settings_general' );
@@ -623,28 +626,29 @@ class IT_Exchange_Stripe_Add_On {
 			?>
             <h4><?php _e( 'Step 1. Fill out your Stripe API Credentials', 'LION' ); ?></h4>
 			<p>
-				<label for="stripe-live-secret-key"><?php _e( 'Live Secret Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
+				<label for="stripe-live-secret-key"><?php _e( 'Live Secret Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'The Stripe Live Secret Key is available in your Stripe Dashboard.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'stripe-live-secret-key' ); ?>
 			</p>
 			<p>
-				<label for="stripe-live-publishable-key"><?php _e( 'Live Publishable Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
+				<label for="stripe-live-publishable-key"><?php _e( 'Live Publishable Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'The Stripe Live Publishable Key is available in your Stripe Dashboard.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'stripe-live-publishable-key' ); ?>
 			</p>
 			<p class="hide-if-wizard">
-				<label for="stripe-test-secret-key"><?php _e( 'Test Secret Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
+				<?php $form->add_check_box( 'stripe-test-mode', array( 'class' => 'show-test-mode-options' ) ); ?>
+				<label for="stripe-test-mode"><?php _e( 'Enable Stripe Test Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Use this mode for testing your store. This mode will need to be disabled when the store is ready to process customer payments.', 'LION' ); ?>">i</span></label>
+			</p>
+            <?php $hidden_class = ( $settings['stripe-test-mode'] ) ? '' : 'hide-if-live-mode'; ?>
+			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
+				<label for="stripe-test-secret-key"><?php _e( 'Test Secret Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'The Stripe Test Secret Key is available in your Stripe Dashboard.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'stripe-test-secret-key' ); ?>
 			</p>
-			<p class="hide-if-wizard">
-				<label for="stripe-test-publishable-key"><?php _e( 'Test Publishable Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
+			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
+				<label for="stripe-test-publishable-key"><?php _e( 'Test Publishable Key', 'LION' ); ?> <span class="tip" title="<?php _e( 'The Stripe Test Publishable Key is available in your Stripe Dashboard.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'stripe-test-publishable-key' ); ?>
 			</p>
 			<p>
 				<label for="stripe-purchase-button-label"><?php _e( 'Purchase Button Label', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the text inside the button your customers will press to purchase with Stripe', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'stripe-purchase-button-label' ); ?>
-			</p>
-			<p class="hide-if-wizard">
-				<?php $form->add_check_box( 'stripe-test-mode' ); ?>
-				<label for="stripe-test-mode"><?php _e( 'Enable Stripe Test Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Enable Stripe Test Mode', 'LION' ); ?>">i</span></label>
 			</p>
             <h4><?php _e( 'Step 2. Setup Stripe Webhooks', 'LION' ); ?></h4>
 			<p><?php _e( 'Webhooks can be configured in the <a href="https://manage.stripe.com/account/webhooks">webhook settings section</a> of the Stripe dashboard. Clicking Add URL will reveal a form to add a new URL for receiving webhooks.', 'LION' ); ?></p>

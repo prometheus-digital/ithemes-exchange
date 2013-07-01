@@ -45,6 +45,7 @@
 /** -----------------------------------------------------:[ addon settings ]:---------- */
 .it-exchange-addon-settings label{display:block;margin:1.5em 0 .5em;font-weight:bold;}
 .it-exchange-addon-settings input[type='checkbox'] + label{display:inline;margin-left:.5em;}
+.it-exchange-addon-settings .hide-if-live-mode{display: none;}
 
 /** -----------------------------------------------------:[ addons achievement ]:---------- */
 #it-exchange-add-ons-wrap .addons-achievement{margin:1em auto;max-width:800px;text-align:center;}

@@ -605,7 +605,12 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		</div>
 		<?php
 	}
-
+	
+	/**
+	 *
+	 * @todo verify video link
+	 *
+	 */
 	function get_paypal_standard_payment_form_table( $form, $settings = array() ) {
 
 		$general_settings = it_exchange_get_option( 'settings_general' );
@@ -640,24 +645,25 @@ class IT_Exchange_PayPal_Standard_Add_On {
 				<?php $form->add_text_box( 'paypal-standard-live-api-signature' ); ?>
 			</p>
 			<p class="hide-if-wizard">
+				<?php $form->add_check_box( 'paypal-standard-sandbox-mode', array( 'class' => 'show-test-mode-options' ) ); ?>
+				<label for="paypal-standard-sandbox-mode"><?php _e( 'Enable PayPal Sandbox Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Use this mode for testing your store. This mode will need to be disabled when the store is ready to process customer payments.', 'LION' ); ?>">i</span></label>
+			</p>
+            <?php $hidden_class = ( $settings['paypal-standard-sandbox-mode'] ) ? '' : 'hide-if-live-mode'; ?>
+			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
 				<label for="paypal-standard-sandbox-email-address"><?php _e( 'PayPal Sandbox Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-sandbox-email-address' ); ?>
 			</p>
-			<p class="hide-if-wizard">
+			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
 				<label for="paypal-standard-sandbox-api-username"><?php _e( 'PayPal Sandbox API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-sandbox-api-username' ); ?>
 			</p>
-			<p class="hide-if-wizard">
+			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
 				<label for="paypal-standard-sandbox-api-password"><?php _e( 'PayPal Sandbox API Password', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-sandbox-api-password' ); ?>
 			</p>
-			<p class="hide-if-wizard">
+			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
 				<label for="paypal-standard-sandbox-api-signature"><?php _e( 'PayPal Sandbox API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-sandbox-api-signature' ); ?>
-			</p>
-			<p class="hide-if-wizard">
-				<?php $form->add_check_box( 'paypal-standard-sandbox-mode' ); ?>
-				<label for="paypal-standard-sandbox-mode"><?php _e( 'Enable PayPal Sandbox Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Enable PayPal Sandbox Mode', 'LION' ); ?>">i</span></label>
 			</p>
             <h4><?php _e( 'Step 3. Setup PayPal Instant Payment Notifications (IPN)', 'LION' ); ?></h4>
 			<p><?php _e( 'PayPal IPN must be configured in Account Profile -› Instant Payment Notification Preferences in your PayPal Account', 'LION' ); ?></p>

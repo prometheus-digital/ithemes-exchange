@@ -354,24 +354,22 @@ class IT_Exchange_Offline_Payments_Add_On {
 
 		?>
         <p><?php _e( 'Offline payments allow you the option to allow people to buy your products from your site but to pay via check or cash. Transactions can be set as pending until you get paid.', 'LION' ); ?></p>
+        <p><?php _e( 'To process payments offline, complete the settings below.', 'LION' ); ?></p>
 		<table class="form-table">
 			<?php do_action( 'it_exchange_offline_payments_settings_table_top' ); ?>
 			<tr valign="top">
-				<th scope="row"><label for="offline-payments-title"><?php _e( 'Title', 'LION' ) ?></label></th>
+				<th scope="row"><label for="offline-payments-title"><?php _e( 'Title', 'LION' ) ?> <span class="tip" title="<?php _e( 'What would you like to title this payment option? eg: Check', 'LION' ); ?>">i</span></label></th>
 				<td>
-					<?php $form->add_text_box( 'offline-payments-title', array( 'class' => 'normal-text' ) ); ?>
-					<br /><span class="description"><?php _e( 'What would you like to title this payment option? eg: Check', 'LION' ); ?></span>
-				</td>
+					<?php $form->add_text_box( 'offline-payments-title', array( 'class' => 'normal-text' ) ); ?>				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="offline-payments-instructions"><?php _e( 'Instructions after purchase', 'LION' ) ?></label></th>
+				<th scope="row"><label for="offline-payments-instructions"><?php _e( 'Instructions after purchase', 'LION' ) ?> <span class="tip" title="<?php _e( 'This will be the notification customers see after using this method of payment.', 'LION' ); ?>">i</span></label></th>
 				<td>
 					<?php $form->add_text_area( 'offline-payments-instructions', array( 'cols' => 50, 'rows' => 5, 'class' => 'normal-text' ) ); ?>
-					<br /><span class="description"><?php _e( 'Use this field to give your customers instructions for payment after purchase.', 'LION' ); ?></span>
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="offline-payments-default-status"><?php _e( 'Default Payment Status', 'LION' ) ?></label></th>
+				<th scope="row"><label for="offline-payments-default-status"><?php _e( 'Default Payment Status', 'LION' ) ?> <span class="tip" title="<?php _e( 'This is the default payment status applied to all offline payment transactions.', 'LION' ); ?>">i</span></label></th>
 				<td>
 					<?php $form->add_drop_down( 'offline-payments-default-status', $default_status_options ); ?>
 				</td>
