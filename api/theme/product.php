@@ -350,9 +350,9 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			if ( ! $inventory = it_exchange_get_product_feature( $this->product->ID, 'inventory' ) )
 				return '';
 
-		// Lets check product availability and return and empty string if its not available.
-		if ( ! it_exchange( 'product', 'is-available' ) )
-			return '';
+			// Lets check product availability and return and empty string if its not available.
+			if ( ! it_exchange( 'product', 'is-available' ) )
+				return '';
 				
 			if ( (int) $max_quantity > 0 && (int) $max_quantity > $inventory )
 				$max_quantity = $inventory;
@@ -365,7 +365,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				break;
 			case 'html' :
 			default :
-				$html  = '<input' . $class . ' type="number" name="' . esc_attr( $var_key ) . '" value="1" min="1" />' . "\n";
+				$html  = '<input' . $class . ' type="number" name="' . esc_attr( $var_key ) . '" value="1" min="1" max="' . ( ! empty( $max_purchase_quantity ) ? $max_purchase_quantity : '' ) . '" />' . "\n";
 				$html .= '<input type="hidden" name="' . it_exchange_get_field_name( 'product_max_purchase_quantity' ) . '[' . esc_attr( $this->product->ID ) . ']" value="' . ( $max_quantity ) . '" />';
 				return $html;
 				break;

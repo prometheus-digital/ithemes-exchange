@@ -145,7 +145,19 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		$var_key = it_exchange_get_field_name( 'product_purchase_quantity' );
 		$var_value = it_exchange_get_cart_product_quantity( $this->_cart_item );
-		$max_purchase_quantity = it_exchange_get_product_feature( $this->_cart_item['product_id'], 'purchase-quantity' ); 
+		$max_quantity = it_exchange_get_product_feature( $this->_cart_item['product_id'], 'purchase-quantity' ); 
+		
+		if ( it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'inventory' ) ) {
+			
+			$inventory = (int)it_exchange_get_product_feature( $this->_cart_item['product_id'], 'inventory' );
+			
+			if ( (int) $max_quantity > 0 && (int) $max_quantity > $inventory )
+				$max_quantity = $inventory;
+			
+		}
+		
+		if ( $var_value > $max_quantity )
+			$var_value = $max_quantity;
 		
 		switch ( $options['format'] ) {
 			case 'var_key' :
@@ -158,7 +170,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 			default :
 				$output  = $options['before'];
 				if ( it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'purchase-quantity' ) ) {
-					$output .= '<input type="number" min="1" max="' . ( ! empty( $max_purchase_quantity ) ? $max_purchase_quantity : '' ) . '" data-cart-product-id="' . esc_attr( $this->_cart_item['product_cart_id'] ) . '" name="' . esc_attr( $var_key ) . '[' . esc_attr( $this->_cart_item['product_cart_id'] ) . ']" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />';
+					$output .= '<input type="number" min="1" max="' . ( ! empty( $max_quantity ) ? $max_quantity : '' ) . '" data-cart-product-id="' . esc_attr( $this->_cart_item['product_cart_id'] ) . '" name="' . esc_attr( $var_key ) . '[' . esc_attr( $this->_cart_item['product_cart_id'] ) . ']" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />';
 				} else {
 					$output .= '1';
 					$output .= '<input type="hidden" name="' . esc_attr( $var_key ) . '[' . esc_attr( $this->_cart_item['product_cart_id'] ) . ']" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />';
