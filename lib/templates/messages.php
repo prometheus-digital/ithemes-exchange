@@ -16,7 +16,7 @@
 ?>
 
 <?php if ( it_exchange( 'messages', 'has-errors' ) ) : ?>
-	<ul class="messages errors">
+	<ul class="it-exchange-messages it-exchange-errors">
 		<?php while ( it_exchange( 'messages', 'errors' ) ) : ?>
 			<li><?php it_exchange( 'messages', 'error' ); ?></li>
 		<?php endwhile; ?>
@@ -24,7 +24,7 @@
 <?php endif; ?>
 
 <?php if ( it_exchange( 'messages', 'has-notices' ) ) : ?>
-	<ul class="messages notices">
+	<ul class="it-exchange-messages it-exchange-notices">
 		<?php while ( it_exchange( 'messages', 'notices' ) ) : ?>
 			<li><?php it_exchange( 'messages', 'notice' ); ?></li>
 		<?php endwhile; ?>

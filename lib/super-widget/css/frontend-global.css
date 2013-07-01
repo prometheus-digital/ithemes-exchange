@@ -27,10 +27,10 @@
 .it-exchange-super-widget .two-actions .cart-action:first-child{border-right:1px solid #F0F0F0;}
 .it-exchange-super-widget .coupon{padding:1em;border-bottom:1px solid #F0F0F0;}
 .it-exchange-super-widget .remove-coupon{float:right;}
-.it-exchange-super-widget .messages{text-align:center;}
-.it-exchange-super-widget .messages li{padding:.8em 0;} 
-.it-exchange-super-widget .messages.notices li{background:#ECFFDA;color:#768B5E;}
-.it-exchange-super-widget .messages.errors li{background:#FFF0F0;color:#DB4343;}
+.it-exchange-super-widget .it-exchange-messages{text-align:center;}
+.it-exchange-super-widget .it-exchange-messages li{padding:.8em 0;} 
+.it-exchange-super-widget .it-exchange-messages.it-exchange-notices li{background:#ECFFDA;color:#768B5E;}
+.it-exchange-super-widget .it-exchange-messages.it-exchange-errors li{background:#FFF0F0;color:#DB4343;}
 .it-exchange-super-widget .empty-cart{padding:.5em 0;}
 
 /** ----------------------------------------:[ login & register ]:--- */
