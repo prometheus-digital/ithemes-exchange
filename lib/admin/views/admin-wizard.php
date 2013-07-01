@@ -22,8 +22,7 @@
 							$addons = it_exchange_get_addons( array( 'category' => 'transaction-methods', 'show_required' => false ) );
 							it_exchange_temporarily_load_addons( $addons );
 							foreach( (array) $addons as $addon ) {
-								$icon = empty( $addon['options']['icon'] ) ? $addon['name'] : '<img src="' . $addon['options']['icon'] . '" />';
-								echo '<li class="payoption ' . $addon['slug'] . '-payoption" transaction-method="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">' . $icon . '</li>';
+								echo '<li class="payoption ' . $addon['slug'] . '-payoption" transaction-method="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">' . $addon['name'] . '</li>';
 							}
 						?>
 						

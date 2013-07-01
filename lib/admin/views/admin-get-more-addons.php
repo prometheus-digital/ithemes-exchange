@@ -19,7 +19,7 @@
 		$addons = it_exchange_get_more_addons();
 		$addons = it_exchange_featured_addons_on_top( $addons );
 		
-		$default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/default-add-on-icon.png' );
+		$default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/exchange50px.png' );
 		
 		$class = '';
 	?>

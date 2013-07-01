@@ -35,7 +35,7 @@
 	<div class="add-ons-wrapper">
 		<?php if ( ! empty( $addons ) ) : ?>
 			
-			<?php $default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/default-add-on-icon.png' ); ?>
+			<?php $default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/exchange50px.png' ); ?>
 			
 			<?php foreach( (array) $addons as $addon ) : ?>
             	
