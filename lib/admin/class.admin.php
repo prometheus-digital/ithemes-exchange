@@ -906,6 +906,11 @@ Order: %s
 		if ( !( isset( $_REQUEST['it_exchange_settings-wizard-submitted'] ) && 'it-exchange-setup' === $this->_current_page ) )
 			return;
 			
+		if ( empty( $_REQUEST['it-exchange-transaction-methods'] ) ) {
+			$this->error_message = __( 'You must select at least one Payment Method.', 'LION' );
+			return;
+		}
+			
 		// Grab general settings
 		$general_settings = array();
 		$default_wizard_general_settings = apply_filters( 'default_wizard_general_settings', array( 'company-email', 'default-currency' ) );
@@ -927,6 +932,10 @@ Order: %s
 			it_exchange_save_option( 'settings_general', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
+			
+		foreach( $_REQUEST['it-exchange-transaction-methods'] as $add_on ) {
+			it_exchange_enable_addon( $add_on );
+		}
 				
 		// Signup for mailchimp if checkbox was checked
 		if ( !empty( $_REQUEST['it_exchange_settings-exchange-notifications'] )
@@ -943,12 +952,6 @@ Order: %s
 		);
 		foreach( $auto_enabled_addons as $addon ) {
 			it_exchange_enable_addon( $addon );
-		}
-		
-		if ( !empty( $_REQUEST['it-exchange-transaction-methods'] ) ) {
-			foreach( $_REQUEST['it-exchange-transaction-methods'] as $add_on ) {
-				it_exchange_enable_addon( $add_on );
-			}
 		}
 
 		do_action( 'it_exchange_save_wizard_settings' );

@@ -22,6 +22,7 @@
 							it_exchange_temporarily_load_addons( $addons );
 							foreach( (array) $addons as $addon ) {
 								echo '<li class="payoption ' . $addon['slug'] . '-payoption" transaction-method="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">' . $addon['name'] . '</li>';
+								echo '<input type="hidden" class="remove-if-js" name="it-exchange-transaction-methods[]" value="' . $addon['slug'] . '" />';
 							}
 						?>
 						
