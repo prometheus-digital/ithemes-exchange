@@ -117,21 +117,33 @@ function it_exchange_offline_payments_addon_process_transaction( $status, $trans
 add_action( 'it_exchange_do_transaction_offline-payments', 'it_exchange_offline_payments_addon_process_transaction', 10, 2 );
 
 
+/**
+ * Generates a unique ID to stand in for the payment gateway ID that doesn't exist for this method
+ *
+ * @since 0.4.0
+ *
+ * @return string
+*/
 function it_exchange_get_offline_transaction_uniqid() {
-	
 	$uniqid = uniqid( '', true );
 
 	if( !it_exchange_verify_offline_transaction_unique_uniqid( $uniqid ) )
 		$uniqid = it_exchange_get_offline_transaction_uniqid();
 
 	return $uniqid;
-	
 }
 
+/**
+ * Verifies that the psassed string is unique since we're generating it ourselves
+ *
+ * @since 0.4.0
+ *
+ * @param string $uniqid The id we're checking
+ * @return boolean
+*/
 function it_exchange_verify_offline_transaction_unique_uniqid( $uniqid ) {
 	
-	if ( !empty( $uniqid ) ) { //verify we get a valid 32 character md5 hash
-		
+	if ( ! empty( $uniqid ) ) { //verify we get a valid 32 character md5 hash
 		$args = array(
 			'post_type' => 'it_exchange_tran',
 			'meta_query' => array(
@@ -147,13 +159,9 @@ function it_exchange_verify_offline_transaction_unique_uniqid( $uniqid ) {
 		);
 		
 		$query = new WP_Query( $args );
-		
 		return ( !empty( $query ) );
-	
 	}
-	
 	return false;
-	
 }
 
 /**
@@ -228,6 +236,14 @@ function it_exchange_offline_payments_add_template_path( $paths ) {
 }
 add_filter( 'it_exchange_possible_template_paths', 'it_exchange_offline_payments_add_template_path' );
 
+/**
+ * Return instructions to be displayed when someone makes a purchase with this payment method
+ *
+ * @since 0.4.0
+ *
+ * @param string $instructions passed in via filter. Ignored here.
+ * @return string
+*/
 function it_exchange_transaction_instructions_offline_payments( $instructions ) {
 	$options = it_exchange_get_option( 'addon_offline_payments' );
 	if ( ! empty( $options['offline-payments-instructions'] ) )

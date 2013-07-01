@@ -9,6 +9,13 @@
 if ( !class_exists( 'Stripe' ) )
 	require_once('stripe-api/lib/Stripe.php');
 
+/**
+ * Enqueues any scripts we need on the frontend during a stripe checkout
+ *
+ * @since 0.4.0
+ *
+ * @return void
+*/
 function it_exchange_stripe_addon_enqueue_script() {
 	wp_enqueue_script( 'stripe', 'https://checkout.stripe.com/v2/checkout.js', array( 'jquery' ) );
 	wp_enqueue_script( 'stripe-addon-js', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/stripe-addon.js', array( 'jquery' ) );

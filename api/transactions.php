@@ -737,7 +737,6 @@ function it_exchange_get_transaction_method_name( $transaction ) {
  * @param mixed $transaction ID or object
  * @return string
 */
-
 function it_exchange_get_transaction_method_id( $transaction ){
 	$transaction = it_exchange_get_transaction( $transaction );
 	return apply_filters( 'it_exchange_get_transaction_method_id', get_post_meta( $transaction->ID, '_it_exchange_transaction_method_id', true ), $transaction );

@@ -1,6 +1,8 @@
 jQuery( document ).ready( function($) {
+	// Init tooltip code
 	$( '.tip, .dice' ).tooltip();
 	
+	// Init date picker on coupon code start / end fields
 	$( '.datepicker' ).datepicker({
 		prevText: '',
 		nextText: '',
@@ -14,21 +16,7 @@ jQuery( document ).ready( function($) {
 		}
 	});
 	
-	function it_exchange_random_coupon( number ) {
-		if ( ! number ) {
-			number = 12;
-		}
-		
-		var coupon = '';
-		var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-		
-		for ( var i = 0; i < number; i++ ) {
-			coupon += possible.charAt( Math.floor( Math.random() * possible.length ) );
-		}
-		
-		return coupon;
-	}
-	
+	// Generate coupon code when dice is clicked
 	$( '.coupon-code' ).on( 'click', '.dice', function( event ) {
 		event.preventDefault();
 		
@@ -38,3 +26,22 @@ jQuery( document ).ready( function($) {
 			$( this ).val( it_exchange_random_coupon() );
 	});
 });
+
+/**
+ * Generates a random coupon code
+**/
+function it_exchange_random_coupon( number ) {
+	if ( ! number ) {
+		number = 12;
+	}
+	
+	var coupon = '';
+	var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+	
+	for ( var i = 0; i < number; i++ ) {
+		coupon += possible.charAt( Math.floor( Math.random() * possible.length ) );
+	}
+	
+	return coupon;
+}
+

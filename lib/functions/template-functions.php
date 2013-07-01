@@ -13,7 +13,6 @@
  * @param string $name Optional. Default null
  * @return mixed template
  */
-
 function it_exchange_get_template_part( $slug, $name=null, $load=true ) {
     // Execute code for this part
     do_action( 'get_template_part_' . $slug, $slug, $name );

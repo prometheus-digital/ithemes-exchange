@@ -12,7 +12,7 @@
  * @param string $string The natural language value
  * @param array $istrue A list strings that are true
  * @return boolean The boolean value of the provided text
- **/
+*/
 function it_exchange_str_true ( $string, $istrue = array('yes', 'y', 'true','1','on','open') ) {
     if (is_array($string)) return false;
     if (is_bool($string)) return $string;
@@ -27,7 +27,7 @@ function it_exchange_str_true ( $string, $istrue = array('yes', 'y', 'true','1',
  *
  * @param string|array $options URL-compatible query string or associative array of tag options
  * @return array API-ready options list 
- **/
+*/
 function it_exchange_parse_options( $options ) {
 	// Set empty array
 	$paramset = array();
