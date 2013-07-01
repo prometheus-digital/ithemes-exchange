@@ -127,16 +127,16 @@ class IT_Exchange_Admin {
 	}
 	
 	/**
-	 * Adds link to bottom of addons settings pages to return to the addons pages
+	 * Adds actions to the plugins page for the iThemes Exchange plugin
 	 *
 	 * @since 0.4.15
-	 * @todo get Documentation and Support links from Elise and Ron
+	 * @todo get Support links from Ron
 	 * @return void
 	*/
 	function it_exchange_plugin_row_actions( $actions, $plugin_file, $plugin_data, $context ) {
 		
 		$actions['quick_setup'] = '<a href="' . get_admin_url( NULL, 'admin.php?page=it-exchange-setup' ) . '">' . __( 'Quick Setup', 'LION' ) . '</a>';
-		$actions['documentation'] = '<a href="#">' . __( 'Documentation', 'LION' ) . '</a>';
+		$actions['documentation'] = '<a href="http://ithemes.com/codex/page/Exchange">' . __( 'Documentation', 'LION' ) . '</a>';
 		$actions['support'] = '<a href="#">' . __( 'Support', 'LION' ) . '</a>';
 		$actions['addons'] = '<a href="http://ithemes.com/exchange">' . __( 'Add-ons', 'LION' ) . '</a>';
 		
