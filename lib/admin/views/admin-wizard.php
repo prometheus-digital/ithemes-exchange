@@ -27,7 +27,7 @@
 						?>
 						
 						<?php if ( ! it_exchange_is_addon_registered( 'stripe' ) ) : ?>
-							<li class="payoption stripe-payoption inactive" data-toggle="stripe-wizard"><img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/stripe.png' ); ?>" /><span>$</span></li>
+							<li class="stripe-payoption inactive" data-toggle="stripe-wizard">Stripe<span>$</span></li>
 						<?php endif; ?>
 					</ul>
 				</div>
