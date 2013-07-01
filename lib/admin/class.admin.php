@@ -1150,7 +1150,7 @@ Order: %s
 					'key' => '_menu_item_xfn',
 					'value' => 'it-exchange-',
 					'compare' => 'LIKE',
-				)
+				),
 		);
 		$nav_post_items = get_posts( $args );
 
@@ -1158,6 +1158,11 @@ Order: %s
 		$GLOBALS['it_exchange']['updating_nav'] = true;
 		foreach( $nav_post_items as $key => $item ) {
 			$page = get_post_meta( $item->ID, '_menu_item_xfn', true );
+
+			// Meta Query is returning items where _menu_item_xfn isn't a post meta key
+			if ( empty( $page ) )
+				continue;
+
 			$page = substr( $page, 12 );
 
 			//if ( ! it_exchange_get_page_slug( $page ) )
