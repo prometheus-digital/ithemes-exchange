@@ -42,7 +42,7 @@ function it_exchange_get_coupons( $options=array() ) {
  * Retreives a coupon object by passing it the WP post object or post id
  *
  * @since 0.4.0
- * @todo check if is_wp_error, add error message, return coupon w/ filter.
+ *
  * @param mixed $post post object or post id
  * @rturn object IT_Exchange_Coupon object for passed post
 */

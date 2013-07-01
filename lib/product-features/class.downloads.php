@@ -15,7 +15,6 @@ class IT_Exchange_Product_Feature_Downloads {
 	 *
 	 * @since 0.4.0
 	 * @return void
-	 * @todo remove it_exchange_enabled_addons_loaded action???
 	*/
 	function IT_Exchange_Product_Feature_Downloads() {
 		if ( is_admin() ) {
@@ -24,7 +23,8 @@ class IT_Exchange_Product_Feature_Downloads {
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		}
 		add_action( 'init', array( $this, 'register_downloads_post_type' ) );
-		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'register_feature_support' ) );
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_digital_downloads' ) );
 		add_action( 'it_exchange_update_product_feature_downloads', array( $this, 'save_feature' ), 9, 3 );
 		add_filter( 'it_exchange_get_product_feature_downloads', array( $this, 'get_feature' ), 9, 3 );
 		add_filter( 'it_exchange_product_has_feature_downloads', array( $this, 'product_has_feature') , 9, 2 );
@@ -82,7 +82,7 @@ class IT_Exchange_Product_Feature_Downloads {
 							'expire_units'   => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-units' ) ),
 							'expire_time'    => $expire_time,
 							'download_limit' => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'limit' ) ),
-							'downloads'      => '0', /** @todo change this! */
+							'downloads'      => '0',
 						); 
 
 						// Add hash and data to DB as file post_meta
@@ -98,17 +98,23 @@ class IT_Exchange_Product_Feature_Downloads {
 	 *
 	 * @since 0.4.0
 	*/
-	function add_feature_support_to_product_types() {
+	function register_feature_support() {
 		// Register the product feature
 		$slug        = 'downloads';
 		$description = 'Downloadable files associated with a product';
 		it_exchange_register_product_feature( $slug, $description );
+	}
 
-		// Add it to all enabled product-type addons
-		$products = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
-		foreach( $products as $key => $params ) {
-			it_exchange_add_feature_support_to_product_type( 'downloads', $params['slug'] );
-		}
+	/**
+	 * Register downloads to the Digital downloads add-on by default
+	 *
+	 * @since 0.4.15
+	 *
+	 * @return void
+	*/
+	function add_feature_support_to_digital_downloads() {
+		if ( it_exchange_is_addon_enabled( 'digital-downloads-product-type' ) )
+			it_exchange_add_feature_support_to_product_type( 'downloads', 'digital-downloads-product-type' );
 	}
 
 	/**
@@ -392,14 +398,16 @@ class IT_Exchange_Product_Feature_Downloads {
 	/**
 	 * This updates the feature for a product
 	 *
-	 * @todo Validate product id and new value 
-	 *
 	 * @since 0.4.0
+	 *
 	 * @param integer $product_id the product id
 	 * @param mixed $new_value the new value 
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_value, $options=array() ) {
+
+		if ( ! it_exchange_get_product( $product_id ) )
+			return false;
 
         // Using options to determine if we're setting the download limit or adding/updating files
         $defaults = array(

@@ -15,7 +15,6 @@ class IT_Exchange_Product_Feature_Product_Images {
 	 *
 	 * @since 0.4.0
 	 * @return void
-	 * @todo remove it_exchange_enabled_addons_loaded action???
 	*/
 	function IT_Exchange_Product_Feature_Product_Images() {
 		if ( is_admin() ) {
@@ -176,9 +175,8 @@ class IT_Exchange_Product_Feature_Product_Images {
 	/** 
 	 * This saves the value
 	 *
-	 * @todo Convert to use product feature API
-	 *
 	 * @since 0.4.0
+	 *
 	 * @param object $post wp post object
 	 * @return void
 	*/
@@ -204,14 +202,15 @@ class IT_Exchange_Product_Feature_Product_Images {
 	/**
 	 * This updates the feature for a product
 	 *
-	 * @todo Validate product id and new value 
-	 *
 	 * @since 0.4.0
+	 *
 	 * @param integer $product_id the product id
 	 * @param mixed $new_value the new value 
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_value ) {
+		if ( ! it_exchange_get_product( $product_id ) )
+			return false;
 		update_post_meta( $product_id, '_it-exchange-product-images', $new_value );
 	}
 

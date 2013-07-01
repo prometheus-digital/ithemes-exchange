@@ -184,8 +184,6 @@ class IT_Exchange_Shopping_Cart {
 	 *
 	 * This listens for REQUESTS to remove a product from the cart, verifies the request, and passes it along to the correct function
 	 *
-	 * @todo Move to /lib/framework dir
-	 *
 	 * @since 0.3.8
 	 * @return void
 	*/

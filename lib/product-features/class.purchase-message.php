@@ -15,7 +15,6 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 	 *
 	 * @since 0.4.0
 	 * @return void
-	 * @todo remove it_exchange_enabled_addons_loaded action???
 	*/
 	function IT_Exchange_Product_Feature_Purchase_Message() {
 		if ( is_admin() ) {
@@ -129,8 +128,6 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 	/**
 	 * This saves the value
 	 *
-	 * @todo Convert to use product feature API
-	 *
 	 * @since 0.3.8
 	 * @param object $post wp post object
 	 * @return void
@@ -162,8 +159,6 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 
 	/**
 	 * This updates the feature for a product
-	 *
-	 * @todo Validate product id and new value 
 	 *
 	 * @since 0.4.0
 	 * @param integer $product_id the product id

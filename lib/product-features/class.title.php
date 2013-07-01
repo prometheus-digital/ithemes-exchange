@@ -15,7 +15,6 @@ class IT_Exchange_Product_Feature_Product_Title {
 	 *
 	 * @since 0.4.0
 	 * @return void
-	 * @todo remove it_exchange_enabled_addons_loaded action???
 	*/
 	function IT_Exchange_Product_Feature_Product_Title() {
 		if ( is_admin() ) {

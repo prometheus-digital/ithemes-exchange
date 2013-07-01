@@ -122,14 +122,15 @@ function it_exchange_digital_downloads_addon_save_files_on_product_save() {
 /**
  * This updates the product files for a product
  *
- * @todo Validate product id and new value
- *
  * @since 0.3.8
+ *
  * @param integer $product_id the product id
  * @param mixed $new_value the new  value
  * @return bolean
 */
 function it_exchange_digital_downloads_addon_save_files( $product_id, $new_value ) {
+	if ( ! it_exchange_get_product( $product_id ) )
+		return false;
 	update_post_meta( $product_id, '_it_exchange_digital_downloads', $new_value );
 }
 

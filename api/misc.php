@@ -89,8 +89,6 @@ function it_exchange_clean_query_args( $exempt=array(), $additional=array() ) {
  * Replace Log in text with Log out text in nav menus
  *
  * @since 0.4.0
- * @todo re-evaluate whether or not we want to proceed with this hackery.
- * @todo verify without permalinks!
  *
  * @param string $page page setting
  * @return string url
@@ -139,9 +137,6 @@ if ( ! function_exists( 'wp_nav_menu_disabled_check' ) && version_compare( $GLOB
  * Returns currency data
  *
  * @since 0.3.4
- * @todo Cache in a transient
- * @todo Provide param to break cache
- * @todo Better anticipate wp_error
 */
 function it_exchange_get_currency_options() {
 	// Country Code => array( symbol, name )

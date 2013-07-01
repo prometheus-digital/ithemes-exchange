@@ -214,8 +214,6 @@ function it_exchange_is_product_visible( $product_id=false ) {
  *
  * @since 0.4.2
  *
- * @todo beef this up. right now it just gets counts. we need to give options for valid transactions / etc.
- *
  * @param mixed $product the product ID or object
  * @param string $type do you want an array of ids or an array of objects returned
  * @param boolen $only_cleared_for_delivery defaults to true. Only return transactions cleared for delivery or return all

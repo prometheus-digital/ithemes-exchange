@@ -14,8 +14,8 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	 * Constructor. Registers hooks
 	 *
 	 * @since 0.4.0
+	 *
 	 * @return void
-	 * @todo remove it_exchange_enabled_addons_loaded action???
 	*/
 	function IT_Exchange_Product_Feature_Product_Availability() {
 		if ( is_admin() ) {
@@ -145,9 +145,8 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	/**
 	 * This saves the value
 	 *
-	 * @todo Convert to use product feature API
-	 *
 	 * @since 0.3.8
+	 *
 	 * @param object $post wp post object
 	 * @return void
 	*/
@@ -198,8 +197,6 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	/**
 	 * This updates the feature for a product
 	 *
-	 * @todo Validate product id and new value 
-	 *
 	 * @since 0.4.0
 	 * @param integer $product_id the product id
 	 * @param mixed $new_value the new value 
@@ -228,6 +225,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	 * Return the product's features
 	 *
 	 * @since 0.4.0
+	 *
 	 * @param mixed $existing the values passed in by the WP Filter API. Ignored here.
 	 * @param integer product_id the WordPress post ID
 	 * @return string product feature

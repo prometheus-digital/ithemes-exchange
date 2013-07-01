@@ -9,7 +9,6 @@
  * The IT_Exchange_Email_Notifications class is for sending out email notification using wp_mail()
  *
  * @since 0.4.0
- * @todo add shortcodes for company tax, name, and  phone and email blah blah blah
 */
 class IT_Exchange_Email_Notifications {
 	
@@ -283,7 +282,6 @@ class IT_Exchange_Email_Notifications {
 	 * Replacement Tag
 	 *
 	 * @since 0.4.0
-	 * @todo better way to get this URL????
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value

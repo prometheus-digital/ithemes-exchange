@@ -114,7 +114,6 @@ function it_exchange_get_page_wpid( $page, $break_cache=false ) {
  * Get permalink for ghost page
  *
  * @since 0.4.0
- * @todo add filters/actions
  *
  * @param string $page page setting
  * @return string url
@@ -123,6 +122,11 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
     $pages    = it_exchange_get_pages( $clear_settings_cache );
 	$type     = it_exchange_get_page_type( $page );
 	$page_url = false;
+
+	// Give addons ability to skip this logic
+	$filtered_url = apply_filters( 'it_exchange_get_page_url', false, $page, $clear_settings_cache );
+	if ( $filtered_url )
+		return $filtered_url;
 
 	// If page is disabled, attempt to redirect to store. If store is disabled, redirect to site home.
 	if ( $type == 'disabled' && $page != 'store' ) {
@@ -165,13 +169,17 @@ function it_exchange_is_page_ghost_page( $page, $break_cache=false ) {
  * Is the the current page what we're looking for? 
  *
  * @since 0.4.0
- * @todo add filters/actions
  *
  * @param string $page the exchange page were checking for
  * @return boolean
 */
 function it_exchange_is_page( $page ) {
 	global $wpdb;
+
+	// Give addons ability to skip this logic
+	$filtered_is = apply_filters( 'it_exchange_is_page', null, $page );
+	if ( ! is_null( $filtered_is ) )
+		return $filtered_is;
 
 	// Page Data
 	$type = it_exchange_get_page_type( $page );

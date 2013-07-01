@@ -158,6 +158,57 @@ class IT_Exchange_Customer {
 		return apply_filters( 'it_exchange_get_customer_purchase_history', $history, $this->id );
 	}
 }
+
+/**
+ * Handles $_REQUESTs and submits them to the registration for processing
+ *
+ * @since 0.4.0
+ * @return void
+*/
+function handle_it_exchange_customer_registration_action() {
+
+    // Grab action and process it.
+    if ( isset( $_REQUEST['it-exchange-register-customer'] ) ) {
+
+        do_action( 'before_handle_it_exchange_customer_registration_action' );
+
+        $result = it_exchange_register_user();
+
+        if ( is_wp_error( $result ) )
+            return it_exchange_add_message( 'error', $result->get_error_message());
+
+        $user_id = $result;
+
+        //else
+
+        $creds = array(
+            'user_login'    => $_REQUEST['user_login'],
+            'user_password' => $_REQUEST['pass1'],
+        );
+
+        $result = wp_signon( $creds );
+
+        if ( is_wp_error( $result ) )
+            return it_exchange_add_message( 'error', $result->get_error_message() );
+
+        wp_new_user_notification( $user_id, $_REQUEST['pass1'] );
+
+        $reg_page = it_exchange_get_page_url( 'registration' );
+        // Set redirect to profile page if they were on the registration page
+        $redirect = ( trailingslashit( $reg_page ) == trailingslashit( wp_get_referer() ) ) ? it_exchange_get_page_url( 'profile' ) : it_exchange_clean_query_args( array(), array( 'ite-sw-state' ) );
+
+        do_action( 'handle_it_exchange_customer_registration_action' );
+        do_action( 'after_handle_it_exchange_customer_registration_action' );
+
+        wp_redirect( $redirect );
+        die();
+
+    }
+
+}
+add_action( 'template_redirect', 'handle_it_exchange_customer_registration_action', 5 );
+
+
 /** 
  * Private Beta monitor. Will be removed before public beta.
  * Pings us once per version number with who, what, when, where.

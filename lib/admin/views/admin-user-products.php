@@ -4,7 +4,6 @@
  *
  * @since 0.4.0
  * @package IT_Exchange
- * @todo get the transaction extra buttons to work
 */
 
 $headings = array(

@@ -17,7 +17,7 @@
 <?php it_exchange_get_template_part( 'messages' ); ?>
 
 <div class="registration-info it-exchange-sw-processing-registration">
-	<?php if ( it_exchange( 'registration', 'is-enabled' ) ) { ?>
+	<?php if ( it_exchange( 'registration', 'is-enabled' ) ) : ?>
 		<?php it_exchange( 'registration', 'form-open' ); ?>
 			<div class="user-name">
 				<?php it_exchange( 'registration', 'username' ); ?>

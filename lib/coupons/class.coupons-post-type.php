@@ -16,7 +16,6 @@ class IT_Exchange_Coupon_Post_Type {
 	/**
 	 * Class Constructor
 	 *
-	 * @todo Filter some of these options. Not all.
 	 * @since 0.4.0
 	 * @return void
 	*/

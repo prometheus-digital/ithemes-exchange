@@ -145,9 +145,8 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 	/**
 	 * This saves the value
 	 *
-	 * @todo Convert to use product feature API
-	 *
 	 * @since 0.3.8
+	 *
 	 * @param object $post wp post object
 	 * @return void
 	*/
@@ -181,14 +180,16 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 	/**
 	 * This updates the feature for a product
 	 *
-	 * @todo Validate product id and new value 
-	 *
 	 * @since 0.4.0
+	 *
 	 * @param integer $product_id the product id
 	 * @param mixed $new_value the new value 
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_value, $options=array() ) {
+		if ( ! it_exchange_get_product( $product_id ) )
+			return false;
+
 		// Using options to determine if we're setting the enabled setting or the actual max_number setting
 		$defaults = array(
 			'setting' => 'max_number',

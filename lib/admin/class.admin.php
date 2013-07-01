@@ -866,9 +866,8 @@ Order: %s
 	 *
 	 * Validates data and saves to options.
 	 *
-	 * @todo provide feedback to user
-	 * @todo validate data
 	 * @since 0.3.4
+	 *
 	 * @return void
 	*/
 	function save_core_general_settings() {
@@ -897,9 +896,8 @@ Order: %s
 	 *
 	 * Validates data and saves to options.
 	 *
-	 * @todo provide feedback to user
-	 * @todo validate data
 	 * @since 0.3.4
+	 *
 	 * @return void
 	*/
 	function save_core_wizard_settings() {

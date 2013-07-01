@@ -16,7 +16,6 @@ class IT_Exchange_Product_Post_Type {
 	/**
 	 * Class Constructor
 	 *
-	 * @todo Filter some of these options. Not all.
 	 * @since 0.3.0
 	 * @return void
 	*/
@@ -646,7 +645,6 @@ class IT_Exchange_Product_Post_Type {
 	 * Modify sort of products in edit.php for custom columns
 	 *
 	 * @since 0.4.0
-	 * @todo sortable by inventory and purchases?
 	 *
 	 * @param string $request original request
 	 */

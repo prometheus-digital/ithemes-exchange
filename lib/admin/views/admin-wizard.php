@@ -4,7 +4,6 @@
  *
  * @since 0.4.0
  * @package IT_Exchange
- * @todo update the Stripe links
 */
 ?>
 <div class="wrap">
@@ -44,7 +43,7 @@
 						<div class="stripe-action buy-stripe">
 							<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/icon32.png' ); ?>" />
 							<p><?php _e( "I don't have the Stripe add-on yet, but I want to use Stripe.", 'LION' ); ?></p>
-							<p><a href="http://ithemes.com/" target="_blank"><?php _e( 'Buy the Stripe Add-On', 'LION' ); ?></a></p>
+							<p><a href="http://ithemes.com/exchange/stripe/" target="_blank"><?php _e( 'Buy the Stripe Add-On', 'LION' ); ?></a></p>
 						</div>
 					</div>
 				<?php endif; ?>

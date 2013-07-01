@@ -16,7 +16,6 @@ class IT_Exchange_Transaction_Post_Type {
 	/**
 	 * Class Constructor
 	 *
-	 * @todo Filter some of these options. Not all.
 	 * @since 0.3.3
 	 * @return void
 	*/

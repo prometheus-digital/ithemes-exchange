@@ -15,7 +15,6 @@ class IT_Exchange_Product_Feature_Inventory {
 	 *
 	 * @since 0.4.0
 	 * @return void
-	 * @todo remove it_exchange_enabled_addons_loaded action???
 	*/
 	function IT_Exchange_Product_Feature_Inventory() {
 		if ( is_admin() ) {
@@ -23,6 +22,7 @@ class IT_Exchange_Product_Feature_Inventory {
 			add_action( 'load-post.php', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		}
+		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'register_feature_support' ) );
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
 		add_action( 'it_exchange_update_product_feature_inventory', array( $this, 'save_feature' ), 9, 3 );
 		add_filter( 'it_exchange_get_product_feature_inventory', array( $this, 'get_feature' ), 9, 3 );
@@ -38,7 +38,7 @@ class IT_Exchange_Product_Feature_Inventory {
 	 *
 	 * @since 0.4.0
 	*/
-	function add_feature_support_to_product_types() {
+	function register_feature_support() {
 		// Register the product feature
 		$slug        = 'inventory';
 		$description = __( 'The current inventory number', 'LION' );
@@ -49,6 +49,18 @@ class IT_Exchange_Product_Feature_Inventory {
 		foreach( $products as $key => $params ) {
 			it_exchange_add_feature_support_to_product_type( 'inventory', $params['slug'] );
 		}
+	}
+
+	/**
+	 * Adds the feature support to digital downloads by default
+	 *
+	 * @since 0.4.15
+	 *
+	 * @return void
+	*/
+	function add_feature_support_to_product_types() {
+		if ( it_exchange_is_addon_enabled( 'digital-downloads-product-type' ) ) 
+			it_exchange_add_feature_support_to_product_type( 'inventory', 'digital-downloads-product-type' );
 	}
 
 	/**
@@ -138,9 +150,8 @@ class IT_Exchange_Product_Feature_Inventory {
 	/**
 	 * This saves the value
 	 *
-	 * @todo Convert to use product feature API
-	 *
 	 * @since 0.3.8
+	 *
 	 * @param object $post wp post object
 	 * @return void
 	*/
@@ -172,9 +183,8 @@ class IT_Exchange_Product_Feature_Inventory {
 	/**
 	 * This updates the feature for a product
 	 *
-	 * @todo Validate product id and new value 
-	 *
 	 * @since 0.4.0
+	 *
 	 * @param integer $product_id the product id
 	 * @param mixed $new_value the new value 
 	 * @return bolean

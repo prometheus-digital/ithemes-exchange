@@ -14,8 +14,8 @@ class IT_Exchange_Base_Price {
 	 * Constructor. Registers hooks
 	 *
 	 * @since 0.3.8
+	 *
 	 * @return void
-	 * @todo remove it_exchange_enabled_addons_loaded action???
 	*/
 	function IT_Exchange_Base_Price() {
 		if ( is_admin() ) {
@@ -126,9 +126,8 @@ class IT_Exchange_Base_Price {
 	/**
 	 * This saves the base price value
 	 *
-	 * @todo Convert to use product feature API
-	 *
 	 * @since 0.3.8
+	 *
 	 * @param object $post wp post object
 	 * @return void
 	*/
@@ -163,14 +162,16 @@ class IT_Exchange_Base_Price {
 	/**
 	 * This updates the base price for a product
 	 *
-	 * @todo Validate product id and new price
-	 *
 	 * @since 0.3.8
+	 *
 	 * @param integer $product_id the product id
 	 * @param mixed $new_price the new price
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_price ) {
+		if ( ! it_exchange_get_product( $product_id ) )
+			return false;
+
 		$new_price = preg_replace("/[^0-9.]/", '', $new_price );
 		update_post_meta( $product_id, '_it-exchange-base-price', $new_price );
 	}
