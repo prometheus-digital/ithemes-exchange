@@ -589,8 +589,8 @@ class IT_Exchange_Transaction_Post_Type {
 					<?php wp_nonce_field( 'update-transaction-status' . $post->ID, 'it-exchange-update-transaction-nonce' ); ?>
 					<input type="hidden" id="it-exchange-update-transaction-current-status" value="<?php esc_attr_e( $current_status ); ?>" />
 					<input type="hidden" id="it-exchange-update-transaction-id" value="<?php esc_attr_e( $post->ID ); ?>" />
-					<div class="hidden" id="it-exchange-update-transaction-status-failed"><?php _e( 'Transaction status not updated', 'LION' ); ?></div>
-					<div class="hidden" id="it-exchange-update-transaction-status-success"><?php _e( 'Transaction status updated', 'LION' ); ?></div>
+					<div class="hidden" id="it-exchange-update-transaction-status-failed"><?php _e( 'Not Saved.', 'LION' ); ?></div>
+					<div class="hidden" id="it-exchange-update-transaction-status-success"><?php _e( 'Saved!', 'LION' ); ?></div>
 				</div>
 			</div>
 			<?php
