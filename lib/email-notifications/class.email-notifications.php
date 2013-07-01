@@ -142,36 +142,6 @@ class IT_Exchange_Email_Notifications {
 	}
 	
 	/**
-	 * Adds email styles in the header.
-	 *
-	 * @since 0.4.0
-	 *
-	 * @return string HTML header styles
-	*/
-	function email_styles() {
-		ob_start();
-		?>
-			<style type="text/css">
-				#outlook a {
-					padding:0;
-				}
-				html {
-					background-color: #EBEBEB;
-				}
-				body {
-					text-align: left;
-				}
-				
-			</style>
-		<?php
-		
-		$output = ob_get_clean();
-		
-		return apply_filters( 'it_exchange_email_notification_email_styles', $output );
-		
-	}
-	
-	/**
 	 * Returns Email HTML header
 	 *
 	 * @since 0.4.0
@@ -184,16 +154,9 @@ class IT_Exchange_Email_Notifications {
 			<html>
 			<head>
 				<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-				<title></title>
-				<?php echo $this->email_styles(); ?>
 			</head>
 			<body>
-				<center>
-					<table>
-						<tbody>
-							<tr>
-								<td>
-							<?php
+		<?php
 		
 		$output = ob_get_clean();
 		
@@ -209,14 +172,13 @@ class IT_Exchange_Email_Notifications {
 	 * @return string HTML footer
 	*/
 	function body_footer() {
+		ob_start();
+		?>
+			</body>
+		</html>
+		<?php
 		
-		$output = '</td>';
-		$output = '</tr>';
-		$output = '</tbody>';
-		$output = '</table>';
-		$output = '</center>';
-		$output .= '</body>';
-		$output .= '</html>';
+		$output = ob_get_clean();
 		
 		return apply_filters( 'it_exchange_email_notification_body_footer', $output );
 		
@@ -294,41 +256,43 @@ class IT_Exchange_Email_Notifications {
 		// Grab all hashes attached to transaction
 		$hashes   = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
 		?>
-		<?php foreach ( $transaction_products as $transaction_product ) : ?>
-			<?php
-				$product_id = $transaction_product['product_id'];
-				$db_product = it_exchange_get_product( $transaction_product );
-			?>
-			<h3><?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?></h3>
-				<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : ?>
-					<?php $count = it_exchange_get_transaction_product_feature( $transaction_product, 'count' ); ?>
-					<?php if ( $count > 1 ) : ?>
-						<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
-						<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%sEach link has its own download limits.%sYou can view the details on you %sdownloads%s page.', 'LION' ), $count, '<br />', '<br />', '<a href="' . $downloads_url . '">', '</a>' ); ?></p>
-					<?php endif; ?>
-					<?php if ( ! it_exchange_transaction_is_cleared_for_delivery( $args->transaction_id ) ) : ?>
-						<p><?php _e( 'The status for this transaction does not grant access to downlodable files. Once the transaction is updated to an appoved status, you will receive a follup email with your download links.', 'LION' ); ?></p>
-					<?php endif; ?>
-					<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
-						<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $args->transaction_id, $transaction_product, $download_id ); ?>
-						<h4><?php esc_attr_e( get_the_title( $download_id ) ); ?></h4>
-						<?php if ( it_exchange_transaction_is_cleared_for_delivery( $args->transaction_id ) ) : ?>
-							<ul class="download-hashes">
-								<?php foreach( (array) $hashes_for_product_transaction as $hash ) : ?>
-									<?php
-									$hash_data      = it_exchange_get_download_data_from_hash( $hash );
-									$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
-									$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
-									?>
-									<li>
-										<?php esc_attr_e( $hash ); ?> : <a href="<?php echo site_url() . '?it-exchange-download=' . $hash; ?>"><?php _e( 'Download link', 'LION' ); ?></a>
-									</li>
-								<?php endforeach; ?>
-							</ul>
+			<div style="border-top: 1px solid #EEE">
+				<?php foreach ( $transaction_products as $transaction_product ) : ?>
+					<?php
+						$product_id = $transaction_product['product_id'];
+						$db_product = it_exchange_get_product( $transaction_product );
+					?>
+					<h3><?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?></h3>
+					<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : ?>
+						<?php $count = it_exchange_get_transaction_product_feature( $transaction_product, 'count' ); ?>
+						<?php if ( $count > 1 ) : ?>
+							<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
+							<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%s%sEach link has its own download limits and you can view the details on you %sdownloads%s page.', 'LION' ), $count, '<br />', '<br />', '<a href="' . $downloads_url . '">', '</a>' ); ?></p>
 						<?php endif; ?>
-					<?php endforeach; ?>
-				<?php endif; ?>
-		<?php endforeach; ?>
+						<?php if ( ! it_exchange_transaction_is_cleared_for_delivery( $args->transaction_id ) ) : ?>
+							<p><?php _e( 'The status for this transaction does not grant access to downlodable files. Once the transaction is updated to an appoved status, you will receive a follup email with your download links.', 'LION' ); ?></p>
+						<?php endif; ?>
+						<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
+							<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $args->transaction_id, $transaction_product, $download_id ); ?>
+							<h4><?php esc_attr_e( get_the_title( $download_id ) ); ?></h4>
+							<?php if ( it_exchange_transaction_is_cleared_for_delivery( $args->transaction_id ) ) : ?>
+								<ul class="download-hashes">
+									<?php foreach( (array) $hashes_for_product_transaction as $hash ) : ?>
+										<?php
+										$hash_data      = it_exchange_get_download_data_from_hash( $hash );
+										$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
+										$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
+										?>
+										<li>
+											<a href="<?php echo site_url() . '?it-exchange-download=' . $hash; ?>"><?php _e( 'Download link', 'LION' ); ?></a> <span style="font-family: Monaco, monospace;font-size:12px;color:#AAA;">(<?php esc_attr_e( $hash ); ?>)</span>
+										</li>
+									<?php endforeach; ?>
+								</ul>
+							<?php endif; ?>
+						<?php endforeach; ?>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			</div>
 		<?php
 		
 		return ob_get_clean();
@@ -391,59 +355,43 @@ class IT_Exchange_Email_Notifications {
 	 * @return string Replaced value
 	*/
 	function it_exchange_replace_order_table_tag( $args, $options = NULL ) {
-		ob_start();
-		?>
-		<table border="0" cellspacing="5" cellpadding="5">
-			<thead>
-				<tr>
-					<td><h3></h3></td>
-				</tr>
-			</thead>
-		</table>
-		<?php
-		$table = ob_get_clean();
 		
 		$purchase_message_on = false;
 		
 		if ( in_array( 'purchase_message', $options ) )
 			$purchase_message_on = true;
 		
-		$table  .= '<table>';
+		ob_start();
+		?>
+			<table style="text-align: left; background: #FBFBFB; margin-bottom: 1.5em;border:1px solid #DDD;border-collapse: collapse;">
+				<thead style="background:#F3F3F3;">
+					<tr>
+						<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Product', 'LION' ); ?></th>
+						<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Quantity', 'LION' ); ?></th>
+						<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total Price', 'LION' ); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php if ( $products = it_exchange_get_transaction_products( $this->transaction_id ) ) : ?>
+						<?php foreach ( $products as $product ) : ?>
+							<tr>
+								<td style="padding: 10px;border:1px solid #DDD;"><?php esc_attr_e( it_exchange_get_transaction_product_feature( $product, 'product_name' ) ); ?></td>
+								<td style="padding: 10px;border:1px solid #DDD;"><?php esc_attr_e( it_exchange_get_transaction_product_feature( $product, 'count' ) ); ?></td>
+								<td style="padding: 10px;border:1px solid #DDD;"><?php esc_attr_e( it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ) ) ); ?></td>
+							</tr>
+						<?php endforeach; ?>
+					<?php endif; ?>
+				</tbody>
+				<tfoot style="background:#F3F3F3;">
+					<tr>
+						<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total', 'LION' ); ?></td>
+						<td style="padding: 10px;border:1px solid #DDD;"><?php echo it_exchange_get_transaction_total( $this->transaction_id, true ) ?></td>
+					</tr>
+				</tfoot>
+			</table>
+		<?php
 		
-		$table .= ' <thead>';
-		$table .= '  <tr>';
-		$table .= '    <th>' . __( 'Product', 'LION' ) . '</th>';
-		$table .= '    <th>' . __( 'Quantity', 'LION' ) . '</th>';
-		$table .= '    <th>' . __( 'Total Price', 'LION' ) . '</th>';
-		$table .= '  <tr>';
-		$table .= ' </thead>';
-		
-		$table .= ' <tbody>';
-		if ( $products = it_exchange_get_transaction_products( $this->transaction_id ) ) {
-			foreach ( $products as $product ) {
-				$table .= '  <tr>';
-				$table .= '    <td>';
-				$table .= esc_attr( it_exchange_get_transaction_product_feature( $product, 'product_name' ) );
-				
-				if ( $purchase_message_on )
-					$table .= '<p>' . esc_attr( it_exchange_get_product_feature( $product['product_id'], 'purchase-message' ) ) . '</p>'; 
-				
-				$table .= '</td>';
-				$table .= '    <td>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'count' ) ) . '</td>';
-				$table .= '    <td>' . esc_attr( it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ) ) )  . '</td>';
-				$table .= '  <tr>';
-			}
-		}
-		$table .= ' </tbody>';
-		
-		$table .= ' <tfoot>';
-		$table .= '  <tr>';
-		$table .= '    <td colspan="2">' . __( 'Total', 'LION' ) . '</td>';
-		$table .= '    <td>' . it_exchange_get_transaction_total( $this->transaction_id, true ) . '</td>';
-		$table .= '  <tr>';
-		$table .= ' </tfoot>';
-		
-		$table .= '</table>';
+		$table = ob_get_clean();
 		
 		return $table;
 	}
