@@ -1,3 +1,38 @@
+0.4.15 - 2013-07-01 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+	Wizard-addon.png option now allowed and working...
+	Add register addons action. Switch core addons to use this action
+	Fixed bug allowing wizard saving successfully when stripe is selected (but the addon isn't activated)
+	Styled up the email notifications (as much as possible).
+	Fixed issue with feature image not being saved properly when moved around
+	Fixed issue with last image not being removed upon update
+	Fixed the x on the product page.
+	Added missing docblocks
+	Wizard settings now pass through error message for failed transaction method setup attempts
+	Fixed issue with cover moving when scrolling.
+	Added tooltips to transaction details.
+	Remove wizard margin when screen options are not available
+	Message styles are now more consistent.
+	Added processing payment notice when purchasing with Stripe.
+	Fix bug where updating Settings --> Pages deleted non-Exchange custom Links in the WP Nav API
+	Prevent duplicate slugs from being saved on Pages tab in settings.
+	Fix false positive for emty slug error on Pages tab in settings.
+	Fixed bug allowing users to 'start selling!' without selecting a valid payment method
+	Finished all @todos in the code that we're probably going to do before launch
+	Fixed quantity bug
+	Replace session_id() with $session_id retrieved from db-sessions class in nonces
+	Added documentation link to plugin screen
+	Mutliple @todo updates. Largely validations.
+	Added/modified tooltips based on feedback from Kristen and Elise.
+	Enabled hide/show functionality in Stripe and PayPal settings for test modes.
+	Added row action to plugin for quick setup, documentation, support, and add-ons
+	Replaced Stripe, PayPal, and default Add-ons icons
+	Add tooltip to transaction details page
+	Fixed max quantity issue when purchasing products
+	Added styles for the transaction details status changed and changed message to Saved or Not Saved.
+	Enabled tooltips for the pages settings.
+	Cleaning up @todo messages we left ourselves. Added several error messages and notices throughout code.
+	Force registration page type to 'disable' if using WP registration settings and WP registration is off, Added tooltip to explain this.
+	Finished cleaning up the templates.
 0.4.14 - 2013-06-28 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Ty Carlson, Cory Miller
 	Add descrption to postslug div
 	Fix broken div in inventory metabox
