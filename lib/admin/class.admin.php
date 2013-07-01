@@ -933,8 +933,12 @@ Order: %s
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
 			
-		foreach( $_REQUEST['it-exchange-transaction-methods'] as $add_on ) {
+		foreach( $_REQUEST['it-exchange-transaction-methods'] as $add_on )
 			it_exchange_enable_addon( $add_on );
+
+		if ( $error_messages = apply_filters( 'it_exchange_save_transaction_method_wizard_settings', array() ) ) {
+			$this->error_message = join( '<br />', $error_messages );
+			return;
 		}
 				
 		// Signup for mailchimp if checkbox was checked

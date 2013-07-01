@@ -63,11 +63,22 @@ function offline_payments_print_wizard_settings( $form ) {
 }
 add_action( 'it_exchange_print_wizard_settings', 'offline_payments_print_wizard_settings' );
 
-function offline_payments_save_wizard_settings() {
+/**
+ * Saves offline payments settings when the Wizard is saved
+ *
+ * @since 0.4.0
+ *
+ * @return void
+*/
+function offline_payments_save_wizard_settings( $errors ) {
+	if ( ! empty( $errors ) )
+		return $errors;
+		
 	$IT_Exchange_Offline_Payments_Add_On = new IT_Exchange_Offline_Payments_Add_On();
-	$IT_Exchange_Offline_Payments_Add_On->offline_payments_save_wizard_settings();
+	return $IT_Exchange_Offline_Payments_Add_On->offline_payments_save_wizard_settings();
 }
-add_action( 'it_exchange_save_wizard_settings', 'offline_payments_save_wizard_settings' );
+add_action( 'it_exchange_save_transaction_method_wizard_settings', 'offline_payments_save_wizard_settings' );
+
 /**
  * This proccesses an offline transaction.
  *
@@ -425,19 +436,16 @@ class IT_Exchange_Offline_Payments_Add_On {
 
 		$settings = wp_parse_args( $offline_payments_settings, it_exchange_get_option( 'addon_offline_payments' ) );
 
-		if ( ! empty( $this->error_message ) || $error_msg = $this->get_form_errors( $settings ) ) {
+		if ( $error_msg = $this->get_form_errors( $settings ) ) {
 
-			if ( ! empty( $error_msg ) ) {
-
-				$this->error_message = $error_msg;
-				return;
-
-			}
+			return $error_msg;
 
 		} else {
 			it_exchange_save_option( 'addon_offline_payments', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
+		
+		return;
 
 	}
 
