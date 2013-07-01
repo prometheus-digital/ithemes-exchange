@@ -92,7 +92,10 @@ class IT_Exchange {
 	 * @return void
 	*/
 	function addons_init() {
+		// Add action for third party addons to register addons with.
 		do_action( 'it_exchange_register_addons' );
+
+		// Get addons
 		$registered = it_exchange_get_addons();
 
 		// Auto enable all 3rd party addons

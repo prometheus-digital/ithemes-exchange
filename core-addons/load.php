@@ -145,7 +145,7 @@ function it_exchange_register_core_addons() {
 		it_exchange_register_addon( $slug, $params );
 	
 }
-add_action( 'it_libraries_loaded', 'it_exchange_register_core_addons' );
+add_action( 'it_exchange_register_addons', 'it_exchange_register_core_addons' );
 
 /**
  * Register's Core iThemes Exchange Add-on Categories
