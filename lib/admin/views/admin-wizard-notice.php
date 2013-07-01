@@ -18,6 +18,9 @@
 		margin: 2.5em 1em 1em 0;
 		color: #44654e;
 	}
+	.it-exchange-wizard-notice.no-screen-options {
+		margin-top: 1em;
+	}
 	.it-exchange-wizard-notice a {
 		background: #D8E9C1;
 		color: #44654e;
@@ -69,3 +72,8 @@
 	?>
 	<a class="dismiss" href="<?php esc_attr_e( $wizard_dismiss ); ?>">&times;</a>
 </div>
+<script type="text/javascript">
+	if ( ! jQuery('#screen-options-wrap').length ) {
+		jQuery('.it-exchange-wizard-notice').addClass('no-screen-options');
+	}
+</script>
