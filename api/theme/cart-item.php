@@ -63,7 +63,6 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	/**
 	 * Returns the remove from cart element / var based on format option
 	 *
-	 * @todo change session_id if we use WP_Session
 	 * @since 0.4.0
 	 *
 	*/
@@ -101,9 +100,10 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 			default :
 				$data = it_exchange_in_superwidget() ? 'data-cart-product-id="' . esc_attr( $var_value ) . '" ' : '';
 				$nonce_var = apply_filters( 'it_exchange_remove_product_from_cart_nonce_var', '_wpnonce' );
+				$session_id = empty( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ? false : $_COOKIE[IT_EXCHANGE_SESSION_COOKIE];
 				$url = it_exchange_clean_query_args();
 				$url = add_query_arg( $var_key, $var_value, $url );
-				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . session_id() ), $url ); 
+				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . $session_id ), $url ); 
 				$output = $options['before'] . '<a href="' . $url . '" ' . $data . 'class="' . $class . '" >' . esc_attr( $options['label'] ) . '</a>' . $options['after'];
 			break;
 		}

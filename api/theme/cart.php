@@ -292,10 +292,11 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				return $var;
 				break;
 			case 'link' :
+				$session_id = empty( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ? false : $_COOKIE[IT_EXCHANGE_SESSION_COOKIE];
 				// Get clean url without any exchange query args
 				$url = it_exchange_clean_query_args();
 				$url = add_query_arg( $var, 1, $url );
-				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . session_id() ), $url );
+				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . $session_id ), $url );
 				$output  = $options['before'];
 				$output .= '<a href="' . $url . '" class="' . esc_attr( $options['class'] ) . '" title="' . esc_attr( $options['title'] ) . '">' . esc_attr( $options['label'] ) . '</a>';
 				$output .= $options['after'];

@@ -157,13 +157,14 @@ class IT_Exchange_Shopping_Cart {
 		$nonce_var   = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
 		$error_var   = it_exchange_get_field_name( 'error_message' );
 		$message_var = it_exchange_get_field_name( 'alert_message' );
+		$session_id  = empty( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ? false : $_COOKIE[IT_EXCHANGE_SESSION_COOKIE];
 
 		if ( it_exchange_is_multi_item_cart_allowed() )
 			$cart = it_exchange_get_page_url( 'cart' );
 		else
 			$cart = it_exchange_clean_query_args();
 
-		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) ) {
+		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . $session_id ) ) {
 			$url = add_query_arg( array( $error_var => 'cart-not-emptied' ), $cart );
 			$url = remove_query_arg( it_exchange_get_field_name( 'empty_cart' ), $url );
 			wp_redirect( $url );
@@ -190,6 +191,7 @@ class IT_Exchange_Shopping_Cart {
 	function handle_remove_product_from_cart_request() {
 		$var             = it_exchange_get_field_name( 'remove_product_from_cart' );
 		$car_product_ids = empty( $_REQUEST[$var] ) ? array() : $_REQUEST[$var];
+		$session_id      = empty( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ? false : $_COOKIE[IT_EXCHANGE_SESSION_COOKIE];
 
 		// Base URL
 		if ( it_exchange_is_multi_item_cart_allowed() )
@@ -199,7 +201,7 @@ class IT_Exchange_Shopping_Cart {
 
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_remove_product_from_cart_nonce_var', '_wpnonce' );
-		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) ) {
+		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . $session_id ) ) {
 			$var = it_exchange_get_field_name( 'error_message' );
 			$url  = add_query_arg( array( $var => 'product-not-removed' ), $cart_url );
 			wp_redirect( $url );
@@ -223,6 +225,7 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	*/
 	function handle_update_cart_request( $redirect=true ) {
+		$session_id = empty( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ? false : $_COOKIE[IT_EXCHANGE_SESSION_COOKIE];
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
 		if ( it_exchange_is_multi_item_cart_allowed() ) {
@@ -232,7 +235,7 @@ class IT_Exchange_Shopping_Cart {
 			if ( it_exchange_in_superwidget() )
 				$cart = add_query_arg( 'ite-sw-state', 'cart', $cart );
 		}
-		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . session_id() ) ) {
+		if ( empty( $_REQUEST[$nonce_var] ) || ! wp_verify_nonce( $_REQUEST[$nonce_var], 'it-exchange-cart-action-' . $session_id ) ) {
 			$var = it_exchange_get_field_name( 'error_message' );
 
 			$url = add_query_arg( array( $var => 'cart-not-updated' ), $cart );
