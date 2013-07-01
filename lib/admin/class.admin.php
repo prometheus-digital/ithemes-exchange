@@ -1239,7 +1239,7 @@ Order: %s
 				)
 			);
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {
-			$deps = array();
+			$deps = array( 'jquery-ui-tooltip' );
 			wp_enqueue_script( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/transaction-details.js', $deps );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip', 'jquery-ui-sortable' );
