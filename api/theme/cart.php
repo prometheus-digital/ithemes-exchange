@@ -92,7 +92,6 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 
 	/**
 	 * Prints the opening form field tag for the cart
-	 * @todo: Not Production Ready. Beef this up
 	 * @since 0.4.0
 	*/
 	function form_open( $options=array() ) {
@@ -118,7 +117,6 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	/**
 	 * Prints the closing form field
 	 *
-	 * @todo Not Production Ready. Beef this up!
 	 * @since 0.4.0
 	*/
 	function form_close( $options=array() ) {
@@ -141,7 +139,6 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	/**
 	 * Returns the update cart button / varname
 	 *
-	 * @todo Not production ready.
 	 * @since 0.4.0
 	*/
 	function update_cart( $options=array() ) {
@@ -312,17 +309,41 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	}
 
 	/**
-	 * @todo add options and docblock
+	 * Returns the subtotal of the cart
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $options
+	 * @return string
 	*/
 	function sub_total( $options=array() ) {
-		return it_exchange_get_cart_subtotal();
+		$defaults = array(
+			'format' => true,
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		if ( 'false' === $options['format'] )
+			$options['format'] = false;
+
+		return it_exchange_get_cart_subtotal( $options['format'] );
 	}
 
 	/**
-	 * @todo add options and docblock
+	 * Returns the total for the cart
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $options
+	 * @return string
 	*/
 	function total( $options=array() ) {
-		return it_exchange_get_cart_total();
+		$defaults = array(
+			'format' => true,
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		if ( 'false' === $options['format'] )
+			$options['format'] = false;
+
+		return it_exchange_get_cart_total( $options['format'] );
 	}
 
 	/**
