@@ -62,9 +62,8 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	/**
 	 * Outputs the login page start of form
 	 *
-	 * @todo why is get_session coming back as an array
-	 *
 	 * @since 0.4.0
+	 *
 	 * @return string
 	*/
 	function form_open( $options=array() ) {

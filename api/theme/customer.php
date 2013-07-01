@@ -29,7 +29,6 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	public $_tag_map = array(
 		'formopen'    => 'form_open',
 		'username'    => 'username',
-		'accountmenu' => 'account_menu',
 		'avatar'      => 'avatar',
 		'firstname'   => 'first_name',
 		'lastname'    => 'last_name',
@@ -102,28 +101,6 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 				$output = $label;
 
 		}
-
-		return $output;
-	}
-
-	/**
-	 * Outputs the customer's account menu data
-	 *
-	 * @since 0.4.0
-	 * @todo need to revisit when we figure out the relationship between addons and user nav
-	 * @return string
-	*/
-	function account_menu( $options=array() ) {
-		$defaults = array(
-			'format' => 'html',
-		);
-		$options = ITUtility::merge_defaults( $options, $defaults );
-
-		$output = '';
-
-		$output .= '<a href="">Downloads</a>';
-		$output .= '<a href="">Purchases</a>';
-		$output .= '<a href="">Profile</a>';
 
 		return $output;
 	}

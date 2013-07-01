@@ -334,7 +334,6 @@ function it_exchange_filter_addons_by_category( $add_ons, $categories ) {
 /**
  * Enable a registerd add_on
  *
- * @todo Add nonce
  * @since 0.3.2
  *
  * @param string $add_on  add_on to enable
@@ -397,7 +396,6 @@ function it_exchange_is_addon_registered( $add_on_slug ) {
 /**
  * Disable a registerd add_on
  *
- * @todo Add nonce
  * @since 0.3.2
  *
  * @param string $add_on add_on to disable

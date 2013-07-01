@@ -682,7 +682,6 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * If has option is true, returns boolean
 	 *
 	 * @since 0.4.0
-	 * @todo this looks incomplete to Lew... check later
 	 *
 	 * @return boolean
 	*/
