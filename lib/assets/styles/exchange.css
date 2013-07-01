@@ -100,6 +100,32 @@
 #it-exchange-cart .cart-apply-coupons,
 #it-exchange-cart .cart-actions{clear:both;display:block;margin-top:1em;text-align:right;}
 
+/** ----------------------------------------:[ processing payment ]:--- */
+#it-exchange-processing-payment{position:absolute;top:0;bottom:0;left:0;right:0;background:#000;background:rgba(0,0,0,0.8);background:-webkit-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:-moz-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:-ms-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);text-align:center;}
+#it-exchange-processing-payment div{position:absolute;top:45%;width:100%;}
+#it-exchange-processing-payment p{margin-top:10px;color:#FFF;font-size:1.2em;text-shadow:#000 1px 1px;}
+#it-exchange-processing-payment span{width:20px;height:20px;border:3px solid transparent;display:inline-block;border-radius:50%;-webkit-animation:stripe-processing-payment 1s 0 infinite alternate;-moz-animation:stripe-processing-payment 1s 0 infinite alternate;-o-animation:stripe-processing-payment 1s 0 infinite alternate;animation:stripe-processing-payment 1s 0 infinite alternate;}
+@-webkit-keyframes stripe-processing-payment{0%{border-top-color:#FFF;}
+33%{border-right-color:#FFF;}
+66%{border-bottom-color:#FFF;}
+100%{border-left-color:#FFF;}
+}
+@-moz-keyframes stripe-processing-payment{0%{border-top-color:#FFF;}
+33%{border-right-color:#FFF;}
+66%{border-bottom-color:#FFF;}
+100%{border-left-color:#FFF;}
+}
+@-o-keyframes stripe-processing-payment{0%{border-top-color:#FFF;}
+33%{border-right-color:#FFF;}
+66%{border-bottom-color:#FFF;}
+100%{border-left-color:#FFF;}
+}
+@keyframes stripe-processing-payment{0%{border-top-color:#FFF;}
+33%{border-right-color:#FFF;}
+66%{border-bottom-color:#FFF;}
+100%{border-left-color:#FFF;}
+}
+
 /** -----------------------------------------------------:[ confirmation ]:---------- */
 #it-exchange-confirmation span{margin-left:1em;}
 
