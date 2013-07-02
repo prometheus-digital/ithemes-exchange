@@ -176,7 +176,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 		'id'            => $coupon->ID,
 		'title'         => $coupon->post_title,
 		'code'          => $coupon->code,
-		'amount_number' => $coupon->amount_number,
+		'amount_number' => it_exchange_convert_from_database_number( $coupon->amount_number ),
 		'amount_type'   => $coupon->amount_type,
 		'start_date'    => $coupon->start_date,
 		'end_date'      => $coupon->end_date,
@@ -287,9 +287,9 @@ function it_exchange_basic_coupons_get_discount_label( $label, $options=array() 
 		return '';
 
 	if( 'amount' == $coupon->amount_type )
-		return it_exchange_format_price( $coupon->amount_number );
+		return it_exchange_format_price( it_exchange_convert_from_database_number( $coupon->amount_number ) );
 	else
-		return $coupon->amount_number . $coupon->amount_type;
+		return it_exchange_convert_from_database_number( $coupon->amount_number ) . $coupon->amount_type;
 }
 add_filter( 'it_exchange_get_coupon_discount_label', 'it_exchange_basic_coupons_get_discount_label', 10, 2 );
 
@@ -391,10 +391,10 @@ add_filter( 'it_exchange_get_transaction_cart_coupon_summary', 'it_exchange_basi
  * @param array $options includes the ID we're looking for.
  * @return string
 */
-function it_exchange_basic_coupons_get_dicount_method( $method, $options=array() ) {
+function it_exchange_basic_coupons_get_discount_method( $method, $options=array() ) {
 	if ( empty( $options['id'] ) || ! $coupon = it_exchange_get_coupon( $options['id'] ) )
 		return false;
 
 	return empty( $coupon->amount_type ) ? false : $coupon->amount_type;
 }
-add_filter( 'it_exchange_get_coupon_discount_method', 'it_exchange_basic_coupons_get_dicount_method', 10, 2 );
+add_filter( 'it_exchange_get_coupon_discount_method', 'it_exchange_basic_coupons_get_discount_method', 10, 2 );

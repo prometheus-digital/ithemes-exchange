@@ -88,7 +88,7 @@ function it_exchange_basic_coupons_save_coupon() {
 
 	// Convert code, amount-number, amount-type, start-date, end-date to meta
 	$data['post_meta']['_it-basic-code']          = $data['code'];
-	$data['post_meta']['_it-basic-amount-number'] = trim( $data['amount-number'] );
+	$data['post_meta']['_it-basic-amount-number'] = it_exchange_convert_to_database_number( $data['amount-number'] );
 	$data['post_meta']['_it-basic-amount-type']   = $data['amount-type'];
 	$data['post_meta']['_it-basic-start-date']    = $data['start-date'];
 	$data['post_meta']['_it-basic-end-date']      = $data['end-date'];
@@ -199,9 +199,15 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 	// Set form values
 	if ( $post_id ) {
 		$coupon = new IT_Exchange_Coupon( $post_id );
+		
+		$amount = it_exchange_convert_from_database_number( $coupon->amount_number );
+		
+		if ( 'amount' == $coupon->amount_type )
+			$amount = it_exchange_format_price( $amount, false );
+			
 		$values['name']          = $coupon->post_title;
 		$values['code']          = $coupon->code;
-		$values['amount-number'] = $coupon->amount_number;
+		$values['amount-number'] = $amount;
 		$values['amount-type']   = $coupon->amount_type;
 		$values['start-date']    = $coupon->start_date;
 		$values['end-date']      = $coupon->end_date;
@@ -370,7 +376,7 @@ add_filter( 'manage_it_exchange_coupon_posts_custom_column', 'it_exchange_basic_
 /**
  * Modify sort of coupons in edit.php for custom columns
  *
- * @since 0.4.0
+ * @since 0.4.0F
  *
  * @param string $request original request
  */

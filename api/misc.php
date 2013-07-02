@@ -6,6 +6,38 @@
 */
 
 /**
+ * Returns an integer value of the price passed
+ *
+ * @since 0.4.16
+ * @param string|int|float price to convert to database integer
+ * @return string|int converted price
+*/
+function it_exchange_convert_to_database_number( $price ) {
+	$settings = it_exchange_get_option( 'settings_general' );
+	$sep = $settings['currency-decimals-separator'];
+	
+	$price = trim( $price );
+			
+	if ( strstr( $price, $sep ) )
+		$price = preg_replace("/[^0-9]*/", '', $price );
+	else //if we don't find a decimal separator, we want to multiply by 100 for future decimal operations
+		$price = preg_replace("/[^0-9]*/", '', $price ) * 100;
+		
+	return $price;
+}
+
+/**
+ * Returns a float value of the price passed from database
+ *
+ * @since 0.4.16
+ * @param string|int price from database integer
+ * @return float converted price
+*/
+function it_exchange_convert_from_database_number( $price ) {
+	return $price /= 100;
+}
+
+/**
  * Returns a field name used in links and forms
  *
  * @since 0.4.0

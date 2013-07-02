@@ -428,7 +428,7 @@ function it_exchange_stripe_addon_update_transaction_status( $stripe_id, $new_st
 function it_exchange_stripe_addon_add_refund_to_transaction( $stripe_id, $refund ) {
 
 	// Stripe money format comes in as cents. Divide by 100.
-	$refund = ( $refund / 100 );
+	$refund /= 100;
 
 	// Grab transaction
 	$transactions = it_exchange_stripe_addon_get_transaction_id( $stripe_id );

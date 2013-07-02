@@ -63,7 +63,7 @@ function it_exchange_parse_options( $options ) {
  * @todo possibly get this working with LC_MONETARY and money_format()
  * @return string
 */
-function it_exchange_format_price( $price ) {
+function it_exchange_format_price( $price, $show_symbol = true ) {
 	if ( ! is_numeric( $price ) )
 		$price = 0;
 	
@@ -71,10 +71,12 @@ function it_exchange_format_price( $price ) {
 	$settings = it_exchange_get_option( 'settings_general' );
 	$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
 	
-	if ( 'after' === $settings['currency-symbol-position'] )
-		$after = $currency['symbol'];
-	else
-		$before = $currency['symbol'];
+	if ( $show_symbol ) {
+		if ( 'after' === $settings['currency-symbol-position'] )
+			$after = $currency['symbol'];
+		else
+			$before = $currency['symbol'];
+	}
 			
 	return $before . number_format( $price, 2, $settings['currency-decimals-separator'], $settings['currency-thousands-separator'] ) . $after;
 }

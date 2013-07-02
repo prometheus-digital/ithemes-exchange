@@ -171,8 +171,9 @@ class IT_Exchange_Base_Price {
 	function save_feature( $product_id, $new_price ) {
 		if ( ! it_exchange_get_product( $product_id ) )
 			return false;
-
-		$new_price = preg_replace("/[^0-9.]/", '', $new_price );
+			
+		$new_price = it_exchange_convert_to_database_number( $new_price );
+			
 		update_post_meta( $product_id, '_it-exchange-base-price', $new_price );
 	}
 
@@ -186,6 +187,7 @@ class IT_Exchange_Base_Price {
 	*/
 	function get_feature( $base_price, $product_id ) {
 		$base_price = get_post_meta( $product_id, '_it-exchange-base-price', true );
+		$base_price = it_exchange_convert_from_database_number( $base_price ); //create a decimal object (float)
 		return $base_price;
 	}
 
