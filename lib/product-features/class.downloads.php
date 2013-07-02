@@ -196,6 +196,7 @@ class IT_Exchange_Product_Feature_Downloads {
 						</div>
 						<div class="download-source column col-7-12">
 							<span><?php _e( 'Source', 'LION' ); ?></span>
+							<span class="tip" title="<?php _e( 'Use the WordPress media library or paste in any publicly accessible URL (Dropbox, Amazon, etc) and we\'ll hide the source for you.', 'LION' ); ?>">i</span>
 						</div>
 					</div>
 				</div>
