@@ -1,3 +1,16 @@
+0.4.16 - 2013-07-02 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+	Add tooltip to Product File source to explain that they can paste URLs from other sources
+	Fixed bug where download API was passing wrong param to function
+	Fixed bug found by glenn in availability
+	Change Files to Product Files in add/edit product screen.
+	Fix several typos
+	Don't create more than 1 sample product if admin goes back to wizard and saves again
+	Store availability dates as epoch, pull them out as WordPress dateformat
+	Activate Exchange Menus by default
+	Fixed decimal separate issues in base price and coupon amounts, this will require all existing installations to reset exchange data
+	Added MP6ish styles to the error and update notifications on the Exchange dashboard (staying ahead of the curve).
+	Add .org readme.txt
+	Add sample product when wizard is saved.
 0.4.15 - 2013-07-01 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
 	Wizard-addon.png option now allowed and working...
 	Add register addons action. Switch core addons to use this action
