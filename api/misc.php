@@ -6,6 +6,76 @@
 */
 
 /**
+ * Pass a PHP date format string to this function to return its jQuery datepicker equivalent
+ *
+ * @since 0.4.16
+ * @param string $date_format PHP Date Format
+ * @return string jQuery datePicker Format
+*/
+function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format ) {
+	
+	//http://us2.php.net/manual/en/function.date.php
+	//http://api.jqueryui.com/datepicker/#utility-formatDate
+	$php_format = array(
+		//day
+		'/d/', //Day of the month, 2 digits with leading zeros
+		'/D/', //A textual representation of a day, three letters
+		'/j/', //Day of the month without leading zeros
+		'/l/', //A full textual representation of the day of the week
+		//'/N/', //ISO-8601 numeric representation of the day of the week (added in PHP 5.1.0)
+		//'/S/', //English ordinal suffix for the day of the month, 2 characters
+		//'/w/', //Numeric representation of the day of the week
+		'/z/', //The day of the year (starting from 0)
+		
+		//week
+		//'/W/', //ISO-8601 week number of year, weeks starting on Monday (added in PHP 4.1.0)
+		
+		//month
+		'/F/', //A full textual representation of a month, such as January or March
+		'/m/', //Numeric representation of a month, with leading zeros
+		'/M/', //A short textual representation of a month, three letters
+		'/n/', //numeric month no leading zeros
+		//'t/', //Number of days in the given month
+		
+		//year
+		//'/L/', //Whether it's a leap year
+		//'/o/', //ISO-8601 year number. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead. (added in PHP 5.1.0)
+		'/Y/', //A full numeric representation of a year, 4 digits
+		'/y/', //A two digit representation of a year
+	);
+	
+	$datepicker_format = array(
+		//day
+		'dd', //day of month (two digit)
+		'D',  //day name short
+		'd',  //day of month (no leading zero)
+		'DD', //day name long
+		//'',   //N - Equivalent does not exist in datePicker
+		//'',   //S - Equivalent does not exist in datePicker
+		//'',   //w - Equivalent does not exist in datePicker
+		'z' => 'o',  //The day of the year (starting from 0)
+		
+		//week
+		//'',   //W - Equivalent does not exist in datePicker
+		
+		//month
+		'MM', //month name long
+		'mm', //month of year (two digit)
+		'M',  //month name short
+		'm',  //month of year (no leading zero)
+		//'',   //t - Equivalent does not exist in datePicker
+		
+		//year
+		//'',   //L - Equivalent does not exist in datePicker
+		//'',   //o - Equivalent does not exist in datePicker
+		'yy', //year (four digit)
+		'y',  //month name long
+	);
+	
+	return preg_replace( $php_format, $datepicker_format, preg_quote( $date_format ) );
+}
+
+/**
  * Returns an integer value of the price passed
  *
  * @since 0.4.16

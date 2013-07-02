@@ -106,6 +106,10 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	 * @return void
 	*/
 	function print_metabox( $post ) {
+		
+		$date_format = get_option( 'date_format' );
+		$jquery_date_format = it_exchange_php_date_format_to_jquery_datepicker_format( $date_format );
+		
 		// Grab the iThemes Exchange Product object from the WP $post object
 		$product = it_exchange_get_product( $post );
 
@@ -139,6 +143,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 					<input type="text" class="datepicker" id="it-exchange-product-availability-end" name="it-exchange-product-availability-end" value="<?php esc_attr_e( $end_date ); ?>" />
 				</p>
 			</p>
+            <input type="hidden" name="it_exchange_availability_date_picker_format" value="<?php echo $jquery_date_format; ?>" />
 		<?php
 	}
 
