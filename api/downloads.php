@@ -57,7 +57,7 @@ function it_exchange_add_download_hash_data( $download_id, $hash, $hash_data ) {
  * @param array $hash_data
 */
 function it_exchange_update_download_hash_data( $hash, $hash_data ) {
-	if ( ! $old_data = it_exchange_get_download_data_from_hash( $hash_data ) )
+	if ( ! $old_data = it_exchange_get_download_data_from_hash( $hash ) )
 		return;
 
 	// Not allowed to change a couple key vars
