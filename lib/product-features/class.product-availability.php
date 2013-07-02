@@ -190,7 +190,8 @@ class IT_Exchange_Product_Feature_Product_Availability {
 				 
 		}
 				
-		if ( $new_value['start'] >= $new_value['end'] )
+		if ( ! empty( $new_value['start'] ) && ! empty( $new_value['end'] ) 
+			&& $new_value['start'] >= $new_value['end'] )
 			return;
 		
 		// Save new value
