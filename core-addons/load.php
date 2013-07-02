@@ -63,7 +63,7 @@ function it_exchange_register_core_addons() {
 		// Digital Download Product Types
 		'digital-downloads-product-type' => array(
 			'name'        => __( 'Digital Downloads', 'LION' ),
-			'description' => __( 'This adds an product type for distributing digital downloads through iThemes Exchange.', 'LION' ),
+			'description' => __( 'This adds a product type for distributing digital downloads through iThemes Exchange.', 'LION' ),
 			'author'      => 'iThemes',
 			'author_url'  => 'http://ithemes.com',
 			'file'        => dirname( __FILE__ ) . '/product-types/digital-downloads/init.php',

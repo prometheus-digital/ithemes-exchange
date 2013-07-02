@@ -31,7 +31,7 @@
 				<th scope="row"><label for="company-tax-id"><?php _e( 'Company Tax ID', 'LION' ) ?> <span class="tip" title="<?php _e( 'In the U.S., this is your Federal Tax ID Number', 'LION' ); ?>">i</span></label></th>
 				<td>
 					<?php $form->add_text_box( 'company-tax-id', array( 'class' => 'normal-text' ) ); ?>
-                    <p class="description"><a href="http://www.irs.gov/Businesses/Small-Businesses-&amp;-Self-Employed/Employer-ID-Numbers-(EINs)-" target="_blank"><?php _e( 'Click here for more info about obtaining a Tax ID', 'LION' ); ?></a></p>
+                    <p class="description"><a href="http://www.irs.gov/Businesses/Small-Businesses-&amp;-Self-Employed/Employer-ID-Numbers-(EINs)-" target="_blank"><?php _e( 'Click here for more info about obtaining a Tax ID in the US', 'LION' ); ?></a></p>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -41,7 +41,7 @@
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="company-phone"><?php _e( 'Company Phone', 'LION' ) ?> <span class="tip" title="<?php _e( 'This is your main customer service lice.', 'LION' ); ?>">i</span></label></th>
+				<th scope="row"><label for="company-phone"><?php _e( 'Company Phone', 'LION' ) ?> <span class="tip" title="<?php _e( 'This is your main customer service line.', 'LION' ); ?>">i</span></label></th>
 				<td>
 					<?php $form->add_text_box( 'company-phone', array( 'class' => 'normal-text' ) ); ?>
 				</td>
