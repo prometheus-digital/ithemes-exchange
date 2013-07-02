@@ -179,16 +179,19 @@ class IT_Exchange_Product_Feature_Product_Availability {
 		
 		foreach( $avail as $key => $val ) {	
 			
-			if ( strtotime( $val ) ) {			
+			if ( $epoch = strtotime( $val ) ) {			
 			
 				 $date = date_parse( $val );
 				 
 				 if ( checkdate( $date['month'], $date['day'], $date['year'] ) )
-					 $new_value[$key] = $avail[$key];
+					 $new_value[$key] = $epoch;
 				 
 			}
 				 
 		}
+				
+		if ( $new_value['start'] >= $new_value['end'] )
+			return;
 		
 		// Save new value
 		it_exchange_update_product_feature( $product_id, 'availability', $new_value );
@@ -206,7 +209,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 		$defaults['type']    = 'either';
 		$defaults['setting'] = 'availability';
 		$options = ITUtility::merge_defaults( $options, $defaults );
-
+		
 		// Save enabled options
 		if ( 'enabled' == $options['setting'] ) {
 			if ( ! in_array( $options['type'], array( 'start', 'end' ) ) )
@@ -231,6 +234,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	 * @return string product feature
 	*/
 	function get_feature( $existing, $product_id, $options=array() ) {
+		$date_format = get_option('date_format');
 		$defaults['type']    = 'either';
 		$defaults['setting'] = 'availability';
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -272,12 +276,16 @@ class IT_Exchange_Product_Feature_Product_Availability {
 			// Return availability dates
 			// Don't use either here. Only both, start, or end
 			$value = get_post_meta( $product_id, '_it-exchange-product-availability', true );
+			
+			foreach( $value as $key => $val )
+				$value[$key] = date_i18n( $date_format, $val );
+				
 			switch ( $options['type'] ) {
 				case 'start' :
 					return $value['start'];
 					break;
 				case 'end' :
-					return $value['end'];
+					return $value['start'];
 					break;
 				case 'both' :
 				case 'either' :
