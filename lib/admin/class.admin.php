@@ -958,6 +958,7 @@ Order: %s
 			it_exchange_enable_addon( $addon );
 		}
 
+		do_action( 'it_exchange_enabled_addons_loaded' );
 		do_action( 'it_exchange_save_wizard_settings' );
 		wp_safe_redirect( 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=digital-downloads-product-type' );
 	}

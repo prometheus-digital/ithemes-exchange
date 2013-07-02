@@ -36,6 +36,7 @@ class IT_Exchange_Product_Post_Type {
 		add_filter( 'wp_insert_post_empty_content', array( $this, 'wp_insert_post_empty_content' ), 20, 2 );
 		add_filter( 'post_updated_messages', array( $this, 'product_updated_messages' ) );
 		add_action( 'it_exchange_add_edit_product_screen_layout_setup', array( $this, 'replace_core_slug_metabox' ) );
+		add_action( 'it_exchange_save_wizard_settings', array( $this, 'create_sample_product' ) );
 
 		if ( is_admin() && !empty( $_REQUEST['post_type'] ) && 'it_exchange_prod' === $_REQUEST['post_type'] )
 			add_action( 'pre_get_posts', array( $this, 'remove_disabled_product_types_from_admin_list' ) );
@@ -727,5 +728,55 @@ class IT_Exchange_Product_Post_Type {
 		<input name="post_name" type="text" size="13" id="post_name" value="<?php echo esc_attr( apply_filters('editable_slug', $post->post_name) ); ?>" />
 		<?php
 	}
+
+    /** 
+     * Creates a sample product when the wizard is saved.
+     *
+     * @since 0.1.15
+     *
+     * @return void
+    */
+    function create_sample_product() {
+		$title       = __( 'My Sample Product', 'LION' );
+		$price       = '1';
+		$description = __( 'A great product description includes the primary benefits, not just features or technical specs to your target market and core audience. It\'s probably about 3-4 sentences, if that, selling your product as the solution for your prospective customers. To help you, answer these questions: What problem does it solve? Who does it solve it for? And how is it different than other products out there?', 'LION' );
+		$extended    = __( '
+			This is your extended description. Use this area for a variety of information, like:
+			<ul>
+				<li>FAQs</li>
+				<li>Table of contents (for books) or track listings (for albums)</li>
+				<li>Samples files</li>
+				<li>Additional yet educational sales information</li>
+				<li>And don\'t forget you could put all those other features and technical specs here!</li>
+			</ul>
+			You can change this on the fly too!
+
+			<strong>Photos and Images</strong>
+
+			You\'ll want to create bigger images, perhaps even at a 1x1 ratio and 1000pixel wide.
+
+			Then let WordPress resize them for output on your page. It\'s best to have a featured image (one big one that really displays your product) then have supplement images (if available) that buyers can click on to see more what you offer.
+
+			JPGs are typically best for photos. PNGs for other types of artwork.'
+		, 'LION' );
+
+		$args = array(
+			'type'                 => 'digital-downloads-product-type',
+			'status'               => 'publish',
+			'show_in_store'        => true,
+			'description'          => $description,
+			'title'                => $title,
+			'base-price'           => $price,
+            'extended-description' => $extended,
+			'images-from-urls'     => array(
+				ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/admin/images/sample-product-image-1.png' ) => __( 'Sample Image One', 'LION' ),
+				ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/admin/images/sample-product-image-2.png' ) => __( 'Sample Image Two', 'LION' ),
+				ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/admin/images/sample-product-image-3.png' ) =>  __( 'Sample Image Three', 'LION' ),
+			),
+		);
+
+		// The it_exchange_add_product API method is a work in progress. We don't suggest that you use it yet.
+		it_exchange_add_product( $args );
+	} 
 }
 $IT_Exchange_Product_Post_Type = new IT_Exchange_Product_Post_Type();

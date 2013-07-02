@@ -689,3 +689,90 @@ function it_exchange_clear_sessions_when_multi_item_cart_is_enabled( $addon_slug
 		it_exchange_db_delete_all_sessions();
 }
 add_action( 'it_exchange_add_on_enabled', 'it_exchange_clear_sessions_when_multi_item_cart_is_enabled' );
+
+/************************************
+ * THE FOLLOWING API METHODS AREN'T READY 
+ * FOR PRIMETIME YET SO THEY LIVE HERE FOR NOW.
+ * USE WITH CAUTION
+ *************************************/
+function it_exchange_add_product( $args=array() ) { 
+	$defaults = array(
+		'status' => 'publish',
+	);  
+	$defaults = apply_filters( 'it_exchange_add_product_defaults', $defaults );
+
+	$args = ITUtility::merge_defaults( $args, $defaults );
+
+	// Convert $args to insert post args
+	$post_args = array();
+	$post_args['post_status']  = $args['status'];
+	$post_args['post_type']    = 'it_exchange_prod';
+	$post_args['post_title']   = empty( $args['title'] ) ? '' : $args['title'];
+	$post_args['post_content'] = ( it_exchange_product_type_supports_feature( $args['type'], 'extended-description' ) && ! empty( $args['extended-description'] ) ) ? $args['extended-description'] : ''; 
+
+	// Insert Post and get ID
+	if ( $product_id = wp_insert_post( $post_args ) ) { 
+		update_post_meta( $product_id, '_it_exchange_product_type', $args['type'] );
+		update_post_meta( $product_id, '_it-exchange-visibility', empty( $args['show_in_store'] ) ? 'hidden' : 'visible' );
+
+		$type = $args['type'];
+
+		// Product Images from URLs
+		if ( ! empty( $args['images-from-urls'] ) && is_array( $args['images-from-urls'] ) ) { 
+			foreach( $args['images-from-urls'] as $url => $description ) { 
+				it_exchange_add_remote_image_to_product_images( $url, $product_id, $description );
+			}   
+			unset( $args['images-from-url'] );
+		}   
+
+		unset( $args['status'] );
+		unset( $args['extended-description'] );
+		unset( $args['type'] );
+
+		foreach( $args as $key => $value ) { 
+			if ( it_exchange_product_type_supports_feature( $type, $key ) ) 
+				it_exchange_update_product_feature( $product_id, $key, $value );
+		}   
+		return $product_id;
+	}   
+	return false;
+}
+
+function it_exchange_add_remote_image_to_product_images( $url, $product_id, $desc='' ) { 
+	$tmp = download_url( $url );
+
+	// Set variables for storage
+	// fix file filename for query strings
+	preg_match('/[^\?]+\.(jpg|JPG|jpe|JPE|jpeg|JPEG|gif|GIF|png|PNG)/', $url, $matches);
+	$file_array['name'] = basename($matches[0]);
+	$file_array['tmp_name'] = $tmp;
+
+	// If error storing temporarily, unlink
+	if ( is_wp_error( $tmp ) ) { 
+		@unlink($file_array['tmp_name']);
+		$file_array['tmp_name'] = ''; 
+	}   
+
+	// do the validation and storage stuff
+	$id = media_handle_sideload( $file_array, $product_id, $desc );
+
+	// If error storing permanently, unlink
+	if ( is_wp_error($id) ) { 
+		@unlink($file_array['tmp_name']);
+		return $id;
+	}   
+
+	$product_images = it_exchange_get_product_feature( $product_id, 'product-images' );
+	if ( empty( $product_images ) || ! is_array( $product_images ) ) 
+		$product_images = array( $id );
+	else
+		$product_images[] = $id;
+	it_exchange_update_product_feature( $product_id, 'product-images', $product_images );
+	@unlink( $file_array['temp_name'] );
+	return $id;
+}
+/************************************
+ * THE PREVIOUS API METHODS AREN'T READY 
+ * FOR PRIMETIME YET SO THEY LIVE HERE FOR NOW.
+ * USE WITH CAUTION
+ *************************************/
