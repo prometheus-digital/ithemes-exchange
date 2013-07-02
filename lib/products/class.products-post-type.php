@@ -737,6 +737,12 @@ class IT_Exchange_Product_Post_Type {
      * @return void
     */
     function create_sample_product() {
+		$settings    = it_exchange_get_option( 'settings_general', true );
+		$sample_id   = empty( $settings['sample-product-id'] ) ? false : $settings['sample-product-id'];
+		// Abort if product already exists.
+		if ( it_exchange_get_product( $sample_id ) )
+			return;
+
 		$title       = __( 'My Sample Product', 'LION' );
 		$price       = '1';
 		$description = __( 'A great product description includes the primary benefits, not just features or technical specs to your target market and core audience. It\'s probably about 3-4 sentences, if that, selling your product as the solution for your prospective customers. To help you, answer these questions: What problem does it solve? Who does it solve it for? And how is it different than other products out there?', 'LION' );
@@ -776,7 +782,10 @@ class IT_Exchange_Product_Post_Type {
 		);
 
 		// The it_exchange_add_product API method is a work in progress. We don't suggest that you use it yet.
-		it_exchange_add_product( $args );
+		if ( $product_id = it_exchange_add_product( $args ) ) {
+			$settings['sample-product-id'] = $product_id;
+			it_exchange_save_option( 'settings_general', $settings );
+		}
 	} 
 }
 $IT_Exchange_Product_Post_Type = new IT_Exchange_Product_Post_Type();
