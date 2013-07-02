@@ -19,6 +19,7 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 
 		add_action( 'admin_init', array( $this, 'register_meta_box' ) );
 		add_filter( 'wp_setup_nav_menu_item', array( $this, 'setup_menu_item' ), 10, 2 );
+		add_filter( 'get_user_option_metaboxhidden_nav-menus', array( $this, 'show_exchange_menu' ), 10, 3 );
 	}
 
 	/**
@@ -29,7 +30,7 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 	 * @return void
 	*/
 	function register_meta_box() {
-		add_meta_box( 'it-exchange-ghost-pages', __( 'iThemes Exchange' ), array( $this, 'print_meta_box' ), 'nav-menus', 'side', 'default' );
+		add_meta_box( 'it-exchange-pages', __( 'iThemes Exchange' ), array( $this, 'print_meta_box' ), 'nav-menus', 'side', 'default' );
 	}
 
 	/**
@@ -73,17 +74,17 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 			'_wpnonce',
 		);
 		?>
-		<div id="taxonomy-it-exchange-ghost-pages" class="taxonomydiv">
-			<ul id="taxonomy-it-exchange-ghost-pages-tabs" class="taxonomy-tabs add-menu-item-tabs">
+		<div id="taxonomy-it-exchange-pages" class="taxonomydiv">
+			<ul id="taxonomy-it-exchange-pages-tabs" class="taxonomy-tabs add-menu-item-tabs">
 				<li class="tabs">
-					<a class="nav-tab-link" data-type="tabs-panel-it-exchange-ghost-pages-all" href="<?php if ( $nav_menu_selected_id ) echo esc_url(add_query_arg( 'it-exchange-ghost-pages' . '-tab', 'all', remove_query_arg( $removed_args ) ) ); ?>#tabs-panel-it-exchange-ghost-pages-all">
+					<a class="nav-tab-link" data-type="tabs-panel-it-exchange-pages-all" href="<?php if ( $nav_menu_selected_id ) echo esc_url(add_query_arg( 'it-exchange-pages' . '-tab', 'all', remove_query_arg( $removed_args ) ) ); ?>#tabs-panel-it-exchange-pages-all">
 						<?php _e( 'View All' ); ?>
 					</a>
 				</li>
 			</ul><!-- .taxonomy-tabs -->
 
-			<div id="tabs-panel-it-exchange-ghost-pages-all" class="tabs-panel tabs-panel-view-all tabs-panel-active">
-				<ul id="it-exchange-ghost-pageschecklist" data-wp-lists="list:it-exchange-ghost-pages" class="categorychecklist form-no-clear">
+			<div id="tabs-panel-it-exchange-pages-all" class="tabs-panel tabs-panel-view-all tabs-panel-active">
+				<ul id="it-exchange-pageschecklist" data-wp-lists="list:it-exchange-pages" class="categorychecklist form-no-clear">
 					<?php
 					$args['walker'] = $walker;
 					echo walk_nav_menu_tree( array_map('wp_setup_nav_menu_item', $terms), 0, (object) $args );
@@ -96,16 +97,16 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 					<a href="<?php
 						echo esc_url(add_query_arg(
 							array(
-								'it-exchange-ghost-pages-tab' => 'all',
+								'it-exchange-pages-tab' => 'all',
 								'selectall' => 1,
 							),   
 							remove_query_arg( $removed_args )
 						));  
-					?>#taxonomy-it-exchange-ghost-pages" class="select-all"><?php _e('Select All'); ?></a>
+					?>#taxonomy-it-exchange-pages" class="select-all"><?php _e('Select All'); ?></a>
 				</span>
 
 				<span class="add-to-menu">
-					<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( __( 'Add to Menu' ) ); ?>" name="add-taxonomy-menu-item" id="<?php esc_attr_e( 'submit-taxonomy-it-exchange-ghost-pages' ); ?>" /> 
+					<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( __( 'Add to Menu' ) ); ?>" name="add-taxonomy-menu-item" id="<?php esc_attr_e( 'submit-taxonomy-it-exchange-pages' ); ?>" /> 
 					<span class="spinner"></span>
 				</span>
 			</p>
@@ -155,6 +156,48 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 	*/
 	function get_url( $setting ) {
 		return it_exchange_get_page_url( $setting, true );
+	}
+
+	/**
+	 * Unhides the exchange nav items
+	 *
+	 * @since 0.4.16
+	 *
+	 * @param mixed $result the result about to be passed back to WP
+	 *
+	*/
+	function show_exchange_menu( $result, $option, $user ) {
+		// Get user ID from user object
+		$user_id = empty( $user->ID ) ? false : $user->ID;
+
+		// If false, that means the user hasn't had usermeta updated before, so were going to whitelist core defaults, plus ours.
+		if ( false === $result ) {
+			$result = array(
+				'nav-menu-theme-locations',
+				'add-page',
+				'add-custom-links',
+				'add-category',
+				'it-exchange-pages',
+			);
+
+			$initial_meta_boxes = $result;
+			$hidden_meta_boxes = array();
+			foreach ( array_keys($GLOBALS['wp_meta_boxes']['nav-menus']) as $context ) {
+				foreach ( array_keys($GLOBALS['wp_meta_boxes']['nav-menus'][$context]) as $priority ) {
+					foreach ( $GLOBALS['wp_meta_boxes']['nav-menus'][$context][$priority] as $box ) {
+						if ( in_array( $box['id'], $initial_meta_boxes ) ) {
+							unset( $box['id'] );
+						} else {
+							$hidden_meta_boxes[] = $box['id'];
+						}
+					}
+				}
+			}
+			if ( ! empty( $user_id ) )
+				update_user_meta( $user_id, 'metaboxhidden_nav-menus', $hidden_meta_boxes, true );
+
+		}
+		return $result;
 	}
 }
 $IT_Exchange_Nav_Menu_Meta_Box = new IT_Exchange_Nav_Menu_Meta_Box();
