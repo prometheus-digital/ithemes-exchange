@@ -421,7 +421,9 @@ class IT_Exchange_Pages {
 	*/
 	function fallback_filter_for_page_template( $content ) {
 		ob_start();
+		add_filter( 'the_content', 'wpautop' );
 		it_exchange_get_template_part( 'content', $this->_current_view );
+		remove_filter( 'the_content', 'wpautop' );
 		return ob_get_clean();
 	}
 
