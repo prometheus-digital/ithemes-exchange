@@ -1,5 +1,5 @@
 === iThemes Exchange: Simple Ecommerce for WordPress ===
-Contributors: ithemes, blepoxp, lewyotte, kopepasah, bradulrich, mattdanner
+Contributors: ithemes, blepoxp, layotte, kopepasah, bradulrich, mattdanner
 Tags: ecommerce
 Requires at least: 3.5
 Tested up to: 3.6
