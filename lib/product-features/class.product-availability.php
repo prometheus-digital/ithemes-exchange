@@ -281,17 +281,19 @@ class IT_Exchange_Product_Feature_Product_Availability {
 		} else if ( 'availability' == $options['setting'] ) {
 			// Return availability dates
 			// Don't use either here. Only both, start, or end
-			$value = get_post_meta( $product_id, '_it-exchange-product-availability', true );
+			if ( ! $value = get_post_meta( $product_id, '_it-exchange-product-availability', true ) )
+				return false;
 			
-			foreach( $value as $key => $val )
+			foreach( (array) $value as $key => $val ) {
 				$value[$key] = date_i18n( $date_format, $val );
+			}
 				
 			switch ( $options['type'] ) {
 				case 'start' :
 					return $value['start'];
 					break;
 				case 'end' :
-					return $value['start'];
+					return $value['end'];
 					break;
 				case 'both' :
 				case 'either' :
