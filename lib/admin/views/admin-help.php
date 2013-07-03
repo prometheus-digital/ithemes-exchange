@@ -25,7 +25,7 @@
 		<div class="help-action exchange-tutorials" title="">
 			<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/e32.png' ); ?>" />
 			<p><?php _e( 'Short video tutorials to help you become an Exchange expert.', 'LION' ); ?></p>
-			<p><a href="#" target="_blank"><?php _e( 'Checkout some tutorials', 'LION' ); ?></a></p>
+			<p><a href="http://ithemes.com/tutorials/ithemes-exchange" target="_blank"><?php _e( 'Checkout some tutorials', 'LION' ); ?></a></p>
 		</div>
 		<div class="help-action exchange-codex" title="">
 			<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/e32.png' ); ?>" />
@@ -53,12 +53,12 @@
 		<div class="help-action exchange-report" title="">
 			<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/e32.png' ); ?>" />
 			<p><?php _e( 'Help us fix an issue that you have found in Exchange.', 'LION' ); ?></p>
-			<p><a href="#" target="_blank"><?php _e( 'Report a Bug or Problem', 'LION' ); ?></a></p>
+			<p><a href="http://ithemes.com/contact" target="_blank"><?php _e( 'Report a Bug or Problem', 'LION' ); ?></a></p>
 		</div>
 		<div class="help-action exchange-request" title="">
 			<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/e32.png' ); ?>" />
 			<p><?php _e( 'Help us improve Exchange for everyone.', 'LION' ); ?></p>
-			<p><a href="#" target="_blank"><?php _e( 'Request a Feature', 'LION' ); ?></a></p>
+			<p><a href="http://ithemes.com/contact" target="_blank"><?php _e( 'Request a Feature', 'LION' ); ?></a></p>
 		</div>
 	</div>
 </div>
