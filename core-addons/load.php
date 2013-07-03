@@ -80,7 +80,7 @@ function it_exchange_register_core_addons() {
 		// Basic Reporting Dashboard Widget
 		'basic-reporting' => array(
 			'name'        => __( 'Basic Reporting Dashboard Widget', 'LION' ),
-			'description' => __( 'Adds a widget to the Admin dashboard to give basic sells statistics.', 'LION' ),
+			'description' => __( 'Adds a widget to the Admin dashboard to give basic sales statistics.', 'LION' ),
 			'author'      => 'iThemes',
 			'author_url'  => 'http://ithemes.com',
 			'file'        => dirname( __FILE__ ) . '/admin/basic-reporting/init.php',
