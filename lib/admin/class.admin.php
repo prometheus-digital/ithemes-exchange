@@ -992,16 +992,21 @@ Order: %s
 				return;
 			}
 				
-		} else {
-			it_exchange_save_option( 'settings_general', $settings );
-			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
-			
-		foreach( $_REQUEST['it-exchange-transaction-methods'] as $add_on )
+		
+		$tx_error_msgs = array();
+		$addons = it_exchange_get_addons( array( 'category' => 'transaction-methods', 'show_required' => false ) );
+		foreach( $_REQUEST['it-exchange-transaction-methods'] as $add_on ) {
 			it_exchange_enable_addon( $add_on );
+			unset( $addons[$add_on] );
+			$tx_error_msgs = apply_filters( 'it_exchange_save_' . $add_on . '_wizard_settings', $tx_error_msgs );
+		}
+		foreach ( $addons as $addon ) {
+			it_exchange_disable_addon( $addon['slug'] );
+		}
 
-		if ( $error_messages = apply_filters( 'it_exchange_save_transaction_method_wizard_settings', array() ) ) {
-			$this->error_message = join( '<br />', $error_messages );
+		if ( ! empty( $tx_error_msgs ) ) {
+			$this->error_message = join( '<br />', $tx_error_msgs );
 			return;
 		}
 				
@@ -1024,6 +1029,10 @@ Order: %s
 
 		do_action( 'it_exchange_enabled_addons_loaded' );
 		do_action( 'it_exchange_save_wizard_settings' );
+		
+		it_exchange_save_option( 'settings_general', $settings );
+		$this->status_message = __( 'Settings Saved.', 'LION' );
+		
 		wp_safe_redirect( 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=digital-downloads-product-type' );
 	}
 	

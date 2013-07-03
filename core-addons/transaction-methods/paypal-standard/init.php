@@ -232,14 +232,14 @@ function paypal_standard_print_wizard_settings( $form ) {
  *
  * @return void
 */
-function it_exchange_paypal_standard_addon_save_wizard_settings( $errors ) {
+function it_exchange_save_paypal_standard_wizard_settings( $errors ) {
 	if ( ! empty( $errors ) )
 		return $errors;
 	
 	$IT_Exchange_PayPal_Standard_Add_On = new IT_Exchange_PayPal_Standard_Add_On();
 	return $IT_Exchange_PayPal_Standard_Add_On->paypal_standard_save_wizard_settings();
 }
-add_action( 'it_exchange_save_transaction_method_wizard_settings', 'it_exchange_paypal_standard_addon_save_wizard_settings' );
+add_action( 'it_exchange_save_paypal-standard_wizard_settings', 'it_exchange_save_paypal_standard_wizard_settings' );
 
 /**
  * Default settings for paypal_standard

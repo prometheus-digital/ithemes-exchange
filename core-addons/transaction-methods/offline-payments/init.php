@@ -74,14 +74,14 @@ add_action( 'it_exchange_print_offline-payments_wizard_settings', 'it_exchange_p
  *
  * @return void
 */
-function offline_payments_save_wizard_settings( $errors ) {
+function it_exchange_save_offline_payments_wizard_settings( $errors ) {
 	if ( ! empty( $errors ) )
 		return $errors;
 		
 	$IT_Exchange_Offline_Payments_Add_On = new IT_Exchange_Offline_Payments_Add_On();
 	return $IT_Exchange_Offline_Payments_Add_On->offline_payments_save_wizard_settings();
 }
-add_action( 'it_exchange_save_transaction_method_wizard_settings', 'offline_payments_save_wizard_settings' );
+add_action( 'it_exchange_save_offline-payments_wizard_settings', 'it_exchange_save_offline_payments_wizard_settings' );
 
 /**
  * This proccesses an offline transaction.
