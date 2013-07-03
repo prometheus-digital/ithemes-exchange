@@ -63,6 +63,7 @@ class IT_Exchange_Admin {
 		// Add actions for iThemes registration
 		add_action( 'admin_notices', array( $this, 'add_wizard_nag' ) );
 		add_action( 'admin_menu', array( $this, 'add_exchange_admin_menu' ) );
+		add_action( 'admin_menu', array( $this, 'add_lower_priority_items_to_exchange_menu' ), 90 );
 		add_action( 'admin_init', array( $this, 'enable_disable_registered_add_on' ) );
 		add_action( 'admin_init', array( $this, 'enable_required_add_ons' ) );
 
@@ -317,6 +318,19 @@ class IT_Exchange_Admin {
 		// Add Transactions menu item
 		add_submenu_page( 'it-exchange', 'iThemes Exchange ' . __( 'Payments', 'LION' ), __( 'Payments', 'LION' ), $this->admin_menu_capability, 'edit.php?post_type=it_exchange_tran' );
 
+		// Remove default iThemes Exchange sub-menu item created with parent menu item
+		remove_submenu_page( 'it-exchange', 'it-exchange' );
+	}
+
+	/**
+	 * Adds the help menu at the bottom of the menu
+	 *
+	 * @since 0.4.17
+	 *
+	 * @return void
+	*/
+	function add_lower_priority_items_to_exchange_menu() {
+
 		// Add Settings Menu Item
 		$settings_callback = array( $this, 'print_exchange_settings_page' );
 		if ( 'it-exchange-settings' == $this->_current_page && ! empty( $this->_current_tab ) )
@@ -333,12 +347,9 @@ class IT_Exchange_Admin {
 				$add_ons_callback = $addon['options']['settings-callback'];
 		}
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->admin_menu_capability, 'it-exchange-addons', $add_ons_callback );
-		
+
+		// Help menu
 		add_submenu_page( 'it-exchange', __( 'Help', 'LION' ), __( 'Help', 'LION' ), $this->admin_menu_capability, 'it-exchange-help', array( $this, 'print_help_page' ) );
-
-		// Remove default iThemes Exchange sub-menu item created with parent menu item
-		remove_submenu_page( 'it-exchange', 'it-exchange' );
-
 	}
 
 	/**
