@@ -13,7 +13,7 @@
 	
 	<div class="help-section-wrap clearfix">
 		<h3><?php _e( 'Quick Links', 'LION' ); ?></h3>
-		<div class="help-action exchange-wizard help-tip" title="This is a link back to the Quick Setup page that opened when you installed Exchange designed to get you going with the essentials fast.">
+		<div class="help-action exchange-wizard help-tip" title="<?php _e( 'This is a link back to the Quick Setup page that opens after Exchange is installed. This page walks through the necessary information and settings needed to set up your store.', 'LION' ); ?>">
 			<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/e32.png' ); ?>" />
 			<p><?php _e( 'Go back to the Exchange Quick Setup Wizard.', 'LION' ); ?></p>
 			<p><a href="<?php echo get_admin_url( NULL, 'admin.php?page=it-exchange-setup' ); ?>" target="_self"><?php _e( 'Open the Wizard', 'LION' ); ?></a></p>

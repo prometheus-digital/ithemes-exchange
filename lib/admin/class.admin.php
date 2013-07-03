@@ -1337,7 +1337,7 @@ Order: %s
 					'uploadSource'          => __( 'Upload Source', 'LION' ),
 					'insert'                => __( 'Insert', 'LION' ),
 					'advanced'              => __( 'Advanced', 'LION' ),
-					'advanced_tooltip'      => __( 'We want to keep things simple for you - so we put the kitchen sink here in the Advanced button &hellip; click it to add more info about your product.', 'LION' ),
+					'advanced_tooltip'      => __( 'We want to keep things simple for you, so we put the kitchen sink here. Click this button to add more info about your product.', 'LION' ),
 				)
 			);
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {

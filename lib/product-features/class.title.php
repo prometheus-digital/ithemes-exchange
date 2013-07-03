@@ -104,7 +104,7 @@ class IT_Exchange_Product_Feature_Product_Title {
 	*/
 	function print_metabox( $post ) {
 		?>
-			<label for="title"><?php _e( 'Product Title', 'LION' ); ?> <span class="tip" title="<?php _e( 'Name your product like you do a headline - to catch attention and sell benefits.', 'LION' ); ?>">i</span></label>
+			<label for="title"><?php _e( 'Product Title', 'LION' ); ?> <span class="tip" title="<?php _e( 'Name your product like you do a headline &mdash; to catch attention and sell benefits.', 'LION' ); ?>">i</span></label>
 			<input type="text" name="post_title" size="30" value="<?php echo esc_attr( htmlspecialchars( $post->post_title ) ); ?>" id="title" autocomplete="off" placeholder="<?php echo apply_filters( 'enter_title_here', __( 'Enter title...' ), $post ); ?>" tabindex="1" />
 		<?php
 	}
