@@ -1,3 +1,16 @@
+/** -----------------------------------------------------:[ general ]:---------- */
+.wrap{font-size:14px;}
+label{display:block;font-size:13px;color:#3d4142;margin-bottom:5px;margin-left:2px;}
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea{background:#fff;border:1px solid #d6d6d6;border-radius:3px;padding:10px;color:#3d4142;width:260px;}
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
+.field{margin-top:20px;}
+
 /** -----------------------------------------------------:[ page settings ]:---------- */
 #it-exchange-page-settings *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 #it-exchange-page-settings .it-column{float:left;margin:.5em 0;}
