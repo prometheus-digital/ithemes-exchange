@@ -80,14 +80,16 @@
 			<div class="cart-totals">
 				<div class="totals-column totals-titles cart-column">
 					<p><?php _e( 'Subtotal', 'LION' ); ?></p>
-					<!-- NOTE Need a check for discounts. -->
-					<p><?php _e( 'Savings', 'LION' ); ?></p>
+					<?php if ( it_exchange( 'coupons', 'supported', 'type=cart' ) && it_exchange( 'coupons', 'has-applied', 'type=cart' ) ) : ?>
+						<p><?php _e( 'Savings', 'LION' ); ?></p>
+					<?php endif; ?>
 					<p><?php _e( 'Total', 'LION' ); ?></p>
 				</div>
 				<div class="totals-column totals-amounts cart-column">
 					<p class="cart-subtotal"><?php it_exchange( 'cart', 'subtotal' ); ?></p>
-					<!-- NOTE Need a check for discounts. -->
-					<p class="cart-discount"><?php it_exchange( 'coupons', 'total-discount', 'type=cart' ); ?></p>
+					<?php if ( it_exchange( 'coupons', 'supported', 'type=cart' ) && it_exchange( 'coupons', 'has-applied', 'type=cart' ) ) : ?>
+						<p class="cart-discount"><?php it_exchange( 'coupons', 'total-discount', 'type=cart' ); ?></p>
+					<?php endif; ?>
 					<p class="cart-total"><?php it_exchange( 'cart', 'total' ); ?><br /></p>
 				</div>
 			</div>

@@ -52,13 +52,13 @@
 		<?php endif; ?>
 		
 		<?php if ( it_exchange( 'product', 'has-downloads' ) ) : ?>
-			<p><strong>Downloads</strong><br />
+			<p><strong><?php _e( 'Downloads', 'LION' ); ?></strong><br />
 			<ul>
 				<?php while( it_exchange( 'product', 'downloads' ) ): ?>
 					<li>
-						<em>Download</em>: <?php it_exchange( 'download', 'title' ); ?><br>
-						<em>Limit</em>: <?php it_exchange( 'download', 'limit', array( 'unlimited-label' => 'Unlimited' ) ); ?><br>
-						<em>Expiration: </em><?php it_exchange( 'download', 'expiration', array( 'never-expires-label' => 'Never Expires' ) ); ?>
+						<em><?php _e( 'Download', 'LION' ); ?></em>: <?php it_exchange( 'download', 'title' ); ?><br>
+						<em><?php _e( 'Limit', 'LION' ); ?></em>: <?php it_exchange( 'download', 'limit', array( 'unlimited-label' => 'Unlimited' ) ); ?><br>
+						<em><?php _e( 'Expiration', 'LION' ); ?>: </em><?php it_exchange( 'download', 'expiration', array( 'never-expires-label' => 'Never Expires' ) ); ?>
 					</li>
 				<?php endwhile; ?>
 			</ul>
@@ -66,19 +66,19 @@
 		<?php endif; ?>
 		
 		<?php if ( it_exchange( 'product', 'has-inventory' ) ) : ?>
-			<p><strong>Inventory</strong><br /><?php it_exchange( 'product', 'inventory' ); ?></p>
+			<p><strong><?php _e( 'Inventory', 'LION' ); ?></strong><br /><?php it_exchange( 'product', 'inventory' ); ?></p>
 		<?php endif; ?>
 		
 		<?php if ( it_exchange( 'product', 'supports-purchase-quantity' ) ) : ?>
-			<p><strong>Max Quantity Per Purchase</strong><br /><?php it_exchange( 'product', 'purchase-quantity', array( 'format' => 'max-quantity' ) ); ?></p>
+			<p><strong><?php _e( 'Max Quantity Per Purchase', 'LION' ); ?></strong><br /><?php it_exchange( 'product', 'purchase-quantity', array( 'format' => 'max-quantity' ) ); ?></p>
 		<?php endif; ?>
 		
 		<?php if ( it_exchange( 'product', 'has-availability', 'type=start' ) ) : ?>
-			<p><strong>Product Start Availability</strong><br /><?php it_exchange( 'product', 'availability', array('type' => 'start' ) ); ?></p>
+			<p><strong><?php _e( 'Product Start Availability', 'LION' ); ?></strong><br /><?php it_exchange( 'product', 'availability', array('type' => 'start' ) ); ?></p>
 		<?php endif; ?>
 		
 		<?php if ( it_exchange( 'product', 'has-availability', 'type=end' ) ) : ?>
-			<p><strong>Product End Availability</strong><br /><?php it_exchange( 'product', 'availability', array('type' => 'end' ) ); ?></p>
+			<p><strong><?php _e( 'Product End Availability', 'LION' ); ?></strong><br /><?php it_exchange( 'product', 'availability', array('type' => 'end' ) ); ?></p>
 		<?php endif; ?>
 	</div>
 </div>

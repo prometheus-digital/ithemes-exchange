@@ -29,12 +29,12 @@
 					<div class="it-exchange-product-details">
 						<?php it_exchange( 'product', 'title' ); ?>
 						<?php it_exchange( 'product', 'baseprice' ); ?>
-						<a class="it-exchange-product-details-link" href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'url') ); ?>">View Details</a>
+						<a class="it-exchange-product-details-link" href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'url') ); ?>"><?php _e( 'View Details', 'LION' ); ?></a>
 					</div>
 				</li>
 			<?php endwhile; ?>
 		<?php else : ?>
-			<p>No Products Found</p>
+			<p><?php _e( 'No Products Found', 'LION' ); ?></p>
 		<?php endif; ?>
 	</ul>
 </div>
