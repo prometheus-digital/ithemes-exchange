@@ -157,6 +157,25 @@ function it_exchange_temporarily_load_addons( $add_ons ) {
 }
 
 /**
+ * We do not want to permanently enable this addon, we just need to load it one time temporarily
+ *
+ * @since 0.4.5
+ *
+ * @param string $add_on slug
+ * @return void
+*/
+function it_exchange_temporarily_load_addon( $add_on ) {
+	$enabled_addons = it_exchange_get_enabled_addons();
+
+	// Init all enabled addons
+	if( ! isset( $enabled_addons[$add_on] ) ) {
+		if ( ! empty( $params['file'] ) && is_file( $params['file'] ) ) {
+			include_once( $params['file'] );
+		}
+	}
+}
+
+/**
  * Returns a specific add-on by its slug
  *
  * @since 0.3.2

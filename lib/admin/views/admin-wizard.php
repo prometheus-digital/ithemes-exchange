@@ -25,8 +25,13 @@
 									$name = '<img src="' . $addon['options']['wizard-icon'] . '" alt="' . $addon['name'] . '" />';
 								else
 									$name = $addon['name'];
+									
+								if ( it_exchange_is_addon_enabled( $addon['slug'] ) )
+									$selected_class = 'selected';
+								else
+									$selected_class = '';
 								
-								echo '<li class="payoption ' . $addon['slug'] . '-payoption" transaction-method="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">' . $name . '</li>';
+								echo '<li class="payoption ' . $addon['slug'] . '-payoption ' . $selected_class . '" transaction-method="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">' . $name . '</li>';
 								echo '<input type="hidden" class="remove-if-js" name="it-exchange-transaction-methods[]" value="' . $addon['slug'] . '" />';
 							}
 						?>
@@ -54,7 +59,11 @@
 					</div>
 				<?php endif; ?>
 				
-				<?php do_action( 'it_exchange_print_wizard_settings', $form ); ?>
+				<?php 
+				foreach( (array) $addons as $addon ) {
+					do_action( 'it_exchange_print_' . $addon['slug'] . '_wizard_settings', $form ); 
+				}
+				?>
 				
 				<div class="field general-settings-wizard">
 					<h3><?php _e( 'General', 'LION' ); ?></h3>

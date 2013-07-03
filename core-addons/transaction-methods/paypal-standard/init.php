@@ -17,16 +17,20 @@ define( 'PAYPAL_NVP_API_LIVE_URL', 'https://api-3t.paypal.com/nvp' );
  * @param object $form Current IT Form object
  * @return void
 */
-function it_exchange_paypal_standard_addon_wizard_settings( $form ) {
+function it_exchange_print_paypal_standard_wizard_settings( $form ) {
 	$IT_Exchange_PayPal_Standard_Add_On = new IT_Exchange_PayPal_Standard_Add_On();
 	$settings = it_exchange_get_option( 'addon_paypal_standard', true );
+	$hide_if_js =  it_exchange_is_addon_enabled( 'paypal-standard' ) ? '' : 'hide-if-js';
 	?>
-	<div class="field paypal-standard-wizard hide-if-js">
+	<div class="field paypal-standard-wizard <?php echo $hide_if_js; ?>">
+	<?php if ( empty( $hide_if_js ) ) { ?>
+        <input class="enable-paypal-standard" type="hidden" name="it-exchange-transaction-methods[]" value="paypal-standard" />
+    <?php } ?>
 	<?php $IT_Exchange_PayPal_Standard_Add_On->get_paypal_standard_payment_form_table( $form, $settings ); ?>
 	</div>
 	<?php
 }
-add_action( 'it_exchange_print_wizard_settings', 'it_exchange_paypal_standard_addon_wizard_settings' );
+add_action( 'it_exchange_print_paypal-standard_wizard_settings', 'it_exchange_print_paypal_standard_wizard_settings' );
 
 /**
  * Stripe URL to perform refunds

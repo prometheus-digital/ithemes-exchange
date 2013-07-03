@@ -52,16 +52,20 @@ function it_exchange_offline_payments_settings_callback() {
  * @param object $form Current IT Form object
  * @return void
 */
-function offline_payments_print_wizard_settings( $form ) {
+function it_exchange_print_offline_payments_wizard_settings( $form ) {
 	$IT_Exchange_Offline_Payments_Add_On = new IT_Exchange_Offline_Payments_Add_On();
 	$settings = it_exchange_get_option( 'addon_offline_payments', true );
+	$hide_if_js =  it_exchange_is_addon_enabled( 'offline-payments' ) ? '' : 'hide-if-js';
 	?>
-	<div class="field offline-payments-wizard hide-if-js">
+	<div class="field offline-payments-wizard <?php echo $hide_if_js; ?>">
+	<?php if ( empty( $hide_if_js ) ) { ?>
+        <input class="enable-offline-payments" type="hidden" name="it-exchange-transaction-methods[]" value="offline-payments" />
+    <?php } ?>
 	<?php $IT_Exchange_Offline_Payments_Add_On->get_offline_payment_form_table( $form, $settings ); ?>
 	</div>
 	<?php
 }
-add_action( 'it_exchange_print_wizard_settings', 'offline_payments_print_wizard_settings' );
+add_action( 'it_exchange_print_offline-payments_wizard_settings', 'it_exchange_print_offline_payments_wizard_settings' );
 
 /**
  * Saves offline payments settings when the Wizard is saved
