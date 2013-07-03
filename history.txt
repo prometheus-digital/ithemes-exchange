@@ -1,3 +1,27 @@
+0.4.17 - 2013-07-03 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+	Typo Updates: 1-13 of 39
+	Wizard selects transactions methods that are already enabled now (step 1)
+	Add it-exchange-admin to body class of all admin pages that are exchange related
+	Added some styles to the settings pages.
+	Require users to have capability to activate_plugins (admin) to see Reporting dashboard widget. Capability is filterable
+	Fixed superwidget
+	Move Settings, Add-ons, Help to separate function so we can push them further down the submenu list.
+	Rename product category and product tag add-on slugs so that they appear next to each other in Add-ons
+	Update registered add-on categories to reflect what we used in core
+	Added URLs to help page.
+	Added styles to the Exchange admin help page.
+	Final links in help page
+	General template cleanup and localization.
+	Fix typo in reporting widget
+	Updated more links
+	Remove stripe from core
+	Add tabindexes to Product File fields on add/edit product screen
+	Rename readmee.text to readme.txt
+	Changed CSS padding for transaction method selections in Wizard
+	Replaced dummy links in plugins action row
+	Fix foreach PHP notice in Product Availability metabox.
+	Fix bug causing product end availabilty request in theme API to return the start date
+	Apply autop to extended-description
 0.4.16 - 2013-07-02 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
 	Add tooltip to Product File source to explain that they can paste URLs from other sources
 	Fixed bug where download API was passing wrong param to function

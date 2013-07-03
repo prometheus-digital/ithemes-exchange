@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: iThemes Exchange
- * Version: 0.4.16
+ * Version: 0.4.17
  * Description: Turns your WordPress site into a Lean, Mean Selling Machine!
  * Plugin URI: http://ithemes.com/exchange/
  * Author: iThemes
@@ -24,7 +24,7 @@
 */
 class IT_Exchange {
 
-	var $_version         = '0.4.16';
+	var $_version         = '0.4.17';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'it-exchange';
 	var $_name            = 'iThemes Exchange';
