@@ -221,14 +221,14 @@ class IT_Exchange_Product_Feature_Downloads {
 						</script>
 						<div class="download-item columns-wrapper" id="download-item-0">
 							<div class="download-name column col-4-12">
-								<input type="text" name="it-exchange-digital-downloads[0][name]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'Name', 'LION' ) ); ?>" value="" />
+								<input type="text" name="it-exchange-digital-downloads[0][name]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'Name', 'LION' ) ); ?>" value="" tabindex="4" />
 							</div>
 							<div class="download-source column col-7-12">
-								<input type="url" name="it-exchange-digital-downloads[0][source]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'LION' ) ); ?>" value="" />
+								<input type="url" name="it-exchange-digital-downloads[0][source]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'LION' ) ); ?>" value="" tabindex="5" />
 								<a href class="it-exchange-upload-digital-download"><?php _e( 'Upload', 'LION' ); ?></a>
 							</div>
 							<div class="download-remove column col-1-12">
-								<a href="#" class="it-exchange-delete-digital-download">&times;</a>
+								<a href="#" class="it-exchange-delete-digital-download" tabindex="6" >&times;</a>
 							</div>
 						</div>
 					<?php else : ?>
