@@ -14,7 +14,7 @@ function it_exchange_register_core_addons() {
 		// Offline
 		'offline-payments' => array(
 			'name'              => __( 'Offline Payments', 'LION' ),
-			'description'       => __( 'Use this Transaction Method to take payments offline.', 'LION' ),
+			'description'       => __( 'Process transactions offline via check or cash.', 'LION' ),
 			'author'            => 'iThemes',
 			'author_url'        => 'http://ithemes.com',
 			'file'              => dirname( __FILE__ ) . '/transaction-methods/offline-payments/init.php',
@@ -35,7 +35,7 @@ function it_exchange_register_core_addons() {
 		// PayPal Standard Transaction Method
 		'paypal-standard' => array(
 			'name'              => __( 'PayPal Standard', 'LION' ),
-			'description'       => __( 'Process Transactions with the PayPal Standard gateway.', 'LION' ),
+			'description'       => __( 'Process transactions via the PayPal Standard gateway.', 'LION' ),
 			'author'            => 'iThemes',
 			'author_url'        => 'http://ithemes.com',
 			'icon'              => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/transaction-methods/paypal-standard/images/paypal50px.png' ),
