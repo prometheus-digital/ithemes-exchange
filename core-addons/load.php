@@ -48,18 +48,6 @@ function it_exchange_register_core_addons() {
 			'tag'               => 'core',
 			'settings-callback' => 'it_exchange_paypal_standard_settings_callback',
 		),
-		// Stripe Transaction Method
-		'stripe'          => array(
-			'name'              => __( 'Stripe', 'LION' ),
-			'description'       => __( 'Process Transactions with the Stripe payment gateway.', 'LION' ),
-			'author'            => 'iThemes',
-			'author_url'        => 'http://ithemes.com',
-			'icon'              => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/transaction-methods/stripe/images/stripe50px.png' ),
-			'wizard-icon'       => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/transaction-methods/stripe/images/wizard-stripe.png' ),
-			'file'              => dirname( __FILE__ ) . '/transaction-methods/stripe/init.php',
-			'category'          => 'transaction-methods',
-			'settings-callback' => 'it_exchange_stripe_addon_settings_callback',
-		),
 		// Digital Download Product Types
 		'digital-downloads-product-type' => array(
 			'name'        => __( 'Digital Downloads', 'LION' ),
