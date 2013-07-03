@@ -66,6 +66,7 @@ class IT_Exchange_Admin {
 		add_action( 'admin_menu', array( $this, 'add_lower_priority_items_to_exchange_menu' ), 90 );
 		add_action( 'admin_init', array( $this, 'enable_disable_registered_add_on' ) );
 		add_action( 'admin_init', array( $this, 'enable_required_add_ons' ) );
+		add_filter( 'admin_body_class', array( $this, 'add_exchange_class_to_exchange_pages' ) );
 
 		// Admin Product Redirects 
 		add_action( 'admin_init', array( $this, 'redirect_post_new_to_product_type_selection_screen' ) );
@@ -747,6 +748,59 @@ Order: %s
 				}
 			}
 		}
+	}
+
+	/**
+	 * Adds the it-exchange-admin CSS class to body on Exchange admin pages
+	 *
+	 * @since 0.4.17
+	 *
+	 * @param string $classes incoming classes from WP filter
+	 * @return string
+	*/
+	function add_exchange_class_to_exchange_pages( $classes ) {
+		if ( $this->is_exchange_admin_page() ) {
+			$classes = explode( ' ', $classes );
+			$classes[] = 'it-exchange-admin';
+			$classes = implode( ' ', $classes );
+		}
+		return $classes;
+	}
+
+	/**
+	 * Is this an exchange admin page?
+	 *
+	 * @since 0.4.17
+	 *
+	 * @return boolean
+	*/
+	function is_exchange_admin_page() {
+		$is_exchange_admin = false;
+
+		// Is this an exchange post type?
+		$post_types = array(
+			'it_exchange_prod',
+			'it_exchange_tran',
+			'it_exchange_coupon',
+			'it_exchange_download',
+		);
+		if ( ! empty( $_GET['post_type'] ) && in_array( $_GET['post_type'], (array) apply_filters( 'it_exchange_post_types', $post_types ) ) )
+			$is_exchange_admin = true;
+
+		// Are we editing an exchange product type
+		if ( ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] && ! empty( $_GET['post'] ) && in_array( get_post_type( $_GET['post'] ), (array) apply_filters( 'it_exchange_post_types', $post_types ) ) )
+			$is_exchange_admin = true;
+
+		// Is this an Exchange page
+		$pages = array(
+			'it-exchange-settings',
+			'it-exchange-addons',
+			'it-exchange-help',
+		);
+		if ( ! empty( $this->_current_page ) && in_array( $this->_current_page, (array) apply_filters( 'it_exchange_admin_pages', $pages ) ) )
+			$is_exchange_admin = true;
+
+		return $is_exchange_admin;
 	}
 
 	/**

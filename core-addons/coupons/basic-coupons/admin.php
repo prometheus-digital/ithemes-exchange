@@ -409,3 +409,17 @@ function it_exchange_basic_coupons_modify_wp_query_request_on_edit_php( $request
 	return $request;
 }
 add_filter( 'request', 'it_exchange_basic_coupons_modify_wp_query_request_on_edit_php' );
+
+/**
+ * Register our pages as an exchange pages so that exchange CSS class is applied to admin body
+ *
+ * @since 0.4.17
+ *
+ * @param array $pages existing pages
+ * @return array
+*/
+function it_exchange_basic_coupons_register_exchange_admin_page( $pages ) {
+	$pages[] = 'it-exchange-add-basic-coupon';
+	return $pages;
+}
+add_filter( 'it_exchange_admin_pages', 'it_exchange_basic_coupons_register_exchange_admin_page' );
