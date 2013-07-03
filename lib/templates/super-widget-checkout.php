@@ -82,6 +82,6 @@
 			</div>
 		<?php endif; ?>
 	<?php else: ?>
-		<p><?php printf( __( '%s Empty', 'LION' ), it_exchange_get_page_name( 'cart' ) ); ?></p>
+		<p><?php _e( 'Your cart is empty', 'LION' ); ?></p>
 	<?php endif; ?>
 </div>
