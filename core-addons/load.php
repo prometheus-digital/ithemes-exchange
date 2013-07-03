@@ -178,29 +178,19 @@ function it_exchange_register_core_addon_categories() {
 				) ),
 			),
 		),
-		'shopping-carts' => array(
-			'name'        => __( 'Shopping Cart UIs', 'LION' ),
-			'description' => __( 'Add-ons that provide a UI for the iThemes Exchange Cart API.', 'LION' ),
-			'options'     => array(),
-		),
-		'customer-management' => array(
-			'name'        => __( 'Customer Management', 'LION' ),
-			'description' => __( 'Add-ons that provide a UI for the iThemes Exchange Customer Management.', 'LION' ),
-			'options'     => array(),
-		),
 		'admin' => array(
 			'name'        => __( 'Admin Add-ons', 'LION' ),
 			'description' => __( 'Add-ons that create general purpose admin functionality. eg: Reports, Export.', 'LION' ),
 			'options'     => array(),
 		),
-		'product-features' => array(
-			'name'        => __( 'Product Features', 'LION' ),
-			'description' => __( 'Add-ons that provide optional features to product type add-ons', 'LION' ),
+		'coupons' => array(
+			'name'        => __( 'Coupon Add-ons', 'LION' ),
+			'description' => __( 'Add-ons that create coupons for your customers.', 'LION' ),
 			'options'     => array(),
 		),
-		'front-end' => array(
-			'name'        => __( 'Front End Add-ons', 'LION' ),
-			'description' => __( 'Add-ons that create general purpose frontend functionality. eg: Widgets, Shortcodes.', 'LION' ),
+		'taxonomy-type' => array(
+			'name'        => __( 'Taxonomy Add-ons', 'LION' ),
+			'description' => __( 'Add-ons that create new taxonomies specifically for Exchange products.', 'LION' ),
 			'options'     => array(),
 		),
 		'other' => array(
