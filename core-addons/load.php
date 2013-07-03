@@ -31,9 +31,6 @@ function it_exchange_register_core_addons() {
 			'file'              => dirname( __FILE__ ) . '/transaction-methods/zero-sum-checkout/init.php',
 			'category'          => 'transaction-methods',
 			'tag'               => 'required',
-			/*
-			'supports'          => array( 'transaction_status' => true ),
-			*/
 		),
 		// PayPal Standard Transaction Method
 		'paypal-standard' => array(
@@ -102,7 +99,7 @@ function it_exchange_register_core_addons() {
 			) ),
 		),
 		// Category Taxonomy
-		'category-taxonomy-type' => array(
+		'taxonomy-type-category' => array(
 			'name'        => __( 'Product Categories', 'LION' ),
 			'description' => __( 'This adds a category taxonomy for all products in iThemes Exchange.', 'LION' ),
 			'author'      => 'iThemes',
@@ -115,7 +112,7 @@ function it_exchange_register_core_addons() {
 			),
 		),
 		// Tag Taxonomy
-		'tag-taxonomy-type' => array(
+		'taxonomy-type-tag' => array(
 			'name'        => __( 'Product Tags', 'LION' ),
 			'description' => __( 'This adds a tag taxonomy for all products in iThemes Exchange.', 'LION' ),
 			'author'      => 'iThemes',
