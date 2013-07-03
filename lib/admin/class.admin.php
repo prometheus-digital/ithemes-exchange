@@ -1302,6 +1302,9 @@ Order: %s
 			wp_enqueue_script( 'it-exchange-wizard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/wizard.js', $deps );
 		} else if ( ( 'profile.php' === $hook_suffix || 'user-edit.php' === $hook_suffix ) && isset( $_REQUEST['it_exchange_customer_data'] ) ) {
 			wp_enqueue_script( 'it-exchange-customer-info', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/customer-info.js' );
+		} else if ( 'exchange_page_it-exchange-help' === $hook_suffix ) {
+			$deps = array( 'jquery-ui-tooltip' );
+			wp_enqueue_script( 'it-exchange-help', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/help.js', $deps );
 		}
 	}
 
@@ -1354,6 +1357,8 @@ Order: %s
 			wp_enqueue_style( 'it-exchange-customer-info', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/customer-info.css' );
 		} else if ( 'index.php' === $hook_suffix ) {
 			wp_enqueue_style( 'it-exchange-dashboard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/dashboard.css' );
+		} else if ( 'exchange_page_it-exchange-help' === $hook_suffix ) {
+			wp_enqueue_style( 'it-exchange-help', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/help.css' );
 		}
 	}
 
