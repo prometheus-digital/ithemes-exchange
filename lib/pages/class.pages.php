@@ -372,8 +372,10 @@ class IT_Exchange_Pages {
 		}
 
 		// Return the iThemes Exchange Template if one is found
-		if ( $template = it_exchange_locate_template( $this->_current_view . '.php' ) )
+		if ( $template = it_exchange_locate_template( $this->_current_view . '.php' ) ) {
+			remove_filter( 'the_content', 'wpautop' );
 			return $template;
+		}
 		
 		// If no iThemes Exchange template was found by it_exchange_location_template and we've viewing a product
 		// then were'e going to need to set a filter
