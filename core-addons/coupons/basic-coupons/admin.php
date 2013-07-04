@@ -246,7 +246,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		<div class="it-exchange-add-basic-coupon">
 			<div class="fields">
 				<div class="field">
-					<label for="name"><?php _e( 'Name', 'LION' ); ?> <span class="tip" title="<?php _e( 'What do you want to call this coupon? Just for your reference.', 'LION' ); ?>">i</span></label>
+					<label for="name"><?php _e( 'Name', 'LION' ); ?> <span class="tip" title="<?php _e( 'What do you want to call this coupon? This is just for your reference.', 'LION' ); ?>">i</span></label>
 					<?php $form->add_text_box( 'name' ); ?>
 				</div>
 				<div class="field coupon-code">

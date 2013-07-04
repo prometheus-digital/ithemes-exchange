@@ -114,7 +114,7 @@ class IT_Exchange_Digital_Downloads_Add_On {
 				<div class="it-exchange-addon-settings it-exchange-digital-downloads-addon-settings">
 					<p>
 						<?php $form->add_check_box( 'require-user-login' ); ?>
-						<?php _e( 'Require Users to Log In before downloading their products?', 'LION' ); ?> <span class="tip" title="<?php _e( 'If unchecked, users can simply download their products using their download links', 'LION' ); ?>">i</span>
+						<?php _e( 'Require users to log in before downloading their products?', 'LION' ); ?> <span class="tip" title="<?php _e( 'If unchecked, users can simply download their products using their download links', 'LION' ); ?>">i</span>
 					</p>
 				</div>
 				<?php

@@ -629,10 +629,10 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		?>
 		<div class="it-exchange-addon-settings it-exchange-paypal-addon-settings">
             <p>
-				<?php _e( 'To get PayPal setup for your ecommerce site, you will need to do a couple of things in PayPal first.<br /><br />
-				<a href="http://ithemes.com/tutorial/category/exchange" target="_blank">Video: Getting PayPal Setup with Exchange</a>', 'LION' ); ?>
+				<?php _e( 'To get PayPal set up for use with Exchange, you\'ll need to add the following information from your PayPal account.', 'LION' ); ?><br /><br />
+				<a href="http://ithemes.com/tutorial/category/exchange" target="_blank"><?php _e( 'Video: Getting PayPal Setup with Exchange', 'LION' ); ?></a>
 			</p>
-			<p><?php _e( 'Do not have a PayPal account yet? <a href="http://paypal.com" target="_blank">Go set one up here</a>.', 'LION' ); ?></p>
+			<p><?php _e( 'Don\'t have a PayPal account yet?', 'LION' ); ?> <a href="http://paypal.com" target="_blank"><?php _e( 'Go set one up here', 'LION' ); ?></a>.</p>
             <h4><?php _e( 'Step 1. Fill out your PayPal email address', 'LION' ); ?></h4>
 			<p>
 				<label for="paypal-standard-live-email-address"><?php _e( 'PayPal Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
@@ -640,15 +640,15 @@ class IT_Exchange_PayPal_Standard_Add_On {
 			</p>
             <h4><?php _e( 'Step 2. Fill out your PayPal API credentials', 'LION' ); ?></h4>
 			<p>
-				<label for="paypal-standard-live-api-username"><?php _e( 'PayPal API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<label for="paypal-standard-live-api-username"><?php _e( 'PayPal API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-live-api-username' ); ?>
 			</p>
 			<p>
-				<label for="paypal-standard-live-api-password"><?php _e( 'PayPal API Password', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<label for="paypal-standard-live-api-password"><?php _e( 'PayPal API Password', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-live-api-password' ); ?>
 			</p>
 			<p>
-				<label for="paypal-standard-live-api-signature"><?php _e( 'PayPal API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<label for="paypal-standard-live-api-signature"><?php _e( 'PayPal API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-live-api-signature' ); ?>
 			</p>
 			<p class="hide-if-wizard">
@@ -661,15 +661,15 @@ class IT_Exchange_PayPal_Standard_Add_On {
 				<?php $form->add_text_box( 'paypal-standard-sandbox-email-address' ); ?>
 			</p>
 			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
-				<label for="paypal-standard-sandbox-api-username"><?php _e( 'PayPal Sandbox API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<label for="paypal-standard-sandbox-api-username"><?php _e( 'PayPal Sandbox API Username', 'LION' ); ?> <!--<span class="tip" title="<?php _e( '', 'LION' ); ?>">i</span>--></label>
 				<?php $form->add_text_box( 'paypal-standard-sandbox-api-username' ); ?>
 			</p>
 			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
-				<label for="paypal-standard-sandbox-api-password"><?php _e( 'PayPal Sandbox API Password', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<label for="paypal-standard-sandbox-api-password"><?php _e( 'PayPal Sandbox API Password', 'LION' ); ?> <!--<span class="tip" title="<?php _e( '', 'LION' ); ?>">i</span>--></label>
 				<?php $form->add_text_box( 'paypal-standard-sandbox-api-password' ); ?>
 			</p>
 			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
-				<label for="paypal-standard-sandbox-api-signature"><?php _e( 'PayPal Sandbox API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal&reg;, see: Profile -› API Access (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<label for="paypal-standard-sandbox-api-signature"><?php _e( 'PayPal Sandbox API Signature', 'LION' ); ?> <!--<span class="tip" title="<?php _e( '', 'LION' ); ?>">i</span>--></label>
 				<?php $form->add_text_box( 'paypal-standard-sandbox-api-signature' ); ?>
 			</p>
             <h4><?php _e( 'Step 3. Setup PayPal Instant Payment Notifications (IPN)', 'LION' ); ?></h4>

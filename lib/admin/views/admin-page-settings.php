@@ -30,14 +30,14 @@
 			</div>
 			<div class="it-column column-2">
 				<div class="it-column column-2-half">
-					<span><?php _e( 'Page Type', 'LION' ); ?></span> <span class="tip" title="<?php _e( 'You have 3 options for Page Types for where and how your store pages are displayed: Exchange (by default & recommended), WordPress (where you can use shortcodes to embed &amp; have max control) or Disabled (if you do not want or care about certain features in this list).', 'LION' ); ?>">i</span>
+					<span><?php _e( 'Page Type', 'LION' ); ?></span> <span class="tip" title="<?php _e( 'You have three Page Type options for where and how your store pages are displayed: Exchange (by default & recommended), WordPress (where you can use shortcodes to embed & have max control) or Disabled (if you don\'t need certain features in this list).', 'LION' ); ?>">i</span>
 				</div>
 				<div class="it-column column-2-half">
 					<span><?php _e( 'Page Title', 'LION' ); ?></span>
 				</div>
 			</div>
 			<div class="it-column column-3">
-				<span><?php _e( 'Page Slug', 'LION' ); ?></span> <span class="tip" title="<?php _e( 'If these URL examples do not look right, go to Settings / Permalinks and click "Post name" and Save and they will be more obvious what they do.', 'LION' ); ?>">i</span>
+				<span><?php _e( 'Page Slug', 'LION' ); ?></span> <span class="tip" title="<?php _e( 'If these URL examples do not look right, go to Settings > Permalinks and click Save Changes.', 'LION' ); ?>">i</span>
 			</div>
 		</div>
 		<?php foreach ( $pages as $page => $data ) : ?>
