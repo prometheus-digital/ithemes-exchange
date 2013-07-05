@@ -597,7 +597,7 @@ class IT_Exchange_Admin {
 			'currency-decimals-separator'  => '.',
 			'site-registration'            => 'it',
 			'company-email'                => get_bloginfo( 'admin_email' ),
-			'company-name'                 => esc_attr( get_bloginfo( 'name' ) ),
+			'company-name'                 => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
 		);
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;
