@@ -1,3 +1,30 @@
+0.4.18 - 2013-07-05 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Chris Jean
+	Add stripe image to uninstalled stripe select box in wizard
+	Add H3s back to wizard for paypal and offline payments
+	Cleaned up the wizard styles.
+	Add default width to 80px for checkout images
+	Add video link to offline payments settings
+	Remove utility script committed by accident
+	Add links to paypal dev api tutorials in links
+	Fix for escaping issues with blogname when setting default value for company-name.
+	PDT instructions in PayPal, just a little clearer
+	Removed much of the advanced data from the product page (expiration, limits, downloads, et cetera).
+	Update video link for PayPal
+	Made the response message more prominent when updating a payments status.
+	Hid the status update section if js is not enabled.
+	Fixed get-more-addons view to properly look for the add-on icon
+	Break page settings cache before flushing rewrite rules
+	Update to transaction methods to save state on errors in wizard
+	Move Documentation, Support, and Add-ons links from first column in plugins page to second column
+	Change Wizard save button text to 'Save Settings'.
+	Redirect to wizard after saving, not to Add new product.
+	Convert wizard error/notice messages to messaging API to preserve on redirect.
+	Add new saved notification message to include links to New Proudct, Addons, Sample Product.
+	Changed paypal description to be cart description, not cart name
+	Remove autop when using exchange templates.
+	Fixed remaining typos in instructions and tooltips
+	Disable unchosen transaction methods in wizard
+	Added some filters and changed some function names in the transaction methods 
 0.4.17 - 2013-07-03 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
 	Typo Updates: 1-13 of 39
 	Wizard selects transactions methods that are already enabled now (step 1)
