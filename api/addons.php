@@ -44,7 +44,7 @@ function it_exchange_register_addon( $slug, $params ) {
 	if ( ! $file )
 		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Excahnge Add-ons require a file paramater.', 'LION' ) );
 	
-	$allowed_keys = array( 'category', 'tag', 'supports', 'labels', 'settings-callback', 'icon', 'wizard-icon', 'basename' );
+	$allowed_keys = array( 'category', 'tag', 'supports', 'labels', 'settings-callback', 'icon', 'wizard-icon' );
 	
 	foreach ( $params as $key => $value )
 		if ( in_array( $key, $allowed_keys ) )
