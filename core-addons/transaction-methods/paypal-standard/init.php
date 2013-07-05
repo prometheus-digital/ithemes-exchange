@@ -61,7 +61,7 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 		return $status;
 
 	if ( !empty( $_REQUEST['it-exchange-transaction-method'] ) && 'paypal-standard' === $_REQUEST['it-exchange-transaction-method'] ) {
-
+		
 		if ( !empty( $_REQUEST['tx'] ) ) //if PDT is enabled
 			$transaction_id = $_REQUEST['tx'];
 		else if ( !empty( $_REQUEST['txn_id'] ) ) //if PDT is not enabled
@@ -82,7 +82,7 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 			$transaction_status = $_REQUEST['payment_status'];
 		else
 			$transaction_status = NULL;
-
+			
 		if ( !empty( $transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
 
 			try {
@@ -92,10 +92,10 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 
 				$it_exchange_customer = it_exchange_get_current_customer();
 
-				$paypal_api_url       = ( $paypal_settings['sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
-				$paypal_api_username  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-username'] : $paypal_settings['live-api-username'];
-				$paypal_api_password  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-password'] : $paypal_settings['live-api-password'];
-				$paypal_api_signature = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-signature'] : $paypal_settings['live-api-signature'];
+				$paypal_api_url       = ( $paypal_settings['paypal-standard-sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
+				$paypal_api_username  = ( $paypal_settings['paypal-standard-sandbox-mode'] ) ? $paypal_settings['paypal-standard-sandbox-api-username'] : $paypal_settings['paypal-standard-live-api-username'];
+				$paypal_api_password  = ( $paypal_settings['paypal-standard-sandbox-mode'] ) ? $paypal_settings['paypal-standard-sandbox-api-password'] : $paypal_settings['paypal-standard-live-api-password'];
+				$paypal_api_signature = ( $paypal_settings['paypal-standard-sandbox-mode'] ) ? $paypal_settings['paypal-standard-sandbox-api-signature'] : $paypal_settings['paypal-standard-live-api-signature'];
 
 				$request = array(
 					'USER'          => trim( $paypal_api_username ),
@@ -141,7 +141,7 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 
 		}
 
-		it_exchange_add_message( 'error', __( 'Unknown error. Please try again later.', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Unknown error while processing with PayPal. Please try again later.', 'LION' ) );
 
 	}
 	return false;
