@@ -44,41 +44,9 @@
 		<?php endif; ?>
 	</div>
 	
-	<div class="product-advanced-content">
-		<?php if ( it_exchange( 'product', 'has-extended-description' ) ) : ?>
-			<div class="extended-description">
-				<?php it_exchange( 'product', 'extended-description' ); ?>
-			</div>
-		<?php endif; ?>
-		
-		<?php if ( it_exchange( 'product', 'has-downloads' ) ) : ?>
-			<p><strong><?php _e( 'Downloads', 'LION' ); ?></strong><br />
-			<ul>
-				<?php while( it_exchange( 'product', 'downloads' ) ): ?>
-					<li>
-						<em><?php _e( 'Download', 'LION' ); ?></em>: <?php it_exchange( 'download', 'title' ); ?><br>
-						<em><?php _e( 'Limit', 'LION' ); ?></em>: <?php it_exchange( 'download', 'limit', array( 'unlimited-label' => 'Unlimited' ) ); ?><br>
-						<em><?php _e( 'Expiration', 'LION' ); ?>: </em><?php it_exchange( 'download', 'expiration', array( 'never-expires-label' => 'Never Expires' ) ); ?>
-					</li>
-				<?php endwhile; ?>
-			</ul>
-			</p>
-		<?php endif; ?>
-		
-		<?php if ( it_exchange( 'product', 'has-inventory' ) ) : ?>
-			<p><strong><?php _e( 'Inventory', 'LION' ); ?></strong><br /><?php it_exchange( 'product', 'inventory' ); ?></p>
-		<?php endif; ?>
-		
-		<?php if ( it_exchange( 'product', 'supports-purchase-quantity' ) ) : ?>
-			<p><strong><?php _e( 'Max Quantity Per Purchase', 'LION' ); ?></strong><br /><?php it_exchange( 'product', 'purchase-quantity', array( 'format' => 'max-quantity' ) ); ?></p>
-		<?php endif; ?>
-		
-		<?php if ( it_exchange( 'product', 'has-availability', 'type=start' ) ) : ?>
-			<p><strong><?php _e( 'Product Start Availability', 'LION' ); ?></strong><br /><?php it_exchange( 'product', 'availability', array('type' => 'start' ) ); ?></p>
-		<?php endif; ?>
-		
-		<?php if ( it_exchange( 'product', 'has-availability', 'type=end' ) ) : ?>
-			<p><strong><?php _e( 'Product End Availability', 'LION' ); ?></strong><br /><?php it_exchange( 'product', 'availability', array('type' => 'end' ) ); ?></p>
-		<?php endif; ?>
-	</div>
+	<?php if ( it_exchange( 'product', 'has-extended-description' ) ) : ?>
+		<div class="extended-description advanced-item">
+			<?php it_exchange( 'product', 'extended-description' ); ?>
+		</div>
+	<?php endif; ?>
 </div>
