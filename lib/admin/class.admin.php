@@ -83,10 +83,10 @@ class IT_Exchange_Admin {
 		add_filter( 'get_user_option_screen_layout_it_exchange_prod', array( $this, 'update_user_column_options' ) );
 
 		// Save core settings
+		add_action( 'admin_init', array( $this, 'save_core_wizard_settings' ), 9 );
 		add_action( 'admin_init', array( $this, 'save_core_general_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_core_email_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_core_page_settings' ) );
-		add_action( 'admin_init', array( $this, 'save_core_wizard_settings' ) );
 
 		// Email settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_email', array( $this, 'register_email_settings_tab_callback' ) );
@@ -544,10 +544,18 @@ class IT_Exchange_Admin {
 			'id'      => apply_filters( 'it_exchange_settings_form_id', 'it-exchange-settings' ),
 			'enctype' => apply_filters( 'it_exchange_settings_form_enctype', false ),
 		);
-		if ( ! empty ( $this->status_message ) )
-			ITUtility::show_status_message( $this->status_message );
-		if ( ! empty( $this->error_message ) )
-			ITUtility::show_error_message( $this->error_message );
+		if ( $messages = it_exchange_get_messages( 'notice' ) ) {
+			foreach( $messages as $notice ) {
+				ITUtility::show_status_message( $notice );
+			}
+			it_exchange_clear_messages( 'notice' );
+		}
+		if ( $messages = it_exchange_get_messages( 'error' ) ) {
+			foreach( $messages as $error ) {
+				ITUtility::show_error_message( $error );
+			}
+			it_exchange_clear_messages( 'error' );
+		}
 		include( 'views/admin-wizard.php' );
 	}
 
@@ -971,7 +979,7 @@ Order: %s
 			return;
 			
 		if ( empty( $_REQUEST['it-exchange-transaction-methods'] ) ) {
-			$this->error_message = __( 'You must select at least one Payment Method.', 'LION' );
+			it_exchange_add_message( 'error', __( 'You must select at least one Payment Method.', 'LION' ) );
 			return;
 		}
 			
@@ -985,13 +993,11 @@ Order: %s
 		}
 
 		$settings = wp_parse_args( $general_settings, it_exchange_get_option( 'settings_general' ) );
-		if ( ! empty( $this->error_message ) || $error_msg = $this->general_settings_are_invalid( $settings ) ) {
-			
+		if ( it_exchange_has_messages( 'error' ) || $error_msg = $this->general_settings_are_invalid( $settings ) ) {
 			if ( ! empty( $error_msg ) ) {
-				$this->error_message = $error_msg;
+				it_exchange_add_message( 'error', $error_msg );
 				return;
 			}
-				
 		}
 		
 		$tx_error_msgs = array();
@@ -1006,7 +1012,9 @@ Order: %s
 		}
 
 		if ( ! empty( $tx_error_msgs ) ) {
-			$this->error_message = join( '<br />', $tx_error_msgs );
+			foreach( (array) $tx_error_msgs as $msg ) {
+				it_exchange_add_message( 'error', $msg );
+			}
 			return;
 		}
 				
@@ -1027,13 +1035,25 @@ Order: %s
 			it_exchange_enable_addon( $addon );
 		}
 
+		it_exchange_save_option( 'settings_general', $settings );
+
 		do_action( 'it_exchange_enabled_addons_loaded' );
 		do_action( 'it_exchange_save_wizard_settings' );
 		
-		it_exchange_save_option( 'settings_general', $settings );
-		$this->status_message = __( 'Settings Saved.', 'LION' );
-		
-		wp_safe_redirect( 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=digital-downloads-product-type' );
+
+		$settings = it_exchange_get_option( 'settings_general', true );
+		$sample_product = empty( $settings['sample-product-id'] ) ? false : it_exchange_get_product( $settings['sample-product-id'] );
+
+		$settings_saved = __( 'Settings Saved. Congrats!', 'LION' );
+		$add_product_link = sprintf( __( '%sAdd a Product%s', 'LION' ), '<a href="' . get_admin_url() . 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=digital-downloads-product-type">', '</a>' ); 
+		$view_addons_link = sprintf( __( '%sEnable Add-ons%s', 'Lion' ), '<a href="' . get_admin_url() . 'admin.php?page=it-exchange-addons">', '</a>' );
+
+		$view_sample_link = empty( $sample_product->ID ) ? '' : ' | ' . sprintf( __( '%sView Sample Product%s', 'LION' ), '<a href="' . get_admin_url() . 'post.php?post=' . $sample_product->ID . '&action=edit">', '</a>' );
+
+		it_exchange_add_message( 'notice', $settings_saved . ' ' . $add_product_link . ' | ' . $view_addons_link . $view_sample_link );
+
+		wp_redirect( get_admin_url() . 'admin.php?page=it-exchange-setup&it_exchange_settings-dismiss-wizard-nag=1' );
+		die();
 	}
 	
 	public function mail_chimp_signup( $email ) {

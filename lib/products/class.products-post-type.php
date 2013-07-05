@@ -768,7 +768,7 @@ class IT_Exchange_Product_Post_Type {
 
 		$args = array(
 			'type'                 => 'digital-downloads-product-type',
-			'status'               => 'publish',
+			'status'               => 'draft',
 			'show_in_store'        => true,
 			'description'          => $description,
 			'title'                => $title,

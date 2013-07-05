@@ -2,6 +2,8 @@
 /**
  * Functions for defining, initiating, and displaying iThemes Exchange Errors and Notices
  *
+ * Core types are 'notice' and 'error'
+ *
  * @since 0.4.0
  * @package IT_Exchange
 */
