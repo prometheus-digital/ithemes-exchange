@@ -24,10 +24,11 @@
 
 /** -----------------------------------------------------:[ payments ]:---------- */
 .it-exchange-wizard .payments{margin:32px 0 16px;}
-.it-exchange-wizard .payments li{width:110px;height:30px;padding:1.25em 2em;float:left;text-align:center;font-size:18px;font-weight:bold;background:#fff;color:#333;border:1px solid #d6d6d6;border-radius:4px;margin-right:1em;cursor:pointer;-webkit-transition:all .1s linear;-moz-transition:all .1s linear;transition:all .1s linear 0s;position:relative;}
+.it-exchange-wizard .payments li{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;width:182px;height:75px;float:left;text-align:center;font-size:18px;font-weight:bold;background:#fff;color:#333;border:1px solid #d6d6d6;border-radius:4px;margin-right:1em;cursor:pointer;-webkit-transition:all .1s linear;-moz-transition:all .1s linear;transition:all .1s linear 0s;position:relative;display:table;}
+.it-exchange-wizard .payments .payoption-spacer {border-radius:4px;display:table-cell;padding:0 20px;vertical-align:middle;}
 .it-exchange-wizard .payments li:hover{background:#fff;box-shadow:inset 0 0 20px #d6d6d6;}
-.it-exchange-wizard .payments li.selected{box-shadow:0 0 0 3px #2f83bd;border-color:transparent;}
-.it-exchange-wizard .stripe-payoption.inactive span{background:#95ce46;color:#263524;position:absolute;top:0;right:0;padding:5px 8px;font-size:12px;border-radius:0 0 0 3px;font-weight:bold;}
+.it-exchange-wizard .payments li.selected{box-shadow:0 0 0 3px #2f83bd;border-color:#2f83bd;}
+.it-exchange-wizard .stripe-payoption.inactive span{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background:#95ce46;color:#263524;position:absolute;top:0;right:0;padding:5px 8px;font-size:12px;border-radius:0 4px 0 3px;font-weight:bold;}
 
 /** -----------------------------------------------------:[ wizards ]:---------- */
 .it-exchange-wizard .stripe-wizard input[type="text"]{min-width:350px;font-family:Consolas,Monaco,monospace;font-size:15px;}
