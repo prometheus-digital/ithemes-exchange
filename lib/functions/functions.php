@@ -73,9 +73,9 @@ function it_exchange_format_price( $price, $show_symbol = true ) {
 	
 	if ( $show_symbol ) {
 		if ( 'after' === $settings['currency-symbol-position'] )
-			$after = $currency['symbol'];
+			$after = $currency;
 		else
-			$before = $currency['symbol'];
+			$before = $currency;
 	}
 			
 	return $before . number_format( $price, 2, $settings['currency-decimals-separator'], $settings['currency-thousands-separator'] ) . $after;
