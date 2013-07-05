@@ -20,13 +20,14 @@ define( 'PAYPAL_NVP_API_LIVE_URL', 'https://api-3t.paypal.com/nvp' );
 function it_exchange_print_paypal_standard_wizard_settings( $form ) {
 	$IT_Exchange_PayPal_Standard_Add_On = new IT_Exchange_PayPal_Standard_Add_On();
 	$settings = it_exchange_get_option( 'addon_paypal_standard', true );
+	$form_values = ITUtility::merge_defaults( ITForm::get_post_data(), $settings );
 	$hide_if_js =  it_exchange_is_addon_enabled( 'paypal-standard' ) ? '' : 'hide-if-js';
 	?>
 	<div class="field paypal-standard-wizard <?php echo $hide_if_js; ?>">
 	<?php if ( empty( $hide_if_js ) ) { ?>
         <input class="enable-paypal-standard" type="hidden" name="it-exchange-transaction-methods[]" value="paypal-standard" />
     <?php } ?>
-	<?php $IT_Exchange_PayPal_Standard_Add_On->get_paypal_standard_payment_form_table( $form, $settings ); ?>
+	<?php $IT_Exchange_PayPal_Standard_Add_On->get_paypal_standard_payment_form_table( $form, $form_values ); ?>
 	</div>
 	<?php
 }
