@@ -40,7 +40,7 @@
 						if ( $addon['sale'] )
 							$class .= ' sale';
 					?>
-					<?php $icon = empty( $addon['options']['icon'] ) ? $default_icon : $addon['options']['icon']; ?>
+					<?php $icon = empty( $addon['icon'] ) ? $default_icon : $addon['icon']; ?>
 					<div class="add-on-block <?php echo $class; ?>">
 						<div class="add-on-icon">
 							<div class="image-wrapper">
