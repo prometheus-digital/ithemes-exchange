@@ -567,7 +567,7 @@ class IT_Exchange_Transaction_Post_Type {
 		<?php
 		if ( it_exchange_transaction_status_can_be_manually_changed( $post ) ) : 
 			?>
-			<div class="transaction-status-update clearfix spacing-wrapper">
+			<div class="transaction-status-update clearfix spacing-wrapper hide-if-no-js">
 				<div class="update-status-label left">
 					<?php _e( 'Change Status', 'LION' ); ?>
 					<span class="tip" title="<?php _e( 'The customer will receive an email When this is changed from a status that is not cleared for delivery to a status that is cleared for delivery', 'LION' ); ?>">i</span>
@@ -591,8 +591,8 @@ class IT_Exchange_Transaction_Post_Type {
 					<?php wp_nonce_field( 'update-transaction-status' . $post->ID, 'it-exchange-update-transaction-nonce' ); ?>
 					<input type="hidden" id="it-exchange-update-transaction-current-status" value="<?php esc_attr_e( $current_status ); ?>" />
 					<input type="hidden" id="it-exchange-update-transaction-id" value="<?php esc_attr_e( $post->ID ); ?>" />
-					<div class="hidden" id="it-exchange-update-transaction-status-failed"><?php _e( 'Not Saved.', 'LION' ); ?></div>
-					<div class="hidden" id="it-exchange-update-transaction-status-success"><?php _e( 'Saved!', 'LION' ); ?></div>
+					<div id="it-exchange-update-transaction-status-failed"><?php _e( 'Not Saved.', 'LION' ); ?></div>
+					<div id="it-exchange-update-transaction-status-success"><?php _e( 'Saved!', 'LION' ); ?></div>
 				</div>
 			</div>
 			<?php

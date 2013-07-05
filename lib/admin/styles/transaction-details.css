@@ -49,7 +49,7 @@
 
 #it-exchange-transaction-details .transaction-status-update{position:relative;border-top:1px solid #DFDFDF;}
 #it-exchange-transaction-details .update-status-label{font-weight:bold;}
-#it-exchange-transaction-details .update-status-setting{position:relative;}
+#it-exchange-transaction-details .update-status-setting{position:relative;width:50%;}
 #it-exchange-update-transaction-status-failed,
-#it-exchange-update-transaction-status-success{position:absolute;top:5px;right:95px;width:135px;color:#407D28;}
-#it-exchange-update-transaction-status-failed{color:#D72E3A;}
+#it-exchange-update-transaction-status-success{position:absolute;top:3px;right:95px;padding:2px 4px;background:#407D28;border-radius:2px;color:#FFF;font-weight:100;opacity:0;}
+#it-exchange-update-transaction-status-failed{background:#D72E3A;}
