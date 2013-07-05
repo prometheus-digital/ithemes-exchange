@@ -306,7 +306,7 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 	);
 
 	$L_BUTTONVARS[] = 'business=' . $paypal_email;
-	$L_BUTTONVARS[] = 'item_name=' . $general_settings['company-name'] . ' ' . __( 'Shopping Cart', 'LION' );
+	$L_BUTTONVARS[] = 'item_name=' . it_exchange_get_cart_description();
 	$L_BUTTONVARS[] = 'amount=' . number_format( it_exchange_get_cart_total( false ), 2, '.', '' );
 	$L_BUTTONVARS[] = 'currency_code=' . $general_settings['default-currency'];
 	$L_BUTTONVARS[] = 'quantity=1';
