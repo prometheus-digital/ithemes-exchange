@@ -7,7 +7,7 @@
 #it-exchange-add-ons-wrap .nav-tab-wrapper .nav-tab:first-child{margin-right:0;}
 #it-exchange-add-ons-wrap .top-description{color:#676c6e;font-size:14px;line-height:1.5;max-width:800px;}
 
-.it-exchange-addon-settings label{display:block;font-size:13px;font-weight:bold;color:#3d4142;margin-bottom:5px;margin-left:2px;}
+.it-exchange-addon-settings label{display:block;font-size:13px;color:#3d4142;margin-bottom:5px;margin-left:2px;}
 .it-exchange-addon-settings input[type="text"],
 .it-exchange-addon-settings input[type="email"],
 .it-exchange-addon-settings input[type="password"],
@@ -16,6 +16,8 @@
 .it-exchange-addon-settings input[type="email"]:focus,
 .it-exchange-addon-settings input[type="password"]:focus,
 .it-exchange-addon-settings textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
+
+.it-exchange-addon-settings h4{margin-top:2.5em;font-size: 1.3em;}
 
 /** -----------------------------------------------------:[ addons ]:---------- */
 #it-exchange-add-ons-wrap .add-ons-wrapper{background:#FFF;border:1px solid #CCC;border-radius:3px;}
@@ -43,7 +45,7 @@
 #it-exchange-add-ons-wrap .add-on-block.sale .add-on-actions .add-on-price .regular-price{color:#f19b9b;text-decoration:line-through;}
 
 /** -----------------------------------------------------:[ addon settings ]:---------- */
-.it-exchange-addon-settings label{display:block;margin:1.5em 0 .5em;font-weight:bold;}
+.it-exchange-addon-settings label{display:block;margin:1.5em 0 .5em;}
 .it-exchange-addon-settings input[type='checkbox'] + label{display:inline;margin-left:.5em;}
 .it-exchange-addon-settings .hide-if-live-mode{display: none;}
 
