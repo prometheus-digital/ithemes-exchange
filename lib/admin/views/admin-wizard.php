@@ -15,7 +15,7 @@
 		<div class="it-exchange-wizard">
 			<div class="fields">
 				<div class="field payments">
-					<p><?php _e( 'How will you be accepting payments? Choose one.', 'LION' ); ?><span class="tip" title="<?php _e( "Choose your preferred payment gateway for processing transactions. You can select more than one option but it's not recommended.", 'LION' ); ?><a href='http://ithemes.com/'>ithemes</a>">i</span></p>
+					<p><?php _e( 'How will you be accepting payments? Choose one.', 'LION' ); ?><span class="tip" title="<?php _e( "Choose your preferred payment gateway for processing transactions. You can select more than one option but it's not recommended.", 'LION' ); ?>">i</span></p>
 					<ul>
 						<?php
 							$addons = it_exchange_get_addons( array( 'category' => 'transaction-methods', 'show_required' => false ) );
