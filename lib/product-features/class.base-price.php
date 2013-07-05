@@ -116,10 +116,13 @@ class IT_Exchange_Base_Price {
 		$description = __( 'Price', 'LION' );
 		$description = apply_filters( 'it_exchange_base-price_addon_metabox_description', $description );
 
+		$settings = it_exchange_get_option( 'settings_general' );
+		$currency = it_exchange_get_currency_symbol( $settings['default-currency'] ) 
+
 		// Echo the form field
 		?>
 			<label for="base-price"><?php esc_html_e( $description ); ?></label>
-			<input type="text" placeholder="<?php esc_attr_e( it_exchange_format_price( '0.00' ) ); ?>" id="base-price" name="it-exchange-base-price" value="<?php esc_attr_e( $product_base_price ); ?>" tabindex="2" />
+			<input type="text" placeholder="<?php esc_attr_e( it_exchange_format_price( '0.00' ) ); ?>" id="base-price" name="it-exchange-base-price" value="<?php esc_attr_e( $product_base_price ); ?>" tabindex="2" data-symbol="<?php esc_attr_e( $currency['symbol'] ); ?>" data-symbol-position="<?php esc_attr_e( $settings['currency-symbol-position'] ); ?>" data-thousands-separator="<?php esc_attr_e( $settings['currency-thousands-separator'] ); ?>" data-decimals-separator="<?php esc_attr_e( $settings['currency-decimals-separator'] ); ?>" />
 		<?php
 	}
 
