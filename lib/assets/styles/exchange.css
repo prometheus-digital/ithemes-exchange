@@ -84,7 +84,7 @@
 #it-exchange-cart .cart-column{display:table-cell;vertical-align:middle;}
 #it-exchange-cart .cart-column-inner{padding:10px;}
 #it-exchange-cart .cart-item-thumbnail{width:10%;}
-#it-exchange-cart .cart-item-thumbnail img{display:block;}
+#it-exchange-cart .cart-item-thumbnail img{display:block;width: 80px;}
 #it-exchange-cart .cart-item-title{width:50%;}
 #it-exchange-cart .cart-item-quantity{width:10%;}
 #it-exchange-cart .cart-item-quantity input{width:100%;}
