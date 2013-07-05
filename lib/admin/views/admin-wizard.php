@@ -32,14 +32,21 @@
 									$selected_class = '';
 								
 								echo '<li class="payoption ' . $addon['slug'] . '-payoption ' . $selected_class . '" transaction-method="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">';
+								echo '<div class="payoption-spacer">';
 								echo $name;
 								echo '<input type="hidden" class="remove-if-js" name="it-exchange-transaction-methods[]" value="' . $addon['slug'] . '" />';
-								echo  '</li>';
+								echo '</div>';
+								echo '</li>';
 							}
 						?>
 						
 						<?php if ( ! it_exchange_is_addon_registered( 'stripe' ) ) : ?>
-							<li class="stripe-payoption inactive" data-toggle="stripe-wizard"><img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/stripe32.png' ); ?>" alt="<?php _e( 'Stripe', 'LION' ); ?>" /><span>$</span></li>
+							<li class="stripe-payoption inactive" data-toggle="stripe-wizard">
+								<div class="payoption-spacer">
+									<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/stripe32.png' ); ?>" alt="<?php _e( 'Stripe', 'LION' ); ?>" />
+									<span>$</span>
+								</div>
+							</li>
 						<?php endif; ?>
 					</ul>
 				</div>
