@@ -39,7 +39,7 @@
 						?>
 						
 						<?php if ( ! it_exchange_is_addon_registered( 'stripe' ) ) : ?>
-							<li class="stripe-payoption inactive" data-toggle="stripe-wizard">Stripe<span>$</span></li>
+							<li class="stripe-payoption inactive" data-toggle="stripe-wizard"><img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/stripe32.png' ); ?>" alt="<?php _e( 'Stripe', 'LION' ); ?>" /><span>$</span></li>
 						<?php endif; ?>
 					</ul>
 				</div>
