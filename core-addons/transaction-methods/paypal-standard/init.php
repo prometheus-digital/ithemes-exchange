@@ -682,7 +682,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 			<p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'LION' ); ?></p>
 			<code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
             <h4><?php _e( 'Step 5. Setup PayPal Payment Data Transfer (PDT)', 'LION' ); ?></h4>
-			<p><?php _e( 'PayPal PDT must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
+			<p><?php _e( 'PayPal PDT must be turned <strong>ON</strong> in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
 		</div>
 		<?php
 	}
