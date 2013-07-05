@@ -58,8 +58,8 @@
 #it-exchange-product .has-images .product-images{width:40%;}
 #it-exchange-product .product-description {margin-bottom: 2em;}
 #it-exchange-product .product-standard-content {margin-bottom: 2em;}
-#it-exchange-product .product-price {font-size: 2em;border-top: 1px solid #ebebeb;border-bottom: 1px solid #ebebeb;margin-bottom: 1em;}
-#it-exchange-product .product-price p {margin-bottom: 0;padding: .25em 0;}
+#it-exchange-product .product-price {font-size: 2em;border-top: 1px solid #ebebeb;border-bottom: 1px solid #ebebeb;margin-bottom: 1em; margin-top: 1em;}
+#it-exchange-product .product-price p {margin: 0;padding: .25em 0;}
 
 /** ----------------------------------------:[ gallery ]:--- */
 #it-exchange-product .it-exchange-product-images-gallery img{display:block;margin:0;padding:0;max-width:100%;border:0;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
