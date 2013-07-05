@@ -384,7 +384,9 @@ class IT_Exchange_Offline_Payments_Add_On {
 			foreach ( $settings as $key => $var )
 				$form->set_option( $key, $var );
 
-		?>
+        if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] ) : ?>
+            <h3><?php _e( 'Offline Payments', 'LION' ); ?></h3>
+        <?php endif; ?>
         <p><?php _e( 'Offline payments allow customers to purchase products from your site using check or cash. Transactions can be set as pending until you receive payment.', 'LION' ); ?></p>
 		<p><?php printf( __( '%sVideo: Getting Offline Payments Setup with Exchange%s', 'LION' ), '<a href="http://ithemes.com/tutorials/using-offline-payments-in-exchange">', '</a>' ); ?></p>
         <p><?php _e( 'To process payments offline, complete the settings below.', 'LION' ); ?></p>

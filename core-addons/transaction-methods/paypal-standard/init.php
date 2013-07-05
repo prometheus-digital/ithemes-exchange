@@ -623,6 +623,10 @@ class IT_Exchange_PayPal_Standard_Add_On {
 
 		$general_settings = it_exchange_get_option( 'settings_general' );
 
+		if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] ) : ?>
+			<h3><?php _e( 'PayPal Standard', 'LION' ); ?></h3>
+		<?php endif;
+
 		if ( !empty( $settings ) )
 			foreach ( $settings as $key => $var )
 				$form->set_option( $key, $var );
