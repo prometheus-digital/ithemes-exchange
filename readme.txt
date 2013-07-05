@@ -13,8 +13,6 @@ Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordP
 = SELL YOUR STUFF ONLINE IN UNDER 5 MINUTES =
 We've made it easy to get your store up and running by making the process simple. Just install, activate, choose your payment methods and start adding your products.
 
-<sales video?>
-
 = A SIMPLE INTERFACE =
 Your products are not blog posts. So we created an experience that makes creating products simpler and more intuitive.
 
@@ -36,20 +34,57 @@ We've been building and supporting WordPress tools for 5 years. With our full ra
 
 We hope you'll try Exchange and love it. But we also want to hear what we can do to make it work best for your business.
 
-Email with ideas and feedback here.
+Send us your ideas and feedback here: http://ithemes.com/contact
 
-= FEATURES =
-- Accept Stripe, PayPal or Offline Payments - Process transitions with payment gateways like Stripe and PayPal Standard or take payments offline.
-- Multi-item Cart - Allow customers to purchase multiple products with one transaction
-- Coupons - Generate basic coupons that apply to all products in your store
-- Sales Reports - View basic sales statistics from the Admin Dashboard
-- Customizable Email Receipts - Personalize your email receipts with a WSIWYG Email Template
-- Enable Product Categories and Taxonomies - Organize your store by applying categories and grouping with taxonomies
+
+== FEATURES ==
+For more information, visit: http://ithemes.com/exchange
+
+= Add-ons =
+
+Add only the features you need with Exchange Add-ons for payment gateways (offline payments, PayPal or Stripe), coupons, digital downloads, sales reports, multi-item cart, product categories and product tags.
+
+* Accept PayPal Standard or Offline Payments - Process transitions out-of-the-box with PayPal Standard or take payments offline to process cash or check payments
+* Stripe - Enable the premium Stripe Add-on to process payments with Stripe, our recommended payment gateway
+* Coupons - Generate basic coupons that apply to all products in your store
+* Multi-item Cart - Allow customers to purchase multiple products with one transaction
+* Basic Reporting Dashboard Widget - View basic sales statistics from the WordPress admin dashboard
+* Digital Downloads - Add a product type for distributing digital downloads through iThemes Exchange
+* Product Categories and Tags - Organize your store by grouping with category and tag taxonomies
+ 
+= Advanced Product Options =
+
+iThemes Exchange allows you to create products quickly and easily. But sometimes you need more than just the basics, so Advanced Product Options help by offering additional ways to manage products.
+
+* Download Expirations - Option to apply settings for download links to expire or to limit access to download links/file downloads
+* Product Availability - Apply product availability start and end dates
+* Product Inventory - Set and track product inventories
+* Hidden Source Files for Digital Product Downloads - Use source file URLs from the WordPress media library or from Dropbox, Amazon, etc. and exchange automatically hides this source URL for digital product downloads.
+* LoopBuddy compatibly - Use LoopBuddy queries and layouts for individual product
+* Builder compatibility - Apply iThemes Builder layouts for individual products
+
+= Payment and Customer Management =
+
+*View transaction details and manager customers from within Exchange
+Payment/Transaction Details - See order number, payment total, status, customer, payment method and date of payment for individual transactions
+* Customer Registration - Use Exchange Registration or WordPress Registration settings
+* Customer Data - Manage customers by viewing products purchased, transactions or add notes to customer info.
+* Issue Refunds or Resend Confirmation Emails - Easily issue refunds or resend confirmation emails for individual customers
+ 
+= Customizable Emails =
+
+* Use the WordPress WSIWYG editor to make custom email templates for Admin Sales Notification emails and Customer Receipt Emails. HTML is accepted.
+* Admin Sales Notification Emails - Customize the email sent to admins for sales notifications
+* Customer Receipt Emails - Customize the receipt emails customers receive after making a purchase
+* Email Shortcode functions - Use built-in shortcode functions in emails for customer name, full name, username, download list, order table, purchase date, total, payment id, receipt id, payment method, site name and receipt links
+
+
 
 == Installation ==
 
 Upload the Exchange plugin to your blog, Activate it, and enable the Digital
-Downloads add-on and an transaction method addon.
+Downloads add-on and an transaction method addon. For more information, visit:
+http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
 
