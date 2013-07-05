@@ -173,6 +173,7 @@ add_action( 'admin_init', 'it_exchange_register_activation_hook' );
 function it_exchange_flush_rewrite_rules() {
 	if ( false !== get_option( '_it-exchange-flush-rewrites', false ) ) {
 		delete_option( '_it-exchange-flush-rewrites' );
+		it_exchange_get_pages( true );
 		flush_rewrite_rules();
 	}
 }
