@@ -122,7 +122,7 @@ class IT_Exchange_Base_Price {
 		// Echo the form field
 		?>
 			<label for="base-price"><?php esc_html_e( $description ); ?></label>
-			<input type="text" placeholder="<?php esc_attr_e( it_exchange_format_price( '0.00' ) ); ?>" id="base-price" name="it-exchange-base-price" value="<?php esc_attr_e( $product_base_price ); ?>" tabindex="2" data-symbol="<?php esc_attr_e( $currency['symbol'] ); ?>" data-symbol-position="<?php esc_attr_e( $settings['currency-symbol-position'] ); ?>" data-thousands-separator="<?php esc_attr_e( $settings['currency-thousands-separator'] ); ?>" data-decimals-separator="<?php esc_attr_e( $settings['currency-decimals-separator'] ); ?>" />
+			<input type="text" placeholder="<?php esc_attr_e( it_exchange_format_price( '0.00' ) ); ?>" id="base-price" name="it-exchange-base-price" value="<?php esc_attr_e( $product_base_price ); ?>" tabindex="2" data-symbol="<?php esc_attr_e( $currency ); ?>" data-symbol-position="<?php esc_attr_e( $settings['currency-symbol-position'] ); ?>" data-thousands-separator="<?php esc_attr_e( $settings['currency-thousands-separator'] ); ?>" data-decimals-separator="<?php esc_attr_e( $settings['currency-decimals-separator'] ); ?>" />
 		<?php
 	}
 

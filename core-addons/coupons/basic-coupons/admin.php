@@ -263,7 +263,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 					$currency = $settings['default-currency'];
 					$symbol   = it_exchange_get_currency_symbol( $currency );
 					?>
-					<?php $form->add_drop_down( 'amount-type', array( '%' => __( '% Percent', 'LION' ), 'amount' => $symbol['symbol']. ' ' . $currency ) ); ?>
+					<?php $form->add_drop_down( 'amount-type', array( '%' => __( '% Percent', 'LION' ), 'amount' => $symbol . ' ' . $currency ) ); ?>
 				</div>
 				
 				<div class="field date" data-alert="<?php _e( 'Please select an end date that is after the start date.', 'LION' ); ?>">

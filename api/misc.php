@@ -415,5 +415,6 @@ function it_exchange_get_currency_options() {
 function it_exchange_get_currency_symbol( $country_code ) {
 	$currencies = it_exchange_get_currency_options();
 	$symbol = empty( $currencies[$country_code] ) ? '$' : $currencies[$country_code];
+	$symbol = ( is_array( $symbol ) && ! empty( $symbol['symbol'] ) ) ? $symbol['symbol'] : '$';
 	return apply_filters( 'it_exchange_get_currency_symbol', $symbol );
 }

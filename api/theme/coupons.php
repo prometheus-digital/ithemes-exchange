@@ -214,7 +214,10 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 	}
 
 	function discount( $options=array() ) {
-		return $this->coupon['amount_number'] . ' ' . $this->coupon['amount_type'];
+		if ( 'amount' == $this->coupon['amount_type'] )
+			return it_exchange_format_price( $this->coupon['amount_number'] );
+		else
+			return $this->coupon['amount_number'] . ' ' . $this->coupon['amount_type'];
 	}
 
 	/**
