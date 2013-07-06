@@ -249,6 +249,7 @@ class IT_Exchange_Email_Notifications {
 	 * @return string Replaced value
 	*/
 	function it_exchange_replace_download_list_tag( $args, $options = NULL ) {
+		$status_notice = '';
 		ob_start();
 		// Grab products attached to transaction
 		$transaction_products = it_exchange_get_transaction_products( $args->transaction_id );
@@ -257,25 +258,36 @@ class IT_Exchange_Email_Notifications {
 		$hashes   = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
 		?>
 			<div style="border-top: 1px solid #EEE">
+				<h3><?php _e( 'Available Downloads', 'LION' ); ?></h3>
 				<?php foreach ( $transaction_products as $transaction_product ) : ?>
 					<?php
 						$product_id = $transaction_product['product_id'];
 						$db_product = it_exchange_get_product( $transaction_product );
 					?>
-					<h3><?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?></h3>
-					<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : ?>
-						<?php $count = it_exchange_get_transaction_product_feature( $transaction_product, 'count' ); ?>
-						<?php if ( $count > 1 ) : ?>
-							<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
-							<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%s%sEach link has its own download limits and you can view the details on you %sdownloads%s page.', 'LION' ), $count, '<br />', '<br />', '<a href="' . $downloads_url . '">', '</a>' ); ?></p>
-						<?php endif; ?>
+					<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : $downloads_exist_for_transaction = true; ?>
 						<?php if ( ! it_exchange_transaction_is_cleared_for_delivery( $args->transaction_id ) ) : ?>
-							<p><?php _e( 'The status for this transaction does not grant access to downlodable files. Once the transaction is updated to an appoved status, you will receive a follup email with your download links.', 'LION' ); ?></p>
-						<?php endif; ?>
-						<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
-							<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $args->transaction_id, $transaction_product, $download_id ); ?>
-							<h4><?php esc_attr_e( get_the_title( $download_id ) ); ?></h4>
-							<?php if ( it_exchange_transaction_is_cleared_for_delivery( $args->transaction_id ) ) : ?>
+							<?php
+							/* Status notice is blank by default and printed here, in the email if downloads are available.
+							 * If downloads are not available for this transaction (tested in loop below), this echo of the status notice won't be printed.
+							 * But we know that downloads will be available if the status changes so we set print the message instead of the files.
+							 * If no files exist for the transaction, then there is no need to print this message even if status is pending
+							 * Clear as mud.
+							*/
+							$status_notice = '<p>' . __( 'The status for this transaction does not grant access to downlodable files. Once the transaction is updated to an appoved status, you will receive a follup email with your download links.', 'LION' ) . '</p>';
+							echo $status_notice;
+							$status_notice = '<h3>' . __( 'Available Downloads', 'LION' ) . '</h3>' . $status_notice;
+							?>
+						<?php else : ?>
+							<h4><?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?></h4>
+							<?php $count = it_exchange_get_transaction_product_feature( $transaction_product, 'count' ); ?>
+							<?php if ( $count > 1 ) : ?>
+								<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
+								<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%s%sEach link has its own download limits and you can view the details on you %sdownloads%s page.', 'LION' ), $count, '<br />', '<br />', '<a href="' . $downloads_url . '">', '</a>' ); ?></p>
+							<?php endif; ?>
+							<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
+								<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $args->transaction_id, $transaction_product, $download_id ); ?>
+								<?php $hashes_found = ( ! empty( $hashes_found ) || ! empty( $hashes_for_product_transaction ) ); // If someone purchases a product prior to downloads existing, they dont' get hashes/downloads ?>
+								<h5><?php esc_attr_e( get_the_title( $download_id ) ); ?></h5>
 								<ul class="download-hashes">
 									<?php foreach( (array) $hashes_for_product_transaction as $hash ) : ?>
 										<?php
@@ -288,14 +300,18 @@ class IT_Exchange_Email_Notifications {
 										</li>
 									<?php endforeach; ?>
 								</ul>
-							<?php endif; ?>
-						<?php endforeach; ?>
+							<?php endforeach; ?>
+						<?php endif; ?>
 					<?php endif; ?>
 				<?php endforeach; ?>
 			</div>
 		<?php
 		
-		return ob_get_clean();
+		if ( empty( $downloads_exist_for_transaction ) || empty( $hashes_found ) ) {
+			return $status_notice;
+		} else {
+			return ob_get_clean();
+		}
 	}
 	
 	/**
@@ -356,7 +372,9 @@ class IT_Exchange_Email_Notifications {
 	*/
 	function it_exchange_replace_order_table_tag( $args, $options = NULL ) {
 		
-		$purchase_message_on = false;
+		$purchase_messages_heading  = '<h3>' . __( 'Important Information', 'LION' ). '</h3>';
+		$purchase_messages          = '';
+		$purchase_message_on        = false;
 		
 		if ( in_array( 'purchase_message', $options ) )
 			$purchase_message_on = true;
@@ -379,6 +397,15 @@ class IT_Exchange_Email_Notifications {
 								<td style="padding: 10px;border:1px solid #DDD;"><?php esc_attr_e( it_exchange_get_transaction_product_feature( $product, 'count' ) ); ?></td>
 								<td style="padding: 10px;border:1px solid #DDD;"><?php esc_attr_e( it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ) ) ); ?></td>
 							</tr>
+
+							<?php 
+							// Generate Purchase Messages
+							if ( $purchase_message_on && it_exchange_product_has_feature( $product['product_id'], 'purchase-message' ) ) {
+								$purchase_messages .= '<h4>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'product_name' ) ) . '</h4>';
+								$purchase_messages .= '<p>' . it_exchange_get_product_feature( $product['product_id'], 'purchase-message' ) . '</p>';
+							}
+							?>
+
 						<?php endforeach; ?>
 					<?php endif; ?>
 				</tbody>
@@ -392,7 +419,8 @@ class IT_Exchange_Email_Notifications {
 		<?php
 		
 		$table = ob_get_clean();
-		
+		$table .= empty( $purchase_messages ) ? '' : $purchase_messages_heading . $purchase_messages;
+
 		return $table;
 	}
 	
