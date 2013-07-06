@@ -45,6 +45,19 @@ function it_exchange_register_core_addons() {
 			'tag'               => 'core',
 			'settings-callback' => 'it_exchange_paypal_standard_settings_callback',
 		),
+		// PayPal Standard Transaction Method
+		'paypal-standard-secure' => array(
+			'name'              => __( 'PayPal Standard (secure)', 'LION' ),
+			'description'       => __( 'Process transactions via the PayPal Standard gateway, securely.', 'LION' ),
+			'author'            => 'iThemes',
+			'author_url'        => 'http://ithemes.com',
+			'icon'              => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/transaction-methods/paypal-standard-secure/images/paypal50px.png' ),
+			'wizard-icon'       => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/transaction-methods/paypal-standard-secure/images/wizard-paypal.png' ),
+			'file'              => dirname( __FILE__ ) . '/transaction-methods/paypal-standard-secure/init.php',
+			'category'          => 'transaction-methods',
+			'tag'               => 'core',
+			'settings-callback' => 'it_exchange_paypal_standard_secure_settings_callback',
+		),
 		// Digital Download Product Types
 		'digital-downloads-product-type' => array(
 			'name'        => __( 'Digital Downloads', 'LION' ),

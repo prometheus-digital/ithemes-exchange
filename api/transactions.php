@@ -730,7 +730,35 @@ function it_exchange_get_transaction_method_name( $transaction ) {
 }
 
 /**
- * Returns the name of a transaction method used for a specific transaction
+ * Updates the ID of a transaction method used for a specific transaction
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @param string $method_id ID from the transaction method
+ * @return string
+*/
+function it_exchange_update_transaction_method_id( $transaction, $method_id ) {
+	$transaction = it_exchange_get_transaction( $transaction );
+	return update_post_meta( $transaction->ID, '_it_exchange_transaction_method_id', $method_id );
+}
+
+/**
+ * Updates the Cart Object of a transaction
+ *
+ * @since 0.4.0
+ *
+ * @param mixed $transaction ID or object
+ * @param object $cart_object Cart Object for specific transaction
+ * @return string
+*/
+function it_exchange_update_transaction_cart_object( $transaction, $cart_object ) {
+	$transaction = it_exchange_get_transaction( $transaction );
+	return update_post_meta( $transaction->ID, '_it_exchange_cart_object', $cart_object );
+}
+
+/**
+ * Returns the ID of a transaction method used for a specific transaction
  *
  * @since 0.4.0
  *
