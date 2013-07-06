@@ -344,8 +344,6 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 
 	}
 	
-	$payment_form .= '<input type="submit" id="it-exchange-paypal-button-substitute" value="Pay with Paypal" style="display:none;" />';
-	
 	return $payment_form;
 }
 add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_paypal_standard_addon_make_payment_button', 10, 2 );
