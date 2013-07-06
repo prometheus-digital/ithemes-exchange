@@ -130,7 +130,8 @@ class IT_Exchange_Product_Post_Type {
 			),
 			'register_meta_box_cb' => array( $this, 'meta_box_callback' ),
 			'rewrite' => array(
-				'slug' => 'product',
+				'slug'       => 'product',
+				'with_front' => false,
 			),
 		);
 
