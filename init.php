@@ -2,7 +2,7 @@
 /*
  * Plugin Name: iThemes Exchange
  * Version: 0.4.18
- * Description: Turns your WordPress site into a Lean, Mean Selling Machine!
+ * Description: Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordPress
  * Plugin URI: http://ithemes.com/exchange/
  * Author: iThemes
  * Author URI: http://ithemes.com
