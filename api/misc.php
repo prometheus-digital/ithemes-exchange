@@ -6,6 +6,18 @@
 */
 
 /**
+ * Generate a unique hash, with microtime and uniqid this should always be unique
+ *
+ * @since 0.4.0
+ *
+ * @return string the hash
+*/
+function it_exchange_create_unique_hash() {
+	$hash = str_replace( '.', '', microtime( true ) . uniqid() ); //Remove the period from microtime, cause it's ugly
+	return apply_filters( 'it_exchange_generate_unique_hash', $hash );
+}
+
+/**
  * Pass a PHP date format string to this function to return its jQuery datepicker equivalent
  *
  * @since 0.4.16

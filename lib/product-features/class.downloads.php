@@ -68,7 +68,7 @@ class IT_Exchange_Product_Feature_Downloads {
 								$expire_time = strtotime( '+' . $int . ' ' . $units );
 						}
 						
-						$hash = it_exchange_create_download_hash();
+						$hash = it_exchange_create_unique_hash();
 						
 						// Create initial hash data package
 						$hash_data = array(

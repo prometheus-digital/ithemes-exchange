@@ -7,18 +7,6 @@
 */
 
 /**
- * Generate a unique hash for file downloads, with microtime and uniqid this should always be unique
- *
- * @since 0.4.0
- *
- * @return string the hash
-*/
-function it_exchange_create_download_hash() {
-	$hash = str_replace( '.', '', microtime( true ) . uniqid() ); //Remove the period from microtime, cause it's ugly
-	return apply_filters( 'it_exchange_generate_download_hash', $hash );
-}
-
-/**
  * Adds metadata associated with a transaction to the download
  *
  * Doesn't work if hash already exists
