@@ -22,7 +22,7 @@
 </div>
 
 <div class="recent-transactions">
-	<p><label><?php _e( 'Recent Sales', 'LION' ); ?></label> <a href="<?php echo get_admin_url(); ?>/edit.php?post_type=it_exchange_tran" class="view-all"><?php _e( 'View all', 'LION' ); ?></a></p>
+	<p><label><?php _e( 'Recent Sales', 'LION' ); ?></label> <a href="<?php echo get_admin_url(); ?>edit.php?post_type=it_exchange_tran" class="view-all"><?php _e( 'View all', 'LION' ); ?></a></p>
 	<?php if ( $transactions = it_exchange_get_transactions( array( 'posts_per_page' => 5 ) ) ) : ?>
 		<?php foreach( $transactions as $transaction ) : ?>
 			<div class="columns-wrapper columns-recent">
@@ -40,5 +40,5 @@
 	<?php else : ?>
 		<?php _e( 'No transactions.', 'LION' ); ?>
 	<?php endif; ?>
-	<p><a href="<?php echo get_admin_url(); ?>/edit.php?post_type=it_exchange_tran" class="view-all"><?php _e( 'View all', 'LION' ); ?></a></p>
+	<p><a href="<?php echo get_admin_url(); ?>edit.php?post_type=it_exchange_tran" class="view-all"><?php _e( 'View all', 'LION' ); ?></a></p>
 </div>
