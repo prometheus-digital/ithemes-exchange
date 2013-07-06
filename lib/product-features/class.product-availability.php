@@ -182,17 +182,27 @@ class IT_Exchange_Product_Feature_Product_Availability {
 		$avail['start'] = empty( $_POST['it-exchange-product-availability-start'] ) ? '' : $_POST['it-exchange-product-availability-start'];
 		$avail['end']   = empty( $_POST['it-exchange-product-availability-end'] ) ? '' : $_POST['it-exchange-product-availability-end'];
 		
+
+		// Loop through start and end dates
 		foreach( $avail as $key => $val ) {	
 			
+			// Get the user's option set in WP General Settings
+			$wp_date_format = get_option( 'date_format', 'm/d/Y' );
+
+			// strtotime requires formats starting with day to be separated by - and month separated by /
+			if ( 'd' == substr( $wp_date_format, 0, 1 ) )
+				$val = str_replace( '/', '-', $val );
+
+			// Transfer to epoch
 			if ( $epoch = strtotime( $val ) ) {			
 			
+				 // Returns an array with values of each date segment
 				 $date = date_parse( $val );
-				 
+
+				 // Confirms we have a legitimate date
 				 if ( checkdate( $date['month'], $date['day'], $date['year'] ) )
 					 $new_value[$key] = $epoch;
-				 
 			}
-				 
 		}
 				
 		if ( ! empty( $new_value['start'] ) && ! empty( $new_value['end'] ) 
