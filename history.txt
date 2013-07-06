@@ -1,3 +1,20 @@
+0.4.19 - 2013-07-06 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Chris Jean
+	Set with_front to false for product rewrites
+	Remove extra slash from View All link in reporting dashboard widget
+	Add Purchase Message to confirmation emails
+	Fix bug preventing Product Availability from saving if date_format started with day.
+	Update plugin description to Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordPress
+	Fix incorrect coupon label in shopping cart
+	Fix PHP error related to currency symbol
+	Added some reformatted styles to the product price.
+	Moved the optional Paypal Sandbox setting to the end of the form.
+	Updated readme.txt
+	Increased font size for the h4 headings on the wizard.
+	Fixed paypal setting variables in transaction processing
+	Removed link in Wizard tooltip that should not have been there.
+	Convert the currency to a number based format on focus out of the input field
+	Removed rogue HTML link (displayed as plain text) to iThemes.com in a tooltip in the setup wizard.
+	Cleaned up formatting of the payoption buttons in the setup wizard.
 0.4.18 - 2013-07-05 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Chris Jean
 	Add stripe image to uninstalled stripe select box in wizard
 	Add H3s back to wizard for paypal and offline payments
