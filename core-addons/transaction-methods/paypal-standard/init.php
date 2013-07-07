@@ -6,7 +6,8 @@
  * @since 0.2.0
 */
 
-define( 'PAYPAL_PAYMENT_URL', 'https://www.paypal.com/cgi-bin/webscr' );
+if ( !defined( 'PAYPAL_PAYMENT_URL' ) )
+	define( 'PAYPAL_PAYMENT_URL', 'https://www.paypal.com/cgi-bin/webscr' );
 
 /**
  * Outputs wizard settings for PayPal
@@ -230,6 +231,7 @@ add_action( 'it_exchange_save_paypal-standard_wizard_settings', 'it_exchange_sav
 function it_exchange_paypal_standard_addon_default_settings( $values ) {
 	$defaults = array(
 		'paypal-standard-live-email-address' => '',
+		'paypal-standard-purchase-button-label' => __( 'Pay with PayPal', 'LION' ),
 	);
 	$values = ITUtility::merge_defaults( $values, $defaults );
 	return $values;
@@ -259,7 +261,7 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 		$it_exchange_customer = it_exchange_get_current_customer();
 
 		$payment_form .= '<form action="' . get_site_url() . '/?paypal-standard-form=1" method="post">';
-		$payment_form .= '<input type="submit" class="it-exchange-paypal-standard-button" name="paypal_standard_purchase" value="' . __( 'Pay with PayPal', 'LION' ) .'" />';
+		$payment_form .= '<input type="submit" class="it-exchange-paypal-standard-button" name="paypal_standard_purchase" value="' . $paypal_settings['paypal-standard-purchase-button-label'] .'" />';
 		$payment_form .= '</form>';
 	
 	}
@@ -675,6 +677,10 @@ class IT_Exchange_PayPal_Standard_Add_On {
 				<label for="paypal-standard-live-email-address"><?php _e( 'PayPal Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-live-email-address' ); ?>
 			</p>
+			<p>
+				<label for="paypal-standard-purchase-button-label"><?php _e( 'Purchase Button Label', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the text inside the button your customers will press to purchase with PayPal Standard', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'paypal-standard-purchase-button-label' ); ?>
+			</p>
 		</div>
 		<?php
 	}
@@ -715,8 +721,12 @@ class IT_Exchange_PayPal_Standard_Add_On {
 
 		$paypal_standard_settings = array();
 
-		$default_wizard_paypal_standard_settings = apply_filters( 'default_wizard_paypal-standard_settings', array( 'paypal-standard-live-email-address' ) );
-
+		$fields = array(
+			'paypal-standard-live-email-address',
+			'paypal-standard-purchase-button-label',
+		);
+		$default_wizard_paypal_standard_settings = apply_filters( 'default_wizard_paypal-standard_settings', $fields );
+		
 		foreach( $default_wizard_paypal_standard_settings as $var ) {
 
 			if ( isset( $_REQUEST['it_exchange_settings-' . $var] ) ) {
