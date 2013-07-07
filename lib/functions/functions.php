@@ -203,26 +203,29 @@ function it_exchange_reset_everything() {
 	if ( empty( $data['reset-exchange'] ) )
 		return;
 
+	// Use Post stati rather than 'any' for post type to include trashed and other non-searchable stati
+	$stati = array_keys( get_post_stati() );
+
 	// Delete all Products 
-	while( $products = it_exchange_get_products( array( 'posts_per_page' => 20, 'post_status' => 'any' ) ) ) {
+	while( $products = it_exchange_get_products( array( 'posts_per_page' => 20, 'post_status' => $stati ) ) ) {
 		foreach ( $products as $product ) {
 			wp_delete_post( $product->ID, true );
 		}
 	}
 	// Delete all Transactions
-	while( $transactions = it_exchange_get_transactions( array( 'posts_per_page' => 20, 'post_status' => 'any' ) ) ) {
+	while( $transactions = it_exchange_get_transactions( array( 'posts_per_page' => 20, 'post_status' => $stati ) ) ) {
 		foreach ( $transactions as $transaction ) {
 			wp_delete_post( $transaction->ID, true );
 		}
 	}
 	// Delete all Transactions
-	while( $coupons = it_exchange_get_coupons( array( 'posts_per_page' => 20, 'post_status' => 'any' ) ) ) {
+	while( $coupons = it_exchange_get_coupons( array( 'posts_per_page' => 20, 'post_status' => $stati ) ) ) {
 		foreach ( $coupons as $coupon ) {
 			wp_delete_post( $coupon->ID, true );
 		}
 	}
 	// Delete all Downloads (post types, not files uploaded to WP Media Library
-	while( $downloads = get_posts( array( 'post_type' => 'it_exchange_download', 'post_status' => 'any' ) ) ) {
+	while( $downloads = get_posts( array( 'post_type' => 'it_exchange_download', 'post_status' => $stati ) ) ) {
 		foreach ( $downloads as $download ) {
 			wp_delete_post( $download->ID, true );
 		}
