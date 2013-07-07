@@ -615,7 +615,7 @@ class IT_Exchange_Admin {
 		$defaults = array(
 			'notification-email-address' => esc_attr( get_bloginfo( 'admin_email' ) ),
 			'admin-email-address'      => esc_attr( get_bloginfo( 'admin_email' ) ),
-			'admin-email-name'         => esc_attr( get_bloginfo( 'name' ) ),
+			'admin-email-name'         => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
 			'admin-email-subject'      => sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'LION' ), '[it_exchange_email show=receipt_id]' ),
 			'admin-email-template'     => sprintf( __( "Your friend %s just bought all this awesomeness from your store!
 
@@ -623,7 +623,7 @@ Order: %s
 
 %s", 'LION' ), '[it_exchange_email show=fullname]', '[it_exchange_email show=receipt_id]', '[it_exchange_email show=order_table]' ),
 			'receipt-email-address'      => esc_attr( get_bloginfo( 'admin_email' ) ),
-			'receipt-email-name'         => esc_attr( get_bloginfo( 'name' ) ),
+			'receipt-email-name'         => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
 			'receipt-email-subject'      => sprintf( __( 'Receipt for Purchase: %s', 'LION' ), '[it_exchange_email show=receipt_id]' ),
 			'receipt-email-template'     => sprintf( __( "Hello %s,
 

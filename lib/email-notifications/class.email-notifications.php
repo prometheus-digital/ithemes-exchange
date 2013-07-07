@@ -493,7 +493,7 @@ class IT_Exchange_Email_Notifications {
 	 * @return string Replaced value
 	*/
 	function it_exchange_replace_sitename_tag( $args, $options = NULL ) {
-		return get_bloginfo( 'name' );
+		return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
 	}
 	
 	/**
