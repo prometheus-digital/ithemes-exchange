@@ -1,3 +1,14 @@
+0.4.20 - 2013-07-07 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+	Fix bug that didn't delete posts with stati set to not return in searches when reseting Exchange
+	Added custom PayPal Standard (insecure/secure) button functionality
+	Fix autop in extended description
+	General admin styles cleanup.
+	Increased the font size for the p on the add-ons screen.
+	Added setup page to is_exchange_admin_page() to add it-exchange-admin class to body.
+	Fixed webhook problem with two paypals
+	PayPal Standard non-Secure
+	Fix bug that showed customers other's transactions / downloads
+	Escape bloginfo( 'name' ) calls better.
 0.4.19 - 2013-07-06 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Chris Jean
 	Set with_front to false for product rewrites
 	Remove extra slash from View All link in reporting dashboard widget
