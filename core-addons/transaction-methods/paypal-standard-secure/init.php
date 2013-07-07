@@ -736,6 +736,22 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 				<label for="paypal-standard-secure-live-api-signature"><?php _e( 'PayPal API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-secure-live-api-signature' ); ?>
 			</p>
+            <h4><?php _e( 'Step 3. Setup PayPal Instant Payment Notifications (IPN)', 'LION' ); ?></h4>
+			<p><?php _e( 'PayPal IPN must be configured in Account Profile -› Instant Payment Notification Preferences in your PayPal Account', 'LION' ); ?></p>
+			<p><?php _e( 'Please log into your account and add this URL to your IPN Settings so iThemes Exchange is notified of things like refunds, payments, etc.', 'LION' ); ?></p>
+			<code><?php echo get_site_url(); ?>/?<?php esc_attr_e( it_exchange_get_webhook( 'paypal-standard-secure' ) ); ?>=1</code>
+            <h4><?php _e( 'Step 4. Setup PayPal Auto Return', 'LION' ); ?></h4>
+			<p><?php _e( 'PayPal Auto Return must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
+			<p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'LION' ); ?></p>
+			<code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
+			<h4><?php _e( 'Step 5. Setup PayPal Payment Data Transfer (PDT)', 'LION' ); ?></h4>
+			<p><?php _e( 'PayPal PDT must be turned <strong>ON</strong> in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
+			<h4><?php _e( 'Optional: Edit Paypal Button Label', 'LION' ); ?></h4>
+			<p>
+				<label for="paypal-standard-secure-purchase-button-label"><?php _e( 'Purchase Button Label', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the text inside the button your customers will press to purchase with PayPal Standard (secure)', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'paypal-standard-secure-purchase-button-label' ); ?>
+			</p>
+			<h4 class="hide-if-wizard"><?php _e( 'Optional: Enable Paypal Testing Mode', 'LION' ); ?></h4>
 			<p class="hide-if-wizard">
 				<?php $form->add_check_box( 'paypal-standard-secure-sandbox-mode', array( 'class' => 'show-test-mode-options' ) ); ?>
 				<label for="paypal-standard-secure-sandbox-mode"><?php _e( 'Enable PayPal Sandbox Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Use this mode for testing your store. This mode will need to be disabled when the store is ready to process customer payments.', 'LION' ); ?>">i</span></label>
@@ -756,21 +772,6 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
 				<label for="paypal-standard-secure-sandbox-api-signature"><?php _e( 'PayPal Sandbox API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'View tutorial: ', 'LION' ); ?>http://ithemes.com/tutorials/creating-a-paypal-sandbox-test-account">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-secure-sandbox-api-signature' ); ?>
-			</p>
-            <h4><?php _e( 'Step 3. Setup PayPal Instant Payment Notifications (IPN)', 'LION' ); ?></h4>
-			<p><?php _e( 'PayPal IPN must be configured in Account Profile -› Instant Payment Notification Preferences in your PayPal Account', 'LION' ); ?></p>
-			<p><?php _e( 'Please log into your account and add this URL to your IPN Settings so iThemes Exchange is notified of things like refunds, payments, etc.', 'LION' ); ?></p>
-			<code><?php echo get_site_url(); ?>/?<?php esc_attr_e( it_exchange_get_webhook( 'paypal-standard-secure' ) ); ?>=1</code>
-            <h4><?php _e( 'Step 4. Setup PayPal Auto Return', 'LION' ); ?></h4>
-			<p><?php _e( 'PayPal Auto Return must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
-			<p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'LION' ); ?></p>
-			<code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
-			<h4><?php _e( 'Step 5. Setup PayPal Payment Data Transfer (PDT)', 'LION' ); ?></h4>
-			<p><?php _e( 'PayPal PDT must be turned <strong>ON</strong> in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
-			<h4><?php _e( 'Optional: Customize Paypal Button Text', 'LION' ); ?></h4>
-			<p>
-				<label for="paypal-standard-secure-purchase-button-label"><?php _e( 'Purchase Button Label', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the text inside the button your customers will press to purchase with PayPal Standard (secure)', 'LION' ); ?>">i</span></label>
-				<?php $form->add_text_box( 'paypal-standard-secure-purchase-button-label' ); ?>
 			</p>
 		</div>
 		<?php
