@@ -34,7 +34,7 @@ function it_exchange_register_core_addons() {
 		),
 		// PayPal Standard Transaction Method
 		'paypal-standard' => array(
-			'name'              => __( 'PayPal Standard', 'LION' ),
+			'name'              => __( 'PayPal Standard Basic', 'LION' ),
 			'description'       => __( 'Process transactions via the PayPal Standard gateway.', 'LION' ),
 			'author'            => 'iThemes',
 			'author_url'        => 'http://ithemes.com',
@@ -47,8 +47,8 @@ function it_exchange_register_core_addons() {
 		),
 		// PayPal Standard Transaction Method
 		'paypal-standard-secure' => array(
-			'name'              => __( 'PayPal Standard (secure)', 'LION' ),
-			'description'       => __( 'Process transactions via the PayPal Standard gateway, securely.', 'LION' ),
+			'name'              => __( 'PayPal Standard Secure', 'LION' ),
+			'description'       => __( 'Process transactions via the PayPal Standard gateway, securely. Requires a Premier or Business level account.', 'LION' ),
 			'author'            => 'iThemes',
 			'author_url'        => 'http://ithemes.com',
 			'icon'              => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/transaction-methods/paypal-standard-secure/images/paypal50px.png' ),
