@@ -34,8 +34,8 @@ function it_exchange_register_core_addons() {
 		),
 		// PayPal Standard Transaction Method
 		'paypal-standard' => array(
-			'name'              => __( 'PayPal Standard Basic', 'LION' ),
-			'description'       => __( 'Process transactions via the PayPal Standard gateway.', 'LION' ),
+			'name'              => __( 'PayPal Standard - Basic (Fastest Setup) ', 'LION' ),
+			'description'       => __( 'This is the simple and fast version to get PayPal setup for your store. You might use this version just to get your store going, but we highly suggest you switch to the PayPal Standard Secure option.', 'LION' ),
 			'author'            => 'iThemes',
 			'author_url'        => 'http://ithemes.com',
 			'icon'              => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/transaction-methods/paypal-standard/images/paypal50px.png' ),
@@ -47,8 +47,8 @@ function it_exchange_register_core_addons() {
 		),
 		// PayPal Standard Transaction Method
 		'paypal-standard-secure' => array(
-			'name'              => __( 'PayPal Standard Secure', 'LION' ),
-			'description'       => __( 'Process transactions via the PayPal Standard gateway, securely. Requires a Premier or Business level account.', 'LION' ),
+			'name'              => __( 'PayPal Standard - Secure (Highly Recommended)', 'LION' ),
+			'description'       => __( 'Although this PayPal version for iThemes Exchange takes more effort and time, it is well worth it for the security options for your store.', 'LION' ),
 			'author'            => 'iThemes',
 			'author_url'        => 'http://ithemes.com',
 			'icon'              => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/transaction-methods/paypal-standard-secure/images/paypal50px.png' ),

@@ -330,6 +330,8 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 		
 		$it_exchange_customer = it_exchange_get_current_customer();
 		
+		remove_filter( 'the_title', 'wptexturize' ); // remove this because it screws up the product titles in PayPal
+		
 		$query = array(
 			'cmd'           => '_xclick',
 			'business'      => $paypal_email,
@@ -347,9 +349,9 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			'cancel_return' => it_exchange_get_page_url( 'cart' ),
 			'custom'        => $temp_id,
 		);
-		
+				
 		$paypal_payment_url = PAYPAL_PAYMENT_URL . '?' .  http_build_query( $query ); 
-	
+			
 	} else {
 	
 		it_exchange_add_message( 'error', __( 'ERROR: Invalid PayPal Setup' ) );
@@ -629,7 +631,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'it-exchange' ); ?>
-			<h2><?php _e( 'PayPal Standard Settings', 'LION' ); ?></h2>
+			<h2><?php _e( 'PayPal Standard Settings - Basic', 'LION' ); ?></h2>
 
 			<?php do_action( 'it_exchange_paypal-standard_settings_page_top' ); ?>
 			<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
@@ -658,7 +660,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		$general_settings = it_exchange_get_option( 'settings_general' );
 
 		if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] ) : ?>
-			<h3><?php _e( 'PayPal Standard', 'LION' ); ?></h3>
+			<h3><?php _e( 'PayPal Standard - Basic (Fastest Setup)', 'LION' ); ?></h3>
 		<?php endif;
 
 		if ( !empty( $settings ) )
@@ -668,7 +670,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		?>
 		<div class="it-exchange-addon-settings it-exchange-paypal-addon-settings">
             <p>
-				<?php _e( 'To get PayPal set up for use with Exchange, you\'ll need to add the following information from your PayPal account.', 'LION' ); ?><br /><br />
+				<?php _e( 'This is the simple and fast version to get PayPal setup for your store. You might use this version just to get your store going, but we highly suggest you switch to the PayPal Standard Secure option. To get PayPal set up for use with Exchange, you\'ll need to add the following information from your PayPal account.', 'LION' ); ?><br /><br />
 				<a href="http://ithemes.com/codex/page/Getting_Started_with_Exchange:_Setting_Up_a_PayPal_Account" target="_blank"><?php _e( 'Video: Getting PayPal Setup with Exchange', 'LION' ); ?></a>
 			</p>
 			<p><?php _e( 'Don\'t have a PayPal account yet?', 'LION' ); ?> <a href="http://paypal.com" target="_blank"><?php _e( 'Go set one up here', 'LION' ); ?></a>.</p>

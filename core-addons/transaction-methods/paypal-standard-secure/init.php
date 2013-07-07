@@ -371,6 +371,8 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 		//	'BUTTONIMAGEURL' => '', //Use either BUTTONIMAGE or BUTTONIMAGEURL -- not both!
 			'BUYNOWTEXT'     => 'PAYNOW',
 		);
+		
+		remove_filter( 'the_title', 'wptexturize' ); // remove this because it screws up the product titles in PayPal
 	
 		$L_BUTTONVARS[] = 'business=' . $paypal_email;
 		$L_BUTTONVARS[] = 'item_name=' . it_exchange_get_cart_description();
@@ -675,7 +677,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'it-exchange' ); ?>
-			<h2><?php _e( 'PayPal Standard Settings', 'LION' ); ?></h2>
+			<h2><?php _e( 'PayPal Standard Settings - Secure', 'LION' ); ?></h2>
 
 			<?php do_action( 'it_exchange_paypal-standard-secure_settings_page_top' ); ?>
 			<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
@@ -704,7 +706,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 		$general_settings = it_exchange_get_option( 'settings_general' );
 
 		if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] ) : ?>
-			<h3><?php _e( 'PayPal Standard', 'LION' ); ?></h3>
+			<h3><?php _e( 'PayPal Standard - Secure (Highly Recommended)', 'LION' ); ?></h3>
 		<?php endif;
 
 		if ( !empty( $settings ) )
@@ -714,7 +716,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 		?>
 		<div class="it-exchange-addon-settings it-exchange-paypal-addon-settings">
             <p>
-				<?php _e( 'To get PayPal set up for use with Exchange, you\'ll need to add the following information from your PayPal account.', 'LION' ); ?><br /><br />
+				<?php _e( 'Although this PayPal version for iThemes Exchange takes more effort and time, it is well worth it for the security options for your store. To get PayPal set up for use with Exchange, you\'ll need to add the following information from your PayPal account.', 'LION' ); ?><br /><br />
 				<a href="http://ithemes.com/codex/page/Getting_Started_with_Exchange:_Setting_Up_a_PayPal_Account" target="_blank"><?php _e( 'Video: Getting PayPal Setup with Exchange', 'LION' ); ?></a>
 			</p>
 			<p><?php _e( 'Don\'t have a PayPal account yet?', 'LION' ); ?> <a href="http://paypal.com" target="_blank"><?php _e( 'Go set one up here', 'LION' ); ?></a>.</p>
