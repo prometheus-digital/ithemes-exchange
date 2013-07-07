@@ -55,7 +55,13 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	*/
 	function found( $options=array() ) {
 		// Return boolean if has flag was set
-		return count( it_exchange_get_transactions() ) > 0 ;
+		if ( it_exchange_is_page( 'purchases' ) || it_exchange_is_page( 'downloads' ) ) {
+			if ( ! $customer = it_exchange_get_current_customer() )
+				return;
+			return count( it_exchange_get_customer_transactions( $customer->id ) ) > 0;
+		} else {
+			return count( it_exchange_get_transactions() ) > 0 ;
+		}
 	}
 
 	/**
@@ -69,7 +75,13 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	function exist( $options=array() ) {
 		// This will init/reset the transactions global and loop through them. the /api/theme/transaction.php file will handle individual transactions.
 		if ( empty( $GLOBALS['it_exchange']['transactions'] ) ) {
-			$GLOBALS['it_exchange']['transactions'] = it_exchange_get_transactions( array( 'posts_per_page' => -1 ) );
+			if ( it_exchange_is_page( 'purchases' ) || it_exchange_is_page( 'downloads' ) ) {
+				if ( ! $customer = it_exchange_get_current_customer() )
+					return;
+				$GLOBALS['it_exchange']['transactions'] = it_exchange_get_customer_transactions( $customer->id );
+			} else {
+				$GLOBALS['it_exchange']['transactions'] = it_exchange_get_transactions( array( 'posts_per_page' => -1 ) );
+			}
 			$GLOBALS['it_exchange']['transaction'] = reset( $GLOBALS['it_exchange']['transactions'] );
 			return true;
 		} else {

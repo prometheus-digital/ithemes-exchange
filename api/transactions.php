@@ -83,7 +83,7 @@ function it_exchange_get_transactions( $args=array() ) {
 			'key'   => '_it_exchange_transaction_method',
 			'value' => $args['transaction_method'],
 		);
-		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
+		$args['meta_query'][] = $meta_query;
 	}
 
 	// Fold in transaction_status
@@ -92,7 +92,7 @@ function it_exchange_get_transactions( $args=array() ) {
 			'key'   => '_it_exchange_transaction_status',
 			'value' => $args['transaction_status'],
 		);
-		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
+		$args['meta_query'][] = $meta_query;
 	}
 
 	// Fold in customer 
@@ -100,8 +100,9 @@ function it_exchange_get_transactions( $args=array() ) {
 		$meta_query = array( 
 			'key'   => '_it_exchange_customer_id',
 			'value' => $args['customer_id'],
+			'type'  => 'NUMERIC',
 		);
-		$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
+		$args['meta_query'][] = $meta_query;
 	}
 
 	if ( $transactions = get_posts( $args ) ) {
