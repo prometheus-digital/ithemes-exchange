@@ -35,7 +35,7 @@
 									<?php endif; ?>
 									<?php while( it_exchange( 'transaction', 'product-downloads' ) ) : ?>
 										<div class="transaction-product-download">
-											<h4 class="transaction-product-download-titile">
+											<h4 class="transaction-product-download-title">
 												<?php it_exchange( 'transaction', 'product-download', array( 'attribute' => 'title' ) ); ?>
 											</h4>
 											<?php if ( it_exchange( 'transaction', 'has-product-download-hashes' ) ) : ?>
