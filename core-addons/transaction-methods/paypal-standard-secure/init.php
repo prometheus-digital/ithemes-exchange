@@ -356,12 +356,12 @@ add_filter( 'it_exchange_get_paypal-standard-secure_make_payment_button', 'it_ex
  * @param array $webhooks existing
  * @return array
 */
-function it_exchange_paypal_addon_register_webhook() {
+function it_exchange_paypal_standard_secure_addon_register_webhook() {
 	$key   = 'paypal-standard-secure';
 	$param = apply_filters( 'it_exchange_paypal-standard-secure_webhook', 'it_exchange_paypal-standard-secure' );
 	it_exchange_register_webhook( $key, $param );
 }
-add_filter( 'init', 'it_exchange_paypal_addon_register_webhook' );
+add_filter( 'init', 'it_exchange_paypal_standard_secure_addon_register_webhook' );
 
 /**
  * Processes webhooks for PayPal Web Standard

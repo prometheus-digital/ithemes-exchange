@@ -367,12 +367,12 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
  * @param array $webhooks existing
  * @return array
 */
-function it_exchange_paypal_addon_register_webhook() {
+function it_exchange_paypal_standard_addon_register_webhook() {
 	$key   = 'paypal-standard';
 	$param = apply_filters( 'it_exchange_paypal-standard_webhook', 'it_exchange_paypal-standard' );
 	it_exchange_register_webhook( $key, $param );
 }
-add_filter( 'init', 'it_exchange_paypal_addon_register_webhook' );
+add_filter( 'init', 'it_exchange_paypal_standard_addon_register_webhook' );
 
 /**
  * Processes webhooks for PayPal Web Standard
