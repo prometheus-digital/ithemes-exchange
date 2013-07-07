@@ -5,7 +5,7 @@
  * @package IT_Exchange
  * @since 0.2.0
 */
-
+	
 define( 'PAYPAL_NVP_API_SANDBOX_URL', 'https://api-3t.sandbox.paypal.com/nvp' );
 define( 'PAYPAL_NVP_API_LIVE_URL', 'https://api-3t.paypal.com/nvp' );
 
@@ -261,16 +261,18 @@ function it_exchange_paypal_standard_secure_addon_default_settings( $values ) {
 		'paypal-standard-secure-sandbox-api-password'  => '',
 		'paypal-standard-secure-sandbox-api-signature' => '',
 		'paypal-standard-secure-sandbox-mode'          => false,
+		'paypal-standard-secure-purchase-button-label' => __( 'Pay with PayPal', 'LION' ),
 	);
 	$values = ITUtility::merge_defaults( $values, $defaults );
 	return $values;
 }
 add_filter( 'it_storage_get_defaults_exchange_addon_paypal_standard_secure', 'it_exchange_paypal_standard_secure_addon_default_settings' );
 
+
 /**
- * Returns the button for making the payment
+ * Returns the button for making the PayPal faux payment button
  *
- * @since 0.4.0
+ * @since 0.4.19
  *
  * @param array $options
  * @return string HTML button
@@ -284,69 +286,147 @@ function it_exchange_paypal_standard_secure_addon_make_payment_button( $options 
 	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard_secure' );
 
 	$payment_form = '';
+		
+	$it_exchange_customer = it_exchange_get_current_customer();
+
+	$payment_form .= '<form action="' . get_site_url() . '/?paypal-standard-secure-form=1" method="post">';
+	$payment_form .= '<input type="submit" class="it-exchange-paypal-standard-button" name="paypal_standard_secure_purchase" value="' . $paypal_settings['paypal-standard-secure-purchase-button-label'] .'" />';
+	$payment_form .= '</form>';
+		
+	return $payment_form;
+	
+}
+add_filter( 'it_exchange_get_paypal-standard-secure_make_payment_button', 'it_exchange_paypal_standard_secure_addon_make_payment_button', 10, 2 );
+
+/**
+ * Process the faux PayPal Standard secure form
+ *
+ * @since 0.4.19
+ *
+ * @param array $options
+ * @return string HTML button
+*/
+function it_exchange_process_paypal_standard_secure_form() {
+	
+	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard_secure' );
+	
+	if ( ! empty( $_REQUEST['paypal_standard_secure_purchase'] ) ) {
+		
+		if ( $url = it_exchange_paypal_standard_secure_addon_get_payment_url() ) {
+			
+			wp_redirect( $url );
+			
+		} else {
+		
+			it_exchange_add_message( 'error', __( 'Error processing PayPal form. Missing valid PayPal information.', 'LION' ) );
+			wp_redirect( it_exchange_get_page_url( 'checkout' ) );
+			
+		}
+	
+	}
+	
+}
+add_action( 'wp', 'it_exchange_process_paypal_standard_secure_form' );
+
+/**
+ * Returns the button for making the payment
+ *
+ * @since 0.4.0
+ *
+ * @return string PayPal payment URL
+*/
+function it_exchange_paypal_standard_secure_addon_get_payment_url() {
+
+	if ( 0 >= it_exchange_get_cart_total( false ) )
+		return;
+		
+	$general_settings = it_exchange_get_option( 'settings_general' );
+	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard_secure' );
+
+	$payment_form = '';
 
 	$paypal_api_url       = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
+	$paypal_payment_url   = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr';	
 	$paypal_email         = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? $paypal_settings['paypal-standard-secure-sandbox-email-address'] : $paypal_settings['paypal-standard-secure-live-email-address'];
 	$paypal_api_username  = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? $paypal_settings['paypal-standard-secure-sandbox-api-username'] : $paypal_settings['paypal-standard-secure-live-api-username'];
 	$paypal_api_password  = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? $paypal_settings['paypal-standard-secure-sandbox-api-password'] : $paypal_settings['paypal-standard-secure-live-api-password'];
 	$paypal_api_signature = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? $paypal_settings['paypal-standard-secure-sandbox-api-signature'] : $paypal_settings['paypal-standard-secure-live-api-signature'];
-
-	$it_exchange_customer = it_exchange_get_current_customer();
-
-	$button_request = array(
-		'USER'           => trim( $paypal_api_username ),
-		'PWD'            => trim( $paypal_api_password ),
-		'SIGNATURE'      => trim( $paypal_api_signature ),
-		'VERSION'        => '96.0', //The PayPal API version
-		'METHOD'         => 'BMCreateButton',
-		'BUTTONCODE'     => 'ENCRYPTED',
-		'BUTTONTYPE'     => 'BUYNOW',
-		'BUTTONIMAGE'    => 'REG',
-	//	'BUTTONIMAGEURL' => '', //Use either BUTTONIMAGE or BUTTONIMAGEURL -- not both!
-		'BUYNOWTEXT'     => 'PAYNOW',
-	);
-
-	$L_BUTTONVARS[] = 'business=' . $paypal_email;
-	$L_BUTTONVARS[] = 'item_name=' . it_exchange_get_cart_description();
-	$L_BUTTONVARS[] = 'amount=' . number_format( it_exchange_get_cart_total( false ), 2, '.', '' );
-	$L_BUTTONVARS[] = 'currency_code=' . $general_settings['default-currency'];
-	$L_BUTTONVARS[] = 'quantity=1';
-	$L_BUTTONVARS[] = 'no_note=1';
-	$L_BUTTONVARS[] = 'no_shipping=1';
-	$L_BUTTONVARS[] = 'shipping=0';
-	$L_BUTTONVARS[] = 'email=' . $it_exchange_customer->data->user_email;
-	$L_BUTTONVARS[] = 'notify_url=' . get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard-secure' ) . '=1';
-	$L_BUTTONVARS[] = 'return=' . it_exchange_get_page_url( 'transaction' ) . '?it-exchange-transaction-method=paypal-standard-secure';
-	$L_BUTTONVARS[] = 'rm=2'; //Return  Method - https://developer.paypal.com/webapps/developer/docs/classic/button-manager/integration-guide/ButtonManagerHTMLVariables/
-	$L_BUTTONVARS[] = 'cancel_return=' . it_exchange_get_page_url( 'cart' );
-
-	$count = 0;
-	foreach( $L_BUTTONVARS as $L_BUTTONVAR ) {
-
-		$button_request['L_BUTTONVAR' . $count] = $L_BUTTONVAR;
-		$count++;
-
-	}
-
-	$response = wp_remote_post( $paypal_api_url, array( 'body' => $button_request ) );
-
-	if ( !is_wp_error( $response ) ) {
-
-		parse_str( wp_remote_retrieve_body( $response ) );
-
-		if ( !empty( $ACK ) && 'Success' === $ACK ) {
-
-			if ( !empty( $WEBSITECODE ) )
-				$payment_form = str_replace( array( "\r\n", "\r", "\n" ), '', stripslashes( $WEBSITECODE ) );
-				//Strip out the newline characters because parse_str/PayPal adds a \n to the encrypted code, whic breaks the digital ID
-
+	
+	if ( ! empty( $paypal_email )
+		&& ! empty( $paypal_api_username )
+		&& ! empty( $paypal_api_password )
+		&& ! empty( $paypal_api_signature ) ) {
+	
+		$it_exchange_customer = it_exchange_get_current_customer();
+	
+		$button_request = array(
+			'USER'           => trim( $paypal_api_username ),
+			'PWD'            => trim( $paypal_api_password ),
+			'SIGNATURE'      => trim( $paypal_api_signature ),
+			'VERSION'        => '96.0', //The PayPal API version
+			'METHOD'         => 'BMCreateButton',
+			'BUTTONCODE'     => 'ENCRYPTED',
+			'BUTTONTYPE'     => 'BUYNOW',
+			'BUTTONIMAGE'    => 'REG',
+		//	'BUTTONIMAGEURL' => '', //Use either BUTTONIMAGE or BUTTONIMAGEURL -- not both!
+			'BUYNOWTEXT'     => 'PAYNOW',
+		);
+	
+		$L_BUTTONVARS[] = 'business=' . $paypal_email;
+		$L_BUTTONVARS[] = 'item_name=' . it_exchange_get_cart_description();
+		$L_BUTTONVARS[] = 'amount=' . number_format( it_exchange_get_cart_total( false ), 2, '.', '' );
+		$L_BUTTONVARS[] = 'currency_code=' . $general_settings['default-currency'];
+		$L_BUTTONVARS[] = 'quantity=1';
+		$L_BUTTONVARS[] = 'no_note=1';
+		$L_BUTTONVARS[] = 'no_shipping=1';
+		$L_BUTTONVARS[] = 'shipping=0';
+		$L_BUTTONVARS[] = 'email=' . $it_exchange_customer->data->user_email;
+		$L_BUTTONVARS[] = 'notify_url=' . get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard-secure' ) . '=1';
+		$L_BUTTONVARS[] = 'return=' . it_exchange_get_page_url( 'transaction' ) . '?it-exchange-transaction-method=paypal-standard-secure';
+		$L_BUTTONVARS[] = 'rm=2'; //Return  Method - https://developer.paypal.com/webapps/developer/docs/classic/button-manager/integration-guide/ButtonManagerHTMLVariables/
+		$L_BUTTONVARS[] = 'cancel_return=' . it_exchange_get_page_url( 'cart' );
+	
+		$count = 0;
+		foreach( $L_BUTTONVARS as $L_BUTTONVAR ) {
+	
+			$button_request['L_BUTTONVAR' . $count] = $L_BUTTONVAR;
+			$count++;
+	
 		}
-
+	
+		$response = wp_remote_post( $paypal_api_url, array( 'body' => $button_request ) );
+	
+		if ( !is_wp_error( $response ) ) {
+	
+			parse_str( wp_remote_retrieve_body( $response ) );
+	
+			if ( !empty( $ACK ) && 'Success' === $ACK ) {
+	
+				if ( !empty( $WEBSITECODE ) )
+					$payment_form = str_replace( array( "\r\n", "\r", "\n" ), '', stripslashes( $WEBSITECODE ) );
+					//Strip out the newline characters because parse_str/PayPal adds a \n to the encrypted code, whic breaks the digital ID
+	
+			}
+	
+		}
+		
+		if ( preg_match( '/-----BEGIN PKCS7-----.*-----END PKCS7-----/i', $payment_form, $matches ) ) {
+			
+			$query = array(
+				'cmd'           => '_s-xclick',
+				'encrypted'     => $matches[0],
+			);
+			
+			$paypal_payment_url = $paypal_payment_url . '?' .  http_build_query( $query ); 
+			
+			return $paypal_payment_url;
+		
+		}
+	
 	}
 	
-	return $payment_form;
+	return false;
 }
-add_filter( 'it_exchange_get_paypal-standard-secure_make_payment_button', 'it_exchange_paypal_standard_secure_addon_make_payment_button', 10, 2 );
 
 /**
  * Adds the paypal webhook to the global array of keys to listen for
@@ -687,6 +767,10 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 			<code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
             <h4><?php _e( 'Step 5. Setup PayPal Payment Data Transfer (PDT)', 'LION' ); ?></h4>
 			<p><?php _e( 'PayPal PDT must be turned <strong>ON</strong> in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
+			<p>
+				<label for="paypal-standard-secure-purchase-button-label"><?php _e( 'Purchase Button Label', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the text inside the button your customers will press to purchase with PayPal Standard (secure)', 'LION' ); ?>">i</span></label>
+				<?php $form->add_text_box( 'paypal-standard-secure-purchase-button-label' ); ?>
+			</p>
 		</div>
 		<?php
 	}
@@ -726,8 +810,20 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 			return;
 
 		$paypal_standard_secure_settings = array();
-
-		$default_wizard_paypal_standard_secure_settings = apply_filters( 'default_wizard_paypal-standard-secure_settings', array( 'paypal-standard-secure-live-email-address', 'paypal-standard-secure-live-api-username', 'paypal-standard-secure-live-api-password', 'paypal-standard-secure-live-api-signature', 'paypal-standard-secure-sandbox-email-address', 'paypal-standard-secure-sandbox-api-username', 'paypal-standard-secure-sandbox-api-password', 'paypal-standard-secure-sandbox-api-signature',  'paypal-standard-secure-sandbox-mode', ) );
+		
+		$fields = array(
+			'paypal-standard-secure-live-email-address',
+			'paypal-standard-secure-live-api-username',
+			'paypal-standard-secure-live-api-password',
+			'paypal-standard-secure-live-api-signature',
+			'paypal-standard-secure-sandbox-mode',
+			'paypal-standard-secure-sandbox-email-address',
+			'paypal-standard-secure-sandbox-api-username',
+			'paypal-standard-secure-sandbox-api-password',
+			'paypal-standard-secure-sandbox-api-signature',
+			'paypal-standard-secure-purchase-button-label',
+		);
+		$default_wizard_stripe_settings = apply_filters( 'default_wizard_paypal-standard-secure_settings', $fields );
 
 		foreach( $default_wizard_paypal_standard_secure_settings as $var ) {
 
