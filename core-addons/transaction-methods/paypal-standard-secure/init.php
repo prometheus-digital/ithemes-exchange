@@ -765,8 +765,9 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 			<p><?php _e( 'PayPal Auto Return must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
 			<p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'LION' ); ?></p>
 			<code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
-            <h4><?php _e( 'Step 5. Setup PayPal Payment Data Transfer (PDT)', 'LION' ); ?></h4>
+			<h4><?php _e( 'Step 5. Setup PayPal Payment Data Transfer (PDT)', 'LION' ); ?></h4>
 			<p><?php _e( 'PayPal PDT must be turned <strong>ON</strong> in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
+			<h4><?php _e( 'Optional: Customize Paypal Button Text', 'LION' ); ?></h4>
 			<p>
 				<label for="paypal-standard-secure-purchase-button-label"><?php _e( 'Purchase Button Label', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the text inside the button your customers will press to purchase with PayPal Standard (secure)', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-secure-purchase-button-label' ); ?>
