@@ -6,6 +6,8 @@
  * @since 0.2.0
 */
 
+define( 'PAYPAL_PAYMENT_URL', 'https://www.paypal.com/cgi-bin/webscr' );
+
 /**
  * Outputs wizard settings for PayPal
  *
@@ -67,9 +69,9 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 			$transaction_id = NULL;
 			
 		if ( !empty( $_REQUEST['cm'] ) )
-			$temp_transaction_id = $_REQUEST['cm'];
+			$transient_transaction_id = $_REQUEST['cm'];
 		else
-			$temp_transaction_id = NULL;
+			$transient_transaction_id = NULL;
 
 		if ( !empty( $_REQUEST['amt'] ) ) //if PDT is enabled
 			$transaction_amount = $_REQUEST['amt'];
@@ -84,8 +86,8 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 			$transaction_status = $_REQUEST['payment_status'];
 		else
 			$transaction_status = NULL;
-			
-		if ( !empty( $transaction_id ) && !empty( $temp_transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
+						
+		if ( !empty( $transaction_id ) && !empty( $transient_transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
 
 			try {
 
@@ -97,8 +99,12 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 				if ( number_format( $transaction_amount, '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) )
 					throw new Exception( __( 'Error: Amount charged is not the same as the cart total!', 'LION' ) );
 
-				it_exchange_paypal_standard_addon_update_transaction_id( $transaction_id, $temp_transaction_id );
-				it_exchange_paypal_standard_addon_update_transaction_cart_object( $temp_transaction_id, $transaction_object );
+				//If the transient still exists, delete it and add the official transaction
+				if ( it_exchange_get_transient_transaction( 'paypal-standard', $transient_transaction_id ) ) {
+					it_exchange_delete_transient_transaction( 'paypal-standard', $transient_transaction_id  );
+					$ite_transaction_id = it_exchange_add_transaction( 'paypal-standard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
+					return $ite_transaction_id;
+				}
 
 			}
 			catch ( Exception $e ) {
@@ -261,6 +267,7 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 	return $payment_form;
 	
 }
+add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_paypal_standard_addon_make_payment_button', 10, 2 );
 
 /**
  * Process the faux PayPal Standard form
@@ -281,9 +288,11 @@ function it_exchange_process_paypal_standard_form() {
 			$it_exchange_customer = it_exchange_get_current_customer();
 			$temp_id = it_exchange_create_unique_hash();
 			
-			it_exchange_add_transaction( 'paypal-standard', $temp_id, 'pending', $it_exchange_customer->id, false );
+			$transaction_object = it_exchange_generate_transaction_object();
 			
-			echo it_exchange_paypal_standard_addon_make_real_payment_button( $temp_id );
+			it_exchange_add_transient_transaction( 'paypal-standard', $temp_id, $it_exchange_customer->id, $transaction_object );
+			
+			wp_redirect( it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) );
 			
 		} else {
 		
@@ -305,7 +314,7 @@ add_action( 'wp', 'it_exchange_process_paypal_standard_form' );
  * @param string $temp_id Temporary ID we reference late with IPN
  * @return string HTML button
 */
-function it_exchange_paypal_standard_addon_make_real_payment_button( $temp_id ) {
+function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 
 	if ( 0 >= it_exchange_get_cart_total( false ) )
 		return;
@@ -313,41 +322,42 @@ function it_exchange_paypal_standard_addon_make_real_payment_button( $temp_id ) 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard' );
 
-	$payment_form = '';
+	$paypal_payment_url = '';
 
 	if ( $paypal_email = $paypal_settings['paypal-standard-live-email-address'] ) {
 		
 		$it_exchange_customer = it_exchange_get_current_customer();
-
-		$payment_form .= '<form name="paypal_standard_form" action="https://www.paypal.com/cgi-bin/webscr" method="post">';
-		$payment_form .= '<input type="hidden" name="cmd" value="_xclick" />';
-		$payment_form .= '<input type="hidden" name="business" value="' . $paypal_email . '" />';
-		$payment_form .= '<input type="hidden" name="item_name" value="' . it_exchange_get_cart_description() . '" />';
-		$payment_form .= '<input type="hidden" name="amount" value="' . number_format( it_exchange_get_cart_total( false ), 2, '.', '' ) . '" />';
-		$payment_form .= '<input type="hidden" name="return" value="' . it_exchange_get_page_url( 'transaction' ) . '?it-exchange-transaction-method=paypal-standard">';
-		$payment_form .= '<input type="hidden" name="currency_code" value="' . $general_settings['default-currency'] . '">';
-		$payment_form .= '<input type="hidden" name="notify_url" value="' . get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard' ) . '=1">';
-		$payment_form .= '<input type="hidden" name="quantity" value="1">';
-		$payment_form .= '<input type="hidden" name="no_note" value="1">';
-		$payment_form .= '<input type="hidden" name="no_shipping" value="1">';
-		$payment_form .= '<input type="hidden" name="shipping" value="0">';
-		$payment_form .= '<input type="hidden" name="email" value="' . $it_exchange_customer->data->user_email . '">';
-		$payment_form .= '<input type="hidden" name="rm" value="2">';
-		$payment_form .= '<input type="hidden" name="cancel_return" value="' . it_exchange_get_page_url( 'cart' ) .'">';
-		$payment_form .= '<input type="hidden" name="custom" value="' . $temp_id . '" />';
-		$payment_form .= '<input type="image" name="submit" border="0"
-src="https://www.paypalobjects.com/en_US/i/btn/btn_paynow_LG.gif"
-alt="' . __( 'Redirecting to PayPal - The safer, easier way to pay online', 'LION' ) . '">';
-		$payment_form .= '<img alt="" border="0" width="1" height="1" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" >';
-		$payment_form .= '<script language="JavaScript">document.paypal_standard_form.submit();</script>';
-		$payment_form .= '</form>';
+		
+		$query = array(
+			'cmd'           => '_xclick',
+			'business'      => $paypal_email,
+			'item_name'     => it_exchange_get_cart_description(),
+			'amount'        => number_format( it_exchange_get_cart_total( false ), 2, '.', '' ),
+			'return'        => it_exchange_get_page_url( 'transaction' ) . '?it-exchange-transaction-method=paypal-standard',
+			'currency_code' => $general_settings['default-currency'],
+			'notify_url'    => get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard' ) . '=1',
+			'quantity'      => '1',
+			'no_note'       => '1',
+			'no_shipping'   => '1',
+			'shipping'      => '0',
+			'email'         => $it_exchange_customer->data->user_email,
+			'rm'            => '2',
+			'cancel_return' => it_exchange_get_page_url( 'cart' ),
+			'custom'        => $temp_id,
+		);
+		
+		$paypal_payment_url = PAYPAL_PAYMENT_URL . '?' .  http_build_query( $query ); 
 	
+	} else {
+	
+		it_exchange_add_message( 'error', __( 'ERROR: Invalid PayPal Setup' ) );
+		$paypal_payment_url = it_exchange_get_page_url( 'cart' );
+		
 	}
 	
-	return $payment_form;
+	return $paypal_payment_url;
 	
 }
-add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_paypal_standard_addon_make_payment_button', 10, 2 );
 
 /**
  * Adds the paypal webhook to the global array of keys to listen for
@@ -380,8 +390,11 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 	// for extra security, retrieve from the Stripe API
 	if ( ! empty( $request['txn_id'] ) ) {
 		
-		if ( !empty( $_REQUEST['transaction_subject'] ) )
-			it_exchange_paypal_standard_addon_update_transaction_id( $request['txn_id'], $request['transaction_subject'] );
+		if ( !empty( $request['transaction_subject'] ) && $transient_data = it_exchange_get_transient_transaction( 'paypal-standard', $request['transaction_subject'] ) ) {
+			it_exchange_delete_transient_transaction( 'paypal-standard', $request['transaction_subject']  );
+			$ite_transaction_id = it_exchange_add_transaction( 'paypal-standard', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
+			return $ite_transaction_id;
+		}
 
 		try {
 
@@ -408,38 +421,6 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 
 }
 add_action( 'it_exchange_webhook_it_exchange_paypal-standard', 'it_exchange_paypal_standard_addon_process_webhook' );
-
-/**
- * Updates a paypals transaction ID based on paypal transaction_subject
- *
- * @since 0.4.19
- *
- * @param integer $paypal_standard_id id of paypal transaction
- * @param string $temp_id Unique ID generated before processing PayPal insecure
- * @return void
-*/
-function it_exchange_paypal_standard_addon_update_transaction_id( $paypal_standard_id, $temp_id ) {
-	$transactions = it_exchange_paypal_standard_addon_get_transaction_id( $temp_id );
-	foreach( $transactions as $transaction ) { //really only one
-		it_exchange_update_transaction_method_id( $transaction, $paypal_standard_id );
-	}
-}
-
-/**
- * Updates a paypals transaction cart object based on paypal transaction ID
- *
- * @since 0.4.19
- *
- * @param integer $paypal_standard_id id of paypal transaction
- * @param object $cart_object
- * @return void
-*/
-function it_exchange_paypal_standard_addon_update_transaction_cart_object( $paypal_standard_id, $cart_object ) {
-	$transactions = it_exchange_paypal_standard_addon_get_transaction_id( $paypal_standard_id );
-	foreach( $transactions as $transaction ) { //really only one
-		it_exchange_update_transaction_cart_object( $transaction, $cart_object );
-	}
-}
 
 /**
  * Gets iThemes Exchange's Transaction ID from PayPal Standard's Transaction ID
