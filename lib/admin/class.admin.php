@@ -828,6 +828,7 @@ Order: %s
 			'it-exchange-settings',
 			'it-exchange-addons',
 			'it-exchange-help',
+			'it-exchange-setup',
 		);
 		if ( ! empty( $this->_current_page ) && in_array( $this->_current_page, (array) apply_filters( 'it_exchange_admin_pages', $pages ) ) )
 			$is_exchange_admin = true;
