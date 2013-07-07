@@ -296,15 +296,7 @@ class IT_Exchange_Shopping_Cart {
 		
 		if ( $status ) //if this has been modified as true already, return.
 			return $status;
-
-		// Verify products exist
-		$products = it_exchange_get_cart_products();
-		if ( count( $products ) < 1 ) {
-			do_action( 'it_exchange_error-no_products_to_purchase' );
-			it_exchange_add_message( 'error', $this->get_cart_message( 'no-products-in-cart' ) );
-			return false;
-		}
-		
+				
 		// Verify transaction method exists
 		$method_var = it_exchange_get_field_name( 'transaction_method' );
 		$requested_transaction_method = empty( $_REQUEST[$method_var] ) ? false : $_REQUEST[$method_var];
@@ -314,40 +306,17 @@ class IT_Exchange_Shopping_Cart {
 			it_exchange_add_message( 'error', $this->get_cart_message( 'bad-transaction-method' ) );
 			return false;
 		}
-
-		// Verify cart total is a positive number
-		$cart_total = number_format( it_exchange_get_cart_total( false ), 2, '.', '' );
-		if ( number_format( $cart_total, 2, '', '' ) < 0 ) {
-			do_action( 'it_exchange_error_negative_cart_total_on_checkout', $cart_total );
-			it_exchange_add_message( 'error', $this->get_cart_message( 'negative-cart-total' ) );
-			return false;
+		
+		if ( $transaction_object = it_exchange_generate_transaction_object() ) {
+			
+			$transaction_object = apply_filters( 'it_exchange_transaction_object', $transaction_object, $requested_transaction_method );
+	
+			// Do the transaction
+			return it_exchange_do_transaction( $requested_transaction_method, $transaction_object );
+			
 		}
-
-		// Grab default currency
-		$settings = it_exchange_get_option( 'settings_general' );
-		$currency = $settings['default-currency'];
-		unset( $settings );
-
-		// Add totals to each product
-		foreach( $products as $key => $product ) {
-			$products[$key]['product_base_price'] = it_exchange_get_cart_product_base_price( $product, false );
-			$products[$key]['product_subtotal'] = it_exchange_get_cart_product_subtotal( $product, false );
-			$products[$key]['product_name']     = it_exchange_get_cart_product_title( $product );
-		}
-
-		// Package it up and send it to the transaction method add-on
-		$transaction_object = new stdClass();
-		$transaction_object->total                  = $cart_total;
-		$transaction_object->currency               = $currency;
-		$transaction_object->description            = it_exchange_get_cart_description();
-		$transaction_object->products               = $products;
-		$transaction_object->coupons                = it_exchange_get_applied_coupons();
-		$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
-
-		$transaction_object = apply_filters( 'it_exchange_transaction_object', $transaction_object, $requested_transaction_method );
-
-		// Do the transaction
-		return it_exchange_do_transaction( $requested_transaction_method, $transaction_object );
+		
+		return false;
 	}
 
 	/**
@@ -394,8 +363,6 @@ class IT_Exchange_Shopping_Cart {
 	function default_cart_messages() {
 		$messages['bad-transaction-method'] = __( 'Please select a payment method', 'LION' );
 		$messages['failed-transaction']     = __( 'There was an error processing your transaction. Please try again.', 'LION' );
-		$messages['negative-cart-total']    = __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'LION' );
-		$messages['no-products-in-cart']    = __( 'You cannot checkout without any items in your cart.', 'LION' );
 		$messages['product-not-removed']    = __( 'Product not removed from cart. Please try again.', 'LION' );
 		$messages['cart-not-emptied']       = __( 'There was an error emptying your cart. Please try again.', 'LION' );
 		$messages['cart-not-updated']       = __( 'There was an error updating your cart. Please try again.', 'LION' );

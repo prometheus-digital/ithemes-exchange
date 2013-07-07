@@ -115,6 +115,93 @@ function it_exchange_get_transactions( $args=array() ) {
 }
 
 /**
+ * Generates the transaction object used by the transaction methods
+ *
+ * @since 0.4.20
+ * @return object Transaction object
+*/
+function it_exchange_generate_transaction_object() {
+
+	// Verify products exist
+	$products = it_exchange_get_cart_products();
+	if ( count( $products ) < 1 ) {
+		do_action( 'it_exchange_error-no_products_to_purchase' );
+		it_exchange_add_message( 'error', __( 'You cannot checkout without any items in your cart.', 'LION' ) );
+		return false;
+	}
+	
+	// Verify cart total is a positive number
+	$cart_total = number_format( it_exchange_get_cart_total( false ), 2, '.', '' );
+	if ( number_format( $cart_total, 2, '', '' ) < 0 ) {
+		do_action( 'it_exchange_error_negative_cart_total_on_checkout', $cart_total );
+		it_exchange_add_message( 'error', __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'LION' ) );
+		return false;
+	}
+
+	// Grab default currency
+	$settings = it_exchange_get_option( 'settings_general' );
+	$currency = $settings['default-currency'];
+	unset( $settings );
+
+	// Add totals to each product
+	foreach( $products as $key => $product ) {
+		$products[$key]['product_base_price'] = it_exchange_get_cart_product_base_price( $product, false );
+		$products[$key]['product_subtotal'] = it_exchange_get_cart_product_subtotal( $product, false );
+		$products[$key]['product_name']     = it_exchange_get_cart_product_title( $product );
+	}
+
+	// Package it up and send it to the transaction method add-on
+	$transaction_object = new stdClass();
+	$transaction_object->total                  = $cart_total;
+	$transaction_object->currency               = $currency;
+	$transaction_object->description            = it_exchange_get_cart_description();
+	$transaction_object->products               = $products;
+	$transaction_object->coupons                = it_exchange_get_applied_coupons();
+	$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
+	
+	return $transaction_object;
+	
+}
+
+/**
+ * Add a transient transaction, default expiry set to 24 hours
+ *
+ * @since 0.4.20
+ * @param string $method name of method that created the transient
+ * @param string $temp_id temporary transaction ID created by the transient
+ * @param int $customer_id ID of current customer
+ * @param object $transaction_object Object used to pass to transaction methods
+ * @return bool true or false depending on success
+*/
+function it_exchange_add_transient_transaction( $method, $temp_id, $customer_id = false, $transaction_object ) {
+	return set_transient( $method . '-' . $temp_id, array( 'customer_id' => $customer_id, 'transaction_object' => $transaction_object ), apply_filters( 'it_exchange_transient_transaction_expiry', 60 * 60 * 24 ) );
+}
+
+/**
+ * Gets a transient transaction
+ *
+ * @since 0.4.20
+ * @param string $method name of method that created the transient
+ * @param string $temp_id temporary transaction ID created by the transient
+ * @return array of customer_id and transaction_object
+*/
+function it_exchange_get_transient_transaction( $method, $temp_id ) {
+	return get_transient( $method . '-' . $temp_id );
+}
+
+/**
+ * Deletes a transient transaction
+ *
+ * @since 0.4.20
+ * @param string $method name of method that created the transient
+ * @param string $temp_id temporary transaction ID created by the transient
+ * @return bool true or false depending on success
+*/
+function it_exchange_delete_transient_transaction( $method, $temp_id ) {
+	return delete_transient( $method . '-' . $temp_id );
+}
+
+/**
  * Adds a transaction post_type to WP
  *
  * @since 0.3.3
