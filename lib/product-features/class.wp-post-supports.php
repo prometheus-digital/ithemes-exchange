@@ -166,8 +166,20 @@ class IT_Exchange_WP_Post_Supports {
 	*/
 	function get_extended_description( $description, $product_id ) { 
 		if ( $product = it_exchange_get_product( $product_id ) ) {
-			remove_filter( 'the_content', array( $GLOBALS['IT_Exchange_Pages'], 'fallback_filter_for_page_template' ) );
-			return apply_filters( 'the_content', $product->post_content );
+
+			// If we're on page.php template, remove our fallback filter. Otherwise, add wpautop
+			if ( has_filter( 'the_content', array( $GLOBALS['IT_Exchange_Pages'], 'fallback_filter_for_page_template' ) ) )
+				remove_filter( 'the_content', array( $GLOBALS['IT_Exchange_Pages'], 'fallback_filter_for_page_template' ) );
+			else
+				add_filter( 'the_content', 'wpautop' );
+
+			$extended_description = apply_filters( 'the_content', $product->post_content );
+
+			// Remove autop if we added it above
+			if ( has_filter( 'the_content', 'wpautop' ) )
+				remove_filter( 'the_content', 'wpautop' );
+
+			return $extended_description;
 		}
 		return false;
 	}
