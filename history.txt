@@ -1,3 +1,13 @@
+0.4.21 - 2013-07-07 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+	General cleanup of the Super Widget styles.
+	Updated copy for PayPal Standard Basic and Secure
+	Updates some styles for the Wizard.
+	Updated the images for Paypal options on wizard.
+	Moved Paypal testing mode options to the bottom
+	Added more indication that the editing button text for Paypal was present and optional.
+	Changed titile to title on confirmation template.
+	Fixed typos on confirmation template.
+	Updated PayPal add-on names used on add-on page. Also updated description of Secure add-on
 0.4.20 - 2013-07-07 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
 	Fix bug that didn't delete posts with stati set to not return in searches when reseting Exchange
 	Added custom PayPal Standard (insecure/secure) button functionality

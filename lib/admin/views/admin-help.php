@@ -39,7 +39,7 @@
 		<div class="help-action exchange-support" title="">
 			<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/e32.png' ); ?>" />
 			<p><?php _e( 'Get free help on some basics of Exchange.', 'LION' ); ?></p>
-			<p><a href="http://wordpress.org/support/plugin/ithemes-exchange" target="_blank"><?php _e( 'Get Basic Help', 'LION' ); ?></a></p>
+			<p><a href="http://ithemes.com/forum/forum/207-exchange-ecommerce-plugin/" target="_blank"><?php _e( 'Get Basic Help', 'LION' ); ?></a></p>
 		</div>
 		<div class="help-action exchange-paid-support" title="">
 			<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/e32.png' ); ?>" />
