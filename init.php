@@ -6,7 +6,6 @@
  * Plugin URI: http://ithemes.com/exchange/
  * Author: iThemes
  * Author URI: http://ithemes.com
- * iThemes Package: ithemes-exchange
  
  * Installation:
  * 1. Download and unzip the latest release zip file.
@@ -179,15 +178,5 @@ function it_exchange_flush_rewrite_rules() {
 }
 add_action( 'admin_init', 'it_exchange_flush_rewrite_rules', 99 );
 
-/**
- * Register Exchange with the iThemes Updater
- *
- * @param object $updater instance of the updater object
- * @return void
-*/
-function ithemes_ithemes_exchange_updater_register( $updater ) { 
-	$updater->register( 'ithemes-exchange', __FILE__ );
-}
-add_action( 'ithemes_updater_register', 'ithemes_ithemes_exchange_updater_register' );
-require( dirname( __FILE__ ) . '/lib/updater/load.php' );
+// Init DB sessions
 require( plugin_dir_path( __FILE__ ) . 'lib/sessions/class.session.php' );

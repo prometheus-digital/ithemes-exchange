@@ -1,6 +1,3 @@
 [submodule "lib/classes"]
 	path = lib/classes
 	url = git@git.gaarai.com:classes
-[submodule "lib/updater"]
-	path = lib/updater
-	url = git@git.gaarai.com:updater
