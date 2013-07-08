@@ -1,3 +1,5 @@
+1.0.0 - 2013-07-08 - This commit is dedicated to everyone at http://ithemes.com/team/
+	Initial commit at wordpress.org
 0.4.22 - 2013-07-08 - Glenn Ansley
 	Remove ithemes licensing, updater code. BETA testers won't receive another update until we push 1.0.0 to wordpress.org SVN
 0.4.21 - 2013-07-07 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
