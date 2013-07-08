@@ -41,7 +41,7 @@ For more information, visit: http://ithemes.com/exchange
 
 = Add-ons =
 
-Add only the features you need with Exchange Add-ons for payment gateways (offline payments, PayPal or Stripe), coupons, digital downloads, sales reports, multi-item cart, product categories and product tags.
+Add only the features you need. Exchange Add-ons include support for payment gateways (Stripe, PayPal Standard or offline payments), coupons, digital downloads, sales reports, multi-item cart, product categories and product tags.
 
 * Accept PayPal Standard or Offline Payments - Process transitions out-of-the-box with PayPal Standard or take payments offline to process cash or check payments
 * Stripe - Enable the premium Stripe Add-on to process payments with Stripe, our recommended payment gateway
@@ -64,15 +64,17 @@ iThemes Exchange allows you to create products quickly and easily. But sometimes
 
 = Payment and Customer Management =
 
-*View transaction details and manager customers from within Exchange
-Payment/Transaction Details - See order number, payment total, status, customer, payment method and date of payment for individual transactions
+View transaction details and manager customers from within Exchange.
+
+* Payment/Transaction Details - See order number, payment total, status, customer, payment method and date of payment for individual transactions
 * Customer Registration - Use Exchange Registration or WordPress Registration settings
 * Customer Data - Manage customers by viewing products purchased, transactions or add notes to customer info.
 * Issue Refunds or Resend Confirmation Emails - Easily issue refunds or resend confirmation emails for individual customers
  
 = Customizable Emails =
 
-* Use the WordPress WSIWYG editor to make custom email templates for Admin Sales Notification emails and Customer Receipt Emails. HTML is accepted.
+Use the WordPress WSIWYG editor to make custom email templates for Admin Sales Notification emails and Customer Receipt Emails. HTML is accepted.
+
 * Admin Sales Notification Emails - Customize the email sent to admins for sales notifications
 * Customer Receipt Emails - Customize the receipt emails customers receive after making a purchase
 * Email Shortcode functions - Use built-in shortcode functions in emails for customer name, full name, username, download list, order table, purchase date, total, payment id, receipt id, payment method, site name and receipt links
