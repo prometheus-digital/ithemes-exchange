@@ -63,7 +63,7 @@
 						<div class="stripe-action buy-stripe">
 							<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/icon32.png' ); ?>" />
 							<p><?php _e( "I don't have the Stripe add-on yet, but I want to use Stripe.", 'LION' ); ?></p>
-							<p><a href="http://ithemes.com/exchange/stripe/" target="_blank"><?php _e( 'Buy the Stripe Add-On', 'LION' ); ?></a></p>
+							<p><a href="http://ithemes.com/exchange/stripe/" target="_blank"><?php _e( 'Buy the Stripe Add-on', 'LION' ); ?></a></p>
 						</div>
 					</div>
 				<?php endif; ?>
@@ -93,8 +93,8 @@
 				<div class="field add-on-banner">
 					<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/icon32.png' ); ?>" />
 					<p><?php _e( 'You\'re almost ready to start selling digital products using PayPal and iThemes Exchange.', 'LION' ); ?></p>
-					<p><strong><?php _e( 'Remember, if you want to do more with Exchange, check out our Add-Ons Library.', 'LION' ); ?></strong></p>
-					<a class="get-add-ons " href="javascript:void(0);" target="_blank"><span><?php _e( "Get Add-Ons", 'LION' ); ?></span></a>
+					<p><strong><?php _e( 'Remember, if you want to do more with Exchange, check out our Add-ons Library.', 'LION' ); ?></strong></p>
+					<a class="get-add-ons " href="javascript:void(0);" target="_blank"><span><?php _e( "Get Add-ons", 'LION' ); ?></span></a>
 				</div>
 				-->
 				

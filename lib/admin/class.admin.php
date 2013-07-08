@@ -105,7 +105,7 @@ class IT_Exchange_Admin {
 		// Page Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_pages', array( $this, 'set_pages_settings_defaults' ) );
 
-		// Add-On Page Filters
+		// Add-on Page Filters
 		add_action( 'it_exchange_print_add_ons_page_tab_links', array( $this, 'print_enabled_add_ons_tab_link' ) );
 		add_action( 'it_exchange_print_add_ons_page_tab_links', array( $this, 'print_disabled_add_ons_tab_link' ) );
 		add_filter( 'it_exchange_add_ons_tab_callback_get-more', array( $this, 'register_get_more_add_ons_tab_callback' ) );

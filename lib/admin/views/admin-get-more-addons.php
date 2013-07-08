@@ -10,7 +10,7 @@
 	<?php screen_icon( 'it-exchange-add-ons' );  ?>
 	
 	<h2>Add-ons</h2>
-	<p class="top-description"><?php _e( 'Add-Ons are features that you can add or remove depending on your needs. Selling your stuff should only be as complicated as you need it to be. Visit the Get More tab to see what else Exchange can do.', 'LION' ); ?></p>
+	<p class="top-description"><?php _e( 'Add-ons are features that you can add or remove depending on your needs. Selling your stuff should only be as complicated as you need it to be. Visit the Get More tab to see what else Exchange can do.', 'LION' ); ?></p>
 	
 	<?php
 		$this->print_add_ons_page_tabs(); 
@@ -76,10 +76,10 @@
 				<div class="addons-achievement">
 					<div class="achievement-notice">
 						<span><?php _e( 'ACHIEVEMENT UNLOCKED', 'LION' ) ?></span>
-						<span><?php _e( 'Acquired all Exchange Add-Ons', 'LION' ) ?></span>
+						<span><?php _e( 'Acquired all Exchange Add-ons', 'LION' ) ?></span>
 					</div>
 					<h2><?php echo sprintf( __( 'You have all %s currently has to offer!', 'LION' ), 'iThemes Exchange' ); ?></h2>
-					<p><?php _e( 'Got and idea for an add-on that would make life easier?', 'LION' ); ?></p>
+					<p><?php _e( 'Got an idea for an add-on that would make life easier?', 'LION' ); ?></p>
 					<a class="it-exchange-button" target="_blank" href="http://ithemes.com/contact"><?php _e( 'Send us a message', 'LION' ); ?></a>
 					
 					<div class="email-signup">
@@ -91,7 +91,7 @@
 						}
 						?>
 						<form action="" method="post" accept-charset="utf-8">
-                            <p><label for="optin-email"><?php _e( 'Sign up to be notified via email when new Add-Ons and updates are released.', 'LION' ); ?></label></p>
+                            <p><label for="optin-email"><?php _e( 'Sign up to be notified via email when new Add-ons and updates are released.', 'LION' ); ?></label></p>
 							<input type="text" name="optin-email" value="<?php echo get_bloginfo( 'admin_email' ); ?>">
 							<input class="it-exchange-button" type="submit" value="Subscribe">
 						</form>

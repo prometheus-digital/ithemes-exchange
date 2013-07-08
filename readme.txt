@@ -36,7 +36,6 @@ We hope you'll try Exchange and love it. But we also want to hear what we can do
 
 Send us your ideas and feedback here: http://ithemes.com/contact
 
-
 == FEATURES ==
 For more information, visit: http://ithemes.com/exchange
 
@@ -78,13 +77,24 @@ Payment/Transaction Details - See order number, payment total, status, customer,
 * Customer Receipt Emails - Customize the receipt emails customers receive after making a purchase
 * Email Shortcode functions - Use built-in shortcode functions in emails for customer name, full name, username, download list, order table, purchase date, total, payment id, receipt id, payment method, site name and receipt links
 
-
-
 == Installation ==
 
 Upload the Exchange plugin to your blog, Activate it, and enable the Digital
 Downloads add-on and an transaction method addon. For more information, visit:
 http://ithemes.com/codex/page/Exchange_Installation
+
+== Screenshots ==
+
+1. Quick Setup
+2. Add New Product
+3. Add-ons
+4. Add Coupon
+5. Customer Detail
+6. Dashboard Widget
+7. Payments
+8. Email Settings
+9. Pages Settings
+10. Help
 
 == Changelog ==
 
