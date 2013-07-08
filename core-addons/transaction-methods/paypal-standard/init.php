@@ -671,7 +671,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		<div class="it-exchange-addon-settings it-exchange-paypal-addon-settings">
             <p>
 				<?php _e( 'This is the simple and fast version to get PayPal setup for your store. You might use this version just to get your store going, but we highly suggest you switch to the PayPal Standard Secure option. To get PayPal set up for use with Exchange, you\'ll need to add the following information from your PayPal account.', 'LION' ); ?><br /><br />
-				<a href="http://ithemes.com/codex/page/Getting_Started_with_Exchange:_Setting_Up_a_PayPal_Account" target="_blank"><?php _e( 'Video: Getting PayPal Setup with Exchange', 'LION' ); ?></a>
+				<a href="http://ithemes.com/codex/page/Exchange_Add-Ons:_PayPal_Standard_Basic" target="_blank"><?php _e( 'Video: Getting PayPal Setup with Exchange', 'LION' ); ?></a>
 			</p>
 			<p><?php _e( 'Don\'t have a PayPal account yet?', 'LION' ); ?> <a href="http://paypal.com" target="_blank"><?php _e( 'Go set one up here', 'LION' ); ?></a>.</p>
             <h4><?php _e( 'What is your PayPal email address?', 'LION' ); ?></h4>
