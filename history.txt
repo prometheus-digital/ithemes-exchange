@@ -1,3 +1,5 @@
+0.4.22 - 2013-07-08 - Glenn Ansley
+	Remove ithemes licensing, updater code. BETA testers won't receive another update until we push 1.0.0 to wordpress.org SVN
 0.4.21 - 2013-07-07 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
 	General cleanup of the Super Widget styles.
 	Updated copy for PayPal Standard Basic and Secure
