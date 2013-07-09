@@ -67,6 +67,7 @@ class IT_Exchange_Admin {
 		add_action( 'admin_init', array( $this, 'enable_disable_registered_add_on' ) );
 		add_action( 'admin_init', array( $this, 'enable_required_add_ons' ) );
 		add_filter( 'admin_body_class', array( $this, 'add_exchange_class_to_exchange_pages' ) );
+		add_filter( 'upload_mimes', array( $this, 'uploads_mimes_for_products' ) );
 
 		// Admin Product Redirects 
 		add_action( 'admin_init', array( $this, 'redirect_post_new_to_product_type_selection_screen' ) );
@@ -1767,6 +1768,43 @@ Order: %s
 	function remove_builder_custom_layout_box( $post_types ) { 
 		$post_types[] = 'it_exchange_tran';
 		return $post_types;
+	}
+
+	/**
+	 * Expand the allowed mime types for Exchange products
+	 *
+	 * @since 1.0.1
+	 *
+	 * @param array $mime_types existing mime_types
+	 * @reutrn array
+	*/
+	function uploads_mimes_for_products( $mime_types ) {
+		if ( ! wp_get_referer() )
+			return $mime_types;
+
+		$url_parts = parse_url( wp_get_referer() );
+		if ( empty( $url_parts['query'] ) )
+			return $mime_types;
+
+		$query_vars = array();
+		parse_str( $url_parts['query'], $query_vars );
+
+		if ( empty( $query_vars['post_type'] ) || 'it_exchange_prod' != $query_vars['post_type'] )
+			return $mime_types;
+
+		$additional_mime_types = array(
+			'zip'  => 'application/zip',
+			'epub' => 'application/epub+zip',
+			'mobi' => 'application/x-mobipocket-ebook',
+			'm4r'  => 'audio/aac',
+			'psd'  => 'image/photoshop',
+			'apk'  => 'application/vnd.android.package-archive',
+			'msi'  => 'application/x-ole-storage',
+		);
+		$additional_mime_types = apply_filters( 'it_exchange_additional_mime_types', $additional_mime_types );
+		
+		$mime_types = array_merge( $mime_types, $additional_mime_types );
+		return $mime_types;
 	}
 }
 if ( is_admin() )
