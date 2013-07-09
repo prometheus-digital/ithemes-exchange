@@ -1,6 +1,9 @@
 <?php
 /**
- * Loads the theme api
+ * Loads the theme API
+ *
+ * Much of the inspiration for our theme API comes from Jonathan Davis from Shopp
+ * https://shopplugin.net/
  *
  * The Theme API is a higher level API than the rest of the files in this directory.
  * - To use the theme API, call it_exchange( 'context', 'method', array( 'optional' => 'options' ) );

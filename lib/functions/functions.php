@@ -7,6 +7,7 @@
  *
  * Boolean values will be passed through.
  *
+ * @author Jonathan Davis from Shopp
  * @since 0.4.0
  *
  * @param string $string The natural language value
