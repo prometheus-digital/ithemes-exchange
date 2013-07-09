@@ -1,3 +1,10 @@
+1.0.1 - 2013-07-09 - Glenn Ansley, Justin Kopepasah
+	Fix some spelling errors in api/addons.php
+	Fix bug that allowed users to create transactions manually in WPMS
+	Whitelist additional file types for upload on the Exchange Add/Edit Product page
+	Jonathan Davis attribution for it_exchange_parse_options() and at top of api/theme.php
+	Fixed an issue where the Replace featured image text is hidden.
+	Fixed a bug in the add/edit product page that cause the advanced inner panel height to not coincide with the height of the tabs
 1.0.0 - 2013-07-08 - This commit is dedicated to everyone at http://ithemes.com/team/
 	Initial commit at wordpress.org
 0.4.22 - 2013-07-08 - Glenn Ansley
