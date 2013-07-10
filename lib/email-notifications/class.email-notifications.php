@@ -209,6 +209,7 @@ class IT_Exchange_Email_Notifications {
 			'payment_method' => 'it_exchange_replace_payment_method_tag',
 			'sitename'       => 'it_exchange_replace_sitename_tag',
 			'receipt_link'   => 'it_exchange_replace_receipt_link_tag',
+			'login_link'     => 'it_exchange_replace_login_link_tag',
 		);
 		
 		return apply_filters( 'it_exchange_email_notification_shortcode_functions', $shortcode_functions );
@@ -506,6 +507,18 @@ class IT_Exchange_Email_Notifications {
 	*/
 	function it_exchange_replace_receipt_link_tag( $args, $options = NULL ) {
 		return it_exchange_get_transaction_confirmation_url( $this->transaction_id );
+	}
+	
+	/**
+	 * Replacement Tag
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param object $args of IT_Exchange_Email_Notifications
+	 * @return string Replaced value
+	*/
+	function it_exchange_replace_login_link_tag( $args, $options = NULL ) {
+		return it_exchange_get_page_url( 'login' );
 	}
 
 	/**

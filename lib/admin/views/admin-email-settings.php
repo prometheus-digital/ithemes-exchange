@@ -82,6 +82,7 @@ global $wp_version;
 				echo '<li>payment_method - ' . __( 'The method of payment used for this purchase', 'LION' ) . '</li>';
 				echo '<li>sitename - ' . __( 'Your site name', 'LION' ) . '</li>';
 				echo '<li>receipt_link - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the email correctly.', 'LION' ) . '</li>';
+				echo '<li>login_link - ' . __( 'Adds a link to the login page on your website.', 'LION' ) . '</li>';
 				do_action( 'it_exchange_email_template_tags_list' );
 				echo '</ul>';
 				?>
@@ -144,6 +145,7 @@ global $wp_version;
 				echo '<li>payment_method - ' . __( 'The method of payment used for this purchase', 'LION' ) . '</li>';
 				echo '<li>sitename - ' . __( 'Your site name', 'LION' ) . '</li>';
 				echo '<li>receipt_link - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the email correctly.', 'LION' ) . '</li>';
+				echo '<li>login_link - ' . __( 'Adds a link to the login page on your website.', 'LION' ) . '</li>';
 				do_action( 'it_exchange_email_template_tags_list' );
 				echo '</ul>';
 				?>
