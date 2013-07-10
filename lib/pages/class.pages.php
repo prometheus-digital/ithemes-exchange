@@ -114,12 +114,14 @@ class IT_Exchange_Pages {
 			$this->_is_product = false;
 		
 		// Set current view property
+		krsort( $pages );
 		foreach( $pages as $page => $data ) {
 			if ( 'disabled' == it_exchange_get_page_type( $page ) )
 				continue;
 			$property = '_is_' . $page;
 			if ( $this->$property ) {
 				$this->_current_view = $page;
+				break;
 			}
 		}
 
