@@ -39,7 +39,7 @@
 			</div>
 			<?php it_exchange( 'registration', 'save' ); ?>
 			<div class="cancel_url">
-				<?php it_exchange( 'registration', 'cancel' ); ?>
+				<?php it_exchange( 'registration', 'cancel', array( 'label' => __( 'Log in', 'LION' ) ) ); ?>
 			</div>
 		<?php it_exchange( 'registration', 'form-close' ); ?>
 	<?php else : ?>
