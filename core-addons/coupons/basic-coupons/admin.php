@@ -87,17 +87,19 @@ function it_exchange_basic_coupons_save_coupon() {
 	$msg = empty( $data['ID'] ) ? 'added' : 'updated';
 
 	// Convert code, amount-number, amount-type, start-date, end-date to meta
-	$data['post_meta']['_it-basic-code']          = $data['code'];
-	$data['post_meta']['_it-basic-amount-number'] = it_exchange_convert_to_database_number( $data['amount-number'] );
-	$data['post_meta']['_it-basic-amount-type']   = $data['amount-type'];
-	$data['post_meta']['_it-basic-start-date']    = $data['start-date'];
-	$data['post_meta']['_it-basic-end-date']      = $data['end-date'];
-	$data['post_meta']['_it-basic-quantity']      = $data['quantity'];
+	$data['post_meta']['_it-basic-code']           = $data['code'];
+	$data['post_meta']['_it-basic-amount-number']  = it_exchange_convert_to_database_number( $data['amount-number'] );
+	$data['post_meta']['_it-basic-amount-type']    = $data['amount-type'];
+	$data['post_meta']['_it-basic-start-date']     = $data['start-date'];
+	$data['post_meta']['_it-basic-end-date']       = $data['end-date'];
+	$data['post_meta']['_it-basic-limit-quantity'] = $data['limit-quantity'];
+	$data['post_meta']['_it-basic-quantity']       = $data['quantity'];
 	unset( $data['code'] );
 	unset( $data['amount-number'] );
 	unset( $data['amount-type'] );
 	unset( $data['start-date'] );
 	unset( $data['end-date'] );
+	unset( $data['limit-quantity'] );
 	unset( $data['quantity'] );
 
 	if ( $post_id = it_exchange_add_coupon( $data ) ) {
@@ -123,8 +125,10 @@ function it_exchange_basic_coupons_data_is_valid() {
 		it_exchange_add_message( 'error', __( 'Coupon Discount cannot be left empty', 'LION' ) );
 	if ( ! is_numeric( $data['amount-number'] ) || trim( $data['amount-number'] ) < 1 )
 		it_exchange_add_message( 'error', __( 'Coupon Discount must be a postive number', 'LION' ) );
+	if ( ! is_numeric( $data['quantity'] ) )
+		it_exchange_add_message( 'error', __( 'Available Coupons must be a number', 'LION' ) );
 
-	return ! it_exchange_has_messages( 'errors' );
+	return ! it_exchange_has_messages( 'error' );
 }
 
 /**
@@ -207,13 +211,14 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		if ( 'amount' == $coupon->amount_type )
 			$amount = it_exchange_format_price( $amount, false );
 			
-		$values['name']          = $coupon->post_title;
-		$values['code']          = $coupon->code;
-		$values['amount-number'] = $amount;
-		$values['amount-type']   = $coupon->amount_type;
-		$values['start-date']    = $coupon->start_date;
-		$values['end-date']      = $coupon->end_date;
-		$values['quantity']      = $coupon->quantity;
+		$values['name']           = $coupon->post_title;
+		$values['code']           = $coupon->code;
+		$values['amount-number']  = $amount;
+		$values['amount-type']    = $coupon->amount_type;
+		$values['start-date']     = $coupon->start_date;
+		$values['end-date']       = $coupon->end_date;
+		$values['limit-quantity'] = $coupon->limit_quantity;
+		$values['quantity']       = $coupon->quantity;
 	}
 
 	$errors = it_exchange_get_messages( 'error' );
@@ -280,18 +285,17 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 					</div>
 				</div>
 
-				<div class="field quantity">
-					<label for="quantity">
-						<?php _e( 'Available Coupons', 'LION' ); ?>
-						<span class="tip" title="<?php _e( 'How many times can this coupon be used before it is disabled?', 'LION' ); ?>">i</span>
+				<div class="field limit-quantity">
+					<?php $form->add_check_box( 'limit-quantity' ); ?> 
+					<label for="limit-quantity">
+						<?php _e( 'Limit Coupon', 'LION' ); ?>
+						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times this coupon can be used', 'LION' ) ); ?>">i</span>
 					</label>
-					<?php 
-					$options['unlimited'] = __( 'Unlimited', 'LION' );
-					for( $i=0;$i<=100;$i++ ) {
-						$options[$i] = $i;
-					}
-					?>
-					<?php $form->add_drop_down( 'quantity', $options ); ?>
+				</div>
+
+				<div class="field quantity">
+					<?php $form->add_text_box( 'quantity', array( 'type' => 'number' ) ); ?>
+					<span class="tip" title="<?php _e( 'How many times can this coupon be used before it is disabled?', 'LION' ); ?>">i</span>
 				</div>
 				
 				<div class="field">
@@ -389,7 +393,7 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 			esc_attr_e( $coupon->end_date );
 			break;
 		case 'it_exchange_coupon_quantity':
-			$quantity_label = ( 'unlimited' == $coupon->quantity ) ? __( 'Unlimited', 'LION' ) : $coupon->quantity;
+			$quantity_label = ( empty( $coupon->limit_quantity ) ) ? __( 'Unlimited', 'LION' ) : $coupon->quantity;
 			esc_attr_e( $quantity_label );
 			break;
 	}

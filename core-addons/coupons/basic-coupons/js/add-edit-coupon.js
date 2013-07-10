@@ -25,6 +25,20 @@ jQuery( document ).ready( function($) {
 		if ( $( this ).val() == 'genrand' )
 			$( this ).val( it_exchange_random_coupon() );
 	});
+
+	// Show hide quantity limit based on checkbox
+	function itExchangeBasicCouponsShowHideQuantity() {
+		var selected = $(this).is( ':checked' );
+		console.log(selected);
+
+		$( '.quantity' ).addClass('hide-if-js');
+		if ( selected ) {
+			$(".quantity").removeClass('hide-if-js');
+		} else {
+			$(".quantity").addClass('hide-if-js');
+		}
+	}
+	$('#limit-quantity').change(itExchangeBasicCouponsShowHideQuantity).triggerHandler("change");
 });
 
 /**

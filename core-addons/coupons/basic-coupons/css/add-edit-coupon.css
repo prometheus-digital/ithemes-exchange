@@ -33,3 +33,4 @@
 .it-exchange-add-basic-coupon .date div{float:left;}
 .it-exchange-add-basic-coupon .date .start-date{margin-right:15px;}
 .it-exchange-add-basic-coupon .date input{width:120px;}
+.it-exchange-add-basic-coupon .quantity input{max-width:80px;text-align:right;}
