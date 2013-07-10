@@ -240,7 +240,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		// If user is not logged in and state is checkout, redirect to login
 		if ( ! $user_logged_in ) {
 			if ( 'checkout' == $state )
-				$state = 'login';
+				$state = 'registration';
 		}
 		
 		if ( empty( $state ) && 'product' == $it_exchange_view  )

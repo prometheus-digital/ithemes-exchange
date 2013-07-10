@@ -44,6 +44,7 @@
 			</div>
 			
 			<?php it_exchange( 'registration', 'save' ); ?>
+			&nbsp;<a href="<?php esc_attr_e( it_exchange_get_page_url( 'login' ) ); ?>"><?php _e( 'Log in', 'LION' ); ?></a>
 			<?php it_exchange( 'registration', 'formclose' ); ?>
 			
 		<?php else : ?>
