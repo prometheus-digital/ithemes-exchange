@@ -1072,7 +1072,7 @@ Order: %s
 
 		$settings_saved = __( 'Settings Saved. Congrats!', 'LION' );
 		$add_product_link = sprintf( __( '%sAdd a Product%s', 'LION' ), '<a href="' . get_admin_url() . 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=digital-downloads-product-type">', '</a>' ); 
-		$view_addons_link = sprintf( __( '%sEnable Add-ons%s', 'Lion' ), '<a href="' . get_admin_url() . 'admin.php?page=it-exchange-addons">', '</a>' );
+		$view_addons_link = sprintf( __( '%sEnable Add-ons%s', 'LION' ), '<a href="' . get_admin_url() . 'admin.php?page=it-exchange-addons">', '</a>' );
 
 		$view_sample_link = empty( $sample_product->ID ) ? '' : ' | ' . sprintf( __( '%sView Sample Product%s', 'LION' ), '<a href="' . get_admin_url() . 'post.php?post=' . $sample_product->ID . '&action=edit">', '</a>' );
 
