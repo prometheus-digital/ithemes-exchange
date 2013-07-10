@@ -175,8 +175,8 @@ class IT_Exchange_Product_Feature_Inventory {
         else
 			it_exchange_update_product_feature( $product_id, 'inventory', 'yes', array( 'setting' => 'enabled' ) );
 		
-		if ( !empty( $_POST['it-exchange-product-inventory'] ) )
-			it_exchange_update_product_feature( $product_id, 'inventory', (integer)$_POST['it-exchange-product-inventory'] );
+		if ( isset( $_POST['it-exchange-product-inventory'] ) )
+			it_exchange_update_product_feature( $product_id, 'inventory', $_POST['it-exchange-product-inventory'] );
 		
 	}
 
@@ -195,10 +195,10 @@ class IT_Exchange_Product_Feature_Inventory {
 			'setting' => 'inventory',
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-
+		
 		// Only accept settings for max_number (default) or 'enabled' (checkbox)
 		if ( 'inventory' == $options['setting'] ) {
-			$new_value = absint( $new_value );
+			$new_value = empty( $new_value ) && !is_numeric( $new_value ) ? '' : absint( $new_value );
 			update_post_meta( $product_id, '_it-exchange-product-inventory', $new_value );
 			return true;
 		} else if ( 'enabled' == $options['setting'] ) {
