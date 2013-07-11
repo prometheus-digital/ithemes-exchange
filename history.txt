@@ -1,3 +1,19 @@
+1.0.2 - 2013-07-11 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+	Fix typos in content-downloads.php and email confirmation.
+	Changed Video links to target _blank
+	Various readme.txt typo fixes
+	Add Notice when our default template parts get updated
+	Fixed bug not allowing inventory setting to be saved in some instances
+	Added new shortcode for email templates: login_link
+	Change default state to Registration, not Login, when user tries to access checkout while not logged in.
+	Fixed unconverted nbsp
+	Fixed mistyped localization namespace
+	Updated copy in Get More top description
+	Updated the Dashboard Reporting Widget for when there are no sales yet, per Brad's trello card
+	Modify coupon limit fields
+	Add coupon limit to Basic Coupons add-on
+	Fix bug preventing subpages of store and account from working correctly
+	Remove Log Out page from showing up in WP's Appearance --> Menus
 1.0.1 - 2013-07-09 - Glenn Ansley, Justin Kopepasah
 	Fix some spelling errors in api/addons.php
 	Fix bug that allowed users to create transactions manually in WPMS
