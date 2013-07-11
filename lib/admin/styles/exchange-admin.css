@@ -1,17 +1,11 @@
 /** -----------------------------------------------------:[ notices ]:---------- */
-div.updated,
-div.error,
-#update-nag,
-.update-nag{padding:5px 10px;background-color:#fff;border:;-webkit-border-radius:0;border-radius:0;font-size:14px;line-height:18px;}
-div.updated strong,
-div.error strong,
-#update-nag strong,
-.update-nag strong{font-weight:normal;}
-div.updated{background-color:#fff;border-left-width:4px;border-color:#7ad03a;}
-#update-nag,
-.update-nag{background-color:#fff;border-left:4px solid #ffba00;}
-div.error{background:#fff;border-left:4px solid #dd3d36;}
-.clearfix:after{content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0;}
+.it-exchange-admin div.updated,
+.it-exchange-admin div.error{padding:5px 10px;background-color:#fff;border:;-webkit-border-radius:0;border-radius:0;font-size:14px;line-height:18px;}
+.it-exchange-admin div.updated strong,
+.it-exchange-admin div.error strong{font-weight:normal;}
+.it-exchange-admin div.updated{background-color:#fff;border-left-width:4px;border-color:#7ad03a;}
+.it-exchange-admin div.error{background:#fff;border-left:4px solid #dd3d36;}
+.it-exchange-admin .clearfix:after{content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0;}
 
 /** -----------------------------------------------------:[ exchange globals ]:---------- */
 .it-exchange-admin .top-description{color:#676c6e;font-size:14px;line-height:1.5;max-width:800px;}
