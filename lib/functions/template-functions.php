@@ -158,3 +158,84 @@ function it_exchange_unset_template_part_args( $template_name ) {
 	if ( isset( $GLOBALS['it_exchange']['template_part_args'][$template_name] ) )
 		unset( $GLOBALS['it_exchange']['template_part_args'][$template_name] );
 }
+
+/**
+ * Template Versioning
+ *
+ * Returns an array of all default exchange templates along with the version they were last edited
+ *
+ * @since 1.0.2
+*/
+function it_exchange_get_default_template_versions() {
+	$templates = array(
+		'content-cart'              => '1.0.0',
+		'content-checkout'          => '1.0.0',
+		'content-confirmation'      => '1.0.0',
+		'content-downloads'         => '1.0.0',
+		'content-login'             => '1.0.0',
+		'content-product'           => '1.0.0',
+		'content-profile'           => '1.0.0',
+		'content-purchases'         => '1.0.1',
+		'content-registration'      => '1.0.2',
+		'content-store'             => '1.0.2',
+		'messages'                  => '1.0.0',
+		'super-widget-cart'         => '1.0.2',
+		'super-widget-checkout'     => '1.0.0',
+		'super-widget-login'        => '1.0.0',
+		'super-widget-product'      => '1.0.0',
+		'super-widget-registration' => '1.0.2',
+		'store-product'             => '1.0.2',
+	);
+
+	// This is not filterable
+	return $templates;
+}
+
+/**
+ * Activates the nag when version is updated if default templates have changed
+ *
+*/
+function activate_updated_template_nag( $versions ) {
+	$templates     = it_exchange_get_default_template_versions();
+	$updated       = false;
+
+	// Don't update for first time installations
+	if ( empty( $versions['previous'] ) ) {
+		update_option( 'it-exchange-hide-template-update-nag', $versions['current'] );
+		return;
+	}
+
+	// Compare each template version to current version. Trigger upgrade if changed since pervious version
+	foreach( (array) $templates as $template => $version ) {
+		if ( $version > $versions['previous'] )
+			$updated = true;
+	}
+
+	if ( empty( $updated ) )
+		update_option( 'it-exchange-hide-template-update-nag', $versions['current'] );
+	else
+		delete_option( 'it-exchange-hide-template-update-nag' );
+}
+add_action( 'it_exchange_version_updated', 'activate_updated_template_nag' );
+
+/**
+ * Shows the nag when needed.
+ *
+ * Also dismisses the nag
+ *
+ * @since 1.0.2
+ *
+ * @return void
+*/
+function it_exchange_show_updated_template_nag() {
+	if ( ! empty( $_GET['it-exchange-dismiss-tempate-nag'] ) )
+		update_option( 'it-exchange-hide-template-update-nag', $GLOBALS['it_exchange']['version'] );
+	
+	$nag_dismissed = get_option( 'it-exchange-hide-template-update-nag', false );
+	if ( empty( $nag_dismissed ) || $nag_dismissed < $GLOBALS['it_exchange']['version'] ) {
+		$codex_url   = 'http://ithemes.com/codex/page/Exchange_Template_Updates';
+		$dismiss_url = add_query_arg( array( 'it-exchange-dismiss-tempate-nag' => 1 ) );
+		ITUtility::show_status_message( sprintf( __( 'iThemes Exchange default template parts have been updated. View %sour codex%s for more information. %sDismiss%s' ), '<a href="' . $codex_url. '">', '</a>', '<a href="' . $dismiss_url . '">', '</a>' ) );
+	}
+}
+add_action( 'admin_notices', 'it_exchange_show_updated_template_nag' );

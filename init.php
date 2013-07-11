@@ -54,6 +54,22 @@ class IT_Exchange {
 		require( $this->_plugin_path . 'api/load.php' );
 		require( $this->_plugin_path . 'core-addons/load.php' );
 
+		// Set version
+		$GLOBALS['it_exchange']['version'] = $this->_version;
+		if ( is_admin() ) {
+			$versions         = get_option( 'it-exchange-versions', false );
+			$current_version  = empty( $versions['current'] ) ? false: $versions['current'];
+			$previous_version = empty( $versions['previous'] ) ? false: $versions['previous'];
+			if ( $this->_version !== $current_version ) {
+				$versions = array(
+					'current'  => $this->_version,
+					'previous' => $current_version,
+				);
+				update_option( 'it-exchange-versions', $versions );
+				do_action( 'it_exchange_version_updated', $versions );
+			}
+		}
+
 		do_action( 'it_exchange_loaded' );
 		add_action( 'it_libraries_loaded', array( $this, 'addons_init' ) );
 	}
