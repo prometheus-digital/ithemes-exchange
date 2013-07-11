@@ -24,7 +24,7 @@ With iThemes Exchange, many features are split into add-ons. You only see what y
 = GET PAID WITH PAYPAL OR STRIPE =
 We designed Exchange's purchase experience with Stripe as the ideal payment gateway. Stripe is awesome. If you've used it, you know.
 
-Not ready for Stripe yet? Exchange supports PayPal Standard out-of-the-box.
+Not ready for Stripe yet? Exchange supports PayPal Standard or Offline Payments out-of-the-box.
 
 = CUSTOMERS MANAGEMENT MADE EASY =
 We don't create our own database tables for users. We use the same built-in WordPress user system and add customer data to its own page, making it simple to edit their transactions, view available downloads and make customer notes for your reference.
@@ -43,7 +43,7 @@ For more information, visit: http://ithemes.com/exchange
 
 Add only the features you need. Exchange Add-ons include support for payment gateways (Stripe, PayPal Standard or offline payments), coupons, digital downloads, sales reports, multi-item cart, product categories and product tags.
 
-* Accept PayPal Standard or Offline Payments - Process transitions out-of-the-box with PayPal Standard or take payments offline to process cash or check payments
+* Accept PayPal Standard or Offline Payments - Process transactions out-of-the-box with PayPal Standard or take payments offline to process cash or check payments
 * Stripe - Enable the premium Stripe Add-on to process payments with Stripe, our recommended payment gateway
 * Coupons - Generate basic coupons that apply to all products in your store
 * Multi-item Cart - Allow customers to purchase multiple products with one transaction
@@ -64,7 +64,7 @@ iThemes Exchange allows you to create products quickly and easily. But sometimes
 
 = Payment and Customer Management =
 
-View transaction details and manager customers from within Exchange.
+View transaction details and manage customers from within Exchange.
 
 * Payment/Transaction Details - See order number, payment total, status, customer, payment method and date of payment for individual transactions
 * Customer Registration - Use Exchange Registration or WordPress Registration settings
@@ -81,8 +81,8 @@ Use the WordPress WSIWYG editor to make custom email templates for Admin Sales N
 
 == Installation ==
 
-Upload the Exchange plugin to your blog, Activate it, and enable the Digital
-Downloads add-on and an transaction method addon. For more information, visit:
+Upload the Exchange plugin to your blog, activate it, and enable the Digital
+Downloads add-on and a transaction method addon. For more information, visit:
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Screenshots ==
