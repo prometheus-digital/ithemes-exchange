@@ -151,9 +151,9 @@ function it_exchange() {
 	$result = call_user_func( array( $object, strtolower( $method ) ), $options );
 
 	// Filters
-	$result = apply_filters( 'it_exchange_theme_api', $result, $tag, strtolower( $method ), $options );
-	$result = apply_filters( 'it_exchange_theme_api_' . $tag, $result, strtolower( $method ), $options );
-	$result = apply_filters( 'it_exchange_theme_api_' . $tag . '_' . strtolower( $method ), $result, $options );
+	$result = apply_filters( 'it_exchange_theme_api', $result, strtolower( $context ), strtolower( $method ), $options );
+	$result = apply_filters( 'it_exchange_theme_api_' . strtolower( $context ), $result, strtolower( $method ), $options );
+	$result = apply_filters( 'it_exchange_theme_api_' . strtolower( $context ) . '_' . strtolower( $method ), $result, $options );
 
 	// Force boolean result
 	if ( isset( $options['is'] ) ) {

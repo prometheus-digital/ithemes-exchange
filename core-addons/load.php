@@ -203,6 +203,11 @@ function it_exchange_register_core_addon_categories() {
 			'description' => __( 'Add-ons that create new taxonomies specifically for Exchange products.', 'LION' ),
 			'options'     => array(),
 		),
+		'email' => array(
+			'name'        => __( 'Email', 'LION' ),
+			'description' => __( 'Add-ons that help store owners manage their email.', 'LION' ),
+			'options'     => array(),
+		),
 		'other' => array(
 			'name'        => __( 'Other', 'LION' ),
 			'description' => __( 'Add-ons that don\'t fit in any other add-on category.', 'LION' ),
