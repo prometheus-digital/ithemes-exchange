@@ -208,31 +208,39 @@ function it_exchange_reset_everything() {
 	$stati = array_keys( get_post_stati() );
 
 	// Delete all Products 
-	while( $products = it_exchange_get_products( array( 'posts_per_page' => 20, 'post_status' => $stati ) ) ) {
-		foreach ( $products as $product ) {
-			wp_delete_post( $product->ID, true );
+	if ( ! apply_filters( 'it_exchange_preserve_products_on_reset', false ) ) {
+		while( $products = it_exchange_get_products( array( 'posts_per_page' => 20, 'post_status' => $stati ) ) ) {
+			foreach ( $products as $product ) {
+				wp_delete_post( $product->ID, true );
+			}
 		}
 	}
 	// Delete all Transactions
-	while( $transactions = it_exchange_get_transactions( array( 'posts_per_page' => 20, 'post_status' => $stati ) ) ) {
-		foreach ( $transactions as $transaction ) {
-			wp_delete_post( $transaction->ID, true );
+	if ( ! apply_filters( 'it_exchange_preserve_transactions_on_reset', false ) ) {
+		while( $transactions = it_exchange_get_transactions( array( 'posts_per_page' => 20, 'post_status' => $stati ) ) ) {
+			foreach ( $transactions as $transaction ) {
+				wp_delete_post( $transaction->ID, true );
+			}
 		}
 	}
-	// Delete all Transactions
-	while( $coupons = it_exchange_get_coupons( array( 'posts_per_page' => 20, 'post_status' => $stati ) ) ) {
-		foreach ( $coupons as $coupon ) {
-			wp_delete_post( $coupon->ID, true );
+	// Delete all Coupons
+	if ( ! apply_filters( 'it_exchange_preserve_coupons_on_reset', false ) ) {
+		while( $coupons = it_exchange_get_coupons( array( 'posts_per_page' => 20, 'post_status' => $stati ) ) ) {
+			foreach ( $coupons as $coupon ) {
+				wp_delete_post( $coupon->ID, true );
+			}
 		}
 	}
-	// Delete all Downloads (post types, not files uploaded to WP Media Library
-	while( $downloads = get_posts( array( 'post_type' => 'it_exchange_download', 'post_status' => $stati ) ) ) {
-		foreach ( $downloads as $download ) {
-			wp_delete_post( $download->ID, true );
+	// Delete all Downloads (post types, not files uploaded to WP Media Library)
+	if ( ! apply_filters( 'it_exchange_preserve_products_on_reset', false ) ) {
+		while( $downloads = get_posts( array( 'post_type' => 'it_exchange_download', 'post_status' => $stati ) ) ) {
+			foreach ( $downloads as $download ) {
+				wp_delete_post( $download->ID, true );
+			}
 		}
+		// Delete all session data for everyone. This is inside the check for product preserves on purpose
+		it_exchange_db_delete_all_sessions();
 	}
-	// Delete all session data for everyone
-	it_exchange_db_delete_all_sessions();
 
 	// Delete all core settings
 	$settings_keys = array(
@@ -251,6 +259,7 @@ function it_exchange_reset_everything() {
 		delete_option( $option );
 	}
 
+	do_action( 'it_exchange_reset_exchange' );
 	
 	// Log message and redirect
 	it_exchange_add_message( 'notice', __( 'Exchange has been reset. All data has been deleted.', 'LION' ) );
