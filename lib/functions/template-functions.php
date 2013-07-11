@@ -175,12 +175,12 @@ function it_exchange_get_default_template_versions() {
 		'content-login'             => '1.0.0',
 		'content-product'           => '1.0.0',
 		'content-profile'           => '1.0.0',
-		'content-purchases'         => '1.0.1',
+		'content-purchases'         => '1.0.2',
 		'content-registration'      => '1.0.2',
 		'content-store'             => '1.0.2',
 		'messages'                  => '1.0.0',
 		'super-widget-cart'         => '1.0.2',
-		'super-widget-checkout'     => '1.0.1',
+		'super-widget-checkout'     => '1.0.2',
 		'super-widget-login'        => '1.0.0',
 		'super-widget-product'      => '1.0.0',
 		'super-widget-registration' => '1.0.2',
@@ -194,6 +194,10 @@ function it_exchange_get_default_template_versions() {
 /**
  * Activates the nag when version is updated if default templates have changed
  *
+ * @since 1.0.2
+ *
+ * @param array $versions contains previous and current elements
+ * @return void
 */
 function activate_updated_template_nag( $versions ) {
 	$templates     = it_exchange_get_default_template_versions();
