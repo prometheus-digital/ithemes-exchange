@@ -162,9 +162,9 @@ class IT_Exchange_Admin {
 	*/
 	function it_exchange_plugin_row_meta( $meta, $plugin_file, $plugin_data, $status ) {
 		if ( 'ithemes-exchange/init.php' == $plugin_file ) {
-			$meta[] = '<a href="http://ithemes.com/codex/page/Exchange">' . __( 'Documentation', 'LION' ) . '</a>';
-			$meta[] = '<a href="http://ithemes.com/exchange/support">' . __( 'Support', 'LION' ) . '</a>';
-			$meta[] = '<a href="http://ithemes.com/exchange/add-ons">' . __( 'Add-ons', 'LION' ) . '</a>';
+			$meta[] = '<a href="http://ithemes.com/codex/page/Exchange" target="_blank">' . __( 'Documentation', 'LION' ) . '</a>';
+			$meta[] = '<a href="http://ithemes.com/exchange/support" target="_blank">' . __( 'Support', 'LION' ) . '</a>';
+			$meta[] = '<a href="http://ithemes.com/exchange/add-ons" target="_blank">' . __( 'Add-ons', 'LION' ) . '</a>';
 		}
 		return $meta;
 	}
