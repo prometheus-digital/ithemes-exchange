@@ -4,7 +4,7 @@
  * downloads.
  * 
  * @since 0.4.0
- * @version 1.0.0
+ * @version 1.0.2
  * @link http://ithemes.com/codex/page/Exchange_Template_Updates
  * @package IT_Exchange
  * 
@@ -38,7 +38,7 @@
 										<h4><?php it_exchange( 'transaction', 'product-download', array( 'attribute' => 'title' ) ); ?></h4>
 										<?php if ( it_exchange( 'transaction', 'has-product-download-hashes' ) ) : ?>
 											<?php if ( ! it_exchange( 'transaction', 'get-cleared-for-delivery' ) ) : ?>
-												<p><?php _e( 'The status for this transaction does not grant access to downlodable files. Once the transaction is updated to an appoved status, you will receive a follup email with your download links.', 'LION' ); ?></p>
+												<p><?php _e( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an approved status, you will receive a follow-up email with your download links.', 'LION' ); ?></p>
 											<?php endif; ?>
 											<ul class="transaction-product-download-hashes">
 											<?php while( it_exchange( 'transaction', 'product-download-hashes' ) ) : ?>

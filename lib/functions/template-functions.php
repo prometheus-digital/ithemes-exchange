@@ -171,7 +171,7 @@ function it_exchange_get_default_template_versions() {
 		'content-cart'              => '1.0.0',
 		'content-checkout'          => '1.0.0',
 		'content-confirmation'      => '1.0.0',
-		'content-downloads'         => '1.0.0',
+		'content-downloads'         => '1.0.2',
 		'content-login'             => '1.0.0',
 		'content-product'           => '1.0.0',
 		'content-profile'           => '1.0.0',

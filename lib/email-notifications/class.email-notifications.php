@@ -274,7 +274,7 @@ class IT_Exchange_Email_Notifications {
 							 * If no files exist for the transaction, then there is no need to print this message even if status is pending
 							 * Clear as mud.
 							*/
-							$status_notice = '<p>' . __( 'The status for this transaction does not grant access to downlodable files. Once the transaction is updated to an appoved status, you will receive a follup email with your download links.', 'LION' ) . '</p>';
+							$status_notice = '<p>' . __( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an approved status, you will receive a follow-up email with your download links.', 'LION' ) . '</p>';
 							echo $status_notice;
 							$status_notice = '<h3>' . __( 'Available Downloads', 'LION' ) . '</h3>' . $status_notice;
 							?>
