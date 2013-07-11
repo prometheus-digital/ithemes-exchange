@@ -3,7 +3,7 @@
  * The checkout template for the Super Widget.
  * 
  * @since 0.4.0
- * @version 1.0.0
+ * @version 1.0.1
  * @link http://ithemes.com/codex/page/Exchange_Template_Updates
  * @package IT_Exchange
  * 
@@ -77,7 +77,7 @@
 			
 					<?php if ( $can_edit_purchase_quantity ) : ?>
 						<div class="cart-action update-quantity">
-							<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-quantity', 'focus' => 'quantity', 'label' => __( 'Change Quantity', 'LION' ) ) ); ?>
+							<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-quantity', 'focus' => 'quantity', 'label' => __( 'Quantity', 'LION' ) ) ); ?>
 						</div>
 					<?php endif; ?>
 				<?php endif; ?>

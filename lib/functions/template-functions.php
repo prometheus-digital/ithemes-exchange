@@ -180,7 +180,7 @@ function it_exchange_get_default_template_versions() {
 		'content-store'             => '1.0.2',
 		'messages'                  => '1.0.0',
 		'super-widget-cart'         => '1.0.2',
-		'super-widget-checkout'     => '1.0.0',
+		'super-widget-checkout'     => '1.0.1',
 		'super-widget-login'        => '1.0.0',
 		'super-widget-product'      => '1.0.0',
 		'super-widget-registration' => '1.0.2',
