@@ -235,7 +235,7 @@ function it_exchange_show_updated_template_nag() {
 	if ( empty( $nag_dismissed ) || $nag_dismissed < $GLOBALS['it_exchange']['version'] ) {
 		$codex_url   = 'http://ithemes.com/codex/page/Exchange_Template_Updates';
 		$dismiss_url = add_query_arg( array( 'it-exchange-dismiss-tempate-nag' => 1 ) );
-		ITUtility::show_status_message( sprintf( __( 'iThemes Exchange default template parts have been updated. View %sour codex%s for more information. %sDismiss%s' ), '<a href="' . $codex_url. '">', '</a>', '<a href="' . $dismiss_url . '">', '</a>' ) );
+		include( dirname( dirname( __FILE__) ) . '/admin/views/admin-default-templates-updated-notice.php' );
 	}
 }
 add_action( 'admin_notices', 'it_exchange_show_updated_template_nag' );
