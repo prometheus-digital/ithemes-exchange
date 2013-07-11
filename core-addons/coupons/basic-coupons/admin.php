@@ -125,7 +125,7 @@ function it_exchange_basic_coupons_data_is_valid() {
 		it_exchange_add_message( 'error', __( 'Coupon Discount cannot be left empty', 'LION' ) );
 	if ( ! is_numeric( $data['amount-number'] ) || trim( $data['amount-number'] ) < 1 )
 		it_exchange_add_message( 'error', __( 'Coupon Discount must be a postive number', 'LION' ) );
-	if ( ! is_numeric( $data['quantity'] ) )
+	if ( ! empty( $data['limit-quantity'] ) && ! is_numeric( $data['quantity'] ) )
 		it_exchange_add_message( 'error', __( 'Available Coupons must be a number', 'LION' ) );
 
 	return ! it_exchange_has_messages( 'error' );
