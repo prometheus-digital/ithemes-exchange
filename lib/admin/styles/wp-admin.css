@@ -8,6 +8,7 @@
 
 /** -----------------------------------------------------:[ nags ]:---------- */
 .it-exchange-nag{position:relative;z-index:10;padding:1em .75em 1em 4em;margin:1em 1em 1em 0;background:#f3fce6 url('../images/open-e.png') .85em center no-repeat;border:1px solid #D8E9C1;border-bottom-width:2px;border-radius:3px;color:#44654e;font-size:14px;line-height:1.6;}
+.it-exchange-nag.after-h2{margin-right:0;}
 .it-exchange-nag a{color:#44654e;border-bottom:1px solid #44654e;font-weight:bold;text-decoration:none;-webkit-transition:all .1s linear;-moz-transition:all .1s linear;transition:all .1s linear;}
 .it-exchange-nag a:hover{border-bottom-color:#b7cc9b;}
 .it-exchange-nag a.btn{display:inline-block;background:#D8E9C1;border:1px solid #b7cc9b;border-bottom-width:2px;border-radius:3px;padding:6px 14px;-webkit-transition:all .1s linear;-moz-transition:all .1s linear;transition:all .1s linear;text-decoration:none;margin:-8px 0;}

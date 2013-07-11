@@ -14,3 +14,10 @@
 	?>
 	<a class="dismiss btn" href="<?php esc_attr_e( $wizard_dismiss ); ?>">&times;</a>
 </div>
+<script type="text/javascript">
+	jQuery( document ).ready( function() {
+		if ( jQuery( '.wrap > h2' ).length == '1' ) {
+			jQuery("#it-exchange-wizard-nag").insertAfter( '.wrap > h2' ).addClass( 'after-h2' );
+		}
+	});
+</script>
