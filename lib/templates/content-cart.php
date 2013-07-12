@@ -3,7 +3,7 @@
  * Default template part for the cart page.
  * 
  * @since 0.4.0
- * @version 1.0.0
+ * @version 1.1.0
  * @link http://ithemes.com/codex/page/Exchange_Template_Updates* @updated 1.0.0
  * @package IT_Exchange
  * 
@@ -25,30 +25,11 @@
 		<?php do_action( 'it_exchange_content_cart_before_form' ); ?>
 		<?php it_exchange( 'cart', 'form-open' ); ?>
 			<?php do_action( 'it_exchange_content_cart_begin_form' ); ?>
-			
-			<?php do_action( 'it_exchange_content_cart_before_items' ); ?>
-			<div id="it-exchange-cart-items" class="it-exchange-table">
-				<?php it_exchange_get_template_part( 'content-cart/loops/items' ); ?>
-			</div>
-			<?php do_action( 'it_exchange_content_cart_after_items' ); ?>
-			
-			<?php do_action( 'it_exchange_content_cart_before_coupons' ); ?>
-			<div id="it-exchange-cart-coupons" class="it-exchange-table">
-				<?php it_exchange_get_template_part( 'content-cart/loops/coupons' ); ?>
-			</div>
-			<?php do_action( 'it_exchange_content_cart_after_coupons' ); ?>
-			
-			<?php do_action( 'it_exchange_content_cart_before_totals' ); ?>
-			<div id="it-exchange-cart-totals" class="it-exchange-table">
-				<?php it_exchange_get_template_part( 'content-cart/loops/totals' ); ?>
-			</div>
-			<?php do_action( 'it_exchange_content_cart_after_totals' ); ?>
-			
-			<?php do_action( 'it_exchange_content_cart_before_actions' ); ?>
-			<div id="it-exchange-cart-actions">
-				<?php it_exchange_get_template_part( 'content-cart/loops/actions' ); ?>
-			</div>
-			<?php do_action( 'it_exchange_content_cart_after_actions' ); ?>
+            
+			<?php it_exchange_get_template_part( 'content-cart/loops/items' ); ?>
+			<?php it_exchange_get_template_part( 'content-cart/loops/coupons' ); ?>
+			<?php it_exchange_get_template_part( 'content-cart/loops/totals' ); ?>
+			<?php it_exchange_get_template_part( 'content-cart/loops/actions' ); ?>
 			
 			<?php do_action( 'it_exchange_content_cart_end_form' ); ?>
 		<?php it_exchange( 'cart', 'form-close' ); ?>
