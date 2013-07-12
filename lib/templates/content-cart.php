@@ -3,7 +3,7 @@
  * Default template part for the cart page.
  * 
  * @since 0.4.0
- * @version 1.1.0
+ * @version 1.0.0
  * @link http://ithemes.com/codex/page/Exchange_Template_Updates* @updated 1.0.0
  * @package IT_Exchange
  * 
