@@ -168,30 +168,26 @@ class IT_Exchange_Customer {
 function handle_it_exchange_customer_registration_action() {
 
     // Grab action and process it.
-    if ( isset( $_REQUEST['it-exchange-register-customer'] ) ) {
+    if ( isset( $_POST['it-exchange-register-customer'] ) ) {
 
         do_action( 'before_handle_it_exchange_customer_registration_action' );
 
-        $result = it_exchange_register_user();
+        $user_id = it_exchange_register_user();
 
-        if ( is_wp_error( $result ) )
-            return it_exchange_add_message( 'error', $result->get_error_message());
+        if ( is_wp_error( $user_id ) )
+            return it_exchange_add_message( 'error', $user_id->get_error_message());
 
-        $user_id = $result;
-
-        //else
+        wp_new_user_notification( $user_id, $_POST['pass1'] );
 
         $creds = array(
-            'user_login'    => $_REQUEST['user_login'],
-            'user_password' => $_REQUEST['pass1'],
+            'user_login'    => $_POST['user_login'],
+            'user_password' => $_POST['pass1'],
         );
 
-        $result = wp_signon( $creds );
+        $user = wp_signon( $creds );
 
-        if ( is_wp_error( $result ) )
+        if ( is_wp_error( $user ) )
             return it_exchange_add_message( 'error', $result->get_error_message() );
-
-        wp_new_user_notification( $user_id, $_REQUEST['pass1'] );
 
         $reg_page = it_exchange_get_page_url( 'registration' );
         // Set redirect to profile page if they were on the registration page

@@ -23,13 +23,6 @@ $focus        = empty( $_GET['ite-sw-cart-focus'] ) ? false : esc_attr( $_GET['i
 $coupon_type  = empty( $_GET['sw-coupon-type'] ) ? false : esc_attr( $_GET['sw-coupon-type'] );
 $coupon       = empty( $_GET['sw-coupon-code'] ) ? false : esc_attr( $_GET['sw-coupon-code'] );
 $cart_product = empty( $_GET['sw-cart-product'] ) ? false : esc_attr( $_GET['sw-cart-product'] );
-$un           = empty( $_GET['sw-un'] ) ? false : esc_attr( $_GET['sw-un'] );
-$pw           = empty( $_GET['sw-p1'] ) ? false : esc_attr( $_GET['sw-p1'] );
-$remember     = empty( $_GET['sw-remember'] ) ? false : esc_attr( $_GET['sw-remember'] );
-$fn           = empty( $_GET['sw-fn'] ) ? false : esc_attr( $_GET['sw-fn'] );
-$ln           = empty( $_GET['sw-ln'] ) ? false : esc_attr( $_GET['sw-ln'] );
-$em           = empty( $_GET['sw-em'] ) ? false : esc_attr( $_GET['sw-em'] );
-$p2           = empty( $_GET['sw-p2'] ) ? false : esc_attr( $_GET['sw-p2'] );
 
 // Update the state HTML of the widget
 if ( 'get-state' == $action && $state ) {
@@ -86,9 +79,9 @@ if ( 'update-quantity' == $action && $quantity && $cart_product ) {
 
 // Login
 if ( 'login' == $action ) {
-	$creds['user_login'] = $un;
-	$creds['user_password']  = $pw;
-	$creds['remember']   = $remember;
+	$creds['user_login']    = empty( $_POST['log'] ) ? '' : esc_attr( $_POST['log'] );
+	$creds['user_password'] = empty( $_POST['pwd'] ) ? '' : esc_attr( $_POST['pwd'] );
+	$creds['remember']      = empty( $_POST['rememberme'] ) ? '' : esc_attr( $_POST['rememberme'] );
 
 	$user = wp_signon( $creds, false );
 	if ( ! is_wp_error( $user ) ) {
@@ -102,20 +95,18 @@ if ( 'login' == $action ) {
 
 // Register a new user
 if ( 'register' == $action ) {
-	$user_data['user_login'] = $un;
-	$user_data['first_name'] = $fn;
-	$user_data['last_name']  = $ln;
-	$user_data['email']      = $em;
-	$user_data['pass1']      = $pw;
-	$user_data['pass2']      = $p2;
-
-	$user = it_exchange_register_user( $user_data );
-	if ( ! is_wp_error( $user ) ) {
-		$creds['user_login']    = $un;
-		$creds['user_password'] = $pw;
-		$creds['remember']      = false;
-		if ( $user = wp_signon( $creds, false ) )
+	$user_id = it_exchange_register_user();
+	if ( ! is_wp_error( $user_id ) ) {
+        wp_new_user_notification( $user_id, $_POST['pass1'] );
+		$creds = array(
+            'user_login'    => esc_attr( $_POST['user_login'] ),
+            'user_password' => esc_attr( $_POST['pass1'] ),
+        );
+        $user = wp_signon( $creds );
+		if ( ! is_wp_error( $user ) )
 			it_exchange_add_message( 'notice', __( 'Registered and logged in as ', 'LION' ) . $user->user_login );
+		else
+            it_exchange_add_message( 'error', $result->get_error_message() );
 		die('1');
 	} else {
 		it_exchange_add_message( 'error', $user->get_error_message() );
