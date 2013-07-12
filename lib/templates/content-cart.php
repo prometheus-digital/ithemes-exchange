@@ -16,66 +16,48 @@
 */
 ?>
 
-<?php it_exchange_get_template_part( 'messages' ); ?>
-
-<?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
-	<?php it_exchange( 'cart', 'form-open' ); ?>
-		<?php do_action( 'it_exchange_cart_form_top' ); ?>
-		<div id="it-exchange-cart">
-			<div class="cart-items-coupons">
-				<?php do_action( 'it_exchange_before_cart_items' ); ?>
-				<div class="cart-items cart-table">
-					<?php do_action( 'it_exchange_before_cart_item_rows' ); ?>
-					<?php while ( it_exchange( 'cart', 'cart-items' ) ) : ?>
-						<div class="cart-item cart-row">
-							<?php foreach( it_exchange_get_cart_item_columns() as $column ) : ?>
-								<?php it_exchange_get_template_part( 'cart/cart-item-columns/' . $column ); ?>
-							<?php endforeach; ?>
-						</div>
-					<?php endwhile; ?>
-					<?php do_action( 'it_exchange_after_cart_item_rows' ); ?>
-				</div>
-				<?php do_action( 'it_exchange_after_cart_items' ); ?>
+<div id="it-exchange-cart" class="it-exchange-wrap">
+	<?php it_exchange_get_template_part( 'messages' ); ?>
+	
+	<?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
+		<?php do_action( 'it_exchange_cart_start' ); ?>
+			<?php it_exchange( 'cart', 'form-open' ); ?>
+			
+			<?php do_action( 'it_exchange_cart_form_top' ); ?>
 				
-				<?php if ( it_exchange( 'coupons', 'supported', 'type=cart' ) && it_exchange( 'coupons', 'has-applied', 'type=cart' ) ) : ?>
-					<div class="cart-coupons cart-table">
-						<?php while ( it_exchange( 'coupons', 'applied', 'type=cart' ) ) : ?>
-							<div class='cart-coupon cart-row'>
-								<?php foreach( it_exchange_get_cart_coupon_columns() as $column ) : ?>
-									<?php it_exchange_get_template_part( 'cart/cart-coupon-columns/' . $column ); ?>
-								<?php endforeach; ?>
-							</div>
-						<?php endwhile; ?>
+				<?php do_action( 'it_exchange_cart_items_start' ); ?>
+					<div id="it-exchange-cart-items" class="it-exchange-table">
+						<?php it_exchange_get_template_part( 'cart/items/loop' ); ?>
 					</div>
-				<?php endif; ?>
-			</div>
-			<?php do_action( 'it_exchange_additional_cart_rows' ); ?>	
-			<div class="cart-totals-wrapper">
-				<?php do_action( 'it_exchange_before_cart_totals' ); ?>
-				<div class="cart-totals">
-					<?php foreach( it_exchange_get_cart_totals_columns() as $column ) : ?>
-						<?php it_exchange_get_template_part( 'cart/cart-totals-columns/' . $column ); ?>
-					<?php endforeach; ?>
-				</div>
-				<?php do_action( 'it_exchange_after_cart_totals' ); ?>
-			</div>
+				<?php do_action( 'it_exchange_cart_items_end' ); ?>
+				
+				<?php do_action( 'it_exchange_cart_coupons_start' ); ?>
+					<div id="it-exchange-cart-coupons" class="it-exchange-table">
+						<?php it_exchange_get_template_part( 'cart/coupons/loop' ); ?>
+					</div>
+				<?php do_action( 'it_exchange_cart_coupons_end' ); ?>
+				
+				<?php do_action( 'it_exchange_cart_totals_start' ); ?>
+					<div id="it-exchange-cart-totals" class="it-exchange-table">
+						<?php it_exchange_get_template_part( 'cart/totals/loop' ); ?>
+					</div>
+				<?php do_action( 'it_exchange_cart_totals_end' ); ?>
+				
+				<?php do_action( 'it_exchange_cart_actions_start' ); ?>
+					<div id="it-exchange-cart-actions">
+						<?php foreach( it_exchange_get_cart_actions() as $action ) : ?>
+							<?php it_exchange_get_template_part( 'cart/actions/' . $action ); ?>
+						<?php endforeach; ?>
+					</div>
+				<?php do_action( 'it_exchange_cart_actions_end' ); ?>
 			
-			<?php if ( it_exchange( 'coupons', 'supported', 'type=cart' ) && it_exchange( 'coupons', 'accepting', 'type=cart' ) ) : ?>
-				<div class="cart-apply-coupons">
-					<?php it_exchange( 'coupons', 'apply', 'type=cart' ); ?>
-					<?php it_exchange( 'cart', 'update', 'label=' . __( 'Apply Coupon', 'LION' ) ); ?>
-				</div>
-			<?php endif; ?>
+			<?php do_action( 'it_exchnage_cart_form_bottom' ); ?>
 			
-			<div class="cart-actions">
-				<?php foreach( it_exchange_get_cart_actions() as $action ) : ?>
-					<?php it_exchange_get_template_part( 'cart/actions/' . $action ); ?>
-				<?php endforeach; ?>
-			</div>
-		</div>
-		<?php do_action( 'it_exchnage_cart_form_bottom' ); ?>
-	<?php it_exchange( 'cart', 'form-close' ); ?>
-<?php else : ?>
-	<p><?php _e( 'There are no items in your cart', 'LION' ); ?></p>
-	<?php do_action( 'it_exchange_no_items_in_cart' ); ?>
-<?php endif; ?>
+			<?php it_exchange( 'cart', 'form-close' ); ?>
+		<?php do_action( 'it_exchange_cart_end' ); ?>
+	<?php else : ?>
+		<?php do_action( 'it_exchange_empty_cart_start' ); ?>
+			<p><?php _e( 'There are no items in your cart', 'LION' ); ?></p>
+		<?php do_action( 'it_exchange_empty_cart_end' ); ?>
+	<?php endif; ?>
+</div>
