@@ -17,15 +17,15 @@
  * @return array
 */
 function it_exchange_get_content_cart_item_details() {
-    $details = array(
-        'featured-image',
-        'title',
-        'quantity',
-        'subtotal',
-        'remove',
-    );
-    $details = apply_filters( 'it_exchange_get_content_cart_item_details', $details );
-    return (array) $details;
+	$details = array(
+		'featured-image',
+		'title',
+		'quantity',
+		'subtotal',
+		'remove',
+	);
+	$details = apply_filters( 'it_exchange_get_content_cart_item_details', $details );
+	return (array) $details;
 }
 
 /**
@@ -36,13 +36,13 @@ function it_exchange_get_content_cart_item_details() {
  * @return array
 */
 function it_exchange_get_content_cart_coupon_details() {
-    $details = array(
+	$details = array(
 		'code',
 		'discount',
 		'remove',
-    );
-    $details = apply_filters( 'it_exchange_get_content_cart_coupon_details', $details );
-    return (array) $details;
+	);
+	$details = apply_filters( 'it_exchange_get_content_cart_coupon_details', $details );
+	return (array) $details;
 }
 
 /**
@@ -53,12 +53,13 @@ function it_exchange_get_content_cart_coupon_details() {
  * @return array
 */
 function it_exchange_get_content_cart_totals_details() {
-    $details = array(
-        'titles',
-        'amounts',
-    );  
-    $details = apply_filters( 'it_exchange_get_content_cart_totals_details', $details );
-    return (array) $details;
+	$details = array(
+		'subtotal',
+		'savings',
+		'total',
+	);  
+	$details = apply_filters( 'it_exchange_get_content_cart_totals_details', $details );
+	return (array) $details;
 }
 
 /**
@@ -69,14 +70,14 @@ function it_exchange_get_content_cart_totals_details() {
  * @return array
 */
 function it_exchange_get_cart_actions() {
-    $actions = array(
+	$actions = array(
 		'apply-coupon',
-        'update',
-        'empty',
-        'checkout',
-    );  
-    $actions = apply_filters( 'it_exchange_get_content_cart_actions', $actions );
-    return (array) $actions;
+		'update',
+		'empty',
+		'checkout',
+	);
+	$actions = apply_filters( 'it_exchange_get_content_cart_actions', $actions );
+	return (array) $actions;
 }
 
 /*****************************************
@@ -91,14 +92,14 @@ function it_exchange_get_cart_actions() {
  * @return array
 */ 
 function it_exchange_get_confirmation_template_transaction_meta_elements() {
-    $elements = array(
-        'date',
-        'status',
-        'total',
-        'instructions',
-    );  
-    $elements = apply_filters( 'it_exchange_get_confirmation_template_transaction_meta_elements', $elements );
-    return (array) $elements;
+	$elements = array(
+		'date',
+		'status',
+		'total',
+		'instructions',
+	);  
+	$elements = apply_filters( 'it_exchange_get_confirmation_template_transaction_meta_elements', $elements );
+	return (array) $elements;
 }
 
 /*****************************************
@@ -113,16 +114,16 @@ function it_exchange_get_confirmation_template_transaction_meta_elements() {
  * @return array
 */ 
 function it_exchange_get_content_login_field_details() {
-    $details = array(
-        'username',
-        'password',
-        'rememberme',
-        'login-button',
+	$details = array(
+		'username',
+		'password',
+		'rememberme',
+		'login-button',
 		'recover',
 		'register',
-    );  
-    $details = apply_filters( 'it_exchange_get_content_login_field_details', $details );
-    return (array) $details;
+	);  
+	$details = apply_filters( 'it_exchange_get_content_login_field_details', $details );
+	return (array) $details;
 }
 
 /*****************************************
@@ -137,18 +138,16 @@ function it_exchange_get_content_login_field_details() {
  * @return array
 */ 
 function it_exchange_get_content_registration_field_details() {
-    $details = array(
-        'username',
-        'first-name',
-        'last-name',
-        'email',
+	$details = array(
+		'username',
+		'first-name',
+		'last-name',
+		'email',
 		'password1',
 		'password2',
 		'save',
 		'login',
-    );  
-    $details = apply_filters( 'it_exchange_get_content_registration_field_details', $details );
-    return (array) $details;
+	);  
+	$details = apply_filters( 'it_exchange_get_content_registration_field_details', $details );
+	return (array) $details;
 }
-
-
