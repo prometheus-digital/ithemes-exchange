@@ -493,3 +493,86 @@ function it_exchange_get_cart_nonce_field() {
 	$var = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
 	return wp_nonce_field( 'it-exchange-cart-action-' . $session_id, $var, true, false );
 }
+
+/**
+ * Returns an array of cart item columns, filterable by add-ons
+ *
+ * @since CHANGEME
+ *
+ * @return array
+*/
+function it_exchange_get_cart_item_columns() {
+	$columns = array(
+		'featured-image',
+		'title',
+		'quantity',
+		'subtotal',
+		'remove',
+	);
+	$columns = apply_filters( 'it_exchange_get_cart_item_columns', $columns );
+	return (array) $columns;
+}
+
+/**
+ * Returns an array of cart coupon columns, filterable by add-ons
+ *
+ * @since CHANGEME
+ *
+ * @return array
+*/
+function it_exchange_get_cart_coupon_columns() {
+	$columns = array(
+	);
+	$columns = apply_filters( 'it_exchange_get_cart_coupon_columns', $columns );
+	return (array) $columns;
+}
+
+/**
+ * Returns an array of cart coupon columns, filterable by add-ons
+ *
+ * @since CHANGEME
+ *
+ * @return array
+*/
+function it_exchange_get_cart_totals_columns() {
+	$columns = array(
+		'titles',
+		'amounts',
+	);
+	$columns = apply_filters( 'it_exchange_get_cart_totals_columns', $columns );
+	return (array) $columns;
+}
+
+/**
+ * Returns an array of cart coupon column rows, filterable by add-ons
+ *
+ * @since CHANGEME
+ *
+ * @return array
+*/
+function it_exchange_get_cart_totals_column_rows() {
+	$columns = array(
+		'subtotal',
+		'savings',
+		'total',
+	);
+	$columns = apply_filters( 'it_exchange_get_cart_totals_column_rows', $columns );
+	return (array) $columns;
+}
+
+/**
+ * Returns an array of cart actions, filterable by add-ons
+ *
+ * @since CHANGEME
+ *
+ * @return array
+*/
+function it_exchange_get_cart_actions() {
+	$actions = array(
+		'update',
+		'empty',
+		'checkout',
+	);
+	$actions = apply_filters( 'it_exchange_get_cart_actions', $actions );
+	return (array) $actions;
+}
