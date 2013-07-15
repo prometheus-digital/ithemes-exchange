@@ -21,23 +21,20 @@
 
 <div id="it-exchange-customer">
 	<div class="login">
+		<?php do_action( 'it_exchange_content_login_before_form' ); ?>
 		<?php it_exchange( 'login', 'form-open' ); ?>
-			<div class="user-name">
-				<?php it_exchange( 'login', 'username' ); ?>
-			</div>
-			<div class="password">
-				<?php it_exchange( 'login', 'password' ); ?>
-			</div>
-			<div class="rememberme">
-				<?php it_exchange( 'login', 'rememberme' ); ?>
-			</div>
-			<?php it_exchange( 'login', 'login-button' ); ?>
-			<div class="recover_url">
-				<?php it_exchange( 'login', 'recover' ); ?>
-			</div>
-			<div class="register_url">
-				<?php it_exchange( 'login', 'register' ); ?>
-			</div>
+			<?php do_action( 'it_exchange_content_login_begin_form' ); ?>
+			<?php foreach( it_exchange_get_content_login_field_details() as $detail ) : ?>
+				<?php 
+				/** 
+				 * Theme and add-on devs should add code to this loop by 
+				 * hooking into it_exchange_get_content_login_field_details filter
+				 * and adding the appropriate template file to their theme or add-on
+				 */
+				it_exchange_get_template_part( 'content-login/details/' . $detail ); ?>
+			<?php endforeach; ?>
+			<?php do_action( 'it_exchange_content_login_end_form' ); ?>
 		<?php it_exchange( 'login', 'form-close' ); ?>
+		<?php do_action( 'it_exchange_content_login_after_form' ); ?>
 	</div>
 </div>
