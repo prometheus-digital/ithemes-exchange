@@ -100,3 +100,28 @@ function it_exchange_get_confirmation_template_transaction_meta_elements() {
     $elements = apply_filters( 'it_exchange_get_confirmation_template_transaction_meta_elements', $elements );
     return (array) $elements;
 }
+
+/*****************************************
+ * lib/templats/content-login.php *
+*****************************************/
+
+/**
+ * Returns an array of elements used in the content-login template part
+ *
+ * @since 1.1.0
+ *
+ * @return array
+*/ 
+function it_exchange_get_content_login_field_details() {
+    $details = array(
+        'username',
+        'password',
+        'rememberme',
+        'login-button',
+		'recover',
+		'register',
+    );  
+    $details = apply_filters( 'it_exchange_get_content_login_field_details', $details );
+    return (array) $details;
+}
+
