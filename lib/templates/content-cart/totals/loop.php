@@ -18,7 +18,7 @@
 <?php do_action( 'it_exchange_content_cart_totals_before_loop' ); ?>
 	<?php do_action( 'it_exchange_content_cart_totals_begin_loop' ); ?>
 		<?php foreach ( it_exchange_get_content_cart_totals_details() as $detail ) : ?>
-			<div class="it-exchange-table-row">
+			<div class="it-exchange-table-row it-exchange-cart-<?php echo $detail; ?>">
 				<?php
 				/** 
 				 * Theme and add-on devs should add code to this loop by 
