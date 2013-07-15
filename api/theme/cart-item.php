@@ -308,7 +308,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 				&& it_exchange_product_has_feature( $product_id, 'product-images' ) ) {
 
 			$defaults = array(
-				'size' => 'thumb'
+				'size' => 'thumbnail'
 			);
 
 			$options = ITUtility::merge_defaults( $options, $defaults );
