@@ -31,14 +31,11 @@
 			<?php it_exchange_get_template_part( 'content-cart/loops/totals' ); ?>
 			<?php it_exchange_get_template_part( 'content-cart/loops/actions' ); ?>
 			
-			<?php do_action( 'it_exchange_content_cart_end_form' ); ?>
-		<?php it_exchange( 'cart', 'form-close' ); ?>
-		<?php do_action( 'it_exchange_content_cart_after_form' ); ?>
+			<?php it_exchange( 'cart', 'form-close' ); ?>
+		<?php do_action( 'it_exchange_cart_end' ); ?>
 	<?php else : ?>
-		<?php do_action( 'it_exchange_content_cart_start_empty_cart' ); ?>
+		<?php do_action( 'it_exchange_empty_cart_start' ); ?>
 			<p><?php _e( 'There are no items in your cart', 'LION' ); ?></p>
-		<?php do_action( 'it_exchange_content_cart_end_empty_cart' ); ?>
+		<?php do_action( 'it_exchange_empty_cart_end' ); ?>
 	<?php endif; ?>
-	<?php do_action( 'it_exchange_content_cart_end_wrap' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_cart_after_wrap' ); ?>
