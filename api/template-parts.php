@@ -106,7 +106,7 @@ function it_exchange_get_confirmation_template_transaction_meta_elements() {
 *****************************************/
 
 /**
- * Returns an array of elements used in the content-login template part
+ * Returns an array of fields used in the content-login template part
  *
  * @since 1.1.0
  *
@@ -124,4 +124,31 @@ function it_exchange_get_content_login_field_details() {
     $details = apply_filters( 'it_exchange_get_content_login_field_details', $details );
     return (array) $details;
 }
+
+/*****************************************
+ * lib/templats/content-registration.php *
+*****************************************/
+
+/**
+ * Returns an array of fields used in the content-registration template part
+ *
+ * @since 1.1.0
+ *
+ * @return array
+*/ 
+function it_exchange_get_content_registration_field_details() {
+    $details = array(
+        'username',
+        'first-name',
+        'last-name',
+        'email',
+		'password1',
+		'password2',
+		'save',
+		'login',
+    );  
+    $details = apply_filters( 'it_exchange_get_content_registration_field_details', $details );
+    return (array) $details;
+}
+
 
