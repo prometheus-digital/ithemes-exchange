@@ -81,7 +81,7 @@ function it_exchange_get_cart_actions() {
 }
 
 /*****************************************
- * lib/templats/content-confirmation.php *
+ * lib/templates/content-confirmation.php *
 *****************************************/
 
 /**
@@ -103,7 +103,7 @@ function it_exchange_get_confirmation_template_transaction_meta_elements() {
 }
 
 /*****************************************
- * lib/templats/content-login.php *
+ * lib/templates/content-login.php *
 *****************************************/
 
 /**
@@ -127,7 +127,7 @@ function it_exchange_get_content_login_field_details() {
 }
 
 /*****************************************
- * lib/templats/content-registration.php *
+ * lib/templates/content-registration.php *
 *****************************************/
 
 /**
@@ -145,9 +145,62 @@ function it_exchange_get_content_registration_field_details() {
 		'email',
 		'password1',
 		'password2',
+    );  
+    $details = apply_filters( 'it_exchange_get_content_registration_field_details', $details );
+    return (array) $details;
+}
+
+/**
+ * Returns an array of profile actions, filterable by add-ons
+ *
+ * @since 1.1.0 
+ *
+ * @return array
+*/
+function it_exchange_get_content_registration_actions() {
+    $actions = array(
 		'save',
 		'login',
-	);  
-	$details = apply_filters( 'it_exchange_get_content_registration_field_details', $details );
-	return (array) $details;
+    );  
+    $actions = apply_filters( 'it_exchange_get_content_registration_actions', $actions );
+    return (array) $actions;
+}
+
+/*****************************************
+ * lib/templates/content-profile.php *
+*****************************************/
+
+/**
+ * Returns an array of fields used in the content-profile template part
+ *
+ * @since 1.1.0
+ *
+ * @return array
+*/ 
+function it_exchange_get_content_profile_field_details() {
+    $details = array(
+        'first-name',
+        'last-name',
+        'email',
+        'website',
+		'password1',
+		'password2',
+    );  
+    $details = apply_filters( 'it_exchange_get_content_profile_field_details', $details );
+    return (array) $details;
+}
+
+/**
+ * Returns an array of profile actions, filterable by add-ons
+ *
+ * @since 1.1.0 
+ *
+ * @return array
+*/
+function it_exchange_get_content_profile_actions() {
+    $actions = array(
+		'save',
+    );  
+    $actions = apply_filters( 'it_exchange_get_content_profile_actions', $actions );
+    return (array) $actions;
 }
