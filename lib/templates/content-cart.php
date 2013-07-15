@@ -29,26 +29,26 @@
 
 			<?php do_action( 'it_exchange_content_cart_before_items' ); ?>
 			<div id="it-exchange-cart-items" class="it-exchange-table">
-				<?php it_exchange_get_template_part( 'cart/items/loop' ); ?>
+				<?php it_exchange_get_template_part( 'content-cart/items/loop' ); ?>
 			</div>
 			<?php do_action( 'it_exchange_content_cart_after_items' ); ?>
 				
 			<?php do_action( 'it_exchange_content_cart_before_coupons' ); ?>
 			<div id="it-exchange-cart-coupons" class="it-exchange-table">
-				<?php it_exchange_get_template_part( 'cart/coupons/loop' ); ?>
+				<?php it_exchange_get_template_part( 'content-cart/coupons/loop' ); ?>
 			</div>
 			<?php do_action( 'it_exchange_content_cart_after_coupons' ); ?>
 			
 			<?php do_action( 'it_exchange_content_cart_before_totals' ); ?>
 			<div id="it-exchange-cart-totals" class="it-exchange-table">
-				<?php it_exchange_get_template_part( 'cart/totals/loop' ); ?>
+				<?php it_exchange_get_template_part( 'content-cart/totals/loop' ); ?>
 			</div>
 			<?php do_action( 'it_exchange_content_cart_after_totals' ); ?>
 				
 			<?php do_action( 'it_exchange_content_cart_before_actions' ); ?>
 			<div id="it-exchange-cart-actions">
 				<?php foreach( it_exchange_get_cart_actions() as $action ) : ?>
-					<?php it_exchange_get_template_part( 'cart/actions/' . $action ); ?>
+					<?php it_exchange_get_template_part( 'content-cart/actions/' . $action ); ?>
 				<?php endforeach; ?>
 			</div>
 			<?php do_action( 'it_exchange_content_cart_after_actions' ); ?>
