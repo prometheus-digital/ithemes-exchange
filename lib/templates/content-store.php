@@ -19,13 +19,17 @@
 <?php it_exchange_get_template_part( 'messages' ); ?>
 
 <div id="it-exchange-store">
+	<?php do_action( 'it_exchange_content_store_before_products' ); ?>
 	<ul class="it-exchange-products">
+		<?php do_action( 'it_exchange_content_store_begin_products' ); ?>
 		<?php if ( it_exchange( 'store', 'has-products' ) ) : ?>
 			<?php while( it_exchange( 'store', 'products' ) ) : ?>
 				<?php it_exchange_get_template_part( 'store', 'product' ); ?>
 			<?php endwhile; ?>
 		<?php else : ?>
-			<p><?php _e( 'No Products Found', 'LION' ); ?></p>
+			<?php it_exchange_get_template_part( 'content-store/no-products-found' ); ?>
 		<?php endif; ?>
+		<?php do_action( 'it_exchange_content_store_end_products' ); ?>
 	</ul>
+	<?php do_action( 'it_exchange_content_store_before_products' ); ?>
 </div>
