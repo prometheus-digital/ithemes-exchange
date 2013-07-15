@@ -12,6 +12,7 @@
  * to the exchange/content-cart/coupons/ directory
  * located in your theme.
 */
+?>
 <p>
 	<?php _e( 'No Products Found', 'LION' ); ?>
 </p>
