@@ -51,6 +51,3 @@ include( $this->_plugin_path . 'api/downloads.php' );
 
 // Pages 
 include( $this->_plugin_path . 'api/pages.php' );
-
-// Tempalate Parts
-include( $this->_plugin_path . 'api/template-parts.php' );
