@@ -22,6 +22,7 @@
 	<div class="product-standard-content product-columns <?php echo ( it_exchange( 'product', 'has-images' ) ) ? ' has-images' : ''; ?>">
 		<div class="product-column product-info">
 			<div class="product-column-inner">
+				<?php it_exchange_get_template_part( 'content-product/product-info/loop' ); ?>
 				<?php if ( it_exchange( 'product', 'has-base-price' ) ) : ?>
 					<div class="product-price">
 						<p><?php it_exchange( 'product', 'base-price' ); ?></p>
@@ -39,6 +40,7 @@
 		</div>
 		<?php if ( it_exchange( 'product', 'has-images' ) ) : ?>
 			<div class="product-column product-images">
+				<?php it_exchange_get_template_part( 'content-product/product-images/loop' ); ?>
 				<div class="product-column-inner">
 					<?php it_exchange( 'product', 'gallery' ); ?>
 				</div>
@@ -46,6 +48,9 @@
 		<?php endif; ?>
 	</div>
 	
+	<div class="product-advanced-items">
+		<?php it_exchange_get_template_part( 'content-product/product-advanced/loop' ); ?>
+	</div>
 	<?php if ( it_exchange( 'product', 'has-extended-description' ) ) : ?>
 		<div class="extended-description advanced-item">
 			<?php it_exchange( 'product', 'extended-description' ); ?>
