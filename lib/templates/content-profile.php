@@ -16,38 +16,16 @@
  * Example: theme/exchange/content-profile.php
 */
 ?>
-
 <?php it_exchange_get_template_part( 'messages' ); ?>
 
 <div id="it-exchange-customer">
-	<?php it_exchange( 'customer', 'menu' ); ?>
-	<div class="customer-info">
-		<?php it_exchange( 'customer', 'formopen' ); ?>
-			<div class="customer-name">
-				<div class="first-name">
-					<?php it_exchange( 'customer', 'firstname' ); ?>
-				</div>
-				<div class="last-name">
-					<?php it_exchange( 'customer', 'lastname' ); ?>
-				</div>
-			</div>
-			<div class="customer-email">
-				<?php it_exchange( 'customer', 'email' ); ?>
-			</div>
-			<div class="customer-website">
-				<?php it_exchange( 'customer', 'website' ); ?>
-			</div>
-			<div class="customer-password">
-				<div class="password-1">
-					<?php it_exchange( 'customer', 'password1' ); ?>
-				</div>
-				<div class="password-2">
-					<?php it_exchange( 'customer', 'password2' ); ?>
-				</div>
-			</div>
-			<div class="customer-save">
-				<?php it_exchange( 'customer', 'save' ); ?>
-			</div>
-		<?php it_exchange( 'customer', 'formclose' ); ?>
-	</div>
+<?php it_exchange( 'customer', 'menu' ); ?>
+	<?php do_action( 'it_exchange_content_profile_before_form' ); ?>
+	<?php it_exchange( 'customer', 'formopen' ); ?>
+		<?php it_exchange_get_template_part( 'content-profile/fields/loop' ); ?>
+		<?php foreach( it_exchange_get_content_profile_actions() as $action ) : ?>
+			<?php it_exchange_get_template_part( 'content-profile/actions/' . $action ); ?>
+		<?php endforeach; ?>
+	<?php it_exchange( 'customer', 'formclose' ); ?>
+	<?php do_action( 'it_exchange_content_profile_after_form' ); ?>
 </div>
