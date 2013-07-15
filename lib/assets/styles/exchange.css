@@ -1,6 +1,14 @@
 /**
  * Structural styles for of iThemes Exchange elements.
 */
+/** -----------------------------------------------------:[ global ]:---------- */
+.it-exchange-wrap{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+.it-exchange-wrap *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+/** -----------------------------------------------------:[ table ]:---------- */
+.it-exchange-table{display:table;table-layout:fixed;width:100%;border:1px solid #DDD;border-bottom:none;border-collapse:collapse;}
+.it-exchange-table-row{display:table-row;overflow:hidden;width:100%;border-bottom:1px solid #DDD;margin:10px;}
+.it-exchange-table-column{display:table-cell;vertical-align:middle;}
+.it-exchange-table-column-inner{padding:10px;}
 
 /** -----------------------------------------------------:[ downloads ]:---------- */
 #it-exchange-downloads .download{clear:both;}
@@ -76,29 +84,35 @@
 /** ----------------------------------------:[ advanced ]:--- */
 #it-exchange-product .extended-description{margin-top:2em;padding-top:2em;border-top:1px solid #EBEBEB;}
 
-/** -----------------------------------------------------:[ cart ]:---------- */
+/** -----------------------------------------------------:[ cart & checkout ]:---------- */
 #it-exchange-cart{overflow:hidden;}
-#it-exchange-cart *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
-#it-exchange-cart .cart-table{display:table;width:100%;border:1px solid #DDD;border-bottom:none;border-collapse:collapse;}
-#it-exchange-cart .cart-row{display:table-row;overflow:hidden;width:100%;border-bottom:1px solid #DDD;margin:10px;}
-#it-exchange-cart .cart-column{display:table-cell;vertical-align:middle;}
-#it-exchange-cart .cart-column-inner{padding:10px;}
-#it-exchange-cart .cart-item-thumbnail{width:10%;}
-#it-exchange-cart .cart-item-thumbnail img{display:block;width: 80px;}
-#it-exchange-cart .cart-item-title{width:50%;}
-#it-exchange-cart .cart-item-quantity{width:10%;}
-#it-exchange-cart .cart-item-quantity input{width:100%;}
-#it-exchange-cart .cart-item-subtotal{text-align:right;width:25%;}
-#it-exchange-cart .cart-remove{text-align:right;width:5%;}
-#it-exchange-cart .cart-coupons.cart-table{border-top:0;}
-#it-exchange-cart .cart-coupon-code{width:60%;padding-left:10%;}
-#it-exchange-cart .cart-coupon-discount{width:25%;text-align:right;}
-#it-exchange-cart .cart-totals-wrapper{overflow:hidden;}
-#it-exchange-cart .cart-totals{float:right;border:1px solid #DDD;border-top:0;width:21.5%;min-width:190px;}
-#it-exchange-cart .cart-totals p{margin-bottom:0;}
-#it-exchange-cart .cart-totals .totals-titles{text-align:right;padding:10px 20px;}
-#it-exchange-cart .cart-apply-coupons,
-#it-exchange-cart .cart-actions{clear:both;display:block;margin-top:1em;text-align:right;}
+#it-exchange-cart .it-exchange-cart-item-thumbnail{width:10%;}
+#it-exchange-cart .it-exchange-cart-item-thumbnail img{display:block;width:80px;}
+#it-exchange-cart .it-exchange-cart-item-title{width:50%;}
+#it-exchange-cart .it-exchange-cart-item-quantity{width:15%;}
+#it-exchange-cart .it-exchange-cart-item-quantity input{width:100%;}
+#it-exchange-cart .it-exchange-cart-item-subtotal{text-align:right;width:15%;}
+#it-exchange-cart .it-exchange-cart-item-remove{text-align:right;width:7%;}
+#it-exchange-cart .it-exchange-cart-item-remove a{text-decoration:none;}
+
+/** ---:[ coupons ]:--- */
+#it-exchange-cart-coupons{border-top:0;}
+#it-exchange-cart-coupons .it-exchange-cart-coupon-code{width:65%;padding-left:10%;}
+#it-exchange-cart .it-exchange-cart-coupon-discount{width:28%;text-align:right;}
+#it-exchange-cart .it-exchange-cart-coupon-remove{text-align:right;}
+#it-exchange-cart .it-exchange-cart-coupon-remove a{text-decoration:none;}
+
+/** ---:[ totals ]:--- */
+#it-exchange-cart-totals{overflow:hidden;max-width:220px;float:right;border-top:none;border-bottom:1px solid #DDDDDD;}
+#it-exchange-cart-totals .it-exchange-table-row{border-bottom:0;}
+#it-exchange-cart-totals .it-exchange-table-column-inner{padding-bottom:0;}
+#it-exchange-cart-totals .it-exchange-cart-total .it-exchange-table-column-inner{padding-bottom:10px;}
+#it-exchange-cart-totals .it-exchange-cart-totals-title{text-align:right;border-right:1px solid #DDDDDD;}
+#it-exchange-cart-totals .it-exchange-cart-total{font-weight:bold;}
+
+/** ---:[ actions ]:--- */
+#it-exchange-cart-actions{overflow:hidden;clear:both;text-align:right;}
+#it-exchange-cart-actions .it-exchange-cart-apply-coupons{margin:1em 0;}
 
 /** ----------------------------------------:[ processing payment ]:--- */
 #it-exchange-processing-payment{position:fixed;top:0;bottom:0;left:0;right:0;background:#000;background:rgba(0,0,0,0.8);background:-webkit-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:-moz-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:-ms-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);text-align:center;}
