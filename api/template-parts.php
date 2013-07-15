@@ -69,14 +69,14 @@ function it_exchange_get_content_cart_totals_details() {
  *
  * @return array
 */
-function it_exchange_get_cart_actions() {
+function it_exchange_get_content_cart_action_details() {
 	$actions = array(
 		'apply-coupon',
 		'update',
 		'empty',
 		'checkout',
 	);
-	$actions = apply_filters( 'it_exchange_get_content_cart_actions', $actions );
+	$actions = apply_filters( 'it_exchange_get_content_cart_action_details', $actions );
 	return (array) $actions;
 }
 
@@ -118,11 +118,25 @@ function it_exchange_get_content_login_field_details() {
 		'username',
 		'password',
 		'rememberme',
+	);  
+	$details = apply_filters( 'it_exchange_get_content_login_field_details', $details );
+	return (array) $details;
+}
+
+/**
+ * Returns an array of actions used in the content-login template part
+ *
+ * @since 1.1.0
+ *
+ * @return array
+*/ 
+function it_exchange_get_content_login_action_details() {
+	$details = array(
 		'login-button',
 		'recover',
 		'register',
 	);  
-	$details = apply_filters( 'it_exchange_get_content_login_field_details', $details );
+	$details = apply_filters( 'it_exchange_get_content_login_action_details', $details );
 	return (array) $details;
 }
 
