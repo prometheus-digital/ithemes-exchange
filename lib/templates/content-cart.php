@@ -15,52 +15,49 @@
  * Example: theme/exchange/content-cart.php
 */
 ?>
-<?php do_action( 'it_exchange_content_cart_before_wrap' ); ?>
-<div id="it-exchange-cart" class="it-exchange-wrap">
-	<?php do_action( 'it_exchange_content_cart_begin_wrap' ); ?>
 
+<div id="it-exchange-cart" class="it-exchange-wrap">
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	
 	<?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
-
-		<?php do_action( 'it_exchange_content_cart_before_form' ); ?>
-		<?php it_exchange( 'cart', 'form-open' ); ?>
-			<?php do_action( 'it_exchange_content_cart_begin_form' ); ?>
-
-			<?php do_action( 'it_exchange_content_cart_before_items' ); ?>
-			<div id="it-exchange-cart-items" class="it-exchange-table">
-				<?php it_exchange_get_template_part( 'cart/items/loop' ); ?>
-			</div>
-			<?php do_action( 'it_exchange_content_cart_after_items' ); ?>
-				
-			<?php do_action( 'it_exchange_content_cart_before_coupons' ); ?>
-			<div id="it-exchange-cart-coupons" class="it-exchange-table">
-				<?php it_exchange_get_template_part( 'cart/coupons/loop' ); ?>
-			</div>
-			<?php do_action( 'it_exchange_content_cart_after_coupons' ); ?>
+		<?php do_action( 'it_exchange_cart_start' ); ?>
+			<?php it_exchange( 'cart', 'form-open' ); ?>
 			
-			<?php do_action( 'it_exchange_content_cart_before_totals' ); ?>
-			<div id="it-exchange-cart-totals" class="it-exchange-table">
-				<?php it_exchange_get_template_part( 'cart/totals/loop' ); ?>
-			</div>
-			<?php do_action( 'it_exchange_content_cart_after_totals' ); ?>
+			<?php do_action( 'it_exchange_cart_form_top' ); ?>
 				
-			<?php do_action( 'it_exchange_content_cart_before_actions' ); ?>
-			<div id="it-exchange-cart-actions">
-				<?php foreach( it_exchange_get_cart_actions() as $action ) : ?>
-					<?php it_exchange_get_template_part( 'cart/actions/' . $action ); ?>
-				<?php endforeach; ?>
-			</div>
-			<?php do_action( 'it_exchange_content_cart_after_actions' ); ?>
+				<?php do_action( 'it_exchange_cart_items_start' ); ?>
+					<div id="it-exchange-cart-items" class="it-exchange-table">
+						<?php it_exchange_get_template_part( 'cart/items/loop' ); ?>
+					</div>
+				<?php do_action( 'it_exchange_cart_items_end' ); ?>
+				
+				<?php do_action( 'it_exchange_cart_coupons_start' ); ?>
+					<div id="it-exchange-cart-coupons" class="it-exchange-table">
+						<?php it_exchange_get_template_part( 'cart/coupons/loop' ); ?>
+					</div>
+				<?php do_action( 'it_exchange_cart_coupons_end' ); ?>
+				
+				<?php do_action( 'it_exchange_cart_totals_start' ); ?>
+					<div id="it-exchange-cart-totals" class="it-exchange-table">
+						<?php it_exchange_get_template_part( 'cart/totals/loop' ); ?>
+					</div>
+				<?php do_action( 'it_exchange_cart_totals_end' ); ?>
+				
+				<?php do_action( 'it_exchange_cart_actions_start' ); ?>
+					<div id="it-exchange-cart-actions">
+						<?php foreach( it_exchange_get_cart_actions() as $action ) : ?>
+							<?php it_exchange_get_template_part( 'cart/actions/' . $action ); ?>
+						<?php endforeach; ?>
+					</div>
+				<?php do_action( 'it_exchange_cart_actions_end' ); ?>
 			
-			<?php do_action( 'it_exchange_content_cart_end_form' ); ?>
-		<?php it_exchange( 'cart', 'form-close' ); ?>
-		<?php do_action( 'it_exchange_content_cart_after_form' ); ?>
+			<?php do_action( 'it_exchnage_cart_form_bottom' ); ?>
+			
+			<?php it_exchange( 'cart', 'form-close' ); ?>
+		<?php do_action( 'it_exchange_cart_end' ); ?>
 	<?php else : ?>
-		<?php do_action( 'it_exchange_content_cart_start_empty_cart' ); ?>
+		<?php do_action( 'it_exchange_empty_cart_start' ); ?>
 			<p><?php _e( 'There are no items in your cart', 'LION' ); ?></p>
-		<?php do_action( 'it_exchange_content_cart_end_empty_cart' ); ?>
+		<?php do_action( 'it_exchange_empty_cart_end' ); ?>
 	<?php endif; ?>
-	<?php do_action( 'it_exchange_content_cart_end_wrap' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_cart_after_wrap' ); ?>
