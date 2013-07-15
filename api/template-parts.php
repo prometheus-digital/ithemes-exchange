@@ -10,69 +10,55 @@
 *********************************/
 
 /**
- * Returns an array of cart item columns, filterable by add-ons
+ * Returns an array of cart item details, filterable by add-ons
  *
  * @since 1.1.0 
  *
  * @return array
 */
-function it_exchange_get_cart_item_columns() {
-    $columns = array(
+function it_exchange_get_content_cart_item_details() {
+    $details = array(
         'featured-image',
         'title',
         'quantity',
         'subtotal',
         'remove',
     );
-    $columns = apply_filters( 'it_exchange_get_cart_item_columns', $columns );
-    return (array) $columns;
+    $details = apply_filters( 'it_exchange_get_content_cart_item_details', $details );
+    return (array) $details;
 }
 
 /**
- * Returns an array of cart coupon columns, filterable by add-ons
+ * Returns an array of cart coupon details, filterable by add-ons
  *
  * @since 1.1.0 
  *
  * @return array
 */
-function it_exchange_get_cart_coupon_columns() {
-    $columns = array(
+function it_exchange_get_content_cart_coupon_details() {
+    $details = array(
+		'code',
+		'discount',
+		'remove',
     );
-    $columns = apply_filters( 'it_exchange_get_cart_coupon_columns', $columns );
-    return (array) $columns;
+    $details = apply_filters( 'it_exchange_get_content_cart_coupon_details', $details );
+    return (array) $details;
 }
 
 /**
- * Returns an array of cart coupon columns, filterable by add-ons
+ * Returns an array of cart coupon details, filterable by add-ons
  *
  * @since 1.1.0
  *
  * @return array
 */
-function it_exchange_get_cart_totals_columns() {
-    $columns = array(
+function it_exchange_get_content_cart_totals_details() {
+    $details = array(
         'titles',
         'amounts',
     );  
-    $columns = apply_filters( 'it_exchange_get_cart_totals_columns', $columns );
-    return (array) $columns;
-}
-
-/**
- * Returns an array of cart coupon column rows, filterable by add-ons
- *
- * @since 1.1.0 
- *
- * @return array
-*/
-function it_exchange_get_cart_totals_column_rows() {
-    $columns = array(
-        'subtotal',
-        'savings',
-        'total',
-    );  
-    $columns = apply_filters( 'it_exchange_get_cart_totals_column_rows', $columns );
-    return (array) $columns;
+    $details = apply_filters( 'it_exchange_get_content_cart_totals_details', $details );
+    return (array) $details;
 }
 
 /**
@@ -84,11 +70,12 @@ function it_exchange_get_cart_totals_column_rows() {
 */
 function it_exchange_get_cart_actions() {
     $actions = array(
+		'apply-coupon',
         'update',
         'empty',
         'checkout',
     );  
-    $actions = apply_filters( 'it_exchange_get_cart_actions', $actions );
+    $actions = apply_filters( 'it_exchange_get_content_cart_actions', $actions );
     return (array) $actions;
 }
 

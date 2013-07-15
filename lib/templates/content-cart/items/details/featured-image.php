@@ -6,12 +6,12 @@
  * @package IT_Exchange
 */
 ?>
-<?php do_action( 'it_exchange_cart_item_details_before_featured_image' ); ?>
+<?php do_action( 'it_exchange_content_cart_item_details_before_featured_image' ); ?>
 <div class="it-exchange-cart-item-thumbnail it-exchange-table-column">
-	<?php do_action( 'it_exchange_cart_item_details_begin_featured_image' ); ?>
+	<?php do_action( 'it_exchange_content_cart_item_details_begin_featured_image' ); ?>
 	<div class="it-exchange-table-column-inner">
 		<?php it_exchange( 'cart-item', 'featured-image' ); ?>
 	</div>
-	<?php do_action( 'it_exchange_cart_item_details_end_featured_image' ); ?>
+	<?php do_action( 'it_exchange_content_cart_item_details_end_featured_image' ); ?>
 </div>
-<?php do_action( 'it_exchange_cart_item_details_after_featured_image' ); ?>
+<?php do_action( 'it_exchange_content_cart_item_details_after_featured_image' ); ?>
