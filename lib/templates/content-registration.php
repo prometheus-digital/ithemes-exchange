@@ -26,9 +26,7 @@
 			<?php do_action( 'it_exchange_content_registration_before_form' ); ?>
 			<?php it_exchange( 'registration', 'form-open' ); ?>
             <?php it_exchange_get_template_part( 'content-registration/fields/loop' ); ?>
-            <?php foreach( it_exchange_get_content_registration_actions() as $action ) : ?>
-				<?php it_exchange_get_template_part( 'content-registration/actions/' . $action ); ?>
-            <?php endforeach; ?>
+            <?php it_exchange_get_template_part( 'content-registration/actions/loop' ); ?>
             <?php it_exchange( 'registration', 'form-close' ); ?>
 			<?php do_action( 'it_exchange_content_registration_after_form' ); ?>
 		<?php else : ?>
