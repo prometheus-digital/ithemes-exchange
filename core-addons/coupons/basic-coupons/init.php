@@ -442,23 +442,3 @@ function it_exchange_basic_coupons_get_discount_method( $method, $options=array(
 	return empty( $coupon->amount_type ) ? false : $coupon->amount_type;
 }
 add_filter( 'it_exchange_get_coupon_discount_method', 'it_exchange_basic_coupons_get_discount_method', 10, 2 );
-
-/**
- * Register our columns for the cart
- *
- * @since CHANGEME
- *
- * @param array $columns existing columns
- * @return array
-*/
-function it_exchange_basic_coupons_add_cart_columns( $columns ) {
-	if ( ! in_array( 'code', $columns ) )
-		$columns[] = 'code';
-	if ( ! in_array( 'discount', $columns ) )
-		$columns[] = 'discount';
-	if ( ! in_array( 'remove', $columns ) )
-		$columns[] = 'remove';
-
-	return $columns;
-}
-add_filter( 'it_exchange_get_cart_coupon_columns', 'it_exchange_basic_coupons_add_cart_columns' );
