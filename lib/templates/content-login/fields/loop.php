@@ -14,7 +14,7 @@
 */
 ?>
 
-<?php foreach( it_exchange_get_content_login_field_details() as $detail ) : ?>
+<?php foreach( it_exchange_get_content_login_field_details( array( 'username', 'password', 'rememberme' ) ) as $detail ) : ?>
 	<?php
 	/**
 	 * Theme and add-on devs should add code to this loop by 
