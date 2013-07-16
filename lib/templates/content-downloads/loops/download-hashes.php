@@ -14,6 +14,7 @@
 	<ul class="transaction-product-download-hashes">
 		<?php do_action( 'it_exchange_content_downloads_begin_download_hashes_loop' ); ?>
 		<?php while( it_exchange( 'transaction', 'product-download-hashes' ) ) : ?>
+			<?php $GLOBALS['it_exchange']['downloads_found'] = true; ?>
 			<li class="transaction-product-download-hash">
 				<?php foreach( it_exchange_get_content_downloads_field_details( array( 'download-hash', 'download-expiration' ) ) as $detail ): ?>
 					<?php it_exchange_get_template_part( 'content-downloads/details/' . $detail ); ?>
