@@ -18,103 +18,46 @@
 
 <?php it_exchange_get_template_part( 'messages' ); ?>
 
+<?php do_action( 'it_exchange_super_widget_cart_before_wrap' ); ?>
 <div class="it-exchange-sw-processing it-exchange-sw-processing-cart">
+	<?php do_action( 'it_exchange_super_widget_cart_begin_wrap' ); ?>
 	<?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
 		<?php if ( ( it_exchange_is_page( 'product' ) && it_exchange_is_current_product_in_cart() ) || it_exchange( 'cart', 'get-focus', array( 'type' => 'coupon' ) ) || it_exchange( 'cart', 'get-focus', array( 'type' => 'quantity' ) ) ) : ?>
+			<?php do_action( 'it_exchange_super_widget_cart_before_form' ); ?>
 			<?php it_exchange( 'cart', 'form-open', array( 'class' => 'it-exchange-sw-update-cart-' . it_exchange( 'cart', 'get-focus' ) ) ); ?>
-                <div class="cart-items-wrapper">
-                    <?php while( it_exchange( 'cart', 'cart-items' ) ) : ?>
-                        <div class="cart-item">
-                            <div class="title-remove">
-                                <?php it_exchange( 'cart-item', 'title' ) ?>
-                                <?php it_exchange( 'cart-item', 'remove' ); ?>
-                            </div>
-                            <div class="item-info">
-                                <?php if ( it_exchange( 'cart-item', 'has-purchase-quantity' ) ) : ?>
-                                    <?php it_exchange( 'cart-item', 'price' ); ?> &times; <?php it_exchange( 'cart-item', 'quantity' ); ?> 
-                                <?php else : ?>
-                                    <?php if ( it_exchange( 'cart-item', 'get-quantity', array( 'format' => 'var_value' ) ) > 1 ) : ?>
-                                        <?php it_exchange( 'cart-item', 'price' ); ?> &times; <?php it_exchange( 'cart-item', 'quantity', array( 'format' => 'var_value' ) ); ?> &#61; <?php it_exchange( 'cart-item', 'subtotal' ); ?>
-                                    <?php else : ?>
-                                        <?php it_exchange( 'cart-item', 'price' ); ?>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    <?php endwhile; ?>
-                    
-                    <?php if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ): ?>
-                        <div class="cart-discount">
-                            <?php while( it_exchange( 'coupons', 'applied', array( 'type' => 'cart' ) ) ) : ?>
-                                <?php it_exchange( 'coupons', 'discount-label' ); ?> <?php _e( 'OFF', 'LION' ); ?> &#61; <?php it_exchange( 'cart', 'total' ); ?>
-                            <?php endwhile; ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
+				<?php do_action( 'it_exchange_super_widget_cart_begin_form' ); ?>
+				<?php
+				// Include cart-items template part
+				it_exchange_get_template_part( 'super-widget-cart/items' );
+
+				// If coupons are supported and the current focus is 'coupon', include the coupons template part
+				if ( it_exchange( 'coupons', 'supported', array( 'type' => 'cart' ) ) && it_exchange( 'cart', 'focus', array( 'type' => 'coupon' ) ) )
+					it_exchange_get_template_part( 'super-widget-cart/coupons' );
                 
-                <?php if ( it_exchange( 'coupons', 'supported', array( 'type' => 'cart' ) ) && it_exchange( 'cart', 'focus', array( 'type' => 'coupon' ) ) ) : ?>
-                    <div class="coupons-wrapper">
-                        <?php if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) : ?>
-                            <ul class="applied-coupons">
-                                <?php while( it_exchange( 'coupons', 'applied', array( 'type' => 'cart' ) ) ) : ?>
-                                    <li class="coupon">
-                                        <?php it_exchange( 'coupons', 'code' ); ?> &ndash; <?php it_exchange( 'coupons', 'discount-label' ); ?>&nbsp;<?php it_exchange( 'coupons', 'remove', array( 'type' => 'cart' ) ); ?>
-                                    </li>
-                                <?php endwhile; ?>
-                            </ul>
-                        <?php endif; ?>
-                        
-                        <?php if ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) ) : ?>
-                            <div class="coupon">
-                                <?php it_exchange( 'coupons', 'apply', array( 'type' => 'cart' ) ); ?>
-                                <?php it_exchange( 'cart', 'update', array( 'class' => 'it-exchange-apply-coupon-button', 'label' => __( 'Apply', 'LION' ) ) ); ?>
-                            </div>
-                        <?php endif; ?>
-                    
-                        <div class="cart-actions-wrapper">
-                            <div class="cart-action cancel-update">
-                            <?php it_exchange( 'cart', 'checkout', array( 'class' => 'sw-cart-focus-checkout', 'focus' => 'checkout', 'label' =>  __( 'Cancel', 'LION' ) ) ); ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
+				// If quantity is the current focus, include the quantity template
+				if ( it_exchange( 'cart', 'focus', 'type=quantity' ) )
+					it_exchange_get_template_part( 'super-widget-cart/actions/update-quantity' );
                 
-                <?php if ( it_exchange( 'cart', 'focus', 'type=quantity' ) ) : ?>
-                    <div class="cart-actions-wrapper">
-                        <div class="cart-action cancel-update">
-                        <?php it_exchange( 'cart', 'update', 'class=it-exchange-update-quantity-button&label=' . __( 'Update Quantity', 'LION' ) ); ?>
-                        </div>
-                    </div>
-                <?php endif; ?>
-                
-                <?php if ( it_exchange_is_multi_item_cart_allowed() ) : ?>
-                    <div class="cart-actions-wrapper two-actions">
-                        <div class="cart-action view-cart">
-                            <?php it_exchange( 'cart', 'view-cart', array( 'class' => 'sw-cart-focus-cart', 'focus' => 'cart' ) ); ?>
-                        </div>     
-                        <div class="cart-action checkout">
-                            <?php it_exchange( 'cart', 'checkout', array( 'class' => 'sw-cart-focus-checkout', 'focus' => 'checkout' ) ); ?>
-                        </div>
-                    </div>
-                <?php endif; ?>
+				// If multi-item cart is allowed, include the multi-item-cart actions
+                if ( it_exchange_is_multi_item_cart_allowed() )
+					it_exchange_get_template_part( 'super-widget-cart/actions/multi-item-cart-actions' );
+				?>
+				<?php do_action( 'it_exchange_super_widget_cart_end_form' ); ?>
             <?php it_exchange( 'cart', 'form-close' ); ?>
+			<?php do_action( 'it_exchange_super_widget_cart_after_form' ); ?>
 		<?php else : ?>
             <?php if ( it_exchange_is_multi_item_cart_allowed() ) : ?>
-                <?php $count = it_exchange( 'cart', 'get-item-count' ); ?>
-                <div class="item-count">
-                    <?php if ( $count === 1 ) : ?>
-                        <?php printf( __( 'You have 1 item in your <a href="%s">%s</a>', 'LION' ), it_exchange_get_page_url( 'cart' ), strtolower( it_exchange_get_page_name( 'cart' ) ) ); ?>
-                    <?php else : ?>
-                        <?php printf( __( 'You have %s items in your <a href="%s">%s</a>', 'LION' ), $count, it_exchange_get_page_url( 'cart' ), strtolower( it_exchange_get_page_name( 'cart' ) ) ); ?>
-                    <?php endif; ?>
-                </div>
+                <?php
+				// Include cart summary
+				it_exchange_get_template_part( 'super-widget-cart/summary' );
+				?>
             <?php else : ?>
                 <?php it_exchange_get_template_part( 'super-widget', 'login' ); ?>
             <?php endif; ?>
 		<?php endif; ?>
 	<?php elseif ( ! it_exchange_is_page( 'product' ) ) : ?>
-		<div class="empty-cart">
-            <p><?php _e( 'Your cart is empty', 'LION' ); ?></p>
-		</div>
+		<?php it_exchange_get_template_part( 'super-widget-cart/empty-cart-notice' ); ?>
 	<?php endif; ?>
+	<?php do_action( 'it_exchange_super_widget_cart_end_wrap' ); ?>
 </div>
+<?php do_action( 'it_exchange_super_widget_cart_after_wrap' ); ?>

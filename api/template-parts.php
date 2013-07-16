@@ -278,3 +278,23 @@ function it_exchange_get_content_purchases_feature_details( $details=array() ) {
 
     return (array) $details;
 }
+
+/*****************************************
+ * lib/templates/super-widget-cart.php *
+*****************************************/
+
+/**
+ * Returns an array of product features used in a super-widget-cart-item template part loop
+ *
+ * @since 1.1.0
+ *
+ * @param array $details an array of product_features. eg: array( 'title', 'base-price, 'permalink' )
+ * @return array
+*/ 
+function it_exchange_get_super_widget_cart_item_details( $details=array() ) {
+
+	// Allow add-ons to filter
+    $details = apply_filters( 'it_exchange_get_super_widget_cart_item_details', $details );
+
+    return (array) $details;
+}
