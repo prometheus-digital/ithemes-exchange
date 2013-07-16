@@ -17,7 +17,7 @@
 
 <?php do_action( 'it_exchange_content_profile_actions_before_loop' ); ?>
 	<?php do_action( 'it_exchange_content_profile_actions_begin_loop' ); ?>
-	<div class="customer-actions">
+	<div class="it-exchange-customer-actions">
 		<?php foreach ( it_exchange_get_content_profile_actions() as $detail ) : ?>
 			<?php
 			/** 
@@ -25,7 +25,8 @@
 			 * hooking into it_exchange_get_content_profile_fields_details filter
 			 * and adding the appropriate template file to their theme or add-on
 			*/
-			it_exchange_get_template_part( 'content-profile/actions/details/' . $detail ); ?>
+			it_exchange_get_template_part( 'content-profile/actions/details/' . $detail );
+			?>
 		<?php endforeach; ?>
 	</div>
 	<?php do_action( 'it_exchange_content_profile_actions_end_loop' ); ?>
