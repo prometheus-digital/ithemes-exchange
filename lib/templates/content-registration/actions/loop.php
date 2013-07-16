@@ -18,7 +18,7 @@
 <?php do_action( 'it_exchange_content_registration_actions_before_loop' ); ?>
 	<?php do_action( 'it_exchange_content_registration_actions_begin_loop' ); ?>
 	<div class="customer-actions">
-		<?php foreach ( it_exchange_get_content_registration_actions() as $detail ) : ?>
+		<?php foreach ( it_exchange_get_content_registration_actions( array( 'save', 'login' ) ) as $detail ) : ?>
 			<?php
 			/** 
 			 * Theme and add-on devs should add code to this loop by 

@@ -182,15 +182,12 @@ function it_exchange_get_confirmation_template_transaction_meta_elements() {
  *
  * @since 1.1.0
  *
+ * @param array $fields list of fields we want to display. default is username, password, rememberme
  * @return array
 */ 
-function it_exchange_get_content_login_field_details() {
-	$details = array(
-		'username',
-		'password',
-		'rememberme',
-	);  
-	$details = apply_filters( 'it_exchange_get_content_login_field_details', $details );
+function it_exchange_get_content_login_field_details( $fields=array() ) {
+
+	$details = apply_filters( 'it_exchange_get_content_login_field_details', $fields );
 	return (array) $details;
 }
 
@@ -199,15 +196,11 @@ function it_exchange_get_content_login_field_details() {
  *
  * @since 1.1.0
  *
+ * @param array $actions array of actions you want displayed in the action loop. default: login-button, recover, register
  * @return array
 */ 
-function it_exchange_get_content_login_action_details() {
-	$details = array(
-		'login-button',
-		'recover',
-		'register',
-	);  
-	$details = apply_filters( 'it_exchange_get_content_login_action_details', $details );
+function it_exchange_get_content_login_action_details( $actions=array() ) {
+	$details = apply_filters( 'it_exchange_get_content_login_action_details', $actions );
 	return (array) $details;
 }
 
@@ -222,16 +215,8 @@ function it_exchange_get_content_login_action_details() {
  *
  * @return array
 */ 
-function it_exchange_get_content_registration_field_details() {
-	$details = array(
-		'username',
-		'first-name',
-		'last-name',
-		'email',
-		'password1',
-		'password2',
-    );  
-    $details = apply_filters( 'it_exchange_get_content_registration_field_details', $details );
+function it_exchange_get_content_registration_field_details( $fields=array() ) {
+    $details = apply_filters( 'it_exchange_get_content_registration_field_details', $fields );
     return (array) $details;
 }
 
@@ -240,13 +225,10 @@ function it_exchange_get_content_registration_field_details() {
  *
  * @since 1.1.0 
  *
+ * @param array $actions array of actions you want displayed in the action loop. default: save, login
  * @return array
 */
-function it_exchange_get_content_registration_actions() {
-    $actions = array(
-		'save',
-		'login',
-    );  
+function it_exchange_get_content_registration_actions( $actions=array() ) {
     $actions = apply_filters( 'it_exchange_get_content_registration_actions', $actions );
     return (array) $actions;
 }
