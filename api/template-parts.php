@@ -80,6 +80,77 @@ function it_exchange_get_content_cart_action_details() {
 	return (array) $actions;
 }
 
+/*********************************
+ * lib/templats/content-checkout.php *
+*********************************/
+
+/**
+ * Returns an array of checkout item details, filterable by add-ons
+ *
+ * @since 1.1.0 
+ *
+ * @return array
+*/
+function it_exchange_get_content_checkout_item_details() {
+	$details = array(
+		'featured-image',
+		'title',
+		'quantity',
+		'subtotal',
+	);
+	$details = apply_filters( 'it_exchange_get_content_checkout_item_details', $details );
+	return (array) $details;
+}
+
+/**
+ * Returns an array of checkout coupon details, filterable by add-ons
+ *
+ * @since 1.1.0 
+ *
+ * @return array
+*/
+function it_exchange_get_content_checkout_coupon_details() {
+	$details = array(
+		'code',
+		'discount',
+	);
+	$details = apply_filters( 'it_exchange_get_content_checkout_coupon_details', $details );
+	return (array) $details;
+}
+
+/**
+ * Returns an array of checkout coupon details, filterable by add-ons
+ *
+ * @since 1.1.0
+ *
+ * @return array
+*/
+function it_exchange_get_content_checkout_totals_details() {
+	$details = array(
+		'subtotal',
+		'savings',
+		'total',
+	);  
+	$details = apply_filters( 'it_exchange_get_content_checkout_totals_details', $details );
+	return (array) $details;
+}
+
+/**
+ * Returns an array of checkout actions, filterable by add-ons
+ *
+ * @since 1.1.0 
+ *
+ * @return array
+*/
+function it_exchange_get_content_checkout_action_details() {
+	$actions = array(
+		'transaction-methods',
+		'cancel',
+	);
+	$actions = apply_filters( 'it_exchange_get_content_checkout_action_details', $actions );
+	return (array) $actions;
+}
+
 /*****************************************
  * lib/templates/content-confirmation.php *
 *****************************************/
