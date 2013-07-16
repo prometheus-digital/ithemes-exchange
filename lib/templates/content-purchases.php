@@ -18,35 +18,33 @@
 ?>
 
 <div class="it-exchange-purchases-wrapper">
+	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php it_exchange( 'customer', 'menu' ); ?>
+	<?php do_action( 'it_exchange_content_purchases_fields_before_loop' ); ?>
 	<?php if ( it_exchange( 'transactions', 'found' ) ) : ?>
+		<?php do_action( 'it_exchange_content_purchases_fields_begin_loop' ); ?>
 		<?php while( it_exchange( 'transactions', 'exist' ) ) : ?>
-			<div class="it-exchange-purchase">
-				<div class="it-exchange-purchase-top">
-					<span class="it-exchange-purchase-date"><strong><?php it_exchange( 'transaction', 'date' ); ?></strong></span> 
-					<span class="it-exchange-purchase-status">- <?php it_exchange( 'transaction', 'status' ); ?></span> 
-					<span class="it-exchange-purchase-total"><strong><?php it_exchange( 'transaction', 'total' ); ?></strong></span>
-				</div>
-				<?php if ( it_exchange( 'transaction', 'has-products' ) ) : ?>
-					<?php while( it_exchange( 'transaction', 'products' ) ) : ?>
-					<div class="it-exchange-purchase-items">
-						<div class="item-info">
-							<div class="item-thumbnail">
-								<?php it_exchange( 'transaction', 'product-featured-image' ); ?>
-							</div>
-							<div class="item-data">
-								<h4>
-									<?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'title' ) ); ?> 
-									<span class="item-price">- <?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'product_subtotal' ) ); ?></span>
-									<span class="item-quantity">- <?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'count' ) ); ?></span>
-								</h4>
-								<p><?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'description' ) ); ?></p>
-							</div>
+		<div class="it-exchange-purchase">
+			<div class="it-exchange-purchase-top transaction-info">
+				<?php it_exchange_get_template_part( 'content-purchases/loops/transaction-info' ); ?>
+			</div>
+			<?php if ( it_exchange( 'transaction', 'has-products' ) ) : ?>
+				<?php while( it_exchange( 'transaction', 'products' ) ) : ?>
+				<div class="it-exchange-purchase-items">
+					<div class="item-info">
+						<div class="item-thumbnail">
+							<?php it_exchange_get_template_part( 'content-purchases/details/fields/product-featured-image' ); ?>
+						</div>
+						<div class="item-data">
+							<?php it_exchange_get_template_part( 'content-purchases/loops/product-info' ); ?>
 						</div>
 					</div>
-					<?php endwhile; ?>
-				<?php endif; ?>
-			</div>
+				</div>
+				<?php endwhile; ?>
+			<?php endif; ?>
+		</div>
 		<?php endwhile; ?>
+		<?php do_action( 'it_exchange_content_purchases_fields_end_loop' ); ?>
 	<?php endif; ?>
+	<?php do_action( 'it_exchange_content_purchases_fields_after_loop' ); ?>
 </div>
