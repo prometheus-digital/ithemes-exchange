@@ -391,3 +391,34 @@ function it_exchange_get_super_widget_checkout_item_details( $details=array() ) 
 
     return (array) $details;
 }
+
+/*****************************************
+ * lib/templates/super-widget-login.php *
+*****************************************/
+
+/**
+ * Returns an array of fields used in the super-widget-login template part
+ *
+ * @since 1.1.0
+ *
+ * @param array $fields list of fields we want to display. default is username, password, rememberme
+ * @return array
+*/ 
+function it_exchange_get_super_widget_login_field_details( $fields=array() ) {
+
+	$details = apply_filters( 'it_exchange_get_super_widget_login_field_details', $fields );
+	return (array) $details;
+}
+
+/**
+ * Returns an array of actions used in the super-widget-login template part
+ *
+ * @since 1.1.0
+ *
+ * @param array $actions array of actions you want displayed in the action loop. default: login-button, recover, register
+ * @return array
+*/ 
+function it_exchange_get_super_widget_login_action_details( $actions=array() ) {
+	$details = apply_filters( 'it_exchange_get_super_widget_login_action_details', $actions );
+	return (array) $details;
+}
