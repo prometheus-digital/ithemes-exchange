@@ -351,6 +351,26 @@ function it_exchange_get_content_purchases_feature_details( $details=array() ) {
 }
 
 /*****************************************
+ * lib/templates/content-downloads.php *
+*****************************************/
+
+/**
+ * Returns an array of download fields used in a content-downloads template part loop
+ *
+ * @since 1.1.0
+ *
+ * @param array $details an array of download details. eg: array( 'title', 'url', 'limit' )
+ * @return array
+*/ 
+function it_exchange_get_content_downloads_field_details( $details=array() ) {
+
+	// Allow add-ons to filter
+    $details = apply_filters( 'it_exchange_get_content_downloads_field_details', $details );
+
+    return (array) $details;
+}
+
+/*****************************************
  * lib/templates/super-widget-cart.php *
 *****************************************/
 
