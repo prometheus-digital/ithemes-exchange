@@ -16,23 +16,8 @@
  * Example: theme/exchange/content-confirmation.php
 */
 ?>
-<?php do_action( 'it_exchange_confirmation_template_part_top' ); ?>
-<div id="it-exchange-confirmation">
-	<?php if ( it_exchange( 'transactions', 'found' ) ) : ?>
-		<?php while( it_exchange( 'transactions', 'exist' ) ) : ?>
-
-			<?php it_exchange_get_template_part( 'confirmation/transaction-meta' ); ?>
-			
-			<?php if ( it_exchange( 'transaction', 'has-products' ) ) : ?>
-				<div class="transaction-products">
-					<?php while( it_exchange( 'transaction', 'products' ) ) : ?>
-						<?php it_exchange_get_template_part( 'confirmation/transaction-product' ); ?>
-					<?php endwhile; ?>
-				</div>
-			<?php endif; ?>
-		<?php endwhile; ?>
-	<?php else : ?>
-		<?php it_exchange_get_template_part( 'confirmation/no-transaction-found' ); ?>
-	<?php endif; ?>
+<?php do_action( 'it_exchange_content_confirmation_before_wrap' ); ?>
+<div id="it-exchange-wrap it-exchange-confirmation">
+<?php it_exchange_get_template_part( 'content-confirmation/loops/transactions' ); ?>
 </div>
-<?php do_action( 'it_exchange_confirmation_template_part_bottom' ); ?>
+<?php do_action( 'it_exchange_content_confirmation_after_wrap' ); ?>
