@@ -17,34 +17,20 @@
 */
 ?>
 
+<?php it_exchange_get_template_part( 'messages' ); ?>
+
 <div class="it-exchange-purchases-wrapper">
-	<?php it_exchange_get_template_part( 'messages' ); ?>
+
 	<?php it_exchange( 'customer', 'menu' ); ?>
+
 	<?php do_action( 'it_exchange_content_purchases_fields_before_loop' ); ?>
-	<?php if ( it_exchange( 'transactions', 'found' ) ) : ?>
-		<?php do_action( 'it_exchange_content_purchases_fields_begin_loop' ); ?>
-		<?php while( it_exchange( 'transactions', 'exist' ) ) : ?>
-		<div class="it-exchange-purchase">
-			<div class="it-exchange-purchase-top transaction-info">
-				<?php it_exchange_get_template_part( 'content-purchases/loops/transaction-info' ); ?>
-			</div>
-			<?php if ( it_exchange( 'transaction', 'has-products' ) ) : ?>
-				<?php while( it_exchange( 'transaction', 'products' ) ) : ?>
-				<div class="it-exchange-purchase-items">
-					<div class="item-info">
-						<div class="item-thumbnail">
-							<?php it_exchange_get_template_part( 'content-purchases/details/fields/product-featured-image' ); ?>
-						</div>
-						<div class="item-data">
-							<?php it_exchange_get_template_part( 'content-purchases/loops/product-info' ); ?>
-						</div>
-					</div>
-				</div>
-				<?php endwhile; ?>
-			<?php endif; ?>
-		</div>
-		<?php endwhile; ?>
-		<?php do_action( 'it_exchange_content_purchases_fields_end_loop' ); ?>
-	<?php endif; ?>
-	<?php do_action( 'it_exchange_content_purchases_fields_after_loop' ); ?>
+
+	<?php 
+	// Loop through transactions
+	if ( it_exchange( 'transactions', 'found' ) )
+		it_exchange_get_template_part( 'content-purchases/loops/transactions' );
+	else
+		it_exchange_get_template_part( 'content-purchases/no-purchases-notice' );
+
+	do_action( 'it_exchange_content_purchases_fields_after_loop' ); ?>
 </div>
