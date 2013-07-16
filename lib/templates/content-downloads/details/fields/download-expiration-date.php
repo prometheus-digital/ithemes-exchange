@@ -9,11 +9,15 @@
 */
 ?>
 <?php if ( it_exchange( 'transaction', 'get-product-download-hash', array( 'attribute' => 'expires' ) ) ) : ?>
-<span class="download-expiration">
-	<?php _e( 'Expires on', 'LION' ); ?> <?php it_exchange( 'transaction', 'product-download-hash', array( 'attribute' => 'expiration-date' ) ); ?>
-</span>
+	<?php do_action( 'it_exchange_content_downloads_details_before_download-expiration-date' ); ?>
+	<span class="download-expiration">
+		<?php _e( 'Expires on', 'LION' ); ?> <?php it_exchange( 'transaction', 'product-download-hash', array( 'attribute' => 'expiration-date' ) ); ?>
+	</span>
+	<?php do_action( 'it_exchange_content_downloads_details_after_download-expiration-date' ); ?>
 <?php else : ?>
-<span class="download-expiration">
-	<?php _e( 'No expiration date', 'LION' ); ?>
-</span>
+	<?php do_action( 'it_exchange_content_downloads_details_before_download-expiration-date' ); ?>
+	<span class="download-expiration">
+		<?php _e( 'No expiration date', 'LION' ); ?>
+	</span>
+	<?php do_action( 'it_exchange_content_downloads_details_after_download-expiration-date' ); ?>
 <?php endif; ?>
