@@ -16,18 +16,18 @@
  * Example: theme/exchange/content-registration.php
 */
 ?>
-<?php it_exchange_get_template_part( 'messages' ); ?>
 
-<div class="registration-info">
+<div id="it-exchange-registration" class="it-exchange-wrap it-exchange-account">
+	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php if ( is_user_logged_in() ) : ?>
 		<?php it_exchange_get_template_part( 'content-registration/user-logged-in' ); ?>
 	<?php else : ?>
 		<?php if ( it_exchange( 'registration', 'is-enabled' ) ) : ?>
 			<?php do_action( 'it_exchange_content_registration_before_form' ); ?>
 			<?php it_exchange( 'registration', 'form-open' ); ?>
-            <?php it_exchange_get_template_part( 'content-registration/fields/loop' ); ?>
-            <?php it_exchange_get_template_part( 'content-registration/actions/loop' ); ?>
-            <?php it_exchange( 'registration', 'form-close' ); ?>
+			<?php it_exchange_get_template_part( 'content-registration/fields/loop' ); ?>
+			<?php it_exchange_get_template_part( 'content-registration/actions/loop' ); ?>
+			<?php it_exchange( 'registration', 'form-close' ); ?>
 			<?php do_action( 'it_exchange_content_registration_after_form' ); ?>
 		<?php else : ?>
 			<?php it_exchange_get_template_part( 'content-registration/registration-disabled-message' ); ?>

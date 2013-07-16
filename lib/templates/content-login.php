@@ -15,7 +15,7 @@
 */
 ?>
 
-<div id="it-exchange-login" class="it-exchange-wrap it-exchange-customer">
+<div id="it-exchange-login" class="it-exchange-wrap it-exchange-account">
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<div class="it-exchange-login-form">
 		<?php do_action( 'it_exchange_content_login_before_form' ); ?>
