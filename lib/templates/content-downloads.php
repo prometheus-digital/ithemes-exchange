@@ -17,9 +17,8 @@
 */
 ?>
 
-<?php it_exchange_get_template_part( 'messages' ); ?>
-
-<div id="it-exchange-downloads">
+<div id="it-exchange-downloads" class="it-exchange-wrap it-exchange-account">
+	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php it_exchange( 'customer', 'menu' ); ?>
-    <?php it_exchange_get_template_part( 'content-downloads/loops/transaction-loop' ); ?>
+	<?php it_exchange_get_template_part( 'content-downloads/loops/transaction-loop' ); ?>
 </div>

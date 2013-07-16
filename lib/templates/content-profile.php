@@ -15,7 +15,7 @@
 */
 ?>
 
-<div id="it-exchange-profile" class="it-exchange-wrap it-exchange-customer">
+<div id="it-exchange-profile" class="it-exchange-wrap it-exchange-account">
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php it_exchange( 'customer', 'menu' ); ?>
 	<?php do_action( 'it_exchange_content_profile_before_form' ); ?>

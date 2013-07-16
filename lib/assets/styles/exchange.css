@@ -4,22 +4,25 @@
 /** -----------------------------------------------------:[ global ]:---------- */
 .it-exchange-wrap{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 .it-exchange-wrap *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+
 /** -----------------------------------------------------:[ table ]:---------- */
 .it-exchange-table{display:table;table-layout:fixed;width:100%;border:1px solid #DDD;border-bottom:none;border-collapse:collapse;}
 .it-exchange-table-row{display:table-row;overflow:hidden;width:100%;border-bottom:1px solid #DDD;margin:10px;}
 .it-exchange-table-column{display:table-cell;vertical-align:middle;}
 .it-exchange-table-column-inner{padding:10px;}
 
-/** -----------------------------------------------------:[ downloads ]:---------- */
-#it-exchange-downloads .download{clear:both;}
-#it-exchange-downloads .download .download-product{float:right;width:20%;}
-#it-exchange-downloads .download .download-product a{float:right;}
-#it-exchange-downloads .download .download-info{float:left;width:80%;}
-#it-exchange-downloads .download .download-info h4{margin-top:0;}
-#it-exchange-downloads .download .download-info span + span{margin-left:1em;}
-#it-exchange-downloads span{margin-left:1em;}
+/** -----------------------------------------------------:[ account ]:---------- */
+.it-exchange-account label{display:block;margin-top:1em;}
+.it-exchange-account input[type="checkbox"]{margin:2em .5em 2em 0;}
+.it-exchange-account input[type="checkbox"] + label{display:inline;}
+.it-exchange-account #wp-submit{margin-bottom:2em;}
 
-/** -----------------------------------------------------:[ purchases ]:---------- */
+/** ----------------------------------------:[ navigation ]:--- */
+.it-exchange-account .it-exchange-customer-menu{list-style:none;margin:0;padding:0;}
+.it-exchange-account .it-exchange-customer-menu li{display:inline;padding:0;margin:0 1em 1em 0;}
+.it-exchange-account .it-exchange-customer-menu li.current{font-weight:bold;}
+
+/** ----------------------------------------:[ purchases ]:--- */
 .it-exchange-purchase,
 .it-exchange-purchase .it-exchange-purchase-top,
 .it-exchange-purchase .item-info{overflow:hidden;}
@@ -39,24 +42,14 @@
 .it-exchange-purchase-items .item-data .item-price,
 .it-exchange-purchase-items .item-data .item-quantity{font-weight:normal;}
 
-/** -----------------------------------------------------:[ login ]:---------- */
-#it-exchange-customer .login label{display:block;margin-top:1em;}
-#it-exchange-customer .login input[type="checkbox"]{margin:2em .5em 2em 0;}
-#it-exchange-customer .login input[type="checkbox"] + label{display:inline;}
-#it-exchange-customer .login #wp-submit{margin-bottom:2em;}
-
-/** -----------------------------------------------------:[ profile ]:---------- */
-#it-exchange-customer .customer-info label{display:block;margin-top:1em;}
-#it-exchange-customer .customer-name,
-#it-exchange-customer .customer-password{overflow:hidden;}
-#it-exchange-customer .customer-name div,
-#it-exchange-customer .customer-password div{float:left;}
-#it-exchange-customer .customer-save{margin-top:1em;}
-
-/** ----------------------------------------:[ customer navigation ]:--- */
-#it-exchange-customer-menu{list-style:none;margin:0;padding:0;}
-#it-exchange-customer-menu li{display:inline;padding:0;margin:0 1em 1em 0;}
-#it-exchange-customer-menu li.current{font-weight:bold;}
+/** ----------------------------------------:[ downloads ]:--- */
+#it-exchange-downloads .download{clear:both;}
+#it-exchange-downloads .download .download-product{float:right;width:20%;}
+#it-exchange-downloads .download .download-product a{float:right;}
+#it-exchange-downloads .download .download-info{float:left;width:80%;}
+#it-exchange-downloads .download .download-info h4{margin-top:0;}
+#it-exchange-downloads .download .download-info span + span{margin-left:1em;}
+#it-exchange-downloads span{margin-left:1em;}
 
 /** -----------------------------------------------------:[ product ]:---------- */
 #it-exchange-product .product-columns.has-images{overflow:hidden;}

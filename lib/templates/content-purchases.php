@@ -19,7 +19,7 @@
 
 <?php it_exchange_get_template_part( 'messages' ); ?>
 
-<div class="it-exchange-purchases-wrapper">
+<div id="it-exchange-purchases" class="it-exchange-wrap it-exchange-account">
 
 	<?php it_exchange( 'customer', 'menu' ); ?>
 
