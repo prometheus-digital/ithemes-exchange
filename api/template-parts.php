@@ -224,45 +224,17 @@ function it_exchange_get_content_profile_actions() {
 *****************************************/
 
 /**
- * Returns an array of product_info features used in the content-product template part
+ * Returns an array of product features used in a content-product template part loop
  *
  * @since 1.1.0
  *
+ * @param array $details an array of product_features. eg: array( 'base-price, 'description', 'super-widget' )
  * @return array
 */ 
-function it_exchange_get_content_product_info_details( $options=null ) {
-
-    $defaults = array(
-        'base-price',
-        'description',
-        'super-widget',
-    );
-
-	$details = is_null( $options ) ? $defaults : (array) $options;
+function it_exchange_get_content_product_feature_details( $details=array() ) {
 
 	// Allow add-ons to filter
-    $details = apply_filters( 'it_exchange_get_content_product_info_details', $details );
-
-    return (array) $details;
-}
-
-/**
- * Returns an array of product_advanced features used in the content-product template part
- *
- * @since 1.1.0
- *
- * @return array
-*/ 
-function it_exchange_get_content_product_advanced_details( $options=null ) {
-
-    $defaults = array(
-        'extended-description',
-    );
-
-	$details = is_null( $options ) ? $defaults : (array) $options;
-
-	// Allow add-ons to filter
-    $details = apply_filters( 'it_exchange_get_content_product_advanced_details', $details );
+    $details = apply_filters( 'it_exchange_get_content_product_feature_details', $details );
 
     return (array) $details;
 }
