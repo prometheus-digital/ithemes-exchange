@@ -18,7 +18,7 @@
 .it-exchange-account #wp-submit{margin-bottom:2em;}
 
 /** ----------------------------------------:[ navigation ]:--- */
-.it-exchange-account .it-exchange-customer-menu{list-style:none;margin:0;padding:0;}
+.it-exchange-account .it-exchange-customer-menu{list-style:none;margin:2em 0;padding:0;}
 .it-exchange-account .it-exchange-customer-menu li{display:inline;padding:0;margin:0 1em 1em 0;}
 .it-exchange-account .it-exchange-customer-menu li.current{font-weight:bold;}
 
@@ -43,13 +43,13 @@
 .it-exchange-purchase-items .item-data .item-quantity{font-weight:normal;}
 
 /** ----------------------------------------:[ downloads ]:--- */
-#it-exchange-downloads .download{clear:both;}
-#it-exchange-downloads .download .download-product{float:right;width:20%;}
-#it-exchange-downloads .download .download-product a{float:right;}
-#it-exchange-downloads .download .download-info{float:left;width:80%;}
-#it-exchange-downloads .download .download-info h4{margin-top:0;}
-#it-exchange-downloads .download .download-info span + span{margin-left:1em;}
-#it-exchange-downloads span{margin-left:1em;}
+#it-exchange-downloads .it-exchange-download{clear:both;}
+#it-exchange-downloads .it-exchange-download-product{float:right;width:20%;}
+#it-exchange-downloads .it-exchange-download-product a{float:right;}
+#it-exchange-downloads .it-exchange-download-info{float:left;width:80%;}
+#it-exchange-downloads .it-exchange-download-info h4{margin-top:0;}
+#it-exchange-downloads .it-exchange-download-info span + span{margin-left:1em;}
+#it-exchange-downloads .it-exchange-download span{margin-left:1em;}
 
 /** -----------------------------------------------------:[ product ]:---------- */
 #it-exchange-product .product-columns.has-images{overflow:hidden;}
