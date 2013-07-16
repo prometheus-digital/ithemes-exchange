@@ -14,9 +14,9 @@
 		<?php while ( it_exchange( 'transaction', 'product-downloads' ) ) : ?>
 			<?php do_action( 'it_exchange_content_downloads_begin_downloads_loop' ); ?>
 			<div class="download">
-				<?php it_exchange_get_template_part( 'content-downloads/details/fields/confirmation-url' ); ?>
+				<?php it_exchange_get_template_part( 'content-downloads/details/confirmation-url' ); ?>
 				<div class="download-info">
-                    <?php it_exchange_get_template_part( 'content-downloads/details/fields/download-title' ); ?>
+                    <?php it_exchange_get_template_part( 'content-downloads/details/download-title' ); ?>
 					<?php if ( it_exchange( 'transaction', 'has-product-download-hashes' ) ) : ?>
 						<?php it_exchange_get_template_part( 'content-downloads/loops/download-hashes' ); ?>
 					<?php endif; ?>
