@@ -8,7 +8,7 @@
 */
 ?>
 <?php do_action( 'it_exchange_content_product_before_product_images_loop' ); ?>
-<?php foreach( it_exchange_get_content_product_info_details( array( 'product-images' ) ) as $detail ): ?>
+<?php foreach( it_exchange_get_content_product_feature_details( array( 'product-images' ) ) as $detail ): ?>
 	<?php it_exchange_get_template_part( 'content-product/details/' . $detail ); ?>
 <?php endforeach; ?>
 <?php do_action( 'it_exchange_content_product_after_product_images_loop' ); ?>
