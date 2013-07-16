@@ -19,7 +19,7 @@
 <div id="it-exchange-product" class="it-exchange-wrap">
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php do_action( 'it_exchange_content_product_begin_product' ); ?>
-	<div class="it-exchange-product-standard-content it-exchange-columns <?php echo ( it_exchange( 'product', 'has-images' ) ) ? ' it-exchange-has-images' : ''; ?>">
+	<div class="it-exchange-product-standard-content it-exchange-columns-wrapper <?php echo ( ! it_exchange( 'product', 'has-images' ) ) ? ' it-exchange-product-no-images' : 'it-exchange-product-has-images'; ?>">
 		<div class="it-exchange-column it-exchange-product-info">
 			<div class="it-exchange-column-inner">
 				<?php it_exchange_get_template_part( 'content-product/loops/product-info' ); ?>
