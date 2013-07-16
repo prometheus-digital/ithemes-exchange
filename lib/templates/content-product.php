@@ -18,42 +18,22 @@
 ?>
 
 <?php it_exchange_get_template_part( 'messages' ); ?>
+
+<?php do_action( 'it_exchange_content_product_before_product' ); ?>
 <div id="it-exchange-product">
+	<?php do_action( 'it_exchange_content_product_begin_product' ); ?>
 	<div class="product-standard-content product-columns <?php echo ( it_exchange( 'product', 'has-images' ) ) ? ' has-images' : ''; ?>">
 		<div class="product-column product-info">
 			<div class="product-column-inner">
-				<?php it_exchange_get_template_part( 'content-product/product-info/loop' ); ?>
-				<?php if ( it_exchange( 'product', 'has-base-price' ) ) : ?>
-					<div class="product-price">
-						<p><?php it_exchange( 'product', 'base-price' ); ?></p>
-					</div>
-				<?php endif; ?>
-			
-				<?php if ( it_exchange( 'product', 'has-description' ) ) : ?>
-					<div class="product-description">
-						<?php it_exchange( 'product', 'description' ); ?>
-					</div>
-				<?php endif; ?>
-				
-				<?php it_exchange( 'product', 'super-widget' ); ?>
+				<?php it_exchange_get_template_part( 'content-product/loops/product-info' ); ?>
 			</div>
 		</div>
-		<?php if ( it_exchange( 'product', 'has-images' ) ) : ?>
-			<div class="product-column product-images">
-				<?php it_exchange_get_template_part( 'content-product/product-images/loop' ); ?>
-				<div class="product-column-inner">
-					<?php it_exchange( 'product', 'gallery' ); ?>
-				</div>
-			</div>
-		<?php endif; ?>
+		<?php it_exchange_get_template_part( 'content-product/loops/product-images' ); ?>
 	</div>
 	
 	<div class="product-advanced-items">
-		<?php it_exchange_get_template_part( 'content-product/product-advanced/loop' ); ?>
+		<?php it_exchange_get_template_part( 'content-product/loops/product-advanced' ); ?>
 	</div>
-	<?php if ( it_exchange( 'product', 'has-extended-description' ) ) : ?>
-		<div class="extended-description advanced-item">
-			<?php it_exchange( 'product', 'extended-description' ); ?>
-		</div>
-	<?php endif; ?>
+	<?php do_action( 'it_exchange_content_product_end_product' ); ?>
 </div>
+<?php do_action( 'it_exchange_content_product_after_product' ); ?>
