@@ -218,3 +218,51 @@ function it_exchange_get_content_profile_actions() {
     $actions = apply_filters( 'it_exchange_get_content_profile_actions', $actions );
     return (array) $actions;
 }
+
+/*****************************************
+ * lib/templates/content-product.php *
+*****************************************/
+
+/**
+ * Returns an array of product_info features used in the content-product template part
+ *
+ * @since 1.1.0
+ *
+ * @return array
+*/ 
+function it_exchange_get_content_product_info_details( $options=null ) {
+
+    $defaults = array(
+        'base-price',
+        'description',
+        'super-widget',
+    );
+
+	$details = is_null( $options ) ? $defaults : (array) $options;
+
+	// Allow add-ons to filter
+    $details = apply_filters( 'it_exchange_get_content_product_info_details', $details );
+
+    return (array) $details;
+}
+
+/**
+ * Returns an array of product_advanced features used in the content-product template part
+ *
+ * @since 1.1.0
+ *
+ * @return array
+*/ 
+function it_exchange_get_content_product_advanced_details( $options=null ) {
+
+    $defaults = array(
+        'extended-description',
+    );
+
+	$details = is_null( $options ) ? $defaults : (array) $options;
+
+	// Allow add-ons to filter
+    $details = apply_filters( 'it_exchange_get_content_product_advanced_details', $details );
+
+    return (array) $details;
+}
