@@ -238,3 +238,23 @@ function it_exchange_get_content_product_feature_details( $details=array() ) {
 
     return (array) $details;
 }
+
+/*****************************************
+ * lib/templates/store-product.php *
+*****************************************/
+
+/**
+ * Returns an array of product features used in a store-product template part loop
+ *
+ * @since 1.1.0
+ *
+ * @param array $details an array of product_features. eg: array( 'title', 'base-price, 'permalink' )
+ * @return array
+*/ 
+function it_exchange_get_store_product_feature_details( $details=array() ) {
+
+	// Allow add-ons to filter
+    $details = apply_filters( 'it_exchange_get_store_product_feature_details', $details );
+
+    return (array) $details;
+}
