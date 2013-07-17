@@ -16,6 +16,8 @@
 function it_exchange_get_template_part( $slug, $name=null, $load=true ) {
     // Execute code for this part
     do_action( 'get_template_part_' . $slug, $slug, $name );
+    do_action( 'it_exchange_get_template_part', $slug, $name );
+    do_action( 'it_exchange_get_template_part_' . $slug, $slug, $name );
 
     // Setup possible parts
     $templates = array();
