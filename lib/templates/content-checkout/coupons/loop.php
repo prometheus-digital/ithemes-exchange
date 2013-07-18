@@ -19,11 +19,11 @@
 <?php while ( it_exchange( 'coupons', 'applied', array( 'type' => 'cart' ) ) ) : ?>
 	<?php do_action( 'it_exchange_content_checkout_coupons_begin_loop' ); ?>
 	<div class="it-exchange-table-row">
-		<?php foreach ( it_exchange_get_template_part_slugs( 'content_checkout', 'coupons', array( 'code', 'discount' ) ) as $detail ) : ?>
+		<?php foreach ( it_exchange_get_template_part_elements( 'content_checkout', 'coupons', array( 'code', 'discount' ) ) as $detail ) : ?>
 			<?php
 			/** 
 			 * Theme and add-on devs should add code to this loop by 
-			 * hooking into it_exchange_get_template_part_slugs filter
+			 * hooking into it_exchange_get_template_part_elements filter
 			 * and adding the appropriate template file to their theme or add-on
 			*/
 			it_exchange_get_template_part( 'content-checkout/coupons/details/' . $detail );

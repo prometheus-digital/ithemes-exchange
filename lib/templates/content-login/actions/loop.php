@@ -14,11 +14,11 @@
 */
 ?>
 
-<?php foreach ( it_exchange_get_template_part_slugs( 'content_login', 'actions', array( 'login-button', 'recover', 'register' ) ) as $detail ) : ?>
+<?php foreach ( it_exchange_get_template_part_elements( 'content_login', 'actions', array( 'login-button', 'recover', 'register' ) ) as $detail ) : ?>
 	<?php 
 	/** 
 	 * Theme and add-on devs should add code to this loop by 
-	 * hooking into it_exchange_get_template_part_slugs filter
+	 * hooking into it_exchange_get_template_part_elements filter
 	 * and adding the appropriate template file to their theme or add-on
 	 */
 	it_exchange_get_template_part( 'content-login/actions/details/' . $detail );

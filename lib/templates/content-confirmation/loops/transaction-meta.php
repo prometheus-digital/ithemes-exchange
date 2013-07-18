@@ -15,7 +15,7 @@
 
 <div class="it-exchange-transaction-meta">
 	<?php do_action( 'it_exchange_content_confirmation_transaction_meta_top' ); ?>
-	<?php foreach( it_exchange_get_template_part_slugs( 'content_confirmation', 'transaction_meta', array( 'date', 'status', 'total', 'instructions' ) ) as $meta ) : ?>
+	<?php foreach( it_exchange_get_template_part_elements( 'content_confirmation', 'transaction_meta', array( 'date', 'status', 'total', 'instructions' ) ) as $meta ) : ?>
 		<?php it_exchange_get_template_part( 'content-confirmation/details/transaction-meta/' . $meta ); ?>
 	<?php endforeach; ?>
 	<?php do_action( 'it_exchange_content_confirmation_transaction_meta_bottom' ); ?>

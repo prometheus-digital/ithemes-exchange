@@ -17,12 +17,12 @@
 
 <?php do_action( 'it_exchange_content_checkout_totals_before_loop' ); ?>
 	<?php do_action( 'it_exchange_content_checkout_totals_begin_loop' ); ?>
-		<?php foreach ( it_exchange_get_template_part_slugs( 'content_checkout', 'totals', array( 'subtotal', 'savings', 'total' ) ) as $detail ) : ?>
+		<?php foreach ( it_exchange_get_template_part_elements( 'content_checkout', 'totals', array( 'subtotal', 'savings', 'total' ) ) as $detail ) : ?>
 			<div class="it-exchange-table-row it-exchange-cart-<?php echo $detail; ?>">
 				<?php
 				/** 
 				 * Theme and add-on devs should add code to this loop by 
-				 * hooking into it_exchange_get_template_part_slugs filter
+				 * hooking into it_exchange_get_template_part_elements filter
 				 * and adding the appropriate template file to their theme or add-on
 				*/
 				it_exchange_get_template_part( 'content-checkout/totals/details/' . $detail );
