@@ -15,7 +15,7 @@
 ?>
 
 <?php do_action( 'it_exchange_content_product_before_product_info_loop' ); ?>
-<?php foreach( it_exchange_get_template_part_slugs( 'content_product', 'features', array( 'base-price', 'description', 'super-widget' ) ) as $detail ): ?>
+<?php foreach( it_exchange_get_template_part_elements( 'content_product', 'features', array( 'base-price', 'description', 'super-widget' ) ) as $detail ): ?>
 	<?php it_exchange_get_template_part( 'content-product/features/' . $detail ); ?>
 <?php endforeach; ?>
 <?php do_action( 'it_exchange_content_product_after_product_info_loop' ); ?>
