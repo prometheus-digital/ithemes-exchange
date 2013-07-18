@@ -14,11 +14,11 @@
 */
 ?>
 
-<?php foreach( it_exchange_get_content_login_field_details( array( 'username', 'password', 'rememberme' ) ) as $detail ) : ?>
+<?php foreach( it_exchange_get_template_part_slugs( 'content_login', 'fields', array( 'username', 'password', 'rememberme' ) ) as $detail ) : ?>
 	<?php
 	/**
 	 * Theme and add-on devs should add code to this loop by 
-	 * hooking into it_exchange_get_content_login_field_details filter
+	 * hooking into it_exchange_get_template_part_slugs filter
 	 * and adding the appropriate template file to their theme or add-on
 	 */
 	it_exchange_get_template_part( 'content-login/fields/details/' . $detail );

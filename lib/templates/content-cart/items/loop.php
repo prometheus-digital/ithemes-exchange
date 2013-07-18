@@ -22,11 +22,12 @@
 	<div class="it-exchange-table-row">
 		<?php do_action( 'it_exchange_content_cart_items_begin_table_row' ); ?>
 		
-		<?php foreach ( it_exchange_get_content_cart_item_details() as $detail ) : ?>
+		<?php foreach ( it_exchange_get_template_part_slugs( 'content_cart', 'items', array(
+'featured-image', 'title', 'quantity', 'subtotal', 'remove',) ) as $detail ) : ?>
 			<?php
 			/**
 			 * Theme and add-on devs should add code to this loop by 
-			 * hooking into it_exchange_get_content_cart_item_details filter
+			 * hooking into it_exchange_get_template_part_slugs filter
 			 * and adding the appropriate template file to their theme or add-on
 			 */
 			it_exchange_get_template_part( 'content-cart/items/details/' . $detail );
