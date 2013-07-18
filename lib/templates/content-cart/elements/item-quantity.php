@@ -19,7 +19,7 @@
 <div class="it-exchange-cart-item-quantity it-exchange-table-column">
 	<?php do_action( 'it_exchange_content_cart_item_details_begin_quantity' ); ?>
 	<div class="it-exchange-table-column-inner">
-		<?php it_exchange( 'cart-item', 'quantity' ) ?>
+		<?php it_exchange( 'cart-item', 'quantity' ); ?>
 	</div>
 	<?php do_action( 'it_exchange_content_cart_item_details_end_quantity' ); ?>
 </div>

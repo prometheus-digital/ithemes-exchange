@@ -27,5 +27,5 @@
 			<?php it_exchange( 'coupons', 'total-discount', array( 'type' => 'cart' ) ); ?>
 		</div>
 	</div>
-<?php endif ?>
+<?php endif; ?>
 <?php do_action( 'it_exchange_content_cart_totals_details_after_savings' ); ?>

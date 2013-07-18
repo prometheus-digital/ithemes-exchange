@@ -23,7 +23,7 @@
 </div>
 <div class="it-exchange-cart-totals-total it-exchange-table-column">
 	<div class="it-exchange-table-column-inner">
-		<?php it_exchange( 'cart', 'subtotal' ) ?>
+		<?php it_exchange( 'cart', 'subtotal' ); ?>
 	</div>
 </div>
 <?php do_action( 'it_exchange_content_cart_totals_details_after_subtotal' ); ?>
