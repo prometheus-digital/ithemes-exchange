@@ -12,7 +12,7 @@
  *
  * @return array
 */
-function it_exchange_get_template_part_slugs( $context, $detail, $parts ) {
-	$details = apply_filters( 'it_exchange_get_' . $context . '_' . $detail . '_slugs', $parts );
+function it_exchange_get_template_part_elements( $context, $detail, $parts ) {
+	$details = apply_filters( 'it_exchange_get_' . $context . '_' . $detail . '_elements', $parts );
 	return (array) $details;
 }

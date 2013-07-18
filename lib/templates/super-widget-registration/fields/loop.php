@@ -14,11 +14,11 @@
 */
 ?>
 
-<?php foreach( it_exchange_get_template_part_slugs( 'super_widget_registration', 'fields', array( 'username', 'first-name', 'last-name', 'email', 'password1', 'password2' ) ) as $detail ) : ?>
+<?php foreach( it_exchange_get_template_part_elements( 'super_widget_registration', 'fields', array( 'username', 'first-name', 'last-name', 'email', 'password1', 'password2' ) ) as $detail ) : ?>
 	<?php
 	/**
 	 * Theme and add-on devs should add code to this loop by 
-	 * hooking into it_exchange_get_template_part_slugs filter
+	 * hooking into it_exchange_get_template_part_elements filter
 	 * and adding the appropriate template file to their theme or add-on
 	 */
 	it_exchange_get_template_part( 'content-registration/fields/details/' . $detail );

@@ -15,13 +15,13 @@
 */
 ?>
 <?php do_action( 'it_exchange_content_cart_actions_before_loop' ); ?>
-<?php foreach ( it_exchange_get_template_part_elements( 'content_cart', 'actions', array('apply-coupon', 'update', 'empty', 'checkout' )) as $detail ) : ?>
+<?php foreach ( it_exchange_get_template_part_elements( 'content_cart', 'actions', array('apply-coupon', 'update', 'empty', 'checkout' )) as $action ) : ?>
 		<?php
 		/** 
 		 * Theme and add-on devs should add code to this loop by 
 		 * hooking into it_exchange_get_template_part_elements filter
 		 * and adding the appropriate template file to their theme or add-on
 		*/
-		it_exchange_get_template_part( 'content-cart/actions/details/' . $detail ); ?>
+		it_exchange_get_template_part( 'content-cart/actions/details/' . $action ); ?>
 <?php endforeach; ?>
 <?php do_action( 'it_exchange_content_cart_actions_after_loop' ); ?>
