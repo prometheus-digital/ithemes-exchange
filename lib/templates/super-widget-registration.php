@@ -3,7 +3,7 @@
  * The registration template for the Super Widget.
  * 
  * @since 0.4.0
- * @version 1.0.2
+ * @version 1.1.0
  * @link http://ithemes.com/codex/page/Exchange_Template_Updates
  * @package IT_Exchange
  * 
@@ -18,33 +18,17 @@
 
 <?php it_exchange_get_template_part( 'messages' ); ?>
 
-<div class="registration-info it-exchange-sw-processing-registration">
+<div class="login it-exchange-sw-processing-login">
+	<?php do_action( 'it_exchange_super_widget_registration_before_form' ); ?>
 	<?php if ( it_exchange( 'registration', 'is-enabled' ) ) : ?>
-		<?php it_exchange( 'registration', 'form-open' ); ?>
-			<div class="user-name">
-				<?php it_exchange( 'registration', 'username' ); ?>
-			</div>
-			<div class="first-name">
-				<?php it_exchange( 'registration', 'first-name' ); ?>
-			</div>
-			<div class="last-name">
-				<?php it_exchange( 'registration', 'last-name' ); ?>
-			</div>
-			<div class="email-name">
-				<?php it_exchange( 'registration', 'email' ); ?>
-			</div>
-			<div class="password1">
-				<?php it_exchange( 'registration', 'password1' ); ?>
-			</div>
-			<div class="password2">
-				<?php it_exchange( 'registration', 'password2' ); ?>
-			</div>
-			<?php it_exchange( 'registration', 'save' ); ?>
-			<div class="cancel_url">
-				<?php it_exchange( 'registration', 'cancel', array( 'label' => __( 'Log in', 'LION' ) ) ); ?>
-			</div>
-		<?php it_exchange( 'registration', 'form-close' ); ?>
+	<?php it_exchange( 'registration', 'form-open' ); ?>
+		<?php do_action( 'it_exchange_super_widget_registration_begin_form' ); ?>
+		<?php it_exchange_get_template_part( 'super-widget-registration/fields/loop' ); ?>
+		<?php it_exchange_get_template_part( 'super-widget-registration/actions/loop' ); ?>
+		<?php do_action( 'it_exchange_super_widget_registration_end_form' ); ?>
+	<?php it_exchange( 'registration', 'form-close' ); ?>
 	<?php else : ?>
 		<?php it_exchange( 'registration', 'disabled-message' ); ?>
 	<?php endif; ?>
+	<?php do_action( 'it_exchange_super_widget_registration_after_form' ); ?>
 </div>
