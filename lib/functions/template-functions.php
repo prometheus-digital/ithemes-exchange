@@ -9,6 +9,7 @@
  * Retrieves a template part
  *
  * @since 0.3.8
+ * @todo action get_template_part_$slug should probably be deprecated for it_exchange_get_template_part_$slug
  * @param string $slug
  * @param string $name Optional. Default null
  * @return mixed template
@@ -16,6 +17,8 @@
 function it_exchange_get_template_part( $slug, $name=null, $load=true ) {
     // Execute code for this part
     do_action( 'get_template_part_' . $slug, $slug, $name );
+    do_action( 'it_exchange_get_template_part', $slug, $name );
+    do_action( 'it_exchange_get_template_part_' . $slug, $slug, $name );
 
     // Setup possible parts
     $templates = array();

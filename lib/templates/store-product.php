@@ -16,15 +16,13 @@
  * Example: theme/exchange/store-product.php
 */
 ?>
+<?php do_action( 'it_exchange_store_product_before_product' ); ?>
 <li class="it-exchange-product">
-	<?php if ( it_exchange( 'product', 'has-featured-image' ) ) : ?>
-		<a class="it-exchange-product-permalink" href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'url') ); ?>">
-			<?php it_exchange( 'product', 'featured-image', array( 'size' => 'large' ) ); ?>
-		</a>
-	<?php endif; ?>
+	<?php do_action( 'it_exchange_store_product_begin_product' ); ?>
+	<?php it_exchange_get_template_part( 'store-product/loops/product-images' ); ?>
 	<div class="it-exchange-product-details">
-		<?php it_exchange( 'product', 'title' ); ?>
-		<?php it_exchange( 'product', 'baseprice' ); ?>
-		<a class="it-exchange-product-details-link" href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'url') ); ?>"><?php _e( 'View Details', 'LION' ); ?></a>
+		<?php it_exchange_get_template_part( 'store-product/loops/product-info' ); ?>
 	</div>
+	<?php do_action( 'it_exchange_store_product_end_product' ); ?>
 </li>
+<?php do_action( 'it_exchange_store_product_after_product' ); ?>

@@ -119,7 +119,9 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 		// If we made it here, we're doing a loop of applied coupons
 		// This will init/reset the applied_coupons global and loop through them.
 		if ( empty( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] ) ) {
-			$GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] = it_exchange_get_applied_coupons( $options['type'] );
+			if ( ! $coupons = it_exchange_get_applied_coupons( $options['type'] ) )
+				return false;
+			$GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] = $coupons;
 			$GLOBALS['it_exchange']['coupon'] = reset( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] );
 			return true;
 		} else {
