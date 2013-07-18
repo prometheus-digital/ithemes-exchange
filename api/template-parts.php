@@ -244,15 +244,7 @@ function it_exchange_get_content_registration_actions( $actions=array() ) {
  *
  * @return array
 */ 
-function it_exchange_get_content_profile_field_details() {
-    $details = array(
-        'first-name',
-        'last-name',
-        'email',
-        'website',
-		'password1',
-		'password2',
-    );  
+function it_exchange_get_content_profile_field_details( $details=array() ) {
     $details = apply_filters( 'it_exchange_get_content_profile_field_details', $details );
     return (array) $details;
 }
@@ -264,10 +256,7 @@ function it_exchange_get_content_profile_field_details() {
  *
  * @return array
 */
-function it_exchange_get_content_profile_actions() {
-    $actions = array(
-		'save',
-    );  
+function it_exchange_get_content_profile_actions( $details=array() ) {
     $actions = apply_filters( 'it_exchange_get_content_profile_actions', $actions );
     return (array) $actions;
 }
@@ -285,10 +274,8 @@ function it_exchange_get_content_profile_actions() {
  * @return array
 */ 
 function it_exchange_get_content_product_feature_details( $details=array() ) {
-
 	// Allow add-ons to filter
     $details = apply_filters( 'it_exchange_get_content_product_feature_details', $details );
-
     return (array) $details;
 }
 
@@ -305,10 +292,8 @@ function it_exchange_get_content_product_feature_details( $details=array() ) {
  * @return array
 */ 
 function it_exchange_get_store_product_feature_details( $details=array() ) {
-
 	// Allow add-ons to filter
     $details = apply_filters( 'it_exchange_get_store_product_feature_details', $details );
-
     return (array) $details;
 }
 
@@ -325,10 +310,8 @@ function it_exchange_get_store_product_feature_details( $details=array() ) {
  * @return array
 */ 
 function it_exchange_get_content_purchases_feature_details( $details=array() ) {
-
 	// Allow add-ons to filter
     $details = apply_filters( 'it_exchange_get_content_purchase_feature_details', $details );
-
     return (array) $details;
 }
 
@@ -345,10 +328,8 @@ function it_exchange_get_content_purchases_feature_details( $details=array() ) {
  * @return array
 */ 
 function it_exchange_get_content_downloads_field_details( $details=array() ) {
-
 	// Allow add-ons to filter
     $details = apply_filters( 'it_exchange_get_content_downloads_field_details', $details );
-
     return (array) $details;
 }
 
@@ -365,10 +346,8 @@ function it_exchange_get_content_downloads_field_details( $details=array() ) {
  * @return array
 */ 
 function it_exchange_get_super_widget_cart_item_details( $details=array() ) {
-
 	// Allow add-ons to filter
     $details = apply_filters( 'it_exchange_get_super_widget_cart_item_details', $details );
-
     return (array) $details;
 }
 
@@ -385,10 +364,8 @@ function it_exchange_get_super_widget_cart_item_details( $details=array() ) {
  * @return array
 */ 
 function it_exchange_get_super_widget_checkout_item_details( $details=array() ) {
-
 	// Allow add-ons to filter
     $details = apply_filters( 'it_exchange_get_super_widget_checkout_item_details', $details );
-
     return (array) $details;
 }
 
@@ -405,7 +382,6 @@ function it_exchange_get_super_widget_checkout_item_details( $details=array() ) 
  * @return array
 */ 
 function it_exchange_get_super_widget_login_field_details( $fields=array() ) {
-
 	$details = apply_filters( 'it_exchange_get_super_widget_login_field_details', $fields );
 	return (array) $details;
 }
@@ -420,5 +396,36 @@ function it_exchange_get_super_widget_login_field_details( $fields=array() ) {
 */ 
 function it_exchange_get_super_widget_login_action_details( $actions=array() ) {
 	$details = apply_filters( 'it_exchange_get_super_widget_login_action_details', $actions );
+	return (array) $details;
+}
+
+
+/*****************************************
+ * lib/templates/super-widget-registration.php *
+*****************************************/
+
+/**
+ * Returns an array of fields used in the super-widget-registration template part
+ *
+ * @since 1.1.0
+ *
+ * @param array $fields list of fields we want to display. default is username, first-name, last-name, email, password1, password2
+ * @return array
+*/ 
+function it_exchange_get_super_widget_registration_field_details( $fields=array() ) {
+	$details = apply_filters( 'it_exchange_get_super_widget_registration_field_details', $fields );
+	return (array) $details;
+}
+
+/**
+ * Returns an array of actions used in the super-widget-registration template part
+ *
+ * @since 1.1.0
+ *
+ * @param array $actions array of actions you want displayed in the action loop. default: save, cancel
+ * @return array
+*/ 
+function it_exchange_get_super_widget_registration_action_details( $actions=array() ) {
+	$details = apply_filters( 'it_exchange_get_super_widget_registration_action_details', $actions );
 	return (array) $details;
 }
