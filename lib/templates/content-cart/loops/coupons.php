@@ -26,7 +26,8 @@
 			 * hooking into it_exchange_get_template_part_elements filter
 			 * and adding the appropriate template file to their theme or add-on
 			*/
-			it_exchange_get_template_part( 'content-cart/elements/' . $coupon ); ?>
+			it_exchange_get_template_part( 'content-cart/elements/' . $coupon );
+			?>
 		<?php endforeach; ?>
 	</div>
 	<?php do_action( 'it_exchange_content_cart_coupons_end_loop' ); ?>

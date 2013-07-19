@@ -9,6 +9,6 @@
 ?>
 <?php do_action( 'it_exchange_store_product_before_product_images_loop' ); ?>
 <?php foreach( it_exchange_get_template_part_elements( 'store_product', 'product_features', array( 'featured-image' ) ) as $detail ): ?>
-	<?php it_exchange_get_template_part( 'store-product/details/' . $detail ); ?>
+	<?php it_exchange_get_template_part( 'store-product/elements/' . $detail ); ?>
 <?php endforeach; ?>
 <?php do_action( 'it_exchange_store_product_after_product_images_loop' ); ?>

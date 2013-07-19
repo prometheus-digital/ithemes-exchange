@@ -16,7 +16,7 @@
 ?>
 
 <?php do_action( 'it_exchange_content_cart_coupon_details_before_remove' ); ?>
-<div class="it-exchange-cart-coupon-remove it-exchange-table-column cart-remove">
+<div class="it-exchange-cart-coupon-remove it-exchange-table-column">
 	<?php do_action( 'it_exchange_content_cart_coupon_details_begin_remove' ); ?>
 	<div class="it-exchange-table-column-inner">
 		<?php it_exchange( 'coupons', 'remove', array( 'type' => 'cart' ) ); ?>

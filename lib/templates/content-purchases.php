@@ -30,7 +30,7 @@
 	if ( it_exchange( 'transactions', 'found' ) )
 		it_exchange_get_template_part( 'content-purchases/loops/transactions' );
 	else
-		it_exchange_get_template_part( 'content-purchases/no-purchases-notice' );
+		it_exchange_get_template_part( 'content-purchases/elements/no-purchases-notice' );
 
 	do_action( 'it_exchange_content_purchases_fields_after_loop' ); ?>
 </div>

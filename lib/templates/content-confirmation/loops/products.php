@@ -16,7 +16,7 @@
 <?php if ( it_exchange( 'transaction', 'has-products' ) ) : ?>
 	<div class="it-exchange-transaction-products">
 		<?php while( it_exchange( 'transaction', 'products' ) ) : ?>
-			<?php it_exchange_get_template_part( 'content-confirmation/details/product' ); ?>
+			<?php it_exchange_get_template_part( 'content-confirmation/elements/product' ); ?>
 		<?php endwhile; ?>
 	</div>
 <?php endif; ?>

@@ -16,18 +16,18 @@
 ?>
 
 <?php do_action( 'it_exchange_content_cart_totals_before_loop' ); ?>
-	<?php do_action( 'it_exchange_content_cart_totals_begin_loop' ); ?>
-		<?php foreach ( it_exchange_get_template_part_elements( 'content_cart', 'totals', array( 'total-subtotal', 'total-savings', 'total-total' ) ) as $total ) : ?>
-			<div class="it-exchange-table-row it-exchange-cart-<?php echo $total; ?>">
-				<?php
-				/** 
-				 * Theme and add-on devs should add code to this loop by 
-				 * hooking into it_exchange_get_template_part_elements filter
-				 * and adding the appropriate template file to their theme or add-on
-				*/
-				it_exchange_get_template_part( 'content-cart/elements/' . $total );
-				?>
-			</div>
-		<?php endforeach; ?>
-	<?php do_action( 'it_exchange_content_cart_totals_end_loop' ); ?>
+<?php do_action( 'it_exchange_content_cart_totals_begin_loop' ); ?>
+<?php foreach ( it_exchange_get_template_part_elements( 'content_cart', 'totals', array( 'totals-subtotal', 'totals-savings', 'totals-total' ) ) as $total ) : ?>
+	<div class="it-exchange-table-row it-exchange-cart-<?php echo $total; ?>">
+		<?php
+		/** 
+		 * Theme and add-on devs should add code to this loop by 
+		 * hooking into it_exchange_get_template_part_elements filter
+		 * and adding the appropriate template file to their theme or add-on
+		*/
+		it_exchange_get_template_part( 'content-cart/elements/' . $total );
+		?>
+	</div>
+<?php endforeach; ?>
+<?php do_action( 'it_exchange_content_cart_totals_end_loop' ); ?>
 <?php do_action( 'it_exchange_content_cart_totals_before_loop' ); ?>

@@ -26,21 +26,55 @@
 			<?php do_action( 'it_exchange_super_widget_cart_before_form' ); ?>
 			<?php it_exchange( 'cart', 'form-open', array( 'class' => 'it-exchange-sw-update-cart-' . it_exchange( 'cart', 'get-focus' ) ) ); ?>
 				<?php do_action( 'it_exchange_super_widget_cart_begin_form' ); ?>
-				<?php
-				// Include cart-items template part
-				it_exchange_get_template_part( 'super-widget-cart/items' );
+                <div class="cart-items-wrapper">
+					<?php while( it_exchange( 'cart', 'cart-items' ) ) : ?>
+                        <?php it_exchange_get_template_part( 'super-widget-cart/loops/items' ); ?>
+                    <?php endwhile; ?>
+                    
+                    <?php if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ): ?>
+                        <div class="cart-discount">
+                            <?php it_exchange_get_template_part( 'super-widget-cart/loops/discounts' ); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
+				<?php
 				// If coupons are supported and the current focus is 'coupon', include the coupons template part
-				if ( it_exchange( 'coupons', 'supported', array( 'type' => 'cart' ) ) && it_exchange( 'cart', 'focus', array( 'type' => 'coupon' ) ) )
-					it_exchange_get_template_part( 'super-widget-cart/coupons' );
+				if ( it_exchange( 'coupons', 'supported', array( 'type' => 'cart' ) ) && it_exchange( 'cart', 'focus', array( 'type' => 'coupon' ) ) ) {
+					?>
+                    
+                    <?php do_action( 'it_exchange_super_widget_cart_coupons_before_wrapper' ); ?>
+                    <div class="coupons-wrapper">
+                        <?php
+                        do_action( 'it_exchange_super_widget_cart_coupons_begin_wrapper' );
+                    
+                        // Include applied coupons loop if any exist
+                        if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) )
+                            it_exchange_get_template_part( 'super-widget-cart/loops/applied-coupons' );
+                    
+                        // If accepting coupons, include template part
+                        if ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) )
+                            it_exchange_get_template_part( 'super-widget-cart/elements/apply-coupon' );
+                    
+                        // Include the single-item-cart actions template part
+                        it_exchange_get_template_part( 'super-widget-cart/elements/single-item-cart-cancel' );
+                    
+                        do_action( 'it_exchange_super_widget_cart_coupons_end_wrapper' );
+                        ?>
+                    </div>
+                    <?php do_action( 'it_exchange_super_widget_cart_coupons_after_wrapper' ); ?>
+                    
+                    <?php	
+					
+				}
                 
 				// If quantity is the current focus, include the quantity template
 				if ( it_exchange( 'cart', 'focus', 'type=quantity' ) )
-					it_exchange_get_template_part( 'super-widget-cart/actions/update-quantity' );
+					it_exchange_get_template_part( 'super-widget-cart/elements/update-quantity' );
                 
 				// If multi-item cart is allowed, include the multi-item-cart actions
                 if ( it_exchange_is_multi_item_cart_allowed() )
-					it_exchange_get_template_part( 'super-widget-cart/actions/multi-item-cart-actions' );
+					it_exchange_get_template_part( 'super-widget-cart/elements/multi-item-cart-actions' );
 				?>
 				<?php do_action( 'it_exchange_super_widget_cart_end_form' ); ?>
             <?php it_exchange( 'cart', 'form-close' ); ?>
@@ -49,14 +83,14 @@
             <?php if ( it_exchange_is_multi_item_cart_allowed() ) : ?>
                 <?php
 				// Include cart summary
-				it_exchange_get_template_part( 'super-widget-cart/summary' );
+				it_exchange_get_template_part( 'super-widget-cart/elements/summary' );
 				?>
             <?php else : ?>
                 <?php it_exchange_get_template_part( 'super-widget', 'login' ); ?>
             <?php endif; ?>
 		<?php endif; ?>
 	<?php elseif ( ! it_exchange_is_page( 'product' ) ) : ?>
-		<?php it_exchange_get_template_part( 'super-widget-cart/empty-cart-notice' ); ?>
+		<?php it_exchange_get_template_part( 'super-widget-cart/elements/empty-cart-notice' ); ?>
 	<?php endif; ?>
 	<?php do_action( 'it_exchange_super_widget_cart_end_wrap' ); ?>
 </div>

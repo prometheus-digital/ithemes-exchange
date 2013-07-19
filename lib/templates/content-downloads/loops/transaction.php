@@ -22,7 +22,7 @@
 	<?php do_action( 'it_exchange_content_downloads_before_transactions_loop' ); ?>
 	<?php while( it_exchange( 'transactions', 'exist' ) ) : ?>
 		<?php do_action( 'it_exchange_content_downloads_begin_transactions_loop' ); ?>
-		<?php it_exchange_get_template_part( 'content-downloads/loops/product' ); ?>
+		<?php it_exchange_get_template_part( 'content-downloads/elements/product' ); ?>
 		<?php do_action( 'it_exchange_content_downloads_end_transactions_loop' ); ?>
     <?php endwhile; ?>
 	<?php do_action( 'it_exchange_content_downloads_after_transactions_loop' ); ?>
