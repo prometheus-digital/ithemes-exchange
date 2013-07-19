@@ -21,8 +21,8 @@
 		<?php do_action( 'it_exchange_content_login_before_form' ); ?>
 		<?php it_exchange( 'login', 'form-open' ); ?>
 			<?php do_action( 'it_exchange_content_login_begin_form' ); ?>
-			<?php it_exchange_get_template_part( 'content-login/fields/loop' ); ?>
-			<?php it_exchange_get_template_part( 'content-login/actions/loop' ); ?>
+			<?php it_exchange_get_template_part( 'content-login/loops/fields' ); ?>
+			<?php it_exchange_get_template_part( 'content-login/loops/actions' ); ?>
 			<?php do_action( 'it_exchange_content_login_end_form' ); ?>
 		<?php it_exchange( 'login', 'form-close' ); ?>
 		<?php do_action( 'it_exchange_content_login_after_form' ); ?>

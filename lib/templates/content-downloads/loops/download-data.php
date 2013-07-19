@@ -26,7 +26,7 @@
 			<?php $GLOBALS['it_exchange']['downloads_found'] = true; ?>
 			<li class="it-exchange-download-data">
 				<?php foreach( it_exchange_get_template_part_elements( 'content_downloads', 'download_meta', array( 'download-hash', 'download-expiration' ) ) as $detail ): ?>
-					<?php it_exchange_get_template_part( 'content-downloads/details/' . $detail ); ?>
+					<?php it_exchange_get_template_part( 'content-downloads/elements/' . $detail ); ?>
 				<?php endforeach; ?>
 			</li>
 			<?php do_action( 'it_exchange_content_downloads_end_download_data_loop' ); ?>

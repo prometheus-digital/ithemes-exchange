@@ -23,8 +23,8 @@
 	<?php if ( it_exchange( 'registration', 'is-enabled' ) ) : ?>
 	<?php it_exchange( 'registration', 'form-open' ); ?>
 		<?php do_action( 'it_exchange_super_widget_registration_begin_form' ); ?>
-		<?php it_exchange_get_template_part( 'super-widget-registration/fields/loop' ); ?>
-		<?php it_exchange_get_template_part( 'super-widget-registration/actions/loop' ); ?>
+		<?php it_exchange_get_template_part( 'super-widget-registration/loops/fields' ); ?>
+		<?php it_exchange_get_template_part( 'super-widget-registration/loops/actions' ); ?>
 		<?php do_action( 'it_exchange_super_widget_registration_end_form' ); ?>
 	<?php it_exchange( 'registration', 'form-close' ); ?>
 	<?php else : ?>

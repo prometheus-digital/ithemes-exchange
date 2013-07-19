@@ -4,7 +4,7 @@
 	<div class="it-exchange-purchase-items">
 		<div class="item-info">
 			<div class="item-thumbnail">
-				<?php it_exchange_get_template_part( 'content-purchases/details/fields/product-featured-image' ); ?>
+				<?php it_exchange_get_template_part( 'content-purchases/elements/product-featured-image' ); ?>
 			</div>
 			<div class="item-data">
 				<?php it_exchange_get_template_part( 'content-purchases/loops/product-info' ); ?>

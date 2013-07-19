@@ -20,9 +20,9 @@
 		<?php while ( it_exchange( 'transaction', 'product-downloads' ) ) : ?>
 			<?php do_action( 'it_exchange_content_downloads_begin_downloads_loop' ); ?>
 			<div class="it-exchange-download">
-				<?php it_exchange_get_template_part( 'content-downloads/details/confirmation-url' ); ?>
+				<?php it_exchange_get_template_part( 'content-downloads/elements/confirmation-url' ); ?>
 				<div class="it-exchange-download-info">
-                    <?php it_exchange_get_template_part( 'content-downloads/details/download-title' ); ?>
+                    <?php it_exchange_get_template_part( 'content-downloads/elements/download-title' ); ?>
 					<?php if ( it_exchange( 'transaction', 'has-product-download-hashes' ) ) : ?>
 						<?php it_exchange_get_template_part( 'content-downloads/loops/download-data' ); ?>
 					<?php endif; ?>

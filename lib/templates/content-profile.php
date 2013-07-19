@@ -20,8 +20,8 @@
 	<?php it_exchange( 'customer', 'menu' ); ?>
 	<?php do_action( 'it_exchange_content_profile_before_form' ); ?>
 	<?php it_exchange( 'customer', 'formopen' ); ?>
-		<?php it_exchange_get_template_part( 'content-profile/fields/loop' ); ?>
-		<?php it_exchange_get_template_part( 'content-profile/actions/loop' ); ?>
+		<?php it_exchange_get_template_part( 'content-profile/loops/fields' ); ?>
+		<?php it_exchange_get_template_part( 'content-profile/loops/actions' ); ?>
 	<?php it_exchange( 'customer', 'formclose' ); ?>
 	<?php do_action( 'it_exchange_content_profile_after_form' ); ?>
 </div>

@@ -19,5 +19,5 @@
 		<?php it_exchange_get_template_part( 'content-confirmation/loops/products' ); ?>
 	<?php endwhile; ?>
 <?php else : ?>
-	<?php it_exchange_get_template_part( 'content-confirmation/details/not-found' ); ?>
+	<?php it_exchange_get_template_part( 'content-confirmation/elements/not-found' ); ?>
 <?php endif; ?>

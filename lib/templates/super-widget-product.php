@@ -28,7 +28,7 @@
 		<?php endif; ?>
 		
 		<?php if ( it_exchange_is_page( 'product' ) && ( !it_exchange_is_multi_item_cart_allowed() || !it_exchange_is_current_product_in_cart() ) ) : ?>
-			<?php it_exchange_get_template_part( 'super-widget-product/purchase-options' ); ?>
+			<?php it_exchange_get_template_part( 'super-widget-product/elements/purchase-options' ); ?>
 		<?php endif; ?>
 
 		<?php do_action( 'it_exchange_super_widget_product_end_product' ); ?>

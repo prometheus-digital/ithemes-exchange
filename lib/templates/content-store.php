@@ -27,7 +27,7 @@
 				<?php it_exchange_get_template_part( 'store', 'product' ); ?>
 			<?php endwhile; ?>
 		<?php else : ?>
-			<?php it_exchange_get_template_part( 'content-store/no-products-found' ); ?>
+			<?php it_exchange_get_template_part( 'content-store/elements/no-products-found' ); ?>
 		<?php endif; ?>
 		<?php do_action( 'it_exchange_content_store_end_products' ); ?>
 	</ul>

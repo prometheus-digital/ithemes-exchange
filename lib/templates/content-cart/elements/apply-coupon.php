@@ -16,7 +16,7 @@
 ?>
 
 <?php do_action( 'it_exchange_content_cart_actions_before_apply_coupon' ); ?>
-<?php if ( it_exchange( 'coupons', 'supported', array( 'type' => 'cart' ) ) && it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) : ?>
+<?php if ( it_exchange( 'coupons', 'supported', array( 'type' => 'cart' ) ) && it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) ) : ?>
 	<?php do_action( 'it_exchange_content_cart_actions_begin_apply_coupon' ); ?>
 	<div class="it-exchange-cart-apply-coupons">
 		<?php it_exchange( 'coupons', 'apply', array( 'type' => 'cart' ) ); ?>

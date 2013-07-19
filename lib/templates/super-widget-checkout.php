@@ -23,18 +23,18 @@
 	// If we have cart Items
 	if ( it_exchange( 'cart', 'has-cart-items' ) ) {
 		// Loop through cart items
-		it_exchange_get_template_part( 'super-widget-checkout/items/loop' );
+		it_exchange_get_template_part( 'super-widget-checkout/loops/items' );
 
 		// Loop through payment options if allowed
 		if ( ! it_exchange_is_multi_item_cart_allowed() || ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_cart_products_count() < 2 ) )
-			it_exchange_get_template_part( 'super-widget-checkout/transaction-methods/loop' );
+			it_exchange_get_template_part( 'super-widget-checkout/loops/transaction-methods' );
 
 		// Show checkout actions
 		if ( ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) || $GLOBALS['it_exchange']['can_edit_purchase_quantity'] )
-			it_exchange_get_template_part( 'super-widget-checkout/actions/loop' ); 
+			it_exchange_get_template_part( 'super-widget-checkout/loops/actions' ); 
 	
 	} else {
-		it_exchange_get_template_part( 'super-widget-cart/empty-cart-notice' );
+		it_exchange_get_template_part( 'super-widget-cart/elements/empty-cart-notice' );
 	}
 	?>
 </div>
