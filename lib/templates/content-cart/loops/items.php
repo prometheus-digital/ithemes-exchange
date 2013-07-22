@@ -22,7 +22,7 @@
 	<div class="it-exchange-table-row">
 		<?php do_action( 'it_exchange_content_cart_items_begin_table_row' ); ?>
 		
-		<?php foreach ( it_exchange_get_template_part_elements( 'content_cart', 'items', array( 'item-featured-image', 'item-title', 'item-quantity', 'item-subtotal', 'item-remove',) ) as $item ) : ?>
+		<?php foreach ( it_exchange_get_template_part_elements( 'content_cart', 'items', array( 'item-featured-image', 'item-title', 'item-quantity', 'item-subtotal', 'item-remove' ) ) as $item ) : ?>
 			<?php
 			/**
 			 * Theme and add-on devs should add code to this loop by 

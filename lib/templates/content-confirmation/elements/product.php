@@ -28,9 +28,9 @@
 						<?php it_exchange( 'transaction', 'product-download', array( 'attribute' => 'title' ) ); ?>
 					</h4>
 					<?php if ( it_exchange( 'transaction', 'has-product-download-hashes' ) ) : ?>
-						<ul class="it-exchange-transaction-product-download-hashes">
+						<ul class="it-exchange-downloads-data">
 							<?php while( it_exchange( 'transaction', 'product-download-hashes' ) ) : ?>
-								<li>
+								<li class="it-exchange-download-data">
 									<code class="it-exchange-download-hash">
 										<?php it_exchange( 'transaction', 'product-download-hash', array( 'attribute' => 'hash' ) ); ?>
 									</code>
