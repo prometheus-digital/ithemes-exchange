@@ -16,7 +16,7 @@
 ?>
 
 <?php do_action( 'it_exchange_content_profile_fields_before_save-button' ); ?>
-<div class="it-exchange-customer-save">
+<div class="it-exchange-customer-save it-exchange-profile-save">
 	<?php it_exchange( 'customer', 'save' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_profile_fields_after_save-button' ); ?>

@@ -20,6 +20,7 @@
 .it-exchange-account input[type="checkbox"]{margin:2em .5em 2em 0;}
 .it-exchange-account input[type="checkbox"] + label{display:inline;}
 .it-exchange-account #wp-submit{margin-bottom:2em;}
+.it-exchange-account .it-exchange-profile-save{margin:1.5em 0;}
 
 /** ----------------------------------------:[ navigation ]:--- */
 .it-exchange-account .it-exchange-customer-menu{list-style:none;margin:2em 0;padding:0;}
@@ -53,6 +54,9 @@
 #it-exchange-downloads .it-exchange-download-info h4{margin-top:0;}
 #it-exchange-downloads .it-exchange-download-info span + span{margin-left:1em;}
 #it-exchange-downloads .it-exchange-download span{margin-left:1em;}
+
+/** ----------------------------------------:[ registration ]:--- */
+/*#it-exchange-registration {}*/
 
 /** -----------------------------------------------------:[ product ]:---------- */
 #it-exchange-product .it-exchange-product-no-images{float:none;}
