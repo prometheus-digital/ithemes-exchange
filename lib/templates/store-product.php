@@ -12,10 +12,9 @@
  * this template in a theme, simply copy over this
  * file's content to the exchange directory located
  * at your templates root.
- * 
- * Example: theme/exchange/store-product.php
 */
 ?>
+
 <?php do_action( 'it_exchange_store_product_before_product' ); ?>
 <li class="it-exchange-product">
 	<?php do_action( 'it_exchange_store_product_begin_product' ); ?>

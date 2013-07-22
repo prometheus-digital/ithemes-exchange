@@ -55,9 +55,6 @@
 #it-exchange-downloads .it-exchange-download-info span + span{margin-left:1em;}
 #it-exchange-downloads .it-exchange-download span{margin-left:1em;}
 
-/** ----------------------------------------:[ registration ]:--- */
-/*#it-exchange-registration {}*/
-
 /** -----------------------------------------------------:[ product ]:---------- */
 #it-exchange-product .it-exchange-product-no-images{float:none;}
 #it-exchange-product .it-exchange-product-has-images .it-exchange-product-info{width:55%;}
@@ -133,9 +130,9 @@
 #it-exchange-store .it-exchange-products li {list-style: none;display: block;float:left;width: 45%;margin: 0 0 5em 0;vertical-align: top;}
 #it-exchange-store .it-exchange-products li:nth-child(2n+1) {margin-right: 5%;clear:both;}
 #it-exchange-store .it-exchange-product-details {padding: 1em;overflow:hidden;}
-#it-exchange-store h1.entry-title {font-size: 1.5em;margin: .5em 0;padding: 0;}
+#it-exchange-store .entry-title {font-size: 1.5em;margin: .5em 0;padding: 0;}
 #it-exchange-store .it-exchange-base-price {font-size: 1.25em;float:left;}
-#it-exchange-store .it-exchange-product-details-link {float:right;line-height: 2;}
+#it-exchange-store .it-exchange-product-permalink {float:right;line-height: 2;}
 #it-exchange-store .featured-image-wrapper img {max-width: 100%; height: auto;}
 
 /** -----------------------------------------------------:[ Error/Notice Notifications ]:---------- */
