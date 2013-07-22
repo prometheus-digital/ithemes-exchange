@@ -11,14 +11,11 @@
  * this template in a theme, simply copy over this
  * file's content to the exchange directory located
  * at your templates root.
- * 
- * Example: theme/exchange/super-widget-product.php
 */
 ?>
 
-<?php it_exchange_get_template_part( 'messages' ); ?>
-
 <?php if ( it_exchange( 'product', 'found' ) ) : ?>
+	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php do_action( 'it_exchange_super_widget_product_before_product' ); ?>
 	<div class="it-exchange-sw-product it-exchange-sw-processing-product">
 		<?php do_action( 'it_exchange_super_widget_product_begin_product' ); ?>

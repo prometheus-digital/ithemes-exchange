@@ -11,14 +11,11 @@
  * this template in a theme, simply copy over this
  * file's content to the exchange directory located
  * at your templates root.
- * 
- * Example: theme/exchange/super-widget-login.php
 */
 ?>
 
-<?php it_exchange_get_template_part( 'messages' ); ?>
-
 <div class="login it-exchange-sw-processing-login">
+	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php do_action( 'it_exchange_super_widget_login_before_form' ); ?>
 	<?php it_exchange( 'login', 'form-open' ); ?>
 		<?php do_action( 'it_exchange_super_widget_login_begin_form' ); ?>
