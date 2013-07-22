@@ -27,24 +27,23 @@
 .it-exchange-account .it-exchange-customer-menu li.current{font-weight:bold;}
 
 /** ----------------------------------------:[ purchases ]:--- */
-.it-exchange-purchase,
-.it-exchange-purchase .it-exchange-purchase-top,
-.it-exchange-purchase .item-info{overflow:hidden;}
-.it-exchange-purchase{margin-bottom:2em;padding-bottom:2em;}
-
-.it-exchange-purchase-top{margin-bottom:1em;}
-.it-exchange-purchase-top .it-exchange-purchase-total{float:right;}
-
-.it-exchange-purchase-items .item-info{margin-bottom:1em;}
-.it-exchange-purchase-items .item-thumbnail,
-.it-exchange-purchase-items .item-data{float:left;}
-.it-exchange-purchase-items .item-thumbnail{width:10%;}
-.it-exchange-purchase-items .item-thumbnail img{margin:0;}
-.it-exchange-purchase-items .item-data{width:90%;}
-.it-exchange-purchase-items .item-data h4{margin:0;margin-left:2em;}
-.it-exchange-purchase-items .item-data p{margin-left:2em;}
-.it-exchange-purchase-items .item-data .item-price,
-.it-exchange-purchase-items .item-data .item-quantity{font-weight:normal;}
+#it-exchange-purchases .it-exchange-purchase,
+#it-exchange-purchases .it-exchange-purchase .it-exchange-purchase-top,
+#it-exchange-purchases .it-exchange-purchase .it-exchange-item-info{overflow:hidden;}
+#it-exchange-purchases .it-exchange-purchase{margin-bottom:2em;padding-bottom:2em;}
+#it-exchange-purchases .it-exchange-purchase-top{margin-bottom:1em;}
+#it-exchange-purchases .it-exchange-purchase-top .it-exchange-purchase-total{float:right;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-info{margin-bottom:1em;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-thumbnail,
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data{float:left;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-thumbnail{width:10%;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-thumbnail img{margin:0;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data{width:90%;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data div{margin-left:2em;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data .it-exchange-item-data-top{margin-bottom:1em;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data .it-exchange-item-title{font-weight:bold;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data .it-exchange-item-price,
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data .it-exchange-item-quantity{font-weight:normal;}
 
 /** ----------------------------------------:[ downloads ]:--- */
 #it-exchange-downloads .it-exchange-download{clear:both;}
@@ -122,6 +121,7 @@
 @keyframes stripe-processing-payment{0%{border-top-color:#FFF;}33%{border-right-color:#FFF;}66%{border-bottom-color:#FFF;}100%{border-left-color:#FFF;}}
 
 /** -----------------------------------------------------:[ confirmation ]:---------- */
+#it-exchange-confirmation .it-exchange-transaction-meta p{margin-bottom:0;}
 #it-exchange-confirmation span{margin-left:1em;}
 
 /** -----------------------------------------------------:[ store ]:---------- */

@@ -8,6 +8,7 @@
  * @package IT_Exchange
 */
 ?>
+
 <?php do_action( 'it_exchange_content_product_info_before_subtotal' ); ?>
-<span class="item-price">- <?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'product_subtotal' ) ); ?></span>
+<span class="it-exchange-item-subtotal">- <?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'product_subtotal' ) ); ?></span>
 <?php do_action( 'it_exchange_content_product_info_after_subtotal' ); ?>
