@@ -4,7 +4,7 @@
 
 	<?php do_action( 'it_exchange_super_widget_checkout_before_items_loop' ); ?>
 	<?php while( it_exchange( 'cart', 'cart-items' ) ) : ?>
-		<?php $GLOBALS['it_exchange']['can_edit_purchase_quantity'] = it_exchange( 'cart-item', 'supports-purchase-quantity' ) && ( it_exchange_get_cart_products_count() < 2 ); ?>
+		<?php it_exchange_set_global( 'can_edit_purchase_quantity', it_exchange( 'cart-item', 'supports-purchase-quantity' ) && ( it_exchange_get_cart_products_count() < 2 ) ); ?>
 		<?php do_action( 'it_exchange_super_widget_checkout_begin_items_loop' ); ?>
 
 		<?php do_action( 'it_exchange_super_widget_checkout_before_item' ); ?>

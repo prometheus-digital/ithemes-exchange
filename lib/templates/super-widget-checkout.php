@@ -30,7 +30,7 @@
 			it_exchange_get_template_part( 'super-widget-checkout/loops/transaction-methods' );
 
 		// Show checkout actions
-		if ( ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) || $GLOBALS['it_exchange']['can_edit_purchase_quantity'] )
+		if ( ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) || it_exchange_get_global( 'can_edit_purchase_quantity' ) )
 			it_exchange_get_template_part( 'super-widget-checkout/loops/actions' ); 
 	
 	} else {
