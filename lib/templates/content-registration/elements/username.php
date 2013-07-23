@@ -1,7 +1,7 @@
 <?php
 /**
  * This is the default template part for the 
- * username field in the content-registration
+ * username element in the content-registration
  * template part.
  *
  * @since 1.1.0

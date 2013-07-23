@@ -1,7 +1,7 @@
 <?php
 /**
  * This is the default template part for the
- * login field in the content-registration
+ * login element in the content-registration
  * template part.
  *
  * @since 1.1.0

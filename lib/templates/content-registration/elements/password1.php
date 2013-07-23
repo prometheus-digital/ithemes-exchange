@@ -1,7 +1,7 @@
 <?php
 /**
  * This is the default template part for the
- * password1 field in the content-registration
+ * password1 element in the content-registration
  * template part.
  *
  * @since 1.1.0

@@ -1,7 +1,7 @@
 <?php
 /**
  * This is the default template part for the email
- * field in the content-registration template part.
+ * element in the content-registration template part.
  *
  * @since 1.1.0
  * @version 1.1.0
