@@ -1,3 +1,12 @@
+1.0.3 - 2013-07-17 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+    Add slash to itExchangeSWAjaxURL to fix login/registration bug.
+	Add default error message to login SW Ajax when WP_Error returns an empty message.
+	Reordered addon_init to prevent 3rd party addons from being included twice
+	Add filters to preserve product types on Exchange Reset
+	Changed the way user login and registration AJAX works in the superwidget, needed for extendability e.g. MailChimp (coming soon)
+	Removed the styles from the WordPress update nag.
+	Fixed theme api filters
+	Added email category type for add-ons
 1.0.2 - 2013-07-11 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
 	Fix typos in content-downloads.php and email confirmation.
 	Changed Video links to target _blank

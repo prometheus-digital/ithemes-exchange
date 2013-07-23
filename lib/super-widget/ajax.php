@@ -88,7 +88,9 @@ if ( 'login' == $action ) {
 		it_exchange_add_message( 'notice', __( 'Logged in as ', 'LION' ) . $user->user_login );
 		die('1');
 	} else {
-		it_exchange_add_message( 'error', $user->get_error_message() );
+		$error_message = $user->get_error_message();
+		$error_message = empty( $error_message ) ? __( 'Error. Please try again.', 'LION' ) : $error_message;
+		it_exchange_add_message( 'error', $error_message );
 		die('0');
 	}
 }
