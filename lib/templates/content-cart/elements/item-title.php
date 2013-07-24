@@ -15,12 +15,12 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_cart_item_details_before_title' ); ?>
+<?php do_action( 'it_exchange_content_cart_item_before_title_element' ); ?>
 <div class="it-exchange-cart-item-title it-exchange-table-column">
-	<?php do_action( 'it_exchange_content_cart_item_details_begin_title' ); ?>
+	<?php do_action( 'it_exchange_content_cart_item_begin_title_element' ); ?>
 	<div class="it-exchange-table-column-inner">
 		<a href="<?php it_exchange( 'cart-item', 'permalink' ); ?>"><?php it_exchange( 'cart-item', 'title' ); ?></a>
 	</div>
-	<?php do_action( 'it_exchange_content_cart_item_details_end_title' ); ?>
+	<?php do_action( 'it_exchange_content_cart_item_end_title_element' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_cart_item_details_after_title' ); ?>
+<?php do_action( 'it_exchange_content_cart_item_after_title_element' ); ?>
