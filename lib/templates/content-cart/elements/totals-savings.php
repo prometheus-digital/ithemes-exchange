@@ -15,7 +15,7 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_cart_totals_details_before_savings' ); ?>
+<?php do_action( 'it_exchange_content_cart_totals_before_savings_element' ); ?>
 <?php if ( it_exchange( 'coupons', 'supported', 'type=cart' ) && it_exchange( 'coupons', 'has-applied', 'type=cart' ) ) : ?>
 	<div class="it-exchange-cart-totals-title it-exchange-table-column">
 		<div class="it-exchange-table-column-inner">
@@ -28,4 +28,4 @@
 		</div>
 	</div>
 <?php endif; ?>
-<?php do_action( 'it_exchange_content_cart_totals_details_after_savings' ); ?>
+<?php do_action( 'it_exchange_content_cart_totals_after_savings_element' ); ?>

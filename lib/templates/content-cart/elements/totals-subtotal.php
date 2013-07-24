@@ -15,7 +15,7 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_cart_totals_details_before_subtotal' ); ?>
+<?php do_action( 'it_exchange_content_cart_totals_before_subtotal_element' ); ?>
 <div class="it-exchange-cart-totals-title it-exchange-table-column">
 	<div class="it-exchange-table-column-inner">
 		<?php _e( 'Subtotal', 'LION' ); ?>
@@ -26,4 +26,4 @@
 		<?php it_exchange( 'cart', 'subtotal' ); ?>
 	</div>
 </div>
-<?php do_action( 'it_exchange_content_cart_totals_details_after_subtotal' ); ?>
+<?php do_action( 'it_exchange_content_cart_totals_after_subtotal_element' ); ?>

@@ -15,12 +15,12 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_checkout_item_details_before_quantity' ); ?>
+<?php do_action( 'it_exchange_content_checkout_item_before_quantity_element' ); ?>
 <div class="it-exchange-cart-item-quantity it-exchange-table-column">
-	<?php do_action( 'it_exchange_content_checkout_item_details_begin_quantity' ); ?>
+	<?php do_action( 'it_exchange_content_checkout_item_begin_quantity_element' ); ?>
 	<div class="it-exchange-table-column-inner">
 		<?php it_exchange( 'cart-item', 'quantity', array( 'format' => 'var_value' ) ) ?>
 	</div>
-	<?php do_action( 'it_exchange_content_checkout_item_details_end_quantity' ); ?>
+	<?php do_action( 'it_exchange_content_checkout_item_end_quantity_element' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_checkout_item_details_after_quantity' ); ?>
+<?php do_action( 'it_exchange_content_checkout_item_after_quantity_element' ); ?>

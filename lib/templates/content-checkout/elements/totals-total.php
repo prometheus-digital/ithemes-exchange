@@ -15,7 +15,7 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_checkout_totals_details_before_total' ); ?>
+<?php do_action( 'it_exchange_content_checkout_totals_before_total_element' ); ?>
 <div class="it-exchange-cart-totals-title it-exchange-table-column">
 	<div class="it-exchange-table-column-inner">
 		<?php _e( 'Total', 'LION' ); ?>
@@ -26,4 +26,4 @@
 		<?php it_exchange( 'cart', 'total' ); ?>
 	</div>
 </div>
-<?php do_action( 'it_exchange_content_checkout_totals_details_after_total' ); ?>
+<?php do_action( 'it_exchange_content_checkout_totals_after_total_element' ); ?>
