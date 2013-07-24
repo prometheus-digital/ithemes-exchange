@@ -13,7 +13,9 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_content_confirmation_before_transactions_loop' ); ?>
 <?php if ( it_exchange( 'transactions', 'found' ) ) : ?>
+	<?php do_action( 'it_exchange_content_confirmation_begin_transactions_loop' ); ?>
 	<?php while( it_exchange( 'transactions', 'exist' ) ) : ?>
 		<?php it_exchange_get_template_part( 'content-confirmation/loops/transaction-meta' ); ?>
 		<?php it_exchange_get_template_part( 'content-confirmation/loops/products' ); ?>
@@ -21,3 +23,4 @@
 <?php else : ?>
 	<?php it_exchange_get_template_part( 'content-confirmation/elements/not-found' ); ?>
 <?php endif; ?>
+<?php do_action( 'it_exchange_content_confirmation_after_transactions_loop' ); ?>

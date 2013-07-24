@@ -40,7 +40,7 @@
 			
 			<?php do_action( 'it_exchange_content_cart_before_totals' ); ?>
 			<div id="it-exchange-cart-totals" class="it-exchange-table">
-				<?php it_exchange_get_template_part( 'content-cart/loop/totals' ); ?>
+				<?php it_exchange_get_template_part( 'content-cart/loops/totals' ); ?>
 			</div>
 			<?php do_action( 'it_exchange_content_cart_after_totals' ); ?>
 			

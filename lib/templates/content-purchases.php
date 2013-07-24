@@ -12,25 +12,20 @@
  * this template in a theme, simply copy over this
  * file's content to the exchange directory located
  * at your templates root.
- * 
- * Example: theme/exchange/content-purchases.php
 */
 ?>
 
-<?php it_exchange_get_template_part( 'messages' ); ?>
-
 <div id="it-exchange-purchases" class="it-exchange-wrap it-exchange-account">
-
+	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php it_exchange( 'customer', 'menu' ); ?>
-
+	
 	<?php do_action( 'it_exchange_content_purchases_fields_before_loop' ); ?>
-
-	<?php 
-	// Loop through transactions
-	if ( it_exchange( 'transactions', 'found' ) )
-		it_exchange_get_template_part( 'content-purchases/loops/transactions' );
-	else
-		it_exchange_get_template_part( 'content-purchases/elements/no-purchases-notice' );
-
-	do_action( 'it_exchange_content_purchases_fields_after_loop' ); ?>
+	
+	<?php if ( it_exchange( 'transactions', 'found' ) ) : ?>
+		<?php it_exchange_get_template_part( 'content-purchases/loops/transactions' ); ?>
+	<?php else : ?>
+		<?php it_exchange_get_template_part( 'content-purchases/elements/no-purchases-found' ); ?>
+	<?php endif; ?>
+	
+	<?php do_action( 'it_exchange_content_purchases_fields_after_loop' ); ?>
 </div>

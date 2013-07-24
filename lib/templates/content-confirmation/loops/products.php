@@ -13,10 +13,13 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_content_confirmation_before_products_loop' ); ?>
 <?php if ( it_exchange( 'transaction', 'has-products' ) ) : ?>
+	<?php do_action( 'it_exchange_content_confirmation_begin_products_loop' ); ?>
 	<div class="it-exchange-transaction-products">
 		<?php while( it_exchange( 'transaction', 'products' ) ) : ?>
 			<?php it_exchange_get_template_part( 'content-confirmation/elements/product' ); ?>
 		<?php endwhile; ?>
 	</div>
 <?php endif; ?>
+<?php do_action( 'it_exchange_content_confirmation_after_products_loop' ); ?>

@@ -430,3 +430,28 @@ function it_exchange_get_currency_symbol( $country_code ) {
 	$symbol = ( is_array( $symbol ) && ! empty( $symbol['symbol'] ) ) ? $symbol['symbol'] : '$';
 	return apply_filters( 'it_exchange_get_currency_symbol', $symbol );
 }
+
+/**
+ * Sets the value of a GLOBALS
+ *
+ * @since 0.4.0
+ *
+ * @param string $key in the GLOBALS array
+ * @param mixed $value in the GLOBALS array
+ * @return void
+*/
+function it_exchange_set_global( $key, $value ) {
+	$GLOBALS['it_exchange'][$key] = $value;
+}
+
+/**
+ * Returns the value of a GLOBALS
+ *
+ * @since 0.4.0
+ *
+ * @param string $key in the GLOBALS array
+ * @return mixed value from the GLOBALS
+*/
+function it_exchange_get_global( $key ) {
+	return isset( $GLOBALS['it_exchange'][$key] ) ? $GLOBALS['it_exchange'][$key] : NULL;
+}

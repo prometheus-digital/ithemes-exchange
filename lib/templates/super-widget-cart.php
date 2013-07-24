@@ -11,15 +11,12 @@
  * this template in a theme, simply copy over this
  * file's content to the exchange directory located
  * at your templates root.
- * 
- * Example: theme/exchange/super-widget-cart.php
 */
 ?>
 
-<?php it_exchange_get_template_part( 'messages' ); ?>
-
 <?php do_action( 'it_exchange_super_widget_cart_before_wrap' ); ?>
 <div class="it-exchange-sw-processing it-exchange-sw-processing-cart">
+	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php do_action( 'it_exchange_super_widget_cart_begin_wrap' ); ?>
 	<?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
 		<?php if ( ( it_exchange_is_page( 'product' ) && it_exchange_is_current_product_in_cart() ) || it_exchange( 'cart', 'get-focus', array( 'type' => 'coupon' ) ) || it_exchange( 'cart', 'get-focus', array( 'type' => 'quantity' ) ) ) : ?>
