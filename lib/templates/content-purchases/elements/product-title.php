@@ -14,6 +14,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_product_info_before_title' ); ?>
+<?php do_action( 'it_exchange_content_purchases_before_product_title_element' ); ?>
 <span class="it-exchange-item-title"><?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'title' ) ); ?></span>
-<?php do_action( 'it_exchange_content_product_info_after_title' ); ?>
+<?php do_action( 'it_exchange_content_purchases_after_product_title_element' ); ?>

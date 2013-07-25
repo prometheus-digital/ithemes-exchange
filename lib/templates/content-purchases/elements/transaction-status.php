@@ -14,6 +14,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_product_info_before_status' ); ?>
+<?php do_action( 'it_exchange_content_purchases_before_transaction_status_element' ); ?>
 <span class="it-exchange-purchase-status">- <?php it_exchange( 'transaction', 'status' ); ?></span> 
-<?php do_action( 'it_exchange_content_product_info_after_status' ); ?>
+<?php do_action( 'it_exchange_content_purchases_after_transaction_status_element' ); ?>

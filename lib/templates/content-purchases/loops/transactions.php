@@ -14,9 +14,9 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_purchases_before_loop' ); ?>
+<?php do_action( 'it_exchange_content_purchases_before_transactions_loop' ); ?>
 <?php while ( it_exchange( 'transactions', 'exist' ) ) : ?>
-	<?php do_action( 'it_exchange_content_purchases_begin_loop' ); ?>
+	<?php do_action( 'it_exchange_content_purchases_begin_transactions_loop' ); ?>
 	<div class="it-exchange-purchase">
 		<div class="it-exchange-purchase-top it-exchange-transaction-info">
 			<?php it_exchange_get_template_part( 'content-purchases/loops/transaction-info' ); ?>
@@ -27,6 +27,6 @@
 			<?php it_exchange_get_template_part( 'content-purchases/elements/no-transaction-products-found' ); ?>
 		<?php endif; ?>
 	</div>
-	<?php do_action( 'it_exchange_content_purchases_end_loop' ); ?>
+	<?php do_action( 'it_exchange_content_purchases_end_transactions_loop' ); ?>
 <?php endwhile; ?>
-<?php do_action( 'it_exchange_content_purchases_after_loop' ); ?>
+<?php do_action( 'it_exchange_content_purchases_after_transactions_loop' ); ?>

@@ -14,6 +14,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_product_info_before_total' ); ?>
+<?php do_action( 'it_exchange_content_purchases_before_transaction_total_element' ); ?>
 <span class="it-exchange-purchase-total"><?php it_exchange( 'transaction', 'total' ); ?></span>
-<?php do_action( 'it_exchange_content_product_info_after_total' ); ?>
+<?php do_action( 'it_exchange_content_purchases_after_transaction_total_element' ); ?>

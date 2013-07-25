@@ -14,6 +14,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_product_info_before_date' ); ?>
+<?php do_action( 'it_exchange_content_purchases_before_transaction_date_element' ); ?>
 <span class="it-exchange-purchase-date"><?php it_exchange( 'transaction', 'date' ); ?></span> 
-<?php do_action( 'it_exchange_content_product_info_after_date' ); ?>
+<?php do_action( 'it_exchange_content_purchases_after_transaction_date_element' ); ?>

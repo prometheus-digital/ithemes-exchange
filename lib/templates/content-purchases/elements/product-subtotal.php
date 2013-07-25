@@ -14,6 +14,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_product_info_before_subtotal' ); ?>
+<?php do_action( 'it_exchange_content_purchases_before_product_subtotal_element' ); ?>
 <span class="it-exchange-item-subtotal">- <?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'product_subtotal' ) ); ?></span>
-<?php do_action( 'it_exchange_content_product_info_after_subtotal' ); ?>
+<?php do_action( 'it_exchange_content_purchases_after_product_subtotal_element' ); ?>

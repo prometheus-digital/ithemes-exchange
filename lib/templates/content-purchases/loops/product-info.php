@@ -15,6 +15,7 @@
 
 <?php do_action( 'it_exchange_content_purchases_before_product_info_loop' ); ?>
 <div class="it-exchange-item-data-top">
+<?php do_action( 'it_exchange_content_purchases_begin_product_info_loop' ); ?>
 	<?php foreach ( it_exchange_get_template_part_elements( 'content_purchases', 'product_fields', array( 'product-title',  'product-count', 'product-subtotal' ) ) as $detail ): ?>
 		<?php it_exchange_get_template_part( 'content-purchases/elements/' . $detail ); ?>
 	<?php endforeach; ?>
@@ -23,5 +24,6 @@
 	<?php foreach( it_exchange_get_template_part_elements( 'content_purchases', 'fields', array( 'product-description' ) ) as $detail ): ?>
 		<?php it_exchange_get_template_part( 'content-purchases/elements/' . $detail ); ?>
 	<?php endforeach; ?>
+<?php do_action( 'it_exchange_content_purchases_end_product_info_loop' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_purchases_after_product_info_loop' ); ?>

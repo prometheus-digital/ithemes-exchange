@@ -14,6 +14,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_product_info_before_featured-image' ); ?>
+<?php do_action( 'it_exchange_content_purchases_before_product_featured_image_element' ); ?>
 <?php it_exchange( 'transaction', 'product-featured-image' ); ?>
-<?php do_action( 'it_exchange_content_product_info_after_featured-image' ); ?>
+<?php do_action( 'it_exchange_content_purchases_after_product_featured_image_element' ); ?>

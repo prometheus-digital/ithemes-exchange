@@ -15,17 +15,17 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_content_purchases_before_wrap' ); ?>
 <div id="it-exchange-purchases" class="it-exchange-wrap it-exchange-account">
+<?php do_action( 'it_exchange_content_purchases_begin_wrap' ); ?>
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php it_exchange( 'customer', 'menu' ); ?>
-	
-	<?php do_action( 'it_exchange_content_purchases_fields_before_loop' ); ?>
 	
 	<?php if ( it_exchange( 'transactions', 'found' ) ) : ?>
 		<?php it_exchange_get_template_part( 'content-purchases/loops/transactions' ); ?>
 	<?php else : ?>
 		<?php it_exchange_get_template_part( 'content-purchases/elements/no-purchases-found' ); ?>
 	<?php endif; ?>
-	
-	<?php do_action( 'it_exchange_content_purchases_fields_after_loop' ); ?>
+<?php do_action( 'it_exchange_content_purchases_end_wrap' ); ?>
 </div>
+<?php do_action( 'it_exchange_content_purchases_after_wrap' ); ?>

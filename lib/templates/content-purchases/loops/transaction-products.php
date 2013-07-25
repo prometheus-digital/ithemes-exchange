@@ -13,8 +13,9 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_purchases_before_transaction_products' ); ?>
+<?php do_action( 'it_exchange_content_purchases_before_transaction_products_loop' ); ?>
 <?php while( it_exchange( 'transaction', 'products' ) ) : ?>
+<?php do_action( 'it_exchange_content_purchases_begin_transaction_products_loop' ); ?>
 	<?php do_action( 'it_exchange_content_purchases_begin_transaction_products' ); ?>
 	<div class="it-exchange-purchase-items">
 		<div class="it-exchange-item-info">
@@ -27,5 +28,6 @@
 		</div>
 	</div>
 	<?php do_action( 'it_exchange_content_purchases_end_transaction_products' ); ?>
+<?php do_action( 'it_exchange_content_purchases_end_transaction_products_loop' ); ?>
 <?php endwhile; ?>
-<?php do_action( 'it_exchange_content_purchases_after_transaction_products' ); ?>
+<?php do_action( 'it_exchange_content_purchases_after_transaction_products_loop' ); ?>
