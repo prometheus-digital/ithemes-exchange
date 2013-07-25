@@ -16,9 +16,9 @@
 ?>
 
 <?php if ( it_exchange( 'product', 'has-base-price' ) ) : ?>
-	<?php do_action( 'it_exchange_content_product_info_before_base-price' ); ?>
+	<?php do_action( 'it_exchange_content_product_before_base_price_element' ); ?>
 	<div class="it-exchange-product-price">
 		<p><?php it_exchange( 'product', 'base-price' ); ?></p>
 	</div>
-	<?php do_action( 'it_exchange_content_product_info_after_base-price' ); ?>
+	<?php do_action( 'it_exchange_content_product_after_base_price_element' ); ?>
 <?php endif; ?>

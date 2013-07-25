@@ -16,9 +16,9 @@
 ?>
 
 <?php if ( it_exchange( 'product', 'has-description' ) ) : ?>
-	<?php do_action( 'it_exchange_content_product_info_before_description' ); ?>
+	<?php do_action( 'it_exchange_content_product_before_description_element' ); ?>
 	<div class="it-exchange-product-description">
 		<?php it_exchange( 'product', 'description' ); ?>
 	</div>
-	<?php do_action( 'it_exchange_content_product_info_after_description' ); ?>
+	<?php do_action( 'it_exchange_content_product_after_description_element' ); ?>
 <?php endif; ?>

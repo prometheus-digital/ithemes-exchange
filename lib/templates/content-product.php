@@ -15,10 +15,10 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_product_before_product' ); ?>
+<?php do_action( 'it_exchange_content_product_before_wrap' ); ?>
 <div id="it-exchange-product" class="it-exchange-wrap">
 	<?php it_exchange_get_template_part( 'messages' ); ?>
-	<?php do_action( 'it_exchange_content_product_begin_product' ); ?>
+	<?php do_action( 'it_exchange_content_product_begin_wrap' ); ?>
 	<div class="it-exchange-product-standard-content it-exchange-columns-wrapper <?php echo ( ! it_exchange( 'product', 'has-images' ) ) ? ' it-exchange-product-no-images' : 'it-exchange-product-has-images'; ?>">
 		<div class="it-exchange-column it-exchange-product-info">
 			<div class="it-exchange-column-inner">
@@ -31,6 +31,6 @@
 	<div class="it-exchange-product-advanced-content">
 		<?php it_exchange_get_template_part( 'content-product/loops/product-advanced' ); ?>
 	</div>
-	<?php do_action( 'it_exchange_content_product_end_product' ); ?>
+	<?php do_action( 'it_exchange_content_product_end_wrap' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_product_after_product' ); ?>
+<?php do_action( 'it_exchange_content_product_after_wrap' ); ?>

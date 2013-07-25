@@ -16,11 +16,11 @@
 ?>
 
 <?php if ( it_exchange( 'product', 'has-images' ) ) : ?>
-	<?php do_action( 'it_exchange_content_product_images_before_product-images' ); ?>
+	<?php do_action( 'it_exchange_content_product_before_product_images_element' ); ?>
 	<div class="it-exchange-column it-exchange-product-images">
 		<div class="it-exchange-column-inner">
 			<?php it_exchange( 'product', 'gallery' ); ?>
 		</div>
 	</div>
-	<?php do_action( 'it_exchange_content_product_images_after_product-images' ); ?>
+	<?php do_action( 'it_exchange_content_product_after_product_images_element' ); ?>
 <?php endif; ?>

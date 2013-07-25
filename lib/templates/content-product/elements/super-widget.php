@@ -15,6 +15,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_product_info_before_super-widget' ); ?>
+<?php do_action( 'it_exchange_content_product_before_super_widget_element' ); ?>
 <?php it_exchange( 'product', 'super-widget' ); ?>
-<?php do_action( 'it_exchange_content_product_info_after_super-widget' ); ?>
+<?php do_action( 'it_exchange_content_product_after_super_widget_element' ); ?>

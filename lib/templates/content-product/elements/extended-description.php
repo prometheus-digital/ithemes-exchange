@@ -16,9 +16,9 @@
 ?>
 
 <?php if ( it_exchange( 'product', 'has-extended-description' ) ) : ?>
-	<?php do_action( 'it_exchange_content_product_advanced_before_extended-description' ); ?>
+	<?php do_action( 'it_exchange_content_product_before_extended_description_element' ); ?>
 	<div class="it-exchange-extended-description it-exchange-advanced-item">
 		<?php it_exchange( 'product', 'extended-description' ); ?>
 	</div>
-	<?php do_action( 'it_exchange_content_product_advanced_after_extended-description' ); ?>
+	<?php do_action( 'it_exchange_content_product_after_extended_description_element' ); ?>
 <?php endif; ?>
