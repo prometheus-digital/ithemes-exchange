@@ -15,7 +15,7 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_download_info_before_download_url' ); ?>
+<?php do_action( 'it_exchange_content_download_before_download_url_element' ); ?>
 <?php if ( ! it_exchange( 'transaction', 'get-product-download-hash', array( 'attribute' => 'download-limit' ) ) || it_exchange( 'transaction', 'get-product-download-hash', array( 'attribute' => 'downloads-remaining' ) ) ) : ?>
 	<?php if ( it_exchange( 'transaction', 'get-cleared-for-delivery' ) ) : ?>
 		<span class="it-exchange-download-now">
@@ -23,4 +23,4 @@
 		</span>
 	<?php endif; ?>
 <?php endif; ?>
-<?php do_action( 'it_exchange_content_download_info_after_download_url' ); ?>
+<?php do_action( 'it_exchange_content_download_after_download_url_element' ); ?>

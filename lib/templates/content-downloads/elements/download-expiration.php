@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_download_info_before_download_expiration' ); ?>
+<?php do_action( 'it_exchange_content_download_before_download_expiration_element' ); ?>
 <?php it_exchange_get_template_part( 'content-downloads/elements/download-expiration-date' ); ?>
 <?php it_exchange_get_template_part( 'content-downloads/elements/download-limit' ); ?>
 <?php it_exchange_get_template_part( 'content-downloads/elements/download-url' ); ?>
-<?php do_action( 'it_exchange_content_download_info_after_download_expiration' ); ?>
+<?php do_action( 'it_exchange_content_download_after_download_expiration_element' ); ?>

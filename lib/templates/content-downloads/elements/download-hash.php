@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_download_info_before_download_hash' ); ?>
+<?php do_action( 'it_exchange_content_download_before_download_hash_element' ); ?>
 <code class="it-exchange-download-hash">
     <?php it_exchange( 'transaction', 'product-download-hash', array( 'attribute' => 'hash' ) ); ?>
 </code>
-<?php do_action( 'it_exchange_content_download_info_after_download_hash' ); ?>
+<?php do_action( 'it_exchange_content_download_after_download_hash_element' ); ?>

@@ -15,7 +15,7 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_download_info_before_download_limit' ); ?>
+<?php do_action( 'it_exchange_content_download_before_download_limit_element' ); ?>
 <span class="it-exchange-download-limit">
 	<?php if ( it_exchange( 'transaction', 'get-product-download-hash', array( 'attribute' => 'download-limit' ) ) ) : ?>
 		<?php it_exchange( 'transaction', 'product-download-hash', array( 'attribute' => 'downloads-remaining' ) ); ?> <?php _e( 'download(s) remaining', 'LION' ); ?>
@@ -23,4 +23,4 @@
 		<?php _e( 'Unlimited downloads', 'LION' ); ?>
 	<?php endif; ?>
 </span>
-<?php do_action( 'it_exchange_content_download_info_after_download_limit' ); ?>
+<?php do_action( 'it_exchange_content_download_info_download_limit_element' ); ?>

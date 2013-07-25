@@ -15,6 +15,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_download_info_before_download_title' ); ?>
+<?php do_action( 'it_exchange_content_download_before_download_title_element' ); ?>
 <h4><?php it_exchange( 'transaction', 'product-download', array( 'attribute' => 'title' ) ); ?></h4>
-<?php do_action( 'it_exchange_content_download_info_after_download_title' ); ?>
+<?php do_action( 'it_exchange_content_download_after_download_title_element' ); ?>

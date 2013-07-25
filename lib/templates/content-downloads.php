@@ -15,8 +15,12 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_content_downloads_before_wrap' ); ?>
 <div id="it-exchange-downloads" class="it-exchange-wrap it-exchange-account">
+	<?php do_action( 'it_exchange_content_downloads_begin_wrap' ); ?>
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php it_exchange( 'customer', 'menu' ); ?>
 	<?php it_exchange_get_template_part( 'content-downloads/loops/transaction' ); ?>
+	<?php do_action( 'it_exchange_content_downloads_end_wrap' ); ?>
 </div>
+<?php do_action( 'it_exchange_content_downloads_after_wrap' ); ?>
