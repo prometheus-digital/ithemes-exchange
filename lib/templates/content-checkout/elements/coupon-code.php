@@ -15,12 +15,12 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_checkout_coupon_before_code_element' ); ?>
+<?php do_action( 'it_exchange_content_checkout_before_coupon_code_element' ); ?>
 <div class="it-exchange-cart-coupon-code it-exchange-table-column">
-	<?php do_action( 'it_exchange_content_checkout_coupon_begin_code_element' ); ?>
+	<?php do_action( 'it_exchange_content_checkout_begin_coupon_code_element' ); ?>
 	<div class="it-exchange-table-column-inner">
 		<?php it_exchange( 'coupons', 'code' ); ?>
 	</div>
-	<?php do_action( 'it_exchange_content_checkout_coupon_end_code_element' ); ?>
+	<?php do_action( 'it_exchange_content_checkout_end_coupon_code_element' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_checkout_coupon_after_code_element' ); ?>
+<?php do_action( 'it_exchange_content_checkout_after_coupon_code_element' ); ?>

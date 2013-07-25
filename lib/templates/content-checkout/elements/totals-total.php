@@ -15,15 +15,19 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_checkout_totals_before_total_element' ); ?>
+<?php do_action( 'it_exchange_content_checkout_before_totals_total_element' ); ?>
 <div class="it-exchange-cart-totals-title it-exchange-table-column">
+	<?php do_action( 'it_exchange_content_checkout_begin_totals_total_element_label' ); ?>
 	<div class="it-exchange-table-column-inner">
 		<?php _e( 'Total', 'LION' ); ?>
 	</div>
+	<?php do_action( 'it_exchange_content_checkout_end_totals_total_element_label' ); ?>
 </div>
 <div class="it-exchange-cart-totals-total it-exchange-table-column">
+	<?php do_action( 'it_exchange_content_checkout_begin_totals_total_element_value' ); ?>
 	<div class="it-exchange-table-column-inner">
 		<?php it_exchange( 'cart', 'total' ); ?>
 	</div>
+	<?php do_action( 'it_exchange_content_checkout_end_totals_total_element_value' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_totals_after_total_element' ); ?>

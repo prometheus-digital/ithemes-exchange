@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_checkout_actions_before_checkout_cancel' ); ?>
+<?php do_action( 'it_exchange_content_checkout_before_cancel_element' ); ?>
 <div class="it-exchange-checkout_cancel">
 	<?php it_exchange( 'checkout', 'cancel' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_checkout_actions_after_checkout_cancel' ); ?>
+<?php do_action( 'it_exchange_content_checkout_after_cancel_element' ); ?>

@@ -15,7 +15,9 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_checkout_actions_before_loop' ); ?>
+<?php do_action( 'it_exchange_content_checkout_before_actions' ); ?>
+<div id="it-exchange-cart-actions" class="it-exchange-payment">
+<?php do_action( 'it_exchange_content_checkout_before_actions_loop' ); ?>
 <?php foreach ( it_exchange_get_template_part_elements( 'content_checkout', 'actions', array( 'transaction-methods', 'cancel' ) ) as $action ) : ?>
 		<?php
 		/** 
@@ -26,4 +28,6 @@
 		it_exchange_get_template_part( 'content-checkout/elements/' . $action );
 		?>
 <?php endforeach; ?>
-<?php do_action( 'it_exchange_content_checkout_actions_after_loop' ); ?>
+<?php do_action( 'it_exchange_content_checkout_after_actions_loop' ); ?>
+</div>
+<?php do_action( 'it_exchange_content_checkout_after_actions' ); ?>

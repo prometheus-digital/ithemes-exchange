@@ -15,7 +15,7 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_checkout_actions_before_transaction-methods' ); ?>
+<?php do_action( 'it_exchange_content_checkout_before_transaction_methods_element' ); ?>
 <div class="it-exchange-checkout-transaction-methods">
 	<?php if ( ! it_exchange( 'checkout', 'has-transaction-methods' ) ) : ?>
 		<p><?php _e( 'No Payment add-ons enabled.', 'LION' ); ?></p>
@@ -25,4 +25,4 @@
 		<?php endwhile; ?>
 	<?php endif; ?>
 </div>
-<?php do_action( 'it_exchange_content_checkout_actions_after_transaction-methods' ); ?>
+<?php do_action( 'it_exchange_content_checkout_actions_after_transaction_methods_element' ); ?>
