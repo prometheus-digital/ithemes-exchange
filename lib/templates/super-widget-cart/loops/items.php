@@ -14,9 +14,9 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_super_widget_cart_items_before_item' ); ?>
+<?php do_action( 'it_exchange_super_widget_cart_before_items_loop' ); ?>
 <div class="cart-item">
-	<?php do_action( 'it_exchange_super_widget_cart_items_begin_item' ); ?>
+	<?php do_action( 'it_exchange_super_widget_cart_begin_items_loop' ); ?>
 	<div class="title-remove">
 		<?php foreach( it_exchange_get_template_part_elements( 'super_widget_cart', 'items', array( 'item-title', 'item-remove' ) ) as $detail ) : ?>
 			<?php it_exchange_get_template_part( 'super-widget-cart/elements/' . $detail ); ?>
@@ -27,6 +27,6 @@
 			<?php it_exchange_get_template_part( 'super-widget-cart/elements/' . $detail ); ?>
 		<?php endforeach; ?>
 	</div>
-	<?php do_action( 'it_exchange_super_widget_cart_items_end_item' ); ?>
+	<?php do_action( 'it_exchange_super_widget_cart_end_items_loop' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widget_cart_items_after_item' ); ?>
+<?php do_action( 'it_exchange_super_widget_cart_after_items_loop' ); ?>
