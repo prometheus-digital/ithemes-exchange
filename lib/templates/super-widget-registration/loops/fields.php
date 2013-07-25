@@ -14,6 +14,8 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_super_widget_registration_before_fields_loop' ); ?>
+<?php do_action( 'it_exchange_super_widget_registration_begin_fields_loop' ); ?>
 <?php foreach( it_exchange_get_template_part_elements( 'super_widget_registration', 'fields', array( 'username', 'first-name', 'last-name', 'email', 'password1', 'password2' ) ) as $field ) : ?>
 	<?php
 	/**
@@ -24,3 +26,5 @@
 	it_exchange_get_template_part( 'content-registration/elements/' . $field );
 	?>
 <?php endforeach; ?>
+<?php do_action( 'it_exchange_super_widget_registration_end_fields_loop' ); ?>
+<?php do_action( 'it_exchange_super_widget_registration_after_fields_loop' ); ?>

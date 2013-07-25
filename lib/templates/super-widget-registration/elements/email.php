@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_super_widget_registration_fields_before_email' ); ?>
+<?php do_action( 'it_exchange_super_widget_registration_before_email_elements' ); ?>
 <div class="email-name">
     <?php it_exchange( 'registration', 'email' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widget_registration_fields_after_email' ); ?>
+<?php do_action( 'it_exchange_super_widget_registration_after_email_elements' ); ?>

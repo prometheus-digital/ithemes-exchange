@@ -15,9 +15,9 @@
 ?>
 
 <?php do_action( 'it_exchange_super_widget_cart_before_update_quantity_element' ); ?>
-<?php do_action( 'it_exchange_super_widget_cart_before_quantity_wrapper' ); ?>
+<?php do_action( 'it_exchange_super_widget_cart_before_quantity_wrap' ); ?>
 <div class="quantity-wrapper">
-	<?php do_action( 'it_exchange_super_widget_cart_begin_quantity_wrapper' ); ?>
+	<?php do_action( 'it_exchange_super_widget_cart_begin_quantity_wrap' ); ?>
 	<div class="quantity">
 		<?php it_exchange( 'cart', 'update', 'class=it-exchange-update-quantity-button&label=' . __( 'Update Quantity', 'LION' ) ); ?>
 	</div>
@@ -27,7 +27,7 @@
 	it_exchange_get_template_part( 'super-widget-cart/elements/single-item-cart-cancel' );
 	?>
 
-	<?php do_action( 'it_exchange_super_widget_cart_end_quantity_wrapper' ); ?>
+	<?php do_action( 'it_exchange_super_widget_cart_end_quantity_wrap' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widget_cart_afterquantity__wrapper' ); ?>
+<?php do_action( 'it_exchange_super_widget_cart_afterquantity__wrap' ); ?>
 <?php do_action( 'it_exchange_super_widget_cart_after_update_quantity_element' ); ?>

@@ -14,7 +14,7 @@
 */
 ?>
 <?php if ( it_exchange( 'transaction', 'has-product-downloads' ) ) : ?>
-	<?php do_action( 'it_exchange_content_downloads_before_download_info_wrapper' ); ?>
+	<?php do_action( 'it_exchange_content_downloads_before_download_info_wrap' ); ?>
 	<div class="it-exchange-download-wrapper">
 		<?php do_action( 'it_exchange_content_downloads_before_download_info_loop' ); ?>
 		<?php while ( it_exchange( 'transaction', 'product-downloads' ) ) : ?>
@@ -32,5 +32,5 @@
 		<?php endwhile; ?>
 		<?php do_action( 'it_exchange_content_downloads_after_download_info_loop' ); ?>
 	</div>
-	<?php do_action( 'it_exchange_content_downloads_after_download_info_wrapper' ); ?>
+	<?php do_action( 'it_exchange_content_downloads_after_download_info_wrap' ); ?>
 <?php endif; ?>

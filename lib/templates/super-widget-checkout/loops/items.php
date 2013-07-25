@@ -14,9 +14,9 @@
 */
 ?>
 <?php do_action( 'it_exchange_super_widget_checkout_before_items' ); ?>
-<?php do_action( 'it_exchange_super_widget_checkout_before_items_wrapper' ); ?>
+<?php do_action( 'it_exchange_super_widget_checkout_before_items_wrap' ); ?>
 <div class="cart-items-wrapper">
-	<?php do_action( 'it_exchange_super_widget_checkout_begin_items_wrapper' ); ?>
+	<?php do_action( 'it_exchange_super_widget_checkout_begin_items_wrap' ); ?>
 
 	<?php do_action( 'it_exchange_super_widget_checkout_before_items_loop' ); ?>
 	<?php while( it_exchange( 'cart', 'cart-items' ) ) : ?>
@@ -34,7 +34,7 @@
 		it_exchange_get_template_part( 'super-widget-checkout/loops/discounts' );
 	?>
 
-	<?php do_action( 'it_exchange_super_widget_checkout_end_items_wrapper' ); ?>
+	<?php do_action( 'it_exchange_super_widget_checkout_end_items_wrap' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widget_checkout_after_items_wrapper' ); ?>
+<?php do_action( 'it_exchange_super_widget_checkout_after_items_wrap' ); ?>
 <?php do_action( 'it_exchange_super_widget_checkout_after_items' ); ?>

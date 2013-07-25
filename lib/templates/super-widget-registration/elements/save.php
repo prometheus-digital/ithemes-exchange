@@ -15,6 +15,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_super_widget_registration_actions_before_save' ); ?>
+<?php do_action( 'it_exchange_super_widget_registration_before_save_elements' ); ?>
 <?php it_exchange( 'registration', 'save' ); ?>
-<?php do_action( 'it_exchange_super_widget_registration_actions_after_save' ); ?>
+<?php do_action( 'it_exchange_super_widget_registration_after_sav_elementse' ); ?>

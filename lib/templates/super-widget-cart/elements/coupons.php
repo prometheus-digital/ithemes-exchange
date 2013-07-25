@@ -19,10 +19,10 @@
 if ( it_exchange( 'coupons', 'supported', array( 'type' => 'cart' ) ) && it_exchange( 'cart', 'focus', array( 'type' => 'coupon' ) ) ) {
 	?>
 	<?php do_action( 'it_exchange_super_widget_cart_before_coupons_element' ); ?>
-	<?php do_action( 'it_exchange_super_widget_cart_before_coupons_wrapper' ); ?>
+	<?php do_action( 'it_exchange_super_widget_cart_before_coupons_wrap' ); ?>
 	<div class="coupons-wrapper">
 		<?php
-		do_action( 'it_exchange_super_widget_cart_begin_coupons_wrapper' );
+		do_action( 'it_exchange_super_widget_cart_begin_coupons_wrap' );
 	
 		// Include applied coupons loop if any exist
 		if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) )
@@ -35,11 +35,11 @@ if ( it_exchange( 'coupons', 'supported', array( 'type' => 'cart' ) ) && it_exch
 		// Include the single-item-cart actions template part
 		it_exchange_get_template_part( 'super-widget-cart/elements/single-item-cart-cancel' );
 	
-		do_action( 'it_exchange_super_widget_cart_end_coupons_wrapper' );
+		do_action( 'it_exchange_super_widget_cart_end_coupons_wrap' );
 		?>
 	</div>
 	<?php 
 	
-	do_action( 'it_exchange_super_widget_cart_after_coupons_wrapper' );
+	do_action( 'it_exchange_super_widget_cart_after_coupons_wrap' );
 	do_action( 'it_exchange_super_widget_cart_after_coupons_element' );
 }

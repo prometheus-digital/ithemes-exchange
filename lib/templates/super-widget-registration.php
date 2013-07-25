@@ -14,7 +14,9 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_super_widget_registration_before_wrap' ); ?>
 <div class="login it-exchange-sw-processing-login">
+	<?php do_action( 'it_exchange_super_widget_registration_begin_wrap' ); ?>
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php do_action( 'it_exchange_super_widget_registration_before_form' ); ?>
 	<?php if ( it_exchange( 'registration', 'is-enabled' ) ) : ?>
@@ -28,4 +30,6 @@
 		<?php it_exchange( 'registration', 'disabled-message' ); ?>
 	<?php endif; ?>
 	<?php do_action( 'it_exchange_super_widget_registration_after_form' ); ?>
+	<?php do_action( 'it_exchange_super_widget_registration_end_wrap' ); ?>
 </div>
+	<?php do_action( 'it_exchange_super_widget_registration_after_wrap' ); ?>
