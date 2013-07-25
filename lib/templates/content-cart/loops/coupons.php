@@ -15,9 +15,11 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_cart_coupons_before_loop' ); ?>
+<?php do_action( 'it_exchange_content_cart_before_coupons' ); ?>
+<div id="it-exchange-cart-coupons" class="it-exchange-table">
+<?php do_action( 'it_exchange_content_cart_before_coupons_loop' ); ?>
 <?php while ( it_exchange( 'coupons', 'applied', array( 'type' => 'cart' ) ) ) : ?>
-	<?php do_action( 'it_exchange_content_cart_coupons_begin_loop' ); ?>
+	<?php do_action( 'it_exchange_content_cart_begin_coupons_loop' ); ?>
 	<div class="it-exchange-table-row">
 		<?php foreach ( it_exchange_get_template_part_elements( 'content_cart', 'coupons', array( 'coupon-code', 'coupon-discount', 'coupon-remove' ) ) as $coupon ) : ?>
 			<?php
@@ -30,6 +32,8 @@
 			?>
 		<?php endforeach; ?>
 	</div>
-	<?php do_action( 'it_exchange_content_cart_coupons_end_loop' ); ?>
+	<?php do_action( 'it_exchange_content_cart_end_coupons_loop' ); ?>
 <?php endwhile; ?>
-<?php do_action( 'it_exchange_content_cart_coupons_after_loop' ); ?>
+<?php do_action( 'it_exchange_content_cart_after_coupons_loop' ); ?>
+</div>
+<?php do_action( 'it_exchange_content_cart_after_coupons' ); ?>

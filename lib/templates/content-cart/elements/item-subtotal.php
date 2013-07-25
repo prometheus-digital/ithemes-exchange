@@ -15,12 +15,12 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_cart_item_before_subtotal_element' ); ?>
+<?php do_action( 'it_exchange_content_cart_before_item_subtotal_element' ); ?>
 <div class="it-exchange-cart-item-subtotal it-exchange-table-column">
-	<?php do_action( 'it_exchange_content_cart_item_begin_subtotal_element' ); ?>
+	<?php do_action( 'it_exchange_content_cart_begin_item_subtotal_element_value' ); ?>
 	<div class="it-exchange-table-column-inner">
 		<?php it_exchange( 'cart-item', 'subtotal' ); ?>
 	</div>
-	<?php do_action( 'it_exchange_content_cart_item_end_subtotal_element' ); ?>
+	<?php do_action( 'it_exchange_content_cart_end_item_subtotal_element_value' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_cart_item_after_subtotal_element' ); ?>
+<?php do_action( 'it_exchange_content_cart_after_item_subtotal_element' ); ?>

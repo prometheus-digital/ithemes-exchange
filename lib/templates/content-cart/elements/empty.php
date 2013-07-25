@@ -15,6 +15,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_cart_actions_before_empty_cart' ); ?>
+<?php do_action( 'it_exchange_content_cart_before_empty_element' ); ?>
 <?php it_exchange( 'cart', 'empty' ); ?>
-<?php do_action( 'it_exchange_content_cart_actions_after_empty_cart' ); ?>
+<?php do_action( 'it_exchange_content_cart_after_empty_element' ); ?>

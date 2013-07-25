@@ -15,8 +15,10 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_cart_totals_before_loop' ); ?>
-<?php do_action( 'it_exchange_content_cart_totals_begin_loop' ); ?>
+<?php do_action( 'it_exchange_content_cart_before_totals' ); ?>
+<div id="it-exchange-cart-totals" class="it-exchange-table">
+<?php do_action( 'it_exchange_content_cart_before_totals_loop' ); ?>
+<?php do_action( 'it_exchange_content_cart_begin_totals_loop' ); ?>
 <?php foreach ( it_exchange_get_template_part_elements( 'content_cart', 'totals', array( 'totals-subtotal', 'totals-savings', 'totals-total' ) ) as $total ) : ?>
 	<div class="it-exchange-table-row it-exchange-cart-<?php echo $total; ?>">
 		<?php
@@ -29,5 +31,7 @@
 		?>
 	</div>
 <?php endforeach; ?>
-<?php do_action( 'it_exchange_content_cart_totals_end_loop' ); ?>
-<?php do_action( 'it_exchange_content_cart_totals_before_loop' ); ?>
+<?php do_action( 'it_exchange_content_cart_end_totals_loop' ); ?>
+<?php do_action( 'it_exchange_content_cart_before_totals_loop' ); ?>
+</div>
+<?php do_action( 'it_exchange_content_cart_after_totals' ); ?>

@@ -15,12 +15,12 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_cart_coupon_before_remove_element' ); ?>
+<?php do_action( 'it_exchange_content_cart_before_coupon_remove_element' ); ?>
 <div class="it-exchange-cart-coupon-remove it-exchange-table-column">
-	<?php do_action( 'it_exchange_content_cart_coupon_begin_remove_element' ); ?>
+	<?php do_action( 'it_exchange_content_cart_begin_coupon_remove_element' ); ?>
 	<div class="it-exchange-table-column-inner">
 		<?php it_exchange( 'coupons', 'remove', array( 'type' => 'cart' ) ); ?>
 	</div>
-	<?php do_action( 'it_exchange_content_cart_coupon_end_remove_element' ); ?>
+	<?php do_action( 'it_exchange_content_cart_end_coupon_remove_element' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_cart_coupon_after_remove_element' ); ?>
+<?php do_action( 'it_exchange_content_cart_after_coupon_remove_element' ); ?>

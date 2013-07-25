@@ -15,6 +15,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_cart_actions_before_update' ); ?>
+<?php do_action( 'it_exchange_content_cart_before_update_element' ); ?>
 <?php it_exchange( 'cart', 'update' ); ?>
-<?php do_action( 'it_exchange_content_cart_actions_after_update' ); ?>
+<?php do_action( 'it_exchange_content_cart_after_update_element' ); ?>

@@ -15,7 +15,10 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_cart_actions_before_loop' ); ?>
+<?php do_action( 'it_exchange_content_cart_before_actions' ); ?>
+<div id="it-exchange-cart-actions">
+<?php do_action( 'it_exchange_content_cart_before_actions_loop' ); ?>
+<?php do_action( 'it_exchange_content_cart_begin_actions_loop' ); ?>
 <?php foreach ( it_exchange_get_template_part_elements( 'content_cart', 'actions', array( 'apply-coupon', 'update', 'empty', 'checkout' ) ) as $action ) : ?>
 		<?php
 		/** 
@@ -26,4 +29,7 @@
 		it_exchange_get_template_part( 'content-cart/elements/' . $action );
 		?>
 <?php endforeach; ?>
-<?php do_action( 'it_exchange_content_cart_actions_after_loop' ); ?>
+<?php do_action( 'it_exchange_content_cart_end_actions_loop' ); ?>
+<?php do_action( 'it_exchange_content_cart_after_actions_loop' ); ?>
+</div>
+<?php do_action( 'it_exchange_content_cart_after_actions' ); ?>

@@ -15,6 +15,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_cart_actions_before_checkout' ); ?>
+<?php do_action( 'it_exchange_content_cart_before_checkout_element' ); ?>
 <?php it_exchange( 'cart', 'checkout' ); ?>
-<?php do_action( 'it_exchange_content_cart_actions_after_checkout' ); ?>
+<?php do_action( 'it_exchange_content_cart_after_checkout_element' ); ?>
