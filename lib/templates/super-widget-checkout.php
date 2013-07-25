@@ -14,8 +14,10 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_super_widget_checkout_before_wrap' ); ?>
 <div class="it-exchange-sw-processing it-exchange-sw-processing-checkout">
 	<?php it_exchange_get_template_part( 'messages' ); ?>
+	<?php do_action( 'it_exchange_super_widget_checkout_begin_wrap' ); ?>
 	<?php
 	// If we have cart Items
 	if ( it_exchange( 'cart', 'has-cart-items' ) ) {
@@ -34,4 +36,6 @@
 		it_exchange_get_template_part( 'super-widget-cart/elements/empty-cart-notice' );
 	}
 	?>
+	<?php do_action( 'it_exchange_super_widget_checkout_end_wrap' ); ?>
 </div>
+<?php do_action( 'it_exchange_super_widget_checkout_after_wrap' ); ?>

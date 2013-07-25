@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_super_widget_login_fields_before_username' ); ?>
+<?php do_action( 'it_exchange_super_widget_login_before_username_element' ); ?>
 <div class="it-exchange-username">
 	<?php it_exchange( 'login', 'username' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widget_login_fields_after_username' ); ?>
+<?php do_action( 'it_exchange_super_widget_login_after_username_element' ); ?>
