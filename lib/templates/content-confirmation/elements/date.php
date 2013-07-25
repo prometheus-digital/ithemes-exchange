@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_confirmation_before_transaction_date' ); ?>
+<?php do_action( 'it_exchange_confirmation_before_transaction_date_element' ); ?>
 <div class="it-exchange-transaction-date">
 	<p><?php it_exchange( 'transaction', 'date' ); ?></p>
 </div>
-<?php do_action( 'it_exchange_confirmation_after_transaction_date' ); ?>
+<?php do_action( 'it_exchange_confirmation_after_transaction_date_element' ); ?>

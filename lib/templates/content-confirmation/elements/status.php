@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_confirmation_before_transaction_status' ); ?>
+<?php do_action( 'it_exchange_confirmation_before_transaction_status_element' ); ?>
 <div class="it-exchange-transaction-status">
 	<p><?php it_exchange( 'transaction', 'status' ); ?></p>
 </div>
-<?php do_action( 'it_exchange_confirmation_after_transaction_status' ); ?>
+<?php do_action( 'it_exchange_confirmation_after_transaction_status_element' ); ?>

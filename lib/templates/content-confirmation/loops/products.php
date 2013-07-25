@@ -21,5 +21,6 @@
 			<?php it_exchange_get_template_part( 'content-confirmation/elements/product' ); ?>
 		<?php endwhile; ?>
 	</div>
+	<?php do_action( 'it_exchange_content_confirmation_end_products_loop' ); ?>
 <?php endif; ?>
 <?php do_action( 'it_exchange_content_confirmation_after_products_loop' ); ?>

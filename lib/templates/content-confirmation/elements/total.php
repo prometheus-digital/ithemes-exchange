@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_confirmation_before_transaction_total' ); ?>
+<?php do_action( 'it_exchange_confirmation_before_transaction_total_element' ); ?>
 <div class="it-exchange-transaction-total">
 	<p><?php it_exchange( 'transaction', 'total' ); ?></p>
 </div>
-<?php do_action( 'it_exchange_confirmation_after_transaction_total' ); ?>
+<?php do_action( 'it_exchange_confirmation_after_transaction_total_element' ); ?>

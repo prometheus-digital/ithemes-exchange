@@ -14,7 +14,7 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_confirmation_template_part_transaction_product_top' ); ?>
+<?php do_action( 'it_exchange_content_confirmation_before_product_element' ); ?>
 <div class="it-exchange-transaction-product">
 	<?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'title', 'wrap' => 'h3' ) ); ?>
 	<?php if ( it_exchange( 'transaction', 'has-product-downloads' ) ) : ?>
@@ -68,4 +68,4 @@
 		</div>
 	<?php endif; ?>
 </div>
-<?php do_action( 'it_exchange_confirmation_template_part_transaction_product_bottom' ); ?>
+<?php do_action( 'it_exchange_content_confirmation_after_product_element' ); ?>

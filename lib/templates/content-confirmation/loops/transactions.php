@@ -20,6 +20,7 @@
 		<?php it_exchange_get_template_part( 'content-confirmation/loops/transaction-meta' ); ?>
 		<?php it_exchange_get_template_part( 'content-confirmation/loops/products' ); ?>
 	<?php endwhile; ?>
+	<?php do_action( 'it_exchange_content_confirmation_end_transactions_loop' ); ?>
 <?php else : ?>
 	<?php it_exchange_get_template_part( 'content-confirmation/elements/not-found' ); ?>
 <?php endif; ?>
