@@ -14,6 +14,8 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_super_widget_login_before_actions_loop' ); ?>
+<?php do_action( 'it_exchange_super_widget_login_begin_actions_loop' ); ?>
 <?php foreach ( it_exchange_get_template_part_elements( 'super_widget_login', 'actions', array( 'login-button', 'recover', 'register', 'cancel' ) ) as $action ) : ?>
 	<?php 
 	/** 
@@ -24,3 +26,5 @@
 	it_exchange_get_template_part( 'super-widget-login/elements/' . $action );
 	?>
 <?php endforeach; ?>
+<?php do_action( 'it_exchange_super_widget_login_end_actions_loop' ); ?>
+<?php do_action( 'it_exchange_super_widget_login_after_actions_loop' ); ?>

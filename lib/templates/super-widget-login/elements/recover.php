@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_super_widget_login_actions_before_recover' ); ?>
+<?php do_action( 'it_exchange_super_widget_login_before_recover_element' ); ?>
 <div class="it-exchange-recover-url">
 	<?php it_exchange( 'login', 'recover' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widget_login_actions_after_recover' ); ?>
+<?php do_action( 'it_exchange_super_widget_login_after_recover_element' ); ?>

@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_super_widget_login_fields_before_rememberme' ); ?>
+<?php do_action( 'it_exchange_super_widget_login_before_rememberme_element' ); ?>
 <div class="it-exchange-rememberme">
 	<?php it_exchange( 'login', 'rememberme' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widget_login_fields_after_rememberme' ); ?>
+<?php do_action( 'it_exchange_super_widget_login_after_rememberme_element' ); ?>

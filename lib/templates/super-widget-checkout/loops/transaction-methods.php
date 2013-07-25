@@ -13,12 +13,18 @@
  * located in your theme.
 */
 ?>
+<?php do_action( 'it_exchange_content_checkout_before_transaction_methods' ); ?>
 <div class="payment-methods-wrapper">
 	<?php if ( ! it_exchange( 'checkout', 'has-transaction-methods' ) ) : ?>
 		<p><?php _e( 'No payment add-ons enabled.', 'LION' ); ?></p>
 	<?php else : ?>
+		<?php do_action( 'it_exchange_content_checkout_before_transaction_methods_loop' ); ?>
 		<?php while( it_exchange( 'checkout', 'transaction-methods' ) ) : ?>
+		<?php do_action( 'it_exchange_content_checkout_begin_transaction_methods_loop' ); ?>
 			<?php it_exchange( 'transaction-method', 'make-payment' ); ?>
+		<?php do_action( 'it_exchange_content_checkout_end_transaction_methods_loop' ); ?>
 		<?php endwhile; ?>
+		<?php do_action( 'it_exchange_content_checkout_after_transaction_methods_loop' ); ?>
 	<?php endif; ?>
 </div>
+<?php do_action( 'it_exchange_content_checkout_after_transaction_methods' ); ?>

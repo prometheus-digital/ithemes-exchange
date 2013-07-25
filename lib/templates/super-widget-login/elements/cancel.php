@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_super_widget_login_action_before_cancel' ); ?>
+<?php do_action( 'it_exchange_super_widget_login_before_cancel_element' ); ?>
 <div class="cancel_url">
 	<?php it_exchange( 'login', 'cancel' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widget_login_action_after_cancel' ); ?>
+<?php do_action( 'it_exchange_super_widget_login_after_cancel_element' ); ?>
