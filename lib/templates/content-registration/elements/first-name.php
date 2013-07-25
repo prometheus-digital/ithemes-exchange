@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_registration_fields_before_first-name' ); ?>
+<?php do_action( 'it_exchange_content_registration_before_first_name_element' ); ?>
 <div class="it-exchange-registration-first-name">
 	<?php it_exchange( 'registration', 'first-name' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_registration_fields_after_first-name' ); ?>
+<?php do_action( 'it_exchange_content_registration_after_first_name_element' ); ?>

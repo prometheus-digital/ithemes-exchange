@@ -15,9 +15,9 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_registration_fields_before_loop' ); ?>
-	<?php do_action( 'it_exchange_content_registration_fields_begin_loop' ); ?>
+<?php do_action( 'it_exchange_content_registration_before_fields_loop' ); ?>
 	<div class="it-exchange-customer-fields">
+	<?php do_action( 'it_exchange_content_registration_begin_fields_loop' ); ?>
 		<?php foreach ( it_exchange_get_template_part_elements( 'content_registration', 'fields', array( 'username', 'first-name', 'last-name', 'email', 'password1', 'password2' ) ) as $field ) : ?>
 			<?php
 			/** 
@@ -27,6 +27,6 @@
 			*/
 			it_exchange_get_template_part( 'content-registration/elements/' . $field ); ?>
 		<?php endforeach; ?>
+   	<?php do_action( 'it_exchange_content_registration_end_fields_loop' ); ?>
 	</div>
-   	<?php do_action( 'it_exchange_content_registration_fields_end_loop' ); ?>
-<?php do_action( 'it_exchange_content_registration_fields_after_loop' ); ?>
+<?php do_action( 'it_exchange_content_registration_after_fields_loop' ); ?>

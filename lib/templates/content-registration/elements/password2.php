@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_registration_fields_before_password2' ); ?>
+<?php do_action( 'it_exchange_content_registration_before_password2_element' ); ?>
 <div class="it-exchange-registration-password2">
 	<?php it_exchange( 'registration', 'password2' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_registration_fields_after_password2' ); ?>
+<?php do_action( 'it_exchange_content_registration_after_password2_element' ); ?>

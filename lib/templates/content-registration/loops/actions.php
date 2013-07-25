@@ -15,9 +15,9 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_registration_actions_before_loop' ); ?>
-	<?php do_action( 'it_exchange_content_registration_actions_begin_loop' ); ?>
+<?php do_action( 'it_exchange_content_registration_before_actions_loop' ); ?>
 	<div class="it-exchange-customer-actions">
+	<?php do_action( 'it_exchange_content_registration_begin_actions_loop' ); ?>
 		<?php foreach ( it_exchange_get_template_part_elements( 'content_registration', 'actions', array( 'save', 'login' ) ) as $action ) : ?>
 			<?php
 			/** 
@@ -28,6 +28,6 @@
 			it_exchange_get_template_part( 'content-registration/elements/' . $action );
 			?>
 		<?php endforeach; ?>
+   	<?php do_action( 'it_exchange_content_registration_end_actions_loop' ); ?>
 	</div>
-   	<?php do_action( 'it_exchange_content_registration_actions_end_loop' ); ?>
-<?php do_action( 'it_exchange_content_registration_actions_after_loop' ); ?>
+<?php do_action( 'it_exchange_content_registration_after_actions_loop' ); ?>

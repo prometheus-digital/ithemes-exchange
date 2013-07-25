@@ -14,8 +14,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_registration_fields_before_save' ); ?>
+<?php do_action( 'it_exchange_content_registration_before_save_element' ); ?>
 <div class="it-exchange-registration-save it-exchange-profile-save">
 	<?php it_exchange( 'registration', 'save' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_registration_fields_after_save' ); ?>
+<?php do_action( 'it_exchange_content_registration_after_save_element' ); ?>

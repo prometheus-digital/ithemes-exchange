@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_registration_fields_before_login' ); ?>
+<?php do_action( 'it_exchange_content_registration_before_login_element' ); ?>
 <div class="it-exchange-registration-login">
 	<a href="<?php esc_attr_e( it_exchange_get_page_url( 'login' ) ); ?>"><?php _e( 'Log in', 'LION' ); ?></a>
 </div>
-<?php do_action( 'it_exchange_content_registration_fields_after_login' ); ?>
+<?php do_action( 'it_exchange_content_registration_after_login_element' ); ?>

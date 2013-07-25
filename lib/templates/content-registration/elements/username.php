@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_registration_fields_before_username' ); ?>
+<?php do_action( 'it_exchange_content_registration_before_username_element' ); ?>
 <div class="it-exchange-registration-username">
 	<?php it_exchange( 'registration', 'username' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_registration_fields_after_username' ); ?>
+<?php do_action( 'it_exchange_content_registration_after_username_element' ); ?>

@@ -17,7 +17,9 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_content_registration_before_wrap' ); ?>
 <div id="it-exchange-registration" class="it-exchange-wrap it-exchange-account">
+<?php do_action( 'it_exchange_content_registration_begin_wrap' ); ?>
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php if ( is_user_logged_in() ) : ?>
 		<?php it_exchange_get_template_part( 'content-registration/elements/user-logged-in' ); ?>
@@ -33,4 +35,6 @@
 			<?php it_exchange_get_template_part( 'content-registration/elements/registration-disabled-message' ); ?>
 		<?php endif; ?>
 	<?php endif; ?>
+<?php do_action( 'it_exchange_content_registration_end_wrap' ); ?>
 </div>
+<?php do_action( 'it_exchange_content_registration_after_wrap' ); ?>

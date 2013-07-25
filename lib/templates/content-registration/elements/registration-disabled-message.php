@@ -15,6 +15,8 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_content_registration_before_registration_disabled_message_element' ); ?>
 <p class="it-exchange-registration-disabled it-exchange-notice">
 	<?php it_exchange( 'registration', 'disabled-message' ); ?>
 </p>
+<?php do_action( 'it_exchange_content_registration_before_registration_disabled_message_element' ); ?>
