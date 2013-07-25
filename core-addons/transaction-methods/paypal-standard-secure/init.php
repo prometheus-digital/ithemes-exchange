@@ -827,7 +827,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 			'paypal-standard-secure-sandbox-api-signature',
 			'paypal-standard-secure-purchase-button-label',
 		);
-		$default_wizard_stripe_settings = apply_filters( 'default_wizard_paypal-standard-secure_settings', $fields );
+		$default_wizard_paypal_standard_secure_settings = apply_filters( 'default_wizard_paypal-standard-secure_settings', $fields );
 
 		foreach( $default_wizard_paypal_standard_secure_settings as $var ) {
 
