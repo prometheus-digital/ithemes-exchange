@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_customer_fields_before_email' ); ?>
+<?php do_action( 'it_exchange_content_profile_before_email_element' ); ?>
 <div class="it-exchange-customer-email">
 	<?php it_exchange( 'customer', 'email' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_customer_fields_after_email' ); ?>
+<?php do_action( 'it_exchange_content_profile_after_email_element' ); ?>

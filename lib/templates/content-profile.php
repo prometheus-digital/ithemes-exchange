@@ -15,7 +15,9 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_content_profile_before_wrap' ); ?>
 <div id="it-exchange-profile" class="it-exchange-wrap it-exchange-account">
+<?php do_action( 'it_exchange_content_profile_begin_wrap' ); ?>
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php it_exchange( 'customer', 'menu' ); ?>
 	<?php do_action( 'it_exchange_content_profile_before_form' ); ?>
@@ -24,4 +26,6 @@
 		<?php it_exchange_get_template_part( 'content-profile/loops/actions' ); ?>
 	<?php it_exchange( 'customer', 'formclose' ); ?>
 	<?php do_action( 'it_exchange_content_profile_after_form' ); ?>
+<?php do_action( 'it_exchange_content_profile_end_wrap' ); ?>
 </div>
+<?php do_action( 'it_exchange_content_profile_after_wrap' ); ?>

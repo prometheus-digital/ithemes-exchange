@@ -15,9 +15,9 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_profile_fields_before_loop' ); ?>
-	<?php do_action( 'it_exchange_content_profile_fields_begin_loop' ); ?>
+<?php do_action( 'it_exchange_content_profile_before_fields_loop' ); ?>
 	<div class="it-exchange-customer-info">
+	<?php do_action( 'it_exchange_content_profile_begin_fields_loop' ); ?>
 		<?php foreach ( it_exchange_get_template_part_elements( 'content_profile', 'fields', array( 'first-name', 'last-name', 'email', 'website', 'password1', 'password2' ) ) as $field ) : ?>
 			<?php
 			/** 
@@ -28,6 +28,6 @@
 			it_exchange_get_template_part( 'content-profile/elements/' . $field );
 			?>
 		<?php endforeach; ?>
+	<?php do_action( 'it_exchange_content_profile_end_fields_loop' ); ?>
 	</div>
-	<?php do_action( 'it_exchange_content_profile_fields_end_loop' ); ?>
-<?php do_action( 'it_exchange_content_profile_fields_after_loop' ); ?>
+<?php do_action( 'it_exchange_content_profile_after_fields_loop' ); ?>

@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_customer_fields_before_last-name' ); ?>
+<?php do_action( 'it_exchange_content_profile_before_last_name_element' ); ?>
 <div class="it-exchange-customer-last-name">
 	<?php it_exchange( 'customer', 'last-name' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_customer_fields_after_last-name' ); ?>
+<?php do_action( 'it_exchange_content_profile_after_last_name_element' ); ?>

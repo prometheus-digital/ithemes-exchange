@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_customer_fields_before_website' ); ?>
+<?php do_action( 'it_exchange_content_profile_before_website_element' ); ?>
 <div class="it-exchange-customer-website">
 	<?php it_exchange( 'customer', 'website' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_customer_fields_after_website' ); ?>
+<?php do_action( 'it_exchange_content_profile_after_website_element' ); ?>

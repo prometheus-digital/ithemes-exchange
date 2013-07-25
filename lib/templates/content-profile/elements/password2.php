@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_customer_fields_before_password2' ); ?>
+<?php do_action( 'it_exchange_content_profile_before_password2_element' ); ?>
 <div class="it-exchange-customer-password2">
 	<?php it_exchange( 'customer', 'password2' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_customer_fields_after_password2' ); ?>
+<?php do_action( 'it_exchange_content_profile_after_password2_element' ); ?>
