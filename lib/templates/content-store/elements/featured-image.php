@@ -15,9 +15,9 @@
 ?>
 
 <?php if ( it_exchange( 'product', 'has-featured-image' ) ) : ?>
-	<?php do_action( 'it_exchange_store_product_images_before_featured-image' ); ?>
+	<?php do_action( 'it_exchange_content_store_before_featured_image_element' ); ?>
 	<a class="it-exchange-product-feature-image" href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'url' ) ); ?>">
 		<?php it_exchange( 'product', 'featured-image', array( 'size' => 'large' ) ); ?>
 	</a>
-	<?php do_action( 'it_exchange_store_product_images_after_featured-image' ); ?>
+	<?php do_action( 'it_exchange_content_store_after_featured_image_element' ); ?>
 <?php endif; ?>

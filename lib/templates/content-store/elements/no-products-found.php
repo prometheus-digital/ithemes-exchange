@@ -15,6 +15,8 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_content_store_before_no_products_found_element' ); ?>
 <p class="it-exchange-no-product-found it-exchange-notice">
 	<?php _e( 'No Products Found', 'LION' ); ?>
 </p>
+<?php do_action( 'it_exchange_content_store_after_no_products_found_element' ); ?>

@@ -14,6 +14,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_store_product_info_before_title' ); ?>
+<?php do_action( 'it_exchange_content_store_info_before_title_element' ); ?>
 <?php it_exchange( 'product', 'title' ); ?>
-<?php do_action( 'it_exchange_store_product_info_after_title' ); ?>
+<?php do_action( 'it_exchange_content_store_info_after_title_element' ); ?>

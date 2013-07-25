@@ -15,13 +15,13 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_store_product_before_product' ); ?>
+<?php do_action( 'it_exchange_content_store_before_product_element' ); ?>
 <li class="it-exchange-product">
-	<?php do_action( 'it_exchange_store_product_begin_product' ); ?>
-	<?php it_exchange_get_template_part( 'store-product/loops/product-images' ); ?>
+	<?php do_action( 'it_exchange_content_store_begin_product_element' ); ?>
+	<?php it_exchange_get_template_part( 'content-store/loops/product-images' ); ?>
 	<div class="it-exchange-product-details">
-		<?php it_exchange_get_template_part( 'store-product/loops/product-info' ); ?>
+		<?php it_exchange_get_template_part( 'content-store/loops/product-info' ); ?>
 	</div>
-	<?php do_action( 'it_exchange_store_product_end_product' ); ?>
+	<?php do_action( 'it_exchange_content_store_end_product_element' ); ?>
 </li>
-<?php do_action( 'it_exchange_store_product_after_product' ); ?>
+<?php do_action( 'it_exchange_content_store_after_product_element' ); ?>

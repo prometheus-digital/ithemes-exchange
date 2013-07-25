@@ -14,6 +14,6 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_store_product_info_before_base-price' ); ?>
+<?php do_action( 'it_exchange_content_store_before_base_price_element' ); ?>
 <span class="it-exchange-base-price"><?php it_exchange( 'product', 'baseprice' ); ?></span>
-<?php do_action( 'it_exchange_store_product_info_after_base-price' ); ?>
+<?php do_action( 'it_exchange_content_store_info_after_base_price_element' ); ?>

@@ -16,18 +16,10 @@
 
 <?php it_exchange_get_template_part( 'messages' ); ?>
 
-<div id="it-exchange-store">
-	<?php do_action( 'it_exchange_content_store_before_products' ); ?>
-	<ul class="it-exchange-products">
-		<?php do_action( 'it_exchange_content_store_begin_products' ); ?>
-		<?php if ( it_exchange( 'store', 'has-products' ) ) : ?>
-			<?php while( it_exchange( 'store', 'products' ) ) : ?>
-				<?php it_exchange_get_template_part( 'store', 'product' ); ?>
-			<?php endwhile; ?>
-		<?php else : ?>
-			<?php it_exchange_get_template_part( 'content-store/elements/no-products-found' ); ?>
-		<?php endif; ?>
-		<?php do_action( 'it_exchange_content_store_end_products' ); ?>
-	</ul>
-	<?php do_action( 'it_exchange_content_store_before_products' ); ?>
+<?php do_action( 'it_exchange_content_store_before_wrap' ); ?>
+<div id="it-exchange-store" class="it-exchange-wrap it-exchange-account">
+	<?php do_action( 'it_exchange_content_store_begin_wrap' ); ?>
+    <?php it_exchange_get_template_part( 'content-store/loops/products' ); ?>
+	<?php do_action( 'it_exchange_content_store_after_wrap' ); ?>
 </div>
+<?php do_action( 'it_exchange_content_store_after_wrap' ); ?>

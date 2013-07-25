@@ -14,8 +14,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_store_product_info_before_permalink' ); ?>
+<?php do_action( 'it_exchange_content_store_before_permalink_element' ); ?>
 <a class="it-exchange-product-permalink" href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'url') ); ?>">
 	<?php _e( 'View Details', 'LION' ); ?>
 </a>
-<?php do_action( 'it_exchange_store_product_info_after_permalink' ); ?>
+<?php do_action( 'it_exchange_content_store_after_permalink_element' ); ?>
