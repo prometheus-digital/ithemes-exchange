@@ -14,6 +14,7 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_content_login_before_fields_loop' ); ?>
 <?php foreach( it_exchange_get_template_part_elements( 'content_login', 'fields', array( 'username', 'password', 'rememberme' ) ) as $field ) : ?>
 	<?php
 	/**
@@ -24,3 +25,4 @@
 	it_exchange_get_template_part( 'content-login/elements/' . $field );
 	?>
 <?php endforeach; ?>
+<?php do_action( 'it_exchange_content_login_after_fields_loop' ); ?>

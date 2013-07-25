@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_login_actions_before_register' ); ?>
+<?php do_action( 'it_exchange_content_login_before_register_element' ); ?>
 <div class="it-exchange-register-url">
 	<?php it_exchange( 'login', 'register' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_login_actions_after_register' ); ?>
+<?php do_action( 'it_exchange_content_login_after_register_element' ); ?>

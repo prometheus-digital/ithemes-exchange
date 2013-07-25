@@ -40,6 +40,6 @@
 	
 	<?php do_action( 'it_exchange_content_cart_end_items_loop' ); ?>
 <?php endwhile; ?>
-<?php do_action( 'it_exchange_content_content_cart_after_items_loop' ); ?>
+<?php do_action( 'it_exchange_content_cart_after_items_loop' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_cart_after_items' ); ?>

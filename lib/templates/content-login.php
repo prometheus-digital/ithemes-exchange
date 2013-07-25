@@ -15,7 +15,9 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_content_login_before_wrap' ); ?>
 <div id="it-exchange-login" class="it-exchange-wrap it-exchange-account">
+<?php do_action( 'it_exchange_content_login_begin_wrap' ); ?>
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<div class="it-exchange-login-form">
 		<?php do_action( 'it_exchange_content_login_before_form' ); ?>
@@ -27,4 +29,6 @@
 		<?php it_exchange( 'login', 'form-close' ); ?>
 		<?php do_action( 'it_exchange_content_login_after_form' ); ?>
 	</div>
+<?php do_action( 'it_exchange_content_login_end_wrap' ); ?>
 </div>
+<?php do_action( 'it_exchange_content_login_after_wrap' ); ?>

@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_login_fields_before_password' ); ?>
+<?php do_action( 'it_exchange_content_login_before_password_element' ); ?>
 <div class="it-exchange-password">
 	<?php it_exchange( 'login', 'password' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_login_fields_after_password' ); ?>
+<?php do_action( 'it_exchange_content_login_after_password_element' ); ?>

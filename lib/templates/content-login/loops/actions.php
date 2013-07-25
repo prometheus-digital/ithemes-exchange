@@ -14,6 +14,7 @@
 */
 ?>
 
+<?php do_action( 'it_exchange_content_login_before_actions_loop' ); ?>
 <?php foreach ( it_exchange_get_template_part_elements( 'content_login', 'actions', array( 'login-button', 'recover', 'register' ) ) as $action ) : ?>
 	<?php 
 	/** 
@@ -24,3 +25,4 @@
 	it_exchange_get_template_part( 'content-login/elements/' . $action );
 	?>
 <?php endforeach; ?>
+<?php do_action( 'it_exchange_content_login_after_actions_loop' ); ?>

@@ -15,8 +15,8 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_login_actions_before_login-button' ); ?>
+<?php do_action( 'it_exchange_content_login_before_login_button_element' ); ?>
 <div class="it-exchange-login-button">
 	<?php it_exchange( 'login', 'login-button' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_login_actions_after_login-button' ); ?>
+<?php do_action( 'it_exchange_content_login_after_login_button_element' ); ?>
