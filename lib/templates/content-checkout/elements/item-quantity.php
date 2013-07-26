@@ -19,7 +19,7 @@
 <div class="it-exchange-cart-item-quantity it-exchange-table-column">
 	<?php do_action( 'it_exchange_content_checkout_begin_item_quantity_element_value' ); ?>
 	<div class="it-exchange-table-column-inner">
-		<?php it_exchange( 'cart-item', 'quantity', array( 'format' => 'var_value' ) ) ?>
+		<?php it_exchange( 'cart-item', 'quantity', array( 'format' => 'var_value' ) ); ?>
 	</div>
 	<?php do_action( 'it_exchange_content_checkout_end_item_quantity_element_value' ); ?>
 </div>
