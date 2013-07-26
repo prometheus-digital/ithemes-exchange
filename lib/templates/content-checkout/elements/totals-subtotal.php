@@ -26,7 +26,7 @@
 <div class="it-exchange-cart-totals-total it-exchange-table-column">
 	<?php do_action( 'it_exchange_content_checkout_begin_subtotal_element_value' ); ?>
 	<div class="it-exchange-table-column-inner">
-		<?php it_exchange( 'cart', 'subtotal' ) ?>
+		<?php it_exchange( 'cart', 'subtotal' ); ?>
 	</div>
 	<?php do_action( 'it_exchange_content_checkout_end_subtotal_element_value' ); ?>
 </div>

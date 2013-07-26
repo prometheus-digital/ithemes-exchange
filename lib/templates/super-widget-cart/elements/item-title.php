@@ -15,5 +15,5 @@
 ?>
 
 <?php do_action( 'it_exchange_super_widget_cart_before_item_title_element' ); ?>
-<?php it_exchange( 'cart-item', 'title' ) ?>
+<?php it_exchange( 'cart-item', 'title' ); ?>
 <?php do_action( 'it_exchange_super_widget_cart_after_item_title_element' ); ?>
