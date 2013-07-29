@@ -656,7 +656,9 @@ function it_exchange_add_page_shortcode( $atts ) {
 	if ( empty( $atts['page'] ) )
 		return false;
 
-	return it_exchange_get_template_part( 'content', $atts['page'] );
+	ob_start();
+	it_exchange_get_template_part( 'content', $atts['page'] );
+	return ob_get_clean();
 }
 add_shortcode( 'it-exchange-page', 'it_exchange_add_page_shortcode' );
 
