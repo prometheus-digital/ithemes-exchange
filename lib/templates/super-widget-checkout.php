@@ -11,79 +11,31 @@
  * this template in a theme, simply copy over this
  * file's content to the exchange directory located
  * at your templates root.
- * 
- * Example: theme/exchange/super-widget-checkout.php
 */
 ?>
 
-<?php it_exchange_get_template_part( 'messages' ); ?>
-
+<?php do_action( 'it_exchange_super_widget_checkout_before_wrap' ); ?>
 <div class="it-exchange-sw-processing it-exchange-sw-processing-checkout">
-	<?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
-		<div class="cart-items-wrapper">
-			<?php while( it_exchange( 'cart', 'cart-items' ) ) : ?>
-				<?php $can_edit_purchase_quantity = it_exchange( 'cart-item', 'supports-purchase-quantity' ) && ( it_exchange_get_cart_products_count() < 2 ); ?>
-				<div class="cart-item">
-					<div class="title-remove">
-						<?php it_exchange( 'cart-item', 'title' ) ?>
-						<?php it_exchange( 'cart-item', 'remove' ); ?>
-					</div>
-					<div class="item-info">
-						<?php if ( it_exchange( 'cart-item', 'get-quantity', array( 'format' => 'var_value' ) ) > 1 ) : ?>
-							<?php it_exchange( 'cart-item', 'price' ); ?> &times; <?php it_exchange( 'cart-item', 'quantity', array( 'format' => 'var_value' ) ); ?> &#61; <?php it_exchange( 'cart', 'subtotal' ); ?>
-						 <?php else : ?>
-							 <?php it_exchange( 'cart-item', 'price' ); ?>
-						<?php endif; ?>
-					</div>
-				</div>
-			<?php endwhile; ?>
-			
-			<?php if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ): ?>
-				<div class="cart-discount">
-					<?php while( it_exchange( 'coupons', 'applied', array( 'type' => 'cart' ) ) ) : ?>
-						<?php it_exchange( 'coupons', 'discount-label' ); ?> <?php _e( 'OFF', 'LION' ); ?> &#61; <?php it_exchange( 'cart', 'total' ); ?>
-					<?php endwhile; ?>
-				</div>
-			<?php endif; ?>
-		</div>
-		
-		<?php if ( ! it_exchange_is_multi_item_cart_allowed() || ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_cart_products_count() < 2 ) ) : ?>
-			<div class="payment-methods-wrapper">
-				<?php if ( ! it_exchange( 'checkout', 'has-transaction-methods' ) ) : ?>
-					<p><?php _e( 'No payment add-ons enabled.', 'LION' ); ?></p>
-				<?php else : ?>
-					<?php while( it_exchange( 'checkout', 'transaction-methods' ) ) : ?>
-						<?php it_exchange( 'transaction-method', 'make-payment' ); ?>
-					<?php endwhile; ?>
-				<?php endif; ?>
-			</div>
-		<?php endif; ?>
-		
-		<?php if ( ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) || $can_edit_purchase_quantity ) : ?>
-			<div class="cart-actions-wrapper <?php echo ( ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) && $can_edit_purchase_quantity ) || ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_cart_products_count() > 1 ) ? ' two-actions' : ''; ?>">
-				<?php if ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_cart_products_count() > 1 ) : ?>
-					<div class="cart-action view-cart">
-						<?php it_exchange( 'checkout', 'cancel', array( 'label' => __( 'View Cart', 'LION' ) ) ); ?>
-					</div>
-					<div class="cart-action checkout">
-						<?php it_exchange( 'cart', 'checkout' ); ?>
-					</div>
-				<?php else : ?>
-					<?php if ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) : ?>
-						<div class="cart-action add-coupon">
-							<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-coupon', 'focus' => 'coupon', 'label' => __( 'Coupons', 'LION' ) ) ); ?>
-						</div>
-					<?php endif; ?>
-			
-					<?php if ( $can_edit_purchase_quantity ) : ?>
-						<div class="cart-action update-quantity">
-							<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-quantity', 'focus' => 'quantity', 'label' => __( 'Quantity', 'LION' ) ) ); ?>
-						</div>
-					<?php endif; ?>
-				<?php endif; ?>
-			</div>
-		<?php endif; ?>
-	<?php else: ?>
-		<p><?php _e( 'Your cart is empty', 'LION' ); ?></p>
-	<?php endif; ?>
+	<?php it_exchange_get_template_part( 'messages' ); ?>
+	<?php do_action( 'it_exchange_super_widget_checkout_begin_wrap' ); ?>
+	<?php
+	// If we have cart Items
+	if ( it_exchange( 'cart', 'has-cart-items' ) ) {
+		// Loop through cart items
+		it_exchange_get_template_part( 'super-widget-checkout/loops/items' );
+
+		// Loop through payment options if allowed
+		if ( ! it_exchange_is_multi_item_cart_allowed() || ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_cart_products_count() < 2 ) )
+			it_exchange_get_template_part( 'super-widget-checkout/loops/transaction-methods' );
+
+		// Show checkout actions
+		if ( ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) || it_exchange_get_global( 'can_edit_purchase_quantity' ) )
+			it_exchange_get_template_part( 'super-widget-checkout/loops/actions' ); 
+	
+	} else {
+		it_exchange_get_template_part( 'super-widget-cart/elements/empty-cart-notice' );
+	}
+	?>
+	<?php do_action( 'it_exchange_super_widget_checkout_end_wrap' ); ?>
 </div>
+<?php do_action( 'it_exchange_super_widget_checkout_after_wrap' ); ?>

@@ -412,8 +412,6 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
-		$field_name = $field_id;
-		
 		switch( $options['format'] ) {
 			
 			case 'label':

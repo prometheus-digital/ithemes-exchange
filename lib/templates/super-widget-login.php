@@ -11,33 +11,21 @@
  * this template in a theme, simply copy over this
  * file's content to the exchange directory located
  * at your templates root.
- * 
- * Example: theme/exchange/super-widget-login.php
 */
 ?>
 
-<?php it_exchange_get_template_part( 'messages' ); ?>
-
+<?php do_action( 'it_exchange_super_widget_login_before_wrap' ); ?>
 <div class="login it-exchange-sw-processing-login">
-	<?php it_exchange( 'login', 'formopen' ); ?>
-		<div class="user-name">
-			<?php it_exchange( 'login', 'username' ); ?>
-		</div>
-		<div class="password">
-			<?php it_exchange( 'login', 'password' ); ?>
-		</div>
-		<div class="rememberme">
-			<?php it_exchange( 'login', 'remember-me' ); ?>
-		</div>
-		<?php it_exchange( 'login', 'login-button' ); ?>
-		<div class="recover_url">
-			<?php it_exchange( 'login', 'recover' ); ?>
-		</div>
-		<div class="register_url">
-			<?php it_exchange( 'login', 'register' ); ?>
-		</div>
-		<div class="cancel_url">
-			<?php it_exchange( 'login', 'cancel' ); ?>
-		</div>
+	<?php do_action( 'it_exchange_super_widget_login_begin_wrap' ); ?>
+	<?php it_exchange_get_template_part( 'messages' ); ?>
+	<?php do_action( 'it_exchange_super_widget_login_before_form' ); ?>
+	<?php it_exchange( 'login', 'form-open' ); ?>
+		<?php do_action( 'it_exchange_super_widget_login_begin_form' ); ?>
+		<?php it_exchange_get_template_part( 'super-widget-login/loops/fields' ); ?>
+		<?php it_exchange_get_template_part( 'super-widget-login/loops/actions' ); ?>
+		<?php do_action( 'it_exchange_super_widget_login_end_form' ); ?>
 	<?php it_exchange( 'login', 'form-close' ); ?>
+	<?php do_action( 'it_exchange_super_widget_login_after_form' ); ?>
+	<?php do_action( 'it_exchange_super_widget_login_end_wrap' ); ?>
 </div>
+<?php do_action( 'it_exchange_super_widget_login_after_wrap' ); ?>

@@ -1,67 +1,72 @@
 /**
  * Structural styles for of iThemes Exchange elements.
 */
+/** -----------------------------------------------------:[ global ]:---------- */
+.it-exchange-wrap{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+.it-exchange-wrap *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 
-/** -----------------------------------------------------:[ downloads ]:---------- */
-#it-exchange-downloads .download{clear:both;}
-#it-exchange-downloads .download .download-product{float:right;width:20%;}
-#it-exchange-downloads .download .download-product a{float:right;}
-#it-exchange-downloads .download .download-info{float:left;width:80%;}
-#it-exchange-downloads .download .download-info h4{margin-top:0;}
-#it-exchange-downloads .download .download-info span + span{margin-left:1em;}
-#it-exchange-downloads span{margin-left:1em;}
+/** -----------------------------------------------------:[ table ]:---------- */
+.it-exchange-table{display:table;table-layout:fixed;width:100%;border:1px solid #DDD;border-bottom:none;border-collapse:collapse;}
+.it-exchange-table-row{display:table-row;overflow:hidden;width:100%;border-bottom:1px solid #DDD;margin:10px;}
+.it-exchange-table-column{display:table-cell;vertical-align:middle;}
+.it-exchange-table-column-inner{padding:10px;}
 
-/** -----------------------------------------------------:[ purchases ]:---------- */
-.it-exchange-purchase,
-.it-exchange-purchase .it-exchange-purchase-top,
-.it-exchange-purchase .item-info{overflow:hidden;}
-.it-exchange-purchase{margin-bottom:2em;padding-bottom:2em;}
+/** -----------------------------------------------------:[ columns ]:---------- */
+.it-exchange-columns-wrapper{overflow:hidden;}
+.it-exchange-column{float:left;}
 
-.it-exchange-purchase-top{margin-bottom:1em;}
-.it-exchange-purchase-top .it-exchange-purchase-total{float:right;}
+/** -----------------------------------------------------:[ account ]:---------- */
+.it-exchange-account label{display:block;margin-top:1em;}
+.it-exchange-account input[type="checkbox"]{margin:2em .5em 2em 0;}
+.it-exchange-account input[type="checkbox"] + label{display:inline;}
+.it-exchange-account #wp-submit{margin-bottom:2em;}
+.it-exchange-account .it-exchange-profile-save{margin:1.5em 0;}
 
-.it-exchange-purchase-items .item-info{margin-bottom:1em;}
-.it-exchange-purchase-items .item-thumbnail,
-.it-exchange-purchase-items .item-data{float:left;}
-.it-exchange-purchase-items .item-thumbnail{width:10%;}
-.it-exchange-purchase-items .item-thumbnail img{margin:0;}
-.it-exchange-purchase-items .item-data{width:90%;}
-.it-exchange-purchase-items .item-data h4{margin:0;margin-left:2em;}
-.it-exchange-purchase-items .item-data p{margin-left:2em;}
-.it-exchange-purchase-items .item-data .item-price,
-.it-exchange-purchase-items .item-data .item-quantity{font-weight:normal;}
+/** ----------------------------------------:[ navigation ]:--- */
+.it-exchange-account .it-exchange-customer-menu{list-style:none;margin:2em 0;padding:0;}
+.it-exchange-account .it-exchange-customer-menu li{display:inline;padding:0;margin:0 1em 1em 0;}
+.it-exchange-account .it-exchange-customer-menu li.current{font-weight:bold;}
 
-/** -----------------------------------------------------:[ login ]:---------- */
-#it-exchange-customer .login label{display:block;margin-top:1em;}
-#it-exchange-customer .login input[type="checkbox"]{margin:2em .5em 2em 0;}
-#it-exchange-customer .login input[type="checkbox"] + label{display:inline;}
-#it-exchange-customer .login #wp-submit{margin-bottom:2em;}
+/** ----------------------------------------:[ purchases ]:--- */
+#it-exchange-purchases .it-exchange-purchase,
+#it-exchange-purchases .it-exchange-purchase .it-exchange-purchase-top,
+#it-exchange-purchases .it-exchange-purchase .it-exchange-item-info{overflow:hidden;}
+#it-exchange-purchases .it-exchange-purchase{margin-bottom:2em;padding-bottom:2em;}
+#it-exchange-purchases .it-exchange-purchase-top{margin-bottom:1em;}
+#it-exchange-purchases .it-exchange-purchase-top .it-exchange-purchase-total{float:right;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-info{margin-bottom:1em;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-thumbnail,
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data{float:left;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-thumbnail{width:10%;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-thumbnail img{margin:0;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data{width:90%;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data div{margin-left:2em;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data .it-exchange-item-data-top{margin-bottom:1em;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data .it-exchange-item-title{font-weight:bold;}
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data .it-exchange-item-price,
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data .it-exchange-item-quantity{font-weight:normal;}
 
-/** -----------------------------------------------------:[ profile ]:---------- */
-#it-exchange-customer .customer-info label{display:block;margin-top:1em;}
-#it-exchange-customer .customer-name,
-#it-exchange-customer .customer-password{overflow:hidden;}
-#it-exchange-customer .customer-name div,
-#it-exchange-customer .customer-password div{float:left;}
-#it-exchange-customer .customer-save{margin-top:1em;}
-
-/** ----------------------------------------:[ customer navigation ]:--- */
-#it-exchange-customer-menu{list-style:none;margin:0;padding:0;}
-#it-exchange-customer-menu li{display:inline;padding:0;margin:0 1em 1em 0;}
-#it-exchange-customer-menu li.current{font-weight:bold;}
+/** ----------------------------------------:[ downloads ]:--- */
+#it-exchange-downloads .it-exchange-download{clear:both;}
+#it-exchange-downloads .it-exchange-download-product{float:right;width:20%;}
+#it-exchange-downloads .it-exchange-download-product a{float:right;}
+#it-exchange-downloads .it-exchange-download-info{float:left;width:80%;}
+#it-exchange-downloads .it-exchange-download-info h4{margin-top:0;}
+#it-exchange-downloads .it-exchange-download-info span + span{margin-left:1em;}
+#it-exchange-downloads .it-exchange-download span{margin-left:1em;}
 
 /** -----------------------------------------------------:[ product ]:---------- */
-#it-exchange-product .product-columns.has-images{overflow:hidden;}
-#it-exchange-product .has-images .product-column{float:left;}
-#it-exchange-product .has-images .product-info{width:60%;}
-#it-exchange-product .has-images .product-info .product-column-inner{margin-right:2em;}
-#it-exchange-product .has-images .product-images{width:40%;}
-#it-exchange-product .product-description {margin-bottom: 2em;}
-#it-exchange-product .product-standard-content {margin-bottom: 2em;}
-#it-exchange-product .product-price {font-size: 2em;border-top: 1px solid #ebebeb;border-bottom: 1px solid #ebebeb;margin-bottom: 1em; margin-top: 1em;}
-#it-exchange-product .product-price p {margin: 0;padding: .25em 0;}
+#it-exchange-product .it-exchange-product-no-images{float:none;}
+#it-exchange-product .it-exchange-product-has-images .it-exchange-product-info{width:55%;}
+#it-exchange-product .it-exchange-product-has-images .it-exchange-product-info .product-column-inner{margin-right:2em;}
+#it-exchange-product .it-exchange-product-has-images .it-exchange-product-images{width:45%;}
+#it-exchange-product .it-exchange-product-standard-content {margin-bottom: 2em;}
+#it-exchange-product .it-exchange-product-price {font-size: 2em;border-top: 1px solid #ebebeb;border-bottom: 1px solid #ebebeb;margin-bottom: 1em; margin-top: 1em;}
+#it-exchange-product .it-exchange-product-price p {margin: 0;padding: .25em 0;}
+#it-exchange-product .it-exchange-product-sw {margin-top: 2em;}
 
 /** ----------------------------------------:[ gallery ]:--- */
+#it-exchange-product .it-exchange-product-images .it-exchange-column-inner{margin-left: 1.5em;}
 #it-exchange-product .it-exchange-product-images-gallery img{display:block;margin:0;padding:0;max-width:100%;border:0;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
 #it-exchange-product .it-exchange-product-images-gallery .it-exchange-featured-image .featured-image-wrapper {border:1px solid transparent;}
 #it-exchange-product .it-exchange-product-images-gallery .it-exchange-featured-image .featured-image-wrapper:hover{border-color:#EEE;cursor:crosshair;}
@@ -74,59 +79,52 @@
 #it-exchange-product .it-exchange-product-images-gallery .it-exchange-thumbnail-images li span.current{border-color:#AAA;}
 
 /** ----------------------------------------:[ advanced ]:--- */
-#it-exchange-product .extended-description{margin-top:2em;padding-top:2em;border-top:1px solid #EBEBEB;}
+#it-exchange-product .it-exchange-extended-description{margin-top:2em;padding-top:2em;border-top:1px solid #EBEBEB;}
 
-/** -----------------------------------------------------:[ cart ]:---------- */
+/** -----------------------------------------------------:[ cart & checkout ]:---------- */
 #it-exchange-cart{overflow:hidden;}
-#it-exchange-cart *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
-#it-exchange-cart .cart-table{display:table;width:100%;border:1px solid #DDD;border-bottom:none;border-collapse:collapse;}
-#it-exchange-cart .cart-row{display:table-row;overflow:hidden;width:100%;border-bottom:1px solid #DDD;margin:10px;}
-#it-exchange-cart .cart-column{display:table-cell;vertical-align:middle;}
-#it-exchange-cart .cart-column-inner{padding:10px;}
-#it-exchange-cart .cart-item-thumbnail{width:10%;}
-#it-exchange-cart .cart-item-thumbnail img{display:block;width: 80px;}
-#it-exchange-cart .cart-item-title{width:50%;}
-#it-exchange-cart .cart-item-quantity{width:10%;}
-#it-exchange-cart .cart-item-quantity input{width:100%;}
-#it-exchange-cart .cart-item-subtotal{text-align:right;width:25%;}
-#it-exchange-cart .cart-remove{text-align:right;width:5%;}
-#it-exchange-cart .cart-coupons.cart-table{border-top:0;}
-#it-exchange-cart .cart-coupon-code{width:60%;padding-left:10%;}
-#it-exchange-cart .cart-coupon-discount{width:25%;text-align:right;}
-#it-exchange-cart .cart-totals-wrapper{overflow:hidden;}
-#it-exchange-cart .cart-totals{float:right;border:1px solid #DDD;border-top:0;width:21.5%;min-width:190px;}
-#it-exchange-cart .cart-totals p{margin-bottom:0;}
-#it-exchange-cart .cart-totals .totals-titles{text-align:right;padding:10px 20px;}
-#it-exchange-cart .cart-apply-coupons,
-#it-exchange-cart .cart-actions{clear:both;display:block;margin-top:1em;text-align:right;}
+#it-exchange-cart .it-exchange-cart-item-thumbnail{width:10%;}
+#it-exchange-cart .it-exchange-cart-item-thumbnail img{display:block;width:80px;}
+#it-exchange-cart .it-exchange-cart-item-title{width:50%;}
+#it-exchange-cart .it-exchange-cart-item-quantity{width:15%;}
+#it-exchange-cart .it-exchange-cart-item-quantity input{width:100%;}
+#it-exchange-cart .it-exchange-cart-item-subtotal{text-align:right;width:15%;}
+#it-exchange-cart .it-exchange-cart-item-remove{text-align:right;width:7%;}
+#it-exchange-cart .it-exchange-cart-item-remove a{text-decoration:none;}
+
+/** ---:[ coupons ]:--- */
+#it-exchange-cart-coupons{border-top:0;}
+#it-exchange-cart-coupons .it-exchange-cart-coupon-code{width:65%;padding-left:10%;}
+#it-exchange-cart .it-exchange-cart-coupon-discount{width:28%;text-align:right;}
+#it-exchange-cart .it-exchange-cart-coupon-remove{text-align:right;}
+#it-exchange-cart .it-exchange-cart-coupon-remove a{text-decoration:none;}
+
+/** ---:[ totals ]:--- */
+#it-exchange-cart-totals{overflow:hidden;max-width:220px;float:right;border-top:none;border-right:0;}
+#it-exchange-cart-totals .it-exchange-table-row{border-bottom:0;}
+#it-exchange-cart-totals .it-exchange-table-column-inner{padding-bottom:0;border-right:1px solid #DDDDDD;}
+#it-exchange-cart-totals .it-exchange-cart-total .it-exchange-table-column-inner{padding-bottom:10px;}
+#it-exchange-cart-totals .it-exchange-cart-totals-title{text-align:right;}
+#it-exchange-cart-totals .it-exchange-cart-totals-total .it-exchange-table-column-inner{border-bottom:1px solid #DDDDDD;}
+#it-exchange-cart-totals .it-exchange-cart-totals-total .it-exchange-table-column-inner{padding-bottom:10px;}
+#it-exchange-cart-totals .it-exchange-cart-total{font-weight:bold;}
+
+/** ---:[ actions ]:--- */
+#it-exchange-cart-actions{overflow:hidden;clear:both;text-align:right;}
+#it-exchange-cart-actions .it-exchange-cart-apply-coupons{margin:1em 0;}
 
 /** ----------------------------------------:[ processing payment ]:--- */
 #it-exchange-processing-payment{position:fixed;top:0;bottom:0;left:0;right:0;background:#000;background:rgba(0,0,0,0.8);background:-webkit-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:-moz-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:-ms-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);text-align:center;}
 #it-exchange-processing-payment div{position:absolute;top:45%;width:100%;}
 #it-exchange-processing-payment p{margin-top:10px;color:#FFF;font-size:1.2em;text-shadow:#000 1px 1px;}
 #it-exchange-processing-payment span{width:20px;height:20px;border:3px solid transparent;display:inline-block;border-radius:50%;-webkit-animation:stripe-processing-payment 1s 0 infinite alternate;-moz-animation:stripe-processing-payment 1s 0 infinite alternate;-o-animation:stripe-processing-payment 1s 0 infinite alternate;animation:stripe-processing-payment 1s 0 infinite alternate;}
-@-webkit-keyframes stripe-processing-payment{0%{border-top-color:#FFF;}
-33%{border-right-color:#FFF;}
-66%{border-bottom-color:#FFF;}
-100%{border-left-color:#FFF;}
-}
-@-moz-keyframes stripe-processing-payment{0%{border-top-color:#FFF;}
-33%{border-right-color:#FFF;}
-66%{border-bottom-color:#FFF;}
-100%{border-left-color:#FFF;}
-}
-@-o-keyframes stripe-processing-payment{0%{border-top-color:#FFF;}
-33%{border-right-color:#FFF;}
-66%{border-bottom-color:#FFF;}
-100%{border-left-color:#FFF;}
-}
-@keyframes stripe-processing-payment{0%{border-top-color:#FFF;}
-33%{border-right-color:#FFF;}
-66%{border-bottom-color:#FFF;}
-100%{border-left-color:#FFF;}
-}
+@-webkit-keyframes stripe-processing-payment{0%{border-top-color:#FFF;}33%{border-right-color:#FFF;}66%{border-bottom-color:#FFF;}100%{border-left-color:#FFF;}}
+@-moz-keyframes stripe-processing-payment{0%{border-top-color:#FFF;}33%{border-right-color:#FFF;}66%{border-bottom-color:#FFF;}100%{border-left-color:#FFF;}}
+@-o-keyframes stripe-processing-payment{0%{border-top-color:#FFF;}33%{border-right-color:#FFF;}66%{border-bottom-color:#FFF;}100%{border-left-color:#FFF;}}
+@keyframes stripe-processing-payment{0%{border-top-color:#FFF;}33%{border-right-color:#FFF;}66%{border-bottom-color:#FFF;}100%{border-left-color:#FFF;}}
 
 /** -----------------------------------------------------:[ confirmation ]:---------- */
+#it-exchange-confirmation .it-exchange-transaction-meta p{margin-bottom:0;}
 #it-exchange-confirmation span{margin-left:1em;}
 
 /** -----------------------------------------------------:[ store ]:---------- */
@@ -134,9 +132,9 @@
 #it-exchange-store .it-exchange-products li {list-style: none;display: block;float:left;width: 45%;margin: 0 0 5em 0;vertical-align: top;}
 #it-exchange-store .it-exchange-products li:nth-child(2n+1) {margin-right: 5%;clear:both;}
 #it-exchange-store .it-exchange-product-details {padding: 1em;overflow:hidden;}
-#it-exchange-store h1.entry-title {font-size: 1.5em;margin: .5em 0;padding: 0;}
+#it-exchange-store .entry-title {font-size: 1.5em;margin: .5em 0;padding: 0;}
 #it-exchange-store .it-exchange-base-price {font-size: 1.25em;float:left;}
-#it-exchange-store .it-exchange-product-details-link {float:right;line-height: 2;}
+#it-exchange-store .it-exchange-product-permalink {float:right;line-height: 2;}
 #it-exchange-store .featured-image-wrapper img {max-width: 100%; height: auto;}
 
 /** -----------------------------------------------------:[ Error/Notice Notifications ]:---------- */

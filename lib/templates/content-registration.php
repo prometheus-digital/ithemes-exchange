@@ -17,40 +17,24 @@
 */
 ?>
 
-<div class="registration-info">
+<?php do_action( 'it_exchange_content_registration_before_wrap' ); ?>
+<div id="it-exchange-registration" class="it-exchange-wrap it-exchange-account">
+<?php do_action( 'it_exchange_content_registration_begin_wrap' ); ?>
+	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php if ( is_user_logged_in() ) : ?>
-		<p><?php printf( __( 'You already have an active account and are logged in. Visit your %sProfile%s', 'LION' ), '<a href="' . it_exchange_get_page_url( 'profile' ) . '">', '</a>' ); ?></p>
+		<?php it_exchange_get_template_part( 'content-registration/elements/user-logged-in' ); ?>
 	<?php else : ?>
 		<?php if ( it_exchange( 'registration', 'is-enabled' ) ) : ?>
-			
-			<?php it_exchange( 'registration', 'formopen' ); ?>
-			<?php it_exchange_get_template_part( 'messages' ); ?>
-			
-			<div class="user-name">
-				<?php it_exchange( 'registration', 'username' ); ?>
-			</div>
-			<div class="first-name">
-				<?php it_exchange( 'registration', 'firstname' ); ?>
-			</div>
-			<div class="last-name">
-				<?php it_exchange( 'registration', 'lastname' ); ?>
-			</div>
-			<div class="email-name">
-				<?php it_exchange( 'registration', 'email' ); ?>
-			</div>
-			<div class="password1">
-				<?php it_exchange( 'registration', 'password1' ); ?>
-			</div>
-			<div class="password2">
-				<?php it_exchange( 'registration', 'password2' ); ?>
-			</div>
-			
-			<?php it_exchange( 'registration', 'save' ); ?>
-			&nbsp;<a href="<?php esc_attr_e( it_exchange_get_page_url( 'login' ) ); ?>"><?php _e( 'Log in', 'LION' ); ?></a>
-			<?php it_exchange( 'registration', 'formclose' ); ?>
-			
+			<?php do_action( 'it_exchange_content_registration_before_form' ); ?>
+			<?php it_exchange( 'registration', 'form-open' ); ?>
+			<?php it_exchange_get_template_part( 'content-registration/loops/fields' ); ?>
+			<?php it_exchange_get_template_part( 'content-registration/loops/actions' ); ?>
+			<?php it_exchange( 'registration', 'form-close' ); ?>
+			<?php do_action( 'it_exchange_content_registration_after_form' ); ?>
 		<?php else : ?>
-			<?php it_exchange( 'registration', 'disabled-message' ); ?>
+			<?php it_exchange_get_template_part( 'content-registration/elements/registration-disabled-message' ); ?>
 		<?php endif; ?>
 	<?php endif; ?>
+<?php do_action( 'it_exchange_content_registration_end_wrap' ); ?>
 </div>
+<?php do_action( 'it_exchange_content_registration_after_wrap' ); ?>
