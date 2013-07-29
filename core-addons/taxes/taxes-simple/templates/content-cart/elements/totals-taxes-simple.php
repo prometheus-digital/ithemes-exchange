@@ -23,7 +23,7 @@
 	</div>
 	<?php do_action( 'it_exchange_content_cart_end_totals_taxes_simple_element_label' ); ?>
 </div>
-<div class="it-exchange-cart-totals-total it-exchange-table-column">
+<div class="it-exchange-cart-totals-amount it-exchange-table-column">
 	<?php do_action( 'it_exchange_content_cart_begin_totals_taxes_simple_element_value' ); ?>
 	<div class="it-exchange-table-column-inner">
 		<?php esc_attr_e( it_exchange_addon_get_simple_taxes_for_cart() ); ?>
