@@ -136,6 +136,17 @@ function it_exchange_register_core_addons() {
 			'labels'      => array(
 				'singular_name' => __( 'Product Tag', 'LION' ),
 			),
+        ),
+        // Simple Taxes
+        'taxes-simple' => array(
+            'name'              => __( 'Simple Taxes', 'LION' ),
+            'description'       => __( 'This gives the admin ability to apply a default tax rate to all sales.', 'LION' ),
+            'author'            => 'iThemes',
+            'author_url'        => 'http://ithemes.com',
+            'file'              => dirname( __FILE__ ) . '/taxes/taxes-simple/init.php',
+            'category'          => 'taxes',
+            'tag'               => 'core',
+            'settings-callback' => 'it_exchange_taxes_simple_settings_callback',
 		),
 	);
 	$add_ons = apply_filters( 'it_exchange_core_addons', $add_ons );
