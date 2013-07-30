@@ -26,10 +26,13 @@
 		<?php it_exchange( 'cart', 'form-open' ); ?>
 			<?php do_action( 'it_exchange_content_cart_begin_form' ); ?>
             
-			<?php it_exchange_get_template_part( 'content-cart/loops/items' ); ?>
-			<?php it_exchange_get_template_part( 'content-cart/loops/coupons' ); ?>
-			<?php it_exchange_get_template_part( 'content-cart/loops/totals' ); ?>
-			<?php it_exchange_get_template_part( 'content-cart/loops/actions' ); ?>
+			<?php
+			// Loops we want to include, in the order we want them.
+			$loops = array( 'items', 'coupons', 'totals', 'actions' );
+			foreach( it_exchange_get_template_part_loops( 'content-cart', 'has-cart-item', $loops ) as $loop ) :
+				it_exchange_get_template_part( 'content-cart/loops/' . $loop );
+			endforeach;
+			?>
 			
 			<?php it_exchange( 'cart', 'form-close' ); ?>
 		<?php do_action( 'it_exchange_cart_end' ); ?>

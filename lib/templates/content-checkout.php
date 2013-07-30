@@ -22,10 +22,13 @@
 	
 	<?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
     
-		<?php it_exchange_get_template_part( 'content-checkout/loops/items' ); ?>
-		<?php it_exchange_get_template_part( 'content-checkout/loops/coupons' ); ?>
-		<?php it_exchange_get_template_part( 'content-checkout/loops/totals' ); ?>
-		<?php it_exchange_get_template_part( 'content-checkout/loops/actions' ); ?>
+		<?php
+		// Loops we want to include, in the order we want them.
+		$loops = array( 'items', 'coupons', 'totals', 'actions' );
+		foreach( it_exchange_get_template_part_loops( 'content-cart', 'has-cart-item', $loops ) as $loop ) : 
+			it_exchange_get_template_part( 'content-checkout/loops/' . $loop );
+		endforeach;
+		?> 
 		
 	<?php else : ?>
 		<?php do_action( 'it_exchange_content_cart_start_empty_cart' ); ?>
