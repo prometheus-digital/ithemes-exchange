@@ -29,7 +29,7 @@
                     <?php endwhile; ?>
                     
                     <?php if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ): ?>
-                        <div class="cart-discount">
+                        <div class="cart-discount cart-totals-row">
                             <?php it_exchange_get_template_part( 'super-widget-cart/loops/discounts' ); ?>
                         </div>
                     <?php endif; ?>

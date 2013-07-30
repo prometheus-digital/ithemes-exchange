@@ -14,7 +14,7 @@
 */
 ?>
 <?php do_action( 'it_exchange_super_widget_checkout_before_discounts_loop' ); ?>
-<div class="cart-discount">
+<div class="cart-discount cart-totals-row">
 	<?php do_action( 'it_exchange_super_widget_checkout_begin_discounts_loop' ); ?>
 	<?php while( it_exchange( 'coupons', 'applied', array( 'type' => 'cart' ) ) ) : ?>
 		<?php _e( 'Discount:', 'LION' ); ?> <?php it_exchange( 'coupons', 'discount-label' ); ?> <?php _e( 'OFF', 'LION' ); ?>
