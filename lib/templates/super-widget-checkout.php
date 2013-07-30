@@ -21,17 +21,23 @@
 	<?php
 	// If we have cart Items
 	if ( it_exchange( 'cart', 'has-cart-items' ) ) {
-		// Loop through cart items
-		it_exchange_get_template_part( 'super-widget-checkout/loops/items' );
 
-		// Loop through payment options if allowed
+		// Default loops we want to include on this view
+		$loops = array();
+		// Add cart items loop to list of loops we want to include
+		$loops[] = 'items';
+		// Add Payment buttons if only one item in cart
 		if ( ! it_exchange_is_multi_item_cart_allowed() || ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_cart_products_count() < 2 ) )
-			it_exchange_get_template_part( 'super-widget-checkout/loops/transaction-methods' );
-
-		// Show checkout actions
+			$loops[] = 'transaction-methods';
+		// Add additional checkout actions loop
 		if ( ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) || it_exchange_get_global( 'can_edit_purchase_quantity' ) )
-			it_exchange_get_template_part( 'super-widget-checkout/loops/actions' ); 
-	
+			$loops[] = 'actions';
+
+		// Include template parts for each of the above loops
+		foreach( it_exchange_get_template_part_loops( 'super-widget-checkout', 'has-cart-items', $loops ) as $loop ) :
+			it_exchange_get_template_part( 'super-widget-checkout/loops/' . $loop );
+		endforeach;
+
 	} else {
 		it_exchange_get_template_part( 'super-widget-cart/elements/empty-cart-notice' );
 	}

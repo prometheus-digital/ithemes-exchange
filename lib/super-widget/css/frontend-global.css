@@ -17,6 +17,7 @@
 .it-exchange-super-widget .cart-items-wrapper .cart-item .item-info .cart-discount{display:block;margin-top:.5em;}
 .it-exchange-super-widget .cart-items-wrapper .cart-item .item-info input{max-width:50px;text-align:center;}
 .it-exchange-super-widget .cart-discount{padding:1em;border-bottom:1px solid #F0F0F0;font-size:.8em;}
+.it-exchange-super-widget .cart-total{padding:1em;border-bottom:1px solid #F0F0F0;font-size:.8em;}
 .it-exchange-super-widget .total-cancel-wrapper{overflow:hidden;padding:1em;background:#F6F6F6;}
 .it-exchange-super-widget .it-exchange-empty-cart{float:right;text-decoration:none;}
 .it-exchange-super-widget .payment-methods-wrapper{padding:1em;border-bottom:1px solid #F0F0F0;}
