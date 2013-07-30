@@ -113,6 +113,32 @@ add_filter( 'it_exchange_get_content_cart_totals_elements', 'it_exchange_addon_a
 add_filter( 'it_exchange_get_content_checkout_totals_elements', 'it_exchange_addon_add_taxes_simple_to_template_totals_loops' );
 
 /**
+ * Add Simple Taxes to the super-widget-checkout totals loop
+ *
+ * @since 1.0.0
+ *
+ * @param array $loops list of existing elements
+ * @return array
+*/
+function it_exchange_addon_add_taxes_simple_to_sw_template_totals_loops( $loops ) {
+	$tax_options           = it_exchange_get_option( 'addon_taxes_simple' );
+	$process_after_savings = ! empty( $tax_options['calculate-after-discounts'] );
+
+	// Locate the discounts key in elements array (if it exists)
+	$index = array_search( 'discounts', $loops );
+	if ( false === $index )
+		$index = -1;
+
+	// Bump index by 1 if calculating tax after discounts
+	if ( -1 != $index && $process_after_savings )
+		$index++;
+
+	array_splice( $loops, $index, 0, 'taxes-simple' );
+	return $loops;
+}
+add_filter( 'it_exchange_get_super-widget-checkout_after-cart-items_loops', 'it_exchange_addon_add_taxes_simple_to_sw_template_totals_loops' );
+
+/**
  * Adds our templates directory to the list of directories
  * searched by Exchange
  *
@@ -128,7 +154,7 @@ function it_exchange_addon_taxes_simple_register_templates( $template_paths, $te
 	$templates = array(
 		'content-cart/elements/totals-taxes-simple.php',
 		'content-checkout/elements/totals-taxes-simple.php',
-		'super-widget-checkout/elements/taxes-simple.php',
+		'super-widget-checkout/loops/taxes-simple.php',
 	);
 	foreach( $templates as $template ) {
 		if ( in_array( $template, (array) $template_names ) )
@@ -155,18 +181,6 @@ function it_exchange_addon_taxes_simple_modify_total( $total ) {
 	return $total + $taxes;
 }
 add_filter( 'it_exchange_get_cart_total', 'it_exchange_addon_taxes_simple_modify_total' );
-
-/**
- * Include taxes template part in super widget after the items loop
- *
- * @since 1.0.0
- *
- * @return void
-*/
-function it_exchange_addon_taxes_add_to_superwidget() {
-	it_exchange_get_template_part( 'super-widget-checkout/elements/taxes-simple' );
-}
-add_action( 'it_exchange_super_widget_checkout_after_items_loop', 'it_exchange_addon_taxes_add_to_superwidget' );
 
 /**
  * Enqueue css for settings page
