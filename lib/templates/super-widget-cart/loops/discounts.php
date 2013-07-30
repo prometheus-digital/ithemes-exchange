@@ -17,7 +17,7 @@
 <?php do_action( 'it_exchange_super_widget_cart_before_discounts_loop' ); ?>
 <?php do_action( 'it_exchange_super_widget_cart_begin_discounts_loop' ); ?>
 <?php while( it_exchange( 'coupons', 'applied', array( 'type' => 'cart' ) ) ) : ?>
-	<?php it_exchange( 'coupons', 'discount-label' ); ?> <?php _e( 'OFF', 'LION' ); ?> &#61; <?php it_exchange( 'cart', 'total' ); ?>
+	<?php _e( 'Discount:', 'LION' ); ?> <?php it_exchange( 'coupons', 'discount-label' ); ?> <?php _e( 'OFF', 'LION' ); ?>
 <?php endwhile; ?>
 <?php do_action( 'it_exchange_super_widget_cart_end_discounts_loop' ); ?>
 <?php do_action( 'it_exchange_super_widget_cart_after_discounts_loop' ); ?>
