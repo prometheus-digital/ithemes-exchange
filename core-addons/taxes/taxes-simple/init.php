@@ -144,3 +144,17 @@ function it_exchange_addon_taxes_add_to_superwidget() {
 	it_exchange_get_template_part( 'super-widget-checkout/elements/taxes-simple' );
 }
 add_action( 'it_exchange_super_widget_checkout_after_items_loop', 'it_exchange_addon_taxes_add_to_superwidget' );
+
+/**
+ * Enqueue css for settings page
+ *
+ * @since 1.1.0
+ *
+ * @return void
+*/
+function it_exchange_addon_taxes_simple_enqueue_admin_css() {
+	$current_screen = get_current_screen();
+	if ( ! empty( $current_screen->base ) && 'exchange_page_it-exchange-addons' == $current_screen->base && ! empty( $_GET['add-on-settings'] ) && 'taxes-simple' == $_GET['add-on-settings'] )
+		wp_enqueue_style( 'it-exchange-addon-taxes-simple-settings', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/settings.css' );
+}
+add_action( 'admin_print_styles', 'it_exchange_addon_taxes_simple_enqueue_admin_css' );
