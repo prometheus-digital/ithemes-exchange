@@ -40,12 +40,13 @@ function it_exchange_taxes_simple_settings_callback() {
 	<div class="wrap">
 		<?php screen_icon( 'it-exchange' ); ?>
 		<h2><?php _e( 'Simple Taxes', 'LION' ); ?></h2>
-
+		
+		<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
 		<?php $form->start_form( $form_options, 'it-exchange-taxes-simple-settings' ); ?>
+			<label for="default-tax-rate"><?php _e( 'Default Tax Rate', 'LION' ); ?></label>
 			<?php $form->add_text_box( 'default-tax-rate' ); ?> %</br />
-			<label for="calculate-after-discounts">
-				<?php $form->add_check_box( 'calculate-after-discounts' ); ?> <?php _e( 'Calculate taxes after discounts are applied?', 'LION' ); ?><br />
-			</label>
+			<?php $form->add_check_box( 'calculate-after-discounts' ); ?>
+			<label for="calculate-after-discounts"><?php _e( 'Calculate taxes after discounts are applied?', 'LION' ); ?></label>
 			<p class="submit">
 				<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary button-large' ) ); ?>
 			</p>
