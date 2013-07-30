@@ -26,6 +26,11 @@ function it_exchange_load_deprecated_template_parts( $slug, $name ) {
 
 	// Enqueue the deprecated template part styles
 	wp_enqueue_style( 'it-exchange-deprecated-template-parts', ITUtility::get_url_from_file( dirname( __FILE__ ) . '/templates/deprecated-template-part-styles.css' ) );
+	wp_enqueue_style( 'it-exchange-deprecated-template-parts', ITUtility::get_url_from_file( dirname( __FILE__ ) . '/templates/deprecated-super-widget-template-styles.css' ) );
+
+	// Dequeue our new ones
+	wp_dequeue_style( 'it-exchange-super-widget-frontend-global' );
+	wp_dequeue_style( 'it-exchange-public-css' );
 }
 add_action( 'it_exchange_get_template_part', 'it_exchange_load_deprecated_template_parts', 10, 2 );
 
