@@ -24,10 +24,12 @@
 .it-exchange-super-widget .payment-methods-wrapper input[type="submit"]{width:100%;}
 .it-exchange-super-widget .cart-actions-wrapper{overflow:hidden;font-size:.8em;text-align:center;}
 .it-exchange-super-widget .cart-actions-wrapper .cart-action{float:left;width:100%;padding:1em;}
+.it-exchange-super-widget .cart-actions-wrapper .cancel-update {border-bottom:1px solid #F0F0F0;}
 .it-exchange-super-widget .two-actions .cart-action{width:50%;}
 .it-exchange-super-widget .two-actions .cart-action:first-child{border-right:1px solid #F0F0F0;}
 .it-exchange-super-widget .coupon{padding:1em;border-bottom:1px solid #F0F0F0;}
 .it-exchange-super-widget .quantity{padding:1em;border-bottom:1px solid #F0F0F0;}
+.it-exchange-super-widget .quantity input{width:100%;}
 .it-exchange-super-widget .remove-coupon{float:right;}
 .it-exchange-super-widget .it-exchange-messages{text-align:center;}
 .it-exchange-super-widget .it-exchange-messages li{padding:.8em 0;}
