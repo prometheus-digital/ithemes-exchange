@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file inits our Simple Taxes add-on. 
+ * It is only included when the add-on is enabled.
+ * @package IT_Exchange
+ * @since 1.0.0
+*/
+
 include( dirname( __FILE__ ) . '/functions.php' );
 
 /**
@@ -51,6 +58,7 @@ function it_exchange_taxes_simple_settings_callback() {
  * Save settings
  *
  * @since 1.0.0
+ *
  * @return void
 */
 function it_exchange_addon_save_taxes_simple_settings() {
@@ -82,10 +90,23 @@ add_action( 'admin_init', 'it_exchange_addon_save_taxes_simple_settings' );
  *
  * @since 1.0.0
  *
+ * @param array $elements list of existing elements
  * @return array
 */
 function it_exchange_addon_add_taxes_simple_to_template_totals_loops( $elements ) {
-	array_splice( $elements, -1, 0, 'totals-taxes-simple' );
+	$tax_options           = it_exchange_get_option( 'addon_taxes_simple' );
+	$process_after_savings = ! empty( $tax_options['calculate-after-discounts'] );
+
+	// Locate the discounts key in elements array (if it exists)
+	$index = array_search( 'totals-savings', $elements );
+	if ( false === $index )
+		$index = -1;
+
+	// Bump index by 1 if calculating tax after discounts
+	if ( -1 != $index && $process_after_savings )
+		$index++;
+
+	array_splice( $elements, $index, 0, 'totals-taxes-simple' );
 	return $elements;
 }
 add_filter( 'it_exchange_get_content_cart_totals_elements', 'it_exchange_addon_add_taxes_simple_to_template_totals_loops' );
@@ -97,6 +118,8 @@ add_filter( 'it_exchange_get_content_checkout_totals_elements', 'it_exchange_add
  *
  * @since 1.0.0
  *
+ * @param array $template_path existing array of paths Exchange will look in for templates
+ * @param array $template_names existing array of file names Exchange is looking for in $template_paths directories
  * @return array
 */
 function it_exchange_addon_taxes_simple_register_templates( $template_paths, $template_names ) {
