@@ -121,7 +121,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 						throw new Exception( __( 'Error: Transaction IDs do not match! %s, %s', 'LION' ) );
 
 					if ( number_format( $AMT, '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) )
-						throw new Exception( __( 'Error: Amount charged is not the same as the cart total!', 'LION' ) );
+						throw new Exception( sprintf( __( 'Error: Amount charged is not the same as the cart total! %s | %s', 'LION' ), $AMT, $transaction_object->total ) );
 
 				} else {
 
