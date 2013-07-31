@@ -41,7 +41,6 @@ function it_exchange_load_deprecated_template_parts() {
 
 		// Enqueue the deprecated template part styles
 		wp_enqueue_style( 'it-exchange-deprecated-template-parts-global', ITUtility::get_url_from_file( dirname( __FILE__ ) . '/templates/deprecated-template-part-styles.css' ) );
-		wp_enqueue_style( 'it-exchange-deprecated-template-parts-sw', ITUtility::get_url_from_file( dirname( __FILE__ ) . '/templates/deprecated-super-widget-template-styles.css' ) );
 
 		// Parent theme /exchange/style.css if it exists
 		$parent_theme_css = get_template_directory() . '/exchange/style.css';
@@ -52,6 +51,9 @@ function it_exchange_load_deprecated_template_parts() {
 		$child_theme_css = get_stylesheet_directory() . '/exchange/style.css';
 		if ( is_file( $child_theme_css ) && ( $parent_theme_css != $child_theme_css || ! is_file( $parent_theme_css ) ) ) 
 			wp_enqueue_style( 'it-exchange-child-theme-css', ITUtility::get_url_from_file( $child_theme_css ) );
+
+		// Enqueue SW after custom styles since that's how it happens otherwise
+		wp_enqueue_style( 'it-exchange-deprecated-template-parts-sw', ITUtility::get_url_from_file( dirname( __FILE__ ) . '/templates/deprecated-super-widget-template-styles.css' ) );
 
 	} else if ( 'it_exchange_get_template_part' == $current_hook ) {
 		// Tell exchange to look in our deprecated tempaltes folder for templates
