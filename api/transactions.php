@@ -67,10 +67,13 @@ function it_exchange_get_transactions( $args=array() ) {
 	);
 	
 	// Different defaults depending on where we are.
-	if ( $transaction_hash = get_query_var('confirmation') ) {
-		if ( $transaction_id = it_exchange_get_transaction_id_from_hash( $transaction_hash ) )
-			$defaults['p'] = $transaction_id;
-		else
+	$confirmation_slug = it_exchange_get_page_slug( 'confirmation' );
+	if ( it_exchange_is_page( 'confirmation' ) ) {
+		if ( $transaction_hash = get_query_var( $confirmation_slug ) ) {
+			if ( $transaction_id = it_exchange_get_transaction_id_from_hash( $transaction_hash ) )
+				$defaults['p'] = $transaction_id;
+		}
+		if ( empty( $transaction_id ) )
 			return array();
 	}
 

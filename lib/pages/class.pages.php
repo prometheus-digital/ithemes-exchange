@@ -503,6 +503,17 @@ class IT_Exchange_Pages {
 			}
 		}
 
+		// This is an exception for the confirmation page.
+		if ( 'wordpress' == it_exchange_get_page_type( 'confirmation', true ) ) {
+			$wpid = it_exchange_get_page_wpid( 'confirmation' );
+			$confirmation_exchange_slug = it_exchange_get_page_slug( 'confirmation', true );
+			if ( $wp_page = get_page( $wpid ) ) 
+				$confirmation_wp_slug = $wp_page->post_name;
+
+			$rewrite = array( $confirmation_wp_slug . '/([^/]+)/?$' => 'index.php?pagename=' . $confirmation_wp_slug . '&' . $confirmation_wp_slug . '=$matches[1]' );
+			$existing = array_merge( $rewrite, $existing );
+		}
+
 		return $existing;
 	}
 }
