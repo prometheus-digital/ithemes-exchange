@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, Kopepasah, bradulrich, mattdanner
 Tags: ecommerce
 Requires at least: 3.5
 Tested up to: 3.6
-Stable tag: 1.0.3
+Stable tag: 1.1.0
 License: GPLv2 or later
 
 Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordPress

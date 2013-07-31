@@ -1,3 +1,16 @@
+1.1.0 - 2013-07-31 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich
+	Fix broken confirmation page when set as a WP page type
+	Simplifying versioning notification logic since we have a gazillion template-parts now
+	Add a little more feedback to paypal error message
+	Dequeue new styles and enqueue sw styles when deprecated templates are supported by the theme
+	Temp fix for blank account page
+	Change format of discount feedback on superwidget to not display updated total.
+	Make sure we have an array before trying to loop it - Paypal Standard Secure
+	Fix error where template file name is printing at bottom of shortcode pages.
+	Adding Simple Taxes core add-on
+	Corrected typo in PayPal Secure Wizard settings
+	Fixed bug that made downloads not show on the downloads page.
+	Add theme_support option for deprecated-template-parts
 1.0.3 - 2013-07-17 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
     Add slash to itExchangeSWAjaxURL to fix login/registration bug.
 	Add default error message to login SW Ajax when WP_Error returns an empty message.
