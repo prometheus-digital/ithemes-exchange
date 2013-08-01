@@ -276,7 +276,7 @@ function it_exchange_serve_product_download( $hash_data ) {
 
 	// Attempt to grab file
 	$filename = basename( $url );
-	if ( $response = wp_remote_get( $url, array( 'stream' => true ) ) ) {
+	if ( $response = wp_remote_get( $url ) ) {
 		if ( ! is_wp_error( $response ) ) {
 			$valid_response_codes = array(
 				200,
@@ -306,10 +306,6 @@ function it_exchange_serve_product_download( $hash_data ) {
 
 				// Force download
 				header( 'Content-disposition: attachment; filename="' . $filename . '"' );
-
-				// Flush buffers
-				ob_end_clean();
-				flush();
 
 				// Deliver file
 				echo wp_remote_retrieve_body( $response );
