@@ -303,14 +303,19 @@ function it_exchange_serve_product_download( $hash_data ) {
 						header( esc_attr( $header ) . ': ' . esc_attr( $headers[$header] ) );
 				}
 
-				header('Content-Description: File Transfer');
-				header('Content-Disposition: attachment; filename='.basename($url));
-				header('Content-Transfer-Encoding: binary');
-				header('Expires: 0');
-				header('Cache-Control: must-revalidate');
-				header('Pragma: public');
+				// Set headers to force download
+				header( 'Content-Description: File Transfer' );
+				header( 'Content-Disposition: attachment; filename=' . basename( $url ) );
+				header( 'Content-Transfer-Encoding: binary' );
+				header( 'Expires: 0' );
+				header( 'Cache-Control: must-revalidate' );
+				header( 'Pragma: public' );
+
+				// Clear buffer
 				flush();
-				readfile($url);
+
+				// Deliver the file
+				readfile( $url );
 				die();
 	
 			}
