@@ -190,8 +190,21 @@ function handle_it_exchange_customer_registration_action() {
             return it_exchange_add_message( 'error', $result->get_error_message() );
 
         $reg_page = it_exchange_get_page_url( 'registration' );
-        // Set redirect to profile page if they were on the registration page
-        $redirect = ( trailingslashit( $reg_page ) == trailingslashit( wp_get_referer() ) ) ? it_exchange_get_page_url( 'profile' ) : it_exchange_clean_query_args( array(), array( 'ite-sw-state' ) );
+
+		// Redirect or clear query args
+        if ( trailingslashit( $reg_page ) == trailingslashit( wp_get_referer() ) ) {
+			// If on the reg page, check for redirect cookie. 
+			$login_redirect = it_exchange_get_session_data( 'login_redirect' );
+			if ( ! empty( $login_redirect ) ) {
+				$redirect = reset( $login_redirect );
+				it_exchange_clear_session_data( 'login_redirect' );
+			}  else {
+				$redirect = it_exchange_get_page_url( 'profile' );
+			}
+		} else {
+			// They were in the superwidget
+			it_exchange_clean_query_args( array(), array( 'ite-sw-state' ) );
+		}
 
         do_action( 'handle_it_exchange_customer_registration_action' );
         do_action( 'after_handle_it_exchange_customer_registration_action' );
