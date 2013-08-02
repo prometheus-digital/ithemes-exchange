@@ -87,7 +87,7 @@ class IT_Exchange_Admin {
 		add_action( 'admin_init', array( $this, 'save_core_wizard_settings' ), 9 );
 		add_action( 'admin_init', array( $this, 'save_core_general_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_core_email_settings' ) );
-		add_action( 'admin_init', array( $this, 'save_core_page_settings' ) );
+		add_action( 'admin_init', array( $this, 'save_core_page_settings' ), 9 ); // Priority 9 to catch product rewrites
 
 		// Email settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_email', array( $this, 'register_email_settings_tab_callback' ) );
@@ -1246,6 +1246,7 @@ Order: %s
 			it_exchange_save_option( 'settings_pages', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 			
+			// Flag rewrites to be updated
 			add_option( '_it-exchange-flush-rewrites', true );
 
 			// Maybe update Ghost Page nav urls

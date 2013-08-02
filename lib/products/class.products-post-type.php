@@ -135,8 +135,14 @@ class IT_Exchange_Product_Post_Type {
 			),
 		);
 
-		add_action( 'init', array( $this, 'set_rewrite_slug' ), 9 );
-		add_action( 'init', array( $this, 'register_the_post_type' ) );
+		// We need to register in a different order during admin to catch updating the permalinks.
+		if ( is_admin() ) {
+			add_action( 'admin_init', array( $this, 'set_rewrite_slug' ), 10 );
+			add_action( 'admin_init', array( $this, 'register_the_post_type' ), 11 );
+		} else {
+			add_action( 'init', array( $this, 'set_rewrite_slug' ), 9 );
+			add_action( 'init', array( $this, 'register_the_post_type' ) );
+		}
 	}
 
 	/**
@@ -147,7 +153,6 @@ class IT_Exchange_Product_Post_Type {
 	 * @return void
 	*/
 	function set_rewrite_slug() {
-		$pages = it_exchange_get_pages( true );
 		if ( ! $slug = it_exchange_get_page_slug( 'product', true ) )
 			return;
 
@@ -163,6 +168,7 @@ class IT_Exchange_Product_Post_Type {
 	*/
 	function register_the_post_type() {
 		register_post_type( $this->post_type, $this->options );
+		it_exchange_flush_rewrite_rules();
 	}
 
 	/**
