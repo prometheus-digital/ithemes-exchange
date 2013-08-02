@@ -15,7 +15,7 @@ class IT_Exchange_Category_Widget extends WP_Widget {
 
 	function __construct() {
 		$widget_ops = array( 'classname' => 'it_exchange_widget_categories', 'description' => __( 'A list or dropdown of Product categories', 'LION' ) );
-		parent::__construct('categories', __( 'Product Categories', 'LION' ), $widget_ops);
+		parent::__construct('product-categories', __( 'Product Categories', 'LION' ), $widget_ops);
 	}
 
 	function widget( $args, $instance ) {
