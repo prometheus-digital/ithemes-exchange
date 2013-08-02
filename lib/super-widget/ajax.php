@@ -111,7 +111,7 @@ if ( 'register' == $action ) {
             it_exchange_add_message( 'error', $result->get_error_message() );
 		die('1');
 	} else {
-		it_exchange_add_message( 'error', $user->get_error_message() );
+		it_exchange_add_message( 'error', $user_id->get_error_message() );
 		die('0');
 	}
 }
