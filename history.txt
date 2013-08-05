@@ -1,3 +1,5 @@
+1.1.1 - 2013-08-05 - Packaging Bot
+	Updated lib/classes to version 2.3.4
 1.1.0 - 2013-07-31 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich
 	Fix broken confirmation page when set as a WP page type
 	Simplifying versioning notification logic since we have a gazillion template-parts now
@@ -528,5 +530,3 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
-1.1.1 - 2013-08-05 - Packaging Bot
-	Updated lib/classes to version 2.3.4
