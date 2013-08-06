@@ -137,8 +137,8 @@ class IT_Exchange_Product_Post_Type {
 
 		// We need to register in a different order during admin to catch updating the permalinks.
 		if ( is_admin() ) {
-			add_action( 'admin_init', array( $this, 'set_rewrite_slug' ), 10 );
-			add_action( 'admin_init', array( $this, 'register_the_post_type' ), 11 );
+			add_action( 'admin_init', array( $this, 'set_rewrite_slug' ), 9 );
+			add_action( 'admin_init', array( $this, 'register_the_post_type' ), 10 );
 		} else {
 			add_action( 'init', array( $this, 'set_rewrite_slug' ), 9 );
 			add_action( 'init', array( $this, 'register_the_post_type' ) );
