@@ -21,6 +21,40 @@ function it_exchange_digital_downloads_settings_callback() {
 	$IT_Exchange_Digital_Downloads_Add_On->print_settings_page();
 }
 
+/**
+ * Copies previous product download data to new product
+ *
+ * @since 1.1.2
+ *
+ * @params object $post Current post object
+ * @params integer $old_post_id Product ID being copied
+ * @return void
+*/
+function it_exchange_digital_downloads_duplicate_product_addon_default_product_meta( $post, $old_post_id ) {
+
+	//Duplicate File Downloads
+	$args = array(
+		'post_type'   => 'it_exchange_download',
+		'post_parent' => $old_post_id,
+	);
+	$downloads = get_posts( $args );
+	
+	foreach ( $downloads as $download ) {
+
+		$download_meta = get_post_meta( $download->ID, '_it-exchange-download-info', true );
+		
+		unset( $download->ID );
+		$download->post_parent = $post->ID;
+		if ( $download_id = wp_insert_post( $download ) ) {
+			// Save the download
+			update_post_meta( $download_id, '_it-exchange-download-info', $download_meta );
+		}
+		
+	}
+	
+}
+add_action( 'it_exchange_duplicate_product_addon_default_product_meta', 'it_exchange_digital_downloads_duplicate_product_addon_default_product_meta', 10, 2 );
+
 class IT_Exchange_Digital_Downloads_Add_On {
 
 	/**

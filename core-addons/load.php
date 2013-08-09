@@ -148,6 +148,18 @@ function it_exchange_register_core_addons() {
             'tag'               => 'core',
             'settings-callback' => 'it_exchange_taxes_simple_settings_callback',
 		),
+		'duplicate-products' => array(
+			'name'              => __( 'Duplicate Products', 'LION' ),
+			'description'       => __( 'This gives the admin the ability to duplicate an existing product.', 'LION' ),
+			'author'            => 'iThemes',
+			'author_url'        => 'http://ithemes.com',
+            'file'              => dirname( __FILE__ ) . '/product-features/duplicate-products/init.php',
+			'category'          => 'other',
+            'tag'               => 'core',
+			'labels'      => array(
+				'singular_name' => __( 'Duplicate', 'LION' ),
+			),
+		),
 	);
 	$add_ons = apply_filters( 'it_exchange_core_addons', $add_ons );
 

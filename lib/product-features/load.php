@@ -34,3 +34,6 @@ require( $this->_plugin_path . 'lib/product-features/class.inventory.php' );
 
 // Product Features: WP Post Type Supports as Product Features
 require( $this->_plugin_path . 'lib/product-features/class.wp-post-supports.php' );
+
+// Product Features: WP Post Type Supports as Duplicate Products Feature
+require( $this->_plugin_path . 'lib/product-features/class.duplicate-products.php' );
