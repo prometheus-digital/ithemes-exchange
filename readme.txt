@@ -85,6 +85,8 @@ Upload the Exchange plugin to your blog, activate it, and enable the Digital
 Downloads add-on and a transaction method addon. For more information, visit:
 http://ithemes.com/codex/page/Exchange_Installation
 
+See history.txt for a complete changelog
+
 == Screenshots ==
 
 1. Quick Setup
@@ -97,7 +99,3 @@ http://ithemes.com/codex/page/Exchange_Installation
 8. Email Settings
 9. Pages Settings
 10. Help
-
-== Changelog ==
-
-See history.txt
