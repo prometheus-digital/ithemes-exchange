@@ -115,9 +115,15 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			wp_enqueue_style( 'it-exchange-single-product-super-widget', $css_url );
 		}
 
+		// Allow add-ons to enqueue styles for super-widget
+		do_action( 'it_exchange_enqueue_super_widget_styles' );
+
 		// JS
 		$script_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/js/super-widget.js' );
 		wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery' ), false, true );
+
+		// Allow add-ons to enqueue scripts for super-widget
+		do_action( 'it_exchange_enqueue_super_widget_scripts' );
 
 		// Remove superwidget flag
 		if ( isset( $GLOBALS['it_exchange']['in_superwidget'] ) )
@@ -232,16 +238,14 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 				$state = 'product';
 			else if ( $multi_item_cart_allowed )
 				$state = 'cart';
-			else if ( !$multi_item_cart_allowed && $user_logged_in )
-				$state = 'checkout';
+			else if ( ! $multi_item_cart_allowed )
+				$state = it_exchange_get_next_purchase_requirement_property( 'sw-template-part' );
 			
 		}
 
-		// If user is not logged in and state is checkout, redirect to login
-		if ( ! $user_logged_in ) {
-			if ( 'checkout' == $state )
-				$state = 'registration';
-		}
+		// Grab the current state from the checkout requirements if trying to checkout
+		if ( 'checkout' == $state )
+			$state = it_exchange_get_next_purchase_requirement_property( 'sw-template-part' );
 		
 		if ( empty( $state ) && 'product' == $it_exchange_view  )
 			$state = 'product';

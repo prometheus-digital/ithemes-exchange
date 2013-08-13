@@ -447,11 +447,124 @@ function it_exchange_set_global( $key, $value ) {
 /**
  * Returns the value of a GLOBALS
  *
- * @since 0.4.0
+ * @since 1.1.0
  *
  * @param string $key in the GLOBALS array
  * @return mixed value from the GLOBALS
 */
 function it_exchange_get_global( $key ) {
 	return isset( $GLOBALS['it_exchange'][$key] ) ? $GLOBALS['it_exchange'][$key] : NULL;
+}
+
+/**
+ * Registers a purchase requirement
+ *
+ * @since 1.2.0
+ *
+ * @return void
+*/
+function it_exchange_register_purchase_requirement( $slug, $properties=array() ) {
+	$defaults = array(
+		'priority'               => 10,
+		'requirement-met'        => '__return_true', // This is a callback, not a boolean.
+		'sw-template-part'       => 'checkout',
+		'checkout-template-part' => 'checkout',
+		'notification'           => __( 'Please complete all purchase requirements before checkout out.', 'LION' ), // This really needs to be customized.
+	);
+
+	// Merge Defaults
+	$properties = ITUtility::merge_defaults( $properties, $defaults );
+
+	$properties['slug'] = $slug;
+
+	// Don't allow false notification value. If you don't want a notification, make it ''.
+	$properties['notification'] = ( false === $properties['notification'] ) ? $defaults['notification'] : $properties['notification'];
+
+	// Grab existing requirements
+	$requirements = it_exchange_get_purchase_requirements();
+
+	// Add the purchase requriement
+	$requirements[$slug] = $properties;
+
+	// Write updated to global
+	$GLOBALS['it_exchange']['purchase-requirements'] = $requirements;
+}
+
+/**
+ * Grab all registered purchase requirements
+ *
+ * @since 1.2.0
+ *
+ * @return array
+*/
+function it_exchange_get_purchase_requirements() {
+	$requirements  = empty( $GLOBALS['it_exchange']['purchase-requirements'] ) ? array() : (array) $GLOBALS['it_exchange']['purchase-requirements'];
+	$requirements = (array) apply_filters( 'it_exchange_get_purchase_requirments', $requirements );
+
+	// Sort the array by priority
+	$priorities = array();
+	foreach( $requirements as $key => $requirement ) {
+		$priorities[$key] = $requirement['priority'];
+	}
+	array_multisort( $priorities, SORT_ASC, SORT_NUMERIC, $requirements );
+	return $requirements;
+}
+
+/**
+ * Returns the next required purchase requirement
+ *
+ * @since 1.2.0
+ * @return string requirement string 
+*/
+function it_exchange_get_next_purchase_requirement() {
+	$requirements = it_exchange_get_purchase_requirements();
+
+	foreach( (array) $requirements as $slug => $requirement ) {
+		if ( is_callable( $requirement['requirement-met'] ) )
+			$requirement_met = (boolean) call_user_func( $requirement['requirement-met'] );
+		else
+			$requirement_met = true;
+
+		if ( ! $requirement_met )
+			return $requirement;
+	}
+	return false;
+}
+
+/**
+ * Returns a list of all page template parts for purchase requirements
+ *
+ * Purchase requirements need to register a template part file to be included
+ * in the purchase-requirements loop at the top of the checkout page.
+ *
+ * @since 1.2.0
+ *
+ * @return array
+*/
+function it_exchange_get_all_purchase_requirement_checkout_element_template_parts() {
+	$template_parts = array();
+	foreach( (array) it_exchange_get_purchase_requirements() as $slug => $requirement ) {
+		if ( ! empty( $requirement['checkout-template-part'] ) );
+			$template_parts[] = $requirement['checkout-template-part'];
+	}
+	return $template_parts;
+}
+
+/**
+ * Returns a specific property from the next required and unfulfilled purchase requriement
+ *
+ * @since 1.2.0
+ *
+ * @param string $prop the registered property we are looking for
+ * @return mixed
+*/
+function it_exchange_get_next_purchase_requirement_property( $prop ) {
+	$requirement = it_exchange_get_next_purchase_requirement();
+	$property    = ! isset( $requirement[$prop] ) ? false : $requirement[$prop];	
+
+	// Send them to checkout in the SuperWidget if a template-part wasn't 
+	if ( 'sw-template-part' == $prop && ! $property )
+		$property = 'checkout';
+
+	return $property;
 }

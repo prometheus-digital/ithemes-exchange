@@ -29,9 +29,9 @@ if ( 'get-state' == $action && $state ) {
 	if ( $product )
 		$GLOBALS['it_exchange']['product'] = it_exchange_get_product( $product );
 
-	// Force Log-in if asking for checkout and user isn't logged in.
-	if ( ! is_user_logged_in() && 'checkout' == $state )
-		it_exchange_get_template_part( 'super-widget', 'registration' );
+	// If requesting checkout, make sure that all requirements are met first
+	if ( 'checkout' == $state )
+		it_exchange_get_template_part( 'super-widget', it_exchange_get_next_purchase_requirement_property( 'sw-template-part' ) );
 	else
 		it_exchange_get_template_part( 'super-widget', $state );
 	die();
@@ -116,7 +116,11 @@ if ( 'register' == $action ) {
 	}
 }
 
-die('bad state');
+// If we made it this far, allow addons to hook in and do their thing.
+do_action( 'it_exchange_processing_super_widget_ajax_' . $action );
+
+// Default
+die('0');
 
 /**
  * Just for fun

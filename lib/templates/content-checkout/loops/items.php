@@ -15,6 +15,7 @@
 ?>
 
 <?php do_action( 'it_exchange_content_checkout_before_items' ); ?>
+<h3><?php _e( 'Order Details', 'LION' ); ?></h3>
 <div id="it-exchange-cart-items" class="it-exchange-table">
 <?php do_action( 'it_exchange_content_checkout_before_items_loop' ); ?>
 <?php while ( it_exchange( 'cart', 'cart-items' ) ) : ?>

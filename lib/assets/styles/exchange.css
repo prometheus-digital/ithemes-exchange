@@ -143,3 +143,6 @@
 .it-exchange-messages.it-exchange-errors li{background:#FFF0F0;color:#DB4343;}
 .it-exchange-messages.it-exchange-notices li{background:#ECFFDA;color:#768B5E;;}
 .it-exchange-wrap .it-exchange-messages li{margin:0;}
+
+/** -------:[ Misc ]:--------------- */
+.it-exchange-hidden{display:none;}

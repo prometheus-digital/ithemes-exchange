@@ -178,6 +178,7 @@ add_action( 'it_exchange_register_addons', 'it_exchange_register_core_addons' );
  * @return void
 */
 function it_exchange_register_core_addon_categories() {
+
 	// An array of our core add-on categories
 	$cats = array(
 		'product-type' => array(

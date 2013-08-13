@@ -189,17 +189,21 @@ function handle_it_exchange_customer_registration_action() {
         if ( is_wp_error( $user ) )
             return it_exchange_add_message( 'error', $result->get_error_message() );
 
-        $reg_page = it_exchange_get_page_url( 'registration' );
+        $reg_page      = trailingslashit( it_exchange_get_page_url( 'registration' ) );
+        $checkout_page = trailingslashit( it_exchange_get_page_url( 'checkout' ) );
 
 		// Redirect or clear query args
-        if ( trailingslashit( $reg_page ) == trailingslashit( wp_get_referer() ) ) {
+        if ( in_array( trailingslashit( wp_get_referer() ), array( $reg_page, $checkout_page ) ) ) {
 			// If on the reg page, check for redirect cookie. 
 			$login_redirect = it_exchange_get_session_data( 'login_redirect' );
 			if ( ! empty( $login_redirect ) ) {
 				$redirect = reset( $login_redirect );
 				it_exchange_clear_session_data( 'login_redirect' );
 			}  else {
-				$redirect = it_exchange_get_page_url( 'profile' );
+				if ( it_exchange_is_page( 'registration' ) )
+					$redirect = it_exchange_get_page_url( 'profile' );
+				if ( it_exchange_is_page( 'checkout' ) )
+					$redirect = it_exchange_get_page_url( 'checkout' );
 			}
 		} else {
 			// They were in the superwidget

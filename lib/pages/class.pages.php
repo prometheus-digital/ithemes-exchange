@@ -245,7 +245,7 @@ class IT_Exchange_Pages {
 
 		// Set pages that we want to protect in one way or another
 		$pages_to_protect = array(
-			'checkout', 'account', 'profile', 'downloads', 'purchases', 'confirmation',
+			'account', 'profile', 'downloads', 'purchases', 'confirmation',
 		);
 		$pages_to_protect = apply_filters( 'it_exchange_pages_to_protect', $pages_to_protect );
 

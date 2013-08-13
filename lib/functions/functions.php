@@ -98,6 +98,10 @@ function it_exchange_load_public_scripts( $current_view ) {
 	if ( is_singular( 'it_exchange_prod' ) ) {
 		wp_enqueue_script( 'it-exchange-product-public-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/exchange-product.js' ), array( 'jquery-zoom' ), false, true );
 	}
+
+	// Load Registration purchase requirement JS if not logged in and on checkout page.
+	if ( it_exchange_is_page( 'checkout' ) && ! is_user_logged_in() )
+		wp_enqueue_script( 'it-exchange-logged-in-purchase-requirement', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/logged-in-purchase-requirement.js' ), array( 'jquery' ), false, true );
 	
 	// Frontend Style 
 	if ( ! apply_filters( 'it_exchange_disable_frontend_stylesheet', false ) )
@@ -728,12 +732,70 @@ function it_exchange_clear_sessions_when_multi_item_cart_is_enabled( $addon_slug
 }
 add_action( 'it_exchange_add_on_enabled', 'it_exchange_clear_sessions_when_multi_item_cart_is_enabled' );
 
+/**
+ * Registers our default purchase requirements
+ *
+ * @since 1.1.2
+*/
+function it_exchange_register_default_purchase_requirements() {
+
+	// User must be logged-in to checkout
+	$properties = array(
+		'priority'               => 1,
+		'requirement-met'        => 'is_user_logged_in',
+		'sw-template-part'       => apply_filters( 'it_exchange_sw_template_part_for_logged_in_purchase_requirement', 'registration' ),
+		'checkout-template-part' => 'logged-in',
+		'notification'           => __( 'You must be logged in to complete your purchase.', 'LION' ),
+	);
+	it_exchange_register_purchase_requirement( 'logged-in', $properties );
+}
+add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_register_default_purchase_requirements' );
+
+/**
+ * Registers any purchase requirements Super Widget template parts as valid
+ *
+ * @since 1.1.2
+ *
+ * @param array $existing The existing valid template parts
+ * @reutrn array
+*/
+function it_exchange_register_valid_sw_states_for_purchase_reqs( $existing ) {
+	foreach( (array) it_exchange_get_purchase_requirements() as $slug => $properties ) {
+		$sw_template = empty( $properties['sw-template-part'] ) ? false : $properties['sw-template-part'];
+		if ( empty( $existing[$sw_template] ) )
+			$existing[] = $sw_template;
+	}
+	return $existing;
+}
+add_filter( 'it_exchange_super_widget_valid_states', 'it_exchange_register_valid_sw_states_for_purchase_reqs' );
+
+/**
+ * Replaces purchase options with notification message if purchase requirements haven't been met
+ *
+ * @since 1.1.3
+ *
+ * @reutnr void
+*/
+function it_exchange_disable_purchase_options_on_checkout_page( $elements ) {
+	if ( false === ( $message = it_exchange_get_next_purchase_requirement_property( 'notification' ) ) )
+		return $elements;
+
+	// Locate the transaction-methods key in elements array (if it exists)
+	$index = array_search( 'transaction-methods', $elements );
+	if ( false === $index )
+		$index = -1; 
+
+	array_splice( $elements, $index, 1, 'purchase-requirements/notification' );
+	return $elements;
+}
+add_filter( 'it_exchange_get_content_checkout_actions_elements', 'it_exchange_disable_purchase_options_on_checkout_page' );
+
 /************************************
- * THE FOLLOWING API METHODS AREN'T READY 
+ * THE FOLLOWING API METHODS AREN'T READY
  * FOR PRIMETIME YET SO THEY LIVE HERE FOR NOW.
  * USE WITH CAUTION
  *************************************/
-function it_exchange_add_product( $args=array() ) { 
+function it_exchange_add_product( $args=array() ) {
 	$defaults = array(
 		'status' => 'publish',
 	);  
