@@ -1,3 +1,11 @@
+1.1.2 - 2013-08-13 - Glenn Ansley, Lew Ayotte
+	Added Duplicate Products core-addon
+	Fixed but that redirected user to profile rather than back to checkout when asked to register before checkout out
+	Fixed bug where activating Product Categories disables core Categories widget
+	Fixed bug where permalinks have to be updated after changing product slug
+	Fixed bug that throws PHP error when trying to call WP_Error->get_error_message()
+	Fixed bug causing 0.00$ cost products to not display their price on the product details
+	Fix bug preventing large files from being downloaded
 1.1.1 - 2013-08-05 - Packaging Bot
 	Updated lib/classes to version 2.3.4
 1.1.0 - 2013-07-31 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich
