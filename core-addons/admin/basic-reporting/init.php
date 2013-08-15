@@ -140,7 +140,7 @@ function it_exchange_basic_reporting_get_total ( $options=array() ) {
 */
 function it_exchange_basic_reporting_get_average( $options=array() ) {
 	$defaults = array(
-		'start_time' => strtotime( 'first day of this month' ),
+		'start_time' => date( 'Y-m-01' ), // PHP 5.3 only (sadpanda) strtotime( 'first day of this month' ),
 		'end_time'   => current_time( 'timestamp' ),
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
@@ -188,7 +188,7 @@ function it_exchange_basic_reporting_get_average( $options=array() ) {
 */
 function it_exchange_basic_reporting_get_transactions_count( $options=array() ) {
 	$defaults = array(
-		'start_time' => strtotime( 'first day of this month' ),
+		'start_time' => date( 'Y-m-01' ), // PHP 5.3 only (sadpanda) strtotime( 'first day of this month' ),
 		'end_time'   => current_time( 'timestamp' ),
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
