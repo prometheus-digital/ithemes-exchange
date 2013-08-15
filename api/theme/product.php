@@ -548,8 +548,9 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			
 			foreach( $product_images as $image_id ) {
 				foreach ( $image_sizes as $size ) {
-					$images[$size] = wp_get_attachment_image_src( $image_id, $size );
+					$image[$size] = wp_get_attachment_image_src( $image_id, $size );
 				}
+				$images[] = $image;
 			}
 			
 			$images['full'] = wp_get_attachment_image_src( $image_id, 'full' );
