@@ -46,9 +46,8 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	}
 
 	/**
-	 * This loops through the transactions GLOBAL and updates the transaction global.
-	 *
-	 * It return false when it reaches the last transaction 
+	 * Use this function to in a while loop to determine if there are any more transactions left to loop through.
+	 * If there are no more transactions found, it will return false. Otherwise, it returns 'true'.
 	 *
 	 * @since 0.4.0
 	 * @return string

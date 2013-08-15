@@ -193,8 +193,9 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	}
 
 	/** 
-	 * The product title
+	 * Use this to get a transaction product attribute like title, description, price, etc.
 	 *
+	 * See lib/templates/content-downloads/ files for examples
 	 * @since 0.4.0
 	 * @return string
 	*/
@@ -243,6 +244,19 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		return $result;
 	} 
 
+	/**
+	 * Grabs a list of all downloads for a specific transaction product.
+	 *
+	 * Intended to be used in a while statement.
+	 * If used with the has- prefix, it returns a boolean of true/false
+	 * If it returns true, you may then continue your while loop with the product-download api method
+	 *
+	 * eg: while( it_exchange( 'transaction', 'product-downloads' ) ) { it_exchange( 'transaction', 'product_download', array( 'title' ) ); }
+	 * See lib/templates/content-downloads/ files for examples
+	 *
+	 * @param array $options
+	 * @return boolean
+	*/
 	function product_downloads( $options=array() ) {
 		// Return false if we don't have a product id
 		if ( empty( $this->_transaction_product['product_id'] ) )
@@ -274,6 +288,16 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
         }   
 	}
 
+	/**
+	 * Returns attributes for a download that is a part of a specific transaction
+	 *
+	 * Intended to be used inside a while loop with it_exchange( 'transaction', 'product-downloads' );
+	 * Use the attribute option to indicated what type of download attribute you want. ie: array( 'attribute' => 'title' );
+	 * See lib/templates/content-downloads/ files for examples
+	 *
+	 * @param array $options
+	 * @return string
+	*/
 	function product_download( $options=array() ) {
 		if ( ! empty( $options['has'] ) )
 			return (boolean) $this->_transaction_product_download;
@@ -288,6 +312,15 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		return $value;
 	}
 
+	/**
+	 * Sets up a loop of all the hashes generated for a specific download for a specific transaction.
+	 *
+	 * Intended to be used in a loop. You may loop through it with the product_download_hash method once setup.
+	 * The number of hashes per download will equal the quantity paid for at time of purchase for the transaction
+	 * See lib/templates/content-downloads/ files for examples
+	 *
+	 * @return void 
+	*/
 	function product_download_hashes( $options=array() ) {
 		// Return false if we don't have a product id
 		if ( empty( $this->_transaction_product['product_id'] ) || empty( $this->_transaction_product_download ) )
@@ -319,6 +352,12 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
         }
 	}
 
+	/**
+	 * Prints details about a specific download has (remaining downloads, etc)
+	 * See lib/templates/content-downloads/ files for examples
+	 *
+	 * @return string
+	*/
 	function product_download_hash( $options=array() ) {
 		if ( ! empty( $options['has'] ) )
 			return (boolean) $this->_transaction_product_download_hash;

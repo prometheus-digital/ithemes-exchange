@@ -62,8 +62,12 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	/**
 	 * Outputs the login page start of form
 	 *
+	 * - Use the redirect option to set where you want the user to be redirected to after logging in.
+	 * - Use the class option to add a custom class to the form.
+	 *
 	 * @since 0.4.0
 	 *
+	 * @param array $options array of options
 	 * @return string
 	*/
 	function form_open( $options=array() ) {
@@ -350,7 +354,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	}
 	
 	/**
-	 * Outputs the profile page end of form
+	 * Outputs the closing form tag for the login form.
 	 *
 	 * @since 0.4.0
 	 * @return string
