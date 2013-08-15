@@ -116,6 +116,27 @@ function it_exchange_load_public_scripts( $current_view ) {
 add_action( 'wp_enqueue_scripts', 'it_exchange_load_public_scripts' );
 
 /**
+ * Loads functions.php in theme if it exists
+ *
+ * @since 1.1.3
+ *
+ * @return void
+*/
+function it_exchange_load_theme_functions_for_exchange() {
+	$parent_theme_functions = get_template_directory() . '/exchange/functions.php';
+	$child_theme_functions = get_stylesheet_directory() . '/exchange/functions.php';
+
+	// Parent theme
+	if ( is_file( $parent_theme_functions ) )
+		include_once( $parent_theme_functions );
+
+	// Child theme or primary theme if not parent
+	if ( is_file( $child_theme_functions ) )
+		include_once( $parent_theme_functions );
+}
+add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_load_theme_functions_for_exchange' );
+
+/**
  * Hook for processing webhooks from services like PayPal IPN, Stripe, etc.
  *
  * @since 0.4.0
