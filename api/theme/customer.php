@@ -95,7 +95,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 
 			case 'label':
 				$output = $label;
-
+				break;
 			case 'html':
 			default:
 				$output = $label;
@@ -136,16 +136,16 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 
 			case 'field-id':
 				$output = $field_id;
-
+				break;
 			case 'field-name':
 				$output = $field_name;
-
+				break;
 			case 'field-value':
 				$output = $field_value;
-
+				break;
 			case 'label':
 				$output = $options['label'];
-
+				break;
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
@@ -177,16 +177,16 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 
 			case 'field-id':
 				$output = $field_id;
-
+				break;
 			case 'field-name':
 				$output = $field_name;
-
+				break;
 			case 'field-value':
 				$output = $field_value;
-
+				break;
 			case 'label':
 				$output = $options['label'];
-
+				break;
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
@@ -218,16 +218,16 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 
 			case 'field-id':
 				$output = $field_id;
-
+				break;
 			case 'field-name':
 				$output = $field_name;
-
+				break;
 			case 'field-value':
 				$output = $field_value;
-
+				break;
 			case 'label':
 				$output = $options['label'];
-
+				break;
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
@@ -259,16 +259,16 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 
 			case 'field-id':
 				$output = $field_id;
-
+				break;
 			case 'field-name':
 				$output = $field_name;
-
+				break;
 			case 'field-value':
 				$output = $field_value;
-
+				break;
 			case 'label':
 				$output = $options['label'];
-
+				break;
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
@@ -299,13 +299,13 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 
 			case 'field-id':
 				$output = $field_id;
-
+				break;
 			case 'field-name':
 				$output = $field_name;
-
+				break;
 			case 'label':
 				$output = $options['label'];
-
+				break;
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
@@ -336,13 +336,13 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 
 			case 'field-id':
 				$output = $field_id;
-
+				break;
 			case 'field-name':
 				$output = $field_name;
-
+				break;
 			case 'label':
 				$output = $options['label'];
-
+				break;
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
@@ -373,13 +373,13 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 
 			case 'field-id':
 				$output = $field_id;
-
+				break;
 			case 'field-name':
 				$output = $field_name;
-
+				break;
 			case 'label':
 				$output = $options['label'];
-
+				break;
 			case 'html':
 			default:
 				$output = '<input type="submit" id="' . $field_id. '" name="' . $field_name. '" value="' . $options['label'] . '" />';
