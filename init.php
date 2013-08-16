@@ -88,6 +88,16 @@ class IT_Exchange {
 		$this->_plugin_url  = plugins_url( '', __FILE__ );
 		$this->_plugin_base = plugin_basename( __FILE__  );
 	}
+	
+	/**
+	 * Returns IT Exchange Plugin Path
+	 *
+	 * @since 1.1.5
+	 * @return void
+	*/
+	public function get_plugin_path() {
+		return $this->_plugin_path;
+	}
 
 	/**
 	 * Loads the translation data for WordPress
@@ -148,6 +158,7 @@ class IT_Exchange {
 */
 function load_it_exchange() {	
 	// Init plugin
+	global $IT_Exchange;
 	$IT_Exchange = new IT_Exchange();
 }
 add_action( 'plugins_loaded', 'load_it_exchange' );
