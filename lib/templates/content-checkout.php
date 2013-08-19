@@ -21,13 +21,13 @@
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	
 	<?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
-    
+		
 		<?php
-		// Loops we want to include, in the order we want them.
-		$loops = array( 'purchase-requirements', 'items', 'coupons', 'totals', 'actions' );
-		foreach( it_exchange_get_template_part_loops( 'content-cart', 'has-cart-item', $loops ) as $loop ) : 
-			it_exchange_get_template_part( 'content-checkout/loops/' . $loop );
-		endforeach;
+			// Loops we want to include, in the order we want them.
+			$loops = array( 'purchase-requirements', 'items', 'coupons', 'totals', 'actions' );
+			foreach ( it_exchange_get_template_part_loops( 'content-cart', 'has-cart-item', $loops ) as $loop ) : 
+				it_exchange_get_template_part( 'content-checkout/loops/' . $loop );
+			endforeach;
 		?> 
 		
 	<?php else : ?>
