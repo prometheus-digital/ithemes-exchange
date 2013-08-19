@@ -735,7 +735,7 @@ add_action( 'it_exchange_add_on_enabled', 'it_exchange_clear_sessions_when_multi
 /**
  * Registers our default purchase requirements
  *
- * @since 1.1.2
+ * @since 1.2.0
 */
 function it_exchange_register_default_purchase_requirements() {
 
@@ -754,7 +754,7 @@ add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_register_default_p
 /**
  * Registers any purchase requirements Super Widget template parts as valid
  *
- * @since 1.1.2
+ * @since 1.2.0
  *
  * @param array $existing The existing valid template parts
  * @reutrn array
@@ -772,7 +772,7 @@ add_filter( 'it_exchange_super_widget_valid_states', 'it_exchange_register_valid
 /**
  * Replaces purchase options with notification message if purchase requirements haven't been met
  *
- * @since 1.1.3
+ * @since 1.2.0
  *
  * @reutnr void
 */
