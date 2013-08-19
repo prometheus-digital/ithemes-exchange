@@ -10,6 +10,7 @@ input[type="email"]:focus,
 input[type="password"]:focus,
 textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
 .field{margin-top:20px;}
+input.small-text{max-width:50px;}
 
 /** -----------------------------------------------------:[ page settings ]:---------- */
 #it-exchange-page-settings *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
