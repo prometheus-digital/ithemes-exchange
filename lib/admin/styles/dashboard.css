@@ -4,7 +4,7 @@
 #it-exchange-dashboard-reporting-widget .column{float:left;}
 #it-exchange-dashboard-reporting-widget label{display:inline-block;font-weight:bold;}
 #it-exchange-dashboard-reporting-widget .columns-totals .column{width:50%;}
-#it-exchange-dashboard-reporting-widget .columns-totals p{width:80%;margin:0;padding:.5em;background:#FFF;border:1px solid #EEE;border-radius:4px;font-size:2em;}
+#it-exchange-dashboard-reporting-widget .columns-totals p{width:80%;margin:0 0 .75em;padding:.5em;background:#FFF;border:1px solid #EEE;border-radius:4px;font-size:2em;}
 #it-exchange-dashboard-reporting-widget .columns-totals label{margin-top:.5em;margin-bottom:.5em;}
 #it-exchange-dashboard-reporting-widget .columns-totals .column-sales p{color:#58BE78;}
 #it-exchange-dashboard-reporting-widget .columns-totals .column-transactions p{font-weight:100;color:#555;}
