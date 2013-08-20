@@ -114,11 +114,11 @@
 #it-exchange-cart-actions .it-exchange-cart-apply-coupons{margin:1em 0;}
 
 /** ---:[ purchase requirements ]:--- */
-.it-exchange-checkout-login-purchase-requirement label{display:block;margin-top:1em;}
-.it-exchange-checkout-login-purchase-requirement input[type="checkbox"]{margin:2em .5em 2em 0;}
-.it-exchange-checkout-login-purchase-requirement input[type="checkbox"] + label{display:inline;}
-.it-exchange-checkout-login-purchase-requirement #wp-submit{margin-bottom:2em;}
-.it-exchange-checkout-login-purchase-requirement .it-exchange-profile-save{margin:1.5em 0;}
+#it-exchange-checkout-purchase-requirements label{display:block;margin-top:1em;}
+#it-exchange-checkout-purchase-requirements input[type="checkbox"]{margin:2em .5em 2em 0;}
+#it-exchange-checkout-purchase-requirements input[type="checkbox"] + label{display:inline;}
+#it-exchange-checkout-purchase-requirements #wp-submit{margin-bottom:2em;}
+#it-exchange-checkout-purchase-requirements .it-exchange-profile-save{margin:1.5em 0;}
 .it-exchange-checkout-purchase-requirements-notification{margin:1em 0;padding:.75em 1em;border-radius:3px;background:#FFF0F0;color:#DB4343;text-align: left;}
 
 /** ----------------------------------------:[ processing payment ]:--- */
