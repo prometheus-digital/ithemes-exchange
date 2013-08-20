@@ -306,10 +306,10 @@ function it_exchange_register_core_pages() {
 		'slug'          => 'product',
 		'name'          => __( 'Product', 'LION' ),
 		'rewrite-rules' => false, //array( 10, 'it_exchange_get_core_page_rewrites' ),
-		'url'           => 'it_exchange_get_core_page_urls', 
+		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Product Base', 'LION' ),
-		'type'			=> 'exchange',
-		'menu'			=> false,
+		'type'          => 'exchange',
+		'menu'          => false,
 		'optional'      => false,
 	);
 	it_exchange_register_page( 'product', $options );
@@ -319,11 +319,11 @@ function it_exchange_register_core_pages() {
 		'slug'          => 'store',
 		'name'          => __( 'Store', 'LION' ),
 		'rewrite-rules' => array( 230, 'it_exchange_get_core_page_rewrites' ),
-		'url'           => 'it_exchange_get_core_page_urls', 
+		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Store Page', 'LION' ),
 		'tip'           => __( 'Where all your products are shown in one place', 'LION' ),
-		'type'			=> 'exchange',
-		'menu'			=> true,
+		'type'          => 'exchange',
+		'menu'          => true,
 		'optional'      => true,
 	);
 	it_exchange_register_page( 'store', $options );
@@ -333,10 +333,10 @@ function it_exchange_register_core_pages() {
 		'slug'          => 'transaction',
 		'name'          => __( 'Transaction', 'LION' ),
 		'rewrite-rules' => array( 210, 'it_exchange_get_core_page_rewrites' ),
-		'url'           => 'it_exchange_get_core_page_urls', 
+		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Transaction', 'LION' ),
-		'type'			=> 'exchange',
-		'menu'			=> false,
+		'type'          => 'exchange',
+		'menu'          => false,
 		'optional'      => false,
 	);
 	it_exchange_register_page( 'transaction', $options );
@@ -346,11 +346,11 @@ function it_exchange_register_core_pages() {
 		'slug'          => 'registration',
 		'name'          => __( 'Registration', 'LION' ),
 		'rewrite-rules' => array( 105, 'it_exchange_get_core_page_rewrites' ),
-		'url'           => 'it_exchange_get_core_page_urls', 
+		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Customer Registration', 'LION' ),
 		'tip'           => __( 'Where customers register to login, download, etc.  You can turn off registration and allow guest checkouts in Exchange / Add-ons / Digital Downloads Settings.', 'LION' ),
-		'type'			=> 'exchange',
-		'menu'			=> true,
+		'type'          => 'exchange',
+		'menu'          => true,
 		'optional'      => true,
 	);
 	it_exchange_register_page( 'registration', $options );
@@ -360,11 +360,11 @@ function it_exchange_register_core_pages() {
 		'slug'          => 'account',
 		'name'          => __( 'Account', 'LION' ),
 		'rewrite-rules' => array( 135, 'it_exchange_get_core_page_rewrites' ),
-		'url'           => 'it_exchange_get_core_page_urls', 
+		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Account Page', 'LION' ),
 		'tip'           => __( 'Customers get an account when they buy something, so they can login and download their purchases. This is the main landing page for customers after they log in.', 'LION' ),
-		'type'			=> 'exchange',
-		'menu'			=> true,
+		'type'          => 'exchange',
+		'menu'          => true,
 		'optional'      => false,
 	);
 	it_exchange_register_page( 'account', $options );
@@ -374,11 +374,11 @@ function it_exchange_register_core_pages() {
 		'slug'          => 'profile',
 		'name'          => __( 'Profile', 'LION' ),
 		'rewrite-rules' => array( 130, 'it_exchange_get_core_page_rewrites' ),
-		'url'           => 'it_exchange_get_core_page_urls', 
+		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Profile Page', 'LION' ),
 		'tip'           => __( 'Private details about your customers that they can change.', 'LION' ),
-		'type'			=> 'exchange',
-		'menu'			=> true,
+		'type'          => 'exchange',
+		'menu'          => true,
 		'optional'      => true,
 	);
 	it_exchange_register_page( 'profile', $options );
@@ -388,11 +388,11 @@ function it_exchange_register_core_pages() {
 		'slug'          => 'downloads',
 		'name'          => __( 'Downloads', 'LION' ),
 		'rewrite-rules' => array( 125, 'it_exchange_get_core_page_rewrites' ),
-		'url'           => 'it_exchange_get_core_page_urls', 
+		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Customer Downloads', 'LION' ),
 		'tip'           => __( 'Page where the customer can find all of their available downloads.', 'LION' ),
-		'type'			=> 'exchange',
-		'menu'			=> true,
+		'type'          => 'exchange',
+		'menu'          => true,
 		'optional'      => true,
 	);
 	it_exchange_register_page( 'downloads', $options );
@@ -402,10 +402,10 @@ function it_exchange_register_core_pages() {
 		'slug'          => 'purchases',
 		'name'          => __( 'Purchases', 'LION' ),
 		'rewrite-rules' => array( 120, 'it_exchange_get_core_page_rewrites' ),
-		'url'           => 'it_exchange_get_core_page_urls', 
+		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Purchases', 'LION' ),
-		'type'			=> 'exchange',
-		'menu'			=> true,
+		'type'          => 'exchange',
+		'menu'          => true,
 		'optional'      => true,
 	);
 	it_exchange_register_page( 'purchases', $options );
@@ -415,10 +415,10 @@ function it_exchange_register_core_pages() {
 		'slug'          => 'log-in',
 		'name'          => __( 'Log In', 'LION' ),
 		'rewrite-rules' => array( 110, 'it_exchange_get_core_page_rewrites' ),
-		'url'           => 'it_exchange_get_core_page_urls', 
+		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Customer Log In', 'LION' ),
-		'type'			=> 'exchange',
-		'menu'			=> true,
+		'type'          => 'exchange',
+		'menu'          => true,
 		'optional'      => true,
 	);
 	it_exchange_register_page( 'login', $options );
@@ -428,23 +428,23 @@ function it_exchange_register_core_pages() {
 		'slug'          => 'log-out',
 		'name'          => __( 'Log Out', 'LION' ),
 		'rewrite-rules' => array( 115, 'it_exchange_get_core_page_rewrites' ),
-		'url'           => 'it_exchange_get_core_page_urls', 
+		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Customer Log Out', 'LION' ),
-		'type'			=> 'exchange',
-		'menu'			=> true,
+		'type'          => 'exchange',
+		'menu'          => true,
 		'optional'      => true,
 	);
 	it_exchange_register_page( 'logout', $options );
 
-	// Confirmation 
+	// Confirmation
 	$options = array(
 		'slug'          => 'confirmation',
 		'name'          => __( 'Thank you', 'LION' ),
 		'rewrite-rules' => array( 205, 'it_exchange_get_core_page_rewrites' ),
-		'url'           => 'it_exchange_get_core_page_urls', 
+		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Purchase Confirmation', 'LION' ),
-		'type'			=> 'exchange',
-		'menu'			=> false,
+		'type'          => 'exchange',
+		'menu'          => false,
 		'optional'      => false,
 	);
 	it_exchange_register_page( 'confirmation', $options );
@@ -571,7 +571,7 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			return $rewrites;
 			break;
 		case 'confirmation' :
-			$rewrites = array( 
+			$rewrites = array(
 				$slug . '/([^/]+)/?$' => 'index.php?' . $slug . '=$matches[1]',
 			);
 			return $rewrites;
@@ -600,7 +600,7 @@ function it_exchange_get_core_page_urls( $page ) {
     $base       = trailingslashit( get_home_url() );
 
 	// Proccess superwidget links
-	if ( it_exchange_in_superwidget() && $slug != 'transaction' ) { 
+	if ( it_exchange_in_superwidget() && $slug != 'transaction' ) {
 		// Get current URL without exchange query args
 		$url = it_exchange_clean_query_args();
 		return add_query_arg( 'ite-sw-state', $slug, $url );
@@ -658,7 +658,7 @@ function it_exchange_get_core_page_urls( $page ) {
 					return add_query_arg( array( $slug => 1 ), $base );
 			}
 			break;
-    } 
+    }
 }
 
 /**
@@ -712,7 +712,7 @@ function it_exchange_filter_where_clause_for_all_queries( $where='' ) {
 	
 	if ( $end_date )
 		$where .= $GLOBALS['wpdb']->prepare( ' AND post_date <= %s', $end_date );
-	
+
 	return $where;
 }
 
@@ -783,7 +783,7 @@ function it_exchange_disable_purchase_options_on_checkout_page( $elements ) {
 	// Locate the transaction-methods key in elements array (if it exists)
 	$index = array_search( 'transaction-methods', $elements );
 	if ( false === $index )
-		$index = -1; 
+		$index = -1;
 
 	array_splice( $elements, $index, 1, 'purchase-requirements/notification' );
 	return $elements;
@@ -798,7 +798,7 @@ add_filter( 'it_exchange_get_content_checkout_actions_elements', 'it_exchange_di
 function it_exchange_add_product( $args=array() ) {
 	$defaults = array(
 		'status' => 'publish',
-	);  
+	);
 	$defaults = apply_filters( 'it_exchange_add_product_defaults', $defaults );
 
 	$args = ITUtility::merge_defaults( $args, $defaults );
@@ -808,33 +808,33 @@ function it_exchange_add_product( $args=array() ) {
 	$post_args['post_status']  = $args['status'];
 	$post_args['post_type']    = 'it_exchange_prod';
 	$post_args['post_title']   = empty( $args['title'] ) ? '' : $args['title'];
-	$post_args['post_content'] = ( it_exchange_product_type_supports_feature( $args['type'], 'extended-description' ) && ! empty( $args['extended-description'] ) ) ? $args['extended-description'] : ''; 
+	$post_args['post_content'] = ( it_exchange_product_type_supports_feature( $args['type'], 'extended-description' ) && ! empty( $args['extended-description'] ) ) ? $args['extended-description'] : '';
 
 	// Insert Post and get ID
-	if ( $product_id = wp_insert_post( $post_args ) ) { 
+	if ( $product_id = wp_insert_post( $post_args ) ) {
 		update_post_meta( $product_id, '_it_exchange_product_type', $args['type'] );
 		update_post_meta( $product_id, '_it-exchange-visibility', empty( $args['show_in_store'] ) ? 'hidden' : 'visible' );
 
 		$type = $args['type'];
 
 		// Product Images from URLs
-		if ( ! empty( $args['images-from-urls'] ) && is_array( $args['images-from-urls'] ) ) { 
-			foreach( $args['images-from-urls'] as $url => $description ) { 
+		if ( ! empty( $args['images-from-urls'] ) && is_array( $args['images-from-urls'] ) ) {
+			foreach( $args['images-from-urls'] as $url => $description ) {
 				it_exchange_add_remote_image_to_product_images( $url, $product_id, $description );
-			}   
+			}
 			unset( $args['images-from-url'] );
-		}   
+		}
 
 		unset( $args['status'] );
 		unset( $args['extended-description'] );
 		unset( $args['type'] );
 
-		foreach( $args as $key => $value ) { 
-			if ( it_exchange_product_type_supports_feature( $type, $key ) ) 
+		foreach( $args as $key => $value ) {
+			if ( it_exchange_product_type_supports_feature( $type, $key ) )
 				it_exchange_update_product_feature( $product_id, $key, $value );
-		}   
+		}
 		return $product_id;
-	}   
+	}
 	return false;
 }
 
@@ -848,22 +848,22 @@ function it_exchange_add_remote_image_to_product_images( $url, $product_id, $des
 	$file_array['tmp_name'] = $tmp;
 
 	// If error storing temporarily, unlink
-	if ( is_wp_error( $tmp ) ) { 
+	if ( is_wp_error( $tmp ) ) {
 		@unlink($file_array['tmp_name']);
-		$file_array['tmp_name'] = ''; 
-	}   
+		$file_array['tmp_name'] = '';
+	}
 
 	// do the validation and storage stuff
 	$id = media_handle_sideload( $file_array, $product_id, $desc );
 
 	// If error storing permanently, unlink
-	if ( is_wp_error($id) ) { 
+	if ( is_wp_error($id) ) {
 		@unlink($file_array['tmp_name']);
 		return $id;
-	}   
+	}
 
 	$product_images = it_exchange_get_product_feature( $product_id, 'product-images' );
-	if ( empty( $product_images ) || ! is_array( $product_images ) ) 
+	if ( empty( $product_images ) || ! is_array( $product_images ) )
 		$product_images = array( $id );
 	else
 		$product_images[] = $id;
@@ -872,7 +872,7 @@ function it_exchange_add_remote_image_to_product_images( $url, $product_id, $des
 	return $id;
 }
 /************************************
- * THE PREVIOUS API METHODS AREN'T READY 
+ * THE PREVIOUS API METHODS AREN'T READY
  * FOR PRIMETIME YET SO THEY LIVE HERE FOR NOW.
  * USE WITH CAUTION
  *************************************/

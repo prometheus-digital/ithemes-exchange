@@ -514,7 +514,7 @@ function it_exchange_get_purchase_requirements() {
  * Returns the next required purchase requirement
  *
  * @since 1.2.0
- * @return string requirement string 
+ * @return string requirement string
 */
 function it_exchange_get_next_purchase_requirement() {
 	$requirements = it_exchange_get_purchase_requirements();
@@ -560,9 +560,9 @@ function it_exchange_get_all_purchase_requirement_checkout_element_template_part
 */
 function it_exchange_get_next_purchase_requirement_property( $prop ) {
 	$requirement = it_exchange_get_next_purchase_requirement();
-	$property    = ! isset( $requirement[$prop] ) ? false : $requirement[$prop];	
+	$property    = ! isset( $requirement[$prop] ) ? false : $requirement[$prop];
 
-	// Send them to checkout in the SuperWidget if a template-part wasn't 
+	// Send them to checkout in the SuperWidget if a template-part wasn't
 	if ( 'sw-template-part' == $prop && ! $property )
 		$property = 'checkout';
 
