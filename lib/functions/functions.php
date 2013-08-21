@@ -136,7 +136,7 @@ function it_exchange_load_theme_functions_for_exchange() {
 
 	// Child theme or primary theme if not parent
 	if ( is_file( $child_theme_functions ) )
-		include_once( $parent_theme_functions );
+		include_once( $child_theme_functions );
 }
 add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_load_theme_functions_for_exchange' );
 
