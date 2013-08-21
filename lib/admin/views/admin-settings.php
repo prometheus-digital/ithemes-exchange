@@ -52,6 +52,18 @@
 					<?php $form->add_text_area( 'company-address', array( 'rows' => 5, 'cols' => 30 ) ); ?>
 				</td>
 			</tr>
+			<tr valign="top">
+				<th scope="row"><label for="company-base-country"><?php _e( 'Base Country', 'LION' ) ?> <span class="tip" title="<?php esc_attr_e( __( 'This is the country where your business is located', 'LION' ) ); ?>">i</span></label></th>
+				<td>
+					<?php $form->add_drop_down( 'company-base-country', it_exchange_get_data_set( 'countries' ) ); ?>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><label for="company-base-state"><?php _e( 'Base State / Province', 'LION' ) ?> <span class="tip" title="<?php esc_attr_e( __( 'This is the state / province where your business is located', 'LION' ) ); ?>">i</span></label></th>
+				<td>
+					<?php $form->add_drop_down( 'company-base-state', it_exchange_get_data_set( 'states', array( 'country' => 'US' ) ) ); ?>
+				</td>
+			</tr>
 			<?php do_action( 'it_exchange_general_settings_before_settings_currency', $form ); ?>
 			<tr valign="top">
 				<th scope="row"><strong><?php _e( 'Currency Settings', 'LION' ); ?></strong></th>

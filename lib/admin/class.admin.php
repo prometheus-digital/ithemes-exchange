@@ -592,6 +592,8 @@ class IT_Exchange_Admin {
 	*/
 	function set_general_settings_defaults( $values ) {
 		$defaults = array(
+			'company-base-country'         => 'US',
+			'company-base-state'           => 'OK',
 			'default-currency'             => 'USD',
 			'currency-symbol-position'     => 'before',
 			'currency-thousands-separator' => ',',
