@@ -52,5 +52,8 @@ include( $this->_plugin_path . 'api/downloads.php' );
 // Pages 
 include( $this->_plugin_path . 'api/pages.php' );
 
-// Pages 
+// Template Parts 
 include( $this->_plugin_path . 'api/template-parts.php' );
+
+// Data Sets
+include( $this->_plugin_path . 'api/data-sets.php' );
