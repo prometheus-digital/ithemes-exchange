@@ -952,7 +952,7 @@ Order: %s
 	*/
 	function get_default_currency_options() {
 		$options = array();
-		$currency_options = it_exchange_get_currency_options();
+		$currency_options = it_exchange_get_data_set( 'currencies' );
 		foreach( (array) $currency_options as $cc => $currency ) {
 			$options[$cc] = ucwords( $currency['name'] ) . ' (' . $currency['symbol'] . ')'; 
 		}
