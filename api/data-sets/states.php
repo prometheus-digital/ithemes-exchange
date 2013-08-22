@@ -25,6 +25,7 @@ function it_exchange_get_country_states( $options=array() ) {
 		'AU' => 'it_exchange_get_country_states_for_au',
 		'CA' => 'it_exchange_get_country_states_for_ca',
 		'DE' => 'it_exchange_get_country_states_for_de',
+		'NL' => 'it_exchange_get_country_states_for_nl',
 		'US' => 'it_exchange_get_country_states_for_us',
 		'ZA' => 'it_exchange_get_country_states_for_za',
 	);
@@ -106,7 +107,7 @@ function it_exchange_get_country_states_for_ca( $options=array() ) {
 		'PE' => __( 'Prince Edward Island', 'LION' ),
 		'QC' => __( 'Quebec', 'LION' ),
 		'SK' => __( 'Saskatchewan', 'LION' ),
-		'YT' => __( 'Yukon Territory', 'LION' )
+		'YT' => __( 'Yukon Territory', 'LION' ),
 	);
 
 	$states = apply_filters( 'it_exchange_get_country_states_for_ca', $states, $options );
@@ -142,6 +143,34 @@ function it_exchange_get_country_states_for_de( $options=array() ) {
 	);
 
 	$states = apply_filters( 'it_exchange_get_country_states_for_de', $states, $options );
+	return $states;
+}
+
+/**
+ * Returns an array of states for the Netherlands
+ *
+ * @since 1.2.0
+ *
+ * @return array
+*/
+function it_exchange_get_country_states_for_nl( $options=array() ) {
+	// States
+	$states = array(
+		'DR' => __( 'Drenthe', 'LION' ),
+		'FL' => __( 'Flevoland', 'LION' ),
+		'FR' => __( 'Fryslân', 'LION' ),
+		'GE' => __( 'Gelderland', 'LION' ),
+		'GR' => __( 'Groningen', 'LION' ),
+		'LI' => __( 'Limburg', 'LION' ),
+		'NB' => __( 'Noord-Brabant', 'LION' ),
+		'NH' => __( 'Noord-Holland', 'LION' ),
+		'OV' => __( 'Overijssel', 'LION' ),
+		'UT' => __( 'Utrecht', 'LION' ),
+		'ZE' => __( 'Zeeland', 'LION' ),
+		'ZH' => __( 'Zuid-Holland', 'LION' ),
+	);
+
+	$states = apply_filters( 'it_exchange_get_country_states_for_nl', $states, $options );
 	return $states;
 }
 
