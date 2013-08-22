@@ -24,7 +24,7 @@ function it_exchange_get_country_states( $options=array() ) {
 	$supported_countries = array(
 		'AU' => 'it_exchange_get_country_states_for_au',
 		'CA' => 'it_exchange_get_country_states_for_ca',
-		'GB' => 'it_exchange_get_country_states_for_gb',
+		'DE' => 'it_exchange_get_country_states_for_de',
 		'US' => 'it_exchange_get_country_states_for_us',
 		'ZA' => 'it_exchange_get_country_states_for_za',
 	);
@@ -110,6 +110,38 @@ function it_exchange_get_country_states_for_ca( $options=array() ) {
 	);
 
 	$states = apply_filters( 'it_exchange_get_country_states_for_ca', $states, $options );
+	return $states;
+}
+
+/**
+ * Returns an array of states for the Germany
+ *
+ * @since 1.2.0
+ *
+ * @return array
+*/
+function it_exchange_get_country_states_for_de( $options=array() ) {
+	// States
+	$states = array(
+		'BW' => __( 'Baden-Württemberg', 'LION' ),
+		'BY' => __( 'Bayern', 'LION' ),
+		'BE' => __( 'Berlin', 'LION' ),
+		'BB' => __( 'Brandenburg', 'LION' ),
+		'HB' => __( 'Bremen', 'LION' ),
+		'HH' => __( 'Hamburg', 'LION' ),
+		'HE' => __( 'Hessen', 'LION' ),
+		'MV' => __( 'Mecklenburg-Vorpommern', 'LION' ),
+		'NI' => __( 'Niedersachsen', 'LION' ),
+		'NW' => __( 'Nordrhein-Westfalen', 'LION' ),
+		'RP' => __( 'Rheinland-Pfalz', 'LION' ),
+		'SL' => __( 'Saarland', 'LION' ),
+		'SN' => __( 'Sachsen', 'LION' ),
+		'ST' => __( 'Sachsen-Anhalt', 'LION' ),
+		'SH' => __( 'Schleswig-Holstein', 'LION' ),
+		'TH' => __( 'Thüringen', 'LION' ),
+	);
+
+	$states = apply_filters( 'it_exchange_get_country_states_for_de', $states, $options );
 	return $states;
 }
 
