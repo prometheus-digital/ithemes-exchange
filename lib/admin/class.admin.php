@@ -1417,6 +1417,8 @@ Order: %s
 
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
+			else
+				$post_type = NULL;
 		}
 
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
@@ -1463,6 +1465,7 @@ Order: %s
 			$deps = array( 'jquery-ui-tooltip' );
 			wp_enqueue_script( 'it-exchange-help', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/help.js', $deps );
 		}
+		do_action( 'it_exchange_admin_wp_enqueue_scripts', $hook_suffix, $post_type );
 	}
 
 	/**
@@ -1490,6 +1493,8 @@ Order: %s
 
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
+			else
+				$post_type = NULL;
 		}
 
 		// All WP Admin pages
@@ -1517,6 +1522,7 @@ Order: %s
 		} else if ( 'exchange_page_it-exchange-help' === $hook_suffix ) {
 			wp_enqueue_style( 'it-exchange-help', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/help.css' );
 		}
+		do_action( 'it_exchange_admin_wp_enqueue_styles', $hook_suffix, $post_type );
 	}
 
 	/**
