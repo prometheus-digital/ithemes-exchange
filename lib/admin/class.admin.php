@@ -68,6 +68,7 @@ class IT_Exchange_Admin {
 		add_action( 'admin_init', array( $this, 'enable_required_add_ons' ) );
 		add_filter( 'admin_body_class', array( $this, 'add_exchange_class_to_exchange_pages' ) );
 		add_filter( 'upload_mimes', array( $this, 'uploads_mimes_for_products' ) );
+		add_filter( 'wp_ajax_ite-country-state-update', array( $this, 'update_country_state_ui_in_general_settings' ) );
 
 		// Admin Product Redirects 
 		add_action( 'admin_init', array( $this, 'redirect_post_new_to_product_type_selection_screen' ) );
@@ -959,6 +960,39 @@ Order: %s
 			$options[$cc] = ucwords( $currency['name'] ) . ' (' . $currency['symbol'] . ')'; 
 		}
 		return $options;
+	}
+
+	/**
+	 * AJAX callback for general settings country states UI
+	 *
+	 * @since 1.2.0
+	 *
+	 * @return void
+	*/
+	function update_country_state_ui_in_general_settings() {
+		$base_country = empty( $_POST['ite_base_country_ajax'] ) ? 'US' : $_POST['ite_base_country_ajax'];
+		$base_state   = empty( $_POST['ite_base_state_ajax'] ) ? 'OK' : $_POST['ite_base_state_ajax'];
+		$states       = it_exchange_get_data_set( 'states', array( 'country' => $base_country ) );
+
+		// Fire off one of the following two functions.
+		if ( ! empty( $states ) )  {
+		   ?>
+			<select name="it_exchange_settings-company-base-state" id="company-base-state">
+				<?php foreach( $states as $key => $value ) : ?>
+					<option value="<?php esc_attr_e( $key ); ?>" <?php selected( $key, $base_state ); ?>><?php esc_attr_e( $value ); ?></option>
+				<?php endforeach; ?>
+			</select>
+			<?php
+			die();
+		} else {
+			?>
+			<input class="small-text" max-length="3" type="text" name="it_exchange_settings-company-base-state" id="company-base-state" value="">
+			<p class="description">
+				<?php printf( __( 'Please use the 2-3 character %sISO abbreviation%s for country subdivisions', 'LION' ), '<a href="http://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">', '</a>' ); ?>
+			</p>
+			<?php
+			die();
+		}
 	}
 
 	/**

@@ -60,7 +60,7 @@
 			</tr>
 			<tr valign="top">
 				<th scope="row"><label for="company-base-state"><?php _e( 'Base State / Province', 'LION' ) ?> <span class="tip" title="<?php esc_attr_e( __( 'This is the state / province where your business is located', 'LION' ) ); ?>">i</span></label></th>
-				<td>
+				<td class="company-base-state-field-td">
 					<?php 
 					$country = $form->get_option( 'company-base-country' );
 					$states  = it_exchange_get_data_set( 'states', array( 'country' => $country ) );
