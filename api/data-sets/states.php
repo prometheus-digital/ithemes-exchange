@@ -25,6 +25,7 @@ function it_exchange_get_country_states( $options=array() ) {
 		'AU' => 'it_exchange_get_country_states_for_au',
 		'CA' => 'it_exchange_get_country_states_for_ca',
 		'DE' => 'it_exchange_get_country_states_for_de',
+		'ES' => 'it_exchange_get_country_states_for_es',
 		'FR' => 'it_exchange_get_country_states_for_fr',
 		'NL' => 'it_exchange_get_country_states_for_nl',
 		'US' => 'it_exchange_get_country_states_for_us',
@@ -211,6 +212,72 @@ function it_exchange_get_country_states_for_nl( $options=array() ) {
 	);
 
 	$states = apply_filters( 'it_exchange_get_country_states_for_nl', $states, $options );
+	return $states;
+}
+
+/**
+ * Returns an array of states for Spain
+ *
+ * @since 1.2.0
+ *
+ * @return array
+*/
+function it_exchange_get_country_states_for_es( $options=array() ) {
+	// States
+	$states = array(
+		'C'  => __( 'A Coruña', 'LION' ),
+		'VI' => __( 'Álava / Araba', 'LION' ),
+		'AB' => __( 'Albacete', 'LION' ),
+		'A'  => __( 'Alicante / Alacant', 'LION' ),
+		'AL' => __( 'Almería', 'LION' ),
+		'O'  => __( 'Asturias', 'LION' ),
+		'AV' => __( 'Ávila', 'LION' ),
+		'BA' => __( 'Badajoz', 'LION' ),
+		'PM' => __( 'Balears', 'LION' ),
+		'B'  => __( 'Barcelona', 'LION' ),
+		'BU' => __( 'Burgos', 'LION' ),
+		'CC' => __( 'Cáceres', 'LION' ),
+		'CA' => __( 'Cádiz', 'LION' ),
+		'S'  => __( 'Cantabria', 'LION' ),
+		'CS' => __( 'Castelló', 'LION' ),
+		'CR' => __( 'Ciudad Real', 'LION' ),
+		'CO' => __( 'Córdoba', 'LION' ),
+		'CU' => __( 'Cuenca', 'LION' ),
+		'GI' => __( 'Girona', 'LION' ),
+		'GR' => __( 'Granada', 'LION' ),
+		'GU' => __( 'Guadalajara', 'LION' ),
+		'SS' => __( 'Guipúzcoa / Gipuzkoa', 'LION' ),
+		'H'  => __( 'Huelva', 'LION' ),
+		'HU' => __( 'Huesca', 'LION' ),
+		'J'  => __( 'Jaén', 'LION' ),
+		'LO' => __( 'La Rioja', 'LION' ),
+		'GC' => __( 'Las Palmas', 'LION' ),
+		'LE' => __( 'León', 'LION' ),
+		'L'  => __( 'Lleida', 'LION' ),
+		'LU' => __( 'Lugo', 'LION' ),
+		'M'  => __( 'Madrid', 'LION' ),
+		'MA' => __( 'Málaga', 'LION' ),
+		'MU' => __( 'Murcia', 'LION' ),
+		'NA' => __( 'Navarra / Nafarroa', 'LION' ),
+		'OR' => __( 'Ourense', 'LION' ),
+		'P'  => __( 'Palencia', 'LION' ),
+		'PO' => __( 'Pontevedra', 'LION' ),
+		'SA' => __( 'Salamanca', 'LION' ),
+		'TF' => __( 'Santa Cruz de Tenerife', 'LION' ),
+		'SG' => __( 'Segovia', 'LION' ),
+		'SE' => __( 'Sevilla', 'LION' ),
+		'SO' => __( 'Soria', 'LION' ),
+		'T'  => __( 'Tarragona', 'LION' ),
+		'TE' => __( 'Teruel', 'LION' ),
+		'TO' => __( 'Toledo', 'LION' ),
+		'V'  => __( 'Valencia / València', 'LION' ),
+		'VA' => __( 'Valladolid', 'LION' ),
+		'BI' => __( 'Vizcaya / Bizkaia', 'LION' ),
+		'ZA' => __( 'Zamora', 'LION' ),
+		'Z'  => __( 'Zaragoza', 'LION' ),
+	);
+
+	$states = apply_filters( 'it_exchange_get_country_states_for_es', $states, $options );
 	return $states;
 }
 
