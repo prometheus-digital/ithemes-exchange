@@ -173,6 +173,15 @@ function it_exchange_register_core_addons() {
 				'singular_name' => __( 'Duplicate', 'LION' ),
 			),
 		),
+		'recurring-payments' => array(
+			'name'              => __( 'Recurring Payments', 'LION' ),
+			'description'       => __( 'This add-on turns on recurring payments for supporting payment gateways.', 'LION' ),
+			'author'            => 'iThemes',
+			'author_url'        => 'http://ithemes.com',
+            'file'              => dirname( __FILE__ ) . '/product-features/recurring-payments/init.php',
+			'category'          => 'other',
+            'tag'               => 'core',
+		),
 	);
 	$add_ons = apply_filters( 'it_exchange_core_addons', $add_ons );
 
