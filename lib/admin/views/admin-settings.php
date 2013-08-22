@@ -61,7 +61,16 @@
 			<tr valign="top">
 				<th scope="row"><label for="company-base-state"><?php _e( 'Base State / Province', 'LION' ) ?> <span class="tip" title="<?php esc_attr_e( __( 'This is the state / province where your business is located', 'LION' ) ); ?>">i</span></label></th>
 				<td>
-					<?php $form->add_drop_down( 'company-base-state', it_exchange_get_data_set( 'states', array( 'country' => 'US' ) ) ); ?>
+					<?php 
+					$country = $form->get_option( 'company-base-country' );
+					$states  = it_exchange_get_data_set( 'states', array( 'country' => $country ) );
+					if ( ! empty( $states ) ) {
+						$form->add_drop_down( 'company-base-state', $states );
+					} else {
+						$form->add_text_box( 'company-base-state', array( 'class' => 'small-text', 'max-length' => 3 ) );
+						?><p class="description"><?php printf( __( 'Please use the 2-3 character %sISO abbreviation%s for country subdivisions', 'LION' ), '<a href="http://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">', '</a>' ); ?></p><?php
+					}
+					?>
 				</td>
 			</tr>
 			<?php do_action( 'it_exchange_general_settings_before_settings_currency', $form ); ?>
