@@ -25,6 +25,7 @@ function it_exchange_get_country_states( $options=array() ) {
 		'AU' => 'it_exchange_get_country_states_for_au',
 		'CA' => 'it_exchange_get_country_states_for_ca',
 		'DE' => 'it_exchange_get_country_states_for_de',
+		'FR' => 'it_exchange_get_country_states_for_fr',
 		'NL' => 'it_exchange_get_country_states_for_nl',
 		'US' => 'it_exchange_get_country_states_for_us',
 		'ZA' => 'it_exchange_get_country_states_for_za',
@@ -145,6 +146,45 @@ function it_exchange_get_country_states_for_de( $options=array() ) {
 	$states = apply_filters( 'it_exchange_get_country_states_for_de', $states, $options );
 	return $states;
 }
+
+/**
+ * Returns an array of states for France
+ *
+ * @since 1.2.0
+ *
+ * @return array
+*/
+function it_exchange_get_country_states_for_fr( $options=array() ) {
+	// States
+	$states = array(
+		'A' => __( 'Alsace', 'LION' ),
+		'B' => __( 'Aquitaine', 'LION' ),
+		'C' => __( 'Auvergne', 'LION' ),
+		'P' => __( 'Basse-Normandie', 'LION' ),
+		'D' => __( 'Bourgogne', 'LION' ),
+		'E' => __( 'Bretagne', 'LION' ),
+		'F' => __( 'Centre', 'LION' ),
+		'G' => __( 'Champagne-Ardenne', 'LION' ),
+		'H' => __( 'Corse', 'LION' ),
+		'I' => __( 'Franche-Comté', 'LION' ),
+		'Q' => __( 'Haute-Normandie', 'LION' ),
+		'J' => __( 'Île-de-France', 'LION' ),
+		'K' => __( 'Languedoc-Roussillon', 'LION' ),
+		'L' => __( 'Limousin', 'LION' ),
+		'M' => __( 'Lorraine', 'LION' ),
+		'N' => __( 'Midi-Pyrénées', 'LION' ),
+		'O' => __( 'Nord-Pas-de-Calais', 'LION' ),
+		'R' => __( 'Pays de la Loire', 'LION' ),
+		'S' => __( 'Picardie', 'LION' ),
+		'T' => __( 'Poitou-Charentes', 'LION' ),
+		'U' => __( 'Provence-Alpes-Côte d\'Azur', 'LION' ),
+		'V' => __( 'Rhône-Alpes', 'LION' ),
+	);
+
+	$states = apply_filters( 'it_exchange_get_country_states_for_fr', $states, $options );
+	return $states;
+}
+
 
 /**
  * Returns an array of states for the Netherlands
