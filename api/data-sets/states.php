@@ -45,17 +45,40 @@ function it_exchange_get_country_states( $options=array() ) {
  * @return array
 */
 function it_exchange_get_country_states_for_au( $options=array() ) {
+	// Defaults
+	$defaults = array(
+		'include-territories'             => true,
+		'sort-territories-alphabetically' => false,
+	);
+
+	$options = ITUtility::merge_defaults( $options, $defaults );
 	// States
 	$states = array(
-		'ACT' => __( 'Australian Capital Territory', 'LION' ),
 		'NSW' => __( 'New South Wales', 'LION' ),
-		'NT'  => __( 'Northern Territory', 'LION' ),
 		'QLD' => __( 'Queensland', 'LION' ),
 		'SA'  => __( 'South Australia', 'LION' ),
 		'TAS' => __( 'Tasmania', 'LION' ),
 		'VIC' => __( 'Victoria', 'LION' ),
 		'WA'  => __( 'Western Australia', 'LION' )
 	);
+	$states = apply_filters( 'it_exchange_au_states', $states );
+
+	// Territories
+	$territories = array(
+		'ACT' => __( 'Australian Capital Territory', 'LION' ),
+		'JBT' => __( 'Jervis Bay Territory', 'LION' ),
+		'NT'  => __( 'Northern Territory', 'LION' ),
+		
+	);
+	$territories = apply_filters( 'it_exchange_au_territories', $territories );
+
+	// Merge territories and states if needed
+	if ( ! empty( $options['include-territories'] ) )
+		$states = array_merge( $states, $territories );
+
+	// Sort alphabetically or keep territories at the end
+	if ( ! empty( $options['sort-territories-alphabetically'] ) )
+		ksort( $states );
 
 	$states = apply_filters( 'it_exchange_get_country_states_for_au', $states, $options );
 	return $states;
@@ -101,7 +124,8 @@ function it_exchange_get_country_states_for_us( $options=array() ) {
 
 	// Defaults
 	$defaults = array(
-		'include-territories' => false,
+		'include-territories'             => false,
+		'sort-territories-alphabetically' => false,
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -159,6 +183,7 @@ function it_exchange_get_country_states_for_us( $options=array() ) {
 		'WI' => __( 'Wisconsin', 'LION' ),
 		'WY' => __( 'Wyoming', 'LION' ),
 	);
+	$states = apply_filters( 'it_exchange_us_states', $states );
 
 	// Territories
 	$territories = array(
@@ -171,9 +196,15 @@ function it_exchange_get_country_states_for_us( $options=array() ) {
 		'PW' => __( 'Palau', 'LION' ),
 		'VI' => __( 'Virgin Islands', 'LION' ),
 	);
+	$territories = apply_filters( 'it_exchange_us_territories', $territories );
 
+	// Include territories?
 	if ( ! empty( $options['include-territories'] ) )
 		$states = array_merge( $states, $territories );
+
+	// Sort alphabetically or keep territories at the end
+	if ( ! empty( $options['sort-territories-alphabetically'] ) )
+		ksort( $states );
 
 	$states = apply_filters( 'it_exchange_get_country_states_for_us', $states, $options );
 	return $states;
