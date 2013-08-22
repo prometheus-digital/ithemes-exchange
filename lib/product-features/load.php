@@ -11,6 +11,9 @@ require( $this->_plugin_path . 'lib/product-features/class.title.php' );
 // Product Feature: Base Price
 require( $this->_plugin_path . 'lib/product-features/class.base-price.php' );
 
+// Product Feature: Recurring Payments
+require( $this->_plugin_path . 'lib/product-features/class.recurring-payments.php' );
+
 // Product Feature: Product Description
 require( $this->_plugin_path . 'lib/product-features/class.description.php' );
 
