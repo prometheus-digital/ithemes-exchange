@@ -22,13 +22,17 @@
 	
 	<?php if ( it_exchange( 'cart', 'has-cart-items' ) ) :  ?>
 		
-		<?php
-			// Loops we want to include, in the order we want them.
-			$loops = array( 'purchase-requirements', 'items', 'coupons', 'totals', 'actions' );
-			foreach ( it_exchange_get_template_part_loops( 'content-cart', 'has-cart-item', $loops ) as $loop ) : 
-				it_exchange_get_template_part( 'content-checkout/loops/' . $loop );
-			endforeach;
-		?> 
+		<?php it_exchange_get_template_part( 'content-checkout/loops/purchase-requirements' ); ?>
+		
+		<div class="it-exchange-order-details<?php echo ( ! is_user_logged_in() ) ? ' it-exchange-requirements-active' : ''; ?>">
+			<?php
+				// Loops we want to include, in the order we want them.
+				$loops = array( 'items', 'coupons', 'totals', 'actions' );
+				foreach ( it_exchange_get_template_part_loops( 'content-cart', 'has-cart-item', $loops ) as $loop ) : 
+					it_exchange_get_template_part( 'content-checkout/loops/' . $loop );
+				endforeach;
+			?> 
+		</div>
 		
 	<?php else : ?>
 		<?php do_action( 'it_exchange_content_cart_start_empty_cart' ); ?>
