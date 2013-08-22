@@ -55,7 +55,6 @@
 			<tr valign="top">
 				<th scope="row"><label for="company-base-country"><?php _e( 'Base Country', 'LION' ) ?> <span class="tip" title="<?php esc_attr_e( __( 'This is the country where your business is located', 'LION' ) ); ?>">i</span></label></th>
 				<td>
-					<?php ITUtility::print_r( it_exchange_get_data_set( 'states', array( 'country' => 'US', 'include-territories' => false, 'sort-territories-alphabetically' => false) ) ); ?>
 					<?php $form->add_drop_down( 'company-base-country', it_exchange_get_data_set( 'countries' ) ); ?>
 				</td>
 			</tr>
