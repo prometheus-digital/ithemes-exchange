@@ -332,8 +332,22 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 		
 		remove_filter( 'the_title', 'wptexturize' ); // remove this because it screws up the product titles in PayPal
 		
+		//https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/#id08A6HI00JQU
+		//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
+		//a2, t2, p2 are for the second trial period, which is not supported with the Recurring Payments add-on
+		//a3, t3, p3 are required for the actual subscription details
+		$paypal_args = array(
+			'cmd' => '_xclick-subscriptions',
+			'a3'  => 1, //Regular subscription price.
+			't3'  => 2, //Subscription duration. Specify an integer value in the allowable range for the units of duration that you specify with t3.	
+			'p3'  => 3, //Regular subscription units of duration. (D, W, M, Y) -- we only use W,M,Y by default
+		);
+		
+		
+		$cmd = '_xclick';
+		
 		$query = array(
-			'cmd'           => '_xclick',
+			'cmd'           => $cmd,
 			'business'      => $paypal_email,
 			'item_name'     => it_exchange_get_cart_description(),
 			'amount'        => number_format( it_exchange_get_cart_total( false ), 2, '.', '' ),
