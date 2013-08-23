@@ -740,12 +740,12 @@ add_action( 'it_exchange_add_on_enabled', 'it_exchange_clear_sessions_when_multi
 function it_exchange_register_default_purchase_requirements() {
 
 	// Link vars
-	$login = __( 'Log in', 'LION' );
-	$register = __( 'Register', 'LION' );
-	$cart = __( 'Edit your cart', 'LION' );
+	$login      = __( 'Log in', 'LION' );
+	$register   = __( 'register', 'LION' );
+	$cart       = __( 'edit your cart', 'LION' );
 	$login_link = '<a href="' . it_exchange_get_page_url( 'login' ) . '" class="it-exchange-login-requirement-login">';
-	$reg_link = '<a href="' . it_exchange_get_page_url( 'registration' ) . '" class="it-exchange-login-requirement-registration">';
-	$cart_link = '<a href="' . it_exchange_get_page_url( 'cart' ) . '">';
+	$reg_link   = '<a href="' . it_exchange_get_page_url( 'registration' ) . '" class="it-exchange-login-requirement-registration">';
+	$cart_link  = '<a href="' . it_exchange_get_page_url( 'cart' ) . '">';
 	$close_link = '</a>';
 
 	// User must be logged-in to checkout
