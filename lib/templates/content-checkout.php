@@ -24,7 +24,7 @@
 		
 		<?php it_exchange_get_template_part( 'content-checkout/loops/purchase-requirements' ); ?>
 		
-		<div class="it-exchange-order-details<?php echo ( ! is_user_logged_in() ) ? ' it-exchange-requirements-active' : ''; ?>">
+		<div class="it-exchange-order-details<?php echo ( false !== ( $notification = it_exchange_get_next_purchase_requirement() ) ) ? ' it-exchange-requirements-active' : ''; ?>">
 			<?php
 				// Loops we want to include, in the order we want them.
 				$loops = array( 'items', 'coupons', 'totals', 'actions' );

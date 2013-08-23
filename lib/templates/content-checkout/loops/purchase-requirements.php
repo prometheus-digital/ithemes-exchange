@@ -17,7 +17,7 @@
 ?>
 <?php if ( it_exchange_get_purchase_requirements() ) : ?>
 	<?php do_action( 'it_exchange_content_checkout_before_purchase_requirements' ); ?>
-	<div id="it-exchange-checkout-purchase-requirements" class="<?php echo ( ! is_user_logged_in() ) ? ' it-exchange-requirements-active' : ''; ?>">
+	<div id="it-exchange-checkout-purchase-requirements" class="<?php echo ( false !== ( $notification = it_exchange_get_next_purchase_requirement() ) ) ? 'it-exchange-requirements-active' : ''; ?>">
 		<?php do_action( 'it_exchange_content_checkout_before_purchase_requirements_loop' ); ?>
 		<?php
 		/* This loop is a bit different because we are asking add-ons to provide the list of element items by
