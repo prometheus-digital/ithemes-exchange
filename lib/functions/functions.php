@@ -122,7 +122,7 @@ add_action( 'wp_enqueue_scripts', 'it_exchange_load_public_scripts' );
 /**
  * Loads functions.php in theme if it exists
  *
- * @since 1.1.3
+ * @since 1.2.0
  *
  * @return void
 */

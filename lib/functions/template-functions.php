@@ -171,7 +171,7 @@ function it_exchange_unset_template_part_args( $template_name ) {
 */
 function it_exchange_default_template_parts_last_updated() {
 	// This is not filterable
-	return '1.1.3';
+	return '1.2.0';
 }
 
 /**
