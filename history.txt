@@ -1,3 +1,24 @@
+1.2.0 - 2013-08-23 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich
+	Added base country and base state to settings page
+	Added States data-set for US, AU, CA, ES, FR, NL, ZA
+	Added countries data set
+	Fix child theme url for functions.php include
+	Added an indication of which fields are required for registration.
+	Implementing Purchase Requirements API
+	Added new method to api/theme/customers: display-name
+	Added ability for 3rd Parties to hook into supwerwidget ajax.php
+	Added .75em bottom margin to dashboard totals.
+	Edited x visibility of the downloads list on the Add/Edit Product screen.
+	Fixed small text input size for decimal and thousands separator.
+	Fixed page settings input overlap.
+	Added missing PHP break statements in api/theme/customer.php switch statements
+	Added get_plugin_path publich function to IT_Exchange class
+	Fixed a bug that causes the get-images array to only pull the last image and not all the images for a product.
+	Allow themes to add functions.php to their /exchange folder
+	Change product title from h1 to h2 in store view
+	Fixed monthly transaction totals in reporting widget for PHP 5.2.
+	Added transaction status to reporting widget
+	Add more fonts to the add-edt product page font-family
 1.1.3 - 2013-08-19 - Packaging Bot
 	Updated lib/classes to version 2.3.5
 1.1.2 - 2013-08-13 - Glenn Ansley, Lew Ayotte
