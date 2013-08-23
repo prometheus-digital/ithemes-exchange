@@ -12,7 +12,14 @@
  *
  * @return array
 */
-function it_exchange_get_countries() {
+function it_exchange_get_countries( $options=array() ) {
+
+	// Defaults
+	$defaults = array(
+		'sort-by-values' => true,
+	); 
+
+	$options = ITUtility::merge_defaults( $options, $defaults );
 
 	$countries = array(
 		'AD' => __( 'Andorra', 'LION' ),
@@ -252,5 +259,15 @@ function it_exchange_get_countries() {
 		'ZM' => __( 'Zambia', 'LION' ),
 		'ZW' => __( 'Zimbabwe', 'LION' ),
 	);
+
+	// Sort by values, not keys.
+	if ( ! empty( $options['sort-by-values'] ) ) {
+		$sorted = array();
+		foreach( $countries as $key => $value ) {
+			$sorted[$value] = $value;
+		}
+		array_multisort( $sorted, SORT_ASC, $countries );
+	}
+
 	return apply_filters( 'it_exchange_get_countries', $countries );
 }
