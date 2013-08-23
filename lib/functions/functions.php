@@ -739,17 +739,26 @@ add_action( 'it_exchange_add_on_enabled', 'it_exchange_clear_sessions_when_multi
 */
 function it_exchange_register_default_purchase_requirements() {
 
+	// Link vars
+	$login = __( 'Log in', 'LION' );
+	$register = __( 'Register', 'LION' );
+	$cart = __( 'Edit your cart', 'LION' );
+	$login_link = '<a href="' . it_exchange_get_page_url( 'login' ) . '" class="it-exchange-login-requirement-login">';
+	$reg_link = '<a href="' . it_exchange_get_page_url( 'registration' ) . '" class="it-exchange-login-requirement-registration">';
+	$cart_link = '<a href="' . it_exchange_get_page_url( 'cart' ) . '">';
+	$close_link = '</a>';
+
 	// User must be logged-in to checkout
 	$properties = array(
 		'priority'               => 1,
 		'requirement-met'        => 'is_user_logged_in',
 		'sw-template-part'       => apply_filters( 'it_exchange_sw_template_part_for_logged_in_purchase_requirement', 'registration' ),
 		'checkout-template-part' => 'logged-in',
-		'notification'           => __( 'You must be logged in to complete your purchase.', 'LION' ),
+		'notification'           => sprintf( __( 'You must be logged in to complete your purchase. %s' . $login . '%s, %s' . $register . '%s, or %s' . $cart . '%s', 'LION' ), $login_link, $close_link, $reg_link, $close_link, $cart_link, $close_link ),
 	);
 	it_exchange_register_purchase_requirement( 'logged-in', $properties );
 }
-add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_register_default_purchase_requirements' );
+add_action( 'init', 'it_exchange_register_default_purchase_requirements' );
 
 /**
  * Registers any purchase requirements Super Widget template parts as valid
@@ -783,7 +792,7 @@ function it_exchange_add_purchase_requirement_notification() {
     do_action( 'it_exchange_content_checkout_before_purchase_requirements_notification_element' );
 	?>
     <div class="it-exchange-checkout-purchase-requirements-notification">
-        <?php esc_html_e( $notification ); ?>
+        <?php _e( $notification ); ?>
     </div>
     <?php
 	do_action( 'it_exchange_content_checkout_actions_after_purchase_requirements_notification_element' );
