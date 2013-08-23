@@ -11,7 +11,7 @@ function it_exchange_register_core_addons() {
 
 	// An array of add-ons provided by iThemes Exchange
 	$add_ons = array(
-		// Offline
+		// Offline Payments
 		'offline-payments' => array(
 			'name'              => __( 'Offline Payments', 'LION' ),
 			'description'       => __( 'Process transactions offline via check or cash.', 'LION' ),
@@ -60,18 +60,18 @@ function it_exchange_register_core_addons() {
 		),
 		// Digital Download Product Types
 		'digital-downloads-product-type' => array(
-			'name'        => __( 'Digital Downloads', 'LION' ),
-			'description' => __( 'This adds a product type for distributing digital downloads through iThemes Exchange.', 'LION' ),
-			'author'      => 'iThemes',
-			'author_url'  => 'http://ithemes.com',
-			'file'        => dirname( __FILE__ ) . '/product-types/digital-downloads/init.php',
-			'category'    => 'product-type',
-			'tag'         => 'core',
-			'labels'      => array(
+			'name'              => __( 'Digital Downloads', 'LION' ),
+			'description'       => __( 'This adds a product type for distributing digital downloads through iThemes Exchange.', 'LION' ),
+			'author'            => 'iThemes',
+			'author_url'        => 'http://ithemes.com',
+			'file'              => dirname( __FILE__ ) . '/product-types/digital-downloads/init.php',
+			'category'          => 'product-type',
+			'tag'               => 'core',
+			'labels'            => array(
 				'singular_name' => __( 'Digital Download', 'LION' ),
 			),
-			'supports'    => apply_filters( 'it_exchange_register_digital_downloads_default_features', array(
-				'inventory'     => false,
+			'supports'          => apply_filters( 'it_exchange_register_digital_downloads_default_features', array(
+				'inventory' => false,
 			) ),
 			'settings-callback' => 'it_exchange_digital_downloads_settings_callback',
 		),
@@ -169,29 +169,39 @@ function it_exchange_register_core_addons() {
 			'labels'      => array(
 				'singular_name' => __( 'Product Tag', 'LION' ),
 			),
-        ),
-        // Simple Taxes
-        'taxes-simple' => array(
-            'name'              => __( 'Simple Taxes', 'LION' ),
-            'description'       => __( 'This gives the admin ability to apply a default tax rate to all sales.', 'LION' ),
-            'author'            => 'iThemes',
-            'author_url'        => 'http://ithemes.com',
-            'file'              => dirname( __FILE__ ) . '/taxes/taxes-simple/init.php',
-            'category'          => 'taxes',
-            'tag'               => 'core',
-            'settings-callback' => 'it_exchange_taxes_simple_settings_callback',
 		),
+		// Simple Taxes
+		'taxes-simple' => array(
+			'name'              => __( 'Simple Taxes', 'LION' ),
+			'description'       => __( 'This gives the admin ability to apply a default tax rate to all sales.', 'LION' ),
+			'author'            => 'iThemes',
+			'author_url'        => 'http://ithemes.com',
+			'file'              => dirname( __FILE__ ) . '/taxes/taxes-simple/init.php',
+			'category'          => 'taxes',
+			'tag'               => 'core',
+			'settings-callback' => 'it_exchange_taxes_simple_settings_callback',
+		),
+		// Duplicate Products
 		'duplicate-products' => array(
 			'name'              => __( 'Duplicate Products', 'LION' ),
 			'description'       => __( 'This gives the admin the ability to duplicate an existing product.', 'LION' ),
 			'author'            => 'iThemes',
 			'author_url'        => 'http://ithemes.com',
-            'file'              => dirname( __FILE__ ) . '/product-features/duplicate-products/init.php',
+			'file'              => dirname( __FILE__ ) . '/product-features/duplicate-products/init.php',
 			'category'          => 'other',
-            'tag'               => 'core',
+			'tag'               => 'core',
 			'labels'      => array(
 				'singular_name' => __( 'Duplicate', 'LION' ),
 			),
+		),
+		'it-shipping'        => array(
+			'name'              => __( 'Shipping', 'LION' ),
+			'description'       => __( 'This gives the admin ability to apply a default tax rate to all sales.', 'LION' ),
+			'author'            => 'iThemes',
+			'author_url'        => 'http://ithemes.com',
+			'file'              => dirname( __FILE__ ) . '/shipping/it-shipping/init.php',
+			'category'          => 'shipping',
+			'settings-callback' => 'it_exchange_shipping_settings_callback',
 		),
 	);
 	$add_ons = apply_filters( 'it_exchange_core_addons', $add_ons );
@@ -199,7 +209,6 @@ function it_exchange_register_core_addons() {
 	// Loop through add-ons and register each one individually
 	foreach( (array) $add_ons as $slug => $params )
 		it_exchange_register_addon( $slug, $params );
-	
 }
 add_action( 'it_exchange_register_addons', 'it_exchange_register_core_addons' );
 

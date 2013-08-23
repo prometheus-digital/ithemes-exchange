@@ -1851,4 +1851,4 @@ Order: %s
 	}
 }
 if ( is_admin() )
-	$IT_Exchange_Admin = new IT_Exchange_Admin( $this );
+	$GLOBALS['IT_Exchange_Admin'] = new IT_Exchange_Admin( $this );
