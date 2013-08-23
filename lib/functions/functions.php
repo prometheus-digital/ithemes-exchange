@@ -770,7 +770,28 @@ function it_exchange_register_valid_sw_states_for_purchase_reqs( $existing ) {
 add_filter( 'it_exchange_super_widget_valid_states', 'it_exchange_register_valid_sw_states_for_purchase_reqs' );
 
 /**
- * Replaces purchase options with notification message if purchase requirements haven't been met
+ * Add purchase requiremnt notification to chekcout page if needed.
+ *
+ * @since 1.2.0
+ *
+ * @return void
+*/
+function it_exchange_add_purchase_requirement_notification() {
+	if ( false === ( $notification = it_exchange_get_next_purchase_requirement_property( 'notification' ) ) )
+		return;
+
+    do_action( 'it_exchange_content_checkout_before_purchase_requirements_notification_element' );
+	?>
+    <div class="it-exchange-checkout-purchase-requirements-notification">
+        <?php esc_html_e( $notification ); ?>
+    </div>
+    <?php
+	do_action( 'it_exchange_content_checkout_actions_after_purchase_requirements_notification_element' );
+}
+add_action( 'it_exchange_content_checkout_after_purchase_requirements', 'it_exchange_add_purchase_requirement_notification' );
+
+/**
+ * Rmove purchase options if purchase requirements haven't been met
  *
  * @since 1.2.0
  *
@@ -783,9 +804,10 @@ function it_exchange_disable_purchase_options_on_checkout_page( $elements ) {
 	// Locate the transaction-methods key in elements array (if it exists)
 	$index = array_search( 'transaction-methods', $elements );
 	if ( false === $index )
-		$index = -1;
+		return $elements;
 
-	array_splice( $elements, $index, 1, 'purchase-requirements/notification' );
+	// Remove transaction-methods
+	unset( $elements[$index] );
 	return $elements;
 }
 add_filter( 'it_exchange_get_content_checkout_actions_elements', 'it_exchange_disable_purchase_options_on_checkout_page' );
