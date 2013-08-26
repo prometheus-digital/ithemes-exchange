@@ -207,6 +207,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			'format'       => 'html',
 			'attribute'    => false,
 			'format_price' => true,
+			'class'        => false
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -229,7 +230,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		if ( (boolean) $options['format_price'] && in_array( $options['attribute'], array( 'product_subtotal', 'product_base_price' ) ) )
 			$attribute = it_exchange_format_price( $attribute );
 
-		$open_wrap  = empty( $options['wrap'] ) ? '' : '<' . esc_attr( $options['wrap'] ) . ' class="entry-title">';
+		$open_wrap  = empty( $options['wrap'] ) ? '' : '<' . esc_attr( $options['wrap'] ) . ' class="' . $options['class'] . '">';
 		$close_wrap = empty( $options['wrap'] ) ? '' : '</' . esc_attr( $options['wrap'] ) . '>';
 		$result   = ''; 
 
