@@ -32,3 +32,21 @@ function it_exchange_addon_get_simple_taxes_for_cart( $format_price=true ) {
 		$taxes = it_exchange_format_price( $taxes );
 	return $taxes;
 }
+
+/**
+ * Get labels from settings
+ *
+ * @since 1.2.1
+ *
+ * @param string $label which label do you want to return? tax or taxes
+ * @return string
+*/
+function it_exchange_add_simple_taxes_get_label( $label ) {
+	$settings = it_exchange_get_option( 'addon_taxes_simple' );
+	if ( 'tax' == $label )
+		$label = 'tax-label-singular';
+	if ( 'taxes' == $label )
+		$label = 'tax-label-plural';
+
+	return empty( $settings[$label] ) ? '' : esc_attr( $settings[$label] );
+}

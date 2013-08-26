@@ -16,7 +16,7 @@
 <?php do_action( 'it_exchange_super_widget_checkout_before_taxes_simple_element' ); ?>
 <div class="cart-taxes cart-totals-row">
 	<?php do_action( 'it_exchange_super_widget_checkout_begin_taxes_simple_element' ); ?>
-	<?php _e( 'Tax:', 'LION' ); ?> <?php esc_attr_e( it_exchange_addon_get_simple_taxes_for_cart() ); ?>
+	<?php echo it_exchange_add_simple_taxes_get_label( 'tax' ) . _x( ':', 'Used in superwidget for taxes. eg Tax: ', 'LION' ); ?> <?php esc_attr_e( it_exchange_addon_get_simple_taxes_for_cart() ); ?>
 	<?php do_action( 'it_exchange_super_widget_checkout_end_taxes_simple_element' ); ?>
 </div>
 <?php do_action( 'it_exchange_super_widget_checkout_after_taxes_simple_element' ); ?>

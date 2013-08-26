@@ -19,7 +19,7 @@
 <div class="it-exchange-cart-totals-title it-exchange-table-column">
 	<?php do_action( 'it_exchange_content_checkout_begin_totals_taxes_simple_element_label' ); ?>
 	<div class="it-exchange-table-column-inner">
-		<?php _e( 'Tax', 'LION' ); ?>
+		<?php echo it_exchange_add_simple_taxes_get_label( 'tax' ); ?>
 	</div>
 	<?php do_action( 'it_exchange_content_checkout_end_totals_taxes_simple_element_label' ); ?>
 </div>

@@ -47,6 +47,11 @@ function it_exchange_taxes_simple_settings_callback() {
 			<?php $form->add_text_box( 'default-tax-rate' ); ?> %</br />
 			<?php $form->add_check_box( 'calculate-after-discounts' ); ?>
 			<label for="calculate-after-discounts"><?php _e( 'Calculate taxes after discounts are applied?', 'LION' ); ?></label>
+			<h3><?php _e( 'Labels', 'LION' ); ?></h3>
+			<label for="tax-label-singular"><?php _e( 'Tax:', 'LION' ); ?><br />
+			<?php $form->add_text_box( 'tax-label-singular', array( 'class' => 'normal' ) ); ?></label>
+			<label for="tax-label-plural"><?php _e( 'Taxes:', 'LION' ); ?><br />
+			<?php $form->add_text_box( 'tax-label-plural', array( 'class' => 'normal' ) ); ?></label>
 			<p class="submit">
 				<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary button-large' ) ); ?>
 			</p>
@@ -54,6 +59,21 @@ function it_exchange_taxes_simple_settings_callback() {
 	</div>
 	<?php
 }
+
+/**
+ * Set default settings
+ *
+ * @since 1.2.1
+ *
+ * @param array $defaults incoming from filter
+ * @return array
+*/
+function it_exchange_addon_taxes_simple_default_settings ( $defaults ) {
+	$defaults['tax-label-singular'] = __( 'Tax', 'LION' );
+	$defaults['tax-label-plural']   = __( 'Taxes', 'LION' );
+	return $defaults;
+}
+add_filter( 'it_storage_get_defaults_exchange_addon_taxes_simple', 'it_exchange_addon_taxes_simple_default_settings' );
 
 /**
  * Save settings
@@ -79,6 +99,8 @@ function it_exchange_addon_save_taxes_simple_settings() {
 	// Validate data
 	if ( ! is_numeric( $new_values['default-tax-rate'] ) ) {
 		it_exchange_add_message( 'error', __( 'Default tax rate must be numeric', 'LION' ) );
+	} else if ( empty( $new_values['tax-label-plural'] ) || empty( $new_values['tax-label-singular'] ) ) {
+		it_exchange_add_message( 'error', __( 'Tax labels cannot be left empty', 'LION' ) );
 	} else {
 		it_exchange_save_option( 'addon_taxes_simple', $new_values );
 		it_exchange_add_message( 'notice', __( 'Settings Saved', 'LION' ) );
