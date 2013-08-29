@@ -314,10 +314,21 @@ function it_exchange_serve_product_download( $hash_data ) {
 				// Clear buffer
 				flush();
 
-				// Deliver the file
-				readfile(str_replace( ' ', '%20', $url )  );
+				// Deliver the file: readfile, curl, redirect
+				if ( ini_get( 'allow_url_fopen' ) ) {
+					// Use readfile if allow_url_fopen is on
+					readfile( str_replace( ' ', '%20', $url )  );
+				} else if ( is_callable( 'curl_init' ) ) {
+					// Use cURL if allow_url_fopen is off and curl is available
+					$ch = curl_init( str_replace( ' ', '%20', $url ) );
+					curl_exec( $ch );
+					curl_close( $ch );
+				} else {
+					// Just redirect to the file becuase their host <strike>sucks</strike> doesn't support allow_url_fopen or curl.
+					wp_redirect( str_replace( ' ', '%20', $url ) );
+				}
 				die();
-	
+
 			}
 			die( __( 'Download Error: Invalid response', 'LION' ) );
 		} else {
