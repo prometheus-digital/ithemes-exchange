@@ -44,7 +44,6 @@
 							<li class="stripe-payoption inactive" data-toggle="stripe-wizard">
 								<div class="payoption-spacer">
 									<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/stripe32.png' ); ?>" alt="<?php _e( 'Stripe', 'LION' ); ?>" />
-									<span>$</span>
 								</div>
 							</li>
 						<?php endif; ?>
@@ -54,7 +53,7 @@
 				<?php if ( ! it_exchange_is_addon_registered( 'stripe' ) ) : ?>
 					<div class="field stripe-wizard inactive hide-if-js">
 						<h3><?php _e( 'Stripe', 'LION' ); ?></h3>
-						<p><?php _e( 'To use Stripe, you need to install the Stripe premium add-on.', 'LION' ); ?></p>
+						<p><?php _e( 'To use Stripe, you need to install the Stripe add-on.', 'LION' ); ?></p>
 						<div class="stripe-action activate-stripe">
 							<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/plugin32.png' ); ?>" />
 							<p><?php _e( 'I have the Stripe add-on and just need to install and/or activate it.', 'LION' ); ?></p>
@@ -63,7 +62,7 @@
 						<div class="stripe-action buy-stripe">
 							<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/icon32.png' ); ?>" />
 							<p><?php _e( "I don't have the Stripe add-on yet, but I want to use Stripe.", 'LION' ); ?></p>
-							<p><a href="http://ithemes.com/exchange/stripe/" target="_blank"><?php _e( 'Buy the Stripe Add-on', 'LION' ); ?></a></p>
+							<p><a href="http://ithemes.com/exchange/stripe/" target="_blank"><?php _e( 'Get the free Stripe Add-on', 'LION' ); ?></a></p>
 						</div>
 					</div>
 				<?php endif; ?>
