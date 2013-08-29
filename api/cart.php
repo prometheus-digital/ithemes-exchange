@@ -176,13 +176,13 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 
 	// Doe we have anything in the cart already?
 	$session_products = it_exchange_get_cart_products();
-
+	
 	/**
 	 * If multi-item carts are allowed, don't do antying here.
 	 * If multi-item carts are NOT allowed and this is a different item, empty the cart before proceeding.
 	 * If item being added to cart is already in cart, preserve that item so that quanity will be bumpped.
 	*/
-	if ( ! it_exchange_is_multi_item_cart_allowed() ) {
+	if ( ! it_exchange_is_multi_item_cart_allowed() || ! it_exchange_is_multi_item_product_allowed( $product_id ) ) {
 		if ( ! empty( $session_products ) ) {
 			// Preserve the current item being added if its already in the cart
 			if ( ! empty( $session_products[$product_id . '-' . $itemized_hash] ) )
@@ -301,6 +301,18 @@ function it_exchange_empty_shopping_cart() {
 */
 function it_exchange_is_multi_item_cart_allowed() {
 	return apply_filters( 'it_exchange_multi_item_cart_allowed', false );
+}
+
+/**
+ * Is this product allowed to be added to a multi-item cart?
+ *
+ * Default is true.
+ *
+ * @since 1.3.0
+ * @return boolean
+*/
+function it_exchange_is_multi_item_product_allowed( $product_id ) {
+	return apply_filters( 'it_exchange_multi_item_product_allowed', true, $product_id );	
 }
 
 /**
