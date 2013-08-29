@@ -1,3 +1,14 @@
+1.2.1 - 2013-08-29 - Glenn Ansley, Justin Kopepasah, Brad Ulrich
+	Introducing our Simple Product Type
+	Add address-formats and measurement-formats data sets
+	Tweak stripe upsell language now that it's free
+	Create fallbacks for file delivery when allow_url_fopen and / or curl isn't available on the server
+	Removed entry-title from the product-attribute wrap and added the class option.
+	Fix template part comments in tax super widget template part
+	Add ability for Store Owner to change 'Tax' label in settings.
+	Change NL state to 'Friesland'
+	Change default cancel link on cart from 'Cancel' to 'Edit Cart' on checkout page
+	Add login, registration and cart links to login notification on checkout page
 1.2.0 - 2013-08-23 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich
 	Added base country and base state to settings page
 	Added States data-set for US, AU, CA, ES, FR, NL, ZA
