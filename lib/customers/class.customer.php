@@ -144,6 +144,30 @@ class IT_Exchange_Customer {
 	}
 
 	/**
+	 * Gets a customer meta property.
+	 *
+	 * If the custom value is already set, it uses that.
+	 * If the custom value is not set and we're on post-add.php, check for a URL param
+	 *
+	 * @since 1.3.0
+	*/
+	function get_customer_meta( $key, $single = true ) {
+		return get_user_meta( $this->id, '_it_exchange_customer_' . $key, $single );
+	}
+
+	/**
+	 * Updates a customer meta property.
+	 *
+	 * If the custom value is already set, it uses that.
+	 * If the custom value is not set and we're on post-add.php, check for a URL param
+	 *
+	 * @since 1.3.0
+	*/
+	function update_customer_meta( $key, $value ) {
+		update_user_meta( $this->ID, '_it_exchange_customer_' . $key, $value );
+	}
+
+	/**
 	 * Returns true or false based on whether the $id property is a WP User id
 	 *
 	 * @since 0.3.8
