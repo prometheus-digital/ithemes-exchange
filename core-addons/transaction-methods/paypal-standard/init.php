@@ -328,33 +328,66 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 
 	if ( $paypal_email = $paypal_settings['paypal-standard-live-email-address'] ) {
 		
+		$subscription = false;
 		$it_exchange_customer = it_exchange_get_current_customer();
 		
 		remove_filter( 'the_title', 'wptexturize' ); // remove this because it screws up the product titles in PayPal
 		
+		if ( 1 === it_exchange_get_cart_products_count() ) {
+			$cart = it_exchange_get_cart_products();
+			foreach( $cart as $product ) {
+				if ( it_exchange_product_supports_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
+					if ( it_exchange_product_has_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
+						$time = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'time' ) );
+						switch( $time ) {
+						
+							case 'yearly':
+								$unit = 'Y';
+								break;
+								
+							case 'monthly':
+							default:
+								$unit = 'M';
+								break;
+							
+						}
+						$unit = apply_filters( 'it_exchange_paypal-standard_subscription_unit', $unit, $time );
+						$duration = apply_filters( 'it_exchange_paypal-standard_subscription_duration', 1, $time );
+						$subscription = true;
+					}
+				}
+			}
+		}
+		
+		if ( $subscription ) {	
 		//https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/#id08A6HI00JQU
-		//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
-		//a2, t2, p2 are for the second trial period, which is not supported with the Recurring Payments add-on
-		//a3, t3, p3 are required for the actual subscription details
-		$paypal_args = array(
-			'cmd' => '_xclick-subscriptions',
-			'a3'  => 1, //Regular subscription price.
-			't3'  => 2, //Subscription duration. Specify an integer value in the allowable range for the units of duration that you specify with t3.	
-			'p3'  => 3, //Regular subscription units of duration. (D, W, M, Y) -- we only use W,M,Y by default
-		);
+			//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
+			//a2, t2, p2 are for the second trial period, which is not supported with the Recurring Payments add-on
+			//a3, t3, p3 are required for the actual subscription details
+			$paypal_args = array(
+				'cmd' => '_xclick-subscriptions',
+				'a3'  => number_format( it_exchange_get_cart_total( false ), 2, '.', '' ), //Regular subscription price.
+				'p3'  => $duration, //Subscription duration. Specify an integer value in the allowable range for the units of duration that you specify with t3.	
+				't3'  => $unit, //Regular subscription units of duration. (D, W, M, Y) -- we only use M,Y by default
+				'src' => 1, //Recurring payments.
+			);
 		
+		} else {
+			
+			$paypal_args = array (
+				'cmd'      => '_xclick',
+				'amount'   => number_format( it_exchange_get_cart_total( false ), 2, '.', '' ),
+				'quantity' => '1',
+			);
 		
-		$cmd = '_xclick';
+		}
 		
 		$query = array(
-			'cmd'           => $cmd,
 			'business'      => $paypal_email,
 			'item_name'     => it_exchange_get_cart_description(),
-			'amount'        => number_format( it_exchange_get_cart_total( false ), 2, '.', '' ),
 			'return'        => it_exchange_get_page_url( 'transaction' ) . '?it-exchange-transaction-method=paypal-standard',
 			'currency_code' => $general_settings['default-currency'],
 			'notify_url'    => get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard' ) . '=1',
-			'quantity'      => '1',
 			'no_note'       => '1',
 			'no_shipping'   => '1',
 			'shipping'      => '0',
@@ -363,6 +396,8 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			'cancel_return' => it_exchange_get_page_url( 'cart' ),
 			'custom'        => $temp_id,
 		);
+		
+		$query = array_merge( $paypal_args, $query );
 				
 		$paypal_payment_url = PAYPAL_PAYMENT_URL . '?' .  http_build_query( $query ); 
 			
@@ -405,6 +440,8 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard' );
 	
+	wp_mail( 'lew@ithemes.com', 'paypal ipn', print_r( $request, true ) );
+	
 	// for extra security, retrieve from the Stripe API
 	if ( ! empty( $request['txn_id'] ) ) {
 		
@@ -434,6 +471,26 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 
 			// What are we going to do here?
 
+		}
+		
+		if ( isset( $request['txn_type'] ) ) {
+		
+			switch( $request['txn_type'] ) {
+				
+				case 'subscr_payment':
+					it_exchange_paypal_standard_addon_update_subscriber_id( $request['txn_id'], $request['subscr_id'] );
+					break;
+					
+				case 'subscr_signup':
+					it_exchange_paypal_standard_addon_update_subscriber_status( $request['txn_id'], 'subscribed' );
+					break;
+					
+				case 'subscr_cancel':
+					it_exchange_paypal_standard_addon_update_subscriber_status( $request['txn_id'], 'cancelled' );
+					break;
+				
+			}
+			
 		}
 	}
 
@@ -501,6 +558,30 @@ function it_exchange_paypal_standard_addon_add_refund_to_transaction( $paypal_st
 		it_exchange_add_refund_to_transaction( $transaction, number_format( abs( $refund ), '2', '.', '' ) );
 	}
 
+}
+
+/**
+ * Updates a subscription ID to post_meta for a paypal transaction
+ *
+ * @since 1.3.0
+*/
+function it_exchange_paypal_standard_addon_update_subscriber_id( $paypal_standard_id, $subscriber_id ) {
+	$transactions = it_exchange_paypal_standard_addon_get_transaction_id( $paypal_standard_id );
+	foreach( $transactions as $transaction ) { //really only one
+		do_action( 'it_exchange_update_transaction_subscription_id', $transaction, $subscriber_id );
+	}	
+}
+
+/**
+ * Updates a subscription status to post_meta for a paypal transaction
+ *
+ * @since 1.3.0
+*/
+function it_exchange_paypal_standard_addon_update_subscriber_status( $paypal_standard_id, $subscriber_status ) {
+	$transactions = it_exchange_paypal_standard_addon_get_transaction_id( $paypal_standard_id );
+	foreach( $transactions as $transaction ) { //really only one
+		do_action( 'it_exchange_update_transaction_subscription_status', $transaction, $subscriber_status );
+	}	
 }
 
 /**
@@ -572,6 +653,19 @@ function it_exchange_paypal_standard_transaction_is_cleared_for_delivery( $clear
     return in_array( strtolower( it_exchange_get_transaction_status( $transaction ) ), $valid_stati );
 }
 add_filter( 'it_exchange_paypal-standard_transaction_is_cleared_for_delivery', 'it_exchange_paypal_standard_transaction_is_cleared_for_delivery', 10, 2 );
+
+function it_exchange_paypal_standard_unsubscribe_action( $output, $options ) {
+	$paypal_settings      = it_exchange_get_option( 'addon_paypal_standard' );
+	$paypal_url           = PAYPAL_PAYMENT_URL;
+	$paypal_email         = $paypal_settings['paypal-standard-live-email-address'];
+	
+	$output  = '<a class="button" href="' . $paypal_url . '?cmd=_subscr-find&alias=' . urlencode( $paypal_email ) . '">';
+	$output .= $options['label'];
+	$output .= '</a>';
+	
+	return $output;
+}
+add_filter( 'it_exchange_paypal-standard_unsubscribe_action', 'it_exchange_paypal_standard_unsubscribe_action', 10, 2 );
 
 /**
  * Class for Stripe

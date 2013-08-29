@@ -6,6 +6,23 @@
 */
 
 /**
+ * Checks if current post is an Exchange Product
+ *
+ * @since 1.3.0
+ * @return boolean
+*/
+function it_exchange_is_product( $post=false ) {
+	if ( ! $post )
+		global $post;
+		
+	$product = it_exchange_get_product( $post );
+	if ( is_object( $product ) )
+		return true;
+		
+	return false;
+}
+
+/**
  * Grabs the product type of a product
  *
  * @since 0.3.1
