@@ -37,6 +37,14 @@ function it_exchange_get_data_set_properties( $data_key=false ) {
 			'file'     => dirname( __FILE__ ) . '/data-sets/currencies.php',
 			'function' => 'it_exchange_get_currencies',
 		),
+		'address-formats' => array(
+			'file'     => dirname( __FILE__ ) . '/data-sets/data-formats.php',
+			'function' => 'it_exchange_get_address_formats',
+		),
+		'measurement-formats' => array(
+			'file'     => dirname( __FILE__ ) . '/data-sets/data-formats.php',
+			'function' => 'it_exchange_get_measurement_formats',
+		),
 	);
 
 	// If a key was passed, just return that info.
@@ -64,6 +72,11 @@ function it_exchange_get_data_set_properties( $data_key=false ) {
 */
 function it_exchange_get_data_set( $key, $options=array() ) {
 	$data_set_props = it_exchange_get_data_set_properties( $key );
+
+	// Return false if we don't have a file or function
+	if ( empty( $data_set_props['file'] ) || empty( $data_set_props['function'] ) )
+		return false;
+
 	// If the file is located, include it.
 	if ( is_file( $data_set_props['file'] ) )
 		include_once( $data_set_props['file'] );
