@@ -147,11 +147,7 @@ class IT_Exchange_Transaction {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Gets a transaction meta property.
-=======
-	 * Gets the transaction_subscription_id property.
->>>>>>> Added it_exchange_is_multi_item_product_allowed function/filter to check if a product can be in a multi-cart cart, added it_exchange_is_product function (to verify we're on a product page), modified Theme API to handle class longer/more descriptive class names, added get/update_transaction_meta function to transaction class, update PayPal add-ons to handle auto-renewing payments properly,
 	 *
 	 * If the custom value is already set, it uses that.
 	 * If the custom value is not set and we're on post-add.php, check for a URL param
