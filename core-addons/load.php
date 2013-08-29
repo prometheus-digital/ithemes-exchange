@@ -75,6 +75,19 @@ function it_exchange_register_core_addons() {
 			) ),
 			'settings-callback' => 'it_exchange_digital_downloads_settings_callback',
 		),
+		// Simple Product Types
+		'simple-product-type' => array(
+			'name'        => __( 'Simple Products', 'LION' ),
+			'description' => __( 'This is a basic product type for selling simple items.', 'LION' ),
+			'author'      => 'iThemes',
+			'author_url'  => 'http://ithemes.com',
+			'file'        => dirname( __FILE__ ) . '/product-types/simple-products/init.php',
+			'category'    => 'product-type',
+			'tag'         => 'core',
+			'labels'      => array(
+				'singular_name' => __( 'Simple Product', 'LION' ),
+			),
+		),
 		// Multi item cart
 		'multi-item-cart-option' => array(
 			'name'        => __( 'Multi-item Cart', 'LION' ),
