@@ -147,19 +147,19 @@ class IT_Exchange_Transaction {
 	}
 
 	/**
-	 * Gets the transaction_subscription_id property.
+	 * Gets a transaction meta property.
 	 *
 	 * If the custom value is already set, it uses that.
 	 * If the custom value is not set and we're on post-add.php, check for a URL param
 	 *
 	 * @since 1.3.0
 	*/
-	function get_transaction_meta( $key ) {
-		return get_post_meta( $this->ID, '_it_exchange_transaction_' . $key, true );
+	function get_transaction_meta( $key, $single = true ) {
+		return get_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $single );
 	}
 
 	/**
-	 * Updates the transaction_subscription_id property.
+	 * Updates a transaction meta property.
 	 *
 	 * If the custom value is already set, it uses that.
 	 * If the custom value is not set and we're on post-add.php, check for a URL param
@@ -169,8 +169,6 @@ class IT_Exchange_Transaction {
 	function update_transaction_meta( $key, $value ) {
 		update_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $value );
 	}
-	
-	
 	
 	/**
 	 * Gets the date property.
