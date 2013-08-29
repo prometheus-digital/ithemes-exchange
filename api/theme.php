@@ -119,7 +119,7 @@ function it_exchange() {
 	if ( ! is_object( $object ) ) {
 
 		// Set the class name based on params
-		$class_name = 'IT_Theme_API_' . ucfirst( strtolower( $context ) );
+		$class_name = 'IT_Theme_API_' . str_replace( ' ', '_', ucwords( str_replace( '-', ' ', strtolower( $context ) ) ) );
 		if ( 'IT_Theme_API_Cart-item' == $class_name )
 			$class_name = 'IT_Theme_API_Cart_Item';
 		if ( 'IT_Theme_API_Transaction-method' == $class_name )
