@@ -164,7 +164,7 @@ class IT_Exchange_Customer {
 	 * @since 1.3.0
 	*/
 	function update_customer_meta( $key, $value ) {
-		update_user_meta( $this->ID, '_it_exchange_customer_' . $key, $value );
+		update_user_meta( $this->id, '_it_exchange_customer_' . $key, $value );
 	}
 
 	/**
