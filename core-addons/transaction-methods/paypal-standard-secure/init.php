@@ -505,8 +505,9 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
 
-	// for extra security, retrieve from the Stripe API
-	if ( isset( $request['txn_id'] ) ) {
+	wp_mail( 'lew@ithemes.com', 'paypal ipn', print_r( $request, true ) );
+	
+	if ( !empty( $request['txn_id'] ) ) {
 
 		try {
 
@@ -530,21 +531,38 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
 		}
 		
-		if ( isset( $request['txn_type'] ) ) {
+		if ( !empty( $request['txn_type'] ) ) {
 		
 			switch( $request['txn_type'] ) {
 				
 				case 'subscr_payment':
 					it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $request['subscr_id'] );
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $request['txn_id'], 'subscribed' );
+					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $request['subscr_id'], 'active' );
 					break;
+				
+			}
+			
+		}
+		
+	} else if ( !empty( $request['subscr_id'] ) || !empty( $request['recurring_payment_id'] ) ) {
+		
+		$subscriber_id = !empty( $request['subscr_id'] ) ? $request['subscr_id'] : '';
+		$subscriber_id = !empty( $request['recurring_payment_id'] ) ? $request['recurring_payment_id'] : $subscriber_id;
+		
+		if ( !empty( $request['txn_type'] ) ) {
+		
+			switch( $request['txn_type'] ) {
 					
 				case 'subscr_signup':
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $request['txn_id'], 'subscribed' );
+					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $request['subscr_id'], 'active' );
+					break;
+					
+				case 'recurring_payment_suspended':
+					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $request['subscr_id'], 'suspended' );
 					break;
 					
 				case 'subscr_cancel':
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $request['txn_id'], 'cancelled' );
+					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $request['subscr_id'], 'cancelled' );
 					break;
 				
 			}
@@ -568,6 +586,23 @@ function it_exchange_paypal_standard_secure_addon_get_transaction_id( $paypal_st
 	$args = array(
 		'meta_key'    => '_it_exchange_transaction_method_id',
 		'meta_value'  => $paypal_standard_secure_id,
+		'numberposts' => 1, //we should only have one, so limit to 1
+	);
+	return it_exchange_get_transactions( $args );
+}
+
+/**
+ * Grab a transaction from the paypal subscriber ID
+ *
+ * @since 0.4.0
+ *
+ * @param integer $paypal_standard_secure_id id of paypal transaction
+ * @return transaction object
+*/
+function it_exchange_paypal_standard_secure_addon_get_transaction_id_by_subscriber_id( $subscriber_id ) {
+	$args = array(
+		'meta_key'    => '_it_exchange_transaction_subscriber_id',
+		'meta_value'  => $subscriber_id,
 		'numberposts' => 1, //we should only have one, so limit to 1
 	);
 	return it_exchange_get_transactions( $args );
@@ -620,10 +655,10 @@ function it_exchange_paypal_standard_secure_addon_update_subscriber_id( $paypal_
  *
  * @since 1.3.0
 */
-function it_exchange_paypal_standard_secure_addon_update_subscriber_status( $paypal_standard_secure_id, $status ) {
-	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id( $paypal_standard_secure_id );
+function it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, $status ) {
+	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id_by_subscriber_id( $subscriber_id );
 	foreach( $transactions as $transaction ) { //really only one
-		do_action( 'it_exchange_update_transaction_subscription_status', $transaction, $status );
+		do_action( 'it_exchange_update_transaction_subscription_status', $transaction, $subscriber_id, $status );
 	}		
 }
 
