@@ -841,6 +841,28 @@ function it_exchange_disable_purchase_options_on_checkout_page( $elements ) {
 add_filter( 'it_exchange_get_content_checkout_actions_elements', 'it_exchange_disable_purchase_options_on_checkout_page' );
 
 /**
+ * Add Billing Address to the super-widget-checkout totals loop
+ *
+ * @since 1.2.2
+ *
+ * @param array $loops list of existing elements
+ * @return array
+*/
+function it_exchange_add_billing_address_to_sw_template_totals_loops( $loops ) { 
+	
+	// Abandon if not doing billing
+	if ( ! apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) )
+		return $loops;
+
+	// Set index to -1. May change once we introduce shipping
+	$index = -1;
+
+	array_splice( $loops, $index, 0, 'billing-address' );
+	return $loops;
+}
+add_filter( 'it_exchange_get_super-widget-checkout_after-cart-items_loops', 'it_exchange_add_billing_address_to_sw_template_totals_loops' );
+
+/**
  * Clear Billing Address when the cart is emptied or a user logs out.
  *
  * @since 1.2.2
