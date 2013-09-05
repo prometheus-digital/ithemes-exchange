@@ -100,6 +100,16 @@ function it_exchange_register_core_addons() {
 			'supports'    => apply_filters( 'it_exchange_register_multi_item_cart_default_features', array(
 			) ),
 		),
+		// Billing Address Purchase Requirement
+		'billing-address-purchase-requirement' => array(
+			'name'        => __( 'Billing Address', 'LION' ),
+			'description' => __( 'Enabling this add-on allows you to collect a billing address at checkout. There are no settings for this add-on.', 'LION' ),
+			'author'      => 'iThemes',
+			'author_url'  => 'http://ithemes.com',
+			'file'        => dirname( __FILE__ ) . '/admin/billing-address/init.php',
+			'category'    => 'admin',
+			'tag'         => 'core',
+		),
 		// Basic Reporting Dashboard Widget
 		'basic-reporting' => array(
 			'name'        => __( 'Basic Reporting Dashboard Widget', 'LION' ),
