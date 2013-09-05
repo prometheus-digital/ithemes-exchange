@@ -164,7 +164,7 @@ function it_exchange_generate_transaction_object() {
 	$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
 
 	// Tack on Billing address
-	$transaction_object->billing_address        = it_exchange_get_cart_billing_address();
+	$transaction_object->billing_address        = apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) ? it_exchange_get_cart_billing_address() : false;
 	
 	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object );
 	return $transaction_object;
