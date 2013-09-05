@@ -201,3 +201,42 @@ function it_exchange_register_user( $user_data=array() ) {
 	// Register user via WP function
 	return edit_user();
 }
+
+/**
+ * Retrieve specific customer data
+ *
+ * @since 1.2.2
+ *
+ * @param string $data_key the key of the data property of the IT Exchange customer object.
+ * @param integer $customer_id the customer id. leave blank to use the current customer.
+ * @return mixed
+*/
+function it_exchange_get_customer_data( $data_key, $customer_id=false ) {
+	$customer = empty( $customer_id ) ? it_exchange_get_current_customer() : it_exchange_get_customer( $customer_id );
+
+	// Return false if no customer was found
+	if ( ! $customer )
+		return false;
+
+	// Set requested data if it exists, otherwise set as false
+	$data = empty( $customer->data->$data_key ) ? false : $customer->data->$data_key;
+
+	// Return the data
+	return apply_filters( 'it_exchange_get_customer_data', $data, $data_key, $customer );
+}
+
+/**
+ * Get Customer Billing Address
+ *
+ * Among other things this function is used as a callback for the billing address
+ * purchase requriement.
+ *
+ * @since 1.2.2
+ *
+ * @param integer $customer_id the customer id. leave blank to use the current customer.
+ * @return array
+*/
+function it_exchange_get_customer_billing_address( $customer_id=false ) {
+	$billing_address = it_exchange_get_customer_data( 'billing_address', $customer_id );
+	return apply_filters( 'it_exchange_get_customer_billing_address', $billing_address, $customer_id );
+}

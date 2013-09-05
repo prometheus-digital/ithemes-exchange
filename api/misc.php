@@ -413,3 +413,26 @@ function it_exchange_get_next_purchase_requirement_property( $prop ) {
 
 	return $property;
 }
+
+/**
+ * Returns an array of all pending purchase requiremnts
+ *
+ * @since 1.2.2
+ *
+ * @return array
+*/
+function it_exchange_get_pending_purchase_requirements() {
+	$pending      = array();
+	$requirements = it_exchange_get_purchase_requirements();
+
+	foreach( (array) $requirements as $slug => $requirement ) {
+		if ( is_callable( $requirement['requirement-met'] ) )
+			$requirement_met = (boolean) call_user_func( $requirement['requirement-met'] );
+		else
+			$requirement_met = true;
+
+		if ( ! $requirement_met )
+			$pending[] = $requirement['slug'];
+	}
+	return $pending;
+}

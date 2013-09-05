@@ -62,6 +62,12 @@ class IT_Exchange_Shopping_Cart {
 			$this->handle_empty_shopping_cart_request();
 			return;
 		}
+
+		// Possibly handle update billing address request
+		if ( ! empty( $_REQUEST['it-exchange-update-billing-address'] ) ) {
+			$this->handle_update_billing_address_request();
+			return;
+		}
 	}
 
 	/**
@@ -266,6 +272,54 @@ class IT_Exchange_Shopping_Cart {
 	}
 
 	/**
+	 * Handles updating a billing address
+	 *
+	 * @since 1.2.2
+	 *
+	 * @return void
+	*/
+	function handle_update_billing_address_request() {
+
+		// Validate nonce
+		if ( empty( $_REQUEST['it-exchange-update-billing-address'] ) || ! wp_verify_nonce( $_REQUEST['it-exchange-update-billing-address'], 'it-exchange-update-checkout-billing-address-' . it_exchange_get_session_id() ) ) {
+			it_exchange_add_message( 'error', __( 'Error adding Billing Address. Please try again.', 'LION' ) );
+			$GLOBALS['it_exchange']['billing-address-error'] = true;
+			return;
+		}
+
+		// Validate required fields
+		$required_fields = apply_filters( 'it_exchange_required_billing_address_fields', array( 'first-name', 'last-name', 'country', 'zip' ) );
+		foreach( $required_fields as $field ) {
+			if ( empty( $_REQUEST['it-exchange-billing-address-' . $field] ) ) {
+				it_exchange_add_message( 'error', __( 'Please fill out all required fields', 'LION' ) );
+				$GLOBALS['it_exchange']['billing-address-error'] = true;
+				return;
+			}
+		}
+
+		/** @todo This is hardcoded for now. will be more flexible before launch **/
+		$billing = array();
+		$fields = array(
+			'first-name',
+			'last-name',
+			'company-name',
+			'address1',
+			'address2',
+			'city',
+			'state',
+			'zip',
+			'country',
+			'email',
+			'phone',
+		);
+		foreach( $fields as $field ) {
+			$billing[$field] = empty( $_REQUEST['it-exchange-billing-address-' . $field] ) ? '' : $_REQUEST['it-exchange-billing-address-' . $field];
+		}
+		update_user_meta( it_exchange_get_current_customer_id(), 'billing-address', $billing );
+		it_exchange_add_message( 'notice', __( 'Billing Address Saved', 'LION' ) );
+	}
+
+	/**
 	 * Advances the user to the checkout screen after updating the cart
 	 *
 	 * @since 0.3.8
@@ -347,11 +401,8 @@ class IT_Exchange_Shopping_Cart {
 	 * @return string
 	*/
 	function get_cart_message( $key ) {
-	
 		$message = $this->default_cart_messages();
-		
 		return ( !empty( $message[$key] ) ) ? $message[$key] : __( 'Unknown error. Please try again.', 'LION' );;
-		
 	}
 
 	/**

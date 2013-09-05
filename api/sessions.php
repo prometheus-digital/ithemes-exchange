@@ -88,3 +88,14 @@ function it_exchange_clear_session( $hard=false ) {
 	$session->clear_session( $hard );
 	do_action( 'it_exchange_clear_session', $hard );
 }
+
+/**
+ * Returns the current session ID
+ *
+ * @since 1.2.2
+ *
+ * @return string
+*/
+function it_exchange_get_session_id() {
+	return empty( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ? false : $_COOKIE[IT_EXCHANGE_SESSION_COOKIE];
+}

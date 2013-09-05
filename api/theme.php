@@ -25,6 +25,7 @@ include( $this->_plugin_path . '/api/theme/checkout.php' );
 include( $this->_plugin_path . '/api/theme/transaction-method.php' );
 include( $this->_plugin_path . '/api/theme/transactions.php' );
 include( $this->_plugin_path . '/api/theme/transaction.php' );
+include( $this->_plugin_path . '/api/theme/billing.php' );
 
 /**
  * Defines the main it_exchange function

@@ -493,3 +493,84 @@ function it_exchange_get_cart_nonce_field() {
 	$var = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
 	return wp_nonce_field( 'it-exchange-cart-action-' . $session_id, $var, true, false );
 }
+
+/**
+ * Returns the billing address values for the cart
+ *
+ * @since 1.2.2
+ *
+ * @return array
+*/
+function it_exchange_get_cart_billing_address() {
+
+	// If user is logged in, grab their data
+	$customer = it_exchange_get_current_customer();
+	$customer_data = empty( $customer->data ) ? new stdClass() : $customer->data;
+
+	// Default values for first time use.
+	$defaults = array(
+		'first-name'   => empty( $customer_data->first_name ) ? '' : $customer_data->first_name,
+		'last-name'    => empty( $customer_data->last_name ) ? '' : $customer_data->last_name,
+		'company-name' => '',
+		'address-1'    => '',
+		'address-2'    => '',
+		'city'         => '',
+		'state'        => '',
+		'zip'          => '',
+		'country'      => '',
+		'email'        => empty( $customer_data->user_email ) ? '' : $customer_data->user_email,
+		'phone'        => '',
+	);
+
+	// See if the customer has a billing address saved. If so, overwrite defaults with saved billing address
+	if ( ! empty( $customer_data->billing_address ) )
+		$defaults = ITUtility::merge_defaults( $customer_data->billing_address, $defaults );
+
+	// If data exists in the session, use that as the most recent
+	$session_data = it_exchange_get_cart_data( 'billing-address' );
+
+	$cart_billing = ITUtility::merge_defaults( $session_data, $defaults );
+
+	// If billing error and form was submitted, use POST values as most recent
+	if ( ! empty( $_REQUEST['it-exchange-update-billing-address'] ) && ! empty( $GLOBALS['it_exchange']['billing-address-error'] ) ) {
+		$keys = array_keys( $defaults );
+		$post_billing = array();
+		foreach( $keys as $key ) {
+			$post_billing[$key] = empty( $_REQUEST['it-exchange-billing-address-' . $key] ) ? '' : $_REQUEST['it-exchange-billing-address-' . $key];
+		}
+		$cart_billing = ITUtility::merge_defaults( $post_billing, $cart_billing );
+	}
+
+	return apply_filters( 'it_exchange_get_cart_billing_address', $cart_billing );
+}
+
+/**
+ * Formats the Billing Address for display
+ *
+ * @todo this function sucks. Lets make a function for formatting any address. ^gta
+ * @since 1.2.2
+ *
+ * @return string HTML
+*/
+function it_exchange_get_formatted_billing_address() {
+	$formatted   = array();
+	$billing     = it_exchange_get_cart_billing_address();
+	$formatted[] = implode( ' ', array( $billing['first-name'], $billing['last-name'] ) );
+	if ( ! empty( $billing['company-name'] ) )
+		$formatted[] = $billing['company-name'];
+	if ( ! empty( $billing['address1'] ) )
+		$formatted[] = $billing['address1'];
+	if ( ! empty( $billing['address2'] ) )
+		$formatted[] = $billing['address2'];
+	if ( ! empty( $billing['city'] ) || ! empty( $billing['state'] ) || ! empty( $billing['zip'] ) ) {
+		$formatted[] = implode( ' ', array( ( empty( $billing['city'] ) ? '': $billing['city'] .',' ),
+			( empty( $billing['state'] ) ? '': $billing['state'] ),
+			( empty( $billing['zip'] ) ? '': $billing['zip'] ),
+		) );
+	}
+	if ( ! empty( $billing['country'] ) )
+		$formatted[] = $billing['country'];
+
+	$formatted = implode( '<br />', $formatted );
+	return apply_filters( 'it_exchange_get_formatted_billing_address', $formatted );
+}
