@@ -109,10 +109,10 @@ class IT_Exchange_Customer {
 		$data->last_name    = get_user_meta( $this->id, 'last_name', true );
 
 		// Shipping data if it exists
-		$data->shipping_address = get_user_meta( $this->id, 'shipping-address', true );
+		$data->shipping_address = get_user_meta( $this->id, 'it-exchange-shipping-address', true );
 
 		// Billing data if it exists
-		$data->billing_address = get_user_meta( $this->id, 'billing-address', true );
+		$data->billing_address = get_user_meta( $this->id, 'it-exchange-billing-address', true );
 
 		$data = apply_filters( 'it_exchange_set_customer_data', $data, $this->id );
 		$this->data = $data;

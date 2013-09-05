@@ -116,6 +116,12 @@ if ( 'register' == $action ) {
 	}
 }
 
+// Edit Billing
+if ( 'update-billing' == $action ) {
+	// This function will either updated the value or create an error and return 1 or 0
+	die( IT_Exchange_Shopping_Cart::handle_update_billing_address_request() );
+}
+
 // If we made it this far, allow addons to hook in and do their thing.
 do_action( 'it_exchange_processing_super_widget_ajax_' . $action );
 

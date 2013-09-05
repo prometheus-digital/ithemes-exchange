@@ -284,7 +284,7 @@ class IT_Exchange_Shopping_Cart {
 		if ( empty( $_REQUEST['it-exchange-update-billing-address'] ) || ! wp_verify_nonce( $_REQUEST['it-exchange-update-billing-address'], 'it-exchange-update-checkout-billing-address-' . it_exchange_get_session_id() ) ) {
 			it_exchange_add_message( 'error', __( 'Error adding Billing Address. Please try again.', 'LION' ) );
 			$GLOBALS['it_exchange']['billing-address-error'] = true;
-			return;
+			return false;
 		}
 
 		// Validate required fields
@@ -293,7 +293,7 @@ class IT_Exchange_Shopping_Cart {
 			if ( empty( $_REQUEST['it-exchange-billing-address-' . $field] ) ) {
 				it_exchange_add_message( 'error', __( 'Please fill out all required fields', 'LION' ) );
 				$GLOBALS['it_exchange']['billing-address-error'] = true;
-				return;
+				return false;
 			}
 		}
 
@@ -315,8 +315,9 @@ class IT_Exchange_Shopping_Cart {
 		foreach( $fields as $field ) {
 			$billing[$field] = empty( $_REQUEST['it-exchange-billing-address-' . $field] ) ? '' : $_REQUEST['it-exchange-billing-address-' . $field];
 		}
-		update_user_meta( it_exchange_get_current_customer_id(), 'billing-address', $billing );
+		update_user_meta( it_exchange_get_current_customer_id(), 'it-exchange-billing-address', $billing );
 		it_exchange_add_message( 'notice', __( 'Billing Address Saved', 'LION' ) );
+		return true;
 	}
 
 	/**

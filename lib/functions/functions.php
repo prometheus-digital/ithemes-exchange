@@ -769,7 +769,7 @@ function it_exchange_register_default_purchase_requirements() {
 	$properties = array(
 		'priority'               => 2,
 		'requirement-met'        => 'it_exchange_get_customer_billing_address',
-		'sw-template-part'       => apply_filters( 'it_exchange_sw_template_part_for_logged_in_purchase_requirement', 'registration' ),
+		'sw-template-part'       => apply_filters( 'it_exchange_sw_template_part_for_logged_in_purchase_requirement', 'billing-address' ),
 		'checkout-template-part' => 'billing-address',
 		'notification'           => __( 'We need a billing address before you can checkout', 'LION' ),
 	);
