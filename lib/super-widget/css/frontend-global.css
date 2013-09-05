@@ -36,6 +36,7 @@
 .it-exchange-super-widget .it-exchange-messages.it-exchange-notices li{background:#ECFFDA;color:#768B5E;}
 .it-exchange-super-widget .it-exchange-messages.it-exchange-errors li{background:#FFF0F0;color:#DB4343;}
 .it-exchange-super-widget .empty-cart{padding:.5em 0;}
+
 /** ----------------------------------------:[ login & register ]:--- */
 .it-exchange-super-widget .it-exchange-sw-processing-login,
 .it-exchange-super-widget .it-exchange-sw-processing-registration{padding:1em;}
@@ -46,3 +47,9 @@
 .it-exchange-super-widget .it-exchange-sw-register label{display:block;font-size:.8em;margin-bottom:.5em;}
 .it-exchange-super-widget .it-exchange-sw-register div{margin-bottom:1em;}
 .it-exchange-super-widget .cancel_url{margin-top:.5em;}
+
+/** ----------------------------------------:[ billing ]:--- */
+.it-exchange-super-widget .cart-billing-address-existing{text-align:left;font-size:1em;line-height:1.5;}
+.it-exchange-super-widget .cart-billing-address-existing a{float:right;}
+.it-exchange-super-widget .it-exchange-sw-billing-address label{display:block;margin:1em 0 .5em;}
+.it-exchange-super-widget .it-exchange-sw-billing-address .it-exchange-submit{margin:1em 0;}
