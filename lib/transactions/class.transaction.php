@@ -288,6 +288,16 @@ class IT_Exchange_Transaction {
 		);
 		add_post_meta( $this->ID, '_it_exchange_transaction_refunds', $args );
 	}
+
+	/**
+	 * checks if the transaction has refunds.
+	 *
+	 * @since 1.3.0
+	 * @return bool
+	*/
+	function has_refunds() {
+		return (bool) get_post_meta( $this->ID, '_it_exchange_transaction_refunds' );
+	}
 	
 	/**
 	 * Get the transaction refunds.
@@ -322,6 +332,36 @@ class IT_Exchange_Transaction {
 		$this->gateway_id_for_transaction = get_post_meta( $this->ID, '_it_exchange_transaction_method_id', true );
 
 		do_action( 'it_exchange_set_transaction_supports_and_data', $this->ID );
+	}
+
+	/**
+	 * checks if the transaction has children.
+	 *
+	 * @since 1.3.0
+	 * @return bool
+	*/
+	function has_children( $args=array() ) {
+		$defaults = array( 
+			'post_parent' => $this->ID,
+			'post_type'   => 'it_exchange_tran',
+		);
+		$args = wp_parse_args( $args, $defaults );
+		return (bool) get_children( $args );
+	}
+
+	/**
+	 * Gets the transactions children.
+	 *
+	 * @since 1.3.0
+	 * @return bool
+	*/
+	function get_children( $args=array() ) {
+		$defaults = array( 
+			'post_parent' => $this->ID,
+			'post_type'   => 'it_exchange_tran',
+		);
+		$args = wp_parse_args( $args, $defaults );
+		return (bool) get_children( $args );
 	}
 
 	/**

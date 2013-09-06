@@ -208,8 +208,12 @@ function it_exchange_delete_transient_transaction( $method, $temp_id ) {
  * Adds a transaction post_type to WP
  *
  * @since 0.3.3
- * @param array $args same args passed to wp_insert_post plus any additional needed
+ * @param string $method Transaction method (e.g. paypal, stripe, etc)
+ * @param string $method_id ID from transaction method
+ * @param string $status Transaction status
+ * @param int $customer_id Customer ID
  * @param object $cart_object passed cart object
+ * @param array $args same args passed to wp_insert_post plus any additional needed
  * @return mixed post id or false
 */
 function it_exchange_add_transaction( $method, $method_id, $status = 'pending', $customer_id = false, $cart_object, $args = array() ) {
@@ -239,8 +243,48 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		do_action( 'it_exchange_add_transaction_success', $transaction_id );
 		return apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $cart_object, $args );
 	}
-	do_action( 'it_exchange_add_transaction_failed', $args, $transaction_object );
-	return apply_filters( 'it_exchange_add_transaction', false, $method, $method_id, $status, $customer_id, $cart_object, $args );
+	do_action( 'it_exchange_add_transaction_failed', $method, $method_id, $status, $customer_id, $cart_object, $args );
+	return apply_filters( 'it_exchange_add_transaction', false, $method, $method_id, $status, $customer_id, $cart_object, $args);
+}
+
+/**
+ * Adds a transaction post_type to WP
+ * Slimmed down "child" of a parent transaction
+ *
+ * @since 1.3.0
+ * @param string $method Transaction method (e.g. paypal, stripe, etc)
+ * @param string $method_id ID from transaction method
+ * @param string $status Transaction status
+ * @param int $customer_id Customer ID
+ * @param int $parent_tx_id Parent Transaction ID
+ * @param array $args same args passed to wp_insert_post plus any additional needed
+ * @return mixed post id or false
+*/
+function it_exchange_add_child_transaction( $method, $method_id, $status = 'pending', $customer_id, $parent_tx_id, $args = array() ) {
+	$defaults = array(
+		'post_type'          => 'it_exchange_tran',
+		'post_status'        => 'publish',
+	);
+	$args = wp_parse_args( $args, $defaults );
+
+	// If we don't have a title, create one
+	if ( empty( $args['post_title'] ) )
+		$args['post_title'] = $method . '-' . $method_id . '-' . date_i18n( 'Y-m-d-H:i:s' );
+		
+	$args['post_parent'] = $parent_tx_id;
+
+	if ( $transaction_id = wp_insert_post( $args ) ) {
+		update_post_meta( $transaction_id, '_it_exchange_transaction_method',    $method );
+		update_post_meta( $transaction_id, '_it_exchange_transaction_method_id', $method_id );
+		update_post_meta( $transaction_id, '_it_exchange_transaction_status',    $status );
+		update_post_meta( $transaction_id, '_it_exchange_customer_id',           $customer_id );
+		update_post_meta( $transaction_id, '_it_exchange_parent_tx_id',          $parent_tx_id );
+		
+		do_action( 'it_exchange_add_child_transaction_success', $transaction_id );
+		return apply_filters( 'it_exchange_add_child_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $args );
+	}
+	do_action( 'it_exchange_add_child_transaction_failed', $method, $method_id, $status, $customer_id, $args );
+	return apply_filters( 'it_exchange_add_child_transaction', false, $method, $method_id, $status, $customer_id, $args );
 }
 
 /**
