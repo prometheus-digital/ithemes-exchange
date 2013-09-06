@@ -107,6 +107,8 @@ function it_exchange_get_transactions( $args=array() ) {
 		);
 		$args['meta_query'][] = $meta_query;
 	}
+	
+	$args = apply_filters( 'it_exchange_get_transactions_get_posts_args', $args );
 
 	if ( $transactions = get_posts( $args ) ) {
 		foreach( $transactions as $key => $transaction ) {
@@ -262,10 +264,11 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
  * @param string $status Transaction status
  * @param int $customer_id Customer ID
  * @param int $parent_tx_id Parent Transaction ID
+ * @param object $cart_object really just a dummy array to store the price information
  * @param array $args same args passed to wp_insert_post plus any additional needed
  * @return mixed post id or false
 */
-function it_exchange_add_child_transaction( $method, $method_id, $status = 'pending', $customer_id, $parent_tx_id, $args = array() ) {
+function it_exchange_add_child_transaction( $method, $method_id, $status = 'pending', $customer_id, $parent_tx_id, $cart_object, $args = array() ) {
 	$defaults = array(
 		'post_type'          => 'it_exchange_tran',
 		'post_status'        => 'publish',
@@ -284,12 +287,13 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 		update_post_meta( $transaction_id, '_it_exchange_transaction_status',    $status );
 		update_post_meta( $transaction_id, '_it_exchange_customer_id',           $customer_id );
 		update_post_meta( $transaction_id, '_it_exchange_parent_tx_id',          $parent_tx_id );
+		update_post_meta( $transaction_id, '_it_exchange_cart_object',           $cart_object );
 		
 		do_action( 'it_exchange_add_child_transaction_success', $transaction_id );
-		return apply_filters( 'it_exchange_add_child_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $args );
+		return apply_filters( 'it_exchange_add_child_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $parent_tx_id, $cart_object, $args );
 	}
-	do_action( 'it_exchange_add_child_transaction_failed', $method, $method_id, $status, $customer_id, $args );
-	return apply_filters( 'it_exchange_add_child_transaction', false, $method, $method_id, $status, $customer_id, $args );
+	do_action( 'it_exchange_add_child_transaction_failed', $method, $method_id, $status, $customer_id, $parent_tx_id, $cart_object, $args );
+	return apply_filters( 'it_exchange_add_child_transaction', false, $method, $method_id, $status, $customer_id, $parent_tx_id, $cart_object, $args );
 }
 
 /**

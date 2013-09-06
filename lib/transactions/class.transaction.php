@@ -361,7 +361,7 @@ class IT_Exchange_Transaction {
 			'post_type'   => 'it_exchange_tran',
 		);
 		$args = wp_parse_args( $args, $defaults );
-		return (bool) get_children( $args );
+		return get_children( $args );
 	}
 
 	/**
