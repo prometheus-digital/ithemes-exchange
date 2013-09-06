@@ -56,3 +56,15 @@ function it_exchange_get_current_purchase_dialog() {
 	else
 		return false;
 }
+
+function it_exchange_flag_purchase_dialog_error( $transaction_method_slug ) {
+	it_exchange_add_session_data( $transaction_method_slug . '_purchase_dialog_error', true );
+}
+
+function it_exchange_purchase_dialog_has_error( $transaction_method_slug ) {
+	return (boolean) it_exchange_get_session_data( $transaction_method_slug . '_purchase_dialog_error' );
+}
+
+function it_exchange_clear_purchase_dialog_error_flag( $transaction_method_slug ) {
+	it_exchange_clear_session_data( $transaction_method_slug . '_purchase_dialog_error' );
+}

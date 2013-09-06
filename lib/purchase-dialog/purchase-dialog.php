@@ -62,6 +62,10 @@ class IT_Exchange_Purchase_Dialog{
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
+		// Append class name
+		$class_name = 'it-exchange-purchase-dialog-' . $transaction_method_slug;
+		$options['form-attributes']['class'] = empty( $options['form-attributes']['class'] ) ? $class_name : $options['form-attributes']['class'] . ' ' . $class_name;
+
 		$this->addon_slug         = $transaction_method_slug;
 		$this->form_attributes    = (array) $options['form-attributes'];
 		$this->required_cc_fields = (array) $options['required_cc_fields'];
@@ -92,9 +96,7 @@ class IT_Exchange_Purchase_Dialog{
 	 * @return HTML
 	*/
 	function get_wrapper_open() {
-		$error_class = '';
-		//$error_class = (boolean) it_exchange_get_session_data( $this->addon_slug . '_purchase_dialog_error' ) ? ' has-errors' : '';
-		$html = '<div class="it-exchange-purchase-dialog' . $error_class . '" id="it-exchange-purchase-dialog-' . esc_attr( $this->addon_slug ) . '" data-addon-slug="' . esc_attr( $this->addon_slug ) . '">';
+		$html = '<div class="it-exchange-purchase-dialog it-exchange-purchase-dialog-' . esc_attr( $this->addon_slug ) . '" data-addon-slug="' . esc_attr( $this->addon_slug ) . '">';
 		return $html;
 	}
 
@@ -207,9 +209,9 @@ class IT_Exchange_Purchase_Dialog{
 	 * @return string HTML
 	*/
 	function get_purchase_button() {
-		$error_class = (boolean) it_exchange_get_session_data( $this->addon_slug . '_purchase_dialog_error' ) ? ' has-errors' : '';
-		it_exchange_clear_session_data( $this->addon_slug . '_purchase_dialog_error' );
-		return '<input type="button" id="it-exchange-purchase-dialog-trigger-' . esc_attr( $this->addon_slug ) . '" class="it-exchange-purchase-dialog-trigger' . $error_class . '" value="Test Payment" data-addon-slug="' . esc_attr( $this->addon_slug ) . '" />';
+		$error_class = it_exchange_purchase_dialog_has_error( $this->addon_slug ) ? ' has-errors' : '';
+		it_exchange_clear_purchase_dialog_error_flag( $this->addon_slug );
+		return '<input type="submit" class="it-exchange-purchase-dialog-trigger-' . esc_attr( $this->addon_slug ) . ' it-exchange-purchase-dialog-trigger' . $error_class . '" value="Test Payment" data-addon-slug="' . esc_attr( $this->addon_slug ) . '" />';
 	}
 
 	/**
@@ -282,7 +284,7 @@ class IT_Exchange_Purchase_Dialog{
 			$invalid = apply_filters( 'it_exchange_validate_' . $key . '_credit_cart_field', $invalid, $value, $this->addon_slug );
 			if ( $invalid ) {
 				it_exchange_add_message( 'error', $invalid );
-				it_exchange_add_session_data( $this->addon_slug . '_purchase_dialog_error', true );
+				it_exchange_flag_purchase_dialog_error( $this->addon_slug );
 				return false;
 			}
 		}
