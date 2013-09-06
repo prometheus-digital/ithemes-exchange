@@ -533,7 +533,7 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 					case 'completed' :
 						if ( !it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
 							//If the transaction isn't found, we've got a new payment
-							it_exchange_paypal_standard_secure_addon_add_child_transaction( $request['txn_id'], $request['payment_status'], $subscriber_id );
+							it_exchange_paypal_standard_secure_addon_add_child_transaction( $request['txn_id'], $request['payment_status'], $subscriber_id, $request['mc_gross'] );
 						}
 						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
 						it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'active' );
@@ -566,7 +566,7 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
 			switch( $request['reason_code'] ) {
 				
-				case 'refunded' :
+				case 'refund' :
 					it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['parent_txn_id'], $request['payment_status'] );
 					it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $request['parent_txn_id'], $request['mc_gross'] );
 					if ( $subscriber_id )
@@ -648,7 +648,7 @@ function it_exchange_paypal_standard_secure_addon_update_transaction_status( $pa
  * @param string $subscriber_id from PayPal (optional)
  * @return bool
 */
-function it_exchange_paypal_standard_secure_addon_add_child_transaction( $paypal_standard_secure_id, $payment_status, $subscriber_id=false ) {
+function it_exchange_paypal_standard_secure_addon_add_child_transaction( $paypal_standard_secure_id, $payment_status, $subscriber_id=false, $amount ) {
 	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id( $paypal_standard_secure_id );
 	if ( !empty( $transactions ) ) {
 		//this transaction DOES exist, don't try to create a new one, just update the status
@@ -660,14 +660,18 @@ function it_exchange_paypal_standard_secure_addon_add_child_transaction( $paypal
 			$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id_by_subscriber_id( $subscriber_id );
 			foreach( $transactions as $transaction ) { //really only one
 				$parent_tx_id = $transaction->ID;
+				$customer_id = get_post_meta( $transaction->ID, '_it_exchange_customer_id', true );
 			}
 			
 		} else {
 			$parent_tx_id = false;
+			$customer_id = false;
 		}
 		
 		if ( $parent_tx_id && $customer_id ) {
-			it_exchange_add_child_transaction( 'paypal', $paypal_standard_secure_id, $payment_status, $customer_id, $parent_tx_id );
+			$transaction_object = new stdClass;
+			$transaction_object->total = $amount;
+			it_exchange_add_child_transaction( 'paypal-standard-secure', $paypal_standard_secure_id, $payment_status, $customer_id, $parent_tx_id, $transaction_object );
 			return true;
 		}
 	}
