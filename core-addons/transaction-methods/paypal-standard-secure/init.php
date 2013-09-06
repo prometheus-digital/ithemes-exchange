@@ -378,11 +378,13 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 						
 							case 'yearly':
 								$unit = 'Y';
+								$unit = 'D';
 								break;
 								
 							case 'monthly':
 							default:
 								$unit = 'M';
+								$unit = 'D';
 								break;
 							
 						}
@@ -507,66 +509,72 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
 	wp_mail( 'lew@ithemes.com', 'paypal ipn', print_r( $request, true ) );
 	
-	if ( !empty( $request['txn_id'] ) ) {
+	$subscriber_id = !empty( $request['subscr_id'] ) ? $request['subscr_id'] : false;
+	$subscriber_id = !empty( $request['recurring_payment_id'] ) ? $request['recurring_payment_id'] : $subscriber_id;
+	
+	if ( !empty( $request['txn_type'] ) ) {
+		
+		switch( $request['txn_type'] ) {
+		
+			case 'web_accept':
+				switch( strtolower( $request['payment_status'] ) ) {
+				
+					case 'completed' :
+						it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] );
+						break;
+					case 'reversed' :
+						it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['parent_txn_id'], $request['reason_code'] );
+						break;					
+				}
+				break;
+				
+			case 'subscr_payment':
+				switch( strtolower( $request['payment_status'] ) ) {
+					case 'completed' :
+						if ( !it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
+							//If the transaction isn't found, we've got a new payment
+							it_exchange_paypal_standard_secure_addon_add_child_transaction( $request['txn_id'], $request['payment_status'], $subscriber_id );
+						}
+						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
+						it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'active' );
+						break;
+				}
+				break;
+				
+			case 'subscr_signup':
+				it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'active' );
+				break;
+				
+			case 'recurring_payment_suspended':
+				it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'suspended' );
+				break;
+				
+			case 'subscr_cancel':
+				it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
+				break;
+				
+			case 'subscr_eot':
+				it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'deactivated' );
+				break;
+			
+		}
+		
+	} else {
+	
+		//These IPNs don't have txn_types, why PayPal!? WHY!?
+		if ( !empty( $request['reason_code'] ) ) {
 
-		try {
-
-			switch( $request['payment_status'] ) :
-
-				case 'Completed' :
-					it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] );
-					break;
-				case 'Refunded' :
+			switch( $request['reason_code'] ) {
+				
+				case 'refunded' :
 					it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['parent_txn_id'], $request['payment_status'] );
 					it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $request['parent_txn_id'], $request['mc_gross'] );
-				case 'Reversed' :
-					it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['parent_txn_id'], $request['reason_code'] );
-					break;
-
-			endswitch;
-
-		} catch ( Exception $e ) {
-
-			// What are we going to do here?
-
-		}
-		
-		if ( !empty( $request['txn_type'] ) ) {
-		
-			switch( $request['txn_type'] ) {
-				
-				case 'subscr_payment':
-					it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $request['subscr_id'] );
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $request['subscr_id'], 'active' );
+					if ( $subscriber_id )
+						it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'refunded' );
 					break;
 				
 			}
-			
-		}
-		
-	} else if ( !empty( $request['subscr_id'] ) || !empty( $request['recurring_payment_id'] ) ) {
-		
-		$subscriber_id = !empty( $request['subscr_id'] ) ? $request['subscr_id'] : '';
-		$subscriber_id = !empty( $request['recurring_payment_id'] ) ? $request['recurring_payment_id'] : $subscriber_id;
-		
-		if ( !empty( $request['txn_type'] ) ) {
-		
-			switch( $request['txn_type'] ) {
-					
-				case 'subscr_signup':
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $request['subscr_id'], 'active' );
-					break;
-					
-				case 'recurring_payment_suspended':
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $request['subscr_id'], 'suspended' );
-					break;
-					
-				case 'subscr_cancel':
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $request['subscr_id'], 'cancelled' );
-					break;
 				
-			}
-			
 		}
 		
 	}
@@ -615,7 +623,7 @@ function it_exchange_paypal_standard_secure_addon_get_transaction_id_by_subscrib
  *
  * @param integer $paypal_standard_secure_id id of paypal transaction
  * @param string $new_status new status
- * @return void
+ * @return bool
 */
 function it_exchange_paypal_standard_secure_addon_update_transaction_status( $paypal_standard_secure_id, $new_status ) {
 	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id( $paypal_standard_secure_id );
@@ -623,7 +631,47 @@ function it_exchange_paypal_standard_secure_addon_update_transaction_status( $pa
 		$current_status = it_exchange_get_transaction_status( $transaction );
 		if ( $new_status !== $current_status )
 			it_exchange_update_transaction_status( $transaction, $new_status );
+		return true;
 	}
+	return false;
+}
+
+/**
+ * Add a new transaction, really only used for subscription payments.
+ * If a subscription pays again, we want to create another transaction in Exchange
+ * This transaction needs to be linked to the parent transaction.
+ *
+ * @since 1.3.0
+ *
+ * @param integer $paypal_standard_secure_id id of paypal transaction
+ * @param string $payment_status new status
+ * @param string $subscriber_id from PayPal (optional)
+ * @return bool
+*/
+function it_exchange_paypal_standard_secure_addon_add_child_transaction( $paypal_standard_secure_id, $payment_status, $subscriber_id=false ) {
+	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id( $paypal_standard_secure_id );
+	if ( !empty( $transactions ) ) {
+		//this transaction DOES exist, don't try to create a new one, just update the status
+		it_exchange_paypal_standard_secure_addon_update_transaction_status( $paypal_standard_secure_id, $payment_status );		
+	} else { 
+	
+		if ( !empty( $subscriber_id ) ) {
+			
+			$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id_by_subscriber_id( $subscriber_id );
+			foreach( $transactions as $transaction ) { //really only one
+				$parent_tx_id = $transaction->ID;
+			}
+			
+		} else {
+			$parent_tx_id = false;
+		}
+		
+		if ( $parent_tx_id && $customer_id ) {
+			it_exchange_add_child_transaction( 'paypal', $paypal_standard_secure_id, $payment_status, $customer_id, $parent_tx_id );
+			return true;
+		}
+	}
+	return false;
 }
 
 /**
@@ -658,6 +706,25 @@ function it_exchange_paypal_standard_secure_addon_update_subscriber_id( $paypal_
 function it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, $status ) {
 	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id_by_subscriber_id( $subscriber_id );
 	foreach( $transactions as $transaction ) { //really only one
+		// If the subscription has been cancelled/suspended and fully refunded, they need to be deactivated
+		if ( !in_array( $status, array( 'active', 'deactivated' ) ) ) {
+			if ( $transaction->has_refunds() && 0 === it_exchange_get_transaction_total( $transaction, false ) )
+				$status = 'deactivated';
+				
+			if ( $transaction->has_children() ) {
+				//Get the last child and make sure it hasn't been fully refunded
+				$args = array(
+					'numberposts' => 1,
+					'order'       => 'ASC',
+				);
+				$last_child_transaction = $transaction->get_children( $args );
+				foreach( $last_child_transaction as $last_transaction ) { //really only one
+					$last_transaction = it_exchange_get_transaction( $last_transaction );
+					if ( $last_transaction->has_refunds() && 0 === it_exchange_get_transaction_total( $last_transaction, false ) )
+						$status = 'deactivated';
+				}
+			}
+		}
 		do_action( 'it_exchange_update_transaction_subscription_status', $transaction, $subscriber_id, $status );
 	}		
 }
