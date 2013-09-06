@@ -124,6 +124,9 @@
 #it-exchange-checkout-purchase-requirements.it-exchange-requirements-active{margin-bottom:5em;}
 .it-exchange-checkout .it-exchange-order-details.it-exchange-requirements-active{opacity:.5;}
 
+/** ---:[ billing ]:--- */
+.it-exchange-checkout .it-exchange-billing-address-form .it-exchange-submit{margin:1em 0;}
+
 /** ----------------------------------------:[ processing payment ]:--- */
 #it-exchange-processing-payment{position:fixed;top:0;bottom:0;left:0;right:0;background:#000;background:rgba(0,0,0,0.8);background:-webkit-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:-moz-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:-ms-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);text-align:center;}
 #it-exchange-processing-payment div{position:absolute;top:45%;width:100%;}

@@ -151,6 +151,7 @@ function it_exchange_generate_transaction_object() {
 		$products[$key]['product_base_price'] = it_exchange_get_cart_product_base_price( $product, false );
 		$products[$key]['product_subtotal'] = it_exchange_get_cart_product_subtotal( $product, false );
 		$products[$key]['product_name']     = it_exchange_get_cart_product_title( $product );
+		$products = apply_filters( 'it_exchange_generate_transaction_object_products', $products, $key, $product );
 	}
 
 	// Package it up and send it to the transaction method add-on
@@ -161,7 +162,11 @@ function it_exchange_generate_transaction_object() {
 	$transaction_object->products               = $products;
 	$transaction_object->coupons                = it_exchange_get_applied_coupons();
 	$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
+
+	// Tack on Billing address
+	$transaction_object->billing_address        = apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) ? it_exchange_get_cart_billing_address() : false;
 	
+	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object );
 	return $transaction_object;
 	
 }
