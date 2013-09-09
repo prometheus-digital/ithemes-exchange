@@ -124,14 +124,14 @@ if ( 'update-billing' == $action ) {
 
 // Submit Purchase Dialog
 if ( 'submit-purchase-dialog' == $action ) {
-	if ( false === ( $transaction_id = IT_Exchange_Shopping_Cart::handle_purchase_cart_request( false ) ) ) {
-		die(0);
-	}
+	$transaction_id = IT_Exchange_Shopping_Cart::handle_purchase_cart_request( false );
+
+	// Return false if we didn't get a transaction_id
+	if ( empty( $transaction_id ) )
+		die('0');
+
 	it_exchange_empty_shopping_cart();
 	$url = it_exchange_get_transaction_confirmation_url( $transaction_id );
-	// Strange bug I need to track down. Seems to be picking up output buffering or something
-	if ( strpos( '#EEE', $url ) )
-		$url = it_exchange_get_transaction_confirmation_url( $transaction_id );
 	die( $url );
 }
 

@@ -62,8 +62,9 @@ class IT_Exchange_Purchase_Dialog{
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
+		$sw = it_exchange_in_superwidget() ? ' it-exchange-sw-purchase-dialog' : '';
 		// Append class name
-		$class_name = 'it-exchange-purchase-dialog it-exchange-purchase-dialog-' . $transaction_method_slug;
+		$class_name = 'it-exchange-purchase-dialog it-exchange-purchase-dialog-' . $transaction_method_slug . $sw;
 		$options['form-attributes']['class'] = empty( $options['form-attributes']['class'] ) ? $class_name : $options['form-attributes']['class'] . ' ' . $class_name;
 
 		$this->addon_slug         = $transaction_method_slug;
@@ -160,8 +161,9 @@ class IT_Exchange_Purchase_Dialog{
 	 * @return string HTML
 	*/
 	function get_form_hidden_fields() {
-		$exchange = '<input type="hidden" name="' . esc_attr( it_exchange_get_field_name('transaction_method') ) . '" value="' . esc_attr( $this->addon_slug ) . '" />';
-		return $exchange;
+		$fields  = '<input type="hidden" name="' . esc_attr( it_exchange_get_field_name('transaction_method') ) . '" value="' . esc_attr( $this->addon_slug ) . '" />';
+		$fields .= wp_nonce_field( $this->addon_slug . '-checkout', 'ite-' . $this->addon_slug . '-purchase-dialog-nonce', true, false ); 
+		return $fields;
 	}
 
 	/**
@@ -268,6 +270,14 @@ class IT_Exchange_Purchase_Dialog{
 	function is_submitted_form_valid() {
 		// Grab the values
 		$values = $this->get_submitted_form_values();
+
+		// Validate nonce
+		$nonce = empty( $_POST['ite-' . $this->addon_slug . '-purchase-dialog-nonce'] ) ? false : $_POST['ite-' . $this->addon_slug . '-purchase-dialog-nonce'];
+		if ( ! wp_verify_nonce( $nonce, $this->addon_slug . '-checkout' ) ) {
+			it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'LION' ) );		
+			it_exchange_flag_purchase_dialog_error( $this->addon_slug );
+			return false;
+		}
 
 		foreach( (array) $values as $key => $value ) {
 			$invalid  = false;
