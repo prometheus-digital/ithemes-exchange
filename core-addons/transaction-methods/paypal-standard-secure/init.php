@@ -378,13 +378,13 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 						
 							case 'yearly':
 								$unit = 'Y';
-								$unit = 'D';
+								$unit = 'D'; //@todo remove this line!
 								break;
 								
 							case 'monthly':
 							default:
 								$unit = 'M';
-								$unit = 'D';
+								$unit = 'D'; //@todo remove this line!
 								break;
 							
 						}
@@ -507,7 +507,7 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
 
-	wp_mail( 'lew@ithemes.com', 'paypal ipn', print_r( $request, true ) );
+	wp_mail( 'lew@ithemes.com', 'paypal insecure ipn', print_r( $request, true ) );
 	
 	$subscriber_id = !empty( $request['subscr_id'] ) ? $request['subscr_id'] : false;
 	$subscriber_id = !empty( $request['recurring_payment_id'] ) ? $request['recurring_payment_id'] : $subscriber_id;
@@ -534,8 +534,10 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 						if ( !it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
 							//If the transaction isn't found, we've got a new payment
 							it_exchange_paypal_standard_secure_addon_add_child_transaction( $request['txn_id'], $request['payment_status'], $subscriber_id, $request['mc_gross'] );
+						} else {
+							//If it is found, make sure the subscriber ID is attached to it
+							it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
 						}
-						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
 						it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'active' );
 						break;
 				}
@@ -682,6 +684,8 @@ function it_exchange_paypal_standard_secure_addon_add_child_transaction( $paypal
  * Adds a refund to post_meta for a paypal transaction
  *
  * @since 0.4.0
+ * @param string $paypal_standard_secure_id PayPal Transaction ID
+ * @param string $refund Refund Amount
 */
 function it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $paypal_standard_secure_id, $refund ) {
 	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id( $paypal_standard_secure_id );
@@ -694,6 +698,8 @@ function it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $pa
  * Updates a subscription ID to post_meta for a paypal transaction
  *
  * @since 1.3.0
+ * @param string $paypal_standard_id PayPal Transaction ID
+ * @param string $subscriber_id PayPal Subscriber ID
 */
 function it_exchange_paypal_standard_secure_addon_update_subscriber_id( $paypal_standard_secure_id, $subscriber_id ) {
 	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id( $paypal_standard_secure_id );
@@ -706,6 +712,8 @@ function it_exchange_paypal_standard_secure_addon_update_subscriber_id( $paypal_
  * Updates a subscription status to post_meta for a paypal transaction
  *
  * @since 1.3.0
+ * @param string $subscriber_id PayPal Subscriber ID
+ * @param string $status Status of Subscription
 */
 function it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, $status ) {
 	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id_by_subscriber_id( $subscriber_id );
