@@ -226,7 +226,7 @@ class IT_Exchange_Purchase_Dialog{
 	*/
 	function enqueue_js() {
 		$file = dirname( __FILE__ ) . '/js/exchange-purchase-dialog.js';
-		wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery' ) );
+		wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type' ) );
 	}
 
 	/**

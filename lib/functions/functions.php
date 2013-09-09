@@ -96,6 +96,9 @@ function it_exchange_load_public_scripts( $current_view ) {
 
 	// jQuery Zoom
 	wp_register_script( 'jquery-zoom', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.zoom.min.js' ), array( 'jquery' ), false, true );
+	
+	// Detect CC Type
+	wp_register_script( 'detect-credit-card-type', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/detect-credit-card-type.js' ), array( 'jquery' ), false, true );
 
 	// Frontend Product JS
 	if ( is_singular( 'it_exchange_prod' ) ) {

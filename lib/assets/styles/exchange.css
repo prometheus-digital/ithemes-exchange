@@ -161,3 +161,55 @@
 /** -------:[ Misc ]:--------------- */
 .it-exchange-hidden{display:none;}
 .it-exchange-required-star{color:#DC4446;margin-left:3px;}
+
+/** -----------------------------------------------------:[ visual credit card ]:---------- */
+.it-exchange-visual-cc {
+	max-width: 300px;
+	background: #F5F5F5;
+}
+.it-exchange-visual-cc .required {
+	color: #111;
+}
+.it-exchange-visual-cc .it-exchange-column-inner {
+	padding: .5em;
+}
+.it-exchange-visual-cc .it-exchange-visual-cc-holder .it-exchange-column {
+	width: 50%;
+}
+.it-exchange-visual-cc .it-exchange-visual-cc-holder input {
+	width: 100%;
+}
+.it-exchange-visual-cc .it-exchange-cc-holder-first-name .it-exchange-column-inner {
+	padding-right: .25em;
+}
+.it-exchange-visual-cc .it-exchange-cc-holder-last-name .it-exchange-column-inner {
+	padding-left: .25em;
+}
+.it-exchange-visual-cc .it-exchange-visual-cc-number input {
+	width: 100%;
+	margin: 0;
+	font-family: Consolas, Monaco, Lucida Console, monospace;
+}
+.it-exchange-visual-cc .it-exchange-cc-number-inner {
+	padding: 0 .5em;
+}
+.it-exchange-visual-cc .it-exchange-visual-cc-expiration {
+	width: 70%;
+	max-width: 100px;
+}
+.it-exchange-visual-cc .it-exchange-visual-cc-expiration input {
+	float: left;
+	width: 45%;
+	font-family: Consolas, Monaco, Lucida Console, monospace;
+}
+.it-exchange-visual-cc .it-exchange-visual-cc-expiration input {
+	margin-right: .5em;
+}
+.it-exchange-visual-cc .it-exchange-visual-cc-code {
+	float: right;
+	width: 30%;
+}
+.it-exchange-visual-cc .it-exchange-visual-cc-code input {
+	width: 100%;
+	font-family: Consolas, Monaco, Lucida Console, monospace;
+}
