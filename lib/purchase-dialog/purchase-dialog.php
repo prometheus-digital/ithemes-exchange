@@ -96,7 +96,8 @@ class IT_Exchange_Purchase_Dialog{
 	 * @return HTML
 	*/
 	function get_wrapper_open() {
-		$html = '<div class="it-exchange-purchase-dialog it-exchange-purchase-dialog-' . esc_attr( $this->addon_slug ) . '" data-addon-slug="' . esc_attr( $this->addon_slug ) . '">';
+		$ssl_class = ! is_ssl() ? ' it-exchange-is-ssl' : '';
+		$html = '<div class="it-exchange-purchase-dialog it-exchange-purchase-dialog-' . esc_attr( $this->addon_slug ) . $ssl_class . '" data-addon-slug="' . esc_attr( $this->addon_slug ) . '">';
 		return $html;
 	}
 
