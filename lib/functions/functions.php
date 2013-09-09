@@ -607,7 +607,7 @@ function it_exchange_get_core_page_urls( $page ) {
     $base       = trailingslashit( get_home_url() );
 
 	// Proccess superwidget links
-	if ( it_exchange_in_superwidget() && $slug != 'transaction' ) {
+	if ( it_exchange_in_superwidget() && $slug != 'transaction' && $page != 'confirmation' ) {
 		// Get current URL without exchange query args
 		$url = it_exchange_clean_query_args();
 		return add_query_arg( 'ite-sw-state', $slug, $url );

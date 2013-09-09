@@ -122,6 +122,19 @@ if ( 'update-billing' == $action ) {
 	die( IT_Exchange_Shopping_Cart::handle_update_billing_address_request() );
 }
 
+// Submit Purchase Dialog
+if ( 'submit-purchase-dialog' == $action ) {
+	if ( false === ( $transaction_id = IT_Exchange_Shopping_Cart::handle_purchase_cart_request( false ) ) ) {
+		die(0);
+	}
+	it_exchange_empty_shopping_cart();
+	$url = it_exchange_get_transaction_confirmation_url( $transaction_id );
+	// Strange bug I need to track down. Seems to be picking up output buffering or something
+	if ( strpos( '#EEE', $url ) )
+		$url = it_exchange_get_transaction_confirmation_url( $transaction_id );
+	die( $url );
+}
+
 // If we made it this far, allow addons to hook in and do their thing.
 do_action( 'it_exchange_processing_super_widget_ajax_' . $action );
 

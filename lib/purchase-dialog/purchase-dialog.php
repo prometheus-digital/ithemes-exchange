@@ -63,7 +63,7 @@ class IT_Exchange_Purchase_Dialog{
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		// Append class name
-		$class_name = 'it-exchange-purchase-dialog-' . $transaction_method_slug;
+		$class_name = 'it-exchange-purchase-dialog it-exchange-purchase-dialog-' . $transaction_method_slug;
 		$options['form-attributes']['class'] = empty( $options['form-attributes']['class'] ) ? $class_name : $options['form-attributes']['class'] . ' ' . $class_name;
 
 		$this->addon_slug         = $transaction_method_slug;
