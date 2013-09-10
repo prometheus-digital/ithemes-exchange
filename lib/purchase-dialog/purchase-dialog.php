@@ -78,7 +78,7 @@ class IT_Exchange_Purchase_Dialog{
 				'expiration-year',
 			),
 			'purchase-label' => __( 'Purchase', 'LION' ),
-			'submit-label'   => __( 'Submit', 'LION' ),
+			'submit-label'   => __( 'Complete Purchase', 'LION' ),
 			'cancel-label'   => __( 'Cancel', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
