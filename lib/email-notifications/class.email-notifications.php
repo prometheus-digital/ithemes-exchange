@@ -309,7 +309,8 @@ class IT_Exchange_Email_Notifications {
 		<?php
 		
 		if ( empty( $downloads_exist_for_transaction ) || empty( $hashes_found ) ) {
-			return $status_notice;
+			echo $status_notice;
+			return ob_get_clean();
 		} else {
 			return ob_get_clean();
 		}
