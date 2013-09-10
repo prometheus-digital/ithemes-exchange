@@ -57,3 +57,6 @@ include( $this->_plugin_path . 'api/template-parts.php' );
 
 // Data Sets
 include( $this->_plugin_path . 'api/data-sets.php' );
+
+// Purchase Dialogs
+include( $this->_plugin_path . 'api/purchase-dialogs.php' );
