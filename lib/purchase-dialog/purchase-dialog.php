@@ -39,6 +39,24 @@ class IT_Exchange_Purchase_Dialog{
 	var $required_cc_fields = array();
 
 	/**
+	 * @param string the label used for the button that opens up the CC fields
+	 * @since 1.2.3
+	*/
+	var $purchase_label;
+
+	/**
+	 * @param string the label used for the button that submits the CC fields
+	 * @since 1.2.3
+	*/
+	var $submit_label;
+
+	/**
+	 * @param string the label used for the cancel link to close the CC fields
+	 * @since 1.2.3
+	*/
+	var $cancel_label;
+
+	/**
 	 * Class Constructor
 	 *
 	 * @since 1.2.3
@@ -52,13 +70,16 @@ class IT_Exchange_Purchase_Dialog{
 				'action' => it_exchange_get_page_url( 'transaction' ),
 				'method' => 'post',
 			),
-			'required_cc_fields' => array(
+			'required-cc-fields' => array(
 				'first-name',
 				'last-name',
 				'number',
 				'expiration-month',
 				'expiration-year',
 			),
+			'purchase-label' => __( 'Purchase', 'LION' ),
+			'submit-label'   => __( 'Submit', 'LION' ),
+			'cancel-label'   => __( 'Cancel', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -69,7 +90,10 @@ class IT_Exchange_Purchase_Dialog{
 
 		$this->addon_slug         = $transaction_method_slug;
 		$this->form_attributes    = (array) $options['form-attributes'];
-		$this->required_cc_fields = (array) $options['required_cc_fields'];
+		$this->required_cc_fields = (array) $options['required-cc-fields'];
+		$this->purchase_label     = $options['purchase-label'];
+		$this->submit_label       = $options['submit-label'];
+		$this->cancel_label       = $options['cancel-label'];
 	}
 
 	/**
@@ -188,8 +212,8 @@ class IT_Exchange_Purchase_Dialog{
 	 * @return string HTML
 	*/
 	function get_form_actions() {
-		$actions  = '<p><input type="submit" value="Complete Purchase" /><br />';
-		$actions .= '<a href="#" class="it-exchange-purchase-dialog-cancel" data-addon-slug="' . esc_attr( $this->addon_slug ) . '">Cancel</a></p>';
+		$actions  = '<p><input type="submit" value="' . esc_attr( $this->submit_label ) . '" /><br />';
+		$actions .= '<a href="#" class="it-exchange-purchase-dialog-cancel" data-addon-slug="' . esc_attr( $this->addon_slug ) . '">' . esc_html( $this->cancel_label ) . '</a></p>';
 		return $actions;
 	}
 
@@ -214,7 +238,7 @@ class IT_Exchange_Purchase_Dialog{
 	function get_purchase_button() {
 		$error_class = it_exchange_purchase_dialog_has_error( $this->addon_slug ) ? ' has-errors' : '';
 		it_exchange_clear_purchase_dialog_error_flag( $this->addon_slug );
-		return '<input type="submit" class="it-exchange-purchase-dialog-trigger-' . esc_attr( $this->addon_slug ) . ' it-exchange-purchase-dialog-trigger' . $error_class . '" value="Test Payment" data-addon-slug="' . esc_attr( $this->addon_slug ) . '" />';
+		return '<input type="submit" class="it-exchange-purchase-dialog-trigger-' . esc_attr( $this->addon_slug ) . ' it-exchange-purchase-dialog-trigger' . $error_class . '" value="' . esc_attr( $this->purchase_label ) . '" data-addon-slug="' . esc_attr( $this->addon_slug ) . '" />';
 	}
 
 	/**
