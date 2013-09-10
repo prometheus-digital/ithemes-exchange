@@ -22,6 +22,8 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	*/
 	function IT_Exchange_Email_Notifications() {
+		add_action( 'it_exchange_send_email_notification', array( $this, 'it_exchange_send_email_notification' ), 20, 4 );
+
 		// Send emails on successfull transaction
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'send_purchase_emails' ), 20 );
 
@@ -33,6 +35,41 @@ class IT_Exchange_Email_Notifications {
 
 		add_shortcode( 'it_exchange_email', array( $this, 'ithemes_exchange_email_notification_shortcode' ) );
 
+	}
+	
+	function it_exchange_send_email_notification( $customer_id, $subject, $content ) {
+		
+		if ( is_email( $to ) ) {
+		
+			$this->transaction_id = apply_filters( 'it_exchange_send_email_notification_transaction_id', false );
+			$this->customer_id    = $customer_id;
+			$this->user           = get_userdata( $customer_id );
+			
+			$settings = it_exchange_get_option( 'settings_email' );	
+			
+			// Edge case where sale is made before admin visits email settings.
+			if ( empty( $settings['receipt-email-name'] ) && ! isset( $IT_Exchange_Admin ) ) {
+				global $IT_Exchange;
+				include_once( dirname( dirname( __FILE__ ) ) . '/admin/class.admin.php' );
+				add_filter( 'it_storage_get_defaults_exchange_settings_email', array( 'IT_Exchange_Admin', 'set_email_settings_defaults' ) );
+				$settings = it_exchange_get_option( 'settings_email', true );	
+			}
+			
+			$headers[] = 'From: ' . $settings['receipt-email-name'] . ' <' . $settings['receipt-email-address'] . '>';
+			$headers[] = 'MIME-Version: 1.0';
+			$headers[] = 'Content-Type: text/html';
+			$headers[] = 'charset=utf-8';
+			
+			$subject = do_shortcode( $subject );
+			$body    = apply_filters( 'it_exchange_send_email_notification_body', $content );
+			$body    = $this->body_header() . '<div>' . wpautop( do_shortcode( $body ) ) . '</div>' . $this->body_footer();
+			
+			$headers = it_exchange_send_email_notification( 'it_exchange_send_email_notification_headers', $headers );
+
+			wp_mail( $this->user->user_email, strip_tags( $subject ), $body, $headers );
+		
+		}
+		
 	}
 	
 	/**
@@ -106,7 +143,6 @@ class IT_Exchange_Email_Notifications {
 		if ( empty( $settings['receipt-email-name'] ) && ! isset( $IT_Exchange_Admin ) ) {
 			global $IT_Exchange;
 			include_once( dirname( dirname( __FILE__ ) ) . '/admin/class.admin.php' );
-		//	$IT_Exchange_Admin = new IT_Exchange_Admin( $IT_Exchange );
 			add_filter( 'it_storage_get_defaults_exchange_settings_email', array( 'IT_Exchange_Admin', 'set_email_settings_defaults' ) );
 			$settings = it_exchange_get_option( 'settings_email', true );	
 		}
