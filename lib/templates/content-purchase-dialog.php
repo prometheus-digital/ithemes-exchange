@@ -3,12 +3,12 @@
 		<div class="it-exchange-visual-cc-line-1 it-exchange-visual-cc-holder it-exchange-columns-wrapper">
 			<div class="it-exchange-cc-holder-first-name it-exchange-column">
 				<div class="it-exchange-column-inner">
-					<?php it_exchange( 'purchase-dialog', 'cc-first-name', array( 'format' => 'field', 'placeholder' => __( 'First name on card', 'LION' ) ) ) ?>
+					<?php it_exchange( 'purchase-dialog', 'cc-first-name', array( 'format' => 'field', 'placeholder' => __( 'First name', 'LION' ) ) ) ?>
 				</div>
 			</div>
 			<div class="it-exchange-cc-holder-last-name it-exchange-column">
 				<div class="it-exchange-column-inner">
-					<?php it_exchange( 'purchase-dialog', 'cc-last-name', array( 'format' => 'field', 'placeholder' => __( 'Last name on card', 'LION' ) ) ) ?>
+					<?php it_exchange( 'purchase-dialog', 'cc-last-name', array( 'format' => 'field', 'placeholder' => __( 'Last name', 'LION' ) ) ) ?>
 				</div>
 			</div>
 		</div>

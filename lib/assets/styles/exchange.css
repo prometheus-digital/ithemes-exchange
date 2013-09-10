@@ -183,8 +183,8 @@
 .it-exchange-visual-cc .it-exchange-visual-cc-number input.card-amex{background-image:url('images/amex.png') ;}
 .it-exchange-visual-cc .it-exchange-visual-cc-number input.card-discover{background-image:url('images/discover.png') ;}
 .it-exchange-visual-cc .it-exchange-cc-number-inner{padding:0 .5em;}
-.it-exchange-visual-cc .it-exchange-visual-cc-expiration{width:70%;max-width:100px;}
-.it-exchange-visual-cc .it-exchange-visual-cc-expiration input{float:left;width:45%;font-family:Consolas,Monaco,Lucida Console,monospace;}
+.it-exchange-visual-cc .it-exchange-visual-cc-expiration{width:70%;}
+.it-exchange-visual-cc .it-exchange-visual-cc-expiration input{float:left;width:45%;max-width:45px;font-family:Consolas,Monaco,Lucida Console,monospace;}
 .it-exchange-visual-cc .it-exchange-visual-cc-expiration input{margin-right:.5em;}
 .it-exchange-visual-cc .it-exchange-visual-cc-code{float:right;width:30%;}
 .it-exchange-visual-cc .it-exchange-visual-cc-code input{width:100%;font-family:Consolas,Monaco,Lucida Console,monospace;}
