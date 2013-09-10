@@ -427,6 +427,5 @@ class IT_Exchange_Shopping_Cart {
 	}
 }
 
-if ( ! is_admin() ) {
-	$IT_Exchange_Shopping_Cart = new IT_Exchange_Shopping_Cart();
-}
+if ( ! is_admin() )
+	$GLOBALS['IT_Exchange_Shopping_Cart'] = new IT_Exchange_Shopping_Cart();

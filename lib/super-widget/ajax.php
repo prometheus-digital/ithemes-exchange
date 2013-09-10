@@ -4,6 +4,9 @@
  * @package IT_Exchange
  * @since 0.4.0
 */
+// Suppress PHP errors that hose ajax responses. If you turn this off, make sure you're error-free
+if ( apply_filters( 'it_exchange_supress_superwidget_ajax_errors', true ) )
+	ini_set( 'display_errors', false );
 
 // Die if called directly
 if ( ! function_exists( 'add_action' ) ) {
@@ -119,12 +122,12 @@ if ( 'register' == $action ) {
 // Edit Billing
 if ( 'update-billing' == $action ) {
 	// This function will either updated the value or create an error and return 1 or 0
-	die( IT_Exchange_Shopping_Cart::handle_update_billing_address_request() );
+	die( $GLOBALS['IT_Exchange_Shopping_Cart']->handle_update_billing_address_request() );
 }
 
 // Submit Purchase Dialog
 if ( 'submit-purchase-dialog' == $action ) {
-	$transaction_id = IT_Exchange_Shopping_Cart::handle_purchase_cart_request( false );
+	$transaction_id = $GLOBALS['IT_Exchange_Shopping_Cart']->handle_purchase_cart_request( false );
 
 	// Return false if we didn't get a transaction_id
 	if ( empty( $transaction_id ) )
