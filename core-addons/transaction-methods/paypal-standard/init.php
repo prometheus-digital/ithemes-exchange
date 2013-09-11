@@ -343,13 +343,11 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 						
 							case 'yearly':
 								$unit = 'Y';
-								$unit = 'D'; //@todo remove this line!
 								break;
 								
 							case 'monthly':
 							default:
 								$unit = 'M';
-								$unit = 'D'; //@todo remove this line!
 								break;
 							
 						}
@@ -441,8 +439,6 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard' );
-
-	wp_mail( 'lew@ithemes.com', 'paypal insecure ipn', print_r( $request, true ) );
 	
 	$subscriber_id = !empty( $request['subscr_id'] ) ? $request['subscr_id'] : false;
 	$subscriber_id = !empty( $request['recurring_payment_id'] ) ? $request['recurring_payment_id'] : $subscriber_id;
@@ -871,11 +867,6 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		<?php
 	}
 	
-	/**
-	 *
-	 * @todo verify video link
-	 *
-	 */
 	function get_paypal_standard_payment_form_table( $form, $settings = array() ) {
 
 		$general_settings = it_exchange_get_option( 'settings_general' );
