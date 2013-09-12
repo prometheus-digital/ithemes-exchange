@@ -169,6 +169,18 @@ class IT_Exchange_Transaction {
 	function update_transaction_meta( $key, $value ) {
 		update_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $value );
 	}
+
+	/**
+	 * Deletes a transaction meta property.
+	 *
+	 * If the custom value is already set, it uses that.
+	 * If the custom value is not set and we're on post-add.php, check for a URL param
+	 *
+	 * @since 1.3.0
+	*/
+	function delete_transaction_meta( $key, $value = '' ) {
+		delete_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $value );
+	}
 	
 	/**
 	 * Gets the date property.
