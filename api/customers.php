@@ -205,7 +205,7 @@ function it_exchange_register_user( $user_data=array() ) {
 /**
  * Retrieve specific customer data
  *
- * @since 1.2.2
+ * @since 1.3.0
  *
  * @param string $data_key the key of the data property of the IT Exchange customer object.
  * @param integer $customer_id the customer id. leave blank to use the current customer.
@@ -231,7 +231,7 @@ function it_exchange_get_customer_data( $data_key, $customer_id=false ) {
  * Among other things this function is used as a callback for the billing address
  * purchase requriement.
  *
- * @since 1.2.2
+ * @since 1.3.0
  *
  * @param integer $customer_id the customer id. leave blank to use the current customer.
  * @return array

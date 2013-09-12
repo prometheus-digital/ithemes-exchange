@@ -509,7 +509,7 @@ function it_exchange_get_cart_nonce_field() {
 /**
  * Returns the billing address values for the cart
  *
- * @since 1.2.2
+ * @since 1.3.0
  *
  * @return array
 */
@@ -560,7 +560,7 @@ function it_exchange_get_cart_billing_address() {
  * Formats the Billing Address for display
  *
  * @todo this function sucks. Lets make a function for formatting any address. ^gta
- * @since 1.2.2
+ * @since 1.3.0
  *
  * @return string HTML
 */

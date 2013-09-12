@@ -274,7 +274,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Handles updating a billing address
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 *
 	 * @return void
 	*/
@@ -297,7 +297,7 @@ class IT_Exchange_Shopping_Cart {
 			}
 		}
 
-		/** @todo This is hardcoded for now. will be more flexible before launch **/
+		/** @todo This is hardcoded for now. will be more flexible at some point **/
 		$billing = array();
 		$fields = array(
 			'first-name',
