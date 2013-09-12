@@ -15,7 +15,7 @@
 */
 ?>
 <?php do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_before_fields_loop' ); ?>
-<?php $fields = array( 'first_name', 'last_name', 'company_name', 'address_1', 'address_2', 'city', 'state', 'zip', 'country', 'nonce' ); ?>
+<?php $fields = array( 'first_name', 'last_name', 'company_name', 'address_1', 'address_2', 'city', 'country', 'state', 'zip', 'nonce' ); ?>
 <?php foreach( it_exchange_get_template_part_elements( 'content_checkout/elements/purchase-requirements/billing-address/elements/', 'fields', $fields ) as $field ) : ?>
 	<?php
 	/**

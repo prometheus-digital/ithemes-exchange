@@ -185,26 +185,6 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	}
 
 	/**
-	 * Outputs the billing address state data
-	 *
-	 * @since 1.2.2
-	 * @return string
-	*/
-	function state( $options=array() ) {
-		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'State', 'LION' ),
-		);
-		$options = ITUtility::merge_defaults( $options, $defaults );
-
-		$options['field_id']   = 'it-exchange-billing-address-state';
-		$options['field_name'] = 'it-exchange-billing-address-state';
-		$options['value']      = empty( $this->_billing_address['state'] ) ? '' : $this->_billing_address['state'];
-
-		return $this->get_fields( $options );
-	}
-
-	/**
 	 * Outputs the billing address zip data
 	 *
 	 * @since 1.2.2
@@ -241,8 +221,111 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-billing-address-country';
 		$options['value']      = empty( $this->_billing_address['country'] ) ? '' : $this->_billing_address['country'];
 
-		return $this->get_fields( $options );
+		// Update value if doing ajax
+		$options['value'] = empty( $_POST['ite_base_country_ajax'] ) ? $options['value'] : $_POST['ite_base_country_ajax'];
+
+		$countries = it_exchange_get_data_set( 'countries' );
+		
+		$current_value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
+
+		$field  = '<select id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '">';
+		foreach( $countries as $key => $value ) {
+			$field .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $current_value, false ) . '>' . esc_html( $value ) . '</option>';
+		}
+		$field .= '</select>';
+
+		switch( $options['format'] ) {
+			case 'field-id' :
+				$output = $options['field_id'];
+				break;
+			case 'field-name':
+				$output = $options['field_name'];
+				break;
+			case 'label':
+				$output = $options['label'];
+				break;
+			case 'field':
+				$output = $field;
+				break;
+			case 'value':
+				$output = $current_value;
+				break;
+			case 'html':
+			default:
+				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'] . '</label>';
+				$output .= $field;
+		}
+		return $output;
 	}
+
+	/**
+	 * Outputs the billing address state data
+	 *
+	 * @since 1.2.2
+	 * @return string
+	*/
+	function state( $options=array() ) {
+
+		// Default state value for normal page load
+		$billing_value = empty( $this->_billing_address['state'] ) ? '' : $this->_billing_address['state'];
+		$default_value = empty( $_POST['it-exchange-billing-address-state'] ) ? $billing_value : $_POST['it-exchange-billing-address-state'];
+
+		$defaults      = array(
+			'format' => 'html',
+			'label'  => __( 'State', 'LION' ),
+			'value'  => $default_value,
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		// Update value if doing ajax
+		$options['value'] = empty( $_POST['ite_base_state_ajax'] ) ? $options['value'] : $_POST['ite_base_state_ajax'];
+
+		$options['field_id']   = 'it-exchange-billing-address-state';
+		$options['field_name'] = 'it-exchange-billing-address-state';
+		$options['value']      = empty( $this->_billing_address['state'] ) ? '' : $this->_billing_address['state'];
+
+		$states = it_exchange_get_data_set( 'states', array( 'country' => it_exchange( 'billing', 'get-country', array( 'format' => 'value' ) ) ) );
+		
+		$current_value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
+
+		$field = '';
+		if ( ! empty( $states ) && is_array( $states ) ) {
+			$field .= '<select id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '">';
+			foreach( (array) $states as $key => $value ) {
+				$field .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $current_value, false ) . '>' . esc_html( $value ) . '</option>';
+			}
+			$field .= '</select>';
+		} else {
+			$text_options = $options;
+			$text_options['format']    = 'field';
+			$field .= $this->get_fields( $text_options );
+		}
+
+		switch( $options['format'] ) {
+			case 'field-id' :
+				$output = $options['field_id'];
+				break;
+			case 'field-name':
+				$output = $options['field_name'];
+				break;
+			case 'label':
+				$output = $options['label'];
+				break;
+			case 'field':
+				$output = $field;
+				break;
+			case 'value':
+				$output = $current_value;
+				break;
+			case 'html':
+			default:
+				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'] . '</label>';
+				$output .= $field;
+		}
+		return $output;
+	}
+
+	/**
 
 	/**
 	 * Outputs the billing address email data
@@ -330,6 +413,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function get_fields( $options ) {
 		
 		$value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
+		$class = empty( $options['class'] ) ? '' : esc_attr( $options['class'] );
 
 		switch( $options['format'] ) {
 
@@ -343,7 +427,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 				$output = $options['label'];
 				break;
 			case 'field':
-				$output = '<input type="text" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" value="" />';
+				$output = '<input type="text" class="' . $class . '" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" value="' . $value . '" />';
 				break;
 			case 'value':
 				$output = $value;
@@ -351,7 +435,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 			case 'html':
 			default:
 				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'] . '</label>';
-				$output .= '<input type="text" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" value="' . $value . '" />';
+				$output .= '<input type="text" class="' . $class . '" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" value="' . $value . '" />';
 		}
 
 		return $output;

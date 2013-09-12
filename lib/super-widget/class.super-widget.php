@@ -94,6 +94,14 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			var itExchangeSWOnProductPage = '<?php echo esc_js( $product_id ); ?>';
 			var itExchangeSWMultiItemCart = '<?php echo esc_js( it_exchange_is_multi_item_cart_allowed() ); ?>';
 			var itExchangeIsUserLoggedIn = '<?php echo esc_js( is_user_logged_in() ); ?>';
+			jQuery( function() {
+				var iteCountryStatesSyncOptions = { 
+					statesWrapper: '.it-exchange-state',
+					stateFieldID:  '#it-exchange-billing-address-state',
+					templatePart:  'super-widget-billing-address/elements/state'
+				}; 
+				jQuery('#it-exchange-billing-address-country', '.it-exchange-super-widget').itCountryStatesSync(iteCountryStatesSyncOptions).trigger('change');
+			});
 		</script>
 		<?php
 		// Print widget
@@ -125,6 +133,8 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 				'processingPaymentLabel' => __( 'Processing', 'LION' ),
 			)
 		);
+		// Country States sync
+		wp_enqueue_script( 'it-exchange-country-states-sync', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/country-states-sync.js' ), array( 'it-exchange-super-widget' ), false, true );
 
 		// Allow add-ons to enqueue scripts for super-widget
 		do_action( 'it_exchange_enqueue_super_widget_scripts' );

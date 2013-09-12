@@ -105,13 +105,29 @@ function it_exchange_load_public_scripts( $current_view ) {
 		wp_enqueue_script( 'it-exchange-product-public-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/exchange-product.js' ), array( 'jquery-zoom' ), false, true );
 	}
 
-	// Load Logged In purchase requirement JS if not logged in and on checkout page.
-	if ( it_exchange_is_page( 'checkout' ) && in_array( 'logged-in', $purchase_requirements ) && ! is_user_logged_in() )
-		wp_enqueue_script( 'it-exchange-logged-in-purchase-requirement', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/logged-in-purchase-requirement.js' ), array( 'jquery' ), false, true );
+	// ****** CHECKOUT SPECIFIC SCRIPTS ******* 
+	if ( it_exchange_is_page( 'checkout' )  ) {
 
-	// Load Shipping Address purchase requirement JS if not logged in and on checkout page.
-	if ( it_exchange_is_page( 'checkout' ) && in_array( 'billing-address', $purchase_requirements ) )
-		wp_enqueue_script( 'it-exchange-billing-address-purchase-requirement', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/billing-address-purchase-requirement.js' ), array( 'jquery' ), false, true );
+		// General Checkout
+		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/checkout-page.js' );
+		wp_enqueue_script( 'it-exchange-checkout-page', $script, array( 'jquery' ), false, true );
+		
+		// Load Logged In purchase requirement JS if not logged in and on checkout page.
+		if ( in_array( 'logged-in', $purchase_requirements ) && ! is_user_logged_in() ) {
+			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/logged-in-purchase-requirement.js' );
+			wp_enqueue_script( 'it-exchange-logged-in-purchase-requirement', $script, array( 'jquery' ), false, true );
+		}
+
+		// Load Shipping Address purchase requirement JS if not logged in and on checkout page.
+		if ( in_array( 'billing-address', $purchase_requirements ) ) {
+			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/billing-address-purchase-requirement.js' );
+			wp_enqueue_script( 'it-exchange-billing-address-purchase-requirement', $script, array( 'jquery', 'it-exchange-country-states-sync' ), false, true );
+		}
+
+		// Load country / state field sync if on checkout page
+		wp_enqueue_script( 'it-exchange-country-states-sync', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/country-states-sync.js' ), array( 'jquery' ), false, true );
+
+	} // ****** END CHECKOUT SPECIFIC SCRIPTS *******
 
 	// Frontend Style 
 	if ( ! apply_filters( 'it_exchange_disable_frontend_stylesheet', false ) )
@@ -877,6 +893,41 @@ function it_exchange_clear_billing_on_cart_empty() {
 }
 add_action( 'it_exchange_empty_shopping_cart', 'it_exchange_clear_billing_on_cart_empty' );
 add_action( 'wp_logout', 'it_exchange_clear_billing_on_cart_empty' );
+
+/**  
+ * AJAX callback for Country / State drop downs
+ *
+ * @since 1.2.2
+ *
+ * @return void
+*/
+function print_country_states_ajax() {
+	define( 'DOING_AJAX', true );
+	if ( empty( $_POST['ite_action_ajax'] ) || 'ite-country-states-update' != $_POST['ite_action_ajax'] )
+		return;
+
+	$base_country  = empty( $_POST['ite_base_country_ajax'] ) ? 'US' : $_POST['ite_base_country_ajax'];
+	$base_state    = empty( $_POST['ite_base_state_ajax'] ) ? '' : $_POST['ite_base_state_ajax'];
+	$template_part = empty( $_POST['ite_template_part_ajax'] ) ? '' : $_POST['ite_template_part_ajax'];
+	
+	it_exchange_get_template_part( $template_part );
+	die();
+}
+add_action( 'init', 'print_country_states_ajax' );
+
+/**
+ * Prints a homeURL var in JS
+ *
+ * @since 1.2.2
+*/
+function it_exchange_print_home_url_in_js() {
+	?>
+	<script type="text/javascript">
+		var itExchangeAjaxCountryStatesAjaxURL = '<?php echo esc_js( trailingslashit( get_site_url() ) ); ?>';
+	</script>
+	<?php
+}
+add_action( 'wp_head', 'it_exchange_print_home_url_in_js' );
 
 /************************************
  * THE FOLLOWING API METHODS AREN'T READY
