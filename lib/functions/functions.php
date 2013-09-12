@@ -902,10 +902,11 @@ add_action( 'wp_logout', 'it_exchange_clear_billing_on_cart_empty' );
  * @return void
 */
 function print_country_states_ajax() {
-	define( 'DOING_AJAX', true );
 	if ( empty( $_POST['ite_action_ajax'] ) || 'ite-country-states-update' != $_POST['ite_action_ajax'] )
 		return;
 
+	define( 'DOING_AJAX', true );
+	
 	$base_country  = empty( $_POST['ite_base_country_ajax'] ) ? 'US' : $_POST['ite_base_country_ajax'];
 	$base_state    = empty( $_POST['ite_base_state_ajax'] ) ? '' : $_POST['ite_base_state_ajax'];
 	$template_part = empty( $_POST['ite_template_part_ajax'] ) ? '' : $_POST['ite_template_part_ajax'];
