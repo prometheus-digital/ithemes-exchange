@@ -2,8 +2,8 @@
 /**
  * The billing address template for the Super Widget.
  * 
- * @since 1.2.2
- * @version 1.2.2
+ * @since 1.3.0
+ * @version 1.3.0
  * @link http://ithemes.com/codex/page/Exchange_Template_Updates
  * @package IT_Exchange
  * 

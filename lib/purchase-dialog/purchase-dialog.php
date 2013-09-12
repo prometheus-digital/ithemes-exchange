@@ -3,63 +3,63 @@
  * This file holds the IT_Exchange_Purchase_Dialog class
  *
  * @package IT_Exchange
- * @since 1.2.3
+ * @since 1.3.0
 */
 
 /**
  * Transaction methods call or extend this class to create a 
  * purchase dialog with a custom form in it.
  *
- * @since 1.2.3
+ * @since 1.3.0
 */
 class IT_Exchange_Purchase_Dialog{
 
 	/**
 	 * @param string $addon_slug the slug for the addon invoking the class
-	 * @since 1.2.3
+	 * @since 1.3.0
 	*/
 	var $addon_slug = false; 
 
 	/**
 	 * @param array a key => value array of form attributes like class, id, etc.
-	 * @since 1.2.3
+	 * @since 1.3.0
 	*/
 	var $form_attributes = array();
 
 	/**
 	 * @param array an array of the cc fields were using
-	 * @since 1.2.3
+	 * @since 1.3.0
 	*/
 	var $active_cc_fields = array();
 
 	/**
 	 * @param array an array of the required cc fields were using
-	 * @since 1.2.3
+	 * @since 1.3.0
 	*/
 	var $required_cc_fields = array();
 
 	/**
 	 * @param string the label used for the button that opens up the CC fields
-	 * @since 1.2.3
+	 * @since 1.3.0
 	*/
 	var $purchase_label;
 
 	/**
 	 * @param string the label used for the button that submits the CC fields
-	 * @since 1.2.3
+	 * @since 1.3.0
 	*/
 	var $submit_label;
 
 	/**
 	 * @param string the label used for the cancel link to close the CC fields
-	 * @since 1.2.3
+	 * @since 1.3.0
 	*/
 	var $cancel_label;
 
 	/**
 	 * Class Constructor
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @param array $options
 	*/
@@ -99,7 +99,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Returns the HTML for the button
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @return string HTML
 	*/
@@ -116,7 +116,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Generates the opening HTML for the wrapper div
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @return HTML
 	*/
@@ -129,7 +129,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Generates the closing HTML for the wrapper div
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @return HTML
 	*/
@@ -141,7 +141,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Generates the purchase form
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @return HTML
 	*/
@@ -163,7 +163,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Gets the open form field
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @return string HTML
 	*/
@@ -180,7 +180,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Get form hidden fields
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @return string HTML
 	*/
@@ -193,7 +193,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Gets the form body
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @return string HTML
 	*/
@@ -207,7 +207,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Gets the form actions
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @return string HTML
 	*/
@@ -220,7 +220,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Get form close
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 * @return string HTML
 	*/
 	function get_form_close() {
@@ -231,7 +231,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Generates the init button that calls the dialog
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @return string HTML
 	*/
@@ -244,7 +244,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Enqueues the JS for purchase dialogs
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @return void
 	*/
@@ -256,7 +256,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Grabs the credit card fields from $_POST
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @return array
 	*/
@@ -286,7 +286,7 @@ class IT_Exchange_Purchase_Dialog{
 	 * This only confirms that the fields exists. Use the filter at the bottom of the function
 	 * to modify validation of CC data.
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @todo this method could use some TLC
 	 * @return boolean

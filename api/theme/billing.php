@@ -2,7 +2,7 @@
 /**
  * Billing class for THEME API
  *
- * @since 1.2.2
+ * @since 1.3.0
 */
 
 class IT_Theme_API_Billing implements IT_Theme_API {
@@ -10,21 +10,21 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * API context
 	 * @var string $_context
-	 * @since 1.2.2
+	 * @since 1.3.0
 	*/
 	private $_context = 'billing';
 
 	/**
 	 * Current customer Billing Address
 	 * @var string $_billing_address
-	 * @since 1.2.2
+	 * @since 1.3.0
 	*/
 	private $_billing_address = '';
 
 	/**
 	 * Maps api tags to methods
 	 * @var array $_tag_map
-	 * @since 1.2.2
+	 * @since 1.3.0
 	*/
 	public $_tag_map = array(
 		'firstname'   => 'first_name',
@@ -45,8 +45,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.2.2
-	 * @todo get working for admins looking at other users profiles
+	 * @since 1.3.0
 	 * @return void
 	*/
 	function IT_Theme_API_Billing() {
@@ -56,7 +55,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 *
 	 * @return string
 	*/
@@ -67,7 +66,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the billing address first name data
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function first_name( $options=array() ) {
@@ -87,7 +86,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the billing address last name data
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function last_name( $options=array() ) {
@@ -107,7 +106,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the billing address compnay name data
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function company_name( $options=array() ) {
@@ -127,7 +126,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the billing address address 1 data
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function address1( $options=array() ) {
@@ -147,7 +146,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the billing address address 2data
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function address2( $options=array() ) {
@@ -167,7 +166,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the billing address city data
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function city( $options=array() ) {
@@ -187,7 +186,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the billing address zip data
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function zip( $options=array() ) {
@@ -207,7 +206,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the billing address country data
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function country( $options=array() ) {
@@ -261,7 +260,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the billing address state data
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function state( $options=array() ) {
@@ -330,7 +329,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the billing address email data
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function email( $options=array() ) {
@@ -350,7 +349,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the billing address phone data
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function phone( $options=array() ) {
@@ -370,7 +369,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the billing address submit button 
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function submit( $options=array() ) {
@@ -389,7 +388,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the billing address phone data
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function cancel( $options=array() ) {
@@ -405,7 +404,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Gets the HTML is the desired format
 	 *
-	 * @since 1.2.2
+	 * @since 1.3.0
 	 *
 	 * @param array $options
 	 * @return mixed

@@ -2,7 +2,7 @@
 /**
  * Purchase Dialog class for THEME API
  *
- * @since 1.2.3
+ * @since 1.3.0
 */
 
 class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
@@ -10,28 +10,28 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	/**
 	 * API context
 	 * @var string $_context
-	 * @since 0.4.0
+	 * @since 1.3.0
 	*/
 	private $_context = 'purchase-dialog';
 	
 	/**
 	 * The required fields for this form this.
 	 * @var string $_required_fields
-	 * @since 1.2.3
+	 * @since 1.3.0
 	*/
 	private $_required_fields= '';
 	
 	/**
 	 * The Transaction Method invoking this.
 	 * @var string $_customer
-	 * @since 0.4.0
+	 * @since 1.3.0
 	*/
 	private $_transaction_method= '';
 
 	/**
 	 * Maps api tags to methods
 	 * @var array $_tag_map
-	 * @since 0.4.0
+	 * @since 1.3.0
 	*/
 	public $_tag_map = array(
 		'ccfirstname'           => 'cc_first_name',
@@ -47,7 +47,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	/**
 	 * Constructor
 	 *
-	 * @since 0.4.0
+	 * @since 1.3.0
 	 * @todo get working for admins looking at other users profiles
 	 * @return void
 	*/
@@ -60,7 +60,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	/**
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
-	 * @since 0.4.0
+	 * @since 1.3.0
 	 * 
 	 * @return string
 	*/
@@ -71,7 +71,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	/**
 	 * Outputs the CC first name data
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function cc_first_name( $options=array() ) {
@@ -92,7 +92,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	/**
 	 * Outputs the CC last name data
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function cc_last_name( $options=array() ) {
@@ -113,7 +113,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	/**
 	 * Outputs the CC Number data
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function cc_number( $options=array() ) {
@@ -134,7 +134,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	/**
 	 * Outputs the CC Expiration Month / Year data
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function cc_expiration_month_year( $options=array() ) {
@@ -155,7 +155,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	/**
 	 * Outputs the CC Expiration Month data
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function cc_expiration_month( $options=array() ) {
@@ -176,7 +176,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	/**
 	 * Outputs the CC Expiration Year data
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function cc_expiration_year( $options=array() ) {
@@ -197,7 +197,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	/**
 	 * Outputs the CC Expiration data
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function cc_code( $options=array() ) {
@@ -218,7 +218,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	/**
 	 * Outputs the hidden field for fields used
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 * @return string
 	*/
 	function fields( $options=array() ) {
@@ -237,7 +237,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	/**
 	 * Returns the field data in the format requested
 	 *
-	 * @since 1.2.3
+	 * @since 1.3.0
 	 *
 	 * @param array $options
 	 * @param string $field_id the id of the form field

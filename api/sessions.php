@@ -92,7 +92,7 @@ function it_exchange_clear_session( $hard=false ) {
 /**
  * Returns the current session ID
  *
- * @since 1.2.2
+ * @since 1.3.0
  *
  * @return string
 */

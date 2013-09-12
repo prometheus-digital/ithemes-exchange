@@ -417,7 +417,7 @@ function it_exchange_get_next_purchase_requirement_property( $prop ) {
 /**
  * Returns an array of all pending purchase requiremnts
  *
- * @since 1.2.2
+ * @since 1.3.0
  *
  * @return array
 */

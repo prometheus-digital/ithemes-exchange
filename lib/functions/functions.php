@@ -862,7 +862,7 @@ add_filter( 'it_exchange_get_content_checkout_actions_elements', 'it_exchange_di
 /**
  * Add Billing Address to the super-widget-checkout totals loop
  *
- * @since 1.2.2
+ * @since 1.3.0
  *
  * @param array $loops list of existing elements
  * @return array
@@ -884,7 +884,7 @@ add_filter( 'it_exchange_get_super-widget-checkout_after-cart-items_loops', 'it_
 /**
  * Clear Billing Address when the cart is emptied or a user logs out.
  *
- * @since 1.2.2
+ * @since 1.3.0
  *
  * @return void
 */
@@ -897,7 +897,7 @@ add_action( 'wp_logout', 'it_exchange_clear_billing_on_cart_empty' );
 /**  
  * AJAX callback for Country / State drop downs
  *
- * @since 1.2.2
+ * @since 1.3.0
  *
  * @return void
 */
@@ -918,7 +918,7 @@ add_action( 'init', 'print_country_states_ajax' );
 /**
  * Prints a homeURL var in JS
  *
- * @since 1.2.2
+ * @since 1.3.0
 */
 function it_exchange_print_home_url_in_js() {
 	?>

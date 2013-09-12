@@ -5,7 +5,7 @@
  * If an addon doesn't want to call this helper, they need to include the class (once),
  * Extend it for thier use, and init it with their slug and options.
  *
- * @since 1.2.3
+ * @since 1.3.0
  *
  * @param string $transaction_method_slug 
  * @param array $options
@@ -21,7 +21,7 @@ function it_exchange_generate_purchase_dialog( $transaction_method_slug, $option
 /**
  * Get the credit card values
  *
- * @since 1.2.3
+ * @since 1.3.0
  *
  * @param string $transaction_method_slug 
  * @param array $options
@@ -37,7 +37,7 @@ function it_exchange_get_purchase_dialog_submitted_values( $transaction_method_s
 /**
  * Are the submitted values valid
  *
- * @since 1.2.3
+ * @since 1.3.0
  *
  * @param string $transaction_method_slug 
  * @param array $options
