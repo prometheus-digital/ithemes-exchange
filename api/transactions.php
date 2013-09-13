@@ -745,6 +745,23 @@ function it_exchange_get_transaction_order_number( $transaction, $prefix='#' ) {
 }
 
 /**
+ * Returns the billing addresss saveed with the transaction
+ *
+ * @since 1.3.0
+ *
+ * @param array transaction billing address
+ *
+*/
+function it_exchange_get_transaction_billing_address( $transaction ) {
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
+		return false;
+
+	$billing_address = empty( $transaction->cart_details->billing_address ) ? false: $transaction->cart_details->billing_address;
+
+	return apply_filters( 'it_exchange_get_transaction_billing_address', $billing_address, $transaction );
+}
+
+/**
  * Returns an array of product objects as they existed when added to the transaction
  *
  * @since 0.4.0

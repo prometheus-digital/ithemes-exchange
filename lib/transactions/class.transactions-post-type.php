@@ -597,6 +597,16 @@ class IT_Exchange_Transaction_Post_Type {
 			</div>
 			<?php
 		endif;
+
+		if ( $billing_address = it_exchange_get_transaction_billing_address( $post->ID ) ) :
+			?>
+			<div class="clearfix spacing-wrapper">
+				<div class="billing-address-label"><?php _e( 'Billing Address', 'LION' ); ?></div>
+				<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
+			</div>
+			<?php
+		endif;
+		do_action( 'it_exchange_after_payment_details' );
 	}
 
 	/**

@@ -436,3 +436,34 @@ function it_exchange_get_pending_purchase_requirements() {
 	}
 	return $pending;
 }
+
+/**
+ * Formats the Billing Address for display
+ *
+ * @todo this function sucks. Lets make a function for formatting any address. ^gta
+ * @since 1.3.0
+ *
+ * @return string HTML
+*/
+function it_exchange_get_formatted_billing_address( $billing_address=false ) { 
+	$formatted   = array();
+	$billing     = empty( $billing_address ) ? it_exchange_get_cart_billing_address() : $billing_address;
+	$formatted[] = implode( ' ', array( $billing['first-name'], $billing['last-name'] ) );
+	if ( ! empty( $billing['company-name'] ) ) 
+		$formatted[] = $billing['company-name'];
+	if ( ! empty( $billing['address1'] ) ) 
+		$formatted[] = $billing['address1'];
+	if ( ! empty( $billing['address2'] ) ) 
+		$formatted[] = $billing['address2'];
+	if ( ! empty( $billing['city'] ) || ! empty( $billing['state'] ) || ! empty( $billing['zip'] ) ) { 
+		$formatted[] = implode( ' ', array( ( empty( $billing['city'] ) ? '': $billing['city'] .',' ),
+			( empty( $billing['state'] ) ? '': $billing['state'] ),
+			( empty( $billing['zip'] ) ? '': $billing['zip'] ),
+		) );
+	}   
+	if ( ! empty( $billing['country'] ) ) 
+		$formatted[] = $billing['country'];
+
+	$formatted = implode( '<br />', $formatted );
+	return apply_filters( 'it_exchange_get_formatted_billing_address', $formatted );
+}
