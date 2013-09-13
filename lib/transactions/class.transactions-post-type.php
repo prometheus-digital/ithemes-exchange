@@ -415,6 +415,13 @@ class IT_Exchange_Transaction_Post_Type {
 			</div>
 		</div>
 
+        <?php if ( $billing_address = it_exchange_get_transaction_billing_address( $post->ID ) ) : ?>  
+            <div class="billing-address spacing-wrapper">
+                <div class="billing-address-label"><?php _e( 'Billing Address', 'LION' ); ?></div>
+                <p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
+            </div>
+		<?php endif; ?>
+
 		<div class="products">
 			<div class="products-header spacing-wrapper">
 				<span><?php _e( 'Products', 'LION' ); ?></span>
@@ -450,50 +457,6 @@ class IT_Exchange_Transaction_Post_Type {
 									<h4 class="product-download-title">
 										<?php esc_attr_e( get_the_title( $download_id ) ); ?>
 									</h4>
-									<!--
-									NOTE Removing this as it was not in the mock up. However, I'd hate to delete the work I've don in case we want to change this later. - Koop
-									<ul class="download-hashes hidden">
-										<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $post->ID, $transaction_product, $download_id ); ?>
-										<?php foreach( (array) $hashes_for_product_transaction as $hash ) : ?>
-											<?php
-												$hash_data = it_exchange_get_download_data_from_hash( $hash );
-												$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
-												$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
-											?>
-											<li class="product-download-hash">
-												<span class="hash">
-													<?php esc_attr_e( $hash ); ?>
-												</span>
-												<span class="expires">
-													<?php
-														if ( $expires = it_exchange_get_download_expiration_date( $hash_data ) )
-															printf( __( 'Expires on %s', 'LION' ), $expires );
-														else
-															_e( "Doesn't expire", 'LION' );
-													?>
-												</span>
-												<span class="limit">
-													<?php
-														if ( $download_limit )
-															printf( __( 'Limited to %d total download(s)', 'LION' ), $download_limit );
-														else
-															_e( 'Unlimited downloads', 'LION' );
-													?>
-												</span>
-												
-												<?php if ( $download_limit ) : ?>
-													<p class="remaining">
-														<?php echo ( $download_limit - $downloads ) . ' '. __( 'Downloads Remaining', 'LION' ); ?>
-													</p>
-												<?php endif; ?>
-												<p class="count">
-													<?php printf( __( 'Downloaded %d Time(s)', 'LION' ), $downloads ); ?>
-												</p>
-											</li>
-										<?php endforeach; ?>
-									</ul>
-									ENDNOTE
-									-->
 								</div>
 							<?php endforeach; ?>
 						<?php else : ?>
@@ -594,15 +557,6 @@ class IT_Exchange_Transaction_Post_Type {
 					<div id="it-exchange-update-transaction-status-failed"><?php _e( 'Not Saved.', 'LION' ); ?></div>
 					<div id="it-exchange-update-transaction-status-success"><?php _e( 'Saved!', 'LION' ); ?></div>
 				</div>
-			</div>
-			<?php
-		endif;
-
-		if ( $billing_address = it_exchange_get_transaction_billing_address( $post->ID ) ) :
-			?>
-			<div class="clearfix spacing-wrapper">
-				<div class="billing-address-label"><?php _e( 'Billing Address', 'LION' ); ?></div>
-				<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
 			</div>
 			<?php
 		endif;
