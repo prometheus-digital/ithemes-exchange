@@ -414,7 +414,7 @@ class IT_Exchange_Transaction_Post_Type {
 				</div>
 			</div>
 		</div>
-		
+
 		<?php if ( $billing_address = it_exchange_get_transaction_billing_address( $post->ID ) ) : ?>  
 			<div class="billing-shipping-wrapper columns-wrapper">
 				<div class="billing-address column c-50">
@@ -429,7 +429,7 @@ class IT_Exchange_Transaction_Post_Type {
 				</div> -->
 			</div>
 		<?php endif; ?>
-		
+
 		<div class="products">
 			<div class="products-header spacing-wrapper">
 				<span><?php _e( 'Products', 'LION' ); ?></span>
@@ -438,11 +438,11 @@ class IT_Exchange_Transaction_Post_Type {
 			<?php
 				// Grab products attached to transaction
 				$transaction_products = it_exchange_get_transaction_products( $post );
-			
+
 				// Grab all hashes attached to transaction
 				$hashes   = it_exchange_get_transaction_download_hash_index( $post );
 			?>
-			
+
 			<?php foreach ( $transaction_products as $transaction_product ) : ?>
 				<?php
 					$product_id = $transaction_product['product_id'];
@@ -501,7 +501,7 @@ class IT_Exchange_Transaction_Post_Type {
 					<?php endforeach; ?>
 				<?php endforeach; ?>
 			<?php endif; ?>
-			
+
 			<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
 				<div class="transaction-costs-refunds right">
 					<div class="transaction-costs-refund-total">
