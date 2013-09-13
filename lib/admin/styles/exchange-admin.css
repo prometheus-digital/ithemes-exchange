@@ -10,6 +10,11 @@
 /** -----------------------------------------------------:[ exchange globals ]:---------- */
 .it-exchange-admin .top-description{color:#676c6e;font-size:14px;line-height:1.5;max-width:800px;}
 
+/** ----------------------------------------:[ columns ]:--- */
+.it-exchange-admin .columns-wrapper{overflow:hidden;}
+.it-exchange-admin .column{float:left;}
+.it-exchange-admin .column.c-50 {width: 50%;}
+
 /** -----------------------------------------------------:[ icons ]:---------- */
 #icon-it-exchange{background:url('../images/e32.png') no-repeat;}
 #icon-it-exchange.icon32-posts-it_exchange_coupon{background:url('../images/coupon32.png') no-repeat;}

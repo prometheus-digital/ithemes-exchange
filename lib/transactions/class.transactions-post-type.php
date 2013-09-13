@@ -414,14 +414,22 @@ class IT_Exchange_Transaction_Post_Type {
 				</div>
 			</div>
 		</div>
-
-        <?php if ( $billing_address = it_exchange_get_transaction_billing_address( $post->ID ) ) : ?>  
-            <div class="billing-address spacing-wrapper">
-                <div class="billing-address-label"><?php _e( 'Billing Address', 'LION' ); ?></div>
-                <p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
-            </div>
+		
+		<?php if ( $billing_address = it_exchange_get_transaction_billing_address( $post->ID ) ) : ?>  
+			<div class="billing-shipping-wrapper columns-wrapper">
+				<div class="billing-address column c-50">
+					<div class="column-inner">
+						<div class="billing-address-label address-label"><?php _e( 'Billing Address', 'LION' ); ?></div>
+						<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
+					</div>
+				</div>
+				<!-- <div class="shipping-address column c-50">
+					<div class="shipping-address-label address-label"><?php _e( 'Shipping Address', 'LION' ); ?></div>
+					<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
+				</div> -->
+			</div>
 		<?php endif; ?>
-
+		
 		<div class="products">
 			<div class="products-header spacing-wrapper">
 				<span><?php _e( 'Products', 'LION' ); ?></span>

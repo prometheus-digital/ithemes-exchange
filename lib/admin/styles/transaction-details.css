@@ -21,6 +21,9 @@
 #it-exchange-transaction-details .transaction-status{margin-top:1em;font-size:1.2em;}
 #it-exchange-transaction-details .transaction-status.paid{color:#7EB03B;}
 
+#it-exchange-transaction-details .billing-shipping-wrapper .address-label{font-weight:bold;}
+#it-exchange-transaction-details .billing-shipping-wrapper .column-inner{padding:0 2em 1em;}
+
 #it-exchange-transaction-details .products-header{padding-bottom:1em;padding-top:1em;border-bottom:1px solid #DFDFDF;font-weight:bold;}
 #it-exchange-transaction-details .product.spacing-wrapper{padding-bottom:0;}
 #it-exchange-transaction-details .product-header{font-size:1.3em;line-height:2;}
