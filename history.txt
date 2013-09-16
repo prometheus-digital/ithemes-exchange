@@ -1,3 +1,8 @@
+1.3.0 - 2013-09-16 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich
+	Groundwork for upcoming Recurring Payments add-on
+	Introduced Purchase Dialog API to allow transaction-method add-ons to invoke CC fields.
+	Added optional Billing Address purchase requirement and associated core add-on.
+	Added core add-on that enables store owner to switch product types.
 1.2.1 - 2013-08-29 - Glenn Ansley, Justin Kopepasah, Brad Ulrich
 	Introducing our Simple Product Type
 	Add address-formats and measurement-formats data sets
