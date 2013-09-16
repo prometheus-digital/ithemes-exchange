@@ -137,8 +137,19 @@ class IT_Exchange_Product_Post_Type {
 
 		// We need to register in a different order during admin to catch updating the permalinks.
 		if ( is_admin() ) {
-			add_action( 'admin_init', array( $this, 'set_rewrite_slug' ), 9 );
-			add_action( 'admin_init', array( $this, 'register_the_post_type' ), 10 );
+
+			// Normal Priorities
+			$priorities['set_rewrite_slug']   = 9;
+			$priorities['register_post_type'] = 10;
+
+			// Special priorities for saving the wizard
+			if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] ) {
+				$priorities['set_rewrite_slug']   = 8;
+				$priorities['register_post_type'] = 8;
+			}
+
+			add_action( 'admin_init', array( $this, 'set_rewrite_slug' ), $priorities['set_rewrite_slug'] );
+			add_action( 'admin_init', array( $this, 'register_the_post_type' ), $priorities['register_post_type'] );
 		} else {
 			add_action( 'init', array( $this, 'set_rewrite_slug' ), 9 );
 			add_action( 'init', array( $this, 'register_the_post_type' ) );
