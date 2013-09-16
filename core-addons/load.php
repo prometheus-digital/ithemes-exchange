@@ -88,6 +88,16 @@ function it_exchange_register_core_addons() {
 				'singular_name' => __( 'Simple Product', 'LION' ),
 			),
 		),
+		// Product Type admin Metabox
+		'switch-product-type-metabox' => array(
+			'name'        => __( 'Switch Product Types', 'LION' ),
+			'description' => __( 'Gives Store Owners the ability to change a Product Type after creation of the Product via the Advanced options', 'LION' ),
+			'author'      => 'iThemes',
+			'author_url'  => 'http://ithemes.com',
+			'file'        => dirname( __FILE__ ) . '/admin/product-type-metabox/init.php',
+			'tag'         => 'core',
+			'options'     => array( 'category' => 'admin' ),
+		), 
 		// Multi item cart
 		'multi-item-cart-option' => array(
 			'name'        => __( 'Multi-item Cart', 'LION' ),
