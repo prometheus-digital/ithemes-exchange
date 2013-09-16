@@ -1516,7 +1516,7 @@ Order: %s
 	 * @return void
 	*/
 	function it_exchange_admin_wp_enqueue_styles() {
-		global $hook_suffix;
+		global $hook_suffix, $wp_version;
 
 		if ( isset( $_REQUEST['post_type'] ) ) {
 			$post_type = $_REQUEST['post_type'];
@@ -1542,8 +1542,13 @@ Order: %s
 		wp_enqueue_style( 'it-exchange-wp-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/wp-admin.css' );
 
 		// All admin exchange pages
-		if ( preg_match('|(it_exchange)|i', str_replace( '-', '_', $hook_suffix ) ) || ( isset( $post_type ) && preg_match('|(it_exchange)|i', str_replace( '-', '_', $post_type ) ) ) )
+		if ( preg_match('|(it_exchange)|i', str_replace( '-', '_', $hook_suffix ) ) || ( isset( $post_type ) && preg_match('|(it_exchange)|i', str_replace( '-', '_', $post_type ) ) ) ) {
 			wp_enqueue_style( 'it-exchange-exchange-only-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/exchange-admin.css' );
+			
+			if ( $wp_version <= 3.7 ) {
+				wp_enqueue_style( 'it-exchange-exchange-only-admin-pre-3.8', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/exchange-admin-pre-3.8.css' );
+			}
+		}
 
 		// Specific Exchange pages
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {

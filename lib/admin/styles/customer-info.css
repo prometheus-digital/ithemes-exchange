@@ -13,6 +13,8 @@
 
 /** -----------------------------------------------------:[ reset ]:---------- */
 .wrap .nav-tab-wrapper{padding-left:6px;border-bottom:0;}
+.wrap .nav-tab-wrapper .nav-tab{border-radius:2px 2px 0 0;}
+.wrap .nav-tab-wrapper .nav-tab-active{background:#FFF;border-bottom-color:#FFF;}
 .wrap .top-description{color:#676c6e;font-size:14px;line-height:1.5;max-width:800px;}
 
 /** -----------------------------------------------------:[ user block ]:---------- */
@@ -23,12 +25,12 @@
 .user-edit-block .heading-column p{padding:10px;color:#747474;}
 .user-edit-block .item-row{border-top:1px solid #CCC;}
 .user-edit-block .item-row:nth-child(2n+2){background:#FCFCFC;}
-.user-edit-block .item-column p{padding:15px;}
+.user-edit-block .item-column p{padding:15px;line-height: 1.5;}
 .user-edit-block .item-column .item{position:relative;}
 .user-edit-block .item-column input{margin-top:11px;}
 .user-edit-block .item-column p .details-toggle{font-size:30px;position:absolute;}
-.user-edit-block .item-column p .details-toggle{cursor:pointer;margin-top:-5px;margin-left:10px;color:#C9C9C9;}
-.user-edit-block .item-column p .details-toggle + .details-toggle{margin-top:0;bottom:14px;}
+.user-edit-block .item-column p .details-toggle{cursor:pointer;margin-top:-16px;margin-left:10px;color:#C9C9C9;}
+.user-edit-block .item-column p .details-toggle + .details-toggle{margin-top:-10px;}
 
 /** -----------------------------------------------------:[ products ]:---------- */
 .products-user-edit-block .block-column-1{width:50%;}

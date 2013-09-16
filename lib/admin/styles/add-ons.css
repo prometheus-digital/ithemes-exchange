@@ -4,7 +4,9 @@
 
 /** -----------------------------------------------------:[ reset ]:---------- */
 #it-exchange-add-ons-wrap .nav-tab-wrapper{padding-left:6px;border-bottom:0;}
+#it-exchange-add-ons-wrap .nav-tab-wrapper .nav-tab{border-radius:2px 2px 0 0;}
 #it-exchange-add-ons-wrap .nav-tab-wrapper .nav-tab:first-child{margin-right:0;}
+#it-exchange-add-ons-wrap .nav-tab-wrapper .nav-tab-active{background:#FFF;border-bottom-color:#FFF;}
 #it-exchange-add-ons-wrap .top-description{color:#676c6e;font-size:14px;line-height:1.5;max-width:800px;}
 
 .it-exchange-addon-settings label{display:block;font-size:13px;color:#3d4142;margin-bottom:5px;margin-left:2px;}

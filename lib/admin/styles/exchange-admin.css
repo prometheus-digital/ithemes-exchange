@@ -1,16 +1,8 @@
-/** -----------------------------------------------------:[ notices ]:---------- */
-.it-exchange-admin div.updated,
-.it-exchange-admin div.error{padding:5px 10px;background-color:#fff;border:;-webkit-border-radius:0;border-radius:0;font-size:14px;line-height:18px;}
-.it-exchange-admin div.updated strong,
-.it-exchange-admin div.error strong{font-weight:normal;}
-.it-exchange-admin div.updated{background-color:#fff;border-left-width:4px;border-color:#7ad03a;}
-.it-exchange-admin div.error{background:#fff;border-left:4px solid #dd3d36;}
-.it-exchange-admin .clearfix:after{content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0;}
-
 /** -----------------------------------------------------:[ exchange globals ]:---------- */
 .it-exchange-admin .top-description{color:#676c6e;font-size:14px;line-height:1.5;max-width:800px;}
 .it-exchange-admin .wrap ul ul{margin-top:20px;margin-left:20px;}
 .it-exchange-admin .wrap ul ul label{font-weight:normal !important;}
+.it-exchange-admin .clearfix:after{content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0;}
 
 /** ----------------------------------------:[ columns ]:--- */
 .it-exchange-admin .columns-wrapper{overflow:hidden;}
