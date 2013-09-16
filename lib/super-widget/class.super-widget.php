@@ -203,6 +203,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			'checkout',
 			'product',
 			'confirmation',
+			'billing-address',
 		);
 		$valid_states = apply_filters( 'it_exchange_super_widget_valid_states', $valid_states );
 		$this->valid_states = (array) $valid_states;
