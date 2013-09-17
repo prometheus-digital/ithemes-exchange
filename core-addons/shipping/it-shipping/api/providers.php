@@ -74,7 +74,7 @@ function it_exchange_print_shipping_provider_settings_tabs() {
 	<div class="shipping-provider-tabs">
 		<?php if ( ! empty( $current ) && it_exchange_is_shipping_provider_registered( $current ) ) : ?>
 			<a class="shipping-provider-link" href="<?php esc_attr_e( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping' ), admin_url( 'admin' ) ) ); ?>">
-				<?php _e( '&larr; Shipping Settings', 'LION' ); ?>
+				<?php _e( 'General', 'LION' ); ?>
 			</a>
 		<?php endif; ?>
 		<?php foreach( $providers as $provider ) : ?>
