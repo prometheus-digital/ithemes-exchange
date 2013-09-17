@@ -763,6 +763,15 @@ function it_exchange_paypal_standard_transaction_is_cleared_for_delivery( $clear
 }
 add_filter( 'it_exchange_paypal-standard_transaction_is_cleared_for_delivery', 'it_exchange_paypal_standard_transaction_is_cleared_for_delivery', 10, 2 );
 
+/*
+ * Returns the unsubscribe action for PayPal autorenewing payments
+ * 
+ * @since 1.3.0
+ *
+ * @param string $output Should be an empty string
+ * @param array $options Array of options passed from Recurring Payments add-on
+ * @return string $output Unsubscribe action
+*/
 function it_exchange_paypal_standard_unsubscribe_action( $output, $options ) {
 	$paypal_settings      = it_exchange_get_option( 'addon_paypal_standard' );
 	$paypal_url           = PAYPAL_PAYMENT_URL;

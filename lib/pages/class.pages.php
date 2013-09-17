@@ -343,7 +343,18 @@ class IT_Exchange_Pages {
 				}
 			}
 			
-			wp_redirect( it_exchange_get_page_url( 'checkout' ) );
+			if ( it_exchange_is_multi_item_cart_allowed() ) {
+				wp_redirect( it_exchange_get_page_url( 'checkout' ) );
+			} else {
+				$transaction_object = it_exchange_generate_transaction_object();
+				if ( !empty( $transaction_object ) ) {
+					foreach ( $transaction_object->products as $product ) {
+						wp_redirect( get_permalink( $product['product_id'] ) );
+					}
+				} else {
+					wp_redirect( it_exchange_get_page_url( 'store' ) );
+				}
+			}
 			die();
 			
 		}
