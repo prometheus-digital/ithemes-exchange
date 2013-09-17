@@ -23,6 +23,9 @@ function it_exchange_addon_get_simple_taxes_for_cart( $format_price=true ) {
 
 	if ( $process_after_discounts )
 		$cart_total -= it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ) );
+		
+	if ( 0 > $cart_total )
+		$cart_total = 0;
 
 	// Calculate taxes
 	$cart_taxes = $cart_total * ( $tax_rate / 100 );
