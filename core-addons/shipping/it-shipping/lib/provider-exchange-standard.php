@@ -33,16 +33,16 @@ function it_exchange_register_exchange_standard_provider() {
 			array(
 				'type'    => 'text_box',
 				'label'   => __( 'Shipping Label', 'LION' ),
-				'slug'    => __( 'shipping_label' ),
+				'slug'    => 'shipping_label',
 				'tooltip' => __( 'This changes the title of this Shipping Method for your customers', 'LION' ),
 				'default' => __( 'Standard Shipping (3-5 days)', 'LION' ),
 			),
 			array(
 				'type'    => 'text_box',
 				'label'   => __( 'Default Shipping Amount', 'LION' ),
-				'slug'    => __( 'default_amount' ),
+				'slug'    => 'default_amount',
 				'tooltip' => __( 'The default shipping amount for new products. This can be overridden by individual products.', 'LION' ),
-				'default' => __( '5', 'LION' ),
+				'default' => 5,
 			),
 		),
 	);
