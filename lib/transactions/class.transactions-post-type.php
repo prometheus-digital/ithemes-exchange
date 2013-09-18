@@ -401,6 +401,7 @@ class IT_Exchange_Transaction_Post_Type {
 	*/
 	function print_transaction_details_metabox( $post ) {
 		$confirmation_url = it_exchange_get_transaction_confirmation_url( $post->ID );
+		do_action( 'it_exchange_before_payment_details' );
 		?>
 		<div class="transaction-stamp hidden <?php esc_attr_e( strtolower( it_exchange_get_transaction_status_label( $post ) ) ); ?>">
 			<?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?>
@@ -473,10 +474,14 @@ class IT_Exchange_Transaction_Post_Type {
 				<div class="product spacing-wrapper">
 					<div class="product-header clearfix">
 						<div class="product-title left">
+                        	<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_title', $post, $transaction_product ); ?>
 							<?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?>
+                        	<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_title', $post, $transaction_product ); ?>
 						</div>
 						<div class="product-subtotal right">
+                        	<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_subtotal', $post, $transaction_product ); ?>
 							<?php esc_attr_e( it_exchange_format_price( it_exchange_get_transaction_product_feature( $transaction_product, 'product_subtotal' ) ) ); ?>
+                        	<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_subtotal', $post, $transaction_product ); ?>
 						</div>
 					</div>
 					<div class="product-details">
@@ -484,7 +489,9 @@ class IT_Exchange_Transaction_Post_Type {
 							<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
 								<div class="product-download product-download-<?php esc_attr_e( $download_id ); ?>">
 									<h4 class="product-download-title">
+										<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_download_title', $post, $download_id, $download_data ); ?>
 										<?php esc_attr_e( get_the_title( $download_id ) ); ?>
+										<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_download_title', $post, $download_id, $download_data ); ?>
 									</h4>
 								</div>
 							<?php endforeach; ?>
@@ -501,13 +508,21 @@ class IT_Exchange_Transaction_Post_Type {
 		<div class="transaction-costs clearfix spacing-wrapper">
 			<div class="transaction-costs-subtotal right clearfix">
 				<div class="transaction-costs-subtotal-label left"><?php _e( 'Subtotal', 'LION' ); ?></div>
-				<div class="transaction-costs-subtotal-price"><?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?></div>
+				<div class="transaction-costs-subtotal-price">
+				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_subtotal', $post ); ?>
+				<?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?>
+				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_subtotal', $post ); ?>
+                </div>
 			</div>
 
 			<?php if ( $coupons = it_exchange_get_transaction_coupons( $post ) ) : ?>
 				<div class="transaction-costs-coupons right">
 					<div class="transaction-costs-coupon-total-label left"><?php _e( 'Total Discount', 'LION' ); ?></div>
-					<div class="transaction-costs-coupon-total-amount"><?php esc_attr_e( it_exchange_get_transaction_coupons_total_discount( $post ) ); ?></div>
+					<div class="transaction-costs-coupon-total-amount">
+					<?php do_action( 'it_exchange_transaction_print_metabox_before_coupons_total_discount', $post ); ?>
+					<?php esc_attr_e( it_exchange_get_transaction_coupons_total_discount( $post ) ); ?>
+					<?php do_action( 'it_exchange_transaction_print_metabox_after_coupons_total_discount', $post ); ?>
+                    </div>
 				</div>
 				<label><strong><?php _e( 'Coupons', 'LION' ); ?></strong></label>
 				<?php foreach ( $coupons as $type => $coupon ) : ?>
@@ -527,7 +542,11 @@ class IT_Exchange_Transaction_Post_Type {
 				<div class="transaction-costs-refunds right">
 					<div class="transaction-costs-refund-total">
 						<div class="transaction-costs-refund-total-label left"><?php _e( 'Total Refund', 'LION' ); ?></div>
-						<div class="transaction-costs-refund-total-amount"><?php esc_attr_e( it_exchange_get_transaction_refunds_total( $post ) ); ?></div>
+						<div class="transaction-costs-refund-total-amount">
+						<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_refunds_total', $post ); ?>
+						<?php esc_attr_e( it_exchange_get_transaction_refunds_total( $post ) ); ?>
+						<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_refunds_total', $post ); ?>
+                        </div>
 					</div>
 				</div>
 				<div class="transaction-refunds-list">
@@ -544,15 +563,27 @@ class IT_Exchange_Transaction_Post_Type {
 		<div class="transaction-summary clearfix spacing-wrapper">
 			<div class="payment-method left">
 				<div class="payment-method-label"><?php _e( 'Payment Method', 'LION' ); ?></div>
-				<div class="payment-method-name"><?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?></div>
+				<div class="payment-method-name">
+				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_method_name', $post ); ?>
+				<?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?>
+				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_method_name', $post ); ?>
+                </div>
 			</div>
 			<div class="payment-total right clearfix">
 				<div class="payment-total-label left"><?php _e( 'Total', 'LION' ); ?></div>
-				<div class="payment-total-amount"><?php _e( it_exchange_get_transaction_total( $post ) ); ?></div>
+				<div class="payment-total-amount">
+				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_total', $post ); ?>
+				<?php _e( it_exchange_get_transaction_total( $post ) ); ?>
+				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_total', $post ); ?>
+                </div>
 
 				<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
 					<div class="payment-original-total-label left"><?php _e( 'Total before refunds', 'LION' ); ?></div>
-					<div class="payment-original-total-amount"><?php _e( it_exchange_get_transaction_total( $post, true, false ) ); ?></div>
+					<div class="payment-original-total-amount">
+					<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_total_before_refunds', $post ); ?>
+					<?php _e( it_exchange_get_transaction_total( $post, true, false ) ); ?>
+					<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_total_before_refunds', $post ); ?>
+                    </div>
 				<?php endif; ?>
 			</div>
 		</div>
