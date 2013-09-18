@@ -4,15 +4,16 @@
  * @package IT_Exchange
  * @since 0.4.0
 */
-// Suppress PHP errors that hose ajax responses. If you turn this off, make sure you're error-free
-if ( apply_filters( 'it_exchange_supress_superwidget_ajax_errors', true ) )
-	ini_set( 'display_errors', false );
-
 // Die if called directly
 if ( ! function_exists( 'add_action' ) ) {
 	turtles_all_the_way_down();
 	die();
 }
+
+// Suppress PHP errors that hose ajax responses. If you turn this off, make sure you're error-free
+if ( apply_filters( 'it_exchange_supress_superwidget_ajax_errors', true ) )
+	ini_set( 'display_errors', false );
+
 
 // Mark as in the superwidget
 $GLOBALS['it_exchange']['in_superwidget'] = true;
