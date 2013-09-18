@@ -82,22 +82,23 @@ function it_exchange_addon_shipping_print_settings_tab() {
 				<tr valign="top">
 					<th scope="row"><label for="product-ships-from"><?php _e( 'Products Ship From', 'LION' ) ?></label></th>
 					<td>
-						<?php $form->add_text_box( 'product-ships-from-address1', array( 'class' => 'large-text', 'placeholder' => __( 'Address 1', 'LION' ) ) ); ?><br />
-						<?php $form->add_text_box( 'product-ships-from-address2', array( 'class' => 'large-text', 'placeholder' => __( 'Address 2', 'LION' ) ) ); ?><br />
-						<?php $form->add_text_box( 'product-ships-from-city', array( 'class' => 'large-text', 'placeholder' => __( 'City', 'LION' ) ) ); ?>
-						<?php 
-						$country = $form->get_option( 'product-ships-from-country' );
-						$states  = it_exchange_get_data_set( 'states', array( 'country' => $country ) );
-						if ( ! empty( $states ) ) { 
-							$form->add_drop_down( 'company-base-state', $states );
-						} else {
-							$form->add_text_box( 'company-base-state', array( 'class' => 'small-text', 'maxlength' => 3, 'placeholder' => __( 'State', 'LION' ) ) ); ?>
-							<span class="description"><?php printf( __( 'Please use the 2-3 character %sISO abbreviation%s for country subdivisions', 'LION' ), '<a href="http://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">', '</a>' ); ?></span><?php
-						}
-						?> 
-						<br />
-						<?php $form->add_drop_down( 'product-ships-from-country', it_exchange_get_data_set( 'countries' ) ); ?><br />
-						<?php $form->add_text_box( 'product-ships-from-zip', array( 'class' => 'large-text', 'placeholder' => __( 'Zip / Postal Code', 'LION' ) ) ); ?>
+						<p><?php $form->add_text_box( 'product-ships-from-address1', array( 'class' => 'large-text', 'placeholder' => __( 'Address 1', 'LION' ) ) ); ?></p>
+						<p><?php $form->add_text_box( 'product-ships-from-address2', array( 'class' => 'large-text', 'placeholder' => __( 'Address 2', 'LION' ) ) ); ?></p>
+						<p>
+							<?php $form->add_text_box( 'product-ships-from-city', array( 'class' => 'large-text', 'placeholder' => __( 'City', 'LION' ) ) ); ?>
+							<?php 
+							$country = $form->get_option( 'product-ships-from-country' );
+							$states  = it_exchange_get_data_set( 'states', array( 'country' => $country ) );
+							if ( ! empty( $states ) ) { 
+								$form->add_drop_down( 'company-base-state', $states );
+							} else {
+								$form->add_text_box( 'company-base-state', array( 'class' => 'small-text', 'maxlength' => 3, 'placeholder' => __( 'State', 'LION' ) ) ); ?>
+								<span class="description"><?php printf( __( 'Please use the 2-3 character %sISO abbreviation%s for country subdivisions', 'LION' ), '<a href="http://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">', '</a>' ); ?></span><?php
+							}
+							?> 
+						</p>
+						<p><?php $form->add_drop_down( 'product-ships-from-country', it_exchange_get_data_set( 'countries' ) ); ?></p>
+						<p><?php $form->add_text_box( 'product-ships-from-zip', array( 'class' => 'large-text', 'placeholder' => __( 'Zip / Postal Code', 'LION' ) ) ); ?></p>
 					</td>
 				</tr>
 				<tr valign="top">

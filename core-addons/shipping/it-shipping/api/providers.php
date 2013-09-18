@@ -71,7 +71,7 @@ function it_exchange_print_shipping_provider_settings_tabs() {
 	$current = empty( $_GET['provider'] ) ? false : $_GET['provider'];
 
 	?>
-	<div class="shipping-provider-tabs">
+	<div class="it-exchange-secondary-tabs it-exchange-shipping-provider-tabs">
 		<?php if ( ! empty( $current ) && it_exchange_is_shipping_provider_registered( $current ) ) : ?>
 			<a class="shipping-provider-link" href="<?php esc_attr_e( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping' ), admin_url( 'admin' ) ) ); ?>">
 				<?php _e( 'General', 'LION' ); ?>
@@ -80,7 +80,7 @@ function it_exchange_print_shipping_provider_settings_tabs() {
 		<?php foreach( $providers as $provider ) : ?>
 			<?php if ( empty( $provider->has_settings_page ) ) continue; ?>
 			<?php $url = add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping', 'provider' => $provider->get_slug() ), admin_url( 'admin' ) ); ?>
-			<a class="shipping-provider-link<?php echo ( $current == $provider->get_slug() ) ? ' current-link' : ''; ?>" href="<?php echo $url; ?>"><?php esc_html_e( $provider->get_label() ); ?></a>
+			<a class="shipping-provider-link<?php echo ( $current == $provider->get_slug() ) ? ' it-exchange-current' : ''; ?>" href="<?php echo $url; ?>"><?php esc_html_e( $provider->get_label() ); ?></a>
 		<?php endforeach; ?>
 	</div>
 	<?php
