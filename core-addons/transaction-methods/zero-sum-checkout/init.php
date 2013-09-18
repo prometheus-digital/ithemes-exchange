@@ -178,6 +178,14 @@ function it_exchange_zero_sum_checkout_add_child_transaction( $parent_txn ) {
 	return false;
 }
 
+/**
+ * Output the Cancel URL for the Payments screen
+ *
+ * @since 1.3.1
+ *
+ * @param object $transaction iThemes Transaction object
+ * @return void
+*/
 function it_exchange_zero_sum_checkout_after_payment_details_cancel_url( $transaction ) {	
 	$cart_object = get_post_meta( $transaction->ID, '_it_exchange_cart_object', true );
 	foreach ( $cart_object->products as $product ) {	
@@ -210,14 +218,19 @@ function it_exchange_zero_sum_checkout_after_payment_details_cancel_url( $transa
 }
 add_action( 'it_exchange_after_payment_details_cancel_url_for_zero-sum-checkout', 'it_exchange_zero_sum_checkout_after_payment_details_cancel_url' );
 
+/**
+ * Process Zero Sum Recurring Payments cancellations
+ *
+ * @since 1.3.1
+ *
+ * @return void
+*/
 function it_exchange_process_zero_sum_recurring_payment_cancel() {
-
 	if ( !empty( $_REQUEST['zero-sum-recurring-payment'] ) && 'cancel' === $_REQUEST['zero-sum-recurring-payment'] ) {
 		if ( !empty( $_REQUEST['post'] ) && $post_id = $_REQUEST['post'] ) {
 			$transaction = it_exchange_get_transaction( $post_id );
 			$status = $transaction->update_transaction_meta( 'subscriber_status', 'cancel' );
 		}
 	}
-	
 }
 add_action( 'admin_init', 'it_exchange_process_zero_sum_recurring_payment_cancel' );
