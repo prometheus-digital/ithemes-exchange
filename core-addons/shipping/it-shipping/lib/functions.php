@@ -86,8 +86,8 @@ add_action( 'it_exchange_empty_shopping_cart', 'it_exchange_addon_shipping_clear
  * @return
 */
 function it_exchange_addon_shipping_modify_total( $total ) {
-    $shipping = it_exchange_addon_get_shipping_for_cart( false );
-    return $total + $shipping;
+	$shipping = it_exchange_addon_get_shipping_for_cart( false );
+	return $total + $shipping;
 }
 add_filter( 'it_exchange_get_cart_total', 'it_exchange_addon_shipping_modify_total' );
 
@@ -99,9 +99,9 @@ add_filter( 'it_exchange_get_cart_total', 'it_exchange_addon_shipping_modify_tot
  * @return void
 */
 function it_exchange_addon_shipping_enqueue_admin_css() {
-    $current_screen = get_current_screen();
-    if ( ! empty( $current_screen->base ) && 'exchange_page_it-exchange-addons' == $current_screen->base && ! empty( $_GET['add-on-settings'] ) && 'shipping' == $_GET['add-on-settings'] )
-        wp_enqueue_style( 'it-exchange-addon-shipping-settings', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/settings.css' );
+	$current_screen = get_current_screen();
+	if ( ! empty( $current_screen->base ) && 'exchange_page_it-exchange-addons' == $current_screen->base && ! empty( $_GET['add-on-settings'] ) && 'shipping' == $_GET['add-on-settings'] )
+		wp_enqueue_style( 'it-exchange-addon-shipping-settings', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/settings.css' );
 }
 add_action( 'admin_print_styles', 'it_exchange_addon_shipping_enqueue_admin_css' );
 
@@ -113,7 +113,7 @@ add_action( 'admin_print_styles', 'it_exchange_addon_shipping_enqueue_admin_css'
  * @return void
 */
 function it_exchange_addon_shipping_enqueue_sw_js() {
-    wp_enqueue_script( 'it-exchange-addon-shipping-sw-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/js/super-widget.js' );
+	wp_enqueue_script( 'it-exchange-addon-shipping-sw-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/js/super-widget.js' );
 }
 add_action( 'it_exchange_enqueue_super_widget_scripts', 'it_exchange_addon_shipping_enqueue_sw_js' );
 
