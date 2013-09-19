@@ -810,7 +810,7 @@ function it_exchange_paypal_standard_after_payment_details_cancel_url( $transact
 					break;
 					
 				case 'cancelled':
-					$output = __( 'Recurring payment has been canceled', 'LION' );
+					$output = __( 'Recurring payment has been cancelled', 'LION' );
 					break;
 					
 				case 'suspended':
