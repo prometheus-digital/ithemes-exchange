@@ -6,7 +6,12 @@
  * @since 0.2.0
 */
 	
+if ( !defined( 'PAYPAL_LIVE_URL' ) )
+	define( 'PAYPAL_LIVE_URL', 'https://www.paypal.com/' );
+if ( !defined( 'PAYPAL_SANDBOX_URL' ) )
+	define( 'PAYPAL_SANDBOX_URL', 'https://www.sandbox.paypal.com/' );
 if ( !defined( 'PAYPAL_PAYMENT_SANDBOX_URL' ) )
+
 	define( 'PAYPAL_PAYMENT_SANDBOX_URL', 'https://www.sandbox.paypal.com/cgi-bin/webscr' );
 if ( !defined( 'PAYPAL_PAYMENT_LIVE_URL' ) )
 	define( 'PAYPAL_PAYMENT_LIVE_URL', 'https://www.paypal.com/cgi-bin/webscr' );
@@ -828,6 +833,55 @@ function it_exchange_paypal_standard_secure_unsubscribe_action( $output, $option
 	return $output;
 }
 add_filter( 'it_exchange_paypal-standard-secure_unsubscribe_action', 'it_exchange_paypal_standard_secure_unsubscribe_action', 10, 2 );
+
+/**
+ * Output the Cancel URL for the Payments screen
+ *
+ * @since 1.3.1
+ *
+ * @param object $transaction iThemes Transaction object
+ * @return void
+*/
+function it_exchange_paypal_standard_secure_after_payment_details_cancel_url( $transaction ) {	
+	$paypal_settings      = it_exchange_get_option( 'addon_paypal_standard_secure' );
+	$paypal_url           = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? PAYPAL_SANDBOX_URL : PAYPAL_LIVE_URL;
+	$cart_object = get_post_meta( $transaction->ID, '_it_exchange_cart_object', true );
+	foreach ( $cart_object->products as $product ) {	
+		$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product['product_id'], true );
+		if ( $autorenews ) {
+			$subscriber_id = $transaction->get_transaction_meta( 'subscriber_id', true );
+			$status = $transaction->get_transaction_meta( 'subscriber_status', true );
+			switch( $status ) {
+			
+				case 'deactivated':
+					$output = __( 'Recurring payment has been deactivated', 'LION' );
+					break;
+					
+				case 'cancelled':
+					$output = __( 'Recurring payment has been canceled', 'LION' );
+					break;
+					
+				case 'suspended':
+					$output = __( 'Recurring payment has been suspended', 'LION' );
+					break;
+				
+				case 'active':
+				default:
+					$output = '<a href="' . $paypal_url . '">' . __( 'Cancel Recurring Payment', 'LION' ) . ' (' . __( 'Profile ID', 'LION' ) . ': ' . $subscriber_id . ')</a>';
+					break;
+			}
+			?>
+			<div class="transaction-autorenews clearfix spacing-wrapper">
+				<div class="recurring-payment-cancel-options left">
+					<div class="recurring-payment-status-name"><?php echo $output; ?></div>
+				</div>
+			</div>
+			<?php
+			continue;
+		}
+	}
+}
+add_action( 'it_exchange_after_payment_details_cancel_url_for_paypal-standard-secure', 'it_exchange_paypal_standard_secure_after_payment_details_cancel_url' );
 
 /**
  * Class for Stripe
