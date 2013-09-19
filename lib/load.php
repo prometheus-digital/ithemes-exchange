@@ -57,4 +57,5 @@ if ( ! is_admin() ) {
 	require( $this->_plugin_path . 'lib/cart/class.cart.php' );
 } else {
 	require( $this->_plugin_path . 'lib/pages/class.nav-menus.php' );
+	require( $this->_plugin_path . 'lib/admin/class-settings-form.php' );
 }
