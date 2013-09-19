@@ -196,7 +196,7 @@ function it_exchange_zero_sum_checkout_after_payment_details_cancel_url( $transa
 			
 				case false: //active
 				case '':
-					$output = '<a href="' . add_query_arg( 'zero-sum-recurring-payment', 'cancel' ) . '">Cancel Recurring Payment</a>';
+					$output = '<a href="' . add_query_arg( 'zero-sum-recurring-payment', 'cancel' ) . '">' . __( 'Cancel Recurring Payment', 'LION' ) . '</a>';
 					break;
 					
 				case 'deactivated':
