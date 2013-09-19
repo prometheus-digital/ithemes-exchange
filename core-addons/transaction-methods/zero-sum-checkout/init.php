@@ -140,10 +140,10 @@ function it_exchange_zero_sum_checkout_handle_expired( $true, $product_id, $tran
 	$transaction_method = it_exchange_get_transaction_method( $transaction->ID );
 	
 	if ( 'zero-sum-checkout' === $transaction_method ) {
-		
+			
 		$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product_id, true );
 		$status = $transaction->get_transaction_meta( 'subscriber_status', true );
-		if ( $autorenews && false === $status ) { //if the subscriber status is false, it hasn't been set, which really means it's active for zero-sum-checkouts
+		if ( $autorenews && empty( $status ) ) { //if the subscriber status is empty, it hasn't been set, which really means it's active for zero-sum-checkouts
 			//if the transaction autorenews and is zero sum, we want to create a new child transaction until deactivated
 			it_exchange_zero_sum_checkout_add_child_transaction( $transaction );
 			return false;
