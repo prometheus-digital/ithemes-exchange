@@ -28,6 +28,8 @@
 #it-exchange-transaction-details .product.spacing-wrapper{padding-bottom:0;}
 #it-exchange-transaction-details .product-header{font-size:1.3em;line-height:2;}
 #it-exchange-transaction-details .product-header .product-title{font-weight:bold;}
+#it-exchange-transaction-details .product-header .product-title .recurring-product-type{padding:5px;background:#ECECEC;border-radius:3px;font-size:9px;text-transform:uppercase;}
+#it-exchange-transaction-details .product-header .product-title .recurring-product-autorenew{float:right;padding:17px;background:url('../images/recurring-on.png') center center no-repeat;}
 #it-exchange-transaction-details .product-details{margin-left:1em;}
 #it-exchange-transaction-details .product-details .download-hashes{padding-left:1.5em;}
 #it-exchange-transaction-details .product-details .hash{font-family:Consolas,Monaco,monospace;}
@@ -49,6 +51,9 @@
 #it-exchange-transaction-details .payment-original-total-label,
 #it-exchange-transaction-details .payment-original-total-amount{margin-top:1em;color:#999;}
 #it-exchange-transaction-details .payment-original-total-label{margin-top:1.416666667em;}
+
+#it-exchange-transaction-details .transaction-autorenews{padding-top:0;}
+#it-exchange-transaction-details .transaction-autorenews a{text-decoration:none;}
 
 #it-exchange-transaction-details .transaction-status-update{position:relative;border-top:1px solid #DFDFDF;}
 #it-exchange-transaction-details .update-status-label{font-weight:bold;}
