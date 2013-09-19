@@ -141,3 +141,33 @@ function it_exchange_addon_shipping_frontend_js() {
 function it_exchange_get_enabled_shipping_methods() {
 	return array( 'exchange-standard-shipping' => 'Exchange ' . __( 'Standard Shipping', 'LION' ) );
 }
+
+/**
+ * This function hooks into the AJAX call generated in general settings for country/states sync
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_addon_shipping_update_general_setting_state_field() {
+	$base_country = empty( $_POST['ite_base_country_ajax'] ) ? false : $_POST['ite_base_country_ajax'];
+	$states       = it_exchange_get_data_set( 'states', array( 'country' => $base_country ) );
+
+	if ( empty( $states ) ) {
+		?>
+		<input type="text" id="product-ships-from-state" name="addon-shipping-general-product-ships-from-state" maxlength="3" placeholder="<?php _e( 'State', 'LION' ); ?>" class="small-text" value="" />&nbsp;
+		<?php $open_tag = '<a href="http://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">'; ?>
+		<span class="description"><?php printf( __( 'Please use the 2-3 character %sISO 3166-2 Country Subdivision Code%s', 'LION' ), $open_tag, '</a>' ); ?></span>
+		<?php
+	} else {
+		?>
+		<select id="product-ships-from-state" name="addon-shipping-general-product-ships-from-state">
+		<?php
+		foreach( (array) $states as $key => $value ) {
+			?><option id="<?php esc_attr_e( $key ); ?>"><?php esc_html_e( $value ); ?></option><?php
+		}
+		?></select><?php
+	}
+	die();
+}
+add_action( 'it_exchange_admin_country_states_sync_for_addon-shipping-general', 'it_exchange_addon_shipping_update_general_setting_state_field' );

@@ -1,12 +1,13 @@
 <?php
 class IT_Exchange_Admin_Settings_Form {
 
-	var $prefix         = false;
-	var $form_fields    = array();
-	var $form_options   = array();
-	var $field_values   = array();
-	var $button_options = array();
-	var $saved_settings = array();
+	var $prefix             = false;
+	var $form_fields        = array();
+	var $form_options       = array();
+	var $field_values       = array();
+	var $button_options     = array();
+	var $saved_settings     = array();
+	var $country_states_js  = false;
 
 	/**
 	 * Constructor Sets up the object
@@ -17,6 +18,7 @@ class IT_Exchange_Admin_Settings_Form {
 	*/
 	function IT_Exchange_Admin_Settings_Form( $args ) {
 
+		// Default Settings
 		$defaults = array(
 			'prefix'  => false,
 			'form-fields'  => array(),
@@ -29,18 +31,24 @@ class IT_Exchange_Admin_Settings_Form {
 				'save-button-label' => __( 'Save Changes', 'LION' ),
 				'save-button-class' => 'button button-primary',
 			),
+			'country-states-js' => false,
 		);
 
 		// Merge defaults
-		$options = ITUtility::merge_defaults( $options, $defaults );
+		$options = ITUtility::merge_defaults( $args, $defaults );
 
 		// If no prefix or form fields, return false
-		if ( empty( $args['prefix'] ) || empty( $args['fields'] ) )
+		if ( empty( $options['prefix'] ) || empty( $options['form-fields'] ) )
 			return false;
 
-		// Set Object Properties
+		// Set prefix and form fields
 		$this->prefix         = $options['prefix'];
 		$this->form_fields    = $options['form-fields'];
+
+		// Update settings if form was submitted
+		$this->save_settings();
+		
+		// Set form options
 		$this->form_options   = $options['form-options'];
 		$this->button_options = $options['button-options'];
 
@@ -53,8 +61,8 @@ class IT_Exchange_Admin_Settings_Form {
 		// Loads settings saved previously
 		$this->load_settings();
 
-		// Update settings if form was submitted
-		$this->save_settings();
+		// Do we want to include the country states JS?
+		$this->set_country_states_js( $options['country-states-js'] );
 	}
 
 	/**
@@ -68,9 +76,9 @@ class IT_Exchange_Admin_Settings_Form {
 	function set_form_options( $options ) {
 
 		// Validate Options
-		$options['id']      = empty( $options['id'] ) ? 'it-exchange-' . $this->prefix;
-		$options['action']  = empty( $options['action'] ? '' : $options['action'];
-		$options['enctype'] = empty( $options['enctype'] ? '' : $options['enctype'];
+		$options['id']      = empty( $options['id'] ) ? 'it-exchange-' . $this->prefix : $options['id'];
+		$options['action']  = empty( $options['action'] ) ? '' : $options['action'];
+		$options['enctype'] = empty( $options['enctype'] ) ? '' : $options['enctype'];
 		
 		// Update property
 		$this->form_options = $options;
@@ -96,7 +104,41 @@ class IT_Exchange_Admin_Settings_Form {
 	 * @return void
 	*/
 	function load_settings() {
+		add_filter( 'it_storage_get_defaults_exchange_' . $this->prefix, array( $this, 'get_default_settings' ) );
 		$this->settings = it_exchange_get_option( $this->prefix, true );
+	}
+
+	/**
+	 * Gives the default settings to the ITStorage API
+	 *
+	 * @since CHANGEME
+	 *
+	 * @param  array $options
+	 * @return array
+	*/
+	function get_default_settings( $options ) {
+
+		foreach( (array) $this->form_fields as $field ) {
+			$options[$field['slug']] = empty( $field['default'] ) ? '' : $field['default'];
+		}
+		return $options;
+	}
+
+	/**
+	 * Print the form
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function print_form() {
+		$this->print_messages();
+		$this->set_field_values();
+		$this->init_form();
+		$this->start_form();
+		$this->print_fields();
+		$this->print_actions();
+		$this->end_form();
 	}
 
 	/**
@@ -109,7 +151,7 @@ class IT_Exchange_Admin_Settings_Form {
 	 * @return void
 	*/
 	function set_field_values() {
-		$this->form_values  = ! it_exchange_has_messages( 'error' ) ? $this->settings : ITForm::get_post_data();
+		$this->field_values  = ! it_exchange_has_messages( 'error' ) ? $this->settings : ITForm::get_post_data();
 	}
 
 	/**
@@ -119,7 +161,7 @@ class IT_Exchange_Admin_Settings_Form {
 	*/
 	function init_form() {
 		// Init the form
-		$this->form = new ITForm( $this->form_values, array( $this->prefix ) );
+		$this->form = new ITForm( $this->field_values, array( 'prefix' => $this->prefix ) );
 	}
 
 	/**
@@ -136,31 +178,42 @@ class IT_Exchange_Admin_Settings_Form {
 	}
 
 	/**
-	 * Prints the form
+	 * Prints the messages if they are present
 	 *
 	 * @since CHANGEME
 	 *
 	 * @return void
 	*/
-	function print_form() {
-
+	function print_messages() {
 		// Print errors if they exist
 		if ( it_exchange_has_messages( 'error' ) ) {
 			foreach( it_exchange_get_messages( 'error' ) as $message ) {
 				ITUtility::show_error_message( $message );
 			}
 		}
+
 		// Print notices if they exist
 		if ( it_exchange_has_messages( 'notice' ) ) {
 			foreach( it_exchange_get_messages( 'notice' ) as $message ) {
 				ITUtility::show_status_message( $message );
 			}
 		}
+	}
+
+	/**
+	 * Prints the form fields
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function print_fields() {
 		?>
 		<table class="form-table">
 			<?php do_action( 'it_exchange_' . $this->prefix . '_top' ); ?>
 			<?php
-			foreach( $this->fields as $row => $field ) {
+			foreach( $this->form_fields as $row => $field ) {
+				$field['options'] = empty( $field['options'] ) ? array() : $field['options'];
 				if ( 'heading' == $field['type'] ) {
 					$this->print_heading_row( $field );
 				} else {
@@ -171,12 +224,41 @@ class IT_Exchange_Admin_Settings_Form {
 						$this->print_uncallable_method_row( $field );
 				}
 			}
-			$this->form->add_hidden( 'processing-' . $this->prefix, true );
+			// Add a hidden field to identify this form
+			$this->form->add_hidden( 'it-exchange-saving-settings', true );
 			?>
 			<?php do_action( 'it_exchange_' . $this->prefix . '_bottom' ); ?>
 		</table>
-		<p class="submit"><input type="submit" value="<?php esc_attr_e( $this->options['save-button-label'] ); ?>" class="<?php esc_attr_e( $this->options['save-button-class'] ); ?>" /></p>
 		<?php
+
+		// Include Country State JS if needed
+		if ( is_array( $this->country_states_js ) )
+			$this->print_country_states_js();
+	}
+
+	/**
+	 * Prints the form actions
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function print_actions() {
+		?>
+		<p class="submit">
+			<input type="submit" value="<?php esc_attr_e( $this->button_options['save-button-label'] ); ?>" class="<?php esc_attr_e( $this->button_options['save-button-class'] ); ?>" />
+		</p>
+		<?php
+	}
+
+	/**
+	 * Prints the close of the form
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function end_form() {
 		$this->form->end_form();
 	}
 
@@ -189,42 +271,114 @@ class IT_Exchange_Admin_Settings_Form {
 		<?php
 	}
 
+	/**
+	 * Prints a table row with the setting
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
 	function print_setting_row( $setting, $form_method ) {
 		?>
 		<tr valign="top">
 			<th scope="row"><label for="<?php esc_attr_e( $setting['slug'] ); ?>"><?php echo $setting['label']; ?></label></th>
-			<td>
+			<td id="<?php esc_attr_e( $setting['slug'] ); ?>-wrapper">
 				<?php $this->form->$form_method( $setting['slug'], $setting['options'] ); ?>
 			</td>
 		</tr>
 		<?php
 	}
 
+	/**
+	 * Prints a warning if the setting has an uncallable method
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
 	function print_uncallable_method_row( $setting ) {
 		?>
 		<tr valign="top">
 			<th scope="row" class="error"><strong><?php _e( 'Coding Error!', 'LION' ); ?></strong></th>
-			<td><?php printf( __( 'The setting for %s has an incorrect type argument. No such method exists in the ITForm class', 'LION' ), $setting['slug'] ); ?></td>
+			<td id="<?php esc_attr_e( $setting['slug'] ); ?>-wrapper"><?php printf( __( 'The setting for %s has an incorrect type argument. No such method exists in the ITForm class', 'LION' ), $setting['slug'] ); ?></td>
 		</tr>
 		<?php
 	}
 
+	/**
+	 * Saves the settings via ITStorage
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
 	function save_settings() {
-
 		// Abandon if not processing
-		if ( empty( $_POST['_wpnonce'] ) || empty( $_POST['it-exchange-add-on-shipping-' . $this->provider->slug . '-processing-shipping-settings'] ) )
+		if ( empty( $_POST['_wpnonce'] ) || empty( $_POST[$this->prefix . '-it-exchange-saving-settings'] ) )
 			return;
 
 		// Log error if nonce wasn't set
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'it-exchange-shipping-settings-for-' . $this->provider->slug ) ) {
-			it_exchange_add_message( 'error', 'Problem with nonce' );
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], $this->prefix ) ) {
+			it_exchange_add_message( 'error', __( 'Invalid security token. Please try again', 'LION' ) );
 			return;
 		}
 
 		$values = ITForm::get_post_data();
-		unset( $values['processing-shipping-settings'] );
+		unset( $values['it-exchange-saving-settings'] );
 
-		$this->provider->update_settings( $values );
-		it_exchange_add_message( 'notice', sprintf( __( '%s settings updated', 'LION' ), $this->provider->label ) );
+		it_exchange_save_option( $this->prefix, $values );
+		it_exchange_add_message( 'notice', __( 'Settings updated', 'LION' ) );
+	}
+
+	/**
+	 * Set the country state js property
+	 *
+	 * @since CHANGEME
+	 *
+	 * @param  array $args args needed to pass to the jQuery plugin
+	 * @return void
+	*/
+	function set_country_states_js( $args ) {
+
+		// Return false if we're missing any required vars
+		if ( 
+			empty( $args['country-id'] ) ||
+			empty( $args['states-id'] ) ||
+			empty( $args['states-wrapper'] )
+		){
+			$this->country_states_js = false;
+		} else {
+			$this->country_states_js = $args;
+			$url = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/country-states-sync.js' );
+			wp_enqueue_script( 'it-exchange-country-states-sync', $url, array( 'jquery' ), false, true );
+		}
+	}
+
+	/**
+	 * Prints the JS that binds the country state sync JS to the country field
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function print_country_states_js() {
+		$country_id     = empty( $this->country_states_js['country-id'] ) ? '' : $this->country_states_js['country-id'];
+		$states_id      = empty( $this->country_states_js['states-id'] ) ? '' : $this->country_states_js['states-id'];
+		$states_wrapper = empty( $this->country_states_js['states-wrapper'] ) ? '' : $this->country_states_js['states-wrapper'];
+		$template_part  = empty( $this->country_states_js['template-part'] ) ? '' : $this->country_states_js['template-part'];
+		?>
+		<script type="text/javascript">
+			var itExchangeAjaxCountryStatesAjaxURL = '<?php echo esc_js( trailingslashit( get_site_url() ) ); ?>';
+			jQuery(function(){
+				jQuery('#<?php echo esc_js( $country_id ); ?>').itCountryStatesSync(
+					{
+						stateWrapper: '<?php echo esc_js( $states_wrapper ); ?>',
+						stateFieldID: '<?php echo esc_js( $states_id ); ?>',
+						adminPrefix:  '<?php echo esc_js( $this->prefix ); ?>'
+					}
+				);
+			});
+		</script>
+		<?php
 	}
 }

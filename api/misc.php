@@ -467,3 +467,19 @@ function it_exchange_get_formatted_billing_address( $billing_address=false ) {
 	$formatted = implode( '<br />', $formatted );
 	return apply_filters( 'it_exchange_get_formatted_billing_address', $formatted );
 }
+
+/**
+ * Inits the IT_Exchange_Admin_Settings_Form class
+ *
+ * @since CHANGEME
+ *
+ * @param array  $options options for the class constructor
+ * @return void
+*/
+function it_exchange_print_admin_settings_form( $options ) { 
+	if ( ! is_admin() )
+		return;
+
+	if ( $settings_form = new IT_Exchange_Admin_Settings_Form( $options ) )
+		$settings_form->print_form();
+}

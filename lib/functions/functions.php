@@ -910,8 +910,14 @@ function print_country_states_ajax() {
 	$base_country  = empty( $_POST['ite_base_country_ajax'] ) ? 'US' : $_POST['ite_base_country_ajax'];
 	$base_state    = empty( $_POST['ite_base_state_ajax'] ) ? '' : $_POST['ite_base_state_ajax'];
 	$template_part = empty( $_POST['ite_template_part_ajax'] ) ? '' : $_POST['ite_template_part_ajax'];
-	
-	it_exchange_get_template_part( $template_part );
+	$admin_prefix  = empty( $_POST['ite_admin_prefix_ajax'] ) ? false : $_POST['ite_admin_prefix_ajax'];
+
+	if ( $admin_prefix && 'false' != $admin_prefix ) {
+		do_action( 'it_exchange_admin_country_states_sync_for_' . $admin_prefix );
+		die( __( 'Coding Error: Please hook into the following action, print your field based on $_POST vars and die():<br /> "it_exchange_admin_country_states_sync_for_' . $admin_prefix . '"' ) );
+	} else {
+		it_exchange_get_template_part( $template_part );
+	}
 	die();
 }
 add_action( 'init', 'print_country_states_ajax' );
