@@ -525,13 +525,9 @@ function it_exchange_offline_payments_handle_expired( $true, $product_id, $trans
 	$transaction_method = it_exchange_get_transaction_method( $transaction->ID );
 	
 	if ( 'offline-payments' === $transaction_method ) {
-		
-		wp_mail( 'lew@ithemes.com', 'op expiring?', var_export( $true, true ) );
-		
+			
 		$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product_id, true );
 		$status = $transaction->get_transaction_meta( 'subscriber_status', true );
-		wp_mail( 'lew@ithemes.com', 'op autorenews?', var_export( $autorenews, true ) );
-		wp_mail( 'lew@ithemes.com', 'op status?', var_export( $status, true ) );
 		if ( $autorenews && empty( $status ) ) { //if the subscriber status is empty, it hasn't been set, which really means it's active for offline payments
 			//if the transaction autorenews and is an offline payment, we want to create a new child transaction until deactivated
 			it_exchange_offline_payments_add_child_transaction( $transaction );
@@ -561,7 +557,7 @@ function it_exchange_offline_payments_add_child_transaction( $parent_txn ) {
 	if ( $customer_id ) {
 		$uniqid = it_exchange_get_offline_transaction_uniqid();
 		$transaction_object = new stdClass;
-		$transaction_object->total = 0;
+		$transaction_object->total = $parent_txn->cart_details->total;
 		it_exchange_add_child_transaction( 'offline-payments', $uniqid, $settings['offline-payments-default-status'], $customer_id, $parent_txn->ID, $transaction_object );
 		return true;
 	}
