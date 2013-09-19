@@ -44,3 +44,8 @@ include( dirname( __FILE__ ) . '/api/providers.php' );
  * This file contains the default Exchange Shipping Provider code
 */
 include( dirname( __FILE__ ) . '/lib/provider-exchange-standard.php' );
+
+/**
+ * This is the product-feature class for shipping.
+*/
+include( dirname( __FILE__ ) . '/lib/product-features/class-shipping.php' );
