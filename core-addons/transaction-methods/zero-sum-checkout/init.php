@@ -141,9 +141,13 @@ function it_exchange_zero_sum_checkout_handle_expired( $true, $product_id, $tran
 	
 	if ( 'zero-sum-checkout' === $transaction_method ) {
 		
+		wp_mail( 'lew@ithemes.com', 'expiring?', var_export( $true, true ) );
+		
 		$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product_id, true );
 		$status = $transaction->get_transaction_meta( 'subscriber_status', true );
-		if ( $autorenews && false === $status ) { //if the subscriber status is false, it hasn't been set, which really means it's active for zero-sum-checkouts
+		wp_mail( 'lew@ithemes.com', 'autorenews?', var_export( $autorenews, true ) );
+		wp_mail( 'lew@ithemes.com', 'status?', var_export( $status, true ) );
+		if ( $autorenews && empty( $status ) ) { //if the subscriber status is empty, it hasn't been set, which really means it's active for zero-sum-checkouts
 			//if the transaction autorenews and is zero sum, we want to create a new child transaction until deactivated
 			it_exchange_zero_sum_checkout_add_child_transaction( $transaction );
 			return false;
