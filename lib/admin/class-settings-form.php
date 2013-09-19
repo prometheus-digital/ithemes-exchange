@@ -1,4 +1,14 @@
 <?php
+/**
+ * This class will build a form for an admin settings page.
+ *
+ * It can be extended as needed or simply invoked by calling it_exchange_print_admin_settings_form()
+ * and passing the correct options to the constructor.
+ * By default, it will look for POST data and attempt to save. If you need to do this on your own, you can disable
+ * the save functionality by passing save-on-load => false
+ *
+ * @since 1.3.1
+*/
 class IT_Exchange_Admin_Settings_Form {
 
 	var $prefix             = false;
@@ -23,15 +33,16 @@ class IT_Exchange_Admin_Settings_Form {
 			'prefix'  => false,
 			'form-fields'  => array(),
 			'form-options' => array(
-				'id'                => false,
-				'enctype'           => false,
-				'action'            => false,
+				'id'      => false,
+				'enctype' => false,
+				'action'  => false,
 			),
 			'button-options' => array(
 				'save-button-label' => __( 'Save Changes', 'LION' ),
 				'save-button-class' => 'button button-primary',
 			),
 			'country-states-js' => false,
+			'save-on-load'      => true,
 		);
 
 		// Merge defaults
@@ -42,12 +53,13 @@ class IT_Exchange_Admin_Settings_Form {
 			return false;
 
 		// Set prefix and form fields
-		$this->prefix         = $options['prefix'];
-		$this->form_fields    = $options['form-fields'];
+		$this->prefix      = $options['prefix'];
+		$this->form_fields = $options['form-fields'];
 
 		// Update settings if form was submitted
-		$this->save_settings();
-		
+		if ( ! empty( $options['save-on-load'] ) )
+			$this->save_settings();
+
 		// Set form options
 		$this->form_options   = $options['form-options'];
 		$this->button_options = $options['button-options'];
@@ -79,7 +91,7 @@ class IT_Exchange_Admin_Settings_Form {
 		$options['id']      = empty( $options['id'] ) ? 'it-exchange-' . $this->prefix : $options['id'];
 		$options['action']  = empty( $options['action'] ) ? '' : $options['action'];
 		$options['enctype'] = empty( $options['enctype'] ) ? '' : $options['enctype'];
-		
+
 		// Update property
 		$this->form_options = $options;
 	}
@@ -117,7 +129,6 @@ class IT_Exchange_Admin_Settings_Form {
 	 * @return array
 	*/
 	function get_default_settings( $options ) {
-
 		foreach( (array) $this->form_fields as $field ) {
 			$options[$field['slug']] = empty( $field['default'] ) ? '' : $field['default'];
 		}

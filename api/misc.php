@@ -445,7 +445,7 @@ function it_exchange_get_pending_purchase_requirements() {
  *
  * @return string HTML
 */
-function it_exchange_get_formatted_billing_address( $billing_address=false ) { 
+function it_exchange_get_formatted_billing_address( $billing_address=false ) {
 	$formatted   = array();
 	$billing     = empty( $billing_address ) ? it_exchange_get_cart_billing_address() : $billing_address;
 	$formatted[] = implode( ' ', array( $billing['first-name'], $billing['last-name'] ) );
@@ -471,12 +471,12 @@ function it_exchange_get_formatted_billing_address( $billing_address=false ) {
 /**
  * Inits the IT_Exchange_Admin_Settings_Form class
  *
- * @since CHANGEME
+ * @since 1.3.1
  *
  * @param array  $options options for the class constructor
  * @return void
 */
-function it_exchange_print_admin_settings_form( $options ) { 
+function it_exchange_print_admin_settings_form( $options ) {
 	if ( ! is_admin() )
 		return;
 
