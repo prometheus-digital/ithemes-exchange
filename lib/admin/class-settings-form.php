@@ -387,7 +387,7 @@ class IT_Exchange_Admin_Settings_Form {
 						stateFieldID: '<?php echo esc_js( $states_id ); ?>',
 						adminPrefix:  '<?php echo esc_js( $this->prefix ); ?>'
 					}
-				);
+				).trigger('change');
 			});
 		</script>
 		<?php
