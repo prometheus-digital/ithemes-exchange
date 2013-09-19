@@ -88,6 +88,19 @@ function it_exchange_register_core_addons() {
 				'singular_name' => __( 'Simple Product', 'LION' ),
 			),
 		),
+		// Physical Product Type
+		'physical-product-type' => array(
+			'name'        => __( 'Physical Products', 'LION' ),
+			'description' => __( 'Products you can put your hands on. Things you might want to ship.', 'LION' ),
+			'author'      => 'iThemes',
+			'author_url'  => 'http://ithemes.com',
+			'file'        => dirname( __FILE__ ) . '/product-types/physical-products/init.php',
+			'category'    => 'product-type',
+			'tag'         => 'core',
+			'labels'      => array(
+				'singular_name' => __( 'Physical Product', 'LION' ),
+			),
+		),
 		// Product Type admin Metabox
 		'switch-product-type-metabox' => array(
 			'name'        => __( 'Switch Product Types', 'LION' ),
