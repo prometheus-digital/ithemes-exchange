@@ -109,7 +109,7 @@ class IT_Exchange_Product_Feature_Shipping {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-downloads', __( 'Product Downloads', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'low' );
+		add_meta_box( 'it-exchange-product-shipping', __( 'Product Shipping', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'low' );
 	}
 
 	/**
