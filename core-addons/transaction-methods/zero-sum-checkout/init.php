@@ -71,7 +71,7 @@ function it_exchange_get_zero_sum_checkout_transaction_uniqid() {
 */
 function it_exchange_verify_zero_sum_checkout_transaction_unique_uniqid( $uniqid ) {
 	if ( !empty( $uniqid ) ) { //verify we get a valid 32 character md5 hash
-		
+
 		$args = array(
 			'post_type' => 'it_exchange_tran',
 			'meta_query' => array(
@@ -85,12 +85,12 @@ function it_exchange_verify_zero_sum_checkout_transaction_unique_uniqid( $uniqid
 				),
 			),
 		);
-		
+
 		$query = new WP_Query( $args );
-		
+
 		return ( !empty( $query ) );
 	}
-	
+
 	return false;
 }
 
@@ -103,13 +103,13 @@ function it_exchange_verify_zero_sum_checkout_transaction_unique_uniqid( $uniqid
  * @return string
 */
 function it_exchange_zero_sum_checkout_addon_make_payment_button( $options ) {
-	
+
 	if ( 0 < it_exchange_get_cart_total( false ) )
 		return;
 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$stripe_settings = it_exchange_get_option( 'addon_zero_sum_checkout' );
-	
+
 	$products = it_exchange_get_cart_data( 'products' );
 
 	$payment_form = '<form id="zero_sum_checkout_form" action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
@@ -121,7 +121,6 @@ function it_exchange_zero_sum_checkout_addon_make_payment_button( $options ) {
 	$payment_form .= '</form>';
 
 	return $payment_form;
-	
 }
 add_filter( 'it_exchange_get_zero-sum-checkout_make_payment_button', 'it_exchange_zero_sum_checkout_addon_make_payment_button', 10, 2 );
 
@@ -129,7 +128,7 @@ add_filter( 'it_exchange_get_zero-sum-checkout_make_payment_button', 'it_exchang
  * Handles expired transactions that are zero sum checkout
  * If this product autorenews and is zero-sum, it should auto-renew unless the susbcriber status has been deactivated already
  * If it autorenews, it creates a zero-sum child transaction
- * 
+ *
  * @since 1.3.1
  * @param bool $true Default True bool, passed from recurring payments expire schedule
  * @param int $product_id iThemes Exchange Product ID
@@ -138,9 +137,9 @@ add_filter( 'it_exchange_get_zero-sum-checkout_make_payment_button', 'it_exchang
 */
 function it_exchange_zero_sum_checkout_handle_expired( $true, $product_id, $transaction ) {
 	$transaction_method = it_exchange_get_transaction_method( $transaction->ID );
-	
+
 	if ( 'zero-sum-checkout' === $transaction_method ) {
-			
+
 		$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product_id, true );
 		$status = $transaction->get_transaction_meta( 'subscriber_status', true );
 		if ( $autorenews && empty( $status ) ) { //if the subscriber status is empty, it hasn't been set, which really means it's active for zero-sum-checkouts
@@ -148,11 +147,11 @@ function it_exchange_zero_sum_checkout_handle_expired( $true, $product_id, $tran
 			it_exchange_zero_sum_checkout_add_child_transaction( $transaction );
 			return false;
 		}
-		
+
 	}
-	
+
 	return $true;
-	
+
 }
 add_filter( 'it_exchange_recurring_payments_handle_expired', 'it_exchange_zero_sum_checkout_handle_expired', 10, 3 );
 
@@ -186,24 +185,24 @@ function it_exchange_zero_sum_checkout_add_child_transaction( $parent_txn ) {
  * @param object $transaction iThemes Transaction object
  * @return void
 */
-function it_exchange_zero_sum_checkout_after_payment_details_cancel_url( $transaction ) {	
+function it_exchange_zero_sum_checkout_after_payment_details_cancel_url( $transaction ) {
 	$cart_object = get_post_meta( $transaction->ID, '_it_exchange_cart_object', true );
-	foreach ( $cart_object->products as $product ) {	
+	foreach ( $cart_object->products as $product ) {
 		$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product['product_id'], true );
 		if ( $autorenews ) {
 			$status = $transaction->get_transaction_meta( 'subscriber_status', true );
 			switch( $status ) {
-			
+
 				case false: //active
 				case '':
 					$output = '<a href="' . add_query_arg( 'zero-sum-recurring-payment', 'cancel' ) . '">' . __( 'Cancel Recurring Payment', 'LION' ) . '</a>';
 					break;
-					
+
 				case 'deactivated':
 				default:
 					$output = __( 'Recurring payment has been deactivated', 'LION' );
 					break;
-				
+
 			}
 			?>
 			<div class="transaction-autorenews clearfix spacing-wrapper">

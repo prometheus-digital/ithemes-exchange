@@ -447,7 +447,7 @@ function it_exchange_get_cart_subtotal( $format=true ) {
 */
 function it_exchange_get_cart_total( $format=true ) {
 	$total = apply_filters( 'it_exchange_get_cart_total', it_exchange_get_cart_subtotal( false ) );
-		
+
 	if ( 0 > $total )
 		$total = 0;
 

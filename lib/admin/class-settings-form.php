@@ -67,7 +67,7 @@ class IT_Exchange_Admin_Settings_Form {
 		// Set form options
 		$this->set_form_options( $options['form-options'] );
 
-		// Set form fields 
+		// Set form fields
 		$this->set_form_fields( $options['form-fields'] );
 
 		// Loads settings saved previously
@@ -352,7 +352,7 @@ class IT_Exchange_Admin_Settings_Form {
 	function set_country_states_js( $args ) {
 
 		// Return false if we're missing any required vars
-		if ( 
+		if (
 			empty( $args['country-id'] ) ||
 			empty( $args['states-id'] ) ||
 			empty( $args['states-wrapper'] )

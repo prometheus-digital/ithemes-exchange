@@ -802,7 +802,7 @@ add_filter( 'it_exchange_transaction_status_label_paypal-standard-secure', 'it_e
  * @return boolean
 */
 function it_exchange_paypal_standard_secure_transaction_is_cleared_for_delivery( $cleared, $transaction ) { 
-    $valid_stati = array( 
+    $valid_stati = array(
 		'completed',
 		'success',
 		'canceled_reversal',
@@ -814,7 +814,7 @@ add_filter( 'it_exchange_paypal-standard-secure_transaction_is_cleared_for_deliv
 
 /*
  * Returns the unsubscribe action for PayPal autorenewing payments
- * 
+ *
  * @since 1.3.0
  *
  * @param string $output Should be an empty string
@@ -842,29 +842,29 @@ add_filter( 'it_exchange_paypal-standard-secure_unsubscribe_action', 'it_exchang
  * @param object $transaction iThemes Transaction object
  * @return void
 */
-function it_exchange_paypal_standard_secure_after_payment_details_cancel_url( $transaction ) {	
+function it_exchange_paypal_standard_secure_after_payment_details_cancel_url( $transaction ) {
 	$paypal_settings      = it_exchange_get_option( 'addon_paypal_standard_secure' );
 	$paypal_url           = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? PAYPAL_SANDBOX_URL : PAYPAL_LIVE_URL;
 	$cart_object = get_post_meta( $transaction->ID, '_it_exchange_cart_object', true );
-	foreach ( $cart_object->products as $product ) {	
+	foreach ( $cart_object->products as $product ) {
 		$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product['product_id'], true );
 		if ( $autorenews ) {
 			$subscriber_id = $transaction->get_transaction_meta( 'subscriber_id', true );
 			$status = $transaction->get_transaction_meta( 'subscriber_status', true );
 			switch( $status ) {
-			
+
 				case 'deactivated':
 					$output = __( 'Recurring payment has been deactivated', 'LION' );
 					break;
-					
+
 				case 'cancelled':
 					$output = __( 'Recurring payment has been cancelled', 'LION' );
 					break;
-					
+
 				case 'suspended':
 					$output = __( 'Recurring payment has been suspended', 'LION' );
 					break;
-				
+
 				case 'active':
 				default:
 					$output = '<a href="' . $paypal_url . '">' . __( 'Cancel Recurring Payment', 'LION' ) . ' (' . __( 'Profile ID', 'LION' ) . ': ' . $subscriber_id . ')</a>';
@@ -988,17 +988,17 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 
 		?>
 		<div class="it-exchange-addon-settings it-exchange-paypal-addon-settings">
-            <p>
+			<p>
 				<?php _e( 'Although this PayPal version for iThemes Exchange takes more effort and time, it is well worth it for the security options for your store. To get PayPal set up for use with Exchange, you\'ll need to add the following information from your PayPal account.', 'LION' ); ?><br /><br />
 				<?php _e( 'Video:', 'LION' ); ?>&nbsp;<a href="http://ithemes.com/tutorials/setting-up-paypal-standard-secure/" target="_blank"><?php _e( 'Setting Up PayPal Standard Secure', 'LION' ); ?></a>
 			</p>
 			<p><?php _e( 'Don\'t have a PayPal account yet?', 'LION' ); ?> <a href="http://paypal.com" target="_blank"><?php _e( 'Go set one up here', 'LION' ); ?></a>.</p>
-            <h4><?php _e( 'Step 1. Fill out your PayPal email address', 'LION' ); ?></h4>
+			<h4><?php _e( 'Step 1. Fill out your PayPal email address', 'LION' ); ?></h4>
 			<p>
 				<label for="paypal-standard-secure-live-email-address"><?php _e( 'PayPal Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-secure-live-email-address' ); ?>
 			</p>
-            <h4><?php _e( 'Step 2. Fill out your PayPal API credentials', 'LION' ); ?></h4>
+			<h4><?php _e( 'Step 2. Fill out your PayPal API credentials', 'LION' ); ?></h4>
 			<p>
 				<label for="paypal-standard-secure-live-api-username"><?php _e( 'PayPal API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-secure-live-api-username' ); ?>
@@ -1011,11 +1011,11 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 				<label for="paypal-standard-secure-live-api-signature"><?php _e( 'PayPal API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-secure-live-api-signature' ); ?>
 			</p>
-            <h4><?php _e( 'Step 3. Setup PayPal Instant Payment Notifications (IPN)', 'LION' ); ?></h4>
+			<h4><?php _e( 'Step 3. Setup PayPal Instant Payment Notifications (IPN)', 'LION' ); ?></h4>
 			<p><?php _e( 'PayPal IPN must be configured in Account Profile -› Instant Payment Notification Preferences in your PayPal Account', 'LION' ); ?></p>
 			<p><?php _e( 'Please log into your account and add this URL to your IPN Settings so iThemes Exchange is notified of things like refunds, payments, etc.', 'LION' ); ?></p>
 			<code><?php echo get_site_url(); ?>/?<?php esc_attr_e( it_exchange_get_webhook( 'paypal-standard-secure' ) ); ?>=1</code>
-            <h4><?php _e( 'Step 4. Setup PayPal Auto Return', 'LION' ); ?></h4>
+			<h4><?php _e( 'Step 4. Setup PayPal Auto Return', 'LION' ); ?></h4>
 			<p><?php _e( 'PayPal Auto Return must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
 			<p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'LION' ); ?></p>
 			<code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
@@ -1031,7 +1031,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 				<?php $form->add_check_box( 'paypal-standard-secure-sandbox-mode', array( 'class' => 'show-test-mode-options' ) ); ?>
 				<label for="paypal-standard-secure-sandbox-mode"><?php _e( 'Enable PayPal Sandbox Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Use this mode for testing your store. This mode will need to be disabled when the store is ready to process customer payments.', 'LION' ); ?>">i</span></label>
 			</p>
-            <?php $hidden_class = ( $settings['paypal-standard-secure-sandbox-mode'] ) ? '' : 'hide-if-live-mode'; ?>
+			<?php $hidden_class = ( $settings['paypal-standard-secure-sandbox-mode'] ) ? '' : 'hide-if-live-mode'; ?>
 			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
 				<label for="paypal-standard-secure-sandbox-email-address"><?php _e( 'PayPal Sandbox Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'paypal-standard-secure-sandbox-email-address' ); ?>
