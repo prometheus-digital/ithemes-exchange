@@ -120,7 +120,9 @@ class IT_Exchange_Product_Feature_Shipping {
 	*/
 	function print_metabox( $post ) {
 		// Grab the iThemes Exchange Product object from the WP $post object
-		$product          = it_exchange_get_product( $post );
+		$product                        = it_exchange_get_product( $post );
+		$shipping_disabled              = false; // @todo it_exchange_product_has_feature( $post->ID, 'shipping' );
+		$product_type_shipping_features = it_exchange_get_shipping_features_for_product_type( it_exchange_get_product_type( $post ) );
 		?>
 		<div class="shipping-header">
 			<div class="shipping-label">
@@ -129,66 +131,16 @@ class IT_Exchange_Product_Feature_Shipping {
 
 			<div class="shipping-toggle">
 					<label id="it-exchange-shipping-disabled-label" for="it-exchange-shipping-disabled">
-						<input type="checkbox" id="it-exchange-shipping-disabled" name="it-exchange-shipping-disabled" />
+						<input type="checkbox" id="it-exchange-shipping-disabled" name="it-exchange-shipping-disabled" <?php checked( $shipping_disabled ); ?>/>
 						<?php _e( 'Disable shipping for this product', 'LION' ); ?>
 						<span class="tip" title="<?php _e( 'Check this box to indicate that shipping is not needed for this product.', 'LION' ); ?>">i</span>
 					</label>
 			</div>
 		</div>
-		<!-- Glenn you will need to put logic here to determine if the hidden class needs to be applied based on whether the disable toggle is checked or not. -->
-		<div class="shipping-wrapper <?php // echo 'hidden'; ?>">
-			<div class="shipping-feature shipping-core">
-				<div class="standard-shipping-flat-rate-cost">
-					<label for="it-exchange-flat-rate-shipping-cost"><?php _e( 'Flat Rate Shipping Cost', 'LION' ); ?> <span class="tip" title="<?php _e( 'Shipping costs for this product. Multiplied by quantity purchased.', 'LION' ); ?>">i</span></label>
-					<input type="text" id="it-exchange-flat-rate-shipping-cost" name="it-exchange-flat-rate-shipping-cost" class="input-money-small" value="$5.00"/>
-				</div>
-			</div>
-
-			<div class="shipping-feature shipping-enabled-methods">
-				<ul>
-					<li>
-						<label id="it-exchange-shipping-override-methods-label" for="it-exchange-shipping-override-methods">
-							<input type="checkbox" id="it-exchange-shipping-override-methods" name="it-exchange-shipping-override-methods" /> <?php _e( 'Override Available Shipping Methods', 'LION' ); ?>
-						</label>
-						<!-- Glenn you will need to put logic here to determine if the hidden class needs to be applied based on whether the disable toggle is checked or not. -->
-						<ul class="shipping-methods <?php echo 'hidden'; ?>">
-							<li>
-								<label id="it-exchange-shipping-override-aaa-method-label" for="it-exchange-shipping-override-aaa-method">
-									<input type="checkbox" id="it-exchange-shipping-override-aaa-method" name="it-exchange-shipping-override-aaa-methods" /> <?php _e( 'FedEx Ground', 'LION' ); ?>
-								</label>
-							</li>
-							<li>
-								<label id="it-exchange-shipping-override-aaa-method-label" for="it-exchange-shipping-override-aaa-method">
-									<input type="checkbox" id="it-exchange-shipping-override-aaa-method" name="it-exchange-shipping-override-aaa-methods" /> <?php _e( 'FedEx Air', 'LION' ); ?>
-								</label>
-							</li>
-							<li>
-								<label id="it-exchange-shipping-override-aaa-method-label" for="it-exchange-shipping-override-aaa-method">
-									<input type="checkbox" id="it-exchange-shipping-override-aaa-method" name="it-exchange-shipping-override-aaa-methods" /> <?php _e( 'UPS Air', 'LION' ); ?>
-								</label>
-							</li>
-						</ul>
-					</li>
-				</ul>
-
-			</div>
-
-			<div class="shipping-feature shipping-weight-dimensions columns-wrapper">
-				<div class="shipping-weight column">
-					<label><?php _e( 'Weight', 'LION' ); ?> <span class="tip" title="<?php _e( 'Weight of the package. Used to calculate shipping costs.', 'LION' ); ?>">i</span></label>
-					<input type="text" id="it-exchange-shipping-weight" name="it-exchange-weight" class="small-input" value="12"/>
-					<span class="it-exchange-shipping-weight-format">lbs</span>
-				</div>
-				<div class="shipping-dimensions column">
-					<label><?php _e( 'Dimensions', 'LION' ); ?> <span class="tip" title="<?php _e( 'Size of the package: length, width and height of the package. Used to calculate shipping costs.', 'LION' ); ?>">i</span></label>
-					<input type="text" id="it-exchange-shipping-length" name="it-exchange-length" class="small-input" value="48"/>
-					<span class="it-exchange-shipping-dimensions-times">&times;</span>
-					<input type="text" id="it-exchange-shipping-width" name="it-exchange-width" class="small-input" value="18"/>
-					<span class="it-exchange-shipping-dimensions-times">&times;</span>
-					<input type="text" id="it-exchange-shipping-height" name="it-exchange-height" class="small-input" value="4"/>
-					<span class="it-exchange-shipping-dimensions-format">inches</span>
-				</div>
-			</div>
+		<div class="shipping-wrapper <?php echo $shipping_disabled ? 'hidden' : ''; ?>">
+			<?php foreach( $product_type_shipping_features as $feature ) : ?>
+				<?php $feature->print_add_edit_feature_box(); ?>
+			<?php endforeach; ?>
 		</div>
 		<?php
 	}
