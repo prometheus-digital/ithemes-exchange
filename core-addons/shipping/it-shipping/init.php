@@ -41,6 +41,11 @@ include( dirname( __FILE__ ) . '/lib/functions.php' );
 include( dirname( __FILE__ ) . '/api/providers.php' );
 
 /**
+ * This file contains the API calls related to Shipping Features
+*/
+include( dirname( __FILE__ ) . '/api/shipping-features.php' );
+
+/**
  * This file contains the default Exchange Shipping Provider code
 */
 include( dirname( __FILE__ ) . '/lib/provider-exchange-standard.php' );
