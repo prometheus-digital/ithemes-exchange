@@ -1,3 +1,13 @@
+1.3.1 - 2013-09-20 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+	Fixed some i18n issues
+	Added cancel links from the Paypal add-ons
+	Fixed bug in Offline Payments for recurring, not keeping totals from parent transaction
+	Added new class for quickly generating an admin setting form
+	Added hooks to All Payments metabox in tranaction methods post type class
+	Fixed border issue when first payment item in the wizard is selected.
+	Added missing docblocks
+	Fixed negative total and negative taxes
+	Fixed bug with failed payments when multicart is deactivated
 1.3.0 - 2013-09-16 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich
 	Groundwork for upcoming Recurring Payments add-on
 	Introduced Purchase Dialog API to allow transaction-method add-ons to invoke CC fields.
