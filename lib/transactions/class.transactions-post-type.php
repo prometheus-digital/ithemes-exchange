@@ -12,7 +12,7 @@
  * @since 0.3.3
 */
 class IT_Exchange_Transaction_Post_Type {
-	
+
 	/**
 	 * Class Constructor
 	 *
@@ -21,7 +21,7 @@ class IT_Exchange_Transaction_Post_Type {
 	*/
 	function IT_Exchange_Transaction_Post_Type() {
 		$this->init();
-		
+
 		add_action( 'save_post', array( $this, 'save_transaction' ) );
 
 		if ( is_admin() ) {
@@ -31,7 +31,7 @@ class IT_Exchange_Transaction_Post_Type {
 			add_filter( 'manage_it_exchange_tran_posts_custom_column', array( $this, 'add_transaction_method_info_to_view_all_table_rows' ) );
 			add_filter( 'it_exchange_transaction_metabox_callback', array( $this, 'register_transaction_details_admin_metabox' ) );
 			add_filter( 'post_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
-			add_filter( 'screen_layout_columns', array( $this, 'modify_details_page_layout' ) ); 
+			add_filter( 'screen_layout_columns', array( $this, 'modify_details_page_layout' ) );
 			add_filter( 'get_user_option_screen_layout_it_exchange_tran', array( $this, 'update_user_column_options' ) );
 			add_action( 'wp_ajax_it-exchange-update-transaction-status', array( $this, 'ajax_update_status' ) );
 		}
@@ -39,7 +39,7 @@ class IT_Exchange_Transaction_Post_Type {
 
 	function init() {
 		add_filter( 'it_exchange_transactions_post_type_hierarchical', array( $this, 'it_exchange_transactions_post_type_hierarchical' ) );
-		
+
 		$this->post_type = 'it_exchange_tran';
 		$labels    = array(
 			'name'          => __( 'Payments', 'LION' ),
@@ -80,8 +80,7 @@ class IT_Exchange_Transaction_Post_Type {
 
 		add_action( 'init', array( $this, 'register_the_post_type' ) );
 	}
-	
-	
+
 	/**
 	 * We want to set transactions to hierarchical on the edit screen only
 	 * This is used for adding payments to a transaction that has a parent transaction
@@ -93,13 +92,13 @@ class IT_Exchange_Transaction_Post_Type {
 	*/
 	function it_exchange_transactions_post_type_hierarchical( $hierarchical ) {
 		global $pagenow;
-		
+
 		if ( 'edit.php' === $pagenow && !empty( $_REQUEST['post_type'] ) && 'it_exchange_tran' === $_REQUEST['post_type'] )
-			return true;	
+			return true;
 		else
 			return $hierarchical;
 	}
-	
+
 	/**
 	 * Change 'Edit Transaction' to 'View Details' in All Payments Table
 	 *
@@ -110,37 +109,35 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return array
 	*/
 	function rename_edit_to_details( $actions, $post ) {
-		
-		if ( 'it_exchange_tran' === $post->post_type ) 
+		if ( 'it_exchange_tran' === $post->post_type )
 		$actions['edit'] = '<a href="' . get_edit_post_link( $post->ID, true ) . '" title="' . esc_attr( __( 'View the transaction details', 'LION' ) ) . '">' . __( 'Details', 'LION' ) . '</a>';
-		
+
 		return $actions;
-		
 	}
 
-    /**
-     * Set the max columns option for the add / edit product page.
-     *
-     * @since 0.4.0
-     *
-     * @param $columns Existing array of how many colunns to show for a post type
-     * @return array Filtered array
-    */
-    function modify_details_page_layout( $columns ) {
-        $columns['it_exchange_tran'] = 1;
-        return $columns;
-    }
+	/**
+	 * Set the max columns option for the add / edit product page.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param $columns Existing array of how many colunns to show for a post type
+	 * @return array Filtered array
+	*/
+	function modify_details_page_layout( $columns ) {
+		$columns['it_exchange_tran'] = 1;
+		return $columns;
+	}
 
-    /**
-     * Updates the user options for number of columns to use on transaction details page
-     *
-     * @since 0.4.0
-     *
-     * @return 2
-    */
-    function update_user_column_options( $existing ) {
-        return 1;
-    }
+	/**
+	 * Updates the user options for number of columns to use on transaction details page
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return 2
+	*/
+	function update_user_column_options( $existing ) {
+		return 1;
+	}
 
 	/**
 	 * Actually registers the post type
@@ -178,7 +175,7 @@ class IT_Exchange_Transaction_Post_Type {
 	 * Provides specific hooks for when iThemes Exchange transactions are saved.
 	 *
 	 * This method is hooked to save_post. It provides hooks for add-on developers
-	 * that will only be called when the post being saved is an iThemes Exchange transaction. 
+	 * that will only be called when the post being saved is an iThemes Exchange transaction.
 	 * It provides the following 4 hooks:
 	 * - it_exchange_save_transaction_unvalidated                    // Runs every time an iThemes Exchange transaction is saved.
 	 * - it_exchange_save_transaction_unavalidate-[transaction-method] // Runs every time a specific iThemes Exchange transaction type is saved.
@@ -188,40 +185,40 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @since 0.3.3
 	 * @return void
 	*/
-	function save_transaction( $post ) { 
+	function save_transaction( $post ) {
 
 		// Exit if not it_exchange_prod post_type
-		if ( ! 'it_exchange_tran' == get_post_type( $post ) ) 
+		if ( ! 'it_exchange_tran' == get_post_type( $post ) )
 			return;
 
 		// Grab enabled transaction-method add-ons
 		$transaction_method_addons = it_exchange_get_enabled_addons( array( 'category' => 'transaction-method' ) );
-		
+
 		// Grab current post's transaction-method
 		$transaction_method = it_exchange_get_transaction_method();
 
 		// These hooks fire off any time a it_exchange_tran post is saved w/o validations
 		do_action( 'it_exchange_save_transaction_unvalidated', $post );
-		foreach( (array) $transaction_method_addons as $slug => $params ) { 
-			if ( $slug == $transaction_method ) { 
+		foreach( (array) $transaction_method_addons as $slug => $params ) {
+			if ( $slug == $transaction_method ) {
 				do_action( 'it_exchange_save_transaction_unvalidated_' . $slug, $post );
-			}   
-		}   
+			}
+		}
 
 		// Fire off actions with validations that most instances need to use.
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
 			return;
 
-		if ( ! current_user_can( 'edit_post', $post ) ) 
+		if ( ! current_user_can( 'edit_post', $post ) )
 			return;
 
 		// This is called any time save_post hook
 		do_action( 'it_exchange_save_transaction', $post );
-		foreach( (array) $transaction_method_addons as $slug => $params ) { 
-			if ( $slug == $transaction_method ) { 
+		foreach( (array) $transaction_method_addons as $slug => $params ) {
+			if ( $slug == $transaction_method ) {
 				do_action( 'it_exchange_save_transaction_' . $slug, $post );
-			}   
-		}   
+			}
+		}
 	}
 
 	/**
@@ -264,11 +261,11 @@ class IT_Exchange_Transaction_Post_Type {
 		if ( isset( $existing['format'] ) )
 			unset( $existing['format'] );
 
-		// Remove Author 
+		// Remove Author
 		if ( isset( $existing['author'] ) )
 			unset( $existing['author'] );
 
-		// Remove Comments 
+		// Remove Comments
 		if ( isset( $existing['comments'] ) )
 			unset( $existing['comments'] );
 
@@ -346,7 +343,7 @@ class IT_Exchange_Transaction_Post_Type {
 					esc_attr_e( __( 'Unknown', 'LION' ) );
 				break;
 			case 'it_exchange_transaction_total_column' :
-				esc_attr_e( it_exchange_get_transaction_total( $transaction ) );		
+				esc_attr_e( it_exchange_get_transaction_total( $transaction ) );
 				break;
 		}
 	}
@@ -406,7 +403,7 @@ class IT_Exchange_Transaction_Post_Type {
 		<div class="transaction-stamp hidden <?php esc_attr_e( strtolower( it_exchange_get_transaction_status_label( $post ) ) ); ?>">
 			<?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?>
 		</div>
-		
+
 		<div class="customer-data spacing-wrapper">
 			<div class="customer-avatar left">
 				<?php echo get_avatar( it_exchange_get_transaction_customer_id( $post->ID ), 80 ); ?>
@@ -437,7 +434,7 @@ class IT_Exchange_Transaction_Post_Type {
 			</div>
 		</div>
 
-		<?php if ( $billing_address = it_exchange_get_transaction_billing_address( $post->ID ) ) : ?>  
+		<?php if ( $billing_address = it_exchange_get_transaction_billing_address( $post->ID ) ) : ?>
 			<div class="billing-shipping-wrapper columns-wrapper">
 				<div class="billing-address column c-50">
 					<div class="column-inner">
@@ -468,20 +465,20 @@ class IT_Exchange_Transaction_Post_Type {
 			<?php foreach ( $transaction_products as $transaction_product ) : ?>
 				<?php
 					$product_id = $transaction_product['product_id'];
-					
+
 					$db_product = it_exchange_get_product( $transaction_product );
 				?>
 				<div class="product spacing-wrapper">
 					<div class="product-header clearfix">
 						<div class="product-title left">
-                        	<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_title', $post, $transaction_product ); ?>
+							<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_title', $post, $transaction_product ); ?>
 							<?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?>
-                        	<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_title', $post, $transaction_product ); ?>
+							<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_title', $post, $transaction_product ); ?>
 						</div>
 						<div class="product-subtotal right">
-                        	<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_subtotal', $post, $transaction_product ); ?>
+							<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_subtotal', $post, $transaction_product ); ?>
 							<?php esc_attr_e( it_exchange_format_price( it_exchange_get_transaction_product_feature( $transaction_product, 'product_subtotal' ) ) ); ?>
-                        	<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_subtotal', $post, $transaction_product ); ?>
+							<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_subtotal', $post, $transaction_product ); ?>
 						</div>
 					</div>
 					<div class="product-details">
@@ -498,7 +495,7 @@ class IT_Exchange_Transaction_Post_Type {
 						<?php else : ?>
 							<div class="no-product-downloads">
 								<?php _e( 'This product does not contain any downloads', 'LION' ); ?>
-							</div> 
+							</div>
 						<?php endif; ?>
 					</div>
 				</div>
@@ -509,20 +506,20 @@ class IT_Exchange_Transaction_Post_Type {
 			<div class="transaction-costs-subtotal right clearfix">
 				<div class="transaction-costs-subtotal-label left"><?php _e( 'Subtotal', 'LION' ); ?></div>
 				<div class="transaction-costs-subtotal-price">
-				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_subtotal', $post ); ?>
-				<?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?>
-				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_subtotal', $post ); ?>
-                </div>
+					<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_subtotal', $post ); ?>
+					<?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?>
+					<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_subtotal', $post ); ?>
+				</div>
 			</div>
 
 			<?php if ( $coupons = it_exchange_get_transaction_coupons( $post ) ) : ?>
 				<div class="transaction-costs-coupons right">
 					<div class="transaction-costs-coupon-total-label left"><?php _e( 'Total Discount', 'LION' ); ?></div>
 					<div class="transaction-costs-coupon-total-amount">
-					<?php do_action( 'it_exchange_transaction_print_metabox_before_coupons_total_discount', $post ); ?>
-					<?php esc_attr_e( it_exchange_get_transaction_coupons_total_discount( $post ) ); ?>
-					<?php do_action( 'it_exchange_transaction_print_metabox_after_coupons_total_discount', $post ); ?>
-                    </div>
+						<?php do_action( 'it_exchange_transaction_print_metabox_before_coupons_total_discount', $post ); ?>
+						<?php esc_attr_e( it_exchange_get_transaction_coupons_total_discount( $post ) ); ?>
+						<?php do_action( 'it_exchange_transaction_print_metabox_after_coupons_total_discount', $post ); ?>
+					</div>
 				</div>
 				<label><strong><?php _e( 'Coupons', 'LION' ); ?></strong></label>
 				<?php foreach ( $coupons as $type => $coupon ) : ?>
@@ -543,10 +540,10 @@ class IT_Exchange_Transaction_Post_Type {
 					<div class="transaction-costs-refund-total">
 						<div class="transaction-costs-refund-total-label left"><?php _e( 'Total Refund', 'LION' ); ?></div>
 						<div class="transaction-costs-refund-total-amount">
-						<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_refunds_total', $post ); ?>
-						<?php esc_attr_e( it_exchange_get_transaction_refunds_total( $post ) ); ?>
-						<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_refunds_total', $post ); ?>
-                        </div>
+							<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_refunds_total', $post ); ?>
+							<?php esc_attr_e( it_exchange_get_transaction_refunds_total( $post ) ); ?>
+							<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_refunds_total', $post ); ?>
+						</div>
 					</div>
 				</div>
 				<div class="transaction-refunds-list">
@@ -564,31 +561,31 @@ class IT_Exchange_Transaction_Post_Type {
 			<div class="payment-method left">
 				<div class="payment-method-label"><?php _e( 'Payment Method', 'LION' ); ?></div>
 				<div class="payment-method-name">
-				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_method_name', $post ); ?>
-				<?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?>
-				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_method_name', $post ); ?>
-                </div>
+					<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_method_name', $post ); ?>
+					<?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?>
+					<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_method_name', $post ); ?>
+				</div>
 			</div>
 			<div class="payment-total right clearfix">
 				<div class="payment-total-label left"><?php _e( 'Total', 'LION' ); ?></div>
 				<div class="payment-total-amount">
-				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_total', $post ); ?>
-				<?php _e( it_exchange_get_transaction_total( $post ) ); ?>
-				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_total', $post ); ?>
-                </div>
+					<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_total', $post ); ?>
+					<?php _e( it_exchange_get_transaction_total( $post ) ); ?>
+					<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_total', $post ); ?>
+				</div>
 
 				<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
 					<div class="payment-original-total-label left"><?php _e( 'Total before refunds', 'LION' ); ?></div>
 					<div class="payment-original-total-amount">
-					<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_total_before_refunds', $post ); ?>
-					<?php _e( it_exchange_get_transaction_total( $post, true, false ) ); ?>
-					<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_total_before_refunds', $post ); ?>
-                    </div>
+						<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_total_before_refunds', $post ); ?>
+						<?php _e( it_exchange_get_transaction_total( $post, true, false ) ); ?>
+						<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_total_before_refunds', $post ); ?>
+					</div>
 				<?php endif; ?>
 			</div>
 		</div>
 		<?php
-		if ( it_exchange_transaction_status_can_be_manually_changed( $post ) ) : 
+		if ( it_exchange_transaction_status_can_be_manually_changed( $post ) ) :
 			?>
 			<div class="transaction-status-update clearfix spacing-wrapper hide-if-no-js">
 				<div class="update-status-label left">

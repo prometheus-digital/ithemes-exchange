@@ -23,7 +23,7 @@ function it_exchange_addon_get_simple_taxes_for_cart( $format_price=true ) {
 
 	if ( $process_after_discounts )
 		$cart_total -= it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ) );
-		
+
 	if ( 0 > $cart_total )
 		$cart_total = 0;
 
