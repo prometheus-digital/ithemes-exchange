@@ -22,7 +22,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Constructor Sets up the object
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
@@ -80,7 +80,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Checks the default form options and sets them if empty
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @param  array $form_options the options for the HTML form tag
 	 * @return void
@@ -99,7 +99,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Sets the form fields property
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
@@ -111,7 +111,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Grabs existing settings and loads them in the object property
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
@@ -123,7 +123,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Gives the default settings to the ITStorage API
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @param  array $options
 	 * @return array
@@ -138,7 +138,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Print the form
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
@@ -157,7 +157,7 @@ class IT_Exchange_Admin_Settings_Form {
 	 *
 	 * Uses POST data, Previously saved settings, Defaults
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
@@ -180,7 +180,7 @@ class IT_Exchange_Admin_Settings_Form {
 	 *
 	 * Prints the opening form HTML tag
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
@@ -191,7 +191,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Prints the messages if they are present
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
@@ -214,7 +214,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Prints the form fields
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
@@ -250,7 +250,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Prints the form actions
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
@@ -265,7 +265,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Prints the close of the form
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
@@ -285,7 +285,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Prints a table row with the setting
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
@@ -303,7 +303,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Prints a warning if the setting has an uncallable method
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
@@ -319,7 +319,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Saves the settings via ITStorage
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
@@ -344,7 +344,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Set the country state js property
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @param  array $args args needed to pass to the jQuery plugin
 	 * @return void
@@ -368,7 +368,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Prints the JS that binds the country state sync JS to the country field
 	 *
-	 * @since CHANGEME
+	 * @since 1.3.1
 	 *
 	 * @return void
 	*/
