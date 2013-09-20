@@ -60,6 +60,16 @@ class IT_Exchange_Shipping_Feature {
 		$this->product = $product;
 	}
 
+
+	/**
+	 * Prints the shipping box on the add/edit product page
+	 *
+	 * Relies on methods provided by extending classes
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
 	function print_add_edit_feature_box() {
 		?>
 		<div class="shipping-feature <?php esc_attr_e( $this->slug ); ?>">
