@@ -71,6 +71,7 @@
 #it-exchange-product-shipping .shipping-wrapper{border:1px solid #DEDEDE;}
 #it-exchange-product-shipping .shipping-feature{padding:20px;border-bottom:1px solid #DEDEDE;}
 #it-exchange-product-shipping .input-money-small{max-width:80px;}
+#it-exchange-product-shipping .core-from-address input{max-width:300px;}
 #it-exchange-product-shipping .shipping-weight{margin-right:80px;}
 
 /** -----------------------------------------------------:[ side sortables ]:---------- */
