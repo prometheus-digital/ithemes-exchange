@@ -8,13 +8,15 @@ class IT_Exchange_Shipping_Provider{
 	var $label;
 	var $shipping_methods;
 	var $provider_settings;
+	var $country_states_js;
 	var $has_settings_page = false;
 
 	function IT_Exchange_Shipping_Provider( $slug, $options=array() ) {
 
 		$defaults = array(
 			'label' => false,
-			'shipping-methods' => array(),
+			'shipping-methods'  => array(),
+			'country-states-js' => array(),
 		);
 
 		// Merge options with defaults
@@ -31,6 +33,13 @@ class IT_Exchange_Shipping_Provider{
 		// Setup settings page if needed
 		if ( ! empty( $options['provider-settings'] ) )
 			$this->setup_provider_settings( $options['provider-settings'] );
+
+		// Add method settings
+		$this->add_method_settings();
+
+		// Setup country_states_js if needed
+		if ( ! empty( $options['country-states-js'] ) )
+			$this->setup_country_states_js( $options['country-states-js'] );
 
 		// Default values for settings
 		add_filter( 'it_storage_get_defaults_exchange_addon_shipping_' . $this->slug, array( $this, 'get_default_provider_setting_values' ) );
@@ -54,8 +63,8 @@ class IT_Exchange_Shipping_Provider{
 	*/
 	function setup_shipping_methods( $methods=array() ) {
 		if ( ! empty( $methods ) ) {
-			foreach( $methods as $slug => $options ) {
-				$this->add_shipping_method( $slug, $options );
+			foreach( $methods as $slug ) {
+				$this->add_shipping_method( $slug );
 			}
 		}
 	}
@@ -69,9 +78,23 @@ class IT_Exchange_Shipping_Provider{
 	 * @return void
 	*/
 	function setup_provider_settings( $settings=array() ) {
+
+		// Add any provider settings
 		foreach( (array) $settings as $options ) {
 			$this->add_provider_setting( $options );
 		}
+	}
+
+	/**
+	 * Applies an array of provider settings to the object provider property
+	 *
+	 * @since CHANGEME
+	 *
+	 * @param  array $options the country_states_js options
+	 * @return void
+	*/
+	function setup_country_states_js( $options ) {
+		$this->country_states_js = $options;
 	}
 
 	/**
@@ -83,8 +106,22 @@ class IT_Exchange_Shipping_Provider{
 	 * @param  array  $options options for the shipping method
 	 * @return void
 	*/
-	function add_shipping_method( $slug, $options=array() ) {
-		$this->shipping_methods[$slug] = $options;
+	function add_shipping_method( $slug ) {
+		if ( ! in_array( $slug, (array) $this->shipping_methods ) )
+			$this->shipping_methods[] = $slug;
+	}
+
+	function add_method_settings() {
+
+		// Loop through methods and add method settings
+		foreach( (array) $this->shipping_methods as $method ) {
+			if ( $method = it_exchange_get_registered_shipping_method( $method ) ) {
+				foreach( (array) $method->settings as $setting ) {
+					$this->add_provider_setting( $setting );
+				}
+			}
+		}
+
 	}
 
 	/**

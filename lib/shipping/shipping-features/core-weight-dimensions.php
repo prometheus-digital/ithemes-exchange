@@ -4,9 +4,9 @@
  *
  * @since CHANGEME
 */
-class IT_Exchange_Exchange_Weight_Dimensions_Shipping_Feature extends IT_Exchange_Shipping_Feature {
+class IT_Exchange_Core_Shipping_Feature_Weight_Dimensions extends IT_Exchange_Shipping_Feature {
 	
-	var $slug = 'exchange-weight-dimensions';
+	var $slug = 'core-weight-dimensions';
 
 	/**
 	 * Constructor
@@ -15,17 +15,47 @@ class IT_Exchange_Exchange_Weight_Dimensions_Shipping_Feature extends IT_Exchang
 		parent::__construct( $product, $options );
 	}
 
+	function set_availability() {
+		$this->available = true;
+	}
+
+	function set_enabled() {
+		$this->enabled = true;
+	}
+
 	/**
 	 * Sets the values
 	*/
 	function set_values() {
+		// Defaults
+		$general_settings = it_exchange_get_option( 'addon-shipping-general' );
+
+		// Post meta
+		$pm = get_post_meta( $this->product->ID, '_it_exchange_core_weight_dimensions', true );
+
+		// Set values
 		$values = new stdClass();
-		$values->weight             = '12';
-		$values->length             = '48';
-		$values->width              = '18';
-		$values->height             = '4';
-		$values->measurement_format = 'standard';
+		$values->weight             = empty( $pm['weight'] ) ? 0 : $pm['weight'];
+		$values->length             = empty( $pm['length'] ) ? 0 : $pm['length'];
+		$values->width              = empty( $pm['width'] )  ? 0 : $pm['width'];
+		$values->height             = empty( $pm['height'] ) ? 0 : $pm['height'];
+		$values->measurement_format = empty( $general_settings['measurements-format'] ) ? 'standard' : $general_settings['measurements-format'];
 		$this->values               = $values;
+	}
+
+	function update_on_product_save() {
+		$data = array();
+
+		$data['weight'] = empty( $_POST['it-exchange-shipping-weight'] ) ? '0' : $_POST['it-exchange-shipping-weight'];
+		$data['length'] = empty( $_POST['it-exchange-shipping-length'] ) ? '0' : $_POST['it-exchange-shipping-length'];
+		$data['height'] = empty( $_POST['it-exchange-shipping-height'] ) ? '0' : $_POST['it-exchange-shipping-height'];
+		$data['width']  = empty( $_POST['it-exchange-shipping-width'] ) ? '0' : $_POST['it-exchange-shipping-width'];
+
+		$this->update_value( $data );
+	}
+
+	function update_value( $new_value ) {
+		update_post_meta( $this->product->ID, '_it_exchange_core_weight_dimensions', $new_value );
 	}
 
 	/**
@@ -51,7 +81,7 @@ class IT_Exchange_Exchange_Weight_Dimensions_Shipping_Feature extends IT_Exchang
 		?>
 		<div class="shipping-weight column">
 			<label><?php _e( 'Weight', 'LION' ); ?> <span class="tip" title="<?php _e( 'Weight of the package. Used to calculate shipping costs.', 'LION' ); ?>">i</span></label>
-			<input type="text" id="it-exchange-shipping-weight" name="it-exchange-weight" class="small-input" value="<?php esc_attr_e( $this->values->weight ); ?>"/>
+			<input type="text" id="it-exchange-shipping-weight" name="it-exchange-shipping-weight" class="small-input" value="<?php esc_attr_e( $this->values->weight ); ?>"/>
 			<span class="it-exchange-shipping-weight-format"><?php echo ( 'standard' == $this->values->measurement_format ) ? __( 'lbs', 'LION' ) : __( 'kgs', 'LION' ); ?></span>
 		</div>
 		<div class="shipping-dimensions column">

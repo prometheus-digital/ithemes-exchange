@@ -156,13 +156,13 @@ function it_exchange_addon_shipping_update_general_setting_state_field() {
 
 	if ( empty( $states ) ) {
 		?>
-		<input type="text" id="product-ships-from-states" name="addon-shipping-general-product-ships-from-states" maxlength="3" placeholder="<?php _e( 'State', 'LION' ); ?>" class="small-text" value="<?php esc_attr_e( $base_state ); ?>" />&nbsp;
+		<input type="text" id="product-ships-from-state" name="addon-shipping-general-product-ships-from-state" maxlength="3" placeholder="<?php _e( 'State', 'LION' ); ?>" class="small-text" value="<?php esc_attr_e( $base_state ); ?>" />&nbsp;
 		<?php $open_tag = '<a href="http://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">'; ?>
 		<span class="description"><?php printf( __( 'Please use the 2-3 character %sISO 3166-2 Country Subdivision Code%s', 'LION' ), $open_tag, '</a>' ); ?></span>
 		<?php
 	} else {
 		?>
-		<select id="product-ships-from-states" name="addon-shipping-general-product-ships-from-states">
+		<select id="product-ships-from-state" name="addon-shipping-general-product-ships-from-state">
 		<?php
 		foreach( (array) $states as $key => $value ) {
 			?><option value="<?php esc_attr_e( $key ); ?>" <?php selected( $key, $base_state ); ?>><?php esc_html_e( $value ); ?></option><?php

@@ -49,6 +49,9 @@ require( $this->_plugin_path . 'lib/coupons/class.coupon.php' );
 // Email Notifications
 require( $this->_plugin_path . 'lib/email-notifications/class.email-notifications.php' );
 
+// Shipping
+require( $this->_plugin_path . 'lib/shipping/class.shipping.php' );
+
 // Deprecated Features
 require( $this->_plugin_path . 'lib/deprecated/init.php' );
 

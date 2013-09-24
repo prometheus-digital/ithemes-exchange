@@ -73,6 +73,8 @@
 #it-exchange-product-shipping .input-money-small{max-width:80px;}
 #it-exchange-product-shipping .core-from-address input{max-width:300px;}
 #it-exchange-product-shipping .shipping-weight{margin-right:80px;}
+#it-exchange-product-shipping #it-exchange-shipping-override-methods-label{font-weight:normal;}
+#it-exchange-product-shipping #it-exchange-avialable-shipping-methods-heading{font-weight:bold;font-size:13px;display:block;margin-bottom:10px;}
 
 /** -----------------------------------------------------:[ side sortables ]:---------- */
 

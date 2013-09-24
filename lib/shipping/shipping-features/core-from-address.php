@@ -4,7 +4,7 @@
  *
  * @since CHANGEME
 */
-class IT_Exchange_Exchange_From_Address_Shipping_Feature extends IT_Exchange_Shipping_Feature {
+class IT_Exchange_Core_Shipping_Feature_From_Address extends IT_Exchange_Shipping_Feature {
 	
 	var $slug = 'core-from-address';
 
@@ -16,18 +16,60 @@ class IT_Exchange_Exchange_From_Address_Shipping_Feature extends IT_Exchange_Shi
 	}
 
 	/**
+	 * Is this shipping feature available as an option
+	*/
+	function set_availability() {
+		$general_shipping_options = it_exchange_get_option( 'addon-shipping-general' );
+		$this->available = ! empty( $general_shipping_options['products-can-override-ships-from'] );
+	}
+
+	/*
+	 * If it is available as an options, is it enabled?
+	*/
+	function set_enabled() {
+		$post_meta = get_post_meta( $this->product->ID, '_it_exchange_override_from_address', true );
+		$this->enabled = ! empty( $post_meta['override_defaults'] );
+	}
+
+	/**
 	 * Sets the values
 	*/
 	function set_values() {
+		$general_shipping_options = it_exchange_get_option( 'addon-shipping-general' );
+		$post_meta = get_post_meta( $this->product->ID, '_it_exchange_override_from_address', true );
+
 		$values = new stdClass();
-		$values->override_defaults = true;
-		$values->address1          = '123 Main Street';
-		$values->address2          = 'Suite 100';
-		$values->city              = 'Oklahoma City';
-		$values->state             = 'OK';
-		$values->country           = 'US';
-		$values->zip               = '12345';
+		$values->override_defaults = ! empty( $post_meta['override_defaults'] );
+		$values->address1          = empty( $post_meta['address1'] ) ? $general_shipping_options['product-ships-from-address1'] : $post_meta['address1'];
+		$values->address2          = empty( $post_meta['address2'] ) ? $general_shipping_options['product-ships-from-address2'] : $post_meta['address2'];
+		$values->city              = empty( $post_meta['city'] ) ? $general_shipping_options['product-ships-from-city'] : $post_meta['city'];
+		$values->state             = empty( $post_meta['state'] ) ? $general_shipping_options['product-ships-from-state'] : $post_meta['state'];
+		$values->country           = empty( $post_meta['country'] ) ? $general_shipping_options['product-ships-from-country'] : $post_meta['country'];
+		$values->zip               = empty( $post_meta['zip'] ) ? $general_shipping_options['product-ships-from-zip'] : $post_meta['zip'];
 		$this->values              = $values;
+	}
+
+	/**
+	 * Updates the data when a product is saved
+	 *
+	*/
+	function update_on_product_save() {
+		if ( empty( $_POST ) )
+			return;
+
+		$data['override_defaults'] = ! empty( $_POST['core-shipping-feature-override-from-address'] );
+		$data['address1']          = empty( $_POST['core-shipping-feature-from-address-address1'] ) ? '' : $_POST['core-shipping-feature-from-address-address1'];
+		$data['address2']          = empty( $_POST['core-shipping-feature-from-address-address2'] ) ? '' : $_POST['core-shipping-feature-from-address-address2'];
+		$data['city']              = empty( $_POST['core-shipping-feature-from-address-city'] ) ? '' : $_POST['core-shipping-feature-from-address-city'];
+		$data['state']             = empty( $_POST['core-shipping-feature-from-address-state'] ) ? '' : $_POST['core-shipping-feature-from-address-state'];
+		$data['country']           = empty( $_POST['core-shipping-feature-from-address-country'] ) ? '' : $_POST['core-shipping-feature-from-address-country'];
+		$data['zip']               = empty( $_POST['core-shipping-feature-from-address-zip'] ) ? '' : $_POST['core-shipping-feature-from-address-zip'];
+
+		$this->update_value( $data );
+	}
+
+	function update_value( $new_value ) {
+		update_post_meta( $this->product->ID, '_it_exchange_override_from_address', $new_value );
 	}
 
 	/**

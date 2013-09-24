@@ -207,14 +207,14 @@ function it_exchange_register_core_addons() {
 				'singular_name' => __( 'Duplicate', 'LION' ),
 			),
 		),
-		'it-shipping'        => array(
-			'name'              => __( 'Shipping', 'LION' ),
-			'description'       => __( 'This gives the admin ability to apply a default tax rate to all sales.', 'LION' ),
+		'simple-shipping'        => array(
+			'name'              => __( 'Simple Shipping', 'LION' ),
+			'description'       => __( 'Flat rate and free shipping for your physcial products', 'LION' ),
 			'author'            => 'iThemes',
 			'author_url'        => 'http://ithemes.com',
-			'file'              => dirname( __FILE__ ) . '/shipping/it-shipping/init.php',
+			'file'              => dirname( __FILE__ ) . '/shipping/simple-shipping/init.php',
 			'category'          => 'shipping',
-			'settings-callback' => 'it_exchange_shipping_settings_callback',
+			'settings-callback' => 'it_exchange_simple_shipping_settings_callback',
 		),
 	);
 	$add_ons = apply_filters( 'it_exchange_core_addons', $add_ons );
