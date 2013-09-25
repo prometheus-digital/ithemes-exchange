@@ -516,7 +516,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	}
 
 	/**
-	 * The product's product images
+	 * Return product's images for all image sizes.
 	 *
 	 * @since 0.4.0
 	 *
@@ -536,13 +536,18 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				&& it_exchange_product_has_feature( $this->product->ID, 'product-images' ) ) {
 					
 			$defaults = array(
+				'id'   => null,
 				'size' => 'all'
 			);
 			
 			$options = ITUtility::merge_defaults( $options, $defaults );
 			$output = array();
 			
+			// Get the image sizes.
 			$image_sizes = get_intermediate_image_sizes();
+			
+			// Add full to the $image_size array.
+			array_push( $image_sizes, 'full' );
 			
 			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
 			
@@ -550,20 +555,21 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				foreach ( $image_sizes as $size ) {
 					$image[$size] = wp_get_attachment_image_src( $image_id, $size );
 				}
-				$images[] = $image;
+				$images[$image_id] = $image;
 			}
-			
-			$images['full'] = wp_get_attachment_image_src( $image_id, 'full' );
 			
 			if ( $options['size'] == 'all' ) {
 				$output = $images;
 			} else {
-				if ( isset( $images[ $options['size'] ] ) )
-					$output = $images[ $options['size'] ];
-				else if ( $options['size'] == 'full' )
-					$output = $images['full'];
-				else 
-					$output = __( 'Unregisterd image size.', 'LION' );
+				if ( isset( $options['id'] ) && ! empty( $options['id'] ) ) {
+					if ( isset( $images[$options['id']][$options['size']] ) && 'all' != $options['size'] ) {
+						$output = $images[$options['id']][$options['size']];
+					} else {
+						$output = __( 'Unregisterd image size.', 'LION' );
+					}
+				} else {
+					$output = __( 'Please add an image id to the array.', 'LION' );
+				} 
 			}
 			
 			return $output;
