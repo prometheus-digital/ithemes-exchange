@@ -44,6 +44,9 @@ abstract class IT_Exchange_Shipping_Method {
 		// Set slug
 		$this->set_slug();
 
+		// Set label 
+		$this->set_label();
+
 		// Set the product
 		$this->set_product( $product_id );
 
@@ -116,6 +119,8 @@ abstract class IT_Exchange_Shipping_Method {
 	 * @return void
 	*/
 	abstract function set_availability();
+
+	abstract function set_label();
 
 	abstract function set_settings();
 

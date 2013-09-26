@@ -19,7 +19,7 @@ class IT_Exchange_Core_Shipping_Feature_From_Address extends IT_Exchange_Shippin
 	 * Is this shipping feature available as an option
 	*/
 	function set_availability() {
-		$general_shipping_options = it_exchange_get_option( 'addon-shipping-general' );
+		$general_shipping_options = it_exchange_get_option( 'shipping-general' );
 		$this->available = ! empty( $general_shipping_options['products-can-override-ships-from'] );
 	}
 
@@ -35,7 +35,16 @@ class IT_Exchange_Core_Shipping_Feature_From_Address extends IT_Exchange_Shippin
 	 * Sets the values
 	*/
 	function set_values() {
-		$general_shipping_options = it_exchange_get_option( 'addon-shipping-general' );
+		$general_shipping_options = it_exchange_get_option( 'shipping-general' );
+
+		// @todo Fix this elsewhere - check for values in rare instance where General Settings page wasn't viewed before Add Product page
+		$general_shipping_from_fields = array( 'address1', 'address2', 'city', 'state', 'country', 'zip' );
+		foreach( $general_shipping_from_fields as $field ) {
+			if ( empty( $general_shipping_options['product-ships-from-' . $field] ) )
+				$general_shipping_options['product-ships-from-' . $field] = '';
+		}
+
+		// Product specific values
 		$post_meta = get_post_meta( $this->product->ID, '_it_exchange_override_from_address', true );
 
 		$values = new stdClass();

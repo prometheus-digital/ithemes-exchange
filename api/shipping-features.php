@@ -63,6 +63,26 @@ function it_exchange_do_shipping_feature_boxes( $product ) {
 }
 
 /**
+ * Get a registered shipping feature object
+ *
+ * @since CHANGEME
+ *
+ * @param string $slug feature slug
+ * @return object
+*/
+function it_exchange_get_registered_shipping_feature( $slug, $product_id=false ) {
+	if ( ! $features = it_exchange_get_registered_shipping_features() )
+		return false;
+
+	if ( empty( $features[$slug] ) )
+		return false;
+
+	$class = $features[$slug];
+	if ( class_exists( $class ) ) 
+		return new $class( $product_id );
+}
+
+/**
  * Grab any features needed by all possible shipping methods applicable to this product
  *
  * - Shipping features are tied to Shipping Methods
@@ -80,7 +100,8 @@ function it_exchange_get_shipping_features_for_product( $product ) {
 	$methods  = it_exchange_get_available_shipping_methods_for_product( $product );
 
 	// Init features array
-	$features = array();
+	/** @todo move this filter to lib/shipping/shipping-features/init.php. create a functiont o get core shipping features **/
+	$features = apply_filters( 'it_exchange_core_shipping_features', array( 'core-available-shipping-methods' ) );
 
 	// Loop through methods and add all required features to the array
 	foreach( $methods as $method ) {
@@ -99,11 +120,30 @@ function it_exchange_get_shipping_features_for_product( $product ) {
 
 	// Loop through array and init objects
 	foreach( $registered_features as $slug => $class ) {
-		if ( class_exists( $class ) && in_array( $slug, $features ) )
-			$shipping_features[$slug] = new $class( $product->ID );
+		if ( in_array( $slug, $features ) && $feature = it_exchange_get_registered_shipping_feature( $slug, $product->ID ) )
+			$shipping_features[$slug] = $feature;
 	}
 
 	return apply_filters( 'it_exchange_get_shipping_features_for_product', $shipping_features, $product );
+}
+
+/**
+ * Gets the values of a shipping feature for a specific post
+ *
+ * @since CHANGEME
+ *
+ * @param string  $feature    the registered feature slug
+ * @param integer $product_id the wordpress post id for the product
+ *
+ * @return mixed
+*/
+function it_exchange_get_shipping_feature_for_product( $feature, $product_id ) {
+	if ( ! $product = it_exchange_get_product( $product_id ) )
+		return false;
+
+	if ( $features = it_exchange_get_shipping_features_for_product( $product ) ) {
+		return ( empty( $features[$feature]->enabled ) || empty( $features[$feature]->values ) ) ? false : $features[$feature]->values;
+	}
 }
 
 /**
@@ -119,7 +159,8 @@ function it_exchange_get_shipping_features_for_product( $product ) {
  * @return an array of shipping methods
 */
 function it_exchange_get_available_shipping_methods_for_product( $product ) {
-	$providers         = it_exchange_get_registered_shipping_providers(); /** @todo Make this dynamic per product **/
+
+	$providers         = it_exchange_get_registered_shipping_providers();
 	$provider_methods  = array();
 	$available_methods = array();
 
@@ -138,4 +179,29 @@ function it_exchange_get_available_shipping_methods_for_product( $product ) {
 	}
 
 	return apply_filters( 'it_exchange_get_available_shipping_methods_for_product', $available_methods, $product );
+}
+
+function it_exchange_get_enabled_shipping_methods_for_product( $product, $return='object' ) {
+
+	// Are we viewing a new product?
+	$screen         = get_current_screen();
+	$is_new_product = is_admin() && ! empty( $screen->action ) && 'add' == $screen->action;
+
+	// Return false if shipping is turned off for this product
+	if ( ! it_exchange_product_has_feature( $product->ID, 'shipping' ) && ! $is_new_product )
+		return false;
+
+	$enabled_methods                    = array();
+	$product_overriding_default_methods = it_exchange_get_shipping_feature_for_product( 'core-available-shipping-methods', $product->ID );
+
+	foreach( (array) it_exchange_get_available_shipping_methods_for_product( $product ) as $slug => $available_method ) {
+		// If we made it here, the method is available. Check to see if it has been turned off for this specific product
+		if ( false !== $product_overriding_default_methods ) {
+			if ( ! empty( $product_overriding_default_methods->$slug ) )
+				$enabled_methods[$slug] = ( 'slug' == $return ) ? $slug : $available_method;
+		} else {
+			$enabled_methods[$slug] = ( 'slug' == $return ) ? $slug : $available_method;
+		}
+	}
+	return $enabled_methods;
 }

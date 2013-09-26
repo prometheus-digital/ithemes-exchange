@@ -127,15 +127,17 @@ class IT_Exchange_Product_Feature_Shipping {
 			</div>
 
 			<div class="shipping-toggle">
-					<label id="it-exchange-shipping-disabled-label" for="it-exchange-shipping-disabled">
-						<input type="checkbox" id="it-exchange-shipping-disabled" name="it-exchange-shipping-disabled" <?php checked( ! $shipping_enabled ); ?>/>
-						<?php _e( 'Disable shipping for this product', 'LION' ); ?>
-						<span class="tip" title="<?php _e( 'Check this box to indicate that shipping is not needed for this product.', 'LION' ); ?>">i</span>
-					</label>
+				<label id="it-exchange-shipping-disabled-label" for="it-exchange-shipping-disabled">
+					<input type="checkbox" id="it-exchange-shipping-disabled" name="it-exchange-shipping-disabled" <?php checked( ! $shipping_enabled ); ?>/>
+					<?php _e( 'Disable shipping for this product', 'LION' ); ?>
+					<span class="tip" title="<?php _e( 'Check this box to indicate that shipping is not needed for this product.', 'LION' ); ?>">i</span>
+				</label>
 			</div>
 		</div>
 		<div class="shipping-wrapper <?php echo $shipping_enabled ? '' : 'hidden'; ?>">
-			<?php it_exchange_do_shipping_feature_boxes( $product ); ?>
+			<?php 
+			it_exchange_do_shipping_feature_boxes( $product );
+			?>
 		</div>
 		<?php
 	}

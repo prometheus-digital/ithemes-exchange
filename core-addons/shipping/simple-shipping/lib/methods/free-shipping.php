@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 delete_option( 'it-storage-exchange_addon-shipping');
 delete_option( 'it-storage-exchange_addon-shipping-exchange');
 delete_option( 'it-storage-exchange_addon-shipping-exchange-shipping');
@@ -16,7 +16,15 @@ delete_option( 'it-storage-exchange_it-exchange-it-exchange-addon-shipping-gener
 delete_option( 'it-storage-exchange_it-exchange-it-exchangie-addon-shipping-gene' );
 delete_option( 'it-storage-exchange_shipping-general' );
 delete_option( 'it-storage-exchange_simple-shipping' );
+delete_option( 'it-storage-exchange_addon-shipping-simple-enable-flat-rate-shipp' );
+delete_option( 'it-storage-exchange_addon-shipping-simple-shipping-enable-flat-r' );
+delete_option( 'it-storage-exchange_addon-simple-shipping' );
+delete_option( 'it-storage-exchange_addon-simple-shipping-enable-flat-rate-shipp');
+delete_option( 'it-storage-exchange_simple-shipping-enable-flat-rate-shipping' );
+delete_option( 'it-storage-exchange_simple-shipping-simple-shipping-enable-flat-' );
+delete_option( 'it-storage-exchange_simple-shiping-simple-shipping-enable-flat-r');
 */
+
 /**
  * Registers the Shipping Methods we need for Exchange Simple Shipping add-on
  *
@@ -76,7 +84,6 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	function set_features() {
 		$this->shipping_features = array(
 			'core-from-address',
-			'core-available-shipping-methods',
 			'core-weight-dimensions',
 		);
 	}
