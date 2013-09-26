@@ -28,7 +28,7 @@ class IT_Exchange_Core_Shipping_Feature_Weight_Dimensions extends IT_Exchange_Sh
 	*/
 	function set_values() {
 		// Defaults
-		$general_settings = it_exchange_get_option( 'addon-shipping-general' );
+		$general_settings = it_exchange_get_option( 'shipping-general' );
 
 		// Post meta
 		$pm = get_post_meta( $this->product->ID, '_it_exchange_core_weight_dimensions', true );
