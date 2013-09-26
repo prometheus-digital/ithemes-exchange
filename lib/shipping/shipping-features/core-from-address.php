@@ -49,12 +49,12 @@ class IT_Exchange_Core_Shipping_Feature_From_Address extends IT_Exchange_Shippin
 
 		$values = new stdClass();
 		$values->override_defaults = ! empty( $post_meta['override_defaults'] );
-		$values->address1          = empty( $post_meta['address1'] ) ? $general_shipping_options['product-ships-from-address1'] : $post_meta['address1'];
-		$values->address2          = empty( $post_meta['address2'] ) ? $general_shipping_options['product-ships-from-address2'] : $post_meta['address2'];
-		$values->city              = empty( $post_meta['city'] ) ? $general_shipping_options['product-ships-from-city'] : $post_meta['city'];
-		$values->state             = empty( $post_meta['state'] ) ? $general_shipping_options['product-ships-from-state'] : $post_meta['state'];
-		$values->country           = empty( $post_meta['country'] ) ? $general_shipping_options['product-ships-from-country'] : $post_meta['country'];
-		$values->zip               = empty( $post_meta['zip'] ) ? $general_shipping_options['product-ships-from-zip'] : $post_meta['zip'];
+		$values->address1          = empty( $post_meta['address1'] ) || empty( $this->enabled ) ? $general_shipping_options['product-ships-from-address1'] : $post_meta['address1'];
+		$values->address2          = ! isset( $post_meta['address2'] ) || empty( $this->enabled ) ? $general_shipping_options['product-ships-from-address2'] : $post_meta['address2'];
+		$values->city              = empty( $post_meta['city'] ) || empty( $this->enabled ) ? $general_shipping_options['product-ships-from-city'] : $post_meta['city'];
+		$values->state             = empty( $post_meta['state'] ) || empty( $this->enabled ) ? $general_shipping_options['product-ships-from-state'] : $post_meta['state'];
+		$values->country           = empty( $post_meta['country'] ) || empty( $this->enabled ) ? $general_shipping_options['product-ships-from-country'] : $post_meta['country'];
+		$values->zip               = empty( $post_meta['zip'] ) || empty( $this->enabled ) ? $general_shipping_options['product-ships-from-zip'] : $post_meta['zip'];
 		$this->values              = $values;
 	}
 
