@@ -1,7 +1,7 @@
 <?php
 /**
  * This is the default template for the 
- * super-widget-checkout shipping-simple address element.
+ * super-widget-checkout shipping address element.
  *
  * @since 1.1.0
  * @version 1.1.0
@@ -13,12 +13,12 @@
  * located in your theme.
 */
 ?>
-<?php do_action( 'it_exchange_super_widget_checkout_before_simple_shipping_address_element' ); ?>
-<div class="cart-simple-shipping-address cart-totals-row">
-	<?php do_action( 'it_exchange_super_widget_checkout_begin_simple-shipping_address_element' ); ?>
+<?php do_action( 'it_exchange_super_widget_checkout_before_shipping_address_element' ); ?>
+<div class="cart-shipping-address cart-totals-row">
+	<?php do_action( 'it_exchange_super_widget_checkout_begin_shipping_address_element' ); ?>
 	<?php _e( 'Shipping to', 'LION' ); ?><br />
-	<?php echo it_exchange_addon_simple_shipping_get_formatted_address(); ?>
-	<a href="" class="update-simple-shipping-address"><?php _e( 'Edit', 'LION' ); ?></a>
-	<?php do_action( 'it_exchange_super_widget_checkout_end_simple_shipping_address_element' ); ?>
+	<?php echo it_exchange_get_formatted_shipping_address(); ?>
+	<a href="" class="update-shipping-address"><?php _e( 'Edit', 'LION' ); ?></a>
+	<?php do_action( 'it_exchange_super_widget_checkout_end_shipping_address_element' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widget_checkout_after_simple_shipping_address_element' ); ?>
+<?php do_action( 'it_exchange_super_widget_checkout_after_shipping_address_element' ); ?>

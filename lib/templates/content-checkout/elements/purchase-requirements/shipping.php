@@ -15,16 +15,16 @@
 ?>
 <?php if ( is_user_logged_in() ) : ?>
 	<h3><?php _e( 'Shipping Address', 'LION' ); ?></h3>
-	<?php if ( it_exchange_addon_simple_shipping_is_address_valid() && empty( $_GET['add-simple-shipping-address'] ) ) : ?>
-		<?php echo it_exchange_addon_simple_shipping_get_formatted_address(); ?>
-		<a class="it-exchange-simple-shipping-edit-address it-exchange-simple-shipping-edit-existing-address" href="?add-simple-shipping-address=1" /><?php _e( 'Edit Address', 'LION' ); ?></a>
+	<?php if ( it_exchange_is_shipping_address_valid() && empty( $_GET['ite-add-shipping-address'] ) ) : ?>
+		<?php echo it_exchange_get_formatted_shipping_address(); ?>
+		<a class="it-exchange-shipping-edit-address it-exchange-shipping-edit-existing-address" href="?ite-add-shipping-address=1" /><?php _e( 'Edit Address', 'LION' ); ?></a>
 	<?php else : ?>
-		<?php if ( empty( $_GET['add-simple-shipping-address'] ) ) : // Ugly little conditional for non-js hack. ?>
-			<a class="it-exchange-simple-shipping-edit-address it-exchange-simple-shipping-add-new-address" href="?add-simple-shipping-address=1" /><?php _e( 'Add Shipping Address', 'LION' ); ?></a>
+		<?php if ( empty( $_GET['ite-add-shipping-address'] ) ) : // Ugly little conditional for non-js hack. ?>
+			<a class="it-exchange-shipping-edit-address it-exchange-shipping-add-new-address" href="?ite-add-shipping-address=1" /><?php _e( 'Add Shipping Address', 'LION' ); ?></a>
 			<?php $hide_edit_address = true; ?>
 		<?php endif; ?>
-		<div class="it-exchange-simple-shipping-edit-address <?php echo empty( $hide_edit_address ) ? '' : 'it-exchange-hidden'; ?>">
-			<?php it_exchange_get_template_part( 'content', 'checkout/elements/purchase-requirements/simple-shipping/edit-address' ); ?>
+		<div class="it-exchange-shipping-edit-address <?php echo empty( $hide_edit_address ) ? '' : 'it-exchange-hidden'; ?>">
+			<?php it_exchange_get_template_part( 'content', 'checkout/elements/purchase-requirements/shipping/edit-address' ); ?>
 		</div>
 	<?php endif; ?>
 <?php endif; ?>

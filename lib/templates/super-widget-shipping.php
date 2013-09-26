@@ -17,17 +17,17 @@
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php do_action( 'it_exchange_addon_simple_shipping_super_widget_checkout_begin_wrap' ); ?>
 	<?php _e( 'Name', 'LION' ); ?><br />
-	<input type="text" class="it-exchange-addon-simple-shipping-name" name="it-exchange-addon-simple-shipping-name" <?php it_exchange_addon_simple_shipping_address_value( 'name' ); ?>/><br />
+	<input type="text" class="it-exchange-addon-simple-shipping-name" name="it-exchange-addon-simple-shipping-name" <?php it_exchange_print_shipping_address_value( 'name' ); ?>/><br />
 	<?php _e( 'Address', 'LION' ); ?><br />
-	<input type="text" class="it-exchange-addon-simple-shipping-address-1" name="it-exchange-addon-simple-shipping-address-1" <?php it_exchange_addon_simple_shipping_address_value( 'address1' ); ?>/><br />
-	<input type="text" class="it-exchange-addon-simple-shipping-address-2" name="it-exchange-addon-simple-shipping-address-2" <?php it_exchange_addon_simple_shipping_address_value( 'address2' ); ?>/><br />
+	<input type="text" class="it-exchange-addon-simple-shipping-address-1" name="it-exchange-addon-simple-shipping-address-1" <?php it_exchange_print_shipping_address_value( 'address1' ); ?>/><br />
+	<input type="text" class="it-exchange-addon-simple-shipping-address-2" name="it-exchange-addon-simple-shipping-address-2" <?php it_exchange_print_shipping_address_value( 'address2' ); ?>/><br />
 	<?php _e( 'City', 'LION' ); ?><br />
-	<input type="text" class="it-exchange-addon-simple-shipping-city" name="it-exchange-addon-simple-shipping-city" <?php it_exchange_addon_simple_shipping_address_value( 'city' ); ?>/><br />
+	<input type="text" class="it-exchange-addon-simple-shipping-city" name="it-exchange-addon-simple-shipping-city" <?php it_exchange_print_shipping_address_value( 'city' ); ?>/><br />
 	<?php _e( 'State', 'LION' ); ?> <?php _e( 'Zip', 'LION' ); ?><br />
-	<input type="text" class="it-exchange-addon-simple-shipping-state" name="it-exchange-addon-simple-shipping-state" <?php it_exchange_addon_simple_shipping_address_value( 'state' ); ?>/> 
-	<input type="text" class="it-exchange-addon-simple-shipping-zip" name="it-exchange-addon-simple-shipping-zip" <?php it_exchange_addon_simple_shipping_address_value( 'zip' ); ?>/><br />
+	<input type="text" class="it-exchange-addon-simple-shipping-state" name="it-exchange-addon-simple-shipping-state" <?php it_exchange_print_shipping_address_value( 'state' ); ?>/> 
+	<input type="text" class="it-exchange-addon-simple-shipping-zip" name="it-exchange-addon-simple-shipping-zip" <?php it_exchange_print_shipping_address_value( 'zip' ); ?>/><br />
 	<?php _e( 'Country', 'LION' ); ?><br />
-	<input type="text" class="it-exchange-addon-simple-shipping-country" name="it-exchange-addon-simple-shipping-country" <?php it_exchange_addon_simple_shipping_address_value( 'country' ); ?>/><br />
+	<input type="text" class="it-exchange-addon-simple-shipping-country" name="it-exchange-addon-simple-shipping-country" <?php it_exchange_print_shipping_address_value( 'country' ); ?>/><br />
 	<input type="hidden" class="it-exchange-addon-simple-shipping-customer" name="it-exchange-addon-simple-shipping-customer" value="<?php esc_attr_e( it_exchange_get_current_customer_id() ); ?>" />
 	<a href="" class="it-exchange-super-widget it-exchange-addon-simple-shipping-continue"><?php _e( 'Continue', 'LION' ); ?></a>
 	<?php do_action( 'it_exchange_addon_simple_shipping_super_widget_checkout_end_wrap' ); ?>
