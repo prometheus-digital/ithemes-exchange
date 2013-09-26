@@ -143,9 +143,9 @@ class IT_Exchange_Pages {
 	*/
 	function set_account() {
 		// Return if not viewing an account based page: account, profile, downloads, purchases, login
-		$account_based_rooms = array( 'account', 'profile', 'downloads', 'purchases' );
-		$account_based_rooms = apply_filters( 'it_exchange_account_based_rooms', $account_based_rooms );
-		if ( ! in_array( $this->_current_view, $account_based_rooms ) )
+		$account_based_pages = array( 'account', 'profile', 'downloads', 'purchases' );
+		$account_based_pages = apply_filters( 'it_exchange_account_based_pages', $account_based_pages );
+		if ( ! in_array( $this->_current_view, $account_based_pages ) )
 			return;
 
 		$account = get_query_var( $this->_account_slug );
@@ -382,6 +382,7 @@ class IT_Exchange_Pages {
 		$profile_pages = array(
 			'account', 'profile', 'downloads', 'purchases',
 		);
+		$profile_pages = apply_filters( 'it_exchange_profile_pages', $profile_pages );
 
 		if ( in_array( $this->_current_view, $profile_pages ) ) {
 			if ( ! $this->_account )
