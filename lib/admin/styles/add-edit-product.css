@@ -65,6 +65,8 @@
 #it-exchange-product-shipping ul{margin-top:0;margin-bottom:0;}
 #it-exchange-product-shipping ul label{margin:0;}
 #it-exchange-product-shipping .core-shipping-feature-from-address-ul{margin-top:20px;}
+#it-exchange-product-shipping .core-shipping-feature-from-address ul li {margin-bottom:0;}
+#it-exchange-product-shipping .core-shipping-feature-from-address ul ul li {margin-bottom:6px;}
 #it-exchange-product-shipping input{font-size:14px;}
 #it-exchange-product-shipping .small-input{max-width:50px;}
 #it-exchange-product-shipping .shipping-header{overflow:hidden;padding-bottom:5px;}
