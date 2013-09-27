@@ -103,7 +103,7 @@ class IT_Exchange_Core_Shipping_Feature_Available_Shipping_Methods extends IT_Ex
 				<?php if ( $this->available ) : ?>
 					<label id="it-exchange-shipping-override-methods-label" for="it-exchange-shipping-override-methods">
 						<input type="checkbox" id="it-exchange-shipping-override-methods" name="it-exchange-shipping-override-methods" <?php checked( ! empty( $this->enabled ) ); ?> />
-						&nbsp;<?php _e( 'Override for this product?', 'LION' ); ?>
+						&nbsp;<?php _e( 'Override available shipping methods for this product?', 'LION' ); ?>
 					</label>
 				<?php endif; ?>
 				<span id="it-exchange-avialable-shipping-methods-heading"><?php _e( 'Available Shipping Methods', 'LION' ); ?></span>

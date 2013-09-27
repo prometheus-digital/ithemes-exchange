@@ -90,7 +90,7 @@ class IT_Exchange_Core_Shipping_Feature_From_Address extends IT_Exchange_Shippin
         <ul>
             <li>
                 <label id="core-shipping-feature-override-from-address-label" for="core-shipping-feature-override-from-address">
-                    <input type="checkbox" id="core-shipping-feature-override-from-address" name="core-shipping-feature-override-from-address" <?php checked( ! empty( $this->values->override_defaults ) ); ?> /> <?php _e( 'Override Default From Address', 'LION' ); ?>
+                    <input type="checkbox" id="core-shipping-feature-override-from-address" name="core-shipping-feature-override-from-address" <?php checked( ! empty( $this->values->override_defaults ) ); ?> /> <?php _e( 'Override shipping from address for this product?', 'LION' ); ?>
                 </label>
 			</li>
 			<ul class="core-shipping-feature-from-address-ul <?php echo empty( $this->values->override_defaults ) ? 'hidden' : ''; ?>">
