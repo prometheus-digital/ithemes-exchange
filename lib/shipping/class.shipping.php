@@ -139,6 +139,7 @@ class IT_Exchange_Shipping {
 		?>
 		<div class="wrap">
 			<?php 
+			screen_icon( 'it-exchange' );
 			// Print Admin Settings Tabs
 			$GLOBALS['IT_Exchange_Admin']->print_general_settings_tabs(); 
 
