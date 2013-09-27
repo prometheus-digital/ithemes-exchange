@@ -139,6 +139,11 @@ class IT_Exchange_Product_Feature_Shipping {
 			it_exchange_do_shipping_feature_boxes( $product );
 			?>
 		</div>
+		<div class="shipping-wrapper shipping-wrapper-disabled <?php echo $shipping_enabled ? 'hidden' : ''; ?>">
+			<div class="shipping-feature">
+				<p><?php _e( 'Shipping has been disabled for this product.', 'LION' ); ?></p>
+			</div>
+		</div>
 		<?php
 	}
 
