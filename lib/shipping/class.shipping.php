@@ -466,19 +466,6 @@ class IT_Exchange_Shipping {
 	}
 
 	/**
-	 * Enqueue css for settings page
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return void
-	*/
-	function enqueue_admin_css() {
-		$current_screen = get_current_screen();
-		if ( ! empty( $current_screen->base ) && 'exchange_page_it-exchange-addons' == $current_screen->base && ! empty( $_GET['add-on-settings'] ) && 'shipping' == $_GET['add-on-settings'] )
-			wp_enqueue_style( 'it-exchange-addon-shipping-settings', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/settings.css' );
-	}
-
-	/**
 	 * Enqueue SW Javascript
 	 *
 	 * @since 1.0.0
@@ -487,6 +474,20 @@ class IT_Exchange_Shipping {
 	*/
 	function enqueue_sw_js() {
 		wp_enqueue_script( 'it-exchange-addon-shipping-sw-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/js/super-widget.js' );
+	}
+
+	/**
+	 * Enqueues frontend javascript needed on checkout page
+	 *
+	 *
+	 * @since 1.2.0
+	 *
+	 * @return void
+	*/
+	function it_exchange_addon_shipping_frontend_js() {
+		// Load Registration purchase requirement JS if not logged in and on checkout page.
+		if ( it_exchange_is_page( 'checkout' ) && ! is_user_logged_in() )
+			wp_enqueue_script( 'it-exchange-shipping-purchase-requirement', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/js/checkout.js' ), array( 'jquery' ), false, true );
 	}
 
 	/**
@@ -517,20 +518,6 @@ class IT_Exchange_Shipping {
 			?></select><?php
 		}
 		die();
-	}
-
-	/**
-	 * Enqueues frontend javascript needed on checkout page
-	 *
-	 *
-	 * @since 1.2.0
-	 *
-	 * @return void
-	*/
-	function it_exchange_addon_shipping_frontend_js() {
-		// Load Registration purchase requirement JS if not logged in and on checkout page.
-		if ( it_exchange_is_page( 'checkout' ) && ! is_user_logged_in() )
-			wp_enqueue_script( 'it-exchange-shipping-purchase-requirement', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/js/checkout.js' ), array( 'jquery' ), false, true );
 	}
 }
 $IT_Exchange_Shipping = new IT_Exchange_Shipping();
