@@ -460,14 +460,21 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		
 		$nav  = '<ul class="it-exchange-customer-menu">';
 		
-		foreach( explode( ',', $options['pages'] ) as $page_slug ) {
+		$pages = explode( ',', $options['pages']  );
+		$pages = apply_filters( 'it_exchange_customer_menu_pages', $pages );
+		
+		$nav .= apply_filters( 'it_exchange_before_customer_menu_loop', '', $this->_customer );
+		
+		foreach( $pages as $page_slug ) {
 			
 			$page_slug = trim( $page_slug );
 			$class = it_exchange_is_page( $page_slug ) ? ' class="current"' : '';
 		
-			$nav .= '<li' . $class . '><a href="' . it_exchange_get_page_url( $page_slug ) . '">' . it_exchange_get_page_name( $page_slug ) . '</a>';
+			$nav .= '<li' . $class . '><a href="' . it_exchange_get_page_url( $page_slug ) . '">' . it_exchange_get_page_name( $page_slug ) . '</a></li>';
 		
 		}
+		
+		$nav .= apply_filters( 'it_exchange_after_customer_menu_loop', '', $this->_customer );
 		
 		$nav .= '</ul>';
 		
