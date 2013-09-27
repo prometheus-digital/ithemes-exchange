@@ -67,10 +67,9 @@ class IT_Exchange_Pages {
 	 * @return void
 	*/
 	function set_slugs_and_names() {
-
-		// Core pages
-		$core_pages = it_exchange_get_pages( false );
-		foreach( (array) $core_pages as $page => $data ) {
+		// registered pages
+		$registered_pages = it_exchange_get_pages( false );
+		foreach( (array) $registered_pages as $page => $data ) {
 			$slug = '_' . $page . '_slug';
 			$name = '_' . $page . '_name';
 			$this->$slug = it_exchange_get_page_slug( $page );
