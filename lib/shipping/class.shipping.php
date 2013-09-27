@@ -29,7 +29,7 @@ class IT_Exchange_Shipping {
 		// Template part filters
 		add_filter( 'it_exchange_get_content_cart_totals_elements', array( $this, 'add_shipping_to_template_totals_loops' ) );
 		add_filter( 'it_exchange_get_content_checkout_totals_elements', array( $this, 'add_shipping_to_template_totals_loops' ) );
-		add_filter( 'it_exchange_get_super-widget-checkout_after-cart-items_loops', array( $this, 'add_shipping_to_sw_template_totals_loops' ) );
+		add_filter( 'it_exchange_get_super-widget-checkout_after-cart-items_loops', array( $this, 'add_shipping_address_to_sw_template_totals_loops' ) );
 
 		// Ajax Request to update shipping address
 		add_action( 'it_exchange_processing_super_widget_ajax_update-shipping', array( $this, 'process_ajax_request' ) );
@@ -43,11 +43,8 @@ class IT_Exchange_Shipping {
 		// Updates the general settings states field in the admin
 		add_action( 'it_exchange_admin_country_states_sync_for_addon-shipping-general', array( $this, 'update_general_settings_state_field' ) );
 
-		// Enqueue the JS needed for the super widget
-		add_action( 'it_exchange_enqueue_super_widget_scripts', array( $this, 'enqueue_sw_js' ) );
-
-		// Enqueue the admin CSS
-		add_action( 'admin_print_styles', array( $this, 'enqueue_admin_css' ) );
+		// Enqueue the JS for the checkout page
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_checkout_page_scripts' ) );
 
 		// Adjusts the cart total
 		add_filter( 'it_exchange_get_cart_total', array( $this, 'modify_shipping_total' ) );
@@ -74,9 +71,9 @@ class IT_Exchange_Shipping {
 	function register_purchase_requirement() {
 		// User must have a shipping address to purchase
 		$properties = array(
-			'requirement-met'        => 'it_exchange_is_shipping_address_valid', // This is a PHP callback
-			'sw-template-part'       => 'shipping',
-			'checkout-template-part' => 'shipping',
+			'requirement-met'        => 'it_exchange_get_customer_shipping_address', // This is a PHP callback
+			'sw-template-part'       => 'shipping-address',
+			'checkout-template-part' => 'shipping-address',
 			'notification'           => __( 'You must enter a shipping address before you can checkout', 'LION' ),
 			'priority'               => 4,
 		);  
@@ -330,7 +327,6 @@ class IT_Exchange_Shipping {
 	 * @return array
 	*/
 	function add_shipping_to_template_totals_loops( $elements ) { 
-		$shipping_options = it_exchange_get_option( 'addon_shipping_settings' );
 
 		// Locate the discounts key in elements array (if it exists)
 		$index = array_search( 'totals-savings', $elements );
@@ -349,19 +345,25 @@ class IT_Exchange_Shipping {
 	 * @param array $loops list of existing elements
 	 * @return array
 	*/
-	function add_shipping_to_sw_template_totals_loops( $loops ) { 
-		$shipping_options      = it_exchange_get_option( 'addon_shipping_settings' );
+	function add_shipping_address_to_sw_template_totals_loops( $loops ) { 
 
-		// Shipping Address 
-		array_splice( $loops, -1, 0, 'shipping-address' );
-
-		// Locate the discounts key in elements array (if it exists)
+		// Locate the Billing Address or discounts key in elements array (if it exists) and insert before
 		$index = array_search( 'discounts', $loops );
+		$index = empty( $index ) ? array_search( 'billing-address', $loops ) : $index;
 		if ( false === $index )
 			$index = -1; 
 
 		// Shipping Costs
 		array_splice( $loops, $index, 0, 'shipping-cost' );
+
+		// Locate the billing address key in elements array (if it exists)
+		$index = array_search( 'billing-address', $loops );
+		if ( false === $index )
+			$index = -1; 
+
+		// Shipping Address 
+		array_splice( $loops, $index, 0, 'shipping-address' );
+
 		return $loops;
 	}
 
@@ -466,28 +468,19 @@ class IT_Exchange_Shipping {
 	}
 
 	/**
-	 * Enqueue SW Javascript
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	*/
-	function enqueue_sw_js() {
-		wp_enqueue_script( 'it-exchange-addon-shipping-sw-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/js/super-widget.js' );
-	}
-
-	/**
-	 * Enqueues frontend javascript needed on checkout page
+	 * Enqueue Checkout Page Javascript
 	 *
 	 *
 	 * @since 1.2.0
 	 *
 	 * @return void
 	*/
-	function it_exchange_addon_shipping_frontend_js() {
-		// Load Registration purchase requirement JS if not logged in and on checkout page.
-		if ( it_exchange_is_page( 'checkout' ) && ! is_user_logged_in() )
-			wp_enqueue_script( 'it-exchange-shipping-purchase-requirement', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/js/checkout.js' ), array( 'jquery' ), false, true );
+	function enqueue_checkout_page_scripts() {
+		if ( it_exchange_is_page( 'checkout' )  ) {  
+			// Load Shipping Address purchase requirement JS on checkout page.
+			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/shipping-address-purchase-requirement.js' );
+			wp_enqueue_script( 'it-exchange-shipping-address-purchase-requirement', $script, array( 'jquery', 'it-exchange-country-states-sync' ), false, true );
+		}
 	}
 
 	/**

@@ -63,6 +63,12 @@ class IT_Exchange_Shopping_Cart {
 			return;
 		}
 
+		// Possibly handle update shipping address request
+		if ( ! empty( $_REQUEST['it-exchange-update-shipping-address'] ) ) {
+			$this->handle_update_shipping_address_request();
+			return;
+		}
+
 		// Possibly handle update billing address request
 		if ( ! empty( $_REQUEST['it-exchange-update-billing-address'] ) ) {
 			$this->handle_update_billing_address_request();
@@ -269,6 +275,55 @@ class IT_Exchange_Shopping_Cart {
 			wp_redirect( $url );
 			die();
 		}
+	}
+
+	/**
+	 * Handles updating a Shipping address
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function handle_update_shipping_address_request() {
+
+		// Validate nonce
+		if ( empty( $_REQUEST['it-exchange-update-shipping-address'] ) || ! wp_verify_nonce( $_REQUEST['it-exchange-update-shipping-address'], 'it-exchange-update-checkout-shipping-address-' . it_exchange_get_session_id() ) ) {
+			it_exchange_add_message( 'error', __( 'Error adding Shipping Address. Please try again.', 'LION' ) );
+			$GLOBALS['it_exchange']['shipping-address-error'] = true;
+			return false;
+		}
+
+		// Validate required fields
+		$required_fields = apply_filters( 'it_exchange_required_shipping_address_fields', array( 'first-name', 'last-name', 'country', 'zip' ) );
+		foreach( $required_fields as $field ) {
+			if ( empty( $_REQUEST['it-exchange-shipping-address-' . $field] ) ) {
+				it_exchange_add_message( 'error', __( 'Please fill out all required fields', 'LION' ) );
+				$GLOBALS['it_exchange']['shipping-address-error'] = true;
+				return false;
+			}
+		}
+
+		/** @todo This is hardcoded for now. will be more flexible at some point **/
+		$shipping = array();
+		$fields = array(
+			'first-name',
+			'last-name',
+			'company-name',
+			'address1',
+			'address2',
+			'city',
+			'state',
+			'zip',
+			'country',
+			'email',
+			'phone',
+		);
+		foreach( $fields as $field ) {
+			$shipping[$field] = empty( $_REQUEST['it-exchange-shipping-address-' . $field] ) ? '' : $_REQUEST['it-exchange-shipping-address-' . $field];
+		}
+		update_user_meta( it_exchange_get_current_customer_id(), 'it-exchange-shipping-address', $shipping );
+		it_exchange_add_message( 'notice', __( 'Shipping Address Saved', 'LION' ) );
+		return true;
 	}
 
 	/**

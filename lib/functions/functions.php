@@ -873,8 +873,8 @@ function it_exchange_add_billing_address_to_sw_template_totals_loops( $loops ) {
 	if ( ! apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) )
 		return $loops;
 
-	// Set index to -1. May change once we introduce shipping
-	$index = -1;
+	// Set index to end of array.
+	$index = count($loops) -1 ;
 
 	array_splice( $loops, $index, 0, 'billing-address' );
 	return $loops;

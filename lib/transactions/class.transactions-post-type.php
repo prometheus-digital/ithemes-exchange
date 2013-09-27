@@ -434,18 +434,27 @@ class IT_Exchange_Transaction_Post_Type {
 			</div>
 		</div>
 
-		<?php if ( $billing_address = it_exchange_get_transaction_billing_address( $post->ID ) ) : ?>
+		<?php
+		$shipping_address = it_exchange_get_transaction_shipping_address( $post->ID );
+		$billing_address  = it_exchange_get_transaction_billing_address( $post->ID );
+		if ( $shipping_address || $billing_address ) : ?>
 			<div class="billing-shipping-wrapper columns-wrapper">
-				<div class="billing-address column c-50">
-					<div class="column-inner">
-						<div class="billing-address-label address-label"><?php _e( 'Billing Address', 'LION' ); ?></div>
-						<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
+				<?php if ( $shipping_address ) : ?>
+					<div class="shipping-address column c-30">
+						<div class="column-inner">
+							<div class="shipping-address-label address-label"><?php _e( 'Shipping Address', 'LION' ); ?></div>
+							<p><?php echo it_exchange_get_formatted_shipping_address( $shipping_address ); ?></p>
+						</div>
 					</div>
-				</div>
-				<!-- <div class="shipping-address column c-50">
-					<div class="shipping-address-label address-label"><?php _e( 'Shipping Address', 'LION' ); ?></div>
-					<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
-				</div> -->
+				<?php endif; ?>
+				<?php if ( $billing_address ) : ?>
+					<div class="billing-address column c-30">
+						<div class="column-inner">
+							<div class="billing-address-label address-label"><?php _e( 'Billing Address', 'LION' ); ?></div>
+							<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
+						</div>
+					</div>
+				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 

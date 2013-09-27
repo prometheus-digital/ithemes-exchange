@@ -89,13 +89,23 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		// Some JS we're going to need
 		?>
 		<script type="text/javascript">
-			var itExchangeSWAjaxURL = '<?php echo esc_js( get_home_url() . '/?it-exchange-sw-ajax=1' );?>';
-			var itExchangeSWState = '<?php echo esc_js( $this->get_state() ); ?>';
-			var itExchangeSWOnProductPage = '<?php echo esc_js( $product_id ); ?>';
-			var itExchangeSWMultiItemCart = '<?php echo esc_js( it_exchange_is_multi_item_cart_allowed() ); ?>';
-			var itExchangeIsUserLoggedIn = '<?php echo esc_js( is_user_logged_in() ); ?>';
-			var itExchangeCartBillingAddress = <?php echo esc_js( (boolean) it_exchange_get_customer_billing_address() ? 1 : 0); ?>;
+			var itExchangeSWAjaxURL           = '<?php echo esc_js( get_home_url() . '/?it-exchange-sw-ajax=1' );?>';
+			var itExchangeSWState             = '<?php echo esc_js( $this->get_state() ); ?>';
+			var itExchangeSWOnProductPage     = '<?php echo esc_js( $product_id ); ?>';
+			var itExchangeSWMultiItemCart     = '<?php echo esc_js( it_exchange_is_multi_item_cart_allowed() ); ?>';
+			var itExchangeIsUserLoggedIn      = '<?php echo esc_js( is_user_logged_in() ); ?>';
+			var itExchangeCartShippingAddress = <?php echo esc_js( (boolean) it_exchange_get_customer_shipping_address() ? 1 : 0); ?>;
+			var itExchangeCartBillingAddress  = <?php echo esc_js( (boolean) it_exchange_get_customer_billing_address() ? 1 : 0); ?>;
 			jQuery( function() {
+				// Shipping Init country/state fields
+				var iteCountryStatesSyncOptions = { 
+					statesWrapper: '.it-exchange-state',
+					stateFieldID:  '#it-exchange-shipping-address-state',
+					templatePart:  'super-widget-shipping-address/elements/state'
+				}; 
+				jQuery('#it-exchange-shipping-address-country', '.it-exchange-super-widget').itCountryStatesSync(iteCountryStatesSyncOptions).trigger('change');
+
+				// Billing Init fields
 				var iteCountryStatesSyncOptions = { 
 					statesWrapper: '.it-exchange-state',
 					stateFieldID:  '#it-exchange-billing-address-state',

@@ -125,6 +125,9 @@
 #it-exchange-checkout-purchase-requirements.it-exchange-requirements-active{margin-bottom:5em;}
 .it-exchange-checkout .it-exchange-order-details.it-exchange-requirements-active{opacity:.5;}
 
+/** ---:[ shipping ]:--- */
+.it-exchange-checkout .it-exchange-shipping-address-form .it-exchange-submit{margin:1em 0;}
+
 /** ---:[ billing ]:--- */
 .it-exchange-checkout .it-exchange-billing-address-form .it-exchange-submit{margin:1em 0;}
 
