@@ -165,7 +165,8 @@ function it_exchange_generate_transaction_object() {
 	$transaction_object->coupons                = it_exchange_get_applied_coupons();
 	$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
 
-	// Tack on Billing address
+	// Tack on Shipping and Billing address
+	$transaction_object->shipping_address       = it_exchange_get_cart_billing_address();
 	$transaction_object->billing_address        = apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) ? it_exchange_get_cart_billing_address() : false;
 	
 	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object );
@@ -790,6 +791,23 @@ function it_exchange_get_transaction_order_number( $transaction, $prefix='#' ) {
 	$order_number = empty( $prefix ) ? $order_number : $prefix . $order_number;
 
 	return apply_filters( 'it_exchange_get_transaction_order_number', $order_number, $transaction );
+}
+
+/**
+ * Returns the shipping addresss saveed with the transaction
+ *
+ * @since CHANGEME
+ *
+ * @param array transaction shipping address
+ *
+*/
+function it_exchange_get_transaction_shipping_address( $transaction ) {
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
+		return false;
+
+	$shipping_address = empty( $transaction->cart_details->shipping_address ) ? false: $transaction->cart_details->shipping_address;
+
+	return apply_filters( 'it_exchange_get_transaction_shipping_address', $shipping_address, $transaction );
 }
 
 /**

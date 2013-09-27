@@ -226,6 +226,22 @@ function it_exchange_get_customer_data( $data_key, $customer_id=false ) {
 }
 
 /**
+ * Get Customer Shipping Address
+ *
+ * Among other things this function is used as a callback for the shipping address
+ * purchase requriement.
+ *
+ * @since CHANGEME
+ *
+ * @param integer $customer_id the customer id. leave blank to use the current customer.
+ * @return array
+*/
+function it_exchange_get_customer_shipping_address( $customer_id=false ) {
+	$shipping_address = it_exchange_get_customer_data( 'shipping_address', $customer_id );
+	return apply_filters( 'it_exchange_get_customer_shipping_address', $shipping_address, $customer_id );
+}
+
+/**
  * Get Customer Billing Address
  *
  * Among other things this function is used as a callback for the billing address

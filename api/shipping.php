@@ -156,23 +156,6 @@ function it_exchange_get_registered_shipping_methods( $filtered=array() ) {
 }
 
 /**
- * Grabs the shipping address
- *
- * We'll check for one stored in the DB first. If it isn't there,
- * we'll grab look in the cart data
- *
- * @since 1.0.0
- *
- * @return array
-*/
-function it_exchange_get_cart_shipping_address() {
-	$address = it_exchange_get_cart_data('shipping-address');
-	unset( $address['invalid'] );
-	return  $address;
-	return false;
-}
-
-/**
  * Save the shipping address based on the User's ID
  *
  * @since 1.0.0
@@ -238,18 +221,35 @@ function it_exchange_print_shipping_address_value( $field, $customer_id=false ) 
     echo 'value="' . esc_attr( $value ) . '" ';
 }
 
-/** @todo finish this 
- * merge with get_formatted_address
-**/
-function it_exchange_get_formatted_shipping_address() {
-    $customer_id = it_exchange_get_current_customer_id();
-    $address    = get_user_meta( $customer_id, 'it_exchange_shipping_address', true );
-    $formatted  = $address['name'] . '<br />';
-    $formatted .= $address['address1'];
-    $formatted .= empty( $address['address2'] ) ? '' : '<br />' . $address['address2'];
-    $formatted .= '<br />' . $address['city'] . ', ' . $address['state'] . ' ' . $address['zip'];
+/**
+ * Formats the Shipping Address for display
+ *
+ * @todo this function sucks. Lets make a function for formatting any address. ^gta
+ * @since 1.3.0
+ *
+ * @return string HTML
+*/
+function it_exchange_get_formatted_shipping_address( $shipping_address=false ) { 
+	$formatted   = array();
+	$shipping     = empty( $shipping_address ) ? it_exchange_get_cart_shipping_address() : $shipping_address;
+	$formatted[] = implode( ' ', array( $shipping['first-name'], $shipping['last-name'] ) );
+	if ( ! empty( $shipping['company-name'] ) ) 
+		$formatted[] = $shipping['company-name'];
+	if ( ! empty( $shipping['address1'] ) ) 
+		$formatted[] = $shipping['address1'];
+	if ( ! empty( $shipping['address2'] ) ) 
+		$formatted[] = $shipping['address2'];
+	if ( ! empty( $shipping['city'] ) || ! empty( $shipping['state'] ) || ! empty( $shipping['zip'] ) ) { 
+		$formatted[] = implode( ' ', array( ( empty( $shipping['city'] ) ? '': $shipping['city'] .',' ),
+			( empty( $shipping['state'] ) ? '': $shipping['state'] ),
+			( empty( $shipping['zip'] ) ? '': $shipping['zip'] ),
+		) );
+	}   
+	if ( ! empty( $shipping['country'] ) ) 
+		$formatted[] = $shipping['country'];
 
-    return $formatted;
+	$formatted = implode( '<br />', $formatted );
+	return apply_filters( 'it_exchange_get_formatted_shipping_address', $formatted );
 }
 
 /** 

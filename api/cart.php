@@ -510,6 +510,56 @@ function it_exchange_get_cart_nonce_field() {
 }
 
 /**
+ * Returns the shipping address values for the cart
+ *
+ * @since CHANGEME
+ *
+ * @return array
+*/
+function it_exchange_get_cart_shipping_address() {
+
+	// If user is logged in, grab their data
+	$customer = it_exchange_get_current_customer();
+	$customer_data = empty( $customer->data ) ? new stdClass() : $customer->data;
+
+	// Default values for first time use.
+	$defaults = array(
+		'first-name'   => empty( $customer_data->first_name ) ? '' : $customer_data->first_name,
+		'last-name'    => empty( $customer_data->last_name ) ? '' : $customer_data->last_name,
+		'company-name' => '',
+		'address1'     => '',
+		'address2'     => '',
+		'city'         => '',
+		'state'        => '',
+		'zip'          => '',
+		'country'      => '',
+		'email'        => empty( $customer_data->user_email ) ? '' : $customer_data->user_email,
+		'phone'        => '',
+	);
+
+	// See if the customer has a shipping address saved. If so, overwrite defaults with saved shipping address
+	if ( ! empty( $customer_data->shipping_address ) )
+		$defaults = ITUtility::merge_defaults( $customer_data->shipping_address, $defaults );
+
+	// If data exists in the session, use that as the most recent
+	$session_data = it_exchange_get_cart_data( 'shipping-address' );
+
+	$cart_shipping = ITUtility::merge_defaults( $session_data, $defaults );
+
+	// If shipping error and form was submitted, use POST values as most recent
+	if ( ! empty( $_REQUEST['it-exchange-update-shipping-address'] ) && ! empty( $GLOBALS['it_exchange']['shipping-address-error'] ) ) {
+		$keys = array_keys( $defaults );
+		$post_shipping = array();
+		foreach( $keys as $key ) {
+			$post_shipping[$key] = empty( $_REQUEST['it-exchange-shipping-address-' . $key] ) ? '' : $_REQUEST['it-exchange-shipping-address-' . $key];
+		}
+		$cart_shipping = ITUtility::merge_defaults( $post_shipping, $cart_shipping );
+	}
+
+	return apply_filters( 'it_exchange_get_cart_shipping_address', $cart_shipping );
+}
+
+/**
  * Returns the billing address values for the cart
  *
  * @since 1.3.0

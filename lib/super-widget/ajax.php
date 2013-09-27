@@ -120,6 +120,12 @@ if ( 'register' == $action ) {
 	}
 }
 
+// Edit Shipping 
+if ( 'update-shipping' == $action ) {
+	// This function will either updated the value or create an error and return 1 or 0
+	die( $GLOBALS['IT_Exchange_Shopping_Cart']->handle_update_shipping_address_request() );
+}
+
 // Edit Billing
 if ( 'update-billing' == $action ) {
 	// This function will either updated the value or create an error and return 1 or 0
