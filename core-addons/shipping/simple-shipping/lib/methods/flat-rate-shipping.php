@@ -103,6 +103,9 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	 * @return void
 	*/
 	function set_settings() {
+		$general_settings = it_exchange_get_option( 'settings_general' );
+		$currency         = it_exchange_get_currency_symbol( $general_settings['default-currency'] );
+
 		$settings = array(
 			array(
 				'type'  => 'heading',
@@ -128,7 +131,13 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 				'label'   => __( 'Default Shipping Amount', 'LION' ),
 				'slug'    => 'flat-rate-shipping-amount',
 				'tooltip' => __( 'The default shipping amount for new products. This can be overridden by individual products.', 'LION' ),
-				'default' => 5,
+				'default' => it_exchange_format_price( 5 ),
+				'options' => array(
+					'data-symbol'              => esc_attr( $currency ),
+					'data-symbol-position'     => esc_attr( $general_settings['currency-symbol-position'] ),
+					'data-thousands-separator' => esc_attr( $general_settings['currency-thousands-separator'] ),
+					'data-decimals-separator'  => esc_attr( $general_settings['currency-decimals-separator'] ),
+				),
 			),
 		);
 
@@ -181,7 +190,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Shipping_Cost extends IT_Exchange_Sh
 		$post_amount  = get_post_meta( $this->product->ID, '_it_exchange_shipping_flat-rate-shipping-default-amount', true );
 
 		// Set value
-		$values->cost = empty( $post_amount ) ? $default_cost : $post_amount;
+		$values->cost = empty( $post_amount ) ? $default_cost : it_exchange_format_price( it_exchange_convert_from_database_number( $post_amount ) );
 		$this->values = $values;
 	}
 
@@ -200,17 +209,19 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Shipping_Cost extends IT_Exchange_Sh
 	 *
 	*/
 	function update_value( $new_value ) {
-		update_post_meta( $this->product->ID, '_it_exchange_shipping_flat-rate-shipping-default-amount', $new_value );
+		update_post_meta( $this->product->ID, '_it_exchange_shipping_flat-rate-shipping-default-amount', it_exchange_convert_to_database_number( $new_value ) );
 	}
 
 	/**
 	 * Prints the interior of the feature box in the add/edit product view
 	*/
 	function print_add_edit_feature_box_interior() {
+		$settings = it_exchange_get_option( 'settings_general' );
+		$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
 		?>
 		<div class="it-exchange-flat-rate-shipping-cost">
 			<label for="it-exchange-flat-rate-shipping-cost"><?php _e( 'Flat Rate Shipping Cost', 'LION' ); ?> <span class="tip" title="<?php _e( 'Shipping costs for this product. Multiplied by quantity purchased.', 'LION' ); ?>">i</span></label>
-			<input type="text" id="it-exchange-flat-rate-shipping-cost" name="it-exchange-flat-rate-shipping-cost" class="input-money-small" value="<?php esc_attr_e( $this->values->cost ); ?>"/>
+			<input type="text" data-symbol="<?php esc_attr_e( $currency ); ?>" data-symbol-position="<?php esc_attr_e( $settings['currency-symbol-position'] ); ?>" data-thousands-separator="<?php esc_attr_e( $settings['currency-thousands-separator'] ); ?>" data-decimals-separator="<?php esc_attr_e( $settings['currency-decimals-separator'] ); ?>" id="it-exchange-flat-rate-shipping-cost" name="it-exchange-flat-rate-shipping-cost" class="input-money-small" value="<?php esc_attr_e( $this->values->cost ); ?>"/>
 		</div>
 		<?php
 	}

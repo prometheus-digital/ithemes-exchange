@@ -1,5 +1,5 @@
 <?php
-/**
+/*
 delete_option( 'it-storage-exchange_addon-shipping');
 delete_option( 'it-storage-exchange_addon-shipping-exchange');
 delete_option( 'it-storage-exchange_addon-shipping-exchange-shipping');
@@ -23,8 +23,11 @@ delete_option( 'it-storage-exchange_addon-simple-shipping-enable-flat-rate-shipp
 delete_option( 'it-storage-exchange_simple-shipping-enable-flat-rate-shipping' );
 delete_option( 'it-storage-exchange_simple-shipping-simple-shipping-enable-flat-' );
 delete_option( 'it-storage-exchange_simple-shiping-simple-shipping-enable-flat-r');
+delete_option( 'it-storage-exchange_addon-shipping-general');
+delete_option( 'it-storage-exchange_addon_shipping' );
+delete_option( 'it-storage-exchange_addon_shipping_general');
+delete_option( 'it-storage-exchange_addon_shipping_settings');
 */
-
 /**
  * Registers the Shipping Methods we need for Exchange Simple Shipping add-on
  *

@@ -41,10 +41,12 @@ class IT_Exchange_Shipping {
 		add_action( 'it_exchange_empty_shopping_cart', array( $this, 'clear_cart_address' ) );
 
 		// Updates the general settings states field in the admin
-		add_action( 'it_exchange_admin_country_states_sync_for_addon-shipping-general', array( $this, 'update_general_settings_state_field' ) );
+		add_action( 'it_exchange_admin_country_states_sync_for_shipping-general', array( $this, 'update_general_settings_state_field' ) );
 
 		// Enqueue the JS for the checkout page
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_checkout_page_scripts' ) );
+
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_settings_js' ) );
 
 		// Adjusts the cart total
 		add_filter( 'it_exchange_get_cart_total', array( $this, 'modify_shipping_total' ) );
@@ -485,6 +487,19 @@ class IT_Exchange_Shipping {
 	}
 
 	/**
+	 * Enqueue JS for settings page
+	 *
+	 * @since CHANGEME
+	*/
+	function enqueue_settings_js() {
+		$current_screen = get_current_screen();
+		if ( ! empty( $current_screen->base ) && 'exchange_page_it-exchange-settings' == $current_screen->base && ! empty( $_GET['tab'] ) && 'shipping' == $_GET['tab'] ) {
+			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/admin/js/settings-shipping.js' );
+			wp_enqueue_script( 'it-exchange-settings-shipping', $script, array( 'jquery' ) );
+		}
+	}
+
+	/**
 	 * This function hooks into the AJAX call generated in general settings for country/states sync
 	 *
 	 * @since CHANGEME
@@ -498,13 +513,13 @@ class IT_Exchange_Shipping {
 
 		if ( empty( $states ) ) {
 			?>
-			<input type="text" id="product-ships-from-state" name="addon-shipping-general-product-ships-from-state" maxlength="3" placeholder="<?php _e( 'State', 'LION' ); ?>" class="small-text" value="<?php esc_attr_e( $base_state ); ?>" />&nbsp;
+			<input type="text" id="product-ships-from-state" name="shipping-general-product-ships-from-state" maxlength="3" placeholder="<?php _e( 'State', 'LION' ); ?>" class="small-text" value="<?php esc_attr_e( $base_state ); ?>" />&nbsp;
 			<?php $open_tag = '<a href="http://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">'; ?>
 			<span class="description"><?php printf( __( 'Please use the 2-3 character %sISO 3166-2 Country Subdivision Code%s', 'LION' ), $open_tag, '</a>' ); ?></span>
 			<?php
 		} else {
 			?>
-			<select id="product-ships-from-state" name="addon-shipping-general-product-ships-from-state">
+			<select id="product-ships-from-state" name="shipping-general-product-ships-from-state">
 			<?php
 			foreach( (array) $states as $key => $value ) {
 				?><option value="<?php esc_attr_e( $key ); ?>" <?php selected( $key, $base_state ); ?>><?php esc_html_e( $value ); ?></option><?php

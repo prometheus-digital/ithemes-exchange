@@ -117,7 +117,8 @@ class IT_Exchange_Admin_Settings_Form {
 	*/
 	function load_settings() {
 		add_filter( 'it_storage_get_defaults_exchange_' . $this->prefix, array( $this, 'get_default_settings' ) );
-		$this->settings = it_exchange_get_option( $this->prefix, true );
+		$settings = it_exchange_get_option( $this->prefix, true );
+		$this->settings = apply_filters( 'it_exchange_load_admin_form_settings_for_' . $this->prefix, $settings );
 	}
 
 	/**
@@ -336,6 +337,8 @@ class IT_Exchange_Admin_Settings_Form {
 
 		$values = ITForm::get_post_data();
 		unset( $values['it-exchange-saving-settings'] );
+
+		$values = apply_filters( 'it_exchange_save_admin_form_settings_for_' . $this->prefix, $values );
 
 		it_exchange_save_option( $this->prefix, $values );
 		it_exchange_add_message( 'notice', __( 'Settings updated', 'LION' ) );
