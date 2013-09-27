@@ -2,7 +2,7 @@
 .handlediv,
 .hndle{display:none;}
 #it-exchange-transaction-details{background:none;}
-#it-exchange-transaction-details .inside{margin:0;padding:0;}
+#it-exchange-transaction-details .inside{margin:0;padding:0;background: #FFF;}
 #it-exchange-transaction-details *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 #it-exchange-transaction-details .left{float:left;}
 #it-exchange-transaction-details .right{float:right;text-align:right;}
