@@ -125,11 +125,19 @@
 #it-exchange-checkout-purchase-requirements.it-exchange-requirements-active{margin-bottom:5em;}
 .it-exchange-checkout .it-exchange-order-details.it-exchange-requirements-active{opacity:.5;}
 
-/** ---:[ shipping ]:--- */
+/** ---:[ logged-in ]:--- */
+.it-exchange-checkout-logged-in-purchase-requirement {margin:2em 0;}
+
+/** ---:[ shipping-address ]:--- */
 .it-exchange-checkout .it-exchange-shipping-address-form .it-exchange-submit{margin:1em 0;}
+.it-exchange-checkout-shipping-address-purchase-requirement {float:left; width:50%; }
 
 /** ---:[ billing ]:--- */
 .it-exchange-checkout .it-exchange-billing-address-form .it-exchange-submit{margin:1em 0;}
+.it-exchange-checkout-billing-address-purchase-requirement {float:left; width:50%;}
+
+/** ---:[ shipping-method ]:--- */
+.it-exchange-checkout-shipping-method-purchase-requirement {margin:3em 0 4em;}
 
 /** ---:[ visual cc ]:--- */
 .it-exchange-checkout .it-exchange-visual-cc-wrap{margin-top:1em;}
