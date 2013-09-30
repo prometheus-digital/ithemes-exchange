@@ -252,6 +252,66 @@ function it_exchange_get_formatted_shipping_address( $shipping_address=false ) {
 	return apply_filters( 'it_exchange_get_formatted_shipping_address', $formatted );
 }
 
+/**
+ * Grabs all the shipping methods available to the passed product
+ *
+ * 1) Grab all shipping methods
+ * 2) Check to see if they're enabled
+ * 3) Return an arry of ones that are enabled.
+ *
+ * @since CHANGEME
+ *
+ * @param  object product an IT_Exchange_Product object
+ * @return an array of shipping methods
+*/
+function it_exchange_get_available_shipping_methods_for_product( $product ) { 
+
+	$providers         = it_exchange_get_registered_shipping_providers();
+	$provider_methods  = array();
+	$available_methods = array();
+
+	// Grab all registerd shipping methods for all providers
+	foreach( (array) $providers as $provider ) { 
+		$provider         = it_exchange_get_registered_shipping_provider( $provider['slug'] );
+		$provider_methods = array_merge( $provider_methods, $provider->shipping_methods );
+	}   
+
+	// Loop through provider methods and only use the ones that are available for this product
+	foreach( $provider_methods as $slug ) { 
+		if ( $method = it_exchange_get_registered_shipping_method( $slug, $product->ID ) ) { 
+			if ( $method->available )
+				$available_methods[$slug] = $method;
+		}   
+	}   
+
+	return apply_filters( 'it_exchange_get_available_shipping_methods_for_product', $available_methods, $product );
+}
+
+function it_exchange_get_enabled_shipping_methods_for_product( $product, $return='object' ) { 
+
+	// Are we viewing a new product?
+	$screen         = is_admin() ? get_current_screen() : false;
+	$is_new_product = is_admin() && ! empty( $screen->action ) && 'add' == $screen->action;
+
+	// Return false if shipping is turned off for this product
+	if ( ! it_exchange_product_has_feature( $product->ID, 'shipping' ) && ! $is_new_product )
+		return false;
+
+	$enabled_methods                    = array();
+	$product_overriding_default_methods = it_exchange_get_shipping_feature_for_product( 'core-available-shipping-methods', $product->ID );
+
+	foreach( (array) it_exchange_get_available_shipping_methods_for_product( $product ) as $slug => $available_method ) { 
+		// If we made it here, the method is available. Check to see if it has been turned off for this specific product
+		if ( false !== $product_overriding_default_methods ) { 
+			if ( ! empty( $product_overriding_default_methods->$slug ) ) 
+				$enabled_methods[$slug] = ( 'slug' == $return ) ? $slug : $available_method;
+		} else {
+			$enabled_methods[$slug] = ( 'slug' == $return ) ? $slug : $available_method;
+		}   
+	}   
+	return $enabled_methods;
+}
+
 /** 
  * Is cart address valid?
  *
@@ -267,3 +327,24 @@ function it_exchange_is_shipping_address_valid() {
 
 	return (boolean) get_user_meta( $customer_id, 'it_exchange_shipping_address', true );
 } 
+
+function it_exchange_get_cart_shipping_method() {
+	$method = it_exchange_get_cart_data( 'shipping-method' );
+	$method = empty( $method[0] ) ? false : $method[0];
+	return empty( $method ) ? false : $method;
+}
+
+function it_exchange_get_shipping_methods_for_cart() {
+	$methods = array();
+	foreach( it_exchange_get_cart_products() as $product ) {
+		if ( false === ( $product = it_exchange_get_product( $product['product_id'] ) ) )
+			continue;
+
+		foreach( (array) it_exchange_get_enabled_shipping_methods_for_product( $product ) as $method ) {
+			if ( ! empty( $method->slug ) )
+				$methods[$method->slug] = $method;
+		}
+	}
+
+	return $methods;
+}

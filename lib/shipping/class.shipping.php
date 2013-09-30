@@ -20,11 +20,14 @@ class IT_Exchange_Shipping {
 		if ( !$enabled_shipping_addons )
 			return;
 
+		add_action( 'init', array( $this, 'update_cart_shipping_method' ) );
+
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_shipping_tab_link' ) );
 		add_filter( 'it_exchange_general_settings_tab_callback_shipping', array( $this, 'register_settings_tab_callback' ) );
 
 		// Setup purchase requirement
-		$this->init_shipping_address_purchase_requirement();
+		add_action( 'init', array( $this, 'init_shipping_address_purchase_requirements' ) );
+		//$this->init_shipping_address_purchase_requirements();
 
 		// Template part filters
 		add_filter( 'it_exchange_get_content_cart_totals_elements', array( $this, 'add_shipping_to_template_totals_loops' ) );
@@ -56,21 +59,24 @@ class IT_Exchange_Shipping {
 	 * Init Shipping Address Purchase Requirement
 	 *
 	*/
-	function init_shipping_address_purchase_requirement() {
-		$this->register_purchase_requirement();
+	function init_shipping_address_purchase_requirements() {
+		if ( is_admin() )
+			return;
+		$this->register_shipping_address_purchase_requirement();
+		$this->register_shipping_method_purchase_requirement();
 	}
 	
 	/**
-	 * Registers the shipping purchase requirements
+	 * Registers the shipping address purchase requirement
 	 *
 	 * Use the it_exchange_register_purchase_requirement function to tell exchange
 	 * that your add-on requires certain conditionals to be set prior to purchase.
 	 * For more details see api/misc.php
 	 *
-	 * @since 1.0.0
+	 * @since  CHANGEME
 	 * @return void
 	*/
-	function register_purchase_requirement() {
+	function register_shipping_address_purchase_requirement() {
 		// User must have a shipping address to purchase
 		$properties = array(
 			'requirement-met'        => 'it_exchange_get_customer_shipping_address', // This is a PHP callback
@@ -79,7 +85,30 @@ class IT_Exchange_Shipping {
 			'notification'           => __( 'You must enter a shipping address before you can checkout', 'LION' ),
 			'priority'               => 4,
 		);  
-		it_exchange_register_purchase_requirement( 'shipping-has-address', $properties );
+		it_exchange_register_purchase_requirement( 'customer-has-shipping-address', $properties );
+	}
+	
+	/**
+	 * Registers the shipping method purchase requirement
+	 *
+	 * Use the it_exchange_register_purchase_requirement function to tell exchange
+	 * that your add-on requires certain conditionals to be set prior to purchase.
+	 * For more details see api/misc.php
+	 *
+	 * @since  CHANGEME
+	 * @return void
+	*/
+	function register_shipping_method_purchase_requirement() {
+		// User must have a shipping address to purchase
+		$properties = array(
+			'requirement-met'        => 'it_exchange_get_cart_shipping_method', // This is a PHP callback
+			'sw-template-part'       => 'shipping-method',
+			'checkout-template-part' => 'shipping-method',
+			'notification'           => __( 'You must select a shipping method before you can checkout', 'LION' ),
+			'priority'               => 5.5,
+		);  
+		if ( it_exchange_get_shipping_methods_for_cart() )
+			it_exchange_register_purchase_requirement( 'has-cart-shipping-method', $properties );
 	}
 
 	/**
@@ -527,6 +556,15 @@ class IT_Exchange_Shipping {
 			?></select><?php
 		}
 		die();
+	}
+
+	// Update cart shipping mehtod
+	function update_cart_shipping_method() {
+		// TEMP LOGIC
+		if ( isset( $_POST['it-exchange-shipping-method'] ) ) {
+			it_exchange_update_cart_data( 'shipping-method', $_POST['it-exchange-shipping-method'] );
+			it_exchange_add_message( 'notice', __( 'Shipping method updated', 'LION' ) );
+		}
 	}
 }
 $IT_Exchange_Shipping = new IT_Exchange_Shipping();
