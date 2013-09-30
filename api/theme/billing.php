@@ -35,6 +35,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 		'city'        => 'city',
 		'state'       => 'state',
 		'zip'         => 'zip',
+		'shipping'    => 'shipping',
 		'country'     => 'country',
 		'email'       => 'email',
 		'phone'       => 'phone',
@@ -202,6 +203,60 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 
 		return $this->get_fields( $options );
 	}
+
+	/**
+	 * Outputs the Ship to Billing address when shipping is needed
+	 *
+	 * @since CHANGEME
+	 *
+	 * @param array $options options
+	 * @return string
+	*/
+	function shipping( $options=array() ) {
+
+		// Abort if shipping is not enabled
+		if ( ! it_exchange_get_shipping_methods_for_cart() )
+			return;
+
+		$defaults      = array(
+			'format' => 'html',
+			'label'  => __( 'Ship to billing address?', 'LION' ),
+			'value'  => '1',
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		$options['field_id']   = 'it-exchange-ship-to-billing';
+		$options['field_name'] = 'it-exchange-ship-to-billing';
+
+		// Grab saved setting
+		$options['value']      = empty( $this->_billing_address['ship-to-billing'] ) ? $options['value'] : $this->_billing_address['ship-to-billing'];
+
+		$field = '<input type="checkbox" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" ' . checked( $options['value'], '1', false ) . ' value="1" />';
+
+		switch( $options['format'] ) { 
+			case 'field-id' :
+				$output = $options['field_id'];
+				break;
+			case 'field-name':
+				$output = $options['field_name'];
+				break;
+			case 'label':
+				$output = $options['label'];
+				break;
+			case 'field':
+				$output = $field;
+				break;
+			case 'value':
+				$output = $current_value;
+				break;
+			case 'html':
+			default:
+				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">';
+				$output .= $field . $options['label'];
+				$output .= '</label>';
+		}
+		return $output;
+	} 
 
 	/**
 	 * Outputs the billing address country data

@@ -83,9 +83,10 @@ class IT_Exchange_Shipping {
 			'sw-template-part'       => 'shipping-address',
 			'checkout-template-part' => 'shipping-address',
 			'notification'           => __( 'You must enter a shipping address before you can checkout', 'LION' ),
-			'priority'               => 4,
+			'priority'               => 5.12
 		);  
-		it_exchange_register_purchase_requirement( 'customer-has-shipping-address', $properties );
+		if ( it_exchange_get_shipping_methods_for_cart() )
+			it_exchange_register_purchase_requirement( 'shipping-address', $properties );
 	}
 	
 	/**
@@ -105,10 +106,10 @@ class IT_Exchange_Shipping {
 			'sw-template-part'       => 'shipping-method',
 			'checkout-template-part' => 'shipping-method',
 			'notification'           => __( 'You must select a shipping method before you can checkout', 'LION' ),
-			'priority'               => 5.5,
+			'priority'               => 5.13,
 		);  
 		if ( it_exchange_get_shipping_methods_for_cart() )
-			it_exchange_register_purchase_requirement( 'has-cart-shipping-method', $properties );
+			it_exchange_register_purchase_requirement( 'shipping-method', $properties );
 	}
 
 	/**

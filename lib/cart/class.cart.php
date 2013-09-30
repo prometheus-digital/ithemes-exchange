@@ -372,6 +372,10 @@ class IT_Exchange_Shopping_Cart {
 		}
 		update_user_meta( it_exchange_get_current_customer_id(), 'it-exchange-billing-address', $billing );
 		it_exchange_add_message( 'notice', __( 'Billing Address Saved', 'LION' ) );
+
+		// Update Shipping if checked
+		if ( ! empty( $_REQUEST['it-exchange-ship-to-billing'] ) && '1' == $_REQUEST['it-exchange-ship-to-billing'] )
+			update_user_meta( it_exchange_get_current_customer_id(), 'it-exchange-shipping-address', $billing );
 		return true;
 	}
 

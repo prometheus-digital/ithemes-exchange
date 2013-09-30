@@ -53,4 +53,5 @@ $editing_shipping = ( ! empty( $_REQUEST['it-exchange-update-shipping-address'] 
 		</div>
 	</div>
 </div>
+<div class="it-exchange-clearfix"></div>
 <?php do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_after_element' ); ?>
