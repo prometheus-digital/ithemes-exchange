@@ -23,6 +23,19 @@ $current_method = empty( $current_method[0] ) ? false : $current_method[0];
 ?>
 <?php do_action( 'it_exchange_content_checkout_shipping_method_purchase_requirement_before_element' ); ?>
 <div class="it-exchange-checkout-shipping-method-purchase-requirement">
+<script type="text/javascript">
+function itExchangeUpdateCheckoutShippingMethod( value ) {
+	var ITExchangeCheckoutRefreshAjaxURL = '<?php echo esc_js( site_url() ); ?>/?ite-checkout-refresh=1';
+	jQuery.post(ITExchangeCheckoutRefreshAjaxURL, {'shipping-method':value}, function(response) {
+		if (response) {
+			jQuery('.entry-content').html(response);
+			jQuery.event.trigger({
+				type: "itExchangeCheckoutReloaded"
+			});
+		}   
+	}); 
+}
+</script>
 	<h3><?php _e( 'Shipping Method', 'LION' ); ?></h3>
 	<?php
 	$methods = it_exchange_get_shipping_methods_for_cart();
@@ -32,7 +45,7 @@ $current_method = empty( $current_method[0] ) ? false : $current_method[0];
 	} else {
 		?>
 		<form method="post" action="">
-		<select name="it-exchange-shipping-method" onchange="this.form.submit()">
+		<select name="it-exchange-shipping-method" onchange="itExchangeUpdateCheckoutShippingMethod( jQuery(this).val() )">
 		<?php
 		$options = '<option value="0">' . __( 'Select a shipping method', 'LION' );
 		foreach( $methods as $method ) {

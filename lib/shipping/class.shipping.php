@@ -20,7 +20,7 @@ class IT_Exchange_Shipping {
 		if ( !$enabled_shipping_addons )
 			return;
 
-		add_action( 'init', array( $this, 'update_cart_shipping_method' ) );
+		add_action( 'template_redirect', array( $this, 'update_cart_shipping_method' ), 99);
 
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_shipping_tab_link' ) );
 		add_filter( 'it_exchange_general_settings_tab_callback_shipping', array( $this, 'register_settings_tab_callback' ) );
@@ -560,6 +560,12 @@ class IT_Exchange_Shipping {
 
 	// Update cart shipping mehtod
 	function update_cart_shipping_method() {
+		if ( ! empty( $_GET['ite-checkout-refresh'] ) ) {
+			$shipping_method = empty( $_POST['shipping-method'] ) ? '0': $_POST['shipping-method'];
+			it_exchange_update_cart_data('shipping-method', $shipping_method );
+			it_exchange_get_template_part( 'content-checkout' );
+			die();
+		}
 		// TEMP LOGIC
 		if ( isset( $_POST['it-exchange-shipping-method'] ) ) {
 			it_exchange_update_cart_data( 'shipping-method', $_POST['it-exchange-shipping-method'] );
