@@ -33,6 +33,9 @@ require( $this->_plugin_path . 'lib/functions/template-functions.php' );
 // Other Functions
 require( $this->_plugin_path . 'lib/functions/functions.php' );
 
+// Integrations
+require( $this->_plugin_path . 'lib/integrations/builder/init.php' );
+
 // Customer Class
 require( $this->_plugin_path . 'lib/customers/class.customer.php' );
 
