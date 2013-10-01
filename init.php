@@ -36,7 +36,7 @@ class IT_Exchange {
 	/**
 	 * Setup the plugin
 	 *
-	 * Class Constructor. Sets up the environment and then loads admin or enqueues active bar
+	 * Class Constructor. Sets up the environment and then loads admin or enqueues active bar.
 	 *
 	 * @uses IT_Exchange::set_plugin_locations()
 	 * @uses IT_Exchange::set_textdomain()
