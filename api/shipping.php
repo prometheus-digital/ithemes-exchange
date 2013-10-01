@@ -344,7 +344,7 @@ function it_exchange_get_available_shipping_methods_for_cart( $only_return_metho
 		if ( false === ( $product = it_exchange_get_product( $product['product_id'] ) ) )
 			continue;
 
-		// Skip product if it doesn't have shipping
+		// Skip product if it doesn't have shipping.
 		if ( ! it_exchange_product_has_feature( $product->ID, 'shipping' ) )
 			continue;
 
