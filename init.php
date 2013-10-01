@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: iThemes Exchange
- * Version: 1.3.1
+ * Version: 1.3.2
  * Description: Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordPress
  * Plugin URI: http://ithemes.com/exchange/
  * Author: iThemes
@@ -23,7 +23,7 @@
 */
 class IT_Exchange {
 
-	var $_version         = '1.3.1';
+	var $_version         = '1.3.2';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'it-exchange';
 	var $_name            = 'iThemes Exchange';
@@ -36,7 +36,7 @@ class IT_Exchange {
 	/**
 	 * Setup the plugin
 	 *
-	 * Class Constructor. Sets up the environment and then loads admin or enqueues active bar
+	 * Class Constructor. Sets up the environment and then loads admin or enqueues active bar.
 	 *
 	 * @uses IT_Exchange::set_plugin_locations()
 	 * @uses IT_Exchange::set_textdomain()
