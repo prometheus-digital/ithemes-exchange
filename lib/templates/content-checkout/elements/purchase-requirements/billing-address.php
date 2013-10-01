@@ -53,7 +53,7 @@ $editing_billing = ( ! empty( $_REQUEST['it-exchange-update-billing-address'] ) 
 		</div>
 	</div>
 </div>
-<?php if ( ! it_exchange_get_shipping_methods_for_cart() ) : ?>
+<?php if ( ! it_exchange_get_available_shipping_methods_for_cart_products() ) : ?>
 	<div class="it-exchange-clearfix"></div>
 <?php endif; ?>
 <?php do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_after_element' ); ?>

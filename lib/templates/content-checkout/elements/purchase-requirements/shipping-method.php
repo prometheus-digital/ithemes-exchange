@@ -38,9 +38,12 @@ function itExchangeUpdateCheckoutShippingMethod( value ) {
 </script>
 	<h3><?php _e( 'Shipping Method', 'LION' ); ?></h3>
 	<?php
-	$methods = it_exchange_get_shipping_methods_for_cart();
-	if ( count( $methods ) < 2 ) {
-		$method = reset($methods);
+	$cart_methods                      = it_exchange_get_available_shipping_methods_for_cart();
+	$cart_product_methods              = it_exchange_get_available_shipping_methods_for_cart_products();
+	$multiple_shipping_methods_allowed = false;
+
+	if ( ( count( $cart_methods ) === 1 && count( $cart_product_methods ) === 1 ) || count( $cart_product_methods ) === 1 ) {
+		$method = reset($cart_methods);
 		echo $method->label;
 	} else {
 		?>
@@ -48,11 +51,20 @@ function itExchangeUpdateCheckoutShippingMethod( value ) {
 		<select name="it-exchange-shipping-method" onchange="itExchangeUpdateCheckoutShippingMethod( jQuery(this).val() )">
 		<?php
 		$options = '<option value="0">' . __( 'Select a shipping method', 'LION' );
-		foreach( $methods as $method ) {
+		foreach( $cart_methods as $method ) {
 			$options .= '<option value="' . esc_attr( $method->slug ) . '" ' . selected( $current_method, $method->slug, false ) . '>' . $method->label . '</option>';
 		}
-		if ( (array) it_exchange_get_cart_products() > 1 )
-			$options .= '<option value="multiple-methods" ' . selected( $current_method, 'multiple-methods', false ) . '>' . __( 'Use multiple shipping methods', 'LION' ) . '</option>';
+		if ( (array) it_exchange_get_cart_products() > 1 ) {
+			$cart_products_with_shipping = 0;
+			foreach( (array) it_exchange_get_cart_products() as $cart_product ) {
+				if ( it_exchange_product_has_feature( $cart_product['product_id'], 'shipping' ) )
+					$cart_products_with_shipping++;
+			}
+			if ( $cart_products_with_shipping > 1 && count( $cart_product_methods ) > 1 ) {
+				$multiple_shipping_methods_allowed = true;
+				$options .= '<option value="multiple-methods" ' . selected( $current_method, 'multiple-methods', false ) . '>' . __( 'Use multiple shipping methods', 'LION' ) . '</option>';
+			}
+		}
 
 		echo $options;
 		?>
@@ -60,6 +72,29 @@ function itExchangeUpdateCheckoutShippingMethod( value ) {
 		</form>
 		<?php
 	}
+
+	if ( 'multiple-methods' == $current_method && $multiple_shipping_methods_allowed ) :
+		?>
+		<div class="it-exchange-itemized-checkout-methods">
+			<?php
+			foreach( (array) it_exchange_get_cart_products() as $product ) {
+				if ( ! it_exchange_product_has_feature( $product['product_id'], 'shipping' ) )
+					continue;
+
+				echo it_exchange_get_cart_product_title( $product ) . ': ';
+				?>
+				<select name="it-exchange-shipping-method-for-<?php esc_attr_e( $product['product_cart_id'] ); ?>">
+					<?php foreach( (array) it_exchange_get_enabled_shipping_methods_for_product( it_exchange_get_product( $product['product_id'] ) ) as $product_method ) : ?>
+						<?php if ( empty( $product_method->slug ) ) continue; ?>
+						<option value="<?php esc_attr_e( $product_method->slug ); ?>"><?php echo $product_method->label; ?></option>
+					<?php endforeach; ?>
+				</select><br />
+				<?php
+			}
+			?>
+		</div>
+		<?php
+	endif;
 	?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_shipping_method_purchase_requirement_after_element' ); ?>

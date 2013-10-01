@@ -85,7 +85,7 @@ class IT_Exchange_Shipping {
 			'notification'           => __( 'You must enter a shipping address before you can checkout', 'LION' ),
 			'priority'               => 5.12
 		);  
-		if ( it_exchange_get_shipping_methods_for_cart() )
+		if ( it_exchange_get_available_shipping_methods_for_cart_products() )
 			it_exchange_register_purchase_requirement( 'shipping-address', $properties );
 	}
 	
@@ -108,7 +108,7 @@ class IT_Exchange_Shipping {
 			'notification'           => __( 'You must select a shipping method before you can checkout', 'LION' ),
 			'priority'               => 5.13,
 		);  
-		if ( it_exchange_get_shipping_methods_for_cart() )
+		if ( it_exchange_get_available_shipping_methods_for_cart_products() )
 			it_exchange_register_purchase_requirement( 'shipping-method', $properties );
 	}
 

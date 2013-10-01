@@ -215,7 +215,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function shipping( $options=array() ) {
 
 		// Abort if shipping is not enabled
-		if ( ! it_exchange_get_shipping_methods_for_cart() )
+		if ( ! it_exchange_get_available_shipping_methods_for_cart_products() )
 			return;
 
 		$defaults      = array(

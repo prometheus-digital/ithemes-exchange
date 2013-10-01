@@ -334,17 +334,55 @@ function it_exchange_get_cart_shipping_method() {
 	return empty( $method ) ? false : $method;
 }
 
-function it_exchange_get_shipping_methods_for_cart() {
-	$methods = array();
+function it_exchange_get_available_shipping_methods_for_cart( $only_return_methods_available_to_all_cart_products=true ) {
+	$methods   = array();
+	$product_i = 0;
+
+	// Grab all the products in the cart
 	foreach( it_exchange_get_cart_products() as $product ) {
+		// Skip foreach element if it isn't an exchange product - just to be safe
 		if ( false === ( $product = it_exchange_get_product( $product['product_id'] ) ) )
 			continue;
 
+		// Skip product if it doesn't have shipping
+		if ( ! it_exchange_product_has_feature( $product->ID, 'shipping' ) )
+			continue;
+
+		// Bump product incrementer
+		$product_i++;
+		$product_methods = array();
+
+		// Loop through shipping methods available for this product
 		foreach( (array) it_exchange_get_enabled_shipping_methods_for_product( $product ) as $method ) {
-			if ( ! empty( $method->slug ) )
+			// Skip if method is false
+			if ( empty( $method->slug ) )
+				continue;
+
+			// If this is the first product, put all available methods in methods array
+			if ( ! empty( $method->slug ) && 1 === $product_i ) {
 				$methods[$method->slug] = $method;
+			}
+
+			// If we're returning all methods, even when they aren't available to other products, tack them onto the array
+			if ( ! $only_return_methods_available_to_all_cart_products )
+				$methods[$method->slug] = $method;
+
+			// Keep track of all this products methods
+			$product_methods[] = $method->slug;
+		}
+
+		// Remove any methods previously added that aren't supported by this product
+		if ( $only_return_methods_available_to_all_cart_products ) {
+			foreach( $methods as $slug => $object ) {
+				if ( ! in_array( $slug, $product_methods ) )
+					unset( $methods[$slug] );
+			}
 		}
 	}
 
 	return $methods;
+}
+
+function it_exchange_get_available_shipping_methods_for_cart_products() {
+	return it_exchange_get_available_shipping_methods_for_cart( false );
 }
