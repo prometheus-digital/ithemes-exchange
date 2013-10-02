@@ -388,7 +388,8 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 		$query = array(
 			'business'      => $paypal_email,
 			'item_name'     => it_exchange_get_cart_description(),
-			'return'        => it_exchange_get_page_url( 'transaction' ) . '?it-exchange-transaction-method=paypal-standard',
+
+			'return='       => add_query_arg( 'it-exchange-transaction-method', 'paypal-standard', it_exchange_get_page_url( 'transaction' ) ),
 			'currency_code' => $general_settings['default-currency'],
 			'notify_url'    => get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard' ) . '=1',
 			'no_note'       => '1',
