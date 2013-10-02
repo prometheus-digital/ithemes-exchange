@@ -19,14 +19,15 @@ if ( apply_filters( 'it_exchange_supress_superwidget_ajax_errors', true ) )
 $GLOBALS['it_exchange']['in_superwidget'] = true;
 
 // Set vars
-$action       = empty( $_GET['sw-action'] ) ? false : esc_attr( $_GET['sw-action'] );
-$state        = empty( $_GET['state'] ) ? false : esc_attr( $_GET['state'] );
-$product      = empty( $_GET['sw-product'] ) ? false : absint( $_GET['sw-product'] );
-$quantity     = empty( $_GET['sw-quantity'] ) ? 1 : absint( $_GET['sw-quantity'] );
-$focus        = empty( $_GET['ite-sw-cart-focus'] ) ? false : esc_attr( $_GET['ite-sw-cart-focus'] );
-$coupon_type  = empty( $_GET['sw-coupon-type'] ) ? false : esc_attr( $_GET['sw-coupon-type'] );
-$coupon       = empty( $_GET['sw-coupon-code'] ) ? false : esc_attr( $_GET['sw-coupon-code'] );
-$cart_product = empty( $_GET['sw-cart-product'] ) ? false : esc_attr( $_GET['sw-cart-product'] );
+$action          = empty( $_GET['sw-action'] ) ? false : esc_attr( $_GET['sw-action'] );
+$state           = empty( $_GET['state'] ) ? false : esc_attr( $_GET['state'] );
+$product         = empty( $_GET['sw-product'] ) ? false : absint( $_GET['sw-product'] );
+$quantity        = empty( $_GET['sw-quantity'] ) ? 1 : absint( $_GET['sw-quantity'] );
+$focus           = empty( $_GET['ite-sw-cart-focus'] ) ? false : esc_attr( $_GET['ite-sw-cart-focus'] );
+$coupon_type     = empty( $_GET['sw-coupon-type'] ) ? false : esc_attr( $_GET['sw-coupon-type'] );
+$coupon          = empty( $_GET['sw-coupon-code'] ) ? false : esc_attr( $_GET['sw-coupon-code'] );
+$cart_product    = empty( $_GET['sw-cart-product'] ) ? false : esc_attr( $_GET['sw-cart-product'] );
+$shipping_method = empty( $_GET['sw-shipping-method'] ) ? '0': esc_attr( $_GET['sw-shipping-method'] );
 
 // Update the state HTML of the widget
 if ( 'get-state' == $action && $state ) {
@@ -143,6 +144,12 @@ if ( 'submit-purchase-dialog' == $action ) {
 	it_exchange_empty_shopping_cart();
 	$url = it_exchange_get_transaction_confirmation_url( $transaction_id );
 	die( $url );
+}
+
+// Update Shipping Method
+if ( 'update-shipping-method' == $action ) {
+	it_exchange_update_cart_data( 'shipping-method', $shipping_method );	
+	die( empty( $shipping_method ) ? '0' : '1' );
 }
 
 // If we made it this far, allow addons to hook in and do their thing.

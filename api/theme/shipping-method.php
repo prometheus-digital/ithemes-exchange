@@ -20,7 +20,10 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	public $_tag_map = array(
-		'form' => 'form',
+		'form'    => 'form',
+		'cancel'  => 'cancel',
+		'submit'  => 'submit',
+		'current' => 'current',
 	);
 
 	/**
@@ -31,6 +34,10 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 * @return void
 	*/
 	function IT_Theme_API_Shipping_Method() {
+		$this->cart_methods                      = it_exchange_get_available_shipping_methods_for_cart();
+		$this->cart_product_methods              = it_exchange_get_available_shipping_methods_for_cart_products();
+		$this->multiple_shipping_methods_allowed = false;
+		$this->current_method                    = it_exchange_get_cart_shipping_method();
 	}
 
 	/**
@@ -55,10 +62,10 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	function form( $options=array() ) {
 		ob_start();
 
-		$cart_methods                      = it_exchange_get_available_shipping_methods_for_cart();
-		$cart_product_methods              = it_exchange_get_available_shipping_methods_for_cart_products();
-		$multiple_shipping_methods_allowed = false;
-		$current_method                    = it_exchange_get_cart_shipping_method();
+		$cart_methods                      = $this->cart_methods;
+		$cart_product_methods              = $this->cart_product_methods;
+		$multiple_shipping_methods_allowed = $this->multiple_shipping_methods_allowed;
+		$current_method                    = $this->current_method;
 
 		if ( ( count( $cart_methods ) === 1 && count( $cart_product_methods ) === 1 ) || count( $cart_product_methods ) === 1 ) {
 			$method = reset($cart_methods);
@@ -133,5 +140,70 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 
 		$return = ob_get_clean();
 		return $return;
+	}
+
+	/**
+	 * Prints the cancel button for shipping method select
+	 *
+	 * Only prints if we have a method
+	 *
+	 * @since CHANGEME
+	 *
+	 * @param array $options
+	*/
+	function cancel( $options=array() ) {
+
+		if ( empty( $this->current_method ) )
+			return '';
+
+		$defaults = array(
+			'label' => __( 'Cancel', 'LION' ),
+			'class' => false,
+		);
+
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		$core_class = 'it-exchange-super-widget-shipping-method-cancel-action';
+		$class = empty( $options['class'] ) ? $core_class : esc_attr( $options['class'] ) . ' ' . $core_class;
+
+		$return = '<a href="" class="' . $class . '">' . esc_html( $options['label'] ). '</a>';
+		return $return;
+	}
+
+	/**
+	 * Prints the submit button for shipping method select
+	 *
+	 * @since CHANGEME
+	 *
+	 * @param array $options
+	*/
+	function submit( $options=array() ) {
+
+		if ( empty( $this->current_method ) )
+			return '';
+
+		$defaults = array(
+			'label' => __( 'Next', 'LION' ),
+			'class' => false,
+		);
+
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		$core_class = 'it-exchange-super-widget-shipping-method-submit-action';
+		$class = empty( $options['class'] ) ? $core_class : esc_attr( $options['class'] ) . ' ' . $core_class;
+
+		$return = '<a href="" class="' . $class . '">' . esc_html( $options['label'] ). '</a>';
+		return $return;
+	}
+
+	/**
+	 * Returns the label for the currently selected Shipping Method
+	 *
+	 * @since CHANGEME
+	 *
+	*/
+	function current( $options=array() ) {
+		$method = it_exchange_get_registered_shipping_method( $this->current_method, $this->product );
+		return $method->label;
 	}
 }

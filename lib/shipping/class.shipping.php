@@ -30,9 +30,10 @@ class IT_Exchange_Shipping {
 		//$this->init_shipping_address_purchase_requirements();
 
 		// Template part filters
-		add_filter( 'it_exchange_get_content_cart_totals_elements', array( $this, 'add_shipping_to_template_totals_loops' ) );
 		add_filter( 'it_exchange_get_content_checkout_totals_elements', array( $this, 'add_shipping_to_template_totals_loops' ) );
 		add_filter( 'it_exchange_get_super-widget-checkout_after-cart-items_loops', array( $this, 'add_shipping_address_to_sw_template_totals_loops' ) );
+		add_filter( 'it_exchange_get_super-widget-checkout_after-cart-items_loops', array( $this, 'add_shipping_method_to_sw_template_totals_loops' ) );
+		add_filter( 'it_exchange_get_super-widget-checkout_after-cart-items_loops', array( $this, 'add_shipping_to_template_totals_loops' ) );
 
 		// Ajax Request to update shipping address
 		add_action( 'it_exchange_processing_super_widget_ajax_update-shipping', array( $this, 'process_ajax_request' ) );
@@ -366,7 +367,7 @@ class IT_Exchange_Shipping {
 		// Locate the discounts key in elements array (if it exists)
 		$index = array_search( 'totals-savings', $elements );
 		if ( false === $index )
-			$index = -1; 
+			$index = count( $elements) -1; 
 
 		array_splice( $elements, $index, 0, 'totals-shipping' );
 		return $elements;
@@ -382,22 +383,36 @@ class IT_Exchange_Shipping {
 	*/
 	function add_shipping_address_to_sw_template_totals_loops( $loops ) { 
 
-		// Locate the Billing Address or discounts key in elements array (if it exists) and insert before
-		$index = array_search( 'discounts', $loops );
-		$index = empty( $index ) ? array_search( 'billing-address', $loops ) : $index;
-		if ( false === $index )
-			$index = -1; 
-
-		// Shipping Costs
-		array_splice( $loops, $index, 0, 'shipping-cost' );
-
-		// Locate the billing address key in elements array (if it exists)
 		$index = array_search( 'billing-address', $loops );
 		if ( false === $index )
-			$index = -1; 
+			$index = -1;
 
 		// Shipping Address 
 		array_splice( $loops, $index, 0, 'shipping-address' );
+
+		return $loops;
+	}
+
+	/**
+	 * Add Shipping Method to the super-widget-checkout totals loop
+	 *
+	 * @since CHANGEME
+	 *
+	 * @param array $loops list of existing elements
+	 * @return array
+	*/
+	function add_shipping_method_to_sw_template_totals_loops( $loops ) { 
+
+		// Locate the Billing Address or discounts key in elements array (if it exists) and insert before
+		$index = array_search( 'billing-address', $loops );
+		$index = ( false === $index ) ? array_search( 'shipping-address', $loops ) : $index;
+		if ( false === $index )
+			$index = -1; 
+		else
+			$index++;
+
+		// Shipping Address 
+		array_splice( $loops, $index, 0, 'shipping-method' );
 
 		return $loops;
 	}
