@@ -1,11 +1,10 @@
 <?php
 /**
  * Custom integrations with Builder.
- * 
+ *
  * @package IT_Exchange
- * @since 1.3.3
+ * @since CHANGEME
 */
-
 function it_exchange_builder_integration_setup() {
 	if ( isset( $GLOBALS['theme_index'] ) && 'it-builder' == $GLOBALS['theme_index'] ) {
 		require_once( dirname( __FILE__ ) . '/functions.php' );
