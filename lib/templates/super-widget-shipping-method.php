@@ -17,18 +17,19 @@
 if ( in_array( 'customer-has-shipping-address', it_exchange_get_pending_purchase_requirements() ) )
 	return;
 ?>
+<div class="it-exchange-sw-processing it-exchange-sw-processing-checkout cart-items-wrapper">
+	<?php do_action( 'it_exchange_super_widget_shipping_method_purchase_requirement_before_element' ); ?>
+	<div class="it-exchange-checkout-shipping-method-purchase-requirement">
+		<?php do_action( 'it_exchange_super_widget_shipping_method_purchase_requirement_begin_element' ); ?>
 
-<?php do_action( 'it_exchange_super_widget_shipping_method_purchase_requirement_before_element' ); ?>
-<div class="it-exchange-checkout-shipping-method-purchase-requirement">
-	<?php do_action( 'it_exchange_super_widget_shipping_method_purchase_requirement_begin_element' ); ?>
+		<h3><?php _e( 'Shipping Method', 'LION' ); ?></h3>
+		<?php it_exchange( 'shipping-method', 'form' ); ?>
 
-	<h3><?php _e( 'Shipping Method', 'LION' ); ?></h3>
-	<?php it_exchange( 'shipping-method', 'form' ); ?>
+		<div id="it-exchange-super-widget-shipping-method-actions">
+			<?php it_exchange( 'shipping-method', 'cancel' ); ?>
+		</div>
 
-	<div id="it-exchange-super-widget-shipping-method-actions">
-		<?php it_exchange( 'shipping-method', 'cancel' ); ?>
+		<?php do_action( 'it_exchange_super_widget_shipping_method_purchase_requirement_end_element' ); ?>
 	</div>
-
-	<?php do_action( 'it_exchange_super_widget_shipping_method_purchase_requirement_end_element' ); ?>
+	<?php do_action( 'it_exchange_super_widget_shipping_method_purchase_requirement_after_element' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widget_shipping_method_purchase_requirement_after_element' ); ?>
