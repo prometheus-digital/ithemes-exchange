@@ -67,7 +67,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 		} else {
 			?>
 			<form method="post" action="">
-			<select name="it-exchange-shipping-method" onchange="itExchangeUpdateCheckoutShippingMethod( jQuery(this).val() )">
+			<select class="it-exchange-shipping-method-select" name="it-exchange-shipping-method">
 			<?php
 			$options = '<option value="0">' . __( 'Select a shipping method', 'LION' );
 			foreach( $cart_methods as $method ) {
@@ -106,7 +106,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 
 					if ( count( $enabled_shipping_methods ) > 1 ) {
 						?>
-						<select name="it-exchange-shipping-method-for-<?php esc_attr_e( $product['product_cart_id'] ); ?>" onchange="itExchangeUpdateCheckoutMultipleShippingMethod( '<?php esc_attr_e( $product['product_cart_id'] ); ?>', jQuery(this).val() )">
+						<select class="it-exchange-multiple-shipping-methods-select" data-it-exchange-product-cart-id="<?php esc_attr_e( $product['product_cart_id'] ); ?>" name="it-exchange-shipping-method-for-<?php esc_attr_e( $product['product_cart_id'] ); ?>" >
 							<?php foreach( $enabled_shipping_methods as $product_method ) : ?>
 								<?php if ( empty( $product_method->slug ) ) continue; ?>
 								<option value="<?php esc_attr_e( $product_method->slug ); ?>" <?php selected( $selected_multiple_method, $product_method->slug ); ?>>

@@ -22,33 +22,10 @@ if ( in_array( 'customer-has-shipping-address', it_exchange_get_pending_purchase
 <?php do_action( 'it_exchange_content_checkout_shipping_method_purchase_requirement_before_element' ); ?>
 <div class="it-exchange-checkout-shipping-method-purchase-requirement">
 	<?php do_action( 'it_exchange_content_checkout_shipping_method_purchase_requirement_begin_element' ); ?>
-	<script type="text/javascript">
-	function itExchangeUpdateCheckoutShippingMethod( value ) {
-		var ITExchangeCheckoutRefreshAjaxURL = '<?php echo esc_js( site_url() ); ?>/?ite-checkout-refresh=1';
-		jQuery.post(ITExchangeCheckoutRefreshAjaxURL, {'shipping-method':value}, function(response) {
-			if (response) {
-				jQuery('.entry-content').html(response);
-				jQuery.event.trigger({
-					type: "itExchangeCheckoutReloaded"
-				});
-			}   
-		}); 
-	}
-	function itExchangeUpdateCheckoutMultipleShippingMethod( cartProductID, value ) {
-		var ITExchangeCheckoutRefreshAjaxURL = '<?php echo esc_js( site_url() ); ?>/?ite-checkout-refresh=1';
 
-		jQuery.post(ITExchangeCheckoutRefreshAjaxURL, {'cart-product-id':cartProductID, 'shipping-method':value}, function(response) {
-			if (response) {
-				jQuery('.entry-content').html(response);
-				jQuery.event.trigger({
-					type: "itExchangeCheckoutReloaded"
-				});
-			}   
-		}); 
-	}
-	</script>
 	<h3><?php _e( 'Shipping Method', 'LION' ); ?></h3>
 	<?php it_exchange( 'shipping-method', 'form' ); ?>
+
 	<?php do_action( 'it_exchange_content_checkout_shipping_method_purchase_requirement_end_element' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_shipping_method_purchase_requirement_after_element' ); ?>

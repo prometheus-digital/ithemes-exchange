@@ -513,8 +513,8 @@ class IT_Exchange_Shipping {
 	function enqueue_checkout_page_scripts() {
 		if ( it_exchange_is_page( 'checkout' )  ) {  
 			// Load Shipping Address purchase requirement JS on checkout page.
-			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/shipping-address-purchase-requirement.js' );
-			wp_enqueue_script( 'it-exchange-shipping-address-purchase-requirement', $script, array( 'jquery', 'it-exchange-country-states-sync' ), false, true );
+			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/shipping-purchase-requirement.js' );
+			wp_enqueue_script( 'it-exchange-shipping-purchase-requirement', $script, array( 'jquery', 'it-exchange-country-states-sync' ), false, true );
 		}
 	}
 
