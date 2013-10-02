@@ -26,6 +26,7 @@ include( $this->_plugin_path . '/api/theme/transaction-method.php' );
 include( $this->_plugin_path . '/api/theme/transactions.php' );
 include( $this->_plugin_path . '/api/theme/transaction.php' );
 include( $this->_plugin_path . '/api/theme/shipping.php' );
+include( $this->_plugin_path . '/api/theme/shipping-method.php' );
 include( $this->_plugin_path . '/api/theme/billing.php' );
 include( $this->_plugin_path . '/api/theme/purchase-dialog.php' );
 
@@ -127,6 +128,8 @@ function it_exchange() {
 			$class_name = 'IT_Theme_API_Transaction_Method';
 		if ( 'IT_Theme_API_Purchase-dialog' == $class_name )
 			$class_name = 'IT_Theme_API_Purchase_Dialog';
+		if ( 'IT_Theme_API_Shipping-method' == $class_name )
+			$class_name = 'IT_Theme_API_Shipping_Method';
 
 		// Does the class exist and return an iThemes Exchange theme API context?
 		if ( ! is_callable( array( $class_name, 'get_api_context' ) ) ) {

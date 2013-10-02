@@ -48,8 +48,10 @@ class IT_Exchange_Shipping {
 
 		// Enqueue the JS for the checkout page
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_checkout_page_scripts' ) );
-
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_settings_js' ) );
+
+		// Add var to checkout header
+		add_action( 'wp_head', array( $this, 'add_js_to_checkout_header' ) );
 
 		// Adjusts the cart total
 		add_filter( 'it_exchange_get_cart_total', array( $this, 'modify_shipping_total' ) );
@@ -579,6 +581,24 @@ class IT_Exchange_Shipping {
 			it_exchange_update_cart_data( 'shipping-method', $_POST['it-exchange-shipping-method'] );
 			it_exchange_add_message( 'notice', __( 'Shipping method updated', 'LION' ) );
 		}
+	}
+
+	/**
+	 * Adds some JS vars to the header or the checkout page
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function add_js_to_checkout_header() {
+		if ( ! it_exchange_is_page( 'checkout' ) )
+			return;
+
+		?>
+		<script type="text/javascript">
+			var ITExchangeCheckoutRefreshAjaxURL = '<?php echo esc_js( site_url() ); ?>/?ite-checkout-refresh=1';
+		</script>
+		<?php
 	}
 }
 $IT_Exchange_Shipping = new IT_Exchange_Shipping();
