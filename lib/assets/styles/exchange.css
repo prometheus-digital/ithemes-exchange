@@ -5,6 +5,7 @@
 .it-exchange-wrap{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 .it-exchange-wrap *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 .it-exchange-clearfix:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0;}
+.it-exchange-right {float:right;}
 
 /** -----------------------------------------------------:[ table ]:---------- */
 .it-exchange-table{display:table;table-layout:fixed;width:100%;border:1px solid #DDD;border-bottom:none;border-collapse:collapse;}
@@ -137,7 +138,9 @@
 .it-exchange-checkout-billing-address-purchase-requirement {float:left; width:50%;}
 
 /** ---:[ shipping-method ]:--- */
-.it-exchange-checkout-shipping-method-purchase-requirement {margin:3em 0 4em;}
+.it-exchange-checkout-shipping-method-purchase-requirement{margin:3em 0 4em;}
+.it-exchange-checkout .it-exchange-itemized-checkout-methods{overflow:hidden;margin-top:1em;border:1px solid #DDD;border-bottom:none;}
+.it-exchange-checkout .it-exchange-itemized-checkout-method{padding:1em;border-bottom:1px solid #DDD;}
 
 /** ---:[ visual cc ]:--- */
 .it-exchange-checkout .it-exchange-visual-cc-wrap{margin-top:1em;}
