@@ -149,4 +149,8 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 			$this->add_setting( $setting );
 		}
 	}
+
+	function get_shipping_cost_for_product( $cart_product ) {
+		return 0;
+	}
 }

@@ -128,6 +128,8 @@ abstract class IT_Exchange_Shipping_Method {
 
 	abstract function set_features();
 
+	abstract function get_shipping_cost_for_product( $cart_product );
+
 	function add_setting( $setting ) {
 		$settings = (array) $this->settings;
 		$this->settings[] = $setting;

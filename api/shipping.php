@@ -158,7 +158,7 @@ function it_exchange_get_registered_shipping_methods( $filtered=array() ) {
 /**
  * Save the shipping address based on the User's ID
  *
- * @since 1.0.0
+ * @since CHANGEME
  *
  * @param array $address the shipping address as an array
  * @param int   $customer_id optional. if empty, will attempt to get he current user's ID
@@ -174,37 +174,9 @@ function it_exchange_save_shipping_address( $address, $customer_id=false ) {
 }
 
 /**
- * Get shipping for cart
- *
- * @since 1.0.0
- *
-*/
-function it_exchange_get_shipping_cost_for_cart( $format_price=true ) {
-
-    // Grab the tax rate
-    $options  = it_exchange_get_option( 'addon_shipping_general' );
-    $tax_rate = empty( $options['default-tax-rate'] ) ? 1 : (float) $options['default-tax-rate'];
-    $process_after_discounts = ! empty( $options['calculate-after-discounts'] );
-
-    // Grab the cart subtotal or the cart total depending on the process after discounts option
-    $cart_total = it_exchange_get_cart_subtotal( false );
-
-    if ( $process_after_discounts )
-        $cart_total -= it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ) );
-
-    // Calculate shipping
-    $cart_shipping = $cart_total * ( $tax_rate / 100 );
-
-    $shipping = apply_filters( 'it_exchange_get_shipping_cost_for_cart', $cart_shipping );
-    if ( $format_price )
-        $shipping = it_exchange_format_price( $shipping );
-    return $shipping;
-}
-
-/**
  * Returns the value of an address field for the address form.
  *
- * @since 1.0.0
+ * @since CHANGEME
  *
  * @param string $field       the form field we are looking for the value
  * @param int    $customer_id the wp ID of the customer
@@ -225,7 +197,7 @@ function it_exchange_print_shipping_address_value( $field, $customer_id=false ) 
  * Formats the Shipping Address for display
  *
  * @todo this function sucks. Lets make a function for formatting any address. ^gta
- * @since 1.3.0
+ * @since CHANGEME
  *
  * @return string HTML
 */
@@ -315,7 +287,7 @@ function it_exchange_get_enabled_shipping_methods_for_product( $product, $return
 /** 
  * Is cart address valid?
  *
- * @since 1.0.0
+ * @since CHANGEME
  *
  * @return boolean
 */
@@ -328,12 +300,31 @@ function it_exchange_is_shipping_address_valid() {
 	return (boolean) get_user_meta( $customer_id, 'it_exchange_shipping_address', true );
 } 
 
+/**
+ * Returns the selected shipping method saved in the cart Session
+ *
+ * @since CHANGEME
+ *
+ * @return string method slug
+*/
 function it_exchange_get_cart_shipping_method() {
 	$method = it_exchange_get_cart_data( 'shipping-method' );
 	$method = empty( $method[0] ) ? false : $method[0];
 	return empty( $method ) ? false : $method;
 }
 
+/**
+ * This returns available shipping methods for the cart
+ *
+ * By default, it only returns the highest common denominator for all products.
+ * ie: If product one supports methods A and B but product two only supports method A,
+ *     this function will only return method A.
+ * Toggling the first paramater to false will return a composite of all available methods across products
+ *
+ * @since CHANGEME
+ *
+ * @parma boolean $only_return_methods_available_to_all_cart_products defaults to true. 
+*/
 function it_exchange_get_available_shipping_methods_for_cart( $only_return_methods_available_to_all_cart_products=true ) {
 	$methods   = array();
 	$product_i = 0;
@@ -383,6 +374,101 @@ function it_exchange_get_available_shipping_methods_for_cart( $only_return_metho
 	return $methods;
 }
 
+/**
+ * Returns all available shipping methods for all cart products
+ *
+ * @since CHANGEME
+ *
+ * @return array an array of shipping methods
+*/
 function it_exchange_get_available_shipping_methods_for_cart_products() {
 	return it_exchange_get_available_shipping_methods_for_cart( false );
+}
+
+/**
+ * Returns the cost of shipping for the cart based on selected shipping method(s)
+ *
+ * If called without the method param, it uses the selected cart method. Use with a param to get estimates for an unselected method
+ *
+ * @since CHANGEME
+ *
+ * @param string $shipping_method optional method. 
+*/
+function it_exchange_get_cart_shipping_cost( $shipping_method=false ) {
+	if ( ! $cart_products = it_exchange_get_cart_products() )
+		return false;
+
+	$cart_shipping_method = empty( $shipping_method ) ? it_exchange_get_cart_shipping_method() : $shipping_method;
+	$cart_cost       = 0;
+
+	foreach( (array) $cart_products as $cart_product ) {
+		if ( ! it_exchange_product_has_feature( $cart_product['product_id'], 'shipping' ) )
+			continue;
+
+		if ( 'multiple-methods' == $cart_shipping_method )
+			$shipping_method = it_exchange_get_multiple_shipping_method_for_cart_product( $cart_product['product_cart_id'] );
+		else
+			$shipping_method = $cart_shipping_method;
+
+		$cart_cost = $cart_cost + it_exchange_get_shipping_method_cost_for_cart_item( $shipping_method, $cart_product );
+	}
+	return it_exchange_format_price( $cart_cost );
+}
+
+/**
+ * This will return the shipping cost for a specific method/product combination in the cart.
+ *
+ * @since CHAGNEME
+ *
+ * @param string  $method_slug  the shipping method slug
+ * @param array   $cart_product the cart product array 
+ * @param boolean $format_price format the price for a display
+*/
+function it_exchange_get_shipping_method_cost_for_cart_item( $method_slug, $cart_product, $format_price=false ) {
+	$method = it_exchange_get_registered_shipping_method( $method_slug, $cart_product['product_id'] );
+	if ( empty( $method->slug ) )
+		return 0;
+
+	$cost = $method->get_shipping_cost_for_product( $cart_product );
+	$cost = empty( $cost ) ? 0 : $cost;
+
+	return empty( $format_price ) ? $cost : it_exchange_format_price( $cost );
+}
+
+/**
+ * Returns the shipping method slug used by a specific cart product
+ *
+ * Only applicable when the cart is using multiple shipping methods for multiple products
+ *
+ * @since CHANGEME
+ *
+ * @param string $product_cart_id the product_cart_id in the cart session. NOT the database ID of the product
+ * @return string
+*/
+function it_exchange_get_multiple_shipping_method_for_cart_product( $product_cart_id ) {
+	$selected_multiple_methods = it_exchange_get_cart_data( 'multiple-shipping-methods' );
+	$selected_multiple_methods = empty( $selected_multiple_methods ) ? false : $selected_multiple_methods;
+
+	$method = empty( $selected_multiple_methods[$product_cart_id] ) ? false : $selected_multiple_methods[$product_cart_id];
+	return $method;
+}
+
+/**
+ * This function updates the shipping method being used for a specific product in the cart
+ *
+ * Only applicable when the cart is using multiple shipping methods for multiple products
+ *
+ * @since CHANGEME
+ *
+ * @param string $product_cart_id the product_cart_id in the cart session. NOT the database ID of the product
+ * @param string $method_slug     the slug of the method this cart product will use
+ * @return void
+*/
+function it_exchange_update_multiple_shipping_method_for_cart_product( $product_cart_id, $method_slug ) {
+	$selected_multiple_methods = it_exchange_get_cart_data( 'multiple-shipping-methods' );
+	$selected_multiple_methods = empty( $selected_multiple_methods ) ? array() : $selected_multiple_methods;
+
+	$selected_multiple_methods[$product_cart_id] = $method_slug;
+
+	it_exchange_update_cart_data( 'multiple-shipping-methods', $selected_multiple_methods );
 }

@@ -496,7 +496,7 @@ class IT_Exchange_Shipping {
 	 * @return
 	*/
 	function modify_shipping_total( $total ) {
-		$shipping = it_exchange_get_shipping_cost_for_cart( false );
+		$shipping = it_exchange_get_cart_shipping_cost( false );
 		return $total + $shipping;
 	}
 
@@ -562,9 +562,16 @@ class IT_Exchange_Shipping {
 	// Update cart shipping mehtod
 	function update_cart_shipping_method() {
 		if ( ! empty( $_GET['ite-checkout-refresh'] ) ) {
+			$cart_product_id = empty( $_POST['cart-product-id'] ) ? false : $_POST['cart-product-id'];
 			$shipping_method = empty( $_POST['shipping-method'] ) ? '0': $_POST['shipping-method'];
-			it_exchange_update_cart_data('shipping-method', $shipping_method );
-			it_exchange_get_template_part( 'content-checkout' );
+
+			if ( ! empty( $cart_product_id ) ) {
+				it_exchange_update_multiple_shipping_method_for_cart_product( $cart_product_id, $shipping_method );
+				it_exchange_get_template_part( 'content-checkout' );
+			} else {
+				it_exchange_update_cart_data('shipping-method', $shipping_method );
+				it_exchange_get_template_part( 'content-checkout' );
+			}
 			die();
 		}
 		// TEMP LOGIC
