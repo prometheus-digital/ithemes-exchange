@@ -11,7 +11,7 @@
  *
  * @return void
 */
-function it_exchange_shipping_settings_callback() {
+function it_exchange_simple_shipping_settings_callback() {
 	// Store Owners should never arrive here. Add a link just in case the do somehow
 	?>
 	<div class="wrap">
@@ -23,3 +23,21 @@ function it_exchange_shipping_settings_callback() {
 	</div>
 	<?php
 }
+
+/**
+ * Redirects to General Settings -> Shipping -> Simple Shipping from add-on settings page.
+ *
+ * @since CHANGEME
+ *
+ * return void
+*/
+function it_exchange_simple_shipping_settings_redirect() {
+	$page  = ! empty( $_GET['page'] ) && 'it-exchange-addons' == $_GET['page'];
+	$addon = ! empty( $_GET['add-on-settings'] ) && 'simple-shipping' == $_GET['add-on-settings'];
+
+	if ( $page && $addon ) {
+		wp_redirect( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping', 'provider' => 'simple-shipping' ), admin_url( 'admin' ) ) );
+		die();
+	}
+}
+add_action( 'admin_init', 'it_exchange_simple_shipping_settings_redirect' );
