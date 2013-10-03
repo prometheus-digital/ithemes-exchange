@@ -874,7 +874,9 @@ function it_exchange_add_billing_address_to_sw_template_totals_loops( $loops ) {
 		return $loops;
 
 	// Set index to end of array.
-	$index = count($loops) -1 ;
+	$index = array_search( 'discounts', $loops );
+	$index = ( false === $index ) ? array_search( 'totals-taxes-simple', $loops ) : $index;
+	$index = ( false === $index ) ? count($loops) -1 : $index;
 
 	array_splice( $loops, $index, 0, 'billing-address' );
 	return $loops;
