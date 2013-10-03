@@ -36,6 +36,11 @@ class IT_Exchange_Product_Feature_Shipping {
 	 * @since CHANGEME
 	*/
 	function register_feature_support() {
+		// Abort if we don't have a shipping add-on enabled
+		$addons = it_exchange_get_enabled_addons( array( 'category' => 'shipping' ) );
+		if ( empty( $addons ) )
+			return;
+
 		// Register the product feature
 		$slug        = 'shipping';
 		$description = 'Adds shipping fields to a product';

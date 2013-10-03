@@ -67,7 +67,6 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	function set_features() {
 		$this->shipping_features = array(
 			'exchange-flat-rate-shipping-cost',
-			'core-from-address',
 		);
 	}
 

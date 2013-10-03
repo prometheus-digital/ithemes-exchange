@@ -1,33 +1,4 @@
 <?php
-/*
-delete_option( 'it-storage-exchange_addon-shipping');
-delete_option( 'it-storage-exchange_addon-shipping-exchange');
-delete_option( 'it-storage-exchange_addon-shipping-exchange-shipping');
-delete_option( 'it-storage-exchange_addon-shipping-exchange-standard');
-delete_option( 'it-storage-exchange_addon-shipping-general');
-delete_option( 'it-storage-exchange_addon-shipping-standard');
-delete_option( 'it-storage-exchange_addon_shipping' );
-delete_option( 'it-storage-exchange_addon_shipping_exchange-standard' );
-delete_option( 'it-storage-exchange_addon_shipping_general' );
-delete_option( 'it-storage-exchange_addon_shipping_settings' );
-delete_option( 'it-storage-exchange_exchange_addon_shipping_exchange-standard');
-delete_option( 'it-storage-exchange_it-exchange-addon-shipping-general' );
-delete_option( 'it-storage-exchange_it-exchange-it-exchange-addon-shipping-gener' );
-delete_option( 'it-storage-exchange_it-exchange-it-exchangie-addon-shipping-gene' );
-delete_option( 'it-storage-exchange_shipping-general' );
-delete_option( 'it-storage-exchange_simple-shipping' );
-delete_option( 'it-storage-exchange_addon-shipping-simple-enable-flat-rate-shipp' );
-delete_option( 'it-storage-exchange_addon-shipping-simple-shipping-enable-flat-r' );
-delete_option( 'it-storage-exchange_addon-simple-shipping' );
-delete_option( 'it-storage-exchange_addon-simple-shipping-enable-flat-rate-shipp');
-delete_option( 'it-storage-exchange_simple-shipping-enable-flat-rate-shipping' );
-delete_option( 'it-storage-exchange_simple-shipping-simple-shipping-enable-flat-' );
-delete_option( 'it-storage-exchange_simple-shiping-simple-shipping-enable-flat-r');
-delete_option( 'it-storage-exchange_addon-shipping-general');
-delete_option( 'it-storage-exchange_addon_shipping' );
-delete_option( 'it-storage-exchange_addon_shipping_general');
-delete_option( 'it-storage-exchange_addon_shipping_settings');
-*/
 /**
  * Registers the Shipping Methods we need for Exchange Simple Shipping add-on
  *
@@ -86,8 +57,6 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	*/
 	function set_features() {
 		$this->shipping_features = array(
-			'core-from-address',
-			'core-weight-dimensions',
 		);
 	}
 
