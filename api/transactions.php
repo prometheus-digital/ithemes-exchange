@@ -166,9 +166,14 @@ function it_exchange_generate_transaction_object() {
 	$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
 
 	// Tack on Shipping and Billing address
-	$transaction_object->shipping_address       = it_exchange_get_cart_billing_address();
+	$transaction_object->shipping_address       = it_exchange_get_cart_shipping_address();
 	$transaction_object->billing_address        = apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) ? it_exchange_get_cart_billing_address() : false;
-	
+
+	// Shipping Method and total
+	$transaction_object->shipping_method        = it_exchange_get_cart_shipping_method();
+	$transaction_object->shipping_method_multi  = it_exchange_get_cart_data( 'multiple-shipping-methods' );
+	$transaction_object->shipping_total         = it_exchange_convert_to_database_number( it_exchange_get_cart_shipping_cost() );
+
 	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object );
 	return $transaction_object;
 	
@@ -1070,4 +1075,87 @@ function it_exchange_transaction_status_can_be_manually_changed( $transaction ) 
 	if( ! $method = it_exchange_get_transaction_method( $transaction ) )
 		return false;
 	return apply_filters( 'it_exchange_' . $method . '_transaction_status_can_be_manually_changed', false );
+}
+
+/**
+ * Does this transaction include shipping details
+ *
+ * @since CHANGEME
+ *
+ * @param mixed $transaction the id or object
+ * @return boolean
+*/
+function it_exchange_transaction_includes_shipping( $transaction ) {
+	$includes_shipping = it_exchange_get_transaction_shipping_method( $transaction );
+	$includes_shipping = ! empty( $includes_shipping->label );
+	return apply_filters( 'it_exchange_transaction_includes_shipping', $includes_shipping, $transaction );
+}
+
+/**
+ * Return the total for shipping for this transaction
+ *
+ * @since CHANGEME
+ *
+ * @param mixed $transaction the id or object
+ * @return string
+*/
+function it_exchange_get_transaction_shipping_total( $transaction ) {
+	if( ! $transaction= it_exchange_get_transaction( $transaction ) )
+		return false;
+
+	$shipping_total = empty( $transaction->cart_details->shipping_total ) ? false : it_exchange_convert_from_database_number( $transaction->cart_details->shipping_total );
+	return apply_filters( 'it_exchange_get_transaction_shipping_total', $shipping_total, $transaction );
+}
+
+/**
+ * Returns the shipping method object used with this transaction
+ *
+ * If Multiple Methods was used, returns a stdClass with slug and label properties
+ *
+ * @since CHANGEME
+ *
+ * @param mixed $transaction the id or object
+ * @return boolean
+*/
+function it_exchange_get_transaction_shipping_method( $transaction ) {
+	if( ! $transaction= it_exchange_get_transaction( $transaction ) )
+		return false;
+
+	$shipping_method = empty( $transaction->cart_details->shipping_method ) ? false : $transaction->cart_details->shipping_method;
+
+	// If Multiple, Just return the string since its not a registered method
+	if ( 'multiple-methods' == $shipping_method ) {
+		$method = new stdClass();
+		$method->slug  = 'multiple-methods';
+		$method->label = __( 'Multiple Shipping Methods', 'LION' );
+		return apply_filters( 'it_exchange_get_transaction_shipping_method', $method, $transaction );
+	}
+
+	$shipping_method = it_exchange_get_registered_shipping_method( $shipping_method );
+	return apply_filters( 'it_exchange_get_transaction_shipping_method', $shipping_method, $transaction );
+}
+
+/**
+ * Prints Shipping Method used for a specific product in the transaction
+ *
+ * @since CHANGEME
+ *
+ * @param mixed $transaction
+ * @return string
+*/
+function it_exchange_get_transaction_shipping_method_for_product( $transaction, $product_cart_id ) {
+	if( ! $transaction= it_exchange_get_transaction( $transaction ) )
+		return false;
+
+	$transaction_method = it_exchange_get_transaction_shipping_method( $transaction );
+	if ( 'multiple-methods' == $transaction_method->slug ) {
+		$product_method = empty( $transaction->cart_details->shipping_method_multi[$product_cart_id] ) ? false : $transaction->cart_details->shipping_method_multi[$product_cart_id];
+		$product_method = it_exchange_get_registered_shipping_method( $product_method );
+		$method = empty( $product_method->label ) ? __( 'Unknown Method', 'LION' ) : $product_method->label;
+	} else {
+		$method = $transaction_method->label;
+	}
+
+	return apply_filters( 'it_exchange_get_transaction_shipping_method_for_product', $method, $transaction, $product_cart_id );
+	
 }

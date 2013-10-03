@@ -405,7 +405,7 @@ function it_exchange_get_available_shipping_methods_for_cart_products() {
  *
  * @param string $shipping_method optional method. 
 */
-function it_exchange_get_cart_shipping_cost( $shipping_method=false ) {
+function it_exchange_get_cart_shipping_cost( $shipping_method=false, $format_price=true ) {
 	if ( ! $cart_products = it_exchange_get_cart_products() )
 		return false;
 
@@ -423,7 +423,7 @@ function it_exchange_get_cart_shipping_cost( $shipping_method=false ) {
 
 		$cart_cost = $cart_cost + it_exchange_get_shipping_method_cost_for_cart_item( $shipping_method, $cart_product );
 	}
-	return it_exchange_format_price( $cart_cost );
+	return empty( $format_price ) ? $cart_cost : it_exchange_format_price( $cart_cost );
 }
 
 /**
