@@ -310,7 +310,18 @@ function it_exchange_is_shipping_address_valid() {
 function it_exchange_get_cart_shipping_method() {
 	$method = it_exchange_get_cart_data( 'shipping-method' );
 	$method = empty( $method[0] ) ? false : $method[0];
-	return empty( $method ) ? false : $method;
+
+	// If there is only one possible shippign method for the cart, set it and return it.
+	$cart_methods         = it_exchange_get_available_shipping_methods_for_cart();
+	$cart_product_methods = it_exchange_get_available_shipping_methods_for_cart_products();
+
+	if ( ( count( $cart_methods ) === 1 && count( $cart_product_methods ) === 1 ) || count( $cart_product_methods ) === 1 ) { 
+		$single_method = reset($cart_methods);
+		it_exchange_update_cart_data( 'shipping-method', $single_method->slug );
+		return $single_method->slug;
+	}
+
+	return $method;
 }
 
 /**
