@@ -99,19 +99,21 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			jQuery( function() {
 				// Shipping Init country/state fields
 				var iteCountryStatesSyncOptions = { 
-					statesWrapper: '.it-exchange-state',
-					stateFieldID:  '#it-exchange-shipping-address-state',
-					templatePart:  'super-widget-shipping-address/elements/state'
+					statesWrapper     : '.it-exchange-state',
+					stateFieldID      : '#it-exchange-shipping-address-state',
+					templatePart      : 'super-widget-shipping-address/elements/state',
+					autoCompleteState : true
 				}; 
-				jQuery('#it-exchange-shipping-address-country', '.it-exchange-super-widget').itCountryStatesSync(iteCountryStatesSyncOptions).trigger('change');
+				jQuery('#it-exchange-shipping-address-country', '.it-exchange-super-widget').itCountryStatesSync(iteCountryStatesSyncOptions).selectToAutocomplete().trigger('change');
 
 				// Billing Init fields
 				var iteCountryStatesSyncOptions = { 
-					statesWrapper: '.it-exchange-state',
-					stateFieldID:  '#it-exchange-billing-address-state',
-					templatePart:  'super-widget-billing-address/elements/state'
+					statesWrapper     : '.it-exchange-state',
+					stateFieldID      : '#it-exchange-billing-address-state',
+					templatePart      :  'super-widget-billing-address/elements/state',
+					autoCompleteState : true,
 				}; 
-				jQuery('#it-exchange-billing-address-country', '.it-exchange-super-widget').itCountryStatesSync(iteCountryStatesSyncOptions).trigger('change');
+				jQuery('#it-exchange-billing-address-country', '.it-exchange-super-widget').itCountryStatesSync(iteCountryStatesSyncOptions).selectToAutocomplete().trigger('change');
 			});
 		</script>
 		<?php
@@ -144,8 +146,16 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 				'processingPaymentLabel' => __( 'Processing', 'LION' ),
 			)
 		);
+
+		// Autocomplete
+		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' );
+		wp_register_script( 'jquery-select-to-autocomplete', $script, array( 'jquery', 'jquery-ui-autocomplete' ) );
+		$style = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/autocomplete.css' );
+		wp_register_style( 'it-exchange-autocomplete-style', $style );
+		wp_enqueue_style( 'it-exchange-autocomplete-style' );
+
 		// Country States sync
-		wp_enqueue_script( 'it-exchange-country-states-sync', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/country-states-sync.js' ), array( 'it-exchange-super-widget' ), false, true );
+		wp_enqueue_script( 'it-exchange-country-states-sync', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/country-states-sync.js' ), array( 'jquery', 'jquery-ui-autocomplete', 'jquery-select-to-autocomplete', 'it-exchange-super-widget' ), false, true );
 
 		// Allow add-ons to enqueue scripts for super-widget
 		do_action( 'it_exchange_enqueue_super_widget_scripts' );
