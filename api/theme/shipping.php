@@ -270,9 +270,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$default_value = empty( $_POST['it-exchange-shipping-address-state'] ) ? $shipping_value : $_POST['it-exchange-shipping-address-state'];
 
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'State', 'LION' ),
-			'value'  => $default_value,
+			'format'     => 'html',
+			'label'      => __( 'State', 'LION' ),
+			'value'      => $default_value,
+			'field-type' => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -288,7 +289,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$current_value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
 
 		$field = '';
-		if ( ! empty( $states ) && is_array( $states ) ) {
+		if ( ! empty( $states ) && is_array( $states ) && 'text' != $options['field-type'] ) {
 			$field .= '<select id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '">';
 			foreach( (array) $states as $key => $value ) {
 				$field .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $current_value, false ) . '>' . esc_html( $value ) . '</option>';
@@ -433,7 +434,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 				break;
 			case 'html':
 			default:
-				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'] . '</label>';
+				$output  = empty( $options['label'] ) ? '' : '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'] . '</label>';
 				$output .= '<input type="text" class="' . $class . '" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" value="' . $value . '" />';
 		}
 

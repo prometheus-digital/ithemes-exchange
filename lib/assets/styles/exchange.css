@@ -130,6 +130,8 @@
 .it-exchange-checkout-logged-in-purchase-requirement {margin:2em 0;}
 
 /** ---:[ shipping-address ]:--- */
+.it-exchange-checkout .it-exchange-shipping-address-form div{float:left;}
+.it-exchange-checkout .it-exchange-shipping-address-form div.it-exchange-clearfix{width:100%;}
 .it-exchange-checkout .it-exchange-shipping-address-form .it-exchange-submit{margin:1em 0;}
 .it-exchange-checkout-shipping-address-purchase-requirement {float:left; width:50%; }
 

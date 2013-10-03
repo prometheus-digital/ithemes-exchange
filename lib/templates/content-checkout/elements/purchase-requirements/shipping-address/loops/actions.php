@@ -16,7 +16,7 @@
 */
 ?>
 <?php do_action( 'it_exchange_content_checkout_purchase_requirement_shipping_before_actions_loop' ); ?>
-<?php foreach ( it_exchange_get_template_part_elements( 'content_checkout/elements/purchase-requirements/shipping-address/elements/', 'actions', array( 'submit', 'cancel' ) ) as $action ) : ?>
+<?php foreach ( it_exchange_get_template_part_elements( 'content_checkout/elements/purchase-requirements/shipping-address/elements/', 'actions', array( 'submit', 'clearfix', 'cancel' ) ) as $action ) : ?>
 	<?php 
 	/** 
 	 * Theme and add-on devs should add code to this loop by 
