@@ -15,9 +15,10 @@
 */
 
 // Don't show anything if login-requirement exists and hasn't been met
-if ( in_array( 'logged-in', it_exchange_get_pending_purchase_requirements() ) )
+if ( in_array( 'logged-in', it_exchange_get_pending_purchase_requirements() ) || in_array( 'billing-address', it_exchange_get_pending_purchase_requirements() ) )
 	return;
-$editing_shipping = ( ! empty( $_REQUEST['it-exchange-update-shipping-address'] ) && ! empty( $GLOBALS['it_exchange']['shipping-address-error'] ) ) ? true : false;
+
+$editing_shipping = ( ( ! empty( $_REQUEST['it-exchange-update-shipping-address'] ) && ! empty( $GLOBALS['it_exchange']['shipping-address-error'] ) ) || ! it_exchange_get_customer_shipping_address() ) ? true : false;
 ?>
 <?php do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_before_element' ); ?>
 <div class="it-exchange-checkout-shipping-address-purchase-requirement">
