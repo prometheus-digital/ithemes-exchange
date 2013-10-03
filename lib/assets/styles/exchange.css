@@ -139,6 +139,11 @@
 .it-exchange-checkout-shipping-address-purchase-requirement {float:left; width:50%; }
 
 /** ---:[ billing ]:--- */
+.it-exchange-checkout .it-exchange-billing-address-form div{float:left;}
+.it-exchange-checkout .it-exchange-billing-address-form #it-exchange-city,
+.it-exchange-checkout .it-exchange-billing-address-form #it-exchange-country{width:40%;}
+.it-exchange-checkout .it-exchange-billing-address-form #it-exchange-billing-address-country{width:150px;}
+.it-exchange-checkout .it-exchange-billing-address-form div.it-exchange-clearfix{width:100%;}
 .it-exchange-checkout .it-exchange-billing-address-form .it-exchange-submit{margin:1em 0;}
 .it-exchange-checkout-billing-address-purchase-requirement {float:left; width:50%;}
 

@@ -283,6 +283,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 		$current_value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
 
 		$field  = '<select id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '">';
+		$field .= '<option value=""></option>';
 		foreach( $countries as $key => $value ) {
 			$field .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $current_value, false ) . '>' . esc_html( $value ) . '</option>';
 		}
@@ -345,6 +346,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 		$field = '';
 		if ( ! empty( $states ) && is_array( $states ) ) {
 			$field .= '<select id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '">';
+			$field .= '<option value=""></option>';
 			foreach( (array) $states as $key => $value ) {
 				$field .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $current_value, false ) . '>' . esc_html( $value ) . '</option>';
 			}
@@ -488,7 +490,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 				break;
 			case 'html':
 			default:
-				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'] . '</label>';
+				$output  = empty( $options['label'] ) ? '' : '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'] . '</label>';
 				$output .= '<input type="text" class="' . $class . '" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" value="' . $value . '" />';
 		}
 

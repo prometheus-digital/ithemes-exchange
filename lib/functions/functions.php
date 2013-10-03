@@ -108,6 +108,12 @@ function it_exchange_load_public_scripts( $current_view ) {
 	// ****** CHECKOUT SPECIFIC SCRIPTS ******* 
 	if ( it_exchange_is_page( 'checkout' )  ) {
 
+		// Register select to autocomplte
+		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' );
+		wp_register_script( 'jquery-select-to-autocomplete', $script, array( 'jquery', 'jquery-ui-autocomplete' ) );
+		wp_register_style('myprefix-jquery-ui','http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css');
+		wp_enqueue_style( 'myprefix-jquery-ui' );
+
 		// General Checkout
 		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/checkout-page.js' );
 		wp_enqueue_script( 'it-exchange-checkout-page', $script, array( 'jquery' ), false, true );
