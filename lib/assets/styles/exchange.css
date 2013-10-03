@@ -16,6 +16,9 @@
 .it-exchange-table-column{display:table-cell;vertical-align:middle;}
 .it-exchange-table-column-inner{padding:10px;}
 
+/** -----------------------------------------------------:[ inputs ]:---------- */
+.it-exchange-wrap select{max-width:100%;}
+
 /** -----------------------------------------------------:[ columns ]:---------- */
 .it-exchange-columns-wrapper{overflow:hidden;}
 .it-exchange-column{float:left;}

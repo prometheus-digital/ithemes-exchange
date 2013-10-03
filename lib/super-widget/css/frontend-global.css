@@ -1,4 +1,5 @@
 .it-exchange-super-widget{width:100%;background:#FFF;color:#111;overflow:hidden;}
+.it-exchange-super-widget select {max-width:100%;}
 .it-exchange-super-widget .it-exchange-sw-product,
 .it-exchange-super-widget .it-exchange-sw-processing{border:1px solid #F0F0F0;}
 .it-exchange-super-widget *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}

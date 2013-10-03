@@ -185,7 +185,7 @@ class IT_Exchange_Product_Feature_Downloads {
 			<div class="downloads-label-add">
 				<label><?php _e( 'Product Files', 'LION' ); ?> <span class="tip" title="<?php _e( 'If you are selling digital products (like music or ebooks), upload those here.', 'LION' ); ?>">i</span></label>
 				<div class="download-add-new right">
-					<a href class="button"><?php _e( 'Add New', 'LION' ); ?></a>
+					<a href class="button"><?php _e( 'Add New Download', 'LION' ); ?></a>
 				</div>
 			</div>
 			<div class="downloads-list-wrapper">
