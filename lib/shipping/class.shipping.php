@@ -546,9 +546,16 @@ class IT_Exchange_Shipping {
 	*/
 	function enqueue_checkout_page_scripts() {
 		if ( it_exchange_is_page( 'checkout' )  ) {  
+			// Register select to autocomplte
+			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' );
+			wp_register_script( 'jquery-select-to-autocomplete', $script, array( 'jquery', 'jquery-ui-autocomplete' ) );
+
 			// Load Shipping Address purchase requirement JS on checkout page.
 			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/shipping-purchase-requirement.js' );
-			wp_enqueue_script( 'it-exchange-shipping-purchase-requirement', $script, array( 'jquery', 'it-exchange-country-states-sync' ), false, true );
+			wp_enqueue_script( 'it-exchange-shipping-purchase-requirement', $script, array( 'jquery', 'jquery-ui-autocomplete', 'it-exchange-country-states-sync', 'jquery-select-to-autocomplete' ), false, true );
+
+			wp_register_style('myprefix-jquery-ui','http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css');
+			wp_enqueue_style( 'myprefix-jquery-ui' );
 		}
 	}
 

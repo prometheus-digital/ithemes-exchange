@@ -228,6 +228,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$current_value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
 
 		$field  = '<select id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '">';
+		$field .= '<option value=""></option>';
 		foreach( $countries as $key => $value ) {
 			$field .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $current_value, false ) . '>' . esc_html( $value ) . '</option>';
 		}
@@ -291,6 +292,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$field = '';
 		if ( ! empty( $states ) && is_array( $states ) && 'text' != $options['field-type'] ) {
 			$field .= '<select id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '">';
+			$field .= '<option value=""></option>';
 			foreach( (array) $states as $key => $value ) {
 				$field .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $current_value, false ) . '>' . esc_html( $value ) . '</option>';
 			}
