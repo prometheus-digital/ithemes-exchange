@@ -175,7 +175,8 @@
 #it-exchange-store .it-exchange-products li {list-style: none;display: block;float:left;width: 45%;margin: 0 0 5em 0;vertical-align: top;}
 #it-exchange-store .it-exchange-products li:nth-child(2n+1) {margin-right: 5%;clear:both;}
 #it-exchange-store .it-exchange-product-details {padding: 1em;overflow:hidden;}
-#it-exchange-store .entry-title {font-size: 1.5em;margin: .5em 0;padding: 0;}
+#it-exchange-store .it-exchange-product-title {font-size: 1.5em;margin: .5em 0;padding: 0;}
+#it-exchange-store .it-exchange-product-title a {text-decoration: none;}
 #it-exchange-store .it-exchange-base-price {font-size: 1.25em;float:left;}
 #it-exchange-store .it-exchange-product-permalink {float:right;line-height: 2;}
 #it-exchange-store .featured-image-wrapper img {max-width: 100%; height: auto;}

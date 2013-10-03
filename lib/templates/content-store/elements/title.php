@@ -15,5 +15,7 @@
 ?>
 
 <?php do_action( 'it_exchange_content_store_info_before_title_element' ); ?>
-<h2 class="it-exchange-product-title entry-title"><?php it_exchange( 'product', 'title', array( 'format' => 'text' ) ); ?></h2>
+<h2 class="it-exchange-product-title entry-title">
+	<a href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'url' ) ); ?>"><?php it_exchange( 'product', 'title', array( 'format' => 'text' ) ); ?></a>
+</h2>
 <?php do_action( 'it_exchange_content_store_info_after_title_element' ); ?>
