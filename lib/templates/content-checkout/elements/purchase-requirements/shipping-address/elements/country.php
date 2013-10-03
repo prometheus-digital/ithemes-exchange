@@ -15,7 +15,7 @@
 */
 ?>
 <?php do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_before_country_element' ); ?>
-<div class="it-exchange-country">
+<div class="it-exchange-country it-exchange-left">
 	<?php it_exchange( 'shipping', 'country' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_after_country_element' ); ?>

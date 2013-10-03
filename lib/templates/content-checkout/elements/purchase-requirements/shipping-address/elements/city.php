@@ -15,7 +15,7 @@
 */
 ?>
 <?php do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_before_city_element' ); ?>
-<div class="it-exchange-city">
+<div class="it-exchange-city it-exchange-left it-exchange-clear-left">
 	<?php it_exchange( 'shipping', 'city' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_after_city_element' ); ?>

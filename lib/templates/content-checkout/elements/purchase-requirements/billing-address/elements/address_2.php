@@ -15,7 +15,7 @@
 */
 ?>
 <?php do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_before_address2_element' ); ?>
-<div class="it-exchange-address2">
+<div class="it-exchange-address2 it-exchange-clear-left">
 	<?php it_exchange( 'billing', 'address2', array( 'label' => false ) ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_after_address2_element' ); ?>

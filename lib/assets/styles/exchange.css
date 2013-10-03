@@ -5,7 +5,10 @@
 .it-exchange-wrap{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 .it-exchange-wrap *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 .it-exchange-clearfix:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0;}
+.it-exchange-left {float:left;}
 .it-exchange-right {float:right;}
+.it-exchange-clear-left {clear:left;overflow:hidden;}
+.it-exchange-clear-right {clear:right;overflow:hidden;}
 
 /** -----------------------------------------------------:[ table ]:---------- */
 .it-exchange-table{display:table;table-layout:fixed;width:100%;border:1px solid #DDD;border-bottom:none;border-collapse:collapse;}
@@ -117,12 +120,13 @@
 
 /** ---:[ purchase requirements ]:--- */
 #it-exchange-checkout-purchase-requirements label{display:block;margin-top:1em;}
-#it-exchange-checkout-purchase-requirements input[type="checkbox"]{margin:2em .5em 2em 0;}
+#it-exchange-checkout-purchase-requirements input[type="checkbox"]{margin-right:.5em;}
 #it-exchange-checkout-purchase-requirements input[type="checkbox"] + label{display:inline;}
 #it-exchange-checkout-purchase-requirements #wp-submit{margin-bottom:2em;}
 #it-exchange-checkout-purchase-requirements .it-exchange-profile-save{margin:1.5em 0;}
 .it-exchange-checkout-purchase-requirements-notification{margin:1em 0;padding:.75em 1em;border-radius:3px;background:#EEE;text-align:center;}
-
+#it-exchange-checkout-purchase-requirements .it-exchange-address1 input,
+#it-exchange-checkout-purchase-requirements .it-exchange-address2 input{width:95%;}
 #it-exchange-checkout-purchase-requirements.it-exchange-requirements-active{margin-bottom:5em;}
 .it-exchange-checkout .it-exchange-order-details.it-exchange-requirements-active{opacity:.5;}
 
@@ -130,22 +134,16 @@
 .it-exchange-checkout-logged-in-purchase-requirement {margin:2em 0;}
 
 /** ---:[ shipping-address ]:--- */
-.it-exchange-checkout .it-exchange-shipping-address-form div{float:left;}
-.it-exchange-checkout .it-exchange-shipping-address-form #it-exchange-city,
-.it-exchange-checkout .it-exchange-shipping-address-form #it-exchange-country{width:40%;}
-.it-exchange-checkout .it-exchange-shipping-address-form #it-exchange-shipping-address-country{width:150px;}
-.it-exchange-checkout .it-exchange-shipping-address-form div.it-exchange-clearfix{width:100%;}
-.it-exchange-checkout .it-exchange-shipping-address-form .it-exchange-submit{margin:1em 0;}
+.it-exchange-checkout .it-exchange-shipping-address-form .it-exchange-left{width:45%;margin-right:5%;}
+.it-exchange-checkout .it-exchange-shipping-address-form .it-exchange-left input{width:100%;}
+.it-exchange-checkout .it-exchange-shipping-address-form .it-exchange-submit{padding:1em 0;}
 .it-exchange-checkout-shipping-address-purchase-requirement {float:left; width:50%; }
 
 /** ---:[ billing ]:--- */
-.it-exchange-checkout .it-exchange-billing-address-form div{float:left;}
-.it-exchange-checkout .it-exchange-billing-address-form #it-exchange-city,
-.it-exchange-checkout .it-exchange-billing-address-form #it-exchange-country{width:40%;}
-.it-exchange-checkout .it-exchange-billing-address-form #it-exchange-billing-address-country{width:150px;}
-.it-exchange-checkout .it-exchange-billing-address-form div.it-exchange-clearfix{width:100%;}
+.it-exchange-checkout .it-exchange-billing-address-form .it-exchange-left{width:45%;margin-right:5%;}
+.it-exchange-checkout .it-exchange-billing-address-form .it-exchange-left input{width:100%;}
 .it-exchange-checkout .it-exchange-billing-address-form .it-exchange-submit{margin:1em 0;}
-.it-exchange-checkout-billing-address-purchase-requirement {float:left; width:50%;}
+.it-exchange-checkout-billing-address-purchase-requirement{float:left;width:50%;}
 
 /** ---:[ shipping-method ]:--- */
 .it-exchange-checkout-shipping-method-purchase-requirement{margin:3em 0 4em;}

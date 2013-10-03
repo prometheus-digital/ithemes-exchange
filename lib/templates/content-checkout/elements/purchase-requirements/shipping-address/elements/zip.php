@@ -15,7 +15,7 @@
 */
 ?>
 <?php do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_before_zip_element' ); ?>
-<div class="it-exchange-zip">
+<div class="it-exchange-zip it-exchange-left">
 	<?php it_exchange( 'shipping', 'zip' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_after_zip_element' ); ?>

@@ -15,7 +15,7 @@
 */
 ?>
 <?php do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_before_first_name_element' ); ?>
-<div class="it-exchange-first-name">
+<div class="it-exchange-first-name it-exchange-left">
 	<?php it_exchange( 'shipping', 'first-name' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_after_first_name_element' ); ?>

@@ -15,7 +15,7 @@
 */
 ?>
 <?php do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_before_state_element' ); ?>
-<div class="it-exchange-state">
+<div class="it-exchange-state it-exchange-left it-exchange-clear-left">
 	<?php it_exchange( 'billing', 'state' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_after_state_element' ); ?>
