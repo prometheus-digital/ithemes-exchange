@@ -35,6 +35,12 @@
 #it-exchange-transaction-details .product-details .expires{font-size:.8em;font-weight:bold;margin-left:1.5em;}
 #it-exchange-transaction-details .product-details li p{margin-left:1em;}
 
+#it-exchange-transaction-details .transaction-shipping-summary{border-bottom:1px solid #DFDFDF;}
+#it-exchange-transaction-details .transaction-shipping-summary .right{font-size:1.2em;width:100%;max-width:250px;}
+#it-exchange-transaction-details .transaction-shipping-summary .left{font-size:.8em;font-weight:bold;line-height:1.6em;width:60%;}
+#it-exchange-transaction-details .transaction-shipping-summary .left div{font-size:1.2em;}
+#it-exchange-transaction-details .transaction-shipping-summary .left .payment-shipping-name{font-size:1.4em;font-weight:normal;}
+
 #it-exchange-transaction-details .transaction-costs{margin-top:2em;border-top:1px solid #DFDFDF;border-bottom:1px solid #DFDFDF;}
 #it-exchange-transaction-details .transaction-costs .right{font-size:1.2em;width:100%;max-width:250px;}
 #it-exchange-transaction-details .transaction-costs .left{font-size:.8em;font-weight:bold;line-height:1.6em;width:60%;}
