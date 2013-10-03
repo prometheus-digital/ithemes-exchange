@@ -110,9 +110,10 @@ function it_exchange_load_public_scripts( $current_view ) {
 
 		// Register select to autocomplte
 		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' );
+		$style = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/autocomplete.css' );
 		wp_register_script( 'jquery-select-to-autocomplete', $script, array( 'jquery', 'jquery-ui-autocomplete' ) );
-		wp_register_style('myprefix-jquery-ui','http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css');
-		wp_enqueue_style( 'myprefix-jquery-ui' );
+		wp_register_style( 'it-exchange-autocomplete-style', $style );
+		wp_enqueue_style( 'it-exchange-autocomplete-style' );
 
 		// General Checkout
 		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/checkout-page.js' );

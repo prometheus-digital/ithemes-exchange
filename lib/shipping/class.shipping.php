@@ -554,8 +554,9 @@ class IT_Exchange_Shipping {
 			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/shipping-purchase-requirement.js' );
 			wp_enqueue_script( 'it-exchange-shipping-purchase-requirement', $script, array( 'jquery', 'jquery-ui-autocomplete', 'it-exchange-country-states-sync', 'jquery-select-to-autocomplete' ), false, true );
 
-			wp_register_style('myprefix-jquery-ui','http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css');
-			wp_enqueue_style( 'myprefix-jquery-ui' );
+			$style = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/autocomplete.css' );
+			wp_register_style( 'it-exchange-autocomplete-style', $style );
+			wp_enqueue_style( 'it-exchange-autocomplete-style' );
 		}
 	}
 
