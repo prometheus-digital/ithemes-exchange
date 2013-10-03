@@ -371,6 +371,10 @@ class IT_Exchange_Shipping {
 	*/
 	function add_shipping_to_template_totals_loops( $elements ) { 
 
+		// Abort of total number of shipping methods available to cart is 0
+		if ( count( it_exchange_get_available_shipping_methods_for_cart() ) < 1 )
+			return $elements;
+
 		// Locate the discounts key in elements array (if it exists)
 		$index = array_search( 'totals-savings', $elements );
 		if ( false === $index )
@@ -389,6 +393,10 @@ class IT_Exchange_Shipping {
 	 * @return array
 	*/
 	function add_shipping_address_to_sw_template_totals_loops( $loops ) { 
+
+		// Abort of total number of shipping methods available to cart is 0
+		if ( count( it_exchange_get_available_shipping_methods_for_cart() ) < 1 )
+			return $loops;
 
 		$index = array_search( 'billing-address', $loops );
 		if ( false === $index )
@@ -409,6 +417,10 @@ class IT_Exchange_Shipping {
 	 * @return array
 	*/
 	function add_shipping_method_to_sw_template_totals_loops( $loops ) { 
+
+		// Abort of total number of shipping methods available to cart is 0
+		if ( count( it_exchange_get_available_shipping_methods_for_cart() ) < 1 )
+			return $loops;
 
 		// Locate the Billing Address or discounts key in elements array (if it exists) and insert before
 		$index = array_search( 'billing-address', $loops );
