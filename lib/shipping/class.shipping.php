@@ -56,6 +56,13 @@ class IT_Exchange_Shipping {
 
 		// Adjusts the cart total
 		add_filter( 'it_exchange_get_cart_total', array( $this, 'modify_shipping_total' ) );
+
+		// Remove Shipping information from cart data when cart is emptied or when item is added to cart
+		add_action( 'it_exchange_empty_shopping_cart', array( $this, 'clear_cart_shipping_data' ) );
+		add_action( 'it_exchange_add_cart_product', array( $this, 'clear_cart_shipping_data' ) );
+		add_action( 'it_exchange_delete_cart_product', array( $this, 'clear_cart_shipping_data' ) );
+		add_action( 'it_exchange_update_cart_product', array( $this, 'clear_cart_shipping_data' ) );
+
 	}
 
 	/**
@@ -615,6 +622,19 @@ class IT_Exchange_Shipping {
 		</script>
 		<?php
 	}
+
+	/**
+	 * Removes all cart_data related to shipping
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function clear_cart_shipping_data() {
+		it_exchange_remove_cart_data( 'shipping-address' );
+		it_exchange_remove_cart_data( 'shipping-method' );
+	}
+
 }
 $IT_Exchange_Shipping = new IT_Exchange_Shipping();
 
