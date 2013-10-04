@@ -14,7 +14,7 @@
 ?>
 
 <?php do_action( 'it_exchange_content_store_before_product_images_loop' ); ?>
-<?php foreach( it_exchange_get_template_part_elements( 'store_product', 'product_features', array( 'featured-image' ) ) as $detail ): ?>
+<?php foreach( it_exchange_get_template_part_elements( 'store_product', 'featured_images_loop', array( 'featured-image' ) ) as $detail ): ?>
 	<?php it_exchange_get_template_part( 'content-store/elements/' . $detail ); ?>
 <?php endforeach; ?>
 <?php do_action( 'it_exchange_content_store_after_product_images_loop' ); ?>

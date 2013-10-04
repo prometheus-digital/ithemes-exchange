@@ -18,12 +18,12 @@
 <div class="cart-item">
     <?php do_action( 'it_exchange_super_widget_checkout_begin_item_element' ); ?>
     <div class="title-remove">
-        <?php foreach( it_exchange_get_template_part_elements( 'super_widget_checkout', 'items', array( 'title', 'remove' ) ) as $detail ) : ?>
+        <?php foreach( it_exchange_get_template_part_elements( 'super_widget_checkout', 'item-title', array( 'title', 'remove' ) ) as $detail ) : ?>
             <?php it_exchange_get_template_part( 'super-widget-checkout/elements/' . $detail ); ?>
         <?php endforeach; ?>
     </div>
     <div class="item-info">
-        <?php foreach( it_exchange_get_template_part_elements( 'super_widget_checkout', 'items', array( 'price' ) ) as $detail ) : ?>
+        <?php foreach( it_exchange_get_template_part_elements( 'super_widget_checkout', 'item-info', array( 'price' ) ) as $detail ) : ?>
             <?php it_exchange_get_template_part( 'super-widget-checkout/elements/' . $detail ); ?>
         <?php endforeach; ?>
     </div>
