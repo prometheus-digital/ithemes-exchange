@@ -378,7 +378,7 @@ class IT_Exchange_Shopping_Cart {
 
 		// Update Shipping if checked
 		if ( ! empty( $_REQUEST['it-exchange-ship-to-billing'] ) && '1' == $_REQUEST['it-exchange-ship-to-billing'] )
-			update_user_meta( it_exchange_get_current_customer_id(), 'it-exchange-shipping-address', $billing );
+			it_exchange_save_shipping_address( $billing, it_exchange_get_current_customer_id() );
 		return true;
 	}
 
