@@ -16,6 +16,6 @@
 ?>
 <?php do_action( 'it_exchange_super_widget_shipping_address_purchase_requirement_before_address2_element' ); ?>
 <div class="it-exchange-address2">
-	<?php it_exchange( 'shipping', 'address2' ); ?>
+	<?php it_exchange( 'shipping', 'address2', array( 'label' => false ) ); ?>
 </div>
 <?php do_action( 'it_exchange_super_widget_shipping_address_purchase_requirement_after_address2_element' ); ?>
