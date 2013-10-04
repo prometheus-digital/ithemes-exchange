@@ -262,68 +262,88 @@ class IT_Exchange_Shipping {
 				'label' => __( 'General Shipping Settings', 'LION' ),
 				'slug'  => 'general-shipping-label',
 			),
-			array(
-				'type'    => 'text_box',
-				'label'   => __( 'Products Ship From', 'LION' ),
-				'slug'    => 'product-ships-from-address1',
-				'tooltip' => __( 'The default from address used when shipping your products.', 'LION' ),
-				'default' => '',
-				'options' => array(
-					'class'       => 'large-text',
-					'placeholder' => __( 'Address 1', 'LION' ),
+		);
+
+		$from_address = array();
+		$shipping_methods = it_exchange_get_registered_shipping_methods();
+		$features         = array();
+		foreach( (array) $shipping_methods as $method => $class ) {
+			$method = it_exchange_get_registered_shipping_method( $method );
+			if ( ! empty( $method->shipping_features ) && $method->enabled ) {
+				foreach( $method->shipping_features as $feature ) {
+					$features[$feature] = $feature;
+				}
+			}
+		}
+		if ( in_array( 'core-from-address', $features ) ) {
+			$from_address = array(
+				array(
+					'type'    => 'text_box',
+					'label'   => __( 'Products Ship From', 'LION' ),
+					'slug'    => 'product-ships-from-address1',
+					'tooltip' => __( 'The default from address used when shipping your products.', 'LION' ),
+					'default' => '',
+					'options' => array(
+						'class'       => 'large-text',
+						'placeholder' => __( 'Address 1', 'LION' ),
+					),
 				),
-			),
-			array(
-				'type'    => 'text_box',
-				'label'   => '',
-				'slug'    => 'product-ships-from-address2',
-				'default' => '',
-				'options' => array(
-					'class'       => 'large-text',
-					'placeholder' => __( 'Address 2', 'LION' ),
+				array(
+					'type'    => 'text_box',
+					'label'   => '',
+					'slug'    => 'product-ships-from-address2',
+					'default' => '',
+					'options' => array(
+						'class'       => 'large-text',
+						'placeholder' => __( 'Address 2', 'LION' ),
+					),
 				),
-			),
-			array(
-				'type'    => 'text_box',
-				'label'   => '',
-				'slug'    => 'product-ships-from-city',
-				'default' => '',
-				'options' => array(
-					'class'       => 'large-text',
-					'placeholder' => __( 'City', 'LION' ),
+				array(
+					'type'    => 'text_box',
+					'label'   => '',
+					'slug'    => 'product-ships-from-city',
+					'default' => '',
+					'options' => array(
+						'class'       => 'large-text',
+						'placeholder' => __( 'City', 'LION' ),
+					),
 				),
-			),
-			array(
-				'type'    => 'drop_down',
-				'label'   => '',
-				'slug'    => 'product-ships-from-country',
-				'default' => 'US',
-				'options' => it_exchange_get_data_set( 'countries' ),
-			),
-			array(
-				'type'    => 'drop_down',
-				'label'   => '',
-				'slug'    => 'product-ships-from-state',
-				'default' => 'NC',
-				'options' => it_exchange_get_data_set( 'states', array( 'country' => 'US' ) ),
-			),
-			array(
-				'type'    => 'text_box',
-				'label'   => '',
-				'slug'    => 'product-ships-from-zip',
-				'default' => '',
-				'options' => array(
-					'class'       => 'normal-text',
-					'placeholder' => __( 'Zip', 'LION' ),
+				array(
+					'type'    => 'drop_down',
+					'label'   => '',
+					'slug'    => 'product-ships-from-country',
+					'default' => 'US',
+					'options' => it_exchange_get_data_set( 'countries' ),
 				),
-			),
-			array(
-				'type'    => 'yes_no_drop_down',
-				'label'   => __( 'Can products override default ships from address?', 'LION' ),
-				'slug'    => 'products-can-override-ships-from',
-				'tooltip' => __( 'Selecting "yes" will place these fields on the Add/Edit product screen.', 'LION' ),
-				'default' => '1',
-			),
+				array(
+					'type'    => 'drop_down',
+					'label'   => '',
+					'slug'    => 'product-ships-from-state',
+					'default' => 'NC',
+					'options' => it_exchange_get_data_set( 'states', array( 'country' => 'US' ) ),
+				),
+				array(
+					'type'    => 'text_box',
+					'label'   => '',
+					'slug'    => 'product-ships-from-zip',
+					'default' => '',
+					'options' => array(
+						'class'       => 'normal-text',
+						'placeholder' => __( 'Zip', 'LION' ),
+					),
+				),
+				array(
+					'type'    => 'yes_no_drop_down',
+					'label'   => __( 'Can products override default ships from address?', 'LION' ),
+					'slug'    => 'products-can-override-ships-from',
+					'tooltip' => __( 'Selecting "yes" will place these fields on the Add/Edit product screen.', 'LION' ),
+					'default' => '1',
+				),
+			);
+		}
+		$form_fields = array_merge( $form_fields, $from_address );
+
+		$form_fields = array_merge( $form_fields, array(
 			array(
 				'type'    => 'yes_no_drop_down',
 				'label'   => __( 'Can products override available shipping methods?', 'LION' ),
@@ -342,7 +362,7 @@ class IT_Exchange_Shipping {
 					'metric'   => __( 'Metric', 'LION' ),
 				),
 			),
-		);
+		));
 		return $form_fields;
 	}
 
