@@ -15,7 +15,7 @@
 */
 
 // Don't show anything if shipping-method requirement exists and hasn't been met
-if ( in_array( 'customer-has-shipping-address', it_exchange_get_pending_purchase_requirements() ) )
+if ( in_array( 'shipping-address', it_exchange_get_pending_purchase_requirements() ) )
 	return;
 ?>
 
