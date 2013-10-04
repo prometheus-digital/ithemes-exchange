@@ -97,6 +97,8 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			var itExchangeCartShippingAddress = <?php echo esc_js( (boolean) it_exchange_get_customer_shipping_address() ? 1 : 0); ?>;
 			var itExchangeCartBillingAddress  = <?php echo esc_js( (boolean) it_exchange_get_customer_billing_address() ? 1 : 0); ?>;
 			jQuery( function() {
+
+				<?php $shipping_addons = it_exchange_get_enabled_addons( array( 'category' => 'shipping' ) ); if ( ! empty( $shipping_addons) ) : ?>
 				// Shipping Init country/state fields
 				var iteCountryStatesSyncOptions = { 
 					statesWrapper     : '.it-exchange-state',
@@ -105,6 +107,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 					autoCompleteState : true
 				}; 
 				jQuery('#it-exchange-shipping-address-country', '.it-exchange-super-widget').itCountryStatesSync(iteCountryStatesSyncOptions).selectToAutocomplete().trigger('change');
+				<?php endif; ?>
 
 				// Billing Init fields
 				var iteCountryStatesSyncOptions = { 

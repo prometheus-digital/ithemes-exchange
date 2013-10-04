@@ -125,14 +125,14 @@ function it_exchange_load_public_scripts( $current_view ) {
 			wp_enqueue_script( 'it-exchange-logged-in-purchase-requirement', $script, array( 'jquery' ), false, true );
 		}
 
-		// Load Shipping Address purchase requirement JS if not logged in and on checkout page.
+		// Load Billing Address purchase requirement JS if not logged in and on checkout page.
 		if ( in_array( 'billing-address', $purchase_requirements ) ) {
 			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/billing-address-purchase-requirement.js' );
 			wp_enqueue_script( 'it-exchange-billing-address-purchase-requirement', $script, array( 'jquery', 'it-exchange-country-states-sync' ), false, true );
 		}
 
 		// Load country / state field sync if on checkout page
-		wp_enqueue_script( 'it-exchange-country-states-sync', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/country-states-sync.js' ), array( 'jquery' ), false, true );
+		wp_enqueue_script( 'it-exchange-country-states-sync', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/country-states-sync.js' ), array( 'jquery', 'jquery-ui-autocomplete', 'jquery-select-to-autocomplete' ), false, true );
 
 	} // ****** END CHECKOUT SPECIFIC SCRIPTS *******
 
