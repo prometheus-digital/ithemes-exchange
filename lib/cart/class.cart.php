@@ -321,9 +321,12 @@ class IT_Exchange_Shopping_Cart {
 		foreach( $fields as $field ) {
 			$shipping[$field] = empty( $_REQUEST['it-exchange-shipping-address-' . $field] ) ? '' : $_REQUEST['it-exchange-shipping-address-' . $field];
 		}
-		update_user_meta( it_exchange_get_current_customer_id(), 'it-exchange-shipping-address', $shipping );
-		it_exchange_add_message( 'notice', __( 'Shipping Address Saved', 'LION' ) );
-		return true;
+
+		if ( it_exchange_save_shipping_address( $shipping, it_exchange_get_current_customer_id() ) ) {
+			it_exchange_add_message( 'notice', __( 'Shipping Address Saved', 'LION' ) );
+			return true;
+		}
+		return false;
 	}
 
 	/**

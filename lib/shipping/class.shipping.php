@@ -62,6 +62,7 @@ class IT_Exchange_Shipping {
 		add_action( 'it_exchange_add_cart_product', array( $this, 'clear_cart_shipping_data' ) );
 		add_action( 'it_exchange_delete_cart_product', array( $this, 'clear_cart_shipping_data' ) );
 		add_action( 'it_exchange_update_cart_product', array( $this, 'clear_cart_shipping_data' ) );
+		add_action( 'it_exchange_shipping_address_updated', array( $this, 'clear_cart_shipping_method' ) );
 
 	}
 
@@ -636,6 +637,17 @@ class IT_Exchange_Shipping {
 	*/
 	function clear_cart_shipping_data() {
 		it_exchange_remove_cart_data( 'shipping-address' );
+		it_exchange_remove_cart_data( 'shipping-method' );
+	}
+
+	/**
+	 * Removes teh cart shipping method
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function clear_cart_shipping_method() {
 		it_exchange_remove_cart_data( 'shipping-method' );
 	}
 
