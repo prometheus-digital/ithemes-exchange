@@ -532,7 +532,7 @@ class IT_Exchange_Shipping {
 	 * @return
 	*/
 	function modify_shipping_total( $total ) {
-		$shipping = it_exchange_get_cart_shipping_cost( false );
+		$shipping = it_exchange_get_cart_shipping_cost( false, false );
 		return $total + $shipping;
 	}
 
