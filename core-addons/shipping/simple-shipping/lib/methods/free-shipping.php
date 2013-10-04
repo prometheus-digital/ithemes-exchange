@@ -45,7 +45,8 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	 * @return void
 	*/
 	function set_label() {
-		$this->label = __( 'Exchange Free Shipping', 'LION' );
+		$settings = it_exchange_get_option( 'simple-shipping' );
+		$this->label = $settings['free-shipping-label'];
 	}
 
 	/**

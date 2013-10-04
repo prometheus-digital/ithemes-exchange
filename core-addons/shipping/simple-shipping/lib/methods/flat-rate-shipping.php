@@ -54,7 +54,8 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	 * @return void
 	*/
 	function set_label() {
-		$this->label = __( 'Exchange Flat Rate Shipping', 'LION' );
+		$settings = it_exchange_get_option( 'simple-shipping' );
+		$this->label = $settings['flat-rate-shipping-label'];
 	}
 
 	/**
