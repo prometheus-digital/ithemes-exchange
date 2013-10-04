@@ -351,18 +351,25 @@ class IT_Exchange_Shipping {
 				'tooltip' => __( 'Selecting "yes" will place options the Add/Edit product screen.', 'LION' ),
 				'default' => '0',
 			),
-			array(
-				'type'    => 'drop_down',
-				'label'   => __( 'Measurements Format', 'LION' ),
-				'slug'    => 'measurements-format',
-				'tooltip' => __( 'Use standard for lbs and inches. Use metric for kg and cm.', 'LION' ),
-				'default' => 'standard',
-				'options' => array(
-					'standard' => __( 'Standard', 'LION' ),
-					'metric'   => __( 'Metric', 'LION' ),
-				),
-			),
 		));
+
+		$measurements = array();
+		if ( in_array( 'core-weight-dimensions', $features ) ) {
+			$measurements = array(
+				array(
+					'type'    => 'drop_down',
+					'label'   => __( 'Measurements Format', 'LION' ),
+					'slug'    => 'measurements-format',
+					'tooltip' => __( 'Use standard for lbs and inches. Use metric for kg and cm.', 'LION' ),
+					'default' => 'standard',
+					'options' => array(
+						'standard' => __( 'Standard', 'LION' ),
+						'metric'   => __( 'Metric', 'LION' ),
+					),
+				),
+			);
+		}
+		$form_fields = array_merge( $form_fields, $measurements );
 		return $form_fields;
 	}
 
