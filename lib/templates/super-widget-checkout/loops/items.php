@@ -24,7 +24,7 @@
 		<?php do_action( 'it_exchange_super_widget_checkout_begin_items_loop' ); ?>
 
 		<?php 
-		foreach( it_exchange_get_template_part_elements( 'super-widget-checkout', 'items', array( 'item' ) ) as $element ) :
+		foreach( it_exchange_get_template_part_elements( 'super-widget-checkout', 'items-loop', array( 'item' ) ) as $element ) :
 			it_exchange_get_template_part( 'super-widget-checkout/elements/' . $element );
 		endforeach;
 		?>
