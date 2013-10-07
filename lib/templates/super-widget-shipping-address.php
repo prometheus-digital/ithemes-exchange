@@ -19,6 +19,7 @@
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<h3><?php _e( 'Shipping Address', 'LION' ); ?></h3>
 	<form class="it-exchange-sw-shipping-address">
+	<p><?php _e( 'All fields required', 'LION' ); ?>
 	<?php it_exchange_get_template_part( 'super-widget-shipping-address/loops/fields' ); ?>
 	<?php it_exchange_get_template_part( 'super-widget-shipping-address/loops/actions' ); ?>
 	</form>
