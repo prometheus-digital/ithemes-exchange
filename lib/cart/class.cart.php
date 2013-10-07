@@ -294,7 +294,7 @@ class IT_Exchange_Shopping_Cart {
 		}
 
 		// Validate required fields
-		$required_fields = apply_filters( 'it_exchange_required_shipping_address_fields', array( 'first-name', 'last-name', 'country', 'zip' ) );
+		$required_fields = apply_filters( 'it_exchange_required_shipping_address_fields', array( 'first-name', 'last-name', 'address1', 'state', 'country', 'zip' ) );
 		foreach( $required_fields as $field ) {
 			if ( empty( $_REQUEST['it-exchange-shipping-address-' . $field] ) ) {
 				it_exchange_add_message( 'error', __( 'Please fill out all required fields', 'LION' ) );
@@ -346,7 +346,7 @@ class IT_Exchange_Shopping_Cart {
 		}
 
 		// Validate required fields
-		$required_fields = apply_filters( 'it_exchange_required_billing_address_fields', array( 'first-name', 'last-name', 'country', 'zip' ) );
+		$required_fields = apply_filters( 'it_exchange_required_billing_address_fields', array( 'first-name', 'last-name', 'address1', 'city', 'state', 'country', 'zip' ) );
 		foreach( $required_fields as $field ) {
 			if ( empty( $_REQUEST['it-exchange-billing-address-' . $field] ) ) {
 				it_exchange_add_message( 'error', __( 'Please fill out all required fields', 'LION' ) );
