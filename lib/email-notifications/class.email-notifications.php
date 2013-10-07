@@ -293,6 +293,7 @@ class IT_Exchange_Email_Notifications {
 
 		// Grab all hashes attached to transaction
 		$hashes   = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
+		if ( !empty( $hashes ) ) {
 		?>
 			<div style="border-top: 1px solid #EEE">
 				<h3><?php _e( 'Available Downloads', 'LION' ); ?></h3>
@@ -343,6 +344,7 @@ class IT_Exchange_Email_Notifications {
 				<?php endforeach; ?>
 			</div>
 		<?php
+		}
 		
 		if ( empty( $downloads_exist_for_transaction ) || empty( $hashes_found ) ) {
 			echo $status_notice;
