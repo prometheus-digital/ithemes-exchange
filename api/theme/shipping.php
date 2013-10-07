@@ -238,7 +238,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$field  = '<select id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '">';
 		$field .= '<option value=""></option>';
 		foreach( $countries as $key => $value ) {
-			$field .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $current_value, false ) . '>' . esc_html( $value ) . '</option>';
+			$alternatives = esc_attr( $key );
+			if ( 'US' == $key )
+				$alternatives .= ' US us usa USA u';
+			$field .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $current_value, false ) . ' data-alternative-spellings="' . $alternatives . '">' . esc_html( $value ) . '</option>';
 		}
 		$field .= '</select>';
 
@@ -306,7 +309,8 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 			$field .= '<select id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '">';
 			$field .= '<option value=""></option>';
 			foreach( (array) $states as $key => $value ) {
-				$field .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $current_value, false ) . '>' . esc_html( $value ) . '</option>';
+				$alternatives = esc_attr( $key );
+				$field .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $current_value, false ) . ' data-alternative-spellings="' . $alternatives . '">' . esc_html( $value ) . '</option>';
 			}
 			$field .= '</select>';
 		} else {
