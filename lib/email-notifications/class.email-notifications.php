@@ -242,6 +242,7 @@ class IT_Exchange_Email_Notifications {
 			'sitename'       => 'it_exchange_replace_sitename_tag',
 			'receipt_link'   => 'it_exchange_replace_receipt_link_tag',
 			'login_link'     => 'it_exchange_replace_login_link_tag',
+			'account_link'   => 'it_exchange_replace_account_link_tag',
 		);
 		
 		return apply_filters( 'it_exchange_email_notification_shortcode_functions', $shortcode_functions );
@@ -257,7 +258,6 @@ class IT_Exchange_Email_Notifications {
 	 * @return string html for the 'Add to Shopping Cart' HTML
 	*/
 	function ithemes_exchange_email_notification_shortcode( $atts, $content='' ) {
-		
 		$supported_pairs = array(
 			'show'    => '',
 			'options' => '',
@@ -267,10 +267,14 @@ class IT_Exchange_Email_Notifications {
 		
 		$shortcode_functions = $this->get_shortcode_functions();
 		
-		if ( !empty( $shortcode_functions[$show] ) )
-			return call_user_func( array( $this, $shortcode_functions[$show] ), $this, explode( ',', $options ) );
-		else
-			return;
+		if ( !empty( $shortcode_functions[$show] ) ) {
+			if ( is_callable( $this, $shortcode_functions[$show] ) )
+				return call_user_func( array( $this, $shortcode_functions[$show] ), $this, explode( ',', $options ) );
+			else if ( is_callable( $shortcode_functions[$show] ) )
+				return call_user_func( $shortcode_functions[$show], $this, explode( ',', $options ) );
+		}
+	
+		return false;
 	}
 	
 	/**
@@ -427,9 +431,11 @@ class IT_Exchange_Email_Notifications {
 					<?php if ( $products = it_exchange_get_transaction_products( $this->transaction_id ) ) : ?>
 						<?php foreach ( $products as $product ) : ?>
 							<tr>
-								<td style="padding: 10px;border:1px solid #DDD;"><?php esc_attr_e( it_exchange_get_transaction_product_feature( $product, 'product_name' ) ); ?></td>
-								<td style="padding: 10px;border:1px solid #DDD;"><?php esc_attr_e( it_exchange_get_transaction_product_feature( $product, 'count' ) ); ?></td>
-								<td style="padding: 10px;border:1px solid #DDD;"><?php esc_attr_e( it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ) ) ); ?></td>
+								<td style="padding: 10px;border:1px solid #DDD;">
+								<?php esc_attr_e( apply_filters( 'it_exchange_email_notification_order_table_product_name', it_exchange_get_transaction_product_feature( $product, 'product_name' ), $product ) ); ?>
+                                </td>
+								<td style="padding: 10px;border:1px solid #DDD;"><?php esc_attr_e( apply_filters( 'it_exchange_email_notification_order_table_product_count', it_exchange_get_transaction_product_feature( $product, 'count' ), $product ) ); ?></td>
+								<td style="padding: 10px;border:1px solid #DDD;"><?php esc_attr_e( apply_filters( 'it_exchange_email_notification_order_table_product_subtotal', it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ), $product ) ) ); ?></td>
 							</tr>
 
 							<?php 
@@ -437,6 +443,7 @@ class IT_Exchange_Email_Notifications {
 							if ( $purchase_message_on && it_exchange_product_has_feature( $product['product_id'], 'purchase-message' ) ) {
 								$purchase_messages .= '<h4>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'product_name' ) ) . '</h4>';
 								$purchase_messages .= '<p>' . it_exchange_get_product_feature( $product['product_id'], 'purchase-message' ) . '</p>';
+								appy_filters( 'it_exchange_email_notification_order_table_purchase_message', $purchase_messages, $product );
 							}
 							?>
 
@@ -552,6 +559,18 @@ class IT_Exchange_Email_Notifications {
 	*/
 	function it_exchange_replace_login_link_tag( $args, $options = NULL ) {
 		return it_exchange_get_page_url( 'login' );
+	}
+	
+	/**
+	 * Replacement Tag
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param object $args of IT_Exchange_Email_Notifications
+	 * @return string Replaced value
+	*/
+	function it_exchange_replace_account_link_tag( $args, $options = NULL ) {
+		return it_exchange_get_page_url( 'account' );
 	}
 
 	/**
