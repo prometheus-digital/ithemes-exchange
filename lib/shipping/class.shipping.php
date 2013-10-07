@@ -2,6 +2,7 @@
 /** 
  * This class get initiated when a shipping add-on is enabled
  * @package IT_Exchagne
+ * @since 1.4.0
 */
 
 class IT_Exchange_Shipping {
