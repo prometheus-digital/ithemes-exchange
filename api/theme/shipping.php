@@ -71,8 +71,9 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	*/
 	function first_name( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'First Name', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'First Name', 'LION' ),
+			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -91,8 +92,9 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	*/
 	function last_name( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Last Name', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Last Name', 'LION' ),
+			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -111,8 +113,9 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	*/
 	function company_name( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Company Name', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Company Name', 'LION' ),
+			'required' => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -131,8 +134,9 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	*/
 	function address1( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Address 1', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Address', 'LION' ),
+			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -151,8 +155,9 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	*/
 	function address2( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Address 2', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Address 2', 'LION' ),
+			'required' => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -171,8 +176,9 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	*/
 	function city( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'City', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'City', 'LION' ),
+			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -191,8 +197,9 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	*/
 	function zip( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Zip Code', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Zip Code', 'LION' ),
+			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -211,8 +218,9 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	*/
 	function country( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Country', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Country', 'LION' ),
+			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -252,7 +260,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 				break;
 			case 'html':
 			default:
-				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'] . '</label>';
+				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'];
+				if ( $options['required'] )
+					$output .= '<span class="it-exchange-required">&#42;</span>';
+				$output .= '</label>';
 				$output .= $field;
 		}
 		return $output;
@@ -275,6 +286,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 			'label'      => __( 'State', 'LION' ),
 			'value'      => $default_value,
 			'field-type' => false,
+			'required'   => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -321,7 +333,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 				break;
 			case 'html':
 			default:
-				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'] . '</label>';
+				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'];
+				if ( $options['required'] )
+					$output .= '<span class="it-exchange-required">&#42;</span>';
+				$output .= '</label>';
 				$output .= $field;
 		}
 		return $output;
@@ -416,6 +431,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		
 		$value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
 		$class = empty( $options['class'] ) ? '' : esc_attr( $options['class'] );
+		$options['required'] = ! empty( $options['required'] );
 
 		switch( $options['format'] ) {
 
@@ -427,6 +443,8 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 				break;
 			case 'label':
 				$output = $options['label'];
+				if ( $options['required'] )
+					$output .= '<span class="it-exchange-required">&#42;</span>';
 				break;
 			case 'field':
 				$output = '<input type="text" class="' . $class . '" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" value="' . $value . '" />';
@@ -436,7 +454,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 				break;
 			case 'html':
 			default:
-				$output  = empty( $options['label'] ) ? '' : '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'] . '</label>';
+				$output  = empty( $options['label'] ) ? '' : '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'];
+				if ( $options['required'] )
+					$output .= '&nbsp;<span class="it-exchange-required">&#42;</span>';
+				$output .= '</label>';
 				$output .= '<input type="text" class="' . $class . '" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" value="' . $value . '" />';
 		}
 

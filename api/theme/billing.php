@@ -72,8 +72,9 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	*/
 	function first_name( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'First Name', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'First Name', 'LION' ),
+			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -92,8 +93,9 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	*/
 	function last_name( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Last Name', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Last Name', 'LION' ),
+			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -112,8 +114,9 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	*/
 	function company_name( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Company Name', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Company Name', 'LION' ),
+			'required' => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -132,8 +135,9 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	*/
 	function address1( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Address 1', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Address', 'LION' ),
+			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -152,8 +156,9 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	*/
 	function address2( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Address 2', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Address 2', 'LION' ),
+			'required' => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -172,8 +177,9 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	*/
 	function city( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'City', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'City', 'LION' ),
+			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -192,8 +198,9 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	*/
 	function zip( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Zip Code', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Zip Code', 'LION' ),
+			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -219,9 +226,10 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 			return;
 
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Ship to billing address?', 'LION' ),
-			'value'  => '1',
+			'format'   => 'html',
+			'label'    => __( 'Ship to billing address?', 'LION' ),
+			'required' => false,
+			'value'    => '1',
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -266,8 +274,9 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	*/
 	function country( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Country', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Country', 'LION' ),
+			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -307,7 +316,10 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 				break;
 			case 'html':
 			default:
-				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'] . '</label>';
+				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'];
+				if ( $options['required'] )
+					$output .= '&nbsp;<span class="it-exchange-required">&#42;</span>';
+				$output .= '</label>';
 				$output .= $field;
 		}
 		return $output;
@@ -326,9 +338,10 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 		$default_value = empty( $_POST['it-exchange-billing-address-state'] ) ? $billing_value : $_POST['it-exchange-billing-address-state'];
 
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'State', 'LION' ),
-			'value'  => $default_value,
+			'format'   => 'html',
+			'label'    => __( 'State', 'LION' ),
+			'required' => true,
+			'value'    => $default_value,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -375,7 +388,10 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 				break;
 			case 'html':
 			default:
-				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'] . '</label>';
+				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'];
+				if ( $options['required'] )
+					$output .= '&nbsp;<span class="it-exchange-required">&#42;</span>';
+				$output .= '</label>';
 				$output .= $field;
 		}
 		return $output;
@@ -391,8 +407,9 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	*/
 	function email( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Email', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Email', 'LION' ),
+			'required' => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -411,8 +428,9 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	*/
 	function phone( $options=array() ) {
 		$defaults      = array(
-			'format' => 'html',
-			'label'  => __( 'Phone', 'LION' ),
+			'format'   => 'html',
+			'label'    => __( 'Phone', 'LION' ),
+			'required' => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -481,6 +499,8 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 				break;
 			case 'label':
 				$output = $options['label'];
+				if ( $options['required'] )
+					$output .= '<span class="it-exchange-required">&#42;</span>';
 				break;
 			case 'field':
 				$output = '<input type="text" class="' . $class . '" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" value="' . $value . '" />';
@@ -490,7 +510,10 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 				break;
 			case 'html':
 			default:
-				$output  = empty( $options['label'] ) ? '' : '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'] . '</label>';
+				$output  = empty( $options['label'] ) ? '' : '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'];
+				if ( $options['required'] )
+					$output .= '&nbsp;<span class="it-exchange-required">&#42;</span>';
+				$output .= '</label>';
 				$output .= '<input type="text" class="' . $class . '" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" value="' . $value . '" />';
 		}
 
