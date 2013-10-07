@@ -129,6 +129,9 @@ class IT_Exchange_WP_Post_Supports {
 	function print_extended_description_metabox( $post ) {
 		global $post_ID;
 		$post_ID = isset($post_ID) ? (int) $post_ID : 0;
+		
+		do_action( 'it_exchange_before_print_extended_description_metabox', $post );
+		
 		?>
 		<div id="postdivrich" class="postarea edit-form-section">
 
@@ -154,6 +157,8 @@ class IT_Exchange_WP_Post_Supports {
 
 		</div>
 		<?php
+		
+		do_action( 'it_exchange_after_print_extended_description_metabox', $post );
 	}
 
 	/**
