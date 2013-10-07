@@ -40,6 +40,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		'save'        => 'save',
 		'formclose'   => 'form_close',
 		'menu'        => 'menu',
+		'accountlink' => 'account_link',
 	);
 
 	/**
@@ -480,5 +481,40 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		
 		return $nav;
 		
+	}
+
+	/**
+	 * Outputs the customer account link
+	 *
+	 * @since 1.4.0
+	 * @return string
+	*/
+	function account_link( $options=array() ) {
+		$defaults = array(
+			'format' => 'html',
+			'before' => '',
+			'after'  => '',
+			'label' => __( 'View your Account', 'LION' ),
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
+		$url = it_exchange_get_page_url( 'account' );
+
+		switch( $options['format'] ) {
+			
+			case 'url':
+				$output = $url;
+				break;
+			case 'label':
+				$output = $options['label'];
+				break;
+			case 'html':
+			default:
+				$output = '<a href="' . $url . '">' . $options['label'] . '</a>';	
+				break;
+
+		}
+		
+		return $output;	
 	}
 }
