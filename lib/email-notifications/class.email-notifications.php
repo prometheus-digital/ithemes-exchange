@@ -268,7 +268,7 @@ class IT_Exchange_Email_Notifications {
 		$shortcode_functions = $this->get_shortcode_functions();
 		
 		if ( !empty( $shortcode_functions[$show] ) ) {
-			if ( is_callable( $this, $shortcode_functions[$show] ) )
+			if ( is_callable( array( $this, $shortcode_functions[$show] ) ) )
 				return call_user_func( array( $this, $shortcode_functions[$show] ), $this, explode( ',', $options ) );
 			else if ( is_callable( $shortcode_functions[$show] ) )
 				return call_user_func( $shortcode_functions[$show], $this, explode( ',', $options ) );
@@ -432,10 +432,10 @@ class IT_Exchange_Email_Notifications {
 						<?php foreach ( $products as $product ) : ?>
 							<tr>
 								<td style="padding: 10px;border:1px solid #DDD;">
-								<?php esc_attr_e( apply_filters( 'it_exchange_email_notification_order_table_product_name', it_exchange_get_transaction_product_feature( $product, 'product_name' ), $product ) ); ?>
+								<?php echo apply_filters( 'it_exchange_email_notification_order_table_product_name', it_exchange_get_transaction_product_feature( $product, 'product_name' ), $product ); ?>
                                 </td>
-								<td style="padding: 10px;border:1px solid #DDD;"><?php esc_attr_e( apply_filters( 'it_exchange_email_notification_order_table_product_count', it_exchange_get_transaction_product_feature( $product, 'count' ), $product ) ); ?></td>
-								<td style="padding: 10px;border:1px solid #DDD;"><?php esc_attr_e( apply_filters( 'it_exchange_email_notification_order_table_product_subtotal', it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ), $product ) ) ); ?></td>
+								<td style="padding: 10px;border:1px solid #DDD;"><?php echo apply_filters( 'it_exchange_email_notification_order_table_product_count', it_exchange_get_transaction_product_feature( $product, 'count' ), $product ); ?></td>
+								<td style="padding: 10px;border:1px solid #DDD;"><?php echo apply_filters( 'it_exchange_email_notification_order_table_product_subtotal', it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ), $product ) ); ?></td>
 							</tr>
 
 							<?php 
@@ -443,7 +443,7 @@ class IT_Exchange_Email_Notifications {
 							if ( $purchase_message_on && it_exchange_product_has_feature( $product['product_id'], 'purchase-message' ) ) {
 								$purchase_messages .= '<h4>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'product_name' ) ) . '</h4>';
 								$purchase_messages .= '<p>' . it_exchange_get_product_feature( $product['product_id'], 'purchase-message' ) . '</p>';
-								appy_filters( 'it_exchange_email_notification_order_table_purchase_message', $purchase_messages, $product );
+								$purchase_messages = appy_filters( 'it_exchange_email_notification_order_table_purchase_message', $purchase_messages, $product );
 							}
 							?>
 
