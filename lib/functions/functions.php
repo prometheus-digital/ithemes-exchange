@@ -108,6 +108,10 @@ function it_exchange_load_public_scripts( $current_view ) {
 	// ****** CHECKOUT SPECIFIC SCRIPTS ******* 
 	if ( it_exchange_is_page( 'checkout' )  ) {
 
+		// Enqueue purchase dialog JS on checkout screen
+		$file = dirname( dirname( __FILE__ ) ) . '/purchase-dialog/js/exchange-purchase-dialog.js';
+		wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type' ), false, true );
+
 		// Register select to autocomplte
 		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' );
 		$style = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/autocomplete.css' );

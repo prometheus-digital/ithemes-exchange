@@ -104,7 +104,7 @@ class IT_Exchange_Purchase_Dialog{
 	 * @return string HTML
 	*/
 	function insert_dialog() {
-		$this->enqueue_js();
+		//$this->enqueue_js(); // We are now doing this in lib/functions/functions.php
 		$wrapper_open  = $this->get_wrapper_open();
 		$form          = $this->get_purchase_form();
 		$wrapper_close = $this->get_wrapper_close();
@@ -249,8 +249,8 @@ class IT_Exchange_Purchase_Dialog{
 	 * @return void
 	*/
 	function enqueue_js() {
-		$file = dirname( __FILE__ ) . '/js/exchange-purchase-dialog.js';
-		wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type' ) );
+		//$file = dirname( __FILE__ ) . '/js/exchange-purchase-dialog.js';
+		//wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type' ), false, true );
 	}
 
 	/**
