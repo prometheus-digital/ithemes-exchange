@@ -15,7 +15,7 @@
 */
 ?>
 <?php do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_before_last_name_element' ); ?>
-<div class="it-exchange-last-name">
+<div class="it-exchange-last-name it-exchange-left">
 	<?php it_exchange( 'billing', 'last-name' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_after_last_name_element' ); ?>

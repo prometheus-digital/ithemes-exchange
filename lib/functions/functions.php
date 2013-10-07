@@ -108,6 +108,17 @@ function it_exchange_load_public_scripts( $current_view ) {
 	// ****** CHECKOUT SPECIFIC SCRIPTS ******* 
 	if ( it_exchange_is_page( 'checkout' )  ) {
 
+		// Enqueue purchase dialog JS on checkout screen
+		$file = dirname( dirname( __FILE__ ) ) . '/purchase-dialog/js/exchange-purchase-dialog.js';
+		wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type' ), false, true );
+
+		// Register select to autocomplte
+		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' );
+		$style = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/autocomplete.css' );
+		wp_register_script( 'jquery-select-to-autocomplete', $script, array( 'jquery', 'jquery-ui-autocomplete' ) );
+		wp_register_style( 'it-exchange-autocomplete-style', $style );
+		wp_enqueue_style( 'it-exchange-autocomplete-style' );
+
 		// General Checkout
 		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/checkout-page.js' );
 		wp_enqueue_script( 'it-exchange-checkout-page', $script, array( 'jquery' ), false, true );
@@ -118,14 +129,14 @@ function it_exchange_load_public_scripts( $current_view ) {
 			wp_enqueue_script( 'it-exchange-logged-in-purchase-requirement', $script, array( 'jquery' ), false, true );
 		}
 
-		// Load Shipping Address purchase requirement JS if not logged in and on checkout page.
+		// Load Billing Address purchase requirement JS if not logged in and on checkout page.
 		if ( in_array( 'billing-address', $purchase_requirements ) ) {
 			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/billing-address-purchase-requirement.js' );
 			wp_enqueue_script( 'it-exchange-billing-address-purchase-requirement', $script, array( 'jquery', 'it-exchange-country-states-sync' ), false, true );
 		}
 
 		// Load country / state field sync if on checkout page
-		wp_enqueue_script( 'it-exchange-country-states-sync', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/country-states-sync.js' ), array( 'jquery' ), false, true );
+		wp_enqueue_script( 'it-exchange-country-states-sync', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/country-states-sync.js' ), array( 'jquery', 'jquery-ui-autocomplete', 'jquery-select-to-autocomplete' ), false, true );
 
 	} // ****** END CHECKOUT SPECIFIC SCRIPTS *******
 
@@ -786,7 +797,7 @@ function it_exchange_register_default_purchase_requirements() {
 
 	// Billing Address Purchase Requirement
 	$properties = array(
-		'priority'               => 2,
+		'priority'               => 5.11,
 		'requirement-met'        => 'it_exchange_get_customer_billing_address',
 		'sw-template-part'       => apply_filters( 'it_exchange_sw_template_part_for_logged_in_purchase_requirement', 'billing-address' ),
 		'checkout-template-part' => 'billing-address',
@@ -873,8 +884,10 @@ function it_exchange_add_billing_address_to_sw_template_totals_loops( $loops ) {
 	if ( ! apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) )
 		return $loops;
 
-	// Set index to -1. May change once we introduce shipping
-	$index = -1;
+	// Set index to end of array.
+	$index = array_search( 'discounts', $loops );
+	$index = ( false === $index ) ? array_search( 'totals-taxes-simple', $loops ) : $index;
+	$index = ( false === $index ) ? count($loops) -1 : $index;
 
 	array_splice( $loops, $index, 0, 'billing-address' );
 	return $loops;

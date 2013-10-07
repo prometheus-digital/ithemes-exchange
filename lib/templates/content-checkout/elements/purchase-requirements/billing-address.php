@@ -17,7 +17,7 @@
 // Don't show anything if login-requirement exists and hasn't been met
 if ( in_array( 'logged-in', it_exchange_get_pending_purchase_requirements() ) )
 	return;
-$editing_billing = ( ! empty( $_REQUEST['it-exchange-update-billing-address'] ) && ! empty( $GLOBALS['it_exchange']['billing-address-error'] ) ) ? true : false;
+$editing_billing = ( ( ! empty( $_REQUEST['it-exchange-update-billing-address'] ) && ! empty( $GLOBALS['it_exchange']['billing-address-error'] ) ) || ! it_exchange_get_customer_billing_address() ) ? true : false;
 ?>
 <?php do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_before_element' ); ?>
 <div class="it-exchange-checkout-billing-address-purchase-requirement">
@@ -41,6 +41,7 @@ $editing_billing = ( ! empty( $_REQUEST['it-exchange-update-billing-address'] ) 
 			do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_before_form' );
 			?>
 			<form action="" method="post" >
+				<p><?php _e( 'All fields required', 'LION' ); ?>
 				<?php
 				do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_begin_form' );
 				// Include template parts for each of the above loops
@@ -53,4 +54,7 @@ $editing_billing = ( ! empty( $_REQUEST['it-exchange-update-billing-address'] ) 
 		</div>
 	</div>
 </div>
+<?php if ( ! it_exchange_get_available_shipping_methods_for_cart_products() ) : ?>
+	<div class="it-exchange-clearfix"></div>
+<?php endif; ?>
 <?php do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_after_element' ); ?>

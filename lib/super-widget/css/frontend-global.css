@@ -38,6 +38,9 @@
 .it-exchange-super-widget .it-exchange-messages.it-exchange-errors li{background:#FFF0F0;color:#DB4343;}
 .it-exchange-super-widget .empty-cart{padding:.5em 0;}
 
+/** ----------------------------------------:[ processing ]:--- */
+.it-exchange-super-widget .it-exchange-sw-processing-section{padding:1em;}
+
 /** ----------------------------------------:[ login & register ]:--- */
 .it-exchange-super-widget .it-exchange-sw-processing-login,
 .it-exchange-super-widget .it-exchange-sw-processing-registration{padding:1em;}
@@ -48,6 +51,17 @@
 .it-exchange-super-widget .it-exchange-sw-register label{display:block;font-size:.8em;margin-bottom:.5em;}
 .it-exchange-super-widget .it-exchange-sw-register div{margin-bottom:1em;}
 .it-exchange-super-widget .cancel_url{margin-top:.5em;}
+
+/** ----------------------------------------:[ shipping ]:--- */
+.it-exchange-super-widget .cart-shipping-address-existing{text-align:left;font-size:1em;line-height:1.5;}
+.it-exchange-super-widget .cart-shipping-address-existing a{float:right;}
+.it-exchange-super-widget .it-exchange-sw-shipping-address label{display:block;margin:1em 0 .5em;}
+.it-exchange-super-widget .it-exchange-sw-shipping-address .it-exchange-submit{margin:1em 0;}
+.it-exchange-super-widget .cart-shipping-method-existing{font-size:1em;}
+.it-exchange-super-widget .cart-shipping-method-existing a{float:right;}
+.it-exchange-super-widget .cart-shipping-method-existing p{margin-bottom:0;text-align:left;}
+.it-exchange-super-widget .it-exchange-checkout-shipping-method-purchase-requirement{margin:0;}
+.it-exchange-super-widget .it-exchange-super-widget-shipping-method-cancel-action{display:block;padding:1em;background:#FFF;border-top:1px solid #F0F0F0;text-align:center;font-size:.8em;}
 
 /** ----------------------------------------:[ billing ]:--- */
 .it-exchange-super-widget .cart-billing-address-existing{text-align:left;font-size:1em;line-height:1.5;}

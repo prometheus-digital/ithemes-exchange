@@ -60,3 +60,7 @@ include( $this->_plugin_path . 'api/data-sets.php' );
 
 // Purchase Dialogs
 include( $this->_plugin_path . 'api/purchase-dialogs.php' );
+
+// Shipping API
+include( $this->_plugin_path . 'api/shipping.php' );
+include( $this->_plugin_path . 'api/shipping-features.php' );

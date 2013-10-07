@@ -434,18 +434,27 @@ class IT_Exchange_Transaction_Post_Type {
 			</div>
 		</div>
 
-		<?php if ( $billing_address = it_exchange_get_transaction_billing_address( $post->ID ) ) : ?>
+		<?php
+		$shipping_address = it_exchange_get_transaction_shipping_address( $post->ID );
+		$billing_address  = it_exchange_get_transaction_billing_address( $post->ID );
+		if ( $shipping_address || $billing_address ) : ?>
 			<div class="billing-shipping-wrapper columns-wrapper">
-				<div class="billing-address column c-50">
-					<div class="column-inner">
-						<div class="billing-address-label address-label"><?php _e( 'Billing Address', 'LION' ); ?></div>
-						<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
+				<?php if ( $shipping_address ) : ?>
+					<div class="shipping-address column c-30">
+						<div class="column-inner">
+							<div class="shipping-address-label address-label"><?php _e( 'Shipping Address', 'LION' ); ?></div>
+							<p><?php echo it_exchange_get_formatted_shipping_address( $shipping_address ); ?></p>
+						</div>
 					</div>
-				</div>
-				<!-- <div class="shipping-address column c-50">
-					<div class="shipping-address-label address-label"><?php _e( 'Shipping Address', 'LION' ); ?></div>
-					<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
-				</div> -->
+				<?php endif; ?>
+				<?php if ( $billing_address ) : ?>
+					<div class="billing-address column c-30">
+						<div class="column-inner">
+							<div class="billing-address-label address-label"><?php _e( 'Billing Address', 'LION' ); ?></div>
+							<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
+						</div>
+					</div>
+				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 
@@ -482,20 +491,23 @@ class IT_Exchange_Transaction_Post_Type {
 						</div>
 					</div>
 					<div class="product-details">
+
+						<?php if ( it_exchange_transaction_includes_shipping( $post ) && it_exchange_product_has_feature( $transaction_product['product_id'], 'shipping' ) ) : ?>
+							<div class="product-shipping-method">
+								<?php printf( __( 'Ship this product with %s.', 'LION' ), it_exchange_get_transaction_shipping_method_for_product( $post, $transaction_product['product_cart_id'] ) ); ?>
+							</div>
+						<?php endif; ?>
+
 						<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : ?>
 							<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
 								<div class="product-download product-download-<?php esc_attr_e( $download_id ); ?>">
 									<h4 class="product-download-title">
 										<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_download_title', $post, $download_id, $download_data ); ?>
-										<?php esc_attr_e( get_the_title( $download_id ) ); ?>
+										<?php echo __( 'Download:', 'LION' ) . ' ' . get_the_title( $download_id ); ?>
 										<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_download_title', $post, $download_id, $download_data ); ?>
 									</h4>
 								</div>
 							<?php endforeach; ?>
-						<?php else : ?>
-							<div class="no-product-downloads">
-								<?php _e( 'This product does not contain any downloads', 'LION' ); ?>
-							</div>
 						<?php endif; ?>
 					</div>
 				</div>
@@ -556,6 +568,28 @@ class IT_Exchange_Transaction_Post_Type {
 				</div>
 			<?php endif; ?>
 		</div>
+
+		<?php if ( it_exchange_transaction_includes_shipping( $post ) ) : ?>
+			<div class="transaction-shipping-summary clearfix spacing-wrapper">
+				<div class="payment-shipping left">
+					<div class="payment-shipping-label"><?php _e( 'Shipping Method', 'LION' ); ?></div>
+					<div class="payment-shipping-name">
+						<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_shipping_name', $post ); ?>
+						<?php esc_attr_e( empty( it_exchange_get_transaction_shipping_method( $post )->label ) ? __( 'Unknown Shipping Method', 'LION' ) : it_exchange_get_transaction_shipping_method( $post )->label ); ?>
+						<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_shipping_name', $post ); ?>
+					</div>
+				</div>
+
+				<div class="payment-shipping-total right clearfix">
+					<div class="payment-shipping-total-label left"><?php _e( 'Shipping', 'LION' ); ?></div>
+					<div class="payment-shipping-total-amount">
+						<?php do_action( 'it_exchange_transaction_print_metabox_before_shipping_total', $post ); ?>
+						<?php echo it_exchange_format_price( it_exchange_get_transaction_shipping_total( $post ) ); ?>
+						<?php do_action( 'it_exchange_transaction_print_metabox_after_shipping_total', $post ); ?>
+					</div>
+				</div>
+			</div>
+		<?php endif; ?>
 
 		<div class="transaction-summary clearfix spacing-wrapper">
 			<div class="payment-method left">

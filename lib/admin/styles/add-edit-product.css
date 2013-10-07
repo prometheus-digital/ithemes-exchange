@@ -28,6 +28,7 @@
 #it-exchange-add-edit-product-interface-main{margin:0;}
 #it_exchange_normal-sortables input,
 #it_exchange_normal-sortables textarea{box-sizing:border-box;width:100%;padding:10px;border:1px solid #d6d6d6;border-radius:2px;font-size:16px;font-family:'Helvetica Neue',Helvetica,Arial,"Lucida Grande",sans-serif;line-height:1.2;color:#4e5559;}
+#it_exchange_normal-sortables input[type="checkbox"]{width:auto;}
 #it_exchange_normal-sortables input{font-size:24px;}
 #it_exchange_normal-sortables textarea{line-height:1.6;}
 #it_exchange_normal-sortables #it-exchange-product-title{float:left;width:80%;}
@@ -58,6 +59,27 @@
 #it-exchange-product-downloads input.not-empty{border-color:transparent;}
 #it-exchange-product-downloads input.not-empty:hover{border-color:#D6D6D6;}
 #it-exchange-product-downloads input.not-empty:focus{border-color:#D6D6D6;}
+
+/** ----------------------------------------:[ shipping ]:--- */
+#it-exchange-product-shipping{margin-bottom:30px;}
+#it-exchange-product-shipping ul{margin-top:0;margin-bottom:0;}
+#it-exchange-product-shipping ul label{margin:0;}
+#it-exchange-product-shipping .core-shipping-feature-from-address-ul{margin-top:20px;}
+#it-exchange-product-shipping .core-shipping-feature-from-address ul li {margin-bottom:0;}
+#it-exchange-product-shipping .core-shipping-feature-from-address ul ul li {margin-bottom:6px;}
+#it-exchange-product-shipping input{font-size:14px;}
+#it-exchange-product-shipping .small-input{max-width:50px;}
+#it-exchange-product-shipping .shipping-header{overflow:hidden;padding-bottom:5px;}
+#it-exchange-product-shipping .shipping-label{float:left;}
+#it-exchange-product-shipping .shipping-toggle{float:right;}
+#it-exchange-product-shipping .shipping-toggle label{font-weight:normal;padding-left:5px;}
+#it-exchange-product-shipping .shipping-wrapper{border:1px solid #DEDEDE;}
+#it-exchange-product-shipping .shipping-feature{padding:20px;border-bottom:1px solid #DEDEDE;}
+#it-exchange-product-shipping .input-money-small{max-width:80px;}
+#it-exchange-product-shipping .core-from-address input{max-width:300px;}
+#it-exchange-product-shipping .shipping-weight{margin-right:80px;}
+#it-exchange-product-shipping #it-exchange-shipping-override-methods-label{margin-bottom:20px;}
+#it-exchange-product-shipping #it-exchange-avialable-shipping-methods-heading{font-weight:bold;font-size:13px;display:block;margin-bottom:10px;}
 
 /** -----------------------------------------------------:[ side sortables ]:---------- */
 
