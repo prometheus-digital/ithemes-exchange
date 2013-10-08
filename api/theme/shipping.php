@@ -265,7 +265,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 			default:
 				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'];
 				if ( $options['required'] )
-					$output .= '<span class="it-exchange-required">&#42;</span>';
+					$output .= '<span class="it-exchange-required-star">&#42;</span>';
 				$output .= '</label>';
 				$output .= $field;
 		}
@@ -339,7 +339,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 			default:
 				$output  = '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'];
 				if ( $options['required'] )
-					$output .= '<span class="it-exchange-required">&#42;</span>';
+					$output .= '<span class="it-exchange-required-star">&#42;</span>';
 				$output .= '</label>';
 				$output .= $field;
 		}
@@ -448,7 +448,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 			case 'label':
 				$output = $options['label'];
 				if ( $options['required'] )
-					$output .= '<span class="it-exchange-required">&#42;</span>';
+					$output .= '<span class="it-exchange-required-star">&#42;</span>';
 				break;
 			case 'field':
 				$output = '<input type="text" class="' . $class . '" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" value="' . $value . '" />';
@@ -460,7 +460,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 			default:
 				$output  = empty( $options['label'] ) ? '' : '<label for="' . esc_attr( $options['field_id'] ) . '">' . $options['label'];
 				if ( $options['required'] )
-					$output .= '&nbsp;<span class="it-exchange-required">&#42;</span>';
+					$output .= '&nbsp;<span class="it-exchange-required-star">&#42;</span>';
 				$output .= '</label>';
 				$output .= '<input type="text" class="' . $class . '" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" value="' . $value . '" />';
 		}
