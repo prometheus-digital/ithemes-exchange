@@ -712,6 +712,10 @@ function it_exchange_add_page_shortcode( $atts ) {
 	);
 	$atts = shortcode_atts( $defaults, $atts );
 
+	// Don't return anything if page type is not WordPress
+	if ( 'wordpress' != it_exchange_get_page_type( $atts['page'] ) )
+		return '';
+
 	if ( 'account' == $atts['page'] )
 		$atts['page'] = 'profile';
 
