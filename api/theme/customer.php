@@ -27,20 +27,21 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	public $_tag_map = array(
-		'formopen'    => 'form_open',
-		'username'    => 'username',
-		'avatar'      => 'avatar',
-		'firstname'   => 'first_name',
-		'lastname'    => 'last_name',
-		'displayname' => 'display_name',
-		'email'       => 'email',
-		'website'     => 'website',
-		'password1'   => 'password1',
-		'password2'   => 'password2',
-		'save'        => 'save',
-		'formclose'   => 'form_close',
-		'menu'        => 'menu',
-		'accountlink' => 'account_link',
+		'formopen'        => 'form_open',
+		'username'        => 'username',
+		'avatar'          => 'avatar',
+		'firstname'       => 'first_name',
+		'lastname'        => 'last_name',
+		'displayname'     => 'display_name',
+		'email'           => 'email',
+		'website'         => 'website',
+		'password1'       => 'password1',
+		'password2'       => 'password2',
+		'save'            => 'save',
+		'formclose'       => 'form_close',
+		'menu'            => 'menu',
+		'accountlink'     => 'account_link',
+		'thankyoumessage' => 'thank_you_message',
 	);
 
 	/**
@@ -511,6 +512,39 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<a href="' . $url . '">' . $options['label'] . '</a>';	
+				break;
+
+		}
+		
+		return $output;	
+	}
+
+	/**
+	 * Outputs the customer thank you message
+	 *
+	 * @since 1.4.0
+	 * @return string
+	*/
+	function thank_you_message( $options=array() ) {
+		$defaults = array(
+			'format' => 'html',
+			'before' => '',
+			'after'  => '',
+			'label' => __( 'Thank you for your order. An email confirmation has been sent to %s.', 'LION' ),
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
+		$url = it_exchange_get_page_url( 'account' );
+
+		switch( $options['format'] ) {
+			
+			case 'label':
+				$output = $options['label'];
+				break;
+			case 'html':
+			default:
+				$user_info = get_userdata( $this->_customer->id );
+				$output = sprintf( $options['label'], $user_info->user_email );	
 				break;
 
 		}

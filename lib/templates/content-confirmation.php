@@ -18,8 +18,8 @@
 <?php do_action( 'it_exchange_content_confirmation_before_wrap' ); ?>
 <div id="it-exchange-confirmation" class="it-exchange-wrap">
 <?php do_action( 'it_exchange_content_confirmation_begin_wrap' ); ?>
+	<?php it_exchange_get_template_part( 'content-confirmation/loops/header' ); ?>
 	<?php it_exchange_get_template_part( 'content-confirmation/loops/transactions' ); ?>
-	<?php it_exchange_get_template_part( 'content-confirmation/elements/account-link' ); ?>
 <?php do_action( 'it_exchange_content_confirmation_end_wrap' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_confirmation_after_wrap' ); ?>

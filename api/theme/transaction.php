@@ -27,9 +27,14 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	public $_tag_map = array(
+		'ordernumber'           => 'order_number',
 		'status'                => 'status',
 		'date'                  => 'date',
 		'total'                 => 'total',
+		'subtotal'              => 'subtotal',
+		'savings'               => 'savings',
+		'shipping'              => 'shipping',
+		'tax'                   => 'tax',
 		'instructions'          => 'instructions',
 		'products'              => 'products',
 		'productattribute'      => 'product_attribute',
@@ -39,6 +44,8 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		'productdownloadhash'   => 'product_download_hash',
 		'productfeaturedimage'  => 'product_featured_image',
 		'clearedfordelivery'    => 'cleared_for_delivery',
+		'featuredimage'         => 'featured_image',
+		'cartobject'            => 'cart_object',
 	);
 
 	/**
@@ -47,6 +54,13 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	public $_transaction_product = false;
+
+	/**
+	 * The current transaction cart object
+	 * @var array $_transaction_cart_object
+	 * @since 1.4.0
+	*/
+	public $_transaction_cart_object = false;
 
 	/**
 	 * Constructor
@@ -74,6 +88,24 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	}
 
 	/**
+	 * Returns the transaction order number
+	 *
+	 * @since 1.4.0
+	 *
+	*/
+	function order_number( $options=array() ) {
+		// Set options
+		$defaults      = array(
+			'before' => '', 
+			'after'  => '', 
+			'label'  => __( 'Order Number: %s', 'LION' ), 
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		return $options['before'] . sprintf( $options['label'], it_exchange_get_transaction_order_number( $this->_transaction ) ) . $options['after'];
+	}
+
+	/**
 	 * Returns the transaction status
 	 *
 	 * @since 0.4.0
@@ -84,10 +116,11 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		$defaults      = array(
 			'before' => '', 
 			'after'  => '', 
+			'label'  => __( 'Status: <span class="%s">%s</span>', 'LION' ), 
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
-		return $options['before'] . it_exchange_get_transaction_status_label( $this->_transaction ) . $options['after'];
+		return $options['before'] . sprintf( $options['label'], it_exchange_get_transaction_status( $this->_transaction ), it_exchange_get_transaction_status_label( $this->_transaction ) ) . $options['after'];
 	}
 
 	/**
@@ -141,10 +174,32 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			'before'          => '', 
 			'after'           => '', 
 			'format_currency' => true,
+			'label'  => __( 'Total: %s', 'LION' ), 
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
-		return $options['before'] . it_exchange_get_transaction_total( $this->_transaction, $options['format_currency'] ) . $options['after'];
+		return $options['before'] . sprintf( $options['label'], it_exchange_get_transaction_total( $this->_transaction, $options['format_currency'] ) ) . $options['after'];
+	}
+
+	/**
+	 * Returns the transaction total
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param array $options output options
+	 * @return string
+	*/
+	function subtotal( $options=array() ) {
+		// Set options
+		$defaults      = array(
+			'before'          => '', 
+			'after'           => '', 
+			'format_currency' => true,
+			'label'  => __( 'Subtotal: %s', 'LION' ), 
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
+		return $options['before'] . sprintf( $options['label'], it_exchange_get_transaction_subtotal( $this->_transaction, $options['format_currency'] ) ) . $options['after'];
 	}
 
     /** 
@@ -222,6 +277,12 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 				return '';
 		} else if ( 'confirmation-url' == $options['attribute'] ) {
 			$attribute = it_exchange_get_transaction_confirmation_url( $this->_transaction->ID );
+		} else if ( 'product_subtotal' == $options['attribute'] ) {
+			$attribute = $this->_transaction_product['product_subtotal'];
+		} else if ( 'product_base_price' == $options['attribute'] ) {
+			$attribute = $this->_transaction_product['product_base_price'];
+		}else if ( 'product_count' == $options['attribute'] ) {
+			$attribute = $this->_transaction_product['count'];
 		} else if ( ! $attribute = it_exchange_get_transaction_product_feature( $this->_transaction_product, $options['attribute'] ) ) {
 			return '';
 		}
@@ -244,6 +305,66 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 		return $result;
 	} 
+
+	/**
+	 * The product's featured image
+	 *
+	 * @since 1.4.0
+	 *
+	 * @return string
+	*/
+	function featured_image( $options=array() ) {
+
+		// Get the real product item or return empty
+		if ( ! $product_id = empty( $this->_transaction_product['product_id'] ) ? false : $this->_transaction_product['product_id'] )
+			return false;
+
+		// Return boolean if has flag was set
+		if ( $options['supports'] )
+			return it_exchange_product_supports_feature( $product_id, 'product-images' );
+
+		// Return boolean if has flag was set
+		if ( $options['has'] )
+			return it_exchange_product_has_feature( $product_id, 'product-images' );
+
+		if ( it_exchange_product_supports_feature( $product_id, 'product-images' )
+				&& it_exchange_product_has_feature( $product_id, 'product-images' ) ) {
+
+			$defaults = array(
+				'size' => 'thumbnail'
+			);
+
+			$options = ITUtility::merge_defaults( $options, $defaults );
+			$output = array();
+
+			$product_images = it_exchange_get_product_feature( $product_id, 'product-images' );
+
+			$feature_image = array(
+				'id'    =>  $product_images[0],
+				'thumb' => wp_get_attachment_thumb_url( $product_images[0] ),
+				'large' => wp_get_attachment_url( $product_images[0] )
+			);
+
+			if ( 'thumbnail' === $options['size'] )
+				$img_src = $feature_image['thumb'];
+			else
+				$img_src = $feature_image['large'];
+
+			ob_start();
+			?>
+				<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
+					<div class="featured-image-wrapper">
+						<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>" data-src-thumb="<?php echo $feature_image['thumb'] ?>" />
+					</div>
+				</div>
+			<?php
+			$output = ob_get_clean();
+
+			return $output;
+		}
+
+		return false;
+	}
 
 	/**
 	 * Grabs a list of all downloads for a specific transaction product.
@@ -456,5 +577,9 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		}   
 
 		return false;
+	}
+	
+	function cart_object() {
+		ITDebug::print_r( $this->_transaction );
 	}
 }
