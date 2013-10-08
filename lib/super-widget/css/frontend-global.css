@@ -33,7 +33,7 @@
 .it-exchange-super-widget .quantity input{width:100%;}
 .it-exchange-super-widget .remove-coupon{float:right;}
 .it-exchange-super-widget .it-exchange-messages{text-align:center;}
-.it-exchange-super-widget .it-exchange-messages li{padding:.8em 0;}
+.it-exchange-super-widget .it-exchange-messages li{padding:.8em;}
 .it-exchange-super-widget .it-exchange-messages.it-exchange-notices li{background:#ECFFDA;color:#768B5E;}
 .it-exchange-super-widget .it-exchange-messages.it-exchange-errors li{background:#FFF0F0;color:#DB4343;}
 .it-exchange-super-widget .empty-cart{padding:.5em 0;}
