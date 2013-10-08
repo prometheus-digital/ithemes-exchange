@@ -27,7 +27,7 @@
 	<?php do_action( 'it_exchange_content_confirmation_end_products_loop' ); ?>
 	<?php do_action( 'it_exchange_content_confirmation_begin_transaction_summary_loop' ); ?>
 	<div class="it-exchange-transaction-summary-loop">
-		 <?php foreach( it_exchange_get_template_part_elements( 'content_confirmation', 'transaction_summary', array( 'totals-subtotal', 'totals-savings', 'totals-total' ) ) as $total ) : ?>
+		 <?php foreach( it_exchange_get_template_part_elements( 'content_confirmation', 'transaction_summary', array( 'totals-subtotal', 'totals-shipping', 'totals-savings', 'totals-total' ) ) as $total ) : ?>
             <div class="it-exchange-table-row it-exchange-cart-<?php echo $total; ?>">
                 <?php
                 /** 
@@ -35,7 +35,7 @@
                  * hooking into it_exchange_get_template_part_elements filter
                  * and adding the appropriate template file to their theme or add-on
                 */
-                it_exchange_get_template_part( 'content-cart/elements/' . $total );
+                it_exchange_get_template_part( 'content-confirmation/elements/' . $total );
                 ?>
             </div>
         <?php endforeach; ?>

@@ -26,7 +26,7 @@
 <div class="it-exchange-confirmation-totals-amount it-exchange-table-column">
 	<?php do_action( 'it_exchange_content_confirmation_begin_totals_subtotal_element_value' ); ?>
 	<div class="it-exchange-table-column-inner">
-		<?php it_exchange( 'transaction', 'subtotal' ); ?>
+		<?php it_exchange( 'cart', 'subtotal' ); ?>
 	</div>
 	<?php do_action( 'it_exchange_content_confirmation_end_totals_subtotal_element_value' ); ?>
 </div>

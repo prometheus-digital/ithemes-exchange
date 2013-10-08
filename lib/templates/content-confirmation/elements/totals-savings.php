@@ -15,21 +15,21 @@
 */
 ?>
 
+<?php if ( it_exchange( 'transaction', 'has-savings-total' ) ) { ?>
 <?php do_action( 'it_exchange_content_confirmation_before_totals_savings_element' ); ?>
-<?php if ( it_exchange( 'coupons', 'supported', 'type=cart' ) && it_exchange( 'coupons', 'has-applied', 'type=cart' ) ) : ?>
-	<div class="it-exchange-cart-totals-title it-exchange-table-column">
-		<?php do_action( 'it_exchange_content_confirmation_begin_totals_savings_element_label' ); ?>
-		<div class="it-exchange-table-column-inner">
-			<?php _e( 'Savings', 'LION' ); ?>
-		</div>
-		<?php do_action( 'it_exchange_content_confirmation_end_totals_savings_element_label' ); ?>
-	</div>
-	<div class="it-exchange-cart-totals-amount it-exchange-table-column">
-		<?php do_action( 'it_exchange_content_confirmation_begin_totals_savings_element_value' ); ?>
-		<div class="it-exchange-table-column-inner">
-			<?php it_exchange( 'coupons', 'total-discount', array( 'type' => 'cart' ) ); ?>
-		</div>
-		<?php do_action( 'it_exchange_content_confirmation_end_totals_savings_element_value' ); ?>
-	</div>
-<?php endif; ?>
+<div class="it-exchange-cart-totals-title it-exchange-table-column">
+    <?php do_action( 'it_exchange_content_confirmation_begin_totals_savings_element_label' ); ?>
+    <div class="it-exchange-table-column-inner">
+        <?php _e( 'Savings', 'LION' ); ?>
+    </div>
+    <?php do_action( 'it_exchange_content_confirmation_end_totals_savings_element_label' ); ?>
+</div>
+<div class="it-exchange-cart-totals-amount it-exchange-table-column">
+    <?php do_action( 'it_exchange_content_confirmation_begin_totals_savings_element_value' ); ?>
+    <div class="it-exchange-table-column-inner">
+        <?php it_exchange( 'transaction', 'savings-total' ); ?>
+    </div>
+    <?php do_action( 'it_exchange_content_confirmation_end_totals_savings_element_value' ); ?>
+</div>
 <?php do_action( 'it_exchange_content_confirmation_after_totals_savings_element' ); ?>
+<?php } ?>

@@ -58,7 +58,6 @@
 		<?php do_action( 'it_exchange_content_confirmation_after_product_downloads' ); ?>
 	<?php endif; ?>
     </div>
-		<?php it_exchange( 'transaction', 'cart-object' ); ?>
     
 	<?php do_action( 'it_exchange_content_confirmation_before_product_cart_object' ); ?>
     <div class="it-exchange-transaction-product-cart-object">

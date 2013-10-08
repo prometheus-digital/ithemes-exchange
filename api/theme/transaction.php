@@ -32,10 +32,11 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		'date'                  => 'date',
 		'total'                 => 'total',
 		'subtotal'              => 'subtotal',
-		'savings'               => 'savings',
-		'shipping'              => 'shipping',
-		'tax'                   => 'tax',
+		'savingstotal'          => 'savings_total',
+		'shippingtotal'         => 'shipping_total',
 		'instructions'          => 'instructions',
+		'shippingaddress'       => 'shipping_address',
+		'billingaddress'        => 'billing_address',
 		'products'              => 'products',
 		'productattribute'      => 'product_attribute',
 		'productdownloads'      => 'product_downloads',
@@ -174,11 +175,10 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			'before'          => '', 
 			'after'           => '', 
 			'format_currency' => true,
-			'label'  => __( 'Total: %s', 'LION' ), 
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
-		return $options['before'] . sprintf( $options['label'], it_exchange_get_transaction_total( $this->_transaction, $options['format_currency'] ) ) . $options['after'];
+		return $options['before'] .it_exchange_get_transaction_total( $this->_transaction, $options['format_currency'] ) . $options['after'];
 	}
 
 	/**
@@ -195,11 +195,102 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			'before'          => '', 
 			'after'           => '', 
 			'format_currency' => true,
-			'label'  => __( 'Subtotal: %s', 'LION' ), 
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+				
+		return $options['before'] . it_exchange_get_transaction_subtotal( $this->_transaction, $options['format_currency'] ) . $options['after'];
+	}
+
+	/**
+	 * Returns the transaction savings
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param array $options output options
+	 * @return string
+	*/
+	function savings_total( $options=array() ) {
+		if ( !empty( $options['has'] ) )
+			return (bool)it_exchange_get_transaction_coupons( $this->_transaction );
+			
+		// Set options
+		$defaults      = array(
+			'before'          => '', 
+			'after'           => '', 
+			'format_currency' => true,
 		);  
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
-		return $options['before'] . sprintf( $options['label'], it_exchange_get_transaction_subtotal( $this->_transaction, $options['format_currency'] ) ) . $options['after'];
+		return $options['before'] . it_exchange_get_transaction_coupons_total_discount( $this->_transaction, $options['format_currency'] ) . $options['after'];
+	}
+
+	/**
+	 * Returns the transaction savings
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param array $options output options
+	 * @return string
+	*/
+	function shipping_total( $options=array() ) {
+		if ( !empty( $options['has'] ) )
+			return (bool)it_exchange_get_transaction_shipping_total( $this->_transaction );
+			
+		// Set options
+		$defaults      = array(
+			'before'          => '', 
+			'after'           => '', 
+			'format_currency' => true,
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
+		return $options['before'] . it_exchange_get_transaction_shipping_total( $this->_transaction, $options['format_currency'] ) . $options['after'];
+	}
+
+	/**
+	 * Returns the transaction shipping address
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param array $options output options
+	 * @return string
+	*/
+	function shipping_address( $options=array() ) {
+		if ( !empty( $options['has'] ) )
+			return !empty( $this->_transaction->cart_details->shipping_address );
+			
+		// Set options
+		$defaults      = array(
+			'before'          => '', 
+			'after'           => '', 
+			'format_currency' => true,
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
+		return $options['before'] . it_exchange_get_formatted_billing_address( $this->_transaction->cart_details->shipping_address ) . $options['after'];
+	}
+
+	/**
+	 * Returns the transaction billing address
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param array $options output options
+	 * @return string
+	*/
+	function billing_address( $options=array() ) {
+		if ( !empty( $options['has'] ) )
+			return !empty( $this->_transaction->cart_details->billing_address );
+			
+		// Set options
+		$defaults      = array(
+			'before'          => '', 
+			'after'           => '', 
+			'format_currency' => true,
+		);  
+		$options = ITUtility::merge_defaults( $options, $defaults );
+		
+		return $options['before'] . it_exchange_get_formatted_billing_address( $this->_transaction->cart_details->billing_address ) . $options['after'];
 	}
 
     /** 

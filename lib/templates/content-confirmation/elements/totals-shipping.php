@@ -15,6 +15,7 @@
 */
 ?>
 
+<?php if ( it_exchange( 'transaction', 'has-shipping-total' ) ) { ?>
 <?php do_action( 'it_exchange_content_confirmation_before_totals_shipping_simple_element' ); ?>
 <div class="it-exchange-confirmation-totals-title it-exchange-table-column">
 	<?php do_action( 'it_exchange_content_confirmation_begin_totals_shipping_simple_element_label' ); ?>
@@ -26,8 +27,9 @@
 <div class="it-exchange-confirmation-totals-amount it-exchange-table-column">
 	<?php do_action( 'it_exchange_content_confirmation_begin_totals_shipping_simple_element_value' ); ?>
 	<div class="it-exchange-table-column-inner">
-		<?php esc_attr_e( it_exchange_get_confirmation_shipping_cost() ); ?>
+		<?php it_exchange( 'transaction', 'shipping-total' ); ?>
 	</div>
 	<?php do_action( 'it_exchange_content_confirmation_end_totals_shipping_simple_element_value' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_confirmation_after_totals_shipping_simple_element' ); ?>
+<?php } ?>
