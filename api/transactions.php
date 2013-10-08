@@ -895,7 +895,7 @@ function it_exchange_get_transaction_method_name_from_slug( $slug ) {
 	if ( $method = it_exchange_get_addon( $slug ) )
 		return apply_filters( 'it_exchange_get_transaction_method_name_' . $slug, $method['name'] );
 		
-	return apply_filters( 'it_exchange_get_transaction_method_name_' . $slug, false );
+	return apply_filters( 'it_exchange_get_transaction_method_name_' . $slug, $slug );
 }
 
 /**
