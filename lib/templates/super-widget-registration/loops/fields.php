@@ -16,14 +16,14 @@
 
 <?php do_action( 'it_exchange_super_widget_registration_before_fields_loop' ); ?>
 <?php do_action( 'it_exchange_super_widget_registration_begin_fields_loop' ); ?>
-<?php foreach( it_exchange_get_template_part_elements( 'super_widget_registration', 'fields', array( 'username', 'first-name', 'last-name', 'email', 'password1', 'password2' ) ) as $field ) : ?>
+<?php foreach( it_exchange_get_template_part_elements( 'super_widget_registration', 'fields', array( 'cancel', 'username', 'first-name', 'last-name', 'email', 'password1', 'password2' ) ) as $field ) : ?>
 	<?php
 	/**
 	 * Theme and add-on devs should add code to this loop by 
 	 * hooking into it_exchange_get_template_part_elements filter
 	 * and adding the appropriate template file to their theme or add-on
 	 */
-	it_exchange_get_template_part( 'content-registration/elements/' . $field );
+	it_exchange_get_template_part( 'super-widget-registration/elements/' . $field );
 	?>
 <?php endforeach; ?>
 <?php do_action( 'it_exchange_super_widget_registration_end_fields_loop' ); ?>
