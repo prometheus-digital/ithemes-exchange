@@ -335,7 +335,7 @@ class IT_Exchange_Shipping {
 				),
 				array(
 					'type'    => 'yes_no_drop_down',
-					'label'   => __( 'Can products override default ships from address?', 'LION' ),
+					'label'   => __( 'Can individual products override the default Ships From Address?', 'LION' ),
 					'slug'    => 'products-can-override-ships-from',
 					'tooltip' => __( 'Selecting "yes" will place these fields on the Add/Edit product screen.', 'LION' ),
 					'default' => '1',
@@ -347,9 +347,9 @@ class IT_Exchange_Shipping {
 		$form_fields = array_merge( $form_fields, array(
 			array(
 				'type'    => 'yes_no_drop_down',
-				'label'   => __( 'Can products override available shipping methods?', 'LION' ),
+				'label'   => __( 'Can individual products override the global Shipping Methods setting?', 'LION' ),
 				'slug'    => 'products-can-override-available-shipping-methods',
-				'tooltip' => __( 'Selecting "yes" will place options the Add/Edit product screen.', 'LION' ),
+				'tooltip' => __( 'Selecting "yes" will allow you to set available Shipping Methods for a product from it\'s Add/Edit product screen.', 'LION' ),
 				'default' => '0',
 			),
 		));
