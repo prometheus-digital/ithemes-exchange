@@ -336,7 +336,8 @@ class IT_Exchange_Transaction_Post_Type {
 		$transaction = it_exchange_get_transaction( $post );
 		switch( $column ) {
 			case 'it_exchange_transaction_method_column' :
-				esc_attr_e( it_exchange_get_transaction_method_name( $transaction ) );
+				$method_name = esc_attr_e( it_exchange_get_transaction_method_name( $transaction ) );
+				echo empty( $method_name ) ? $transaction->transaction_method : $method_name;
 				break;
 			case 'it_exchange_transaction_status_column' :
 				esc_attr_e( it_exchange_get_transaction_status_label( $post ) );
