@@ -501,7 +501,7 @@ function it_exchange_get_core_page_rewrites( $page ) {
 	switch( $page ) {
 		case 'store' :
 			$rewrites = array(
-				$slug => 'index.php?' . $slug . '=1',
+				$slug . '$' => 'index.php?' . $slug . '=1',
 			);
 			return $rewrites;
 			break;
@@ -516,7 +516,7 @@ function it_exchange_get_core_page_rewrites( $page ) {
 
 			$rewrites = array(
 				$slug . '/([^/]+)/?$' => 'index.php?' . $slug . '=$matches[1]&' . $profile_slug . '=1',
-				$slug => 'index.php?' . $slug . '=1&' . $profile_slug . '=1',
+				$slug . '$' => 'index.php?' . $slug . '=1&' . $profile_slug . '=1',
 			);
 			return $rewrites;
 			break;
@@ -531,7 +531,7 @@ function it_exchange_get_core_page_rewrites( $page ) {
 
 			$rewrites = array(
 				$account_slug  . '/([^/]+)/' . $slug  => 'index.php?' . $account_slug . '=$matches[1]&' . $slug . '=1',
-				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
+				$account_slug . '/' . $slug . '$' => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
 			);
 			return $rewrites;
 			break;
@@ -545,7 +545,7 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			}
 
 			$rewrites = array(
-				$account_slug  . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
+				$account_slug  . '/' . $slug . '$' => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
 			);
 			return $rewrites;
 			break;
@@ -559,7 +559,7 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			}
 
 			$rewrites = array(
-				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
+				$account_slug . '/' . $slug . '$' => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
 			);
 			return $rewrites;
 			break;
@@ -573,7 +573,7 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			}
 
 			$rewrites = array(
-				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
+				$account_slug . '/' . $slug . '$' => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
 			);
 			return $rewrites;
 			break;
@@ -587,8 +587,8 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			}
 
 			$rewrites = array(
-				$account_slug  . '/([^/]+)/' . $slug => 'index.php?' . $account_slug . '=$matches[1]&' . $slug . '=1',
-				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
+				$account_slug  . '/([^/]+)/' . $slug . '$' => 'index.php?' . $account_slug . '=$matches[1]&' . $slug . '=1',
+				$account_slug . '/' . $slug . '$' => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
 			);
 			return $rewrites;
 			break;
@@ -602,8 +602,8 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			}
 
 			$rewrites = array(
-				$account_slug  . '/([^/]+)/' . $slug => 'index.php?' . $account_slug . '=$matches[1]&' . $slug . '=1',
-				$account_slug . '/' . $slug => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
+				$account_slug  . '/([^/]+)/' . $slug . '$' => 'index.php?' . $account_slug . '=$matches[1]&' . $slug . '=1',
+				$account_slug . '/' . $slug . '$' => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
 			);
 			return $rewrites;
 			break;
