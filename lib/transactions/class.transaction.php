@@ -65,7 +65,7 @@ class IT_Exchange_Transaction {
 	 * @return void
 	*/
 	function IT_Exchange_Transaction( $post=false ) {
-		
+
 		// If not an object, try to grab the WP object
 		if ( ! is_object( $post ) )
 			$post = get_post( (int) $post );
@@ -181,7 +181,7 @@ class IT_Exchange_Transaction {
 	function delete_transaction_meta( $key, $value = '' ) {
 		delete_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $value );
 	}
-	
+
 	/**
 	 * Gets the date property.
 	 *
@@ -310,7 +310,7 @@ class IT_Exchange_Transaction {
 	function has_refunds() {
 		return (bool) get_post_meta( $this->ID, '_it_exchange_transaction_refunds' );
 	}
-	
+
 	/**
 	 * Get the transaction refunds.
 	 *
@@ -326,7 +326,7 @@ class IT_Exchange_Transaction {
 	 * @ since 0.3.2
 	 * @return void
 	*/
-    function set_transaction_supports_and_data() {
+	function set_transaction_supports_and_data() {
 
 		// Set status
 		$this->status = $this->get_status();
@@ -353,7 +353,7 @@ class IT_Exchange_Transaction {
 	 * @return bool
 	*/
 	function has_children( $args=array() ) {
-		$defaults = array( 
+		$defaults = array(
 			'post_parent' => $this->ID,
 			'post_type'   => 'it_exchange_tran',
 		);
@@ -368,7 +368,7 @@ class IT_Exchange_Transaction {
 	 * @return bool
 	*/
 	function get_children( $args=array() ) {
-		$defaults = array( 
+		$defaults = array(
 			'post_parent' => $this->ID,
 			'post_type'   => 'it_exchange_tran',
 		);
@@ -386,28 +386,33 @@ class IT_Exchange_Transaction {
 		return empty( $this->gateway_id_for_transaction ) ? false : $this->gateway_id_for_transaction;
 	}
 
-    /** 
-     * Sets the supports array for the post_type.
-     *
-     * @since 0.3.3
-    */
-    function set_add_edit_screen_supports() {
+	/**
+	 * Sets the supports array for the post_type.
+	 *
+	 * @since 0.3.3
+	*/
+	function set_add_edit_screen_supports() {
 		global $pagenow;
-        $supports = array(
-            'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields',
-            'comments', 'revisions', 'post-formats',
-        );  
+		$supports = array(
+			'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields',
+			'comments', 'revisions', 'post-formats',
+		);
 
-        // If is_admin and is post-new.php or post.php, only register supports for current transaction-method
-        if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow )
+		// If is_admin and is post-new.php or post.php, only register supports for current transaction-method
+		if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow )
 			return; // Don't remove any if not on post-new / or post.php
 
-		if ( $addon = it_exchange_get_addon( $this->transaction_method ) ) { 
+		if ( $addon = it_exchange_get_addon( $this->transaction_method ) ) {
 			// Remove any supports args that the transaction add-on does not want.
-			foreach( $supports as $option ) { 
-                if ( empty( $addon['options']['supports'][$option] ) )
+			foreach( $supports as $option ) {
+				if ( empty( $addon['options']['supports'][$option] ) )
 					remove_post_type_support( 'it_exchange_tran', $option );
-            }   
-        }   
-    }  
+			}
+		} else {
+			// Can't find the transaction - remove everything
+			foreach( $supports as $option ) {
+				remove_post_type_support( 'it_exchange_tran', $option );
+			}
+		}
+	}
 }
