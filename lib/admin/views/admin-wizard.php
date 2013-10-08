@@ -14,6 +14,129 @@
 	<?php $form->start_form( $form_options, 'exchange-general-settings' ); ?>
 		<div class="it-exchange-wizard">
 			<div class="fields">
+				<div class="field product-types">
+					<p><?php _e( 'Click to select the types of products you plan to sell in your store.', 'LION' ); ?><span class="tip" title="<?php _e( "You can always add or remove these later on the Add-ons page.", 'LION' ); ?>">i</span></p>
+					<ul>
+						<?php
+							$addons = it_exchange_get_addons( array( 'category' => 'product-type', 'show_required' => false ) );
+							if ( isset( $addons['simple-product-type'] ) )
+								unset( $addons['simple-product-type'] );
+
+							it_exchange_temporarily_load_addons( $addons );
+							foreach( (array) $addons as $addon ) {
+								if ( ! empty( $addon['options']['wizard-icon'] ) )
+									$name = '<img src="' . $addon['options']['wizard-icon'] . '" alt="' . $addon['name'] . '" />';
+								else
+									$name = $addon['name'];
+									
+								if ( it_exchange_is_addon_enabled( $addon['slug'] ) )
+									$selected_class = 'selected';
+								else
+									$selected_class = '';
+								
+								$toggle_ships = 'physical-product-type' == $addon['slug'] ? ' data-ships="shipping-types"' : '';
+
+								echo '<li class="productoption ' . $addon['slug'] . '-productoption ' . $selected_class . '" product-type="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard"' . $toggle_ships . '>';
+								echo '<div class="option-spacer">';
+								echo $name;
+								echo '<input type="hidden" class="remove-if-js" name="it-exchange-product-type[]" value="' . $addon['slug'] . '" />';
+								echo '</div>';
+								echo '</li>';
+							}
+						?>
+						<?php if ( ! it_exchange_is_addon_registered( 'membership' ) ) : ?>
+							<li class="membership-productoption inactive" data-toggle="membership-wizard">
+								<div class="option-spacer">
+									<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/wizard-membership.png' ); ?>" alt="<?php _e( 'Membership', 'LION' ); ?>" />
+									<span>$</span>
+								</div>
+							</li>
+						<?php endif; ?>
+					</ul>
+				</div>
+				
+				<?php if ( ! it_exchange_is_addon_registered( 'membership' ) ) : ?>
+					<div class="field membership-wizard inactive hide-if-js">
+						<h3><?php _e( 'Membership', 'LION' ); ?></h3>
+						<p><?php _e( 'To use Membership, you need to install the Membership add-on.', 'LION' ); ?></p>
+						<div class="membership-action activate-membership">
+							<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/plugin32.png' ); ?>" />
+							<p><?php _e( 'I have the Membership add-on and just need to install and/or activate it.', 'LION' ); ?></p>
+							<p><a href="<?php echo admin_url( 'plugins.php' ); ?>" target="_self"><?php _e( 'Go to the plugins page', 'LION' ); ?></a></p>
+						</div>
+						<div class="membership-action buy-membership">
+							<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/icon32.png' ); ?>" />
+							<p><?php _e( "I don't have the Membership add-on yet, but I want to use Membership.", 'LION' ); ?></p>
+							<p><a href="http://ithemes.com/exchange/membership/" target="_blank"><?php _e( 'Get the Membership Add-on', 'LION' ); ?></a></p>
+						</div>
+					</div>
+				<?php endif; ?>
+				
+				<?php 
+				foreach( (array) $addons as $addon ) {
+					do_action( 'it_exchange_print_' . $addon['slug'] . '_wizard_settings', $form ); 
+				}
+				?>
+
+				<div class="field shipping-types inactive hide-if-js">
+					<p><?php _e( 'How will you ship your products?', 'LION' ); ?><span class="tip" title="<?php _e( "You can always add or remove these later on the Shipping Settings page.", 'LION' ); ?>">i</span></p>
+					<ul>
+						<?php
+							$addons = it_exchange_get_addons( array( 'category' => 'shipping', 'show_required' => false ) );
+							it_exchange_temporarily_load_addons( $addons );
+
+							// Add Simple Shipping's free and flat rate methods as providers since Brad thinks they're so special 
+							$addons['simple-shipping-flat-rate'] = array(
+								'name' => __( 'Flat Rate', 'LION' ),
+								'slug' => 'simple-shipping-flat-rate',
+								'options' => array( 'wizard-icon' => false ),
+							);
+							$addons['simple-shipping-free'] = array(
+								'name' => __( 'Free Shipping', 'LION' ),
+								'slug' => 'simple-shipping-free',
+								'options' => array( 'wizard-icon' => false ),
+							);
+
+							// Loop through them and print their settings
+							foreach( (array) $addons as $addon ) {
+								// Skip simple shipping
+								if ( 'simple-shipping' == $addon['slug'] )
+									continue;
+
+								if ( ! empty( $addon['options']['wizard-icon'] ) )
+									$name = '<img src="' . $addon['options']['wizard-icon'] . '" alt="' . $addon['name'] . '" />';
+								else
+									$name = $addon['name'];
+									
+								if ( it_exchange_is_addon_enabled( $addon['slug'] ) )
+									$selected_class = 'selected';
+								else
+									$selected_class = '';
+
+								// Set selected for free and flat rate
+								if ( 'simple-shipping-free' == $addon['slug'] || 'simple-shipping-flat-rate' == $addon['slug'] ) {
+									$option_key = ( 'simple-shipping-free' == $addon['slug'] ) ? 'enable-free-shipping' : 'enable-flat-rate-shipping';
+									$simple_shipping_options = it_exchange_get_option( 'simple-shipping' );
+									$selected_class = it_exchange_is_addon_enabled( 'simple-shipping' ) && ! empty( $simple_shipping_options[$option_key] ) ? 'selected' : '';
+								}
+								
+								echo '<li class="productoption ' . $addon['slug'] . '-productoption ' . $selected_class . '" product-type="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">';
+								echo '<div class="option-spacer">';
+								echo $name;
+								echo '<input type="hidden" class="remove-if-js" name="it-exchange-product-type[]" value="' . $addon['slug'] . '" />';
+								echo '</div>';
+								echo '</li>';
+							}
+						?>
+					</ul>
+				</div>
+
+				<?php 
+				foreach( (array) $addons as $addon ) {
+					do_action( 'it_exchange_print_' . $addon['slug'] . '_wizard_settings', $form ); 
+				}
+				?>
+
 				<div class="field payments">
 					<p><?php _e( 'How will you be accepting payments? Choose one.', 'LION' ); ?><span class="tip" title="<?php _e( "Choose your preferred payment gateway for processing transactions. You can select more than one option but it's not recommended.", 'LION' ); ?>">i</span></p>
 					<ul>
@@ -32,7 +155,7 @@
 									$selected_class = '';
 								
 								echo '<li class="payoption ' . $addon['slug'] . '-payoption ' . $selected_class . '" transaction-method="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">';
-								echo '<div class="payoption-spacer">';
+								echo '<div class="option-spacer">';
 								echo $name;
 								echo '<input type="hidden" class="remove-if-js" name="it-exchange-transaction-methods[]" value="' . $addon['slug'] . '" />';
 								echo '</div>';
@@ -42,7 +165,7 @@
 						
 						<?php if ( ! it_exchange_is_addon_registered( 'stripe' ) ) : ?>
 							<li class="stripe-payoption inactive" data-toggle="stripe-wizard">
-								<div class="payoption-spacer">
+								<div class="option-spacer">
 									<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/stripe32.png' ); ?>" alt="<?php _e( 'Stripe', 'LION' ); ?>" />
 								</div>
 							</li>
