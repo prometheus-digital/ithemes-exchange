@@ -31,6 +31,7 @@ class IT_Exchange_Transaction_Post_Type {
 			add_filter( 'manage_it_exchange_tran_posts_custom_column', array( $this, 'add_transaction_method_info_to_view_all_table_rows' ) );
 			add_filter( 'it_exchange_transaction_metabox_callback', array( $this, 'register_transaction_details_admin_metabox' ) );
 			add_filter( 'post_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
+			add_filter( 'page_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
 			add_filter( 'screen_layout_columns', array( $this, 'modify_details_page_layout' ) );
 			add_filter( 'get_user_option_screen_layout_it_exchange_tran', array( $this, 'update_user_column_options' ) );
 			add_action( 'wp_ajax_it-exchange-update-transaction-status', array( $this, 'ajax_update_status' ) );
@@ -336,7 +337,7 @@ class IT_Exchange_Transaction_Post_Type {
 		$transaction = it_exchange_get_transaction( $post );
 		switch( $column ) {
 			case 'it_exchange_transaction_method_column' :
-				$method_name = esc_attr_e( it_exchange_get_transaction_method_name( $transaction ) );
+				$method_name = esc_attr( it_exchange_get_transaction_method_name( $transaction ) );
 				echo empty( $method_name ) ? $transaction->transaction_method : $method_name;
 				break;
 			case 'it_exchange_transaction_status_column' :
