@@ -169,7 +169,27 @@
 
 /** -----------------------------------------------------:[ confirmation ]:---------- */
 #it-exchange-confirmation .it-exchange-transaction-meta p{margin-bottom:0;}
-#it-exchange-confirmation span{margin-left:1em;}
+#it-exchange-confirmation .it-exchange-table-column-inner{padding:20px 20px 0;}
+#it-exchange-confirmation .it-exchange-customer-menu{list-style:none;}
+#it-exchange-confirmation .it-exchange-customer-menu li{margin-left:0;}
+#it-exchange-confirmation .it-exchange-transaction-status .paid{color:#6BC43F;}
+#it-exchange-confirmation .it-exchange-transaction-instructions{margin-top:1em;}
+#it-exchange-confirmation .it-exchange-confirmation-billing-address-purchase-requirement,
+#it-exchange-confirmation .it-exchange-confirmation-shipping-address-purchase-requirement{width:50%;}
+#it-exchange-confirmation .it-exchange-transaction-product-details{border-bottom:none;}
+#it-exchange-confirmation .it-exchange-transaction-product-thumbnail-title{width:80%;border-right:1px solid #DDD;}
+#it-exchange-confirmation .it-exchange-transaction-product-thumbnail-title .it-exchange-featured-image{max-width:100px;float:left;}
+#it-exchange-confirmation .it-exchange-transaction-product-thumbnail-title h3{clear:none;margin-left:120px;}
+#it-exchange-confirmation .it-exchange-transaction-product-cart-object{width:20%;}
+#it-exchange-confirmation .it-exchange-table-column-downloads{width:80%;border-right:1px solid #DDD;}
+#it-exchange-confirmation .it-exchange-table-column-downloads h4{margin:0 0 10px;}
+#it-exchange-confirmation .it-exchange-downloads-data{list-style:none;}
+#it-exchange-confirmation .it-exchange-downloads-data li{margin-left:0;}
+#it-exchange-confirmation .it-exchange-transaction-summary-loop{overflow:hidden;width:220px;float:right;border-top:none;border-bottom:none;}
+#it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-table-row{border-bottom:0;}
+#it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-table-column-inner{padding:10px 10px 0;border-right:1px solid #DDD;}
+#it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-confirmation-totals-title{text-align:right;}
+#it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-cart-totals-total .it-exchange-table-column-inner{padding:10px;border-bottom:1px solid #DDD;}
 
 /** -----------------------------------------------------:[ store ]:---------- */
 #it-exchange-store .it-exchange-products {margin: 0;padding: 0;}

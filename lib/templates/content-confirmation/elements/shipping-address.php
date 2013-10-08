@@ -17,7 +17,7 @@
 
 <?php if ( it_exchange( 'transaction', 'has-shipping-address' ) ) { ?>
 <?php do_action( 'it_exchange_content_confirmation_before_shipping_address_element' ); ?>
-<div class="it-exchange-confirmation-shipping-address-purchase-requirement">
+<div class="it-exchange-confirmation-shipping-address-purchase-requirement it-exchange-column">
 	<h3><?php _e( 'Shipping Address', 'LION' ); ?></h3>
     <div class="checkout-purchase-requirement-shipping-address-options">
         <div class="existing-shipping-address">
