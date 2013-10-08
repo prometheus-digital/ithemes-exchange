@@ -1099,11 +1099,14 @@ function it_exchange_transaction_includes_shipping( $transaction ) {
  * @param mixed $transaction the id or object
  * @return string
 */
-function it_exchange_get_transaction_shipping_total( $transaction ) {
+function it_exchange_get_transaction_shipping_total( $transaction, $format_price=false ) {
 	if( ! $transaction= it_exchange_get_transaction( $transaction ) )
 		return false;
 
 	$shipping_total = empty( $transaction->cart_details->shipping_total ) ? false : it_exchange_convert_from_database_number( $transaction->cart_details->shipping_total );
+	if ( ! empty( $shipping_total ) && $format_price )
+		$shipping_total = it_exchange_format_price( $shipping_total );
+
 	return apply_filters( 'it_exchange_get_transaction_shipping_total', $shipping_total, $transaction );
 }
 
