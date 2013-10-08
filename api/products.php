@@ -153,6 +153,24 @@ function it_exchange_set_the_product_id( $product_id=false ) {
 }
 
 /**
+ * Set the global Exchange Product for use in loops
+ *
+ * @since 1.4.0
+ *
+ * @param integer $id the post/product ID
+ * @return boolean true if set, false if no product was found/set
+*/
+function it_exchange_set_product( $id ) {
+	$product = it_exchange_get_product( $id );
+	if ( is_object( $product ) && 'IT_Exchange_Product' == get_class( $product ) ) {
+		$GLOBALS['it_exchange']['product'] = $product;
+		return true;
+	}
+	$GLOBALS['it_exchange']['product'] = false;
+	return false;
+}
+
+/**
  * Returns the global for the current product's id
  *
  * @since 0.3.8
