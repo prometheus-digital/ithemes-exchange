@@ -273,6 +273,11 @@ class IT_Exchange_Transaction_Post_Type {
 		if ( isset( $existing['date'] ) )
 			unset( $existing['date'] );
 
+		// Remove Builder 
+		if ( isset( $existing['builder_layout'] ) )
+			unset( $existing['builder_layout'] );
+
+
 		// All Core should be removed at this point. Build ours back (including date from core)
 		$exchange_columns = array(
 			'cb'                                      => $check,

@@ -1541,7 +1541,7 @@ Order: %s
 		// For Transaction Details Page
 		if ( ( 'post-new.php' == $pagenow || 'post.php' == $pagenow ) && 'it_exchange_tran' == $post_type ) {
 			// Remove builder meta box
-			if ( 'builder' == strtolower( get_option( 'template' ) ) ) 
+			if ( 'builder' == strtolower( get_option( 'template' ) ) || ( isset( $GLOBALS['theme_index'] ) && 'it-builder' == $GLOBALS['theme_index'] ) ) 
 				add_filter( 'builder_layout_filter_non_layout_post_types', array( $this, 'remove_builder_custom_layout_box' ) );
 		}
 	}
