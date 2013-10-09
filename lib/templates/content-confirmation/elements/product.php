@@ -15,44 +15,32 @@
 ?>
 
 <?php do_action( 'it_exchange_content_confirmation_before_product_element' ); ?>
-<div class="it-exchange-transaction-product it-exchange-table">
-	<div class="it-exchange-transaction-product-details it-exchange-table-row">
-		<?php do_action( 'it_exchange_content_confirmation_before_product_featured_image' ); ?>
-		<div class="it-exchange-transaction-product-thumbnail-title it-exchange-table-column">
-			<div class="it-exchange-table-column-inner">
+<div class="it-exchange-transaction-product it-exchange-columns-wrapper it-exchange-clearfix">
+	<?php do_action( 'it_exchange_content_confirmation_before_product_details' ); ?>
+	<div class="it-exchange-transaction-product-details it-exchange-column">
+		<div class="it-exchange-column-inner">
+			<?php do_action( 'it_exchange_content_confirmation_before_product_attibutes' ); ?>
+			<div class="it-exchange-transaction-product-attributes it-exchange-transaction-product-data it-exchange-clearfix">
 				<?php do_action( 'it_exchange_content_confirmation_before_product_featured_image' ); ?>
 				<?php it_exchange( 'transaction', 'featured-image' ); ?>
 				<?php do_action( 'it_exchange_content_confirmation_after_product_featured_image' ); ?>
-				
-				<?php do_action( 'it_exchange_content_confirmation_after_product_title' ); ?>
+			
+				<?php do_action( 'it_exchange_content_confirmation_before_product_title' ); ?>
 				<?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'title', 'wrap' => 'h3' ) ); ?>
 				<?php do_action( 'it_exchange_content_confirmation_after_product_title' ); ?>
 			</div>
-		</div>
-		
-		<?php do_action( 'it_exchange_content_confirmation_before_product_cart_object' ); ?>
-		<div class="it-exchange-transaction-product-cart-object it-exchange-table-column">
-			<div class="it-exchange-table-column-inner">
-				<?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'product_count' ) ); ?>
-				<span class="it-exchange-right"><?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'product_base_price' ) ); ?></span>
-			</div>
-		</div>
-		<?php do_action( 'it_exchange_content_confirmation_after_product_cart_object' ); ?>
-	</div>
-	
-	<?php if ( it_exchange( 'transaction', 'has-product-downloads' ) ) : ?>
-		<?php do_action( 'it_exchange_content_confirmation_before_product_downloads' ); ?>
-		<div class="it-exchange-transaction-product-downloads it-exchange-table-row">
-			<div class="it-exchange-table-column-downloads it-exchange-table-column">
-				<div class="it-exchange-table-column-inner">
+			<?php do_action( 'it_exchange_content_confirmation_after_product_attibutes' ); ?>
+			
+			<?php if ( it_exchange( 'transaction', 'has-product-downloads' ) ) : ?>
+				<?php do_action( 'it_exchange_content_confirmation_before_product_downloads' ); ?>
+				<div class="it-exchange-transaction-product-downloads it-exchange-transaction-product-data it-exchange-clearfix">
 					<h4><?php _e( 'Downloads', 'LION' ); ?></h4>
 					<?php if ( ! it_exchange( 'transaction', 'get-cleared-for-delivery' ) ) : ?>
 						<p><?php _e( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an appoved status, you will receive a followup email with your download links.', 'LION' ); ?></p>
 					<?php endif; ?>
-					<?php while( it_exchange( 'transaction', 'product-downloads' ) ) : ?>
-						<div class="it-exchange-transaction-product-download">
-							<?php if ( it_exchange( 'transaction', 'has-product-download-hashes' ) ) : ?>
-								<ul class="it-exchange-downloads-data">
+					<ul class="it-exchange-transaction-product-downloads-list">
+						<?php while( it_exchange( 'transaction', 'product-downloads' ) ) : ?>
+								<?php if ( it_exchange( 'transaction', 'has-product-download-hashes' ) ) : ?>
 									<?php while( it_exchange( 'transaction', 'product-download-hashes' ) ) : ?>
 										<li class="it-exchange-download-data it-exchange-clearfix">
 											<span class="it-exchange-transaction-product-download-title it-exchange-left">
@@ -67,17 +55,23 @@
 											<?php endif; ?>
 										</li>
 									<?php endwhile; ?>
-								</ul>
-							<?php endif; ?>
-						</div>
-					<?php endwhile; ?>
+								<?php endif; ?>
+						<?php endwhile; ?>
+					</ul>
 				</div>
-			</div>
-			<div class="it-exchange-transaction-product-cart-object">
-				
-			</div>
+				<?php do_action( 'it_exchange_content_confirmation_after_product_downloads' ); ?>
+			<?php endif; ?>
 		</div>
-		<?php do_action( 'it_exchange_content_confirmation_after_product_downloads' ); ?>
-	<?php endif; ?>
+	</div>
+	<?php do_action( 'it_exchange_content_confirmation_after_product_details' ); ?>
+	
+	<?php do_action( 'it_exchange_content_confirmation_before_product_cart_object' ); ?>
+	<div class="it-exchange-transaction-product-cart-object it-exchange-column">
+		<div class="it-exchange-column-inner">
+			<?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'product_count' ) ); ?>
+			<span class="it-exchange-right"><?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'product_base_price' ) ); ?></span>
+		</div>
+	</div>
+	<?php do_action( 'it_exchange_content_confirmation_after_product_cart_object' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_confirmation_after_product_element' ); ?>
