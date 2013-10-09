@@ -177,7 +177,7 @@ class IT_Exchange_Shipping {
 			// Print active shipping page
 			$provider          = ( ! empty( $_GET['provider'] ) && it_exchange_is_shipping_provider_registered( $_GET['provider'] ) ) ? it_exchange_get_registered_shipping_provider( $_GET['provider'] ) : 'shipping-general';
 			$prefix            = is_object( $provider ) ? $provider->slug : 'shipping-general';
-			$action            = add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping' ), admin_url( 'admin' ) );
+			$action            = add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping' ), admin_url( 'admin.php' ) );
 			$action            = is_object( $provider ) ? add_query_arg( array( 'provider' => $provider->slug ), $action ) : $action;
 			$fields            = is_object( $provider ) ? $provider->provider_settings : $this->get_general_settings_fields();
 			$country_states_js = is_object( $provider ) ? $provider->country_states_js : $this->get_general_settings_country_states_js();
@@ -217,7 +217,7 @@ class IT_Exchange_Shipping {
 		// Print the HTML
 		?>  
 		<div class="it-exchange-secondary-tabs it-exchange-shipping-provider-tabs">
-			<a class="shipping-provider-link <?php echo ( empty( $current ) ) ? 'it-exchange-current' : ''; ?>" href="<?php esc_attr_e( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping' ), admin_url( 'admin' ) ) ); ?>">
+			<a class="shipping-provider-link <?php echo ( empty( $current ) ) ? 'it-exchange-current' : ''; ?>" href="<?php esc_attr_e( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping' ), admin_url( 'admin.php' ) ) ); ?>">
 				<?php _e( 'General', 'LION' ); ?>
 			</a>
 			<?php 
@@ -225,7 +225,7 @@ class IT_Exchange_Shipping {
 				$provider = it_exchange_get_registered_shipping_provider( $provider['slug'] );
 				if ( empty( $provider->has_settings_page ) )
 					continue;
-				$url = add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping', 'provider' => $provider->get_slug() ), admin_url( 'admin' ) );
+				$url = add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping', 'provider' => $provider->get_slug() ), admin_url( 'admin.php' ) );
 				?><a class="shipping-provider-link<?php echo ( $current == $provider->get_slug() ) ? ' it-exchange-current' : ''; ?>" href="<?php echo $url; ?>"><?php esc_html_e( $provider->get_label() ); ?></a><?php
 			}
 			?>

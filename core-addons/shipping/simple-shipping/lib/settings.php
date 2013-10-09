@@ -36,7 +36,7 @@ function it_exchange_simple_shipping_settings_redirect() {
 	$addon = ! empty( $_GET['add-on-settings'] ) && 'simple-shipping' == $_GET['add-on-settings'];
 
 	if ( $page && $addon ) {
-		wp_redirect( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping', 'provider' => 'simple-shipping' ), admin_url( 'admin' ) ) );
+		wp_redirect( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping', 'provider' => 'simple-shipping' ), admin_url( 'admin.php' ) ) );
 		die();
 	}
 }
@@ -57,29 +57,41 @@ add_action( 'admin_init', 'it_exchange_simple_shipping_settings_redirect' );
 */
 function it_exchange_print_simple_shipping_flat_rate_wizard_settings( $form ) { 
 	$options = it_exchange_get_option( 'simple-shipping', true );
-	
-	//$form_values = ITUtility::merge_defaults( ITForm::get_post_data(), $settings );
+
+	$settings['simple-shipping-flat-rate-cost'] = empty( $options['flat-rate-shipping-amount'] ) ? it_exchange_format_price( 5 ) : $options['flat-rate-shipping-amount'];
+
+	$form->set_option( 'simple-shipping-flat-rate-cost', $settings['simple-shipping-flat-rate-cost'] );
 	$hide_if_js  = it_exchange_is_addon_enabled( 'simple-shipping' ) && ! empty( $options['enable-flat-rate-shipping'] ) ? '' : 'hide-if-js';
 	?>  
 	<div class="field stripe-wizard <?php echo $hide_if_js; ?>">
-		<p>Here I am</p>
+		<table class="form-table">
+			<tr valign="top">
+				<td scope="row">
+					<label for="simple-shipping-flat-rate-cost"><?php _e( 'Flat Rate Default Amount', 'LION' ); ?></label>
+					<span class="tip" title="<?php _e( 'Default shipping costs for flat rate. Multiplied by quantity purchased. Customizable per product by Store Admin.', 'LION' ); ?>" >i</span>
+				</td>
+				<td>
+					<?php $form->add_text_box( 'simple-shipping-flat-rate-cost', array( 'class' => 'normal-text' ) ); ?>
+				</td>
+			</tr>
+		</table>
 	</div>
 	<?php
 }
-add_action( 'iiiiiiiiit_exchange_print_simple-shipping-flat-rate_wizard_settings', 'it_exchange_print_simple_shipping_flat_rate_wizard_settings' );
+//add_action( 'it_exchange_print_simple-shipping-flat-rate_wizard_settings', 'it_exchange_print_simple_shipping_flat_rate_wizard_settings' );
 
 /**
-	 * Saves stripe settings when the Wizard is saved
-	 *
-	 * @since 0.1.0
-	 *
-	 * @return void
-	*/
-	function it_exchange_save_simple_shipping_flat_rate_wizard_settings( $errors ) { 
-		if ( ! empty( $errors ) ) 
-			return $errors;
+ * Saves stripe settings when the Wizard is saved
+ *
+ * @since 0.1.0
+ *
+ * @return void
+*/
+function it_exchange_save_simple_shipping_flat_rate_wizard_settings( $errors ) { 
+	if ( ! empty( $errors ) ) 
+		return $errors;
 
-		$IT_Exchange_Stripe_Add_On = new IT_Exchange_Stripe_Add_On();
-		return $IT_Exchange_Stripe_Add_On->stripe_save_wizard_settings();
-	}
-	add_action( 'it_eixchange_save_stripe_wizardii_settings', 'it_exchange_save_stripe_wizard_settings' );
+	ITUtility::print_r( ITForm::get_post_data() );
+	die();
+}
+//add_action( 'it_exchange_save_stripe_wizard_settings', 'it_exchange_save_simple_shipping_flat_rate_wizard_settings' );
