@@ -1,3 +1,8 @@
+1.4.0 - 2013-10-09 - All the cats here: ithemes.com/team/
+	Introducing Memberships
+	Introducing Physical Products
+	Introducing Simple Shipping
+	Introducing Free Products
 1.3.2 - 2013-10-01 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
 	Fix bug preventing Product details from showing if apply_filters was previously called
 	Added some hooks to the customer API, fixed some typos
