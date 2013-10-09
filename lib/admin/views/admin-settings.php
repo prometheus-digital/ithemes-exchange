@@ -162,7 +162,7 @@
 					<?php 
 					_e( 'Enter your content for the Customer\'s account page. HTML is accepted. Available shortcode functions:', 'LION' );  
 					echo '<br />';
-					printf( __( 'You call these shortcode functions like this: %s', 'LION' ), '[it_exchange_customer show=avatar size=50]' );  
+					printf( __( 'You call these shortcode functions like this: %s', 'LION' ), '[it_exchange_customer show=avatar avatar_size=50]' );  
 					echo '<ul>';
 					echo '<li>first-name - ' . __( "The customer's first name", 'LION' ) . '</li>';
 					echo '<li>last-name - ' . __( "The customer's last name", 'LION' ) . '</li>';
