@@ -28,10 +28,12 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 							$show_shipping = 'hide-if-js';
 							it_exchange_temporarily_load_addons( $addons );
 							foreach( (array) $addons as $addon ) {
-								if ( ! empty( $addon['options']['wizard-icon'] ) )
-									$name = '<img src="' . $addon['options']['wizard-icon'] . '" alt="' . $addon['name'] . '" />';
-								else
+								if ( ! empty( $addon['options']['wizard-icon'] ) ) {
+									$name  = '<img src="' . $addon['options']['wizard-icon'] . '" alt="' . $addon['name'] . '" />';
+									$name .= '<span class="product-name">' . $addon['name'] . '</span>';
+								} else {
 									$name = $addon['name'];
+								}
 									
 								if ( it_exchange_is_addon_enabled( $addon['slug'] ) )
 									$selected_class = 'selected';
@@ -56,6 +58,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 							<li class="membership-productoption inactive" data-toggle="membership-wizard">
 								<div class="option-spacer">
 									<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/wizard-membership.png' ); ?>" alt="<?php _e( 'Membership', 'LION' ); ?>" />
+									<span class="product-name"><?php _e( 'Membership', 'LION' ); ?></span>
 									<span>$</span>
 								</div>
 							</li>
@@ -75,7 +78,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 						<div class="membership-action buy-membership">
 							<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/icon32.png' ); ?>" />
 							<p><?php _e( "I don't have the Membership add-on yet, but I want to use Membership.", 'LION' ); ?></p>
-							<p><a href="http://ithemes.com/exchange/membership/" target="_blank"><?php _e( 'Get the Membership Add-on', 'LION' ); ?></a></p>
+							<p><a href="http://ithemes.com/purchase/membership-add-on/" target="_blank"><?php _e( 'Get the Membership Add-on', 'LION' ); ?></a></p>
 						</div>
 					</div>
 				<?php endif; ?>
