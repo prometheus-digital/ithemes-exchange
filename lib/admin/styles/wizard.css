@@ -34,6 +34,7 @@
 .it-exchange-wizard .product-types li:hover{background:#fff;box-shadow:inset 0 0 20px #d6d6d6;}
 .it-exchange-wizard .product-types li.selected{box-shadow:0 0 0 2px #8EC602;border-color:#8EC602;}
 .it-exchange-wizard .membership-product-option.inactive .product-paid-sign{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background:#95ce46;color:#263524;position:absolute;top:0;right:0;padding:5px 8px;font-size:12px;border-radius:0 4px 0 3px;font-weight:bold;}
+.it-exchange-wizard .membership-product-type-product-option:hover {cursor:not-allowed;}
 
 /** -----------------------------------------------------:[ shipping-types ]:---------- */
 .it-exchange-wizard .shipping-types ul{padding-left:3px;}
