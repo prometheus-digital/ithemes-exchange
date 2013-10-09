@@ -6,7 +6,7 @@
  * @package IT_Exchange
 */
 $flat_rate_cost = it_exchange_get_option( 'simple-shipping', true );
-$flat_rate_cost = empty( $options['flat-rate-shipping-amount'] ) ? it_exchange_format_price( 5 ) : $options['flat-rate-shipping-amount'];
+$flat_rate_cost = empty( $flat_rate_cost['flat-rate-shipping-amount'] ) ? it_exchange_format_price( 5 ) : $flat_rate_cost['flat-rate-shipping-amount'];
 $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 ?>
 <div class="wrap">
