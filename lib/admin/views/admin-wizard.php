@@ -145,14 +145,14 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 							}
 						?>
 					</ul>
-				</div>
-
-				<div class="field simple-shipping-flat-rate-wizard <?php esc_attr_e( $flat_rate_selected ); ?>">
-					<h3><?php _e( 'Flat Rate Shipping', 'LION' ); ?></h3>
-					<p>
-						<label for="simple-shipping-flat-rate-cost"><?php _e( 'Flat Rate Default Amount', 'LION' ); ?><span class="tip" title="<?php _e( 'Default shipping costs for flat rate. Multiplied by quantity purchased. Customizable per product by Store Admin.', 'LION' ); ?>" >i</span></label>
-						<?php $form->add_text_box( 'simple-shipping-flat-rate-cost', array( 'class' => 'normal-text' ) ); ?>
-					</p>
+    
+                    <div class="field simple-shipping-flat-rate-wizard <?php esc_attr_e( $flat_rate_selected ); ?>">
+                        <h3><?php _e( 'Flat Rate Shipping', 'LION' ); ?></h3>
+                        <p>
+                            <label for="simple-shipping-flat-rate-cost"><?php _e( 'Flat Rate Default Amount', 'LION' ); ?><span class="tip" title="<?php _e( 'Default shipping costs for flat rate. Multiplied by quantity purchased. Customizable per product by Store Admin.', 'LION' ); ?>" >i</span></label>
+                            <?php $form->add_text_box( 'simple-shipping-flat-rate-cost', array( 'class' => 'normal-text' ) ); ?>
+                        </p>
+                    </div>
 				</div>
 
 				<?php 
