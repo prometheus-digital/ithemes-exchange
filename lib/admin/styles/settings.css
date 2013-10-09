@@ -5,6 +5,8 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 textarea{background:#fff;border:1px solid #d6d6d6;border-radius:3px;padding:10px;color:#3d4142;width: 90%;max-width:260px;}
+textarea.large-text,
+textarea.wp-editor-area{max-width:none;}
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
