@@ -120,7 +120,12 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @return string
 	*/
 	function avatar( $options=array() ) {
-		return get_avatar( $this->_customer->data->ID, apply_filters( 'it_exchange_avatar_size', '128' ), apply_filters( 'it_exchange_default_avatar', 'blank' ) );
+		$defaults = array(
+			'size' => 128,
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		return get_avatar( $this->_customer->data->ID, apply_filters( 'it_exchange_avatar_size', (int) $options['size'] ), apply_filters( 'it_exchange_default_avatar', 'blank' ) );
 	}
 
 	/**

@@ -736,6 +736,7 @@ add_shortcode( 'it-exchange-page', 'it_exchange_add_page_shortcode' );
 function it_exchange_add_customer_shortcode( $atts ) {
 	$defaults = array(
 		'show' => false,
+		'avatar_size' => 128,
 	);
 	$atts = shortcode_atts( $defaults, $atts );
 
@@ -747,7 +748,13 @@ function it_exchange_add_customer_shortcode( $atts ) {
 	if ( empty( $atts['show'] ) || ! in_array( $atts['show'], (array) $whitelist ) )
 		return '';
 
-	return it_exchange( 'customer', 'get-' . $atts['show'], array( 'format' => 'field-value' ) );
+	$options = array(
+		'format' => 'field-value',
+	);
+	if ( 'avatar' == $atts['show'] )
+		$options['size'] = $atts['avatar_size'];
+
+	return it_exchange( 'customer', 'get-' . $atts['show'], $options );
 }
 add_shortcode( 'it_exchange_customer', 'it_exchange_add_customer_shortcode' );
 

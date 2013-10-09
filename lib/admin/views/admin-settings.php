@@ -162,13 +162,13 @@
 					<?php 
 					_e( 'Enter your content for the Customer\'s account page. HTML is accepted. Available shortcode functions:', 'LION' );  
 					echo '<br />';
-					printf( __( 'You call these shortcode functions like this: %s', 'LION' ), '[it_exchange_customer show=first-name]' );  
+					printf( __( 'You call these shortcode functions like this: %s', 'LION' ), '[it_exchange_customer show=avatar size=50]' );  
 					echo '<ul>';
 					echo '<li>first-name - ' . __( "The customer's first name", 'LION' ) . '</li>';
 					echo '<li>last-name - ' . __( "The customer's last name", 'LION' ) . '</li>';
 					echo '<li>username - ' . __( "The customer's username on the site", 'LION' ) . '</li>';
 					echo '<li>email - ' . __( "The customer's email address", 'LION' ) . '</li>';
-					echo '<li>avatar - ' . __( "The customer's gravatar image URL", 'LION' ) . '</li>';
+					echo '<li>avatar - ' . __( "The customer's gravatar image. Use the avatar_size param for square size. Default is 128", 'LION' ) . '</li>';
 					echo '<li>sitename - ' . __( 'Your site name', 'LION' ) . '</li>';
 					do_action( 'it_customer_account_page_shortcode_tags_list' );
 					echo '</ul>';
