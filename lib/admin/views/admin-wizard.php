@@ -18,8 +18,8 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 		<div class="it-exchange-wizard">
 			<div class="fields">
 				<div class="field product-types">
-					<p><?php _e( 'Click to select the types of products you plan to sell in your store.', 'LION' ); ?><span class="tip" title="<?php _e( "You can always add or remove these later on the Add-ons page.", 'LION' ); ?>">i</span></p>
-					<ul>
+					<p class="section-lable"><?php _e( 'Click to select the types of products you plan to sell in your store.', 'LION' ); ?><span class="tip" title="<?php _e( "You can always add or remove these later on the Add-ons page.", 'LION' ); ?>">i</span></p>
+					<ul class="clearfix">
 						<?php
 							$addons = it_exchange_get_addons( array( 'category' => 'product-type', 'show_required' => false ) );
 							if ( isset( $addons['simple-product-type'] ) )
@@ -45,7 +45,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 									$show_shipping = empty( $selected_class ) ? 'hide-if-js' : '';	
 								}
 
-								echo '<li class="productoption ' . $addon['slug'] . '-productoption ' . $selected_class . '" product-type="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard"' . $toggle_ships . '>';
+								echo '<li class="product-option ' . $addon['slug'] . '-product-option ' . $selected_class . '" product-type="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard"' . $toggle_ships . '>';
 								echo '<div class="option-spacer">';
 								echo $name;
 								echo '</div>';
@@ -55,11 +55,11 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 							}
 						?>
 						<?php if ( ! it_exchange_is_addon_registered( 'membership' ) ) : ?>
-							<li class="membership-productoption inactive" data-toggle="membership-wizard">
+							<li class="membership-product-option inactive" data-toggle="membership-wizard">
 								<div class="option-spacer">
 									<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/wizard-membership.png' ); ?>" alt="<?php _e( 'Membership', 'LION' ); ?>" />
 									<span class="product-name"><?php _e( 'Membership', 'LION' ); ?></span>
-									<span>$</span>
+									<span class="product-paid-sign">$</span>
 								</div>
 							</li>
 						<?php endif; ?>
@@ -90,8 +90,8 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 				?>
 
 				<div class="field shipping-types <?php esc_attr_e( $show_shipping ); ?>">
-					<p><?php _e( 'How will you ship your products?', 'LION' ); ?><span class="tip" title="<?php _e( "You can always add or remove these later on the Shipping Settings page.", 'LION' ); ?>">i</span></p>
-					<ul>
+					<p class="section-lable"><?php _e( 'How will you ship your products?', 'LION' ); ?><span class="tip" title="<?php _e( "You can always add or remove these later on the Shipping Settings page.", 'LION' ); ?>">i</span></p>
+					<ul class="clearfix">
 						<?php
 							$addons = it_exchange_get_addons( array( 'category' => 'shipping', 'show_required' => false ) );
 							it_exchange_temporarily_load_addons( $addons );
@@ -149,17 +149,10 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 
 				<div class="field simple-shipping-flat-rate-wizard <?php esc_attr_e( $flat_rate_selected ); ?>">
 					<h3><?php _e( 'Flat Rate Shipping', 'LION' ); ?></h3>
-					<table class="form-table">
-						<tr valign="top">
-							<td scope="row">
-								<label for="simple-shipping-flat-rate-cost"><?php _e( 'Flat Rate Default Amount', 'LION' ); ?></label>
-								<span class="tip" title="<?php _e( 'Default shipping costs for flat rate. Multiplied by quantity purchased. Customizable per product by Store Admin.', 'LION' ); ?>" >i</span>
-							</td>
-							<td>
-								<?php $form->add_text_box( 'simple-shipping-flat-rate-cost', array( 'class' => 'normal-text' ) ); ?>
-							</td>
-						</tr>
-					</table>
+					<p>
+						<label for="simple-shipping-flat-rate-cost"><?php _e( 'Flat Rate Default Amount', 'LION' ); ?><span class="tip" title="<?php _e( 'Default shipping costs for flat rate. Multiplied by quantity purchased. Customizable per product by Store Admin.', 'LION' ); ?>" >i</span></label>
+						<?php $form->add_text_box( 'simple-shipping-flat-rate-cost', array( 'class' => 'normal-text' ) ); ?>
+					</p>
 				</div>
 
 				<?php 
@@ -169,8 +162,8 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 				?>
 
 				<div class="field payments">
-					<p><?php _e( 'How will you be accepting payments? Choose one.', 'LION' ); ?><span class="tip" title="<?php _e( "Choose your preferred payment gateway for processing transactions. You can select more than one option but it's not recommended.", 'LION' ); ?>">i</span></p>
-					<ul>
+					<p class="section-lable"><?php _e( 'How will you be accepting payments? Choose one.', 'LION' ); ?><span class="tip" title="<?php _e( "Choose your preferred payment gateway for processing transactions. You can select more than one option but it's not recommended.", 'LION' ); ?>">i</span></p>
+					<ul class="clearfix">
 						<?php
 							$addons = it_exchange_get_addons( array( 'category' => 'transaction-methods', 'show_required' => false ) );
 							it_exchange_temporarily_load_addons( $addons );
