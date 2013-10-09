@@ -2,7 +2,7 @@
 /**
  * Shipping class for THEME API
  *
- * @since CHANGEME
+ * @since 1.4.0
 */
 
 class IT_Theme_API_Shipping implements IT_Theme_API {
@@ -10,21 +10,21 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * API context
 	 * @var string $_context
-	 * @since CHANGEME
+	 * @since 1.4.0
 	*/
 	private $_context = 'shipping';
 
 	/**
 	 * Current customer Shipping Address
 	 * @var string $_shipping_address
-	 * @since CHANGEME
+	 * @since 1.4.0
 	*/
 	private $_shipping_address = '';
 
 	/**
 	 * Maps api tags to methods
 	 * @var array $_tag_map
-	 * @since CHANGEME
+	 * @since 1.4.0
 	*/
 	public $_tag_map = array(
 		'firstname'   => 'first_name',
@@ -45,7 +45,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Constructor
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return void
 	*/
 	function IT_Theme_API_Shipping() {
@@ -55,7 +55,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return string
 	*/
@@ -66,7 +66,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Outputs the shipping address first name data
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return string
 	*/
 	function first_name( $options=array() ) {
@@ -87,7 +87,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Outputs the shipping address last name data
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return string
 	*/
 	function last_name( $options=array() ) {
@@ -108,7 +108,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Outputs the shipping address compnay name data
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return string
 	*/
 	function company_name( $options=array() ) {
@@ -129,7 +129,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Outputs the shipping address address 1 data
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return string
 	*/
 	function address1( $options=array() ) {
@@ -150,7 +150,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Outputs the shipping address address 2data
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return string
 	*/
 	function address2( $options=array() ) {
@@ -171,7 +171,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Outputs the shipping address city data
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return string
 	*/
 	function city( $options=array() ) {
@@ -192,7 +192,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Outputs the shipping address zip data
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return string
 	*/
 	function zip( $options=array() ) {
@@ -213,7 +213,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Outputs the shipping address country data
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return string
 	*/
 	function country( $options=array() ) {
@@ -275,7 +275,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Outputs the shipping address state data
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return string
 	*/
 	function state( $options=array() ) {
@@ -351,7 +351,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Outputs the shipping address email data
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return string
 	*/
 	function email( $options=array() ) {
@@ -371,7 +371,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Outputs the shipping address phone data
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return string
 	*/
 	function phone( $options=array() ) {
@@ -391,7 +391,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Outputs the shipping address submit button 
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return string
 	*/
 	function submit( $options=array() ) {
@@ -410,7 +410,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Outputs the shipping address phone data
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return string
 	*/
 	function cancel( $options=array() ) {
@@ -426,7 +426,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	/**
 	 * Gets the HTML is the desired format
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param array $options
 	 * @return mixed

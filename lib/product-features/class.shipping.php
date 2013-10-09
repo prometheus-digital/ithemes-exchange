@@ -3,7 +3,7 @@
  * This will associate shipping with any product types who register shipping support.
  * By default, it registers a metabox on the product's add/edit screen and provides HTML / data for the frontend.
  *
- * @since CHANGEME
+ * @since 1.4.0
  * @package IT_Exchange
 */
 
@@ -13,7 +13,7 @@ class IT_Exchange_Product_Feature_Shipping {
 	/**
 	 * Constructor. Registers hooks
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 * @return void
 	*/
 	function IT_Exchange_Product_Feature_Shipping() {
@@ -33,7 +33,7 @@ class IT_Exchange_Product_Feature_Shipping {
 	/**
 	 * Register the product feature and add it to enabled product-type addons
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	*/
 	function register_feature_support() {
 		// Abort if we don't have a shipping add-on enabled
@@ -50,7 +50,7 @@ class IT_Exchange_Product_Feature_Shipping {
 	/**
 	 * Register shipping to the Physical Products product type add-on by default
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/

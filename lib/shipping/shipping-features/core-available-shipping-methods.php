@@ -2,7 +2,7 @@
 /**
  * This is the class for our available shipping methods shipping feature 
  *
- * @since CHANGEME
+ * @since 1.4.0
 */
 class IT_Exchange_Core_Shipping_Feature_Available_Shipping_Methods extends IT_Exchange_Shipping_Feature {
 	
@@ -18,7 +18,7 @@ class IT_Exchange_Core_Shipping_Feature_Available_Shipping_Methods extends IT_Ex
 	/**
 	 * Is this shipping feature available
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	*/
 	function set_availability() {
 		$options = it_exchange_get_option( 'shipping-general' );
@@ -81,7 +81,7 @@ class IT_Exchange_Core_Shipping_Feature_Available_Shipping_Methods extends IT_Ex
      * Relies on methods provided by extending classes
      * If the shipping feature isn't availabe to this product, it is hidden
      *
-     * @since CHANGEME
+     * @since 1.4.0
      *
      * @return void
     */

@@ -56,7 +56,7 @@ class IT_Exchange_Shipping_Provider{
 	/**
 	 * Applies an array of shipping methods to the object provider property
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param  array $methods the methods array
 	 * @return void
@@ -72,7 +72,7 @@ class IT_Exchange_Shipping_Provider{
 	/**
 	 * Applies an array of provider settings to the object provider property
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param  array $settings the settings array
 	 * @return void
@@ -88,7 +88,7 @@ class IT_Exchange_Shipping_Provider{
 	/**
 	 * Applies an array of provider settings to the object provider property
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param  array $options the country_states_js options
 	 * @return void
@@ -100,7 +100,7 @@ class IT_Exchange_Shipping_Provider{
 	/**
 	 * Adds a shipping method to the provider as an object property
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param  string $slug    the slug for the shipping method
 	 * @param  array  $options options for the shipping method
@@ -127,7 +127,7 @@ class IT_Exchange_Shipping_Provider{
 	/**
 	 * Adds a provider settings to the array of existing provider settings
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param  array  $options options for the provider setting 
 	 * @return void
@@ -144,7 +144,7 @@ class IT_Exchange_Shipping_Provider{
 	/**
 	 * Returns all of the shipping methods for this provider
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return array
 	*/
@@ -155,7 +155,7 @@ class IT_Exchange_Shipping_Provider{
 	/**
 	 * Returns all of the settings for this provider
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return array
 	*/
@@ -166,7 +166,7 @@ class IT_Exchange_Shipping_Provider{
 	/**
 	 * Returns the values for the provider settings 
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return array
 	*/
@@ -178,7 +178,7 @@ class IT_Exchange_Shipping_Provider{
 	/**
 	 * Returns the default values for the provider settings 
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return array
 	*/
@@ -194,7 +194,7 @@ class IT_Exchange_Shipping_Provider{
 	/**
 	 * Save provider settings
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param array $settings the settings that will replace current settings
 	 * @return void

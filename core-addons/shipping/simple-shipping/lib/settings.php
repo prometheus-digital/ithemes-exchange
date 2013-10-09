@@ -7,7 +7,7 @@
  * It will be intercepted though if the user clicks on it and redirected to 
  * The Exchange settings --> shipping tab.
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @return void
 */
@@ -27,7 +27,7 @@ function it_exchange_simple_shipping_settings_callback() {
 /**
  * Redirects to General Settings -> Shipping -> Simple Shipping from add-on settings page.
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * return void
 */

@@ -33,7 +33,7 @@ abstract class IT_Exchange_Shipping_Method {
 	/**
 	 * Class constructor
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param  int   $product exchange product id or empty to attempt to pick up the global product
 	 * @param  array $options options for the object
@@ -68,7 +68,7 @@ abstract class IT_Exchange_Shipping_Method {
 	/**
 	 * Sets the product if one is available
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @todo   I don't like this. Cory needs to refactor it. ^gta
 	 * @param  int  $product exchange product id or empty to attempt to pick up the global product
@@ -114,7 +114,7 @@ abstract class IT_Exchange_Shipping_Method {
 	 *
 	 * The shipping method is required to extend override this method in the extended class.
 	 * It needs to then determine if the shipping method is available
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/

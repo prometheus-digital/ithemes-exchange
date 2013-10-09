@@ -2,14 +2,14 @@
 /**
  * This file contains functions related to the shipping API
  * See also: api/shipping-features.php
- * @since CHANGEME
+ * @since 1.4.0
  * @package IT_Exchagne
 */
 
 /**
  * Register a shipping provider
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param  string  $slug    provider slug
  * @param  array   $options options for the provider
@@ -30,7 +30,7 @@ function it_exchange_register_shipping_provider( $slug, $options ) {
 /**
  * Returns all registered shipping providers
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param  mixed $filtered a string or an array of strings to limit returned providers to specific providers
  * @return array
@@ -50,7 +50,7 @@ function it_exchange_get_registered_shipping_providers( $filtered=array() ) {
 /**
  * Returns a specific registered shipping provider object
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param  string $slug the registerd slug
  * @return mixed  false or object
@@ -76,7 +76,7 @@ function it_exchange_get_registered_shipping_provider( $slug ) {
 /**
  * Is the requested shipping provider registered?
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param  string  $slug the registerd slug
  * @return boolean
@@ -88,7 +88,7 @@ function it_exchange_is_shipping_provider_registered( $slug ) {
 /**
  * Register a shipping method
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param string  $slug    method slug
  * @param array   $options options for the slug
@@ -109,7 +109,7 @@ function it_exchange_register_shipping_method( $slug, $class ) {
 /**
  * Returns a specific registered shipping method object
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param  string $slug the registerd slug
  * @return mixed  false or object
@@ -137,7 +137,7 @@ function it_exchange_get_registered_shipping_method( $slug, $product_id=false ) 
 /**
  * Returns all registered shipping methods
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param  mixed $filtered a string or an array of strings to limit returned methods to specific methods 
  * @return array
@@ -158,7 +158,7 @@ function it_exchange_get_registered_shipping_methods( $filtered=array() ) {
 /**
  * Save the shipping address based on the User's ID
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param array $address the shipping address as an array
  * @param int   $customer_id optional. if empty, will attempt to get he current user's ID
@@ -179,7 +179,7 @@ function it_exchange_save_shipping_address( $address, $customer_id=false ) {
 /**
  * Returns the value of an address field for the address form.
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param string $field       the form field we are looking for the value
  * @param int    $customer_id the wp ID of the customer
@@ -200,7 +200,7 @@ function it_exchange_print_shipping_address_value( $field, $customer_id=false ) 
  * Formats the Shipping Address for display
  *
  * @todo this function sucks. Lets make a function for formatting any address. ^gta
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @return string HTML
 */
@@ -234,7 +234,7 @@ function it_exchange_get_formatted_shipping_address( $shipping_address=false ) {
  * 2) Check to see if they're enabled
  * 3) Return an arry of ones that are enabled.
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param  object product an IT_Exchange_Product object
  * @return an array of shipping methods
@@ -290,7 +290,7 @@ function it_exchange_get_enabled_shipping_methods_for_product( $product, $return
 /** 
  * Is cart address valid?
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @return boolean
 */
@@ -306,7 +306,7 @@ function it_exchange_is_shipping_address_valid() {
 /**
  * Returns the selected shipping method saved in the cart Session
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @return string method slug
 */
@@ -335,7 +335,7 @@ function it_exchange_get_cart_shipping_method() {
  *     this function will only return method A.
  * Toggling the first paramater to false will return a composite of all available methods across products
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @parma boolean $only_return_methods_available_to_all_cart_products defaults to true. 
 */
@@ -391,7 +391,7 @@ function it_exchange_get_available_shipping_methods_for_cart( $only_return_metho
 /**
  * Returns all available shipping methods for all cart products
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @return array an array of shipping methods
 */
@@ -404,7 +404,7 @@ function it_exchange_get_available_shipping_methods_for_cart_products() {
  *
  * If called without the method param, it uses the selected cart method. Use with a param to get estimates for an unselected method
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param string $shipping_method optional method. 
 */
@@ -454,7 +454,7 @@ function it_exchange_get_shipping_method_cost_for_cart_item( $method_slug, $cart
  *
  * Only applicable when the cart is using multiple shipping methods for multiple products
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param string $product_cart_id the product_cart_id in the cart session. NOT the database ID of the product
  * @return string
@@ -472,7 +472,7 @@ function it_exchange_get_multiple_shipping_method_for_cart_product( $product_car
  *
  * Only applicable when the cart is using multiple shipping methods for multiple products
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param string $product_cart_id the product_cart_id in the cart session. NOT the database ID of the product
  * @param string $method_slug     the slug of the method this cart product will use

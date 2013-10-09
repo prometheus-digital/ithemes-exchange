@@ -2,7 +2,7 @@
 /**
  * This is the class for our From Address shipping feature
  *
- * @since CHANGEME
+ * @since 1.4.0
 */
 class IT_Exchange_Core_Shipping_Feature_From_Address extends IT_Exchange_Shipping_Feature {
 	

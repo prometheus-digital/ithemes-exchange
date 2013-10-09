@@ -2,7 +2,7 @@
 /**
  * Registers the Shipping Methods we need for Exchange Simple Shipping add-on
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @return void
 */
@@ -26,7 +26,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	/**
 	 * Class constructor. Needed to call parent constructor
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param integer $product_id optional product id for current product
 	 * @return void
@@ -38,7 +38,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	/**
 	 * Sets the identifying slug for this shipping method
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -49,7 +49,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	/**
 	 * Sets the label for this shipping method
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -61,7 +61,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	/**
 	 * Sets the Shipping Features that this method uses.
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -74,7 +74,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	/**
 	 * Determines if this shipping method is enabled and sets the property value
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -87,7 +87,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	/**
 	 * Determines if this shipping method is available to the product and sets the property value
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -98,7 +98,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	/**
 	 * Define any setting fields that you want this method to include on the Provider settings page
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -158,7 +158,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 /**
  * This is the class for our exchange flat rate shipping feature
  *
- * @since CHANGEME
+ * @since 1.4.0
 */
 class IT_Exchange_Simple_Shipping_Flat_Rate_Shipping_Cost extends IT_Exchange_Shipping_Feature {
 	

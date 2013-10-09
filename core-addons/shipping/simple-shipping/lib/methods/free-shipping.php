@@ -2,7 +2,7 @@
 /**
  * Registers the Shipping Methods we need for Exchange Simple Shipping add-on
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @return void
 */
@@ -17,7 +17,7 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	/**
 	 * Class constructor. Needed to call parent constructor
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param integer $product_id optional product id for current product
 	 * @return void
@@ -29,7 +29,7 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	/**
 	 * Sets the identifying slug for this shipping method
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -40,7 +40,7 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	/**
 	 * Sets the label for this shipping method
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -52,7 +52,7 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	/**
 	 * Sets the Shipping Features that this method uses.
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -64,7 +64,7 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	/**
 	 * Determines if this shipping method is enabled and sets the property value
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -77,7 +77,7 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	/**
 	 * Determines if this shipping method is available to the product and sets the property value
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -88,7 +88,7 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	/**
 	 * Define any setting fields that you want this method to include on the Provider settings page
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/

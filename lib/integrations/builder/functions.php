@@ -10,7 +10,7 @@
  * post types.
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
  * @var $views
 */
@@ -29,7 +29,7 @@ add_filter( 'builder_get_available_views', 'it_exchange_remove_default_exchange_
  * Builder theme callback to determine if this a product view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
 */
 function it_exchange_is_product_builder_view() {
@@ -40,7 +40,7 @@ function it_exchange_is_product_builder_view() {
  * Builder theme callback to determine if this a storeview
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
 */
 function it_exchange_is_store_builder_view() {
@@ -51,7 +51,7 @@ function it_exchange_is_store_builder_view() {
  * Builder theme callback to determine if this a transaction view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
 */
 function it_exchange_is_transaction_builder_view() {
@@ -62,7 +62,7 @@ function it_exchange_is_transaction_builder_view() {
  * Builder theme callback to determine if this a registration view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
 */
 function it_exchange_is_registration_builder_view() {
@@ -73,7 +73,7 @@ function it_exchange_is_registration_builder_view() {
  * Builder theme callback to determine if this a account view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
 */
 function it_exchange_is_account_builder_view() {
@@ -84,7 +84,7 @@ function it_exchange_is_account_builder_view() {
  * Builder theme callback to determine if this a profile view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
 */
 function it_exchange_is_profile_builder_view() {
@@ -95,7 +95,7 @@ function it_exchange_is_profile_builder_view() {
  * Builder theme callback to determine if this a downloads view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
 */
 function it_exchange_is_downloads_builder_view() {
@@ -106,7 +106,7 @@ function it_exchange_is_downloads_builder_view() {
  * Builder theme callback to determine if this a purchases view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
 */
 function it_exchange_is_purchases_builder_view() {
@@ -117,7 +117,7 @@ function it_exchange_is_purchases_builder_view() {
  * Builder theme callback to determine if this a login view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
 */
 function it_exchange_is_login_builder_view() {
@@ -128,7 +128,7 @@ function it_exchange_is_login_builder_view() {
  * Builder theme callback to determine if this a logout view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
 */
 function it_exchange_is_logout_builder_view() {
@@ -139,7 +139,7 @@ function it_exchange_is_logout_builder_view() {
  * Builder theme callback to determine if this a confirmation view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
 */
 function it_exchange_is_confirmation_builder_view() {
@@ -150,7 +150,7 @@ function it_exchange_is_confirmation_builder_view() {
  * Builder theme callback to determine if this a cart view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
 */
 function it_exchange_is_cart_builder_view() {
@@ -161,7 +161,7 @@ function it_exchange_is_cart_builder_view() {
  * Builder theme callback to determine if this a checkout view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
 */
 function it_exchange_is_checkout_builder_view() {
@@ -172,7 +172,7 @@ function it_exchange_is_checkout_builder_view() {
  * Add the views to Builder's list of available views.
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
  * @author Justin Kopepasah
  * @var $views
 */

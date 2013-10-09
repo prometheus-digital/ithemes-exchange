@@ -2,7 +2,7 @@
 /**
  * This is the class for our weight and dimensions shipping feature
  *
- * @since CHANGEME
+ * @since 1.4.0
 */
 class IT_Exchange_Core_Shipping_Feature_Weight_Dimensions extends IT_Exchange_Shipping_Feature {
 	
@@ -63,7 +63,7 @@ class IT_Exchange_Core_Shipping_Feature_Weight_Dimensions extends IT_Exchange_Sh
 	 *
 	 * This feature overloads the default one in the parent class
 	 *
-	 * @since  CHANGEME
+	 * @since  1.4.0
 	 * @return void
 	*/
 	function print_add_edit_feature_box() {

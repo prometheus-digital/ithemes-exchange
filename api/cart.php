@@ -512,7 +512,7 @@ function it_exchange_get_cart_nonce_field() {
 /**
  * Returns the shipping address values for the cart
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @return array
 */

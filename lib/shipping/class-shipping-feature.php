@@ -33,7 +33,7 @@ abstract class IT_Exchange_Shipping_Feature {
 	/**
 	 * Class constructor
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param  int   $product exchange product id or empty to attempt to pick up the global product
 	 * @param  array $options options for the object
@@ -59,7 +59,7 @@ abstract class IT_Exchange_Shipping_Feature {
 	/** 
 	 * Sets the product if one is available
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @todo   I don't like this. Cory needs to refactor it. ^gta
 	 * @param  int  $product exchange product id or empty to attempt to pick up the global product
@@ -105,7 +105,7 @@ abstract class IT_Exchange_Shipping_Feature {
 	 *
 	 * The shipping feature is required to extend override this method in the extended class.
 	 * It needs to then determine if the shipping feature 
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -114,7 +114,7 @@ abstract class IT_Exchange_Shipping_Feature {
 	/**
 	 * Is this feature enabled for this product
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -123,7 +123,7 @@ abstract class IT_Exchange_Shipping_Feature {
 	/**
 	 * Neds to set the values property.
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	*/
 	abstract function set_values();
 
@@ -137,7 +137,7 @@ abstract class IT_Exchange_Shipping_Feature {
 	 * Relies on methods provided by extending classes
 	 * If the shipping feature isn't availabe to this product, it is hidden
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/

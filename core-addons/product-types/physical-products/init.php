@@ -5,5 +5,5 @@
  * This is the most basic product type available. There is literally nothing here to see.
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
 */

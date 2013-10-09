@@ -231,7 +231,7 @@ function it_exchange_get_customer_data( $data_key, $customer_id=false ) {
  * Among other things this function is used as a callback for the shipping address
  * purchase requriement.
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param integer $customer_id the customer id. leave blank to use the current customer.
  * @return array

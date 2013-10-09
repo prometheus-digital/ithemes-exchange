@@ -1,14 +1,14 @@
 <?php
 /**
  * This file contains methods for accessing and updating Shipping features
- * @since CHANGEME
+ * @since 1.4.0
  * @package IT_Exchange
 */
 
 /**
  * Keeps track of all available shipping features
  *
- * @since CHANGEME
+ * @since 1.4.0
  * @param string $slug the identifying slug for the shipping feature
  * @param string $class the shipping feature class
  * @return void
@@ -28,7 +28,7 @@ function it_exchange_register_shipping_feature( $slug, $class ) {
 /**
  * Grabs all shipping registered features from GLOBALS and inits objects and returns
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @return array
 */
@@ -45,7 +45,7 @@ function it_exchange_get_registered_shipping_features() {
  * If it determines that a shipping registered shipping feature is not available because
  * the shipping methods its assoicated with are not enabled, it will hide the box.
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param  object $product an IT_Exchange_Product object
  * @return void
@@ -65,7 +65,7 @@ function it_exchange_do_shipping_feature_boxes( $product ) {
 /**
  * Get a registered shipping feature object
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param string $slug feature slug
  * @return object
@@ -89,7 +89,7 @@ function it_exchange_get_registered_shipping_feature( $slug, $product_id=false )
  * - Shipping methods are associated with Shipping Providers
  * - Shipping methods are available to a product if the Provider is available to the product type
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param  object $product an IT_Exchange_Product object
  * @return an array of shipping feature objects
@@ -130,7 +130,7 @@ function it_exchange_get_shipping_features_for_product( $product ) {
 /**
  * Gets the values of a shipping feature for a specific post
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param string  $feature    the registered feature slug
  * @param integer $product_id the wordpress post id for the product

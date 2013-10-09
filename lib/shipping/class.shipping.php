@@ -85,7 +85,7 @@ class IT_Exchange_Shipping {
 	 * that your add-on requires certain conditionals to be set prior to purchase.
 	 * For more details see api/misc.php
 	 *
-	 * @since  CHANGEME
+	 * @since  1.4.0
 	 * @return void
 	*/
 	function register_shipping_address_purchase_requirement() {
@@ -108,7 +108,7 @@ class IT_Exchange_Shipping {
 	 * that your add-on requires certain conditionals to be set prior to purchase.
 	 * For more details see api/misc.php
 	 *
-	 * @since  CHANGEME
+	 * @since  1.4.0
 	 * @return void
 	*/
 	function register_shipping_method_purchase_requirement() {
@@ -127,7 +127,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * Prints the Shipping tab on the Exchange Settings admin page
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param  string $current_tab the current tab being requested
 	 * @return void
@@ -142,7 +142,7 @@ class IT_Exchange_Shipping {
 	 *
 	 * I hate that this was setup like this. Seems like an uneeded function
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return string the callback
 	*/
@@ -157,7 +157,7 @@ class IT_Exchange_Shipping {
 	 * If so, it inits those fields.
 	 * If not, it loads the general shipping settings
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -200,7 +200,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * Prints the tabs for all registered shipping providers
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return html
 	*/
@@ -236,7 +236,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * This returns the country-state-js options for general settings
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return array
 	*/
@@ -252,7 +252,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * This returns the settings fields array for general shipping settings
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return array
 	*/
@@ -377,7 +377,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * Add Shipping to the content-cart totals and content-checkout loop
 	 *
-	 * @since CHANGEMEEME
+	 * @since 1.4.0
 	 *
 	 * @param array $elements list of existing elements
 	 * @return array
@@ -400,7 +400,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * Add Shipping to the super-widget-checkout totals loop
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param array $loops list of existing elements
 	 * @return array
@@ -424,7 +424,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * Add Shipping Method to the super-widget-checkout totals loop
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param array $loops list of existing elements
 	 * @return array
@@ -576,7 +576,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * Enqueue JS for settings page
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	*/
 	function enqueue_settings_js() {
 		$current_screen = get_current_screen();
@@ -589,7 +589,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * This function hooks into the AJAX call generated in general settings for country/states sync
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -641,7 +641,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * Adds some JS vars to the header or the checkout page
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -659,7 +659,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * Removes all cart_data related to shipping
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
@@ -671,7 +671,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * Removes teh cart shipping method
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/

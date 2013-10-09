@@ -54,7 +54,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	/**
 	 * Prints the Shipping Method select form
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param  array  $options
 	 * @return string
@@ -147,7 +147,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 *
 	 * Only prints if we have a method
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param array $options
 	*/
@@ -173,7 +173,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	/**
 	 * Prints the submit button for shipping method select
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param array $options
 	*/
@@ -199,7 +199,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	/**
 	 * Returns the label for the currently selected Shipping Method
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	*/
 	function current( $options=array() ) {

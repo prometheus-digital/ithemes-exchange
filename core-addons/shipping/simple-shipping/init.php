@@ -3,7 +3,7 @@
  * This file inits our Flat Rate Shipping add-on. 
  * It is only included when the add-on is enabled.
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
 */
 
 /**

@@ -3,7 +3,7 @@
  * Custom integrations with Builder.
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.4.0
 */
 function it_exchange_builder_integration_setup() {
 	if ( isset( $GLOBALS['theme_index'] ) && 'it-builder' == $GLOBALS['theme_index'] ) {

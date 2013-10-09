@@ -801,7 +801,7 @@ function it_exchange_get_transaction_order_number( $transaction, $prefix='#' ) {
 /**
  * Returns the shipping addresss saveed with the transaction
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param array transaction shipping address
  *
@@ -1080,7 +1080,7 @@ function it_exchange_transaction_status_can_be_manually_changed( $transaction ) 
 /**
  * Does this transaction include shipping details
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param mixed $transaction the id or object
  * @return boolean
@@ -1094,7 +1094,7 @@ function it_exchange_transaction_includes_shipping( $transaction ) {
 /**
  * Return the total for shipping for this transaction
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param mixed $transaction the id or object
  * @return string
@@ -1115,7 +1115,7 @@ function it_exchange_get_transaction_shipping_total( $transaction, $format_price
  *
  * If Multiple Methods was used, returns a stdClass with slug and label properties
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param mixed $transaction the id or object
  * @return boolean
@@ -1141,7 +1141,7 @@ function it_exchange_get_transaction_shipping_method( $transaction ) {
 /**
  * Prints Shipping Method used for a specific product in the transaction
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @param mixed $transaction
  * @return string

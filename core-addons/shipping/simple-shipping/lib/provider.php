@@ -2,7 +2,7 @@
 /**
  * Register our Simple Shipping Provider
  *
- * @since CHANGEME
+ * @since 1.4.0
  *
  * @return void
 */

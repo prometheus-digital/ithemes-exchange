@@ -280,7 +280,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Handles updating a Shipping address
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @return void
 	*/

@@ -214,7 +214,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	/**
 	 * Outputs the Ship to Billing address when shipping is needed
 	 *
-	 * @since CHANGEME
+	 * @since 1.4.0
 	 *
 	 * @param array $options options
 	 * @return string
