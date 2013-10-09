@@ -20,7 +20,7 @@
 	<div class="it-exchange-transaction-product-details it-exchange-column">
 		<div class="it-exchange-column-inner">
 			<?php do_action( 'it_exchange_content_confirmation_before_product_attibutes' ); ?>
-			<div class="it-exchange-transaction-product-attributes it-exchange-transaction-product-data it-exchange-clearfix">
+			<div class="it-exchange-transaction-product-attributes it-exchange-clearfix it-exchange-transaction-product-<?php echo ( it_exchange( 'transaction', 'has-featured-image' ) ) ? 'has-featured-image' : 'no-featured-image' ?>">
 				<?php do_action( 'it_exchange_content_confirmation_before_product_featured_image' ); ?>
 				<?php it_exchange( 'transaction', 'featured-image' ); ?>
 				<?php do_action( 'it_exchange_content_confirmation_after_product_featured_image' ); ?>
@@ -33,7 +33,7 @@
 			
 			<?php if ( it_exchange( 'transaction', 'has-product-downloads' ) ) : ?>
 				<?php do_action( 'it_exchange_content_confirmation_before_product_downloads' ); ?>
-				<div class="it-exchange-transaction-product-downloads it-exchange-transaction-product-data it-exchange-clearfix">
+				<div class="it-exchange-transaction-product-downloads it-exchange-clearfix">
 					<h4><?php _e( 'Downloads', 'LION' ); ?></h4>
 					<?php if ( ! it_exchange( 'transaction', 'get-cleared-for-delivery' ) ) : ?>
 						<p><?php _e( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an appoved status, you will receive a followup email with your download links.', 'LION' ); ?></p>

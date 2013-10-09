@@ -183,9 +183,10 @@
 #it-exchange-confirmation .it-exchange-transaction-product-details{width:80%;}
 #it-exchange-confirmation .it-exchange-transaction-product-details .it-exchange-column-inner{border-right:1px solid #DDD;}
 #it-exchange-confirmation .it-exchange-transaction-product-details .it-exchange-featured-image{max-width:75px;margin-right:20px;float:left;}
-#it-exchange-confirmation .it-exchange-transaction-product-details h3{clear:none;float:left;}
+#it-exchange-confirmation .it-exchange-transaction-product-details h3{clear:none;float:left;margin:23px 0;}
+#it-exchange-confirmation .it-exchange-transaction-product-details .it-exchange-transaction-product-no-featured-image h3{margin:0 0 20px;}
 #it-exchange-confirmation .it-exchange-transaction-product-downloads h4{margin-bottom:5px;}
-#it-exchange-confirmation .it-exchange-transaction-product-downloads-list{list-style:none;}
+#it-exchange-confirmation .it-exchange-transaction-product-downloads-list{list-style:none;margin-bottom:0;}
 #it-exchange-confirmation .it-exchange-transaction-product-downloads-list li{margin:0 0 5px 10px;}
 #it-exchange-confirmation .it-exchange-transaction-product-cart-object{width:20%;}
 #it-exchange-confirmation .it-exchange-downloads-data li{margin-left:0;}
