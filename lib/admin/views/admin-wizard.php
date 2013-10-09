@@ -132,7 +132,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 									$selected_class = it_exchange_is_addon_enabled( 'simple-shipping' ) && ! empty( $simple_shipping_options[$option_key] ) ? 'selected' : '';
 								}
 								
-								if ( 'simple-shipping-flat-rate' == $addon['slug'] && ! empty( $selected_class ) && empty( $show_shipping ) )
+								if ( 'simple-shipping-flat-rate' == $addon['slug'] && ! empty( $selected_class ) )
 									$flat_rate_selected = '';
 
 								echo '<li class="shippingoption ' . $addon['slug'] . '-shippingoption ' . $selected_class . '" shipping-method="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">';
