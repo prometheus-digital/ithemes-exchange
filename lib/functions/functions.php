@@ -753,8 +753,19 @@ function it_exchange_add_customer_shortcode( $atts ) {
 	);
 	if ( 'avatar' == $atts['show'] )
 		$options['size'] = $atts['avatar_size'];
-
-	return it_exchange( 'customer', 'get-' . $atts['show'], $options );
+		
+	$output = it_exchange( 'customer', 'get-' . $atts['show'], $options );
+	
+	if ( empty( $output ) ) {
+		//fallbacks if we have empty $output
+		switch( $atts['show'] ) {
+			case 'first-name':
+					$output = it_exchange( 'customer', 'get-username', array( 'format' => 'field-value' ) );
+				break;
+		}
+	}
+	
+	return $output;
 }
 add_shortcode( 'it_exchange_customer', 'it_exchange_add_customer_shortcode' );
 
