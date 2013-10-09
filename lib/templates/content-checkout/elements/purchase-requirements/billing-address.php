@@ -41,7 +41,6 @@ $editing_billing = ( ( ! empty( $_REQUEST['it-exchange-update-billing-address'] 
 			do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_before_form' );
 			?>
 			<form action="" method="post" >
-				<p><?php _e( 'All fields required', 'LION' ); ?>
 				<?php
 				do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_begin_form' );
 				// Include template parts for each of the above loops

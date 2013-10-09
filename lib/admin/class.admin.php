@@ -1062,7 +1062,44 @@ Order: %s
 				return;
 			}
 		}
+
+		// Save activated product types
+		$product_addons = it_exchange_get_addons( array( 'category' => 'product-type' ) );
+
+		// Filter out simple products
+		if ( isset( $product_addons['simple-product-type'] ) )
+			unset( $product_addons['simple-product-type'] );
+
+		// Disable all of the product-type addons accept for simple
+		foreach( $product_addons as $product_addon_slug => $options ) {
+			it_exchange_disable_addon( $product_addon_slug );
+		}
+
+		// Loop through selected and renable them.
+		if ( ! empty( $_REQUEST['it-exchange-product-types'] ) && is_array( $_REQUEST['it-exchange-product-types'] ) ) {
+			foreach( $_REQUEST['it-exchange-product-types'] as $product_addon ) {
+				it_exchange_enable_addon( $product_addon );
+			}
+		}
+
+		// Handle core Simple Shipping addon settings here
+		if ( empty( $_REQUEST['it-exchange-shipping-methods'] ) || ( ! in_array( 'simple-shipping-flat-rate', $_REQUEST['it-exchange-shipping-methods'] ) && ! in_array( 'simple-shipping-free', $_REQUEST['it-exchange-shipping-methods'] ) ) ) {
+			it_exchange_disable_addon( 'simple-shipping' );
+		} else {
+			it_exchange_enable_addon( 'simple-shipping' );
+			$simple_shipping_options = it_exchange_get_option( 'simple-shipping', true );
+			$simple_shipping_options['enable-flat-rate-shipping'] = in_array( 'simple-shipping-flat-rate', $_REQUEST['it-exchange-shipping-methods'] );
+			$simple_shipping_options['enable-free-shipping'] = in_array( 'simple-shipping-free', $_REQUEST['it-exchange-shipping-methods'] );
+
+			if ( ! empty( $simple_shipping_options['enable-flat-rate-shipping'] ) ) {
+				$flat_rate_default_cost = $_REQUEST['it_exchange_settings-simple-shipping-flat-rate-cost'];
+				$simple_shipping_options['flat-rate-shipping-amount'] = $flat_rate_default_cost;
+			}
+
+			it_exchange_save_option( 'simple-shipping', $simple_shipping_options );
+		}
 		
+		// Transaction Methods
 		$tx_error_msgs = array();
 		$addons = it_exchange_get_addons( array( 'category' => 'transaction-methods', 'show_required' => false ) );
 		foreach( $_REQUEST['it-exchange-transaction-methods'] as $add_on ) {
@@ -1091,7 +1128,6 @@ Order: %s
 		
 		// Auto enable any core add-ons we want enabled on setup.
 		$auto_enabled_addons = array(
-			'digital-downloads-product-type',
 			'basic-reporting',
 		);
 		foreach( $auto_enabled_addons as $addon ) {
