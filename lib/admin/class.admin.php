@@ -602,6 +602,7 @@ class IT_Exchange_Admin {
 			'site-registration'            => 'it',
 			'company-email'                => get_bloginfo( 'admin_email' ),
 			'company-name'                 => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
+			'customer-account-page'        => 'Welcome to your account, [it_exchange_customer show="first-name"].<br />Using the links above, you can edit your profile and view your purchases and products.<br />Thanks for being a customer.'
 		);
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;

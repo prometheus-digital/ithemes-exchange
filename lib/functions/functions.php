@@ -515,8 +515,8 @@ function it_exchange_get_core_page_rewrites( $page ) {
 			}
 
 			$rewrites = array(
-				$slug . '/([^/]+)/?$' => 'index.php?' . $slug . '=$matches[1]&' . $profile_slug . '=1',
-				$slug . '$' => 'index.php?' . $slug . '=1&' . $profile_slug . '=1',
+				$slug . '/([^/]+)/?$' => 'index.php?' . $slug . '=$matches[1]',//&' . $profile_slug . '=1',
+				$slug . '$' => 'index.php?' . $slug . '=1',//&' . $profile_slug . '=1',
 			);
 			return $rewrites;
 			break;
@@ -716,9 +716,6 @@ function it_exchange_add_page_shortcode( $atts ) {
 	if ( 'wordpress' != it_exchange_get_page_type( $atts['page'] ) )
 		return '';
 
-	if ( 'account' == $atts['page'] )
-		$atts['page'] = 'profile';
-
 	if ( empty( $atts['page'] ) )
 		return false;
 
@@ -727,6 +724,32 @@ function it_exchange_add_page_shortcode( $atts ) {
 	return ob_get_clean();
 }
 add_shortcode( 'it-exchange-page', 'it_exchange_add_page_shortcode' );
+
+/**
+ * Creates a shortcode that returns customer information
+ *
+ * @since 1.4.0
+ *
+ * @param array $atts attributes passed in via shortcode arguments
+ * @return string the template part
+*/
+function it_exchange_add_customer_shortcode( $atts ) {
+	$defaults = array(
+		'show' => false,
+	);
+	$atts = shortcode_atts( $defaults, $atts );
+
+	$whitelist = array(
+		'first-name', 'last-name', 'username', 'email', 'avatar', 'site-name', 
+	);
+	$whitelist = apply_filters( 'it_exchange_customer_shortcode_tag_list', $whitelist );
+
+	if ( empty( $atts['show'] ) || ! in_array( $atts['show'], (array) $whitelist ) )
+		return '';
+
+	return it_exchange( 'customer', 'get-' . $atts['show'], array( 'format' => 'field-value' ) );
+}
+add_shortcode( 'it_exchange_customer', 'it_exchange_add_customer_shortcode' );
 
 /**
  * Adds date retraints to query posts.
@@ -952,6 +975,19 @@ function it_exchange_print_home_url_in_js() {
 	<?php
 }
 add_action( 'wp_head', 'it_exchange_print_home_url_in_js' );
+
+/**
+ * Force rewrite rule update on upgrade
+ *
+ * @since 1.4.0
+ *
+ * @param array $versions old and new versions. not used here
+ * @return void
+*/
+function it_exchange_force_rewrite_flush_on_upgrade() {
+	add_option('_it-exchange-flush-rewrites', true );	
+}
+add_action( 'it_exchange_version_updated', 'it_exchange_force_rewrite_flush_on_upgrade' );
 
 /************************************
  * THE FOLLOWING API METHODS AREN'T READY

@@ -203,6 +203,24 @@ function it_exchange_is_page( $page ) {
 		return false;
 	}
 
+	// When asking if this is the account page, we need to remember that the account query_var is always set when viewing other
+	// account based pages. if another exchange pages's query_var is also set, we will return false for account.
+	if ( 'account' == $page && get_query_var( 'account' ) ) {
+
+		// Grab all exchange pages
+		$account_based_pages = it_exchange_get_pages();
+
+		// Loop through exchange pages
+		foreach ( $account_based_pages as $account_based_page => $values ) {
+			// Get page slug
+			$account_based_slug = it_exchange_get_page_slug( $account_based_page );
+			// If this page slug is set and it isn't 'account', return false for acocunt
+			if ( get_query_var( $account_based_slug ) && $account_based_slug != 'account' )
+				return false;
+		}
+		return true;
+	}
+
 	// Return true if set and not product
 	if ( $query_var && 'product' != $page  )
 		return true;

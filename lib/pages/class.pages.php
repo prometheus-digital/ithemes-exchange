@@ -124,10 +124,6 @@ class IT_Exchange_Pages {
 			}
 		}
 
-		// Hack. We need a better solution here.
-		if ( 'account' == $this->_current_view )
-			$this->_current_view = 'profile';
-
 		// Add hook for things that need to be done when on an exchange page
 		if ( $this->_current_view )
 			do_action( 'it_exchange_template_redirect', $this->_current_view );

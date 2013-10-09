@@ -23,7 +23,7 @@
 */
 class IT_Exchange {
 
-	var $_version         = '1.3.2';
+	var $_version         = '1.3.2.1';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'it-exchange';
 	var $_name            = 'iThemes Exchange';
@@ -172,7 +172,7 @@ add_action( 'plugins_loaded', 'load_it_exchange' );
 */
 function it_exchange_activation_hook() {
     add_option('_it-exchange-register-activation-hook', true);
-    add_option('_it-exchange-flush-rewrites', true);
+    add_option('_it-exchange-flush-rewrites', true );
 }
 register_activation_hook( __FILE__, 'it_exchange_activation_hook' );
 

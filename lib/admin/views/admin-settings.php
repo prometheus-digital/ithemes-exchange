@@ -141,6 +141,41 @@
 						?>
 					</span>
 				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><strong><?php _e( 'Customer Messages', 'LION' ); ?></strong></th>
+				<td></td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><label for="customer-account-page"><?php _e( 'Customer Account Page', 'LION' ) ?></label></th>
+				<td>
+					<?php
+					if ( $GLOBALS['wp_version'] >= 3.3 && function_exists( 'wp_editor' ) ) { 
+						echo wp_editor( $settings['customer-account-page'], 'customer-account-page', array( 'textarea_name' => 'it_exchange_settings-customer-account-page', 'textarea_rows' => 20, 'textarea_cols' => 20, 'editor_class' => 'large-text' ) );
+						//We do this for some ITForm trickery... just to add customer-account-page to the used inputs field
+						$form->get_text_area( 'customer-account-page', array( 'rows' => 20, 'cols' => 20, 'class' => 'large-text' ) );
+					} else {
+						$form->add_text_area( 'customer-account-page', array( 'rows' => 20, 'cols' => 20, 'class' => 'large-text' ) );
+					}   
+					?>  
+					<p class="description">
+					<?php 
+					_e( 'Enter your content for the Customer\'s account page. HTML is accepted. Available shortcode functions:', 'LION' );  
+					echo '<br />';
+					printf( __( 'You call these shortcode functions like this: %s', 'LION' ), '[it_exchange_customer show=first-name]' );  
+					echo '<ul>';
+					echo '<li>first-name - ' . __( "The customer's first name", 'LION' ) . '</li>';
+					echo '<li>last-name - ' . __( "The customer's last name", 'LION' ) . '</li>';
+					echo '<li>username - ' . __( "The customer's username on the site", 'LION' ) . '</li>';
+					echo '<li>email - ' . __( "The customer's email address", 'LION' ) . '</li>';
+					echo '<li>avatar - ' . __( "The customer's gravatar image URL", 'LION' ) . '</li>';
+					echo '<li>sitename - ' . __( 'Your site name', 'LION' ) . '</li>';
+					do_action( 'it_customer_account_page_shortcode_tags_list' );
+					echo '</ul>';
+					?>
+					</p>
+				</td>
+			</tr>
 			<?php do_action( 'it_exchange_general_settings_table_bottom', $form ); ?>
 		</table>
 		<p class="submit"><input type="submit" value="<?php _e( 'Save Changes', 'LION' ); ?>" class="button button-primary" /></p>

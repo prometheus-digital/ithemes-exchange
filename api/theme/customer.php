@@ -40,6 +40,8 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		'save'            => 'save',
 		'formclose'       => 'form_close',
 		'menu'            => 'menu',
+		'welcome'         => 'welcome',
+		'sitename'        => 'sitename',
 		'accountlink'     => 'account_link',
 		'thankyoumessage' => 'thank_you_message',
 	);
@@ -98,6 +100,9 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 
 			case 'label':
 				$output = $label;
+				break;
+			case 'field-value' :
+				$output = $field_value;
 				break;
 			case 'html':
 			default:
@@ -456,7 +461,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		
 		$defaults = array(
 			'format' => 'html',
-			'pages'  => 'profile,purchases,downloads',
+			'pages'  => 'account,profile,purchases,downloads',
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		
@@ -482,6 +487,32 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		
 		return $nav;
 		
+	}
+
+	/**
+	 * Prints the welcome message for the customer. Used on the account page template by core
+	 *
+	 * @since 1.4.0
+	 *
+	 * @return string
+	*/
+	function welcome( $options=array() ) {
+		$options = it_exchange_get_option( 'settings_general' );
+		$message = wpautop( $options['customer-account-page'] );
+		$message = do_shortcode( $message );
+		return $message;
+	}
+
+	/**
+	 * Returns the site name
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param array $options
+	 * @return string
+	*/
+	function sitename( $options=array() ) {
+		return get_option( 'blogname' );
 	}
 
 	/**
