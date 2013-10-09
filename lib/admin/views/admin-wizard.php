@@ -135,7 +135,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 								if ( 'simple-shipping-flat-rate' == $addon['slug'] && ! empty( $selected_class ) )
 									$flat_rate_selected = '';
 
-								echo '<li class="shippingoption ' . $addon['slug'] . '-shippingoption ' . $selected_class . '" shipping-method="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">';
+								echo '<li class="shipping-option ' . $addon['slug'] . '-shipping-option ' . $selected_class . '" shipping-method="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">';
 								echo '<div class="option-spacer">';
 								echo $name;
 								echo '</div>';
