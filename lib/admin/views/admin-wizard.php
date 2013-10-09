@@ -54,7 +54,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 								echo '</li>';
 							}
 						?>
-						<?php if ( ! it_exchange_is_addon_registered( 'membership' ) ) : ?>
+						<?php if ( ! it_exchange_is_addon_registered( 'membership-product-type' ) ) : ?>
 							<li class="membership-productoption inactive" data-toggle="membership-wizard">
 								<div class="option-spacer">
 									<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/wizard-membership.png' ); ?>" alt="<?php _e( 'Membership', 'LION' ); ?>" />
@@ -66,7 +66,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 					</ul>
 				</div>
 				
-				<?php if ( ! it_exchange_is_addon_registered( 'membership' ) ) : ?>
+				<?php if ( ! it_exchange_is_addon_registered( 'membership-product-type' ) ) : ?>
 					<div class="field membership-wizard inactive hide-if-js">
 						<h3><?php _e( 'Membership', 'LION' ); ?></h3>
 						<p><?php _e( 'To use Membership, you need to install the Membership add-on.', 'LION' ); ?></p>
