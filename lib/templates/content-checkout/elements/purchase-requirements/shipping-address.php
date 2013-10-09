@@ -42,7 +42,6 @@ $editing_shipping = ( ( ! empty( $_REQUEST['it-exchange-update-shipping-address'
 			do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_before_form' );
 			?>
 			<form action="" method="post" >
-				<p><?php _e( 'All fields required', 'LION' ); ?>
 				<?php
 				do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_begin_form' );
 				// Include template parts for each of the above loops

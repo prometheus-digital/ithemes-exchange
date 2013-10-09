@@ -19,7 +19,6 @@
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<h3><?php _e( 'Billing Address', 'LION' ); ?></h3>
 	<form class="it-exchange-sw-billing-address">
-	<p><?php _e( 'All fields required', 'LION' ); ?>
 	<?php it_exchange_get_template_part( 'super-widget-billing-address/loops/fields' ); ?>
 	<?php it_exchange_get_template_part( 'super-widget-billing-address/loops/actions' ); ?>
 	</form>
