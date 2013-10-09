@@ -5,6 +5,9 @@
  * @since 0.4.0
  * @package IT_Exchange
 */
+$flat_rate_cost = it_exchange_get_option( 'simple-shipping', true );
+$flat_rate_cost = empty( $options['flat-rate-shipping-amount'] ) ? it_exchange_format_price( 5 ) : $options['flat-rate-shipping-amount'];
+$form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 ?>
 <div class="wrap">
 	<?php screen_icon( 'it-exchange' );  ?>
@@ -22,6 +25,7 @@
 							if ( isset( $addons['simple-product-type'] ) )
 								unset( $addons['simple-product-type'] );
 
+							$show_shipping = 'hide-if-js';
 							it_exchange_temporarily_load_addons( $addons );
 							foreach( (array) $addons as $addon ) {
 								if ( ! empty( $addon['options']['wizard-icon'] ) )
@@ -35,12 +39,16 @@
 									$selected_class = '';
 								
 								$toggle_ships = 'physical-product-type' == $addon['slug'] ? ' data-ships="shipping-types"' : '';
+								if ( 'physical-product-type' == $addon['slug'] ) {
+									$show_shipping = empty( $selected_class ) ? 'hide-if-js' : '';	
+								}
 
 								echo '<li class="productoption ' . $addon['slug'] . '-productoption ' . $selected_class . '" product-type="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard"' . $toggle_ships . '>';
 								echo '<div class="option-spacer">';
 								echo $name;
-								echo '<input type="hidden" class="remove-if-js" name="it-exchange-product-type[]" value="' . $addon['slug'] . '" />';
 								echo '</div>';
+								if ( ! empty( $selected_class ) )
+									echo '<input class="enable-' . esc_attr( $addon['slug'] ) . '" type="hidden" name="it-exchange-product-types[]" value="' . esc_attr( $addon['slug'] ) . '" />';
 								echo '</li>';
 							}
 						?>
@@ -78,7 +86,7 @@
 				}
 				?>
 
-				<div class="field shipping-types inactive hide-if-js">
+				<div class="field shipping-types <?php esc_attr_e( $show_shipping ); ?>">
 					<p><?php _e( 'How will you ship your products?', 'LION' ); ?><span class="tip" title="<?php _e( "You can always add or remove these later on the Shipping Settings page.", 'LION' ); ?>">i</span></p>
 					<ul>
 						<?php
@@ -86,6 +94,7 @@
 							it_exchange_temporarily_load_addons( $addons );
 
 							// Add Simple Shipping's free and flat rate methods as providers since Brad thinks they're so special 
+							$flat_rate_selected = 'hide-if-js';
 							$addons['simple-shipping-flat-rate'] = array(
 								'name' => __( 'Flat Rate', 'LION' ),
 								'slug' => 'simple-shipping-flat-rate',
@@ -120,15 +129,34 @@
 									$selected_class = it_exchange_is_addon_enabled( 'simple-shipping' ) && ! empty( $simple_shipping_options[$option_key] ) ? 'selected' : '';
 								}
 								
-								echo '<li class="productoption ' . $addon['slug'] . '-productoption ' . $selected_class . '" product-type="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">';
+								if ( 'simple-shipping-flat-rate' == $addon['slug'] && ! empty( $selected_class ) && empty( $show_shipping ) )
+									$flat_rate_selected = '';
+
+								echo '<li class="shippingoption ' . $addon['slug'] . '-shippingoption ' . $selected_class . '" shipping-method="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">';
 								echo '<div class="option-spacer">';
 								echo $name;
-								echo '<input type="hidden" class="remove-if-js" name="it-exchange-product-type[]" value="' . $addon['slug'] . '" />';
 								echo '</div>';
+								if ( $selected_class )
+									echo '<input class="enable-' . esc_attr( $addon['slug'] ) . '" type="hidden" name="it-exchange-shipping-methods[]" value="' . esc_attr( $addon['slug'] ) . '" />';
 								echo '</li>';
 							}
 						?>
 					</ul>
+				</div>
+
+				<div class="field simple-shipping-flat-rate-wizard <?php esc_attr_e( $flat_rate_selected ); ?>">
+					<h3><?php _e( 'Flat Rate Shipping', 'LION' ); ?></h3>
+					<table class="form-table">
+						<tr valign="top">
+							<td scope="row">
+								<label for="simple-shipping-flat-rate-cost"><?php _e( 'Flat Rate Default Amount', 'LION' ); ?></label>
+								<span class="tip" title="<?php _e( 'Default shipping costs for flat rate. Multiplied by quantity purchased. Customizable per product by Store Admin.', 'LION' ); ?>" >i</span>
+							</td>
+							<td>
+								<?php $form->add_text_box( 'simple-shipping-flat-rate-cost', array( 'class' => 'normal-text' ) ); ?>
+							</td>
+						</tr>
+					</table>
 				</div>
 
 				<?php 

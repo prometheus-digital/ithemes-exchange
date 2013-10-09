@@ -366,7 +366,7 @@ function it_exchange_enable_addon( $add_on ) {
 	if ( isset( $registered[$add_on] ) && ! isset( $enabled_add_ons[$add_on] ) ) {
 		$enabled_add_ons[$add_on] = $registered[$add_on];
 		if ( it_exchange_save_option( 'enabled_add_ons', $enabled_add_ons ) ) {
-			include( $registered[$add_on]['file'] );
+			include_once( $registered[$add_on]['file'] );
 			do_action( 'it_exchange_add_on_enabled', $registered[$add_on] );
 			update_option( '_it-exchange-flush-rewrites', true );
 			$success = true;
@@ -385,7 +385,7 @@ function it_exchange_enable_addon( $add_on ) {
  * @return boolean
 */
 function it_exchange_is_addon_enabled( $add_on_slug ) {
-	$enabled = array_keys( it_exchange_get_enabled_addons() );
+	$enabled = array_keys( it_exchange_get_enabled_addons( array( 'break_cache' => true ) ) );
 	$success = false;
 
 	if ( in_array( $add_on_slug, $enabled ) )
@@ -422,7 +422,7 @@ function it_exchange_is_addon_registered( $add_on_slug ) {
 */
 function it_exchange_disable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
-	$enabled_addons = it_exchange_get_enabled_addons();
+	$enabled_addons = it_exchange_get_enabled_addons( array( 'break_cache' => true ) );
 	$success = false;
 
 	if ( ! empty( $enabled_addons[$add_on] ) ) {
