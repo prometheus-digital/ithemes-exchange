@@ -75,11 +75,11 @@ add_action( 'iiiiiiiiit_exchange_print_simple-shipping-flat-rate_wizard_settings
 	 *
 	 * @return void
 	*/
-	function it_exchange_save_stripe_wizard_settings( $errors ) { 
+	function it_exchange_save_simple_shipping_flat_rate_wizard_settings( $errors ) { 
 		if ( ! empty( $errors ) ) 
 			return $errors;
 
 		$IT_Exchange_Stripe_Add_On = new IT_Exchange_Stripe_Add_On();
 		return $IT_Exchange_Stripe_Add_On->stripe_save_wizard_settings();
 	}
-	add_action( 'it_eixchange_save_stripe_wizard_settings', 'it_exchange_save_stripe_wizard_settings' );
+	add_action( 'it_eixchange_save_stripe_wizardii_settings', 'it_exchange_save_stripe_wizard_settings' );
