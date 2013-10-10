@@ -293,7 +293,14 @@ class IT_Exchange_Admin_Settings_Form {
 	function print_setting_row( $setting, $form_method ) {
 		?>
 		<tr valign="top">
-			<th scope="row"><label for="<?php esc_attr_e( $setting['slug'] ); ?>"><?php echo $setting['label']; ?></label></th>
+			<th scope="row"><label for="<?php esc_attr_e( $setting['slug'] ); ?>"><?php echo $setting['label']; ?>
+				<?php
+				if ( ! empty( $setting['tooltip'] ) ) {
+					echo '<span class="tip" title="' . esc_attr( $setting['tooltip'] ) . '">i</span>';
+				}
+				?>
+				</label>
+			</th>
 			<td id="<?php esc_attr_e( $setting['slug'] ); ?>-wrapper">
 				<?php $this->form->$form_method( $setting['slug'], $setting['options'] ); ?>
 			</td>
