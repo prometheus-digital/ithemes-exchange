@@ -712,7 +712,7 @@ function it_exchange_get_transaction_customer( $transaction ) {
  * @return string
 */
 function it_exchange_get_transaction_customer_display_name( $transaction ) {
-	$unknown = __( 'Unknown', 'LION' );
+	$unknown = __( 'Deleted Customer', 'LION' );
 	
 	if ( $customer = it_exchange_get_transaction_customer( $transaction ) ) {
 		$display_name = empty( $customer->wp_user->display_name ) ? $unknown : $customer->wp_user->display_name;

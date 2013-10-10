@@ -101,10 +101,13 @@ class IT_Exchange_Customer {
 	function set_customer_data() {
 		$data = (object) $this->data;
 		
-		$wp_user_data = get_object_vars( $this->wp_user->data );
-		foreach( (array) $wp_user_data as $key => $value ) {
-			$data->$key = $value;
+		if ( is_object( $this->wp_user->data ) ) {
+			$wp_user_data = get_object_vars( $this->wp_user->data );
+			foreach( (array) $wp_user_data as $key => $value ) {
+				$data->$key = $value;
+			}
 		}
+
 		$data->first_name   = get_user_meta( $this->id, 'first_name', true );
 		$data->last_name    = get_user_meta( $this->id, 'last_name', true );
 

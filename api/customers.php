@@ -30,6 +30,8 @@ function it_exchange_register_customer( $customer_data, $args=array() ) {
 function it_exchange_get_customer( $customer_id ) {
     // Grab the WP User
 	$customer = new IT_Exchange_Customer( $customer_id );
+	if ( empty( $customer->wp_user->ID ) )
+		return false;
 	return apply_filters( 'it_exchange_get_customer', $customer, $customer_id );
 }
 
