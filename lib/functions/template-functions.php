@@ -110,6 +110,7 @@ function it_exchange_locate_template( $template_names, $load=false, $require_onc
     }   
 
     if ( ( true == $load ) && ! empty( $located ) ) {
+		do_action( 'it_exchange_template_found', $located, $template_names, $possible_template_paths, $require_once );
         load_template( $located, $require_once );
 		it_exchange_unset_template_part_args( rtrim( $template_name, '.php' ) );
 	}
