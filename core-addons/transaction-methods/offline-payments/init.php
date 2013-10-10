@@ -112,7 +112,7 @@ function it_exchange_offline_payments_addon_process_transaction( $status, $trans
 		// Get customer ID data
 		$it_exchange_customer = it_exchange_get_current_customer();
 
-		return it_exchange_add_transaction( 'offline-payments', $uniqid, $settings['offline-payments-default-status'], $it_exchange_customer->id, $transaction_object );
+		return it_exchange_add_transaction( 'offline-payments', $uniqid, $settings['offline-payments-default-status'], $it_exchange_customer->ID, $transaction_object );
 		
 	}
 	

@@ -125,6 +125,19 @@ function it_exchange_register_core_addons() {
 			'supports'    => apply_filters( 'it_exchange_register_multi_item_cart_default_features', array(
 			) ),
 		),
+		// Guest Checkout
+		'guest-checkout' => array(
+			'name'              => __( 'Guest Checkout', 'LION' ),
+			'description'       => __( 'Enabling this add-on gives customers the ability to checkout as a guest, without registering', 'LION' ),
+			'author'            => 'iThemes',
+			'author_url'        => 'http://ithemes.com',
+			'file'              => dirname( __FILE__ ) . '/admin/guest-checkout/init.php',
+			'category'          => 'admin',
+			'tag'               => 'core',
+			'settings-callback' => 'it_exchange_guest_checkout_settings_callback',
+			'supports'          => apply_filters( 'it_exchange_register_guest_checkout_default_features', array(
+			) ),
+		),
 		// Billing Address Purchase Requirement
 		'billing-address-purchase-requirement' => array(
 			'name'        => __( 'Billing Address', 'LION' ),

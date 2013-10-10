@@ -14,11 +14,11 @@ if ( ! function_exists( 'add_action' ) ) {
 if ( apply_filters( 'it_exchange_supress_superwidget_ajax_errors', true ) )
 	ini_set( 'display_errors', false );
 
-// Provide an action for add-ons
-do_action( 'it_exchange_super_widget_ajax_top' );
-
 // Mark as in the superwidget
 $GLOBALS['it_exchange']['in_superwidget'] = true;
+
+// Provide an action for add-ons
+do_action( 'it_exchange_super_widget_ajax_top' );
 
 // Set vars
 $action          = empty( $_GET['sw-action'] ) ? false : esc_attr( $_GET['sw-action'] );
@@ -108,11 +108,16 @@ if ( 'login' == $action ) {
 if ( 'register' == $action ) {
 	$user_id = it_exchange_register_user();
 	if ( ! is_wp_error( $user_id ) ) {
-        wp_new_user_notification( $user_id, $_POST['pass1'] );
+
+		// Clearing the user pass will prevent the user email from being sent
+		$email_pw = apply_filters( 'it_exchange_send_customer_registration_email', true ) ? $_POST['pass1'] : '';
+        wp_new_user_notification( $user_id, $email_pass );
+
 		$creds = array(
             'user_login'    => esc_attr( $_POST['user_login'] ),
             'user_password' => esc_attr( $_POST['pass1'] ),
         );
+		
         $user = wp_signon( $creds );
 		if ( ! is_wp_error( $user ) )
 			it_exchange_add_message( 'notice', __( 'Registered and logged in as ', 'LION' ) . $user->user_login );
