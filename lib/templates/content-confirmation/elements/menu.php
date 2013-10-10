@@ -16,7 +16,7 @@
 ?>
 
 <?php do_action( 'it_exchange_confirmation_before_transaction_customer_menu' ); ?>
-<div class="it-exchange-customer-menu">
-	<p><?php it_exchange( 'customer', 'menu' ); ?></p>
+<div class="it-exchange-customer-menu-wrapper">
+	<?php it_exchange( 'customer', 'menu' ); ?>
 </div>
 <?php do_action( 'it_exchange_confirmation_after_transaction_customer_menu' ); ?>
