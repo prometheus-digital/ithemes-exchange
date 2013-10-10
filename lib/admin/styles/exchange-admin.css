@@ -9,8 +9,8 @@
 
 /** -----------------------------------------------------:[ exchange globals ]:---------- */
 .it-exchange-admin .top-description{color:#676c6e;font-size:14px;line-height:1.5;max-width:800px;}
-.it-exchange-admin ul ul{margin-top:20px;margin-left:20px;}
-.it-exchange-admin ul ul label{font-weight:normal !important;}
+.it-exchange-admin .wrap ul ul{margin-top:20px;margin-left:20px;}
+.it-exchange-admin .wrap ul ul label{font-weight:normal !important;}
 
 /** ----------------------------------------:[ columns ]:--- */
 .it-exchange-admin .columns-wrapper{overflow:hidden;}
