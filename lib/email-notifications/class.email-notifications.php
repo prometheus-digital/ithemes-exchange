@@ -445,7 +445,7 @@ class IT_Exchange_Email_Notifications {
 							if ( $purchase_message_on && it_exchange_product_has_feature( $product['product_id'], 'purchase-message' ) ) {
 								$purchase_messages .= '<h4>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'product_name' ) ) . '</h4>';
 								$purchase_messages .= '<p>' . it_exchange_get_product_feature( $product['product_id'], 'purchase-message' ) . '</p>';
-								$purchase_messages = appy_filters( 'it_exchange_email_notification_order_table_purchase_message', $purchase_messages, $product );
+								$purchase_messages = apply_filters( 'it_exchange_email_notification_order_table_purchase_message', $purchase_messages, $product );
 							}
 							?>
 
