@@ -1,3 +1,6 @@
+1.4.2 - 2013-10-14 - Lew Ayotte
+	Fixed typo in email notifications
+	Fixed wizard styling for Stripe
 1.4.1 - 2013-10-09 - Glenn Ansley
 	Adding missing images
 1.4.0 - 2013-10-09 - All the cats here: ithemes.com/team/
