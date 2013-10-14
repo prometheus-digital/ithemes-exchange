@@ -1,6 +1,11 @@
 1.4.2 - 2013-10-14 - Lew Ayotte
 	Fixed typo in email notifications
 	Fixed wizard styling for Stripe
+	Added quick fix to margins
+	Added hook to template loader
+	Added tool-tips to admin form class
+	Report 'Deleted Customer' when customer is missing
+	Changed the class for the customer menu wrapper in the confirmation page
 1.4.1 - 2013-10-09 - Glenn Ansley
 	Adding missing images
 1.4.0 - 2013-10-09 - All the cats here: ithemes.com/team/
