@@ -180,57 +180,57 @@ function it_exchange_add_new_builder_views( $views ) {
 	$exchange_views = array(
 		'it_exchange_is_product_builder_view' => array(
 			'name'        => _x( 'Exchange - Product', 'view', 'LION' ),
-			'priority'    => '20',
+			'priority'    => '40',
 			'description' => __( 'Any Exchange product.', 'LION' ),
 		),
 		'it_exchange_is_store_builder_view' => array(
 			'name'        => _x( 'Exchange - Store', 'view', 'LION' ),
-			'priority'    => '10',
+			'priority'    => '30',
 			'description' => __( 'The Exchange store page.', 'LION' ),
 		),
 		'it_exchange_is_transaction_builder_view' => array(
 			'name'        => _x( 'Exchange - Transaction', 'view', 'LION' ),
-			'priority'    => '20',
+			'priority'    => '30',
 			'description' => __( 'The Exchange transactions page.', 'LION' ),
 		),
 		'it_exchange_is_registration_builder_view' => array(
 			'name'        => _x( 'Exchange - Registration', 'view', 'LION' ),
-			'priority'    => '20',
+			'priority'    => '30',
 			'description' => __( 'The Exchange registration page.', 'LION' ),
 		),
 		'it_exchange_is_account_builder_view' => array(
 			'name'        => _x( 'Exchange - Account', 'view', 'LION' ),
-			'priority'    => '10',
-			'description' => __( 'Any Exchange customer\'s account pages (e.g. profile, purchases, login, et cetera).', 'LION' ),
+			'priority'    => '30',
+			'description' => __( 'The Exchange customer\'s account page.', 'LION' ),
 		),
 		'it_exchange_is_profile_builder_view' => array(
 			'name'        => _x( 'Exchange - Profile', 'view', 'LION' ),
-			'priority'    => '20',
-			'description' => __( 'The Exchange customer\'s profile or account page.', 'LION' ),
+			'priority'    => '30',
+			'description' => __( 'The Exchange customer\'s profile page.', 'LION' ),
 		),
 		'it_exchange_is_downloads_builder_view' => array(
 			'name'        => _x( 'Exchange - Downloads', 'view', 'LION' ),
-			'priority'    => '20',
+			'priority'    => '30',
 			'description' => __( 'The Exchange customer\'s downloads page.', 'LION' ),
 		),
 		'it_exchange_is_purchases_builder_view' => array(
 			'name'        => _x( 'Exchange - Purchases', 'view', 'LION' ),
-			'priority'    => '20',
+			'priority'    => '30',
 			'description' => __( 'The Exchange customer\'s purchases page.', 'LION' ),
 		),
 		'it_exchange_is_login_builder_view' => array(
 			'name'        => _x( 'Exchange - Login', 'view', 'LION' ),
-			'priority'    => '20',
+			'priority'    => '30',
 			'description' => __( 'The Exchange login page.', 'LION' ),
 		),
 		'it_exchange_is_logout_builder_view' => array(
 			'name'        => _x( 'Exchange - Logout', 'view', 'LION' ),
-			'priority'    => '20',
+			'priority'    => '30',
 			'description' => __( 'The Exchange logout page.', 'LION' ),
 		),
 		'it_exchange_is_confirmation_builder_view' => array(
 			'name'        => _x( 'Exchange - Confirmation', 'view', 'LION' ),
-			'priority'    => '20',
+			'priority'    => '30',
 			'description' => __( 'The Exchange purchase confirmation page.', 'LION' ),
 		),
 	);
@@ -238,12 +238,12 @@ function it_exchange_add_new_builder_views( $views ) {
 	$multi_item_views = array(
 		'it_exchange_is_cart_builder_view' => array(
 			'name'        => _x( 'Exchange - Cart', 'view', 'LION' ),
-			'priority'    => '20',
+			'priority'    => '30',
 			'description' => __( 'The Exchange cart page.', 'LION' ),
 		),
 		'it_exchange_is_checkout_builder_view' => array(
 			'name'        => _x( 'Exchange - Checkout', 'view', 'LION' ),
-			'priority'    => '20',
+			'priority'    => '30',
 			'description' => __( 'The Exchange checkout page.', 'LION' ),
 		),
 	);
