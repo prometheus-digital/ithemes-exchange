@@ -302,7 +302,9 @@ class IT_Exchange_Admin_Settings_Form {
 				</label>
 			</th>
 			<td id="<?php esc_attr_e( $setting['slug'] ); ?>-wrapper">
+				<?php echo empty( $setting['before'] ) ? '' : $setting['before']; ?>
 				<?php $this->form->$form_method( $setting['slug'], $setting['options'] ); ?>
+				<?php echo empty( $setting['after'] ) ? '' : $setting['after']; ?>
 			</td>
 		</tr>
 		<?php
