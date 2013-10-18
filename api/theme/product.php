@@ -543,10 +543,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		
 		if ( it_exchange_product_supports_feature( $this->product->ID, 'product-images' )
 				&& it_exchange_product_has_feature( $this->product->ID, 'product-images' ) ) {
-					
+				
 			$defaults = array(
 				'id'   => null,
-				'size' => 'all'
+				'size' => 'all' // NOTE These do nothing right now. Going to rething the options later. - Koop
 			);
 			
 			$options = ITUtility::merge_defaults( $options, $defaults );
@@ -562,24 +562,13 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			
 			foreach( $product_images as $image_id ) {
 				foreach ( $image_sizes as $size ) {
+					$image['id'] = $image_id;
 					$image[$size] = wp_get_attachment_image_src( $image_id, $size );
 				}
-				$images[$image_id] = $image;
+				$images[] = $image;
 			}
 			
-			if ( $options['size'] == 'all' ) {
-				$output = $images;
-			} else {
-				if ( isset( $options['id'] ) && ! empty( $options['id'] ) ) {
-					if ( isset( $images[$options['id']][$options['size']] ) && 'all' != $options['size'] ) {
-						$output = $images[$options['id']][$options['size']];
-					} else {
-						$output = __( 'Unregisterd image size.', 'LION' );
-					}
-				} else {
-					$output = __( 'Please add an image id to the array.', 'LION' );
-				} 
-			}
+			$output = $images;
 			
 			return $output;
 		}
