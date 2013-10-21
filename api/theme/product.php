@@ -523,7 +523,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		
 		return false;
 	}
-
+	
 	/**
 	 * Return product's images for all image sizes.
 	 *
@@ -594,11 +594,17 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		if ( it_exchange_product_supports_feature( $this->product->ID, 'product-images' )
 				&& it_exchange_product_has_feature( $this->product->ID, 'product-images' ) ) {
-
+			
+			$settings = it_exchange_get_option( 'settings_general' );
+			
+			$zoom = ( 1 == $settings['enable-gallery-zoom'] ) ? $settings['product-gallery-zoom-action'] : 'false';
+			
+			$popup = ( 1 == $settings['enable-gallery-popup'] ) ? 'true' : 'false';
+			
 			$defaults = array(
 				'size'   => 'thumbnail', // thumbnail or large
 				'output' => 'gallery',   // gallery or thumbnails
-				'zoom'   => 'hover',      // hover or click
+				'zoom'   => $zoom,       // hover or click
 				'switch' => 'click'      // hover or click
 			);
 			
@@ -638,15 +644,18 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				default :
 					if ( ! empty( $product_images ) ) {
 						
-						$feature_img_src = wp_get_attachment_url( $product_images[0] );
-						$feature_img_thumb_src = wp_get_attachment_thumb_url( $product_images[0] );
+						$featured = array(
+							'full'  => wp_get_attachment_image_src( $product_images[0], 'full' ),
+							'large' => wp_get_attachment_image_src( $product_images[0], 'large' ),
+							'thumb' => wp_get_attachment_image_src( $product_images[0], 'thumbnail' ),
+						);
 						
 						ob_start();
 						?>
-							<div class="it-exchange-product-images-gallery-<?php echo get_the_id(); ?> it-exchange-product-images-gallery it-exchange-gallery-full" data-zoom="<?php echo $options['zoom']; ?>" data-switch="<?php echo $options['switch']; ?>">
+							<div id="it-exchange-product-images-gallery-<?php echo get_the_id(); ?>" class="it-exchange-product-images-gallery it-exchange-gallery-full" data-popup="<?php echo $popup; ?>" data-zoom="<?php echo $options["zoom"]; ?>" data-switch="<?php echo $options['switch']; ?>">
 								<div class="it-exchange-feature-image-<?php echo get_the_ID(); ?> it-exchange-featured-image">
 									<div class="featured-image-wrapper">
-										<img alt="" src="<?php echo $feature_img_src ?>" data-src-large="<?php echo $feature_img_src ?>" data-src-thumb="<?php echo $feature_img_thumb_src ?>">
+										<img alt="" class="featured-image" src="<?php echo $featured['large'][0] ?>" data-src-full="<?php echo $featured['full'][0] ?>" data-src-large="<?php echo $featured['large'][0] ?>" data-height-large="<?php echo $featured['large'][2] ?>" data-featured-position="">
 									</div>
 								</div>
 								<?php if ( count( $product_images ) > 1 ) : ?>
@@ -659,11 +668,14 @@ class IT_Theme_API_Product implements IT_Theme_API {
 												else
 													$img_class = '';
 												
-												$img_url = wp_get_attachment_url( $image_id );
-												$img_thumb_url = wp_get_attachment_thumb_url( $image_id );
+												$thumbnail = array(
+													'full'  => wp_get_attachment_image_src( $image_id, 'full' ),
+													'large' => wp_get_attachment_image_src( $image_id, 'large' ),
+													'thumb' => wp_get_attachment_image_src( $image_id, 'thumbnail' ),
+												);
 											?>
 											<li class="it-exchange-product-image-thumb-<?php echo $image_id; ?>">
-												<span class="<?php echo $img_class; ?>"><img alt="" src="<?php echo $img_thumb_url; ?>" data-src-large="<?php echo $img_url; ?>" data-src-thumb="<?php echo $img_thumb_url; ?>"></span>
+												<span class="<?php echo $img_class; ?>"><img alt="" src="<?php echo $thumbnail['thumb'][0] ?>" data-src-full="<?php echo $thumbnail['full'][0] ?>" data-src-large="<?php echo $thumbnail['large'][0] ?>" data-height-large="<?php echo $thumbnail['large'][2] ?>" data-src-thumb="<?php echo $thumbnail['thumb'][0] ?>" data-featured-padding="" /></span>
 											</li>
 											<?php $img_iteration++; ?>
 										<?php endforeach; ?>
@@ -675,6 +687,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 					}
 				break;
 			}
+			
+			$output = apply_filters( 'it_exchange_product_gallery', $output );
 			
 			return $output;
 		}

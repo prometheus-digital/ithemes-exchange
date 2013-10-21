@@ -93,18 +93,32 @@ function it_exchange_load_public_scripts( $current_view ) {
 
 	$purchase_requirements = (array) it_exchange_get_purchase_requirements();
 	$purchase_requirements = array_keys( $purchase_requirements );
-
+	
+	$settings = it_exchange_get_option( 'settings_general' );
+	
 	// jQuery Zoom
 	wp_register_script( 'jquery-zoom', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.zoom.min.js' ), array( 'jquery' ), false, true );
 	
+	// jQuery Colorbox
+	wp_register_script( 'jquery-colorbox', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.colorbox.min.js' ), array( 'jquery' ), false, true );
+	
 	// Detect CC Type
 	wp_register_script( 'detect-credit-card-type', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/detect-credit-card-type.js' ), array( 'jquery' ), false, true );
-
+	
 	// Frontend Product JS
 	if ( is_singular( 'it_exchange_prod' ) ) {
-		wp_enqueue_script( 'it-exchange-product-public-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/exchange-product.js' ), array( 'jquery-zoom' ), false, true );
+		$script_deps = array();
+		
+		if ( ( 1 == $settings['enable-gallery-zoom'] ) )
+			array_push( $script_deps, 'jquery-zoom' );
+		
+		if ( ( 1 == $settings['enable-gallery-popup'] ) )
+			array_push( $script_deps, 'jquery-colorbox' );
+		
+		wp_enqueue_script( 'it-exchange-product-public-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/exchange-product.js' ), $script_deps, false, true );
+		wp_enqueue_style( 'it-exchange-icon-fonts', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange-fonts.css' ) );
 	}
-
+	
 	// ****** CHECKOUT SPECIFIC SCRIPTS ******* 
 	if ( it_exchange_is_page( 'checkout' )  ) {
 
@@ -143,15 +157,15 @@ function it_exchange_load_public_scripts( $current_view ) {
 	// Frontend Style 
 	if ( ! apply_filters( 'it_exchange_disable_frontend_stylesheet', false ) )
 		wp_enqueue_style( 'it-exchange-public-css', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange.css' ) );
-
+	
 	// Parent theme /exchange/style.css if it exists
 	$parent_theme_css = get_template_directory() . '/exchange/style.css';
-    if ( is_file( $parent_theme_css ) )
+	if ( is_file( $parent_theme_css ) )
 		wp_enqueue_style( 'it-exchange-parent-theme-css', ITUtility::get_url_from_file( $parent_theme_css ) );
-
+	
 	// Child theme /exchange/style.css if it exists
 	$child_theme_css = get_stylesheet_directory() . '/exchange/style.css';
-    if ( is_file( $child_theme_css ) && ( $parent_theme_css != $child_theme_css || ! is_file( $parent_theme_css ) ) )
+	if ( is_file( $child_theme_css ) && ( $parent_theme_css != $child_theme_css || ! is_file( $parent_theme_css ) ) )
 		wp_enqueue_style( 'it-exchange-child-theme-css', ITUtility::get_url_from_file( $child_theme_css ) );
 }
 add_action( 'wp_enqueue_scripts', 'it_exchange_load_public_scripts' );

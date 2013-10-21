@@ -135,7 +135,6 @@
 				</td>
 			</tr>
             <?php do_action( 'it_exchange_general_settings_before_settings_styles', $form ); ?>
-            <?php do_action( 'it_exchange_general_settings_before_settings_styles', $form ); ?>
 			<tr valign="top">
 				<th scope="row"><strong><?php _e( 'Stylesheet Settings', 'LION' ); ?></strong></th>
 				<td></td>
@@ -153,6 +152,32 @@
 						echo implode( $custom_style_locations, '<br />' );
 						?>
 					</span>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><strong><?php _e( 'Product Gallery', 'LION' ); ?></strong></th>
+				<td></td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><label for="enable-gallery-popup"><?php _e( 'Enable Popup', 'LION' ) ?></label></th>
+				<td>
+					<?php $form->add_yes_no_drop_down( 'enable-gallery-popup' ); ?>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><label for="product-gallery-zoom"><?php _e( 'Enable Zoom', 'LION' ) ?></label></th>
+				<td>
+					<?php $form->add_yes_no_drop_down( 'enable-gallery-zoom' ); ?>
+					<div class="product-gallery-zoom-actions <?php echo ( $form->_options['enable-gallery-zoom'] != 1 ) ? 'hidden' : ''; ?>">
+						<?php $form->add_radio( 'product-gallery-zoom-action', array( 'value' => 'click' ) ); ?>
+						<label for="product-gallery-zoom-action-click"><?php _e( 'Click', 'LION' ) ?></label>
+						<br />
+						<?php $form->add_radio( 'product-gallery-zoom-action', array( 'value' => 'hover' ) ); ?>
+						<label for="product-gallery-zoom-action-hover"><?php _e( 'Hover', 'LION' ) ?></label>
+						<span class="description <?php echo ( $form->_options['enable-gallery-popup'] != 1 ) ? 'hidden' : ''; ?>">
+							<p><?php _e( 'Zoom will occur in the popup when popup is enabled.', 'LION' ); ?></p>
+						</span>
+					</div>
 				</td>
 			</tr>
 			<tr valign="top">
