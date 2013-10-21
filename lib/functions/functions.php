@@ -862,7 +862,9 @@ add_action( 'init', 'it_exchange_register_default_purchase_requirements' );
  * @return string
 */
 function it_exchange_get_default_sw_checkout_mode() {
-	$default_mode = apply_filters( 'it_exchange_get_default_sw_checkout_mode', 'registration' );
+	$settings = it_exchange_get_option( 'settings_general' );
+	$default_mode = empty( $settings['checkout-reg-form'] ) ? 'registration' : $settings['checkout-reg-form'];
+	$default_mode = apply_filters( 'it_exchange_get_default_sw_checkout_mode', $default_mode );
 	add_filter( 'it_exchange_is_sw_' . $default_mode . '_checkout_mode', '__return_true' );
 	return $default_mode;
 }
@@ -875,7 +877,9 @@ function it_exchange_get_default_sw_checkout_mode() {
  * @return string
 */
 function it_exchange_get_default_content_checkout_mode() {
-	$default_mode = apply_filters( 'it_exchange_get_default_content_checkout_mode', 'registration' );
+	$settings = it_exchange_get_option( 'settings_general' );
+	$default_mode = empty( $settings['checkout-reg-form'] ) ? 'registration' : $settings['checkout-reg-form'];
+	$default_mode = apply_filters( 'it_exchange_get_default_content_checkout_mode', $default_mode );
 	add_filter( 'it_exchange_is_content_' . $default_mode . '_checkout_mode', '__return_true' );
 	return $default_mode;
 }
