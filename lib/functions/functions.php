@@ -834,8 +834,8 @@ function it_exchange_register_default_purchase_requirements() {
 	$properties = array(
 		'priority'               => 1,
 		'requirement-met'        => 'is_user_logged_in',
-		'sw-template-part'       => apply_filters( 'it_exchange_sw_template_part_for_logged_in_purchase_requirement', 'registration' ),
-		'checkout-template-part' => apply_filters( 'it_exchange_checkout_template_part_for_logged_in_purchase_requirement', 'logged-in' ),
+		'sw-template-part'       => it_exchange_get_default_sw_checkout_mode(), //apply_filters( 'it_exchange_sw_template_part_for_logged_in_purchase_requirement', 'registration' ),
+		'checkout-template-part' => 'logged-in', //apply_filters( 'it_exchange_checkout_template_part_for_logged_in_purchase_requirement', 'logged-in' ),
 		'notification'           => sprintf( __( 'You must be logged in to complete your purchase. %s' . $login . '%s, %s' . $register . '%s or %s' . $cart . '%s', 'LION' ), $login_link, $close_link, $reg_link, $close_link, $cart_link, $close_link ),
 	);
 	it_exchange_register_purchase_requirement( 'logged-in', $properties );
@@ -853,6 +853,33 @@ function it_exchange_register_default_purchase_requirements() {
 		it_exchange_register_purchase_requirement( 'billing-address', $properties );
 }
 add_action( 'init', 'it_exchange_register_default_purchase_requirements' );
+
+/**
+ * The default checkout mode for the superwidget
+ *
+ * @since CHANGME
+ *
+ * @return string
+*/
+function it_exchange_get_default_sw_checkout_mode() {
+	$default_mode = apply_filters( 'it_exchange_get_default_sw_checkout_mode', 'registration' );
+	add_filter( 'it_exchange_is_sw_' . $default_mode . '_checkout_mode', '__return_true' );
+	return $default_mode;
+}
+
+/**
+ * The default checkout mode for the page
+ *
+ * @since CHANGME
+ *
+ * @return string
+*/
+function it_exchange_get_default_content_checkout_mode() {
+	$default_mode = apply_filters( 'it_exchange_get_default_content_checkout_mode', 'registration' );
+	add_filter( 'it_exchange_is_content_' . $default_mode . '_checkout_mode', '__return_true' );
+	return $default_mode;
+}
+add_action( 'template_redirect', 'it_exchange_get_default_content_checkout_mode' );
 
 /**
  * Registers any purchase requirements Super Widget template parts as valid

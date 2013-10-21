@@ -16,7 +16,7 @@
 */
 ?>
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_before_registration_element' ); ?>
-<div class="it-exchange-hidden checkout-purchase-requirement-registration">
+<div class="<?php echo it_exchange_is_checkout_mode( 'registration' ) ? '' : 'it-exchange-hidden'; ?> checkout-purchase-requirement-registration">
 	<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_begin_registration_element' ); ?>
 	<?php
 	$reg_loops = array( 'fields', 'actions' );

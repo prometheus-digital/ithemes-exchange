@@ -438,6 +438,19 @@ function it_exchange_get_pending_purchase_requirements() {
 }
 
 /**
+ * Returns boolean if passed paramater is the current checkout mode
+ *
+ * @since CHANGEME
+ *
+ * @param  string  $mode    the checkout mode we're testing
+ * @param string   $context 'content' or 'sw'
+ * @return boolean
+*/
+function it_exchange_is_checkout_mode( $mode, $context='content' ) {
+	return apply_filters( 'it_exchange_is_' . $context . '_' . $mode . '_checkout_mode', false );
+}
+
+/**
  * Formats the Billing Address for display
  *
  * @todo this function sucks. Lets make a function for formatting any address. ^gta
