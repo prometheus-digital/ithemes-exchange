@@ -392,7 +392,7 @@ function it_exchange_get_cart_product_base_price( $product, $format=true ) {
 	if ( $format )
 		$db_base_price = it_exchange_format_price( $db_base_price );
 
-	return apply_filters( 'it_exchange_get_cart_product_base_price', $db_base_price, $product );
+	return apply_filters( 'it_exchange_get_cart_product_base_price', $db_base_price, $product, $format );
 }
 
 /**
