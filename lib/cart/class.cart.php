@@ -373,7 +373,8 @@ class IT_Exchange_Shopping_Cart {
 		foreach( $fields as $field ) {
 			$billing[$field] = empty( $_REQUEST['it-exchange-billing-address-' . $field] ) ? '' : $_REQUEST['it-exchange-billing-address-' . $field];
 		}
-		update_user_meta( it_exchange_get_current_customer_id(), 'it-exchange-billing-address', $billing );
+
+		it_exchange_save_customer_billing_address( $billing );
 		it_exchange_add_message( 'notice', __( 'Billing Address Saved', 'LION' ) );
 
 		// Update Shipping if checked

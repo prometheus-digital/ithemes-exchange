@@ -170,6 +170,8 @@ function it_exchange_save_shipping_address( $address, $customer_id=false ) {
 	if ( ! it_exchange_get_customer( $customer_id ) )
 		return false;
 
+	$address = apply_filters( 'it_exchange_save_customer_shipping_address', $address, $customer_id );
+
 	// Add to usermeta
 	update_user_meta( $customer_id, 'it-exchange-shipping-address', $address );
 	do_action( 'it_exchange_shipping_address_updated', $address, $customer_id );

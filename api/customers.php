@@ -258,3 +258,19 @@ function it_exchange_get_customer_billing_address( $customer_id=false ) {
 	$billing_address = it_exchange_get_customer_data( 'billing_address', $customer_id );
 	return apply_filters( 'it_exchange_get_customer_billing_address', $billing_address, $customer_id );
 }
+
+/**
+ * Updates the customer billing address
+ *
+ * @since CHANGEME
+ *
+ * @param array   $addres      address obejct
+ * @param integer $customer_id optional. defualts to current customer
+ * @return boolean
+*/
+function it_exchange_save_customer_billing_address( $address, $customer_id=false ) {
+	$customer_id = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
+
+	$billing = apply_filters( 'it_exchange_save_customer_billing_address', $address, $customer_id );
+	update_user_meta( it_exchange_get_current_customer_id(), 'it-exchange-billing-address', $billing );
+}
