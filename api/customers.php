@@ -272,5 +272,11 @@ function it_exchange_save_customer_billing_address( $address, $customer_id=false
 	$customer_id = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
 
 	$billing = apply_filters( 'it_exchange_save_customer_billing_address', $address, $customer_id );
-	update_user_meta( it_exchange_get_current_customer_id(), 'it-exchange-billing-address', $billing );
+
+	if ( false !== $billing ) {
+		update_user_meta( it_exchange_get_current_customer_id(), 'it-exchange-billing-address', $billing );
+		do_action( 'it_exchange_customer_billing_address_updated', $billing, $custoemr_id );
+		return true;
+	}
+	return false;
 }
