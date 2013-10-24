@@ -606,6 +606,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		// Get addon product type addon settings @todo move this setting to product-feature for downloads
 		$settings = it_exchange_get_option( 'addon_digital_downloads' );
 		$require_user_login = ! empty( $settings['require-user-login'] );
+		$require_user_login = apply_filters( 'it_exchange_require_user_login_for_download', $hash_data );
 
 		// In the event that the admin never visited the settings page to register defaults
 		if ( empty( $settings ) ) {
