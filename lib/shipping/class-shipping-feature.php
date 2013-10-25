@@ -93,7 +93,7 @@ abstract class IT_Exchange_Shipping_Feature {
 		}   
 
 		// Set the property
-		if ( 'IT_Exchange_Product' == get_class( $product ) ) 
+		if ( is_object( $product ) && 'IT_Exchange_Product' == get_class( $product ) ) 
 			$this->product = $product;
 		else
 			$this->product = false;

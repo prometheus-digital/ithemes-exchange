@@ -401,7 +401,7 @@ function it_exchange_update_transaction( $args ) {
 */
 function it_exchange_update_transaction_status( $transaction, $status ) {
 
-	if ( 'IT_Exchange_Transaction' != get_class( $transaction ) ) {
+	if ( is_object( $transaction ) && 'IT_Exchange_Transaction' != get_class( $transaction ) ) {
 		$transaction = it_exchange_get_transaction( $transaction );
 	}
 
