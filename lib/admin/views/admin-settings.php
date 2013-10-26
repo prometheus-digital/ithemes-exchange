@@ -165,7 +165,7 @@
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="product-gallery-zoom"><?php _e( 'Enable Zoom', 'LION' ) ?></label></th>
+				<th scope="row"><label for="product-gallery-zoom"><?php _e( 'Enable Zoom', 'LION' ) ?><span class="tip" title="<?php _e( 'Zoom will only work properly when uploading large images.', 'LION' ); ?>">i</span></label></th>
 				<td>
 					<?php $form->add_yes_no_drop_down( 'enable-gallery-zoom' ); ?>
 					<div class="product-gallery-zoom-actions <?php echo ( $form->_options['enable-gallery-zoom'] != 1 ) ? 'hidden' : ''; ?>">
@@ -174,7 +174,7 @@
 						<br />
 						<?php $form->add_radio( 'product-gallery-zoom-action', array( 'value' => 'hover' ) ); ?>
 						<label for="product-gallery-zoom-action-hover"><?php _e( 'Hover', 'LION' ) ?></label>
-						<span class="description <?php echo ( $form->_options['enable-gallery-popup'] != 1 ) ? 'hidden' : ''; ?>">
+						<span class="description popup-enabled <?php echo ( $form->_options['enable-gallery-popup'] != 1 ) ? 'hidden' : ''; ?>">
 							<p><?php _e( 'Zoom will occur in the popup when popup is enabled.', 'LION' ); ?></p>
 						</span>
 					</div>

@@ -111,7 +111,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 		$product_images = it_exchange_get_product_feature( $product->ID, 'product-images' );
 		?>
 		
-		<label for="product-images-field">Images</label>
+		<label for="product-images-field">Images<span class="tip" title="<?php _e( 'Uploading large images is best (1600px or greater). Exchange will resize the images to use in the store.', 'LION' ) ?>">i</span></label>
 		<div id="it-exchange-product-images">
 			<?php
 			if ( ! empty( $product_images ) ) {
