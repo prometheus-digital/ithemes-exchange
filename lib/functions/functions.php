@@ -1052,6 +1052,33 @@ function it_exchange_force_rewrite_flush_on_upgrade() {
 }
 add_action( 'it_exchange_version_updated', 'it_exchange_force_rewrite_flush_on_upgrade' );
 
+/**
+ * Add custom image sizs to use in themes and admin.
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_add_image_sizes() {
+	$image_sizes = array(
+		'large' => array(
+			'width'  => 1000,
+			'height' => 1000,
+			'crop'   => false
+		),
+		'thumb' => array(
+			'width'  => 150,
+			'height' => 150,
+			'crop'   => true
+		),
+	);
+	
+	foreach ( $image_sizes as $name => $data ) {
+		add_image_size( 'it-exchange-' . $name, $data['width'], $data['height'], $data['crop'] );
+	}
+}
+add_action( 'init', 'it_exchange_add_image_sizes' );
+
 /************************************
  * THE FOLLOWING API METHODS AREN'T READY
  * FOR PRIMETIME YET SO THEY LIVE HERE FOR NOW.

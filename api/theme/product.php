@@ -646,8 +646,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 						
 						$featured = array(
 							'full'  => wp_get_attachment_image_src( $product_images[0], 'full' ),
-							'large' => wp_get_attachment_image_src( $product_images[0], 'large' ),
-							'thumb' => wp_get_attachment_image_src( $product_images[0], 'thumbnail' ),
+							'large' => wp_get_attachment_image_src( $product_images[0], 'it-exchange-large' ),
+							'thumb' => wp_get_attachment_image_src( $product_images[0], 'it-exchange-thumb' ),
 						);
 						
 						ob_start();
@@ -670,9 +670,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 												
 												$thumbnail = array(
 													'full'  => wp_get_attachment_image_src( $image_id, 'full' ),
-													'large' => wp_get_attachment_image_src( $image_id, 'large' ),
-													'thumb' => wp_get_attachment_image_src( $image_id, 'thumbnail' ),
+													'large' => wp_get_attachment_image_src( $image_id, 'it-exchange-large' ),
+													'thumb' => wp_get_attachment_image_src( $image_id, 'it-exchange-thumb' ),
 												);
+												
+												$dumped[] = $thumbnail;
 											?>
 											<li class="it-exchange-product-image-thumb-<?php echo $image_id; ?>">
 												<span class="<?php echo $img_class; ?>"><img alt="" src="<?php echo $thumbnail['thumb'][0] ?>" data-src-full="<?php echo $thumbnail['full'][0] ?>" data-src-large="<?php echo $thumbnail['large'][0] ?>" data-height-large="<?php echo $thumbnail['large'][2] ?>" data-src-thumb="<?php echo $thumbnail['thumb'][0] ?>" data-featured-padding="" /></span>
