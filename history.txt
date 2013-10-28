@@ -1,3 +1,20 @@
+1.5.0 - 2013-10-28 - Lew Ayotte, Glenn Ansley, Justin Kopepasah
+	Fixed some priority bugs
+	Added additional IDs and classes to admin settings
+	Added a general remove button style
+	Added hooks for base price and customer pricing
+	Broke out lib/templates/content-checkout/elements/purchase-requirements/logged-in.php to several more template parts for flexibility needed in Guest Checkout
+	Updated the get-images function call to fix a bug
+	Updated the Setup Wizard
+	Modified the way the Logged-in purchase requirement determines which form to show (registration/login/options) so that we can filter it for Guest Checkout
+	Added Default Checkout Form option to General Settings
+	Added api method for saving billing address and defer to it from lib/cart/class.cart.php
+	Added filter to existing save_shipping_address function
+	Added conditional to update shipping/billing address API methods
+	Added filter to require-user-login check before filtering file downloads
+	Fixed call to wrong function in new confirmation page template part
+	Added a couple is_object checks before get_class calls
+	Introducing New Gallery
 1.4.2 - 2013-10-14 - Lew Ayotte
 	Fixed typo in email notifications
 	Fixed wizard styling for Stripe
