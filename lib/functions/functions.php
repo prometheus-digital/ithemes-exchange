@@ -1077,7 +1077,10 @@ function it_exchange_add_image_sizes() {
 		add_image_size( 'it-exchange-' . $name, $data['width'], $data['height'], $data['crop'] );
 	}
 }
+/*
+NOTE Tableing this for now until we write a way to regenerate images for users.
 add_action( 'init', 'it_exchange_add_image_sizes' );
+*/
 
 /************************************
  * THE FOLLOWING API METHODS AREN'T READY
