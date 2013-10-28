@@ -268,6 +268,7 @@
 .it-exchange-colorbox #cboxContent #cboxCurrent{position:absolute;bottom:0;left:0;right:0;text-align:center;}
 
 /** ----------------------------------------:[ gallery ]:--- */
+.it-exchange-colorbox img{margin:0;padding:0;}
 .it-exchange-colorbox .it-exchange-product-images-gallery{overflow:hidden;max-width:1100px;margin:0 auto;}
 .it-exchange-colorbox .it-exchange-featured-image{text-align:center;}
 .it-exchange-colorbox .it-exchange-featured-image .it-exchange-zoom-enabled:hover{border-color:#EEE;cursor:pointer;cursor:-webkit-zoom-in;cursor:-moz-zoom-in;}
