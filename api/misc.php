@@ -440,7 +440,7 @@ function it_exchange_get_pending_purchase_requirements() {
 /**
  * Returns boolean if passed paramater is the current checkout mode
  *
- * @since CHANGEME
+ * @since 1.5.0
  *
  * @param  string  $mode    the checkout mode we're testing
  * @param string   $context 'content' or 'sw'
