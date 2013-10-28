@@ -262,7 +262,7 @@ function it_exchange_get_customer_billing_address( $customer_id=false ) {
 /**
  * Updates the customer billing address
  *
- * @since CHANGEME
+ * @since 1.5.0
  *
  * @param array   $addres      address obejct
  * @param integer $customer_id optional. defualts to current customer
