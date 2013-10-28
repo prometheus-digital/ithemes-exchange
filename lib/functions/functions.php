@@ -1082,6 +1082,26 @@ NOTE Tableing this for now until we write a way to regenerate images for users.
 add_action( 'init', 'it_exchange_add_image_sizes' );
 */
 
+/**
+ * Change the content_width global if we are viewing 
+ * an Exchange product page.
+ * 
+ * NOTE The function is temporary until we add the image
+ * sizes function above.
+ * 
+ * @since 1.5
+ *
+ * @return void
+ * @var $content_width
+*/
+function it_exchange_set_content_width_on_product_pages() {
+	if ( it_exchange_is_page( 'product' ) ) {
+		global $content_width;
+		$content_width = 1024;
+	}
+}
+add_action( 'template_redirect', 'it_exchange_set_content_width_on_product_pages', 100 );
+
 /************************************
  * THE FOLLOWING API METHODS AREN'T READY
  * FOR PRIMETIME YET SO THEY LIVE HERE FOR NOW.
