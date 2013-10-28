@@ -646,8 +646,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 						
 						$featured = array(
 							'full'  => wp_get_attachment_image_src( $product_images[0], 'full' ),
-							'large' => wp_get_attachment_image_src( $product_images[0], 'it-exchange-large' ),
-							'thumb' => wp_get_attachment_image_src( $product_images[0], 'it-exchange-thumb' ),
+							'large' => wp_get_attachment_image_src( $product_images[0], 'large' ),
+							'thumb' => wp_get_attachment_image_src( $product_images[0], 'thumbnail' ),
 						);
 						
 						ob_start();
@@ -670,8 +670,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 												
 												$thumbnail = array(
 													'full'  => wp_get_attachment_image_src( $image_id, 'full' ),
-													'large' => wp_get_attachment_image_src( $image_id, 'it-exchange-large' ),
-													'thumb' => wp_get_attachment_image_src( $image_id, 'it-exchange-thumb' ),
+													'large' => wp_get_attachment_image_src( $image_id, 'large' ),
+													'thumb' => wp_get_attachment_image_src( $image_id, 'thumbnail' ),
 												);
 												
 												$dumped[] = $thumbnail;
