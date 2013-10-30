@@ -46,16 +46,23 @@ class IT_Exchange_Customer {
 	 * Constructor. Sets up the customer
 	 *
 	 * @since 0.3.8
-	 * @param integer $id customer id
+	 * @param  mixed $user customer id or WP User object
 	 * @return mixed false if no customer is found. self if customer is located
 	*/
-	function IT_Exchange_Customer( $id ) {
+	function IT_Exchange_Customer( $user ) {
 		
-		// Set the ID
-		$this->id = $id;
+		if ( is_object( $user ) && 'WP_User' == get_class( $user ) ) {
+			$this->id = $this->ID = $user->ID;
+			$this->wp_user = $user;
+			$this->set_customer_data();
+		} else {
+			$this->id = $this->ID = $user;
+			$this->set_wp_user();
+			$this->set_customer_data();
+		}
 
-		// Set properties
-		$this->init();
+		//We want to do this last
+		add_action( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_to_user' ), 999 );
 
 		// Return false if not a WP User
 		if ( ! $this->is_wp_user() )
@@ -63,20 +70,6 @@ class IT_Exchange_Customer {
 		
 		// Return object if found a WP user
 		return $this;
-	}
-
-	/**
-	 * Sets up the class
-	 *
-	 * @since 0.3.8
-	 * @return void
-	*/
-	function init() {
-		$this->set_wp_user();
-		$this->set_customer_data();
-		
-		//We want to do this last
-		add_action( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_to_user' ), 999 );
 	}
 
 	/**
@@ -142,7 +135,7 @@ class IT_Exchange_Customer {
      * @return void
     */
 	function has_transaction( $transaction_id ) {
-		$transaction_ids = get_user_meta( $this->id, '_it_exchange_transaction_id' );
+		$transaction_ids = (array) get_user_meta( $this->id, '_it_exchange_transaction_id' );
 		return ( in_array( $transaction_id, $transaction_ids ) );
 	}
 

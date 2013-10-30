@@ -463,35 +463,35 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @return string
 	*/
 	function menu( $options=array() ) {
-		
+
 		$defaults = array(
 			'format' => 'html',
 			'pages'  => 'account,profile,purchases,downloads',
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$nav  = '<ul class="it-exchange-customer-menu">';
-		
+
 		$pages = explode( ',', $options['pages']  );
 		$pages = apply_filters( 'it_exchange_customer_menu_pages', $pages );
-		
+
 		$nav .= apply_filters( 'it_exchange_before_customer_menu_loop', '', $this->_customer );
-		
+
 		foreach( $pages as $page_slug ) {
-			
+
 			$page_slug = trim( $page_slug );
 			$class = it_exchange_is_page( $page_slug ) ? ' class="current"' : '';
-		
+
 			$nav .= '<li' . $class . '><a href="' . it_exchange_get_page_url( $page_slug ) . '">' . it_exchange_get_page_name( $page_slug ) . '</a></li>';
-		
+
 		}
-		
+
 		$nav .= apply_filters( 'it_exchange_after_customer_menu_loop', '', $this->_customer );
-		
+
 		$nav .= '</ul>';
-		
+
 		return $nav;
-		
+
 	}
 
 	/**
@@ -534,11 +534,11 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 			'label' => __( 'View your Account', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$url = it_exchange_get_page_url( 'account' );
 
 		switch( $options['format'] ) {
-			
+
 			case 'url':
 				$output = $url;
 				break;
@@ -547,12 +547,12 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 				break;
 			case 'html':
 			default:
-				$output = '<a href="' . $url . '">' . $options['label'] . '</a>';	
+				$output = '<a href="' . $url . '">' . $options['label'] . '</a>';
 				break;
 
 		}
-		
-		return $output;	
+
+		return $output;
 	}
 
 	/**
@@ -569,22 +569,22 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 			'label' => __( 'Thank you for your order. An email confirmation has been sent to %s.', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$url = it_exchange_get_page_url( 'account' );
 
 		switch( $options['format'] ) {
-			
+
 			case 'label':
 				$output = $options['label'];
 				break;
 			case 'html':
 			default:
-				$user_info = get_userdata( $this->_customer->id );
-				$output = sprintf( $options['label'], $user_info->user_email );	
+				$user_info = it_exchange_get_customer( $this->_customer->id );
+				$output = sprintf( $options['label'], $user_info->data->user_email );
 				break;
 
 		}
-		
-		return $output;	
+
+		return $output;
 	}
 }

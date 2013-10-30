@@ -31,7 +31,8 @@ function it_exchange_get_customer( $customer_id ) {
     // Grab the WP User
 	$customer = new IT_Exchange_Customer( $customer_id );
 	if ( empty( $customer->wp_user->ID ) )
-		return false;
+		$customer = false;
+
 	return apply_filters( 'it_exchange_get_customer', $customer, $customer_id );
 }
 
@@ -43,7 +44,7 @@ function it_exchange_get_customer( $customer_id ) {
 */
 function it_exchange_get_current_customer() {
 	if ( ! is_user_logged_in() )
-		return false;
+		return apply_filters( 'it_exchange_get_current_customer', false );
 
 	$customer = it_exchange_get_customer( get_current_user_id() );
 	return apply_filters( 'it_exchange_get_current_customer', $customer );
@@ -275,7 +276,7 @@ function it_exchange_save_customer_billing_address( $address, $customer_id=false
 
 	if ( false !== $billing ) {
 		update_user_meta( it_exchange_get_current_customer_id(), 'it-exchange-billing-address', $billing );
-		do_action( 'it_exchange_customer_billing_address_updated', $billing, $custoemr_id );
+		do_action( 'it_exchange_customer_billing_address_updated', $billing, $customer_id );
 		return true;
 	}
 	return false;
