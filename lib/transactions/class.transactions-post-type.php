@@ -433,17 +433,24 @@ class IT_Exchange_Transaction_Post_Type {
 				<div class="customer-email">
 					<?php esc_attr_e( it_exchange_get_transaction_customer_email( $post ) ); ?>
 				</div>
-				<div class="customer-profile">
-					<a href="<?php esc_attr_e( it_exchange_get_transaction_customer_admin_profile_url( $post ) ); ?>">
-						<?php _e( 'View Customer Data', 'LION' ); ?>
-					</a>
-				</div>
+
+				<?php if ( apply_filters( 'it_exchange_transaction_detail_has_customer_profile', true, $post ) ) : ?>
+					<div class="customer-profile">
+						<a href="<?php esc_attr_e( it_exchange_get_transaction_customer_admin_profile_url( $post ) ); ?>">
+							<?php _e( 'View Customer Data', 'LION' ); ?>
+						</a>
+					</div>
+				<?php endif; ?>
+
 			</div>
 		</div>
 
 		<?php
 		$shipping_address = it_exchange_get_transaction_shipping_address( $post->ID );
+		$shipping_address = array_filter( (array) $shipping_address ); // Make it false if all values are empty
 		$billing_address  = it_exchange_get_transaction_billing_address( $post->ID );
+		$billing_address = array_filter( (array) $billing_address ); // Make it false if all values are empty
+
 		if ( $shipping_address || $billing_address ) : ?>
 			<div class="billing-shipping-wrapper columns-wrapper">
 				<?php if ( $shipping_address ) : ?>
