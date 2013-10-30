@@ -41,8 +41,8 @@ class IT_Exchange_Email_Notifications {
 				
 		$this->transaction_id = apply_filters( 'it_exchange_send_email_notification_transaction_id', false );
 		$this->customer_id    = $customer_id;
-		$this->user           = get_userdata( $customer_id );
-		
+		$this->user           = it_exchange_get_customer( $customer_id );
+
 		$settings = it_exchange_get_option( 'settings_email' );	
 		
 		// Edge case where sale is made before admin visits email settings.
@@ -64,7 +64,7 @@ class IT_Exchange_Email_Notifications {
 		
 		$headers = apply_filters( 'it_exchange_send_email_notification_headers', $headers );
 
-		wp_mail( $this->user->user_email, strip_tags( $subject ), $body, $headers );
+		wp_mail( $this->user->data->user_email, strip_tags( $subject ), $body, $headers );
 				
 	}
 	
@@ -131,7 +131,7 @@ class IT_Exchange_Email_Notifications {
 		
 		$this->transaction_id = $transaction->ID;
 		$this->customer_id    = it_exchange_get_transaction_customer_id( $this->transaction_id );
-		$this->user           = get_userdata( $this->customer_id );
+		$this->user           = it_exchange_get_current_customer(); //get_userdata( $this->customer_id );
 		
 		$settings = it_exchange_get_option( 'settings_email' );	
 		
@@ -153,7 +153,7 @@ class IT_Exchange_Email_Notifications {
 		$body    = apply_filters( 'send_purchase_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body );
 		$body    = $this->body_header() . '<div>' . wpautop( do_shortcode( $body ) ) . '</div>' . $this->body_footer();
 		
-		wp_mail( $this->user->user_email, strip_tags( $subject ), $body, $headers );
+		wp_mail( $this->user->data->user_email, strip_tags( $subject ), $body, $headers );
 		
 		// Send admin notification if param is true and email is provided in settings
 		if ( $send_admin_email && ! empty( $settings['notification-email-address'] ) ) {
@@ -363,10 +363,10 @@ class IT_Exchange_Email_Notifications {
 	 * @return string Replaced value
 	*/
 	function it_exchange_replace_name_tag( $args, $options = NULL ) {
-		if ( !empty( $this->user->first_name ) ) {
-			$name = $this->user->first_name;
+		if ( !empty( $this->user->data->first_name ) ) {
+			$name = $this->user->data->first_name;
 		} else {
-			$name = $this->user->display_name;
+			$name = $this->user->data->display_name;
 		}
 		
 		return $name;
@@ -381,10 +381,10 @@ class IT_Exchange_Email_Notifications {
 	 * @return string Replaced value
 	*/
 	function it_exchange_replace_fullname_tag( $args, $options = NULL ) {
-		if ( !empty( $this->user->first_name ) ) {
-			$fullname = $this->user->first_name . ' ' . $this->user->last_name;
+		if ( !empty( $this->user->data->first_name ) ) {
+			$fullname = $this->user->data->first_name . ' ' . $this->user->data->last_name;
 		} else {
-			$fullname = $this->user->display_name;
+			$fullname = $this->user->data->display_name;
 		}
 		
 		return $fullname;
@@ -399,7 +399,7 @@ class IT_Exchange_Email_Notifications {
 	 * @return string Replaced value
 	*/
 	function it_exchange_replace_username_tag( $args, $options = NULL ) {
-		return $this->user->user_login;
+		return $this->user->data->user_login;
 	}
 	
 	/**
