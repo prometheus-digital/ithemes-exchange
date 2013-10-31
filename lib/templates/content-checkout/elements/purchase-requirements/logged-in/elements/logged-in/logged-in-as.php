@@ -19,7 +19,7 @@
 <div class="it-exchange-logged-in-purchase-requirement-logged-in-logged-in-as">
 	<?php 
 	$display_name = it_exchange( 'customer', 'get-display-name', array( 'format' => 'field-value' ) );
-	printf( __( 'Logged in as: %s', 'LION' ), $display_name );
+	printf( __( 'Checking out as: %s', 'LION' ), $display_name );
 	?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_logged_in_after_logged_in_as_element' ); ?>
