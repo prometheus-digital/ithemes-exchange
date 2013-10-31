@@ -15,7 +15,7 @@ if ( apply_filters( 'it_exchange_supress_superwidget_ajax_errors', true ) )
 	ini_set( 'display_errors', false );
 
 // Provide an action for add-ons
-do_action( 'it_exchange_supwer_widget_ajax_top' );
+do_action( 'it_exchange_super_widget_ajax_top' );
 
 // Mark as in the superwidget
 $GLOBALS['it_exchange']['in_superwidget'] = true;
