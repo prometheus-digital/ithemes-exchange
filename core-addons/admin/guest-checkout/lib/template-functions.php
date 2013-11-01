@@ -41,6 +41,14 @@ function it_exchange_guest_checkout_add_template_directory( $template_paths, $te
 }
 add_filter( 'it_exchange_possible_template_paths', 'it_exchange_guest_checkout_add_template_directory', 10, 2 );
 
+/**
+ * Add the register and login links if settings allows them
+ *
+ * @since CHANGEME
+ *
+ * @param  array $actions
+ * @return array
+*/
 function it_exchange_guest_checkout_modify_guest_checkout_purchase_requirement_form_actions( $actions ) {
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) ) 
@@ -138,7 +146,7 @@ function it_exchange_guest_checkout_get_heading() {
 */
 function it_exchange_guest_checkout_get_purchase_requirement_continue_action() {
 	?>
-	<input type="submit" id="it-exchange-guest-checkout-action" name="continue" value="<?php esc_attr_e( 'Continue', 'LION' ); ?>" />
+	<input type="submit" id="it-exchange-guest-checkout-action" name="continue" value="<?php esc_attr_e( 'Continue as guest', 'LION' ); ?>" />
 	<?php
 }
 
