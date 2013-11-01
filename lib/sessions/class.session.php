@@ -30,7 +30,7 @@ class IT_Exchange_Session {
 	
 	function IT_Exchange_Session() {
 		if( ! defined( 'IT_EXCHANGE_SESSION_COOKIE' ) )
-			define( 'IT_EXCHANGE_SESSION_COOKIE', '_it_exchange' );
+			define( 'IT_EXCHANGE_SESSION_COOKIE', 'it_exchange_session_' . COOKIEHASH );
 		
 		if ( ! class_exists( 'Recursive_ArrayAccess' ) )
 			require_once( 'db_session_manager/class-recursive-arrayaccess.php' );
