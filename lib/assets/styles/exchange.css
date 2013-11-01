@@ -9,6 +9,7 @@
 .it-exchange-right {float:right;}
 .it-exchange-clear-left {clear:left;overflow:hidden;}
 .it-exchange-clear-right {clear:right;overflow:hidden;}
+a.it-exchange-button {text-decoration:none;}
 
 /** -----------------------------------------------------:[ table ]:---------- */
 .it-exchange-table{display:table;table-layout:fixed;width:100%;border:1px solid #DDD;border-bottom:none;border-collapse:collapse;}

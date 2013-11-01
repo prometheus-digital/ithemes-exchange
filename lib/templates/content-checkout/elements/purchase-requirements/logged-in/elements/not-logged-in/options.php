@@ -18,8 +18,7 @@
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_before_options_element' ); ?>
 <div class="<?php echo it_exchange_is_checkout_mode( 'options' ) ? '' : 'it-exchange-hidden'; ?> checkout-purchase-requirement-login-options">
 	<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_begin_options_element' ); ?>
-	<a class="it-exchange-login-requirement-registration" href="<?php echo it_exchange_get_page_url( 'registration' ); ?>">Register</a> |
-	<a class="it-exchange-login-requirement-login" href="<?php echo it_exchange_get_page_url( 'login' ); ?>">Log in</a>
+	<h3><?php _e( 'Select an option to continue', 'LION' ); ?>
 	<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_end_options_element' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_after_options_element' ); ?>

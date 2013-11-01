@@ -151,32 +151,6 @@ function it_exchange_guest_checkout_get_purchase_requirement_continue_action() {
 }
 
 /**
- * Prints the register link for the Checkout page purchase requirement
- *
- * @since CHANGEME
- *
- * @return string
-*/
-function it_exchange_guest_checkout_get_purchase_requirement_register_action() {
-	?>
-	<a class="it-exchange-login-requirement-registration" href="<?php esc_attr_e( it_exchange_get_page_url( 'registration' ) ); ?>"><?php esc_attr_e( 'Register', 'LION' ); ?></a>
-	<?php
-}
-
-/**
- * Prints the login link for the Checkout page purchase requirement
- *
- * @since CHANGEME
- *
- * @return string
-*/
-function it_exchange_guest_checkout_get_purchase_requirement_login_action() {
-	?>
-	<a class="it-exchange-login-requirement-login" href="<?php esc_attr_e( it_exchange_get_page_url( 'login' ) ); ?>"><?php esc_attr_e( 'Log in', 'LION' ); ?></a>
-	<?php
-}
-
-/**
  * Prints the link to checkout as Guest in the SW
  *
  * @since CHANGEME
@@ -274,18 +248,6 @@ function it_exchange_guest_checkout_override_logged_in_supwer_widget_template_pa
 add_filter( 'it_exchange_get_default_sw_checkout_mode', 'it_exchange_guest_checkout_override_logged_in_supwer_widget_template_part' );
 
 /**
- * Add the Log in as a guest option to the registration purchase requirement's options loop
- *
- * @since CHANGEME
- *
- * @return void 
-*/
-function it_exchange_guest_checkout_add_guest_option_to_registration_options() {
-	echo ' | <a href="" class="it-exchange-login-requirement-guest-checkout">' . __( 'Checkout as a guest', 'LION' ) . '</a>';
-}
-add_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_end_options_element', 'it_exchange_guest_checkout_add_guest_option_to_registration_options' );
-
-/**
  * Add the Guest Checkin UI to the checkout page registration view
  *
  * @since CHANGEME
@@ -298,6 +260,20 @@ function it_exchagne_guest_checkout_add_guest_checkout_template_part_to_logged_i
 	return $elements;
 }
 add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-not-logged-in_content_elements', 'it_exchagne_guest_checkout_add_guest_checkout_template_part_to_logged_in_purchase_requirement' );
+
+/**
+ * Add link back to Guest Checkout from Registration and Login forms on Checkout Page
+ *
+ * @since CHANGEME
+ *
+ * @param array $links incoming links
+ * @return array
+*/
+function it_exchange_add_guest_checkout_links_to_logged_in_purchase_requirement_on_checkout_page( $links ) {
+	$links[] = 'guest-checkout';
+	return $links;
+}
+add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-not-logged-in_links_elements', 'it_exchange_add_guest_checkout_links_to_logged_in_purchase_requirement_on_checkout_page' );
 
 /**
  * Removes the User Menu links from the confirmation page if doing guest checkout

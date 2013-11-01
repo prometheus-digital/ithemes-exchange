@@ -35,5 +35,6 @@
 		?>
 	</div>
 	<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_end_login_element' ); ?>
+	<?php it_exchange_get_template_part( 'content', 'checkout/elements/purchase-requirements/logged-in/loops/not-logged-in/links' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_after_login_element' ); ?>

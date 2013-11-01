@@ -19,16 +19,14 @@
 	<?php if ( ! is_user_logged_in() ) : ?>
 		<?php it_exchange_add_session_data( 'login_redirect', it_exchange_get_page_url( 'checkout' ) ); ?>
 		<?php
-		// Header loop conatins heading. Content loop contains form options / login form and registration form
-		$logged_in_purchase_requirement_loops = array( 'header', 'content' );
-		foreach( (array) it_exchange_get_template_part_loops( 'content-checkout-logged-in-purchase-requirment', 'not-logged-in', $logged_in_purchase_requirement_loops ) as $loop ) :
+		// Content loop contains form options / login form and registration form. The Options loop contains additional action options (like switching login/registration views);
+		foreach( (array) it_exchange_get_template_part_loops( 'content-checkout-logged-in-purchase-requirment', 'not-logged-in', array( 'content' ) ) as $loop ) :
 			it_exchange_get_template_part( 'content', 'checkout/elements/purchase-requirements/logged-in/loops/not-logged-in/' . $loop );
 		endforeach;
 		?>
 	<?php else : ?>
 		<?php
-		$logged_in_purchase_requirement_loops = array( 'content' );
-		foreach( (array) it_exchange_get_template_part_loops( 'content-checkout-logged-in-purchase-requirment', 'logged-in', $logged_in_purchase_requirement_loops ) as $loop ) :
+		foreach( (array) it_exchange_get_template_part_loops( 'content-checkout-logged-in-purchase-requirment', 'logged-in', array( 'content' ) ) as $loop ) :
 			it_exchange_get_template_part( 'content', 'checkout/elements/purchase-requirements/logged-in/loops/logged-in/' . $loop );
 		endforeach;
 		?>

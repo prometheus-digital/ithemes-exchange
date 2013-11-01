@@ -1,13 +1,11 @@
-jQuery(function($){
-	$('.it-exchange-login-requirement-guest-checkout').on('click', function(event){
+jQuery( function() {
+	// Switch to guest checkout view when guest checkout link is clicked
+	jQuery(document).on('click', 'a.it-exchange-login-requirement-guest-checkout', function(event) {
 		event.preventDefault();
-		$('.checkout-purchase-requirement-login-options').addClass( 'it-exchange-hidden');
-		$('.checkout-purchase-requirement-login').addClass('it-exchange-hidden');
-		$('.checkout-purchase-requirement-registration').addClass('it-exchange-hidden');
-		$('.checkout-purchase-requirement-guest-checkout').removeClass('it-exchange-hidden');
-	});
-
-	$('.it-exchange-login-requirement-login, .it-exchange-login-requirement-registration').on('click', function(event){
-		$('.checkout-purchase-requirement-guest-checkout').addClass('it-exchange-hidden');
+		jQuery('.it-exchange-logged-in-purchase-requirement-link-div').removeClass('it-exchange-hidden');
+		jQuery('.checkout-purchase-requirement-login').addClass( 'it-exchange-hidden');
+		jQuery('.checkout-purchase-requirement-registration').addClass('it-exchange-hidden');
+		jQuery('.it-exchange-content-checkout-logged-in-purchase-requirement-guest-checkout-link').addClass('it-exchange-hidden');
+		jQuery('.checkout-purchase-requirement-guest-checkout').removeClass('it-exchange-hidden');
 	});
 });

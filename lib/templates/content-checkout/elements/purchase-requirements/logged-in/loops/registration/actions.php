@@ -18,7 +18,7 @@
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_registration_before_actions_loop' ); ?>
 <div class="it-exchange-customer-actions">
 <?php do_action( 'it_exchange_content_registration_begin_actions_loop' ); ?>
-	<?php foreach ( it_exchange_get_template_part_elements( 'content_checkout/elements/purchase-requirements/logged-in/elements/registration/', 'actions', array( 'save', 'cancel' ) ) as $action ) : ?>
+	<?php foreach ( it_exchange_get_template_part_elements( 'content_checkout/elements/purchase-requirements/logged-in/elements/registration/', 'actions', array( 'save' ) ) as $action ) : ?>
 		<?php
 		/**
 		 * Theme and add-on devs should add code to this loop by
