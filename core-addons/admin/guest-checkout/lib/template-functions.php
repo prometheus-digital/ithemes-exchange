@@ -56,14 +56,24 @@ function it_exchange_guest_checkout_modify_guest_checkout_purchase_requirement_f
 
 	$guest_checkout_settings = it_exchange_get_option( 'addon-guest-checkout' );
 
+	// Remove cancel action if it is present
+	$cancel = array_search( 'cancel', $actions );
+	if ( false !== $cancel )
+		unset( $actions[$cancel] );
+
+	// Show Reg link if settings have enabled it.
 	if ( ! empty( $guest_checkout_settings['show-registration-link'] ) )
 		$actions[] = 'register';
+
+	// Show Log in link if settings have enabled it.
 	if ( ! empty( $guest_checkout_settings['show-log-in-link'] ) )
 		$actions[] = 'login';
 
+	// Add cancel back to array
+	$actions[] = 'cancel';
+
 	return $actions;
 }
-add_filter( 'it_exchange_get_content-checkout-guest-checkout-purchase-requirement_actions_elements', 'it_exchange_guest_checkout_modify_guest_checkout_purchase_requirement_form_actions' );
 add_filter( 'it_exchange_get_super_widget_guest_checkout_actions_elements', 'it_exchange_guest_checkout_modify_guest_checkout_purchase_requirement_form_actions' );
 
 /**
@@ -160,7 +170,7 @@ function it_exchange_guest_checkout_get_purchase_requirement_continue_action() {
  * @return string
 */
 function it_exchange_guest_checkout_sw_link( $label ) {
-	return '<a class="it-exchange-guest-checkout-link" href="">' . esc_attr( $label ) . '</a>';
+	return '<a class="it-exchange-guest-checkout-link" href=""><input type="button" value="' . esc_attr( $label ) . '" /></a>';
 }
 
 /**
@@ -274,6 +284,20 @@ function it_exchange_add_guest_checkout_links_to_logged_in_purchase_requirement_
 	return $links;
 }
 add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-not-logged-in_links_elements', 'it_exchange_add_guest_checkout_links_to_logged_in_purchase_requirement_on_checkout_page' );
+
+/**
+ * Add Guest Checkout links to the SuperWidget Login / Registration Forms
+ *
+ * @since CHANGEME
+ *
+ * @param array $links incoming template parts from WP filter
+ * @return array
+*/
+function it_exchange_add_guest_checkout_link_to_sw_registration_and_login_states( $links ) {
+	$links[] = 'guest-checkout-link';
+	return $links;
+}
+add_filter( 'it_exchange_get_super_widget_registration_actions_elements', 'it_exchange_add_guest_checkout_link_to_sw_registration_and_login_states' );
 
 /**
  * Removes the User Menu links from the confirmation page if doing guest checkout
