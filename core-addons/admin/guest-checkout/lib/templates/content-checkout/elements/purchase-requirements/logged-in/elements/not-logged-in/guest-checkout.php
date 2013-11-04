@@ -18,6 +18,8 @@
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_before_guest_checkout_element' ); ?>
 <div class="<?php echo it_exchange_is_checkout_mode( 'guest-checkout' ) ? '' : 'it-exchange-hidden'; ?> checkout-purchase-requirement-guest-checkout">
 	<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_begin_guest_checkout_element' ); ?>
+	<div class="it-exchange-guest-checkout-form-wrapper it-exchange-clearfix">
+		<h3><?php _e( 'Check out as guest', 'LION' ); ?></h3>
 		<?php do_action( 'it_exchange_content_checkout_logged_in_checkout_requirement_guest_checkout_before_form' ); ?>
 		<form action="" method="post" >
 			<?php
@@ -32,6 +34,7 @@
 			<input type="hidden" name="it-exchange-init-guest-checkout" value="1" />
 		</form>
 		<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_guest_checkout_after_form' ); ?>
+	</div>
 	<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_end_guest_checkout_element' ); ?>
 	<?php it_exchange_get_template_part( 'content', 'checkout/elements/purchase-requirements/logged-in/loops/not-logged-in/links' ); ?>
 </div>

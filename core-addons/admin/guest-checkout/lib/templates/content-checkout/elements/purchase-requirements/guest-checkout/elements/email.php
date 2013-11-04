@@ -16,7 +16,7 @@
 ?>
 
 <?php do_action( 'it_exchange_content_checkout_guest_checkout_purchase_requirement_before_email_elements' ); ?>
-<div class="email-name">
+<div class="email-name it-exchange-left">
 	<?php echo it_exchange_guest_checkout_get_email_field(); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_guest_checkout_purchase_requirement_after_email_elements' ); ?>

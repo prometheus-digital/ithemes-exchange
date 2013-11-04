@@ -164,6 +164,13 @@ a.it-exchange-button {text-decoration:none;}
 .it-exchange-checkout .it-exchange-visual-cc-wrap{margin-top:1em;}
 .it-exchange-checkout .it-exchange-visual-cc{float:right;}
 
+/** ---:[ guest checkout ]:--- */
+.it-exchange-checkout .it-exchange-guest-checkout-form-wrapper{display:inline-block;padding:1em;border:1px solid #DDD;border-radius:3px;margin-bottom:1.5em;}
+.it-exchange-checkout .it-exchange-guest-checkout-form-wrapper h3{margin:0 0 .5em;font-weight:normal;}
+.it-exchange-checkout .it-exchange-guest-checkout-form-wrapper div input[type="submit"]{margin:0 0 0 .5em;}
+.it-exchange-checkout .it-exchange-content-checkout-logged-in-purchase-requirement-links{overflow:hidden;}
+.it-exchange-checkout .it-exchange-content-checkout-logged-in-purchase-requirement-links div{float:left;margin-right:.5em ;}
+
 /** ----------------------------------------:[ processing payment ]:--- */
 #it-exchange-processing-payment{position:fixed;top:0;bottom:0;left:0;right:0;background:#000;background:rgba(0,0,0,0.8);background:-webkit-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:-moz-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:-ms-radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);background:radial-gradient(50% 50%,ellipse closest-corner,rgba(0,0,0,0.45) 1%,rgba(0,0,0,0.8) 100%);text-align:center;}
 #it-exchange-processing-payment div{position:absolute;top:45%;width:100%;}

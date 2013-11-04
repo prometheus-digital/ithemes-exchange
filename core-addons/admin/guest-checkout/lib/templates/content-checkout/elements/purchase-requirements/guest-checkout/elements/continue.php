@@ -16,7 +16,7 @@
 ?>
 
 <?php do_action( 'it_exchange_content_checkout_guest_checkout_purchase_requirement_before_continue_elements' ); ?>
-<div class="continue-action">
+<div class="continue-action it-exchange-left">
 	<?php echo it_exchange_guest_checkout_get_purchase_requirement_continue_action(); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_guest_checkout_purchase_requirement_after_continue_elements' ); ?>
