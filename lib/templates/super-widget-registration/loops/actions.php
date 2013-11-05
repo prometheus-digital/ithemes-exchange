@@ -16,7 +16,7 @@
 
 <?php do_action( 'it_exchange_super_widget_registration_before_actions_loop' ); ?>
 <?php do_action( 'it_exchange_super_widget_registration_begin_actions_loop' ); ?>
-<?php foreach ( it_exchange_get_template_part_elements( 'super_widget_registration', 'actions', array( 'save' ) ) as $action ) : ?>
+<?php foreach ( it_exchange_get_template_part_elements( 'super_widget_registration', 'actions', array( 'save', 'cancel' ) ) as $action ) : ?>
 	<?php 
 	/** 
 	 * Theme and add-on devs should add code to this loop by 

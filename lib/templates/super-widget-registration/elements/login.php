@@ -17,6 +17,6 @@
 
 <?php do_action( 'it_exchange_super_widget_registration_before_cancel_elements' ); ?>
 <div class="cancel_url">
-    <?php it_exchange( 'login', 'cancel' ); ?>
+    <?php it_exchange( 'registration', 'cancel', array( 'label' => __( 'Log in', 'LION' ) ) ); ?>
 </div>
 <?php do_action( 'it_exchange_super_widget_registrationafter_cancel_elements' ); ?>
