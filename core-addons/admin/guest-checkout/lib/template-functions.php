@@ -195,7 +195,7 @@ function it_exchange_guest_checkout_get_sw_save_link( $options=array() ) {
  * @return string
 */
 function it_exchange_guest_checkout_get_sw_cancel_link( $options=array() ) {
-	$link = '<a href="" class="it-exchange-guest-checkout-cancel-link">' . __( 'Cancel', 'LION' ) . '</a>';
+	$link = '<a href="" class="it-exchange-sw-cancel-guest-checkout-link">' . __( 'Cancel', 'LION' ) . '</a>';
 	return $link;
 }
 
