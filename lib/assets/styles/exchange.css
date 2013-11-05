@@ -27,7 +27,7 @@ a.it-exchange-button {text-decoration:none;}
 /** -----------------------------------------------------:[ account ]:---------- */
 .it-exchange-account label{display:block;margin-top:1em;}
 .it-exchange-account input[type="checkbox"]{margin:2em .5em 2em 0;}
-.it-exchange-account input[type="checkbox"] + label{display:inline;}
+.it-exchange-account input[type="checkbox"] + label{display:inline !important;}
 .it-exchange-account #wp-submit{margin-bottom:2em;}
 .it-exchange-account .it-exchange-profile-save{margin:1.5em 0;}
 

@@ -15,7 +15,7 @@
 ?>
 
 <?php do_action( 'it_exchange_super_widget_login_before_wrap' ); ?>
-<div class="login it-exchange-sw-processing-login">
+<div class="login it-exchange-sw-processing it-exchange-sw-processing-login">
 	<?php do_action( 'it_exchange_super_widget_login_begin_wrap' ); ?>
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<?php do_action( 'it_exchange_super_widget_login_before_form' ); ?>
