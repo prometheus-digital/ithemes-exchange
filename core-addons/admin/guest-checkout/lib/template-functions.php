@@ -279,11 +279,15 @@ add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-no
  * @param array $links incoming template parts from WP filter
  * @return array
 */
-function it_exchange_add_guest_checkout_link_to_sw_registration_and_login_states( $links ) {
-	$links[] = 'guest-checkout-link';
+function it_exchange_add_guest_checkout_link_to_sw_registration_state( $links ) {
+	// Place it before cancel if cancel is found. Otherwise, place it at the end.
+	if ( ! ( $index = array_search( 'cancel', $links ) ) )
+		$index = count( $links );
+	array_splice( $links, $index, 0, 'guest-checkout-link' );
+
 	return $links;
 }
-add_filter( 'it_exchange_get_super_widget_registration_actions_elements', 'it_exchange_add_guest_checkout_link_to_sw_registration_and_login_states' );
+add_filter( 'it_exchange_get_super_widget_registration_actions_elements', 'it_exchange_add_guest_checkout_link_to_sw_registration_state' );
 
 /**
  * Add Guest Checkout links to the SuperWidget Log in form
@@ -293,7 +297,7 @@ add_filter( 'it_exchange_get_super_widget_registration_actions_elements', 'it_ex
  * @param array $links incoming template parts from WP filter
  * @return array
 */
-function it_exchange_add_guest_checkout_link_to_sw_login_states( $links ) {
+function it_exchange_add_guest_checkout_link_to_sw_login_state( $links ) {
 
 	if ( ! ( $index = array_search( 'recover', $links ) ) )
 		$index = count( $links );
@@ -301,7 +305,7 @@ function it_exchange_add_guest_checkout_link_to_sw_login_states( $links ) {
 
 	return $links;
 }
-add_filter( 'it_exchange_get_super_widget_login_actions_elements', 'it_exchange_add_guest_checkout_link_to_sw_login_states' );
+add_filter( 'it_exchange_get_super_widget_login_actions_elements', 'it_exchange_add_guest_checkout_link_to_sw_login_state' );
 
 /**
  * Removes the User Menu links from the confirmation page if doing guest checkout
