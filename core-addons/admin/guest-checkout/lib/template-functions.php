@@ -42,6 +42,19 @@ function it_exchange_guest_checkout_add_template_directory( $template_paths, $te
 add_filter( 'it_exchange_possible_template_paths', 'it_exchange_guest_checkout_add_template_directory', 10, 2 );
 
 /**
+ * Returns the Guest Checkout title
+ *
+ * @since CHANGME
+ * @return string
+*/
+function it_exchange_guest_checkout_get_heading() {
+	$class = (bool) it_exchange_in_superwidget() ? ' class="in-super-widget"' : '';
+	$heading = '<h3' . $class . '>' . __( 'Guest Checkout', 'LION' ) . '</h3>';
+	$heading = apply_filters( 'it_exchange_guest_checkout_get_heading', $heading, $class );
+	return $heading;
+}
+
+/**
  * Add the register and login links if settings allows them
  *
  * @since CHANGEME
@@ -119,19 +132,6 @@ function it_exchange_remove_register_link_from_login_sw_state( $actions ) {
 	return $actions;
 }
 add_filter( 'it_exchange_get_super_widget_login_actions_elements', 'it_exchange_remove_register_link_from_login_sw_state' );
-
-/**
- * Returns the Guest Checkout title
- *
- * @since CHANGME
- * @return string
-*/
-function it_exchange_guest_checkout_get_heading() {
-	$class = (bool) it_exchange_in_superwidget() ? ' class="in-super-widget"' : '';
-	$heading = '<h3' . $class . '>' . __( 'Guest Checkout', 'LION' ) . '</h3>';
-	$heading = apply_filters( 'it_exchange_guest_checkout_get_heading', $heading, $class );
-	return $heading;
-}
 
 /**
  * Prints the continue link for the Checkout page purchase requirement
