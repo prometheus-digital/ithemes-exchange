@@ -16,7 +16,7 @@
 */
 ?>
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_links_before_guest_checkout_element' ); ?>
-<div class="it-exchange-content-checkout-logged-in-purchase-requirement-guest-checkout-link">
+<div class="<?php echo ! it_exchange_is_checkout_mode( 'guest-checkout' ) ? '' : 'it-exchange-hidden'; ?> it-exchange-content-checkout-logged-in-purchase-requirement-guest-checkout-link it-exchange-logged-in-purchase-requirement-link-div">
 	<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_links_begin_guest_checkout_element' ); ?>
 	<a class="it-exchange-login-requirement-guest-checkout it-exchange-button" href="#"><input type="button" value="<?php _e( 'Check out as a guest', 'LION' ); ?>" /></a>
 	<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_links_end_guest_checkout_element' ); ?>
