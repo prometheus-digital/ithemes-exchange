@@ -272,6 +272,37 @@ function it_exchange_add_guest_checkout_links_to_logged_in_purchase_requirement_
 add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-not-logged-in_links_elements', 'it_exchange_add_guest_checkout_links_to_logged_in_purchase_requirement_on_checkout_page' );
 
 /**
+ * Removes the Login and the and Registration link from the Checkout page template parts when turned off in guest-checkout settings
+ *
+ * @since CHANGEME
+ *
+ * @param array $links incoming links
+ * @return array
+*/
+function it_exchange_guest_checout_maybe_remove_reg_and_login_links_from_checkout_page( $links ) {
+	$general_settings = it_exchange_get_option( 'settings_general' );
+	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) ) 
+		return $actions;
+
+	$guest_checkout_settings = it_exchange_get_option( 'addon-guest-checkout' );
+
+	// Remove Reg link if settings have disabled it.
+	if ( empty( $guest_checkout_settings['show-registration-link'] ) && in_array( 'register', $links ) ) {
+		$index = array_search( 'register', $links );
+		unset( $links[$index] );
+	}
+
+	// Remove Log in link if settings have disabled it.
+	if ( empty( $guest_checkout_settings['show-log-in-link'] ) && in_array( 'login', $links ) ) {
+		$index = array_search( 'login', $links );
+		unset( $links[$index] );
+	}
+
+	return $links;
+}
+add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-not-logged-in_links_elements', 'it_exchange_guest_checout_maybe_remove_reg_and_login_links_from_checkout_page' );
+
+/**
  * Add Guest Checkout links to the SuperWidget Login / Registration Forms
  *
  * @since CHANGEME
