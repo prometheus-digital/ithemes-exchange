@@ -27,7 +27,7 @@
 		</div>
 		<?php it_exchange_get_template_part( 'content-product/loops/product-images' ); ?>
 	</div>
-	
+
 	<div class="it-exchange-product-advanced-content">
 		<?php it_exchange_get_template_part( 'content-product/loops/product-advanced' ); ?>
 	</div>

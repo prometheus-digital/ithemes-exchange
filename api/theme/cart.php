@@ -264,7 +264,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		}
 		return $output;
 	}
-	
+
 	/**
 	 * Returns the empty cart button / varname
 	 *

@@ -11,9 +11,9 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 ?>
 <div class="wrap">
 	<?php screen_icon( 'it-exchange' );  ?>
-	
+
 	<h2>iThemes Exchange <?php _e( 'Setup', 'LION' ); ?></h2>
-	
+
 	<?php $form->start_form( $form_options, 'exchange-general-settings' ); ?>
 		<div class="it-exchange-wizard">
 			<div class="welcome">
@@ -39,15 +39,15 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 								} else {
 									$name = $addon['name'];
 								}
-									
+
 								if ( it_exchange_is_addon_enabled( $addon['slug'] ) )
 									$selected_class = 'selected';
 								else
 									$selected_class = '';
-								
+
 								$toggle_ships = 'physical-product-type' == $addon['slug'] ? ' data-ships="shipping-types"' : '';
 								if ( 'physical-product-type' == $addon['slug'] ) {
-									$show_shipping = empty( $selected_class ) ? 'hide-if-js' : '';	
+									$show_shipping = empty( $selected_class ) ? 'hide-if-js' : '';
 								}
 
 								echo '<li class="product-option ' . $addon['slug'] . '-product-option ' . $selected_class . '" product-type="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard"' . $toggle_ships . '>';
@@ -70,7 +70,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 						<?php endif; ?>
 					</ul>
 				</div>
-				
+
 				<?php if ( ! it_exchange_is_addon_registered( 'membership-product-type' ) ) : ?>
 					<div class="field membership-wizard inactive hide-if-js">
 						<h3><?php _e( 'Membership', 'LION' ); ?></h3>
@@ -87,10 +87,10 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 						</div>
 					</div>
 				<?php endif; ?>
-				
-				<?php 
+
+				<?php
 				foreach( (array) $addons as $addon ) {
-					do_action( 'it_exchange_print_' . $addon['slug'] . '_wizard_settings', $form ); 
+					do_action( 'it_exchange_print_' . $addon['slug'] . '_wizard_settings', $form );
 				}
 				?>
 
@@ -101,7 +101,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 							$addons = it_exchange_get_addons( array( 'category' => 'shipping', 'show_required' => false ) );
 							it_exchange_temporarily_load_addons( $addons );
 
-							// Add Simple Shipping's free and flat rate methods as providers since Brad thinks they're so special 
+							// Add Simple Shipping's free and flat rate methods as providers since Brad thinks they're so special
 							$flat_rate_selected = 'hide-if-js';
 							$addons['simple-shipping-flat-rate'] = array(
 								'name' => __( 'Flat Rate', 'LION' ),
@@ -124,7 +124,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 									$name = '<img src="' . $addon['options']['wizard-icon'] . '" alt="' . $addon['name'] . '" />';
 								else
 									$name = $addon['name'];
-									
+
 								if ( it_exchange_is_addon_enabled( $addon['slug'] ) )
 									$selected_class = 'selected';
 								else
@@ -136,7 +136,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 									$simple_shipping_options = it_exchange_get_option( 'simple-shipping' );
 									$selected_class = it_exchange_is_addon_enabled( 'simple-shipping' ) && ! empty( $simple_shipping_options[$option_key] ) ? 'selected' : '';
 								}
-								
+
 								if ( 'simple-shipping-flat-rate' == $addon['slug'] && ! empty( $selected_class ) )
 									$flat_rate_selected = '';
 
@@ -150,7 +150,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 							}
 						?>
 					</ul>
-    
+
                     <div class="field simple-shipping-flat-rate-wizard <?php esc_attr_e( $flat_rate_selected ); ?>">
                         <h3><?php _e( 'Flat Rate Shipping', 'LION' ); ?></h3>
                         <p>
@@ -160,9 +160,9 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
                     </div>
 				</div>
 
-				<?php 
+				<?php
 				foreach( (array) $addons as $addon ) {
-					do_action( 'it_exchange_print_' . $addon['slug'] . '_wizard_settings', $form ); 
+					do_action( 'it_exchange_print_' . $addon['slug'] . '_wizard_settings', $form );
 				}
 				?>
 
@@ -177,12 +177,12 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 									$name = '<img src="' . $addon['options']['wizard-icon'] . '" alt="' . $addon['name'] . '" />';
 								else
 									$name = $addon['name'];
-									
+
 								if ( it_exchange_is_addon_enabled( $addon['slug'] ) )
 									$selected_class = 'selected';
 								else
 									$selected_class = '';
-								
+
 								echo '<li class="payoption ' . $addon['slug'] . '-payoption ' . $selected_class . '" transaction-method="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard">';
 								echo '<div class="option-spacer">';
 								echo $name;
@@ -191,7 +191,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 								echo '</li>';
 							}
 						?>
-						
+
 						<?php if ( ! it_exchange_is_addon_registered( 'stripe' ) ) : ?>
 							<li class="stripe-payoption inactive" data-toggle="stripe-wizard">
 								<div class="option-spacer">
@@ -201,7 +201,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 						<?php endif; ?>
 					</ul>
 				</div>
-				
+
 				<?php if ( ! it_exchange_is_addon_registered( 'stripe' ) ) : ?>
 					<div class="field stripe-wizard inactive hide-if-js">
 						<h3><?php _e( 'Stripe', 'LION' ); ?></h3>
@@ -218,13 +218,13 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 						</div>
 					</div>
 				<?php endif; ?>
-				
-				<?php 
+
+				<?php
 				foreach( (array) $addons as $addon ) {
-					do_action( 'it_exchange_print_' . $addon['slug'] . '_wizard_settings', $form ); 
+					do_action( 'it_exchange_print_' . $addon['slug'] . '_wizard_settings', $form );
 				}
 				?>
-				
+
 				<div class="field general-settings-wizard">
 					<h3><?php _e( 'General', 'LION' ); ?></h3>
 					<label for="company-email"><?php _e( 'E-mail Notifications', 'LION' ); ?> <span class="tip" title="<?php _e( 'At what email address would you like to receive store notifications?', 'LION' ); ?>">i</span></label>
@@ -238,8 +238,8 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 						<?php $form->add_drop_down( 'default-currency', $this->get_default_currency_options() ); ?>
 					</div>
 				</div>
-				
-				<!-- 
+
+				<!--
 				NOTE: We are removing this for now, but will probably add this later.
 				<div class="field add-on-banner">
 					<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/icon32.png' ); ?>" />
@@ -248,7 +248,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 					<a class="get-add-ons " href="javascript:void(0);" target="_blank"><span><?php _e( "Get Add-ons", 'LION' ); ?></span></a>
 				</div>
 				-->
-				
+
 				<div class="field submit-wrapper">
 					<?php $form->add_submit( 'submit', array( 'class' => 'button button-primary button-large', 'value' => __( 'Save Settings', 'LION' ) ) ); ?>
 					<?php $form->add_hidden( 'dismiss-wizard-nag', true ); ?>
@@ -256,5 +256,5 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 				</div>
 			</div>
 		</div>
-	<?php $form->end_form(); ?> 
+	<?php $form->end_form(); ?>
 </div>

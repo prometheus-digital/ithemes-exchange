@@ -61,7 +61,7 @@
 			<tr valign="top">
 				<th scope="row"><label for="company-base-state"><?php _e( 'Base State / Province', 'LION' ) ?> <span class="tip" title="<?php esc_attr_e( __( 'This is the state / province where your business is located', 'LION' ) ); ?>">i</span></label></th>
 				<td class="company-base-state-field-td">
-					<?php 
+					<?php
 					$country = $form->get_option( 'company-base-country' );
 					$states  = it_exchange_get_data_set( 'states', array( 'country' => $country ) );
 					if ( ! empty( $states ) ) {
@@ -87,7 +87,7 @@
 			<tr valign="top">
 				<th scope="row"><label for="currency-symbol-position"><?php _e( 'Symbol Position', 'LION' ) ?></label></th>
 				<td>
-					<?php 
+					<?php
 					$symbol_positions = array( 'before' => __( 'Before: $10.00', 'LION' ), 'after' => __( 'After: 10.00$', 'LION' ) );
 					$form->add_drop_down( 'currency-symbol-position', $symbol_positions ); ?>
 					<br /><span class="description"><?php _e( 'Where should the currency symbol be placed in relation to the price?', 'LION' ); ?></span>
@@ -126,7 +126,7 @@
 				<th scope="row"><label for="checkout-reg-form"><?php _e( 'Default Checkout Form', 'LION' ) ?></label></th>
 				<td>
 					<?php
-					$options = array( 
+					$options = array(
 						'registration' => __( 'Registration', 'LION' ),
 						'login'        => __( 'Log in', 'LION' ),
 					);
@@ -188,19 +188,19 @@
 				<th scope="row"><label for="customer-account-page"><?php _e( 'Customer Account Page', 'LION' ) ?></label></th>
 				<td>
 					<?php
-					if ( $GLOBALS['wp_version'] >= 3.3 && function_exists( 'wp_editor' ) ) { 
+					if ( $GLOBALS['wp_version'] >= 3.3 && function_exists( 'wp_editor' ) ) {
 						echo wp_editor( $settings['customer-account-page'], 'customer-account-page', array( 'textarea_name' => 'it_exchange_settings-customer-account-page', 'textarea_rows' => 20, 'textarea_cols' => 20, 'editor_class' => 'large-text' ) );
 						//We do this for some ITForm trickery... just to add customer-account-page to the used inputs field
 						$form->get_text_area( 'customer-account-page', array( 'rows' => 20, 'cols' => 20, 'class' => 'large-text' ) );
 					} else {
 						$form->add_text_area( 'customer-account-page', array( 'rows' => 20, 'cols' => 20, 'class' => 'large-text' ) );
-					}   
-					?>  
+					}
+					?>
 					<p class="description">
-					<?php 
-					_e( 'Enter your content for the Customer\'s account page. HTML is accepted. Available shortcode functions:', 'LION' );  
+					<?php
+					_e( 'Enter your content for the Customer\'s account page. HTML is accepted. Available shortcode functions:', 'LION' );
 					echo '<br />';
-					printf( __( 'You call these shortcode functions like this: %s', 'LION' ), '[it_exchange_customer show=avatar avatar_size=50]' );  
+					printf( __( 'You call these shortcode functions like this: %s', 'LION' ), '[it_exchange_customer show=avatar avatar_size=50]' );
 					echo '<ul>';
 					echo '<li>first-name - ' . __( "The customer's first name", 'LION' ) . '</li>';
 					echo '<li>last-name - ' . __( "The customer's last name", 'LION' ) . '</li>';

@@ -133,7 +133,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 				end( $GLOBALS['it_exchange']['applied_' . $options['type'] . '_coupons'] );
 				$GLOBALS['it_exchange']['coupon'] = false;
 				return false;
-			}   
+			}
 		}
 	}
 

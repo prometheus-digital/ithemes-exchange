@@ -8,35 +8,35 @@
 ?>
 <div id="it-exchange-add-ons-wrap" class="wrap">
 	<?php screen_icon( 'it-exchange-add-ons' );  ?>
-	
+
 	<h2>Add-ons</h2>
 	<p class="top-description"><?php _e( 'Add-ons are features that you can add or remove depending on your needs. Selling your stuff should only be as complicated as you need it to be. If you have already purchased additional Exchange add-ons, please upload and activate them through the WordPress plugins menu.', 'LION' ); ?></p>
-	
+
 	<?php
-		$this->print_add_ons_page_tabs(); 
+		$this->print_add_ons_page_tabs();
 		do_action( 'it_exchange_add_ons_page_top' );
-		
+
 		$addons = it_exchange_get_more_addons();
 		$addons = it_exchange_featured_addons_on_top( $addons );
-		
+
 		$default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/exchange50px.png' );
-		
+
 		$class = '';
 	?>
-	
+
 	<div class="add-ons-wrapper">
 		<?php if ( ! empty( $addons ) ) : ?>
-			<?php 
+			<?php
 				$count = 0;
 				foreach( (array) $addons as $addon ) : ?>
 				<?php if ( ! it_exchange_is_addon_registered( $addon['slug'] ) ) : ?>
 					<?php
 						if ( $addon['featured'] )
 							$class .= ' featured';
-						
+
 						if ( $addon['new'] )
 							$class .= ' new';
-						
+
 						if ( $addon['sale'] )
 							$class .= ' sale';
 					?>
@@ -71,7 +71,7 @@
 				<?php $count++; ?>
 				<?php endif; ?>
 			<?php endforeach; ?>
-			
+
 			<?php if ( 0 === $count ) : ?>
 				<div class="addons-achievement">
 					<div class="achievement-notice">
@@ -81,13 +81,13 @@
 					<h2><?php echo sprintf( __( 'You have all %s currently has to offer!', 'LION' ), 'iThemes Exchange' ); ?></h2>
 					<p><?php _e( 'Got an idea for an add-on that would make life easier?', 'LION' ); ?></p>
 					<a class="it-exchange-button" target="_blank" href="http://ithemes.com/contact"><?php _e( 'Send us a message', 'LION' ); ?></a>
-					
+
 					<div class="email-signup">
-                    	<?php 
+                    	<?php
 						if ( ! empty( $_REQUEST['optin-email'] ) ) {
-						
+
 							IT_Exchange_Admin::mail_chimp_signup( $_REQUEST['optin-email'] );
-						
+
 						}
 						?>
 						<form action="" method="post" accept-charset="utf-8">
@@ -98,11 +98,11 @@
 					</div>
 				</div>
 			<?php endif; ?>
-			
+
 		<?php else : ?>
 			<div class="no-addons-found">
 				<p><?php echo sprintf( __( 'Looks like there\'s a problem loading available add-ons. Go to %s to check out other available add-ons.', 'LION' ), '<a href="http://ithemes.com/exchange">iThemes Exchange</a>' ); ?></p>
 			</div>
 		<?php endif; ?>
-	</div> 
+	</div>
 </div>

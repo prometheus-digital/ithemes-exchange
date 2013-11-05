@@ -50,7 +50,7 @@ Add only the features you need. Exchange Add-ons include support for payment gat
 * Basic Reporting Dashboard Widget - View basic sales statistics from the WordPress admin dashboard
 * Digital Downloads - Add a product type for distributing digital downloads through iThemes Exchange
 * Product Categories and Tags - Organize your store by grouping with category and tag taxonomies
- 
+
 = Advanced Product Options =
 
 iThemes Exchange allows you to create products quickly and easily. But sometimes you need more than just the basics, so Advanced Product Options help by offering additional ways to manage products.
@@ -70,7 +70,7 @@ View transaction details and manage customers from within Exchange.
 * Customer Registration - Use Exchange Registration or WordPress Registration settings
 * Customer Data - Manage customers by viewing products purchased, transactions or add notes to customer info.
 * Issue Refunds or Resend Confirmation Emails - Easily issue refunds or resend confirmation emails for individual customers
- 
+
 = Customizable Emails =
 
 Use the WordPress WSIWYG editor to make custom email templates for Admin Sales Notification emails and Customer Receipt Emails. HTML is accepted.

@@ -1,5 +1,5 @@
 <?php
-/** 
+/**
  * This class get initiated when a shipping add-on is enabled
  * @package IT_Exchagne
  * @since 1.4.0
@@ -17,7 +17,7 @@ class IT_Exchange_Shipping {
 	}
 
 	function maybe_init() {
-		$enabled_shipping_addons = (boolean) it_exchange_get_enabled_addons( array( 'category' => 'shipping' ) );	
+		$enabled_shipping_addons = (boolean) it_exchange_get_enabled_addons( array( 'category' => 'shipping' ) );
 		if ( !$enabled_shipping_addons )
 			return;
 
@@ -77,7 +77,7 @@ class IT_Exchange_Shipping {
 		$this->register_shipping_address_purchase_requirement();
 		$this->register_shipping_method_purchase_requirement();
 	}
-	
+
 	/**
 	 * Registers the shipping address purchase requirement
 	 *
@@ -96,11 +96,11 @@ class IT_Exchange_Shipping {
 			'checkout-template-part' => 'shipping-address',
 			'notification'           => __( 'You must enter a shipping address before you can checkout', 'LION' ),
 			'priority'               => 5.12
-		);  
+		);
 		if ( it_exchange_get_available_shipping_methods_for_cart_products() )
 			it_exchange_register_purchase_requirement( 'shipping-address', $properties );
 	}
-	
+
 	/**
 	 * Registers the shipping method purchase requirement
 	 *
@@ -119,7 +119,7 @@ class IT_Exchange_Shipping {
 			'checkout-template-part' => 'shipping-method',
 			'notification'           => __( 'You must select a shipping method before you can checkout', 'LION' ),
 			'priority'               => 5.13,
-		);  
+		);
 		if ( it_exchange_get_available_shipping_methods_for_cart_products() )
 			it_exchange_register_purchase_requirement( 'shipping-method', $properties );
 	}
@@ -166,10 +166,10 @@ class IT_Exchange_Shipping {
 
 		?>
 		<div class="wrap">
-			<?php 
+			<?php
 			screen_icon( 'it-exchange' );
 			// Print Admin Settings Tabs
-			$GLOBALS['IT_Exchange_Admin']->print_general_settings_tabs(); 
+			$GLOBALS['IT_Exchange_Admin']->print_general_settings_tabs();
 
 			// Print shipping provider tabs
 			$this->print_provider_settings_tabs();
@@ -181,7 +181,7 @@ class IT_Exchange_Shipping {
 			$action            = is_object( $provider ) ? add_query_arg( array( 'provider' => $provider->slug ), $action ) : $action;
 			$fields            = is_object( $provider ) ? $provider->provider_settings : $this->get_general_settings_fields();
 			$country_states_js = is_object( $provider ) ? $provider->country_states_js : $this->get_general_settings_country_states_js();
-			
+
 			// Set admin setting form class options
 			$options = array(
 				'prefix'       => $prefix,
@@ -208,19 +208,19 @@ class IT_Exchange_Shipping {
 
 		// Return empty string if there aren't any registered shipping providers
 		if ( ! $providers = it_exchange_get_registered_shipping_providers() )
-			return ''; 
+			return '';
 
 		// Set the currently requested shipping provider tab. Defaults to General
 		$current = empty( $_GET['provider'] ) ? false : $_GET['provider'];
 		$current = ( ! empty( $current ) && ! it_exchange_is_shipping_provider_registered( $current ) ) ? false : $current;
 
 		// Print the HTML
-		?>  
+		?>
 		<div class="it-exchange-secondary-tabs it-exchange-shipping-provider-tabs">
 			<a class="shipping-provider-link <?php echo ( empty( $current ) ) ? 'it-exchange-current' : ''; ?>" href="<?php esc_attr_e( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping' ), admin_url( 'admin.php' ) ) ); ?>">
 				<?php _e( 'General', 'LION' ); ?>
 			</a>
-			<?php 
+			<?php
 			foreach( $providers as $provider )  {
 				$provider = it_exchange_get_registered_shipping_provider( $provider['slug'] );
 				if ( empty( $provider->has_settings_page ) )
@@ -382,7 +382,7 @@ class IT_Exchange_Shipping {
 	 * @param array $elements list of existing elements
 	 * @return array
 	*/
-	function add_shipping_to_template_totals_loops( $elements ) { 
+	function add_shipping_to_template_totals_loops( $elements ) {
 
 		// Abort of total number of shipping methods available to cart is 0
 		if ( count( it_exchange_get_available_shipping_methods_for_cart() ) < 1 )
@@ -391,7 +391,7 @@ class IT_Exchange_Shipping {
 		// Locate the discounts key in elements array (if it exists)
 		$index = array_search( 'totals-savings', $elements );
 		if ( false === $index )
-			$index = count( $elements) -1; 
+			$index = count( $elements) -1;
 
 		array_splice( $elements, $index, 0, 'totals-shipping' );
 		return $elements;
@@ -405,7 +405,7 @@ class IT_Exchange_Shipping {
 	 * @param array $loops list of existing elements
 	 * @return array
 	*/
-	function add_shipping_address_to_sw_template_totals_loops( $loops ) { 
+	function add_shipping_address_to_sw_template_totals_loops( $loops ) {
 
 		// Abort of total number of shipping methods available to cart is 0
 		if ( count( it_exchange_get_available_shipping_methods_for_cart() ) < 1 )
@@ -415,7 +415,7 @@ class IT_Exchange_Shipping {
 		if ( false === $index )
 			$index = -1;
 
-		// Shipping Address 
+		// Shipping Address
 		array_splice( $loops, $index, 0, 'shipping-address' );
 
 		return $loops;
@@ -429,7 +429,7 @@ class IT_Exchange_Shipping {
 	 * @param array $loops list of existing elements
 	 * @return array
 	*/
-	function add_shipping_method_to_sw_template_totals_loops( $loops ) { 
+	function add_shipping_method_to_sw_template_totals_loops( $loops ) {
 
 		// Abort of total number of shipping methods available to cart is 0
 		if ( count( it_exchange_get_available_shipping_methods_for_cart() ) < 1 )
@@ -439,11 +439,11 @@ class IT_Exchange_Shipping {
 		$index = array_search( 'billing-address', $loops );
 		$index = ( false === $index ) ? array_search( 'shipping-address', $loops ) : $index;
 		if ( false === $index )
-			$index = -1; 
+			$index = -1;
 		else
 			$index++;
 
-		// Shipping Address 
+		// Shipping Address
 		array_splice( $loops, $index, 0, 'shipping-method' );
 
 		return $loops;
@@ -558,7 +558,7 @@ class IT_Exchange_Shipping {
 	 * @return void
 	*/
 	function enqueue_checkout_page_scripts() {
-		if ( it_exchange_is_page( 'checkout' )  ) {  
+		if ( it_exchange_is_page( 'checkout' )  ) {
 			// Register select to autocomplte
 			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' );
 			wp_register_script( 'jquery-select-to-autocomplete', $script, array( 'jquery', 'jquery-ui-autocomplete' ) );

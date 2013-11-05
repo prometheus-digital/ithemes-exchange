@@ -50,9 +50,9 @@ class IT_Exchange_Addon_Duplicate_Product_Feature {
 	 * @return void
 	*/
 	function init_feature_metaboxes() {
-		
+
 		global $post;
-		
+
 		if ( isset( $_REQUEST['post_type'] ) ) {
 			$post_type = $_REQUEST['post_type'];
 		} else {
@@ -69,17 +69,17 @@ class IT_Exchange_Addon_Duplicate_Product_Feature {
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
 		}
-			
+
 		if ( !empty( $_REQUEST['it-exchange-product-type'] ) )
 			$product_type = $_REQUEST['it-exchange-product-type'];
 		else
 			$product_type = it_exchange_get_product_type( $post );
-		
+
 		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'duplicate-product-type' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_metabox' ) );
 		}
-		
+
 	}
 
 	/**
@@ -103,7 +103,7 @@ class IT_Exchange_Addon_Duplicate_Product_Feature {
 	function print_metabox( $post ) {
 		// Grab the iThemes Exchange Product object from the WP $post object
 		$product = it_exchange_get_product( $post );
-		
+
 		if ( 'auto-draft' !== $post->post_status ) {
 			// Set the value of the feature for this product
 			$product_feature_value = it_exchange_get_product_feature( $product->ID, 'duplicate-product-type' );

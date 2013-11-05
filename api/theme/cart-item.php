@@ -103,7 +103,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 				$session_id = empty( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ? false : $_COOKIE[IT_EXCHANGE_SESSION_COOKIE];
 				$url = it_exchange_clean_query_args();
 				$url = add_query_arg( $var_key, $var_value, $url );
-				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . $session_id ), $url ); 
+				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . $session_id ), $url );
 				$output = $options['before'] . '<a href="' . $url . '" ' . $data . 'class="' . $class . '" >' . esc_attr( $options['label'] ) . '</a>' . $options['after'];
 			break;
 		}
@@ -145,20 +145,20 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		$var_key = it_exchange_get_field_name( 'product_purchase_quantity' );
 		$var_value = it_exchange_get_cart_product_quantity( $this->_cart_item );
-		$max_quantity = it_exchange_get_product_feature( $this->_cart_item['product_id'], 'purchase-quantity' ); 
-		
+		$max_quantity = it_exchange_get_product_feature( $this->_cart_item['product_id'], 'purchase-quantity' );
+
 		if ( it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'inventory' ) ) {
-			
+
 			$inventory = (int)it_exchange_get_product_feature( $this->_cart_item['product_id'], 'inventory' );
-			
+
 			if ( $inventory && (int) $max_quantity > 0 && (int) $max_quantity > $inventory )
 				$max_quantity = $inventory;
-			
+
 		}
-		
+
 		if ( (int) $max_quantity > 0 && $var_value > $max_quantity )
 			$var_value = $max_quantity;
-		
+
 		switch ( $options['format'] ) {
 			case 'var_key' :
 				$output = $var_key;
@@ -213,7 +213,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	function supports_purchase_quantity( $options=array() ) {
 		return it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'purchase-quantity' );
 	}
-	
+
 	/**
 	 * Returns URL for cart item
 	 *

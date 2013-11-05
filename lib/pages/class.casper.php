@@ -3,19 +3,19 @@
  * This file contains the class in charge of our ghost posts
  *
  * @since 0.4.0
- * @package IT_Exchange 
+ * @package IT_Exchange
 */
 
 /**
  * Casper is our friendly ghost post.
  *
- * It is used when viewing a frontend iThemes Exchange view other than a single product. 
+ * It is used when viewing a frontend iThemes Exchange view other than a single product.
  * It modifies some of the wp_query properties to fit our needs
  *
  * @since 0.4.0
 */
 class IT_Exchange_Casper {
-	
+
 	/**
 	 * @var string $_current_view the current iThemes Exchange frontend view. Should not ever be product.
 	 * @since 0.4.0
@@ -106,7 +106,7 @@ class IT_Exchange_Casper {
 		$this->_wp_query->is_post_type_archive = false;
 
 		$GLOBALS['wp_query'] = $this->_wp_query;
-		
+
 	}
 
 	/**

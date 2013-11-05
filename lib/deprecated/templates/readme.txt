@@ -6,7 +6,7 @@
  *
  * Adding the following code to your theme's functions.php file
  * will allow you to use these deprecated functions until you
- * have a chance to convert your theme. 
+ * have a chance to convert your theme.
  *
  * add_theme_support( 'it-exchange-deprecated-template-parts' );
  *

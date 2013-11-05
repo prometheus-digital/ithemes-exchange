@@ -55,9 +55,9 @@ class IT_Exchange_Base_Price {
 	 * @return void
 	*/
 	function init_feature_metaboxes() {
-		
+
 		global $post;
-		
+
 		if ( isset( $_REQUEST['post_type'] ) ) {
 			$post_type = $_REQUEST['post_type'];
 		} else {
@@ -74,17 +74,17 @@ class IT_Exchange_Base_Price {
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
 		}
-			
+
 		if ( !empty( $_REQUEST['it-exchange-product-type'] ) )
 			$product_type = $_REQUEST['it-exchange-product-type'];
 		else
 			$product_type = it_exchange_get_product_type( $post );
-				
+
 		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'base-price' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_metabox' ) );
 		}
-		
+
 	}
 
 	/**
@@ -137,7 +137,7 @@ class IT_Exchange_Base_Price {
 	 * @return void
 	*/
 	function save_feature_on_product_save() {
-		
+
 		// Abort if we can't determine a product type
 		if ( ! $product_type = it_exchange_get_product_type() )
 			return;
@@ -154,12 +154,12 @@ class IT_Exchange_Base_Price {
 		// Abort if key for base-price option isn't set in POST data
 		if ( ! isset( $_POST['it-exchange-base-price'] ) )
 			return;
-			
+
 		if ( !empty( $_POST['it-exchange-base-price'] ) )
 			$new_price = $_POST['it-exchange-base-price'];
 		else
 			$new_price = 0;
-		
+
 		// Save new value
 		it_exchange_update_product_feature( $product_id, 'base-price', $new_price );
 	}
@@ -176,9 +176,9 @@ class IT_Exchange_Base_Price {
 	function save_feature( $product_id, $new_price ) {
 		if ( ! it_exchange_get_product( $product_id ) )
 			return false;
-			
+
 		$new_price = it_exchange_convert_to_database_number( $new_price );
-			
+
 		update_post_meta( $product_id, '_it-exchange-base-price', $new_price );
 	}
 
@@ -214,7 +214,7 @@ class IT_Exchange_Base_Price {
 	/**
 	 * Does the product support a base price?
 	 *
-	 * This is different than if it has the feature, a product can 
+	 * This is different than if it has the feature, a product can
 	 * support a feature but might not have the feature set.
 	 *
 	 * @since 0.4.0

@@ -106,9 +106,9 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 				foreach( (array) it_exchange_get_cart_products() as $product ) {
 					if ( ! it_exchange_product_has_feature( $product['product_id'], 'shipping' ) )
 						continue;
-					
+
 					echo '<div class="it-exchange-itemized-checkout-method">';
-					
+
 						echo '<span class="it-exchange-shipping-product-title">' . it_exchange_get_cart_product_title( $product ) . '</span>';
 						$selected_multiple_method = it_exchange_get_multiple_shipping_method_for_cart_product( $product['product_cart_id'] );
 						$enabled_shipping_methods = (array) it_exchange_get_enabled_shipping_methods_for_product( it_exchange_get_product( $product['product_id'] ) );
@@ -130,7 +130,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 							it_exchange_update_multiple_shipping_method_for_cart_product( $product['product_cart_id'], $product_method->slug );
 							echo '<span class="it-exchange-right">' . $product_method->label . ' (' . it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product, true ) . ')</span>';
 						}
-						
+
 					echo '</div>';
 				}
 				?>

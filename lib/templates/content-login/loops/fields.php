@@ -18,7 +18,7 @@
 <?php foreach( it_exchange_get_template_part_elements( 'content_login', 'fields', array( 'username', 'password', 'rememberme' ) ) as $field ) : ?>
 	<?php
 	/**
-	 * Theme and add-on devs should add code to this loop by 
+	 * Theme and add-on devs should add code to this loop by
 	 * hooking into it_exchange_get_template_part_elements filter
 	 * and adding the appropriate template file to their theme or add-on
 	 */

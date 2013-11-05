@@ -6,7 +6,7 @@
  * @package IT_Exchange
 */
 class IT_Exchange_Super_Widget extends WP_Widget {
-	
+
 	/**
 	 * @var array $pages exchange pages options
 	 * @since 0.4.0
@@ -67,18 +67,18 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 * @since 0.4.0
 	 *
 	 * @param array $args Display arguments including before_title, after_title, before_widget, and after_widget.
-	 * @param array $instance The settings for the particular instance of the widget 
+	 * @param array $instance The settings for the particular instance of the widget
 	 * @return void
 	*/
 	function widget( $args, $instance ) {
 		if ( ! $this->get_state() )
 			return false;
-			
+
 		$defaults = array(
 			'enqueue_hide_script' => true,
 		);
 		$args = wp_parse_args( $args, $defaults );
-		
+
 		// Flag that we're in the superwidget
 		$GLOBALS['it_exchange']['in_superwidget'] = $instance;
 		if ( ! empty( $GLOBALS['wp_query']->queried_object->ID ) && it_exchange_get_product( $GLOBALS['wp_query']->queried_object->ID ) )
@@ -100,22 +100,22 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 
 				<?php $shipping_addons = it_exchange_get_enabled_addons( array( 'category' => 'shipping' ) ); if ( ! empty( $shipping_addons) ) : ?>
 				// Shipping Init country/state fields
-				var iteCountryStatesSyncOptions = { 
+				var iteCountryStatesSyncOptions = {
 					statesWrapper     : '.it-exchange-state',
 					stateFieldID      : '#it-exchange-shipping-address-state',
 					templatePart      : 'super-widget-shipping-address/elements/state',
 					autoCompleteState : true
-				}; 
+				};
 				jQuery('#it-exchange-shipping-address-country', '.it-exchange-super-widget').itCountryStatesSync(iteCountryStatesSyncOptions).selectToAutocomplete().trigger('change');
 				<?php endif; ?>
 
 				// Billing Init fields
-				var iteCountryStatesSyncOptions = { 
+				var iteCountryStatesSyncOptions = {
 					statesWrapper     : '.it-exchange-state',
 					stateFieldID      : '#it-exchange-billing-address-state',
 					templatePart      :  'super-widget-billing-address/elements/state',
 					autoCompleteState : true,
-				}; 
+				};
 				jQuery('#it-exchange-billing-address-country', '.it-exchange-super-widget').itCountryStatesSync(iteCountryStatesSyncOptions).selectToAutocomplete().trigger('change');
 			});
 		</script>
@@ -133,7 +133,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		$css_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/css/frontend-global.css' );
 		if ( ! apply_filters( 'it_exchange_disable_super_widget_stylesheet', false ) )
 				wp_enqueue_style( 'it-exchange-super-widget-frontend-global', $css_url );
-		
+
 		if ( $args['enqueue_hide_script'] ) {
 			$css_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/css/single-product-super-widget.css' );
 			wp_enqueue_style( 'it-exchange-single-product-super-widget', $css_url );
@@ -168,7 +168,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			unset( $GLOBALS['it_exchange']['in_superwidget'] );
 	}
 
-	/** 
+	/**
 	 * Update a particular instance.
 	 *
 	 * This function should check that $new_instance is set correctly.
@@ -183,7 +183,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 */
 	function update($new_instance, $old_instance) {
 		return $new_instance;
-	}    
+	}
 
 	/**
 	 * Echo the settings update form
@@ -232,7 +232,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		$valid_states = apply_filters( 'it_exchange_super_widget_valid_states', $valid_states );
 		$this->valid_states = (array) $valid_states;
 	}
-	
+
 	/**
 	 * Set the page options
 	 *
@@ -270,22 +270,22 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		$multi_item_cart_allowed = it_exchange_is_multi_item_cart_allowed();
 		$items_in_cart = (bool) it_exchange_get_cart_products();
 		$it_exchange_view = get_query_var( 'it_exchange_view' );
-		
+
 		if ( $items_in_cart ) {
-		
+
 			if ( 'product' == $it_exchange_view && ! it_exchange_is_current_product_in_cart() )
 				$state = 'product';
 			else if ( $multi_item_cart_allowed )
 				$state = 'cart';
 			else if ( ! $multi_item_cart_allowed )
 				$state = it_exchange_get_next_purchase_requirement_property( 'sw-template-part' );
-			
+
 		}
 
 		// Grab the current state from the checkout requirements if trying to checkout
 		if ( 'checkout' == $state )
 			$state = it_exchange_get_next_purchase_requirement_property( 'sw-template-part' );
-		
+
 		if ( empty( $state ) && 'product' == $it_exchange_view  )
 			$state = 'product';
 		else if ( empty( $state ) )
@@ -294,7 +294,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		// Validate state
 		if ( $state && in_array( $state, $this->valid_states ) )
 			$this->state = $state;
-					
+
 	}
 
 	/**

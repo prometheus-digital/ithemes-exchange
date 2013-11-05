@@ -63,7 +63,7 @@ function it_exchange_basic_coupons_register_field_names( $names ) {
 	$names['remove_coupon'] = 'it-exchange-basic-coupons-remove-coupon';
 	return $names;
 }
-add_filter( 'it_exchange_default_field_names', 'it_exchange_basic_coupons_register_field_names' ); 
+add_filter( 'it_exchange_default_field_names', 'it_exchange_basic_coupons_register_field_names' );
 
 /**
  * Returns applied cart coupons

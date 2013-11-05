@@ -78,7 +78,7 @@ function it_exchange_get_registered_shipping_feature( $slug, $product_id=false )
 		return false;
 
 	$class = $features[$slug];
-	if ( class_exists( $class ) ) 
+	if ( class_exists( $class ) )
 		return new $class( $product_id );
 }
 

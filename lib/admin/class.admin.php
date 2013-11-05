@@ -28,13 +28,13 @@ class IT_Exchange_Admin {
 	var $_current_tab;
 
 	/**
-	 * @var string $status_message informative message for current settings tab 
+	 * @var string $status_message informative message for current settings tab
 	 * @since 0.3.6
 	*/
 	var $status_message;
 
 	/**
-	 * @var string $error_message error message for current settings tab 
+	 * @var string $error_message error message for current settings tab
 	 * @since 0.3.6
 	*/
 	var $error_message;
@@ -44,7 +44,7 @@ class IT_Exchange_Admin {
 	 *
 	 * @uses add_action()
 	 * @since 0.1.0
-	 * @return void 
+	 * @return void
 	*/
 	function IT_Exchange_Admin( &$parent ) {
 
@@ -70,7 +70,7 @@ class IT_Exchange_Admin {
 		add_filter( 'upload_mimes', array( $this, 'uploads_mimes_for_products' ) );
 		add_filter( 'wp_ajax_ite-country-state-update', array( $this, 'update_country_state_ui_in_general_settings' ) );
 
-		// Admin Product Redirects 
+		// Admin Product Redirects
 		add_action( 'admin_init', array( $this, 'redirect_post_new_to_product_type_selection_screen' ) );
 		add_action( 'admin_init', array( $this, 'bounce_user_to_all_products_if_directly_accessing_disabled_product_type' ) );
 
@@ -100,7 +100,7 @@ class IT_Exchange_Admin {
 
 		// General Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_general', array( $this, 'set_general_settings_defaults' ) );
-		
+
 		// Email Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_email', array( $this, 'set_email_settings_defaults' ) );
 
@@ -124,13 +124,13 @@ class IT_Exchange_Admin {
 		add_action( 'all_admin_notices', array( $this, 'it_exchange_user_edit_load' ) );
 		add_action( 'show_user_profile', array( $this, 'it_exchange_user_profile' ) );
 		add_action( 'edit_user_profile', array( $this, 'it_exchange_user_profile' ) );
-		
+
 		add_action( 'it_exchange_addon_settings_page_top', array( $this, 'return_to_addons' ) );
-		
+
 		add_filter( 'plugin_action_links_ithemes-exchange/init.php', array( $this, 'it_exchange_plugin_row_actions' ), 10, 4 );
 		add_filter( 'plugin_row_meta', array( $this, 'it_exchange_plugin_row_meta' ), 10, 4 );
 	}
-	
+
 	/**
 	 * Adds actions to the plugins page for the iThemes Exchange plugin
 	 *
@@ -139,15 +139,15 @@ class IT_Exchange_Admin {
 	 * @param array $meta Existing meta
 	 * @param string $plugin_file the wp plugin slug (path)
 	 * @param array $plugin_data the data WP harvested from the plugin header
-	 * @param string $context 
+	 * @param string $context
 	 * @return array
 	*/
 	function it_exchange_plugin_row_actions( $actions, $plugin_file, $plugin_data, $context ) {
-		
+
 		$actions['quick_setup'] = '<a href="' . get_admin_url( NULL, 'admin.php?page=it-exchange-setup' ) . '">' . __( 'Quick Setup', 'LION' ) . '</a>';
-		
+
 		return $actions;
-		
+
 	}
 
 	/**
@@ -170,7 +170,7 @@ class IT_Exchange_Admin {
 		return $meta;
 	}
 
-	
+
 	/**
 	 * Adds link to bottom of addons settings pages to return to the addons pages
 	 *
@@ -189,14 +189,14 @@ class IT_Exchange_Admin {
 	 *
 	 * @since 0.4.0
 	 * @return void
-	*/	
+	*/
 	function it_exchange_user_row_actions( $actions, $user_object ) {
 
 		$actions['it_exchange'] = "<a class='it-exchange-cust-info' href='" . esc_url( add_query_arg( array( 'wp_http_referer' => urlencode( stripslashes_deep( $_SERVER['REQUEST_URI'] ) ), 'it_exchange_customer_data' => 1 ), get_edit_user_link( $user_object->ID ) ) ) . "'>" . __( 'Customer Data', 'LION' ) . "</a>";
-	
+
 		return $actions;
 	}
-	
+
 	/**
 	 * Adds iThemes Exchange User Meta page to user-edit.php
 	 *
@@ -204,10 +204,10 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function it_exchange_user_profile( $profileuser ) {
-						
+
 		if ( current_user_can('edit_users') )
 			include( 'views/admin-user-profile.php' );
-	
+
 	}
 
 	/**
@@ -217,25 +217,25 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function it_exchange_user_edit_load() {
-		
+
 		//A little hacky
 		global $pagenow;
-		
-		if ( in_array( $pagenow, array( 'user-edit.php', 'profile.php' ) ) 
+
+		if ( in_array( $pagenow, array( 'user-edit.php', 'profile.php' ) )
 			&& !empty( $_REQUEST['it_exchange_customer_data'] )  && current_user_can('edit_users') ) {
-			
+
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_products_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_transactions_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_info_user_edit_tab_link' ) );
-			
+
 			include( 'views/admin-user-edit.php' );
 			include( ABSPATH . 'wp-admin/admin-footer.php');
 			die();
-			
+
 		}
-		
+
 	}
-	
+
 	/**
 	 * Save iThemes Exchange User Meta Options to user-edit.php
 	 *
@@ -314,7 +314,7 @@ class IT_Exchange_Admin {
 	function add_wizard_nag() {
 		if ( ! empty( $_REQUEST['it_exchange_settings-dismiss-wizard-nag'] ) )
 			update_option( 'it-exchange-hide-wizard-nag', true );
-			
+
 		if ( isset( $_GET['it-exchange-show-wizard-link'] ) )
 			delete_option( 'it-exchange-hide-wizard-nag' );
 
@@ -407,7 +407,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Registers the callback for the email tab
 	 *
-	 * @param mixed default callback for general settings. 
+	 * @param mixed default callback for general settings.
 	 * @since 0.3.4
 	 * @return mixed function or class method name
 	*/
@@ -430,7 +430,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Registers the callback for the pages tab
 	 *
-	 * @param mixed default callback for general settings. 
+	 * @param mixed default callback for general settings.
 	 * @since 0.3.7
 	 * @return mixed function or class method name
 	*/
@@ -507,7 +507,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Registers the callback for the get more add-ons tab
 	 *
-	 * @param mixed default callback for add-ons page. 
+	 * @param mixed default callback for add-ons page.
 	 * @since 0.4.0
 	 * @return mixed function or class method name
 	*/
@@ -544,7 +544,7 @@ class IT_Exchange_Admin {
 		$active = 'get-more' == $current_tab ? 'nav-tab-active' : '';
 		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&tab=get-more' ); ?>"><?php _e( 'Get More', 'LION' ); ?></a><?php
 	}
-	
+
 	/**
 	 * Prints the help/support page for iThemes Exchange
 	 *
@@ -611,7 +611,7 @@ class IT_Exchange_Admin {
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;
 	}
-	
+
 	/**
 	 * Sets the email settings default values
 	 *
@@ -770,7 +770,7 @@ Order: %s
 
 		include( 'views/admin-add-ons.php' );
 	}
-	
+
 	/**
 	 * Enable all addons tagged as "required"
 	 *
@@ -781,7 +781,7 @@ Order: %s
 	function enable_required_add_ons() {
 		$registered = it_exchange_get_addons();
 		$enabled    = it_exchange_get_enabled_addons();
-		
+
 		foreach ( $registered as $slug => $params ) {
 			if ( !empty( $params['options']['tag'] ) && 'required' === $params['options']['tag'] ) {
 				if ( empty( $enabled[$slug] ) ) {
@@ -956,13 +956,13 @@ Order: %s
 	 * Prints select options for the currency type
 	 *
 	 * @since 0.3.6
-	 * return array 
+	 * return array
 	*/
 	function get_default_currency_options() {
 		$options = array();
 		$currency_options = it_exchange_get_data_set( 'currencies' );
 		foreach( (array) $currency_options as $cc => $currency ) {
-			$options[$cc] = ucwords( $currency['name'] ) . ' (' . $currency['symbol'] . ')'; 
+			$options[$cc] = ucwords( $currency['name'] ) . ' (' . $currency['symbol'] . ')';
 		}
 		return $options;
 	}
@@ -1016,10 +1016,10 @@ Order: %s
 		$settings = wp_parse_args( ITForm::get_post_data(), it_exchange_get_option( 'settings_general' ) );
 
         // Check nonce
-        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-general-settings' ) ) { 
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-general-settings' ) ) {
             $this->error_message = __( 'Error. Please try again', 'LION' );
             return;
-        } 
+        }
 
 		if ( ! empty( $this->error_message ) || $error_msg = $this->general_settings_are_invalid( $settings ) ) {
 			if ( ! empty( $error_msg ) )
@@ -1044,16 +1044,16 @@ Order: %s
 		// Abandon if not saving wizard
 		if ( !( isset( $_REQUEST['it_exchange_settings-wizard-submitted'] ) && 'it-exchange-setup' === $this->_current_page ) )
 			return;
-			
+
 		if ( empty( $_REQUEST['it-exchange-transaction-methods'] ) ) {
 			it_exchange_add_message( 'error', __( 'You must select at least one Payment Method.', 'LION' ) );
 			return;
 		}
-			
+
 		// Grab general settings
 		$general_settings = array();
 		$default_wizard_general_settings = apply_filters( 'default_wizard_general_settings', array( 'company-email', 'default-currency' ) );
-		
+
 		foreach( $default_wizard_general_settings as $var ) {
 			if ( isset( $_REQUEST['it_exchange_settings-' . $var] ) )
 				$general_settings[$var] = $_REQUEST['it_exchange_settings-' . $var];
@@ -1102,7 +1102,7 @@ Order: %s
 
 			it_exchange_save_option( 'simple-shipping', $simple_shipping_options );
 		}
-		
+
 		// Transaction Methods
 		$tx_error_msgs = array();
 		$addons = it_exchange_get_addons( array( 'category' => 'transaction-methods', 'show_required' => false ) );
@@ -1121,15 +1121,15 @@ Order: %s
 			}
 			return;
 		}
-				
+
 		// Signup for mailchimp if checkbox was checked
 		if ( !empty( $_REQUEST['it_exchange_settings-exchange-notifications'] )
 			&& !empty( $_REQUEST['it_exchange_settings-company-email'] ) ) {
-			
+
 			$this->mail_chimp_signup( $_REQUEST['it_exchange_settings-company-email'] );
-		
+
 		}
-		
+
 		// Auto enable any core add-ons we want enabled on setup.
 		$auto_enabled_addons = array(
 			'basic-reporting',
@@ -1142,13 +1142,13 @@ Order: %s
 
 		do_action( 'it_exchange_enabled_addons_loaded' );
 		do_action( 'it_exchange_save_wizard_settings' );
-		
+
 
 		$settings = it_exchange_get_option( 'settings_general', true );
 		$sample_product = empty( $settings['sample-product-id'] ) ? false : it_exchange_get_product( $settings['sample-product-id'] );
 
 		$settings_saved = __( 'Settings Saved. Congrats!', 'LION' );
-		$add_product_link = sprintf( __( '%sAdd a Product%s', 'LION' ), '<a href="' . get_admin_url() . 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=digital-downloads-product-type">', '</a>' ); 
+		$add_product_link = sprintf( __( '%sAdd a Product%s', 'LION' ), '<a href="' . get_admin_url() . 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=digital-downloads-product-type">', '</a>' );
 		$view_addons_link = sprintf( __( '%sEnable Add-ons%s', 'LION' ), '<a href="' . get_admin_url() . 'admin.php?page=it-exchange-addons">', '</a>' );
 
 		$view_sample_link = empty( $sample_product->ID ) ? '' : ' | ' . sprintf( __( '%sView Sample Product%s', 'LION' ), '<a href="' . get_admin_url() . 'post.php?post=' . $sample_product->ID . '&action=edit">', '</a>' );
@@ -1158,13 +1158,13 @@ Order: %s
 		wp_redirect( get_admin_url() . 'admin.php?page=it-exchange-setup&it_exchange_settings-dismiss-wizard-nag=1' );
 		die();
 	}
-	
+
 	public function mail_chimp_signup( $email ) {
-		
+
 		$email = trim( $email );
-	
+
 		if ( is_email( $email ) ) {
-				
+
 			$mailchimp = 'http://ithemes.us2.list-manage.com/subscribe/post?u=7acf83c7a47b32c740ad94a4e&amp;id=9da0741ac0';
 			$query = array(
 				'body' => array(
@@ -1172,9 +1172,9 @@ Order: %s
 				),
 			);
 			wp_remote_post( $mailchimp, $query );
-		
+
 		}
-		
+
 	}
 
 	/**
@@ -1213,7 +1213,7 @@ Order: %s
 			return;
 
         // Check nonce
-        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-email-settings' ) ) { 
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-email-settings' ) ) {
             $this->error_message = __( 'Error. Please try again', 'LION' );
             return;
         }
@@ -1238,7 +1238,7 @@ Order: %s
 	*/
 	function email_settings_are_invalid( $settings ) {
 		$errors = array();
-		if ( empty( $settings['receipt-email-address'] ) 
+		if ( empty( $settings['receipt-email-address'] )
 			|| ( !empty( $settings['receipt-email-address'] ) && ! is_email( $settings['receipt-email-address'] ) ) )
 			$errors[] = __( 'Please provide a valid email address.', 'LION' );
 		if ( empty( $settings['receipt-email-name'] ) )
@@ -1247,20 +1247,20 @@ Order: %s
 			$errors[] = __( 'Email Subject cannot be empty', 'LION' );
 		if ( empty( $settings['receipt-email-template'] ) )
 			$errors[] = __( 'Email Template cannot be empty', 'LION' );
-			
+
 		if ( !empty( $settings['notification-email-address'] ) ) {
-			
+
 			$emails = explode( ',', $settings['notification-email-address'] );
-			
+
 			foreach( $emails as $email ) {
-			
+
 				if ( !is_email( trim( $email ) ) ) {
 					$errors[] = __( 'Invalid email address in Sales Notification Email Address', 'LION' );
 					break;
 				}
-				
+
 			}
-			
+
 		}
 
 		$errors = apply_filters( 'it_exchange_email_settings_validation_errors', $errors );
@@ -1295,7 +1295,7 @@ Order: %s
 		}
 		$settings = wp_parse_args( ITForm::get_post_data(), $settings );
 
-			
+
 		// If WordPress page is set to 0 somehow, use exchange page
 		foreach( $existing as $page => $data ) {
 			if ( 'wordpress' == $settings[$page . '-type'] && empty( $settings[$page . '-wpid'] ) )
@@ -1303,10 +1303,10 @@ Order: %s
 		}
 
         // Check nonce
-        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-page-settings' ) ) { 
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-page-settings' ) ) {
             $this->error_message = __( 'Error. Please try again', 'LION' );
             return;
-        } 
+        }
 
 		// Trim all slug settings
 		foreach( $settings as $key => $value ) {
@@ -1322,7 +1322,7 @@ Order: %s
 		} else {
 			it_exchange_save_option( 'settings_pages', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
-			
+
 			// Flag rewrites to be updated
 			add_option( '_it-exchange-flush-rewrites', true );
 
@@ -1348,7 +1348,7 @@ Order: %s
 			'post_type' => 'nav_menu_item',
 			'posts_per_page' => -1,
 			'meta_query' =>
-				array( 
+				array(
 					'key' => '_menu_item_xfn',
 					'value' => 'it-exchange-',
 					'compare' => 'LIKE',
@@ -1582,7 +1582,7 @@ Order: %s
 		// For Transaction Details Page
 		if ( ( 'post-new.php' == $pagenow || 'post.php' == $pagenow ) && 'it_exchange_tran' == $post_type ) {
 			// Remove builder meta box
-			if ( 'builder' == strtolower( get_option( 'template' ) ) || ( isset( $GLOBALS['theme_index'] ) && 'it-builder' == $GLOBALS['theme_index'] ) ) 
+			if ( 'builder' == strtolower( get_option( 'template' ) ) || ( isset( $GLOBALS['theme_index'] ) && 'it-builder' == $GLOBALS['theme_index'] ) )
 				add_filter( 'builder_layout_filter_non_layout_post_types', array( $this, 'remove_builder_custom_layout_box' ) );
 		}
 	}
@@ -1603,7 +1603,7 @@ Order: %s
 
 		if ( ( 'post-new.php' != $pagenow && 'post.php' != $pagenow ) || 'it_exchange_prod' != $post_type )
 			return;
-			
+
 		// Redirect if no product-type addons are enabled
 		if ( ! $enabled_product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ) {
 			$redirect = add_query_arg( 'page', 'it-exchange-settings', get_admin_url() . 'admin.php' );;
@@ -1655,7 +1655,7 @@ Order: %s
 		add_action( 'admin_head', array( $this, 'add_edit_product_append_wrap_classes' ) );
 
 		// Temporarially remove post support for post_formats and title
-		add_filter( 'post_updated_messages', array( $this, 'temp_remove_theme_supports' ) ); 
+		add_filter( 'post_updated_messages', array( $this, 'temp_remove_theme_supports' ) );
 
 		// Register layout metabox
 		add_action( 'do_meta_boxes', array( $this, 'register_custom_layout_metabox' ), 999, 2 );
@@ -1757,7 +1757,7 @@ Order: %s
 					if ( ! isset( $wp_meta_boxes['it_exchange_prod']['it_exchange_advanced']['low'] ) )
 						 $wp_meta_boxes['it_exchange_prod']['it_exchange_advanced']['low']= array();
 					$wp_meta_boxes['it_exchange_prod']['it_exchange_advanced']['low'] = array_merge(
-						$wp_meta_boxes['it_exchange_prod']['it_exchange_advanced']['low'], 
+						$wp_meta_boxes['it_exchange_prod']['it_exchange_advanced']['low'],
 						$wp_meta_boxes['it_exchange_prod'][$context][$priority]
 					);
 				}
@@ -1818,7 +1818,7 @@ Order: %s
 	function do_add_edit_product_screen_layout_side( $post ) {
 		do_meta_boxes( 'it_exchange_prod', 'it_exchange_side', $post );
 	}
-	
+
 	/**
 	 * Removed Quick Edit action from IT Exchange Post Types
 	 *
@@ -1828,28 +1828,28 @@ Order: %s
 	*/
 	function it_exchange_remove_quick_edit( $actions, $post ) {
 
-		$it_exchange_post_types = apply_filters( 'it_exchange_remove_quick_edit_from_post_types', 
+		$it_exchange_post_types = apply_filters( 'it_exchange_remove_quick_edit_from_post_types',
 			array(
 				'it_exchange_download',
 				'it_exchange_prod',
 				'it_exchange_tran',
-			) 
+			)
 		);
 
-		if ( in_array( $post->post_type, $it_exchange_post_types ) ) 
+		if ( in_array( $post->post_type, $it_exchange_post_types ) )
 			unset( $actions['inline hide-if-no-js'] ); //unset the Quick Edit action
 
 		return $actions;
 	}
 
-	/** 
+	/**
 	 * Add it_exchange_tran post type to Builder blacklist for Custom Layouts meta box
 	 *
 	 * @param array $post_types An array of post types that will not include the builder custom layout
 	 * @since 0.4.0
 	 * @return array
 	*/
-	function remove_builder_custom_layout_box( $post_types ) { 
+	function remove_builder_custom_layout_box( $post_types ) {
 		$post_types[] = 'it_exchange_tran';
 		return $post_types;
 	}
@@ -1886,7 +1886,7 @@ Order: %s
 			'msi'  => 'application/x-ole-storage',
 		);
 		$additional_mime_types = apply_filters( 'it_exchange_additional_mime_types', $additional_mime_types );
-		
+
 		$mime_types = array_merge( $mime_types, $additional_mime_types );
 		return $mime_types;
 	}

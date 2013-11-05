@@ -161,7 +161,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
  * @since 1.4.0
 */
 class IT_Exchange_Simple_Shipping_Flat_Rate_Shipping_Cost extends IT_Exchange_Shipping_Feature {
-	
+
 	var $slug = 'exchange-flat-rate-shipping-cost';
 
 	/**

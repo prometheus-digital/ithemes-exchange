@@ -232,7 +232,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['value'] = empty( $_POST['ite_base_country_ajax'] ) ? $options['value'] : $_POST['ite_base_country_ajax'];
 
 		$countries = it_exchange_get_data_set( 'countries' );
-		
+
 		$current_value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
 
 		$field  = '<select id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '">';
@@ -301,7 +301,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['value']      = empty( $this->_shipping_address['state'] ) ? '' : $this->_shipping_address['state'];
 
 		$states = it_exchange_get_data_set( 'states', array( 'country' => it_exchange( 'shipping', 'get-country', array( 'format' => 'value' ) ) ) );
-		
+
 		$current_value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
 
 		$field = '';
@@ -389,7 +389,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	}
 
 	/**
-	 * Outputs the shipping address submit button 
+	 * Outputs the shipping address submit button
 	 *
 	 * @since 1.4.0
 	 * @return string
@@ -432,7 +432,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	 * @return mixed
 	*/
 	function get_fields( $options ) {
-		
+
 		$value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
 		$class = empty( $options['class'] ) ? '' : esc_attr( $options['class'] );
 		$options['required'] = ! empty( $options['required'] );

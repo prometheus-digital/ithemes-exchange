@@ -49,10 +49,10 @@ include( $this->_plugin_path . 'api/coupons.php' );
 // Downloads
 include( $this->_plugin_path . 'api/downloads.php' );
 
-// Pages 
+// Pages
 include( $this->_plugin_path . 'api/pages.php' );
 
-// Template Parts 
+// Template Parts
 include( $this->_plugin_path . 'api/template-parts.php' );
 
 // Data Sets

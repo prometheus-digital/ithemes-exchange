@@ -24,18 +24,18 @@ foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
 	$transaction_url    = get_admin_url() . '/post.php?action=edit&post=' . esc_attr( $transaction_id );
 	$transaction_number = it_exchange_get_transaction_order_number( $transaction_id );
 	$transaction_link   = '<a href="' . $transaction_url . '">' . $transaction_number . '</a>';
-	
+
 	$transaction_downloads = it_exchange_get_transaction_download_hash_index( $transaction_id );
-	
+
 	if ( !empty( $transaction_downloads[$product_id] ) ) {
-		
+
 		$downloads = $transaction_downloads[$product_id];
 		$product_link .= __( '<span class="details-toggle hide-if-no-js">&#61;</span><span class="details-toggle hide-if-no-js">&#61;</span>', 'LION' );
-	
+
 	} else {
-		
+
 		$downloads = array();
-		
+
 	}
 
 	$product_list[] = array(
@@ -43,7 +43,7 @@ foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
 		'transaction_link' => $transaction_link,
 		'downloads'        => $downloads,
 	);
-}	
+}
 ?>
 
 <div class="user-edit-block <?php echo $tab; ?>-user-edit-block">
@@ -56,7 +56,7 @@ foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
 			</div>
 		<?php endforeach; ?>
 	</div>
-	
+
 	<?php foreach ( (array) $product_list as $product_id => $data ) : ?>
 		<div class="item-row block-row">
 			<div class="item-column block-column block-column-1">
@@ -65,14 +65,14 @@ foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
 			<div class="item-column block-column block-column-2">
 				<p class="item"><?php echo $data['transaction_link']; ?></p>
 			</div>
-			
+
 			<?php if ( ! empty( $data['downloads'] ) ) : ?>
 				<div class="item-column block-column-full hide-if-js">
 					<h3><?php _e( 'Downloads', 'LION' ); ?></h3>
 					<div class="downloads-wrapper">
 						<?php foreach ( $data['downloads'] as $download_id => $download_hashes ) : ?>
 							<?php $download_info = it_exchange_get_download_info( $download_id ); ?>
-							
+
 							<?php if ( ! empty( $download_info['source'] ) ) : ?>
 								<h4><?php echo get_the_title( $download_id ) ?><span><?php echo end( ( explode( '/', $download_info['source'] ) ) ) ?></span></h4>
 								<ul class="download-hashes">
@@ -81,13 +81,13 @@ foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
 										<?php if ( ! empty( $download_data ) ) : ?>
 											<li>
 												<span class="hash"><?php echo $download_data['hash'] ?></span>
-												
+
 												<?php if ( ! empty( $download_data['download_limit'] ) ) : ?>
 													<span class="limit"><?php echo sprintf( __( '%s of %s downloads remaining', 'LION' ), $download_data['download_limit'] - $download_data['downloads'], $download_data['download_limit'] ); ?></span>
 												<?php else : ?>
 													<span class="limit"><?php _e( 'Unlimited Downloads', 'LION' );  ?>
 												<?php endif; ?>
-												
+
 												<?php if ( $expires = it_exchange_get_download_expiration_date( $download_data ) ) : ?>
 													<span class="expires"><?php echo sprintf( __( 'Expires %s', 'LION' ), $expires ); ?></span>
 												<?php else : ?>
@@ -103,5 +103,5 @@ foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
 				</div>
 			<?php endif; ?>
 		</div>
-	<?php endforeach; ?>	
+	<?php endforeach; ?>
 </div>

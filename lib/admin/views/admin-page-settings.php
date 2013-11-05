@@ -9,20 +9,20 @@
 <div class="wrap page-settings-wrap">
 	<?php
 		screen_icon( 'it-exchange' );
-		
+
 		$this->print_general_settings_tabs();
 		do_action( 'it_exchange_general_settings_page_page_top' );
-		
+
 		$form->start_form( $form_options, 'exchange-page-settings' );
 		do_action( 'it_exchange_general_settings_page_form_top' );
-		
+
 		$general_settings = it_exchange_get_option( 'settings_general' );
 		$pages            = it_exchange_get_registered_pages();
 		$wp_pages         = array( 0 => __( 'Select a Page', 'LION' ) ) + it_exchange_get_wp_pages();
 	?>
-	
+
 	<?php do_action( 'it_exchange_general_settings_page_top' ); ?>
-	
+
 	<div class="page-settings">
 		<div class="it-row ps-header">
 			<div class="it-column column-1">
@@ -46,9 +46,9 @@
 				 * Don't show options for transactions at all.
 				 * @todo remove transaction from pages and use query args
 				*/
-				if ( 'transaction' == $page ) 
+				if ( 'transaction' == $page )
 					continue;
-				
+
 				$options = array();
 				$url = '';
 			?>
@@ -69,7 +69,7 @@
 							// Products don't get WordPress
 							if ( 'product' != $page )
 								$options['wordpress'] = __( 'WordPress', 'LION' );
-							
+
 							// If on registration, we force disabled if WP option is disabled
 							if ( 'registration' == $page && ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) ) )
 								unset( $options );
@@ -77,7 +77,7 @@
 							// Only optional pages get Disabled
 							if ( $data['optional'] )
 								$options['disabled'] = __( 'Disabled', 'LION' );
-							
+
 							// If count is 1, just print it and create a hidden field
 							if ( count( $options ) < 2 ) {
 								$form->add_hidden( $page . '-type' );
@@ -122,12 +122,12 @@
 		<?php endforeach; ?>
 	</div>
 	<?php do_action( 'it_exchange_general_settings_page_table_bottom' ); ?>
-	
+
 	<?php wp_nonce_field( 'save-page-settings', 'exchange-page-settings' ); ?>
 	<p class="submit">
 		<input type="submit" value="<?php _e( 'Save Changes', 'LION' ); ?>" class="button button-primary button-large" />
 	</p>
-	
+
 	<?php
 		do_action( 'it_exchange_general_settings_page_form_bottom' );
 		$form->end_form();

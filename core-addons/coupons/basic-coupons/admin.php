@@ -36,7 +36,7 @@ function it_exchange_basic_coupons_enqueue_js_css() {
 }
 add_action( 'admin_print_styles', 'it_exchange_basic_coupons_enqueue_js_css' );
 add_action( 'admin_print_scripts', 'it_exchange_basic_coupons_enqueue_js_css' );
-	
+
 /**
  * Adds Basic Coupons post type to list of post type to remove the quick edit
  *
@@ -49,7 +49,7 @@ function it_exchange_remove_quick_edit_from_basic_coupons( $post_types ) {
 	return $post_types;
 }
 add_filter( 'it_exchange_remove_quick_edit_from_post_types', 'it_exchange_remove_quick_edit_from_basic_coupons', 10 );
-		
+
 /**
  * Saves a coupon
  *
@@ -201,16 +201,16 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 	$post_id = empty( $_GET['post'] ) ? false : $_GET['post'];
 	$heading = $post_id ? __( 'Edit Coupon', 'LION' ) : __( 'Add Coupon', 'LION' );
 	$form_action = $post_id ? add_query_arg( array( 'page' => 'it-exchange-edit-basic-coupon', 'post' => $post_id ), get_admin_url() . 'admin.php' ) : add_query_arg( array( 'page' => 'it-exchange-add-basic-coupon' ), get_admin_url() . 'admin.php' );
-	
+
 	// Set form values
 	if ( $post_id ) {
 		$coupon = new IT_Exchange_Coupon( $post_id );
-		
+
 		$amount = it_exchange_convert_from_database_number( $coupon->amount_number );
-		
+
 		if ( 'amount' == $coupon->amount_type )
 			$amount = it_exchange_format_price( $amount, false );
-			
+
 		$values['name']           = $coupon->post_title;
 		$values['code']           = $coupon->code;
 		$values['amount-number']  = $amount;
@@ -234,7 +234,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 
 	$form_values  = empty( $values ) ? ITForm::get_post_data() : $values;
 	$form_values  = ! empty( $errors ) ? ITForm::get_post_data() : $form_values;
-	$form         = new ITForm( $form_values, array( 'prefix' => 'it-exchange-basic-coupons' ) ); 
+	$form         = new ITForm( $form_values, array( 'prefix' => 'it-exchange-basic-coupons' ) );
 	$form_options = array(
 		'id'      => apply_filters( 'it-exchange-basic-coupons_form_id', 'it-exchange-basic-coupons' ),
 		'enctype' => apply_filters( 'it-exchange-basic-coupons_enctype', false ),
@@ -262,7 +262,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 					<?php $form->add_text_box( 'code', array( 'class' => 'emptycode' ) ); ?>
 					<a href class="dice" title="Generate a random code."><img src="<?php echo esc_attr( ITUtility::get_url_from_file( dirname( __FILE__ ) ) ); ?>/images/dice-t.png" /></a>
 				</div>
-				
+
 				<div class="field amount">
 					<label for="amount-number"><?php _e( 'Amount', 'LION' ); ?></label>
 					<?php $form->add_text_box( 'amount-number', array( 'type' => 'number' ) ); ?>
@@ -273,7 +273,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 					?>
 					<?php $form->add_drop_down( 'amount-type', array( '%' => __( '% Percent', 'LION' ), 'amount' => $symbol . ' ' . $currency ) ); ?>
 				</div>
-				
+
 				<div class="field date" data-alert="<?php _e( 'Please select an end date that is after the start date.', 'LION' ); ?>">
 					<div class="start-date">
 						<label for="start-date"><?php _e( 'Start Date', 'LION' ); ?></label>
@@ -286,7 +286,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 				</div>
 
 				<div class="field limit-quantity">
-					<?php $form->add_check_box( 'limit-quantity' ); ?> 
+					<?php $form->add_check_box( 'limit-quantity' ); ?>
 					<label for="limit-quantity">
 						<?php _e( 'Limit Coupon', 'LION' ); ?>
 						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times this coupon can be used', 'LION' ) ); ?>">i</span>
@@ -297,7 +297,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 					<?php $form->add_text_box( 'quantity', array( 'type' => 'number' ) ); ?>
 					<span class="tip" title="<?php _e( 'How many times can this coupon be used before it is disabled?', 'LION' ); ?>">i</span>
 				</div>
-				
+
 				<div class="field">
 					<?php $form->add_submit( 'cancel', array( 'class' => 'button-large button', 'value' => __( 'Cancel', 'LION' ) ) ); ?>
 					<?php $form->add_submit( 'submit', array( 'class' => 'button-large button-primary button', 'value' => __( 'Save', 'LION' ) ) ); ?>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * This file contains functions for currency data sets
  * @package IT_Exchange

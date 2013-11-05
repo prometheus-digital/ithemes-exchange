@@ -1,11 +1,11 @@
 <?php
 /**
- * This is the class for our available shipping methods shipping feature 
+ * This is the class for our available shipping methods shipping feature
  *
  * @since 1.4.0
 */
 class IT_Exchange_Core_Shipping_Feature_Available_Shipping_Methods extends IT_Exchange_Shipping_Feature {
-	
+
 	var $slug = 'core-available-shipping-methods';
 
 	/**
@@ -75,7 +75,7 @@ class IT_Exchange_Core_Shipping_Feature_Available_Shipping_Methods extends IT_Ex
 		$this->values = $values;
 	}
 
-    /** 
+    /**
      * Prints the shipping box on the add/edit product page
      *
      * Relies on methods provided by extending classes
@@ -86,7 +86,7 @@ class IT_Exchange_Core_Shipping_Feature_Available_Shipping_Methods extends IT_Ex
      * @return void
     */
     function print_add_edit_feature_box() {
-        ?>  
+        ?>
         <div class="shipping-feature <?php esc_attr_e( $this->slug ); ?>">
             <?php $this->print_add_edit_feature_box_interior(); ?>
         </div>

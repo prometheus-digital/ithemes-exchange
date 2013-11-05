@@ -11,7 +11,7 @@
 */
 function it_exchange_guest_checkout_add_template_directory( $template_paths, $template_names ) {
 
-	/** 
+	/**
 	 * Use the template_names array to target a specific template part you want to add
 	 * In this example, we're adding the following template part: super-widget-registration/elements/guest.php
 	 * So we're going to only add our templates directory if Exchange is looking for that part.
@@ -30,7 +30,7 @@ function it_exchange_guest_checkout_add_template_directory( $template_paths, $te
 	if ( $found )
 		return $template_paths;
 
-	/** 
+	/**
 	 * If we are looking for the mailchimp-signup template part, go ahead and add our add_ons directory to the list
 	 * No trailing slash
 	*/
@@ -64,7 +64,7 @@ function it_exchange_guest_checkout_get_heading() {
 */
 function it_exchange_guest_checkout_modify_guest_checkout_purchase_requirement_form_actions( $actions ) {
 	$general_settings = it_exchange_get_option( 'settings_general' );
-	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) ) 
+	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) )
 		return $actions;
 
 	$guest_checkout_settings = it_exchange_get_option( 'addon-guest-checkout' );
@@ -99,7 +99,7 @@ add_filter( 'it_exchange_get_super_widget_guest_checkout_actions_elements', 'it_
 */
 function it_exchange_remove_login_link_from_register_sw_state( $actions ) {
 	$general_settings = it_exchange_get_option( 'settings_general' );
-	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) ) 
+	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) )
 		return $actions;
 
 	$guest_checkout_settings = it_exchange_get_option( 'addon-guest-checkout' );
@@ -121,7 +121,7 @@ add_filter( 'it_exchange_get_super_widget_registration_fields_elements', 'it_exc
 */
 function it_exchange_remove_register_link_from_login_sw_state( $actions ) {
 	$general_settings = it_exchange_get_option( 'settings_general' );
-	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) ) 
+	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) )
 		return $actions;
 
 	$guest_checkout_settings = it_exchange_get_option( 'addon-guest-checkout' );
@@ -281,7 +281,7 @@ add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-no
 */
 function it_exchange_guest_checout_maybe_remove_reg_and_login_links_from_checkout_page( $links ) {
 	$general_settings = it_exchange_get_option( 'settings_general' );
-	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) ) 
+	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) )
 		return $actions;
 
 	$guest_checkout_settings = it_exchange_get_option( 'addon-guest-checkout' );
@@ -346,7 +346,7 @@ add_filter( 'it_exchange_get_super_widget_login_actions_elements', 'it_exchange_
  * @param  array $loops   the array of loops to include in the header
  * @return array modified loops missing the menu
 */
-function it_exchange_remove_customer_menu_when_doing_guest_checkout( $loops ) { 
+function it_exchange_remove_customer_menu_when_doing_guest_checkout( $loops ) {
     if ( ! it_exchange_doing_guest_checkout() )
         return $loops;
 

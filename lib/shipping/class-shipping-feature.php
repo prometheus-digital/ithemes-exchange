@@ -4,7 +4,7 @@
 */
 
 abstract class IT_Exchange_Shipping_Feature {
-	
+
 	/**
 	 * @var string $slug the identifying key of the shipping feature
 	*/
@@ -56,7 +56,7 @@ abstract class IT_Exchange_Shipping_Feature {
 		$this->set_values();
 	}
 
-	/** 
+	/**
 	 * Sets the product if one is available
 	 *
 	 * @since 1.4.0
@@ -65,20 +65,20 @@ abstract class IT_Exchange_Shipping_Feature {
 	 * @param  int  $product exchange product id or empty to attempt to pick up the global product
 	 * @return void
 	*/
-	function set_product( $product_id=false ) { 
+	function set_product( $product_id=false ) {
 		$product = false;
 
 		// If a product ID is passed, use it
-		if ( $product_id  ) { 
+		if ( $product_id  ) {
 			$product = it_exchange_get_product( $product_id );
 		} else {
 			// Grab global $post
 			global $post;
 
 			// If post is set in REQUEST, use it.
-			if ( isset( $_REQUEST['post'] ) ) 
+			if ( isset( $_REQUEST['post'] ) )
 				$post_id = (int) $_REQUEST['post'];
-			elseif ( isset( $_REQUEST['post_ID'] ) ) 
+			elseif ( isset( $_REQUEST['post_ID'] ) )
 				$post_id = (int) $_REQUEST['post_ID'];
 			else
 				$post_id = empty( $post->ID ) ? 0 : $post->ID;
@@ -88,23 +88,23 @@ abstract class IT_Exchange_Shipping_Feature {
 				$post = get_post( $post_id );
 
 			// If we have a post object, grab the product
-			if ( ! empty( $post ) && is_object( $post ) ) 
+			if ( ! empty( $post ) && is_object( $post ) )
 				$product = it_exchange_get_product( $post );
-		}   
+		}
 
 		// Set the property
-		if ( is_object( $product ) && 'IT_Exchange_Product' == get_class( $product ) ) 
+		if ( is_object( $product ) && 'IT_Exchange_Product' == get_class( $product ) )
 			$this->product = $product;
 		else
 			$this->product = false;
-	}  
+	}
 
 	/**
 	 * Is this feature available to this product
 	 *
 	 *
 	 * The shipping feature is required to extend override this method in the extended class.
-	 * It needs to then determine if the shipping feature 
+	 * It needs to then determine if the shipping feature
 	 * @since 1.4.0
 	 *
 	 * @return void

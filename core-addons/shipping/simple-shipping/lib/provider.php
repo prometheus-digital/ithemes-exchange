@@ -12,8 +12,8 @@ function it_exchange_addon_simple_shipping_register_shipping_provider() {
         'shipping-methods' => array(
             'exchange-flat-rate-shipping',
             'exchange-free-shipping',
-        ),  
-    );  
+        ),
+    );
     it_exchange_register_shipping_provider( 'simple-shipping', $options );
 }
 add_filter( 'it_exchange_enabled_addons_loaded', 'it_exchange_addon_simple_shipping_register_shipping_provider' );

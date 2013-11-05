@@ -28,7 +28,7 @@ function it_exchange_register_addon( $slug, $params ) {
 	$description  = empty( $params['description'] ) ? ''      : $params['description'];
 	$file         = empty( $params['file'] )        ? false   : $params['file'];
 	$options      = empty( $params['options'] )     ? array() : (array) $params['options'];
-	
+
 	// Basic Validation
 	$slug   = empty( $slug )        ? false : sanitize_key( $slug );
 	$name   = empty( $name )        ? false : sanitize_text_field( $name );
@@ -43,9 +43,9 @@ function it_exchange_register_addon( $slug, $params ) {
 
 	if ( ! $file )
 		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Exchange Add-ons require a file parameter.', 'LION' ) );
-	
+
 	$allowed_keys = array( 'category', 'tag', 'supports', 'labels', 'settings-callback', 'icon', 'wizard-icon' );
-	
+
 	foreach ( $params as $key => $value )
 		if ( in_array( $key, $allowed_keys ) )
 			$options[$key] = $value;
@@ -203,7 +203,7 @@ function it_exchange_get_addon_categories() {
 		$categories = array() ;
 	else
 		$categories = $GLOBALS['it_exchange']['add_on_categories'];
-		
+
 	return apply_filters( 'it_exchange_get_addon_categories', $categories );
 }
 
@@ -223,7 +223,7 @@ function it_exchange_get_enabled_addons( $options=array() ) {
 		'break_cache'   => false,
 	);
 	$options = wp_parse_args( $options, $defaults );
-	
+
 	// Grab all registered add-ons
 	$registered = it_exchange_get_addons();
 	$enabled = array();
@@ -395,7 +395,7 @@ function it_exchange_is_addon_enabled( $add_on_slug ) {
 }
 
 /**
- * Checks if an add-on is registered 
+ * Checks if an add-on is registered
  *
  * @since 0.4.0
  *

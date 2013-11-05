@@ -55,9 +55,9 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	 * @return void
 	*/
 	function init_feature_metaboxes() {
-		
+
 		global $post;
-		
+
 		if ( isset( $_REQUEST['post_type'] ) ) {
 			$post_type = $_REQUEST['post_type'];
 		} else {
@@ -74,23 +74,23 @@ class IT_Exchange_Product_Feature_Product_Availability {
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
 		}
-			
+
 		if ( !empty( $_REQUEST['it-exchange-product-type'] ) )
 			$product_type = $_REQUEST['it-exchange-product-type'];
 		else
 			$product_type = it_exchange_get_product_type( $post );
-		
+
 		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'availability' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_metabox' ) );
 		}
-		
+
 	}
 
 	/**
 	 * Registers the feature metabox for a specific product type
 	 *
-	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports the feature 
+	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports the feature
 	 *
 	 * @since 0.4.0
 	 * @return void
@@ -106,10 +106,10 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	 * @return void
 	*/
 	function print_metabox( $post ) {
-		
+
 		$date_format = get_option( 'date_format' );
 		$jquery_date_format = it_exchange_php_date_format_to_jquery_datepicker_format( $date_format );
-		
+
 		// Grab the iThemes Exchange Product object from the WP $post object
 		$product = it_exchange_get_product( $post );
 
@@ -156,9 +156,9 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	 * @return void
 	*/
 	function save_feature_on_product_save() {
-		
+
 		$new_value = array();
-		
+
 		// Abort if we can't determine a product type
 		if ( ! $product_type = it_exchange_get_product_type() )
 			return;
@@ -174,18 +174,18 @@ class IT_Exchange_Product_Feature_Product_Availability {
 		$end_enabled = empty( $_POST['it-exchange-enable-product-availability-end'] ) ? 'no' : 'yes';
 		it_exchange_update_product_feature( $product_id, 'availability', $end_enabled, array( 'type' => 'end', 'setting' => 'enabled' ) );
 
-		// Abort if this product type doesn't support this feature 
+		// Abort if this product type doesn't support this feature
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'availability', array( 'type' => 'either' ) ) )
 			return;
 
 		// Get new value from post
 		$avail['start'] = empty( $_POST['it-exchange-product-availability-start'] ) ? '' : $_POST['it-exchange-product-availability-start'];
 		$avail['end']   = empty( $_POST['it-exchange-product-availability-end'] ) ? '' : $_POST['it-exchange-product-availability-end'];
-		
+
 
 		// Loop through start and end dates
-		foreach( $avail as $key => $val ) {	
-			
+		foreach( $avail as $key => $val ) {
+
 			// Get the user's option set in WP General Settings
 			$wp_date_format = get_option( 'date_format', 'm/d/Y' );
 
@@ -194,8 +194,8 @@ class IT_Exchange_Product_Feature_Product_Availability {
 				$val = str_replace( '/', '-', $val );
 
 			// Transfer to epoch
-			if ( $epoch = strtotime( $val ) ) {			
-			
+			if ( $epoch = strtotime( $val ) ) {
+
 				 // Returns an array with values of each date segment
 				 $date = date_parse( $val );
 
@@ -204,11 +204,11 @@ class IT_Exchange_Product_Feature_Product_Availability {
 					 $new_value[$key] = $epoch;
 			}
 		}
-				
-		if ( ! empty( $new_value['start'] ) && ! empty( $new_value['end'] ) 
+
+		if ( ! empty( $new_value['start'] ) && ! empty( $new_value['end'] )
 			&& $new_value['start'] >= $new_value['end'] )
 			return;
-		
+
 		// Save new value
 		it_exchange_update_product_feature( $product_id, 'availability', $new_value );
 	}
@@ -218,14 +218,14 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	 *
 	 * @since 0.4.0
 	 * @param integer $product_id the product id
-	 * @param mixed $new_value the new value 
+	 * @param mixed $new_value the new value
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_value, $options=array() ) {
 		$defaults['type']    = 'either';
 		$defaults['setting'] = 'availability';
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		// Save enabled options
 		if ( 'enabled' == $options['setting'] ) {
 			if ( ! in_array( $options['type'], array( 'start', 'end' ) ) )
@@ -284,7 +284,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 
 					// If we made it here, one is 'yes' and one is 'no'. If case is 'both', return 'no'. If case is 'either', return 'yes'.
 					if ( 'both' == $options['type'] )
-						return 'no'; 
+						return 'no';
 					return 'yes';
 					break;
 			}
@@ -293,11 +293,11 @@ class IT_Exchange_Product_Feature_Product_Availability {
 			// Don't use either here. Only both, start, or end
 			if ( ! $value = get_post_meta( $product_id, '_it-exchange-product-availability', true ) )
 				return false;
-			
+
 			foreach( (array) $value as $key => $val ) {
 				$value[$key] = date_i18n( $date_format, $val );
 			}
-				
+
 			switch ( $options['type'] ) {
 				case 'start' :
 					return $value['start'];
@@ -337,7 +337,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	/**
 	 * Does the product support this feature?
 	 *
-	 * This is different than if it has the feature, a product can 
+	 * This is different than if it has the feature, a product can
 	 * support a feature but might not have the feature set.
 	 *
 	 * @since 0.4.0
@@ -351,11 +351,11 @@ class IT_Exchange_Product_Feature_Product_Availability {
 
 		// Does this product type support this feature?
 		$product_type = it_exchange_get_product_type( $product_id );
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'availability' ) ) 
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'availability' ) )
 			return false;
 
 		// Determine if this product has turned on product availability
-		if ( 'no' == it_exchange_get_product_feature( $product_id, 'availability', array( 'type' => $options['type'], 'setting' => 'enabled' ) ) ) 
+		if ( 'no' == it_exchange_get_product_feature( $product_id, 'availability', array( 'type' => $options['type'], 'setting' => 'enabled' ) ) )
 			return false;
 
 		return true;

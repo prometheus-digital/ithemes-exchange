@@ -17,7 +17,7 @@ function it_exchange_get_countries( $options=array() ) {
 	// Defaults
 	$defaults = array(
 		'sort-by-values' => true,
-	); 
+	);
 
 	$options = ITUtility::merge_defaults( $options, $defaults );
 

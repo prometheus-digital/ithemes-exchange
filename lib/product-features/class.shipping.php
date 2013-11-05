@@ -29,7 +29,7 @@ class IT_Exchange_Product_Feature_Shipping {
 		add_filter( 'it_exchange_product_has_feature_shipping', array( $this, 'product_has_feature') , 9, 2 );
 		add_filter( 'it_exchange_product_supports_feature_shipping', array( $this, 'product_supports_feature') , 9, 2 );
 	}
-	
+
 	/**
 	 * Register the product feature and add it to enabled product-type addons
 	 *
@@ -66,9 +66,9 @@ class IT_Exchange_Product_Feature_Shipping {
 	 * @return void
 	*/
 	function init_feature_metaboxes() {
-		
+
 		global $post;
-		
+
 		if ( isset( $_REQUEST['post_type'] ) ) {
 			$post_type = $_REQUEST['post_type'];
 		} else {
@@ -85,17 +85,17 @@ class IT_Exchange_Product_Feature_Shipping {
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
 		}
-			
+
 		if ( !empty( $_REQUEST['it-exchange-product-type'] ) )
 			$product_type = $_REQUEST['it-exchange-product-type'];
 		else
 			$product_type = it_exchange_get_product_type( $post );
-		
+
 		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'shipping' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_metabox' ) );
 		}
-		
+
 	}
 
 	/**
@@ -140,7 +140,7 @@ class IT_Exchange_Product_Feature_Shipping {
 			</div>
 		</div>
 		<div class="shipping-wrapper <?php echo $shipping_enabled ? '' : 'hidden'; ?>">
-			<?php 
+			<?php
 			it_exchange_do_shipping_feature_boxes( $product );
 			?>
 		</div>
@@ -187,7 +187,7 @@ class IT_Exchange_Product_Feature_Shipping {
 	 * @since 0.4.0
 	 *
 	 * @param integer $product_id the product id
-	 * @param mixed $new_value the new value 
+	 * @param mixed $new_value the new value
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_value, $options=array() ) {
@@ -195,7 +195,7 @@ class IT_Exchange_Product_Feature_Shipping {
 		if ( ! it_exchange_get_product( $product_id ) )
 			return false;
 
-		update_post_meta( $product_id, '_it-exchange-shipping-enabled', $new_value );	
+		update_post_meta( $product_id, '_it-exchange-shipping-enabled', $new_value );
 	}
 
 	/**
@@ -211,7 +211,7 @@ class IT_Exchange_Product_Feature_Shipping {
 		if ( ! it_exchange_get_product( $product_id ) )
 			return false;
 
-		return get_post_meta( $product_id, '_it-exchange-shipping-enabled', true ); 
+		return get_post_meta( $product_id, '_it-exchange-shipping-enabled', true );
 	}
 
 	/**
@@ -232,7 +232,7 @@ class IT_Exchange_Product_Feature_Shipping {
 	/**
 	 * Does the product support this feature?
 	 *
-	 * This is different than if it has the feature, a product can 
+	 * This is different than if it has the feature, a product can
 	 * support a feature but might not have the feature set.
 	 *
 	 * @since 0.4.0

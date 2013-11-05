@@ -102,7 +102,7 @@ function it_exchange_register_coupon_type( $type ) {
 
 	if ( ! in_array( $type, $GLOBALS['it_exchange']['coupon_types'] ) )
 		$GLOBALS['it_exchange']['coupon_types'][] = $type;
-		
+
 	do_action( 'it_exchange_register_coupon_type', $type );
 }
 
@@ -114,11 +114,11 @@ function it_exchange_register_coupon_type( $type ) {
  * @return array
 */
 function it_exchange_get_coupon_types() {
-	
+
 	$coupon_types = empty( $GLOBALS['it_exchange']['coupon_types'] ) ? array() : (array) $GLOBALS['it_exchange']['coupon_types'];
-	
+
 	return apply_filters( 'it_exchange_get_coupon_types', $coupon_types );
-	
+
 }
 
 /**

@@ -5,7 +5,7 @@
  * @package IT_Exchange
  * @since 0.2.0
 */
-	
+
 if ( !defined( 'PAYPAL_LIVE_URL' ) )
 	define( 'PAYPAL_LIVE_URL', 'https://www.paypal.com/' );
 if ( !defined( 'PAYPAL_SANDBOX_URL' ) )
@@ -55,7 +55,7 @@ add_action( 'it_exchange_print_paypal-standard-secure_wizard_settings', 'it_exch
 function it_exchange_refund_url_for_paypal_standard_secure( $url ) {
 
 	return 'https://paypal.com/';
-	
+
 }
 add_filter( 'it_exchange_refund_url_for_paypal-standard-secure', 'it_exchange_refund_url_for_paypal_standard_secure' );
 /**
@@ -72,7 +72,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 		return $status;
 
 	if ( !empty( $_REQUEST['it-exchange-transaction-method'] ) && 'paypal-standard-secure' === $_REQUEST['it-exchange-transaction-method'] ) {
-		
+
 		if ( !empty( $_REQUEST['tx'] ) ) //if PDT is enabled
 			$transaction_id = $_REQUEST['tx'];
 		else if ( !empty( $_REQUEST['txn_id'] ) ) //if PDT is not enabled
@@ -93,7 +93,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 			$transaction_status = $_REQUEST['payment_status'];
 		else
 			$transaction_status = NULL;
-					
+
 		if ( !empty( $transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
 
 			try {
@@ -247,7 +247,7 @@ function paypal_standard_secure_print_wizard_settings( $form ) {
 function it_exchange_save_paypal_standard_secure_wizard_settings( $errors ) {
 	if ( ! empty( $errors ) )
 		return $errors;
-	
+
 	$IT_Exchange_paypal_standard_secure_Add_On = new IT_Exchange_paypal_standard_secure_Add_On();
 	return $IT_Exchange_paypal_standard_secure_Add_On->paypal_standard_secure_save_wizard_settings();
 }
@@ -292,20 +292,20 @@ function it_exchange_paypal_standard_secure_addon_make_payment_button( $options 
 
 	if ( 0 >= it_exchange_get_cart_total( false ) )
 		return;
-		
+
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard_secure' );
 
 	$payment_form = '';
-		
+
 	$it_exchange_customer = it_exchange_get_current_customer();
 
 	$payment_form .= '<form action="' . get_site_url() . '/?paypal-standard-secure-form=1" method="post">';
 	$payment_form .= '<input type="submit" class="it-exchange-paypal-standard-button" name="paypal_standard_secure_purchase" value="' . $paypal_settings['paypal-standard-secure-purchase-button-label'] .'" />';
 	$payment_form .= '</form>';
-		
+
 	return $payment_form;
-	
+
 }
 add_filter( 'it_exchange_get_paypal-standard-secure_make_payment_button', 'it_exchange_paypal_standard_secure_addon_make_payment_button', 10, 2 );
 
@@ -318,24 +318,24 @@ add_filter( 'it_exchange_get_paypal-standard-secure_make_payment_button', 'it_ex
  * @return string HTML button
 */
 function it_exchange_process_paypal_standard_secure_form() {
-	
+
 	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard_secure' );
-	
+
 	if ( ! empty( $_REQUEST['paypal_standard_secure_purchase'] ) ) {
-		
+
 		if ( $url = it_exchange_paypal_standard_secure_addon_get_payment_url() ) {
-			
+
 			wp_redirect( $url );
-			
+
 		} else {
-		
+
 			it_exchange_add_message( 'error', __( 'Error processing PayPal form. Missing valid PayPal information.', 'LION' ) );
 			wp_redirect( it_exchange_get_page_url( 'checkout' ) );
-			
+
 		}
-	
+
 	}
-	
+
 }
 add_action( 'wp', 'it_exchange_process_paypal_standard_secure_form' );
 
@@ -350,29 +350,29 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 
 	if ( 0 >= it_exchange_get_cart_total( false ) )
 		return;
-		
+
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard_secure' );
 
 	$payment_form = '';
 
 	$paypal_api_url       = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
-	$paypal_payment_url   = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr';	
+	$paypal_payment_url   = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr';
 	$paypal_email         = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? $paypal_settings['paypal-standard-secure-sandbox-email-address'] : $paypal_settings['paypal-standard-secure-live-email-address'];
 	$paypal_api_username  = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? $paypal_settings['paypal-standard-secure-sandbox-api-username'] : $paypal_settings['paypal-standard-secure-live-api-username'];
 	$paypal_api_password  = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? $paypal_settings['paypal-standard-secure-sandbox-api-password'] : $paypal_settings['paypal-standard-secure-live-api-password'];
 	$paypal_api_signature = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? $paypal_settings['paypal-standard-secure-sandbox-api-signature'] : $paypal_settings['paypal-standard-secure-live-api-signature'];
-	
+
 	if ( ! empty( $paypal_email )
 		&& ! empty( $paypal_api_username )
 		&& ! empty( $paypal_api_password )
 		&& ! empty( $paypal_api_signature ) ) {
-	
+
 		$subscription = false;
 		$it_exchange_customer = it_exchange_get_current_customer();
-		
+
 		remove_filter( 'the_title', 'wptexturize' ); // remove this because it screws up the product titles in PayPal
-		
+
 		if ( 1 === it_exchange_get_cart_products_count() ) {
 			$cart = it_exchange_get_cart_products();
 			foreach( $cart as $product ) {
@@ -380,16 +380,16 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 					if ( it_exchange_product_has_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
 						$time = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'time' ) );
 						switch( $time ) {
-						
+
 							case 'yearly':
 								$unit = 'Y';
 								break;
-								
+
 							case 'monthly':
 							default:
 								$unit = 'M';
 								break;
-							
+
 						}
 						$unit = apply_filters( 'it_exchange_paypal-standard_subscription_unit', $unit, $time );
 						$duration = apply_filters( 'it_exchange_paypal-standard_subscription_duration', 1, $time );
@@ -398,7 +398,7 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 				}
 			}
 		}
-	
+
 		$button_request = array(
 			'USER'           => trim( $paypal_api_username ),
 			'PWD'            => trim( $paypal_api_password ),
@@ -409,25 +409,25 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 			'BUTTONIMAGE'    => 'REG',
 			'BUYNOWTEXT'     => 'PAYNOW',
 		);
-		
-		if ( $subscription ) {	
+
+		if ( $subscription ) {
 		//https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/#id08A6HI00JQU
 			//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
 			//a2, t2, p2 are for the second trial period, which is not supported with the Recurring Payments add-on
 			//a3, t3, p3 are required for the actual subscription details
 			$button_request['BUTTONTYPE'] = 'SUBSCRIBE';
 			$L_BUTTONVARS[] = 'a3=' . number_format( it_exchange_get_cart_total( false ), 2, '.', '' ); //Regular subscription price.
-			$L_BUTTONVARS[] = 'p3=' . $duration; //Subscription duration. Specify an integer value in the allowable range for the units of duration that you specify with t3.	
+			$L_BUTTONVARS[] = 'p3=' . $duration; //Subscription duration. Specify an integer value in the allowable range for the units of duration that you specify with t3.
 			$L_BUTTONVARS[] = 't3=' . $unit; //Regular subscription units of duration. (D, W, M, Y) -- we only use M,Y by default
 			$L_BUTTONVARS[] = 'src=1'; //Recurring payments.
-		
+
 		} else {
 			$button_request['BUTTONTYPE'] = 'BUYNOW';
 			$L_BUTTONVARS[] = 'amount=' . number_format( it_exchange_get_cart_total( false ), 2, '.', '' );
 			$L_BUTTONVARS[] = 'quantity=1';
-		
+
 		}
-		
+
 		$L_BUTTONVARS[] = 'business=' . $paypal_email;
 		$L_BUTTONVARS[] = 'item_name=' . it_exchange_get_cart_description();
 		$L_BUTTONVARS[] = 'return=' . add_query_arg( 'it-exchange-transaction-method', 'paypal-standard-secure', it_exchange_get_page_url( 'transaction' ) );
@@ -439,46 +439,46 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 		$L_BUTTONVARS[] = 'email=' . $it_exchange_customer->data->user_email;
 		$L_BUTTONVARS[] = 'rm=2'; //Return  Method - https://developer.paypal.com/webapps/developer/docs/classic/button-manager/integration-guide/ButtonManagerHTMLVariables/
 		$L_BUTTONVARS[] = 'cancel_return=' . it_exchange_get_page_url( 'cart' );
-	
+
 		$count = 0;
 		foreach( $L_BUTTONVARS as $L_BUTTONVAR ) {
-	
+
 			$button_request['L_BUTTONVAR' . $count] = $L_BUTTONVAR;
 			$count++;
-	
+
 		}
-	
+
 		$response = wp_remote_post( $paypal_api_url, array( 'body' => $button_request ) );
-	
+
 		if ( !is_wp_error( $response ) ) {
-	
+
 			parse_str( wp_remote_retrieve_body( $response ) );
-	
+
 			if ( !empty( $ACK ) && 'Success' === $ACK ) {
-	
+
 				if ( !empty( $WEBSITECODE ) )
 					$payment_form = str_replace( array( "\r\n", "\r", "\n" ), '', stripslashes( $WEBSITECODE ) );
 					//Strip out the newline characters because parse_str/PayPal adds a \n to the encrypted code, whic breaks the digital ID
-	
+
 			}
-	
+
 		}
-		
+
 		if ( preg_match( '/-----BEGIN PKCS7-----.*-----END PKCS7-----/i', $payment_form, $matches ) ) {
-			
+
 			$query = array(
 				'cmd'           => '_s-xclick',
 				'encrypted'     => $matches[0],
 			);
-			
-			$paypal_payment_url = $paypal_payment_url . '?' .  http_build_query( $query ); 
-			
+
+			$paypal_payment_url = $paypal_payment_url . '?' .  http_build_query( $query );
+
 			return $paypal_payment_url;
-		
+
 		}
-	
+
 	}
-	
+
 	return false;
 }
 
@@ -509,26 +509,26 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
-		
+
 	$subscriber_id = !empty( $request['subscr_id'] ) ? $request['subscr_id'] : false;
 	$subscriber_id = !empty( $request['recurring_payment_id'] ) ? $request['recurring_payment_id'] : $subscriber_id;
-	
+
 	if ( !empty( $request['txn_type'] ) ) {
-		
+
 		switch( $request['txn_type'] ) {
-		
+
 			case 'web_accept':
 				switch( strtolower( $request['payment_status'] ) ) {
-				
+
 					case 'completed' :
 						it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] );
 						break;
 					case 'reversed' :
 						it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['parent_txn_id'], $request['reason_code'] );
-						break;					
+						break;
 				}
 				break;
-				
+
 			case 'subscr_payment':
 				switch( strtolower( $request['payment_status'] ) ) {
 					case 'completed' :
@@ -543,43 +543,43 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 						break;
 				}
 				break;
-				
+
 			case 'subscr_signup':
 				it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'active' );
 				break;
-				
+
 			case 'recurring_payment_suspended':
 				it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'suspended' );
 				break;
-				
+
 			case 'subscr_cancel':
 				it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
 				break;
-				
+
 			case 'subscr_eot':
 				it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'deactivated' );
 				break;
-			
+
 		}
-		
+
 	} else {
-	
+
 		//These IPNs don't have txn_types, why PayPal!? WHY!?
 		if ( !empty( $request['reason_code'] ) ) {
 
 			switch( $request['reason_code'] ) {
-				
+
 				case 'refund' :
 					it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['parent_txn_id'], $request['payment_status'] );
 					it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $request['parent_txn_id'], $request['mc_gross'] );
 					if ( $subscriber_id )
 						it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'refunded' );
 					break;
-				
+
 			}
-				
+
 		}
-		
+
 	}
 
 }
@@ -655,22 +655,22 @@ function it_exchange_paypal_standard_secure_addon_add_child_transaction( $paypal
 	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id( $paypal_standard_secure_id );
 	if ( !empty( $transactions ) ) {
 		//this transaction DOES exist, don't try to create a new one, just update the status
-		it_exchange_paypal_standard_secure_addon_update_transaction_status( $paypal_standard_secure_id, $payment_status );		
-	} else { 
-	
+		it_exchange_paypal_standard_secure_addon_update_transaction_status( $paypal_standard_secure_id, $payment_status );
+	} else {
+
 		if ( !empty( $subscriber_id ) ) {
-			
+
 			$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id_by_subscriber_id( $subscriber_id );
 			foreach( $transactions as $transaction ) { //really only one
 				$parent_tx_id = $transaction->ID;
 				$customer_id = get_post_meta( $transaction->ID, '_it_exchange_customer_id', true );
 			}
-			
+
 		} else {
 			$parent_tx_id = false;
 			$customer_id = false;
 		}
-		
+
 		if ( $parent_tx_id && $customer_id ) {
 			$transaction_object = new stdClass;
 			$transaction_object->total = $amount;
@@ -706,7 +706,7 @@ function it_exchange_paypal_standard_secure_addon_update_subscriber_id( $paypal_
 	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id( $paypal_standard_secure_id );
 	foreach( $transactions as $transaction ) { //really only one
 		do_action( 'it_exchange_update_transaction_subscription_id', $transaction, $subscriber_id );
-	}	
+	}
 }
 
 /**
@@ -723,7 +723,7 @@ function it_exchange_paypal_standard_secure_addon_update_subscriber_status( $sub
 		if ( !in_array( $status, array( 'active', 'deactivated' ) ) ) {
 			if ( $transaction->has_refunds() && 0 === it_exchange_get_transaction_total( $transaction, false ) )
 				$status = 'deactivated';
-				
+
 			if ( $transaction->has_children() ) {
 				//Get the last child and make sure it hasn't been fully refunded
 				$args = array(
@@ -739,7 +739,7 @@ function it_exchange_paypal_standard_secure_addon_update_subscriber_status( $sub
 			}
 		}
 		do_action( 'it_exchange_update_transaction_subscription_status', $transaction, $subscriber_id, $status );
-	}		
+	}
 }
 
 /**
@@ -801,7 +801,7 @@ add_filter( 'it_exchange_transaction_status_label_paypal-standard-secure', 'it_e
  * @param object $transaction
  * @return boolean
 */
-function it_exchange_paypal_standard_secure_transaction_is_cleared_for_delivery( $cleared, $transaction ) { 
+function it_exchange_paypal_standard_secure_transaction_is_cleared_for_delivery( $cleared, $transaction ) {
     $valid_stati = array(
 		'completed',
 		'success',
@@ -825,11 +825,11 @@ function it_exchange_paypal_standard_secure_unsubscribe_action( $output, $option
 	$paypal_settings      = it_exchange_get_option( 'addon_paypal_standard_secure' );
 	$paypal_url           = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? PAYPAL_PAYMENT_SANDBOX_URL : PAYPAL_PAYMENT_LIVE_URL;
 	$paypal_email         = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? $paypal_settings['paypal-standard-secure-sandbox-email-address'] : $paypal_settings['paypal-standard-secure-live-email-address'];
-	
+
 	$output  = '<a class="button" href="' . $paypal_url . '?cmd=_subscr-find&alias=' . urlencode( $paypal_email ) . '">';
 	$output .= $options['label'];
 	$output .= '</a>';
-	
+
 	return $output;
 }
 add_filter( 'it_exchange_paypal-standard-secure_unsubscribe_action', 'it_exchange_paypal_standard_secure_unsubscribe_action', 10, 2 );
@@ -973,7 +973,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 		</div>
 		<?php
 	}
-	
+
 	function get_paypal_standard_secure_payment_form_table( $form, $settings = array() ) {
 
 		$general_settings = it_exchange_get_option( 'settings_general' );
@@ -1077,7 +1077,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 		} else {
 			$this->status_message = __( 'Settings not saved.', 'LION' );
 		}
-		
+
 		do_action( 'it_exchange_save_add_on_settings_paypal-standard-secure' );
 
 	}
@@ -1087,7 +1087,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 			return;
 
 		$paypal_standard_secure_settings = array();
-		
+
 		$fields = array(
 			'paypal-standard-secure-live-email-address',
 			'paypal-standard-secure-live-api-username',
@@ -1111,7 +1111,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 		}
 
 		$settings = wp_parse_args( $paypal_standard_secure_settings, it_exchange_get_option( 'addon_paypal_standard_secure' ) );
-		
+
 		if ( $error_msg = $this->get_form_errors( $settings ) ) {
 
 			return $error_msg;
@@ -1120,7 +1120,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 			it_exchange_save_option( 'addon_paypal_standard_secure', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
-		
+
 		return;
 
 	}

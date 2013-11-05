@@ -55,7 +55,7 @@ function it_exchange_update_download_hash_data( $hash, $hash_data ) {
 	$hash_data['customer_id'] = $old_data['customer_id'];
 
 	update_post_meta( $hash_data['file_id'], '_download_hash_' . $hash, $hash_data );
-	
+
 	do_action( 'it_exchange_update_download_hash_data', $hash, $hash_data );
 }
 /**
@@ -183,7 +183,7 @@ function it_exchange_delete_hash_from_transaction_hash_index( $transaction, $has
 
 	// Grab existing hash index
 	$hash_index = (array) it_exchange_get_transaction_download_hash_index( $transaction );
-	
+
 	// Delete if it exists
 	foreach( $hash_index as $product ) {
 		foreach( $product as $download => $hashes ) {

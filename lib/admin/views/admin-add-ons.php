@@ -10,22 +10,22 @@
 	<?php screen_icon( 'it-exchange-add-ons' );  ?>
 	<h2>Add-ons</h2>
 	<p class="top-description"><?php _e( 'Add-ons are features that you can add or remove depending on your needs. Selling your stuff should only be as complicated as you need it to be. Visit the Get More tab to see what else Exchange can do.', 'LION' ); ?></p>
-	
+
 	<?php $this->print_add_ons_page_tabs(); ?>
 	<?php do_action( 'it_exchange_add_ons_page_top' ); ?>
 
 	<?php
 		$tab = ! empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'all';
-		
+
 		switch ( $tab ) {
 			case 'enabled':
 				$addons = it_exchange_get_enabled_addons( array( 'show_required' => false ) );
 				break;
-			
+
 			case 'disabled':
 				$addons = it_exchange_get_disabled_addons( array( 'show_required' => false ) );
 				break;
-			
+
 			case 'all':
 			default:
 				$addons = it_exchange_get_addons( array( 'show_required' => false ) );
@@ -34,18 +34,18 @@
 	?>
 	<div class="add-ons-wrapper">
 		<?php if ( ! empty( $addons ) ) : ?>
-			
+
 			<?php $default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/exchange50px.png' ); ?>
-			
+
 			<?php foreach( (array) $addons as $addon ) : ?>
-            	
+
 				<?php
-				
+
 				if ( !empty( $addon['options']['tag'] ) && 'required' === $addon['options']['tag'] )
 					continue;
-				
+
 				?>
-            	
+
 				<?php $icon = empty( $addon['options']['icon'] ) ? $default_icon : $addon['options']['icon']; ?>
 				<div class="add-on-block">
 					<div class="add-on-icon">
@@ -68,29 +68,29 @@
 						<?php else : ?>
 							<div class="add-on-disabled"><a href="<?php echo wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-enable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-enable-add-on' ); ?>" data-text-enable="&#x2714;&nbsp; Enable" data-text-disabled="&times;&nbsp; Disabled">&times;&nbsp; Disabled</a></div>
 						<?php endif; ?>
-						
+
 						<?php if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) ) : ?>
 							<div class="add-on-settings"><a href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&add-on-settings=' . $addon['slug'] ); ?>">S</a></div>
 						<?php endif; ?>
 					</div>
 				</div>
-			<?php endforeach; ?> 
+			<?php endforeach; ?>
 		<?php else : ?>
-			<?php 
+			<?php
 			if ( 'all' == $tab ) {
-				$vars = array( 
+				$vars = array(
 					'target' => add_query_arg( 'tab', 'get-more' ),
 					'text'   => __( 'No add-ons installed. How\'d you do that?', 'LION' ),
 					'link'   => __( 'Go get some now', 'LION' )
 				);
 			} else if ( 'enabled' == $tab ) {
-				$vars = array( 
+				$vars = array(
 					'target' => add_query_arg( 'tab', 'disabled' ),
 					'text'   => __( 'No add-ons are currently enabled', 'LION' ),
 					'link'   => __( 'Go enable some now', 'LION' )
 				);
 			} else if ( 'disabled' == $tab ) {
-				$vars = array( 
+				$vars = array(
 					'target' => add_query_arg( 'tab', 'get-more' ),
 					'text'   => __( 'All add-ons are currently enabled', 'LION' ),
 					'link'   => __( 'Go get more', 'LION' )

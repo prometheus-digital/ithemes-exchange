@@ -274,7 +274,7 @@ class IT_Exchange_Transaction_Post_Type {
 		if ( isset( $existing['date'] ) )
 			unset( $existing['date'] );
 
-		// Remove Builder 
+		// Remove Builder
 		if ( isset( $existing['builder_layout'] ) )
 			unset( $existing['builder_layout'] );
 

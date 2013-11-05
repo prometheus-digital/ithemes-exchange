@@ -7,7 +7,7 @@
 */
 
 /**
- * This is the function registered in the options array when it_exchange_register_addon 
+ * This is the function registered in the options array when it_exchange_register_addon
  * was called for Digital Downloads
  *
  * It tells Exchange where to find the settings page
@@ -38,20 +38,20 @@ function it_exchange_digital_downloads_duplicate_product_addon_default_product_m
 		'post_parent' => $old_post_id,
 	);
 	$downloads = get_posts( $args );
-	
+
 	foreach ( $downloads as $download ) {
 
 		$download_meta = get_post_meta( $download->ID, '_it-exchange-download-info', true );
-		
+
 		unset( $download->ID );
 		$download->post_parent = $post->ID;
 		if ( $download_id = wp_insert_post( $download ) ) {
 			// Save the download
 			update_post_meta( $download_id, '_it-exchange-download-info', $download_meta );
 		}
-		
+
 	}
-	
+
 }
 add_action( 'it_exchange_duplicate_product_addon_default_product_meta', 'it_exchange_digital_downloads_duplicate_product_addon_default_product_meta', 10, 2 );
 
@@ -103,7 +103,7 @@ class IT_Exchange_Digital_Downloads_Add_On {
 			add_action( 'it_exchange_save_add_on_settings_digital_downloads', array( $this, 'save_settings' ) );
 			do_action( 'it_exchange_save_add_on_settings_digital_downloads' );
 		}
-		
+
 		add_filter( 'it_storage_get_defaults_exchange_addon_digital_downloads', array( $this, 'set_default_settings' ) );
 	}
 
@@ -137,13 +137,13 @@ class IT_Exchange_Digital_Downloads_Add_On {
 			<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
 			<?php $form->start_form( $form_options, 'it-exchange-digitald-downloads-settings' ); ?>
 
-				<?php 
+				<?php
 				do_action( 'it_exchange_digital_downloads_settings_form_top' );
-                		
+
 				if ( ! empty( $settings ) )
 					foreach ( $settings as $key => $var )
 						$form->set_option( $key, $var );
-		
+
 				?>
 				<div class="it-exchange-addon-settings it-exchange-digital-downloads-addon-settings">
 					<p>
@@ -153,7 +153,7 @@ class IT_Exchange_Digital_Downloads_Add_On {
 				</div>
 				<?php
 
-				do_action( 'it_exchange_digital_downloads_settings_form_bottom' ); 
+				do_action( 'it_exchange_digital_downloads_settings_form_bottom' );
 				?>
 				<p class="submit">
 					<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary button-large' ) ); ?>

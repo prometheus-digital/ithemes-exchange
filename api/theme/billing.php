@@ -230,7 +230,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 			'label'    => __( 'Ship to billing address?', 'LION' ),
 			'required' => false,
 			'value'    => '1',
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		$options['field_id']   = 'it-exchange-ship-to-billing';
@@ -241,7 +241,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 
 		$field = '<input type="checkbox" id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '" ' . checked( $options['value'], '1', false ) . ' value="1" />';
 
-		switch( $options['format'] ) { 
+		switch( $options['format'] ) {
 			case 'field-id' :
 				$output = $options['field_id'];
 				break;
@@ -264,7 +264,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 				$output .= '</label>';
 		}
 		return $output;
-	} 
+	}
 
 	/**
 	 * Outputs the billing address country data
@@ -288,7 +288,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 		$options['value'] = empty( $_POST['ite_base_country_ajax'] ) ? $options['value'] : $_POST['ite_base_country_ajax'];
 
 		$countries = it_exchange_get_data_set( 'countries' );
-		
+
 		$current_value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
 
 		$field  = '<select id="' . esc_attr( $options['field_id'] ) . '" name="' . esc_attr( $options['field_name'] ) . '">';
@@ -356,7 +356,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 		$options['value']      = empty( $this->_billing_address['state'] ) ? '' : $this->_billing_address['state'];
 
 		$states = it_exchange_get_data_set( 'states', array( 'country' => it_exchange( 'billing', 'get-country', array( 'format' => 'value' ) ) ) );
-		
+
 		$current_value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
 
 		$field = '';
@@ -446,7 +446,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	}
 
 	/**
-	 * Outputs the billing address submit button 
+	 * Outputs the billing address submit button
 	 *
 	 * @since 1.3.0
 	 * @return string
@@ -489,7 +489,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	 * @return mixed
 	*/
 	function get_fields( $options ) {
-		
+
 		$value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
 		$class = empty( $options['class'] ) ? '' : esc_attr( $options['class'] );
 

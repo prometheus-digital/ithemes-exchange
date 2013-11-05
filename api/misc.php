@@ -25,7 +25,7 @@ function it_exchange_create_unique_hash() {
  * @return string jQuery datePicker Format
 */
 function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format ) {
-	
+
 	//http://us2.php.net/manual/en/function.date.php
 	//http://api.jqueryui.com/datepicker/#utility-formatDate
 	$php_format = array(
@@ -38,24 +38,24 @@ function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format )
 		//'/S/', //English ordinal suffix for the day of the month, 2 characters
 		//'/w/', //Numeric representation of the day of the week
 		'/z/', //The day of the year (starting from 0)
-		
+
 		//week
 		//'/W/', //ISO-8601 week number of year, weeks starting on Monday (added in PHP 4.1.0)
-		
+
 		//month
 		'/F/', //A full textual representation of a month, such as January or March
 		'/m/', //Numeric representation of a month, with leading zeros
 		'/M/', //A short textual representation of a month, three letters
 		'/n/', //numeric month no leading zeros
 		//'t/', //Number of days in the given month
-		
+
 		//year
 		//'/L/', //Whether it's a leap year
 		//'/o/', //ISO-8601 year number. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead. (added in PHP 5.1.0)
 		'/Y/', //A full numeric representation of a year, 4 digits
 		'/y/', //A two digit representation of a year
 	);
-	
+
 	$datepicker_format = array(
 		//day
 		'dd', //day of month (two digit)
@@ -66,24 +66,24 @@ function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format )
 		//'',   //S - Equivalent does not exist in datePicker
 		//'',   //w - Equivalent does not exist in datePicker
 		'z' => 'o',  //The day of the year (starting from 0)
-		
+
 		//week
 		//'',   //W - Equivalent does not exist in datePicker
-		
+
 		//month
 		'MM', //month name long
 		'mm', //month of year (two digit)
 		'M',  //month name short
 		'm',  //month of year (no leading zero)
 		//'',   //t - Equivalent does not exist in datePicker
-		
+
 		//year
 		//'',   //L - Equivalent does not exist in datePicker
 		//'',   //o - Equivalent does not exist in datePicker
 		'yy', //year (four digit)
 		'y',  //month name long
 	);
-	
+
 	return preg_replace( $php_format, $datepicker_format, preg_quote( $date_format ) );
 }
 
@@ -97,14 +97,14 @@ function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format )
 function it_exchange_convert_to_database_number( $price ) {
 	$settings = it_exchange_get_option( 'settings_general' );
 	$sep = $settings['currency-decimals-separator'];
-	
+
 	$price = trim( $price );
-			
+
 	if ( strstr( $price, $sep ) )
 		$price = preg_replace("/[^0-9]*/", '', $price );
 	else //if we don't find a decimal separator, we want to multiply by 100 for future decimal operations
 		$price = preg_replace("/[^0-9]*/", '', $price ) * 100;
-		
+
 	return $price;
 }
 
@@ -462,19 +462,19 @@ function it_exchange_get_formatted_billing_address( $billing_address=false ) {
 	$formatted   = array();
 	$billing     = empty( $billing_address ) ? it_exchange_get_cart_billing_address() : $billing_address;
 	$formatted[] = implode( ' ', array( $billing['first-name'], $billing['last-name'] ) );
-	if ( ! empty( $billing['company-name'] ) ) 
+	if ( ! empty( $billing['company-name'] ) )
 		$formatted[] = $billing['company-name'];
-	if ( ! empty( $billing['address1'] ) ) 
+	if ( ! empty( $billing['address1'] ) )
 		$formatted[] = $billing['address1'];
-	if ( ! empty( $billing['address2'] ) ) 
+	if ( ! empty( $billing['address2'] ) )
 		$formatted[] = $billing['address2'];
-	if ( ! empty( $billing['city'] ) || ! empty( $billing['state'] ) || ! empty( $billing['zip'] ) ) { 
+	if ( ! empty( $billing['city'] ) || ! empty( $billing['state'] ) || ! empty( $billing['zip'] ) ) {
 		$formatted[] = implode( ' ', array( ( empty( $billing['city'] ) ? '': $billing['city'] .',' ),
 			( empty( $billing['state'] ) ? '': $billing['state'] ),
 			( empty( $billing['zip'] ) ? '': $billing['zip'] ),
 		) );
-	}   
-	if ( ! empty( $billing['country'] ) ) 
+	}
+	if ( ! empty( $billing['country'] ) )
 		$formatted[] = $billing['country'];
 
 	$formatted = implode( '<br />', $formatted );

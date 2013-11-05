@@ -83,7 +83,7 @@ if ( !function_exists( 'it_exchange_categories_addon_add_menu_item' ) ) {
 
 }
 
-if ( !function_exists( 'it_exchange_categories_addon_fix_menu_parent_file' ) ) { 
+if ( !function_exists( 'it_exchange_categories_addon_fix_menu_parent_file' ) ) {
 
 	/**
 	 * This fixed the $parent_file variable so that the Exchange top-level menu expands when on the Product Tags page

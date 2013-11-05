@@ -7,7 +7,7 @@
 */
 
 /**
- * Check if a given product supports a specific feature 
+ * Check if a given product supports a specific feature
  *
  * @since 0.3.8
  * @param integer $product_id the WordPress post ID for the product
@@ -20,7 +20,7 @@ function it_exchange_product_supports_feature( $product_id, $feature_key, $optio
 }
 
 /**
- * Check if a given product has a specific feature 
+ * Check if a given product has a specific feature
  *
  * @since 0.3.8
  * @param integer $product_id the WordPress post ID for the product

@@ -59,7 +59,7 @@ class IT_Exchange_Product_Feature_Inventory {
 	 * @return void
 	*/
 	function add_feature_support_to_product_types() {
-		if ( it_exchange_is_addon_enabled( 'digital-downloads-product-type' ) ) 
+		if ( it_exchange_is_addon_enabled( 'digital-downloads-product-type' ) )
 			it_exchange_add_feature_support_to_product_type( 'inventory', 'digital-downloads-product-type' );
 	}
 
@@ -70,9 +70,9 @@ class IT_Exchange_Product_Feature_Inventory {
 	 * @return void
 	*/
 	function init_feature_metaboxes() {
-		
+
 		global $post;
-		
+
 		if ( isset( $_REQUEST['post_type'] ) ) {
 			$post_type = $_REQUEST['post_type'];
 		} else {
@@ -89,23 +89,23 @@ class IT_Exchange_Product_Feature_Inventory {
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
 		}
-			
+
 		if ( !empty( $_REQUEST['it-exchange-product-type'] ) )
 			$product_type = $_REQUEST['it-exchange-product-type'];
 		else
 			$product_type = it_exchange_get_product_type( $post );
-		
+
 		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'inventory' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_metabox' ) );
 		}
-		
+
 	}
 
 	/**
 	 * Registers the feature metabox for a specific product type
 	 *
-	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports the feature 
+	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports the feature
 	 *
 	 * @since 0.4.0
 	 * @return void
@@ -165,7 +165,7 @@ class IT_Exchange_Product_Feature_Inventory {
 		if ( ! $product_id )
 			return;
 
-		// Abort if this product type doesn't support this feature 
+		// Abort if this product type doesn't support this feature
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'inventory' ) )
 			return;
 
@@ -174,10 +174,10 @@ class IT_Exchange_Product_Feature_Inventory {
 			it_exchange_update_product_feature( $product_id, 'inventory', 'no', array( 'setting' => 'enabled' ) );
         else
 			it_exchange_update_product_feature( $product_id, 'inventory', 'yes', array( 'setting' => 'enabled' ) );
-		
+
 		if ( isset( $_POST['it-exchange-product-inventory'] ) )
 			it_exchange_update_product_feature( $product_id, 'inventory', $_POST['it-exchange-product-inventory'] );
-		
+
 	}
 
 	/**
@@ -186,7 +186,7 @@ class IT_Exchange_Product_Feature_Inventory {
 	 * @since 0.4.0
 	 *
 	 * @param integer $product_id the product id
-	 * @param mixed $new_value the new value 
+	 * @param mixed $new_value the new value
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_value, $options=array() ) {
@@ -195,7 +195,7 @@ class IT_Exchange_Product_Feature_Inventory {
 			'setting' => 'inventory',
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		// Only accept settings for max_number (default) or 'enabled' (checkbox)
 		if ( 'inventory' == $options['setting'] ) {
 			$new_value = empty( $new_value ) && !is_numeric( $new_value ) ? '' : absint( $new_value );
@@ -223,18 +223,18 @@ class IT_Exchange_Product_Feature_Inventory {
         // Using options to determine if we're getting the enabled setting or the actual inventory number
         $defaults = array(
             'setting' => 'inventory',
-        );  
+        );
         $options = ITUtility::merge_defaults( $options, $defaults );
 
-        if ( 'enabled' == $options['setting'] ) { 
+        if ( 'enabled' == $options['setting'] ) {
             $enabled = get_post_meta( $product_id, '_it-exchange-product-enable-inventory', true );
-            if ( ! in_array( $enabled, array( 'yes', 'no' ) ) ) 
+            if ( ! in_array( $enabled, array( 'yes', 'no' ) ) )
                 $enabled = 'no';
             return $enabled;
-        } else if ( 'inventory' == $options['setting'] ) { 
-            if ( it_exchange_product_supports_feature( $product_id, 'inventory' ) ) 
+        } else if ( 'inventory' == $options['setting'] ) {
+            if ( it_exchange_product_supports_feature( $product_id, 'inventory' ) )
                 return get_post_meta( $product_id, '_it-exchange-product-inventory', true );
-        }   
+        }
         return false;
 	}
 
@@ -256,7 +256,7 @@ class IT_Exchange_Product_Feature_Inventory {
 	/**
 	 * Does the product support this feature?
 	 *
-	 * This is different than if it has the feature, a product can 
+	 * This is different than if it has the feature, a product can
 	 * support a feature but might not have the feature set.
 	 *
 	 * @since 0.4.0

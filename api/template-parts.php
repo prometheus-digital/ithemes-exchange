@@ -8,7 +8,7 @@
 /**
  * Returns an array of template part loop slugs, filterable by add-ons
  *
- * @since 1.1.0 
+ * @since 1.1.0
  *
  * @param string $context usually the template-part its being called from
  * @param string $detail usually an identifying slug to indicated where we are on the template-part
@@ -23,7 +23,7 @@ function it_exchange_get_template_part_loops( $context, $detail, $parts ) {
 /**
  * Returns an array of template part element slugs, filterable by add-ons
  *
- * @since 1.1.0 
+ * @since 1.1.0
  *
  * @param string $context usually the template-part its being called from
  * @param string $detail usually an identifying slug to indicated where we are on the template-part

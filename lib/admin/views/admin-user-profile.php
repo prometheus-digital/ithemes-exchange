@@ -12,7 +12,7 @@ if ( empty( $_REQUEST['user_id'] ) )
     $user_id = get_current_user_id();
 else
     $user_id = $_REQUEST['user_id'];
-    
+
 $user_object = get_userdata( $user_id );
 ?>
 

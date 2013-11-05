@@ -52,7 +52,7 @@ class IT_Exchange_Coupon {
 	 * @return void
 	*/
 	function IT_Exchange_Coupon( $post=false ) {
-		
+
 		// If not an object, try to grab the WP object
 		if ( ! is_object( $post ) )
 			$post = get_post( (int) $post );

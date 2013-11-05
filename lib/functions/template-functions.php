@@ -55,12 +55,12 @@ function it_exchange_locate_template( $template_names, $load=false, $require_onc
 		$template_names[] = 'single-it_exchange_prod.php';
 
 	// Define possible template paths
-	$possible_template_paths = array( 
+	$possible_template_paths = array(
 		// Exchange directory
 		trailingslashit( get_stylesheet_directory() ) . 'exchange',
 		trailingslashit( get_template_directory() ) . 'exchange',
 	);
-	
+
 	// Allow addons to add a template path for template parts
 	if ( $template_part )
 		$possible_template_paths = apply_filters( 'it_exchange_possible_template_paths', $possible_template_paths, $template_names );
@@ -83,10 +83,10 @@ function it_exchange_locate_template( $template_names, $load=false, $require_onc
 	$possible_template_paths = array_unique( $possible_template_paths );
 
     // Try to find an exchange template file
-    foreach ( (array) $template_names as $template_name ) { 
+    foreach ( (array) $template_names as $template_name ) {
 
         // Continue if template is empty
-        if ( empty( $template_name ) ) 
+        if ( empty( $template_name ) )
             continue;
 
         // Trim off any slashes from the template name
@@ -98,7 +98,7 @@ function it_exchange_locate_template( $template_names, $load=false, $require_onc
 			// Don't look for single-it_exchange_prod inside /exchange folder
 			if ( '/exchange/' == substr( trailingslashit( $path ), -10 ) && 'single-it_exchange_prod.php' == $template_name )
 				continue;
-			
+
 			// If file doesn't exist, keep looking
 			if ( ! is_file( trailingslashit( $path ) . $template_name ) )
 				continue;
@@ -107,7 +107,7 @@ function it_exchange_locate_template( $template_names, $load=false, $require_onc
 			$located = trailingslashit( $path ) . $template_name;
 			break 2;
 		}
-    }   
+    }
 
     if ( ( true == $load ) && ! empty( $located ) ) {
 		do_action( 'it_exchange_template_found', $located, $template_names, $possible_template_paths, $require_once );
@@ -216,7 +216,7 @@ add_action( 'it_exchange_version_updated', 'activate_updated_template_nag' );
 function it_exchange_show_updated_template_nag() {
 	if ( ! empty( $_GET['it-exchange-dismiss-tempate-nag'] ) )
 		update_option( 'it-exchange-hide-template-update-nag', $GLOBALS['it_exchange']['version'] );
-	
+
 	$nag_dismissed = get_option( 'it-exchange-hide-template-update-nag', false );
 	if ( empty( $nag_dismissed ) || $nag_dismissed < $GLOBALS['it_exchange']['version'] ) {
 		$codex_url   = 'http://ithemes.com/codex/page/Exchange_Template_Updates';

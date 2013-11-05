@@ -3,7 +3,7 @@
  * This class setsup a provider
 */
 class IT_Exchange_Shipping_Provider{
-	
+
 	var $slug;
 	var $label;
 	var $shipping_methods;
@@ -129,7 +129,7 @@ class IT_Exchange_Shipping_Provider{
 	 *
 	 * @since 1.4.0
 	 *
-	 * @param  array  $options options for the provider setting 
+	 * @param  array  $options options for the provider setting
 	 * @return void
 	*/
 	function add_provider_setting( $options=array() ) {
@@ -164,7 +164,7 @@ class IT_Exchange_Shipping_Provider{
 	}
 
 	/**
-	 * Returns the values for the provider settings 
+	 * Returns the values for the provider settings
 	 *
 	 * @since 1.4.0
 	 *
@@ -176,18 +176,18 @@ class IT_Exchange_Shipping_Provider{
 	}
 
 	/**
-	 * Returns the default values for the provider settings 
+	 * Returns the default values for the provider settings
 	 *
 	 * @since 1.4.0
 	 *
 	 * @return array
 	*/
-    function get_default_provider_setting_values( $defaults ) { 
-        foreach ( (array) $this->provider_settings as $setting ) { 
-            if ( 'heading' != $setting['type'] ) { 
+    function get_default_provider_setting_values( $defaults ) {
+        foreach ( (array) $this->provider_settings as $setting ) {
+            if ( 'heading' != $setting['type'] ) {
                 $defaults[$setting['slug']] = empty( $setting['default'] ) ? false : $setting['default'];
-            }   
-        }   
+            }
+        }
         return $defaults;
     }
 

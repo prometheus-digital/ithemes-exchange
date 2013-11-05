@@ -6,7 +6,7 @@
 */
 
 class IT_Theme_API_Transaction implements IT_Theme_API {
-	
+
 	/**
 	 * API context
 	 * @var string $_context
@@ -81,7 +81,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
 	 * @since 0.4.0
-	 * 
+	 *
 	 * @return string
 	*/
 	function get_api_context() {
@@ -97,10 +97,10 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	function order_number( $options=array() ) {
 		// Set options
 		$defaults      = array(
-			'before' => '', 
-			'after'  => '', 
-			'label'  => __( 'Order Number: %s', 'LION' ), 
-		);  
+			'before' => '',
+			'after'  => '',
+			'label'  => __( 'Order Number: %s', 'LION' ),
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		return $options['before'] . sprintf( $options['label'], it_exchange_get_transaction_order_number( $this->_transaction ) ) . $options['after'];
@@ -115,17 +115,17 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	function status( $options=array() ) {
 		// Set options
 		$defaults      = array(
-			'before' => '', 
-			'after'  => '', 
-			'label'  => __( 'Status: <span class="%s">%s</span>', 'LION' ), 
-		);  
+			'before' => '',
+			'after'  => '',
+			'label'  => __( 'Status: <span class="%s">%s</span>', 'LION' ),
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		return $options['before'] . sprintf( $options['label'], it_exchange_get_transaction_status( $this->_transaction ), it_exchange_get_transaction_status_label( $this->_transaction ) ) . $options['after'];
 	}
 
 	/**
-	 * Returns the transaction instructions 
+	 * Returns the transaction instructions
 	 *
 	 * @since 0.4.0
 	 *
@@ -133,9 +133,9 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	function instructions( $options=array() ) {
 		// Set options
 		$defaults      = array(
-			'before' => '', 
-			'after'  => '', 
-		);  
+			'before' => '',
+			'after'  => '',
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		return $options['before'] . it_exchange_get_transaction_instructions( $this->_transaction ) . $options['after'];
@@ -152,10 +152,10 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	function date( $options=array() ) {
 		// Set options
 		$defaults      = array(
-			'before' => '', 
-			'after'  => '', 
+			'before' => '',
+			'after'  => '',
 			'format' => get_option('date_format'),
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		return $options['before'] . it_exchange_get_transaction_date( $this->_transaction, $options['format'] ) . $options['after'];
@@ -172,12 +172,12 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	function total( $options=array() ) {
 		// Set options
 		$defaults      = array(
-			'before'          => '', 
-			'after'           => '', 
+			'before'          => '',
+			'after'           => '',
 			'format_currency' => true,
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		return $options['before'] .it_exchange_get_transaction_total( $this->_transaction, $options['format_currency'] ) . $options['after'];
 	}
 
@@ -192,12 +192,12 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	function subtotal( $options=array() ) {
 		// Set options
 		$defaults      = array(
-			'before'          => '', 
-			'after'           => '', 
+			'before'          => '',
+			'after'           => '',
 			'format_currency' => true,
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-				
+
 		return $options['before'] . it_exchange_get_transaction_subtotal( $this->_transaction, $options['format_currency'] ) . $options['after'];
 	}
 
@@ -212,15 +212,15 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	function savings_total( $options=array() ) {
 		if ( !empty( $options['has'] ) )
 			return (bool)it_exchange_get_transaction_coupons( $this->_transaction );
-			
+
 		// Set options
 		$defaults      = array(
-			'before'          => '', 
-			'after'           => '', 
+			'before'          => '',
+			'after'           => '',
 			'format_currency' => true,
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		return $options['before'] . it_exchange_get_transaction_coupons_total_discount( $this->_transaction, $options['format_currency'] ) . $options['after'];
 	}
 
@@ -235,15 +235,15 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	function shipping_total( $options=array() ) {
 		if ( !empty( $options['has'] ) )
 			return (bool)it_exchange_get_transaction_shipping_total( $this->_transaction );
-			
+
 		// Set options
 		$defaults      = array(
-			'before'          => '', 
-			'after'           => '', 
+			'before'          => '',
+			'after'           => '',
 			'format_currency' => true,
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		return $options['before'] . it_exchange_get_transaction_shipping_total( $this->_transaction, $options['format_currency'] ) . $options['after'];
 	}
 
@@ -258,15 +258,15 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	function shipping_address( $options=array() ) {
 		if ( !empty( $options['has'] ) )
 			return !empty( $this->_transaction->cart_details->shipping_address );
-			
+
 		// Set options
 		$defaults      = array(
-			'before'          => '', 
-			'after'           => '', 
+			'before'          => '',
+			'after'           => '',
 			'format_currency' => true,
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		return $options['before'] . it_exchange_get_formatted_billing_address( $this->_transaction->cart_details->shipping_address ) . $options['after'];
 	}
 
@@ -281,19 +281,19 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	function billing_address( $options=array() ) {
 		if ( !empty( $options['has'] ) )
 			return !empty( $this->_transaction->cart_details->billing_address );
-			
+
 		// Set options
 		$defaults      = array(
-			'before'          => '', 
-			'after'           => '', 
+			'before'          => '',
+			'after'           => '',
 			'format_currency' => true,
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		return $options['before'] . it_exchange_get_formatted_billing_address( $this->_transaction->cart_details->billing_address ) . $options['after'];
 	}
 
-    /** 
+    /**
      * This loops through the transaction_products GLOBAL and updates the transaction_product global.
      *
      * It return false when it reaches the last product
@@ -302,19 +302,19 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
      * @since 0.4.0
      * @return string
     */
-    function products( $options=array() ) { 
+    function products( $options=array() ) {
         // Return boolean if has flag was set
         if ( $options['has'] )
-            return count( it_exchange_get_transaction_products( $this->_transaction ) ) > 0 ; 
+            return count( it_exchange_get_transaction_products( $this->_transaction ) ) > 0 ;
 
         // If we made it here, we're doing a loop of transaction_products for the current query.
         // This will init/reset the transaction_products global and loop through them.
-        if ( empty( $GLOBALS['it_exchange']['transaction_products'] ) ) { 
+        if ( empty( $GLOBALS['it_exchange']['transaction_products'] ) ) {
             $GLOBALS['it_exchange']['transaction_products'] = it_exchange_get_transaction_products( $this->_transaction );
             $GLOBALS['it_exchange']['transaction_product'] = reset( $GLOBALS['it_exchange']['transaction_products'] );
             return true;
         } else {
-            if ( next( $GLOBALS['it_exchange']['transaction_products'] ) ) { 
+            if ( next( $GLOBALS['it_exchange']['transaction_products'] ) ) {
                 $GLOBALS['it_exchange']['transaction_product'] = current( $GLOBALS['it_exchange']['transaction_products'] );
                 return true;
             } else {
@@ -322,7 +322,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
         		end( $GLOBALS['it_exchange']['transaction_products'] );
                 $GLOBALS['it_exchange']['transaction_product'] = false;
                 return false;
-            }   
+            }
         }
     }
 
@@ -338,15 +338,15 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		return it_exchange_transaction_is_cleared_for_delivery( $this->_transaction->ID );
 	}
 
-	/** 
+	/**
 	 * Use this to get a transaction product attribute like title, description, price, etc.
 	 *
 	 * See lib/templates/content-downloads/ files for examples
 	 * @since 0.4.0
 	 * @return string
 	*/
-	function product_attribute( $options=array() ) { 
-	
+	function product_attribute( $options=array() ) {
+
 		// Set defaults
 		$defaults = array(
 			'wrap'         => false,
@@ -354,7 +354,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			'attribute'    => false,
 			'format_price' => true,
 			'class'        => false
-		);  
+		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		// Return empty if attribute was not provided
@@ -384,7 +384,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 		$open_wrap  = empty( $options['wrap'] ) ? '' : '<' . esc_attr( $options['wrap'] ) . ' class="' . $options['class'] . '">';
 		$close_wrap = empty( $options['wrap'] ) ? '' : '</' . esc_attr( $options['wrap'] ) . '>';
-		$result   = ''; 
+		$result   = '';
 
 		if ( 'html' == $options['format'] )
 			$result .= $open_wrap;
@@ -395,7 +395,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			$result .= $close_wrap;
 
 		return $result;
-	} 
+	}
 
 	/**
 	 * The product's featured image
@@ -484,12 +484,12 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
         // If we made it here, we're doing a loop of transaction_product_downloads for the current query.
         // This will init/reset the transaction_product_downloads global and loop through them.
-        if ( empty( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] ) ) { 
+        if ( empty( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] ) ) {
             $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] = it_exchange_get_product_feature( $product_id, 'downloads' );
             $GLOBALS['it_exchange']['transaction_product_download'] = reset( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] );
             return true;
         } else {
-            if ( next( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] ) ) { 
+            if ( next( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] ) ) {
                 $GLOBALS['it_exchange']['transaction_product_download'] = current( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] );
                 return true;
             } else {
@@ -497,8 +497,8 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 				end( $GLOBALS['it_exchange']['transaction_product_downloads'][$product_id] );
                 $GLOBALS['it_exchange']['transaction_product_download'] = false;
                 return false;
-            }   
-        }   
+            }
+        }
 	}
 
 	/**
@@ -532,7 +532,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * The number of hashes per download will equal the quantity paid for at time of purchase for the transaction
 	 * See lib/templates/content-downloads/ files for examples
 	 *
-	 * @return void 
+	 * @return void
 	*/
 	function product_download_hashes( $options=array() ) {
 		// Return false if we don't have a product id
@@ -541,19 +541,19 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 		// Return boolean if we're just checking
 		if ( ! empty( $options['has'] ) )
-			return (boolean) it_exchange_get_download_hashes_for_transaction_product( $this->_transaction, $this->_transaction_product, $this->_transaction_product_download['id'] ); 
+			return (boolean) it_exchange_get_download_hashes_for_transaction_product( $this->_transaction, $this->_transaction_product, $this->_transaction_product_download['id'] );
 
 		// Download ID
 		$download_id = $this->_transaction_product_download['id'];
 
 		// If we made it here, we're doing a loop of transaction_product_download_hashes for the current query.
         // This will init/reset the transaction_product_download_hashes global and loop through them.
-        if ( empty( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] ) ) { 
+        if ( empty( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] ) ) {
             $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] = it_exchange_get_download_hashes_for_transaction_product( $this->_transaction, $this->_transaction_product, $download_id );
             $GLOBALS['it_exchange']['transaction_product_download_hash'] = reset( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] );
             return true;
         } else {
-            if ( next( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] ) ) { 
+            if ( next( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] ) ) {
                 $GLOBALS['it_exchange']['transaction_product_download_hash'] = current( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] );
                 return true;
             } else {
@@ -561,7 +561,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 				end( $GLOBALS['it_exchange']['transaction_product_download_hashes'][$download_id] );
                 $GLOBALS['it_exchange']['transaction_product_download_hash'] = false;
                 return false;
-            }   
+            }
         }
 	}
 
@@ -592,7 +592,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			$options['attribute'] = 'downloads';
 
 		if ( 'expiration-date' == $options['attribute'] ) {
-		
+
 			$date_format = empty( $options['date-format'] ) ? false : $options['date-format'];
 			$date = it_exchange_get_download_expiration_date( $hash_data, $date_format );
 			$value = empty( $date ) ? false : $date;
@@ -610,14 +610,14 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		return $value;
 	}
 
-	/** 
+	/**
 	 * The product's featured image
 	 *
 	 * @since 0.4.12
 	 *
 	 * @return string
 	*/
-	function product_featured_image( $options=array() ) { 
+	function product_featured_image( $options=array() ) {
 
 		// Get the real product item or return empty
 		if ( ! $product_id = empty( $this->_transaction_product['product_id'] ) ? false : $this->_transaction_product['product_id'] )
@@ -632,11 +632,11 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			return it_exchange_product_has_feature( $product_id, 'product-images' );
 
 		if ( it_exchange_product_supports_feature( $product_id, 'product-images' )
-				&& it_exchange_product_has_feature( $product_id, 'product-images' ) ) { 
+				&& it_exchange_product_has_feature( $product_id, 'product-images' ) ) {
 
 			$defaults = array(
 				'size' => 'thumb'
-			);  
+			);
 
 			$options = ITUtility::merge_defaults( $options, $defaults );
 			$output = array();
@@ -647,7 +647,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 				'id'    =>  $product_images[0],
 				'thumb' => wp_get_attachment_thumb_url( $product_images[0] ),
 				'large' => wp_get_attachment_url( $product_images[0] ),
-			);  
+			);
 
 			if ( 'thumbnail' === $options['size'] )
 				$img_src = $feature_image['thumb'];
@@ -655,7 +655,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 				$img_src = $feature_image['large'];
 
 			ob_start();
-			?>  
+			?>
 				<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
 					<div class="featured-image-wrapper">
 						<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>" data-src-thumb="<?php echo $feature_image['thumb'] ?>" />
@@ -665,11 +665,11 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			$output = ob_get_clean();
 
 			return $output;
-		}   
+		}
 
 		return false;
 	}
-	
+
 	function cart_object() {
 		ITDebug::print_r( $this->_transaction );
 	}

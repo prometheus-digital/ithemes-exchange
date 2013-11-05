@@ -78,7 +78,7 @@ add_action( 'it_exchange_print_offline-payments_wizard_settings', 'it_exchange_p
 function it_exchange_save_offline_payments_wizard_settings( $errors ) {
 	if ( ! empty( $errors ) )
 		return $errors;
-		
+
 	$IT_Exchange_Offline_Payments_Add_On = new IT_Exchange_Offline_Payments_Add_On();
 	return $IT_Exchange_Offline_Payments_Add_On->offline_payments_save_wizard_settings();
 }
@@ -102,20 +102,20 @@ function it_exchange_offline_payments_addon_process_transaction( $status, $trans
 	if ( ! empty( $_REQUEST['_offline_payments_nonce'] ) && ! wp_verify_nonce( $_REQUEST['_offline_payments_nonce'], 'offline-payments-checkout' ) ) {
 		it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'LION' ) );
 		return false;
-		
+
 	} else {
 
 		$settings = it_exchange_get_option( 'addon_offline_payments' );
-		
+
 		$uniqid = it_exchange_get_offline_transaction_uniqid();
 
 		// Get customer ID data
 		$it_exchange_customer = it_exchange_get_current_customer();
 
 		return it_exchange_add_transaction( 'offline-payments', $uniqid, $settings['offline-payments-default-status'], $it_exchange_customer->ID, $transaction_object );
-		
+
 	}
-	
+
 	return false;
 
 }
@@ -147,7 +147,7 @@ function it_exchange_get_offline_transaction_uniqid() {
  * @return boolean
 */
 function it_exchange_verify_offline_transaction_unique_uniqid( $uniqid ) {
-	
+
 	if ( ! empty( $uniqid ) ) { //verify we get a valid 32 character md5 hash
 		$args = array(
 			'post_type' => 'it_exchange_tran',
@@ -162,7 +162,7 @@ function it_exchange_verify_offline_transaction_unique_uniqid( $uniqid ) {
 				),
 			),
 		);
-		
+
 		$query = new WP_Query( $args );
 		return ( !empty( $query ) );
 	}
@@ -178,13 +178,13 @@ function it_exchange_verify_offline_transaction_unique_uniqid( $uniqid ) {
  * @return string
 */
 function it_exchange_offline_payments_addon_make_payment_button( $options ) {
-	
+
 	if ( 0 >= it_exchange_get_cart_total( false ) )
 		return;
 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$stripe_settings = it_exchange_get_option( 'addon_offline_payments' );
-	
+
 	$products = it_exchange_get_cart_data( 'products' );
 
 	$payment_form = '<form id="offline_payment_form" action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
@@ -209,7 +209,7 @@ function it_exchange_offline_payments_addon_make_payment_button( $options ) {
 	*/
 
 	return $payment_form;
-	
+
 }
 add_filter( 'it_exchange_get_offline-payments_make_payment_button', 'it_exchange_offline_payments_addon_make_payment_button', 10, 2 );
 
@@ -254,7 +254,7 @@ function it_exchange_transaction_instructions_offline_payments( $instructions ) 
 	if ( ! empty( $options['offline-payments-instructions'] ) )
 		$instructions = $options['offline-payments-instructions'];
 	return $instructions;
-	
+
 }
 add_filter( 'it_exchange_transaction_instructions_offline-payments', 'it_exchange_transaction_instructions_offline_payments' );
 
@@ -298,7 +298,7 @@ add_filter( 'it_exchange_transaction_status_label_offline-payments', 'it_exchang
  * @param object $transaction
  * @return boolean
 */
-function it_exchange_offline_payments_transaction_is_cleared_for_delivery( $cleared, $transaction ) { 
+function it_exchange_offline_payments_transaction_is_cleared_for_delivery( $cleared, $transaction ) {
     $valid_stati = array( 'succeeded', 'paid' );
     return in_array( it_exchange_get_transaction_status( $transaction ), $valid_stati );
 }
@@ -468,7 +468,7 @@ class IT_Exchange_Offline_Payments_Add_On {
 			it_exchange_save_option( 'addon_offline_payments', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
-		
+
 		return;
 
 	}
@@ -511,7 +511,7 @@ class IT_Exchange_Offline_Payments_Add_On {
 
 /*
  * Handles expired transactions that are offline payments
- * If this product autorenews and is an offline payment, it should auto-renew 
+ * If this product autorenews and is an offline payment, it should auto-renew
  * unless the susbcriber status has been deactivated already
  * If it autorenews, it creates an offline payment child transaction
  *
@@ -533,7 +533,7 @@ function it_exchange_offline_payments_handle_expired( $true, $product_id, $trans
 			it_exchange_offline_payments_add_child_transaction( $transaction );
 			return false;
 		}
-		
+
 	}
 
 	return $true;
@@ -583,7 +583,7 @@ function it_exchange_offline_payments_checkout_after_payment_details_cancel_url(
 				case '':
 					$output = '<a href="' . add_query_arg( 'offline-payments-recurring-payment', 'cancel' ) . '">' . __( 'Cancel Recurring Payment', 'LION' ) . '</a>';
 					break;
-					
+
 				case 'deactivated':
 				default:
 					$output = __( 'Recurring payment has been deactivated', 'LION' );

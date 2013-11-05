@@ -4,7 +4,7 @@
 */
 
 abstract class IT_Exchange_Shipping_Method {
-	
+
 	/**
 	 * @var string $slug the identifying key of the shipping feature
 	*/
@@ -44,7 +44,7 @@ abstract class IT_Exchange_Shipping_Method {
 		// Set slug
 		$this->set_slug();
 
-		// Set label 
+		// Set label
 		$this->set_label();
 
 		// Set the product
@@ -59,7 +59,7 @@ abstract class IT_Exchange_Shipping_Method {
 		// Set the settings
 		$this->set_settings();
 
-		// Set the shipping features for this method 
+		// Set the shipping features for this method
 		$this->set_features();
 	}
 
@@ -85,9 +85,9 @@ abstract class IT_Exchange_Shipping_Method {
 			global $post;
 
 			// If post is set in REQUEST, use it.
-			if ( isset( $_REQUEST['post'] ) ) 
+			if ( isset( $_REQUEST['post'] ) )
 				$post_id = (int) $_REQUEST['post'];
-			elseif ( isset( $_REQUEST['post_ID'] ) ) 
+			elseif ( isset( $_REQUEST['post_ID'] ) )
 				$post_id = (int) $_REQUEST['post_ID'];
 			else
 				$post_id = empty( $post->ID ) ? 0 : $post->ID;
@@ -97,7 +97,7 @@ abstract class IT_Exchange_Shipping_Method {
 				$post = get_post( $post_id );
 
 			// If we have a post object, grab the product
-			if ( ! empty( $post ) && is_object( $post ) ) 
+			if ( ! empty( $post ) && is_object( $post ) )
 				$product = it_exchange_get_product( $post );
 		}
 

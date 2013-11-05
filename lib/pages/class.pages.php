@@ -3,7 +3,7 @@
  * This file contains the class in charge of rewrites and template fetching
  *
  * @since 0.4.0
- * @package IT_Exchange 
+ * @package IT_Exchange
 */
 
 /**
@@ -104,14 +104,14 @@ class IT_Exchange_Pages {
 			$property = '_is_' . $page;
 			$this->$property = it_exchange_is_page( $page );
 		}
-		
+
 		$post_type = get_query_var( 'post_type' );
 		if ( (boolean) get_query_var( $this->_product_slug )
 			|| ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) )
 			$this->_is_product = true;
 		else
 			$this->_is_product = false;
-		
+
 		// Set current view property
 		krsort( $pages );
 		foreach( $pages as $page => $data ) {
@@ -146,25 +146,25 @@ class IT_Exchange_Pages {
 		$account = get_query_var( $this->_account_slug );
 
 		if ( 1 == $account ) {
-		
+
 			$customer_id = get_current_user_id();
-			
+
 		} else if ( $account == (int)$account ) {
-		
+
 			$customer_id = $account;
-			
+
 		} else {
-			
+
 			if ( $customer = get_user_by( 'login', $account ) )
 				$customer_id = $customer->ID;
 			else
 				$customer_id = false;
-			
+
 		}
-		
+
 		$this->_account = $customer_id;
 		set_query_var( 'account', $customer_id );
-		
+
 	}
 
 	/**
@@ -177,7 +177,7 @@ class IT_Exchange_Pages {
 	function set_wp_query_vars() {
 		set_query_var( 'it_exchange_view', $this->_current_view );
 	}
-	
+
 	/**
 	 * Redirects users away from login page if they're already logged in
 	 * or Redirects to /store/ if they log out.
@@ -198,7 +198,7 @@ class IT_Exchange_Pages {
 			die();
 		}
 	}
-	
+
 	/**
 	 * Redirects users away from registration page if they're already logged in
 	 * except for Administrators, because they might want to see the registration page.
@@ -208,7 +208,7 @@ class IT_Exchange_Pages {
 	 * @return void
 	*/
 	function registration_redirect() {
-		if ( is_user_logged_in() && 'registration' == $this->_current_view 
+		if ( is_user_logged_in() && 'registration' == $this->_current_view
 			&& ! current_user_can( 'administrator' ) ) {
 			wp_redirect( it_exchange_get_page_url( 'profile' ) );
 			die();
@@ -261,33 +261,33 @@ class IT_Exchange_Pages {
 
 		// Get current user
 		$user_id = get_current_user_id();
-				
+
 		if ( 'confirmation' === $this->_current_view  ) {
-			
+
 			$transaction_id = false;
-			
+
 			if ( $transaction_hash = get_query_var('confirmation') )
 				$transaction_id = it_exchange_get_transaction_id_from_hash( $transaction_hash );
-			
+
 			if ( !it_exchange_customer_has_transaction( $transaction_id, $user_id ) ) {
 				$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_non_admin_requests_confirmation', it_exchange_get_page_url( 'purchases' ) );
 				wp_redirect( $redirect_url );
 				die();
 			}
-			
+
 			return;
-			
+
 		}
 
 		// If trying to view account and not an admin, and not the owner, redirect
-		if ( in_array( $this->_current_view, $pages_to_protect ) 
+		if ( in_array( $this->_current_view, $pages_to_protect )
 				&& $this->_account != $user_id && ! current_user_can( 'administrator' ) ) {
 			$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_non_admin_requests_account' , it_exchange_get_page_url( 'store' ) );
 			wp_redirect( $redirect_url );
 			die();
 		}
 	}
-	
+
 	/**
 	 * Redirect away from checkout if cart is empty
 	 *
@@ -315,29 +315,29 @@ class IT_Exchange_Pages {
 	 * @return void
 	*/
 	function process_transaction() {
-				
+
 		if ( 'transaction' == $this->_current_view ) {
 
 			if ( is_user_logged_in() ) {
 				$transaction_id = apply_filters( 'it_exchange_process_transaction', false );
-				
+
 				// If we made a transaction
 				if ( $transaction_id ) {
 
 					// Clear the cart
 					it_exchange_empty_shopping_cart();
-					
+
 					// Grab the transaction confirmation URL. fall back to store if confirmation url fails
 					$confirmation_url = it_exchange_get_transaction_confirmation_url( $transaction_id );
 					if ( empty( $confirmation_url ) )
 						$confirmation_url = it_exchange_get_page_url( 'store' );
-					
+
 					// Redirect
 					wp_redirect( $confirmation_url );
 					die();
 				}
 			}
-			
+
 			if ( it_exchange_is_multi_item_cart_allowed() ) {
 				wp_redirect( it_exchange_get_page_url( 'checkout' ) );
 			} else {
@@ -351,9 +351,9 @@ class IT_Exchange_Pages {
 				}
 			}
 			die();
-			
+
 		}
-	
+
 	}
 
 	/**
@@ -389,7 +389,7 @@ class IT_Exchange_Pages {
 			remove_filter( 'the_content', 'wpautop' );
 			return $template;
 		}
-		
+
 		// If no iThemes Exchange template was found by it_exchange_location_template and we've viewing a product
 		// then were'e going to need to set a filter
 		if ( 'product' == $this->_current_view )
@@ -411,7 +411,7 @@ class IT_Exchange_Pages {
 	 * @since 0.4.0
 	 *
 	 * @param string $template We are hooking into a filter for an action. Always return value unchanged
-	 * @return string 
+	 * @return string
 	*/
 	function load_casper( $template ) {
 		if ( $this->_current_view ) {
@@ -514,7 +514,7 @@ class IT_Exchange_Pages {
 		if ( 'wordpress' == it_exchange_get_page_type( 'confirmation', true ) ) {
 			$wpid = it_exchange_get_page_wpid( 'confirmation' );
 			$confirmation_exchange_slug = it_exchange_get_page_slug( 'confirmation', true );
-			if ( $wp_page = get_page( $wpid ) ) 
+			if ( $wp_page = get_page( $wpid ) )
 				$confirmation_wp_slug = $wp_page->post_name;
 
 			$rewrite = array( $confirmation_wp_slug . '/([^/]+)/?$' => 'index.php?pagename=' . $confirmation_wp_slug . '&' . $confirmation_wp_slug . '=$matches[1]' );

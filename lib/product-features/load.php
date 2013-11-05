@@ -20,13 +20,13 @@ require( $this->_plugin_path . 'lib/product-features/class.downloads.php' );
 // Product Feature: Shipping
 require( $this->_plugin_path . 'lib/product-features/class.shipping.php' );
 
-// Product Feature: Product Images 
+// Product Feature: Product Images
 require( $this->_plugin_path . 'lib/product-features/class.product-images.php' );
 
-// Product Feature: Purchase Message 
+// Product Feature: Purchase Message
 require( $this->_plugin_path . 'lib/product-features/class.purchase-message.php' );
 
-// Product Feature: Product Availability 
+// Product Feature: Product Availability
 require( $this->_plugin_path . 'lib/product-features/class.product-availability.php' );
 
 // Product Feature: Quantity

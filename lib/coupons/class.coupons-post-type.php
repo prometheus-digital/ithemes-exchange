@@ -12,7 +12,7 @@
  * @since 0.4.0
 */
 class IT_Exchange_Coupon_Post_Type {
-	
+
 	/**
 	 * Class Constructor
 	 *
@@ -95,7 +95,7 @@ class IT_Exchange_Coupon_Post_Type {
 	 * Provides specific hooks for when iThemes Exchange coupons are saved.
 	 *
 	 * This method is hooked to save_post. It provides hooks for add-on developers
-	 * that will only be called when the post being saved is an iThemes Exchange coupon. 
+	 * that will only be called when the post being saved is an iThemes Exchange coupon.
 	 * It provides the following 4 hooks:
 	 * - it_exchange_save_coupon_unvalidated // Runs every time an iThemes Exchange coupon is saved.
 	 * - it_exchange_save_coupon             // Runs every time an iThemes Exchange coupon is saved if not an autosave and if user has permission to save post
@@ -103,10 +103,10 @@ class IT_Exchange_Coupon_Post_Type {
 	 * @since 0.4.0
 	 * @return void
 	*/
-	function save_coupon( $post ) { 
+	function save_coupon( $post ) {
 
 		// Exit if not it_exchange_prod post_type
-		if ( ! 'it_exchange_coupon' == get_post_type( $post ) ) 
+		if ( ! 'it_exchange_coupon' == get_post_type( $post ) )
 			return;
 
 		// These hooks fire off any time a it_exchange_coupon post is saved w/o validations
@@ -116,7 +116,7 @@ class IT_Exchange_Coupon_Post_Type {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
 			return;
 
-		if ( ! current_user_can( 'edit_post', $post ) ) 
+		if ( ! current_user_can( 'edit_post', $post ) )
 			return;
 
 		// This is called any time save_post hook

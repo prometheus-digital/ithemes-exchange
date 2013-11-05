@@ -1,6 +1,6 @@
 <?php
 /**
- * Shopping cart class. 
+ * Shopping cart class.
  * @since 0.3.8
  * @package IT_Exchange
 */
@@ -18,7 +18,7 @@ class IT_Exchange_Shopping_Cart {
 		add_action( 'template_redirect', array( $this, 'handle_it_exchange_cart_function' ) );
 		add_filter( 'it_exchange_process_transaction', array( $this, 'handle_purchase_cart_request' ) );
 	}
-	
+
 	/**
 	 * Handles $_REQUESTs and submits them to the cart for processing
 	 *
@@ -26,9 +26,9 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	*/
 	function handle_it_exchange_cart_function() {
-		
+
 		$this->redirect_checkout_if_empty_cart(); //if on checkout but have empty cart, redirect
-		
+
 		// Grab action and process it.
 		if ( isset( $_REQUEST['it-exchange-action'] ) ) {
 			call_user_func( array( $this, 'handle_' . esc_attr( $_REQUEST['it-exchange-action'] ) . '_request' ) );
@@ -55,7 +55,7 @@ class IT_Exchange_Shopping_Cart {
 			$this->proceed_to_checkout();
 			return;
 		}
-		
+
 		// Possibly Handle Empty Cart request
 		$empty_var = it_exchange_get_field_name( 'empty_cart' );
 		if ( ! empty( $_REQUEST[$empty_var] ) ) {
@@ -105,7 +105,7 @@ class IT_Exchange_Shopping_Cart {
 			$sw_state = is_user_logged_in() ? 'checkout' : 'login';
 			// Get current URL without exchange query args
 			$url = it_exchange_clean_query_args();
-			$url = ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_page_url( 'checkout' ) ) ? it_exchange_get_page_url( 'checkout' ) : add_query_arg( 'ite-sw-state', $sw_state, $url ); 
+			$url = ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_page_url( 'checkout' ) ) ? it_exchange_get_page_url( 'checkout' ) : add_query_arg( 'ite-sw-state', $sw_state, $url );
 			wp_redirect( $url );
 			die();
 		}
@@ -145,7 +145,7 @@ class IT_Exchange_Shopping_Cart {
 			$sw_state = is_user_logged_in() ? 'cart' : 'login';
 			// Get current URL without exchange query args
 			$url = it_exchange_clean_query_args();
-			$url = ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_page_url( 'cart' ) ) ? it_exchange_get_page_url( 'cart' ) : add_query_arg( 'ite-sw-state', $sw_state, $url ); 
+			$url = ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_page_url( 'cart' ) ) ? it_exchange_get_page_url( 'cart' ) : add_query_arg( 'ite-sw-state', $sw_state, $url );
 			it_exchange_add_message( 'notice', __( 'Product added to cart', 'LION' ) );
 			wp_redirect( $url );
 			die();
@@ -271,7 +271,7 @@ class IT_Exchange_Shopping_Cart {
 			$url = remove_query_arg( $message_var, $cart );
 			$url = add_query_arg( array( $message_var => 'cart-updated' ), $url );
 			$url = remove_query_arg( it_exchange_get_field_name( 'empty_cart' ), $url );
-			
+
 			wp_redirect( $url );
 			die();
 		}
@@ -391,7 +391,7 @@ class IT_Exchange_Shopping_Cart {
 	*/
 	function proceed_to_checkout() {
 
-		// Update cart info before redirecting. 
+		// Update cart info before redirecting.
 		$this->handle_update_cart_request( false );
 
 		// Redirect to Checkout
@@ -408,13 +408,13 @@ class IT_Exchange_Shopping_Cart {
 	 *
 	 * @since 0.3.8
 	 * @param bool $status
-	 * @return boolean 
+	 * @return boolean
 	*/
 	function handle_purchase_cart_request( $status ) {
-		
+
 		if ( $status ) //if this has been modified as true already, return.
 			return $status;
-				
+
 		// Verify transaction method exists
 		$method_var = it_exchange_get_field_name( 'transaction_method' );
 		$requested_transaction_method = empty( $_REQUEST[$method_var] ) ? false : $_REQUEST[$method_var];
@@ -424,16 +424,16 @@ class IT_Exchange_Shopping_Cart {
 			it_exchange_add_message( 'error', $this->get_cart_message( 'bad-transaction-method' ) );
 			return false;
 		}
-		
+
 		if ( $transaction_object = it_exchange_generate_transaction_object() ) {
-			
+
 			$transaction_object = apply_filters( 'it_exchange_transaction_object', $transaction_object, $requested_transaction_method );
-	
+
 			// Do the transaction
 			return it_exchange_do_transaction( $requested_transaction_method, $transaction_object );
-			
+
 		}
-		
+
 		return false;
 	}
 
@@ -447,16 +447,16 @@ class IT_Exchange_Shopping_Cart {
 		$cart     = it_exchange_get_page_url( 'cart' );
 		$checkout = it_exchange_get_page_url( 'checkout' );
 
-		if ( empty( $checkout ) || ! is_page( $checkout ) ) 
+		if ( empty( $checkout ) || ! is_page( $checkout ) )
 			return;
 
 		$products = it_exchange_get_cart_products();
 		if ( empty( $products ) ){
 			wp_redirect( $cart );
 			die();
-		}   
+		}
 	}
-	
+
 	/**
 	 * Gets message for given key
 	 *
@@ -485,7 +485,7 @@ class IT_Exchange_Shopping_Cart {
 		$messages['cart-emptied']          = __( 'Cart Emptied', 'LION' );
 		$messages['product-removed']       = __( 'Product removed from cart.', 'LION' );
 		$messages['product-added-to-cart'] = __( 'Product added to cart', 'LION' );
-		
+
 		return apply_filters( 'it_exchange_default_cart_messages', $messages );
 	}
 }

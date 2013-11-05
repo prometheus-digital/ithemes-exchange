@@ -112,7 +112,7 @@ function it_exchange_register_core_addons() {
 			'file'        => dirname( __FILE__ ) . '/admin/product-type-metabox/init.php',
 			'tag'         => 'core',
 			'options'     => array( 'category' => 'admin' ),
-		), 
+		),
 		// Multi item cart
 		'multi-item-cart-option' => array(
 			'name'        => __( 'Multi-item Cart', 'LION' ),

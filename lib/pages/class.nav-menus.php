@@ -64,7 +64,7 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 			$terms[] = $object;
 		}
 
-		$walker = new Walker_Nav_Menu_Checklist( false ); 
+		$walker = new Walker_Nav_Menu_Checklist( false );
 		$removed_args = array(
 			'action',
 			'customlink-tab',
@@ -99,14 +99,14 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 							array(
 								'it-exchange-pages-tab' => 'all',
 								'selectall' => 1,
-							),   
+							),
 							remove_query_arg( $removed_args )
-						));  
+						));
 					?>#taxonomy-it-exchange-pages" class="select-all"><?php _e('Select All'); ?></a>
 				</span>
 
 				<span class="add-to-menu">
-					<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( __( 'Add to Menu' ) ); ?>" name="add-taxonomy-menu-item" id="<?php esc_attr_e( 'submit-taxonomy-it-exchange-pages' ); ?>" /> 
+					<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( __( 'Add to Menu' ) ); ?>" name="add-taxonomy-menu-item" id="<?php esc_attr_e( 'submit-taxonomy-it-exchange-pages' ); ?>" />
 					<span class="spinner"></span>
 				</span>
 			</p>
@@ -137,16 +137,16 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 
 		$menu_item->title = $menu_item->name;
 		$menu_item->url = $this->get_url( $menu_item->setting );
-		$menu_item->target = ''; 
-		$menu_item->attr_title = ''; 
+		$menu_item->target = '';
+		$menu_item->attr_title = '';
 		$menu_item->description = 'test';
 		$menu_item->classes = array();
-		$menu_item->xfn = 'it-exchange-' . esc_attr( $menu_item->setting ); 
+		$menu_item->xfn = 'it-exchange-' . esc_attr( $menu_item->setting );
 
 		return $menu_item;
 	}
 
-	/** 
+	/**
 	 * Creates a guid based on the current view
 	 *
 	 * @since 0.4.0

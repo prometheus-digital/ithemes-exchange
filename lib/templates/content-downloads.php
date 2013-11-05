@@ -2,7 +2,7 @@
 /**
  * Default template for displaying a customer
  * downloads.
- * 
+ *
  * @since 0.4.0
  * @version 1.0.2
  * @link http://ithemes.com/codex/page/Exchange_Template_Updates

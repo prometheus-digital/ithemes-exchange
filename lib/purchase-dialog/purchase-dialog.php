@@ -7,7 +7,7 @@
 */
 
 /**
- * Transaction methods call or extend this class to create a 
+ * Transaction methods call or extend this class to create a
  * purchase dialog with a custom form in it.
  *
  * @since 1.3.0
@@ -18,7 +18,7 @@ class IT_Exchange_Purchase_Dialog{
 	 * @param string $addon_slug the slug for the addon invoking the class
 	 * @since 1.3.0
 	*/
-	var $addon_slug = false; 
+	var $addon_slug = false;
 
 	/**
 	 * @param array a key => value array of form attributes like class, id, etc.
@@ -66,7 +66,7 @@ class IT_Exchange_Purchase_Dialog{
 	function IT_Exchange_Purchase_Dialog( $transaction_method_slug, $options=array() ) {
 
 		$defaults = array(
-			'form-attributes'    => array( 
+			'form-attributes'    => array(
 				'action' => it_exchange_get_page_url( 'transaction' ),
 				'method' => 'post',
 			),
@@ -186,7 +186,7 @@ class IT_Exchange_Purchase_Dialog{
 	*/
 	function get_form_hidden_fields() {
 		$fields  = '<input type="hidden" name="' . esc_attr( it_exchange_get_field_name('transaction_method') ) . '" value="' . esc_attr( $this->addon_slug ) . '" />';
-		$fields .= wp_nonce_field( $this->addon_slug . '-checkout', 'ite-' . $this->addon_slug . '-purchase-dialog-nonce', true, false ); 
+		$fields .= wp_nonce_field( $this->addon_slug . '-checkout', 'ite-' . $this->addon_slug . '-purchase-dialog-nonce', true, false );
 		return $fields;
 	}
 
@@ -298,7 +298,7 @@ class IT_Exchange_Purchase_Dialog{
 		// Validate nonce
 		$nonce = empty( $_POST['ite-' . $this->addon_slug . '-purchase-dialog-nonce'] ) ? false : $_POST['ite-' . $this->addon_slug . '-purchase-dialog-nonce'];
 		if ( ! wp_verify_nonce( $nonce, $this->addon_slug . '-checkout' ) ) {
-			it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'LION' ) );		
+			it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'LION' ) );
 			it_exchange_flag_purchase_dialog_error( $this->addon_slug );
 			return false;
 		}

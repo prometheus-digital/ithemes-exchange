@@ -6,7 +6,7 @@
 */
 
 class IT_Theme_API_Download implements IT_Theme_API {
-	
+
 	/**
 	 * API context
 	 * @var string $_context
@@ -50,7 +50,7 @@ class IT_Theme_API_Download implements IT_Theme_API {
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
 	 * @since 0.4.0
-	 * 
+	 *
 	 * @return string
 	*/
 	function get_api_context() {
@@ -106,7 +106,7 @@ class IT_Theme_API_Download implements IT_Theme_API {
 	}
 
 	/**
-	 * The download Limit 
+	 * The download Limit
 	 *
 	 * @since 0.4.0
 	 * @return string

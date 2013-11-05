@@ -117,7 +117,7 @@ if ( 'register' == $action ) {
             'user_login'    => esc_attr( $_POST['user_login'] ),
             'user_password' => esc_attr( $_POST['pass1'] ),
         );
-		
+
         $user = wp_signon( $creds );
 		if ( ! is_wp_error( $user ) )
 			it_exchange_add_message( 'notice', __( 'Registered and logged in as ', 'LION' ) . $user->user_login );
@@ -130,7 +130,7 @@ if ( 'register' == $action ) {
 	}
 }
 
-// Edit Shipping 
+// Edit Shipping
 if ( 'update-shipping' == $action ) {
 	// This function will either updated the value or create an error and return 1 or 0
 	die( $GLOBALS['IT_Exchange_Shopping_Cart']->handle_update_shipping_address_request() );
@@ -157,7 +157,7 @@ if ( 'submit-purchase-dialog' == $action ) {
 
 // Update Shipping Method
 if ( 'update-shipping-method' == $action ) {
-	it_exchange_update_cart_data( 'shipping-method', $shipping_method );	
+	it_exchange_update_cart_data( 'shipping-method', $shipping_method );
 	die( empty( $shipping_method ) ? '0' : '1' );
 }
 

@@ -325,7 +325,7 @@ add_filter( 'it_exchange_set_customer_data', 'it_exchange_guest_checkout_set_cus
  * @return object
 */
 function it_exchange_flag_transaction_as_guest_checkout( $transaction_object ) {
-	if ( ! it_exchange_doing_guest_checkout() )	
+	if ( ! it_exchange_doing_guest_checkout() )
 		return $transaction_object;
 
 	$transaction_object->is_guest_checkout = true;
@@ -511,6 +511,6 @@ function it_exchange_guest_checkout_process_ajax_login() {
 	$customer_email = $_POST['email'];
 
 	it_exchange_init_guest_checkout_session( $customer_email );
-	die('1');	
+	die('1');
 }
 add_action( 'it_exchange_processing_super_widget_ajax_guest-checkout', 'it_exchange_guest_checkout_process_ajax_login' );

@@ -6,7 +6,7 @@
 */
 
 class IT_Theme_API_Messages implements IT_Theme_API {
-	
+
 	/**
 	 * API context
 	 * @var string $_context
@@ -65,7 +65,7 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
 	 * @since 0.4.0
-	 * 
+	 *
 	 * @return string
 	*/
 	function get_api_context() {
@@ -88,12 +88,12 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 
 		// If we made it here, we're doing a loop of errors
 		// This will init/reset the errors global and loop through them. The error method will return the current one
-		if ( ! isset( $GLOBALS['it_exchange']['error'] ) && $this->_has_errors ) { 
+		if ( ! isset( $GLOBALS['it_exchange']['error'] ) && $this->_has_errors ) {
 			$GLOBALS['it_exchange']['errors'] = it_exchange_get_messages( 'error' );
 			$GLOBALS['it_exchange']['error'] = reset( $GLOBALS['it_exchange']['errors'] );
 			return true;
 		} else {
-			if ( next( $GLOBALS['it_exchange']['errors'] ) ) { 
+			if ( next( $GLOBALS['it_exchange']['errors'] ) ) {
 				$GLOBALS['it_exchange']['error'] = current( $GLOBALS['it_exchange']['errors'] );
 				return true;
 			} else {
@@ -101,9 +101,9 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 				$GLOBALS['it_exchange']['errors'] = array();
 				it_exchange_clear_messages( 'error' );
 				return false;
-			}   
+			}
 		}
-		
+
 		return false;
 	}
 
@@ -123,7 +123,7 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 	}
 
 	/**
-	 * Loops through Notices 
+	 * Loops through Notices
 	 *
 	 * If has option is true, returns boolean
 	 *
@@ -138,12 +138,12 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 
 		// If we made it here, we're doing a loop of notices
 		// This will init/reset the notices global and loop through them. The notice method will return the current one
-		if ( ! isset( $GLOBALS['it_exchange']['notice'] ) && $this->_has_notices ) { 
+		if ( ! isset( $GLOBALS['it_exchange']['notice'] ) && $this->_has_notices ) {
 			$GLOBALS['it_exchange']['notices'] = it_exchange_get_messages( 'notice' );
 			$GLOBALS['it_exchange']['notice'] = reset( $GLOBALS['it_exchange']['notices'] );
 			return true;
 		} else {
-			if ( next( $GLOBALS['it_exchange']['notices'] ) ) { 
+			if ( next( $GLOBALS['it_exchange']['notices'] ) ) {
 				$GLOBALS['it_exchange']['notice'] = current( $GLOBALS['it_exchange']['notices'] );
 				return true;
 			} else {
@@ -151,9 +151,9 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 				end( $GLOBALS['it_exchange']['notices'] );
 				it_exchange_clear_messages( 'notice' );
 				return false;
-			}   
+			}
 		}
-		
+
 		return false;
 	}
 

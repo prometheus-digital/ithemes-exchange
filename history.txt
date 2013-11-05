@@ -206,7 +206,7 @@
 	Remove autop when using exchange templates.
 	Fixed remaining typos in instructions and tooltips
 	Disable unchosen transaction methods in wizard
-	Added some filters and changed some function names in the transaction methods 
+	Added some filters and changed some function names in the transaction methods
 0.4.17 - 2013-07-03 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
 	Typo Updates: 1-13 of 39
 	Wizard selects transactions methods that are already enabled now (step 1)
@@ -588,7 +588,7 @@
 	Cart API
 	Default Cart Add-on
 	Refactored Sessions API
-	Offline Add-on 
+	Offline Add-on
 	Standardized function names accross codebase
 	Customer Mangement API (WIP)
 	Messaging / Errors API

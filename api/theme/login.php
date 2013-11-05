@@ -52,7 +52,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
 	 * @since 0.4.0
-	 * 
+	 *
 	 * @return string
 	*/
 	function get_api_context() {
@@ -278,7 +278,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	}
 
 	/**
-	 * Outputs the registration link by default. 
+	 * Outputs the registration link by default.
 	 *
 	 * Can also output the registration URL
 	 *

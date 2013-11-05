@@ -47,7 +47,7 @@ add_action( 'it_exchange_print_paypal-standard_wizard_settings', 'it_exchange_pr
 function it_exchange_refund_url_for_paypal_standard( $url ) {
 
 	return 'https://paypal.com/';
-	
+
 }
 add_filter( 'it_exchange_refund_url_for_paypal-standard', 'it_exchange_refund_url_for_paypal_standard' );
 /**
@@ -62,16 +62,16 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 
 	if ( $status ) //if this has been modified as true already, return.
 		return $status;
-		
+
 	if ( !empty( $_REQUEST['it-exchange-transaction-method'] ) && 'paypal-standard' === $_REQUEST['it-exchange-transaction-method'] ) {
-		
+
 		if ( !empty( $_REQUEST['tx'] ) ) //if PDT is enabled
 			$transaction_id = $_REQUEST['tx'];
 		else if ( !empty( $_REQUEST['txn_id'] ) ) //if PDT is not enabled
 			$transaction_id = $_REQUEST['txn_id'];
 		else
 			$transaction_id = NULL;
-			
+
 		if ( !empty( $_REQUEST['cm'] ) )
 			$transient_transaction_id = $_REQUEST['cm'];
 		else
@@ -90,7 +90,7 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 			$transaction_status = $_REQUEST['payment_status'];
 		else
 			$transaction_status = NULL;
-						
+
 		if ( !empty( $transaction_id ) && !empty( $transient_transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
 
 			try {
@@ -217,7 +217,7 @@ function paypal_standard_print_wizard_settings( $form ) {
 function it_exchange_save_paypal_standard_wizard_settings( $errors ) {
 	if ( ! empty( $errors ) )
 		return $errors;
-	
+
 	$IT_Exchange_PayPal_Standard_Add_On = new IT_Exchange_PayPal_Standard_Add_On();
 	return $IT_Exchange_PayPal_Standard_Add_On->paypal_standard_save_wizard_settings();
 }
@@ -253,24 +253,24 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 
 	if ( 0 >= it_exchange_get_cart_total( false ) )
 		return;
-		
+
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard' );
 
 	$payment_form = '';
 
 	if ( $paypal_email = $paypal_settings['paypal-standard-live-email-address'] ) {
-		
+
 		$it_exchange_customer = it_exchange_get_current_customer();
 
 		$payment_form .= '<form action="' . get_site_url() . '/?paypal-standard-form=1" method="post">';
 		$payment_form .= '<input type="submit" class="it-exchange-paypal-standard-button" name="paypal_standard_purchase" value="' . $paypal_settings['paypal-standard-purchase-button-label'] .'" />';
 		$payment_form .= '</form>';
-	
+
 	}
-	
+
 	return $payment_form;
-	
+
 }
 add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_paypal_standard_addon_make_payment_button', 10, 2 );
 
@@ -283,31 +283,31 @@ add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_
  * @return string HTML button
 */
 function it_exchange_process_paypal_standard_form() {
-	
+
 	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard' );
-	
+
 	if ( ! empty( $_REQUEST['paypal_standard_purchase'] ) ) {
-		
+
 		if ( $paypal_email = $paypal_settings['paypal-standard-live-email-address']  ) {
-			
+
 			$it_exchange_customer = it_exchange_get_current_customer();
 			$temp_id = it_exchange_create_unique_hash();
-			
+
 			$transaction_object = it_exchange_generate_transaction_object();
-			
+
 			it_exchange_add_transient_transaction( 'paypal-standard', $temp_id, $it_exchange_customer->id, $transaction_object );
-			
+
 			wp_redirect( it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) );
-			
+
 		} else {
-		
+
 			it_exchange_add_message( 'error', __( 'Error processing PayPal form. Missing valid PayPal account.', 'LION' ) );
 			wp_redirect( it_exchange_get_page_url( 'checkout' ) );
-			
+
 		}
-	
+
 	}
-	
+
 }
 add_action( 'wp', 'it_exchange_process_paypal_standard_form' );
 
@@ -323,19 +323,19 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 
 	if ( 0 >= it_exchange_get_cart_total( false ) )
 		return;
-		
+
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard' );
 
 	$paypal_payment_url = '';
 
 	if ( $paypal_email = $paypal_settings['paypal-standard-live-email-address'] ) {
-		
+
 		$subscription = false;
 		$it_exchange_customer = it_exchange_get_current_customer();
-		
+
 		remove_filter( 'the_title', 'wptexturize' ); // remove this because it screws up the product titles in PayPal
-		
+
 		if ( 1 === it_exchange_get_cart_products_count() ) {
 			$cart = it_exchange_get_cart_products();
 			foreach( $cart as $product ) {
@@ -343,16 +343,16 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 					if ( it_exchange_product_has_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
 						$time = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'time' ) );
 						switch( $time ) {
-						
+
 							case 'yearly':
 								$unit = 'Y';
 								break;
-								
+
 							case 'monthly':
 							default:
 								$unit = 'M';
 								break;
-							
+
 						}
 						$unit = apply_filters( 'it_exchange_paypal-standard_subscription_unit', $unit, $time );
 						$duration = apply_filters( 'it_exchange_paypal-standard_subscription_duration', 1, $time );
@@ -361,8 +361,8 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 				}
 			}
 		}
-		
-		if ( $subscription ) {	
+
+		if ( $subscription ) {
 		//https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/#id08A6HI00JQU
 			//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
 			//a2, t2, p2 are for the second trial period, which is not supported with the Recurring Payments add-on
@@ -370,21 +370,21 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			$paypal_args = array(
 				'cmd' => '_xclick-subscriptions',
 				'a3'  => number_format( it_exchange_get_cart_total( false ), 2, '.', '' ), //Regular subscription price.
-				'p3'  => $duration, //Subscription duration. Specify an integer value in the allowable range for the units of duration that you specify with t3.	
+				'p3'  => $duration, //Subscription duration. Specify an integer value in the allowable range for the units of duration that you specify with t3.
 				't3'  => $unit, //Regular subscription units of duration. (D, W, M, Y) -- we only use M,Y by default
 				'src' => 1, //Recurring payments.
 			);
-		
+
 		} else {
-			
+
 			$paypal_args = array (
 				'cmd'      => '_xclick',
 				'amount'   => number_format( it_exchange_get_cart_total( false ), 2, '.', '' ),
 				'quantity' => '1',
 			);
-		
+
 		}
-		
+
 		$query = array(
 			'business'      => $paypal_email,
 			'item_name'     => it_exchange_get_cart_description(),
@@ -400,20 +400,20 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			'cancel_return' => it_exchange_get_page_url( 'cart' ),
 			'custom'        => $temp_id,
 		);
-		
+
 		$query = array_merge( $paypal_args, $query );
-				
-		$paypal_payment_url = PAYPAL_PAYMENT_URL . '?' .  http_build_query( $query ); 
-			
+
+		$paypal_payment_url = PAYPAL_PAYMENT_URL . '?' .  http_build_query( $query );
+
 	} else {
-	
+
 		it_exchange_add_message( 'error', __( 'ERROR: Invalid PayPal Setup' ) );
 		$paypal_payment_url = it_exchange_get_page_url( 'cart' );
-		
+
 	}
-	
+
 	return $paypal_payment_url;
-	
+
 }
 
 /**
@@ -443,32 +443,32 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard' );
-	
+
 	$subscriber_id = !empty( $request['subscr_id'] ) ? $request['subscr_id'] : false;
 	$subscriber_id = !empty( $request['recurring_payment_id'] ) ? $request['recurring_payment_id'] : $subscriber_id;
-	
+
 	if ( !empty( $request['txn_type'] ) ) {
-		
+
 		if ( !empty( $request['transaction_subject'] ) && $transient_data = it_exchange_get_transient_transaction( 'paypal-standard', $request['transaction_subject'] ) ) {
 			it_exchange_delete_transient_transaction( 'paypal-standard', $request['transaction_subject']  );
 			$ite_transaction_id = it_exchange_add_transaction( 'paypal-standard', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
 			return $ite_transaction_id;
 		}
-		
+
 		switch( $request['txn_type'] ) {
-		
+
 			case 'web_accept':
 				switch( strtolower( $request['payment_status'] ) ) {
-				
+
 					case 'completed' :
 						it_exchange_paypal_standard_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] );
 						break;
 					case 'reversed' :
 						it_exchange_paypal_standard_addon_update_transaction_status( $request['parent_txn_id'], $request['reason_code'] );
-						break;					
+						break;
 				}
 				break;
-				
+
 			case 'subscr_payment':
 				switch( strtolower( $request['payment_status'] ) ) {
 					case 'completed' :
@@ -483,43 +483,43 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 						break;
 				}
 				break;
-				
+
 			case 'subscr_signup':
 				it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'active' );
 				break;
-				
+
 			case 'recurring_payment_suspended':
 				it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'suspended' );
 				break;
-				
+
 			case 'subscr_cancel':
 				it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
 				break;
-				
+
 			case 'subscr_eot':
 				it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'deactivated' );
 				break;
-			
+
 		}
-		
+
 	} else {
-	
+
 		//These IPNs don't have txn_types, why PayPal!? WHY!?
 		if ( !empty( $request['reason_code'] ) ) {
 
 			switch( $request['reason_code'] ) {
-				
+
 				case 'refund' :
 					it_exchange_paypal_standard_addon_update_transaction_status( $request['parent_txn_id'], $request['payment_status'] );
 					it_exchange_paypal_standard_addon_add_refund_to_transaction( $request['parent_txn_id'], $request['mc_gross'] );
 					if ( $subscriber_id )
 						it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'refunded' );
 					break;
-				
+
 			}
-				
+
 		}
-		
+
 	}
 
 }
@@ -610,22 +610,22 @@ function it_exchange_paypal_standard_addon_add_child_transaction( $paypal_standa
 	$transactions = it_exchange_paypal_standard_addon_get_transaction_id( $paypal_standard_id );
 	if ( !empty( $transactions ) ) {
 		//this transaction DOES exist, don't try to create a new one, just update the status
-		it_exchange_paypal_standard_addon_update_transaction_status( $paypal_standard_id, $payment_status );		
-	} else { 
-	
+		it_exchange_paypal_standard_addon_update_transaction_status( $paypal_standard_id, $payment_status );
+	} else {
+
 		if ( !empty( $subscriber_id ) ) {
-			
+
 			$transactions = it_exchange_paypal_standard_addon_get_transaction_id_by_subscriber_id( $subscriber_id );
 			foreach( $transactions as $transaction ) { //really only one
 				$parent_tx_id = $transaction->ID;
 				$customer_id = get_post_meta( $transaction->ID, '_it_exchange_customer_id', true );
 			}
-			
+
 		} else {
 			$parent_tx_id = false;
 			$customer_id = false;
 		}
-		
+
 		if ( $parent_tx_id && $customer_id ) {
 			$transaction_object = new stdClass;
 			$transaction_object->total = $amount;
@@ -661,7 +661,7 @@ function it_exchange_paypal_standard_addon_update_subscriber_id( $paypal_standar
 	$transactions = it_exchange_paypal_standard_addon_get_transaction_id( $paypal_standard_id );
 	foreach( $transactions as $transaction ) { //really only one
 		do_action( 'it_exchange_update_transaction_subscription_id', $transaction, $subscriber_id );
-	}	
+	}
 }
 
 /**
@@ -678,7 +678,7 @@ function it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber
 		if ( !in_array( $status, array( 'active', 'deactivated' ) ) ) {
 			if ( $transaction->has_refunds() && 0 === it_exchange_get_transaction_total( $transaction, false ) )
 				$status = 'deactivated';
-				
+
 			if ( $transaction->has_children() ) {
 				//Get the last child and make sure it hasn't been fully refunded
 				$args = array(
@@ -694,7 +694,7 @@ function it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber
 			}
 		}
 		do_action( 'it_exchange_update_transaction_subscription_status', $transaction, $subscriber_id, $status );
-	}		
+	}
 }
 
 /**
@@ -756,8 +756,8 @@ add_filter( 'it_exchange_transaction_status_label_paypal-standard', 'it_exchange
  * @param object $transaction
  * @return boolean
 */
-function it_exchange_paypal_standard_transaction_is_cleared_for_delivery( $cleared, $transaction ) { 
-    $valid_stati = array( 
+function it_exchange_paypal_standard_transaction_is_cleared_for_delivery( $cleared, $transaction ) {
+    $valid_stati = array(
 		'completed',
 		'success',
 		'canceled_reversal',
@@ -769,7 +769,7 @@ add_filter( 'it_exchange_paypal-standard_transaction_is_cleared_for_delivery', '
 
 /*
  * Returns the unsubscribe action for PayPal autorenewing payments
- * 
+ *
  * @since 1.3.0
  *
  * @param string $output Should be an empty string
@@ -780,11 +780,11 @@ function it_exchange_paypal_standard_unsubscribe_action( $output, $options ) {
 	$paypal_settings      = it_exchange_get_option( 'addon_paypal_standard' );
 	$paypal_url           = PAYPAL_PAYMENT_URL;
 	$paypal_email         = $paypal_settings['paypal-standard-live-email-address'];
-	
+
 	$output  = '<a class="button" href="' . $paypal_url . '?cmd=_subscr-find&alias=' . urlencode( $paypal_email ) . '">';
 	$output .= $options['label'];
 	$output .= '</a>';
-	
+
 	return $output;
 }
 add_filter( 'it_exchange_paypal-standard_unsubscribe_action', 'it_exchange_paypal_standard_unsubscribe_action', 10, 2 );
@@ -797,27 +797,27 @@ add_filter( 'it_exchange_paypal-standard_unsubscribe_action', 'it_exchange_paypa
  * @param object $transaction iThemes Transaction object
  * @return void
 */
-function it_exchange_paypal_standard_after_payment_details_cancel_url( $transaction ) {	
+function it_exchange_paypal_standard_after_payment_details_cancel_url( $transaction ) {
 	$cart_object = get_post_meta( $transaction->ID, '_it_exchange_cart_object', true );
-	foreach ( $cart_object->products as $product ) {	
+	foreach ( $cart_object->products as $product ) {
 		$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product['product_id'], true );
 		if ( $autorenews ) {
 			$subscriber_id = $transaction->get_transaction_meta( 'subscriber_id', true );
 			$status = $transaction->get_transaction_meta( 'subscriber_status', true );
 			switch( $status ) {
-			
+
 				case 'deactivated':
 					$output = __( 'Recurring payment has been deactivated', 'LION' );
 					break;
-					
+
 				case 'cancelled':
 					$output = __( 'Recurring payment has been cancelled', 'LION' );
 					break;
-					
+
 				case 'suspended':
 					$output = __( 'Recurring payment has been suspended', 'LION' );
 					break;
-				
+
 				case 'active':
 				default:
 					$output = '<a href="' . PAYPAL_LIVE_URL . '">' . __( 'Cancel Recurring Payment', 'LION' ) . ' (' . __( 'Profile ID', 'LION' ) . ': ' . $subscriber_id . ')</a>';
@@ -926,7 +926,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		</div>
 		<?php
 	}
-	
+
 	function get_paypal_standard_payment_form_table( $form, $settings = array() ) {
 
 		$general_settings = it_exchange_get_option( 'settings_general' );
@@ -984,7 +984,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		} else {
 			$this->status_message = __( 'Settings not saved.', 'LION' );
 		}
-		
+
 		do_action( 'it_exchange_save_add_on_settings_paypal-standard' );
 
 	}
@@ -1000,7 +1000,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 			'paypal-standard-purchase-button-label',
 		);
 		$default_wizard_paypal_standard_settings = apply_filters( 'default_wizard_paypal-standard_settings', $fields );
-		
+
 		foreach( $default_wizard_paypal_standard_settings as $var ) {
 
 			if ( isset( $_REQUEST['it_exchange_settings-' . $var] ) ) {
@@ -1010,7 +1010,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		}
 
 		$settings = wp_parse_args( $paypal_standard_settings, it_exchange_get_option( 'addon_paypal_standard' ) );
-		
+
 		if ( $error_msg = $this->get_form_errors( $settings ) ) {
 
 			return $error_msg;
@@ -1019,7 +1019,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 			it_exchange_save_option( 'addon_paypal_standard', $settings );
 			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
-		
+
 		return;
 
 	}

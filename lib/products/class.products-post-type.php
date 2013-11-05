@@ -12,7 +12,7 @@
  * @since 0.3.0
 */
 class IT_Exchange_Product_Post_Type {
-	
+
 	/**
 	 * Class Constructor
 	 *
@@ -21,7 +21,7 @@ class IT_Exchange_Product_Post_Type {
 	*/
 	function IT_Exchange_Product_Post_Type() {
 		$this->init();
-		
+
 		add_action( 'template_redirect', array( $this, 'load_product' ) );
 		add_action( 'save_post', array( $this, 'save_product' ) );
 		add_action( 'admin_init', array( $this, 'set_add_new_item_label' ) );
@@ -42,7 +42,7 @@ class IT_Exchange_Product_Post_Type {
 			add_action( 'pre_get_posts', array( $this, 'remove_disabled_product_types_from_admin_list' ) );
 
 	}
-	
+
 	/**
 	 * Load IT Exchange Product if looking at a single product page
 	 *
@@ -54,9 +54,9 @@ class IT_Exchange_Product_Post_Type {
 				global $post;
 				$GLOBALS['it_exchange']['product'] = it_exchange_get_product( $post );
 			}
-		}	
+		}
 	}
-	
+
 	/**
 	 * Removed disabled product-types from the list
 	 *
@@ -70,7 +70,7 @@ class IT_Exchange_Product_Post_Type {
 
 			// Preserve existing meta_query
 			$meta_query = $query->get( 'meta_query' );
-			
+
 			// Add ours to existing
 			$meta_query[] = array(
 				'key'   => '_it_exchange_product_type',
@@ -79,7 +79,7 @@ class IT_Exchange_Product_Post_Type {
 			$query->set( 'meta_query', $meta_query );
 		}
 	}
-	
+
 	/**
 	 * Allows empty title/description/excerpt products to be published to WP
 	 *
@@ -88,18 +88,18 @@ class IT_Exchange_Product_Post_Type {
 	 * @return void
 	*/
 	function wp_insert_post_empty_content( $maybe_empty, $postarr ) {
-		
+
 		if ( !empty( $postarr['action'] ) && 'editpost' === $postarr['action']
 			&& !empty( $postarr['post_type'] ) && 'it_exchange_prod' === $postarr['post_type'] ) {
-				
+
 			return false;
-		
+
 		}
-		
+
 		return $maybe_empty;
-		
+
 	}
-	
+
 	/**
 	 * Sets up the object
 	 *
@@ -199,28 +199,28 @@ class IT_Exchange_Product_Post_Type {
 					do_action( 'it_exchange_product_metabox_callback_' . $addon_slug, $product );
 			}
 		}
-		
+
 		remove_meta_box( 'submitdiv', __( 'Publish' ), 'post_submit_meta_box', null, 'it_exchange_advanced', 'core' );
 		add_meta_box( 'submitdiv', __( 'Publish' ), array( $this, 'post_submit_meta_box' ), 'it_exchange_prod', 'it_exchange_side', 'high' );
 
 		// Do action for any product type
 		do_action( 'it_exchange_product_metabox_callback', $product );
 	}
-	
+
 	function post_submit_meta_box( $post ) {
-			
+
 		global $action;
-	
+
 		$post_type = $post->post_type;
 		$post_type_object = get_post_type_object($post_type);
 		$can_publish = current_user_can($post_type_object->cap->publish_posts);
-		
+
 		// Grab the iThemes Exchange Product object from the WP $post object
 		$product = it_exchange_get_product( $post );
 
 		// Set the value of the visibility for this product
 		$product_visibility = get_post_meta( $post->ID, '_it-exchange-visibility', true );
-		
+
 		?>
         <div id="it-exchange-submit-box">
 			<?php do_action('post_submitbox_start'); ?>
@@ -337,7 +337,7 @@ class IT_Exchange_Product_Post_Type {
 							 </div>
 						<?php endif; ?>
 					</div>
-					
+
 					<div class="misc-pub-section">
 						<label for="visibility"><?php _e( 'Visibility:', 'LION' ) ?></label>
 						<span id="product-visibility-display">
@@ -366,7 +366,7 @@ class IT_Exchange_Product_Post_Type {
 							</div>
 						<?php endif; ?>
 					</div>
-					
+
 					<?php
 						if ( 'private' == $post->post_status ) {
 							$post->post_password = '';
@@ -384,7 +384,7 @@ class IT_Exchange_Product_Post_Type {
 						}
 					?>
 					<input type="hidden" name="hidden_post_visibility" id="hidden-post-visibility" value="<?php echo esc_attr( $visibility ); ?>" />
-					
+
 					<?php do_action('post_submitbox_misc_actions'); ?>
 				</div>
 			</div>
@@ -393,7 +393,7 @@ class IT_Exchange_Product_Post_Type {
 	}
 
 	/**
-	 * Generates the Add New Product Label for a new Product 
+	 * Generates the Add New Product Label for a new Product
 	 *
 	 * @since 0.3.0
 	 * @return string $label Label for add new product page.
@@ -405,7 +405,7 @@ class IT_Exchange_Product_Post_Type {
 
 		if ( empty( $wp_post_types['it_exchange_prod'] ) )
 			return;
-			
+
 		$product_add_ons = it_exchange_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
 		$product = array();
 
@@ -426,7 +426,7 @@ class IT_Exchange_Product_Post_Type {
 	}
 
 	/**
-	 * Generates the Edit Product Label for a new Product 
+	 * Generates the Edit Product Label for a new Product
 	 *
 	 * Post types have to be registered earlier than we know that type of post is being edited
 	 * so this function inserts the correct label into the $wp_post_types global after post type is registered
@@ -443,7 +443,7 @@ class IT_Exchange_Product_Post_Type {
 
 		if ( empty( $wp_post_types['it_exchange_prod'] ) )
 			return;
-			
+
 		if ( 'it_exchange_prod' != get_post_type( $post ) )
 			return;
 
@@ -471,7 +471,7 @@ class IT_Exchange_Product_Post_Type {
 	 * Provides specific hooks for when iThemes Exchange products are saved.
 	 *
 	 * This method is hooked to save_post. It provides hooks for add-on developers
-	 * that will only be called when the post being saved is an iThemes Exchange product. 
+	 * that will only be called when the post being saved is an iThemes Exchange product.
 	 * It provides the following 4 hooks:
 	 * - it_exchange_save_product_unvalidated                // Runs every time an iThemes Exchange product is saved.
 	 * - it_exchange_save_product_unavalidate-[product-type] // Runs every time a specific iThemes Exchange product type is saved.
@@ -482,43 +482,43 @@ class IT_Exchange_Product_Post_Type {
 	 * @param int $post_id WordPress Post ID
 	 * @return void
 	*/
-	function save_product( $post_id ) { 
+	function save_product( $post_id ) {
 
 		// Exit if not it_exchange_prod post_type
-		if ( ! 'it_exchange_prod' === get_post_type( $post_id ) ) 
-			return; 
+		if ( ! 'it_exchange_prod' === get_post_type( $post_id ) )
+			return;
 
 		// Fire off actions with validations that most instances need to use.
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
 			return;
 
-		if ( ! current_user_can( 'edit_post', $post_id ) ) 
-			return;  
-				
+		if ( ! current_user_can( 'edit_post', $post_id ) )
+			return;
+
 		if ( isset( $_POST['it-exchange-visibility'] ) )
 			update_post_meta( $post_id, '_it-exchange-visibility', $_POST['it-exchange-visibility'] );
 
 		// Grab enabled product add-ons
 		$product_type_addons = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
-		
+
 		// Grab current post's product_type
 		$product_type = it_exchange_get_product_type();
 
 		// These hooks fire off any time a it_exchange_prod post is saved w/o validations
 		do_action( 'it_exchange_save_product_unvalidated', $post_id );
-		foreach( (array) $product_type_addons as $slug => $params ) { 
-			if ( $slug == $product_type ) { 
+		foreach( (array) $product_type_addons as $slug => $params ) {
+			if ( $slug == $product_type ) {
 				do_action( 'it_exchange_save_product_unvalidated_' . $slug, $post_id );
-			}   
-		}  
-		
+			}
+		}
+
 		// This is called any time save_post hook
 		do_action( 'it_exchange_save_product', $post_id );
-		foreach( (array) $product_type_addons as $slug => $params ) { 
-			if ( $slug == $product_type ) { 
+		foreach( (array) $product_type_addons as $slug => $params ) {
+			if ( $slug == $product_type ) {
 				do_action( 'it_exchange_save_product_' . $slug, $post_id );
-			}   
-		} 
+			}
+		}
 	}
 
 	/**
@@ -544,13 +544,13 @@ class IT_Exchange_Product_Post_Type {
 	 * @return void
 	*/
 	function modify_post_new_file() {
-		
+
 		global $current_screen, $post_new_file;
 
 		if ( 'edit-it_exchange_prod' == $current_screen->id || 'it_exchange_prod' == $current_screen->id ) {
-			
+
 			$product_type = it_exchange_get_product_type();
-			
+
 			// Hackery. The 'Add New button in the H2 isn't going to work if we have multiple product types
 			$product_addons = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 			$hide_it = '<style type="text/css">.add-new-h2 { display:none; }</style>';
@@ -562,12 +562,12 @@ class IT_Exchange_Product_Post_Type {
 				$product_addon = $product_addon[0];
 				$product_type = empty( $product_addon ) ? false : $product_addon;
 			}
-	
+
 			if ( ! empty( $post_new_file) && ! empty( $product_type ) )
 				$post_new_file = add_query_arg( array( 'it-exchange-product-type' => $product_type ), $post_new_file );
-			
+
 		}
-		
+
 	}
 
 	/**
@@ -585,7 +585,7 @@ class IT_Exchange_Product_Post_Type {
 		$columns['it_exchange_product_show_in_store'] = __( 'Show in Store', 'LION' );
 		$columns['it_exchange_product_inventory']     = __( 'Inventory', 'LION' );
 		$columns['it_exchange_product_purchases']     = __( 'Purchases', 'LION' );
-		
+
 		if ( 1 < count( it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ) )
 			$columns['it_exchange_product_type']          = __( 'Product Type', 'LION' );
 
@@ -624,7 +624,7 @@ class IT_Exchange_Product_Post_Type {
 
 		//This will only show up if there are multiple product-type addons
 		$sortables['it_exchange_product_type']     = 'it-exchange-product-type';
-		
+
 		return $sortables;
 	}
 
@@ -639,7 +639,7 @@ class IT_Exchange_Product_Post_Type {
 	function it_exchange_prod_posts_custom_column_info( $column ) {
 		global $post;
 		$product = it_exchange_get_product( $post );
-		
+
 		switch( $column ) {
 			case 'it_exchange_product_price':
 				esc_attr_e( it_exchange_format_price( it_exchange_get_product_feature( $post->ID, 'base-price' ) ) );
@@ -669,7 +669,7 @@ class IT_Exchange_Product_Post_Type {
 	 */
 	function modify_wp_query_request_on_edit_php( $request ) {
 		global $hook_suffix;
-		
+
 		if ( 'edit.php' === $hook_suffix ) {
 			if ( 'it_exchange_prod' === $request['post_type'] && isset( $request['orderby'] ) ) {
 				switch( $request['orderby'] ) {
@@ -688,7 +688,7 @@ class IT_Exchange_Product_Post_Type {
 				}
 			}
 		}
-		
+
 		return $request;
 	}
 
@@ -703,7 +703,7 @@ class IT_Exchange_Product_Post_Type {
 	function product_updated_messages( $messages ) {
 		global $post;
 		$post_ID = $post->ID;
-		$messages['it_exchange_prod'] = array( 
+		$messages['it_exchange_prod'] = array(
 			 1 => sprintf( __('Product updated. <a href="%s">View product</a>'), esc_url( get_permalink($post_ID) ) ),
 			 2 => __('Custom field updated.'),
 			 3 => __('Custom field deleted.'),
@@ -738,8 +738,8 @@ class IT_Exchange_Product_Post_Type {
 	 *
 	 * @return void
 	*/
-	function post_slug_meta_box( $post ) {  
-		?>   
+	function post_slug_meta_box( $post ) {
+		?>
 		<label class="" for="post_name">
 			<?php _e( 'Product Slug', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the final part of the product\'s URL. WordPress will auto-create it for you.', 'LION' ); ?>">i</span>
 		</label>
@@ -747,7 +747,7 @@ class IT_Exchange_Product_Post_Type {
 		<?php
 	}
 
-    /** 
+    /**
      * Creates a sample product when the wizard is saved.
      *
      * @since 0.1.15
@@ -804,6 +804,6 @@ class IT_Exchange_Product_Post_Type {
 			$settings['sample-product-id'] = $product_id;
 			it_exchange_save_option( 'settings_general', $settings );
 		}
-	} 
+	}
 }
 $IT_Exchange_Product_Post_Type = new IT_Exchange_Product_Post_Type();

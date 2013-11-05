@@ -57,7 +57,7 @@ global $wp_version;
 				<?php
                 if ( $wp_version >= 3.3 && function_exists( 'wp_editor' ) ) {
                     echo wp_editor( $settings['admin-email-template'], 'admin-email-template', array( 'textarea_name' => 'it_exchange_email_settings-admin-email-template', 'textarea_rows' => 10, 'textarea_cols' => 30, 'editor_class' => 'large-text' ) );
-					
+
 					//We do this for some ITForm trickery... just to add receipt-email-template to the used inputs field
 					$form->get_text_area( 'admin-email-template', array( 'rows' => 10, 'cols' => 30, 'class' => 'large-text' ) );
                 } else {
@@ -65,10 +65,10 @@ global $wp_version;
                 }
                 ?>
                 <p class="description">
-                <?php 
-				_e( 'Enter the email that is sent to administrator after a customer completes a successful purchase. HTML is accepted. Available shortcode functions:', 'LION' ); 
+                <?php
+				_e( 'Enter the email that is sent to administrator after a customer completes a successful purchase. HTML is accepted. Available shortcode functions:', 'LION' );
 				echo '<br />';
-				printf( __( 'You call these shortcode functions like this: %s', 'LION' ), '[it_exchange_email show=order_table option=purchase_message]' ); 
+				printf( __( 'You call these shortcode functions like this: %s', 'LION' ), '[it_exchange_email show=order_table option=purchase_message]' );
 				echo '<ul>';
 				echo '<li>download_list - ' . __( 'A list of download links for each download purchased', 'LION' ) . '</li>';
 				echo '<li>name - ' . __( "The buyer's first name", 'LION' ) . '</li>';
@@ -121,7 +121,7 @@ global $wp_version;
 				<?php
                 if ( $wp_version >= 3.3 && function_exists( 'wp_editor' ) ) {
                     echo wp_editor( $settings['receipt-email-template'], 'receipt-email-template', array( 'textarea_name' => 'it_exchange_email_settings-receipt-email-template', 'textarea_rows' => 10, 'textarea_cols' => 30, 'editor_class' => 'large-text' ) );
-					
+
 					//We do this for some ITForm trickery... just to add receipt-email-template to the used inputs field
 					$form->get_text_area( 'receipt-email-template', array( 'rows' => 10, 'cols' => 30, 'class' => 'large-text' ) );
                 } else {
@@ -129,10 +129,10 @@ global $wp_version;
                 }
                 ?>
                 <p class="description">
-                <?php 
-				_e( 'Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available shortcode functions:', 'LION' ); 
+                <?php
+				_e( 'Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available shortcode functions:', 'LION' );
 				echo '<br />';
-				printf( __( 'You call these shortcode functions like this: %s', 'LION' ), '[it_exchange_email show=order_table option=purchase_message]' ); 
+				printf( __( 'You call these shortcode functions like this: %s', 'LION' ), '[it_exchange_email show=order_table option=purchase_message]' );
 				echo '<ul>';
 				echo '<li>download_list - ' . __( 'A list of download links for each download purchased', 'LION' ) . '</li>';
 				echo '<li>name - ' . __( "The buyer's first name", 'LION' ) . '</li>';

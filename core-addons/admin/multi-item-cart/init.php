@@ -18,10 +18,10 @@ function it_exchange_register_multi_item_cart_pages() {
         'type'          => 'exchange',
         'menu'          => true,
         'optional'      => true,
-    );  
+    );
     it_exchange_register_page( 'cart', $options );
 
-    // Checkout 
+    // Checkout
     $options = array(
         'slug'          => 'checkout',
         'name'          => __( 'Checkout', 'LION' ),
@@ -31,7 +31,7 @@ function it_exchange_register_multi_item_cart_pages() {
         'type'          => 'exchange',
         'menu'          => true,
         'optional'      => true,
-    );  
+    );
     it_exchange_register_page( 'checkout', $options );
 }
 add_action( 'init', 'it_exchange_register_multi_item_cart_pages', 9 );

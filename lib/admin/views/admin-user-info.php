@@ -13,15 +13,15 @@ else
 
 $user_object = get_userdata( $user_id );
 
-if ( !empty( $_POST['_it_exchange_customer_info_nonce'] ) && !wp_verify_nonce( $_POST['_it_exchange_customer_info_nonce'], 'update-it-exchange-customer-info' ) ) {	
+if ( !empty( $_POST['_it_exchange_customer_info_nonce'] ) && !wp_verify_nonce( $_POST['_it_exchange_customer_info_nonce'], 'update-it-exchange-customer-info' ) ) {
 
-	it_exchange_get_add_message( 'error', __( 'Error verifying security token. Please try again.', 'LION' ) );	
-	
+	it_exchange_get_add_message( 'error', __( 'Error verifying security token. Please try again.', 'LION' ) );
+
 } else {
-	
+
 	if ( isset( $_REQUEST['it_exchange_customer_note'] ) )
 		update_user_meta( $user_id, '_it_exchange_customer_note', $_REQUEST['it_exchange_customer_note'] );
-	
+
 }
 ?>
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * This is the default template part for the 
+ * This is the default template part for the
  * purchases label for the transaction
  * confirmation template part.
  *

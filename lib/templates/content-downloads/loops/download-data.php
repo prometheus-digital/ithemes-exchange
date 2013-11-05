@@ -1,6 +1,6 @@
 <?php
 /**
- * The default download-data loop for the 
+ * The default download-data loop for the
  * content-downloads.php template part.
  *
  * @since 1.1.0

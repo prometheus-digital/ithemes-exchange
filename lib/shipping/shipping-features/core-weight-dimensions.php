@@ -5,7 +5,7 @@
  * @since 1.4.0
 */
 class IT_Exchange_Core_Shipping_Feature_Weight_Dimensions extends IT_Exchange_Shipping_Feature {
-	
+
 	var $slug = 'core-weight-dimensions';
 
 	/**
@@ -67,12 +67,12 @@ class IT_Exchange_Core_Shipping_Feature_Weight_Dimensions extends IT_Exchange_Sh
 	 * @return void
 	*/
 	function print_add_edit_feature_box() {
-		?>  
+		?>
 		<div class="shipping-feature <?php esc_attr_e( $this->slug ); ?> columns-wrapper">
 			<?php $this->print_add_edit_feature_box_interior(); ?>
 		</div>
 		<?php
-	}   
+	}
 
 	/**
 	 * Prints the interior of the feature box in the add/edit product view

@@ -44,7 +44,7 @@ function it_exchange_get_pages( $break_cache=false, $options=array() ) {
  * @param string $page page var
  * @return string url
 */
-function it_exchange_get_page_name( $page, $break_cache=false ) { 
+function it_exchange_get_page_name( $page, $break_cache=false ) {
 	$pages     = it_exchange_get_pages( $break_cache );
 	$type      = it_exchange_get_page_type( $page );
 	$page_name = false;
@@ -67,7 +67,7 @@ function it_exchange_get_page_name( $page, $break_cache=false ) {
  * @param string $page page var
  * @return string
 */
-function it_exchange_get_page_slug( $page, $break_cache=false ) { 
+function it_exchange_get_page_slug( $page, $break_cache=false ) {
 	$pages     = it_exchange_get_pages( $break_cache );
 	$type      = it_exchange_get_page_type( $page );
 	$page_slug = false;
@@ -90,7 +90,7 @@ function it_exchange_get_page_slug( $page, $break_cache=false ) {
  * @param string $page page var
  * @return string
 */
-function it_exchange_get_page_type( $page, $break_cache=false ) { 
+function it_exchange_get_page_type( $page, $break_cache=false ) {
 	$pages     = it_exchange_get_pages( $break_cache );
 	$page_type = empty( $pages[$page]['type'] ) ? false : $pages[$page]['type'];
 	return apply_filters( 'it_exchange_get_page_type', $page_type, $page, $break_cache );
@@ -104,7 +104,7 @@ function it_exchange_get_page_type( $page, $break_cache=false ) {
  * @param string $page page var
  * @return string
 */
-function it_exchange_get_page_wpid( $page, $break_cache=false ) { 
+function it_exchange_get_page_wpid( $page, $break_cache=false ) {
 	$pages     = it_exchange_get_pages( $break_cache );
 	$page_wpid = empty( $pages[$page]['wpid'] ) ? '0' : $pages[$page]['wpid'];
 	return apply_filters( 'it_exchange_get_page_wpid', $page_wpid, $page, $break_cache );
@@ -166,7 +166,7 @@ function it_exchange_is_page_ghost_page( $page, $break_cache=false ) {
 }
 
 /**
- * Is the the current page what we're looking for? 
+ * Is the the current page what we're looking for?
  *
  * @since 0.4.0
  *
@@ -229,7 +229,7 @@ function it_exchange_is_page( $page ) {
 	$sql = $wpdb->prepare( 'SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = "it_exchange_prod" AND post_status = "publish" AND post_name = "%s"', $query_var );
 	if ( $id = $wpdb->get_var( $sql ) )
 		return true;
-		
+
 	return false;
 }
 
@@ -296,7 +296,7 @@ function it_exchange_register_page( $page, $options ) {
 /**
  * Returns a list of registerd pages
  *
- * This returns pages that are registered, with their defaults. 
+ * This returns pages that are registered, with their defaults.
  * It DOES NOT RETURN THE ADMIN'S SETTINGS for those pages
  * For the admin's settings, use it_exchange_get_pages()
  *
@@ -336,5 +336,5 @@ function it_exchange_get_wp_pages( $options=array() ) {
 	foreach( $pages as $page ) {
 		$returnval[$page->ID] = get_the_title( $page->ID );
 	}
-	return apply_filters( 'it_exchange_get_wp_pages', $returnval, $options );	
+	return apply_filters( 'it_exchange_get_wp_pages', $returnval, $options );
 }

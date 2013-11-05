@@ -1,11 +1,11 @@
 <?php
 /**
- * Basic Reporting Dashboard Widget. 
+ * Basic Reporting Dashboard Widget.
  * @package IT_Exchange
  * @since 0.4.9
 */
 
-/**  
+/**
  * Registers the dasboard reporting widget
  *
  * @since 0.4.9
@@ -16,11 +16,11 @@ function it_exchange_basic_reporting_register_dashboard_widget() {
 	$cap = apply_filters( 'it_exchange_basic_reporting_capability_level', 'activate_plugins' );
 	if ( ! current_user_can( $cap ) )
 		return;
-	wp_add_dashboard_widget( 'it-exchange-dashboard-reporting-widget', __( 'iThemes Exchange', 'LION' ), 'it_exchange_basic_reporting_print_dashboard_widget' ); 
-}    
+	wp_add_dashboard_widget( 'it-exchange-dashboard-reporting-widget', __( 'iThemes Exchange', 'LION' ), 'it_exchange_basic_reporting_print_dashboard_widget' );
+}
 add_action( 'wp_dashboard_setup', 'it_exchange_basic_reporting_register_dashboard_widget' );
 
-/**  
+/**
  * Put our widget under the Right Now widget because we think we're important.
  *
  * We're hooking into a filter so we need to make sure we return what we get, regardless of what we do here.
@@ -46,7 +46,7 @@ function it_exchange_basic_reporting_reorder_dashboard_widgets( $widgets ) {
 	// Abort if reporting widget wasn't registered for some reason
 	if ( ! $reporting_widget )
 		return $widgets;
-	else 
+	else
 		unset( $dashboard_widgets['it-exchange-dashboard-reporting-widget'] );
 
 	// Loop through widgets and add the reporting widget after the key were looking for or at the end.
@@ -55,8 +55,8 @@ function it_exchange_basic_reporting_reorder_dashboard_widgets( $widgets ) {
 		if ( $key === $target && ! $inserted ) {
 			$modified_array['it-exchange-dashboard-reporting-widget'] = $reporting_widget;
 			$inserted = true;
-		}    
-	}    
+		}
+	}
 
 	// If we didn't find the key were were looking for, add it to the end.
 	if ( ! $inserted )
@@ -64,10 +64,10 @@ function it_exchange_basic_reporting_reorder_dashboard_widgets( $widgets ) {
 
 	$wp_meta_boxes['dashboard']['normal']['core'] = $modified_array;
 	return $widgets;
-}    
+}
 add_filter( 'wp_dashboard_widgets', 'it_exchange_basic_reporting_reorder_dashboard_widgets' );
 
-/**  
+/**
  * Prints the dashboard reporting widget
  *
  * @since 0.4.9
@@ -76,7 +76,7 @@ add_filter( 'wp_dashboard_widgets', 'it_exchange_basic_reporting_reorder_dashboa
 */
 function it_exchange_basic_reporting_print_dashboard_widget() {
 	include( 'dashboard-widget.php' );
-} 
+}
 
 /**
  * Reporting functions go here. Will grow after version 1

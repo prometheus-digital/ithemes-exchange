@@ -24,13 +24,13 @@
 				<?php do_action( 'it_exchange_content_confirmation_before_product_featured_image' ); ?>
 				<?php it_exchange( 'transaction', 'featured-image' ); ?>
 				<?php do_action( 'it_exchange_content_confirmation_after_product_featured_image' ); ?>
-			
+
 				<?php do_action( 'it_exchange_content_confirmation_before_product_title' ); ?>
 				<?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'title', 'wrap' => 'h3' ) ); ?>
 				<?php do_action( 'it_exchange_content_confirmation_after_product_title' ); ?>
 			</div>
 			<?php do_action( 'it_exchange_content_confirmation_after_product_attibutes' ); ?>
-			
+
 			<?php if ( it_exchange( 'transaction', 'has-product-downloads' ) ) : ?>
 				<?php do_action( 'it_exchange_content_confirmation_before_product_downloads' ); ?>
 				<div class="it-exchange-transaction-product-downloads it-exchange-clearfix">
@@ -64,7 +64,7 @@
 		</div>
 	</div>
 	<?php do_action( 'it_exchange_content_confirmation_after_product_details' ); ?>
-	
+
 	<?php do_action( 'it_exchange_content_confirmation_before_product_cart_object' ); ?>
 	<div class="it-exchange-transaction-product-cart-object it-exchange-column">
 		<div class="it-exchange-column-inner">

@@ -1,5 +1,5 @@
 <?php
-/** 
+/**
  * This file inits deprecated features of Exchange
  * Some are alwasy included. Others require theme_support
  * or filters to be activated.
@@ -44,12 +44,12 @@ function it_exchange_load_deprecated_template_parts() {
 
 		// Parent theme /exchange/style.css if it exists
 		$parent_theme_css = get_template_directory() . '/exchange/style.css';
-		if ( is_file( $parent_theme_css ) ) 
+		if ( is_file( $parent_theme_css ) )
 			wp_enqueue_style( 'it-exchange-parent-theme-css', ITUtility::get_url_from_file( $parent_theme_css ) );
 
 		// Child theme /exchange/style.css if it exists
 		$child_theme_css = get_stylesheet_directory() . '/exchange/style.css';
-		if ( is_file( $child_theme_css ) && ( $parent_theme_css != $child_theme_css || ! is_file( $parent_theme_css ) ) ) 
+		if ( is_file( $child_theme_css ) && ( $parent_theme_css != $child_theme_css || ! is_file( $parent_theme_css ) ) )
 			wp_enqueue_style( 'it-exchange-child-theme-css', ITUtility::get_url_from_file( $child_theme_css ) );
 
 		// Enqueue SW after custom styles since that's how it happens otherwise

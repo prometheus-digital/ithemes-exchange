@@ -54,9 +54,9 @@ class IT_Exchange_Product_Feature_Product_Images {
 	 * @return void
 	*/
 	function init_feature_metaboxes() {
-		
+
 		global $post;
-		
+
 		if ( isset( $_REQUEST['post_type'] ) ) {
 			$post_type = $_REQUEST['post_type'];
 		} else {
@@ -73,23 +73,23 @@ class IT_Exchange_Product_Feature_Product_Images {
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
 		}
-			
+
 		if ( !empty( $_REQUEST['it-exchange-product-type'] ) )
 			$product_type = $_REQUEST['it-exchange-product-type'];
 		else
 			$product_type = it_exchange_get_product_type( $post );
-		
+
 		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'product-images' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_metabox' ) );
 		}
-		
+
 	}
 
 	/**
 	 * Registers the feature metabox for a specific product type
 	 *
-	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports the feature 
+	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports the feature
 	 *
 	 * @since 0.4.0
 	 * @return void
@@ -107,21 +107,21 @@ class IT_Exchange_Product_Feature_Product_Images {
 	function print_metabox( $post ) {
 		// Grab the iThemes Exchange Product object from the WP $post object
 		$product = it_exchange_get_product( $post );
-		
+
 		$product_images = it_exchange_get_product_feature( $product->ID, 'product-images' );
 		?>
-		
+
 		<label for="product-images-field">Images<span class="tip" title="<?php _e( 'Uploading large images is best (1600px or greater). Exchange will resize the images to use in the store.', 'LION' ) ?>">i</span></label>
 		<div id="it-exchange-product-images">
 			<?php
 			if ( ! empty( $product_images ) ) {
-				
+
 				$image = array_shift( $product_images ); //get the first element from the array
-				
+
 				$thumb = wp_get_attachment_thumb_url( $image );
 				$large = wp_get_attachment_url( $image );
 				$src = $large;
-				
+
 				echo '<div id="it-exchange-feature-image" class="ui-droppable">';
 				echo '<ul class="feature-image">';
 				echo '  <li id="' . $image . '">';
@@ -135,14 +135,14 @@ class IT_Exchange_Product_Feature_Product_Images {
 				echo '</ul>';
 				echo '<div class="replace-feature-image"><span>Replace featured image</span></div>';
 				echo '</div>';
-								
+
 				echo '<ul id="it-exchange-gallery-images" class="ui-sortable">';
 				foreach( $product_images as $image_id ) {
-					
+
 					$thumb = wp_get_attachment_thumb_url( $image_id );
 					$large = wp_get_attachment_url( $image_id );
 					$src = $thumb;
-					
+
 					echo '  <li id="' . $image_id . '">';
 					echo '    <a class="image-edit" href="">';
 					echo '      <img alt="" data-thumb="' . $thumb . '" data-large="' . $large . '" src=" ' . $src . '">';
@@ -151,11 +151,11 @@ class IT_Exchange_Product_Feature_Product_Images {
 					echo '    <span class="remove-item">×</span>';
 					echo '    <input type="hidden" value="' . $image_id . '" name="it-exchange-product-images[]">';
 					echo '  </li>';
-					
+
 				}
 				echo '<li id="it-exchange-add-new-image" class="disable-sorting"><a href><span>Add Images</span></a></li>';
 				echo '</ul>';
-				
+
 			} else {
 				?>
 				<div id="it-exchange-feature-image" class="ui-droppable">
@@ -172,7 +172,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 		<?php
 	}
 
-	/** 
+	/**
 	 * This saves the value
 	 *
 	 * @since 0.4.0
@@ -190,12 +190,12 @@ class IT_Exchange_Product_Feature_Product_Images {
 		if ( ! $product_id )
 			return;
 
-		// Abort if this product type doesn't support this feature 
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'product-images' ) ) 
+		// Abort if this product type doesn't support this feature
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'product-images' ) )
 			return;
 
 		// Abort if key for feature option isn't set in POST data
-		if ( !empty( $_POST['it-exchange-product-images'] ) ) 
+		if ( !empty( $_POST['it-exchange-product-images'] ) )
 			it_exchange_update_product_feature( $product_id, 'product-images', $_POST['it-exchange-product-images'] );
 		else
 			it_exchange_update_product_feature( $product_id, 'product-images', array() );
@@ -207,7 +207,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 	 * @since 0.4.0
 	 *
 	 * @param integer $product_id the product id
-	 * @param mixed $new_value the new value 
+	 * @param mixed $new_value the new value
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_value ) {
@@ -247,7 +247,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 	/**
 	 * Does the product support this feature?
 	 *
-	 * This is different than if it has the feature, a product can 
+	 * This is different than if it has the feature, a product can
 	 * support a feature but might not have the feature set.
 	 *
 	 * @since 0.4.0

@@ -11,7 +11,7 @@
  * @since 0.3.8
 */
 class IT_Exchange_Customer {
-	
+
 	/**
 	 * @var integer $id the customer id. corresponds with the WP user id
 	 * @since 0.3.8
@@ -50,7 +50,7 @@ class IT_Exchange_Customer {
 	 * @return mixed false if no customer is found. self if customer is located
 	*/
 	function IT_Exchange_Customer( $user ) {
-		
+
 		if ( is_object( $user ) && 'WP_User' == get_class( $user ) ) {
 			$this->id = $this->ID = $user->ID;
 			$this->wp_user = $user;
@@ -67,7 +67,7 @@ class IT_Exchange_Customer {
 		// Return false if not a WP User
 		if ( ! $this->is_wp_user() )
 			return false;
-		
+
 		// Return object if found a WP user
 		return $this;
 	}
@@ -93,7 +93,7 @@ class IT_Exchange_Customer {
 	*/
 	function set_customer_data() {
 		$data = (object) $this->data;
-		
+
 		if ( is_object( $this->wp_user->data ) ) {
 			$wp_user_data = get_object_vars( $this->wp_user->data );
 			foreach( (array) $wp_user_data as $key => $value ) {
@@ -113,8 +113,8 @@ class IT_Exchange_Customer {
 		$data = apply_filters( 'it_exchange_set_customer_data', $data, $this->id );
 		$this->data = $data;
 	}
-	
-    /** 
+
+    /**
      * Tack transaction_id to user_meta of customer
      *
      * @since 0.4.0
@@ -125,8 +125,8 @@ class IT_Exchange_Customer {
 	function add_transaction_to_user( $transaction_id ) {
 		add_user_meta( $this->id, '_it_exchange_transaction_id', $transaction_id );
 	}
-	
-    /** 
+
+    /**
      * Tack transaction_id to user_meta of customer
      *
      * @since 0.4.0
@@ -204,7 +204,7 @@ function handle_it_exchange_customer_registration_action() {
             return it_exchange_add_message( 'error', $user_id->get_error_message());
 
 		// Clearing the user pass will prevent the user email from being sent
-		$email_pw = apply_filters( 'it_exchange_send_customer_registration_email', true ) ? $_POST['pass1'] : ''; 
+		$email_pw = apply_filters( 'it_exchange_send_customer_registration_email', true ) ? $_POST['pass1'] : '';
         wp_new_user_notification( $user_id, $_POST['pass1'] );
 
         $creds = array(
@@ -222,7 +222,7 @@ function handle_it_exchange_customer_registration_action() {
 
 		// Redirect or clear query args
         if ( in_array( trailingslashit( wp_get_referer() ), array( $reg_page, $checkout_page ) ) ) {
-			// If on the reg page, check for redirect cookie. 
+			// If on the reg page, check for redirect cookie.
 			$login_redirect = it_exchange_get_session_data( 'login_redirect' );
 			if ( ! empty( $login_redirect ) ) {
 				$redirect = reset( $login_redirect );

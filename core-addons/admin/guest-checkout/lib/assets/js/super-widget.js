@@ -25,13 +25,13 @@ function itExchangeGuestCheckoutSWRegister(formData) {
 jQuery(document).on('click', '.it-exchange-super-widget a.it-exchange-sw-cancel-guest-checkout-link', function(event) {
 	event.preventDefault();
 	if ( itExchangeSWMultiItemCart )
-		if ( itExchangeSWOnProductPage ) 
+		if ( itExchangeSWOnProductPage )
 			itExchangeGetSuperWidgetState( 'product', itExchangeSWOnProductPage );
 		else
 			itExchangeGetSuperWidgetState( 'cart' );
 	else
 		itExchangeSWEmptyCart( itExchangeSWOnProductPage );
-}); 
+});
 
 /**
  * Processes the guest login
@@ -42,5 +42,5 @@ function itExchangeGuestCheckoutSWRegister( data ) {
             itExchangeGetSuperWidgetState( 'guest-checkout' );
         else
             itExchangeGetSuperWidgetState( 'checkout' );
-    }); 
+    });
 }

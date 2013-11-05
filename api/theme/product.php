@@ -6,7 +6,7 @@
 */
 
 class IT_Theme_API_Product implements IT_Theme_API {
-	
+
 	/**
 	 * API context
 	 * @var string $_context
@@ -70,7 +70,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
 	 * @since 0.4.0
-	 * 
+	 *
 	 * @return string
 	*/
 	function get_api_context() {
@@ -95,7 +95,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function title( $options=array() ) {
-		
+
 		// Return boolean if has flag was set
 		if ( $options['supports'] )
 			return it_exchange_product_supports_feature( $this->product->ID, 'title' );
@@ -105,12 +105,12 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			return it_exchange_product_has_feature( $this->product->ID, 'title' );
 
 		// Repeats checks for when flags were not passed.
-		if ( it_exchange_product_supports_feature( $this->product->ID, 'title' )	
+		if ( it_exchange_product_supports_feature( $this->product->ID, 'title' )
 				&& it_exchange_product_has_feature( $this->product->ID, 'title' ) ) {
 
 			$result   = '';
 			$title    = it_exchange_get_product_feature( $this->product->ID, 'title' );
-			
+
 			$defaults = array(
 				'wrap'   => 'h1',
 				'format' => 'html',
@@ -137,9 +137,9 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return mixed
 	*/
 	function permalink( $options=array() ) {
-		
+
 		$permalink = empty( $this->product->ID ) ? false : get_permalink( $this->product->ID );
-			
+
 		if ( $options['has'] )
 			return (boolean) $permalink;
 
@@ -160,7 +160,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$result .= $options['after'];
 
 		return $result;
-	
+
 	}
 
 	/**
@@ -174,7 +174,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// Return boolean if has flag was set
 		if ( $options['supports'] )
 			return it_exchange_product_supports_feature( $this->product->ID, 'base-price' );
-			
+
 		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'base-price' );
@@ -222,7 +222,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// Return boolean if has flag was set
 		if ( $options['supports'] )
 			return it_exchange_product_supports_feature( $this->product->ID, 'description' );
-			
+
 		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'description' );
@@ -245,7 +245,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// Return boolean if has flag was set
 		if ( $options['supports'] )
 			return it_exchange_product_supports_feature( $this->product->ID, 'extended-description' );
-			
+
 		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'extended-description' );
@@ -318,10 +318,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	}
 
 	/**
-	 * The product purchase quantity (max purchase option by customer) 
+	 * The product purchase quantity (max purchase option by customer)
 	 *
 	 * @since 0.4.0
-	 * @return integer 
+	 * @return integer
 	*/
 	function purchase_quantity( $options=array() ) {
 
@@ -362,7 +362,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			// Lets check product availability and return and empty string if its not available.
 			if ( ! it_exchange( 'product', 'is-available' ) )
 				return '';
-				
+
 			if ( (int) $max_quantity > 0 && (int) $max_quantity > $inventory )
 				$max_quantity = $inventory;
 		}
@@ -385,7 +385,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * The product's current inventory
 	 *
 	 * @since 0.4.0
-	 * @return integer 
+	 * @return integer
 	*/
 	function inventory( $options=array() ) {
 
@@ -491,23 +491,23 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$defaults = array(
 				'size' => 'large'
 			);
-			
+
 			$options = ITUtility::merge_defaults( $options, $defaults );
 			$output = array();
 
 			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
-			
+
 			$feature_image = array(
 				'id'    =>  $product_images[0],
 				'thumb' => wp_get_attachment_thumb_url( $product_images[0] ),
 				'large' => wp_get_attachment_url( $product_images[0] )
 			);
-			
+
 			if ( 'thumbnail' === $options['size'] )
 				$img_src = $feature_image['thumb'];
 			else
 				$img_src = $feature_image['large'];
-			
+
 			ob_start();
 			?>
 				<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
@@ -517,13 +517,13 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				</div>
 			<?php
 			$output = ob_get_clean();
-			
+
 			return $output;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Return product's images for all image sizes.
 	 *
@@ -532,34 +532,34 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function product_images( $options=array() ) {
-		
+
 		// Return boolean if has flag was set
 		if ( $options['supports'] )
 			return it_exchange_product_supports_feature( $this->product->ID, 'product-images' );
-		
+
 		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'product-images' );
-		
+
 		if ( it_exchange_product_supports_feature( $this->product->ID, 'product-images' )
 				&& it_exchange_product_has_feature( $this->product->ID, 'product-images' ) ) {
-				
+
 			$defaults = array(
 				'id'   => null,
 				'size' => 'all' // NOTE These do nothing right now. Going to rething the options later. - Koop
 			);
-			
+
 			$options = ITUtility::merge_defaults( $options, $defaults );
 			$output = array();
-			
+
 			// Get the image sizes.
 			$image_sizes = get_intermediate_image_sizes();
-			
+
 			// Add full to the $image_size array.
 			array_push( $image_sizes, 'full' );
-			
+
 			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
-			
+
 			foreach( $product_images as $image_id ) {
 				foreach ( $image_sizes as $size ) {
 					$image['id'] = $image_id;
@@ -567,9 +567,9 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				}
 				$images[] = $image;
 			}
-			
+
 			$output = $images;
-			
+
 			return $output;
 		}
 		return false;
@@ -583,7 +583,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function product_gallery( $options=array() ) {
-		
+
 		// Return boolean if has flag was set
 		if ( $options['supports'] )
 			return it_exchange_product_supports_feature( $this->product->ID, 'product-images' );
@@ -594,27 +594,27 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		if ( it_exchange_product_supports_feature( $this->product->ID, 'product-images' )
 				&& it_exchange_product_has_feature( $this->product->ID, 'product-images' ) ) {
-			
+
 			$settings = it_exchange_get_option( 'settings_general' );
-			
+
 			$zoom = ( 1 == $settings['enable-gallery-zoom'] ) ? $settings['product-gallery-zoom-action'] : 'false';
-			
+
 			$popup = ( 1 == $settings['enable-gallery-popup'] ) ? 'true' : 'false';
-			
+
 			$defaults = array(
 				'size'   => 'thumbnail', // thumbnail or large
 				'output' => 'gallery',   // gallery or thumbnails
 				'zoom'   => $zoom,       // hover or click
 				'switch' => 'click'      // hover or click
 			);
-			
+
 			$options = ITUtility::merge_defaults( $options, $defaults );
 			$output = NULL;
-			
+
 			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
-			
+
 			switch( $options['output'] ) {
-				
+
 				case 'thumbnails' :
 					if ( !empty( $product_images ) ) {
 						ob_start();
@@ -636,20 +636,20 @@ class IT_Theme_API_Product implements IT_Theme_API {
 							</div>
 						<?php
 						$output = ob_get_clean();
-						
+
 					}
 				break;
-				
+
 				case 'gallery' :
 				default :
 					if ( ! empty( $product_images ) ) {
-						
+
 						$featured = array(
 							'full'  => wp_get_attachment_image_src( $product_images[0], 'full' ),
 							'large' => wp_get_attachment_image_src( $product_images[0], 'large' ),
 							'thumb' => wp_get_attachment_image_src( $product_images[0], 'thumbnail' ),
 						);
-						
+
 						ob_start();
 						?>
 							<div id="it-exchange-product-images-gallery-<?php echo get_the_id(); ?>" class="it-exchange-product-images-gallery it-exchange-gallery-full" data-popup="<?php echo $popup; ?>" data-zoom="<?php echo $options["zoom"]; ?>" data-switch="<?php echo $options['switch']; ?>">
@@ -667,13 +667,13 @@ class IT_Theme_API_Product implements IT_Theme_API {
 													$img_class = 'current';
 												else
 													$img_class = '';
-												
+
 												$thumbnail = array(
 													'full'  => wp_get_attachment_image_src( $image_id, 'full' ),
 													'large' => wp_get_attachment_image_src( $image_id, 'large' ),
 													'thumb' => wp_get_attachment_image_src( $image_id, 'thumbnail' ),
 												);
-												
+
 												$dumped[] = $thumbnail;
 											?>
 											<li class="it-exchange-product-image-thumb-<?php echo $image_id; ?>">
@@ -689,16 +689,16 @@ class IT_Theme_API_Product implements IT_Theme_API {
 					}
 				break;
 			}
-			
+
 			$output = apply_filters( 'it_exchange_product_gallery', $output );
-			
+
 			return $output;
 		}
 		return false;
 	}
 
 	/**
-	 * Returns downloads for product. 
+	 * Returns downloads for product.
 	 *
 	 * If has option is true, returns boolean
 	 *
@@ -718,12 +718,12 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		// If we made it here, we're doing a loop of downloads for the current product.
 		// This will init/reset the downloads global and loop through them. the /api/theme/download.php file will handle individual downloads.
-		if ( empty( $GLOBALS['it_exchange']['downloads'] ) ) { 
+		if ( empty( $GLOBALS['it_exchange']['downloads'] ) ) {
 			$GLOBALS['it_exchange']['downloads'] = it_exchange_get_product_feature( $this->product->ID, 'downloads' );
 			$GLOBALS['it_exchange']['download'] = reset( $GLOBALS['it_exchange']['downloads'] );
 			return true;
 		} else {
-			if ( next( $GLOBALS['it_exchange']['downloads'] ) ) { 
+			if ( next( $GLOBALS['it_exchange']['downloads'] ) ) {
 				$GLOBALS['it_exchange']['download'] = current( $GLOBALS['it_exchange']['downloads'] );
 				return true;
 			} else {
@@ -731,7 +731,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				end( $GLOBALS['it_exchange']['downloads'] );
 				$GLOBALS['it_exchange']['download'] = false;
 				return false;
-			}   
+			}
 		}
 	}
 
@@ -764,7 +764,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return true;
-		
+
 		// Parse options
 		$result        = false;
 
@@ -803,15 +803,15 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$buy_now_hidden_fields = $add_to_cart_hidden_fields = '';
 
 		$output = '';
-		
+
 		if ( !$product_in_stock )
 			return __( 'Product is currently out of stock.', 'LION' );
-			
+
 		if ( !$product_is_available )
 			return __( 'Product is currently not available.', 'LION' );
-			
+
 		$class = $options['class'];
-	
+
 		// Set buy-now options
 		$options['before']        = $options['buy-now-before'];
 		$options['after']         = $options['buy-now-after'];
@@ -820,7 +820,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$options['button-type']   = $options['buy-now-button-type'];
 		$options['button-name']   = $options['buy-now-button-name'];
 		$options['edit-quantity'] = $options['buy-now-edit-quantity'];
-		
+
 		// Add add-to-cart form to output if not multicart or is multicart and no products in cart
 		// and/or template asked for it
 		if ( ( ! $multi_item_cart || ( $multi_item_cart && 0 === it_exchange_get_cart_products_count() ) )
@@ -837,10 +837,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$options['edit-quantity'] = $options['add-to-cart-edit-quantity'];
 
 		// Add add-to-cart form to output if multicart and/or template asked for it.
-		if ( $multi_item_cart 
+		if ( $multi_item_cart
 			&& ( empty( $options['type'] ) || 'add-to-cart' == $options['type'] ) )
 			$output .= it_exchange( 'product', 'get-add-to-cart', $options );
-		
+
 		// Return output
 		return $output;
 	}
@@ -864,7 +864,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return true;
-		
+
 		// Parse options
 		$result        = false;
 
@@ -872,13 +872,13 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'class'    => false,
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
-		
-		$args['before_widget'] = '<div class="it-exchange-product-sw single-product-super-widget ' . esc_attr( $options['class'] ) . '">';	
-		$args['after_widget'] = '</div>';			
+
+		$args['before_widget'] = '<div class="it-exchange-product-sw single-product-super-widget ' . esc_attr( $options['class'] ) . '">';
+		$args['after_widget'] = '</div>';
 		$args['enqueue_hide_script'] = false;
-		
+
 		the_widget( 'IT_Exchange_Super_Widget', array(), $args );
-		
+
 	}
 
 	function buy_now( $options=array() ) {
@@ -890,7 +890,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return true;
-		
+
 		// Parse options
 		$result        = false;
 
@@ -923,7 +923,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$hidden_fields  = '<input type="hidden" name="it-exchange-action" value="buy_now" />';
 		$hidden_fields .= '<input class="buy-now-product-id" type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
 		$hidden_fields .= wp_nonce_field( 'it-exchange-purchase-product-' . $this->product->ID, '_wpnonce', true, false );
-		
+
 		if ( ! $product_in_stock )
 			return '<p>' . esc_attr( $options['out-of-stock-label'] ) . '</p>';
 
@@ -932,10 +932,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		$result  = '<form action="" method="post" class="it-exchange-sw-purchase-options it-exchange-sw-buy-now ' . esc_attr( $class ) . '">';
 		$result .= $hidden_fields;
-		
+
 		if ( $options['edit-quantity'] )
 			$result .= it_exchange( 'product', 'get-purchase-quantity' );
-		
+
 		$result .= $button;
 		$result .= '</form>';
 
@@ -951,7 +951,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return true;
-		
+
 		// Parse options
 		$result        = false;
 
@@ -989,27 +989,27 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$hidden_fields  = '<input type="hidden" name="it-exchange-action" value="add_product_to_cart" />';
 		$hidden_fields .= '<input class="add-to-cart-product-id" type="hidden" name="' . esc_attr( $var_key ). '" value="' . esc_attr( $var_value ). '" />';
 		$hidden_fields .= wp_nonce_field( 'it-exchange-purchase-product-' . $this->product->ID, '_wpnonce', true, false );
-		
-		
+
+
 		if ( it_exchange_product_supports_feature( $this->product->ID, 'purchase-quantity' ) && it_exchange_product_has_feature( $this->product->ID, 'purchase-quantity' ) ) {
-				
+
 			$quantity = it_exchange_get_cart_product_quantity_by_product_id( $this->product->ID );
 			$max_quantity = it_exchange_get_product_feature( $this->product->ID, 'purchase-quantity' );
-			
+
 			if ( $quantity < $max_quantity )
 				$can_add_more = true;
 			else
 				$can_add_more = false;
-		
+
 		} else {
-		
+
 			$can_add_more = true;
-			
+
 		}
-		
+
 		if ( !$can_add_more )
 			return '<p>' . esc_attr( $options['max-quantity-text'] ) . '</p>';
-		
+
 		if ( ! $product_in_stock )
 			return '<p>' . esc_attr( $options['out-of-stock-text'] ) . '</p>';
 
@@ -1021,10 +1021,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		$result  = '<form action="" method="post" class="it-exchange-sw-purchase-options it-exchange-sw-add-to-cart ' . esc_attr( $class ) . '">';
 		$result .= $hidden_fields;
-		
+
 		if ( $options['edit-quantity'] )
 			$result .= it_exchange( 'product', 'get-purchase-quantity' );
-		
+
 		$result .= $button;
 		$result .= '</form>';
 
@@ -1048,7 +1048,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return true;
-		
+
 		// Parse options
 		$defaults      = array(
 			'format'      => 'key',
@@ -1078,7 +1078,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return true;
-		
+
 		// Parse options
 		$defaults = array(
 			'format' => 'key',

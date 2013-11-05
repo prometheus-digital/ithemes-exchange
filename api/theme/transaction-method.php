@@ -6,15 +6,15 @@
 */
 
 class IT_Theme_API_Transaction_Method implements IT_Theme_API {
-	
-	/** 
+
+	/**
 	 * API context
 	 * @var string $_context
 	 * @since 0.4.0
 	*/
 	private $_context = 'transaction-method';
 
-	/** 
+	/**
 	 * Maps api tags to methods
 	 * @var array $_tag_map
 	 * @since 0.4.0
@@ -23,14 +23,14 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 		'makepayment' => 'make_payment',
 	);
 
-	/** 
+	/**
 	 * The current transaction method
 	 * @var array $_transaction_method
 	 * @since 0.4.0
 	*/
 	private $_transaction_method = false;
 
-	/** 
+	/**
 	 * Constructor
 	 *
 	 * @since 0.4.0
@@ -39,13 +39,13 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 	*/
 	function IT_Theme_API_Transaction_Method() {
 		$this->_transaction_method = empty( $GLOBALS['it_exchange']['transaction_method'] ) ? false : $GLOBALS['it_exchange']['transaction_method'];
-	}   
+	}
 
 	/**
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
 	 * @since 0.4.0
-	 * 
+	 *
 	 * @return string
 	*/
 	function get_api_context() {

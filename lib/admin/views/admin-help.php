@@ -8,9 +8,9 @@
 <div class="wrap help-wrap">
 	<?php screen_icon( 'it-exchange' );  ?>
 	<h2><?php _e( 'Help and Resources', 'LION' ); ?></h2>
-	
+
 	<p class="top-description"><?php printf( __( 'We\'ve built %s to simplify ecommerce for WordPress. However, ecommerce is not always easy, so we\'ve taken the time to create some resources to help you get started.', 'LION' ), '<a title="iThemes Exchange" href="http://ithemes.com/exchange/" target="_blank">iThemes Exchange</a>' ); ?></p>
-	
+
 	<div class="help-section-wrap clearfix">
 		<h3><?php _e( 'Quick Links', 'LION' ); ?></h3>
 		<div class="help-action exchange-wizard help-tip" title="<?php _e( 'This is a link back to the Quick Setup page that opens after Exchange is installed. This page walks through the necessary information and settings needed to set up your store.', 'LION' ); ?>">
@@ -19,7 +19,7 @@
 			<p><a href="<?php echo get_admin_url( NULL, 'admin.php?page=it-exchange-setup' ); ?>" target="_self"><?php _e( 'Open the Wizard', 'LION' ); ?></a></p>
 		</div>
 	</div>
-	
+
 	<div class="help-section-wrap clearfix">
 		<h3><?php _e( 'Resources', 'LION' ); ?></h3>
 		<div class="help-action exchange-tutorials" title="">
@@ -33,7 +33,7 @@
 			<p><a href="http://ithemes.com/codex/page/Exchange" target="_blank"><?php _e( 'Dig Deep into Exchange', 'LION' ); ?></a></p>
 		</div>
 	</div>
-	
+
 	<div class="help-section-wrap clearfix">
 		<h3><?php _e( 'Support', 'LION' ); ?></h3>
 		<div class="help-action exchange-support" title="">
@@ -47,7 +47,7 @@
 			<p><a href="http://ithemes.com/exchange/support/" target="_blank"><?php _e( 'Get Premuim Support', 'LION' ); ?></a></p>
 		</div>
 	</div>
-	
+
 	<div class="help-section-wrap clearfix">
 		<h3><?php _e( 'Report &amp Request', 'LION' ); ?></h3>
 		<div class="help-action exchange-report" title="">

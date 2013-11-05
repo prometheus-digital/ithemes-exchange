@@ -27,7 +27,7 @@ function it_exchange_str_true ( $string, $istrue = array('yes', 'y', 'true','1',
  * @since 0.4.0
  *
  * @param string|array $options URL-compatible query string or associative array of tag options
- * @return array API-ready options list 
+ * @return array API-ready options list
 */
 function it_exchange_parse_options( $options ) {
 	// Set empty array
@@ -40,7 +40,7 @@ function it_exchange_parse_options( $options ) {
 	// If options is string, convert to array ($paramset) via parse_str
 	if ( is_string( $options) )
 		parse_str( $options, $paramset );
-	else 
+	else
 		$paramset = $options;
 
 	// Passed options are now an array ($paramset). Reset $options variable
@@ -67,18 +67,18 @@ function it_exchange_parse_options( $options ) {
 function it_exchange_format_price( $price, $show_symbol = true ) {
 	if ( ! is_numeric( $price ) )
 		$price = 0;
-	
+
 	$before = $after = '';
 	$settings = it_exchange_get_option( 'settings_general' );
 	$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
-	
+
 	if ( $show_symbol ) {
 		if ( 'after' === $settings['currency-symbol-position'] )
 			$after = $currency;
 		else
 			$before = $currency;
 	}
-			
+
 	return $before . number_format( $price, 2, $settings['currency-decimals-separator'], $settings['currency-thousands-separator'] ) . $after;
 }
 
@@ -93,33 +93,33 @@ function it_exchange_load_public_scripts( $current_view ) {
 
 	$purchase_requirements = (array) it_exchange_get_purchase_requirements();
 	$purchase_requirements = array_keys( $purchase_requirements );
-	
+
 	$settings = it_exchange_get_option( 'settings_general' );
-	
+
 	// jQuery Zoom
 	wp_register_script( 'jquery-zoom', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.zoom.min.js' ), array( 'jquery' ), false, true );
-	
+
 	// jQuery Colorbox
 	wp_register_script( 'jquery-colorbox', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.colorbox.min.js' ), array( 'jquery' ), false, true );
-	
+
 	// Detect CC Type
 	wp_register_script( 'detect-credit-card-type', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/detect-credit-card-type.js' ), array( 'jquery' ), false, true );
-	
+
 	// Frontend Product JS
 	if ( is_singular( 'it_exchange_prod' ) ) {
 		$script_deps = array();
-		
+
 		if ( ( 1 == $settings['enable-gallery-zoom'] ) )
 			array_push( $script_deps, 'jquery-zoom' );
-		
+
 		if ( ( 1 == $settings['enable-gallery-popup'] ) )
 			array_push( $script_deps, 'jquery-colorbox' );
-		
+
 		wp_enqueue_script( 'it-exchange-product-public-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/exchange-product.js' ), $script_deps, false, true );
 		wp_enqueue_style( 'it-exchange-icon-fonts', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange-fonts.css' ) );
 	}
-	
-	// ****** CHECKOUT SPECIFIC SCRIPTS ******* 
+
+	// ****** CHECKOUT SPECIFIC SCRIPTS *******
 	if ( it_exchange_is_page( 'checkout' )  ) {
 
 		// Enqueue purchase dialog JS on checkout screen
@@ -136,7 +136,7 @@ function it_exchange_load_public_scripts( $current_view ) {
 		// General Checkout
 		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/checkout-page.js' );
 		wp_enqueue_script( 'it-exchange-checkout-page', $script, array( 'jquery' ), false, true );
-		
+
 		// Load Logged In purchase requirement JS if not logged in and on checkout page.
 		if ( in_array( 'logged-in', $purchase_requirements ) && ! is_user_logged_in() ) {
 			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/logged-in-purchase-requirement.js' );
@@ -154,15 +154,15 @@ function it_exchange_load_public_scripts( $current_view ) {
 
 	} // ****** END CHECKOUT SPECIFIC SCRIPTS *******
 
-	// Frontend Style 
+	// Frontend Style
 	if ( ! apply_filters( 'it_exchange_disable_frontend_stylesheet', false ) )
 		wp_enqueue_style( 'it-exchange-public-css', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange.css' ) );
-	
+
 	// Parent theme /exchange/style.css if it exists
 	$parent_theme_css = get_template_directory() . '/exchange/style.css';
 	if ( is_file( $parent_theme_css ) )
 		wp_enqueue_style( 'it-exchange-parent-theme-css', ITUtility::get_url_from_file( $parent_theme_css ) );
-	
+
 	// Child theme /exchange/style.css if it exists
 	$child_theme_css = get_stylesheet_directory() . '/exchange/style.css';
 	if ( is_file( $child_theme_css ) && ( $parent_theme_css != $child_theme_css || ! is_file( $parent_theme_css ) ) )
@@ -202,12 +202,12 @@ function it_exchange_process_webhooks() {
     $webhooks = it_exchange_get_webhooks();
 
 	// Loop through them and init callbacks
-    foreach( $webhooks as $key => $param ) { 
-    
-        if ( ! empty( $_REQUEST[$param] ) ) 
+    foreach( $webhooks as $key => $param ) {
+
+        if ( ! empty( $_REQUEST[$param] ) )
             do_action( 'it_exchange_webhook_' . $param, $_REQUEST );
-    
-    }   
+
+    }
     do_action( 'it_exchange_webhooks_processed' );
 }
 add_action( 'wp', 'it_exchange_process_webhooks' );
@@ -283,7 +283,7 @@ function it_exchange_reset_everything() {
 	// Use Post stati rather than 'any' for post type to include trashed and other non-searchable stati
 	$stati = array_keys( get_post_stati() );
 
-	// Delete all Products 
+	// Delete all Products
 	if ( ! apply_filters( 'it_exchange_preserve_products_on_reset', false ) ) {
 		while( $products = it_exchange_get_products( array( 'posts_per_page' => 20, 'post_status' => $stati ) ) ) {
 			foreach ( $products as $product ) {
@@ -336,7 +336,7 @@ function it_exchange_reset_everything() {
 	}
 
 	do_action( 'it_exchange_reset_exchange' );
-	
+
 	// Log message and redirect
 	it_exchange_add_message( 'notice', __( 'Exchange has been reset. All data has been deleted.', 'LION' ) );
 	wp_safe_redirect( add_query_arg( 'page', 'it-exchange-settings', trailingslashit( get_admin_url() ) . 'admin.php' ) );
@@ -755,7 +755,7 @@ function it_exchange_add_customer_shortcode( $atts ) {
 	$atts = shortcode_atts( $defaults, $atts );
 
 	$whitelist = array(
-		'first-name', 'last-name', 'username', 'email', 'avatar', 'site-name', 
+		'first-name', 'last-name', 'username', 'email', 'avatar', 'site-name',
 	);
 	$whitelist = apply_filters( 'it_exchange_customer_shortcode_tag_list', $whitelist );
 
@@ -767,9 +767,9 @@ function it_exchange_add_customer_shortcode( $atts ) {
 	);
 	if ( 'avatar' == $atts['show'] )
 		$options['size'] = $atts['avatar_size'];
-		
+
 	$output = it_exchange( 'customer', 'get-' . $atts['show'], $options );
-	
+
 	if ( empty( $output ) ) {
 		//fallbacks if we have empty $output
 		switch( $atts['show'] ) {
@@ -778,7 +778,7 @@ function it_exchange_add_customer_shortcode( $atts ) {
 				break;
 		}
 	}
-	
+
 	return $output;
 }
 add_shortcode( 'it_exchange_customer', 'it_exchange_add_customer_shortcode' );
@@ -805,7 +805,7 @@ function it_exchange_filter_where_clause_for_all_queries( $where='' ) {
 
 	if ( $start_date )
 		$where .= $GLOBALS['wpdb']->prepare( ' AND post_date >= %s', $start_date );
-	
+
 	if ( $end_date )
 		$where .= $GLOBALS['wpdb']->prepare( ' AND post_date <= %s', $end_date );
 
@@ -968,8 +968,8 @@ add_filter( 'it_exchange_get_content_checkout_actions_elements', 'it_exchange_di
  * @param array $loops list of existing elements
  * @return array
 */
-function it_exchange_add_billing_address_to_sw_template_totals_loops( $loops ) { 
-	
+function it_exchange_add_billing_address_to_sw_template_totals_loops( $loops ) {
+
 	// Abandon if not doing billing
 	if ( ! apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) )
 		return $loops;
@@ -997,7 +997,7 @@ function it_exchange_clear_billing_on_cart_empty() {
 add_action( 'it_exchange_empty_shopping_cart', 'it_exchange_clear_billing_on_cart_empty' );
 add_action( 'wp_logout', 'it_exchange_clear_billing_on_cart_empty' );
 
-/**  
+/**
  * AJAX callback for Country / State drop downs
  *
  * @since 1.3.0
@@ -1009,7 +1009,7 @@ function print_country_states_ajax() {
 		return;
 
 	define( 'DOING_AJAX', true );
-	
+
 	$base_country  = empty( $_POST['ite_base_country_ajax'] ) ? 'US' : $_POST['ite_base_country_ajax'];
 	$base_state    = empty( $_POST['ite_base_state_ajax'] ) ? '' : $_POST['ite_base_state_ajax'];
 	$template_part = empty( $_POST['ite_template_part_ajax'] ) ? '' : $_POST['ite_template_part_ajax'];
@@ -1048,7 +1048,7 @@ add_action( 'wp_head', 'it_exchange_print_home_url_in_js' );
  * @return void
 */
 function it_exchange_force_rewrite_flush_on_upgrade() {
-	add_option('_it-exchange-flush-rewrites', true );	
+	add_option('_it-exchange-flush-rewrites', true );
 }
 add_action( 'it_exchange_version_updated', 'it_exchange_force_rewrite_flush_on_upgrade' );
 
@@ -1072,7 +1072,7 @@ function it_exchange_add_image_sizes() {
 			'crop'   => true
 		),
 	);
-	
+
 	foreach ( $image_sizes as $name => $data ) {
 		add_image_size( 'it-exchange-' . $name, $data['width'], $data['height'], $data['crop'] );
 	}
@@ -1083,12 +1083,12 @@ add_action( 'init', 'it_exchange_add_image_sizes' );
 */
 
 /**
- * Change the content_width global if we are viewing 
+ * Change the content_width global if we are viewing
  * an Exchange product page.
- * 
+ *
  * NOTE The function is temporary until we add the image
  * sizes function above.
- * 
+ *
  * @since 1.5
  *
  * @return void
@@ -1150,7 +1150,7 @@ function it_exchange_add_product( $args=array() ) {
 	return false;
 }
 
-function it_exchange_add_remote_image_to_product_images( $url, $product_id, $desc='' ) { 
+function it_exchange_add_remote_image_to_product_images( $url, $product_id, $desc='' ) {
 	$tmp = download_url( $url );
 
 	// Set variables for storage

@@ -64,7 +64,7 @@ class IT_Exchange_Product {
 	 * @return void
 	*/
 	function IT_Exchange_Product( $post=false ) {
-		
+
 		// If not an object, try to grab the WP object
 		if ( ! is_object( $post ) )
 			$post = get_post( (int) $post );
@@ -104,11 +104,11 @@ class IT_Exchange_Product {
 			$this->set_add_edit_screen_supports();
 		else
 			add_action( 'admin_init', array( $this, 'set_add_edit_screen_supports' ) );
-			
+
 		//We want to do this sooner than 10
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_to_product' ), 5 );
 	}
-	
+
 	/**
 	 * Tack transaction_id to post_meta for product
 	 *
@@ -133,7 +133,7 @@ class IT_Exchange_Product {
 	function set_product_type() {
 		global $pagenow;
 		if ( ! $product_type = get_post_meta( $this->ID, '_it_exchange_product_type', true ) ) {
-			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['it-exchange-product-type'] ) )	
+			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['it-exchange-product-type'] ) )
 				$product_type = $_GET['it-exchange-product-type'];
 		}
 		$this->product_type = $product_type;
@@ -189,7 +189,7 @@ class IT_Exchange_Product {
 		return false;
 	}
 
-    /** 
+    /**
      * Sets the supports array for the post_type.
      *
      * @since 0.3.3
@@ -199,15 +199,15 @@ class IT_Exchange_Product {
         $supports = array(
             'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields',
             'comments', 'revisions', 'post-formats',
-        );  
+        );
 
         // If is_admin and is post-new.php or post.php, only register supports for current product-type
         if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow )
 			return; // Don't remove any if not on post-new / or post.php
 
-		if ( $addon = it_exchange_get_addon( $this->product_type ) ) { 
+		if ( $addon = it_exchange_get_addon( $this->product_type ) ) {
 			// Remove any supports args that the product add-on does not want.
-			foreach( $supports as $option ) { 
+			foreach( $supports as $option ) {
 
 				// Map Core WP post_type supports to our addon names
 				if ( 'title' == $option ) {
@@ -237,7 +237,7 @@ class IT_Exchange_Product {
                 if ( ! it_exchange_product_type_supports_feature( $this->product_type, $exchange_product_feature ) ) {
 					remove_post_type_support( 'it_exchange_prod', $option );
 				}
-            }   
-        }   
-    }  
+            }
+        }
+    }
 }

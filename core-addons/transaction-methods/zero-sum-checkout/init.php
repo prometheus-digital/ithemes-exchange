@@ -32,7 +32,7 @@ function it_exchange_zero_sum_checkout_addon_process_transaction( $status, $tran
 
 		return it_exchange_add_transaction( 'zero-sum-checkout', $uniqid, 'Completed', $it_exchange_customer->id, $transaction_object );
 	}
-	
+
 	return false;
 }
 add_action( 'it_exchange_do_transaction_zero-sum-checkout', 'it_exchange_zero_sum_checkout_addon_process_transaction', 10, 2 );
@@ -46,7 +46,7 @@ add_action( 'it_exchange_do_transaction_zero-sum-checkout', 'it_exchange_zero_su
  * @param object $transaction
  * @return boolean
 */
-function it_exchange_zero_sum_checkout_transaction_is_cleared_for_delivery( $cleared, $transaction ) { 
+function it_exchange_zero_sum_checkout_transaction_is_cleared_for_delivery( $cleared, $transaction ) {
 	$valid_stati = array( 'Completed' );
 	return in_array( it_exchange_get_transaction_status( $transaction ), $valid_stati );
 }

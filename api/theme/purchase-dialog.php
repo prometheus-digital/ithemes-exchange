@@ -6,21 +6,21 @@
 */
 
 class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
-	
+
 	/**
 	 * API context
 	 * @var string $_context
 	 * @since 1.3.0
 	*/
 	private $_context = 'purchase-dialog';
-	
+
 	/**
 	 * The required fields for this form this.
 	 * @var string $_required_fields
 	 * @since 1.3.0
 	*/
 	private $_required_fields= '';
-	
+
 	/**
 	 * The Transaction Method invoking this.
 	 * @var string $_customer
@@ -61,7 +61,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	 * Returns the context. Also helps to confirm we are an iThemes Exchange theme API class
 	 *
 	 * @since 1.3.0
-	 * 
+	 *
 	 * @return string
 	*/
 	function get_api_context() {
@@ -82,7 +82,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 			'required'    => (boolean) in_array( 'first-name', $this->_required_fields ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id   = 'it-exchnage-purchase-dialog-cc-first-name-for-' . $this->_transaction_method;
 		$field_name = 'it-exchange-purchase-dialog-cc-first-name';
 
@@ -103,7 +103,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 			'required'    => (boolean) in_array( 'last-name', $this->_required_fields ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id   = 'it-exchnage-purchase-dialog-cc-last-name-for-' . $this->_transaction_method;
 		$field_name = 'it-exchange-purchase-dialog-cc-last-name';
 
@@ -124,10 +124,10 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 			'required'    => (boolean) in_array( 'number', $this->_required_fields ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id   = 'it-exchnage-purchase-dialog-cc-number-for-' . $this->_transaction_method;
 		$field_name = 'it-exchange-purchase-dialog-cc-number';
-		
+
 		return $this->get_field( $options, $field_id, $field_name );
 	}
 
@@ -145,10 +145,10 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 			'required'    => (boolean) in_array( 'expiration-month-year', $this->_required_fields ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id   = 'it-exchnage-purchase-dialog-cc-expiration-month-year-for-' . $this->_transaction_method;
 		$field_name = 'it-exchange-purchase-dialog-cc-expiration-month-year';
-		
+
 		return $this->get_field( $options, $field_id, $field_name );
 	}
 
@@ -166,10 +166,10 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 			'required'    => (boolean) in_array( 'expiration-month', $this->_required_fields ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id   = 'it-exchnage-purchase-dialog-cc-expiration-month-for-' . $this->_transaction_method;
 		$field_name = 'it-exchange-purchase-dialog-cc-expiration-month';
-		
+
 		return $this->get_field( $options, $field_id, $field_name );
 	}
 
@@ -187,10 +187,10 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 			'required'    => (boolean) in_array( 'expiration-year', $this->_required_fields ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id   = 'it-exchnage-purchase-dialog-cc-expiration-year-for-' . $this->_transaction_method;
 		$field_name = 'it-exchange-purchase-dialog-cc-expiration-year';
-		
+
 		return $this->get_field( $options, $field_id, $field_name );
 	}
 
@@ -208,10 +208,10 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 			'required'    => (boolean) in_array( 'code', $this->_required_fields ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id   = 'it-exchnage-purchase-dialog-cc-code-for-' . $this->_transaction_method;
 		$field_name = 'it-exchange-purchase-dialog-cc-code';
-		
+
 		return $this->get_field( $options, $field_id, $field_name );
 	}
 
@@ -227,10 +227,10 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 			'label'  => __( 'Fields', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		
+
 		$field_id   = 'it-exchnage-purchase-dialog-cc-fields-for-' . $this->_transaction_method;
 		$field_name = 'it-exchange-purchase-dialog-cc-fields';
-		
+
 		return $this->get_field( $options, $field_id, $field_name );
 	}
 
@@ -250,25 +250,25 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 		$output = '';
 
 		switch( $options['format'] ) {
-			
+
 			case 'field-id':
 				$output = $field_id;
-				break;	
+				break;
 			case 'field-name':
 				$output = $field_name;
-				break;	
+				break;
 			case 'label':
 				$output = $options['label'];
-				break;	
+				break;
 			case 'field':
 				$output .= '<input type="text" id="' . esc_attr( $field_id ) . '" '. $required . 'placeholder="' . esc_attr( $options['placeholder'] ) . '" name="' . esc_attr( $field_name ) . '" value="" />';
-				break;	
+				break;
 			case 'html':
 			default:
 				$output = '<label for="' . esc_attr( $field_id ) . '">' . $options['label'] . '</label>';
 				$output .= '<input type="text" id="' . esc_attr( $field_id ) . '" placeholder="' . esc_attr( $options['placeholder'] ) . '" name="' . esc_attr( $field_name ) . '" value="" />';
 		}
-		
+
 		return $output;
 	}
 }

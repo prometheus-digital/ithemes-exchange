@@ -6,7 +6,7 @@
  * @package IT_Exchange
 */
 class IT_Exchange_Core_Addon_Product_Type_Meta_Box {
-	
+
 	/**
 	 * Class constructor. Registers hooks
 	 *
@@ -97,4 +97,4 @@ class IT_Exchange_Core_Addon_Product_Type_Meta_Box {
 			update_post_meta( $post->ID, '_it_exchange_product_type', $product_type );
 	}
 }
-new IT_Exchange_Core_Addon_Product_Type_Meta_Box(); 
+new IT_Exchange_Core_Addon_Product_Type_Meta_Box();

@@ -8,7 +8,7 @@
  * The Theme API is a higher level API than the rest of the files in this directory.
  * - To use the theme API, call it_exchange( 'context', 'method', array( 'optional' => 'options' ) );
  * - Contexts are mapped to classes included in this file. ie: store, product, customer.
- * - Methods are held found within each class and contain various options for output. 
+ * - Methods are held found within each class and contain various options for output.
  * - All theme API calls print data by default. To return the data, prefix it with 'get-'. ie: it_exchange( 'product', 'get-title' );
  */
 include( $this->_plugin_path . '/api/theme/store.php' );
@@ -53,7 +53,7 @@ function it_exchange() {
 		'return' => false,
 	);
 	$get     = false;
-	
+
 	// Die if we don't have any args
 	if ( $num_args < 1 ) {
 		it_exchange_add_message( 'error', sprintf( __( 'Coding Error: Incorrect number of args passed to %s', 'LION' ), 'it_exchange()' ) );
@@ -99,7 +99,7 @@ function it_exchange() {
 	if ( 'get' == substr( $tag, 0, 3 ) ) {
 		$tag = substr( $tag, 3 );
 		$get = true;
-	}   
+	}
 
 	// Strip has prefix from request method and set flags
 	if ( 'has' == substr( $tag, 0, 3 ) ) {
@@ -189,7 +189,7 @@ function it_exchange() {
 	// Output the result
 	if ( is_scalar( $result ) )
 		echo $result;
-	else 
+	else
 		return $result;
 
 	return true;

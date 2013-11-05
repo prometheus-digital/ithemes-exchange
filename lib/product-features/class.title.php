@@ -52,9 +52,9 @@ class IT_Exchange_Product_Feature_Product_Title {
 	 * @return void
 	*/
 	function init_feature_metaboxes() {
-		
+
 		global $post;
-		
+
 		if ( isset( $_REQUEST['post_type'] ) ) {
 			$post_type = $_REQUEST['post_type'];
 		} else {
@@ -71,23 +71,23 @@ class IT_Exchange_Product_Feature_Product_Title {
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
 		}
-			
+
 		if ( !empty( $_REQUEST['it-exchange-product-type'] ) )
 			$product_type = $_REQUEST['it-exchange-product-type'];
 		else
 			$product_type = it_exchange_get_product_type( $post );
-		
+
 		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'title' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_metabox' ) );
 		}
-		
+
 	}
 
 	/**
 	 * Registers the feature metabox for a specific product type
 	 *
-	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports the feature 
+	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports the feature
 	 *
 	 * @since 0.4.0
 	 * @return void
@@ -140,7 +140,7 @@ class IT_Exchange_Product_Feature_Product_Title {
 	/**
 	 * Does the product support this feature?
 	 *
-	 * This is different than if it has the feature, a product can 
+	 * This is different than if it has the feature, a product can
 	 * support a feature but might not have the feature set.
 	 *
 	 * @since 0.4.0

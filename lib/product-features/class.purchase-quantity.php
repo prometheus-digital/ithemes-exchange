@@ -55,9 +55,9 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 	 * @return void
 	*/
 	function init_feature_metaboxes() {
-		
+
 		global $post;
-		
+
 		if ( isset( $_REQUEST['post_type'] ) ) {
 			$post_type = $_REQUEST['post_type'];
 		} else {
@@ -74,23 +74,23 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
 		}
-			
+
 		if ( !empty( $_REQUEST['it-exchange-product-type'] ) )
 			$product_type = $_REQUEST['it-exchange-product-type'];
 		else
 			$product_type = it_exchange_get_product_type( $post );
-		
+
 		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'purchase-quantity' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_metabox' ) );
 		}
-		
+
 	}
 
 	/**
 	 * Registers the feature metabox for a specific product type
 	 *
-	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports the feature 
+	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports the feature
 	 *
 	 * @since 0.4.0
 	 * @return void
@@ -114,7 +114,7 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 
 		// Allow quantity?
 		$product_feature_enable_value = it_exchange_get_product_feature( $product->ID, 'purchase-quantity', array( 'setting' => 'enabled' ) );
-		
+
 		?>
 			<p>
 				<input type="checkbox" id="it-exchange-enable-product-quantity" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-quantity" <?php echo checked( 'yes', $product_feature_enable_value ); ?> value="yes" />
@@ -166,7 +166,7 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 		else
 			it_exchange_update_product_feature( $product_id, 'purchase-quantity', 'yes', array( 'setting' => 'enabled' ) );
 
-		// Abort if this product type doesn't support this feature 
+		// Abort if this product type doesn't support this feature
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'purchase-quantity' ) || empty( $_POST['it-exchange-enable-product-quantity']  ))
 			return;
 
@@ -183,7 +183,7 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 	 * @since 0.4.0
 	 *
 	 * @param integer $product_id the product id
-	 * @param mixed $new_value the new value 
+	 * @param mixed $new_value the new value
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_value, $options=array() ) {
@@ -261,7 +261,7 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 	/**
 	 * Does the product support this feature?
 	 *
-	 * This is different than if it has the feature, a product can 
+	 * This is different than if it has the feature, a product can
 	 * support a feature but might not have the feature set.
 	 *
 	 * @since 0.4.0

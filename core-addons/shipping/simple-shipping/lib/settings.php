@@ -4,7 +4,7 @@
  *
  * We are using this differently than most add-ons. We want the gear
  * to appear on the add-ons screen so we are registering the callback.
- * It will be intercepted though if the user clicks on it and redirected to 
+ * It will be intercepted though if the user clicks on it and redirected to
  * The Exchange settings --> shipping tab.
  *
  * @since 1.4.0

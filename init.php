@@ -6,7 +6,7 @@
  * Plugin URI: http://ithemes.com/exchange/
  * Author: iThemes
  * Author URI: http://ithemes.com
- 
+
  * Installation:
  * 1. Download and unzip the latest release zip file.
  * 2. If you use the WordPress plugin uploader to install this plugin skip to step 4.
@@ -88,7 +88,7 @@ class IT_Exchange {
 		$this->_plugin_url  = plugins_url( '', __FILE__ );
 		$this->_plugin_base = plugin_basename( __FILE__  );
 	}
-	
+
 	/**
 	 * Returns IT Exchange Plugin Path
 	 *
@@ -119,7 +119,7 @@ class IT_Exchange {
 	function addons_init() {
 		// Add action for third party addons to register addons with.
 		do_action( 'it_exchange_register_addons' );
-		
+
 		$enabled_addons = array();
 
 		// Init all previously enabled addons
@@ -139,7 +139,7 @@ class IT_Exchange {
 
 		// Get addons
 		$registered = it_exchange_get_addons();
-	
+
 		// Auto enable all 3rd party addons
 		foreach( $registered as $slug => $params ) {
 			if ( ! it_exchange_is_core_addon( $slug ) && ! isset( $enabled_addons[$slug] ) )
@@ -156,7 +156,7 @@ class IT_Exchange {
  *
  * @return void
 */
-function load_it_exchange() {	
+function load_it_exchange() {
 	// Init plugin
 	global $IT_Exchange;
 	$IT_Exchange = new IT_Exchange();

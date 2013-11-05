@@ -14,11 +14,11 @@
 function it_exchange_is_product( $post=false ) {
 	if ( ! $post )
 		global $post;
-		
+
 	$product = it_exchange_get_product( $post );
 	if ( is_object( $product ) )
 		return true;
-		
+
 	return false;
 }
 
@@ -53,7 +53,7 @@ function it_exchange_get_product_type( $post=false ) {
 function it_exchange_get_product_type_name( $product_type ) {
 	if ( $addon = it_exchange_get_addon( $product_type ) )
 		return apply_filters( 'it_exchange_get_product_type_name', $addon['name'], $product_type );
-	
+
 	return apply_filters( 'it_exchange_get_product_type_name', false, $product_type );
 }
 
@@ -99,22 +99,22 @@ function it_exchange_get_products( $args=array() ) {
 	$args['meta_query'] = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
 
 	if ( ! empty( $args['product_type'] ) ) {
-		$meta_query = array( 
+		$meta_query = array(
 			'key'   => '_it_exchange_product_type',
 			'value' => $args['product_type'],
 		);
 		$args['meta_query'][] = $meta_query;
 	} else { //we only want to get enabled product-type products
-		$meta_query = array( 
+		$meta_query = array(
 			'key'   => '_it_exchange_product_type',
 			'compare' => 'IN',
 			'value' => array_keys( it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ),
 		);
 		$args['meta_query'][] = $meta_query;
 	}
-	
+
 	if ( ! $args['show_hidden'] ) {
-		$meta_query = array( 
+		$meta_query = array(
 			'key'     => '_it-exchange-visibility',
 			'value'   => 'hidden',
 			'compare' => 'NOT LIKE',
@@ -148,7 +148,7 @@ function it_exchange_set_the_product_id( $product_id=false ) {
 		$GLOBALS['it_exchange']['product_id'] = $product->ID;
 	else
 		$GLOBALS['it_exchange']['product_id'] = false;
-		
+
 	do_action( 'it_exchange_set_the_product_id', $product_id );
 }
 
@@ -257,7 +257,7 @@ function it_exchange_is_product_visible( $product_id=false ) {
 function it_exchange_get_transactions_for_product( $product, $type='objects', $only_cleared_for_delivery=true ) {
 	if ( ! $product = it_exchange_get_product( $product ) )
 		return array();
-	
+
 	// Get all meta
 	$transaction_ids = get_post_meta( $product->ID, '_it_exchange_transaction_id' );
 	$transaction_ids = array_unique ( $transaction_ids );

@@ -30,11 +30,11 @@ class IT_Exchange_Product_Feature_Downloads {
 		add_filter( 'it_exchange_product_has_feature_downloads', array( $this, 'product_has_feature') , 9, 2 );
 		add_filter( 'it_exchange_product_supports_feature_downloads', array( $this, 'product_supports_feature') , 9, 2 );
 		add_filter( 'template_redirect', array( $this, 'handle_download_pickup_request' ) );
-			
+
 		//We want to do this sooner than 10
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_hash_to_product' ), 5 );
 	}
-	
+
 	/**
 	 * Adds transaction hashes to the products in a transaction.
 	 *
@@ -50,7 +50,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		foreach( $products as $key => $transaction_product ) {
 			// If this is a downloadable product, generate a hash for each download unique to this transaction
 			if ( $this->product_has_feature( 'false', $transaction_product['product_id'] ) ) {
-						
+
 				// Quantity
 				$count = $transaction_product['count'];
 
@@ -59,17 +59,17 @@ class IT_Exchange_Product_Feature_Downloads {
 				// Loop through downloads and create hash for each ( multiplied by quantity )
 				foreach( $existing_downloads as $download_id => $download_data ) {
 					// One for each count
-					for( $i=0;$i<$count;$i++ ) {							
+					for( $i=0;$i<$count;$i++ ) {
 						$expire_time = false;
-						
+
 						if ( it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expires' ) ) ) {
 								$int = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-int' ) );
 								$units = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-units' ) );
 								$expire_time = strtotime( '+' . $int . ' ' . $units );
 						}
-						
+
 						$hash = it_exchange_create_unique_hash();
-						
+
 						// Create initial hash data package
 						$hash_data = array(
 							'hash'           => $hash,
@@ -83,7 +83,7 @@ class IT_Exchange_Product_Feature_Downloads {
 							'expire_time'    => $expire_time,
 							'download_limit' => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'limit' ) ),
 							'downloads'      => '0',
-						); 
+						);
 
 						// Add hash and data to DB as file post_meta
 						$pm_id = it_exchange_add_download_hash_data( $download_id, $hash, $hash_data );
@@ -124,9 +124,9 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * @return void
 	*/
 	function init_feature_metaboxes() {
-		
+
 		global $post;
-		
+
 		if ( isset( $_REQUEST['post_type'] ) ) {
 			$post_type = $_REQUEST['post_type'];
 		} else {
@@ -143,17 +143,17 @@ class IT_Exchange_Product_Feature_Downloads {
 			if ( isset( $post ) && !empty( $post ) )
 				$post_type = $post->post_type;
 		}
-			
+
 		if ( !empty( $_REQUEST['it-exchange-product-type'] ) )
 			$product_type = $_REQUEST['it-exchange-product-type'];
 		else
 			$product_type = it_exchange_get_product_type( $post );
-		
+
 		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'downloads' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_metabox' ) );
 		}
-		
+
 	}
 
 	/**
@@ -267,15 +267,15 @@ class IT_Exchange_Product_Feature_Downloads {
 		// Grab the iThemes Exchange Product object from the WP $post object
 		$product = it_exchange_get_product( $post );
 
-		// Download expires 
+		// Download expires
 		$download_expires = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expires' ) );
 		// Download exipre-int
 		$download_expire_int = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expire-int' ) );
-		// Download expire-units 
+		// Download expire-units
 		$download_expire_units = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'expire-units' ) );
 		// Download limit
 		$download_limit = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'limit' ) );
-		
+
 		$expire_units = array(
 			'hours'     => __( 'Hours', 'LION' ),
 			'days'      => __( 'Days', 'LION' ),
@@ -283,9 +283,9 @@ class IT_Exchange_Product_Feature_Downloads {
 			'months'    => __( 'Months', 'LION' ),
 			'years'     => __( 'Years', 'LION' ),
 		);
-		
+
 		$expire_hidden = ( $download_expires == 0 ) ? ' hidden' : '';
-		
+
 		?>
 		<div class="download-expiration">
 			<label class="download-limit-label" for="it-exchange-digital-downloads-expire">
@@ -349,7 +349,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		// Abort if this product type doesn't support downloads
 		if ( ! it_exchange_product_type_supports_feature( $product_type, 'downloads' ) )
 			return;
-		
+
 		// Update Expires Meta
 		$expires= isset( $_POST['it-exchange-digital-downloads-expires'] ) ? $_POST['it-exchange-digital-downloads-expires'] : 0;
 		it_exchange_update_product_feature( $product_id, 'downloads', $expires, array( 'setting' => 'expires' ) );
@@ -368,7 +368,7 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// Grab previously saved downloads
 		$previous_downloads = it_exchange_get_product_feature( $product_id, 'downloads' );
-		
+
 		//Delete Non-Existant Downloads
 		if ( !empty( $previous_downloads ) && is_array( $previous_downloads ) ) {
 			foreach( $previous_downloads as $download_id => $data ) {
@@ -380,20 +380,20 @@ class IT_Exchange_Product_Feature_Downloads {
 		//Add/Update Existant Downloads
 		if ( ! empty( $_POST['it-exchange-digital-downloads'] ) && is_array( $_POST['it-exchange-digital-downloads'] ) ) {
 			foreach ( (array) $_POST['it-exchange-digital-downloads'] as $download ) {
-	
+
 				$data = array(
 					'product_id'  => $product_id,
 					'download_id' => empty( $download['id'] ) ? false : trim( $download['id'] ),
 					'source'      => empty( $download['source'] ) ? false : trim( $download['source'] ),
 					'name'        => empty( $download['name'] ) ? false : trim( $download['name'] ),
 				);
-	
+
 				if ( ! empty( $product_id ) && ! empty( $data['source'] ) && ! empty( $data['name'] ) )
 					it_exchange_update_product_feature( $product_id, 'downloads', $data );
-					
+
 			}
 		}
-		
+
 	}
 
 	/**
@@ -402,7 +402,7 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * @since 0.4.0
 	 *
 	 * @param integer $product_id the product id
-	 * @param mixed $new_value the new value 
+	 * @param mixed $new_value the new value
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_value, $options=array() ) {
@@ -448,7 +448,7 @@ class IT_Exchange_Product_Feature_Downloads {
 			} else if ( 'expire-units' == $options['setting'] ) {
 				$meta['expire-units'] = $new_value;
 			}
-			update_post_meta( $product_id, '_it-exchange-download-meta', $meta );	
+			update_post_meta( $product_id, '_it-exchange-download-meta', $meta );
 		}
 	}
 
@@ -480,10 +480,10 @@ class IT_Exchange_Product_Feature_Downloads {
 				foreach( $download_posts as $post ) {
 					$post_meta      = get_post_meta( $post->ID, '_it-exchange-download-info', true );
 					$source         = empty( $post_meta['source'] ) ? false : $post_meta['source'];
-					$expires        = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expires' ) ); 
-					$expire_int     = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire-int' ) ); 
-					$expire_units   = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire-units' ) ); 
-					$download_limit = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'limit' ) ); 
+					$expires        = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expires' ) );
+					$expire_int     = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire-int' ) );
+					$expire_units   = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire-units' ) );
+					$download_limit = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'limit' ) );
 
 					$downloads[$post->ID] = array(
 						'id'             => $post->ID,
@@ -534,7 +534,7 @@ class IT_Exchange_Product_Feature_Downloads {
 	/**
 	 * Does the product support this feature?
 	 *
-	 * This is different than if it has the feature, a product can 
+	 * This is different than if it has the feature, a product can
 	 * support a feature but might not have the feature set.
 	 *
 	 * @since 0.4.0
@@ -559,7 +559,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		$labels    = array(
 			'name'          => __( 'Exchange Downloads', 'LION' ),
 			'singular_name' => __( 'Download', 'LION' ),
-		);  
+		);
 		$options = array(
 			'labels' => $labels,
 			'description' => __( 'An iThemes Exchange Post Type for storing all Downloads in the system', 'LION' ),
@@ -571,9 +571,9 @@ class IT_Exchange_Product_Feature_Downloads {
 			'hierarchical'      => false,
 			'supports'          => array( // Support everything but page-attributes for add-on flexibility
 				'title', 'editor', 'author', 'custom-fields',
-			),  
+			),
 			'register_meta_box_cb' => array( $this, 'meta_box_callback' ),
-		);  
+		);
 		register_post_type( $post_type, $options );
     }
 
@@ -602,7 +602,7 @@ class IT_Exchange_Product_Feature_Downloads {
 			wp_redirect( $url );
 			die();
 		}
-		
+
 		// Get addon product type addon settings @todo move this setting to product-feature for downloads
 		$settings = it_exchange_get_option( 'addon_digital_downloads' );
 		$require_user_login = ! empty( $settings['require-user-login'] );

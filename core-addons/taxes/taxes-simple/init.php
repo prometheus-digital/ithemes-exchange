@@ -1,6 +1,6 @@
 <?php
 /**
- * This file inits our Simple Taxes add-on. 
+ * This file inits our Simple Taxes add-on.
  * It is only included when the add-on is enabled.
  * @package IT_Exchange
  * @since 1.0.0
@@ -23,7 +23,7 @@ function it_exchange_taxes_simple_settings_callback() {
 		'id'      => 'it-exchange-add-on-taxes-simple-settings',
 		'enctype' => false,
 		'action'  => 'admin.php?page=it-exchange-addons&add-on-settings=taxes-simple',
-	);  
+	);
 	$form = new ITForm( $form_values, array( 'prefix' => 'it-exchange-add-on-taxes_simple' ) );
 
 	if ( it_exchange_has_messages( 'notice' ) ) {
@@ -36,11 +36,11 @@ function it_exchange_taxes_simple_settings_callback() {
 			ITUtility::show_error_message( $message );
 		}
 	}
-	?>  
+	?>
 	<div class="wrap">
 		<?php screen_icon( 'it-exchange' ); ?>
 		<h2><?php _e( 'Simple Taxes', 'LION' ); ?></h2>
-		
+
 		<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
 		<?php $form->start_form( $form_options, 'it-exchange-taxes-simple-settings' ); ?>
 			<label for="default-tax-rate"><?php _e( 'Default Tax Rate', 'LION' ); ?></label>

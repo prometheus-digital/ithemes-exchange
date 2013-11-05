@@ -17,7 +17,7 @@ function it_exchange_guest_checkout_bump_session() {
 		$GLOBALS['current_user'] = it_exchange_guest_checkout_generate_guest_user_object( $customer_email );
 }
 
-/** 
+/**
  * Generates a fake WP_User for Guest Chekcout
  *
  * @since CHANGEME
@@ -66,14 +66,14 @@ function it_exchange_kill_guest_checkout_session() {
  * @since CHANGEME
  *
  * @param string $customer_email the customer's email
- * @return boolean 
+ * @return boolean
 */
 function it_exchange_init_guest_checkout_session( $customer_email ) {
 	if ( empty( $customer_email ) || ! is_email( $customer_email ) )
 		return false;
 
 	// Set the user ID in the cart session
-	it_exchange_update_cart_data( 'guest-checkout-user', $customer_email );	
+	it_exchange_update_cart_data( 'guest-checkout-user', $customer_email );
 
 	// Bump the timeout var
 	it_exchange_guest_checkout_bump_session();

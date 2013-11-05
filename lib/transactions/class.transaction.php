@@ -102,7 +102,7 @@ class IT_Exchange_Transaction {
 			$this->set_add_edit_screen_supports();
 		else
 			add_action( 'admin_init', array( $this, 'set_add_edit_screen_supports' ) );
-			
+
 	}
 
 	/**
@@ -116,8 +116,8 @@ class IT_Exchange_Transaction {
 	function set_transaction_method() {
 		global $pagenow;
 		if ( ! $transaction_method = get_post_meta( $this->ID, '_it_exchange_transaction_method', true ) ) {
-			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['transaction-method'] ) )	
-				$transaction_method = $_GET['transaction-method'];		
+			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['transaction-method'] ) )
+				$transaction_method = $_GET['transaction-method'];
 		}
 		$this->transaction_method = $transaction_method;
 	}

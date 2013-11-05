@@ -1,13 +1,13 @@
 <?php
 /**
- * This is a wrapper to our Purchase Dialog class. 
+ * This is a wrapper to our Purchase Dialog class.
  *
  * If an addon doesn't want to call this helper, they need to include the class (once),
  * Extend it for thier use, and init it with their slug and options.
  *
  * @since 1.3.0
  *
- * @param string $transaction_method_slug 
+ * @param string $transaction_method_slug
  * @param array $options
  * @return string
 */
@@ -23,7 +23,7 @@ function it_exchange_generate_purchase_dialog( $transaction_method_slug, $option
  *
  * @since 1.3.0
  *
- * @param string $transaction_method_slug 
+ * @param string $transaction_method_slug
  * @param array $options
  * @return array
 */
@@ -39,7 +39,7 @@ function it_exchange_get_purchase_dialog_submitted_values( $transaction_method_s
  *
  * @since 1.3.0
  *
- * @param string $transaction_method_slug 
+ * @param string $transaction_method_slug
  * @param array $options
  * @return array
 */

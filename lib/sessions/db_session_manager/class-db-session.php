@@ -21,7 +21,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * @var string
 	 */
 	protected $session_id;
-	
+
 	/**
 	 * Option Key of the current session.
 	 *
@@ -91,7 +91,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 			$this->session_id = $this->generate_id();
 			$this->set_expiration();
 		}
-	
+
 		$this->option_key = '_it_exchange_db_session_' . $this->session_id;
 
 		$this->read_data();

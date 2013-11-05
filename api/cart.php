@@ -123,17 +123,17 @@ function it_exchange_is_current_product_in_cart() {
 	$product_id = false;
 	$cart_products = it_exchange_get_cart_products();
 	$product = empty( $GLOBALS['post'] ) ? false : it_exchange_get_product( $GLOBALS['post'] );
-	
+
 	if ( ! empty( $product ) )
 		$product_id = $product->ID;
 	else if ( ! empty( $_GET['sw-product'] ) )
 		$product_id = $_GET['sw-product'];
-	
+
 	foreach( $cart_products as $cart_product ) {
 		if ( $product_id == $cart_product['product_id'] )
 			return true;
 	}
-		
+
 	return false;
 }
 
@@ -176,7 +176,7 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 
 	// Doe we have anything in the cart already?
 	$session_products = it_exchange_get_cart_products();
-	
+
 	/**
 	 * If multi-item carts are allowed, don't do antying here.
 	 * If multi-item carts are NOT allowed and this is a different item, empty the cart before proceeding.
@@ -212,7 +212,7 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 		if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) ) {
 
 			// Get max quantity setting
-			$max_purchase_quantity = it_exchange_get_product_feature( $product_id, 'purchase-quantity' ); 
+			$max_purchase_quantity = it_exchange_get_product_feature( $product_id, 'purchase-quantity' );
 			$count = ( $max_purchase_quantity && $quantity > $max_purchase_quantity ) ? $max_purchase_quantity : $quantity;
 		} else {
 			$count = 1;
@@ -312,7 +312,7 @@ function it_exchange_is_multi_item_cart_allowed() {
  * @return boolean
 */
 function it_exchange_is_multi_item_product_allowed( $product_id ) {
-	return apply_filters( 'it_exchange_multi_item_product_allowed', true, $product_id );	
+	return apply_filters( 'it_exchange_multi_item_product_allowed', true, $product_id );
 }
 
 /**
@@ -353,12 +353,12 @@ function it_exchange_get_cart_product_quantity( $product ) {
 */
 function it_exchange_get_cart_product_quantity_by_product_id( $product_id ) {
 	$products = it_exchange_get_cart_products();
-	
+
 	foreach ( $products as $product ) {
 		if ( $product['product_id'] == $product_id )
 			return $product['count'];
 	}
-	
+
 	return 0;
 }
 

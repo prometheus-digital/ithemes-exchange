@@ -61,7 +61,7 @@ function it_exchange_clear_option_cache( $key ) {
  * Return the ITStorage object for a given key
  *
  * $args options:
- *  - version  default is 0 
+ *  - version  default is 0
  *  - autoload default is true
  *
  * @since 0.3.6

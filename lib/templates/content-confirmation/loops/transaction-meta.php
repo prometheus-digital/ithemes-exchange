@@ -19,7 +19,7 @@
 	<?php foreach( it_exchange_get_template_part_elements( 'content_confirmation', 'transaction_meta', array( 'order-details-label', 'order-number', 'date', 'total', 'status', 'instructions' ) ) as $meta ) : ?>
 		<?php it_exchange_get_template_part( 'content-confirmation/elements/' . $meta ); ?>
 	<?php endforeach; ?>
-	
+
 	<div class="it-exchange-columns-wrapper it-exchange-clearfix">
 		<?php foreach( it_exchange_get_template_part_elements( 'content_confirmation', 'address_meta', array( 'billing-address', 'shipping-address' ) ) as $meta ) : ?>
 			<?php it_exchange_get_template_part( 'content-confirmation/elements/' . $meta ); ?>
