@@ -77,7 +77,7 @@
 
 /** ----------------------------------------:[ guest checkout ]:--- */
 .it-exchange-super-widget .it-exchange-sw-processing-guest-checkout{padding:1em;}
-.it-exchange-super-widget .it-exchange-guest-checkout-form div{margin-bottom:1em;}
+.it-exchange-super-widget .it-exchange-guest-checkout-form div{margin-bottom:2em;}
 .it-exchange-super-widget .it-exchange-guest-checkout-form .email-name,
 .it-exchange-super-widget .it-exchange-guest-checkout-form .register_url{margin-bottom:5px;}
 .it-exchange-super-widget .it-exchange-guest-checkout-form .cancel_url{margin-bottom:0;}
