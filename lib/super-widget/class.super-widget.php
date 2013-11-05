@@ -117,6 +117,9 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 					autoCompleteState : true,
 				};
 				jQuery('#it-exchange-billing-address-country', '.it-exchange-super-widget').itCountryStatesSync(iteCountryStatesSyncOptions).selectToAutocomplete().trigger('change');
+
+				// Init Purchase Dialog
+				itExchangeInitSWPurchaseDialogs();
 			});
 		</script>
 		<?php
