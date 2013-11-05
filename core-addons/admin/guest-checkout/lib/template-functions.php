@@ -121,20 +121,6 @@ function it_exchange_remove_register_link_from_login_sw_state( $actions ) {
 add_filter( 'it_exchange_get_super_widget_login_actions_elements', 'it_exchange_remove_register_link_from_login_sw_state' );
 
 /**
- * Slip the Checkout as Guest link into the front of the template-part array for super widget registation
- *
- * @since CHANGEME
- *
- * @param array $elements existing loop elements
- * @return array
-*/
-function it_exchange_guest_checkout_add_link_to_super_widget_registration( $elements ) {
-	$elements = array_merge( array( 'guest' ), $elements );
-	return $elements;
-}
-add_filter( 'it_exchange_get_super_widget_registration_fields_elements', 'it_exchange_guest_checkout_add_link_to_super_widget_registration' );
-
-/**
  * Returns the Guest Checkout title
  *
  * @since CHANGME
@@ -298,6 +284,24 @@ function it_exchange_add_guest_checkout_link_to_sw_registration_and_login_states
 	return $links;
 }
 add_filter( 'it_exchange_get_super_widget_registration_actions_elements', 'it_exchange_add_guest_checkout_link_to_sw_registration_and_login_states' );
+
+/**
+ * Add Guest Checkout links to the SuperWidget Log in form
+ *
+ * @since CHANGEME
+ *
+ * @param array $links incoming template parts from WP filter
+ * @return array
+*/
+function it_exchange_add_guest_checkout_link_to_sw_login_states( $links ) {
+
+	if ( ! ( $index = array_search( 'recover', $links ) ) )
+		$index = count( $links );
+	array_splice( $links, $index, 0, 'guest-checkout-link' );
+
+	return $links;
+}
+add_filter( 'it_exchange_get_super_widget_login_actions_elements', 'it_exchange_add_guest_checkout_link_to_sw_login_states' );
 
 /**
  * Removes the User Menu links from the confirmation page if doing guest checkout
