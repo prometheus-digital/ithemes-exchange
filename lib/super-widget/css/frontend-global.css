@@ -68,3 +68,13 @@
 .it-exchange-super-widget .cart-billing-address-existing a{float:right;}
 .it-exchange-super-widget .it-exchange-sw-billing-address label{display:block;margin:1em 0 .5em;}
 .it-exchange-super-widget .it-exchange-sw-billing-address .it-exchange-submit{margin:1em 0;}
+
+/** ----------------------------------------:[ guest checkout ]:--- */
+.it-exchange-super-widget .it-exchange-sw-processing-guest-checkout{padding:1em;}
+.it-exchange-super-widget .it-exchange-guest-checkout-form div{margin-bottom:1em;}
+.it-exchange-super-widget .it-exchange-guest-checkout-form .email-name,
+.it-exchange-super-widget .it-exchange-guest-checkout-form .register_url{margin-bottom:5px;}
+.it-exchange-super-widget .it-exchange-guest-checkout-form .cancel_url{margin-bottom:0;}
+.it-exchange-super-widget .it-exchange-guest-checkout-form input{margin:0;}
+.it-exchange-super-widget .it-exchange-sw-processing-guest-checkout .email-name input,
+.it-exchange-super-widget .it-exchange-sw-processing-guest-checkout .save_url input{width:100%;}
