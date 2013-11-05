@@ -32,14 +32,14 @@ function it_exchange_guest_checkout_settings_callback() {
 				'label'   => __( 'Show log in link?', 'LION' ),
 				'slug'    => 'show-log-in-link',
 				'tooltip' => __( 'Selecting \'No\' will remove the Log in link from Registration and Guest Checkout forms.', 'LION' ),
-				'default' => 0,
+				'default' => 1,
 			),
 			array( 
 				'type'    => 'yes_no_drop_down',
 				'label'   => __( 'Show registration link?', 'LION' ),
 				'slug'    => 'show-registration-link',
 				'tooltip' => __( 'Selecting \'No\' will remove the Registration link from Log in and Guest Checkout forms.', 'LION' ),
-				'default' => 0,
+				'default' => 1,
 			),
 		);
 		// Other Settings
