@@ -229,6 +229,7 @@ function it_exchange_register_core_addons() {
 			'author_url'        => 'http://ithemes.com',
 			'file'              => dirname( __FILE__ ) . '/shipping/simple-shipping/init.php',
 			'category'          => 'shipping',
+			'tag'               => 'core',
 			'settings-callback' => 'it_exchange_simple_shipping_settings_callback',
 		),
 	);
