@@ -17,6 +17,6 @@
 
 <?php do_action( 'it_exchange_super_widget_login_before_register_element' ); ?>
 <div class="it-exchange-register-url">
-	<?php it_exchange( 'login', 'register' ); ?>
+	<a class="it-exchange-sw-register-link exchange-button" href="<?php esc_attr_e( it_exchange( 'login', 'get-register', array( 'format' => 'url' ) ) ); ?>"><input type="button" value="<?php esc_attr_e( __( 'Create an account', 'LION' ) ); ?>" /></a>
 </div>
 <?php do_action( 'it_exchange_super_widget_login_after_register_element' ); ?>
