@@ -17,6 +17,6 @@
 
 <?php do_action( 'it_exchange_super_widget_registration_before_cancel_elements' ); ?>
 <div class="cancel_url">
-    <a href="" class="it-exchange-sw-cancel-register-link it-exchange-button"><input type="button" value="<?php esc_attr_e( __( 'Log in', 'LION' ); ?>" /></a>
+    <a href="" class="it-exchange-sw-cancel-register-link it-exchange-button"><input type="button" value="<?php esc_attr_e( __( 'Log in', 'LION' ) ); ?>" /></a>
 </div>
 <?php do_action( 'it_exchange_super_widget_registrationafter_cancel_elements' ); ?>

@@ -502,7 +502,7 @@ add_filter( 'authenticate', 'it_exchange_end_guest_checkout_on_login_attempt' );
 function it_exchange_guest_checkout_process_ajax_login() {
 
 	if ( empty( $_REQUEST['sw-action'] ) || 'guest-checkout' != $_REQUEST['sw-action'] || empty( $_POST['email'] ) ) {
-		it_exchange_add_message( 'error', __( 'adsfPlease use a properly formatted email address.', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Please use a properly formatted email address.', 'LION' ) );
 		die('0');
 	}
 
