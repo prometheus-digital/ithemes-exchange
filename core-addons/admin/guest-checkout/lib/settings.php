@@ -54,6 +54,11 @@ function it_exchange_guest_checkout_settings_callback() {
 			),
 		);
 
+		/**
+		 * Temp remove expiration settings
+		*/
+		$core_settings = array();
+
 		// Init form fields
 		$form_fields = array();
 

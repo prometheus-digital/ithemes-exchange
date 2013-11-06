@@ -108,12 +108,16 @@ function it_exchange_handle_guest_checkout_session() {
 	// Do some math.
 	$expires = $guest_session + ( $timeout * 60 );
 
+	/**
+	 * DISABLING SESSION TIMEOUTS FOR NOW 
 	if ( ( $expires ) <= time() ) {
 		it_exchange_kill_guest_checkout_session();
 		it_exchange_add_message( 'notice', __( 'Session has expired.', 'LION' ) );
 	} else {
 		it_exchange_guest_checkout_bump_session();
 	}
+	*/
+	it_exchange_guest_checkout_bump_session();
 }
 add_action( 'template_redirect', 'it_exchange_handle_guest_checkout_session', 9 );
 add_action( 'it_exchange_super_widget_ajax_top', 'it_exchange_handle_guest_checkout_session', 9 );
