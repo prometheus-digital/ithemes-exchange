@@ -94,7 +94,7 @@
 					</div>
 					<div class="it-column column-2-half page-title toggle-disabled <?php echo ( $form->_options[$page . '-type'] == 'disabled' ) ? 'hidden' : ''; ?>">
 						<span class="ex-page <?php echo ( $form->_options[$page . '-type'] == 'wordpress' ) ? 'hidden' : ''; ?>"><?php $form->add_text_box( $page . '-name', array( 'class' => 'normal-text' ) ); ?></span>
-						<span class="wp-page wp-page-select-span <?php echo ( $form->_options[$page . '-type'] == 'exchange' ) ? 'hidden' : ''; ?>"><?php $form->add_drop_down( $page . '-wpid', $wp_pages ); ?></span>
+						<span class="wp-page wp-page-select-span <?php echo ( $form->_options[$page . '-type'] != 'wordpress' ) ? 'hidden' : ''; ?>"><?php $form->add_drop_down( $page . '-wpid', $wp_pages ); ?></span>
 					</div>
 					<div class="it-column column-2-full wp-page toggle-disabled <?php echo ( $form->_options[$page . '-type'] == 'exchange' || $form->_options[$page . '-type'] == 'disabled' ) ? 'hidden' : '';?>">
 						<div>
