@@ -320,7 +320,7 @@ class IT_Exchange_Email_Notifications {
 							<?php $count = it_exchange_get_transaction_product_feature( $transaction_product, 'count' ); ?>
 							<?php if ( $count > 1 ) : ?>
 								<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
-								<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%s%sEach link has its own download limits and you can view the details on you %sdownloads%s page.', 'LION' ), $count, '<br />', '<br />', '<a href="' . $downloads_url . '">', '</a>' ); ?></p>
+								<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%s%sEach link has its own download limits and you can view the details on your %sdownloads%s page.', 'LION' ), $count, '<br />', '<br />', '<a href="' . $downloads_url . '">', '</a>' ); ?></p>
 							<?php endif; ?>
 							<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
 								<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $args->transaction_id, $transaction_product, $download_id ); ?>
