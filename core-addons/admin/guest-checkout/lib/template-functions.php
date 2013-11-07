@@ -63,6 +63,10 @@ function it_exchange_guest_checkout_get_heading() {
  * @return array
 */
 function it_exchange_guest_checkout_modify_guest_checkout_purchase_requirement_form_actions( $actions ) {
+	// Don't offer guest checkout if we're doing membership
+	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
+		return $actions;
+
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) )
 		return $actions;
@@ -98,6 +102,10 @@ add_filter( 'it_exchange_get_super_widget_guest_checkout_actions_elements', 'it_
  * @return array
 */
 function it_exchange_remove_login_link_from_register_sw_state( $actions ) {
+	// Don't offer guest checkout if we're doing membership
+	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
+		return $actions;
+
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) )
 		return $actions;
@@ -120,6 +128,10 @@ add_filter( 'it_exchange_get_super_widget_registration_fields_elements', 'it_exc
  * @return array
 */
 function it_exchange_remove_register_link_from_login_sw_state( $actions ) {
+	// Don't offer guest checkout if we're doing membership
+	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
+		return $actions;
+
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) )
 		return $actions;
@@ -208,6 +220,10 @@ function it_exchange_guest_checkout_get_sw_cancel_link( $options=array() ) {
  * @return array
 */
 function it_exchange_guest_checkout_modify_valid_sw_states( $valid_states ) {
+	// Don't offer guest checkout if we're doing membership
+	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
+		return $valid_states;
+
 	$valid_states[] = 'guest-checkout';
 	return $valid_states;
 }
@@ -222,8 +238,14 @@ add_filter( 'it_exchange_super_widget_valid_states', 'it_exchange_guest_checkout
  * @return string
 */
 function it_exchange_guest_checkout_override_logged_in_checkout_template_part( $template_part ) {
+
+	// Don't offer guest checkout if we're doing membership
+	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
+		return $template_part;
+
 	$guest_checkout_settings = it_exchange_get_option( 'addon-guest-checkout' );
 	$form = empty( $guest_checkout_settings['default-form'] ) ? $template_part : 'guest-checkout';
+
 	return $form;
 }
 add_filter( 'it_exchange_get_default_content_checkout_mode', 'it_exchange_guest_checkout_override_logged_in_checkout_template_part' );
@@ -239,6 +261,11 @@ add_filter( 'it_exchange_get_default_content_checkout_mode', 'it_exchange_guest_
 function it_exchange_guest_checkout_override_logged_in_supwer_widget_template_part( $template_part ) {
 	$guest_checkout_settings = it_exchange_get_option( 'addon-guest-checkout' );
 	$form = empty( $guest_checkout_settings['default-form'] ) ? $template_part : 'guest-checkout';
+
+	// Don't offer guest checkout if we're doing membership
+	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
+		return $template_part;
+
 	return $form;
 }
 add_filter( 'it_exchange_get_default_sw_checkout_mode', 'it_exchange_guest_checkout_override_logged_in_supwer_widget_template_part' );
@@ -252,6 +279,10 @@ add_filter( 'it_exchange_get_default_sw_checkout_mode', 'it_exchange_guest_check
  * @return array
 */
 function it_exchagne_guest_checkout_add_guest_checkout_template_part_to_logged_in_purchase_requirement( $elements ) {
+	// Don't offer guest checkout if we're doing membership
+	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
+		return $elements;
+
 	$elements[] = 'guest-checkout';
 	return $elements;
 }
@@ -266,6 +297,11 @@ add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-no
  * @return array
 */
 function it_exchange_add_guest_checkout_links_to_logged_in_purchase_requirement_on_checkout_page( $links ) {
+
+	// Don't offer guest checkout if we're doing membership
+	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
+		return $links;
+
 	$links[] = 'guest-checkout';
 	return $links;
 }
@@ -280,6 +316,11 @@ add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-no
  * @return array
 */
 function it_exchange_guest_checout_maybe_remove_reg_and_login_links_from_checkout_page( $links ) {
+
+	// Don't offer guest checkout if we're doing membership
+	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
+		return $links;
+
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	if ( 'wp' == $general_settings['site-registration'] && ! get_option( 'users_can_register' ) )
 		return $actions;
@@ -311,6 +352,10 @@ add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-no
  * @return array
 */
 function it_exchange_add_guest_checkout_link_to_sw_registration_state( $links ) {
+	// Don't offer guest checkout if we're doing membership
+	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
+		return $links;
+
 	// Place it before cancel if cancel is found. Otherwise, place it at the end.
 	if ( ! ( $index = array_search( 'cancel', $links ) ) )
 		$index = count( $links );
@@ -329,6 +374,10 @@ add_filter( 'it_exchange_get_super_widget_registration_actions_elements', 'it_ex
  * @return array
 */
 function it_exchange_add_guest_checkout_link_to_sw_login_state( $links ) {
+
+	// Don't offer guest checkout if we're doing membership
+	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
+		return $links;
 
 	if ( ! ( $index = array_search( 'recover', $links ) ) )
 		$index = count( $links );
