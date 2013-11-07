@@ -191,7 +191,8 @@ class IT_Exchange_Pages {
 			wp_redirect( it_exchange_get_page_url( 'profile' ) );
 			die();
 		} else if ( is_user_logged_in() && 'logout' == $this->_current_view ) {
-			wp_redirect( str_replace( '&amp;', '&', wp_logout_url( it_exchange_get_page_url( 'store' ) ) ) );
+			$url = apply_filters( 'it_exchange_redirect_on_logout', str_replace( '&amp;', '&', wp_logout_url( it_exchange_get_page_url( 'store' ) ) ) );
+			wp_redirect( $url );
 			die();
 		} else if ( ! is_user_logged_in() && 'logout' == $this->_current_view ) {
 			wp_redirect( it_exchange_get_page_url( 'login' ) );
