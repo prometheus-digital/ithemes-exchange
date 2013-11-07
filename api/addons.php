@@ -298,6 +298,10 @@ function it_exchange_get_more_addons( $options=array() ) {
 	// Grab all registered add-ons
 	$remote_get = wp_remote_get( 'https://api.ithemes.com/exchange/addons/' );
 
+	// Return empty array if remote_get errored out.
+	if ( is_wp_error( $remote_get ) )
+		return array();
+
 	$addons = json_decode( $remote_get['body'], true );
 
 	if ( ! empty( $options['category'] ) )
