@@ -518,3 +518,20 @@ function it_exchange_guest_checkout_process_ajax_login() {
 	die('1');
 }
 add_action( 'it_exchange_processing_super_widget_ajax_guest-checkout', 'it_exchange_guest_checkout_process_ajax_login' );
+
+/**
+ * Remove the download page link in the email if this was a guest checkout transaction
+ *
+ * @since CHANGEME
+ *
+ * @param  boolean  $boolean incoming from WP Filter
+ * @param  int      $id      the transaction ID
+ * @return boolean
+*/
+function it_exchange_guest_checkout_maybe_remove_download_page_link_from_email( $boolean, $id ) {
+	if ( ! $transaction = it_exchange_get_transaction( $id ) )
+		return $boolean;
+
+	return empty( $transaction->cart_details->is_guest_checkout );
+}
+add_filter( 'it_exchange_print_downlods_page_link_in_email', 'it_exchange_guest_checkout_maybe_remove_download_page_link_from_email', 10, 2 );

@@ -318,7 +318,7 @@ class IT_Exchange_Email_Notifications {
 						<?php else : ?>
 							<h4><?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?></h4>
 							<?php $count = it_exchange_get_transaction_product_feature( $transaction_product, 'count' ); ?>
-							<?php if ( $count > 1 ) : ?>
+							<?php if ( $count > 1 && apply_filters( 'it_exchange_print_downlods_page_link_in_email', true, $this->transaction_id ) ) : ?>
 								<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
 								<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%s%sEach link has its own download limits and you can view the details on your %sdownloads%s page.', 'LION' ), $count, '<br />', '<br />', '<a href="' . $downloads_url . '">', '</a>' ); ?></p>
 							<?php endif; ?>
