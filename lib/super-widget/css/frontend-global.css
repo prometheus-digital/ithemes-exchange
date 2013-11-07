@@ -50,12 +50,14 @@
 .it-exchange-super-widget .it-exchange-sw-log-in label{display:block;font-size:.8em;margin-bottom:.5em;}
 .it-exchange-super-widget .it-exchange-sw-log-in .rememberme label{display:inline;}
 .it-exchange-super-widget .it-exchange-sw-log-in .recover_url{margin-top:1em;margin-bottom:.4em;}
+.it-exchange-super-widget .it-exchange-sw-log-in .it-exchange-login-button{margin-bottom:2em;}
 .it-exchange-super-widget .it-exchange-sw-processing-login input[type="submit"],
 .it-exchange-super-widget .it-exchange-sw-processing-login input[type="button"],
 .it-exchange-super-widget .it-exchange-sw-processing-login .it-exchange-recover-url{margin-top:1em;}
 .it-exchange-super-widget .it-exchange-sw-processing-registration .it-exchange-guest-checkout-link{margin-top:5px;display:block;}
 .it-exchange-super-widget .it-exchange-sw-register label{display:block;font-size:.8em;margin-bottom:.5em;}
 .it-exchange-super-widget .it-exchange-sw-register div{margin-bottom:1em;}
+.it-exchange-super-widget .it-exchange-sw-register input#it-exchange-register-customer{margin-bottom:2em;}
 .it-exchange-super-widget .cancel_url{margin-top:.5em;}
 
 /** ----------------------------------------:[ shipping ]:--- */
@@ -84,3 +86,4 @@
 .it-exchange-super-widget .it-exchange-guest-checkout-form input{margin:0;}
 .it-exchange-super-widget .it-exchange-sw-processing-guest-checkout .email-name input,
 .it-exchange-super-widget .it-exchange-sw-processing-guest-checkout .save_url input{width:100%;}
+.it-exchange-super-widget .it-exchange-sw-processing-guest-checkout h3.in-super-widget{margin: 0 0 .75em;}
