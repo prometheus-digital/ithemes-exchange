@@ -1102,6 +1102,33 @@ function it_exchange_set_content_width_on_product_pages() {
 }
 add_action( 'template_redirect', 'it_exchange_set_content_width_on_product_pages', 100 );
 
+/**
+ * Redirects to Exchange Login page if login fails
+ *
+ * Technically, we're hijacking a filter to use it for an action.
+ *
+ * @since 1.6.0
+ *
+ * @param  object $error instance of WP_Error
+ * @return mixed
+*/
+function it_exchange_redirect_to_correct_login_form_on_error( $error ) {
+	if ( empty( $error ) || ! is_wp_error( $error ) || empty( $error->errors ) )
+		return $error;
+
+	$wp_referer       = wp_get_referer();
+	$exchange_pages[] = it_exchange_get_page_url( 'login' );
+	$exchange_pages[] = it_exchange_get_page_url( 'checkout' );
+
+	if ( in_array( $wp_referer, $exchange_pages ) ) {
+		it_exchange_add_message( 'error', $error->get_error_message() );
+		wp_redirect( $wp_referer );
+		die();
+	}
+	return $error;
+}
+add_filter( 'wp_login_errors', 'it_exchange_redirect_to_correct_login_form_on_error', 99 );
+
 /************************************
  * THE FOLLOWING API METHODS AREN'T READY
  * FOR PRIMETIME YET SO THEY LIVE HERE FOR NOW.
