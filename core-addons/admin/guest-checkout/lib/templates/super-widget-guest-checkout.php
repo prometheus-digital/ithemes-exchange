@@ -2,8 +2,8 @@
 /**
  * The guest-checkout template for the Super Widget.
  *
- * @since CHANGEME
- * @version CHANGEME
+ * @since 1.6.0
+ * @version 1.6.0
  * @link http://ithemes.com/codex/page/Exchange_Template_Updates
  * @package IT_Exchange
  *

@@ -871,7 +871,7 @@ add_action( 'init', 'it_exchange_register_default_purchase_requirements' );
 /**
  * The default checkout mode for the superwidget
  *
- * @since CHANGME
+ * @since 1.6.0
  *
  * @return string
 */
@@ -886,7 +886,7 @@ function it_exchange_get_default_sw_checkout_mode() {
 /**
  * The default checkout mode for the page
  *
- * @since CHANGME
+ * @since 1.6.0
  *
  * @return string
 */
@@ -1055,7 +1055,7 @@ add_action( 'it_exchange_version_updated', 'it_exchange_force_rewrite_flush_on_u
 /**
  * Add custom image sizs to use in themes and admin.
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return void
 */

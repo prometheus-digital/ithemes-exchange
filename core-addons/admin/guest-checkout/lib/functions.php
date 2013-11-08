@@ -2,7 +2,7 @@
 /**
  * Resets the session activity to the current timestamp
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return void
 */
@@ -20,7 +20,7 @@ function it_exchange_guest_checkout_bump_session() {
 /**
  * Generates a fake WP_User for Guest Chekcout
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param string $email
  * @return object
@@ -48,7 +48,7 @@ function it_exchange_guest_checkout_generate_guest_user_object( $email, $return_
 /**
  * Kills a guest checkout session by removing vars from the session global
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return void
 */
@@ -63,7 +63,7 @@ function it_exchange_kill_guest_checkout_session() {
 /**
  * Init a guest session
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param string $customer_email the customer's email
  * @return boolean
@@ -84,7 +84,7 @@ function it_exchange_init_guest_checkout_session( $customer_email ) {
 /**
  * Are we doing guest checkout?
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return boolean
 */

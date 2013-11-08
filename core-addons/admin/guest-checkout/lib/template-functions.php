@@ -5,7 +5,7 @@
  * Only adds it if were looking for one of our templates. No need
  * to scan our directory if we know we don't have the template being requeste
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return array
 */
@@ -44,7 +44,7 @@ add_filter( 'it_exchange_possible_template_paths', 'it_exchange_guest_checkout_a
 /**
  * Returns the Guest Checkout title
  *
- * @since CHANGME
+ * @since 1.6.0
  * @return string
 */
 function it_exchange_guest_checkout_get_heading() {
@@ -57,7 +57,7 @@ function it_exchange_guest_checkout_get_heading() {
 /**
  * Add the register and login links if settings allows them
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param  array $actions
  * @return array
@@ -96,7 +96,7 @@ add_filter( 'it_exchange_get_super_widget_guest_checkout_actions_elements', 'it_
 /**
  * Remove the login link from the super-widget 'Register' state if guest checkout settings have disabled it.
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param  array $actions incoming actions already registered
  * @return array
@@ -122,7 +122,7 @@ add_filter( 'it_exchange_get_super_widget_registration_fields_elements', 'it_exc
 /**
  * Remove the register link from the super-widget 'Log in' state if guest checkout settings have disabled it.
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param  array $actions incoming actions already registered
  * @return array
@@ -148,7 +148,7 @@ add_filter( 'it_exchange_get_super_widget_login_actions_elements', 'it_exchange_
 /**
  * Prints the continue link for the Checkout page purchase requirement
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return string
 */
@@ -161,7 +161,7 @@ function it_exchange_guest_checkout_get_purchase_requirement_continue_action() {
 /**
  * Prints the link to checkout as Guest in the SW
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param string $label What do you wan the link to say
  *
@@ -174,7 +174,7 @@ function it_exchange_guest_checkout_sw_link( $label ) {
 /**
  * This prints the email field in the various template parts
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $options Options for format, output, etc
  * @return string
@@ -188,7 +188,7 @@ function it_exchange_guest_checkout_get_email_field( $options=array() ) {
 /**
  * This prints the continue link in the SW
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $options Options for format, output, etc
  * @return string
@@ -201,7 +201,7 @@ function it_exchange_guest_checkout_get_sw_save_link( $options=array() ) {
 /**
  * This prints the cancel link in the SW
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $options Options for format, output, etc
  * @return string
@@ -214,7 +214,7 @@ function it_exchange_guest_checkout_get_sw_cancel_link( $options=array() ) {
 /**
  * Adds guest-checkout as a valid super-widget state
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $valid_states existing valid states
  * @return array
@@ -232,7 +232,7 @@ add_filter( 'it_exchange_super_widget_valid_states', 'it_exchange_guest_checkout
 /**
  * Overwrites the core default_form setting for the guest_checkout value on the Checkout page.
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param string $template_part
  * @return string
@@ -253,7 +253,7 @@ add_filter( 'it_exchange_get_default_content_checkout_mode', 'it_exchange_guest_
 /**
  * Overwrites the core default_form setting for the guest_checkout value in the SuperWidget.
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param string $template_part
  * @return string
@@ -273,7 +273,7 @@ add_filter( 'it_exchange_get_default_sw_checkout_mode', 'it_exchange_guest_check
 /**
  * Add the Guest Checkin UI to the checkout page registration view
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $elements existing elements in the content loop of the logged-in requiremnt template
  * @return array
@@ -291,7 +291,7 @@ add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-no
 /**
  * Add link back to Guest Checkout from Registration and Login forms on Checkout Page
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $links incoming links
  * @return array
@@ -310,7 +310,7 @@ add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-no
 /**
  * Removes the Login and the and Registration link from the Checkout page template parts when turned off in guest-checkout settings
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $links incoming links
  * @return array
@@ -346,7 +346,7 @@ add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-no
 /**
  * Add Guest Checkout links to the SuperWidget Login / Registration Forms
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $links incoming template parts from WP filter
  * @return array
@@ -368,7 +368,7 @@ add_filter( 'it_exchange_get_super_widget_registration_actions_elements', 'it_ex
 /**
  * Add Guest Checkout links to the SuperWidget Log in form
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $links incoming template parts from WP filter
  * @return array
@@ -390,7 +390,7 @@ add_filter( 'it_exchange_get_super_widget_login_actions_elements', 'it_exchange_
 /**
  * Removes the User Menu links from the confirmation page if doing guest checkout
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param  array $loops   the array of loops to include in the header
  * @return array modified loops missing the menu

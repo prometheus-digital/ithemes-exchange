@@ -7,7 +7,7 @@
  * be aware of the account and will not have access to it.
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.6.0
 */
 
 /**

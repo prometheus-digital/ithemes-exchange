@@ -2,7 +2,7 @@
 /**
  * Enqueues Guest Checkout SW JS
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return void
 */
@@ -15,7 +15,7 @@ add_action( 'it_exchange_enqueue_super_widget_scripts', 'it_exchange_guest_check
 /**
  * Enqueues the checkout page scripts
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return void
 */
@@ -31,7 +31,7 @@ add_action( 'wp_enqueue_scripts', 'it_exchange_guest_checkout_enqueue_checkout_s
 /**
  * Init Guest Checkout Registration/Login via email
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return void
 */
@@ -59,7 +59,7 @@ add_action( 'template_redirect', 'it_exchange_guest_checkout_init_login' );
  * - Transaction was a guest checkout transaction
  * - Current guest has same email as one used in the transaction
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param boolean $has_transaction the value coming in from the WP filter
  * @param integer $transaction_id  the transaction ID
@@ -84,7 +84,7 @@ add_filter( 'it_exchange_customer_has_transaction', 'it_exchange_guest_checkout_
 /**
  * Continues the guest checkout session or ends it based on timeout
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return void
 */
@@ -125,7 +125,7 @@ add_action( 'it_exchange_super_widget_ajax_top', 'it_exchange_handle_guest_check
 /**
  * Modify customer billing address
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $billing_address the billing address returned from customer meta
  * @return mixed
@@ -144,7 +144,7 @@ add_filter( 'it_exchange_get_customer_billing_address', 'it_exchange_guest_check
 /**
  * Modify cart billing address
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return array
 */
@@ -169,7 +169,7 @@ add_filter( 'it_exchange_get_cart_billing_address', 'it_exchange_guest_checkout_
 /**
  * Do not update the Customer's Billing address if doing guest checkout. Add it to the session instead
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $address the address array that is supposed to be added to the customer
  * @return array
@@ -189,7 +189,7 @@ add_action( 'it_exchange_save_customer_billing_address', 'it_exchange_guest_chec
 /**
  * Modify customer shipping address
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $shipping_address the shipping address returned from customer meta
  * @return mixed
@@ -208,7 +208,7 @@ add_filter( 'it_exchange_get_customer_shipping_address', 'it_exchange_guest_chec
 /**
  * Returns the customer email for a guest transaction
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param string $email the email passed through from the WP filter
  * @param mixed  $transaction the id or the object
@@ -225,7 +225,7 @@ add_filter( 'it_exchange_get_transaction_customer_email', 'it_exchange_get_guest
 /**
  * Returns the customer id for a guest transaction
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param string $id          the id passed through from the WP filter
  * @param mixed  $transaction the id or the object
@@ -242,7 +242,7 @@ add_filter( 'it_exchange_get_transaction_customer_id', 'it_exchange_get_guest_ch
 /**
  * Do not print link to customer details on payment transactions admin page
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param  boolean $display_link yes or no
  * @param  object  $wp_post      the wp post_type for the transaction
@@ -262,7 +262,7 @@ add_filter( 'it_exchange_transaction_detail_has_customer_profile', 'it_exchange_
 /**
  * Modify cart shipping address
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return array
 */
@@ -287,7 +287,7 @@ add_filter( 'it_exchange_get_cart_shipping_address', 'it_exchange_guest_checkout
 /**
  * Do not update the Customer's shipping address if doing guest checkout. Add it to the session instead
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $address the address array that is supposed to be added to the customer
  * @return array
@@ -307,7 +307,7 @@ add_action( 'it_exchange_save_customer_shipping_address', 'it_exchange_guest_che
 /**
  * Flags the user as someone who registered as a guest
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param  object $data        custoemr data
  * @param  int    $customer_id the wp customer_id
@@ -323,7 +323,7 @@ add_filter( 'it_exchange_set_customer_data', 'it_exchange_guest_checkout_set_cus
 /**
  * Flag transaction object as guest checkout
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param object $transaction_object the transaction object right before being added to database
  * @return object
@@ -342,7 +342,7 @@ add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_flag_transac
  *
  * So that we can filter it out of queries
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param integer $transaction_id
  * @return void
@@ -363,7 +363,7 @@ add_action( 'it_exchange_add_transaction_success', 'it_exchange_flag_transaction
  * If a registerd user checkouts as a guest rather than logging in, the transaction
  * is still attached to them but we don't want to show it to them in their front end profile.
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param array $args wp post args used for the post query
  * @return array
@@ -386,7 +386,7 @@ add_filter( 'it_exchange_get_transactions_get_posts_args', 'it_exchange_guest_ch
 /**
  * Modifies the Transaction Customer data when dealing with a guest checkout
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param object $customer the customer object
  * @return object
@@ -410,7 +410,7 @@ add_filter( 'it_exchange_get_transaction_customer', 'it_exchange_guest_checkout_
  *
  * This modifies the feedback on the Checkout Page in the Logged-In purchse requirement
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param object $customer the customer object
  * @return object
@@ -430,7 +430,7 @@ add_filter( 'it_exchange_get_customer', 'it_exchange_guest_checkout_modify_custo
 /**
  * This modifies the loginout link generated by WP when we're doing Guest Checkout
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param string $url      the html for the loginout link
  * @param string $redirect the URL we're redirecting to after logged out.
@@ -449,7 +449,7 @@ add_filter( 'logout_url', 'it_exchange_guest_checkout_modify_loginout_link', 10,
 /**
  * Logs out a guest checkout session
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return void
 */
@@ -464,7 +464,7 @@ add_action( 'template_redirect', 'it_exchange_logout_guest_checkout_session', 1 
 /**
  * Allow downloads to be served regardless of the requirement to be logged in if user checkout out as a guest
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param boolean  $setting the default setting
  * @param array    $hash_data the download has data
@@ -481,7 +481,7 @@ add_filter( 'it_exchange_require_user_login_for_download', 'it_exchange_allow_fi
 /**
  * Clear guest session when an authentication attemp happens.
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param  mixed $incoming Whatever is coming from WP hook API. We don't use it.
  * @return void
@@ -496,7 +496,7 @@ add_filter( 'authenticate', 'it_exchange_end_guest_checkout_on_login_attempt' );
 /**
  * Proccesses Guest login via superwidget
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
 */
 function it_exchange_guest_checkout_process_ajax_login() {
@@ -522,7 +522,7 @@ add_action( 'it_exchange_processing_super_widget_ajax_guest-checkout', 'it_excha
 /**
  * Remove the download page link in the email if this was a guest checkout transaction
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @param  boolean  $boolean incoming from WP Filter
  * @param  int      $id      the transaction ID

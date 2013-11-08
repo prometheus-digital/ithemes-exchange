@@ -7,7 +7,7 @@
  * It will be intercepted though if the user clicks on it and redirected to
  * The Exchange settings --> shipping tab.
  *
- * @since CHANGEME
+ * @since 1.6.0
  *
  * @return void
 */
