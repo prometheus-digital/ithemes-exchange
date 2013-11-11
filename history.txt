@@ -1,3 +1,26 @@
+1.6.0 - 2012-11-11 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+	Introducing Guest Checkout
+	Redirect back to Exchange Log in Page, not WP login page on failed log in
+	Fix typo in customer confirmation email
+	Fix bug that prevented Page settings from being saved if a page was previously set to 'disabled'
+	Fix bug requiring a WP page to be selected before saving Page settings when page type is not WordPress
+	Make default logout redirect go to login page if it isn't disabled. Go to site home if it is. Add filter to default.
+	Prevent PHP error if remote_get returns WP_Error object when trying to retreive addons json from ithemes server
+	Don't show quantity option in SW when changing coupon info
+	Remove login link from above registration fields on checkout page
+	Move login link below registration fields in SW and convert to button format
+	Add 'core' tag to Simple Shipping add-on
+	Init purchase dialog JS on SW non-AJAX load
+	Large amount of tabbing and white-space corrections
+	Decouple SW registration state login/cancel elements.
+	Add breaks to switch statements in api/theme/login.php
+	Updated our COOKIE key to work with some hosting environments
+	Fixing paypal standard return code
+	Add action to top of super widget ajax script
+	Changing core template from "Logged in as:" to "Checking out as:" on Checkout page
+	Cleaned up the image after zooming to prevent multiple images loading over and over.
+	Removed margin and padding from images inside the product image popup.
+	A couple product gallery fixes.
 1.5.0 - 2013-10-28 - Lew Ayotte, Glenn Ansley, Justin Kopepasah
 	Fixed some priority bugs
 	Added additional IDs and classes to admin settings
