@@ -172,7 +172,7 @@ function it_exchange_generate_transaction_object() {
 	// Shipping Method and total
 	$transaction_object->shipping_method        = it_exchange_get_cart_shipping_method();
 	$transaction_object->shipping_method_multi  = it_exchange_get_cart_data( 'multiple-shipping-methods' );
-	$transaction_object->shipping_total         = it_exchange_convert_to_database_number( it_exchange_get_cart_shipping_cost() );
+	$transaction_object->shipping_total         = it_exchange_convert_to_database_number( it_exchange_get_cart_shipping_cost( false, false ) );
 
 	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object );
 	return $transaction_object;
