@@ -70,7 +70,7 @@ function it_exchange_format_price( $price, $show_symbol = true ) {
 
 	$before = $after = '';
 	$settings = it_exchange_get_option( 'settings_general' );
-	$currency = html_entity_decode( it_exchange_get_currency_symbol( $settings['default-currency'] ) );
+	$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
 
 	if ( $show_symbol ) {
 		if ( 'after' === $settings['currency-symbol-position'] )
