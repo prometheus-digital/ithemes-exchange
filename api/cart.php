@@ -504,9 +504,8 @@ function it_exchange_do_confirmation_redirect( $transaction_id ) {
  * @return string
 */
 function it_exchange_get_cart_nonce_field() {
-	$session_id = empty( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ? false : $_COOKIE[IT_EXCHANGE_SESSION_COOKIE];
 	$var = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
-	return wp_nonce_field( 'it-exchange-cart-action-' . $session_id, $var, true, false );
+	return wp_nonce_field( 'it-exchange-cart-action-' . it_exchange_get_session_id(), $var, true, false );
 }
 
 /**

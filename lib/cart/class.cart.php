@@ -169,7 +169,7 @@ class IT_Exchange_Shopping_Cart {
 		$nonce_var   = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
 		$error_var   = it_exchange_get_field_name( 'error_message' );
 		$message_var = it_exchange_get_field_name( 'alert_message' );
-		$session_id  = empty( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ? false : $_COOKIE[IT_EXCHANGE_SESSION_COOKIE];
+		$session_id  = it_exchange_get_session_id();
 
 		if ( it_exchange_is_multi_item_cart_allowed() )
 			$cart = it_exchange_get_page_url( 'cart' );
@@ -203,7 +203,7 @@ class IT_Exchange_Shopping_Cart {
 	function handle_remove_product_from_cart_request() {
 		$var             = it_exchange_get_field_name( 'remove_product_from_cart' );
 		$car_product_ids = empty( $_REQUEST[$var] ) ? array() : $_REQUEST[$var];
-		$session_id      = empty( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ? false : $_COOKIE[IT_EXCHANGE_SESSION_COOKIE];
+		$session_id      = it_exchange_get_session_id();
 
 		// Base URL
 		if ( it_exchange_is_multi_item_cart_allowed() )
@@ -237,7 +237,7 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	*/
 	function handle_update_cart_request( $redirect=true ) {
-		$session_id = empty( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ? false : $_COOKIE[IT_EXCHANGE_SESSION_COOKIE];
+		$session_id = it_exchange_get_session_id();
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
 		if ( it_exchange_is_multi_item_cart_allowed() ) {
