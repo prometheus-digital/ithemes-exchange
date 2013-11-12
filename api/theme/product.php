@@ -907,6 +907,9 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
+		// Allow options to be filtered
+		$options = apply_filters( 'it_exchange_product_theme_api_buy_now_options', $options, $this->product->ID );
+
 		// If we are tracking inventory, lets make sure we have some available
 		$product_in_stock = it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ? it_exchange_product_has_feature( $this->product->ID, 'inventory' ) : true;
 
