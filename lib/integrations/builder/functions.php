@@ -230,22 +230,22 @@ function it_exchange_add_new_builder_views( $views ) {
 		'it_exchange_is_account_builder_view' => array(
 			'name'        => _x( 'Exchange - Account', 'view', 'LION' ),
 			'priority'    => '30',
-			'description' => __( 'The Exchange customer\'s account page.', 'LION' ),
+			'description' => __( 'The Exchange customer account page.', 'LION' ),
 		),
 		'it_exchange_is_profile_builder_view' => array(
 			'name'        => _x( 'Exchange - Profile', 'view', 'LION' ),
 			'priority'    => '30',
-			'description' => __( 'The Exchange customer\'s profile page.', 'LION' ),
+			'description' => __( 'The Exchange customer profile page.', 'LION' ),
 		),
 		'it_exchange_is_downloads_builder_view' => array(
 			'name'        => _x( 'Exchange - Downloads', 'view', 'LION' ),
 			'priority'    => '30',
-			'description' => __( 'The Exchange customer\'s downloads page.', 'LION' ),
+			'description' => __( 'The Exchange customer downloads page.', 'LION' ),
 		),
 		'it_exchange_is_purchases_builder_view' => array(
 			'name'        => _x( 'Exchange - Purchases', 'view', 'LION' ),
 			'priority'    => '30',
-			'description' => __( 'The Exchange customer\'s purchases page.', 'LION' ),
+			'description' => __( 'The Exchange customer purchases page.', 'LION' ),
 		),
 		'it_exchange_is_login_builder_view' => array(
 			'name'        => _x( 'Exchange - Login', 'view', 'LION' ),
