@@ -203,7 +203,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 *
 	*/
 	function current( $options=array() ) {
-		$method = it_exchange_get_registered_shipping_method( $this->current_method, $this->product );
+		$method = it_exchange_get_registered_shipping_method( $this->current_method );
 		return $method->label;
 	}
 }
