@@ -1,4 +1,13 @@
-1.6.0 - 2012-11-11 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+1.6.1 - 2013-11-12 - Glenn Ansley, Kristen Wright
+	Update readme.txt
+	Make buy-now theme API options filterable.
+	Replace all instances of tertiary session_id logic with calls to it_exchange_get_session_id()
+	Fix bug that caused incorrect shipping prices to be displayed on PHP versions before 5.4
+	Remove 's from all Exchange Builder view descriptions
+	Add Builder view for 'any exchange page'
+	Add functionality to it_exchange_is_page() to retrun the current page if $page param was passed empty.
+	Remove call to non-existant property in shipping-method Theme API class
+1.6.0 - 2013-11-11 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
 	Introducing Guest Checkout
 	Redirect back to Exchange Log in Page, not WP login page on failed log in
 	Fix typo in customer confirmation email

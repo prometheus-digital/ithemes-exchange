@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, Kopepasah, bradulrich, mattdanner
 Tags: ecommerce
 Requires at least: 3.5
 Tested up to: 3.7
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -20,7 +20,7 @@ Your products are not blog posts. So we created an experience that makes creatin
 An online store can get pretty complicated. And not everyone needs the same things. With iThemes Exchange, many features are split into add-ons. You only see what your store needs, making it simple to use and manage.
 
 = Get Paid with PayPal or Stripe =
-We designed Exchange's purchase experience with Stripe as the ideal payment gateway. Stripe is awesome. If you've used it, you know. 
+We designed Exchange's purchase experience with Stripe as the ideal payment gateway. Stripe is awesome. If you've used it, you know.
 
 PayPal Standard (Basic or Secure) is supported out of the box as an Exchange core add-on . But we want you to have the easiest store experience with Exchange, so we're now offering the Stripe add-on for free.
 
@@ -47,7 +47,7 @@ Add only the features you need. Exchange Add-ons include support for several pay
 * Digital Downloads - Add a product type for distributing digital downloads through iThemes Exchange.
 * Product Categories and Tags - Organize your store by grouping with category and tag taxonomies.
 * Guest Checkout - Enabling this add-on gives customers the ability to checkout as a guest, without registering.
-* Billing Address - Collect a billing address at checkout. 
+* Billing Address - Collect a billing address at checkout.
 * Customer Pricing - Let customers choose their price from a list of price options you create or let them enter their own price.
 * Simple Shipping - Adds flat rate and free shipping for your physical products.
 * Simple Taxes - This gives the admin ability to apply a default tax rate to all sales.

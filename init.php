@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: iThemes Exchange
- * Version: 1.6.0
+ * Version: 1.6.1
  * Description: Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordPress
  * Plugin URI: http://ithemes.com/exchange/
  * Author: iThemes
@@ -23,7 +23,7 @@
 */
 class IT_Exchange {
 
-	var $_version         = '1.6.0';
+	var $_version         = '1.6.1';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'it-exchange';
 	var $_name            = 'iThemes Exchange';
