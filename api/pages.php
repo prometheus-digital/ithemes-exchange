@@ -166,15 +166,24 @@ function it_exchange_is_page_ghost_page( $page, $break_cache=false ) {
 }
 
 /**
- * Is the the current page what we're looking for?
+ * Tests to see if current page is a specific exchange page or if its an exchange page at all.
+ *
+ * Pass in a page as a string to test for a specific string. Leaving it blank will return the current exchange page or false
  *
  * @since 0.4.0
  *
- * @param string $page the exchange page were checking for
+ * @param mixed $page optional. the exchange page were checking for
  * @return boolean
 */
-function it_exchange_is_page( $page ) {
+function it_exchange_is_page( $page=false ) {
 	global $wpdb;
+
+	// If no page was passed, return the name of the exchange page or false
+	if ( empty( $page ) ) {
+		$is_exchange_page = get_query_var( 'it_exchange_view' );
+		$is_exchange_page = apply_filters( 'it_exchange_is_this_an_exchange_page', $is_exchange_page );
+		return $is_exchange_page;
+	}
 
 	// Give addons ability to skip this logic
 	$filtered_is = apply_filters( 'it_exchange_is_page', null, $page );
