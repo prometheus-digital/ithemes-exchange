@@ -761,6 +761,11 @@ class IT_Exchange_Product_Post_Type {
 		if ( it_exchange_get_product( $sample_id ) )
 			return;
 
+		// Set sample product Type
+		$product_types       = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
+		$product_type        = current( $product_types );
+		$sample_product_type = empty( $product_type['slug'] ) ? 'digital-downloads-product-type' : $product_type['slug'];
+
 		$title       = __( 'My Sample Product', 'LION' );
 		$price       = '1';
 		$description = __( 'A great product description includes the primary benefits, not just features or technical specs to your target market and core audience. It\'s probably about 3-4 sentences, if that, selling your product as the solution for your prospective customers. To help you, answer these questions: What problem does it solve? Who does it solve it for? And how is it different than other products out there?', 'LION' );
@@ -785,7 +790,7 @@ class IT_Exchange_Product_Post_Type {
 		, 'LION' );
 
 		$args = array(
-			'type'                 => 'digital-downloads-product-type',
+			'type'                 => $sample_product_type,
 			'status'               => 'draft',
 			'show_in_store'        => true,
 			'description'          => $description,
