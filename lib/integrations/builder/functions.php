@@ -196,6 +196,20 @@ function it_exchange_is_checkout_builder_view() {
 }
 
 /**
+ * Builder theme callback to determine if this a specfic product type singular view
+ *
+ * @package IT_Exchange
+ * @since CHANGEME
+ * @return boolean
+*/
+function it_exchange_is_builder_product_type_view( $type ) {
+	if ( ! it_exchange_is_page( 'product' ) )
+		return false;
+
+	return ( it_exchange_get_product_type() == $type );
+}
+
+/**
  * Add the views to Builder's list of available views.
  *
  * @package IT_Exchange
@@ -204,6 +218,8 @@ function it_exchange_is_checkout_builder_view() {
  * @var $views
 */
 function it_exchange_add_new_builder_views( $views ) {
+
+	// Basic Exchange Views
 	$exchange_views = array(
 		'it_exchange_is_product_builder_view' => array(
 			'name'        => _x( 'Exchange - Product', 'view', 'LION' ),
@@ -280,10 +296,26 @@ function it_exchange_add_new_builder_views( $views ) {
 		),
 	);
 
+	// Merge in core Exchange views
 	$views = array_merge( $views, $exchange_views );
 
+	// Merge in Multi-Item Cart Views
 	if ( it_exchange_is_multi_item_cart_allowed() )
 		$views = array_merge( $multi_item_views, $views );
+
+	// Product Type views
+	$product_type_views = array();
+	foreach( it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) as $type ) {
+		$title = empty( $type['labels']['singular_name'] ) ? $type['name'] : $type['labels']['singular_name'];
+		$product_type_views['it_exchange_is_builder_product_type_view|' . $type['slug']] = array(
+			'name' => 'Exchange Product Type - ' . $title,
+			'priority' => '41',
+			'description' => sprintf( __( 'All %s product type single product views', 'LION' ), $title ),
+		);
+	}
+
+	// Merge in Product Type Views
+	$views = array_merge( $views, $product_type_views );
 
     return $views;
 }
