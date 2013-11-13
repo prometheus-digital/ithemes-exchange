@@ -523,6 +523,7 @@ class IT_Exchange_Pages {
 			$existing = array_merge( $rewrite, $existing );
 		}
 
+		do_action( 'it_exchange_rewrite_rules_registered' );
 		return $existing;
 	}
 }
