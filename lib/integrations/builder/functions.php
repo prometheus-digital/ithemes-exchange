@@ -16,11 +16,9 @@
 */
 function it_exchange_remove_default_exchange_builder_views( $views ) {
 	foreach ( $views as $view => $data ) {
-		if ( preg_match( '/it_exchange_/' , $view, $match ) ) {
+		if ( false !== strpos( $view, 'it_exchange_' ) )
 			unset( $views[$view] );
-		}
 	}
-
 	return $views;
 }
 add_filter( 'builder_get_available_views', 'it_exchange_remove_default_exchange_builder_views', 100 );
