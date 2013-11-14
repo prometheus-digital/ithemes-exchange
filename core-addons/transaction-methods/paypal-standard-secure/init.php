@@ -32,6 +32,13 @@ function it_exchange_print_paypal_standard_secure_wizard_settings( $form ) {
 	$IT_Exchange_paypal_standard_secure_Add_On = new IT_Exchange_paypal_standard_secure_Add_On();
 	$settings = it_exchange_get_option( 'addon_paypal_standard_secure', true );
 	$form_values = ITUtility::merge_defaults( ITForm::get_post_data(), $settings );
+
+	// Alter setting keys for wizard
+	foreach( $form_values as $key => $value ) {
+		$form_values['paypal-standard-secure-' . $key] = $value;
+		unset( $form_values[$key] );
+	}
+
 	$hide_if_js =  it_exchange_is_addon_enabled( 'paypal-standard-secure' ) ? '' : 'hide-if-js';
 	?>
 	<div class="field paypal-standard-secure-wizard <?php echo $hide_if_js; ?>">
@@ -1023,20 +1030,40 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 			<h4><?php _e( 'Step 1. Fill out your PayPal email address', 'LION' ); ?></h4>
 			<p>
 				<label for="live-email-address"><?php _e( 'PayPal Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
-				<?php $form->add_text_box( 'live-email-address' ); ?>
+				<?php
+				if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
+					$form->add_text_box( 'paypal-standard-secure-live-email-address' );
+				else
+					$form->add_text_box( 'live-email-address' );
+				?>
 			</p>
 			<h4><?php _e( 'Step 2. Fill out your PayPal API credentials', 'LION' ); ?></h4>
 			<p>
 				<label for="live-api-username"><?php _e( 'PayPal API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'LION' ); ?>">i</span></label>
-				<?php $form->add_text_box( 'live-api-username' ); ?>
+				<?php
+				if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
+					$form->add_text_box( 'paypal-standard-secure-live-api-username' );
+				else
+					$form->add_text_box( 'live-api-username' );
+				?>
 			</p>
 			<p>
 				<label for="live-api-password"><?php _e( 'PayPal API Password', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'LION' ); ?>">i</span></label>
-				<?php $form->add_text_box( 'live-api-password' ); ?>
+				<?php
+				if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
+					$form->add_text_box( 'paypal-standard-secure-live-api-password' );
+				else
+					$form->add_text_box( 'live-api-password' );
+				?>
 			</p>
 			<p>
 				<label for="live-api-signature"><?php _e( 'PayPal API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'LION' ); ?>">i</span></label>
-				<?php $form->add_text_box( 'live-api-signature' ); ?>
+				<?php
+				if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
+					$form->add_text_box( 'paypal-standard-secure-live-api-signature' );
+				else
+					$form->add_text_box( 'live-api-signature' );
+				?>
 			</p>
 			<h4><?php _e( 'Step 3. Setup PayPal Instant Payment Notifications (IPN)', 'LION' ); ?></h4>
 			<p><?php _e( 'PayPal IPN must be configured in Account Profile -› Instant Payment Notification Preferences in your PayPal Account', 'LION' ); ?></p>
@@ -1051,7 +1078,12 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 			<h4><?php _e( 'Optional: Edit Paypal Button Label', 'LION' ); ?></h4>
 			<p>
 				<label for="purchase-button-label"><?php _e( 'Purchase Button Label', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the text inside the button your customers will press to purchase with PayPal Standard (secure)', 'LION' ); ?>">i</span></label>
-				<?php $form->add_text_box( 'purchase-button-label' ); ?>
+				<?php
+				if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
+					$form->add_text_box( 'paypal-standard-secure-purchase-button-label' );
+				else
+					$form->add_text_box( 'purchase-button-label' );
+				?>
 			</p>
 			<h4 class="hide-if-wizard"><?php _e( 'Optional: Enable Paypal Testing Mode', 'LION' ); ?></h4>
 			<p class="hide-if-wizard">
@@ -1131,8 +1163,8 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 
 		foreach( (array) $default_wizard_paypal_standard_secure_settings as $var ) {
 
-			if ( isset( $_REQUEST['it_exchange_settings-' . $var] ) ) {
-				$paypal_standard_secure_settings[$var] = $_REQUEST['it_exchange_settings-' . $var];
+			if ( isset( $_REQUEST['it_exchange_settings-paypal-standard-secure-' . $var] ) ) {
+				$paypal_standard_secure_settings[$var] = $_REQUEST['it_exchange_settings-paypal-standard-secure-' . $var];
 			}
 
 		}
