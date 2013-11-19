@@ -448,6 +448,7 @@ class IT_Exchange_Transaction_Post_Type {
 		<?php
 		$shipping_address = it_exchange_get_transaction_shipping_address( $post->ID );
 		$shipping_address = array_filter( (array) $shipping_address ); // Make it false if all values are empty
+		$shipping_address =  it_exchange_transaction_includes_shipping( $post ) ? $shipping_address : false;
 		$billing_address  = it_exchange_get_transaction_billing_address( $post->ID );
 		$billing_address = array_filter( (array) $billing_address ); // Make it false if all values are empty
 
