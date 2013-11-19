@@ -1090,7 +1090,12 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 				<?php $form->add_check_box( 'sandbox-mode', array( 'class' => 'show-test-mode-options' ) ); ?>
 				<label for="sandbox-mode"><?php _e( 'Enable PayPal Sandbox Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Use this mode for testing your store. This mode will need to be disabled when the store is ready to process customer payments.', 'LION' ); ?>">i</span></label>
 			</p>
-			<?php $hidden_class = ( $settings['sandbox-mode'] ) ? '' : 'hide-if-live-mode'; ?>
+			<?php
+			if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
+				$hidden_class = ( $settings['paypal-standard-secure-sandbox-mode'] ) ? '' : 'hide-if-live-mode';
+			else
+				$hidden_class = ( $settings['sandbox-mode'] ) ? '' : 'hide-if-live-mode';
+			?>
 			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
 				<label for="sandbox-email-address"><?php _e( 'PayPal Sandbox Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'sandbox-email-address' ); ?>
