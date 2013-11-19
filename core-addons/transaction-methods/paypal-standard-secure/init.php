@@ -111,10 +111,10 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 
 				$it_exchange_customer = it_exchange_get_current_customer();
 
-				$paypal_api_url       = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
-				$paypal_api_username  = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? $paypal_settings['paypal-standard-secure-sandbox-api-username'] : $paypal_settings['paypal-standard-secure-live-api-username'];
-				$paypal_api_password  = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? $paypal_settings['paypal-standard-secure-sandbox-api-password'] : $paypal_settings['paypal-standard-secure-live-api-password'];
-				$paypal_api_signature = ( $paypal_settings['paypal-standard-secure-sandbox-mode'] ) ? $paypal_settings['paypal-standard-secure-sandbox-api-signature'] : $paypal_settings['paypal-standard-secure-live-api-signature'];
+				$paypal_api_url       = ( $paypal_settings['sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
+				$paypal_api_username  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-username'] : $paypal_settings['live-api-username'];
+				$paypal_api_password  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-password'] : $paypal_settings['live-api-password'];
+				$paypal_api_signature = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-signature'] : $paypal_settings['live-api-signature'];
 
 				$request = array(
 					'USER'          => trim( $paypal_api_username ),
