@@ -1,4 +1,11 @@
-1.6.1 - 2013-11-12 - Glenn Ansley, Kristen Wright
+1.6.2 - 2013-11-19 - Glenn Ansley, Elise Alley
+	Don't show shipping address in Payment Details if transaction doesn't include shipping
+	Convert Paypl Standard setting keys to be shorter
+	Don't hardcode sample product to digital downloads. Make sample product one of the product-types setup in the wizard
+	Create Builder Views for all active product type's singular pages
+	Replace preg_match with strpos in Builder Views integration
+	Add action to rewrite rules method in pages class
+1.6.1 - 2013-11-12 - Glenn Ansley, Kristen Wright, Elise Alley
 	Update readme.txt
 	Make buy-now theme API options filterable.
 	Replace all instances of tertiary session_id logic with calls to it_exchange_get_session_id()
@@ -7,7 +14,7 @@
 	Add Builder view for 'any exchange page'
 	Add functionality to it_exchange_is_page() to retrun the current page if $page param was passed empty.
 	Remove call to non-existant property in shipping-method Theme API class
-1.6.0 - 2013-11-11 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+1.6.0 - 2013-11-11 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
 	Introducing Guest Checkout
 	Redirect back to Exchange Log in Page, not WP login page on failed log in
 	Fix typo in customer confirmation email
@@ -30,7 +37,7 @@
 	Cleaned up the image after zooming to prevent multiple images loading over and over.
 	Removed margin and padding from images inside the product image popup.
 	A couple product gallery fixes.
-1.5.0 - 2013-10-28 - Lew Ayotte, Glenn Ansley, Justin Kopepasah
+1.5.0 - 2013-10-28 - Lew Ayotte, Glenn Ansley, Justin Kopepasah, Elise Alley
 	Fixed some priority bugs
 	Added additional IDs and classes to admin settings
 	Added a general remove button style
@@ -47,7 +54,7 @@
 	Fixed call to wrong function in new confirmation page template part
 	Added a couple is_object checks before get_class calls
 	Introducing New Gallery
-1.4.2 - 2013-10-14 - Lew Ayotte
+1.4.2 - 2013-10-14 - Lew Ayotte, Elise Alley
 	Fixed typo in email notifications
 	Fixed wizard styling for Stripe
 	Added quick fix to margins
@@ -55,18 +62,18 @@
 	Added tool-tips to admin form class
 	Report 'Deleted Customer' when customer is missing
 	Changed the class for the customer menu wrapper in the confirmation page
-1.4.1 - 2013-10-09 - Glenn Ansley
+1.4.1 - 2013-10-09 - Glenn Ansley, Elise Alley
 	Adding missing images
 1.4.0 - 2013-10-09 - All the cats here: ithemes.com/team/
 	Introducing Memberships
 	Introducing Physical Products
 	Introducing Simple Shipping
 	Introducing Free Products
-1.3.2 - 2013-10-01 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+1.3.2 - 2013-10-01 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
 	Fix bug preventing Product details from showing if apply_filters was previously called
 	Added some hooks to the customer API, fixed some typos
 	Updated get-images to allow users to specify an specific image of a specific size.
-1.3.1 - 2013-09-20 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+1.3.1 - 2013-09-20 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
 	Fixed some i18n issues
 	Added cancel links from the Paypal add-ons
 	Fixed bug in Offline Payments for recurring, not keeping totals from parent transaction
@@ -76,12 +83,12 @@
 	Added missing docblocks
 	Fixed negative total and negative taxes
 	Fixed bug with failed payments when multicart is deactivated
-1.3.0 - 2013-09-16 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich
+1.3.0 - 2013-09-16 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich, Elise Alley
 	Groundwork for upcoming Recurring Payments add-on
 	Introduced Purchase Dialog API to allow transaction-method add-ons to invoke CC fields.
 	Added optional Billing Address purchase requirement and associated core add-on.
 	Added core add-on that enables store owner to switch product types.
-1.2.1 - 2013-08-29 - Glenn Ansley, Justin Kopepasah, Brad Ulrich
+1.2.1 - 2013-08-29 - Glenn Ansley, Justin Kopepasah, Brad Ulrich, Elise Alley
 	Introducing our Simple Product Type
 	Add address-formats and measurement-formats data sets
 	Tweak stripe upsell language now that it's free
@@ -92,7 +99,7 @@
 	Change NL state to 'Friesland'
 	Change default cancel link on cart from 'Cancel' to 'Edit Cart' on checkout page
 	Add login, registration and cart links to login notification on checkout page
-1.2.0 - 2013-08-23 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich
+1.2.0 - 2013-08-23 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich, Elise Alley
 	Added base country and base state to settings page
 	Added States data-set for US, AU, CA, ES, FR, NL, ZA
 	Added countries data set
@@ -115,7 +122,7 @@
 	Add more fonts to the add-edt product page font-family
 1.1.3 - 2013-08-19 - Packaging Bot
 	Updated lib/classes to version 2.3.5
-1.1.2 - 2013-08-13 - Glenn Ansley, Lew Ayotte
+1.1.2 - 2013-08-13 - Glenn Ansley, Lew Ayotte, Elise Alley
 	Added Duplicate Products core-addon
 	Fixed but that redirected user to profile rather than back to checkout when asked to register before checkout out
 	Fixed bug where activating Product Categories disables core Categories widget
@@ -125,7 +132,7 @@
 	Fix bug preventing large files from being downloaded
 1.1.1 - 2013-08-05 - Packaging Bot
 	Updated lib/classes to version 2.3.4
-1.1.0 - 2013-07-31 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich
+1.1.0 - 2013-07-31 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Brad Ulrich, Elise Alley
 	Fix broken confirmation page when set as a WP page type
 	Simplifying versioning notification logic since we have a gazillion template-parts now
 	Add a little more feedback to paypal error message
@@ -138,7 +145,7 @@
 	Corrected typo in PayPal Secure Wizard settings
 	Fixed bug that made downloads not show on the downloads page.
 	Add theme_support option for deprecated-template-parts
-1.0.3 - 2013-07-17 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+1.0.3 - 2013-07-17 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
     Add slash to itExchangeSWAjaxURL to fix login/registration bug.
 	Add default error message to login SW Ajax when WP_Error returns an empty message.
 	Reordered addon_init to prevent 3rd party addons from being included twice
@@ -147,7 +154,7 @@
 	Removed the styles from the WordPress update nag.
 	Fixed theme api filters
 	Added email category type for add-ons
-1.0.2 - 2013-07-11 - Glenn Ansley, Lew Ayotte, Justin Kopepasah
+1.0.2 - 2013-07-11 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
 	Fix typos in content-downloads.php and email confirmation.
 	Changed Video links to target _blank
 	Various readme.txt typo fixes
@@ -163,7 +170,7 @@
 	Add coupon limit to Basic Coupons add-on
 	Fix bug preventing subpages of store and account from working correctly
 	Remove Log Out page from showing up in WP's Appearance --> Menus
-1.0.1 - 2013-07-09 - Glenn Ansley, Justin Kopepasah
+1.0.1 - 2013-07-09 - Glenn Ansley, Justin Kopepasah, Elise Alley
 	Fix some spelling errors in api/addons.php
 	Fix bug that allowed users to create transactions manually in WPMS
 	Whitelist additional file types for upload on the Exchange Add/Edit Product page
