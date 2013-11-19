@@ -1,6 +1,6 @@
 1.6.2 - 2013-11-19 - Glenn Ansley, Elise Alley
 	Don't show shipping address in Payment Details if transaction doesn't include shipping
-	Convert Paypl Standard setting keys to be shorter
+	Convert Paypl Standard setting keys to be shorter - This was Chris's fault
 	Don't hardcode sample product to digital downloads. Make sample product one of the product-types setup in the wizard
 	Create Builder Views for all active product type's singular pages
 	Replace preg_match with strpos in Builder Views integration
