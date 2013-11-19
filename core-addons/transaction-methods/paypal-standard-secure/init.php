@@ -894,7 +894,7 @@ add_action( 'it_exchange_after_payment_details_cancel_url_for_paypal-standard-se
  *
  * Our original option keys for this plugin were generating form field names 80+ chars in length
  *
- * @since CHANGEME
+ * @since 1.6.2
  *
  * @param  array   $options         options as pulled from the DB
  * @param  string  $key             the key for the options

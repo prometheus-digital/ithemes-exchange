@@ -26,7 +26,7 @@ add_filter( 'builder_get_available_views', 'it_exchange_remove_default_exchange_
 /**
  * Builder theme callback to determine if this is any Exchange view
  *
- * @since CHANGEME
+ * @since 1.6.2
  * @return boolean
 */
 function it_exchange_is_exchange_builder_view() {
@@ -199,7 +199,7 @@ function it_exchange_is_checkout_builder_view() {
  * Builder theme callback to determine if this a specfic product type singular view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.6.2
  * @return boolean
 */
 function it_exchange_is_builder_product_type_view( $type ) {
