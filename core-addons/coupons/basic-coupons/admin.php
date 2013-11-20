@@ -94,6 +94,8 @@ function it_exchange_basic_coupons_save_coupon() {
 	$data['post_meta']['_it-basic-end-date']       = $data['end-date'];
 	$data['post_meta']['_it-basic-limit-quantity'] = $data['limit-quantity'];
 	$data['post_meta']['_it-basic-quantity']       = $data['quantity'];
+	$data['post_meta']['_it-basic-limit-product']  = $data['limit-product'];
+	$data['post_meta']['_it-basic-product-id']     = $data['product-id'];
 	unset( $data['code'] );
 	unset( $data['amount-number'] );
 	unset( $data['amount-type'] );
@@ -101,6 +103,8 @@ function it_exchange_basic_coupons_save_coupon() {
 	unset( $data['end-date'] );
 	unset( $data['limit-quantity'] );
 	unset( $data['quantity'] );
+	unset( $data['limit-product'] );
+	unset( $data['product-id'] );
 
 	if ( $post_id = it_exchange_add_coupon( $data ) ) {
 		wp_safe_redirect( add_query_arg( array( 'post_type' => 'it_exchange_coupon' ), get_admin_url() . 'edit.php' ) );
@@ -127,6 +131,8 @@ function it_exchange_basic_coupons_data_is_valid() {
 		it_exchange_add_message( 'error', __( 'Coupon Discount must be a postive number', 'LION' ) );
 	if ( ! empty( $data['limit-quantity'] ) && ! is_numeric( $data['quantity'] ) )
 		it_exchange_add_message( 'error', __( 'Available Coupons must be a number', 'LION' ) );
+	if ( ! empty( $data['limit-product'] ) && ! it_exchange_get_product( $data['product-id'] ) )
+		it_exchange_add_message( 'error', __( 'Please select a product.', 'LION' ) );
 
 	return ! it_exchange_has_messages( 'error' );
 }
@@ -219,6 +225,8 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		$values['end-date']       = $coupon->end_date;
 		$values['limit-quantity'] = $coupon->limit_quantity;
 		$values['quantity']       = $coupon->quantity;
+		$values['limit-product']  = $coupon->limit_product;
+		$values['product-id']     = $coupon->product_id;
 	}
 
 	$errors = it_exchange_get_messages( 'error' );
@@ -288,7 +296,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 				<div class="field limit-quantity">
 					<?php $form->add_check_box( 'limit-quantity' ); ?>
 					<label for="limit-quantity">
-						<?php _e( 'Limit Coupon', 'LION' ); ?>
+						<?php _e( 'Limit number of coupons', 'LION' ); ?>
 						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times this coupon can be used', 'LION' ) ); ?>">i</span>
 					</label>
 				</div>
@@ -296,6 +304,26 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 				<div class="field quantity">
 					<?php $form->add_text_box( 'quantity', array( 'type' => 'number' ) ); ?>
 					<span class="tip" title="<?php _e( 'How many times can this coupon be used before it is disabled?', 'LION' ); ?>">i</span>
+				</div>
+
+				<div class="field limit-product">
+					<?php $form->add_check_box( 'limit-product' ); ?>
+					<label for="limit-product">
+						<?php _e( 'Limit to a specific product', 'LION' ); ?>
+						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the coupon discount to a specific product price, not the cart total', 'LION' ) ); ?>">i</span>
+					</label>
+				</div>
+
+				<div class="field product-id">
+					<?php 
+					$product_options = array( 0 => __( 'Select a product', 'LION' ) );
+					$products        = it_exchange_get_products();
+					foreach( (array) $products as $id => $product ) {
+						$product_options[$product->ID] = $product->post_title;
+					}
+					?>
+					<?php $form->add_drop_down( 'product-id', $product_options ); ?>
+					<span class="tip" title="<?php _e( 'Select a product to use with this coupon.', 'LION' ); ?>">i</span>
 				</div>
 
 				<div class="field">
@@ -344,6 +372,7 @@ function it_exchange_basic_coupons_product_columns( $existing ) {
 	$columns['it_exchange_coupon_start_date'] = __( 'Start Date', 'LION' );
 	$columns['it_exchange_coupon_end_date']   = __( 'End Date', 'LION' );
 	$columns['it_exchange_coupon_quantity']   = __( 'Available Coupons', 'LION' );
+	$columns['it_exchange_coupon_product_id'] = __( 'Product', 'LION' );
 
 	return $columns;
 }
@@ -362,6 +391,7 @@ function it_exchange_basic_coupons_sortable_columns( $sortables ) {
 	$sortables['it_exchange_coupon_start_date'] = 'it-exchange-coupon-start-date';
 	$sortables['it_exchange_coupon_end_date']   = 'it-exchange-coupon-end-date';
 	$sortables['it_exchange_coupon_quantity']   = 'it-exchange-coupon-quantity';
+	$sortables['it_exchange_coupon_product_id'] = 'it-exchange-coupon-product-id';
 
 	return $sortables;
 }
@@ -395,6 +425,10 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 		case 'it_exchange_coupon_quantity':
 			$quantity_label = ( empty( $coupon->limit_quantity ) ) ? __( 'Unlimited', 'LION' ) : $coupon->quantity;
 			esc_attr_e( $quantity_label );
+			break;
+		case 'it_exchange_coupon_product_id':
+			$product_name = ( empty( $coupon->limit_product ) ) ? __( 'All Products', 'LION' ) : it_exchange_get_product_feature( $coupon->product_id, 'title' );
+			esc_attr_e( $product_name );
 			break;
 	}
 }
@@ -432,6 +466,10 @@ function it_exchange_basic_coupons_modify_wp_query_request_on_edit_php( $request
 				case 'it-exchange-coupon-quantity':
 					$request['orderby']  = 'meta_value_num';
 					$request['meta_key'] = '_it-basic-quantity';
+					break;
+				case 'it-exchange-coupon-product-id':
+					$request['orderby']  = 'meta_value_num';
+					$request['meta_key'] = '_it-basic-product-id';
 					break;
 			}
 		}

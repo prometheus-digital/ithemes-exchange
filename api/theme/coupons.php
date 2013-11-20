@@ -48,7 +48,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 	*/
 	function IT_Theme_API_Coupons() {
 		// Set the current global coupon as a property
-		$this->coupon = empty( $GLOBALS['it_exchange']['coupon'] ) ? false : $GLOBALS['it_exchange']['coupon'];
+		$this->coupon = empty( $GLOBALS['it_exchange']['coupon'] ) ? false : it_exchange_get_coupon( $GLOBALS['it_exchange']['coupon']['id'] );
 	}
 
 	/**
@@ -212,14 +212,13 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 	}
 
 	function code( $options=array() ) {
-		return $this->coupon['code'];
+		return $this->coupon->code;
 	}
 
 	function discount( $options=array() ) {
-		if ( 'amount' == $this->coupon['amount_type'] )
-			return it_exchange_format_price( $this->coupon['amount_number'] );
-		else
-			return $this->coupon['amount_number'] . ' ' . $this->coupon['amount_type'];
+		$amount_number = it_exchange_convert_from_database_number( $this->coupon->amount_number );
+
+		return _x( '-', 'LION', 'negative character for amount of money in coupons' ) . it_exchange_basic_coupons_get_total_discount_for_cart();
 	}
 
 	/**
@@ -238,7 +237,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 			'after'  => '',
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-		if ( $label = it_exchange_get_coupon_discount_label( $this->coupon['id'] ) )
+		if ( $label = it_exchange_get_coupon_discount_label( $this->coupon->ID ) )
 			return $options['before'] . $label . $options['after'];
 
 		return '';
@@ -285,7 +284,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 			return $var;
 
 		// Return the requested type
-		$return = it_exchange_get_remove_coupon_html( $options['type'], $this->coupon['code'], array( 'format' => $options['format'], 'class' => $options['class'], 'label' => $options['label'], 'code' => $this->coupon['code'] ) );
+		$return = it_exchange_get_remove_coupon_html( $options['type'], $this->coupon->code, array( 'format' => $options['format'], 'class' => $options['class'], 'label' => $options['label'], 'code' => $this->coupon->code ) );
 
 		if ( $return )
 			return $options['before'] . $return . $options['after'];
@@ -314,12 +313,12 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 
 		// Return boolean if has flag was set
 		if ( $options['has'] )
-			return ! empty( $this->coupon['name'] );
+			return ! empty( $this->coupon->name );
 
-		if ( ! empty( $this->coupon['name'] ) ) {
+		if ( ! empty( $this->coupon->name ) ) {
 
 			$result   = '';
-			$title    = $this->coupon['name'];
+			$title    = $this->coupon->name;
 			$defaults = array(
 				'before' => '<h1 class="coupon-title">',
 				'after'  => '</h1>',
@@ -351,12 +350,12 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 
 		// Return boolean if has flag was set
 		if ( $options['has'] )
-			return ! empty( $this->coupon['limit'] );
+			return ! empty( $this->coupon->limit );
 
-		if ( ! empty( $this->coupon['limit'] ) ) {
+		if ( ! empty( $this->coupon->limit ) ) {
 
 			$result   = '';
-			$limit    = $this->coupon['limit'];
+			$limit    = $this->coupon->limit;
 			$defaults = array(
 				'before' => '<span class="coupon-limit">',
 				'after'  => '</span>',
@@ -388,12 +387,12 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 
 		// Return boolean if has flag was set
 		if ( $options['has'] )
-			return ! empty( $this->coupon['expiration'] );
+			return ! empty( $this->coupon->expiration );
 
-		if ( ! empty( $this->coupon['expiration'] ) ) {
+		if ( ! empty( $this->coupon->expiration ) ) {
 
 			$result     = '';
-			$expiration = $this->coupon['expiration'];
+			$expiration = $this->coupon->expiration;
 			$defaults   = array(
 				'before' => '<span class="coupon-expiration">',
 				'after'  => '</span>',
@@ -423,7 +422,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 	*/
 	function discount_method( $options=array() ) {
 
-		$method = it_exchange_get_coupon_discount_method( $this->coupon['id'] );
+		$method = it_exchange_get_coupon_discount_method( $this->coupon->ID );
 
 		// Return boolean if has flag was set
 		if ( $options['has'] )

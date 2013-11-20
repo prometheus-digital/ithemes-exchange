@@ -29,7 +29,6 @@ jQuery( document ).ready( function($) {
 	// Show hide quantity limit based on checkbox
 	function itExchangeBasicCouponsShowHideQuantity() {
 		var selected = $(this).is( ':checked' );
-		console.log(selected);
 
 		$( '.quantity' ).addClass('hide-if-js');
 		if ( selected ) {
@@ -39,6 +38,19 @@ jQuery( document ).ready( function($) {
 		}
 	}
 	$('#limit-quantity').change(itExchangeBasicCouponsShowHideQuantity).triggerHandler("change");
+
+	// Show hide product limit based on checkbox
+	function itExchangeBasicCouponsShowHideProduct() {
+		var selected = $(this).is( ':checked' );
+
+		$( '.product-id' ).addClass('hide-if-js');
+		if ( selected ) {
+			$(".product-id").removeClass('hide-if-js');
+		} else {
+			$(".product-id").addClass('hide-if-js');
+		}
+	}
+	$('#limit-product').change(itExchangeBasicCouponsShowHideProduct).triggerHandler("change");
 });
 
 /**

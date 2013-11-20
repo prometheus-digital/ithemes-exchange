@@ -38,6 +38,8 @@ function it_exchange_basic_coupons_add_meta_data_to_coupon_object( $data, $objec
 		'end_date'       => '_it-basic-end-date',
 		'limit_quantity' => '_it-basic-limit-quantity',
 		'quantity'       => '_it-basic-quantity',
+		'limit_product'  => '_it-basic-limit-product',
+		'product_id'     => '_it-basic-product-id',
 	);
 
 	// Loop through and add them to the data that will be added as properties to coupon object
@@ -171,6 +173,12 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 		return false;
 	}
 
+	// Abort if product not in cart
+	if ( ! empty( $coupon->limit_product ) && ( it_exchange_get_cart_product_quantity_by_product_id( $coupon->product_id ) < 1 ) ) {
+		it_exchange_add_message( 'error', __( 'Invalid coupon', 'LION' ) );
+		return false;
+	}
+
 	// Abort if not within start and end dates
 	$start_okay = empty( $coupon->start_date ) || strtotime( $coupon->start_date ) <= strtotime( date( 'Y-m-d' ) );
 	$end_okay   = empty( $coupon->end_date ) || strtotime( $coupon->end_date ) >= strtotime( date( 'Y-m-d' ) );
@@ -262,7 +270,7 @@ add_filter( 'it_exchange_get_cart_total', 'it_exchange_basic_coupons_apply_disco
  * @param string $total existing value passed in by WP filter
  * @return string
 */
-function it_exchange_basic_coupons_get_total_discount_for_cart( $discount, $options=array() ) {
+function it_exchange_basic_coupons_get_total_discount_for_cart( $discount=false, $options=array() ) {
 	$defaults = array(
 		'format_price' => true,
 	);
@@ -272,7 +280,25 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount, $opti
 	$subtotal = it_exchange_get_cart_subtotal( false );
 
 	foreach( (array) $coupons as $coupon ) {
-		$discount = ( '%' == $coupon['amount_type'] ) ? $discount + ( ( $coupon['amount_number'] / 100 ) * $subtotal ) : $discount + $coupon['amount_number'];
+		if ( empty( $coupon ) )
+			continue;
+
+		$coupon = it_exchange_get_coupon( $coupon['id'] );
+		$coupon->amount_number = empty( $coupon->amount_number ) ? false : it_exchange_convert_from_database_number( $coupon->amount_number );
+
+		if ( ! empty( $coupon->product_id ) ) {
+			$cart_products = it_exchange_get_cart_products();
+			foreach( (array) it_exchange_get_cart_products() as $cart_product ) {
+				if ( ! empty( $cart_product['product_id'] ) && $cart_product['product_id'] == $coupon->product_id ) {
+					$base_price = it_exchange_get_cart_product_base_price( $cart_product, false );
+					$product_discount = ( '%' == $coupon->amount_type ) ? $discount + ( ( $coupon->amount_number / 100 ) * $base_price ) : $discount + $coupon->amount_number;
+					$product_discount = $product_discount * $cart_product['count'];
+					$discount = $discount + $product_discount;
+				}
+			}
+		} else {
+			$discount = ( '%' == $coupon->amount_type ) ? $discount + ( ( $coupon->amount_number / 100 ) * $subtotal ) : $discount + $coupon->amount_number;
+		}
 	}
 	if ( $options['format_price'] )
 		$discount = it_exchange_format_price( $discount );
