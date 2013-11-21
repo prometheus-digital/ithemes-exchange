@@ -71,7 +71,7 @@ class IT_Exchange_Transaction_Post_Type {
 			),
 			'capabilities'         => array(
 				'edit_posts'        => 'edit_posts',
-				'create_posts'      => 'do_not_allow',
+				'create_posts'      => apply_filters( 'it_exchange_tran_create_posts_capabilities', 'do_not_allow' ),
 				'edit_others_posts' => 'edit_others_posts',
 				'publish_posts'     => 'publish_posts',
 			),
