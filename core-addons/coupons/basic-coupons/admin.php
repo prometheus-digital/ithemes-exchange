@@ -333,7 +333,10 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 			</div>
 		</div>
 		<?php
-	$form->end_form();
+		$form->end_form();
+		?>
+	</div>
+	<?php
 }
 
 /**
