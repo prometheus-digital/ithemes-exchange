@@ -154,10 +154,6 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		);
 
 		// Autocomplete
-		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' );
-		wp_register_script( 'jquery-select-to-autocomplete', $script, array( 'jquery', 'jquery-ui-autocomplete' ) );
-		$style = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/autocomplete.css' );
-		wp_register_style( 'it-exchange-autocomplete-style', $style );
 		wp_enqueue_style( 'it-exchange-autocomplete-style' );
 
 		// Country States sync

@@ -95,16 +95,7 @@ function it_exchange_load_public_scripts( $current_view ) {
 	$purchase_requirements = array_keys( $purchase_requirements );
 
 	$settings = it_exchange_get_option( 'settings_general' );
-
-	// jQuery Zoom
-	wp_register_script( 'jquery-zoom', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.zoom.min.js' ), array( 'jquery' ), false, true );
-
-	// jQuery Colorbox
-	wp_register_script( 'jquery-colorbox', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.colorbox.min.js' ), array( 'jquery' ), false, true );
-
-	// Detect CC Type
-	wp_register_script( 'detect-credit-card-type', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/detect-credit-card-type.js' ), array( 'jquery' ), false, true );
-
+	
 	// Frontend Product JS
 	if ( is_singular( 'it_exchange_prod' ) ) {
 		$script_deps = array();
@@ -127,10 +118,6 @@ function it_exchange_load_public_scripts( $current_view ) {
 		wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type' ), false, true );
 
 		// Register select to autocomplte
-		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' );
-		$style = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/autocomplete.css' );
-		wp_register_script( 'jquery-select-to-autocomplete', $script, array( 'jquery', 'jquery-ui-autocomplete' ) );
-		wp_register_style( 'it-exchange-autocomplete-style', $style );
 		wp_enqueue_style( 'it-exchange-autocomplete-style' );
 
 		// General Checkout
@@ -169,6 +156,30 @@ function it_exchange_load_public_scripts( $current_view ) {
 		wp_enqueue_style( 'it-exchange-child-theme-css', ITUtility::get_url_from_file( $child_theme_css ) );
 }
 add_action( 'wp_enqueue_scripts', 'it_exchange_load_public_scripts' );
+
+/**
+ * Registers generic scripts we might want to use in plugins/addons
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_register_scripts() {
+	// jQuery Zoom
+	wp_register_script( 'jquery-zoom', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.zoom.min.js' ), array( 'jquery' ), false, true );
+
+	// jQuery Colorbox
+	wp_register_script( 'jquery-colorbox', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.colorbox.min.js' ), array( 'jquery' ), false, true );
+
+	// Detect CC Type
+	wp_register_script( 'detect-credit-card-type', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/detect-credit-card-type.js' ), array( 'jquery' ), false, true );
+	
+	// Select to Autocomplete
+	wp_register_script( 'jquery-select-to-autocomplete', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' ), array( 'jquery', 'jquery-ui-autocomplete' ) );
+	wp_register_style( 'it-exchange-autocomplete-style', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/autocomplete.css' ) );
+}
+add_action( 'wp_enqueue_scripts', 'it_exchange_register_scripts', 1 );
+add_action( 'admin_enqueue_scripts', 'it_exchange_register_scripts', 1 );
 
 /**
  * Loads functions.php in theme if it exists
