@@ -1,3 +1,9 @@
+1.6.3 - 2013-11-25 - Packaging Bot (lib/classes)
+	Enhancement: Improved output of ITUtility::print_r() in WordPress 3.8.
+	Enhancement: ITUtility::print_r() now indicates the number of array elements in collapsed arrays and identifies boolean values explicitly.
+	Enhancement: Added the ability for ITForm::add_drop_down() to show divided lists.
+	Bug Fix: Fixed depth cutoff of ITUtility::backtrace().
+	Bug Fix: Fixed broken javascript in error message output. This bug prevented the error message from being collapsed by default, causing the screen to show the message at all times.
 1.6.2 - 2013-11-19 - Glenn Ansley, Elise Alley
 	Don't show shipping address in Payment Details if transaction doesn't include shipping
 	Convert Paypl Standard setting keys to be shorter - This was Chris's fault
@@ -662,9 +668,3 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
-1.6.3 - 2013-11-25 - Packaging Bot (lib/classes)
-	Enhancement: Improved output of ITUtility::print_r() in WordPress 3.8.
-	Enhancement: ITUtility::print_r() now indicates the number of array elements in collapsed arrays and identifies boolean values explicitly.
-	Enhancement: Added the ability for ITForm::add_drop_down() to show divided lists.
-	Bug Fix: Fixed depth cutoff of ITUtility::backtrace().
-	Bug Fix: Fixed broken javascript in error message output. This bug prevented the error message from being collapsed by default, causing the screen to show the message at all times.
