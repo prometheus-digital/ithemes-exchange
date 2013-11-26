@@ -220,7 +220,7 @@ class IT_Exchange_Product_Post_Type {
 
 		// Set the value of the visibility for this product
 		$product_visibility = get_post_meta( $post->ID, '_it-exchange-visibility', true );
-
+		$product_visibility = apply_filters( 'it_exchange_add_ediit_product_visibility', $product_visibility, $post->ID );
 		?>
         <div id="it-exchange-submit-box">
 			<?php do_action('post_submitbox_start'); ?>
