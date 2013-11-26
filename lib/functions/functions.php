@@ -160,7 +160,7 @@ add_action( 'wp_enqueue_scripts', 'it_exchange_load_public_scripts' );
 /**
  * Registers generic scripts we might want to use in plugins/addons
  *
- * @since CHANGEME
+ * @since 1.7.0
  *
  * @return void
 */

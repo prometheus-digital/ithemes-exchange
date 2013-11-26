@@ -1,3 +1,13 @@
+1.7.0 - 2013-11-26 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
+	Updated lib/icon-fonts
+	Introduce MP6 changes for 3.8
+	Add filter to store visibility value on add/edit product screen
+	Added register script/style function to register all third party JS/CSS scripts that might be enqueued by addons
+	Updated: lib/classes
+	Added missing /div in coupons add/edit
+	Change display name of add-on from 'Basic Coupons' to 'Coupons'
+	Allow Coupons to be limited to a specific product.
+	Added filter to create_posts capability in transation post type
 1.6.3 - 2013-11-25 - Packaging Bot (lib/classes)
 	Enhancement: Improved output of ITUtility::print_r() in WordPress 3.8.
 	Enhancement: ITUtility::print_r() now indicates the number of array elements in collapsed arrays and identifies boolean values explicitly.
