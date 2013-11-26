@@ -3,4 +3,4 @@
 	url = git@git.gaarai.com:classes
 [submodule "lib/icon-fonts"]
 	path = lib/icon-fonts
-	url = git@projectpress.net:icon-fonts
+	url = git@git.gaarai.com:icon-fonts
