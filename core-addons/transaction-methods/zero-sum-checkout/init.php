@@ -107,9 +107,6 @@ function it_exchange_zero_sum_checkout_addon_make_payment_button( $options ) {
 	if ( 0 < it_exchange_get_cart_total( false ) )
 		return;
 
-	$general_settings = it_exchange_get_option( 'settings_general' );
-	$stripe_settings = it_exchange_get_option( 'addon_zero_sum_checkout' );
-
 	$products = it_exchange_get_cart_data( 'products' );
 
 	$payment_form = '<form id="zero_sum_checkout_form" action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
