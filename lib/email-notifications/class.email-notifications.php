@@ -149,8 +149,8 @@ class IT_Exchange_Email_Notifications {
 		$headers[] = 'charset=utf-8';
 
 		$subject = do_shortcode( $settings['receipt-email-subject'] );
-		$body    = apply_filters( 'send_purchase_emails_body', $settings['receipt-email-template'] );
-		$body    = apply_filters( 'send_purchase_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body );
+		$body    = apply_filters( 'send_purchase_emails_body', $settings['receipt-email-template'], $transaction );
+		$body    = apply_filters( 'send_purchase_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body, $transaction );
 		$body    = $this->body_header() . '<div>' . wpautop( do_shortcode( $body ) ) . '</div>' . $this->body_footer();
 
 		wp_mail( $this->user->data->user_email, strip_tags( $subject ), $body, $headers );
@@ -159,8 +159,8 @@ class IT_Exchange_Email_Notifications {
 		if ( $send_admin_email && ! empty( $settings['notification-email-address'] ) ) {
 
 			$subject = do_shortcode( $settings['admin-email-subject'] );
-			$body    = apply_filters( 'send_admin_emails_body', $settings['admin-email-template'] );
-			$body    = apply_filters( 'send_admin_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body );
+			$body    = apply_filters( 'send_admin_emails_body', $settings['admin-email-template'], $transaction );
+			$body    = apply_filters( 'send_admin_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body, $transaction );
 			$body    = $this->body_header() . wpautop( do_shortcode( $body ) ) . $this->body_footer();
 
 			$emails = explode( ',', $settings['notification-email-address'] );
