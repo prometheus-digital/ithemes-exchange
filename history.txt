@@ -1,3 +1,5 @@
+1.7.1 - 2013-12-02 - Glenn Ansley
+	Add transaction object to admin_email filters
 1.7.0 - 2013-11-26 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
 	Updated lib/icon-fonts
 	Introduce MP6 changes for 3.8
