@@ -680,3 +680,7 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
+1.7.2 - 2013-12-02 - Packaging Bot (lib/classes)
+	Enhancement: Added ITUtility::screen_icon() to allow for easily preparing code for the WordPress 3.8 release. It only runs the screen_icon() function when WordPress is older than 3.8, thus avoiding the deprecation notice.
+	Bug Fix: Removed Javascript notices created by the tooltips.
+	Bug Fix: Removed Javascript notices created by ITDialog thickboxes.
