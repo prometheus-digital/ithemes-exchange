@@ -131,7 +131,7 @@ class IT_Exchange_Email_Notifications {
 
 		$this->transaction_id = $transaction->ID;
 		$this->customer_id    = it_exchange_get_transaction_customer_id( $this->transaction_id );
-		$this->user           = it_exchange_get_current_customer(); //get_userdata( $this->customer_id );
+		$this->user           = it_exchange_get_customer( $this->customer_id );
 
 		$settings = it_exchange_get_option( 'settings_email' );
 
