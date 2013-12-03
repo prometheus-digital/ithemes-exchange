@@ -54,6 +54,8 @@ function it_exchange_locate_template( $template_names, $load=false, $require_onc
 	if ( ! $template_part && in_array( 'product.php', $template_names ) && ! in_array( 'single-it_exchange_prod.php', $template_names ) )
 		$template_names[] = 'single-it_exchange_prod.php';
 
+	$template_names = apply_filters( 'it_exchange_locate_template_template_names', $template_names, $load, $require_once, $template_part );
+
 	// Define possible template paths
 	$possible_template_paths = array(
 		// Exchange directory
