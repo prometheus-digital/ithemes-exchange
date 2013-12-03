@@ -493,7 +493,6 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			);
 
 			$options = ITUtility::merge_defaults( $options, $defaults );
-			$output = array();
 
 			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
 
