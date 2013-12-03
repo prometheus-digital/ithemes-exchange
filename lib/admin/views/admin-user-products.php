@@ -44,8 +44,9 @@ foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
 		'downloads'        => $downloads,
 	);
 }
-?>
 
+do_action( 'it-exchange-before-admin-user-products' );
+?>
 <div class="user-edit-block <?php echo $tab; ?>-user-edit-block">
 	<div class="heading-row block-row">
 		<?php $column = 0; ?>
@@ -105,3 +106,5 @@ foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
 		</div>
 	<?php endforeach; ?>
 </div>
+<?php
+do_action( 'it-exchange-after-admin-user-products' );
