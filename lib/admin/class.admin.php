@@ -1462,6 +1462,8 @@ Order: %s
 				$post_type = NULL;
 		}
 
+		wp_register_script( 'it-exchange-dialog', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tips.js', array( 'jquery-ui-dialog' ) );
+		
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			$deps = array( 'post', 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'autosave' );
 			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', $deps );
@@ -1483,7 +1485,7 @@ Order: %s
 			wp_enqueue_script( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-ons.js', $deps );
 		} else if ( 'exchange_page_it-exchange-settings' === $hook_suffix ) {
 			if ( empty( $_GET['tab'] ) ) {
-				$deps = array( 'jquery-ui-tooltip' );
+				$deps = array( 'jquery-ui-tooltip', 'it-exchange-dialog' );
 				wp_enqueue_script( 'it-exchange-settings-general', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/settings-general.js', $deps );
 				wp_localize_script( 'it-exchange-settings-general', 'settingsGenearlL10n', array(
 						'delteConfirmationText'  => __( 'You have checked the option to "Reset ALL data". Are you should you want to delete all Exchange products, transactions, and settings?', 'LION' ),
