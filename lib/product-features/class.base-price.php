@@ -114,7 +114,7 @@ class IT_Exchange_Base_Price {
 
 		// Set description
 		$description = __( 'Price', 'LION' );
-		$description = apply_filters( 'it_exchange_base-price_addon_metabox_description', $description );
+		$description = apply_filters( 'it_exchange_base-price_addon_metabox_description', $description, $post );
 
 		$settings = it_exchange_get_option( 'settings_general' );
 		$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
