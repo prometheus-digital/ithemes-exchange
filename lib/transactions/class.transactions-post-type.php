@@ -473,8 +473,8 @@ class IT_Exchange_Transaction_Post_Type {
 			</div>
 		<?php endif; ?>
 
-		<div class="products">
-			<div class="products-header spacing-wrapper">
+		<div class="products bottom-border">
+			<div class="products-header spacing-wrapper bottom-border">
 				<span><?php _e( 'Products', 'LION' ); ?></span>
 				<span class="right"><?php _e( 'Amount', 'LION' ); ?></span>
 			</div>
@@ -529,7 +529,7 @@ class IT_Exchange_Transaction_Post_Type {
 			<?php endforeach; ?>
 		</div>
 
-		<div class="transaction-costs clearfix spacing-wrapper">
+		<div class="transaction-costs clearfix spacing-wrapper bottom-border">
 			<div class="transaction-costs-subtotal right clearfix">
 				<div class="transaction-costs-subtotal-label left"><?php _e( 'Subtotal', 'LION' ); ?></div>
 				<div class="transaction-costs-subtotal-price">
@@ -585,7 +585,7 @@ class IT_Exchange_Transaction_Post_Type {
 		</div>
 
 		<?php if ( it_exchange_transaction_includes_shipping( $post ) ) : ?>
-			<div class="transaction-shipping-summary clearfix spacing-wrapper">
+			<div class="transaction-shipping-summary clearfix spacing-wrapper bottom-border">
 				<div class="payment-shipping left">
 					<div class="payment-shipping-label"><?php _e( 'Shipping Method', 'LION' ); ?></div>
 					<div class="payment-shipping-name">
@@ -606,7 +606,7 @@ class IT_Exchange_Transaction_Post_Type {
 			</div>
 		<?php endif; ?>
 
-		<div class="transaction-summary clearfix spacing-wrapper">
+		<div class="transaction-summary clearfix spacing-wrapper bottom-border">
 			<div class="payment-method left">
 				<div class="payment-method-label"><?php _e( 'Payment Method', 'LION' ); ?></div>
 				<div class="payment-method-name">
@@ -636,7 +636,7 @@ class IT_Exchange_Transaction_Post_Type {
 		<?php
 		if ( it_exchange_transaction_status_can_be_manually_changed( $post ) ) :
 			?>
-			<div class="transaction-status-update clearfix spacing-wrapper hide-if-no-js">
+			<div class="transaction-status-update clearfix spacing-wrapper hide-if-no-js bottom-border">
 				<div class="update-status-label left">
 					<?php _e( 'Change Status', 'LION' ); ?>
 					<span class="tip" title="<?php _e( 'The customer will receive an email When this is changed from a status that is not cleared for delivery to a status that is cleared for delivery', 'LION' ); ?>">i</span>
