@@ -1151,7 +1151,7 @@ add_filter( 'wp_login_errors', 'it_exchange_redirect_to_correct_login_form_on_er
  * @return string
 */
 function it_exchange_admin_tooltip( $text, $echo=true, $indicator='i' ) {
-	$tooltip = '<span class="tip" data-tip-content="' . esc_attr( $text ) . '">' . $indicator . '</span>';
+	$tooltip = '<span class="it-exchange-tip" data-tip-content="' . esc_attr( $text ) . '">' . $indicator . '</span>';
 	$tooltip = apply_filters( 'it_exchange_admin_tooltip', $tooltip, $text, $indicator );
 
 	if ( true === $echo )
