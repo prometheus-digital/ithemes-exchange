@@ -28,10 +28,11 @@
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="company-tax-id"><?php _e( 'Company Tax ID', 'LION' ) ?> <span class="tip" title="<?php _e( 'In the U.S., this is your Federal Tax ID Number.', 'LION' ); ?>" data-tip-content="<?php _e( 'In the U.S., this is your Federal Tax ID Number.', 'LION' ); ?>">i</span></label></th>
+				<?php $tax_link = 'http://www.irs.gov/Businesses/Small-Businesses-&amp;-Self-Employed/Employer-ID-Numbers-(EINs)-"'; ?>
+				<th scope="row"><label for="company-tax-id"><?php _e( 'Company Tax ID', 'LION' ) ?> <?php it_exchange_admin_tooltip( sprintf( __( 'In the U.S., this is your Federal %sTax ID Number%s.', 'LION' ), '<a href="' . $tax_link . '" target="_blank">', '</a>' ) ); ?></label></th>
 				<td>
 					<?php $form->add_text_box( 'company-tax-id', array( 'class' => 'normal-text' ) ); ?>
-                    <p class="description"><a href="http://www.irs.gov/Businesses/Small-Businesses-&amp;-Self-Employed/Employer-ID-Numbers-(EINs)-" target="_blank"><?php _e( 'Click here for more info about obtaining a Tax ID in the US', 'LION' ); ?></a></p>
+					<p class="description"><a href="http://www.irs.gov/Businesses/Small-Businesses-&amp;-Self-Employed/Employer-ID-Numbers-(EINs)-" target="_blank"><?php _e( 'Click here for more info about obtaining a Tax ID in the US', 'LION' ); ?></a></p>
 				</td>
 			</tr>
 			<tr valign="top">

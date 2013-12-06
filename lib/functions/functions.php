@@ -1140,6 +1140,26 @@ function it_exchange_redirect_to_correct_login_form_on_error( $error ) {
 }
 add_filter( 'wp_login_errors', 'it_exchange_redirect_to_correct_login_form_on_error', 99 );
 
+/**
+ * Prints a tooltip in the admin
+ *
+ * @since CHANGEME
+ *
+ * @param string  $text       the HTML for the tooltip. Can be a plaintext string or HTML
+ * @param boolean $echo       echo the tooltip? defaults to true
+ * @param string  $indicator  the character used to indicate a tooltip is avaialable. Defaults to 'i'
+ * @return string
+*/
+function it_exchange_admin_tooltip( $text, $echo=true, $indicator='i' ) {
+	$tooltip = '<span class="tip" data-tip-content="' . esc_attr( $text ) . '">' . $indicator . '</span>';
+	$tooltip = apply_filters( 'it_exchange_admin_tooltip', $tooltip, $text, $indicator );
+
+	if ( true === $echo )
+		echo $tooltip;
+
+	return $tooltip; 
+}
+
 /************************************
  * THE FOLLOWING API METHODS AREN'T READY
  * FOR PRIMETIME YET SO THEY LIVE HERE FOR NOW.
