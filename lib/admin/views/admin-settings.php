@@ -36,13 +36,13 @@
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="company-email"><?php _e( 'Company Email', 'LION' ) ?> <span class="tip" title="<?php _e( 'Where do you want customer inquiries to go?', 'LION' ); ?>">i</span></label></th>
+				<th scope="row"><label for="company-email"><?php _e( 'Company Email', 'LION' ) ?> <?php it_exchange_admin_tooltip( __( 'Where do you want customer inquiries to go?', 'LION' ) ); ?></label></th>
 				<td>
 					<?php $form->add_text_box( 'company-email', array( 'class' => 'normal-text' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="company-phone"><?php _e( 'Company Phone', 'LION' ) ?> <span class="tip" title="<?php _e( 'This is your main customer service line.', 'LION' ); ?>">i</span></label></th>
+				<th scope="row"><label for="company-phone"><?php _e( 'Company Phone', 'LION' ) ?> <?php it_exchange_admin_tooltip( __( 'This is your main customer service line.', 'LION' ) ); ?></label></th>
 				<td>
 					<?php $form->add_text_box( 'company-phone', array( 'class' => 'normal-text' ) ); ?>
 				</td>
@@ -54,13 +54,13 @@
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="company-base-country"><?php _e( 'Base Country', 'LION' ) ?> <span class="tip" title="<?php esc_attr_e( __( 'This is the country where your business is located', 'LION' ) ); ?>">i</span></label></th>
+				<th scope="row"><label for="company-base-country"><?php _e( 'Base Country', 'LION' ) ?> <?php it_exchange_admin_tooltip( __( 'This is the country where your business is located', 'LION' ) ); ?></label></th>
 				<td>
 					<?php $form->add_drop_down( 'company-base-country', it_exchange_get_data_set( 'countries' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="company-base-state"><?php _e( 'Base State / Province', 'LION' ) ?> <span class="tip" title="<?php esc_attr_e( __( 'This is the state / province where your business is located', 'LION' ) ); ?>">i</span></label></th>
+				<th scope="row"><label for="company-base-state"><?php _e( 'Base State / Province', 'LION' ) ?> <?php it_exchange_admin_tooltip( __( 'This is the state / province where your business is located', 'LION' ) ); ?></label></th>
 				<td class="company-base-state-field-td">
 					<?php
 					$country = $form->get_option( 'company-base-country' );
@@ -120,7 +120,7 @@
                 	<label for="site-registration-it"><?php _e( 'Use Exchange Registration Only', 'LION' ) ?></label>
                     <br />
 					<?php $form->add_radio( 'site-registration', array( 'value' => 'wp' ) ); ?>
-                	<label for="site-registration-wp"><?php _e( 'Use WordPress Registration Setting', 'LION' ) ?></label><span class="tip" title="<?php esc_attr_e( __( 'In order to use this setting, you will first need to check the "Anyone can register" checkbox from the WordPress General Settings page to allow site membership.', 'LION' ) ); ?>">i</span>
+                	<label for="site-registration-wp"><?php _e( 'Use WordPress Registration Setting', 'LION' ) ?></label><?php it_exchange_admin_tooltip( __( 'In order to use this setting, you will first need to check the "Anyone can register" checkbox from the WordPress General Settings page to allow site membership.', 'LION' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -166,7 +166,7 @@
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="product-gallery-zoom"><?php _e( 'Enable Zoom', 'LION' ) ?><span class="tip" title="<?php _e( 'Zoom will only work properly when uploading large images.', 'LION' ); ?>">i</span></label></th>
+				<th scope="row"><label for="product-gallery-zoom"><?php _e( 'Enable Zoom', 'LION' ) ?><?php it_exchange_admin_tooltip( __( 'Zoom will only work properly when uploading large images.', 'LION' ) ); ?></label></th>
 				<td>
 					<?php $form->add_yes_no_drop_down( 'enable-gallery-zoom' ); ?>
 					<div class="product-gallery-zoom-actions <?php echo ( $form->_options['enable-gallery-zoom'] != 1 ) ? 'hidden' : ''; ?>">
