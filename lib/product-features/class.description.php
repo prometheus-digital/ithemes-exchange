@@ -105,9 +105,10 @@ class IT_Exchange_Product_Feature_Product_Description {
 	 * @return void
 	*/
 	function print_metabox( $post ) {
+		$label_text   = apply_filters( 'it_exchange_add_edit_product_description_label', __( 'Product Description', 'LION' ), $post );
+		$tooltip_text = apply_filters( 'it_exchange_add_edit_product_description_tooltip', __( 'This is a quick, descriptive summary of what your product does and is usually 3-5 sentences long. To add additional info, use the Advanced button below to make an extended description.', 'LION' ), $post );
 		?>
-		<label for="it-exchange-product-description-field"><?php _e( 'Product Description', 'LION' ); ?> <span class="tip" title="
-		<?php _e( 'This is a quick, descriptive summary of what your product does and is usually 3-5 sentences long. To add additional info, use the Advanced button below to make an extended description.', 'LION' ); ?>">i</span></label>
+		<label for="it-exchange-product-description-field"><?php echo $label_text; ?> <span class="tip" title="<?php esc_attr_e( $tooltip_text ); ?>">i</span></label>
 		<textarea name="it-exchange-product-description" id="it-exchange-product-description-field" tabindex="3" rows="<?php echo apply_filters( 'it_exchange_product_descripiton_textarea_rows', '10' ); ?>" placeholder="<?php echo apply_filters( 'it_exchange_product_description_placeholder', __( 'Enter description...' ), $post ); ?>"><?php echo esc_html( htmlspecialchars( $this->get_feature ( false, $post->ID ) ) ); ?></textarea>
 		<?php
 	}
