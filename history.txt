@@ -1,3 +1,15 @@
+1.7.3 - 2013-12-09 - Lew Ayotte, Glenn Ansley, Justin Kopepasah, Elise Alley
+	Pass current product to ajax script when checkout is clicked
+	Refactor the tooltip
+	Standardize the transaction details page styles.
+	Add filter to Product Title label and tooltip on Add/Edit Product screen.
+	Pass $description variable in existing description filter for Base Price on product Add/Edit screen.
+	Changed user profile exchange label
+	Removed some unused code
+	Make template names filterable
+	Fixing bug causing purchase notifications to be sent to the 'current user' rather thant he transaction's customer ID
+	Added some actions for manual purchases to user products view
+	Updated lib/classes
 1.7.2 - 2013-12-02 - Packaging Bot (lib/classes)
 	Enhancement: Added ITUtility::screen_icon() to allow for easily preparing code for the WordPress 3.8 release. It only runs the screen_icon() function when WordPress is older than 3.8, thus avoiding the deprecation notice.
 	Bug Fix: Removed Javascript notices created by the tooltips.
