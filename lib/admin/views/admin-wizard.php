@@ -23,7 +23,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 			</div>
 			<div class="fields">
 				<div class="field product-types">
-					<p class="section-lable"><?php _e( 'What are you going to sell?', 'LION' ); ?><span class="tip" title="<?php _e( "You can always add or remove these later on the Add-ons page.", 'LION' ); ?>">i</span></p>
+					<p class="section-label"><?php _e( 'What are you going to sell?', 'LION' ); ?><span class="tip" title="<?php _e( "You can always add or remove these later on the Add-ons page.", 'LION' ); ?>">i</span></p>
 					<ul class="clearfix">
 						<?php
 							$addons = it_exchange_get_addons( array( 'category' => 'product-type', 'show_required' => false ) );
@@ -95,7 +95,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 				?>
 
 				<div class="field shipping-types <?php esc_attr_e( $show_shipping ); ?>">
-					<p class="section-lable"><?php _e( 'How will you ship your products?', 'LION' ); ?><span class="tip" title="<?php _e( "You can always add or remove these later on the Shipping Settings page.", 'LION' ); ?>">i</span></p>
+					<p class="section-label"><?php _e( 'How will you ship your products?', 'LION' ); ?><span class="tip" title="<?php _e( "You can always add or remove these later on the Shipping Settings page.", 'LION' ); ?>">i</span></p>
 					<ul class="clearfix">
 						<?php
 							$addons = it_exchange_get_addons( array( 'category' => 'shipping', 'show_required' => false ) );
@@ -167,7 +167,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 				?>
 
 				<div class="field payments">
-					<p class="section-lable"><?php _e( 'How will you accept payments?', 'LION' ); ?><span class="tip" title="<?php _e( "Choose your preferred payment gateway for processing transactions. You can select more than one option but it's not recommended.", 'LION' ); ?>">i</span></p>
+					<p class="section-label"><?php _e( 'How will you accept payments?', 'LION' ); ?><span class="tip" title="<?php _e( "Choose your preferred payment gateway for processing transactions. You can select more than one option but it's not recommended.", 'LION' ); ?>">i</span></p>
 					<ul class="clearfix">
 						<?php
 							$addons = it_exchange_get_addons( array( 'category' => 'transaction-methods', 'show_required' => false ) );
