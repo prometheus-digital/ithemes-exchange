@@ -69,7 +69,7 @@
 .it-exchange-super-widget .it-exchange-sw-shipping-address .it-exchange-submit{margin:1em 0;}
 .it-exchange-super-widget .cart-shipping-method-existing{font-size:1em;}
 .it-exchange-super-widget .cart-shipping-method-existing a{float:right;}
-.it-exchange-super-widget .cart-shipping-method-existing p{margin-bottom:0;text-align:left;}
+.it-exchange-super-widget .cart-shipping-method-existing p{margin:0;text-align:left;}
 .it-exchange-super-widget .it-exchange-checkout-shipping-method-purchase-requirement{margin:0;}
 .it-exchange-super-widget .it-exchange-super-widget-shipping-method-cancel-action{display:block;padding:1em;background:#FFF;border-top:1px solid #F0F0F0;text-align:center;font-size:.8em;}
 
