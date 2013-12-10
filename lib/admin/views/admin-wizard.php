@@ -10,7 +10,7 @@ $flat_rate_cost = empty( $flat_rate_cost['flat-rate-shipping-amount'] ) ? it_exc
 $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 ?>
 <div class="wrap">
-	<?php screen_icon( 'it-exchange' );  ?>
+	<?php ITUtility::screen_icon( 'it-exchange' );  ?>
 
 	<h2>iThemes Exchange <?php _e( 'Setup', 'LION' ); ?></h2>
 

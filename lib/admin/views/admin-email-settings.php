@@ -11,7 +11,7 @@ global $wp_version;
 ?>
 <div class="wrap">
 	<?php
-	screen_icon( 'it-exchange' );
+	ITUtility::screen_icon( 'it-exchange' );
 	$this->print_general_settings_tabs();
 	do_action( 'it_exchange_general_settings_email_page_top' );
 	$form->start_form( $form_options, 'exchange-email-settings' );

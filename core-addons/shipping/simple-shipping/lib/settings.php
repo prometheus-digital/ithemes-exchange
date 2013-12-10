@@ -15,7 +15,7 @@ function it_exchange_simple_shipping_settings_callback() {
 	// Store Owners should never arrive here. Add a link just in case the do somehow
 	?>
 	<div class="wrap">
-		<?php screen_icon( 'it-exchange' ); ?>
+		<?php ITUtility::screen_icon( 'it-exchange' ); ?>
 		<h2><?php _e( 'Shipping', 'LION' ); ?></h2>
 		<?php
 		$url = add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping' ), esc_url( admin_url( 'admin.php' ) ) );

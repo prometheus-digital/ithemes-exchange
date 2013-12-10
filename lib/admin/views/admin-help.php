@@ -6,7 +6,7 @@
 */
 ?>
 <div class="wrap help-wrap">
-	<?php screen_icon( 'it-exchange' );  ?>
+	<?php ITUtility::screen_icon( 'it-exchange' );  ?>
 	<h2><?php _e( 'Help and Resources', 'LION' ); ?></h2>
 
 	<p class="top-description"><?php printf( __( 'We\'ve built %s to simplify ecommerce for WordPress. However, ecommerce is not always easy, so we\'ve taken the time to create some resources to help you get started.', 'LION' ), '<a title="iThemes Exchange" href="http://ithemes.com/exchange/" target="_blank">iThemes Exchange</a>' ); ?></p>

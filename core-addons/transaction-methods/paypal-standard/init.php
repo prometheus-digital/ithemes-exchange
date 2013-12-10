@@ -941,7 +941,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 
 		?>
 		<div class="wrap">
-			<?php screen_icon( 'it-exchange' ); ?>
+			<?php ITUtility::screen_icon( 'it-exchange' ); ?>
 			<h2><?php _e( 'PayPal Standard Settings - Basic', 'LION' ); ?></h2>
 
 			<?php do_action( 'it_exchange_paypal-standard_settings_page_top' ); ?>

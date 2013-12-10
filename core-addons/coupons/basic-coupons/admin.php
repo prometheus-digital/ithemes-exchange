@@ -251,7 +251,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 	?>
 	<div class="wrap">
 		<?php
-		screen_icon( 'it-exchange-coupons' );
+		ITUtility::screen_icon( 'it-exchange-coupons' );
 		echo '<h2>' . $heading . '</h2>';
 		$form->start_form( $form_options, 'it-exchange-basic-coupons-add-edit-coupon' );
 

@@ -7,7 +7,7 @@
 */
 ?>
 <div id="it-exchange-add-ons-wrap" class="wrap">
-	<?php screen_icon( 'it-exchange-add-ons' );  ?>
+	<?php ITUtility::screen_icon( 'it-exchange-add-ons' );  ?>
 
 	<h2>Add-ons</h2>
 	<p class="top-description"><?php _e( 'Add-ons are features that you can add or remove depending on your needs. Selling your stuff should only be as complicated as you need it to be. If you have already purchased additional Exchange add-ons, please upload and activate them through the WordPress plugins menu.', 'LION' ); ?></p>
