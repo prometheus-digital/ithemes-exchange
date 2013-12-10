@@ -1241,6 +1241,153 @@ function it_exchange_add_remote_image_to_product_images( $url, $product_id, $des
 	@unlink( $file_array['temp_name'] );
 	return $id;
 }
+
+
+if ( !function_exists( 'it_exchange_dropdown_taxonomies' ) ) {
+
+	function it_exchange_dropdown_taxonomies( $args = '' ) {
+	    $defaults = array(
+	        'show_option_all' => '', 'show_option_none' => '',
+	        'orderby' => 'id', 'order' => 'ASC',
+	        'show_count' => 0,
+	        'hide_empty' => 1, 'child_of' => 0,
+	        'exclude' => '', 'echo' => 1,
+	        'selected' => 0, 'hierarchical' => 0,
+	        'name' => 'tax', 'id' => '',
+	        'class' => 'postform', 'depth' => 0,
+	        'tab_index' => 0, 'taxonomy' => 'category',
+	        'hide_if_empty' => false
+	    );
+	
+	    $defaults['selected'] = ( is_tax() ) ? get_query_var( 'term' ) : 0;
+	
+	    $r = wp_parse_args( $args, $defaults );
+	
+	    if ( !isset( $r['pad_counts'] ) && $r['show_count'] && $r['hierarchical'] ) {
+	        $r['pad_counts'] = true;
+	    }
+	
+	    extract( $r );
+	
+	    $tab_index_attribute = '';
+	    if ( (int) $tab_index > 0 )
+	        $tab_index_attribute = " tabindex=\"$tab_index\"";
+	
+	    $terms = get_terms( $taxonomy, $r );
+	    $name = esc_attr( $name );
+	    $class = esc_attr( $class );
+	    $id = $id ? esc_attr( $id ) : $name;
+	
+	    if ( ! $r['hide_if_empty'] || ! empty($terms) )
+	        $output = "<select name='$name' id='$id' class='$class' $tab_index_attribute>\n";
+	    else
+	        $output = '';
+	
+	    if ( empty($terms) && ! $r['hide_if_empty'] && !empty($show_option_none) ) {
+	        $show_option_none = apply_filters( 'list_cats', $show_option_none );
+	        $output .= "\t<option value='-1' selected='selected'>$show_option_none</option>\n";
+	    }
+	
+	    if ( ! empty( $terms ) ) {
+	
+	        if ( $show_option_all ) {
+	            $show_option_all = apply_filters( 'list_cats', $show_option_all );
+	            $selected = ( '0' === strval($r['selected']) ) ? " selected='selected'" : '';
+	            $output .= "\t<option value='0'$selected>$show_option_all</option>\n";
+	        }
+	
+	        if ( $show_option_none ) {
+	            $show_option_none = apply_filters( 'list_cats', $show_option_none );
+	            $selected = ( '-1' === strval($r['selected']) ) ? " selected='selected'" : '';
+	            $output .= "\t<option value='-1'$selected>$show_option_none</option>\n";
+	        }
+	
+	        if ( $hierarchical )
+	            $depth = $r['depth'];  // Walk the full depth.
+	        else
+	            $depth = -1; // Flat.
+	
+	        $output .= it_exchange_walk_product_category_dropdown_tree( $terms, $depth, $r );
+	    }
+	
+	    if ( ! $r['hide_if_empty'] || ! empty($terms) )
+	        $output .= "</select>\n";
+	
+	    $output = apply_filters( 'wp_dropdown_cats', $output );
+	
+	    if ( $echo )
+	        echo $output;
+	
+	    return $output;
+	}
+
+}
+
+/**
+ * Retrieve HTML dropdown (select) content for category list.
+ *
+ * @uses Walker_CategoryDropdown to create HTML dropdown content.
+ * @since CHANGEME
+ * @see Walker_CategoryDropdown::walk() for parameters and return description.
+ */
+function it_exchange_walk_product_category_dropdown_tree() {
+    $args = func_get_args();
+    // the user's options are the third parameter
+    if ( empty($args[2]['walker']) || !is_a($args[2]['walker'], 'Walker') )
+        $walker = new Walker_ProductCategoryDropdown;
+    else
+        $walker = $args[2]['walker'];
+
+    return call_user_func_array(array( &$walker, 'walk' ), $args );
+}
+
+/**
+ * Create HTML dropdown list of IT Exchange Product Categories.
+ *
+ * @since CHANGEME
+ * @uses Walker
+ */
+class Walker_ProductCategoryDropdown extends Walker {
+    /**
+     * @see Walker::$tree_type
+     * @since CHANGEME
+     * @var string
+     */
+    var $tree_type = 'category';
+
+    /**
+     * @see Walker::$db_fields
+     * @since CHANGEME
+     * @todo Decouple this
+     * @var array
+     */
+    var $db_fields = array ('parent' => 'parent', 'id' => 'term_id');
+
+    /**
+     * Start the element output.
+     *
+     * @see Walker::start_el()
+     * @since CHANGEME
+     *
+     * @param string $output   Passed by reference. Used to append additional content.
+     * @param object $category Category data object.
+     * @param int    $depth    Depth of category. Used for padding.
+     * @param array  $args     Uses 'selected' and 'show_count' keys, if they exist. @see wp_dropdown_categories()
+     */
+    function start_el( &$output, $category, $depth = 0, $args = array(), $id = 0 ) {
+        $pad = str_repeat('&nbsp;', $depth * 3);
+
+        $cat_name = apply_filters('list_cats', $category->name, $category);
+        $output .= "\t<option class=\"level-$depth\" value=\"".$category->slug."\"";
+        if ( $category->slug == $args['selected'] )
+            $output .= ' selected="selected"';
+        $output .= '>';
+        $output .= $pad.$cat_name;
+        if ( $args['show_count'] )
+            $output .= '&nbsp;&nbsp;('. $category->count .')';
+        $output .= "</option>\n";
+    }
+}
 /************************************
  * THE PREVIOUS API METHODS AREN'T READY
  * FOR PRIMETIME YET SO THEY LIVE HERE FOR NOW.

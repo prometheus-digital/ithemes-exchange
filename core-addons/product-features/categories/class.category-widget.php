@@ -35,18 +35,20 @@ class IT_Exchange_Category_Widget extends WP_Widget {
 		if ( $d ) {
 			$cat_args['show_option_none'] = __( 'Select Product Category', 'LION' );
 			$cat_args['taxonomy'] = 'it_exchange_category';
-			wp_dropdown_categories( apply_filters('it_exchange_widget_categories_dropdown_args', $cat_args) );
+			$cat_args['id'] = 'product_cats';
+			it_exchange_dropdown_taxonomies( apply_filters('it_exchange_widget_categories_dropdown_args', $cat_args) );
 
 ?>
 	<script type='text/javascript'>
 		/* <![CDATA[ */
-		var dropdown = document.getElementById("cat");
-		function onCatChange() {
-			if ( dropdown.options[dropdown.selectedIndex].value > 0 ) {
-				location.href = "<?php echo home_url(); ?>/?cat="+dropdown.options[dropdown.selectedIndex].value;
+		var exchange_cat_dropdown = document.getElementById("product_cats");
+		function onProductCatChange() {
+			if ( exchange_cat_dropdown.options[exchange_cat_dropdown.selectedIndex].value != 0 
+				&& exchange_cat_dropdown.options[exchange_cat_dropdown.selectedIndex].value != -1 ) {
+				location.href = "<?php echo home_url(); ?>/?taxonomy=it_exchange_category&term="+exchange_cat_dropdown.options[exchange_cat_dropdown.selectedIndex].value;
 			}
 		}
-		dropdown.onchange = onCatChange;
+		exchange_cat_dropdown.onchange = onProductCatChange;
 		/* ]]> */
 	</script>
 <?php
