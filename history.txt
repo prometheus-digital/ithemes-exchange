@@ -1,3 +1,5 @@
+1.7.4 - 2013-12-11 - Packaging Bot (lib/icon-fonts)
+	Initial Release Version
 1.7.3 - 2013-12-09 - Lew Ayotte, Glenn Ansley, Justin Kopepasah, Elise Alley
 	Pass current product to ajax script when checkout is clicked
 	Refactor the tooltip
@@ -696,5 +698,3 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
-1.7.4 - 2013-12-11 - Packaging Bot (lib/icon-fonts)
-	Initial Release Version
