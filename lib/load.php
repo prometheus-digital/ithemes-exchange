@@ -10,7 +10,7 @@
 require( 'classes/load.php' );
 
 // IT Fonts
-require( $this->_plugin_path . 'lib/icon-fonts/init.php' );
+require( $this->_plugin_path . 'lib/icon-fonts/load.php' );
 
 // Admin Functionality
 require( $this->_plugin_path . 'lib/admin/class.admin.php' );
