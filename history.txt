@@ -696,3 +696,5 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
+1.7.4 - 2013-12-11 - Packaging Bot (lib/icon-fonts)
+	Initial Release Version
