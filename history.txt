@@ -1,3 +1,7 @@
+1.7.8 - 2013-12-12 - Glenn Ansley
+	Fixing some internal submodules. WordPress.org version of Exchange jumpped from 1.7.3 to 1.7.8
+1.7.7 - 2013-12-12 - Packaging Bot (lib/icon-fonts)
+	Initial Release Version
 1.7.6 - 2013-12-12 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
 	Fix line height on remove download button.
 	Fixing purchase quantity advance tab show/hide functionality
@@ -712,5 +716,3 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
-1.7.7 - 2013-12-12 - Packaging Bot (lib/icon-fonts)
-	Initial Release Version
