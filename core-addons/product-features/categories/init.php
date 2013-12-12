@@ -26,7 +26,7 @@ if ( !function_exists( 'create_it_exchange_categories' ) ) {
 			'edit_item'         => __( 'Edit Product Categories', 'LION' ),
 			'update_item'       => __( 'Update Product Categories', 'LION' ),
 			'add_new_item'      => __( 'Add New Product Categories', 'LION' ),
-			'new_item_name'     => __( 'New Product Category', 'LION' ),
+			'new_item_name'     => __( '', 'LION' ), //leave blank
 		);
 
 		register_taxonomy(
