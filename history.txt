@@ -1,3 +1,15 @@
+1.7.6 - 2013-12-12 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
+	Fix line height on remove download button.
+	Fixing purchase quantity advance tab show/hide functionality
+	Updating all screen_icon() functions to use ITUtility
+	Fixing bug causing Product Categories widget dropdown to not work properly
+	Fixing tooltip styling on shipping settings page
+	Fixing HTML error in settings-form
+	Remove margin on shipping method.
+	Fixing it_exchange_number_format() function in javascript
+	Add filters to Product Description and Product Description tooltip
+	Fixed label misspelling on the wizard.
+	Added Open Sans to the font stack.
 1.7.5 - 2013-12-11 - Packaging Bot (lib/icon-fonts)
 	Initial Release Version
 1.7.4 - 2013-12-11 - Packaging Bot (lib/icon-fonts)
