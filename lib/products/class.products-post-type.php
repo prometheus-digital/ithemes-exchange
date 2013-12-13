@@ -240,12 +240,12 @@ class IT_Exchange_Product_Post_Type {
 					<div id="preview-action">
 						<?php
 							if ( 'publish' == $post->post_status ) {
-								$preview_link = esc_url( get_permalink( $post->ID ) );
+								$preview_link = esc_url( apply_filters( 'it_exchange_view_product_button_link', get_permalink( $post->ID ), $post ) );
 								$preview_button = apply_filters( 'it_exchange_view_product_button_label', __( 'View Product', 'LION' ), $post );
 								$preview_id = 'post-view';
 							} else {
 								$preview_link = set_url_scheme( get_permalink( $post->ID ) );
-								$preview_link = esc_url( apply_filters( 'preview_post_link', add_query_arg( 'preview', 'true', $preview_link ) ) );
+								$preview_link = esc_url( apply_filters( 'it_exchange_preview_product_button_link', apply_filters( 'preview_post_link', add_query_arg( 'preview', 'true', $preview_link ) ), $post ) );
 								$preview_button = apply_filters( 'it_exchange_preview_product_button_label', __( 'Preview Product', 'LION' ), $post );
 								$preview_id = 'post-preview';
 							}
