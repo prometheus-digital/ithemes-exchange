@@ -200,7 +200,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			if ( 'html' == $options['format'] )
 				$result .= $options['before'];
 
-			$result .= $price;
+			$result .= apply_filters( 'it_exchange_api_theme_product_base_price', $price, $this->product->ID );
 
 			if ( 'html' == $options['format'] )
 				$result .= $options['after'];
