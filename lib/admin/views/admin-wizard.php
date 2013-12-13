@@ -50,7 +50,8 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 									$show_shipping = empty( $selected_class ) ? 'hide-if-js' : '';
 								}
 
-								echo '<li class="product-option ' . $addon['slug'] . '-product-option ' . $selected_class . '" product-type="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard"' . $toggle_ships . '>';
+								$core_external_class = it_exchange_is_core_addon( $addon['slug'] ) ? 'core-product-type' : 'external-product-type';
+								echo '<li class="product-option ' . $addon['slug'] . '-product-option ' . $core_external_class . ' ' . $selected_class . '" product-type="' . $addon['slug']. '" data-toggle="' . $addon['slug'] . '-wizard"' . $toggle_ships . '>';
 								echo '<div class="option-spacer">';
 								echo $name;
 								echo '</div>';
