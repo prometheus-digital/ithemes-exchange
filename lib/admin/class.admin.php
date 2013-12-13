@@ -118,6 +118,7 @@ class IT_Exchange_Admin {
 
 		// Remove Quick Edit
 		add_filter( 'post_row_actions', array( $this, 'it_exchange_remove_quick_edit' ), 10, 2 );
+		add_filter( 'page_row_actions', array( $this, 'it_exchange_remove_quick_edit' ), 10, 2 );
 
 		// User Edit
 		add_filter( 'user_row_actions', array( $this, 'it_exchange_user_row_actions' ), 10, 2 );
