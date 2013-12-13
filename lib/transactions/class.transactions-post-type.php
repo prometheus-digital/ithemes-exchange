@@ -411,6 +411,8 @@ class IT_Exchange_Transaction_Post_Type {
 			<?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?>
 		</div>
 
+		<?php do_action( 'it_exchange_transaction_details_before_customer_data', $post ); ?>
+
 		<div class="customer-data spacing-wrapper">
 			<div class="customer-avatar left">
 				<?php echo get_avatar( it_exchange_get_transaction_customer_id( $post->ID ), 80 ); ?>
@@ -445,6 +447,9 @@ class IT_Exchange_Transaction_Post_Type {
 			</div>
 		</div>
 
+		<?php do_action( 'it_exchange_transaction_details_after_customer_data', $post ); ?>
+		<?php do_action( 'it_exchange_transaction_details_before_shipping_and_billing', $post ); ?>
+
 		<?php
 		$shipping_address = it_exchange_get_transaction_shipping_address( $post->ID );
 		$shipping_address = array_filter( (array) $shipping_address ); // Make it false if all values are empty
@@ -473,6 +478,9 @@ class IT_Exchange_Transaction_Post_Type {
 			</div>
 		<?php endif; ?>
 
+		<?php do_action( 'it_exchange_transaction_details_after_shipping_and_bililng', $post ); ?>
+		<?php do_action( 'it_exchange_transaction_details_before_products', $post ); ?>
+
 		<div class="products bottom-border">
 			<div class="products-header spacing-wrapper bottom-border">
 				<span><?php _e( 'Products', 'LION' ); ?></span>
@@ -494,6 +502,7 @@ class IT_Exchange_Transaction_Post_Type {
 				?>
 				<div class="product spacing-wrapper">
 					<div class="product-header clearfix">
+						<?php do_action( 'it_exchange_transaction_details_begin_product_header', $post, $transaction_product ); ?>
 						<div class="product-title left">
 							<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_title', $post, $transaction_product ); ?>
 							<?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?>
@@ -504,8 +513,10 @@ class IT_Exchange_Transaction_Post_Type {
 							<?php esc_attr_e( it_exchange_format_price( it_exchange_get_transaction_product_feature( $transaction_product, 'product_subtotal' ) ) ); ?>
 							<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_subtotal', $post, $transaction_product ); ?>
 						</div>
+						<?php do_action( 'it_exchange_transaction_details_end_product_header', $post, $transaction_product ); ?>
 					</div>
 					<div class="product-details">
+						<?php do_action( 'it_exchange_transaction_details_begin_product_details', $post, $transaction_product ); ?>
 
 						<?php if ( it_exchange_transaction_includes_shipping( $post ) && it_exchange_product_has_feature( $transaction_product['product_id'], 'shipping' ) ) : ?>
 							<div class="product-shipping-method">
@@ -524,10 +535,15 @@ class IT_Exchange_Transaction_Post_Type {
 								</div>
 							<?php endforeach; ?>
 						<?php endif; ?>
+						<?php do_action( 'it_exchange_transaction_details_end_product_details', $post, $transaction_product ); ?>
 					</div>
+					<?php do_action( 'it_exchange_transaction_details_end_product_container', $post, $transaction_product ); ?>
 				</div>
 			<?php endforeach; ?>
 		</div>
+
+		<?php do_action( 'it_exchange_transaction_details_after_products', $post ); ?>
+		<?php do_action( 'it_exchange_transaction_details_before_costs', $post ); ?>
 
 		<div class="transaction-costs clearfix spacing-wrapper bottom-border">
 			<div class="transaction-costs-subtotal right clearfix">
