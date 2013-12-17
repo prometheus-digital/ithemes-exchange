@@ -29,7 +29,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		add_filter( 'it_exchange_get_product_feature_downloads', array( $this, 'get_feature' ), 9, 3 );
 		add_filter( 'it_exchange_product_has_feature_downloads', array( $this, 'product_has_feature') , 9, 2 );
 		add_filter( 'it_exchange_product_supports_feature_downloads', array( $this, 'product_supports_feature') , 9, 2 );
-		add_filter( 'template_redirect', array( $this, 'handle_download_pickup_request' ) );
+		add_filter( 'wp', array( $this, 'handle_download_pickup_request' ), 9 );
 
 		//We want to do this sooner than 10
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_hash_to_product' ), 5 );
@@ -63,9 +63,9 @@ class IT_Exchange_Product_Feature_Downloads {
 						$expire_time = false;
 
 						if ( it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expires' ) ) ) {
-								$int = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-int' ) );
-								$units = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-units' ) );
-								$expire_time = strtotime( '+' . $int . ' ' . $units );
+							$int = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-int' ) );
+							$units = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-units' ) );
+							$expire_time = strtotime( '+' . $int . ' ' . $units );
 						}
 
 						$hash = it_exchange_create_unique_hash();
