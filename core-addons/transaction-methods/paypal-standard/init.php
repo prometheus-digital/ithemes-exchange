@@ -270,7 +270,7 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 
 		$it_exchange_customer = it_exchange_get_current_customer();
 
-		$payment_form .= '<form action="' . get_site_url() . '/?paypal-standard-form=1" method="post">';
+		$payment_form .= '<form action="" method="post">';
 		$payment_form .= '<input type="submit" class="it-exchange-paypal-standard-button" name="paypal_standard_purchase" value="' . $paypal_settings['purchase-button-label'] .'" />';
 		$payment_form .= '</form>';
 
@@ -316,7 +316,7 @@ function it_exchange_process_paypal_standard_form() {
 	}
 
 }
-add_action( 'wp', 'it_exchange_process_paypal_standard_form' );
+add_action( 'template_redirect', 'it_exchange_process_paypal_standard_form', 11 );
 
 /**
  * Returns the button for making the PayPal real payment button
