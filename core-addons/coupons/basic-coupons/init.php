@@ -300,6 +300,9 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount=false,
 			$discount = ( '%' == $coupon->amount_type ) ? $discount + ( ( $coupon->amount_number / 100 ) * $subtotal ) : $discount + $coupon->amount_number;
 		}
 	}
+
+	$discount = round( $discount );
+
 	if ( $options['format_price'] )
 		$discount = it_exchange_format_price( $discount );
 	return $discount;
