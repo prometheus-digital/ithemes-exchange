@@ -650,7 +650,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		}
 
 		// If download expiration has passed, redirect to their downloads page
-		if ( ! empty( $hash_data['expires'] ) && $hash_data['expire_time'] < ( strtotime( 'tomorrow' ) ) ) {
+		if ( ! empty( $hash_data['expires'] ) && $hash_data['expire_time'] < ( time() ) ) {
 			it_exchange_add_message( 'error', __( 'Download expiration reached. Unable to download this file.', 'LION' ) );
 			$redirect_url = apply_filters( 'it_exchange_redirect_no_permission_to_pickup_file', it_exchange_get_page_url( 'downloads' ) );
 			wp_redirect( $redirect_url );
