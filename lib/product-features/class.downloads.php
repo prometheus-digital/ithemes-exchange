@@ -372,7 +372,7 @@ class IT_Exchange_Product_Feature_Downloads {
 		//Delete Non-Existant Downloads
 		if ( !empty( $previous_downloads ) && is_array( $previous_downloads ) ) {
 			foreach( $previous_downloads as $download_id => $data ) {
-				if ( !array_key_exists( $download_id, $_POST['it-exchange-digital-downloads'] ) )
+				if ( empty( $_POST['it-exchange-digital-downloads'] ) || !array_key_exists( $download_id, $_POST['it-exchange-digital-downloads'] ) )
 					wp_delete_post( $download_id, true );
 			}
 		}
