@@ -330,7 +330,7 @@ function it_exchange_serve_product_download( $hash_data ) {
 				die();
 
 			}
-			die( __( 'Download Error: Invalid response', 'LION' ) );
+			die( __( 'Download Error: Invalid response: ', 'LION' ) . wp_remote_retrieve_response_code( $response ) );
 		} else {
 			die( __( 'Download Error:', 'LION' ) . ' ' . $response->get_error_message() );
 		}
