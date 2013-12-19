@@ -100,3 +100,26 @@ if ( !function_exists( 'it_exchange_categories_addon_fix_menu_parent_file' ) ) {
 
 }
 
+if ( !function_exists( 'it_exchange_categories_pre_get_posts' ) ) {
+
+	/**
+	 * Removes hidden products from product category queries
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function it_exchange_categories_pre_get_posts( $query ) {
+	    if ( !is_admin() && is_tax( 'it_exchange_category' ) ) {
+	    	$meta_query = (array) $query->meta_query;
+	    	$meta_query[] = array(
+	    		'key'   => '_it-exchange-visibility',
+	    		'value' => 'visible',
+	    	);
+	    	$query->set( 'meta_query', $meta_query );
+	    }
+	}
+	add_action( 'pre_get_posts', 'it_exchange_categories_pre_get_posts' );
+	
+}
+

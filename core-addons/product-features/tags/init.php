@@ -79,3 +79,26 @@ if ( !function_exists( 'it_exchange_tags_fix_menu_parent_file' ) ) {
 	add_action( 'admin_head-edit-tags.php', 'it_exchange_tags_fix_menu_parent_file' );
 
 }
+
+if ( !function_exists( 'it_exchange_tags_pre_get_posts' ) ) {
+
+	/**
+	 * Removes hidden products from product tag queries
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function it_exchange_tags_pre_get_posts( $query ) {
+	    if ( !is_admin() && is_tax( 'it_exchange_tag' ) ) {
+	    	$meta_query = (array) $query->meta_query;
+	    	$meta_query[] = array(
+	    		'key'   => '_it-exchange-visibility',
+	    		'value' => 'visible',
+	    	);
+	    	$query->set( 'meta_query', $meta_query );
+	    }
+	}
+	add_action( 'pre_get_posts', 'it_exchange_tags_pre_get_posts' );
+	
+}
