@@ -143,6 +143,9 @@ class IT_Exchange_Email_Notifications {
 			$settings = it_exchange_get_option( 'settings_email', true );
 		}
 
+		// Sets Temporary GLOBAL information
+		$GLOBALS['it_exchange']['email-confirmation-data'] = array( $transaction, $this );
+
 		$headers[] = 'From: ' . $settings['receipt-email-name'] . ' <' . $settings['receipt-email-address'] . '>';
 		$headers[] = 'MIME-Version: 1.0';
 		$headers[] = 'Content-Type: text/html';
@@ -158,7 +161,7 @@ class IT_Exchange_Email_Notifications {
 		$subject      = apply_filters( 'it_exchange_send_purchase_emails_subject', $subject, $transaction, $settings, $this );
 		$body         = apply_filters( 'it_exchange_send_purchase_emails_body', $body, $transaction, $settings, $this );
 		$headers      = apply_filters( 'it_exchange_send_purchase_emails_headers', $headers, $transaction, $settings, $this );
-		$attachments = apply_filters( 'it_exchange_send_purchase_emails_attachments', array(), $transaction, $settings, $this );
+		$attachments  = apply_filters( 'it_exchange_send_purchase_emails_attachments', array(), $transaction, $settings, $this );
 
 		wp_mail( $to, strip_tags( $subject ), $body, $headers, $attachments );
 
@@ -178,6 +181,10 @@ class IT_Exchange_Email_Notifications {
 
 		}
 
+		// Clear temp data
+		if ( isset( $GLOBALS['it_exchange']['email-confirmation-data'] ) )
+			unset( $GLOBALS['it_exchange']['email-confirmation-data'] );
+
 	}
 
 	/**
@@ -188,6 +195,7 @@ class IT_Exchange_Email_Notifications {
 	 * @return string HTML header
 	*/
 	function body_header() {
+		$data = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
 		ob_start();
 		?>
 			<html>
@@ -199,7 +207,7 @@ class IT_Exchange_Email_Notifications {
 
 		$output = ob_get_clean();
 
-		return apply_filters( 'it_exchange_email_notification_body_header', $output );
+		return apply_filters( 'it_exchange_email_notification_body_header', $output, $data );
 
 	}
 
@@ -211,6 +219,7 @@ class IT_Exchange_Email_Notifications {
 	 * @return string HTML footer
 	*/
 	function body_footer() {
+		$data = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
 		ob_start();
 		?>
 			</body>
@@ -219,7 +228,7 @@ class IT_Exchange_Email_Notifications {
 
 		$output = ob_get_clean();
 
-		return apply_filters( 'it_exchange_email_notification_body_footer', $output );
+		return apply_filters( 'it_exchange_email_notification_body_footer', $output, $data );
 
 	}
 
@@ -233,6 +242,7 @@ class IT_Exchange_Email_Notifications {
 	*/
 	function get_shortcode_functions() {
 
+		$data = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
 		//Key = replacement tag
 		//Value = callback function
 		$shortcode_functions = array(
@@ -252,7 +262,7 @@ class IT_Exchange_Email_Notifications {
 			'account_link'   => 'it_exchange_replace_account_link_tag',
 		);
 
-		return apply_filters( 'it_exchange_email_notification_shortcode_functions', $shortcode_functions );
+		return apply_filters( 'it_exchange_email_notification_shortcode_functions', $shortcode_functions, $data );
 
 	}
 
@@ -265,6 +275,7 @@ class IT_Exchange_Email_Notifications {
 	 * @return string html for the 'Add to Shopping Cart' HTML
 	*/
 	function ithemes_exchange_email_notification_shortcode( $atts, $content='' ) {
+		$data = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
 		$supported_pairs = array(
 			'show'    => '',
 			'options' => '',
@@ -274,14 +285,16 @@ class IT_Exchange_Email_Notifications {
 
 		$shortcode_functions = $this->get_shortcode_functions();
 
+		$return = false;
+
 		if ( !empty( $shortcode_functions[$show] ) ) {
 			if ( is_callable( array( $this, $shortcode_functions[$show] ) ) )
-				return call_user_func( array( $this, $shortcode_functions[$show] ), $this, explode( ',', $options ) );
+				$return = call_user_func( array( $this, $shortcode_functions[$show] ), $this, explode( ',', $options ) );
 			else if ( is_callable( $shortcode_functions[$show] ) )
-				return call_user_func( $shortcode_functions[$show], $this, explode( ',', $options ) );
+				$return = call_user_func( $shortcode_functions[$show], $this, explode( ',', $options ) );
 		}
 
-		return false;
+		return apply_filters( 'it_exchange_email_notification_shortcode_' . $atts['show'], $return, $atts, $content, $data );
 	}
 
 	/**
