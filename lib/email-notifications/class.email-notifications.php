@@ -153,7 +153,14 @@ class IT_Exchange_Email_Notifications {
 		$body    = apply_filters( 'send_purchase_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body, $transaction );
 		$body    = $this->body_header() . '<div>' . wpautop( do_shortcode( $body ) ) . '</div>' . $this->body_footer();
 
-		wp_mail( $this->user->data->user_email, strip_tags( $subject ), $body, $headers );
+		// Filters
+		$to           = apply_filters( 'it_exchange_send_purchase_emails_to', $this->user->data->user_email, $transaction, $settings, $this );
+		$subject      = apply_filters( 'it_exchange_send_purchase_emails_subject', $subject, $transaction, $settings, $this );
+		$body         = apply_filters( 'it_exchange_send_purchase_emails_body', $body, $transaction, $settings, $this );
+		$headers      = apply_filters( 'it_exchange_send_purchase_emails_headers', $headers, $transaction, $settings, $this );
+		$attachments = apply_filters( 'it_exchange_send_purchase_emails_attachments', array(), $transaction, $settings, $this );
+
+		wp_mail( $to, strip_tags( $subject ), $body, $headers, $attachments );
 
 		// Send admin notification if param is true and email is provided in settings
 		if ( $send_admin_email && ! empty( $settings['notification-email-address'] ) ) {
