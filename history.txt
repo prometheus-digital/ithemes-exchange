@@ -1,3 +1,20 @@
+1.7.9 - 2013-12-19 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
+	Added Response Code to 'Invalid Response' message on downloads
+	Added rounding function to discount to ensure it always rounds the same way
+	Fixed bug causing error when removing all digital downloads from a product
+	Fixed bug where hourly expiration on downloads wasn't working
+	Changed URL used to init PayPal Secure and PayPal standard payments
+	Changed hook that listens for download requests from template_redirect to wp
+	Product Categories add JS working on add/edit products screen now
+	Added simple grayscale to non selected payment types in wizard.
+	Remove quick-edit from All Payments screen
+	Added 12 actions to the Payment Details page
+	Added filter to base price product theme api
+	Added filters to preview and view product links
+	Added filters to view / preview product button labels
+	Apply cursor:not-allowed CSS rule to all external product types rather than to membership specifically.
+	Added class in Wizard to distinguish between core and external product types.
+	Removing blank localization string in categories so that packaging bot doesn't complain
 1.7.8 - 2013-12-12 - Glenn Ansley
 	Fixing some internal submodules. WordPress.org version of Exchange jumpped from 1.7.3 to 1.7.8
 1.7.7 - 2013-12-12 - Packaging Bot (lib/icon-fonts)
