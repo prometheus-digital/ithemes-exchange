@@ -1143,7 +1143,7 @@ add_filter( 'wp_login_errors', 'it_exchange_redirect_to_correct_login_form_on_er
 /**
  * Prints a tooltip in the admin
  *
- * @since CHANGEME
+ * @since 1.7.9
  *
  * @param string  $text       the HTML for the tooltip. Can be a plaintext string or HTML
  * @param boolean $echo       echo the tooltip? defaults to true
@@ -1327,7 +1327,7 @@ if ( !function_exists( 'it_exchange_dropdown_taxonomies' ) ) {
  * Retrieve HTML dropdown (select) content for category list.
  *
  * @uses Walker_CategoryDropdown to create HTML dropdown content.
- * @since CHANGEME
+ * @since 1.7.9
  * @see Walker_CategoryDropdown::walk() for parameters and return description.
  */
 function it_exchange_walk_product_category_dropdown_tree() {
@@ -1344,20 +1344,20 @@ function it_exchange_walk_product_category_dropdown_tree() {
 /**
  * Create HTML dropdown list of IT Exchange Product Categories.
  *
- * @since CHANGEME
+ * @since 1.7.9
  * @uses Walker
  */
 class Walker_ProductCategoryDropdown extends Walker {
     /**
      * @see Walker::$tree_type
-     * @since CHANGEME
+     * @since 1.7.9
      * @var string
      */
     var $tree_type = 'category';
 
     /**
      * @see Walker::$db_fields
-     * @since CHANGEME
+     * @since 1.7.9
      * @todo Decouple this
      * @var array
      */
@@ -1367,7 +1367,7 @@ class Walker_ProductCategoryDropdown extends Walker {
      * Start the element output.
      *
      * @see Walker::start_el()
-     * @since CHANGEME
+     * @since 1.7.9
      *
      * @param string $output   Passed by reference. Used to append additional content.
      * @param object $category Category data object.
