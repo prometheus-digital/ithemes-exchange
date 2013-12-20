@@ -386,9 +386,19 @@ class IT_Exchange_Pages {
 				return get_404_template();
 		}
 
-		// Return the iThemes Exchange Template if one is found
+		/**
+		 * 1) If we found an iThemes Exchange Page Template in the theme's /exchange/ folder, return it.
+		 * 2) If the found iThemes Exchange Theme Template has been filtered, return the filtered one instead and add the callback the_content filter
+		 * -- In the event of option 2, this is working much like the 'product' == $this_current_view clase below would act with page.php
+		*/
 		if ( $template = it_exchange_locate_template( $this->_current_view . '.php' ) ) {
 			remove_filter( 'the_content', 'wpautop' );
+			$filtered_template = apply_filters( 'it_exchange_fetch_template_override_located_template', $template, $this );
+			if ( $filtered_template != $template && 'product' == $this->_current_view ) {
+				add_filter( 'the_content', array( $this, 'fallback_filter_for_page_template' ) );
+				$template = $filtered_template;
+			}
+
 			return $template;
 		}
 

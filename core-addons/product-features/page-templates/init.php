@@ -23,6 +23,7 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		} else {
 			add_filter( 'it_exchange_fetch_template_override_default_page_template', array( $this, 'replace_template' ) );
+			add_filter( 'it_exchange_fetch_template_override_located_template', array( $this, 'replace_template' ) );
 		}
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
 		add_filter( 'it_exchange_get_product_feature_page-template', array( $this, 'get_feature' ), 9, 2 );
@@ -111,11 +112,12 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 		$template = get_post_meta( $post->ID, '_wp_page_template', true );
 		?>
 		<p><strong><?php _e( 'Template' ) ?></strong></p>
+		<p><?php _e( 'This option will allow you to override the default WordPress template used for this product.', 'LION' ); ?> <span class="tip" title="<?php esc_attr_e( __( 'Exchange uses page.php as it\'s default when no custom Exchange Templates are available. Page templates for Exchange products need to include a call to the_content() or use Exchange Theme API functions to display correctly.', 'LION' ) ); ?>">i</span></p>
 		<label class="screen-reader-text" for="page_template"><?php _e( 'Page Template' ) ?></label>
 		<select name="it-exchange-page-template" id="it-exchange-page-template">
 			<option value='default'><?php _e(' Default Template' ); ?></option>
 			<?php page_template_dropdown( $template ); ?>
-		</select>
+		</select> <span class="tip" title="<?php esc_attr_e( __( 'These options are generated from alternative page templates included with your current theme.', 'LION' ) ); ?>">i</span>
 		<?php
 		}
 	}
