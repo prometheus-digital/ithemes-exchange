@@ -3,7 +3,7 @@
  * This will control wordpress page templates with any product types that register page_template support
  * By default, it registers a metabox on the product's add/edit screen and provides HTML / data for the frontend.
  *
- * @since 0.4.0
+ * @since CHANGEME
  * @package IT_Exchange
 */
 
@@ -13,7 +13,7 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 	/**
 	 * Constructor. Registers hooks
 	 *
-	 * @since 0.4.0
+	 * @since CHANGEME
 	 * @return void
 	*/
 	function IT_Exchange_Product_Feature_Product_Page_Template() {
@@ -34,7 +34,7 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 	/**
 	 * Register the product feature and add it to enabled product-type addons
 	 *
-	 * @since 0.4.0
+	 * @since CHANGEME
 	*/
 	function add_feature_support_to_product_types() {
 		// Register the product feature
@@ -52,7 +52,7 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 	/**
 	 * Register's the metabox for any product type that supports the feature
 	 *
-	 * @since 0.4.0
+	 * @since CHANGEME
 	 * @return void
 	*/
 	function init_feature_metaboxes() {
@@ -93,7 +93,7 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 	 *
 	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports the feature
 	 *
-	 * @since 0.4.0
+	 * @since CHANGEME
 	 * @return void
 	*/
 	function register_metabox() {
@@ -103,7 +103,7 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 	/**
 	 * This echos the feature metabox.
 	 *
-	 * @since 0.4.0
+	 * @since CHANGEME
 	 * @return void
 	*/
 	function print_metabox( $post ) {
@@ -123,7 +123,7 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 	/**
 	 * This saves the value
 	 *
-	 * @since 0.3.8
+	 * @since CHANGEME
 	 *
 	 * @param object $post wp post object
 	 * @return void
@@ -150,7 +150,7 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 	/**
 	 * This updates the feature for a product
 	 *
-	 * @since 0.4.0
+	 * @since CHANGEME
 	 *
 	 * @param integer $product_id the product id
 	 * @param mixed $new_value the new value
@@ -166,7 +166,7 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 	/**
 	 * Return the product's features
 	 *
-	 * @since 0.4.0
+	 * @since CHANGEME
 	 * @param mixed $existing the values passed in by the WP Filter API. Ignored here.
 	 * @param integer product_id the WordPress post ID
 	 * @return string product feature
@@ -179,7 +179,7 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 	/**
 	 * Does the product have the feature?
 	 *
-	 * @since 0.4.0
+	 * @since CHANGEME
 	 * @param mixed $result Not used by core
 	 * @param integer $product_id
 	 * @return boolean
@@ -197,7 +197,7 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 	 * This is different than if it has the feature, a product can
 	 * support a feature but might not have the feature set.
 	 *
-	 * @since 0.4.0
+	 * @since CHANGEME
 	 * @param mixed $result Not used by core
 	 * @param integer $product_id
 	 * @return boolean
@@ -211,7 +211,7 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 	/**
 	 * Filter page.php template for selected page_template if it exists
 	 *
-	 * @since 1.0.0
+	 * @since CHANGEME
 	 *
 	 * @param string $template incoming page.php template location
 	 * @return string
