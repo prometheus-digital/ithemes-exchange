@@ -138,6 +138,18 @@ function it_exchange_register_core_addons() {
 			'supports'          => apply_filters( 'it_exchange_register_guest_checkout_default_features', array(
 			) ),
 		),
+		// Page Templates
+		'page-template' => array(
+			'name'              => __( 'WordPress Page Templates', 'LION' ),
+			'description'       => __( 'Enable the WordPress Page Templates meta box for products', 'LION' ),
+			'author'            => 'iThemes',
+			'author_url'        => 'http://ithemes.com',
+			'file'              => dirname( __FILE__ ) . '/product-features/page-templates/init.php',
+			'category'          => 'admin',
+			'tag'               => 'core',
+			'supports'          => apply_filters( 'it_exchange_register_page_template_default_features', array(
+			) ),
+		),
 		// Billing Address Purchase Requirement
 		'billing-address-purchase-requirement' => array(
 			'name'        => __( 'Billing Address', 'LION' ),

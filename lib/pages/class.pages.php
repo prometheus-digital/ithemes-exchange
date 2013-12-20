@@ -399,6 +399,7 @@ class IT_Exchange_Pages {
 
 		// If no iThemes Exchange Template was found, use the theme's page template
 		if ( $template = get_page_template() ) {
+			$template = apply_filters( 'it_exchange_fetch_template_override_default_page_template', $template, $this );
 			remove_filter( 'the_content', 'wpautop' );
 			return $template;
 		}
