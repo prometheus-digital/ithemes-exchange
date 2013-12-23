@@ -795,7 +795,7 @@ function it_exchange_get_transaction_order_number( $transaction, $prefix='#' ) {
 	$order_number = sprintf( '%06d', $transaction->ID );
 	$order_number = empty( $prefix ) ? $order_number : $prefix . $order_number;
 
-	return apply_filters( 'it_exchange_get_transaction_order_number', $order_number, $transaction );
+	return apply_filters( 'it_exchange_get_transaction_order_number', $order_number, $transaction, $prefix );
 }
 
 /**
