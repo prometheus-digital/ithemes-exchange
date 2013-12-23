@@ -105,7 +105,7 @@ if ( !function_exists( 'it_exchange_categories_pre_get_posts' ) ) {
 	/**
 	 * Removes hidden products from product category queries
 	 *
-	 * @since CHANGEME
+	 * @since 1.7.10
 	 *
 	 * @return void
 	*/

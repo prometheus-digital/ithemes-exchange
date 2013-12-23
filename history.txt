@@ -1,3 +1,9 @@
+1.7.10 - 2013-12-23 - Glenn Ansley, Lew Ayotte
+	Add new WordPress Page Templates Core Add-on
+	Add ability to filter any returned shortcode replacement for an email confirmation. 
+	Include current transaction details, current shortcode being processed, and the object for the email notification class.
+	Add filters and attachments param to function that sends the confirmation email
+	Added pre_query_posts action to remove hidden produts from product taxonomy queries
 1.7.9 - 2013-12-19 - Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
 	Added Response Code to 'Invalid Response' message on downloads
 	Added rounding function to discount to ensure it always rounds the same way

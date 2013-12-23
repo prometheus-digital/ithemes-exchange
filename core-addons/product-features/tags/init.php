@@ -85,7 +85,7 @@ if ( !function_exists( 'it_exchange_tags_pre_get_posts' ) ) {
 	/**
 	 * Removes hidden products from product tag queries
 	 *
-	 * @since CHANGEME
+	 * @since 1.7.10
 	 *
 	 * @return void
 	*/
