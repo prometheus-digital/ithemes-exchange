@@ -40,9 +40,8 @@ class IT_Exchange_Product_Post_Type {
 
 		if ( is_admin() && !empty( $_REQUEST['post_type'] ) && 'it_exchange_prod' === $_REQUEST['post_type'] )
 			add_action( 'pre_get_posts', array( $this, 'remove_disabled_product_types_from_admin_list' ) );
-
 	}
-
+	
 	/**
 	 * Load IT Exchange Product if looking at a single product page
 	 *
@@ -150,10 +149,10 @@ class IT_Exchange_Product_Post_Type {
 
 			add_action( 'admin_init', array( $this, 'set_rewrite_slug' ), $priorities['set_rewrite_slug'] );
 			add_action( 'admin_init', array( $this, 'register_the_post_type' ), $priorities['register_post_type'] );
-		} else {
-			add_action( 'init', array( $this, 'set_rewrite_slug' ), 9 );
-			add_action( 'init', array( $this, 'register_the_post_type' ) );
 		}
+	
+		add_action( 'init', array( $this, 'set_rewrite_slug' ), 9 );
+		add_action( 'init', array( $this, 'register_the_post_type' ) );
 	}
 
 	/**
@@ -620,7 +619,6 @@ class IT_Exchange_Product_Post_Type {
 		$sortables['it_exchange_product_price']         = 'it-exchange-product-price';
 		$sortables['it_exchange_product_show_in_store'] = 'it-exchange-product-show-in-store';
 		$sortables['it_exchange_product_inventory']     = 'it-exchange-product-inventory';
-		$sortables['it_exchange_product_purchases']     = 'it-exchange-product-purchases';
 
 		//This will only show up if there are multiple product-type addons
 		$sortables['it_exchange_product_type']     = 'it-exchange-product-type';
