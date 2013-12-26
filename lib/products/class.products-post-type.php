@@ -681,7 +681,7 @@ class IT_Exchange_Product_Post_Type {
 						break;
 					case 'it-exchange-product-type':
 						$request['orderby'] = 'meta_value';
-						$request['meta_key'] = '_it-exchange-product-type';
+						$request['meta_key'] = '_it_exchange_product_type';
 						break;
 				}
 			}
