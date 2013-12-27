@@ -890,6 +890,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( $options['has'] )
 			return true;
 
+		// Setting this filter to true will disable the Buy Now Button
+		if ( apply_filters( 'it_exchange_disable_buy_now', false, $this->product ) )
+			return '';
+
 		// Parse options
 		$result        = false;
 
