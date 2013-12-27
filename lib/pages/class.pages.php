@@ -448,6 +448,10 @@ class IT_Exchange_Pages {
 	 * @param string content generated from template part
 	*/
 	function fallback_filter_for_page_template( $content ) {
+		$global_post = empty( $GLOBALS['post']->ID ) ? 0 : $GLOBALS['post']->ID;
+		if ( ! it_exchange_get_product( $global_post ) )
+			return $content;
+
 		ob_start();
 		add_filter( 'the_content', 'wpautop' );
 		it_exchange_get_template_part( 'content', $this->_current_view );
