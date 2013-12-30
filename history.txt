@@ -1,3 +1,10 @@
+1.7.11 - 2013-12-30 - Glenn Ansley, Lew Ayotte
+	Fixed bug that broke 3rd party calls to new WP_Query on product pages
+	Added filter to disable the Buy Now button
+	Fixed Product Type search meta key
+	Fix for Screen Options not saving Products #
+	Removed Product Purchases from sortable column list
+	Pass prefix through transaction_number filter
 1.7.10 - 2013-12-23 - Glenn Ansley, Lew Ayotte
 	Add new WordPress Page Templates Core Add-on
 	Add ability to filter any returned shortcode replacement for an email confirmation. 
