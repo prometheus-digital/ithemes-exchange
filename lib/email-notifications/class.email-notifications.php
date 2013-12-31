@@ -157,7 +157,8 @@ class IT_Exchange_Email_Notifications {
 		$body    = $this->body_header() . '<div>' . wpautop( do_shortcode( $body ) ) . '</div>' . $this->body_footer();
 
 		// Filters
-		$to           = apply_filters( 'it_exchange_send_purchase_emails_to', $this->user->data->user_email, $transaction, $settings, $this );
+		$to           = empty( $this->user->data->user_email ) ? false : $this->user->data->user_email;
+		$to           = apply_filters( 'it_exchange_send_purchase_emails_to', $to, $transaction, $settings, $this );
 		$subject      = apply_filters( 'it_exchange_send_purchase_emails_subject', $subject, $transaction, $settings, $this );
 		$body         = apply_filters( 'it_exchange_send_purchase_emails_body', $body, $transaction, $settings, $this );
 		$headers      = apply_filters( 'it_exchange_send_purchase_emails_headers', $headers, $transaction, $settings, $this );
@@ -316,7 +317,6 @@ class IT_Exchange_Email_Notifications {
 		if ( !empty( $hashes ) ) {
 		?>
 			<div style="border-top: 1px solid #EEE">
-				<h3><?php _e( 'Available Downloads', 'LION' ); ?></h3>
 				<?php foreach ( $transaction_products as $transaction_product ) : ?>
 					<?php
 						$product_id = $transaction_product['product_id'];
@@ -332,7 +332,6 @@ class IT_Exchange_Email_Notifications {
 							 * Clear as mud.
 							*/
 							$status_notice = '<p>' . __( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an approved status, you will receive a follow-up email with your download links.', 'LION' ) . '</p>';
-							echo $status_notice;
 							$status_notice = '<h3>' . __( 'Available Downloads', 'LION' ) . '</h3>' . $status_notice;
 							?>
 						<?php else : ?>
@@ -383,12 +382,12 @@ class IT_Exchange_Email_Notifications {
 	 * @return string Replaced value
 	*/
 	function it_exchange_replace_name_tag( $args, $options = NULL ) {
+		$name = '';
 		if ( !empty( $this->user->data->first_name ) ) {
 			$name = $this->user->data->first_name;
-		} else {
+		} else if ( ! empty( $this->user->data->display_name ) ) {
 			$name = $this->user->data->display_name;
 		}
-
 		return $name;
 	}
 
@@ -401,9 +400,11 @@ class IT_Exchange_Email_Notifications {
 	 * @return string Replaced value
 	*/
 	function it_exchange_replace_fullname_tag( $args, $options = NULL ) {
-		if ( !empty( $this->user->data->first_name ) ) {
+		$fullname = '';
+
+		if ( ! empty( $this->user->data->first_name ) && ! empty( $this->user->data->last_name ) ) {
 			$fullname = $this->user->data->first_name . ' ' . $this->user->data->last_name;
-		} else {
+		} else if ( ! empty( $this->user->data->display_name ) ) {
 			$fullname = $this->user->data->display_name;
 		}
 
@@ -419,7 +420,7 @@ class IT_Exchange_Email_Notifications {
 	 * @return string Replaced value
 	*/
 	function it_exchange_replace_username_tag( $args, $options = NULL ) {
-		return $this->user->data->user_login;
+		return empty( $this->user->data->user_login ) ? '' : $this->user->data->user_login;
 	}
 
 	/**
