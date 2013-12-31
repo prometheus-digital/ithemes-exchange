@@ -535,3 +535,21 @@ function it_exchange_guest_checkout_maybe_remove_download_page_link_from_email( 
 	return empty( $transaction->cart_details->is_guest_checkout );
 }
 add_filter( 'it_exchange_print_downlods_page_link_in_email', 'it_exchange_guest_checkout_maybe_remove_download_page_link_from_email', 10, 2 );
+
+/**
+ * Filter email for sending if its false and we're transaction was a guest checkout
+ *
+ * @since CHANGEME
+ *
+ * @param string $to_email the email address we're sending it to
+ * @param object $transaction the transaction object
+ * @return string
+*/
+function it_exchange_guest_checkout_modify_confirmation_email_address( $to_email, $transaction ) {
+	if ( ! empty( $to_email ) || empty( $transaction->cart_details->is_guest_checkout ) )
+		return $to_email;
+
+	return is_email( $transaction->customer_id ) ? $transaction->customer_id : '';
+}
+add_filter( 'it_exchange_send_purchase_emails_to', 'it_exchange_guest_checkout_modify_confirmation_email_address', 10, 2 );
+
