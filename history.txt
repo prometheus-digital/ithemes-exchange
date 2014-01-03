@@ -1,3 +1,8 @@
+1.7.12 - 2014-01-03 - Glenn Ansley, Lew Ayotte
+	Disabled AJAX caching to deal with a bug in IE's aggressive AJAX caching
+	Add filter to guest checkout to replace email address
+	Don't print 'Available Downlowads' twice in confirmation email.
+	Don't assume we have a WP User in email notification shortcodes
 1.7.11 - 2013-12-30 - Glenn Ansley, Lew Ayotte
 	Fixed bug that broke 3rd party calls to new WP_Query on product pages
 	Added filter to disable the Buy Now button
