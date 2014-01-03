@@ -539,7 +539,7 @@ add_filter( 'it_exchange_print_downlods_page_link_in_email', 'it_exchange_guest_
 /**
  * Filter email for sending if its false and we're transaction was a guest checkout
  *
- * @since CHANGEME
+ * @since 1.7.12 
  *
  * @param string $to_email the email address we're sending it to
  * @param object $transaction the transaction object
