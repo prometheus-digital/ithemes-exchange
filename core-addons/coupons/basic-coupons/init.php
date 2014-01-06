@@ -301,7 +301,7 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount=false,
 		}
 	}
 
-	$discount = round( $discount );
+	$discount = round( $discount, 2 );
 
 	if ( $options['format_price'] )
 		$discount = it_exchange_format_price( $discount );
