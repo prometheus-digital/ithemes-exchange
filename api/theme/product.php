@@ -591,6 +591,9 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( $options['has'] )
 			return it_exchange_product_has_feature( $this->product->ID, 'product-images' );
 
+		// Vidembed conflict. Temp fix until vidembed fixes their issue.
+		remove_filter( 'image_downsize', 'ithemes_filter_image_downsize', 10, 3 );
+
 		if ( it_exchange_product_supports_feature( $this->product->ID, 'product-images' )
 				&& it_exchange_product_has_feature( $this->product->ID, 'product-images' ) ) {
 
