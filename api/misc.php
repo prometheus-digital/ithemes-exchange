@@ -116,7 +116,7 @@ function it_exchange_convert_to_database_number( $price ) {
  * @return float converted price
 */
 function it_exchange_convert_from_database_number( $price ) {
-	return $price /= 100;
+	return number_format( $price /= 100, 2, '.', '' );
 }
 
 /**
