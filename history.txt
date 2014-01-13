@@ -1,3 +1,9 @@
+1.7.13 - 2014-01-13 - Glenn Ansley (robin), Lew Ayotte (batman)
+	Apply number_format to it_exchange_convert_from_database_number to get properly formatted prices that have decimals ending in 0 (which get trimmed)
+	Edit Product page now remembers which advanced option you last selected
+	Give rounding for coupons a higher precision
+	Don't use theme API in lowerlevel product availability API
+	Temp fix for vidembed plugin conflict.
 1.7.12 - 2014-01-03 - Glenn Ansley, Lew Ayotte
 	Disabled AJAX caching to deal with a bug in IE's aggressive AJAX caching
 	Add filter to guest checkout to replace email address
