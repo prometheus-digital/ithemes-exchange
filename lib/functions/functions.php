@@ -96,6 +96,8 @@ function it_exchange_load_public_scripts( $current_view ) {
 
 	$settings = it_exchange_get_option( 'settings_general' );
 	
+	wp_register_style( 'it-exchange-icon-fonts', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange-fonts.css' ) );
+	
 	// Frontend Product JS
 	if ( is_singular( 'it_exchange_prod' ) ) {
 		$script_deps = array();
@@ -107,7 +109,7 @@ function it_exchange_load_public_scripts( $current_view ) {
 			array_push( $script_deps, 'jquery-colorbox' );
 
 		wp_enqueue_script( 'it-exchange-product-public-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/exchange-product.js' ), $script_deps, false, true );
-		wp_enqueue_style( 'it-exchange-icon-fonts', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange-fonts.css' ) );
+		wp_enqueue_style( 'it-exchange-icon-fonts' );
 	}
 
 	// ****** CHECKOUT SPECIFIC SCRIPTS *******
