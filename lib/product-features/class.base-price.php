@@ -110,7 +110,7 @@ class IT_Exchange_Base_Price {
 		$product = it_exchange_get_product( $post );
 
 		// Set the value of the base-price for this product
-		$product_base_price = ( '' == it_exchange_get_product_feature( $product->ID, 'base-price' ) ) ? '' : it_exchange_format_price( it_exchange_get_product_feature( $product->ID, 'base-price' ) );
+		$product_base_price = ( '' === it_exchange_get_product_feature( $product->ID, 'base-price' ) ) ? '' : it_exchange_format_price( it_exchange_get_product_feature( $product->ID, 'base-price' ) );
 
 		// Set description
 		$description = __( 'Price', 'LION' );
@@ -123,7 +123,7 @@ class IT_Exchange_Base_Price {
 		do_action( 'it_exchange_before_print_metabox_base_price', $product );
 		?>
 			<label for="base-price"><?php esc_html_e( $description ); ?></label>
-			<input type="text" placeholder="<?php esc_attr_e( it_exchange_format_price( '0.00' ) ); ?>" id="base-price" name="it-exchange-base-price" value="<?php esc_attr_e( $product_base_price ); ?>" tabindex="2" data-symbol="<?php esc_attr_e( $currency ); ?>" data-symbol-position="<?php esc_attr_e( $settings['currency-symbol-position'] ); ?>" data-thousands-separator="<?php esc_attr_e( $settings['currency-thousands-separator'] ); ?>" data-decimals-separator="<?php esc_attr_e( $settings['currency-decimals-separator'] ); ?>" />
+			<input type="text" placeholder="<?php esc_attr_e( it_exchange_format_price( 0 ) ); ?>" id="base-price" name="it-exchange-base-price" value="<?php esc_attr_e( $product_base_price ); ?>" tabindex="2" data-symbol="<?php esc_attr_e( $currency ); ?>" data-symbol-position="<?php esc_attr_e( $settings['currency-symbol-position'] ); ?>" data-thousands-separator="<?php esc_attr_e( $settings['currency-thousands-separator'] ); ?>" data-decimals-separator="<?php esc_attr_e( $settings['currency-decimals-separator'] ); ?>" />
 		<?php
 		do_action( 'it_exchange_after_print_metabox_base_price', $product );
 	}
@@ -191,8 +191,8 @@ class IT_Exchange_Base_Price {
 	 * @return string base-price
 	*/
 	function get_feature( $base_price, $product_id ) {
-		$base_price = get_post_meta( $product_id, '_it-exchange-base-price', true );
-		$base_price = it_exchange_convert_from_database_number( $base_price ); //create a decimal object (float)
+		if ( '' !== $base_price = get_post_meta( $product_id, '_it-exchange-base-price', true ) )
+			$base_price = it_exchange_convert_from_database_number( $base_price ); //create a decimal object (float)
 		return $base_price;
 	}
 
