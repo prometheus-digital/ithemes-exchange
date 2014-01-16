@@ -104,6 +104,7 @@ function it_exchange_get_products( $args=array() ) {
 			'value' => $args['product_type'],
 		);
 		$args['meta_query'][] = $meta_query;
+		unset( $args['product_type'] ); //remove this so it doesn't conflict with the meta query
 	} else { //we only want to get enabled product-type products
 		$meta_query = array(
 			'key'   => '_it_exchange_product_type',
