@@ -145,7 +145,7 @@ class IT_Exchange_Pages {
 
 		$account = get_query_var( $this->_account_slug );
 
-		if ( 1 == $account ) {
+		if ( empty( $account ) || 1 == $account ) {
 
 			$customer_id = get_current_user_id();
 
