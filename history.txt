@@ -1,3 +1,11 @@
+1.7.14 - 2014-01-21 - Lew Ayotte, Glenn Ansley,
+	Added new action to protected pages method
+	Fixed confirmation page bug caused when setting confirmation page as a WP page
+	Fix bug where login link isn't switching to 'Log out' after login occurs
+	Fix for bug causing Account variable to not be set when using WordPress pages for protected areas
+	Fixed bug causing it_exchange_get_products to return empty when searching by product_type when only one product type is enabled
+	Fix for placeholder/value when adding new products
+	Added icon fonts as a registered stylesheet.
 1.7.13 - 2014-01-13 - Glenn Ansley (robin), Lew Ayotte (batman)
 	Apply number_format to it_exchange_convert_from_database_number to get properly formatted prices that have decimals ending in 0 (which get trimmed)
 	Edit Product page now remembers which advanced option you last selected
