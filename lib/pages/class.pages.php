@@ -267,8 +267,9 @@ class IT_Exchange_Pages {
 		if ( 'confirmation' === $this->_current_view  ) {
 
 			$transaction_id = false;
+			$page_slug = it_exchange_get_page_slug( 'confirmation', true );
 
-			if ( $transaction_hash = get_query_var('confirmation') )
+			if ( $transaction_hash = get_query_var( $page_slug ) )
 				$transaction_id = it_exchange_get_transaction_id_from_hash( $transaction_hash );
 
 			if ( !it_exchange_customer_has_transaction( $transaction_id, $user_id ) ) {
@@ -288,6 +289,8 @@ class IT_Exchange_Pages {
 			wp_redirect( $redirect_url );
 			die();
 		}
+		
+		do_action( 'it_exchange_protect_pages' );
 	}
 
 	/**
@@ -530,15 +533,16 @@ class IT_Exchange_Pages {
 		// This is an exception for the confirmation page.
 		if ( 'wordpress' == it_exchange_get_page_type( 'confirmation', true ) ) {
 			$wpid = it_exchange_get_page_wpid( 'confirmation' );
-			$confirmation_exchange_slug = it_exchange_get_page_slug( 'confirmation', true );
-			if ( $wp_page = get_page( $wpid ) )
-				$confirmation_wp_slug = $wp_page->post_name;
-
-			$rewrite = array( $confirmation_wp_slug . '/([^/]+)/?$' => 'index.php?pagename=' . $confirmation_wp_slug . '&' . $confirmation_wp_slug . '=$matches[1]' );
+	        if ( $wp_page = get_page( $wpid ) )
+	            $page_slug = $wp_page->post_name;
+	        else
+	        	$page_slug = 'confirmation';
+			
+			$rewrite = array( $page_slug . '/([^/]+)/?$' => 'index.php?pagename=' . $page_slug . '&' . $page_slug . '=$matches[1]' );
 			$existing = array_merge( $rewrite, $existing );
 		}
-
 		do_action( 'it_exchange_rewrite_rules_registered' );
+		
 		return $existing;
 	}
 }
