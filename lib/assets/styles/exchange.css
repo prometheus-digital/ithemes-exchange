@@ -275,21 +275,6 @@ a.it-exchange-button {text-decoration:none;}
 .it-exchange-colorbox #cboxContent #cboxTitle{position:absolute;top:-0.5em;left:0;right:0;text-align:center;font-weight:300;font-size:1.5em;}
 .it-exchange-colorbox #cboxContent #cboxCurrent{position:absolute;bottom:0;left:0;right:0;text-align:center;}
 
-/** ----------------------------------------:[ gallery ]:--- */
-.it-exchange-colorbox img{margin:0;padding:0;}
-.it-exchange-colorbox .it-exchange-product-images-gallery{overflow:hidden;max-width:1100px;margin:0 auto;}
-.it-exchange-colorbox .it-exchange-featured-image{text-align:center;}
-.it-exchange-colorbox .it-exchange-featured-image .it-exchange-zoom-enabled:hover{border-color:#EEE;cursor:pointer;cursor:-webkit-zoom-in;cursor:-moz-zoom-in;}
-.it-exchange-colorbox .it-exchange-featured-image .it-exchange-zooming:hover{cursor:crosshair;cursor:-webkit-zoom-out;cursor:-moz-zoom-out;}
-.it-exchange-colorbox .featured-image-wrapper{display:inline-block;border:0;}
-.it-exchange-colorbox .it-exchange-thumbnail-images{position:fixed;bottom:0;right:10%;left:10%;overflow:hidden;text-align:center;}
-.it-exchange-colorbox .it-exchange-thumbnail-images li{display:inline-block;margin:5px;cursor:pointer;}
-.it-exchange-colorbox .it-exchange-thumbnail-images li img{max-width:75px !important;}
-.it-exchange-colorbox .it-exchange-thumbnail-images li span{display:inline-block;border:1px solid transparent;float:left;-webkit-transition:margin .2s ease;-moz-transition:margin .2s ease;transition:margin .2s ease;}
-.it-exchange-colorbox-light .it-exchange-thumbnail-images li span:hover,
-.it-exchange-colorbox-light .it-exchange-thumbnail-images li .current{margin-bottom:5px;}
-.it-exchange-colorbox-light .it-exchange-thumbnail-images li img{display:block;}
-
 /** ----------------------------------------:[ light ]:--- */
 .it-exchange-colorbox-light#cboxOverlay{background:#FFF;background:rgba(255,255,255,.9);}
 .it-exchange-colorbox-light #cboxContent #cboxPrevious,
@@ -315,6 +300,21 @@ a.it-exchange-button {text-decoration:none;}
 .it-exchange-colorbox-dark #cboxContent #cboxSlideshow:hover{color:#888;}
 .it-exchange-colorbox-dark .it-exchange-thumbnail-images li:hover span{border-color:#000;}
 .it-exchange-colorbox-dark .it-exchange-thumbnail-images li .current{border-color:#000;box-shadow:#000 0 5px 10px -3px;}
+
+/** ----------------------------------------:[ gallery ]:--- */
+.it-exchange-colorbox-gallery img{margin:0;padding:0;}
+.it-exchange-colorbox-gallery .it-exchange-product-images-gallery{overflow:hidden;max-width:1100px;margin:0 auto;}
+.it-exchange-colorbox-gallery .it-exchange-featured-image{text-align:center;}
+.it-exchange-colorbox-gallery .it-exchange-featured-image .it-exchange-zoom-enabled:hover{border-color:#EEE;cursor:pointer;cursor:-webkit-zoom-in;cursor:-moz-zoom-in;}
+.it-exchange-colorbox-gallery .it-exchange-featured-image .it-exchange-zooming:hover{cursor:crosshair;cursor:-webkit-zoom-out;cursor:-moz-zoom-out;}
+.it-exchange-colorbox-gallery .featured-image-wrapper{display:inline-block;border:0;}
+.it-exchange-colorbox-gallery .it-exchange-thumbnail-images{position:fixed;bottom:0;right:10%;left:10%;overflow:hidden;text-align:center;}
+.it-exchange-colorbox-gallery .it-exchange-thumbnail-images li{display:inline-block;margin:5px;cursor:pointer;}
+.it-exchange-colorbox-gallery .it-exchange-thumbnail-images li img{max-width:75px !important;}
+.it-exchange-colorbox-gallery .it-exchange-thumbnail-images li span{display:inline-block;border:1px solid transparent;float:left;-webkit-transition:margin .2s ease;-moz-transition:margin .2s ease;transition:margin .2s ease;}
+.it-exchange-colorbox-gallery.it-exchange-colorbox-light .it-exchange-thumbnail-images li span:hover,
+.it-exchange-colorbox-gallery.it-exchange-colorbox-light .it-exchange-thumbnail-images li .current{margin-bottom:5px;}
+.it-exchange-colorbox-gallery.it-exchange-colorbox-light .it-exchange-thumbnail-images li img{display:block;}
 
 /** ----------------------------------------:[ screen fixes ]:--- */
 @media screen and (max-width: 1000px) {
