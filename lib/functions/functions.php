@@ -176,6 +176,9 @@ function it_exchange_register_scripts() {
 	// Detect CC Type
 	wp_register_script( 'detect-credit-card-type', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/detect-credit-card-type.js' ), array( 'jquery' ), false, true );
 	
+	// Detect CC Type
+	wp_register_script( 'it-exchange-event-manager', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/event-manager.js' ), array(), false, true );
+	
 	// Select to Autocomplete
 	wp_register_script( 'jquery-select-to-autocomplete', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' ), array( 'jquery', 'jquery-ui-autocomplete' ) );
 	wp_register_style( 'it-exchange-autocomplete-style', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/autocomplete.css' ) );

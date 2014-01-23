@@ -147,7 +147,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 
 		// JS
 		$script_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/js/super-widget.js' );
-		wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery', 'detect-credit-card-type' ), false, true );
+		wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery', 'detect-credit-card-type', 'it-exchange-event-manager' ), false, true );
 		wp_localize_script( 'it-exchange-super-widget', 'exchangeSWL10n', array(
 				'processingPaymentLabel' => __( 'Processing', 'LION' ),
 			)
