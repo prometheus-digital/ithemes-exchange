@@ -765,3 +765,5 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
+1.7.15 - 2014-01-23 - Packaging Bot (lib/classes)
+	Bug Fix: Prior versions would fix non-https URL's for local content when the site was accessed via SSL so that the URL would become an https URL; however, it would not reverse the process and change https URL's to http when accessed without SSL. This caused problems on sites that use self-signed certificates and would sometimes have local content URL's that referred to the https location. This update makes the https URL's convert to http when the site is accessed via SSL.
