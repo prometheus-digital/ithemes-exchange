@@ -317,7 +317,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 				<div class="field product-id">
 					<?php 
 					$product_options = array( 0 => __( 'Select a product', 'LION' ) );
-					$products        = it_exchange_get_products();
+					$products        = it_exchange_get_products( array( 'show_hidden' => true, 'posts_per_page' => -1 ) );
 					foreach( (array) $products as $id => $product ) {
 						$product_options[$product->ID] = $product->post_title;
 					}
