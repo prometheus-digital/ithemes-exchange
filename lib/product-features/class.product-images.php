@@ -167,6 +167,17 @@ class IT_Exchange_Product_Feature_Product_Images {
 				</ul>
 				<?php
 			}
+
+			// Does product type support variants
+			if ( it_exchange_product_type_supports_feature( it_exchange_get_product_type( $post->ID ), 'variants' ) ) {
+
+				// Do we have any variants for this product?
+				if ( ! it_exchange_get_variants_for_product( $post->ID ) ) {
+					echo '<p>' . __( 'No variants have beeen setup for this product.', 'LION' ). '</p>';
+				} else {
+					echo "<p>This is where we put the variants UI</p>";
+				}
+			}
 			?>
 		</div>
 		<?php
