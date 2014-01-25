@@ -27,4 +27,4 @@
 	<?php endif; ?>
 	<?php do_action( 'it_exchange_content_store_end_product_loops' ); ?>
 </ul>
-<?php do_action( 'it_exchange_content_store_before_products_loop' ); ?>
+<?php do_action( 'it_exchange_content_store_after_products_loop' ); ?>
