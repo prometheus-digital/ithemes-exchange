@@ -175,7 +175,52 @@ class IT_Exchange_Product_Feature_Product_Images {
 				if ( ! it_exchange_get_variants_for_product( $post->ID ) ) {
 					echo '<p>' . __( 'No variants have beeen setup for this product.', 'LION' ). '</p>';
 				} else {
-					echo "<p>This is where we put the variants UI</p>";
+					ob_start();
+					?>
+					<label for="product-variant-images-field"><?php _e( 'Variant Images', 'LION' ); ?></label>
+					<div id="it-exchange-variant-images">
+						<div class="it-exchange-variant-image-item">
+							<div class="it-exchange-variant-image-item-title">
+								<p>Any leather type, any size, blue. <span class="it-exchange-variant-image-edit"></p>
+							</div>
+							<div class="it-exchange-variant-image-item-content hidden">
+								<p>Meatloaf pork andouille porchetta rump, frankfurter swine tail cow ham hock ribeye shoulder.</p>
+								<select name="some_name" id="some_name" onchange="" size="1">
+									<option value="option1">option1</option>
+									<option value="option2">option2</option>
+								</select>
+								<select name="some_name" id="some_name" onchange="" size="1">
+									<option value="option1">option1</option>
+									<option value="option2">option2</option>
+								</select>
+								<a class="it-exchange-variant-image-add-images">Add Images</a>
+								<a href class="it-exchange-variant-images-add button-primary">Add</button>
+								<a href class="it-exchange-variant-images-remove-item">Remove</a>
+							</div>
+						</div>
+						<div class="it-exchange-variant-image-item">
+							<div class="it-exchange-variant-image-item-title">
+								<p>Any leather type, any size, blue. <span class="it-exchange-variant-image-edit"></p>
+							</div>
+							<div class="it-exchange-variant-image-item-content hidden">
+								<p>Meatloaf pork andouille porchetta rump, frankfurter swine tail cow ham hock ribeye shoulder.</p>
+								<select name="some_name" id="some_name" onchange="" size="1">
+									<option value="option1">option1</option>
+									<option value="option2">option2</option>
+								</select>
+								<select name="some_name" id="some_name" onchange="" size="1">
+									<option value="option1">option1</option>
+									<option value="option2">option2</option>
+								</select>
+								<a href class="it-exchange-variant-image-add-images">Add Images</a>
+								<a href class="it-exchange-variant-images-add button-primary">Add</button>
+								<a href class="it-exchange-variant-images-remove-item">Remove</a>
+							</div>
+						</div>
+					</div>
+					<?php
+					echo ob_get_clean();
+					
 				}
 			}
 			?>
