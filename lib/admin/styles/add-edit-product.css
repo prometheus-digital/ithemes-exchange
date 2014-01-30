@@ -29,9 +29,11 @@
 
 /** -----------------------------------------------------:[ normal ]:---------- */
 #it-exchange-add-edit-product-interface-main{margin:0;}
-#it_exchange_normal-sortables input,
+#it_exchange_normal-sortables input[type="text"],
+#it_exchange_normal-sortables input[type="email"],
+#it_exchange_normal-sortables input[type="password"],
+#it_exchange_normal-sortables input[type="text"],
 #it_exchange_normal-sortables textarea{box-sizing:border-box;width:100%;padding:10px;border:1px solid #d6d6d6;border-radius:2px;font-size:16px;font-family: 'Open Sans', 'Helvetica Neue',Helvetica,Arial,'Lucida Grande',sans-serif;line-height:1.2;color:#4e5559;}
-#it_exchange_normal-sortables input[type="checkbox"]{width:auto;}
 #it_exchange_normal-sortables input{font-size:24px;}
 #it_exchange_normal-sortables textarea{line-height:1.6;}
 #it_exchange_normal-sortables #it-exchange-product-title{float:left;width:80%;}
