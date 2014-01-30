@@ -130,17 +130,17 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 				if ( !is_wp_error( $response ) ) {
 
 					$array = array();
-					parse_str( wp_remote_retrieve_body( $response ) );
+					parse_str( wp_remote_retrieve_body( $response ), $response_array );
 
-					it_exchange_set_paypal_standard_secure_addon_customer_id( $it_exchange_customer->id, $PAYERID );
-					it_exchange_set_paypal_standard_secure_addon_customer_email( $it_exchange_customer->id, $EMAIL );
-					$transaction_status = $PAYMENTSTATUS;
+					it_exchange_set_paypal_standard_secure_addon_customer_id( $it_exchange_customer->id, $response_array['PAYERID'] );
+					it_exchange_set_paypal_standard_secure_addon_customer_email( $it_exchange_customer->id, $response_array['EMAIL'] );
+					$transaction_status = $response_array['PAYMENTSTATUS'];
 
-					if ( $transaction_id != $TRANSACTIONID )
+					if ( $transaction_id != $response_array['TRANSACTIONID'] )
 						throw new Exception( __( 'Error: Transaction IDs do not match! %s, %s', 'LION' ) );
 
-					if ( number_format( $AMT, '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) )
-						throw new Exception( sprintf( __( 'Error: Amount charged is not the same as the cart total! %s | %s', 'LION' ), $AMT, $transaction_object->total ) );
+					if ( number_format( $response_array['AMT'], '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) )
+						throw new Exception( sprintf( __( 'Error: Amount charged is not the same as the cart total! %s | %s', 'LION' ), $response_array['AMT'], $transaction_object->total ) );
 
 				} else {
 
@@ -458,12 +458,12 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 
 		if ( !is_wp_error( $response ) ) {
 
-			parse_str( wp_remote_retrieve_body( $response ) );
+			parse_str( wp_remote_retrieve_body( $response ), $response_array );
 
-			if ( !empty( $ACK ) && 'Success' === $ACK ) {
+			if ( !empty( $response_array['ACK'] ) && 'Success' === $response_array['ACK'] ) {
 
-				if ( !empty( $WEBSITECODE ) )
-					$payment_form = str_replace( array( "\r\n", "\r", "\n" ), '', stripslashes( $WEBSITECODE ) );
+				if ( !empty( $response_array['WEBSITECODE'] ) )
+					$payment_form = str_replace( array( "\r\n", "\r", "\n" ), '', stripslashes( $response_array['WEBSITECODE'] ) );
 					//Strip out the newline characters because parse_str/PayPal adds a \n to the encrypted code, whic breaks the digital ID
 
 			}
