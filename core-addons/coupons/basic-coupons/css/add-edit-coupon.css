@@ -27,7 +27,7 @@
 
 /** -----------------------------------------------------:[ form ]:---------- */
 .it-exchange-add-basic-coupon .amount input{max-width:80px;text-align:right;}
-.it-exchange-add-basic-coupon .coupon-code .dice{margin:14px 0 0 10px;cursor:pointer;-webkit-transition:all .1s linear;-moz-transition:all .1s linear 0s;padding:3px 3px 0;border:1px solid #d6d6d6;border-radius:3px;}
+.it-exchange-add-basic-coupon .coupon-code .dice{margin:14px 0 0 10px;cursor:pointer;-webkit-transition:all .1s linear;-moz-transition:all .1s linear 0s;padding:0 3px;background:#FFF;border:1px solid #d6d6d6;border-radius:3px;}
 .it-exchange-add-basic-coupon .coupon-code .dice:hover{border:1px solid #fff;box-shadow:0 0 0 2px #8dc943;border-radius:2px;}
 .it-exchange-add-basic-coupon .date{overflow:hidden;}
 .it-exchange-add-basic-coupon .date div{float:left;}
