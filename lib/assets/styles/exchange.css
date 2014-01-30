@@ -164,6 +164,10 @@ a.it-exchange-button {text-decoration:none;}
 .it-exchange-checkout .it-exchange-visual-cc-wrap{margin-top:1em;}
 .it-exchange-checkout .it-exchange-visual-cc{float:right;}
 
+/** -----------------------------------------------------:[ transaction methods ]:---------- */
+.it-exchange-checkout .it-exchange-checkout-transaction-methods form{margin-top:.5em;}
+.it-exchange-checkout .it-exchange-checkout_cancel{margin-top:.5em;}
+
 /** ---:[ guest checkout ]:--- */
 .it-exchange-checkout .it-exchange-guest-checkout-form-wrapper{display:inline-block;padding:1em;border:1px solid #DDD;border-radius:3px;margin-bottom:1.5em;}
 .it-exchange-checkout .it-exchange-guest-checkout-form-wrapper h3{margin:0 0 .5em;font-weight:normal;}
