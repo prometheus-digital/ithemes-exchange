@@ -1,3 +1,9 @@
+1.7.16 - 2014-01-30 Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
+	Adding an JS hook API for exchange. Based on https://github.com/carldanley/WP-JS-Hooks
+	Fixed products loop template action copy/paste error -- Thanks Ronald!
+	Show all products in coupon dropdown
+	Added a max-length option to the product description.
+	Added some style mods for the colorbox popup.
 1.7.15 - 2014-01-23 - Packaging Bot (lib/classes)
 	Bug Fix: Prior versions would fix non-https URL's for local content when the site was accessed via SSL so that the URL would become an https URL; however, it would not reverse the process and change https URL's to http when accessed without SSL. This caused problems on sites that use self-signed certificates and would sometimes have local content URL's that referred to the https location. This update makes the https URL's convert to http when the site is accessed via SSL.
 1.7.14 - 2014-01-21 - Lew Ayotte, Glenn Ansley,
@@ -8,7 +14,7 @@
 	Fixed bug causing it_exchange_get_products to return empty when searching by product_type when only one product type is enabled
 	Fix for placeholder/value when adding new products
 	Added icon fonts as a registered stylesheet.
-1.7.13 - 2014-01-13 - Glenn Ansley (robin), Lew Ayotte (batman)
+1.7.13 - 2014-01-13 - Glenn Ansley (batman), Lew Ayotte (robin)
 	Apply number_format to it_exchange_convert_from_database_number to get properly formatted prices that have decimals ending in 0 (which get trimmed)
 	Edit Product page now remembers which advanced option you last selected
 	Give rounding for coupons a higher precision
