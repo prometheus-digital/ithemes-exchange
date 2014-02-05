@@ -387,6 +387,9 @@ class IT_Exchange_Email_Notifications {
 			$name = $this->user->data->first_name;
 		} else if ( ! empty( $this->user->data->display_name ) ) {
 			$name = $this->user->data->display_name;
+		} else if ( ! empty( $GLOBALS['it_exchange']['email-confirmation-data'][0]->customer_id ) && is_email( $GLOBALS['it_exchange']['email-confirmation-data'][0]->customer_id ) ) {
+			// Guest Chekcout
+			$name = $GLOBALS['it_exchange']['email-confirmation-data'][0]->customer_id;
 		}
 		return $name;
 	}
