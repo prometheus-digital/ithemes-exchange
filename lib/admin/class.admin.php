@@ -1489,7 +1489,7 @@ Order: %s
 				$deps = array( 'jquery-ui-tooltip', 'it-exchange-dialog' );
 				wp_enqueue_script( 'it-exchange-settings-general', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/settings-general.js', $deps );
 				wp_localize_script( 'it-exchange-settings-general', 'settingsGenearlL10n', array(
-						'delteConfirmationText'  => __( 'You have checked the option to "Reset ALL data". Are you should you want to delete all Exchange products, transactions, and settings?', 'LION' ),
+						'delteConfirmationText'  => __( 'You have checked the option to "Reset ALL data". Are you sure you want to delete all Exchange products, transactions, and settings?', 'LION' ),
 					)
 				);
 			} else if ( $_GET['tab'] == 'pages') {
