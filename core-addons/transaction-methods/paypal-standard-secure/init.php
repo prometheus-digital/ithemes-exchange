@@ -234,6 +234,8 @@ function it_exchange_cancel_paypal_standard_secure_subscription( $subscription_d
 		}
 
 	}
+
+	return false;
 }
 add_action( 'it_exchange_cancel_paypal-standard-secure_subscription', 'it_exchange_cancel_paypal_standard_secure_subscription' );
 
