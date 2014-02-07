@@ -242,6 +242,13 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 	// If we don't have a title, create one
 	if ( empty( $args['post_title'] ) )
 		$args['post_title'] = $method . '-' . $method_id . '-' . date_i18n( 'Y-m-d-H:i:s' );
+		
+	if ( $subscription_details = it_exchange_get_session_data( 'cancel_subscription' ) ) {
+		if ( !empty( $subscription_details['old_transaction_method'] ) )
+			do_action( 'it_exchange_cancel_' . $subscription_details['old_transaction_method'] . '_subscription', $subscription_details );
+	} else {
+		it_exchange_clear_session_data( 'cancel_subscription' ); // just in case, we don't want any lingering
+	}
 
 	if ( $transaction_id = wp_insert_post( $args ) ) {
 		update_post_meta( $transaction_id, '_it_exchange_transaction_method',    $method );
@@ -257,6 +264,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		return apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $cart_object, $args );
 	}
 	do_action( 'it_exchange_add_transaction_failed', $method, $method_id, $status, $customer_id, $cart_object, $args );
+	
 	return apply_filters( 'it_exchange_add_transaction', false, $method, $method_id, $status, $customer_id, $cart_object, $args);
 }
 
