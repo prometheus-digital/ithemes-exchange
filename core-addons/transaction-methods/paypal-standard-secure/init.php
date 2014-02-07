@@ -75,98 +75,162 @@ add_filter( 'it_exchange_refund_url_for_paypal-standard-secure', 'it_exchange_re
  * @param object $transaction_object The transaction object
 */
 function it_exchange_process_paypal_standard_secure_addon_transaction( $status, $transaction_object ) {
-
+	
 	if ( $status ) //if this has been modified as true already, return.
 		return $status;
-
+	
 	if ( !empty( $_REQUEST['it-exchange-transaction-method'] ) && 'paypal-standard-secure' === $_REQUEST['it-exchange-transaction-method'] ) {
-
-		if ( !empty( $_REQUEST['tx'] ) ) //if PDT is enabled
-			$transaction_id = $_REQUEST['tx'];
-		else if ( !empty( $_REQUEST['txn_id'] ) ) //if PDT is not enabled
-			$transaction_id = $_REQUEST['txn_id'];
-		else
-			$transaction_id = NULL;
-
-		if ( !empty( $_REQUEST['amt'] ) ) //if PDT is enabled
-			$transaction_amount = $_REQUEST['amt'];
-		else if ( !empty( $_REQUEST['mc_gross'] ) ) //if PDT is not enabled
-			$transaction_amount = $_REQUEST['mc_gross'];
-		else
-			$transaction_amount = NULL;
-
-		if ( !empty( $_REQUEST['st'] ) ) //if PDT is enabled
-			$transaction_status = $_REQUEST['st'];
-		else if ( !empty( $_REQUEST['payment_status'] ) ) //if PDT is not enabled
-			$transaction_status = $_REQUEST['payment_status'];
-		else
-			$transaction_status = NULL;
-
-		if ( !empty( $transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
-
-			try {
-
-				$general_settings = it_exchange_get_option( 'settings_general' );
-				$paypal_settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
-
-				$it_exchange_customer = it_exchange_get_current_customer();
-
-				$paypal_api_url       = ( $paypal_settings['sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
-				$paypal_api_username  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-username'] : $paypal_settings['live-api-username'];
-				$paypal_api_password  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-password'] : $paypal_settings['live-api-password'];
-				$paypal_api_signature = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-signature'] : $paypal_settings['live-api-signature'];
-
-				$request = array(
-					'USER'          => trim( $paypal_api_username ),
-					'PWD'           => trim( $paypal_api_password ),
-					'SIGNATURE'     => trim( $paypal_api_signature ),
-					'VERSION'       => '96.0', //The PayPal API version
-					'METHOD'        => 'GetTransactionDetails',
-					'TRANSACTIONID' => $transaction_id,
-				);
-
-				$response = wp_remote_post( $paypal_api_url, array( 'body' => $request ) );
-
-				if ( !is_wp_error( $response ) ) {
-
-					$array = array();
-					parse_str( wp_remote_retrieve_body( $response ), $response_array );
-
-					it_exchange_set_paypal_standard_secure_addon_customer_id( $it_exchange_customer->id, $response_array['PAYERID'] );
-					it_exchange_set_paypal_standard_secure_addon_customer_email( $it_exchange_customer->id, $response_array['EMAIL'] );
-					$transaction_status = $response_array['PAYMENTSTATUS'];
-
-					if ( $transaction_id != $response_array['TRANSACTIONID'] )
-						throw new Exception( __( 'Error: Transaction IDs do not match! %s, %s', 'LION' ) );
-
-					if ( number_format( $response_array['AMT'], '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) )
-						throw new Exception( sprintf( __( 'Error: Amount charged is not the same as the cart total! %s | %s', 'LION' ), $response_array['AMT'], $transaction_object->total ) );
-
-				} else {
-
-					throw new Exception( $response->get_error_message() );
-
+		
+		if ( !empty( $_REQUEST['paypal-standard-secure-nonce'] ) && wp_verify_nonce( $_REQUEST['paypal-standard-secure-nonce'], 'ppss-nonce' ) ) {
+			
+			if ( !empty( $_REQUEST['tx'] ) ) //if PDT is enabled
+				$transaction_id = $_REQUEST['tx'];
+			else if ( !empty( $_REQUEST['txn_id'] ) ) //if PDT is not enabled
+				$transaction_id = $_REQUEST['txn_id'];
+			else
+				$transaction_id = NULL;
+			
+			if ( !empty( $_REQUEST['amt'] ) ) //if PDT is enabled
+				$transaction_amount = $_REQUEST['amt'];
+			else if ( !empty( $_REQUEST['mc_gross'] ) ) //if PDT is not enabled
+				$transaction_amount = $_REQUEST['mc_gross'];
+			else
+				$transaction_amount = NULL;
+			
+			if ( !empty( $_REQUEST['st'] ) ) //if PDT is enabled
+				$transaction_status = $_REQUEST['st'];
+			else if ( !empty( $_REQUEST['payment_status'] ) ) //if PDT is not enabled
+				$transaction_status = $_REQUEST['payment_status'];
+			else
+				$transaction_status = NULL;
+			
+			$general_settings = it_exchange_get_option( 'settings_general' );
+			$paypal_settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
+			
+			$it_exchange_customer = it_exchange_get_current_customer();
+			
+			if ( !empty( $transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
+			
+				try {
+					
+					$paypal_api_url       = ( $paypal_settings['sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
+					$paypal_api_username  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-username'] : $paypal_settings['live-api-username'];
+					$paypal_api_password  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-password'] : $paypal_settings['live-api-password'];
+					$paypal_api_signature = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-signature'] : $paypal_settings['live-api-signature'];
+					
+					$request = array(
+						'USER'          => trim( $paypal_api_username ),
+						'PWD'           => trim( $paypal_api_password ),
+						'SIGNATURE'     => trim( $paypal_api_signature ),
+						'VERSION'       => '96.0', //The PayPal API version
+						'METHOD'        => 'GetTransactionDetails',
+						'TRANSACTIONID' => $transaction_id,
+					);
+					
+					$response = wp_remote_post( $paypal_api_url, array( 'body' => $request ) );
+					
+					if ( !is_wp_error( $response ) ) {
+						
+						$array = array();
+						parse_str( wp_remote_retrieve_body( $response ), $response_array );
+						
+						it_exchange_set_paypal_standard_secure_addon_customer_id( $it_exchange_customer->id, $response_array['PAYERID'] );
+						it_exchange_set_paypal_standard_secure_addon_customer_email( $it_exchange_customer->id, $response_array['EMAIL'] );
+						$transaction_status = $response_array['PAYMENTSTATUS'];
+						
+						if ( $transaction_id != $response_array['TRANSACTIONID'] )
+							throw new Exception( __( 'Error: Transaction IDs do not match! %s, %s', 'LION' ) );
+						
+						if ( number_format( $response_array['AMT'], '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) )
+							throw new Exception( sprintf( __( 'Error: Amount charged is not the same as the cart total! %s | %s', 'LION' ), $response_array['AMT'], $transaction_object->total ) );
+						
+					} else {
+						
+						throw new Exception( $response->get_error_message() );
+						
+					}
+					
 				}
-
+				catch ( Exception $e ) {
+					
+					it_exchange_add_message( 'error', $e->getMessage() );
+					return false;
+					
+				}
+				
+				return it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
+				
+			} else {
+				//nonce verified, so let's check if this was a free trial -- no transaction data is sent from PayPal until
+				//an actual monetary transaction occurs, so we need to improvise.
+				$fake_id = $_REQUEST['paypal-standard-secure-nonce'];
+				$transaction_object->total = 0;
+				//set to pending until the IPN verifies...
+				$transaction_id = it_exchange_add_transaction( 'paypal-standard-secure', $fake_id, 'pending', $it_exchange_customer->id, $transaction_object );
+				
+				return $transaction_id;
 			}
-			catch ( Exception $e ) {
-
-				it_exchange_add_message( 'error', $e->getMessage() );
-				return false;
-
-			}
-
-			return it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
-
+			
+			it_exchange_add_message( 'error', __( 'Unknown error while processing with PayPal. Please check your PayPal account for any charges and try again later.', 'LION' ) );
+			
 		}
-
-		it_exchange_add_message( 'error', __( 'Unknown error while processing with PayPal. Please try again later.', 'LION' ) );
-
+	
 	}
 	return false;
 
 }
 add_action( 'it_exchange_do_transaction_paypal-standard-secure', 'it_exchange_process_paypal_standard_secure_addon_transaction', 10, 2 );
+
+function it_exchange_cancel_paypal_standard_secure_subscription( $subscription_details ) {
+	
+	if ( empty( $subscription_details['old_subscriber_id'] ) )
+		return;
+
+	$subscriber_id = $subscription_details['old_subscriber_id'];
+	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard_secure' );
+
+	$paypal_api_url       = ( $paypal_settings['sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
+
+	$paypal_api_username  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-username'] : $paypal_settings['live-api-username'];
+	$paypal_api_password  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-password'] : $paypal_settings['live-api-password'];
+	$paypal_api_signature = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-signature'] : $paypal_settings['live-api-signature'];
+
+	if ( ! empty( $paypal_api_username )
+		&& ! empty( $paypal_api_password )
+		&& ! empty( $paypal_api_signature ) ) {
+
+		$button_request = array(
+			'USER'      => trim( $paypal_api_username ),
+			'PWD'       => trim( $paypal_api_password ),
+			'SIGNATURE' => trim( $paypal_api_signature ),
+			'VERSION'   => '96.0', //The PayPal API version
+			'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
+			'PROFILEID' => $subscriber_id,
+			'ACTION'    => 'CANCEL',
+			'NOTE'      => __( 'Canceled during Upgrade/Downgrade Process', 'LION' ),
+		);
+	
+		$response = wp_remote_post( $paypal_api_url, array( 'body' => $button_request ) );
+		
+		if ( !is_wp_error( $response ) ) {
+
+			parse_str( wp_remote_retrieve_body( $response ), $response_array );
+
+			if ( !empty( $response_array['ACK'] ) && 'Success' === $response_array['ACK'] ) {
+
+				if ( !empty( $response_array['WEBSITECODE'] ) )
+					$payment_form = str_replace( array( "\r\n", "\r", "\n" ), '', stripslashes( $response_array['WEBSITECODE'] ) );
+					//Strip out the newline characters because parse_str/PayPal adds a \n to the encrypted code, whic breaks the digital ID
+
+			}
+
+		}
+
+	}
+
+	return false;
+}
+add_action( 'it_exchange_cancel_paypal-standard-secure_subscription', 'it_exchange_cancel_paypal_standard_secure_subscription' );
 
 /**
  * Grab the paypal customer ID for a WP user
@@ -400,6 +464,7 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 						$unit = apply_filters( 'it_exchange_paypal-standard_subscription_unit', $unit, $time );
 						$duration = apply_filters( 'it_exchange_paypal-standard_subscription_duration', 1, $time );
 						$subscription = true;
+						$product_id = $product['product_id'];
 					}
 				}
 			}
@@ -415,13 +480,93 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 			'BUTTONIMAGE'    => 'REG',
 			'BUYNOWTEXT'     => 'PAYNOW',
 		);
-
+		$upgrade_downgrade = it_exchange_get_session_data( 'updowngrade_details' );
+		
 		if ( $subscription ) {
-		//https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/#id08A6HI00JQU
+			//https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/#id08A6HI00JQU
 			//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
 			//a2, t2, p2 are for the second trial period, which is not supported with the Recurring Payments add-on
 			//a3, t3, p3 are required for the actual subscription details
+			$trial_duration_1 = empty( $upgrade_downgrade[$product_id]['free_days'] ) ? null : $upgrade_downgrade[$product_id]['free_days']; //stripe returns null if it isn't set
+			$trial_duration_2 = 0;
+
 			$button_request['BUTTONTYPE'] = 'SUBSCRIBE';
+			if ( !empty( $trial_duration_1 ) ) {
+				/*
+				D – for days; allowable range for p2 is 1 to 90
+				W – for weeks; allowable range for p2 is 1 to 52
+				M – for months; allowable range for p2 is 1 to 24
+				Y – for years; allowable range for p2 is 1 to 5
+				Source: https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/#id08A6HF00TZS
+				*/
+			
+				$trial_unit_1 = 'D'; //Days by default
+				$trial_unit_2 = 'D';
+				if ( 90 < $trial_duration_1 ) { //If greater than 90 days, we need to modify
+					$years = floor( $trial_duration_1 / 365 );
+					$years_remainder = $trial_duration_1 % 365;
+					$months = floor( $trial_duration_1 / 30 );
+					$months_remainder = $trial_duration_1 % 30;
+					$weeks = floor( $trial_duration_1 / 7 );
+					$weeks_remainder = $trial_duration_1 % 7;
+					
+					if ( 10 == $years ) { //the most we can do
+						$trial_unit_1 = 'Y';
+						$trial_duration_1 = 5;
+						$trial_unit_2 = 'Y';
+						$trial_duration_2 = 5;
+					} else if ( !empty( $years ) && 5 >= $years ) {
+						$trial_unit_1 = 'Y';
+						$trial_duration_1 = $years;
+						if ( !empty( $years_remainder ) )
+							$trial_duration_2 = $years_remainder;
+					} else if ( !empty( $months ) && 24 >= $months ) {
+						$trial_unit_1 = 'M';
+						$trial_duration_1 = $months;
+						if ( !empty( $months_remainder ) )
+							$trial_duration_2 = $months_remainder;
+					} else if ( !empty( $weeks ) && 52 >= $weeks ) {
+						$trial_unit_1 = 'W';
+						$trial_duration_1 = $weeks;
+						if ( !empty( $weeks_remainder ) )
+							$trial_duration_2 = $weeks_remainder;
+					} else {
+						$trial_duration_1 = 0;
+						$trial_duration_2 = 0;
+					}
+				}
+				
+				if ( 90 < $trial_duration_2 ) { //If greater than 90 days, we need to modify
+					$weeks = floor( $trial_duration_2 / 7 );
+					$months = floor( $trial_duration_2 / 30 );
+					$years = floor( $trial_duration_2 / 365 );
+					
+					if ( !empty( $weeks ) &&  52 >= $weeks ) {
+						$trial_unit_2 = 'W';
+						$trial_duration_2 = $weeks;
+					} else if ( !empty( $months ) &&  24 >= $months ) {
+						$trial_unit_2 = 'M';
+						$trial_duration_2 = $months;
+					} else if ( !empty( $years ) &&  5 >= $years ) {
+						$trial_unit_2 = 'Y';
+						$trial_duration_2 = $years;
+					} else {
+						$trial_duration_2 = 0;
+					}
+				}
+			
+				if ( $trial_duration_1 ) {
+					$L_BUTTONVARS[] = 'a1=0'; //Free trial subscription price.
+					$L_BUTTONVARS[] = 'p1=' . $trial_duration_1; //Trial period.
+					$L_BUTTONVARS[] = 't1=' . $trial_unit_1;
+				}
+				if ( $trial_duration_2 ) {
+					$L_BUTTONVARS[] = 'a2=0.01'; //Free trial subscription price. (needs to be greater than 0)
+					$L_BUTTONVARS[] = 'p2=' . $trial_duration_2; //Trial period.
+					$L_BUTTONVARS[] = 't2=' . $trial_unit_2;
+				}
+			}
+				
 			$L_BUTTONVARS[] = 'a3=' . number_format( it_exchange_get_cart_total( false ), 2, '.', '' ); //Regular subscription price.
 			$L_BUTTONVARS[] = 'p3=' . $duration; //Subscription duration. Specify an integer value in the allowable range for the units of duration that you specify with t3.
 			$L_BUTTONVARS[] = 't3=' . $unit; //Regular subscription units of duration. (D, W, M, Y) -- we only use M,Y by default
@@ -433,10 +578,12 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 			$L_BUTTONVARS[] = 'quantity=1';
 
 		}
+		
+		$nonce = wp_create_nonce( 'ppss-nonce' );
 
 		$L_BUTTONVARS[] = 'business=' . $paypal_email;
 		$L_BUTTONVARS[] = 'item_name=' . it_exchange_get_cart_description();
-		$L_BUTTONVARS[] = 'return=' . add_query_arg( 'it-exchange-transaction-method', 'paypal-standard-secure', it_exchange_get_page_url( 'transaction' ) );
+		$L_BUTTONVARS[] = 'return=' . add_query_arg( array( 'it-exchange-transaction-method' => 'paypal-standard-secure', 'paypal-standard-secure-nonce' => $nonce ), it_exchange_get_page_url( 'transaction' ) );
 		$L_BUTTONVARS[] = 'currency_code=' . $general_settings['default-currency'];
 		$L_BUTTONVARS[] = 'notify_url=' . get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard-secure' ) . '=1';
 		$L_BUTTONVARS[] = 'no_note=1';
@@ -445,6 +592,7 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 		$L_BUTTONVARS[] = 'email=' . $it_exchange_customer->data->user_email;
 		$L_BUTTONVARS[] = 'rm=2'; //Return  Method - https://developer.paypal.com/webapps/developer/docs/classic/button-manager/integration-guide/ButtonManagerHTMLVariables/
 		$L_BUTTONVARS[] = 'cancel_return=' . it_exchange_get_page_url( 'cart' );
+		$L_BUTTONVARS[] = 'custom=' . $nonce;
 
 		$count = 0;
 		foreach( $L_BUTTONVARS as $L_BUTTONVAR ) {
@@ -453,7 +601,7 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 			$count++;
 
 		}
-
+		
 		$response = wp_remote_post( $paypal_api_url, array( 'body' => $button_request ) );
 
 		if ( !is_wp_error( $response ) ) {
@@ -469,13 +617,30 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 			}
 
 		}
-
+		
 		if ( preg_match( '/-----BEGIN PKCS7-----.*-----END PKCS7-----/i', $payment_form, $matches ) ) {
 
 			$query = array(
-				'cmd'           => '_s-xclick',
-				'encrypted'     => $matches[0],
+				'cmd'       => '_s-xclick',
+				'encrypted' => $matches[0],
 			);
+			
+			if ( $subscription && !empty( $product_id )
+				&& !empty( $upgrade_downgrade[$product_id]['old_transaction_id'] ) 
+				&& !empty( $upgrade_downgrade[$product_id]['old_transaction_method'] ) ) {
+				$subscription_details = array(
+					'product_id'             => $product_id,
+					'free_days'              => $upgrade_downgrade[$product_id]['free_days'],
+					'credit'                 => $upgrade_downgrade[$product_id]['credit'],
+					'old_transaction_id'     => $upgrade_downgrade[$product_id]['old_transaction_id'],
+					'old_transaction_method' => $upgrade_downgrade[$product_id]['old_transaction_method'],
+				);
+				if ( !empty( $upgrade_downgrade[$product_id]['old_subscriber_id'] ) )
+					$subscription_details['old_subscriber_id'] = $upgrade_downgrade[$product_id]['old_subscriber_id'];
+				it_exchange_update_session_data( 'cancel_subscription', $subscription_details );
+			} else {
+				it_exchange_clear_session_data( 'cancel_subscription' );
+			}
 
 			$paypal_payment_url = $paypal_payment_url . '?' .  http_build_query( $query );
 
@@ -521,15 +686,24 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
 	if ( !empty( $request['txn_type'] ) ) {
 
+		if ( !empty( $request['custom'] ) && $transaction_data = it_exchange_get_transaction( 'paypal-standard-secure', $request['custom'] ) ) {
+			if ( !empty( $request['txn_id'] ) )
+				update_post_meta( $transaction_data->ID, '_it_exchange_transaction_method_id', $request['txn_id'] );
+			else
+				$request['txn_id'] = $request['custom'];
+				
+			it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], 'success' );
+			it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
+		}
+		
 		switch( $request['txn_type'] ) {
 
 			case 'web_accept':
 				switch( strtolower( $request['payment_status'] ) ) {
-
-					case 'completed' :
+					case 'completed':
 						it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] );
 						break;
-					case 'reversed' :
+					case 'reversed':
 						it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['parent_txn_id'], $request['reason_code'] );
 						break;
 				}
@@ -537,7 +711,7 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
 			case 'subscr_payment':
 				switch( strtolower( $request['payment_status'] ) ) {
-					case 'completed' :
+					case 'completed':
 						if ( !it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
 							//If the transaction isn't found, we've got a new payment
 							it_exchange_paypal_standard_secure_addon_add_child_transaction( $request['txn_id'], $request['payment_status'], $subscriber_id, $request['mc_gross'] );
@@ -575,7 +749,7 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
 			switch( $request['reason_code'] ) {
 
-				case 'refund' :
+				case 'refund':
 					it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['parent_txn_id'], $request['payment_status'] );
 					it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $request['parent_txn_id'], $request['mc_gross'] );
 					if ( $subscriber_id )
