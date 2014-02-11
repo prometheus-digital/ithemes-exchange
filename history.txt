@@ -1,3 +1,5 @@
+1.7.17 - 2014-02-11 - Packaging Bot (lib/icon-fonts)
+	Edited ithemes shared resource
 1.7.16 - 2014-01-30 Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
 	Adding an JS hook API for exchange. Based on https://github.com/carldanley/WP-JS-Hooks
 	Fixed products loop template action copy/paste error -- Thanks Ronald!
@@ -773,5 +775,3 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
-1.7.17 - 2014-02-11 - Packaging Bot (lib/icon-fonts)
-	Add support for iThemes Security
