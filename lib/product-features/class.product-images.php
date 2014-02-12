@@ -124,8 +124,8 @@ class IT_Exchange_Product_Feature_Product_Images {
 
 				echo '<div id="it-exchange-feature-image" class="ui-droppable">';
 				echo '<ul class="feature-image">';
-				echo '  <li id="' . $image . '">';
-				echo '    <a class="image-edit" href="">';
+				echo '  <li id="' . uniqid() . '">';
+				echo '    <a class="image-edit is-featured" href="" data-image-id="' . $image . '">';
 				echo '      <img alt="Featured Image" data-thumb="' . $thumb . '" data-large="' . $large . '" src=" ' . $src . '">';
 				echo '      <span class="overlay"></span>';
 				echo '    </a>';
@@ -143,8 +143,8 @@ class IT_Exchange_Product_Feature_Product_Images {
 					$large = wp_get_attachment_url( $image_id );
 					$src = $thumb;
 
-					echo '  <li id="' . $image_id . '">';
-					echo '    <a class="image-edit" href="">';
+					echo '  <li id="' . uniqid() . '">';
+					echo '    <a class="image-edit" href="" data-image-id="' . $image_id . '">';
 					echo '      <img alt="" data-thumb="' . $thumb . '" data-large="' . $large . '" src=" ' . $src . '">';
 					echo '      <span class="overlay"></span>';
 					echo '    </a>';
