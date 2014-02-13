@@ -181,6 +181,13 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 }
 add_action( 'it_exchange_do_transaction_paypal-standard-secure', 'it_exchange_process_paypal_standard_secure_addon_transaction', 10, 2 );
 
+/**
+ * Call to cancel PayPal subscription automatically (on upgrade/downgrade)
+ *
+ * @since CHANGEME
+ *
+ * @param array $subscription_details the Exchange Subscription Details
+*/
 function it_exchange_cancel_paypal_standard_secure_subscription( $subscription_details ) {
 	
 	if ( empty( $subscription_details['old_subscriber_id'] ) )
@@ -227,8 +234,6 @@ function it_exchange_cancel_paypal_standard_secure_subscription( $subscription_d
 		}
 
 	}
-
-	return false;
 }
 add_action( 'it_exchange_cancel_paypal-standard-secure_subscription', 'it_exchange_cancel_paypal_standard_secure_subscription' );
 
