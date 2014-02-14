@@ -106,8 +106,12 @@ function it_exchange_basic_reporting_get_total ( $options=array() ) {
 	// Add the filter
 	add_filter( 'posts_where', 'it_exchange_filter_where_clause_for_all_queries' );
 
-	// Grab transactions
-	if ( $transactions = it_exchange_get_transactions( array( 'posts_per_page' => -1, 'suppress_filters' => false ) ) ) {
+	// Grab transactions via transient or make DB call
+	if ( false === $transactions = get_transient( 'it-exchange-basic-reporting-tran-total' ) ) {
+		$transactions = it_exchange_get_transactions( array( 'posts_per_page' => -1, 'suppress_filters' => false ) );
+		set_transient( 'it-exchange-basic-reporting-tran-total', $transactions, DAY_IN_SECONDS );
+	}
+	if ( $transactions ) {
 		$total = 0;
 		// Loop through transactions and sum the totals if they are cleared for delivery
 		foreach( $transactions as $transaction ) {
@@ -152,8 +156,12 @@ function it_exchange_basic_reporting_get_average( $options=array() ) {
 	// Add the filter
 	add_filter( 'posts_where', 'it_exchange_filter_where_clause_for_all_queries' );
 
-	// Grab transactions
-	if ( $transactions = it_exchange_get_transactions( array( 'posts_per_page' => -1, 'suppress_filters' => false ) ) ) {
+	// Grab transactions via transient or make DB call
+	if ( false === $transactions = get_transient( 'it-exchange-basic-reporting-tran-average' ) ) {
+		$transactions = it_exchange_get_transactions( array( 'posts_per_page' => -1, 'suppress_filters' => false ) );
+		set_transient( 'it-exchange-basic-reporting-tran-average', $transactions, DAY_IN_SECONDS );
+	}
+	if ( $transactions  ) {
 		// Loop through transactions and sum the totals if they are cleared for delivery
 		$totals = array();
 		foreach( $transactions as $transaction ) {
@@ -200,8 +208,14 @@ function it_exchange_basic_reporting_get_transactions_count( $options=array() ) 
 	// Add the filter
 	add_filter( 'posts_where', 'it_exchange_filter_where_clause_for_all_queries' );
 
+	// Grab transactions via transient or make DB call
+	if ( false === $transactions = get_transient( 'it-exchange-basic-reporting-tran-count' ) ) {
+		$transactions = it_exchange_get_transactions( array( 'posts_per_page' => -1, 'suppress_filters' => false ) );
+		set_transient( 'it-exchange-basic-reporting-tran-count', $transactions, DAY_IN_SECONDS );
+	}
+
 	// Grab transactions
-	if ( $transactions = it_exchange_get_transactions( array( 'posts_per_page' => -1, 'suppress_filters' => false ) ) ) {
+	if ( $transactions ) {
 		// Loop through transactions and sum the totals if they are cleared for delivery
 		foreach( $transactions as $key => $transaction ) {
 			if ( ! it_exchange_transaction_is_cleared_for_delivery( $transaction ) )
