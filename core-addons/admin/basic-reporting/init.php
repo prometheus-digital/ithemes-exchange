@@ -235,3 +235,17 @@ function it_exchange_basic_reporting_get_transactions_count( $options=array() ) 
 
 	return $count;
 }
+
+/**
+ * Breaks the transient caches when a transaction happens
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_basic_reporting_break_transaction_caches() {
+	delete_transient( 'it-exchange-basic-reporting-tran-total' );
+	delete_transient( 'it-exchange-basic-reporting-tran-average' );
+	delete_transient( 'it-exchange-basic-reporting-tran-count' );
+}
+add_action( 'it_exchange_add_transaction_success', 'it_exchange_basic_reporting_break_transaction_caches' );
