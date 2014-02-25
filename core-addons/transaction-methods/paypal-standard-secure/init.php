@@ -447,9 +447,9 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 		$it_exchange_customer = it_exchange_get_current_customer();
 
 		remove_filter( 'the_title', 'wptexturize' ); // remove this because it screws up the product titles in PayPal
+		$cart = it_exchange_get_cart_products();
 
-		if ( 1 === it_exchange_get_cart_products_count() ) {
-			$cart = it_exchange_get_cart_products();
+		if ( 1 === absint( count( $cart ) ) ) {
 			foreach( $cart as $product ) {
 				if ( it_exchange_product_supports_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
 					if ( it_exchange_product_has_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
@@ -485,8 +485,31 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 			'BUTTONIMAGE'    => 'REG',
 			'BUYNOWTEXT'     => 'PAYNOW',
 		);
+
 		$upgrade_downgrade = it_exchange_get_session_data( 'updowngrade_details' );
-		
+		if ( !empty( $upgrade_downgrade ) ) {
+			foreach( $cart as $product ) {
+				if ( !empty( $upgrade_downgrade[$product['product_id']] ) ) {
+					$product_id = $product['product_id'];
+					if (   !empty( $upgrade_downgrade[$product_id]['old_transaction_id'] ) 
+						&& !empty( $upgrade_downgrade[$product_id]['old_transaction_method'] ) ) {
+						$subscription_details['product_id'] = array(
+							'free_days'              => $product_id,
+							'product_id'             => $upgrade_downgrade[$product_id]['free_days'],
+							'credit'                 => $upgrade_downgrade[$product_id]['credit'],
+							'old_transaction_id'     => $upgrade_downgrade[$product_id]['old_transaction_id'],
+							'old_transaction_method' => $upgrade_downgrade[$product_id]['old_transaction_method'],
+						);
+						if ( !empty( $upgrade_downgrade[$product_id]['old_subscriber_id'] ) )
+							$subscription_details['old_subscriber_id'] = $upgrade_downgrade[$product_id]['old_subscriber_id'];
+						it_exchange_update_session_data( 'cancel_subscription', $subscription_details );
+					}
+				}
+			}
+		} else {
+			it_exchange_clear_session_data( 'cancel_subscription' );
+		}
+				
 		if ( $subscription ) {
 			//https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/#id08A6HI00JQU
 			//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
@@ -624,35 +647,14 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 		}
 		
 		if ( preg_match( '/-----BEGIN PKCS7-----.*-----END PKCS7-----/i', $payment_form, $matches ) ) {
-
 			$query = array(
 				'cmd'       => '_s-xclick',
 				'encrypted' => $matches[0],
 			);
-			
-			if ( $subscription && !empty( $product_id )
-				&& !empty( $upgrade_downgrade[$product_id]['old_transaction_id'] ) 
-				&& !empty( $upgrade_downgrade[$product_id]['old_transaction_method'] ) ) {
-				$subscription_details = array(
-					'product_id'             => $product_id,
-					'free_days'              => $upgrade_downgrade[$product_id]['free_days'],
-					'credit'                 => $upgrade_downgrade[$product_id]['credit'],
-					'old_transaction_id'     => $upgrade_downgrade[$product_id]['old_transaction_id'],
-					'old_transaction_method' => $upgrade_downgrade[$product_id]['old_transaction_method'],
-				);
-				if ( !empty( $upgrade_downgrade[$product_id]['old_subscriber_id'] ) )
-					$subscription_details['old_subscriber_id'] = $upgrade_downgrade[$product_id]['old_subscriber_id'];
-				it_exchange_update_session_data( 'cancel_subscription', $subscription_details );
-			} else {
-				it_exchange_clear_session_data( 'cancel_subscription' );
-			}
-
 			$paypal_payment_url = $paypal_payment_url . '?' .  http_build_query( $query );
 
 			return $paypal_payment_url;
-
 		}
-
 	}
 
 	return false;
@@ -944,32 +946,25 @@ function it_exchange_paypal_standard_secure_addon_transaction_status_label( $sta
 		case 'canceled_reversal':
 		case 'processed' :
 			return __( 'Paid', 'LION' );
-			break;
 		case 'refunded':
 		case 'refund':
 			return __( 'Refund', 'LION' );
-			break;
 		case 'reversed':
 			return __( 'Reversed', 'LION' );
-			break;
 		case 'buyer_complaint':
 			return __( 'Buyer Complaint', 'LION' );
-			break;
 		case 'denied' :
 			return __( 'Denied', 'LION' );
-			break;
 		case 'expired' :
 			return __( 'Expired', 'LION' );
-			break;
 		case 'failed' :
 			return __( 'Failed', 'LION' );
-			break;
 		case 'pending' :
 			return __( 'Pending', 'LION' );
-			break;
 		case 'voided' :
 			return __( 'Voided', 'LION' );
-			break;
+		case 'cancelled' :
+			return __( 'Cancelled', 'LION' );
 		default:
 			return __( 'Unknown', 'LION' );
 	}

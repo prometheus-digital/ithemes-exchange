@@ -721,32 +721,23 @@ function it_exchange_paypal_standard_addon_transaction_status_label( $status ) {
 		case 'canceled_reversal':
 		case 'processed' :
 			return __( 'Paid', 'LION' );
-			break;
 		case 'refunded':
 		case 'refund':
 			return __( 'Refund', 'LION' );
-			break;
 		case 'reversed':
 			return __( 'Reversed', 'LION' );
-			break;
 		case 'buyer_complaint':
 			return __( 'Buyer Complaint', 'LION' );
-			break;
 		case 'denied' :
 			return __( 'Denied', 'LION' );
-			break;
 		case 'expired' :
 			return __( 'Expired', 'LION' );
-			break;
 		case 'failed' :
 			return __( 'Failed', 'LION' );
-			break;
 		case 'pending' :
 			return __( 'Pending', 'LION' );
-			break;
 		case 'voided' :
 			return __( 'Voided', 'LION' );
-			break;
 		default:
 			return __( 'Unknown', 'LION' );
 	}
