@@ -1165,6 +1165,38 @@ function it_exchange_admin_tooltip( $text, $echo=true, $indicator='i' ) {
 	return $tooltip; 
 }
 
+
+/**
+ * Blocks access to Download iThemes Exchange attachments
+ *
+ * @since CHANGEME
+ * @return void
+ */
+function it_exchange_block_attachments() {
+	if ( ! is_attachment() )
+		return;
+		
+	$uri = wp_get_attachment_url( get_the_ID() );
+	
+	$args = array(
+		'post_type' => 'it_exchange_download',
+		'meta_query' => array(
+			array(
+				'key' => '_it-exchange-download-info',
+				'value' => $uri,
+				'compare' => 'LIKE',
+			)
+		),
+	);
+	$results = get_posts( $args );
+	
+	if ( empty( $results ) )
+		return;
+
+	wp_die( __( 'You do not have permission to view this file.', 'LION' ), __( 'Error', 'LION' ), array( 'response' => 403, 'back_link' => true ) );
+}
+add_action( 'template_redirect', 'it_exchange_block_attachments' );
+
 /************************************
  * THE FOLLOWING API METHODS AREN'T READY
  * FOR PRIMETIME YET SO THEY LIVE HERE FOR NOW.
