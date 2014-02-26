@@ -494,8 +494,8 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 					if (   !empty( $upgrade_downgrade[$product_id]['old_transaction_id'] ) 
 						&& !empty( $upgrade_downgrade[$product_id]['old_transaction_method'] ) ) {
 						$subscription_details['product_id'] = array(
-							'free_days'              => $product_id,
-							'product_id'             => $upgrade_downgrade[$product_id]['free_days'],
+							'product_id'             => $product_id,
+							'free_days'              => $upgrade_downgrade[$product_id]['free_days'],
 							'credit'                 => $upgrade_downgrade[$product_id]['credit'],
 							'old_transaction_id'     => $upgrade_downgrade[$product_id]['old_transaction_id'],
 							'old_transaction_method' => $upgrade_downgrade[$product_id]['old_transaction_method'],
