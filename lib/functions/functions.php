@@ -1165,11 +1165,10 @@ function it_exchange_admin_tooltip( $text, $echo=true, $indicator='i' ) {
 	return $tooltip; 
 }
 
-
 /**
  * Blocks access to Download iThemes Exchange attachments
  *
- * @since CHANGEME
+ * @since 1.7.18 
  * @return void
  */
 function it_exchange_block_attachments() {

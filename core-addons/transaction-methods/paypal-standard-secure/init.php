@@ -184,7 +184,7 @@ add_action( 'it_exchange_do_transaction_paypal-standard-secure', 'it_exchange_pr
 /**
  * Call to cancel PayPal subscription automatically (on upgrade/downgrade)
  *
- * @since CHANGEME
+ * @since 1.7.18 
  *
  * @param array $subscription_details the Exchange Subscription Details
 */

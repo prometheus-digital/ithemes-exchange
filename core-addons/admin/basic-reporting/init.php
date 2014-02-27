@@ -239,7 +239,7 @@ function it_exchange_basic_reporting_get_transactions_count( $options=array() ) 
 /**
  * Breaks the transient caches when a transaction happens
  *
- * @since CHANGEME
+ * @since 1.7.18 
  *
  * @return void
 */

@@ -1,3 +1,20 @@
+1.7.18 - 2014-02-27 - Lew Ayotte, GLenn Ansley, Elise Alley
+	Added functionality to enable upgrades and downgrades with Membership add-on
+	Blocking attachment pages for Exchange Downloads addons
+	Break transient cache when a transaction is made
+	Cache basic reporting get_transactions in transient
+	Fixed type=url styling
+	Remove 'is-featured' class from featured images being demoted on drop.
+	Add 'is-featured' class to promoted featured image on drop
+	Add min-height to image gallery thumbnails on add-edit product screens
+	Product Gallery Modifications: - Generate unique IDs for list items instead of using image ID (allows image to be in list more than once) - When editing existing images, make clicked image already selected in Media Gallery when it opens. - When opening Media Gallery to edit an existing image, provide a way to actually save your changes.
+	Fixed bad currency labels
+	Change typo from 'Are you should' to 'Are you sure'
+	Fixed error where resending email on payment status change for guest checkout didn't add name to email template
+	Change the way checkbox and radio inputs are styled for the normal-sortables.
+	Throw vars from parse_str into an array
+	Added small top margin to transaction methods on the checkout page.
+	Fixing the dice on the coupon add/edit screen. See: https://trello.com/c/XEbHEMen/896-coupons-coupon-dice-style-broken-in-3-8
 1.7.17 - 2014-02-11 - Packaging Bot (lib/icon-fonts)
 	Edited ithemes shared resource
 1.7.16 - 2014-01-30 Glenn Ansley, Lew Ayotte, Justin Kopepasah, Elise Alley
