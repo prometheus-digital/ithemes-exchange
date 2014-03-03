@@ -23,26 +23,20 @@ $headings = array(
 $list = array();
 foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transaction ) {
 	// View URL
-	$view_url   = get_admin_url() . '/post.php?action=edit&post=' . esc_attr( $transaction->ID );
-	$view_url   = remove_query_arg( 'it-exchange-customer-transaction-action', $view_url );
-	$view_url   = remove_query_arg( '_wpnonce', $view_url );
-
+	$view_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'view', 'action' => 'edit', 'post' => esc_attr( $transaction->ID ) ), get_admin_url() . '/post.php' );
+	
 	// Resend URL
 	$resend_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'resend', 'id' => $transaction->ID ) );
 	$resend_url = remove_query_arg( 'wp_http_referer', $resend_url );
 	$resend_url = wp_nonce_url( $resend_url, 'it-exchange-resend-confirmation-' . $transaction->ID );
-	$resend_url = remove_query_arg( 'it-exchange-customer-transaction-action', $resend_url );
 	$resend_url = remove_query_arg( '_wpnonce', $resend_url );
 
 	// Refund URL
-	$refund_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'refund', 'id' => $transaction->ID ) );
-	$refund_url = remove_query_arg( 'wp_http_referer', $refund_url );
-	$refund_url = remove_query_arg( 'it-exchange-customer-transaction-action', $refund_url );
-	$refund_url = remove_query_arg( '_wpnonce', $refund_url );
+	$refund_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'refund', 'action' => 'edit', 'post' => esc_attr( $transaction->ID ) ), get_admin_url() . '/post.php' );
 	$refund_url = apply_filters( 'it_exchange_refund_url_for_' . it_exchange_get_transaction_method( $transaction ), $refund_url );
-
+	
 	// Build Transaction Link
-	$transaction_url    = get_admin_url() . '/post.php?action=edit&post=' . esc_attr( $transaction->ID );
+	$transaction_url    = add_query_arg( array( 'action' => 'edit', 'post' => esc_attr( $transaction->ID ) ), get_admin_url() . '/post.php' );
 	$transaction_number = it_exchange_get_transaction_order_number( $transaction->ID );
 	$transaction_link   = '<a href="' . $transaction_url . '">' . $transaction_number . '</a>';
 

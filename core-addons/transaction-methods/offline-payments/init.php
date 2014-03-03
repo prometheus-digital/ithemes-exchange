@@ -20,7 +20,6 @@ add_filter( 'it_exchange_offline-payments_transaction_status_can_be_manually_cha
  * @return void
 */
 function it_exchange_offline_payments_get_default_status_options() {
-	$add_on = it_exchange_get_addon( 'offline-payments' );
 	$options = array(
 		'pending'  => _x( 'Pending', 'Transaction Status', 'LION' ),
 		'paid'     => _x( 'Paid', 'Transaction Status', 'LION' ),
