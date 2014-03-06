@@ -429,7 +429,7 @@ function it_exchange_register_core_pages() {
 		'rewrite-rules' => array( 135, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Account Page', 'LION' ),
-		'tip'           => __( 'Customers get an account when they buy something, so they can login and download their purchases. This is the main landing page for customers after they log in.', 'LION' ),
+		'tip'           => __( 'Customers get an account when they buy something, so they can login and download their purchases. This is the main landing page for customers after they log in. It currently redirects to the Profile page.', 'LION' ),
 		'type'          => 'exchange',
 		'menu'          => true,
 		'optional'      => false,
