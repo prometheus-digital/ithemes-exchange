@@ -476,7 +476,7 @@ function it_exchange_get_cart_description() {
 			$string .= ' (' . $count . ')';
 		$description[] = $string;
 	}
-	$description = apply_filters( 'it_exchange_get_cart_description', join( ', ', $description ), $description );
+	$description = apply_filters( 'it_exchange_get_cart_description', implode( ', ', $description ), $description );
 
 	return $description;
 }
