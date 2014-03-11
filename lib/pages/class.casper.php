@@ -52,6 +52,10 @@ class IT_Exchange_Casper {
 		$this->_wp_query->nopaging = true;
 		$this->_wp_query->post_count = 1;
 
+		// If we don't have a post, load an empty one
+		if ( empty( $this->_wp_query->post ) )
+			$this->_wp_query->post = new WP_Post( new stdClass() );
+
 		$this->_wp_query->post->ID = 0;
 		$this->_wp_query->post->post_date = current_time( 'mysql' );
 		$this->_wp_query->post->post_date_gmt = current_time( 'mysql', 1 );
