@@ -108,7 +108,7 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 				$it_exchange_customer = it_exchange_get_current_customer();
 
 				if ( number_format( $transaction_amount, '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) )
-					throw new Exception( __( 'Error: Amount charged is not the same as the cart total!', 'it-l10n-ithemes-exchange' ) );
+					throw new Exception( __( 'Error: Amount charged is not the same as the cart total!', 'LION' ) );
 
 				//If the transient still exists, delete it and add the official transaction
 				if ( it_exchange_get_transient_transaction( 'paypal-standard', $transient_transaction_id ) ) {
@@ -129,7 +129,7 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 
 		}
 
-		it_exchange_add_message( 'error', __( 'Unknown error while processing with PayPal. Please try again later.', 'it-l10n-ithemes-exchange' ) );
+		it_exchange_add_message( 'error', __( 'Unknown error while processing with PayPal. Please try again later.', 'LION' ) );
 
 	}
 	return false;
@@ -241,7 +241,7 @@ add_action( 'it_exchange_save_paypal-standard_wizard_settings', 'it_exchange_sav
 function it_exchange_paypal_standard_addon_default_settings( $values ) {
 	$defaults = array(
 		'live-email-address' => '',
-		'purchase-button-label' => __( 'Pay with PayPal', 'it-l10n-ithemes-exchange' ),
+		'purchase-button-label' => __( 'Pay with PayPal', 'LION' ),
 	);
 	$values = ITUtility::merge_defaults( $values, $defaults );
 	return $values;
@@ -308,7 +308,7 @@ function it_exchange_process_paypal_standard_form() {
 
 		} else {
 
-			it_exchange_add_message( 'error', __( 'Error processing PayPal form. Missing valid PayPal account.', 'it-l10n-ithemes-exchange' ) );
+			it_exchange_add_message( 'error', __( 'Error processing PayPal form. Missing valid PayPal account.', 'LION' ) );
 			wp_redirect( it_exchange_get_page_url( 'checkout' ) );
 
 		}
@@ -721,26 +721,26 @@ function it_exchange_paypal_standard_addon_transaction_status_label( $status ) {
 		case 'success':
 		case 'canceled_reversal':
 		case 'processed' :
-			return __( 'Paid', 'it-l10n-ithemes-exchange' );
+			return __( 'Paid', 'LION' );
 		case 'refunded':
 		case 'refund':
-			return __( 'Refund', 'it-l10n-ithemes-exchange' );
+			return __( 'Refund', 'LION' );
 		case 'reversed':
-			return __( 'Reversed', 'it-l10n-ithemes-exchange' );
+			return __( 'Reversed', 'LION' );
 		case 'buyer_complaint':
-			return __( 'Buyer Complaint', 'it-l10n-ithemes-exchange' );
+			return __( 'Buyer Complaint', 'LION' );
 		case 'denied' :
-			return __( 'Denied', 'it-l10n-ithemes-exchange' );
+			return __( 'Denied', 'LION' );
 		case 'expired' :
-			return __( 'Expired', 'it-l10n-ithemes-exchange' );
+			return __( 'Expired', 'LION' );
 		case 'failed' :
-			return __( 'Failed', 'it-l10n-ithemes-exchange' );
+			return __( 'Failed', 'LION' );
 		case 'pending' :
-			return __( 'Pending', 'it-l10n-ithemes-exchange' );
+			return __( 'Pending', 'LION' );
 		case 'voided' :
-			return __( 'Voided', 'it-l10n-ithemes-exchange' );
+			return __( 'Voided', 'LION' );
 		default:
-			return __( 'Unknown', 'it-l10n-ithemes-exchange' );
+			return __( 'Unknown', 'LION' );
 	}
 
 }
@@ -806,20 +806,20 @@ function it_exchange_paypal_standard_after_payment_details_cancel_url( $transact
 			switch( $status ) {
 
 				case 'deactivated':
-					$output = __( 'Recurring payment has been deactivated', 'it-l10n-ithemes-exchange' );
+					$output = __( 'Recurring payment has been deactivated', 'LION' );
 					break;
 
 				case 'cancelled':
-					$output = __( 'Recurring payment has been cancelled', 'it-l10n-ithemes-exchange' );
+					$output = __( 'Recurring payment has been cancelled', 'LION' );
 					break;
 
 				case 'suspended':
-					$output = __( 'Recurring payment has been suspended', 'it-l10n-ithemes-exchange' );
+					$output = __( 'Recurring payment has been suspended', 'LION' );
 					break;
 
 				case 'active':
 				default:
-					$output = '<a href="' . PAYPAL_LIVE_URL . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . ' (' . __( 'Profile ID', 'it-l10n-ithemes-exchange' ) . ': ' . $subscriber_id . ')</a>';
+					$output = '<a href="' . PAYPAL_LIVE_URL . '">' . __( 'Cancel Recurring Payment', 'LION' ) . ' (' . __( 'Profile ID', 'LION' ) . ': ' . $subscriber_id . ')</a>';
 					break;
 			}
 			?>
@@ -934,7 +934,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		?>
 		<div class="wrap">
 			<?php ITUtility::screen_icon( 'it-exchange' ); ?>
-			<h2><?php _e( 'PayPal Standard Settings - Basic', 'it-l10n-ithemes-exchange' ); ?></h2>
+			<h2><?php _e( 'PayPal Standard Settings - Basic', 'LION' ); ?></h2>
 
 			<?php do_action( 'it_exchange_paypal-standard_settings_page_top' ); ?>
 			<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
@@ -944,7 +944,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 				<?php $this->get_paypal_standard_payment_form_table( $form, $form_values ); ?>
 				<?php do_action( 'it_exchange_paypal-standard_settings_form_bottom' ); ?>
 				<p class="submit">
-					<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'it-l10n-ithemes-exchange' ), 'class' => 'button button-primary button-large' ) ); ?>
+					<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary button-large' ) ); ?>
 				</p>
 			<?php $form->end_form(); ?>
 			<?php do_action( 'it_exchange_paypal-standard_settings_page_bottom' ); ?>
@@ -958,7 +958,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		$general_settings = it_exchange_get_option( 'settings_general' );
 
 		if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] ) : ?>
-			<h3><?php _e( 'PayPal Standard - Basic (Fastest Setup)', 'it-l10n-ithemes-exchange' ); ?></h3>
+			<h3><?php _e( 'PayPal Standard - Basic (Fastest Setup)', 'LION' ); ?></h3>
 		<?php endif;
 
 		if ( !empty( $settings ) )
@@ -968,13 +968,13 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		?>
 		<div class="it-exchange-addon-settings it-exchange-paypal-addon-settings">
             <p>
-				<?php _e( 'This is the simple and fast version to get PayPal setup for your store. You might use this version just to get your store going, but we highly suggest you switch to the PayPal Standard Secure option. To get PayPal set up for use with Exchange, you\'ll need to add the following information from your PayPal account.', 'it-l10n-ithemes-exchange' ); ?><br /><br />
-				<?php _e( 'Video:', 'it-l10n-ithemes-exchange' ); ?>&nbsp;<a href="http://ithemes.com/tutorials/setting-up-paypal-standard-basic/" target="_blank"><?php _e( 'Setting Up PayPal Standard Basic', 'it-l10n-ithemes-exchange' ); ?></a>
+				<?php _e( 'This is the simple and fast version to get PayPal setup for your store. You might use this version just to get your store going, but we highly suggest you switch to the PayPal Standard Secure option. To get PayPal set up for use with Exchange, you\'ll need to add the following information from your PayPal account.', 'LION' ); ?><br /><br />
+				<?php _e( 'Video:', 'LION' ); ?>&nbsp;<a href="http://ithemes.com/tutorials/setting-up-paypal-standard-basic/" target="_blank"><?php _e( 'Setting Up PayPal Standard Basic', 'LION' ); ?></a>
 			</p>
-			<p><?php _e( 'Don\'t have a PayPal account yet?', 'it-l10n-ithemes-exchange' ); ?> <a href="http://paypal.com" target="_blank"><?php _e( 'Go set one up here', 'it-l10n-ithemes-exchange' ); ?></a>.</p>
-            <h4><?php _e( 'What is your PayPal email address?', 'it-l10n-ithemes-exchange' ); ?></h4>
+			<p><?php _e( 'Don\'t have a PayPal account yet?', 'LION' ); ?> <a href="http://paypal.com" target="_blank"><?php _e( 'Go set one up here', 'LION' ); ?></a>.</p>
+            <h4><?php _e( 'What is your PayPal email address?', 'LION' ); ?></h4>
 			<p>
-				<label for="live-email-address"><?php _e( 'PayPal Email Address', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
+				<label for="live-email-address"><?php _e( 'PayPal Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
 				<?php 
 				if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
 					$form->add_text_box( 'paypal-standard-live-email-address' );
@@ -983,7 +983,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 				?>
 			</p>
 			<p>
-				<label for="purchase-button-label"><?php _e( 'Purchase Button Label', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'This is the text inside the button your customers will press to purchase with PayPal Standard', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
+				<label for="purchase-button-label"><?php _e( 'Purchase Button Label', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the text inside the button your customers will press to purchase with PayPal Standard', 'LION' ); ?>">i</span></label>
 				<?php
 				if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
 					$form->add_text_box( 'paypal-standard-purchase-button-label' );
@@ -1007,18 +1007,18 @@ class IT_Exchange_PayPal_Standard_Add_On {
 
 		// Check nonce
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'it-exchange-paypal-standard-settings' ) ) {
-			$this->error_message = __( 'Error. Please try again', 'it-l10n-ithemes-exchange' );
+			$this->error_message = __( 'Error. Please try again', 'LION' );
 			return;
 		}
 
 		$errors = apply_filters( 'it_exchange_add_on_paypal_standard_validate_settings', $this->get_form_errors( $new_values ), $new_values );
 		if ( ! $errors && it_exchange_save_option( 'addon_paypal_standard', $new_values ) ) {
-			ITUtility::show_status_message( __( 'Settings saved.', 'it-l10n-ithemes-exchange' ) );
+			ITUtility::show_status_message( __( 'Settings saved.', 'LION' ) );
 		} else if ( $errors ) {
 			$errors = implode( '<br />', $errors );
 			$this->error_message = $errors;
 		} else {
-			$this->status_message = __( 'Settings not saved.', 'it-l10n-ithemes-exchange' );
+			$this->status_message = __( 'Settings not saved.', 'LION' );
 		}
 
 		do_action( 'it_exchange_save_add_on_settings_paypal-standard' );
@@ -1053,7 +1053,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 
 		} else {
 			it_exchange_save_option( 'addon_paypal_standard', $settings );
-			$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
+			$this->status_message = __( 'Settings Saved.', 'LION' );
 		}
 
 		return;
@@ -1072,7 +1072,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 
 		$errors = array();
 		if ( empty( $values['live-email-address'] ) )
-			$errors[] = __( 'Please include your PayPal Email Address', 'it-l10n-ithemes-exchange' );
+			$errors[] = __( 'Please include your PayPal Email Address', 'LION' );
 
 		return $errors;
 	}
