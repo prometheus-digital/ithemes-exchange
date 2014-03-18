@@ -14,26 +14,31 @@
  * @return array
 */
 function it_exchange_get_pages( $break_cache=false, $options=array() ) {
-	// Grab registered pages
-	$registered = it_exchange_get_registered_pages( $options );
-	$merged     = array();
 
-	// Grab existing DB data if its present
-	if ( ! $pages = it_exchange_get_option( 'settings_pages', $break_cache ) )
-		$pages = array();
-
-	// Merge DB data with registered defaults
-	foreach( $registered as $page => $default_params ) {
-		$db_params = array();
-		$db_params['slug'] = empty( $pages[$page . '-slug'] ) ? 0 : $pages[$page . '-slug'];
-		$db_params['tip']  = empty( $pages[$page . '-tip'] )  ? 0 : $pages[$page . '-tip'];
-		$db_params['name'] = empty( $pages[$page . '-name'] ) ? 0 : $pages[$page . '-name'];
-		$db_params['type'] = empty( $pages[$page . '-type'] ) ? 0 : $pages[$page . '-type'];
-		$db_params['wpid'] = empty( $pages[$page . '-wpid'] ) ? 0 : $pages[$page . '-wpid'];
-		$merged[$page] = ITUtility::merge_defaults( $db_params, $default_params );
+	if ( empty( $GLOBALS['it_exchange']['pages'] ) || $break_cache ) {
+		// Grab registered pages
+		$registered = it_exchange_get_registered_pages( $options );
+		$merged     = array();
+	
+		// Grab existing DB data if its present
+		if ( ! $pages = it_exchange_get_option( 'settings_pages', $break_cache ) )
+			$pages = array();
+	
+		// Merge DB data with registered defaults
+		foreach( $registered as $page => $default_params ) {
+			$db_params = array();
+			$db_params['slug'] = empty( $pages[$page . '-slug'] ) ? 0 : $pages[$page . '-slug'];
+			$db_params['tip']  = empty( $pages[$page . '-tip'] )  ? 0 : $pages[$page . '-tip'];
+			$db_params['name'] = empty( $pages[$page . '-name'] ) ? 0 : $pages[$page . '-name'];
+			$db_params['type'] = empty( $pages[$page . '-type'] ) ? 0 : $pages[$page . '-type'];
+			$db_params['wpid'] = empty( $pages[$page . '-wpid'] ) ? 0 : $pages[$page . '-wpid'];
+			$merged[$page] = ITUtility::merge_defaults( $db_params, $default_params );
+		}
+		
+		$GLOBALS['it_exchange']['pages'] = $merged;
 	}
 
-	return apply_filters( 'it_exchange_get_pages', $merged, $break_cache );
+	return apply_filters( 'it_exchange_get_pages', $GLOBALS['it_exchange']['pages'], $break_cache );
 }
 
 /**
