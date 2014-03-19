@@ -11,7 +11,6 @@ class IT_Exchange_Shipping {
 		// We need to include the abstract methods class regardless
 		include_once( dirname( __FILE__ ) . '/class-method.php' );
 		include_once( dirname( __FILE__ ) . '/class-shipping-feature.php' );
-		include_once( dirname( __FILE__ ) . '/shipping-features/init.php' );
 
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'maybe_init' ) );
 	}
@@ -20,6 +19,9 @@ class IT_Exchange_Shipping {
 		$enabled_shipping_addons = (boolean) it_exchange_get_enabled_addons( array( 'category' => 'shipping' ) );
 		if ( !$enabled_shipping_addons )
 			return;
+
+		// Init core shipping features
+		include_once( dirname( __FILE__ ) . '/shipping-features/init.php' );
 
 		add_action( 'template_redirect', array( $this, 'update_cart_shipping_method' ), 99);
 
