@@ -1,3 +1,13 @@
+1.7.19 - 2014-03-19 - Lew Ayotte, Glenn Ansley, Elise Alley
+	Cache Casper Pages in GLOBALS to reduce load
+	Create dummy post if none exist
+	Replaced a join() with implode()
+	Changed login redirect form to go to account page as it should
+	Added some text to clarify the Account Page tooltip
+	Removed some unused code from offline payments addon
+	removed some uneeded code from admin user transactions view
+	Changed how the view, refund, and transaction URLs are built on the admin user transaction view
+	Adding a couple of filters to modify paypal button request and query request
 1.7.18 - 2014-02-27 - Lew Ayotte, GLenn Ansley, Elise Alley
 	Added functionality to enable upgrades and downgrades with Membership add-on
 	Blocking attachment pages for Exchange Downloads addons
