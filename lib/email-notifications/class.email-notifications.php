@@ -12,9 +12,9 @@
 */
 class IT_Exchange_Email_Notifications {
 
-	private $transaction_id;
-	private $customer_id;
-	private $user;
+	public $transaction_id;
+	public $customer_id;
+	public $user;
 
 	/**
 	 * Constructor. Sets up the class
