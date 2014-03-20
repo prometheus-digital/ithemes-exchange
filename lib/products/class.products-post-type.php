@@ -23,7 +23,7 @@ class IT_Exchange_Product_Post_Type {
 		$this->init();
 
 		add_action( 'template_redirect', array( $this, 'load_product' ) );
-		add_action( 'save_post', array( $this, 'save_product' ) );
+		add_action( 'save_post_it_exchange_prod', array( $this, 'save_product' ) );
 		add_action( 'admin_init', array( $this, 'set_add_new_item_label' ) );
 		add_action( 'admin_init', array( $this, 'set_edit_item_label' ) );
 		add_action( 'it_exchange_save_product_unvalidated', array( $this, 'set_initial_post_product_type' ) );
