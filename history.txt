@@ -1,4 +1,5 @@
 1.7.20 - 2014-03-21 - Lew Ayotte, Glenn Ansley, Elise Alley
+	Fixed typos in Cancel/Login Super Widget registration elements
 	Fixed get_pages globals to work properly with Membership pages (and other add-ons)
 	Fixed bug that caused slow product saves
 	Setting email notifications class variables to public for developer add-ons
