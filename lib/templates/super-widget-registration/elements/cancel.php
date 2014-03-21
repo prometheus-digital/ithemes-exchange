@@ -19,4 +19,4 @@
 <div class="cancel_url">
     <?php it_exchange( 'login', 'cancel' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widget_registrationafter_cancel_elements' ); ?>
+<?php do_action( 'it_exchange_super_widget_registration_after_cancel_elements' ); ?>
