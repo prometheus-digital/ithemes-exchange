@@ -1,3 +1,8 @@
+1.7.20 - 2014-03-21 - Lew Ayotte, Glenn Ansley, Elise Alley
+	Fixed get_pages globals to work properly with Membership pages (and other add-ons)
+	Fixed bug that caused slow product saves
+	Setting email notifications class variables to public for developer add-ons
+	Only init core shipping features if we have the shipping addon enabled
 1.7.19 - 2014-03-19 - Lew Ayotte, Glenn Ansley, Elise Alley
 	Cache Casper Pages in GLOBALS to reduce load
 	Create dummy post if none exist
