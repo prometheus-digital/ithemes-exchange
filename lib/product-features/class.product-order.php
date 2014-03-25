@@ -3,12 +3,12 @@
  * This will control email messages with any product types that register email message support.
  * By default, it registers a metabox on the product's add/edit screen and provides HTML / data for the frontend.
  *
- * @since 0.4.0
+ * @since CHANGEME
  * @package IT_Exchange
 */
 
 
-class IT_Exchange_Product_Feature_Purchase_Message {
+class IT_Exchange_Product_Feature_Product_Order {
 
 	/**
 	 * Constructor. Registers hooks
@@ -16,17 +16,17 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 	 * @since 0.4.0
 	 * @return void
 	*/
-	function IT_Exchange_Product_Feature_Purchase_Message() {
+	function IT_Exchange_Product_Feature_Product_Order() {
 		if ( is_admin() ) {
 			add_action( 'load-post-new.php', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'load-post.php', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		}
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
-		add_action( 'it_exchange_update_product_feature_purchase-message', array( $this, 'save_feature' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_purchase-message', array( $this, 'get_feature' ), 9, 2 );
-		add_filter( 'it_exchange_product_has_feature_purchase-message', array( $this, 'product_has_feature') , 9, 2 );
-		add_filter( 'it_exchange_product_supports_feature_purchase-message', array( $this, 'product_supports_feature') , 9, 2 );
+		add_action( 'it_exchange_update_product_feature_product-order', array( $this, 'save_feature' ), 9, 2 );
+		add_filter( 'it_exchange_get_product_feature_product-order', array( $this, 'get_feature' ), 9, 2 );
+		add_filter( 'it_exchange_product_has_feature_product-order', array( $this, 'product_has_feature') , 9, 2 );
+		add_filter( 'it_exchange_product_supports_feature_product-order', array( $this, 'product_supports_feature') , 9, 2 );
 	}
 
 	/**
@@ -36,14 +36,14 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 	*/
 	function add_feature_support_to_product_types() {
 		// Register the product feature
-		$slug        = 'purchase-message';
-		$description = 'Purchase Message associated with a product';
+		$slug        = 'product-order';
+		$description = 'Manually set Product Order # for store placement';
 		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
 		$products = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 		foreach( $products as $key => $params ) {
-			it_exchange_add_feature_support_to_product_type( 'purchase-message', $params['slug'] );
+			it_exchange_add_feature_support_to_product_type( 'product-order', $params['slug'] );
 		}
 	}
 
@@ -80,7 +80,7 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 			$product_type = it_exchange_get_product_type( $post );
 
 		if ( !empty( $post_type ) && 'it_exchange_prod' === $post_type ) {
-			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'purchase-message' ) )
+			if ( !empty( $product_type ) &&  it_exchange_product_type_supports_feature( $product_type, 'product-order' ) )
 				add_action( 'it_exchange_product_metabox_callback_' . $product_type, array( $this, 'register_metabox' ) );
 		}
 
@@ -95,7 +95,7 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-purchase-message', __( 'Purchase Message', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'normal' );
+		add_meta_box( 'it-exchange-product-product-order', __( 'Product Order', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'normal' );
 	}
 
 	/**
@@ -105,23 +105,15 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 	 * @return void
 	*/
 	function print_metabox( $post ) {
-		// Grab the iThemes Exchange Product object from the WP $post object
-		$product = it_exchange_get_product( $post );
-
-		// Set the value of the feature for this product
-		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'purchase-message' );
-
 		// Set description
-		$description = __( 'Any text placed here will be appended to the receipt when this product is purchased. You might want to use this to add special instructions for particular products.', 'LION' );
-		$description = apply_filters( 'it_exchange_product_purchase-message_metabox_description', $description );
+		$description = __( 'Specify the placement of the product in the store listing by changing this number and enabling the Order settings in General Settings.', 'LION' );
+		$description = apply_filters( 'it_exchange_product_product-order_metabox_description', $description );
 
 		?>
 			<?php if ( $description ) : ?>
-				<p class="intro-description"><?php echo $description; ?></p>
+				<p class="order-description"><?php echo $description; ?></p>
 			<?php endif; ?>
-			<p>
-				<textarea name="it-exchange-product-purchase-message"><?php echo esc_textarea( $product_feature_value ); ?></textarea>
-			</p>
+			<p><label for="menu_order" class="screen-reader-text"><?php __( 'Order' ); ?></label><input type="text" value="<?php echo $post->menu_order; ?>" id="menu_order" size="4" name="menu_order"></p>
 		<?php
 	}
 
@@ -143,18 +135,18 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 			return;
 
 		// Abort if this product type doesn't support this feature
-		if ( ! it_exchange_product_type_supports_feature( $product_type, 'purchase-message' ) )
+		if ( ! it_exchange_product_type_supports_feature( $product_type, 'product-order' ) )
 			return;
 
 		// Abort if key for feature option isn't set in POST data
-		if ( ! isset( $_POST['it-exchange-product-purchase-message'] ) )
+		if ( ! isset( $_POST['it-exchange-product-product-order'] ) )
 			return;
 
 		// Get new value from post
-		$new_value = $_POST['it-exchange-product-purchase-message'];
+		$new_value = $_POST['it-exchange-product-product-order'];
 
 		// Save new value
-		it_exchange_update_product_feature( $product_id, 'purchase-message', $new_value );
+		it_exchange_update_product_feature( $product_id, 'product-order', $new_value );
 	}
 
 	/**
@@ -166,7 +158,7 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 	 * @return bolean
 	*/
 	function save_feature( $product_id, $new_value ) {
-		update_post_meta( $product_id, 'it-exchange-product-purchase-message', $new_value );
+		update_post_meta( $product_id, 'it-exchange-product-product-order', $new_value );
 	}
 
 	/**
@@ -178,8 +170,11 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 	 * @return string product feature
 	*/
 	function get_feature( $existing, $product_id ) {
-		$value = get_post_meta( $product_id, 'it-exchange-product-purchase-message', true );
-		return $value;
+		$post = get_post( $product_id );
+		if ( empty( $post->menu_order ) )
+			return 0;
+		else
+			return $post->menu_order;
 	}
 
 	/**
@@ -211,7 +206,7 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 	function product_supports_feature( $result, $product_id ) {
 		// Does this product type support this feature?
 		$product_type = it_exchange_get_product_type( $product_id );
-		return it_exchange_product_type_supports_feature( $product_type, 'purchase-message' );
+		return it_exchange_product_type_supports_feature( $product_type, 'product-order' );
 	}
 }
-$IT_Exchange_Product_Feature_Purchase_Message = new IT_Exchange_Product_Feature_Purchase_Message();
+$IT_Exchange_Product_Feature_Product_Order = new IT_Exchange_Product_Feature_Product_Order();
