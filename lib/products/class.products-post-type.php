@@ -123,9 +123,11 @@ class IT_Exchange_Product_Post_Type {
 			'show_in_menu'      => false, // We will be adding it manually with various labels based on available product-type add-ons
 			'show_in_admin_bar' => true,
 			'hierarchical'      => false,
-			'supports'          => array( // Support everything but page-attributes for add-on flexibility
-				'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields',
-				'comments', 'revisions', 'post-formats',
+			'supports'          => array( // Support everything including page-attributes for add-on flexibility
+				'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 
+				'custom-fields', 'comments', 'revisions', 'post-formats', 'page-attributes'
+				//If you edit this, edit it in set_add_edit_screen_supports()
+				//in lib/products/class.product.php
 			),
 			'register_meta_box_cb' => array( $this, 'meta_box_callback' ),
 			'rewrite' => array(

@@ -197,8 +197,8 @@ class IT_Exchange_Product {
     function set_add_edit_screen_supports() {
 		global $pagenow;
         $supports = array(
-            'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields',
-            'comments', 'revisions', 'post-formats',
+            'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 
+            'custom-fields', 'comments', 'revisions', 'post-formats', 'page-attributes'
         );
 
         // If is_admin and is post-new.php or post.php, only register supports for current product-type
@@ -208,7 +208,7 @@ class IT_Exchange_Product {
 		if ( $addon = it_exchange_get_addon( $this->product_type ) ) {
 			// Remove any supports args that the product add-on does not want.
 			foreach( $supports as $option ) {
-
+			
 				// Map Core WP post_type supports to our addon names
 				if ( 'title' == $option ) {
 					$exchange_product_feature = 'title';
