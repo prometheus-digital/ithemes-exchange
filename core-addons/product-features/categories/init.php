@@ -17,7 +17,7 @@ if ( !function_exists( 'create_it_exchange_categories' ) ) {
 	function it_exchange_categories_addon_create() {
 
 		$labels = array(
-			'name'              => __( 'Product Categories', 'LION' ),
+			'name'              => __( 'Categories', 'LION' ),
 			'singular_name'     => __( 'Product Category', 'LION' ),
 			'search_items'      => __( 'Search Product Categories', 'LION' ),
 			'all_items'         => __( 'All Product Categories', 'LION' ),
