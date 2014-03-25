@@ -35,5 +35,8 @@ require( $this->_plugin_path . 'lib/product-features/class.purchase-quantity.php
 // Product Feature: Inventory
 require( $this->_plugin_path . 'lib/product-features/class.inventory.php' );
 
+// Product Feature: Product Order
+require( $this->_plugin_path . 'lib/product-features/class.product-order.php' );
+
 // Product Features: WP Post Type Supports as Product Features
 require( $this->_plugin_path . 'lib/product-features/class.wp-post-supports.php' );

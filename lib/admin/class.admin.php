@@ -596,6 +596,8 @@ class IT_Exchange_Admin {
 		$defaults = array(
 			'company-base-country'         => 'US',
 			'company-base-state'           => 'OK',
+			'store-product-order-by'       => 'date',
+			'store-product-order'          => 'DESC',
 			'default-currency'             => 'USD',
 			'currency-symbol-position'     => 'before',
 			'currency-thousands-separator' => ',',
