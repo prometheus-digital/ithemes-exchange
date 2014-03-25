@@ -80,7 +80,7 @@
 				<td></td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="store-product-order-by"><?php _e( 'Order By', 'LION' ) ?></label></th>
+				<th scope="row"><label for="store-product-order-by"><?php _e( 'Order Products By', 'LION' ) ?></label></th>
 				<td>
 					<?php
 					$order_by = apply_filters( 'it_exchange_store_order_by_options', array(

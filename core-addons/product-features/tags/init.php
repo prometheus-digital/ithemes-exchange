@@ -17,7 +17,7 @@ if ( !function_exists( 'create_it_exchange_tags' ) ) {
 	function create_it_exchange_tags() {
 
 		$labels = array(
-			'name'              => __( 'Product Tags', 'LION' ),
+			'name'              => __( 'Tags', 'LION' ),
 			'singular_name'     => __( 'Product Tag', 'LION' ),
 			'search_items'      => __( 'Search Product Tags', 'LION' ),
 			'all_items'         => __( 'All Product Tags', 'LION' ),

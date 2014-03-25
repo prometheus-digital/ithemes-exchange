@@ -37,7 +37,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 	function add_feature_support_to_product_types() {
 		// Register the product feature
 		$slug        = 'product-images';
-		$description = 'Product Images';
+		$description = 'Images';
 		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
