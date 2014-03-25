@@ -2,6 +2,7 @@
 /*
  * Plugin Name: iThemes Exchange
  * Version: 1.7.21
+ * Text Domain: LION
  * Description: Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordPress
  * Plugin URI: http://ithemes.com/exchange/
  * Author: iThemes
