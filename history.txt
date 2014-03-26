@@ -1,3 +1,6 @@
+1.7.23 - 2014-03-26 - Lew Ayotte, Glenn Ansley, Elise Alley
+	Fix registration call for Cart and Checkout pages	
+	Fixed for Pages tab not showing Page Types set to WordPress or Disabled
 1.7.22 - 2014-03-25 - Lew Ayotte, Glenn Ansley, Elise Alley
 	Removed extraneous 'Product' labels
 	Added Text Domain to plugin Header block
