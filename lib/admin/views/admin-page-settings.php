@@ -17,7 +17,7 @@
 		do_action( 'it_exchange_general_settings_page_form_top' );
 
 		$general_settings = it_exchange_get_option( 'settings_general' );
-		$pages            = it_exchange_get_registered_pages();
+		$pages            = it_exchange_get_pages( true );
 		$wp_pages         = array( 0 => __( 'Select a Page', 'LION' ) ) + it_exchange_get_wp_pages();
 	?>
 
