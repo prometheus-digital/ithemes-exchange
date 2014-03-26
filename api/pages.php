@@ -35,7 +35,10 @@ function it_exchange_get_pages( $break_cache=false, $options=array() ) {
 			$merged[$page] = ITUtility::merge_defaults( $db_params, $default_params );
 		}
 		
-		$GLOBALS['it_exchange']['registered_pages'] = $merged;
+		if ( !empty( $options ) )
+			return apply_filters( 'it_exchange_get_pages', $merged, $break_cache );
+		else
+			$GLOBALS['it_exchange']['registered_pages'] = $merged;
 	}
 
 	return apply_filters( 'it_exchange_get_pages', $GLOBALS['it_exchange']['registered_pages'], $break_cache );
@@ -319,12 +322,14 @@ function it_exchange_register_page( $page, $options ) {
 */
 function it_exchange_get_registered_pages( $options=array() ) {
 	$pages = empty( $GLOBALS['it_exchange']['registered_pages'] ) ? array() : (array) $GLOBALS['it_exchange']['registered_pages'];
+	
 	if ( ! empty( $options['type'] ) ) {
 		foreach( $pages as $page => $page_options ) {
 			if ( $options['type'] != it_exchange_get_page_type( $page ) )
 				unset( $pages[$page] );
 		}
 	}
+	
 	return $pages;
 }
 
