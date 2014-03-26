@@ -34,7 +34,7 @@ function it_exchange_register_multi_item_cart_pages() {
     );
     it_exchange_register_page( 'checkout', $options );
 }
-add_action( 'init', 'it_exchange_register_multi_item_cart_pages', 9 );
+add_action( 'it_libraries_loaded', 'it_exchange_register_multi_item_cart_pages', 11 );
 
 /**
  * Returns rewrites for cart and checkout pages
