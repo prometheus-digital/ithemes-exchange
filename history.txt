@@ -818,3 +818,5 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
+1.7.24 - 2014-03-26 - Packaging Bot (lib/icon-fonts)
+	Fixed issue with admin menu icons not functioning properly on sites that have an ABSPATH or WP_CONTENT_DIR of "/".
