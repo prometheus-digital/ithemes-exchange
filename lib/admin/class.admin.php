@@ -1804,8 +1804,12 @@ Order: %s
 
 		// Move Featured Image to top of side if supported
 		if ( it_exchange_product_type_supports_feature( $product_type, 'featured-image' ) ) {
+			remove_meta_box('postimagediv', 'it_exchange_prod', 'it_exchange_advanced' );
 			add_meta_box('postimagediv', __('Featured Image'), 'post_thumbnail_meta_box', 'it_exchange_prod', 'it_exchange_side' );
+		} else {
+			remove_meta_box('postimagediv', 'it_exchange_prod', 'it_exchange_advanced' );
 		}
+
 
 		do_action( 'it_exchange_add_edit_product_screen_layout_setup', $product_type );
 		do_action( 'it_exchange_add_edit_product_screen_layout_setup_for_' . $product_type, $product_type );
