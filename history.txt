@@ -1,3 +1,8 @@
+1.7.25 - 2014-04-02 - Lew Ayotte, Glenn Ansley, Elise Alley
+	Added ability to get true product count from it_exchange_get_cart_products_count()
+	Added fix for WP-Engine login requirements
+	Remove image thumbnail div from products
+	Remove extra space from bottom of advanced tabs on add/edit product screen
 1.7.24 - 2014-03-26 - Packaging Bot (lib/icon-fonts)
 	Fixed issue with admin menu icons not functioning properly on sites that have an ABSPATH or WP_CONTENT_DIR of "/".
 1.7.23 - 2014-03-26 - Lew Ayotte, Glenn Ansley, Elise Alley
