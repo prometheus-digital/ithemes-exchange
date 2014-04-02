@@ -238,7 +238,7 @@ a.it-exchange-button {text-decoration:none;}
 
 /** -----------------------------------------------------:[ visual credit card ]:---------- */
 .it-exchange-visual-cc-wrap{margin-bottom:1em;}
-.it-exchange-visual-cc{max-width:300px;background:#F5F5F5;}
+.it-exchange-visual-cc{max-width:300px;background:#F5F5F5;border: 1px solid #D6D6D6;border-bottom-width: 2px;border-radius: 4px;}
 .it-exchange-visual-cc input{min-height:35px;outline:none;}
 .it-exchange-visual-cc .required{color:#111;}
 .it-exchange-visual-cc .it-exchange-column-inner{padding:.5em;}
