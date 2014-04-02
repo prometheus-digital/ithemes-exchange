@@ -89,7 +89,9 @@ class IT_Theme_API_Login implements IT_Theme_API {
 		else
 			$class= empty( $options['class'] ) ? 'it-exchange-log-in' : 'it-exchange-log-in ' . esc_attr( $class );
 
-		return '<form id="loginform" class="' . $class . '" action="' . wp_login_url( $options['redirect'] ) . '" method="post">';
+		// WP-Engine only plays with the 'login_post' schema, so we cannot use wp_login_url()
+		// At least until we can modify the schema with that function
+		return '<form id="loginform" class="' . $class . '" action="' . esc_url( add_query_arg( 'redirect_to', urlencode( $options['redirect'] ), site_url( 'wp-login.php', 'login_post' ) ) ) . '" method="post">';
 	}
 
 	/**

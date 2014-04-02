@@ -363,13 +363,23 @@ function it_exchange_get_cart_product_quantity_by_product_id( $product_id ) {
 }
 
 /**
- * Returns the number of items in the cart (not including quantity for individual items)
+ * Returns the number of items in the cart 
+ * Now including quantity for individual items w/ true_count flag
  *
  * @since 0.4.0
  *
+ * @param bool $true_count Whether or not to traverse cart products to get true count of items
  * @return integer
 */
-function it_exchange_get_cart_products_count() {
+function it_exchange_get_cart_products_count( $true_count=false ) {
+	if ( $true_count ) {
+		$count = 0;
+		$products = it_exchange_get_cart_products();
+		foreach( $products as $product ) {
+			$count += $product['count'];
+		}
+		return absint( $count );
+	}
 	return absint( count( it_exchange_get_cart_products() ) );
 }
 
