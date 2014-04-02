@@ -15,19 +15,19 @@
 */
 ?>
 
-<?php do_action( 'it_exchange_content_confirmation_before_totals_subtotal_element' ); ?>
-<div class="it-exchange-confirmation-totals-title it-exchange-table-column">
-	<?php do_action( 'it_exchange_content_confirmation_begin_totals_subtotal_element_label' ); ?>
+<?php do_action( 'it_exchange_content_cart_before_totals_subtotal_element' ); ?>
+<div class="it-exchange-cart-totals-title it-exchange-table-column">
+	<?php do_action( 'it_exchange_content_cart_begin_totals_subtotal_element_label' ); ?>
 	<div class="it-exchange-table-column-inner">
 		<?php _e( 'Subtotal', 'LION' ); ?>
 	</div>
-	<?php do_action( 'it_exchange_content_confirmation_end_totals_subtotal_element_label' ); ?>
+	<?php do_action( 'it_exchange_content_cart_end_totals_subtotal_element_label' ); ?>
 </div>
-<div class="it-exchange-confirmation-totals-amount it-exchange-table-column">
-	<?php do_action( 'it_exchange_content_confirmation_begin_totals_subtotal_element_value' ); ?>
+<div class="it-exchange-cart-totals-amount it-exchange-table-column">
+	<?php do_action( 'it_exchange_content_cart_begin_totals_subtotal_element_value' ); ?>
 	<div class="it-exchange-table-column-inner">
 		<?php it_exchange( 'cart', 'subtotal' ); ?>
 	</div>
-	<?php do_action( 'it_exchange_content_confirmation_end_totals_subtotal_element_value' ); ?>
+	<?php do_action( 'it_exchange_content_cart_end_totals_subtotal_element_value' ); ?>
 </div>
-<?php do_action( 'it_exchange_content_confirmation_after_totals_subtotal_element' ); ?>
+<?php do_action( 'it_exchange_content_cart_after_totals_subtotal_element' ); ?>
