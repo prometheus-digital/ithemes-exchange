@@ -374,12 +374,14 @@ class IT_Exchange_Shopping_Cart {
 			$billing[$field] = empty( $_REQUEST['it-exchange-billing-address-' . $field] ) ? '' : $_REQUEST['it-exchange-billing-address-' . $field];
 		}
 
-		it_exchange_save_customer_billing_address( $billing );
-		it_exchange_add_message( 'notice', __( 'Billing Address Saved', 'LION' ) );
+		if ( it_exchange_save_customer_billing_address( $billing ) ) {
+			it_exchange_add_message( 'notice', __( 'Billing Address Saved', 'LION' ) );
 
-		// Update Shipping if checked
-		if ( ! empty( $_REQUEST['it-exchange-ship-to-billing'] ) && '1' == $_REQUEST['it-exchange-ship-to-billing'] )
-			it_exchange_save_shipping_address( $billing, it_exchange_get_current_customer_id() );
+			// Update Shipping if checked
+			if ( ! empty( $_REQUEST['it-exchange-ship-to-billing'] ) && '1' == $_REQUEST['it-exchange-ship-to-billing'] )
+				it_exchange_save_shipping_address( $billing, it_exchange_get_current_customer_id() );
+				
+		}
 		return true;
 	}
 
