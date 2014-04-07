@@ -5,6 +5,9 @@
  * @package IT_Exchange
 */
 
+// Abstract Class for Product Features
+require( $this->_plugin_path . 'lib/product-features/class.abstract.php' );
+
 // Product Feature: Title
 require( $this->_plugin_path . 'lib/product-features/class.title.php' );
 
