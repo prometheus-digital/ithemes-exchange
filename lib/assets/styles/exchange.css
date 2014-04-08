@@ -322,12 +322,12 @@ a.it-exchange-button {text-decoration:none;}
 
 /** ----------------------------------------:[ screen fixes ]:--- */
 @media screen and (max-width: 1000px) {
-	.it-exchange-colorbox .it-exchange-product-images-gallery {
-		max-width: 500px;
-	}
+	.it-exchange-colorbox .it-exchange-product-images-gallery {max-width: 500px;}
 }
 @media screen and (max-width: 600px) {
-	.it-exchange-colorbox .it-exchange-product-images-gallery {
-		max-width: 300px;
-	}
+	.it-exchange-colorbox .it-exchange-product-images-gallery {max-width: 300px;}
+	
+	#it-exchange-product .it-exchange-product-has-images .it-exchange-product-info{width:100%;}
+	#it-exchange-product .it-exchange-product-has-images .it-exchange-product-images{width:100%; margin-top: 2em}
+	#it-exchange-product .it-exchange-product-has-images .it-exchange-product-images .it-exchange-column-inner {margin-left:0;}
 }
