@@ -48,7 +48,7 @@ input.small-text{max-width:50px;}
 #it-exchange-page-settings .it-column.column-3 .url{color:#AAA;}
 
 
-@media screen and (max-width: 850px){ 
+@media screen and (max-width: 960px){ 
 	.it-exchange-general-settings.columns-2 {margin-right: 0;}
 	.it-exchange-general-settings #postbox-container-1 {display:none;}
 }
