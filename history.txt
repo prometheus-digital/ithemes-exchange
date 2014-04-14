@@ -1,3 +1,9 @@
+1.7.26 - 2014-04-14 - Lew Ayotte, Glenn Ansley, Elise Alley
+	Fixed issue with tracking membership cancelationg for PayPal Standard (Secure)
+	Verify billing address saved before outputting that it saved
+	Add styles to .it-exchange-visual-cc to help it look more like a card
+	Fix subtotal mis-alignment in content-cart elements and correct hook names in same template
+	Fix for Wizard opening two tabs when clicking link for Membership addon and Stripe addon
 1.7.25 - 2014-04-02 - Lew Ayotte, Glenn Ansley, Elise Alley
 	Added ability to get true product count from it_exchange_get_cart_products_count()
 	Added fix for WP-Engine login requirements
