@@ -69,7 +69,25 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 								</div>
 							</li>
 						<?php endif; ?>
+
+						<li class="product-option pro-pack-product-option" data-toggle="pro-pack-wizard">
+							<div class="option-spacer">
+								<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/wizard-pro-pack.png' ); ?>" alt="<?php _e( 'Get more Add-ons', 'LION' ); ?>" />
+								<span class="product-name"><?php _e( 'Get more Add-ons', 'LION' ); ?></span>
+							</div>
+						</li>
 					</ul>
+				</div>
+
+				<div class="field pro-pack-wizard inactive hide-if-js">
+					<div class="pro-pack-left-column">
+						<h3><?php _e( 'Do more with your store with the Pro Pack', 'LION' ); ?></h3>
+						<p><?php _e( 'Membership, Invoices, Stripe Payments, MailChimp Integration and more!', 'LION' ); ?></p>
+					</div>
+					<div class="pro-pack-right-column">
+						<span class="pro-pack-coupon"><?php _e( 'Use Code GOPRO25 to get 25% off!', 'LION' ); ?></span><br />
+						<a href="http://ithemes.com/exchange/#pricing" target="_blank" class="pro-pack-cta"><?php _e( 'Get the Pro Pack', 'LION' ); ?></a>
+					</div>
 				</div>
 
 				<?php if ( ! it_exchange_is_addon_registered( 'membership-product-type' ) ) : ?>
