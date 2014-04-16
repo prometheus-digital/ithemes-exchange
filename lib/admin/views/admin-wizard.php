@@ -17,7 +17,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 	<?php $form->start_form( $form_options, 'exchange-general-settings' ); ?>
 		<div class="it-exchange-wizard">
 			<div class="welcome">
-				<div class="welcome-title"><?php printf( __( 'Welcome to %s', 'LION' ), '<span class="it-exchange-green">iThemes Exchange</span>' ); ?></div>
+				<div class="welcome-title"><p class="section-label"><?php printf( __( 'Welcome to %s', 'LION' ), 'iThemes Exchange' ); ?></p></div>
 				<p>
 					<?php printf( __( 'You can customize your store features by filling out some information below. (Don\'t worry, you can always change these settings on the Add-ons page and the %s Settings page later. And you can get back to this setup screen from the link on the help page.) If you have add-ons, please go to the %splugins page%s and install them now before starting the setup.' ), 'Exchange', '<a href="' . admin_url( 'plugins.php' ) . '">', '</a>' ); ?>
 			</div>

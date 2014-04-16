@@ -191,10 +191,10 @@ class IT_Exchange_Product_Feature_Downloads {
 			<div class="downloads-list-wrapper">
 				<div class="downloads-list-titles">
 					<div class="download-item columns-wrapper">
-						<div class="download-name column col-4-12">
+						<div class="download-name column">
 							<span><?php _e( 'Name', 'LION' ); ?></span>
 						</div>
-						<div class="download-source column col-7-12">
+						<div class="download-source column">
 							<span><?php _e( 'Source', 'LION' ); ?></span>
 							<span class="tip" title="<?php _e( 'Use the WordPress media library or paste in any accessible URL (from Dropbox, Amazon, etc.) and we\'ll hide the source for you.', 'LION' ); ?>">i</span>
 						</div>
@@ -203,14 +203,14 @@ class IT_Exchange_Product_Feature_Downloads {
 				<div class="downloads-list">
 					<!-- New download items start. -->
 					<div class="download-item download-item-clone columns-wrapper hidden">
-						<div class="download-name column col-4-12">
+						<div class="download-name column">
 							<input type="text" name="" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'Name', 'LION' ) ); ?>" value="" />
 						</div>
-						<div class="download-source column col-7-12">
+						<div class="download-source column">
 							<input type="url" name="" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'LION' ) ); ?>" value="" />
 							<a href class="it-exchange-upload-digital-download"><?php _e( 'Upload', 'LION' ); ?></a>
 						</div>
-						<div class="download-remove column col-1-12">
+						<div class="download-remove column">
 							<a href="#" class="it-exchange-delete-digital-download">&times;</a>
 						</div>
 					</div>
@@ -220,14 +220,14 @@ class IT_Exchange_Product_Feature_Downloads {
 							var it_exchange_new_download_interation = 1;
 						</script>
 						<div class="download-item columns-wrapper" id="download-item-0">
-							<div class="download-name column col-4-12">
+							<div class="download-name column">
 								<input type="text" name="it-exchange-digital-downloads[0][name]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'Name', 'LION' ) ); ?>" value="" tabindex="4" />
 							</div>
-							<div class="download-source column col-7-12">
+							<div class="download-source column">
 								<input type="url" name="it-exchange-digital-downloads[0][source]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'LION' ) ); ?>" value="" tabindex="5" />
 								<a href class="it-exchange-upload-digital-download"><?php _e( 'Upload', 'LION' ); ?></a>
 							</div>
-							<div class="download-remove column col-1-12">
+							<div class="download-remove column">
 								<a href="#" class="it-exchange-delete-digital-download" tabindex="6" >&times;</a>
 							</div>
 						</div>
@@ -238,14 +238,14 @@ class IT_Exchange_Product_Feature_Downloads {
 						<?php foreach( $existing_downloads as $id => $data ) : ?>
 							<div id="download-item-<?php esc_attr_e( $id ); ?>" class="download-item download-exists columns-wrapper">
 								<input type="hidden" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][id]" value="<?php esc_attr_e( $data['id'] ); ?>" />
-								<div class="download-name column col-4-12">
+								<div class="download-name column">
 									<input type="text" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][name]" class="not-empty" value="<?php esc_attr_e( $data['name'] ); ?>" />
 								</div>
-								<div class="download-source column col-7-12">
+								<div class="download-source column">
 									<input type="text" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][source]" class="not-empty" value="<?php esc_attr_e( $data['source'] ); ?>" />
 									<a href class="it-exchange-upload-digital-download"><?php _e( 'Upload', 'LION' ); ?></a>
 								</div>
-								<div class="download-remove column col-1-12">
+								<div class="download-remove column">
 									<input id="it-exchange-digital-downloads-delete-<?php esc_attr_e( $id ); ?>" class="hide-if-js" type="checkbox" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][delete]" value="true" />
 									<a href="#" class="it-exchange-delete-digital-download" data-checkbox-id="it-exchange-digital-downloads-delete-<?php esc_attr_e( $id ); ?>">&times;</a>
 								</div>
