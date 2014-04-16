@@ -1162,13 +1162,13 @@ function it_exchange_admin_tooltip( $text, $echo=true, $indicator='i' ) {
 	if ( true === $echo )
 		echo $tooltip;
 
-	return $tooltip; 
+	return $tooltip;
 }
 
 /**
  * Blocks access to Download iThemes Exchange attachments
  *
- * @since 1.7.18 
+ * @since 1.7.18
  * @return void
  */
 function it_exchange_block_attachments() {
@@ -1358,6 +1358,27 @@ if ( !function_exists( 'it_exchange_dropdown_taxonomies' ) ) {
 	}
 
 }
+
+/**
+ * Add At a Glance dashboard stats for products
+ *
+ * @since CHANGEME
+*/
+function it_exchange_at_a_glance( $elements ) {
+	$product_counts = wp_count_posts( 'it_exchange_prod' );
+	if ( $product_counts && $product_counts->publish ) {
+		$text = _n( '%s Product', '%s Products', $product_counts->publish );
+		$text = sprintf( $text, number_format_i18n( $product_counts->publish ) );
+		$post_type_object = get_post_type_object( 'it_exchange_prod' );
+		if ( $post_type_object && current_user_can( $post_type_object->cap->edit_posts ) ) {
+			$elements[] = sprintf( '<a class="it-exchange-glance-products" href="edit.php?post_type=%1$s">%2$s</a>', 'it_exchange_prod', $text );
+		} else {
+			$elements = sprintf( '<span class="it-exchange-glance-products">%2$s</span>', 'it_exchange_prod', $text );
+		}
+	}
+	return $elements;
+}
+add_filter( 'dashboard_glance_items', 'it_exchange_at_a_glance' );
 
 /**
  * Retrieve HTML dropdown (select) content for category list.
