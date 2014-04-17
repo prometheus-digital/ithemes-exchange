@@ -2,7 +2,7 @@
 /**
  * This is an abstract class mean to be extended by product features
  *
- * @since CHANGEME
+ * @since 1.7.27
  * @package IT_Exchange
 */
 abstract class IT_Exchange_Product_Feature_Abstract {
@@ -10,7 +10,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	/**
 	 * Constructor. Registers hooks
 	 *
-	 * @since 0.4.0
+	 * @since 1.7.27
 	 *
 	 * @return void
 	*/
@@ -79,7 +79,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	/**
 	 * Register the product feature and add it to enabled product-type addons
 	 *
-	 * @since 0.4.0
+	 * @since 1.7.27
 	*/
 	function add_feature_support_to_product_types() {
 
@@ -96,7 +96,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	/**
 	 * Register's the metabox for any product type that supports the feature
 	 *
-	 * @since 0.4.0
+	 * @since 1.7.27
 	 * @return void
 	*/
 	function init_feature_metaboxes() {
@@ -137,7 +137,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	 *
 	 * Hooked to it_exchange_product_metabox_callback_[product-type] where product type supports the feature
 	 *
-	 * @since 0.4.0
+	 * @since 1.7.27
 	 * @return void
 	*/
 	function register_metabox() {
@@ -147,7 +147,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	/**
 	 * This echos the feature metabox.
 	 *
-	 * @since 0.4.0
+	 * @since 1.7.27
 	 * @return void
 	*/
 	abstract function print_metabox( $post );
@@ -155,7 +155,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	/**
 	 * This saves the value
 	 *
-	 * @since 0.3.8
+	 * @since 1.7.27
 	 *
 	 * @param object $post wp post object
 	 * @return void
@@ -165,7 +165,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	/**
 	 * This updates the feature for a product
 	 *
-	 * @since 0.4.0
+	 * @since 1.7.27
 	 * @param integer $product_id the product id
 	 * @param mixed $new_value the new value
 	 * @return bolean
@@ -175,7 +175,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	/**
 	 * Return the product's features
 	 *
-	 * @since 0.4.0
+	 * @since 1.7.27
 	 *
 	 * @param mixed $existing the values passed in by the WP Filter API. Ignored here.
 	 * @param integer product_id the WordPress post ID
@@ -186,7 +186,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	/**
 	 * Does the product have the feature?
 	 *
-	 * @since 0.4.0
+	 * @since 1.7.27
 	 * @param mixed $result Not used by core
 	 * @param integer $product_id
 	 * @return boolean
@@ -199,7 +199,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	 * This is different than if it has the feature, a product can
 	 * support a feature but might not have the feature set.
 	 *
-	 * @since 0.4.0
+	 * @since 1.7.27
 	 * @param mixed $result Not used by core
 	 * @param integer $product_id
 	 * @return boolean

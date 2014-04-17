@@ -1,3 +1,7 @@
+1.7.27 - 2014-04-17 - Glenn Ansley, Lew Ayotte, Ty Carlson, Elise Alley
+	Add pro-pack info to setup wizard
+	Add 'At a Glance' for products
+	Introduced abstract class for product featuress and implemented in inventory
 1.7.26 - 2014-04-14 - Lew Ayotte, Glenn Ansley, Elise Alley
 	Fixed issue with tracking membership cancelationg for PayPal Standard (Secure)
 	Verify billing address saved before outputting that it saved

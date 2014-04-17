@@ -1362,7 +1362,7 @@ if ( !function_exists( 'it_exchange_dropdown_taxonomies' ) ) {
 /**
  * Add At a Glance dashboard stats for products
  *
- * @since CHANGEME
+ * @since 1.7.27
 */
 function it_exchange_at_a_glance( $elements ) {
 	$product_counts = wp_count_posts( 'it_exchange_prod' );
