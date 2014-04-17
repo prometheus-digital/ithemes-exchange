@@ -170,7 +170,8 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 			default :
 				$output  = $options['before'];
 				if ( it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'purchase-quantity' ) ) {
-					$output .= '<input type="number" min="1" max="' . ( ! empty( $max_quantity ) ? $max_quantity : '' ) . '" data-cart-product-id="' . esc_attr( $this->_cart_item['product_cart_id'] ) . '" name="' . esc_attr( $var_key ) . '[' . esc_attr( $this->_cart_item['product_cart_id'] ) . ']" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />';
+					$max = ! empty( $max_quantity ) ? 'max="' . $max_quantity . '"' : '';
+					$output .= '<input type="number" min="1" ' . $max . '" data-cart-product-id="' . esc_attr( $this->_cart_item['product_cart_id'] ) . '" name="' . esc_attr( $var_key ) . '[' . esc_attr( $this->_cart_item['product_cart_id'] ) . ']" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />';
 				} else {
 					$output .= '1';
 					$output .= '<input type="hidden" name="' . esc_attr( $var_key ) . '[' . esc_attr( $this->_cart_item['product_cart_id'] ) . ']" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />';
