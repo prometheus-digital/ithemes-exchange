@@ -42,7 +42,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 		$this->slug             = $options['slug'];
 		$this->description      = $options['description'];
 		$this->product_types    = $options['product_types'];
-		$this->metabox_title    = empty( $options['metabox_title'] ) ? ucwords( $this->slug ) : $this->metabox_title;
+		$this->metabox_title    = empty( $options['metabox_title'] ) ? ucwords( $this->slug ) : $options['metabox_title'];
 		$this->metabox_context  = $options['metabox_context'];
 		$this->metabox_priority = $options['metabox_priority'];
 		$this->metabox_args     = $options['metabox_args'];
