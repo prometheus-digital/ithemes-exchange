@@ -17,6 +17,8 @@
 */
 function it_exchange_get_template_part_loops( $context, $detail, $parts ) {
 	$details = apply_filters( 'it_exchange_get_' . $context . '_' . $detail . '_loops', $parts );
+	if ( defined( 'WP_DEBUG' ) && WP_DEBUG )
+		echo '<!-- Template Part Loops Filter: it_exchange_get_' . $context . '_' . $detail . '_loops -->';
 	return (array) $details;
 }
 
@@ -32,5 +34,7 @@ function it_exchange_get_template_part_loops( $context, $detail, $parts ) {
 */
 function it_exchange_get_template_part_elements( $context, $detail, $parts ) {
 	$details = apply_filters( 'it_exchange_get_' . $context . '_' . $detail . '_elements', $parts );
+	if ( defined( 'WP_DEBUG' ) && WP_DEBUG )
+		echo '<!-- Template Part Elements Filter: it_exchange_get_' . $context . '_' . $detail . '_elements -->';
 	return (array) $details;
 }
