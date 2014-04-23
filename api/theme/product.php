@@ -52,7 +52,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @var object $product
 	 * @since 0.4.0
 	*/
-	private $product;
+	public $product;
 
 	/**
 	 * Constructor

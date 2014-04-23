@@ -143,20 +143,24 @@ function it_exchange() {
 
 	// Is the requested tag mapped to a method
 	if ( empty( $object->_tag_map[$tag] ) ) {
-		it_exchange_add_message( 'error', sprintf( __( 'Coding Error: <em>%s</em> in not a mapped method inside the <em>%s</em> Exchange theme API class', 'LION' ), $tag, $class_name ) );
-		return false;
+		if ( ! $tag_callback = apply_filters( 'it_exchange_theme_api_get_extended_tag_functions', false, $class_name, $tag ) ) {
+			it_exchange_add_message( 'error', sprintf( __( 'Coding Error: <em>%s</em> in not a mapped method inside the <em>%s</em> Exchange theme API class', 'LION' ), $tag, $class_name ) );
+			return false;
+		}
+
 	} else {
-		$method = $object->_tag_map[$tag];
+		$method       = $object->_tag_map[$tag];
+		$tag_callback = array( $object, strtolower( $method ) );
 	}
 
 	// Does the method called exist on this class?
-	if ( ! is_callable( array( $object, strtolower( $method ) ) ) ) {
+	if ( empty( $tag_callback )  || ! is_callable( $tag_callback ) ) {
 		it_exchange_add_message( 'error', sprintf( __( 'Coding Error: <em>%s</em> in not a callable method inside the <em>%s</em> Exchange theme API class', 'LION' ), $method, $class_name ) );
 		return false;
 	}
 
 	// Get the results from the class method
-	$result = call_user_func( array( $object, strtolower( $method ) ), $options );
+	$result = call_user_func( $tag_callback, $options );
 
 	// Filters
 	$result = apply_filters( 'it_exchange_theme_api', $result, strtolower( $context ), strtolower( $method ), $options );
