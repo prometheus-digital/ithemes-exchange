@@ -91,17 +91,17 @@
 /** -----------------------------------------------------:[ side sortables ]:---------- */
 
 /** ---:[ submit box ]:--- */
-#it-exchange-submit-box{padding:10px;background:#FFF;border:1px solid #DEDEDE;border-radius:3px;overflow:hidden;}
-#it-exchange-submit-box .publishing-actions{overflow:hidden;margin-bottom:10px;}
-#it-exchange-submit-box .publishing-actions #save-action input{margin-right:5px;}
-#it-exchange-submit-box .publishing-actions .preview{float:left;}
-#it-exchange-submit-box .modifying-actions{clear:both;overflow: hidden;}
-#it-exchange-submit-box .modifying-actions #advanced-action{float:left;line-height: 25px;}
-#it-exchange-submit-box .modifying-actions #delete-action{float:right;}
-#it-exchange-submit-box .modifying-actions #delete-action .submitdelete{color:#f00;border-bottom-color:#f00;}
-#it-exchange-submit-box .modifying-actions #delete-action .submitdelete:hover{color:#fff;background-color:#f00;border-bottom-color:#f00;}
-#it-exchange-submit-box .advanced-actions{clear:both;margin-top:5px;padding-top:10px;border-top:1px solid #F1F1F1;}
-#it-exchange-submit-box .advanced-actions .misc-pub-section{float:left;width:50%;border-bottom:0;}
+#submitpost.it-exchange-submit-box{padding:10px;background:#FFF;border:1px solid #DEDEDE;border-radius:3px;overflow:hidden;}
+#submitpost.it-exchange-submit-box .publishing-actions{overflow:hidden;margin-bottom:10px;}
+#submitpost.it-exchange-submit-box .publishing-actions #save-action input{margin-right:5px;}
+#submitpost.it-exchange-submit-box .publishing-actions .preview{float:left;}
+#submitpost.it-exchange-submit-box .modifying-actions{clear:both;overflow: hidden;}
+#submitpost.it-exchange-submit-box .modifying-actions #advanced-action{float:left;line-height: 25px;}
+#submitpost.it-exchange-submit-box .modifying-actions #delete-action{float:right;}
+#submitpost.it-exchange-submit-box .modifying-actions #delete-action .submitdelete{color:#f00;border-bottom-color:#f00;}
+#submitpost.it-exchange-submit-box .modifying-actions #delete-action .submitdelete:hover{color:#fff;background-color:#f00;border-bottom-color:#f00;}
+#submitpost.it-exchange-submit-box .advanced-actions{clear:both;margin-top:5px;padding-top:10px;border-top:1px solid #F1F1F1;}
+#submitpost.it-exchange-submit-box .advanced-actions .misc-pub-section{float:left;width:50%;border-bottom:0;}
 
 /** ---:[ product-images ]:--- */
 #it-exchange-product-images label {padding-top:5px;}

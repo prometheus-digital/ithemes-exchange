@@ -223,7 +223,7 @@ class IT_Exchange_Product_Post_Type {
 		$product_visibility = get_post_meta( $post->ID, '_it-exchange-visibility', true );
 		$product_visibility = apply_filters( 'it_exchange_add_ediit_product_visibility', $product_visibility, $post->ID );
 		?>
-        <div id="it-exchange-submit-box">
+        <div id="submitpost" class="it-exchange-submit-box">
 			<?php do_action('post_submitbox_start'); ?>
 			<div style="display:none;">
 				<?php submit_button( __( 'Save' ), 'button', 'save' ); ?>
