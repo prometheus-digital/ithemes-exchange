@@ -30,7 +30,7 @@
 			case 'all':
 			default:
 				$addons = it_exchange_get_addons( array( 'show_required' => false ) );
-				$propack = true;
+				$propack = false; // Temp turn off
 				break;
 		}
 	?>
