@@ -174,7 +174,16 @@
 
 /*  Responsive help above the default WordPress breaks. The first WP break is at 850, but we need it a little higher */
 @media screen and (max-width: 1200px) and (min-width: 850px) { 
+	/* reduce sidebar width */
 	.wrap #poststuff #post-body.columns-2{margin-right:300px;}
 	.wrap #post-body.columns-2 #postbox-container-1{margin-right:-300px;width:280px;}
+	
+	/* fix publishing actions buttons */
+	#submitpost.it-exchange-submit-box .publishing-actions .preview{float:left; clear:left; margin-top: 5px;}
+	#submitpost.it-exchange-submit-box .publishing-actions #publishing-action input {margin-top: 5px;}
+	
+	/* fix image gallery */
+	#it-exchange-gallery-images #it-exchange-add-new-image.empty {height: 250px; padding-top: 5px;}
 	#it-exchange-gallery-images #it-exchange-add-new-image a {height: 88px; padding-top: 30px;}
+	
 }
