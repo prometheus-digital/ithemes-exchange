@@ -121,7 +121,7 @@
 #it-exchange-feature-image .replace-feature-image span{position:absolute;left:50px;right:50px;padding:15px 0;border:3px solid #FFF;border-radius:3px;text-align:center;font-size:16px;color:#FFF;}
 
 #it-exchange-gallery-images{max-width:400px;float:left;width:100%;margin-top: 0px;}
-#it-exchange-gallery-images li{overflow:hidden;position:relative;margin-bottom:0;float:left;width:33.3333333%;height:auto;min-height:133px;}
+#it-exchange-gallery-images li{overflow:hidden;position:relative;margin-bottom:0;float:left;width:33.3333333%;height:auto;}
 #it-exchange-gallery-images li a{display:block;overflow:hidden;position:relative;cursor:move;outline:none;margin-right:5px;margin-bottom:5px;background:#FFF;border:1px solid #D6D6D6;}
 #it-exchange-product-images li .remove-item{right:10px;}
 #it-exchange-gallery-images.sorting li .remove-item{display:none;}
