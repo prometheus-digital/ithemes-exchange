@@ -95,7 +95,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-images', __( 'Product Images', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_side', 'default' );
+		add_meta_box( 'it-exchange-product-images-container', __( 'Product Images', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_side', 'default' );
 	}
 
 	/**
@@ -111,8 +111,14 @@ class IT_Exchange_Product_Feature_Product_Images {
 		$product_images = it_exchange_get_product_feature( $product->ID, 'product-images' );
 		?>
 
-		<label for="product-images-field">Images<span class="tip" title="<?php _e( 'Uploading large images is best (1600px or greater). Exchange will resize the images to use in the store.', 'LION' ) ?>">i</span></label>
+		<div class="it-exchange-product-images-labels">
+			<label id="it-exchange-product-core-images-tab" class="it-exchange-product-images-tab selected">
+				<?php _e( 'Images', 'LION' ); ?>
+				<span class="tip" title="<?php _e( 'Uploading large images is best (1600px or greater). Exchange will resize the images to use in the store.', 'LION' ) ?>">i</span>
+			</label>
+		</div>
 		<div id="it-exchange-product-images">
+			<div class="inner-core">
 			<?php
 			if ( ! empty( $product_images ) ) {
 
@@ -168,6 +174,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 				<?php
 			}
 			?>
+			</div>
 		</div>
 		<?php
 	}
