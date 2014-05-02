@@ -104,6 +104,8 @@
 #submitpost.it-exchange-submit-box .advanced-actions .misc-pub-section{float:left;width:50%;border-bottom:0;}
 
 /** ---:[ product-images ]:--- */
+#it-exchange-product-images{position:relative;z-index: 1;}
+#it-exchange-product-images .inner-core{padding:10px;background:#FFF;border:1px solid #DEDEDE;border-radius:3px;overflow:hidden;}
 #it-exchange-product-images label {padding-top:5px;}
 #it-exchange-product-images li .remove-item{position:absolute;z-index:101;top:5px;right:5px;padding:0 5px 1px;border:1px solid #FFF;border-radius:2px;color:#FFF;opacity:0;}
 #it-exchange-product-images li:hover .remove-item{opacity:1;}
@@ -112,29 +114,35 @@
 #it-exchange-product-images li:hover a .overlay{opacity:.4;}
 #it-exchange-product-images img{max-width:100%;height:auto;display:block;}
 
-#it-exchange-feature-image{width:100%;height:auto;position:relative;}
-#it-exchange-feature-image .feature-image{margin-top:12px;}
-#it-exchange-feature-image a{display:block;margin-right:5px;}
-#it-exchange-feature-image li a .overlay {right:5px;}
-#it-exchange-feature-image .replace-feature-image{opacity:0;display:none;}
-#it-exchange-feature-image .replace-feature-image{position:absolute;top:0;bottom:0;right:5px;left:0;background:rgba(0,0,0,.6);}
-#it-exchange-feature-image .replace-feature-image span{position:absolute;left:50px;right:50px;padding:15px 0;border:3px solid #FFF;border-radius:3px;text-align:center;font-size:16px;color:#FFF;}
+.it-exchange-feature-images-div{width:100%;height:auto;position:relative;}
+.it-exchange-feature-images-div .feature-image{margin-top:0;}
+.it-exchange-feature-images-div a{display:block;margin-right:5px;}
+.it-exchange-feature-images-div li a .overlay {right:5px;}
+.it-exchange-feature-images-div .replace-feature-image{opacity:0;display:none;}
+.it-exchange-feature-images-div .replace-feature-image{position:absolute;top:0;bottom:0;right:5px;left:0;background:rgba(0,0,0,.6);}
+.it-exchange-feature-images-div .replace-feature-image span{position:absolute;left:50px;right:50px;padding:15px 0;border:3px solid #FFF;border-radius:3px;text-align:center;font-size:16px;color:#FFF;}
 
-#it-exchange-gallery-images{max-width:400px;float:left;width:100%;margin-top: 0px;}
-#it-exchange-gallery-images li{overflow:hidden;position:relative;margin-bottom:0;float:left;width:33.3333333%;height:auto;}
-#it-exchange-gallery-images li a{display:block;overflow:hidden;position:relative;cursor:move;outline:none;margin-right:5px;margin-bottom:5px;background:#FFF;border:1px solid #D6D6D6;}
-#it-exchange-product-images li .remove-item{right:10px;}
-#it-exchange-gallery-images.sorting li .remove-item{display:none;}
-#it-exchange-gallery-images .disable-sorting a{cursor:pointer;}
-#it-exchange-gallery-images .sorting-placeholder img{opacity:.2;}
-#it-exchange-gallery-images .ui-sortable-helper a{border:3px solid #3487B4;border-radius:2px;box-shadow:#888 0 0 10px,inset #fff 0 0 0 1px;}
-#it-exchange-gallery-images #it-exchange-add-new-image{text-align:center;}
-#it-exchange-gallery-images #it-exchange-add-new-image a{height:128px;padding-top:50px;box-shadow:inset #EEEEEE 0 0 10px;text-decoration:none;}
-#it-exchange-gallery-images #it-exchange-add-new-image a span{display:inline-block;}
-#it-exchange-gallery-images #it-exchange-add-new-image.empty{width:100%;height:250px;}
-#it-exchange-gallery-images #it-exchange-add-new-image.empty a{display:block;width:auto;padding:110px 0;box-shadow:inset #EEEEEE 0 0 20px;}
-#it-exchange-gallery-images #it-exchange-add-new-image.empty a:hover{box-shadow:inset #E9E9E9 0 0 20px;}
-#it-exchange-gallery-images #it-exchange-add-new-image.empty a:before{display:none;}
+.it-exchange-gallery-images{max-width:400px;float:left;width:100%;margin: 0px;}
+.it-exchange-gallery-images li{overflow:hidden;position:relative;margin-bottom:0;float:left;width:33.3333333%;height:auto;}
+.it-exchange-gallery-images li a{display:block;overflow:hidden;position:relative;cursor:move;outline:none;margin-right:5px;margin-bottom:5px;background:#FFF;border:1px solid #D6D6D6;}
+#it-exchange-gallery-images li .remove-item{right:10px;}
+.it-exchange-gallery-images.sorting li .remove-item{display:none;}
+.it-exchange-gallery-images .disable-sorting a{cursor:pointer;}
+.it-exchange-gallery-images .sorting-placeholder img{opacity:.2;}
+.it-exchange-gallery-images .ui-sortable-helper a{border:3px solid #3487B4;border-radius:2px;box-shadow:#888 0 0 10px,inset #fff 0 0 0 1px;}
+.it-exchange-gallery-images .it-exchange-add-new-image{text-align:center;}
+.it-exchange-gallery-images .it-exchange-add-new-image a{height:121px;padding-top:50px;box-shadow:inset #EEEEEE 0 0 10px;text-decoration:none;}
+.it-exchange-gallery-images .it-exchange-add-new-image a span{display:inline-block;}
+.it-exchange-gallery-images .it-exchange-add-new-image.empty{width:100%;height:250px;}
+.it-exchange-gallery-images .it-exchange-add-new-image.empty a{display:block;width:auto;padding:110px 0;box-shadow:inset #EEEEEE 0 0 20px;}
+.it-exchange-gallery-images .it-exchange-add-new-image.empty a:hover{box-shadow:inset #E9E9E9 0 0 20px;}
+.it-exchange-gallery-images .it-exchange-add-new-image.empty a:before{display:none;}
+.it-exchange-variant-image-item .delete-variant-gallery {color: #f00;border-bottom-color: #f00;padding:1px;}
+.it-exchange-variant-image-item .delete-variant-gallery:hover {color: #fff;background-color: #f00;border-bottom-color: #f00;}
+
+#it-exchange-product-images-container .it-exchange-product-images-labels.multiple-tabs {overflow:hidden;position: relative;z-index: 2;margin-bottom: -1px;}
+#it-exchange-product-images-container .it-exchange-product-images-labels.multiple-tabs label {float:left;margin:0;padding: 8px 10px;border: 1px solid transparent; border-bottom: none;}
+#it-exchange-product-images-container .it-exchange-product-images-labels.multiple-tabs label.selected {background:#FFF;border: 1px solid #DEDEDE;border-bottom: none;}
 
 /** -----------------------------------------------------:[ advanced ]:---------- */
 .js #it_exchange_advanced-sortables .postbox{display:none;}
@@ -184,6 +192,6 @@
 	
 	/* fix image gallery */
 	#it-exchange-gallery-images #it-exchange-add-new-image.empty {height: 250px; padding-top: 5px;}
-	#it-exchange-gallery-images #it-exchange-add-new-image a {height: 88px; padding-top: 30px;}
+	#it-exchange-gallery-images #it-exchange-add-new-image a {height: 81px; padding-top: 28px;}
 	
 }

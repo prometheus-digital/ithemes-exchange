@@ -241,7 +241,7 @@ class IT_Exchange_Product_Feature_Purchase_Quantity {
 			// Return the value if supported or on add/edit screen
 			if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) || $editing_product )
 				return get_post_meta( $product_id, '_it-exchange-product-quantity', true );
-		}
+        }
 		return false;
 	}
 

@@ -10,6 +10,7 @@
 .widget_it-exchange-super-widget .it-exchange-super-widget p.cart-empty{margin:1em;}
 .it-exchange-super-widget .item-count{padding:1em;text-align:center;border-bottom:1px solid #F0F0F0;line-height:1.5;}
 .it-exchange-super-widget .it-exchange-sw-product .purchase-options{padding:1em;}
+.it-exchange-super-widget .it-exchange-sw-product .purchase-options p.out-of-stock{margin:0;}
 .it-exchange-super-widget .it-exchange-sw-product .buy-now-button,
 .it-exchange-super-widget .it-exchange-sw-product .add-to-cart-button{width:100%;}
 .it-exchange-super-widget .cart-items-wrapper{background:#F6F6F6;}

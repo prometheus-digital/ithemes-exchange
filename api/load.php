@@ -8,8 +8,10 @@
 
 if ( is_admin() ) {
 	// Admin only
-} else {
-	// Frontend only
+}
+
+// Frontend only
+if ( ! is_admin() || ( is_admin() && defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 	include( $this->_plugin_path . 'api/theme.php' );
 }
 

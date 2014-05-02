@@ -183,14 +183,17 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				&& it_exchange_product_has_feature( $this->product->ID, 'base-price' ) ) {
 
 			$result     = '';
-			$base_price = it_exchange_get_product_feature( $this->product->ID, 'base-price' );
 			$defaults   = array(
 				'before' => '<span class="it-exchange-base-price">',
 				'after'  => '</span>',
 				'format' => 'html',
+				'price'  => false,
 				'free-label' => __( 'Free', 'LION' ),
 			);
 			$options = ITUtility::merge_defaults( $options, $defaults );
+
+			// Grab product feature price
+			$base_price = empty( $options['price'] ) ? it_exchange_get_product_feature( $this->product->ID, 'base-price' ): $options['price'];
 
 			// Replace with Free label if needed
 			$db_price = it_exchange_convert_to_database_number( $base_price );
@@ -628,13 +631,14 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				'size'   => 'thumbnail', // thumbnail or large
 				'output' => 'gallery',   // gallery or thumbnails
 				'zoom'   => $zoom,       // hover or click
-				'switch' => 'click'      // hover or click
+				'switch' => 'click',     // hover or click
+				'images' => false,
 			);
 
 			$options = ITUtility::merge_defaults( $options, $defaults );
 			$output = NULL;
 
-			$product_images = it_exchange_get_product_feature( $this->product->ID, 'product-images' );
+			$product_images = empty( $options['images'] ) ? it_exchange_get_product_feature( $this->product->ID, 'product-images' ) : (array) $options['images'];
 
 			switch( $options['output'] ) {
 
@@ -808,13 +812,15 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'add-to-cart-button-type'   => 'submit',
 			'add-to-cart-button-name'   => false,
 			'add-to-cart-edit-quantity' => true,
-			'out-of-stock-text'         => __( 'Out of stock.', 'LION' ),
+			'out-of-stock-text'         => __( 'Product is currently out of stock.', 'LION' ),
 			'not-available-text'        => __( 'Product not available right now.', 'LION' ),
+			'product-in-stock'          => null,
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
 		// If we are tracking inventory, lets make sure we have some available
 		$product_in_stock = it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ? it_exchange_product_has_feature( $this->product->ID, 'inventory' ) : true;
+		$product_in_stock = is_null( $options['product-in-stock'] ) ? $product_in_stock : $options['product-in-stock'];
 
 		// If we're supporting availability dates, check that
 		$product_is_available = it_exchange( 'product', 'is-available' );
@@ -828,7 +834,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$output = '';
 
 		if ( !$product_in_stock )
-			return __( 'Product is currently out of stock.', 'LION' );
+			return '<p class="out-of-stock">' . esc_attr( $options['out-of-stock-text'] ) . '</p>';
 
 		if ( !$product_is_available )
 			return __( 'Product is currently not available.', 'LION' );
@@ -930,7 +936,8 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'button-name'         => false,
 			'out-of-stock-text'   => __( 'Out of stock.', 'LION' ),
 			'not-available-text'  => __( 'Product not available right now.', 'LION' ),
-			'edit-quantity'       => true
+			'edit-quantity'       => true,
+			'product-in-stock'    => null,
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
@@ -939,6 +946,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 		// If we are tracking inventory, lets make sure we have some available
 		$product_in_stock = it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ? it_exchange_product_has_feature( $this->product->ID, 'inventory' ) : true;
+		$product_in_stock = is_null( $options['product-in-stock'] ) ? $product_in_stock : $options['product-in-stock'];
 
 		// If we're supporting availability dates, check that
 		$product_is_available = it_exchange( 'product', 'is-available' );
@@ -955,7 +963,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$hidden_fields .= wp_nonce_field( 'it-exchange-purchase-product-' . $this->product->ID, '_wpnonce', true, false );
 
 		if ( ! $product_in_stock )
-			return '<p>' . esc_attr( $options['out-of-stock-label'] ) . '</p>';
+			return '<p class="out-of-stock">' . esc_attr( $options['out-of-stock-text'] ) . '</p>';
 
 		if ( ! $product_is_available )
 			return '<p>' . esc_attr( $options['not-available-text'] ) . '</p>';
@@ -996,11 +1004,13 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'not-available-text'  => __( 'Product not available right now.', 'LION' ),
 			'edit-quantity'       => true,
 			'max-quantity-text'   => __( 'Max Quantity Reached', 'LION' ),
+			'product-in-stock'    => null,
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
 		// If we are tracking inventory, lets make sure we have some available
 		$product_in_stock = it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ? it_exchange_product_has_feature( $this->product->ID, 'inventory' ) : true;
+		$product_in_stock = is_null( $options['product-in-stock'] ) ? $product_in_stock : $options['product-in-stock'];
 
 		// If we're supporting availability dates, check that
 		$product_is_available = it_exchange( 'product', 'is-available' );
@@ -1041,7 +1051,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			return '<p>' . esc_attr( $options['max-quantity-text'] ) . '</p>';
 
 		if ( ! $product_in_stock )
-			return '<p>' . esc_attr( $options['out-of-stock-text'] ) . '</p>';
+			return '<p class="out-of-stock">' . esc_attr( $options['out-of-stock-text'] ) . '</p>';
 
 		if ( ! $product_is_available )
 			return '<p>' . esc_attr( $options['not-available-text'] ) . '</p>';

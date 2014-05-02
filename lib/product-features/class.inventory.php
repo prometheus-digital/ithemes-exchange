@@ -47,12 +47,15 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 			<p>
 				<input type="checkbox" id="it-exchange-enable-product-inventory" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-inventory" <?php checked( 'yes', $product_feature_enable_value ); ?> /> <label for="it-exchange-enable-product-inventory"><?php _e( 'Enable Inventory Tracking for this Product', 'LION' ); ?></label><br />
 			</p>
-			<p class="it-exchange-enable-product-inventory<?php echo ( $product_feature_enable_value == 'no' ) ? ' hide-if-js' : '' ?>">
-				<label for="it-exchange-product-inventory"><?php _e( 'Current Inventory', 'LION' ); ?></label>
-				<input type="number" id="it-exchange-product-inventory" name="it-exchange-product-inventory" value="<?php esc_attr_e( $product_feature_value ); ?>" />
-				<br /><span class="description"><?php _e( 'Leave blank for unlimited.', 'LION' ); ?></span>
-			</p>
+			<div class="it-exchange-enable-product-inventory<?php echo ( $product_feature_enable_value == 'no' ) ? ' hide-if-js' : '' ?>">
+				<div class="it-exchange-core-product-inventory-fields">
+					<label for="it-exchange-product-inventory"><?php _e( 'Current Inventory', 'LION' ); ?></label>
+					<input type="number" id="it-exchange-product-inventory" name="it-exchange-product-inventory" value="<?php esc_attr_e( $product_feature_value ); ?>" />
+					<br /><span class="description"><?php _e( 'Leave blank for unlimited.', 'LION' ); ?></span>
+				</div>
+			</div>
 		<?php
+
 	}
 
 	/**
@@ -86,6 +89,37 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 		if ( isset( $_POST['it-exchange-product-inventory'] ) )
 			it_exchange_update_product_feature( $product_id, 'inventory', $_POST['it-exchange-product-inventory'] );
 
+        // Save option for checkbox allowing quantity
+        if ( empty( $_POST['it-exchange-enable-product-variant-inventory'] ) )
+			it_exchange_update_product_feature( $product_id, 'inventory', 'no', array( 'setting' => 'variants-enabled' ) );
+        else
+			it_exchange_update_product_feature( $product_id, 'inventory', 'yes', array( 'setting' => 'variants-enabled' ) );
+
+		// Abort if the lock is engaged because versions are mismatched
+		if ( ! empty( $_POST['it-exchange-lock-inventory-variants'] ) )
+			return;
+
+		// Save variants version for inventory if it is set
+		if ( isset( $_POST['it-exchange-inventory-variants-version'] ) )
+			it_exchange_update_product_feature( $product_id, 'inventory', $_POST['it-exchange-inventory-variants-version'], array( 'setting' => 'variants-version' ) );
+
+		// Save variants if variants is activated
+		if ( it_exchange_product_supports_feature( $product_id, 'variants' ) && ! empty( $_POST['it-exchange-enable-product-variant-inventory'] ) ) {
+			if ( ! empty( $_POST['it_exchange_inventory_variants'] ) ) {
+				//die( ITUtility::print_r( $_POST['it_exchange_inventory_variants'] ) );
+				$controller = it_exchange_variants_addon_get_product_feature_controller( $product_id, 'inventory', array( 'setting' => 'variants' ) );
+				$controller->clear_post_meta();
+				$controller->set_all_variant_combos_for_product();
+				foreach( $_POST['it_exchange_inventory_variants'] as $hash => $value ) {
+					$controller->load_new_from_hash( $hash );
+					$controller->set_value( $value );
+					$controller->update_meta_value_for_current_combo();
+				}
+				//die( ITUtility::print_r( $controller->post_meta ) );
+				$controller->save_post_meta();
+			}
+		}
+
 	}
 
 	/**
@@ -115,6 +149,16 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 				$new_value = 'yes';
 			update_post_meta( $product_id, '_it-exchange-product-enable-inventory', $new_value );
 			return true;
+		} else if ( 'variants-enabled' == $options['setting'] ) {
+			// Enabled setting must be yes or no.
+			if ( ! in_array( $new_value, array( 'yes', 'no' ) ) )
+				$new_value = 'yes';
+			update_post_meta( $product_id, '_it-exchange-product-enable-variant-inventory', $new_value );
+			return true;
+		} else if ( 'variants' == $options['setting'] ) {
+			update_post_meta( $product_id, '_it-exchange-product-inventory-variants', $new_value );
+		} else if ( 'variants-version' == $options['setting'] ) {
+			update_post_meta( $product_id, '_it-exchange-inventory-variants-version', $new_value );
 		}
 	}
 
@@ -139,9 +183,19 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
             if ( ! in_array( $enabled, array( 'yes', 'no' ) ) )
                 $enabled = 'no';
             return $enabled;
+        } else if ( 'variants-enabled' == $options['setting'] ) {
+            $enabled = get_post_meta( $product_id, '_it-exchange-product-enable-variant-inventory', true );
+            if ( ! in_array( $enabled, array( 'yes', 'no' ) ) )
+                $enabled = 'no';
+            return $enabled;
         } else if ( 'inventory' == $options['setting'] ) {
             if ( it_exchange_product_supports_feature( $product_id, 'inventory' ) )
                 return get_post_meta( $product_id, '_it-exchange-product-inventory', true );
+        } else if ( 'variants' == $options['setting'] ) {
+            if ( it_exchange_product_supports_feature( $product_id, 'inventory' ) )
+                return get_post_meta( $product_id, '_it-exchange-product-inventory-variants', true );
+        } else if ( 'variants-version' == $options['setting'] ) {
+			return get_post_meta( $product_id, '_it-exchange-inventory-variants-version', true );
         }
         return false;
 	}
@@ -203,9 +257,22 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 			$count     = $data['count'];
 			$inventory = it_exchange_get_product_feature( $data['product_id'], 'inventory' );
 			$updated   = absint( $inventory - $count );
-			it_exchange_update_product_feature( $data['product_id'], 'inventory', $updated );
+			$options   = array();
+
+			$inventory_params = array(
+				'cart_id'                       => $cart_id,
+				'cart_product_data'             => $data,
+				'quantity'                      => $count,
+				'current_inventory'             => $inventory,
+				'updated_inventory'             => $updated,
+				'options'                       => $options,
+				'perform_core_inventory_update' => true,
+			);
+			$inventory_params = apply_filters( 'it_exchange_inventory_params_at_purchase', $inventory_params );
+
+			if ( ! empty( $inventory_params['perform_core_inventory_update'] ) )
+				it_exchange_update_product_feature( $data['product_id'], 'inventory', $inventory_params['updated_inventory'], (array) $inventory_params['options'] );
 		}
 	}
-
 }
 $IT_Exchange_Product_Feature_Inventory = new IT_Exchange_Product_Feature_Inventory( array( 'slug' => 'inventory', 'description' => __( 'The current inventory number', 'LION' ) ) );

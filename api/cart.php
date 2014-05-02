@@ -213,6 +213,7 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 
 			// Get max quantity setting
 			$max_purchase_quantity = it_exchange_get_product_feature( $product_id, 'purchase-quantity' );
+			$max_purchase_quantity = apply_filters( 'it_exchange_max_purchase_quantity_cart_check', $max_purchase_quantity, $product_id, $itemized_data, $additional_data, $itemized_hash );
 			$count = ( $max_purchase_quantity && $quantity > $max_purchase_quantity ) ? $max_purchase_quantity : $quantity;
 		} else {
 			$count = 1;

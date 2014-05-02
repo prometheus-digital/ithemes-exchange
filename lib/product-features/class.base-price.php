@@ -23,10 +23,10 @@ class IT_Exchange_Base_Price {
 			add_action( 'load-post.php', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'it_exchange_save_product', array( $this, 'save_feature_on_product_save' ) );
 		}
-		add_action( 'it_exchange_update_product_feature_base-price', array( $this, 'save_feature' ), 9, 2 );
-		add_filter( 'it_exchange_get_product_feature_base-price', array( $this, 'get_feature' ), 9, 2 );
+		add_action( 'it_exchange_update_product_feature_base-price', array( $this, 'save_feature' ), 9, 3 );
+		add_filter( 'it_exchange_get_product_feature_base-price', array( $this, 'get_feature' ), 9, 3 );
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
-		add_filter( 'it_exchange_product_has_feature_base-price', array( $this, 'product_has_feature') , 9, 2 );
+		add_filter( 'it_exchange_product_has_feature_base-price', array( $this, 'product_has_feature') , 9, 3 );
 		add_filter( 'it_exchange_product_supports_feature_base-price', array( $this, 'product_supports_feature') , 9, 2 );
 	}
 
@@ -162,6 +162,34 @@ class IT_Exchange_Base_Price {
 
 		// Save new value
 		it_exchange_update_product_feature( $product_id, 'base-price', $new_price );
+
+		/** VARIANT PRICING **/
+
+        // Abort if the lock is engaged because versions are mismatched
+        if ( ! empty( $_POST['it-exchange-lock-pricing-variants'] ) ) 
+            return;
+
+        // Save variants version for pricing if it is set
+        if ( isset( $_POST['it-exchange-product-pricing-variants-version'] ) ) 
+            it_exchange_update_product_feature( $product_id, 'base-price', $_POST['it-exchange-product-pricing-variants-version'], array( 'setting' => 'variants-version' ) );
+
+        // Save variants if variants is activated
+        if ( it_exchange_product_has_feature( $product_id, 'variants' ) ) { 
+            if ( ! empty( $_POST['it-exchange-product-variant-pricing'] ) ) { 
+                $controller = it_exchange_variants_addon_get_product_feature_controller( $product_id, 'base-price', array( 'setting' => 'variants' ) );
+                $controller->clear_post_meta();
+                $controller->set_all_variant_combos_for_product();
+                foreach( $_POST['it-exchange-product-variant-pricing'] as $hash => $value ) { 
+                    $controller->load_new_from_hash( $hash );
+                    $controller->set_value( $value );
+                    $controller->update_meta_value_for_current_combo();
+                }   
+                $controller->save_post_meta();
+            } else {
+                it_exchange_update_product_feature( $product_id, 'base-price', array(), array( 'setting' => 'variants' ) );
+            }   
+        }
+
 	}
 
 	/**
@@ -173,13 +201,27 @@ class IT_Exchange_Base_Price {
 	 * @param mixed $new_price the new price
 	 * @return bolean
 	*/
-	function save_feature( $product_id, $new_price ) {
+	function save_feature( $product_id, $new_price, $options=array() ) {
+
+        $defaults = array(
+            'setting' => 'primary',
+        );
+        $options = wp_parse_args( $options, $defaults );
+
 		if ( ! it_exchange_get_product( $product_id ) )
 			return false;
 
-		$new_price = it_exchange_convert_to_database_number( $new_price );
-
-		update_post_meta( $product_id, '_it-exchange-base-price', $new_price );
+		if ( 'primary' == $options['setting'] ) {
+			$new_price = it_exchange_convert_to_database_number( $new_price );
+			update_post_meta( $product_id, '_it-exchange-base-price', $new_price );
+		} else if ( 'variants' == $options['setting'] ) {
+			foreach( (array) $new_price as $key => $data ) {
+				$new_price[$key]['value'] = it_exchange_convert_to_database_number( $data['value'] );
+			}
+			update_post_meta( $product_id, '_it-exchange-product-pricing-variants', $new_price );
+		} else if ( 'variants-version' == $options['setting'] ) {
+			update_post_meta( $product_id, '_it-exchange-product-pricing-variants-version', $new_price );
+		}
 	}
 
 	/**
@@ -190,10 +232,28 @@ class IT_Exchange_Base_Price {
 	 * @param integer product_id the WordPress post ID
 	 * @return string base-price
 	*/
-	function get_feature( $base_price, $product_id ) {
-		if ( '' !== $base_price = get_post_meta( $product_id, '_it-exchange-base-price', true ) )
-			$base_price = it_exchange_convert_from_database_number( $base_price ); //create a decimal object (float)
-		return $base_price;
+	function get_feature( $base_price, $product_id, $options=array() ) {
+        $defaults = array(
+            'setting' => 'primary',
+        );
+        $options = wp_parse_args( $options, $defaults );
+
+		if ( 'primary' == $options['setting'] ) {
+			if ( '' !== $base_price = get_post_meta( $product_id, '_it-exchange-base-price', true ) )
+				$base_price = it_exchange_convert_from_database_number( $base_price ); //create a decimal object (float)
+			return $base_price;
+		} else if ( 'variants' == $options['setting'] ) {
+			if ( '' !== $variant_pricing = get_post_meta( $product_id, '_it-exchange-product-pricing-variants', true ) ) {
+				foreach( (array) $variant_pricing as $key => $data ) {
+					$variant_pricing[$key]['value'] = it_exchange_convert_from_database_number( $data['value'] );
+				}
+				return $variant_pricing;
+			} else {
+				return false;
+			}
+		} else if ( 'variants-version' == $options['setting'] ) {
+			return get_post_meta( $product_id, '_it-exchange-product-pricing-variants-version', true );
+		}
 	}
 
 	/**
@@ -204,11 +264,12 @@ class IT_Exchange_Base_Price {
 	 * @param integer $product_id
 	 * @return boolean
 	*/
-	function product_has_feature( $result, $product_id ) {
+	function product_has_feature( $result, $product_id, $options=array() ) {
 		// Does this product type support this feature?
 		if ( false === $this->product_supports_feature( false, $product_id ) )
 			return false;
-		return false === $this->get_feature( false, $product_id ) ? false : true;
+		$value = $this->get_feature( false, $product_id, $options );
+		return empty( $value ) ? false : true;
 	}
 
 	/**
