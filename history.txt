@@ -1,3 +1,18 @@
+1.8.0 - 2014-05-08 - Glenn Ansley, Lew Ayotte, Ty Carlson, Brad Ulrich, Elise Alley
+	Zeroed out padding by default on super widget notice messages
+	Add tooltip script to add-product page.
+	Change jQuery 'on' event to work with dynamicly created nodes in tooltip script
+	Introduced multiple core changes to support Variants add-on
+	Made it possible to enable tabbed interface for image gallery.
+	Fixed save/preview/publish buttons breaking at smaller screen widths
+	Removed set height on image gallery thumbnails to fix weirdness on smaller screens
+	Fixed the annoying 'Are you sure you want to reload' message on Add/Edit product page
+	Updated tax id link on general settings page
+	Cannot have empty string max attributes, fix for cart product page
+	Added a filter to super widget on missing product IDs
+	Made tag maps for Theme API objects extendable.
+	Added some tracing in HTML comments for template_part loops/elements if WP_DEBUG is defined as true
+	Fixed bug with metabox_title in abstract product features class
 1.7.27.1 - 2014-04-18 - Glenn Ansley, Lew Ayotte, Ty Carlson, Elise Alley
 	Adding missing image not included with last commit
 1.7.27 - 2014-04-17 - Glenn Ansley, Lew Ayotte, Ty Carlson, Elise Alley
