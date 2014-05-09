@@ -68,15 +68,26 @@
 #it-exchange-add-ons-wrap .no-addons-found{margin:1em;font-size:1.2em;}
 
 /** -----------------------------------------------------:[ pro-pack block]:---------- */
-.add-on-block.pro-pack {background: #334940 url(../images/pro-pack-addons.png) no-repeat 96% center;color: #FFF;border-radius: 3px 3px 0 0;}
-.add-on-block.pro-pack h3 {margin: 0.25em 0 0;font-size: 2em;color: #8CC53E;}
-.add-on-block.pro-pack p {max-width: 55%;margin: 1.25em 0 2em;}
-.add-on-block.pro-pack a.btn-pro {display: inline-block;padding: 10px 15px;background: #8CC53E;box-shadow: 0 2px 0 #72A033;color: #3F4E29;font-size: 16px;text-align: center;text-decoration: none;border-radius: 4px;}
-.add-on-block.pro-pack a.btn-pro {background: #A8E457;}
+#it-exchange-add-ons-wrap .pro-pack {background: #334940;color: #FFF;border-radius: 3px 3px 0 0;}
+#it-exchange-add-ons-wrap .pro-pack h3 {margin: 0.25em 0 0;font-size: 1.4em;color: #8CC53E;float:left;line-height: 1.5em;}
+#it-exchange-add-ons-wrap .pro-pack h3 span a {font-size: .75em;font-weight:normal;text-decoration:none;color:#7e948b;margin-left:1.5em;}
+#it-exchange-add-ons-wrap .pro-pack h3 span a:hover {color: #95b0a5;}
+#it-exchange-add-ons-wrap .pro-pack p {margin:0;display:none;clear:both;float:left;max-width: 55%;}
+#it-exchange-add-ons-wrap .pro-pack a.btn-pro {display: inline-block;padding: 10px 15px;background: #8CC53E;box-shadow: 0 2px 0 #72A033;color: #3F4E29;font-size: 16px;text-align: center;text-decoration: none;border-radius: 4px;float:right;}
+#it-exchange-add-ons-wrap .pro-pack a.btn-pro:hover {background: #A8E457;}
+#it-exchange-add-ons-wrap .pro-pack a.dismiss {display:none;float:left;margin: 1em;display:none;font-size: 1em;font-weight:normal;text-decoration:none;color:#7e948b;}
+#it-exchange-add-ons-wrap .pro-pack a.dismiss:hover {color: #95b0a5;}
+#it-exchange-add-ons-wrap .pro-pack.open {background: #334940 url(../images/pro-pack-addons.png) no-repeat 96% center;color: #FFF;border-radius: 3px 3px 0 0;padding: 30px;}
+#it-exchange-add-ons-wrap .pro-pack.open p {margin: 1.25em 0 2em 0;}
+#it-exchange-add-ons-wrap .pro-pack.get-more-tab p {display:block;}
+#it-exchange-add-ons-wrap .pro-pack.open a.btn-pro {clear:left;float:left;}
+#it-exchange-add-ons-wrap .pro-pack.open a.dismiss {display:block;}
+
 
 @media only screen and ( max-width:600px ) {
 
-	.add-on-block.pro-pack {background: #334940;}
-	.add-on-block.pro-pack p {max-width: 100%;}
+	#it-exchange-add-ons-wrap .add-on-block.pro-pack, #it-exchange-add-ons-wrap .add-on-block.pro-pack.open {background: #334940;}
+	#it-exchange-add-ons-wrap .pro-pack h3 span a {display:block;margin: 0 0 1em 0;}
+	#it-exchange-add-ons-wrap .add-on-block.pro-pack p {max-width: 100%;}
 
 }

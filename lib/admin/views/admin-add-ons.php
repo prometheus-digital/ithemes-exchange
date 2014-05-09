@@ -30,7 +30,7 @@
 			case 'all':
 			default:
 				$addons = it_exchange_get_addons( array( 'show_required' => false ) );
-				$propack = false; // Temp turn off
+				$propack = true;
 				break;
 		}
 	?>
@@ -38,9 +38,9 @@
 		<?php if ( ! empty( $addons ) ) : ?>
 			<?php if ( $propack ) { ?>
 				<div class="add-on-block pro-pack">
-					<h3><?php _e( 'Get the Exchange Pro Pack', 'LION' ); ?></h3>
+					<h3><?php _e( 'Get the Exchange Pro Pack', 'LION' ); ?><span><a href="#">Learn More</a></span></h3>
 					<p><?php _e( 'The Pro Pack gets you access to all the iThemes Exchange add-ons... like Membership, Invoices, Recurring Payments, Stripe, and MailChimp add-ons and coming soon &ndash; Variants and Advances U.S. Taxes. Add-ons unlock so much more that Exchange can do. And with the Pro Pack you get access to all our iThemes-built add-ons, plus any more we build in the next year (which will be a lot).', 'LION' ); ?></p>
-					<a class="btn-pro" href="http://ithemes.com/exchange/pro-pack/" target="_blank"><?php _e( 'Get all our add-ons for $197', 'LION' ); ?></a>
+					<a class="btn-pro" href="http://ithemes.com/exchange/pro-pack/" target="_blank"><?php _e( 'Get all our add-ons for $197', 'LION' ); ?></a><a href="#" class="dismiss">No thanks</a>
 				</div>
 			<?php } ?>
 

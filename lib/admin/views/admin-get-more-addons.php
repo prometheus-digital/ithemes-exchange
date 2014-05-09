@@ -25,6 +25,11 @@
 	?>
 
 	<div class="add-ons-wrapper">
+		<div class="add-on-block pro-pack open get-more-tab">
+			<h3><?php _e( 'Get the Exchange Pro Pack', 'LION' ); ?></h3>
+			<p><?php _e( 'The Pro Pack gets you access to all the iThemes Exchange add-ons... like Membership, Invoices, Recurring Payments, Stripe, and MailChimp add-ons and coming soon &ndash; Variants and Advances U.S. Taxes. Add-ons unlock so much more that Exchange can do. And with the Pro Pack you get access to all our iThemes-built add-ons, plus any more we build in the next year (which will be a lot).', 'LION' ); ?></p>
+			<a class="btn-pro" href="http://ithemes.com/exchange/pro-pack/" target="_blank"><?php _e( 'Get all our add-ons for $197', 'LION' ); ?></a>
+		</div>
 		<?php if ( ! empty( $addons ) ) : ?>
 			<?php
 				$count = 0;
