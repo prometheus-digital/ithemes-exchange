@@ -1069,6 +1069,43 @@ function it_exchange_force_rewrite_flush_on_upgrade() {
 add_action( 'it_exchange_version_updated', 'it_exchange_force_rewrite_flush_on_upgrade' );
 
 /**
+ * Force rewrite rule update on upgrade
+ *
+ * @since 1.8.1
+ *
+ * @param array $versions old and new versions. not used here
+ * @return void
+*/
+function it_exchange_clean_duplicate_user_post_meta( $versions ) {
+	if ( version_compare( '1.8.1', $versions['previous'], '>' ) ) {
+		global $wpdb;
+		
+		$wpdb->query( 
+			"
+			DELETE n1 
+			FROM $wpdb->postmeta n1, $wpdb->postmeta n2 
+			WHERE n1.post_id = n2.post_id 
+			AND n1.meta_key = '_it_exchange_transaction_id' 
+			AND n1.meta_value = n2.meta_value 
+			AND n1.meta_id > n2.meta_id
+			"
+		);
+		
+		$wpdb->query(
+			"
+			DELETE n1 
+			FROM $wpdb->usermeta n1, $wpdb->usermeta n2 
+			WHERE n1.user_id = n2.user_id 
+			AND n1.meta_key = '_it_exchange_transaction_id' 
+			AND n1.meta_value = n2.meta_value 
+			AND n1.umeta_id > n2.umeta_id
+			"
+		);
+	}
+}
+add_action( 'it_exchange_version_updated', 'it_exchange_clean_duplicate_user_post_meta' );
+
+/**
  * Add custom image sizs to use in themes and admin.
  *
  * @since 1.6.0
