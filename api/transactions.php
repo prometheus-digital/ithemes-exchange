@@ -238,6 +238,8 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 
 	if ( !$customer_id )
 		$customer_id = it_exchange_get_current_customer_id();
+		
+	$customer = new IT_Exchange_Customer( $customer_id );
 
 	// If we don't have a title, create one
 	if ( empty( $args['post_title'] ) )
@@ -263,6 +265,17 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		update_post_meta( $transaction_id, '_it_exchange_transaction_hash', it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) );
 
 		do_action( 'it_exchange_add_transaction_success', $transaction_id );
+		if ( $products = it_exchange_get_transaction_products( $transaction_id ) ) {
+			// Loop through products
+			foreach( $products as $cart_id => $data ) {
+				$product = new IT_Exchange_Product( $data['product_id'] );
+				$product->add_transaction_to_product( $transaction_id );
+				
+			}
+		}
+
+		$customer->add_transaction_to_user( $transaction_id );
+		
 		return apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $cart_object, $args );
 	}
 	do_action( 'it_exchange_add_transaction_failed', $method, $method_id, $status, $customer_id, $cart_object, $args );

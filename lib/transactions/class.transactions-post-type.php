@@ -22,7 +22,7 @@ class IT_Exchange_Transaction_Post_Type {
 	function IT_Exchange_Transaction_Post_Type() {
 		$this->init();
 
-		add_action( 'save_post', array( $this, 'save_transaction' ) );
+		add_action( 'save_post_it_exchange_tran', array( $this, 'save_transaction' ) );
 
 		if ( is_admin() ) {
 			add_action( 'admin_init', array( $this, 'modify_post_type_features' ) );

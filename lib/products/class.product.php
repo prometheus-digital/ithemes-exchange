@@ -105,8 +105,6 @@ class IT_Exchange_Product {
 		else
 			add_action( 'admin_init', array( $this, 'set_add_edit_screen_supports' ) );
 
-		//We want to do this sooner than 10
-		add_action( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_to_product' ), 5 );
 	}
 
 	/**

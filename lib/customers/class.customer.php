@@ -61,9 +61,6 @@ class IT_Exchange_Customer {
 			$this->set_customer_data();
 		}
 
-		//We want to do this last
-		add_action( 'it_exchange_add_transaction_success', array( $this, 'add_transaction_to_user' ), 999 );
-
 		// Return false if not a WP User
 		if ( ! $this->is_wp_user() )
 			return false;
