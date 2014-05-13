@@ -63,6 +63,16 @@ class IT_Exchange_Shopping_Cart {
 			return;
 		}
 
+		// Possibly Handle Continue Shopping Request
+		$empty_var = it_exchange_get_field_name( 'continue_shopping' );
+		if ( ! empty( $_REQUEST[$empty_var] ) ) {
+			if ( $url = it_exchange_get_page_url( 'store' ) ) {
+				wp_redirect( $url );
+				die();
+			}
+			return;
+		}
+
 		// Possibly handle update shipping address request
 		if ( ! empty( $_REQUEST['it-exchange-update-shipping-address'] ) ) {
 			$this->handle_update_shipping_address_request();

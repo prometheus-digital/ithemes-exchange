@@ -146,6 +146,7 @@ function it_exchange_get_field_names() {
 		'remove_product_from_cart' => 'it-exchange-remove-product-from-cart',
 		'update_cart_action'       => 'it-exchange-update-cart-request',
 		'empty_cart'               => 'it-exchange-empty-cart',
+		'continue_shopping'        => 'it-exchange-continue-shopping',
 		'proceed_to_checkout'      => 'it-exchange-proceed-to-checkout',
 		'view_cart'                => 'it-exchange-view-cart',
 		'purchase_cart'            => 'it-exchange-purchase-cart',

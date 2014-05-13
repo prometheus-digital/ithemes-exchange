@@ -100,3 +100,77 @@ function it_exchange_multi_item_cart_get_page_urls( $page ) {
  * @since 0.4.0
 */
 add_filter( 'it_exchange_multi_item_cart_allowed', '__return_true' );
+
+/**
+ * Settings page
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_multi_item_cart_settings_callback() {
+	$form_values  = it_exchange_get_option( 'addon_multi_item_cart', true );
+	if ( ! isset( $form_values['show-continue-shopping-button'] ) )
+		$form_values['show-continue-shopping-button'] = true;
+	$form_options = array(
+		'id'      => 'it-exchange-add-on-multi-item-cart-settings',
+		'action'  => 'admin.php?page=it-exchange-addons&add-on-settings=multi-item-cart-option',
+	);
+	$form         = new ITForm( $form_values, array( 'prefix' => 'it-exchange-add-on-multi-item-cart' ) );
+
+	?>
+	<div class="wrap">
+		<?php ITUtility::screen_icon( 'it-exchange' ); ?>
+		<h2><?php _e( 'Multi-Item Cart Settings', 'LION' ); ?></h2>
+
+		<?php do_action( 'it_exchange_multi_item_cart_settings_page_top' ); ?>
+		<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
+		<?php $form->start_form( $form_options, 'it-exchange-multi-item-cart-settings' ); ?>
+
+		<?php
+		do_action( 'it_exchange_digital_downloads_settings_form_top' );
+		if ( ! empty( $form_values ) )
+			foreach ( $form_values as $key => $var )
+				$form->set_option( $key, $var );
+
+		if ( ! empty( $_POST['__it-form-prefix'] ) && 'it-exchange-add-on-multi-item-cart' == $_POST['__it-form-prefix'] )
+			ITUtility::show_status_message( __( 'Options Saved', 'LION' ) );
+		?>
+		<div class="it-exchange-addon-settings it-exchange-multi-item-cart-addon-settings">
+			<p>
+				<label for="show-continue-shopping-button">
+				<?php $form->add_check_box( 'show-continue-shopping-button' ); ?>
+				<?php _e( 'Show the Continue Shopping button on the cart page?', 'LION' ); ?>
+				</label>
+			</p>
+		</div>
+		<?php
+
+		do_action( 'it_exchange_multi_item_cart_settings_form_bottom' );
+		?>
+		<p class="submit">
+			<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary button-large' ) ); ?>
+		</p>
+	<?php $form->end_form(); ?>
+	<?php do_action( 'it_exchange_multi_item_cart_settings_page_bottom' ); ?>
+	<?php do_action( 'it_exchange_addon_settings_page_bottom' ); ?>
+</div>
+<?php
+}
+
+/**
+ * Saves the settings page values
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_multi_item_cart_save_settings() {
+	if ( empty( $_POST['__it-form-prefix'] ) || 'it-exchange-add-on-multi-item-cart' != $_POST['__it-form-prefix'] )
+		return;
+
+	$form_values = it_exchange_get_option( 'addon_multi_item_cart', true );
+	$form_values['show-continue-shopping-button'] = ! empty( $_POST['it-exchange-add-on-multi-item-cart-show-continue-shopping-button'] );
+	it_exchange_save_option( 'addon_multi_item_cart', $form_values );
+}
+add_action( 'admin_init', 'it_exchange_multi_item_cart_save_settings' );

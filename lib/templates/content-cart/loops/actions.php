@@ -19,7 +19,7 @@
 <div id="it-exchange-cart-actions">
 <?php do_action( 'it_exchange_content_cart_before_actions_loop' ); ?>
 <?php do_action( 'it_exchange_content_cart_begin_actions_loop' ); ?>
-<?php foreach ( it_exchange_get_template_part_elements( 'content_cart', 'actions', array( 'apply-coupon', 'update', 'empty', 'checkout' ) ) as $action ) : ?>
+<?php foreach ( it_exchange_get_template_part_elements( 'content_cart', 'actions', array( 'apply-coupon', 'update', 'empty', 'checkout', 'continue-shopping' ) ) as $action ) : ?>
 		<?php
 		/**
 		 * Theme and add-on devs should add code to this loop by

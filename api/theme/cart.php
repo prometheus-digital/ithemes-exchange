@@ -20,19 +20,20 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	public $_tag_map = array(
-		'cartitems'     => 'cart_items',
-		'formopen'      => 'form_open',
-		'noncefield'    => 'nonce_field',
-		'formclose'     => 'form_close',
-		'subtotal'      => 'sub_total',
-		'total'         => 'total',
-		'update'        => 'update_cart',
-		'checkout'      => 'checkout_cart',
-		'viewcart'      => 'view_cart',
-		'empty'         => 'empty_cart',
-		'multipleitems' => 'multiple_items',
-		'itemcount'     => 'item_count',
-		'focus'         => 'focus',
+		'cartitems'        => 'cart_items',
+		'formopen'         => 'form_open',
+		'noncefield'       => 'nonce_field',
+		'formclose'        => 'form_close',
+		'subtotal'         => 'sub_total',
+		'total'            => 'total',
+		'update'           => 'update_cart',
+		'checkout'         => 'checkout_cart',
+		'viewcart'         => 'view_cart',
+		'empty'            => 'empty_cart',
+		'continueshopping' => 'continue_shopping',
+		'multipleitems'    => 'multiple_items',
+		'itemcount'        => 'item_count',
+		'focus'            => 'focus',
 	);
 
 	/**
@@ -282,6 +283,55 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		$var = it_exchange_get_field_name( 'empty_cart' );
+		$nonce_var   = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
+
+		switch( $options['format'] ) {
+			case 'var' :
+				return $var;
+				break;
+			case 'link' :
+				// Get clean url without any exchange query args
+				$url = it_exchange_clean_query_args();
+				$url = add_query_arg( $var, 1, $url );
+				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . it_exchange_get_session_id() ), $url );
+				$output  = $options['before'];
+				$output .= '<a href="' . $url . '" class="' . esc_attr( $options['class'] ) . '" title="' . esc_attr( $options['title'] ) . '">' . esc_attr( $options['label'] ) . '</a>';
+				$output .= $options['after'];
+				break;
+			case 'button' :
+			default :
+				$output  = $options['before'];
+				$output .= '<input type="submit" class="' . esc_attr( $options['class'] ). '" name="' . esc_attr( $var ) . '" value="' . esc_attr( $options['label'] ) . '" />';
+				$output .= $options['after'];
+				break;
+		}
+		return $output;
+	}
+
+	/**
+	 * Returns the continue Shopping button/link/var
+	 *
+	 * @since CHANGEME
+	*/
+	function continue_shopping( $options=array() ) {
+		$defaults = array(
+			'before' => '',
+			'after'  => '',
+			'class'  => 'it-exchange-continue-shopping',
+			'format' => 'button',
+			'title'  => __( 'Continue Shopping', 'LION' ),
+			'label'  => __( 'Continue Shopping', 'LION' ),
+		);
+		$options = wp_parse_args( $options, $defaults );
+
+		if ( ! empty( $options['has'] ) ) {
+			if ( ! it_exchange_is_multi_item_cart_allowed() )
+				return false;
+			$multi_item_cart_settings = it_exchange_get_option( 'addon_multi_item_cart', true );
+			return ! empty( $multi_item_cart_settings['show-continue-shopping-button'] );
+		}
+
+		$var = it_exchange_get_field_name( 'continue_shopping' );
 		$nonce_var   = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
 
 		switch( $options['format'] ) {
