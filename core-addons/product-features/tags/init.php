@@ -90,7 +90,7 @@ if ( !function_exists( 'it_exchange_tags_pre_get_posts' ) ) {
 	 * @return void
 	*/
 	function it_exchange_tags_pre_get_posts( $query ) {
-	    if ( !is_admin() && is_tax( 'it_exchange_tag' ) ) {
+	    if ( !is_admin() && is_tax( 'it_exchange_tag' ) && ! empty( $query->it_exchange_tag ) ) {
 	    	$meta_query = (array) $query->meta_query;
 	    	$meta_query[] = array(
 	    		'key'   => '_it-exchange-visibility',

@@ -110,7 +110,7 @@ if ( !function_exists( 'it_exchange_categories_pre_get_posts' ) ) {
 	 * @return void
 	*/
 	function it_exchange_categories_pre_get_posts( $query ) {
-	    if ( !is_admin() && is_tax( 'it_exchange_category' ) ) {
+	    if ( ! is_admin() && is_tax( 'it_exchange_category' ) && ! empty( $query->it_exchange_category ) ) {
 	    	$meta_query = (array) $query->meta_query;
 	    	$meta_query[] = array(
 	    		'key'   => '_it-exchange-visibility',
