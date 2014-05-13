@@ -332,6 +332,9 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				return false;
 
 			$multi_item_cart_settings = it_exchange_get_option( 'addon_multi_item_cart', true );
+			if ( ! isset( $multi_item_cart_settings['show-continue-shopping-button'] ) )
+				return true;
+
 			return ! empty( $multi_item_cart_settings['show-continue-shopping-button'] );
 		}
 
