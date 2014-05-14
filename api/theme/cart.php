@@ -311,7 +311,10 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	/**
 	 * Returns the continue Shopping button/link/var
 	 *
-	 * @since CHANGEME
+	 * @since 1.8.1
+	 *
+	 * @param array $options
+	 * @return mixed
 	*/
 	function continue_shopping( $options=array() ) {
 		$defaults = array(

@@ -1,9 +1,9 @@
 === iThemes Exchange: Simple Ecommerce ===
-Contributors: ithemes, blepoxp, layotte, Kopepasah, bradulrich, mattdanner
+Contributors: ithemes, blepoxp, layotte, bradulrich, mattdanner
 Tags: ecommerce
 Requires at least: 3.5
 Tested up to: 3.8
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress

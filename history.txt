@@ -1,3 +1,10 @@
+1.8.1 - 2014-05-14 - Glenn Ansley, Lew Ayotte, Ty Carlson, Brad Ulrich, Elise Alley
+	Fixed bug preventing nav menu from showing up on Product Category and Product Tag archive pages
+	Added Continue Shopping button to cart with setting to deactivate in Multi-Item Cart settings
+	Add pro-pack block back to addons screen, make it collapsible
+	Delete duplicate _it_exchange_transaction_id meta_keys from postmeta and usermeta tables. Runs only if previous version is less than 1.8.1.
+	Fixed but causing multiple it_exchange_add_transaction_success actions to fire with each transaction.
+	Do not redirect to the wizard when Exchange is activated if its a network activate
 1.8.0 - 2014-05-08 - Glenn Ansley, Lew Ayotte, Ty Carlson, Brad Ulrich, Elise Alley
 	Zeroed out padding by default on super widget notice messages
 	Add tooltip script to add-product page.

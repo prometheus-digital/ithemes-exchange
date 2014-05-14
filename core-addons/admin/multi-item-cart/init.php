@@ -104,7 +104,7 @@ add_filter( 'it_exchange_multi_item_cart_allowed', '__return_true' );
 /**
  * Settings page
  *
- * @since CHANGEME
+ * @since 1.8.1
  *
  * @return void
 */
@@ -161,7 +161,7 @@ function it_exchange_multi_item_cart_settings_callback() {
 /**
  * Saves the settings page values
  *
- * @since CHANGEME
+ * @since 1.8.1
  *
  * @return void
 */
