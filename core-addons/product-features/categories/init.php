@@ -17,7 +17,7 @@ if ( !function_exists( 'create_it_exchange_categories' ) ) {
 	function it_exchange_categories_addon_create() {
 
 		$labels = array(
-			'name'              => __( 'Categories', 'LION' ),
+			'name'              => __( 'Product Categories', 'LION' ),
 			'singular_name'     => __( 'Product Category', 'LION' ),
 			'search_items'      => __( 'Search Product Categories', 'LION' ),
 			'all_items'         => __( 'All Product Categories', 'LION' ),
@@ -28,6 +28,10 @@ if ( !function_exists( 'create_it_exchange_categories' ) ) {
 			'add_new_item'      => __( 'Add New Product Categories', 'LION' ),
 			'new_item_name'     => '', //leave blank
 		);
+
+		// A little hackery for admin --> appearances --> menues page
+		if ( is_admin() && ! empty( $GLOBALS['pagenow'] ) && 'nav-menus.php' == $GLOBALS['pagenow'] )
+			$labels['name'] = __( 'Exchange Categories', 'LION' );
 
 		register_taxonomy(
 			'it_exchange_category',

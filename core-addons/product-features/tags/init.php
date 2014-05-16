@@ -29,6 +29,10 @@ if ( !function_exists( 'create_it_exchange_tags' ) ) {
 			'new_item_name'     => __( 'New Product Tag', 'LION' ),
 		);
 
+        // A little hackery for admin --> appearances --> menues page
+        if ( is_admin() && ! empty( $GLOBALS['pagenow'] ) && 'nav-menus.php' == $GLOBALS['pagenow'] )
+            $labels['name'] = __( 'Exchange Tags', 'LION' );
+
 		register_taxonomy(
 			'it_exchange_tag',
 			array( 'it_exchange_prod' ),
