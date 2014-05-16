@@ -180,6 +180,7 @@
 /** ---:[ fixes ]:--- */
 #wp-it-exchange-product-description-field-editor-tools .wp-switch-editor,
 #it-exchange-advanced-tabs .wp-switch-editor{height:27px;}
+#wp-it-exchange-product-description-field-editor-container .wp-editor-area,
 #it-exchange-advanced-tabs .ui-tabs-panel .inner .wp-editor-area{border:none;font-size:13px;font-family:Consolas,Monaco,monospace;}
 
 /*  Responsive help above the default WordPress breaks. The first WP break is at 850, but we need it a little higher */
