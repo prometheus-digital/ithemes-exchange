@@ -178,7 +178,8 @@
 #it-exchange-product-downloads-expiration .download-expiration input[type="number"]{width:60px;text-align:right;}
 
 /** ---:[ fixes ]:--- */
-#it-exchange-advanced-tabs .wp-switch-editor{height:26px;}
+#wp-it-exchange-product-description-field-editor-tools .wp-switch-editor,
+#it-exchange-advanced-tabs .wp-switch-editor{height:27px;}
 #it-exchange-advanced-tabs .ui-tabs-panel .inner .wp-editor-area{border:none;font-size:13px;font-family:Consolas,Monaco,monospace;}
 
 /*  Responsive help above the default WordPress breaks. The first WP break is at 850, but we need it a little higher */
