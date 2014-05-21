@@ -86,6 +86,10 @@ Use the WordPress WSIWYG editor to make custom email templates for Admin Sales N
 Upload the Exchange plugin to your blog, activate it and enable the Digital Downloads add-on and a transaction method add-on. For more information, visit:
 http://ithemes.com/codex/page/Exchange_Installation
 
+== Changelog ==
+=== All the versions === 
+http://ithemes.com/codex/page/Exchange_Changelog
+
 == Upgrade Notice ==
 http://ithemes.com/codex/page/Exchange_Changelog
 
