@@ -87,8 +87,9 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
 === All the versions === 
-http://ithemes.com/codex/page/Exchange_Changelog
+* http://ithemes.com/codex/page/Exchange_Changelog
 
 == Upgrade Notice ==
 http://ithemes.com/codex/page/Exchange_Changelog
