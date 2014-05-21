@@ -501,7 +501,7 @@ function it_exchange_print_admin_settings_form( $options ) {
 /**
  * Wrapper for wp_redirect to allow standardized filtering
  *
- * @since CHANGEME
+ * @since 1.8.2
  *
  * @param  string $url     the URL to redirect the user to
  * @param  string $context the context of the redirect to help with filtering
