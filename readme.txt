@@ -2,7 +2,7 @@
 Contributors: ithemes, blepoxp, layotte, bradulrich, mattdanner
 Tags: ecommerce
 Requires at least: 3.5
-Tested up to: 3.8
+Tested up to: 3.9
 Stable tag: 1.8.2
 License: GPLv2 or later
 
