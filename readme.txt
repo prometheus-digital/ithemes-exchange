@@ -88,10 +88,11 @@ http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
 
-=== All the versions === 
+=== All the versions ===
 * http://ithemes.com/codex/page/Exchange_Changelog
 
 == Upgrade Notice ==
+
 http://ithemes.com/codex/page/Exchange_Changelog
 
 See history.txt for a complete changelog

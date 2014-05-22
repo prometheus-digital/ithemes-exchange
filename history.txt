@@ -130,7 +130,7 @@
 	Pass prefix through transaction_number filter
 1.7.10 - 2013-12-23 - Glenn Ansley, Lew Ayotte
 	Add new WordPress Page Templates Core Add-on
-	Add ability to filter any returned shortcode replacement for an email confirmation. 
+	Add ability to filter any returned shortcode replacement for an email confirmation.
 	Include current transaction details, current shortcode being processed, and the object for the email notification class.
 	Add filters and attachments param to function that sends the confirmation email
 	Added pre_query_posts action to remove hidden produts from product taxonomy queries
@@ -749,7 +749,7 @@
 	Make Product Images and Product Descrition even on Add / Edit products page.
 	Added a tabindex to the normal sortable items
 	Removed some unneeded code from the add-edit-product.js file.
-    Add new API file: api/pages.php.
+	Add new API file: api/pages.php.
 	Add new function it_exchnage_get_pages()
 	Replace all instances of it_exchange_get_option( 'settings_pages') with it_exchange_get_pages()
 	Fixed Delete Download button not appearing properly for existing downloads
