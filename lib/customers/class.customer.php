@@ -228,11 +228,11 @@ function handle_it_exchange_customer_registration_action() {
 			}  else {
 				if ( it_exchange_is_page( 'registration' ) ) {
 					$redirect = it_exchange_get_page_url( 'profile' );
-					$redirect_hook_slug = 'registration-to-profile';
+					$redirect_hook_slug = 'registration-success-from-registration';
 				}
 				if ( it_exchange_is_page( 'checkout' ) ) {
 					$redirect = it_exchange_get_page_url( 'checkout' );
-					$redirect_hook_slug = 'registration-to-checkout';
+					$redirect_hook_slug = 'registration-success-from-checkout';
 				}
 			}
 		} else {

@@ -77,6 +77,10 @@ class IT_Theme_API_Login implements IT_Theme_API {
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
+		$current_page = it_exchange_is_page();
+		$current_page = empty( $current_page ) ? 'login' : $current_page;
+		$options['redirect'] = apply_filters( 'it_exchange_redirect_for-login-success-from-' . $current_page, $options['redirect'], array( 'context' => 'login-success-from-' . $current_page ), 302 );
+
 		// Grab redirect var from session
 		$login_redirect = it_exchange_get_session_data( 'login_redirect' );
 		if ( ! empty( $login_redirect ) ) {
