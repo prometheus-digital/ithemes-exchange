@@ -30,7 +30,7 @@ $editing_billing = ( ( ! empty( $_REQUEST['it-exchange-update-billing-address'] 
 		</div>
 	<?php endif; ?>
 	<div class="<?php echo $editing_billing ? 'it-exchange-hidden ' : ''; ?>checkout-purchase-requirement-billing-address-options">
-		<a class="it-exchange-purchase-requirement-edit-billing" href="">Edit Billing Address</a>
+		<a class="it-exchange-purchase-requirement-edit-billing" href=""><?php _e( 'Edit Billing Address', 'LION' ); ?></a>
 	</div>
 	<div class="<?php echo $editing_billing ? '' : 'it-exchange-hidden '; ?>checkout-purchase-requirement-billing-address-edit">
 		<?php

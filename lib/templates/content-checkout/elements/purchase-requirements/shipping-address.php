@@ -31,7 +31,7 @@ $editing_shipping = ( ( ! empty( $_REQUEST['it-exchange-update-shipping-address'
 		</div>
 	<?php endif; ?>
 	<div class="<?php echo $editing_shipping ? 'it-exchange-hidden ' : ''; ?>checkout-purchase-requirement-shipping-address-options">
-		<a class="it-exchange-purchase-requirement-edit-shipping" href="">Edit Shipping Address</a>
+		<a class="it-exchange-purchase-requirement-edit-shipping" href=""><?php _e( 'Edit Shipping Address', 'LION' ); ?></a>
 	</div>
 	<div class="<?php echo $editing_shipping ? '' : 'it-exchange-hidden '; ?>checkout-purchase-requirement-shipping-address-edit">
 		<?php
