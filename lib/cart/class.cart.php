@@ -17,6 +17,13 @@ class IT_Exchange_Shopping_Cart {
 	function IT_Exchange_Shopping_Cart() {
 		add_action( 'template_redirect', array( $this, 'handle_it_exchange_cart_function' ) );
 		add_filter( 'it_exchange_process_transaction', array( $this, 'handle_purchase_cart_request' ) );
+
+		// Filters to sync cart across devices
+		add_action( 'it_exchange_clear_session', array( $this, 'sync_customer_active_carts' ) );
+		add_action( 'it_exchange_clear_session_data', array( $this, 'sync_customer_active_carts' ) );
+		add_action( 'it_exchange_update_session_data', array( $this, 'sync_customer_active_carts' ) );
+		add_action( 'it_exchange_add_session_data', array( $this, 'sync_customer_active_carts' ) );
+		add_action( 'wp_login', 'it_exchange_merge_cached_customer_cart_into_current_session', 10, 2 );
 	}
 
 	/**
@@ -523,6 +530,34 @@ class IT_Exchange_Shopping_Cart {
 		$messages['product-added-to-cart'] = __( 'Product added to cart', 'LION' );
 
 		return apply_filters( 'it_exchange_default_cart_messages', $messages );
+	}
+
+	/**
+	 * Makes calls to sync carts when customer modifies cart data
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function sync_customer_active_carts() {
+
+		// Don't do this if user is logging out
+		if ( ! empty( $GLOBALS['it_exchange']['logging_out_user'] ) )
+			return;
+
+		remove_action( 'it_exchange_clear_session', array( $this, 'sync_customer_active_carts' ) );
+		remove_action( 'it_exchange_clear_session_data', array( $this, 'sync_customer_active_carts' ) );
+		remove_action( 'it_exchange_update_session_data', array( $this, 'sync_customer_active_carts' ) );
+		remove_action( 'it_exchange_add_session_data', array( $this, 'sync_customer_active_carts' ) );
+
+		it_exchange_add_current_session_to_customer_active_carts();
+		it_exchange_cache_customer_cart();
+		it_exchange_sync_current_cart_with_all_active_customer_carts();
+
+		add_action( 'it_exchange_clear_session', array( $this, 'sync_customer_active_carts' ) );
+		add_action( 'it_exchange_clear_session_data', array( $this, 'sync_customer_active_carts' ) );
+		add_action( 'it_exchange_update_session_data', array( $this, 'sync_customer_active_carts' ) );
+		add_action( 'it_exchange_add_session_data', array( $this, 'sync_customer_active_carts' ) );
 	}
 }
 

@@ -1399,65 +1399,6 @@ if ( !function_exists( 'it_exchange_dropdown_taxonomies' ) ) {
 }
 
 /**
- * Syncs all browser sessions for user
- *
- * @since CHANGEME
- *
- * @return void
-*/
-function it_exchange_sync_sessions_for_logged_in_user() {
-	// We're not going to sync if the user isn't logged in
-	if ( ! is_user_logged_in() )
-		return;
-
-	// Grab current USER ID
-	$current_user_id    = it_exchange_get_current_customer_id();
-
-	// Grab current session ID from sessions API and parse out the real ID from the returned string that also holds expiration
-	$current_session_id = it_exchange_get_session_id();
-	$current_session_id = explode( '||', $current_session_id, 2 )[0];
-
-	// Hold the current sessions data and expiration for later sync to other sessions
-	$current_raw_data   = get_option( '_it_exchange_db_session_' . $current_session_id );
-	$current_raw_exp    = get_option( '_it_exchange_db_session_expires_' . $current_session_id );
-
-	// We're not going to sync if the user doesn't have any other active sessions
-	$active_shopping_sessions = get_user_meta( $current_user_id, '_it_exchange_active_user_sessions', true );
-
-	// If current session is in list, clear it.
-	if ( ! empty( $active_shopping_sessions[$current_session_id] ) )
-		unset( $active_shopping_sessions[$current_session_id] );
-
-	// If no sessions are in list, add the current session back and abort
-	if ( empty( $active_shopping_sessions ) ) {
-		$active_shopping_sessions[$current_session_id] = $current_session_id;
-		update_user_meta( $current_user_id, '_it_exchange_active_user_sessions', $active_shopping_sessions );
-		return;
-	}
-
-	// Loop through session and sync with current session
-	$now = time();
-	foreach( (array) $active_shopping_sessions as $session_id ) {
-		$session_expiration = get_option( '_it_exchange_db_session_expires_' . $session_id );
-		if ( empty( $session_expiration ) || $now > intval( $session_expiration ) ) {
-			unset( $active_shopping_sessions[$session_id] );
-			continue;
-		}
-		// Sync across browsers
-		update_option( '_it_exchange_db_session_' . $session_id, $current_raw_data );
-		update_option( '_it_exchange_db_session_expires_' . $session_id, $current_raw_exp );
-	}
-
-	// Update active sessions
-	$active_shopping_sessions[$current_session_id] = $current_session_id;
-	update_user_meta( $current_user_id, '_it_exchange_active_user_sessions', $active_shopping_sessions );
-}
-add_action( 'it_exchange_clear_session', 'it_exchange_sync_sessions_for_logged_in_user' );
-add_action( 'it_exchange_clear_session_data', 'it_exchange_sync_sessions_for_logged_in_user' );
-add_action( 'it_exchange_update_session_data', 'it_exchange_sync_sessions_for_logged_in_user' );
-add_action( 'wp_login', 'it_exchange_sync_sessions_for_logged_in_user' );
-
-/**
  * Add At a Glance dashboard stats for products
  *
  * @since 1.7.27

@@ -45,6 +45,10 @@ class IT_Exchange_Session {
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 		else
 			add_action( 'init', array( $this, 'init' ) );
+
+		// Reset the session when the user loggs out
+		add_action( 'wp_logout', array( $this, 'reset_session_and_cache_cart_on_logout' ) );
+
 	}
 
 	/**
@@ -145,8 +149,35 @@ class IT_Exchange_Session {
 	 * @since 0.4.0
 	*/
 	function clear_session( $hard=false ) {
-		if ( $hard )
-			$this->init();
+		it_exchange_db_session_regenerate_id( $hard );
+		it_exchange_db_session_commit();
 	}
+
+	/**
+	 * Kills the DB Session and starts over
+	 *
+	 * This should only be hooked to logout. Don't fire if not logging out.
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function reset_session_and_cache_cart_on_logout() {
+		$current_filter = current_filter();
+		if ( 'wp_logout' == $current_filter ) {
+
+			// Flag this as a logout action
+			$GLOBALS['it_exchange']['logging_out_user'] = true;
+
+			// Cache the state of their cart
+			it_exchange_cache_customer_cart();
+
+			it_exchange_remove_current_session_from_customer_active_carts();
+			it_exchange_clear_session( true );
+
+			do_action( 'it_exchange_db_session_reset_on_logout' );
+		}
+	}
+
 }
 $GLOBALS['it_exchange']['session'] = new IT_Exchange_Session();

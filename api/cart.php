@@ -293,6 +293,216 @@ function it_exchange_empty_shopping_cart() {
 }
 
 /**
+ * Caches the user's cart in user meta if they are logged in
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_cache_customer_cart( $customer_id=false ) {
+	// Grab the current customer
+	$customer = empty( $customer_id ) ? it_exchange_get_current_customer() : new IT_Exchange_Customer( $customer_id );
+
+	// Abort if we don't have a logged in customer
+	if ( empty( $customer->id ) )
+		return;
+
+	$cart_data = it_exchange_get_cart_data();
+
+	update_user_meta( $customer->id, '_it_exchange_cached_cart', $cart_data );
+}
+
+/**
+ * Get a customer's cached cart if they are logged in
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_get_cached_customer_cart( $id=false ) {
+	// Grab the current customer
+	$customer = empty( $id ) ? it_exchange_get_current_customer() : new IT_Exchange_Customer( $id );
+
+	// Abort if we don't have a logged in customer
+	if ( empty( $customer->id ) )
+		return false;
+
+	// Grab the data
+	$cart = get_user_meta( $customer->id, '_it_exchange_cached_cart', true );
+
+	return apply_filters( 'it_exchange_get_chached_customer_cart', $cart, $customer->id );
+}
+
+/**
+ * Add a session ID to the list of active customer cart sessions
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_add_current_session_to_customer_active_carts( $customer_id=false ) {
+
+	$customer_id = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
+
+	// Grab the current customer
+	$customer = it_exchange_get_customer( $customer_id );
+
+	// Abort if we don't have a logged in customer
+	if ( empty( $customer->id ) )
+		return false;
+	
+	// Get the current customer's session ID
+	$current_session_string  = it_exchange_get_session_id();
+	$current_session_id      = explode( '||', $current_session_string, 2 )[0];
+	$current_session_expires = explode( '||', $current_session_string, 3 )[1];
+
+	// Get all active carts for customer (across devices / browsers )
+	$active_carts = it_exchange_get_active_carts_for_customer( false, $customer->id );
+
+	// Add or update current session data to active sessions
+	if ( ! isset( $active_carts[$current_session_id] ) || ( isset( $active_carts[$current_session_id] ) && $active_carts[$current_session_id] < time() ) ) {
+		$active_carts[$current_session_id] = $current_session_expires;
+
+		// Update user meta
+		if ( empty( $_GLOBALS['it_exchange']['logging_out_user'] ) ) {
+			update_user_meta( $customer->id, '_it_exchange_active_user_carts', $active_carts );
+		}
+	}
+
+}
+
+/**
+ * Remove session from a customer's active carts
+ *
+ * @since CHANGEME
+ *
+ * @param int $customer_id the customer id
+ * @param string $session_id the session id to remove
+ * @return void
+*/
+function it_exchange_remove_current_session_from_customer_active_carts() {
+	// This works because it doesn't return the current cart in the list of active carts
+	$active_carts = it_exchange_get_active_carts_for_customer();
+	update_user_meta( it_exchange_get_current_customer_id(), '_it_exchange_active_user_carts', $active_carts );
+}
+
+/** 
+ * Grabs current active Users carts
+ *
+ * @since @CHANGEME
+ *
+ * @param boolean $include_current_cart defaultst to false
+ * @param int $customer_id optional. uses current customer id if null
+ * @return array
+*/
+function it_exchange_get_active_carts_for_customer( $include_current_cart=false, $customer_id=null ) {
+	// Get the customer
+	$customer = is_null( $customer_id ) ? it_exchange_get_current_customer() : it_exchange_get_customer( $customer_id );
+
+	// Abort if we don't have a logged in customer
+	if ( empty( $customer->id ) )
+		return apply_filters( 'it_exchange_get_active_carts_for_customer', array(), $customer_id );
+
+	// Get current session ID
+	$current_session_string  = it_exchange_get_session_id();
+	$current_session_id      = explode( '||', $current_session_string, 2 )[0];
+	$current_session_exp     = explode( '||', $current_session_string, 3 )[1];
+
+	// Grab saved active sessions from user meta
+	$active_carts = get_user_meta( $customer->id, '_it_exchange_active_user_carts', true );
+
+	// If active_carts is false, this is probably the first call with no previously active carts, so add the current one.
+	if ( empty( $active_carts ) )
+		$active_carts = array( $current_session_id => $current_session_exp );
+
+	// Current time
+	$time = time();
+
+	// Loop through active sessions
+	foreach( (array) $active_carts as $session_id => $expires ) {
+		// Remove expired carts
+		if ( $time > $expires )
+			unset( $active_carts[$session_id] );
+	}
+
+	// Remove current cart if not needed
+	if ( empty( $include_current_cart ) && isset( $active_carts[$current_session_id] ) )
+		unset( $active_carts[$current_session_id] );
+
+	return apply_filters( 'it_exchange_get_active_carts_for_customer', $active_carts, $customer_id );
+}
+
+/**
+ * Loads a cached cart into active session
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_merge_cached_customer_cart_into_current_session( $user_login, $user ) {
+	// Grab the current customer
+	$customer = it_exchange_get_customer( $user->ID );
+
+	// Abort if we don't have a logged in customer
+	if ( empty( $customer->id ) )
+		return false;
+
+	// Current Cart Products prior to merge
+	$current_products = it_exchange_get_cart_products();
+
+	// Grab cached cart data and insert into current sessio
+	$cached_cart = it_exchange_get_cached_customer_cart( $customer->id );
+
+	/**
+	 * Loop through data. Override non-product data.
+	 * If product exists in current cart, bump the quantity
+	*/
+	foreach( (array) $cached_cart as $key => $data ) {
+		if ( 'products' != $key || empty( $current_products ) ) {
+			it_exchange_update_cart_data( $key, $data );
+		} else {
+			foreach( $data as $product_id => $product_data ) {
+				if ( ! empty( $current_products[$product_id]['count'] ) ) {
+					$data[$product_id]['count'] = $data[$product_id]['count'] + $current_products[$product_id]['count'];
+					unset( $current_products[$product_id] );
+				}
+			}
+			// If current products hasn't been absored into cached cart, tack it to cached cart and load cached cart into current session
+			if ( is_array( $current_products ) && ! empty ( $current_products ) ) {
+				foreach( $current_products as $product_id => $product_atts ) {
+					$data[$product_id] = $product_atts;
+				}
+			}
+
+			it_exchange_update_cart_data( 'products', $data );
+		}
+	}
+
+	it_exchange_add_current_session_to_customer_active_carts( $customer->id );
+	if ( it_exchange_get_cart_products() ) {
+		it_exchange_cache_customer_cart( $customer->id );
+		it_exchange_sync_current_cart_with_all_active_customer_carts();
+	}
+}
+
+/**
+ * Syncs the current cart with all other active carts
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_sync_current_cart_with_all_active_customer_carts() {
+	$active_carts      = it_exchange_get_active_carts_for_customer();
+	$current_cart_data = it_exchange_get_cart_data();
+
+	// Sync across browsers and devices
+    foreach( (array) $active_carts as $session_id => $expiration ) {
+        update_option( '_it_exchange_db_session_' . $session_id, $current_cart_data );
+    }  
+}
+
+/**
  * Are multi item carts allowed?
  *
  * Default is no. Addons must tell us yes as well as provide any pages needed for a cart / checkout / etc.
