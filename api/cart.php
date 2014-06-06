@@ -310,6 +310,8 @@ function it_exchange_cache_customer_cart( $customer_id=false ) {
 	$cart_data = it_exchange_get_cart_data();
 
 	update_user_meta( $customer->id, '_it_exchange_cached_cart', $cart_data );
+
+	do_action( 'it_exchange_cache_customer_cart', $customer, $cart_data );
 }
 
 /**
@@ -478,7 +480,10 @@ function it_exchange_merge_cached_customer_cart_into_current_session( $user_logi
 		}
 	}
 
+	// This is a new customer session after loggin in so add this session to active carts
 	it_exchange_add_current_session_to_customer_active_carts( $customer->id );
+
+	// If there are items in the cart, cache and sync
 	if ( it_exchange_get_cart_products() ) {
 		it_exchange_cache_customer_cart( $customer->id );
 		it_exchange_sync_current_cart_with_all_active_customer_carts();
