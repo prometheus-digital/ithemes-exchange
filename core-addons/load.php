@@ -116,7 +116,7 @@ function it_exchange_register_core_addons() {
 		// Multi item cart
 		'multi-item-cart-option' => array(
 			'name'              => __( 'Multi-item Cart', 'LION' ),
-			'description'       => __( 'Enabling this add-on allows your customers to purchase multiple products with one transaction. There are no settings for this add-on.', 'LION' ),
+			'description'       => __( 'Enabling this add-on allows your customers to purchase multiple products with one transaction.', 'LION' ),
 			'author'            => 'iThemes',
 			'author_url'        => 'http://ithemes.com',
 			'file'              => dirname( __FILE__ ) . '/admin/multi-item-cart/init.php',

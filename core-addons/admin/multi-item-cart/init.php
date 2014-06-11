@@ -4,7 +4,6 @@
  * @package IT_Exchange
  * @since 0.4.0
 */
-// No settings. This is either enabled or disabled.
 
 function it_exchange_register_multi_item_cart_pages() {
 
