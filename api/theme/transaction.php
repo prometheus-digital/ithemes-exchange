@@ -389,7 +389,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		if ( 'html' == $options['format'] )
 			$result .= $open_wrap;
 
-		$result .= $attribute;
+		$result .= apply_filters( 'it_exchange_api_theme_transaction_product_attribute', $attribute, $options, $this->_transaction, $this->_transaction_product );
 
 		if ( 'html' == $options['format'] )
 			$result .= $close_wrap;
