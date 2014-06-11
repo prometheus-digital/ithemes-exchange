@@ -470,7 +470,20 @@ class IT_Exchange_Shipping {
 		$zip      = empty( $_POST['shippingZip'] ) ? false : $_POST['shippingZip'];
 		$country  = empty( $_POST['shippingCountry'] ) ? false : $_POST['shippingCountry'];
 		$customer = empty( $_POST['shippingCustomer'] ) ? false : $_POST['shippingCustomer'];
-		$invalid  = ( ! $name || ! $address1 || ! $city || ! $state || ! $zip || ! $country || ! $customer );
+		
+		$required_fields = apply_filter( 'it_exchange_required_shipping_address_fields', array( 'name', 'address1', 'city', 'state', 'zip', 'country', 'customer' ) );
+		
+		$states = it_exchange_get_data_set( 'states', array( 'country' => $country ) );
+		if ( empty( $states ) && $key = array_search( 'state', $required_fields ) ) {
+			unset( $required_fields[$key] );
+		}
+		
+		foreach( $required_fields as $field ) {
+			if ( !$$field ) {
+				$invalid = true;
+				break;
+			}
+		}
 
 		// Update object with what we have
 		$address = compact( 'name', 'address1', 'address2', 'city', 'state', 'zip', 'country', 'customer' );
@@ -511,7 +524,20 @@ class IT_Exchange_Shipping {
 		$state    = empty( $_POST['it-exchange-addon-shipping-state'] ) ? false : $_POST['it-exchange-addon-shipping-state'];
 		$zip      = empty( $_POST['it-exchange-addon-shipping-zip'] ) ? false : $_POST['it-exchange-addon-shipping-zip'];
 		$country  = empty( $_POST['it-exchange-addon-shipping-country'] ) ? false : $_POST['it-exchange-addon-shipping-country'];
-		$invalid  = ( ! $name || ! $address1 || ! $city || ! $state || ! $zip || ! $country );
+		
+		$required_fields = apply_filter( 'it_exchange_required_shipping_address_fields', array( 'name', 'address1', 'city', 'state', 'zip', 'country' ) );
+		
+		$states = it_exchange_get_data_set( 'states', array( 'country' => $country ) );
+		if ( empty( $states ) && $key = array_search( 'state', $required_fields ) ) {
+			unset( $required_fields[$key] );
+		}		
+			
+		foreach( $required_fields as $field ) {
+			if ( !$$field ) {
+				$invalid = true;
+				break;
+			}
+		}
 
 		// Update object with what we have
 		$address = compact( 'name', 'address1', 'address2', 'city', 'state', 'zip', 'country' );

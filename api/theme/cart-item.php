@@ -191,7 +191,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	 *
 	*/
 	function price( $options=array() ) {
-		return it_exchange_get_cart_product_base_price( $this->_cart_item );
+		return apply_filters( 'it_exchange_api_theme_cart_item_price', it_exchange_get_cart_product_base_price( $this->_cart_item ), $this->_cart_item );
 	}
 
 	/**
@@ -202,7 +202,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	 * @return string
 	*/
 	function sub_total( $options=array() ) {
-		return it_exchange_get_cart_product_subtotal( $this->_cart_item );
+		return apply_filters( 'it_exchange_api_theme_cart_item_sub_total', it_exchange_get_cart_product_subtotal( $this->_cart_item ), $this->_cart_item );
 	}
 
 	/**

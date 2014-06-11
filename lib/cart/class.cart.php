@@ -329,6 +329,12 @@ class IT_Exchange_Shopping_Cart {
 
 		// Validate required fields
 		$required_fields = apply_filters( 'it_exchange_required_shipping_address_fields', array( 'first-name', 'last-name', 'address1', 'state', 'country', 'zip' ) );
+
+		$states = it_exchange_get_data_set( 'states', array( 'country' => $_REQUEST['it-exchange-shipping-address-country'] ) );
+		if ( empty( $states ) && $key = array_search( 'state', $required_fields ) ) {
+			unset( $required_fields[$key] );
+		}	
+		
 		foreach( $required_fields as $field ) {
 			if ( empty( $_REQUEST['it-exchange-shipping-address-' . $field] ) ) {
 				it_exchange_add_message( 'error', __( 'Please fill out all required fields', 'LION' ) );
@@ -339,7 +345,7 @@ class IT_Exchange_Shopping_Cart {
 
 		/** @todo This is hardcoded for now. will be more flexible at some point **/
 		$shipping = array();
-		$fields = array(
+		$fields = apply_filters( 'it_exchange_shipping_address_fields', array(
 			'first-name',
 			'last-name',
 			'company-name',
@@ -351,7 +357,7 @@ class IT_Exchange_Shopping_Cart {
 			'country',
 			'email',
 			'phone',
-		);
+		) );
 		foreach( $fields as $field ) {
 			$shipping[$field] = empty( $_REQUEST['it-exchange-shipping-address-' . $field] ) ? '' : $_REQUEST['it-exchange-shipping-address-' . $field];
 		}
@@ -381,6 +387,12 @@ class IT_Exchange_Shopping_Cart {
 
 		// Validate required fields
 		$required_fields = apply_filters( 'it_exchange_required_billing_address_fields', array( 'first-name', 'last-name', 'address1', 'city', 'state', 'country', 'zip' ) );
+		
+		$states = it_exchange_get_data_set( 'states', array( 'country' => $_REQUEST['it-exchange-shipping-address-country'] ) );
+		if ( empty( $states ) && $key = array_search( 'state', $required_fields ) ) {
+			unset( $required_fields[$key] );
+		}			
+
 		foreach( $required_fields as $field ) {
 			if ( empty( $_REQUEST['it-exchange-billing-address-' . $field] ) ) {
 				it_exchange_add_message( 'error', __( 'Please fill out all required fields', 'LION' ) );
@@ -391,7 +403,7 @@ class IT_Exchange_Shopping_Cart {
 
 		/** @todo This is hardcoded for now. will be more flexible at some point **/
 		$billing = array();
-		$fields = array(
+		$fields = apply_filters( 'it_exchange_billing_address_fields', array(
 			'first-name',
 			'last-name',
 			'company-name',
@@ -403,7 +415,7 @@ class IT_Exchange_Shopping_Cart {
 			'country',
 			'email',
 			'phone',
-		);
+		) );
 		foreach( $fields as $field ) {
 			$billing[$field] = empty( $_REQUEST['it-exchange-billing-address-' . $field] ) ? '' : $_REQUEST['it-exchange-billing-address-' . $field];
 		}

@@ -402,7 +402,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		if ( 'false' === $options['format'] )
 			$options['format'] = false;
 
-		return it_exchange_get_cart_total( $options['format'] );
+		return apply_filters( 'it_exchange_api_theme_cart_total', it_exchange_get_cart_total( $options['format'] ) );
 	}
 
 	/**
