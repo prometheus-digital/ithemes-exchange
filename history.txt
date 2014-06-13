@@ -1,3 +1,5 @@
+1.9.1 - 2014-05-14 - Glenn Ansley, Lew Ayotte, Gerroald Barron
+	Fixed PHP error in older versions of PHP
 1.9.0 - 2014-05-14 - Glenn Ansley, Lew Ayotte, Ty Carlson, Elise Alley
 	Added a bunch of filters for EUVAT modifications
 	Modified how shipping/billing addresses are handled for 'required' state fields when the country doesn't have any states (known by Exchange)
