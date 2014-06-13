@@ -81,8 +81,8 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 
 		// Flag that we're in the superwidget
 		$GLOBALS['it_exchange']['in_superwidget'] = $instance;
-		if ( ! empty( $GLOBALS['wp_query']->queried_object->ID ) && it_exchange_get_product( $GLOBALS['wp_query']->queried_object->ID ) )
-			$product_id = $GLOBALS['wp_query']->queried_object->ID;
+		if ( get_queried_object() && ! empty( get_queried_object()->ID ) && it_exchange_get_product( get_queried_object()->ID ) )
+			$product_id = get_queried_object_id();
 		else
 			$product_id = apply_filters( 'it_exchange_super_widget_empty_product_id', false );
 
