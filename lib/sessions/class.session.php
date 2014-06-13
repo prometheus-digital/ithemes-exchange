@@ -158,7 +158,7 @@ class IT_Exchange_Session {
 	 *
 	 * This should only be hooked to logout. Don't fire if not logging out.
 	 *
-	 * @since CHANGEME
+	 * @since 1.9.0 
 	 *
 	 * @return void
 	*/

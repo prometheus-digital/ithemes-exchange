@@ -437,7 +437,7 @@ function it_exchange_get_cart_shipping_cost( $shipping_method=false, $format_pri
 /**
  * This will return the shipping cost for a specific method/product combination in the cart.
  *
- * @since CHAGNEME
+ * @since unknown 
  *
  * @param string  $method_slug  the shipping method slug
  * @param array   $cart_product the cart product array

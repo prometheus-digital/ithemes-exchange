@@ -1,3 +1,21 @@
+1.9.0 - 2014-05-14 - Glenn Ansley, Lew Ayotte, Ty Carlson, Elise Alley
+	Added a bunch of filters for EUVAT modifications
+	Modified how shipping/billing addresses are handled for 'required' state fields when the country doesn't have any states (known by Exchange)
+	Updated description for multi-item cart core add-on
+	Styling updates for confirmation page table
+	Adding an action after customers cart is cached.
+	Add styling support for nested rows in it-exchange-table
+	Sync user carts across browsers and devices: - Caches state of cart anytime it has data added, updated, deleted - Logs session ID to list of active carts for user anytime they log-in - Removes session 
+	Sync user sessions across browsers if logged-in
+	i18n strings in purchase-requirements billing and shipping templates
+	Modifications to some filters
+	Fix bug in tooltip positioning
+	Whitespace in readme and history text files
+	Update tested up to
+	Fix readme
+	Add link to changelog in changelog section of the readme
+	Adding the Changelog link to the plugin meta links
+	Setup menu items filter to compare path of login/logout URLS, not the full URLs, in case of https/http conflict
 1.8.2 - 2014-05-14 - Glenn Ansley, Lew Ayotte, Ty Carlson, Brad Ulrich, Elise Alley
 	Wrapped most instances of wp_redirect() inside it_exchange_redirect() to standardize filters
 	Fixed same border bug in confirmation table

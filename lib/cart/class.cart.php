@@ -547,7 +547,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Makes calls to sync carts when customer modifies cart data
 	 *
-	 * @since CHANGEME
+	 * @since 1.9.0 
 	 *
 	 * @return void
 	*/

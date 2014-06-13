@@ -295,7 +295,7 @@ function it_exchange_empty_shopping_cart() {
 /**
  * Caches the user's cart in user meta if they are logged in
  *
- * @since CHANGEME
+ * @since 1.9.0
  *
  * @return void
 */
@@ -317,7 +317,7 @@ function it_exchange_cache_customer_cart( $customer_id=false ) {
 /**
  * Get a customer's cached cart if they are logged in
  *
- * @since CHANGEME
+ * @since 1.9.0
  *
  * @return void
 */
@@ -338,7 +338,7 @@ function it_exchange_get_cached_customer_cart( $id=false ) {
 /**
  * Add a session ID to the list of active customer cart sessions
  *
- * @since CHANGEME
+ * @since 1.9.0
  *
  * @return void
 */
@@ -376,7 +376,7 @@ function it_exchange_add_current_session_to_customer_active_carts( $customer_id=
 /**
  * Remove session from a customer's active carts
  *
- * @since CHANGEME
+ * @since 1.9.0
  *
  * @param int $customer_id the customer id
  * @param string $session_id the session id to remove
@@ -391,7 +391,7 @@ function it_exchange_remove_current_session_from_customer_active_carts() {
 /** 
  * Grabs current active Users carts
  *
- * @since @CHANGEME
+ * @since @1.9.0
  *
  * @param boolean $include_current_cart defaultst to false
  * @param int $customer_id optional. uses current customer id if null
@@ -437,7 +437,7 @@ function it_exchange_get_active_carts_for_customer( $include_current_cart=false,
 /**
  * Loads a cached cart into active session
  *
- * @since CHANGEME
+ * @since 1.9.0
  *
  * @return void
 */
@@ -493,7 +493,7 @@ function it_exchange_merge_cached_customer_cart_into_current_session( $user_logi
 /**
  * Syncs the current cart with all other active carts
  *
- * @since CHANGEME
+ * @since 1.9.0
  *
  * @return void
 */
