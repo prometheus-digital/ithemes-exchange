@@ -289,7 +289,7 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount=false,
 		if ( ! empty( $coupon->product_id ) ) {
 			$cart_products = it_exchange_get_cart_products();
 			foreach( (array) it_exchange_get_cart_products() as $cart_product ) {
-				if ( ! empty( $cart_product['product_id'] ) && $cart_product['product_id'] == $coupon->product_id ) {
+				if ( ! empty( $cart_product['product_id'] ) && ( empty( $coupon->limit_product ) || ( ! empty( $coupon->limit_product ) && $cart_product['product_id'] == $coupon->product_id ) ) ) {
 					$base_price = it_exchange_get_cart_product_base_price( $cart_product, false );
 					$product_discount = ( '%' == $coupon->amount_type ) ? $discount + ( ( $coupon->amount_number / 100 ) * $base_price ) : $discount + $coupon->amount_number;
 					$product_discount = $product_discount * $cart_product['count'];
