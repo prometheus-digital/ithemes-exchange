@@ -29,12 +29,13 @@ jQuery( document ).ready( function($) {
 	// Show hide quantity limit based on checkbox
 	function itExchangeBasicCouponsShowHideQuantity() {
 		var selected = $(this).is( ':checked' );
+		var $fields  = $('.quantity');
 
-		$( '.quantity' ).addClass('hide-if-js');
+		$fields.addClass('hide-if-js');
 		if ( selected ) {
-			$(".quantity").removeClass('hide-if-js');
+			$fields.removeClass('hide-if-js');
 		} else {
-			$(".quantity").addClass('hide-if-js');
+			$fields.addClass('hide-if-js');
 		}
 	}
 	$('#limit-quantity').change(itExchangeBasicCouponsShowHideQuantity).triggerHandler("change");
@@ -42,15 +43,30 @@ jQuery( document ).ready( function($) {
 	// Show hide product limit based on checkbox
 	function itExchangeBasicCouponsShowHideProduct() {
 		var selected = $(this).is( ':checked' );
+		var $fields  = $('.product-id');
 
-		$( '.product-id' ).addClass('hide-if-js');
+		$fields.addClass('hide-if-js');
 		if ( selected ) {
-			$(".product-id").removeClass('hide-if-js');
+			$fields.removeClass('hide-if-js');
 		} else {
-			$(".product-id").addClass('hide-if-js');
+			$fields.addClass('hide-if-js');
 		}
 	}
 	$('#limit-product').change(itExchangeBasicCouponsShowHideProduct).triggerHandler("change");
+
+	// Show hide frequeny limit based on checkbox
+	function itExchangeBasicCouponsShowHideFrequency() {
+		var selected = $(this).is( ':checked' );
+		var $fields  = $('.frequency-limitations');
+
+		$fields.addClass('hide-if-js');
+		if ( selected ) {
+			$fields.removeClass('hide-if-js');
+		} else {
+			$fields.addClass('hide-if-js');
+		}
+	}
+	$('#limit-frequency').change(itExchangeBasicCouponsShowHideFrequency).triggerHandler("change");
 });
 
 /**

@@ -87,15 +87,19 @@ function it_exchange_basic_coupons_save_coupon() {
 	$msg = empty( $data['ID'] ) ? 'added' : 'updated';
 
 	// Convert code, amount-number, amount-type, start-date, end-date to meta
-	$data['post_meta']['_it-basic-code']           = $data['code'];
-	$data['post_meta']['_it-basic-amount-number']  = it_exchange_convert_to_database_number( $data['amount-number'] );
-	$data['post_meta']['_it-basic-amount-type']    = $data['amount-type'];
-	$data['post_meta']['_it-basic-start-date']     = $data['start-date'];
-	$data['post_meta']['_it-basic-end-date']       = $data['end-date'];
-	$data['post_meta']['_it-basic-limit-quantity'] = $data['limit-quantity'];
-	$data['post_meta']['_it-basic-quantity']       = $data['quantity'];
-	$data['post_meta']['_it-basic-limit-product']  = $data['limit-product'];
-	$data['post_meta']['_it-basic-product-id']     = $data['product-id'];
+	$data['post_meta']['_it-basic-code']             = $data['code'];
+	$data['post_meta']['_it-basic-amount-number']    = it_exchange_convert_to_database_number( $data['amount-number'] );
+	$data['post_meta']['_it-basic-amount-type']      = $data['amount-type'];
+	$data['post_meta']['_it-basic-start-date']       = $data['start-date'];
+	$data['post_meta']['_it-basic-end-date']         = $data['end-date'];
+	$data['post_meta']['_it-basic-limit-quantity']   = $data['limit-quantity'];
+	$data['post_meta']['_it-basic-quantity']         = $data['quantity'];
+	$data['post_meta']['_it-basic-limit-product']    = $data['limit-product'];
+	$data['post_meta']['_it-basic-product-id']       = $data['product-id'];
+	$data['post_meta']['_it-basic-limit-frequency']  = $data['limit-frequency'];
+	$data['post_meta']['_it-basic-frequency-times']  = $data['frequency-times'];
+	$data['post_meta']['_it-basic-frequency-length'] = $data['frequency-length'];
+	$data['post_meta']['_it-basic-frequency-units']  = $data['frequency-units'];
 	unset( $data['code'] );
 	unset( $data['amount-number'] );
 	unset( $data['amount-type'] );
@@ -105,6 +109,10 @@ function it_exchange_basic_coupons_save_coupon() {
 	unset( $data['quantity'] );
 	unset( $data['limit-product'] );
 	unset( $data['product-id'] );
+	unset( $data['limit-frequency'] );
+	unset( $data['frequency-times'] );
+	unset( $data['frequency-length'] );
+	unset( $data['frequency-units'] );
 
 	if ( $post_id = it_exchange_add_coupon( $data ) ) {
 		wp_safe_redirect( add_query_arg( array( 'post_type' => 'it_exchange_coupon' ), get_admin_url() . 'edit.php' ) );
@@ -133,6 +141,8 @@ function it_exchange_basic_coupons_data_is_valid() {
 		it_exchange_add_message( 'error', __( 'Available Coupons must be a number', 'LION' ) );
 	if ( ! empty( $data['limit-product'] ) && ! it_exchange_get_product( $data['product-id'] ) )
 		it_exchange_add_message( 'error', __( 'Please select a product.', 'LION' ) );
+	if ( ! empty( $data['limit-frequency'] ) && ! is_numeric( $data['frequency-times'] ) && ! is_numeric( $data['frequency-length'] ) )
+		it_exchange_add_message( 'error', __( 'Please select a frequency limitation', 'LION' ) );
 
 	return ! it_exchange_has_messages( 'error' );
 }
@@ -217,16 +227,20 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		if ( 'amount' == $coupon->amount_type )
 			$amount = it_exchange_format_price( $amount, false );
 
-		$values['name']           = $coupon->post_title;
-		$values['code']           = $coupon->code;
-		$values['amount-number']  = $amount;
-		$values['amount-type']    = $coupon->amount_type;
-		$values['start-date']     = $coupon->start_date;
-		$values['end-date']       = $coupon->end_date;
-		$values['limit-quantity'] = $coupon->limit_quantity;
-		$values['quantity']       = $coupon->quantity;
-		$values['limit-product']  = $coupon->limit_product;
-		$values['product-id']     = $coupon->product_id;
+		$values['name']             = $coupon->post_title;
+		$values['code']             = $coupon->code;
+		$values['amount-number']    = $amount;
+		$values['amount-type']      = $coupon->amount_type;
+		$values['start-date']       = $coupon->start_date;
+		$values['end-date']         = $coupon->end_date;
+		$values['limit-quantity']   = $coupon->limit_quantity;
+		$values['quantity']         = $coupon->quantity;
+		$values['limit-product']    = $coupon->limit_product;
+		$values['product-id']       = $coupon->product_id;
+		$values['limit-frequency']  = $coupon->limit_frequency;
+		$values['frequency-times']  = $coupon->frequency_times;
+		$values['frequency-length'] = $coupon->frequency_length;
+		$values['frequency-units']  = $coupon->frequency_units;
 	}
 
 	$errors = it_exchange_get_messages( 'error' );
@@ -315,7 +329,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 				</div>
 
 				<div class="field product-id">
-					<?php 
+					<?php
 					$product_options = array( 0 => __( 'Select a product', 'LION' ) );
 					$products        = it_exchange_get_products( array( 'show_hidden' => true, 'posts_per_page' => -1 ) );
 					foreach( (array) $products as $id => $product ) {
@@ -325,6 +339,32 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 					<?php $form->add_drop_down( 'product-id', $product_options ); ?>
 					<span class="tip" title="<?php _e( 'Select a product to use with this coupon.', 'LION' ); ?>">i</span>
 				</div>
+
+				<div class="field limit-frequency">
+					<?php $form->add_check_box( 'limit-frequency' ); ?>
+					<label for="limit-frequency">
+						<?php _e( 'Limit frequency of use per customer', 'LION' ); ?>
+						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times each customer can use the coupon during a specified time frame', 'LION' ) ); ?>">i</span>
+					</label>
+				</div>
+
+				<div class="field frequency-limitations">
+					<?php
+					$thirty = array();
+					for( $i=1;$i<=30;$i++ ) {
+						$thirty[$i] = $i;
+					}
+					$frequency_times  = apply_filters( 'it_exchange_limit_coupon_freqency_times_options', $thirty );
+					$frequency_length = apply_filters( 'it_exchange_limit_coupon_freqency_length_options', $thirty );
+					$frequency_units  = array( 'day' => __( 'Day(s)', 'LION' ), 'week' =>  __( 'Week(s)', 'LION' ), 'year' => __( 'Year(s)', 'LION' ) );
+					_e( 'Limit this coupon to ', 'LION' );
+					$form->add_drop_down( 'frequency-times', $frequency_times );
+					_e( ' use(s) per customer for every ', 'LION' );
+					$form->add_drop_down( 'frequency-length', $frequency_length );
+					$form->add_drop_down( 'frequency-units', $frequency_units );
+					?>
+				</div>
+
 
 				<div class="field">
 					<?php $form->add_submit( 'cancel', array( 'class' => 'button-large button', 'value' => __( 'Cancel', 'LION' ) ) ); ?>

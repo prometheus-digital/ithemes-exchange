@@ -31,15 +31,19 @@ add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_basic_coupons_regi
 function it_exchange_basic_coupons_add_meta_data_to_coupon_object( $data, $object ) {
 	// Set post meta keys used in basic coupons
 	$post_meta_keys = array(
-		'code'           => '_it-basic-code',
-		'amount_number'  => '_it-basic-amount-number',
-		'amount_type'    => '_it-basic-amount-type',
-		'start_date'     => '_it-basic-start-date',
-		'end_date'       => '_it-basic-end-date',
-		'limit_quantity' => '_it-basic-limit-quantity',
-		'quantity'       => '_it-basic-quantity',
-		'limit_product'  => '_it-basic-limit-product',
-		'product_id'     => '_it-basic-product-id',
+		'code'             => '_it-basic-code',
+		'amount_number'    => '_it-basic-amount-number',
+		'amount_type'      => '_it-basic-amount-type',
+		'start_date'       => '_it-basic-start-date',
+		'end_date'         => '_it-basic-end-date',
+		'limit_quantity'   => '_it-basic-limit-quantity',
+		'quantity'         => '_it-basic-quantity',
+		'limit_product'    => '_it-basic-limit-product',
+		'product_id'       => '_it-basic-product-id',
+		'limit_frequency'  => '_it-basic-limit-frequency',
+		'frequency_times'  => '_it-basic-frequency-times',
+		'frequency_length' => '_it-basic-frequency-length',
+		'frequency_units'  => '_it-basic-frequency-units',
 	);
 
 	// Loop through and add them to the data that will be added as properties to coupon object
@@ -151,7 +155,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 		return false;
 	}
 
-	// Abort if no coupon code matches and falls within dates
+	// Abort if no coupons are found for submitted code matches and falls within dates
 	$args = array(
 		'meta_query' => array(
 			array(
@@ -187,6 +191,12 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 		return false;
 	}
 
+	// Get previous uses. Returns array of timestamps
+	if ( it_exchange_basic_coupon_frequency_limit_met_by_customer( $coupon->ID ) ) {
+		it_exchange_add_message( 'error', __( 'Invalid coupon', 'LION' ) );
+		return false;
+	}
+
 	// Format data for session
 	$coupon = array(
 		'id'            => $coupon->ID,
@@ -206,6 +216,107 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	return true;
 }
 add_action( 'it_exchange_apply_coupon_to_cart', 'it_exchange_basic_coupons_apply_to_cart', 10, 2 );
+
+/**
+ * Is this coupon available to this customer?
+ *
+ * Grabs array of timestamps specified (or current) user has used the specific coupon.
+ * Determines # of seconds before now to count uses
+ * Makes sure that customer has not met limit of use in calculated time period
+ *
+ * @since CHANGEME
+ *
+ * @param integer $coupon_id wp post id for the coupon
+ * @param integer $customer_id wp user id of customer
+ * @return boolean
+*/
+function it_exchange_basic_coupon_frequency_limit_met_by_customer( $coupon_id, $customer_id=false ) {
+	$customer_id = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
+	$coupon      = it_exchange_get_coupon( $coupon_id );
+
+	if ( empty( $coupon->limit_frequency ) || empty( $customer_id ) )
+		return false;
+
+	$current_frequencies = it_exchange_basic_coupons_get_customer_coupon_frequency( $coupon_id, $customer_id );
+	if ( ! empty( $coupon->limit_frequency ) ) {
+		// Set the base unit
+		switch ( $coupon->frequency_units ) {
+			case 'years' :
+				$base = YEAR_IN_SECONDS;
+				break;
+			case 'months' :
+				$base = DAY_IN_SECONDS * date_i18n( 't' ); // Not perfect for < PHP 5.3
+				break;
+			case 'weeks' :
+				$base = WEEK_IN_SECONDS;
+				break;
+			case 'days' :
+			default     :
+				$base = DAY_IN_SECONDS;
+				break;
+		}
+		// Multiply the length times the units to get seconds for set frequency
+		$frequency_seconds = $coupon->frequency_length * $base;
+		$earliest_limit    = date_i18n( 'U' ) - $frequency_seconds;
+
+		// Loop through current frequencies and total uses since last limit
+		$relevant_uses = 0;
+		foreach( (array) $current_frequencies as $date ) {
+			if ( $date > $earliest_limit )
+				$relevant_uses++;
+		}
+
+		// If relevant uses is greater than limit, return error message
+		if ( $relevant_uses >= $coupon->frequency_times ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * Gets all coupon uses or all uses for a specific coupon for a user
+ *
+ * @since CHANGEME
+ *
+ * @param integer $coupon_id   the coupon code. optional
+ * @param integer $customer_id the customer id. defaults to current customer
+ * @return array
+*/
+function it_exchange_basic_coupons_get_customer_coupon_frequency( $coupon_id=false, $customer_id=false ) {
+	$customer_id = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
+
+	$coupon_history = get_user_meta( $customer_id, '_it_exchagne_basic_coupon_history', true );
+
+
+	if ( empty( $coupon_id ) )
+		$validated_history = $coupon_history;
+	else
+		$validated_history = empty( $coupon_history[$coupon_id] ) ? array() : $coupon_history[$coupon_id];
+
+	return apply_filters( 'it_exchange_basic_coupons_get_customer_coupon_frequency', $validated_history, $coupon_id, $customer_id, $coupon_history );
+}
+
+/**
+ * Increments coupon use for a specific coupon for a user
+ *
+ * @since CHANGEME
+ *
+ * @param integer $coupon_id   the coupon code.
+ * @param integer $customer_id the customer id. defaults to current customer
+ * @return array
+*/
+function it_exchange_basic_coupons_bump_customer_coupon_frequency( $coupon_id, $customer_id=false ) {
+	$customer_id    = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
+	$coupon_history = it_exchange_basic_coupons_get_customer_coupon_frequency( false, $customer_id );
+
+	if ( empty( $coupon_history[$coupon_id] ) )
+		$coupon_history[$coupon_id] = array( date_i18n( 'U' ) );
+	else
+		$coupon_history[$coupon_id][] = date_i18n('U');
+
+	update_user_meta( $customer_id, '_it_exchagne_basic_coupon_history', $coupon_history );
+}
 
 /**
  * Clear cart coupons when cart is emptied
@@ -344,6 +455,33 @@ function it_exchange_basic_coupons_modify_coupon_quantity_on_transaction( $trans
 	}
 }
 add_action( 'it_exchange_add_transaction_success', 'it_exchange_basic_coupons_modify_coupon_quantity_on_transaction' );
+
+/**
+ * Track the customer's use of this coupon on checkout
+ *
+ * @since CHANGEME
+ *
+ * @param integer $transaction_id
+ * @return void
+*/
+function it_exchange_basic_coupons_bump_for_customer_on_checkout( $transaction_id ) {
+	if ( ! $transaction = it_exchange_get_transaction( $transaction_id ) )
+		return false;
+
+	if ( ! $coupons = it_exchange_get_transaction_coupons( $transaction ) )
+		return;
+
+	// Do we have a cart coupon?
+	if ( isset( $coupons['cart'] ) && ! empty( $coupons['cart'] ) ) {
+		$coupon = reset( $coupons['cart'] );
+
+		$coupon_id   = $coupon['id'];
+		$customer_id = $transaction->customer_id;
+		it_exchange_basic_coupons_bump_customer_coupon_frequency( $coupon_id, $customer_id );
+	}
+
+}
+add_action( 'it_exchange_add_transaction_success', 'it_exchange_basic_coupons_bump_for_customer_on_checkout' );
 
 /**
  * Returns the coupon discount label
