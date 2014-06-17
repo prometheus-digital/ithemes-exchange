@@ -23,7 +23,7 @@
 
 <div class="recent-transactions">
 <?php if ( $transactions = it_exchange_get_transactions( array( 'posts_per_page' => 5 ) ) ) : ?>
-	<p><label><?php _e( 'Recent Sales', 'LION' ); ?></label> <a href="<?php echo get_admin_url(); ?>edit.php?post_type=it_exchange_tran" class="view-all"><?php _e( 'View all', 'LION' ); ?></a></p>
+	<p><label><?php _e( 'Recent Transactions', 'LION' ); ?></label> <a href="<?php echo get_admin_url(); ?>edit.php?post_type=it_exchange_tran" class="view-all"><?php _e( 'View all', 'LION' ); ?></a></p>
 		<?php foreach( $transactions as $transaction ) : ?>
 			<?php $classname = it_exchange_transaction_is_cleared_for_delivery( $transaction ) ? 'cleared-for-delivery' : 'not-cleared-for-delivery'; ?>
 			<div class="columns-wrapper columns-recent">
