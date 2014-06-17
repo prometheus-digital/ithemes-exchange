@@ -21,6 +21,31 @@ if ( !defined( 'PAYPAL_NVP_API_LIVE_URL' ) )
 	define( 'PAYPAL_NVP_API_LIVE_URL', 'https://api-3t.paypal.com/nvp' );
 
 /**
+ * Mark this transaction method as okay to manually change transactions
+ *
+ * @since CHANGEME
+*/
+add_filter( 'it_exchange_paypal-standard-secure_transaction_status_can_be_manually_changed', '__return_true' );
+
+/**
+ * Returns status options
+ *
+ * @since CHANGEME
+ * @return array
+*/
+function it_exchange_paypal_standard_secure_get_default_status_options() {
+	$options = array(
+		'Pending'   => _x( 'Pending', 'Transaction Status', 'LION' ),
+		'Completed' => _x( 'Paid', 'Transaction Status', 'LION' ),
+		'Reversed'  => _x( 'Reversed', 'Transaction Status', 'LION' ),
+		'Refunded'  => _x( 'Refunded', 'Transaction Status', 'LION' ),
+		'Voided'    => _x( 'Voided', 'Transaction Status', 'LION' ),
+	);
+	return $options;
+}
+add_filter( 'it_exchange_get_status_options_for_paypal-standard-secure_transaction', 'it_exchange_paypal_standard_secure_get_default_status_options' );
+
+/**
  * Outputs wizard settings for PayPal
  *
  * @since 0.4.0
