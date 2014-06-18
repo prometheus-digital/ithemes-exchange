@@ -43,6 +43,7 @@ class IT_Exchange_Pages {
 		add_action( 'init', array( $this, 'set_pretty_permalinks_boolean' ) );
 		if ( is_admin() ) {
 			add_filter( 'rewrite_rules_array', array( $this, 'register_rewrite_rules' ) );
+			add_action( 'save_post', array( $this, 'flush_rewrites_when_wp_confirmation_page_is_updated' ) );
 		} else {
 			add_action( 'template_redirect', array( $this, 'set_environment' ), 1 );
 			add_action( 'template_redirect', array( $this, 'set_account' ), 2 );
@@ -304,7 +305,7 @@ class IT_Exchange_Pages {
 			it_exchange_redirect( $redirect_url, 'no-permission-account-to-store' );
 			die();
 		}
-		
+
 		do_action( 'it_exchange_protect_pages' );
 	}
 
@@ -549,17 +550,42 @@ class IT_Exchange_Pages {
 		// This is an exception for the confirmation page.
 		if ( 'wordpress' == it_exchange_get_page_type( 'confirmation', true ) ) {
 			$wpid = it_exchange_get_page_wpid( 'confirmation' );
-	        if ( $wp_page = get_page( $wpid ) )
-	            $page_slug = $wp_page->post_name;
-	        else
+	        if ( $wp_page = get_page( $wpid ) ) {
+	            $page_slug = get_page_uri( $wpid );
+			} else {
 	        	$page_slug = 'confirmation';
-			
+			}
+
 			$rewrite = array( $page_slug . '/([^/]+)/?$' => 'index.php?pagename=' . $page_slug . '&' . $page_slug . '=$matches[1]' );
 			$existing = array_merge( $rewrite, $existing );
 		}
 		do_action( 'it_exchange_rewrite_rules_registered' );
-		
+
 		return $existing;
+	}
+
+	/**
+	 * Flush rewrite rules if confirmation page is set to WP type and updated
+	 *
+	 * This is needed in the event that the post_parent is updated
+	 *
+	 * @since CHANGEME
+	 *
+	 * @param int $post_id the wp post id
+	 * @return void
+	*/
+	function flush_rewrites_when_wp_confirmation_page_is_updated( $post_id ) {
+		// Abort if we aren't saving a page
+		if ( 'page' != get_post_type( $post_id ) )
+			return;
+
+		// Only proceed if the Exchange confirmation page is a WordPress type
+		if ( 'wordpress' == it_exchange_get_page_type( 'confirmation', true ) ) {
+			// Flag a rewrite flush if the current page being saved is the confirmation page
+			$wpid = it_exchange_get_page_wpid( 'confirmation' );
+			if ( $wpid == $post_id )
+				add_option('_it-exchange-flush-rewrites', true );
+		}
 	}
 }
 global $IT_Exchange_Pages; // We need it inside casper
