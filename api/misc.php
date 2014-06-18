@@ -212,9 +212,18 @@ function it_exchange_wp_get_nav_menu_items_filter( $items, $menu, $args ) {
 	if ( is_user_logged_in() ) {
 		foreach ( $items as $item ) {
 			//We really just want to compare the URL PATH, so grab that and compare later
-			$item_url_path = parse_url( $item->url, PHP_URL_PATH );
-			$login_url_path = parse_url( it_exchange_get_page_url( 'login' ), PHP_URL_PATH );
-			$logout_url_path = parse_url( it_exchange_get_page_url( 'logout' ), PHP_URL_PATH );
+			if ( '' == get_option( 'permalink_structure' ) ) {
+				// No permalinks
+				$item_url_path = parse_url( $item->url, PHP_URL_QUERY );
+				$login_url_path = parse_url( it_exchange_get_page_url( 'login' ), PHP_URL_QUERY );
+				$logout_url_path = parse_url( it_exchange_get_page_url( 'logout' ), PHP_URL_QUERY );
+			} else {
+				// Permalinks
+				$item_url_path = parse_url( $item->url, PHP_URL_PATH );
+				$login_url_path = parse_url( it_exchange_get_page_url( 'login' ), PHP_URL_PATH );
+				$logout_url_path = parse_url( it_exchange_get_page_url( 'logout' ), PHP_URL_PATH );
+			}
+
 			if ( $item_url_path == $login_url_path || $item_url_path == $logout_url_path ) {
 				$item->url = it_exchange_get_page_url( 'logout' );
 				$item->title = it_exchange_get_page_name( 'logout' );
