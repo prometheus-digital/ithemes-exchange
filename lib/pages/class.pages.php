@@ -494,8 +494,20 @@ class IT_Exchange_Pages {
 		foreach( $pages as $page => $data ) {
 			if ( 'product' == $page || 'disabled' == it_exchange_get_page_type( $page ) )
 				continue;
-			if ( $var = it_exchange_get_page_slug( $page ) )
-				$vars[] = $var;
+			if ( $var = it_exchange_get_page_slug( $page ) ) {
+
+				// Exception for confirmation page set as wordpress page type
+				if ( 'confirmation' == $page && 'wordpress' == it_exchange_get_page_type( 'confirmation', true ) ) {
+					$wpid = it_exchange_get_page_wpid( 'confirmation' );
+					if ( $wp_page = get_page( $wpid ) ) {
+						$vars[] = get_page_uri( $wpid );
+					} else {
+						$vars[] = $var;
+					}
+				} else {
+					$vars[] = $var;
+				}
+			}
 		}
 		$new_vars = array_merge( $vars, $existing );
 		return $new_vars;

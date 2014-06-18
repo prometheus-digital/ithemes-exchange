@@ -85,7 +85,7 @@ function it_exchange_get_page_slug( $page, $break_cache=false ) {
 	} else if ( 'wordpress' == $type ) {
 		$wpid = it_exchange_get_page_wpid( $page );
 		if ( $wp_page = get_page( $wpid ) )
-			$page_slug = $wp_page->post_name;
+			$page_slug = get_page_uri( $wpid );
 	}
 	return apply_filters( 'it_exchange_get_page_slug', $page_slug, $page, $break_cache );
 }
