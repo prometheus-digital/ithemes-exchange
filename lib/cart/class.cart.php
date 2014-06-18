@@ -395,7 +395,7 @@ class IT_Exchange_Shopping_Cart {
 		// Validate required fields
 		$required_fields = apply_filters( 'it_exchange_required_billing_address_fields', array( 'first-name', 'last-name', 'address1', 'city', 'state', 'country', 'zip' ) );
 		
-		$states = it_exchange_get_data_set( 'states', array( 'country' => $_REQUEST['it-exchange-shipping-address-country'] ) );
+		$states = it_exchange_get_data_set( 'states', array( 'country' => $_REQUEST['it-exchange-billing-address-country'] ) );
 		if ( empty( $states ) && $key = array_search( 'state', $required_fields ) ) {
 			unset( $required_fields[$key] );
 		}			
