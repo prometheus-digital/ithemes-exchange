@@ -465,7 +465,7 @@ function it_exchange_merge_cached_customer_cart_into_current_session( $user_logi
 		if ( 'products' != $key || empty( $current_products ) ) {
 			it_exchange_update_cart_data( $key, $data );
 		} else {
-			foreach( $data as $product_id => $product_data ) {
+			foreach( (array) $data as $product_id => $product_data ) {
 				if ( ! empty( $current_products[$product_id]['count'] ) ) {
 					$data[$product_id]['count'] = $data[$product_id]['count'] + $current_products[$product_id]['count'];
 					unset( $current_products[$product_id] );

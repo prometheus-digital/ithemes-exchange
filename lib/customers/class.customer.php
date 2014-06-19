@@ -237,7 +237,7 @@ function handle_it_exchange_customer_registration_action() {
 			}
 		} else {
 			// They were in the superwidget
-			it_exchange_clean_query_args( array(), array( 'ite-sw-state' ) );
+			$redirect = it_exchange_clean_query_args( array(), array( 'ite-sw-state' ) );
 		}
 
         do_action( 'handle_it_exchange_customer_registration_action' );
