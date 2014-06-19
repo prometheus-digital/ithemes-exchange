@@ -23,14 +23,14 @@ if ( !defined( 'PAYPAL_NVP_API_LIVE_URL' ) )
 /**
  * Mark this transaction method as okay to manually change transactions
  *
- * @since CHANGEME
+ * @since 1.9.2
 */
 add_filter( 'it_exchange_paypal-standard-secure_transaction_status_can_be_manually_changed', '__return_true' );
 
 /**
  * Returns status options
  *
- * @since CHANGEME
+ * @since 1.9.2
  * @return array
 */
 function it_exchange_paypal_standard_secure_get_default_status_options() {

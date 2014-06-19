@@ -224,7 +224,7 @@ add_action( 'it_exchange_apply_coupon_to_cart', 'it_exchange_basic_coupons_apply
  * Determines # of seconds before now to count uses
  * Makes sure that customer has not met limit of use in calculated time period
  *
- * @since CHANGEME
+ * @since 1.9.2
  *
  * @param integer $coupon_id wp post id for the coupon
  * @param integer $customer_id wp user id of customer
@@ -277,7 +277,7 @@ function it_exchange_basic_coupon_frequency_limit_met_by_customer( $coupon_id, $
 /**
  * Gets all coupon uses or all uses for a specific coupon for a user
  *
- * @since CHANGEME
+ * @since 1.9.2
  *
  * @param integer $coupon_id   the coupon code. optional
  * @param integer $customer_id the customer id. defaults to current customer
@@ -300,7 +300,7 @@ function it_exchange_basic_coupons_get_customer_coupon_frequency( $coupon_id=fal
 /**
  * Increments coupon use for a specific coupon for a user
  *
- * @since CHANGEME
+ * @since 1.9.2
  *
  * @param integer $coupon_id   the coupon code.
  * @param integer $customer_id the customer id. defaults to current customer
@@ -459,7 +459,7 @@ add_action( 'it_exchange_add_transaction_success', 'it_exchange_basic_coupons_mo
 /**
  * Track the customer's use of this coupon on checkout
  *
- * @since CHANGEME
+ * @since 1.9.2
  *
  * @param integer $transaction_id
  * @return void

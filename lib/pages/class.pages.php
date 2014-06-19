@@ -581,7 +581,7 @@ class IT_Exchange_Pages {
 	 *
 	 * This is needed in the event that the post_parent is updated
 	 *
-	 * @since CHANGEME
+	 * @since 1.9.2
 	 *
 	 * @param int $post_id the wp post id
 	 * @return void

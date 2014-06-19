@@ -218,7 +218,7 @@ require( plugin_dir_path( __FILE__ ) . 'lib/sessions/class.session.php' );
  *
  * @param Ithemes_Sync_API $api An instnance of the iThemes Sync API
  *
- * @since CHANGEME
+ * @since 1.9.2
  *
  * @return void
  */
