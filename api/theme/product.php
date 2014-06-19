@@ -221,7 +221,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * @return string
 	*/
 	function description( $options=array() ) {
-
+		
 		// Return boolean if has flag was set
 		if ( $options['supports'] )
 			return it_exchange_product_supports_feature( $this->product->ID, 'description' );
@@ -245,10 +245,26 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$options = ITUtility::merge_defaults( $options, $defaults );
 
 			if ( ! empty( $options['max-length'] ) && is_numeric( $options['max-length'] ) && strlen( $description ) > $options['max-length'] ) {
-				$result = substr( $description, 0, $options['max-length'] );
+			
+				$result = substr( wp_strip_all_tags( $description ), 0, $options['max-length'] );
 				$result .= $options['ellipsis'] . ' <a href="' . get_permalink( $this->product->ID ) . '">' . $options['more-text'] . '</a>';
+				
 			} else {
-				$result = $description;
+
+				global $IT_Exchange_Pages;
+			
+				if ( has_filter( 'the_content', array( $IT_Exchange_Pages, 'fallback_filter_for_page_template' ) ) )
+					$has_filter = true;
+				else
+					$has_filter = false;
+				
+				if ( $has_filter )
+					remove_filter( 'the_content', array( $IT_Exchange_Pages, 'fallback_filter_for_page_template' ) );
+			
+				$result = apply_filters( 'the_content', $description );
+				
+				if ( $has_filter )
+					add_filter( 'the_content', array( $IT_Exchange_Pages, 'fallback_filter_for_page_template' ) );
 			}
 
 			return $result;
