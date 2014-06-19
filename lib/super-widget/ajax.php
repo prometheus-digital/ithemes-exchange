@@ -115,8 +115,8 @@ if ( 'register' == $action ) {
         wp_new_user_notification( $user_id, $email_pass );
 
 		$creds = array(
-            'user_login'    => esc_attr( $_POST['user_login'] ),
-            'user_password' => esc_attr( $_POST['pass1'] ),
+            'user_login'    => urldecode($_POST['user_login'] ),
+            'user_password' => urldecode( $_POST['pass1'] ),
         );
 
         $user = wp_signon( $creds );
