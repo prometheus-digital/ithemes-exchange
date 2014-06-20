@@ -419,7 +419,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 
 		$query = array(
 			'business'      => $paypal_email,
-			'item_name'     => it_exchange_get_cart_description(),
+			'item_name'     => strip_tags( it_exchange_get_cart_description() ),
 
 			'return'       => add_query_arg( 'it-exchange-transaction-method', 'paypal-standard', it_exchange_get_page_url( 'transaction' ) ),
 			'currency_code' => $general_settings['default-currency'],
