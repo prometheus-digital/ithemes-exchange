@@ -1,3 +1,8 @@
+1.9.3 - 2014-06-21 - Glenn Ansley, Lew Ayotte, Aaron D. Campbell, Elise Alley
+	Decode HTML entities when converting prices to database numbers, otherwise the British Pound &#163; adds 163 to the front of a price!
+	Add strip_tags to cart description before appending to paypal standard payment URL
+	Allow shortcodes in product description with the_content filter
+	Run product description through wp_strip_all_tags when max-length is set
 1.9.2 - 2014-06-19 - Glenn Ansley, Lew Ayotte, Aaron D. Campbell, Elise Alley
 	Fixed error preventing auto-login after user reg from SW
 	Fixed PHP Warning caused by attempt to loop through non-array.\n Fixed PHP Warning caused by undefined param
