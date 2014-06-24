@@ -75,7 +75,7 @@ class IT_Exchange_Admin {
 		add_action( 'admin_init', array( $this, 'bounce_user_to_all_products_if_directly_accessing_disabled_product_type' ) );
 
 		// Init our custom add/edit layout interface
-		add_action( 'admin_enqueue_scripts', array( $this, 'it_exchange_admin_wp_enqueue_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'it_exchange_admin_wp_enqueue_scripts' ), 9 );
 		add_action( 'admin_print_styles', array( $this, 'it_exchange_admin_wp_enqueue_styles' ) );
 		add_action( 'admin_init', array( $this, 'remove_third_party_metaboxes' ) );
 		add_action( 'admin_init', array( $this, 'setup_add_edit_product_screen_layout' ) );
@@ -1468,6 +1468,7 @@ Order: %s
 		}
 
 		wp_register_script( 'it-exchange-dialog', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tips.js', array( 'jquery-ui-dialog' ) );
+		wp_register_script( 'ithemes-chartjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/Chart.min.js', array( 'jquery' ), '0.2', true );
 		
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			$deps = array( 'post', 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'autosave', 'it-exchange-dialog' );
