@@ -1,3 +1,6 @@
+1.9.4 - 2014-06-30 - Lew Ayotte, Glenn Ansley, Elise Alley
+	Empty arrays passed through json_encode result in a string that causes json_decode to output an array, but an object is expected by get_object_vars, which outputs a warning on some PHP installs. Checking for empty arrays in session for Cart Sync.
+	Register chartjs in exchange for other addons... but don't enqueue it.
 1.9.3 - 2014-06-21 - Glenn Ansley, Lew Ayotte, Aaron D. Campbell, Elise Alley
 	Decode HTML entities when converting prices to database numbers, otherwise the British Pound &#163; adds 163 to the front of a price!
 	Add strip_tags to cart description before appending to paypal standard payment URL
