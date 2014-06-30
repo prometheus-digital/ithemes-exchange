@@ -29,7 +29,7 @@ class Ithemes_Sync_Verb_Ithemes_Exchange_Get_Overview extends Ithemes_Sync_Verb 
 			'transactionsToday'     => it_exchange_basic_reporting_get_transactions_count( array( 'start_time' => strtotime( 'today' ), 'end_time' => ( strtotime( 'tomorrow' ) - 1 ) ) ),
 			'transactionsThisMonth' => it_exchange_basic_reporting_get_transactions_count( array( 'start_time' => strtotime( date( 'Y-m-01' ) ) ) ),
 			'recentTransactions'    => array(),
-			'allTransactionsUrl'    => get_admin_url( null, 'edit.php?post_type=it_exchange_tran' ),
+			'allTransactionsUrl'    => wp_login_url( get_admin_url( null, 'edit.php?post_type=it_exchange_tran' ) ),
 		);
 
 		if ( $transactions = it_exchange_get_transactions( array( 'posts_per_page' => 5 ) ) ) {
