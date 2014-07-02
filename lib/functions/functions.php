@@ -1440,7 +1440,7 @@ function it_exchange_show_ithemes_sync_integration_nag() {
 
 	// Check for dismissed tag
 	if ( $show_nag )
-		$show_nag = ! get_user_meta( $current_user->ID, '_it_exchange_dismiss_sync_nag', true );
+		$show_nag = ( true == get_user_meta( $current_user->ID, '_it_exchange_dismiss_sync_nag', true ) ) ? false : true;
 
 	if ( ! current_user_can( 'activate_plugins' ) )
 		$show_nag = false;
