@@ -829,7 +829,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'add-to-cart-button-name'   => false,
 			'add-to-cart-edit-quantity' => true,
 			'out-of-stock-text'         => __( 'Product is currently out of stock.', 'LION' ),
-			'not-available-text'        => __( 'Product not available right now.', 'LION' ),
+			'not-available-text'        => __( 'Product is currently not available.', 'LION' ),
 			'product-in-stock'          => null,
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
@@ -853,7 +853,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			return '<p class="out-of-stock">' . esc_attr( $options['out-of-stock-text'] ) . '</p>';
 
 		if ( !$product_is_available )
-			return __( 'Product is currently not available.', 'LION' );
+			return '<p class="not-availabe">' . esc_attr( $options['not-available-text'] ) . '</p>';
 
 		$class = $options['class'];
 
