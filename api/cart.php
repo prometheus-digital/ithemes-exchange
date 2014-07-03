@@ -205,8 +205,11 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 	if ( ! is_serialized( $additional_data ) )
 		$additional_data = maybe_serialize( $additional_data );
 
-	// Doe we have anything in the cart already?
+	// Grab existing session products
 	$session_products = it_exchange_get_cart_products();
+
+	// Grab the cart ID or set it to false if no products exist
+	$existing_cart_id = empty( $session_products ) ? false : it_exchange_get_cart_id();
 
 	/**
 	 * If multi-item carts are allowed, don't do antying here.
@@ -259,7 +262,12 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 			'count'           => $count,
 		);
 
+		// Actually add product to the cart
 		it_exchange_add_cart_product( $product_id . '-' . $itemized_hash, $product );
+
+		// If no unique cart ID exists, create one.
+		it_exchange_update_cart_id( $existing_cart_id );
+
 		do_action( 'it_exchange_product_added_to_cart', $product_id );
 		return true;
 	}
@@ -421,7 +429,7 @@ function it_exchange_remove_current_session_from_customer_active_carts() {
 	update_user_meta( it_exchange_get_current_customer_id(), '_it_exchange_active_user_carts', $active_carts );
 }
 
-/** 
+/**
  * Grabs current active Users carts
  *
  * @since @1.9.0
@@ -538,7 +546,7 @@ function it_exchange_sync_current_cart_with_all_active_customer_carts() {
 	// Sync across browsers and devices
     foreach( (array) $active_carts as $session_id => $expiration ) {
         update_option( '_it_exchange_db_session_' . $session_id, $current_cart_data );
-    }  
+    }
 }
 
 /**
@@ -613,7 +621,7 @@ function it_exchange_get_cart_product_quantity_by_product_id( $product_id ) {
 }
 
 /**
- * Returns the number of items in the cart 
+ * Returns the number of items in the cart
  * Now including quantity for individual items w/ true_count flag
  *
  * @since 0.4.0
@@ -891,4 +899,63 @@ function it_exchange_get_cart_billing_address() {
 	}
 
 	return apply_filters( 'it_exchange_get_cart_billing_address', $cart_billing );
+}
+
+/**
+ * Generates and returns a unique Cart ID to share across sessions
+ *
+ * Wrapper to it_exchange_get_unique_hash but allows filter for cart id
+ *
+ * @since CHANGEME
+ *
+ * @return string
+*/
+function it_exchange_create_cart_id() {
+	$cart_id = it_exchange_create_unique_hash();
+	$cart_id = apply_filters( 'it_exchange_create_cart_id', $cart_id );
+	return $cart_id;
+}
+
+/**
+ * Add a cart id to a cart
+ *
+ * Called by core whenever a product is added to an empty cart
+ *
+ * @since CHANGEME
+ *
+ * @param string $id the id you want to set. false by default.
+ * @return string returns the ID
+*/
+function it_exchange_update_cart_id( $id=false ) {
+	if ( empty( $id ) ) {
+		$id = it_exchange_create_cart_id();
+		it_exchange_update_cart_data( 'cart_id', $id );
+	}
+	return $id;
+}
+
+/**
+ * Get a cart id from the session
+ *
+ * @since CHANGEME
+ *
+ * @return string returns the ID
+*/
+function it_exchange_get_cart_id() {
+	$id = it_exchange_get_cart_data( 'cart_id' );
+
+	// Expects ID to be a single item array
+	$id = empty( $id[0] ) ? false : $id[0];
+	return $id;
+}
+
+/**
+ * Delete a cart id from the session
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_remove_cart_id() {
+	it_exchange_remove_cart_data( 'cart_id' );
 }
