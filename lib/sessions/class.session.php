@@ -80,8 +80,8 @@ class IT_Exchange_Session {
 			if ( $key && !empty( $this->_session[$key] ) )
 				return $this->_session[$key];
 		} else {
-			if ( $json = it_exchange_db_session_encode() && !empty( $json ) ) {
-				if ( $session_data = get_object_vars( json_decode( $json ) ) ) {
+			if ( $json = it_exchange_db_session_encode() ) {
+				if ( ! empty( $json ) && $session_data = get_object_vars( json_decode( $json ) ) ) {
 					$session_data = array_map( 'maybe_unserialize', $session_data );
 					return $session_data;
 				}
