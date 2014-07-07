@@ -1,7 +1,7 @@
 === iThemes Exchange: Simple Ecommerce ===
 Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
-Requires at least: 3.6
+Requires at least: 3.7
 Tested up to: 3.9.1
 Stable tag: 1.9.4
 License: GPLv2 or later
