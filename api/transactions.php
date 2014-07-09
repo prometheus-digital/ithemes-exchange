@@ -148,6 +148,10 @@ function it_exchange_generate_transaction_object() {
 	$currency = $settings['default-currency'];
 	unset( $settings );
 
+	// Grab cart ID
+	$cart_id = it_exchange_get_cart_data( 'cart_id' );
+	$cart_id = empty( $cart_id[0] ) ? 0 : $cart_id[0];
+
 	// Add totals to each product
 	foreach( $products as $key => $product ) {
 		$products[$key]['product_base_price'] = it_exchange_get_cart_product_base_price( $product, false );
@@ -158,6 +162,7 @@ function it_exchange_generate_transaction_object() {
 
 	// Package it up and send it to the transaction method add-on
 	$transaction_object = new stdClass();
+	$transaction_object->cart_id                = $cart_id;
 	$transaction_object->total                  = $cart_total;
 	$transaction_object->currency               = $currency;
 	$transaction_object->description            = it_exchange_get_cart_description();
