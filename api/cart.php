@@ -327,6 +327,7 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
  * @return boolean
 */
 function it_exchange_empty_shopping_cart() {
+	do_action( 'it_exchange_before_empty_shopping_cart', it_exchange_get_session_data() );
 	it_exchange_clear_session_data( 'products' );
 	do_action( 'it_exchange_empty_shopping_cart' );
 }
