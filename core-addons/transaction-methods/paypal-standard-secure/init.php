@@ -107,7 +107,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 	if ( !empty( $_REQUEST['it-exchange-transaction-method'] ) && 'paypal-standard-secure' === $_REQUEST['it-exchange-transaction-method'] ) {
 		
 		if ( !empty( $_REQUEST['paypal-standard-secure-nonce'] ) && wp_verify_nonce( $_REQUEST['paypal-standard-secure-nonce'], 'ppss-nonce' ) ) {
-			
+
 			if ( !empty( $_REQUEST['tx'] ) ) //if PDT is enabled
 				$transaction_id = $_REQUEST['tx'];
 			else if ( !empty( $_REQUEST['txn_id'] ) ) //if PDT is not enabled
@@ -140,7 +140,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 			$it_exchange_customer = it_exchange_get_current_customer();
 			
 			if ( !empty( $transaction_id ) && !empty( $transient_transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
-			
+
 				try {
 					
 					$paypal_api_url       = ( $paypal_settings['sandbox-mode'] ) ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
@@ -175,13 +175,24 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 							throw new Exception( sprintf( __( 'Error: Amount charged is not the same as the cart total! %s | %s', 'LION' ), $response_array['AMT'], $transaction_object->total ) );
 							
 						}
-						
+
 						if ( it_exchange_get_transient_transaction( 'paypal-standard-secure', $transient_transaction_id ) ) {
+							//If the transient still exists, delete it and add the official transaction
+
 							it_exchange_delete_transient_transaction( 'paypal-standard-secure', $transient_transaction_id  );
 							return it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
+							
+						} else if ( !( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transaction_id ) ) ){
+							//If the transient didn't exist and there isn't a transaction with this ID already, create it.
+
+							return it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
+							
+						} else {
+						
+							return it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transaction_id );
+							
 						}
 
-						
 					} else {
 						
 						throw new Exception( $response->get_error_message() );
@@ -195,8 +206,6 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 					return false;
 					
 				}
-				
-				return it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transaction_id );
 				
 			}
 			
@@ -727,7 +736,7 @@ add_filter( 'init', 'it_exchange_paypal_standard_secure_addon_register_webhook' 
  */
 function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
-	wp_mail( 'lew@ithemes.com', 'paypal webhook', print_r( $request, true ) );
+	wp_mail( 'lew@ithemes.com', 'paypal secure webhook', print_r( $request, true ) );
 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
