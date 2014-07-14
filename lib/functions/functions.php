@@ -214,6 +214,8 @@ add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_load_theme_functio
 */
 function it_exchange_process_webhooks() {
 
+	wp_mail( 'lew@ithemes.com', 'it_exchange_process_webhooks', print_r( $_REQUEST, true ) );
+
 	// Grab registered webhooks
     $webhooks = it_exchange_get_webhooks();
 
