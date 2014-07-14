@@ -1600,7 +1600,7 @@ Order: %s
 		if ( empty( $current_screen->id ) || 'it_exchange_prod' != $current_screen->id || empty( $store_link ) )
 			return;
 
-		?><div class="it-exchange-view-store-on-update-link hidden"><a href="<?php esc_attr_e( $store_link ) ; ?>" title="View Store" ><?php _e( 'View Store', 'LION' ); ?></a><?php
+		?><div class="it-exchange-view-store-on-update-link hidden"><a href="<?php esc_attr_e( $store_link ) ; ?>" title="View store" ><?php _e( 'View store', 'LION' ); ?></a><?php
 	}
 
 	/**
