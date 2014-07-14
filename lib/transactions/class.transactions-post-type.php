@@ -34,6 +34,7 @@ class IT_Exchange_Transaction_Post_Type {
 			add_filter( 'page_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
 			add_filter( 'screen_layout_columns', array( $this, 'modify_details_page_layout' ) );
 			add_filter( 'get_user_option_screen_layout_it_exchange_tran', array( $this, 'update_user_column_options' ) );
+			add_filter( 'bulk_actions-edit-it_exchange_tran', array( $this, 'edit_bulk_actions' ) );
 			add_action( 'wp_ajax_it-exchange-update-transaction-status', array( $this, 'ajax_update_status' ) );
 		}
 	}
@@ -719,6 +720,21 @@ class IT_Exchange_Transaction_Post_Type {
 			die( 'success' );
 		else
 			die ('failed' );
+	}
+
+	/**
+	 * Remove Edit from 'Bulk Actions'
+	 *
+	 * @since CHANGEME
+	 *
+	 * @param  array $actions incoming options
+	 * @return array
+	*/
+	function edit_bulk_actions( $actions ) {
+		if ( isset( $actions['edit'] ) ) {
+			unset( $actions['edit'] );
+		}
+		return $actions;
 	}
 }
 $IT_Exchange_Transaction_Post_Type = new IT_Exchange_Transaction_Post_Type();
