@@ -13,7 +13,7 @@
  * @return void
 */
 function it_exchange_basic_reporting_register_dashboard_widget() {
-	$cap = apply_filters( 'it_exchange_basic_reporting_capability_level', 'activate_plugins' );
+	$cap = apply_filters( 'it_exchange_basic_reporting_capability_level', 'manage_options' );
 	if ( ! current_user_can( $cap ) )
 		return;
 	wp_add_dashboard_widget( 'it-exchange-dashboard-reporting-widget', __( 'iThemes Exchange', 'LION' ), 'it_exchange_basic_reporting_print_dashboard_widget' );
