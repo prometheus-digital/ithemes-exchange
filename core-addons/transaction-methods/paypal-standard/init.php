@@ -424,7 +424,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			'business'      => $paypal_email,
 			'item_name'     => strip_tags( it_exchange_get_cart_description() ),
 
-			'return'       => add_query_arg( array( 'it-exchange-transaction-method' => 'paypal-standard', 'paypal-standard-nonce' => $nonce ), it_exchange_get_page_url( 'transaction' ) );,
+			'return'       => add_query_arg( array( 'it-exchange-transaction-method' => 'paypal-standard', 'paypal-standard-nonce' => $nonce ), it_exchange_get_page_url( 'transaction' ) ),
 			'currency_code' => $general_settings['default-currency'],
 			'notify_url'    => get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard' ) . '=1',
 			'no_note'       => '1',
