@@ -114,6 +114,11 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 				$transaction_id = $_REQUEST['txn_id'];
 			else
 				$transaction_id = NULL;
+	
+			if ( !empty( $_REQUEST['cm'] ) )
+				$transient_transaction_id = $_REQUEST['cm'];
+			else
+				$transient_transaction_id = NULL;
 			
 			if ( !empty( $_REQUEST['amt'] ) ) //if PDT is enabled
 				$transaction_amount = $_REQUEST['amt'];
@@ -134,7 +139,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 			
 			$it_exchange_customer = it_exchange_get_current_customer();
 			
-			if ( !empty( $transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
+			if ( !empty( $transaction_id ) && !empty( $transient_transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
 			
 				try {
 					
@@ -166,8 +171,16 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 						if ( $transaction_id != $response_array['TRANSACTIONID'] )
 							throw new Exception( __( 'Error: Transaction IDs do not match! %s, %s', 'LION' ) );
 						
-						if ( number_format( $response_array['AMT'], '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) )
+						if ( number_format( $response_array['AMT'], '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) ) {
 							throw new Exception( sprintf( __( 'Error: Amount charged is not the same as the cart total! %s | %s', 'LION' ), $response_array['AMT'], $transaction_object->total ) );
+							
+						}
+						
+						if ( it_exchange_get_transient_transaction( 'paypal-standard-secure', $transient_transaction_id ) ) {
+							it_exchange_delete_transient_transaction( 'paypal-standard-secure', $transient_transaction_id  );
+							return it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
+						}
+
 						
 					} else {
 						
@@ -183,17 +196,8 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 					
 				}
 				
-				return it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
+				return it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transaction_id );
 				
-			} else {
-				//nonce verified, so let's check if this was a free trial -- no transaction data is sent from PayPal until
-				//an actual monetary transaction occurs, so we need to improvise.
-				$fake_id = $_REQUEST['paypal-standard-secure-nonce'];
-				$transaction_object->total = 0;
-				//set to pending until the IPN verifies...
-				$transaction_id = it_exchange_add_transaction( 'paypal-standard-secure', $fake_id, 'pending', $it_exchange_customer->id, $transaction_object );
-				
-				return $transaction_id;
 			}
 			
 			it_exchange_add_message( 'error', __( 'Unknown error while processing with PayPal. Please check your PayPal account for any charges and try again later.', 'LION' ) );
@@ -424,7 +428,14 @@ function it_exchange_process_paypal_standard_secure_form() {
 
 	if ( ! empty( $_REQUEST['paypal_standard_secure_purchase'] ) ) {
 
-		if ( $url = it_exchange_paypal_standard_secure_addon_get_payment_url() ) {
+		$it_exchange_customer = it_exchange_get_current_customer();
+		$temp_id = it_exchange_create_unique_hash();
+
+		$transaction_object = it_exchange_generate_transaction_object();
+
+		it_exchange_add_transient_transaction( 'paypal-standard-secure', $temp_id, $it_exchange_customer->id, $transaction_object );
+
+		if ( $url = it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id ) ) {
 			wp_redirect( $url );
 			die();
 		} else {
@@ -444,9 +455,10 @@ add_action( 'template_redirect', 'it_exchange_process_paypal_standard_secure_for
  *
  * @since 0.4.0
  *
+ * @param string $temp_id Temporary ID we reference late with IPN
  * @return string PayPal payment URL
 */
-function it_exchange_paypal_standard_secure_addon_get_payment_url() {
+function it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id ) {
 
 	if ( 0 >= it_exchange_get_cart_total( false ) )
 		return;
@@ -645,7 +657,7 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url() {
 		$L_BUTTONVARS[] = 'email=' . $it_exchange_customer->data->user_email;
 		$L_BUTTONVARS[] = 'rm=2'; //Return  Method - https://developer.paypal.com/webapps/developer/docs/classic/button-manager/integration-guide/ButtonManagerHTMLVariables/
 		$L_BUTTONVARS[] = 'cancel_return=' . it_exchange_get_page_url( 'cart' );
-		$L_BUTTONVARS[] = 'custom=' . $nonce;
+		$L_BUTTONVARS[] = 'custom=' . $temp_id;
 		
 		$L_BUTTONVARS = apply_filters( 'it_exchange_paypal_standard_secure_button_vars', $L_BUTTONVARS );
 
@@ -709,10 +721,13 @@ add_filter( 'init', 'it_exchange_paypal_standard_secure_addon_register_webhook' 
  *
  * @since 0.4.0
  * @todo actually handle the exceptions
+ * @todo verify IPN mc_gross values match IPN if converting a transient transaction
  *
  * @param array $request really just passing  $_REQUEST
  */
 function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
+
+	wp_mail( 'lew@ithemes.com', 'paypal webhook', print_r( $request, true ) );
 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
@@ -721,15 +736,10 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 	$subscriber_id = !empty( $request['recurring_payment_id'] ) ? $request['recurring_payment_id'] : $subscriber_id;
 
 	if ( !empty( $request['txn_type'] ) ) {
-
-		if ( !empty( $request['custom'] ) && $transaction_data = it_exchange_get_transaction( 'paypal-standard-secure', $request['custom'] ) ) {
-			if ( !empty( $request['txn_id'] ) )
-				update_post_meta( $transaction_data->ID, '_it_exchange_transaction_method_id', $request['txn_id'] );
-			else
-				$request['txn_id'] = $request['custom'];
-				
-			it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], 'success' );
-			it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
+	
+		if ( !empty( $request['transaction_subject'] ) && $transient_data = it_exchange_get_transient_transaction( 'paypal-standard', $request['transaction_subject'] ) ) {
+			it_exchange_delete_transient_transaction( 'paypal-standard-secure', $request['transaction_subject']  );
+			return it_exchange_add_transaction( 'paypal-standard-secure', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
 		}
 		
 		switch( $request['txn_type'] ) {
@@ -800,6 +810,22 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
 }
 add_action( 'it_exchange_webhook_it_exchange_paypal-standard-secure', 'it_exchange_paypal_standard_secure_addon_process_webhook' );
+
+
+/**
+ * Gets iThemes Exchange's Transaction ID from PayPal Standard Secure's Transaction ID
+ *
+ * @since CHANGEME
+ *
+ * @param integer $paypal_standard_secure_id id of paypal transaction
+ * @return integer iTheme Exchange's Transaction ID
+*/
+function it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $paypal_standard_secure_id ) {
+	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id( $paypal_standard_secure_id );
+	foreach( $transactions as $transaction ) { //really only one
+		return $transaction->ID;
+	}
+}
 
 /**
  * Grab a transaction from the paypal transaction ID
@@ -1267,15 +1293,11 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 					$form->add_text_box( 'live-api-signature' );
 				?>
 			</p>
-			<h4><?php _e( 'Step 3. Setup PayPal Instant Payment Notifications (IPN)', 'LION' ); ?></h4>
-			<p><?php _e( 'PayPal IPN must be configured in Account Profile -› Instant Payment Notification Preferences in your PayPal Account', 'LION' ); ?></p>
-			<p><?php _e( 'Please log into your account and add this URL to your IPN Settings so iThemes Exchange is notified of things like refunds, payments, etc.', 'LION' ); ?></p>
-			<code><?php echo get_site_url(); ?>/?<?php esc_attr_e( it_exchange_get_webhook( 'paypal-standard-secure' ) ); ?>=1</code>
-			<h4><?php _e( 'Step 4. Setup PayPal Auto Return', 'LION' ); ?></h4>
+			<h4><?php _e( 'Step 3. Setup PayPal Auto Return', 'LION' ); ?></h4>
 			<p><?php _e( 'PayPal Auto Return must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
 			<p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'LION' ); ?></p>
 			<code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
-			<h4><?php _e( 'Step 5. Setup PayPal Payment Data Transfer (PDT)', 'LION' ); ?></h4>
+			<h4><?php _e( 'Step 4. Setup PayPal Payment Data Transfer (PDT)', 'LION' ); ?></h4>
 			<p><?php _e( 'PayPal PDT must be turned <strong>ON</strong> in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
 			<h4><?php _e( 'Optional: Edit Paypal Button Label', 'LION' ); ?></h4>
 			<p>
