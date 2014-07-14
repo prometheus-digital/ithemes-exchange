@@ -470,9 +470,12 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		if ( 'files' == $options['setting'] ) {
 			$args = array(
-				'post_parent' => $product_id,
-				'post_type'   => 'it_exchange_download',
-				'post_status' => 'publish',
+				'post_parent'    => $product_id,
+				'post_type'      => 'it_exchange_download',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'orderby'        => 'ID',
+				'order'          => 'ASC',
 			);
 
 			if ( $download_posts = get_posts( $args ) ) {
