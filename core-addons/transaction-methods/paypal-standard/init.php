@@ -141,6 +141,15 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 					if ( it_exchange_get_transient_transaction( 'paypal-standard', $transient_transaction_id ) ) {
 						it_exchange_delete_transient_transaction( 'paypal-standard', $transient_transaction_id  );
 						return it_exchange_add_transaction( 'paypal-standard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
+					} else if ( !( it_exchange_paypal_standard_addon_get_ite_transaction_id( $transaction_id ) ) ){
+						//If the transient didn't exist and there isn't a transaction with this ID already, create it.
+
+						return it_exchange_add_transaction( 'paypal-standard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
+						
+					} else {
+						
+						return it_exchange_paypal_standard_addon_get_ite_transaction_id( $transaction_id );
+
 					}
 	
 				}
@@ -150,8 +159,6 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 					return false;
 	
 				}
-	
-				return it_exchange_paypal_standard_addon_get_ite_transaction_id( $transaction_id );
 	
 			}
 	
@@ -437,7 +444,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 		);
 
 		$query = array_merge( $paypal_args, $query );
-		$query = apply_filters( 'it_exchange_paypal_standad_query', $query );
+		$query = apply_filters( 'it_exchange_paypal_standard_query', $query );
 		
 		$paypal_payment_url = PAYPAL_PAYMENT_URL . '?' .  http_build_query( $query );
 
@@ -477,6 +484,8 @@ add_filter( 'init', 'it_exchange_paypal_standard_addon_register_webhook' );
  * @param array $request really just passing  $_REQUEST
  */
 function it_exchange_paypal_standard_addon_process_webhook( $request ) {
+
+	wp_mail( 'lew@ithemes.com', 'paypal insecure webhook', print_r( $request, true ) );
 
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard' );
