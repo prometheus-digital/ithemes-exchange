@@ -262,6 +262,7 @@ class IT_Exchange_Email_Notifications {
 			'login_link'       => 'it_exchange_replace_login_link_tag',
 			'account_link'     => 'it_exchange_replace_account_link_tag',
 			'shipping_address' => 'it_exchange_replace_shipping_address_tag',
+			'billing_address'  => 'it_exchange_replace_billing_address_tag',
 		);
 
 		return apply_filters( 'it_exchange_email_notification_shortcode_functions', $shortcode_functions, $data );
@@ -616,6 +617,23 @@ class IT_Exchange_Email_Notifications {
 			return empty( $address ) ? '' : $before . it_exchange_get_formatted_shipping_address( $address ) . $after;
 		}
 		return '';
+	}
+
+	/**
+	 * Replacement Billing Address Tag
+	 *
+	 * @since CHANGEME
+	 *
+	 * @param object $args of IT_Exchange_Email_Notifications
+	 * @return string Billing Address
+	*/
+	function it_exchange_replace_billing_address_tag( $args, $options = NULL, $atts=array() ) {
+		$address = it_exchange_get_transaction_billing_address( $this->transaction_id );
+		if ( empty( $address ) )
+			return '';
+		$before  = empty( $atts['before'] ) ? '' : $atts['before'];
+		$after   = empty( $atts['after'] ) ? '' : $atts['after'];
+		return empty( $address ) ? '' : $before . it_exchange_get_formatted_billing_address( $address ) . $after;
 	}
 
 	/**
