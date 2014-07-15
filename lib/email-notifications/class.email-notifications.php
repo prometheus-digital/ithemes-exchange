@@ -247,20 +247,21 @@ class IT_Exchange_Email_Notifications {
 		//Key = replacement tag
 		//Value = callback function
 		$shortcode_functions = array(
-			'download_list'  => 'it_exchange_replace_download_list_tag',
-			'name'           => 'it_exchange_replace_name_tag',
-			'fullname'       => 'it_exchange_replace_fullname_tag',
-			'username'       => 'it_exchange_replace_username_tag',
-			'order_table'    => 'it_exchange_replace_order_table_tag',
-			'purchase_date'  => 'it_exchange_replace_purchase_date_tag',
-			'total'          => 'it_exchange_replace_total_tag',
-			'payment_id'     => 'it_exchange_replace_payment_id_tag',
-			'receipt_id'     => 'it_exchange_replace_receipt_id_tag',
-			'payment_method' => 'it_exchange_replace_payment_method_tag',
-			'sitename'       => 'it_exchange_replace_sitename_tag',
-			'receipt_link'   => 'it_exchange_replace_receipt_link_tag',
-			'login_link'     => 'it_exchange_replace_login_link_tag',
-			'account_link'   => 'it_exchange_replace_account_link_tag',
+			'download_list'    => 'it_exchange_replace_download_list_tag',
+			'name'             => 'it_exchange_replace_name_tag',
+			'fullname'         => 'it_exchange_replace_fullname_tag',
+			'username'         => 'it_exchange_replace_username_tag',
+			'order_table'      => 'it_exchange_replace_order_table_tag',
+			'purchase_date'    => 'it_exchange_replace_purchase_date_tag',
+			'total'            => 'it_exchange_replace_total_tag',
+			'payment_id'       => 'it_exchange_replace_payment_id_tag',
+			'receipt_id'       => 'it_exchange_replace_receipt_id_tag',
+			'payment_method'   => 'it_exchange_replace_payment_method_tag',
+			'sitename'         => 'it_exchange_replace_sitename_tag',
+			'receipt_link'     => 'it_exchange_replace_receipt_link_tag',
+			'login_link'       => 'it_exchange_replace_login_link_tag',
+			'account_link'     => 'it_exchange_replace_account_link_tag',
+			'shipping_address' => 'it_exchange_replace_shipping_address_tag',
 		);
 
 		return apply_filters( 'it_exchange_email_notification_shortcode_functions', $shortcode_functions, $data );
@@ -290,9 +291,9 @@ class IT_Exchange_Email_Notifications {
 
 		if ( !empty( $shortcode_functions[$show] ) ) {
 			if ( is_callable( array( $this, $shortcode_functions[$show] ) ) )
-				$return = call_user_func( array( $this, $shortcode_functions[$show] ), $this, explode( ',', $options ) );
+				$return = call_user_func( array( $this, $shortcode_functions[$show] ), $this, explode( ',', $options ), $atts );
 			else if ( is_callable( $shortcode_functions[$show] ) )
-				$return = call_user_func( $shortcode_functions[$show], $this, explode( ',', $options ) );
+				$return = call_user_func( $shortcode_functions[$show], $this, explode( ',', $options ), $atts );
 		}
 
 		return apply_filters( 'it_exchange_email_notification_shortcode_' . $atts['show'], $return, $atts, $content, $data );
@@ -597,6 +598,24 @@ class IT_Exchange_Email_Notifications {
 	*/
 	function it_exchange_replace_account_link_tag( $args, $options = NULL ) {
 		return it_exchange_get_page_url( 'account' );
+	}
+
+	/**
+	 * Replacement Shipping Address Tag
+	 *
+	 * @since CHANGEME
+	 *
+	 * @param object $args of IT_Exchange_Email_Notifications
+	 * @return string Shipping Address
+	*/
+	function it_exchange_replace_shipping_address_tag( $args, $options = NULL, $atts=array() ) {
+		if ( it_exchange_transaction_includes_shipping( $this->transaction_id ) ) {
+			$address = it_exchange_get_transaction_shipping_address( $this->transaction_id );
+			$before  = empty( $atts['before'] ) ? '' : $atts['before'];
+			$after   = empty( $atts['after'] ) ? '' : $atts['after'];
+			return empty( $address ) ? '' : $before . it_exchange_get_formatted_shipping_address( $address ) . $after;
+		}
+		return '';
 	}
 
 	/**
