@@ -176,10 +176,10 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 							
 						}
 
-						if ( it_exchange_get_transient_transaction( 'paypal-standard-secure', $transient_transaction_id ) ) {
+						if ( it_exchange_get_transient_transaction( 'ppss', $transient_transaction_id ) ) {
 							//If the transient still exists, delete it and add the official transaction
 
-							it_exchange_delete_transient_transaction( 'paypal-standard-secure', $transient_transaction_id  );
+							it_exchange_delete_transient_transaction( 'ppss', $transient_transaction_id  );
 							return it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
 							
 						} else if ( !( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transaction_id ) ) ){
@@ -442,7 +442,7 @@ function it_exchange_process_paypal_standard_secure_form() {
 
 		$transaction_object = it_exchange_generate_transaction_object();
 
-		it_exchange_add_transient_transaction( 'paypal-standard-secure', $temp_id, $it_exchange_customer->id, $transaction_object );
+		it_exchange_add_transient_transaction( 'ppss', $temp_id, $it_exchange_customer->id, $transaction_object );
 
 		if ( $url = it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id ) ) {
 			wp_redirect( $url );
@@ -736,8 +736,6 @@ add_filter( 'init', 'it_exchange_paypal_standard_secure_addon_register_webhook' 
  */
 function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
-	wp_mail( 'lew@ithemes.com', 'paypal secure webhook', 'request ' . print_r( $request, true ) );
-
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
 
@@ -746,8 +744,8 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
 	if ( !empty( $request['txn_type'] ) ) {
 	
-		if ( !empty( $request['transaction_subject'] ) && $transient_data = it_exchange_get_transient_transaction( 'paypal-standard', $request['transaction_subject'] ) ) {
-			it_exchange_delete_transient_transaction( 'paypal-standard-secure', $request['transaction_subject']  );
+		if ( !empty( $request['transaction_subject'] ) && $transient_data = it_exchange_get_transient_transaction( 'ppss', $request['transaction_subject'] ) ) {
+			it_exchange_delete_transient_transaction( 'ppss', $request['transaction_subject']  );
 			return it_exchange_add_transaction( 'paypal-standard-secure', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
 		}
 		
