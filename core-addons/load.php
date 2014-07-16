@@ -180,6 +180,7 @@ function it_exchange_register_core_addons() {
 			'author'      => 'iThemes',
 			'author_url'  => 'http://ithemes.com',
 			'file'        => dirname( __FILE__ ) . '/coupons/basic-coupons/init.php',
+			'icon'        => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/coupons/basic-coupons/images/coupon50.png' ),
 			'category'    => 'coupons',
 			'tag'         => 'core',
 			'supports'    => apply_filters( 'it_exchange_register_basic_coupons_default_features', array(

@@ -210,6 +210,26 @@ function it_exchange_is_builder_product_type_view( $type ) {
 }
 
 /**
+ * Builder theme callback to determine if this a Cateogry Taxonomy view
+ *
+ * @package IT_Exchange
+ * @since CHANGEME
+*/
+function it_exchange_is_product_category_builder_view() {
+	return is_tax( 'it_exchange_category' ) && ! empty( $GLOBALS['wp_query']->query['it_exchange_category'] );
+}
+
+/**
+ * Builder theme callback to determine if this a Cateogry Taxonomy view
+ *
+ * @package IT_Exchange
+ * @since CHANGEME
+*/
+function it_exchange_is_product_tag_builder_view() {
+	return is_tax( 'it_exchange_tag' ) && ! empty( $GLOBALS['wp_query']->query['it_exchange_tag'] );
+}
+
+/**
  * Add the views to Builder's list of available views.
  *
  * @package IT_Exchange
@@ -316,6 +336,27 @@ function it_exchange_add_new_builder_views( $views ) {
 
 	// Merge in Product Type Views
 	$views = array_merge( $views, $product_type_views );
+
+	// Taxonomy Views
+	if ( it_exchange_is_addon_enabled( 'taxonomy-type-category' ) ) {
+		$tax_views['it_exchange_is_product_category_builder_view'] = array(
+			'name'        => _x( 'Exchange - Product Categories', 'view', 'LION' ),
+			'priority'    => 30,
+			'description' => __( 'The archive view for the Categories taxonomy', 'LION' ),
+		);
+		$views = array_merge( $views, $tax_views );
+		unset( $tax_views );
+	}
+	if ( it_exchange_is_addon_enabled( 'taxonomy-type-tag' ) ) {
+		$tax_views['it_exchange_is_product_tag_builder_view'] = array(
+			'name'        => _x( 'Exchange - Product Tags', 'view', 'LION' ),
+			'priority'    => 30,
+			'description' => __( 'The archive view for the Tags taxonomy', 'LION' ),
+		);
+		$views = array_merge( $views, $tax_views );
+		unset( $tax_views );
+	}
+
 
     return $views;
 }

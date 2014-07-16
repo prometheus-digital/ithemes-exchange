@@ -130,6 +130,8 @@ class IT_Exchange_Admin {
 
 		add_filter( 'plugin_action_links_ithemes-exchange/init.php', array( $this, 'it_exchange_plugin_row_actions' ), 10, 4 );
 		add_filter( 'plugin_row_meta', array( $this, 'it_exchange_plugin_row_meta' ), 10, 4 );
+
+		add_action( 'admin_footer', array( $this, 'add_store_link_to_product_saved_message' ) );
 	}
 
 	/**
@@ -1580,6 +1582,25 @@ Order: %s
 			wp_enqueue_style( 'it-exchange-help', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/help.css' );
 		}
 		do_action( 'it_exchange_admin_wp_enqueue_styles', $hook_suffix, $post_type );
+	}
+
+	/**
+	 * Add hidden span to store link if post was saved. It will be added to the view product message.
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function add_store_link_to_product_saved_message() {
+		if ( empty( $_GET['post'] ) || empty( $_GET['message'] ) || ( 1 !== $_GET['message'] && 6 !== $_GET['message'] ) )
+			return;
+
+		$current_screen = get_current_screen();
+		$store_link     =( 'disabled' == it_exchange_get_page_type( 'store' ) ) ? false : it_exchange_get_page_url( 'store' );
+		if ( empty( $current_screen->id ) || 'it_exchange_prod' != $current_screen->id || empty( $store_link ) )
+			return;
+
+		?><div class="it-exchange-view-store-on-update-link hidden"><a href="<?php esc_attr_e( $store_link ) ; ?>" title="View store" ><?php _e( 'View store', 'LION' ); ?></a><?php
 	}
 
 	/**
