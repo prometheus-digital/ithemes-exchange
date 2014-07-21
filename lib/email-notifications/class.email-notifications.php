@@ -604,7 +604,7 @@ class IT_Exchange_Email_Notifications {
 	/**
 	 * Replacement Shipping Address Tag
 	 *
-	 * @since CHANGEME
+	 * @since 1.10.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Shipping Address
@@ -622,7 +622,7 @@ class IT_Exchange_Email_Notifications {
 	/**
 	 * Replacement Billing Address Tag
 	 *
-	 * @since CHANGEME
+	 * @since 1.10.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Billing Address

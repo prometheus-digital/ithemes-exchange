@@ -725,7 +725,7 @@ class IT_Exchange_Transaction_Post_Type {
 	/**
 	 * Remove Edit from 'Bulk Actions'
 	 *
-	 * @since CHANGEME
+	 * @since 1.10.0
 	 *
 	 * @param  array $actions incoming options
 	 * @return array

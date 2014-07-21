@@ -2,7 +2,7 @@
 /**
  * This file contains the notice for the Sync Integration Notice
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.10.0
 */
 // Just placing internal JS here since it won't be around long.
 ?>

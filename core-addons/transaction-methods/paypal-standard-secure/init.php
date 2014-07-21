@@ -824,7 +824,7 @@ add_action( 'it_exchange_webhook_it_exchange_paypal-standard-secure', 'it_exchan
 /**
  * Gets iThemes Exchange's Transaction ID from PayPal Standard Secure's Transaction ID
  *
- * @since CHANGEME
+ * @since 1.10.0
  *
  * @param integer $paypal_standard_secure_id id of paypal transaction
  * @return integer iTheme Exchange's Transaction ID

@@ -1422,7 +1422,7 @@ add_filter( 'dashboard_glance_items', 'it_exchange_at_a_glance' );
 /**
  * Adds notification about Sync Integration for users with admin rights
  *
- * @since CHANGEME
+ * @since 1.10.0
  *
  * @return void
 */
