@@ -213,7 +213,7 @@ function it_exchange_is_builder_product_type_view( $type ) {
  * Builder theme callback to determine if this a Cateogry Taxonomy view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.10.0
 */
 function it_exchange_is_product_category_builder_view() {
 	return is_tax( 'it_exchange_category' ) && ! empty( $GLOBALS['wp_query']->query['it_exchange_category'] );
@@ -223,7 +223,7 @@ function it_exchange_is_product_category_builder_view() {
  * Builder theme callback to determine if this a Cateogry Taxonomy view
  *
  * @package IT_Exchange
- * @since CHANGEME
+ * @since 1.10.0
 */
 function it_exchange_is_product_tag_builder_view() {
 	return is_tax( 'it_exchange_tag' ) && ! empty( $GLOBALS['wp_query']->query['it_exchange_tag'] );

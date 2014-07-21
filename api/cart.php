@@ -907,7 +907,7 @@ function it_exchange_get_cart_billing_address() {
  *
  * Wrapper to it_exchange_get_unique_hash but allows filter for cart id
  *
- * @since CHANGEME
+ * @since 1.10.0
  *
  * @return string
 */
@@ -922,7 +922,7 @@ function it_exchange_create_cart_id() {
  *
  * Called by core whenever a product is added to an empty cart
  *
- * @since CHANGEME
+ * @since 1.10.0
  *
  * @param string $id the id you want to set. false by default.
  * @return string returns the ID
@@ -938,7 +938,7 @@ function it_exchange_update_cart_id( $id=false ) {
 /**
  * Get a cart id from the session
  *
- * @since CHANGEME
+ * @since 1.10.0
  *
  * @return string returns the ID
 */
@@ -953,7 +953,7 @@ function it_exchange_get_cart_id() {
 /**
  * Delete a cart id from the session
  *
- * @since CHANGEME
+ * @since 1.10.0
  *
  * @return void
 */

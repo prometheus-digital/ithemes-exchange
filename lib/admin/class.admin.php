@@ -1587,7 +1587,7 @@ Order: %s
 	/**
 	 * Add hidden span to store link if post was saved. It will be added to the view product message.
 	 *
-	 * @since CHANGEME
+	 * @since 1.10.0
 	 *
 	 * @return void
 	*/
