@@ -397,7 +397,10 @@ class IT_Exchange_Admin {
 			if ( 1 == $add_on_count ) {
 				// If we only have one product-type enabled, add standard post_type pages
 				$product = reset( $enabled_product_types );
-				add_submenu_page( 'it-exchange', 'Add Product', 'Add Product', $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . $product['slug'] );
+
+				// Allow add-ons to adjust their menu titles
+				$menu_title = apply_filters( 'it_exchange_admin_add_one_product_type_product_page_title', __( 'Add Product', 'LION' ), $product );
+				add_submenu_page( 'it-exchange', __( 'Add Product', 'LION' ), $menu_title, $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . $product['slug'] );
 			} else if ( $add_on_count > 1 ) {
 				// If we have more than one product type, add them each separately
 				foreach( $enabled_product_types as $type => $params ) {
