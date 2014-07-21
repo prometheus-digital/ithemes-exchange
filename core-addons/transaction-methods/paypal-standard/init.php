@@ -108,6 +108,8 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 	
 			if ( !empty( $_REQUEST['cm'] ) )
 				$transient_transaction_id = $_REQUEST['cm'];
+			else if ( !empty( $_REQUEST['custom'] ) )
+				$transient_transaction_id = $_REQUEST['custom'];
 			else
 				$transient_transaction_id = NULL;
 	
@@ -124,9 +126,9 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 				$transaction_status = $_REQUEST['payment_status'];
 			else
 				$transaction_status = NULL;
-	
+					
 			if ( !empty( $transaction_id ) && !empty( $transient_transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
-	
+
 				try {
 	
 					$general_settings = it_exchange_get_option( 'settings_general' );
@@ -136,20 +138,22 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 	
 					if ( number_format( $transaction_amount, '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) )
 						throw new Exception( __( 'Error: Amount charged is not the same as the cart total!', 'LION' ) );
-	
+							
 					//If the transient still exists, delete it and add the official transaction
 					if ( it_exchange_get_transient_transaction( 'pps', $transient_transaction_id ) ) {
+					
 						it_exchange_delete_transient_transaction( 'pps', $transient_transaction_id  );
-						return it_exchange_add_transaction( 'paypal-standard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
-					} else if ( !( it_exchange_paypal_standard_addon_get_ite_transaction_id( $transaction_id ) ) ){
-						//If the transient didn't exist and there isn't a transaction with this ID already, create it.
-
 						return it_exchange_add_transaction( 'paypal-standard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
 						
 					} else {
-						
-						return it_exchange_paypal_standard_addon_get_ite_transaction_id( $transaction_id );
-
+					
+						if ( $ite_txn = it_exchange_paypal_standard_addon_get_ite_transaction_id( $transaction_id ) ) {
+							return $ite_txn;
+						} else {
+							//If the transient didn't exist and there isn't a transaction with this ID already, create it.
+							return it_exchange_add_transaction( 'paypal-standard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
+						}
+					
 					}
 	
 				}
@@ -161,7 +165,7 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 				}
 	
 			}
-	
+
 			it_exchange_add_message( 'error', __( 'Unknown error while processing with PayPal. Please try again later.', 'LION' ) );
 
 		}
@@ -330,12 +334,12 @@ function it_exchange_process_paypal_standard_form() {
 
 	if ( ! empty( $_REQUEST['paypal_standard_purchase'] ) ) {
 
-		$it_exchange_customer = it_exchange_get_current_customer();
+		$customer = it_exchange_get_current_customer();
 		$temp_id = it_exchange_create_unique_hash();
-
+		
 		$transaction_object = it_exchange_generate_transaction_object();
-
-		it_exchange_add_transient_transaction( 'pps', $temp_id, $it_exchange_customer->id, $transaction_object );
+		
+		it_exchange_add_transient_transaction( 'pps', $temp_id, $customer->id, $transaction_object );
 
 		if ( $url = it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) ) {
 			wp_redirect( $url );
@@ -581,6 +585,7 @@ function it_exchange_paypal_standard_addon_get_ite_transaction_id( $paypal_stand
 	foreach( $transactions as $transaction ) { //really only one
 		return $transaction->ID;
 	}
+	return false;
 }
 
 /**

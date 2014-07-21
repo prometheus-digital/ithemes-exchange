@@ -117,6 +117,8 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 	
 			if ( !empty( $_REQUEST['cm'] ) )
 				$transient_transaction_id = $_REQUEST['cm'];
+			else if ( !empty( $_REQUEST['custom'] ) )
+				$transient_transaction_id = $_REQUEST['custom'];
 			else
 				$transient_transaction_id = NULL;
 			
@@ -182,14 +184,14 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 							it_exchange_delete_transient_transaction( 'ppss', $transient_transaction_id  );
 							return it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
 							
-						} else if ( !( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transaction_id ) ) ){
-							//If the transient didn't exist and there isn't a transaction with this ID already, create it.
-
-							return it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
-							
 						} else {
-						
-							return it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transaction_id );
+							
+							if ( $ite_txn = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transaction_id ) ){
+								return $ite_txn;
+							} else {
+								//If the transient didn't exist and there isn't a transaction with this ID already, create it.
+								return it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
+							}
 							
 						}
 
@@ -436,14 +438,14 @@ function it_exchange_process_paypal_standard_secure_form() {
 	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard_secure' );
 
 	if ( ! empty( $_REQUEST['paypal_standard_secure_purchase'] ) ) {
-
-		$it_exchange_customer = it_exchange_get_current_customer();
+	
+		$customer = it_exchange_get_current_customer();
 		$temp_id = it_exchange_create_unique_hash();
-
+		
 		$transaction_object = it_exchange_generate_transaction_object();
 
-		it_exchange_add_transient_transaction( 'ppss', $temp_id, $it_exchange_customer->id, $transaction_object );
-
+		it_exchange_add_transient_transaction( 'ppss', $temp_id, $customer->id, $transaction_object );
+		
 		if ( $url = it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id ) ) {
 			wp_redirect( $url );
 			die();
@@ -832,6 +834,7 @@ function it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $paypa
 	foreach( $transactions as $transaction ) { //really only one
 		return $transaction->ID;
 	}
+	return false;
 }
 
 /**
