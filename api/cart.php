@@ -72,7 +72,7 @@ function it_exchange_get_cart_products( $options=array() ) {
 		$products = empty( $cart['products'] ) ? array() : $cart['products'];
 	}
 
-	return ( empty( $products ) || ! array( $products ) ) ? array() : $products;
+	return ( empty( $products ) || ! is_array( $products ) ) ? array() : $products;
 }
 
 /**
