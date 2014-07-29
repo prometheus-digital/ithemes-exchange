@@ -1,3 +1,7 @@
+1.10.1 - 2014-07-29 - Glenn Ansley, Lew Ayotte, Elise Alley, Timothy Jacobs <http://ironbounddesigns.com/>
+	Fixed bug where we were casting rather than checking for a conditional. Oops. Props Timmy
+	Allow product-type add-ons to modify admin menu_title for clarity
+	Fixing Guest Checkouts for addons using transient transactions.
 1.10.0 - 2014-07-21 - Glenn Ansley, Lew Ayotte, Elise Alley
 	Added support for IPN only transactions, fixes bug with users paying without PayPal accounts via PayPal and not clicking to return to the site.
 	Added for coupons as add-on
