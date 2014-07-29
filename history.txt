@@ -61,7 +61,7 @@
 	Styling updates for confirmation page table
 	Adding an action after customers cart is cached.
 	Add styling support for nested rows in it-exchange-table
-	Sync user carts across browsers and devices: - Caches state of cart anytime it has data added, updated, deleted - Logs session ID to list of active carts for user anytime they log-in - Removes session 
+	Sync user carts across browsers and devices: - Caches state of cart anytime it has data added, updated, deleted - Logs session ID to list of active carts for user anytime they log-in - Removes session
 	Sync user sessions across browsers if logged-in
 	i18n strings in purchase-requirements billing and shipping templates
 	Modifications to some filters
