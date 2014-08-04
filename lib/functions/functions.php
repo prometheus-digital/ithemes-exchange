@@ -1454,6 +1454,41 @@ function it_exchange_show_ithemes_sync_integration_nag() {
 add_action( 'admin_notices', 'it_exchange_show_ithemes_sync_integration_nag' );
 
 /**
+ * This should only run once on update.
+ *
+ * It fixes a problem we had with carts. We have to clear
+ * all users' cached carts and reset all sessions to clear bad data.
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_fix_bad_data_in_carts( $versions ) {
+	global $wpdb;
+
+	// Abandon if already run
+	$updated = get_option( 'it_exchange_bad_cart_data_fixed' );
+	if ( ! empty( $updated ) ) {
+		return;
+	}
+
+	// Reset everyone's current sessions by deleting them.
+	it_exchange_db_delete_all_sessions();
+
+	// Delete all the active carts for all users
+	$q = $wpdb->prepare( 'DELETE FROM ' . $wpdb->usermeta . ' WHERE meta_key = %s', '_it_exchange_active_user_carts' );
+	$wpdb->query( $q );
+
+	// Delete all cached carts
+	$q = $wpdb->prepare( 'DELETE FROM ' . $wpdb->usermeta . ' WHERE meta_key = %s', '_it_exchange_cached_cart' );
+	$wpdb->query( $q );
+
+	// Flag as updated
+	$updated = update_option( 'it_exchange_bad_cart_data_fixed', true );
+}
+add_action( 'it_exchange_version_updated', 'it_exchange_fix_bad_data_in_carts' );
+
+/**
  * Retrieve HTML dropdown (select) content for category list.
  *
  * @uses Walker_CategoryDropdown to create HTML dropdown content.
