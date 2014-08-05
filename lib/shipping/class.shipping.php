@@ -148,7 +148,7 @@ class IT_Exchange_Shipping {
 	 * @return string the callback
 	*/
 	function register_settings_tab_callback() {
-		return array( $this, 'print_shipping_tab' );
+		return apply_filters( 'it_exchange_shipping_register_settings_tab_callback', array( $this, 'print_shipping_tab' ) );
 	}
 
 	/**
@@ -707,5 +707,5 @@ class IT_Exchange_Shipping {
 	}
 
 }
-$IT_Exchange_Shipping = new IT_Exchange_Shipping();
+$GLOBALS['it_exchange']['shipping_object'] = new IT_Exchange_Shipping();
 
