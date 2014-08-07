@@ -77,13 +77,30 @@ class IT_Exchange_Session {
 		if ( $key ) {
 			$key = sanitize_key( $key );
 
-			if ( $key && !empty( $this->_session[$key] ) )
-				return $this->_session[$key];
+			if ( $key && !empty( $this->_session[$key] ) ) {
+				$data = $this->_session[$key];
+				if ( is_array( $data ) ) {
+					$data = array_map( 'maybe_unserialize', $data );
+				} else {
+					$data = maybe_unserialize( $data );
+				}
+				return $data;
+			}
 		} else {
 			if ( $json = it_exchange_db_session_encode() ) {
 				$json = json_decode( $json );
 				if ( ! empty( $json ) && $session_data = get_object_vars( $json ) ) {
 					$session_data = array_map( 'maybe_unserialize', $session_data );
+					/**
+					 * We were having issues here b/c data in session can be objects or arrays
+					 * but it_exchange_db_session_encode uses json_encode / json_decode so they
+					 * have to all come back as either an array or an object based on second param
+					 * of json_decode. So we just overwrite each key's value by grabbing it specifically
+					 * since that doesn't involve the json_encode / json_decode functions. ^gta
+					*/
+					foreach( $session_data as $data_key => $data_value ) {
+						$session_data[$data_key] = $this->get_session_data( $data_key );
+					}
 					return $session_data;
 				}
 			}
@@ -161,7 +178,7 @@ class IT_Exchange_Session {
 	 *
 	 * This should only be hooked to logout. Don't fire if not logging out.
 	 *
-	 * @since 1.9.0 
+	 * @since 1.9.0
 	 *
 	 * @return void
 	*/
