@@ -1459,7 +1459,9 @@ add_action( 'admin_notices', 'it_exchange_show_ithemes_sync_integration_nag' );
  * It fixes a problem we had with carts. We have to clear
  * all users' cached carts and reset all sessions to clear bad data.
  *
- * @since CHANGEME
+ * @todo Remove this function after December, 2014
+ *
+ * @since 1.10.2
  *
  * @return void
 */
