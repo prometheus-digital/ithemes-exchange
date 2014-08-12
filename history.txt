@@ -1,3 +1,5 @@
+1.10.3 - 2014-08-12 - Lew Ayotte, Elise Alley
+	Fix for memory leak in sessions
 1.10.2 - 2014-08-08 - Glenn Ansley, Lew Ayotte, Elise Alley
 	Fixed non-object PHP warnings
 	Changed subtitle in readme to 'iThemes Exchange: Simple WP Ecommerce'
