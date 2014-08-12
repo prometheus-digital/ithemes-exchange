@@ -88,19 +88,9 @@ class IT_Exchange_Session {
 			}
 		} else {
 			if ( $json = it_exchange_db_session_encode() ) {
-				$json = json_decode( $json );
-				if ( ! empty( $json ) && $session_data = get_object_vars( $json ) ) {
+				$session_data = json_decode( $json, true );
+				if ( ! empty( $session_data ) ) {
 					$session_data = array_map( 'maybe_unserialize', $session_data );
-					/**
-					 * We were having issues here b/c data in session can be objects or arrays
-					 * but it_exchange_db_session_encode uses json_encode / json_decode so they
-					 * have to all come back as either an array or an object based on second param
-					 * of json_decode. So we just overwrite each key's value by grabbing it specifically
-					 * since that doesn't involve the json_encode / json_decode functions. ^gta
-					*/
-					foreach( $session_data as $data_key => $data_value ) {
-						$session_data[$data_key] = $this->get_session_data( $data_key );
-					}
 					return $session_data;
 				}
 			}
