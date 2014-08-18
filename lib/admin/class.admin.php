@@ -1569,6 +1569,9 @@ Order: %s
 		// Specific Exchange pages
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			wp_enqueue_style( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-edit-product.css' );
+			if ( $wp_version < 4.0 ) {
+				wp_enqueue_style( 'it-exchange-add-edit-product-pre-4.0', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-edit-product-pre-4.0.css' );
+			}
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {
 			wp_enqueue_style( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/transaction-details.css' );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
