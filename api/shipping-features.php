@@ -11,7 +11,8 @@
  * @since 1.4.0
  * @param string $slug the identifying slug for the shipping feature
  * @param string $class the shipping feature class
- * @return void
+ *
+ * @return bool|void
 */
 function it_exchange_register_shipping_feature( $slug, $class ) {
 	// Don't attempt to register if class doesn't exist
@@ -48,6 +49,7 @@ function it_exchange_get_registered_shipping_features() {
  * @since 1.4.0
  *
  * @param  object $product an IT_Exchange_Product object
+ *
  * @return void
 */
 function it_exchange_do_shipping_feature_boxes( $product ) {
@@ -68,6 +70,8 @@ function it_exchange_do_shipping_feature_boxes( $product ) {
  * @since 1.4.0
  *
  * @param string $slug feature slug
+ * @param int|bool $product_id
+ *
  * @return object
 */
 function it_exchange_get_registered_shipping_feature( $slug, $product_id=false ) {
@@ -91,8 +95,9 @@ function it_exchange_get_registered_shipping_feature( $slug, $product_id=false )
  *
  * @since 1.4.0
  *
- * @param  object $product an IT_Exchange_Product object
- * @return an array of shipping feature objects
+ * @param IT_Exchange_Product $product an IT_Exchange_Product object
+ *
+ * @return array of shipping feature objects
 */
 function it_exchange_get_shipping_features_for_product( $product ) {
 

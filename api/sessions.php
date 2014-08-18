@@ -14,7 +14,7 @@
  * This grabs you a copy of the IT_Exchange_Session object
  *
  * @since 0.3.3
- * @return object  instance of IT_Exchange_Session
+ * @return IT_Exchange_Session|bool instance of IT_Exchange_Session
 */
 function it_exchange_get_session() {
 	$session = empty( $GLOBALS['it_exchange']['session'] ) ? false : $GLOBALS['it_exchange']['session'];
@@ -25,6 +25,9 @@ function it_exchange_get_session() {
  * Returns session_data array from current session
  *
  * @since 0.3.3
+ *
+ * @param string|bool $key
+ *
  * @return array  an array of session_data stored in $_SESSION['it_exchange']
 */
 function it_exchange_get_session_data( $key=false ) {
@@ -43,6 +46,7 @@ function it_exchange_get_session_data( $key=false ) {
  * @since 0.3.7
  * @param mixed $data data as passed by the shopping cart
  * @param mixed $key optional identifier for the data.
+ *
  * @return void
 */
 function it_exchange_add_session_data( $key, $data ) {
@@ -57,6 +61,7 @@ function it_exchange_add_session_data( $key, $data ) {
  * @since 0.3.7
  * @param mixed $key key for the data
  * @param mixed $data updated data
+ *
  * @return void
 */
 function it_exchange_update_session_data( $key, $data ) {
@@ -69,7 +74,10 @@ function it_exchange_update_session_data( $key, $data ) {
  * Removes all data from the session key
  *
  * @since 0.3.7
- * @return boolean
+ *
+ * @param string|bool $key
+ *
+ * @return void
 */
 function it_exchange_clear_session_data( $key=false ) {
 	$session = it_exchange_get_session();
@@ -81,7 +89,10 @@ function it_exchange_clear_session_data( $key=false ) {
  * Removes all data from the session
  *
  * @since 0.3.7
- * @return boolean
+ *
+ * @param bool $hard
+ *
+ * @return void
 */
 function it_exchange_clear_session( $hard=false ) {
 	$session = it_exchange_get_session();

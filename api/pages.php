@@ -11,6 +11,8 @@
  * @since 0.4.4
  *
  * @param boolean $break_cache pages come from it_storage which caches options. Set this to true to not retreived cached pages
+ * @param array $options
+ *
  * @return array
 */
 function it_exchange_get_pages( $break_cache=false, $options=array() ) {
@@ -50,6 +52,8 @@ function it_exchange_get_pages( $break_cache=false, $options=array() ) {
  * @since 0.4.0
  *
  * @param string $page page var
+ * @param bool $break_cache
+ *
  * @return string url
 */
 function it_exchange_get_page_name( $page, $break_cache=false ) {
@@ -73,6 +77,8 @@ function it_exchange_get_page_name( $page, $break_cache=false ) {
  * @since 0.4.4
  *
  * @param string $page page var
+ * @param bool $break_cache
+ *
  * @return string
 */
 function it_exchange_get_page_slug( $page, $break_cache=false ) {
@@ -96,6 +102,8 @@ function it_exchange_get_page_slug( $page, $break_cache=false ) {
  * @since 0.4.4
  *
  * @param string $page page var
+ * @param bool $break_cache
+ *
  * @return string
 */
 function it_exchange_get_page_type( $page, $break_cache=false ) {
@@ -110,6 +118,8 @@ function it_exchange_get_page_type( $page, $break_cache=false ) {
  * @since 0.4.4
  *
  * @param string $page page var
+ * @param bool $break_cache
+ *
  * @return string
 */
 function it_exchange_get_page_wpid( $page, $break_cache=false ) {
@@ -124,6 +134,8 @@ function it_exchange_get_page_wpid( $page, $break_cache=false ) {
  * @since 0.4.0
  *
  * @param string $page page setting
+ * @param bool $clear_settings_cache
+ *
  * @return string url
 */
 function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
@@ -165,6 +177,8 @@ function it_exchange_get_page_url( $page, $clear_settings_cache=false ) {
  * @since 0.4.4
  *
  * @param string $page page setting
+ * @param bool $break_cache
+ *
  * @return boolean
 */
 function it_exchange_is_page_ghost_page( $page, $break_cache=false ) {
@@ -180,7 +194,8 @@ function it_exchange_is_page_ghost_page( $page, $break_cache=false ) {
  *
  * @since 0.4.0
  *
- * @param mixed $page optional. the exchange page were checking for
+ * @param string|bool $page optional. the exchange page were checking for
+ *
  * @return boolean
 */
 function it_exchange_is_page( $page=false ) {
@@ -279,6 +294,7 @@ function it_exchange_is_page( $page=false ) {
  *
  * @param string $page unique name it-exchange uses to refer to this page
  * @param array  $options page options
+ *
  * @return boolean
 */
 function it_exchange_register_page( $page, $options ) {
@@ -318,6 +334,9 @@ function it_exchange_register_page( $page, $options ) {
  * For the admin's settings, use it_exchange_get_pages()
  *
  * @since 0.4.4
+ *
+ * @param array $options
+ *
  * @return array
 */
 function it_exchange_get_registered_pages( $options=array() ) {
@@ -337,6 +356,8 @@ function it_exchange_get_registered_pages( $options=array() ) {
  * Returns an array of WP page IDs to page names
  *
  * @since 0.4.0
+ *
+ * @param array $options
  *
  * @return array
 */

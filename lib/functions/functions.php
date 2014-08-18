@@ -62,6 +62,10 @@ function it_exchange_parse_options( $options ) {
  *
  * @since 0.4.0
  * @todo possibly get this working with LC_MONETARY and money_format()
+ *
+ * @param mixed $price
+ * @param bool $show_symbol
+ *
  * @return string
 */
 function it_exchange_format_price( $price, $show_symbol = true ) {
@@ -233,7 +237,8 @@ add_action( 'wp', 'it_exchange_process_webhooks' );
  *
  * @since 0.4.2
  *
- * @param object $form the ITForm object for the settings form
+ * @param ITForm $form the ITForm object for the settings form
+ *
  * @return void
 */
 function it_exchange_add_plugin_reset_checkbox_to_settings( $form ) {
@@ -523,7 +528,8 @@ add_action( 'it_libraries_loaded', 'it_exchange_register_core_pages' );
  *
  * @since 0.4.4
  *
- * @param string page
+ * @param string $page
+ *
  * @return array
 */
 function it_exchange_get_core_page_rewrites( $page ) {
@@ -658,7 +664,8 @@ function it_exchange_get_core_page_rewrites( $page ) {
  *
  * @since 0.4.4
  *
- * @param string page
+ * @param string $page
+ *
  * @return array
 */
 function it_exchange_get_core_page_urls( $page ) {
@@ -734,6 +741,7 @@ function it_exchange_get_core_page_urls( $page ) {
  * @since 0.4.8
  *
  * @param array $atts attributes passed in via shortcode arguments
+ *
  * @return string the template part
 */
 function it_exchange_add_page_shortcode( $atts ) {
@@ -761,6 +769,7 @@ add_shortcode( 'it-exchange-page', 'it_exchange_add_page_shortcode' );
  * @since 1.4.0
  *
  * @param array $atts attributes passed in via shortcode arguments
+ *
  * @return string the template part
 */
 function it_exchange_add_customer_shortcode( $atts ) {
@@ -807,6 +816,7 @@ add_shortcode( 'it_exchange_customer', 'it_exchange_add_customer_shortcode' );
  * @since 0.4.9
  *
  * @param string $where the where clause of the query
+ *
  * @return string
 */
 function it_exchange_filter_where_clause_for_all_queries( $where='' ) {
@@ -835,7 +845,8 @@ function it_exchange_filter_where_clause_for_all_queries( $where='' ) {
  *
  * @since 0.4.11
  *
- * @param string $addon name of addon being enabled.
+ * @param array $addon_slug name of addon being enabled.
+ *
  * @return void
 */
 function it_exchange_clear_sessions_when_multi_item_cart_is_enabled( $addon_slug ) {
@@ -921,7 +932,8 @@ add_action( 'template_redirect', 'it_exchange_get_default_content_checkout_mode'
  * @since 1.2.0
  *
  * @param array $existing The existing valid template parts
- * @reutrn array
+ *
+ * @return array
 */
 function it_exchange_register_valid_sw_states_for_purchase_reqs( $existing ) {
 	foreach( (array) it_exchange_get_purchase_requirements() as $slug => $properties ) {
@@ -955,11 +967,13 @@ function it_exchange_add_purchase_requirement_notification() {
 add_action( 'it_exchange_content_checkout_after_purchase_requirements', 'it_exchange_add_purchase_requirement_notification' );
 
 /**
- * Rmove purchase options if purchase requirements haven't been met
+ * Remove purchase options if purchase requirements haven't been met
  *
  * @since 1.2.0
  *
- * @reutnr void
+ * @param array $elements
+ *
+ * @return array
 */
 function it_exchange_disable_purchase_options_on_checkout_page( $elements ) {
 	if ( false === ( $message = it_exchange_get_next_purchase_requirement_property( 'notification' ) ) )
@@ -982,6 +996,7 @@ add_filter( 'it_exchange_get_content_checkout_actions_elements', 'it_exchange_di
  * @since 1.3.0
  *
  * @param array $loops list of existing elements
+ *
  * @return array
 */
 function it_exchange_add_billing_address_to_sw_template_totals_loops( $loops ) {
@@ -1060,7 +1075,6 @@ add_action( 'wp_head', 'it_exchange_print_home_url_in_js' );
  *
  * @since 1.4.0
  *
- * @param array $versions old and new versions. not used here
  * @return void
 */
 function it_exchange_force_rewrite_flush_on_upgrade() {
@@ -1074,6 +1088,7 @@ add_action( 'it_exchange_version_updated', 'it_exchange_force_rewrite_flush_on_u
  * @since 1.8.1
  *
  * @param array $versions old and new versions. not used here
+ *
  * @return void
 */
 function it_exchange_clean_duplicate_user_post_meta( $versions ) {
@@ -1106,7 +1121,7 @@ function it_exchange_clean_duplicate_user_post_meta( $versions ) {
 add_action( 'it_exchange_version_updated', 'it_exchange_clean_duplicate_user_post_meta' );
 
 /**
- * Add custom image sizs to use in themes and admin.
+ * Add custom image sizes to use in themes and admin.
  *
  * @since 1.6.0
  *
@@ -1162,7 +1177,7 @@ add_action( 'template_redirect', 'it_exchange_set_content_width_on_product_pages
  *
  * @since 1.6.0
  *
- * @param  object $error instance of WP_Error
+ * @param  WP_Error $error instance of WP_Error
  * @return mixed
 */
 function it_exchange_redirect_to_correct_login_form_on_error( $error ) {
@@ -1192,6 +1207,7 @@ add_filter( 'wp_login_errors', 'it_exchange_redirect_to_correct_login_form_on_er
  * @param string  $text       the HTML for the tooltip. Can be a plaintext string or HTML
  * @param boolean $echo       echo the tooltip? defaults to true
  * @param string  $indicator  the character used to indicate a tooltip is avaialable. Defaults to 'i'
+ *
  * @return string
 */
 function it_exchange_admin_tooltip( $text, $echo=true, $indicator='i' ) {
@@ -1208,6 +1224,7 @@ function it_exchange_admin_tooltip( $text, $echo=true, $indicator='i' ) {
  * Blocks access to Download iThemes Exchange attachments
  *
  * @since 1.7.18
+ *
  * @return void
  */
 function it_exchange_block_attachments() {
@@ -1402,6 +1419,10 @@ if ( !function_exists( 'it_exchange_dropdown_taxonomies' ) ) {
  * Add At a Glance dashboard stats for products
  *
  * @since 1.7.27
+ *
+ * @param $elements array
+ *
+ * @return array
 */
 function it_exchange_at_a_glance( $elements ) {
 	$product_counts = wp_count_posts( 'it_exchange_prod' );

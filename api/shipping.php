@@ -13,6 +13,7 @@
  *
  * @param  string  $slug    provider slug
  * @param  array   $options options for the provider
+ *
  * @return boolean
 */
 function it_exchange_register_shipping_provider( $slug, $options ) {
@@ -33,6 +34,7 @@ function it_exchange_register_shipping_provider( $slug, $options ) {
  * @since 1.4.0
  *
  * @param  mixed $filtered a string or an array of strings to limit returned providers to specific providers
+ *
  * @return array
 */
 function it_exchange_get_registered_shipping_providers( $filtered=array() ) {
@@ -53,7 +55,8 @@ function it_exchange_get_registered_shipping_providers( $filtered=array() ) {
  * @since 1.4.0
  *
  * @param  string $slug the registerd slug
- * @return mixed  false or object
+ *
+ * @return IT_Exchange_Shipping_Provider|bool  false or object
 */
 function it_exchange_get_registered_shipping_provider( $slug ) {
 	// Return false if we don't have one registered
@@ -79,6 +82,7 @@ function it_exchange_get_registered_shipping_provider( $slug ) {
  * @since 1.4.0
  *
  * @param  string  $slug the registerd slug
+ *
  * @return boolean
 */
 function it_exchange_is_shipping_provider_registered( $slug ) {
@@ -91,7 +95,8 @@ function it_exchange_is_shipping_provider_registered( $slug ) {
  * @since 1.4.0
  *
  * @param string  $slug    method slug
- * @param array   $options options for the slug
+ * @param string  $class  class name
+ *
  * @return boolean
 */
 function it_exchange_register_shipping_method( $slug, $class ) {
@@ -112,7 +117,9 @@ function it_exchange_register_shipping_method( $slug, $class ) {
  * @since 1.4.0
  *
  * @param  string $slug the registerd slug
- * @return mixed  false or object
+ * @param int|bool $product_id
+ *
+ * @return object|bool  false or object
 */
 function it_exchange_get_registered_shipping_method( $slug, $product_id=false ) {
 
@@ -139,7 +146,8 @@ function it_exchange_get_registered_shipping_method( $slug, $product_id=false ) 
  *
  * @since 1.4.0
  *
- * @param  mixed $filtered a string or an array of strings to limit returned methods to specific methods
+ * @param  array|string $filtered a string or an array of strings to limit returned methods to specific methods
+ *
  * @return array
 */
 function it_exchange_get_registered_shipping_methods( $filtered=array() ) {
@@ -160,8 +168,9 @@ function it_exchange_get_registered_shipping_methods( $filtered=array() ) {
  *
  * @since 1.4.0
  *
- * @param array $address the shipping address as an array
- * @param int   $customer_id optional. if empty, will attempt to get he current user's ID
+ * @param array    $address the shipping address as an array
+ * @param int|bool $customer_id optional. if empty, will attempt to get he current user's ID
+ *
  * @return boolean Will fail if no user ID was provided or found
 */
 function it_exchange_save_shipping_address( $address, $customer_id=false ) {
@@ -186,10 +195,10 @@ function it_exchange_save_shipping_address( $address, $customer_id=false ) {
  *
  * @since 1.4.0
  *
- * @param string $field       the form field we are looking for the value
- * @param int    $customer_id the wp ID of the customer
+ * @param string   $field       the form field we are looking for the value
+ * @param int|bool $customer_id the wp ID of the customer
  *
- * @return string
+ * @return void
 */
 function it_exchange_print_shipping_address_value( $field, $customer_id=false ) {
     $customer_id = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
@@ -206,6 +215,8 @@ function it_exchange_print_shipping_address_value( $field, $customer_id=false ) 
  *
  * @todo this function sucks. Lets make a function for formatting any address. ^gta
  * @since 1.4.0
+ *
+ * @param array|bool $shipping_address
  *
  * @return string HTML
 */
@@ -241,8 +252,9 @@ function it_exchange_get_formatted_shipping_address( $shipping_address=false ) {
  *
  * @since 1.4.0
  *
- * @param  object product an IT_Exchange_Product object
- * @return an array of shipping methods
+ * @param  IT_Exchange_Product $product an IT_Exchange_Product object
+ *
+ * @return object[] of shipping methods
 */
 function it_exchange_get_available_shipping_methods_for_product( $product ) {
 
@@ -342,7 +354,9 @@ function it_exchange_get_cart_shipping_method() {
  *
  * @since 1.4.0
  *
- * @parma boolean $only_return_methods_available_to_all_cart_products defaults to true.
+ * @param boolean $only_return_methods_available_to_all_cart_products defaults to true.
+ *
+ * @return string[]
 */
 function it_exchange_get_available_shipping_methods_for_cart( $only_return_methods_available_to_all_cart_products=true ) {
 	$methods   = array();
@@ -411,7 +425,10 @@ function it_exchange_get_available_shipping_methods_for_cart_products() {
  *
  * @since 1.4.0
  *
- * @param string $shipping_method optional method.
+ * @param string|bool $shipping_method optional method.
+ * @param bool $format_price
+ *
+ * @return mixed
 */
 function it_exchange_get_cart_shipping_cost( $shipping_method=false, $format_price=true ) {
 	if ( ! $cart_products = it_exchange_get_cart_products() )
@@ -442,6 +459,8 @@ function it_exchange_get_cart_shipping_cost( $shipping_method=false, $format_pri
  * @param string  $method_slug  the shipping method slug
  * @param array   $cart_product the cart product array
  * @param boolean $format_price format the price for a display
+ *
+ * @return mixed
 */
 function it_exchange_get_shipping_method_cost_for_cart_item( $method_slug, $cart_product, $format_price=false ) {
 	$method = it_exchange_get_registered_shipping_method( $method_slug, $cart_product['product_id'] );
@@ -462,6 +481,7 @@ function it_exchange_get_shipping_method_cost_for_cart_item( $method_slug, $cart
  * @since 1.4.0
  *
  * @param string $product_cart_id the product_cart_id in the cart session. NOT the database ID of the product
+ *
  * @return string
 */
 function it_exchange_get_multiple_shipping_method_for_cart_product( $product_cart_id ) {
@@ -481,6 +501,7 @@ function it_exchange_get_multiple_shipping_method_for_cart_product( $product_car
  *
  * @param string $product_cart_id the product_cart_id in the cart session. NOT the database ID of the product
  * @param string $method_slug     the slug of the method this cart product will use
+ *
  * @return void
 */
 function it_exchange_update_multiple_shipping_method_for_cart_product( $product_cart_id, $method_slug ) {

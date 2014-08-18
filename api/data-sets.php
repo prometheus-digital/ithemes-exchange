@@ -16,6 +16,8 @@
  *
  * @since 1.2.0
  *
+ * @param string|bool $data_key
+ *
  * @return array
 */
 function it_exchange_get_data_set_properties( $data_key=false ) {
@@ -69,6 +71,8 @@ function it_exchange_get_data_set_properties( $data_key=false ) {
  *
  * @param string $key     the data set you are looking for
  * @param array  $options any options you want passed through to the function that retuns the data set
+ *
+ * @return mixed
 */
 function it_exchange_get_data_set( $key, $options=array() ) {
 	$data_set_props = it_exchange_get_data_set_properties( $key );

@@ -13,13 +13,14 @@
  *
  * @since 0.3.7
  *
- * @param  string $key the identifying string for the data being requested
+ * @param  string|bool $key the identifying string for the data being requested
  * @param  array  $options {
  *      An array of possible options passed to the function
  *
  *      @type mixed $use_cached_customer_cart If contains a customer ID, we grab cart
  *                                            data from the cached cart
  * }
+ *
  * @return array
 */
 function it_exchange_get_cart_data( $key = false, $options=array() ) {
@@ -34,6 +35,7 @@ function it_exchange_get_cart_data( $key = false, $options=array() ) {
  * Updates the data
  *
  * @since 0.4.0
+ *
  * @return void
 */
 function it_exchange_update_cart_data( $key, $data ) {
@@ -62,6 +64,7 @@ function it_exchange_remove_cart_data( $key ) {
  *      @type mixed $use_cached_customer_cart If contains a customer ID, we grab cart
  *                                            products from the cached cart
  * }
+ *
  * @return array
 */
 function it_exchange_get_cart_products( $options=array() ) {
@@ -79,7 +82,8 @@ function it_exchange_get_cart_products( $options=array() ) {
  * Inserts product into the cart session
  *
  * @since 0.4.0
- * @return array
+ *
+ * @return void
 */
 function it_exchange_add_cart_product( $cart_product_id, $product ) {
 	it_exchange_add_session_data( 'products', array( $cart_product_id => $product ) );
@@ -90,7 +94,8 @@ function it_exchange_add_cart_product( $cart_product_id, $product ) {
  * Updates product into the cart session
  *
  * @since 0.4.0
- * @return array
+ *
+ * @return void
 */
 function it_exchange_update_cart_product( $cart_product_id, $product ) {
 	$products = it_exchange_get_session_data( 'products' );
@@ -107,6 +112,9 @@ function it_exchange_update_cart_product( $cart_product_id, $product ) {
  * Deletes product from the cart session
  *
  * @since 0.4.0
+ *
+ * @param int $cart_product_id
+ *
  * @return array
 */
 function it_exchange_delete_cart_product( $cart_product_id ) {
@@ -132,10 +140,11 @@ function it_exchange_delete_cart_product( $cart_product_id ) {
  *      @type mixed $use_cached_customer_cart If contains a customer ID, we grab cart
  *                                            products from the cached cart
  * }
- * @return mixed
+ *
+ * @return array|bool
 */
 function it_exchange_get_cart_product( $id, $options=array() ) {
-	if ( ! $products = it_exchange_get_cart_products( $opitons ) )
+	if ( ! $products = it_exchange_get_cart_products( $options ) )
 		return false;
 
 	if ( empty( $products[$id] ) )
@@ -145,9 +154,10 @@ function it_exchange_get_cart_product( $id, $options=array() ) {
 }
 
 /**
- * Checks if the current product being viewd is in the cart
+ * Checks if the current product being viewed is in the cart
  *
  * @since 0.4.10
+ *
  * @return bool true if in cart|false if not
 */
 function it_exchange_is_current_product_in_cart() {
@@ -174,7 +184,8 @@ function it_exchange_is_current_product_in_cart() {
  * @since 0.3.7
  * @param string $product_id a valid wp post id with an iThemes Exchange product post_typp
  * @param int $quantity (optional) how many?
- * return boolean
+ *
+ * @return boolean|void
 */
 function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 
@@ -282,7 +293,8 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
  * @param int $cart_product_id the product ID prepended to the itemized hash by a hyphen
  * @param int $quantity the incoming quantity
  * @param boolean $add_to_existing if set to false, it replaces the existing.
- * @return void
+ *
+ * @return bool|void
 */
 function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, $add_to_existing=true ) {
 	// Get cart products
@@ -324,7 +336,8 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
  * Empties the cart
  *
  * @since 0.3.7
- * @return boolean
+ *
+ * @return void
 */
 function it_exchange_empty_shopping_cart() {
 	do_action( 'it_exchange_before_empty_shopping_cart', it_exchange_get_session_data() );
@@ -336,6 +349,8 @@ function it_exchange_empty_shopping_cart() {
  * Caches the user's cart in user meta if they are logged in
  *
  * @since 1.9.0
+ *
+ * @param int|bool $customer_id
  *
  * @return void
 */
@@ -359,8 +374,9 @@ function it_exchange_cache_customer_cart( $customer_id=false ) {
  *
  * @since 1.9.0
  *
- * @param  integer $customer_id the id of an exchange customer
- * @return array
+ * @param  int|bool $customer_id the id of an exchange customer
+ *
+ * @return array|bool
 */
 function it_exchange_get_cached_customer_cart( $customer_id=false ) {
 	// Grab the current customer
@@ -381,7 +397,7 @@ function it_exchange_get_cached_customer_cart( $customer_id=false ) {
  *
  * @since 1.9.0
  *
- * @return void
+ * @return void|bool
 */
 function it_exchange_add_current_session_to_customer_active_carts( $customer_id=false ) {
 
@@ -420,8 +436,6 @@ function it_exchange_add_current_session_to_customer_active_carts( $customer_id=
  *
  * @since 1.9.0
  *
- * @param int $customer_id the customer id
- * @param string $session_id the session id to remove
  * @return void
 */
 function it_exchange_remove_current_session_from_customer_active_carts() {
@@ -435,8 +449,9 @@ function it_exchange_remove_current_session_from_customer_active_carts() {
  *
  * @since @1.9.0
  *
- * @param boolean $include_current_cart defaultst to false
+ * @param boolean $include_current_cart defaults to false
  * @param int $customer_id optional. uses current customer id if null
+ *
  * @return array
 */
 function it_exchange_get_active_carts_for_customer( $include_current_cart=false, $customer_id=null ) {
@@ -482,7 +497,10 @@ function it_exchange_get_active_carts_for_customer( $include_current_cart=false,
  *
  * @since 1.9.0
  *
- * @return void
+ * @param $user_login string
+ * @param $user WP_User
+ *
+ * @return bool|void
 */
 function it_exchange_merge_cached_customer_cart_into_current_session( $user_login, $user ) {
 	// Grab the current customer
@@ -556,6 +574,7 @@ function it_exchange_sync_current_cart_with_all_active_customer_carts() {
  * Default is no. Addons must tell us yes as well as provide any pages needed for a cart / checkout / etc.
  *
  * @since 0.4.0
+ *
  * @return boolean
 */
 function it_exchange_is_multi_item_cart_allowed() {
@@ -568,6 +587,9 @@ function it_exchange_is_multi_item_cart_allowed() {
  * Default is true.
  *
  * @since 1.3.0
+ *
+ * @param $product_id int
+ *
  * @return boolean
 */
 function it_exchange_is_multi_item_product_allowed( $product_id ) {
@@ -581,6 +603,7 @@ function it_exchange_is_multi_item_product_allowed( $product_id ) {
  *
  * @since 0.3.7
  * @param array $product cart product
+ *
  * @return string product title
 */
 function it_exchange_get_cart_product_title( $product ) {
@@ -596,6 +619,7 @@ function it_exchange_get_cart_product_title( $product ) {
  *
  * @since 0.3.7
  * @param array $product cart product
+ *
  * @return integer quantity
 */
 function it_exchange_get_cart_product_quantity( $product ) {
@@ -607,7 +631,8 @@ function it_exchange_get_cart_product_quantity( $product ) {
  * Returns the quantity for a cart product
  *
  * @since 0.4.4
- * @param int $product ID
+ * @param int $product_id
+ *
  * @return integer quantity
 */
 function it_exchange_get_cart_product_quantity_by_product_id( $product_id ) {
@@ -649,7 +674,9 @@ function it_exchange_get_cart_products_count( $true_count=false ) {
  *
  * @since 0.3.7
  * @param array $product cart product
- * @return integer quantity
+ * @param bool $format
+ *
+ * @return integer|string price
 */
 function it_exchange_get_cart_product_base_price( $product, $format=true ) {
 	if ( ! $db_product = it_exchange_get_product( $product['product_id'] ) )
@@ -671,7 +698,9 @@ function it_exchange_get_cart_product_base_price( $product, $format=true ) {
  *
  * @since 0.3.7
  * @param array $product cart product
- * @return mixed subtotal
+ * @param bool $format
+ *
+ * @return int|string subtotal
 */
 function it_exchange_get_cart_product_subtotal( $product, $format=true ) {
 	$base_price = it_exchange_get_cart_product_base_price( $product, false );
@@ -695,6 +724,7 @@ function it_exchange_get_cart_product_subtotal( $product, $format=true ) {
  *      @type mixed $use_cached_customer_cart If contains a customer ID, we grab cart
  *                                            data from the cached cart
  * }
+ *
  * @return mixed subtotal of cart
 */
 function it_exchange_get_cart_subtotal( $format=true, $options=array() ) {
@@ -716,7 +746,7 @@ function it_exchange_get_cart_subtotal( $format=true, $options=array() ) {
 /**
  * Returns the cart total
  *
- * The cart total is essentailly going to be the sub_total plus whatever motifications other add-ons make to it.
+ * The cart total is essentially going to be the sub_total plus whatever modifications other add-ons make to it.
  * eg: taxes, shipping, discounts, etc.
  *
  * @since 0.3.7
@@ -728,6 +758,7 @@ function it_exchange_get_cart_subtotal( $format=true, $options=array() ) {
  *      @type mixed $use_cached_customer_cart If contains a customer ID, we grab cart
  *                                            data from the cached cart
  * }
+ *
  * @return mixed total of cart
 */
 function it_exchange_get_cart_total( $format=true, $options=array() ) {
@@ -755,7 +786,8 @@ function it_exchange_get_cart_total( $format=true, $options=array() ) {
  *      @type mixed $use_cached_customer_cart If contains a customer ID, we grab cart
  *                                            data from the cached cart
  * }
- * @return mixed total of cart
+ *
+ * @return string description
 */
 function it_exchange_get_cart_description( $options=array() ) {
 	$description = array();
@@ -778,6 +810,7 @@ function it_exchange_get_cart_description( $options=array() ) {
  *
  * @since 0.3.7
  * @param integer $transaction_id the transaction id
+ *
  * @return void
 */
 function it_exchange_do_confirmation_redirect( $transaction_id ) {
@@ -924,7 +957,8 @@ function it_exchange_create_cart_id() {
  *
  * @since 1.10.0
  *
- * @param string $id the id you want to set. false by default.
+ * @param string|bool $id the id you want to set. false by default.
+ *
  * @return string returns the ID
 */
 function it_exchange_update_cart_id( $id=false ) {

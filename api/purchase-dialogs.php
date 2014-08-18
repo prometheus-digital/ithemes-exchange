@@ -9,6 +9,7 @@
  *
  * @param string $transaction_method_slug
  * @param array $options
+ *
  * @return string
 */
 function it_exchange_generate_purchase_dialog( $transaction_method_slug, $options=array() ) {
@@ -25,6 +26,7 @@ function it_exchange_generate_purchase_dialog( $transaction_method_slug, $option
  *
  * @param string $transaction_method_slug
  * @param array $options
+ *
  * @return array
 */
 function it_exchange_get_purchase_dialog_submitted_values( $transaction_method_slug, $options=array() ) {
@@ -41,6 +43,7 @@ function it_exchange_get_purchase_dialog_submitted_values( $transaction_method_s
  *
  * @param string $transaction_method_slug
  * @param array $options
+ *
  * @return array
 */
 function it_exchange_submitted_purchase_dialog_values_are_valid( $transaction_method_slug, $options=array() ) {

@@ -16,6 +16,7 @@
  * @param string $key option key
  * @param boolean $break_cache clear the ITStorage2 cache before returning options?
  * @param boolean $merge_defaults attempt to merge with default values
+ *
  * @return mixed value of passed key
 */
 function it_exchange_get_option( $key, $break_cache=false, $merge_defaults=true ) {
@@ -37,7 +38,8 @@ function it_exchange_get_option( $key, $break_cache=false, $merge_defaults=true 
  * @since 0.3.6
  * @param string $key the options key
  * @param mixed $value the values to save to the options key
- * @return void
+ *
+ * @return bool
 */
 function it_exchange_save_option( $key, $value ) {
 	$storage = it_exchange_get_storage( $key );
@@ -66,8 +68,9 @@ function it_exchange_clear_option_cache( $key ) {
  *
  * @since 0.3.6
  * @param string $key options key
- * @param mixed $args Either a version number (string) or an array of args passed to class constructor for ITStorage2
- * @return object instance of ITStorage2
+ * @param array|string $args Either a version number (string) or an array of args passed to class constructor for ITStorage2
+ *
+ * @return ITStorage2 instance of ITStorage2
 */
 function it_exchange_get_storage( $key, $args=array() ) {
 	it_classes_load( 'it-storage.php' );

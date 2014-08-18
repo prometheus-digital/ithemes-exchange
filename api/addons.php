@@ -19,6 +19,8 @@
  *
  * @param string $slug         string for identifying the add-on in code
  * @param array $params        key / value pairs.
+ *
+ * @return void|WP_Error
 */
 function it_exchange_register_addon( $slug, $params ) {
 
@@ -79,6 +81,8 @@ function it_exchange_register_addon( $slug, $params ) {
  * @param string $name         name of add-on used in UI
  * @param string $description  description of the add-on
  * @param array  $options      key / value pairs.
+ *
+ * @return void|WP_Error
 */
 function it_exchange_register_addon_category( $slug, $name, $description, $options = array() ) {
 	// Basic Validation
@@ -107,6 +111,7 @@ function it_exchange_register_addon_category( $slug, $name, $description, $optio
  * @since 0.2.0
  *
  * @param array $options  For filtering by category, use $options['category'] = array( 'cat1', 'cat2', 'etc' );
+ *
  * @return array  registered add-ons
 */
 function it_exchange_get_addons( $options=array() ) {
@@ -141,6 +146,7 @@ function it_exchange_get_addons( $options=array() ) {
  * @since 0.4.5
  *
  * @param array $add_ons
+ *
  * @return void
 */
 function it_exchange_temporarily_load_addons( $add_ons ) {
@@ -162,6 +168,7 @@ function it_exchange_temporarily_load_addons( $add_ons ) {
  * @since 0.4.5
  *
  * @param string $add_on slug
+ *
  * @return void
 */
 function it_exchange_temporarily_load_addon( $add_on ) {
@@ -181,6 +188,7 @@ function it_exchange_temporarily_load_addon( $add_on ) {
  * @since 0.3.2
  *
  * @param string $slug  the add-on's slug
+ *
  * @return array  the add_on array
 */
 function it_exchange_get_addon( $slug ) {
@@ -215,6 +223,7 @@ function it_exchange_get_addon_categories() {
  * @since 0.3.0
  *
  * @param array $options  For filtering by category, use $options['category'] = array( 'cat1', 'cat2', 'etc' );
+ *
  * @return array  Enabled add-ons
 */
 function it_exchange_get_enabled_addons( $options=array() ) {
@@ -259,6 +268,7 @@ function it_exchange_get_enabled_addons( $options=array() ) {
  * @since 0.4.0
  *
  * @param array $options  For filtering by category, use $options['category'] = array( 'cat1', 'cat2', 'etc' );
+ *
  * @return array  Disabled add-ons
 */
 function it_exchange_get_disabled_addons( $options=array() ) {
@@ -292,6 +302,7 @@ function it_exchange_get_disabled_addons( $options=array() ) {
  * @since 0.4.0
  *
  * @param array $options  For filtering by category, use $options['category'] = array( 'cat1', 'cat2', 'etc' );
+ *
  * @return array  All add-ons available from iThemes
 */
 function it_exchange_get_more_addons( $options=array() ) {
@@ -318,6 +329,7 @@ function it_exchange_get_more_addons( $options=array() ) {
  * @since 0.4.0
  *
  * @param array $addons  Current add-on array from it_exchange_get_more_addons()
+ *
  * @return array  Restorted add-ons array
 */
 function it_exchange_featured_addons_on_top( $addons ) {
@@ -342,6 +354,7 @@ function it_exchange_featured_addons_on_top( $addons ) {
  *
  * @param array $add_ons  an array of add-ons formatted like $GLOBALS['it_exchange']['add_ons'] array
  * @param array $categories  contains categories we want filters: array( 'cat1', 'cat2', 'etc' );
+ *
  * @return array  Filtered add-ons
 */
 function it_exchange_filter_addons_by_category( $add_ons, $categories ) {
@@ -360,6 +373,7 @@ function it_exchange_filter_addons_by_category( $add_ons, $categories ) {
  * @since 0.3.2
  *
  * @param string $add_on  add_on to enable
+ *
  * @return bool
 */
 function it_exchange_enable_addon( $add_on ) {
@@ -386,6 +400,7 @@ function it_exchange_enable_addon( $add_on ) {
  * @since 0.4.0
  *
  * @param string $add_on_slug  add_on slug to check
+ *
  * @return boolean
 */
 function it_exchange_is_addon_enabled( $add_on_slug ) {
@@ -403,7 +418,8 @@ function it_exchange_is_addon_enabled( $add_on_slug ) {
  *
  * @since 0.4.0
  *
- * @param string $add_on  add_on slug to check
+ * @param string $add_on_slug  add_on slug to check
+ *
  * @return bool
 */
 function it_exchange_is_addon_registered( $add_on_slug ) {
@@ -422,6 +438,7 @@ function it_exchange_is_addon_registered( $add_on_slug ) {
  * @since 0.3.2
  *
  * @param string $add_on add_on to disable
+ *
  * @return bool
 */
 function it_exchange_disable_addon( $add_on ) {
@@ -449,6 +466,7 @@ function it_exchange_disable_addon( $add_on ) {
  *
  * @param string $add_on   add_on slug
  * @param string $feature type of feature we are testing for support
+ *
  * @return bool
 */
 function it_exchange_addon_supports( $add_on, $feature ) {
@@ -472,7 +490,8 @@ function it_exchange_addon_supports( $add_on, $feature ) {
  *
  * @param string $add_on   the slug for the add-on being targeted
  * @param string $feature the feature slug that needs to be enabled
- * @return void
+ *
+ * @return void|bool
 */
 function it_exchange_add_addon_support( $add_on, $feature ) {
 	$add_ons = it_exchange_get_addons();
@@ -493,7 +512,8 @@ function it_exchange_add_addon_support( $add_on, $feature ) {
  *
  * @param string $add_on   the slug for the add-on being targeted
  * @param string $feature the feature slug that needs to be enabled
- * @return void
+ *
+ * @return void|bool
 */
 function it_exchange_remove_addon_support( $add_on, $feature ) {
 	$add_ons = it_exchange_get_addons();
@@ -514,6 +534,7 @@ function it_exchange_remove_addon_support( $add_on, $feature ) {
  *
  * @param string $add_on the slug for the add-on being targeted
  * @param string $feature the feature the slug is targeting
+ *
  * @return mixed the value of the key
 */
 function it_exchange_get_addon_support( $add_on, $feature ) {
@@ -532,6 +553,7 @@ function it_exchange_get_addon_support( $add_on, $feature ) {
  * @since 0.4.0
  *
  * @param string $slug the addon slug
+ *
  * @return boolean
 */
 function it_exchange_is_core_addon( $slug ) {

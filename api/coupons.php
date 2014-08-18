@@ -11,6 +11,8 @@
  * Options can be sent through to be used with WP's get_posts() funciton.
  * @since 0.4.0
  *
+ * @param array $options
+ *
  * @return array an array of posts from our coupon post type
 */
 function it_exchange_get_coupons( $options=array() ) {
@@ -43,8 +45,9 @@ function it_exchange_get_coupons( $options=array() ) {
  *
  * @since 0.4.0
  *
- * @param mixed $post post object or post id
- * @rturn object IT_Exchange_Coupon object for passed post
+ * @param WP_Post|int|IT_Exchange_Coupon $post post object or post id
+ *
+ * @return IT_Exchange_Coupon|bool object for passed post
 */
 function it_exchange_get_coupon( $post ) {
 	$coupon = ( is_object( $post ) && 'IT_Exchange_Coupon' == get_class( $post ) ) ? $post : new IT_Exchange_Coupon( $post );
@@ -58,7 +61,8 @@ function it_exchange_get_coupon( $post ) {
  *
  * @since 0.4.0
  * @param array $args same args passed to wp_insert_post plus any additional needed
- * @param object $cart_object passed cart object
+ * @param object|bool $cart_object passed cart object
+ *
  * @return mixed post id or false
 */
 function it_exchange_add_coupon( $args=array(), $cart_object=false ) {
@@ -94,6 +98,7 @@ function it_exchange_add_coupon( $args=array(), $cart_object=false ) {
  * @since 0.4.0
  *
  * @param string $type type of coupon
+ *
  * @return void
 */
 function it_exchange_register_coupon_type( $type ) {
@@ -129,6 +134,7 @@ function it_exchange_get_coupon_types() {
  * @since 0.4.0
  *
  * @param string $type the type of coupon
+ *
  * @return boolean
 */
 function it_exchange_supports_coupon_type( $type ) {
@@ -143,7 +149,8 @@ function it_exchange_supports_coupon_type( $type ) {
  *
  * @since 0.4.0
  *
- * @param string $type the type of coupon to check for
+ * @param string|bool $type the type of coupon to check for
+ *
  * @return boolean
 */
 function it_exchange_get_applied_coupons( $type=false ) {
@@ -170,6 +177,7 @@ function it_exchange_get_applied_coupons( $type=false ) {
  * @since 0.4.0
  *
  * @param string $type the type of coupon to check for
+ *
  * @return boolean
 */
 function it_exchange_accepting_coupon_type( $type ) {
@@ -185,6 +193,7 @@ function it_exchange_accepting_coupon_type( $type ) {
  *
  * @param string $type the type of coupon to check for
  * @param array $options
+ *
  * @return boolean
 */
 function it_exchange_get_coupon_type_apply_field( $type, $options=array() ) {
@@ -213,6 +222,7 @@ function it_exchange_get_remove_coupon_html( $type, $code, $options=array() ) {
  * @param string $type the type of coupon to check for
  * @param string $code the coupon code
  * @param array $options
+ *
  * @return boolean
 */
 function it_exchange_apply_coupon( $type, $code, $options=array() ) {
@@ -230,6 +240,7 @@ function it_exchange_apply_coupon( $type, $code, $options=array() ) {
  * @param string $type the type of coupon to check for
  * @param string $code the coupon code
  * @param array $options
+ *
  * @return boolean
 */
 function it_exchange_remove_coupon( $type, $code, $options=array() ) {
@@ -242,8 +253,10 @@ function it_exchange_remove_coupon( $type, $code, $options=array() ) {
  *
  * @since 0.4.0
  *
- * @param string $type the type of coupon to check for
+ * @param string|bool $type the type of coupon to check for
  * @param array $options
+ *
+ * @return int
 */
 function it_exchange_get_total_coupons_discount( $type=false, $options=array() ) {
 	$defaults = array(
@@ -268,7 +281,7 @@ function it_exchange_get_total_coupons_discount( $type=false, $options=array() )
 }
 
 /**
- * Get coupon dicount method.
+ * Get coupon discount method.
  *
  * Will return false if coupon addon doesn't provide this data
  *
@@ -276,6 +289,8 @@ function it_exchange_get_total_coupons_discount( $type=false, $options=array() )
  *
  * @param integer $coupon_id the coupon id
  * @param array   $options optional.
+ *
+ * @return string|bool
 */
 function it_exchange_get_coupon_discount_method( $coupon_id, $options=array() ) {
 	$options['id'] = $coupon_id;
@@ -289,8 +304,9 @@ function it_exchange_get_coupon_discount_method( $coupon_id, $options=array() ) 
  *
  * @since 0.4.0
  *
- * @param mixed $coupon id or object
- * @param options optional
+ * @param WP_Post|int|IT_Exchange_Coupon $coupon id or object
+ * @param array $options optional
+ *
  * @return string
 */
 function it_exchange_get_coupon_discount_label( $coupon, $options=array() ) {
@@ -307,8 +323,9 @@ function it_exchange_get_coupon_discount_label( $coupon, $options=array() ) {
  *
  * @since 0.4.0
  *
- * @param string $slug the slug of the add-on responsible for creating the coupon
+ * @param string $type the slug of the add-on responsible for creating the coupon
  * @param mixed $transaction_coupon
+ *
  * @return string
 */
 function it_exchange_get_transaction_coupon_summary( $type, $transaction_coupon ) {

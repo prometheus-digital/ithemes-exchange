@@ -16,6 +16,8 @@
  * @param integer $download_id ID of the download post
  * @param string $hash
  * @param array $hash_data
+ *
+ * @return mixed
 */
 function it_exchange_add_download_hash_data( $download_id, $hash, $hash_data ) {
 	// If hash already exists, something went wrong
@@ -63,7 +65,8 @@ function it_exchange_update_download_hash_data( $hash, $hash_data ) {
  *
  * @since 0.4.0
  *
- * @param string $hash The hash holding the meta for the file
+ * @param int $download_id The hash holding the meta for the file
+ *
  * @return array hash data
 */
 function it_exchange_get_download_info( $download_id ) {
@@ -75,7 +78,9 @@ function it_exchange_get_download_info( $download_id ) {
  *
  * @since 0.4.0
  *
+ * @param int $download_id
  * @param string $hash The hash holding the meta for the file
+ *
  * @return array hash data
 */
 function it_exchange_get_download_data( $download_id, $hash ) {
@@ -88,6 +93,7 @@ function it_exchange_get_download_data( $download_id, $hash ) {
  * @since 0.4.0
  *
  * @param string $hash The hash holding the meta for the file
+ *
  * @return array hash data
 */
 function it_exchange_get_download_data_from_hash( $hash ) {
@@ -103,11 +109,10 @@ function it_exchange_get_download_data_from_hash( $hash ) {
 /**
  * Grabs download data for a specific transaction / product / file combination
  *
- * Fourth param is opitonal.
- *
  * @param  mixed   $transaction transaction ID or object
  * @param  array   $transaction_product this is the product array found in cart_details property in the transaction object
  * @param  integer $download_id the id of the download attached to the product passed in param 2
+ *
  * @return mixed   array of all data or a specific key
 */
 function it_exchange_get_download_hashes_for_transaction_product( $transaction, $transaction_product, $download_id ) {
@@ -132,7 +137,8 @@ function it_exchange_get_download_hashes_for_transaction_product( $transaction, 
  *
  * @since 0.4.0
  *
- * @param mixed $transaction ID or object
+ * @param IT_Exchange_Transaction|int|WP_Post $transaction ID or object
+ *
  * @return array
 */
 function it_exchange_get_transaction_download_hash_index( $transaction ) {
@@ -143,10 +149,11 @@ function it_exchange_get_transaction_download_hash_index( $transaction ) {
 /**
  * This updates the index of hashes per product per transaction stored in the transaction
  *
- * @param mixed   $transaction         transaction ID or object
- * @param array   $transaction_product this is the product array found in cart_details property in the transaction object
+ * @param IT_Exchange_Transaction|int|WP_Post $transaction         transaction ID or object
+ * @param array   $product this is the product array found in cart_details property in the transaction object
  * @param integer $download_id         the id of the download attached to the product passed in param 2
  * @param string  $hash                the has we're adding to the index
+ *
  * @return boolean true for success | false for failure
 */
 function it_exchange_update_transaction_download_hash_index( $transaction, $product, $download_id, $hash ) {
@@ -172,8 +179,9 @@ function it_exchange_update_transaction_download_hash_index( $transaction, $prod
  *
  * This function doesn't care what product its attached to. If it finds it, it deletes it.
  *
- * @param mixed  $transaction the ID or object
+ * @param IT_Exchange_Transaction|int|WP_Post  $transaction the ID or object
  * @param string $hash        the hash we're looking for
+ *
  * @return boolean true for success | false for failure
 */
 function it_exchange_delete_hash_from_transaction_hash_index( $transaction, $hash ) {
@@ -201,7 +209,8 @@ function it_exchange_delete_hash_from_transaction_hash_index( $transaction, $has
  *
  * @since 0.4.0
  *
- * @param mixed $transaction ID or object
+ * @param IT_Exchange_Transaction|int|WP_Post $transaction ID or object
+ *
  * @return boolean
 */
 function it_exchange_clear_transaction_hash_index( $transaction ) {
@@ -220,7 +229,8 @@ function it_exchange_clear_transaction_hash_index( $transaction ) {
  *
  * @param array $hash_data from download hash
  * @param string $purchase_date post_date from transaction post_type
- * @param string $date_foramt optional. the format to display the date in.
+ * @param string|bool $date_format optional. the format to display the date in.
+ *
  * @return string
 */
 function it_exchange_get_download_expiration_date( $hash_data, $date_format=false ) {
@@ -241,7 +251,8 @@ function it_exchange_get_download_expiration_date( $hash_data, $date_format=fals
  *
  * @param array $hash_data from download hash
  * @param string $purchase_date post_date from transaction post_type
- * @param string $date_foramt optional. the format to display the date in.
+ * @param string|bool $date_format optional. the format to display the date in.
+ *
  * @return string
 */
 function it_exchange_get_download_expiration_date_from_settings( $hash_data, $purchase_date, $date_format=false ) {
@@ -261,7 +272,7 @@ function it_exchange_get_download_expiration_date_from_settings( $hash_data, $pu
  *
  * @since 0.4.0
  *
- * @param array $download_info download hash data
+ * @param array $hash_data download hash data
 */
 function it_exchange_serve_product_download( $hash_data ) {
 	// Grab the download info

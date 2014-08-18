@@ -13,6 +13,7 @@
  * @param string $context usually the template-part its being called from
  * @param string $detail usually an identifying slug to indicated where we are on the template-part
  * @param array  $parts   an array of template part files in the loops folder for the $context that we want included
+ *
  * @return array
 */
 function it_exchange_get_template_part_loops( $context, $detail, $parts ) {
@@ -30,6 +31,7 @@ function it_exchange_get_template_part_loops( $context, $detail, $parts ) {
  * @param string $context usually the template-part its being called from
  * @param string $detail usually an identifying slug to indicated where we are on the template-part
  * @param array  $parts   an array of template part files in the elements folder for the $context that we want included
+ *
  * @return array
 */
 function it_exchange_get_template_part_elements( $context, $detail, $parts ) {

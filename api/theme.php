@@ -34,6 +34,13 @@ include( $this->_plugin_path . '/api/theme/purchase-dialog.php' );
  * Defines the main it_exchange function
  *
  * @since 0.4.0
+ *
+ * @todo Provide proper documentation for the parameters and various usages
+ *
+ * @return void|bool|string
+ *  Void on usage error, or echo of data,
+ *  bool when using support and has and is,
+ *  string when getting the requested data
  */
 function it_exchange() {
 

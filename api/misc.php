@@ -92,6 +92,7 @@ function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format )
  *
  * @since 0.4.16
  * @param string|int|float price to convert to database integer
+ *
  * @return string|int converted price
 */
 function it_exchange_convert_to_database_number( $price ) {
@@ -113,6 +114,7 @@ function it_exchange_convert_to_database_number( $price ) {
  *
  * @since 0.4.16
  * @param string|int price from database integer
+ *
  * @return float converted price
 */
 function it_exchange_convert_from_database_number( $price ) {
@@ -124,6 +126,7 @@ function it_exchange_convert_from_database_number( $price ) {
  *
  * @since 0.4.0
  * @param string $var var being requested
+ *
  * @return string var used in links / forms for different actions
 */
 function it_exchange_get_field_name( $var ) {
@@ -136,6 +139,7 @@ function it_exchange_get_field_name( $var ) {
  * Returns an array of all field names registered with iThemes Exchange
  *
  * @since 0.4.0
+ *
  * @return array
 */
 function it_exchange_get_field_names() {
@@ -167,13 +171,14 @@ function it_exchange_get_field_names() {
 /**
  * Grabs the current URL, removes all registerd exchange query_args from it
  *
- * Exempts args in first paramater
- * Cleans additional args in second paramater
+ * Exempts args in first parameter
+ * Cleans additional args in second parameter
  *
  * @since 0.4.0
  *
  * @param array $exempt optional array of query args not to clean
- * @param array $additional opitonal array of params to clean even if not found in register params
+ * @param array $additional optional array of params to clean even if not found in register params
+ *
  * @return string
 */
 function it_exchange_clean_query_args( $exempt=array(), $additional=array() ) {
@@ -205,7 +210,10 @@ function it_exchange_clean_query_args( $exempt=array(), $additional=array() ) {
  *
  * @since 0.4.0
  *
- * @param string $page page setting
+ * @param array $items page setting
+ * @param string $menu
+ * @param array $args
+ *
  * @return string url
 */
 function it_exchange_wp_get_nav_menu_items_filter( $items, $menu, $args ) {
@@ -280,6 +288,7 @@ function it_exchange_get_currency_options() {
  * @since 0.4.0
  *
  * @param string $country_code country code for the currency
+ *
  * @return string
 */
 function it_exchange_get_currency_symbol( $country_code ) {
@@ -296,6 +305,7 @@ function it_exchange_get_currency_symbol( $country_code ) {
  *
  * @param string $key in the GLOBALS array
  * @param mixed $value in the GLOBALS array
+ *
  * @return void
 */
 function it_exchange_set_global( $key, $value ) {
@@ -308,6 +318,7 @@ function it_exchange_set_global( $key, $value ) {
  * @since 1.1.0
  *
  * @param string $key in the GLOBALS array
+ *
  * @return mixed value from the GLOBALS
 */
 function it_exchange_get_global( $key ) {
@@ -318,6 +329,9 @@ function it_exchange_get_global( $key ) {
  * Registers a purchase requirement
  *
  * @since 1.2.0
+ *
+ * @param string $slug
+ * @param array $properties
  *
  * @return void
 */
@@ -372,7 +386,8 @@ function it_exchange_get_purchase_requirements() {
  * Returns the next required purchase requirement
  *
  * @since 1.2.0
- * @return string requirement string
+ *
+ * @return string|bool requirement string
 */
 function it_exchange_get_next_purchase_requirement() {
 	$requirements = it_exchange_get_purchase_requirements();
@@ -414,6 +429,7 @@ function it_exchange_get_all_purchase_requirement_checkout_element_template_part
  * @since 1.2.0
  *
  * @param string $prop the registered property we are looking for
+ *
  * @return mixed
 */
 function it_exchange_get_next_purchase_requirement_property( $prop ) {
@@ -457,6 +473,7 @@ function it_exchange_get_pending_purchase_requirements() {
  *
  * @param  string  $mode    the checkout mode we're testing
  * @param string   $context 'content' or 'sw'
+ *
  * @return boolean
 */
 function it_exchange_is_checkout_mode( $mode, $context='content' ) {
@@ -468,6 +485,8 @@ function it_exchange_is_checkout_mode( $mode, $context='content' ) {
  *
  * @todo this function sucks. Lets make a function for formatting any address. ^gta
  * @since 1.3.0
+ *
+ * @param array|bool $billing_address
  *
  * @return string HTML
 */
@@ -500,6 +519,7 @@ function it_exchange_get_formatted_billing_address( $billing_address=false ) {
  * @since 1.3.1
  *
  * @param array  $options options for the class constructor
+ *
  * @return void
 */
 function it_exchange_print_admin_settings_form( $options ) {
@@ -519,7 +539,8 @@ function it_exchange_print_admin_settings_form( $options ) {
  * @param  string $context the context of the redirect to help with filtering
  * @param  array  $options additional options available for filters
  * @param  int    $status  HTTP code passed to wp_redirect's 2nd param
- * @retrun string $url
+ *
+ * @return void
 */
 function it_exchange_redirect( $url, $context='', $options=array(), $status=302 ) {
 	$options['context'] = $context;

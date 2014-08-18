@@ -12,6 +12,7 @@
  * @since 0.3.7
  * @param array $customer_data array of customer data to be processed by the customer management add-on when creating a customer
  * @param array $args optional array of arguments. not used by all add-ons
+ *
  * @return mixed
 */
 function it_exchange_register_customer( $customer_data, $args=array() ) {
@@ -25,7 +26,8 @@ function it_exchange_register_customer( $customer_data, $args=array() ) {
  *
  * @since 0.3.7
  * @param integer $customer_id id for the customer
- * @return mixed customer data
+ *
+ * @return IT_Exchange_Customer|bool customer data
 */
 function it_exchange_get_customer( $customer_id ) {
     // Grab the WP User
@@ -40,7 +42,8 @@ function it_exchange_get_customer( $customer_id ) {
  * Get the currently logged in customer or return false
  *
  * @since 0.3.7
- * @return mixed customer data
+ *
+ * @return IT_Exchange_Customer|bool customer data
 */
 function it_exchange_get_current_customer() {
 	if ( ! is_user_logged_in() )
@@ -54,7 +57,8 @@ function it_exchange_get_current_customer() {
  * Get the currently logged in customer ID or return false
  *
  * @since 0.4.0
- * @return mixed customer data
+ *
+ * @return int|bool customer ID
 */
 function it_exchange_get_current_customer_id() {
 	if ( ! is_user_logged_in() )
@@ -71,6 +75,7 @@ function it_exchange_get_current_customer_id() {
  * @param integer $customer_id id for the customer
  * @param mixed $customer_data data to be updated
  * @param array $args optional array of arguments. not used by all add-ons
+ *
  * @return mixed
 */
 function it_exchange_update_customer( $customer_id, $customer_data, $args ) {
@@ -82,7 +87,8 @@ function it_exchange_update_customer( $customer_id, $customer_data, $args ) {
  *
  * @since 0.4.0
  *
- * @param integer ID customer id
+ * @param integer $customer_id customer id
+ *
  * @return array
 */
 function it_exchange_get_customer_transactions( $customer_id ) {
@@ -102,8 +108,9 @@ function it_exchange_get_customer_transactions( $customer_id ) {
  *
  * @since 0.4.0
  *
- * @param integer ID transaction id
- * @param integer ID customer id
+ * @param integer $transaction_id
+ * @param integer $customer_id
+ *
  * @return array
 */
 function it_exchange_customer_has_transaction( $transaction_id, $customer_id = NULL ) {
@@ -127,6 +134,7 @@ function it_exchange_customer_has_transaction( $transaction_id, $customer_id = N
  * @since 0.4.0
  *
  * @param integer $customer_id the WP id of the customer
+ *
  * @return array
 */
 function it_exchange_get_customer_products( $customer_id ) {
@@ -187,7 +195,8 @@ add_action( 'template_redirect', 'handle_it_exchange_save_profile_action', 5 );
  *
  * @since 0.4.0
  * @param array $user_data optional. Overwrites POST data
- * @return mixed WP_Error or WP_User object
+ *
+ * @return WP_User|WP_Error
 */
 function it_exchange_register_user( $user_data=array() ) {
 
@@ -211,7 +220,8 @@ function it_exchange_register_user( $user_data=array() ) {
  * @since 1.3.0
  *
  * @param string $data_key the key of the data property of the IT Exchange customer object.
- * @param integer $customer_id the customer id. leave blank to use the current customer.
+ * @param integer|bool $customer_id the customer id. leave blank to use the current customer.
+ *
  * @return mixed
 */
 function it_exchange_get_customer_data( $data_key, $customer_id=false ) {
@@ -236,7 +246,8 @@ function it_exchange_get_customer_data( $data_key, $customer_id=false ) {
  *
  * @since 1.4.0
  *
- * @param integer $customer_id the customer id. leave blank to use the current customer.
+ * @param integer|bool $customer_id the customer id. leave blank to use the current customer.
+ *
  * @return array
 */
 function it_exchange_get_customer_shipping_address( $customer_id=false ) {
@@ -252,7 +263,8 @@ function it_exchange_get_customer_shipping_address( $customer_id=false ) {
  *
  * @since 1.3.0
  *
- * @param integer $customer_id the customer id. leave blank to use the current customer.
+ * @param integer|bool $customer_id the customer id. leave blank to use the current customer.
+ *
  * @return array
 */
 function it_exchange_get_customer_billing_address( $customer_id=false ) {
@@ -265,8 +277,9 @@ function it_exchange_get_customer_billing_address( $customer_id=false ) {
  *
  * @since 1.5.0
  *
- * @param array   $addres      address obejct
- * @param integer $customer_id optional. defualts to current customer
+ * @param array   $address      address obejct
+ * @param integer|bool $customer_id optional. defualts to current customer
+ *
  * @return boolean
 */
 function it_exchange_save_customer_billing_address( $address, $customer_id=false ) {

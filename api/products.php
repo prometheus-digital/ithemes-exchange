@@ -9,6 +9,7 @@
  * Checks if current post is an Exchange Product
  *
  * @since 1.3.0
+ *
  * @return boolean
 */
 function it_exchange_is_product( $post=false ) {
@@ -26,6 +27,7 @@ function it_exchange_is_product( $post=false ) {
  * Grabs the product type of a product
  *
  * @since 0.3.1
+ *
  * @return string the product type
 */
 function it_exchange_get_product_type( $post=false ) {
@@ -49,6 +51,8 @@ function it_exchange_get_product_type( $post=false ) {
  *
  * @since 0.3.2
  * @param string $product_type  slug for the product-type
+ *
+ * @return string
 */
 function it_exchange_get_product_type_name( $product_type ) {
 	if ( $addon = it_exchange_get_addon( $product_type ) )
@@ -62,6 +66,8 @@ function it_exchange_get_product_type_name( $product_type ) {
  *
  * @since 0.3.2
  * @param string $product_type  slug for the product-type
+ *
+ * @return array
 */
 function it_exchange_get_product_type_options( $product_type ) {
 	if ( $addon = it_exchange_get_addon( $product_type ) )
@@ -75,7 +81,8 @@ function it_exchange_get_product_type_options( $product_type ) {
  *
  * @since 0.3.2
  * @param mixed $post  post object or post id
- * @rturn object IT_Exchange_Product object for passed post
+ *
+ * @return IT_Exchange_Product object for passed post
 */
 function it_exchange_get_product( $post ) {
 	$product = new IT_Exchange_Product( $post );
@@ -88,7 +95,8 @@ function it_exchange_get_product( $post ) {
  * Get IT_Exchange_Products
  *
  * @since 0.3.3
- * @return array  an array of IT_Exchange_Product objects
+ *
+ * @return IT_Exchange_Product[]  an array of IT_Exchange_Product objects
 */
 function it_exchange_get_products( $args=array() ) {
 	$defaults = array(
@@ -141,7 +149,8 @@ function it_exchange_get_products( $args=array() ) {
  * If global $post and passed param are not product ids, it is set to false
  *
  * @since 0.3.8
- * @param integer $product_id
+ * @param int|bool $product_id
+ *
  * @return void
 */
 function it_exchange_set_the_product_id( $product_id=false ) {
@@ -159,6 +168,7 @@ function it_exchange_set_the_product_id( $product_id=false ) {
  * @since 1.4.0
  *
  * @param integer $id the post/product ID
+ *
  * @return boolean true if set, false if no product was found/set
 */
 function it_exchange_set_product( $id ) {
@@ -175,7 +185,8 @@ function it_exchange_set_product( $id ) {
  * Returns the global for the current product's id
  *
  * @since 0.3.8
- * @return mixed product id or false
+ *
+ * @return int|bool product id or false
 */
 function it_exchange_get_the_product_id() {
 	$product_id = empty( $GLOBALS['it_exchange']['product_id'] ) ? false : $GLOBALS['it_exchange']['product_id'];
@@ -187,7 +198,8 @@ function it_exchange_get_the_product_id() {
  *
  * @since 0.4.0
  *
- * @param int $product_id Product ID
+ * @param int|bool $product_id Product ID
+ *
  * @return boolean
 */
 function it_exchange_is_product_available( $product_id=false ) {
@@ -228,7 +240,8 @@ function it_exchange_is_product_available( $product_id=false ) {
  *
  * @since 0.4.0
  *
- * @param int $product_id Product ID
+ * @param int|bool $product_id Product ID
+ *
  * @return boolean
 */
 function it_exchange_is_product_visible( $product_id=false ) {
@@ -252,7 +265,8 @@ function it_exchange_is_product_visible( $product_id=false ) {
  *
  * @param mixed $product the product ID or object
  * @param string $type do you want an array of ids or an array of objects returned
- * @param boolen $only_cleared_for_delivery defaults to true. Only return transactions cleared for delivery or return all
+ * @param bool $only_cleared_for_delivery defaults to true. Only return transactions cleared for delivery or return all
+ *
  * @return array
 */
 function it_exchange_get_transactions_for_product( $product, $type='objects', $only_cleared_for_delivery=true ) {

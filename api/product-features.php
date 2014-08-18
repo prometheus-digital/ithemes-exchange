@@ -13,6 +13,7 @@
  * @param integer $product_id the WordPress post ID for the product
  * @param string $feature_key the slug for the feature
  * @param array $options
+ *
  * @return boolean
 */
 function it_exchange_product_supports_feature( $product_id, $feature_key, $options=array() ) {
@@ -26,6 +27,7 @@ function it_exchange_product_supports_feature( $product_id, $feature_key, $optio
  * @param integer $product_id the WordPress post ID for the product
  * @param string $feature_key the slug for the feature
  * @param array $options
+ *
  * @return boolean
 */
 function it_exchange_product_has_feature( $product_id, $feature_key, $options=array() ) {
@@ -40,6 +42,7 @@ function it_exchange_product_has_feature( $product_id, $feature_key, $options=ar
  * @param string $feature_key the slug for the feature
  * @param mixed $feature_value the value for the feature
  * @param array $options the options for the feature
+ *
  * @return boolean
 */
 function it_exchange_update_product_feature( $product_id, $feature_key, $feature_value, $options=array() ) {
@@ -53,6 +56,7 @@ function it_exchange_update_product_feature( $product_id, $feature_key, $feature
  * @param integer $product_id the WordPress post ID for the product
  * @param string $feature_key the slug for the feature
  * @param array $options
+ *
  * @return mixed the value of the feature
 */
 function it_exchange_get_product_feature( $product_id, $feature_key, $options=array() ) {
@@ -63,8 +67,9 @@ function it_exchange_get_product_feature( $product_id, $feature_key, $options=ar
  * Adds support for a specific product-feature to a specific product-type
  *
  * @since 0.3.8
- * @param string $feature_key the slug for the featuer
+ * @param string $feature_key the slug for the feature
  * @param string $product_type the product-type slug
+ *
  * @return void
 */
 function it_exchange_add_feature_support_to_product_type( $feature_key, $product_type ) {
@@ -80,6 +85,7 @@ function it_exchange_add_feature_support_to_product_type( $feature_key, $product
  * @since 0.3.8
  * @param string $feature_key the slug for the feature
  * @param string $product_type the product-type slug
+ *
  * @return void
 */
 function it_exchange_remove_feature_support_for_product_type( $feature_key, $product_type ) {
@@ -95,6 +101,7 @@ function it_exchange_remove_feature_support_for_product_type( $feature_key, $pro
  *
  * @param string $product_type the product-type slug
  * @param string $feature_key the slug for the feature
+ *
  * @return boolean
 */
 function it_exchange_product_type_supports_feature( $product_type, $feature_key ) {
@@ -113,7 +120,10 @@ function it_exchange_product_type_supports_feature( $product_type, $feature_key 
  * Keeps track of all available product features
  *
  * @since 0.3.8
- * @param slug
+ * @param string $slug
+ * @param string $description
+ * @param array $default_product_types
+ *
  * @return void
 */
 function it_exchange_register_product_feature( $slug, $description='', $default_product_types=array() ) {
@@ -126,6 +136,7 @@ function it_exchange_register_product_feature( $slug, $description='', $default_
  * Returns all registered product_features
  *
  * @since 0.3.8
+ *
  * @return array
 */
 function it_exchange_get_registered_product_features() {
