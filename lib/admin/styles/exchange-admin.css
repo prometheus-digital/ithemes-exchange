@@ -4,6 +4,10 @@
 .it-exchange-admin .wrap ul ul label{font-weight:normal !important;}
 .it-exchange-admin .clearfix:after{content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0;}
 
+/** ----------------------------------------:[ menu ]:------ */
+#adminmenu .wp-submenu a[href|="admin.php?page=it-exchange-addons"],
+#adminmenu .wp-submenu li.current a[href|="admin.php?page=it-exchange-addons"]{ color:#8cc53e; }
+
 /** ----------------------------------------:[ columns ]:--- */
 .it-exchange-admin .columns-wrapper{overflow:hidden;}
 .it-exchange-admin .column{float:left;}
