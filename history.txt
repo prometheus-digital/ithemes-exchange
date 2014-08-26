@@ -1,3 +1,8 @@
+1.10.4 - 2014-08-26 - Glenn Ansley, Lew Ayotte, Timothy Jacobs <http://ironbounddesigns.com/>
+	Fixed bug causing Template Updates nag to appear on every upgrade
+	Updated add/edit product styles for 4.0
+	Changed color of addon-link in admin menu
+	Added DocBlock modifications from Timothy
 1.10.3 - 2014-08-12 - Lew Ayotte, Elise Alley
 	Fix for memory leak in sessions
 1.10.2 - 2014-08-08 - Glenn Ansley, Lew Ayotte, Elise Alley
