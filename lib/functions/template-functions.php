@@ -196,7 +196,7 @@ function activate_updated_template_nag( $versions ) {
 	}
 
 	// Compare version number for last time templates were updated
-	if ( $last_updated > $versions['previous'] )
+	if ( version_compare( $versions['previous'], $last_updated ) < 0 )
 			$updated = true;
 
 	if ( empty( $updated ) )
@@ -220,7 +220,7 @@ function it_exchange_show_updated_template_nag() {
 		update_option( 'it-exchange-hide-template-update-nag', $GLOBALS['it_exchange']['version'] );
 
 	$nag_dismissed = get_option( 'it-exchange-hide-template-update-nag', false );
-	if ( empty( $nag_dismissed ) || $nag_dismissed < $GLOBALS['it_exchange']['version'] ) {
+	if ( empty( $nag_dismissed ) || ( version_compare( $nag_dismissed, $GLOBALS['it_exchange']['version'] ) < 0 ) ) {
 		$codex_url   = 'http://ithemes.com/codex/page/Exchange_Template_Updates';
 		$dismiss_url = add_query_arg( array( 'it-exchange-dismiss-tempate-nag' => 1 ) );
 		include( dirname( dirname( __FILE__) ) . '/admin/views/admin-default-templates-updated-notice.php' );
