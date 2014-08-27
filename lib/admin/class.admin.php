@@ -974,6 +974,7 @@ Order: %s
 		foreach( (array) $currency_options as $cc => $currency ) {
 			$options[$cc] = ucwords( $currency['name'] ) . ' (' . $currency['symbol'] . ')';
 		}
+		asort( $options );
 		return $options;
 	}
 
