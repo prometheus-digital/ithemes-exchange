@@ -18,4 +18,4 @@
 <div class="it-exchange-zip">
 	<?php it_exchange( 'billing', 'zip' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widge_billing_address_purchase_requirement_after_zip_element' ); ?>
+<?php do_action( 'it_exchange_super_widget_billing_address_purchase_requirement_after_zip_element' ); ?>

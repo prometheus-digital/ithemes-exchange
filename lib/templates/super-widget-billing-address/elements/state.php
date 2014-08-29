@@ -18,4 +18,4 @@
 <div class="it-exchange-state">
 	<?php it_exchange( 'billing', 'state' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widge_billing_address_purchase_requirement_after_state_element' ); ?>
+<?php do_action( 'it_exchange_super_widget_billing_address_purchase_requirement_after_state_element' ); ?>

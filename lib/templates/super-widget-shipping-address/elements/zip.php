@@ -18,4 +18,4 @@
 <div class="it-exchange-zip">
 	<?php it_exchange( 'shipping', 'zip' ); ?>
 </div>
-<?php do_action( 'it_exchange_super_widge_shipping_address_purchase_requirement_after_zip_element' ); ?>
+<?php do_action( 'it_exchange_super_widget_shipping_address_purchase_requirement_after_zip_element' ); ?>
