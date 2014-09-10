@@ -27,3 +27,8 @@ include( dirname( __FILE__ ) . '/lib/methods/flat-rate-shipping.php' );
  * This file contains the code needed to register Exchange's Free Shipping Method
 */
 include( dirname( __FILE__ ) . '/lib/methods/free-shipping.php' );
+
+/**
+ * This file includes our template related functions / hooks for template parts
+*/
+include( dirname( __FILE__ ) . '/lib/template-functions.php' );
