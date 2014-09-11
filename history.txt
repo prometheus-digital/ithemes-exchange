@@ -956,3 +956,5 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
+1.10.5 - 2014-09-11 - Packaging Bot (lib/icon-fonts)
+	Add support for ContactBuddy
