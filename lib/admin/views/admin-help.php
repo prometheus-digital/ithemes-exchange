@@ -44,7 +44,7 @@
 		<div class="help-action exchange-paid-support" title="">
 			<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/e32.png' ); ?>" />
 			<p><?php _e( 'Get premium and priority support for Exchange.', 'LION' ); ?></p>
-			<p><a href="http://ithemes.com/exchange/support/" target="_blank"><?php _e( 'Get Premuim Support', 'LION' ); ?></a></p>
+			<p><a href="http://ithemes.com/exchange/support/" target="_blank"><?php _e( 'Get Premium Support', 'LION' ); ?></a></p>
 		</div>
 	</div>
 
