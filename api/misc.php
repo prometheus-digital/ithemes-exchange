@@ -365,7 +365,9 @@ function it_exchange_register_purchase_requirement( $slug, $properties=array() )
 /**
  * Unregister a purchase requirement
  *
- * @since CHANGEME
+ * @since 1.10.6
+ *
+ * @param string $slug the purchase requirement slug that we want to unregister
  *
  * @return void
 */

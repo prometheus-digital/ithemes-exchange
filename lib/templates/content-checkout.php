@@ -3,7 +3,7 @@
  * Default template part for the checkout page.
  *
  * @since 0.4.0
- * @version CHANGEME
+ * @version 1.10.6
  * @link http://ithemes.com/codex/page/Exchange_Template_Updates* @updated 1.0.0
  * @package IT_Exchange
  *

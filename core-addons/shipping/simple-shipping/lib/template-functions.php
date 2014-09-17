@@ -1,9 +1,8 @@
 <?php
-
 /**
  * Adds shipping-address as a valid super-widget state
  *
- * @since CHANGEME
+ * @since unknown
  *
  * @param array $valid_states existing valid states
  * @return array
