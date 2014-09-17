@@ -363,6 +363,19 @@ function it_exchange_register_purchase_requirement( $slug, $properties=array() )
 }
 
 /**
+ * Unregister a purchase requirement
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_unregister_purchase_requirement( $slug ) {
+	if ( isset( $GLOBALS['it_exchange']['purchase-requirements'][$slug] ) ) {
+		unset( $GLOBALS['it_exchange']['purchase-requirements'][$slug] );
+	}
+}
+
+/**
  * Grab all registered purchase requirements
  *
  * @since 1.2.0
@@ -392,12 +405,14 @@ function it_exchange_get_purchase_requirements() {
 function it_exchange_get_next_purchase_requirement() {
 	$requirements = it_exchange_get_purchase_requirements();
 
+	// Loop through each purchase requirement and check their callback to see if it's requirement is met
 	foreach( (array) $requirements as $slug => $requirement ) {
 		if ( is_callable( $requirement['requirement-met'] ) )
 			$requirement_met = (boolean) call_user_func( $requirement['requirement-met'] );
 		else
 			$requirement_met = true;
 
+		// If the requirement is not met, return the purchase requirement details
 		if ( ! $requirement_met )
 			return $requirement;
 	}
@@ -440,6 +455,7 @@ function it_exchange_get_next_purchase_requirement_property( $prop ) {
 	if ( 'sw-template-part' == $prop && ! $property )
 		$property = 'checkout';
 
+	$property = apply_filters( 'it_exchange_get_next_purchase_requirement_property', $property, $prop );
 	return $property;
 }
 

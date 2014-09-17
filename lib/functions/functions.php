@@ -127,7 +127,7 @@ function it_exchange_load_public_scripts( $current_view ) {
 		wp_enqueue_style( 'it-exchange-autocomplete-style' );
 
 		// General Checkout
-		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/checkout-page.js' );
+		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/checkout-page.js', array( 'it-exchange-event-manager', 'jquery' ) );
 		wp_enqueue_script( 'it-exchange-checkout-page', $script, array( 'jquery' ), false, true );
 
 		// Load Logged In purchase requirement JS if not logged in and on checkout page.
