@@ -1,6 +1,6 @@
 [submodule "lib/classes"]
 	path = lib/classes
-	url = git@git.gaarai.com:classes
+	url = git@bitbucket.org:ithemes/classes
 [submodule "lib/icon-fonts"]
 	path = lib/icon-fonts
-	url = git@git.gaarai.com:icon-fonts
+	url = git@bitbucket.org:ithemes/icon-fonts
