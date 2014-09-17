@@ -1,3 +1,17 @@
+1.10.6 - 2014-09-17 - Glenn Ansley, Lew Ayotte, Ty Carlson, Elise Alley
+	Moved css for Add-ons menu styling to global admin stylesheet from sheet for exchange pages only.
+	Changed Swiss Frank symbol from 'Fr.' to 'CHF'
+	Core changes to support a unified checkout page in the future:
+		- Moved conditional logic to determine if purchase requirement template parts are included out of template part files.
+		- Added filters to hide the purchase requirements notification
+		- Added new function to unregister purchase requirements
+	Changed 'Premuim' to 'Premium' and 'physcial' to 'physical' on Help page
+	Added shipping-address as a valid super-widget state when simple shipping is enabled
+	Added filter to surpress add-to-cart buttons
+	Fixed hook typos in SW template parts
+	Fixed JS error in lib/assets/js/edit-product.js when itExchange was not defined
+	Sort the Default Currency options by alpha
+	Make options in Settings dropdown for symbol position use the selected symbol
 1.10.5 - 2014-09-11 - Packaging Bot (lib/icon-fonts submodule) This version was not pushed to wordpress.org)
 	Added support for ContactBuddy
 1.10.4 - 2014-08-26 - Glenn Ansley, Lew Ayotte, Timothy Jacobs <http://ironbounddesigns.com/>
