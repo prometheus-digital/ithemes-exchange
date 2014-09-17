@@ -43,7 +43,7 @@ function it_exchange_get_currencies() {
 		'BZD' => array( 'symbol' => 'BZ$', 'name' => __( 'Belize dollar', 'LION' ) ),
 		'CAD' => array( 'symbol' => '$', 'name' => __( 'Canadian dollar', 'LION' ) ),
 		'CDF' => array( 'symbol' => 'F', 'name' => __( 'Congolese franc', 'LION' ) ),
-		'CHF' => array( 'symbol' => 'Fr.', 'name' => __( 'Swiss franc', 'LION' ) ),
+		'CHF' => array( 'symbol' => 'CHF', 'name' => __( 'Swiss franc', 'LION' ) ),
 		'CLP' => array( 'symbol' => '$', 'name' => __( 'Chilean peso', 'LION' ) ),
 		'CNY' => array( 'symbol' => '&#165;', 'name' => __( 'Chinese/Yuan renminbi', 'LION' ) ),
 		'COP' => array( 'symbol' => 'Col$', 'name' => __( 'Colombian peso', 'LION' ) ),
