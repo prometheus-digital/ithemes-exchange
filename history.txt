@@ -1,3 +1,5 @@
+1.10.5 - 2014-09-11 - Packaging Bot (lib/icon-fonts submodule) This version was not pushed to wordpress.org)
+	Added support for ContactBuddy
 1.10.4 - 2014-08-26 - Glenn Ansley, Lew Ayotte, Timothy Jacobs <http://ironbounddesigns.com/>
 	Fixed bug causing Template Updates nag to appear on every upgrade
 	Updated add/edit product styles for 4.0
@@ -956,5 +958,3 @@
 	API Revamp
 0.1.0 - Glenn Ansley
 	Proof of Concept
-1.10.5 - 2014-09-11 - Packaging Bot (lib/icon-fonts)
-	Add support for ContactBuddy
