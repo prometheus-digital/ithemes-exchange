@@ -86,7 +86,9 @@ function it_exchange_get_cart_products( $options=array() ) {
  * @return void
 */
 function it_exchange_add_cart_product( $cart_product_id, $product ) {
-	it_exchange_add_session_data( 'products', array( $cart_product_id => $product ) );
+	if ( !empty( $cart_product_id ) ) {
+		it_exchange_add_session_data( 'products', array( $cart_product_id => $product ) );
+	}
 	do_action( 'it_exchange_add_cart_product', $product );
 }
 
@@ -102,7 +104,7 @@ function it_exchange_update_cart_product( $cart_product_id, $product ) {
 	if ( isset( $products[$cart_product_id] ) ) {
 		$products[$cart_product_id] = $product;
 		it_exchange_update_session_data( 'products', $products );
-	} else {
+	} else if ( !empty( $cart_product_id ) ) {
 		it_exchange_add_cart_product( $cart_product_id, $product );
 	}
 	do_action( 'it_exchange_update_cart_product', $cart_product_id, $product, $products );
