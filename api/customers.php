@@ -171,6 +171,18 @@ function handle_it_exchange_save_profile_action() {
 
 	// Grab action and process it.
 	if ( isset( $_REQUEST['it-exchange-save-profile'] ) ) {
+		
+		if ( ! $customer_id = it_exchange_get_current_customer_id() ) {
+			return false;
+		}
+
+		if ( empty( $_POST['_profile_nonce'] ) ) {
+			return false;
+		}
+
+		if ( ! wp_verify_nonce( $_POST['_profile_nonce'], 'it-exchange-update-profile-' . $customer_id ) ) {
+			return false;
+		}
 
 		//WordPress builtin
 		require_once(ABSPATH . 'wp-admin/includes/user.php');
