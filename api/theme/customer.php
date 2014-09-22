@@ -19,7 +19,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @var string $_customer
 	 * @since 0.4.0
 	*/
-	private $_customer = '';
+	protected $_customer = '';
 
 	/**
 	 * Maps api tags to methods
