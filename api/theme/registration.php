@@ -94,7 +94,8 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 
 		$default_class = it_exchange_in_superwidget() ? 'it-exchange-sw-register' : 'it-exchange-register';
 		$class= empty( $options['class'] ) ? $default_class : $default_class . ' ' . esc_attr( $options['class'] );
-		$output = '<form class="' . $class . '" action="" method="post" >';
+		$output  = '<form class="' . $class . '" action="" method="post" >';
+		$output .= wp_nonce_field( 'it-exchange-register-customer', '_exchange_register_nonce', true, true );
 		return $output;
 	}
 
