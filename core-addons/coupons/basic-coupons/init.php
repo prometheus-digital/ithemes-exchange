@@ -205,15 +205,15 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	 * Your addon should output an it_exchange_add_message( 'error', $message )
 	 * letting the user know the coupon was not applied.
 	 *
-	 * @param $result  bool
-	 * @param $options array
-	 * @param $coupon  IT_Exchange_Coupon
+	 * @param $addon_result  bool
+	 * @param $options       array
+	 * @param $coupon        IT_Exchange_Coupon
 	 */
-	$result = apply_filters( 'it_exchange_basic_coupons_apply_coupon_to_cart', $result, $options, $coupon );
+	$addon_result = apply_filters( 'it_exchange_basic_coupons_apply_coupon_to_cart', null, $options, $coupon );
 
-	if ( ! $result ) {
+	if ( $addon_result === false ) {
 
-		return $result;
+		return $addon_result;
 	}
 
 	// Format data for session
