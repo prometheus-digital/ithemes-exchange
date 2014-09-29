@@ -99,13 +99,14 @@ function it_exchange_is_shipping_provider_registered( $slug ) {
  *
  * @return boolean
 */
-function it_exchange_register_shipping_method( $slug, $class ) {
+function it_exchange_register_shipping_method( $slug, $class, $args=array() ) {
 	// Validate opitons
 	if ( ! class_exists( $class ) )
 		return false;
 
 	// Store the initiated class in our global
-	$GLOBALS['it_exchange']['shipping']['methods'][$slug] = $class;
+	$GLOBALS['it_exchange']['shipping']['methods'][$slug]['class'] = $class;
+	$GLOBALS['it_exchange']['shipping']['methods'][$slug]['args'] = $args;
 
 	// Return the object
 	return true;
@@ -128,14 +129,15 @@ function it_exchange_get_registered_shipping_method( $slug, $product_id=false ) 
 		return false;
 
 	// Retrieve the method class
-	$class = $GLOBALS['it_exchange']['shipping']['methods'][$slug];
+	$class = $GLOBALS['it_exchange']['shipping']['methods'][$slug]['class'];
+	$args = $GLOBALS['it_exchange']['shipping']['methods'][$slug]['args'];
 
 	// Make sure we have a class index and it corresponds to a defined class
 	if ( empty( $class ) || ! class_exists( $class ) )
 		return false;
 
 	// Init the class
-	return new $class( $product_id );
+	return new $class( $product_id, $args );
 
 	// Return false if no object was found
 	return false;
