@@ -406,7 +406,7 @@ function it_exchange_get_available_shipping_methods_for_cart( $only_return_metho
 		}
 	}
 
-	return $methods;
+	return apply_filters( 'it_exchange_get_available_shipping_methods_for_cart', $methods, $only_return_methods_available_to_all_cart_products );
 }
 
 /**
