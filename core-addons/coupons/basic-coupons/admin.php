@@ -114,7 +114,21 @@ function it_exchange_basic_coupons_save_coupon() {
 	unset( $data['frequency-length'] );
 	unset( $data['frequency-units'] );
 
+	/**
+	 * Allow for addon's to save additional coupon data.
+	 *
+	 * @param $data array
+	 */
+	$data = apply_filters( 'it_exchange_basic_coupons_save_coupon', $data );
+
 	if ( $post_id = it_exchange_add_coupon( $data ) ) {
+		/**
+		 * Fires when a coupon is successfully saved.
+		 *
+		 * @param $post_id int
+		 * @param $data    array
+		 */
+		do_action( 'it_exchange_basic_coupons_saved_coupon', $post_id, $data );
 		wp_safe_redirect( add_query_arg( array( 'post_type' => 'it_exchange_coupon' ), get_admin_url() . 'edit.php' ) );
 	}
 }
@@ -143,6 +157,8 @@ function it_exchange_basic_coupons_data_is_valid() {
 		it_exchange_add_message( 'error', __( 'Please select a product.', 'LION' ) );
 	if ( ! empty( $data['limit-frequency'] ) && ! is_numeric( $data['frequency-times'] ) && ! is_numeric( $data['frequency-length'] ) )
 		it_exchange_add_message( 'error', __( 'Please select a frequency limitation', 'LION' ) );
+
+	do_action( 'it_exchange_basic_coupons_data_is_valid', $data );
 
 	return ! it_exchange_has_messages( 'error' );
 }
@@ -275,6 +291,9 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		?>
 		<div class="it-exchange-add-basic-coupon">
 			<div class="fields">
+
+				<?php do_action( 'it_exchange_basics_coupon_coupon_edit_screen_begin_fields', $form ); ?>
+
 				<div class="field">
 					<label for="name"><?php _e( 'Name', 'LION' ); ?> <span class="tip" title="<?php _e( 'What do you want to call this coupon? This is just for your reference.', 'LION' ); ?>">i</span></label>
 					<?php $form->add_text_box( 'name' ); ?>
@@ -365,6 +384,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 					?>
 				</div>
 
+				<?php do_action( 'it_exchange_basics_coupon_coupon_edit_screen_end_fields', $form ); ?>
 
 				<div class="field">
 					<?php $form->add_submit( 'cancel', array( 'class' => 'button-large button', 'value' => __( 'Cancel', 'LION' ) ) ); ?>

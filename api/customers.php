@@ -212,11 +212,11 @@ add_action( 'template_redirect', 'handle_it_exchange_save_profile_action', 5 );
 */
 function it_exchange_register_user( $user_data=array() ) {
 
-	if ( empty( $_REQUEST['_exchange_register_nonce'] ) ) {
+	if ( empty( $_POST['_exchange_register_nonce'] ) ) {
 		return new WP_Error( 'not-allowed', __( 'Action not allowed', 'LION' ) );;
 	}
 
-	if ( ! wp_verify_nonce( $_REQUEST['_exchange_register_nonce'], 'it-exchange-register-customer' ) ) {
+	if ( ! wp_verify_nonce( $_POST['_exchange_register_nonce'], 'it-exchange-register-customer' ) ) {
 		return new WP_Error( 'not-allowed', __( 'Action not allowed', 'LION' ) );
 	}
 

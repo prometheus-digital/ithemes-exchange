@@ -197,6 +197,25 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 		return false;
 	}
 
+	/**
+	 * Fires before a coupon is applied to the cart.
+	 *
+	 * If false is returned, the coupon won't be applied.
+	 *
+	 * Your addon should output an it_exchange_add_message( 'error', $message )
+	 * letting the user know the coupon was not applied.
+	 *
+	 * @param $addon_result  bool
+	 * @param $options       array
+	 * @param $coupon        IT_Exchange_Coupon
+	 */
+	$addon_result = apply_filters( 'it_exchange_basic_coupons_apply_coupon_to_cart', null, $options, $coupon );
+
+	if ( $addon_result === false ) {
+
+		return $addon_result;
+	}
+
 	// Format data for session
 	$coupon = array(
 		'id'            => $coupon->ID,
@@ -400,7 +419,7 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount=false,
 		if ( ! empty( $coupon->product_id ) ) {
 			$cart_products = it_exchange_get_cart_products();
 			foreach( (array) it_exchange_get_cart_products() as $cart_product ) {
-				if ( ! empty( $cart_product['product_id'] ) && ( empty( $coupon->limit_product ) || ( ! empty( $coupon->limit_product ) && $cart_product['product_id'] == $coupon->product_id ) ) ) {
+				if ( it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $coupon ) ) {
 					$base_price = it_exchange_get_cart_product_base_price( $cart_product, false );
 					$product_discount = ( '%' == $coupon->amount_type ) ? $discount + ( ( $coupon->amount_number / 100 ) * $base_price ) : $discount + $coupon->amount_number;
 					$product_discount = $product_discount * $cart_product['count'];
@@ -419,6 +438,36 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount=false,
 	return $discount;
 }
 add_filter( 'it_exchange_get_total_discount_for_cart', 'it_exchange_basic_coupons_get_total_discount_for_cart', 10, 2 );
+
+/**
+ * Determine if this is a valid product for a certain coupon.
+ *
+ * @since CHANGEME 
+ *
+ * @param $cart_product object
+ * @param $coupon       IT_Exchange_Coupon
+ *
+ * @return bool
+ */
+function it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $coupon ) {
+	if ( ! empty( $cart_product['product_id'] ) && ( empty( $coupon->limit_product ) ) ) {
+		$valid = true;
+	}
+	elseif	( ! empty( $coupon->limit_product ) && $cart_product['product_id'] == $coupon->product_id ) {
+		$valid = true;
+	} else {
+		$valid = false;
+	}
+
+	/**
+	 * Can be used by addons to modify if a target product is valid for a coupon.
+	 *
+	 * @param $valid        bool
+	 * @param $cart_product object
+	 * @param $coupon       IT_Exchange_Coupon
+	 */
+	return apply_filters( 'it_exchange_basic_coupons_valid_product_for_coupon', $valid, $cart_product, $coupon );
+}
 
 /**
  * Reduces coupon quanity by 1 if coupon was applied to transaction and coupon is tracking usage

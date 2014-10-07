@@ -30,6 +30,7 @@ function it_exchange_register_addon( $slug, $params ) {
 	$description  = empty( $params['description'] ) ? ''      : $params['description'];
 	$file         = empty( $params['file'] )        ? false   : $params['file'];
 	$options      = empty( $params['options'] )     ? array() : (array) $params['options'];
+	$basename     = empty( $params['basename'] )    ? false   : $params['basename'];
 
 	// Basic Validation
 	$slug   = empty( $slug )        ? false : sanitize_key( $slug );
@@ -64,7 +65,8 @@ function it_exchange_register_addon( $slug, $params ) {
 		'description' 	=> $description,
 		'file' 			=> $file,
 		'options' 		=> $options,
-	) );
+		'basename'      => $basename,
+	), $params );
 }
 
 /**

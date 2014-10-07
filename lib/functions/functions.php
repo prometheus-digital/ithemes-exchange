@@ -1490,8 +1490,8 @@ function it_exchange_fix_bad_data_in_carts( $versions ) {
 	global $wpdb;
 
 	// Abandon if already run
-	$updated = get_option( 'it_exchange_bad_cart_data_fixed' );
-	if ( ! empty( $updated ) ) {
+	delete_option( 'it_exchange_bad_cart_data_fixed' );
+	if ( version_compare( $versions['previous'], 'CHANGEME', '>=' ) ) {
 		return;
 	}
 
@@ -1505,9 +1505,6 @@ function it_exchange_fix_bad_data_in_carts( $versions ) {
 	// Delete all cached carts
 	$q = $wpdb->prepare( 'DELETE FROM ' . $wpdb->usermeta . ' WHERE meta_key = %s', '_it_exchange_cached_cart' );
 	$wpdb->query( $q );
-
-	// Flag as updated
-	$updated = update_option( 'it_exchange_bad_cart_data_fixed', true );
 }
 add_action( 'it_exchange_version_updated', 'it_exchange_fix_bad_data_in_carts' );
 
