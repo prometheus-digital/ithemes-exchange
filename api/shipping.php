@@ -447,7 +447,9 @@ function it_exchange_get_cart_shipping_cost( $shipping_method=false, $format_pri
 
 		$cart_cost = $cart_cost + it_exchange_get_shipping_method_cost_for_cart_item( $shipping_method, $cart_product );
 	}
-	return empty( $format_price ) ? $cart_cost : it_exchange_format_price( $cart_cost );
+	$cart_cost = empty( $format_price ) ? $cart_cost : it_exchange_format_price( $cart_cost );
+	
+	return apply_filters( 'it_exchange_get_cart_shipping_cost', $cart_cost, $cart_shipping_method, $cart_products, $format_price );
 }
 
 /**
@@ -469,7 +471,8 @@ function it_exchange_get_shipping_method_cost_for_cart_item( $method_slug, $cart
 	$cost = $method->get_shipping_cost_for_product( $cart_product );
 	$cost = empty( $cost ) ? 0 : $cost;
 
-	return empty( $format_price ) ? $cost : it_exchange_format_price( $cost );
+	$cost = empty( $format_price ) ? $cost : it_exchange_format_price( $cost );
+	return apply_filters( 'it_exchange_get_shipping_method_cost_for_cart_item', $cost, $method_slug, $cart_product, $format_price );
 }
 
 /**
