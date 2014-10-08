@@ -672,6 +672,25 @@ function it_exchange_get_cart_products_count( $true_count=false ) {
 }
 
 /**
+ * Return total weight for cart
+ *
+ * @since CHANGEME
+ *
+ * @return float
+*/
+function it_exchange_get_cart_weight() {
+	$weight = 0;
+	$products = it_exchange_get_cart_products();
+	if ( !empty( $products ) ) {
+		foreach( $products as $product ) {
+	        $pm = get_post_meta( $product['product_id'], '_it_exchange_core_weight_dimensions', true );
+			$weight += empty( $pm['weight'] ) ? 0 : $pm['weight'];
+		}
+	}
+	return is_numeric( $weight ) ? $weight : 0;
+}
+
+/**
  * Returns the base_price for the cart product
  *
  * Other add-ons may modify this on the fly based on the product's itemized_data and additional_data arrays
