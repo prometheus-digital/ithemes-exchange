@@ -463,6 +463,20 @@ function it_exchange_logout_guest_checkout_session() {
 add_action( 'template_redirect', 'it_exchange_logout_guest_checkout_session', 1 );
 
 /**
+ * Logout Guest user after hitting confirmation page.
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_logout_guest_checkout_session_on_confirmation_page() {
+	if ( it_exchange_is_page( 'confirmation' ) && it_exchange_doing_guest_checkout() ) {
+		it_exchange_kill_guest_checkout_session();
+	}
+}
+add_action( 'wp_footer', 'it_exchange_logout_guest_checkout_session_on_confirmation_page' );
+
+/**
  * Allow downloads to be served regardless of the requirement to be logged in if user checkout out as a guest
  *
  * @since 1.6.0
@@ -553,4 +567,3 @@ function it_exchange_guest_checkout_modify_confirmation_email_address( $to_email
 	return is_email( $transaction->customer_id ) ? $transaction->customer_id : '';
 }
 add_filter( 'it_exchange_send_purchase_emails_to', 'it_exchange_guest_checkout_modify_confirmation_email_address', 10, 2 );
-
