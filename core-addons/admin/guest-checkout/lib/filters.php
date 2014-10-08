@@ -417,7 +417,7 @@ add_filter( 'it_exchange_get_transaction_customer', 'it_exchange_guest_checkout_
 */
 function it_exchange_guest_checkout_modify_customer( $customer ) {
 
-	if ( ! it_exchange_doing_guest_checkout() || is_admin() )
+	if ( ! it_exchange_doing_guest_checkout() || ( is_admin() && ! defined( 'DOING_AJAX' ) ) || ( is_admin() && defined( 'DOING_AJAX' ) && ! DOING_AJAX ) )
 		return $customer;
 
 	$email = it_exchange_get_cart_data( 'guest-checkout-user' );
