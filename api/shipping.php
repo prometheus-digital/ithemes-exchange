@@ -71,9 +71,6 @@ function it_exchange_get_registered_shipping_provider( $slug ) {
 
 	// Init the class
 	return new IT_Exchange_Shipping_Provider( $slug, $options );
-
-	// Return false if no object was found
-	return false;
 }
 
 /**
