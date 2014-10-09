@@ -56,6 +56,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			$this->set_pages();
 			$this->set_using_permalinks();
 			$this->set_valid_states();
+			add_action( 'template_redirect', array( $this, 'load_ajax' ), 1 );
 			add_action( 'template_redirect', array( $this, 'set_state' ), 11 );
 		}
 	}
@@ -88,7 +89,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		// Some JS we're going to need
 		?>
 		<script type="text/javascript">
-			var itExchangeSWAjaxURL           = '<?php echo admin_url( 'admin-ajax.php' ) . '?action=it-exchange-sw&it-exchange-sw-ajax=1';?>';
+			var itExchangeSWAjaxURL           = '<?php echo esc_js( get_home_url() . '/?it-exchange-sw-ajax=1' );?>';
 			var itExchangeSWState             = '<?php echo esc_js( $this->get_state() ); ?>';
 			var itExchangeSWOnProductPage     = '<?php echo esc_js( $product_id ); ?>';
 			var itExchangeSWMultiItemCart     = '<?php echo esc_js( it_exchange_is_multi_item_cart_allowed() ); ?>';
@@ -194,6 +195,20 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	function form($instance) {
 		echo '<p class="no-options-widget">' . __('There are no options for this widget.') . '</p>';
 		return 'noform';
+	}
+
+	/**
+	 * Load the ajax script if requested
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	*/
+	function load_ajax() {
+		if ( ! empty( $_GET['it-exchange-sw-ajax'] ) ) {
+			include( dirname( __FILE__ ) . '/ajax.php' );
+			die();
+		}
 	}
 
 	/**
@@ -314,19 +329,3 @@ add_action( 'widgets_init', 'it_exchange_register_super_widget' );
 function it_exchange_in_superwidget() {
 	return isset( $GLOBALS['it_exchange']['in_superwidget'] );
 }
-
-/**
- * Load the ajax script if requested
- *
- * @since 0.4.0
- *
- * @return void
-*/
-function it_exchange_superwidget_load_ajax() {
-	if ( ! empty( $_GET['it-exchange-sw-ajax'] ) ) {
-		include( dirname( __FILE__ ) . '/ajax.php' );
-		die();
-	}
-}
-add_action( 'wp_ajax_it-exchange-sw', 'it_exchange_superwidget_load_ajax' );
-add_action( 'wp_ajax_nopriv_it-exchange-sw', 'it_exchange_superwidget_load_ajax' );
