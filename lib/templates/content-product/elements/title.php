@@ -18,7 +18,7 @@
 <?php if ( it_exchange( 'product', 'has-title' ) ) : ?>
 	<?php do_action( 'it_exchange_content_product_before_title_element' ); ?>
 	<div class="it-exchange-product-title">
-		<p><?php it_exchange( 'product', 'title' ); ?></p>
+		<?php it_exchange( 'product', 'title' ); ?>
 	</div>
 	<?php do_action( 'it_exchange_content_product_after_title_element' ); ?>
 <?php endif; ?>
