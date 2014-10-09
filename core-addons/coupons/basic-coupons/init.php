@@ -442,7 +442,7 @@ add_filter( 'it_exchange_get_total_discount_for_cart', 'it_exchange_basic_coupon
 /**
  * Determine if this is a valid product for a certain coupon.
  *
- * @since CHANGEME 
+ * @since 1.10.6
  *
  * @param $cart_product object
  * @param $coupon       IT_Exchange_Coupon
