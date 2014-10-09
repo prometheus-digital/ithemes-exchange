@@ -465,7 +465,7 @@ add_action( 'template_redirect', 'it_exchange_logout_guest_checkout_session', 1 
 /**
  * Logout Guest user after hitting confirmation page.
  *
- * @since CHANGEME
+ * @since 1.10.6
  *
  * @return void
 */

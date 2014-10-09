@@ -1491,7 +1491,7 @@ function it_exchange_fix_bad_data_in_carts( $versions ) {
 
 	// Abandon if already run
 	delete_option( 'it_exchange_bad_cart_data_fixed' );
-	if ( version_compare( $versions['previous'], 'CHANGEME', '>=' ) ) {
+	if ( version_compare( $versions['previous'], '1.10.6', '>=' ) ) {
 		return;
 	}
 
