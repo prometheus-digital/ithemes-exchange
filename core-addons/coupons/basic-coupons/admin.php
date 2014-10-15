@@ -174,14 +174,14 @@ function it_exchange_basic_coupons_add_menu_item() {
 	if ( ! empty( $_GET['page'] ) && 'it-exchange-add-basic-coupon' == $_GET['page'] ) {
 		$slug = 'it-exchange-add-basic-coupon';
 		$func = 'it_exchange_basic_coupons_print_add_edit_coupon_screen';
-		add_submenu_page( 'it-exchange', __( 'Add Coupon', 'LION' ), __( 'Add Coupon', 'LION' ), 'update_plugins', $slug, $func );
+		add_submenu_page( 'it-exchange', __( 'Add Coupon', 'LION' ), __( 'Add Coupon', 'LION' ), 'manage_options', $slug, $func );
 	} else if ( ! empty( $_GET['page'] ) && 'it-exchange-edit-basic-coupon' == $_GET['page'] ) {
 		$slug = 'it-exchange-edit-basic-coupon';
 		$func = 'it_exchange_basic_coupons_print_add_edit_coupon_screen';
-		add_submenu_page( 'it-exchange', __( 'Edit Coupon', 'LION' ), __( 'Edit Coupon', 'LION' ), 'update_plugins', $slug, $func );
+		add_submenu_page( 'it-exchange', __( 'Edit Coupon', 'LION' ), __( 'Edit Coupon', 'LION' ), 'manage_options', $slug, $func );
 	}
 	$url = add_query_arg( array( 'post_type' => 'it_exchange_coupon' ), 'edit.php' );
-	add_submenu_page( 'it-exchange', __( 'Coupons', 'LION' ), __( 'Coupons', 'LION' ), 'update_plugins', $url );
+	add_submenu_page( 'it-exchange', __( 'Coupons', 'LION' ), __( 'Coupons', 'LION' ), 'manage_options', $url );
 }
 add_action( 'admin_menu', 'it_exchange_basic_coupons_add_menu_item' );
 

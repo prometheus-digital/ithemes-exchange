@@ -61,7 +61,7 @@ if ( !function_exists( 'it_exchange_tags_add_menu_item' ) ) {
 	*/
 	function it_exchange_tags_add_menu_item() {
 		$url = "edit-tags.php?taxonomy=it_exchange_tag&amp;post_type=it_exchange_prod";
-		add_submenu_page( 'it-exchange', __( 'Product Tags', 'LION' ), __( 'Product Tags', 'LION' ), 'update_plugins', $url );
+		add_submenu_page( 'it-exchange', __( 'Product Tags', 'LION' ), __( 'Product Tags', 'LION' ), 'manage_options', $url );
 	}
 	add_action( 'admin_menu', 'it_exchange_tags_add_menu_item' );
 

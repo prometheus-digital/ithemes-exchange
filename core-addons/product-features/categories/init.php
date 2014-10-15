@@ -81,7 +81,7 @@ if ( !function_exists( 'it_exchange_categories_addon_add_menu_item' ) ) {
 	*/
 	function it_exchange_categories_addon_add_menu_item() {
 		$url = "edit-tags.php?taxonomy=it_exchange_category&amp;post_type=it_exchange_prod";
-		add_submenu_page( 'it-exchange', __( 'Product Categories', 'LION' ), __( 'Product Categories', 'LION' ), 'update_plugins', $url );
+		add_submenu_page( 'it-exchange', __( 'Product Categories', 'LION' ), __( 'Product Categories', 'LION' ), 'manage_options', $url );
 	}
 	add_action( 'admin_menu', 'it_exchange_categories_addon_add_menu_item' );
 
