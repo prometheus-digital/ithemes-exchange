@@ -1,4 +1,10 @@
-1.10.6 - 2014-09-17 - Glenn Ansley, Lew Ayotte, Ty Carlson, Elise Alley
+1.10.7 - 2014-10-16 - Glenn Ansley, Lew Ayotte, Elise Alley
+	Updated select-to-autocomplete JS from 1.0.5 to 1.0.9
+	Replaced update_plugins with manage_options to fix missing coupons and taxonomy menu items from WPMS installs.
+	Fixed bug breaking the ability to save billing as shipping when using Guest Checkout
+	Fixed bug in it_exchange_db_delete_all_sessions with miscalculated substring
+	Added title template part for content-product elements
+1.10.6 - 2014-10-09 - Glenn Ansley, Lew Ayotte, Ty Carlson, Elise Alley
 	Added function that logs guest user out once they hit the confirmation page.
 	Add DOING_AJAX checks to is_admin conditional in guest checkout
 	Check for non-empty product ID and product arrays before adding/updating session data
