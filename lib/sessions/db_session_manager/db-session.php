@@ -184,7 +184,7 @@ function it_exchange_db_delete_all_sessions() {
 
 		foreach( $expiration_keys as $expiration ) {
 			// Get the session ID by parsing the option_name
-			$session_id = substr( $expiration->option_name, 20 );
+			$session_id = substr( $expiration->option_name, 24 );
 
 			$expired_sessions[] = $expiration->option_name;
 			$expired_sessions[] = "_it_exchange_db_session_$session_id";

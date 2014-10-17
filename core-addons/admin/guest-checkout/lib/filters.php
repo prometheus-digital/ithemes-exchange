@@ -181,6 +181,11 @@ function it_exchange_guest_checkout_handle_update_billing_address( $address ) {
 	// Add the address to our cart
 	it_exchange_update_cart_data( 'guest-billing-address', $address );
 
+	// Update shipping too if checked
+	if ( ! empty( $_REQUEST['it-exchange-ship-to-billing'] ) ) {
+		it_exchange_update_cart_data( 'guest-shipping-address', $address );
+	}
+
 	// Return false so that the customer address doesn't get updated
 	return false;
 }
