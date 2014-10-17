@@ -18,7 +18,7 @@ class IT_Exchange_Shipping {
 	function maybe_init() {
 		$enabled_shipping_addons = (boolean) it_exchange_get_enabled_addons( array( 'category' => 'shipping' ) );
 		if ( !$enabled_shipping_addons )
-			return;
+			return; //If not shipping addons, just exit this class
 
 		// Init core shipping features
 		include_once( dirname( __FILE__ ) . '/shipping-features/init.php' );
