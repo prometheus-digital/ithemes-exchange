@@ -26,6 +26,7 @@ function it_exchange_get_country_states( $options=array() ) {
 		'CA' => 'it_exchange_get_country_states_for_ca',
 		'DE' => 'it_exchange_get_country_states_for_de',
 		'ES' => 'it_exchange_get_country_states_for_es',
+		'MX' => 'it_exchange_get_country_states_for_mx',
 		'FR' => 'it_exchange_get_country_states_for_fr',
 		'NL' => 'it_exchange_get_country_states_for_nl',
 		'US' => 'it_exchange_get_country_states_for_us',
@@ -278,6 +279,56 @@ function it_exchange_get_country_states_for_es( $options=array() ) {
 	);
 
 	$states = apply_filters( 'it_exchange_get_country_states_for_es', $states, $options );
+	return $states;
+}
+
+/**
+* Returns an array of states for Mexico
+*
+* Props: Darryl Clark
+*
+* @since CHANGEME
+*
+* @return array
+*/
+function it_exchange_get_country_states_for_mx( $options=array() ) {
+	// States
+	$states = array(
+		'AGU' => __( 'Aguascalientes', 'LION' ),
+		'BCN' => __( 'Baja California', 'LION' ),
+		'BCS' => __( 'Baja California Sur', 'LION' ),
+		'CAM' => __( 'Campeche', 'LION' ),
+		'CHP' => __( 'Chiapas', 'LION' ),
+		'CHH' => __( 'Chihuahua', 'LION' ),
+		'COA' => __( 'Coahuila', 'LION' ),
+		'COL' => __( 'Colima', 'LION' ),
+		'DIF' => __( 'Distrito Federal', 'LION' ),
+		'DUR' => __( 'Durango', 'LION' ),
+		'GUA' => __( 'Guanajuato', 'LION' ),
+		'GRO' => __( 'Guerrero', 'LION' ),
+		'HID' => __( 'Hidalgo', 'LION' ),
+		'JAL' => __( 'Jalisco', 'LION' ),
+		'MEX' => __( 'Estado de México', 'LION' ),
+		'MIC' => __( 'Michoacán', 'LION' ),
+		'MOR' => __( 'Morelos', 'LION' ),
+		'NAY' => __( 'Nayarit', 'LION' ),
+		'NLE' => __( 'Nuevo León', 'LION' ),
+		'OAX' => __( 'Oaxaca', 'LION' ),
+		'PUE' => __( 'Puebla', 'LION' ),
+		'QRO' => __( 'Querétaro', 'LION' ),
+		'ROO' => __( 'Quintana Roo', 'LION' ),
+		'SLP' => __( 'San Luis Potosí', 'LION' ),
+		'SIN' => __( 'Sinaloa', 'LION' ),
+		'SON' => __( 'Sonora', 'LION' ),
+		'TAB' => __( 'Tabasco', 'LION' ),
+		'TAM' => __( 'Tamaulipas', 'LION' ),
+		'TLA' => __( 'Tlaxcala', 'LION' ),
+		'VER' => __( 'Veracruz', 'LION' ),
+		'YUC' => __( 'Yucatán', 'LION' ),
+		'ZAC' => __( 'Zacatecas', 'LION' ),
+	);
+
+	$states = apply_filters( 'it_exchange_get_country_states_for_mx', $states, $options );
 	return $states;
 }
 
