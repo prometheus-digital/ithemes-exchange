@@ -68,7 +68,11 @@ class IT_Exchange_Core_Shipping_Feature_Available_Shipping_Methods extends IT_Ex
 				$values->$method = ! empty( $post_meta[$method] );
 			} else {
 				$current_method = it_exchange_get_registered_shipping_method( $method, $this->product->ID );
-				$values->$method = $current_method->enabled;
+				if ( !empty( $current_method ) ) {
+					$values->$method = $current_method->enabled;
+				} else {
+					$values->$method = false;
+				}
 			}
 		}
 
@@ -111,7 +115,7 @@ class IT_Exchange_Core_Shipping_Feature_Available_Shipping_Methods extends IT_Ex
 					<?php
 					foreach( it_exchange_get_registered_shipping_methods() as $method => $class ) {
 						$current_method = it_exchange_get_registered_shipping_method( $method, $this->product->ID );
-						if ( ! $current_method->available )
+						if ( empty( $current_method ) || ! $current_method->available )
 							continue;
 						?>
 						<li>

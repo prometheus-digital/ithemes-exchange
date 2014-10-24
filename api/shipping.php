@@ -122,22 +122,25 @@ function it_exchange_register_shipping_method( $slug, $class, $args=array() ) {
 function it_exchange_get_registered_shipping_method( $slug, $product_id=false ) {
 
 	// Return false if we don't have one registered
-	if ( empty( $GLOBALS['it_exchange']['shipping']['methods'][$slug] ) )
+	if ( empty( $GLOBALS['it_exchange']['shipping']['methods'][$slug] ) ) {
 		return false;
+	}
 
 	// Retrieve the method class
 	$class = $GLOBALS['it_exchange']['shipping']['methods'][$slug]['class'];
 	$args = $GLOBALS['it_exchange']['shipping']['methods'][$slug]['args'];
 
 	// Make sure we have a class index and it corresponds to a defined class
-	if ( empty( $class ) || ! class_exists( $class ) )
+	if ( empty( $class ) || ! class_exists( $class ) ) {
 		return false;
+	}
+		
+	if ( apply_filters( 'it_exchange_get_registered_shipping_method', false, $slug, $product_id, $class, $args ) ) {
+		return false;
+	}
 
 	// Init the class
 	return new $class( $product_id, $args );
-
-	// Return false if no object was found
-	return false;
 }
 
 /**
@@ -270,7 +273,7 @@ function it_exchange_get_available_shipping_methods_for_product( $product ) {
 	// Loop through provider methods and only use the ones that are available for this product
 	foreach( $provider_methods as $slug ) {
 		if ( $method = it_exchange_get_registered_shipping_method( $slug, $product->ID ) ) {
-			if ( $method->available )
+			if ( apply_filters( 'it_exchange_get_registered_shipping_method_available', $method->available, $slug, $method, $product ) )
 				$available_methods[$slug] = $method;
 		}
 	}
@@ -414,7 +417,8 @@ function it_exchange_get_available_shipping_methods_for_cart( $only_return_metho
  * @return array an array of shipping methods
 */
 function it_exchange_get_available_shipping_methods_for_cart_products() {
-	return it_exchange_get_available_shipping_methods_for_cart( false );
+	$methods = it_exchange_get_available_shipping_methods_for_cart( false );
+	return apply_filters( 'it_exchange_get_available_shipping_methods_for_cart_products', $methods );
 }
 
 /**
@@ -491,7 +495,7 @@ function it_exchange_get_multiple_shipping_method_for_cart_product( $product_car
 	$selected_multiple_methods = empty( $selected_multiple_methods ) ? false : $selected_multiple_methods;
 
 	$method = empty( $selected_multiple_methods[$product_cart_id] ) ? false : $selected_multiple_methods[$product_cart_id];
-	return $method;
+	return apply_filters( 'it_exchange_get_multiple_shipping_method_for_cart_product', $method, $selected_multiple_methods, $product_cart_id );
 }
 
 /**
