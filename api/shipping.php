@@ -271,6 +271,7 @@ function it_exchange_get_available_shipping_methods_for_product( $product ) {
 	}
 
 	// Loop through provider methods and only use the ones that are available for this product
+	$provider_methods = apply_filters( 'it_exchange_get_available_shipping_methods_for_product_provider_methods', $provider_methods, $product );
 	foreach( $provider_methods as $slug ) {
 		if ( $method = it_exchange_get_registered_shipping_method( $slug, $product->ID ) ) {
 			if ( apply_filters( 'it_exchange_get_registered_shipping_method_available', $method->available, $slug, $method, $product ) )
@@ -361,6 +362,7 @@ function it_exchange_get_cart_shipping_method() {
  * @return string[]
 */
 function it_exchange_get_available_shipping_methods_for_cart( $only_return_methods_available_to_all_cart_products=true ) {
+	$GLOBALS['it_exchange']['shipping']['only_return_methods_available_to_all_cart_products'] = $only_return_methods_available_to_all_cart_products; //I need this as a global for some hooks later with Table Rate Shipping (and possibly other future add-ons)
 	$methods   = array();
 	$product_i = 0;
 
@@ -406,7 +408,7 @@ function it_exchange_get_available_shipping_methods_for_cart( $only_return_metho
 		}
 	}
 
-	return apply_filters( 'it_exchange_get_available_shipping_methods_for_cart', $methods, $only_return_methods_available_to_all_cart_products );
+	return apply_filters( 'it_exchange_get_available_shipping_methods_for_cart', $methods );
 }
 
 /**
