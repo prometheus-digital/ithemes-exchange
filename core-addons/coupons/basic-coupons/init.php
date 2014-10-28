@@ -230,6 +230,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	// Add to session data
 	$data = array( $coupon['code'] => $coupon );
 	it_exchange_update_cart_data( 'basic_coupons', $data );
+	do_action( 'it_exchange_basic_coupon_applied', $data );
 
 	it_exchange_add_message( 'notice', __( 'Coupon applied', 'LION' ) );
 	return true;
@@ -598,6 +599,7 @@ function it_exchange_basic_coupons_remove_coupon_from_cart( $result, $options=ar
 
 	// Unset coupons
 	it_exchange_update_cart_data( 'basic_coupons', $coupons );
+	do_action( 'it_exchange_basic_coupons_remove_coupon_from_cart', $coupon_code );
 	return true;
 }
 add_filter( 'it_exchange_remove_coupon_for_cart', 'it_exchange_basic_coupons_remove_coupon_from_cart', 10, 2 );
