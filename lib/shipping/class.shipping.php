@@ -356,7 +356,7 @@ class IT_Exchange_Shipping {
 		));
 
 		$measurements = array();
-		if ( in_array( 'core-weight-dimensions', $features ) ) {
+		if ( in_array( 'core-dimensions', $features ) || in_array( 'core-weight', $features )  ) {
 			$measurements = array(
 				array(
 					'type'    => 'drop_down',

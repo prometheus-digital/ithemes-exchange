@@ -12,5 +12,8 @@ include_once( dirname( __FILE__ ) . '/core-from-address.php' );
 it_exchange_register_shipping_feature( 'core-from-address', 'IT_Exchange_Core_Shipping_Feature_From_Address' );
 
 // Weight and Dimensions
-include_once( dirname( __FILE__ ) . '/core-weight-dimensions.php' );
-it_exchange_register_shipping_feature( 'core-weight-dimensions', 'IT_Exchange_Core_Shipping_Feature_Weight_Dimensions' );
+include_once( dirname( __FILE__ ) . '/core-dimensions.php' );
+it_exchange_register_shipping_feature( 'core-dimensions', 'IT_Exchange_Core_Shipping_Feature_Dimensions' );
+
+include_once( dirname( __FILE__ ) . '/core-weight.php' );
+it_exchange_register_shipping_feature( 'core-weight', 'IT_Exchange_Core_Shipping_Feature_Weight' );
