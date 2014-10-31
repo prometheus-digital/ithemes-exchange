@@ -104,16 +104,34 @@ function it_exchange_get_registered_shipping_feature( $slug, $product_id=false, 
  * @return array of shipping feature objects
 */
 function it_exchange_get_shipping_features_for_product( $product ) {
+	// Grab all available methods for this product
+	$methods  = it_exchange_get_available_shipping_methods_for_product( $product );
+	
+	// Init features array
+	/** @todo move this filter to lib/shipping/shipping-features/init.php. create a functiont o get core shipping features **/
+	$features = apply_filters( 'it_exchange_core_shipping_features', array( 'core-available-shipping-methods' ) );
+	
+	// Loop through methods and add all required features to the array
+	foreach( $methods as $method ) {
+		if ( ! empty( $method->shipping_features ) && is_array( $method->shipping_features ) ) {
+			$features = array_merge( $features, $method->shipping_features );
+		}
+	}
+	
+	// Clean the array
+	$features = array_values( array_unique( $features ) );
+	
 	// Grab registered feature details
-	$registered_features = it_exchange_get_registered_shipping_features();
+	$registered_features = it_exchange_get_registered_shipping_features( $features );
 	
 	// Init return array
 	$shipping_features = array();
 
 	// Loop through array and init objects
 	foreach( $registered_features as $slug => $class ) {
-		if ( $feature = it_exchange_get_registered_shipping_feature( $slug, $product->ID ) )
+		if ( in_array( $slug, $features ) && $feature = it_exchange_get_registered_shipping_feature( $slug, $product->ID ) ) {
 			$shipping_features[$slug] = $feature;
+		}
 	}
 
 	return apply_filters( 'it_exchange_get_shipping_features_for_product', $shipping_features, $product );
