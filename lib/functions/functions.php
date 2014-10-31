@@ -217,18 +217,34 @@ add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_load_theme_functio
  * @since 0.4.0
 */
 function it_exchange_process_webhooks() {
-
 	// Grab registered webhooks
     $webhooks = it_exchange_get_webhooks();
-
 	// Loop through them and init callbacks
     foreach( $webhooks as $key => $param ) {
+        if ( ! empty( $_REQUEST[$param] ) ) {
+	        
+	        $requested_webhook_url = untrailingslashit( get_site_url() ) . $_SERVER['REQUEST_URI']; //REQUEST_URI includes the slash
+	        $parsed_requested_webhook_url = parse_url( $requested_webhook_url );
+	        $required_webhook_url = add_query_arg( $param, '1', trailingslashit( get_site_url() ) ); //add the slash to make sure we match
+	        $parsed_required_webhook_url = parse_url( $required_webhook_url );
+			$webhook_diff = array_diff_assoc( $parsed_requested_webhook_url, $parsed_required_webhook_url );
 
-        if ( ! empty( $_REQUEST[$param] ) )
-            do_action( 'it_exchange_webhook_' . $param, $_REQUEST );
+			if ( empty( $webhook_diff ) ) { //No differences in the requested webhook and the required webhook
 
+		        do_action( 'it_exchange_webhook_' . $param, $_REQUEST );
+	        
+		    } else {
+			    
+			    wp_die( sprintf( __( 'Invalid webhook request for this site. The webhook request should be: %s', 'LION' ), $required_webhook_url ), __( 'iThemes Exchange Webhook Process Error', 'LION' ), array( 'response' => 400 ) );
+			    
+		    }
+		    
+		    break; //we can stop processing here... no need to continue the foreach since we can only handle one webhook at a time
+
+		}
     }
     do_action( 'it_exchange_webhooks_processed' );
+    wp_die( __( 'iThemes Exchange webhook process Complete', 'LION' ), __( 'iThemes Exchange Webhook Process Complete', 'LION' ), array( 'response' => 200 ) );
 }
 add_action( 'wp', 'it_exchange_process_webhooks' );
 
