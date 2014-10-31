@@ -74,7 +74,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 			'after'  => '',
 			'format' => 'html',
 			'class'  => false,
-			'label'  => __( '&times;', 'LION' ),
+			'label'  => _x( '&times;', 'html representation for multiplication symbol (x)', 'LION' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 

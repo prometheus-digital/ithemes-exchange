@@ -362,7 +362,7 @@ function it_exchange_base_coupons_remove_cart_coupon_html( $incoming=false, $cod
 	$defaults = array(
 		'class'  => 'remove-coupon',
 		'format' => 'link',
-		'label'  => __( '&times;', 'LION' ),
+		'label'  => _x( '&times;', 'html representation for multiplication symbol (x)', 'LION' ),
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
 

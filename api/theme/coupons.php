@@ -264,7 +264,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 			'class'  => 'remove-coupon',
 			'type'   => false,
 			'format' => 'link',
-			'label'  => '&times;',
+			'label'  => _x( '&times;', 'html representation for multiplication symbol (x)', 'LION' ),
 		);
 
 		$options = ITUtility::merge_defaults( $options, $defaults );
