@@ -219,10 +219,12 @@ add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_load_theme_functio
 function it_exchange_process_webhooks() {
 	// Grab registered webhooks
     $webhooks = it_exchange_get_webhooks();
+	$webhooks_processed = false;
 	// Loop through them and init callbacks
     foreach( $webhooks as $key => $param ) {
         if ( ! empty( $_REQUEST[$param] ) ) {
 	        
+			$webhooks_processed = true;
 	        $requested_webhook_url = untrailingslashit( get_site_url() ) . $_SERVER['REQUEST_URI']; //REQUEST_URI includes the slash
 	        $parsed_requested_webhook_url = parse_url( $requested_webhook_url );
 	        $required_webhook_url = add_query_arg( $param, '1', trailingslashit( get_site_url() ) ); //add the slash to make sure we match
@@ -243,8 +245,10 @@ function it_exchange_process_webhooks() {
 
 		}
     }
-    do_action( 'it_exchange_webhooks_processed' );
-    wp_die( __( 'iThemes Exchange webhook process Complete', 'LION' ), __( 'iThemes Exchange Webhook Process Complete', 'LION' ), array( 'response' => 200 ) );
+	if ( $webhooks_processed ) {
+		do_action( 'it_exchange_webhooks_processed' );
+		wp_die( __( 'iThemes Exchange webhook process Complete', 'LION' ), __( 'iThemes Exchange Webhook Process Complete', 'LION' ), array( 'response' => 200 ) );
+	}
 }
 add_action( 'wp', 'it_exchange_process_webhooks' );
 
