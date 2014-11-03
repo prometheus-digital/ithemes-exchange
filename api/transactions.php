@@ -142,7 +142,8 @@ function it_exchange_generate_transaction_object() {
 	}
 
 	// Verify cart total is a positive number
-	$cart_total = number_format( it_exchange_get_cart_total( false ), 2, '.', '' );
+	$cart_total    = number_format( it_exchange_get_cart_total( false ), 2, '.', '' );
+	$cart_sub_total = number_format( it_exchange_get_cart_subtotal( false ), 2, '.', '' );
 	if ( number_format( $cart_total, 2, '', '' ) < 0 ) {
 		do_action( 'it_exchange_error_negative_cart_total_on_checkout', $cart_total );
 		it_exchange_add_message( 'error', __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'LION' ) );
@@ -170,11 +171,16 @@ function it_exchange_generate_transaction_object() {
 	$transaction_object = new stdClass();
 	$transaction_object->cart_id                = $cart_id;
 	$transaction_object->total                  = $cart_total;
+	$transaction_object->sub_total                  = $cart_sub_total;
 	$transaction_object->currency               = $currency;
 	$transaction_object->description            = it_exchange_get_cart_description();
 	$transaction_object->products               = $products;
 	$transaction_object->coupons                = it_exchange_get_applied_coupons();
 	$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
+
+	// Tack on Tax information
+	$transaction_object->taxes_formated         = apply_filters( 'it_exchange_set_transaction_objet_cart_taxes_formatted', false );
+	$transaction_object->taxes_raw              = apply_filters( 'it_exchange_set_transaction_objet_cart_taxes_raw', false );
 
 	// Tack on Shipping and Billing address
 	$transaction_object->shipping_address       = it_exchange_get_cart_shipping_address();
