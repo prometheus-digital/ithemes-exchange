@@ -287,7 +287,7 @@ function it_exchange_get_country_states_for_es( $options=array() ) {
 *
 * Props: Darryl Clark
 *
-* @since CHANGEME
+* @since 1.11.0 
 *
 * @return array
 */

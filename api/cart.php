@@ -674,7 +674,7 @@ function it_exchange_get_cart_products_count( $true_count=false ) {
 /**
  * Return total weight for cart
  *
- * @since CHANGEME
+ * @since 1.11.0 
  *
  * @return float
 */

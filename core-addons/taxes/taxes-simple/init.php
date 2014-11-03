@@ -208,7 +208,7 @@ add_filter( 'it_exchange_get_cart_total', 'it_exchange_addon_taxes_simple_modify
 /**
  * Adds the cart taxes to the transaction object
  *
- * @since CHANGEME
+ * @since 1.11.0 
  *
  * @param string $taxes incoming from WP Filter. False by default.
  * @return string
