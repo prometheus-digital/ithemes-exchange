@@ -684,7 +684,7 @@ function it_exchange_get_cart_weight() {
 	if ( !empty( $products ) ) {
 		foreach( $products as $product ) {
 	        $pm = get_post_meta( $product['product_id'], '_it_exchange_core_weight_dimensions', true );
-			$weight += empty( $pm['weight'] ) ? 0 : $pm['weight'];
+			$weight += empty( $pm['weight'] ) ? 0 : ( $pm['weight'] * $product['count'] );
 		}
 	}
 	return is_numeric( $weight ) ? $weight : 0;
