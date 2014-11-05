@@ -1,3 +1,6 @@
+1.11.1 - 2014-11-05 - Glenn Ansley, Lew Ayotte, Elise Alley,
+	Clear shipping method on cart product update
+	Fixed it_exchange_get_cart_weight to account for product count
 1.11.0 - 2014-11-03 - Glenn Ansley, Lew Ayotte, Elise Alley
 	Added filter to transaction object generator to allow cart taxes to be added
 	Broke out weight and dimensions shipping features
