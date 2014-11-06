@@ -480,8 +480,13 @@ class IT_Exchange_Shopping_Cart {
 			return false;
 		}
 
-		if ( $transaction_object = it_exchange_generate_transaction_object() ) {
-
+		$transaction_object = it_exchange_generate_transaction_object();
+		if ( empty( $transaction_object ) && false !== ( $transaction_id = apply_filters( 'handle_purchase_cart_request_already_processed_for_' . $requested_transaction_method, false ) ) ) {
+			
+			return $transaction_id;
+			
+		} else {
+			
 			$transaction_object = apply_filters( 'it_exchange_transaction_object', $transaction_object, $requested_transaction_method );
 
 			// Do the transaction
