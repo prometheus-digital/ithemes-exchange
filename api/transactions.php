@@ -162,8 +162,8 @@ function it_exchange_generate_transaction_object() {
 	// Add totals to each product
 	foreach( $products as $key => $product ) {
 		$products[$key]['product_base_price'] = it_exchange_get_cart_product_base_price( $product, false );
-		$products[$key]['product_subtotal'] = it_exchange_get_cart_product_subtotal( $product, false );
-		$products[$key]['product_name']     = it_exchange_get_cart_product_title( $product );
+		$products[$key]['product_subtotal']   = it_exchange_get_cart_product_subtotal( $product, false );
+		$products[$key]['product_name']       = it_exchange_get_cart_product_title( $product );
 		$products = apply_filters( 'it_exchange_generate_transaction_object_products', $products, $key, $product );
 	}
 
@@ -171,7 +171,7 @@ function it_exchange_generate_transaction_object() {
 	$transaction_object = new stdClass();
 	$transaction_object->cart_id                = $cart_id;
 	$transaction_object->total                  = $cart_total;
-	$transaction_object->sub_total                  = $cart_sub_total;
+	$transaction_object->sub_total              = $cart_sub_total;
 	$transaction_object->currency               = $currency;
 	$transaction_object->description            = it_exchange_get_cart_description();
 	$transaction_object->products               = $products;
