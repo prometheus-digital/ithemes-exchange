@@ -483,6 +483,7 @@ class IT_Exchange_Shopping_Cart {
 		$transaction_object = it_exchange_generate_transaction_object();
 		if ( empty( $transaction_object ) && false !== ( $transaction_id = apply_filters( 'handle_purchase_cart_request_already_processed_for_' . $requested_transaction_method, false ) ) ) {
 			
+			it_exchange_clear_messages( 'error' ); //we really need a way to only remove certain errors
 			return $transaction_id;
 			
 		} else {
