@@ -92,6 +92,47 @@ function it_exchange_refund_url_for_paypal_standard_secure( $url ) {
 add_filter( 'it_exchange_refund_url_for_paypal-standard-secure', 'it_exchange_refund_url_for_paypal_standard_secure' );
 
 /**
+ * Determine if the transaction currently trying to process has already been processed
+ *
+ * @since CHANGEME
+ *
+ * @param bool|int $processed If this transaction has already been processed.
+ * @param bool|int $processed False or iThemes Exchange Transaction ID for this transaction
+*/
+function handle_purchase_cart_request_already_processed_for_paypal_standard_secure( $processed ) {
+	
+	if ( !empty( $processed ) ) {
+		return $processed;
+	}
+	
+	if ( !empty( $_REQUEST['it-exchange-transaction-method'] ) && 'paypal-standard-secure' === $_REQUEST['it-exchange-transaction-method'] ) {
+		
+		if ( !empty( $_REQUEST['paypal-standard-secure-nonce'] ) && wp_verify_nonce( $_REQUEST['paypal-standard-secure-nonce'], 'ppss-nonce' ) ) {
+
+			if ( !empty( $_REQUEST['tx'] ) ) { //if PDT is enabled
+				$transaction_id = $_REQUEST['tx'];
+			} else if ( !empty( $_REQUEST['txn_id'] ) ) { //if PDT is not enabled
+				$transaction_id = $_REQUEST['txn_id'];
+			} else {
+				$transaction_id = NULL;
+			}
+			
+			$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id( $transaction_id );
+			if ( !empty( $transactions ) ) {
+				foreach( $transactions as $transaction ) { //really only one
+					return $transaction->ID;
+				}
+			}
+		}
+	
+	}
+	
+	return false;
+
+}
+add_filter( 'handle_purchase_cart_request_already_processed_for_paypal-standard-secure', 'handle_purchase_cart_request_already_processed_for_paypal_standard_secure' );
+
+/**
  * This proccesses a paypal transaction.
  *
  * @since 0.4.0
