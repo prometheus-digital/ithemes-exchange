@@ -67,7 +67,10 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 		$multiple_shipping_methods_allowed = $this->multiple_shipping_methods_allowed;
 		$current_method                    = $this->current_method;
 
-		if ( ( count( $cart_methods ) === 1 && count( $cart_product_methods ) === 1 ) || count( $cart_product_methods ) === 1 ) {
+		$cart_methods_count = count( $cart_methods );
+		$cart_product_methods_count = count( $cart_product_methods );
+		
+		if ( 1 === $cart_product_methods_count && $cart_product_methods_count >= $cart_methods_count ) {
 			$method = reset($cart_methods);
 			it_exchange_update_cart_data( 'shipping-method', $method->slug );
 			echo $method->label . ' (' . it_exchange_get_cart_shipping_cost() . ')';

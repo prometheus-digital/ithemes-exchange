@@ -338,7 +338,10 @@ function it_exchange_get_cart_shipping_method() {
 	$cart_methods         = it_exchange_get_available_shipping_methods_for_cart();
 	$cart_product_methods = it_exchange_get_available_shipping_methods_for_cart_products();
 
-	if ( ( count( $cart_methods ) === 1 && count( $cart_product_methods ) === 1 ) || count( $cart_product_methods ) === 1 ) {
+	$cart_methods_count = count( $cart_methods );
+	$cart_product_methods_count = count( $cart_product_methods );
+	
+	if ( 1 === $cart_product_methods_count && $cart_product_methods_count >= $cart_methods_count ) {
 		$single_method = reset($cart_methods);
 		it_exchange_update_cart_data( 'shipping-method', $single_method->slug );
 		return $single_method->slug;
