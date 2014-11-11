@@ -657,18 +657,30 @@ function it_exchange_get_cart_product_quantity_by_product_id( $product_id ) {
  * @since 0.4.0
  *
  * @param bool $true_count Whether or not to traverse cart products to get true count of items
+ * @param bool|string $feature only include products with this feature
  * @return integer
 */
-function it_exchange_get_cart_products_count( $true_count=false ) {
+function it_exchange_get_cart_products_count( $true_count=false, $feature=false ) {
+	$products = it_exchange_get_cart_products();
+	$count = 0;
 	if ( $true_count ) {
-		$count = 0;
-		$products = it_exchange_get_cart_products();
 		foreach( $products as $product ) {
+			if ( !empty( $feature ) && !it_exchange_product_has_feature( $product['product_id'], $feature ) ) {
+				continue;
+			}
 			$count += $product['count'];
 		}
 		return absint( $count );
+	} else {
+		foreach( $products as $product ) {
+			if ( !empty( $feature ) && !it_exchange_product_has_feature( $product['product_id'], $feature ) ) {
+				continue;
+			}
+			$count++;
+		}
+		return absint( $count );
 	}
-	return absint( count( it_exchange_get_cart_products() ) );
+	return $count;
 }
 
 /**
