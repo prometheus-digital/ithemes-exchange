@@ -184,31 +184,33 @@ function it_exchange_zero_sum_checkout_add_child_transaction( $parent_txn ) {
 */
 function it_exchange_zero_sum_checkout_after_payment_details_cancel_url( $transaction ) {
 	$cart_object = get_post_meta( $transaction->ID, '_it_exchange_cart_object', true );
-	foreach ( $cart_object->products as $product ) {
-		$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product['product_id'], true );
-		if ( $autorenews ) {
-			$status = $transaction->get_transaction_meta( 'subscriber_status', true );
-			switch( $status ) {
-
-				case false: //active
-				case '':
-					$output = '<a href="' . add_query_arg( 'zero-sum-recurring-payment', 'cancel' ) . '">' . __( 'Cancel Recurring Payment', 'LION' ) . '</a>';
-					break;
-
-				case 'deactivated':
-				default:
-					$output = __( 'Recurring payment has been deactivated', 'LION' );
-					break;
-
-			}
-			?>
-			<div class="transaction-autorenews clearfix spacing-wrapper">
-				<div class="recurring-payment-cancel-options left">
-					<div class="recurring-payment-status-name"><?php echo $output; ?></div>
+	if ( !empty( $cart_object->products ) ) {
+		foreach ( $cart_object->products as $product ) {
+			$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product['product_id'], true );
+			if ( $autorenews ) {
+				$status = $transaction->get_transaction_meta( 'subscriber_status', true );
+				switch( $status ) {
+	
+					case false: //active
+					case '':
+						$output = '<a href="' . add_query_arg( 'zero-sum-recurring-payment', 'cancel' ) . '">' . __( 'Cancel Recurring Payment', 'LION' ) . '</a>';
+						break;
+	
+					case 'deactivated':
+					default:
+						$output = __( 'Recurring payment has been deactivated', 'LION' );
+						break;
+	
+				}
+				?>
+				<div class="transaction-autorenews clearfix spacing-wrapper">
+					<div class="recurring-payment-cancel-options left">
+						<div class="recurring-payment-status-name"><?php echo $output; ?></div>
+					</div>
 				</div>
-			</div>
-			<?php
-			continue;
+				<?php
+				continue;
+			}
 		}
 	}
 }
