@@ -1,3 +1,5 @@
+1.11.2.1 - 2014-11-12 - Glenn Ansley, Lew Ayotte, Elise Alley
+	Fixing call to weight meta for product
 1.11.2 - 2014-11-12 - Glenn Ansley, Lew Ayotte, Elise Alley
 	Fixed typo in filter in lib/templates/content-store.php
 	Fix bug caused when the shipping methods available to an invidial product is less than that available to the whole cart
