@@ -225,20 +225,16 @@ function it_exchange_process_webhooks() {
         if ( ! empty( $_REQUEST[$param] ) ) {
 	        
 			$webhooks_processed = true;
-	        $requested_webhook_url = untrailingslashit( get_site_url() ) . $_SERVER['REQUEST_URI']; //REQUEST_URI includes the slash
+	        $requested_webhook_url = untrailingslashit( $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] ) . $_SERVER['REQUEST_URI']; //REQUEST_URI includes the slash
 	        $parsed_requested_webhook_url = parse_url( $requested_webhook_url );
 	        $required_webhook_url = add_query_arg( $param, '1', trailingslashit( get_site_url() ) ); //add the slash to make sure we match
 	        $parsed_required_webhook_url = parse_url( $required_webhook_url );
 			$webhook_diff = array_diff_assoc( $parsed_requested_webhook_url, $parsed_required_webhook_url );
 
 			if ( empty( $webhook_diff ) ) { //No differences in the requested webhook and the required webhook
-
 		        do_action( 'it_exchange_webhook_' . $param, $_REQUEST );
-	        
 		    } else {
-			    
 			    wp_die( sprintf( __( 'Invalid webhook request for this site. The webhook request should be: %s', 'LION' ), $required_webhook_url ), __( 'iThemes Exchange Webhook Process Error', 'LION' ), array( 'response' => 400 ) );
-			    
 		    }
 		    
 		    break; //we can stop processing here... no need to continue the foreach since we can only handle one webhook at a time
