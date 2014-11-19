@@ -127,6 +127,9 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		echo $args['before_widget'];
 			?>
 			<div class="it-exchange-super-widget it-exchange-super-widget-<?php esc_attr_e( $this->get_state() ); ?>">
+				<style type="text/css">
+				.it-exchange-super-widget .spinner{background:url('<?php echo get_admin_url(); ?>/images/wpspin_light.gif') no-repeat;}
+				</style>
 				<?php it_exchange_get_template_part( 'super-widget', $this->get_state() ); ?>
 			</div>
 			<?php
@@ -147,9 +150,10 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 
 		// JS
 		$script_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/js/super-widget.js' );
-		wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery', 'detect-credit-card-type', 'it-exchange-event-manager' ), false, true );
+		wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery', 'jquery-ui-spinner', 'detect-credit-card-type', 'it-exchange-event-manager' ), false, true );
 		wp_localize_script( 'it-exchange-super-widget', 'exchangeSWL10n', array(
 				'processingPaymentLabel' => __( 'Processing', 'LION' ),
+				'processingAction'       => __( 'Processing... ', 'LION' ),
 			)
 		);
 

@@ -90,3 +90,6 @@
 .it-exchange-super-widget .it-exchange-sw-processing-guest-checkout .email-name input,
 .it-exchange-super-widget .it-exchange-sw-processing-guest-checkout .save_url input{width:100%;}
 .it-exchange-super-widget .it-exchange-sw-processing-guest-checkout h3.in-super-widget{margin: 0 0 .75em;}
+
+/** ----------------------------------------:[ guest checkout (background image set inline)]:--- */
+.it-exchange-super-widget .spinner{background-size: 16px 16px;display:none;opacity: .7;filter: alpha(opacity=70);width: 16px;height: 16px; margin: 0 0 5px 5px;display:inline-block;}
