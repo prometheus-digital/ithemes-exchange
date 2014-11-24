@@ -86,7 +86,7 @@ add_filter( 'it_exchange_refund_url_for_paypal-standard', 'it_exchange_refund_ur
 /**
  * Determine if the transaction currently trying to process has already been processed
  *
- * @since CHANGEME
+ * @since 1.11.2
  *
  * @param bool|int $processed If this transaction has already been processed.
  * @param bool|int $processed False or iThemes Exchange Transaction ID for this transaction
