@@ -17,6 +17,6 @@
 
 <?php do_action( 'it_exchange_confirmation_before_transaction_order_details_label' ); ?>
 <div class="it-exchange-transaction-order-details-label">
-	<h3><?php _e( 'Order Details', 'date' ); ?></h3>
+	<h3><?php _e( 'Order Details', 'LION' ); ?></h3>
 </div>
 <?php do_action( 'it_exchange_confirmation_after_transaction_order_details_label' ); ?>
