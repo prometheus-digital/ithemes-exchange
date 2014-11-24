@@ -295,8 +295,10 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 		$field .= '<option value=""></option>';
 		foreach( $countries as $key => $value ) {
 			$alternatives = esc_attr( $key );
-			if ( 'US' == $key )
+			if ( 'US' == $key ) {
 				$alternatives .= ' US us usa USA u';
+			}
+			$alternatives = apply_filters( 'it_exchange_country_select_alternatives_' . strtolower( $key ), $alternatives );
 			$field .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $current_value, false ) . ' data-alternative-spellings="' . $alternatives . '">' . esc_html( $value ) . '</option>';
 		}
 		$field .= '</select>';
@@ -365,6 +367,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 			$field .= '<option value=""></option>';
 			foreach( (array) $states as $key => $value ) {
 				$alternatives = esc_attr( $key );
+				$alternatives = apply_filters( 'it_exchange_state_select_alternatives_' . strtolower( $key ), $alternatives );
 				$field .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $current_value, false ) . ' data-alternative-spellings="' . $alternatives . '">' . esc_html( $value ) . '</option>';
 			}
 			$field .= '</select>';
