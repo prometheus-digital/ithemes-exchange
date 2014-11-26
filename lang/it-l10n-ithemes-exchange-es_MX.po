@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: iThemes Exchange 1.10.4\n"
+"Project-Id-Version: iThemes Exchange 1.11.3\n"
 "Report-Msgid-Bugs-To: http://ithemes.com/forum/\n"
 "POT-Creation-Date: 2014-08-26 14:41:33+00:00\n"
-"PO-Revision-Date: 2014-10-29 12:39-0600\n"
+"PO-Revision-Date: 2014-11-26 08:42-0600\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -441,7 +441,7 @@ msgstr "Isla de Man"
 
 #: api/data-sets/countries.php:124
 msgid "India"
-msgstr "La India (L'Inde)"
+msgstr "India"
 
 #: api/data-sets/countries.php:125
 msgid "British Indian Ocean Territory"
@@ -665,7 +665,7 @@ msgstr "Nueva Caledonia"
 
 #: api/data-sets/countries.php:180
 msgid "Niger"
-msgstr "Nigeria"
+msgstr "Níger"
 
 #: api/data-sets/countries.php:181
 msgid "Norfolk Island"
@@ -945,7 +945,7 @@ msgstr "Venezuela"
 
 #: api/data-sets/countries.php:250
 msgid "Virgin Islands, British"
-msgstr "Islas Vírgenes, Británicas  "
+msgstr "Islas Vírgenes, Británicas"
 
 #: api/data-sets/countries.php:251
 msgid "Virgin Islands, U.S."
@@ -2373,7 +2373,8 @@ msgstr "Error de descarga:"
 
 #: api/misc.php:344
 msgid "Please complete all purchase requirements before checkout out."
-msgstr "Por favor, complete todos los requisitos de compra antes de la verificación."
+msgstr ""
+"Por favor, complete todos los requisitos de compra antes de la verificación."
 
 #: api/theme/billing.php:76 api/theme/customer.php:140
 #: api/theme/registration.php:147 api/theme/shipping.php:75
@@ -2383,7 +2384,7 @@ msgstr "Nombre"
 #: api/theme/billing.php:97 api/theme/customer.php:181
 #: api/theme/registration.php:184 api/theme/shipping.php:96
 msgid "Last Name"
-msgstr "Apellido"
+msgstr "Apellido(s)"
 
 #: api/theme/billing.php:118 api/theme/shipping.php:117
 #: lib/admin/views/admin-settings.php:60
@@ -2433,7 +2434,7 @@ msgstr "Teléfono"
 
 #: api/theme/billing.php:457 api/theme/shipping.php:400
 msgid "Submit"
-msgstr "Enviar"
+msgstr "Continuar"
 
 #: api/theme/billing.php:476 api/theme/checkout.php:93 api/theme/login.php:332
 #: api/theme/registration.php:367 api/theme/shipping-method.php:160
@@ -2517,7 +2518,9 @@ msgstr "Ver tu Cuenta"
 
 #: api/theme/customer.php:569
 msgid "Thank you for your order. An email confirmation has been sent to %s."
-msgstr "Gracias por tu pedido. Un mensaje de correo electrónico de confirmación ha sido enviado a %s."
+msgstr ""
+"Gracias por tu pedido. Un mensaje de correo electrónico de confirmación ha "
+"sido enviado a %s."
 
 #: api/theme/download.php:127 api/theme/product.php:382
 #: core-addons/coupons/basic-coupons/admin.php:469
@@ -2598,7 +2601,7 @@ msgstr "Nombre en la Tarjeta"
 
 #: api/theme/purchase-dialog.php:101
 msgid "Last Name on card"
-msgstr "Apellido en la Tarjeta"
+msgstr "Apellido(s) en la Tarjeta"
 
 #: api/theme/purchase-dialog.php:122
 #: lib/templates/content-purchase-dialog.php:17
@@ -2647,7 +2650,7 @@ msgstr "Número de Pedido: %s"
 
 #: api/theme/transaction.php:120
 msgid "Status: <span class=\"%s\">%s</span>"
-msgstr "Estado: <span class=\" %s\">%s</ span>"
+msgstr "Estado: <span class=\"%s\">%s</span>"
 
 #: api/theme/transaction.php:600 lib/admin/views/admin-user-products.php:89
 msgid "Unlimited Downloads"
@@ -2659,19 +2662,25 @@ msgstr "Error de Codificación: Número incorrecto de argumentos pasados ​​a
 
 #: api/theme.php:143
 msgid "Coding Error: <em>%s</em> is not a valid Exchange theme API context"
-msgstr "Error de Codificación: <em>%s</ em> no es un contexto API de tema Exchange válido"
+msgstr ""
+"Error de Codificación: <em>%s</em> no es un contexto API de tema Exchange "
+"válido"
 
 #: api/theme.php:154
 msgid ""
 "Coding Error: <em>%s</em> in not a mapped method inside the <em>%s</em> "
 "Exchange theme API class"
-msgstr "Error de Codificación: <em>%s</ em> no es un método mapeado dentro la <em>%s</ em> clase API de tema Exchange"
+msgstr ""
+"Error de Codificación: <em>%s</em> no es un método mapeado dentro la <em>%s</"
+"em> clase API de tema Exchange"
 
 #: api/theme.php:165
 msgid ""
 "Coding Error: <em>%s</em> in not a callable method inside the <em>%s</em> "
 "Exchange theme API class"
-msgstr "Error de Codificación: <em>%s</ em> no es un método exigible dentro la <em>%s</ em> clase API de tema Exchange"
+msgstr ""
+"Error de Codificación: <em>%s</em> no es un método exigible dentro la <em>"
+"%s</em> clase API de tema Exchange"
 
 #: api/transactions.php:140
 msgid "You cannot checkout without any items in your cart."
@@ -2680,7 +2689,8 @@ msgstr "No se puede verificar sin algún artículo en tu carrito."
 #: api/transactions.php:148
 msgid ""
 "The cart total must be greater than 0 for you to checkout. Please try again."
-msgstr "Debe haber al menos un articulo en el carrito, Por favor, intente de nuevo."
+msgstr ""
+"Debe haber al menos un articulo en el carrito, Por favor, intente de nuevo."
 
 #: api/transactions.php:748 api/transactions.php:816
 #: core-addons/transaction-methods/offline-payments/init.php:285
@@ -2744,7 +2754,9 @@ msgstr "iThemes Exchange"
 #: core-addons/admin/guest-checkout/lib/filters.php:506
 #: core-addons/admin/guest-checkout/lib/filters.php:512
 msgid "Please use a properly formatted email address."
-msgstr "Por favor utilice una dirección de correo electrónico formatado correctamente."
+msgstr ""
+"Por favor utilice una dirección de correo electrónico formatado "
+"correctamente."
 
 #: core-addons/admin/guest-checkout/lib/filters.php:401
 msgid "Guest Customer"
@@ -2763,7 +2775,9 @@ msgstr "¿Hacer Verificación del Invitado el método por defecto?"
 
 #: core-addons/admin/guest-checkout/lib/settings.php:28
 msgid "This will overwrite the value for Default Form in General Settings."
-msgstr "Esto sobrescribirá el valor de Formulario Predeterminado en las Configuración Generales."
+msgstr ""
+"Esto sobrescribirá el valor de Formulario Predeterminado en las "
+"Configuración Generales."
 
 #: core-addons/admin/guest-checkout/lib/settings.php:33
 msgid "Show log in link?"
@@ -2773,7 +2787,9 @@ msgstr "¿Mostrar enlace de iniciar sesión?"
 msgid ""
 "Selecting 'No' will remove the Log in link from Registration and Guest "
 "Checkout forms."
-msgstr "Al seleccionar 'No' se eliminará el vínculo Iniciar Sesión de formularios de Registro y Verificación de Invitado."
+msgstr ""
+"Al seleccionar 'No' se eliminará el vínculo Iniciar Sesión de formularios de "
+"Registro y Verificación de Invitado."
 
 #: core-addons/admin/guest-checkout/lib/settings.php:40
 msgid "Show registration link?"
@@ -2783,7 +2799,9 @@ msgstr "¿Mostrar enlace de registro?"
 msgid ""
 "Selecting 'No' will remove the Registration link from Log in and Guest "
 "Checkout forms."
-msgstr "Al seleccionar 'No' se eliminará el vínculo Registro de formularios Iniciar Sesión y Verificación de Invitado."
+msgstr ""
+"Al seleccionar 'No' se eliminará el vínculo Registro de formularios Iniciar "
+"Sesión y Verificación de Invitado."
 
 #: core-addons/admin/guest-checkout/lib/settings.php:50
 msgid "Cart Expiration"
@@ -2793,7 +2811,9 @@ msgstr "Caducidad del Carrito"
 msgid ""
 "Cart will expire and be cleared after a guest customer is inactive for set "
 "number of minutes."
-msgstr "El carrito caducará y se borrará después que un cliente de invitados está inactivo por este cierto número de minutos."
+msgstr ""
+"El carrito caducará y se borrará después que un cliente de invitados está "
+"inactivo por este cierto número de minutos."
 
 #: core-addons/admin/guest-checkout/lib/settings.php:53
 msgid "minutes"
@@ -2874,7 +2894,9 @@ msgstr "Tipo de Producto"
 #: core-addons/admin/product-type-metabox/init.php:48
 msgid ""
 "You must save the product after changing this to access new product options."
-msgstr "Se requiere guardar el producto después de cambiar para acceder a nuevas opciones de productos."
+msgstr ""
+"Se requiere guardar el producto después de cambiar para acceder a nuevas "
+"opciones de productos."
 
 #: core-addons/admin/product-type-metabox/init.php:50
 msgid "You currently have not Product Type add-ons enabled."
@@ -2882,7 +2904,9 @@ msgstr "Actualmente no tienes ningún Tipo de Producto habilitado."
 
 #: core-addons/admin/product-type-metabox/init.php:55
 msgid "You must have more than 1 product type enabled to make changes here."
-msgstr "Tienes que tener más de 1 tipo de producto habilitado para hacer cambios aquí."
+msgstr ""
+"Tienes que tener más de 1 tipo de producto habilitado para hacer cambios "
+"aquí."
 
 #: core-addons/coupons/basic-coupons/admin.php:133
 msgid "Coupon Name cannot be left empty"
@@ -2956,7 +2980,9 @@ msgstr "Código"
 msgid ""
 "Try something cool like EXCHANGERULEZ5000! Or click the dice to generate a "
 "random code."
-msgstr "Intente algo fresa como EXCHANGERULEZ5000! O haga clic en el dado para generar un código aleatorio."
+msgstr ""
+"Intente algo fresa como EXCHANGERULEZ5000! O haga clic en el dado para "
+"generar un código aleatorio."
 
 #: core-addons/coupons/basic-coupons/admin.php:289
 #: lib/transactions/class.transactions-post-type.php:488
@@ -2969,7 +2995,9 @@ msgstr "% Porcentaje"
 
 #: core-addons/coupons/basic-coupons/admin.php:299
 msgid "Please select an end date that is after the start date."
-msgstr "Por favor, seleccione una fecha de finalización que sea posterior a la fecha de inicio."
+msgstr ""
+"Por favor, seleccione una fecha de finalización que sea posterior a la fecha "
+"de inicio."
 
 #: core-addons/coupons/basic-coupons/admin.php:301
 #: core-addons/coupons/basic-coupons/admin.php:415
@@ -3105,7 +3133,10 @@ msgid ""
 "This is the simple and fast version to get PayPal setup for your store. You "
 "might use this version just to get your store going, but we highly suggest "
 "you switch to the PayPal Standard Secure option."
-msgstr "Esta es la versión sencilla y rápida para obtener la instalación de PayPal para tu tienda. Es posible que utilice esta versión sólo para comenzar, pero la sugerencia es que se cambie a la opción segura de PayPal Estándar."
+msgstr ""
+"Esta es la versión sencilla y rápida para obtener la instalación de PayPal "
+"para tu tienda. Es posible que utilice esta versión sólo para comenzar, pero "
+"la sugerencia es que se cambie a la opción segura de PayPal Estándar."
 
 #: core-addons/load.php:50
 msgid "PayPal Standard - Secure"
@@ -3115,7 +3146,9 @@ msgstr "PayPal Estándar - Secure"
 msgid ""
 "Although this PayPal version for iThemes Exchange takes more effort and "
 "time, it is well worth it for the security options for your store."
-msgstr "Aunque esta versión de PayPal para iThemes Exchange requiere más esfuerzo y tiempo, bien vale la pena para las opciones de seguridad para tu tienda."
+msgstr ""
+"Aunque esta versión de PayPal para iThemes Exchange requiere más esfuerzo y "
+"tiempo, bien vale la pena para las opciones de seguridad para tu tienda."
 
 #: core-addons/load.php:63
 msgid "Digital Downloads"
@@ -3125,7 +3158,9 @@ msgstr "Descargas Digitales"
 msgid ""
 "This adds a product type for distributing digital downloads through iThemes "
 "Exchange."
-msgstr "Esta agrega un tipo de producto para la distribución de descargas digitales por medio de iThemes Exchange."
+msgstr ""
+"Esta agrega un tipo de producto para la distribución de descargas digitales "
+"por medio de iThemes Exchange."
 
 #: core-addons/load.php:72
 msgid "Digital Download"
@@ -3163,7 +3198,9 @@ msgstr "Cambiar Tipos de Producto"
 msgid ""
 "Gives Store Owners the ability to change a Product Type after creation of "
 "the Product via the Advanced options"
-msgstr "Da al propietario de la tienda la habilidad de cambiar tipo de producto después de la creación del producto a través de opciones avanzadas."
+msgstr ""
+"Da al propietario de la tienda la habilidad de cambiar tipo de producto "
+"después de la creación del producto a través de opciones avanzadas."
 
 #: core-addons/load.php:118
 msgid "Multi-item Cart"
@@ -3173,13 +3210,17 @@ msgstr "Carrito Multi-artículo"
 msgid ""
 "Enabling this add-on allows your customers to purchase multiple products "
 "with one transaction."
-msgstr "La activación de este add-on permite a tus clientes comprar productos múltiples con una transacción."
+msgstr ""
+"La activación de este add-on permite a tus clientes comprar productos "
+"múltiples con una transacción."
 
 #: core-addons/load.php:132
 msgid ""
 "Enabling this add-on gives customers the ability to checkout as a guest, "
 "without registering"
-msgstr "La activación de este add-on ofrece a los clientes la capacidad de pagar como invitado, sin registrarse."
+msgstr ""
+"La activación de este add-on ofrece a los clientes la capacidad de pagar "
+"como invitado, sin registrarse."
 
 #: core-addons/load.php:144
 msgid "WordPress Page Templates"
@@ -3187,7 +3228,8 @@ msgstr "WordPress Plantillas Página"
 
 #: core-addons/load.php:145
 msgid "Enable the WordPress Page Templates meta box for products"
-msgstr "Activa la casilla de meta de la WordPress Plantillas Página para productos"
+msgstr ""
+"Activa la casilla de meta de la WordPress Plantillas Página para productos"
 
 #: core-addons/load.php:156
 #: lib/templates/content-checkout/elements/purchase-requirements/billing-address.php:24
@@ -3195,13 +3237,15 @@ msgstr "Activa la casilla de meta de la WordPress Plantillas Página para produc
 #: lib/templates/super-widget-billing-address.php:20
 #: lib/transactions/class.transactions-post-type.php:474
 msgid "Billing Address"
-msgstr "Direccion de Facturacion"
+msgstr "Dirección de Facturacion"
 
 #: core-addons/load.php:157
 msgid ""
 "Enabling this add-on allows you to collect a billing address at checkout. "
 "There are no settings for this add-on."
-msgstr "La activación de este add-on le permite recoger una dirección de facturación al verificar. No hay ajustes para este add-on."
+msgstr ""
+"La activación de este add-on le permite recoger una dirección de facturación "
+"al verificar. No hay ajustes para este add-on."
 
 #: core-addons/load.php:166
 msgid "Basic Reporting Dashboard Widget"
@@ -3209,13 +3253,17 @@ msgstr "Widget de Tablero Informativo Básico"
 
 #: core-addons/load.php:167
 msgid "Adds a widget to the Admin dashboard to give basic sales statistics."
-msgstr "Agrega un widget al panel de administración para dar estadísticas básicas de ventas."
+msgstr ""
+"Agrega un widget al panel de administración para dar estadísticas básicas de "
+"ventas."
 
 #: core-addons/load.php:179
 msgid ""
 "This add-on allows you to generate coupons that apply to all products in "
 "your store."
-msgstr "Este add-on te permita generar cupones que se aplican a todos los productos en tu tienda."
+msgstr ""
+"Este add-on te permita generar cupones que se aplican a todos los productos "
+"en tu tienda."
 
 #: core-addons/load.php:191
 #: core-addons/product-features/categories/class.category-widget.php:18
@@ -3227,7 +3275,9 @@ msgstr "Categorías de Productos"
 
 #: core-addons/load.php:192
 msgid "This adds a category taxonomy for all products in iThemes Exchange."
-msgstr "Esto añade una categoría taxonomía para todos los productos en iThemes Exchange."
+msgstr ""
+"Esto añade una categoría taxonomía para todos los productos en iThemes "
+"Exchange."
 
 #: core-addons/load.php:199
 #: core-addons/product-features/categories/init.php:21
@@ -3240,7 +3290,9 @@ msgstr "Etiquetas de Producto"
 
 #: core-addons/load.php:205
 msgid "This adds a tag taxonomy for all products in iThemes Exchange."
-msgstr "Esto añade una etiqueta taxonomía para todos los productos en iThemes Exchange."
+msgstr ""
+"Esto añade una etiqueta taxonomía para todos los productos en iThemes "
+"Exchange."
 
 #: core-addons/load.php:212 core-addons/product-features/tags/init.php:21
 msgid "Product Tag"
@@ -3252,7 +3304,9 @@ msgstr "Impuestos Simples"
 
 #: core-addons/load.php:218
 msgid "This gives the admin ability to apply a default tax rate to all sales."
-msgstr "Esto le da al administrador la capacidad de aplicar una tasa de impuestos por defecto para todas las ventas."
+msgstr ""
+"Esto le da al administrador la capacidad de aplicar una tasa de impuestos "
+"por defecto para todas las ventas."
 
 #: core-addons/load.php:228
 msgid "Duplicate Products"
@@ -3260,7 +3314,8 @@ msgstr "Duplicar Productos"
 
 #: core-addons/load.php:229
 msgid "This gives the admin the ability to duplicate an existing product."
-msgstr "Esto le da al administrador la capacidad de duplicar un producto existente."
+msgstr ""
+"Esto le da al administrador la capacidad de duplicar un producto existente."
 
 #: core-addons/load.php:236
 msgid "Duplicate"
@@ -3279,7 +3334,9 @@ msgstr "Tarifa fija y el envío gratis para tus productos físicos"
 msgid ""
 "Add-ons responsible for the differing types of products available in iThemes "
 "Exchange."
-msgstr "Add-ons responsables para los diferentes tipos de productos disponibles en iThemes Exchange."
+msgstr ""
+"Add-ons responsables para los diferentes tipos de productos disponibles en "
+"iThemes Exchange."
 
 #: core-addons/load.php:276
 msgid "Transaction Methods"
@@ -3333,7 +3390,9 @@ msgstr "Admin Añadir Add-ons"
 #: core-addons/load.php:302
 msgid ""
 "Add-ons that create general purpose admin functionality. eg: Reports, Export."
-msgstr "Add-ons que crean funcionalidad general de administración propósito. por ejemplo: informes, en Exportar."
+msgstr ""
+"Add-ons que crean funcionalidad general de administración propósito. por "
+"ejemplo: informes, en Exportar."
 
 #: core-addons/load.php:306
 msgid "Coupon Add-ons"
@@ -3349,11 +3408,15 @@ msgstr "Add-ons de Taxonomía"
 
 #: core-addons/load.php:312
 msgid "Add-ons that create new taxonomies specifically for Exchange products."
-msgstr "Add-ons que crean nuevas taxonomías específicamente para productos de Exchange."
+msgstr ""
+"Add-ons que crean nuevas taxonomías específicamente para productos de "
+"Exchange."
 
 #: core-addons/load.php:317
 msgid "Add-ons that help store owners manage their email."
-msgstr "Add-ons que ayudan a los propietarios de tiendas a manejar tu correo electrónico."
+msgstr ""
+"Add-ons que ayudan a los propietarios de tiendas a manejar tu correo "
+"electrónico."
 
 #: core-addons/load.php:321
 msgid "Other"
@@ -3440,7 +3503,9 @@ msgstr "Plantilla"
 msgid ""
 "This option will allow you to override the default WordPress template used "
 "for this product."
-msgstr "Esta opción le permitirá anular la plantilla de WordPress por defecto utilizado para este producto."
+msgstr ""
+"Esta opción le permitirá anular la plantilla de WordPress por defecto "
+"utilizado para este producto."
 
 #: core-addons/product-features/page-templates/init.php:118
 msgid " Default Template"
@@ -3492,13 +3557,16 @@ msgstr "Descargas Digitales Ajustes"
 
 #: core-addons/product-types/digital-downloads/init.php:151
 msgid "Require users to log in before downloading their products?"
-msgstr "Requerir a los usuarios iniciar sesión antes de la descarga de tus productos?"
+msgstr ""
+"Requerir a los usuarios iniciar sesión antes de la descarga de tus productos?"
 
 #: core-addons/product-types/digital-downloads/init.php:151
 msgid ""
 "If unchecked, users can simply download their products using their download "
 "links"
-msgstr "Si no se controla, los usuarios sólo pueden descargar tus productos utilizando tus enlaces de descarga"
+msgstr ""
+"Si no se controla, los usuarios sólo pueden descargar tus productos "
+"utilizando tus enlaces de descarga"
 
 #: core-addons/product-types/digital-downloads/init.php:180
 #: core-addons/taxes/taxes-simple/init.php:95
@@ -3538,7 +3606,9 @@ msgstr "¿Habilitar Tarifa Fija de Envío?"
 msgid ""
 "Do you want flat rate shipping available to your customers as a shipping "
 "option?"
-msgstr "¿Quieres tarifa fija de envío disponibles a tus clientes como una opción de envío?"
+msgstr ""
+"¿Quieres tarifa fija de envío disponibles a tus clientes como una opción de "
+"envío?"
 
 #: core-addons/shipping/simple-shipping/lib/methods/flat-rate-shipping.php:124
 #: core-addons/shipping/simple-shipping/lib/methods/free-shipping.php:111
@@ -3562,7 +3632,9 @@ msgstr "Costo de Envio Predeterminado"
 msgid ""
 "The default shipping amount for new products. This can be overridden by "
 "individual products."
-msgstr "El costo de envio predeterminado para nuevos productos. Esto puede ser anulado por productos individuales."
+msgstr ""
+"El costo de envio predeterminado para nuevos productos. Esto puede ser "
+"anulado por productos individuales."
 
 #: core-addons/shipping/simple-shipping/lib/methods/flat-rate-shipping.php:231
 msgid "Flat Rate Shipping Cost"
@@ -3570,7 +3642,8 @@ msgstr "Tarifa Fija de Costo de Envío"
 
 #: core-addons/shipping/simple-shipping/lib/methods/flat-rate-shipping.php:231
 msgid "Shipping costs for this product. Multiplied by quantity purchased."
-msgstr "Costos de envío para este producto. Multiplicado por cantidad comprada."
+msgstr ""
+"Costos de envío para este producto. Multiplicado por cantidad comprada."
 
 #: core-addons/shipping/simple-shipping/lib/methods/free-shipping.php:49
 #: core-addons/shipping/simple-shipping/lib/methods/free-shipping.php:99
@@ -3585,7 +3658,8 @@ msgstr "¿Habilitar Envío Gratuito?"
 #: core-addons/shipping/simple-shipping/lib/methods/free-shipping.php:106
 msgid ""
 "Do you want free shipping available to your customers as a shipping option?"
-msgstr "¿Quieres el envío gratis disponible a tus clientes como una opción de envío?"
+msgstr ""
+"¿Quieres el envío gratis disponible a tus clientes como una opción de envío?"
 
 #: core-addons/shipping/simple-shipping/lib/methods/free-shipping.php:114
 msgid "Free Shipping (3-5 days)"
@@ -3605,7 +3679,9 @@ msgstr "Envío"
 #: core-addons/shipping/simple-shipping/lib/settings.php:22
 msgid ""
 "Settings are located in the %sShipping tab%s on the Exchange Settings page."
-msgstr "Ajustes se encuentran en las %sPestaña de Envio%s en la página de Configuración de Exchange."
+msgstr ""
+"Ajustes se encuentran en las %sPestaña de Envio%s en la página de "
+"Configuración de Exchange."
 
 #: core-addons/taxes/taxes-simple/init.php:46
 msgid "Default Tax Rate"
@@ -3684,7 +3760,10 @@ msgstr "Anulado"
 msgid ""
 "Offline payments allow customers to purchase products from your site using "
 "check or cash. Transactions can be set as pending until you receive payment."
-msgstr "Pagos fuera de línea permiten a los clientes comprar productos desde tu sitio usando cheque o dinero en efectivo. Las transacciones se pueden configurar como pendiente hasta que reciba el pago."
+msgstr ""
+"Pagos fuera de línea permiten a los clientes comprar productos desde tu "
+"sitio usando cheque o dinero en efectivo. Las transacciones se pueden "
+"configurar como pendiente hasta que reciba el pago."
 
 #: core-addons/transaction-methods/offline-payments/init.php:390
 #: core-addons/transaction-methods/paypal-standard/init.php:1012
@@ -3698,7 +3777,9 @@ msgstr "Configurando Pagos Fuera de Línea en Exchange"
 
 #: core-addons/transaction-methods/offline-payments/init.php:391
 msgid "To process payments offline, complete the settings below."
-msgstr "Para procesar pagos fuera de línea, completa las configuraciones a continuación."
+msgstr ""
+"Para procesar pagos fuera de línea, completa las configuraciones a "
+"continuación."
 
 #: core-addons/transaction-methods/offline-payments/init.php:395
 msgid "What would you like to title this payment option? eg: Check"
@@ -3712,7 +3793,8 @@ msgstr "Instrucciones después de la compra"
 msgid ""
 "This will be the notification customers see after using this method of "
 "payment."
-msgstr "Esta será la notificación clientes ven después de usar este método de pago."
+msgstr ""
+"Esta será la notificación clientes ven después de usar este método de pago."
 
 #: core-addons/transaction-methods/offline-payments/init.php:406
 msgid "Default Payment Status"
@@ -3722,7 +3804,9 @@ msgstr "Estado de Pago Predeterminado"
 msgid ""
 "This is the default payment status applied to all offline payment "
 "transactions."
-msgstr "Este es el estado de pago predeterminado aplicada a todas las transacciones de pago fuera de línea."
+msgstr ""
+"Este es el estado de pago predeterminado aplicada a todas las transacciones "
+"de pago fuera de línea."
 
 #: core-addons/transaction-methods/offline-payments/init.php:468
 #: core-addons/transaction-methods/paypal-standard/init.php:1096
@@ -3740,7 +3824,9 @@ msgstr "El campo de Título no puede dejarse en blanco"
 msgid ""
 "Please leave some instructions for customers checking out with this "
 "transaction method"
-msgstr "Por favor, deje algunas instrucciones para los clientes comprobando según este método de transacción."
+msgstr ""
+"Por favor, deje algunas instrucciones para los clientes comprobando según "
+"este método de transacción."
 
 #: core-addons/transaction-methods/offline-payments/init.php:492
 msgid "Please select a valid default transaction status."
@@ -3752,7 +3838,8 @@ msgstr "Paga con Cheque"
 
 #: core-addons/transaction-methods/offline-payments/init.php:505
 msgid "Thank you for your order. We will contact you shortly for payment."
-msgstr "Gracias por tu pedido. Nos pondremos en contacto en breve para el pago."
+msgstr ""
+"Gracias por tu pedido. Nos pondremos en contacto en breve para el pago."
 
 #: core-addons/transaction-methods/offline-payments/init.php:584
 #: core-addons/transaction-methods/paypal-standard/init.php:862
@@ -3780,11 +3867,14 @@ msgstr "Reversado"
 
 #: core-addons/transaction-methods/paypal-standard/init.php:140
 msgid "Error: Amount charged is not the same as the cart total!"
-msgstr "Error: La cantidad que se cobra no es el mismo que el total de la compra."
+msgstr ""
+"Error: La cantidad que se cobra no es el mismo que el total de la compra."
 
 #: core-addons/transaction-methods/paypal-standard/init.php:169
 msgid "Unknown error while processing with PayPal. Please try again later."
-msgstr "Error desconocido al procesar con PayPal. Por favor, inténtelo de nuevo más tarde."
+msgstr ""
+"Error desconocido al procesar con PayPal. Por favor, inténtelo de nuevo más "
+"tarde."
 
 #: core-addons/transaction-methods/paypal-standard/init.php:283
 #: core-addons/transaction-methods/paypal-standard-secure/init.php:392
@@ -3794,7 +3884,8 @@ msgstr "Pague con PayPal"
 #: core-addons/transaction-methods/paypal-standard/init.php:348
 #: core-addons/transaction-methods/paypal-standard-secure/init.php:453
 msgid "Error processing PayPal form. Missing valid PayPal information."
-msgstr "Error procesando el formulario PayPal. Falta de información válida de PayPal."
+msgstr ""
+"Error procesando el formulario PayPal. Falta de información válida de PayPal."
 
 #: core-addons/transaction-methods/paypal-standard/init.php:457
 msgid "ERROR: Invalid PayPal Setup"
@@ -3860,7 +3951,12 @@ msgid ""
 "you switch to the PayPal Standard Secure option. To get PayPal set up for "
 "use with Exchange, you'll need to add the following information from your "
 "PayPal account."
-msgstr "Esta es la versión sencilla y rápida para obtener la configuración de PayPal para tu tienda. Es posible utilizar esta versión sólo para conseguir tu tienda de ir, pero sugeriría que cambie a la opción segura de PayPal estándar. Para obtener PayPal configurado para tu uso con Exchange, tendrá que añadir la siguiente información de tu cuenta PayPal."
+msgstr ""
+"Esta es la versión sencilla y rápida para obtener la configuración de PayPal "
+"para tu tienda. Es posible utilizar esta versión sólo para conseguir tu "
+"tienda de ir, pero sugeriría que cambie a la opción segura de PayPal "
+"estándar. Para obtener PayPal configurado para tu uso con Exchange, tendrá "
+"que añadir la siguiente información de tu cuenta PayPal."
 
 #: core-addons/transaction-methods/paypal-standard/init.php:1012
 msgid "Setting Up PayPal Standard Basic"
@@ -3900,7 +3996,9 @@ msgstr "Etiqueta de Botón de Compra"
 msgid ""
 "This is the text inside the button your customers will press to purchase "
 "with PayPal Standard"
-msgstr "Este es el texto dentro del botón de tus clientes presionarán para comprar con PayPal Estándar"
+msgstr ""
+"Este es el texto dentro del botón de tus clientes presionarán para comprar "
+"con PayPal Estándar"
 
 #: core-addons/transaction-methods/paypal-standard/init.php:1115
 #: core-addons/transaction-methods/paypal-standard-secure/init.php:1438
@@ -3913,13 +4011,17 @@ msgstr "Error: ¡IDs de transacciónes no coinciden %s , %s"
 
 #: core-addons/transaction-methods/paypal-standard-secure/init.php:177
 msgid "Error: Amount charged is not the same as the cart total! %s | %s"
-msgstr "Error: la cantidad que se cobra no es el mismo que el total de la compra. %s | %s"
+msgstr ""
+"Error: la cantidad que se cobra no es el mismo que el total de la compra. %s "
+"| %s"
 
 #: core-addons/transaction-methods/paypal-standard-secure/init.php:214
 msgid ""
 "Unknown error while processing with PayPal. Please check your PayPal account "
 "for any charges and try again later."
-msgstr "Error desconocido al procesar con PayPal. Por favor, revise tu cuenta PayPal por cualquier carga y vuelva a intentarlo más tarde."
+msgstr ""
+"Error desconocido al procesar con PayPal. Por favor, revise tu cuenta PayPal "
+"por cualquier carga y vuelva a intentarlo más tarde."
 
 #: core-addons/transaction-methods/paypal-standard-secure/init.php:257
 msgid "Canceled during Upgrade/Downgrade Process"
@@ -3943,7 +4045,11 @@ msgid ""
 "time, it is well worth it for the security options for your store. To get "
 "PayPal set up for use with Exchange, you'll need to add the following "
 "information from your PayPal account."
-msgstr "Aunque esta versión de PayPal para iThemes Exchange requiere más esfuerzo y tiempo, es bien vale la pena para las opciones de seguridad para tu tienda. Para obtener PayPal configurado para tu uso con Exchange, tendrás que añadir la siguiente información de tu cuenta PayPal."
+msgstr ""
+"Aunque esta versión de PayPal para iThemes Exchange requiere más esfuerzo y "
+"tiempo, es bien vale la pena para las opciones de seguridad para tu tienda. "
+"Para obtener PayPal configurado para tu uso con Exchange, tendrás que añadir "
+"la siguiente información de tu cuenta PayPal."
 
 #: core-addons/transaction-methods/paypal-standard-secure/init.php:1265
 msgid "Setting Up PayPal Standard Secure"
@@ -3967,7 +4073,10 @@ msgstr "PayPal nombre de usuario API"
 msgid ""
 "At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; "
 "Update &rarr; View API Signature (or Request API Credentials)."
-msgstr "En PayPal, consulte: Perfil &rarr; Mi herramientas de venta &rarr; API de acceso &rarr; Actualización y rarr; Firma Ver API (o Solicitud de Verificación de Poderes de la API)."
+msgstr ""
+"En PayPal, consulte: Perfil &rarr; Mi herramientas de venta &rarr; API de "
+"acceso &rarr; Actualización y rarr; Firma Ver API (o Solicitud de "
+"Verificación de Poderes de la API)."
 
 #: core-addons/transaction-methods/paypal-standard-secure/init.php:1289
 msgid "PayPal API Password"
@@ -3985,14 +4094,19 @@ msgstr "Paso 3. Configurar PayPal retorno automático"
 msgid ""
 "PayPal Auto Return must be configured in Account Profile -› Website Payment "
 "Preferences in your PayPal Account"
-msgstr "PayPal retorno automático se debe configurar en Perfil de cuenta -> Preferencias de Pago en tu cuenta PayPal"
+msgstr ""
+"PayPal retorno automático se debe configurar en Perfil de cuenta -> "
+"Preferencias de Pago en tu cuenta PayPal"
 
 #: core-addons/transaction-methods/paypal-standard-secure/init.php:1308
 msgid ""
 "Please log into your account, set Auto Return to ON and add this URL to your "
 "Return URL Settings so your customers are redirected to your site to "
 "complete the transactions."
-msgstr "Por favor, ingrese a tu cuenta, ajuste de retorno automático en ON y añadir esta URL a la configuración de tu URL de devolución para que tus clientes son redirigidos a tu sitio para completar las transacciones."
+msgstr ""
+"Por favor, ingrese a tu cuenta, ajuste de retorno automático en ON y añadir "
+"esta URL a la configuración de tu URL de devolución para que tus clientes "
+"son redirigidos a tu sitio para completar las transacciones."
 
 #: core-addons/transaction-methods/paypal-standard-secure/init.php:1310
 msgid "Step 4. Setup PayPal Payment Data Transfer (PDT)"
@@ -4002,7 +4116,9 @@ msgstr "Paso 4. Configurar PayPal Transferencia de datos de pago (PDT)"
 msgid ""
 "PayPal PDT must be turned <strong>ON</strong> in Account Profile -› Website "
 "Payment Preferences in your PayPal Account"
-msgstr "PayPal PDT debe estar <strong>ENCENDIDO</ strong> en la Cuenta Perfil -> Preferencias de Pago en tu cuenta PayPal"
+msgstr ""
+"PayPal PDT debe estar <strong>ENCENDIDO</ strong> en la Cuenta Perfil -> "
+"Preferencias de Pago en tu cuenta PayPal"
 
 #: core-addons/transaction-methods/paypal-standard-secure/init.php:1312
 msgid "Optional: Edit Paypal Button Label"
@@ -4012,7 +4128,9 @@ msgstr "Opcional: Editar Etiqueta de Botón de Paypal"
 msgid ""
 "This is the text inside the button your customers will press to purchase "
 "with PayPal Standard (secure)"
-msgstr "Este es el texto dentro del botón de tus clientes presionarán para comprar con PayPal Estándar (seguro)"
+msgstr ""
+"Este es el texto dentro del botón de tus clientes presionarán para comprar "
+"con PayPal Estándar (seguro)"
 
 #: core-addons/transaction-methods/paypal-standard-secure/init.php:1322
 msgid "Optional: Enable Paypal Testing Mode"
@@ -4026,7 +4144,9 @@ msgstr "Activar el modo de Sandbox de PayPal?"
 msgid ""
 "Use this mode for testing your store. This mode will need to be disabled "
 "when the store is ready to process customer payments."
-msgstr "Usa este modo para probar tu tienda. Este modo necisita estar deshabilitado cuando la tienda está listo para procesar pagos de clientes."
+msgstr ""
+"Usa este modo para probar tu tienda. Este modo necisita estar deshabilitado "
+"cuando la tienda está listo para procesar pagos de clientes."
 
 #: core-addons/transaction-methods/paypal-standard-secure/init.php:1334
 msgid "PayPal Sandbox Email Address"
@@ -4086,7 +4206,9 @@ msgstr "¡Error de Codificación!"
 msgid ""
 "The setting for %s has an incorrect type argument. No such method exists in "
 "the ITForm class"
-msgstr "Los ajustes de %s tiene un argumento de tipo incorrecto. No existe tal método en la clase ITForm."
+msgstr ""
+"Los ajustes de %s tiene un argumento de tipo incorrecto. No existe tal "
+"método en la clase ITForm."
 
 #: lib/admin/class-settings-form.php:343
 msgid "Invalid security token. Please try again"
@@ -4199,7 +4321,12 @@ msgid ""
 "Order: %s\n"
 "\n"
 "%s"
-msgstr "Tu amigo %s acaba de comprar todo esta genialidad de tu tienda\n\nPedido: %s\n\n%s"
+msgstr ""
+"Tu amigo %s acaba de comprar todo esta genialidad de tu tienda\n"
+"\n"
+"Pedido: %s\n"
+"\n"
+"%s"
 
 #: lib/admin/class.admin.php:646
 msgid "Receipt for Purchase: %s"
@@ -4215,7 +4342,15 @@ msgid ""
 "%s\n"
 "\n"
 "%s"
-msgstr "Hola %s,\n\nGracias por tu pedido. Detalles de tu pedido están abajo.\nPedido: %s\n\n%s\n\n%s"
+msgstr ""
+"Hola %s,\n"
+"\n"
+"Gracias por tu pedido. Detalles de tu pedido están abajo.\n"
+"Pedido: %s\n"
+"\n"
+"%s\n"
+"\n"
+"%s"
 
 #: lib/admin/class.admin.php:766
 msgid "Add-on enabled."
@@ -4236,7 +4371,8 @@ msgstr "Error: Add-on no deshabilitado."
 #: lib/admin/class.admin.php:1006 lib/admin/views/admin-settings.php:108
 msgid ""
 "Please use the 2-3 character %sISO abbreviation%s for country subdivisions"
-msgstr "Utilice el carácter de 2-3 %sISO abreviatura%s para subdivisiones de países"
+msgstr ""
+"Utilice el carácter de 2-3 %sISO abreviatura%s para subdivisiones de países"
 
 #: lib/admin/class.admin.php:1059
 msgid "You must select at least one Payment Method."
@@ -4284,7 +4420,9 @@ msgstr "Plantilla de correo electrónico no puede estar vacío"
 
 #: lib/admin/class.admin.php:1268
 msgid "Invalid email address in Sales Notification Email Address"
-msgstr "Dirección de correo electrónico inválida en el Correo Electrónico de la Notificación de Ventas"
+msgstr ""
+"Dirección de correo electrónico inválida en el Correo Electrónico de la "
+"Notificación de Ventas"
 
 #: lib/admin/class.admin.php:1407
 msgid "Please make sure all your page slugs are unique."
@@ -4322,18 +4460,26 @@ msgstr "Avanzado"
 msgid ""
 "We want to keep things simple for you, so we put the kitchen sink here. "
 "Click this button to add more info about your product."
-msgstr "Queremos mantener las cosas simples, así que pusimos el fregadero de la cocina aquí. Haga clic en este botón para agregar más información sobre tu producto."
+msgstr ""
+"Queremos mantener las cosas simples, así que pusimos el fregadero de la "
+"cocina aquí. Haga clic en este botón para agregar más información sobre tu "
+"producto."
 
 #: lib/admin/class.admin.php:1502
 msgid ""
 "You have checked the option to \"Reset ALL data\". Are you sure you want to "
 "delete all Exchange products, transactions, and settings?"
-msgstr "Has seleccionado la opción de \"Restablecer TODOS los datos\". ¿Seguro que quieres eliminar todos los productos de intercambio, las transacciones y los ajustes?"
+msgstr ""
+"Has seleccionado la opción de \"Restablecer TODOS los datos\". ¿Seguro que "
+"quieres eliminar todos los productos de intercambio, las transacciones y los "
+"ajustes?"
 
 #: lib/admin/class.admin.php:1509
 msgid ""
 "Please make sure all WordPress page types have a WordPress page selected."
-msgstr "Por favor, asegúrese de que todos los tipos de página de WordPress tienen una página de WordPress seleccionado."
+msgstr ""
+"Por favor, asegúrese de que todos los tipos de página de WordPress tienen "
+"una página de WordPress seleccionado."
 
 #: lib/admin/class.admin.php:1606
 msgid "View store"
@@ -4356,7 +4502,11 @@ msgid ""
 "Add-ons are features that you can add or remove depending on your needs. "
 "Selling your stuff should only be as complicated as you need it to be. Visit "
 "the Get More tab to see what else Exchange can do."
-msgstr "Los Add-ons son características que se pueden agregar o quitar en función de tus necesidades. La venta de tus artículos sólo debería ser complicado como lo necesita ser. Visitas la ficha Obtén Más para ver qué más puede hacer Exchange."
+msgstr ""
+"Los Add-ons son características que se pueden agregar o quitar en función de "
+"tus necesidades. La venta de tus artículos sólo debería ser complicado como "
+"lo necesita ser. Visitas la ficha Obtén Más para ver qué más puede hacer "
+"Exchange."
 
 #: lib/admin/views/admin-add-ons.php:41
 #: lib/admin/views/admin-get-more-addons.php:29
@@ -4371,7 +4521,13 @@ msgid ""
 "Sales Taxes, Recurring Payments, Stripe and MailChimp. With the Pro Pack, "
 "you get access to all our iThemes-built Exchange Add-ons plus any more we "
 "build in the next year (which will be a lot)."
-msgstr "El Paquete Pro le proporcionará acceso a iThemes Exchange add-ons que desbloquear mucho más que Exchange puede hacer ... como membresía, facturas, variantes, Impuestos Fácil estadounidense de venta, pagos periódicos, la raya y MailChimp. Con el Paquete Pro, obtienes acceso completo a todos nuestros iThemes-construidas Exchange Add-ons más lo que construemos en el año que viene (y  será mucho)."
+msgstr ""
+"El Paquete Pro le proporcionará acceso a iThemes Exchange add-ons que "
+"desbloquear mucho más que Exchange puede hacer ... como membresía, facturas, "
+"variantes, Impuestos Fácil estadounidense de venta, pagos periódicos, la "
+"raya y MailChimp. Con el Paquete Pro, obtienes acceso completo a todos "
+"nuestros iThemes-construidas Exchange Add-ons más lo que construemos en el "
+"año que viene (y  será mucho)."
 
 #: lib/admin/views/admin-add-ons.php:43
 #: lib/admin/views/admin-get-more-addons.php:31
@@ -4406,7 +4562,9 @@ msgstr "Agárate más"
 msgid ""
 "iThemes Exchange default template parts have been updated. View %sour codex"
 "%s for more information."
-msgstr "iThemes Exchange partes de plantilla por defecto se han actualizado. Ver %snuestro códice%s para más información."
+msgstr ""
+"iThemes Exchange partes de plantilla por defecto se han actualizado. Ver "
+"%snuestro códice%s para más información."
 
 #: lib/admin/views/admin-email-settings.php:23
 msgid "Admin Notifications"
@@ -4420,7 +4578,9 @@ msgstr "Correo Electrónico de la Notificación de Ventas"
 msgid ""
 "Enter the email address(es) that should receive a notification anytime a "
 "sale is made, comma separated"
-msgstr "Introduzca la(s) dirección(es) de correo electrónico que debe recibir una notificación cada vez que una venta se hace, separadas por comas"
+msgstr ""
+"Introduzca la(s) dirección(es) de correo electrónico que debe recibir una "
+"notificación cada vez que una venta se hace, separadas por comas"
 
 #: lib/admin/views/admin-email-settings.php:34
 #: lib/admin/views/admin-email-settings.php:100
@@ -4438,7 +4598,9 @@ msgstr "Nombre de Correo Electrónico"
 
 #: lib/admin/views/admin-email-settings.php:44
 msgid "Name used for account that sends admin notification emails."
-msgstr "Nombre para la dirección de correo utilizado para notificaciónes administrativas."
+msgstr ""
+"Nombre para la dirección de correo utilizado para notificaciónes "
+"administrativas."
 
 #: lib/admin/views/admin-email-settings.php:48
 msgid "Notification Subject Line"
@@ -4456,7 +4618,10 @@ msgstr "Plantilla de correo electrónico para notificaciónes"
 msgid ""
 "Enter the email that is sent to administrator after a customer completes a "
 "successful purchase. HTML is accepted. Available shortcode functions:"
-msgstr "Introduzca el correo electrónico que se envía al administrador después de que un cliente completa una compra exitosa. Se acepta HTML. Shortcode funciones disponibles:"
+msgstr ""
+"Introduzca el correo electrónico que se envía al administrador después de "
+"que un cliente completa una compra exitosa. Se acepta HTML. Shortcode "
+"funciones disponibles:"
 
 #: lib/admin/views/admin-email-settings.php:71
 #: lib/admin/views/admin-email-settings.php:137
@@ -4482,11 +4647,14 @@ msgstr "El nombre completo del comprador, primero y último"
 #: lib/admin/views/admin-email-settings.php:76
 #: lib/admin/views/admin-email-settings.php:142
 msgid "The buyer's username on the site, if they registered an account"
-msgstr "Nombre de usuario del comprador en el sitio, si se ha registrado una cuenta"
+msgstr ""
+"Nombre de usuario del comprador en el sitio, si se ha registrado una cuenta"
 
 #: lib/admin/views/admin-email-settings.php:77
 msgid "A table of the order details. Accepts \"purchase_message\" option."
-msgstr "Una tabla de los detalles de la orden. Acepta la opción \"mensaje de compra\"."
+msgstr ""
+"Una tabla de los detalles de la orden. Acepta la opción \"mensaje de compra"
+"\"."
 
 #: lib/admin/views/admin-email-settings.php:78
 #: lib/admin/views/admin-email-settings.php:144
@@ -4518,14 +4686,18 @@ msgstr "El método de pago utilizado para esta compra"
 msgid ""
 "The shipping address for this product. Blank if shipping is not required. "
 "Also accepts \"before\" and \"after\" arguments."
-msgstr "La dirección de envío para este producto. En blanco si no se requiere el envío. También acepta \"antes\" y \"después\" argumentos."
+msgstr ""
+"La dirección de envío para este producto. En blanco si no se requiere el "
+"envío. También acepta \"antes\" y \"después\" argumentos."
 
 #: lib/admin/views/admin-email-settings.php:84
 #: lib/admin/views/admin-email-settings.php:150
 msgid ""
 "The billing address for this product. Blank if shipping is not required. "
 "Also accepts \"before\" and \"after\" arguments."
-msgstr "La dirección de facturación de este producto. En blanco si no se requiere el envío. También acepta \"antes\" y \"después\" argumentos."
+msgstr ""
+"La dirección de facturación de este producto. En blanco si no se requiere el "
+"envío. También acepta \"antes\" y \"después\" argumentos."
 
 #: lib/admin/views/admin-email-settings.php:85
 #: lib/admin/views/admin-email-settings.php:151
@@ -4538,7 +4710,10 @@ msgstr "Tu nombre de sitio"
 msgid ""
 "Adds a link so users can view their receipt directly on your website if they "
 "are unable to view it in the email correctly."
-msgstr "Añade un enlace que los usuarios puedan ver tu recibo directamente en tu sitio web, si no son capaces de ver que en el correo electrónico correctamente."
+msgstr ""
+"Añade un enlace que los usuarios puedan ver tu recibo directamente en tu "
+"sitio web, si no son capaces de ver que en el correo electrónico "
+"correctamente."
 
 #: lib/admin/views/admin-email-settings.php:87
 #: lib/admin/views/admin-email-settings.php:153
@@ -4560,7 +4735,9 @@ msgstr "Correos electrónicos utilizado para recibos al cliente"
 
 #: lib/admin/views/admin-email-settings.php:110
 msgid "Name used for account that sends customer receipt emails."
-msgstr "Nombre utilizado para la cuenta que envía mensajes de correos electrónicos de  recibos al cliente."
+msgstr ""
+"Nombre utilizado para la cuenta que envía mensajes de correos electrónicos "
+"de  recibos al cliente."
 
 #: lib/admin/views/admin-email-settings.php:114
 msgid "Subject Line"
@@ -4568,7 +4745,9 @@ msgstr "Línea de Asunto"
 
 #: lib/admin/views/admin-email-settings.php:117
 msgid "Subject line used for customer receipt emails."
-msgstr "Asunto línea usada para mensajes de correos electrónicos de  recibos al cliente."
+msgstr ""
+"Asunto línea usada para mensajes de correos electrónicos de  recibos al "
+"cliente."
 
 #: lib/admin/views/admin-email-settings.php:121
 msgid "Email Template"
@@ -4578,11 +4757,15 @@ msgstr "Plantilla de Correo Electrónico"
 msgid ""
 "Enter the email that is sent to users after completing a successful "
 "purchase. HTML is accepted. Available shortcode functions:"
-msgstr "Introduzca el correo electrónico que se envía a los usuarios después de completar una compra exitosa. Se acepta HTML. Shortcode funciones disponibles:"
+msgstr ""
+"Introduzca el correo electrónico que se envía a los usuarios después de "
+"completar una compra exitosa. Se acepta HTML. Shortcode funciones "
+"disponibles:"
 
 #: lib/admin/views/admin-email-settings.php:143
 msgid "A table of the order details. Accept \"purchase_message\" option."
-msgstr "Una tabla de los detalles de la orden. Acepte la opción \"purchase_message\"."
+msgstr ""
+"Una tabla de los detalles de la orden. Acepte la opción \"purchase_message\"."
 
 #: lib/admin/views/admin-get-more-addons.php:13
 msgid ""
@@ -4590,7 +4773,11 @@ msgid ""
 "Selling your stuff should only be as complicated as you need it to be. If "
 "you have already purchased additional Exchange add-ons, please upload and "
 "activate them through the WordPress plugins menu."
-msgstr "Add-ons son características que se pueden agregar o quitar en función de tus necesidades. La venta de tu material sólo debería ser tan complicado como tu lo necesitas ser. Si ya ha comprado Exchange add-ons adicional, por favor, subir y activarlos a través del menú de plugins de WordPress."
+msgstr ""
+"Add-ons son características que se pueden agregar o quitar en función de tus "
+"necesidades. La venta de tu material sólo debería ser tan complicado como tu "
+"lo necesitas ser. Si ya ha comprado Exchange add-ons adicional, por favor, "
+"subir y activarlos a través del menú de plugins de WordPress."
 
 #: lib/admin/views/admin-get-more-addons.php:57
 msgid "by"
@@ -4623,13 +4810,17 @@ msgstr "Envíenos un mensaje"
 #: lib/admin/views/admin-get-more-addons.php:99
 msgid ""
 "Sign up to be notified via email when new Add-ons and updates are released."
-msgstr "Regístrese para ser notificado por correo electrónico cuando nuevos Add-ons y actualizaciones son liberadas."
+msgstr ""
+"Regístrese para ser notificado por correo electrónico cuando nuevos Add-ons "
+"y actualizaciones son liberadas."
 
 #: lib/admin/views/admin-get-more-addons.php:109
 msgid ""
 "Looks like there's a problem loading available add-ons. Go to %s to check "
 "out other available add-ons."
-msgstr "Parece que hay un problema al cargar add-ons disponibles. Vete a %s para revisar otros add-ons disponibles."
+msgstr ""
+"Parece que hay un problema al cargar add-ons disponibles. Vete a %s para "
+"revisar otros add-ons disponibles."
 
 #: lib/admin/views/admin-help.php:10
 msgid "Help and Resources"
@@ -4640,7 +4831,10 @@ msgid ""
 "We've built %s to simplify ecommerce for WordPress. However, ecommerce is "
 "not always easy, so we've taken the time to create some resources to help "
 "you get started."
-msgstr "Hemos construido %s para simplificar el comercio electrónico para WordPress. Sin embargo, el comercio electrónico no siempre es fácil, así que hemos tomado el tiempo para crear algunos recursos para ayudarle a empezar."
+msgstr ""
+"Hemos construido %s para simplificar el comercio electrónico para WordPress. "
+"Sin embargo, el comercio electrónico no siempre es fácil, así que hemos "
+"tomado el tiempo para crear algunos recursos para ayudarle a empezar."
 
 #: lib/admin/views/admin-help.php:15
 msgid "Quick Links"
@@ -4651,7 +4845,10 @@ msgid ""
 "This is a link back to the Quick Setup page that opens after Exchange is "
 "installed. This page walks through the necessary information and settings "
 "needed to set up your store."
-msgstr "Este es un enlace a la página de Configuración Rápida que se abre después de la instalación de Exchange. Esta página camina a través de la información y los ajustes necesarios para configurar tu tienda sea necesario."
+msgstr ""
+"Este es un enlace a la página de Configuración Rápida que se abre después de "
+"la instalación de Exchange. Esta página camina a través de la información y "
+"los ajustes necesarios para configurar tu tienda sea necesario."
 
 #: lib/admin/views/admin-help.php:18
 msgid "Go back to the Exchange Quick Setup Wizard."
@@ -4667,7 +4864,9 @@ msgstr "Recursos"
 
 #: lib/admin/views/admin-help.php:27
 msgid "Short video tutorials to help you become an Exchange expert."
-msgstr "Tutoriales en vídeo cortos para ayudarle a convertirse en un experto de Exchange."
+msgstr ""
+"Tutoriales en vídeo cortos para ayudarle a convertirse en un experto de "
+"Exchange."
 
 #: lib/admin/views/admin-help.php:28
 msgid "Checkout some tutorials"
@@ -4719,7 +4918,9 @@ msgstr "Solicitar una Característica"
 
 #: lib/admin/views/admin-ithemes-sync-integration-notice.php:10
 msgid "New! Track Your Sales Remotely with iThemes Sync. %sCheck it Out Now%s."
-msgstr "¡Nuevo! Seguimiento de tus ventas de forma remota con iThemes Sync. %sDale un vistazo ahora%s ."
+msgstr ""
+"¡Nuevo! Seguimiento de tus ventas de forma remota con iThemes Sync. %sDale "
+"un vistazo ahora%s ."
 
 #: lib/admin/views/admin-page-settings.php:21
 msgid "Select a Page"
@@ -4739,7 +4940,11 @@ msgid ""
 "displayed: Exchange (by default & recommended), WordPress (where you can use "
 "shortcodes to embed & have max control) or Disabled (if you don't need "
 "certain features in this list)."
-msgstr "Tienes tres opciones de Tipo de Página para dónde y cómo se muestran las páginas de la tienda: Exchange (por defecto y recomendado), WordPress (donde se puede utilizar para incrustar códigos cortos y tener un control máximo) o movilidad (si tu no necesitas ciertas características en esta lista)."
+msgstr ""
+"Tienes tres opciones de Tipo de Página para dónde y cómo se muestran las "
+"páginas de la tienda: Exchange (por defecto y recomendado), WordPress (donde "
+"se puede utilizar para incrustar códigos cortos y tener un control máximo) o "
+"movilidad (si tu no necesitas ciertas características en esta lista)."
 
 #: lib/admin/views/admin-page-settings.php:36
 msgid "Page Title"
@@ -4753,7 +4958,9 @@ msgstr "Slug de Página"
 msgid ""
 "If these URL examples do not look right, go to Settings > Permalinks and "
 "click Save Changes."
-msgstr "Si estos ejemplos de URL no se ven bien, vaya a Ajustes > Enlaces Permanentes y haga clic en Guardar Cambios."
+msgstr ""
+"Si estos ejemplos de URL no se ven bien, vaya a Ajustes > Enlaces "
+"Permanentes y haga clic en Guardar Cambios."
 
 #: lib/admin/views/admin-page-settings.php:67
 msgid "Exchange"
@@ -4767,7 +4974,9 @@ msgstr "WordPress"
 msgid ""
 "You'll need to turn registration on in WordPress settings or override the "
 "WordPress settings in Exchange to use this, sorry."
-msgstr "Tendrá que activar el registro en la configuración de WordPress o anular los valores de WordPress en Exchange a utilizar esto, lo siento."
+msgstr ""
+"Tendrá que activar el registro en la configuración de WordPress o anular los "
+"valores de WordPress en Exchange a utilizar esto, lo siento."
 
 #: lib/admin/views/admin-page-settings.php:89
 msgid "This has to be Exchange, sorry."
@@ -4795,7 +5004,9 @@ msgstr "En los EE.UU., este es tu %sIdentificación Fiscal%s Federal."
 
 #: lib/admin/views/admin-settings.php:71
 msgid "Click here for more info about obtaining a Tax ID in the US"
-msgstr "Haga clic aquí para obtener más información acerca de cómo obtener un ID de impuestos en los EE.UU."
+msgstr ""
+"Haga clic aquí para obtener más información acerca de cómo obtener un ID de "
+"impuestos en los EE.UU."
 
 #: lib/admin/views/admin-settings.php:75
 msgid "Company Email"
@@ -4907,7 +5118,8 @@ msgstr "Después: 10.00$"
 
 #: lib/admin/views/admin-settings.php:163
 msgid "Where should the currency symbol be placed in relation to the price?"
-msgstr "¿Dónde se debe colocar el símbolo de la moneda en relación con el precio?"
+msgstr ""
+"¿Dónde se debe colocar el símbolo de la moneda en relación con el precio?"
 
 #: lib/admin/views/admin-settings.php:167
 msgid "Thousands Separator"
@@ -4917,7 +5129,9 @@ msgstr "Separador Miles"
 msgid ""
 "What character would you like to use to separate thousands when displaying "
 "prices?"
-msgstr "¿Qué personaje te gustaría usar para separar miles cuando se muestran los precios?"
+msgstr ""
+"¿Qué personaje te gustaría usar para separar miles cuando se muestran los "
+"precios?"
 
 #: lib/admin/views/admin-settings.php:174
 msgid "Decimals Separator"
@@ -4927,7 +5141,9 @@ msgstr "Separador Decimales"
 msgid ""
 "What character would you like to use to separate decimals when displaying "
 "prices?"
-msgstr "¿Qué personaje te gustaría utilizar para separar los decimales al mostrar los precios?"
+msgstr ""
+"¿Qué personaje te gustaría utilizar para separar los decimales al mostrar "
+"los precios?"
 
 #: lib/admin/views/admin-settings.php:182
 msgid "Customer Registration Settings"
@@ -4950,7 +5166,10 @@ msgid ""
 "In order to use this setting, you will first need to check the \"Anyone can "
 "register\" checkbox from the WordPress General Settings page to allow site "
 "membership."
-msgstr "Para utilizar esta opción, primero tendrá que comprobar el \"Cualquier persona puede registrar\" casilla de verificación en la página Configuración de WordPress generales para permitir la pertenencia al sitio."
+msgstr ""
+"Para utilizar esta opción, primero tendrá que comprobar el \"Cualquier "
+"persona puede registrar\" casilla de verificación en la página Configuración "
+"de WordPress generales para permitir la pertenencia al sitio."
 
 #: lib/admin/views/admin-settings.php:196
 msgid "Default Checkout Form"
@@ -4982,7 +5201,9 @@ msgstr "Estilos Personalizados"
 msgid ""
 "If they exist, the following files will be loaded in order after core "
 "Exchange stylesheets:"
-msgstr "Si existen, los siguientes archivos se cargan en orden después de las hojas de estilo núcleo de Exchange:"
+msgstr ""
+"Si existen, los siguientes archivos se cargan en orden después de las hojas "
+"de estilo núcleo de Exchange:"
 
 #: lib/admin/views/admin-settings.php:229
 msgid "Admin Settings"
@@ -5010,7 +5231,8 @@ msgstr "Habilitar Zoom"
 
 #: lib/admin/views/admin-settings.php:251
 msgid "Zoom will only work properly when uploading large images."
-msgstr "Zoom sólo funciona correctamente cuando se cargan imágenes de gran tamaño."
+msgstr ""
+"Zoom sólo funciona correctamente cuando se cargan imágenes de gran tamaño."
 
 #: lib/admin/views/admin-settings.php:256
 msgid "Click"
@@ -5022,7 +5244,8 @@ msgstr "Flotar"
 
 #: lib/admin/views/admin-settings.php:261
 msgid "Zoom will occur in the popup when popup is enabled."
-msgstr "Zoom se producirá en la ventana emergente cuando emergente está activada."
+msgstr ""
+"Zoom se producirá en la ventana emergente cuando emergente está activada."
 
 #: lib/admin/views/admin-settings.php:267
 msgid "Customer Messages"
@@ -5036,7 +5259,9 @@ msgstr "Página para Cuenta de Cliente"
 msgid ""
 "Enter your content for the Customer's account page. HTML is accepted. "
 "Available shortcode functions:"
-msgstr "Ingrese tu contenido para la página en la cuenta del cliente. Se acepta HTML. Shortcode funciones disponibles:"
+msgstr ""
+"Ingrese tu contenido para la página en la cuenta del cliente. Se acepta "
+"HTML. Shortcode funciones disponibles:"
 
 #: lib/admin/views/admin-settings.php:288
 msgid "The customer's first name"
@@ -5044,7 +5269,7 @@ msgstr "El primer nombre del cliente"
 
 #: lib/admin/views/admin-settings.php:289
 msgid "The customer's last name"
-msgstr "El apellido del cliente"
+msgstr "Apellido(s) del cliente"
 
 #: lib/admin/views/admin-settings.php:290
 msgid "The customer's username on the site"
@@ -5058,7 +5283,9 @@ msgstr "Dirección de correo electrónico del cliente"
 msgid ""
 "The customer's gravatar image. Use the avatar_size param for square size. "
 "Default is 128"
-msgstr "Imagen gravatar del cliente. Utilice el param avatar_size para el tamaño cuadrado. El valor predeterminado es de 128"
+msgstr ""
+"Imagen gravatar del cliente. Utilice el param avatar_size para el tamaño "
+"cuadrado. El valor predeterminado es de 128"
 
 #: lib/admin/views/admin-user-edit.php:24
 msgctxt "it-l10n-ithemes-exchange"
@@ -5088,7 +5315,9 @@ msgstr "Transacción"
 msgid ""
 "<span class=\"details-toggle hide-if-no-js\">&#61;</span><span class="
 "\"details-toggle hide-if-no-js\">&#61;</span>"
-msgstr "<span class=\"details-toggle hide-if-no-js\">&#61;</span><span class=\"details-toggle hide-if-no-js\">&#61;</span>"
+msgstr ""
+"<span class=\"details-toggle hide-if-no-js\">&#61;</span><span class="
+"\"details-toggle hide-if-no-js\">&#61;</span>"
 
 #: lib/admin/views/admin-user-products.php:72 lib/functions/functions.php:461
 #: lib/product-features/class.downloads.php:168
@@ -5179,7 +5408,13 @@ msgid ""
 "the %s Settings page later. And you can get back to this setup screen from "
 "the link on the help page.) If you have add-ons, please go to the %splugins "
 "page%s and install them now before starting the setup."
-msgstr "Puede personalizar las funciones de almacén rellenando algunos datos a continuación. (No te preocupes, siempre se puede cambiar estos ajustes en la página de Add-ons y el %s Página Configuración después. Y puedes volver a esta pantalla de configuración del enlace en la página de ayuda.) Si tiene add-ons, por favor vaya a la %spágina de plugins%s e instalarlos ahora antes de comenzar la instalación."
+msgstr ""
+"Puede personalizar las funciones de almacén rellenando algunos datos a "
+"continuación. (No te preocupes, siempre se puede cambiar estos ajustes en la "
+"página de Add-ons y el %s Página Configuración después. Y puedes volver a "
+"esta pantalla de configuración del enlace en la página de ayuda.) Si tiene "
+"add-ons, por favor vaya a la %spágina de plugins%s e instalarlos ahora antes "
+"de comenzar la instalación."
 
 #: lib/admin/views/admin-wizard.php:26
 msgid "What are you going to sell?"
@@ -5187,7 +5422,8 @@ msgstr "¿Qué vas a vender?"
 
 #: lib/admin/views/admin-wizard.php:26
 msgid "You can always add or remove these later on the Add-ons page."
-msgstr "Siempre se puede añadir o eliminar estos más tarde en la página de Add-ons."
+msgstr ""
+"Siempre se puede añadir o eliminar estos más tarde en la página de Add-ons."
 
 #: lib/admin/views/admin-wizard.php:66 lib/admin/views/admin-wizard.php:67
 #: lib/admin/views/admin-wizard.php:95
@@ -5241,7 +5477,9 @@ msgstr "¿Cómo va a enviar tus productos?"
 
 #: lib/admin/views/admin-wizard.php:117
 msgid "You can always add or remove these later on the Shipping Settings page."
-msgstr "Siempre se puede añadir o eliminar estos más tarde en la Página de Configuración de Envío."
+msgstr ""
+"Siempre se puede añadir o eliminar estos más tarde en la Página de "
+"Configuración de Envío."
 
 #: lib/admin/views/admin-wizard.php:126
 msgid "Flat Rate"
@@ -5255,7 +5493,9 @@ msgstr "Cantidad Predeterminada de Tarifa Fija"
 msgid ""
 "Default shipping costs for flat rate. Multiplied by quantity purchased. "
 "Customizable per product by Store Admin."
-msgstr "Los gastos de envío por defecto para tarifa fija. Multiplicado por cantidad comprada. Personalizable por producto por tienda de administración."
+msgstr ""
+"Los gastos de envío por defecto para tarifa fija. Multiplicado por cantidad "
+"comprada. Personalizable por producto por tienda de administración."
 
 #: lib/admin/views/admin-wizard.php:189
 msgid "How will you accept payments?"
@@ -5265,7 +5505,9 @@ msgstr "¿Cómo vas a aceptar pagos?"
 msgid ""
 "Choose your preferred payment gateway for processing transactions. You can "
 "select more than one option but it's not recommended."
-msgstr "Elija tu pasarela de pago preferido para el procesamiento de transacciones. Puede seleccionar más de una opción, pero no es recomendable."
+msgstr ""
+"Elija tu pasarela de pago preferido para el procesamiento de transacciones. "
+"Puede seleccionar más de una opción, pero no es recomendable."
 
 #: lib/admin/views/admin-wizard.php:217 lib/admin/views/admin-wizard.php:226
 msgid "Stripe"
@@ -5293,17 +5535,23 @@ msgstr "Notificaciones de Correo Electrónico"
 
 #: lib/admin/views/admin-wizard.php:249
 msgid "At what email address would you like to receive store notifications?"
-msgstr "¿A qué dirección de correo electrónico desea recibir notificaciones de tienda?"
+msgstr ""
+"¿A qué dirección de correo electrónico desea recibir notificaciones de "
+"tienda?"
 
 #: lib/admin/views/admin-wizard.php:253
 msgid "Get e-mail updates from us about iThemes Exchange"
-msgstr "Recibe actualizaciones de correo electrónico de nuestra parte sobre iThemes Exchange"
+msgstr ""
+"Recibe actualizaciones de correo electrónico de nuestra parte sobre iThemes "
+"Exchange"
 
 #: lib/admin/views/admin-wizard.php:253
 msgid ""
 "Subscribe to get iThemes Exchange news, updates, discounts and swag &hellip; "
 "oh, and our endless love."
-msgstr "Suscríbete para recibir iThemes intercambio de noticias, actualizaciones, descuentos y botín &hellip; oh, y nuestro amor sin fin."
+msgstr ""
+"Suscríbete para recibir iThemes intercambio de noticias, actualizaciones, "
+"descuentos y botín &hellip; oh, y nuestro amor sin fin."
 
 #: lib/admin/views/admin-wizard.php:256
 msgid "Currency"
@@ -5317,13 +5565,17 @@ msgstr "Selecciona la moneda que va a utilizar en tu tienda."
 msgid ""
 "You're almost ready to start selling digital products using PayPal and "
 "iThemes Exchange."
-msgstr "Estás casi listo para empezar a vender productos digitales a través de PayPal y iThemes Exchange."
+msgstr ""
+"Estás casi listo para empezar a vender productos digitales a través de "
+"PayPal y iThemes Exchange."
 
 #: lib/admin/views/admin-wizard.php:266
 msgid ""
 "Remember, if you want to do more with Exchange, check out our Add-ons "
 "Library."
-msgstr "Recuerde, si quieres hacer más con Exchange, visita nuestra Libraria de Add-ons."
+msgstr ""
+"Recuerde, si quieres hacer más con Exchange, visita nuestra Libraria de Add-"
+"ons."
 
 #: lib/admin/views/admin-wizard.php:267
 msgid "Get Add-ons"
@@ -5356,7 +5608,8 @@ msgstr "Dirección de Envío Guardado"
 
 #: lib/cart/class.cart.php:390
 msgid "Error adding Billing Address. Please try again."
-msgstr "Error al añadir la Dirección de Facturación. Por favor, inténtelo de nuevo."
+msgstr ""
+"Error al añadir la Dirección de Facturación. Por favor, inténtelo de nuevo."
 
 #: lib/cart/class.cart.php:431
 msgid "Billing Address Saved"
@@ -5372,7 +5625,8 @@ msgstr "Por favor, selecciona un método de pago"
 
 #: lib/cart/class.cart.php:535
 msgid "There was an error processing your transaction. Please try again."
-msgstr "Hubo un error al procesar tu transacción. Por favor, inténtelo de nuevo."
+msgstr ""
+"Hubo un error al procesar tu transacción. Por favor, inténtelo de nuevo."
 
 #: lib/cart/class.cart.php:536
 msgid "Product not removed from cart. Please try again."
@@ -5410,7 +5664,9 @@ msgstr "Haciendo trampas ¿eh?"
 msgid ""
 "This feature requires inline frames. You have iframes disabled or your "
 "browser does not support them."
-msgstr "Esta función requiere inline frames. Tiene iframes deshabilitado o tu navegador no los admite."
+msgstr ""
+"Esta función requiere inline frames. Tiene iframes deshabilitado o tu "
+"navegador no los admite."
 
 #: lib/classes/it-dialog.php:47
 msgid "Close"
@@ -5487,7 +5743,9 @@ msgstr "Todo %s"
 msgid ""
 "The IT_Exchange_Coupon class must have a WP post object or ID passed to its "
 "constructor"
-msgstr "La clase IT_Exchange_Coupon debe tener un objeto entrada WP o ID pasado a tu constructor"
+msgstr ""
+"La clase IT_Exchange_Coupon debe tener un objeto entrada WP o ID pasado a tu "
+"constructor"
 
 #: lib/coupons/class.coupons-post-type.php:31
 msgid "Coupon"
@@ -5495,7 +5753,9 @@ msgstr "Cupón"
 
 #: lib/coupons/class.coupons-post-type.php:38
 msgid "An iThemes Exchange Post Type for storing all Coupons in the system"
-msgstr "Un Tipo Entrada de iThemes Exchange para almacenar todos los Cupones en el sistema"
+msgstr ""
+"Un Tipo Entrada de iThemes Exchange para almacenar todos los Cupones en el "
+"sistema"
 
 #: lib/deprecated/templates/content-cart.php:85
 #: lib/deprecated/templates/content-checkout.php:84
@@ -5536,7 +5796,10 @@ msgid ""
 "The status for this transaction does not grant access to downloadable files. "
 "Once the transaction is updated to an appoved status, you will receive a "
 "followup email with your download links."
-msgstr "El estado de esta transacción no concede el acceso a los archivos descargables. Una vez que la transacción se actualiza a un estado appoved, recibirás un correo electrónico de seguimiento con los enlaces de descarga."
+msgstr ""
+"El estado de esta transacción no concede el acceso a los archivos "
+"descargables. Una vez que la transacción se actualiza a un estado appoved, "
+"recibirás un correo electrónico de seguimiento con los enlaces de descarga."
 
 #: lib/deprecated/templates/content-confirmation.php:52
 #: lib/deprecated/templates/content-downloads.php:51
@@ -5580,14 +5843,18 @@ msgid ""
 "The status for this transaction does not grant access to downloadable files. "
 "Once the transaction is updated to an approved status, you will receive a "
 "follow-up email with your download links."
-msgstr "El estado de esta transacción no concede el acceso a los archivos descargables. Una vez que la transacción se actualiza a un estado aprobado, recibirás un correo electrónico de seguimiento con los enlaces de descarga."
+msgstr ""
+"El estado de esta transacción no concede el acceso a los archivos "
+"descargables. Una vez que la transacción se actualiza a un estado aprobado, "
+"recibirás un correo electrónico de seguimiento con los enlaces de descarga."
 
 #: lib/deprecated/templates/content-registration.php:22
 #: lib/templates/content-checkout/elements/purchase-requirements/logged-in/elements/registration/user-logged-in.php:20
 #: lib/templates/content-registration/elements/user-logged-in.php:19
 msgid ""
 "You already have an active account and are logged in. Visit your %sProfile%s"
-msgstr "Ya tienes una cuenta activa y está en el sistema. Visite a tu %sPerfil%s"
+msgstr ""
+"Ya tienes una cuenta activa y está en el sistema. Visite a tu %sPerfil%s"
 
 #: lib/deprecated/templates/content-store.php:28
 #: lib/templates/content-store/elements/no-products-found.php:20
@@ -5645,15 +5912,21 @@ msgstr "Cantidad"
 
 #: lib/email-notifications/class.email-notifications.php:86
 msgid "Invalid transaction. Confirmation email not sent."
-msgstr "Transacción no válida. Mensaje de correo electrónico de confirmación no se envía."
+msgstr ""
+"Transacción no válida. Mensaje de correo electrónico de confirmación no se "
+"envía."
 
 #: lib/email-notifications/class.email-notifications.php:95
 msgid "Confirmation Email not sent. Please try again."
-msgstr "Mensaje de correo electrónico de confirmación no se envía. Por favor, inténtelo de nuevo."
+msgstr ""
+"Mensaje de correo electrónico de confirmación no se envía. Por favor, "
+"inténtelo de nuevo."
 
 #: lib/email-notifications/class.email-notifications.php:103
 msgid "You do not have permission to resend confirmation emails."
-msgstr "No tienes permiso para reenviar mensajes de correo electrónico de confirmación."
+msgstr ""
+"No tienes permiso para reenviar mensajes de correo electrónico de "
+"confirmación."
 
 #: lib/email-notifications/class.email-notifications.php:111
 msgid "Confirmation email resent"
@@ -5668,7 +5941,10 @@ msgid ""
 "You have purchased %d unique download link(s) for each file available with "
 "this product.%s%sEach link has its own download limits and you can view the "
 "details on your %sdownloads%s page."
-msgstr "Has adquirido %d enlace(s) descarga única para cada archivo disponible con este producto.%s%sCada enlace tiene tus propios límites de descarga y se puede ver los detalles sobre tu %sdescargas%s página."
+msgstr ""
+"Has adquirido %d enlace(s) descarga única para cada archivo disponible con "
+"este producto.%s%sCada enlace tiene tus propios límites de descarga y se "
+"puede ver los detalles sobre tu %sdescargas%s página."
 
 #: lib/email-notifications/class.email-notifications.php:358
 msgid "Download link"
@@ -5696,7 +5972,8 @@ msgstr "Restablecer TODOS los datos"
 
 #: lib/functions/functions.php:266
 msgid "Checking this box will rest ALL settings and DELETE ALL DATA."
-msgstr "Al marcar esta casilla reiniciará TODOS los ajustes y BORRAR TODOS LOS DATOS."
+msgstr ""
+"Al marcar esta casilla reiniciará TODOS los ajustes y BORRAR TODOS LOS DATOS."
 
 #: lib/functions/functions.php:362
 msgid "Exchange has been reset. All data has been deleted."
@@ -5723,7 +6000,10 @@ msgid ""
 "Where customers register to login, download, etc.  You can turn off "
 "registration and allow guest checkouts in Exchange / Add-ons / Digital "
 "Downloads Settings."
-msgstr "Cuando los clientes se registran para acceder, descargar, etc. Se puede desactivar el registro y permitir que las cajas de los huéspedes en Exchange / Add-ons / Descargas Digitales Configuración."
+msgstr ""
+"Cuando los clientes se registran para acceder, descargar, etc. Se puede "
+"desactivar el registro y permitir que las cajas de los huéspedes en "
+"Exchange / Add-ons / Descargas Digitales Configuración."
 
 #: lib/functions/functions.php:433
 msgid "Account"
@@ -5738,7 +6018,10 @@ msgid ""
 "Customers get an account when they buy something, so they can login and "
 "download their purchases. This is the main landing page for customers after "
 "they log in."
-msgstr "Los clientes obtienen una cuenta cuando compran algo, para que puedan acceder y descargar tus compras. Esta es la página de destino principal para los clientes que se inician sesión."
+msgstr ""
+"Los clientes obtienen una cuenta cuando compran algo, para que puedan "
+"acceder y descargar tus compras. Esta es la página de destino principal para "
+"los clientes que se inician sesión."
 
 #: lib/functions/functions.php:447
 msgid "Profile"
@@ -5758,7 +6041,8 @@ msgstr "Descargas de Clientes"
 
 #: lib/functions/functions.php:465
 msgid "Page where the customer can find all of their available downloads."
-msgstr "Página donde el cliente puede encontrar todos tus descargas disponibles."
+msgstr ""
+"Página donde el cliente puede encontrar todos tus descargas disponibles."
 
 #: lib/functions/functions.php:475 lib/functions/functions.php:478
 #: lib/products/class.products-post-type.php:588
@@ -5796,7 +6080,8 @@ msgstr "editar tu carrito"
 
 #: lib/functions/functions.php:890
 msgid "We need a billing address before you can checkout"
-msgstr "Necesitamos una dirección de facturación antes de que puedes pagar el pedido"
+msgstr ""
+"Necesitamos una dirección de facturación antes de que puedes pagar el pedido"
 
 #: lib/functions/functions.php:1251
 msgid "You do not have permission to view this file."
@@ -5976,7 +6261,9 @@ msgstr "submit-taxonomy-it-exchange-pages"
 msgid ""
 "Coding Error: IT_Exchange_Product_Feature_Abstract extended without a slug "
 "value"
-msgstr "Error de Codificación: IT_Exchange_Product_Feature_Abstract extendido sin un valor slug"
+msgstr ""
+"Error de Codificación: IT_Exchange_Product_Feature_Abstract extendido sin un "
+"valor slug"
 
 #: lib/product-features/class.base-price.php:99
 msgid "Base Price"
@@ -5992,7 +6279,10 @@ msgid ""
 "This is a quick, descriptive summary of what your product does and is "
 "usually 3-5 sentences long. To add additional info, use the Advanced button "
 "below to make an extended description."
-msgstr "Este es un resumen rápido, descriptivo de lo que hace tu producto y es generalmente 3-5 frases largas. Para añadir información adicional, utilice el botón avanzado de abajo para hacer una descripción ampliada."
+msgstr ""
+"Este es un resumen rápido, descriptivo de lo que hace tu producto y es "
+"generalmente 3-5 frases largas. Para añadir información adicional, utilice "
+"el botón avanzado de abajo para hacer una descripción ampliada."
 
 #: lib/product-features/class.description.php:119
 msgid "Enter description..."
@@ -6010,7 +6300,9 @@ msgstr "Archivos de Producto"
 msgid ""
 "If you are selling digital products (like music or ebooks), upload those "
 "here."
-msgstr "Si estás vendiendo productos digitales (como música o libros electrónicos), subalos aquí."
+msgstr ""
+"Si estás vendiendo productos digitales (como música o libros electrónicos), "
+"subalos aquí."
 
 #: lib/product-features/class.downloads.php:188
 msgid "Add New Download"
@@ -6024,7 +6316,9 @@ msgstr "Fuente"
 msgid ""
 "Use the WordPress media library or paste in any accessible URL (from "
 "Dropbox, Amazon, etc.) and we'll hide the source for you."
-msgstr "Utilice la libraria de medios de WordPress o pega en cualquier URL accesible (de Dropbox, Amazon, etc.) y nos esconderemos la fuente para ti."
+msgstr ""
+"Utilice la libraria de medios de WordPress o pega en cualquier URL accesible "
+"(de Dropbox, Amazon, etc.) y nos esconderemos la fuente para ti."
 
 #: lib/product-features/class.downloads.php:211
 #: lib/product-features/class.downloads.php:228
@@ -6095,7 +6389,9 @@ msgstr "Descargar"
 
 #: lib/product-features/class.downloads.php:568
 msgid "An iThemes Exchange Post Type for storing all Downloads in the system"
-msgstr "Un Tipo de Exchange iThemes Publicar para guardar todas las descargas en el sistema"
+msgstr ""
+"Un Tipo de Exchange iThemes Publicar para guardar todas las descargas en el "
+"sistema"
 
 #: lib/product-features/class.downloads.php:603
 msgid "Download not found"
@@ -6149,7 +6445,9 @@ msgstr "Disponibilidad"
 #: lib/product-features/class.product-availability.php:124
 msgid ""
 "Use these settings to determine when a product is available to purchase."
-msgstr "Utilice estos ajustes para determinar cuando un producto está disponible para la compra."
+msgstr ""
+"Utilice estos ajustes para determinar cuando un producto está disponible "
+"para la compra."
 
 #: lib/product-features/class.product-availability.php:132
 msgid "Use a start date"
@@ -6180,7 +6478,10 @@ msgid ""
 "Change the product's order on the store page by changing this number and "
 "setting 'Product Order #' as the Order By setting on the Exchange General "
 "Settings page."
-msgstr "Cambie la orden del producto en la página de la tienda al cambiar este número y el estableciendo 'Orden de Producto #' como la Ordenar Por configuración en la página Configuración General de Exchange."
+msgstr ""
+"Cambie la orden del producto en la página de la tienda al cambiar este "
+"número y el estableciendo 'Orden de Producto #' como la Ordenar Por "
+"configuración en la página Configuración General de Exchange."
 
 #: lib/product-features/class.purchase-message.php:98
 msgid "Purchase Message"
@@ -6191,7 +6492,10 @@ msgid ""
 "Any text placed here will be appended to the receipt when this product is "
 "purchased. You might want to use this to add special instructions for "
 "particular products."
-msgstr "Cualquier texto colocado aquí se anexará a la recepción cuando se compra este producto. Es posible que desee usar esto para añadir instrucciones especiales para determinados productos."
+msgstr ""
+"Cualquier texto colocado aquí se anexará a la recepción cuando se compra "
+"este producto. Es posible que desee usar esto para añadir instrucciones "
+"especiales para determinados productos."
 
 #: lib/product-features/class.purchase-quantity.php:41
 msgid "The max quantity available per purchase settings for a product."
@@ -6204,12 +6508,16 @@ msgstr "Cantidad de Compra"
 #: lib/product-features/class.purchase-quantity.php:121
 msgid ""
 "Check this to allow customers to modify the quantity they want to purchase."
-msgstr "Active esta opción para permitir a los clientes para modificar la cantidad que quieren comprar."
+msgstr ""
+"Active esta opción para permitir a los clientes para modificar la cantidad "
+"que quieren comprar."
 
 #: lib/product-features/class.purchase-quantity.php:125
 msgid ""
 "What is the maximum quantity a customer can set when purchasing this product?"
-msgstr "¿Cuál es la cantidad máxima que un cliente puede configurar en la compra de este producto?"
+msgstr ""
+"¿Cuál es la cantidad máxima que un cliente puede configurar en la compra de "
+"este producto?"
 
 #: lib/product-features/class.shipping.php:131
 msgid "Set shipping details for the product here."
@@ -6222,7 +6530,9 @@ msgstr "Desactivar el envío de este producto"
 #: lib/product-features/class.shipping.php:138
 msgid ""
 "Check this box to indicate that shipping is not needed for this product."
-msgstr "Marque esta casilla para indicar que no es necesario que el envio de este producto."
+msgstr ""
+"Marque esta casilla para indicar que no es necesario que el envio de este "
+"producto."
 
 #: lib/product-features/class.shipping.php:149
 msgid "Shipping has been disabled for this product."
@@ -6232,7 +6542,9 @@ msgstr "Envíos ha sido deshabilitado para este producto."
 msgid ""
 "Name your product like you do a headline &mdash; to catch attention and sell "
 "benefits."
-msgstr "Nombra de tu producto como un titular &mdash; para llamar la atención y vender beneficios."
+msgstr ""
+"Nombra de tu producto como un titular &mdash; para llamar la atención y "
+"vender beneficios."
 
 #: lib/product-features/class.title.php:110
 msgid "Enter title..."
@@ -6240,7 +6552,9 @@ msgstr "Introduzca el título..."
 
 #: lib/product-features/class.wp-post-supports.php:63
 msgid "Adds support for the post content area to product types."
-msgstr "Agrega soporte para el área de contenido de correos para los tipos de producto."
+msgstr ""
+"Agrega soporte para el área de contenido de correos para los tipos de "
+"producto."
 
 #: lib/product-features/class.wp-post-supports.php:120
 msgid "Extended Description"
@@ -6264,11 +6578,14 @@ msgstr "Agrega soporte para WP campo Autor a un producto específico"
 
 #: lib/product-features/class.wp-post-supports.php:257
 msgid "Adds support for WP Custom Fields as a product Feature"
-msgstr "Agrega soporte para WP Campos Personalizados como una característica del producto"
+msgstr ""
+"Agrega soporte para WP Campos Personalizados como una característica del "
+"producto"
 
 #: lib/product-features/class.wp-post-supports.php:272
 msgid "Adds support for the WP Comments field to a specific product type"
-msgstr "Agrega soporte para WP campo Comentarios a un tipo específico de producto"
+msgstr ""
+"Agrega soporte para WP campo Comentarios a un tipo específico de producto"
 
 #: lib/product-features/class.wp-post-supports.php:287
 msgid "Adds support for the WP Trackbacks metabox."
@@ -6290,7 +6607,9 @@ msgstr "Añade soporte para las WP Revisiones a Tipos de Productos"
 msgid ""
 "The IT_Exchange_Product class must have a WP post object or ID passed to its "
 "constructor"
-msgstr "La clase IT_Exchange_Product debe tener un WP  objeto entrada o ID pasado a su constructor"
+msgstr ""
+"La clase IT_Exchange_Product debe tener un WP  objeto entrada o ID pasado a "
+"su constructor"
 
 #: lib/products/class.products-post-type.php:114
 msgid "Edit Product"
@@ -6303,7 +6622,9 @@ msgstr "Ver producto"
 
 #: lib/products/class.products-post-type.php:119
 msgid "An iThemes Exchange Post Type for storing all Products in the system"
-msgstr "Un Tipo de Entrada iThemes Exchange para almacenar todos los productos en el sistema"
+msgstr ""
+"Un Tipo de Entrada iThemes Exchange para almacenar todos los productos en el "
+"sistema"
 
 #: lib/products/class.products-post-type.php:204
 #: lib/products/class.products-post-type.php:205
@@ -6480,7 +6801,9 @@ msgstr "Producto presentado. <a target=\"_blank\" href=\"%s\">Vista Previa</a>"
 msgid ""
 "Product scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href="
 "\"%2$s\">Preview product</a>"
-msgstr "Producto programada para: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Vista Previa</a>"
+msgstr ""
+"Producto programada para: <strong>%1$s</strong>. <a target=\"_blank\" href="
+"\"%2$s\">Vista Previa</a>"
 
 #. translators: Publish box date format, see http:php.net/date
 #: lib/products/class.products-post-type.php:718
@@ -6490,13 +6813,17 @@ msgstr "M j, Y @ G:i"
 #: lib/products/class.products-post-type.php:719
 msgid ""
 "Product draft updated. <a target=\"_blank\" href=\"%s\">Preview product</a>"
-msgstr "Borrador de producto actualizada. <a target=\"_blank\" href=\"%s\">Vista Previa</a>"
+msgstr ""
+"Borrador de producto actualizada. <a target=\"_blank\" href=\"%s\">Vista "
+"Previa</a>"
 
 #: lib/products/class.products-post-type.php:744
 msgid ""
 "This is the final part of the product's URL. WordPress will auto-create it "
 "for you."
-msgstr "Esta es la parte final de la dirección URL del producto. WordPress se auto-creará para ti."
+msgstr ""
+"Esta es la parte final de la dirección URL del producto. WordPress se auto-"
+"creará para ti."
 
 #: lib/products/class.products-post-type.php:769
 msgid "My Sample Product"
@@ -6510,7 +6837,13 @@ msgid ""
 "prospective customers. To help you, answer these questions: What problem "
 "does it solve? Who does it solve it for? And how is it different than other "
 "products out there?"
-msgstr "Una gran descripción del producto incluye los principales beneficios, no sólo las características o especificaciones técnicas a tu mercado objetivo y audiencia principal. Es probable que sea alrededor de 3-4 oraciones, si eso, la venta de tu producto como la solución para tus clientes potenciales. Para ayudarle, contestar a estas preguntas: ¿Qué problema soluciona? ¿Quién soluciona dirigido? Y en ¿qué se diferencia de otros productos que hay?"
+msgstr ""
+"Una gran descripción del producto incluye los principales beneficios, no "
+"sólo las características o especificaciones técnicas a tu mercado objetivo y "
+"audiencia principal. Es probable que sea alrededor de 3-4 oraciones, si eso, "
+"la venta de tu producto como la solución para tus clientes potenciales. Para "
+"ayudarle, contestar a estas preguntas: ¿Qué problema soluciona? ¿Quién "
+"soluciona dirigido? Y en ¿qué se diferencia de otros productos que hay?"
 
 #: lib/products/class.products-post-type.php:772
 msgid ""
@@ -6539,7 +6872,33 @@ msgid ""
 "what you offer.\n"
 "\n"
 "\t\t\tJPGs are typically best for photos. PNGs for other types of artwork."
-msgstr "\n\t\t\tEsta es la descripción extendida. Utilice esta área para una variedad de información, como:\n\t\t\t<ul>\n\t\t\t\t<li>PMFs</li>\n\t\t\t\t<li>Tabla de contenidos (para libros) o pista (listados para álbumes)</li>\n\t\t\t\t<li>Archivos de muestras</li>\n\t\t\t\t<li>Información de ventas adicionales todavía educativos</li>\n\t\t\t\t<li>¡Y no se olvide que puedes poner todas esas otras características y especificaciones técnicas aquí!</li>\n\t\t\t</ul>\n\t\t\t¡Puedes cambiar esto en la marcha también!\n\n\t\t\t<strong>Fotos e Imágenes</strong>\n\n\t\t\tVas a querer crear imágenes más grandes, tal vez incluso en una proporción de 1x1 y 1000pixel amplia.\n\n\t\t\tEntonces deja de WordPress redimensionar ellos para la salida en tu página. Es mejor tener una imagen ofrecida (uno grande que realmente muestra tu producto), entonces tiene imágenes de suplementos (si está disponible) que los compradores pueden hacer clic en para ver más de lo que ofreces.\n\n\t\t\tJPG suelen ser mejor para las fotos. PNG para otros tipos de ilustraciones."
+msgstr ""
+"\n"
+"\t\t\tEsta es la descripción extendida. Utilice esta área para una variedad "
+"de información, como:\n"
+"\t\t\t<ul>\n"
+"\t\t\t\t<li>PMFs</li>\n"
+"\t\t\t\t<li>Tabla de contenidos (para libros) o pista (listados para "
+"álbumes)</li>\n"
+"\t\t\t\t<li>Archivos de muestras</li>\n"
+"\t\t\t\t<li>Información de ventas adicionales todavía educativos</li>\n"
+"\t\t\t\t<li>¡Y no se olvide que puedes poner todas esas otras "
+"características y especificaciones técnicas aquí!</li>\n"
+"\t\t\t</ul>\n"
+"\t\t\t¡Puedes cambiar esto en la marcha también!\n"
+"\n"
+"\t\t\t<strong>Fotos e Imágenes</strong>\n"
+"\n"
+"\t\t\tVas a querer crear imágenes más grandes, tal vez incluso en una "
+"proporción de 1x1 y 1000pixel amplia.\n"
+"\n"
+"\t\t\tEntonces deja de WordPress redimensionar ellos para la salida en tu "
+"página. Es mejor tener una imagen ofrecida (uno grande que realmente muestra "
+"tu producto), entonces tiene imágenes de suplementos (si está disponible) "
+"que los compradores pueden hacer clic en para ver más de lo que ofreces.\n"
+"\n"
+"\t\t\tJPG suelen ser mejor para las fotos. PNG para otros tipos de "
+"ilustraciones."
 
 #: lib/products/class.products-post-type.php:801
 msgid "Sample Image One"
@@ -6563,19 +6922,23 @@ msgstr "Finalizar Compra"
 
 #: lib/purchase-dialog/purchase-dialog.php:312
 msgid "Please make sure all required fields have a value."
-msgstr "Por favor, asegúrese de que todos los campos obligatorios tienen un valor."
+msgstr ""
+"Por favor, asegúrese de que todos los campos obligatorios tienen un valor."
 
 #: lib/purchase-dialog/purchase-dialog.php:316
 msgid "Please make sure all fields are formatted properly."
-msgstr "Por favor, asegúrese de que todos los campos tienen el formato correcto."
+msgstr ""
+"Por favor, asegúrese de que todos los campos tienen el formato correcto."
 
 #: lib/shipping/class.shipping.php:98
 msgid "You must enter a shipping address before you can checkout"
-msgstr "Debe introducir una dirección de envío antes de que puedes pagar el pedido"
+msgstr ""
+"Debe introducir una dirección de envío antes de que puedes pagar el pedido"
 
 #: lib/shipping/class.shipping.php:121
 msgid "You must select a shipping method before you can checkout"
-msgstr "Debes seleccionar un método de envío antes de que puedes pagar el pedido"
+msgstr ""
+"Debes seleccionar un método de envío antes de que puedes pagar el pedido"
 
 #: lib/shipping/class.shipping.php:264
 msgid "General Shipping Settings"
@@ -6587,7 +6950,8 @@ msgstr "Productos Se Envían Desde"
 
 #: lib/shipping/class.shipping.php:286
 msgid "The default from address used when shipping your products."
-msgstr "La dirección de origen predeterminada utilizada al enviar tus productos."
+msgstr ""
+"La dirección de origen predeterminada utilizada al enviar tus productos."
 
 #: lib/shipping/class.shipping.php:290
 msgid "Address 1"
@@ -6599,22 +6963,30 @@ msgstr "Código postal"
 
 #: lib/shipping/class.shipping.php:339
 msgid "Can individual products override the default Ships From Address?"
-msgstr "¿Pueden los productos individuales anular la dirección de origen predeterminada?"
+msgstr ""
+"¿Pueden los productos individuales anular la dirección de origen "
+"predeterminada?"
 
 #: lib/shipping/class.shipping.php:341
 msgid ""
 "Selecting \"yes\" will place these fields on the Add/Edit product screen."
-msgstr "Seleccionando \"sí \" colocará estos campos en la pantalla de producto Añadir/Editar."
+msgstr ""
+"Seleccionando \"sí \" colocará estos campos en la pantalla de producto "
+"Añadir/Editar."
 
 #: lib/shipping/class.shipping.php:351
 msgid "Can individual products override the global Shipping Methods setting?"
-msgstr "¿Pueden los productos individuales anular la configuración global de métodos de envío?"
+msgstr ""
+"¿Pueden los productos individuales anular la configuración global de métodos "
+"de envío?"
 
 #: lib/shipping/class.shipping.php:353
 msgid ""
 "Selecting \"yes\" will allow you to set available Shipping Methods for a "
 "product from it's Add/Edit product screen."
-msgstr "Seleccionando \"sí \" te permitirás establecer Métodos de Envío disponibles para un producto desde tu pantalla de producto Añadir/Editar."
+msgstr ""
+"Seleccionando \"sí \" te permitirás establecer Métodos de Envío disponibles "
+"para un producto desde tu pantalla de producto Añadir/Editar."
 
 #: lib/shipping/class.shipping.php:363
 msgid "Measurements Format"
@@ -6630,7 +7002,9 @@ msgstr "Dirección de Envío Actualizado"
 
 #: lib/shipping/class.shipping.php:632
 msgid "Please use the 2-3 character %sISO 3166-2 Country Subdivision Code%s"
-msgstr "Por favor, utilice el carácter de 2-3 %sISO 3166-2 Código de País Subdivisión%s"
+msgstr ""
+"Por favor, utilice el carácter de 2-3 %sISO 3166-2 Código de País Subdivisión"
+"%s"
 
 #: lib/shipping/class.shipping.php:664
 msgid "Shipping method updated"
@@ -6676,7 +7050,9 @@ msgstr "Dimensiones"
 msgid ""
 "Size of the package: length, width and height of the package. Used to "
 "calculate shipping costs."
-msgstr "Tamaño del paquete: longitud, anchura y altura del paquete. Se utiliza para calcular los gastos de envío."
+msgstr ""
+"Tamaño del paquete: longitud, anchura y altura del paquete. Se utiliza para "
+"calcular los gastos de envío."
 
 #: lib/shipping/shipping-features/core-weight-dimensions.php:94
 msgid "inches"
@@ -6706,7 +7082,9 @@ msgstr "Súper Widget de iThemes Exchange"
 msgid ""
 "Handles Buy Now, Add to Cart, Cart Summary, Registration, Log in, and "
 "Confirmation views depending on the situation"
-msgstr "Se maneja Comprar Ahora, Añadir a el Carrito, Carrito Resumen, Registro, Acceder, y las vistas de Confirmación dependiendo de la situación"
+msgstr ""
+"Se maneja Comprar Ahora, Añadir a el Carrito, Carrito Resumen, Registro, "
+"Acceder, y las vistas de Confirmación dependiendo de la situación"
 
 #: lib/super-widget/class.super-widget.php:152
 msgid "Processing"
@@ -6771,7 +7149,7 @@ msgstr "Nombre"
 
 #: lib/templates/content-purchase-dialog.php:11
 msgid "Last name"
-msgstr "Apellido"
+msgstr "Apellido(s)"
 
 #: lib/templates/content-purchase-dialog.php:23
 msgid "MM"
@@ -6800,7 +7178,7 @@ msgstr "Descuento:"
 
 #: lib/templates/super-widget-checkout/loops/billing-address.php:19
 msgid "Billing Address:"
-msgstr "Direccion de Facturacion:"
+msgstr "Dirección de Facturacion:"
 
 #: lib/templates/super-widget-checkout/loops/shipping-address.php:19
 msgid "Shipping Address:"
@@ -6818,7 +7196,9 @@ msgstr "Envío:"
 msgid ""
 "The IT_Exchange_Transaction class must have a WP post object or ID passed to "
 "its constructor"
-msgstr "La clase IT_Exchange_Transaction debe tener un WP objeto entrada o ID pasado a su constructor"
+msgstr ""
+"La clase IT_Exchange_Transaction debe tener un WP objeto entrada o ID pasado "
+"a su constructor"
 
 #: lib/transactions/class.transactions-post-type.php:48
 msgid "Payment"
@@ -6830,7 +7210,9 @@ msgstr "Detalles del Pago"
 
 #: lib/transactions/class.transactions-post-type.php:53
 msgid "An iThemes Exchange Post Type for storing all Payments in the system"
-msgstr "Un Tipo de Entrada iThemes Exchange para almacenar todos los pagos en el sistema"
+msgstr ""
+"Un Tipo de Entrada iThemes Exchange para almacenar todos los pagos en el "
+"sistema"
 
 #: lib/transactions/class.transactions-post-type.php:115
 msgid "View the transaction details"
@@ -6900,7 +7282,10 @@ msgstr "Estado de Cambio"
 msgid ""
 "The customer will receive an email When this is changed from a status that "
 "is not cleared for delivery to a status that is cleared for delivery"
-msgstr "El cliente recibirá un correo electrónico cuando este se cambia de un estado que no está autorizado para tu entrega a un estado que se despejó para la entrega"
+msgstr ""
+"El cliente recibirá un correo electrónico cuando este se cambia de un estado "
+"que no está autorizado para tu entrega a un estado que se despejó para la "
+"entrega"
 
 #: lib/transactions/class.transactions-post-type.php:680
 msgid "Not Saved."
@@ -6910,7 +7295,7 @@ msgstr "No Guardado."
 msgid "Saved!"
 msgstr "¡Guardado!"
 
-#. Plugin URI of the plugin/theme
+#. Plugin URI of the plugin/them"
 msgid "http://ithemes.com/exchange/"
 msgstr "http://ithemes.com/exchange/"
 
@@ -6918,7 +7303,9 @@ msgstr "http://ithemes.com/exchange/"
 msgid ""
 "Easily sell your digital goods with iThemes Exchange, simple ecommerce for "
 "WordPress"
-msgstr "Vender fácilmente tus productos digitales con iThemes Exchange, comercio electrónico simple para WordPress"
+msgstr ""
+"Vender fácilmente tus productos digitales con iThemes Exchange, comercio "
+"electrónico simple para WordPress"
 
 #. Author of the plugin/theme
 msgid "iThemes"
@@ -6928,23 +7315,10 @@ msgstr "iThemes"
 msgid "http://ithemes.com"
 msgstr "http://ithemes.com"
 
-#. Quantity Discounts table 1
-msgid "Quantity Discounts!"
-msgstr "¡Descuentos por Cantidad!"
-
-#. Quantity Discounts table 2
-msgid "You Purchase"
-msgstr "Compra"
-
-#. Quantity Discounts table 3
-msgid "Pay Only"
-msgstr "Paga Sólo"
-
-#. Quantity Discounts table 4
-msgid "Regular Retail Price"
-msgstr "Precio de Venta Normal"
-
-#. Quantity Discounts table "
-msgid "or more"
-msgstr "o más"
-
+#: functions.php:900
+msgid ""
+"You must be logged in to complete your purchase. %s' . $login . '%s, %s' . "
+"$register . '%s or %s' . $cart . '%s"
+msgstr ""
+"Tienes que iniciar sesión para completar su compra. %s' . $login . '%s, "
+"%s' . $register . '%s or %s' . $cart . '%s"
