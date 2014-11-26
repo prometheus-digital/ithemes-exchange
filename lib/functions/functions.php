@@ -222,25 +222,24 @@ function it_exchange_process_webhooks() {
 	$webhooks_processed = false;
 	// Loop through them and init callbacks
     foreach( $webhooks as $key => $param ) {
-        if ( ! empty( $_REQUEST[$param] ) ) {
-	        
+		if ( ! empty( $_REQUEST[$param] ) ) {
 			$webhooks_processed = true;
-	        $requested_webhook_url = untrailingslashit( $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] ) . $_SERVER['REQUEST_URI']; //REQUEST_URI includes the slash
-	        $parsed_requested_webhook_url = parse_url( $requested_webhook_url );
-	        $required_webhook_url = add_query_arg( $param, '1', trailingslashit( get_site_url() ) ); //add the slash to make sure we match
-	        $parsed_required_webhook_url = parse_url( $required_webhook_url );
+			$request_scheme = is_ssl() ? 'https://' : 'http://';
+			$requested_webhook_url = untrailingslashit( $request_scheme . $_SERVER['HTTP_HOST'] ) . $_SERVER['REQUEST_URI']; //REQUEST_URI includes the slash
+			$parsed_requested_webhook_url = parse_url( $requested_webhook_url );
+			$required_webhook_url = add_query_arg( $param, '1', trailingslashit( get_site_url() ) ); //add the slash to make sure we match
+			$parsed_required_webhook_url = parse_url( $required_webhook_url );
 			$webhook_diff = array_diff_assoc( $parsed_requested_webhook_url, $parsed_required_webhook_url );
 
 			if ( empty( $webhook_diff ) ) { //No differences in the requested webhook and the required webhook
-		        do_action( 'it_exchange_webhook_' . $param, $_REQUEST );
-		    } else {
-			    wp_die( sprintf( __( 'Invalid webhook request for this site. The webhook request should be: %s', 'LION' ), $required_webhook_url ), __( 'iThemes Exchange Webhook Process Error', 'LION' ), array( 'response' => 400 ) );
-		    }
-		    
-		    break; //we can stop processing here... no need to continue the foreach since we can only handle one webhook at a time
+				do_action( 'it_exchange_webhook_' . $param, $_REQUEST );
+			} else {
+				wp_die( sprintf( __( 'Invalid webhook request for this site. The webhook request should be: %s', 'LION' ), $required_webhook_url ), __( 'iThemes Exchange Webhook Process Error', 'LION' ), array( 'response' => 400 ) );
+			}
 
+			break; //we can stop processing here... no need to continue the foreach since we can only handle one webhook at a time
 		}
-    }
+	}
 	if ( $webhooks_processed ) {
 		do_action( 'it_exchange_webhooks_processed' );
 		wp_die( __( 'iThemes Exchange webhook process Complete', 'LION' ), __( 'iThemes Exchange Webhook Process Complete', 'LION' ), array( 'response' => 200 ) );
@@ -1110,7 +1109,7 @@ add_action( 'it_exchange_version_updated', 'it_exchange_force_rewrite_flush_on_u
 function it_exchange_clean_duplicate_user_post_meta( $versions ) {
 	if ( version_compare( '1.8.1', $versions['previous'], '>' ) ) {
 		global $wpdb;
-		
+
 		$wpdb->query( 
 			"
 			DELETE n1 
@@ -1121,7 +1120,7 @@ function it_exchange_clean_duplicate_user_post_meta( $versions ) {
 			AND n1.meta_id > n2.meta_id
 			"
 		);
-		
+
 		$wpdb->query(
 			"
 			DELETE n1 
