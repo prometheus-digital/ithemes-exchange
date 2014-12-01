@@ -1,3 +1,8 @@
+1.11.4 - Glenn Ansley, Lew Ayotte, Elise Alley
+	Fixed instances where webhooks wouldn't work if ['http_scheme'] wasn't set
+	Updated es_MX mo file
+	Updated the es_MX po file
+	Fixed bad language string in template
 1.11.3 - Glenn Ansley, Lew Ayotte, Elise Alley
 	Fixed bad translation string in order details template part
 	Added filters for country and state alternatives in text2select API
