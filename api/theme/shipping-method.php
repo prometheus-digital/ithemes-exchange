@@ -90,8 +90,10 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 						$cart_products_with_shipping++;
 				}
 				if ( $cart_products_with_shipping > 1 && count( $cart_product_methods ) > 1 ) {
-					$multiple_shipping_methods_allowed = true;
-					$options .= '<option value="multiple-methods" ' . selected( $current_method, 'multiple-methods', false ) . '>' . __( 'Use multiple shipping methods', 'LION' ) . '</option>';
+					$multiple_shipping_methods_allowed = apply_filters( 'it_exchange_shipping_method_form_multiple_shipping_methods_allowed', true );
+					if ( $multiple_shipping_methods_allowed ) {
+						$options .= '<option value="multiple-methods" ' . selected( $current_method, 'multiple-methods', false ) . '>' . __( 'Use multiple shipping methods', 'LION' ) . '</option>';
+					}
 				}
 			}
 
