@@ -55,8 +55,10 @@ class IT_Theme_API_Store implements IT_Theme_API {
 	*/
 	function products( $options=array() ) {
 		// Return boolean if has flag was set
-		if ( $options['has'] )
-			return count( it_exchange_get_products( apply_filters( 'it_exchange_store_get_products_args',  array( 'posts_per_page' => -1, 'order' => $settings['store-product-order'], 'orderby' => $settings['store-product-order-by'] ) ) ) ) > 0 ;
+		if ( $options['has'] ) {
+			$settings = it_exchange_get_option( 'settings_general' );
+			return count( it_exchange_get_products( apply_filters( 'it_exchange_store_get_products_args',  array( 'posts_per_page' => -1, 'order' => $settings['store-product-order'], 'orderby' => $settings['store-product-order-by'] ) ) ) ) > 0;
+		}
 
 		// If we made it here, we're doing a loop of products for the current query.
 		// This will init/reset the products global and loop through them. the /api/theme/product.php file will handle individual products.
