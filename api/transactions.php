@@ -280,6 +280,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		update_post_meta( $transaction_id, '_it_exchange_transaction_method_id', $method_id );
 		update_post_meta( $transaction_id, '_it_exchange_transaction_status',    $status );
 		update_post_meta( $transaction_id, '_it_exchange_customer_id',           $customer_id );
+		update_post_meta( $transaction_id, '_it_exchange_customer_ip',           it_exchange_get_ip() );
 		update_post_meta( $transaction_id, '_it_exchange_cart_object',           $cart_object );
 
 		// Transaction Hash for confirmation lookup
@@ -825,6 +826,24 @@ function it_exchange_get_transaction_customer_email( $transaction ) {
 		return apply_filters( 'it_exchange_get_transaction_customer_email', empty( $customer->wp_user->user_email ) ? $unknown : $customer->wp_user->user_email, $transaction );
 
 	return apply_filters( 'it_exchange_get_transaction_customer_email', $unknown, $transaction );
+}
+
+/**
+ * Returns the transaction customer's IP Address
+ *
+ * @since CHANGEME
+ *
+ * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
+ *
+ * @return string
+*/
+function it_exchange_get_transaction_customer_ip_address( $transaction ) {
+	$return = __( 'IP Address: %s', 'LION' );
+	$ip = get_post_meta( $transaction->ID, '_it_exchange_customer_ip', true );
+	if ( !empty( $ip ) ) {
+		return sprintf( $return, $ip );
+	}
+	return sprintf( $return, __( 'Unknown', 'LION' ) );
 }
 
 /**
