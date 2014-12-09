@@ -87,7 +87,7 @@ class IT_Exchange {
 	function set_plugin_locations() {
 		$this->_plugin_path = plugin_dir_path( __FILE__ );
 		$this->_plugin_url  = plugins_url( '', __FILE__ );
-		$this->_plugin_base = plugin_basename( __FILE__  );
+		$this->_plugin_base = plugin_basename( __FILE__ );
 	}
 
 	/**
