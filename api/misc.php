@@ -571,7 +571,7 @@ function it_exchange_redirect( $url, $context='', $options=array(), $status=302 
  *
  * Copied from Better WP Security (HT: Chris Wiegman)
  *
- * @since CHANGEME
+ * @since 1.11.5 
  *
  * @return string Current IP address for customer
 */

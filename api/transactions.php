@@ -831,7 +831,7 @@ function it_exchange_get_transaction_customer_email( $transaction ) {
 /**
  * Returns the transaction customer's IP Address
  *
- * @since CHANGEME
+ * @since 1.11.5 
  *
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
