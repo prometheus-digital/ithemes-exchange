@@ -408,7 +408,12 @@ class IT_Exchange_Shopping_Cart {
 			}
 		}
 
-		/** @todo This is hardcoded for now. will be more flexible at some point **/
+		/**
+		 * @todo This is hardcoded for now. will be more flexible at some point
+		 * If you're having trouble getting your custom field to save, make sure that your form field's name
+		 * matches what we're looking for in the REQUEST below. eg: adding 'custom-form' to the $fields var
+		 * via this next filter means that your form field name has to be: 'it-exchange-billing-address-custom-form'
+		*/
 		$billing = array();
 		$fields = apply_filters( 'it_exchange_billing_address_fields', array(
 			'first-name',
