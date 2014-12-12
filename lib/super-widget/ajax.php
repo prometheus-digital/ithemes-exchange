@@ -112,7 +112,7 @@ if ( 'register' == $action ) {
 
 		// Clearing the user pass will prevent the user email from being sent
 		$email_pw = apply_filters( 'it_exchange_send_customer_registration_email', true ) ? $_POST['pass1'] : '';
-        wp_new_user_notification( $user_id, $email_pass );
+        wp_new_user_notification( $user_id, $email_pw );
 
 		$creds = array(
             'user_login'    => urldecode($_POST['user_login'] ),
