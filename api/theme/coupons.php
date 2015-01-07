@@ -218,7 +218,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 	function discount( $options=array() ) {
 		$amount_number = it_exchange_convert_from_database_number( $this->coupon->amount_number );
 
-		return _x( '-', 'it-l10n-ithemes-exchange', 'negative character for amount of money in coupons' ) . it_exchange_basic_coupons_get_total_discount_for_cart();
+		return _x( '-', 'negative character for amount of money in coupons', 'it-l10n-ithemes-exchange' ) . it_exchange_basic_coupons_get_total_discount_for_cart();
 	}
 
 	/**
