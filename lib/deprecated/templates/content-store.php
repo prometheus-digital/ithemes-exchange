@@ -25,7 +25,7 @@
 				<?php it_exchange_get_template_part( 'store', 'product' ); ?>
 			<?php endwhile; ?>
 		<?php else : ?>
-			<p><?php _e( 'No Products Found', 'LION' ); ?></p>
+			<p><?php _e( 'No Products Found', 'it-l10n-ithemes-exchange' ); ?></p>
 		<?php endif; ?>
 	</ul>
 </div>

@@ -35,11 +35,11 @@ add_filter( 'it_exchange_paypal-standard-secure_transaction_status_can_be_manual
 */
 function it_exchange_paypal_standard_secure_get_default_status_options() {
 	$options = array(
-		'Pending'   => _x( 'Pending', 'Transaction Status', 'LION' ),
-		'Completed' => _x( 'Paid', 'Transaction Status', 'LION' ),
-		'Reversed'  => _x( 'Reversed', 'Transaction Status', 'LION' ),
-		'Refunded'  => _x( 'Refunded', 'Transaction Status', 'LION' ),
-		'Voided'    => _x( 'Voided', 'Transaction Status', 'LION' ),
+		'Pending'   => _x( 'Pending', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
+		'Completed' => _x( 'Paid', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
+		'Reversed'  => _x( 'Reversed', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
+		'Refunded'  => _x( 'Refunded', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
+		'Voided'    => _x( 'Voided', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
 	);
 	return $options;
 }
@@ -212,10 +212,10 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 						$transaction_status = $response_array['PAYMENTSTATUS'];
 						
 						if ( $transaction_id != $response_array['TRANSACTIONID'] )
-							throw new Exception( __( 'Error: Transaction IDs do not match! %s, %s', 'LION' ) );
+							throw new Exception( __( 'Error: Transaction IDs do not match! %s, %s', 'it-l10n-ithemes-exchange' ) );
 						
 						if ( number_format( $response_array['AMT'], '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) ) {
-							throw new Exception( sprintf( __( 'Error: Amount charged is not the same as the cart total! %s | %s', 'LION' ), $response_array['AMT'], $transaction_object->total ) );
+							throw new Exception( sprintf( __( 'Error: Amount charged is not the same as the cart total! %s | %s', 'it-l10n-ithemes-exchange' ), $response_array['AMT'], $transaction_object->total ) );
 							
 						}
 
@@ -252,7 +252,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 				
 			}
 			
-			it_exchange_add_message( 'error', __( 'Unknown error while processing with PayPal. Please check your PayPal account for any charges and try again later.', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'Unknown error while processing with PayPal. Please check your PayPal account for any charges and try again later.', 'it-l10n-ithemes-exchange' ) );
 			
 		}
 	
@@ -295,7 +295,7 @@ function it_exchange_cancel_paypal_standard_secure_subscription( $subscription_d
 			'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
 			'PROFILEID' => $subscriber_id,
 			'ACTION'    => 'CANCEL',
-			'NOTE'      => __( 'Canceled during Upgrade/Downgrade Process', 'LION' ),
+			'NOTE'      => __( 'Canceled during Upgrade/Downgrade Process', 'it-l10n-ithemes-exchange' ),
 		);
 	
 		$response = wp_remote_post( $paypal_api_url, array( 'body' => $button_request ) );
@@ -430,7 +430,7 @@ function it_exchange_paypal_standard_secure_addon_default_settings( $values ) {
 		'sandbox-api-password'  => '',
 		'sandbox-api-signature' => '',
 		'sandbox-mode'          => false,
-		'purchase-button-label' => __( 'Pay with PayPal', 'LION' ),
+		'purchase-button-label' => __( 'Pay with PayPal', 'it-l10n-ithemes-exchange' ),
 	);
 	$values = ITUtility::merge_defaults( $values, $defaults );
 	return $values;
@@ -491,7 +491,7 @@ function it_exchange_process_paypal_standard_secure_form() {
 			wp_redirect( $url );
 			die();
 		} else {
-			it_exchange_add_message( 'error', __( 'Error processing PayPal form. Missing valid PayPal information.', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'Error processing PayPal form. Missing valid PayPal information.', 'it-l10n-ithemes-exchange' ) );
 			$url = ! wp_get_referer() ? it_exchange_get_page_url( 'checkout' ) : wp_get_referer();
 			wp_redirect( $url );
 			die();
@@ -1051,28 +1051,28 @@ function it_exchange_paypal_standard_secure_addon_transaction_status_label( $sta
 		case 'success':
 		case 'canceled_reversal':
 		case 'processed' :
-			return __( 'Paid', 'LION' );
+			return __( 'Paid', 'it-l10n-ithemes-exchange' );
 		case 'refunded':
 		case 'refund':
-			return __( 'Refund', 'LION' );
+			return __( 'Refund', 'it-l10n-ithemes-exchange' );
 		case 'reversed':
-			return __( 'Reversed', 'LION' );
+			return __( 'Reversed', 'it-l10n-ithemes-exchange' );
 		case 'buyer_complaint':
-			return __( 'Buyer Complaint', 'LION' );
+			return __( 'Buyer Complaint', 'it-l10n-ithemes-exchange' );
 		case 'denied' :
-			return __( 'Denied', 'LION' );
+			return __( 'Denied', 'it-l10n-ithemes-exchange' );
 		case 'expired' :
-			return __( 'Expired', 'LION' );
+			return __( 'Expired', 'it-l10n-ithemes-exchange' );
 		case 'failed' :
-			return __( 'Failed', 'LION' );
+			return __( 'Failed', 'it-l10n-ithemes-exchange' );
 		case 'pending' :
-			return __( 'Pending', 'LION' );
+			return __( 'Pending', 'it-l10n-ithemes-exchange' );
 		case 'voided' :
-			return __( 'Voided', 'LION' );
+			return __( 'Voided', 'it-l10n-ithemes-exchange' );
 		case 'cancelled' :
-			return __( 'Cancelled', 'LION' );
+			return __( 'Cancelled', 'it-l10n-ithemes-exchange' );
 		default:
-			return __( 'Unknown', 'LION' );
+			return __( 'Unknown', 'it-l10n-ithemes-exchange' );
 	}
 
 }
@@ -1140,20 +1140,20 @@ function it_exchange_paypal_standard_secure_after_payment_details_cancel_url( $t
 			switch( $status ) {
 
 				case 'deactivated':
-					$output = __( 'Recurring payment has been deactivated', 'LION' );
+					$output = __( 'Recurring payment has been deactivated', 'it-l10n-ithemes-exchange' );
 					break;
 
 				case 'cancelled':
-					$output = __( 'Recurring payment has been cancelled', 'LION' );
+					$output = __( 'Recurring payment has been cancelled', 'it-l10n-ithemes-exchange' );
 					break;
 
 				case 'suspended':
-					$output = __( 'Recurring payment has been suspended', 'LION' );
+					$output = __( 'Recurring payment has been suspended', 'it-l10n-ithemes-exchange' );
 					break;
 
 				case 'active':
 				default:
-					$output = '<a href="' . $paypal_url . '">' . __( 'Cancel Recurring Payment', 'LION' ) . ' (' . __( 'Profile ID', 'LION' ) . ': ' . $subscriber_id . ')</a>';
+					$output = '<a href="' . $paypal_url . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . ' (' . __( 'Profile ID', 'it-l10n-ithemes-exchange' ) . ': ' . $subscriber_id . ')</a>';
 					break;
 			}
 			?>
@@ -1268,7 +1268,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 		?>
 		<div class="wrap">
 			<?php ITUtility::screen_icon( 'it-exchange' ); ?>
-			<h2><?php _e( 'PayPal Standard Settings - Secure', 'LION' ); ?></h2>
+			<h2><?php _e( 'PayPal Standard Settings - Secure', 'it-l10n-ithemes-exchange' ); ?></h2>
 
 			<?php do_action( 'it_exchange_paypal-standard-secure_settings_page_top' ); ?>
 			<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
@@ -1278,7 +1278,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 				<?php $this->get_paypal_standard_secure_payment_form_table( $form, $form_values ); ?>
 				<?php do_action( 'it_exchange_paypal-standard-secure_settings_form_bottom' ); ?>
 				<p class="submit">
-					<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary button-large' ) ); ?>
+					<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'it-l10n-ithemes-exchange' ), 'class' => 'button button-primary button-large' ) ); ?>
 				</p>
 			<?php $form->end_form(); ?>
 			<?php do_action( 'it_exchange_paypal-standard-secure_settings_page_bottom' ); ?>
@@ -1292,7 +1292,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 		$general_settings = it_exchange_get_option( 'settings_general' );
 
 		if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] ) : ?>
-			<h3><?php _e( 'PayPal Standard - Secure (Highly Recommended)', 'LION' ); ?></h3>
+			<h3><?php _e( 'PayPal Standard - Secure (Highly Recommended)', 'it-l10n-ithemes-exchange' ); ?></h3>
 		<?php endif;
 
 		if ( !empty( $settings ) )
@@ -1302,13 +1302,13 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 		?>
 		<div class="it-exchange-addon-settings it-exchange-paypal-addon-settings">
 			<p>
-				<?php _e( 'Although this PayPal version for iThemes Exchange takes more effort and time, it is well worth it for the security options for your store. To get PayPal set up for use with Exchange, you\'ll need to add the following information from your PayPal account.', 'LION' ); ?><br /><br />
-				<?php _e( 'Video:', 'LION' ); ?>&nbsp;<a href="http://ithemes.com/tutorials/setting-up-paypal-standard-secure/" target="_blank"><?php _e( 'Setting Up PayPal Standard Secure', 'LION' ); ?></a>
+				<?php _e( 'Although this PayPal version for iThemes Exchange takes more effort and time, it is well worth it for the security options for your store. To get PayPal set up for use with Exchange, you\'ll need to add the following information from your PayPal account.', 'it-l10n-ithemes-exchange' ); ?><br /><br />
+				<?php _e( 'Video:', 'it-l10n-ithemes-exchange' ); ?>&nbsp;<a href="http://ithemes.com/tutorials/setting-up-paypal-standard-secure/" target="_blank"><?php _e( 'Setting Up PayPal Standard Secure', 'it-l10n-ithemes-exchange' ); ?></a>
 			</p>
-			<p><?php _e( 'Don\'t have a PayPal account yet?', 'LION' ); ?> <a href="http://paypal.com" target="_blank"><?php _e( 'Go set one up here', 'LION' ); ?></a>.</p>
-			<h4><?php _e( 'Step 1. Fill out your PayPal email address', 'LION' ); ?></h4>
+			<p><?php _e( 'Don\'t have a PayPal account yet?', 'it-l10n-ithemes-exchange' ); ?> <a href="http://paypal.com" target="_blank"><?php _e( 'Go set one up here', 'it-l10n-ithemes-exchange' ); ?></a>.</p>
+			<h4><?php _e( 'Step 1. Fill out your PayPal email address', 'it-l10n-ithemes-exchange' ); ?></h4>
 			<p>
-				<label for="live-email-address"><?php _e( 'PayPal Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
+				<label for="live-email-address"><?php _e( 'PayPal Email Address', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 				<?php
 				if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
 					$form->add_text_box( 'paypal-standard-secure-live-email-address' );
@@ -1316,9 +1316,9 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 					$form->add_text_box( 'live-email-address' );
 				?>
 			</p>
-			<h4><?php _e( 'Step 2. Fill out your PayPal API credentials', 'LION' ); ?></h4>
+			<h4><?php _e( 'Step 2. Fill out your PayPal API credentials', 'it-l10n-ithemes-exchange' ); ?></h4>
 			<p>
-				<label for="live-api-username"><?php _e( 'PayPal API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<label for="live-api-username"><?php _e( 'PayPal API Username', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 				<?php
 				if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
 					$form->add_text_box( 'paypal-standard-secure-live-api-username' );
@@ -1327,7 +1327,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 				?>
 			</p>
 			<p>
-				<label for="live-api-password"><?php _e( 'PayPal API Password', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<label for="live-api-password"><?php _e( 'PayPal API Password', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 				<?php
 				if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
 					$form->add_text_box( 'paypal-standard-secure-live-api-password' );
@@ -1336,7 +1336,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 				?>
 			</p>
 			<p>
-				<label for="live-api-signature"><?php _e( 'PayPal API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'LION' ); ?>">i</span></label>
+				<label for="live-api-signature"><?php _e( 'PayPal API Signature', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'At PayPal, see: Profile &rarr; My Selling Tools &rarr; API Access &rarr; Update &rarr; View API Signature (or Request API Credentials).', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 				<?php
 				if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
 					$form->add_text_box( 'paypal-standard-secure-live-api-signature' );
@@ -1344,15 +1344,15 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 					$form->add_text_box( 'live-api-signature' );
 				?>
 			</p>
-			<h4><?php _e( 'Step 3. Setup PayPal Auto Return', 'LION' ); ?></h4>
-			<p><?php _e( 'PayPal Auto Return must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
-			<p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'LION' ); ?></p>
+			<h4><?php _e( 'Step 3. Setup PayPal Auto Return', 'it-l10n-ithemes-exchange' ); ?></h4>
+			<p><?php _e( 'PayPal Auto Return must be configured in Account Profile -› Website Payment Preferences in your PayPal Account', 'it-l10n-ithemes-exchange' ); ?></p>
+			<p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'it-l10n-ithemes-exchange' ); ?></p>
 			<code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
-			<h4><?php _e( 'Step 4. Setup PayPal Payment Data Transfer (PDT)', 'LION' ); ?></h4>
-			<p><?php _e( 'PayPal PDT must be turned <strong>ON</strong> in Account Profile -› Website Payment Preferences in your PayPal Account', 'LION' ); ?></p>
-			<h4><?php _e( 'Optional: Edit Paypal Button Label', 'LION' ); ?></h4>
+			<h4><?php _e( 'Step 4. Setup PayPal Payment Data Transfer (PDT)', 'it-l10n-ithemes-exchange' ); ?></h4>
+			<p><?php _e( 'PayPal PDT must be turned <strong>ON</strong> in Account Profile -› Website Payment Preferences in your PayPal Account', 'it-l10n-ithemes-exchange' ); ?></p>
+			<h4><?php _e( 'Optional: Edit Paypal Button Label', 'it-l10n-ithemes-exchange' ); ?></h4>
 			<p>
-				<label for="purchase-button-label"><?php _e( 'Purchase Button Label', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the text inside the button your customers will press to purchase with PayPal Standard (secure)', 'LION' ); ?>">i</span></label>
+				<label for="purchase-button-label"><?php _e( 'Purchase Button Label', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'This is the text inside the button your customers will press to purchase with PayPal Standard (secure)', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 				<?php
 				if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
 					$form->add_text_box( 'paypal-standard-secure-purchase-button-label' );
@@ -1360,10 +1360,10 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 					$form->add_text_box( 'purchase-button-label' );
 				?>
 			</p>
-			<h4 class="hide-if-wizard"><?php _e( 'Optional: Enable Paypal Testing Mode', 'LION' ); ?></h4>
+			<h4 class="hide-if-wizard"><?php _e( 'Optional: Enable Paypal Testing Mode', 'it-l10n-ithemes-exchange' ); ?></h4>
 			<p class="hide-if-wizard">
 				<?php $form->add_check_box( 'sandbox-mode', array( 'class' => 'show-test-mode-options' ) ); ?>
-				<label for="sandbox-mode"><?php _e( 'Enable PayPal Sandbox Mode?', 'LION' ); ?> <span class="tip" title="<?php _e( 'Use this mode for testing your store. This mode will need to be disabled when the store is ready to process customer payments.', 'LION' ); ?>">i</span></label>
+				<label for="sandbox-mode"><?php _e( 'Enable PayPal Sandbox Mode?', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'Use this mode for testing your store. This mode will need to be disabled when the store is ready to process customer payments.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 			</p>
 			<?php
 			if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
@@ -1372,19 +1372,19 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 				$hidden_class = ( $settings['sandbox-mode'] ) ? '' : 'hide-if-live-mode';
 			?>
 			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
-				<label for="sandbox-email-address"><?php _e( 'PayPal Sandbox Email Address', 'LION' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'LION' ); ?>">i</span></label>
+				<label for="sandbox-email-address"><?php _e( 'PayPal Sandbox Email Address', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 				<?php $form->add_text_box( 'sandbox-email-address' ); ?>
 			</p>
 			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
-				<label for="sandbox-api-username"><?php _e( 'PayPal Sandbox API Username', 'LION' ); ?> <span class="tip" title="<?php _e( 'View tutorial: ', 'LION' ); ?>http://ithemes.com/tutorials/creating-a-paypal-sandbox-test-account">i</span></label>
+				<label for="sandbox-api-username"><?php _e( 'PayPal Sandbox API Username', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'View tutorial: ', 'it-l10n-ithemes-exchange' ); ?>http://ithemes.com/tutorials/creating-a-paypal-sandbox-test-account">i</span></label>
 				<?php $form->add_text_box( 'sandbox-api-username' ); ?>
 			</p>
 			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
-				<label for="sandbox-api-password"><?php _e( 'PayPal Sandbox API Password', 'LION' ); ?> <span class="tip" title="<?php _e( 'View tutorial: ', 'LION' ); ?>http://ithemes.com/tutorials/creating-a-paypal-sandbox-test-account">i</span></label>
+				<label for="sandbox-api-password"><?php _e( 'PayPal Sandbox API Password', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'View tutorial: ', 'it-l10n-ithemes-exchange' ); ?>http://ithemes.com/tutorials/creating-a-paypal-sandbox-test-account">i</span></label>
 				<?php $form->add_text_box( 'sandbox-api-password' ); ?>
 			</p>
 			<p class="test-mode-options hide-if-wizard <?php echo $hidden_class; ?>">
-				<label for="sandbox-api-signature"><?php _e( 'PayPal Sandbox API Signature', 'LION' ); ?> <span class="tip" title="<?php _e( 'View tutorial: ', 'LION' ); ?>http://ithemes.com/tutorials/creating-a-paypal-sandbox-test-account">i</span></label>
+				<label for="sandbox-api-signature"><?php _e( 'PayPal Sandbox API Signature', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'View tutorial: ', 'it-l10n-ithemes-exchange' ); ?>http://ithemes.com/tutorials/creating-a-paypal-sandbox-test-account">i</span></label>
 				<?php $form->add_text_box( 'sandbox-api-signature' ); ?>
 			</p>
 		</div>
@@ -1403,18 +1403,18 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 
 		// Check nonce
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'it-exchange-paypal-standard-secure-settings' ) ) {
-			$this->error_message = __( 'Error. Please try again', 'LION' );
+			$this->error_message = __( 'Error. Please try again', 'it-l10n-ithemes-exchange' );
 			return;
 		}
 
 		$errors = apply_filters( 'it_exchange_add_on_paypal_standard_secure_validate_settings', $this->get_form_errors( $new_values ), $new_values );
 		if ( ! $errors && it_exchange_save_option( 'addon_paypal_standard_secure', $new_values ) ) {
-			ITUtility::show_status_message( __( 'Settings saved.', 'LION' ) );
+			ITUtility::show_status_message( __( 'Settings saved.', 'it-l10n-ithemes-exchange' ) );
 		} else if ( $errors ) {
 			$errors = implode( '<br />', $errors );
 			$this->error_message = $errors;
 		} else {
-			$this->status_message = __( 'Settings not saved.', 'LION' );
+			$this->status_message = __( 'Settings not saved.', 'it-l10n-ithemes-exchange' );
 		}
 
 		do_action( 'it_exchange_save_add_on_settings_paypal-standard-secure' );
@@ -1457,7 +1457,7 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 
 		} else {
 			it_exchange_save_option( 'addon_paypal_standard_secure', $settings );
-			$this->status_message = __( 'Settings Saved.', 'LION' );
+			$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
 		}
 
 		return;
@@ -1476,23 +1476,23 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 
 		$errors = array();
 		if ( empty( $values['live-email-address'] ) )
-			$errors[] = __( 'Please include your PayPal Email Address', 'LION' );
+			$errors[] = __( 'Please include your PayPal Email Address', 'it-l10n-ithemes-exchange' );
 		if ( empty( $values['live-api-username'] ) )
-			$errors[] = __( 'Please include your PayPal API Username', 'LION' );
+			$errors[] = __( 'Please include your PayPal API Username', 'it-l10n-ithemes-exchange' );
 		if ( empty( $values['live-api-password'] ) )
-			$errors[] = __( 'Please include your PayPal API password', 'LION' );
+			$errors[] = __( 'Please include your PayPal API password', 'it-l10n-ithemes-exchange' );
 		if ( empty( $values['live-api-signature'] ) )
-			$errors[] = __( 'Please include your PayPal API signature', 'LION' );
+			$errors[] = __( 'Please include your PayPal API signature', 'it-l10n-ithemes-exchange' );
 
 		if ( !empty( $values['sandbox-mode' ] ) ) {
 			if ( empty( $values['sandbox-email-address'] ) )
-				$errors[] = __( 'Please include your PayPal Sandbox Email Address', 'LION' );
+				$errors[] = __( 'Please include your PayPal Sandbox Email Address', 'it-l10n-ithemes-exchange' );
 			if ( empty( $values['sandbox-api-username'] ) )
-				$errors[] = __( 'Please include your PayPal Sandbox API Username', 'LION' );
+				$errors[] = __( 'Please include your PayPal Sandbox API Username', 'it-l10n-ithemes-exchange' );
 			if ( empty( $values['sandbox-api-password'] ) )
-				$errors[] = __( 'Please include your PayPal Sandbox API password', 'LION' );
+				$errors[] = __( 'Please include your PayPal Sandbox API password', 'it-l10n-ithemes-exchange' );
 			if ( empty( $values['sandbox-api-signature'] ) )
-				$errors[] = __( 'Please include your PayPal Sandbox API signature', 'LION' );
+				$errors[] = __( 'Please include your PayPal Sandbox API signature', 'it-l10n-ithemes-exchange' );
 		}
 
 		return $errors;

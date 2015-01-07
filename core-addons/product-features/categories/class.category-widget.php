@@ -14,14 +14,14 @@
 class IT_Exchange_Category_Widget extends WP_Widget {
 
 	function __construct() {
-		$widget_ops = array( 'classname' => 'it_exchange_widget_categories', 'description' => __( 'A list or dropdown of Product categories', 'LION' ) );
-		parent::__construct('product-categories', __( 'Product Categories', 'LION' ), $widget_ops);
+		$widget_ops = array( 'classname' => 'it_exchange_widget_categories', 'description' => __( 'A list or dropdown of Product categories', 'it-l10n-ithemes-exchange' ) );
+		parent::__construct('product-categories', __( 'Product Categories', 'it-l10n-ithemes-exchange' ), $widget_ops);
 	}
 
 	function widget( $args, $instance ) {
 		extract( $args );
 
-		$title = apply_filters('widget_title', empty( $instance['title'] ) ? __( 'Product Categories', 'LION' ) : $instance['title'], $instance, $this->id_base);
+		$title = apply_filters('widget_title', empty( $instance['title'] ) ? __( 'Product Categories', 'it-l10n-ithemes-exchange' ) : $instance['title'], $instance, $this->id_base);
 		$c = ! empty( $instance['count'] ) ? '1' : '0';
 		$h = ! empty( $instance['hierarchical'] ) ? '1' : '0';
 		$d = ! empty( $instance['dropdown'] ) ? '1' : '0';
@@ -33,7 +33,7 @@ class IT_Exchange_Category_Widget extends WP_Widget {
 		$cat_args = array('orderby' => 'name', 'show_count' => $c, 'hierarchical' => $h);
 
 		if ( $d ) {
-			$cat_args['show_option_none'] = __( 'Select Product Category', 'LION' );
+			$cat_args['show_option_none'] = __( 'Select Product Category', 'it-l10n-ithemes-exchange' );
 			$cat_args['taxonomy'] = 'it_exchange_category';
 			$cat_args['id'] = 'product_cats';
 			it_exchange_dropdown_taxonomies( apply_filters('it_exchange_widget_categories_dropdown_args', $cat_args) );
@@ -89,17 +89,17 @@ class IT_Exchange_Category_Widget extends WP_Widget {
 		$dropdown = isset( $instance['dropdown'] ) ? (bool) $instance['dropdown'] : false;
 
 ?>
-	<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'LION' ); ?></label>
+	<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'it-l10n-ithemes-exchange' ); ?></label>
 	<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></p>
 
 	<p><input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('dropdown'); ?>" name="<?php echo $this->get_field_name('dropdown'); ?>"<?php checked( $dropdown ); ?> />
-	<label for="<?php echo $this->get_field_id('dropdown'); ?>"><?php _e( 'Display as dropdown', 'LION' ); ?></label><br />
+	<label for="<?php echo $this->get_field_id('dropdown'); ?>"><?php _e( 'Display as dropdown', 'it-l10n-ithemes-exchange' ); ?></label><br />
 
 	<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('count'); ?>" name="<?php echo $this->get_field_name('count'); ?>"<?php checked( $count ); ?> />
-	<label for="<?php echo $this->get_field_id('count'); ?>"><?php _e( 'Show product counts', 'LION' ); ?></label><br />
+	<label for="<?php echo $this->get_field_id('count'); ?>"><?php _e( 'Show product counts', 'it-l10n-ithemes-exchange' ); ?></label><br />
 
 	<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('hierarchical'); ?>" name="<?php echo $this->get_field_name('hierarchical'); ?>"<?php checked( $hierarchical ); ?> />
-	<label for="<?php echo $this->get_field_id('hierarchical'); ?>"><?php _e( 'Show hierarchy', 'LION' ); ?></label></p>
+	<label for="<?php echo $this->get_field_id('hierarchical'); ?>"><?php _e( 'Show hierarchy', 'it-l10n-ithemes-exchange' ); ?></label></p>
 <?php
 
 	}

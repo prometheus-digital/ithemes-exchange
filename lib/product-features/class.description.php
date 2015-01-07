@@ -95,7 +95,7 @@ class IT_Exchange_Product_Feature_Product_Description {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-description', __( 'Description', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal' );
+		add_meta_box( 'it-exchange-product-description', __( 'Description', 'it-l10n-ithemes-exchange' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal' );
 	}
 
 	/**
@@ -107,8 +107,8 @@ class IT_Exchange_Product_Feature_Product_Description {
 	function print_metabox( $post ) {
 		$settings     = it_exchange_get_option( 'settings_general' );
 		$enable_description_wysiwyg = ! empty( $settings['wysiwyg-for-product-description'] );
-		$label_text   = apply_filters( 'it_exchange_add_edit_product_description_label', __( 'Description', 'LION' ), $post );
-		$tooltip_text = apply_filters( 'it_exchange_add_edit_product_description_tooltip', __( 'This is a quick, descriptive summary of what your product does and is usually 3-5 sentences long. To add additional info, use the Advanced button below to make an extended description.', 'LION' ), $post );
+		$label_text   = apply_filters( 'it_exchange_add_edit_product_description_label', __( 'Description', 'it-l10n-ithemes-exchange' ), $post );
+		$tooltip_text = apply_filters( 'it_exchange_add_edit_product_description_tooltip', __( 'This is a quick, descriptive summary of what your product does and is usually 3-5 sentences long. To add additional info, use the Advanced button below to make an extended description.', 'it-l10n-ithemes-exchange' ), $post );
 		?>
 		<label for="it-exchange-product-description-field"><?php echo $label_text; ?> <span class="tip" title="<?php esc_attr_e( $tooltip_text ); ?>">i</span></label>
 		<?php

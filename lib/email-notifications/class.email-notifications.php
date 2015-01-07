@@ -83,7 +83,7 @@ class IT_Exchange_Email_Notifications {
 		// Abort if no transaction or invalid transaction was passed
 		$transaction = it_exchange_get_transaction( $_GET['id'] );
 		if ( empty( $transaction->ID ) ) {
-			it_exchange_add_message( 'error', __( 'Invalid transaction. Confirmation email not sent.', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'Invalid transaction. Confirmation email not sent.', 'it-l10n-ithemes-exchange' ) );
 			$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
 			it_exchange_redirect( $url, 'admin-confirmation-email-resend-failed' );
 			die();
@@ -92,7 +92,7 @@ class IT_Exchange_Email_Notifications {
 		// Abort if nonce is bad
 		$nonce = empty( $_GET['_wpnonce'] ) ? false : $_GET['_wpnonce'];
 		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'it-exchange-resend-confirmation-' . $transaction->ID ) ) {
-			it_exchange_add_message( 'error', __( 'Confirmation Email not sent. Please try again.', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'Confirmation Email not sent. Please try again.', 'it-l10n-ithemes-exchange' ) );
 			$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
 			it_exchange_redirect( $url, 'admin-confirmation-email-resend-failed' );
 			die();
@@ -100,7 +100,7 @@ class IT_Exchange_Email_Notifications {
 
 		// Abort if user doesn't have permission
 		if ( ! current_user_can( 'administrator' ) ) {
-			it_exchange_add_message( 'error', __( 'You do not have permission to resend confirmation emails.', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'You do not have permission to resend confirmation emails.', 'it-l10n-ithemes-exchange' ) );
 			$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
 			it_exchange_redirect( $url, 'admin-confirmation-email-resend-failed' );
 			die();
@@ -108,7 +108,7 @@ class IT_Exchange_Email_Notifications {
 
 		// Resend w/o admin notification
 		$this->send_purchase_emails( $transaction, false );
-		it_exchange_add_message( 'notice', __( 'Confirmation email resent', 'LION' ) );
+		it_exchange_add_message( 'notice', __( 'Confirmation email resent', 'it-l10n-ithemes-exchange' ) );
 		$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
 		it_exchange_redirect( $url, 'admin-confirmation-email-resend-success' );
 		die();
@@ -333,15 +333,15 @@ class IT_Exchange_Email_Notifications {
 							 * If no files exist for the transaction, then there is no need to print this message even if status is pending
 							 * Clear as mud.
 							*/
-							$status_notice = '<p>' . __( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an approved status, you will receive a follow-up email with your download links.', 'LION' ) . '</p>';
-							$status_notice = '<h3>' . __( 'Available Downloads', 'LION' ) . '</h3>' . $status_notice;
+							$status_notice = '<p>' . __( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an approved status, you will receive a follow-up email with your download links.', 'it-l10n-ithemes-exchange' ) . '</p>';
+							$status_notice = '<h3>' . __( 'Available Downloads', 'it-l10n-ithemes-exchange' ) . '</h3>' . $status_notice;
 							?>
 						<?php else : ?>
 							<h4><?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?></h4>
 							<?php $count = it_exchange_get_transaction_product_feature( $transaction_product, 'count' ); ?>
 							<?php if ( $count > 1 && apply_filters( 'it_exchange_print_downlods_page_link_in_email', true, $this->transaction_id ) ) : ?>
 								<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
-								<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%s%sEach link has its own download limits and you can view the details on your %sdownloads%s page.', 'LION' ), $count, '<br />', '<br />', '<a href="' . $downloads_url . '">', '</a>' ); ?></p>
+								<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%s%sEach link has its own download limits and you can view the details on your %sdownloads%s page.', 'it-l10n-ithemes-exchange' ), $count, '<br />', '<br />', '<a href="' . $downloads_url . '">', '</a>' ); ?></p>
 							<?php endif; ?>
 							<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
 								<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $args->transaction_id, $transaction_product, $download_id ); ?>
@@ -351,11 +351,11 @@ class IT_Exchange_Email_Notifications {
 									<?php foreach( (array) $hashes_for_product_transaction as $hash ) : ?>
 										<?php
 										$hash_data      = it_exchange_get_download_data_from_hash( $hash );
-										$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'LION' ) : $hash_data['download_limit'];
+										$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'it-l10n-ithemes-exchange' ) : $hash_data['download_limit'];
 										$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
 										?>
 										<li>
-											<a href="<?php echo site_url() . '?it-exchange-download=' . $hash; ?>"><?php _e( 'Download link', 'LION' ); ?></a> <span style="font-family: Monaco, monospace;font-size:12px;color:#AAA;">(<?php esc_attr_e( $hash ); ?>)</span>
+											<a href="<?php echo site_url() . '?it-exchange-download=' . $hash; ?>"><?php _e( 'Download link', 'it-l10n-ithemes-exchange' ); ?></a> <span style="font-family: Monaco, monospace;font-size:12px;color:#AAA;">(<?php esc_attr_e( $hash ); ?>)</span>
 										</li>
 									<?php endforeach; ?>
 								</ul>
@@ -438,7 +438,7 @@ class IT_Exchange_Email_Notifications {
 	*/
 	function it_exchange_replace_order_table_tag( $args, $options = NULL ) {
 
-		$purchase_messages_heading  = '<h3>' . __( 'Important Information', 'LION' ). '</h3>';
+		$purchase_messages_heading  = '<h3>' . __( 'Important Information', 'it-l10n-ithemes-exchange' ). '</h3>';
 		$purchase_messages          = '';
 		$purchase_message_on        = false;
 
@@ -450,9 +450,9 @@ class IT_Exchange_Email_Notifications {
 			<table style="text-align: left; background: #FBFBFB; margin-bottom: 1.5em;border:1px solid #DDD;border-collapse: collapse;">
 				<thead style="background:#F3F3F3;">
 					<tr>
-						<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Product', 'LION' ); ?></th>
-						<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Quantity', 'LION' ); ?></th>
-						<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total Price', 'LION' ); ?></th>
+						<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Product', 'it-l10n-ithemes-exchange' ); ?></th>
+						<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Quantity', 'it-l10n-ithemes-exchange' ); ?></th>
+						<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total Price', 'it-l10n-ithemes-exchange' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -480,7 +480,7 @@ class IT_Exchange_Email_Notifications {
 				</tbody>
 				<tfoot style="background:#F3F3F3;">
 					<tr>
-						<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total', 'LION' ); ?></td>
+						<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total', 'it-l10n-ithemes-exchange' ); ?></td>
 						<td style="padding: 10px;border:1px solid #DDD;"><?php echo it_exchange_get_transaction_total( $this->transaction_id, true ) ?></td>
 					</tr>
 				</tfoot>

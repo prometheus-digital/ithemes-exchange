@@ -17,6 +17,6 @@
 ?>
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_registration_before_login_element' ); ?>
 <div class="it-exchange-registration-login">
-    <a class="it-exchange-login-requirement-login" href="<?php echo it_exchange_get_page_url( 'login' ); ?>"><?php _e( 'Log in', 'LION' ); ?></a>
+    <a class="it-exchange-login-requirement-login" href="<?php echo it_exchange_get_page_url( 'login' ); ?>"><?php _e( 'Log in', 'it-l10n-ithemes-exchange' ); ?></a>
 </div>
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_registration_after_login_element' ); ?>

@@ -16,5 +16,5 @@
 ?>
 
 <?php do_action( 'it_exchange_super_widget_registration_before_guest_checkout_link_element' ); ?>
-<?php echo it_exchange_guest_checkout_sw_link( __( 'Checkout as a guest', 'LION' ) ); ?>
+<?php echo it_exchange_guest_checkout_sw_link( __( 'Checkout as a guest', 'it-l10n-ithemes-exchange' ) ); ?>
 <?php do_action( 'it_exchange_super_widget_registration_after_guest_checkout_link_element' ); ?>

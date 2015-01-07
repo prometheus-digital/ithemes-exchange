@@ -95,7 +95,7 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-purchase-message', __( 'Purchase Message', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'normal' );
+		add_meta_box( 'it-exchange-product-purchase-message', __( 'Purchase Message', 'it-l10n-ithemes-exchange' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'normal' );
 	}
 
 	/**
@@ -112,7 +112,7 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'purchase-message' );
 
 		// Set description
-		$description = __( 'Any text placed here will be appended to the receipt when this product is purchased. You might want to use this to add special instructions for particular products.', 'LION' );
+		$description = __( 'Any text placed here will be appended to the receipt when this product is purchased. You might want to use this to add special instructions for particular products.', 'it-l10n-ithemes-exchange' );
 		$description = apply_filters( 'it_exchange_product_purchase-message_metabox_description', $description );
 
 		?>

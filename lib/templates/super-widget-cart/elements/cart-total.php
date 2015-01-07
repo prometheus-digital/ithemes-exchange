@@ -17,7 +17,7 @@
 <?php do_action( 'it_exchange_super_widget_cart_before_total_element' ); ?>
 <div class="cart-total cart-totals-row">
 	<?php do_action( 'it_exchange_super_widget_cart_begin_total_element' ); ?>
-	<?php _e( 'Total:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_cart_total() ); ?>
+	<?php _e( 'Total:', 'it-l10n-ithemes-exchange' ); ?> <?php esc_attr_e( it_exchange_get_cart_total() ); ?>
 	<?php do_action( 'it_exchange_super_widget_cart_end_total_element' ); ?>
 </div>
 <?php do_action( 'it_exchange_super_widget_cart_after_total_element' ); ?>

@@ -95,11 +95,11 @@ if ( 'login' == $action ) {
 
 	$user = wp_signon( $creds, false );
 	if ( ! is_wp_error( $user ) ) {
-		it_exchange_add_message( 'notice', __( 'Logged in as ', 'LION' ) . $user->user_login );
+		it_exchange_add_message( 'notice', __( 'Logged in as ', 'it-l10n-ithemes-exchange' ) . $user->user_login );
 		die('1');
 	} else {
 		$error_message = $user->get_error_message();
-		$error_message = empty( $error_message ) ? __( 'Error. Please try again.', 'LION' ) : $error_message;
+		$error_message = empty( $error_message ) ? __( 'Error. Please try again.', 'it-l10n-ithemes-exchange' ) : $error_message;
 		it_exchange_add_message( 'error', $error_message );
 		die('0');
 	}
@@ -121,7 +121,7 @@ if ( 'register' == $action ) {
 
         $user = wp_signon( $creds );
 		if ( ! is_wp_error( $user ) )
-			it_exchange_add_message( 'notice', __( 'Registered and logged in as ', 'LION' ) . $user->user_login );
+			it_exchange_add_message( 'notice', __( 'Registered and logged in as ', 'it-l10n-ithemes-exchange' ) . $user->user_login );
 		else
             it_exchange_add_message( 'error', $result->get_error_message() );
 		die('1');

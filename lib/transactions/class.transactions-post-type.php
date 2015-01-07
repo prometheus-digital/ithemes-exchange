@@ -44,13 +44,13 @@ class IT_Exchange_Transaction_Post_Type {
 
 		$this->post_type = 'it_exchange_tran';
 		$labels    = array(
-			'name'          => __( 'Payments', 'LION' ),
-			'singular_name' => __( 'Payment', 'LION' ),
-			'edit_item'     => __( 'Payment Details', 'LION' ),
+			'name'          => __( 'Payments', 'it-l10n-ithemes-exchange' ),
+			'singular_name' => __( 'Payment', 'it-l10n-ithemes-exchange' ),
+			'edit_item'     => __( 'Payment Details', 'it-l10n-ithemes-exchange' ),
 		);
 		$this->options = array(
 			'labels'               => $labels,
-			'description'          => __( 'An iThemes Exchange Post Type for storing all Payments in the system', 'LION' ),
+			'description'          => __( 'An iThemes Exchange Post Type for storing all Payments in the system', 'it-l10n-ithemes-exchange' ),
 			'public'               => false,
 			'show_ui'              => true,
 			'show_in_nav_menus'    => false,
@@ -112,7 +112,7 @@ class IT_Exchange_Transaction_Post_Type {
 	*/
 	function rename_edit_to_details( $actions, $post ) {
 		if ( 'it_exchange_tran' === $post->post_type )
-		$actions['edit'] = '<a href="' . get_edit_post_link( $post->ID, true ) . '" title="' . esc_attr( __( 'View the transaction details', 'LION' ) ) . '">' . __( 'Details', 'LION' ) . '</a>';
+		$actions['edit'] = '<a href="' . get_edit_post_link( $post->ID, true ) . '" title="' . esc_attr( __( 'View the transaction details', 'it-l10n-ithemes-exchange' ) ) . '">' . __( 'Details', 'it-l10n-ithemes-exchange' ) . '</a>';
 
 		return $actions;
 	}
@@ -283,12 +283,12 @@ class IT_Exchange_Transaction_Post_Type {
 		// All Core should be removed at this point. Build ours back (including date from core)
 		$exchange_columns = array(
 			'cb'                                      => $check,
-			'title'                                   => __( 'Order Number', 'LION' ),
-			'it_exchange_transaction_total_column'    => __( 'Total', 'LION' ),
-			'it_exchange_transaction_status_column'   => __( 'Status', 'LION' ),
-			'it_exchange_transaction_customer_column' => __( 'Customer', 'LION' ),
-			'it_exchange_transaction_method_column'   => __( 'Method', 'LION' ),
-			'date'                                    => __( 'Date', 'LION' ),
+			'title'                                   => __( 'Order Number', 'it-l10n-ithemes-exchange' ),
+			'it_exchange_transaction_total_column'    => __( 'Total', 'it-l10n-ithemes-exchange' ),
+			'it_exchange_transaction_status_column'   => __( 'Status', 'it-l10n-ithemes-exchange' ),
+			'it_exchange_transaction_customer_column' => __( 'Customer', 'it-l10n-ithemes-exchange' ),
+			'it_exchange_transaction_method_column'   => __( 'Method', 'it-l10n-ithemes-exchange' ),
+			'date'                                    => __( 'Date', 'it-l10n-ithemes-exchange' ),
 		);
 
 		// Merge ours back with existing to preserve any 3rd party columns
@@ -348,7 +348,7 @@ class IT_Exchange_Transaction_Post_Type {
 				if ( $customer = it_exchange_get_transaction_customer( $transaction ) )
 					esc_attr_e( empty( $customer->wp_user->display_name ) ? $customer->wp_user->user_login : $customer->wp_user->display_name );
 				else
-					esc_attr_e( __( 'Unknown', 'LION' ) );
+					esc_attr_e( __( 'Unknown', 'it-l10n-ithemes-exchange' ) );
 				break;
 			case 'it_exchange_transaction_total_column' :
 				esc_attr_e( it_exchange_get_transaction_total( $transaction ) );
@@ -390,7 +390,7 @@ class IT_Exchange_Transaction_Post_Type {
 		add_filter('screen_options_show_screen', '__return_false');
 
 		// Transaction Details
-		$title     = __( 'Transaction Details', 'LION' );
+		$title     = __( 'Transaction Details', 'it-l10n-ithemes-exchange' );
 		$callback  = array( $this, 'print_transaction_details_metabox' );
 		$post_type = 'it_exchange_tran';
 		add_meta_box( 'it-exchange-transaction-details', $title, $callback, $post_type, 'normal', 'high' );
@@ -443,7 +443,7 @@ class IT_Exchange_Transaction_Post_Type {
 				<?php if ( apply_filters( 'it_exchange_transaction_detail_has_customer_profile', true, $post ) ) : ?>
 					<div class="customer-profile">
 						<a href="<?php esc_attr_e( it_exchange_get_transaction_customer_admin_profile_url( $post ) ); ?>">
-							<?php _e( 'View Customer Data', 'LION' ); ?>
+							<?php _e( 'View Customer Data', 'it-l10n-ithemes-exchange' ); ?>
 						</a>
 					</div>
 				<?php endif; ?>
@@ -466,7 +466,7 @@ class IT_Exchange_Transaction_Post_Type {
 				<?php if ( $shipping_address ) : ?>
 					<div class="shipping-address column c-30">
 						<div class="column-inner">
-							<div class="shipping-address-label address-label"><?php _e( 'Shipping Address', 'LION' ); ?></div>
+							<div class="shipping-address-label address-label"><?php _e( 'Shipping Address', 'it-l10n-ithemes-exchange' ); ?></div>
 							<p><?php echo it_exchange_get_formatted_shipping_address( $shipping_address ); ?></p>
 						</div>
 					</div>
@@ -474,7 +474,7 @@ class IT_Exchange_Transaction_Post_Type {
 				<?php if ( $billing_address ) : ?>
 					<div class="billing-address column c-30">
 						<div class="column-inner">
-							<div class="billing-address-label address-label"><?php _e( 'Billing Address', 'LION' ); ?></div>
+							<div class="billing-address-label address-label"><?php _e( 'Billing Address', 'it-l10n-ithemes-exchange' ); ?></div>
 							<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
 						</div>
 					</div>
@@ -487,8 +487,8 @@ class IT_Exchange_Transaction_Post_Type {
 
 		<div class="products bottom-border">
 			<div class="products-header spacing-wrapper bottom-border">
-				<span><?php _e( 'Products', 'LION' ); ?></span>
-				<span class="right"><?php _e( 'Amount', 'LION' ); ?></span>
+				<span><?php _e( 'Products', 'it-l10n-ithemes-exchange' ); ?></span>
+				<span class="right"><?php _e( 'Amount', 'it-l10n-ithemes-exchange' ); ?></span>
 			</div>
 			<?php
 				// Grab products attached to transaction
@@ -524,7 +524,7 @@ class IT_Exchange_Transaction_Post_Type {
 
 						<?php if ( it_exchange_transaction_includes_shipping( $post ) && it_exchange_product_has_feature( $transaction_product['product_id'], 'shipping' ) ) : ?>
 							<div class="product-shipping-method">
-								<?php printf( __( 'Ship this product with %s.', 'LION' ), it_exchange_get_transaction_shipping_method_for_product( $post, $transaction_product['product_cart_id'] ) ); ?>
+								<?php printf( __( 'Ship this product with %s.', 'it-l10n-ithemes-exchange' ), it_exchange_get_transaction_shipping_method_for_product( $post, $transaction_product['product_cart_id'] ) ); ?>
 							</div>
 						<?php endif; ?>
 
@@ -533,7 +533,7 @@ class IT_Exchange_Transaction_Post_Type {
 								<div class="product-download product-download-<?php esc_attr_e( $download_id ); ?>">
 									<h4 class="product-download-title">
 										<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_download_title', $post, $download_id, $download_data ); ?>
-										<?php echo __( 'Download:', 'LION' ) . ' ' . get_the_title( $download_id ); ?>
+										<?php echo __( 'Download:', 'it-l10n-ithemes-exchange' ) . ' ' . get_the_title( $download_id ); ?>
 										<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_download_title', $post, $download_id, $download_data ); ?>
 									</h4>
 								</div>
@@ -551,7 +551,7 @@ class IT_Exchange_Transaction_Post_Type {
 
 		<div class="transaction-costs clearfix spacing-wrapper bottom-border">
 			<div class="transaction-costs-subtotal right clearfix">
-				<div class="transaction-costs-subtotal-label left"><?php _e( 'Subtotal', 'LION' ); ?></div>
+				<div class="transaction-costs-subtotal-label left"><?php _e( 'Subtotal', 'it-l10n-ithemes-exchange' ); ?></div>
 				<div class="transaction-costs-subtotal-price">
 					<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_subtotal', $post ); ?>
 					<?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?>
@@ -561,14 +561,14 @@ class IT_Exchange_Transaction_Post_Type {
 
 			<?php if ( $coupons = it_exchange_get_transaction_coupons( $post ) ) : ?>
 				<div class="transaction-costs-coupons right">
-					<div class="transaction-costs-coupon-total-label left"><?php _e( 'Total Discount', 'LION' ); ?></div>
+					<div class="transaction-costs-coupon-total-label left"><?php _e( 'Total Discount', 'it-l10n-ithemes-exchange' ); ?></div>
 					<div class="transaction-costs-coupon-total-amount">
 						<?php do_action( 'it_exchange_transaction_print_metabox_before_coupons_total_discount', $post ); ?>
 						<?php esc_attr_e( it_exchange_get_transaction_coupons_total_discount( $post ) ); ?>
 						<?php do_action( 'it_exchange_transaction_print_metabox_after_coupons_total_discount', $post ); ?>
 					</div>
 				</div>
-				<label><strong><?php _e( 'Coupons', 'LION' ); ?></strong></label>
+				<label><strong><?php _e( 'Coupons', 'it-l10n-ithemes-exchange' ); ?></strong></label>
 				<?php foreach ( $coupons as $type => $coupon ) : ?>
 					<?php foreach ( $coupon as $data ) : ?>
 						<div class="transaction-cost-coupon">
@@ -585,7 +585,7 @@ class IT_Exchange_Transaction_Post_Type {
 			<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
 				<div class="transaction-costs-refunds right">
 					<div class="transaction-costs-refund-total">
-						<div class="transaction-costs-refund-total-label left"><?php _e( 'Total Refund', 'LION' ); ?></div>
+						<div class="transaction-costs-refund-total-label left"><?php _e( 'Total Refund', 'it-l10n-ithemes-exchange' ); ?></div>
 						<div class="transaction-costs-refund-total-amount">
 							<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_refunds_total', $post ); ?>
 							<?php esc_attr_e( it_exchange_get_transaction_refunds_total( $post ) ); ?>
@@ -594,10 +594,10 @@ class IT_Exchange_Transaction_Post_Type {
 					</div>
 				</div>
 				<div class="transaction-refunds-list">
-					<label><strong><?php _e( 'Refunds', 'LION' ); ?></strong></label>
+					<label><strong><?php _e( 'Refunds', 'it-l10n-ithemes-exchange' ); ?></strong></label>
 					<?php foreach ( $refunds as $refund ) : ?>
 						<div class="transaction-costs-refund">
-							<span class="code"><?php echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'LION' ) . ' ' . esc_attr( $refund['date'] ); ?></span>
+							<span class="code"><?php echo esc_attr( it_exchange_format_price( $refund['amount'] ) ) . ' ' . __( 'on', 'it-l10n-ithemes-exchange' ) . ' ' . esc_attr( $refund['date'] ); ?></span>
 						</div>
 					<?php endforeach; ?>
 				</div>
@@ -607,16 +607,16 @@ class IT_Exchange_Transaction_Post_Type {
 		<?php if ( it_exchange_transaction_includes_shipping( $post ) ) : ?>
 			<div class="transaction-shipping-summary clearfix spacing-wrapper bottom-border">
 				<div class="payment-shipping left">
-					<div class="payment-shipping-label"><?php _e( 'Shipping Method', 'LION' ); ?></div>
+					<div class="payment-shipping-label"><?php _e( 'Shipping Method', 'it-l10n-ithemes-exchange' ); ?></div>
 					<div class="payment-shipping-name">
 						<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_shipping_name', $post ); ?>
-						<?php esc_attr_e( empty( it_exchange_get_transaction_shipping_method( $post )->label ) ? __( 'Unknown Shipping Method', 'LION' ) : it_exchange_get_transaction_shipping_method( $post )->label ); ?>
+						<?php esc_attr_e( empty( it_exchange_get_transaction_shipping_method( $post )->label ) ? __( 'Unknown Shipping Method', 'it-l10n-ithemes-exchange' ) : it_exchange_get_transaction_shipping_method( $post )->label ); ?>
 						<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_shipping_name', $post ); ?>
 					</div>
 				</div>
 
 				<div class="payment-shipping-total right clearfix">
-					<div class="payment-shipping-total-label left"><?php _e( 'Shipping', 'LION' ); ?></div>
+					<div class="payment-shipping-total-label left"><?php _e( 'Shipping', 'it-l10n-ithemes-exchange' ); ?></div>
 					<div class="payment-shipping-total-amount">
 						<?php do_action( 'it_exchange_transaction_print_metabox_before_shipping_total', $post ); ?>
 						<?php echo it_exchange_format_price( it_exchange_get_transaction_shipping_total( $post ) ); ?>
@@ -628,7 +628,7 @@ class IT_Exchange_Transaction_Post_Type {
 
 		<div class="transaction-summary clearfix spacing-wrapper bottom-border">
 			<div class="payment-method left">
-				<div class="payment-method-label"><?php _e( 'Payment Method', 'LION' ); ?></div>
+				<div class="payment-method-label"><?php _e( 'Payment Method', 'it-l10n-ithemes-exchange' ); ?></div>
 				<div class="payment-method-name">
 					<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_method_name', $post ); ?>
 					<?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?>
@@ -636,7 +636,7 @@ class IT_Exchange_Transaction_Post_Type {
 				</div>
 			</div>
 			<div class="payment-total right clearfix">
-				<div class="payment-total-label left"><?php _e( 'Total', 'LION' ); ?></div>
+				<div class="payment-total-label left"><?php _e( 'Total', 'it-l10n-ithemes-exchange' ); ?></div>
 				<div class="payment-total-amount">
 					<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_total', $post ); ?>
 					<?php _e( it_exchange_get_transaction_total( $post ) ); ?>
@@ -644,7 +644,7 @@ class IT_Exchange_Transaction_Post_Type {
 				</div>
 
 				<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
-					<div class="payment-original-total-label left"><?php _e( 'Total before refunds', 'LION' ); ?></div>
+					<div class="payment-original-total-label left"><?php _e( 'Total before refunds', 'it-l10n-ithemes-exchange' ); ?></div>
 					<div class="payment-original-total-amount">
 						<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_total_before_refunds', $post ); ?>
 						<?php _e( it_exchange_get_transaction_total( $post, true, false ) ); ?>
@@ -658,8 +658,8 @@ class IT_Exchange_Transaction_Post_Type {
 			?>
 			<div class="transaction-status-update clearfix spacing-wrapper hide-if-no-js bottom-border">
 				<div class="update-status-label left">
-					<?php _e( 'Change Status', 'LION' ); ?>
-					<span class="tip" title="<?php _e( 'The customer will receive an email When this is changed from a status that is not cleared for delivery to a status that is cleared for delivery', 'LION' ); ?>">i</span>
+					<?php _e( 'Change Status', 'it-l10n-ithemes-exchange' ); ?>
+					<span class="tip" title="<?php _e( 'The customer will receive an email When this is changed from a status that is not cleared for delivery to a status that is cleared for delivery', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 				</div>
 				<div class="update-status-setting right">
 					<select id='it-exchange-update-transaction-status'>
@@ -680,8 +680,8 @@ class IT_Exchange_Transaction_Post_Type {
 					<?php wp_nonce_field( 'update-transaction-status' . $post->ID, 'it-exchange-update-transaction-nonce' ); ?>
 					<input type="hidden" id="it-exchange-update-transaction-current-status" value="<?php esc_attr_e( $current_status ); ?>" />
 					<input type="hidden" id="it-exchange-update-transaction-id" value="<?php esc_attr_e( $post->ID ); ?>" />
-					<div id="it-exchange-update-transaction-status-failed"><?php _e( 'Not Saved.', 'LION' ); ?></div>
-					<div id="it-exchange-update-transaction-status-success"><?php _e( 'Saved!', 'LION' ); ?></div>
+					<div id="it-exchange-update-transaction-status-failed"><?php _e( 'Not Saved.', 'it-l10n-ithemes-exchange' ); ?></div>
+					<div id="it-exchange-update-transaction-status-success"><?php _e( 'Saved!', 'it-l10n-ithemes-exchange' ); ?></div>
 				</div>
 			</div>
 			<?php

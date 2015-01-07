@@ -63,7 +63,7 @@ function it_exchange() {
 
 	// Die if we don't have any args
 	if ( $num_args < 1 ) {
-		it_exchange_add_message( 'error', sprintf( __( 'Coding Error: Incorrect number of args passed to %s', 'LION' ), 'it_exchange()' ) );
+		it_exchange_add_message( 'error', sprintf( __( 'Coding Error: Incorrect number of args passed to %s', 'it-l10n-ithemes-exchange' ), 'it_exchange()' ) );
 		return;
 	}
 
@@ -140,7 +140,7 @@ function it_exchange() {
 
 		// Does the class exist and return an iThemes Exchange theme API context?
 		if ( ! is_callable( array( $class_name, 'get_api_context' ) ) ) {
-			it_exchange_add_message( 'error', sprintf( __( 'Coding Error: <em>%s</em> is not a valid Exchange theme API context', 'LION' ), $context ) );
+			it_exchange_add_message( 'error', sprintf( __( 'Coding Error: <em>%s</em> is not a valid Exchange theme API context', 'it-l10n-ithemes-exchange' ), $context ) );
 			return;
 		}
 
@@ -151,7 +151,7 @@ function it_exchange() {
 	// Is the requested tag mapped to a method
 	if ( empty( $object->_tag_map[$tag] ) ) {
 		if ( ! $tag_callback = apply_filters( 'it_exchange_theme_api_get_extended_tag_functions', false, $class_name, $tag ) ) {
-			it_exchange_add_message( 'error', sprintf( __( 'Coding Error: <em>%s</em> in not a mapped method inside the <em>%s</em> Exchange theme API class', 'LION' ), $tag, $class_name ) );
+			it_exchange_add_message( 'error', sprintf( __( 'Coding Error: <em>%s</em> in not a mapped method inside the <em>%s</em> Exchange theme API class', 'it-l10n-ithemes-exchange' ), $tag, $class_name ) );
 			return false;
 		}
 
@@ -162,7 +162,7 @@ function it_exchange() {
 
 	// Does the method called exist on this class?
 	if ( empty( $tag_callback )  || ! is_callable( $tag_callback ) ) {
-		it_exchange_add_message( 'error', sprintf( __( 'Coding Error: <em>%s</em> in not a callable method inside the <em>%s</em> Exchange theme API class', 'LION' ), $method, $class_name ) );
+		it_exchange_add_message( 'error', sprintf( __( 'Coding Error: <em>%s</em> in not a callable method inside the <em>%s</em> Exchange theme API class', 'it-l10n-ithemes-exchange' ), $method, $class_name ) );
 		return false;
 	}
 

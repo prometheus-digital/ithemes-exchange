@@ -34,7 +34,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 
 		// Don't go any further if we don't have a slug
 		if ( empty( $options['slug'] ) ) {
-			it_exchange_add_message( 'error', __( 'Coding Error: IT_Exchange_Product_Feature_Abstract extended without a slug value', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'Coding Error: IT_Exchange_Product_Feature_Abstract extended without a slug value', 'it-l10n-ithemes-exchange' ) );
 			return false;
 		}
 

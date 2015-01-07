@@ -79,7 +79,7 @@ class IT_Exchange_Product {
 
 		// Return a WP Error if we don't have the $post object by this point
 		if ( ! $post )
-			return new WP_Error( 'it-exchange-product-not-a-wp-post', __( 'The IT_Exchange_Product class must have a WP post object or ID passed to its constructor', 'LION' ) );
+			return new WP_Error( 'it-exchange-product-not-a-wp-post', __( 'The IT_Exchange_Product class must have a WP post object or ID passed to its constructor', 'it-l10n-ithemes-exchange' ) );
 
 		// Grab the $post object vars and populate this objects vars
 		foreach( (array) get_object_vars( $post ) as $var => $value ) {

@@ -41,7 +41,7 @@
 			<?php if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ): ?>
 				<div class="cart-discount">
 					<?php while( it_exchange( 'coupons', 'applied', array( 'type' => 'cart' ) ) ) : ?>
-						<?php it_exchange( 'coupons', 'discount-label' ); ?> <?php _e( 'OFF', 'LION' ); ?> &#61; <?php it_exchange( 'cart', 'total' ); ?>
+						<?php it_exchange( 'coupons', 'discount-label' ); ?> <?php _e( 'OFF', 'it-l10n-ithemes-exchange' ); ?> &#61; <?php it_exchange( 'cart', 'total' ); ?>
 					<?php endwhile; ?>
 				</div>
 			<?php endif; ?>
@@ -50,7 +50,7 @@
 		<?php if ( ! it_exchange_is_multi_item_cart_allowed() || ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_cart_products_count() < 2 ) ) : ?>
 			<div class="payment-methods-wrapper">
 				<?php if ( ! it_exchange( 'checkout', 'has-transaction-methods' ) ) : ?>
-					<p><?php _e( 'No payment add-ons enabled.', 'LION' ); ?></p>
+					<p><?php _e( 'No payment add-ons enabled.', 'it-l10n-ithemes-exchange' ); ?></p>
 				<?php else : ?>
 					<?php while( it_exchange( 'checkout', 'transaction-methods' ) ) : ?>
 						<?php it_exchange( 'transaction-method', 'make-payment' ); ?>
@@ -63,7 +63,7 @@
 			<div class="cart-actions-wrapper <?php echo ( ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) && $can_edit_purchase_quantity ) || ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_cart_products_count() > 1 ) ? ' two-actions' : ''; ?>">
 				<?php if ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_cart_products_count() > 1 ) : ?>
 					<div class="cart-action view-cart">
-						<?php it_exchange( 'checkout', 'cancel', array( 'label' => __( 'View Cart', 'LION' ) ) ); ?>
+						<?php it_exchange( 'checkout', 'cancel', array( 'label' => __( 'View Cart', 'it-l10n-ithemes-exchange' ) ) ); ?>
 					</div>
 					<div class="cart-action checkout">
 						<?php it_exchange( 'cart', 'checkout' ); ?>
@@ -71,19 +71,19 @@
 				<?php else : ?>
 					<?php if ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) : ?>
 						<div class="cart-action add-coupon">
-							<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-coupon', 'focus' => 'coupon', 'label' => __( 'Coupons', 'LION' ) ) ); ?>
+							<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-coupon', 'focus' => 'coupon', 'label' => __( 'Coupons', 'it-l10n-ithemes-exchange' ) ) ); ?>
 						</div>
 					<?php endif; ?>
 
 					<?php if ( $can_edit_purchase_quantity ) : ?>
 						<div class="cart-action update-quantity">
-							<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-quantity', 'focus' => 'quantity', 'label' => __( 'Quantity', 'LION' ) ) ); ?>
+							<?php it_exchange( 'checkout', 'cancel', array( 'class' => 'sw-cart-focus-quantity', 'focus' => 'quantity', 'label' => __( 'Quantity', 'it-l10n-ithemes-exchange' ) ) ); ?>
 						</div>
 					<?php endif; ?>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 	<?php else: ?>
-		<p><?php _e( 'Your cart is empty', 'LION' ); ?></p>
+		<p><?php _e( 'Your cart is empty', 'it-l10n-ithemes-exchange' ); ?></p>
 	<?php endif; ?>
 </div>

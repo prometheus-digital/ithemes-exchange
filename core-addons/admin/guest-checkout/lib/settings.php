@@ -15,7 +15,7 @@ function it_exchange_guest_checkout_settings_callback() {
 	?>
 	<div class="wrap">
 		<?php ITUtility::screen_icon( 'it-exchange' ); ?>
-		<h2><?php _e( 'Guest Checkout', 'LION' ); ?></h2>
+		<h2><?php _e( 'Guest Checkout', 'it-l10n-ithemes-exchange' ); ?></h2>
 		<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
 
 		<?php
@@ -23,23 +23,23 @@ function it_exchange_guest_checkout_settings_callback() {
 		$registration_settings = array(
 			array(
 				'type'    => 'yes_no_drop_down',
-				'label'   => __( 'Make Guest Checkout the default method?', 'LION' ),
+				'label'   => __( 'Make Guest Checkout the default method?', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'default-form',
-				'tooltip' => __( 'This will overwrite the value for Default Form in General Settings.', 'LION' ),
+				'tooltip' => __( 'This will overwrite the value for Default Form in General Settings.', 'it-l10n-ithemes-exchange' ),
 				'default' => 1,
 			),
 			array(
 				'type'    => 'yes_no_drop_down',
-				'label'   => __( 'Show log in link?', 'LION' ),
+				'label'   => __( 'Show log in link?', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'show-log-in-link',
-				'tooltip' => __( 'Selecting \'No\' will remove the Log in link from Registration and Guest Checkout forms.', 'LION' ),
+				'tooltip' => __( 'Selecting \'No\' will remove the Log in link from Registration and Guest Checkout forms.', 'it-l10n-ithemes-exchange' ),
 				'default' => 1,
 			),
 			array(
 				'type'    => 'yes_no_drop_down',
-				'label'   => __( 'Show registration link?', 'LION' ),
+				'label'   => __( 'Show registration link?', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'show-registration-link',
-				'tooltip' => __( 'Selecting \'No\' will remove the Registration link from Log in and Guest Checkout forms.', 'LION' ),
+				'tooltip' => __( 'Selecting \'No\' will remove the Registration link from Log in and Guest Checkout forms.', 'it-l10n-ithemes-exchange' ),
 				'default' => 1,
 			),
 		);
@@ -47,10 +47,10 @@ function it_exchange_guest_checkout_settings_callback() {
 		$core_settings = array(
 			array(
 				'type'    => 'text_box',
-				'label'   => __( 'Cart Expiration', 'LION' ),
+				'label'   => __( 'Cart Expiration', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'cart-expiration',
-				'tooltip' => __( 'Cart will expire and be cleared after a guest customer is inactive for set number of minutes.', 'LION' ),
-				'after'   => '&nbsp;' . __( 'minutes', 'LION' ),
+				'tooltip' => __( 'Cart will expire and be cleared after a guest customer is inactive for set number of minutes.', 'it-l10n-ithemes-exchange' ),
+				'after'   => '&nbsp;' . __( 'minutes', 'it-l10n-ithemes-exchange' ),
 				'default' => 15,
 			),
 		);

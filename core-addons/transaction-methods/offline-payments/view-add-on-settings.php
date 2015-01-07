@@ -8,7 +8,7 @@
 ?>
 <div class="wrap">
 	<?php ITUtility::screen_icon( 'it-exchange' ); ?>
-	<h2><?php _e( 'Offline Payments Settings', 'LION' ); ?></h2>
+	<h2><?php _e( 'Offline Payments Settings', 'it-l10n-ithemes-exchange' ); ?></h2>
 
 	<?php do_action( 'it_exchange_offline-payments_settings_page_top' ); ?>
 	<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
@@ -18,7 +18,7 @@
 		<?php $this->get_offline_payment_form_table( $form ); ?>
 		<?php do_action( 'it_exchange_offline_payments_settings_form_bottom' ); ?>
 		<p class="submit">
-			<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary' ) ); ?>
+			<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'it-l10n-ithemes-exchange' ), 'class' => 'button button-primary' ) ); ?>
 		</p>
 	<?php $form->end_form(); ?>
 	<?php do_action( 'it_exchange_offline_payments_settings_page_bottom' ); ?>

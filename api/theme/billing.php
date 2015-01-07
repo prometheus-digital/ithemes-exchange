@@ -73,7 +73,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function first_name( $options=array() ) {
 		$defaults      = array(
 			'format'   => 'html',
-			'label'    => __( 'First Name', 'LION' ),
+			'label'    => __( 'First Name', 'it-l10n-ithemes-exchange' ),
 			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -94,7 +94,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function last_name( $options=array() ) {
 		$defaults      = array(
 			'format'   => 'html',
-			'label'    => __( 'Last Name', 'LION' ),
+			'label'    => __( 'Last Name', 'it-l10n-ithemes-exchange' ),
 			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -115,7 +115,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function company_name( $options=array() ) {
 		$defaults      = array(
 			'format'   => 'html',
-			'label'    => __( 'Company Name', 'LION' ),
+			'label'    => __( 'Company Name', 'it-l10n-ithemes-exchange' ),
 			'required' => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -136,7 +136,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function address1( $options=array() ) {
 		$defaults      = array(
 			'format'   => 'html',
-			'label'    => __( 'Address', 'LION' ),
+			'label'    => __( 'Address', 'it-l10n-ithemes-exchange' ),
 			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -157,7 +157,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function address2( $options=array() ) {
 		$defaults      = array(
 			'format'   => 'html',
-			'label'    => __( 'Address 2', 'LION' ),
+			'label'    => __( 'Address 2', 'it-l10n-ithemes-exchange' ),
 			'required' => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -178,7 +178,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function city( $options=array() ) {
 		$defaults      = array(
 			'format'   => 'html',
-			'label'    => __( 'City', 'LION' ),
+			'label'    => __( 'City', 'it-l10n-ithemes-exchange' ),
 			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -199,7 +199,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function zip( $options=array() ) {
 		$defaults      = array(
 			'format'   => 'html',
-			'label'    => __( 'Zip Code', 'LION' ),
+			'label'    => __( 'Zip Code', 'it-l10n-ithemes-exchange' ),
 			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -227,7 +227,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 
 		$defaults      = array(
 			'format'   => 'html',
-			'label'    => __( 'Ship to billing address?', 'LION' ),
+			'label'    => __( 'Ship to billing address?', 'it-l10n-ithemes-exchange' ),
 			'required' => false,
 			'value'    => '1',
 		);
@@ -275,7 +275,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function country( $options=array() ) {
 		$defaults      = array(
 			'format'   => 'html',
-			'label'    => __( 'Country', 'LION' ),
+			'label'    => __( 'Country', 'it-l10n-ithemes-exchange' ),
 			'required' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -344,7 +344,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 
 		$defaults      = array(
 			'format'   => 'html',
-			'label'    => __( 'State', 'LION' ),
+			'label'    => __( 'State', 'it-l10n-ithemes-exchange' ),
 			'required' => true,
 			'value'    => $default_value,
 		);
@@ -415,7 +415,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function email( $options=array() ) {
 		$defaults      = array(
 			'format'   => 'html',
-			'label'    => __( 'Email', 'LION' ),
+			'label'    => __( 'Email', 'it-l10n-ithemes-exchange' ),
 			'required' => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -436,7 +436,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function phone( $options=array() ) {
 		$defaults      = array(
 			'format'   => 'html',
-			'label'    => __( 'Phone', 'LION' ),
+			'label'    => __( 'Phone', 'it-l10n-ithemes-exchange' ),
 			'required' => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -457,7 +457,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function submit( $options=array() ) {
 		$defaults      = array(
 			'format' => 'html',
-			'label'  => __( 'Submit', 'LION' ),
+			'label'  => __( 'Submit', 'it-l10n-ithemes-exchange' ),
 			'name'   => '',
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -476,7 +476,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function cancel( $options=array() ) {
 		$defaults      = array(
 			'format' => 'html',
-			'label'  => __( 'Cancel', 'LION' ),
+			'label'  => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 

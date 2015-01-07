@@ -38,7 +38,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	function add_feature_support_to_product_types() {
 		// Register the product feature
 		$slug        = 'availability';
-		$description = __( 'Availability to purchase the product.', 'LION' );
+		$description = __( 'Availability to purchase the product.', 'it-l10n-ithemes-exchange' );
 		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
@@ -96,7 +96,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-availability', __( 'Availability', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'normal' );
+		add_meta_box( 'it-exchange-product-availability', __( 'Availability', 'it-l10n-ithemes-exchange' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'normal' );
 	}
 
 	/**
@@ -121,7 +121,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 		$end_date              = empty( $product_feature_value['end'] ) ? '' : $product_feature_value['end'];
 
 		// Set description
-		$description = __( 'Use these settings to determine when a product is available to purchase.', 'LION' );
+		$description = __( 'Use these settings to determine when a product is available to purchase.', 'it-l10n-ithemes-exchange' );
 		$description = apply_filters( 'it_exchange_product_availability_metabox_description', $description );
 
 		?>
@@ -129,17 +129,17 @@ class IT_Exchange_Product_Feature_Product_Availability {
 				<p class="intro-description"><?php echo $description; ?></p>
 			<?php endif; ?>
 			<p>
-				<input type="checkbox" id="it-exchange-enable-product-availability-start"  class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-start" value="yes" <?php checked( 'yes', $start_enabled ); ?> />&nbsp;<label for="it-exchange-enable-product-availability-start"><?php _e( 'Use a start date', 'LION' ); ?></label>
+				<input type="checkbox" id="it-exchange-enable-product-availability-start"  class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-start" value="yes" <?php checked( 'yes', $start_enabled ); ?> />&nbsp;<label for="it-exchange-enable-product-availability-start"><?php _e( 'Use a start date', 'it-l10n-ithemes-exchange' ); ?></label>
 				&nbsp;
-				<input type="checkbox" id="it-exchange-enable-product-availability-end" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-end" value="yes" <?php checked( 'yes', $end_enabled ); ?> />&nbsp;<label for="it-exchange-enable-product-availability-end"><?php _e( 'Use an end date', 'LION' ); ?></label>
+				<input type="checkbox" id="it-exchange-enable-product-availability-end" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-availability-end" value="yes" <?php checked( 'yes', $end_enabled ); ?> />&nbsp;<label for="it-exchange-enable-product-availability-end"><?php _e( 'Use an end date', 'it-l10n-ithemes-exchange' ); ?></label>
 			</p>
 			<p>
 				<p class="it-exchange-enable-product-availability-start<?php echo ( $start_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
-					<label for="it-exchange-product-availability-start"><?php _e( 'Start Date', 'LION' ); ?></label>
+					<label for="it-exchange-product-availability-start"><?php _e( 'Start Date', 'it-l10n-ithemes-exchange' ); ?></label>
 					<input type="text" class="datepicker" id="it-exchange-product-availability-start" name="it-exchange-product-availability-start" value="<?php esc_attr_e( $start_date ); ?>" />
 				</p>
 				<p class="it-exchange-enable-product-availability-end<?php echo ( $end_enabled == 'no' ) ? ' hide-if-js' : '' ?>">
-					<label for="it-exchange-product-availability-end"><?php _e( 'End Date', 'LION' ); ?></label>
+					<label for="it-exchange-product-availability-end"><?php _e( 'End Date', 'it-l10n-ithemes-exchange' ); ?></label>
 					<input type="text" class="datepicker" id="it-exchange-product-availability-end" name="it-exchange-product-availability-end" value="<?php esc_attr_e( $end_date ); ?>" />
 				</p>
 			</p>

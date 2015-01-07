@@ -41,7 +41,7 @@ function it_exchange_guest_checkout_init_login() {
 
 	// Vaidate email address
 	if ( ! is_email( $_POST['email'] ) ) {
-		it_exchange_add_message( 'error', __( 'Please use a properly formatted email address.', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Please use a properly formatted email address.', 'it-l10n-ithemes-exchange' ) );
 		return;
 	}
 
@@ -112,7 +112,7 @@ function it_exchange_handle_guest_checkout_session() {
 	 * DISABLING SESSION TIMEOUTS FOR NOW 
 	if ( ( $expires ) <= time() ) {
 		it_exchange_kill_guest_checkout_session();
-		it_exchange_add_message( 'notice', __( 'Session has expired.', 'LION' ) );
+		it_exchange_add_message( 'notice', __( 'Session has expired.', 'it-l10n-ithemes-exchange' ) );
 	} else {
 		it_exchange_guest_checkout_bump_session();
 	}
@@ -403,7 +403,7 @@ function it_exchange_guest_checkout_modify_transaction_customer( $customer, $tra
 	$customer = ( ! empty( $transaction->customer_id ) && is_email( $transaction->customer_id ) ) ? it_exchange_guest_checkout_generate_guest_user_object( $transaction->customer_id ) : false;
 	if ( ! empty( $customer ) ) {
 		$customer->wp_user = new stdClass();
-		$customer->wp_user->display_name = __( 'Guest Customer', 'LION' );
+		$customer->wp_user->display_name = __( 'Guest Customer', 'it-l10n-ithemes-exchange' );
 	}
 
 	return $customer;
@@ -522,13 +522,13 @@ add_filter( 'authenticate', 'it_exchange_end_guest_checkout_on_login_attempt' );
 function it_exchange_guest_checkout_process_ajax_login() {
 
 	if ( empty( $_REQUEST['sw-action'] ) || 'guest-checkout' != $_REQUEST['sw-action'] || empty( $_POST['email'] ) ) {
-		it_exchange_add_message( 'error', __( 'Please use a properly formatted email address.', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Please use a properly formatted email address.', 'it-l10n-ithemes-exchange' ) );
 		die('0');
 	}
 
 	// Vaidate email address
 	if ( ! is_email( $_POST['email'] ) ) {
-		it_exchange_add_message( 'error', __( 'Please use a properly formatted email address.', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Please use a properly formatted email address.', 'it-l10n-ithemes-exchange' ) );
 		die('0');
 	}
 

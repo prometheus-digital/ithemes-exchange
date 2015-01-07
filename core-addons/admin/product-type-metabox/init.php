@@ -30,7 +30,7 @@ class IT_Exchange_Core_Addon_Product_Type_Meta_Box {
 		global $pagenow;
 		$product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 		if ( is_array( $product_types ) && count( $product_types ) > 1  && $pagenow != 'post-new.php' )
-			add_meta_box( 'it_exchange_product_type', __( 'Product Type', 'LION' ), array( $this, 'print_meta_box' ), $post->post_type, 'side' );
+			add_meta_box( 'it_exchange_product_type', __( 'Product Type', 'it-l10n-ithemes-exchange' ), array( $this, 'print_meta_box' ), $post->post_type, 'side' );
 	}
 
 	/**
@@ -45,14 +45,14 @@ class IT_Exchange_Core_Addon_Product_Type_Meta_Box {
 		$enabled              = it_exchange_get_enabled_addons( array( 'category' => array( 'product-type' ) ) );
 		$current_product_type = $product->product_type;
 
-		echo '<p>' . __( 'You must save the product after changing this to access new product options.', 'LION' ) . '</p>';
+		echo '<p>' . __( 'You must save the product after changing this to access new product options.', 'it-l10n-ithemes-exchange' ) . '</p>';
 		if ( empty( $enabled ) ) {
-			echo '<p>' . __( 'You currently have not Product Type add-ons enabled.', 'LION' ) . '</p>';
+			echo '<p>' . __( 'You currently have not Product Type add-ons enabled.', 'it-l10n-ithemes-exchange' ) . '</p>';
 		} else if ( count( $enabled ) === 1 ) {
 			$product_type = reset( $enabled );
 			echo '<p>' . esc_attr( $product_type['name'] ) . '</p>';
 			echo '<input type="hidden" name="it-exchange-product-type" value="' . esc_attr( $product_type['slug'] ) . '" />';
-			echo '<p class="description">' . __( 'You must have more than 1 product type enabled to make changes here.', 'LION' ) . '</p>';
+			echo '<p class="description">' . __( 'You must have more than 1 product type enabled to make changes here.', 'it-l10n-ithemes-exchange' ) . '</p>';
 		} else {
 			?><div id="it-exchange-product-type-select"><?php
 			foreach( $enabled as $slug => $params ) {

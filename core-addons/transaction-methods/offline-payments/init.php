@@ -21,10 +21,10 @@ add_filter( 'it_exchange_offline-payments_transaction_status_can_be_manually_cha
 */
 function it_exchange_offline_payments_get_default_status_options() {
 	$options = array(
-		'pending'  => _x( 'Pending', 'Transaction Status', 'LION' ),
-		'paid'     => _x( 'Paid', 'Transaction Status', 'LION' ),
-		'refunded' => _x( 'Refunded', 'Transaction Status', 'LION' ),
-		'voided'   => _x( 'Voided', 'Transaction Status', 'LION' ),
+		'pending'  => _x( 'Pending', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
+		'paid'     => _x( 'Paid', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
+		'refunded' => _x( 'Refunded', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
+		'voided'   => _x( 'Voided', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
 	);
 	return $options;
 }
@@ -99,7 +99,7 @@ function it_exchange_offline_payments_addon_process_transaction( $status, $trans
 
 	// Verify nonce
 	if ( ! empty( $_REQUEST['_offline_payments_nonce'] ) && ! wp_verify_nonce( $_REQUEST['_offline_payments_nonce'], 'offline-payments-checkout' ) ) {
-		it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'it-l10n-ithemes-exchange' ) );
 		return false;
 
 	} else {
@@ -202,7 +202,7 @@ function it_exchange_offline_payments_addon_make_payment_button( $options ) {
 	 *
 	$payment_form .= '<div class="hide-if-js">';
 
-	$payment_form .= '<h3>' . __( 'JavaScript disabled: Stripe Payment Gateway cannot be loaded!', 'LION' ) . '</h3>';
+	$payment_form .= '<h3>' . __( 'JavaScript disabled: Stripe Payment Gateway cannot be loaded!', 'it-l10n-ithemes-exchange' ) . '</h3>';
 
 	$payment_form .= '</div>';
 	*/
@@ -270,19 +270,19 @@ function it_exchange_offline_payments_addon_transaction_status_label( $status ) 
 	switch ( $status ) {
 		case 'succeeded':
 		case 'paid':
-			return __( 'Paid', 'LION' );
+			return __( 'Paid', 'it-l10n-ithemes-exchange' );
 			break;
 		case 'refunded':
-			return __( 'Refunded', 'LION' );
+			return __( 'Refunded', 'it-l10n-ithemes-exchange' );
 			break;
 		case 'pending':
-			return __( 'Pending', 'LION' );
+			return __( 'Pending', 'it-l10n-ithemes-exchange' );
 			break;
 		case 'voided':
-			return __( 'Voided', 'LION' );
+			return __( 'Voided', 'it-l10n-ithemes-exchange' );
 			break;
 		default:
-			return __( 'Unknown', 'LION' );
+			return __( 'Unknown', 'it-l10n-ithemes-exchange' );
 	}
 
 }
@@ -384,26 +384,26 @@ class IT_Exchange_Offline_Payments_Add_On {
 				$form->set_option( $key, $var );
 
         if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] ) : ?>
-            <h3><?php _e( 'Offline Payments', 'LION' ); ?></h3>
+            <h3><?php _e( 'Offline Payments', 'it-l10n-ithemes-exchange' ); ?></h3>
         <?php endif; ?>
-        <p><?php _e( 'Offline payments allow customers to purchase products from your site using check or cash. Transactions can be set as pending until you receive payment.', 'LION' ); ?></p>
-        <p><?php _e( 'Video:', 'LION' ); ?>&nbsp;<a href="http://ithemes.com/tutorials/using-offline-payments-in-exchange/" target="_blank"><?php _e( 'Setting Up Offline Payments in Exchange', 'LION' ); ?></a></p>
-        <p><?php _e( 'To process payments offline, complete the settings below.', 'LION' ); ?></p>
+        <p><?php _e( 'Offline payments allow customers to purchase products from your site using check or cash. Transactions can be set as pending until you receive payment.', 'it-l10n-ithemes-exchange' ); ?></p>
+        <p><?php _e( 'Video:', 'it-l10n-ithemes-exchange' ); ?>&nbsp;<a href="http://ithemes.com/tutorials/using-offline-payments-in-exchange/" target="_blank"><?php _e( 'Setting Up Offline Payments in Exchange', 'it-l10n-ithemes-exchange' ); ?></a></p>
+        <p><?php _e( 'To process payments offline, complete the settings below.', 'it-l10n-ithemes-exchange' ); ?></p>
 		<table class="form-table">
 			<?php do_action( 'it_exchange_offline_payments_settings_table_top' ); ?>
 			<tr valign="top">
-				<th scope="row"><label for="offline-payments-title"><?php _e( 'Title', 'LION' ) ?> <span class="tip" title="<?php _e( 'What would you like to title this payment option? eg: Check', 'LION' ); ?>">i</span></label></th>
+				<th scope="row"><label for="offline-payments-title"><?php _e( 'Title', 'it-l10n-ithemes-exchange' ) ?> <span class="tip" title="<?php _e( 'What would you like to title this payment option? eg: Check', 'it-l10n-ithemes-exchange' ); ?>">i</span></label></th>
 				<td>
 					<?php $form->add_text_box( 'offline-payments-title', array( 'class' => 'normal-text' ) ); ?>				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="offline-payments-instructions"><?php _e( 'Instructions after purchase', 'LION' ) ?> <span class="tip" title="<?php _e( 'This will be the notification customers see after using this method of payment.', 'LION' ); ?>">i</span></label></th>
+				<th scope="row"><label for="offline-payments-instructions"><?php _e( 'Instructions after purchase', 'it-l10n-ithemes-exchange' ) ?> <span class="tip" title="<?php _e( 'This will be the notification customers see after using this method of payment.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label></th>
 				<td>
 					<?php $form->add_text_area( 'offline-payments-instructions', array( 'cols' => 50, 'rows' => 5, 'class' => 'normal-text' ) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="offline-payments-default-status"><?php _e( 'Default Payment Status', 'LION' ) ?> <span class="tip" title="<?php _e( 'This is the default payment status applied to all offline payment transactions.', 'LION' ); ?>">i</span></label></th>
+				<th scope="row"><label for="offline-payments-default-status"><?php _e( 'Default Payment Status', 'it-l10n-ithemes-exchange' ) ?> <span class="tip" title="<?php _e( 'This is the default payment status applied to all offline payment transactions.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label></th>
 				<td>
 					<?php $form->add_drop_down( 'offline-payments-default-status', $default_status_options ); ?>
 				</td>
@@ -426,18 +426,18 @@ class IT_Exchange_Offline_Payments_Add_On {
 
 		// Check nonce
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'it-exchange-offline-payments-settings' ) ) {
-			$this->error_message = __( 'Error. Please try again', 'LION' );
+			$this->error_message = __( 'Error. Please try again', 'it-l10n-ithemes-exchange' );
 			return;
 		}
 
 		$errors = apply_filters( 'it_exchange_add_on_manual_transaction_validate_settings', $this->get_form_errors( $new_values ), $new_values );
 		if ( ! $errors && it_exchange_save_option( 'addon_offline_payments', $new_values ) ) {
-			ITUtility::show_status_message( __( 'Settings saved.', 'LION' ) );
+			ITUtility::show_status_message( __( 'Settings saved.', 'it-l10n-ithemes-exchange' ) );
 		} else if ( $errors ) {
 			$errors = implode( '<br />', $errors );
 			$this->error_message = $errors;
 		} else {
-			$this->status_message = __( 'Settings not saved.', 'LION' );
+			$this->status_message = __( 'Settings not saved.', 'it-l10n-ithemes-exchange' );
 		}
 	}
 
@@ -465,7 +465,7 @@ class IT_Exchange_Offline_Payments_Add_On {
 
 		} else {
 			it_exchange_save_option( 'addon_offline_payments', $settings );
-			$this->status_message = __( 'Settings Saved.', 'LION' );
+			$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
 		}
 
 		return;
@@ -483,13 +483,13 @@ class IT_Exchange_Offline_Payments_Add_On {
 	function get_form_errors( $values ) {
 		$errors = array();
 		if ( empty( $values['offline-payments-title'] ) )
-			$errors[] = __( 'The Title field cannot be left blank', 'LION' );
+			$errors[] = __( 'The Title field cannot be left blank', 'it-l10n-ithemes-exchange' );
 		if ( empty( $values['offline-payments-instructions'] ) )
-			$errors[] = __( 'Please leave some instructions for customers checking out with this transaction method', 'LION' );
+			$errors[] = __( 'Please leave some instructions for customers checking out with this transaction method', 'it-l10n-ithemes-exchange' );
 
 		$valid_status_options = it_exchange_offline_payments_get_default_status_options();
 		if ( empty( $values['offline-payments-default-status'] ) || empty( $valid_status_options[$values['offline-payments-default-status']] ) )
-			$errors[] = __( 'Please select a valid default transaction status.', 'LION' );
+			$errors[] = __( 'Please select a valid default transaction status.', 'it-l10n-ithemes-exchange' );
 
 		return $errors;
 	}
@@ -501,8 +501,8 @@ class IT_Exchange_Offline_Payments_Add_On {
 	 * @return array settings
 	*/
 	function set_default_settings( $defaults ) {
-		$defaults['offline-payments-title']          = __( 'Pay with check', 'LION' );
-		$defaults['offline-payments-instructions']   = __( 'Thank you for your order. We will contact you shortly for payment.', 'LION' );
+		$defaults['offline-payments-title']          = __( 'Pay with check', 'it-l10n-ithemes-exchange' );
+		$defaults['offline-payments-instructions']   = __( 'Thank you for your order. We will contact you shortly for payment.', 'it-l10n-ithemes-exchange' );
 		$defaults['offline-payments-default-status'] = 'pending';
 		return $defaults;
 	}
@@ -581,12 +581,12 @@ function it_exchange_offline_payments_checkout_after_payment_details_cancel_url(
 	
 					case false: //active
 					case '':
-						$output = '<a href="' . add_query_arg( 'offline-payments-recurring-payment', 'cancel' ) . '">' . __( 'Cancel Recurring Payment', 'LION' ) . '</a>';
+						$output = '<a href="' . add_query_arg( 'offline-payments-recurring-payment', 'cancel' ) . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . '</a>';
 						break;
 	
 					case 'deactivated':
 					default:
-						$output = __( 'Recurring payment has been deactivated', 'LION' );
+						$output = __( 'Recurring payment has been deactivated', 'it-l10n-ithemes-exchange' );
 						break;
 	
 				}

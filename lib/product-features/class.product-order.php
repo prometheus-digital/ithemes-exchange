@@ -37,7 +37,7 @@ class IT_Exchange_Product_Feature_Product_Order {
 	function add_feature_support_to_product_types() {
 		// Register the product feature
 		$slug        = 'product-order';
-		$description = __( "Manually set Product's order on the store page", 'LION' );
+		$description = __( "Manually set Product's order on the store page", 'it-l10n-ithemes-exchange' );
 		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
@@ -95,7 +95,7 @@ class IT_Exchange_Product_Feature_Product_Order {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-product-order', __( 'Store Order', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'normal' );
+		add_meta_box( 'it-exchange-product-product-order', __( 'Store Order', 'it-l10n-ithemes-exchange' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'normal' );
 	}
 
 	/**
@@ -106,7 +106,7 @@ class IT_Exchange_Product_Feature_Product_Order {
 	*/
 	function print_metabox( $post ) {
 		// Set description
-		$description = __( "Change the product's order on the store page by changing this number and setting 'Product Order #' as the Order By setting on the Exchange General Settings page.", 'LION' );
+		$description = __( "Change the product's order on the store page by changing this number and setting 'Product Order #' as the Order By setting on the Exchange General Settings page.", 'it-l10n-ithemes-exchange' );
 		$description = apply_filters( 'it_exchange_product_product-order_metabox_description', $description );
 
 		?>

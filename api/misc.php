@@ -341,7 +341,7 @@ function it_exchange_register_purchase_requirement( $slug, $properties=array() )
 		'requirement-met'        => '__return_true', // This is a callback, not a boolean.
 		'sw-template-part'       => 'checkout',
 		'checkout-template-part' => 'checkout',
-		'notification'           => __( 'Please complete all purchase requirements before checkout out.', 'LION' ), // This really needs to be customized.
+		'notification'           => __( 'Please complete all purchase requirements before checkout out.', 'it-l10n-ithemes-exchange' ), // This really needs to be customized.
 	);
 
 	// Merge Defaults

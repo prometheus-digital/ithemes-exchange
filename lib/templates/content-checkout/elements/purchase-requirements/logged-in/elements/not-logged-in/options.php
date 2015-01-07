@@ -18,7 +18,7 @@
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_before_options_element' ); ?>
 <div class="<?php echo it_exchange_is_checkout_mode( 'options' ) ? '' : 'it-exchange-hidden'; ?> checkout-purchase-requirement-login-options">
 	<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_begin_options_element' ); ?>
-	<h3><?php _e( 'Select an option to continue', 'LION' ); ?>
+	<h3><?php _e( 'Select an option to continue', 'it-l10n-ithemes-exchange' ); ?>
 	<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_end_options_element' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_after_options_element' ); ?>

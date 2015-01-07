@@ -16,6 +16,6 @@
 
 <?php do_action( 'it_exchange_content_confirmation_before_not_found_element' ); ?>
 <div class="it-exchange-transaction-not-found">
-	<p class="it-exchange-error"><?php _e( 'No transactions found.', 'LION' ); ?></p>
+	<p class="it-exchange-error"><?php _e( 'No transactions found.', 'it-l10n-ithemes-exchange' ); ?></p>
 </div>
 <?php do_action( 'it_exchange_content_confirmation_after_not_found_element' ); ?>

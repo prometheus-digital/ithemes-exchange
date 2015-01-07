@@ -329,5 +329,5 @@ function it_exchange_get_coupon_discount_label( $coupon, $options=array() ) {
  * @return string
 */
 function it_exchange_get_transaction_coupon_summary( $type, $transaction_coupon ) {
-	return apply_filters( 'it_exchange_get_transaction_' . $type . '_coupon_summary', __( 'Coupon Data not found:', 'LION' ) . ' ' . $type, $transaction_coupon );
+	return apply_filters( 'it_exchange_get_transaction_' . $type . '_coupon_summary', __( 'Coupon Data not found:', 'it-l10n-ithemes-exchange' ) . ' ' . $type, $transaction_coupon );
 }

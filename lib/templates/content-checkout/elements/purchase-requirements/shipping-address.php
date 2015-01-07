@@ -18,7 +18,7 @@ $editing_shipping = ( ( ! empty( $_REQUEST['it-exchange-update-shipping-address'
 ?>
 <?php do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_before_element' ); ?>
 <div class="it-exchange-checkout-shipping-address-purchase-requirement">
-	<h3><?php _e( 'Shipping Address', 'LION' ); ?></h3>
+	<h3><?php _e( 'Shipping Address', 'it-l10n-ithemes-exchange' ); ?></h3>
 	<?php if ( false !== ( $shipping_address = it_exchange_get_customer_shipping_address() ) && empty( $editing_shipping ) ) : ?>
 		<div class="checkout-purchase-requirement-shipping-address-options">
 			<div class="existing-shipping-address">
@@ -27,7 +27,7 @@ $editing_shipping = ( ( ! empty( $_REQUEST['it-exchange-update-shipping-address'
 		</div>
 	<?php endif; ?>
 	<div class="<?php echo $editing_shipping ? 'it-exchange-hidden ' : ''; ?>checkout-purchase-requirement-shipping-address-options">
-		<a class="it-exchange-purchase-requirement-edit-shipping" href=""><?php _e( 'Edit Shipping Address', 'LION' ); ?></a>
+		<a class="it-exchange-purchase-requirement-edit-shipping" href=""><?php _e( 'Edit Shipping Address', 'it-l10n-ithemes-exchange' ); ?></a>
 	</div>
 	<div class="<?php echo $editing_shipping ? '' : 'it-exchange-hidden '; ?>checkout-purchase-requirement-shipping-address-edit">
 		<?php

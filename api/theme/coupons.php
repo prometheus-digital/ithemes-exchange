@@ -178,7 +178,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 				'type'        => false,
 				'format'      => 'form-field',
 				'class'       => 'apply-coupon',
-				'placeholder' => __( 'Coupon Code', 'LION' ),
+				'placeholder' => __( 'Coupon Code', 'it-l10n-ithemes-exchange' ),
 				'before'      => '',
 				'after'       => '',
 			);
@@ -218,7 +218,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 	function discount( $options=array() ) {
 		$amount_number = it_exchange_convert_from_database_number( $this->coupon->amount_number );
 
-		return _x( '-', 'LION', 'negative character for amount of money in coupons' ) . it_exchange_basic_coupons_get_total_discount_for_cart();
+		return _x( '-', 'it-l10n-ithemes-exchange', 'negative character for amount of money in coupons' ) . it_exchange_basic_coupons_get_total_discount_for_cart();
 	}
 
 	/**
@@ -264,7 +264,7 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 			'class'  => 'remove-coupon',
 			'type'   => false,
 			'format' => 'link',
-			'label'  => _x( '&times;', 'html representation for multiplication symbol (x)', 'LION' ),
+			'label'  => _x( '&times;', 'html representation for multiplication symbol (x)', 'it-l10n-ithemes-exchange' ),
 		);
 
 		$options = ITUtility::merge_defaults( $options, $defaults );

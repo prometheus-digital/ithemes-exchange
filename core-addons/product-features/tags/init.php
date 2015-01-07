@@ -17,21 +17,21 @@ if ( !function_exists( 'create_it_exchange_tags' ) ) {
 	function create_it_exchange_tags() {
 
 		$labels = array(
-			'name'              => __( 'Tags', 'LION' ),
-			'singular_name'     => __( 'Product Tag', 'LION' ),
-			'search_items'      => __( 'Search Product Tags', 'LION' ),
-			'all_items'         => __( 'All Product Tags', 'LION' ),
-			'parent_item'       => __( 'Parent Product Tags', 'LION' ),
-			'parent_item_colon' => __( 'Parent Product Tags:', 'LION' ),
-			'edit_item'         => __( 'Edit Product Tags', 'LION' ),
-			'update_item'       => __( 'Update Product Tags', 'LION' ),
-			'add_new_item'      => __( 'Add New Product Tags', 'LION' ),
-			'new_item_name'     => __( 'New Product Tag', 'LION' ),
+			'name'              => __( 'Tags', 'it-l10n-ithemes-exchange' ),
+			'singular_name'     => __( 'Product Tag', 'it-l10n-ithemes-exchange' ),
+			'search_items'      => __( 'Search Product Tags', 'it-l10n-ithemes-exchange' ),
+			'all_items'         => __( 'All Product Tags', 'it-l10n-ithemes-exchange' ),
+			'parent_item'       => __( 'Parent Product Tags', 'it-l10n-ithemes-exchange' ),
+			'parent_item_colon' => __( 'Parent Product Tags:', 'it-l10n-ithemes-exchange' ),
+			'edit_item'         => __( 'Edit Product Tags', 'it-l10n-ithemes-exchange' ),
+			'update_item'       => __( 'Update Product Tags', 'it-l10n-ithemes-exchange' ),
+			'add_new_item'      => __( 'Add New Product Tags', 'it-l10n-ithemes-exchange' ),
+			'new_item_name'     => __( 'New Product Tag', 'it-l10n-ithemes-exchange' ),
 		);
 
         // A little hackery for admin --> appearances --> menues page
         if ( is_admin() && ! empty( $GLOBALS['pagenow'] ) && 'nav-menus.php' == $GLOBALS['pagenow'] )
-            $labels['name'] = __( 'Exchange Tags', 'LION' );
+            $labels['name'] = __( 'Exchange Tags', 'it-l10n-ithemes-exchange' );
 
 		register_taxonomy(
 			'it_exchange_tag',
@@ -61,7 +61,7 @@ if ( !function_exists( 'it_exchange_tags_add_menu_item' ) ) {
 	*/
 	function it_exchange_tags_add_menu_item() {
 		$url = "edit-tags.php?taxonomy=it_exchange_tag&amp;post_type=it_exchange_prod";
-		add_submenu_page( 'it-exchange', __( 'Product Tags', 'LION' ), __( 'Product Tags', 'LION' ), 'manage_options', $url );
+		add_submenu_page( 'it-exchange', __( 'Product Tags', 'it-l10n-ithemes-exchange' ), __( 'Product Tags', 'it-l10n-ithemes-exchange' ), 'manage_options', $url );
 	}
 	add_action( 'admin_menu', 'it_exchange_tags_add_menu_item' );
 

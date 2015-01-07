@@ -60,7 +60,7 @@ class IT_Exchange_WP_Post_Supports {
 	function init_wp_post_content_as_product_feature() {
 		// Register the product feature
 		$slug        = 'extended-description';
-		$description = __( 'Adds support for the post content area to product types.', 'LION' );
+		$description = __( 'Adds support for the post content area to product types.', 'it-l10n-ithemes-exchange' );
 		it_exchange_register_product_feature( $slug, $description );
 
 		// Add it to all enabled product-type addons
@@ -117,7 +117,7 @@ class IT_Exchange_WP_Post_Supports {
 	 * @return void
 	*/
 	function register_extended_description_metabox() {
-		add_meta_box( 'it-exchange-product-extended-description', __( 'Extended Description', 'LION' ), array( $this, 'print_extended_description_metabox' ), 'it_exchange_prod', 'it_exchange_advanced', 'high' );
+		add_meta_box( 'it-exchange-product-extended-description', __( 'Extended Description', 'it-l10n-ithemes-exchange' ), array( $this, 'print_extended_description_metabox' ), 'it_exchange_prod', 'it_exchange_advanced', 'high' );
 	}
 
 	/**
@@ -138,7 +138,7 @@ class IT_Exchange_WP_Post_Supports {
 		<?php wp_editor( $post->post_content, 'content', array('dfw' => true, 'tabfocus_elements' => 'insert-media-button,save-post', 'editor_height' => 360 ) ); ?>
 
 		<table id="post-status-info" cellspacing="0"><tbody><tr>
-			<td id="wp-word-count"><?php printf( __( 'Word count: %s', 'LION' ), '<span class="word-count">0</span>' ); ?></td>
+			<td id="wp-word-count"><?php printf( __( 'Word count: %s', 'it-l10n-ithemes-exchange' ), '<span class="word-count">0</span>' ); ?></td>
 			<td class="autosave-info">
 			<span class="autosave-message">&nbsp;</span>
 		<?php
@@ -146,9 +146,9 @@ class IT_Exchange_WP_Post_Supports {
 				echo '<span id="last-edit">';
 				if ( $last_id = get_post_meta( $post_ID, '_edit_last', true ) ) {
 					$last_user = get_userdata( $last_id );
-					printf( __( 'Last edited by %1$s on %2$s at %3$s', 'LION' ), esc_html( $last_user->display_name ), mysql2date( get_option( 'date_format' ), $post->post_modified), mysql2date( get_option( 'time_format' ), $post->post_modified ) );
+					printf( __( 'Last edited by %1$s on %2$s at %3$s', 'it-l10n-ithemes-exchange' ), esc_html( $last_user->display_name ), mysql2date( get_option( 'date_format' ), $post->post_modified), mysql2date( get_option( 'time_format' ), $post->post_modified ) );
 				} else {
-					printf( __( 'Last edited on %1$s at %2$s', 'LION' ), mysql2date( get_option( 'date_format' ), $post->post_modified ), mysql2date( get_option( 'time_format' ), $post->post_modified ) );
+					printf( __( 'Last edited on %1$s at %2$s', 'it-l10n-ithemes-exchange' ), mysql2date( get_option( 'date_format' ), $post->post_modified ), mysql2date( get_option( 'time_format' ), $post->post_modified ) );
 				}
 				echo '</span>';
 			} ?>
@@ -220,7 +220,7 @@ class IT_Exchange_WP_Post_Supports {
 	function init_wp_author_support_as_product_feature() {
 		// Register the product feature
 		$slug        = 'wp-author';
-		$description = __( 'Adds support for WP Author field to a specific product', 'LION' );
+		$description = __( 'Adds support for WP Author field to a specific product', 'it-l10n-ithemes-exchange' );
 		it_exchange_register_product_feature( $slug, $description );
 	}
 
@@ -254,7 +254,7 @@ class IT_Exchange_WP_Post_Supports {
 	function init_wp_custom_fields_as_product_feature() {
 		// Register the product feature
 		$slug        = 'wp-custom-fields';
-		$description = __( 'Adds support for WP Custom Fields as a product Feature', 'LION' );
+		$description = __( 'Adds support for WP Custom Fields as a product Feature', 'it-l10n-ithemes-exchange' );
 		it_exchange_register_product_feature( $slug, $description );
 	}
 
@@ -269,7 +269,7 @@ class IT_Exchange_WP_Post_Supports {
 	function init_wp_comments_support_as_product_feature() {
 		// Register the product feature
 		$slug        = 'wp-comments';
-		$description = __( 'Adds support for the WP Comments field to a specific product type', 'LION' );
+		$description = __( 'Adds support for the WP Comments field to a specific product type', 'it-l10n-ithemes-exchange' );
 		it_exchange_register_product_feature( $slug, $description );
 	}
 
@@ -284,7 +284,7 @@ class IT_Exchange_WP_Post_Supports {
 	function init_wp_trackbacks_as_product_feature() {
 		// Register the product feature
 		$slug        = 'wp-trackbacks';
-		$description = __( 'Adds support for the WP Trackbacks metabox.', 'LION' );
+		$description = __( 'Adds support for the WP Trackbacks metabox.', 'it-l10n-ithemes-exchange' );
 		it_exchange_register_product_feature( $slug, $description );
 	}
 
@@ -297,7 +297,7 @@ class IT_Exchange_WP_Post_Supports {
 	function init_wp_excerpt_as_product_feature() {
 		// Register the product feature
 		$slug        = 'wp-excerpt';
-		$description = __( 'Adds support for the WP excerpt of the product', 'LION' );
+		$description = __( 'Adds support for the WP excerpt of the product', 'it-l10n-ithemes-exchange' );
 		it_exchange_register_product_feature( $slug, $description );
 	}
 
@@ -339,7 +339,7 @@ class IT_Exchange_WP_Post_Supports {
 	function init_wp_post_formats_as_product_feature() {
 		// Register the product feature
 		$slug        = 'wp-post-formats';
-		$description = __( 'Adds support for WP Post Formats to products', 'LION' );
+		$description = __( 'Adds support for WP Post Formats to products', 'it-l10n-ithemes-exchange' );
 		it_exchange_register_product_feature( $slug, $description );
 	}
 
@@ -352,7 +352,7 @@ class IT_Exchange_WP_Post_Supports {
 	function init_wp_revisions_as_product_feature() {
 		// Register the product feature
 		$slug        = 'wp-revisions';
-		$description = __( 'Adds support for WP Revisions to Product Types', 'LION' );
+		$description = __( 'Adds support for WP Revisions to Product Types', 'it-l10n-ithemes-exchange' );
 		it_exchange_register_product_feature( $slug, $description );
 	}
 }

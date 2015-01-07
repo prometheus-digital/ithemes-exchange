@@ -16,6 +16,6 @@
 
 <?php do_action( 'it_exchange_content_registration_before_user_logged_in_element' ); ?>
 <p class="it-exchange-registration-logged-in">
-	<?php printf( __( 'You already have an active account and are logged in. Visit your %sProfile%s', 'LION' ), '<a href="' . it_exchange_get_page_url( 'profile' ) . '">', '</a>' ); ?>
+	<?php printf( __( 'You already have an active account and are logged in. Visit your %sProfile%s', 'it-l10n-ithemes-exchange' ), '<a href="' . it_exchange_get_page_url( 'profile' ) . '">', '</a>' ); ?>
 </p>
 <?php do_action( 'it_exchange_content_registration_before_user_logged_in_element' ); ?>

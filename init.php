@@ -1,13 +1,13 @@
 <?php
 /*
  * Plugin Name: iThemes Exchange
- * Version: 1.11.5
- * Text Domain: LION
+ * Version: 1.11.5.1
+ * Text Domain: it-l10n-ithemes-exchange
  * Description: Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordPress
  * Plugin URI: http://ithemes.com/exchange/
  * Author: iThemes
  * Author URI: http://ithemes.com
-
+ *
  * Installation:
  * 1. Download and unzip the latest release zip file.
  * 2. If you use the WordPress plugin uploader to install this plugin skip to step 4.
@@ -24,7 +24,7 @@
 */
 class IT_Exchange {
 
-	var $_version         = '1.11.5';
+	var $_version         = '1.11.5.1';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'it-exchange';
 	var $_name            = 'iThemes Exchange';
@@ -108,7 +108,7 @@ class IT_Exchange {
 	 * @return void
 	*/
 	function set_textdomain() {
-		load_plugin_textdomain( 'LION', false, dirname( $this->_plugin_base ) . '/lang/' );
+		load_plugin_textdomain( 'it-l10n-ithemes-exchange', false, dirname( $this->_plugin_base ) . '/lang/' );
 	}
 
 	/**

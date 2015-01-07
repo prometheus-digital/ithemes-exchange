@@ -257,7 +257,7 @@ function it_exchange_get_download_expiration_date( $hash_data, $date_format=fals
 */
 function it_exchange_get_download_expiration_date_from_settings( $hash_data, $purchase_date, $date_format=false ) {
 	if ( empty( $hash_data['expire_int'] ) || empty( $hash_data['expire_units'] ) )
-		return __( "Download doesn't expire", 'LION' );
+		return __( "Download doesn't expire", 'it-l10n-ithemes-exchange' );
 
 	$date_format = empty( $date_format ) ? get_option( 'date_format' ) : $date_format;
 
@@ -341,9 +341,9 @@ function it_exchange_serve_product_download( $hash_data ) {
 				die();
 
 			}
-			die( __( 'Download Error: Invalid response: ', 'LION' ) . wp_remote_retrieve_response_code( $response ) );
+			die( __( 'Download Error: Invalid response: ', 'it-l10n-ithemes-exchange' ) . wp_remote_retrieve_response_code( $response ) );
 		} else {
-			die( __( 'Download Error:', 'LION' ) . ' ' . $response->get_error_message() );
+			die( __( 'Download Error:', 'it-l10n-ithemes-exchange' ) . ' ' . $response->get_error_message() );
 		}
 	}
 }

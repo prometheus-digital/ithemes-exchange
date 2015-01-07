@@ -38,7 +38,7 @@ class IT_Exchange_Admin_Settings_Form {
 				'action'  => false,
 			),
 			'button-options' => array(
-				'save-button-label' => __( 'Save Changes', 'LION' ),
+				'save-button-label' => __( 'Save Changes', 'it-l10n-ithemes-exchange' ),
 				'save-button-class' => 'button button-primary',
 			),
 			'country-states-js' => false,
@@ -320,8 +320,8 @@ class IT_Exchange_Admin_Settings_Form {
 	function print_uncallable_method_row( $setting ) {
 		?>
 		<tr valign="top">
-			<th scope="row" class="error"><strong><?php _e( 'Coding Error!', 'LION' ); ?></strong></th>
-			<td id="<?php esc_attr_e( $setting['slug'] ); ?>-wrapper"><?php printf( __( 'The setting for %s has an incorrect type argument. No such method exists in the ITForm class', 'LION' ), $setting['slug'] ); ?></td>
+			<th scope="row" class="error"><strong><?php _e( 'Coding Error!', 'it-l10n-ithemes-exchange' ); ?></strong></th>
+			<td id="<?php esc_attr_e( $setting['slug'] ); ?>-wrapper"><?php printf( __( 'The setting for %s has an incorrect type argument. No such method exists in the ITForm class', 'it-l10n-ithemes-exchange' ), $setting['slug'] ); ?></td>
 		</tr>
 		<?php
 	}
@@ -340,7 +340,7 @@ class IT_Exchange_Admin_Settings_Form {
 
 		// Log error if nonce wasn't set
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], $this->prefix ) ) {
-			it_exchange_add_message( 'error', __( 'Invalid security token. Please try again', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'Invalid security token. Please try again', 'it-l10n-ithemes-exchange' ) );
 			return;
 		}
 
@@ -350,7 +350,7 @@ class IT_Exchange_Admin_Settings_Form {
 		$values = apply_filters( 'it_exchange_save_admin_form_settings_for_' . $this->prefix, $values );
 
 		it_exchange_save_option( $this->prefix, $values );
-		it_exchange_add_message( 'notice', __( 'Settings updated', 'LION' ) );
+		it_exchange_add_message( 'notice', __( 'Settings updated', 'it-l10n-ithemes-exchange' ) );
 	}
 
 	/**

@@ -16,7 +16,7 @@
 <?php do_action( 'it_exchange_super_widget_checkout_before_shipping_address_existing_element' ); ?>
 <div class="cart-shipping-address-existing cart-totals-row">
 	<?php do_action( 'it_exchange_super_widget_checkout_begin_shipping_address_existing_element' ); ?>
-	<strong><?php _e( 'Shipping Address:', 'LION' ); ?></strong> <a href="" class="it-exchange-sw-edit-shipping-address"><?php _e( 'Edit', 'LION' ); ?></a><br/>
+	<strong><?php _e( 'Shipping Address:', 'it-l10n-ithemes-exchange' ); ?></strong> <a href="" class="it-exchange-sw-edit-shipping-address"><?php _e( 'Edit', 'it-l10n-ithemes-exchange' ); ?></a><br/>
 	<?php echo it_exchange_get_formatted_shipping_address(); ?><br />
 	<?php do_action( 'it_exchange_super_widget_checkout_end_shipping_address_existing_element' ); ?>
 </div>

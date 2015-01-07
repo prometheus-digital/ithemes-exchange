@@ -17,6 +17,6 @@
 
 <?php do_action( 'it_exchange_content_checkout_before_cancel_element' ); ?>
 <div class="it-exchange-checkout_cancel">
-	<?php it_exchange( 'checkout', 'cancel', array( 'label' => __( 'Edit Cart', 'LION' ) ) ); ?>
+	<?php it_exchange( 'checkout', 'cancel', array( 'label' => __( 'Edit Cart', 'it-l10n-ithemes-exchange' ) ) ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_after_cancel_element' ); ?>

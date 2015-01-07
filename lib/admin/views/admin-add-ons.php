@@ -9,7 +9,7 @@
 <div id="it-exchange-add-ons-wrap" class="wrap">
 	<?php ITUtility::screen_icon( 'it-exchange-add-ons' );  ?>
 	<h2>Add-ons</h2>
-	<p class="top-description"><?php _e( 'Add-ons are features that you can add or remove depending on your needs. Selling your stuff should only be as complicated as you need it to be. Visit the Get More tab to see what else Exchange can do.', 'LION' ); ?></p>
+	<p class="top-description"><?php _e( 'Add-ons are features that you can add or remove depending on your needs. Selling your stuff should only be as complicated as you need it to be. Visit the Get More tab to see what else Exchange can do.', 'it-l10n-ithemes-exchange' ); ?></p>
 
 	<?php $this->print_add_ons_page_tabs(); ?>
 	<?php do_action( 'it_exchange_add_ons_page_top' ); ?>
@@ -38,9 +38,9 @@
 		<?php if ( ! empty( $addons ) ) : ?>
 			<?php if ( $propack ) { ?>
 				<div class="add-on-block pro-pack">
-					<h3><?php _e( 'Get the Exchange Pro Pack', 'LION' ); ?><span><a href="#">Learn More</a></span></h3>
-					<p><?php _e( 'The Pro Pack gets you access to iThemes Exchange add-ons that unlock so much more that Exchange can do … like Membership, Invoices, Variants, Easy U.S. Sales Taxes, Recurring Payments, Stripe and MailChimp. With the Pro Pack, you get access to all our iThemes-built Exchange Add-ons plus any more we build in the next year (which will be a lot).', 'LION' ); ?></p>
-					<a class="btn-pro" href="http://ithemes.com/exchange/pro-pack/" target="_blank"><?php _e( 'Get all our add-ons for $197', 'LION' ); ?></a><a href="#" class="dismiss">No thanks</a>
+					<h3><?php _e( 'Get the Exchange Pro Pack', 'it-l10n-ithemes-exchange' ); ?><span><a href="#">Learn More</a></span></h3>
+					<p><?php _e( 'The Pro Pack gets you access to iThemes Exchange add-ons that unlock so much more that Exchange can do … like Membership, Invoices, Variants, Easy U.S. Sales Taxes, Recurring Payments, Stripe and MailChimp. With the Pro Pack, you get access to all our iThemes-built Exchange Add-ons plus any more we build in the next year (which will be a lot).', 'it-l10n-ithemes-exchange' ); ?></p>
+					<a class="btn-pro" href="http://ithemes.com/exchange/pro-pack/" target="_blank"><?php _e( 'Get all our add-ons for $197', 'it-l10n-ithemes-exchange' ); ?></a><a href="#" class="dismiss">No thanks</a>
 				</div>
 			<?php } ?>
 
@@ -89,20 +89,20 @@
 			if ( 'all' == $tab ) {
 				$vars = array(
 					'target' => add_query_arg( 'tab', 'get-more' ),
-					'text'   => __( 'No add-ons installed. How\'d you do that?', 'LION' ),
-					'link'   => __( 'Go get some now', 'LION' )
+					'text'   => __( 'No add-ons installed. How\'d you do that?', 'it-l10n-ithemes-exchange' ),
+					'link'   => __( 'Go get some now', 'it-l10n-ithemes-exchange' )
 				);
 			} else if ( 'enabled' == $tab ) {
 				$vars = array(
 					'target' => add_query_arg( 'tab', 'disabled' ),
-					'text'   => __( 'No add-ons are currently enabled', 'LION' ),
-					'link'   => __( 'Go enable some now', 'LION' )
+					'text'   => __( 'No add-ons are currently enabled', 'it-l10n-ithemes-exchange' ),
+					'link'   => __( 'Go enable some now', 'it-l10n-ithemes-exchange' )
 				);
 			} else if ( 'disabled' == $tab ) {
 				$vars = array(
 					'target' => add_query_arg( 'tab', 'get-more' ),
-					'text'   => __( 'All add-ons are currently enabled', 'LION' ),
-					'link'   => __( 'Go get more', 'LION' )
+					'text'   => __( 'All add-ons are currently enabled', 'it-l10n-ithemes-exchange' ),
+					'link'   => __( 'Go get more', 'it-l10n-ithemes-exchange' )
 				);
 			}
 			?>

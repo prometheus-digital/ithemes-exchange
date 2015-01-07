@@ -15,5 +15,5 @@
 ?>
 
 <?php do_action( 'it_exchange_content_purchases_before_no_transaction_products_notice_element' ); ?>
-<p class="it-exchange-no-transaction-products-found it-exchange-notice"><?php _e( 'No products found for this transaction', 'LION' ); ?></p>
+<p class="it-exchange-no-transaction-products-found it-exchange-notice"><?php _e( 'No products found for this transaction', 'it-l10n-ithemes-exchange' ); ?></p>
 <?php do_action( 'it_exchange_content_purchases_after_no_transaction_products_after_element' ); ?>

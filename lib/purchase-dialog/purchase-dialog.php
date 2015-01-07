@@ -77,9 +77,9 @@ class IT_Exchange_Purchase_Dialog{
 				'expiration-month',
 				'expiration-year',
 			),
-			'purchase-label' => __( 'Purchase', 'LION' ),
-			'submit-label'   => __( 'Complete Purchase', 'LION' ),
-			'cancel-label'   => __( 'Cancel', 'LION' ),
+			'purchase-label' => __( 'Purchase', 'it-l10n-ithemes-exchange' ),
+			'submit-label'   => __( 'Complete Purchase', 'it-l10n-ithemes-exchange' ),
+			'cancel-label'   => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -298,7 +298,7 @@ class IT_Exchange_Purchase_Dialog{
 		// Validate nonce
 		$nonce = empty( $_POST['ite-' . $this->addon_slug . '-purchase-dialog-nonce'] ) ? false : $_POST['ite-' . $this->addon_slug . '-purchase-dialog-nonce'];
 		if ( ! wp_verify_nonce( $nonce, $this->addon_slug . '-checkout' ) ) {
-			it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'it-l10n-ithemes-exchange' ) );
 			it_exchange_flag_purchase_dialog_error( $this->addon_slug );
 			return false;
 		}
@@ -309,11 +309,11 @@ class IT_Exchange_Purchase_Dialog{
 
 			// Make sure its not empty if its required
 			if ( $required && empty( $value ) )
-				$invalid = __( 'Please make sure all required fields have a value.', 'LION' );
+				$invalid = __( 'Please make sure all required fields have a value.', 'it-l10n-ithemes-exchange' );
 
 			// Make sure card number, expiration, and code have a number
 			if ( ! empty( $value ) && ! in_array( $key, array( 'first-name', 'last-name' ) ) && ! is_numeric( $value ) )
-				$invalid = __( 'Please make sure all fields are formatted properly.', 'LION' );
+				$invalid = __( 'Please make sure all fields are formatted properly.', 'it-l10n-ithemes-exchange' );
 
 			// Filter makes it possible for add-on to make something valid that would be invalid otherwise.
 			$invalid = apply_filters( 'it_exchange_validate_' . $key . '_credit_cart_field', $invalid, $value, $this->addon_slug );

@@ -18,7 +18,7 @@
 <?php if ( it_exchange( 'transaction', 'has-billing-address' ) ) { ?>
 <?php do_action( 'it_exchange_content_confirmation_before_billing_address_element' ); ?>
 <div class="it-exchange-confirmation-billing-address-purchase-requirement it-exchange-column">
-	<h3><?php _e( 'Billing Address', 'LION' ); ?></h3>
+	<h3><?php _e( 'Billing Address', 'it-l10n-ithemes-exchange' ); ?></h3>
     <div class="checkout-purchase-requirement-billing-address-options">
         <div class="existing-billing-address">
         <?php it_exchange( 'transaction', 'billing-address' ); ?>

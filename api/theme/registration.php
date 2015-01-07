@@ -108,7 +108,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	function username( $options=array() ) {
 		$defaults      = array(
 			'format' => 'html',
-			'label'  => __( 'Username', 'LION' ),
+			'label'  => __( 'Username', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -145,7 +145,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	function firstname( $options=array() ) {
 		$defaults      = array(
 			'format' => 'html',
-			'label'  => __( 'First Name', 'LION' ),
+			'label'  => __( 'First Name', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -182,7 +182,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	function lastname( $options=array() ) {
 		$defaults      = array(
 			'format'      => 'html',
-			'label'  => __( 'Last Name', 'LION' ),
+			'label'  => __( 'Last Name', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -219,7 +219,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	function email( $options=array() ) {
 		$defaults      = array(
 			'format'      => 'html',
-			'label'  => __( 'Email', 'LION' ),
+			'label'  => __( 'Email', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -256,7 +256,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	function password1( $options=array() ) {
 		$defaults      = array(
 			'format'      => 'html',
-			'label'  => __( 'Password', 'LION' ),
+			'label'  => __( 'Password', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -293,7 +293,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	function password2( $options=array() ) {
 		$defaults      = array(
 			'format' => 'html',
-			'label'  => __( 'Confirm Password', 'LION' ),
+			'label'  => __( 'Confirm Password', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -330,7 +330,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	function save( $options=array() ) {
 		$defaults      = array(
 			'format' => 'html',
-			'label'  =>  __( 'Register', 'LION' ),
+			'label'  =>  __( 'Register', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -365,7 +365,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	function cancel( $options=array() ) {
 		$defaults = array(
 			'format' => 'html',
-			'label'  =>  __( 'Cancel', 'LION' ),
+			'label'  =>  __( 'Cancel', 'it-l10n-ithemes-exchange' ),
 			'class'  => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -409,7 +409,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	function disabled_message( $options=array() ) {
 		$defaults      = array(
 			'format' => 'html',
-			'label'  =>  __( 'Registration Disabled', 'LION' ),
+			'label'  =>  __( 'Registration Disabled', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 

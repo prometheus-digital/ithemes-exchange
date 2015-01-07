@@ -111,7 +111,7 @@ add_filter( 'it_exchange_accepting_cart_coupons', 'it_exchange_basic_coupons_acc
 function it_exchange_base_coupons_apply_cart_coupon_field( $incoming=false, $options=array() ) {
 	$defaults = array(
 		'class'       => 'apply-coupon',
-		'placeholder' => __( 'Coupon Code', 'LION' ),
+		'placeholder' => __( 'Coupon Code', 'it-l10n-ithemes-exchange' ),
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
 	$var = it_exchange_get_field_name( 'apply_coupon' ) . '-cart';
@@ -151,7 +151,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	// Set coupon code. Return false if one is not available
 	$coupon_code = empty( $options['code'] ) ? false : $options['code'];
 	if ( empty( $coupon_code ) ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
 		return false;
 	}
 
@@ -165,7 +165,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 		),
 	);
 	if ( ! $coupons = it_exchange_get_coupons( $args ) ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
 		return false;
 	}
 
@@ -173,13 +173,13 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 
 	// Abort if coupon limit has been reached
 	if ( ! empty( $coupon->limit_quantity ) && empty( $coupon->quantity ) ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
 		return false;
 	}
 
 	// Abort if product not in cart
 	if ( ! empty( $coupon->limit_product ) && ( it_exchange_get_cart_product_quantity_by_product_id( $coupon->product_id ) < 1 ) ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
 		return false;
 	}
 
@@ -187,13 +187,13 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	$start_okay = empty( $coupon->start_date ) || strtotime( $coupon->start_date ) <= strtotime( date( 'Y-m-d' ) );
 	$end_okay   = empty( $coupon->end_date ) || strtotime( $coupon->end_date ) >= strtotime( date( 'Y-m-d' ) );
 	if ( ! $start_okay || ! $end_okay ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
 		return false;
 	}
 
 	// Get previous uses. Returns array of timestamps
 	if ( it_exchange_basic_coupon_frequency_limit_met_by_customer( $coupon->ID ) ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
 		return false;
 	}
 
@@ -232,7 +232,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	it_exchange_update_cart_data( 'basic_coupons', $data );
 	do_action( 'it_exchange_basic_coupon_applied', $data );
 
-	it_exchange_add_message( 'notice', __( 'Coupon applied', 'LION' ) );
+	it_exchange_add_message( 'notice', __( 'Coupon applied', 'it-l10n-ithemes-exchange' ) );
 	return true;
 }
 add_action( 'it_exchange_apply_coupon_to_cart', 'it_exchange_basic_coupons_apply_to_cart', 10, 2 );
@@ -362,7 +362,7 @@ function it_exchange_base_coupons_remove_cart_coupon_html( $incoming=false, $cod
 	$defaults = array(
 		'class'  => 'remove-coupon',
 		'format' => 'link',
-		'label'  => _x( '&times;', 'html representation for multiplication symbol (x)', 'LION' ),
+		'label'  => _x( '&times;', 'html representation for multiplication symbol (x)', 'it-l10n-ithemes-exchange' ),
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -575,7 +575,7 @@ function it_exchange_basic_coupons_handle_remove_coupon_from_cart_request() {
 	else
 		$url = it_exchange_clean_query_args( array( it_exchange_get_field_name( 'sw_cart_focus' ) ) );
 
-	it_exchange_add_message( 'notice', __( 'Coupon removed', 'LION' ) );
+	it_exchange_add_message( 'notice', __( 'Coupon removed', 'it-l10n-ithemes-exchange' ) );
 	wp_redirect( $url );
 	die();
 }
@@ -627,7 +627,7 @@ function it_exchange_basic_coupons_transaction_summary( $summary, $transaction_c
 	$url = trailingslashit( get_admin_url() ) . 'admin.php';
 	$url = add_query_arg( array( 'page' => 'it-exchange-edit-basic-coupon', 'post' => $id ), $url );
 
-	$link = '<a href="' . $url . '">' . __( 'View Coupon', 'LION' ) . '</a>';
+	$link = '<a href="' . $url . '">' . __( 'View Coupon', 'it-l10n-ithemes-exchange' ) . '</a>';
 
 	$string = '';
 	if ( $title )

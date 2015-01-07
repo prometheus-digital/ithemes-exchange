@@ -124,7 +124,7 @@ class IT_Theme_API_Download implements IT_Theme_API {
 			'before' => '<span class="download-limit">',
 			'after'  => '</span>',
 			'format' => 'raw',
-			'unlimited-label' => __( 'Unlimited', 'LION' ),
+			'unlimited-label' => __( 'Unlimited', 'it-l10n-ithemes-exchange' ),
 		);
 
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -161,8 +161,8 @@ class IT_Theme_API_Download implements IT_Theme_API {
 			'before'              => '<span class="download-expiration">',
 			'after'               => '</span>',
 			'format'              => 'raw',
-			'never-expires-label' => __( 'Never expires', 'LION' ),
-			'template'            => __( '%d %s after purchase', 'LION' ),
+			'never-expires-label' => __( 'Never expires', 'it-l10n-ithemes-exchange' ),
+			'template'            => __( '%d %s after purchase', 'it-l10n-ithemes-exchange' ),
 		);
 
 		$options = ITUtility::merge_defaults( $options, $defaults );

@@ -10,10 +10,10 @@ function it_exchange_register_multi_item_cart_pages() {
     // Cart
     $options = array(
         'slug'          => 'cart',
-        'name'          => __( 'Shopping Cart', 'LION' ),
+        'name'          => __( 'Shopping Cart', 'it-l10n-ithemes-exchange' ),
         'rewrite-rules' => array( 215, 'it_exchange_multi_item_cart_get_page_rewrites' ),
         'url'           => 'it_exchange_multi_item_cart_get_page_urls',
-        'settings-name' => __( 'Customer Shopping Cart', 'LION' ),
+        'settings-name' => __( 'Customer Shopping Cart', 'it-l10n-ithemes-exchange' ),
         'type'          => 'exchange',
         'menu'          => true,
         'optional'      => true,
@@ -23,10 +23,10 @@ function it_exchange_register_multi_item_cart_pages() {
     // Checkout
     $options = array(
         'slug'          => 'checkout',
-        'name'          => __( 'Checkout', 'LION' ),
+        'name'          => __( 'Checkout', 'it-l10n-ithemes-exchange' ),
         'rewrite-rules' => array( 216, 'it_exchange_multi_item_cart_get_page_rewrites' ),
         'url'           => 'it_exchange_multi_item_cart_get_page_urls',
-        'settings-name' => __( 'Customer Checkout', 'LION' ),
+        'settings-name' => __( 'Customer Checkout', 'it-l10n-ithemes-exchange' ),
         'type'          => 'exchange',
         'menu'          => true,
         'optional'      => true,
@@ -120,7 +120,7 @@ function it_exchange_multi_item_cart_settings_callback() {
 	?>
 	<div class="wrap">
 		<?php ITUtility::screen_icon( 'it-exchange' ); ?>
-		<h2><?php _e( 'Multi-Item Cart Settings', 'LION' ); ?></h2>
+		<h2><?php _e( 'Multi-Item Cart Settings', 'it-l10n-ithemes-exchange' ); ?></h2>
 
 		<?php do_action( 'it_exchange_multi_item_cart_settings_page_top' ); ?>
 		<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
@@ -133,13 +133,13 @@ function it_exchange_multi_item_cart_settings_callback() {
 				$form->set_option( $key, $var );
 
 		if ( ! empty( $_POST['__it-form-prefix'] ) && 'it-exchange-add-on-multi-item-cart' == $_POST['__it-form-prefix'] )
-			ITUtility::show_status_message( __( 'Options Saved', 'LION' ) );
+			ITUtility::show_status_message( __( 'Options Saved', 'it-l10n-ithemes-exchange' ) );
 		?>
 		<div class="it-exchange-addon-settings it-exchange-multi-item-cart-addon-settings">
 			<p>
 				<label for="show-continue-shopping-button">
 				<?php $form->add_check_box( 'show-continue-shopping-button' ); ?>
-				<?php _e( 'Show the Continue Shopping button on the cart page?', 'LION' ); ?>
+				<?php _e( 'Show the Continue Shopping button on the cart page?', 'it-l10n-ithemes-exchange' ); ?>
 				</label>
 			</p>
 		</div>
@@ -148,7 +148,7 @@ function it_exchange_multi_item_cart_settings_callback() {
 		do_action( 'it_exchange_multi_item_cart_settings_form_bottom' );
 		?>
 		<p class="submit">
-			<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary button-large' ) ); ?>
+			<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'it-l10n-ithemes-exchange' ), 'class' => 'button button-primary button-large' ) ); ?>
 		</p>
 	<?php $form->end_form(); ?>
 	<?php do_action( 'it_exchange_multi_item_cart_settings_page_bottom' ); ?>

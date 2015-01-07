@@ -16,7 +16,7 @@
 
 <?php if ( ! it_exchange( 'transaction', 'get-cleared-for-delivery' ) ) : ?>
 	<div class="it-exchange-notice">
-		<p><?php _e( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an approved status, you will receive a follow-up email with your download links.', 'LION' ); ?></p>
+		<p><?php _e( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an approved status, you will receive a follow-up email with your download links.', 'it-l10n-ithemes-exchange' ); ?></p>
 	</div>
 <?php else: ?>
 	<?php do_action( 'it_exchange_content_downloads_before_download_data_loop' ); ?>

@@ -20,7 +20,7 @@
 	<?php do_action( 'it_exchange_content_cart_begin_apply_coupon_element' ); ?>
 	<div class="it-exchange-cart-apply-coupons">
 		<?php it_exchange( 'coupons', 'apply', array( 'type' => 'cart' ) ); ?>
-		<?php it_exchange( 'cart', 'update', array( 'label' => __( 'Apply Coupon', 'LION' ) ) ); ?>
+		<?php it_exchange( 'cart', 'update', array( 'label' => __( 'Apply Coupon', 'it-l10n-ithemes-exchange' ) ) ); ?>
 	</div>
 	<?php do_action( 'it_exchange_content_cart_end_apply_coupon_element' ); ?>
 <?php endif; ?>

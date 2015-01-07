@@ -17,7 +17,7 @@ $editing_billing = ( ( ! empty( $_REQUEST['it-exchange-update-billing-address'] 
 ?>
 <?php do_action( 'it_exchange_content_checkout_billing_address_purchase_requirement_before_element' ); ?>
 <div class="it-exchange-checkout-billing-address-purchase-requirement">
-	<h3><?php _e( 'Billing Address', 'LION' ); ?></h3>
+	<h3><?php _e( 'Billing Address', 'it-l10n-ithemes-exchange' ); ?></h3>
 	<?php if ( false !== ( $billing_address = it_exchange_get_customer_billing_address() ) && empty( $editing_billing ) ) : ?>
 		<div class="checkout-purchase-requirement-billing-address-options">
 			<div class="existing-billing-address">
@@ -26,7 +26,7 @@ $editing_billing = ( ( ! empty( $_REQUEST['it-exchange-update-billing-address'] 
 		</div>
 	<?php endif; ?>
 	<div class="<?php echo $editing_billing ? 'it-exchange-hidden ' : ''; ?>checkout-purchase-requirement-billing-address-options">
-		<a class="it-exchange-purchase-requirement-edit-billing" href=""><?php _e( 'Edit Billing Address', 'LION' ); ?></a>
+		<a class="it-exchange-purchase-requirement-edit-billing" href=""><?php _e( 'Edit Billing Address', 'it-l10n-ithemes-exchange' ); ?></a>
 	</div>
 	<div class="<?php echo $editing_billing ? '' : 'it-exchange-hidden '; ?>checkout-purchase-requirement-billing-address-edit">
 		<?php

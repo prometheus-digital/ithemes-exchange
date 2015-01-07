@@ -53,50 +53,50 @@
 			<table class="form-table">
 				<?php do_action( 'it_exchange_general_settings_table_top', $form ); ?>
 				<tr valign="top">
-					<th scope="row"><strong><?php _e( 'Company Details', 'LION' ); ?></strong></th>
+					<th scope="row"><strong><?php _e( 'Company Details', 'it-l10n-ithemes-exchange' ); ?></strong></th>
 					<td></td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="company-name"><?php _e( 'Company Name', 'LION' ) ?></label></th>
+					<th scope="row"><label for="company-name"><?php _e( 'Company Name', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
 						<?php $form->add_text_box( 'company-name', array( 'class' => 'normal-text' ) ); ?>
-						<br /><span class="description"><?php _e( 'The name used in customer receipts.', 'LION' ); ?></span>
+						<br /><span class="description"><?php _e( 'The name used in customer receipts.', 'it-l10n-ithemes-exchange' ); ?></span>
 					</td>
 				</tr>
 				<tr valign="top">
 					<?php $tax_link = 'http://www.irs.gov/Businesses/Small-Businesses-&amp;-Self-Employed/Apply-for-an-Employer-Identification-Number-(EIN)-Online'; ?>
-					<th scope="row"><label for="company-tax-id"><?php _e( 'Company Tax ID', 'LION' ) ?> <?php it_exchange_admin_tooltip( sprintf( __( 'In the U.S., this is your Federal %sTax ID Number%s.', 'LION' ), '<a href="' . $tax_link . '" target="_blank">', '</a>' ) ); ?></label></th>
+					<th scope="row"><label for="company-tax-id"><?php _e( 'Company Tax ID', 'it-l10n-ithemes-exchange' ) ?> <?php it_exchange_admin_tooltip( sprintf( __( 'In the U.S., this is your Federal %sTax ID Number%s.', 'it-l10n-ithemes-exchange' ), '<a href="' . $tax_link . '" target="_blank">', '</a>' ) ); ?></label></th>
 					<td>
 						<?php $form->add_text_box( 'company-tax-id', array( 'class' => 'normal-text' ) ); ?>
-						<p class="description"><a href="<?php echo $tax_link; ?>" target="_blank"><?php _e( 'Click here for more info about obtaining a Tax ID in the US', 'LION' ); ?></a></p>
+						<p class="description"><a href="<?php echo $tax_link; ?>" target="_blank"><?php _e( 'Click here for more info about obtaining a Tax ID in the US', 'it-l10n-ithemes-exchange' ); ?></a></p>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="company-email"><?php _e( 'Company Email', 'LION' ) ?> <?php it_exchange_admin_tooltip( __( 'Where do you want customer inquiries to go?', 'LION' ) ); ?></label></th>
+					<th scope="row"><label for="company-email"><?php _e( 'Company Email', 'it-l10n-ithemes-exchange' ) ?> <?php it_exchange_admin_tooltip( __( 'Where do you want customer inquiries to go?', 'it-l10n-ithemes-exchange' ) ); ?></label></th>
 					<td>
 						<?php $form->add_text_box( 'company-email', array( 'class' => 'normal-text' ) ); ?>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="company-phone"><?php _e( 'Company Phone', 'LION' ) ?> <?php it_exchange_admin_tooltip( __( 'This is your main customer service line.', 'LION' ) ); ?></label></th>
+					<th scope="row"><label for="company-phone"><?php _e( 'Company Phone', 'it-l10n-ithemes-exchange' ) ?> <?php it_exchange_admin_tooltip( __( 'This is your main customer service line.', 'it-l10n-ithemes-exchange' ) ); ?></label></th>
 					<td>
 						<?php $form->add_text_box( 'company-phone', array( 'class' => 'normal-text' ) ); ?>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="company-address"><?php _e( 'Company Address', 'LION' ) ?></label></th>
+					<th scope="row"><label for="company-address"><?php _e( 'Company Address', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
 						<?php $form->add_text_area( 'company-address', array( 'rows' => 5, 'cols' => 30 ) ); ?>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="company-base-country"><?php _e( 'Base Country', 'LION' ) ?> <?php it_exchange_admin_tooltip( __( 'This is the country where your business is located', 'LION' ) ); ?></label></th>
+					<th scope="row"><label for="company-base-country"><?php _e( 'Base Country', 'it-l10n-ithemes-exchange' ) ?> <?php it_exchange_admin_tooltip( __( 'This is the country where your business is located', 'it-l10n-ithemes-exchange' ) ); ?></label></th>
 					<td>
 						<?php $form->add_drop_down( 'company-base-country', it_exchange_get_data_set( 'countries' ) ); ?>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="company-base-state"><?php _e( 'Base State / Province', 'LION' ) ?> <?php it_exchange_admin_tooltip( __( 'This is the state / province where your business is located', 'LION' ) ); ?></label></th>
+					<th scope="row"><label for="company-base-state"><?php _e( 'Base State / Province', 'it-l10n-ithemes-exchange' ) ?> <?php it_exchange_admin_tooltip( __( 'This is the state / province where your business is located', 'it-l10n-ithemes-exchange' ) ); ?></label></th>
 					<td class="company-base-state-field-td">
 						<?php
 						$country = $form->get_option( 'company-base-country' );
@@ -105,39 +105,39 @@
 							$form->add_drop_down( 'company-base-state', $states );
 						} else {
 							$form->add_text_box( 'company-base-state', array( 'class' => 'small-text', 'max-length' => 3 ) );
-							?><p class="description"><?php printf( __( 'Please use the 2-3 character %sISO abbreviation%s for country subdivisions', 'LION' ), '<a href="http://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">', '</a>' ); ?></p><?php
+							?><p class="description"><?php printf( __( 'Please use the 2-3 character %sISO abbreviation%s for country subdivisions', 'it-l10n-ithemes-exchange' ), '<a href="http://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">', '</a>' ); ?></p><?php
 						}
 						?>
 					</td>
 				</tr>
 				<?php do_action( 'it_exchange_general_settings_before_settings_store', $form ); ?>
 				<tr valign="top">
-					<th scope="row"><strong><?php _e( 'Store Settings', 'LION' ); ?></strong></th>
+					<th scope="row"><strong><?php _e( 'Store Settings', 'it-l10n-ithemes-exchange' ); ?></strong></th>
 					<td></td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="store-product-order-by"><?php _e( 'Order Products By', 'LION' ) ?></label></th>
+					<th scope="row"><label for="store-product-order-by"><?php _e( 'Order Products By', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
 						<?php
 						$order_by = apply_filters( 'it_exchange_store_order_by_options', array(
-							'ID'         => __( 'Product ID', 'LION' ),
-							'title'      => __( 'Product Title', 'LION' ),
-							'name'       => __( 'Product Slug', 'LION' ),
-							'date'       => __( 'Product Published Date/Time', 'LION' ),
-							'modified'   => __( 'Product Modified Date/Time', 'LION' ),
-							'rand'       => __( 'Random', 'LION' ),
-							'menu_order' => __( 'Product Order #', 'LION' ),
+							'ID'         => __( 'Product ID', 'it-l10n-ithemes-exchange' ),
+							'title'      => __( 'Product Title', 'it-l10n-ithemes-exchange' ),
+							'name'       => __( 'Product Slug', 'it-l10n-ithemes-exchange' ),
+							'date'       => __( 'Product Published Date/Time', 'it-l10n-ithemes-exchange' ),
+							'modified'   => __( 'Product Modified Date/Time', 'it-l10n-ithemes-exchange' ),
+							'rand'       => __( 'Random', 'it-l10n-ithemes-exchange' ),
+							'menu_order' => __( 'Product Order #', 'it-l10n-ithemes-exchange' ),
 						) );
 						$form->add_drop_down( 'store-product-order-by', $order_by ); ?>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="store-product-order"><?php _e( 'Order', 'LION' ) ?></label></th>
+					<th scope="row"><label for="store-product-order"><?php _e( 'Order', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
 						<?php
 						$order_by = apply_filters( 'it_exchange_store_order_options', array(
-							'ASC'  => __( 'Ascending', 'LION' ),
-							'DESC' => __( 'Descending', 'LION' ),
+							'ASC'  => __( 'Ascending', 'it-l10n-ithemes-exchange' ),
+							'DESC' => __( 'Descending', 'it-l10n-ithemes-exchange' ),
 						) );
 						$form->add_drop_down( 'store-product-order', $order_by ); ?>
 					</td>
@@ -145,61 +145,61 @@
 	
 				<?php do_action( 'it_exchange_general_settings_before_settings_currency', $form ); ?>
 				<tr valign="top">
-					<th scope="row"><strong><?php _e( 'Currency Settings', 'LION' ); ?></strong></th>
+					<th scope="row"><strong><?php _e( 'Currency Settings', 'it-l10n-ithemes-exchange' ); ?></strong></th>
 					<td></td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="default-currency"><?php _e( 'Default Currency', 'LION' ) ?></label></th>
+					<th scope="row"><label for="default-currency"><?php _e( 'Default Currency', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
 						<?php $form->add_drop_down( 'default-currency', $this->get_default_currency_options() ); ?>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="currency-symbol-position"><?php _e( 'Symbol Position', 'LION' ) ?></label></th>
+					<th scope="row"><label for="currency-symbol-position"><?php _e( 'Symbol Position', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
 						<?php
 						$currency_symbol  = empty( $settings['default-currency'] ) ? '$' : it_exchange_get_currency_symbol( $settings['default-currency'] );
-						$symbol_positions = array( 'before' => sprintf( __( 'Before: %s10.00', 'LION' ), $currency_symbol ), 'after' => sprintf( __( 'After: 10.00%s', 'LION' ), $currency_symbol ) );
+						$symbol_positions = array( 'before' => sprintf( __( 'Before: %s10.00', 'it-l10n-ithemes-exchange' ), $currency_symbol ), 'after' => sprintf( __( 'After: 10.00%s', 'it-l10n-ithemes-exchange' ), $currency_symbol ) );
 						$form->add_drop_down( 'currency-symbol-position', $symbol_positions ); ?>
-						<br /><span class="description"><?php _e( 'Where should the currency symbol be placed in relation to the price?', 'LION' ); ?></span>
+						<br /><span class="description"><?php _e( 'Where should the currency symbol be placed in relation to the price?', 'it-l10n-ithemes-exchange' ); ?></span>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="currency-thousands-separator"><?php _e( 'Thousands Separator', 'LION' ) ?></label></th>
+					<th scope="row"><label for="currency-thousands-separator"><?php _e( 'Thousands Separator', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
 						<?php $form->add_text_box( 'currency-thousands-separator', array( 'class' => 'small-text', 'maxlength' => '1' ) ); ?>
-						<br /><span class="description"><?php _e( 'What character would you like to use to separate thousands when displaying prices?', 'LION' ); ?></span>
+						<br /><span class="description"><?php _e( 'What character would you like to use to separate thousands when displaying prices?', 'it-l10n-ithemes-exchange' ); ?></span>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="currency-decimals-separator"><?php _e( 'Decimals Separator', 'LION' ) ?></label></th>
+					<th scope="row"><label for="currency-decimals-separator"><?php _e( 'Decimals Separator', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
 						<?php $form->add_text_box( 'currency-decimals-separator', array( 'class' => 'small-text', 'maxlength' => '1' ) ); ?>
-						<br /><span class="description"><?php _e( 'What character would you like to use to separate decimals when displaying prices?', 'LION' ); ?></span>
+						<br /><span class="description"><?php _e( 'What character would you like to use to separate decimals when displaying prices?', 'it-l10n-ithemes-exchange' ); ?></span>
 					</td>
 				</tr>
 	            <?php do_action( 'it_exchange_general_settings_before_settings_registration', $form ); ?>
 				<tr valign="top">
-					<th scope="row"><strong><?php _e( 'Customer Registration Settings', 'LION' ); ?></strong></th>
+					<th scope="row"><strong><?php _e( 'Customer Registration Settings', 'it-l10n-ithemes-exchange' ); ?></strong></th>
 					<td></td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="site-registration"><?php _e( 'Customer Registration', 'LION' ) ?></label></th>
+					<th scope="row"><label for="site-registration"><?php _e( 'Customer Registration', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
 						<?php $form->add_radio( 'site-registration', array( 'value' => 'it' ) ); ?>
-	                	<label for="site-registration-it"><?php _e( 'Use Exchange Registration Only', 'LION' ) ?></label>
+	                	<label for="site-registration-it"><?php _e( 'Use Exchange Registration Only', 'it-l10n-ithemes-exchange' ) ?></label>
 	                    <br />
 						<?php $form->add_radio( 'site-registration', array( 'value' => 'wp' ) ); ?>
-	                	<label for="site-registration-wp"><?php _e( 'Use WordPress Registration Setting', 'LION' ) ?></label><?php it_exchange_admin_tooltip( __( 'In order to use this setting, you will first need to check the "Anyone can register" checkbox from the WordPress General Settings page to allow site membership.', 'LION' ) ); ?>
+	                	<label for="site-registration-wp"><?php _e( 'Use WordPress Registration Setting', 'it-l10n-ithemes-exchange' ) ?></label><?php it_exchange_admin_tooltip( __( 'In order to use this setting, you will first need to check the "Anyone can register" checkbox from the WordPress General Settings page to allow site membership.', 'it-l10n-ithemes-exchange' ) ); ?>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="checkout-reg-form"><?php _e( 'Default Checkout Form', 'LION' ) ?></label></th>
+					<th scope="row"><label for="checkout-reg-form"><?php _e( 'Default Checkout Form', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
 						<?php
 						$options = array(
-							'registration' => __( 'Registration', 'LION' ),
-							'login'        => __( 'Log in', 'LION' ),
+							'registration' => __( 'Registration', 'it-l10n-ithemes-exchange' ),
+							'login'        => __( 'Log in', 'it-l10n-ithemes-exchange' ),
 						);
 						?>
 						<?php $form->add_drop_down( 'checkout-reg-form', $options ); ?>
@@ -207,13 +207,13 @@
 				</tr>
 	            <?php do_action( 'it_exchange_general_settings_before_settings_styles', $form ); ?>
 				<tr valign="top">
-					<th scope="row"><strong><?php _e( 'Stylesheet Settings', 'LION' ); ?></strong></th>
+					<th scope="row"><strong><?php _e( 'Stylesheet Settings', 'it-l10n-ithemes-exchange' ); ?></strong></th>
 					<td></td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="custom-styles"><?php _e( 'Custom Styles', 'LION' ) ?></label></th>
+					<th scope="row"><label for="custom-styles"><?php _e( 'Custom Styles', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
-						<?php _e( 'If they exist, the following files will be loaded in order after core Exchange stylesheets:', 'LION' ); ?><br />
+						<?php _e( 'If they exist, the following files will be loaded in order after core Exchange stylesheets:', 'it-l10n-ithemes-exchange' ); ?><br />
 						<span class="description">
 							<?php
 							$parent = get_template_directory() . '/exchange/style.css';
@@ -227,49 +227,49 @@
 				</tr>
 	            <?php do_action( 'it_exchange_general_settings_before_settings_admin', $form ); ?>
 				<tr valign="top">
-					<th scope="row"><strong><?php _e( 'Admin Settings', 'LION' ); ?></strong></th>
+					<th scope="row"><strong><?php _e( 'Admin Settings', 'it-l10n-ithemes-exchange' ); ?></strong></th>
 					<td></td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="custom-styles"><?php _e( 'Visual Editor for Product Description', 'LION' ) ?></label></th>
+					<th scope="row"><label for="custom-styles"><?php _e( 'Visual Editor for Product Description', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
 						<?php $form->add_check_box( 'wysiwyg-for-product-description' ); ?>
-						<label for="wysiwyg-for-product-description"><?php _e( 'Enable Visual Editor for Product Descriptions?', 'LION' ); ?>
+						<label for="wysiwyg-for-product-description"><?php _e( 'Enable Visual Editor for Product Descriptions?', 'it-l10n-ithemes-exchange' ); ?>
 					</td>
 				</tr>
 	            <?php do_action( 'it_exchange_general_settings_before_settings_product_gallery', $form ); ?>
 				<tr valign="top">
-					<th scope="row"><strong><?php _e( 'Product Gallery', 'LION' ); ?></strong></th>
+					<th scope="row"><strong><?php _e( 'Product Gallery', 'it-l10n-ithemes-exchange' ); ?></strong></th>
 					<td></td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="enable-gallery-popup"><?php _e( 'Enable Popup', 'LION' ) ?></label></th>
+					<th scope="row"><label for="enable-gallery-popup"><?php _e( 'Enable Popup', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
 						<?php $form->add_yes_no_drop_down( 'enable-gallery-popup' ); ?>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="product-gallery-zoom"><?php _e( 'Enable Zoom', 'LION' ) ?><?php it_exchange_admin_tooltip( __( 'Zoom will only work properly when uploading large images.', 'LION' ) ); ?></label></th>
+					<th scope="row"><label for="product-gallery-zoom"><?php _e( 'Enable Zoom', 'it-l10n-ithemes-exchange' ) ?><?php it_exchange_admin_tooltip( __( 'Zoom will only work properly when uploading large images.', 'it-l10n-ithemes-exchange' ) ); ?></label></th>
 					<td>
 						<?php $form->add_yes_no_drop_down( 'enable-gallery-zoom' ); ?>
 						<div class="product-gallery-zoom-actions <?php echo ( $form->_options['enable-gallery-zoom'] != 1 ) ? 'hidden' : ''; ?>">
 							<?php $form->add_radio( 'product-gallery-zoom-action', array( 'value' => 'click' ) ); ?>
-							<label for="product-gallery-zoom-action-click"><?php _e( 'Click', 'LION' ) ?></label>
+							<label for="product-gallery-zoom-action-click"><?php _e( 'Click', 'it-l10n-ithemes-exchange' ) ?></label>
 							<br />
 							<?php $form->add_radio( 'product-gallery-zoom-action', array( 'value' => 'hover' ) ); ?>
-							<label for="product-gallery-zoom-action-hover"><?php _e( 'Hover', 'LION' ) ?></label>
+							<label for="product-gallery-zoom-action-hover"><?php _e( 'Hover', 'it-l10n-ithemes-exchange' ) ?></label>
 							<span class="description popup-enabled <?php echo ( $form->_options['enable-gallery-popup'] != 1 ) ? 'hidden' : ''; ?>">
-								<p><?php _e( 'Zoom will occur in the popup when popup is enabled.', 'LION' ); ?></p>
+								<p><?php _e( 'Zoom will occur in the popup when popup is enabled.', 'it-l10n-ithemes-exchange' ); ?></p>
 							</span>
 						</div>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><strong><?php _e( 'Customer Messages', 'LION' ); ?></strong></th>
+					<th scope="row"><strong><?php _e( 'Customer Messages', 'it-l10n-ithemes-exchange' ); ?></strong></th>
 					<td></td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="customer-account-page"><?php _e( 'Customer Account Page', 'LION' ) ?></label></th>
+					<th scope="row"><label for="customer-account-page"><?php _e( 'Customer Account Page', 'it-l10n-ithemes-exchange' ) ?></label></th>
 					<td>
 						<?php
 						if ( $GLOBALS['wp_version'] >= 3.3 && function_exists( 'wp_editor' ) ) {
@@ -282,16 +282,16 @@
 						?>
 						<p class="description">
 						<?php
-						_e( 'Enter your content for the Customer\'s account page. HTML is accepted. Available shortcode functions:', 'LION' );
+						_e( 'Enter your content for the Customer\'s account page. HTML is accepted. Available shortcode functions:', 'it-l10n-ithemes-exchange' );
 						echo '<br />';
-						printf( __( 'You call these shortcode functions like this: %s', 'LION' ), '[it_exchange_customer show=avatar avatar_size=50]' );
+						printf( __( 'You call these shortcode functions like this: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_customer show=avatar avatar_size=50]' );
 						echo '<ul>';
-						echo '<li>first-name - ' . __( "The customer's first name", 'LION' ) . '</li>';
-						echo '<li>last-name - ' . __( "The customer's last name", 'LION' ) . '</li>';
-						echo '<li>username - ' . __( "The customer's username on the site", 'LION' ) . '</li>';
-						echo '<li>email - ' . __( "The customer's email address", 'LION' ) . '</li>';
-						echo '<li>avatar - ' . __( "The customer's gravatar image. Use the avatar_size param for square size. Default is 128", 'LION' ) . '</li>';
-						echo '<li>sitename - ' . __( 'Your site name', 'LION' ) . '</li>';
+						echo '<li>first-name - ' . __( "The customer's first name", 'it-l10n-ithemes-exchange' ) . '</li>';
+						echo '<li>last-name - ' . __( "The customer's last name", 'it-l10n-ithemes-exchange' ) . '</li>';
+						echo '<li>username - ' . __( "The customer's username on the site", 'it-l10n-ithemes-exchange' ) . '</li>';
+						echo '<li>email - ' . __( "The customer's email address", 'it-l10n-ithemes-exchange' ) . '</li>';
+						echo '<li>avatar - ' . __( "The customer's gravatar image. Use the avatar_size param for square size. Default is 128", 'it-l10n-ithemes-exchange' ) . '</li>';
+						echo '<li>sitename - ' . __( 'Your site name', 'it-l10n-ithemes-exchange' ) . '</li>';
 						do_action( 'it_customer_account_page_shortcode_tags_list' );
 						echo '</ul>';
 						?>
@@ -300,7 +300,7 @@
 				</tr>
 				<?php do_action( 'it_exchange_general_settings_table_bottom', $form ); ?>
 			</table>
-			<p class="submit"><input type="submit" value="<?php _e( 'Save Changes', 'LION' ); ?>" class="button button-primary" /></p>
+			<p class="submit"><input type="submit" value="<?php _e( 'Save Changes', 'it-l10n-ithemes-exchange' ); ?>" class="button button-primary" /></p>
 			<?php do_action( 'it_exchange_general_settings_form_bottom', $form ); ?>
 		<?php $form->end_form(); ?>
 		<?php do_action( 'it_exchange_general_settings_page_bottom' ); ?>

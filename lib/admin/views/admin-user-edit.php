@@ -21,7 +21,7 @@
 
 	<h2>
 		<?php echo $user_object->display_name; ?>
-		<a href="<?php echo esc_url( add_query_arg( 'wp_http_referer', urlencode( stripslashes_deep( $_SERVER['REQUEST_URI'] ) ), get_edit_user_link( $user_object->ID ) ) ); ?>" class="edit-user add-new-h2"><?php echo esc_html_x( 'Edit User', 'LION' ); ?></a>
+		<a href="<?php echo esc_url( add_query_arg( 'wp_http_referer', urlencode( stripslashes_deep( $_SERVER['REQUEST_URI'] ) ), get_edit_user_link( $user_object->ID ) ) ); ?>" class="edit-user add-new-h2"><?php echo esc_html_x( 'Edit User', 'it-l10n-ithemes-exchange' ); ?></a>
 	</h2>
 	<?php
 	// Show update messages

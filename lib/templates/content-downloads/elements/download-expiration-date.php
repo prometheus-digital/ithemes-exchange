@@ -18,13 +18,13 @@
 <?php if ( it_exchange( 'transaction', 'get-product-download-hash', array( 'attribute' => 'expires' ) ) ) : ?>
 	<?php do_action( 'it_exchange_content_downloads_before_download_expiration_date_element' ); ?>
 	<span class="it-exchange-download-expiration">
-		<?php _e( 'Expires on', 'LION' ); ?> <?php it_exchange( 'transaction', 'product-download-hash', array( 'attribute' => 'expiration-date' ) ); ?>
+		<?php _e( 'Expires on', 'it-l10n-ithemes-exchange' ); ?> <?php it_exchange( 'transaction', 'product-download-hash', array( 'attribute' => 'expiration-date' ) ); ?>
 	</span>
 	<?php do_action( 'it_exchange_content_downloads_after_download_expiration_date_element' ); ?>
 <?php else : ?>
 	<?php do_action( 'it_exchange_content_downloads_before_download_expiration_date_element' ); ?>
 	<span class="it-exchange-download-expiration">
-		<?php _e( 'No expiration date', 'LION' ); ?>
+		<?php _e( 'No expiration date', 'it-l10n-ithemes-exchange' ); ?>
 	</span>
 	<?php do_action( 'it_exchange_content_downloads_after_download_expiration_date_element' ); ?>
 <?php endif; ?>

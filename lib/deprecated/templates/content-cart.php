@@ -82,11 +82,11 @@
 			<div class="cart-totals-wrapper">
 				<div class="cart-totals">
 					<div class="totals-column totals-titles cart-column">
-						<p><?php _e( 'Subtotal', 'LION' ); ?></p>
+						<p><?php _e( 'Subtotal', 'it-l10n-ithemes-exchange' ); ?></p>
 						<?php if ( it_exchange( 'coupons', 'supported', 'type=cart' ) && it_exchange( 'coupons', 'has-applied', 'type=cart' ) ) : ?>
-							<p><?php _e( 'Savings', 'LION' ); ?></p>
+							<p><?php _e( 'Savings', 'it-l10n-ithemes-exchange' ); ?></p>
 						<?php endif; ?>
-						<p><?php _e( 'Total', 'LION' ); ?></p>
+						<p><?php _e( 'Total', 'it-l10n-ithemes-exchange' ); ?></p>
 					</div>
 					<div class="totals-column totals-amounts cart-column">
 						<p class="cart-subtotal"><?php it_exchange( 'cart', 'subtotal' ); ?></p>
@@ -101,7 +101,7 @@
 			<div class="cart-apply-coupons">
 				<?php if ( it_exchange( 'coupons', 'supported', 'type=cart' ) && it_exchange( 'coupons', 'accepting', 'type=cart' ) ) : ?>
 					<?php it_exchange( 'coupons', 'apply', 'type=cart' ); ?>
-					<?php it_exchange( 'cart', 'update', 'label=' . __( 'Apply Coupon', 'LION' ) ); ?>
+					<?php it_exchange( 'cart', 'update', 'label=' . __( 'Apply Coupon', 'it-l10n-ithemes-exchange' ) ); ?>
 				<?php endif; ?>
 			</div>
 
@@ -113,5 +113,5 @@
 		</div>
 	<?php it_exchange( 'cart', 'form-close' ); ?>
 <?php else : ?>
-	<p><?php _e( 'There are no items in your cart', 'LION' ); ?></p>
+	<p><?php _e( 'There are no items in your cart', 'it-l10n-ithemes-exchange' ); ?></p>
 <?php endif; ?>

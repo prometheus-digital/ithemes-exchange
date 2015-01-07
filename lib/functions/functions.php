@@ -234,7 +234,7 @@ function it_exchange_process_webhooks() {
 			if ( empty( $webhook_diff ) ) { //No differences in the requested webhook and the required webhook
 				do_action( 'it_exchange_webhook_' . $param, $_REQUEST );
 			} else {
-				wp_die( sprintf( __( 'Invalid webhook request for this site. The webhook request should be: %s', 'LION' ), $required_webhook_url ), __( 'iThemes Exchange Webhook Process Error', 'LION' ), array( 'response' => 400 ) );
+				wp_die( sprintf( __( 'Invalid webhook request for this site. The webhook request should be: %s', 'it-l10n-ithemes-exchange' ), $required_webhook_url ), __( 'iThemes Exchange Webhook Process Error', 'it-l10n-ithemes-exchange' ), array( 'response' => 400 ) );
 			}
 
 			break; //we can stop processing here... no need to continue the foreach since we can only handle one webhook at a time
@@ -242,7 +242,7 @@ function it_exchange_process_webhooks() {
 	}
 	if ( $webhooks_processed ) {
 		do_action( 'it_exchange_webhooks_processed' );
-		wp_die( __( 'iThemes Exchange webhook process Complete', 'LION' ), __( 'iThemes Exchange Webhook Process Complete', 'LION' ), array( 'response' => 200 ) );
+		wp_die( __( 'iThemes Exchange webhook process Complete', 'it-l10n-ithemes-exchange' ), __( 'iThemes Exchange Webhook Process Complete', 'it-l10n-ithemes-exchange' ), array( 'response' => 200 ) );
 	}
 }
 add_action( 'wp', 'it_exchange_process_webhooks' );
@@ -270,15 +270,15 @@ function it_exchange_add_plugin_reset_checkbox_to_settings( $form ) {
 	$form->set_option( 'reset-exchange', 0 );
 	?>
 	<tr valign="top">
-		<th scope="row"><strong><?php _e( 'Dangerous Settings', 'LION' ); ?></strong></th>
+		<th scope="row"><strong><?php _e( 'Dangerous Settings', 'it-l10n-ithemes-exchange' ); ?></strong></th>
 		<td></td>
 	</tr>
 	<tr valign="top">
-		<th scope="row"><label for="reset-exchange"><?php _e( 'Reset Exchange', 'LION' ) ?></label></th>
+		<th scope="row"><label for="reset-exchange"><?php _e( 'Reset Exchange', 'it-l10n-ithemes-exchange' ) ?></label></th>
 		<td>
 			<?php $form->add_check_box( 'reset-exchange' ); ?>
-			<label for="reset-exchange"><?php _e( 'Reset ALL data', 'LION' ) ?></label><br />
-			<span class="description"><?php _e( 'Checking this box will rest ALL settings and DELETE ALL DATA.', 'LION' ); ?></span>
+			<label for="reset-exchange"><?php _e( 'Reset ALL data', 'it-l10n-ithemes-exchange' ) ?></label><br />
+			<span class="description"><?php _e( 'Checking this box will rest ALL settings and DELETE ALL DATA.', 'it-l10n-ithemes-exchange' ); ?></span>
 		</td>
 	</tr>
 	<?php
@@ -374,7 +374,7 @@ function it_exchange_reset_everything() {
 	do_action( 'it_exchange_reset_exchange' );
 
 	// Log message and redirect
-	it_exchange_add_message( 'notice', __( 'Exchange has been reset. All data has been deleted.', 'LION' ) );
+	it_exchange_add_message( 'notice', __( 'Exchange has been reset. All data has been deleted.', 'it-l10n-ithemes-exchange' ) );
 	wp_safe_redirect( add_query_arg( 'page', 'it-exchange-settings', trailingslashit( get_admin_url() ) . 'admin.php' ) );
 	die();
 }
@@ -391,10 +391,10 @@ function it_exchange_register_core_pages() {
 	// Product
 	$options = array(
 		'slug'          => 'product',
-		'name'          => __( 'Product', 'LION' ),
+		'name'          => __( 'Product', 'it-l10n-ithemes-exchange' ),
 		'rewrite-rules' => false, //array( 10, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
-		'settings-name' => __( 'Product Base', 'LION' ),
+		'settings-name' => __( 'Product Base', 'it-l10n-ithemes-exchange' ),
 		'type'          => 'exchange',
 		'menu'          => false,
 		'optional'      => false,
@@ -404,11 +404,11 @@ function it_exchange_register_core_pages() {
 	// Store
 	$options = array(
 		'slug'          => 'store',
-		'name'          => __( 'Store', 'LION' ),
+		'name'          => __( 'Store', 'it-l10n-ithemes-exchange' ),
 		'rewrite-rules' => array( 230, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
-		'settings-name' => __( 'Store Page', 'LION' ),
-		'tip'           => __( 'Where all your products are shown in one place', 'LION' ),
+		'settings-name' => __( 'Store Page', 'it-l10n-ithemes-exchange' ),
+		'tip'           => __( 'Where all your products are shown in one place', 'it-l10n-ithemes-exchange' ),
 		'type'          => 'exchange',
 		'menu'          => true,
 		'optional'      => true,
@@ -418,10 +418,10 @@ function it_exchange_register_core_pages() {
 	// Transaction
 	$options = array(
 		'slug'          => 'transaction',
-		'name'          => __( 'Transaction', 'LION' ),
+		'name'          => __( 'Transaction', 'it-l10n-ithemes-exchange' ),
 		'rewrite-rules' => array( 210, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
-		'settings-name' => __( 'Transaction', 'LION' ),
+		'settings-name' => __( 'Transaction', 'it-l10n-ithemes-exchange' ),
 		'type'          => 'exchange',
 		'menu'          => false,
 		'optional'      => false,
@@ -431,11 +431,11 @@ function it_exchange_register_core_pages() {
 	// Customer Registration
 	$options = array(
 		'slug'          => 'registration',
-		'name'          => __( 'Registration', 'LION' ),
+		'name'          => __( 'Registration', 'it-l10n-ithemes-exchange' ),
 		'rewrite-rules' => array( 105, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
-		'settings-name' => __( 'Customer Registration', 'LION' ),
-		'tip'           => __( 'Where customers register to login, download, etc.  You can turn off registration and allow guest checkouts in Exchange / Add-ons / Digital Downloads Settings.', 'LION' ),
+		'settings-name' => __( 'Customer Registration', 'it-l10n-ithemes-exchange' ),
+		'tip'           => __( 'Where customers register to login, download, etc.  You can turn off registration and allow guest checkouts in Exchange / Add-ons / Digital Downloads Settings.', 'it-l10n-ithemes-exchange' ),
 		'type'          => 'exchange',
 		'menu'          => true,
 		'optional'      => true,
@@ -445,11 +445,11 @@ function it_exchange_register_core_pages() {
 	// Account
 	$options = array(
 		'slug'          => 'account',
-		'name'          => __( 'Account', 'LION' ),
+		'name'          => __( 'Account', 'it-l10n-ithemes-exchange' ),
 		'rewrite-rules' => array( 135, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
-		'settings-name' => __( 'Account Page', 'LION' ),
-		'tip'           => __( 'Customers get an account when they buy something, so they can login and download their purchases. This is the main landing page for customers after they log in.', 'LION' ),
+		'settings-name' => __( 'Account Page', 'it-l10n-ithemes-exchange' ),
+		'tip'           => __( 'Customers get an account when they buy something, so they can login and download their purchases. This is the main landing page for customers after they log in.', 'it-l10n-ithemes-exchange' ),
 		'type'          => 'exchange',
 		'menu'          => true,
 		'optional'      => false,
@@ -459,11 +459,11 @@ function it_exchange_register_core_pages() {
 	// Profile
 	$options = array(
 		'slug'          => 'profile',
-		'name'          => __( 'Profile', 'LION' ),
+		'name'          => __( 'Profile', 'it-l10n-ithemes-exchange' ),
 		'rewrite-rules' => array( 130, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
-		'settings-name' => __( 'Profile Page', 'LION' ),
-		'tip'           => __( 'Private details about your customers that they can change.', 'LION' ),
+		'settings-name' => __( 'Profile Page', 'it-l10n-ithemes-exchange' ),
+		'tip'           => __( 'Private details about your customers that they can change.', 'it-l10n-ithemes-exchange' ),
 		'type'          => 'exchange',
 		'menu'          => true,
 		'optional'      => true,
@@ -473,11 +473,11 @@ function it_exchange_register_core_pages() {
 	// Downloads
 	$options = array(
 		'slug'          => 'downloads',
-		'name'          => __( 'Downloads', 'LION' ),
+		'name'          => __( 'Downloads', 'it-l10n-ithemes-exchange' ),
 		'rewrite-rules' => array( 125, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
-		'settings-name' => __( 'Customer Downloads', 'LION' ),
-		'tip'           => __( 'Page where the customer can find all of their available downloads.', 'LION' ),
+		'settings-name' => __( 'Customer Downloads', 'it-l10n-ithemes-exchange' ),
+		'tip'           => __( 'Page where the customer can find all of their available downloads.', 'it-l10n-ithemes-exchange' ),
 		'type'          => 'exchange',
 		'menu'          => true,
 		'optional'      => true,
@@ -487,10 +487,10 @@ function it_exchange_register_core_pages() {
 	// Purchases
 	$options = array(
 		'slug'          => 'purchases',
-		'name'          => __( 'Purchases', 'LION' ),
+		'name'          => __( 'Purchases', 'it-l10n-ithemes-exchange' ),
 		'rewrite-rules' => array( 120, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
-		'settings-name' => __( 'Purchases', 'LION' ),
+		'settings-name' => __( 'Purchases', 'it-l10n-ithemes-exchange' ),
 		'type'          => 'exchange',
 		'menu'          => true,
 		'optional'      => true,
@@ -500,10 +500,10 @@ function it_exchange_register_core_pages() {
 	// Log In
 	$options = array(
 		'slug'          => 'log-in',
-		'name'          => __( 'Log In', 'LION' ),
+		'name'          => __( 'Log In', 'it-l10n-ithemes-exchange' ),
 		'rewrite-rules' => array( 110, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
-		'settings-name' => __( 'Customer Log In', 'LION' ),
+		'settings-name' => __( 'Customer Log In', 'it-l10n-ithemes-exchange' ),
 		'type'          => 'exchange',
 		'menu'          => true,
 		'optional'      => true,
@@ -513,10 +513,10 @@ function it_exchange_register_core_pages() {
 	// Log Out
 	$options = array(
 		'slug'          => 'log-out',
-		'name'          => __( 'Log Out', 'LION' ),
+		'name'          => __( 'Log Out', 'it-l10n-ithemes-exchange' ),
 		'rewrite-rules' => array( 115, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
-		'settings-name' => __( 'Customer Log Out', 'LION' ),
+		'settings-name' => __( 'Customer Log Out', 'it-l10n-ithemes-exchange' ),
 		'type'          => 'exchange',
 		'menu'          => true,
 		'optional'      => true,
@@ -526,10 +526,10 @@ function it_exchange_register_core_pages() {
 	// Confirmation
 	$options = array(
 		'slug'          => 'confirmation',
-		'name'          => __( 'Thank you', 'LION' ),
+		'name'          => __( 'Thank you', 'it-l10n-ithemes-exchange' ),
 		'rewrite-rules' => array( 205, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
-		'settings-name' => __( 'Purchase Confirmation', 'LION' ),
+		'settings-name' => __( 'Purchase Confirmation', 'it-l10n-ithemes-exchange' ),
 		'type'          => 'exchange',
 		'menu'          => false,
 		'optional'      => false,
@@ -878,9 +878,9 @@ add_action( 'it_exchange_add_on_enabled', 'it_exchange_clear_sessions_when_multi
 function it_exchange_register_default_purchase_requirements() {
 
 	// Link vars
-	$login      = __( 'Log in', 'LION' );
-	$register   = __( 'register', 'LION' );
-	$cart       = __( 'edit your cart', 'LION' );
+	$login      = __( 'Log in', 'it-l10n-ithemes-exchange' );
+	$register   = __( 'register', 'it-l10n-ithemes-exchange' );
+	$cart       = __( 'edit your cart', 'it-l10n-ithemes-exchange' );
 	$login_link = '<a href="' . it_exchange_get_page_url( 'login' ) . '" class="it-exchange-login-requirement-login">';
 	$reg_link   = '<a href="' . it_exchange_get_page_url( 'registration' ) . '" class="it-exchange-login-requirement-registration">';
 	$cart_link  = '<a href="' . it_exchange_get_page_url( 'cart' ) . '">';
@@ -892,7 +892,7 @@ function it_exchange_register_default_purchase_requirements() {
 		'requirement-met'        => 'is_user_logged_in',
 		'sw-template-part'       => it_exchange_get_default_sw_checkout_mode(), //apply_filters( 'it_exchange_sw_template_part_for_logged_in_purchase_requirement', 'registration' ),
 		'checkout-template-part' => 'logged-in', //apply_filters( 'it_exchange_checkout_template_part_for_logged_in_purchase_requirement', 'logged-in' ),
-		'notification'           => sprintf( __( 'You must be logged in to complete your purchase. %s' . $login . '%s, %s' . $register . '%s or %s' . $cart . '%s', 'LION' ), $login_link, $close_link, $reg_link, $close_link, $cart_link, $close_link ),
+		'notification'           => sprintf( __( 'You must be logged in to complete your purchase. %s' . $login . '%s, %s' . $register . '%s or %s' . $cart . '%s', 'it-l10n-ithemes-exchange' ), $login_link, $close_link, $reg_link, $close_link, $cart_link, $close_link ),
 	);
 	it_exchange_register_purchase_requirement( 'logged-in', $properties );
 
@@ -902,7 +902,7 @@ function it_exchange_register_default_purchase_requirements() {
 		'requirement-met'        => 'it_exchange_get_customer_billing_address',
 		'sw-template-part'       => apply_filters( 'it_exchange_sw_template_part_for_logged_in_purchase_requirement', 'billing-address' ),
 		'checkout-template-part' => 'billing-address',
-		'notification'           => __( 'We need a billing address before you can checkout', 'LION' ),
+		'notification'           => __( 'We need a billing address before you can checkout', 'it-l10n-ithemes-exchange' ),
 	);
 	// Only init the billing address if an add-on asks for it
 	if ( apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) )
@@ -1263,7 +1263,7 @@ function it_exchange_block_attachments() {
 	if ( empty( $results ) )
 		return;
 
-	wp_die( __( 'You do not have permission to view this file.', 'LION' ), __( 'Error', 'LION' ), array( 'response' => 403, 'back_link' => true ) );
+	wp_die( __( 'You do not have permission to view this file.', 'it-l10n-ithemes-exchange' ), __( 'Error', 'it-l10n-ithemes-exchange' ), array( 'response' => 403, 'back_link' => true ) );
 }
 add_action( 'template_redirect', 'it_exchange_block_attachments' );
 

@@ -22,7 +22,7 @@ function it_exchange_zero_sum_checkout_addon_process_transaction( $status, $tran
 
 	// Verify nonce
 	if ( ! empty( $_REQUEST['_zero_sum_checkout_nonce'] ) && ! wp_verify_nonce( $_REQUEST['_zero_sum_checkout_nonce'], 'zero-sum-checkout-checkout' ) ) {
-		it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'it-l10n-ithemes-exchange' ) );
 		return false;
 	} else {
 		$uniqid = it_exchange_get_zero_sum_checkout_transaction_uniqid();
@@ -193,12 +193,12 @@ function it_exchange_zero_sum_checkout_after_payment_details_cancel_url( $transa
 	
 					case false: //active
 					case '':
-						$output = '<a href="' . add_query_arg( 'zero-sum-recurring-payment', 'cancel' ) . '">' . __( 'Cancel Recurring Payment', 'LION' ) . '</a>';
+						$output = '<a href="' . add_query_arg( 'zero-sum-recurring-payment', 'cancel' ) . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . '</a>';
 						break;
 	
 					case 'deactivated':
 					default:
-						$output = __( 'Recurring payment has been deactivated', 'LION' );
+						$output = __( 'Recurring payment has been deactivated', 'it-l10n-ithemes-exchange' );
 						break;
 	
 				}

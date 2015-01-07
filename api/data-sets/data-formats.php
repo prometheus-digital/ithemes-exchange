@@ -37,8 +37,8 @@ function it_exchange_get_address_formats( $options=array() ) {
 */
 function it_exchange_get_measurement_formats( $options=array() ) {
 	$formats = array(
-		'standard' => __( 'Standard', 'LION' ),
-		'metric'   => __( 'Metric', 'LION' ),
+		'standard' => __( 'Standard', 'it-l10n-ithemes-exchange' ),
+		'metric'   => __( 'Metric', 'it-l10n-ithemes-exchange' ),
 	);
 
 	$formats = apply_filters( 'it_exchange_get_measurement_formats', $formats );

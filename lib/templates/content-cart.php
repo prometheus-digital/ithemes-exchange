@@ -38,7 +38,7 @@
 		<?php do_action( 'it_exchange_cart_end' ); ?>
 	<?php else : ?>
 		<?php do_action( 'it_exchange_empty_cart_start' ); ?>
-			<p><?php _e( 'There are no items in your cart', 'LION' ); ?></p>
+			<p><?php _e( 'There are no items in your cart', 'it-l10n-ithemes-exchange' ); ?></p>
 		<?php do_action( 'it_exchange_empty_cart_end' ); ?>
 	<?php endif; ?>
 </div>

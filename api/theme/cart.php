@@ -148,7 +148,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			'after'  => '',
 			'class'  => 'it-exchange-update-cart',
 			'format' => 'button',
-			'label'  => __( 'Update Cart', 'LION' ),
+			'label'  => __( 'Update Cart', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -179,7 +179,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			'after'  => '',
 			'class'  => false,
 			'format' => 'button',
-			'label'  => __( 'Checkout', 'LION' ),
+			'label'  => __( 'Checkout', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -232,7 +232,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			'after'  => '',
 			'class'  => false,
 			'format' => 'button',
-			'label'  => __( 'View Cart', 'LION' ),
+			'label'  => __( 'View Cart', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -278,7 +278,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			'class'  => 'it-exchange-empty-cart',
 			'format' => 'button',
 			'title'  => 'Empty Cart',
-			'label'  => __( 'Empty Cart', 'LION' ),
+			'label'  => __( 'Empty Cart', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -322,8 +322,8 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			'after'  => '',
 			'class'  => 'it-exchange-continue-shopping',
 			'format' => 'button',
-			'title'  => __( 'Continue Shopping', 'LION' ),
-			'label'  => __( 'Continue Shopping', 'LION' ),
+			'title'  => __( 'Continue Shopping', 'it-l10n-ithemes-exchange' ),
+			'label'  => __( 'Continue Shopping', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = wp_parse_args( $options, $defaults );
 

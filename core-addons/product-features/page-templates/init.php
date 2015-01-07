@@ -98,7 +98,7 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-page-template', __( 'Page Template', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_advanced' );
+		add_meta_box( 'it-exchange-product-page-template', __( 'Page Template', 'it-l10n-ithemes-exchange' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_advanced' );
 	}
 
 	/**
@@ -112,12 +112,12 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 		$template = get_post_meta( $post->ID, '_wp_page_template', true );
 		?>
 		<p><strong><?php _e( 'Template' ) ?></strong></p>
-		<p><?php _e( 'This option will allow you to override the default WordPress template used for this product.', 'LION' ); ?> <span class="tip" title="<?php esc_attr_e( __( 'Exchange uses page.php as it\'s default when no custom Exchange Templates are available. Page templates for Exchange products need to include a call to the_content() or use Exchange Theme API functions to display correctly.', 'LION' ) ); ?>">i</span></p>
+		<p><?php _e( 'This option will allow you to override the default WordPress template used for this product.', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php esc_attr_e( __( 'Exchange uses page.php as it\'s default when no custom Exchange Templates are available. Page templates for Exchange products need to include a call to the_content() or use Exchange Theme API functions to display correctly.', 'it-l10n-ithemes-exchange' ) ); ?>">i</span></p>
 		<label class="screen-reader-text" for="page_template"><?php _e( 'Page Template' ) ?></label>
 		<select name="it-exchange-page-template" id="it-exchange-page-template">
 			<option value='default'><?php _e(' Default Template' ); ?></option>
 			<?php page_template_dropdown( $template ); ?>
-		</select> <span class="tip" title="<?php esc_attr_e( __( 'These options are generated from alternative page templates included with your current theme.', 'LION' ) ); ?>">i</span>
+		</select> <span class="tip" title="<?php esc_attr_e( __( 'These options are generated from alternative page templates included with your current theme.', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
 		<?php
 		}
 	}

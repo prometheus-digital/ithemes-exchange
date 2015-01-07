@@ -46,7 +46,7 @@
                     <?php if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ): ?>
                         <div class="cart-discount">
                             <?php while( it_exchange( 'coupons', 'applied', array( 'type' => 'cart' ) ) ) : ?>
-                                <?php it_exchange( 'coupons', 'discount-label' ); ?> <?php _e( 'OFF', 'LION' ); ?> &#61; <?php it_exchange( 'cart', 'total' ); ?>
+                                <?php it_exchange( 'coupons', 'discount-label' ); ?> <?php _e( 'OFF', 'it-l10n-ithemes-exchange' ); ?> &#61; <?php it_exchange( 'cart', 'total' ); ?>
                             <?php endwhile; ?>
                         </div>
                     <?php endif; ?>
@@ -67,13 +67,13 @@
                         <?php if ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) ) : ?>
                             <div class="coupon">
                                 <?php it_exchange( 'coupons', 'apply', array( 'type' => 'cart' ) ); ?>
-                                <?php it_exchange( 'cart', 'update', array( 'class' => 'it-exchange-apply-coupon-button', 'label' => __( 'Apply', 'LION' ) ) ); ?>
+                                <?php it_exchange( 'cart', 'update', array( 'class' => 'it-exchange-apply-coupon-button', 'label' => __( 'Apply', 'it-l10n-ithemes-exchange' ) ) ); ?>
                             </div>
                         <?php endif; ?>
 
                         <div class="cart-actions-wrapper">
                             <div class="cart-action cancel-update">
-                            <?php it_exchange( 'cart', 'checkout', array( 'class' => 'sw-cart-focus-checkout', 'focus' => 'checkout', 'label' =>  __( 'Cancel', 'LION' ) ) ); ?>
+                            <?php it_exchange( 'cart', 'checkout', array( 'class' => 'sw-cart-focus-checkout', 'focus' => 'checkout', 'label' =>  __( 'Cancel', 'it-l10n-ithemes-exchange' ) ) ); ?>
                             </div>
                         </div>
                     </div>
@@ -82,7 +82,7 @@
                 <?php if ( it_exchange( 'cart', 'focus', 'type=quantity' ) ) : ?>
                     <div class="cart-actions-wrapper">
                         <div class="cart-action cancel-update">
-                        <?php it_exchange( 'cart', 'update', 'class=it-exchange-update-quantity-button&label=' . __( 'Update Quantity', 'LION' ) ); ?>
+                        <?php it_exchange( 'cart', 'update', 'class=it-exchange-update-quantity-button&label=' . __( 'Update Quantity', 'it-l10n-ithemes-exchange' ) ); ?>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -103,9 +103,9 @@
                 <?php $count = it_exchange( 'cart', 'get-item-count' ); ?>
                 <div class="item-count">
                     <?php if ( $count === 1 ) : ?>
-                        <?php printf( __( 'You have 1 item in your <a href="%s">%s</a>', 'LION' ), it_exchange_get_page_url( 'cart' ), strtolower( it_exchange_get_page_name( 'cart' ) ) ); ?>
+                        <?php printf( __( 'You have 1 item in your <a href="%s">%s</a>', 'it-l10n-ithemes-exchange' ), it_exchange_get_page_url( 'cart' ), strtolower( it_exchange_get_page_name( 'cart' ) ) ); ?>
                     <?php else : ?>
-                        <?php printf( __( 'You have %s items in your <a href="%s">%s</a>', 'LION' ), $count, it_exchange_get_page_url( 'cart' ), strtolower( it_exchange_get_page_name( 'cart' ) ) ); ?>
+                        <?php printf( __( 'You have %s items in your <a href="%s">%s</a>', 'it-l10n-ithemes-exchange' ), $count, it_exchange_get_page_url( 'cart' ), strtolower( it_exchange_get_page_name( 'cart' ) ) ); ?>
                     <?php endif; ?>
                 </div>
             <?php else : ?>
@@ -114,7 +114,7 @@
 		<?php endif; ?>
 	<?php elseif ( ! it_exchange_is_page( 'product' ) ) : ?>
 		<div class="empty-cart">
-            <p><?php _e( 'Your cart is empty', 'LION' ); ?></p>
+            <p><?php _e( 'Your cart is empty', 'it-l10n-ithemes-exchange' ); ?></p>
 		</div>
 	<?php endif; ?>
 </div>

@@ -192,7 +192,7 @@ function handle_it_exchange_save_profile_action() {
 		if ( is_wp_error( $result ) ) {
 			it_exchange_add_message( 'error', $result->get_error_message() );
 		} else {
-			it_exchange_add_message( 'notice', __( 'Successfully saved profile!', 'LION' ) );
+			it_exchange_add_message( 'notice', __( 'Successfully saved profile!', 'it-l10n-ithemes-exchange' ) );
 		}
 
 		do_action( 'handle_it_exchange_save_profile_action' );
@@ -213,11 +213,11 @@ add_action( 'template_redirect', 'handle_it_exchange_save_profile_action', 5 );
 function it_exchange_register_user( $user_data=array() ) {
 
 	if ( empty( $_POST['_exchange_register_nonce'] ) ) {
-		return new WP_Error( 'not-allowed', __( 'Action not allowed', 'LION' ) );;
+		return new WP_Error( 'not-allowed', __( 'Action not allowed', 'it-l10n-ithemes-exchange' ) );;
 	}
 
 	if ( ! wp_verify_nonce( $_POST['_exchange_register_nonce'], 'it-exchange-register-customer' ) ) {
-		return new WP_Error( 'not-allowed', __( 'Action not allowed', 'LION' ) );
+		return new WP_Error( 'not-allowed', __( 'Action not allowed', 'it-l10n-ithemes-exchange' ) );
 	}
 
 	// Include WP file

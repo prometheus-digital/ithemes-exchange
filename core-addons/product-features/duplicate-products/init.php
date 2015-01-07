@@ -35,7 +35,7 @@ function it_exchange_duplicate_product_addon_add_duplicate_product_function( $ac
 
 		$url = it_exchange_duplicate_product_addon_get_duplicating_url( $post );
 
-		$actions['it_exchange_duplicate'] =  '<a class="duplicate_product_it_exchange_product" id="' . $post->ID . '" title="' . __( 'Duplicate Exchange Products', 'LION' ) . '" href="' . $url . '">Duplicate</a>';
+		$actions['it_exchange_duplicate'] =  '<a class="duplicate_product_it_exchange_product" id="' . $post->ID . '" title="' . __( 'Duplicate Exchange Products', 'it-l10n-ithemes-exchange' ) . '" href="' . $url . '">Duplicate</a>';
 
 	}
 
@@ -84,7 +84,7 @@ function it_exchange_duplicate_product_addon_default_product_title( $post_title,
 
 		$duplicate_product_post = get_post( $duplicate_product_post_id );
 
-		$post_title = $duplicate_product_post->post_title . ' - ' . __( 'copy', 'LION' );
+		$post_title = $duplicate_product_post->post_title . ' - ' . __( 'copy', 'it-l10n-ithemes-exchange' );
 
 	}
 

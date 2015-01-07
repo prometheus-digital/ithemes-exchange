@@ -8,7 +8,7 @@
 */
 function it_exchange_addon_simple_shipping_register_shipping_provider() {
     $options = array(
-        'label'            => __( 'Simple Shipping', 'LION' ),
+        'label'            => __( 'Simple Shipping', 'it-l10n-ithemes-exchange' ),
         'shipping-methods' => array(
             'exchange-flat-rate-shipping',
             'exchange-free-shipping',

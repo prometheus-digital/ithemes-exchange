@@ -18,7 +18,7 @@
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_links_before_login_element' ); ?>
 <div class="<?php echo ! it_exchange_is_checkout_mode( 'login' ) ? '' : 'it-exchange-hidden'; ?> it-exchange-content-checkout-logged-in-purchase-requirement-login-link it-exchange-logged-in-purchase-requirement-link-div">
 	<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_links_begin_login_element' ); ?>
-	<a class="it-exchange-login-requirement-login it-exchange-button" href="<?php echo it_exchange_get_page_url( 'login' ); ?>"><input type="button" value="<?php _e( 'Log in', 'LION' ); ?>" /></a>
+	<a class="it-exchange-login-requirement-login it-exchange-button" href="<?php echo it_exchange_get_page_url( 'login' ); ?>"><input type="button" value="<?php _e( 'Log in', 'it-l10n-ithemes-exchange' ); ?>" /></a>
 	<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_links_end_login_element' ); ?>
 </div>
 <?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_links_after_login_element' ); ?>

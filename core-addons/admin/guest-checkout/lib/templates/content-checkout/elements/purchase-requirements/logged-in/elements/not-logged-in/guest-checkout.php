@@ -19,7 +19,7 @@
 <div class="<?php echo it_exchange_is_checkout_mode( 'guest-checkout' ) ? '' : 'it-exchange-hidden'; ?> checkout-purchase-requirement-guest-checkout">
 	<?php do_action( 'it_exchange_content_checkout_logged_in_purchase_requirement_not_logged_in_begin_guest_checkout_element' ); ?>
 	<div class="it-exchange-guest-checkout-form-wrapper it-exchange-clearfix">
-		<h3><?php _e( 'Check out as guest', 'LION' ); ?></h3>
+		<h3><?php _e( 'Check out as guest', 'it-l10n-ithemes-exchange' ); ?></h3>
 		<?php do_action( 'it_exchange_content_checkout_logged_in_checkout_requirement_guest_checkout_before_form' ); ?>
 		<form action="" method="post" >
 			<?php

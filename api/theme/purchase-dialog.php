@@ -77,7 +77,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	function cc_first_name( $options=array() ) {
 		$defaults      = array(
 			'format'      => 'html',
-			'label'       => __( 'Name on Card', 'LION' ),
+			'label'       => __( 'Name on Card', 'it-l10n-ithemes-exchange' ),
 			'placeholder' => '',
 			'required'    => (boolean) in_array( 'first-name', $this->_required_fields ),
 		);
@@ -98,7 +98,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	function cc_last_name( $options=array() ) {
 		$defaults      = array(
 			'format'      => 'html',
-			'label'       => __( 'Last Name on card', 'LION' ),
+			'label'       => __( 'Last Name on card', 'it-l10n-ithemes-exchange' ),
 			'placeholder' => '',
 			'required'    => (boolean) in_array( 'last-name', $this->_required_fields ),
 		);
@@ -119,7 +119,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	function cc_number( $options=array() ) {
 		$defaults      = array(
 			'format'      => 'html',
-			'label'       => __( 'Card Number', 'LION' ),
+			'label'       => __( 'Card Number', 'it-l10n-ithemes-exchange' ),
 			'placeholder' => '',
 			'required'    => (boolean) in_array( 'number', $this->_required_fields ),
 		);
@@ -140,7 +140,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	function cc_expiration_month_year( $options=array() ) {
 		$defaults      = array(
 			'format'      => 'html',
-			'label'       => __( 'Expiration Date', 'LION' ),
+			'label'       => __( 'Expiration Date', 'it-l10n-ithemes-exchange' ),
 			'placeholder' => '',
 			'required'    => (boolean) in_array( 'expiration-month-year', $this->_required_fields ),
 		);
@@ -161,7 +161,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	function cc_expiration_month( $options=array() ) {
 		$defaults      = array(
 			'format'      => 'html',
-			'label'       => __( 'Expiration Month', 'LION' ),
+			'label'       => __( 'Expiration Month', 'it-l10n-ithemes-exchange' ),
 			'placeholder' => '',
 			'required'    => (boolean) in_array( 'expiration-month', $this->_required_fields ),
 		);
@@ -182,7 +182,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	function cc_expiration_year( $options=array() ) {
 		$defaults      = array(
 			'format'      => 'html',
-			'label'       => __( 'Expiration Year', 'LION' ),
+			'label'       => __( 'Expiration Year', 'it-l10n-ithemes-exchange' ),
 			'placeholder' => '',
 			'required'    => (boolean) in_array( 'expiration-year', $this->_required_fields ),
 		);
@@ -203,7 +203,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	function cc_code( $options=array() ) {
 		$defaults = array(
 			'format'      => 'html',
-			'label'       => __( 'CVC Code', 'LION' ),
+			'label'       => __( 'CVC Code', 'it-l10n-ithemes-exchange' ),
 			'placeholder' => '',
 			'required'    => (boolean) in_array( 'code', $this->_required_fields ),
 		);
@@ -224,7 +224,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	function fields( $options=array() ) {
 		$defaults      = array(
 			'format' => 'html',
-			'label'  => __( 'Fields', 'LION' ),
+			'label'  => __( 'Fields', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 

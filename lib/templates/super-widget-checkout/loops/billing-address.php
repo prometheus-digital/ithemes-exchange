@@ -16,7 +16,7 @@
 <?php do_action( 'it_exchange_super_widget_checkout_before_billing_address_existing_element' ); ?>
 <div class="cart-billing-address-existing cart-totals-row">
 	<?php do_action( 'it_exchange_super_widget_checkout_begin_billing_address_existing_element' ); ?>
-	<strong><?php _e( 'Billing Address:', 'LION' ); ?></strong> <a href="" class="it-exchange-sw-edit-billing-address"><?php _e( 'Edit', 'LION' ); ?></a><br/>
+	<strong><?php _e( 'Billing Address:', 'it-l10n-ithemes-exchange' ); ?></strong> <a href="" class="it-exchange-sw-edit-billing-address"><?php _e( 'Edit', 'it-l10n-ithemes-exchange' ); ?></a><br/>
 	<?php echo it_exchange_get_formatted_billing_address(); ?><br />
 	<?php do_action( 'it_exchange_super_widget_checkout_end_billing_address_existing_element' ); ?>
 </div>

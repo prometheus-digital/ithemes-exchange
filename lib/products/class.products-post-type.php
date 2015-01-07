@@ -109,14 +109,14 @@ class IT_Exchange_Product_Post_Type {
 	function init() {
 		$this->post_type = 'it_exchange_prod';
 		$labels    = array(
-			'name'          => __( 'Products', 'LION' ),
-			'singular_name' => __( 'Product', 'LION' ),
-			'edit_item'     => __( 'Edit Product', 'LION' ),
-			'view_item'     => __( 'View Product', 'LION' ),
+			'name'          => __( 'Products', 'it-l10n-ithemes-exchange' ),
+			'singular_name' => __( 'Product', 'it-l10n-ithemes-exchange' ),
+			'edit_item'     => __( 'Edit Product', 'it-l10n-ithemes-exchange' ),
+			'view_item'     => __( 'View Product', 'it-l10n-ithemes-exchange' ),
 		);
 		$this->options = array(
 			'labels' => $labels,
-			'description' => __( 'An iThemes Exchange Post Type for storing all Products in the system', 'LION' ),
+			'description' => __( 'An iThemes Exchange Post Type for storing all Products in the system', 'it-l10n-ithemes-exchange' ),
 			'public'      => true,
 			'show_ui'     => true,
 			'show_in_nav_menus' => true,
@@ -242,12 +242,12 @@ class IT_Exchange_Product_Post_Type {
 						<?php
 							if ( 'publish' == $post->post_status ) {
 								$preview_link = esc_url( apply_filters( 'it_exchange_view_product_button_link', get_permalink( $post->ID ), $post ) );
-								$preview_button = apply_filters( 'it_exchange_view_product_button_label', __( 'View Product', 'LION' ), $post );
+								$preview_button = apply_filters( 'it_exchange_view_product_button_label', __( 'View Product', 'it-l10n-ithemes-exchange' ), $post );
 								$preview_id = 'post-view';
 							} else {
 								$preview_link = set_url_scheme( get_permalink( $post->ID ) );
 								$preview_link = esc_url( apply_filters( 'it_exchange_preview_product_button_link', apply_filters( 'preview_post_link', add_query_arg( 'preview', 'true', $preview_link ) ), $post ) );
-								$preview_button = apply_filters( 'it_exchange_preview_product_button_label', __( 'Preview Product', 'LION' ), $post );
+								$preview_button = apply_filters( 'it_exchange_preview_product_button_label', __( 'Preview Product', 'it-l10n-ithemes-exchange' ), $post );
 								$preview_id = 'post-preview';
 							}
 						?>
@@ -278,7 +278,7 @@ class IT_Exchange_Product_Post_Type {
 			</div>
 			<div class="modifying-actions">
 				<div id="advanced-action">
-					<a class="advanced-status-option-link advanced-hidden" href data-hidden="<?php _e( 'Show Advanced', 'LION' ); ?>" data-visible="<?php _e( 'Hide Advanced', 'LION' ); ?>"><?php _e( 'Show Advanced', 'LION' ); ?></a>
+					<a class="advanced-status-option-link advanced-hidden" href data-hidden="<?php _e( 'Show Advanced', 'it-l10n-ithemes-exchange' ); ?>" data-visible="<?php _e( 'Hide Advanced', 'it-l10n-ithemes-exchange' ); ?>"><?php _e( 'Show Advanced', 'it-l10n-ithemes-exchange' ); ?></a>
 				</div>
 				<div id="delete-action">
 					<?php if ( current_user_can( "delete_post", $post->ID ) ) : ?>
@@ -319,16 +319,16 @@ class IT_Exchange_Product_Post_Type {
 							?>
 						</span>
 						<?php if ( 'publish' == $post->post_status || 'private' == $post->post_status || $can_publish ) : ?>
-							<a href="#post_status" <?php if ( 'private' == $post->post_status ) { ?>style="display:none;" <?php } ?>class="edit-post-status hide-if-no-js"><?php _e( 'Edit', 'LION' ) ?></a>
+							<a href="#post_status" <?php if ( 'private' == $post->post_status ) { ?>style="display:none;" <?php } ?>class="edit-post-status hide-if-no-js"><?php _e( 'Edit', 'it-l10n-ithemes-exchange' ) ?></a>
 							<div id="post-status-select" class="hide-if-js">
 								<input type="hidden" name="hidden_post_status" id="hidden_post_status" value="<?php echo esc_attr( ('auto-draft' == $post->post_status ) ? 'draft' : $post->post_status); ?>" />
 								<select name='post_status' id='post_status'>
 									<?php if ( 'publish' == $post->post_status ) : ?>
-										<option<?php selected( $post->post_status, 'publish' ); ?> value='publish'><?php _e( 'Published', 'LION' ); ?></option>
+										<option<?php selected( $post->post_status, 'publish' ); ?> value='publish'><?php _e( 'Published', 'it-l10n-ithemes-exchange' ); ?></option>
 									<?php endif; ?>
-										<option<?php selected( $post->post_status, 'pending' ); ?> value='pending'><?php _e( 'Pending Review', 'LION' ); ?></option>
+										<option<?php selected( $post->post_status, 'pending' ); ?> value='pending'><?php _e( 'Pending Review', 'it-l10n-ithemes-exchange' ); ?></option>
 									<?php if ( 'auto-draft' == $post->post_status ) : ?>
-										<option<?php selected( $post->post_status, 'auto-draft' ); ?> value='draft'><?php _e( 'Draft', 'LION' ); ?></option>
+										<option<?php selected( $post->post_status, 'auto-draft' ); ?> value='draft'><?php _e( 'Draft', 'it-l10n-ithemes-exchange' ); ?></option>
 									<?php else : ?>
 										<option<?php selected( $post->post_status, 'draft' ); ?> value='draft'><?php _e('Draft') ?></option>
 									<?php endif; ?>
@@ -340,16 +340,16 @@ class IT_Exchange_Product_Post_Type {
 					</div>
 
 					<div class="misc-pub-section">
-						<label for="visibility"><?php _e( 'Visibility:', 'LION' ) ?></label>
+						<label for="visibility"><?php _e( 'Visibility:', 'it-l10n-ithemes-exchange' ) ?></label>
 						<span id="product-visibility-display">
 							<?php
 								switch ( $product_visibility ) {
 									case 'hidden':
-										_e( 'Hide from Store', 'LION' );
+										_e( 'Hide from Store', 'it-l10n-ithemes-exchange' );
 										break;
 									case 'visible':
 									default:
-										_e( 'Show in Store', 'LION' );
+										_e( 'Show in Store', 'it-l10n-ithemes-exchange' );
 										break;
 								}
 							?>
@@ -359,8 +359,8 @@ class IT_Exchange_Product_Post_Type {
 							<div id="product-visibility-select" class="hide-if-js">
 								<input type="hidden" name="hidden_it-exchange-visibility" id="hidden_it-exchange-visibility" value="<?php echo esc_attr( ('hidden' == $post->post_status ) ? 'hidden' : $product_visibility); ?>" />
 								<select name='it-exchange-visibility' id='it-exchange-visibility'>
-										<option<?php selected( $product_visibility, 'visible' ); ?> value='visible'><?php _e( 'Show in Store', 'LION' ) ?></option>
-										<option<?php selected( $product_visibility, 'hidden' ); ?> value='hidden'><?php _e( 'Hide from Store', 'LION' ) ?></option>
+										<option<?php selected( $product_visibility, 'visible' ); ?> value='visible'><?php _e( 'Show in Store', 'it-l10n-ithemes-exchange' ) ?></option>
+										<option<?php selected( $product_visibility, 'hidden' ); ?> value='hidden'><?php _e( 'Hide from Store', 'it-l10n-ithemes-exchange' ) ?></option>
 								</select>
 								<a href="#product_visibility" class="save-product_visibility hide-if-no-js button"><?php _e('OK'); ?></a>
 								<a href="#product_visibility" class="cancel-product_visibility hide-if-no-js"><?php _e('Cancel'); ?></a>
@@ -402,7 +402,7 @@ class IT_Exchange_Product_Post_Type {
 	function set_add_new_item_label() {
 		global $pagenow, $wp_post_types;
 		if ( $pagenow != 'post-new.php' || empty( $_GET['post_type'] ) || 'it_exchange_prod' != $_GET['post_type'] )
-			return apply_filters( 'it_exchange_add_new_product_label', __( 'Add New Product', 'LION' ) );
+			return apply_filters( 'it_exchange_add_new_product_label', __( 'Add New Product', 'it-l10n-ithemes-exchange' ) );
 
 		if ( empty( $wp_post_types['it_exchange_prod'] ) )
 			return;
@@ -422,7 +422,7 @@ class IT_Exchange_Product_Post_Type {
 
 		}
 		$singular = empty( $product['options']['labels']['singular_name'] ) ? $product['name'] : $product['options']['labels']['singular_name'];
-		$label = apply_filters( 'it_exchange_add_new_product_label_' . $product['slug'], __( 'Add New ', 'LION' ) . $singular );
+		$label = apply_filters( 'it_exchange_add_new_product_label_' . $product['slug'], __( 'Add New ', 'it-l10n-ithemes-exchange' ) . $singular );
 		$wp_post_types['it_exchange_prod']->labels->add_new_item = $label;
 	}
 
@@ -464,7 +464,7 @@ class IT_Exchange_Product_Post_Type {
 		}
 
 		$singular = empty( $product['options']['labels']['singular_name'] ) ? $product['name'] : $product['options']['labels']['singular_name'];
-		$label = apply_filters( 'it_exchange_edit_product_label_' . $product['slug'], __( 'Edit ', 'LION' ) . $singular );
+		$label = apply_filters( 'it_exchange_edit_product_label_' . $product['slug'], __( 'Edit ', 'it-l10n-ithemes-exchange' ) . $singular );
 		$wp_post_types['it_exchange_prod']->labels->edit_item = $label;
 	}
 
@@ -581,14 +581,14 @@ class IT_Exchange_Product_Post_Type {
 	function it_exchange_product_columns( $existing ) {
 		add_filter( 'the_excerpt', array( $this, 'replace_excerpt_in_products_table_with_description' ) );
 		$columns['cb']                                = '<input type="checkbox" />';
-		$columns['title']                             = __( 'Title', 'LION' );
-		$columns['it_exchange_product_price']         = __( 'Price', 'LION' );
-		$columns['it_exchange_product_show_in_store'] = __( 'Show in Store', 'LION' );
-		$columns['it_exchange_product_inventory']     = __( 'Inventory', 'LION' );
-		$columns['it_exchange_product_purchases']     = __( 'Purchases', 'LION' );
+		$columns['title']                             = __( 'Title', 'it-l10n-ithemes-exchange' );
+		$columns['it_exchange_product_price']         = __( 'Price', 'it-l10n-ithemes-exchange' );
+		$columns['it_exchange_product_show_in_store'] = __( 'Show in Store', 'it-l10n-ithemes-exchange' );
+		$columns['it_exchange_product_inventory']     = __( 'Inventory', 'it-l10n-ithemes-exchange' );
+		$columns['it_exchange_product_purchases']     = __( 'Purchases', 'it-l10n-ithemes-exchange' );
 
 		if ( 1 < count( it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ) )
-			$columns['it_exchange_product_type']          = __( 'Product Type', 'LION' );
+			$columns['it_exchange_product_type']          = __( 'Product Type', 'it-l10n-ithemes-exchange' );
 
 		return $columns;
 	}
@@ -729,7 +729,7 @@ class IT_Exchange_Product_Post_Type {
 	*/
 	function replace_core_slug_metabox() {
 		remove_meta_box( 'slugdiv', 'it_exchange_prod', 'it_exchange_advanced', 'low' );
-		add_meta_box( 'slugdiv', __( 'Product Slug', 'LION' ), array( $this, 'post_slug_meta_box' ), 'it_exchange_prod', 'it_exchange_advanced', 'low' );
+		add_meta_box( 'slugdiv', __( 'Product Slug', 'it-l10n-ithemes-exchange' ), array( $this, 'post_slug_meta_box' ), 'it_exchange_prod', 'it_exchange_advanced', 'low' );
 	}
 	/**
 	 * Modifed version of slugmetabox with description
@@ -741,7 +741,7 @@ class IT_Exchange_Product_Post_Type {
 	function post_slug_meta_box( $post ) {
 		?>
 		<label class="" for="post_name">
-			<?php _e( 'Product Slug', 'LION' ); ?> <span class="tip" title="<?php _e( 'This is the final part of the product\'s URL. WordPress will auto-create it for you.', 'LION' ); ?>">i</span>
+			<?php _e( 'Product Slug', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'This is the final part of the product\'s URL. WordPress will auto-create it for you.', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 		</label>
 		<input name="post_name" type="text" size="13" id="post_name" value="<?php echo esc_attr( apply_filters('editable_slug', $post->post_name) ); ?>" />
 		<?php
@@ -766,9 +766,9 @@ class IT_Exchange_Product_Post_Type {
 		$product_type        = current( $product_types );
 		$sample_product_type = empty( $product_type['slug'] ) ? 'digital-downloads-product-type' : $product_type['slug'];
 
-		$title       = __( 'My Sample Product', 'LION' );
+		$title       = __( 'My Sample Product', 'it-l10n-ithemes-exchange' );
 		$price       = '1';
-		$description = __( 'A great product description includes the primary benefits, not just features or technical specs to your target market and core audience. It\'s probably about 3-4 sentences, if that, selling your product as the solution for your prospective customers. To help you, answer these questions: What problem does it solve? Who does it solve it for? And how is it different than other products out there?', 'LION' );
+		$description = __( 'A great product description includes the primary benefits, not just features or technical specs to your target market and core audience. It\'s probably about 3-4 sentences, if that, selling your product as the solution for your prospective customers. To help you, answer these questions: What problem does it solve? Who does it solve it for? And how is it different than other products out there?', 'it-l10n-ithemes-exchange' );
 		$extended    = __( '
 			This is your extended description. Use this area for a variety of information, like:
 			<ul>
@@ -787,7 +787,7 @@ class IT_Exchange_Product_Post_Type {
 			Then let WordPress resize them for output on your page. It\'s best to have a featured image (one big one that really displays your product) then have supplement images (if available) that buyers can click on to see more what you offer.
 
 			JPGs are typically best for photos. PNGs for other types of artwork.'
-		, 'LION' );
+		, 'it-l10n-ithemes-exchange' );
 
 		$args = array(
 			'type'                 => $sample_product_type,
@@ -798,9 +798,9 @@ class IT_Exchange_Product_Post_Type {
 			'base-price'           => $price,
             'extended-description' => $extended,
 			'images-from-urls'     => array(
-				ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/admin/images/sample-product-image-1.png' ) => __( 'Sample Image One', 'LION' ),
-				ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/admin/images/sample-product-image-2.png' ) => __( 'Sample Image Two', 'LION' ),
-				ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/admin/images/sample-product-image-3.png' ) =>  __( 'Sample Image Three', 'LION' ),
+				ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/admin/images/sample-product-image-1.png' ) => __( 'Sample Image One', 'it-l10n-ithemes-exchange' ),
+				ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/admin/images/sample-product-image-2.png' ) => __( 'Sample Image Two', 'it-l10n-ithemes-exchange' ),
+				ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/admin/images/sample-product-image-3.png' ) =>  __( 'Sample Image Three', 'it-l10n-ithemes-exchange' ),
 			),
 		);
 

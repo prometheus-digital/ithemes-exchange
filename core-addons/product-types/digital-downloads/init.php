@@ -131,7 +131,7 @@ class IT_Exchange_Digital_Downloads_Add_On {
 		?>
 		<div class="wrap">
 			<?php ITUtility::screen_icon( 'it-exchange' ); ?>
-			<h2><?php _e( 'Digital Downloads Settings', 'LION' ); ?></h2>
+			<h2><?php _e( 'Digital Downloads Settings', 'it-l10n-ithemes-exchange' ); ?></h2>
 
 			<?php do_action( 'it_exchange_digital_downloads_settings_page_top' ); ?>
 			<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
@@ -148,7 +148,7 @@ class IT_Exchange_Digital_Downloads_Add_On {
 				<div class="it-exchange-addon-settings it-exchange-digital-downloads-addon-settings">
 					<p>
 						<?php $form->add_check_box( 'require-user-login' ); ?>
-						<?php _e( 'Require users to log in before downloading their products?', 'LION' ); ?> <span class="tip" title="<?php _e( 'If unchecked, users can simply download their products using their download links', 'LION' ); ?>">i</span>
+						<?php _e( 'Require users to log in before downloading their products?', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'If unchecked, users can simply download their products using their download links', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 					</p>
 				</div>
 				<?php
@@ -156,7 +156,7 @@ class IT_Exchange_Digital_Downloads_Add_On {
 				do_action( 'it_exchange_digital_downloads_settings_form_bottom' );
 				?>
 				<p class="submit">
-					<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary button-large' ) ); ?>
+					<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'it-l10n-ithemes-exchange' ), 'class' => 'button button-primary button-large' ) ); ?>
 				</p>
 			<?php $form->end_form(); ?>
 			<?php do_action( 'it_exchange_digital_downloads_settings_page_bottom' ); ?>
@@ -177,18 +177,18 @@ class IT_Exchange_Digital_Downloads_Add_On {
 
 		// Check nonce
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'it-exchange-digitald-downloads-settings' ) ) {
-			$this->error_message = __( 'Error. Please try again', 'LION' );
+			$this->error_message = __( 'Error. Please try again', 'it-l10n-ithemes-exchange' );
 			return;
 		}
 
 		$errors = apply_filters( 'it_exchange_add_on_digital_downloads_validate_settings', $this->get_form_errors( $new_values ), $new_values );
 		if ( ! $errors && it_exchange_save_option( 'addon_digital_downloads', $new_values ) ) {
-			ITUtility::show_status_message( __( 'Settings saved.', 'LION' ) );
+			ITUtility::show_status_message( __( 'Settings saved.', 'it-l10n-ithemes-exchange' ) );
 		} else if ( $errors ) {
 			$errors = implode( '<br />', $errors );
 			$this->error_message = $errors;
 		} else {
-			$this->status_message = __( 'Settings not saved.', 'LION' );
+			$this->status_message = __( 'Settings not saved.', 'it-l10n-ithemes-exchange' );
 		}
 	}
 

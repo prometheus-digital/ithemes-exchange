@@ -17,21 +17,21 @@ if ( !function_exists( 'create_it_exchange_categories' ) ) {
 	function it_exchange_categories_addon_create() {
 
 		$labels = array(
-			'name'              => __( 'Product Categories', 'LION' ),
-			'singular_name'     => __( 'Product Category', 'LION' ),
-			'search_items'      => __( 'Search Product Categories', 'LION' ),
-			'all_items'         => __( 'All Product Categories', 'LION' ),
-			'parent_item'       => __( 'Parent Product Categories', 'LION' ),
-			'parent_item_colon' => __( 'Parent Product Categories:', 'LION' ),
-			'edit_item'         => __( 'Edit Product Categories', 'LION' ),
-			'update_item'       => __( 'Update Product Categories', 'LION' ),
-			'add_new_item'      => __( 'Add New Product Categories', 'LION' ),
+			'name'              => __( 'Product Categories', 'it-l10n-ithemes-exchange' ),
+			'singular_name'     => __( 'Product Category', 'it-l10n-ithemes-exchange' ),
+			'search_items'      => __( 'Search Product Categories', 'it-l10n-ithemes-exchange' ),
+			'all_items'         => __( 'All Product Categories', 'it-l10n-ithemes-exchange' ),
+			'parent_item'       => __( 'Parent Product Categories', 'it-l10n-ithemes-exchange' ),
+			'parent_item_colon' => __( 'Parent Product Categories:', 'it-l10n-ithemes-exchange' ),
+			'edit_item'         => __( 'Edit Product Categories', 'it-l10n-ithemes-exchange' ),
+			'update_item'       => __( 'Update Product Categories', 'it-l10n-ithemes-exchange' ),
+			'add_new_item'      => __( 'Add New Product Categories', 'it-l10n-ithemes-exchange' ),
 			'new_item_name'     => '', //leave blank
 		);
 
 		// A little hackery for admin --> appearances --> menues page
 		if ( is_admin() && ! empty( $GLOBALS['pagenow'] ) && 'nav-menus.php' == $GLOBALS['pagenow'] )
-			$labels['name'] = __( 'Exchange Categories', 'LION' );
+			$labels['name'] = __( 'Exchange Categories', 'it-l10n-ithemes-exchange' );
 
 		register_taxonomy(
 			'it_exchange_category',
@@ -81,7 +81,7 @@ if ( !function_exists( 'it_exchange_categories_addon_add_menu_item' ) ) {
 	*/
 	function it_exchange_categories_addon_add_menu_item() {
 		$url = "edit-tags.php?taxonomy=it_exchange_category&amp;post_type=it_exchange_prod";
-		add_submenu_page( 'it-exchange', __( 'Product Categories', 'LION' ), __( 'Product Categories', 'LION' ), 'manage_options', $url );
+		add_submenu_page( 'it-exchange', __( 'Product Categories', 'it-l10n-ithemes-exchange' ), __( 'Product Categories', 'it-l10n-ithemes-exchange' ), 'manage_options', $url );
 	}
 	add_action( 'admin_menu', 'it_exchange_categories_addon_add_menu_item' );
 

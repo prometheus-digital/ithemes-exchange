@@ -37,7 +37,7 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 		$product_feature_value = it_exchange_get_product_feature( $product->ID, 'inventory' );
 
 		// Set description
-		$description = __( 'Use this to set the product\'s current inventory number.', 'LION' );
+		$description = __( 'Use this to set the product\'s current inventory number.', 'it-l10n-ithemes-exchange' );
 		$description = apply_filters( 'it_exchange_product_inventory_metabox_description', $description );
 
 		?>
@@ -45,13 +45,13 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 				<p class="intro-description"><?php echo $description; ?></p>
 			<?php endif; ?>
 			<p>
-				<input type="checkbox" id="it-exchange-enable-product-inventory" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-inventory" <?php checked( 'yes', $product_feature_enable_value ); ?> /> <label for="it-exchange-enable-product-inventory"><?php _e( 'Enable Inventory Tracking for this Product', 'LION' ); ?></label><br />
+				<input type="checkbox" id="it-exchange-enable-product-inventory" class="it-exchange-checkbox-enable" name="it-exchange-enable-product-inventory" <?php checked( 'yes', $product_feature_enable_value ); ?> /> <label for="it-exchange-enable-product-inventory"><?php _e( 'Enable Inventory Tracking for this Product', 'it-l10n-ithemes-exchange' ); ?></label><br />
 			</p>
 			<div class="it-exchange-enable-product-inventory<?php echo ( $product_feature_enable_value == 'no' ) ? ' hide-if-js' : '' ?>">
 				<div class="it-exchange-core-product-inventory-fields">
-					<label for="it-exchange-product-inventory"><?php _e( 'Current Inventory', 'LION' ); ?></label>
+					<label for="it-exchange-product-inventory"><?php _e( 'Current Inventory', 'it-l10n-ithemes-exchange' ); ?></label>
 					<input type="number" id="it-exchange-product-inventory" name="it-exchange-product-inventory" value="<?php esc_attr_e( $product_feature_value ); ?>" />
-					<br /><span class="description"><?php _e( 'Leave blank for unlimited.', 'LION' ); ?></span>
+					<br /><span class="description"><?php _e( 'Leave blank for unlimited.', 'it-l10n-ithemes-exchange' ); ?></span>
 				</div>
 			</div>
 		<?php
@@ -275,4 +275,4 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 		}
 	}
 }
-$IT_Exchange_Product_Feature_Inventory = new IT_Exchange_Product_Feature_Inventory( array( 'slug' => 'inventory', 'description' => __( 'The current inventory number', 'LION' ) ) );
+$IT_Exchange_Product_Feature_Inventory = new IT_Exchange_Product_Feature_Inventory( array( 'slug' => 'inventory', 'description' => __( 'The current inventory number', 'it-l10n-ithemes-exchange' ) ) );

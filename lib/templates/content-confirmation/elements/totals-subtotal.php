@@ -19,7 +19,7 @@
 <div class="it-exchange-confirmation-totals-title it-exchange-table-column">
 	<?php do_action( 'it_exchange_content_confirmation_begin_totals_subtotal_element_label' ); ?>
 	<div class="it-exchange-table-column-inner">
-		<?php _e( 'Subtotal', 'LION' ); ?>
+		<?php _e( 'Subtotal', 'it-l10n-ithemes-exchange' ); ?>
 	</div>
 	<?php do_action( 'it_exchange_content_confirmation_end_totals_subtotal_element_label' ); ?>
 </div>

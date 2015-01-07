@@ -95,7 +95,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-images-container', __( 'Product Images', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_side', 'default' );
+		add_meta_box( 'it-exchange-product-images-container', __( 'Product Images', 'it-l10n-ithemes-exchange' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_side', 'default' );
 	}
 
 	/**
@@ -113,7 +113,7 @@ class IT_Exchange_Product_Feature_Product_Images {
 
 		<div class="it-exchange-product-images-labels">
 			<label id="it-exchange-product-core-images-tab" class="it-exchange-product-images-tab selected">
-				<?php _e( 'Images', 'LION' ); ?>
+				<?php _e( 'Images', 'it-l10n-ithemes-exchange' ); ?>
 			</label>
 		</div>
 		<div id="it-exchange-product-images">

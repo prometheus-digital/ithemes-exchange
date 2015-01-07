@@ -78,13 +78,13 @@ class IT_Exchange_Core_Shipping_Feature_Dimensions extends IT_Exchange_Shipping_
 	function print_add_edit_feature_box_interior() {
 		?>
 		<div class="shipping-dimensions column">
-			<label><?php _e( 'Dimensions', 'LION' ); ?> <span class="tip" title="<?php _e( 'Size of the package: length, width and height of the package. Used to calculate shipping costs.', 'LION' ); ?>">i</span></label>
+			<label><?php _e( 'Dimensions', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'Size of the package: length, width and height of the package. Used to calculate shipping costs.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 			<input type="text" id="it-exchange-shipping-length" name="it-exchange-shipping-length" class="small-input" value="<?php esc_attr_e( $this->values->length ); ?>"/>
 			<span class="it-exchange-shipping-dimensions-times">&times;</span>
 			<input type="text" id="it-exchange-shipping-width" name="it-exchange-shipping-width" class="small-input" value="<?php esc_attr_e( $this->values->width ); ?>"/>
 			<span class="it-exchange-shipping-dimensions-times">&times;</span>
 			<input type="text" id="it-exchange-shipping-height" name="it-exchange-shipping-height" class="small-input" value="<?php esc_attr_e( $this->values->height); ?>"/>
-			<span class="it-exchange-shipping-dimensions-format"><?php echo ( 'standard' == $this->values->measurement_format ) ? __( 'inches', 'LION' ) : __( 'cm', 'LION' ); ?></span>
+			<span class="it-exchange-shipping-dimensions-format"><?php echo ( 'standard' == $this->values->measurement_format ) ? __( 'inches', 'it-l10n-ithemes-exchange' ) : __( 'cm', 'it-l10n-ithemes-exchange' ); ?></span>
 		</div>
 		<?php
 	}

@@ -46,7 +46,7 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	*/
 	function set_label() {
 		$settings = it_exchange_get_option( 'simple-shipping' );
-		$this->label = empty( $settings['free-shipping-label'] ) ? __( 'Free Shipping', 'LION' ) : $settings['free-shipping-label'];
+		$this->label = empty( $settings['free-shipping-label'] ) ? __( 'Free Shipping', 'it-l10n-ithemes-exchange' ) : $settings['free-shipping-label'];
 	}
 
 	/**
@@ -96,22 +96,22 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 		$settings = array(
 			array(
 				'type'  => 'heading',
-				'label' => __( 'Free Shipping', 'LION' ),
+				'label' => __( 'Free Shipping', 'it-l10n-ithemes-exchange' ),
 				'slug'  => 'free-shipping-heading',
 			),
 			array(
 				'type'    => 'yes_no_drop_down',
-				'label'   => __( 'Enable Free Shipping?', 'LION' ),
+				'label'   => __( 'Enable Free Shipping?', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'enable-free-shipping',
-				'tooltip' => __( 'Do you want free shipping available to your customers as a shipping option?', 'LION' ),
+				'tooltip' => __( 'Do you want free shipping available to your customers as a shipping option?', 'it-l10n-ithemes-exchange' ),
 				'default' => 1,
 			),
 			array(
 				'type'    => 'text_box',
-				'label'   => __( 'Shipping Label', 'LION' ),
+				'label'   => __( 'Shipping Label', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'free-shipping-label',
-				'tooltip' => __( 'This changes the title of this Shipping Method for your customers', 'LION' ),
-				'default' => __( 'Free Shipping (3-5 days)', 'LION' ),
+				'tooltip' => __( 'This changes the title of this Shipping Method for your customers', 'it-l10n-ithemes-exchange' ),
+				'default' => __( 'Free Shipping (3-5 days)', 'it-l10n-ithemes-exchange' ),
 			),
 		);
 

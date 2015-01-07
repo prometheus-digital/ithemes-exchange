@@ -147,7 +147,7 @@ class IT_Exchange_Admin {
 	*/
 	function it_exchange_plugin_row_actions( $actions, $plugin_file, $plugin_data, $context ) {
 
-		$actions['quick_setup'] = '<a href="' . get_admin_url( NULL, 'admin.php?page=it-exchange-setup' ) . '">' . __( 'Quick Setup', 'LION' ) . '</a>';
+		$actions['quick_setup'] = '<a href="' . get_admin_url( NULL, 'admin.php?page=it-exchange-setup' ) . '">' . __( 'Quick Setup', 'it-l10n-ithemes-exchange' ) . '</a>';
 
 		return $actions;
 
@@ -166,10 +166,10 @@ class IT_Exchange_Admin {
 	*/
 	function it_exchange_plugin_row_meta( $meta, $plugin_file, $plugin_data, $status ) {
 		if ( 'ithemes-exchange/init.php' == $plugin_file ) {
-			$meta[] = '<a href="http://ithemes.com/codex/page/Exchange" target="_blank">' . __( 'Documentation', 'LION' ) . '</a>';
-			$meta[] = '<a href="http://ithemes.com/exchange/support" target="_blank">' . __( 'Support', 'LION' ) . '</a>';
-			$meta[] = '<a href="http://ithemes.com/exchange/add-ons" target="_blank">' . __( 'Add-ons', 'LION' ) . '</a>';
-			$meta[] = '<a href="http://ithemes.com/codex/page/Exchange_Changelog" target="_blank">' . __( 'Changelog', 'LION' ) . '</a>';
+			$meta[] = '<a href="http://ithemes.com/codex/page/Exchange" target="_blank">' . __( 'Documentation', 'it-l10n-ithemes-exchange' ) . '</a>';
+			$meta[] = '<a href="http://ithemes.com/exchange/support" target="_blank">' . __( 'Support', 'it-l10n-ithemes-exchange' ) . '</a>';
+			$meta[] = '<a href="http://ithemes.com/exchange/add-ons" target="_blank">' . __( 'Add-ons', 'it-l10n-ithemes-exchange' ) . '</a>';
+			$meta[] = '<a href="http://ithemes.com/codex/page/Exchange_Changelog" target="_blank">' . __( 'Changelog', 'it-l10n-ithemes-exchange' ) . '</a>';
 		}
 		return $meta;
 	}
@@ -184,7 +184,7 @@ class IT_Exchange_Admin {
 	function return_to_addons() {
 		if ( ! empty( $GLOBALS['hook_suffix'] ) && 'exchange_page_it-exchange-addons' == $GLOBALS['hook_suffix'] ) { //only show on add-on-settings pages
 			$url = add_query_arg( 'page', 'it-exchange-addons', admin_url( 'admin.php' ) );
-			echo '<div class="it-exchange-return-to-addons"><p><a href="' . $url . '">&larr; ' . __( 'Back to Add-ons', 'LION' ) . '</a></p></div>';
+			echo '<div class="it-exchange-return-to-addons"><p><a href="' . $url . '">&larr; ' . __( 'Back to Add-ons', 'it-l10n-ithemes-exchange' ) . '</a></p></div>';
 		}
 	}
 
@@ -196,7 +196,7 @@ class IT_Exchange_Admin {
 	*/
 	function it_exchange_user_row_actions( $actions, $user_object ) {
 
-		$actions['it_exchange'] = "<a class='it-exchange-cust-info' href='" . esc_url( add_query_arg( array( 'wp_http_referer' => urlencode( stripslashes_deep( $_SERVER['REQUEST_URI'] ) ), 'it_exchange_customer_data' => 1 ), get_edit_user_link( $user_object->ID ) ) ) . "'>" . __( 'Customer Data', 'LION' ) . "</a>";
+		$actions['it_exchange'] = "<a class='it-exchange-cust-info' href='" . esc_url( add_query_arg( array( 'wp_http_referer' => urlencode( stripslashes_deep( $_SERVER['REQUEST_URI'] ) ), 'it_exchange_customer_data' => 1 ), get_edit_user_link( $user_object->ID ) ) ) . "'>" . __( 'Customer Data', 'it-l10n-ithemes-exchange' ) . "</a>";
 
 		return $actions;
 	}
@@ -274,7 +274,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_products_user_edit_tab_link( $current_tab ) {
 		$active = ( 'products' === $current_tab || false === $current_tab ) ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'products' ); ?>#it-exchange-member-options"><?php _e( 'Products', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'products' ); ?>#it-exchange-member-options"><?php _e( 'Products', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -285,7 +285,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_transactions_user_edit_tab_link( $current_tab ) {
 		$active = 'transactions' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'transactions' ); ?>#it-exchange-member-options"><?php _e( 'Transactions', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'transactions' ); ?>#it-exchange-member-options"><?php _e( 'Transactions', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -296,7 +296,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_info_user_edit_tab_link( $current_tab ) {
 		$active = ( 'info' === $current_tab ) ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'info' ); ?>#it-exchange-member-options"><?php _e( 'Info', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'info' ); ?>#it-exchange-member-options"><?php _e( 'Info', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -347,7 +347,7 @@ class IT_Exchange_Admin {
 		$this->add_product_submenus();
 
 		// Add Transactions menu item
-		add_submenu_page( 'it-exchange', 'iThemes Exchange ' . __( 'Payments', 'LION' ), __( 'Payments', 'LION' ), $this->admin_menu_capability, 'edit.php?post_type=it_exchange_tran' );
+		add_submenu_page( 'it-exchange', 'iThemes Exchange ' . __( 'Payments', 'it-l10n-ithemes-exchange' ), __( 'Payments', 'it-l10n-ithemes-exchange' ), $this->admin_menu_capability, 'edit.php?post_type=it_exchange_tran' );
 
 		// Remove default iThemes Exchange sub-menu item created with parent menu item
 		remove_submenu_page( 'it-exchange', 'it-exchange' );
@@ -380,7 +380,7 @@ class IT_Exchange_Admin {
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->admin_menu_capability, 'it-exchange-addons', $add_ons_callback );
 
 		// Help menu
-		add_submenu_page( 'it-exchange', __( 'Help', 'LION' ), __( 'Help', 'LION' ), $this->admin_menu_capability, 'it-exchange-help', array( $this, 'print_help_page' ) );
+		add_submenu_page( 'it-exchange', __( 'Help', 'it-l10n-ithemes-exchange' ), __( 'Help', 'it-l10n-ithemes-exchange' ), $this->admin_menu_capability, 'it-exchange-help', array( $this, 'print_help_page' ) );
 	}
 
 	/**
@@ -399,8 +399,8 @@ class IT_Exchange_Admin {
 				$product = reset( $enabled_product_types );
 
 				// Allow add-ons to adjust their menu titles
-				$menu_title = apply_filters( 'it_exchange_admin_add_one_product_type_product_page_title', __( 'Add Product', 'LION' ), $product );
-				add_submenu_page( 'it-exchange', __( 'Add Product', 'LION' ), $menu_title, $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . $product['slug'] );
+				$menu_title = apply_filters( 'it_exchange_admin_add_one_product_type_product_page_title', __( 'Add Product', 'it-l10n-ithemes-exchange' ), $product );
+				add_submenu_page( 'it-exchange', __( 'Add Product', 'it-l10n-ithemes-exchange' ), $menu_title, $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . $product['slug'] );
 			} else if ( $add_on_count > 1 ) {
 				// If we have more than one product type, add them each separately
 				foreach( $enabled_product_types as $type => $params ) {
@@ -431,7 +431,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_email_settings_tab_link( $current_tab ) {
 		$active = 'email' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=email' ); ?>"><?php _e( 'Email Settings', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=email' ); ?>"><?php _e( 'Email Settings', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -454,7 +454,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_pages_settings_tab_link( $current_tab ) {
 		$active = 'pages' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=pages' ); ?>"><?php _e( 'Pages', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=pages' ); ?>"><?php _e( 'Pages', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -467,7 +467,7 @@ class IT_Exchange_Admin {
 		$active = empty( $this->_current_tab ) ? 'nav-tab-active' : '';
 		?>
 		<h2 class="nav-tab-wrapper">
-		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings' ); ?>"><?php _e( 'General', 'LION' ); ?></a>
+		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings' ); ?>"><?php _e( 'General', 'it-l10n-ithemes-exchange' ); ?></a>
 		<?php do_action( 'it_exchange_print_general_settings_tab_links', $this->_current_tab ); ?>
 		</h2>
 		<?php
@@ -483,7 +483,7 @@ class IT_Exchange_Admin {
 		$active = ( empty( $this->_current_tab ) || 'all' == $this->_current_tab ) ? 'nav-tab-active' : '';
 		?>
 		<h2 class="nav-tab-wrapper">
-		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons' ); ?>"><?php _e( 'All', 'LION' ); ?></a>
+		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons' ); ?>"><?php _e( 'All', 'it-l10n-ithemes-exchange' ); ?></a>
 		<?php do_action( 'it_exchange_print_add_ons_page_tab_links', $this->_current_tab ); ?>
 		</h2>
 		<?php
@@ -497,7 +497,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_enabled_add_ons_tab_link( $current_tab ) {
 		$active = 'enabled' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&tab=enabled' ); ?>"><?php _e( 'Enabled', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&tab=enabled' ); ?>"><?php _e( 'Enabled', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -508,7 +508,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_disabled_add_ons_tab_link( $current_tab ) {
 		$active = 'disabled' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&tab=disabled' ); ?>"><?php _e( 'Disabled', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&tab=disabled' ); ?>"><?php _e( 'Disabled', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -532,11 +532,11 @@ class IT_Exchange_Admin {
 		$add_on_cats = it_exchange_get_addon_categories();
 		$message = empty( $_GET['message'] ) ? false : $_GET['message'];
 		if ( 'installed' == $message )
-			ITUtility::show_status_message( __( 'Add-on installed.', 'LION' ) );
+			ITUtility::show_status_message( __( 'Add-on installed.', 'it-l10n-ithemes-exchange' ) );
 
 		$error = empty( $_GET['error'] ) ? false : $_GET['error'];
 		if ( 'installed' == $error )
-			ITUtility::show_error_message( __( 'Error: Add-on not installed.', 'LION' ) );
+			ITUtility::show_error_message( __( 'Error: Add-on not installed.', 'it-l10n-ithemes-exchange' ) );
 
 		include( 'views/admin-get-more-addons.php' );
 	}
@@ -549,7 +549,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_get_more_add_ons_tab_link( $current_tab ) {
 		$active = 'get-more' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&tab=get-more' ); ?>"><?php _e( 'Get More', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&tab=get-more' ); ?>"><?php _e( 'Get More', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -635,15 +635,15 @@ class IT_Exchange_Admin {
 			'notification-email-address' => esc_attr( get_bloginfo( 'admin_email' ) ),
 			'admin-email-address'      => esc_attr( get_bloginfo( 'admin_email' ) ),
 			'admin-email-name'         => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
-			'admin-email-subject'      => sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'LION' ), '[it_exchange_email show=receipt_id]' ),
+			'admin-email-subject'      => sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
 			'admin-email-template'     => sprintf( __( "Your friend %s just bought all this awesomeness from your store!
 
 Order: %s
 
-%s", 'LION' ), '[it_exchange_email show=fullname]', '[it_exchange_email show=receipt_id]', '[it_exchange_email show=order_table]' ),
+%s", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=fullname]', '[it_exchange_email show=receipt_id]', '[it_exchange_email show=order_table]' ),
 			'receipt-email-address'      => esc_attr( get_bloginfo( 'admin_email' ) ),
 			'receipt-email-name'         => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
-			'receipt-email-subject'      => sprintf( __( 'Receipt for Purchase: %s', 'LION' ), '[it_exchange_email show=receipt_id]' ),
+			'receipt-email-subject'      => sprintf( __( 'Receipt for Purchase: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
 			'receipt-email-template'     => sprintf( __( "Hello %s,
 
 Thank you for your order. Your order's details are below.
@@ -651,7 +651,7 @@ Order: %s
 
 %s
 
-%s", 'LION' ), '[it_exchange_email show=name]', '[it_exchange_email show=receipt_id]', '[it_exchange_email show=order_table options=purchase_message]', '[it_exchange_email show=download_list]' ),
+%s", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=name]', '[it_exchange_email show=receipt_id]', '[it_exchange_email show=order_table options=purchase_message]', '[it_exchange_email show=download_list]' ),
 		);
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;
@@ -763,20 +763,20 @@ Order: %s
 		$add_on_cats = it_exchange_get_addon_categories();
 		$message = empty( $_GET['message'] ) ? false : $_GET['message'];
 		if ( 'enabled' == $message ) {
-			ITUtility::show_status_message( __( 'Add-on enabled.', 'LION' ) );
+			ITUtility::show_status_message( __( 'Add-on enabled.', 'it-l10n-ithemes-exchange' ) );
 		} else if ( 'disabled' == $message ) {
-			ITUtility::show_status_message( __( 'Add-on disabled.', 'LION' ) );
+			ITUtility::show_status_message( __( 'Add-on disabled.', 'it-l10n-ithemes-exchange' ) );
 		} else if ( 'addon-auto-disabled-' == substr( $message, 0, 20 ) ) {
 			$addon_slug = substr( $message, 20 );
-			$status_message = __( sprintf( 'iThemes Exchange has automatically disabled an add-on: %s. This is mostly likely due to it being uninstalled or improperlly registered.', $addon_slug ), 'LION' );
+			$status_message = __( sprintf( 'iThemes Exchange has automatically disabled an add-on: %s. This is mostly likely due to it being uninstalled or improperlly registered.', $addon_slug ), 'it-l10n-ithemes-exchange' );
 			ITUtility::show_status_message( $status_message );
 		}
 
 		$error= empty( $_GET['error'] ) ? false : $_GET['error'];
 		if ( 'enabled' == $error )
-			ITUtility::show_error_message( __( 'Error: Add-on not enabled.', 'LION' ) );
+			ITUtility::show_error_message( __( 'Error: Add-on not enabled.', 'it-l10n-ithemes-exchange' ) );
 		else if ( 'disabled' == $error )
-			ITUtility::show_error_message( __( 'Error: Add-on not disabled.', 'LION' ) );
+			ITUtility::show_error_message( __( 'Error: Add-on not disabled.', 'it-l10n-ithemes-exchange' ) );
 
 		include( 'views/admin-add-ons.php' );
 	}
@@ -1004,7 +1004,7 @@ Order: %s
 			?>
 			<input class="small-text" max-length="3" type="text" name="it_exchange_settings-company-base-state" id="company-base-state" value="">
 			<p class="description">
-				<?php printf( __( 'Please use the 2-3 character %sISO abbreviation%s for country subdivisions', 'LION' ), '<a href="http://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">', '</a>' ); ?>
+				<?php printf( __( 'Please use the 2-3 character %sISO abbreviation%s for country subdivisions', 'it-l10n-ithemes-exchange' ), '<a href="http://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">', '</a>' ); ?>
 			</p>
 			<?php
 			die();
@@ -1028,7 +1028,7 @@ Order: %s
 
         // Check nonce
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-general-settings' ) ) {
-            $this->error_message = __( 'Error. Please try again', 'LION' );
+            $this->error_message = __( 'Error. Please try again', 'it-l10n-ithemes-exchange' );
             return;
         }
 
@@ -1037,7 +1037,7 @@ Order: %s
 				$this->error_message = $error_msg;
 		} else {
 			it_exchange_save_option( 'settings_general', $settings );
-			$this->status_message = __( 'Settings Saved.', 'LION' );
+			$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
 		}
 	}
 
@@ -1057,7 +1057,7 @@ Order: %s
 			return;
 
 		if ( empty( $_REQUEST['it-exchange-transaction-methods'] ) ) {
-			it_exchange_add_message( 'error', __( 'You must select at least one Payment Method.', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'You must select at least one Payment Method.', 'it-l10n-ithemes-exchange' ) );
 			return;
 		}
 
@@ -1158,11 +1158,11 @@ Order: %s
 		$settings = it_exchange_get_option( 'settings_general', true );
 		$sample_product = empty( $settings['sample-product-id'] ) ? false : it_exchange_get_product( $settings['sample-product-id'] );
 
-		$settings_saved = __( 'Settings Saved. Congrats!', 'LION' );
-		$add_product_link = sprintf( __( '%sAdd a Product%s', 'LION' ), '<a href="' . get_admin_url() . 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=digital-downloads-product-type">', '</a>' );
-		$view_addons_link = sprintf( __( '%sEnable Add-ons%s', 'LION' ), '<a href="' . get_admin_url() . 'admin.php?page=it-exchange-addons">', '</a>' );
+		$settings_saved = __( 'Settings Saved. Congrats!', 'it-l10n-ithemes-exchange' );
+		$add_product_link = sprintf( __( '%sAdd a Product%s', 'it-l10n-ithemes-exchange' ), '<a href="' . get_admin_url() . 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=digital-downloads-product-type">', '</a>' );
+		$view_addons_link = sprintf( __( '%sEnable Add-ons%s', 'it-l10n-ithemes-exchange' ), '<a href="' . get_admin_url() . 'admin.php?page=it-exchange-addons">', '</a>' );
 
-		$view_sample_link = empty( $sample_product->ID ) ? '' : ' | ' . sprintf( __( '%sView Sample Product%s', 'LION' ), '<a href="' . get_admin_url() . 'post.php?post=' . $sample_product->ID . '&action=edit">', '</a>' );
+		$view_sample_link = empty( $sample_product->ID ) ? '' : ' | ' . sprintf( __( '%sView Sample Product%s', 'it-l10n-ithemes-exchange' ), '<a href="' . get_admin_url() . 'post.php?post=' . $sample_product->ID . '&action=edit">', '</a>' );
 
 		it_exchange_add_message( 'notice', $settings_saved . ' ' . $add_product_link . ' | ' . $view_addons_link . $view_sample_link );
 
@@ -1198,11 +1198,11 @@ Order: %s
 	function general_settings_are_invalid( $settings ) {
 		$errors = array();
 		if ( ! empty( $settings['company-email'] ) && ! is_email( $settings['company-email'] ) )
-			$errors[] = __( 'Please provide a valid email address.', 'LION' );
+			$errors[] = __( 'Please provide a valid email address.', 'it-l10n-ithemes-exchange' );
 		if ( empty( $settings['currency-thousands-separator'] ) )
-			$errors[] = __( 'Thousands Separator cannot be empty', 'LION' );
+			$errors[] = __( 'Thousands Separator cannot be empty', 'it-l10n-ithemes-exchange' );
 		if ( empty( $settings['currency-decimals-separator'] ) )
-			$errors[] = __( 'Decimals Separator cannot be empty', 'LION' );
+			$errors[] = __( 'Decimals Separator cannot be empty', 'it-l10n-ithemes-exchange' );
 
 		$errors = apply_filters( 'it_exchange_general_settings_validation_errors', $errors );
 		if ( ! empty ( $errors ) )
@@ -1225,7 +1225,7 @@ Order: %s
 
         // Check nonce
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-email-settings' ) ) {
-            $this->error_message = __( 'Error. Please try again', 'LION' );
+            $this->error_message = __( 'Error. Please try again', 'it-l10n-ithemes-exchange' );
             return;
         }
 
@@ -1236,7 +1236,7 @@ Order: %s
 				$this->error_message = $error_msg;
 		} else {
 			it_exchange_save_option( 'settings_email', $settings );
-			$this->status_message = __( 'Settings Saved.', 'LION' );
+			$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
 		}
 	}
 
@@ -1251,13 +1251,13 @@ Order: %s
 		$errors = array();
 		if ( empty( $settings['receipt-email-address'] )
 			|| ( !empty( $settings['receipt-email-address'] ) && ! is_email( $settings['receipt-email-address'] ) ) )
-			$errors[] = __( 'Please provide a valid email address.', 'LION' );
+			$errors[] = __( 'Please provide a valid email address.', 'it-l10n-ithemes-exchange' );
 		if ( empty( $settings['receipt-email-name'] ) )
-			$errors[] = __( 'Email Name cannot be empty', 'LION' );
+			$errors[] = __( 'Email Name cannot be empty', 'it-l10n-ithemes-exchange' );
 		if ( empty( $settings['receipt-email-subject'] ) )
-			$errors[] = __( 'Email Subject cannot be empty', 'LION' );
+			$errors[] = __( 'Email Subject cannot be empty', 'it-l10n-ithemes-exchange' );
 		if ( empty( $settings['receipt-email-template'] ) )
-			$errors[] = __( 'Email Template cannot be empty', 'LION' );
+			$errors[] = __( 'Email Template cannot be empty', 'it-l10n-ithemes-exchange' );
 
 		if ( !empty( $settings['notification-email-address'] ) ) {
 
@@ -1266,7 +1266,7 @@ Order: %s
 			foreach( $emails as $email ) {
 
 				if ( !is_email( trim( $email ) ) ) {
-					$errors[] = __( 'Invalid email address in Sales Notification Email Address', 'LION' );
+					$errors[] = __( 'Invalid email address in Sales Notification Email Address', 'it-l10n-ithemes-exchange' );
 					break;
 				}
 
@@ -1315,7 +1315,7 @@ Order: %s
 
         // Check nonce
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-page-settings' ) ) {
-            $this->error_message = __( 'Error. Please try again', 'LION' );
+            $this->error_message = __( 'Error. Please try again', 'it-l10n-ithemes-exchange' );
             return;
         }
 
@@ -1332,7 +1332,7 @@ Order: %s
 				$this->error_message = $error_msg;
 		} else {
 			it_exchange_save_option( 'settings_pages', $settings );
-			$this->status_message = __( 'Settings Saved.', 'LION' );
+			$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
 
 			// Flag rewrites to be updated
 			add_option( '_it-exchange-flush-rewrites', true );
@@ -1405,13 +1405,13 @@ Order: %s
 		foreach( $settings as $setting => $value ) {
 			// Check for unique slugs
 			if ( 'slug' == substr( $setting, -4 ) && in_array( $value, $used_slugs ) )
-				$errors = array( __( 'Please make sure all your page slugs are unique.', 'LION' ) );
+				$errors = array( __( 'Please make sure all your page slugs are unique.', 'it-l10n-ithemes-exchange' ) );
 			else if ( 'exchange' == $settings[substr( $setting, 0, -4 ) . 'type'] )
 				$used_slugs[] = $value;
 
 			// *-wpid comes back as 0 when not set.
 			if ( ! isset( $value ) || '' == $value ) {
-				$errors = array( __( 'Page settings cannot be left blank.', 'LION' ) );
+				$errors = array( __( 'Page settings cannot be left blank.', 'it-l10n-ithemes-exchange' ) );
 			}
 		}
 
@@ -1480,13 +1480,13 @@ Order: %s
 			$deps = array( 'post', 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'autosave', 'it-exchange-dialog' );
 			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', $deps );
 			wp_localize_script( 'it-exchange-add-edit-product', 'addEditProductL10n', array(
-					'mediaManagerTitle'     => __( 'Select Images', 'LION' ),
-					'largerThan150'         => __( 'You must upload an image larger than 150x150.', 'LION' ),
-					'editMediaManagerTitle' => __( 'Edit Image', 'LION' ),
-					'uploadSource'          => __( 'Upload Source', 'LION' ),
-					'insert'                => __( 'Insert', 'LION' ),
-					'advanced'              => __( 'Advanced', 'LION' ),
-					'advanced_tooltip'      => __( 'We want to keep things simple for you, so we put the kitchen sink here. Click this button to add more info about your product.', 'LION' ),
+					'mediaManagerTitle'     => __( 'Select Images', 'it-l10n-ithemes-exchange' ),
+					'largerThan150'         => __( 'You must upload an image larger than 150x150.', 'it-l10n-ithemes-exchange' ),
+					'editMediaManagerTitle' => __( 'Edit Image', 'it-l10n-ithemes-exchange' ),
+					'uploadSource'          => __( 'Upload Source', 'it-l10n-ithemes-exchange' ),
+					'insert'                => __( 'Insert', 'it-l10n-ithemes-exchange' ),
+					'advanced'              => __( 'Advanced', 'it-l10n-ithemes-exchange' ),
+					'advanced_tooltip'      => __( 'We want to keep things simple for you, so we put the kitchen sink here. Click this button to add more info about your product.', 'it-l10n-ithemes-exchange' ),
 				)
 			);
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {
@@ -1500,14 +1500,14 @@ Order: %s
 				$deps = array( 'jquery-ui-tooltip', 'it-exchange-dialog' );
 				wp_enqueue_script( 'it-exchange-settings-general', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/settings-general.js', $deps );
 				wp_localize_script( 'it-exchange-settings-general', 'settingsGenearlL10n', array(
-						'delteConfirmationText'  => __( 'You have checked the option to "Reset ALL data". Are you sure you want to delete all Exchange products, transactions, and settings?', 'LION' ),
+						'delteConfirmationText'  => __( 'You have checked the option to "Reset ALL data". Are you sure you want to delete all Exchange products, transactions, and settings?', 'it-l10n-ithemes-exchange' ),
 					)
 				);
 			} else if ( $_GET['tab'] == 'pages') {
 				$deps = array( 'jquery-ui-tooltip' );
 				wp_enqueue_script( 'it-exchange-settings-pages', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/settings-pages.js', $deps );
 				wp_localize_script( 'it-exchange-settings-pages', 'settingsPagesL10n', array(
-						'emptyWPPage'  => __( 'Please make sure all WordPress page types have a WordPress page selected.', 'LION' ),
+						'emptyWPPage'  => __( 'Please make sure all WordPress page types have a WordPress page selected.', 'it-l10n-ithemes-exchange' ),
 					)
 				);
 			} else if ( $_GET['tab'] == 'shipping') {
@@ -1604,7 +1604,7 @@ Order: %s
 		if ( empty( $current_screen->id ) || 'it_exchange_prod' != $current_screen->id || empty( $store_link ) )
 			return;
 
-		?><div class="it-exchange-view-store-on-update-link hidden"><a href="<?php esc_attr_e( $store_link ) ; ?>" title="View store" ><?php _e( 'View store', 'LION' ); ?></a><?php
+		?><div class="it-exchange-view-store-on-update-link hidden"><a href="<?php esc_attr_e( $store_link ) ; ?>" title="View store" ><?php _e( 'View store', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -1757,12 +1757,12 @@ Order: %s
 			return;
 
 		$id       = 'it-exchange-add-edit-product-interface-main';
-		$title    = __( 'Main Product Interface', 'LION' ); // Not used
+		$title    = __( 'Main Product Interface', 'it-l10n-ithemes-exchange' ); // Not used
 		$callback = array( $this, 'do_add_edit_product_screen_layout_main' );
 		add_meta_box( $id, $title, $callback, 'it_exchange_prod', 'normal', 'high' );
 
 		$id       = 'it-exchange-add-edit-product-interface-side';
-		$title    = __( 'Side Product Interface', 'LION' ); // Not used
+		$title    = __( 'Side Product Interface', 'it-l10n-ithemes-exchange' ); // Not used
 		$callback = array( $this, 'do_add_edit_product_screen_layout_side' );
 		add_meta_box( $id, $title, $callback, 'it_exchange_prod', 'side', 'high' );
 	}

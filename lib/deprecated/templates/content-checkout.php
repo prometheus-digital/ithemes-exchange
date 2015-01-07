@@ -81,11 +81,11 @@
 		<div class="cart-totals-wrapper">
 			<div class="cart-totals">
 				<div class="totals-column totals-titles cart-column">
-					<p><?php _e( 'Subtotal', 'LION' ); ?></p>
+					<p><?php _e( 'Subtotal', 'it-l10n-ithemes-exchange' ); ?></p>
 					<?php if ( it_exchange( 'coupons', 'supported', 'type=cart' ) && it_exchange( 'coupons', 'has-applied', 'type=cart' ) ) : ?>
-						<p><?php _e( 'Savings', 'LION' ); ?></p>
+						<p><?php _e( 'Savings', 'it-l10n-ithemes-exchange' ); ?></p>
 					<?php endif; ?>
-					<p><?php _e( 'Total', 'LION' ); ?></p>
+					<p><?php _e( 'Total', 'it-l10n-ithemes-exchange' ); ?></p>
 				</div>
 				<div class="totals-column totals-amounts cart-column">
 					<p class="cart-subtotal"><?php it_exchange( 'cart', 'subtotal' ); ?></p>
@@ -99,7 +99,7 @@
 
 		<div class="it-exchange-payment-methods cart-actions">
 			<?php if ( ! it_exchange( 'checkout', 'has-transaction-methods' ) ) : ?>
-				<p><?php _e( 'No Payment add-ons enabled.', 'LION' ); ?></p>
+				<p><?php _e( 'No Payment add-ons enabled.', 'it-l10n-ithemes-exchange' ); ?></p>
 			<?php else : ?>
 				<?php while( it_exchange( 'checkout', 'transaction-methods' ) ) : ?>
 					<?php it_exchange( 'transaction-method', 'make-payment' ); ?>
@@ -110,5 +110,5 @@
 		</div>
 	</div>
 <?php else : ?>
-	<p><?php _e( 'There are no items in your cart', 'LION' ); ?></p>
+	<p><?php _e( 'There are no items in your cart', 'it-l10n-ithemes-exchange' ); ?></p>
 <?php endif; ?>

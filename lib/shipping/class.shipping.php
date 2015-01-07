@@ -96,7 +96,7 @@ class IT_Exchange_Shipping {
 			'requirement-met'        => 'it_exchange_get_customer_shipping_address', // This is a PHP callback
 			'sw-template-part'       => 'shipping-address',
 			'checkout-template-part' => 'shipping-address',
-			'notification'           => __( 'You must enter a shipping address before you can checkout', 'LION' ),
+			'notification'           => __( 'You must enter a shipping address before you can checkout', 'it-l10n-ithemes-exchange' ),
 			'priority'               => 5.12
 		);
 		if ( it_exchange_get_available_shipping_methods_for_cart_products() )
@@ -119,7 +119,7 @@ class IT_Exchange_Shipping {
 			'requirement-met'        => 'it_exchange_get_cart_shipping_method', // This is a PHP callback
 			'sw-template-part'       => 'shipping-method',
 			'checkout-template-part' => 'shipping-method',
-			'notification'           => __( 'You must select a shipping method before you can checkout', 'LION' ),
+			'notification'           => __( 'You must select a shipping method before you can checkout', 'it-l10n-ithemes-exchange' ),
 			'priority'               => 5.13,
 		);
 		if ( it_exchange_get_available_shipping_methods_for_cart_products() )
@@ -136,7 +136,7 @@ class IT_Exchange_Shipping {
 	*/
 	function print_shipping_tab_link( $current_tab ) {
 		$active = 'shipping' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=shipping' ); ?>"><?php _e( 'Shipping', 'LION' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=shipping' ); ?>"><?php _e( 'Shipping', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -220,7 +220,7 @@ class IT_Exchange_Shipping {
 		?>
 		<div class="it-exchange-secondary-tabs it-exchange-shipping-provider-tabs">
 			<a class="shipping-provider-link <?php echo ( empty( $current ) ) ? 'it-exchange-current' : ''; ?>" href="<?php esc_attr_e( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping' ), admin_url( 'admin.php' ) ) ); ?>">
-				<?php _e( 'General', 'LION' ); ?>
+				<?php _e( 'General', 'it-l10n-ithemes-exchange' ); ?>
 			</a>
 			<?php
 			foreach( $providers as $provider )  {
@@ -262,7 +262,7 @@ class IT_Exchange_Shipping {
 		$form_fields = array(
 			array(
 				'type'  => 'heading',
-				'label' => __( 'General Shipping Settings', 'LION' ),
+				'label' => __( 'General Shipping Settings', 'it-l10n-ithemes-exchange' ),
 				'slug'  => 'general-shipping-label',
 			),
 		);
@@ -282,13 +282,13 @@ class IT_Exchange_Shipping {
 			$from_address = array(
 				array(
 					'type'    => 'text_box',
-					'label'   => __( 'Products Ship From', 'LION' ),
+					'label'   => __( 'Products Ship From', 'it-l10n-ithemes-exchange' ),
 					'slug'    => 'product-ships-from-address1',
-					'tooltip' => __( 'The default from address used when shipping your products.', 'LION' ),
+					'tooltip' => __( 'The default from address used when shipping your products.', 'it-l10n-ithemes-exchange' ),
 					'default' => '',
 					'options' => array(
 						'class'       => 'large-text',
-						'placeholder' => __( 'Address 1', 'LION' ),
+						'placeholder' => __( 'Address 1', 'it-l10n-ithemes-exchange' ),
 					),
 				),
 				array(
@@ -298,7 +298,7 @@ class IT_Exchange_Shipping {
 					'default' => '',
 					'options' => array(
 						'class'       => 'large-text',
-						'placeholder' => __( 'Address 2', 'LION' ),
+						'placeholder' => __( 'Address 2', 'it-l10n-ithemes-exchange' ),
 					),
 				),
 				array(
@@ -308,7 +308,7 @@ class IT_Exchange_Shipping {
 					'default' => '',
 					'options' => array(
 						'class'       => 'large-text',
-						'placeholder' => __( 'City', 'LION' ),
+						'placeholder' => __( 'City', 'it-l10n-ithemes-exchange' ),
 					),
 				),
 				array(
@@ -332,14 +332,14 @@ class IT_Exchange_Shipping {
 					'default' => '',
 					'options' => array(
 						'class'       => 'normal-text',
-						'placeholder' => __( 'Zip', 'LION' ),
+						'placeholder' => __( 'Zip', 'it-l10n-ithemes-exchange' ),
 					),
 				),
 				array(
 					'type'    => 'yes_no_drop_down',
-					'label'   => __( 'Can individual products override the default Ships From Address?', 'LION' ),
+					'label'   => __( 'Can individual products override the default Ships From Address?', 'it-l10n-ithemes-exchange' ),
 					'slug'    => 'products-can-override-ships-from',
-					'tooltip' => __( 'Selecting "yes" will place these fields on the Add/Edit product screen.', 'LION' ),
+					'tooltip' => __( 'Selecting "yes" will place these fields on the Add/Edit product screen.', 'it-l10n-ithemes-exchange' ),
 					'default' => '1',
 				),
 			);
@@ -349,9 +349,9 @@ class IT_Exchange_Shipping {
 		$form_fields = array_merge( $form_fields, array(
 			array(
 				'type'    => 'yes_no_drop_down',
-				'label'   => __( 'Can individual products override the global Shipping Methods setting?', 'LION' ),
+				'label'   => __( 'Can individual products override the global Shipping Methods setting?', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'products-can-override-available-shipping-methods',
-				'tooltip' => __( 'Selecting "yes" will allow you to set available Shipping Methods for a product from it\'s Add/Edit product screen.', 'LION' ),
+				'tooltip' => __( 'Selecting "yes" will allow you to set available Shipping Methods for a product from it\'s Add/Edit product screen.', 'it-l10n-ithemes-exchange' ),
 				'default' => '0',
 			),
 		));
@@ -361,13 +361,13 @@ class IT_Exchange_Shipping {
 			$measurements = array(
 				array(
 					'type'    => 'drop_down',
-					'label'   => __( 'Measurements Format', 'LION' ),
+					'label'   => __( 'Measurements Format', 'it-l10n-ithemes-exchange' ),
 					'slug'    => 'measurements-format',
-					'tooltip' => __( 'Use standard for pounds and inches. Use metric for kilograms and centimeters.', 'LION' ),
+					'tooltip' => __( 'Use standard for pounds and inches. Use metric for kilograms and centimeters.', 'it-l10n-ithemes-exchange' ),
 					'default' => 'standard',
 					'options' => array(
-						'standard' => __( 'Standard', 'LION' ),
-						'metric'   => __( 'Metric', 'LION' ),
+						'standard' => __( 'Standard', 'it-l10n-ithemes-exchange' ),
+						'metric'   => __( 'Metric', 'it-l10n-ithemes-exchange' ),
 					),
 				),
 			);
@@ -628,9 +628,9 @@ class IT_Exchange_Shipping {
 
 		if ( empty( $states ) ) {
 			?>
-			<input type="text" id="product-ships-from-state" name="shipping-general-product-ships-from-state" maxlength="3" placeholder="<?php _e( 'State', 'LION' ); ?>" class="small-text" value="<?php esc_attr_e( $base_state ); ?>" />&nbsp;
+			<input type="text" id="product-ships-from-state" name="shipping-general-product-ships-from-state" maxlength="3" placeholder="<?php _e( 'State', 'it-l10n-ithemes-exchange' ); ?>" class="small-text" value="<?php esc_attr_e( $base_state ); ?>" />&nbsp;
 			<?php $open_tag = '<a href="http://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">'; ?>
-			<span class="description"><?php printf( __( 'Please use the 2-3 character %sISO 3166-2 Country Subdivision Code%s', 'LION' ), $open_tag, '</a>' ); ?></span>
+			<span class="description"><?php printf( __( 'Please use the 2-3 character %sISO 3166-2 Country Subdivision Code%s', 'it-l10n-ithemes-exchange' ), $open_tag, '</a>' ); ?></span>
 			<?php
 		} else {
 			?>
@@ -662,7 +662,7 @@ class IT_Exchange_Shipping {
 		// TEMP LOGIC
 		if ( isset( $_POST['it-exchange-shipping-method'] ) ) {
 			it_exchange_update_cart_data( 'shipping-method', $_POST['it-exchange-shipping-method'] );
-			it_exchange_add_message( 'notice', __( 'Shipping method updated', 'LION' ) );
+			it_exchange_add_message( 'notice', __( 'Shipping method updated', 'it-l10n-ithemes-exchange' ) );
 		}
 	}
 

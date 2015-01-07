@@ -107,7 +107,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	function username( $options=array() ) {
 		$defaults      = array(
 			'format' => 'html',
-			'label'  => __( 'Username', 'LION' ),
+			'label'  => __( 'Username', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -144,7 +144,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	function password( $options=array() ) {
 		$defaults      = array(
 			'format' => 'html',
-			'label'  => __( 'Password', 'LION' ),
+			'label'  => __( 'Password', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -181,7 +181,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	function remember_me( $options=array() ) {
 		$defaults      = array(
 			'format' => 'html',
-			'label'  => __( 'Remember Me', 'LION' ),
+			'label'  => __( 'Remember Me', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -218,7 +218,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	function login_button( $options=array() ) {
 		$defaults      = array(
 			'format' => 'html',
-			'label'  => __( 'Log In', 'LION' ),
+			'label'  => __( 'Log In', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -254,7 +254,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	function recover( $options=array() ) {
 		$defaults      = array(
 			'format'   => 'html',
-			'label'    => __( 'Lost your password?', 'LION' ),
+			'label'    => __( 'Lost your password?', 'it-l10n-ithemes-exchange' ),
 			'class'  => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -294,7 +294,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	function register( $options=array() ) {
 		$defaults = array(
 			'format' => 'html',
-			'label'  => __( 'Register', 'LION' ),
+			'label'  => __( 'Register', 'it-l10n-ithemes-exchange' ),
 			'class'  => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
@@ -329,7 +329,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	function cancel( $options=array() ) {
 		$defaults = array(
 			'format' => 'html',
-			'label'  =>  __( 'Cancel', 'LION' ),
+			'label'  =>  __( 'Cancel', 'it-l10n-ithemes-exchange' ),
 			'class'  => false,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );

@@ -93,7 +93,7 @@ class IT_Exchange_Product_Feature_Product_Title {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-title', __( 'Title', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'high' );
+		add_meta_box( 'it-exchange-product-title', __( 'Title', 'it-l10n-ithemes-exchange' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'high' );
 	}
 
 	/**
@@ -103,8 +103,8 @@ class IT_Exchange_Product_Feature_Product_Title {
 	 * @return void
 	*/
 	function print_metabox( $post ) {
-		$label   = apply_filters( 'it_exchange_add_edit_product_title_label', __( 'Product Title', 'LION' ), $post ); 
-		$tooltip = apply_filters( 'it_exchange_add_edit_product_title_tooltip', __( 'Name your product like you do a headline &mdash; to catch attention and sell benefits.', 'LION' ), $post );
+		$label   = apply_filters( 'it_exchange_add_edit_product_title_label', __( 'Product Title', 'it-l10n-ithemes-exchange' ), $post ); 
+		$tooltip = apply_filters( 'it_exchange_add_edit_product_title_tooltip', __( 'Name your product like you do a headline &mdash; to catch attention and sell benefits.', 'it-l10n-ithemes-exchange' ), $post );
 		?>
 		<label for="title"><?php echo $label; ?> <span class="tip" title="<?php esc_attr_e( $tooltip ); ?>">i</span></label>
 		<input type="text" name="post_title" size="30" value="<?php echo esc_attr( htmlspecialchars( $post->post_title ) ); ?>" id="title" autocomplete="off" placeholder="<?php echo apply_filters( 'enter_title_here', __( 'Enter title...' ), $post ); ?>" tabindex="1" />

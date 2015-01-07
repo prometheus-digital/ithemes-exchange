@@ -137,7 +137,7 @@ function it_exchange_generate_transaction_object() {
 	$products = it_exchange_get_cart_products();
 	if ( count( $products ) < 1 ) {
 		do_action( 'it_exchange_error-no_products_to_purchase' );
-		it_exchange_add_message( 'error', __( 'You cannot checkout without any items in your cart.', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'You cannot checkout without any items in your cart.', 'it-l10n-ithemes-exchange' ) );
 		return false;
 	}
 
@@ -146,7 +146,7 @@ function it_exchange_generate_transaction_object() {
 	$cart_sub_total = number_format( it_exchange_get_cart_subtotal( false ), 2, '.', '' );
 	if ( number_format( $cart_total, 2, '', '' ) < 0 ) {
 		do_action( 'it_exchange_error_negative_cart_total_on_checkout', $cart_total );
-		it_exchange_add_message( 'error', __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'it-l10n-ithemes-exchange' ) );
 		return false;
 	}
 
@@ -752,7 +752,7 @@ function it_exchange_get_transaction_description( $transaction ) {
 	if ( $transaction = it_exchange_get_transaction( $transaction ) )
 		return apply_filters( 'it_exchange_get_transaction_description', $transaction->get_description(), $transaction );
 
-	return apply_filters( 'it_exchange_get_transaction_description', __( 'Unknown', 'LION' ), $transaction );
+	return apply_filters( 'it_exchange_get_transaction_description', __( 'Unknown', 'it-l10n-ithemes-exchange' ), $transaction );
 }
 
 /**
@@ -782,7 +782,7 @@ function it_exchange_get_transaction_customer( $transaction ) {
  * @return string
 */
 function it_exchange_get_transaction_customer_display_name( $transaction ) {
-	$unknown = __( 'Deleted Customer', 'LION' );
+	$unknown = __( 'Deleted Customer', 'it-l10n-ithemes-exchange' );
 
 	if ( $customer = it_exchange_get_transaction_customer( $transaction ) ) {
 		$display_name = empty( $customer->wp_user->display_name ) ? $unknown : $customer->wp_user->display_name;
@@ -820,7 +820,7 @@ function it_exchange_get_transaction_customer_id( $transaction ) {
  * @return string
 */
 function it_exchange_get_transaction_customer_email( $transaction ) {
-	$unknown = __( 'Unknown', 'LION' );
+	$unknown = __( 'Unknown', 'it-l10n-ithemes-exchange' );
 
 	if ( $customer = it_exchange_get_transaction_customer( $transaction ) )
 		return apply_filters( 'it_exchange_get_transaction_customer_email', empty( $customer->wp_user->user_email ) ? $unknown : $customer->wp_user->user_email, $transaction );
@@ -838,12 +838,12 @@ function it_exchange_get_transaction_customer_email( $transaction ) {
  * @return string
 */
 function it_exchange_get_transaction_customer_ip_address( $transaction ) {
-	$return = __( 'IP Address: %s', 'LION' );
+	$return = __( 'IP Address: %s', 'it-l10n-ithemes-exchange' );
 	$ip = get_post_meta( $transaction->ID, '_it_exchange_customer_ip', true );
 	if ( !empty( $ip ) ) {
 		return sprintf( $return, $ip );
 	}
-	return sprintf( $return, __( 'Unknown', 'LION' ) );
+	return sprintf( $return, __( 'Unknown', 'it-l10n-ithemes-exchange' ) );
 }
 
 /**
@@ -884,7 +884,7 @@ function it_exchange_get_transaction_order_number( $transaction, $prefix='#' ) {
 		return false;
 
 	// Translate default prefix
-	$prefix = ( '#' == $prefix ) ? __( '#', 'LION' ) : $prefix;
+	$prefix = ( '#' == $prefix ) ? __( '#', 'it-l10n-ithemes-exchange' ) : $prefix;
 
 	$order_number = sprintf( '%06d', $transaction->ID );
 	$order_number = empty( $prefix ) ? $order_number : $prefix . $order_number;
@@ -1253,7 +1253,7 @@ function it_exchange_get_transaction_shipping_method( $transaction ) {
 	if ( 'multiple-methods' == $shipping_method ) {
 		$method = new stdClass();
 		$method->slug  = 'multiple-methods';
-		$method->label = __( 'Multiple Shipping Methods', 'LION' );
+		$method->label = __( 'Multiple Shipping Methods', 'it-l10n-ithemes-exchange' );
 		return apply_filters( 'it_exchange_get_transaction_shipping_method', $method, $transaction );
 	}
 
@@ -1279,7 +1279,7 @@ function it_exchange_get_transaction_shipping_method_for_product( $transaction, 
 	if ( 'multiple-methods' == $transaction_method->slug ) {
 		$product_method = empty( $transaction->cart_details->shipping_method_multi[$product_cart_id] ) ? false : $transaction->cart_details->shipping_method_multi[$product_cart_id];
 		$product_method = it_exchange_get_registered_shipping_method( $product_method );
-		$method = empty( $product_method->label ) ? __( 'Unknown Method', 'LION' ) : $product_method->label;
+		$method = empty( $product_method->label ) ? __( 'Unknown Method', 'it-l10n-ithemes-exchange' ) : $product_method->label;
 	} else {
 		$method = $transaction_method->label;
 	}

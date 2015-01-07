@@ -111,7 +111,7 @@ class IT_Exchange_Product_Feature_Shipping {
 	function register_metabox() {
 		$shipping_features = it_exchange_get_registered_shipping_features();
 		if ( ! empty( $shipping_features ) )
-			add_meta_box( 'it-exchange-product-shipping', __( 'Shipping', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'low' );
+			add_meta_box( 'it-exchange-product-shipping', __( 'Shipping', 'it-l10n-ithemes-exchange' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'low' );
 	}
 
 	/**
@@ -128,14 +128,14 @@ class IT_Exchange_Product_Feature_Shipping {
 		?>
 		<div class="shipping-header">
 			<div class="shipping-label">
-				<label for="it-exchange-flat-rate-shipping-cost"><?php _e( 'Shipping', 'LION' ); ?> <span class="tip" title="<?php _e( 'Set shipping details for the product here.', 'LION' ); ?>">i</span></label>
+				<label for="it-exchange-flat-rate-shipping-cost"><?php _e( 'Shipping', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'Set shipping details for the product here.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 			</div>
 
 			<div class="shipping-toggle">
 				<label id="it-exchange-shipping-disabled-label" for="it-exchange-shipping-disabled">
 					<input type="checkbox" id="it-exchange-shipping-disabled" name="it-exchange-shipping-disabled" <?php checked( ! $shipping_enabled ); ?>/>
-					<?php _e( 'Disable shipping for this product', 'LION' ); ?>
-					<span class="tip" title="<?php _e( 'Check this box to indicate that shipping is not needed for this product.', 'LION' ); ?>">i</span>
+					<?php _e( 'Disable shipping for this product', 'it-l10n-ithemes-exchange' ); ?>
+					<span class="tip" title="<?php _e( 'Check this box to indicate that shipping is not needed for this product.', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 				</label>
 			</div>
 		</div>
@@ -146,7 +146,7 @@ class IT_Exchange_Product_Feature_Shipping {
 		</div>
 		<div class="shipping-wrapper shipping-wrapper-disabled <?php echo $shipping_enabled ? 'hidden' : ''; ?>">
 			<div class="shipping-feature">
-				<p><?php _e( 'Shipping has been disabled for this product.', 'LION' ); ?></p>
+				<p><?php _e( 'Shipping has been disabled for this product.', 'it-l10n-ithemes-exchange' ); ?></p>
 			</div>
 		</div>
 		<?php

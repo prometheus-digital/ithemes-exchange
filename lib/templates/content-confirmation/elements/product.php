@@ -34,9 +34,9 @@
 			<?php if ( it_exchange( 'transaction', 'has-product-downloads' ) ) : ?>
 				<?php do_action( 'it_exchange_content_confirmation_before_product_downloads' ); ?>
 				<div class="it-exchange-transaction-product-downloads it-exchange-clearfix">
-					<h4><?php _e( 'Downloads', 'LION' ); ?></h4>
+					<h4><?php _e( 'Downloads', 'it-l10n-ithemes-exchange' ); ?></h4>
 					<?php if ( ! it_exchange( 'transaction', 'get-cleared-for-delivery' ) ) : ?>
-						<p><?php _e( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an appoved status, you will receive a followup email with your download links.', 'LION' ); ?></p>
+						<p><?php _e( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an appoved status, you will receive a followup email with your download links.', 'it-l10n-ithemes-exchange' ); ?></p>
 					<?php endif; ?>
 					<ul class="it-exchange-transaction-product-downloads-list">
 						<?php while( it_exchange( 'transaction', 'product-downloads' ) ) : ?>
@@ -49,7 +49,7 @@
 											<?php if ( ! it_exchange( 'transaction', 'get-product-download-hash', array( 'attribute' => 'download-limit' ) ) || it_exchange( 'transaction', 'get-product-download-hash', array( 'attribute' => 'downloads-remaining' ) ) ) : ?>
 												<?php if ( it_exchange( 'transaction', 'get-cleared-for-delivery' ) ) : ?>
 													<span class="it-exchange-right">
-														<a class="button btn" href="<?php it_exchange( 'transaction', 'product-download-hash', array( 'attribute' => 'download-url' ) ); ?>"><?php _e( 'Download', 'LION' ); ?></a>
+														<a class="button btn" href="<?php it_exchange( 'transaction', 'product-download-hash', array( 'attribute' => 'download-url' ) ); ?>"><?php _e( 'Download', 'it-l10n-ithemes-exchange' ); ?></a>
 													</span>
 												<?php endif; ?>
 											<?php endif; ?>

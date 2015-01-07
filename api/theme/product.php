@@ -188,7 +188,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				'after'  => '</span>',
 				'format' => 'html',
 				'price'  => false,
-				'free-label' => __( 'Free', 'LION' ),
+				'free-label' => __( 'Free', 'it-l10n-ithemes-exchange' ),
 			);
 			$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -239,7 +239,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$defaults   = array(
 				'max-length' => false,
 				'ellipsis'   => '...',
-				'more-text'  => __( '(more info)', 'LION' )
+				'more-text'  => __( '(more info)', 'it-l10n-ithemes-exchange' )
 			);
 
 			$options = ITUtility::merge_defaults( $options, $defaults );
@@ -379,7 +379,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'after'           => '',
 			'format'          => 'html',
 			'class'           => 'product-purchase-quantity',
-			'unlimited-label' => __( 'Unlimited', 'LION' ),
+			'unlimited-label' => __( 'Unlimited', 'it-l10n-ithemes-exchange' ),
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
@@ -817,19 +817,19 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'buy-now-before'            => '',
 			'buy-now-after'             => '',
 			'buy-now-class'             => false,
-			'buy-now-label'             => __( 'Buy Now', 'LION' ),
+			'buy-now-label'             => __( 'Buy Now', 'it-l10n-ithemes-exchange' ),
 			'buy-now-button-type'       => 'submit',
 			'buy-now-button-name'       => false,
 			'buy-now-edit-quantity'     => true,
 			'add-to-cart-before'        => '',
 			'add-to-cart-after'         => '',
 			'add-to-cart-class'         => false,
-			'add-to-cart-label'         => __( 'Add to Cart', 'LION' ),
+			'add-to-cart-label'         => __( 'Add to Cart', 'it-l10n-ithemes-exchange' ),
 			'add-to-cart-button-type'   => 'submit',
 			'add-to-cart-button-name'   => false,
 			'add-to-cart-edit-quantity' => true,
-			'out-of-stock-text'         => __( 'Product is currently out of stock.', 'LION' ),
-			'not-available-text'        => __( 'Product is currently not available.', 'LION' ),
+			'out-of-stock-text'         => __( 'Product is currently out of stock.', 'it-l10n-ithemes-exchange' ),
+			'not-available-text'        => __( 'Product is currently not available.', 'it-l10n-ithemes-exchange' ),
 			'product-in-stock'          => null,
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
@@ -947,11 +947,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'before'              => '',
 			'after'               => '',
 			'class'               => false,
-			'label'               => __( 'Buy Now', 'LION' ),
+			'label'               => __( 'Buy Now', 'it-l10n-ithemes-exchange' ),
 			'button-type'         => 'submit',
 			'button-name'         => false,
-			'out-of-stock-text'   => __( 'Out of stock.', 'LION' ),
-			'not-available-text'  => __( 'Product not available right now.', 'LION' ),
+			'out-of-stock-text'   => __( 'Out of stock.', 'it-l10n-ithemes-exchange' ),
+			'not-available-text'  => __( 'Product not available right now.', 'it-l10n-ithemes-exchange' ),
 			'edit-quantity'       => true,
 			'product-in-stock'    => null,
 		);
@@ -1017,13 +1017,13 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'before'              => '',
 			'after'               => '',
 			'class'               => false,
-			'label'               => __( 'Add to Cart', 'LION' ),
+			'label'               => __( 'Add to Cart', 'it-l10n-ithemes-exchange' ),
 			'button-type'         => 'submit',
 			'button-name'         => false,
-			'out-of-stock-text'   => __( 'Out of stock.', 'LION' ),
-			'not-available-text'  => __( 'Product not available right now.', 'LION' ),
+			'out-of-stock-text'   => __( 'Out of stock.', 'it-l10n-ithemes-exchange' ),
+			'not-available-text'  => __( 'Product not available right now.', 'it-l10n-ithemes-exchange' ),
 			'edit-quantity'       => true,
-			'max-quantity-text'   => __( 'Max Quantity Reached', 'LION' ),
+			'max-quantity-text'   => __( 'Max Quantity Reached', 'it-l10n-ithemes-exchange' ),
 			'product-in-stock'    => null,
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );

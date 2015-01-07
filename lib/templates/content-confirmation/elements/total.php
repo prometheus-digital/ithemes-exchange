@@ -17,6 +17,6 @@
 
 <?php do_action( 'it_exchange_confirmation_before_transaction_total_element' ); ?>
 <div class="it-exchange-transaction-total">
-	<p><?php _e( 'Total:', 'LION' ); ?> <?php it_exchange( 'transaction', 'total' ); ?></p>
+	<p><?php _e( 'Total:', 'it-l10n-ithemes-exchange' ); ?> <?php it_exchange( 'transaction', 'total' ); ?></p>
 </div>
 <?php do_action( 'it_exchange_confirmation_after_transaction_total_element' ); ?>

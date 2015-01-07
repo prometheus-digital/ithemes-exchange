@@ -19,7 +19,7 @@
 
 <div class="registration-info">
 	<?php if ( is_user_logged_in() ) : ?>
-		<p><?php printf( __( 'You already have an active account and are logged in. Visit your %sProfile%s', 'LION' ), '<a href="' . it_exchange_get_page_url( 'profile' ) . '">', '</a>' ); ?></p>
+		<p><?php printf( __( 'You already have an active account and are logged in. Visit your %sProfile%s', 'it-l10n-ithemes-exchange' ), '<a href="' . it_exchange_get_page_url( 'profile' ) . '">', '</a>' ); ?></p>
 	<?php else : ?>
 		<?php if ( it_exchange( 'registration', 'is-enabled' ) ) : ?>
 
@@ -46,7 +46,7 @@
 			</div>
 
 			<?php it_exchange( 'registration', 'save' ); ?>
-			&nbsp;<a href="<?php esc_attr_e( it_exchange_get_page_url( 'login' ) ); ?>"><?php _e( 'Log in', 'LION' ); ?></a>
+			&nbsp;<a href="<?php esc_attr_e( it_exchange_get_page_url( 'login' ) ); ?>"><?php _e( 'Log in', 'it-l10n-ithemes-exchange' ); ?></a>
 			<?php it_exchange( 'registration', 'formclose' ); ?>
 
 		<?php else : ?>

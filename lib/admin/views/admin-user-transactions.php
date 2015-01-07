@@ -14,10 +14,10 @@ else
 $user_object = get_userdata( $user_id );
 
 $headings = array(
-	__( 'Description', 'LION' ),
-	__( 'Total', 'LION' ),
-	__( 'Order Number', 'LION' ),
-	__( 'Actions', 'LION' ),
+	__( 'Description', 'it-l10n-ithemes-exchange' ),
+	__( 'Total', 'it-l10n-ithemes-exchange' ),
+	__( 'Order Number', 'it-l10n-ithemes-exchange' ),
+	__( 'Actions', 'it-l10n-ithemes-exchange' ),
 );
 
 $list = array();
@@ -42,9 +42,9 @@ foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transacti
 
 	// Actions array
 	$actions_array = array(
-		$view_url   => __( 'View', 'LION' ),
-		$resend_url => __( 'Resend Confirmation Email', 'LION' ),
-		$refund_url =>  sprintf( __( 'Refund from %s', 'LION' ), it_exchange_get_transaction_method_name( $transaction ) ),
+		$view_url   => __( 'View', 'it-l10n-ithemes-exchange' ),
+		$resend_url => __( 'Resend Confirmation Email', 'it-l10n-ithemes-exchange' ),
+		$refund_url =>  sprintf( __( 'Refund from %s', 'it-l10n-ithemes-exchange' ), it_exchange_get_transaction_method_name( $transaction ) ),
 	);
 	$description  = it_exchange_get_transaction_description( $transaction );
 	$price        = it_exchange_get_transaction_total( $transaction );
@@ -88,7 +88,7 @@ foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transacti
 
 <?php if ( 'transactions' === $tab && false ) : ?>
 	<div class="add-manual-transaction">
-		<input type="button" class="button button-large" name="add_it_exchange_transaction" value="<?php _e( 'Add Manual Transaction', 'LION' ) ?>" />
+		<input type="button" class="button button-large" name="add_it_exchange_transaction" value="<?php _e( 'Add Manual Transaction', 'it-l10n-ithemes-exchange' ) ?>" />
 	</div>
 <?php endif; ?>
 

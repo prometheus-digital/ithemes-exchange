@@ -279,7 +279,7 @@ function it_exchange_is_page( $page=false ) {
  *
  * Options:
  *  - slug          required. eg: store
- *  - name          required. eg: __( 'Store', 'LION' )
+ *  - name          required. eg: __( 'Store', 'it-l10n-ithemes-exchange' )
  *  - rewrite-rules required. an array. 1st element is priority within all exchange page rewrites. 2nd element is callback that will provide the rewrite array.
  *  - url           required. callback that will provide the url for the page. Make sure to check for permalinks
  *  - settings-name optional. The title given to the setting on Settings -> Pages

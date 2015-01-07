@@ -7,8 +7,8 @@
 */
 
 $headings = array(
-	__( 'Products', 'LION' ),
-	__( 'Transaction', 'LION' ),
+	__( 'Products', 'it-l10n-ithemes-exchange' ),
+	__( 'Transaction', 'it-l10n-ithemes-exchange' ),
 );
 
 $product_list = array();
@@ -30,7 +30,7 @@ foreach( (array) it_exchange_get_customer_products( $user_id ) as $product ) {
 	if ( !empty( $transaction_downloads[$product_id] ) ) {
 
 		$downloads = $transaction_downloads[$product_id];
-		$product_link .= __( '<span class="details-toggle hide-if-no-js">&#61;</span><span class="details-toggle hide-if-no-js">&#61;</span>', 'LION' );
+		$product_link .= __( '<span class="details-toggle hide-if-no-js">&#61;</span><span class="details-toggle hide-if-no-js">&#61;</span>', 'it-l10n-ithemes-exchange' );
 
 	} else {
 
@@ -69,7 +69,7 @@ do_action( 'it-exchange-before-admin-user-products' );
 
 			<?php if ( ! empty( $data['downloads'] ) ) : ?>
 				<div class="item-column block-column-full hide-if-js">
-					<h3><?php _e( 'Downloads', 'LION' ); ?></h3>
+					<h3><?php _e( 'Downloads', 'it-l10n-ithemes-exchange' ); ?></h3>
 					<div class="downloads-wrapper">
 						<?php foreach ( $data['downloads'] as $download_id => $download_hashes ) : ?>
 							<?php $download_info = it_exchange_get_download_info( $download_id ); ?>
@@ -84,15 +84,15 @@ do_action( 'it-exchange-before-admin-user-products' );
 												<span class="hash"><?php echo $download_data['hash'] ?></span>
 
 												<?php if ( ! empty( $download_data['download_limit'] ) ) : ?>
-													<span class="limit"><?php echo sprintf( __( '%s of %s downloads remaining', 'LION' ), $download_data['download_limit'] - $download_data['downloads'], $download_data['download_limit'] ); ?></span>
+													<span class="limit"><?php echo sprintf( __( '%s of %s downloads remaining', 'it-l10n-ithemes-exchange' ), $download_data['download_limit'] - $download_data['downloads'], $download_data['download_limit'] ); ?></span>
 												<?php else : ?>
-													<span class="limit"><?php _e( 'Unlimited Downloads', 'LION' );  ?>
+													<span class="limit"><?php _e( 'Unlimited Downloads', 'it-l10n-ithemes-exchange' );  ?>
 												<?php endif; ?>
 
 												<?php if ( $expires = it_exchange_get_download_expiration_date( $download_data ) ) : ?>
-													<span class="expires"><?php echo sprintf( __( 'Expires %s', 'LION' ), $expires ); ?></span>
+													<span class="expires"><?php echo sprintf( __( 'Expires %s', 'it-l10n-ithemes-exchange' ), $expires ); ?></span>
 												<?php else : ?>
-													<span class="expires"><?php _e( 'Never Expires', 'LION' );  ?>
+													<span class="expires"><?php _e( 'Never Expires', 'it-l10n-ithemes-exchange' );  ?>
 												<?php endif; ?>
 											</li>
 										<?php endif; ?>

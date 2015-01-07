@@ -1,6 +1,0 @@
-[submodule "lib/classes"]
-	path = lib/classes
-	url = git@bitbucket.org:ithemes/classes
-[submodule "lib/icon-fonts"]
-	path = lib/icon-fonts
-	url = git@bitbucket.org:ithemes/icon-fonts

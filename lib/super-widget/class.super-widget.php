@@ -46,9 +46,9 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	*/
 	function IT_Exchange_Super_Widget() {
 		$id_base = 'it-exchange-super-widget';
-		$name    = __( 'iThemes Exchange Super Widget', 'LION' );
+		$name    = __( 'iThemes Exchange Super Widget', 'it-l10n-ithemes-exchange' );
 		$options = array(
-			'description' => __( 'Handles Buy Now, Add to Cart, Cart Summary, Registration, Log in, and Confirmation views depending on the situation', 'LION' ),
+			'description' => __( 'Handles Buy Now, Add to Cart, Cart Summary, Registration, Log in, and Confirmation views depending on the situation', 'it-l10n-ithemes-exchange' ),
 		);
 		parent::__construct( $id_base, $name, $options );
 
@@ -152,8 +152,8 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		$script_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/js/super-widget.js' );
 		wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery', 'jquery-ui-spinner', 'detect-credit-card-type', 'it-exchange-event-manager' ), false, true );
 		wp_localize_script( 'it-exchange-super-widget', 'exchangeSWL10n', array(
-				'processingPaymentLabel' => __( 'Processing', 'LION' ),
-				'processingAction'       => __( 'Processing... ', 'LION' ),
+				'processingPaymentLabel' => __( 'Processing', 'it-l10n-ithemes-exchange' ),
+				'processingAction'       => __( 'Processing... ', 'it-l10n-ithemes-exchange' ),
 			)
 		);
 

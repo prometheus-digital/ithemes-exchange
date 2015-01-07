@@ -19,7 +19,7 @@
 <?php if ( ! it_exchange( 'transaction', 'get-product-download-hash', array( 'attribute' => 'download-limit' ) ) || it_exchange( 'transaction', 'get-product-download-hash', array( 'attribute' => 'downloads-remaining' ) ) ) : ?>
 	<?php if ( it_exchange( 'transaction', 'get-cleared-for-delivery' ) ) : ?>
 		<span class="it-exchange-download-now">
-			<a href="<?php it_exchange( 'transaction', 'product-download-hash', array( 'attribute' => 'download-url' ) ); ?>"><?php _e( 'Download Now', 'LION' ); ?></a>
+			<a href="<?php it_exchange( 'transaction', 'product-download-hash', array( 'attribute' => 'download-url' ) ); ?>"><?php _e( 'Download Now', 'it-l10n-ithemes-exchange' ); ?></a>
 		</span>
 	<?php endif; ?>
 <?php endif; ?>

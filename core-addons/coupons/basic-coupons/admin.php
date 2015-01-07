@@ -144,19 +144,19 @@ add_action( 'admin_init', 'it_exchange_basic_coupons_save_coupon' );
 function it_exchange_basic_coupons_data_is_valid() {
 	$data = ITForm::get_post_data();
 	if ( empty( $data['name'] ) )
-		it_exchange_add_message( 'error', __( 'Coupon Name cannot be left empty', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Coupon Name cannot be left empty', 'it-l10n-ithemes-exchange' ) );
 	if ( empty( $data['code'] ) )
-		it_exchange_add_message( 'error', __( 'Coupon Code cannot be left empty', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Coupon Code cannot be left empty', 'it-l10n-ithemes-exchange' ) );
 	if ( empty( $data['amount-number'] ) )
-		it_exchange_add_message( 'error', __( 'Coupon Discount cannot be left empty', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Coupon Discount cannot be left empty', 'it-l10n-ithemes-exchange' ) );
 	if ( ! is_numeric( $data['amount-number'] ) || trim( $data['amount-number'] ) < 1 )
-		it_exchange_add_message( 'error', __( 'Coupon Discount must be a postive number', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Coupon Discount must be a postive number', 'it-l10n-ithemes-exchange' ) );
 	if ( ! empty( $data['limit-quantity'] ) && ! is_numeric( $data['quantity'] ) )
-		it_exchange_add_message( 'error', __( 'Available Coupons must be a number', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Available Coupons must be a number', 'it-l10n-ithemes-exchange' ) );
 	if ( ! empty( $data['limit-product'] ) && ! it_exchange_get_product( $data['product-id'] ) )
-		it_exchange_add_message( 'error', __( 'Please select a product.', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Please select a product.', 'it-l10n-ithemes-exchange' ) );
 	if ( ! empty( $data['limit-frequency'] ) && ! is_numeric( $data['frequency-times'] ) && ! is_numeric( $data['frequency-length'] ) )
-		it_exchange_add_message( 'error', __( 'Please select a frequency limitation', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Please select a frequency limitation', 'it-l10n-ithemes-exchange' ) );
 
 	do_action( 'it_exchange_basic_coupons_data_is_valid', $data );
 
@@ -174,14 +174,14 @@ function it_exchange_basic_coupons_add_menu_item() {
 	if ( ! empty( $_GET['page'] ) && 'it-exchange-add-basic-coupon' == $_GET['page'] ) {
 		$slug = 'it-exchange-add-basic-coupon';
 		$func = 'it_exchange_basic_coupons_print_add_edit_coupon_screen';
-		add_submenu_page( 'it-exchange', __( 'Add Coupon', 'LION' ), __( 'Add Coupon', 'LION' ), 'manage_options', $slug, $func );
+		add_submenu_page( 'it-exchange', __( 'Add Coupon', 'it-l10n-ithemes-exchange' ), __( 'Add Coupon', 'it-l10n-ithemes-exchange' ), 'manage_options', $slug, $func );
 	} else if ( ! empty( $_GET['page'] ) && 'it-exchange-edit-basic-coupon' == $_GET['page'] ) {
 		$slug = 'it-exchange-edit-basic-coupon';
 		$func = 'it_exchange_basic_coupons_print_add_edit_coupon_screen';
-		add_submenu_page( 'it-exchange', __( 'Edit Coupon', 'LION' ), __( 'Edit Coupon', 'LION' ), 'manage_options', $slug, $func );
+		add_submenu_page( 'it-exchange', __( 'Edit Coupon', 'it-l10n-ithemes-exchange' ), __( 'Edit Coupon', 'it-l10n-ithemes-exchange' ), 'manage_options', $slug, $func );
 	}
 	$url = add_query_arg( array( 'post_type' => 'it_exchange_coupon' ), 'edit.php' );
-	add_submenu_page( 'it-exchange', __( 'Coupons', 'LION' ), __( 'Coupons', 'LION' ), 'manage_options', $url );
+	add_submenu_page( 'it-exchange', __( 'Coupons', 'it-l10n-ithemes-exchange' ), __( 'Coupons', 'it-l10n-ithemes-exchange' ), 'manage_options', $url );
 }
 add_action( 'admin_menu', 'it_exchange_basic_coupons_add_menu_item' );
 
@@ -231,7 +231,7 @@ add_action( 'admin_init', 'it_exchange_basic_coupons_redirect_core_add_edit_scre
 function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 	// Setup add / edit variables
 	$post_id = empty( $_GET['post'] ) ? false : $_GET['post'];
-	$heading = $post_id ? __( 'Edit Coupon', 'LION' ) : __( 'Add Coupon', 'LION' );
+	$heading = $post_id ? __( 'Edit Coupon', 'it-l10n-ithemes-exchange' ) : __( 'Add Coupon', 'it-l10n-ithemes-exchange' );
 	$form_action = $post_id ? add_query_arg( array( 'page' => 'it-exchange-edit-basic-coupon', 'post' => $post_id ), get_admin_url() . 'admin.php' ) : add_query_arg( array( 'page' => 'it-exchange-add-basic-coupon' ), get_admin_url() . 'admin.php' );
 
 	// Set form values
@@ -265,9 +265,9 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 			ITUtility::show_error_message( $error );
 		}
 	} else if ( ! empty( $_GET['added'] ) ) {
-		ITUtility::show_status_message( __( 'Coupon Added', 'LION' ) );
+		ITUtility::show_status_message( __( 'Coupon Added', 'it-l10n-ithemes-exchange' ) );
 	} else if ( ! empty( $_GET['updated'] ) ) {
-		ITUtility::show_status_message( __( 'Coupon Updated', 'LION' ) );
+		ITUtility::show_status_message( __( 'Coupon Updated', 'it-l10n-ithemes-exchange' ) );
 	}
 
 	$form_values  = empty( $values ) ? ITForm::get_post_data() : $values;
@@ -295,33 +295,33 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 				<?php do_action( 'it_exchange_basics_coupon_coupon_edit_screen_begin_fields', $form ); ?>
 
 				<div class="field">
-					<label for="name"><?php _e( 'Name', 'LION' ); ?> <span class="tip" title="<?php _e( 'What do you want to call this coupon? This is just for your reference.', 'LION' ); ?>">i</span></label>
+					<label for="name"><?php _e( 'Name', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'What do you want to call this coupon? This is just for your reference.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 					<?php $form->add_text_box( 'name' ); ?>
 				</div>
 				<div class="field coupon-code">
-					<label for="code"><?php _e( 'Code', 'LION' ); ?> <span class="tip" title="<?php _e( 'Try something cool like EXCHANGERULEZ5000! Or click the dice to generate a random code.', 'LION' ); ?>">i</span></label>
+					<label for="code"><?php _e( 'Code', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'Try something cool like EXCHANGERULEZ5000! Or click the dice to generate a random code.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 					<?php $form->add_text_box( 'code', array( 'class' => 'emptycode' ) ); ?>
 					<a href class="dice" title="Generate a random code."><img src="<?php echo esc_attr( ITUtility::get_url_from_file( dirname( __FILE__ ) ) ); ?>/images/dice-t.png" /></a>
 				</div>
 
 				<div class="field amount">
-					<label for="amount-number"><?php _e( 'Amount', 'LION' ); ?></label>
+					<label for="amount-number"><?php _e( 'Amount', 'it-l10n-ithemes-exchange' ); ?></label>
 					<?php $form->add_text_box( 'amount-number', array( 'type' => 'number' ) ); ?>
 					<?php
 					$settings = it_exchange_get_option( 'settings_general' );
 					$currency = $settings['default-currency'];
 					$symbol   = it_exchange_get_currency_symbol( $currency );
 					?>
-					<?php $form->add_drop_down( 'amount-type', array( '%' => __( '% Percent', 'LION' ), 'amount' => $symbol . ' ' . $currency ) ); ?>
+					<?php $form->add_drop_down( 'amount-type', array( '%' => __( '% Percent', 'it-l10n-ithemes-exchange' ), 'amount' => $symbol . ' ' . $currency ) ); ?>
 				</div>
 
-				<div class="field date" data-alert="<?php _e( 'Please select an end date that is after the start date.', 'LION' ); ?>">
+				<div class="field date" data-alert="<?php _e( 'Please select an end date that is after the start date.', 'it-l10n-ithemes-exchange' ); ?>">
 					<div class="start-date">
-						<label for="start-date"><?php _e( 'Start Date', 'LION' ); ?></label>
+						<label for="start-date"><?php _e( 'Start Date', 'it-l10n-ithemes-exchange' ); ?></label>
 						<?php $form->add_text_box( 'start-date', array( 'class' => 'datepicker', 'data-append' => 'end-date' ) ); ?>
 					</div>
 					<div class="end-date">
-						<label for="end-date"><?php _e( 'End Date', 'LION' ); ?></label>
+						<label for="end-date"><?php _e( 'End Date', 'it-l10n-ithemes-exchange' ); ?></label>
 						<?php $form->add_text_box( 'end-date', array( 'class' => 'datepicker', 'data-append' => 'start-date' ) ); ?>
 					</div>
 				</div>
@@ -329,41 +329,41 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 				<div class="field limit-quantity">
 					<?php $form->add_check_box( 'limit-quantity' ); ?>
 					<label for="limit-quantity">
-						<?php _e( 'Limit number of coupons', 'LION' ); ?>
-						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times this coupon can be used', 'LION' ) ); ?>">i</span>
+						<?php _e( 'Limit number of coupons', 'it-l10n-ithemes-exchange' ); ?>
+						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times this coupon can be used', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
 					</label>
 				</div>
 
 				<div class="field quantity">
 					<?php $form->add_text_box( 'quantity', array( 'type' => 'number' ) ); ?>
-					<span class="tip" title="<?php _e( 'How many times can this coupon be used before it is disabled?', 'LION' ); ?>">i</span>
+					<span class="tip" title="<?php _e( 'How many times can this coupon be used before it is disabled?', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 				</div>
 
 				<div class="field limit-product">
 					<?php $form->add_check_box( 'limit-product' ); ?>
 					<label for="limit-product">
-						<?php _e( 'Limit to a specific product', 'LION' ); ?>
-						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the coupon discount to a specific product price, not the cart total', 'LION' ) ); ?>">i</span>
+						<?php _e( 'Limit to a specific product', 'it-l10n-ithemes-exchange' ); ?>
+						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the coupon discount to a specific product price, not the cart total', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
 					</label>
 				</div>
 
 				<div class="field product-id">
 					<?php
-					$product_options = array( 0 => __( 'Select a product', 'LION' ) );
+					$product_options = array( 0 => __( 'Select a product', 'it-l10n-ithemes-exchange' ) );
 					$products        = it_exchange_get_products( array( 'show_hidden' => true, 'posts_per_page' => -1 ) );
 					foreach( (array) $products as $id => $product ) {
 						$product_options[$product->ID] = $product->post_title;
 					}
 					?>
 					<?php $form->add_drop_down( 'product-id', $product_options ); ?>
-					<span class="tip" title="<?php _e( 'Select a product to use with this coupon.', 'LION' ); ?>">i</span>
+					<span class="tip" title="<?php _e( 'Select a product to use with this coupon.', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 				</div>
 
 				<div class="field limit-frequency">
 					<?php $form->add_check_box( 'limit-frequency' ); ?>
 					<label for="limit-frequency">
-						<?php _e( 'Limit frequency of use per customer', 'LION' ); ?>
-						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times each customer can use the coupon during a specified time frame', 'LION' ) ); ?>">i</span>
+						<?php _e( 'Limit frequency of use per customer', 'it-l10n-ithemes-exchange' ); ?>
+						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times each customer can use the coupon during a specified time frame', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
 					</label>
 				</div>
 
@@ -375,10 +375,10 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 					}
 					$frequency_times  = apply_filters( 'it_exchange_limit_coupon_freqency_times_options', $thirty );
 					$frequency_length = apply_filters( 'it_exchange_limit_coupon_freqency_length_options', $thirty );
-					$frequency_units  = array( 'day' => __( 'Day(s)', 'LION' ), 'week' =>  __( 'Week(s)', 'LION' ), 'year' => __( 'Year(s)', 'LION' ) );
-					_e( 'Limit this coupon to ', 'LION' );
+					$frequency_units  = array( 'day' => __( 'Day(s)', 'it-l10n-ithemes-exchange' ), 'week' =>  __( 'Week(s)', 'it-l10n-ithemes-exchange' ), 'year' => __( 'Year(s)', 'it-l10n-ithemes-exchange' ) );
+					_e( 'Limit this coupon to ', 'it-l10n-ithemes-exchange' );
 					$form->add_drop_down( 'frequency-times', $frequency_times );
-					_e( ' use(s) per customer for every ', 'LION' );
+					_e( ' use(s) per customer for every ', 'it-l10n-ithemes-exchange' );
 					$form->add_drop_down( 'frequency-length', $frequency_length );
 					$form->add_drop_down( 'frequency-units', $frequency_units );
 					?>
@@ -387,8 +387,8 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 				<?php do_action( 'it_exchange_basics_coupon_coupon_edit_screen_end_fields', $form ); ?>
 
 				<div class="field">
-					<?php $form->add_submit( 'cancel', array( 'class' => 'button-large button', 'value' => __( 'Cancel', 'LION' ) ) ); ?>
-					<?php $form->add_submit( 'submit', array( 'class' => 'button-large button-primary button', 'value' => __( 'Save', 'LION' ) ) ); ?>
+					<?php $form->add_submit( 'cancel', array( 'class' => 'button-large button', 'value' => __( 'Cancel', 'it-l10n-ithemes-exchange' ) ) ); ?>
+					<?php $form->add_submit( 'submit', array( 'class' => 'button-large button-primary button', 'value' => __( 'Save', 'it-l10n-ithemes-exchange' ) ) ); ?>
 				</div>
 			</div>
 		</div>
@@ -429,13 +429,13 @@ add_action( 'admin_head', 'it_exchange_basic_coupons_remove_submenu_links' );
 */
 function it_exchange_basic_coupons_product_columns( $existing ) {
 	$columns['cb']    = '<input type="checkbox" />';
-	$columns['title'] = __( 'Title', 'LION' );
-	$columns['it_exchange_coupon_code']       = __( 'Coupon Code', 'LION' );
-	$columns['it_exchange_coupon_discount']   = __( 'Discount', 'LION' );
-	$columns['it_exchange_coupon_start_date'] = __( 'Start Date', 'LION' );
-	$columns['it_exchange_coupon_end_date']   = __( 'End Date', 'LION' );
-	$columns['it_exchange_coupon_quantity']   = __( 'Available Coupons', 'LION' );
-	$columns['it_exchange_coupon_product_id'] = __( 'Product', 'LION' );
+	$columns['title'] = __( 'Title', 'it-l10n-ithemes-exchange' );
+	$columns['it_exchange_coupon_code']       = __( 'Coupon Code', 'it-l10n-ithemes-exchange' );
+	$columns['it_exchange_coupon_discount']   = __( 'Discount', 'it-l10n-ithemes-exchange' );
+	$columns['it_exchange_coupon_start_date'] = __( 'Start Date', 'it-l10n-ithemes-exchange' );
+	$columns['it_exchange_coupon_end_date']   = __( 'End Date', 'it-l10n-ithemes-exchange' );
+	$columns['it_exchange_coupon_quantity']   = __( 'Available Coupons', 'it-l10n-ithemes-exchange' );
+	$columns['it_exchange_coupon_product_id'] = __( 'Product', 'it-l10n-ithemes-exchange' );
 
 	return $columns;
 }
@@ -486,11 +486,11 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 			esc_attr_e( $coupon->end_date );
 			break;
 		case 'it_exchange_coupon_quantity':
-			$quantity_label = ( empty( $coupon->limit_quantity ) ) ? __( 'Unlimited', 'LION' ) : $coupon->quantity;
+			$quantity_label = ( empty( $coupon->limit_quantity ) ) ? __( 'Unlimited', 'it-l10n-ithemes-exchange' ) : $coupon->quantity;
 			esc_attr_e( $quantity_label );
 			break;
 		case 'it_exchange_coupon_product_id':
-			$product_name = ( empty( $coupon->limit_product ) ) ? __( 'All Products', 'LION' ) : it_exchange_get_product_feature( $coupon->product_id, 'title' );
+			$product_name = ( empty( $coupon->limit_product ) ) ? __( 'All Products', 'it-l10n-ithemes-exchange' ) : it_exchange_get_product_feature( $coupon->product_id, 'title' );
 			esc_attr_e( $product_name );
 			break;
 	}

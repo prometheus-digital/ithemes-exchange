@@ -79,7 +79,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 			<form method="post" action="">
 			<select class="it-exchange-shipping-method-select" name="it-exchange-shipping-method">
 			<?php
-			$options = '<option value="0">' . __( 'Select a shipping method', 'LION' );
+			$options = '<option value="0">' . __( 'Select a shipping method', 'it-l10n-ithemes-exchange' );
 			foreach( $cart_methods as $method ) {
 				$options .= '<option value="' . esc_attr( $method->slug ) . '" ' . selected( $current_method, $method->slug, false ) . '>' . $method->label . ' (' . it_exchange_get_cart_shipping_cost( $method->slug ) . ')</option>';
 			}
@@ -92,7 +92,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 				if ( $cart_products_with_shipping > 1 && count( $cart_product_methods ) > 1 ) {
 					$multiple_shipping_methods_allowed = apply_filters( 'it_exchange_shipping_method_form_multiple_shipping_methods_allowed', true );
 					if ( $multiple_shipping_methods_allowed ) {
-						$options .= '<option value="multiple-methods" ' . selected( $current_method, 'multiple-methods', false ) . '>' . __( 'Use multiple shipping methods', 'LION' ) . '</option>';
+						$options .= '<option value="multiple-methods" ' . selected( $current_method, 'multiple-methods', false ) . '>' . __( 'Use multiple shipping methods', 'it-l10n-ithemes-exchange' ) . '</option>';
 					}
 				}
 			}
@@ -162,7 +162,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 			return '';
 
 		$defaults = array(
-			'label' => __( 'Cancel', 'LION' ),
+			'label' => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
 			'class' => false,
 		);
 
@@ -188,7 +188,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 			return '';
 
 		$defaults = array(
-			'label' => __( 'Next', 'LION' ),
+			'label' => __( 'Next', 'it-l10n-ithemes-exchange' ),
 			'class' => false,
 		);
 

@@ -99,7 +99,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		$defaults      = array(
 			'before' => '',
 			'after'  => '',
-			'label'  => __( 'Order Number: %s', 'LION' ),
+			'label'  => __( 'Order Number: %s', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -117,7 +117,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		$defaults      = array(
 			'before' => '',
 			'after'  => '',
-			'label'  => __( 'Status: <span class="%s">%s</span>', 'LION' ),
+			'label'  => __( 'Status: <span class="%s">%s</span>', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -597,7 +597,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			$date = it_exchange_get_download_expiration_date( $hash_data, $date_format );
 			$value = empty( $date ) ? false : $date;
 		} else if ( 'downloads-remaining' == $options['attribute'] ) {
-			$limit = empty( $hash_data['download_limit'] ) ? __( 'Unlimited Downloads', 'LION' ) : absint( $hash_data['download_limit'] );
+			$limit = empty( $hash_data['download_limit'] ) ? __( 'Unlimited Downloads', 'it-l10n-ithemes-exchange' ) : absint( $hash_data['download_limit'] );
 			$count = empty( $hash_data['downloads'] ) ? 0 : absint( $hash_data['downloads'] );
 			$remaining = ( $limit - $count );
 			$value = ( $remaining < 0 ) ? 0 : $remaining;

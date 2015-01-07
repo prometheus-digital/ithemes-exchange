@@ -19,7 +19,7 @@
 <div class="cart-actions-wrapper">
 	<?php do_action( 'it_exchange_super_widget_cart_begin_single_item_cancel_wrap' ); ?>
 	<div class="cart-action cancel-update">
-	<?php it_exchange( 'cart', 'checkout', array( 'class' => 'sw-cart-focus-checkout', 'focus' => 'checkout', 'label' =>  __( 'Cancel', 'LION' ) ) ); ?>
+	<?php it_exchange( 'cart', 'checkout', array( 'class' => 'sw-cart-focus-checkout', 'focus' => 'checkout', 'label' =>  __( 'Cancel', 'it-l10n-ithemes-exchange' ) ) ); ?>
 	</div>
 	<?php do_action( 'it_exchange_super_widget_cart_end_single_item_cancel_wrap' ); ?>
 </div>

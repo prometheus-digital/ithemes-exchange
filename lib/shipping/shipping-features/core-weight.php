@@ -74,9 +74,9 @@ class IT_Exchange_Core_Shipping_Feature_Weight extends IT_Exchange_Shipping_Feat
 	function print_add_edit_feature_box_interior() {
 		?>
 		<div class="shipping-weight column">
-			<label><?php _e( 'Weight', 'LION' ); ?> <span class="tip" title="<?php _e( 'Weight of the package. Used to calculate shipping costs.', 'LION' ); ?>">i</span></label>
+			<label><?php _e( 'Weight', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'Weight of the package. Used to calculate shipping costs.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 			<input type="text" id="it-exchange-shipping-weight" name="it-exchange-shipping-weight" class="small-input" value="<?php esc_attr_e( $this->values->weight ); ?>"/>
-			<span class="it-exchange-shipping-weight-format"><?php echo ( 'standard' == $this->values->measurement_format ) ? __( 'lbs', 'LION' ) : __( 'kgs', 'LION' ); ?></span>
+			<span class="it-exchange-shipping-weight-format"><?php echo ( 'standard' == $this->values->measurement_format ) ? __( 'lbs', 'it-l10n-ithemes-exchange' ) : __( 'kgs', 'it-l10n-ithemes-exchange' ); ?></span>
 		</div>
 		<?php
 	}

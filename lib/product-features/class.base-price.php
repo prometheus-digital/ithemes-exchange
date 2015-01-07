@@ -96,7 +96,7 @@ class IT_Exchange_Base_Price {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-base-price', __( 'Base Price', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'high' );
+		add_meta_box( 'it-exchange-base-price', __( 'Base Price', 'it-l10n-ithemes-exchange' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'high' );
 	}
 
 	/**
@@ -113,7 +113,7 @@ class IT_Exchange_Base_Price {
 		$product_base_price = ( '' === it_exchange_get_product_feature( $product->ID, 'base-price' ) ) ? '' : it_exchange_format_price( it_exchange_get_product_feature( $product->ID, 'base-price' ) );
 
 		// Set description
-		$description = __( 'Price', 'LION' );
+		$description = __( 'Price', 'it-l10n-ithemes-exchange' );
 		$description = apply_filters( 'it_exchange_base-price_addon_metabox_description', $description, $post );
 
 		$settings = it_exchange_get_option( 'settings_general' );

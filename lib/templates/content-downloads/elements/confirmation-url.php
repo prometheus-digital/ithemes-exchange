@@ -17,6 +17,6 @@
 
 <?php do_action( 'it_exchange_content_download_before_confirmation_url_element' ); ?>
 <div class="it-exchange-download-product">
-	<a href="<?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'confirmation-url' ) ); ?>" class="btn"><?php _e( 'Transaction', 'LION' ); ?></a>
+	<a href="<?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'confirmation-url' ) ); ?>" class="btn"><?php _e( 'Transaction', 'it-l10n-ithemes-exchange' ); ?></a>
 </div>
 <?php do_action( 'it_exchange_content_download_after_confirmation_url_element' ); ?>

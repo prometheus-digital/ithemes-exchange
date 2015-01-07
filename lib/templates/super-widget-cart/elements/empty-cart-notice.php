@@ -17,7 +17,7 @@
 <?php do_action( 'it_exchange_super_widget_cart_before_empty_cart_notice_element' ); ?>
 <div class="empty-cart">
 	<?php do_action( 'it_exchange_super_widget_cart_begin_empty_cart_notice_element' ); ?>
-	<p><?php _e( 'Your cart is empty', 'LION' ); ?></p>
+	<p><?php _e( 'Your cart is empty', 'it-l10n-ithemes-exchange' ); ?></p>
 	<?php do_action( 'it_exchange_super_widget_cart_end_empty_cart_notice_element' ); ?>
 </div>
 <?php do_action( 'it_exchange_super_widget_cart_after_empty_cart_notice_element' ); ?>

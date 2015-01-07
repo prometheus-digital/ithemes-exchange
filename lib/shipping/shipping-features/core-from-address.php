@@ -90,13 +90,13 @@ class IT_Exchange_Core_Shipping_Feature_From_Address extends IT_Exchange_Shippin
         <ul>
             <li>
                 <label id="core-shipping-feature-override-from-address-label" for="core-shipping-feature-override-from-address">
-                    <input type="checkbox" id="core-shipping-feature-override-from-address" name="core-shipping-feature-override-from-address" <?php checked( ! empty( $this->values->override_defaults ) ); ?> /> <?php _e( 'Override shipping from address for this product?', 'LION' ); ?>
+                    <input type="checkbox" id="core-shipping-feature-override-from-address" name="core-shipping-feature-override-from-address" <?php checked( ! empty( $this->values->override_defaults ) ); ?> /> <?php _e( 'Override shipping from address for this product?', 'it-l10n-ithemes-exchange' ); ?>
                 </label>
 			</li>
 			<ul class="core-shipping-feature-from-address-ul <?php echo empty( $this->values->override_defaults ) ? 'hidden' : ''; ?>">
-				<li><input type="text" name="core-shipping-feature-from-address-address1" value="<?php esc_attr_e( $this->values->address1 ); ?>" placeholder="<?php esc_attr_e( __( 'Address 1', 'LION' ) ); ?>" /></li>
-				<li><input type="text" name="core-shipping-feature-from-address-address2" value="<?php esc_attr_e( $this->values->address2 ); ?>" placeholder="<?php esc_attr_e( __( 'Address 2', 'LION' ) ); ?>" /></li>
-				<li><input type="text" name="core-shipping-feature-from-address-city" value="<?php esc_attr_e( $this->values->city ); ?>" placeholder="<?php esc_attr_e( __( 'City', 'LION' ) ); ?>" /></li>
+				<li><input type="text" name="core-shipping-feature-from-address-address1" value="<?php esc_attr_e( $this->values->address1 ); ?>" placeholder="<?php esc_attr_e( __( 'Address 1', 'it-l10n-ithemes-exchange' ) ); ?>" /></li>
+				<li><input type="text" name="core-shipping-feature-from-address-address2" value="<?php esc_attr_e( $this->values->address2 ); ?>" placeholder="<?php esc_attr_e( __( 'Address 2', 'it-l10n-ithemes-exchange' ) ); ?>" /></li>
+				<li><input type="text" name="core-shipping-feature-from-address-city" value="<?php esc_attr_e( $this->values->city ); ?>" placeholder="<?php esc_attr_e( __( 'City', 'it-l10n-ithemes-exchange' ) ); ?>" /></li>
 				<li>
 					<select name="core-shipping-feature-from-address-country">
 						<?php foreach( it_exchange_get_data_set( 'countries' ) as $value => $country ) : ?>
@@ -115,10 +115,10 @@ class IT_Exchange_Core_Shipping_Feature_From_Address extends IT_Exchange_Shippin
 							<?php endforeach; ?>
 						</select>
 					<?php else : ?>
-						<input type="text" name="core-shipping-feature-from-address-state" value="<?php esc_attr_e( $this->values->state ); ?>" placeholder="<?php esc_attr_e( __( 'State', 'LION' ) ); ?>" />
+						<input type="text" name="core-shipping-feature-from-address-state" value="<?php esc_attr_e( $this->values->state ); ?>" placeholder="<?php esc_attr_e( __( 'State', 'it-l10n-ithemes-exchange' ) ); ?>" />
 					<?php endif; ?>
 				</li>
-				<li><input type="text" name="core-shipping-feature-from-address-zip" value="<?php esc_attr_e( $this->values->zip ); ?>" placeholder="<?php esc_attr_e( __( 'Zip', 'LION' ) ); ?>" /></li>
+				<li><input type="text" name="core-shipping-feature-from-address-zip" value="<?php esc_attr_e( $this->values->zip ); ?>" placeholder="<?php esc_attr_e( __( 'Zip', 'it-l10n-ithemes-exchange' ) ); ?>" /></li>
 			</ul>
 		</div>
 		<?php

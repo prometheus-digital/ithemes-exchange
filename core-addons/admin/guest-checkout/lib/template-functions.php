@@ -49,7 +49,7 @@ add_filter( 'it_exchange_possible_template_paths', 'it_exchange_guest_checkout_a
 */
 function it_exchange_guest_checkout_get_heading() {
 	$class = (bool) it_exchange_in_superwidget() ? ' class="in-super-widget"' : '';
-	$heading = '<h3' . $class . '>' . __( 'Guest Checkout', 'LION' ) . '</h3>';
+	$heading = '<h3' . $class . '>' . __( 'Guest Checkout', 'it-l10n-ithemes-exchange' ) . '</h3>';
 	$heading = apply_filters( 'it_exchange_guest_checkout_get_heading', $heading, $class );
 	return $heading;
 }
@@ -154,7 +154,7 @@ add_filter( 'it_exchange_get_super_widget_login_actions_elements', 'it_exchange_
 */
 function it_exchange_guest_checkout_get_purchase_requirement_continue_action() {
 	?>
-	<input type="submit" id="it-exchange-guest-checkout-action" name="continue" value="<?php esc_attr_e( 'Continue as guest', 'LION' ); ?>" />
+	<input type="submit" id="it-exchange-guest-checkout-action" name="continue" value="<?php esc_attr_e( 'Continue as guest', 'it-l10n-ithemes-exchange' ); ?>" />
 	<?php
 }
 
@@ -181,7 +181,7 @@ function it_exchange_guest_checkout_sw_link( $label ) {
 */
 function it_exchange_guest_checkout_get_email_field( $options=array() ) {
 	$email = ! empty( $_POST['email'] ) && ! is_email( $_POST['email'] ) ? $_POST['email'] : '';
-	$field = '<input type="text" name="email" class="it-exchange-guest-checkout-email" value="' . esc_attr( $email ) . '" placeholder="' . __( 'Email address', 'LION' ) . '" />';
+	$field = '<input type="text" name="email" class="it-exchange-guest-checkout-email" value="' . esc_attr( $email ) . '" placeholder="' . __( 'Email address', 'it-l10n-ithemes-exchange' ) . '" />';
 	return $field;
 }
 
@@ -194,7 +194,7 @@ function it_exchange_guest_checkout_get_email_field( $options=array() ) {
  * @return string
 */
 function it_exchange_guest_checkout_get_sw_save_link( $options=array() ) {
-	$link = '<input type="submit" class="it-exchange-guest-checkout-save-link" value="' . __( 'Continue', 'LION' ) . '" />';
+	$link = '<input type="submit" class="it-exchange-guest-checkout-save-link" value="' . __( 'Continue', 'it-l10n-ithemes-exchange' ) . '" />';
 	return $link;
 }
 
@@ -207,7 +207,7 @@ function it_exchange_guest_checkout_get_sw_save_link( $options=array() ) {
  * @return string
 */
 function it_exchange_guest_checkout_get_sw_cancel_link( $options=array() ) {
-	$link = '<a href="" class="it-exchange-sw-cancel-guest-checkout-link">' . __( 'Cancel', 'LION' ) . '</a>';
+	$link = '<a href="" class="it-exchange-sw-cancel-guest-checkout-link">' . __( 'Cancel', 'it-l10n-ithemes-exchange' ) . '</a>';
 	return $link;
 }
 

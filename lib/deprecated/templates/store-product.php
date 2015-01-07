@@ -25,6 +25,6 @@
 	<div class="it-exchange-product-details">
 		<?php it_exchange( 'product', 'title' ); ?>
 		<?php it_exchange( 'product', 'baseprice' ); ?>
-		<a class="it-exchange-product-details-link" href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'url') ); ?>"><?php _e( 'View Details', 'LION' ); ?></a>
+		<a class="it-exchange-product-details-link" href="<?php it_exchange( 'product', 'permalink', array( 'format' => 'url') ); ?>"><?php _e( 'View Details', 'it-l10n-ithemes-exchange' ); ?></a>
 	</div>
 </li>

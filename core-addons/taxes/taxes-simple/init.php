@@ -39,21 +39,21 @@ function it_exchange_taxes_simple_settings_callback() {
 	?>
 	<div class="wrap">
 		<?php ITUtility::screen_icon( 'it-exchange' ); ?>
-		<h2><?php _e( 'Simple Taxes', 'LION' ); ?></h2>
+		<h2><?php _e( 'Simple Taxes', 'it-l10n-ithemes-exchange' ); ?></h2>
 
 		<?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
 		<?php $form->start_form( $form_options, 'it-exchange-taxes-simple-settings' ); ?>
-			<label for="default-tax-rate"><?php _e( 'Default Tax Rate', 'LION' ); ?></label>
+			<label for="default-tax-rate"><?php _e( 'Default Tax Rate', 'it-l10n-ithemes-exchange' ); ?></label>
 			<?php $form->add_text_box( 'default-tax-rate' ); ?> %</br />
 			<?php $form->add_check_box( 'calculate-after-discounts' ); ?>
-			<label for="calculate-after-discounts"><?php _e( 'Calculate taxes after discounts are applied?', 'LION' ); ?></label>
-			<h3><?php _e( 'Labels', 'LION' ); ?></h3>
-			<label for="tax-label-singular"><?php _e( 'Tax:', 'LION' ); ?><br />
+			<label for="calculate-after-discounts"><?php _e( 'Calculate taxes after discounts are applied?', 'it-l10n-ithemes-exchange' ); ?></label>
+			<h3><?php _e( 'Labels', 'it-l10n-ithemes-exchange' ); ?></h3>
+			<label for="tax-label-singular"><?php _e( 'Tax:', 'it-l10n-ithemes-exchange' ); ?><br />
 			<?php $form->add_text_box( 'tax-label-singular', array( 'class' => 'normal' ) ); ?></label>
-			<label for="tax-label-plural"><?php _e( 'Taxes:', 'LION' ); ?><br />
+			<label for="tax-label-plural"><?php _e( 'Taxes:', 'it-l10n-ithemes-exchange' ); ?><br />
 			<?php $form->add_text_box( 'tax-label-plural', array( 'class' => 'normal' ) ); ?></label>
 			<p class="submit">
-				<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'LION' ), 'class' => 'button button-primary button-large' ) ); ?>
+				<?php $form->add_submit( 'submit', array( 'value' => __( 'Save Changes', 'it-l10n-ithemes-exchange' ), 'class' => 'button button-primary button-large' ) ); ?>
 			</p>
 		<?php $form->end_form(); ?>
 	</div>
@@ -69,8 +69,8 @@ function it_exchange_taxes_simple_settings_callback() {
  * @return array
 */
 function it_exchange_addon_taxes_simple_default_settings ( $defaults ) {
-	$defaults['tax-label-singular'] = __( 'Tax', 'LION' );
-	$defaults['tax-label-plural']   = __( 'Taxes', 'LION' );
+	$defaults['tax-label-singular'] = __( 'Tax', 'it-l10n-ithemes-exchange' );
+	$defaults['tax-label-plural']   = __( 'Taxes', 'it-l10n-ithemes-exchange' );
 	return $defaults;
 }
 add_filter( 'it_storage_get_defaults_exchange_addon_taxes_simple', 'it_exchange_addon_taxes_simple_default_settings' );
@@ -92,18 +92,18 @@ function it_exchange_addon_save_taxes_simple_settings() {
 
 	// Check nonce
 	if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'it-exchange-taxes-simple-settings' ) ) {
-		it_exchange_add_message( 'error', __( 'Error. Please try again', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Error. Please try again', 'it-l10n-ithemes-exchange' ) );
 		return;
 	}
 
 	// Validate data
 	if ( ! is_numeric( $new_values['default-tax-rate'] ) ) {
-		it_exchange_add_message( 'error', __( 'Default tax rate must be numeric', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Default tax rate must be numeric', 'it-l10n-ithemes-exchange' ) );
 	} else if ( empty( $new_values['tax-label-plural'] ) || empty( $new_values['tax-label-singular'] ) ) {
-		it_exchange_add_message( 'error', __( 'Tax labels cannot be left empty', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Tax labels cannot be left empty', 'it-l10n-ithemes-exchange' ) );
 	} else {
 		it_exchange_save_option( 'addon_taxes_simple', $new_values );
-		it_exchange_add_message( 'notice', __( 'Settings Saved', 'LION' ) );
+		it_exchange_add_message( 'notice', __( 'Settings Saved', 'it-l10n-ithemes-exchange' ) );
 	}
 }
 add_action( 'admin_init', 'it_exchange_addon_save_taxes_simple_settings' );

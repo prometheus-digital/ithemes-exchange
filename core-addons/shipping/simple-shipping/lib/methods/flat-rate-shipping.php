@@ -55,7 +55,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	*/
 	function set_label() {
 		$settings = it_exchange_get_option( 'simple-shipping' );
-		$this->label = empty( $settings['flat-rate-shipping-label'] ) ? __( 'Flat Rate Shipping', 'LION' ) : $settings['flat-rate-shipping-label'];
+		$this->label = empty( $settings['flat-rate-shipping-label'] ) ? __( 'Flat Rate Shipping', 'it-l10n-ithemes-exchange' ) : $settings['flat-rate-shipping-label'];
 	}
 
 	/**
@@ -109,28 +109,28 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 		$settings = array(
 			array(
 				'type'  => 'heading',
-				'label' => __( 'Flat Rate Shipping', 'LION' ),
+				'label' => __( 'Flat Rate Shipping', 'it-l10n-ithemes-exchange' ),
 				'slug'  => 'flat-rate-shipping-heading',
 			),
 			array(
 				'type'    => 'yes_no_drop_down',
-				'label'   => __( 'Enable Flat Rate Shipping?', 'LION' ),
+				'label'   => __( 'Enable Flat Rate Shipping?', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'enable-flat-rate-shipping',
-				'tooltip' => __( 'Do you want flat rate shipping available to your customers as a shipping option?', 'LION' ),
+				'tooltip' => __( 'Do you want flat rate shipping available to your customers as a shipping option?', 'it-l10n-ithemes-exchange' ),
 				'default' => 1,
 			),
 			array(
 				'type'    => 'text_box',
-				'label'   => __( 'Shipping Label', 'LION' ),
+				'label'   => __( 'Shipping Label', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'flat-rate-shipping-label',
-				'tooltip' => __( 'This changes the title of this Shipping Method for your customers', 'LION' ),
-				'default' => __( 'Standard Shipping (3-5 days)', 'LION' ),
+				'tooltip' => __( 'This changes the title of this Shipping Method for your customers', 'it-l10n-ithemes-exchange' ),
+				'default' => __( 'Standard Shipping (3-5 days)', 'it-l10n-ithemes-exchange' ),
 			),
 			array(
 				'type'    => 'text_box',
-				'label'   => __( 'Default Shipping Amount', 'LION' ),
+				'label'   => __( 'Default Shipping Amount', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'flat-rate-shipping-amount',
-				'tooltip' => __( 'The default shipping amount for new products. This can be overridden by individual products.', 'LION' ),
+				'tooltip' => __( 'The default shipping amount for new products. This can be overridden by individual products.', 'it-l10n-ithemes-exchange' ),
 				'default' => it_exchange_format_price( 5 ),
 				'options' => array(
 					'data-symbol'              => esc_attr( $currency ),
@@ -228,7 +228,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Shipping_Cost extends IT_Exchange_Sh
 		$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
 		?>
 		<div class="it-exchange-flat-rate-shipping-cost">
-			<label for="it-exchange-flat-rate-shipping-cost"><?php _e( 'Flat Rate Shipping Cost', 'LION' ); ?> <span class="tip" title="<?php _e( 'Shipping costs for this product. Multiplied by quantity purchased.', 'LION' ); ?>">i</span></label>
+			<label for="it-exchange-flat-rate-shipping-cost"><?php _e( 'Flat Rate Shipping Cost', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'Shipping costs for this product. Multiplied by quantity purchased.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 			<input type="text" data-symbol="<?php esc_attr_e( $currency ); ?>" data-symbol-position="<?php esc_attr_e( $settings['currency-symbol-position'] ); ?>" data-thousands-separator="<?php esc_attr_e( $settings['currency-thousands-separator'] ); ?>" data-decimals-separator="<?php esc_attr_e( $settings['currency-decimals-separator'] ); ?>" id="it-exchange-flat-rate-shipping-cost" name="it-exchange-flat-rate-shipping-cost" class="input-money-small" value="<?php esc_attr_e( $this->values->cost ); ?>"/>
 		</div>
 		<?php

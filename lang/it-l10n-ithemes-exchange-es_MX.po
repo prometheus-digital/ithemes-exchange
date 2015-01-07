@@ -2487,7 +2487,7 @@ msgid "Coupon Code"
 msgstr "Código del Cupón"
 
 #: api/theme/coupons.php:221
-msgctxt "LION"
+msgctxt "it-l10n-ithemes-exchange"
 msgid "-"
 msgstr "-"
 

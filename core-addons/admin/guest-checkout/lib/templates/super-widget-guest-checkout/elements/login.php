@@ -17,6 +17,6 @@
 
 <?php do_action( 'it_exchange_super_widget_guest_checkout_before_login_elements' ); ?>
 <div class="login_url">
-	<a class="it-exchange-sw-cancel-register-link" href="<?php esc_attr_e( it_exchange( 'registration', 'get-cancel', array( 'format' => 'url' ) ) ); ?>"><input type="button" value="<?php esc_attr_e( __( 'Log in', 'LION' ) ); ?>" /></a>
+	<a class="it-exchange-sw-cancel-register-link" href="<?php esc_attr_e( it_exchange( 'registration', 'get-cancel', array( 'format' => 'url' ) ) ); ?>"><input type="button" value="<?php esc_attr_e( __( 'Log in', 'it-l10n-ithemes-exchange' ) ); ?>" /></a>
 </div>
 <?php do_action( 'it_exchange_super_widget_guest_checkoutafter_login_elements' ); ?>

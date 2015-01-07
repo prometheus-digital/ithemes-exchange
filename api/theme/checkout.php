@@ -90,7 +90,7 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 			'before' => '',
 			'after'  => '',
 			'format' => 'link',
-			'label'  => __( 'Cancel', 'LION' ),
+			'label'  => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
 			'class'  => '',
 			'focus'  => false
 		);

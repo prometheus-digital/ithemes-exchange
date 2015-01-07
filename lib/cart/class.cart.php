@@ -134,7 +134,7 @@ class IT_Exchange_Shopping_Cart {
 		}
 
 		$error = empty( $error ) ? 'product-not-added-to-cart' : $error;
-		it_exchange_add_message( 'error', __( 'Product not added to cart', 'LION' ) );
+		it_exchange_add_message( 'error', __( 'Product not added to cart', 'it-l10n-ithemes-exchange' ) );
 		it_exchange_redirect( $url, 'buy-now-failed' );
 		die();
 	}
@@ -168,7 +168,7 @@ class IT_Exchange_Shopping_Cart {
 			$sw_state = is_user_logged_in() ? 'cart' : 'login';
 			// Get current URL without exchange query args
 			$url = it_exchange_clean_query_args();
-			it_exchange_add_message( 'notice', __( 'Product added to cart', 'LION' ) );
+			it_exchange_add_message( 'notice', __( 'Product added to cart', 'it-l10n-ithemes-exchange' ) );
 			if ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_page_url( 'cart' ) ) {
 				$url = it_exchange_get_page_url( 'cart' );
 				it_exchange_redirect( $url, 'add-to-cart-success-no-sw' );
@@ -329,7 +329,7 @@ class IT_Exchange_Shopping_Cart {
 
 		// Validate nonce
 		if ( empty( $_REQUEST['it-exchange-update-shipping-address'] ) || ! wp_verify_nonce( $_REQUEST['it-exchange-update-shipping-address'], 'it-exchange-update-checkout-shipping-address-' . it_exchange_get_session_id() ) ) {
-			it_exchange_add_message( 'error', __( 'Error adding Shipping Address. Please try again.', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'Error adding Shipping Address. Please try again.', 'it-l10n-ithemes-exchange' ) );
 			$GLOBALS['it_exchange']['shipping-address-error'] = true;
 			return false;
 		}
@@ -344,7 +344,7 @@ class IT_Exchange_Shopping_Cart {
 		
 		foreach( $required_fields as $field ) {
 			if ( empty( $_REQUEST['it-exchange-shipping-address-' . $field] ) ) {
-				it_exchange_add_message( 'error', __( 'Please fill out all required fields', 'LION' ) );
+				it_exchange_add_message( 'error', __( 'Please fill out all required fields', 'it-l10n-ithemes-exchange' ) );
 				$GLOBALS['it_exchange']['shipping-address-error'] = true;
 				return false;
 			}
@@ -370,7 +370,7 @@ class IT_Exchange_Shopping_Cart {
 		}
 
 		if ( it_exchange_save_shipping_address( $shipping, it_exchange_get_current_customer_id() ) ) {
-			it_exchange_add_message( 'notice', __( 'Shipping Address Saved', 'LION' ) );
+			it_exchange_add_message( 'notice', __( 'Shipping Address Saved', 'it-l10n-ithemes-exchange' ) );
 			return true;
 		}
 		return false;
@@ -387,7 +387,7 @@ class IT_Exchange_Shopping_Cart {
 
 		// Validate nonce
 		if ( empty( $_REQUEST['it-exchange-update-billing-address'] ) || ! wp_verify_nonce( $_REQUEST['it-exchange-update-billing-address'], 'it-exchange-update-checkout-billing-address-' . it_exchange_get_session_id() ) ) {
-			it_exchange_add_message( 'error', __( 'Error adding Billing Address. Please try again.', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'Error adding Billing Address. Please try again.', 'it-l10n-ithemes-exchange' ) );
 			$GLOBALS['it_exchange']['billing-address-error'] = true;
 			return false;
 		}
@@ -402,7 +402,7 @@ class IT_Exchange_Shopping_Cart {
 
 		foreach( $required_fields as $field ) {
 			if ( empty( $_REQUEST['it-exchange-billing-address-' . $field] ) ) {
-				it_exchange_add_message( 'error', __( 'Please fill out all required fields', 'LION' ) );
+				it_exchange_add_message( 'error', __( 'Please fill out all required fields', 'it-l10n-ithemes-exchange' ) );
 				$GLOBALS['it_exchange']['billing-address-error'] = true;
 				return false;
 			}
@@ -428,7 +428,7 @@ class IT_Exchange_Shopping_Cart {
 		}
 
 		if ( it_exchange_save_customer_billing_address( $billing ) ) {
-			it_exchange_add_message( 'notice', __( 'Billing Address Saved', 'LION' ) );
+			it_exchange_add_message( 'notice', __( 'Billing Address Saved', 'it-l10n-ithemes-exchange' ) );
 
 			// Update Shipping if checked
 			if ( ! empty( $_REQUEST['it-exchange-ship-to-billing'] ) && '1' == $_REQUEST['it-exchange-ship-to-billing'] )
@@ -527,7 +527,7 @@ class IT_Exchange_Shopping_Cart {
 	*/
 	function get_cart_message( $key ) {
 		$message = $this->default_cart_messages();
-		return ( !empty( $message[$key] ) ) ? $message[$key] : __( 'Unknown error. Please try again.', 'LION' );;
+		return ( !empty( $message[$key] ) ) ? $message[$key] : __( 'Unknown error. Please try again.', 'it-l10n-ithemes-exchange' );;
 	}
 
 	/**
@@ -537,15 +537,15 @@ class IT_Exchange_Shopping_Cart {
 	 * @return array
 	*/
 	function default_cart_messages() {
-		$messages['bad-transaction-method'] = __( 'Please select a payment method', 'LION' );
-		$messages['failed-transaction']     = __( 'There was an error processing your transaction. Please try again.', 'LION' );
-		$messages['product-not-removed']    = __( 'Product not removed from cart. Please try again.', 'LION' );
-		$messages['cart-not-emptied']       = __( 'There was an error emptying your cart. Please try again.', 'LION' );
-		$messages['cart-not-updated']       = __( 'There was an error updating your cart. Please try again.', 'LION' );
-		$messages['cart-updated']          = __( 'Cart Updated.', 'LION' );
-		$messages['cart-emptied']          = __( 'Cart Emptied', 'LION' );
-		$messages['product-removed']       = __( 'Product removed from cart.', 'LION' );
-		$messages['product-added-to-cart'] = __( 'Product added to cart', 'LION' );
+		$messages['bad-transaction-method'] = __( 'Please select a payment method', 'it-l10n-ithemes-exchange' );
+		$messages['failed-transaction']     = __( 'There was an error processing your transaction. Please try again.', 'it-l10n-ithemes-exchange' );
+		$messages['product-not-removed']    = __( 'Product not removed from cart. Please try again.', 'it-l10n-ithemes-exchange' );
+		$messages['cart-not-emptied']       = __( 'There was an error emptying your cart. Please try again.', 'it-l10n-ithemes-exchange' );
+		$messages['cart-not-updated']       = __( 'There was an error updating your cart. Please try again.', 'it-l10n-ithemes-exchange' );
+		$messages['cart-updated']          = __( 'Cart Updated.', 'it-l10n-ithemes-exchange' );
+		$messages['cart-emptied']          = __( 'Cart Emptied', 'it-l10n-ithemes-exchange' );
+		$messages['product-removed']       = __( 'Product removed from cart.', 'it-l10n-ithemes-exchange' );
+		$messages['product-added-to-cart'] = __( 'Product added to cart', 'it-l10n-ithemes-exchange' );
 
 		return apply_filters( 'it_exchange_default_cart_messages', $messages );
 	}

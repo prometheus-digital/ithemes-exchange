@@ -165,8 +165,8 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * @return void
 	*/
 	function register_metabox() {
-		add_meta_box( 'it-exchange-product-downloads', __( 'Downloads', 'LION' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'low' );
-		add_meta_box( 'it-exchange-product-downloads-expiration', __( 'Downloads Expiration', 'LION' ), array( $this, 'print_expirations_metabox' ), 'it_exchange_prod', 'it_exchange_advanced' );
+		add_meta_box( 'it-exchange-product-downloads', __( 'Downloads', 'it-l10n-ithemes-exchange' ), array( $this, 'print_metabox' ), 'it_exchange_prod', 'it_exchange_normal', 'low' );
+		add_meta_box( 'it-exchange-product-downloads-expiration', __( 'Downloads Expiration', 'it-l10n-ithemes-exchange' ), array( $this, 'print_expirations_metabox' ), 'it_exchange_prod', 'it_exchange_advanced' );
 	}
 
 	/**
@@ -183,20 +183,20 @@ class IT_Exchange_Product_Feature_Downloads {
 		$existing_downloads = it_exchange_get_product_feature( $product->ID, 'downloads' );
 		?>
 			<div class="downloads-label-add">
-				<label><?php _e( 'Product Files', 'LION' ); ?> <span class="tip" title="<?php _e( 'If you are selling digital products (like music or ebooks), upload those here.', 'LION' ); ?>">i</span></label>
+				<label><?php _e( 'Product Files', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'If you are selling digital products (like music or ebooks), upload those here.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 				<div class="download-add-new right">
-					<a href class="button"><?php _e( 'Add New Download', 'LION' ); ?></a>
+					<a href class="button"><?php _e( 'Add New Download', 'it-l10n-ithemes-exchange' ); ?></a>
 				</div>
 			</div>
 			<div class="downloads-list-wrapper">
 				<div class="downloads-list-titles">
 					<div class="download-item columns-wrapper">
 						<div class="download-name column">
-							<span><?php _e( 'Name', 'LION' ); ?></span>
+							<span><?php _e( 'Name', 'it-l10n-ithemes-exchange' ); ?></span>
 						</div>
 						<div class="download-source column">
-							<span><?php _e( 'Source', 'LION' ); ?></span>
-							<span class="tip" title="<?php _e( 'Use the WordPress media library or paste in any accessible URL (from Dropbox, Amazon, etc.) and we\'ll hide the source for you.', 'LION' ); ?>">i</span>
+							<span><?php _e( 'Source', 'it-l10n-ithemes-exchange' ); ?></span>
+							<span class="tip" title="<?php _e( 'Use the WordPress media library or paste in any accessible URL (from Dropbox, Amazon, etc.) and we\'ll hide the source for you.', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 						</div>
 					</div>
 				</div>
@@ -204,11 +204,11 @@ class IT_Exchange_Product_Feature_Downloads {
 					<!-- New download items start. -->
 					<div class="download-item download-item-clone columns-wrapper hidden">
 						<div class="download-name column">
-							<input type="text" name="" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'Name', 'LION' ) ); ?>" value="" />
+							<input type="text" name="" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'Name', 'it-l10n-ithemes-exchange' ) ); ?>" value="" />
 						</div>
 						<div class="download-source column">
-							<input type="url" name="" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'LION' ) ); ?>" value="" />
-							<a href class="it-exchange-upload-digital-download"><?php _e( 'Upload', 'LION' ); ?></a>
+							<input type="url" name="" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'it-l10n-ithemes-exchange' ) ); ?>" value="" />
+							<a href class="it-exchange-upload-digital-download"><?php _e( 'Upload', 'it-l10n-ithemes-exchange' ); ?></a>
 						</div>
 						<div class="download-remove column">
 							<a href="#" class="it-exchange-delete-digital-download">&times;</a>
@@ -221,11 +221,11 @@ class IT_Exchange_Product_Feature_Downloads {
 						</script>
 						<div class="download-item columns-wrapper" id="download-item-0">
 							<div class="download-name column">
-								<input type="text" name="it-exchange-digital-downloads[0][name]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'Name', 'LION' ) ); ?>" value="" tabindex="4" />
+								<input type="text" name="it-exchange-digital-downloads[0][name]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'Name', 'it-l10n-ithemes-exchange' ) ); ?>" value="" tabindex="4" />
 							</div>
 							<div class="download-source column">
-								<input type="url" name="it-exchange-digital-downloads[0][source]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'LION' ) ); ?>" value="" tabindex="5" />
-								<a href class="it-exchange-upload-digital-download"><?php _e( 'Upload', 'LION' ); ?></a>
+								<input type="url" name="it-exchange-digital-downloads[0][source]" autocomplete="off" class="" placeholder="<?php esc_attr_e( __( 'http://', 'it-l10n-ithemes-exchange' ) ); ?>" value="" tabindex="5" />
+								<a href class="it-exchange-upload-digital-download"><?php _e( 'Upload', 'it-l10n-ithemes-exchange' ); ?></a>
 							</div>
 							<div class="download-remove column">
 								<a href="#" class="it-exchange-delete-digital-download" tabindex="6" >&times;</a>
@@ -243,7 +243,7 @@ class IT_Exchange_Product_Feature_Downloads {
 								</div>
 								<div class="download-source column">
 									<input type="text" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][source]" class="not-empty" value="<?php esc_attr_e( $data['source'] ); ?>" />
-									<a href class="it-exchange-upload-digital-download"><?php _e( 'Upload', 'LION' ); ?></a>
+									<a href class="it-exchange-upload-digital-download"><?php _e( 'Upload', 'it-l10n-ithemes-exchange' ); ?></a>
 								</div>
 								<div class="download-remove column">
 									<input id="it-exchange-digital-downloads-delete-<?php esc_attr_e( $id ); ?>" class="hide-if-js" type="checkbox" name="it-exchange-digital-downloads[<?php esc_attr_e( $id ); ?>][delete]" value="true" />
@@ -277,11 +277,11 @@ class IT_Exchange_Product_Feature_Downloads {
 		$download_limit = it_exchange_get_product_feature( $product->ID, 'downloads', array( 'setting' => 'limit' ) );
 
 		$expire_units = array(
-			'hours'     => __( 'Hours', 'LION' ),
-			'days'      => __( 'Days', 'LION' ),
-			'weeks'     => __( 'Weeks', 'LION' ),
-			'months'    => __( 'Months', 'LION' ),
-			'years'     => __( 'Years', 'LION' ),
+			'hours'     => __( 'Hours', 'it-l10n-ithemes-exchange' ),
+			'days'      => __( 'Days', 'it-l10n-ithemes-exchange' ),
+			'weeks'     => __( 'Weeks', 'it-l10n-ithemes-exchange' ),
+			'months'    => __( 'Months', 'it-l10n-ithemes-exchange' ),
+			'years'     => __( 'Years', 'it-l10n-ithemes-exchange' ),
 		);
 
 		$expire_hidden = ( $download_expires == 0 ) ? ' hidden' : '';
@@ -289,15 +289,15 @@ class IT_Exchange_Product_Feature_Downloads {
 		?>
 		<div class="download-expiration">
 			<label class="download-limit-label" for="it-exchange-digital-downloads-expire">
-				<?php _e( 'Download Expiration', 'LION' ); ?>
-				<span class="tip" title="<?php _e( 'Changing this value only applies to future purchases', 'LION' ); ?>">i</span>
+				<?php _e( 'Download Expiration', 'it-l10n-ithemes-exchange' ); ?>
+				<span class="tip" title="<?php _e( 'Changing this value only applies to future purchases', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 			</label>
-			<span><?php _e( 'Download links', 'LION' ); ?></span>
+			<span><?php _e( 'Download links', 'it-l10n-ithemes-exchange' ); ?></span>
 			<select name="it-exchange-digital-downloads-expires" id="it-exchange-digital-downloads-expires">
-				<option value="0" <?php selected( 0, $download_expires ); ?>><?php _e( 'do not expire', 'LION' ); ?></option>
-				<option value="1" <?php selected( 1, $download_expires ); ?>><?php _e( 'expire', 'LION' ); ?></option>
+				<option value="0" <?php selected( 0, $download_expires ); ?>><?php _e( 'do not expire', 'it-l10n-ithemes-exchange' ); ?></option>
+				<option value="1" <?php selected( 1, $download_expires ); ?>><?php _e( 'expire', 'it-l10n-ithemes-exchange' ); ?></option>
 			</select>
-			<span class="hide-if-no-expire<?php echo $expire_hidden ?>"><?php _e( 'after', 'LION' ); ?></span>
+			<span class="hide-if-no-expire<?php echo $expire_hidden ?>"><?php _e( 'after', 'it-l10n-ithemes-exchange' ); ?></span>
 			<input type="number" class="hide-if-no-expire<?php echo $expire_hidden ?>" name="it-exchange-digital-downloads-expire-int" value="<?php esc_attr_e( $download_expire_int ); ?>" />
 			<select class="hide-if-no-expire<?php echo $expire_hidden ?>" name="it-exchange-digital-downloads-expire-units">
 				<?php foreach( $expire_units as $unit => $label ) : ?>
@@ -308,13 +308,13 @@ class IT_Exchange_Product_Feature_Downloads {
 		<br/>
 		<div class="download-limit">
 			<label class="download-limit-label" for="it-exchange-digital-downloads-download-limit">
-				<?php _e( 'Download Limit', 'LION' ); ?>
-				<span class="tip" title="<?php _e( 'How many times customers can download the file(s).', 'LION' ); ?>">i</span>
+				<?php _e( 'Download Limit', 'it-l10n-ithemes-exchange' ); ?>
+				<span class="tip" title="<?php _e( 'How many times customers can download the file(s).', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 			</label>
 			<div class="download-limit-select">
 				<select name="it-exchange-digital-downloads-download-limit" id="it-exchange-digital-downloads-download-limit">
 					<?php
-					$options = array( 0 => __( 'Unlimited', 'LION' ) );
+					$options = array( 0 => __( 'Unlimited', 'it-l10n-ithemes-exchange' ) );
 					for ( $i=1;$i<=20;$i++ ) {
 						$options[$i] = $i;
 					}
@@ -560,12 +560,12 @@ class IT_Exchange_Product_Feature_Downloads {
 	function register_downloads_post_type() {
 		$post_type = 'it_exchange_download';
 		$labels    = array(
-			'name'          => __( 'Exchange Downloads', 'LION' ),
-			'singular_name' => __( 'Download', 'LION' ),
+			'name'          => __( 'Exchange Downloads', 'it-l10n-ithemes-exchange' ),
+			'singular_name' => __( 'Download', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = array(
 			'labels' => $labels,
-			'description' => __( 'An iThemes Exchange Post Type for storing all Downloads in the system', 'LION' ),
+			'description' => __( 'An iThemes Exchange Post Type for storing all Downloads in the system', 'it-l10n-ithemes-exchange' ),
 			'public'      => false,
 			'show_ui'     => false,
 			'show_in_nav_menus' => false,
@@ -600,7 +600,7 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// Abort with message if hash isn't found
 		if ( ! $hash_data = it_exchange_get_download_data_from_hash( $_GET['it-exchange-download'] ) ) {
-			it_exchange_add_message( 'error', __( 'Download not found', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'Download not found', 'it-l10n-ithemes-exchange' ) );
 			$url = apply_filters( 'it_exchange_download_error_url', it_exchange_get_page_url( 'store' ) );
 			it_exchange_redirect( $url, 'download-pickup-hash-not-found-to-store' );
 			die();
@@ -630,7 +630,7 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// If transaction isn't cleared for delivery of product, don't give them the download
 		if ( ! it_exchange_transaction_is_cleared_for_delivery( $hash_data['transaction_id'] ) ) {
-			it_exchange_add_message( 'error', __( 'The transaction this download is attached to is not valid for download', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'The transaction this download is attached to is not valid for download', 'it-l10n-ithemes-exchange' ) );
 			$redirect_url = apply_filters( 'it_exchange_redirect_transaction_not_cleared_to_pickup_file', it_exchange_get_page_url( 'downloads' ) );
 
 			$redirect_options = array( 'hash_data' => $hash_data );
@@ -642,7 +642,7 @@ class IT_Exchange_Product_Feature_Downloads {
 			// If user doesn't belong to the download, and isn't an admin, send them to their downloads page.
 			$customer = it_exchange_get_current_customer();
 			if ( empty( $customer->id ) || ( $customer->id != $hash_data['customer_id'] && ! current_user_can( 'administrator' ) ) ) {
-				it_exchange_add_message( 'error', __( 'You are not allowed to download this file.', 'LION' ) );
+				it_exchange_add_message( 'error', __( 'You are not allowed to download this file.', 'it-l10n-ithemes-exchange' ) );
 				$redirect_url = apply_filters( 'it_exchange_redirect_no_permission_to_pickup_file', it_exchange_get_page_url( 'downloads' ) );
 
 				it_exchange_redirect( $redirect_url, 'download-pickup-not-authorized-customer' );
@@ -652,7 +652,7 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// If download limit has been met, redirect to their downloads page
 		if ( ! empty( $hash_data['download_limit'] ) && $hash_data['downloads'] >= $hash_data['download_limit'] ) {
-			it_exchange_add_message( 'error', __( 'Download limit reached. Unable to download this file.', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'Download limit reached. Unable to download this file.', 'it-l10n-ithemes-exchange' ) );
 			$redirect_url = apply_filters( 'it_exchange_redirect_no_permission_to_pickup_file', it_exchange_get_page_url( 'downloads' ) );
 
 			it_exchange_redirect( $redirect_url, 'download-pickup-download-limit-met' );
@@ -661,7 +661,7 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// If download expiration has passed, redirect to their downloads page
 		if ( ! empty( $hash_data['expires'] ) && $hash_data['expire_time'] < ( time() ) ) {
-			it_exchange_add_message( 'error', __( 'Download expiration reached. Unable to download this file.', 'LION' ) );
+			it_exchange_add_message( 'error', __( 'Download expiration reached. Unable to download this file.', 'it-l10n-ithemes-exchange' ) );
 			$redirect_url = apply_filters( 'it_exchange_redirect_no_permission_to_pickup_file', it_exchange_get_page_url( 'downloads' ) );
 			it_exchange_redirect( $redirect_url, 'download-pickup-download-expiration-passed' );
 			die();

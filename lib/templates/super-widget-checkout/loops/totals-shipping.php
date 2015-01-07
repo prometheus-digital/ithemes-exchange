@@ -16,7 +16,7 @@
 <?php do_action( 'it_exchange_super_widget_checkout_before_simple_shipping_cost_element' ); ?>
 <div class="cart-simple-shipping-cost cart-totals-row">
 	<?php do_action( 'it_exchange_super_widget_checkout_begin_simple_shipping_cost_element' ); ?>
-	<?php _e( 'Shipping:', 'LION' ); ?> <?php esc_attr_e( it_exchange_get_cart_shipping_cost() ); ?>
+	<?php _e( 'Shipping:', 'it-l10n-ithemes-exchange' ); ?> <?php esc_attr_e( it_exchange_get_cart_shipping_cost() ); ?>
 	<?php do_action( 'it_exchange_super_widget_checkout_end_simple_shipping_cost_element' ); ?>
 </div>
 <?php do_action( 'it_exchange_super_widget_checkout_after_simple_shipping_cost_element' ); ?>

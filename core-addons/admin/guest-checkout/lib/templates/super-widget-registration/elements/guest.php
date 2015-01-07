@@ -18,6 +18,6 @@
 <?php do_action( 'it_exchange_super_widget_registration_before_guest_element' ); ?>
 'boom'
 <div class="guest-url">
-    <?php echo it_exchange_guest_checkout_sw_link( __( 'Guest Checkout', 'LION' ) ); ?>
+    <?php echo it_exchange_guest_checkout_sw_link( __( 'Guest Checkout', 'it-l10n-ithemes-exchange' ) ); ?>
 </div>
 <?php do_action( 'it_exchange_super_widget_registrationafter_guest_element' ); ?>

@@ -39,7 +39,7 @@
 
 	<?php else : ?>
 		<?php do_action( 'it_exchange_content_cart_start_empty_cart' ); ?>
-			<p><?php _e( 'There are no items in your cart', 'LION' ); ?></p>
+			<p><?php _e( 'There are no items in your cart', 'it-l10n-ithemes-exchange' ); ?></p>
 		<?php do_action( 'it_exchange_content_cart_end_empty_cart' ); ?>
 	<?php endif; ?>
 	<?php do_action( 'it_exchange_content_cart_end_wrap' ); ?>

@@ -22,7 +22,7 @@ if ( in_array( 'customer-has-shipping-address', it_exchange_get_pending_purchase
 	<div class="it-exchange-checkout-shipping-method-purchase-requirement it-exchange-sw-processing-inner">
 		<?php do_action( 'it_exchange_super_widget_shipping_method_purchase_requirement_begin_element' ); ?>
 		<div class="it-exchange-sw-processing-section">
-			<h3><?php _e( 'Shipping Method', 'LION' ); ?></h3>
+			<h3><?php _e( 'Shipping Method', 'it-l10n-ithemes-exchange' ); ?></h3>
 			<?php it_exchange( 'shipping-method', 'form' ); ?>
 		</div>
 

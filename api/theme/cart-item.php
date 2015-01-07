@@ -74,7 +74,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 			'after'  => '',
 			'format' => 'html',
 			'class'  => false,
-			'label'  => _x( '&times;', 'html representation for multiplication symbol (x)', 'LION' ),
+			'label'  => _x( '&times;', 'html representation for multiplication symbol (x)', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -276,7 +276,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 				else if ( $options['size'] == 'full' )
 					$output = $images['full'];
 				else
-					$output = __( 'Unregisterd image size.', 'LION' );
+					$output = __( 'Unregisterd image size.', 'it-l10n-ithemes-exchange' );
 			}
 
 			return $output;

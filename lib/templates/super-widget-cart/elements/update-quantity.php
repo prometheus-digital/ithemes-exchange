@@ -19,7 +19,7 @@
 <div class="quantity-wrapper">
 	<?php do_action( 'it_exchange_super_widget_cart_begin_quantity_wrap' ); ?>
 	<div class="quantity">
-		<?php it_exchange( 'cart', 'update', 'class=it-exchange-update-quantity-button&label=' . __( 'Update Quantity', 'LION' ) ); ?>
+		<?php it_exchange( 'cart', 'update', 'class=it-exchange-update-quantity-button&label=' . __( 'Update Quantity', 'it-l10n-ithemes-exchange' ) ); ?>
 	</div>
 
 	<?php

@@ -27,15 +27,15 @@ class IT_Exchange_Coupon_Post_Type {
 	function init() {
 		$this->post_type = 'it_exchange_coupon';
 		$labels    = array(
-			'name'          => __( 'Coupons', 'LION' ),
-			'singular_name' => __( 'Coupon', 'LION' ),
-			'edit_item'     => __( 'Edit Coupon', 'LION' ),
+			'name'          => __( 'Coupons', 'it-l10n-ithemes-exchange' ),
+			'singular_name' => __( 'Coupon', 'it-l10n-ithemes-exchange' ),
+			'edit_item'     => __( 'Edit Coupon', 'it-l10n-ithemes-exchange' ),
 		);
 
 		// We're not going to add this to the menu. Individual add-ons will need to do that.
 		$this->options = array(
 			'labels'               => $labels,
-			'description'          => __( 'An iThemes Exchange Post Type for storing all Coupons in the system', 'LION' ),
+			'description'          => __( 'An iThemes Exchange Post Type for storing all Coupons in the system', 'it-l10n-ithemes-exchange' ),
 			'public'               => false,
 			'show_ui'              => true,
 			'show_in_nav_menus'    => false,

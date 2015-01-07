@@ -19,7 +19,7 @@
 <div class="it-exchange-cart-totals-title it-exchange-table-column">
 	<?php do_action( 'it_exchange_content_checkout_begin_totals_total_element_label' ); ?>
 	<div class="it-exchange-table-column-inner">
-		<?php _e( 'Total', 'LION' ); ?>
+		<?php _e( 'Total', 'it-l10n-ithemes-exchange' ); ?>
 	</div>
 	<?php do_action( 'it_exchange_content_checkout_end_totals_total_element_label' ); ?>
 </div>
