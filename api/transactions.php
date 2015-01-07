@@ -465,8 +465,8 @@ function it_exchange_update_transaction_status( $transaction, $status ) {
 	$old_status_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction );
 	$transaction->update_status( $status );
 
-	do_action( 'it_exchange_update_transaction_status', $transaction, $old_status, $old_status_cleared );
-	do_action( 'it_exchange_update_transaction_status_' . $transaction->transaction_method, $transaction, $old_status, $old_status_cleared );
+	do_action( 'it_exchange_update_transaction_status', $transaction, $old_status, $old_status_cleared, $status );
+	do_action( 'it_exchange_update_transaction_status_' . $transaction->transaction_method, $transaction, $old_status, $old_status_cleared, $status );
 	return $transaction->get_status();
 }
 
