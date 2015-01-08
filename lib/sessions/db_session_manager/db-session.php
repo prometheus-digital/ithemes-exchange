@@ -157,7 +157,7 @@ function it_exchange_db_session_cleanup() {
 		// Delete all expired sessions in a single query
 		if ( ! empty( $expired_sessions ) ) {
 			$formatted = implode( ', ', array_fill( 0, count( $expired_sessions ), '%s' ) );
-			$query     = $wpdb->prepare( "DELETE FROM $wpdb->options WHERE option_name IN ($formatted)", $expired_sessions );;
+			$query     = $wpdb->prepare( "DELETE FROM $wpdb->options WHERE option_name IN ($formatted)", $expired_sessions );
 			$wpdb->query( $query );
 		}
 	}
@@ -193,8 +193,9 @@ function it_exchange_db_delete_all_sessions() {
 
 		// Delete all sessions in a single query
 		if ( ! empty( $expired_sessions ) ) {
-			$option_names = implode( "','", $expired_sessions );
-			$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name IN ('$option_names')" );
+			$formatted = implode( ', ', array_fill( 0, count( $expired_sessions ), '%s' ) );
+			$query     = $wpdb->prepare( "DELETE FROM $wpdb->options WHERE option_name IN ($formatted)", $expired_sessions );
+			$wpdb->query( $query );
 		}
 	}
 
