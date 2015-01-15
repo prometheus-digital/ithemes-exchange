@@ -427,22 +427,74 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			foreach( $cart as $product ) {
 				if ( it_exchange_product_supports_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
 					if ( it_exchange_product_has_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
-						$time = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'time' ) );
-						switch( $time ) {
-
-							case 'yearly':
+						$trial_interval = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-interval' ) );
+						$trial_interval_count = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-interval-count' ) );
+						$auto_renew = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) );
+						$interval = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'interval' ) );
+						$interval_count = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'interval-count' ) );
+	
+						switch( $interval ) {
+							case 'year':
 								$unit = 'Y';
 								break;
-
-							case 'monthly':
+							case 'week':
+								$unit = 'W';
+								break;
+							case 'day':
+								$unit = 'D';
+								break;
+							case 'month':
 							default:
 								$unit = 'M';
 								break;
 
 						}
-						$unit = apply_filters( 'it_exchange_paypal-standard_subscription_unit', $unit, $time );
-						$duration = apply_filters( 'it_exchange_paypal-standard_subscription_duration', 1, $time );
+						$duration = apply_filters( 'it_exchange_paypal_standard_addon_subscription_duration', $interval_count, $product );
+						
+						$allow_trial = true;
+						//Should we all trials?
+						if ( 'membership-product-type' === it_exchange_get_product_type( $product['product_id'] ) ) {
+							if ( is_user_logged_in() ) {
+								if ( function_exists( 'it_exchange_get_session_data' ) ) {
+									$member_access = it_exchange_get_session_data( 'member_access' );
+									$children = (array)it_exchange_membership_addon_get_all_the_children( $product['product_id'] );
+									$parents = (array)it_exchange_membership_addon_get_all_the_parents( $product['product_id'] );
+									foreach( $member_access as $prod_id => $txn_id ) {
+										if ( $prod_id === $product['product_id'] || in_array( $prod_id, $children ) || in_array( $prod_id, $parents ) ) {
+											$allow_trial = false;
+											break;
+										}								
+									}
+								}
+							}
+						}
+				
+						$allow_trial = apply_filters( 'it_exchange_paypal_standard_addon_get_payment_url_allow_trial', $allow_trial, $product['product_id'] );
+						
+						if ( $allow_trial && 0 < $trial_interval_count ) {
+							switch ( $trial_interval ) {
+								case 'year':
+									$trial_unit = 'Y';
+									break;
+								case 'week':
+									$trial_unit = 'W';
+									break;
+								case 'day':
+									$trial_unit = 'D';
+									break;
+								case 'month':
+								default:
+									$trial_unit = 'M';
+									break;
+							}
+							$trial_duration = apply_filters( 'it_exchange_paypal_standard_addon_subscription_trial_duration', $trial_interval_count, $product );
+						} else {
+							$trial_unit = '';
+							$trial_duration = '';
+						}
+						
 						$subscription = true;
+						$product_id = $product['product_id'];
 					}
 				}
 			}
@@ -460,6 +512,12 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 				't3'  => $unit, //Regular subscription units of duration. (D, W, M, Y) -- we only use M,Y by default
 				'src' => 1, //Recurring payments.
 			);
+			
+			if ( !empty( $trial_unit ) && !empty( $trial_duration ) ) {
+				$paypal_args['a1'] = 0;
+				$paypal_args['p1'] = $trial_duration;
+				$paypal_args['t1'] = $trial_unit;
+			}
 
 		} else {
 
