@@ -217,7 +217,7 @@ function it_exchange_clean_query_args( $exempt=array(), $additional=array() ) {
  * @return string url
 */
 function it_exchange_wp_get_nav_menu_items_filter( $items, $menu, $args ) {
-	if ( is_user_logged_in() ) {
+	if ( is_user_logged_in() && 'disabled' != it_exchange_get_page_type( 'logout' ) ) {
 		foreach ( $items as $item ) {
 			//We really just want to compare the URL PATH, so grab that and compare later
 			if ( '' == get_option( 'permalink_structure' ) ) {
