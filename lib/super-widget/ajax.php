@@ -152,7 +152,16 @@ if ( 'register' == $action ) {
 // Edit Shipping
 if ( 'update-shipping' == $action ) {
 	// This function will either updated the value or create an error and return 1 or 0
-	die( $GLOBALS['IT_Exchange_Shopping_Cart']->handle_update_shipping_address_request() );
+
+	$shipping_result = $GLOBALS['IT_Exchange_Shopping_Cart']->handle_update_shipping_address_request();
+
+	if ( ! $shipping_result ) {
+		it_exchange_update_session_data( "sw-shipping", $_POST );
+	} else {
+		it_exchange_clear_session_data( "sw-shipping" );
+	}
+
+	die( $shipping_result );
 }
 
 // Edit Billing
