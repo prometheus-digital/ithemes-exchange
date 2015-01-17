@@ -22,6 +22,11 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	private $_customer = '';
 
 	/**
+	 * @var array
+	 */
+	private $registration_session = array();
+
+	/**
 	 * Maps api tags to methods
 	 * @var array $_tag_map
 	 * @since 0.4.0
@@ -49,6 +54,17 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	 * @return void
 	*/
 	function IT_Theme_API_Registration() {
+
+		if ( it_exchange_in_superwidget() ) {
+
+			$data = it_exchange_get_session_data( "sw-registration" );
+
+			if ( empty( $data ) ) {
+				$data = array();
+			}
+
+			$this->registration_session = $data;
+		}
 	}
 
 	/**
@@ -115,6 +131,12 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 		$field_id = 'user_login';
 		$field_name = $field_id;
 
+		if ( isset($this->registration_session[ $field_name ] ) ) {
+			$value = $this->registration_session[ $field_name ];
+		} else {
+			$value = '';
+		}
+
 		switch( $options['format'] ) {
 
 			case 'field-id':
@@ -129,7 +151,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . esc_attr( $options['label'] ) . '<span class="it-exchange-required-star">*</span></label>';
-				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="" />';
+				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $value .'" />';
 
 		}
 
@@ -152,6 +174,12 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 		$field_id = 'first_name';
 		$field_name = $field_id;
 
+		if ( isset($this->registration_session[ $field_name ] ) ) {
+			$value = $this->registration_session[ $field_name ];
+		} else {
+			$value = '';
+		}
+
 		switch( $options['format'] ) {
 
 			case 'field-id':
@@ -166,7 +194,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id . '">' . esc_attr( $options['label'] ) . '</label>';
-				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="" />';
+				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="' . $value .'" />';
 
 		}
 
@@ -189,6 +217,12 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 		$field_id = 'last_name';
 		$field_name = $field_id;
 
+		if ( isset($this->registration_session[ $field_name ] ) ) {
+			$value = $this->registration_session[ $field_name ];
+		} else {
+			$value = '';
+		}
+
 		switch( $options['format'] ) {
 
 			case 'field-id':
@@ -203,7 +237,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id . '">' . $options['label'] . '</label>';
-				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="" />';
+				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="' . $value .'" />';
 
 		}
 
@@ -226,6 +260,12 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 		$field_id = 'email';
 		$field_name = $field_id;
 
+		if ( isset($this->registration_session[ $field_name ] ) ) {
+			$value = $this->registration_session[ $field_name ];
+		} else {
+			$value = '';
+		}
+
 		switch( $options['format'] ) {
 
 			case 'field-id':
@@ -240,7 +280,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id . '">' . esc_attr( $options['label'] ) . '<span class="it-exchange-required-star">*</span></label>';
-				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="" />';
+				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="' . $value .'" />';
 
 		}
 
