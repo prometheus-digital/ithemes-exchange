@@ -158,7 +158,16 @@ if ( 'update-shipping' == $action ) {
 // Edit Billing
 if ( 'update-billing' == $action ) {
 	// This function will either updated the value or create an error and return 1 or 0
-	die( $GLOBALS['IT_Exchange_Shopping_Cart']->handle_update_billing_address_request() );
+
+	$billing_result =  $GLOBALS['IT_Exchange_Shopping_Cart']->handle_update_billing_address_request();
+
+	if ( ! $billing_result ) {
+		it_exchange_update_session_data( "sw-billing", $_POST );
+	} else {
+		it_exchange_clear_session_data( "sw-billing" );
+	}
+
+	die( $billing_result );
 }
 
 // Submit Purchase Dialog
