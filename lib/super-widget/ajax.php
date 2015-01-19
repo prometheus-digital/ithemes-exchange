@@ -89,9 +89,9 @@ if ( 'update-quantity' == $action && $quantity && $cart_product ) {
 
 // Login
 if ( 'login' == $action ) {
-	$creds['user_login']    = empty( $_POST['log'] ) ? '' : esc_attr( $_POST['log'] );
-	$creds['user_password'] = empty( $_POST['pwd'] ) ? '' : esc_attr( $_POST['pwd'] );
-	$creds['remember']      = empty( $_POST['rememberme'] ) ? '' : esc_attr( $_POST['rememberme'] );
+	$creds['user_login']    = empty( $_POST['log'] ) ? '' : urldecode( $_POST['log'] );
+	$creds['user_password'] = empty( $_POST['pwd'] ) ? '' : urldecode( $_POST['pwd'] );
+	$creds['remember']      = empty( $_POST['rememberme'] ) ? '' : urldecode( $_POST['rememberme'] );
 
 	$user = wp_signon( $creds, false );
 	if ( ! is_wp_error( $user ) ) {
