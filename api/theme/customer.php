@@ -480,7 +480,8 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 
 		foreach( $pages as $page_slug ) {
 
-			if ( "disabled" == it_exchange_get_page_type( $page_slug ) ) {
+			// Skip menu item if disabled
+			if ( 'disabled' == it_exchange_get_page_type( $page_slug ) ) {
 				continue;
 			}
 
