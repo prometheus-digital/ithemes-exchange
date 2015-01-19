@@ -331,7 +331,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 		// Update value if doing ajax
 		$options['value'] = empty( $_POST['ite_base_country_ajax'] ) ? $options['value'] : $_POST['ite_base_country_ajax'];
 
-		if ( empty( $options['value'] ) || ! empty( $this->session[ $options['field_name'] ] ) ) {
+		if ( empty( $options['value'] ) && ! empty( $this->session[ $options['field_name'] ] ) ) {
 			$options['value'] = $this->session[ $options['field_name'] ];
 		}
 
@@ -405,7 +405,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-billing-address-state';
 		$options['value']      = empty( $this->_billing_address['state'] ) ? '' : $this->_billing_address['state'];
 
-		if ( empty( $options['value'] ) || ! empty( $this->session[ $options['field_name'] ] ) ) {
+		if ( empty( $options['value'] ) && ! empty( $this->session[ $options['field_name'] ] ) ) {
 			$options['value'] = $this->session[ $options['field_name'] ];
 		}
 
