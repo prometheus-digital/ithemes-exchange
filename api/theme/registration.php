@@ -151,7 +151,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . esc_attr( $options['label'] ) . '<span class="it-exchange-required-star">*</span></label>';
-				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $value .'" />';
+				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . esc_attr( $value ) .'" />';
 
 		}
 
@@ -194,7 +194,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id . '">' . esc_attr( $options['label'] ) . '</label>';
-				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="' . $value .'" />';
+				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="' . esc_attr( $value ) .'" />';
 
 		}
 
@@ -237,7 +237,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id . '">' . $options['label'] . '</label>';
-				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="' . $value .'" />';
+				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="' . esc_attr( $value ) .'" />';
 
 		}
 
@@ -280,7 +280,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id . '">' . esc_attr( $options['label'] ) . '<span class="it-exchange-required-star">*</span></label>';
-				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="' . $value .'" />';
+				$output .= '<input type="text" id="' . $field_id . '" name="' . $field_name . '" value="' . esc_attr( $value ) .'" />';
 
 		}
 
