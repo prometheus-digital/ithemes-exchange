@@ -322,7 +322,7 @@ function it_exchange_register_page( $page, $options ) {
 
 	$pages[sanitize_title( $page )] = $options;
 	$GLOBALS['it_exchange']['registered_pages'] = $pages;
-	do_action( 'it_exchnage_register_page', $page, $options );
+	do_action( 'it_exchange_register_page', $page, $options );
 	return true;
 }
 

@@ -76,3 +76,16 @@ function it_exchange_register_deprecated_template_parts_directory( $possible_loc
 	$possible_locations[] = $deprecated_path;
 	return $possible_locations;
 }
+
+/**
+ * This function is a wrapper for the deprecated action called during ()
+ *
+ * @since CHANGEME
+ *
+ * @param string $page - Page Slug
+ * @param array $options
+*/
+function deprecated_it_exchnage_register_page( $page, $options ) {
+    do_action( 'it_exchnage_register_page', $page, $options );
+}
+add_action( 'it_exchange_register_page', 'deprecated_it_exchnage_register_page', 10, 2 );
