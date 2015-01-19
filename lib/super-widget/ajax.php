@@ -124,9 +124,27 @@ if ( 'register' == $action ) {
 			it_exchange_add_message( 'notice', __( 'Registered and logged in as ', 'it-l10n-ithemes-exchange' ) . $user->user_login );
 		else
             it_exchange_add_message( 'error', $result->get_error_message() );
+
+		it_exchange_clear_session_data( "sw-registration" );
+
 		die('1');
 	} else {
 		it_exchange_add_message( 'error', $user_id->get_error_message() );
+
+		// clear out the passwords before we save the data to the session
+		unset( $_POST['pass1'] );
+		unset( $_POST['pass2'] );
+
+		if ( $user_id->get_error_message( "user_login" ) ) {
+			unset( $_POST['user_login'] );
+		}
+
+		if ( $user_id->get_error_message( "invalid_email" ) || $user_id->get_error_message( "email_exists" ) ) {
+			unset( $_POST['email'] );
+		}
+
+		it_exchange_update_session_data( "sw-registration",  $_POST );
+
 		die('0');
 	}
 }
@@ -134,13 +152,31 @@ if ( 'register' == $action ) {
 // Edit Shipping
 if ( 'update-shipping' == $action ) {
 	// This function will either updated the value or create an error and return 1 or 0
-	die( $GLOBALS['IT_Exchange_Shopping_Cart']->handle_update_shipping_address_request() );
+
+	$shipping_result = $GLOBALS['IT_Exchange_Shopping_Cart']->handle_update_shipping_address_request();
+
+	if ( ! $shipping_result ) {
+		it_exchange_update_session_data( "sw-shipping", $_POST );
+	} else {
+		it_exchange_clear_session_data( "sw-shipping" );
+	}
+
+	die( $shipping_result );
 }
 
 // Edit Billing
 if ( 'update-billing' == $action ) {
 	// This function will either updated the value or create an error and return 1 or 0
-	die( $GLOBALS['IT_Exchange_Shopping_Cart']->handle_update_billing_address_request() );
+
+	$billing_result =  $GLOBALS['IT_Exchange_Shopping_Cart']->handle_update_billing_address_request();
+
+	if ( ! $billing_result ) {
+		it_exchange_update_session_data( "sw-billing", $_POST );
+	} else {
+		it_exchange_clear_session_data( "sw-billing" );
+	}
+
+	die( $billing_result );
 }
 
 // Submit Purchase Dialog

@@ -22,6 +22,11 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	private $_shipping_address = '';
 
 	/**
+	 * @var array
+	 */
+	private $session = array();
+
+	/**
 	 * Maps api tags to methods
 	 * @var array $_tag_map
 	 * @since 1.4.0
@@ -50,6 +55,17 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	*/
 	function IT_Theme_API_Shipping() {
 		$this->_shipping_address = it_exchange_get_cart_shipping_address();
+
+		if ( it_exchange_in_superwidget() ) {
+
+			$data = it_exchange_get_session_data( "sw-shipping" );
+
+			if ( empty( $data ) ) {
+				$data = array();
+			}
+
+			$this->session = $data;
+		}
 	}
 
 	/**
@@ -81,6 +97,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-first-name';
 		$options['value']      = empty( $this->_shipping_address['first-name'] ) ? '' : $this->_shipping_address['first-name'];
 
+		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+			$options['value'] = $this->session[ $options['field_name'] ];
+		}
+
 		return $this->get_fields( $options );
 	}
 
@@ -101,6 +121,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_id']   = 'it-exchange-shipping-address-last-name';
 		$options['field_name'] = 'it-exchange-shipping-address-last-name';
 		$options['value']      = empty( $this->_shipping_address['last-name'] ) ? '' : $this->_shipping_address['last-name'];
+
+		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+			$options['value'] = $this->session[ $options['field_name'] ];
+		}
 
 		return $this->get_fields( $options );
 	}
@@ -123,6 +147,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-company-name';
 		$options['value']      = empty( $this->_shipping_address['company-name'] ) ? '' : $this->_shipping_address['company-name'];
 
+		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+			$options['value'] = $this->session[ $options['field_name'] ];
+		}
+
 		return $this->get_fields( $options );
 	}
 
@@ -143,6 +171,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_id']   = 'it-exchange-shipping-address-address1';
 		$options['field_name'] = 'it-exchange-shipping-address-address1';
 		$options['value']      = empty( $this->_shipping_address['address1'] ) ? '' : $this->_shipping_address['address1'];
+
+		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+			$options['value'] = $this->session[ $options['field_name'] ];
+		}
 
 		return $this->get_fields( $options );
 	}
@@ -165,6 +197,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-address2';
 		$options['value']      = empty( $this->_shipping_address['address2'] ) ? '' : $this->_shipping_address['address2'];
 
+		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+			$options['value'] = $this->session[ $options['field_name'] ];
+		}
+
 		return $this->get_fields( $options );
 	}
 
@@ -186,6 +222,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-city';
 		$options['value']      = empty( $this->_shipping_address['city'] ) ? '' : $this->_shipping_address['city'];
 
+		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+			$options['value'] = $this->session[ $options['field_name'] ];
+		}
+
 		return $this->get_fields( $options );
 	}
 
@@ -206,6 +246,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_id']   = 'it-exchange-shipping-address-zip';
 		$options['field_name'] = 'it-exchange-shipping-address-zip';
 		$options['value']      = empty( $this->_shipping_address['zip'] ) ? '' : $this->_shipping_address['zip'];
+
+		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+			$options['value'] = $this->session[ $options['field_name'] ];
+		}
 
 		return $this->get_fields( $options );
 	}
@@ -230,6 +274,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 
 		// Update value if doing ajax
 		$options['value'] = empty( $_POST['ite_base_country_ajax'] ) ? $options['value'] : $_POST['ite_base_country_ajax'];
+
+		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+			$options['value'] = $this->session[ $options['field_name'] ];
+		}
 
 		$countries = it_exchange_get_data_set( 'countries' );
 
@@ -302,6 +350,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-state';
 		$options['value']      = empty( $this->_shipping_address['state'] ) ? '' : $this->_shipping_address['state'];
 
+		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+			$options['value'] = $this->session[ $options['field_name'] ];
+		}
+
 		$states = it_exchange_get_data_set( 'states', array( 'country' => it_exchange( 'shipping', 'get-country', array( 'format' => 'value' ) ) ) );
 
 		$current_value = empty( $options['value'] ) ? '' : esc_attr( $options['value'] );
@@ -368,6 +420,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-email';
 		$options['value']      = empty( $this->_shipping_address['email'] ) ? '' : $this->_shipping_address['email'];
 
+		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+			$options['value'] = $this->session[ $options['field_name'] ];
+		}
+
 		return $this->get_fields( $options );
 	}
 
@@ -387,6 +443,10 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_id']   = 'it-exchange-shipping-address-phone';
 		$options['field_name'] = 'it-exchange-shipping-address-phone';
 		$options['value']      = empty( $this->_shipping_address['phone'] ) ? '' : $this->_shipping_address['phone'];
+
+		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+			$options['value'] = $this->session[ $options['field_name'] ];
+		}
 
 		return $this->get_fields( $options );
 	}
