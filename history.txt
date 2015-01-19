@@ -1,3 +1,15 @@
+1.11.6 - Glenn Ansley, Lew Ayotte, Elise Alley, Timothy Jacobs
+	Fix bug preventing users with '&' in their username from logging in via SW. props Timothy Jacobs <http://ironbounddesigns.com/>
+	Remember the shipping address when errors are present on SW form. props Timothy Jacobs <http://ironbounddesigns.com/>
+	Remember the billing address when errors are present on SW form. props Timothy Jacobs <http://ironbounddesigns.com/>
+	Remember the registration fields when errors are present on SW form. props Timothy Jacobs <http://ironbounddesigns.com/>
+	Fixed bug that tries to display disabled Exchange profile pages on the user's profile page. props Timothy Jacobs <http://ironbounddesigns.com/>
+	Fix bug causing menu item titles to not display when user_is_logged_in and Exchagne login/logout pages are set to 'disabled' in Settings
+	Properly escape in values in the event that poorly-formatted option names were previously inserted into the options table
+	Fixed improper order of args in call to _x()
+	Add new status to param of actions triggered when a transaction status is changed.
+	Fixed bug that was preventing default WP welcome email from being sent when new users register
+	Extend inline-docs a bit for saving custom billing address fields
 1.11.5 - Glenn Ansley, Lew Ayotte, Elise Alley
 	Adding IP address of customer to Transaction meta and on the Transaction page
 	Define settings var in IT_Theme_API_Store::products before count since new filter added
@@ -37,7 +49,7 @@
 	Add lang directory and es_MX po/mo files
 	Add actions for applying/removing basic coupons to/from cart
 	Adding new filters and setting new global for add-ons
-	Adding some filters for Table Rate Shipping 
+	Adding some filters for Table Rate Shipping
 	Add Mexican states to states.php dataset. Props: Darryl Clark
 	Fixed bug causing JS error when Image Gallery Settings turn zoom off
 1.10.7 - 2014-10-16 - Glenn Ansley, Lew Ayotte, Elise Alley

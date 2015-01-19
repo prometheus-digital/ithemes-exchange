@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.1
-Stable tag: 1.11.5.1
+Stable tag: 1.11.6
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,19 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.11.6 =
+* Fix bug preventing users with '&' in their username from logging in via SW. props Timothy Jacobs <http://ironbounddesigns.com/>
+* Remember the shipping address when errors are present on SW form. props Timothy Jacobs <http://ironbounddesigns.com/>
+* Remember the billing address when errors are present on SW form. props Timothy Jacobs <http://ironbounddesigns.com/>
+* Remember the registration fields when errors are present on SW form. props Timothy Jacobs <http://ironbounddesigns.com/>
+* Fixed bug that tries to display disabled Exchange profile pages on the user's profile page. props Timothy Jacobs <http://ironbounddesigns.com/>
+* Fix bug causing menu item titles to not display when user_is_logged_in and Exchagne login/logout pages are set to 'disabled' in Settings
+* Properly escape in values in the event that poorly-formatted option names were previously inserted into the options table
+* Fixed improper order of args in call to _x()
+* Add new status to param of actions triggered when a transaction status is changed.
+* Fixed bug that was preventing default WP welcome email from being sent when new users register
+* Extend inline-docs a bit for saving custom billing address fields
+
 = 1.11.5.1 =
 * Fix missing font-icons
 
@@ -134,7 +147,7 @@ http://ithemes.com/codex/page/Exchange_Installation
 * Add lang directory and es_MX po/mo files
 * Add actions for applying/removing basic coupons to/from cart
 * Adding new filters and setting new global for add-ons
-* Adding some filters for Table Rate Shipping 
+* Adding some filters for Table Rate Shipping
 * Add Mexican states to states.php dataset. Props: Darryl Clark
 * Fixed bug causing JS error when Image Gallery Settings turn zoom off
 
