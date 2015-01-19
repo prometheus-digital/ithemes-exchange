@@ -97,7 +97,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-first-name';
 		$options['value']      = empty( $this->_shipping_address['first-name'] ) ? '' : $this->_shipping_address['first-name'];
 
-		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+		if ( empty( $options['value'] ) && ! empty( $this->session[ $options['field_name'] ] ) ) {
 			$options['value'] = $this->session[ $options['field_name'] ];
 		}
 
@@ -122,7 +122,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-last-name';
 		$options['value']      = empty( $this->_shipping_address['last-name'] ) ? '' : $this->_shipping_address['last-name'];
 
-		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+		if ( empty( $options['value'] ) && ! empty( $this->session[ $options['field_name'] ] ) ) {
 			$options['value'] = $this->session[ $options['field_name'] ];
 		}
 
@@ -147,7 +147,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-company-name';
 		$options['value']      = empty( $this->_shipping_address['company-name'] ) ? '' : $this->_shipping_address['company-name'];
 
-		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+		if ( empty( $options['value'] ) && ! empty( $this->session[ $options['field_name'] ] ) ) {
 			$options['value'] = $this->session[ $options['field_name'] ];
 		}
 
@@ -172,7 +172,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-address1';
 		$options['value']      = empty( $this->_shipping_address['address1'] ) ? '' : $this->_shipping_address['address1'];
 
-		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+		if ( empty( $options['value'] ) && ! empty( $this->session[ $options['field_name'] ] ) ) {
 			$options['value'] = $this->session[ $options['field_name'] ];
 		}
 
@@ -197,7 +197,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-address2';
 		$options['value']      = empty( $this->_shipping_address['address2'] ) ? '' : $this->_shipping_address['address2'];
 
-		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+		if ( empty( $options['value'] ) && ! empty( $this->session[ $options['field_name'] ] ) ) {
 			$options['value'] = $this->session[ $options['field_name'] ];
 		}
 
@@ -222,7 +222,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-city';
 		$options['value']      = empty( $this->_shipping_address['city'] ) ? '' : $this->_shipping_address['city'];
 
-		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+		if ( empty( $options['value'] ) && ! empty( $this->session[ $options['field_name'] ] ) ) {
 			$options['value'] = $this->session[ $options['field_name'] ];
 		}
 
@@ -247,7 +247,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-zip';
 		$options['value']      = empty( $this->_shipping_address['zip'] ) ? '' : $this->_shipping_address['zip'];
 
-		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+		if ( empty( $options['value'] ) && ! empty( $this->session[ $options['field_name'] ] ) ) {
 			$options['value'] = $this->session[ $options['field_name'] ];
 		}
 
@@ -275,7 +275,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		// Update value if doing ajax
 		$options['value'] = empty( $_POST['ite_base_country_ajax'] ) ? $options['value'] : $_POST['ite_base_country_ajax'];
 
-		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+		if ( empty( $options['value'] ) && ! empty( $this->session[ $options['field_name'] ] ) ) {
 			$options['value'] = $this->session[ $options['field_name'] ];
 		}
 
@@ -350,7 +350,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-state';
 		$options['value']      = empty( $this->_shipping_address['state'] ) ? '' : $this->_shipping_address['state'];
 
-		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+		if ( empty( $options['value'] ) && ! empty( $this->session[ $options['field_name'] ] ) ) {
 			$options['value'] = $this->session[ $options['field_name'] ];
 		}
 
@@ -420,7 +420,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-email';
 		$options['value']      = empty( $this->_shipping_address['email'] ) ? '' : $this->_shipping_address['email'];
 
-		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+		if ( empty( $options['value'] ) && ! empty( $this->session[ $options['field_name'] ] ) ) {
 			$options['value'] = $this->session[ $options['field_name'] ];
 		}
 
@@ -444,7 +444,7 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		$options['field_name'] = 'it-exchange-shipping-address-phone';
 		$options['value']      = empty( $this->_shipping_address['phone'] ) ? '' : $this->_shipping_address['phone'];
 
-		if ( empty( $options['value'] ) && isset( $this->session[ $options['field_name'] ] ) ) {
+		if ( empty( $options['value'] ) && ! empty( $this->session[ $options['field_name'] ] ) ) {
 			$options['value'] = $this->session[ $options['field_name'] ];
 		}
 
