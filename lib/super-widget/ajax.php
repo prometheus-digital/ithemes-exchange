@@ -120,12 +120,14 @@ if ( 'register' == $action ) {
         );
 
         $user = wp_signon( $creds );
-		if ( ! is_wp_error( $user ) )
+		if ( ! is_wp_error( $user ) ) {
 			it_exchange_add_message( 'notice', __( 'Registered and logged in as ', 'it-l10n-ithemes-exchange' ) . $user->user_login );
-		else
+		} else {
             it_exchange_add_message( 'error', $result->get_error_message() );
+		}
 
-		it_exchange_clear_session_data( "sw-registration" );
+		// Clear form values we saved in case of error
+		it_exchange_clear_session_data( 'sw-registration' );
 
 		die('1');
 	} else {
@@ -135,15 +137,15 @@ if ( 'register' == $action ) {
 		unset( $_POST['pass1'] );
 		unset( $_POST['pass2'] );
 
-		if ( $user_id->get_error_message( "user_login" ) ) {
+		if ( $user_id->get_error_message( 'user_login' ) ) {
 			unset( $_POST['user_login'] );
 		}
 
-		if ( $user_id->get_error_message( "invalid_email" ) || $user_id->get_error_message( "email_exists" ) ) {
+		if ( $user_id->get_error_message( 'invalid_email' ) || $user_id->get_error_message( 'email_exists' ) ) {
 			unset( $_POST['email'] );
 		}
 
-		it_exchange_update_session_data( "sw-registration",  $_POST );
+		it_exchange_update_session_data( 'sw-registration',  $_POST );
 
 		die('0');
 	}
