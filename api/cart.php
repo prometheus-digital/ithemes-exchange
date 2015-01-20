@@ -833,7 +833,7 @@ function it_exchange_get_cart_description( $options=array() ) {
 		$string = it_exchange_get_cart_product_title( $product );
 		if (  1 < $count = it_exchange_get_cart_product_quantity( $product ) )
 			$string .= ' (' . $count . ')';
-		$description[] = $string;
+		$description[] = apply_filters( 'it_exchange_get_cart_description_for_product', $string, $product );
 	}
 	$description = apply_filters( 'it_exchange_get_cart_description', implode( ', ', $description ), $description, $options );
 
