@@ -132,12 +132,13 @@ add_action( 'shutdown', 'it_exchange_db_session_write_close' );
  */
 function it_exchange_db_session_cleanup() {
 	global $wpdb;
-
+	
 	if ( defined( 'WP_SETUP_CONFIG' ) ) {
 		return;
 	}
-
+	
 	if ( ! defined( 'WP_INSTALLING' ) ) {
+		
 		$expiration_keys = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE '_it_exchange_db_session_expires_%'" );
 
 		$now = time();
@@ -147,7 +148,7 @@ function it_exchange_db_session_cleanup() {
 			// If the session has expired
 			if ( $now > intval( $expiration->option_value ) ) {
 				// Get the session ID by parsing the option_name
-				$session_id = substr( $expiration->option_name, 20 );
+				$session_id = substr( $expiration->option_name, 24 );
 
 				$expired_sessions[] = $expiration->option_name;
 				$expired_sessions[] = "_it_exchange_db_session_$session_id";
@@ -181,22 +182,7 @@ function it_exchange_db_delete_all_sessions() {
 	}
 
 	if ( ! defined( 'WP_INSTALLING' ) ) {
-		$expiration_keys = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_it_exchange_db_session_%'" );
-
-		foreach( $expiration_keys as $expiration ) {
-			// Get the session ID by parsing the option_name
-			$session_id = substr( $expiration->option_name, 24 );
-
-			$expired_sessions[] = $expiration->option_name;
-			$expired_sessions[] = "_it_exchange_db_session_$session_id";
-		}
-
-		// Delete all sessions in a single query
-		if ( ! empty( $expired_sessions ) ) {
-			$formatted = implode( ', ', array_fill( 0, count( $expired_sessions ), '%s' ) );
-			$query     = $wpdb->prepare( "DELETE FROM $wpdb->options WHERE option_name IN ($formatted)", $expired_sessions );
-			$wpdb->query( $query );
-		}
+		$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '_it_exchange_db_session_%'" );
 	}
 
 	// Allow other plugins to hook in to the garbage collection process.

@@ -4,7 +4,7 @@
  * product in the store.
  *
  * @since 0.4.0
- * @version 1.0.2
+ * @version CHANGEME
  * @link http://ithemes.com/codex/page/Exchange_Template_Updates
  * @package IT_Exchange
  *
@@ -16,7 +16,7 @@
 ?>
 
 <?php do_action( 'it_exchange_content_store_before_product_element' ); ?>
-<li class="it-exchange-product">
+<li class="it-exchange-product <?php it_exchange( 'store', 'product-classes' ); ?>">
 	<?php do_action( 'it_exchange_content_store_begin_product_element' ); ?>
 	<?php it_exchange_get_template_part( 'content-store/loops/product-images' ); ?>
 	<div class="it-exchange-product-details">
