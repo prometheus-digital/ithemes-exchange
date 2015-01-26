@@ -216,7 +216,9 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 							foreach( $transient_data['transaction_object']->products as $key => $product ) {
 								if ( it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
 									it_exchange_clear_session_data( 'pps_transient_transaction_id' );
-									return it_exchange_add_transaction( 'paypal-standard', $transient_transaction_id, 'completed', $it_exchange_customer->id, $transient_data['transaction_object'] );
+									$transient_data['transaction_object']->total = '0.00'; //should be 0.00 ... since this is a free trial!
+									$transient_data['transaction_object']->subtotal = '0.00'; //should be 0.00 ... since this is a free trial!
+									return it_exchange_add_transaction( 'paypal-standard', $transient_transaction_id[0], 'completed', $it_exchange_customer->id, $transient_data['transaction_object'] );
 								}
 							}
 						}
@@ -639,6 +641,11 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 			case 'subscr_payment':
 				switch( strtolower( $request['payment_status'] ) ) {
 					case 'completed' :
+						if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) { //this is a free trial
+							/* We need to do some free trial magic! */
+							$transaction = it_exchange_get_transaction( $temp_txn_id );
+							$transaction->update_transaction_meta( '_it_exchange_transaction_method_id', $request['txn_id'] );
+						}
 						if ( !it_exchange_paypal_standard_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
 							//If the transaction isn't found, we've got a new payment
 							it_exchange_paypal_standard_addon_add_child_transaction( $request['txn_id'], $request['payment_status'], $subscriber_id, $request['mc_gross'] );
@@ -652,6 +659,12 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 				break;
 
 			case 'subscr_signup':
+				if ( isset( $request['amount1'] ) && '0.00' == $request['amount1'] ) { //this is a free trial
+					/* We need to do some free trial magic! */
+					if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
+						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $temp_txn_id, $subscriber_id );
+					}
+				}
 				it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'active' );
 				break;
 
