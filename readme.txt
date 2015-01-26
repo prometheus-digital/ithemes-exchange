@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.1
-Stable tag: 1.11.6
+Stable tag: 1.11.7
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,12 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.11.7 =
+* Don't pre-check box to mailchimp subscription in Exchange Startup Wizard
+* Fix for DB Session Cleanup 
+* Add a filter to the individual product description when generated for the cart description
+* Add product-[ID] and product-[product-type] class names to store product li elementes by default. Make filterable as well.
+
 = 1.11.6 =
 * Fix bug preventing users with '&' in their username from logging in via SW. props Timothy Jacobs <http://ironbounddesigns.com/>
 * Remember the shipping address when errors are present on SW form. props Timothy Jacobs <http://ironbounddesigns.com/>
@@ -121,7 +127,8 @@ http://ithemes.com/codex/page/Exchange_Installation
 * Added loading gif during SW AJAX calls to Register / Login
 * Fixed bug causing Stripe webhooks not to reach Exchange in some setups
 * Fixed notice when no cart object is returned in zero sum checkout
-1.11.2.1 - 2014-11-12 - Glenn Ansley, Lew Ayotte, Elise Alley
+
+= 1.11.2 =
 * Fixing call to weight meta for product
 
 = 1.11.2 =
