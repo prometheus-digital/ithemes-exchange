@@ -127,7 +127,8 @@ http://ithemes.com/codex/page/Exchange_Installation
 * Added loading gif during SW AJAX calls to Register / Login
 * Fixed bug causing Stripe webhooks not to reach Exchange in some setups
 * Fixed notice when no cart object is returned in zero sum checkout
-1.11.2.1 - 2014-11-12 - Glenn Ansley, Lew Ayotte, Elise Alley
+
+= 1.11.2 =
 * Fixing call to weight meta for product
 
 = 1.11.2 =
