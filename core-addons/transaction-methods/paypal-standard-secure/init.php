@@ -849,8 +849,6 @@ add_filter( 'init', 'it_exchange_paypal_standard_secure_addon_register_webhook' 
  */
 function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
-	wp_mail( 'lew@ithemes.com', 'request', print_r( $request, true ) );
-
 	$general_settings = it_exchange_get_option( 'settings_general' );
 	$settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
 
