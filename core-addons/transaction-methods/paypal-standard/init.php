@@ -565,7 +565,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			'shipping'      => '0',
 			'email'         => $it_exchange_customer->data->user_email,
 			'rm'            => '2',
-			'cancel_return' => it_exchange_get_page_url( 'cart' ),
+			'cancel_return' => ( it_exchange_is_multi_item_cart_allowed() ? it_exchange_get_page_url( 'cart' ) : get_site_url() ),
 			'custom'        => $temp_id,
 		);
 

@@ -778,7 +778,7 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id ) {
 		$L_BUTTONVARS[] = 'shipping=0';
 		$L_BUTTONVARS[] = 'email=' . $it_exchange_customer->data->user_email;
 		$L_BUTTONVARS[] = 'rm=2'; //Return  Method - https://developer.paypal.com/webapps/developer/docs/classic/button-manager/integration-guide/ButtonManagerHTMLVariables/
-		$L_BUTTONVARS[] = 'cancel_return=' . it_exchange_get_page_url( 'cart' );
+		$L_BUTTONVARS[] = 'cancel_return=' . ( it_exchange_is_multi_item_cart_allowed() ? it_exchange_get_page_url( 'cart' ) : get_site_url() );
 		$L_BUTTONVARS[] = 'custom=' . $temp_id;
 		
 		$L_BUTTONVARS = apply_filters( 'it_exchange_paypal_standard_secure_button_vars', $L_BUTTONVARS );
