@@ -1,9 +1,12 @@
+1.11.8 - Lew Ayotte, Glenn Ansley, Elise Alley, Timothy Jacobs
+	Added feature to always populate current product in GLOBAL
+	If cart is not available, use site URL for cancel_return in PayPal add-ons
+	Upating PayPal add-ons to work with latest Recurring Payments options
 1.11.7 - Lew Ayotte, Glenn Ansley, Elise Alley, Timothy Jacobs
 	Don't pre-check box to mailchimp subscription in Exchange Startup Wizard
 	Fix for DB Session Cleanup 
 	Add a filter to the individual product description when generated for the cart description
 	Add product-[ID] and product-[product-type] class names to store product li elementes by default. Make filterable as well.
-
 1.11.6 - Glenn Ansley, Lew Ayotte, Elise Alley, Timothy Jacobs
 	Fix bug preventing users with '&' in their username from logging in via SW. props Timothy Jacobs <http://ironbounddesigns.com/>
 	Remember the shipping address when errors are present on SW form. props Timothy Jacobs <http://ironbounddesigns.com/>
