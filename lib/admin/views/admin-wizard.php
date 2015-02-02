@@ -249,7 +249,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
 					<label for="company-email"><?php _e( 'E-mail Notifications', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'At what email address would you like to receive store notifications?', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 					<?php $form->add_text_box( 'company-email', array( 'value' => get_bloginfo( 'admin_email' ), 'class' => 'clearfix' ) ); ?>
 					<p>
-						<?php $form->add_check_box( 'exchange-notifications', array( 'checked' => true ) ); ?>
+						<?php $form->add_check_box( 'exchange-notifications' ); ?>
 						<label for="exchange-notifications"><?php _e( 'Get e-mail updates from us about iThemes Exchange', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'Subscribe to get iThemes Exchange news, updates, discounts and swag &hellip; oh, and our endless love.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 					</p>
 					<div class="default-currency">

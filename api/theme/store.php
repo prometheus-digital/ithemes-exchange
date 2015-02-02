@@ -20,7 +20,8 @@ class IT_Theme_API_Store implements IT_Theme_API {
 	 * @since 0.4.0
 	*/
 	public $_tag_map = array(
-		'products' => 'products',
+		'products'       => 'products',
+		'productclasses' => 'product_classes',
 	);
 
 	/**
@@ -78,5 +79,35 @@ class IT_Theme_API_Store implements IT_Theme_API {
 				return false;
 			}
 		}
+	}
+
+	function product_classes( $options=array() ) {
+
+        // Return boolean if has flag was set
+        if ( $options['supports'] )
+            return true;
+
+        // Return boolean if has flag was set
+        if ( $options['has'] )
+            return true;
+
+		$product    = empty( $GLOBALS['it_exchange']['product'] ) ? 0 : $GLOBALS['it_exchange']['product'];
+		$product_id = empty( $product->ID ) ? 0 : $product->ID;
+
+		if ( empty( $product_id ) ) {
+			return '';
+		}
+
+		$type = it_exchange_get_product_type( $product_id );
+
+		$classes = array(
+			'it-exchange-product-' . $product_id,
+			'it-exchange-product-type-' . $type,
+		);
+		$classes = apply_filters( 'it_exchange_get_store_li_classes_for_product', $classes, $type, $product_id );
+
+		$classes = implode( ' ', $classes );
+		$classes = esc_attr( trim( $classes ) );
+		return $classes;
 	}
 }

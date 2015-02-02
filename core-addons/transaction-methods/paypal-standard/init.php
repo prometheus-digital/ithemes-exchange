@@ -169,7 +169,7 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 			else
 				$transaction_status = NULL;
 					
-			if ( !empty( $transaction_id ) && !empty( $transient_transaction_id ) && !empty( $transaction_amount ) && !empty( $transaction_status ) ) {
+			if ( !empty( $transaction_id ) && !empty( $transient_transaction_id ) && NULL !== $transaction_amount && !empty( $transaction_status ) ) {
 
 				try {
 	
@@ -206,6 +206,24 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 	
 				}
 	
+			} else if ( is_null( $transaction_id ) && is_null( $transient_transaction_id ) && is_null( $transaction_amount ) && is_null( $transaction_status ) ) {
+				//Check to see if the transient transaction was for a free trial membership and then proceed as necessary...
+				$transient_transaction_id = it_exchange_get_session_data( 'pps_transient_transaction_id' );
+				if ( !empty( $transient_transaction_id[0] ) ) {
+					$transient_data = it_exchange_get_transient_transaction( 'pps', $transient_transaction_id[0] );
+					if ( !empty( $transient_data['transaction_object']->products ) ) {
+						if ( 1 === count( $transient_data['transaction_object']->products ) ) {
+							foreach( $transient_data['transaction_object']->products as $key => $product ) {
+								if ( it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
+									it_exchange_clear_session_data( 'pps_transient_transaction_id' );
+									$transient_data['transaction_object']->total = '0.00'; //should be 0.00 ... since this is a free trial!
+									$transient_data['transaction_object']->subtotal = '0.00'; //should be 0.00 ... since this is a free trial!
+									return it_exchange_add_transaction( 'paypal-standard', $transient_transaction_id[0], 'completed', $it_exchange_customer->id, $transient_data['transaction_object'] );
+								}
+							}
+						}
+					}
+				}
 			}
 
 			it_exchange_add_message( 'error', __( 'Unknown error while processing with PayPal. Please try again later.', 'it-l10n-ithemes-exchange' ) );
@@ -382,6 +400,7 @@ function it_exchange_process_paypal_standard_form() {
 		$transaction_object = it_exchange_generate_transaction_object();
 		
 		it_exchange_add_transient_transaction( 'pps', $temp_id, $customer->id, $transaction_object );
+		it_exchange_update_session_data( 'pps_transient_transaction_id', $temp_id );
 
 		if ( $url = it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) ) {
 			wp_redirect( $url );
@@ -427,22 +446,77 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			foreach( $cart as $product ) {
 				if ( it_exchange_product_supports_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
 					if ( it_exchange_product_has_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
-						$time = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'time' ) );
-						switch( $time ) {
-
-							case 'yearly':
+						$trial_enabled = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) );
+						$trial_interval = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-interval' ) );
+						$trial_interval_count = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-interval-count' ) );
+						$auto_renew = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) );
+						$interval = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'interval' ) );
+						$interval_count = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'interval-count' ) );
+	
+						switch( $interval ) {
+							case 'year':
 								$unit = 'Y';
 								break;
-
-							case 'monthly':
+							case 'week':
+								$unit = 'W';
+								break;
+							case 'day':
+								$unit = 'D';
+								break;
+							case 'month':
 							default:
 								$unit = 'M';
 								break;
 
 						}
-						$unit = apply_filters( 'it_exchange_paypal-standard_subscription_unit', $unit, $time );
-						$duration = apply_filters( 'it_exchange_paypal-standard_subscription_duration', 1, $time );
+						$duration = apply_filters( 'it_exchange_paypal_standard_addon_subscription_duration', $interval_count, $product );
+				
+						$trial_unit = NULL;
+						$trial_duration = NULL;
+						
+						if ( $trial_enabled ) {
+							$allow_trial = true;
+							//Should we all trials?
+							if ( 'membership-product-type' === it_exchange_get_product_type( $product['product_id'] ) ) {
+								if ( is_user_logged_in() ) {
+									if ( function_exists( 'it_exchange_get_session_data' ) ) {
+										$member_access = it_exchange_get_session_data( 'member_access' );
+										$children = (array)it_exchange_membership_addon_get_all_the_children( $product['product_id'] );
+										$parents = (array)it_exchange_membership_addon_get_all_the_parents( $product['product_id'] );
+										foreach( $member_access as $prod_id => $txn_id ) {
+											if ( $prod_id === $product['product_id'] || in_array( $prod_id, $children ) || in_array( $prod_id, $parents ) ) {
+												$allow_trial = false;
+												break;
+											}								
+										}
+									}
+								}
+							}
+					
+							$allow_trial = apply_filters( 'it_exchange_paypal_standard_addon_get_payment_url_allow_trial', $allow_trial, $product['product_id'] );
+							
+							if ( $allow_trial && 0 < $trial_interval_count ) {
+								switch ( $trial_interval ) {
+									case 'year':
+										$trial_unit = 'Y';
+										break;
+									case 'week':
+										$trial_unit = 'W';
+										break;
+									case 'day':
+										$trial_unit = 'D';
+										break;
+									case 'month':
+									default:
+										$trial_unit = 'M';
+										break;
+								}
+								$trial_duration = apply_filters( 'it_exchange_paypal_standard_addon_subscription_trial_duration', $trial_interval_count, $product );
+							}
+						}
+						
 						$subscription = true;
+						$product_id = $product['product_id'];
 					}
 				}
 			}
@@ -460,6 +534,12 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 				't3'  => $unit, //Regular subscription units of duration. (D, W, M, Y) -- we only use M,Y by default
 				'src' => 1, //Recurring payments.
 			);
+			
+			if ( !empty( $trial_unit ) && !empty( $trial_duration ) ) {
+				$paypal_args['a1'] = 0;
+				$paypal_args['p1'] = $trial_duration;
+				$paypal_args['t1'] = $trial_unit;
+			}
 
 		} else {
 
@@ -485,7 +565,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			'shipping'      => '0',
 			'email'         => $it_exchange_customer->data->user_email,
 			'rm'            => '2',
-			'cancel_return' => it_exchange_get_page_url( 'cart' ),
+			'cancel_return' => ( it_exchange_is_multi_item_cart_allowed() ? it_exchange_get_page_url( 'cart' ) : get_site_url() ),
 			'custom'        => $temp_id,
 		);
 
@@ -561,6 +641,11 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 			case 'subscr_payment':
 				switch( strtolower( $request['payment_status'] ) ) {
 					case 'completed' :
+						if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) { //this is a free trial
+							/* We need to do some free trial magic! */
+							$transaction = it_exchange_get_transaction( $temp_txn_id );
+							$transaction->update_transaction_meta( '_it_exchange_transaction_method_id', $request['txn_id'] );
+						}
 						if ( !it_exchange_paypal_standard_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
 							//If the transaction isn't found, we've got a new payment
 							it_exchange_paypal_standard_addon_add_child_transaction( $request['txn_id'], $request['payment_status'], $subscriber_id, $request['mc_gross'] );
@@ -574,6 +659,12 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 				break;
 
 			case 'subscr_signup':
+				if ( isset( $request['amount1'] ) && '0.00' == $request['amount1'] ) { //this is a free trial
+					/* We need to do some free trial magic! */
+					if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
+						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $temp_txn_id, $subscriber_id );
+					}
+				}
 				it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'active' );
 				break;
 
