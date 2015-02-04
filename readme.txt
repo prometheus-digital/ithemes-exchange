@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.1
-Stable tag: 1.11.8
+Stable tag: 1.11.9
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,10 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.11.9 =
+* Sort the advanced metaboxes alphabeticallyi. props Timothy Jacobs <http://ironbounddesigns.com/>
+* Adding post vars to actions in print_transaction_details_metabox()
+
 = 1.11.8 =
 * Fixed feature to always populate current product in GLOBAL. props Timothy Jacobs <http://ironbounddesigns.com/>
 * If cart is not available, use site URL for cancel_return in PayPal add-ons

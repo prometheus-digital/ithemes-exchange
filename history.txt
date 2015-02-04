@@ -1,3 +1,6 @@
+1.11.9 - Lew Ayotte, Glenn Ansley, Elise Alley, Timothy Jacobs
+	Sort the advanced metaboxes alphabeticallyi. props Timothy Jacobs <http://ironbounddesigns.com/>
+	Adding post vars to actions in print_transaction_details_metabox()
 1.11.8 - Lew Ayotte, Glenn Ansley, Elise Alley, Timothy Jacobs
 	Added feature to always populate current product in GLOBAL
 	If cart is not available, use site URL for cancel_return in PayPal add-ons
