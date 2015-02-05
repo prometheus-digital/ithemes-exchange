@@ -313,7 +313,7 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
 		} else {
 
 			// If we don't support purchase quanity, quanity will always be 1
-			if ( it_exchange_product_supports_feature( $cart_product['product_id'], 'purchase-quantity' ) ) {
+			if ( it_exchange_product_supports_feature( $cart_product['product_id'], 'purchase-quantity' ) && it_exchange_is_multi_item_product_allowed( $cart_product['product_id'] ) ) {
 				// Get max quantity setting
 				$max_purchase_quantity = it_exchange_get_product_feature( $cart_product['product_id'], 'purchase-quantity' );
 
