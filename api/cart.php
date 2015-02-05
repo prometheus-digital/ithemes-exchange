@@ -231,7 +231,8 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 	 * If multi-item carts are NOT allowed and this is a different item, empty the cart before proceeding.
 	 * If item being added to cart is already in cart, preserve that item so that quanity will be bumpped.
 	*/
-	if ( ! it_exchange_is_multi_item_cart_allowed() || ! it_exchange_is_multi_item_product_allowed( $product_id ) ) {
+	$multi_item_product_allowed = it_exchange_is_multi_item_product_allowed( $product_id );
+	if ( ! it_exchange_is_multi_item_cart_allowed() || ! $multi_item_product_allowed ) {
 		if ( ! empty( $session_products ) ) {
 			// Preserve the current item being added if its already in the cart
 			if ( ! empty( $session_products[$product_id . '-' . $itemized_hash] ) )
@@ -257,8 +258,8 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 
 	} else {
 
-		// If we don't support purchase quanity, quanity will always be 1
-		if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) ) {
+		// If we don't support purchase quanity, quantity will always be 1
+		if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) && $multi_item_product_allowed ) {
 
 			// Get max quantity setting
 			$max_purchase_quantity = it_exchange_get_product_feature( $product_id, 'purchase-quantity' );
