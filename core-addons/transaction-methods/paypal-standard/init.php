@@ -641,7 +641,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 			case 'subscr_payment':
 				switch( strtolower( $request['payment_status'] ) ) {
 					case 'completed' :
-						if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) { //this is a free trial
+						if ( $temp_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) { //this is a free trial
 							/* We need to do some free trial magic! */
 							$transaction = it_exchange_get_transaction( $temp_txn_id );
 							$transaction->update_transaction_meta( '_it_exchange_transaction_method_id', $request['txn_id'] );
@@ -661,7 +661,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 			case 'subscr_signup':
 				if ( isset( $request['amount1'] ) && '0.00' == $request['amount1'] ) { //this is a free trial
 					/* We need to do some free trial magic! */
-					if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
+					if ( $temp_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) {
 						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $temp_txn_id, $subscriber_id );
 					}
 				}
