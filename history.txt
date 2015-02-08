@@ -1,3 +1,5 @@
+1.11.10.1 - Lew Ayotte, Glenn Ansley, Elise Alley
+	Fixed function reference in PayPal Standard (basic).
 1.11.10 - Lew Ayotte, Glenn Ansley, Elise Alley
 	Fixed function reference in PayPal Standard (basic).
 	Verify quantity functionality in one more place to prevent bug of adding multiples of an item when multiples shouldn't be allowed.
