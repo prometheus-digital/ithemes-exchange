@@ -26,7 +26,7 @@ class IT_Exchange {
 
 	var $_version         = '1.11.10.1';
 	var $_wp_minimum      = '3.5';
-	var $_slug            = 'it-exchange';
+	var $_slug            = 'itheme-exchange';
 	var $_name            = 'iThemes Exchange';
 	var $_series          = '';
 
@@ -108,14 +108,13 @@ class IT_Exchange {
 	 * @return void
 	*/
 	function set_textdomain() {
-            $plugin_name = dirname( plugin_basename( __FILE__  ) );
-            $text_domain = "it-l10n-ithemes-exchange";
+		$plugin_name = $this->_slug;
+		$text_domain = 'it-l10n-ithemes-exchange';
+		$locale      = apply_filters( 'plugin_locale', get_locale(), $plugin_name );
+		$dir         = trailingslashit( WP_LANG_DIR . '/plugins/' . $plugin_name );
 
-            $locale = apply_filters( 'plugin_locale', get_locale(), $plugin_name );
-            $dir   = trailingslashit(WP_LANG_DIR . '/plugins/' . $plugin_name );
-
-            load_textdomain( $text_domain, $dir . $text_domain . "-" . $locale . '.mo' );
-            load_plugin_textdomain( $text_domain, false, $plugin_name . '/lang/' );
+		load_textdomain( $text_domain, $dir . $text_domain . "-" . $locale . '.mo' );
+		load_plugin_textdomain( $text_domain, false, $plugin_name . '/lang/' );
 	}
 
 	/**
