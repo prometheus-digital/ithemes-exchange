@@ -108,7 +108,14 @@ class IT_Exchange {
 	 * @return void
 	*/
 	function set_textdomain() {
-		load_plugin_textdomain( 'it-l10n-ithemes-exchange', false, dirname( $this->_plugin_base ) . '/lang/' );
+            $plugin_name = dirname( plugin_basename( __FILE__  ) );
+            $text_domain = "it-l10n-ithemes-exchange";
+
+            $locale = apply_filters( 'plugin_locale', get_locale(), $plugin_name );
+            $dir   = trailingslashit(WP_LANG_DIR . '/plugins/' . $plugin_name );
+
+            load_textdomain( $text_domain, $dir . $text_domain . "-" . $locale . '.mo' );
+            load_plugin_textdomain( $text_domain, false, $plugin_name . '/lang/' );
 	}
 
 	/**
