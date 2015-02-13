@@ -108,7 +108,7 @@ class IT_Exchange {
 	 * @return void
 	*/
 	function set_textdomain() {
-		$plugin_name = $this->_slug;
+		$plugin_name = dirname( $this->_plugin_base );
 		$text_domain = 'it-l10n-ithemes-exchange';
 		$locale      = apply_filters( 'plugin_locale', get_locale(), $plugin_name );
 		$dir         = trailingslashit( WP_LANG_DIR . '/plugins/' . $plugin_name );
