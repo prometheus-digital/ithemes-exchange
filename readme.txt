@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.1
-Stable tag: 1.11.9
+Stable tag: 1.11.10.1
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,14 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.11.10.1 =
+* Fixed function reference in PayPal Standard (basic).
+
+= 1.11.10 =
+* Fixed function reference in PayPal Standard (basic).
+* Verify quantity functionality in one more place to prevent bug of adding multiples of an item when multiples shouldn't be allowed.
+* Restricted Super-Widget JS calls to only the Super-Widget HTML.
+
 = 1.11.9 =
 * Sort the advanced metaboxes alphabeticallyi. props Timothy Jacobs <http://ironbounddesigns.com/>
 * Adding post vars to actions in print_transaction_details_metabox()

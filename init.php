@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: iThemes Exchange
- * Version: 1.11.10
+ * Version: 1.11.10.1
  * Text Domain: it-l10n-ithemes-exchange
  * Description: Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordPress
  * Plugin URI: http://ithemes.com/exchange/
@@ -24,7 +24,7 @@
 */
 class IT_Exchange {
 
-	var $_version         = '1.11.10';
+	var $_version         = '1.11.10.1';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'it-exchange';
 	var $_name            = 'iThemes Exchange';
@@ -108,7 +108,14 @@ class IT_Exchange {
 	 * @return void
 	*/
 	function set_textdomain() {
-		load_plugin_textdomain( 'it-l10n-ithemes-exchange', false, dirname( $this->_plugin_base ) . '/lang/' );
+            $plugin_name = dirname( plugin_basename( __FILE__  ) );
+            $text_domain = "it-l10n-ithemes-exchange";
+
+            $locale = apply_filters( 'plugin_locale', get_locale(), $plugin_name );
+            $dir   = trailingslashit(WP_LANG_DIR . '/plugins/' . $plugin_name );
+
+            load_textdomain( $text_domain, $dir . $text_domain . "-" . $locale . '.mo' );
+            load_plugin_textdomain( $text_domain, false, $plugin_name . '/lang/' );
 	}
 
 	/**
