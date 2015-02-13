@@ -109,12 +109,11 @@ class IT_Exchange {
 	*/
 	function set_textdomain() {
 		$plugin_name = dirname( $this->_plugin_base );
-		$text_domain = 'it-l10n-ithemes-exchange';
 		$locale      = apply_filters( 'plugin_locale', get_locale(), $plugin_name );
 		$dir         = trailingslashit( WP_LANG_DIR . '/plugins/' . $plugin_name );
 
-		load_textdomain( $text_domain, $dir . $text_domain . "-" . $locale . '.mo' );
-		load_plugin_textdomain( $text_domain, false, $plugin_name . '/lang/' );
+		load_textdomain( 'it-l10n-ithemes-exchange', $dir . 'it-l10n-ithemes-exchange-' . $locale . '.mo' );
+		load_plugin_textdomain( 'it-l10n-ithemes-exchange', false, $plugin_name . '/lang/' );
 	}
 
 	/**
