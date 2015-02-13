@@ -210,16 +210,18 @@ function it_exchange_is_page( $page=false ) {
 
 	// Give addons ability to skip this logic
 	$filtered_is = apply_filters( 'it_exchange_is_page', null, $page );
-	if ( ! is_null( $filtered_is ) )
+	if ( ! is_null( $filtered_is ) ) {
 		return $filtered_is;
+	}
 
 	// Page Data
 	$type = it_exchange_get_page_type( $page );
 	$slug = it_exchange_get_page_slug( $page );
 
 	// If type is disabled, return false
-	if ( 'disabled' == $type )
+	if ( 'disabled' == $type ) {
 		return false;
+	}
 
 	// If type is wordpress, pass it on to the wordpress function
 	if ( 'wordpress' == $type ) {
@@ -227,7 +229,7 @@ function it_exchange_is_page( $page=false ) {
 		return is_page( $wpid );
 	}
 
-	if ( ! empty( $_GET['it-exchange-sw-ajax'] ) && ! empty( $_GET['sw-product'] ) ) {
+	if ( ! empty( $_GET['it-exchange-sw-ajax'] ) && ! empty( $_GET['sw-product'] ) && ( empty( $page ) || $page == 'product' ) ) {
 		// Are we doing AJAX, if so, grab product ID from it.
 		return (boolean) it_exchange_get_product( $_GET['sw-product'] );
 	} else if ( ! $query_var = get_query_var( $slug ) ) {
@@ -247,20 +249,23 @@ function it_exchange_is_page( $page=false ) {
 			// Get page slug
 			$account_based_slug = it_exchange_get_page_slug( $account_based_page );
 			// If this page slug is set and it isn't 'account', return false for acocunt
-			if ( get_query_var( $account_based_slug ) && $account_based_slug != 'account' )
+			if ( get_query_var( $account_based_slug ) && $account_based_slug != 'account' ) {
 				return false;
+			}
 		}
 		return true;
 	}
 
 	// Return true if set and not product
-	if ( $query_var && 'product' != $page  )
+	if ( ! empty( $query_var ) && 'product' != $page  ) {
 		return true;
+	}
 
 	// Try to get the post from the slug
 	$sql = $wpdb->prepare( 'SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = "it_exchange_prod" AND post_status = "publish" AND post_name = "%s"', $query_var );
-	if ( $id = $wpdb->get_var( $sql ) )
+	if ( $id = $wpdb->get_var( $sql ) ) {
 		return true;
+	}
 
 	return false;
 }
