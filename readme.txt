@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.1
-Stable tag: 1.11.10.1
+Stable tag: 1.11.11
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,12 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.11.11 =
+1.11.11 - Glenn Ansley, Lew Ayotte, Elise Alley, Ronald van Weerd
+* Fix bug causing it_exchange_is_page(  ) to always return true when called from SW and  != 'product'
+* Fix bug preventing query args from loading correct SW state. Also, prevent cart state on product page if no items are in cart
+* Enable translation mo file to be overridden in wp-content/languages/plugins/it-exchange
+
 = 1.11.10.1 =
 * Fixed function reference in PayPal Standard (basic).
 
