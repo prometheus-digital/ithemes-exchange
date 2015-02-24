@@ -274,7 +274,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		$items_in_cart = (bool) it_exchange_get_cart_products();
 		$it_exchange_view = get_query_var( 'it_exchange_view' );
 
-		if ( $items_in_cart ) {
+		if ( $items_in_cart && empty( $state ) ) {
 
 			if ( 'product' == $it_exchange_view && ! it_exchange_is_current_product_in_cart() )
 				$state = 'product';
@@ -283,6 +283,11 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			else if ( ! $multi_item_cart_allowed )
 				$state = it_exchange_get_next_purchase_requirement_property( 'sw-template-part' );
 
+		}
+
+		// If we're on a product page w/o items in cart and asking for cart, switch to product state
+		if ( 'product' == $it_exchange_view && ! $items_in_cart ) {
+			$state = 'product';
 		}
 
 		// Grab the current state from the checkout requirements if trying to checkout

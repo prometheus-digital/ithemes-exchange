@@ -1850,8 +1850,38 @@ Order: %s
 	 * @return void
 	*/
 	function do_add_edit_product_screen_layout_main( $post ) {
+		$this->sort_advanced_metaboxes();
+
 		do_meta_boxes( 'it_exchange_prod', 'it_exchange_normal', $post );
 		do_meta_boxes( 'it_exchange_prod', 'it_exchange_advanced', $post );
+	}
+
+	/**
+	 * Sort the advanced metaboxes lexicographically.
+	 *
+	 * This only sorts the low priority metaboxes.
+	 */
+	function sort_advanced_metaboxes() {
+
+		global $wp_meta_boxes;
+
+		$low = $wp_meta_boxes['it_exchange_prod']['it_exchange_advanced']['low'];
+
+		usort( $low, array( $this, 'sort_advanced_metaboxes_callback' ) );
+
+		$wp_meta_boxes['it_exchange_prod']['it_exchange_advanced']['low'] = $low;
+	}
+
+	/**
+	 * usort callback for advanced metaboxes.
+	 *
+	 * @param array $a
+	 * @param array $b
+	 *
+	 * @return int
+	 */
+	function sort_advanced_metaboxes_callback( $a, $b ) {
+		return strcmp( $a['title'], $b['title'] );
 	}
 
 	/**

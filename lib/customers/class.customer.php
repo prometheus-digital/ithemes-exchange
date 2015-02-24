@@ -218,6 +218,7 @@ function handle_it_exchange_customer_registration_action() {
         $checkout_page = trailingslashit( it_exchange_get_page_url( 'checkout' ) );
 
 		// Redirect or clear query args
+		$redirect_hook_slug = false;
         if ( in_array( trailingslashit( wp_get_referer() ), array( $reg_page, $checkout_page ) ) ) {
 			// If on the reg page, check for redirect cookie.
 			$login_redirect = it_exchange_get_session_data( 'login_redirect' );

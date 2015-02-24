@@ -406,7 +406,7 @@ class IT_Exchange_Transaction_Post_Type {
 	*/
 	function print_transaction_details_metabox( $post ) {
 		$confirmation_url = it_exchange_get_transaction_confirmation_url( $post->ID );
-		do_action( 'it_exchange_before_payment_details' );
+		do_action( 'it_exchange_before_payment_details', $post );
 		?>
 		<div class="transaction-stamp hidden <?php esc_attr_e( strtolower( it_exchange_get_transaction_status_label( $post ) ) ); ?>">
 			<?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?>
@@ -440,6 +440,7 @@ class IT_Exchange_Transaction_Post_Type {
 					<?php esc_attr_e( it_exchange_get_transaction_customer_ip_address( $post ) ); ?>
 				</div>
 
+				
 				<?php if ( apply_filters( 'it_exchange_transaction_detail_has_customer_profile', true, $post ) ) : ?>
 					<div class="customer-profile">
 						<a href="<?php esc_attr_e( it_exchange_get_transaction_customer_admin_profile_url( $post ) ); ?>">
@@ -447,7 +448,6 @@ class IT_Exchange_Transaction_Post_Type {
 						</a>
 					</div>
 				<?php endif; ?>
-
 			</div>
 		</div>
 
@@ -686,7 +686,7 @@ class IT_Exchange_Transaction_Post_Type {
 			</div>
 			<?php
 		endif;
-		do_action( 'it_exchange_after_payment_details' );
+		do_action( 'it_exchange_after_payment_details', $post );
 	}
 
 	/**

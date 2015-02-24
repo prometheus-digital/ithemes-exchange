@@ -80,7 +80,7 @@ function it_exchange_register_deprecated_template_parts_directory( $possible_loc
 /**
  * This function is a wrapper for the deprecated action called during ()
  *
- * @since CHANGEME
+ * @since 1.11.9 
  *
  * @param string $page - Page Slug
  * @param array $options
