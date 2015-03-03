@@ -58,6 +58,7 @@ class IT_Exchange_Transaction_Post_Type {
 			'show_in_admin_bar'    => false,
 			'hierarchical'         => apply_filters( 'it_exchange_transactions_post_type_hierarchical', false ),
 			'register_meta_box_cb' => array( $this, 'meta_box_callback' ),
+			'delete_with_user'     => false,
 			'supports'             => array( // Support everything but page-attributes for add-on flexibility
 				'title',
 				'editor',
