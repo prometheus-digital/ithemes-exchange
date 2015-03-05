@@ -30,11 +30,15 @@ $coupon_type     = empty( $_GET['sw-coupon-type'] ) ? false : esc_attr( $_GET['s
 $coupon          = empty( $_GET['sw-coupon-code'] ) ? false : esc_attr( $_GET['sw-coupon-code'] );
 $cart_product    = empty( $_GET['sw-cart-product'] ) ? false : esc_attr( $_GET['sw-cart-product'] );
 $shipping_method = empty( $_GET['sw-shipping-method'] ) ? '0': esc_attr( $_GET['sw-shipping-method'] );
+$ajax_args       = compact( 'action', 'state', 'product', 'quantity', 'focus', 'coupon_type', 'coupon', 'cart_product', 'shipping_method' );
 
 // Update the state HTML of the widget
 if ( 'get-state' == $action && $state ) {
 	if ( $product )
 		$GLOBALS['it_exchange']['product'] = it_exchange_get_product( $product );
+
+	// Allow 3rd party add-ons to filter
+	$state = apply_filters( 'it_exchange_get_sw_state_via_ajax_call', $state, $ajax_args );
 
 	// If requesting checkout, make sure that all requirements are met first
 	if ( 'checkout' == $state )

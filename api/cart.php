@@ -165,21 +165,25 @@ function it_exchange_get_cart_product( $id, $options=array() ) {
  * @return bool true if in cart|false if not
 */
 function it_exchange_is_current_product_in_cart() {
-	$product_id = false;
+	$product_id    = false;
+	$in_cart       = false;
 	$cart_products = it_exchange_get_cart_products();
-	$product = empty( $GLOBALS['post'] ) ? false : it_exchange_get_product( $GLOBALS['post'] );
+	$product       = empty( $GLOBALS['post'] ) ? false : it_exchange_get_product( $GLOBALS['post'] );
 
-	if ( ! empty( $product ) )
+	if ( ! empty( $product ) ) {
 		$product_id = $product->ID;
-	else if ( ! empty( $_GET['sw-product'] ) )
+	} else if ( ! empty( $_GET['sw-product'] ) ) {
 		$product_id = $_GET['sw-product'];
-
-	foreach( $cart_products as $cart_product ) {
-		if ( $product_id == $cart_product['product_id'] )
-			return true;
 	}
 
-	return false;
+	foreach( $cart_products as $cart_product ) {
+		if ( $product_id == $cart_product['product_id'] ) {
+			$in_cart = true;
+		}
+	}
+
+	$in_cart = apply_filters( 'it_exchange_is_current_product_in_cart', $in_cart, $product_id, $product, $cart_products );
+	return $in_cart;
 }
 
 /**

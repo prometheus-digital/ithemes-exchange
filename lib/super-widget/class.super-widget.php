@@ -299,9 +299,13 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		else if ( empty( $state ) )
 			$state = 'cart';
 
+		// Allow initial state to be filtered by 3rd parties
+		$state = apply_filters( 'it_exchange_set_inital_sw_state', $state, $this->valid_states );
+
 		// Validate state
-		if ( $state && in_array( $state, $this->valid_states ) )
+		if ( $state && in_array( $state, $this->valid_states ) ) {
 			$this->state = $state;
+		}
 
 	}
 
