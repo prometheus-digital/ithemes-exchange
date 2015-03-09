@@ -262,7 +262,8 @@ function it_exchange_is_page( $page=false ) {
 	}
 
 	// Try to get the post from the slug
-	$sql = $wpdb->prepare( 'SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = "it_exchange_prod" AND post_status = "publish" AND post_name = "%s"', $query_var );
+	$name = get_query_var( 'name' );
+	$sql = $wpdb->prepare( 'SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = "it_exchange_prod" AND post_status = "publish" AND post_name = "%s"', $name );
 	if ( $id = $wpdb->get_var( $sql ) ) {
 		return true;
 	}

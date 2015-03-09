@@ -122,7 +122,7 @@ class IT_Exchange_Product_Post_Type {
 			'show_in_nav_menus' => true,
 			'show_in_menu'      => false, // We will be adding it manually with various labels based on available product-type add-ons
 			'show_in_admin_bar' => true,
-			'hierarchical'      => false,
+			'hierarchical'      => apply_filters( 'ithemes_exchange_products_post_type_hierarchical', false ),
 			'supports'          => array( // Support everything including page-attributes for add-on flexibility
 				'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 
 				'custom-fields', 'comments', 'revisions', 'post-formats', 'page-attributes'
