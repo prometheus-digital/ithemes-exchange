@@ -278,7 +278,7 @@ function it_exchange_add_plugin_reset_checkbox_to_settings( $form ) {
 		<td>
 			<?php $form->add_check_box( 'reset-exchange' ); ?>
 			<label for="reset-exchange"><?php _e( 'Reset ALL data', 'it-l10n-ithemes-exchange' ) ?></label><br />
-			<span class="description"><?php _e( 'Checking this box will rest ALL settings and DELETE ALL DATA.', 'it-l10n-ithemes-exchange' ); ?></span>
+			<span class="description"><?php _e( 'Checking this box will reset ALL settings and DELETE ALL DATA.', 'it-l10n-ithemes-exchange' ); ?></span>
 		</td>
 	</tr>
 	<?php
