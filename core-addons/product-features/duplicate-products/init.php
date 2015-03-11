@@ -38,6 +38,7 @@ function it_exchange_duplicate_product_addon_add_duplicate_product_function( $ac
 	return $actions;
 }
 add_filter( 'post_row_actions', 'it_exchange_duplicate_product_addon_add_duplicate_product_function', 10, 2 );
+add_filter( 'page_row_actions', 'it_exchange_duplicate_product_addon_add_duplicate_product_function', 10, 2 );
 
 /**
  * Copies previous product content to new product
