@@ -850,10 +850,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$output = '';
 
 		if ( !$product_in_stock )
-			return '<p class="out-of-stock">' . esc_attr( $options['out-of-stock-text'] ) . '</p>';
+			return '<p class="out-of-stock">' . $options['out-of-stock-text'] . '</p>';
 
 		if ( !$product_is_available )
-			return '<p class="not-availabe">' . esc_attr( $options['not-available-text'] ) . '</p>';
+			return '<p class="not-availabe">' . $options['not-available-text'] . '</p>';
 
 		$class = $options['class'];
 
@@ -979,10 +979,10 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$hidden_fields .= wp_nonce_field( 'it-exchange-purchase-product-' . $this->product->ID, '_wpnonce', true, false );
 
 		if ( ! $product_in_stock )
-			return '<p class="out-of-stock">' . esc_attr( $options['out-of-stock-text'] ) . '</p>';
+			return '<p class="out-of-stock">' . $options['out-of-stock-text'] . '</p>';
 
 		if ( ! $product_is_available )
-			return '<p>' . esc_attr( $options['not-available-text'] ) . '</p>';
+			return '<p>' . $options['not-available-text'] . '</p>';
 
 		$result  = '<form action="" method="post" class="it-exchange-sw-purchase-options it-exchange-sw-buy-now ' . esc_attr( $class ) . '">';
 		$result .= $hidden_fields;
@@ -1068,13 +1068,13 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		}
 
 		if ( !$can_add_more )
-			return '<p>' . esc_attr( $options['max-quantity-text'] ) . '</p>';
+			return '<p>' . $options['max-quantity-text'] . '</p>';
 
 		if ( ! $product_in_stock )
-			return '<p class="out-of-stock">' . esc_attr( $options['out-of-stock-text'] ) . '</p>';
+			return '<p class="out-of-stock">' . $options['out-of-stock-text'] . '</p>';
 
 		if ( ! $product_is_available )
-			return '<p>' . esc_attr( $options['not-available-text'] ) . '</p>';
+			return '<p>' . $options['not-available-text'] . '</p>';
 
 		if ( ! $multi_item_cart )
 			return '';
