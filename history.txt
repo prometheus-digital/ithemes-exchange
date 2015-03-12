@@ -1,3 +1,9 @@
+1.11.13 - Glenn Ansley, Lew Ayotte, Elise Alley
+	Updating Duplicate Products for new Invoices update
+	Removing unnecessary esc_attr() calls from text that would have valid HTML
+	Disable Offline Payment's Purchase button when clicked
+	Adding a filter to the Products Post Type hierarchical setting
+	Modified it_exchange_is_page() to use 'name' query var instead of product slug
 1.11.12 - Glenn Ansley, Lew Ayotte, Elise Alley
 	Auto-Height for admin advanced area text fields
 	Spell reset with two e's
