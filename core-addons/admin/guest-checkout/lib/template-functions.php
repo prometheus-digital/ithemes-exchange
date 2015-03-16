@@ -42,15 +42,35 @@ function it_exchange_guest_checkout_add_template_directory( $template_paths, $te
 add_filter( 'it_exchange_possible_template_paths', 'it_exchange_guest_checkout_add_template_directory', 10, 2 );
 
 /**
- * Returns the Guest Checkout title
+ * Returns the Guest Checkout title.
  *
  * @since 1.6.0
- * @return string
+ *
+ * @param  string $text   the text to be displayed in the heading element. pass FALSE to text to display nothing
+ * @param  string $class  space separated classes you want to add to the heading element
+ * @param  string $tag    the HTML tag you want to use for the heading. without brackets. default is: h3
+ * @return string         html heading
 */
-function it_exchange_guest_checkout_get_heading() {
-	$class = (bool) it_exchange_in_superwidget() ? ' class="in-super-widget"' : '';
-	$heading = '<h3' . $class . '>' . __( 'Guest Checkout', 'it-l10n-ithemes-exchange' ) . '</h3>';
-	$heading = apply_filters( 'it_exchange_guest_checkout_get_heading', $heading, $class );
+function it_exchange_guest_checkout_get_heading( $text=false, $class='', $tag='h3' ) {
+	$in_sw = it_exchange_in_superwidget();
+	$class = (bool) it_exchange_in_superwidget() ? $class . ' in-super-widget' : $class;
+
+	if ( FALSE == $text ) {
+		$guest_checkout_settings = it_exchange_get_option( 'addon-guest-checkout' );
+		if ( $in_sw ) {
+			$text = ! isset( $guest_checkout_settings['sw_heading_text'] ) ? __( 'Guest Checkout', 'it-l10n-ithemes-exchange' ) : $guest_checkout_settings['sw_heading_text'];
+		} else {
+			$text = ! isset( $guest_checkout_settings['content_heading_text'] ) ? __( 'Checkout as a guest?', 'it-l10n-ithemes-exchange' ) : $guest_checkout_settings['content_heading_text'];
+		}
+	} else if ( empty( $text ) ) {
+		$text = '';
+	}
+
+	$classes = explode( ' ', $class );
+	$class   = implode( ' ', array_filter( $classes ) );
+
+	$heading = '<' . esc_attr( $tag ) . ' class="' . esc_attr( $class ) . '">' . $text . '</' . esc_attr( $tag ) . '>';
+	$heading = apply_filters( 'it_exchange_guest_checkout_get_heading', $heading, $class, $text, $tag );
 	return $heading;
 }
 
@@ -153,8 +173,10 @@ add_filter( 'it_exchange_get_super_widget_login_actions_elements', 'it_exchange_
  * @return string
 */
 function it_exchange_guest_checkout_get_purchase_requirement_continue_action() {
+	$guest_checkout_settings = it_exchange_get_option( 'addon-guest-checkout' );
+	$text = empty( $guest_checkout_settings['content_continue_button_text'] ) ? __( 'Continue as guest', 'it-l10n-ithemes-exchange' ) : $guest_checkout_settings['content_continue_button_text'];
 	?>
-	<input type="submit" id="it-exchange-guest-checkout-action" name="continue" value="<?php esc_attr_e( 'Continue as guest', 'it-l10n-ithemes-exchange' ); ?>" />
+	<input type="submit" id="it-exchange-guest-checkout-action" name="continue" value="<?php esc_attr_e( $text ); ?>" />
 	<?php
 }
 
@@ -194,7 +216,9 @@ function it_exchange_guest_checkout_get_email_field( $options=array() ) {
  * @return string
 */
 function it_exchange_guest_checkout_get_sw_save_link( $options=array() ) {
-	$link = '<input type="submit" class="it-exchange-guest-checkout-save-link" value="' . __( 'Continue', 'it-l10n-ithemes-exchange' ) . '" />';
+	$guest_checkout_settings = it_exchange_get_option( 'addon-guest-checkout' );
+	$text = empty( $guest_checkout_settings['sw_continue_button_text'] ) ? __( 'Continue', 'it-l10n-ithemes-exchange' ) : $guest_checkout_settings['sw_continue_button_text'];
+	$link = '<input type="submit" class="it-exchange-guest-checkout-save-link" value="' . esc_attr( $text ) . '" />';
 	return $link;
 }
 
