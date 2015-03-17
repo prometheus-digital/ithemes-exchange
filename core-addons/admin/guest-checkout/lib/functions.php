@@ -13,8 +13,9 @@ function it_exchange_guest_checkout_bump_session() {
 
 	it_exchange_update_cart_data( 'guest-checkout', $now );
 
-	if ( it_exchange_is_page( 'checkout' ) || it_exchange_is_page( 'transaction' ) || it_exchange_is_page( 'confirmation' ) || it_exchange_in_superwidget() )
+	if ( it_exchange_is_page( 'checkout' ) || it_exchange_is_page( 'transaction' ) || it_exchange_is_page( 'confirmation' ) || ! empty( $_GET['ite-checkout-refresh'] ) || it_exchange_in_superwidget() ) {
 		$GLOBALS['current_user'] = it_exchange_guest_checkout_generate_guest_user_object( $customer_email );
+	}
 }
 
 /**
