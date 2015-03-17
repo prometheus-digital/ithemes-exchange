@@ -1585,8 +1585,9 @@ class Walker_ProductCategoryDropdown extends Walker {
 
         $cat_name = apply_filters('list_cats', $category->name, $category);
         $output .= "\t<option class=\"level-$depth\" value=\"".$category->slug."\"";
-        if ( $category->slug == $args['selected'] )
+        if ( $category->slug === $args['selected'] ) {
             $output .= ' selected="selected"';
+		}
         $output .= '>';
         $output .= $pad.$cat_name;
         if ( $args['show_count'] )
