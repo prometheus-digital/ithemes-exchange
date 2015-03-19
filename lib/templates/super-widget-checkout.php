@@ -29,14 +29,16 @@
 		// Add Payment buttons if only one item in cart
 		if ( ! it_exchange_is_multi_item_cart_allowed() || ( it_exchange_is_multi_item_cart_allowed() && it_exchange_get_cart_products_count() < 2 ) )
 			$loops[] = 'transaction-methods';
-		// Add additional checkout actions loop
-		if ( ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) || it_exchange_get_global( 'can_edit_purchase_quantity' ) )
-			$loops[] = 'actions';
 
 		// Include template parts for each of the above loops
 		foreach( it_exchange_get_template_part_loops( 'super-widget-checkout', 'has-cart-items', $loops ) as $loop ) :
 			it_exchange_get_template_part( 'super-widget-checkout/loops/' . $loop );
 		endforeach;
+
+		// Add additional checkout actions loop
+		if ( ( it_exchange( 'coupons', 'accepting', array( 'type' => 'cart' ) ) || it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) ) || it_exchange_get_global( 'can_edit_purchase_quantity' ) ) {
+			it_exchange_get_template_part( 'super-widget-checkout/loops/actions' );
+		}
 
 	} else {
 		it_exchange_get_template_part( 'super-widget-cart/elements/empty-cart-notice' );
