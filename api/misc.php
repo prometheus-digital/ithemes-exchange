@@ -98,8 +98,10 @@ function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format )
 function it_exchange_convert_to_database_number( $price ) {
 	$settings = it_exchange_get_option( 'settings_general' );
 	$sep = $settings['currency-decimals-separator'];
+	$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
 
 	$price = html_entity_decode( trim( $price ), ENT_COMPAT, 'UTF-8' );
+	$price = str_replace( $currency, '', $price );
 
 	if ( strstr( $price, $sep ) ) {
 		if ( '.' !== $sep ) {
