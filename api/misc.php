@@ -98,19 +98,18 @@ function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format )
 function it_exchange_convert_to_database_number( $price ) {
 	$settings = it_exchange_get_option( 'settings_general' );
 	$sep = $settings['currency-decimals-separator'];
-	$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
 
 	$price = html_entity_decode( trim( $price ), ENT_COMPAT, 'UTF-8' );
-	$price = str_replace( $currency, '', $price );
+	$price = preg_replace( '/[^0-9\\' . $sep . ']*/', '', $price );
 
 	if ( strstr( $price, $sep ) ) {
 		if ( '.' !== $sep ) {
 			$price = str_replace( $sep, '.', $price );
 		}
 		$price = number_format( (float)$price, 2 ); //make sure we have 2 decimal places!
-		$price = preg_replace("/[^0-9]*/", '', $price );
+		$price = preg_replace( '/[^0-9]*/', '', $price );
 	} else { //if we don't find a decimal separator, we want to multiply by 100 for future decimal operations
-		$price = preg_replace("/[^0-9]*/", '', $price ) * 100;
+		$price = preg_replace( '/[^0-9]*/', '', $price ) * 100;
 	}
 	
 	return $price;
