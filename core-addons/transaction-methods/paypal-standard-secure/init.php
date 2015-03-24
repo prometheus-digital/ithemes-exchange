@@ -10,15 +10,16 @@ if ( !defined( 'PAYPAL_LIVE_URL' ) )
 	define( 'PAYPAL_LIVE_URL', 'https://www.paypal.com/' );
 if ( !defined( 'PAYPAL_SANDBOX_URL' ) )
 	define( 'PAYPAL_SANDBOX_URL', 'https://www.sandbox.paypal.com/' );
-if ( !defined( 'PAYPAL_PAYMENT_SANDBOX_URL' ) )
-
-	define( 'PAYPAL_PAYMENT_SANDBOX_URL', 'https://www.sandbox.paypal.com/cgi-bin/webscr' );
+	
 if ( !defined( 'PAYPAL_PAYMENT_LIVE_URL' ) )
 	define( 'PAYPAL_PAYMENT_LIVE_URL', 'https://www.paypal.com/cgi-bin/webscr' );
-if ( !defined( 'PAYPAL_NVP_API_SANDBOX_URL' ) )
-	define( 'PAYPAL_NVP_API_SANDBOX_URL', 'https://api-3t.sandbox.paypal.com/nvp' );
+if ( !defined( 'PAYPAL_PAYMENT_SANDBOX_URL' ) )
+	define( 'PAYPAL_PAYMENT_SANDBOX_URL', 'https://www.sandbox.paypal.com/cgi-bin/webscr' );
+	
 if ( !defined( 'PAYPAL_NVP_API_LIVE_URL' ) )
 	define( 'PAYPAL_NVP_API_LIVE_URL', 'https://api-3t.paypal.com/nvp' );
+if ( !defined( 'PAYPAL_NVP_API_SANDBOX_URL' ) )
+	define( 'PAYPAL_NVP_API_SANDBOX_URL', 'https://api-3t.sandbox.paypal.com/nvp' );
 
 /**
  * Mark this transaction method as okay to manually change transactions
@@ -848,9 +849,6 @@ add_filter( 'init', 'it_exchange_paypal_standard_secure_addon_register_webhook' 
  * @param array $request really just passing  $_REQUEST
  */
 function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
-
-	$general_settings = it_exchange_get_option( 'settings_general' );
-	$settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
 	
     $payload['cmd'] = '_notify-validate';
     foreach( $_POST as $key => $value ) {
@@ -861,6 +859,9 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 	$body = wp_remote_retrieve_body( $response );
 	
 	if ( 'VERIFIED' === $body ) {
+	
+		$general_settings = it_exchange_get_option( 'settings_general' );
+		$settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
 	
 		$subscriber_id = !empty( $request['subscr_id'] ) ? $request['subscr_id'] : false;
 		$subscriber_id = !empty( $request['recurring_payment_id'] ) ? $request['recurring_payment_id'] : $subscriber_id;
