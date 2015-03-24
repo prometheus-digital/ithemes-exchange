@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.1
-Stable tag: 1.11.13
+Stable tag: 1.11.14
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,17 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.11.14 =
+* Strip any non-separator/non-digit character out of price before converting to database number
+* Fix for converting to DB number for numbers with unexpected number of decimals places
+* If unauthenticated site visitor goes directly to account, profile, or purchases, redirect them to login instead of registration
+* Fix bug not displaying quanity option in superwidget if coupons isn't activated
+* Fix bug causing all categories in product dropdown widget to have 'selected' attribute
+* Update custom dropdown_category function to reflect WP Core changeset https://core.trac.wordpress.org/changeset/31024.
+* Sort addons by display name rather than addon-slug
+* Preserve logged in Guest when updating shipping method on Cart page 
+* Add ability for store owners to change Guest Checkout heading text and button labels
 
 = 1.11.13 =
 * Updating Duplicate Products for new Invoices update

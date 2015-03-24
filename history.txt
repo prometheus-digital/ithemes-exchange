@@ -1,3 +1,13 @@
+1.11.14 - Glenn Ansley, Lew Ayotte, Elise Alley
+	Strip any non-separator/non-digit character out of price before converting to database number
+	Fix for converting to DB number for numbers with unexpected number of decimals places
+	If unauthenticated site visitor goes directly to account, profile, or purchases, redirect them to login instead of registration
+	Fix bug not displaying quanity option in superwidget if coupons isn't activated
+	Fix bug causing all categories in product dropdown widget to have 'selected' attribute
+	Update custom dropdown_category function to reflect WP Core changeset https://core.trac.wordpress.org/changeset/31024.
+	Sort addons by display name rather than addon-slug
+	Preserve logged in Guest when updating shipping method on Cart page
+	Add ability for store owners to change Guest Checkout heading text and button labels
 1.11.13 - Glenn Ansley, Lew Ayotte, Elise Alley
 	Updating Duplicate Products for new Invoices update
 	Removing unnecessary esc_attr() calls from text that would have valid HTML
