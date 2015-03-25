@@ -51,8 +51,11 @@ class IT_Exchange_Admin {
 		// Set parent property
 		$this->_parent = $parent;
 
-		// Admin Menu Capability
-		$this->admin_menu_capability = apply_filters( 'it_exchange_admin_menu_capability', 'manage_options' );
+		/**
+		 * Admin Menu Capability
+		 * @deprecated This is deprecated. Don't use the property. Use the method it calls
+		*/
+		$this->admin_menu_capability = $this->get_admin_menu_capability();
 
 		// Set current properties
 		$this->set_current_properties();
@@ -132,6 +135,17 @@ class IT_Exchange_Admin {
 		add_filter( 'plugin_row_meta', array( $this, 'it_exchange_plugin_row_meta' ), 10, 4 );
 
 		add_action( 'admin_footer', array( $this, 'add_store_link_to_product_saved_message' ) );
+	}
+
+	/**
+	 * Returns the admin_menu_capability
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return string
+	*/
+	function get_admin_menu_capability() {
+		return apply_filters( 'it_exchange_admin_menu_capability', 'manage_options' );
 	}
 
 	/**
@@ -337,17 +351,17 @@ class IT_Exchange_Admin {
 	*/
 	function add_exchange_admin_menu() {
 		// Add main iThemes Exchange menu item
-		add_menu_page( 'iThemes Exchange', 'Exchange', $this->admin_menu_capability, 'it-exchange', array( $this, 'print_exchange_setup_page' ) );
+		add_menu_page( 'iThemes Exchange', 'Exchange', $this->get_admin_menu_capability(), 'it-exchange', array( $this, 'print_exchange_setup_page' ) );
 
 		// Add setup wizard page without menu item unless we're viewing it.
 		if ( 'it-exchange-setup' == $this->_current_page )
-			add_submenu_page( 'it-exchange', 'iThemes Exchange Setup Wizard', 'Setup Wizard', $this->admin_menu_capability, 'it-exchange-setup', array( $this, 'print_exchange_setup_page' ) );
+			add_submenu_page( 'it-exchange', 'iThemes Exchange Setup Wizard', 'Setup Wizard', $this->get_admin_menu_capability(), 'it-exchange-setup', array( $this, 'print_exchange_setup_page' ) );
 
 		// Add the product submenu pages depending on active product add-ons
 		$this->add_product_submenus();
 
 		// Add Transactions menu item
-		add_submenu_page( 'it-exchange', 'iThemes Exchange ' . __( 'Payments', 'it-l10n-ithemes-exchange' ), __( 'Payments', 'it-l10n-ithemes-exchange' ), $this->admin_menu_capability, 'edit.php?post_type=it_exchange_tran' );
+		add_submenu_page( 'it-exchange', 'iThemes Exchange ' . __( 'Payments', 'it-l10n-ithemes-exchange' ), __( 'Payments', 'it-l10n-ithemes-exchange' ), $this->get_admin_menu_capability(), 'edit.php?post_type=it_exchange_tran' );
 
 		// Remove default iThemes Exchange sub-menu item created with parent menu item
 		remove_submenu_page( 'it-exchange', 'it-exchange' );
@@ -366,7 +380,7 @@ class IT_Exchange_Admin {
 		$settings_callback = array( $this, 'print_exchange_settings_page' );
 		if ( 'it-exchange-settings' == $this->_current_page && ! empty( $this->_current_tab ) )
 			$settings_callback = apply_filters( 'it_exchange_general_settings_tab_callback_' . $this->_current_tab, $settings_callback );
-		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->admin_menu_capability, 'it-exchange-settings', $settings_callback );
+		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->get_admin_menu_capability(), 'it-exchange-settings', $settings_callback );
 
 		// Add Add-ons menu item
 		$add_ons_callback = array( $this, 'print_exchange_add_ons_page' );
@@ -377,10 +391,10 @@ class IT_Exchange_Admin {
 			if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) )
 				$add_ons_callback = $addon['options']['settings-callback'];
 		}
-		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->admin_menu_capability, 'it-exchange-addons', $add_ons_callback );
+		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->get_admin_menu_capability(), 'it-exchange-addons', $add_ons_callback );
 
 		// Help menu
-		add_submenu_page( 'it-exchange', __( 'Help', 'it-l10n-ithemes-exchange' ), __( 'Help', 'it-l10n-ithemes-exchange' ), $this->admin_menu_capability, 'it-exchange-help', array( $this, 'print_help_page' ) );
+		add_submenu_page( 'it-exchange', __( 'Help', 'it-l10n-ithemes-exchange' ), __( 'Help', 'it-l10n-ithemes-exchange' ), $this->get_admin_menu_capability(), 'it-exchange-help', array( $this, 'print_help_page' ) );
 	}
 
 	/**
@@ -393,19 +407,19 @@ class IT_Exchange_Admin {
 		// Check for enabled product add-ons. Don't need product pages if we don't have product add-ons enabled
 		if ( $enabled_product_types = it_exchange_get_enabled_addons( array( 'category' => array( 'product-type' ) ) ) ) {
 			$add_on_count = count( $enabled_product_types );
-			add_submenu_page( 'it-exchange', 'All Products', 'All Products', $this->admin_menu_capability, 'edit.php?post_type=it_exchange_prod' );
+			add_submenu_page( 'it-exchange', 'All Products', 'All Products', $this->get_admin_menu_capability(), 'edit.php?post_type=it_exchange_prod' );
 			if ( 1 == $add_on_count ) {
 				// If we only have one product-type enabled, add standard post_type pages
 				$product = reset( $enabled_product_types );
 
 				// Allow add-ons to adjust their menu titles
 				$menu_title = apply_filters( 'it_exchange_admin_add_one_product_type_product_page_title', __( 'Add Product', 'it-l10n-ithemes-exchange' ), $product );
-				add_submenu_page( 'it-exchange', __( 'Add Product', 'it-l10n-ithemes-exchange' ), $menu_title, $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . $product['slug'] );
+				add_submenu_page( 'it-exchange', __( 'Add Product', 'it-l10n-ithemes-exchange' ), $menu_title, $this->get_admin_menu_capability(), 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . $product['slug'] );
 			} else if ( $add_on_count > 1 ) {
 				// If we have more than one product type, add them each separately
 				foreach( $enabled_product_types as $type => $params ) {
 					$name = empty( $params['options']['labels']['singular_name'] ) ? 'Product' : esc_attr( $params['options']['labels']['singular_name'] );
-					add_submenu_page( 'it-exchange', 'Add ' . $name, 'Add ' . $name, $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . esc_attr( $params['slug'] ) );
+					add_submenu_page( 'it-exchange', 'Add ' . $name, 'Add ' . $name, $this->get_admin_menu_capability(), 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . esc_attr( $params['slug'] ) );
 				}
 			}
 		}
