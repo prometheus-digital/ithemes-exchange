@@ -1196,7 +1196,7 @@ add_action( 'template_redirect', 'it_exchange_set_content_width_on_product_pages
  * @return mixed
 */
 function it_exchange_redirect_to_correct_login_form_on_error( $error ) {
-	if ( empty( $error ) || ! is_wp_error( $error ) || empty( $error->errors ) )
+	if ( empty( $error ) || ! is_wp_error( $error ) || ( empty( $error->errors ) && empty( $_POST ) ) )
 		return $error;
 
 	$wp_referer       = wp_get_referer();
@@ -1204,7 +1204,11 @@ function it_exchange_redirect_to_correct_login_form_on_error( $error ) {
 	$exchange_pages[] = it_exchange_get_page_url( 'checkout' );
 
 	if ( in_array( $wp_referer, $exchange_pages ) ) {
-		it_exchange_add_message( 'error', $error->get_error_message() );
+		if ( empty( $error->errors ) && empty( $_POST['log'] ) && empty( $_POST['pwd'] ) ) {
+			it_exchange_add_message( 'error', __( 'Please provide a username and password', 'it-l10n-ithemes-exchange' ) );
+		} else {
+			it_exchange_add_message( 'error', $error->get_error_message() );
+		}
 
 		$url_target = ( $wp_referer == $exchange_pages[1] ) ? 'checkout' : 'login';
 		it_exchange_redirect( $wp_referer, 'login-failed-from-' . $url_target );
