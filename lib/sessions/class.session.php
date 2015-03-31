@@ -150,7 +150,10 @@ class IT_Exchange_Session {
 				it_exchange_db_session_commit();
 			}
 		} else {
-			$this->clear_session( true );
+			foreach( $this->_session as $key => $value ) {
+				unset( $this->_session[$key] );
+			}
+			it_exchange_db_session_commit();
 		}
 	}
 
