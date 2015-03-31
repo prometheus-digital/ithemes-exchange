@@ -142,15 +142,16 @@ class IT_Exchange_Session {
 	 * @return void
 	*/
 	function clear_session_data( $key=false ) {
-		if ( $key ) {
+		if ( !empty( $key ) ) {
 			$key = sanitize_key( $key );
 
 			if ( isset( $this->_session[$key] ) ) {
 				unset( $this->_session[$key] );
 				it_exchange_db_session_commit();
 			}
+		} else {
+			$this->clear_session( true );
 		}
-		$this->_session[$key] = $this->_session[$key];
 	}
 
 	/**
