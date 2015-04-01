@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.1
-Stable tag: 1.11.14
+Stable tag: 1.11.15
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,12 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.11.15 =
+* Deprecate the admin_menu_capability property in IT_Exchange_Admin and replace with a method so that themes can filter it.
+* If no username or password is provided on submit from exchange Login page, don't redirect to wp-login.php
+* Fix bug in purchase-requirement template part's filter name created by first param. Maintain back_compat.
+* Adding IPN Verification to PayPal non-Secure option
 
 = 1.11.14 =
 * Strip any non-separator/non-digit character out of price before converting to database number
