@@ -4,7 +4,7 @@
  * product in the store.
  *
  * @since 0.4.0
- * @version CHANGEME
+ * @version 
  * @link http://ithemes.com/codex/page/Exchange_Template_Updates
  * @package IT_Exchange
  *

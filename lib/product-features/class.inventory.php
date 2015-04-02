@@ -51,7 +51,7 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 				<div class="it-exchange-core-product-inventory-fields">
 					<label for="it-exchange-product-inventory"><?php _e( 'Current Inventory', 'it-l10n-ithemes-exchange' ); ?></label>
 					<input type="number" id="it-exchange-product-inventory" name="it-exchange-product-inventory" value="<?php esc_attr_e( $product_feature_value ); ?>" />
-					<br /><span class="description"><?php _e( 'Leave blank for unlimited.', 'it-l10n-ithemes-exchange' ); ?></span>
+					<br /><span class="description"><?php _e( 'Disable this feature for unlimited inventory.', 'it-l10n-ithemes-exchange' ); ?></span>
 				</div>
 			</div>
 		<?php

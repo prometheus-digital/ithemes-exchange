@@ -263,9 +263,14 @@ class IT_Exchange_Pages {
 
 		// If user isn't logged in, redirect
 		if ( ! is_user_logged_in() ) {
-			if ( $this->_current_view != 'login' && $this->_current_view != 'registration' )
+			// Redirect to the page we were trying to access after login/registration if this isn't a login/registration page
+			if ( $this->_current_view != 'login' && $this->_current_view != 'registration' ) {
 				it_exchange_add_session_data( 'login_redirect', it_exchange_get_page_url( $this->_current_view ) );
-			$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_not_logged_in', it_exchange_get_page_url( 'registration' ) );
+			}
+
+			// If looking for registration page or purchases page, send to login, else send to register
+			$redirect_url = ( in_array( $this->_current_view, array( 'account', 'profile', 'downloads', 'purchases' ) ) ) ? it_exchange_get_page_url( 'login' ) : it_exchange_get_page_url( 'registration' );
+			$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_not_logged_in', $redirect_url, $this->_current_view );
 
 			$redirect_options = array( 'current-page' => $this->_current_view );
 			it_exchange_redirect( $redirect_url, 'protected-pages-to-registration-when-not-logged-in', $redirect_options );

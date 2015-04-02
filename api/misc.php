@@ -100,11 +100,17 @@ function it_exchange_convert_to_database_number( $price ) {
 	$sep = $settings['currency-decimals-separator'];
 
 	$price = html_entity_decode( trim( $price ), ENT_COMPAT, 'UTF-8' );
+	$price = preg_replace( '/[^0-9\\' . $sep . ']*/', '', $price );
 
-	if ( strstr( $price, $sep ) )
-		$price = preg_replace("/[^0-9]*/", '', $price );
-	else //if we don't find a decimal separator, we want to multiply by 100 for future decimal operations
-		$price = preg_replace("/[^0-9]*/", '', $price ) * 100;
+	if ( strstr( $price, $sep ) ) {
+		if ( '.' !== $sep ) {
+			$price = str_replace( $sep, '.', $price );
+		}
+		$price = number_format( (float)$price, 2 ); //make sure we have 2 decimal places!
+		$price = preg_replace( '/[^0-9]*/', '', $price );
+	} else { //if we don't find a decimal separator, we want to multiply by 100 for future decimal operations
+		$price = preg_replace( '/[^0-9]*/', '', $price ) * 100;
+	}
 	
 	return $price;
 }

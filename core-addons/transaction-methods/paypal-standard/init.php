@@ -9,8 +9,10 @@
 if ( !defined( 'PAYPAL_LIVE_URL' ) )
 	define( 'PAYPAL_LIVE_URL', 'https://www.paypal.com/' );
 
-if ( !defined( 'PAYPAL_PAYMENT_URL' ) )
-	define( 'PAYPAL_PAYMENT_URL', 'https://www.paypal.com/cgi-bin/webscr' );
+if ( !defined( 'PAYPAL_PAYMENT_LIVE_URL' ) )
+	define( 'PAYPAL_PAYMENT_LIVE_URL', 'https://www.paypal.com/cgi-bin/webscr' );
+if ( !defined( 'PAYPAL_PAYMENT_SANDBOX_URL' ) )
+	define( 'PAYPAL_PAYMENT_SANDBOX_URL', 'https://www.sandbox.paypal.com/cgi-bin/webscr' );
 	
 /**
  * Mark this transaction method as okay to manually change transactions
@@ -572,7 +574,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 		$query = array_merge( $paypal_args, $query );
 		$query = apply_filters( 'it_exchange_paypal_standard_query', $query );
 		
-		$paypal_payment_url = PAYPAL_PAYMENT_URL . '?' .  http_build_query( $query );
+		$paypal_payment_url = PAYPAL_PAYMENT_LIVE_URL . '?' .  http_build_query( $query );
 
 	} else {
 
@@ -611,95 +613,111 @@ add_filter( 'init', 'it_exchange_paypal_standard_addon_register_webhook' );
  */
 function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 
-	$general_settings = it_exchange_get_option( 'settings_general' );
-	$settings = it_exchange_get_option( 'addon_paypal_standard' );
-
-	$subscriber_id = !empty( $request['subscr_id'] ) ? $request['subscr_id'] : false;
-	$subscriber_id = !empty( $request['recurring_payment_id'] ) ? $request['recurring_payment_id'] : $subscriber_id;
-
-	if ( !empty( $request['txn_type'] ) ) {
-
-		if ( !empty( $request['transaction_subject'] ) && $transient_data = it_exchange_get_transient_transaction( 'pps', $request['transaction_subject'] ) ) {
-			it_exchange_delete_transient_transaction( 'pps', $request['transaction_subject']  );
-			return it_exchange_add_transaction( 'paypal-standard', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
-		}
-
-		switch( $request['txn_type'] ) {
-
-			case 'web_accept':
-				switch( strtolower( $request['payment_status'] ) ) {
-
-					case 'completed' :
-						it_exchange_paypal_standard_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] );
-						break;
-					case 'reversed' :
-						it_exchange_paypal_standard_addon_update_transaction_status( $request['parent_txn_id'], $request['reason_code'] );
-						break;
-				}
-				break;
-
-			case 'subscr_payment':
-				switch( strtolower( $request['payment_status'] ) ) {
-					case 'completed' :
-						if ( $temp_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) { //this is a free trial
-							/* We need to do some free trial magic! */
-							$transaction = it_exchange_get_transaction( $temp_txn_id );
-							$transaction->update_transaction_meta( '_it_exchange_transaction_method_id', $request['txn_id'] );
-						}
-						if ( !it_exchange_paypal_standard_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
-							//If the transaction isn't found, we've got a new payment
-							it_exchange_paypal_standard_addon_add_child_transaction( $request['txn_id'], $request['payment_status'], $subscriber_id, $request['mc_gross'] );
-						} else {
-							//If it is found, make sure the subscriber ID is attached to it
-							it_exchange_paypal_standard_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
-						}
-						it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'active' );
-						break;
-				}
-				break;
-
-			case 'subscr_signup':
-				if ( isset( $request['amount1'] ) && '0.00' == $request['amount1'] ) { //this is a free trial
-					/* We need to do some free trial magic! */
-					if ( $temp_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) {
-						it_exchange_paypal_standard_addon_update_subscriber_id( $temp_txn_id, $subscriber_id );
-					}
-				}
-				it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'active' );
-				break;
-
-			case 'recurring_payment_suspended':
-				it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'suspended' );
-				break;
-
-			case 'subscr_cancel':
-				it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
-				break;
-
-			case 'subscr_eot':
-				it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'deactivated' );
-				break;
-
-		}
-
-	} else {
-
-		//These IPNs don't have txn_types, why PayPal!? WHY!?
-		if ( !empty( $request['reason_code'] ) ) {
-
-			switch( $request['reason_code'] ) {
-
-				case 'refund' :
-					it_exchange_paypal_standard_addon_update_transaction_status( $request['parent_txn_id'], $request['payment_status'] );
-					it_exchange_paypal_standard_addon_add_refund_to_transaction( $request['parent_txn_id'], $request['mc_gross'] );
-					if ( $subscriber_id )
-						it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'refunded' );
-					break;
-
+    $payload['cmd'] = '_notify-validate';
+    foreach( $_POST as $key => $value ) {
+	    $payload[$key] = stripslashes( $value );
+    }
+	$paypal_api_url = !empty( $_REQUEST['test_ipn'] ) ? PAYPAL_PAYMENT_SANDBOX_URL : PAYPAL_PAYMENT_LIVE_URL;
+	$response = wp_remote_post( $paypal_api_url, array( 'body' => $payload ) );
+	$body = wp_remote_retrieve_body( $response );
+	
+	if ( 'VERIFIED' === $body ) {
+		
+		$general_settings = it_exchange_get_option( 'settings_general' );
+		$settings = it_exchange_get_option( 'addon_paypal_standard' );
+	
+		$subscriber_id = !empty( $request['subscr_id'] ) ? $request['subscr_id'] : false;
+		$subscriber_id = !empty( $request['recurring_payment_id'] ) ? $request['recurring_payment_id'] : $subscriber_id;
+	
+		if ( !empty( $request['txn_type'] ) ) {
+	
+			if ( !empty( $request['transaction_subject'] ) && $transient_data = it_exchange_get_transient_transaction( 'pps', $request['transaction_subject'] ) ) {
+				it_exchange_delete_transient_transaction( 'pps', $request['transaction_subject']  );
+				return it_exchange_add_transaction( 'paypal-standard', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
 			}
-
+	
+			switch( $request['txn_type'] ) {
+	
+				case 'web_accept':
+					switch( strtolower( $request['payment_status'] ) ) {
+	
+						case 'completed' :
+							it_exchange_paypal_standard_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] );
+							break;
+						case 'reversed' :
+							it_exchange_paypal_standard_addon_update_transaction_status( $request['parent_txn_id'], $request['reason_code'] );
+							break;
+					}
+					break;
+	
+				case 'subscr_payment':
+					switch( strtolower( $request['payment_status'] ) ) {
+						case 'completed' :
+							if ( $temp_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) { //this is a free trial
+								/* We need to do some free trial magic! */
+								$transaction = it_exchange_get_transaction( $temp_txn_id );
+								$transaction->update_transaction_meta( '_it_exchange_transaction_method_id', $request['txn_id'] );
+							}
+							if ( !it_exchange_paypal_standard_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
+								//If the transaction isn't found, we've got a new payment
+								it_exchange_paypal_standard_addon_add_child_transaction( $request['txn_id'], $request['payment_status'], $subscriber_id, $request['mc_gross'] );
+							} else {
+								//If it is found, make sure the subscriber ID is attached to it
+								it_exchange_paypal_standard_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
+							}
+							it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'active' );
+							break;
+					}
+					break;
+	
+				case 'subscr_signup':
+					if ( isset( $request['amount1'] ) && '0.00' == $request['amount1'] ) { //this is a free trial
+						/* We need to do some free trial magic! */
+						if ( $temp_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) {
+							it_exchange_paypal_standard_addon_update_subscriber_id( $temp_txn_id, $subscriber_id );
+						}
+					}
+					it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'active' );
+					break;
+	
+				case 'recurring_payment_suspended':
+					it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'suspended' );
+					break;
+	
+				case 'subscr_cancel':
+					it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
+					break;
+	
+				case 'subscr_eot':
+					it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'deactivated' );
+					break;
+	
+			}
+	
+		} else {
+	
+			//These IPNs don't have txn_types, why PayPal!? WHY!?
+			if ( !empty( $request['reason_code'] ) ) {
+	
+				switch( $request['reason_code'] ) {
+	
+					case 'refund' :
+						it_exchange_paypal_standard_addon_update_transaction_status( $request['parent_txn_id'], $request['payment_status'] );
+						it_exchange_paypal_standard_addon_add_refund_to_transaction( $request['parent_txn_id'], $request['mc_gross'] );
+						if ( $subscriber_id )
+							it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'refunded' );
+						break;
+	
+				}
+	
+			}
+	
 		}
-
+		
+	} else {
+		
+		error_log( sprintf( __( 'Invalid IPN sent from PayPal: %s', 'it-l10n-ithemes-exchange' ), maybe_serialize( $payload ) ) );
+		
 	}
 
 }
@@ -950,7 +968,7 @@ add_filter( 'it_exchange_paypal-standard_transaction_is_cleared_for_delivery', '
 */
 function it_exchange_paypal_standard_unsubscribe_action( $output, $options ) {
 	$paypal_settings      = it_exchange_get_option( 'addon_paypal_standard' );
-	$paypal_url           = PAYPAL_PAYMENT_URL;
+	$paypal_url           = PAYPAL_PAYMENT_LIVE_URL;
 	$paypal_email         = $paypal_settings['live-email-address'];
 
 	$output  = '<a class="button" href="' . $paypal_url . '?cmd=_subscr-find&alias=' . urlencode( $paypal_email ) . '">';

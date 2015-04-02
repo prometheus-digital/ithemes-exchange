@@ -33,6 +33,17 @@
 				$propack = true;
 				break;
 		}
+
+		// Sort Add-ons by display name
+		$display_names = array();
+		foreach( (array) $addons as $key => $data ) {
+			if ( empty( $key ) ) { continue; }
+			$name = empty( $data['name'] ) ? $key : $data['name'];
+			$display_names[$key] = $name;
+		}
+		if ( apply_filters( 'it_exchange_sort_addons_by_display_name', true ) ) {
+			array_multisort( $display_names, SORT_ASC, $addons );
+		}
 	?>
 	<div class="add-ons-wrapper">
 		<?php if ( ! empty( $addons ) ) : ?>
