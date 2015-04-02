@@ -1,3 +1,5 @@
+1.11.16 - Lew Ayotte, Glenn Ansley, Elise Alley 
+	Fix for DB Session bloat bug
 1.11.15 - Glenn Ansley, Lew Ayotte, Elise Alley
 	Deprecate the admin_menu_capability property in IT_Exchange_Admin and replace with a method so that themes can filter it.
 	If no username or password is provided on submit from exchange Login page, don't redirect to wp-login.php

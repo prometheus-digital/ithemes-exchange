@@ -140,7 +140,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Returns the admin_menu_capability
 	 *
-	 * @since CHANGEME
+	 * @since 1.11.15 
 	 *
 	 * @return string
 	*/
