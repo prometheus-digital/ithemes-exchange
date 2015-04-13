@@ -58,6 +58,24 @@ function it_exchange_parse_options( $options ) {
 }
 
 /**
+ * Used to set admin menu capabilities
+ *
+ * @since CHANGEME
+ *
+ * @param string $context the context of where it's being used
+ * @param string $capability the incoming capability
+ * @return string
+*/
+function it_exchange_get_admin_menu_capability( $context='', $capability='manage_options' ) {
+
+	// Allow addons to filter
+	$capability =  apply_filters( 'it_exchange_admin_menu_capability', $capability, $context );
+
+	// Clean and return
+	return empty( $capability ) || ! is_string( $capability ) ? false : $capability;
+}
+
+/**
  * Formats a price based on settings
  *
  * @since 0.4.0

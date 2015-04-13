@@ -9,6 +9,9 @@
 // IT Classes
 require( 'classes/load.php' );
 
+// Other Functions
+require( $this->_plugin_path . 'lib/functions/functions.php' );
+
 // IT Fonts
 require( $this->_plugin_path . 'lib/icon-fonts/load.php' );
 
@@ -32,9 +35,6 @@ require( $this->_plugin_path . 'lib/transactions/class.transaction.php' );
 
 // Template Functions
 require( $this->_plugin_path . 'lib/functions/template-functions.php' );
-
-// Other Functions
-require( $this->_plugin_path . 'lib/functions/functions.php' );
 
 // Integrations
 require( $this->_plugin_path . 'lib/integrations/builder/init.php' );
