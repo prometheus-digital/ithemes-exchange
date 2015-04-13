@@ -1230,38 +1230,40 @@ function it_exchange_paypal_standard_secure_after_payment_details_cancel_url( $t
 	$paypal_settings      = it_exchange_get_option( 'addon_paypal_standard_secure' );
 	$paypal_url           = ( $paypal_settings['sandbox-mode'] ) ? PAYPAL_SANDBOX_URL : PAYPAL_LIVE_URL;
 	$cart_object = get_post_meta( $transaction->ID, '_it_exchange_cart_object', true );
-	foreach ( $cart_object->products as $product ) {
-		$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product['product_id'], true );
-		if ( $autorenews ) {
-			$subscriber_id = $transaction->get_transaction_meta( 'subscriber_id', true );
-			$status = $transaction->get_transaction_meta( 'subscriber_status', true );
-			switch( $status ) {
-
-				case 'deactivated':
-					$output = __( 'Recurring payment has been deactivated', 'it-l10n-ithemes-exchange' );
-					break;
-
-				case 'cancelled':
-					$output = __( 'Recurring payment has been cancelled', 'it-l10n-ithemes-exchange' );
-					break;
-
-				case 'suspended':
-					$output = __( 'Recurring payment has been suspended', 'it-l10n-ithemes-exchange' );
-					break;
-
-				case 'active':
-				default:
-					$output = '<a href="' . $paypal_url . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . ' (' . __( 'Profile ID', 'it-l10n-ithemes-exchange' ) . ': ' . $subscriber_id . ')</a>';
-					break;
-			}
-			?>
-			<div class="transaction-autorenews clearfix spacing-wrapper">
-				<div class="recurring-payment-cancel-options left">
-					<div class="recurring-payment-status-name"><?php echo $output; ?></div>
+	if ( !empty( $cart_object->products ) ) {
+		foreach ( $cart_object->products as $product ) {
+			$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product['product_id'], true );
+			if ( $autorenews ) {
+				$subscriber_id = $transaction->get_transaction_meta( 'subscriber_id', true );
+				$status = $transaction->get_transaction_meta( 'subscriber_status', true );
+				switch( $status ) {
+	
+					case 'deactivated':
+						$output = __( 'Recurring payment has been deactivated', 'it-l10n-ithemes-exchange' );
+						break;
+	
+					case 'cancelled':
+						$output = __( 'Recurring payment has been cancelled', 'it-l10n-ithemes-exchange' );
+						break;
+	
+					case 'suspended':
+						$output = __( 'Recurring payment has been suspended', 'it-l10n-ithemes-exchange' );
+						break;
+	
+					case 'active':
+					default:
+						$output = '<a href="' . $paypal_url . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . ' (' . __( 'Profile ID', 'it-l10n-ithemes-exchange' ) . ': ' . $subscriber_id . ')</a>';
+						break;
+				}
+				?>
+				<div class="transaction-autorenews clearfix spacing-wrapper">
+					<div class="recurring-payment-cancel-options left">
+						<div class="recurring-payment-status-name"><?php echo $output; ?></div>
+					</div>
 				</div>
-			</div>
-			<?php
-			continue;
+				<?php
+				continue;
+			}
 		}
 	}
 }

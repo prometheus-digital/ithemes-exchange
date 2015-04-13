@@ -99,8 +99,9 @@ class IT_Exchange_Shipping {
 			'notification'           => __( 'You must enter a shipping address before you can checkout', 'it-l10n-ithemes-exchange' ),
 			'priority'               => 5.12
 		);
-		if ( it_exchange_get_available_shipping_methods_for_cart_products() )
+		if ( it_exchange_get_available_shipping_methods_for_cart_products() || apply_filters( 'it_exchange_shipping_address_purchase_requirement_enabled', false ) ) {
 			it_exchange_register_purchase_requirement( 'shipping-address', $properties );
+		}
 	}
 
 	/**
@@ -122,8 +123,9 @@ class IT_Exchange_Shipping {
 			'notification'           => __( 'You must select a shipping method before you can checkout', 'it-l10n-ithemes-exchange' ),
 			'priority'               => 5.13,
 		);
-		if ( it_exchange_get_available_shipping_methods_for_cart_products() )
+		if ( it_exchange_get_available_shipping_methods_for_cart_products() || apply_filters( 'it_exchange_shipping_method_purchase_requirement_enabled', false ) ) {
 			it_exchange_register_purchase_requirement( 'shipping-method', $properties );
+		}
 	}
 
 	/**
