@@ -204,8 +204,13 @@ function it_exchange_clean_query_args( $exempt=array(), $additional=array() ) {
 
 	$url = false;
 	foreach( $registered as $key => $param ) {
-		if ( ! in_array( $param, $exempt ) )
+		if ( ! in_array( $param, $exempt ) ) {
 			$url = remove_query_arg( $param, $url );
+		}
+	}
+
+	if ( ! empty( $url ) ) {
+		$url = esc_url( $url );
 	}
 
 	return apply_filters( 'it_exchange_clean_query_args', $url );
