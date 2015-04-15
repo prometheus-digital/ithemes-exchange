@@ -373,7 +373,7 @@ function it_exchange_base_coupons_remove_cart_coupon_html( $incoming=false, $cod
 	} else {
 		$url = it_exchange_clean_query_args( array( it_exchange_get_field_name( 'sw_cart_focus' ) ) );
 		$url = add_query_arg( $var . '[]', $options['code'] );
-		return '<a data-coupon-code="' . esc_attr( $options['code'] ) . '" class="' . esc_attr( $options['class'] ) . '" href="' . $url . '">' . esc_attr( $options['label'] ) . '</a>';
+		return '<a data-coupon-code="' . esc_attr( $options['code'] ) . '" class="' . esc_attr( $options['class'] ) . '" href="' . esc_url( $url ) . '">' . esc_attr( $options['label'] ) . '</a>';
 	}
 }
 add_filter( 'it_exchange_remove_cart_coupon_html', 'it_exchange_base_coupons_remove_cart_coupon_html', 10, 3 );
@@ -576,7 +576,7 @@ function it_exchange_basic_coupons_handle_remove_coupon_from_cart_request() {
 		$url = it_exchange_clean_query_args( array( it_exchange_get_field_name( 'sw_cart_focus' ) ) );
 
 	it_exchange_add_message( 'notice', __( 'Coupon removed', 'it-l10n-ithemes-exchange' ) );
-	wp_redirect( $url );
+	wp_redirect( esc_url( $url ) );
 	die();
 }
 add_action( 'template_redirect', 'it_exchange_basic_coupons_handle_remove_coupon_from_cart_request', 9 );
@@ -627,7 +627,7 @@ function it_exchange_basic_coupons_transaction_summary( $summary, $transaction_c
 	$url = trailingslashit( get_admin_url() ) . 'admin.php';
 	$url = add_query_arg( array( 'page' => 'it-exchange-edit-basic-coupon', 'post' => $id ), $url );
 
-	$link = '<a href="' . $url . '">' . __( 'View Coupon', 'it-l10n-ithemes-exchange' ) . '</a>';
+	$link = '<a href="' . esc_url( $url ) . '">' . __( 'View Coupon', 'it-l10n-ithemes-exchange' ) . '</a>';
 
 	$string = '';
 	if ( $title )
