@@ -771,7 +771,7 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id ) {
 
 		$L_BUTTONVARS[] = 'business=' . $paypal_email;
 		$L_BUTTONVARS[] = 'item_name=' . it_exchange_get_cart_description();
-		$L_BUTTONVARS[] = 'return=' . add_query_arg( array( 'it-exchange-transaction-method' => 'paypal-standard-secure', 'paypal-standard-secure-nonce' => $nonce ), it_exchange_get_page_url( 'transaction' ) );
+		$L_BUTTONVARS[] = 'return=' . esc_url( add_query_arg( array( 'it-exchange-transaction-method' => 'paypal-standard-secure', 'paypal-standard-secure-nonce' => $nonce ), it_exchange_get_page_url( 'transaction' ) ) );
 		$L_BUTTONVARS[] = 'currency_code=' . $general_settings['default-currency'];
 		$L_BUTTONVARS[] = 'notify_url=' . get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard-secure' ) . '=1';
 		$L_BUTTONVARS[] = 'no_note=1';

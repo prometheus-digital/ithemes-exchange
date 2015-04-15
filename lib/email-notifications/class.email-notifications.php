@@ -85,7 +85,7 @@ class IT_Exchange_Email_Notifications {
 		if ( empty( $transaction->ID ) ) {
 			it_exchange_add_message( 'error', __( 'Invalid transaction. Confirmation email not sent.', 'it-l10n-ithemes-exchange' ) );
 			$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
-			it_exchange_redirect( $url, 'admin-confirmation-email-resend-failed' );
+			it_exchange_redirect( esc_url( $url ), 'admin-confirmation-email-resend-failed' );
 			die();
 		}
 
@@ -94,7 +94,7 @@ class IT_Exchange_Email_Notifications {
 		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'it-exchange-resend-confirmation-' . $transaction->ID ) ) {
 			it_exchange_add_message( 'error', __( 'Confirmation Email not sent. Please try again.', 'it-l10n-ithemes-exchange' ) );
 			$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
-			it_exchange_redirect( $url, 'admin-confirmation-email-resend-failed' );
+			it_exchange_redirect( esc_url( $url ), 'admin-confirmation-email-resend-failed' );
 			die();
 		}
 
@@ -102,7 +102,7 @@ class IT_Exchange_Email_Notifications {
 		if ( ! current_user_can( 'administrator' ) ) {
 			it_exchange_add_message( 'error', __( 'You do not have permission to resend confirmation emails.', 'it-l10n-ithemes-exchange' ) );
 			$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
-			it_exchange_redirect( $url, 'admin-confirmation-email-resend-failed' );
+			it_exchange_redirect( esc_url( $url ), 'admin-confirmation-email-resend-failed' );
 			die();
 		}
 
@@ -110,7 +110,7 @@ class IT_Exchange_Email_Notifications {
 		$this->send_purchase_emails( $transaction, false );
 		it_exchange_add_message( 'notice', __( 'Confirmation email resent', 'it-l10n-ithemes-exchange' ) );
 		$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
-		it_exchange_redirect( $url, 'admin-confirmation-email-resend-success' );
+		it_exchange_redirect( esc_url( $url ), 'admin-confirmation-email-resend-success' );
 		die();
 	}
 
@@ -341,7 +341,7 @@ class IT_Exchange_Email_Notifications {
 							<?php $count = it_exchange_get_transaction_product_feature( $transaction_product, 'count' ); ?>
 							<?php if ( $count > 1 && apply_filters( 'it_exchange_print_downlods_page_link_in_email', true, $this->transaction_id ) ) : ?>
 								<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
-								<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%s%sEach link has its own download limits and you can view the details on your %sdownloads%s page.', 'it-l10n-ithemes-exchange' ), $count, '<br />', '<br />', '<a href="' . $downloads_url . '">', '</a>' ); ?></p>
+								<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%s%sEach link has its own download limits and you can view the details on your %sdownloads%s page.', 'it-l10n-ithemes-exchange' ), $count, '<br />', '<br />', '<a href="' . esc_url( $downloads_url ) . '">', '</a>' ); ?></p>
 							<?php endif; ?>
 							<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
 								<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $args->transaction_id, $transaction_product, $download_id ); ?>
@@ -355,7 +355,7 @@ class IT_Exchange_Email_Notifications {
 										$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
 										?>
 										<li>
-											<a href="<?php echo site_url() . '?it-exchange-download=' . $hash; ?>"><?php _e( 'Download link', 'it-l10n-ithemes-exchange' ); ?></a> <span style="font-family: Monaco, monospace;font-size:12px;color:#AAA;">(<?php esc_attr_e( $hash ); ?>)</span>
+											<a href="<?php echo esc_url( add_query_arg( 'it-exchange-download', $hash, site_url() ) ); ?>"><?php _e( 'Download link', 'it-l10n-ithemes-exchange' ); ?></a> <span style="font-family: Monaco, monospace;font-size:12px;color:#AAA;">(<?php esc_attr_e( $hash ); ?>)</span>
 										</li>
 									<?php endforeach; ?>
 								</ul>

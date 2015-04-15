@@ -246,12 +246,12 @@ class IT_Exchange_Product_Post_Type {
 								$preview_id = 'post-view';
 							} else {
 								$preview_link = set_url_scheme( get_permalink( $post->ID ) );
-								$preview_link = esc_url( apply_filters( 'it_exchange_preview_product_button_link', apply_filters( 'preview_post_link', add_query_arg( 'preview', 'true', $preview_link ) ), $post ) );
+								$preview_link = apply_filters( 'it_exchange_preview_product_button_link', apply_filters( 'preview_post_link', add_query_arg( 'preview', 'true', $preview_link ) ), $post );
 								$preview_button = apply_filters( 'it_exchange_preview_product_button_label', __( 'Preview Product', 'it-l10n-ithemes-exchange' ), $post );
 								$preview_id = 'post-preview';
 							}
 						?>
-						<a class="preview button button-large" href="<?php echo $preview_link; ?>" target="wp-preview" id="<?php echo $preview_id; ?>"><?php echo $preview_button; ?></a>
+						<a class="preview button button-large" href="<?php echo esc_url( $preview_link ); ?>" target="wp-preview" id="<?php echo $preview_id; ?>"><?php echo $preview_button; ?></a>
 						<input type="hidden" name="wp-preview" id="wp-preview" value="" />
 					</div>
 				<?php endif; ?>
@@ -565,7 +565,7 @@ class IT_Exchange_Product_Post_Type {
 			}
 
 			if ( ! empty( $post_new_file) && ! empty( $product_type ) )
-				$post_new_file = add_query_arg( array( 'it-exchange-product-type' => $product_type ), $post_new_file );
+				$post_new_file = esc_url( add_query_arg( array( 'it-exchange-product-type' => $product_type ), $post_new_file ) );
 
 		}
 

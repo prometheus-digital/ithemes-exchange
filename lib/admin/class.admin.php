@@ -198,7 +198,7 @@ class IT_Exchange_Admin {
 	function return_to_addons() {
 		if ( ! empty( $GLOBALS['hook_suffix'] ) && 'exchange_page_it-exchange-addons' == $GLOBALS['hook_suffix'] ) { //only show on add-on-settings pages
 			$url = add_query_arg( 'page', 'it-exchange-addons', admin_url( 'admin.php' ) );
-			echo '<div class="it-exchange-return-to-addons"><p><a href="' . $url . '">&larr; ' . __( 'Back to Add-ons', 'it-l10n-ithemes-exchange' ) . '</a></p></div>';
+			echo '<div class="it-exchange-return-to-addons"><p><a href="' . esc_url( $url ) . '">&larr; ' . __( 'Back to Add-ons', 'it-l10n-ithemes-exchange' ) . '</a></p></div>';
 		}
 	}
 
@@ -288,7 +288,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_products_user_edit_tab_link( $current_tab ) {
 		$active = ( 'products' === $current_tab || false === $current_tab ) ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'products' ); ?>#it-exchange-member-options"><?php _e( 'Products', 'it-l10n-ithemes-exchange' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo esc_url( add_query_arg( 'tab', 'products' ) ); ?>#it-exchange-member-options"><?php _e( 'Products', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -299,7 +299,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_transactions_user_edit_tab_link( $current_tab ) {
 		$active = 'transactions' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'transactions' ); ?>#it-exchange-member-options"><?php _e( 'Transactions', 'it-l10n-ithemes-exchange' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo esc_url( add_query_arg( 'tab', 'transactions' ) ); ?>#it-exchange-member-options"><?php _e( 'Transactions', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -310,7 +310,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_info_user_edit_tab_link( $current_tab ) {
 		$active = ( 'info' === $current_tab ) ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'info' ); ?>#it-exchange-member-options"><?php _e( 'Info', 'it-l10n-ithemes-exchange' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo esc_url( add_query_arg( 'tab', 'info' ) ); ?>#it-exchange-member-options"><?php _e( 'Info', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -970,7 +970,7 @@ Order: %s
 		if ( count( $product_type_add_ons ) > 1 && 'post-new.php' == $pagenow && 'it_exchange_prod' == $post_type ) {
 			$product_type_add_ons = reset( $product_type_add_ons );
 			if ( ! empty( $product_type_add_ons['slug'] ) ) {
-				wp_safe_redirect( add_query_arg( 'it-exchange-product-type', $product_type_add_ons['slug'] ) );
+				wp_safe_redirect( esc_url( add_query_arg( 'it-exchange-product-type', $product_type_add_ons['slug'] ) ) );
 				die();
 			}
 		}
@@ -1618,7 +1618,7 @@ Order: %s
 		if ( empty( $current_screen->id ) || 'it_exchange_prod' != $current_screen->id || empty( $store_link ) )
 			return;
 
-		?><div class="it-exchange-view-store-on-update-link hidden"><a href="<?php esc_attr_e( $store_link ) ; ?>" title="View store" ><?php _e( 'View store', 'it-l10n-ithemes-exchange' ); ?></a><?php
+		?><div class="it-exchange-view-store-on-update-link hidden"><a href="<?php esc_url( $store_link ) ; ?>" title="View store" ><?php _e( 'View store', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -1662,7 +1662,7 @@ Order: %s
 		// Redirect if no product-type addons are enabled
 		if ( ! $enabled_product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ) {
 			$redirect = add_query_arg( 'page', 'it-exchange-settings', get_admin_url() . 'admin.php' );;
-			wp_redirect( $redirect );
+			wp_redirect( esc_url( $redirect ) );
 			die();
 		}
 
@@ -1679,7 +1679,7 @@ Order: %s
 		}
 
 		if ( $redirect ) {
-			wp_redirect( $redirect );
+			wp_redirect( esc_url( $redirect ) );
 			die();
 		}
 	}

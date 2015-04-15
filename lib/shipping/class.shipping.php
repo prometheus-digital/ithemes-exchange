@@ -190,7 +190,7 @@ class IT_Exchange_Shipping {
 			$options = array(
 				'prefix'       => $prefix,
 				'form-options' => array(
-					'action'            => $action,
+					'action'            => esc_url( $action ),
 					'country-states-js' => $country_states_js,
 				),
 				'form-fields'  => $fields,
@@ -221,7 +221,7 @@ class IT_Exchange_Shipping {
 		// Print the HTML
 		?>
 		<div class="it-exchange-secondary-tabs it-exchange-shipping-provider-tabs">
-			<a class="shipping-provider-link <?php echo ( empty( $current ) ) ? 'it-exchange-current' : ''; ?>" href="<?php esc_attr_e( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping' ), admin_url( 'admin.php' ) ) ); ?>">
+			<a class="shipping-provider-link <?php echo ( empty( $current ) ) ? 'it-exchange-current' : ''; ?>" href="<?php echo esc_url( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping' ), admin_url( 'admin.php' ) ) ); ?>">
 				<?php _e( 'General', 'it-l10n-ithemes-exchange' ); ?>
 			</a>
 			<?php
@@ -229,8 +229,7 @@ class IT_Exchange_Shipping {
 				$provider = it_exchange_get_registered_shipping_provider( $provider['slug'] );
 				if ( empty( $provider->has_settings_page ) )
 					continue;
-				$url = add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping', 'provider' => $provider->get_slug() ), admin_url( 'admin.php' ) );
-				?><a class="shipping-provider-link<?php echo ( $current == $provider->get_slug() ) ? ' it-exchange-current' : ''; ?>" href="<?php echo $url; ?>"><?php esc_html_e( $provider->get_label() ); ?></a><?php
+				?><a class="shipping-provider-link<?php echo ( $current == $provider->get_slug() ) ? ' it-exchange-current' : ''; ?>" href="<?php echo esc_url( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping', 'provider' => $provider->get_slug() ), admin_url( 'admin.php' ) ) ); ?>"><?php esc_html_e( $provider->get_label() ); ?></a><?php
 			}
 			?>
 		</div>

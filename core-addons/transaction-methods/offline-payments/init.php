@@ -582,7 +582,7 @@ function it_exchange_offline_payments_checkout_after_payment_details_cancel_url(
 	
 					case false: //active
 					case '':
-						$output = '<a href="' . add_query_arg( 'offline-payments-recurring-payment', 'cancel' ) . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . '</a>';
+						$output = '<a href="' . esc_url( add_query_arg( 'offline-payments-recurring-payment', 'cancel' ) ) . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . '</a>';
 						break;
 	
 					case 'deactivated':

@@ -120,7 +120,7 @@
 			<div class="addons-achievement">
 				<h2><?php echo $vars['text']; ?></h2>
 				<p>
-					<a href="<?php echo $vars['target']; ?>" class="it-exchange-button"><?php echo $vars['link'] ?></a>
+					<a href="<?php echo esc_url( $vars['target'] ); ?>" class="it-exchange-button"><?php echo $vars['link'] ?></a>
 				</p>
 			</div>
 		<?php endif; ?>
