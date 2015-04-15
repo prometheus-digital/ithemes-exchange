@@ -18,8 +18,8 @@ function it_exchange_simple_shipping_settings_callback() {
 		<?php ITUtility::screen_icon( 'it-exchange' ); ?>
 		<h2><?php _e( 'Shipping', 'it-l10n-ithemes-exchange' ); ?></h2>
 		<?php
-		$url = add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping' ), esc_url( admin_url( 'admin.php' ) ) );
-		?><p><?php printf( __( 'Settings are located in the %sShipping tab%s on the Exchange Settings page.', 'it-l10n-ithemes-exchange' ), '<a href="' . $url . '">', '</a>' ); ?></p>
+		$url = add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping' ), admin_url( 'admin.php' ) );
+		?><p><?php printf( __( 'Settings are located in the %sShipping tab%s on the Exchange Settings page.', 'it-l10n-ithemes-exchange' ), '<a href="' . esc_attr( $url ) . '">', '</a>' ); ?></p>
 	</div>
 	<?php
 }
