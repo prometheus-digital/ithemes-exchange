@@ -208,13 +208,13 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				}
 
 				$output  = $options['before'];
-				$output .= '<a href="' . $url . '" class="' . $class . '" name="' . esc_attr( $var ) . '">' . esc_attr( $options['label'] ) . '</a>';
+				$output .= '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $class ) . '" name="' . esc_attr( $var ) . '">' . esc_attr( $options['label'] ) . '</a>';
 				$output .= $options['after'];
 				break;
 			case 'button' :
 			default :
 				$output  = $options['before'];
-				$output .= '<input type="submit" class="' . $class . '" name="' . esc_attr( $var ) . '" value="' . esc_attr( $options['label'] ) . '" />';
+				$output .= '<input type="submit" class="' . esc_attr( $class ) . '" name="' . esc_attr( $var ) . '" value="' . esc_attr( $options['label'] ) . '" />';
 				$output .= $options['after'];
 				break;
 		}
@@ -253,13 +253,13 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				$url = it_exchange_get_page_url( 'cart' );
 
 				$output  = $options['before'];
-				$output .= '<a href="' . $url . '" class="' . $class . '" name="' . esc_attr( $var ) . '">' . esc_attr( $options['label'] ) . '</a>';
+				$output .= '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $class ) . '" name="' . esc_attr( $var ) . '">' . esc_attr( $options['label'] ) . '</a>';
 				$output .= $options['after'];
 				break;
 			case 'button' :
 			default :
 				$output  = $options['before'];
-				$output .= '<input type="submit" class="' . $class . '" name="' . esc_attr( $var ) . '" value="' . esc_attr( $options['label'] ) . '" />';
+				$output .= '<input type="submit" class="' . esc_attr( $class ) . '" name="' . esc_attr( $var ) . '" value="' . esc_attr( $options['label'] ) . '" />';
 				$output .= $options['after'];
 				break;
 		}
@@ -295,7 +295,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				$url = add_query_arg( $var, 1, $url );
 				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . it_exchange_get_session_id() ), $url );
 				$output  = $options['before'];
-				$output .= '<a href="' . $url . '" class="' . esc_attr( $options['class'] ) . '" title="' . esc_attr( $options['title'] ) . '">' . esc_attr( $options['label'] ) . '</a>';
+				$output .= '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $options['class'] ) . '" title="' . esc_attr( $options['title'] ) . '">' . esc_attr( $options['label'] ) . '</a>';
 				$output .= $options['after'];
 				break;
 			case 'button' :
@@ -354,7 +354,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 				$url = add_query_arg( $var, 1, $url );
 				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . it_exchange_get_session_id() ), $url );
 				$output  = $options['before'];
-				$output .= '<a href="' . $url . '" class="' . esc_attr( $options['class'] ) . '" title="' . esc_attr( $options['title'] ) . '">' . esc_attr( $options['label'] ) . '</a>';
+				$output .= '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $options['class'] ) . '" title="' . esc_attr( $options['title'] ) . '">' . esc_attr( $options['label'] ) . '</a>';
 				$output .= $options['after'];
 				break;
 			case 'button' :

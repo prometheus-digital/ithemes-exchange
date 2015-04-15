@@ -58,6 +58,24 @@ function it_exchange_parse_options( $options ) {
 }
 
 /**
+ * Used to set admin menu capabilities
+ *
+ * @since CHANGEME
+ *
+ * @param string $context the context of where it's being used
+ * @param string $capability the incoming capability
+ * @return string
+*/
+function it_exchange_get_admin_menu_capability( $context='', $capability='manage_options' ) {
+
+	// Allow addons to filter
+	$capability =  apply_filters( 'it_exchange_admin_menu_capability', $capability, $context );
+
+	// Clean and return
+	return empty( $capability ) || ! is_string( $capability ) ? false : $capability;
+}
+
+/**
  * Formats a price based on settings
  *
  * @since 0.4.0
@@ -1493,7 +1511,7 @@ function it_exchange_show_ithemes_sync_integration_nag() {
 
     if ( ! empty( $show_nag ) ) {
         $more_info_url   = 'http://ithemes.com/2014/06/24/track-sales-sync-new-ithemes-exchange-integration/';
-        $dismiss_url = add_query_arg( array( 'it-exchange-dismiss-sync-integration-nag' => 1 ) );
+        $dismiss_url = add_query_arg( array( 'it-exchange-dismiss-sync-integration-nag' => 1 ) ); // escaped before printed
         include( dirname( dirname( __FILE__) ) . '/admin/views/admin-ithemes-sync-integration-notice.php' );
     }
 }

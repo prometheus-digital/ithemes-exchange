@@ -7,8 +7,8 @@
 // Just placing internal JS here since it won't be around long.
 ?>
 <div id="it-exchange-ithemes-sync-integration-nag" class="it-exchange-nag">
-	<?php printf( __( 'New! Track Your Sales Remotely with iThemes Sync. %sCheck it Out Now%s.' ), '<a target="_blank" href="' . $more_info_url . '">', '</a>' ) ?>
-	<a class="dismiss btn" href="<?php esc_attr_e( $dismiss_url ); ?>">&times;</a>
+	<?php printf( __( 'New! Track Your Sales Remotely with iThemes Sync. %sCheck it Out Now%s.' ), '<a target="_blank" href="' . esc_url( $more_info_url ) . '">', '</a>' ) ?>
+	<a class="dismiss btn" href="<?php echo esc_url( $dismiss_url ); ?>">&times;</a>
 </div>
 <script type="text/javascript">
 	jQuery( document ).ready( function() {

@@ -241,7 +241,7 @@ class IT_Exchange_Product_Post_Type {
 					<div id="preview-action">
 						<?php
 							if ( 'publish' == $post->post_status ) {
-								$preview_link = esc_url( apply_filters( 'it_exchange_view_product_button_link', get_permalink( $post->ID ), $post ) );
+								$preview_link = apply_filters( 'it_exchange_view_product_button_link', get_permalink( $post->ID ), $post );
 								$preview_button = apply_filters( 'it_exchange_view_product_button_label', __( 'View Product', 'it-l10n-ithemes-exchange' ), $post );
 								$preview_id = 'post-view';
 							} else {
