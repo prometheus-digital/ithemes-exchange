@@ -109,7 +109,7 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 		}
 
 		if ( 'link' == $options['format'] )
-			return $options['before'] . '<a class="' . esc_attr( $class ) . '" href="' . $url . '">' . $options['label'] . '</a>' . $options['after'];
+			return $options['before'] . '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $url ) . '">' . $options['label'] . '</a>' . $options['after'];
 
 		return $url;
 	}
