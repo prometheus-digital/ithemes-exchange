@@ -1,3 +1,5 @@
+1.11.18 - Lew Ayotte, Glenn Ansley, Elise Alley 
+	Pass shipping to PayPal when available
 1.11.17 - Lew Ayotte, Glenn Ansley, Elise Alley 
 	Added filter to shipping address and method requirement
 	Added cart object verification to PayPal processing
