@@ -558,18 +558,33 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 		$query = array(
 			'business'      => $paypal_email,
 			'item_name'     => strip_tags( it_exchange_get_cart_description() ),
-
-			'return'       => add_query_arg( array( 'it-exchange-transaction-method' => 'paypal-standard', 'paypal-standard-nonce' => $nonce ), it_exchange_get_page_url( 'transaction' ) ),
+			'return'        => add_query_arg( array( 'it-exchange-transaction-method' => 'paypal-standard', 'paypal-standard-nonce' => $nonce ), it_exchange_get_page_url( 'transaction' ) ),
 			'currency_code' => $general_settings['default-currency'],
 			'notify_url'    => get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard' ) . '=1',
 			'no_note'       => '1',
-			'no_shipping'   => '1',
 			'shipping'      => '0',
 			'email'         => $it_exchange_customer->data->user_email,
 			'rm'            => '2',
 			'cancel_return' => ( it_exchange_is_multi_item_cart_allowed() ? it_exchange_get_page_url( 'cart' ) : get_site_url() ),
 			'custom'        => $temp_id,
 		);
+		
+		$shipping_address = it_exchange_get_cart_shipping_address();
+		// If we have the shipping info, we may as well include it in the fields sent to Authorize.Net
+		if ( !empty( $shipping_address ) ) {
+			$query['address_override'] = '1';
+			$query['no_shipping'] = '2';
+			$query['first_name']  = !empty( $shipping_address['first-name'] ) ? $shipping_address['first-name'] : '';
+			$query['last_name']   = !empty( $shipping_address['last-name'] )  ? $shipping_address['last-name']  : '';
+			$query['address1']    = !empty( $shipping_address['address1'] )   ? $shipping_address['address1']   : '';
+			$query['address2']    = !empty( $shipping_address['address2'] )   ? $shipping_address['address2']   : '';
+			$query['city']        = !empty( $shipping_address['city'] )       ? $shipping_address['city']       : '';
+			$query['state']       = !empty( $shipping_address['state'] )      ? $shipping_address['state']      : '';
+			$query['zip']         = !empty( $shipping_address['zip'] )        ? $shipping_address['zip']        : '';
+			$query['country']     = !empty( $shipping_address['country'] )    ? $shipping_address['country']    : '';
+		} else {
+			$query['no_shipping'] = '1';
+		}
 
 		$query = array_merge( $paypal_args, $query );
 		$query = apply_filters( 'it_exchange_paypal_standard_query', $query );

@@ -775,12 +775,28 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id ) {
 		$L_BUTTONVARS[] = 'currency_code=' . $general_settings['default-currency'];
 		$L_BUTTONVARS[] = 'notify_url=' . get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard-secure' ) . '=1';
 		$L_BUTTONVARS[] = 'no_note=1';
-		$L_BUTTONVARS[] = 'no_shipping=1';
 		$L_BUTTONVARS[] = 'shipping=0';
 		$L_BUTTONVARS[] = 'email=' . $it_exchange_customer->data->user_email;
 		$L_BUTTONVARS[] = 'rm=2'; //Return  Method - https://developer.paypal.com/webapps/developer/docs/classic/button-manager/integration-guide/ButtonManagerHTMLVariables/
 		$L_BUTTONVARS[] = 'cancel_return=' . ( it_exchange_is_multi_item_cart_allowed() ? it_exchange_get_page_url( 'cart' ) : get_site_url() );
 		$L_BUTTONVARS[] = 'custom=' . $temp_id;
+		
+		$shipping_address = it_exchange_get_cart_shipping_address();
+		// If we have the shipping info, we may as well include it in the fields sent to Authorize.Net
+		if ( !empty( $shipping_address ) ) {
+			$L_BUTTONVARS[] = 'address_override=1';
+			$L_BUTTONVARS[] = 'no_shipping=2';
+			$L_BUTTONVARS[] = 'first_name=' . ( !empty( $shipping_address['first-name'] ) ? $shipping_address['first-name'] : '' );
+			$L_BUTTONVARS[] = 'last_name='  . ( !empty( $shipping_address['last-name'] )  ? $shipping_address['last-name']  : '' );
+			$L_BUTTONVARS[] = 'address1='   . ( !empty( $shipping_address['address1'] )   ? $shipping_address['address1']   : '' );
+			$L_BUTTONVARS[] = 'address2='   . ( !empty( $shipping_address['address2'] )   ? $shipping_address['address2']   : '' );
+			$L_BUTTONVARS[] = 'city='       . ( !empty( $shipping_address['city'] )       ? $shipping_address['city']       : '' );
+			$L_BUTTONVARS[] = 'state='      . ( !empty( $shipping_address['state'] )      ? $shipping_address['state']      : '' );
+			$L_BUTTONVARS[] = 'zip='        . ( !empty( $shipping_address['zip'] )        ? $shipping_address['zip']        : '' );
+			$L_BUTTONVARS[] = 'country='    . ( !empty( $shipping_address['country'] )    ? $shipping_address['country']    : '' );
+		} else {
+			$L_BUTTONVARS[] = 'no_shipping=1';
+		}	
 		
 		$L_BUTTONVARS = apply_filters( 'it_exchange_paypal_standard_secure_button_vars', $L_BUTTONVARS );
 
