@@ -558,7 +558,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 		$query = array(
 			'business'      => $paypal_email,
 			'item_name'     => strip_tags( it_exchange_get_cart_description() ),
-			'return'        => esc_url( add_query_arg( array( 'it-exchange-transaction-method' => 'paypal-standard', 'paypal-standard-nonce' => $nonce ), it_exchange_get_page_url( 'transaction' ) ) ),
+			'return'        => add_query_arg( array( 'it-exchange-transaction-method' => 'paypal-standard', 'paypal-standard-nonce' => $nonce ), it_exchange_get_page_url( 'transaction' ) ),
 			'currency_code' => $general_settings['default-currency'],
 			'notify_url'    => get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard' ) . '=1',
 			'no_note'       => '1',
@@ -569,9 +569,10 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			'custom'        => $temp_id,
 		);
 		
-		$shipping_address = it_exchange_get_cart_shipping_address();
-		// If we have the shipping info, we may as well include it in the fields sent to Authorize.Net
-		if ( !empty( $shipping_address ) ) {
+		$purchase_requirements = it_exchange_get_purchase_requirements();
+		// If we have the shipping info, we may as well include it in the fields sent to PayPal
+		if ( !empty( $purchase_requirements['shipping-address'] ) ) {
+			$shipping_address = it_exchange_get_cart_shipping_address();
 			$query['address_override'] = '1';
 			$query['no_shipping'] = '2';
 			$query['first_name']  = !empty( $shipping_address['first-name'] ) ? $shipping_address['first-name'] : '';
