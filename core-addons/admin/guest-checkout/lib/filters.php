@@ -462,7 +462,7 @@ add_filter( 'logout_url', 'it_exchange_guest_checkout_modify_loginout_link', 10,
 function it_exchange_logout_guest_checkout_session() {
 	if ( ( it_exchange_is_page( 'logout' ) && it_exchange_doing_guest_checkout() ) || ! empty( $_REQUEST['it-exchange-guest-logout'] ) ) {
 		it_exchange_kill_guest_checkout_session();
-		wp_redirect( esc_url( remove_query_arg( 'it-exchange-guest-logout' ) ) );
+		wp_redirect( esc_url_raw( remove_query_arg( 'it-exchange-guest-logout' ) ) );
 	}
 }
 add_action( 'template_redirect', 'it_exchange_logout_guest_checkout_session', 1 );

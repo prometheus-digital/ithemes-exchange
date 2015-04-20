@@ -576,7 +576,7 @@ function it_exchange_basic_coupons_handle_remove_coupon_from_cart_request() {
 		$url = it_exchange_clean_query_args( array( it_exchange_get_field_name( 'sw_cart_focus' ) ) );
 
 	it_exchange_add_message( 'notice', __( 'Coupon removed', 'it-l10n-ithemes-exchange' ) );
-	wp_redirect( esc_url( $url ) );
+	wp_redirect( esc_url_raw( $url ) );
 	die();
 }
 add_action( 'template_redirect', 'it_exchange_basic_coupons_handle_remove_coupon_from_cart_request', 9 );
