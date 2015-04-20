@@ -127,14 +127,14 @@ class IT_Exchange_Shopping_Cart {
 				die();
 			} else {
 				$url = add_query_arg( 'ite-sw-state', $sw_state, $url );
-				it_exchange_redirect( esc_url( $url ), 'buy-now-success-in-sw' );
+				it_exchange_redirect( esc_url_raw( $url ), 'buy-now-success-in-sw' );
 				die();
 			}
 		}
 
 		$error = empty( $error ) ? 'product-not-added-to-cart' : $error;
 		it_exchange_add_message( 'error', __( 'Product not added to cart', 'it-l10n-ithemes-exchange' ) );
-		it_exchange_redirect( esc_url( $cart ), 'buy-now-failed' );
+		it_exchange_redirect( esc_url_raw( $cart ), 'buy-now-failed' );
 		die();
 	}
 
@@ -174,7 +174,7 @@ class IT_Exchange_Shopping_Cart {
 				die();
 			} else {
 				$url = add_query_arg( 'ite-sw-state', $sw_state, $url );
-				it_exchange_redirect( esc_url( $url ), 'add-to-cart-success-in-sw' );
+				it_exchange_redirect( esc_url_raw( $url ), 'add-to-cart-success-in-sw' );
 				die();
 			}
 		}
@@ -182,7 +182,7 @@ class IT_Exchange_Shopping_Cart {
 		$error_var = it_exchange_get_field_name( 'error_message' );
 		$error = empty( $error ) ? 'product-not-added-to-cart' : $error;
 		$url  = add_query_arg( array( $error_var => $error ), $cart );
-		it_exchange_redirect( esc_url( $url ), 'add-to-cart-failed' );
+		it_exchange_redirect( esc_url_raw( $url ), 'add-to-cart-failed' );
 		die();
 	}
 
@@ -221,7 +221,7 @@ class IT_Exchange_Shopping_Cart {
 		$url = remove_query_arg( it_exchange_get_field_name( 'empty_cart' ), $cart );
 
 		$redirect_options = array( 'query_arg' => array( $message_var => 'cart-emptied' ) );
-		it_exchange_redirect( esc_url( $url ), 'cart-empty-success', $redirect_options );
+		it_exchange_redirect( esc_url_raw( $url ), 'cart-empty-success', $redirect_options );
 		die();
 	}
 
@@ -251,7 +251,7 @@ class IT_Exchange_Shopping_Cart {
 			$url  = add_query_arg( array( $var => 'product-not-removed' ), $cart_url );
 
 			$redirect_options = array( 'query_arg' => array( $var => 'product-not-removed' ) );
-			it_exchange_redirect( esc_url( $url ), 'cart-remove-product-failed', $redirect_options );
+			it_exchange_redirect( esc_url_raw( $url ), 'cart-remove-product-failed', $redirect_options );
 			die();
 		}
 
@@ -263,7 +263,7 @@ class IT_Exchange_Shopping_Cart {
 		$url = add_query_arg( array( $var => 'product-removed' ), $cart_url );
 
 		$redirect_options = array( 'query_arg' => array( $var => 'product-removed' ) );
-		it_exchange_redirect( esc_url( $url ), 'cart-remove-product-success', $redirect_options );
+		it_exchange_redirect( esc_url_raw( $url ), 'cart-remove-product-success', $redirect_options );
 		die();
 	}
 
