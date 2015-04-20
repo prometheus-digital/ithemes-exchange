@@ -60,7 +60,7 @@ function it_exchange_parse_options( $options ) {
 /**
  * Used to set admin menu capabilities
  *
- * @since CHANGEME
+ * @since 1.12.0
  *
  * @param string $context the context of where it's being used
  * @param string $capability the incoming capability

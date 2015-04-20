@@ -88,6 +88,11 @@ http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
 
+= 1.12.0 =
+* Multiple updates involving add_query_arg and remove_query_arg to esc_url()
+* Introduce it_exchange_get_admin_menu_capability( $context, $capability )
+* Adding filter to shipping address and method requirement, for that rare case when the shipping requirement should be enabled, but isn't
+
 = 1.11.18 =
 * Pass shipping to PayPal when available
 
