@@ -230,10 +230,16 @@ class IT_Exchange_Admin_Settings_Form {
 					$this->print_heading_row( $field );
 				} else {
 					$form_method = 'add_' . $field['type'];
-					if ( is_callable( array( $this->form, $form_method ) ) )
+					// Allow forms to override this by providing a callback function
+					if ( ! empty( $field['print_setting_field_override'] ) && is_callable( $field['print_setting_field_override'] ) ) {
+						// Force ITForm to include this input name in saveable inputs
+						$this->form->_used_inputs[''][] = $this->prefix . '-' . $field['slug'];
+						call_user_func( $field['print_setting_field_override'], $this->field_values );
+					} else if ( is_callable( array( $this->form, $form_method ) ) ) {
 						$this->print_setting_row( $field, $form_method );
-					else
+					} else {
 						$this->print_uncallable_method_row( $field );
+					}
 				}
 			}
 			// Add a hidden field to identify this form

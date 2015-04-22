@@ -1122,6 +1122,7 @@ Order: %s
 
 			if ( ! empty( $simple_shipping_options['enable-flat-rate-shipping'] ) ) {
 				$flat_rate_default_cost = $_REQUEST['it_exchange_settings-simple-shipping-flat-rate-cost'];
+				$flat_rate_default_cost = it_exchange_convert_to_database_number( $flat_rate_default_cost );
 				$simple_shipping_options['flat-rate-shipping-amount'] = $flat_rate_default_cost;
 			}
 
