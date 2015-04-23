@@ -21,6 +21,22 @@ function it_exchange_addon_simple_shipping_register_flat_rate_shipping_features(
 }
 add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_addon_simple_shipping_register_flat_rate_shipping_features' );
 
+/**
+ * Default Shipping Cost coming out of DB should always be formated for databse
+ *
+ * @since CHANGEME
+ *
+ * @param array $data the data retrieved from the DB
+ * @return array
+ */
+function it_exchange_addon_simple_shipping_clean_shipping_cost_coming_out_of_db( $data ) {
+	if ( ! empty( $data['flat-rate-shipping-amount'] ) && ! is_numeric( $data['flat-rate-shipping-amount'] ) ) {
+		$data['flat-rate-shipping-amount'] = it_exchange_convert_to_database_number( $data['flat-rate-shipping-amount'] );
+	}
+	return $data;
+}
+add_filter( 'it_exchange_get_option-simple-shipping', 'it_exchange_addon_simple_shipping_clean_shipping_cost_coming_out_of_db' );
+
 class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_Method {
 
 	/**
