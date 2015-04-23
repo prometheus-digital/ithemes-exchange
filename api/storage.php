@@ -29,6 +29,7 @@ function it_exchange_get_option( $key, $break_cache=false, $merge_defaults=true 
 	if ( is_array( $data) && isset( $data['storage_version'] ) )
 		unset( $data['storage_version'] );
 
+	$data = apply_filters( 'it_exchange_get_option-' . $key, $data, $key, $break_cache, $merge_defaults );
 	return apply_filters( 'it_exchange_get_option', $data, $key, $break_cache, $merge_defaults );
 }
 
