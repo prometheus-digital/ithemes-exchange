@@ -32,6 +32,8 @@ add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_addon_simple_shipp
 function it_exchange_addon_simple_shipping_clean_shipping_cost_coming_out_of_db( $data ) {
 	if ( ! empty( $data['flat-rate-shipping-amount'] ) && ! is_numeric( $data['flat-rate-shipping-amount'] ) ) {
 		$data['flat-rate-shipping-amount'] = it_exchange_convert_to_database_number( $data['flat-rate-shipping-amount'] );
+	} else if ( ! empty( $data['flat-rate-shipping-amount'] ) && is_numeric( $data['flat-rate-shipping-amount'] ) ) {
+		$data['flat-rate-shipping-amount'] = str_replace( '.', '', $data['flat-rate-shipping-amount'] );
 	}
 	return $data;
 }
