@@ -904,7 +904,6 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 					break;
 	
 				case 'subscr_payment':
-					wp_mail( 'lew@ithemes.com', 'paypal $request', print_r( $request, true ) );
 					switch( strtolower( $request['payment_status'] ) ) {
 						case 'completed':
 							if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) { //this is a free trial
@@ -914,8 +913,7 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 							}
 							if ( !it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
 								//If the transaction isn't found, we've got a new payment
-								global $ite_child_transaction;
-								$ite_child_transaction = true;
+								$GLOBALS['it_exchange']['child_transaction'] = true;
 								it_exchange_paypal_standard_secure_addon_add_child_transaction( $request['txn_id'], $request['payment_status'], $subscriber_id, $request['mc_gross'] );
 							} else {
 								//If it is found, make sure the subscriber ID is attached to it
