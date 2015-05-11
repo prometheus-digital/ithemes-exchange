@@ -927,8 +927,10 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 				case 'subscr_signup':
 					if ( isset( $request['amount1'] ) && '0.00' == $request['amount1'] ) { //this is a free trial
 						/* We need to do some free trial magic! */
-						if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
-							it_exchange_paypal_standard_secure_addon_update_subscriber_id( $temp_txn_id, $subscriber_id );
+						if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
+							it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['custom'], $subscriber_id );
+						} else if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['txn_id'] ) ) {
+							it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
 						}
 					}
 					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'active' );
