@@ -1,4 +1,14 @@
-1.12.0 - Glenn Ansley, Lew Ayotte, Elise, Alley
+1.13.0 - Glenn Ansley, Lew Ayotte, Elise Alley
+	Add JS hook to SW after state is updated
+	Fixes for Recurring Payments bugs
+	Change how I handle my globals... also remove my wp_mail debugs
+	Fixed bug causing broken 'View store' link in saved product notification
+	Fix JS on Shipping Settings Page
+	Modify function converting format of default price coming out of DB
+	Fix Flat Rate Shipping for international setups: Backwards Compat to ensure data coming out of DB is always
+	Add key'd filter to it_exchange_get_option
+	Fixed but that prevented it_exchange_load_addon from ever working
+1.12.0 - Glenn Ansley, Lew Ayotte, Elise Alley
 	Multiple updates involving add_query_arg and remove_query_arg to esc_url()
 	Introduce it_exchange_get_admin_menu_capability( $context, $capability )
 	Adding filter to shipping address and method requirement, for that rare case when the shipping requirement should be enabled, but isn't
