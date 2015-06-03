@@ -24,7 +24,7 @@ add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_addon_simple_shipp
 /**
  * Default Shipping Cost coming out of DB should always be formated for databse
  *
- * @since CHANGEME
+ * @since 1.14.0 
  *
  * @param array $data the data retrieved from the DB
  * @return array

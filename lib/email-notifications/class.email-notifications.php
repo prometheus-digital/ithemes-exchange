@@ -400,7 +400,7 @@ class IT_Exchange_Email_Notifications {
 	/**
 	 * Replacement Tag
 	 *
-	 * @since CHANGEME
+	 * @since 1.14.0 
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
