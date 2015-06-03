@@ -249,6 +249,7 @@ class IT_Exchange_Email_Notifications {
 		$shortcode_functions = array(
 			'download_list'    => 'it_exchange_replace_download_list_tag',
 			'name'             => 'it_exchange_replace_name_tag',
+			'email'            => 'it_exchange_replace_email_tag',
 			'fullname'         => 'it_exchange_replace_fullname_tag',
 			'username'         => 'it_exchange_replace_username_tag',
 			'order_table'      => 'it_exchange_replace_order_table_tag',
@@ -394,6 +395,24 @@ class IT_Exchange_Email_Notifications {
 			$name = $GLOBALS['it_exchange']['email-confirmation-data'][0]->customer_id;
 		}
 		return $name;
+	}
+	
+	/**
+	 * Replacement Tag
+	 *
+	 * @since CHANGEME
+	 *
+	 * @param object $args of IT_Exchange_Email_Notifications
+	 * @return string Replaced value
+	*/
+	function it_exchange_replace_email_tag( $args, $options = NULL ) {
+		$email = '';
+
+		if ( ! empty( $this->user->data->user_email ) ) {
+			$email = $this->user->data->user_email;
+		}
+
+		return $email;
 	}
 
 	/**
