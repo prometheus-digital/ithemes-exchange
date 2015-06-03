@@ -2,8 +2,8 @@
 Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
-Tested up to: 4.2
-Stable tag: 1.12.0
+Tested up to: 4.3
+Stable tag: 1.13.0
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,16 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.13.0 =
+* Add JS hook to SW after state is updated
+* Fixes for Recurring Payments bugs
+* Change how I handle my globals... also remove my wp_mail debugs
+* Fixed bug causing broken 'View store' link in saved product notification
+* Fix JS on Shipping Settings Page
+* Modify function converting format of default price coming out of DB
+* Fix Flat Rate Shipping for international setups: Backwards Compat to ensure data coming out of DB is always
+* Add key'd filter to it_exchange_get_option
+* Fixed but that prevented it_exchange_load_addon from ever working
 
 = 1.12.0 =
 * Multiple updates involving add_query_arg and remove_query_arg to esc_url()
