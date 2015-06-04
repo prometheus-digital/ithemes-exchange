@@ -122,7 +122,7 @@ class IT_Exchange_Product_Post_Type {
 			'show_in_nav_menus' => true,
 			'show_in_menu'      => false, // We will be adding it manually with various labels based on available product-type add-ons
 			'show_in_admin_bar' => true,
-			'hierarchical'      => false,
+			'hierarchical'      => apply_filters( 'ithemes_exchange_products_post_type_hierarchical', false ),
 			'supports'          => array( // Support everything including page-attributes for add-on flexibility
 				'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 
 				'custom-fields', 'comments', 'revisions', 'post-formats', 'page-attributes'
@@ -241,17 +241,17 @@ class IT_Exchange_Product_Post_Type {
 					<div id="preview-action">
 						<?php
 							if ( 'publish' == $post->post_status ) {
-								$preview_link = esc_url( apply_filters( 'it_exchange_view_product_button_link', get_permalink( $post->ID ), $post ) );
+								$preview_link = apply_filters( 'it_exchange_view_product_button_link', get_permalink( $post->ID ), $post );
 								$preview_button = apply_filters( 'it_exchange_view_product_button_label', __( 'View Product', 'it-l10n-ithemes-exchange' ), $post );
 								$preview_id = 'post-view';
 							} else {
 								$preview_link = set_url_scheme( get_permalink( $post->ID ) );
-								$preview_link = esc_url( apply_filters( 'it_exchange_preview_product_button_link', apply_filters( 'preview_post_link', add_query_arg( 'preview', 'true', $preview_link ) ), $post ) );
+								$preview_link = apply_filters( 'it_exchange_preview_product_button_link', apply_filters( 'preview_post_link', add_query_arg( 'preview', 'true', $preview_link ) ), $post );
 								$preview_button = apply_filters( 'it_exchange_preview_product_button_label', __( 'Preview Product', 'it-l10n-ithemes-exchange' ), $post );
 								$preview_id = 'post-preview';
 							}
 						?>
-						<a class="preview button button-large" href="<?php echo $preview_link; ?>" target="wp-preview" id="<?php echo $preview_id; ?>"><?php echo $preview_button; ?></a>
+						<a class="preview button button-large" href="<?php echo esc_url( $preview_link ); ?>" target="wp-preview" id="<?php echo $preview_id; ?>"><?php echo $preview_button; ?></a>
 						<input type="hidden" name="wp-preview" id="wp-preview" value="" />
 					</div>
 				<?php endif; ?>
@@ -565,7 +565,7 @@ class IT_Exchange_Product_Post_Type {
 			}
 
 			if ( ! empty( $post_new_file) && ! empty( $product_type ) )
-				$post_new_file = add_query_arg( array( 'it-exchange-product-type' => $product_type ), $post_new_file );
+				$post_new_file = esc_url( add_query_arg( array( 'it-exchange-product-type' => $product_type ), $post_new_file ) );
 
 		}
 

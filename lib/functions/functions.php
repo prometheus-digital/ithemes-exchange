@@ -58,6 +58,24 @@ function it_exchange_parse_options( $options ) {
 }
 
 /**
+ * Used to set admin menu capabilities
+ *
+ * @since 1.12.0
+ *
+ * @param string $context the context of where it's being used
+ * @param string $capability the incoming capability
+ * @return string
+*/
+function it_exchange_get_admin_menu_capability( $context='', $capability='manage_options' ) {
+
+	// Allow addons to filter
+	$capability =  apply_filters( 'it_exchange_admin_menu_capability', $capability, $context );
+
+	// Clean and return
+	return empty( $capability ) || ! is_string( $capability ) ? false : $capability;
+}
+
+/**
  * Formats a price based on settings
  *
  * @since 0.4.0
@@ -278,7 +296,7 @@ function it_exchange_add_plugin_reset_checkbox_to_settings( $form ) {
 		<td>
 			<?php $form->add_check_box( 'reset-exchange' ); ?>
 			<label for="reset-exchange"><?php _e( 'Reset ALL data', 'it-l10n-ithemes-exchange' ) ?></label><br />
-			<span class="description"><?php _e( 'Checking this box will rest ALL settings and DELETE ALL DATA.', 'it-l10n-ithemes-exchange' ); ?></span>
+			<span class="description"><?php _e( 'Checking this box will reset ALL settings and DELETE ALL DATA.', 'it-l10n-ithemes-exchange' ); ?></span>
 		</td>
 	</tr>
 	<?php
@@ -1196,7 +1214,7 @@ add_action( 'template_redirect', 'it_exchange_set_content_width_on_product_pages
  * @return mixed
 */
 function it_exchange_redirect_to_correct_login_form_on_error( $error ) {
-	if ( empty( $error ) || ! is_wp_error( $error ) || empty( $error->errors ) )
+	if ( empty( $error ) || ! is_wp_error( $error ) || ( empty( $error->errors ) && empty( $_POST ) ) )
 		return $error;
 
 	$wp_referer       = wp_get_referer();
@@ -1204,7 +1222,11 @@ function it_exchange_redirect_to_correct_login_form_on_error( $error ) {
 	$exchange_pages[] = it_exchange_get_page_url( 'checkout' );
 
 	if ( in_array( $wp_referer, $exchange_pages ) ) {
-		it_exchange_add_message( 'error', $error->get_error_message() );
+		if ( empty( $error->errors ) && empty( $_POST['log'] ) && empty( $_POST['pwd'] ) ) {
+			it_exchange_add_message( 'error', __( 'Please provide a username and password', 'it-l10n-ithemes-exchange' ) );
+		} else {
+			it_exchange_add_message( 'error', $error->get_error_message() );
+		}
 
 		$url_target = ( $wp_referer == $exchange_pages[1] ) ? 'checkout' : 'login';
 		it_exchange_redirect( $wp_referer, 'login-failed-from-' . $url_target );
@@ -1360,7 +1382,7 @@ if ( !function_exists( 'it_exchange_dropdown_taxonomies' ) ) {
 	        'hide_empty' => 1, 'child_of' => 0,
 	        'exclude' => '', 'echo' => 1,
 	        'selected' => 0, 'hierarchical' => 0,
-	        'name' => 'tax', 'id' => '',
+	        'name' => '', 'id' => '',
 	        'class' => 'postform', 'depth' => 0,
 	        'tab_index' => 0, 'taxonomy' => 'category',
 	        'hide_if_empty' => false
@@ -1381,6 +1403,12 @@ if ( !function_exists( 'it_exchange_dropdown_taxonomies' ) ) {
 	        $tab_index_attribute = " tabindex=\"$tab_index\"";
 
 	    $terms = get_terms( $taxonomy, $r );
+
+		 // Avoid clashes with the 'name' param of get_terms().
+		$get_terms_args = $r;
+		unset( $get_terms_args['name'] );
+		$terms = get_terms( $r['taxonomy'], $get_terms_args );
+
 	    $name = esc_attr( $name );
 	    $class = esc_attr( $class );
 	    $id = $id ? esc_attr( $id ) : $name;
@@ -1483,7 +1511,7 @@ function it_exchange_show_ithemes_sync_integration_nag() {
 
     if ( ! empty( $show_nag ) ) {
         $more_info_url   = 'http://ithemes.com/2014/06/24/track-sales-sync-new-ithemes-exchange-integration/';
-        $dismiss_url = add_query_arg( array( 'it-exchange-dismiss-sync-integration-nag' => 1 ) );
+        $dismiss_url = add_query_arg( array( 'it-exchange-dismiss-sync-integration-nag' => 1 ) ); // escaped before printed
         include( dirname( dirname( __FILE__) ) . '/admin/views/admin-ithemes-sync-integration-notice.php' );
     }
 }
@@ -1506,7 +1534,7 @@ function it_exchange_fix_bad_data_in_carts( $versions ) {
 
 	// Abandon if already run
 	delete_option( 'it_exchange_bad_cart_data_fixed' );
-	if ( version_compare( $versions['previous'], '1.11.7', '>=' ) ) {
+	if ( version_compare( $versions['previous'], '1.11.16', '>=' ) ) {
 		return;
 	}
 
@@ -1579,8 +1607,9 @@ class Walker_ProductCategoryDropdown extends Walker {
 
         $cat_name = apply_filters('list_cats', $category->name, $category);
         $output .= "\t<option class=\"level-$depth\" value=\"".$category->slug."\"";
-        if ( $category->slug == $args['selected'] )
+        if ( $category->slug === $args['selected'] ) {
             $output .= ' selected="selected"';
+		}
         $output .= '>';
         $output .= $pad.$cat_name;
         if ( $args['show_count'] )

@@ -148,7 +148,7 @@ function it_exchange_db_session_cleanup() {
 			// If the session has expired
 			if ( $now > intval( $expiration->option_value ) ) {
 				// Get the session ID by parsing the option_name
-				$session_id = substr( $expiration->option_name, 24 );
+				$session_id = substr( $expiration->option_name, 32 );
 
 				$expired_sessions[] = $expiration->option_name;
 				$expired_sessions[] = "_it_exchange_db_session_$session_id";

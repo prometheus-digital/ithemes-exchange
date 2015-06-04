@@ -7,8 +7,8 @@
 // Just adding internal CSS rule here since it won't be around long.
 ?>
 <div id="it-exchange-updated-templates-nag" class="it-exchange-nag">
-	<?php printf( __( 'iThemes Exchange default template parts have been updated. View %sour codex%s for more information.' ), '<a href="' . $codex_url. '">', '</a>' ) ?>
-	<a class="dismiss btn" href="<?php esc_attr_e( $dismiss_url ); ?>">&times;</a>
+	<?php printf( __( 'iThemes Exchange default template parts have been updated. View %sour codex%s for more information.' ), '<a href="' . esc_url( $codex_url ). '">', '</a>' ) ?>
+	<a class="dismiss btn" href="<?php echo esc_url( $dismiss_url ); ?>">&times;</a>
 </div>
 <script type="text/javascript">
 	jQuery( document ).ready( function() {

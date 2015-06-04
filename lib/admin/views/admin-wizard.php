@@ -6,8 +6,8 @@
  * @package IT_Exchange
 */
 $flat_rate_cost = it_exchange_get_option( 'simple-shipping', true );
-$flat_rate_cost = empty( $flat_rate_cost['flat-rate-shipping-amount'] ) ? it_exchange_format_price( 5 ) : $flat_rate_cost['flat-rate-shipping-amount'];
-$form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
+$flat_rate_cost = empty( $flat_rate_cost['flat-rate-shipping-amount'] ) ? 500 : $flat_rate_cost['flat-rate-shipping-amount'];
+$flat_rate_cost = it_exchange_format_price( it_exchange_convert_from_database_number( $flat_rate_cost ) );
 ?>
 <div class="wrap">
 	<?php ITUtility::screen_icon( 'it-exchange' );  ?>
@@ -174,7 +174,7 @@ $form->set_option( 'simple-shipping-flat-rate-cost', $flat_rate_cost );
                         <h3><?php _e( 'Flat Rate Shipping', 'it-l10n-ithemes-exchange' ); ?></h3>
                         <p>
                             <label for="simple-shipping-flat-rate-cost"><?php _e( 'Flat Rate Default Amount', 'it-l10n-ithemes-exchange' ); ?><span class="tip" title="<?php _e( 'Default shipping costs for flat rate. Multiplied by quantity purchased. Customizable per product by Store Admin.', 'it-l10n-ithemes-exchange' ); ?>" >i</span></label>
-                            <?php $form->add_text_box( 'simple-shipping-flat-rate-cost', array( 'class' => 'normal-text' ) ); ?>
+							<input class="normal-text" type="text" name="it_exchange_settings-simple-shipping-flat-rate-cost" id="simple-shipping-flat-rate-cost" value="<?php esc_attr_e( $flat_rate_cost ); ?>" />
                         </p>
                     </div>
 				</div>

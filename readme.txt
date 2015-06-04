@@ -2,8 +2,8 @@
 Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
-Tested up to: 4.1
-Stable tag: 1.11.11
+Tested up to: 4.3
+Stable tag: 1.14.0
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,8 +87,67 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.14. =
+* Adding 'email' option to it_exchange_email email notification shortcode
+
+= 1.13.0 =
+* Add JS hook to SW after state is updated
+* Fixes for Recurring Payments bugs
+* Change how I handle my globals... also remove my wp_mail debugs
+* Fixed bug causing broken 'View store' link in saved product notification
+* Fix JS on Shipping Settings Page
+* Modify function converting format of default price coming out of DB
+* Fix Flat Rate Shipping for international setups: Backwards Compat to ensure data coming out of DB is always
+* Add key'd filter to it_exchange_get_option
+* Fixed but that prevented it_exchange_load_addon from ever working
+
+= 1.12.0 =
+* Multiple updates involving add_query_arg and remove_query_arg to esc_url()
+* Introduce it_exchange_get_admin_menu_capability( $context, $capability )
+* Adding filter to shipping address and method requirement, for that rare case when the shipping requirement should be enabled, but isn't
+
+= 1.11.18 =
+* Pass shipping to PayPal when available
+
+= 1.11.17 =
+* Added filter to shipping address and method requirement
+* Added cart object verification to PayPal processing 
+
+= 1.11.16 =
+* Fix for DB Session bloat bug
+
+= 1.11.15 =
+* Deprecate the admin_menu_capability property in IT_Exchange_Admin and replace with a method so that themes can filter it.
+* If no username or password is provided on submit from exchange Login page, don't redirect to wp-login.php
+* Fix bug in purchase-requirement template part's filter name created by first param. Maintain back_compat.
+* Adding IPN Verification to PayPal non-Secure option
+
+= 1.11.14 =
+* Strip any non-separator/non-digit character out of price before converting to database number
+* Fix for converting to DB number for numbers with unexpected number of decimals places
+* If unauthenticated site visitor goes directly to account, profile, or purchases, redirect them to login instead of registration
+* Fix bug not displaying quanity option in superwidget if coupons isn't activated
+* Fix bug causing all categories in product dropdown widget to have 'selected' attribute
+* Update custom dropdown_category function to reflect WP Core changeset https://core.trac.wordpress.org/changeset/31024.
+* Sort addons by display name rather than addon-slug
+* Preserve logged in Guest when updating shipping method on Cart page 
+* Add ability for store owners to change Guest Checkout heading text and button labels
+
+= 1.11.13 =
+* Updating Duplicate Products for new Invoices update
+* Removing unnecessary esc_attr() calls from text that would have valid HTML
+* Disable Offline Payment's Purchase button when clicked
+* Adding a filter to the Products Post Type hierarchical setting
+* Modified it_exchange_is_page() to use 'name' query var instead of product slug
+
+= 1.11.12 =
+* Auto-Height for admin advanced area text fields
+* Spell reset with two e's
+* Allow 3rd parties to tweak the state of the SW
+* Change unlimited inventory message
+* Don't delete transactions when customer's WP user is deleted
+
 = 1.11.11 =
-1.11.11 - Glenn Ansley, Lew Ayotte, Elise Alley, Ronald van Weerd
 * Fix bug causing it_exchange_is_page(  ) to always return true when called from SW and  != 'product'
 * Fix bug preventing query args from loading correct SW state. Also, prevent cart state on product page if no items are in cart
 * Enable translation mo file to be overridden in wp-content/languages/plugins/it-exchange

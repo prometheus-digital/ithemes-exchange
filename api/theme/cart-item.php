@@ -104,7 +104,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 				$url = it_exchange_clean_query_args();
 				$url = add_query_arg( $var_key, $var_value, $url );
 				$url = add_query_arg( $nonce_var, wp_create_nonce( 'it-exchange-cart-action-' . $session_id ), $url );
-				$output = $options['before'] . '<a href="' . $url . '" ' . $data . 'class="' . $class . '" >' . esc_attr( $options['label'] ) . '</a>' . $options['after'];
+				$output = $options['before'] . '<a href="' . esc_url( $url ) . '" ' . $data . 'class="' . $class . '" >' . esc_attr( $options['label'] ) . '</a>' . $options['after'];
 			break;
 		}
 		return $output;

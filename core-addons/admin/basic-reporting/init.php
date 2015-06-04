@@ -13,6 +13,8 @@
  * @return void
 */
 function it_exchange_basic_reporting_register_dashboard_widget() {
+	$cap = it_exchange_get_admin_menu_capability( 'it_exchange_basic_reporting' );
+	// Back compat for the filter
 	$cap = apply_filters( 'it_exchange_basic_reporting_capability_level', 'manage_options' );
 	if ( ! current_user_can( $cap ) )
 		return;

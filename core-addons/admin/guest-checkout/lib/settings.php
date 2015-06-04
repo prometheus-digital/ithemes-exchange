@@ -42,6 +42,30 @@ function it_exchange_guest_checkout_settings_callback() {
 				'tooltip' => __( 'Selecting \'No\' will remove the Registration link from Log in and Guest Checkout forms.', 'it-l10n-ithemes-exchange' ),
 				'default' => 1,
 			),
+			array(
+				'type'    => 'text_box',
+				'label'   => __( 'Heading Label on Checkout Page', 'it-l10n-ithemes-exchange' ),
+				'slug'    => 'content_heading_text',
+				'default' => __( 'Checkout as a guest?', 'it-l10n-ithemes-exchange' ),
+			),
+			array(
+				'type'    => 'text_box',
+				'label'   => __( 'Heading Label in the SuperWidget', 'it-l10n-ithemes-exchange' ),
+				'slug'    => 'sw_heading_text',
+				'default' => __( 'Guest Checkout', 'it-l10n-ithemes-exchange' ),
+			),
+			array(
+				'type'    => 'text_box',
+				'label'   => __( 'Button Text on Checkout Page', 'it-l10n-ithemes-exchange' ),
+				'slug'    => 'content_continue_button_text',
+				'default' => __( 'Continue as guest', 'it-l10n-ithemes-exchange' ),
+			),
+			array(
+				'type'    => 'text_box',
+				'label'   => __( 'Button Text in SuperWidget', 'it-l10n-ithemes-exchange' ),
+				'slug'    => 'sw_continue_button_text',
+				'default' => __( 'Continue', 'it-l10n-ithemes-exchange' ),
+			),
 		);
 		// Other Settings
 		$core_settings = array(

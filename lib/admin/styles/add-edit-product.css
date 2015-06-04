@@ -168,6 +168,8 @@
 #it-exchange-advanced-tabs input[type="number"]:focus,
 #it-exchange-advanced-tabs textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
 
+#it-exchange-advanced-tabs input[type="text"] { height:auto; }
+
 #it-exchange-advanced-tab-nav .ui-state-default{outline:none;margin-bottom:0;border-width:1px 0 1px;border-style:solid;border-color:transparent;}
 #it-exchange-advanced-tab-nav .ui-state-default:first-child{border-top:0;border-radius:4px 0 0 0;}
 #it-exchange-advanced-tab-nav .ui-state-default:last-child{border-bottom:0;border-radius:0 0 0 4px;}

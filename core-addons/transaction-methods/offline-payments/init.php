@@ -186,7 +186,8 @@ function it_exchange_offline_payments_addon_make_payment_button( $options ) {
 
 	$products = it_exchange_get_cart_data( 'products' );
 
-	$payment_form = '<form id="offline_payment_form" action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
+	$disable_on_submit = ' onSubmit="document.getElementById(\'offline-payments-button\').disabled=true;" ';
+	$payment_form = '<form id="offline_payment_form" action="' . it_exchange_get_page_url( 'transaction' ) . '" ' . $disable_on_submit . 'method="post">';
 	$payment_form .= '<input type="hidden" name="it-exchange-transaction-method" value="offline-payments" />';
 	$payment_form .= wp_nonce_field( 'offline-payments-checkout', '_offline_payments_nonce', true, false );
 
@@ -581,7 +582,7 @@ function it_exchange_offline_payments_checkout_after_payment_details_cancel_url(
 	
 					case false: //active
 					case '':
-						$output = '<a href="' . add_query_arg( 'offline-payments-recurring-payment', 'cancel' ) . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . '</a>';
+						$output = '<a href="' . esc_url( add_query_arg( 'offline-payments-recurring-payment', 'cancel' ) ) . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . '</a>';
 						break;
 	
 					case 'deactivated':

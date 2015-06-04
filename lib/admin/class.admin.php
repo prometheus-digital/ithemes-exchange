@@ -51,8 +51,11 @@ class IT_Exchange_Admin {
 		// Set parent property
 		$this->_parent = $parent;
 
-		// Admin Menu Capability
-		$this->admin_menu_capability = apply_filters( 'it_exchange_admin_menu_capability', 'manage_options' );
+		/**
+		 * Admin Menu Capability
+		 * @deprecated This is deprecated. Don't use the property. Use the method it calls
+		*/
+		$this->admin_menu_capability = $this->get_admin_menu_capability();
 
 		// Set current properties
 		$this->set_current_properties();
@@ -135,6 +138,17 @@ class IT_Exchange_Admin {
 	}
 
 	/**
+	 * Returns the admin_menu_capability
+	 *
+	 * @since 1.11.15 
+	 *
+	 * @return string
+	*/
+	function get_admin_menu_capability( $context='' ) {
+		return it_exchange_get_admin_menu_capability( $context );
+	}
+
+	/**
 	 * Adds actions to the plugins page for the iThemes Exchange plugin
 	 *
 	 * @since 0.4.15
@@ -184,7 +198,7 @@ class IT_Exchange_Admin {
 	function return_to_addons() {
 		if ( ! empty( $GLOBALS['hook_suffix'] ) && 'exchange_page_it-exchange-addons' == $GLOBALS['hook_suffix'] ) { //only show on add-on-settings pages
 			$url = add_query_arg( 'page', 'it-exchange-addons', admin_url( 'admin.php' ) );
-			echo '<div class="it-exchange-return-to-addons"><p><a href="' . $url . '">&larr; ' . __( 'Back to Add-ons', 'it-l10n-ithemes-exchange' ) . '</a></p></div>';
+			echo '<div class="it-exchange-return-to-addons"><p><a href="' . esc_url( $url ) . '">&larr; ' . __( 'Back to Add-ons', 'it-l10n-ithemes-exchange' ) . '</a></p></div>';
 		}
 	}
 
@@ -274,7 +288,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_products_user_edit_tab_link( $current_tab ) {
 		$active = ( 'products' === $current_tab || false === $current_tab ) ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'products' ); ?>#it-exchange-member-options"><?php _e( 'Products', 'it-l10n-ithemes-exchange' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo esc_url( add_query_arg( 'tab', 'products' ) ); ?>#it-exchange-member-options"><?php _e( 'Products', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -285,7 +299,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_transactions_user_edit_tab_link( $current_tab ) {
 		$active = 'transactions' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'transactions' ); ?>#it-exchange-member-options"><?php _e( 'Transactions', 'it-l10n-ithemes-exchange' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo esc_url( add_query_arg( 'tab', 'transactions' ) ); ?>#it-exchange-member-options"><?php _e( 'Transactions', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -296,7 +310,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_info_user_edit_tab_link( $current_tab ) {
 		$active = ( 'info' === $current_tab ) ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo add_query_arg( 'tab', 'info' ); ?>#it-exchange-member-options"><?php _e( 'Info', 'it-l10n-ithemes-exchange' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo esc_url( add_query_arg( 'tab', 'info' ) ); ?>#it-exchange-member-options"><?php _e( 'Info', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -337,17 +351,17 @@ class IT_Exchange_Admin {
 	*/
 	function add_exchange_admin_menu() {
 		// Add main iThemes Exchange menu item
-		add_menu_page( 'iThemes Exchange', 'Exchange', $this->admin_menu_capability, 'it-exchange', array( $this, 'print_exchange_setup_page' ) );
+		add_menu_page( 'iThemes Exchange', 'Exchange', $this->get_admin_menu_capability( 'it-exchange' ), 'it-exchange', array( $this, 'print_exchange_setup_page' ) );
 
 		// Add setup wizard page without menu item unless we're viewing it.
 		if ( 'it-exchange-setup' == $this->_current_page )
-			add_submenu_page( 'it-exchange', 'iThemes Exchange Setup Wizard', 'Setup Wizard', $this->admin_menu_capability, 'it-exchange-setup', array( $this, 'print_exchange_setup_page' ) );
+			add_submenu_page( 'it-exchange', 'iThemes Exchange Setup Wizard', 'Setup Wizard', $this->get_admin_menu_capability( 'it-exchange-setup' ), 'it-exchange-setup', array( $this, 'print_exchange_setup_page' ) );
 
 		// Add the product submenu pages depending on active product add-ons
 		$this->add_product_submenus();
 
 		// Add Transactions menu item
-		add_submenu_page( 'it-exchange', 'iThemes Exchange ' . __( 'Payments', 'it-l10n-ithemes-exchange' ), __( 'Payments', 'it-l10n-ithemes-exchange' ), $this->admin_menu_capability, 'edit.php?post_type=it_exchange_tran' );
+		add_submenu_page( 'it-exchange', 'iThemes Exchange ' . __( 'Payments', 'it-l10n-ithemes-exchange' ), __( 'Payments', 'it-l10n-ithemes-exchange' ), $this->get_admin_menu_capability( 'all-transactions' ), 'edit.php?post_type=it_exchange_tran' );
 
 		// Remove default iThemes Exchange sub-menu item created with parent menu item
 		remove_submenu_page( 'it-exchange', 'it-exchange' );
@@ -366,7 +380,7 @@ class IT_Exchange_Admin {
 		$settings_callback = array( $this, 'print_exchange_settings_page' );
 		if ( 'it-exchange-settings' == $this->_current_page && ! empty( $this->_current_tab ) )
 			$settings_callback = apply_filters( 'it_exchange_general_settings_tab_callback_' . $this->_current_tab, $settings_callback );
-		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->admin_menu_capability, 'it-exchange-settings', $settings_callback );
+		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->get_admin_menu_capability( 'it-exchange-settings' ), 'it-exchange-settings', $settings_callback );
 
 		// Add Add-ons menu item
 		$add_ons_callback = array( $this, 'print_exchange_add_ons_page' );
@@ -377,10 +391,10 @@ class IT_Exchange_Admin {
 			if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) )
 				$add_ons_callback = $addon['options']['settings-callback'];
 		}
-		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->admin_menu_capability, 'it-exchange-addons', $add_ons_callback );
+		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->get_admin_menu_capability( 'it-exchange-addons' ), 'it-exchange-addons', $add_ons_callback );
 
 		// Help menu
-		add_submenu_page( 'it-exchange', __( 'Help', 'it-l10n-ithemes-exchange' ), __( 'Help', 'it-l10n-ithemes-exchange' ), $this->admin_menu_capability, 'it-exchange-help', array( $this, 'print_help_page' ) );
+		add_submenu_page( 'it-exchange', __( 'Help', 'it-l10n-ithemes-exchange' ), __( 'Help', 'it-l10n-ithemes-exchange' ), $this->get_admin_menu_capability( 'it-exchange-help' ), 'it-exchange-help', array( $this, 'print_help_page' ) );
 	}
 
 	/**
@@ -393,19 +407,19 @@ class IT_Exchange_Admin {
 		// Check for enabled product add-ons. Don't need product pages if we don't have product add-ons enabled
 		if ( $enabled_product_types = it_exchange_get_enabled_addons( array( 'category' => array( 'product-type' ) ) ) ) {
 			$add_on_count = count( $enabled_product_types );
-			add_submenu_page( 'it-exchange', 'All Products', 'All Products', $this->admin_menu_capability, 'edit.php?post_type=it_exchange_prod' );
+			add_submenu_page( 'it-exchange', 'All Products', 'All Products', $this->get_admin_menu_capability( 'all-products' ), 'edit.php?post_type=it_exchange_prod' );
 			if ( 1 == $add_on_count ) {
 				// If we only have one product-type enabled, add standard post_type pages
 				$product = reset( $enabled_product_types );
 
 				// Allow add-ons to adjust their menu titles
 				$menu_title = apply_filters( 'it_exchange_admin_add_one_product_type_product_page_title', __( 'Add Product', 'it-l10n-ithemes-exchange' ), $product );
-				add_submenu_page( 'it-exchange', __( 'Add Product', 'it-l10n-ithemes-exchange' ), $menu_title, $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . $product['slug'] );
+				add_submenu_page( 'it-exchange', __( 'Add Product', 'it-l10n-ithemes-exchange' ), $menu_title, $this->get_admin_menu_capability( 'add-product' ), 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . $product['slug'] );
 			} else if ( $add_on_count > 1 ) {
 				// If we have more than one product type, add them each separately
 				foreach( $enabled_product_types as $type => $params ) {
 					$name = empty( $params['options']['labels']['singular_name'] ) ? 'Product' : esc_attr( $params['options']['labels']['singular_name'] );
-					add_submenu_page( 'it-exchange', 'Add ' . $name, 'Add ' . $name, $this->admin_menu_capability, 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . esc_attr( $params['slug'] ) );
+					add_submenu_page( 'it-exchange', 'Add ' . $name, 'Add ' . $name, $this->get_admin_menu_capability( 'add-product' ), 'post-new.php?post_type=it_exchange_prod&it-exchange-product-type=' . esc_attr( $params['slug'] ) );
 				}
 			}
 		}
@@ -956,7 +970,7 @@ Order: %s
 		if ( count( $product_type_add_ons ) > 1 && 'post-new.php' == $pagenow && 'it_exchange_prod' == $post_type ) {
 			$product_type_add_ons = reset( $product_type_add_ons );
 			if ( ! empty( $product_type_add_ons['slug'] ) ) {
-				wp_safe_redirect( add_query_arg( 'it-exchange-product-type', $product_type_add_ons['slug'] ) );
+				wp_safe_redirect( esc_url_raw( add_query_arg( 'it-exchange-product-type', $product_type_add_ons['slug'] ) ) );
 				die();
 			}
 		}
@@ -1108,6 +1122,7 @@ Order: %s
 
 			if ( ! empty( $simple_shipping_options['enable-flat-rate-shipping'] ) ) {
 				$flat_rate_default_cost = $_REQUEST['it_exchange_settings-simple-shipping-flat-rate-cost'];
+				$flat_rate_default_cost = it_exchange_convert_to_database_number( $flat_rate_default_cost );
 				$simple_shipping_options['flat-rate-shipping-amount'] = $flat_rate_default_cost;
 			}
 
@@ -1600,11 +1615,11 @@ Order: %s
 			return;
 
 		$current_screen = get_current_screen();
-		$store_link     =( 'disabled' == it_exchange_get_page_type( 'store' ) ) ? false : it_exchange_get_page_url( 'store' );
+		$store_link     = ( 'disabled' == it_exchange_get_page_type( 'store' ) ) ? false : it_exchange_get_page_url( 'store' );
 		if ( empty( $current_screen->id ) || 'it_exchange_prod' != $current_screen->id || empty( $store_link ) )
 			return;
 
-		?><div class="it-exchange-view-store-on-update-link hidden"><a href="<?php esc_attr_e( $store_link ) ; ?>" title="View store" ><?php _e( 'View store', 'it-l10n-ithemes-exchange' ); ?></a><?php
+		?><div class="it-exchange-view-store-on-update-link hidden"><a href="<?php echo esc_url( $store_link ) ; ?>" title="View store" ><?php _e( 'View store', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
@@ -1648,7 +1663,7 @@ Order: %s
 		// Redirect if no product-type addons are enabled
 		if ( ! $enabled_product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ) {
 			$redirect = add_query_arg( 'page', 'it-exchange-settings', get_admin_url() . 'admin.php' );;
-			wp_redirect( $redirect );
+			wp_redirect( esc_url_raw( $redirect ) );
 			die();
 		}
 
@@ -1665,7 +1680,7 @@ Order: %s
 		}
 
 		if ( $redirect ) {
-			wp_redirect( $redirect );
+			wp_redirect( esc_url_raw( $redirect ) );
 			die();
 		}
 	}

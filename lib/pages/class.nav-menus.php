@@ -77,7 +77,7 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 		<div id="taxonomy-it-exchange-pages" class="taxonomydiv">
 			<ul id="taxonomy-it-exchange-pages-tabs" class="taxonomy-tabs add-menu-item-tabs">
 				<li class="tabs">
-					<a class="nav-tab-link" data-type="tabs-panel-it-exchange-pages-all" href="<?php if ( $nav_menu_selected_id ) echo esc_url(add_query_arg( 'it-exchange-pages' . '-tab', 'all', remove_query_arg( $removed_args ) ) ); ?>#tabs-panel-it-exchange-pages-all">
+					<a class="nav-tab-link" data-type="tabs-panel-it-exchange-pages-all" href="<?php if ( $nav_menu_selected_id ) echo esc_url( add_query_arg( 'it-exchange-pages' . '-tab', 'all', remove_query_arg( $removed_args ) ) ); ?>#tabs-panel-it-exchange-pages-all">
 						<?php _e( 'View All' ); ?>
 					</a>
 				</li>
