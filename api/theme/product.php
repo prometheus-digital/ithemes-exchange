@@ -403,8 +403,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			if ( ! it_exchange( 'product', 'is-available' ) )
 				return '';
 
-			if ( (int) $max_quantity > 0 && (int) $max_quantity > $inventory )
+			if ( trim( $max_quantity ) === '' ) {
 				$max_quantity = $inventory;
+			} else if ( $inventory && (int) $max_quantity > 0 && (int) $max_quantity > $inventory ) {
+				$max_quantity = $inventory;
+			}
 		}
 
 		// Return requested format
