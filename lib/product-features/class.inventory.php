@@ -270,7 +270,10 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 
 			$count     = $data['count'];
 			$inventory = it_exchange_get_product_feature( $data['product_id'], 'inventory' );
-			$updated   = absint( $inventory - $count );
+
+			// if a user is able to bypass the front-end protections for some reason,
+			// admin should be made aware that there is negative inventory.
+			$updated   = $inventory - $count;
 			$options   = array();
 
 			$inventory_params = array(
