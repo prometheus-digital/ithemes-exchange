@@ -140,7 +140,7 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 
 		// Only accept settings for max_number (default) or 'enabled' (checkbox)
 		if ( 'inventory' == $options['setting'] ) {
-			$new_value = empty( $new_value ) && !is_numeric( $new_value ) ? '' : absint( $new_value );
+			$new_value = empty( $new_value ) && !is_numeric( $new_value ) ? '' : intval( $new_value );
 			update_post_meta( $product_id, '_it-exchange-product-inventory', $new_value );
 			return true;
 		} else if ( 'enabled' == $options['setting'] ) {
