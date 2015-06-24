@@ -1622,3 +1622,22 @@ class Walker_ProductCategoryDropdown extends Walker {
  * FOR PRIMETIME YET SO THEY LIVE HERE FOR NOW.
  * USE WITH CAUTION
  *************************************/
+
+function it_exchange_add_on_before_disable_payment_gateways( $add_on ) {
+	if ( empty( $_GET['remove-gateway'] ) || 'yes' !== $_GET['remove-gateway'] ) {
+		switch( $add_on ) {
+			case 'paypal-standard':
+			case 'paypal-standard-secure':
+				$title = __( 'Payment Gateway Warning', 'LION' );
+				$yes = '<a href="' . esc_url( add_query_arg( 'remove-gateway', 'yes' ) ) . '">' . __( 'Yes', 'LION' ) . '</a>';
+				$no  = '<a href="javascript:history.back()">' . __( 'No', 'LION' ) . '</a>';
+				$message = '<p>' . sprintf( __( 'Deactivating a payment gateway can cause customers to lose access to any membership products they have purchased using this payment gateway. Are you sure you want to proceed? %s | %s', 'LION' ), $yes, $no ) . '</p>';
+				$args = array(
+					'response'  => 200,
+					'back_link' => false,
+				);
+				wp_die( $message, $title, $args );
+		}
+	}
+}
+add_action( 'it_exchange_add_on_before_disable', 'it_exchange_add_on_before_disable_payment_gateways' );
