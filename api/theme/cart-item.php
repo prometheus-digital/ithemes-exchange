@@ -142,43 +142,50 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 			'class'  => 'product-cart-quantity',
 			'label'  => '',
 		);
+		
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		$var_key = it_exchange_get_field_name( 'product_purchase_quantity' );
 		$var_value = it_exchange_get_cart_product_quantity( $this->_cart_item );
 		$max_quantity = it_exchange_get_product_feature( $this->_cart_item['product_id'], 'purchase-quantity' );
-
-		if ( it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'inventory' ) ) {
-
-			$inventory = (int)it_exchange_get_product_feature( $this->_cart_item['product_id'], 'inventory' );
-
-			if ( $inventory && (int) $max_quantity > 0 && (int) $max_quantity > $inventory )
-				$max_quantity = $inventory;
-
-		}
-
-		if ( (int) $max_quantity > 0 && $var_value > $max_quantity )
-			$var_value = $max_quantity;
-
-		switch ( $options['format'] ) {
-			case 'var_key' :
-				$output = $var_key;
+		
+		if ( apply_filters( 'it_exchange_multi_item_product_allowed', true, $this->_cart_item['product_id'] ) ) {
+	
+			if ( it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'inventory' ) ) {
+	
+				$inventory = (int)it_exchange_get_product_feature( $this->_cart_item['product_id'], 'inventory' );
+	
+				if ( $inventory && (int) $max_quantity > 0 && (int) $max_quantity > $inventory )
+					$max_quantity = $inventory;
+	
+			}
+	
+			if ( (int) $max_quantity > 0 && $var_value > $max_quantity )
+				$var_value = $max_quantity;
+	
+			switch ( $options['format'] ) {
+				case 'var_key' :
+					$output = $var_key;
+					break;
+				case 'var_value' :
+					$output = $var_value;
+					break;
+				case 'text-field' :
+				default :
+					$output  = $options['before'];
+					if ( it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'purchase-quantity' ) ) {
+						$max = ! empty( $max_quantity ) ? 'max="' . $max_quantity . '"' : '';
+						$output .= '<input type="number" min="1" ' . $max . ' data-cart-product-id="' . esc_attr( $this->_cart_item['product_cart_id'] ) . '" name="' . esc_attr( $var_key ) . '[' . esc_attr( $this->_cart_item['product_cart_id'] ) . ']" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />';
+					} else {
+						$output .= '1';
+						$output .= '<input type="hidden" name="' . esc_attr( $var_key ) . '[' . esc_attr( $this->_cart_item['product_cart_id'] ) . ']" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />';
+					}
+					$output .= $options['after'];
+					break;
 				break;
-			case 'var_value' :
-				$output = $var_value;
-				break;
-			case 'text-field' :
-			default :
-				$output  = $options['before'];
-				if ( it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'purchase-quantity' ) ) {
-					$max = ! empty( $max_quantity ) ? 'max="' . $max_quantity . '"' : '';
-					$output .= '<input type="number" min="1" ' . $max . ' data-cart-product-id="' . esc_attr( $this->_cart_item['product_cart_id'] ) . '" name="' . esc_attr( $var_key ) . '[' . esc_attr( $this->_cart_item['product_cart_id'] ) . ']" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />';
-				} else {
-					$output .= '1';
-					$output .= '<input type="hidden" name="' . esc_attr( $var_key ) . '[' . esc_attr( $this->_cart_item['product_cart_id'] ) . ']" value="' . esc_attr( $var_value ) . '" class="' . esc_attr( $options['class'] ) . '" />';
-				}
-				$output .= $options['after'];
-				break;
-			break;
+			}
+			
+		} else {
+			$output = $var_value;
 		}
 
 		return $output;
