@@ -2,7 +2,7 @@
 
 /*
 Written by Chris Jean for iThemes.com
-Version 2.6.0
+Version 2.7.0
 
 Version History
 	2.0.0 - 2011-02-22 - Chris Jean
@@ -31,6 +31,8 @@ Version History
 		Rewrote $file calculation in start_form() in order to avoid strict standards warning in PHP 5.5.0.
 	2.6.0 - 2013-11-25 - Chris Jean
 		Added the option for drop downs to have dividers by using __optgroup_\d+ indexes in the options array.
+	2.7.0 - 2015-04-20 - Chris Jean
+		Updated get_option(), set_option(), and _get_simple_input() to handle input groups properly.
 
 Notes:
 	Need to fix $this->_var support or handle used_inputs better
@@ -257,13 +259,31 @@ if ( ! class_exists( 'ITForm' ) ) {
 		}
 		
 		function get_option( $name ) {
-			if ( isset( $this->_options[$name] ) )
-				return $this->_options[$name];
-			return null;
+			if ( ! empty( $this->_input_group ) ) {
+				if ( false === strpos( $name, '[' ) ) {
+					$name = "[$name]";
+				} else {
+					$name = preg_replace( '/^([^\[]+)\[/', '[$1][', $name );
+				}
+				
+				$name = "{$this->_input_group}$name";
+			}
+			
+			return ITUtility::get_array_value( $this->_options, $name );
 		}
 		
 		function set_option( $name, $value ) {
-			$this->_options[$name] = $value;
+			if ( ! empty( $this->_input_group ) ) {
+				if ( false === strpos( $name, '[' ) ) {
+					$name = "[$name]";
+				} else {
+					$name = preg_replace( '/^([^\[]+)\[/', '[$1][', $name );
+				}
+				
+				$name = "{$this->_input_group}$name";
+			}
+			
+			ITUtility::add_array_value( $this->_options, $name, $value );
 		}
 		
 		function set_options( $options = array() ) {
@@ -641,6 +661,8 @@ if ( ! class_exists( 'ITForm' ) ) {
 				$clean_var = trim( preg_replace( '/[^a-z0-9_]+/i', '-', $defaults['name'] ), '-' );
 			}
 			
+			$val = $this->get_option( $var );
+			
 			if ( isset( $this->_args['widget_instance'] ) && @method_exists( $this->_args['widget_instance'], 'get_field_id' ) )
 				$defaults['id'] = $this->_args['widget_instance']->get_field_id( $var );
 			else
@@ -653,13 +675,13 @@ if ( ! class_exists( 'ITForm' ) ) {
 			
 			$options = ITUtility::merge_defaults( $options, $defaults );
 			
-			if ( ( false === $override_value ) && isset( $this->_options[$var] ) ) {
+			if ( ( false === $override_value ) && ! is_null( $val ) ) {
 				if ( in_array( $options['type'], array( 'checkbox', 'radio' ) ) ) {
-					if ( ( is_array( $this->_options[$var] ) && in_array( $options['value'], $this->_options[$var] ) ) || ( ! is_array( $this->_options[$var] ) && ( (string) $this->_options[$var] === (string) $options['value'] ) ) )
+					if ( ( is_array( $val ) && in_array( $options['value'], $val ) ) || ( ! is_array( $val ) && ( (string) $val === (string) $options['value'] ) ) )
 						$options['checked'] = 'checked';
 				}
 				else if ( 'dropdown' !== $options['type'] )
-					$options['value'] = $this->_options[$var];
+					$options['value'] = $val;
 			}
 			
 			if ( ( ( ! empty( $this->_args['prefix'] ) && ( preg_match( "|^{$this->_args['prefix']}-|", $options['name'] ) ) ) || ( empty( $this->_args['prefix'] ) ) ) ) {
@@ -671,14 +693,14 @@ if ( ! class_exists( 'ITForm' ) ) {
 			$attributes = '';
 			
 			if ( false !== $options ) {
-				foreach ( (array) $options as $name => $val ) {
-					if ( ! is_array( $val ) && ( ! isset( $scrublist[$options['type']][$name] ) || ( true !== $scrublist[$options['type']][$name] ) ) ) {
+				foreach ( (array) $options as $name => $content ) {
+					if ( ! is_array( $content ) && ( ! isset( $scrublist[$options['type']][$name] ) || ( true !== $scrublist[$options['type']][$name] ) ) ) {
 						if ( 'value' == $name )
-							$val = ITForm::esc_value_attr( $val );
+							$content = ITForm::esc_value_attr( $content );
 						else if ( ! in_array( $options['type'], array( 'submit', 'button' ) ) )
-							$val = esc_attr( $val );
+							$content = esc_attr( $content );
 						
-						$attributes .= "$name=\"$val\" ";
+						$attributes .= "$name=\"$content\" ";
 					}
 				}
 			}
@@ -695,26 +717,26 @@ if ( ! class_exists( 'ITForm' ) ) {
 				$retval = "<select $attributes>\n";
 				
 				if ( isset( $options['value'] ) && is_array( $options['value'] ) ) {
-					foreach ( (array) $options['value'] as $val => $name ) {
+					foreach ( (array) $options['value'] as $content => $name ) {
 						if ( is_array( $name ) ) {
 							$options = $name;
 							
-							if ( preg_match( '/^__optgroup_\d+$/', $val ) ) {
+							if ( preg_match( '/^__optgroup_\d+$/', $content ) ) {
 								$retval .= "<optgroup class='it-classes-optgroup-separator'>\n";
 							} else {
-								$retval .= "<optgroup label='" . esc_attr( $val ) . "'>\n";
+								$retval .= "<optgroup label='" . esc_attr( $content ) . "'>\n";
 							}
 							
-							foreach ( (array) $options as $val => $name ) {
-								$selected = ( isset( $this->_options[$var] ) && ( (string) $this->_options[$var] === (string) $val ) ) ? ' selected="selected"' : '';
-								$retval .= "<option value=\"" . ITForm::esc_value_attr( $val ) . "\"$selected>$name</option>\n";
+							foreach ( (array) $options as $content => $name ) {
+								$selected = ( ! is_null( $content ) && ( (string) $content === (string) $content ) ) ? ' selected="selected"' : '';
+								$retval .= "<option value=\"" . ITForm::esc_value_attr( $content ) . "\"$selected>$name</option>\n";
 							}
 							
 							$retval .= "</optgroup>\n";
 						}
 						else {
-							$selected = ( isset( $this->_options[$var] ) && ( (string) $this->_options[$var] === (string) $val ) ) ? ' selected="selected"' : '';
-							$retval .= "<option value=\"" . ITForm::esc_value_attr( $val ) . "\"$selected>$name</option>\n";
+							$selected = ( ! is_null( $val ) && ( (string) $val === (string) $content ) ) ? ' selected="selected"' : '';
+							$retval .= "<option value=\"" . ITForm::esc_value_attr( $content ) . "\"$selected>$name</option>\n";
 						}
 					}
 				}

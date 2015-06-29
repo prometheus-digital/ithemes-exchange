@@ -3,7 +3,7 @@
 /*
 Utility functions for manipulating images
 Written by Chris Jean for iThemes.com
-Version 1.0.4
+Version 1.0.5
 
 Version History
 	1.0.0 - 2011-10-05 - Chris Jean
@@ -17,6 +17,9 @@ Version History
 		Removed unnecessary argument to the save_ico function call.
 	1.0.4 - 2013-06-25 - Chris Jean
 		Changed function declarations to "public static".
+	1.0.5 - 2015-06-26 - Chris Jean
+		Security Fix: Forced width and height arguments to integers and sanitized command line arguments prior to
+			passing them to system().
 */
 
 
@@ -83,8 +86,13 @@ if ( !class_exists( 'ITImageUtility' ) ) {
 			
 			list( $orig_w, $orig_h, $orig_type ) = getimagesize( $file );
 			$dims = ITImageUtility::_image_resize_dimensions( $orig_w, $orig_h, $max_w, $max_h, $crop );
-			if ( ! $dims )
+			
+			if ( is_wp_error( $dims ) ) {
+				return $dims;
+			} else if ( ! $dims ) {
 				return new WP_Error( 'error_resizing_image', "Could not resize image" );
+			}
+			
 			list( $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h ) = $dims;
 			
 			
@@ -118,15 +126,24 @@ if ( !class_exists( 'ITImageUtility' ) ) {
 			if ( ITImageUtility::is_animated_gif( $file ) ) {
 				$coalescefilename = "${dir}/${name}-coalesced-file.${ext}";
 				
-				if ( ! file_exists( $coalescefilename ) )
-					system( "convert $file -coalesce $coalescefilename" );
+				$safe_file_name = escapeshellarg( $file );
+				$safe_coalescefilename = escapeshellarg( $coalescefilename );
+				
+				if ( ! file_exists( $coalescefilename ) ) {
+					system( "convert $safe_file_name -coalesce $safe_coalescefilename" );
+				}
 				
 				if ( file_exists( $coalescefilename ) ) {
-					system( "convert -crop ${src_w}x${src_h}+${src_x}+${src_y}! $coalescefilename $destfilename" );
+					$safe_crop_argument = escapeshellarg( "{$src_w}x{$src_h}+{$src_x}+{$src_y}!" );
+					$safe_destfilename = escapeshellarg( $destfilename );
+					
+					system( "convert -crop $safe_crop_argument $safe_coalescefilename $safe_destfilename" );
 					
 					if ( file_exists( $destfilename ) ) {
-						system( "mogrify -resize ${dst_w}x${dst_h} $destfilename" );
-						system( "convert -layers optimize $destfilename" );
+						$safe_resize_argument = escapeshellarg( "${dst_w}x${dst_h}" );
+						
+						system( "mogrify -resize $safe_resize_argument $safe_destfilename" );
+						system( "convert -layers optimize $safe_destfilename" );
 						
 						$animated = true;
 					}
@@ -214,6 +231,13 @@ if ( !class_exists( 'ITImageUtility' ) ) {
 			else
 				list( $new_w, $new_h ) = wp_constrain_dimensions( $orig_w, $orig_h, $dest_w, $dest_h );
 			
+			
+			$s_x = intval( $s_x );
+			$s_y = intval( $s_y );
+			$new_w = intval( $new_w );
+			$new_h = intval( $new_h );
+			$crop_w = intval( $crop_w );
+			$crop_h = intval( $crop_h );
 			
 			return array( 0, 0, $s_x, $s_y, $new_w, $new_h, $crop_w, $crop_h );
 		}
