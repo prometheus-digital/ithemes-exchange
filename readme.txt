@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.3
-Stable tag: 1.14.0
+Stable tag: 1.15.0
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,13 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.15.0 =
+* Updated lib/classes to 2.4.3
+* Remove quanity input box if multi-item product is not allowed
+* Adding secure/httponly flags to setcookie, taken from original DB Sessions on github
+* Adding deactivation warning to paypal addons
+* Fix illegal offset error in cart API when admin deletes product that a customer has in the cart
+
 = 1.14. =
 * Adding 'email' option to it_exchange_email email notification shortcode
 
