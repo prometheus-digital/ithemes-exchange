@@ -473,16 +473,16 @@ if ( ! class_exists( 'ITPostType' ) ) {
 			$labels = array(
 				'name'               => $this->_name_plural,
 				'singular_name'      => $this->_name,
-				'add_new'            => _x( 'Add New', 'post', 'it-l10n-ithemes-exchange' ),
-				'add_new_item'       => sprintf( _x( 'Add New %s', 'post', 'it-l10n-ithemes-exchange' ), $this->_name ),
-				'edit_item'          => sprintf( _x( 'Edit %s', 'post', 'it-l10n-ithemes-exchange' ), $this->_name ),
-				'new_item'           => sprintf( _x( 'New %s', 'post', 'it-l10n-ithemes-exchange' ), $this->_name ),
-				'view_item'          => sprintf( _x( 'View %s', 'post', 'it-l10n-ithemes-exchange' ), $this->_name ),
-				'search_items'       => sprintf( _x( 'Search %s', 'post', 'it-l10n-ithemes-exchange' ), $this->_name_plural ),
-				'not_found'          => sprintf( _x( 'No %s found', 'post', 'it-l10n-ithemes-exchange' ), strtolower( $this->_name ) ),
-				'not_found_in_trash' => sprintf( _x( 'No %s found in trash', 'post', 'it-l10n-ithemes-exchange' ), strtolower( $this->_name_plural ) ),
-				'parent_item_colon'  => sprintf( _x( 'Parent %s:', 'post', 'it-l10n-ithemes-exchange' ), $this->_name ),
-				'all_items'          => sprintf( _x( 'All %s', 'post', 'it-l10n-ithemes-exchange' ), $this->_name_plural ),
+				'add_new'            => _x( 'Add New', 'post', 'LION' ),
+				'add_new_item'       => sprintf( _x( 'Add New %s', 'post', 'LION' ), $this->_name ),
+				'edit_item'          => sprintf( _x( 'Edit %s', 'post', 'LION' ), $this->_name ),
+				'new_item'           => sprintf( _x( 'New %s', 'post', 'LION' ), $this->_name ),
+				'view_item'          => sprintf( _x( 'View %s', 'post', 'LION' ), $this->_name ),
+				'search_items'       => sprintf( _x( 'Search %s', 'post', 'LION' ), $this->_name_plural ),
+				'not_found'          => sprintf( _x( 'No %s found', 'post', 'LION' ), strtolower( $this->_name ) ),
+				'not_found_in_trash' => sprintf( _x( 'No %s found in trash', 'post', 'LION' ), strtolower( $this->_name_plural ) ),
+				'parent_item_colon'  => sprintf( _x( 'Parent %s:', 'post', 'LION' ), $this->_name ),
+				'all_items'          => sprintf( _x( 'All %s', 'post', 'LION' ), $this->_name_plural ),
 			);
 			
 			return $labels;

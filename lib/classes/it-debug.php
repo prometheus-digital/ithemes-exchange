@@ -2,7 +2,7 @@
 
 /*
 Written by Chris Jean for iThemes.com
-Version 1.1.0
+Version 1.1.1
 
 Version History
 	1.0.0 - 2012-06-15 - Chris Jean
@@ -17,6 +17,8 @@ Version History
 		Added "boolean" descriptor in print_r() output.
 		Fixed array indexes with HTML special character from rendering poorly in print_r() output.
 		Fixed invalid recursive argument passing to print_r() in get_backtrace().
+	1.1.1 - 2015-04-02 - Chris Jean
+		Better handling of non-ASCII, non-UTF8 string output.
 */
 
 
@@ -231,10 +233,14 @@ if ( ! class_exists( 'ITDebug' ) ) {
 			$pad = ITUtility::pad( $depth, '    ' );
 			
 			if ( is_string( $data ) ) {
-				if ( '' === $data )
+				if ( empty( $data ) ) {
 					return "<strong>[empty string]</strong>";
-				else
-					return htmlspecialchars( $data );
+				} else {
+					if ( ITUtility::is_callable_function( 'mb_detect_encoding' ) && ( 'UTF-8' !== mb_detect_encoding( $data, 'UTF-8', true ) ) && ITUtility::is_callable_function( 'utf8_encode' ) ) {
+						$data = utf8_encode( $data );
+					}
+					return htmlspecialchars( $data, ENT_COMPAT | ENT_HTML401, 'UTF-8', false );
+				}
 			}
 			
 			if ( is_bool( $data ) )

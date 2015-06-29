@@ -42,9 +42,9 @@ if ( ! class_exists( 'ITDialog' ) ) {
 			wp_enqueue_script( 'it-dialog-outside-dialog-script', "$plugin_url/js/it-dialog-outside-dialog.js", array( 'jquery' ), false, true );
 			
 			$vars = array(
-				'no_iframes_message' => __( 'This feature requires inline frames. You have iframes disabled or your browser does not support them.', 'it-l10n-ithemes-exchange' ),
+				'no_iframes_message' => __( 'This feature requires inline frames. You have iframes disabled or your browser does not support them.', 'LION' ),
 				'loading_image'      => ITDialog::get_loading_image_url(),
-				'close_message'      => __( 'Close', 'it-l10n-ithemes-exchange' ),
+				'close_message'      => __( 'Close', 'LION' ),
 				'close_image'        => "$plugin_url/images/it-dialog-close.png",
 			);
 			

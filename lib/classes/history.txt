@@ -353,3 +353,8 @@
 	Bug Fix: Removed Javascript notices created by ITDialog thickboxes.
 2.4.2 - 2014-01-23 - Chris Jean
 	Bug Fix: Prior versions would fix non-https URL's for local content when the site was accessed via SSL so that the URL would become an https URL; however, it would not reverse the process and change https URL's to http when accessed without SSL. This caused problems on sites that use self-signed certificates and would sometimes have local content URL's that referred to the https location. This update makes the https URL's convert to http when the site is accessed via SSL.
+2.4.3 - 2015-06-29 - Chris Jean
+	Security Fix: Fixed a potential Remote Code Execution (RCE) security hole caused by unsanitized inputs for resizing certain kinds of images and generating zip files. Exploiting this flaw would require third-party code or a privileged WordPress user. Thanks to Ryan Satterfield (http://planetzuda.com) for helping to identify this issue.
+	Bug Fix: Fixed index.php files being added to the root of zip files created with ITZip.
+	Enhancement: Improved the form-handling API to handle complex forms with nested groups.
+	Enhancement: Better handling of non-ASCII, non-UTF8 characters in debug output.
