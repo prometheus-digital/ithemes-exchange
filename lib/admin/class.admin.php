@@ -1131,7 +1131,7 @@ Order: %s
 
 		// Transaction Methods
 		$tx_error_msgs = array();
-		$addons = it_exchange_get_addons( array( 'category' => 'transaction-methods', 'show_required' => false ) );
+		$addons = it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods', 'show_required' => false ) );
 		foreach( $_REQUEST['it-exchange-transaction-methods'] as $add_on ) {
 			it_exchange_enable_addon( $add_on );
 			unset( $addons[$add_on] );
