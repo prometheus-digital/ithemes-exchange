@@ -2,7 +2,7 @@
 
 /*
 Written by Chris Jean for iThemes.com
-Version 2.7.0
+Version 2.7.1
 
 Version History
 	2.0.0 - 2011-02-22 - Chris Jean
@@ -33,6 +33,8 @@ Version History
 		Added the option for drop downs to have dividers by using __optgroup_\d+ indexes in the options array.
 	2.7.0 - 2015-04-20 - Chris Jean
 		Updated get_option(), set_option(), and _get_simple_input() to handle input groups properly.
+	2.7.1 - 2015-07-10 - Chris Jean
+		Fixed bug that prevents dropdowns with nested options from defaulting to the current value properly.
 
 Notes:
 	Need to fix $this->_var support or handle used_inputs better
@@ -719,17 +721,15 @@ if ( ! class_exists( 'ITForm' ) ) {
 				if ( isset( $options['value'] ) && is_array( $options['value'] ) ) {
 					foreach ( (array) $options['value'] as $content => $name ) {
 						if ( is_array( $name ) ) {
-							$options = $name;
-							
 							if ( preg_match( '/^__optgroup_\d+$/', $content ) ) {
 								$retval .= "<optgroup class='it-classes-optgroup-separator'>\n";
 							} else {
 								$retval .= "<optgroup label='" . esc_attr( $content ) . "'>\n";
 							}
 							
-							foreach ( (array) $options as $content => $name ) {
-								$selected = ( ! is_null( $content ) && ( (string) $content === (string) $content ) ) ? ' selected="selected"' : '';
-								$retval .= "<option value=\"" . ITForm::esc_value_attr( $content ) . "\"$selected>$name</option>\n";
+							foreach ( (array) $name as $content => $sub_name ) {
+								$selected = ( ! is_null( $val ) && ( (string) $val === (string) $content ) ) ? ' selected="selected"' : '';
+								$retval .= "<option value=\"" . ITForm::esc_value_attr( $content ) . "\"$selected>$sub_name</option>\n";
 							}
 							
 							$retval .= "</optgroup>\n";
