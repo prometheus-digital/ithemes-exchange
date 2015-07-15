@@ -1496,7 +1496,7 @@ Order: %s
 			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', $deps );
 			wp_localize_script( 'it-exchange-add-edit-product', 'addEditProductL10n', array(
 					'mediaManagerTitle'     => __( 'Select Images', 'it-l10n-ithemes-exchange' ),
-					'largerThan150'         => __( 'You must upload an image larger than 150x150.', 'it-l10n-ithemes-exchange' ),
+					'largerThan150'         => __( 'Your photo must have a thumbnail created for it that is larger than 150x150px.', 'it-l10n-ithemes-exchange' ),
 					'editMediaManagerTitle' => __( 'Edit Image', 'it-l10n-ithemes-exchange' ),
 					'uploadSource'          => __( 'Upload Source', 'it-l10n-ithemes-exchange' ),
 					'insert'                => __( 'Insert', 'it-l10n-ithemes-exchange' ),
