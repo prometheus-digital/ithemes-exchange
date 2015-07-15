@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.3
-Stable tag: 1.15.1
+Stable tag: 1.16.0
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,11 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.16.0 =
+* Updated JS Error to say 'Your photo must have a thumbnail created for it that is larger than 150x150px'
+* Fixing typo with 'site-name' text
+* Updated lib/classes to 2.4.4
+
 = 1.15.1 =
 * Fix bug caused by disabled transaction methods on the quick setup wizard
 
