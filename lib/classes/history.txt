@@ -358,3 +358,5 @@
 	Bug Fix: Fixed index.php files being added to the root of zip files created with ITZip.
 	Enhancement: Improved the form-handling API to handle complex forms with nested groups.
 	Enhancement: Better handling of non-ASCII, non-UTF8 characters in debug output.
+2.4.4 - 2015-07-14 - Chris Jean
+	Bug Fix: Dropdowns with multiple levels of options now default to the current value as expected.
