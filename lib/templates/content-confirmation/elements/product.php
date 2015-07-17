@@ -36,7 +36,7 @@
 				<div class="it-exchange-transaction-product-downloads it-exchange-clearfix">
 					<h4><?php _e( 'Downloads', 'it-l10n-ithemes-exchange' ); ?></h4>
 					<?php if ( ! it_exchange( 'transaction', 'get-cleared-for-delivery' ) ) : ?>
-						<p><?php _e( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an appoved status, you will receive a followup email with your download links.', 'it-l10n-ithemes-exchange' ); ?></p>
+						<p><?php _e( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an approved status, you will receive a followup email with your download links.', 'it-l10n-ithemes-exchange' ); ?></p>
 					<?php endif; ?>
 					<ul class="it-exchange-transaction-product-downloads-list">
 						<?php while( it_exchange( 'transaction', 'product-downloads' ) ) : ?>
