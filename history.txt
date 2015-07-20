@@ -1128,3 +1128,6 @@
 	Updated JS Error to say 'Your photo must have a thumbnail created for it that is larger than 150x150px'
 	Fixing typo with 'site-name' text
 	Updated lib/classes to 2.4.4
+1.17.0 - Glenn Ansley, Lew Ayotte, Elise Alley
+	Fixing typos
+	Don't lose State focus when Country changes in billing/shipping requirement
