@@ -134,6 +134,7 @@ function it_exchange_addon_add_taxes_simple_to_template_totals_loops( $elements 
 }
 add_filter( 'it_exchange_get_content_cart_totals_elements', 'it_exchange_addon_add_taxes_simple_to_template_totals_loops' );
 add_filter( 'it_exchange_get_content_checkout_totals_elements', 'it_exchange_addon_add_taxes_simple_to_template_totals_loops' );
+add_filter( 'it_exchange_get_content_confirmation_transaction_summary_elements', 'it_exchange_addon_add_taxes_simple_to_template_totals_loops' );
 
 /**
  * Add Simple Taxes to the super-widget-checkout totals loop
@@ -177,6 +178,7 @@ function it_exchange_addon_taxes_simple_register_templates( $template_paths, $te
 	$templates = array(
 		'content-cart/elements/totals-taxes-simple.php',
 		'content-checkout/elements/totals-taxes-simple.php',
+		'content-confirmation/elements/totals-taxes-simple.php',
 		'super-widget-checkout/loops/taxes-simple.php',
 	);
 	foreach( $templates as $template ) {
