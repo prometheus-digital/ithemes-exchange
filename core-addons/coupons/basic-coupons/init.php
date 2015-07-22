@@ -254,7 +254,7 @@ function it_exchange_basic_coupon_frequency_limit_met_by_customer( $coupon_id, $
 	$customer_id = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
 	$coupon      = it_exchange_get_coupon( $coupon_id );
 
-	if ( empty( $coupon->limit_frequency ) || empty( $customer_id ) )
+	if ( empty( $coupon->limit_frequency ) )
 		return false;
 
 	$current_frequencies = it_exchange_basic_coupons_get_customer_coupon_frequency( $coupon_id, $customer_id );
@@ -305,9 +305,16 @@ function it_exchange_basic_coupon_frequency_limit_met_by_customer( $coupon_id, $
 */
 function it_exchange_basic_coupons_get_customer_coupon_frequency( $coupon_id=false, $customer_id=false ) {
 	$customer_id = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
-
-	$coupon_history = get_user_meta( $customer_id, '_it_exchagne_basic_coupon_history', true );
-
+	$coupon_history = array();
+	
+	if ( empty( $customer_id ) ) {
+		if ( function_exists( 'it_exchange_doing_guest_checkout' ) && it_exchange_doing_guest_checkout() ) {
+			$customer = it_exchange_get_current_customer();
+			$coupon_history = get_option( '_it_exchange_basic_coupon_history_' . $customer->data->email );
+		}
+	} else {
+		$coupon_history = get_user_meta( $customer_id, '_it_exchagne_basic_coupon_history', true );
+	}
 
 	if ( empty( $coupon_id ) )
 		$validated_history = $coupon_history;
@@ -335,7 +342,11 @@ function it_exchange_basic_coupons_bump_customer_coupon_frequency( $coupon_id, $
 	else
 		$coupon_history[$coupon_id][] = date_i18n('U');
 
-	update_user_meta( $customer_id, '_it_exchagne_basic_coupon_history', $coupon_history );
+	if ( function_exists( 'it_exchange_doing_guest_checkout' ) && it_exchange_doing_guest_checkout() ) {
+		update_option( '_it_exchange_basic_coupon_history_' . $customer_id, $coupon_history );
+	} else {
+		update_user_meta( $customer_id, '_it_exchagne_basic_coupon_history', $coupon_history );
+	}
 }
 
 /**
@@ -515,12 +526,13 @@ add_action( 'it_exchange_add_transaction_success', 'it_exchange_basic_coupons_mo
  * @return void
 */
 function it_exchange_basic_coupons_bump_for_customer_on_checkout( $transaction_id ) {
+
 	if ( ! $transaction = it_exchange_get_transaction( $transaction_id ) )
 		return false;
 
 	if ( ! $coupons = it_exchange_get_transaction_coupons( $transaction ) )
 		return;
-
+		
 	// Do we have a cart coupon?
 	if ( isset( $coupons['cart'] ) && ! empty( $coupons['cart'] ) ) {
 		$coupon = reset( $coupons['cart'] );
