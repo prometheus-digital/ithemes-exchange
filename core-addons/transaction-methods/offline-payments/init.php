@@ -621,3 +621,25 @@ function it_exchange_process_offline_payments_recurring_payment_cancel() {
 	}
 }
 add_action( 'admin_init', 'it_exchange_process_offline_payments_recurring_payment_cancel' );
+
+function it_exchange_offline_payments_email_template_tags_list() {
+	echo '<li>offline_payments_message - ' . __( 'Adds the instructions after purchase message from the Offline Payments gateway settings.', 'it-l10n-ithemes-exchange' ) . '</li>';
+}
+add_action( 'it_exchange_email_template_tags_list', 'it_exchange_offline_payments_email_template_tags_list' );
+
+function it_exchange_offline_payments_email_notification_shortcode_functions( $shortcode_functions, $data ) {
+	$shortcode_functions['offline_payments_message'] = 'it_exchange_offline_payments_email_notification_message';
+	return $shortcode_functions;
+}
+add_filter( 'it_exchange_email_notification_shortcode_functions', 'it_exchange_offline_payments_email_notification_shortcode_functions', 10, 2 );
+
+function it_exchange_offline_payments_email_notification_message( $email_obj, $options, $atts ) {
+	$instructions = '';
+	if ( 'offline-payments' === it_exchange_get_transaction_method( $email_obj->transaction_id ) ) {
+		$options = it_exchange_get_option( 'addon_offline_payments' );
+		if ( ! empty( $options['offline-payments-instructions'] ) ) {
+			$instructions = $options['offline-payments-instructions'];
+		}
+	}
+	return $instructions;
+}
