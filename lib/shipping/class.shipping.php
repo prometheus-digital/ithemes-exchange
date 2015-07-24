@@ -66,6 +66,8 @@ class IT_Exchange_Shipping {
 		add_action( 'it_exchange_update_cart_product', array( $this, 'clear_cart_shipping_data' ) );
 		add_action( 'it_exchange_delete_cart_product', array( $this, 'clear_cart_shipping_data' ) );
 		add_action( 'it_exchange_shipping_address_updated', array( $this, 'clear_cart_shipping_method' ) );
+		
+		add_action( 'it_exchange_replace_order_table_tag_before_total_row', array( $this, 'add_shipping_to_order_table_tag_before_total_row' ), 10, 2 );
 
 	}
 
@@ -706,6 +708,25 @@ class IT_Exchange_Shipping {
 	*/
 	function clear_cart_shipping_method() {
 		it_exchange_remove_cart_data( 'shipping-method' );
+	}
+	
+	/**
+	 * 
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return void
+	*/
+	function add_shipping_to_order_table_tag_before_total_row( $email_obj, $options ) {
+		$shipping = it_exchange_get_transaction_shipping_total( $email_obj->transaction_id, true );
+		if ( !empty( $shipping ) ) {
+		?>
+		<tr>
+			<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Shipping', 'LION' ); ?></td>
+			<td style="padding: 10px;border:1px solid #DDD;"><?php echo $shipping; ?></td>
+		</tr>
+		<?php
+		}
 	}
 
 }
