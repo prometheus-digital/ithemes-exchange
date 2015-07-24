@@ -42,9 +42,16 @@ function it_exchange_addon_get_simple_taxes_for_cart( $format_price=true ) {
  * @since CHANGEME
  *
 */
-function it_exchange_addon_get_simple_taxes_for_transaction( $format_price=true ) {
+function it_exchange_addon_get_simple_taxes_for_transaction( $transaction=false, $format_price=true ) {
     $taxes = 0;
-    if ( !empty( $GLOBALS['it_exchange']['transaction'] ) ) {
+    if ( !empty( $transaction ) ) {
+	    $transaction = it_exchange_get_transaction( $transaction );
+        if ( !empty( $transaction->cart_details->taxes_raw ) ) {
+        	$taxes = $transaction->cart_details->taxes_raw;
+        } else {
+	        $taxes = 0;
+        }
+    } else if ( !empty( $GLOBALS['it_exchange']['transaction'] ) ) {
         $transaction = $GLOBALS['it_exchange']['transaction'];
         if ( !empty( $transaction->cart_details->taxes_raw ) ) {
         	$taxes = $transaction->cart_details->taxes_raw;

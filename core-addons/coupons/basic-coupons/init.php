@@ -672,3 +672,13 @@ function it_exchange_basic_coupons_get_discount_method( $method, $options=array(
 	return empty( $coupon->amount_type ) ? false : $coupon->amount_type;
 }
 add_filter( 'it_exchange_get_coupon_discount_method', 'it_exchange_basic_coupons_get_discount_method', 10, 2 );
+
+function it_exchange_addon_basic_coupons_replace_order_table_tag_before_total_row( $email_obj, $options ) {
+	?>
+	<tr>
+		<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Savings', 'it-l10n-ithemes-exchange' ); ?></td>
+		<td style="padding: 10px;border:1px solid #DDD;"><?php echo it_exchange_get_transaction_coupons_total_discount( $email_obj->transaction_id ); ?></td>
+	</tr>
+	<?php
+}
+add_action( 'it_exchange_replace_order_table_tag_before_total_row', 'it_exchange_addon_basic_coupons_replace_order_table_tag_before_total_row', 10, 2 );
