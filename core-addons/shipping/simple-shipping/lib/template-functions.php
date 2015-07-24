@@ -17,7 +17,7 @@ function it_exchange_addon_simple_shipping_replace_order_table_tag_before_total_
 	?>
 	<tr>
 		<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Shipping', 'it-l10n-ithemes-exchange' ); ?></td>
-		<td style="padding: 10px;border:1px solid #DDD;"><?php echo it_exchange_get_transaction_shipping_total( $email_obj->transaction_id ); ?></td>
+		<td style="padding: 10px;border:1px solid #DDD;"><?php echo it_exchange_get_transaction_shipping_total( $email_obj->transaction_id, true ); ?></td>
 	</tr>
 	<?php
 }
