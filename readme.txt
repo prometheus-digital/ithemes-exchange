@@ -87,6 +87,19 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.18.0 =
+* Better serve filenames when downloading w/ query args
+* Adding 301 and 302 as valid response codes for download headers...
+* Updating zoom JS and related functionality
+* Removing action hook to add shipping to order table from the shipping addon and adding it in the shipping class
+* Format the pricing for shipping total in email template
+* Adding hooks to order_table email notification template, added action for coupons, simple shipping, and simple taxes to modify email notification order_table template
+* Adding Instructions after purchase message to email notifications when Offline Payments are processed
+* Added some styling and changed the text a bit to make it clearer what 'No downloads found' means in the context of the downloads page showing 'downlaods' but downlaod
+* Fixed Guest Checkout Coupon Limitation bug
+* Removing 'total' from Cart page... reserved for Checkout page only Adding taxes column to confirmation page
+* Fix for 'Most Used' categories tab not saving, update feature image JS to use .on() instead of .live()
+
 = 1.17.0 =
 * Fixing typos
 * Don't lose State focus when Country changes in billing/shipping requirement
