@@ -694,6 +694,9 @@ class IT_Theme_API_Product implements IT_Theme_API {
 						);
 
 						ob_start();
+						if ( 'hover' === $options['zoom'] ) {
+							$options['zoom'] = 'mouseover';
+						}
 						?>
 							<div id="it-exchange-product-images-gallery-<?php echo get_the_id(); ?>" class="it-exchange-product-images-gallery it-exchange-gallery-full" data-popup="<?php echo $popup; ?>" data-zoom="<?php echo $options["zoom"]; ?>" data-switch="<?php echo $options['switch']; ?>">
 								<div class="it-exchange-feature-image-<?php echo get_the_ID(); ?> it-exchange-featured-image">
