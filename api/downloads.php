@@ -318,7 +318,7 @@ function it_exchange_serve_product_download( $hash_data ) {
 
 				// Set headers to force download
 				header( 'Content-Description: File Transfer' );
-				header( 'Content-Disposition: attachment; filename=' . basename( $url ) );
+				header( 'Content-Disposition: attachment; filename=' . basename( parse_url( $url, PHP_URL_PATH ) ) );
 				header( 'Content-Transfer-Encoding: binary' );
 				header( 'Expires: 0' );
 				header( 'Cache-Control: must-revalidate' );
