@@ -290,6 +290,8 @@ function it_exchange_serve_product_download( $hash_data ) {
 		if ( ! is_wp_error( $response ) ) {
 			$valid_response_codes = array(
 				200,
+				301,
+				302,
 			);
 			$valid_response_codes = apply_filters( 'it_exchange_valid_response_codes_for_downloadable_files', $valid_response_codes, $download_info );
 			if ( in_array( wp_remote_retrieve_response_code( $response ), (array) $valid_response_codes ) ) {
