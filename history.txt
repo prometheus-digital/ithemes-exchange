@@ -1144,3 +1144,6 @@
 	Removing 'total' from Cart page... reserved for Checkout page only
 	Adding taxes column to confirmation page
 	Fix for 'Most Used' categories tab not saving, update feature image JS to use .on() instead of .live()
+1.19.0 - Lew Ayotte, Elise Alley
+	Adding email address to Guest Customer label in transaction table
+	Changing itExchangeSWAjaxURL to use get_site_url() to help with potential SSL conflicts

@@ -2,8 +2,8 @@
 Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
-Tested up to: 4.3
-Stable tag: 1.18.0
+Tested up to: 4.4
+Stable tag: 1.19.0
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,11 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.19.0 =
+* Adding email address to Guest Customer label in transaction table
+* Changing itExchangeSWAjaxURL to use get_site_url() to help with potential SSL conflicts
+
+
 = 1.18.0 =
 * Better serve filenames when downloading w/ query args
 * Adding 301 and 302 as valid response codes for download headers...
