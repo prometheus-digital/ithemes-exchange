@@ -565,7 +565,7 @@ function it_exchange_is_core_addon( $slug ) {
 	$addon = it_exchange_get_addon( $slug );
 	if ( empty( $addon['file'] ) )
 		return false;
-
+	
 	// Don't add a filter here.
-	return ( 'ithemes-exchange/core-addons/' == substr( plugin_basename( $addon['file'] ), 0, 29 ) );
+	return ( preg_match( '#ithemes-exchange.*/core-addons/.*#', plugin_basename( $addon['file'] ) ) );
 }
