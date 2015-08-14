@@ -126,10 +126,52 @@ function it_exchange_get_download_hashes_for_transaction_product( $transaction, 
 
 	// Grab an array of all download hashes for this transaction, grouped by product
 	$transaction_hash_index = it_exchange_get_transaction_download_hash_index( $transaction->ID );
-
+	
 	// If the requested download / product / transaction combination is in the hash_index, use that to look up the hash data
-	$hashes = empty( $transaction_hash_index[$product_id][$download_id] ) ? array() : $transaction_hash_index[$product_id][$download_id];
+	$hashes = empty( $transaction_hash_index[$product_id][$download_id] ) ? it_exchange_update_download_hashes_for_transaction_product( $transaction->ID, $product_id, $download_id ) : $transaction_hash_index[$product_id][$download_id];
 	return apply_filters( 'it_exchange_get_download_hashes_for_transaction_product', $hashes, $transaction, $transaction_product, $download_id );
+}
+
+/**
+ * Adds download hashes to the products in a transaction.
+ *
+ * @since CHANGEME
+ *
+ * @param $transaction_id Transaction ID
+ * @param $product_id Product ID
+ * @param $download_id Download ID
+ * @return array with Download's new hash value
+*/
+function it_exchange_update_download_hashes_for_transaction_product( $transaction_id, $product_id, $download_id ) {
+	$expire_time = false;
+	$expires = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expires' ) );
+	$int = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire-int' ) );
+	$units = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire-units' ) );
+	if ( $expires ) {
+		$expire_time = strtotime( '+' . $int . ' ' . $units );
+	}
+
+	$hash = it_exchange_create_unique_hash();
+
+	// Create initial hash data package
+	$hash_data = array(
+		'hash'           => $hash,
+		'transaction_id' => $transaction_id,
+		'product_id'     => $product_id,
+		'file_id'        => $download_id,
+		'customer_id'    => it_exchange_get_transaction_customer_id( $transaction_id ),
+		'expires'        => $expires,
+		'expire_int'     => $int,
+		'expire_units'   => $units,
+		'expire_time'    => $expire_time,
+		'download_limit' => it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'limit' ) ),
+		'downloads'      => '0',
+	);
+
+	// Add hash and data to DB as file post_meta
+	$pm_id = it_exchange_add_download_hash_data( $download_id, $hash, $hash_data );
+	
+	return array( $hash );
 }
 
 /**
