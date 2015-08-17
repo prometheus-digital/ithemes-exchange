@@ -1147,3 +1147,7 @@
 1.19.0 - Lew Ayotte, Elise Alley
 	Adding email address to Guest Customer label in transaction table
 	Changing itExchangeSWAjaxURL to use get_site_url() to help with potential SSL conflicts
+1.20.0 - Lew Ayotte, Elise Alley
+	Don't escape email notification URLs with &amp; because &#308; breaks in the browser
+	Fix for adding new downloadable files to previous purchases
+	Change how we determine if an addon is core
