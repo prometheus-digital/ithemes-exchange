@@ -1151,3 +1151,5 @@
 	Don't escape email notification URLs with &amp; because &#308; breaks in the browser
 	Fix for adding new downloadable files to previous purchases
 	Change how we determine if an addon is core
+1.21.0 - Lew Ayotte, Elise Alley
+	Favor home_url over site_url
