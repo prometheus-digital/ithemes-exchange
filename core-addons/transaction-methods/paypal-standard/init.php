@@ -560,12 +560,12 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			'item_name'     => strip_tags( it_exchange_get_cart_description() ),
 			'return'        => add_query_arg( array( 'it-exchange-transaction-method' => 'paypal-standard', 'paypal-standard-nonce' => $nonce ), it_exchange_get_page_url( 'transaction' ) ),
 			'currency_code' => $general_settings['default-currency'],
-			'notify_url'    => get_site_url() . '/?' . it_exchange_get_webhook( 'paypal-standard' ) . '=1',
+			'notify_url'    => get_home_url() . '/?' . it_exchange_get_webhook( 'paypal-standard' ) . '=1',
 			'no_note'       => '1',
 			'shipping'      => '0',
 			'email'         => $it_exchange_customer->data->user_email,
 			'rm'            => '2',
-			'cancel_return' => ( it_exchange_is_multi_item_cart_allowed() ? it_exchange_get_page_url( 'cart' ) : get_site_url() ),
+			'cancel_return' => ( it_exchange_is_multi_item_cart_allowed() ? it_exchange_get_page_url( 'cart' ) : get_home_url() ),
 			'custom'        => $temp_id,
 		);
 		

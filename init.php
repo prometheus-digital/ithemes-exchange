@@ -80,7 +80,6 @@ class IT_Exchange {
 	 *
 	 * @uses WP_PLUGIN_DIR
 	 * @uses ABSPATH
-	 * @uses site_url()
 	 * @since 0.1.0
 	 * @return void
 	*/

@@ -245,7 +245,7 @@ function it_exchange_process_webhooks() {
 			$request_scheme = is_ssl() ? 'https://' : 'http://';
 			$requested_webhook_url = untrailingslashit( $request_scheme . $_SERVER['HTTP_HOST'] ) . $_SERVER['REQUEST_URI']; //REQUEST_URI includes the slash
 			$parsed_requested_webhook_url = parse_url( $requested_webhook_url );
-			$required_webhook_url = add_query_arg( $param, '1', trailingslashit( get_site_url() ) ); //add the slash to make sure we match
+			$required_webhook_url = add_query_arg( $param, '1', trailingslashit( get_home_url() ) ); //add the slash to make sure we match
 			$parsed_required_webhook_url = parse_url( $required_webhook_url );
 			$webhook_diff = array_diff_assoc( $parsed_requested_webhook_url, $parsed_required_webhook_url );
 
@@ -1097,7 +1097,7 @@ add_action( 'init', 'print_country_states_ajax' );
 function it_exchange_print_home_url_in_js() {
 	?>
 	<script type="text/javascript">
-		var itExchangeAjaxCountryStatesAjaxURL = '<?php echo esc_js( trailingslashit( get_site_url() ) ); ?>';
+		var itExchangeAjaxCountryStatesAjaxURL = '<?php echo esc_js( trailingslashit( get_home_url() ) ); ?>';
 	</script>
 	<?php
 }

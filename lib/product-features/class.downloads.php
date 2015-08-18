@@ -593,7 +593,7 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// If user isn't logged in, redirect them to login and bring them back when complete
 		if ( ! empty( $require_user_login ) && ! is_user_logged_in() ) {
-			$redirect_url = site_url() . '?it-exchange-download=' . $hash_data['hash'];
+			$redirect_url = get_home_url() . '?it-exchange-download=' . $hash_data['hash'];
 			it_exchange_add_session_data( 'login_redirect', $redirect_url );
 			$url = it_exchange_get_page_url( 'login' );
 

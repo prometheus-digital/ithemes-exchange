@@ -682,7 +682,7 @@ class IT_Exchange_Shipping {
 
 		?>
 		<script type="text/javascript">
-			var ITExchangeCheckoutRefreshAjaxURL = '<?php echo esc_js( site_url() ); ?>/?ite-checkout-refresh=1';
+			var ITExchangeCheckoutRefreshAjaxURL = '<?php echo esc_js( get_home_url() ); ?>/?ite-checkout-refresh=1';
 		</script>
 		<?php
 	}
