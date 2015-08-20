@@ -62,7 +62,7 @@ require( $this->_plugin_path . 'lib/shipping/class.shipping.php' );
 require( $this->_plugin_path . 'lib/deprecated/init.php' );
 
 // Sessions
-if ( ! is_admin() ) {
+if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 	require( $this->_plugin_path . 'lib/cart/class.cart.php' );
 } else {
 	require( $this->_plugin_path . 'lib/pages/class.nav-menus.php' );
