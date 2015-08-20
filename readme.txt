@@ -2,8 +2,8 @@
 Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
-Tested up to: 4.3
-Stable tag: 1.14.0
+Tested up to: 4.4
+Stable tag: 1.21.0
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,50 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.21.0 =
+* Favor home_url over site_url
+
+= 1.20.0 =
+* Don't escape email notification URLs with &amp; because &#308; breaks in the browser
+* Fix for adding new downloadable files to previous purchases
+* Change how we determine if an addon is core
+
+= 1.19.0 =
+* Adding email address to Guest Customer label in transaction table
+* Changing itExchangeSWAjaxURL to use get_site_url() to help with potential SSL conflicts
+
+= 1.18.0 =
+* Better serve filenames when downloading w/ query args
+* Adding 301 and 302 as valid response codes for download headers...
+* Updating zoom JS and related functionality
+* Removing action hook to add shipping to order table from the shipping addon and adding it in the shipping class
+* Format the pricing for shipping total in email template
+* Adding hooks to order_table email notification template, added action for coupons, simple shipping, and simple taxes to modify email notification order_table template
+* Adding Instructions after purchase message to email notifications when Offline Payments are processed
+* Added some styling and changed the text a bit to make it clearer what 'No downloads found' means in the context of the downloads page showing 'downlaods' but downlaod
+* Fixed Guest Checkout Coupon Limitation bug
+* Removing 'total' from Cart page... reserved for Checkout page only Adding taxes column to confirmation page
+* Fix for 'Most Used' categories tab not saving, update feature image JS to use .on() instead of .live()
+
+= 1.17.0 =
+* Fixing typos
+* Don't lose State focus when Country changes in billing/shipping requirement
+
+= 1.16.0 =
+* Updated JS Error to say 'Your photo must have a thumbnail created for it that is larger than 150x150px'
+* Fixing typo with 'site-name' text
+* Updated lib/classes to 2.4.4
+
+= 1.15.1 =
+* Fix bug caused by disabled transaction methods on the quick setup wizard
+
+= 1.15.0 =
+* Updated lib/classes to 2.4.3 - Fixed a potential Remote Code Execution (RCE) security hole caused by unsanitized inputs for resizing certain kinds of images and generating zip files. Exploiting this flaw would require third-party code or a privileged WordPress user. Thanks to Ryan Satterfield (http://planetzuda.com) for helping to identify this issue.
+* Remove quanity input box if multi-item product is not allowed
+* Adding secure/httponly flags to setcookie, taken from original DB Sessions on github
+* Adding deactivation warning to paypal addons
+* Fix illegal offset error in cart API when admin deletes product that a customer has in the cart
+
 = 1.14. =
 * Adding 'email' option to it_exchange_email email notification shortcode
 

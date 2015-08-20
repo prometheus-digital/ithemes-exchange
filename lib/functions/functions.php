@@ -245,7 +245,7 @@ function it_exchange_process_webhooks() {
 			$request_scheme = is_ssl() ? 'https://' : 'http://';
 			$requested_webhook_url = untrailingslashit( $request_scheme . $_SERVER['HTTP_HOST'] ) . $_SERVER['REQUEST_URI']; //REQUEST_URI includes the slash
 			$parsed_requested_webhook_url = parse_url( $requested_webhook_url );
-			$required_webhook_url = add_query_arg( $param, '1', trailingslashit( get_site_url() ) ); //add the slash to make sure we match
+			$required_webhook_url = add_query_arg( $param, '1', trailingslashit( get_home_url() ) ); //add the slash to make sure we match
 			$parsed_required_webhook_url = parse_url( $required_webhook_url );
 			$webhook_diff = array_diff_assoc( $parsed_requested_webhook_url, $parsed_required_webhook_url );
 
@@ -1097,7 +1097,7 @@ add_action( 'init', 'print_country_states_ajax' );
 function it_exchange_print_home_url_in_js() {
 	?>
 	<script type="text/javascript">
-		var itExchangeAjaxCountryStatesAjaxURL = '<?php echo esc_js( trailingslashit( get_site_url() ) ); ?>';
+		var itExchangeAjaxCountryStatesAjaxURL = '<?php echo esc_js( trailingslashit( get_home_url() ) ); ?>';
 	</script>
 	<?php
 }
@@ -1622,3 +1622,26 @@ class Walker_ProductCategoryDropdown extends Walker {
  * FOR PRIMETIME YET SO THEY LIVE HERE FOR NOW.
  * USE WITH CAUTION
  *************************************/
+
+function it_exchange_add_on_before_disable_payment_gateways( $add_on ) {
+	if ( !empty( $_GET['page'] ) && 'it-exchange-setup' !== $_GET['page'] ) {
+		if ( empty( $_GET['remove-gateway'] ) || 'yes' !== $_GET['remove-gateway'] ) {
+			switch( $add_on ) {
+				case 'offline-payments':
+				case 'paypal-standard':
+				case 'paypal-standard-secure':
+				case 'zero-sum-checkout':
+					$title = __( 'Payment Gateway Warning', 'LION' );
+					$yes = '<a href="' . esc_url( add_query_arg( 'remove-gateway', 'yes' ) ) . '">' . __( 'Yes', 'LION' ) . '</a>';
+					$no  = '<a href="javascript:history.back()">' . __( 'No', 'LION' ) . '</a>';
+					$message = '<p>' . sprintf( __( 'Deactivating a payment gateway can cause customers to lose access to any membership products they have purchased using this payment gateway. Are you sure you want to proceed? %s | %s', 'LION' ), $yes, $no ) . '</p>';
+					$args = array(
+						'response'  => 200,
+						'back_link' => false,
+					);
+					wp_die( $message, $title, $args );
+			}
+		}
+	}
+}
+add_action( 'it_exchange_add_on_before_disable', 'it_exchange_add_on_before_disable_payment_gateways' );

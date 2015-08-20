@@ -2,7 +2,7 @@
 
 /*
 Written by Chris Jean for iThemes.com
-Version 1.0.4
+Version 1.0.5
 
 Version History
 	1.0.0 - 2010-12-14
@@ -15,6 +15,8 @@ Version History
 		Changed static function declarations to "public static".
 	1.0.4 - 2013-06-25 - Chris Jean
 		Changed unzip() function declaration to "public static".
+	1.0.5 - 2015-06-26 - Chris Jean
+		Security Fix: Sanitized filename before sending it to the exec() function.
 */
 
 
@@ -43,10 +45,15 @@ if ( ! class_exists( 'ITZip' ) ) {
 			
 			$path = ITFileUtility::create_writable_directory( array( 'name' => 'deleteme-ithemes-zip-temp', 'random' => true ) );
 			
-			if ( is_wp_error( $path ) )
+			if ( is_wp_error( $path ) ) {
 				$this->_error = $path;
-			else
+			} else {
 				$this->_path = $path;
+				
+				if ( file_exists( "$path/index.php" ) ) {
+					unlink( "$path/index.php" );
+				}
+			}
 			
 			$this->_cleanup_old_temp_directories();
 			
@@ -244,7 +251,7 @@ if ( ! class_exists( 'ITZip' ) ) {
 					@unlink( $file );
 			}
 			
-			$command .= " -r \"$file\" . -i \"*\"";
+			$command .= ' -r ' . escapeshellarg( $file ) . ' . -i "*"';
 			
 			
 			$result = $this->_try_native_zip_command( $command, $file );

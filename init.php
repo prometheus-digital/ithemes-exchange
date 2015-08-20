@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: iThemes Exchange
- * Version: 1.14.0
+ * Version: 1.21.0
  * Text Domain: it-l10n-ithemes-exchange
  * Description: Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordPress
  * Plugin URI: http://ithemes.com/exchange/
@@ -24,7 +24,7 @@
 */
 class IT_Exchange {
 
-	var $_version         = '1.14.0';
+	var $_version         = '1.21.0';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'ithemes-exchange';
 	var $_name            = 'iThemes Exchange';
@@ -80,7 +80,6 @@ class IT_Exchange {
 	 *
 	 * @uses WP_PLUGIN_DIR
 	 * @uses ABSPATH
-	 * @uses site_url()
 	 * @since 0.1.0
 	 * @return void
 	*/

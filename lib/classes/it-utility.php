@@ -2,7 +2,7 @@
 
 /*
 Written by Chris Jean for iThemes.com
-Version 1.9.1
+Version 1.10.0
 
 Version History
 	1.7.0 - 2013-02-13 - Chris Jean
@@ -20,6 +20,8 @@ Version History
 		Added the screen_option() function.
 	1.9.1 - 2014-01-23 - Chris Jean
 		Updated fix_url() to change https to http when is_ssl() is false.
+	1.10.0 - 2015-04-03 - Chris Jean
+		Added is_callable_function() to detect if a function is both callable and not disabled.
 */
 
 
@@ -533,6 +535,34 @@ if ( ! class_exists( 'ITUtility' ) ) {
 			$args = compact( 'expand_objects', 'max_depth', 'echo' );
 			
 			return ITDebug::inspect( $data, $args );
+		}
+		
+		public static function is_callable_function( $function ) {
+			if ( ! is_callable( $function ) ) {
+				return false;
+			}
+			
+			if ( ! isset( $GLOBALS['it_classes_cached_values'] ) ) {
+				$GLOBALS['it_classes_cached_values'] = array();
+			}
+			
+			if ( ! isset( $GLOBALS['it_classes_cached_values']['ini_get:disable_functions'] ) ) {
+				$GLOBALS['it_classes_cached_values']['var:disable_functions'] = preg_split( '/\s*,\s*/', (string) ini_get( 'disable_functions' ) );
+			}
+			
+			if ( in_array( $function, $GLOBALS['it_classes_cached_values']['var:disable_functions'] ) ) {
+				return false;
+			}
+			
+			if ( ! isset( $GLOBALS['it_classes_cached_values']['ini_get:suhosin.executor.func.blacklist'] ) ) {
+				$GLOBALS['it_classes_cached_values']['ini_get:suhosin.executor.func.blacklist'] = preg_split( '/\s*,\s*/', (string) ini_get( 'suhosin.executor.func.blacklist' ) );
+			}
+			
+			if ( in_array( $function, $GLOBALS['it_classes_cached_values']['ini_get:suhosin.executor.func.blacklist'] ) ) {
+				return false;
+			}
+			
+			return true;
 		}
 	}
 }

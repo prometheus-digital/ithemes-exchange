@@ -71,7 +71,7 @@ foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transacti
 				<?php if ( is_array( $detail ) ) : ?>
 					<div class="item-column block-column block-column-<?php echo $column; ?>">
 						<?php foreach ( $detail as $action => $label ) : ?>
-							<a class="button" href="<?php echo esc_url( $action ); ?>"><?php esc_attr_e( $label ); ?></a>
+							<a class="button" href="<?php echo $action; ?>"><?php esc_attr_e( $label ); ?></a>
 							<!--
 							<input type="button" class="button" name="it_exchange_<?php echo $action; ?>" value="<?php echo $label; ?>" />
 							-->

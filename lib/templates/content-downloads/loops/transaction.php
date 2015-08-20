@@ -24,7 +24,8 @@
     <?php endwhile; ?>
 	<?php do_action( 'it_exchange_content_downloads_after_transactions_loop' ); ?>
 	<?php if ( ! it_exchange_get_global( 'downloads_found' ) ) : ?>
-		<p><?php _e( 'No downloads found.', 'it-l10n-ithemes-exchange' ); ?></p>
+		<div class="it-exchange-clearfix"></div>
+		<p><?php _e( 'No downloadable files available.', 'it-l10n-ithemes-exchange' ); ?></p>
 	<?php endif; ?>
 <?php else: ?>
 	<p><?php _e( 'No downloads found.', 'it-l10n-ithemes-exchange' ); ?></p>

@@ -403,7 +403,7 @@ function it_exchange_guest_checkout_modify_transaction_customer( $customer, $tra
 	$customer = ( ! empty( $transaction->customer_id ) && is_email( $transaction->customer_id ) ) ? it_exchange_guest_checkout_generate_guest_user_object( $transaction->customer_id ) : false;
 	if ( ! empty( $customer ) ) {
 		$customer->wp_user = new stdClass();
-		$customer->wp_user->display_name = __( 'Guest Customer', 'it-l10n-ithemes-exchange' );
+		$customer->wp_user->display_name = sprintf( __( 'Guest Customer (%s)', 'it-l10n-ithemes-exchange' ), $customer->ID );
 	}
 
 	return $customer;

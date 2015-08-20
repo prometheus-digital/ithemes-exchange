@@ -397,7 +397,7 @@ class IT_Exchange_Admin_Settings_Form {
 		$template_part  = empty( $this->country_states_js['template-part'] ) ? '' : $this->country_states_js['template-part'];
 		?>
 		<script type="text/javascript">
-			var itExchangeAjaxCountryStatesAjaxURL = '<?php echo esc_js( trailingslashit( get_site_url() ) ); ?>';
+			var itExchangeAjaxCountryStatesAjaxURL = '<?php echo esc_js( trailingslashit( get_home_url() ) ); ?>';
 			jQuery(function(){
 				jQuery('#<?php echo esc_js( $country_id ); ?>').itCountryStatesSync(
 					{

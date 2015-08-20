@@ -60,33 +60,7 @@ class IT_Exchange_Product_Feature_Downloads {
 				foreach( $existing_downloads as $download_id => $download_data ) {
 					// One for each count
 					for( $i=0;$i<$count;$i++ ) {
-						$expire_time = false;
-
-						if ( it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expires' ) ) ) {
-							$int = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-int' ) );
-							$units = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-units' ) );
-							$expire_time = strtotime( '+' . $int . ' ' . $units );
-						}
-
-						$hash = it_exchange_create_unique_hash();
-
-						// Create initial hash data package
-						$hash_data = array(
-							'hash'           => $hash,
-							'transaction_id' => $transaction_id,
-							'product_id'     => $transaction_product['product_id'],
-							'file_id'        => $download_id,
-							'customer_id'    => it_exchange_get_transaction_customer_id( $transaction_id ),
-							'expires'        => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expires' ) ),
-							'expire_int'     => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-int' ) ),
-							'expire_units'   => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'expire-units' ) ),
-							'expire_time'    => $expire_time,
-							'download_limit' => it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads', array( 'setting' => 'limit' ) ),
-							'downloads'      => '0',
-						);
-
-						// Add hash and data to DB as file post_meta
-						$pm_id = it_exchange_add_download_hash_data( $download_id, $hash, $hash_data );
+						it_exchange_update_download_hashes_for_transaction_product( $transaction_id, $transaction_product['product_id'], $download_id );
 					}
 				}
 			}
@@ -619,7 +593,7 @@ class IT_Exchange_Product_Feature_Downloads {
 
 		// If user isn't logged in, redirect them to login and bring them back when complete
 		if ( ! empty( $require_user_login ) && ! is_user_logged_in() ) {
-			$redirect_url = site_url() . '?it-exchange-download=' . $hash_data['hash'];
+			$redirect_url = get_home_url() . '?it-exchange-download=' . $hash_data['hash'];
 			it_exchange_add_session_data( 'login_redirect', $redirect_url );
 			$url = it_exchange_get_page_url( 'login' );
 

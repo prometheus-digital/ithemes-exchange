@@ -37,6 +37,34 @@ function it_exchange_addon_get_simple_taxes_for_cart( $format_price=true ) {
 }
 
 /**
+ * Get taxes for transaction
+ *
+ * @since CHANGEME
+ *
+*/
+function it_exchange_addon_get_simple_taxes_for_transaction( $transaction=false, $format_price=true ) {
+    $taxes = 0;
+    if ( !empty( $transaction ) ) {
+	    $transaction = it_exchange_get_transaction( $transaction );
+        if ( !empty( $transaction->cart_details->taxes_raw ) ) {
+        	$taxes = $transaction->cart_details->taxes_raw;
+        } else {
+	        $taxes = 0;
+        }
+    } else if ( !empty( $GLOBALS['it_exchange']['transaction'] ) ) {
+        $transaction = $GLOBALS['it_exchange']['transaction'];
+        if ( !empty( $transaction->cart_details->taxes_raw ) ) {
+        	$taxes = $transaction->cart_details->taxes_raw;
+        } else {
+	        $taxes = 0;
+        }
+    }
+    if ( $format_price )
+        $taxes = it_exchange_format_price( $taxes );
+    return $taxes;  
+}
+
+/**
  * Get labels from settings
  *
  * @since 1.2.1

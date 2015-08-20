@@ -85,7 +85,7 @@ class IT_Exchange_Email_Notifications {
 		if ( empty( $transaction->ID ) ) {
 			it_exchange_add_message( 'error', __( 'Invalid transaction. Confirmation email not sent.', 'it-l10n-ithemes-exchange' ) );
 			$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
-			it_exchange_redirect( esc_url( $url ), 'admin-confirmation-email-resend-failed' );
+			it_exchange_redirect( $url, 'admin-confirmation-email-resend-failed' );
 			die();
 		}
 
@@ -94,7 +94,7 @@ class IT_Exchange_Email_Notifications {
 		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'it-exchange-resend-confirmation-' . $transaction->ID ) ) {
 			it_exchange_add_message( 'error', __( 'Confirmation Email not sent. Please try again.', 'it-l10n-ithemes-exchange' ) );
 			$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
-			it_exchange_redirect( esc_url( $url ), 'admin-confirmation-email-resend-failed' );
+			it_exchange_redirect( $url, 'admin-confirmation-email-resend-failed' );
 			die();
 		}
 
@@ -102,7 +102,7 @@ class IT_Exchange_Email_Notifications {
 		if ( ! current_user_can( 'administrator' ) ) {
 			it_exchange_add_message( 'error', __( 'You do not have permission to resend confirmation emails.', 'it-l10n-ithemes-exchange' ) );
 			$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
-			it_exchange_redirect( esc_url( $url ), 'admin-confirmation-email-resend-failed' );
+			it_exchange_redirect( $url, 'admin-confirmation-email-resend-failed' );
 			die();
 		}
 
@@ -110,7 +110,7 @@ class IT_Exchange_Email_Notifications {
 		$this->send_purchase_emails( $transaction, false );
 		it_exchange_add_message( 'notice', __( 'Confirmation email resent', 'it-l10n-ithemes-exchange' ) );
 		$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
-		it_exchange_redirect( esc_url( $url ), 'admin-confirmation-email-resend-success' );
+		it_exchange_redirect( $url, 'admin-confirmation-email-resend-success' );
 		die();
 	}
 
@@ -356,7 +356,7 @@ class IT_Exchange_Email_Notifications {
 										$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
 										?>
 										<li>
-											<a href="<?php echo esc_url( add_query_arg( 'it-exchange-download', $hash, site_url() ) ); ?>"><?php _e( 'Download link', 'it-l10n-ithemes-exchange' ); ?></a> <span style="font-family: Monaco, monospace;font-size:12px;color:#AAA;">(<?php esc_attr_e( $hash ); ?>)</span>
+											<a href="<?php echo esc_url( add_query_arg( 'it-exchange-download', $hash, get_home_url() ) ); ?>"><?php _e( 'Download link', 'it-l10n-ithemes-exchange' ); ?></a> <span style="font-family: Monaco, monospace;font-size:12px;color:#AAA;">(<?php esc_attr_e( $hash ); ?>)</span>
 										</li>
 									<?php endforeach; ?>
 								</ul>
@@ -498,10 +498,12 @@ class IT_Exchange_Email_Notifications {
 					<?php endif; ?>
 				</tbody>
 				<tfoot style="background:#F3F3F3;">
+					<?php do_action( 'it_exchange_replace_order_table_tag_before_total_row', $args, $options ); ?>
 					<tr>
 						<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total', 'it-l10n-ithemes-exchange' ); ?></td>
 						<td style="padding: 10px;border:1px solid #DDD;"><?php echo it_exchange_get_transaction_total( $this->transaction_id, true ) ?></td>
 					</tr>
+					<?php do_action( 'it_exchange_replace_order_table_tag_after_total_row', $args, $options ); ?>
 				</tfoot>
 			</table>
 		<?php

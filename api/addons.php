@@ -448,6 +448,8 @@ function it_exchange_disable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
 	$enabled_addons = it_exchange_get_enabled_addons( array( 'break_cache' => true ) );
 	$success = false;
+	
+	do_action( 'it_exchange_add_on_before_disable', $add_on );
 
 	if ( ! empty( $enabled_addons[$add_on] ) ) {
 		unset( $enabled_addons[$add_on] );
@@ -563,7 +565,7 @@ function it_exchange_is_core_addon( $slug ) {
 	$addon = it_exchange_get_addon( $slug );
 	if ( empty( $addon['file'] ) )
 		return false;
-
+	
 	// Don't add a filter here.
-	return ( 'ithemes-exchange/core-addons/' == substr( plugin_basename( $addon['file'] ), 0, 29 ) );
+	return ( preg_match( '#ithemes-exchange.*/core-addons/.*#', plugin_basename( $addon['file'] ) ) );
 }

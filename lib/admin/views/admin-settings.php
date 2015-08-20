@@ -291,7 +291,7 @@
 						echo '<li>username - ' . __( "The customer's username on the site", 'it-l10n-ithemes-exchange' ) . '</li>';
 						echo '<li>email - ' . __( "The customer's email address", 'it-l10n-ithemes-exchange' ) . '</li>';
 						echo '<li>avatar - ' . __( "The customer's gravatar image. Use the avatar_size param for square size. Default is 128", 'it-l10n-ithemes-exchange' ) . '</li>';
-						echo '<li>sitename - ' . __( 'Your site name', 'it-l10n-ithemes-exchange' ) . '</li>';
+						echo '<li>site-name - ' . __( 'Your site name', 'it-l10n-ithemes-exchange' ) . '</li>';
 						do_action( 'it_customer_account_page_shortcode_tags_list' );
 						echo '</ul>';
 						?>
