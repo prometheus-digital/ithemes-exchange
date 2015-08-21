@@ -74,6 +74,9 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * @uses apply_filters Calls `it_exchange_db_session_expiration` to determine how long until sessions expire.
 	 */
 	protected function __construct() {
+
+		parent::__construct();
+
 		if ( isset( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ) {
 			$cookie = stripslashes( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] );
 			$cookie_crumbs = explode( '||', $cookie );
@@ -87,16 +90,15 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 				$this->set_expiration();
 				update_option( "_it_exchange_db_session_expires_{$this->session_id}", $this->expires );
 			}
-		} else {
-			$this->session_id = $this->generate_id();
-			$this->set_expiration();
+
+			$this->option_key = $this->generate_option_key();
+
+			$this->read_data();
+
+			$this->set_cookie();
+		} elseif ( is_user_logged_in() ) {
+			$this->initialize_new_session();
 		}
-
-		$this->option_key = '_it_exchange_db_session_' . $this->session_id;
-
-		$this->read_data();
-
-		$this->set_cookie();
 	}
 
 	/**
@@ -123,9 +125,25 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	}
 
 	/**
+	 * Generate the option key.
+	 *
+	 * @since CHANGEME
+	 *
+	 * @return string
+	 */
+	protected function generate_option_key() {
+		return '_it_exchange_db_session_' . $this->session_id;
+	}
+
+	/**
 	 * Set the session cookie
 	 */
 	protected function set_cookie() {
+
+		if ( ! $this->session_id ) {
+			return;
+		}
+
 		$secure = apply_filters( 'wp_session_cookie_secure', false );
 		$httponly = apply_filters( 'wp_session_cookie_httponly', false );
 		setcookie( IT_EXCHANGE_SESSION_COOKIE, $this->session_id . '||' . $this->expires . '||' . $this->exp_variant , $this->expires, COOKIEPATH, COOKIE_DOMAIN, $secure, $httponly );
@@ -151,6 +169,11 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * @return array
 	 */
 	protected function read_data() {
+
+		if ( ! $this->session_id ) {
+			return array();
+		}
+
 		$this->container = get_option( $this->option_key, array() );
 
 		return $this->container;
@@ -161,7 +184,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 */
 	public function write_data() {
 		// Only write the collection to the DB if it's changed.
-		if ( $this->dirty ) {
+		if ( $this->dirty && $this->session_id ) {
 			if ( false === get_option( $this->option_key ) ) {
 				add_option( $this->option_key, $this->container, '', 'no' );
 				add_option( "_it_exchange_db_session_expires_{$this->session_id}", $this->expires, '', 'no' );
@@ -191,11 +214,58 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 		$array = json_decode( $data );
 
 		if ( is_array( $array ) ) {
+
+			if ( ! $this->session_id ) {
+				$this->initialize_new_session();
+			}
+
 			$this->container = $array;
+
 			return true;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Initialize a new session.
+	 *
+	 * This is different then regenerating an ID. This is used when session data is added mid-page request,
+	 * and a session cookie hasn't yet been established.
+	 *
+	 * @since CHANGEME
+	 */
+	protected function initialize_new_session() {
+
+		$this->session_id = $this->generate_id();
+		$this->set_expiration();
+
+		$this->option_key = $this->generate_option_key();
+
+		$this->read_data();
+
+		$this->set_cookie();
+	}
+
+	/**
+	 * Offset to set.
+	 *
+	 * Initialize a session prior to setting the data, if this hasn't been done yet.
+	 *
+	 * @link http://php.net/manual/en/arrayaccess.offsetset.php
+	 *
+	 * @param mixed $offset The offset to assign the value to.
+	 * @param mixed $value  The value to set.
+	 *
+	 * @return void
+	 */
+	public function offsetSet( $offset, $data ) {
+
+		if ( ! $this->session_id ) {
+			$this->initialize_new_session();
+		}
+
+		parent::offsetSet( $offset, $data );
 	}
 
 	/**
