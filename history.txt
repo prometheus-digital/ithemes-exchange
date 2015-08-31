@@ -1153,3 +1153,7 @@
 	Change how we determine if an addon is core
 1.21.0 - Lew Ayotte, Elise Alley
 	Favor home_url over site_url
+1.22.0 - Lew Ayotte, Elise Alley, Timothy B. Jacobs, Nikola Nikolov
+	Let it_exchange_shipping_address_purchase_requirement_enabled filter enable save to shipping address on billing form
+	Lazy loading the ITE session - Timothy B. Jacobs
+	Admin AJAX session fix - Nikola Nikolov
