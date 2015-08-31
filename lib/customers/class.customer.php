@@ -200,10 +200,6 @@ function handle_it_exchange_customer_registration_action() {
         if ( is_wp_error( $user_id ) )
             return it_exchange_add_message( 'error', $user_id->get_error_message());
 
-		// Clearing the user pass will prevent the user email from being sent
-		$email_pw = apply_filters( 'it_exchange_send_customer_registration_email', true ) ? $_POST['pass1'] : '';
-        wp_new_user_notification( $user_id, $_POST['pass1'] );
-
         $creds = array(
             'user_login'    => $_POST['user_login'],
             'user_password' => $_POST['pass1'],
