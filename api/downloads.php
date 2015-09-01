@@ -368,6 +368,7 @@ function it_exchange_serve_product_download( $hash_data ) {
 
 				// Clear buffer
 				flush();
+				ob_end_clean();
 
 				// Deliver the file: readfile, curl, redirect
 				if ( ini_get( 'allow_url_fopen' ) ) {
