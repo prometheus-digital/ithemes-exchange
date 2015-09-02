@@ -1157,3 +1157,6 @@
 	Let it_exchange_shipping_address_purchase_requirement_enabled filter enable save to shipping address on billing form
 	Lazy loading the ITE session - Timothy B. Jacobs
 	Admin AJAX session fix - Nikola Nikolov
+1.23.0 - Lew Ayotte, Elise Alley
+	End and clean the buffer before attempting to readfile/download...
+	Remove wp_new_user_notification calls, because this is handled by edit_user now
