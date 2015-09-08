@@ -583,5 +583,6 @@ class IT_Exchange_Shopping_Cart {
 	}
 }
 
-if ( ! is_admin() )
+if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 	$GLOBALS['IT_Exchange_Shopping_Cart'] = new IT_Exchange_Shopping_Cart();
+}
