@@ -370,9 +370,9 @@ function it_exchange_get_available_shipping_methods_for_cart( $only_return_metho
 	$product_i = 0;
 
 	// Grab all the products in the cart
-	foreach( it_exchange_get_cart_products() as $product ) {
+	foreach( it_exchange_get_cart_products() as $cart_product ) {
 		// Skip foreach element if it isn't an exchange product - just to be safe
-		if ( false === ( $product = it_exchange_get_product( $product['product_id'] ) ) )
+		if ( empty( $cart_product['product_id'] ) || false === ( $product = it_exchange_get_product( $cart_product['product_id'] ) ) )
 			continue;
 
 		// Skip product if it doesn't have shipping.
@@ -446,7 +446,7 @@ function it_exchange_get_cart_shipping_cost( $shipping_method=false, $format_pri
 	$cart_cost       = 0;
 
 	foreach( (array) $cart_products as $cart_product ) {
-		if ( ! it_exchange_product_has_feature( $cart_product['product_id'], 'shipping' ) )
+		if ( empty( $cart_product['product_id'] ) || ! it_exchange_product_has_feature( $cart_product['product_id'], 'shipping' ) )
 			continue;
 
 		if ( 'multiple-methods' == $cart_shipping_method )
