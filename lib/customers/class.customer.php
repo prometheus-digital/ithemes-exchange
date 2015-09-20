@@ -65,6 +65,8 @@ class IT_Exchange_Customer {
 		// Return false if not a WP User
 		if ( ! $this->is_wp_user() )
 			throw new Exception("Invalid user.");
+
+		$this->ID = $this->id; // back-compat
 	}
 
 	/**
