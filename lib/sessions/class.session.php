@@ -38,12 +38,12 @@ class IT_Exchange_Session {
 			define( 'IT_EXCHANGE_SESSION_COOKIE', 'it_exchange_session_' . COOKIEHASH );
 
 		if ( ! class_exists( 'Recursive_ArrayAccess' ) )
-			require_once( 'db_session_manager/class-recursive-arrayaccess.php' );
+			require_once( dirname( __FILE__ ) .  '/db_session_manager/class-recursive-arrayaccess.php' );
 
 		// Only include the functionality if it's not pre-defined.
 		if ( ! class_exists( 'IT_Exchange_DB_Sessions' ) ) {
-			require_once( 'db_session_manager/class-db-session.php' );
-			require_once( 'db_session_manager/db-session.php' );
+			require_once( dirname( __FILE__ ) .  '/db_session_manager/class-db-session.php' );
+			require_once( dirname( __FILE__ ) . '/db_session_manager/db-session.php' );
 		}
 
 		if ( empty( $this->_session ) )
