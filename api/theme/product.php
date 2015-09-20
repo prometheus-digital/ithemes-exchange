@@ -205,6 +205,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			if ( it_exchange_is_product_sale_active( $this->product ) ) {
 
 				$sale_price = it_exchange_get_product_feature( $this->product->ID, 'sale-price' );
+				$sale_price = it_exchange_format_price( $sale_price );
 
 				$price = "<del>$price</del>&nbsp;";
 				$price .= "<ins>$sale_price</ins>";
