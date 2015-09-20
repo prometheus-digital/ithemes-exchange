@@ -14,9 +14,8 @@ class IT_Exchange_Product_Feature_Product_Order {
 	 * Constructor. Registers hooks
 	 *
 	 * @since 1.7.22
-	 * @return void
 	*/
-	function IT_Exchange_Product_Feature_Product_Order() {
+	function __construct() {
 		if ( is_admin() ) {
 			add_action( 'load-post-new.php', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'load-post.php', array( $this, 'init_feature_metaboxes' ) );
@@ -27,6 +26,18 @@ class IT_Exchange_Product_Feature_Product_Order {
 		add_filter( 'it_exchange_get_product_feature_product-order', array( $this, 'get_feature' ), 9, 2 );
 		add_filter( 'it_exchange_product_has_feature_product-order', array( $this, 'product_has_feature') , 9, 2 );
 		add_filter( 'it_exchange_product_supports_feature_product-order', array( $this, 'product_supports_feature') , 9, 2 );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Product_Feature_Product_Order() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

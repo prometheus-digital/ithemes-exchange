@@ -92,9 +92,8 @@ class IT_Exchange_Digital_Downloads_Add_On {
 	 *
 	 * Sets up the class.
 	 * @since 0.4.5
-	 * @return void
 	*/
-	function IT_Exchange_Digital_Downloads_Add_On() {
+	function __construct() {
 		$this->_is_admin       = is_admin();
 		$this->_current_page   = empty( $_GET['page'] ) ? false : $_GET['page'];
 		$this->_current_add_on = empty( $_GET['add-on-settings'] ) ? false : $_GET['add-on-settings'];
@@ -105,6 +104,18 @@ class IT_Exchange_Digital_Downloads_Add_On {
 		}
 
 		add_filter( 'it_storage_get_defaults_exchange_addon_digital_downloads', array( $this, 'set_default_settings' ) );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Digital_Downloads_Add_On() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

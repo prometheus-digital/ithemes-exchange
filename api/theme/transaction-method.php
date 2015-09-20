@@ -34,11 +34,21 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 	 * Constructor
 	 *
 	 * @since 0.4.0
-	 *
-	 * @return void
 	*/
-	function IT_Theme_API_Transaction_Method() {
+	function __construct() {
 		$this->_transaction_method = empty( $GLOBALS['it_exchange']['transaction_method'] ) ? false : $GLOBALS['it_exchange']['transaction_method'];
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Theme_API_Transaction_Method() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

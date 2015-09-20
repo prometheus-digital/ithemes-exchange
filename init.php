@@ -43,9 +43,8 @@ class IT_Exchange {
 	 * @uses IT_Exchange::set_textdomain()
 	 * @uses IT_Exchange::init_exchange()
 	 * @since 0.1.0
-	 * @return void
 	*/
-	function IT_Exchange() {
+	function __construct() {
 		// Setup Plugin
 		$this->set_plugin_locations();
 		$this->set_textdomain();
@@ -73,6 +72,17 @@ class IT_Exchange {
 
 		do_action( 'it_exchange_loaded' );
 		add_action( 'it_libraries_loaded', array( $this, 'addons_init' ) );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange() {
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

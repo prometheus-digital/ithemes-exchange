@@ -35,9 +35,7 @@ abstract class IT_Exchange_Shipping_Feature {
 	 *
 	 * @since 1.4.0
 	 *
-	 * @param  int   $product exchange product id or empty to attempt to pick up the global product
-	 * @param  array $options options for the object
-	 * @return void
+	 * @param int|bool $product_id exchange product id or empty to attempt to pick up the global product
 	*/
 	function __construct( $product_id=false ) {
 

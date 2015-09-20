@@ -211,7 +211,7 @@ function it_exchange_basic_coupons_redirect_core_add_edit_screens() {
 	if ( in_array( $action, array( 'delete', 'trash', 'untrash' ) ) )
 		return;
 
-	$coupon = new IT_Exchange_Coupon( $post_id );
+	$coupon = it_exchange_get_coupon( $post_id );
 	if ( 'post.php' == $pagenow ) {
 		if ( $post_id && 'it_exchange_coupon' == $coupon->post_type ) {
 			wp_safe_redirect( add_query_arg( array( 'page' => 'it-exchange-edit-basic-coupon', 'post' => $post_id ), get_admin_url() . 'admin.php' ) );
@@ -236,7 +236,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 
 	// Set form values
 	if ( $post_id ) {
-		$coupon = new IT_Exchange_Coupon( $post_id );
+		$coupon = it_exchange_get_coupon( $post_id );
 
 		$amount = it_exchange_convert_from_database_number( $coupon->amount_number );
 

@@ -28,10 +28,20 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	 * Constructor
 	 *
 	 * @since 0.4.0
-	 *
-	 * @return void
 	*/
-	function IT_Theme_API_Transactions() {
+	function __construct() {
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Theme_API_Transaction() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

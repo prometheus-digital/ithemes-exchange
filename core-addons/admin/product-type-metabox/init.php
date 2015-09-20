@@ -11,13 +11,24 @@ class IT_Exchange_Core_Addon_Product_Type_Meta_Box {
 	 * Class constructor. Registers hooks
 	 *
 	 * @since 0.3.1
-	 * @return void
 	*/
-	function IT_Exchange_Core_Addon_Product_Type_Meta_Box() {
+	function __construct() {
 		if ( is_admin() ) {
 			add_action( 'it_exchange_product_metabox_callback', array( $this, 'register_product_type_meta_box' ) );
 			add_action( 'it_exchange_save_product', array( $this, 'update_post_product_type' ) );
 		}
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Core_Addon_Product_Type_Meta_Box() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

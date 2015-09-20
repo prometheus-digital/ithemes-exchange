@@ -7,7 +7,7 @@
 */
 
 // IT Classes
-require( 'classes/load.php' );
+require( $this->_plugin_path . 'lib/classes/load.php' );
 
 // Other Functions
 require( $this->_plugin_path . 'lib/functions/functions.php' );

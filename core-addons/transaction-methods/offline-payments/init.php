@@ -345,9 +345,8 @@ class IT_Exchange_Offline_Payments_Add_On {
 	 *
 	 * Sets up the class.
 	 * @since 0.3.6
-	 * @return void
 	*/
-	function IT_Exchange_Offline_Payments_Add_On() {
+	function __construct() {
 		$this->_is_admin       = is_admin();
 		$this->_current_page   = empty( $_GET['page'] ) ? false : $_GET['page'];
 		$this->_current_add_on = empty( $_GET['add-on-settings'] ) ? false : $_GET['add-on-settings'];
@@ -358,6 +357,18 @@ class IT_Exchange_Offline_Payments_Add_On {
 		}
 
 		add_filter( 'it_storage_get_defaults_exchange_addon_offline_payments', array( $this, 'set_default_settings' ) );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Offline_Payments_Add_On() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	function print_settings_page() {

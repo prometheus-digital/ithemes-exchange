@@ -28,7 +28,12 @@ class IT_Exchange_Session {
 	*/
 	private $_session;
 
-	function IT_Exchange_Session() {
+	/**
+	 * Constructor.
+	 *
+	 * @since 0.3.3
+	 */
+	function __construct() {
 		if( ! defined( 'IT_EXCHANGE_SESSION_COOKIE' ) )
 			define( 'IT_EXCHANGE_SESSION_COOKIE', 'it_exchange_session_' . COOKIEHASH );
 
@@ -48,7 +53,18 @@ class IT_Exchange_Session {
 
 		// Reset the session when the user loggs out
 		add_action( 'wp_logout', array( $this, 'reset_session_and_cache_cart_on_logout' ) );
+	}
 
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Session() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

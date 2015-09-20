@@ -85,9 +85,15 @@ function it_exchange_get_product_type_options( $product_type ) {
  * @return IT_Exchange_Product object for passed post
 */
 function it_exchange_get_product( $post ) {
-	$product = new IT_Exchange_Product( $post );
+	try {
+		$product = new IT_Exchange_Product( $post );
+	} catch ( Exception $e ) {
+		return false;
+	}
+
 	if ( $product->ID )
 		return apply_filters( 'it_exchange_get_product', $product, $post );
+
 	return apply_filters( 'it_exchange_get_product', false, $post );
 }
 

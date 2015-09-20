@@ -50,9 +50,17 @@ function it_exchange_get_coupons( $options=array() ) {
  * @return IT_Exchange_Coupon|bool object for passed post
 */
 function it_exchange_get_coupon( $post ) {
-	$coupon = ( is_object( $post ) && 'IT_Exchange_Coupon' == get_class( $post ) ) ? $post : new IT_Exchange_Coupon( $post );
+
+	try {
+		$coupon = ( is_object( $post ) && 'IT_Exchange_Coupon' == get_class( $post ) ) ? $post : new IT_Exchange_Coupon( $post );
+	}
+	catch ( Exception $e ) {
+		return false;
+	}
+
 	if ( $coupon->ID )
 		return apply_filters( 'it_exchange_get_coupon', $coupon, $post );
+
 	return false;
 }
 

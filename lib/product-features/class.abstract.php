@@ -12,9 +12,9 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	 *
 	 * @since 1.7.27
 	 *
-	 * @return void
+	 * @param array $args
 	*/
-	function IT_Exchange_Product_Feature_Abstract( $args=array() ) {
+	function __construct( $args=array() ) {
 
 		// Merge Defaults
 		$defaults = array(
@@ -35,7 +35,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 		// Don't go any further if we don't have a slug
 		if ( empty( $options['slug'] ) ) {
 			it_exchange_add_message( 'error', __( 'Coding Error: IT_Exchange_Product_Feature_Abstract extended without a slug value', 'it-l10n-ithemes-exchange' ) );
-			return false;
+			return;
 		}
 
 		// Set properties
@@ -74,6 +74,18 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 
 		// Action run on construct
 		do_action( 'it_exchange_product_feature_abstract_end_construct-' . $this->slug, $this );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Product_Feature_Abstract() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**
@@ -168,7 +180,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	 * @since 1.7.27
 	 * @param integer $product_id the product id
 	 * @param mixed $new_value the new value
-	 * @return bolean
+	 * @return bool
 	*/
 	abstract function save_feature( $product_id, $new_value, $options=array() );
 
@@ -178,7 +190,8 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	 * @since 1.7.27
 	 *
 	 * @param mixed $existing the values passed in by the WP Filter API. Ignored here.
-	 * @param integer product_id the WordPress post ID
+	 * @param integer $product_id the WordPress post ID
+	 * @param array   $options
 	 * @return string product feature
 	*/
 	abstract function get_feature( $existing, $product_id, $options=array() );
@@ -189,6 +202,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	 * @since 1.7.27
 	 * @param mixed $result Not used by core
 	 * @param integer $product_id
+	 * @param array   $options
 	 * @return boolean
 	*/
 	abstract function product_has_feature( $result, $product_id, $options=array() );
@@ -202,6 +216,7 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	 * @since 1.7.27
 	 * @param mixed $result Not used by core
 	 * @param integer $product_id
+	 * @param array   $options
 	 * @return boolean
 	*/
 	abstract function product_supports_feature( $result, $product_id, $options=array() );

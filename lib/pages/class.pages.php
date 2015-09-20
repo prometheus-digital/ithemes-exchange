@@ -35,10 +35,8 @@ class IT_Exchange_Pages {
 	 * Constructor
 	 *
 	 * @since 0.4.0
-	 *
-	 * @return void
 	*/
-	function IT_Exchange_Pages() {
+	function __construct() {
 		add_action( 'init', array( $this, 'set_slugs_and_names' ) );
 		add_action( 'init', array( $this, 'set_pretty_permalinks_boolean' ) );
 		if ( is_admin() ) {
@@ -58,6 +56,18 @@ class IT_Exchange_Pages {
 			add_filter( 'template_include', array( $this, 'fetch_template' ) );
 			add_filter( 'template_include', array( $this, 'load_casper' ), 11 );
 		}
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Pages() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

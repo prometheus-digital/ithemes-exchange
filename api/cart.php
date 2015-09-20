@@ -365,7 +365,7 @@ function it_exchange_empty_shopping_cart() {
 */
 function it_exchange_cache_customer_cart( $customer_id=false ) {
 	// Grab the current customer
-	$customer = empty( $customer_id ) ? it_exchange_get_current_customer() : new IT_Exchange_Customer( $customer_id );
+	$customer = empty( $customer_id ) ? it_exchange_get_current_customer() : it_exchange_get_customer( $customer_id );
 
 	// Abort if we don't have a logged in customer
 	if ( empty( $customer->id ) )
@@ -389,7 +389,7 @@ function it_exchange_cache_customer_cart( $customer_id=false ) {
 */
 function it_exchange_get_cached_customer_cart( $customer_id=false ) {
 	// Grab the current customer
-	$customer = empty( $customer_id ) ? it_exchange_get_current_customer() : new IT_Exchange_Customer( $customer_id );
+	$customer = empty( $customer_id ) ? it_exchange_get_current_customer() : it_exchange_get_customer( $customer_id );
 
 	// Abort if we don't have a logged in customer
 	if ( empty( $customer->id ) )

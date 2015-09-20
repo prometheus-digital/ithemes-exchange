@@ -70,7 +70,6 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * Will rebuild the session collection from the given session ID if it exists. Otherwise, will
 	 * create a new session with that ID.
 	 *
-	 * @param $session_id
 	 * @uses apply_filters Calls `it_exchange_db_session_expiration` to determine how long until sessions expire.
 	 */
 	protected function __construct() {

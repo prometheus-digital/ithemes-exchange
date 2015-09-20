@@ -14,9 +14,8 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 	 * Constructor. Registers hooks
 	 *
 	 * @since 1.7.10
-	 * @return void
 	*/
-	function IT_Exchange_Product_Feature_Product_Page_Template() {
+	function __construct() {
 		if ( is_admin() ) {
 			add_action( 'load-post-new.php', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'load-post.php', array( $this, 'init_feature_metaboxes' ) );
@@ -30,6 +29,18 @@ class IT_Exchange_Product_Feature_Product_Page_Template {
 		add_filter( 'it_exchange_product_has_feature_page-template', array( $this, 'product_has_feature') , 9, 2 );
 		add_filter( 'it_exchange_product_supports_feature_page-template', array( $this, 'product_supports_feature') , 9, 2 );
 		add_action( 'it_exchange_update_product_feature_page-template', array( $this, 'save_feature' ), 9, 3 );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Product_Feature_Product_Page_Template() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

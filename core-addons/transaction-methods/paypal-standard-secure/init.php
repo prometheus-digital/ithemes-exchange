@@ -1354,9 +1354,8 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 	 *
 	 * Sets up the class.
 	 * @since 0.4.0
-	 * @return void
 	*/
-	function IT_Exchange_paypal_standard_secure_Add_On() {
+	function __construct() {
 		$this->_is_admin       = is_admin();
 		$this->_current_page   = empty( $_GET['page'] ) ? false : $_GET['page'];
 		$this->_current_add_on = empty( $_GET['add-on-settings'] ) ? false : $_GET['add-on-settings'];
@@ -1364,7 +1363,18 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 		if ( ! empty( $_POST ) && $this->_is_admin && 'it-exchange-addons' == $this->_current_page && 'paypal-standard-secure' == $this->_current_add_on ) {
 			$this->save_settings();
 		}
+	}
 
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_paypal_standard_secure_Add_On() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	function print_settings_page() {

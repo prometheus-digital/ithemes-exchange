@@ -11,7 +11,13 @@ class IT_Exchange_Shipping_Provider{
 	var $country_states_js;
 	var $has_settings_page = false;
 
-	function IT_Exchange_Shipping_Provider( $slug, $options=array() ) {
+	/**
+	 * Constructor.
+	 *
+	 * @param string $slug
+	 * @param array $options
+	 */
+	function __construct( $slug, $options=array() ) {
 
 		$defaults = array(
 			'label' => false,
