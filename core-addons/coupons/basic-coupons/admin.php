@@ -213,7 +213,7 @@ function it_exchange_basic_coupons_redirect_core_add_edit_screens() {
 
 	$coupon = it_exchange_get_coupon( $post_id );
 	if ( 'post.php' == $pagenow ) {
-		if ( $post_id && 'it_exchange_coupon' == $coupon->post_type ) {
+		if ( $post_id && $coupon ) {
 			wp_safe_redirect( add_query_arg( array( 'page' => 'it-exchange-edit-basic-coupon', 'post' => $post_id ), get_admin_url() . 'admin.php' ) );
 			die();
 		}
