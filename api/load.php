@@ -3,8 +3,8 @@
  * Loads APIs for iThemes Exchange
  *
  * @package IT_Exchange
- * @since 0.2.0
-*/
+ * @since   0.2.0
+ */
 
 if ( is_admin() ) {
 	// Admin only
@@ -66,3 +66,5 @@ include( $this->_plugin_path . 'api/purchase-dialogs.php' );
 // Shipping API
 include( $this->_plugin_path . 'api/shipping.php' );
 include( $this->_plugin_path . 'api/shipping-features.php' );
+
+include( $this->_plugin_path . 'api/sales.php' );

@@ -27,6 +27,8 @@ class IT_Exchange_Sale_Price extends IT_Exchange_Product_Feature_Abstract {
 		);
 
 		parent::IT_Exchange_Product_Feature_Abstract( $args );
+
+		add_filter( 'it_exchange_get_cart_product_base_price', array( $this, 'override_cart_base_price' ), 0, 3 );
 	}
 
 	/**
@@ -196,6 +198,33 @@ class IT_Exchange_Sale_Price extends IT_Exchange_Product_Feature_Abstract {
 		$product_type = it_exchange_get_product_type( $product_id );
 
 		return it_exchange_product_type_supports_feature( $product_type, $this->slug );
+	}
+
+	/**
+	 * Override the cart base price to the sale price, if the sale is active.
+	 *
+	 * We filter this very early so other extensions can properly filter the price.
+	 *
+	 * @since 1.24.0
+	 *
+	 * @param string|float $base_price
+	 * @param array        $product
+	 * @param bool         $format
+	 *
+	 * @return string|float
+	 */
+	public function override_cart_base_price( $base_price, $product, $format ) {
+
+		if ( it_exchange_is_product_sale_active( $product['product_id'] ) ) {
+
+			$base_price = it_exchange_get_product_feature( $product['product_id'], $this->slug );
+
+			if ( $format ) {
+				$base_price = it_exchange_format_price( $base_price );
+			}
+		}
+
+		return $base_price;
 	}
 }
 
