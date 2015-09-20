@@ -245,3 +245,36 @@ function it_exchange_register_sync_verbs( $api ) {
 	}
 }
 add_action( 'ithemes_sync_register_verbs', 'it_exchange_register_sync_verbs' );
+
+if ( ! function_exists( '_deprecated_constructor' ) ) {
+	function _deprecated_constructor( $class, $version ) {
+
+		/**
+		 * Fires when a deprecated constructor is called.
+		 *
+		 * @since 4.3.0
+		 *
+		 * @param string $class   The class containing the deprecated constructor.
+		 * @param string $version The version of WordPress that deprecated the function.
+		 */
+		do_action( 'deprecated_constructor_run', $class, $version );
+
+		/**
+		 * Filter whether to trigger an error for deprecated functions.
+		 *
+		 * `WP_DEBUG` must be true in addition to the filter evaluating to true.
+		 *
+		 * @since 4.3.0
+		 *
+		 * @param bool $trigger Whether to trigger the error for deprecated functions. Default true.
+		 */
+		if ( WP_DEBUG && apply_filters( 'deprecated_constructor_trigger_error', true ) ) {
+			if ( function_exists( '__' ) ) {
+				trigger_error( sprintf( __( 'The called constructor method for %1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.' ), $class, $version, '<pre>__construct()</pre>' ) );
+			} else {
+				trigger_error( sprintf( 'The called constructor method for %1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', $class, $version, '<pre>__construct()</pre>' ) );
+			}
+		}
+
+	}
+}
