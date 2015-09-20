@@ -113,7 +113,7 @@ class IT_Exchange_Base_Price {
 		$product_base_price = ( '' === it_exchange_get_product_feature( $product->ID, 'base-price' ) ) ? '' : it_exchange_format_price( it_exchange_get_product_feature( $product->ID, 'base-price' ) );
 
 		// Set description
-		$description = __( 'Price', 'it-l10n-ithemes-exchange' );
+		$description = __( 'Base Price', 'it-l10n-ithemes-exchange' );
 		$description = apply_filters( 'it_exchange_base-price_addon_metabox_description', $description, $post );
 
 		$settings = it_exchange_get_option( 'settings_general' );
