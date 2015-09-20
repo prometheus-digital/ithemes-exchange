@@ -24,6 +24,8 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 		);
 
 		parent::IT_Exchange_Product_Feature_Abstract( $args );
+
+		add_filter( 'it_exchange_is_product_sale_active', array( $this, 'enforce_schedule' ), 10, 2 );
 	}
 
 	/**
@@ -35,12 +37,25 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 	 */
 	function print_metabox( $post ) {
 
-		$data = it_exchange_get_product_feature( isset( $post->ID ) ? $post->ID : 0, $this->slug );
+		$df        = get_option( 'date_format' );
+		$jquery_df = it_exchange_php_date_format_to_jquery_datepicker_format( $df );
 
-		$start_enabled = $data['start-enabled'];
-		$end_enabled   = $data['end-enabled'];
-		$start         = $data['start'];
-		$end           = $data['end'];
+		$data = it_exchange_get_product_feature( $post->ID, $this->slug );
+
+		$start_enabled = $data['enable_start'];
+		$end_enabled   = $data['enable_end'];
+
+		if ( $data['start'] ) {
+			$start = date( get_option( 'date_format' ), $data['start'] );
+		} else {
+			$start = '';
+		}
+
+		if ( $data['end'] ) {
+			$end = date( get_option( 'date_format' ), $data['end'] );
+		} else {
+			$end = '';
+		}
 		?>
 
 		<p><?php echo $this->description; ?></p>
@@ -48,27 +63,29 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 		<div class="it-exchange-sale-schedule-settings">
 			<p>
 				<input type="checkbox" id="it-exchange-enable-sale-schedule-start" class="it-exchange-checkbox-enable"
-				       name="it-exchange-sale-schedule[enable_start]" value="yes" <?php checked( true, $start_enabled ); ?>>
+				       name="it-exchange-sale-schedule[enable_start]" value="yes" <?php checked( $start_enabled ); ?>>
 				<label for="it-exchange-enable-sale-schedule-start">
 					<?php _e( 'Use a start date', 'it-l10n-ithemes-exchange' ); ?>
 				</label>
 				&nbsp;
 				<input type="checkbox" id="it-exchange-enable-sale-schedule-end" class="it-exchange-checkbox-enable"
-				       name="it-exchange-sale-schedule[enable_end]" value="yes" <?php checked( true, $end_enabled ); ?> />
+				       name="it-exchange-sale-schedule[enable_end]" value="yes" <?php checked( $end_enabled ); ?> />
 				<label for="it-exchange-enable-sale-schedule-end">
 					<?php _e( 'Use an end date', 'it-l10n-ithemes-exchange' ); ?>
 				</label>
 			</p>
 
-			<p id="it-exchange-sale-schedule-start<?php echo ( ! $start_enabled ) ? ' hide-if-js' : '' ?>">
+			<p id="it-exchange-sale-schedule-start-container" class="<?php echo $start_enabled ? '' : ' hide-if-js' ?>">
 				<label for="it-exchange-sale-schedule-start"><?php _e( 'Start Date', 'it-l10n-ithemes-exchange' ); ?></label>
 				<input type="text" class="datepicker" id="it-exchange-sale-schedule-start" name="it-exchange-sale-schedule[start]" value="<?php esc_attr_e( $start ); ?>" />
 			</p>
 
-			<p id="it-exchange-sale-schedule-end<?php echo ( ! $end_enabled ) ? ' hide-if-js' : '' ?>">
+			<p id="it-exchange-sale-schedule-end-container" class="<?php echo $end_enabled ? '' : ' hide-if-js' ?>">
 				<label for="it-exchange-sale-schedule-end"><?php _e( 'End Date', 'it-l10n-ithemes-exchange' ); ?></label>
 				<input type="text" class="datepicker" id="it-exchange-sale-schedule-end" name="it-exchange-sale-schedule[end]" value="<?php esc_attr_e( $end ); ?>" />
 			</p>
+
+			<input type="hidden" name="it-exchange-sale-schedule-df">
 		</div>
 		<?php
 	}
@@ -126,7 +143,7 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 			}
 		}
 
-		it_exchange_update_product_feature( $product_id, $this->slug, $_POST['it-exchange-sale-schedule'] );
+		it_exchange_update_product_feature( $product_id, $this->slug, $data );
 	}
 
 	/**
@@ -178,7 +195,7 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 		) );
 
 
-		if ( ! isset( $options['field'] ) ) { // if we aren't looking for a particular field
+		if ( ! isset( $options['setting'] ) ) { // if we aren't looking for a particular field
 			return $raw_meta;
 		}
 
@@ -240,6 +257,52 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 		$product_type = it_exchange_get_product_type( $product_id );
 
 		return it_exchange_product_type_supports_feature( $product_type, $this->slug );
+	}
+
+	/**
+	 * Enforce the sale schedule.
+	 *
+	 * @param bool                $enabled
+	 * @param IT_Exchange_Product $product
+	 *
+	 * @return bool
+	 */
+	public function enforce_schedule( $enabled, $product ) {
+
+		// we don't want to re-enable the sale if another add-on has already disabled it
+		if ( $enabled ) {
+
+			if ( it_exchange_product_has_feature( $product->ID, $this->slug ) ) {
+
+				$start = it_exchange_get_product_feature( $product->ID, $this->slug, array( 'setting' => 'start' ) );
+				$end   = it_exchange_get_product_feature( $product->ID, $this->slug, array( 'setting' => 'end' ) );
+
+				$past_start_date = true;
+				$before_end_date = true;
+				$now_start       = strtotime( date( 'Y-m-d 00:00:00' ) );
+				$now_end         = strtotime( date( 'Y-m-d 23:59:59' ) );
+
+				// Check start time
+				if ( $start ) {
+					$start_date = strtotime( date( 'Y-m-d', $start ) . ' 00:00:00' );
+					if ( $now_start < $start_date ) {
+						$past_start_date = false;
+					}
+				}
+
+				// Check end time
+				if ( $end ) {
+					$end_date = strtotime( date( 'Y-m-d', $end ) . ' 23:59:59' );
+					if ( $now_end > $end_date ) {
+						$before_end_date = false;
+					}
+				}
+
+				$enabled = $past_start_date && $before_end_date;
+			}
+		}
+
+		return $enabled;
 	}
 }
 
