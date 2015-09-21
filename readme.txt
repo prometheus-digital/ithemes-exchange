@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.4
-Stable tag: 1.23.0
+Stable tag: 1.24.0
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,9 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.24.0 =
+* Adding extra checks for product_id and count in product array... in case the cart is corrupted and causes isues
+
 = 1.23.0 =
 * End and clean the buffer before attempting to readfile/download...
 * Remove wp_new_user_notification calls, because this is handled by edit_user now

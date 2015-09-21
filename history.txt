@@ -1160,3 +1160,5 @@
 1.23.0 - Lew Ayotte, Elise Alley
 	End and clean the buffer before attempting to readfile/download...
 	Remove wp_new_user_notification calls, because this is handled by edit_user now
+1.24.0 - Lew Ayotte, Elise Alley
+	Adding extra checks for product_id and count in product array... in case the cart is corrupted and causes isues
