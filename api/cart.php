@@ -648,8 +648,9 @@ function it_exchange_get_cart_product_quantity_by_product_id( $product_id ) {
 	$products = it_exchange_get_cart_products();
 
 	foreach ( $products as $product ) {
-		if ( $product['product_id'] == $product_id )
+		if ( !empty( $product['product_id'] ) && $product['product_id'] == $product_id ) {
 			return $product['count'];
+		}
 	}
 
 	return 0;
