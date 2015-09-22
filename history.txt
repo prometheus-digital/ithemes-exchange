@@ -1162,3 +1162,5 @@
 	Remove wp_new_user_notification calls, because this is handled by edit_user now
 1.24.0 - Lew Ayotte, Elise Alley
 	Adding extra checks for product_id and count in product array... in case the cart is corrupted and causes isues
+1.24.1 - Lew Ayotte, Elise Alley
+	Adding another check for product_id in cart products
