@@ -41,10 +41,7 @@ class IT_Exchange_Session {
 			require_once( 'db_session_manager/db-session.php' );
 		}
 
-		if ( empty( $this->_session ) )
-			add_action( 'plugins_loaded', array( $this, 'init' ) );
-		else
-			add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'init' ) );
 
 		// Reset the session when the user loggs out
 		add_action( 'wp_logout', array( $this, 'reset_session_and_cache_cart_on_logout' ) );
