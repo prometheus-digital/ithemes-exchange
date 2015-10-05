@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.5
-Stable tag: 1.25.0
+Stable tag: 1.26.0
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,9 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.26.0 = 
+* Fix for registartion and checkout redirect bug
 
 = 1.25.0 =
 * Better Output Buffer Cleaning for Plugins/Themes that have created multiple levels of Output Buffer that we need to escape

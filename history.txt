@@ -1167,3 +1167,5 @@
 1.25.0 - Lew Ayotte, Elise Alley
 	Better Output Buffer Cleaning for Plugins/Themes that have created multiple levels of Output Buffer that we need to escape
 	Change how DB sessions initialize
+1.26.0 - Lew Ayotte, Elise Alley
+	Fix for registration/checkout redirects bug	
