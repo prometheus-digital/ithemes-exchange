@@ -192,6 +192,7 @@ function handle_it_exchange_customer_registration_action() {
 
     // Grab action and process it.
     if ( isset( $_POST['it-exchange-register-customer'] ) ) {
+		global $wp;
 
         do_action( 'before_handle_it_exchange_customer_registration_action' );
 
@@ -210,12 +211,20 @@ function handle_it_exchange_customer_registration_action() {
         if ( is_wp_error( $user ) )
             return it_exchange_add_message( 'error', $result->get_error_message() );
 
-        $reg_page      = trailingslashit( it_exchange_get_page_url( 'registration' ) );
-        $checkout_page = trailingslashit( it_exchange_get_page_url( 'checkout' ) );
+        $registration_url = trailingslashit( it_exchange_get_page_url( 'registration' ) );
+        $checkout_url     = trailingslashit( it_exchange_get_page_url( 'checkout' ) );
+        $current_home_url = trailingslashit( home_url( $wp->request ) );
+        $current_site_url = trailingslashit( site_url( $wp->request ) );
+        $referrer         = trailingslashit( wp_get_referer() );
 
 		// Redirect or clear query args
 		$redirect_hook_slug = false;
-        if ( in_array( trailingslashit( wp_get_referer() ), array( $reg_page, $checkout_page ) ) ) {
+		
+		error_log( $referrer );
+		
+        if ( in_array( $referrer, array( $registration_url, $checkout_url ) ) 
+        	|| in_array( $current_home_url, array( $registration_url, $checkout_url ) )
+        	|| in_array( $current_site_url, array( $registration_url, $checkout_url ) ) ) {
 			// If on the reg page, check for redirect cookie.
 			$login_redirect = it_exchange_get_session_data( 'login_redirect' );
 			if ( ! empty( $login_redirect ) ) {
@@ -233,7 +242,7 @@ function handle_it_exchange_customer_registration_action() {
 				}
 			}
 		} else {
-			// They were in the superwidget
+			// Then were in the superwidget
 			$redirect = it_exchange_clean_query_args( array(), array( 'ite-sw-state' ) );
 		}
 
