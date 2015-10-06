@@ -1169,3 +1169,5 @@
 	Change how DB sessions initialize
 1.26.0 - Lew Ayotte, Elise Alley
 	Fix for registration/checkout redirects bug	
+1.27.0 - Lew Ayotte, Elise Alley
+	Changing init priority for db sessions, to happen before widget_init
