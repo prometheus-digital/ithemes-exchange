@@ -86,7 +86,7 @@ function it_exchange_db_session_start() {
 
 	return $it_exchange_db_session->session_started();
 }
-add_action( 'init', 'it_exchange_db_session_start' );
+add_action( 'init', 'it_exchange_db_session_start', -1 );
 
 /**
  * Return the current session status.

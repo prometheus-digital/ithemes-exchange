@@ -41,7 +41,7 @@ class IT_Exchange_Session {
 			require_once( 'db_session_manager/db-session.php' );
 		}
 
-		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'init' ), -1 );
 
 		// Reset the session when the user loggs out
 		add_action( 'wp_logout', array( $this, 'reset_session_and_cache_cart_on_logout' ) );
