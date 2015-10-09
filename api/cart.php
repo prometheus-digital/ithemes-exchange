@@ -267,8 +267,23 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 
 			// Get max quantity setting
 			$max_purchase_quantity = it_exchange_get_product_feature( $product_id, 'purchase-quantity' );
+
+			$inventory = it_exchange_get_product_feature( $product_id, 'inventory' );
+
+			if ( trim( $max_purchase_quantity ) === '' ) {
+				$max_purchase_quantity = $inventory;
+			} else if ( $inventory && (int) $max_purchase_quantity > 0 && (int) $max_purchase_quantity > $inventory ) {
+				$max_purchase_quantity = $inventory;
+			}
+
 			$max_purchase_quantity = apply_filters( 'it_exchange_max_purchase_quantity_cart_check', $max_purchase_quantity, $product_id, $itemized_data, $additional_data, $itemized_hash );
-			$count = ( $max_purchase_quantity && $quantity > $max_purchase_quantity ) ? $max_purchase_quantity : $quantity;
+
+			if ( $quantity > $max_purchase_quantity ) {
+				$count = $max_purchase_quantity;
+			} else {
+				$count = $quantity;
+			}
+
 		} else {
 			$count = 1;
 		}
@@ -321,15 +336,25 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
 				// Get max quantity setting
 				$max_purchase_quantity = it_exchange_get_product_feature( $cart_product['product_id'], 'purchase-quantity' );
 
+				$inventory = it_exchange_get_product_feature( $cart_product['product_id'], 'inventory' );
+
 				// Zero out existing if we're not adding incoming quantity to it.
 				if ( ! $add_to_existing )
 					$cart_product['count'] = 0;
 
-				// If we support it but don't have it, quantity is unlimited
-				if ( ! $max_purchase_quantity )
-					$cart_product['count'] = $cart_product['count'] + $quantity;
-				else
-					$cart_product['count'] = ( ( $cart_product['count'] + $quantity ) > $max_purchase_quantity ) ? $max_purchase_quantity : $quantity + $cart_product['count'];
+				if ( trim( $max_purchase_quantity ) === '' ) {
+					$max_purchase_quantity = $inventory;
+				} else if ( $inventory && (int) $max_purchase_quantity > 0 && (int) $max_purchase_quantity > $inventory ) {
+					$max_purchase_quantity = $inventory;
+				}
+
+				$new_count = $cart_product['count'] + $quantity;
+
+				if ( $new_count > $max_purchase_quantity ) {
+					$new_count = $max_purchase_quantity;
+				}
+
+				$cart_product['count'] = $new_count;
 			} else {
 				$cart_product['count'] = 1;
 			}

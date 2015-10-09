@@ -163,9 +163,12 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 			if ( it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'inventory' ) ) {
 	
 				$inventory = (int)it_exchange_get_product_feature( $this->_cart_item['product_id'], 'inventory' );
-	
-				if ( $inventory && (int) $max_quantity > 0 && (int) $max_quantity > $inventory )
+		
+				if ( trim( $max_quantity ) === '' ) {
 					$max_quantity = $inventory;
+				} else if ( $inventory && (int) $max_quantity > 0 && (int) $max_quantity > $inventory ) {
+					$max_quantity = $inventory;
+				}
 	
 			}
 	
@@ -191,7 +194,6 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 					}
 					$output .= $options['after'];
 					break;
-				break;
 			}
 			
 		} else {

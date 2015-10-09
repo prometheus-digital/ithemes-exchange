@@ -141,7 +141,7 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 
 		// Only accept settings for max_number (default) or 'enabled' (checkbox)
 		if ( 'inventory' == $options['setting'] ) {
-			$new_value = empty( $new_value ) && !is_numeric( $new_value ) ? '' : absint( $new_value );
+			$new_value = empty( $new_value ) && !is_numeric( $new_value ) ? '' : intval( $new_value );
 			update_post_meta( $product_id, '_it-exchange-product-inventory', $new_value );
 			return true;
 		} else if ( 'enabled' == $options['setting'] ) {
@@ -190,8 +190,22 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
                 $enabled = 'no';
             return $enabled;
         } else if ( 'inventory' == $options['setting'] ) {
-            if ( it_exchange_product_supports_feature( $product_id, 'inventory' ) )
-                return get_post_meta( $product_id, '_it-exchange-product-inventory', true );
+            if ( it_exchange_product_supports_feature( $product_id, 'inventory' ) ) {
+
+	            $inventory = get_post_meta( $product_id, '_it-exchange-product-inventory', true );
+
+	            /**
+	             * Filter the total inventory.
+	             *
+	             * Workaround because of recursive hook bug, making it impossible to filter the total inventory.
+	             *
+	             * @since 1.15
+	             *
+	             * @param int $inventory Total inventory available
+	             * @param int $product_id
+	             */
+	            return apply_filters( 'it_exchange_get_product_feature_inventory_total_inventory', $inventory, $product_id );
+            }
         } else if ( 'variants' == $options['setting'] ) {
             if ( it_exchange_product_supports_feature( $product_id, 'inventory' ) )
                 return get_post_meta( $product_id, '_it-exchange-product-inventory-variants', true );
@@ -257,7 +271,10 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 
 			$count     = $data['count'];
 			$inventory = it_exchange_get_product_feature( $data['product_id'], 'inventory' );
-			$updated   = absint( $inventory - $count );
+
+			// if a user is able to bypass the front-end protections for some reason,
+			// admin should be made aware that there is negative inventory.
+			$updated   = $inventory - $count;
 			$options   = array();
 
 			$inventory_params = array(
