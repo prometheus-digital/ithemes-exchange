@@ -53,11 +53,11 @@ class IT_Exchange_Customer {
 	function __construct( $user ) {
 
 		if ( is_object( $user ) && 'WP_User' == get_class( $user ) ) {
-			$this->id = $this->id = $user->ID;
+			$this->id  = $user->ID;
 			$this->wp_user = $user;
 			$this->set_customer_data();
 		} else {
-			$this->id = $this->id = $user;
+			$this->id = $user;
 			$this->set_wp_user();
 			$this->set_customer_data();
 		}
