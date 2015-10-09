@@ -47,26 +47,40 @@ class IT_Exchange_Customer {
 	 *
 	 * @since 0.3.8
 	 * @param  mixed $user customer id or WP User object
-	 * @return mixed false if no customer is found. self if customer is located
+	 *
+	 * @throws Exception
 	*/
-	function IT_Exchange_Customer( $user ) {
+	function __construct( $user ) {
 
 		if ( is_object( $user ) && 'WP_User' == get_class( $user ) ) {
-			$this->id = $this->ID = $user->ID;
+			$this->id = $this->id = $user->ID;
 			$this->wp_user = $user;
 			$this->set_customer_data();
 		} else {
-			$this->id = $this->ID = $user;
+			$this->id = $this->id = $user;
 			$this->set_wp_user();
 			$this->set_customer_data();
 		}
 
 		// Return false if not a WP User
 		if ( ! $this->is_wp_user() )
-			return false;
+			throw new Exception("Invalid user.");
 
-		// Return object if found a WP user
-		return $this;
+		$this->ID = $this->id; // back-compat
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @param mixed $user
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Customer( $user ) {
+
+		self::__construct( $user );
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

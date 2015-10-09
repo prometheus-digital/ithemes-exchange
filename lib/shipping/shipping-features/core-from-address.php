@@ -10,9 +10,12 @@ class IT_Exchange_Core_Shipping_Feature_From_Address extends IT_Exchange_Shippin
 
 	/**
 	 * Constructor
+	 *
+	 * @param int|bool $product
+	 * @param array    $options
 	*/
 	function __construct( $product=false, $options=array() ) {
-		parent::__construct( $product, $options );
+		parent::__construct( $product );
 	}
 
 	/**

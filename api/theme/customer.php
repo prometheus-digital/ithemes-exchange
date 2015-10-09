@@ -51,11 +51,22 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 *
 	 * @since 0.4.0
 	 * @todo get working for admins looking at other users profiles
-	 * @return void
 	*/
-	function IT_Theme_API_Customer() {
+	function __construct() {
 		if ( is_user_logged_in() )
 			$this->_customer = it_exchange_get_current_customer();
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Theme_API_Customer() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

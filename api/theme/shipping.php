@@ -51,9 +51,8 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	 * Constructor
 	 *
 	 * @since 1.4.0
-	 * @return void
 	*/
-	function IT_Theme_API_Shipping() {
+	function __construct() {
 		$this->_shipping_address = it_exchange_get_cart_shipping_address();
 
 		if ( it_exchange_in_superwidget() ) {
@@ -66,6 +65,18 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 
 			$this->session = $data;
 		}
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Theme_API_Shipping() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

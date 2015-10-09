@@ -30,14 +30,24 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 * Constructor
 	 *
 	 * @since 0.4.0
-	 *
-	 * @return void
 	*/
-	function IT_Theme_API_Shipping_Method() {
+	function __construct() {
 		$this->cart_methods                      = it_exchange_get_available_shipping_methods_for_cart();
 		$this->cart_product_methods              = it_exchange_get_available_shipping_methods_for_cart_products();
 		$this->multiple_shipping_methods_allowed = false;
 		$this->current_method                    = it_exchange_get_cart_shipping_method();
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Theme_API_Shipping_Method() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

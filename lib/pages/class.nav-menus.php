@@ -13,7 +13,12 @@
 */
 class IT_Exchange_Nav_Menu_Meta_Box {
 
-	function IT_Exchange_Nav_Menu_Meta_Box() {
+	/**
+	 * Constructor.
+	 *
+	 * @since 0.4.0
+	 */
+	function __construct() {
 		if ( ! is_admin() )
 			return;
 
@@ -21,6 +26,19 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 		add_filter( 'wp_setup_nav_menu_item', array( $this, 'setup_menu_item' ), 10, 2 );
 		add_filter( 'get_user_option_metaboxhidden_nav-menus', array( $this, 'show_exchange_menu' ), 10, 3 );
 	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Nav_Menu_Meta_Box() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
+	}
+
 
 	/**
 	 * Registers the meta box for the nav page

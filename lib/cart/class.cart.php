@@ -12,9 +12,8 @@ class IT_Exchange_Shopping_Cart {
 	 * Hooks default filters and actions for cart
 	 *
 	 * @since 0.3.8
-	 * @return void
 	*/
-	function IT_Exchange_Shopping_Cart() {
+	function __construct() {
 		add_action( 'template_redirect', array( $this, 'handle_it_exchange_cart_function' ) );
 		add_filter( 'it_exchange_process_transaction', array( $this, 'handle_purchase_cart_request' ) );
 
@@ -24,6 +23,18 @@ class IT_Exchange_Shopping_Cart {
 		add_action( 'it_exchange_update_session_data', array( $this, 'sync_customer_active_carts' ) );
 		add_action( 'it_exchange_add_session_data', array( $this, 'sync_customer_active_carts' ) );
 		add_action( 'wp_login', 'it_exchange_merge_cached_customer_cart_into_current_session', 10, 2 );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	public function IT_Exchange_Shopping_Cart() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

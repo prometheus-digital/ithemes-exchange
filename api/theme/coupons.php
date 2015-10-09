@@ -43,12 +43,22 @@ class IT_Theme_API_Coupons implements IT_Theme_API {
 	 * Constructor
 	 *
 	 * @since 0.4.0
-	 *
-	 * @return void
 	*/
-	function IT_Theme_API_Coupons() {
+	function __construct() {
 		// Set the current global coupon as a property
 		$this->coupon = empty( $GLOBALS['it_exchange']['coupon'] ) ? false : it_exchange_get_coupon( $GLOBALS['it_exchange']['coupon']['id'] );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Theme_API_Coupons() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

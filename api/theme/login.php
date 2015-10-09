@@ -43,9 +43,20 @@ class IT_Theme_API_Login implements IT_Theme_API {
 	 *
 	 * @since 0.4.0
 	 * @todo get working for admins looking at other users profiles
-	 * @return void
 	*/
+	function __construct() {
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
 	function IT_Theme_API_Login() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

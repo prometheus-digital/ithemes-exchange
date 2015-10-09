@@ -14,9 +14,8 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 	 * Constructor. Registers hooks
 	 *
 	 * @since 0.4.0
-	 * @return void
 	*/
-	function IT_Exchange_Product_Feature_Purchase_Message() {
+	function __construct() {
 		if ( is_admin() ) {
 			add_action( 'load-post-new.php', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'load-post.php', array( $this, 'init_feature_metaboxes' ) );
@@ -27,6 +26,18 @@ class IT_Exchange_Product_Feature_Purchase_Message {
 		add_filter( 'it_exchange_get_product_feature_purchase-message', array( $this, 'get_feature' ), 9, 2 );
 		add_filter( 'it_exchange_product_has_feature_purchase-message', array( $this, 'product_has_feature') , 9, 2 );
 		add_filter( 'it_exchange_product_supports_feature_purchase-message', array( $this, 'product_supports_feature') , 9, 2 );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Product_Feature_Purchase_Message() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

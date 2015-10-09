@@ -11,9 +11,8 @@ class IT_Exchange_WP_Post_Supports {
 	 * Constructor. Loads hooks for various post supports
 	 *
 	 * @since 0.3.8
-	 * @return void
 	*/
-	function IT_Exchange_WP_Post_Supports() {
+	function __construct() {
 
 		// WordPress Post Content (Extended Description)
 		if ( is_admin() ) {
@@ -47,6 +46,18 @@ class IT_Exchange_WP_Post_Supports {
 
 		// WordPress Post Revisions
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'init_wp_revisions_as_product_feature' ) );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_WP_Post_Supports() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

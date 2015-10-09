@@ -17,9 +17,8 @@ class IT_Exchange_Transaction_Post_Type {
 	 * Class Constructor
 	 *
 	 * @since 0.3.3
-	 * @return void
 	*/
-	function IT_Exchange_Transaction_Post_Type() {
+	function __construct() {
 		$this->init();
 
 		add_action( 'save_post_it_exchange_tran', array( $this, 'save_transaction' ) );
@@ -37,6 +36,18 @@ class IT_Exchange_Transaction_Post_Type {
 			add_filter( 'bulk_actions-edit-it_exchange_tran', array( $this, 'edit_bulk_actions' ) );
 			add_action( 'wp_ajax_it-exchange-update-transaction-status', array( $this, 'ajax_update_status' ) );
 		}
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Transaction_Post_Type() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	function init() {

@@ -10,9 +10,12 @@ class IT_Exchange_Core_Shipping_Feature_Available_Shipping_Methods extends IT_Ex
 
 	/**
 	 * Constructor
+	 *
+	 * @param bool|int $product
+	 * @param array    $options
 	*/
 	function __construct( $product=false, $options=array() ) {
-		parent::__construct( $product, $options );
+		parent::__construct( $product );
 	}
 
 	/**

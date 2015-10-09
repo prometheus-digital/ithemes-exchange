@@ -62,9 +62,10 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 0.3.3
 	 * @param mixed $post  wp post id or post object. optional.
-	 * @return void
+	 *
+	 * @throws Exception
 	*/
-	function IT_Exchange_Transaction( $post=false ) {
+	function __construct( $post=false ) {
 
 		// If not an object, try to grab the WP object
 		if ( ! is_object( $post ) )
@@ -80,7 +81,7 @@ class IT_Exchange_Transaction {
 
 		// Return a WP Error if we don't have the $post object by this point
 		if ( ! $post )
-			return new WP_Error( 'it-exchange-transaction-not-a-wp-post', __( 'The IT_Exchange_Transaction class must have a WP post object or ID passed to its constructor', 'it-l10n-ithemes-exchange' ) );
+			throw new Exception( __( 'The IT_Exchange_Transaction class must have a WP post object or ID passed to its constructor', 'it-l10n-ithemes-exchange' ) );
 
 		// Grab the $post object vars and populate this objects vars
 		foreach( (array) get_object_vars( $post ) as $var => $value ) {
@@ -103,6 +104,20 @@ class IT_Exchange_Transaction {
 		else
 			add_action( 'admin_init', array( $this, 'set_add_edit_screen_supports' ) );
 
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 *
+	 * @throws Exception
+	 */
+	function IT_Exchange_Transaction() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

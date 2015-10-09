@@ -52,9 +52,8 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	 * Constructor
 	 *
 	 * @since 1.3.0
-	 * @return void
 	*/
-	function IT_Theme_API_Billing() {
+	function __construct() {
 		$this->_billing_address = it_exchange_get_cart_billing_address();
 
 		if ( it_exchange_in_superwidget() ) {
@@ -67,6 +66,18 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 
 			$this->session = $data;
 		}
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Theme_API_Billing() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

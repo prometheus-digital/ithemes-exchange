@@ -17,11 +17,22 @@ class IT_Exchange_Coupon_Post_Type {
 	 * Class Constructor
 	 *
 	 * @since 0.4.0
-	 * @return void
 	*/
-	function IT_Exchange_Coupon_Post_Type() {
+	function __construct() {
 		$this->init();
 		add_action( 'save_post', array( $this, 'save_coupon' ) );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Coupon_Post_Type() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	function init() {

@@ -15,7 +15,7 @@
 class IT_Exchange_Purchase_Dialog{
 
 	/**
-	 * @param string $addon_slug the slug for the addon invoking the class
+	 * @var string $addon_slug the slug for the addon invoking the class
 	 * @since 1.3.0
 	*/
 	var $addon_slug = false;
@@ -27,31 +27,31 @@ class IT_Exchange_Purchase_Dialog{
 	var $form_attributes = array();
 
 	/**
-	 * @param array an array of the cc fields were using
+	 * @var array an array of the cc fields were using
 	 * @since 1.3.0
 	*/
 	var $active_cc_fields = array();
 
 	/**
-	 * @param array an array of the required cc fields were using
+	 * @var array an array of the required cc fields were using
 	 * @since 1.3.0
 	*/
 	var $required_cc_fields = array();
 
 	/**
-	 * @param string the label used for the button that opens up the CC fields
+	 * @var string the label used for the button that opens up the CC fields
 	 * @since 1.3.0
 	*/
 	var $purchase_label;
 
 	/**
-	 * @param string the label used for the button that submits the CC fields
+	 * @var string the label used for the button that submits the CC fields
 	 * @since 1.3.0
 	*/
 	var $submit_label;
 
 	/**
-	 * @param string the label used for the cancel link to close the CC fields
+	 * @var string the label used for the cancel link to close the CC fields
 	 * @since 1.3.0
 	*/
 	var $cancel_label;
@@ -61,9 +61,10 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @since 1.3.0
 	 *
-	 * @param array $options
+	 * @param string $transaction_method_slug
+	 * @param array  $options
 	*/
-	function IT_Exchange_Purchase_Dialog( $transaction_method_slug, $options=array() ) {
+	function __construct( $transaction_method_slug, $options=array() ) {
 
 		$defaults = array(
 			'form-attributes'    => array(
@@ -97,6 +98,21 @@ class IT_Exchange_Purchase_Dialog{
 	}
 
 	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @param string $transaction_method_slug
+	 * @param array  $options
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Purchase_Dialog( $transaction_method_slug, $options = array() ) {
+
+		self::__construct( $transaction_method_slug, $options );
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
+	}
+
+	/**
 	 * Returns the HTML for the button
 	 *
 	 * @since 1.3.0
@@ -118,7 +134,7 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @since 1.3.0
 	 *
-	 * @return HTML
+	 * @return string
 	*/
 	function get_wrapper_open() {
 		$ssl_class = is_ssl() ? ' it-exchange-is-ssl' : ' it-exchange-no-ssl';
@@ -131,7 +147,7 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @since 1.3.0
 	 *
-	 * @return HTML
+	 * @return string
 	*/
 	function get_wrapper_close() {
 		$html = '</div>';
@@ -143,7 +159,7 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @since 1.3.0
 	 *
-	 * @return HTML
+	 * @return string
 	*/
 	function get_purchase_form() {
 		$GLOBALS['it_exchange']['purchase-dialog']['transaction-method-slug'] = $this->addon_slug;

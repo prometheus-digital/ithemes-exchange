@@ -54,7 +54,13 @@ function it_exchange_get_transaction( $post ) {
 	if ( is_object( $post ) && 'IT_Exchange_Transaction' == get_class( $post ) )
 		return apply_filters( 'it_exchange_get_transaction', $post );
 
-	return apply_filters( 'it_exchange_get_transaction', new IT_Exchange_Transaction( $post ) );
+	try {
+		$transaction = new IT_Exchange_Transaction( $post );
+	} catch ( Exception $e ) {
+		return false;
+	}
+
+	return apply_filters( 'it_exchange_get_transaction', $transaction );
 }
 
 /**
@@ -260,7 +266,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 	if ( !$customer_id )
 		$customer_id = it_exchange_get_current_customer_id();
 		
-	$customer = new IT_Exchange_Customer( $customer_id );
+	$customer = it_exchange_get_customer( $customer_id );
 
 	// If we don't have a title, create one
 	if ( empty( $args['post_title'] ) )

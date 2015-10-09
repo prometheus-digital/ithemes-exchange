@@ -24,9 +24,9 @@ class IT_Exchange_Admin_Settings_Form {
 	 *
 	 * @since 1.3.1
 	 *
-	 * @return void
+	 * @param array $args
 	*/
-	function IT_Exchange_Admin_Settings_Form( $args ) {
+	function __construct( $args ) {
 
 		// Default Settings
 		$defaults = array(
@@ -48,9 +48,9 @@ class IT_Exchange_Admin_Settings_Form {
 		// Merge defaults
 		$options = ITUtility::merge_defaults( $args, $defaults );
 
-		// If no prefix or form fields, return false
+		// If no prefix or form fields, return
 		if ( empty( $options['prefix'] ) || empty( $options['form-fields'] ) )
-			return false;
+			return;
 
 		// Set prefix and form fields
 		$this->prefix      = $options['prefix'];
@@ -75,6 +75,20 @@ class IT_Exchange_Admin_Settings_Form {
 
 		// Do we want to include the country states JS?
 		$this->set_country_states_js( $options['country-states-js'] );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 *
+	 * @param array $args
+	 */
+	function IT_Exchange_Admin_Settings_Form( $args ) {
+
+		self::__construct( $args );
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

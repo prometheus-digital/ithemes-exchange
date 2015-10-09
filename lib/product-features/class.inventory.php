@@ -14,7 +14,8 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 	 * Constructor. Registers hooks
 	 *
 	 * @since 0.4.0
-	 * @return void
+	 *
+	 * @param array $args
 	*/
 	function IT_Exchange_Product_Feature_Inventory( $args=array() ) {
 		parent::__construct( $args );

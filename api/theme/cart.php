@@ -40,10 +40,20 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	 * Constructor
 	 *
 	 * @since 0.4.0
+	 */
+	function __construct() {
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
 	 *
-	 * @return void
-	*/
+	 * @deprecated
+	 */
 	function IT_Theme_API_Cart() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

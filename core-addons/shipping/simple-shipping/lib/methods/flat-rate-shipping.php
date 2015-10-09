@@ -46,8 +46,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	 *
 	 * @since 1.4.0
 	 *
-	 * @param integer $product_id optional product id for current product
-	 * @return void
+	 * @param int|bool $product_id optional product id for current product
 	*/
 	function __construct( $product_id=false ) {
 		parent::__construct( $product_id );
@@ -214,6 +213,8 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Shipping_Cost extends IT_Exchange_Sh
 
 	/**
 	 * Constructor
+	 *
+	 * @param int|bool $product_id
 	*/
 	function __construct( $product_id=false ) {
 		parent::__construct( $product_id );

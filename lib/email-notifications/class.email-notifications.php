@@ -21,7 +21,7 @@ class IT_Exchange_Email_Notifications {
 	 *
 	 * @since 0.4.0
 	*/
-	function IT_Exchange_Email_Notifications() {
+	function __construct() {
 		add_action( 'it_exchange_send_email_notification', array( $this, 'it_exchange_send_email_notification' ), 20, 3 );
 
 		// Send emails on successfull transaction
@@ -35,6 +35,18 @@ class IT_Exchange_Email_Notifications {
 
 		add_shortcode( 'it_exchange_email', array( $this, 'ithemes_exchange_email_notification_shortcode' ) );
 
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Email_Notifications() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	function it_exchange_send_email_notification( $customer_id, $subject, $content ) {
