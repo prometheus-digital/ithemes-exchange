@@ -159,9 +159,6 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 	 */
 	public function save_feature( $product_id, $new_value, $options = array() ) {
 
-		$defaults  = it_exchange_get_product_feature( $product_id, $this->slug );
-		$new_value = ITUtility::merge_defaults( $new_value, $defaults );
-
 		$new_value['enable_start'] = (bool) $new_value['enable_start'];
 		$new_value['enable_end']   = (bool) $new_value['enable_end'];
 		$new_value['start']        = absint( $new_value['start'] );
@@ -288,13 +285,16 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 				$start = it_exchange_get_product_feature( $product->ID, $this->slug, array( 'setting' => 'start' ) );
 				$end   = it_exchange_get_product_feature( $product->ID, $this->slug, array( 'setting' => 'end' ) );
 
+				$start_enabled = it_exchange_get_product_feature( $product->ID, $this->slug, array( 'setting' => 'enable_start' ) );
+				$end_enabled   = it_exchange_get_product_feature( $product->ID, $this->slug, array( 'setting' => 'enable_end' ) );
+
 				$past_start_date = true;
 				$before_end_date = true;
 				$now_start       = strtotime( date( 'Y-m-d 00:00:00' ) );
 				$now_end         = strtotime( date( 'Y-m-d 23:59:59' ) );
 
 				// Check start time
-				if ( $start ) {
+				if ( $start && $start_enabled ) {
 					$start_date = strtotime( date( 'Y-m-d', $start ) . ' 00:00:00' );
 					if ( $now_start < $start_date ) {
 						$past_start_date = false;
@@ -302,7 +302,7 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 				}
 
 				// Check end time
-				if ( $end ) {
+				if ( $end && $end_enabled ) {
 					$end_date = strtotime( date( 'Y-m-d', $end ) . ' 23:59:59' );
 					if ( $now_end > $end_date ) {
 						$before_end_date = false;
