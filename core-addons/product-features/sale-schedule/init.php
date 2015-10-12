@@ -171,6 +171,12 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 			return false;
 		}
 
+		update_post_meta( $product_id, '_it_echange_sale_schedule_start', $new_value['start'] );
+		update_post_meta( $product_id, '_it_echange_sale_schedule_end', $new_value['end'] );
+
+		unset( $new_value['start'] );
+		unset( $new_value['end'] );
+
 		return update_post_meta( $product_id, '_it_exchange_sale_schedule', $new_value );
 	}
 
@@ -187,6 +193,9 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 	 */
 	public function get_feature( $existing, $product_id, $options = array() ) {
 
+		$start = get_post_meta( $product_id, '_it_echange_sale_schedule_start', true );
+		$end   = get_post_meta( $product_id, '_it_echange_sale_schedule_end', true );
+
 		$raw_meta = ITUtility::merge_defaults( get_post_meta( $product_id, '_it_exchange_sale_schedule', true ), array(
 			'enable_start' => false,
 			'enable_end'   => false,
@@ -194,6 +203,8 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 			'end'          => ''
 		) );
 
+		$raw_meta['start'] = $start;
+		$raw_meta['end']   = $end;
 
 		if ( ! isset( $options['setting'] ) ) { // if we aren't looking for a particular field
 			return $raw_meta;
