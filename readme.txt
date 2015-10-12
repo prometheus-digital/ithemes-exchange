@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.5
-Stable tag: 1.27.0
+Stable tag: 1.28.0
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,11 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.28.0 = 
+* PHP7 Updates from Timothy Jacobs (Iron Bound Design)
+* Fix for Inventory Bug from Timothy Jacobe (Iron Bound Design)
+* Bug fix for race condition when PayPal IPN comes before PDT
 
 = 1.27.0 =
 * Changing init priority for db sessions, to happen before widget_init
