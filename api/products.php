@@ -100,8 +100,9 @@ function it_exchange_get_product( $post ) {
 */
 function it_exchange_get_products( $args=array() ) {
 	$defaults = array(
-		'post_type' => 'it_exchange_prod',
-		'show_hidden' => false,
+		'post_type'     => 'it_exchange_prod',
+		'show_hidden'   => false,
+		'only_on_sale'  => false // set to true to only return products that are on sale
 	);
 	$args = wp_parse_args( $args, $defaults );
 	$args['meta_query'] = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
@@ -131,10 +132,22 @@ function it_exchange_get_products( $args=array() ) {
 		$args['meta_query'][] = $meta_query;
 	}
 
+	if ( $args['only_on_sale'] ) {
+		$args['meta_query'][] = array(
+			'key'       => '_it_exchange_sale_price',
+			'compare'   => 'EXISTS'
+		);
+	}
+
 	$products = false;
 	if ( $products = get_posts( $args ) ) {
 		foreach( $products as $key => $product ) {
-			$products[$key] = it_exchange_get_product( $product );
+
+			$product = it_exchange_get_product( $product );
+
+			if ( it_exchange_is_product_sale_active( $product ) ) {
+				$products[$key] = $product;
+			}
 		}
 	}
 
@@ -214,7 +227,7 @@ function it_exchange_is_product_available( $product_id=false ) {
 	// Check start time
 	if (
 		it_exchange_product_supports_feature( $product_id, 'availability', array( 'type' => 'start' ) ) &&
-		it_exchange_product_has_feature( $product_id, 'availability', array( 'type' => 'start' ) ) 
+		it_exchange_product_has_feature( $product_id, 'availability', array( 'type' => 'start' ) )
 	) {
 		$start_date = strtotime( it_exchange_get_product_feature( $product_id, 'availability', array( 'type' => 'start' ) ) . ' 00:00:00' );
 		if ( $now_start < $start_date )

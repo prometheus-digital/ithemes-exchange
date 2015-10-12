@@ -131,7 +131,11 @@ class IT_Exchange_Sale_Price extends IT_Exchange_Product_Feature_Abstract {
 
 			$new_value = it_exchange_convert_to_database_number( $new_value );
 
-			return update_post_meta( $product_id, '_it_exchange_sale_price', $new_value );
+			if ( empty( $new_value ) ) {
+				return delete_post_meta( $product_id, '_it_exchange_sale_price' );
+			} else {
+				return update_post_meta( $product_id, '_it_exchange_sale_price', $new_value );
+			}
 		}
 
 		return false;
