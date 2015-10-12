@@ -688,13 +688,10 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 					break;
 	
 				case 'subscr_signup':
-					if ( isset( $request['amount1'] ) && '0.00' == $request['amount1'] ) { //this is a free trial
-						/* We need to do some free trial magic! */
-						if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
-							it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['custom'], $subscriber_id );
-						} else if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['txn_id'] ) ) {
-							it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
-						}
+					if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
+						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['custom'], $subscriber_id );
+					} else if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['txn_id'] ) ) {
+						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
 					}
 					it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'active' );
 					break;
@@ -1115,9 +1112,8 @@ class IT_Exchange_PayPal_Standard_Add_On {
 	 *
 	 * Sets up the class.
 	 * @since 0.4.0
-	 * @return void
 	*/
-	function IT_Exchange_PayPal_Standard_Add_On() {
+	function __construct() {
 		$this->_is_admin       = is_admin();
 		$this->_current_page   = empty( $_GET['page'] ) ? false : $_GET['page'];
 		$this->_current_add_on = empty( $_GET['add-on-settings'] ) ? false : $_GET['add-on-settings'];
@@ -1125,7 +1121,18 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		if ( ! empty( $_POST ) && $this->_is_admin && 'it-exchange-addons' == $this->_current_page && 'paypal-standard' == $this->_current_add_on ) {
 			$this->save_settings();
 		}
+	}
 
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchane_PayPal_Standard_Add_On() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	function print_settings_page() {

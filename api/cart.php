@@ -267,8 +267,23 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 
 			// Get max quantity setting
 			$max_purchase_quantity = it_exchange_get_product_feature( $product_id, 'purchase-quantity' );
+
+			$inventory = it_exchange_get_product_feature( $product_id, 'inventory' );
+
+			if ( trim( $max_purchase_quantity ) === '' ) {
+				$max_purchase_quantity = $inventory;
+			} else if ( $inventory && (int) $max_purchase_quantity > 0 && (int) $max_purchase_quantity > $inventory ) {
+				$max_purchase_quantity = $inventory;
+			}
+
 			$max_purchase_quantity = apply_filters( 'it_exchange_max_purchase_quantity_cart_check', $max_purchase_quantity, $product_id, $itemized_data, $additional_data, $itemized_hash );
-			$count = ( $max_purchase_quantity && $quantity > $max_purchase_quantity ) ? $max_purchase_quantity : $quantity;
+
+			if ( $quantity > $max_purchase_quantity ) {
+				$count = $max_purchase_quantity;
+			} else {
+				$count = $quantity;
+			}
+
 		} else {
 			$count = 1;
 		}
@@ -321,15 +336,25 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
 				// Get max quantity setting
 				$max_purchase_quantity = it_exchange_get_product_feature( $cart_product['product_id'], 'purchase-quantity' );
 
+				$inventory = it_exchange_get_product_feature( $cart_product['product_id'], 'inventory' );
+
 				// Zero out existing if we're not adding incoming quantity to it.
 				if ( ! $add_to_existing )
 					$cart_product['count'] = 0;
 
-				// If we support it but don't have it, quantity is unlimited
-				if ( ! $max_purchase_quantity )
-					$cart_product['count'] = $cart_product['count'] + $quantity;
-				else
-					$cart_product['count'] = ( ( $cart_product['count'] + $quantity ) > $max_purchase_quantity ) ? $max_purchase_quantity : $quantity + $cart_product['count'];
+				if ( trim( $max_purchase_quantity ) === '' ) {
+					$max_purchase_quantity = $inventory;
+				} else if ( $inventory && (int) $max_purchase_quantity > 0 && (int) $max_purchase_quantity > $inventory ) {
+					$max_purchase_quantity = $inventory;
+				}
+
+				$new_count = $cart_product['count'] + $quantity;
+
+				if ( $new_count > $max_purchase_quantity ) {
+					$new_count = $max_purchase_quantity;
+				}
+
+				$cart_product['count'] = $new_count;
 			} else {
 				$cart_product['count'] = 1;
 			}
@@ -365,7 +390,7 @@ function it_exchange_empty_shopping_cart() {
 */
 function it_exchange_cache_customer_cart( $customer_id=false ) {
 	// Grab the current customer
-	$customer = empty( $customer_id ) ? it_exchange_get_current_customer() : new IT_Exchange_Customer( $customer_id );
+	$customer = empty( $customer_id ) ? it_exchange_get_current_customer() : it_exchange_get_customer( $customer_id );
 
 	// Abort if we don't have a logged in customer
 	if ( empty( $customer->id ) )
@@ -389,7 +414,7 @@ function it_exchange_cache_customer_cart( $customer_id=false ) {
 */
 function it_exchange_get_cached_customer_cart( $customer_id=false ) {
 	// Grab the current customer
-	$customer = empty( $customer_id ) ? it_exchange_get_current_customer() : new IT_Exchange_Customer( $customer_id );
+	$customer = empty( $customer_id ) ? it_exchange_get_current_customer() : it_exchange_get_customer( $customer_id );
 
 	// Abort if we don't have a logged in customer
 	if ( empty( $customer->id ) )
@@ -648,8 +673,9 @@ function it_exchange_get_cart_product_quantity_by_product_id( $product_id ) {
 	$products = it_exchange_get_cart_products();
 
 	foreach ( $products as $product ) {
-		if ( $product['product_id'] == $product_id )
+		if ( !empty( $product['product_id'] ) && $product['product_id'] == $product_id ) {
 			return $product['count'];
+		}
 	}
 
 	return 0;

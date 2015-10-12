@@ -19,8 +19,7 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	 *
 	 * @since 1.4.0
 	 *
-	 * @param integer $product_id optional product id for current product
-	 * @return void
+	 * @param int|bool $product_id optional product id for current product
 	*/
 	function __construct( $product_id=false ) {
 		parent::__construct( $product_id );

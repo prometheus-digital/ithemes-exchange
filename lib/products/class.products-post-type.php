@@ -17,9 +17,8 @@ class IT_Exchange_Product_Post_Type {
 	 * Class Constructor
 	 *
 	 * @since 0.3.0
-	 * @return void
 	*/
-	function IT_Exchange_Product_Post_Type() {
+	function __construct() {
 		$this->init();
 
 		add_action( 'template_redirect', array( $this, 'load_product' ) );
@@ -40,6 +39,17 @@ class IT_Exchange_Product_Post_Type {
 
 		if ( is_admin() && !empty( $_REQUEST['post_type'] ) && 'it_exchange_prod' === $_REQUEST['post_type'] )
 			add_action( 'pre_get_posts', array( $this, 'remove_disabled_product_types_from_admin_list' ) );
+	}
+
+	/**
+	 * Deprecated PHP 4 constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Product_Post_Type() {
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 	
 	/**

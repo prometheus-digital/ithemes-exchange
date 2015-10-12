@@ -61,9 +61,10 @@ class IT_Exchange_Product {
 	 *
 	 * @since 0.3.2
 	 * @param mixed $post  wp post id or post object. optional.
-	 * @return void
+	 *
+	 * @throws Exception If post type is invalid.
 	*/
-	function IT_Exchange_Product( $post=false ) {
+	function __construct( $post=false ) {
 
 		// If not an object, try to grab the WP object
 		if ( ! is_object( $post ) )
@@ -79,7 +80,7 @@ class IT_Exchange_Product {
 
 		// Return a WP Error if we don't have the $post object by this point
 		if ( ! $post )
-			return new WP_Error( 'it-exchange-product-not-a-wp-post', __( 'The IT_Exchange_Product class must have a WP post object or ID passed to its constructor', 'it-l10n-ithemes-exchange' ) );
+			throw new Exception("Invalid post type.");
 
 		// Grab the $post object vars and populate this objects vars
 		foreach( (array) get_object_vars( $post ) as $var => $value ) {
@@ -105,6 +106,19 @@ class IT_Exchange_Product {
 		else
 			add_action( 'admin_init', array( $this, 'set_add_edit_screen_supports' ) );
 
+	}
+
+	/**
+	 * This constructor is deprecated.
+	 *
+	 * @deprecated
+	 *
+	 * @throws Exception
+	 */
+	function IT_Exchange_Product() {
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

@@ -27,9 +27,11 @@ class IT_Exchange_Casper {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return void
+	 * @param string $current_view
+	 *
+	 * @throws Exception If invalid view type. Either product or exchange.
 	*/
-	function IT_Exchange_Casper( $current_view ) {
+	function __construct( $current_view ) {
 		if ( 'product' == $current_view )
 			throw new Exception( 'IT_Exchange_Casper should not be constructed when $current_view is "product".' );
 		if ( 'exchange' != it_exchange_get_page_type( $current_view ) )
@@ -38,6 +40,22 @@ class IT_Exchange_Casper {
 		$this->_current_view = $current_view;
 		$this->_wp_query = $GLOBALS['wp_query'];
 		$this->modify_wp_query();
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 *
+	 * @param string $current_view
+	 *
+	 * @throws Exception
+	 */
+	function IT_Exchange_Casper( $current_view ) {
+
+		self::__construct( $current_view );
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

@@ -7,12 +7,27 @@
 
 class IT_Exchange_Shipping {
 
-	function IT_Exchange_Shipping() {
+	/**
+	 * Constructor.
+	 */
+	function __construct() {
 		// We need to include the abstract methods class regardless
 		include_once( dirname( __FILE__ ) . '/class-method.php' );
 		include_once( dirname( __FILE__ ) . '/class-shipping-feature.php' );
 
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'maybe_init' ) );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Shipping() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	function maybe_init() {

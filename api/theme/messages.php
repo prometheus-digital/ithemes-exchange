@@ -51,14 +51,24 @@ class IT_Theme_API_Messages implements IT_Theme_API {
 	 * Constructor
 	 *
 	 * @since 0.4.0
-	 *
-	 * @return void
 	*/
-	function IT_Theme_API_Messages() {
+	function __construct() {
 		// Set the current has_ properties
 		$this->_has_errors   = it_exchange_has_messages( 'error' );
 		$this->_has_notices  = it_exchange_has_messages( 'notice' );
 		$this->_has_messages = $this->_has_errors || $this->_has_errors;
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Theme_API_Messages() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

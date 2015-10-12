@@ -49,9 +49,10 @@ class IT_Exchange_Coupon {
 	 *
 	 * @since 0.4.0
 	 * @param mixed $post  wp post id or post object. optional.
-	 * @return void
+	 *
+	 * @throws Exception
 	*/
-	function IT_Exchange_Coupon( $post=false ) {
+	function __construct( $post=false ) {
 
 		// If not an object, try to grab the WP object
 		if ( ! is_object( $post ) )
@@ -67,7 +68,7 @@ class IT_Exchange_Coupon {
 
 		// Return a WP Error if we don't have the $post object by this point
 		if ( ! $post )
-			return new WP_Error( 'it-exchange-coupon-not-a-wp-post', __( 'The IT_Exchange_Coupon class must have a WP post object or ID passed to its constructor', 'it-l10n-ithemes-exchange' ) );
+			throw new Exception( __( 'The IT_Exchange_Coupon class must have a WP post object or ID passed to its constructor', 'it-l10n-ithemes-exchange' ) );
 
 		// Grab the $post object vars and populate this objects vars
 		foreach( (array) get_object_vars( $post ) as $var => $value ) {
@@ -79,5 +80,17 @@ class IT_Exchange_Coupon {
 		foreach( $additional_properties as $key => $value ) {
 			$this->$key = $value;
 		}
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Coupon() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 }

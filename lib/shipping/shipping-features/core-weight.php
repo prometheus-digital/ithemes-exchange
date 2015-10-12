@@ -10,9 +10,12 @@ class IT_Exchange_Core_Shipping_Feature_Weight extends IT_Exchange_Shipping_Feat
 
 	/**
 	 * Constructor
+	 *
+	 * @param int|bool $product
+	 * @param array    $options
 	*/
 	function __construct( $product=false, $options=array() ) {
-		parent::__construct( $product, $options );
+		parent::__construct( $product );
 	}
 
 	function set_availability() {

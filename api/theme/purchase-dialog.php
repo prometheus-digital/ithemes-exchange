@@ -49,12 +49,23 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	 *
 	 * @since 1.3.0
 	 * @todo get working for admins looking at other users profiles
-	 * @return void
 	*/
-	function IT_Theme_API_Purchase_Dialog() {
+	function __construct() {
 		$dialog = it_exchange_get_current_purchase_dialog();
 		$this->_transaction_method = empty( $GLOBALS['it_exchange']['purchase-dialog']['transaction-method-slug'] ) ? '' : $GLOBALS['it_exchange']['purchase-dialog']['transaction-method-slug'];
 		$this->_required_fields = empty( $dialog->required_cc_fields ) ? array() : $dialog->required_cc_fields;
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Theme_API_Purchase_Dialog() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

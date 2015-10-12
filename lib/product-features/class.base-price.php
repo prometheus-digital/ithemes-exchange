@@ -14,10 +14,8 @@ class IT_Exchange_Base_Price {
 	 * Constructor. Registers hooks
 	 *
 	 * @since 0.3.8
-	 *
-	 * @return void
 	*/
-	function IT_Exchange_Base_Price() {
+	function __construct() {
 		if ( is_admin() ) {
 			add_action( 'load-post-new.php', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'load-post.php', array( $this, 'init_feature_metaboxes' ) );
@@ -28,6 +26,18 @@ class IT_Exchange_Base_Price {
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'add_feature_support_to_product_types' ) );
 		add_filter( 'it_exchange_product_has_feature_base-price', array( $this, 'product_has_feature') , 9, 3 );
 		add_filter( 'it_exchange_product_supports_feature_base-price', array( $this, 'product_supports_feature') , 9, 2 );
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Base_Price() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

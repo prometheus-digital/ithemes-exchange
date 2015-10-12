@@ -38,12 +38,22 @@ class IT_Theme_API_Download implements IT_Theme_API {
 	 * Constructor
 	 *
 	 * @since 0.4.0
-	 *
-	 * @return void
 	*/
-	function IT_Theme_API_Download() {
+	function __construct() {
 		// Set the current global download as a property
 		$this->download = empty( $GLOBALS['it_exchange']['download'] ) ? false : $GLOBALS['it_exchange']['download'];
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Theme_API_Download() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

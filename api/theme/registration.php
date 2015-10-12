@@ -51,9 +51,8 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 	 *
 	 * @since 0.4.0
 	 * @todo get working for admins looking at other users profiles
-	 * @return void
 	*/
-	function IT_Theme_API_Registration() {
+	function __construct() {
 
 		if ( it_exchange_in_superwidget() ) {
 
@@ -65,6 +64,18 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 
 			$this->registration_session = $data;
 		}
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Theme_API_Registration() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

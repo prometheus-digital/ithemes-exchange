@@ -58,12 +58,22 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	 * Constructor
 	 *
 	 * @since 0.4.0
-	 *
-	 * @return void
 	*/
-	function IT_Theme_API_Product() {
+	function __construct() {
 		// Set the current global product as a property
 		$this->product = empty( $GLOBALS['it_exchange']['product'] ) ? false : $GLOBALS['it_exchange']['product'];
+	}
+
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Theme_API_Product() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**
@@ -403,8 +413,11 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			if ( ! it_exchange( 'product', 'is-available' ) )
 				return '';
 
-			if ( (int) $max_quantity > 0 && (int) $max_quantity > $inventory )
+			if ( trim( $max_quantity ) === '' ) {
 				$max_quantity = $inventory;
+			} else if ( $inventory && (int) $max_quantity > 0 && (int) $max_quantity > $inventory ) {
+				$max_quantity = $inventory;
+			}
 		}
 
 		// Return requested format

@@ -41,10 +41,8 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 * Constructor: Init
 	 *
 	 * @since 0.4.0
-	 *
-	 * @return void
 	*/
-	function IT_Exchange_Super_Widget() {
+	function __construct() {
 		$id_base = 'it-exchange-super-widget';
 		$name    = __( 'iThemes Exchange Super Widget', 'it-l10n-ithemes-exchange' );
 		$options = array(
@@ -62,6 +60,18 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	}
 
 	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Super_Widget() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
+	}
+
+	/**
 	 * Outputs the widget content. This is a required method by the WP_Widget class
 	 *
 	 * @since 0.4.0
@@ -72,7 +82,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	*/
 	function widget( $args, $instance ) {
 		if ( ! $this->get_state() )
-			return false;
+			return;
 
 		$defaults = array(
 			'enqueue_hide_script' => true,
@@ -194,7 +204,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 * @since 0.4.0
 	 *
 	 * @param array $instance Current settings
-	 * @return void
+	 * @return string
 	 */
 	function form($instance) {
 		echo '<p class="no-options-widget">' . __('There are no options for this widget.') . '</p>';

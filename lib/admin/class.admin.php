@@ -44,9 +44,8 @@ class IT_Exchange_Admin {
 	 *
 	 * @uses add_action()
 	 * @since 0.1.0
-	 * @return void
 	*/
-	function IT_Exchange_Admin( &$parent ) {
+	function __construct( $parent ) {
 
 		// Set parent property
 		$this->_parent = $parent;
@@ -135,6 +134,20 @@ class IT_Exchange_Admin {
 		add_filter( 'plugin_row_meta', array( $this, 'it_exchange_plugin_row_meta' ), 10, 4 );
 
 		add_action( 'admin_footer', array( $this, 'add_store_link_to_product_saved_message' ) );
+	}
+
+	/**
+	 * Deprecated PHP 4 constructor.
+	 *
+	 * @deprecated
+	 *
+	 * @param $parent
+	 */
+	function IT_Exchange_Admin( $parent)  {
+
+		self::__construct( $parent );
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**
@@ -1981,5 +1994,6 @@ Order: %s
 		return $mime_types;
 	}
 }
-if ( is_admin() )
+if ( is_admin() ) {
 	$GLOBALS['IT_Exchange_Admin'] = new IT_Exchange_Admin( $this );
+}

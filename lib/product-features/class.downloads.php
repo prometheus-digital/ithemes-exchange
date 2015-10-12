@@ -14,9 +14,8 @@ class IT_Exchange_Product_Feature_Downloads {
 	 * Constructor. Registers hooks
 	 *
 	 * @since 0.4.0
-	 * @return void
 	*/
-	function IT_Exchange_Product_Feature_Downloads() {
+	function __construct() {
 		if ( is_admin() ) {
 			add_action( 'load-post-new.php', array( $this, 'init_feature_metaboxes' ) );
 			add_action( 'load-post.php', array( $this, 'init_feature_metaboxes' ) );
@@ -36,13 +35,23 @@ class IT_Exchange_Product_Feature_Downloads {
 	}
 
 	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Product_Feature_Downloads() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
+	}
+
+	/**
 	 * Adds transaction hashes to the products in a transaction.
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object the cart data
-	 * @param integer the transaction id
-	 * @return updated cart data with the download hashes
+	 * @param integer $transaction_id the transaction id
 	*/
 	function add_transaction_hash_to_product( $transaction_id ) {
 		// Grab all products purchased with this transaction

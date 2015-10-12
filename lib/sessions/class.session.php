@@ -28,27 +28,40 @@ class IT_Exchange_Session {
 	*/
 	private $_session;
 
-	function IT_Exchange_Session() {
+	/**
+	 * Constructor.
+	 *
+	 * @since 0.3.3
+	 */
+	function __construct() {
 		if( ! defined( 'IT_EXCHANGE_SESSION_COOKIE' ) )
 			define( 'IT_EXCHANGE_SESSION_COOKIE', 'it_exchange_session_' . COOKIEHASH );
 
 		if ( ! class_exists( 'Recursive_ArrayAccess' ) )
-			require_once( 'db_session_manager/class-recursive-arrayaccess.php' );
+			require_once( dirname( __FILE__ ) .  '/db_session_manager/class-recursive-arrayaccess.php' );
 
 		// Only include the functionality if it's not pre-defined.
 		if ( ! class_exists( 'IT_Exchange_DB_Sessions' ) ) {
-			require_once( 'db_session_manager/class-db-session.php' );
-			require_once( 'db_session_manager/db-session.php' );
+			require_once( dirname( __FILE__ ) .  '/db_session_manager/class-db-session.php' );
+			require_once( dirname( __FILE__ ) . '/db_session_manager/db-session.php' );
 		}
 
-		if ( empty( $this->_session ) )
-			add_action( 'plugins_loaded', array( $this, 'init' ) );
-		else
-			add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'init' ), -1 );
 
 		// Reset the session when the user loggs out
 		add_action( 'wp_logout', array( $this, 'reset_session_and_cache_cart_on_logout' ) );
+	}
 
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_Session() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	/**

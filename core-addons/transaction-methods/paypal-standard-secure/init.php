@@ -142,7 +142,7 @@ add_filter( 'handle_purchase_cart_request_already_processed_for_paypal-standard-
  * @param object $transaction_object The transaction object
 */
 function it_exchange_process_paypal_standard_secure_addon_transaction( $status, $transaction_object ) {
-	
+
 	if ( $status ) //if this has been modified as true already, return.
 		return $status;
 	
@@ -875,7 +875,7 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 	$response = wp_remote_post( $paypal_api_url, array( 'body' => $payload ) );
 	$body = wp_remote_retrieve_body( $response );
 	
-	if ( 'VERIFIED' === $body || true ) {
+	if ( 'VERIFIED' === $body ) {
 		
 		$general_settings = it_exchange_get_option( 'settings_general' );
 		$settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
@@ -925,13 +925,11 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 					break;
 	
 				case 'subscr_signup':
-					if ( isset( $request['amount1'] ) && '0.00' == $request['amount1'] ) { //this is a free trial
-						/* We need to do some free trial magic! */
-						if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
-							it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['custom'], $subscriber_id );
-						} else if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['txn_id'] ) ) {
-							it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
-						}
+					/* We need to do some free trial magic! */
+					if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
+						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['custom'], $subscriber_id );
+					} else if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['txn_id'] ) ) {
+						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
 					}
 					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'active' );
 					break;
@@ -1068,15 +1066,14 @@ function it_exchange_paypal_standard_secure_addon_add_child_transaction( $paypal
 		//this transaction DOES exist, don't try to create a new one, just update the status
 		it_exchange_paypal_standard_secure_addon_update_transaction_status( $paypal_standard_secure_id, $payment_status );
 	} else {
+		$parent_tx_id = false;
+		$customer_id = false;
 		if ( !empty( $subscriber_id ) ) {
 			$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id_by_subscriber_id( $subscriber_id );
 			foreach( $transactions as $transaction ) { //really only one
 				$parent_tx_id = $transaction->ID;
 				$customer_id = get_post_meta( $transaction->ID, '_it_exchange_customer_id', true );
 			}
-		} else {
-			$parent_tx_id = false;
-			$customer_id = false;
 		}
 
 		if ( $parent_tx_id && $customer_id ) {
@@ -1354,9 +1351,8 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 	 *
 	 * Sets up the class.
 	 * @since 0.4.0
-	 * @return void
 	*/
-	function IT_Exchange_paypal_standard_secure_Add_On() {
+	function __construct() {
 		$this->_is_admin       = is_admin();
 		$this->_current_page   = empty( $_GET['page'] ) ? false : $_GET['page'];
 		$this->_current_add_on = empty( $_GET['add-on-settings'] ) ? false : $_GET['add-on-settings'];
@@ -1364,7 +1360,18 @@ class IT_Exchange_paypal_standard_secure_Add_On {
 		if ( ! empty( $_POST ) && $this->_is_admin && 'it-exchange-addons' == $this->_current_page && 'paypal-standard-secure' == $this->_current_add_on ) {
 			$this->save_settings();
 		}
+	}
 
+	/**
+	 * Deprecated PHP 4 style constructor.
+	 *
+	 * @deprecated
+	 */
+	function IT_Exchange_paypal_standard_secure_Add_On() {
+
+		self::__construct();
+
+		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
 	function print_settings_page() {
