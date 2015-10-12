@@ -80,10 +80,12 @@ abstract class IT_Exchange_Product_Feature_Abstract {
 	 * Deprecated PHP 4 style constructor.
 	 *
 	 * @deprecated
+	 *
+	 * @param array $args
 	 */
-	function IT_Exchange_Product_Feature_Abstract() {
+	function IT_Exchange_Product_Feature_Abstract( $args = array() ) {
 
-		self::__construct();
+		self::__construct( $args );
 
 		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
