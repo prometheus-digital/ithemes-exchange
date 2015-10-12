@@ -9,7 +9,7 @@
 /**
  * Check if a sale price is active.
  *
- * @since 1.24.0
+ * @since 1.28.0
  *
  * @param int|IT_Exchange_Product $product
  *

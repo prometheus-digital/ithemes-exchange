@@ -2,14 +2,14 @@
 /**
  * This file contains the core-addon product feature for scheduling sales.
  *
- * @since   1.24.0
+ * @since   1.28.0
  * @package IT_Exchange
  */
 
 /**
  * Class IT_Exchange_Sale_Schedule
  *
- * @since 1.24.0
+ * @since 1.28.0
  */
 class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 
@@ -23,7 +23,7 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 			'metabox_title' => __( "Sale Schedule", 'it-l10n-ithemes-exchange' )
 		);
 
-		parent::IT_Exchange_Product_Feature_Abstract( $args );
+		parent::__construct( $args );
 
 		add_filter( 'it_exchange_is_product_sale_active', array( $this, 'enforce_schedule' ), 10, 2 );
 	}
@@ -31,7 +31,7 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 	/**
 	 * This echos the feature metabox.
 	 *
-	 * @since 1.0
+	 * @since 1.28.0
 	 *
 	 * @param \WP_Post $post
 	 */
@@ -93,7 +93,7 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 	/**
 	 * This saves the value.
 	 *
-	 * @since 1.0
+	 * @since 1.28.0
 	 */
 	public function save_feature_on_product_save() {
 
@@ -149,7 +149,7 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 	/**
 	 * This updates the feature for a product
 	 *
-	 * @since 1.0
+	 * @since 1.28.0
 	 *
 	 * @param integer $product_id the product id
 	 * @param array   $new_value  the new value
@@ -177,7 +177,7 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 	/**
 	 * Return the product's features
 	 *
-	 * @since 1.0
+	 * @since 1.28.0
 	 *
 	 * @param mixed   $existing   the values passed in by the WP Filter API. Ignored here.
 	 * @param integer $product_id the WordPress post ID
@@ -223,7 +223,7 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 	/**
 	 * Does the product have the feature?
 	 *
-	 * @since 1.0
+	 * @since 1.28.0
 	 *
 	 * @param mixed   $result Not used by core
 	 * @param integer $product_id
@@ -245,7 +245,7 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 	 * This is different than if it has the feature, a product can
 	 * support a feature but might not have the feature set.
 	 *
-	 * @since 1.0
+	 * @since 1.28.0
 	 *
 	 * @param mixed   $result Not used by core
 	 * @param integer $product_id

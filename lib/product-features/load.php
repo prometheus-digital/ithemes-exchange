@@ -47,8 +47,6 @@ require( $this->_plugin_path . 'lib/product-features/class.wp-post-supports.php'
 /**
  * Load the Sale Price product feature.
  *
- * todo move to core-addon
- *
- * @since 1.24.0
+ * @since 1.28.0
  */
 require( $this->_plugin_path . 'lib/product-features/class.sale-price.php' );
