@@ -202,15 +202,6 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$price    = empty( $db_price ) ? '<span class="free-label">' . $options['free-label'] . '</span>' : it_exchange_format_price( $base_price );
 			$price    = ( empty( $options['free-label'] ) && empty( $db_price ) ) ? it_exchange_format_price( $base_price ) : $price;
 
-			if ( it_exchange_is_product_sale_active( $this->product ) ) {
-
-				$sale_price = it_exchange_get_product_feature( $this->product->ID, 'sale-price' );
-				$sale_price = it_exchange_format_price( $sale_price );
-
-				$price = "<del>$price</del>&nbsp;";
-				$price .= "<ins>$sale_price</ins>";
-			}
-
 			if ( 'html' == $options['format'] )
 				$result .= $options['before'];
 

@@ -40,3 +40,29 @@ function it_exchange_is_product_sale_active( $product ) {
 
 	return apply_filters( 'it_exchange_is_product_sale_active', true, $product );
 }
+
+/**
+ * Add sale information to the base price in the IT_Theme_API_Product class.
+ *
+ * @since 1.28.0
+ *
+ * @param string $price
+ * @param int    $product_id
+ *
+ * @return string
+ */
+function it_exchange_add_sale_information_to_base_price_theme( $price, $product_id ) {
+
+	if ( it_exchange_is_product_sale_active( $product_id ) ) {
+
+		$sale_price = it_exchange_get_product_feature( $product_id, 'sale-price' );
+		$sale_price = it_exchange_format_price( $sale_price );
+
+		$price = "<del>$price</del>&nbsp;";
+		$price .= "<ins>$sale_price</ins>";
+	}
+
+	return $price;
+}
+
+add_filter( 'it_exchange_api_theme_product_base_price', 'it_exchange_add_sale_information_to_base_price_theme', 10, 2 );
