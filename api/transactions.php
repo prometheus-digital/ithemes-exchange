@@ -214,7 +214,9 @@ function it_exchange_generate_transaction_object() {
  * @return bool true or false depending on success
 */
 function it_exchange_add_transient_transaction( $method, $temp_id, $customer_id = false, $transaction_object ) {
-	return set_transient( $method . '-' . $temp_id, array( 'customer_id' => $customer_id, 'transaction_object' => $transaction_object ), apply_filters( 'it_exchange_transient_transaction_expiry', 60 * 60 * 24 ) );
+    update_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id, current_time( 'timestamp' ) + apply_filters( 'it_exchange_transient_transaction_expiry', 60 * 60 * 24 ) );
+    update_option( 'ite_temp_tnx_' . $method . '_' . $temp_id, array( 'customer_id' => $customer_id, 'transaction_object' => $transaction_object ) );
+    return true;
 }
 
 /**
@@ -223,11 +225,18 @@ function it_exchange_add_transient_transaction( $method, $temp_id, $customer_id 
  * @since 0.4.20
  * @param string $method name of method that created the transient
  * @param string $temp_id temporary transaction ID created by the transient
+ * @param bool $force_delete Force delete transient from options table (if found)
  *
  * @return array of customer_id and transaction_object
 */
-function it_exchange_get_transient_transaction( $method, $temp_id ) {
-	return get_transient( $method . '-' . $temp_id );
+function it_exchange_get_transient_transaction( $method, $temp_id, $force_delete=false ) {
+	$expires = get_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id, false );
+	$txn_details = get_option( 'ite_temp_tnx_' . $method . '_' . $temp_id, false );
+	$now = current_time( 'timestamp' );
+    if ( !empty( $txn_details ) && ( $now > intval( $expires ) || $force_delete ) ) {
+		it_exchange_delete_transient_transaction( $method, $temp_id );
+	}
+	return $txn_details;
 }
 
 /**
@@ -240,7 +249,9 @@ function it_exchange_get_transient_transaction( $method, $temp_id ) {
  * @return bool true or false depending on success
 */
 function it_exchange_delete_transient_transaction( $method, $temp_id ) {
-	return delete_transient( $method . '-' . $temp_id );
+	delete_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id );
+	delete_option( 'ite_temp_tnx_' . $method . '_' . $temp_id );
+	return true;
 }
 
 /**

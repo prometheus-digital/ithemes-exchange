@@ -647,9 +647,16 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 	
 		if ( !empty( $request['txn_type'] ) ) {
 	
-			if ( !empty( $request['transaction_subject'] ) && $transient_data = it_exchange_get_transient_transaction( 'pps', $request['transaction_subject'] ) ) {
-				it_exchange_delete_transient_transaction( 'pps', $request['transaction_subject']  );
-				return it_exchange_add_transaction( 'paypal-standard', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
+			if ( !empty( $request['custom'] ) ) {
+				$tmp_txn_id = $request['custom'];
+			} else if ( !empty( $request['transaction_subject'] ) ) {
+				$tmp_txn_id = $request['transaction_subject'];
+			} else {
+				$tmp_txn_id = false;
+			}
+			
+			if ( !empty( $request['txn_id'] ) && !empty( $request['payment_status'] ) && !empty( $tmp_txn_id ) && $transient_data = it_exchange_get_transient_transaction( 'pps', $tmp_txn_id, true ) ) {
+				it_exchange_add_transaction( 'paypal-standard-secure', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
 			}
 	
 			switch( $request['txn_type'] ) {
