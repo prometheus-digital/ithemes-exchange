@@ -199,8 +199,8 @@ class IT_Exchange_Pages {
 	*/
 	function login_out_page_redirect() {
 		if ( is_user_logged_in() && 'login' == $this->_current_view ) {
-			$url = it_exchange_get_page_url( 'profile' );
-			it_exchange_redirect( $url, 'login-to-profile-when-user-logged-in' );
+			$url = it_exchange_get_page_url( 'account' );
+			it_exchange_redirect( $url, 'login-to-account-when-user-logged-in' );
 			die();
 		} else if ( is_user_logged_in() && 'logout' == $this->_current_view ) {
 			/**
@@ -231,8 +231,8 @@ class IT_Exchange_Pages {
 	function registration_redirect() {
 		if ( is_user_logged_in() && 'registration' == $this->_current_view
 			&& ! current_user_can( 'administrator' ) ) {
-			$url = it_exchange_get_page_url( 'profile' );
-			it_exchange_redirect( $url, 'registration-to-profile-when-logged-in' );
+			$url = it_exchange_get_page_url( 'account' );
+			it_exchange_redirect( $url, 'registration-to-account-when-logged-in' );
 			die();
 		}
 	}
