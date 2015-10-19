@@ -206,7 +206,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			$base_price = empty( $options['price'] ) ? it_exchange_get_product_feature( $this->product->ID, 'base-price' ): $options['price'];
 
 			// Replace with Free label if needed
-			$db_price = it_exchange_convert_to_database_number( $base_price );
+			$db_price = (int) it_exchange_convert_to_database_number( $base_price );
 			$price    = empty( $db_price ) ? '<span class="free-label">' . $options['free-label'] . '</span>' : it_exchange_format_price( $base_price );
 			$price    = ( empty( $options['free-label'] ) && empty( $db_price ) ) ? it_exchange_format_price( $base_price ) : $price;
 
