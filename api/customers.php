@@ -314,7 +314,7 @@ function it_exchange_save_customer_billing_address( $address, $customer_id=false
 	$billing = apply_filters( 'it_exchange_save_customer_billing_address', $address, $customer_id );
 
 	if ( false !== $billing ) {
-		update_user_meta( it_exchange_get_current_customer_id(), 'it-exchange-billing-address', $billing );
+		update_user_meta( $customer_id, 'it-exchange-billing-address', $billing );
 		do_action( 'it_exchange_customer_billing_address_updated', $billing, $customer_id );
 		return true;
 	}
