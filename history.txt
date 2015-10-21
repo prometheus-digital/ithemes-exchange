@@ -1171,3 +1171,7 @@
 	Fix for registration/checkout redirects bug	
 1.27.0 - Lew Ayotte, Elise Alley
 	Changing init priority for db sessions, to happen before widget_init
+1.28.0 - Lew Ayotte, Elise Alley, Timothy B. Jacobs
+	PHP7 Updates from Timothy Jacobs (Iron Bound Design)
+	Fix for Inventory Bug from Timothy Jacobe (Iron Bound Design)
+	Bug fix for race condition when PayPal IPN comes before PDT
