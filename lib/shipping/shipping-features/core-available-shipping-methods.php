@@ -25,7 +25,7 @@ class IT_Exchange_Core_Shipping_Feature_Available_Shipping_Methods extends IT_Ex
 	*/
 	function set_availability() {
 		$options = it_exchange_get_option( 'shipping-general' );
-		$this->available = ! empty( $options['products-can-override-available-shipping-methods'] );
+		$this->available = ! empty( $options['products-can-override-shipping-methods'] );
 	}
 
 	function set_enabled() {

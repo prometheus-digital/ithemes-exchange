@@ -368,7 +368,7 @@ class IT_Exchange_Shipping {
 			array(
 				'type'    => 'yes_no_drop_down',
 				'label'   => __( 'Can individual products override the global Shipping Methods setting?', 'it-l10n-ithemes-exchange' ),
-				'slug'    => 'products-can-override-available-shipping-methods',
+				'slug'    => 'products-can-override-shipping-methods',
 				'tooltip' => __( 'Selecting "yes" will allow you to set available Shipping Methods for a product from it\'s Add/Edit product screen.', 'it-l10n-ithemes-exchange' ),
 				'default' => '0',
 			),
