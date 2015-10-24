@@ -221,6 +221,8 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 							
 						}
 						
+						wp_mail( 'lew@ithemes.com', 'PayPal PDT $response_array', print_r( $response_array, true ) );
+
 						$transient_data = it_exchange_get_transient_transaction( 'ppss', $transient_transaction_id );
 						if ( !empty( $transient_data ) ) {
 							if ( !empty( $transient_data['transaction_id'] ) ) {
@@ -261,9 +263,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 					it_exchange_clear_session_data( 'ppss_transient_transaction_id' );
 					$transient_data = it_exchange_get_transient_transaction( 'ppss', $transient_transaction_id[0] );
 					if ( !empty( $transient_data ) ) {
-						if ( !empty( $transient_data['transaction_id'] ) ) {
-							return $transient_data['transaction_id']; //Already created transaction, by IPN
-						} else if ( !empty( $transient_data['transaction_object']->products ) ) {
+						if ( !empty( $transient_data['transaction_object']->products ) ) {
 							if ( 1 === count( $transient_data['transaction_object']->products ) ) {
 								foreach( $transient_data['transaction_object']->products as $key => $product ) {
 									if ( it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
@@ -883,7 +883,9 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 	$body = wp_remote_retrieve_body( $response );
 	
 	if ( 'VERIFIED' === $body ) {
-				
+		
+		wp_mail( 'lew@ithemes.com', 'PayPal IPN $request', print_r( $request, true ) );
+		
 		$general_settings = it_exchange_get_option( 'settings_general' );
 		$settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
 	
@@ -903,9 +905,11 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 			if ( !empty( $tmp_txn_id ) ) {
 				$transient_data = it_exchange_get_transient_transaction( 'ppss', $tmp_txn_id );
 				if ( !empty( $transient_data ) ) {
-					if ( !empty( $request['txn_id'] ) && !empty( $request['payment_status'] ) && empty( $transient_data['transaction_id'] ) ) {
-						$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
-						it_exchange_add_transient_transaction( 'ppss', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id );
+					if ( !empty( $request['txn_id'] ) && !empty( $request['payment_status'] ) ) {
+						if ( empty( $transient_data['transaction_id'] ) ) {
+							$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
+							it_exchange_add_transient_transaction( 'ppss', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id );
+						}
 					}
 				}
 			}
