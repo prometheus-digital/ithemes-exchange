@@ -51,8 +51,6 @@ class IT_Exchange_Transaction_Post_Type {
 	}
 
 	function init() {
-		add_filter( 'it_exchange_transactions_post_type_hierarchical', array( $this, 'it_exchange_transactions_post_type_hierarchical' ) );
-
 		$this->post_type = 'it_exchange_tran';
 		$labels    = array(
 			'name'          => __( 'Payments', 'it-l10n-ithemes-exchange' ),
@@ -67,19 +65,13 @@ class IT_Exchange_Transaction_Post_Type {
 			'show_in_nav_menus'    => false,
 			'show_in_menu'         => false, // We will be adding it manually with various labels based on available product-type add-ons
 			'show_in_admin_bar'    => false,
-			'hierarchical'         => apply_filters( 'it_exchange_transactions_post_type_hierarchical', false ),
+			'hierarchical'         => apply_filters( 'it_exchange_transactions_post_type_hierarchical', true ),
 			'register_meta_box_cb' => array( $this, 'meta_box_callback' ),
 			'delete_with_user'     => false,
 			'supports'             => array( // Support everything but page-attributes for add-on flexibility
 				'title',
-				'editor',
 				'author',
-				'thumbnail',
-				'excerpt',
-				'trackbacks',
 				'custom-fields',
-				'comments',
-				'revisions',
 				'post-formats',
 			),
 			'capabilities'         => array(
@@ -93,24 +85,6 @@ class IT_Exchange_Transaction_Post_Type {
 		);
 
 		add_action( 'init', array( $this, 'register_the_post_type' ) );
-	}
-
-	/**
-	 * We want to set transactions to hierarchical on the edit screen only
-	 * This is used for adding payments to a transaction that has a parent transaction
-	 *
-	 * @since 1.3.0
-	 *
-	 * @param bool $hierarchical
-	 * @return bool
-	*/
-	function it_exchange_transactions_post_type_hierarchical( $hierarchical ) {
-		global $pagenow;
-
-		if ( 'edit.php' === $pagenow && !empty( $_REQUEST['post_type'] ) && 'it_exchange_tran' === $_REQUEST['post_type'] )
-			return true;
-		else
-			return $hierarchical;
 	}
 
 	/**

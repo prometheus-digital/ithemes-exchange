@@ -269,7 +269,9 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 									if ( it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
 										$transient_data['transaction_object']->total = '0.00'; //should be 0.00 ... since this is a free trial!
 										$transient_data['transaction_object']->subtotal = '0.00'; //should be 0.00 ... since this is a free trial!
-										return it_exchange_add_transaction( 'paypal-standard-secure', $transient_transaction_id[0], 'completed', $it_exchange_customer->id, $transient_data['transaction_object'] );
+										$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $transient_transaction_id[0], 'completed', $it_exchange_customer->id, $transient_data['transaction_object'] );
+										it_exchange_add_transient_transaction( 'ppss', $transient_transaction_id[0], $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id );
+										return $txn_id;
 									}
 								}
 							}
