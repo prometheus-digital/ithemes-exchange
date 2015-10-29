@@ -1645,3 +1645,63 @@ function it_exchange_add_on_before_disable_payment_gateways( $add_on ) {
 	}
 }
 add_action( 'it_exchange_add_on_before_disable', 'it_exchange_add_on_before_disable_payment_gateways' );
+
+/**
+ * Setup schedule for delete transient transactions (moved away from WP transient API)
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_transient_transactions_garbage_collection() {
+	if ( ! wp_next_scheduled( 'it_exchange_trans_txn_garbage_collection' ) ) {
+		wp_schedule_event( time(), 'twicedaily', 'it_exchange_trans_txn_garbage_collection' );
+	}
+}
+add_action( 'wp', 'it_exchange_transient_transactions_garbage_collection' );
+
+/**
+ * Delete all expired transients in a single query
+ *
+ * @since CHANGEME
+ *
+ * @return void
+*/
+function it_exchange_trans_txn_cleanup() {
+	global $wpdb;
+	
+	if ( defined( 'WP_SETUP_CONFIG' ) ) {
+		return;
+	}
+	
+	if ( ! defined( 'WP_INSTALLING' ) ) {
+		
+		$expiration_keys = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE 'ite_temp_tnx_expires_%" );
+
+		$now = time();
+		$expired_sessions = array();
+
+		foreach( $expiration_keys as $expiration ) {
+			// If the session has expired
+			if ( $now > intval( $expiration->option_value ) ) {
+				// Get the Method and Temp ID by parsing the option_name
+				$temp_txn_name = substr( $expiration->option_name, 21 );
+				list( $method, $temp_id ) = explode( '_', $temp_txn_name, 2 );
+
+				$expired_transients[] = 'ite_temp_tnx_expires_' . $method . '_' . $temp_id;
+				$expired_transients[] = 'ite_temp_tnx_' . $method . '_' . $temp_id;
+			}
+		}
+
+		// Delete all expired transients in a single query
+		if ( ! empty( $expired_transients ) ) {
+			$formatted = implode( ', ', array_fill( 0, count( $expired_transients ), '%s' ) );
+			$query     = $wpdb->prepare( "DELETE FROM $wpdb->options WHERE option_name IN ($formatted)", $expired_transients );
+			$wpdb->query( $query );
+		}
+	}
+
+	// Allow other plugins to hook in to the garbage collection process.
+	do_action( 'it_exchange_trans_txn_cleanup' );
+}
+add_action( 'it_exchange_trans_txn_garbage_collection', 'it_exchange_trans_txn_cleanup' );

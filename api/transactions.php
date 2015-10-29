@@ -215,7 +215,7 @@ function it_exchange_generate_transaction_object() {
  * @return bool true or false depending on success
 */
 function it_exchange_add_transient_transaction( $method, $temp_id, $customer_id = false, $transaction_object, $transaction_id = false ) {
-    update_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id, current_time( 'timestamp' ) + apply_filters( 'it_exchange_transient_transaction_expiry', 60 * 60 * 24 ) );
+    update_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id, current_time( 'timestamp' ) + apply_filters( 'it_exchange_transient_transaction_expiry', 60 * 60 * 4 ) );
     update_option( 'ite_temp_tnx_' . $method . '_' . $temp_id, array( 'customer_id' => $customer_id, 'transaction_object' => $transaction_object, 'transaction_id' => $transaction_id ) );
     return true;
 }
@@ -235,6 +235,7 @@ function it_exchange_get_transient_transaction( $method, $temp_id ) {
 	$now = current_time( 'timestamp' );
     if ( !empty( $txn_details ) && $now > intval( $expires ) ) {
 		it_exchange_delete_transient_transaction( $method, $temp_id );
+		return false;
 	}
 	return $txn_details;
 }
