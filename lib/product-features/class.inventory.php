@@ -17,10 +17,22 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 	 *
 	 * @param array $args
 	*/
-	function IT_Exchange_Product_Feature_Inventory( $args=array() ) {
+	function __construct( $args=array() ) {
 		parent::__construct( $args );
 		// Decrease inventory on purchase
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'decrease_inventory_on_purchase' ) );
+	}
+
+	/**
+	 * Deprecated Constructor. Registers hooks
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $args
+	*/
+	function IT_Exchange_Product_Feature_Inventory( $args=array() ) {
+		self::__construct();
+		_deprecated_constructor( __CLASS__, '1.29.0' );
 	}
 
 	/**
