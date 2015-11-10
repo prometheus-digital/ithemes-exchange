@@ -203,9 +203,9 @@ function it_exchange_generate_transaction_object() {
 }
 
 /**
- * Add a transient transaction, default expiry set to 24 hours
+ * Update a transient transaction, default expiry set to 4 hours
  *
- * @since 0.4.20
+ * @since CHANGEME
  * @param string $method name of method that created the transient
  * @param string $temp_id temporary transaction ID created by the transient
  * @param int|bool $customer_id ID of current customer
@@ -214,9 +214,26 @@ function it_exchange_generate_transaction_object() {
  *
  * @return bool true or false depending on success
 */
-function it_exchange_add_transient_transaction( $method, $temp_id, $customer_id = false, $transaction_object, $transaction_id = false ) {
+function it_exchange_update_transient_transaction( $method, $temp_id, $customer_id = false, $transaction_object, $transaction_id = false ) {
     update_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id, current_time( 'timestamp' ) + apply_filters( 'it_exchange_transient_transaction_expiry', 60 * 60 * 4 ) );
     update_option( 'ite_temp_tnx_' . $method . '_' . $temp_id, array( 'customer_id' => $customer_id, 'transaction_object' => $transaction_object, 'transaction_id' => $transaction_id ) );
+    return true;
+}
+
+/**
+ * Add a transient transaction
+ *
+ * @since 0.4.20
+ * @param string $method name of method that created the transient
+ * @param string $temp_id temporary transaction ID created by the transient
+ * @param int|bool $customer_id ID of current customer
+ * @param stdClass $transaction_object Object used to pass to transaction methods
+ *
+ * @return bool true or false depending on success
+*/
+function it_exchange_add_transient_transaction( $method, $temp_id, $customer_id = false, $transaction_object ) {
+	//Deprecated
+	it_exchange_update_transient_transaction( $method, $temp_id, $customer_id, $transaction_object );
     return true;
 }
 
