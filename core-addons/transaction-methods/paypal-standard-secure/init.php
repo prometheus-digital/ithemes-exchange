@@ -146,9 +146,6 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 	if ( $status ) //if this has been modified as true already, return.
 		return $status;
 	
-	//error_log( 'auto-return' );
-	//wp_mail( 'lew@ithemes.com', 'PayPal Auto-Return $_REQUEST', print_r( $_REQUEST, true ) );
-	
 	if ( !empty( $_REQUEST['it-exchange-transaction-method'] ) && 'paypal-standard-secure' === $_REQUEST['it-exchange-transaction-method'] ) {
 		
 		if ( !empty( $_REQUEST['paypal-standard-secure-nonce'] ) && wp_verify_nonce( $_REQUEST['paypal-standard-secure-nonce'], 'ppss-nonce' ) ) {
@@ -229,37 +226,25 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 							$subscriber_id = false;
 						}
 						
-						//wp_mail( 'lew@ithemes.com', 'PayPal PDT $response_array', print_r( $response_array, true ) );
-
 						$transient_data = it_exchange_get_transient_transaction( 'ppss', $transient_transaction_id );
 						
 						if ( !empty( $transient_data ) ) {
-							//error_log( '!empty( $transient_data )' );
 							if ( !empty( $transient_data['transaction_id'] ) ) {
 								//Already created transaction, by IPN probably
 								$txn_id = $transient_data['transaction_id'];
-								//error_log( 'Already created transaction, by IPN probably' );
 							} else {
 								//If the transient still exists, delete it and add the official transaction
 								it_exchange_delete_transient_transaction( 'ppss', $transient_transaction_id );
 								$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
-								//error_log( 'Not already created by IPN... creating it on auto-return' );
 							}
 						} else {
-							//error_log( 'no transient data found' );
 							//Transaction shouldn't have been created yet...
 							if ( $ite_txn = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transaction_id ) ) {
 								//In case it has, look it up by the PayPal transaction ID and return the ITE transaction ID
 								$txn_id = $ite_txn;
-								//error_log( 'In case it has, look it up by the PayPal transaction ID and return the ITE transaction ID' );
-							//} else if ( $ite_txn = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transient_transaction_id ) ){
-								//In case it has, look it up by the ITE transient transaction ID and return the ITE transaction ID
-								//This is different from checking for the actual transient, because in some cases we use the transient transaction ID as a temporary gateway ID -- but maybe only in cases of free subscriptions... so we might be bale to ignore this.
-							//	$txn_id = $ite_txn;
 							} else {
 								//If the transient didn't exist and there isn't a transaction with this ID already, create it.
 								$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
-								//error_log( 'create the transaction' );
 							}
 						}
 						
@@ -906,7 +891,6 @@ add_filter( 'init', 'it_exchange_paypal_standard_secure_addon_register_webhook' 
  */
 function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 	
-	//error_log( 'webhook' );
     $payload['cmd'] = '_notify-validate';
     foreach( $_POST as $key => $value ) {
 	    $payload[$key] = stripslashes( $value );
@@ -916,9 +900,7 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 	$body = wp_remote_retrieve_body( $response );
 	
 	if ( 'VERIFIED' === $body ) {
-		
-		//wp_mail( 'lew@ithemes.com', 'PayPal IPN $request', print_r( $request, true ) );
-		
+				
 		$general_settings = it_exchange_get_option( 'settings_general' );
 		$settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
 	
@@ -947,25 +929,17 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 				$tmp_txn_id = false;
 			}
 			
-			//error_log( 'tmp_txn_id: ' . $tmp_txn_id );
-			
 			if ( !empty( $tmp_txn_id ) ) {
 				$transient_data = it_exchange_get_transient_transaction( 'ppss', $tmp_txn_id );
 				if ( !empty( $transient_data ) ) {
 					if ( empty( $transient_data['transaction_id'] ) ) {
-						//error_log( "empty( transient_data['transaction_id'] )" );
 						if ( !empty( $request['txn_id'] ) && !empty( $request['payment_status'] ) ) {
-							//error_log( "request['txn_id']: " . $request['txn_id'] );
-							//error_log( "request['payment_status']: " . $request['payment_status'] );
 							$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
-							//error_log( "txn_id " . $txn_id );
 							it_exchange_update_transient_transaction( 'ppss', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id );
 						} else if ( 'subscr_signup' === $request['txn_type'] ) {
-							//error_log( "'subscr_signup' === request['txn_type']" );
 							$transient_data['transaction_object']->total = $request['amount1'];
 							$transient_data['transaction_object']->subtotal = $request['amount1'];
 							$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $request['custom'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
-							//error_log( "txn_id " . $txn_id );
 							it_exchange_update_transient_transaction( 'ppss', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id );
 						}
 					}
