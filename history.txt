@@ -1175,3 +1175,7 @@
 	PHP7 Updates from Timothy Jacobs (Iron Bound Design)
 	Fix for Inventory Bug from Timothy Jacobe (Iron Bound Design)
 	Bug fix for race condition when PayPal IPN comes before PDT
+1.29.0 - Lew Ayotte, Elise Alley
+	Fix for PayPal IPN race conditions
+	Fix bug causing shipping method overrise save issues when PHP Suhosin is compiled
+	Changing registration and login page default redirects to account page rather than profile page
