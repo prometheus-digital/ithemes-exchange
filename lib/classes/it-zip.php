@@ -27,7 +27,7 @@ if ( ! class_exists( 'ITZip' ) ) {
 		var $_args = array();
 		
 		
-		function ITZip( $args = array() ) {
+		function __construct( $args = array() ) {
 			if ( is_string( $args ) && is_file( $args ) )
 				$args = array( 'file' => $args );
 			
@@ -58,6 +58,10 @@ if ( ! class_exists( 'ITZip' ) ) {
 			$this->_cleanup_old_temp_directories();
 			
 			register_shutdown_function( array( &$this, '__destruct' ) );
+		}
+		
+		function ITZip( $args = array() ) {
+			ITZip::__construct( $args );
 		}
 		
 		function __destruct() {

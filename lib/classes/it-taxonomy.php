@@ -30,7 +30,7 @@ if ( ! class_exists( 'ITTaxonomy' ) ) {
 		var $_priority = '';
 		
 		
-		function ITTaxonomy() {
+		function __construct() {
 			$this->_setup_default_settings();
 			
 			if ( empty( $this->_template_file_base ) )
@@ -40,6 +40,10 @@ if ( ! class_exists( 'ITTaxonomy' ) ) {
 			add_action( 'deactivated_plugin', array( &$this, 'deactivate_plugin' ) );
 			
 			add_filter( 'template_include', array( &$this, '__filter_template_include' ) );
+		}
+		
+		function ITTaxonomy() {
+			ITTaxonomy::__construct();
 		}
 		
 		function init() {

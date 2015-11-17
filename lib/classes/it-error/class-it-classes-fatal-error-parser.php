@@ -28,10 +28,14 @@ class IT_Classes_Fatal_Error_Parser {
 	var $solutions_complete = false;
 	
 	
-	function IT_Classes_Fatal_Error_Parser( $error ) {
+	function __construct( $error ) {
 		$this->add_data( $error, 'error_' );
 		
 		$this->parse();
+	}
+	
+	function IT_Classes_Fatal_Error_Parser( $error ) {
+		IT_Classes_Fatal_Error_Parser::__construct( $error );
 	}
 	
 	function add_data( $data, $prefix = '' ) {

@@ -54,7 +54,7 @@ if ( ! class_exists( 'ITForm' ) ) {
 		var $_input_group_stack = array();
 		
 		
-		function ITForm( $options = array(), $args = array() ) {
+		function __construct( $options = array(), $args = array() ) {
 			if ( is_bool( $args ) )
 				$args = array( 'compact_used_inputs' => $args );
 			
@@ -74,6 +74,9 @@ if ( ! class_exists( 'ITForm' ) ) {
 			$this->_options =& $options;
 		}
 		
+		function ITForm( $options = array(), $args = array() ) {
+			ITForm::__construct( $options, $args );
+		}
 		
 		public static function get_post_data( $compact_used_inputs = false ) {
 			$data = array();

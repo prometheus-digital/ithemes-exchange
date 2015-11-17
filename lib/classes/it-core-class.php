@@ -57,7 +57,7 @@ if ( ! class_exists( 'ITCoreClass' ) ) {
 		var $_self_link;
 		
 		
-		function ITCoreClass() {
+		function __construct() {
 			if ( false === $this->_it_storage_version )
 				$this->_storage = false;
 			else if ( '2' != $this->_it_storage_version )
@@ -69,6 +69,10 @@ if ( ! class_exists( 'ITCoreClass' ) ) {
 			add_action( 'admin_menu', array( &$this, 'add_admin_pages' ), $this->_menu_priority );
 			add_action( 'widgets_init', array( &$this, 'register_widgets' ) );
 			add_action( "it_storage_do_upgrade_{$this->_var}", array( &$this, 'add_storage_upgrade_handler' ) );
+		}
+		
+		function ITCoreClass() {
+			ITCoreClass::__construct();
 		}
 		
 		function init() {
@@ -183,7 +187,7 @@ if ( ! class_exists( 'ITCoreClass' ) ) {
 				return;
 			
 			if ( ! isset( $this->_storage ) || ! is_callable( array( $this->_storage, 'load' ) ) )
-				ITError::fatal( "empty_var:class_var:{$this->_class}->_storage", "The $this->_class class did not set the \$this->_storage variable. This should be set by the ITCoreClass class, ensure that the ITCoreClass::ITCoreClass() method is called." );
+				ITError::fatal( "empty_var:class_var:{$this->_class}->_storage", "The $this->_class class did not set the \$this->_storage variable. This should be set by the ITCoreClass class, ensure that the parent::__construct() method is called." );
 			
 			$this->_options = $this->_storage->load();
 		}

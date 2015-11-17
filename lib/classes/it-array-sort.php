@@ -20,7 +20,7 @@ if ( ! class_exists( 'ITArraySort' ) ) {
 		var $_index = '';
 		var $_args = array();
 		
-		function ITArraySort( $array, $index, $args = array() ) {
+		function __construct( $array, $index, $args = array() ) {
 			$this->_array = $array;
 			$this->_index = $index;
 			
@@ -32,6 +32,10 @@ if ( ! class_exists( 'ITArraySort' ) ) {
 			$this->_args = array_merge( $default_args, $args );
 			
 			it_classes_load( 'it-utility.php' );
+		}
+		
+		function ITArraySort( $array, $index, $args = array() ) {
+			ITArraySort::__construct( $array, $index, $args );
 		}
 		
 		function get_sorted_array() {

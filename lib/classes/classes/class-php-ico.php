@@ -34,7 +34,7 @@ class PHP_ICO {
 	 * @param string $file Optional. Path to the source image file.
 	 * @param array $sizes Optional. An array of sizes (each size is an array with a width and height) that the source image should be rendered at in the generated ICO file. If sizes are not supplied, the size of the source image will be used.
 	 */
-	function PHP_ICO( $file = false, $sizes = array() ) {
+	function __construct( $file = false, $sizes = array() ) {
 		$required_functions = array(
 			'getimagesize',
 			'imagecreatefromstring',
@@ -60,6 +60,10 @@ class PHP_ICO {
 		
 		if ( false != $file )
 			$this->add_image( $file, $sizes );
+	}
+	
+	function PHP_ICO( $file = false, $sizes = array() ) {
+		PHP_ICO::__construct( $file, $sizes );
 	}
 	
 	/**

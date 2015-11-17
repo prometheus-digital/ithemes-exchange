@@ -64,7 +64,7 @@ if ( ! class_exists( 'ITPostType' ) ) {
 		var $_is_admin_post_listing = false;
 		
 		
-		function ITPostType() {
+		function __construct() {
 			$this->_class = get_class( $this );
 			
 			if ( ! $this->__validate_config() )
@@ -95,6 +95,10 @@ if ( ! class_exists( 'ITPostType' ) ) {
 			add_action( 'load-edit.php', array( &$this, '__identify_editor' ) );
 			
 			add_action( 'admin_print_styles', array( &$this, '__admin_print_styles' ) );
+		}
+		
+		function ITPostType() {
+			ITPostType::__construct();
 		}
 		
 		// Initialize the Post Type ////////////////////////////

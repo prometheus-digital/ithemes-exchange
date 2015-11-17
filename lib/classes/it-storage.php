@@ -33,7 +33,7 @@ if ( ! class_exists( 'ITStorage' ) ) {
 		var $_loaded = false;
 		
 		
-		function ITStorage( $var, $global = false, $storage_version = '0', $suppress_errors = false ) {
+		function __construct( $var, $global = false, $storage_version = '0', $suppress_errors = false ) {
 			$this->_var = $var;
 			$this->_global = $global;
 			$this->_storage_version = $storage_version;
@@ -56,6 +56,10 @@ if ( ! class_exists( 'ITStorage' ) ) {
 			add_action( "it_storage_remove_{$this->_var}", array( &$this, 'remove' ) );
 			
 			add_filter( "it_storage_load_{$this->_var}", array( &$this, 'load' ) );
+		}
+		
+		function ITStorage( $var, $global = false, $storage_version = '0', $suppress_errors = false ) {
+			ITStorage::__construct( $var, $global, $storage_version, $suppress_errors );
 		}
 		
 		function _remove_filters() {
@@ -222,7 +226,7 @@ if ( ! class_exists( 'ITStorage2' ) ) {
 		var $_data = false;
 		
 		
-		function ITStorage2( $var, $args = array() ) {
+		function __construct( $var, $args = array() ) {
 			if ( is_string( $args ) )
 				$args = array( 'version' => $args );
 			
@@ -249,6 +253,10 @@ if ( ! class_exists( 'ITStorage2' ) ) {
 			add_action( "it_storage_remove_{$this->_var}", array( &$this, 'remove' ) );
 			
 			add_filter( "it_storage_load_{$this->_var}", array( &$this, 'load' ) );
+		}
+		
+		function ITStorage2( $var, $args = array() ) {
+			ITStorage2::__construct( $var, $args );
 		}
 		
 		function _remove_filters() {

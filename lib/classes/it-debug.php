@@ -2,7 +2,7 @@
 
 /*
 Written by Chris Jean for iThemes.com
-Version 1.1.1
+Version 1.1.2
 
 Version History
 	1.0.0 - 2012-06-15 - Chris Jean
@@ -19,6 +19,8 @@ Version History
 		Fixed invalid recursive argument passing to print_r() in get_backtrace().
 	1.1.1 - 2015-04-02 - Chris Jean
 		Better handling of non-ASCII, non-UTF8 string output.
+	1.1.2 - 2015-11-16 - Chris Jean
+		Fixed warning that happened in _inspect_dive() on PHP <5.4.0.
 */
 
 
@@ -239,7 +241,14 @@ if ( ! class_exists( 'ITDebug' ) ) {
 					if ( ITUtility::is_callable_function( 'mb_detect_encoding' ) && ( 'UTF-8' !== mb_detect_encoding( $data, 'UTF-8', true ) ) && ITUtility::is_callable_function( 'utf8_encode' ) ) {
 						$data = utf8_encode( $data );
 					}
-					return htmlspecialchars( $data, ENT_COMPAT | ENT_HTML401, 'UTF-8', false );
+					
+					$flags = ENT_COMPAT;
+					
+					if ( defined( 'ENT_HTML401' ) ) {
+						$flags |= ENT_HTML401;
+					}
+					
+					return htmlspecialchars( $data, $flags, 'UTF-8', false );
 				}
 			}
 			

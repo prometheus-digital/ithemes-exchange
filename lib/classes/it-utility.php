@@ -2,7 +2,7 @@
 
 /*
 Written by Chris Jean for iThemes.com
-Version 1.10.0
+Version 1.10.1
 
 Version History
 	1.7.0 - 2013-02-13 - Chris Jean
@@ -22,6 +22,9 @@ Version History
 		Updated fix_url() to change https to http when is_ssl() is false.
 	1.10.0 - 2015-04-03 - Chris Jean
 		Added is_callable_function() to detect if a function is both callable and not disabled.
+	1.10.1 - 2015-11-16 - Chris Jean
+		Updated get_file_from_url() and get_url_from_file() to handle multisite installations on servers that
+			periodically change the absolute path to the site, such as happens on Media Temple.
 */
 
 
@@ -423,10 +426,28 @@ if ( ! class_exists( 'ITUtility' ) ) {
 			$upload_dir['basedir'] = str_replace( '\\', '/', $upload_dir['basedir'] );
 			
 			if ( is_array( $upload_dir ) && ( false === $upload_dir['error'] ) ) {
-				if ( 0 === strpos( $file, $upload_dir['basedir'] ) )
+				if ( 0 === strpos( $file, $upload_dir['basedir'] ) ) {
 					$url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file );
-				else if ( false !== strpos( $file, 'wp-content/uploads' ) )
-					$url = $upload_dir['baseurl'] . substr( $file, strpos( $file, 'wp-content/uploads' ) + 18 );
+				} else if ( false !== strpos( $file, 'wp-content/uploads' ) ) {
+					$path_pattern = 'wp-content/uploads';
+					$url_base = $upload_dir['baseurl'];
+					
+					if ( is_multisite() && ! ( is_main_network() && is_main_site() && defined( 'MULTISITE' ) ) ) {
+						if ( defined( 'MULTISITE' ) ) {
+							$mu_path = '/sites/' . get_current_blog_id();
+						} else {
+							$mu_path = '/' . get_current_blog_id();
+						}
+						
+						if ( false === strpos( $file, "$path_pattern$mu_path" ) ) {
+							$url_base = substr( $url_base, 0, - strlen( $mu_path ) );
+						} else {
+							$path_pattern .= $mu_path;
+						}
+					}
+					
+					$url = $url_base . substr( $file, strpos( $file, $path_pattern ) + strlen( $path_pattern ) );
+				}
 			}
 			
 			if ( empty( $url ) ) {
@@ -463,10 +484,28 @@ if ( ! class_exists( 'ITUtility' ) ) {
 			$upload_dir = ITUtility::get_cached_value( 'wp_upload_dir' );
 			
 			if ( is_array( $upload_dir ) && ( false === $upload_dir['error'] ) ) {
-				if ( 0 === strpos( $url, $upload_dir['baseurl'] ) )
+				if ( 0 === strpos( $url, $upload_dir['baseurl'] ) ) {
 					$file = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $url );
-				else if ( false !== strpos( $url, 'wp-content/uploads' ) )
-					$file = $upload_dir['basedir'] . substr( $url, strpos( $url, 'wp-content/uploads' ) + 18 );
+				} else if ( false !== strpos( $url, 'wp-content/uploads' ) ) {
+					$path_pattern = 'wp-content/uploads';
+					$file_base = $upload_dir['basedir'];
+					
+					if ( is_multisite() && ! ( is_main_network() && is_main_site() && defined( 'MULTISITE' ) ) ) {
+						if ( defined( 'MULTISITE' ) ) {
+							$mu_path = '/sites/' . get_current_blog_id();
+						} else {
+							$mu_path = '/' . get_current_blog_id();
+						}
+						
+						if ( false === strpos( $url, "$path_pattern$mu_path" ) ) {
+							$file_base = substr( $file_base, 0, - strlen( $mu_path ) );
+						} else {
+							$path_pattern .= $mu_path;
+						}
+					}
+					
+					$file = $file_base . substr( $url, strpos( $url, $path_pattern ) + strlen( $path_pattern ) );
+				}
 			}
 			
 			if ( empty( $file ) ) {

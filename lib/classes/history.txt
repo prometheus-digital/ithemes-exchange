@@ -360,3 +360,7 @@
 	Enhancement: Better handling of non-ASCII, non-UTF8 characters in debug output.
 2.4.4 - 2015-07-14 - Chris Jean
 	Bug Fix: Dropdowns with multiple levels of options now default to the current value as expected.
+2.4.5 - 2015-10-08 - Chris Jean
+	Compatibility Fix: Updated constructors to prevent warnings in PHP 7 while maintaining backwards compatibility.
+2.4.6 - 2015-11-16 - Chris Jean
+	Bug Fix: Fixed URL to file path and file path to URL conversions on multisite installations where the site's absolute path may vary.

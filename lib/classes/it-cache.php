@@ -32,7 +32,7 @@ if ( ! class_exists( 'ITCache' ) ) {
 		var $_rebuild_types = array();
 		
 		
-		function ITCache( $name, $args = array() ) {
+		function __construct( $name, $args = array() ) {
 			$this->_name = $name;
 			
 			$default_args = array(
@@ -59,6 +59,10 @@ if ( ! class_exists( 'ITCache' ) ) {
 			
 			add_action( "it_cache_render_{$name}", array( &$this, 'render' ) );
 			add_action( "it_cache_rebuild_cache_{$name}", array( &$this, 'rebuild_cache' ) );
+		}
+		
+		function ITCache( $name, $args = array() ) {
+			ITCache::__construct( $name, $args );
 		}
 		
 		function render( $type ) {
