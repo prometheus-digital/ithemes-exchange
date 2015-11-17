@@ -1179,3 +1179,6 @@
 	Fix for PayPal IPN race conditions
 	Fix bug causing shipping method overrise save issues when PHP Suhosin is compiled
 	Changing registration and login page default redirects to account page rather than profile page
+1.30.0 - Lew Ayotte, Elise Alley
+	Fixing typo in Transient Transaction Cleanup
+	Updating lib/classes
