@@ -1676,7 +1676,7 @@ function it_exchange_trans_txn_cleanup() {
 	
 	if ( ! defined( 'WP_INSTALLING' ) ) {
 		
-		$expiration_keys = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE 'ite_temp_tnx_expires_%" );
+		$expiration_keys = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE 'ite_temp_tnx_expires_%'" );
 
 		$now = time();
 		$expired_sessions = array();
