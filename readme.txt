@@ -88,6 +88,10 @@ http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
 
+= 1.30.0 =
+* Fixing typo in Transient Transaction Cleanup
+* Updating lib/classes
+
 = 1.29.0 =
 * Fix for PayPal IPN race conditions
 * Fix bug causing shipping method overrise save issues when PHP Suhosin is compiled
