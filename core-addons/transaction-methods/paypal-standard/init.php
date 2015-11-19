@@ -143,6 +143,18 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 
 		if ( !empty( $_REQUEST['paypal-standard-nonce'] ) && wp_verify_nonce( $_REQUEST['paypal-standard-nonce'], 'pps-nonce' ) ) {
 
+			$now = time();
+			while ( $time = get_option( 'updating_paypal_transactions' ) ) {
+				$now = time();
+				if ( ( $now - $time ) > 5 ) { //We only want to give them 5 seconds to make their changes... probably could do it in less
+					delete_option( 'updating_paypal_transactions' );
+				} else {
+					time_nanosleep( 0, 500000000 ); //half a second
+				}
+			}
+			
+			update_option( 'updating_paypal_transactions', time() );
+			
 			if ( !empty( $_REQUEST['tx'] ) ) //if PDT is enabled
 				$transaction_id = $_REQUEST['tx'];
 			else if ( !empty( $_REQUEST['txn_id'] ) ) //if PDT is not enabled
@@ -182,59 +194,64 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 	
 					if ( number_format( $transaction_amount, '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) )
 						throw new Exception( __( 'Error: Amount charged is not the same as the cart total!', 'it-l10n-ithemes-exchange' ) );
-							
-					$transient_data = it_exchange_get_transient_transaction( 'ppss', $transient_transaction_id );
-					
-					if ( !empty( $transient_data ) ) {
-						if ( !empty( $transient_data['transaction_id'] ) ) {
-							//Already created transaction, by IPN probably
-							$txn_id = $transient_data['transaction_id'];
-						} else {							
-							//If the transient still exists, delete it and add the official transaction
-							it_exchange_delete_transient_transaction( 'pps', $transient_transaction_id );
-							$txn_id = it_exchange_add_transaction( 'paypal-standard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
-						} 
-					} else {
-						//Transaction shouldn't have been created yet...
-						if ( $ite_txn = it_exchange_paypal_standard_addon_get_ite_transaction_id( $transaction_id ) ) {
-							//In case it has, look it up by the PayPal transaction ID and return the ITE transaction ID
-							$txn_id = $ite_txn;
-						} else {
-							//If the transient didn't exist and there isn't a transaction with this ID already, create it.
-							$txn_id = it_exchange_add_transaction( 'paypal-standard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
-						}
-					}
 						
-					return $txn_id;
+					
+					if ( $temp_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $transient_transaction_id ) ) {
+						
+						$transaction = it_exchange_get_transaction( $temp_txn_id );
+						$transaction->update_transaction_meta( 'method_id', $transaction_id );
+						$txn_id = $transaction_id;
+						
+					} else {
+						
+						$transient_data = it_exchange_get_transient_transaction( 'pps', $transient_transaction_id );
+						
+						if ( !empty( $transient_data ) ) {
+							if ( !empty( $transient_data['transaction_id'] ) ) {
+								//Already created transaction, by IPN probably
+								$txn_id = $transient_data['transaction_id'];
+							} else {							
+								//If the transient still exists, delete it and add the official transaction
+								$txn_id = it_exchange_add_transaction( 'paypal-standard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
+							} 
+							it_exchange_delete_transient_transaction( 'pps', $transient_transaction_id );
+						} else {
+							//Transaction shouldn't have been created yet...
+							if ( $ite_txn = it_exchange_paypal_standard_addon_get_ite_transaction_id( $transaction_id ) ) {
+								//In case it has, look it up by the PayPal transaction ID and return the ITE transaction ID
+								$txn_id = $ite_txn;
+							} else {
+								//If the transient didn't exist and there isn't a transaction with this ID already, create it.
+								$txn_id = it_exchange_add_transaction( 'paypal-standard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
+							}
+						}
+					
+					}
 	
 				}
 				catch ( Exception $e ) {
 	
 					it_exchange_add_message( 'error', $e->getMessage() );
-					return false;
 	
 				}
 	
 			} else if ( is_null( $transaction_id ) && is_null( $transient_transaction_id ) && is_null( $transaction_amount ) && is_null( $transaction_status ) ) {
 				//Check to see if the transient transaction was for a free trial membership and then proceed as necessary...
 				$transient_transaction_id = it_exchange_get_session_data( 'pps_transient_transaction_id' );
-				it_exchange_clear_session_data( 'ppss_transient_transaction_id' );
+				it_exchange_clear_session_data( 'pps_transient_transaction_id' );
 				if ( !empty( $transient_transaction_id[0] ) ) {
-					if ( $txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $transient_transaction_id[0] ) ) {
-						//In case it has, look it up by the ITE transient transaction ID and return the ITE transaction ID
-						return $txn_id;
-					}
-					$transient_data = it_exchange_get_transient_transaction( 'pps', $transient_transaction_id[0] );
-					if ( !empty( $transient_data ) ) {
-						if ( !empty( $transient_data['transaction_object']->products ) ) {
-							foreach( $transient_data['transaction_object']->products as $key => $product ) { //really only one product
-								if ( it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
-									//make sure the product has the trial enabled
-									$transient_data['transaction_object']->total = '0.00'; //should be 0.00 ... since this is a free trial!
-									$transient_data['transaction_object']->subtotal = '0.00'; //should be 0.00 ... since this is a free trial!
-									$txn_id = it_exchange_add_transaction( 'paypal-standard', $transient_transaction_id[0], 'completed', $it_exchange_customer->id, $transient_data['transaction_object'] );
-									it_exchange_update_transient_transaction( 'pps', $transient_transaction_id[0], $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id ); //update transient with ITE txn_id, to help IPN set subscriber ID.
-									return $txn_id;
+					if ( false === $txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $transient_transaction_id[0] ) ) {
+						$transient_data = it_exchange_get_transient_transaction( 'pps', $transient_transaction_id[0] );
+						if ( !empty( $transient_data ) ) {
+							if ( !empty( $transient_data['transaction_object']->products ) ) {
+								foreach( $transient_data['transaction_object']->products as $key => $product ) { //really only one product
+									if ( it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
+										//make sure the product has the trial enabled
+										$transient_data['transaction_object']->total = '0.00'; //should be 0.00 ... since this is a free trial!
+										$transient_data['transaction_object']->subtotal = '0.00'; //should be 0.00 ... since this is a free trial!
+										$txn_id = it_exchange_add_transaction( 'paypal-standard', $transient_transaction_id[0], 'completed', $it_exchange_customer->id, $transient_data['transaction_object'] );
+										it_exchange_update_transient_transaction( 'pps', $transient_transaction_id[0], $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id ); //update transient with ITE txn_id, to help IPN set subscriber ID.
+									}
 								}
 							}
 						}
@@ -242,8 +259,11 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 				}
 			}
 
-			it_exchange_add_message( 'error', __( 'Unknown error while processing with PayPal. Please try again later.', 'it-l10n-ithemes-exchange' ) );
-
+			if ( empty( $txn_id ) ) {
+				it_exchange_add_message( 'error', __( 'Unknown error while processing with PayPal. Please try again later.', 'it-l10n-ithemes-exchange' ) );
+			}
+			delete_option( 'updating_paypal_transactions' );
+			return $txn_id;
 		}
 
 	}
@@ -654,6 +674,12 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 	
 	if ( 'VERIFIED' === $body ) {
 		
+		if ( get_option( 'updating_paypal_transactions' ) ) {
+			time_nanosleep( 0, 500000000 ); //half a second
+		}
+		
+		update_option( 'updating_paypal_transactions', time() );
+		
 		$general_settings = it_exchange_get_option( 'settings_general' );
 		$settings = it_exchange_get_option( 'addon_paypal_standard' );
 	
@@ -687,13 +713,26 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 				$transient_data = it_exchange_get_transient_transaction( 'pps', $tmp_txn_id );
 				if ( !empty( $transient_data ) ) {
 					if ( empty( $transient_data['transaction_id'] ) ) {
-						if ( !empty( $request['txn_id'] ) && !empty( $request['payment_status'] ) ) {
-							$txn_id = it_exchange_add_transaction( 'paypal-standard', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
+						if ( 'subscr_signup' === $request['txn_type'] ) {
+							if ( isset( $request['amount1'] ) ) {
+								$transient_data['transaction_object']->total = $request['amount1'];
+								$transient_data['transaction_object']->subtotal = $request['amount1'];
+							}
+							$txn_id = it_exchange_add_transaction( 'paypal-standard', $request['custom'], 'completed', $transient_data['customer_id'], $transient_data['transaction_object'] );
 							it_exchange_update_transient_transaction( 'pps', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id );
-						} else if ( 'subscr_signup' === $request['txn_type'] ) {
-							$transient_data['transaction_object']->total = $request['amount1'];
-							$transient_data['transaction_object']->subtotal = $request['amount1'];
-							$txn_id = it_exchange_add_transaction( 'paypal-standard', $request['custom'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
+						} else if ( !empty( $request['txn_id'] ) && !empty( $request['payment_status'] ) ) {
+							$custom_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] );
+							$real_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['txn_id'] );
+							if ( empty( $custom_txn_id ) && empty( $real_txn_id ) ) {
+								$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
+							} else {
+								if ( !empty( $custom_txn_id ) ) {
+									$txn_id = $custom_txn_id;
+								}
+								if ( !empty( $real_txn_id ) ) {
+									$txn_id = $real_txn_id;
+								}
+							}
 							it_exchange_update_transient_transaction( 'pps', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id );
 						}
 					}
@@ -708,7 +747,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 							if ( $temp_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) { //this is a free trial
 								/* We need to do some free trial magic! */
 								$transaction = it_exchange_get_transaction( $temp_txn_id );
-								$transaction->update_transaction_meta( '_it_exchange_transaction_method_id', $request['txn_id'] );
+								$transaction->update_transaction_meta( 'method_id', $request['txn_id'] );
 							}
 							if ( !it_exchange_paypal_standard_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
 								//If the transaction isn't found, we've got a new payment
@@ -767,6 +806,8 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 			}
 	
 		}
+		
+		delete_option( 'updating_paypal_transactions' );
 		
 	} else {
 		
