@@ -237,11 +237,10 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 							$subscriber_id = false;
 						}
 						
-						if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transient_transaction_id ) ) {
+						if ( $txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transient_transaction_id ) ) {
 							
-							$transaction = it_exchange_get_transaction( $temp_txn_id );
+							$transaction = it_exchange_get_transaction( $txn_id );
 							$transaction->update_transaction_meta( 'method_id', $transaction_id );
-							$txn_id = $transaction_id;
 							
 						} else {
 							
@@ -258,10 +257,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 								it_exchange_delete_transient_transaction( 'ppss', $transient_transaction_id );
 							} else {
 								//Transaction shouldn't have been created yet...
-								if ( $ite_txn = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transaction_id ) ) {
-									//In case it has, look it up by the PayPal transaction ID and return the ITE transaction ID
-									$txn_id = $ite_txn;
-								} else {
+								if ( false === $txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $transaction_id ) ) {
 									//If the transient didn't exist and there isn't a transaction with this ID already, create it.
 									$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
 								}
