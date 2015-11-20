@@ -246,15 +246,9 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 						} else {
 							
 							$transient_data = it_exchange_get_transient_transaction( 'ppss', $transient_transaction_id );
-							
-							if ( !empty( $transient_data ) ) {
-								if ( !empty( $transient_data['transaction_id'] ) ) {
-									//Already created transaction, by IPN probably
-									$txn_id = $transient_data['transaction_id'];
-								} else {
-									//If the transient still exists, delete it and add the official transaction
-									$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
-								}
+							if ( !empty( $transient_data['transaction_id'] ) ) {
+								//Already created transaction, by IPN probably
+								$txn_id = $transient_data['transaction_id'];
 								it_exchange_delete_transient_transaction( 'ppss', $transient_transaction_id );
 							} else {
 								//Transaction shouldn't have been created yet...
