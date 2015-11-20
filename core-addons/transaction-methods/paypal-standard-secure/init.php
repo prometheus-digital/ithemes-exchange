@@ -940,6 +940,7 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 		if ( !empty( $request['txn_type'] ) ) {
 			
 			if ( 'web_accept' === $request['txn_type'] ) {
+				
 				switch( strtolower( $request['payment_status'] ) ) {
 					case 'completed':
 						it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] );
@@ -948,97 +949,99 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 						it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['parent_txn_id'], $request['reason_code'] );
 						break;
 				}
-				return;
-			}
-		
-			if ( !empty( $request['custom'] ) ) {
-				$tmp_txn_id = $request['custom'];
-			} else if ( !empty( $request['transaction_subject'] ) ) {
-				$tmp_txn_id = $request['transaction_subject'];
+				
 			} else {
-				$tmp_txn_id = false;
-			}
 			
-			if ( !empty( $tmp_txn_id ) ) {
-				$transient_data = it_exchange_get_transient_transaction( 'ppss', $tmp_txn_id );
-				if ( !empty( $transient_data ) ) {
-					if ( empty( $transient_data['transaction_id'] ) ) {
-						if ( 'subscr_signup' === $request['txn_type'] ) {
-							if ( isset( $request['amount1'] ) ) {
-								$transient_data['transaction_object']->total = $request['amount1'];
-								$transient_data['transaction_object']->subtotal = $request['amount1'];
-							}
-							//Use Temp TXN ID (custom) to create transaction
-							$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $request['custom'], 'completed', $transient_data['customer_id'], $transient_data['transaction_object'] ); 
-							it_exchange_update_transient_transaction( 'ppss', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], array(), $txn_id );
-						} else if ( !empty( $request['txn_id'] ) && !empty( $request['payment_status'] ) ) {
-							if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
-								$transaction = it_exchange_get_transaction( $temp_txn_id );
-								$transaction->update_transaction_meta( 'method_id', $request['txn_id'] );
-							} else {
-								$custom_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] );
-								$real_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['txn_id'] );
-								if ( empty( $custom_txn_id ) && empty( $real_txn_id ) ) {
-									$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
-								} else {
-									if ( !empty( $custom_txn_id ) ) {
-										$txn_id = $custom_txn_id;
-									}
-									if ( !empty( $real_txn_id ) ) {
-										$txn_id = $real_txn_id;
-									}
+				if ( !empty( $request['custom'] ) ) {
+					$tmp_txn_id = $request['custom'];
+				} else if ( !empty( $request['transaction_subject'] ) ) {
+					$tmp_txn_id = $request['transaction_subject'];
+				} else {
+					$tmp_txn_id = false;
+				}
+				
+				if ( !empty( $tmp_txn_id ) ) {
+					$transient_data = it_exchange_get_transient_transaction( 'ppss', $tmp_txn_id );
+					if ( !empty( $transient_data ) ) {
+						if ( empty( $transient_data['transaction_id'] ) ) {
+							if ( 'subscr_signup' === $request['txn_type'] ) {
+								if ( isset( $request['amount1'] ) ) {
+									$transient_data['transaction_object']->total = $request['amount1'];
+									$transient_data['transaction_object']->subtotal = $request['amount1'];
 								}
-								it_exchange_update_transient_transaction( 'ppss', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id );
+								//Use Temp TXN ID (custom) to create transaction
+								$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $request['custom'], 'completed', $transient_data['customer_id'], $transient_data['transaction_object'] ); 
+								it_exchange_update_transient_transaction( 'ppss', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], array(), $txn_id );
+							} else if ( !empty( $request['txn_id'] ) && !empty( $request['payment_status'] ) ) {
+								if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
+									$transaction = it_exchange_get_transaction( $temp_txn_id );
+									$transaction->update_transaction_meta( 'method_id', $request['txn_id'] );
+								} else {
+									$custom_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] );
+									$real_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['txn_id'] );
+									if ( empty( $custom_txn_id ) && empty( $real_txn_id ) ) {
+										$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
+									} else {
+										if ( !empty( $custom_txn_id ) ) {
+											$txn_id = $custom_txn_id;
+										}
+										if ( !empty( $real_txn_id ) ) {
+											$txn_id = $real_txn_id;
+										}
+									}
+									it_exchange_update_transient_transaction( 'ppss', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id );
+								}
 							}
 						}
 					}
 				}
-			}
+				
+				switch( $request['txn_type'] ) {
 			
-			switch( $request['txn_type'] ) {
+					case 'subscr_payment':
+						switch( strtolower( $request['payment_status'] ) ) {
+							case 'completed':
+								if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) { 
+									//subscr_singup came first, switch out the transaction ID
+									$transaction = it_exchange_get_transaction( $temp_txn_id );
+									$transaction->update_transaction_meta( 'method_id', $request['txn_id'] );
+								}
+								if ( !it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
+									//If the transaction isn't found, we've got a new payment	
+									$GLOBALS['it_exchange']['child_transaction'] = true;
+									it_exchange_paypal_standard_secure_addon_add_child_transaction( $request['txn_id'], $request['payment_status'], $subscriber_id, $request['mc_gross'] );
+								} else {
+									//If it is found, make sure the subscriber ID is attached to it
+									it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
+								}
+								it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'active' );
+								break;
+						}
+						break;
 		
-				case 'subscr_payment':
-					switch( strtolower( $request['payment_status'] ) ) {
-						case 'completed':
-							if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) { 
-								//subscr_singup came first, switch out the transaction ID
-								$transaction = it_exchange_get_transaction( $temp_txn_id );
-								$transaction->update_transaction_meta( 'method_id', $request['txn_id'] );
-							}
-							if ( !it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
-								//If the transaction isn't found, we've got a new payment	
-								$GLOBALS['it_exchange']['child_transaction'] = true;
-								it_exchange_paypal_standard_secure_addon_add_child_transaction( $request['txn_id'], $request['payment_status'], $subscriber_id, $request['mc_gross'] );
-							} else {
-								//If it is found, make sure the subscriber ID is attached to it
-								it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
-							}
-							it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'active' );
-							break;
-					}
-					break;
-	
-				case 'subscr_signup':
-					/* We need to do some free trial magic! */
-					if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
-						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['custom'], $subscriber_id );
-						it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['custom'], 'completed' );
-					}
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'active' );
-					break;
-	
-				case 'recurring_payment_suspended':
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'suspended' );
-					break;
-	
-				case 'subscr_cancel':
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
-					break;
-	
-				case 'subscr_eot':
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'deactivated' );
-					break;
-	
+					case 'subscr_signup':
+						/* We need to do some free trial magic! */
+						if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
+							it_exchange_paypal_standard_secure_addon_update_subscriber_id( $request['custom'], $subscriber_id );
+							it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['custom'], 'completed' );
+						}
+						it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'active' );
+						break;
+		
+					case 'recurring_payment_suspended':
+						it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'suspended' );
+						break;
+		
+					case 'subscr_cancel':
+						it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
+						break;
+		
+					case 'subscr_eot':
+						it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'deactivated' );
+						break;
+		
+				}
+				
 			}
 	
 		} else {
