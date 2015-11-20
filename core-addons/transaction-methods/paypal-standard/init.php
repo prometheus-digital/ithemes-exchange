@@ -146,8 +146,9 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 			$now = time();
 			while ( $time = get_option( 'updating_paypal_transactions' ) ) {
 				$now = time();
-				if ( ( $now - $time ) > 2 ) { //We only want to give them 2 seconds to make their changes... probably could do it in less
+				if ( ( $now - $time ) > 2 ) { //We only want to give them 2 seconds to make their changes...
 					delete_option( 'updating_paypal_transactions' );
+					break;
 				} else {
 					time_nanosleep( 0, 500000000 ); //half a second
 				}
@@ -672,8 +673,9 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 		
 		while ( $time = get_option( 'updating_paypal_transactions' ) ) {
 			$now = time();
-			if ( ( $now - $time ) > 2 ) { //We only want to give them 2 seconds to make their changes... probably could do it in less
+			if ( ( $now - $time ) > 2 ) { //We only want to give them 2 seconds to make their changes...
 				delete_option( 'updating_paypal_transactions' );
+				break;
 			} else {
 				time_nanosleep( 0, 500000000 ); //half a second
 			}
