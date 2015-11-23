@@ -158,25 +158,46 @@ class IT_Exchange_Email_Notifications {
 		// Sets Temporary GLOBAL information
 		$GLOBALS['it_exchange']['email-confirmation-data'] = array( $transaction, $this );
 
-		$headers[] = 'From: ' . $settings['receipt-email-name'] . ' <' . $settings['receipt-email-address'] . '>';
-		$headers[] = 'MIME-Version: 1.0';
-		$headers[] = 'Content-Type: text/html';
-		$headers[] = 'charset=utf-8';
+		/**
+		 * Determine whether purchase emails should be sent to a customer.
+		 *
+		 * @since 1.29.0
+		 *
+		 * @param bool                            $send
+		 * @param IT_Exchange_Email_Notifications $this
+		 */
+		if ( apply_filters( 'it_exchange_send_purchase_email_to_customer', true, $this ) ) {
 
-		$subject = do_shortcode( $settings['receipt-email-subject'] );
-		$body    = apply_filters( 'send_purchase_emails_body', $settings['receipt-email-template'], $transaction );
-		$body    = apply_filters( 'send_purchase_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body, $transaction );
-		$body    = $this->body_header() . '<div>' . wpautop( do_shortcode( $body ) ) . '</div>' . $this->body_footer();
+			$headers[] = 'From: ' . $settings['receipt-email-name'] . ' <' . $settings['receipt-email-address'] . '>';
+			$headers[] = 'MIME-Version: 1.0';
+			$headers[] = 'Content-Type: text/html';
+			$headers[] = 'charset=utf-8';
 
-		// Filters
-		$to           = empty( $this->user->data->user_email ) ? false : $this->user->data->user_email;
-		$to           = apply_filters( 'it_exchange_send_purchase_emails_to', $to, $transaction, $settings, $this );
-		$subject      = apply_filters( 'it_exchange_send_purchase_emails_subject', $subject, $transaction, $settings, $this );
-		$body         = apply_filters( 'it_exchange_send_purchase_emails_body', $body, $transaction, $settings, $this );
-		$headers      = apply_filters( 'it_exchange_send_purchase_emails_headers', $headers, $transaction, $settings, $this );
-		$attachments  = apply_filters( 'it_exchange_send_purchase_emails_attachments', array(), $transaction, $settings, $this );
+			$subject = do_shortcode( $settings['receipt-email-subject'] );
+			$body    = apply_filters( 'send_purchase_emails_body', $settings['receipt-email-template'], $transaction );
+			$body    = apply_filters( 'send_purchase_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body, $transaction );
+			$body    = $this->body_header() . '<div>' . wpautop( do_shortcode( $body ) ) . '</div>' . $this->body_footer();
 
-		wp_mail( $to, strip_tags( $subject ), $body, $headers, $attachments );
+			// Filters
+			$to          = empty( $this->user->data->user_email ) ? false : $this->user->data->user_email;
+			$to          = apply_filters( 'it_exchange_send_purchase_emails_to', $to, $transaction, $settings, $this );
+			$subject     = apply_filters( 'it_exchange_send_purchase_emails_subject', $subject, $transaction, $settings, $this );
+			$body        = apply_filters( 'it_exchange_send_purchase_emails_body', $body, $transaction, $settings, $this );
+			$headers     = apply_filters( 'it_exchange_send_purchase_emails_headers', $headers, $transaction, $settings, $this );
+			$attachments = apply_filters( 'it_exchange_send_purchase_emails_attachments', array(), $transaction, $settings, $this );
+
+			wp_mail( $to, strip_tags( $subject ), $body, $headers, $attachments );
+		}
+
+		/**
+		 * Determine whether purchase emails should be sent to the site owner.
+		 *
+		 * @since 1.29.0
+		 *
+		 * @param bool                            $send_admin_email
+		 * @param IT_Exchange_Email_Notifications $this
+		 */
+		$send_admin_email = apply_filters( 'it_exchange_send_purchase_email_to_admin', $send_admin_email, $this );
 
 		// Send admin notification if param is true and email is provided in settings
 		if ( $send_admin_email && ! empty( $settings['notification-email-address'] ) ) {

@@ -117,9 +117,9 @@ a.it-exchange-button {text-decoration:none;}
 #it-exchange-cart .it-exchange-cart-coupon-remove a{text-decoration:none;}
 
 /** ---:[ totals ]:--- */
+#it-exchange-cart-totals {border-bottom: 1px solid #ddd;margin-bottom: 20px;}
 #it-exchange-cart-totals{width:240px;float:right;border-top:none;border-right:0;}
 #it-exchange-cart-totals .it-exchange-table-row{border-bottom:0;}
-#it-exchange-cart-totals .it-exchange-table-column-inner{padding-bottom:0;}
 #it-exchange-cart-totals .it-exchange-cart-total .it-exchange-table-column-inner{padding-bottom:10px;}
 #it-exchange-cart-totals .it-exchange-cart-totals-title {text-align:right;border-right: 1px solid #DDDDDD}
 #it-exchange-cart-totals .it-exchange-cart-totals-amount {border-right: 1px solid #DDDDDD}
@@ -129,7 +129,7 @@ a.it-exchange-button {text-decoration:none;}
 
 /** ---:[ actions ]:--- */
 #it-exchange-cart-actions{overflow:hidden;clear:both;text-align:right;}
-#it-exchange-cart-actions .it-exchange-cart-apply-coupons{margin:1em 0;}
+#it-exchange-cart-actions .it-exchange-cart-apply-coupons{margin: 0 0 1em 0;}
 
 /** ---:[ purchase requirements ]:--- */
 #it-exchange-checkout-purchase-requirements label{display:block;margin-top:1em;}
