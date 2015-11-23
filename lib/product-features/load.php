@@ -43,3 +43,10 @@ require( $this->_plugin_path . 'lib/product-features/class.product-order.php' );
 
 // Product Features: WP Post Type Supports as Product Features
 require( $this->_plugin_path . 'lib/product-features/class.wp-post-supports.php' );
+
+/**
+ * Load the Sale Price product feature.
+ *
+ * @since 1.28.0
+ */
+require( $this->_plugin_path . 'lib/product-features/class.sale-price.php' );
