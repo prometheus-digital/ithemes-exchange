@@ -143,7 +143,6 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 
 		if ( !empty( $_REQUEST['paypal-standard-nonce'] ) && wp_verify_nonce( $_REQUEST['paypal-standard-nonce'], 'pps-nonce' ) ) {
 
-			$now = time();
 			while ( $time = get_option( 'updating_paypal_transactions' ) ) {
 				$now = time();
 				if ( ( $now - $time ) > 2 ) { //We only want to give them 2 seconds to make their changes...
