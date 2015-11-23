@@ -1182,3 +1182,7 @@
 1.30.0 - Lew Ayotte, Elise Alley
 	Fixing typo in Transient Transaction Cleanup
 	Updating lib/classes
+1.31.0 - Lew Ayotte, Elise Alley
+	PayPal Quantum-Locking
+	Transient Transaction Code Cleanup
+	General Code Cleanup
