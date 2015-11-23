@@ -58,6 +58,11 @@ class IT_Exchange_Transaction {
 	var $transaction_data = array();
 
 	/**
+	 * @var string
+	 */
+	var $status;
+
+	/**
 	 * Constructor. Loads post data and transaction data
 	 *
 	 * @since 0.3.3
@@ -159,6 +164,7 @@ class IT_Exchange_Transaction {
 	*/
 	function update_status( $new_status ) {
 		update_post_meta( $this->ID, '_it_exchange_transaction_status', $new_status );
+		$this->status = $new_status;
 	}
 
 	/**
