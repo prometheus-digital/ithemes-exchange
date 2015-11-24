@@ -189,6 +189,14 @@ class IT_Exchange_SW_Shortcode {
 	 */
 	public function callback( $atts ) {
 
+		if ( $this->product ) {
+			if ( current_user_can( 'edit_post', $GLOBALS['post']->ID ) ) {
+				return __( "Only one Super Widget can be embedded per-page.", 'it-l10n-ithemes-exchange' );
+			}
+
+			return '';
+		}
+
 		$atts = shortcode_atts( array( 'product' => null, 'description' => 'no' ), $atts, 'it_exchange_sw' );
 
 		$product      = it_exchange_get_product( $atts['product'] );
@@ -203,7 +211,6 @@ class IT_Exchange_SW_Shortcode {
 		} else if ( ! it_exchange_product_type_supports_feature( $product_type, 'sw-shortcode' ) ) {
 
 			if ( current_user_can( 'edit_post', $GLOBALS['post']->ID ) ) {
-
 				return __( "This product does not support being embedded in shortcodes.", 'it-l10n-ithemes-exchange' );
 			}
 
@@ -219,6 +226,7 @@ class IT_Exchange_SW_Shortcode {
 
 		add_filter( 'it_exchange_super_widget_empty_product_id', array( $this, 'set_sw_product_id' ) );
 		add_filter( 'it_exchange_get_content_product_product_info_loop_elements', array( $this, 'hide_templates' ) );
+		add_filter( 'it_exchange_super_widget_args', array( $this, 'prevent_hide_css' ) );
 
 		ob_start();
 
@@ -271,6 +279,21 @@ class IT_Exchange_SW_Shortcode {
 		}
 
 		return $parts;
+	}
+
+	/**
+	 * Prevent the SW from enqueuing the css to hide itself when the sidebar is being used.
+	 *
+	 * @since 1.33
+	 *
+	 * @param array $args
+	 *
+	 * @return array
+	 */
+	public function prevent_hide_css( $args ) {
+		$args['enqueue_hide_script'] = false;
+
+		return $args;
 	}
 }
 

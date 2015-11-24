@@ -57,6 +57,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			$this->set_valid_states();
 			add_action( 'template_redirect', array( $this, 'load_ajax' ), 1 );
 			add_action( 'template_redirect', array( $this, 'set_state' ), 11 );
+			add_action( 'dynamic_sidebar_before', array( $this, 'maybe_remove_sw_from_sidebar' ) );
 		}
 	}
 
@@ -99,6 +100,16 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		} else {
 			$product_id = $this->_get_product_id_for_non_product_pages();
 		}
+
+		/**
+		 * Filter the args used to build the Super Widget.
+		 *
+		 * @since 1.33
+		 *
+		 * @param array $args
+		 * @param int   $product_id
+		 */
+		$args = apply_filters( 'it_exchange_super_widget_args', $args, $product_id );
 
 		// Some JS we're going to need
 		?>
@@ -369,6 +380,31 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 */
 	protected function _get_product_id_for_non_product_pages() {
 		return apply_filters( 'it_exchange_super_widget_empty_product_id', false );
+	}
+
+	/**
+	 * Maybe remove the SW from the sidebar if the SW shortcode is embedded on this page.
+	 *
+	 * @since 1.33
+	 *
+	 * @param $index
+	 */
+	public function maybe_remove_sw_from_sidebar( $index ) {
+
+		if ( IT_Exchange_SW_Shortcode::has_shortcode() ) {
+
+			global $wp_registered_widgets;
+
+			$widgets = wp_get_sidebars_widgets();
+			$widgets = $widgets[ $index ];
+
+			foreach ( $widgets as $widget ) {
+
+				if ( strpos( $widget, 'it-exchange-super-widget' ) !== false ) {
+					unset( $wp_registered_widgets[ $widget ] );
+				}
+			}
+		}
 	}
 }
 
