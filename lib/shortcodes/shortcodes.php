@@ -217,6 +217,10 @@ class IT_Exchange_SW_Shortcode {
 			return '';
 		}
 
+		if ( is_archive() || is_home() ) {
+			return '';
+		}
+
 		it_exchange_set_product( $product->ID );
 		$this->product = $product;
 
