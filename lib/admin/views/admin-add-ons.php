@@ -83,7 +83,11 @@
 					</div>
 					<div class="add-on-actions">
 						<?php if ( it_exchange_is_addon_enabled( $addon['slug'] ) ) : ?>
-							<?php $url = it_exchange_is_core_addon( $addon['slug'] ) ? wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-disable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-disable-add-on' ) : admin_url() . 'plugins.php'; ?>
+							<?php if ( it_exchange_is_core_addon( $addon['slug'] ) ) {
+								$url = wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-disable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-disable-add-on' );
+							} else {
+								$url = admin_url() . 'plugins.php?s=' . urlencode( $addon['name'] );
+							} ?>
 							<div class="add-on-enabled"><a href="<?php echo $url; ?>" data-text-disable="&times;&nbsp; Disable" data-text-enabled="&#x2714;&nbsp; Enabled">&#x2714;&nbsp; Enabled</a></div>
 						<?php else : ?>
 							<div class="add-on-disabled"><a href="<?php echo wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-enable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-enable-add-on' ); ?>" data-text-enable="&#x2714;&nbsp; Enable" data-text-disabled="&times;&nbsp; Disabled">&times;&nbsp; Disabled</a></div>
