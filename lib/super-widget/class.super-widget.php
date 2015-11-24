@@ -391,7 +391,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 */
 	public function maybe_remove_sw_from_sidebar( $index ) {
 
-		if ( IT_Exchange_SW_Shortcode::has_shortcode() ) {
+		if ( IT_Exchange_SW_Shortcode::has_shortcode() && ! ( is_archive() || is_home() ) ) {
 
 			global $wp_registered_widgets;
 
