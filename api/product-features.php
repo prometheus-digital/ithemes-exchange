@@ -116,7 +116,7 @@ function it_exchange_product_type_supports_feature( $product_type, $feature_key 
 		return false;
 	}
 
-	if ( in_array( $feature_key, $product_types[$product_type]['options']['supports'] ) ) {
+	if ( array_key_exists( $feature_key, $product_types[$product_type]['options']['supports'] ) ) {
 		return true;
 	}
 
