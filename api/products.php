@@ -188,7 +188,10 @@ function it_exchange_set_product( $product ) {
 		it_exchange_set_the_product_id( $product->ID );
 		return true;
 	}
+
 	$GLOBALS['it_exchange']['product'] = false;
+	it_exchange_set_the_product_id( false );
+
 	return false;
 }
 
@@ -225,7 +228,7 @@ function it_exchange_is_product_available( $product_id=false ) {
 	// Check start time
 	if (
 		it_exchange_product_supports_feature( $product_id, 'availability', array( 'type' => 'start' ) ) &&
-		it_exchange_product_has_feature( $product_id, 'availability', array( 'type' => 'start' ) ) 
+		it_exchange_product_has_feature( $product_id, 'availability', array( 'type' => 'start' ) )
 	) {
 		$start_date = strtotime( it_exchange_get_product_feature( $product_id, 'availability', array( 'type' => 'start' ) ) . ' 00:00:00' );
 		if ( $now_start < $start_date )
