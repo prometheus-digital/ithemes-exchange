@@ -110,6 +110,16 @@ function it_exchange_product_type_supports_feature( $product_type, $feature_key 
 	if ( empty( $product_features[$feature_key] ) )
 		return false;
 
+	$product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
+
+	if ( empty($product_types[$product_type])) {
+		return false;
+	}
+
+	if ( array_key_exists( $feature_key, $product_types[$product_type]['options']['supports'] ) ) {
+		return true;
+	}
+
 	if ( empty( $product_features[$feature_key]['product_types'][$product_type] ) )
 		return false;
 

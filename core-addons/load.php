@@ -73,6 +73,7 @@ function it_exchange_register_core_addons() {
 			),
 			'supports'          => apply_filters( 'it_exchange_register_digital_downloads_default_features', array(
 				'inventory' => false,
+				'sw-shortcode' => true
 			) ),
 			'settings-callback' => 'it_exchange_digital_downloads_settings_callback',
 		),
@@ -88,6 +89,9 @@ function it_exchange_register_core_addons() {
 			'labels'      => array(
 				'singular_name' => __( 'Simple Product', 'it-l10n-ithemes-exchange' ),
 			),
+			'supports' => array(
+				'sw-shortcode' => true
+			)
 		),
 		// Physical Product Type
 		'physical-product-type' => array(
@@ -102,6 +106,9 @@ function it_exchange_register_core_addons() {
 			'labels'      => array(
 				'singular_name' => __( 'Physical Product', 'it-l10n-ithemes-exchange' ),
 			),
+			'supports' => array(
+				'sw-shortcode' => true
+			)
 		),
 		// Product Type admin Metabox
 		'switch-product-type-metabox' => array(

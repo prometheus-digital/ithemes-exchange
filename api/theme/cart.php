@@ -77,6 +77,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	 * @return string
 	*/
 	function cart_items( $options=array() ) {
+
 		// Return boolean if has flag was set
 		if ( $options['has'] )
 			return count( it_exchange_get_cart_products() ) > 0 ;

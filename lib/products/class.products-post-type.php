@@ -61,7 +61,7 @@ class IT_Exchange_Product_Post_Type {
 		if ( ! is_admin() ) {
 			if ( is_singular( 'it_exchange_prod' ) ) {
 				global $post;
-				$GLOBALS['it_exchange']['product'] = it_exchange_get_product( $post );
+				it_exchange_set_product( $post->ID );
 			}
 		}
 	}

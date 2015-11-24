@@ -76,16 +76,16 @@ class IT_Theme_API_Store implements IT_Theme_API {
 		if ( empty( $GLOBALS['it_exchange']['products'] ) ) {
 			$settings = it_exchange_get_option( 'settings_general' );
 			$GLOBALS['it_exchange']['products'] = it_exchange_get_products( apply_filters( 'it_exchange_store_get_products_args',  array( 'posts_per_page' => -1, 'order' => $settings['store-product-order'], 'orderby' => $settings['store-product-order-by'] ) ) );
-			$GLOBALS['it_exchange']['product'] = reset( $GLOBALS['it_exchange']['products'] );
+			it_exchange_set_product( reset( $GLOBALS['it_exchange']['products'] ) );
 			return true;
 		} else {
 			if ( next( $GLOBALS['it_exchange']['products'] ) ) {
-				$GLOBALS['it_exchange']['product'] = current( $GLOBALS['it_exchange']['products'] );
+				it_exchange_set_product( current( $GLOBALS['it_exchange']['products'] ) );
 				return true;
 			} else {
 				$GLOBALS['it_exchange']['products'] = array();
 				end( $GLOBALS['it_exchange']['products'] );
-				$GLOBALS['it_exchange']['product'] = false;
+				it_exchange_set_product( false );
 				return false;
 			}
 		}

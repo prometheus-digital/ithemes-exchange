@@ -85,6 +85,7 @@ function it_exchange_get_product_type_options( $product_type ) {
  * @return IT_Exchange_Product object for passed post
 */
 function it_exchange_get_product( $post ) {
+
 	try {
 		$product = new IT_Exchange_Product( $post );
 	} catch ( Exception $e ) {
@@ -160,6 +161,7 @@ function it_exchange_get_products( $args=array() ) {
  * @return void
 */
 function it_exchange_set_the_product_id( $product_id=false ) {
+
 	if ( $product = it_exchange_get_product( $product_id ) )
 		$GLOBALS['it_exchange']['product_id'] = $product->ID;
 	else
@@ -173,17 +175,23 @@ function it_exchange_set_the_product_id( $product_id=false ) {
  *
  * @since 1.4.0
  *
- * @param integer $id the post/product ID
+ * @param int|WP_Post|IT_Exchange_Product $product
  *
  * @return boolean true if set, false if no product was found/set
 */
-function it_exchange_set_product( $id ) {
-	$product = it_exchange_get_product( $id );
-	if ( is_object( $product ) && 'IT_Exchange_Product' == get_class( $product ) ) {
+function it_exchange_set_product( $product ) {
+
+	$product = $product instanceof IT_Exchange_Product ? $product : it_exchange_get_product( $product );
+
+	if ( $product instanceof IT_Exchange_Product ) {
 		$GLOBALS['it_exchange']['product'] = $product;
+		it_exchange_set_the_product_id( $product->ID );
 		return true;
 	}
+
 	$GLOBALS['it_exchange']['product'] = false;
+	it_exchange_set_the_product_id( false );
+
 	return false;
 }
 
@@ -220,7 +228,7 @@ function it_exchange_is_product_available( $product_id=false ) {
 	// Check start time
 	if (
 		it_exchange_product_supports_feature( $product_id, 'availability', array( 'type' => 'start' ) ) &&
-		it_exchange_product_has_feature( $product_id, 'availability', array( 'type' => 'start' ) ) 
+		it_exchange_product_has_feature( $product_id, 'availability', array( 'type' => 'start' ) )
 	) {
 		$start_date = strtotime( it_exchange_get_product_feature( $product_id, 'availability', array( 'type' => 'start' ) ) . ' 00:00:00' );
 		if ( $now_start < $start_date )

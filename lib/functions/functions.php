@@ -121,7 +121,7 @@ function it_exchange_load_public_scripts( $current_view ) {
 	wp_register_style( 'it-exchange-icon-fonts', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange-fonts.css' ) );
 
 	// Frontend Product JS
-	if ( is_singular( 'it_exchange_prod' ) ) {
+	if ( is_singular( 'it_exchange_prod' ) || IT_Exchange_SW_Shortcode::has_shortcode() ) {
 		$script_deps = array();
 
 		if ( ( 1 == $settings['enable-gallery-zoom'] ) )

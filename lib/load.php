@@ -58,6 +58,9 @@ require( $this->_plugin_path . 'lib/email-notifications/class.email-notification
 // Shipping
 require( $this->_plugin_path . 'lib/shipping/class.shipping.php' );
 
+// Shortcodes
+require( $this->_plugin_path . 'lib/shortcodes/shortcodes.php' );
+
 // Deprecated Features
 require( $this->_plugin_path . 'lib/deprecated/init.php' );
 
