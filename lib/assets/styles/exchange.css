@@ -72,9 +72,9 @@ a.it-exchange-button {text-decoration:none;}
 #it-exchange-product .it-exchange-product-has-images .it-exchange-product-info .product-column-inner{margin-right:2em;}
 #it-exchange-product .it-exchange-product-has-images .it-exchange-product-images{width:45%;}
 #it-exchange-product .it-exchange-product-standard-content {margin-bottom: 2em;}
-#it-exchange-product .it-exchange-product-price {font-size: 2em;border-top: 1px solid #ebebeb;border-bottom: 1px solid #ebebeb;margin-bottom: 1em; margin-top: 1em;}
-#it-exchange-product .it-exchange-product-price p {margin: 0;padding: .25em 0;}
-#it-exchange-product .it-exchange-product-sw {margin-top: 2em;}
+.it-exchange-product-price {font-size: 2em;border-top: 1px solid #ebebeb;border-bottom: 1px solid #ebebeb;margin-bottom: 1em; margin-top: 1em;}
+.it-exchange-product-price p {margin: 0;padding: .25em 0;}
+.it-exchange-product-sw {margin-top: 2em;}
 
 /** ----------------------------------------:[ gallery ]:--- */
 #it-exchange-product .it-exchange-product-images .it-exchange-column-inner{margin-left: 1.5em;}

@@ -1,47 +1,48 @@
 <?php
+
 /**
  * Controls the super widget - which can also be output via a shortcode or a PHP functions
  *
- * @since 0.4.0
+ * @since   0.4.0
  * @package IT_Exchange
-*/
+ */
 class IT_Exchange_Super_Widget extends WP_Widget {
 
 	/**
 	 * @var array $pages exchange pages options
 	 * @since 0.4.0
-	*/
+	 */
 	var $pages;
 
 	/**
 	 * @var boolean $using_permalinks are permalinks set in WP settings?
 	 * @since 0.4.0
-	*/
+	 */
 	var $using_permalinks;
 
 	/**
 	 * @var array $valid_states a filterable list of valid super widget states
 	 * @since 0.4.0
-	*/
+	 */
 	var $valid_states;
 
 	/**
 	 * @var string $state the current state of the widget
 	 * @since 0.4.0
-	*/
+	 */
 	var $state = false;
 
 	/**
 	 * @var string $it_exchange_view current view set by class.pages.php
 	 * @since 0.4.0
-	*/
+	 */
 	var $it_exchange_view;
 
 	/**
 	 * Constructor: Init
 	 *
 	 * @since 0.4.0
-	*/
+	 */
 	function __construct() {
 		$id_base = 'it-exchange-super-widget';
 		$name    = __( 'iThemes Exchange Super Widget', 'it-l10n-ithemes-exchange' );
@@ -76,55 +77,58 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param array $args Display arguments including before_title, after_title, before_widget, and after_widget.
+	 * @param array $args     Display arguments including before_title, after_title, before_widget, and after_widget.
 	 * @param array $instance The settings for the particular instance of the widget
+	 *
 	 * @return void
-	*/
+	 */
 	function widget( $args, $instance ) {
-		if ( ! $this->get_state() )
+		if ( ! $this->get_state() ) {
 			return;
+		}
 
 		$defaults = array(
 			'enqueue_hide_script' => true,
 		);
-		$args = wp_parse_args( $args, $defaults );
+		$args     = wp_parse_args( $args, $defaults );
 
 		// Flag that we're in the superwidget
 		$GLOBALS['it_exchange']['in_superwidget'] = $instance;
-		if ( get_queried_object() && ! empty( get_queried_object()->ID ) && it_exchange_get_product( get_queried_object()->ID ) )
+		if ( get_queried_object() && ! empty( get_queried_object()->ID ) && it_exchange_get_product( get_queried_object()->ID ) ) {
 			$product_id = get_queried_object_id();
-		else
-			$product_id = apply_filters( 'it_exchange_super_widget_empty_product_id', false );
+		} else {
+			$product_id = $this->_get_product_id_for_non_product_pages();
+		}
 
 		// Some JS we're going to need
 		?>
 		<script type="text/javascript">
-			var itExchangeSWAjaxURL           = '<?php echo esc_js( get_home_url() . '/?it-exchange-sw-ajax=1' );?>';
-			var itExchangeSWState             = '<?php echo esc_js( $this->get_state() ); ?>';
-			var itExchangeSWOnProductPage     = '<?php echo esc_js( $product_id ); ?>';
-			var itExchangeSWMultiItemCart     = '<?php echo esc_js( it_exchange_is_multi_item_cart_allowed() ); ?>';
-			var itExchangeIsUserLoggedIn      = '<?php echo esc_js( is_user_logged_in() ); ?>';
+			var itExchangeSWAjaxURL = '<?php echo esc_js( get_home_url() . '/?it-exchange-sw-ajax=1' );?>';
+			var itExchangeSWState = '<?php echo esc_js( $this->get_state() ); ?>';
+			var itExchangeSWOnProductPage = '<?php echo esc_js( $product_id ); ?>';
+			var itExchangeSWMultiItemCart = '<?php echo esc_js( it_exchange_is_multi_item_cart_allowed() ); ?>';
+			var itExchangeIsUserLoggedIn = '<?php echo esc_js( is_user_logged_in() ); ?>';
 			var itExchangeCartShippingAddress = <?php echo esc_js( (boolean) it_exchange_get_customer_shipping_address() ? 1 : 0); ?>;
-			var itExchangeCartBillingAddress  = <?php echo esc_js( (boolean) it_exchange_get_customer_billing_address() ? 1 : 0); ?>;
-			jQuery( function() {
+			var itExchangeCartBillingAddress = <?php echo esc_js( (boolean) it_exchange_get_customer_billing_address() ? 1 : 0); ?>;
+			jQuery(function () {
 
 				<?php $shipping_addons = it_exchange_get_enabled_addons( array( 'category' => 'shipping' ) ); if ( ! empty( $shipping_addons) ) : ?>
 				// Shipping Init country/state fields
 				var iteCountryStatesSyncOptions = {
-					statesWrapper     : '.it-exchange-state',
-					stateFieldID      : '#it-exchange-shipping-address-state',
-					templatePart      : 'super-widget-shipping-address/elements/state',
-					autoCompleteState : true
+					statesWrapper    : '.it-exchange-state',
+					stateFieldID     : '#it-exchange-shipping-address-state',
+					templatePart     : 'super-widget-shipping-address/elements/state',
+					autoCompleteState: true
 				};
 				jQuery('#it-exchange-shipping-address-country', '.it-exchange-super-widget').itCountryStatesSync(iteCountryStatesSyncOptions).selectToAutocomplete().trigger('change');
 				<?php endif; ?>
 
 				// Billing Init fields
 				var iteCountryStatesSyncOptions = {
-					statesWrapper     : '.it-exchange-state',
-					stateFieldID      : '#it-exchange-billing-address-state',
-					templatePart      :  'super-widget-billing-address/elements/state',
-					autoCompleteState : true,
+					statesWrapper    : '.it-exchange-state',
+					stateFieldID     : '#it-exchange-billing-address-state',
+					templatePart     : 'super-widget-billing-address/elements/state',
+					autoCompleteState: true,
 				};
 				jQuery('#it-exchange-billing-address-country', '.it-exchange-super-widget').itCountryStatesSync(iteCountryStatesSyncOptions).selectToAutocomplete().trigger('change');
 
@@ -135,20 +139,23 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		<?php
 		// Print widget
 		echo $args['before_widget'];
-			?>
-			<div class="it-exchange-super-widget it-exchange-super-widget-<?php esc_attr_e( $this->get_state() ); ?>">
-				<style type="text/css">
-				.it-exchange-super-widget .spinner{background:url('<?php echo get_admin_url(); ?>/images/wpspin_light.gif') no-repeat;}
-				</style>
-				<?php it_exchange_get_template_part( 'super-widget', $this->get_state() ); ?>
-			</div>
-			<?php
+		?>
+		<div class="it-exchange-super-widget it-exchange-super-widget-<?php esc_attr_e( $this->get_state() ); ?>">
+			<style type="text/css">
+				.it-exchange-super-widget .spinner {
+					background: url('<?php echo get_admin_url(); ?>/images/wpspin_light.gif') no-repeat;
+				}
+			</style>
+			<?php it_exchange_get_template_part( 'super-widget', $this->get_state() ); ?>
+		</div>
+		<?php
 		echo $args['after_widget'];
 
 		// Styles if set
 		$css_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/css/frontend-global.css' );
-		if ( ! apply_filters( 'it_exchange_disable_super_widget_stylesheet', false ) )
-				wp_enqueue_style( 'it-exchange-super-widget-frontend-global', $css_url );
+		if ( ! apply_filters( 'it_exchange_disable_super_widget_stylesheet', false ) ) {
+			wp_enqueue_style( 'it-exchange-super-widget-frontend-global', $css_url );
+		}
 
 		if ( $args['enqueue_hide_script'] ) {
 			$css_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/css/single-product-super-widget.css' );
@@ -160,7 +167,12 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 
 		// JS
 		$script_url = ITUtility::get_url_from_file( dirname( __FILE__ ) . '/js/super-widget.js' );
-		wp_enqueue_script( 'it-exchange-super-widget', $script_url, array( 'jquery', 'jquery-ui-spinner', 'detect-credit-card-type', 'it-exchange-event-manager' ), false, true );
+		wp_enqueue_script( 'it-exchange-super-widget', $script_url, array(
+			'jquery',
+			'jquery-ui-spinner',
+			'detect-credit-card-type',
+			'it-exchange-event-manager'
+		), false, true );
 		wp_localize_script( 'it-exchange-super-widget', 'exchangeSWL10n', array(
 				'processingPaymentLabel' => __( 'Processing', 'it-l10n-ithemes-exchange' ),
 				'processingAction'       => __( 'Processing... ', 'it-l10n-ithemes-exchange' ),
@@ -171,14 +183,20 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		wp_enqueue_style( 'it-exchange-autocomplete-style' );
 
 		// Country States sync
-		wp_enqueue_script( 'it-exchange-country-states-sync', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/country-states-sync.js' ), array( 'jquery', 'jquery-ui-autocomplete', 'jquery-select-to-autocomplete', 'it-exchange-super-widget' ), false, true );
+		wp_enqueue_script( 'it-exchange-country-states-sync', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/country-states-sync.js' ), array(
+			'jquery',
+			'jquery-ui-autocomplete',
+			'jquery-select-to-autocomplete',
+			'it-exchange-super-widget'
+		), false, true );
 
 		// Allow add-ons to enqueue scripts for super-widget
 		do_action( 'it_exchange_enqueue_super_widget_scripts' );
 
 		// Remove superwidget flag
-		if ( isset( $GLOBALS['it_exchange']['in_superwidget'] ) )
+		if ( isset( $GLOBALS['it_exchange']['in_superwidget'] ) ) {
 			unset( $GLOBALS['it_exchange']['in_superwidget'] );
+		}
 	}
 
 	/**
@@ -192,9 +210,10 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 *
 	 * @param array $new_instance New settings for this instance as input by the user via form()
 	 * @param array $old_instance Old settings for this instance
+	 *
 	 * @return array Settings to save or bool false to cancel saving
 	 */
-	function update($new_instance, $old_instance) {
+	function update( $new_instance, $old_instance ) {
 		return $new_instance;
 	}
 
@@ -204,10 +223,12 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 * @since 0.4.0
 	 *
 	 * @param array $instance Current settings
+	 *
 	 * @return string
 	 */
-	function form($instance) {
-		echo '<p class="no-options-widget">' . __('There are no options for this widget.') . '</p>';
+	function form( $instance ) {
+		echo '<p class="no-options-widget">' . __( 'There are no options for this widget.' ) . '</p>';
+
 		return 'noform';
 	}
 
@@ -217,7 +238,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 * @since 0.4.0
 	 *
 	 * @return void
-	*/
+	 */
 	function load_ajax() {
 		if ( ! empty( $_GET['it-exchange-sw-ajax'] ) ) {
 			include( dirname( __FILE__ ) . '/ajax.php' );
@@ -231,9 +252,9 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 * @since 0.4.0
 	 *
 	 * @return array
-	*/
+	 */
 	function set_valid_states() {
-		$valid_states = array(
+		$valid_states       = array(
 			'registration',
 			'login',
 			'cart',
@@ -242,7 +263,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			'confirmation',
 			'billing-address',
 		);
-		$valid_states = apply_filters( 'it_exchange_super_widget_valid_states', $valid_states );
+		$valid_states       = apply_filters( 'it_exchange_super_widget_valid_states', $valid_states );
 		$this->valid_states = (array) $valid_states;
 	}
 
@@ -252,7 +273,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 * @since 0.4.0
 	 *
 	 * @return void
-	*/
+	 */
 	function set_pages() {
 		$this->pages = it_exchange_get_pages();
 	}
@@ -263,7 +284,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 * @since 0.4.0
 	 *
 	 * @return void
-	*/
+	 */
 	function set_using_permalinks() {
 		$this->using_permalinks = (boolean) get_option( 'permalink_structure' );
 	}
@@ -274,40 +295,47 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 * @since 0.4.0
 	 *
 	 * @return false;
-	*/
+	 */
 	function set_state() {
 
 		// Get state from REQUEST
-		$state = empty( $_REQUEST['ite-sw-state'] ) ? false : $_REQUEST['ite-sw-state'];
-		$user_logged_in = is_user_logged_in();
+		$state                   = empty( $_REQUEST['ite-sw-state'] ) ? false : $_REQUEST['ite-sw-state'];
+		$user_logged_in          = is_user_logged_in();
 		$multi_item_cart_allowed = it_exchange_is_multi_item_cart_allowed();
-		$items_in_cart = (bool) it_exchange_get_cart_products();
-		$it_exchange_view = get_query_var( 'it_exchange_view' );
+		$items_in_cart           = (bool) it_exchange_get_cart_products();
+		$it_exchange_view        = get_query_var( 'it_exchange_view' );
 
 		if ( $items_in_cart && empty( $state ) ) {
 
-			if ( 'product' == $it_exchange_view && ! it_exchange_is_current_product_in_cart() )
+			if ( 'product' == $it_exchange_view && ! it_exchange_is_current_product_in_cart() ) {
 				$state = 'product';
-			else if ( $multi_item_cart_allowed )
+			} else if ( $product = $this->_get_product_id_for_non_product_pages() ) {
+
+				if ( it_exchange_is_product_in_cart( $product ) ) {
+					$state = 'cart';
+				} else {
+					$state = 'product';
+				}
+
+			} else if ( $multi_item_cart_allowed ) {
 				$state = 'cart';
-			else if ( ! $multi_item_cart_allowed )
+			} else if ( ! $multi_item_cart_allowed ) {
 				$state = it_exchange_get_next_purchase_requirement_property( 'sw-template-part' );
-
-		}
-
-		// If we're on a product page w/o items in cart and asking for cart, switch to product state
-		if ( 'product' == $it_exchange_view && ! $items_in_cart ) {
+			}
+		} else if ( it_exchange_get_the_product_id() ) {
 			$state = 'product';
 		}
 
 		// Grab the current state from the checkout requirements if trying to checkout
-		if ( 'checkout' == $state )
+		if ( 'checkout' == $state ) {
 			$state = it_exchange_get_next_purchase_requirement_property( 'sw-template-part' );
+		}
 
-		if ( empty( $state ) && 'product' == $it_exchange_view  )
+		if ( empty( $state ) && ( 'product' == $it_exchange_view || $this->_get_product_id_for_non_product_pages() ) ) {
 			$state = 'product';
-		else if ( empty( $state ) )
+		} else if ( empty( $state ) ) {
 			$state = 'cart';
+		}
 
 		// Allow initial state to be filtered by 3rd parties
 		$state = apply_filters( 'it_exchange_set_inital_sw_state', $state, $this->valid_states );
@@ -316,7 +344,6 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		if ( $state && in_array( $state, $this->valid_states ) ) {
 			$this->state = $state;
 		}
-
 	}
 
 	/**
@@ -325,9 +352,23 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 * @since 0.4.0
 	 *
 	 * @return string
-	*/
+	 */
 	function get_state() {
-		return empty( $this->state) ? false : $this->state;
+
+		$this->set_state();
+
+		return empty( $this->state ) ? false : $this->state;
+	}
+
+	/**
+	 * Get the fallback product ID to use on non-product pages.
+	 *
+	 * @since 1.33
+	 *
+	 * @return int|bool
+	 */
+	protected function _get_product_id_for_non_product_pages() {
+		return apply_filters( 'it_exchange_super_widget_empty_product_id', false );
 	}
 }
 
@@ -337,10 +378,11 @@ class IT_Exchange_Super_Widget extends WP_Widget {
  * @since 0.4.0
  *
  * @return void
-*/
+ */
 function it_exchange_register_super_widget() {
 	register_widget( 'IT_Exchange_Super_Widget' );
 }
+
 add_action( 'widgets_init', 'it_exchange_register_super_widget' );
 
 /**
@@ -348,7 +390,7 @@ add_action( 'widgets_init', 'it_exchange_register_super_widget' );
  *
  * @since 0.4.0
  * @return boolean
-*/
+ */
 function it_exchange_in_superwidget() {
 	return isset( $GLOBALS['it_exchange']['in_superwidget'] );
 }

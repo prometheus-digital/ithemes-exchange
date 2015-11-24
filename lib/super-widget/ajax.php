@@ -35,7 +35,7 @@ $ajax_args       = compact( 'action', 'state', 'product', 'quantity', 'focus', '
 // Update the state HTML of the widget
 if ( 'get-state' == $action && $state ) {
 	if ( $product )
-		$GLOBALS['it_exchange']['product'] = it_exchange_get_product( $product );
+		it_exchange_set_product( $product );
 
 	// Allow 3rd party add-ons to filter
 	$state = apply_filters( 'it_exchange_get_sw_state_via_ajax_call', $state, $ajax_args );
