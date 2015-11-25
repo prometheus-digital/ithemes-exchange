@@ -41,13 +41,13 @@
 #it_exchange_normal-sortables input{font-size:24px;}
 #it_exchange_normal-sortables textarea{line-height:1.6;}
 
-#it_exchange_normal-sortables #it-exchange-product-title{float:left;width:64%;}
-#it_exchange_normal-sortables #it-exchange-product-title .inside{padding-right:1.5em;}
+#it_exchange_normal-sortables #it-exchange-product-title{float:left;width:calc(100% - 40% - 1.0em);}
+#it_exchange_normal-sortables #it-exchange-product-title .inside{padding-right:2em;}
 
-#it_exchange_normal-sortables #it-exchange-base-price{float:left;width:18%;}
+#it_exchange_normal-sortables #it-exchange-base-price{float:left;width:20%;}
 #it_exchange_normal-sortables #it-exchange-base-price input{text-align:right;}
 #it_exchange_normal-sortables #it-exchange-base-price .inside {padding-right: .75em;}
-#it_exchange_normal-sortables #it-exchange-product-sale-price {float:left;width:18%;}
+#it_exchange_normal-sortables #it-exchange-product-sale-price {float:left;width:20%;}
 #it_exchange_normal-sortables #it-exchange-product-sale-price input{text-align:right;}
 #it_exchange_normal-sortables #it-exchange-product-sale-price .inside {padding-left:.75em;}
 
