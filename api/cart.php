@@ -189,7 +189,7 @@ function it_exchange_is_current_product_in_cart() {
 /**
  * Check if a product is in the cart.
  *
- * @since 1.33
+ * @since 1.32
  *
  * @param int $product_id
  *

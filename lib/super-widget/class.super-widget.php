@@ -104,7 +104,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		/**
 		 * Filter the args used to build the Super Widget.
 		 *
-		 * @since 1.33
+		 * @since 1.32
 		 *
 		 * @param array $args
 		 * @param int   $product_id
@@ -374,7 +374,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	/**
 	 * Get the fallback product ID to use on non-product pages.
 	 *
-	 * @since 1.33
+	 * @since 1.32
 	 *
 	 * @return int|bool
 	 */
@@ -385,7 +385,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	/**
 	 * Maybe remove the SW from the sidebar if the SW shortcode is embedded on this page.
 	 *
-	 * @since 1.33
+	 * @since 1.32
 	 *
 	 * @param $index
 	 */

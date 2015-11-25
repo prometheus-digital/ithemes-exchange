@@ -3,7 +3,7 @@
  * Contains shortcodes.
  *
  * @author    iThemes
- * @since     1.33
+ * @since     1.32
  */
 
 /**
@@ -34,7 +34,7 @@ class IT_Exchange_SW_Shortcode {
 	/**
 	 * Check if this page has the shortcode in it.
 	 *
-	 * @since 1.33
+	 * @since 1.32
 	 *
 	 * @return bool
 	 */
@@ -48,7 +48,7 @@ class IT_Exchange_SW_Shortcode {
 	/**
 	 * Register the feature with Exchange.
 	 *
-	 * @sine 1.33
+	 * @sine 1.32
 	 */
 	public function register_feature() {
 
@@ -62,7 +62,7 @@ class IT_Exchange_SW_Shortcode {
 	 *
 	 * This is embedded only for public post types, and NOT for products.
 	 *
-	 * @since 1.33
+	 * @since 1.32
 	 */
 	public function insert_button() {
 
@@ -83,7 +83,7 @@ class IT_Exchange_SW_Shortcode {
 	/**
 	 * Render the thickbox for inserting a SW shortcode.
 	 *
-	 * @since 1.33
+	 * @since 1.32
 	 */
 	public function thickbox() {
 
@@ -182,7 +182,7 @@ class IT_Exchange_SW_Shortcode {
 	 *
 	 * Super widget shortcode callback.
 	 *
-	 * @since 1.33
+	 * @since 1.32
 	 *
 	 * @param array $atts
 	 *
@@ -248,7 +248,7 @@ class IT_Exchange_SW_Shortcode {
 	/**
 	 * Set the product ID for use in the SW when no product found.
 	 *
-	 * @since 1.33
+	 * @since 1.32
 	 *
 	 * @param int $product
 	 *
@@ -266,7 +266,7 @@ class IT_Exchange_SW_Shortcode {
 	/**
 	 * Hide template parts.
 	 *
-	 * @since 1.33
+	 * @since 1.32
 	 *
 	 * @param array $parts
 	 *
@@ -289,7 +289,7 @@ class IT_Exchange_SW_Shortcode {
 	/**
 	 * Prevent the SW from enqueuing the css to hide itself when the sidebar is being used.
 	 *
-	 * @since 1.33
+	 * @since 1.32
 	 *
 	 * @param array $args
 	 *
