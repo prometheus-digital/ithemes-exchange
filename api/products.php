@@ -103,12 +103,15 @@ function it_exchange_get_product( $post ) {
  *
  * @since 0.3.3
  *
+ * @param array $args
+ *
  * @return IT_Exchange_Product[]  an array of IT_Exchange_Product objects
 */
 function it_exchange_get_products( $args=array() ) {
 	$defaults = array(
-		'post_type' => 'it_exchange_prod',
-		'show_hidden' => false,
+		'post_type'     => 'it_exchange_prod',
+		'show_hidden'   => false,
+		'only_on_sale'  => false // set to true to only return products that are on sale
 	);
 	$args = wp_parse_args( $args, $defaults );
 	$args['meta_query'] = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
@@ -138,10 +141,21 @@ function it_exchange_get_products( $args=array() ) {
 		$args['meta_query'][] = $meta_query;
 	}
 
-	$products = false;
+	if ( $args['only_on_sale'] ) {
+		$args['meta_query'][] = array(
+			'key'       => '_it_exchange_sale_price',
+			'compare'   => 'EXISTS'
+		);
+	}
+
 	if ( $products = get_posts( $args ) ) {
 		foreach( $products as $key => $product ) {
-			$products[$key] = it_exchange_get_product( $product );
+
+			$product = it_exchange_get_product( $product );
+
+			if ( it_exchange_is_product_sale_active( $product ) ) {
+				$products[$key] = $product;
+			}
 		}
 	}
 

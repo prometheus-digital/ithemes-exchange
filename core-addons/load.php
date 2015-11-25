@@ -253,6 +253,15 @@ function it_exchange_register_core_addons() {
 			'tag'               => 'core',
 			'settings-callback' => 'it_exchange_simple_shipping_settings_callback',
 		),
+		'sale-schedule'        => array(
+			'name'              => __( 'Sale Schedule', 'it-l10n-ithemes-exchange' ),
+			'description'       => __( 'Limit sale availability to certain dates.', 'it-l10n-ithemes-exchange' ),
+			'author'            => 'iThemes',
+			'author_url'        => 'http://ithemes.com',
+			'file'              => dirname( __FILE__ ) . '/product-features/sale-schedule/init.php',
+			'category'          => 'other',
+			'tag'               => 'core',
+		),
 	);
 	$add_ons = apply_filters( 'it_exchange_core_addons', $add_ons );
 

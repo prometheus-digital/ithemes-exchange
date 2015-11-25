@@ -207,6 +207,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 			// Replace with Free label if needed
 			$db_price = (int) it_exchange_convert_to_database_number( $base_price );
+
 			$price    = empty( $db_price ) ? '<span class="free-label">' . $options['free-label'] . '</span>' : it_exchange_format_price( $base_price );
 			$price    = ( empty( $options['free-label'] ) && empty( $db_price ) ) ? it_exchange_format_price( $base_price ) : $price;
 
@@ -259,9 +260,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 				$result = substr( wp_strip_all_tags( $description ), 0, $options['max-length'] );
 				$result .= $options['ellipsis'] . ' <a href="' . get_permalink( $this->product->ID ) . '">' . $options['more-text'] . '</a>';
-
-			}
-			else if ( ! empty( $options['max-words'] ) ) {
+			} else if ( ! empty( $options['max-words'] ) ) {
 
 				$more = $options['ellipsis'] . ' <a href="' . get_permalink( $this->product->ID ) . '">' . $options['more-text'] . '</a>';
 
