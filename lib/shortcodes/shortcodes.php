@@ -92,7 +92,7 @@ class IT_Exchange_SW_Shortcode {
 		$post_type = ! empty( $screen->post_type ) ? $screen->post_type : get_post_type();
 		$post_type = get_post_type_object( $post_type );
 
-		if ( ! $post_type->public || $post_type == 'it_exchange_prod' ) {
+		if ( ! $post_type || ! $post_type->public || $post_type == 'it_exchange_prod' ) {
 			return;
 		}
 
