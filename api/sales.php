@@ -2,7 +2,7 @@
 /**
  * This file contains functions making up the Sales API
  *
- * @since   1.24.0
+ * @since   1.32.0
  * @package IT_Exchange
  */
 
@@ -32,7 +32,7 @@ function it_exchange_is_product_sale_active( $product ) {
 	 *
 	 * If add-ons want to restrict the time period of a sale, they should use this filter.
 	 *
-	 * @since 1.24.0
+	 * @since 1.32.0
 	 *
 	 * @param bool                $active
 	 * @param IT_Exchange_Product $product
