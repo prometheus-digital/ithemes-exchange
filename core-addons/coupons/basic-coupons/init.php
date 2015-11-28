@@ -44,6 +44,8 @@ function it_exchange_basic_coupons_add_meta_data_to_coupon_object( $data, $objec
 		'frequency_times'  => '_it-basic-frequency-times',
 		'frequency_length' => '_it-basic-frequency-length',
 		'frequency_units'  => '_it-basic-frequency-units',
+		'customer'         => '_it-basic-customer',
+		'limit_customer'   => '_it-basic-limit-customer',
 	);
 
 	// Loop through and add them to the data that will be added as properties to coupon object

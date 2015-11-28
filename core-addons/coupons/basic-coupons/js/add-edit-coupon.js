@@ -54,6 +54,20 @@ jQuery( document ).ready( function($) {
 	}
 	$('#limit-product').change(itExchangeBasicCouponsShowHideProduct).triggerHandler("change");
 
+	// Show hide customer based on checkbox
+	function itExchangeBasicCouponsShowHideCustomer() {
+		var selected = $(this).is( ':checked' );
+		var $fields  = $('.customer');
+
+		$fields.addClass('hide-if-js');
+		if ( selected ) {
+			$fields.removeClass('hide-if-js');
+		} else {
+			$fields.addClass('hide-if-js');
+		}
+	}
+	$('#limit-customer').change(itExchangeBasicCouponsShowHideCustomer).triggerHandler("change");
+
 	// Show hide frequeny limit based on checkbox
 	function itExchangeBasicCouponsShowHideFrequency() {
 		var selected = $(this).is( ':checked' );

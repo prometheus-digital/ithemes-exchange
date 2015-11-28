@@ -100,6 +100,8 @@ function it_exchange_basic_coupons_save_coupon() {
 	$data['post_meta']['_it-basic-frequency-times']  = $data['frequency-times'];
 	$data['post_meta']['_it-basic-frequency-length'] = $data['frequency-length'];
 	$data['post_meta']['_it-basic-frequency-units']  = $data['frequency-units'];
+	$data['post_meta']['_it-basic-customer']         = $data['customer'];
+	$data['post_meta']['_it-basic-limit-customer']   = $data['limit-customer'];
 	unset( $data['code'] );
 	unset( $data['amount-number'] );
 	unset( $data['amount-type'] );
@@ -257,6 +259,8 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		$values['frequency-times']  = $coupon->frequency_times;
 		$values['frequency-length'] = $coupon->frequency_length;
 		$values['frequency-units']  = $coupon->frequency_units;
+		$values['limit-customer']   = $coupon->limit_customer;
+		$values['customer']         = $coupon->customer;
 	}
 
 	$errors = it_exchange_get_messages( 'error' );
@@ -357,6 +361,26 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 					?>
 					<?php $form->add_drop_down( 'product-id', $product_options ); ?>
 					<span class="tip" title="<?php _e( 'Select a product to use with this coupon.', 'it-l10n-ithemes-exchange' ); ?>">i</span>
+				</div>
+
+				<div class="field limit-customer">
+					<?php $form->add_check_box( 'limit-customer' ); ?>
+					<label for="limit-customer">
+						<?php _e( 'Limit to a specific customer', 'it-l10n-ithemes-exchange' ); ?>
+						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the coupon discount to a specific customer.', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
+					</label>
+				</div>
+
+				<div class="field customer">
+					<?php
+					$customer_options = array( 0 => __( 'Select a customer', 'it-l10n-ithemes-exchange' ) );
+					$customers        = get_users( array( 'number' => -1 ) );
+					foreach( (array) $customers as $customer ) {
+						$customer_options[$customer->ID] = $customer->display_name;
+					}
+					?>
+					<?php $form->add_drop_down( 'customer', $customer_options ); ?>
+					<span class="tip" title="<?php _e( 'Restrict this coupon to a single customer.', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 				</div>
 
 				<div class="field limit-frequency">
