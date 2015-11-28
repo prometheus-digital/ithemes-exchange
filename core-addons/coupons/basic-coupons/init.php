@@ -179,6 +179,11 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 		return false;
 	}
 
+	if ( ! empty( $coupon->limit_customer ) && it_exchange_get_current_customer_id() != $coupon->customer ) {
+		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
+		return false;
+	}
+
 	// Abort if product not in cart
 	if ( ! empty( $coupon->limit_product ) && ( it_exchange_get_cart_product_quantity_by_product_id( $coupon->product_id ) < 1 ) ) {
 		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
