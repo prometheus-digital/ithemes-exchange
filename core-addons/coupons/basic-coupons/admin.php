@@ -434,7 +434,7 @@ function it_exchange_basic_coupons_product_columns( $existing ) {
 	$columns['it_exchange_coupon_discount']   = __( 'Discount', 'it-l10n-ithemes-exchange' );
 	$columns['it_exchange_coupon_start_date'] = __( 'Start Date', 'it-l10n-ithemes-exchange' );
 	$columns['it_exchange_coupon_end_date']   = __( 'End Date', 'it-l10n-ithemes-exchange' );
-	$columns['it_exchange_coupon_quantity']   = __( 'Available Coupons', 'it-l10n-ithemes-exchange' );
+	$columns['it_exchange_coupon_quantity']   = __( 'Available', 'it-l10n-ithemes-exchange' );
 	$columns['it_exchange_coupon_product_id'] = __( 'Product', 'it-l10n-ithemes-exchange' );
 
 	return $columns;
