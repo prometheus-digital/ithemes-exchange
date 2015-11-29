@@ -73,7 +73,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @return float
 	 */
 	public function get_amount_number() {
-		return $this->amount_number;
+		return it_exchange_convert_from_database_number( $this->amount_number );
 	}
 
 	/**

@@ -116,12 +116,19 @@ add_filter( 'it_exchange_get_cart_coupon_from_code', 'it_exchange_get_cart_coupo
  *
  * @since 0.4.0
  *
- * @param mixed $incoming sent from WP filter. Discarded here.
- * @return boolean
+ * @return IT_Exchange_Coupon[]|false
 */
-function it_exchange_basic_coupons_applied_cart_coupons( $incoming=false ) {
+function it_exchange_basic_coupons_applied_cart_coupons() {
+
 	$cart_data = it_exchange_get_cart_data( 'basic_coupons' );
-	return empty( $cart_data ) ? false : $cart_data;
+
+	$coupons = array();
+
+	foreach ( $cart_data as $code => $coupon ) {
+		$coupons[] = it_exchange_get_coupon_from_code( $code, 'cart' );
+	}
+
+	return empty( $coupons ) ? false : $coupons;
 }
 add_filter( 'it_exchange_get_applied_cart_coupons', 'it_exchange_basic_coupons_applied_cart_coupons' );
 
@@ -296,12 +303,8 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	// Format data for session
 	$coupon = array(
 		'id'            => $coupon->ID,
-		'title'         => $coupon->post_title,
-		'code'          => $coupon->code,
-		'amount_number' => it_exchange_convert_from_database_number( $coupon->amount_number ),
-		'amount_type'   => $coupon->amount_type,
-		'start_date'    => $coupon->start_date,
-		'end_date'      => $coupon->end_date,
+		'title'         => $coupon->get_title(),
+		'code'          => $coupon->get_code()
 	);
 
 	// Add to session data
@@ -480,10 +483,12 @@ add_filter( 'it_exchange_get_cart_total', 'it_exchange_basic_coupons_apply_disco
  *
  * @since 0.4.0
  *
- * @param string $total existing value passed in by WP filter
+ * @param string|bool $discount existing value passed in by WP filter
+ * @param array       $options
+ *
  * @return string
 */
-function it_exchange_basic_coupons_get_total_discount_for_cart( $discount=false, $options=array() ) {
+function it_exchange_basic_coupons_get_total_discount_for_cart( $discount = false, $options = array() ) {
 	$defaults = array(
 		'format_price' => true,
 	);
@@ -493,31 +498,44 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount=false,
 	$subtotal = it_exchange_get_cart_subtotal( false );
 
 	foreach( (array) $coupons as $coupon ) {
-		if ( empty( $coupon ) )
+
+		if ( empty( $coupon ) || ! $coupon instanceof IT_Exchange_Cart_Coupon )
 			continue;
 
-		$coupon = it_exchange_get_coupon( $coupon['id'] );
-		$coupon->amount_number = empty( $coupon->amount_number ) ? false : it_exchange_convert_from_database_number( $coupon->amount_number );
+		if ( $coupon->is_product_limited() ) {
 
-		if ( ! empty( $coupon->product_id ) ) {
 			$cart_products = it_exchange_get_cart_products();
-			foreach( (array) it_exchange_get_cart_products() as $cart_product ) {
+
+			foreach( $cart_products as $cart_product ) {
+
 				if ( it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $coupon ) ) {
 					$base_price = it_exchange_get_cart_product_base_price( $cart_product, false );
-					$product_discount = ( '%' == $coupon->amount_type ) ? $discount + ( ( $coupon->amount_number / 100 ) * $base_price ) : $discount + $coupon->amount_number;
+
+					if ( $coupon->get_amount_type() == IT_Exchange_Cart_Coupon::TYPE_PERCENT ) {
+						$product_discount = $discount + ( $coupon->get_amount_number() / 100 ) * $base_price;
+					} else {
+						$product_discount = $discount + $coupon->get_amount_number();
+					}
+
 					$product_discount = $product_discount * $cart_product['count'];
 					$discount = $discount + $product_discount;
 				}
 			}
 		} else {
-			$discount = ( '%' == $coupon->amount_type ) ? $discount + ( ( $coupon->amount_number / 100 ) * $subtotal ) : $discount + $coupon->amount_number;
+			if ( $coupon->get_amount_type() == IT_Exchange_Cart_Coupon::TYPE_PERCENT ) {
+				$discount = $discount + ( $coupon->get_amount_number() / 100 ) * $subtotal;
+			} else {
+				$discount = $discount + $coupon->get_amount_number();
+			}
 		}
 	}
 
 	$discount = round( $discount, 2 );
 
-	if ( $options['format_price'] )
+	if ( $options['format_price'] ) {
 		$discount = it_exchange_format_price( $discount );
+	}
+
 	return $discount;
 }
 add_filter( 'it_exchange_get_total_discount_for_cart', 'it_exchange_basic_coupons_get_total_discount_for_cart', 10, 2 );
@@ -528,18 +546,25 @@ add_filter( 'it_exchange_get_total_discount_for_cart', 'it_exchange_basic_coupon
  * @since 1.10.6
  *
  * @param $cart_product object
- * @param $coupon       IT_Exchange_Coupon
+ * @param $coupon       IT_Exchange_Cart_Coupon
  *
  * @return bool
  */
 function it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $coupon ) {
-	if ( ! empty( $cart_product['product_id'] ) && ( empty( $coupon->limit_product ) ) ) {
-		$valid = true;
-	}
-	elseif	( ! empty( $coupon->limit_product ) && $cart_product['product_id'] == $coupon->product_id ) {
+
+	$valid = false;
+
+	if ( ! $coupon->is_product_limited() ) {
 		$valid = true;
 	} else {
-		$valid = false;
+		foreach ( $coupon->get_limited_products() as $product ) {
+
+			if ( $cart_product['product_id'] == $product->ID ) {
+				$valid = true;
+
+				break;
+			}
+		}
 	}
 
 	/**
@@ -676,9 +701,11 @@ function it_exchange_basic_coupons_remove_coupon_from_cart( $result, $options=ar
 	if ( empty( $coupon_code ) )
 		return false;
 
-	$coupons = it_exchange_get_applied_coupons( 'cart' );
-	if ( isset( $coupons[$coupon_code] ) )
-		unset( $coupons[$coupon_code] );
+	$coupons = it_exchange_get_cart_data( 'basic_coupons' );
+
+	if ( isset( $coupons[ $coupon_code ] ) ) {
+		unset( $coupons[ $coupon_code ] );
+	}
 
 	// Unset coupons
 	it_exchange_update_cart_data( 'basic_coupons', $coupons );

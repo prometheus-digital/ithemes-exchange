@@ -109,6 +109,7 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 		}
 
 		$this->coupon_data['ID']    = $this->ID;
+		$this->coupon_data['id']    = $this->ID;
 		$this->coupon_data['title'] = $this->post_title;
 
 		reset( $this->coupon_data );
