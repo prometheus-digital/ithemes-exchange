@@ -81,6 +81,37 @@ function it_exchange_basic_coupons_register_field_names( $names ) {
 add_filter( 'it_exchange_default_field_names', 'it_exchange_basic_coupons_register_field_names' );
 
 /**
+ * Get a cart coupon from its code.
+ *
+ * @since 1.33
+ *
+ * @param IT_Exchange_Coupon|null $coupon
+ * @param string                  $code
+ *
+ * @return IT_Exchange_Coupon|null
+ */
+function it_exchange_get_cart_coupon_from_code( IT_Exchange_Coupon $coupon = null, $code ) {
+
+	if ( ! ( $ID = wp_cache_get( 'it-exchange-cart-coupon', $code ) ) ) {
+
+		/** wpdb $wpdb */
+		global $wpdb;
+
+		$ID = $wpdb->get_results( $wpdb->prepare(
+				"SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = %s",
+				'_it-basic-code',
+				$code
+		) );
+
+		wp_cache_set( 'it-exchange-cart-coupon', $ID, $code );
+	}
+
+	return it_exchange_get_coupon( $ID, 'cart' );
+}
+
+add_filter( 'it_exchange_get_cart_coupon_from_code', 'it_exchange_get_cart_coupon_from_code', 10, 2 );
+
+/**
  * Returns applied cart coupons
  *
  * @since 0.4.0

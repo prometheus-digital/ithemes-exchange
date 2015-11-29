@@ -84,6 +84,29 @@ function it_exchange_get_coupon( $post, $type = '' ) {
 }
 
 /**
+ * Get a coupon from its code and type.
+ *
+ * @since 1.33
+ *
+ * @param string $code
+ * @param string $type
+ *
+ * @return IT_Exchange_Coupon|null
+ */
+function it_exchange_get_coupon_from_code( $code, $type ) {
+
+	/**
+	 * Filter the coupon corresponding to a certain code.
+	 *
+	 * @since 1.33
+	 *
+	 * @param IT_Exchange_Coupon|null $coupon
+	 * @pparam string                 $code
+	 */
+	return apply_filters( 'it_exchange_get_' . $type . '_coupon_from_code', null, $code );
+}
+
+/**
  * Adds a coupon post_type to WP
  *
  * @since 0.4.0
