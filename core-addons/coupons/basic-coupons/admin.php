@@ -460,6 +460,7 @@ function it_exchange_basic_coupons_product_columns( $existing ) {
 	$columns['it_exchange_coupon_end_date']   = __( 'End Date', 'it-l10n-ithemes-exchange' );
 	$columns['it_exchange_coupon_quantity']   = __( 'Available', 'it-l10n-ithemes-exchange' );
 	$columns['it_exchange_coupon_product_id'] = __( 'Product', 'it-l10n-ithemes-exchange' );
+	$columns['it_exchange_coupon_customer']   = __( 'Customer', 'it-l10n-ithemes-exchange' );
 
 	return $columns;
 }
@@ -479,6 +480,7 @@ function it_exchange_basic_coupons_sortable_columns( $sortables ) {
 	$sortables['it_exchange_coupon_end_date']   = 'it-exchange-coupon-end-date';
 	$sortables['it_exchange_coupon_quantity']   = 'it-exchange-coupon-quantity';
 	$sortables['it_exchange_coupon_product_id'] = 'it-exchange-coupon-product-id';
+	$sortables['it_exchange_coupon_customer']   = 'it-exchange-coupon-customer';
 
 	return $sortables;
 }
@@ -516,6 +518,14 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 		case 'it_exchange_coupon_product_id':
 			$product_name = ( empty( $coupon->limit_product ) ) ? __( 'All Products', 'it-l10n-ithemes-exchange' ) : it_exchange_get_product_feature( $coupon->product_id, 'title' );
 			esc_attr_e( $product_name );
+			break;
+		case 'it_exchange_coupon_customer':
+			if ( ( empty( $coupon->limit_customer ) ) ) {
+				$customer = __( 'Any Customer', 'it-l10n-ithemes-exchange' );
+			} else {
+				$customer = it_exchange_get_customer( $coupon->customer )->wp_user->display_name;
+			}
+			esc_attr_e( $customer );
 			break;
 	}
 }
@@ -557,6 +567,10 @@ function it_exchange_basic_coupons_modify_wp_query_request_on_edit_php( $request
 				case 'it-exchange-coupon-product-id':
 					$request['orderby']  = 'meta_value_num';
 					$request['meta_key'] = '_it-basic-product-id';
+					break;
+				case 'it-exchange-coupon-customer':
+					$request['orderby']  = 'meta_value_num';
+					$request['meta_key'] = '_it-basic-customer';
 					break;
 			}
 		}
