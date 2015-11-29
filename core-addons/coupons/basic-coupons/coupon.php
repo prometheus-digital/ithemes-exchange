@@ -11,6 +11,9 @@
  */
 class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 
+	const TYPE_PERCENT = '%';
+	const TYPE_FLAT = 'amount';
+
 	/**
 	 * @var IT_Exchange_Product[]
 	 */
@@ -45,6 +48,32 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 */
 	public function get_title( $raw = false ) {
 		return $raw ? $this->post_title : get_the_title( $this->get_ID() );
+	}
+
+	/**
+	 * Get the type of the discount.
+	 *
+	 * Either '%' or 'amount', but you should evaluate against the constants provided.
+	 *
+	 * @since 1.33
+	 *
+	 * @return string
+	 */
+	public function get_amount_type() {
+		return $this->amount_type;
+	}
+
+	/**
+	 * Get the total amount of the discount.
+	 *
+	 * ie, the 5 in 5% or the 10 in $10 off.
+	 *
+	 * @since 1.33
+	 *
+	 * @return float
+	 */
+	public function get_amount_number() {
+		return $this->amount_number;
 	}
 
 	/**
@@ -223,7 +252,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 *
 	 * @deprecated 1.33
 	 *
-	 * @var int
+	 * @var float
 	 */
 	var $amount_number;
 
