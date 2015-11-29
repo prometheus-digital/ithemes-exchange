@@ -97,7 +97,7 @@ function it_exchange_get_cart_coupon_from_code( IT_Exchange_Coupon $coupon = nul
 		/** wpdb $wpdb */
 		global $wpdb;
 
-		$ID = $wpdb->get_results( $wpdb->prepare(
+		$ID = $wpdb->get_var( $wpdb->prepare(
 				"SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = %s",
 				'_it-basic-code',
 				$code
