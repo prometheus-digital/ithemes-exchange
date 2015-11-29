@@ -3,14 +3,14 @@
  * This file holds the class for an iThemes Exchange Coupon
  *
  * @package IT_Exchange
- * @since 0.4.0
-*/
+ * @since   0.4.0
+ */
 
 /**
  * Merges a WP Post with iThemes Exchange Coupon data
  *
  * @since 0.4.0
-*/
+ */
 class IT_Exchange_Coupon {
 
 	// WP Post Type Properties
@@ -39,45 +39,69 @@ class IT_Exchange_Coupon {
 	var $comment_count;
 
 	/**
-	 * @param array $coupon_data  any custom data registered by the coupon addon
+	 * @param array $coupon_data any custom data registered by the coupon addon
+	 *
 	 * @since 0.4.0
-	*/
+	 */
 	var $coupon_data = array();
+
+	/**
+	 * Coupon code property. Use get_code() instead.
+	 *
+	 * @deprecated 1.33
+	 *
+	 * @var string
+	 */
+	var $code;
 
 	/**
 	 * Constructor. Loads post data and coupon data
 	 *
 	 * @since 0.4.0
-	 * @param mixed $post  wp post id or post object. optional.
+	 *
+	 * @param mixed $post wp post id or post object. optional.
 	 *
 	 * @throws Exception
-	*/
-	function __construct( $post=false ) {
+	 */
+	public function __construct( $post = false ) {
 
 		// If not an object, try to grab the WP object
-		if ( ! is_object( $post ) )
+		if ( ! is_object( $post ) ) {
 			$post = get_post( (int) $post );
+		}
 
 		// Ensure that $post is a WP_Post object
-		if ( is_object( $post ) && ! $post instanceof WP_Post )
+		if ( is_object( $post ) && ! $post instanceof WP_Post ) {
 			$post = false;
+		}
 
 		// Ensure this is a coupon post type
-		if ( 'it_exchange_coupon' != get_post_type( $post ) )
+		if ( 'it_exchange_coupon' != get_post_type( $post ) ) {
 			$post = false;
+		}
 
 		// Return a WP Error if we don't have the $post object by this point
-		if ( ! $post )
+		if ( ! $post ) {
 			throw new Exception( __( 'The IT_Exchange_Coupon class must have a WP post object or ID passed to its constructor', 'it-l10n-ithemes-exchange' ) );
+		}
 
 		// Grab the $post object vars and populate this objects vars
-		foreach( (array) get_object_vars( $post ) as $var => $value ) {
+		foreach ( (array) get_object_vars( $post ) as $var => $value ) {
 			$this->$var = $value;
 		}
 
-		// Set additional properties
+		/**
+		 * Allows for additional properties to be set on the coupon object.
+		 *
+		 * Custom coupon types should register their coupon type with their custom class.
+		 *
+		 * @deprecated 1.33
+		 *
+		 * @param array   $properties
+		 * @param WP_Post $post
+		 */
 		$additional_properties = apply_filters( 'it_exchange_coupon_additional_data', array(), $post );
-		foreach( $additional_properties as $key => $value ) {
+		foreach ( $additional_properties as $key => $value ) {
 			$this->$key = $value;
 		}
 	}
@@ -92,5 +116,27 @@ class IT_Exchange_Coupon {
 		self::__construct();
 
 		_deprecated_constructor( __CLASS__, '1.24.0' );
+	}
+
+	/**
+	 * Get the Coupon ID.
+	 *
+	 * @since 1.33
+	 *
+	 * @return int
+	 */
+	public function get_ID() {
+		return $this->ID;
+	}
+
+	/**
+	 * Get the coupon code.
+	 *
+	 * @since 1.33
+	 *
+	 * @return string
+	 */
+	public function get_code() {
+		return $this->code;
 	}
 }

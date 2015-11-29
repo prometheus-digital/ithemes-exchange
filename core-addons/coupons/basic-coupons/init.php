@@ -10,6 +10,13 @@ if ( is_admin() ) {
 }
 
 /**
+ * Include the IT_Exchange_Cart_Coupon class.
+ *
+ * @since 1.33
+ */
+require_once( dirname( __FILE__ ) . '/coupon.php' );
+
+/**
  * Register the cart coupon type
  *
  * @since 0.4.0
@@ -17,7 +24,7 @@ if ( is_admin() ) {
  * @return void
 */
 function it_exchange_basic_coupons_register_coupon_type() {
-	it_exchange_register_coupon_type( 'cart' );
+	it_exchange_register_coupon_type( 'cart', 'IT_Exchange_Cart_Coupon' );
 }
 add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_basic_coupons_register_coupon_type' );
 
@@ -90,7 +97,7 @@ add_filter( 'it_exchange_get_applied_cart_coupons', 'it_exchange_basic_coupons_a
 /**
  * Determines if we are currently accepting more coupons
  *
- * Basic coupons only allows one coupon applied to each cart
+ * Basic coupons only allows one coupon applied to each cart.
  *
  * @since 0.4.0
  *
@@ -171,6 +178,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 		return false;
 	}
 
+	/** @var IT_Exchange_Coupon $coupon */
 	$coupon = reset( $coupons );
 
 	// Abort if coupon limit has been reached
