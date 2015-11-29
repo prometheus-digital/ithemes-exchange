@@ -88,7 +88,7 @@ add_filter( 'it_exchange_default_field_names', 'it_exchange_basic_coupons_regist
  * @param IT_Exchange_Coupon|null $coupon
  * @param string                  $code
  *
- * @return IT_Exchange_Coupon|null
+ * @return IT_Exchange_Cart_Coupon|null
  */
 function it_exchange_get_cart_coupon_from_code( IT_Exchange_Coupon $coupon = null, $code ) {
 
@@ -190,56 +190,87 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 
 	// Set coupon code. Return false if one is not available
 	$coupon_code = empty( $options['code'] ) ? false : $options['code'];
-	if ( empty( $coupon_code ) ) {
+
+	$coupon = it_exchange_get_cart_coupon_from_code( null, $coupon_code );
+
+	if ( ! $coupon ) {
 		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
 		return false;
 	}
-
-	// Abort if no coupons are found for submitted code matches and falls within dates
-	$args = array(
-		'meta_query' => array(
-			array(
-				'key' => '_it-basic-code',
-				'value' => $coupon_code,
-			),
-		),
-	);
-	if ( ! $coupons = it_exchange_get_coupons( $args ) ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
-		return false;
-	}
-
-	/** @var IT_Exchange_Coupon $coupon */
-	$coupon = reset( $coupons );
 
 	// Abort if coupon limit has been reached
-	if ( ! empty( $coupon->limit_quantity ) && empty( $coupon->quantity ) ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
+	if ( $coupon->is_quantity_limited() && ! $coupon->get_remaining_quantity() ) {
+		it_exchange_add_message( 'error', __( 'This coupon has reached its maximum uses.', 'it-l10n-ithemes-exchange' ) );
 		return false;
 	}
 
-	if ( ! empty( $coupon->limit_customer ) && it_exchange_get_current_customer_id() != $coupon->customer ) {
+	if ( $coupon->is_customer_limited() && it_exchange_get_current_customer_id() != $coupon->get_customer()->id ) {
 		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
 		return false;
 	}
 
 	// Abort if product not in cart
-	if ( ! empty( $coupon->limit_product ) && ( it_exchange_get_cart_product_quantity_by_product_id( $coupon->product_id ) < 1 ) ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
+	if ( $coupon->is_product_limited() && ( it_exchange_get_cart_product_quantity_by_product_id( $coupon->product_id ) < 1 ) ) {
+
+		$has_product = false;
+
+		$names = array();
+
+		foreach ( $coupon->get_limited_products() as $product ) {
+
+			$names[] = $product->post_title;
+
+			if ( it_exchange_get_cart_product_quantity_by_product_id( $product->ID ) >= 1 ) {
+				$has_product = true;
+			}
+		}
+
+		if ( ! $has_product ) {
+
+			if ( count( $names ) == 1 ) {
+				$message = __( "To use this coupon, add the %s product to your cart.", 'it-l10n-ithemes-exchange' );
+				$message = sprintf( $message, reset( $names ) );
+			} else {
+				$message = __( "To use this coupon, add any of the following products to your cart: %s." );
+				$message = sprintf( $message, implode( ', ', $message ) );
+			}
+
+			it_exchange_add_message( 'error', $message );
+
+			return false;
+		}
+	}
+
+	$now = new DateTime();
+
+	// Abort if not within start and end dates
+	$start_okay = ! $coupon->get_start_date() || $coupon->get_start_date() < $now;
+	$end_okay   = ! $coupon->get_end_date() || $now < $coupon->get_end_date();
+
+	if ( ! $start_okay ) {
+
+		$message = sprintf(
+			__( 'This coupon is not valid until %s.', 'it-l10n-ithemes-exchange' ),
+			$coupon->get_start_date()->format( get_option( 'date_format' ) )
+		);
+
+		it_exchange_add_message( 'error', $message );
+
 		return false;
 	}
 
-	// Abort if not within start and end dates
-	$start_okay = empty( $coupon->start_date ) || strtotime( $coupon->start_date ) <= strtotime( date( 'Y-m-d' ) );
-	$end_okay   = empty( $coupon->end_date ) || strtotime( $coupon->end_date ) >= strtotime( date( 'Y-m-d' ) );
-	if ( ! $start_okay || ! $end_okay ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
+	if ( ! $end_okay ) {
+		it_exchange_add_message( 'error', __( 'This coupon has expired.', 'it-l10n-ithemes-exchange' ) );
+
 		return false;
 	}
 
 	// Get previous uses. Returns array of timestamps
-	if ( it_exchange_basic_coupon_frequency_limit_met_by_customer( $coupon->ID ) ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
+	if ( it_exchange_basic_coupon_frequency_limit_met_by_customer( $coupon ) ) {
+
+		// todo, refactor error handling to coupon class and provide better error message
+		it_exchange_add_message( 'error', __( "This coupon's frequency limit has been met.", 'it-l10n-ithemes-exchange' ) );
+
 		return false;
 	}
 
@@ -281,10 +312,11 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	it_exchange_add_message( 'notice', __( 'Coupon applied', 'it-l10n-ithemes-exchange' ) );
 	return true;
 }
+
 add_action( 'it_exchange_apply_coupon_to_cart', 'it_exchange_basic_coupons_apply_to_cart', 10, 2 );
 
 /**
- * Is this coupon available to this customer?
+ * Has the frequency limit for this coupon been met.
  *
  * Grabs array of timestamps specified (or current) user has used the specific coupon.
  * Determines # of seconds before now to count uses
@@ -292,67 +324,58 @@ add_action( 'it_exchange_apply_coupon_to_cart', 'it_exchange_basic_coupons_apply
  *
  * @since 1.9.2
  *
- * @param integer $coupon_id wp post id for the coupon
- * @param integer $customer_id wp user id of customer
+ * @param int|IT_Exchange_Cart_Coupon $coupon wp post id for the coupon
+ * @param int|bool                    $customer_id Customer ID to check against. If false, current customer is used.
  * @return boolean
 */
-function it_exchange_basic_coupon_frequency_limit_met_by_customer( $coupon_id, $customer_id=false ) {
+function it_exchange_basic_coupon_frequency_limit_met_by_customer( $coupon, $customer_id=false ) {
+
 	$customer_id = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
-	$coupon      = it_exchange_get_coupon( $coupon_id );
 
-	if ( empty( $coupon->limit_frequency ) )
+	$coupon = it_exchange_get_coupon( $coupon );
+
+	if ( ! $coupon instanceof IT_Exchange_Cart_Coupon || ! $coupon->is_frequency_limited() ) {
 		return false;
-
-	$current_frequencies = it_exchange_basic_coupons_get_customer_coupon_frequency( $coupon_id, $customer_id );
-	if ( ! empty( $coupon->limit_frequency ) ) {
-		// Set the base unit
-		switch ( $coupon->frequency_units ) {
-			case 'years' :
-				$base = YEAR_IN_SECONDS;
-				break;
-			case 'months' :
-				$base = DAY_IN_SECONDS * date_i18n( 't' ); // Not perfect for < PHP 5.3
-				break;
-			case 'weeks' :
-				$base = WEEK_IN_SECONDS;
-				break;
-			case 'days' :
-			default     :
-				$base = DAY_IN_SECONDS;
-				break;
-		}
-		// Multiply the length times the units to get seconds for set frequency
-		$frequency_seconds = $coupon->frequency_length * $base;
-		$earliest_limit    = date_i18n( 'U' ) - $frequency_seconds;
-
-		// Loop through current frequencies and total uses since last limit
-		$relevant_uses = 0;
-		foreach( (array) $current_frequencies as $date ) {
-			if ( $date > $earliest_limit )
-				$relevant_uses++;
-		}
-
-		// If relevant uses is greater than limit, return error message
-		if ( $relevant_uses >= $coupon->frequency_times ) {
-			return true;
-		}
 	}
+
+	$current_frequencies = it_exchange_basic_coupons_get_customer_coupon_frequency( $coupon->get_ID(), $customer_id );
+
+	// Multiply the length times the units to get seconds for set frequency
+	$frequency_seconds = $coupon->get_frequency_period_in_seconds();
+
+	$earliest_limit = date_i18n( 'U' ) - $frequency_seconds;
+
+	// Loop through current frequencies and total uses since last limit
+	$relevant_uses = 0;
+	foreach( (array) $current_frequencies as $date ) {
+		if ( $date > $earliest_limit )
+			$relevant_uses++;
+	}
+
+	// If relevant uses is greater than limit, return error message
+	if ( $relevant_uses >= $coupon->get_frequency_times() ) {
+		return true;
+	}
+
 	return false;
 }
 
 /**
- * Gets all coupon uses or all uses for a specific coupon for a user
+ * Get a customers usage of either a particular coupon or all coupons.
  *
  * @since 1.9.2
  *
- * @param integer $coupon_id   the coupon code. optional
- * @param integer $customer_id the customer id. defaults to current customer
+ * @param int|bool $coupon_id   The coupon ID to check against. If false, history for all coupons is returned.
+ * @param int|bool $customer_id The customer id. If false, the current customer will be used.
+ *
  * @return array
 */
-function it_exchange_basic_coupons_get_customer_coupon_frequency( $coupon_id=false, $customer_id=false ) {
+function it_exchange_basic_coupons_get_customer_coupon_frequency( $coupon_id = false, $customer_id = false ) {
+
 	$customer_id = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
+
 	$coupon_history = array();
-	
+
 	if ( empty( $customer_id ) ) {
 		if ( function_exists( 'it_exchange_doing_guest_checkout' ) && it_exchange_doing_guest_checkout() ) {
 			$customer = it_exchange_get_current_customer();
@@ -375,11 +398,13 @@ function it_exchange_basic_coupons_get_customer_coupon_frequency( $coupon_id=fal
  *
  * @since 1.9.2
  *
- * @param integer $coupon_id   the coupon code.
- * @param integer $customer_id the customer id. defaults to current customer
+ * @param int      $coupon_id   the coupon code.
+ * @param int|bool $customer_id The customer id to update. If false, the current customer will be used.
+ *
  * @return array
 */
-function it_exchange_basic_coupons_bump_customer_coupon_frequency( $coupon_id, $customer_id=false ) {
+function it_exchange_basic_coupons_bump_customer_coupon_frequency( $coupon_id, $customer_id = false ) {
+
 	$customer_id    = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
 	$coupon_history = it_exchange_basic_coupons_get_customer_coupon_frequency( false, $customer_id );
 
@@ -578,7 +603,7 @@ function it_exchange_basic_coupons_bump_for_customer_on_checkout( $transaction_i
 
 	if ( ! $coupons = it_exchange_get_transaction_coupons( $transaction ) )
 		return;
-		
+
 	// Do we have a cart coupon?
 	if ( isset( $coupons['cart'] ) && ! empty( $coupons['cart'] ) ) {
 		$coupon = reset( $coupons['cart'] );
