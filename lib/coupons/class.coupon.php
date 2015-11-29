@@ -127,6 +127,17 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	}
 
 	/**
+	 * The __toString method allows a class to decide how it will react when it is converted to a string.
+	 *
+	 * @since 1.33
+	 *
+	 * @return string
+	 */
+	public function __toString() {
+		return $this->get_code();
+	}
+
+	/**
 	 * Get the Coupon ID.
 	 *
 	 * @since 1.33
