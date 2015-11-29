@@ -11,7 +11,7 @@
  *
  * @since 0.4.0
  */
-class IT_Exchange_Coupon {
+class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 
 	// WP Post Type Properties
 	var $ID;
@@ -42,6 +42,8 @@ class IT_Exchange_Coupon {
 	 * @param array $coupon_data any custom data registered by the coupon addon
 	 *
 	 * @since 0.4.0
+	 *
+	 * @internal
 	 */
 	var $coupon_data = array();
 
@@ -102,8 +104,14 @@ class IT_Exchange_Coupon {
 		 */
 		$additional_properties = apply_filters( 'it_exchange_coupon_additional_data', array(), $post );
 		foreach ( $additional_properties as $key => $value ) {
-			$this->$key = $value;
+			$this->coupon_data[ $key ] = $value;
+			$this->$key                = $value;
 		}
+
+		$this->coupon_data['ID']    = $this->ID;
+		$this->coupon_data['title'] = $this->post_title;
+
+		reset( $this->coupon_data );
 	}
 
 	/**
@@ -138,5 +146,123 @@ class IT_Exchange_Coupon {
 	 */
 	public function get_code() {
 		return $this->code;
+	}
+
+	/**
+	 * Return the current element
+	 *
+	 * @since 1.33
+	 *
+	 * @return mixed Can return any type.
+	 */
+	public function current() {
+		return current( $this->coupon_data );
+	}
+
+	/**
+	 * Move forward to next element
+	 *
+	 * @since 1.33
+	 *
+	 * @return void Any returned value is ignored.
+	 */
+	public function next() {
+		next( $this->coupon_data );
+	}
+
+	/**
+	 * Return the key of the current element
+	 *
+	 * @since 1.33
+	 *
+	 * @return mixed scalar on success, or null on failure.
+	 */
+	public function key() {
+		return key( $this->coupon_data );
+	}
+
+	/**
+	 * Checks if current position is valid
+	 *
+	 * @since 1.33
+	 *
+	 * @return boolean The return value will be casted to boolean and then evaluated.
+	 * Returns true on success or false on failure.
+	 */
+	public function valid() {
+		return key( $this->coupon_data ) !== null;
+	}
+
+	/**
+	 * Rewind the Iterator to the first element
+	 *
+	 * @since 1.33
+	 */
+	public function rewind() {
+		reset( $this->coupon_data );
+	}
+
+	/**
+	 * Set a custom property.
+	 *
+	 * @since 1.33
+	 *
+	 * @param string $offset
+	 * @param mixed  $value
+	 */
+	public function offsetSet( $offset, $value ) {
+		if ( is_null( $offset ) ) {
+			$this->coupon_data[] = $value;
+		} else {
+			$this->coupon_data[ $offset ] = $value;
+		}
+	}
+
+	/**
+	 * Check if a custom property exists.
+	 *
+	 * @since 1.33
+	 *
+	 * @param string $offset
+	 *
+	 * @return bool
+	 */
+	public function offsetExists( $offset ) {
+		return isset( $this->coupon_data[ $offset ] );
+	}
+
+	/**
+	 * Unset a custom property.
+	 *
+	 * @since 1.33
+	 *
+	 * @param string $offset
+	 */
+	public function offsetUnset( $offset ) {
+		unset( $this->coupon_data[ $offset ] );
+	}
+
+	/**
+	 * Retrieve a custom property.
+	 *
+	 * @since 1.33
+	 *
+	 * @param string $offset
+	 *
+	 * @return mixed|null
+	 */
+	public function offsetGet( $offset ) {
+		return isset( $this->coupon_data[ $offset ] ) ? $this->coupon_data[ $offset ] : null;
+	}
+
+	/**
+	 * Get the total custom properties registered.
+	 *
+	 * @since 1.33
+	 *
+	 * @return int
+	 */
+	public function count() {
+		return count( $this->coupon_data );
 	}
 }
