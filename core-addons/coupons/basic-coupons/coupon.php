@@ -85,8 +85,12 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 */
 	public function get_start_date() {
 
+		if ( ! $this->start_date ) {
+			return null;
+		}
+
 		try {
-			return new DateTime( "@{$this->start_date}" );
+			return new DateTime( $this->start_date );
 		}
 		catch ( Exception $e ) {
 			return null;
@@ -102,8 +106,12 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 */
 	public function get_end_date() {
 
+		if ( ! $this->end_date ) {
+			return null;
+		}
+
 		try {
-			return new DateTime( "@{$this->end_date}" );
+			return new DateTime( $this->end_date );
 		}
 		catch ( Exception $e ) {
 			return null;
@@ -163,6 +171,17 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 */
 	public function is_customer_limited() {
 		return ! empty( $this->limit_customer );
+	}
+
+	/**
+	 * Get the customer this coupon is limited to.
+	 *
+	 * @since 1.33
+	 *
+	 * @return IT_Exchange_Customer
+	 */
+	public function get_customer() {
+		return it_exchange_get_customer( $this->customer );
 	}
 
 	/**
