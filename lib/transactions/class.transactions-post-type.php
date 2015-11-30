@@ -516,7 +516,7 @@ class IT_Exchange_Transaction_Post_Type {
 
 						<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : ?>
 							<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
-								<div class="product-download product-download-<?php esc_attr_e( $download_id ); ?>">
+								<div class="product-download product-download-<?php esc_attr_e(  $download_id ); ?>">
 									<h4 class="product-download-title">
 										<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_download_title', $post, $download_id, $download_data ); ?>
 										<?php echo __( 'Download:', 'it-l10n-ithemes-exchange' ) . ' ' . get_the_title( $download_id ); ?>
@@ -559,10 +559,6 @@ class IT_Exchange_Transaction_Post_Type {
 					<?php foreach ( $coupon as $data ) : ?>
 						<div class="transaction-cost-coupon">
 							<span class="code"><?php echo $data['code'] ?></span>
-							<!--
-								NOTE Plan to edit this later when more variables are added to the output of the coupon. - Koop
-							-->
-							<!-- <span class="code amount"><?php echo $data['amount_number'] ?><?php echo $data['amount_type'] ?></span> -->
 						</div>
 					<?php endforeach; ?>
 				<?php endforeach; ?>

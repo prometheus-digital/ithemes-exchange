@@ -181,7 +181,21 @@ function it_exchange_generate_transaction_object() {
 	$transaction_object->currency               = $currency;
 	$transaction_object->description            = it_exchange_get_cart_description();
 	$transaction_object->products               = $products;
-	$transaction_object->coupons                = it_exchange_get_applied_coupons();
+
+	$coupons = array();
+
+	foreach ( it_exchange_get_applied_coupons() as $type => $type_coupons ) {
+
+		foreach ( $type_coupons as $coupon ) {
+			if ( $coupon instanceof IT_Exchange_Coupon ) {
+				$coupons[$type][] = $coupon->get_data_for_transaction_object();
+			} else {
+				$coupons[$type][] = $coupon;
+			}
+		}
+	}
+
+	$transaction_object->coupons                = $coupons;
 	$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
 
 	// Tack on Tax information
@@ -198,8 +212,8 @@ function it_exchange_generate_transaction_object() {
 	$transaction_object->shipping_total         = it_exchange_convert_to_database_number( it_exchange_get_cart_shipping_cost( false, false ) );
 
 	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object );
-	return $transaction_object;
 
+	return $transaction_object;
 }
 
 /**

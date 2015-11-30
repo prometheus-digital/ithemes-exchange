@@ -139,6 +139,20 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	}
 
 	/**
+	 * Get data to save to the transaction object.
+	 *
+	 * @since 1.33
+	 *
+	 * @return array
+	 */
+	public function get_data_for_transaction_object() {
+		return array(
+			'id'   => $this->get_ID(),
+			'code' => $this->get_code()
+		);
+	}
+
+	/**
 	 * Get the Coupon ID.
 	 *
 	 * @since 1.33
