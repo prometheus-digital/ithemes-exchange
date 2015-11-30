@@ -132,21 +132,21 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	 *
 	 * @since 1.33
 	 *
-	 * @param IT_Exchange_Transaction $transaction
+	 * @param object $transaction_object
 	 */
-	public function use_coupon( IT_Exchange_Transaction $transaction ) {
+	public function use_coupon( $transaction_object ) {
 
 		/**
 		 * Fires when a coupon is used.
 		 *
 		 * @since 1.33
 		 *
-		 * @param IT_Exchange_Coupon      $this
-		 * @param IT_Exchange_Transaction $transaction
+		 * @param IT_Exchange_Coupon $this
+		 * @param object             $transaction_object
 		 */
-		do_action( 'it_exchange_use_coupon', $this, $transaction );
+		do_action( 'it_exchange_use_coupon', $this, $transaction_object );
 
-		$this->increment_usage( $transaction );
+		$this->increment_usage( $transaction_object );
 	}
 
 	/**
@@ -154,9 +154,9 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	 *
 	 * @since 1.33
 	 *
-	 * @param IT_Exchange_Transaction $transaction
+	 * @param object $transaction_object
 	 */
-	public function increment_usage( IT_Exchange_Transaction $transaction ) {
+	public function increment_usage( $transaction_object ) {
 		// add-ons should overwrite this method
 	}
 
@@ -165,9 +165,9 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	 *
 	 * @since 1.33
 	 *
-	 * @param IT_Exchange_Transaction $transaction
+	 * @param object $transaction_object
 	 */
-	public function decrement_usage( IT_Exchange_Transaction $transaction ) {
+	public function decrement_usage( $transaction_object ) {
 		// add-ons should overwrite this method
 	}
 

@@ -42,17 +42,17 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 *
 	 * @since 1.33
 	 *
-	 * @param IT_Exchange_Transaction $transaction
+	 * @param object $transaction_object
 	 */
-	public function increment_usage( IT_Exchange_Transaction $transaction ) {
-		parent::increment_usage( $transaction );
+	public function increment_usage( $transaction_object ) {
+		parent::increment_usage( $transaction_object );
 
 		if ( $this->is_quantity_limited() ) {
 			$this->modify_quantity_available( - 1 );
 		}
 
 		if ( $this->is_frequency_limited() ) {
-			$this->bump_customer_coupon_frequency( $transaction );
+			$this->bump_customer_coupon_frequency( $transaction_object );
 		}
 	}
 
@@ -61,13 +61,13 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 *
 	 * @since 1.33
 	 *
-	 * @param IT_Exchange_Transaction $transaction
+	 * @param object $transaction_object
 	 */
-	public function decrement_usage( IT_Exchange_Transaction $transaction ) {
-		parent::decrement_usage( $transaction );
+	public function decrement_usage( $transaction_object ) {
+		parent::decrement_usage( $transaction_object );
 
 		$this->modify_quantity_available( + 1 );
-		$this->reduce_customer_coupon_frequency( $transaction );
+		$this->reduce_customer_coupon_frequency( $transaction_object );
 	}
 
 	/**
@@ -90,20 +90,25 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 *
 	 * @since 1.33
 	 *
-	 * @param IT_Exchange_Transaction $transaction
+	 * @param object $transaction_object
 	 */
-	public function bump_customer_coupon_frequency( IT_Exchange_Transaction $transaction ) {
+	public function bump_customer_coupon_frequency( $transaction_object ) {
 
-		$customer_id    = it_exchange_get_transaction_customer_id( $transaction );
+		$customer_id = $transaction_object->customer_id;
+
+		if ( ! $customer_id ) {
+			return;
+		}
+
 		$coupon_history = it_exchange_basic_coupons_get_customer_coupon_frequency( false, $customer_id );
 
 		if ( empty( $coupon_history[ $this->get_ID() ] ) ) {
 			$coupon_history[ $this->get_ID() ] = array();
 		}
 
-		$coupon_history[ $this->get_ID() ][ $transaction->ID ] = date_i18n( 'U' );
+		$coupon_history[ $this->get_ID() ][ $transaction_object->cart_id ] = date_i18n( 'U' );
 
-		if ( ! empty( $transaction->cart_details->is_guest_checkout ) ) {
+		if ( ! empty( $transaction_object->is_guest_checkout ) ) {
 			update_option( '_it_exchange_basic_coupon_history_' . $customer_id, $coupon_history );
 		} else {
 			update_user_meta( $customer_id, '_it_exchagne_basic_coupon_history', $coupon_history );
@@ -115,20 +120,25 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 *
 	 * @since 1.33
 	 *
-	 * @param IT_Exchange_Transaction $transaction
+	 * @param object $transaction_object
 	 */
-	public function reduce_customer_coupon_frequency( IT_Exchange_Transaction $transaction ) {
+	public function reduce_customer_coupon_frequency( $transaction_object ) {
 
-		$customer_id    = it_exchange_get_transaction_customer_id( $transaction );
-		$coupon_history = it_exchange_basic_coupons_get_customer_coupon_frequency( false, $customer_id );
+		$customer_id = $transaction_object->customer_id;
 
-		if ( empty( $coupon_history[ $this->get_ID() ] ) || empty( $coupon_history[ $this->get_ID() ][ $transaction->ID ] ) ) {
+		if ( ! $customer_id ) {
 			return;
 		}
 
-		unset( $coupon_history[ $this->get_ID() ][ $transaction->ID ] );
+		$coupon_history = it_exchange_basic_coupons_get_customer_coupon_frequency( false, $customer_id );
 
-		if ( ! empty( $transaction->cart_details->is_guest_checkout ) ) {
+		if ( empty( $coupon_history[ $this->get_ID() ] ) || empty( $coupon_history[ $this->get_ID() ][ $transaction_object->cart_id ] ) ) {
+			return;
+		}
+
+		unset( $coupon_history[ $this->get_ID() ][ $transaction_object->cart_id ] );
+
+		if ( ! empty( $transaction_object->is_guest_checkout ) ) {
 			update_option( '_it_exchange_basic_coupon_history_' . $customer_id, $coupon_history );
 		} else {
 			update_user_meta( $customer_id, '_it_exchagne_basic_coupon_history', $coupon_history );
