@@ -38,6 +38,104 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	}
 
 	/**
+	 * Increment usage of this coupon.
+	 *
+	 * @since 1.33
+	 *
+	 * @param IT_Exchange_Transaction $transaction
+	 */
+	public function increment_usage( IT_Exchange_Transaction $transaction ) {
+		parent::increment_usage( $transaction );
+
+		if ( $this->is_quantity_limited() ) {
+			$this->modify_quantity_available( - 1 );
+		}
+
+		if ( $this->is_frequency_limited() ) {
+			$this->bump_customer_coupon_frequency( $transaction );
+		}
+	}
+
+	/**
+	 * Decrement the usage of this coupon.
+	 *
+	 * @since 1.33
+	 *
+	 * @param IT_Exchange_Transaction $transaction
+	 */
+	public function decrement_usage( IT_Exchange_Transaction $transaction ) {
+		parent::decrement_usage( $transaction );
+
+		$this->modify_quantity_available( + 1 );
+		$this->reduce_customer_coupon_frequency( $transaction );
+	}
+
+	/**
+	 * Reduce the remaining quantity available by a fixed amount.
+	 *
+	 * @since 1.33
+	 *
+	 * @param int $by
+	 */
+	public function modify_quantity_available( $by ) {
+
+		$quantity = $this->get_remaining_quantity();
+		$quantity += $by;
+
+		update_post_meta( $this->get_ID(), '_it-basic-quantity', $quantity );
+	}
+
+	/**
+	 * Bump the customer coupon uses.
+	 *
+	 * @since 1.33
+	 *
+	 * @param IT_Exchange_Transaction $transaction
+	 */
+	public function bump_customer_coupon_frequency( IT_Exchange_Transaction $transaction ) {
+
+		$customer_id    = it_exchange_get_transaction_customer_id( $transaction );
+		$coupon_history = it_exchange_basic_coupons_get_customer_coupon_frequency( false, $customer_id );
+
+		if ( empty( $coupon_history[ $this->get_ID() ] ) ) {
+			$coupon_history[ $this->get_ID() ] = array();
+		}
+
+		$coupon_history[ $this->get_ID() ][ $transaction->ID ] = date_i18n( 'U' );
+
+		if ( ! empty( $transaction->cart_details->is_guest_checkout ) ) {
+			update_option( '_it_exchange_basic_coupon_history_' . $customer_id, $coupon_history );
+		} else {
+			update_user_meta( $customer_id, '_it_exchagne_basic_coupon_history', $coupon_history );
+		}
+	}
+
+	/**
+	 * Reduce the customer coupon frequency. This will remove the bump associated with the given transaction.
+	 *
+	 * @since 1.33
+	 *
+	 * @param IT_Exchange_Transaction $transaction
+	 */
+	public function reduce_customer_coupon_frequency( IT_Exchange_Transaction $transaction ) {
+
+		$customer_id    = it_exchange_get_transaction_customer_id( $transaction );
+		$coupon_history = it_exchange_basic_coupons_get_customer_coupon_frequency( false, $customer_id );
+
+		if ( empty( $coupon_history[ $this->get_ID() ] ) || empty( $coupon_history[ $this->get_ID() ][ $transaction->ID ] ) ) {
+			return;
+		}
+
+		unset( $coupon_history[ $this->get_ID() ][ $transaction->ID ] );
+
+		if ( ! empty( $transaction->cart_details->is_guest_checkout ) ) {
+			update_option( '_it_exchange_basic_coupon_history_' . $customer_id, $coupon_history );
+		} else {
+			update_user_meta( $customer_id, '_it_exchagne_basic_coupon_history', $coupon_history );
+		}
+	}
+
+	/**
 	 * Get data to save to the transaction object.
 	 *
 	 * @since 1.33

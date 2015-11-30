@@ -401,12 +401,18 @@ function it_exchange_basic_coupons_get_customer_coupon_frequency( $coupon_id = f
  *
  * @since 1.9.2
  *
+ * @deprecated 1.33 This function does not handle transient transactions, and makes reversing usage impossible.
+ *
  * @param int      $coupon_id   the coupon code.
  * @param int|bool $customer_id The customer id to update. If false, the current customer will be used.
  *
  * @return array
 */
 function it_exchange_basic_coupons_bump_customer_coupon_frequency( $coupon_id, $customer_id = false ) {
+
+	_deprecated_function(
+		'it_exchange_basic_coupons_bump_customer_coupon_frequency', '1.33',
+		'IT_Exchange_Cart_Coupon::bump_customer_coupon_frequency' );
 
 	$customer_id    = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
 	$coupon_history = it_exchange_basic_coupons_get_customer_coupon_frequency( false, $customer_id );
@@ -586,6 +592,12 @@ function it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $cou
  * @return void
 */
 function it_exchange_basic_coupons_modify_coupon_quantity_on_transaction( $transaction_id ) {
+
+	_deprecated_function(
+		'it_exchange_basic_coupons_modify_coupon_quantity_on_transaction', '1.33',
+		'IT_Exchange_Cart_Coupon::modify_quantity_available'
+	);
+
 	if ( ! $transaction = it_exchange_get_transaction( $transaction_id ) )
 		return false;
 
@@ -611,7 +623,6 @@ function it_exchange_basic_coupons_modify_coupon_quantity_on_transaction( $trans
 		update_post_meta( $coupon['id'], '_it-basic-quantity', $quantity );
 	}
 }
-add_action( 'it_exchange_add_transaction_success', 'it_exchange_basic_coupons_modify_coupon_quantity_on_transaction' );
 
 /**
  * Track the customer's use of this coupon on checkout
@@ -622,6 +633,11 @@ add_action( 'it_exchange_add_transaction_success', 'it_exchange_basic_coupons_mo
  * @return void
 */
 function it_exchange_basic_coupons_bump_for_customer_on_checkout( $transaction_id ) {
+
+	_deprecated_function(
+		'it_exchange_basic_coupons_bump_for_customer_on_checkout', '1.33',
+		'IT_Exchange_Cart_Coupon::bump_customer_coupon_frequency'
+	);
 
 	if ( ! $transaction = it_exchange_get_transaction( $transaction_id ) )
 		return false;
@@ -637,9 +653,7 @@ function it_exchange_basic_coupons_bump_for_customer_on_checkout( $transaction_i
 		$customer_id = $transaction->customer_id;
 		it_exchange_basic_coupons_bump_customer_coupon_frequency( $coupon_id, $customer_id );
 	}
-
 }
-add_action( 'it_exchange_add_transaction_success', 'it_exchange_basic_coupons_bump_for_customer_on_checkout' );
 
 /**
  * Returns the coupon discount label

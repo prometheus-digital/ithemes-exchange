@@ -128,6 +128,50 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	}
 
 	/**
+	 * This method is called when a coupon is used for a transaction.
+	 *
+	 * @since 1.33
+	 *
+	 * @param IT_Exchange_Transaction $transaction
+	 */
+	public function use_coupon( IT_Exchange_Transaction $transaction ) {
+
+		/**
+		 * Fires when a coupon is used.
+		 *
+		 * @since 1.33
+		 *
+		 * @param IT_Exchange_Coupon      $this
+		 * @param IT_Exchange_Transaction $transaction
+		 */
+		do_action( 'it_exchange_use_coupon', $this, $transaction );
+
+		$this->increment_usage( $transaction );
+	}
+
+	/**
+	 * Increment usage of this coupon.
+	 *
+	 * @since 1.33
+	 *
+	 * @param IT_Exchange_Transaction $transaction
+	 */
+	public function increment_usage( IT_Exchange_Transaction $transaction ) {
+		// add-ons should overwrite this method
+	}
+
+	/**
+	 * Decrement the usage of this coupon.
+	 *
+	 * @since 1.33
+	 *
+	 * @param IT_Exchange_Transaction $transaction
+	 */
+	public function decrement_usage( IT_Exchange_Transaction $transaction ) {
+		// add-ons should overwrite this method
+	}
+
+	/**
 	 * The __toString method allows a class to decide how it will react when it is converted to a string.
 	 *
 	 * @since 1.33
