@@ -133,8 +133,16 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	 * @since 1.33
 	 *
 	 * @param object $transaction_object
+	 *
+	 * @return bool
 	 */
 	public function use_coupon( $transaction_object ) {
+
+		if ( $this->is_used_by( $transaction_object->cart_id ) ) {
+			return false;
+		}
+
+		$this->record_used_by( $transaction_object->cart_id );
 
 		/**
 		 * Fires when a coupon is used.
@@ -147,6 +155,51 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 		do_action( 'it_exchange_use_coupon', $this, $transaction_object );
 
 		$this->increment_usage( $transaction_object );
+
+		return true;
+	}
+
+	/**
+	 * Record that this coupon was used by a transaction.
+	 *
+	 * @since 1.33
+	 *
+	 * @param string $cart_id
+	 */
+	protected function record_used_by( $cart_id ) {
+		add_post_meta( $this->get_ID(), '_used_by', $cart_id, true );
+	}
+
+	/**
+	 * Check if this coupon was used by a transaction.
+	 *
+	 * @since 1.33
+	 *
+	 * @param string $cart_id
+	 *
+	 * @return bool
+	 */
+	protected function is_used_by( $cart_id ) {
+		return in_array( $cart_id, $this->get_uses() );
+	}
+
+	/**
+	 * Get all uses of this coupon.
+	 *
+	 * This is an associative array of cart IDs.
+	 *
+	 * @since 1.33
+	 *
+	 * @return array
+	 */
+	protected function get_uses() {
+		$uses = get_post_meta( $this->get_ID(), '_used_by', false );
+
+		if ( ! is_array( $uses ) ) {
+			return array();
+		}
+
+		return $uses;
 	}
 
 	/**
