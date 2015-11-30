@@ -504,37 +504,28 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount = fals
 	$options = ITUtility::merge_defaults( $options, $defaults );
 
 	$coupons = it_exchange_get_applied_coupons( 'cart' );
-	$subtotal = it_exchange_get_cart_subtotal( false );
 
 	foreach( (array) $coupons as $coupon ) {
 
-		if ( empty( $coupon ) || ! $coupon instanceof IT_Exchange_Cart_Coupon )
+		if ( empty( $coupon ) || ! $coupon instanceof IT_Exchange_Cart_Coupon ) {
 			continue;
+		}
 
-		if ( $coupon->is_product_limited() ) {
+		$cart_products = it_exchange_get_cart_products();
 
-			$cart_products = it_exchange_get_cart_products();
+		foreach( $cart_products as $cart_product ) {
 
-			foreach( $cart_products as $cart_product ) {
+			if ( it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $coupon ) ) {
+				$base_price = it_exchange_get_cart_product_base_price( $cart_product, false );
 
-				if ( it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $coupon ) ) {
-					$base_price = it_exchange_get_cart_product_base_price( $cart_product, false );
-
-					if ( $coupon->get_amount_type() == IT_Exchange_Cart_Coupon::TYPE_PERCENT ) {
-						$product_discount = $discount + ( $coupon->get_amount_number() / 100 ) * $base_price;
-					} else {
-						$product_discount = $discount + $coupon->get_amount_number();
-					}
-
-					$product_discount = $product_discount * $cart_product['count'];
-					$discount = $discount + $product_discount;
+				if ( $coupon->get_amount_type() == IT_Exchange_Cart_Coupon::TYPE_PERCENT ) {
+					$product_discount = ( $coupon->get_amount_number() / 100 ) * $base_price;
+				} else {
+					$product_discount = $coupon->get_amount_number();
 				}
-			}
-		} else {
-			if ( $coupon->get_amount_type() == IT_Exchange_Cart_Coupon::TYPE_PERCENT ) {
-				$discount = $discount + ( $coupon->get_amount_number() / 100 ) * $subtotal;
-			} else {
-				$discount = $discount + $coupon->get_amount_number();
+
+				$product_discount *= $cart_product['count'];
+				$discount += $product_discount;
 			}
 		}
 	}
@@ -803,8 +794,8 @@ add_filter( 'it_exchange_get_transaction_cart_coupon_summary', 'it_exchange_basi
  *
  * @return string
 */
-function it_exchange_basic_coupons_get_discount_method( $method, $options=array() ) {
-	
+function it_exchange_basic_coupons_get_discount_method( $mehod, $options=array() ) {
+
 	if ( empty( $options['id'] ) || ! $coupon = it_exchange_get_coupon( $options['id'] ) )
 		return false;
 
