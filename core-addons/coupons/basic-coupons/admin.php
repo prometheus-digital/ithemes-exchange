@@ -552,7 +552,7 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 			if ( ! $coupon->is_customer_limited() ) {
 				$customer = __( 'Any Customer', 'it-l10n-ithemes-exchange' );
 			} else {
-				$customer = $coupon->get_customer()->wp_user->display_name;
+				$customer = $coupon->get_customer() ? $coupon->get_customer()->wp_user->display_name : '';
 			}
 
 			esc_attr_e( $customer );
