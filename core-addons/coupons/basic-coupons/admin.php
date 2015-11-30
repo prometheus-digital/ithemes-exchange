@@ -507,7 +507,7 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 		return;
 	}
 
-	$format = get_option( 'date_format' );
+	$format = str_replace( 'F', 'M', get_option( 'date_format' ) );
 
 	switch( $column ) {
 		case 'it_exchange_coupon_code':
