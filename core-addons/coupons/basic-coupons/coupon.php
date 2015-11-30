@@ -155,7 +155,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	public function get_data_for_transaction_object() {
 		$data = parent::get_data_for_transaction_object();
 
-		$data['amount_number'] = $this->get_amount_number();
+		$data['amount_number'] = it_exchange_convert_to_database_number( $this->get_amount_number() );
 		$data['amount_type']   = $this->get_amount_type();
 		$data['start_date']    = $this->get_start_date() ? $this->get_start_date()->format( 'Y-m-d H:i:s' ) : '';
 		$data['end_date']      = $this->get_end_date() ? $this->get_end_date()->format( 'Y-m-d H:i:s' ) : '';
