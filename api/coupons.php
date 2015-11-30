@@ -383,13 +383,19 @@ function it_exchange_get_total_coupons_discount( $type=false, $options=array() )
  *
  * @since 0.4.0
  *
+ * @deprecated 1.33
+ *
  * @param integer $coupon_id the coupon id
  * @param array   $options optional.
  *
  * @return string|bool
 */
 function it_exchange_get_coupon_discount_method( $coupon_id, $options=array() ) {
+
+	_deprecated_function( 'it_exchange_get_coupon_discount_method', '1.33' );
+
 	$options['id'] = $coupon_id;
+
 	return apply_filters( 'it_exchange_get_coupon_discount_method', false, $options );
 }
 
