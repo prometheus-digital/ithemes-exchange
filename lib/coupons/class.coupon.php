@@ -160,6 +160,41 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	}
 
 	/**
+	 * Unuse a coupon.
+	 *
+	 * This method is called when a coupon is no longer cleared for delivery.
+	 *
+	 * @since 1.33
+	 *
+	 * @param object $transaction_object
+	 *
+	 * @return bool
+	 */
+	public function unuse_coupon( $transaction_object ) {
+
+		if ( ! $this->is_used_by( $transaction_object->cart_id ) ) {
+			return false;
+		}
+
+		$this->delete_used_by( $transaction_object->cart_id );
+
+		/**
+		 * Fires when a coupon is un-used.
+		 *
+		 * Typically this is as a result of a order cancellation.
+		 *
+		 * @since 1.33
+		 *
+		 * @param IT_Exchange_Coupon $this
+		 * @param object             $transaction_object
+		 */
+		do_action( 'it_exchange_unuse_coupon', $this, $transaction_object );
+		$this->decrement_usage( $transaction_object );
+
+		return true;
+	}
+
+	/**
 	 * Record that this coupon was used by a transaction.
 	 *
 	 * @since 1.33
@@ -168,6 +203,27 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	 */
 	protected function record_used_by( $cart_id ) {
 		add_post_meta( $this->get_ID(), '_used_by', $cart_id, true );
+	}
+
+	/**
+	 * Delete the record that this coupon was used by a transaction.
+	 *
+	 * @since 1.33
+	 *
+	 * @param string $cart_id
+	 */
+	protected function delete_used_by( $cart_id ) {
+
+		/** @var wpdb $wpdb */
+		global $wpdb;
+
+		$mid = $wpdb->get_var( $wpdb->prepare(
+			"SELECT meta_id FROM $wpdb->postmeta WHERE post_id = %d AND meta_key = %s AND meta_value = %s",
+			$this->get_ID(), '_used_by', $cart_id ) );
+
+		if ( $mid ) {
+			delete_metadata_by_mid( 'post', $mid );
+		}
 	}
 
 	/**

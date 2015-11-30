@@ -51,6 +51,7 @@ require( $this->_plugin_path . 'lib/super-widget/class.super-widget.php' );
 // Coupons
 require( $this->_plugin_path . 'lib/coupons/class.coupons-post-type.php' );
 require( $this->_plugin_path . 'lib/coupons/class.coupon.php' );
+require( $this->_plugin_path . 'lib/coupons/hooks.php' );
 
 // Email Notifications
 require( $this->_plugin_path . 'lib/email-notifications/class.email-notifications.php' );
