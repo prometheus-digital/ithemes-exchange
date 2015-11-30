@@ -474,12 +474,15 @@ add_filter( 'it_exchange_remove_cart_coupon_html', 'it_exchange_base_coupons_rem
  *
  * @since 0.4.0
  *
- * @return price
+ * @param float $total
+ *
+ * @return float
 */
 function it_exchange_basic_coupons_apply_discount_to_cart_total( $total ) {
-	$coupons = it_exchange_get_applied_coupons( 'cart' );
+
 	$total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ) );
 	$total = $total - $total_discount;
+
 	return $total;
 }
 add_filter( 'it_exchange_get_cart_total', 'it_exchange_basic_coupons_apply_discount_to_cart_total' );
@@ -664,16 +667,21 @@ function it_exchange_basic_coupons_bump_for_customer_on_checkout( $transaction_i
  * @param array  $options $options['coupon'] should have the coupon object
  * @return string
 */
-function it_exchange_basic_coupons_get_discount_label( $label, $options=array() ) {
-	$coupon = empty( $options['coupon']->ID ) ? false : $options['coupon'];
-	if ( ! $coupon )
-		return '';
+function it_exchange_basic_coupons_get_discount_label( $label, $options = array() ) {
 
-	if( 'amount' == $coupon->amount_type )
-		return it_exchange_format_price( it_exchange_convert_from_database_number( $coupon->amount_number ) );
-	else
-		return it_exchange_convert_from_database_number( $coupon->amount_number ) . $coupon->amount_type;
+	$coupon = empty( $options['coupon']->ID ) ? false : $options['coupon'];
+
+	if ( ! $coupon || ! $coupon instanceof IT_Exchange_Cart_Coupon ) {
+		return '';
+	}
+
+	if ( IT_Exchange_Cart_Coupon::TYPE_FLAT == $coupon->get_amount_number() ) {
+		return it_exchange_format_price( $coupon->get_amount_number() );
+	} else {
+		return $coupon->get_amount_number() . '%';
+	}
 }
+
 add_filter( 'it_exchange_get_coupon_discount_label', 'it_exchange_basic_coupons_get_discount_label', 10, 2 );
 
 /**
@@ -707,13 +715,17 @@ add_action( 'template_redirect', 'it_exchange_basic_coupons_handle_remove_coupon
  * Removes a coupon from the cart
  *
  * @param boolean $result default result passed by apply_filters
- * @param string $coupon_code code of coupon to be removed
+ * @param array   $options The $code parameter must contain the coupon code.
  * @return boolean
 */
 function it_exchange_basic_coupons_remove_coupon_from_cart( $result, $options=array() ) {
+
 	$coupon_code = empty( $options['code'] ) ? false : $options['code'];
-	if ( empty( $coupon_code ) )
+	$coupon = it_exchange_get_coupon_from_code( $coupon_code, 'cart' );
+
+	if ( empty( $coupon_code ) || empty( $coupon ) ) {
 		return false;
+	}
 
 	$coupons = it_exchange_get_cart_data( 'basic_coupons' );
 
@@ -723,7 +735,17 @@ function it_exchange_basic_coupons_remove_coupon_from_cart( $result, $options=ar
 
 	// Unset coupons
 	it_exchange_update_cart_data( 'basic_coupons', $coupons );
-	do_action( 'it_exchange_basic_coupons_remove_coupon_from_cart', $coupon_code );
+
+	/**
+	 * Fires when a coupon is removed from the cart.
+	 *
+	 * @since 1.33 Add $coupon parameter
+	 *
+	 * @param string                  $coupon_code
+	 * @param IT_Exchange_Cart_Coupon $coupon
+	 */
+	do_action( 'it_exchange_basic_coupons_remove_coupon_from_cart', $coupon_code, $coupon );
+
 	return true;
 }
 add_filter( 'it_exchange_remove_coupon_for_cart', 'it_exchange_basic_coupons_remove_coupon_from_cart', 10, 2 );
@@ -745,8 +767,6 @@ function it_exchange_basic_coupons_transaction_summary( $summary, $transaction_c
 	$code     = empty( $transaction_coupon['code'] )          ? false : $transaction_coupon['code'];
 	$number   = empty( $transaction_coupon['amount_number'] ) ? false : $transaction_coupon['amount_number'];
 	$type     = empty( $transaction_coupon['amount_type'] )   ? false : $transaction_coupon['amount_type'];
-	$start    = empty( $transaction_coupon['start_date'] )    ? false : $transaction_coupon['start_date'];
-	$end      = empty( $transaction_coupon['end_date'] )      ? false : $transaction_coupon['end_date'];
 
 	$url = trailingslashit( get_admin_url() ) . 'admin.php';
 	$url = add_query_arg( array( 'page' => 'it-exchange-edit-basic-coupon', 'post' => $id ), $url );
@@ -754,13 +774,18 @@ function it_exchange_basic_coupons_transaction_summary( $summary, $transaction_c
 	$link = '<a href="' . esc_url( $url ) . '">' . __( 'View Coupon', 'it-l10n-ithemes-exchange' ) . '</a>';
 
 	$string = '';
-	if ( $title )
-		$string .= $title . ': ';
-	if ( $code )
-		$string .= $code . ' | ';
 
-	if ( $number && $type )
+	if ( $title ) {
+		$string .= $title . ': ';
+	}
+
+	if ( $code ) {
+		$string .= $code . ' | ';
+	}
+
+	if ( $number && $type ) {
 		$string .= implode( '', array( $number, $type ) ) . ' | ';
+	}
 
 	$string .= ' ' . $link;
 
@@ -775,9 +800,11 @@ add_filter( 'it_exchange_get_transaction_cart_coupon_summary', 'it_exchange_basi
  *
  * @param string $method default type passed by WP filters. Not used here.
  * @param array $options includes the ID we're looking for.
+ *
  * @return string
 */
 function it_exchange_basic_coupons_get_discount_method( $method, $options=array() ) {
+	
 	if ( empty( $options['id'] ) || ! $coupon = it_exchange_get_coupon( $options['id'] ) )
 		return false;
 

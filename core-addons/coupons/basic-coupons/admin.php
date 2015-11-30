@@ -29,7 +29,6 @@ function it_exchange_basic_coupons_enqueue_js_css() {
 			wp_enqueue_script( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-coupon.js', $deps );
 		} else if ( 'admin_print_styles' == $current_filter ) {
 			// CSS
-			$deps = array( 'jquery-ui-tooltip', 'jquery-ui-datepicker' );
 			wp_enqueue_style( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/add-edit-coupon.css' );
 		}
 	}
@@ -42,10 +41,13 @@ add_action( 'admin_print_scripts', 'it_exchange_basic_coupons_enqueue_js_css' );
  *
  * @since 0.4.5
  *
+ * @param array $post_types
+ *
  * @return array list of post types
 */
 function it_exchange_remove_quick_edit_from_basic_coupons( $post_types ) {
 	$post_types[] = 'it_exchange_coupon';
+
 	return $post_types;
 }
 add_filter( 'it_exchange_remove_quick_edit_from_post_types', 'it_exchange_remove_quick_edit_from_basic_coupons', 10 );
@@ -236,31 +238,33 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 	$heading = $post_id ? __( 'Edit Coupon', 'it-l10n-ithemes-exchange' ) : __( 'Add Coupon', 'it-l10n-ithemes-exchange' );
 	$form_action = $post_id ? add_query_arg( array( 'page' => 'it-exchange-edit-basic-coupon', 'post' => $post_id ), get_admin_url() . 'admin.php' ) : add_query_arg( array( 'page' => 'it-exchange-add-basic-coupon' ), get_admin_url() . 'admin.php' );
 
+	$coupon = it_exchange_get_coupon( $post_id );
+
 	// Set form values
-	if ( $post_id ) {
-		$coupon = it_exchange_get_coupon( $post_id );
+	if ( $coupon instanceof IT_Exchange_Cart_Coupon ) {
 
-		$amount = it_exchange_convert_from_database_number( $coupon->amount_number );
+		$amount =  $coupon->get_amount_number();
 
-		if ( 'amount' == $coupon->amount_type )
+		if ( IT_Exchange_Cart_Coupon::TYPE_FLAT == $coupon->get_amount_type() ) {
 			$amount = it_exchange_format_price( $amount, false );
+		}
 
-		$values['name']             = $coupon->post_title;
-		$values['code']             = $coupon->code;
+		$values['name']             = $coupon->get_title( true );
+		$values['code']             = $coupon->get_code();
 		$values['amount-number']    = $amount;
-		$values['amount-type']      = $coupon->amount_type;
-		$values['start-date']       = $coupon->start_date;
-		$values['end-date']         = $coupon->end_date;
-		$values['limit-quantity']   = $coupon->limit_quantity;
-		$values['quantity']         = $coupon->quantity;
-		$values['limit-product']    = $coupon->limit_product;
-		$values['product-id']       = $coupon->product_id;
-		$values['limit-frequency']  = $coupon->limit_frequency;
-		$values['frequency-times']  = $coupon->frequency_times;
-		$values['frequency-length'] = $coupon->frequency_length;
-		$values['frequency-units']  = $coupon->frequency_units;
-		$values['limit-customer']   = $coupon->limit_customer;
-		$values['customer']         = $coupon->customer;
+		$values['amount-type']      = $coupon->get_amount_type();
+		$values['start-date']       = $coupon->get_start_date() ? $coupon->get_start_date()->format( 'Y-m-d H:i:s' ) : '';
+		$values['end-date']         = $coupon->get_end_date() ? $coupon->get_end_date()->format( 'Y-m-d H:i:s' ) : '';
+		$values['limit-quantity']   = $coupon->is_quantity_limited();
+		$values['quantity']         = $coupon->get_remaining_quantity();
+		$values['limit-product']    = $coupon->is_product_limited();
+		$values['product-id']       = $coupon->product_id; // for now
+		$values['limit-frequency']  = $coupon->is_frequency_limited();
+		$values['frequency-times']  = $coupon->get_frequency_times();
+		$values['frequency-length'] = $coupon->get_frequency_length();
+		$values['frequency-units']  = $coupon->get_frequency_units();
+		$values['limit-customer']   = $coupon->is_customer_limited();
+		$values['customer']         = $coupon->get_customer() ? $coupon->get_customer()->id : 0;
 	}
 
 	$errors = it_exchange_get_messages( 'error' );
@@ -490,7 +494,8 @@ add_filter( 'manage_edit-it_exchange_coupon_sortable_columns', 'it_exchange_basi
  * Adds the data to the custom columns
  *
  * @since 0.4.0
- * @param string $column  column title
+ * @param string $column  Column title
+ *
  * @return void
 */
 function it_exchange_basic_coupons_custom_column_info( $column ) {
@@ -498,33 +503,58 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 
 	$coupon = it_exchange_get_coupon( $post );
 
+	if ( ! $coupon instanceof IT_Exchange_Cart_Coupon ) {
+		return;
+	}
+
+	$format = get_option( 'date_format' );
+
 	switch( $column ) {
 		case 'it_exchange_coupon_code':
-			esc_attr_e( $coupon->code );
+			esc_attr_e( (string) $coupon );
 			break;
 		case 'it_exchange_coupon_discount':
 			echo esc_attr( it_exchange_get_coupon_discount_label( $coupon ) );
 			break;
 		case 'it_exchange_coupon_start_date':
-			esc_attr_e( $coupon->start_date );
+			esc_attr_e( $coupon->get_start_date() ? $coupon->get_start_date()->format( $format ) : '' );
 			break;
 		case 'it_exchange_coupon_end_date':
-			esc_attr_e( $coupon->end_date );
+			esc_attr_e( $coupon->get_end_date() ? $coupon->get_end_date()->format( $format ) : '' );
 			break;
 		case 'it_exchange_coupon_quantity':
-			$quantity_label = ( empty( $coupon->limit_quantity ) ) ? __( 'Unlimited', 'it-l10n-ithemes-exchange' ) : $coupon->quantity;
+
+			if ( ! $coupon->is_quantity_limited() ) {
+				$quantity_label = __( 'Unlimited', 'it-l10n-ithemes-exchange' );
+			} else {
+				$quantity_label = $coupon->get_remaining_quantity();
+			}
+
 			esc_attr_e( $quantity_label );
 			break;
 		case 'it_exchange_coupon_product_id':
-			$product_name = ( empty( $coupon->limit_product ) ) ? __( 'All Products', 'it-l10n-ithemes-exchange' ) : it_exchange_get_product_feature( $coupon->product_id, 'title' );
-			esc_attr_e( $product_name );
+
+			if ( ! $coupon->is_product_limited() ) {
+				esc_attr_e( 'All Products', 'it-l10n-ithemes-exchange' );
+			} else {
+
+				$product_names = array();
+
+				foreach ( $coupon->get_limited_products() as $product ) {
+					$product_names[] = $product->post_title;
+				}
+
+				esc_attr_e( implode( ', ', $product_names ) );
+			}
 			break;
 		case 'it_exchange_coupon_customer':
-			if ( ( empty( $coupon->limit_customer ) ) ) {
+
+			if ( ! $coupon->is_customer_limited() ) {
 				$customer = __( 'Any Customer', 'it-l10n-ithemes-exchange' );
 			} else {
-				$customer = it_exchange_get_customer( $coupon->customer )->wp_user->display_name;
+				$customer = $coupon->get_customer()->wp_user->display_name;
 			}
+
 			esc_attr_e( $customer );
 			break;
 	}
@@ -536,7 +566,9 @@ add_filter( 'manage_it_exchange_coupon_posts_custom_column', 'it_exchange_basic_
  *
  * @since 0.4.0F
  *
- * @param string $request original request
+ * @param array $request original request
+ *
+ * @return array
  */
 function it_exchange_basic_coupons_modify_wp_query_request_on_edit_php( $request ) {
 	global $hook_suffix;
@@ -590,6 +622,7 @@ add_filter( 'request', 'it_exchange_basic_coupons_modify_wp_query_request_on_edi
 */
 function it_exchange_basic_coupons_register_exchange_admin_page( $pages ) {
 	$pages[] = 'it-exchange-add-basic-coupon';
+
 	return $pages;
 }
 add_filter( 'it_exchange_admin_pages', 'it_exchange_basic_coupons_register_exchange_admin_page' );
