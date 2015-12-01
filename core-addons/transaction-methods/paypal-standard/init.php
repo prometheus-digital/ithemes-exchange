@@ -747,11 +747,11 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 								}
 							}
 							it_exchange_update_transient_transaction( 'pps', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id );
-
-							it_exchange_release_lock( "pps-$tmp_txn_id" );
 						}
 					}
 				}
+
+				it_exchange_release_lock( "pps-$tmp_txn_id" );
 
 				switch( $request['txn_type'] ) {
 
@@ -781,7 +781,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 						if ( it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) {
 							it_exchange_paypal_standard_addon_update_subscriber_id( $request['custom'], $subscriber_id );
 							it_exchange_paypal_standard_addon_update_transaction_status( $request['custom'], 'completed' );
-						} else if ( it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['txn_id'] ) ) {
+						} else if ( isset( $request['txn_id'] ) && it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['txn_id'] ) ) {
 							it_exchange_paypal_standard_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
 						}
 						it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'active' );
