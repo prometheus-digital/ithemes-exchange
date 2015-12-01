@@ -245,7 +245,7 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 									$transient_data['transaction_object']->total    = '0.00'; //should be 0.00 ... since this is a free trial!
 									$transient_data['transaction_object']->subtotal = '0.00'; //should be 0.00 ... since this is a free trial!
 
-									$txn_id = it_exchange_add_transaction( 'paypal-standard', $transient_transaction_id[0], 'completed', it_exchange_get_current_customer_id(), $transient_data['transaction_object'] );
+									$txn_id = it_exchange_add_transaction( 'paypal-standard', $transient_transaction_id[0], 'Completed', it_exchange_get_current_customer_id(), $transient_data['transaction_object'] );
 									it_exchange_update_transient_transaction( 'pps', $transient_transaction_id[0], $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id ); //update transient with ITE txn_id, to help IPN set subscriber ID.
 								}
 							}
