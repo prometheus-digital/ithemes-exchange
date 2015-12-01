@@ -728,7 +728,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 								$transient_data['transaction_object']->total = $request['amount1'];
 								$transient_data['transaction_object']->subtotal = $request['amount1'];
 							}
-							$txn_id = it_exchange_add_transaction( 'paypal-standard', $request['custom'], 'completed', $transient_data['customer_id'], $transient_data['transaction_object'] );
+							$txn_id = it_exchange_add_transaction( 'paypal-standard', $request['custom'], 'Completed', $transient_data['customer_id'], $transient_data['transaction_object'] );
 							it_exchange_update_transient_transaction( 'pps', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id );
 						} else if ( !empty( $request['txn_id'] ) && !empty( $request['payment_status'] ) ) {
 							$custom_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] );
