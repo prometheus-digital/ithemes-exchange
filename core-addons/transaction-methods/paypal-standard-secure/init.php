@@ -963,8 +963,8 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 								$transient_data['transaction_object']->subtotal = $request['amount1'];
 							}
 							//Use Temp TXN ID (custom) to create transaction
-							$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $request['custom'], 'completed', $transient_data['customer_id'], $transient_data['transaction_object'] ); 
-							it_exchange_update_transient_transaction( 'ppss', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], array(), $txn_id );
+							$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $request['custom'], 'Completed', $transient_data['customer_id'], $transient_data['transaction_object'] );
+							it_exchange_update_transient_transaction( 'ppss', $tmp_txn_id, $transient_data['customer_id'], $transient_data['transaction_object'], $txn_id );
 						} else if ( !empty( $request['txn_id'] ) && !empty( $request['payment_status'] ) ) {
 							if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) {
 								$transaction = it_exchange_get_transaction( $temp_txn_id );
