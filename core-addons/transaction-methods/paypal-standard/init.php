@@ -183,7 +183,7 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 
 	try {
 		if ( ! $lock === null ) {
-			it_exchange_lock( $lock, 60 );
+			it_exchange_lock( $lock, 2 );
 		}
 
 		if ( ! empty( $transaction_id ) && ! empty( $transient_transaction_id ) && null !== $transaction_amount && ! empty( $transaction_status ) ) {
@@ -677,7 +677,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 
 	if ( $tmp_txn_id ) {
 		$tmp_txn_id = sanitize_text_field( $tmp_txn_id );
-		it_exchange_lock( "pps-$tmp_txn_id", 60 );
+		it_exchange_lock( "pps-$tmp_txn_id", 2 );
 	}
 
     $payload['cmd'] = '_notify-validate';
