@@ -24,14 +24,14 @@ function it_exchange_lock( $name, $length ) {
 
 	$suppress = $wpdb->suppress_errors();
 
-	$wpdb->query( $wpdb->prepare(
+	$result = $wpdb->query( $wpdb->prepare(
 		"INSERT IGNORE INTO `$wpdb->options` ( `option_name`, `option_value`, `autoload` ) VALUES (%s, %s, 'no') /* LOCK */",
 		_it_exchange_get_lock_option( $name ), time() + $length ) );
 
 	$wpdb->suppress_errors( $suppress );
 
 	// a lock by this name already exists
-	if ( $wpdb->last_error ) {
+	if ( $wpdb->last_error || ! $result ) {
 
 		$requested_completion_time = get_option( _it_exchange_get_lock_option( $name ) );
 
