@@ -777,7 +777,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 						/* We need to do some free trial magic! */
 						if ( it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) {
 							it_exchange_paypal_standard_addon_update_subscriber_id( $request['custom'], $subscriber_id );
-							it_exchange_paypal_standard_addon_update_transaction_status( $request['custom'], 'completed' );
+							it_exchange_paypal_standard_addon_update_transaction_status( $request['custom'], 'Completed' );
 						} else if ( isset( $request['txn_id'] ) && it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['txn_id'] ) ) {
 							it_exchange_paypal_standard_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
 						}
