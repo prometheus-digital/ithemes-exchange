@@ -13,7 +13,7 @@ if ( !defined( 'PAYPAL_PAYMENT_LIVE_URL' ) )
 	define( 'PAYPAL_PAYMENT_LIVE_URL', 'https://www.paypal.com/cgi-bin/webscr' );
 if ( !defined( 'PAYPAL_PAYMENT_SANDBOX_URL' ) )
 	define( 'PAYPAL_PAYMENT_SANDBOX_URL', 'https://www.sandbox.paypal.com/cgi-bin/webscr' );
-	
+
 /**
  * Mark this transaction method as okay to manually change transactions
  *
@@ -94,13 +94,13 @@ add_filter( 'it_exchange_refund_url_for_paypal-standard', 'it_exchange_refund_ur
  * @param bool|int $processed False or iThemes Exchange Transaction ID for this transaction
 */
 function handle_purchase_cart_request_already_processed_for_paypal_standard( $processed ) {
-	
+
 	if ( !empty( $processed ) ) {
 		return $processed;
 	}
-	
+
 	if ( !empty( $_REQUEST['it-exchange-transaction-method'] ) && 'paypal-standard' === $_REQUEST['it-exchange-transaction-method'] ) {
-		
+
 		if ( !empty( $_REQUEST['paypal-standard-nonce'] ) && wp_verify_nonce( $_REQUEST['paypal-standard-nonce'], 'pps-nonce' ) ) {
 
 			if ( !empty( $_REQUEST['tx'] ) ) { //if PDT is enabled
@@ -110,7 +110,7 @@ function handle_purchase_cart_request_already_processed_for_paypal_standard( $pr
 			} else {
 				$transaction_id = NULL;
 			}
-			
+
 			$transactions = it_exchange_paypal_standard_addon_get_transaction_id( $transaction_id );
 			if ( !empty( $transactions ) ) {
 				foreach( $transactions as $transaction ) { //really only one
@@ -118,9 +118,9 @@ function handle_purchase_cart_request_already_processed_for_paypal_standard( $pr
 				}
 			}
 		}
-	
+
 	}
-	
+
 	return false;
 
 }
@@ -436,9 +436,9 @@ function it_exchange_process_paypal_standard_form() {
 
 		$customer = it_exchange_get_current_customer();
 		$temp_id = it_exchange_create_unique_hash();
-		
+
 		$transaction_object = it_exchange_generate_transaction_object();
-		
+
 		it_exchange_add_transient_transaction( 'pps', $temp_id, $customer->id, $transaction_object );
 		it_exchange_update_session_data( 'pps_transient_transaction_id', $temp_id );
 
@@ -453,7 +453,7 @@ function it_exchange_process_paypal_standard_form() {
 		}
 
 	}
-	
+
 }
 add_action( 'template_redirect', 'it_exchange_process_paypal_standard_form', 11 );
 
@@ -493,7 +493,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 						$auto_renew = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) );
 						$interval = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'interval' ) );
 						$interval_count = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'interval-count' ) );
-	
+
 						switch( $interval ) {
 							case 'year':
 								$unit = 'Y';
@@ -511,10 +511,10 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 
 						}
 						$duration = apply_filters( 'it_exchange_paypal_standard_addon_subscription_duration', $interval_count, $product );
-				
+
 						$trial_unit = NULL;
 						$trial_duration = NULL;
-						
+
 						if ( $trial_enabled ) {
 							$allow_trial = true;
 							//Should we all trials?
@@ -528,14 +528,14 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 											if ( $prod_id === $product['product_id'] || in_array( $prod_id, $children ) || in_array( $prod_id, $parents ) ) {
 												$allow_trial = false;
 												break;
-											}								
+											}
 										}
 									}
 								}
 							}
-					
+
 							$allow_trial = apply_filters( 'it_exchange_paypal_standard_addon_get_payment_url_allow_trial', $allow_trial, $product['product_id'] );
-							
+
 							if ( $allow_trial && 0 < $trial_interval_count ) {
 								switch ( $trial_interval ) {
 									case 'year':
@@ -555,7 +555,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 								$trial_duration = apply_filters( 'it_exchange_paypal_standard_addon_subscription_trial_duration', $trial_interval_count, $product );
 							}
 						}
-						
+
 						$subscription = true;
 						$product_id = $product['product_id'];
 					}
@@ -575,7 +575,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 				't3'  => $unit, //Regular subscription units of duration. (D, W, M, Y) -- we only use M,Y by default
 				'src' => 1, //Recurring payments.
 			);
-			
+
 			if ( !empty( $trial_unit ) && !empty( $trial_duration ) ) {
 				$paypal_args['a1'] = 0;
 				$paypal_args['p1'] = $trial_duration;
@@ -591,7 +591,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			);
 
 		}
-				
+
 		$nonce = wp_create_nonce( 'pps-nonce' );
 
 		$query = array(
@@ -607,7 +607,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			'cancel_return' => ( it_exchange_is_multi_item_cart_allowed() ? it_exchange_get_page_url( 'cart' ) : get_home_url() ),
 			'custom'        => $temp_id,
 		);
-		
+
 		$purchase_requirements = it_exchange_get_purchase_requirements();
 		// If we have the shipping info, we may as well include it in the fields sent to PayPal
 		if ( !empty( $purchase_requirements['shipping-address'] ) ) {
@@ -628,7 +628,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 
 		$query = array_merge( $paypal_args, $query );
 		$query = apply_filters( 'it_exchange_paypal_standard_query', $query );
-		
+
 		$paypal_payment_url = PAYPAL_PAYMENT_LIVE_URL . '?' .  http_build_query( $query );
 
 	} else {
@@ -668,6 +668,20 @@ add_filter( 'init', 'it_exchange_paypal_standard_addon_register_webhook' );
  */
 function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 
+	// we have to request a lock before validating that the IPN is valid
+	if ( !empty( $request['custom'] ) ) {
+		$tmp_txn_id = $request['custom'];
+	} else if ( !empty( $request['transaction_subject'] ) ) {
+		$tmp_txn_id = $request['transaction_subject'];
+	} else {
+		$tmp_txn_id = false;
+	}
+
+	if ( $tmp_txn_id ) {
+		$tmp_txn_id = sanitize_text_field( $tmp_txn_id );
+		it_exchange_lock( "pps-$tmp_txn_id", 60 );
+	}
+
     $payload['cmd'] = '_notify-validate';
     foreach( $_POST as $key => $value ) {
 	    $payload[$key] = stripslashes( $value );
@@ -675,19 +689,19 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 	$paypal_api_url = !empty( $_REQUEST['test_ipn'] ) ? PAYPAL_PAYMENT_SANDBOX_URL : PAYPAL_PAYMENT_LIVE_URL;
 	$response = wp_remote_post( $paypal_api_url, array( 'body' => $payload ) );
 	$body = wp_remote_retrieve_body( $response );
-	
+
 	if ( 'VERIFIED' === $body ) {
 
 		$general_settings = it_exchange_get_option( 'settings_general' );
 		$settings = it_exchange_get_option( 'addon_paypal_standard' );
-	
+
 		$subscriber_id = !empty( $request['subscr_id'] ) ? $request['subscr_id'] : false;
 		$subscriber_id = !empty( $request['recurring_payment_id'] ) ? $request['recurring_payment_id'] : $subscriber_id;
-	
+
 		if ( !empty( $request['txn_type'] ) ) {
-			
+
 			if ( 'web_accept' === $request['txn_type'] ) {
-				
+
 				switch( strtolower( $request['payment_status'] ) ) {
 
 					case 'completed' :
@@ -699,7 +713,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 				}
 
 			} else {
-				
+
 				if ( !empty( $request['custom'] ) ) {
 					$tmp_txn_id = $request['custom'];
 				} else if ( !empty( $request['transaction_subject'] ) ) {
@@ -707,10 +721,8 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 				} else {
 					$tmp_txn_id = false;
 				}
-				
-				if ( !empty( $tmp_txn_id ) ) {
 
-					it_exchange_lock( "pps-$tmp_txn_id", 60 );
+				if ( !empty( $tmp_txn_id ) ) {
 
 					$transient_data = it_exchange_get_transient_transaction( 'pps', $tmp_txn_id );
 					if ( !empty( $transient_data ) && empty( $transient_data['transaction_id'] ) ) {
@@ -740,9 +752,9 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 						}
 					}
 				}
-				
+
 				switch( $request['txn_type'] ) {
-			
+
 					case 'subscr_payment':
 						switch( strtolower( $request['payment_status'] ) ) {
 							case 'completed':
@@ -763,7 +775,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 								break;
 						}
 						break;
-		
+
 					case 'subscr_signup':
 						/* We need to do some free trial magic! */
 						if ( it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) {
@@ -774,48 +786,48 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 						}
 						it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'active' );
 						break;
-		
+
 					case 'recurring_payment_suspended':
 						it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'suspended' );
 						break;
-		
+
 					case 'subscr_cancel':
 						it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
 						break;
-		
+
 					case 'subscr_eot':
 						it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'deactivated' );
 						break;
-		
+
 				}
-						
+
 			}
 
 		} else {
-	
+
 			//These IPNs don't have txn_types, why PayPal!? WHY!?
 			if ( !empty( $request['reason_code'] ) ) {
-	
+
 				switch( $request['reason_code'] ) {
-	
+
 					case 'refund' :
 						it_exchange_paypal_standard_addon_update_transaction_status( $request['parent_txn_id'], $request['payment_status'] );
 						it_exchange_paypal_standard_addon_add_refund_to_transaction( $request['parent_txn_id'], $request['mc_gross'] );
 						if ( $subscriber_id )
 							it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'refunded' );
 						break;
-	
+
 				}
-	
+
 			}
-	
+
 		}
-		
+
 	} else {
-		
+
 		error_log( sprintf( __( 'Invalid IPN sent from PayPal - PayLoad: %s', 'it-l10n-ithemes-exchange' ), maybe_serialize( $payload ) ) );
 		error_log( sprintf( __( 'Invalid IPN sent from PayPal - Response: %s', 'it-l10n-ithemes-exchange' ), maybe_serialize( $response ) ) );
-		
+
 	}
 
 }
@@ -1094,19 +1106,19 @@ function it_exchange_paypal_standard_after_payment_details_cancel_url( $transact
 				$subscriber_id = $transaction->get_transaction_meta( 'subscriber_id', true );
 				$status = $transaction->get_transaction_meta( 'subscriber_status', true );
 				switch( $status ) {
-	
+
 					case 'deactivated':
 						$output = __( 'Recurring payment has been deactivated', 'it-l10n-ithemes-exchange' );
 						break;
-	
+
 					case 'cancelled':
 						$output = __( 'Recurring payment has been cancelled', 'it-l10n-ithemes-exchange' );
 						break;
-	
+
 					case 'suspended':
 						$output = __( 'Recurring payment has been suspended', 'it-l10n-ithemes-exchange' );
 						break;
-	
+
 					case 'active':
 					default:
 						$output = '<a href="' . PAYPAL_LIVE_URL . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . ' (' . __( 'Profile ID', 'it-l10n-ithemes-exchange' ) . ': ' . $subscriber_id . ')</a>';
@@ -1147,11 +1159,11 @@ function it_exchange_paypal_standard_convert_option_keys( $options, $key, $break
         if ( 'paypal-standard-' == substr( $key, 0, 16 ) && empty( $opitons[substr( $key, 16 )] ) ) {
             $options[substr( $key, 16 )] = $value;
             unset( $options[$key] );
-        }    
-    }    
+        }
+    }
     return $options;
 }
-add_filter( 'it_exchange_get_option', 'it_exchange_paypal_standard_convert_option_keys', 10, 4 ); 
+add_filter( 'it_exchange_get_option', 'it_exchange_paypal_standard_convert_option_keys', 10, 4 );
 
 /**
  * Class for Stripe
@@ -1276,7 +1288,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
             <h4><?php _e( 'What is your PayPal email address?', 'it-l10n-ithemes-exchange' ); ?></h4>
 			<p>
 				<label for="live-email-address"><?php _e( 'PayPal Email Address', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'We need this to tie payments to your account.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
-				<?php 
+				<?php
 				if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] )
 					$form->add_text_box( 'paypal-standard-live-email-address' );
 				else
