@@ -175,9 +175,7 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 	else
 		$transaction_status = NULL;
 
-	if ( $transaction_id ) {
-		$lock = "pps-$transaction_id";
-	} else if ( $transient_transaction_id ) {
+	if ( $transient_transaction_id ) {
 		$lock = "pps-$transient_transaction_id";
 	} else {
 		$lock = null;
