@@ -737,7 +737,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 							$custom_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] );
 							$real_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['txn_id'] );
 							if ( empty( $custom_txn_id ) && empty( $real_txn_id ) ) {
-								$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
+								$txn_id = it_exchange_add_transaction( 'paypal-standard', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
 							} else {
 								if ( !empty( $custom_txn_id ) ) {
 									$txn_id = $custom_txn_id;
