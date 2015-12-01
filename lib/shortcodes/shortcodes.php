@@ -68,10 +68,10 @@ class IT_Exchange_SW_Shortcode {
 
 		$screen = get_current_screen();
 
-		$post_type = ! empty( $screen->post_type ) ? $screen->post_type : get_post_type();
-		$post_type = get_post_type_object( $post_type );
+		$post_type        = ! empty( $screen->post_type ) ? $screen->post_type : get_post_type();
+		$post_type_object = get_post_type_object( $post_type );
 
-		if ( $post_type->public && $post_type != 'it_exchange_prod' ) {
+		if ( $post_type_object && $post_type_object->public && $post_type != 'it_exchange_prod' ) {
 			add_thickbox();
 			$id    = 'it-exchange-insert-sw-shortcode';
 			$class = 'thickbox button it-exchange-insert-sw-shortcode';
