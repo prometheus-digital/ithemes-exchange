@@ -520,9 +520,8 @@ class IT_Exchange_Shopping_Cart {
 					// this would happen in the following flow
 					// IPN -> Auto Return ( wait 2 seconds ) -> IPN fails
 
-					$message = __( "While processing your payment, an unexpected issue occurred.", 'it-l10n-ithemes-exchange' );
-					$message .= ' ' . __( "It is possible that your payment will still be processed.", 'it-l10n-ithemes-exchange' );
-					$message .= '' . __( "Please check your email for a receipt in the next few minutes. Or try again later.", 'it-l10n-ithemes-exchange');
+					$message = __( 'A possible error occurred during your purchase.', 'it-l10n-ithemes-exchange' );
+					$message .= ' ' . __( 'If you do not receive an email receipt shortly, please contact the site owner', 'it-l10n-ithemes-exchange' );
 
 					it_exchange_add_message( 'error', $message );
 				}
