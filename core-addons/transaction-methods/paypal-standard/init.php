@@ -282,6 +282,11 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 		}
 
 	} catch ( Exception $e ) {
+
+		if ( $e instanceof IT_Exchange_Locking_Exception ) {
+			throw $e;
+		}
+
 		it_exchange_add_message( 'error', $e->getMessage() );
 
 		return false;
