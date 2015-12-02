@@ -239,12 +239,11 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 
 			//Check to see if the transient transaction was for a free trial membership and then proceed as necessary...
 			$transient_transaction_id = it_exchange_get_session_data( 'pps_transient_transaction_id' );
-			$lock = "pps-$transient_transaction_id";
+			$lock = "pps-{$transient_transaction_id[0]}";
 
 			if ( $lock ) {
 				it_exchange_lock( $lock, 2 );
 			}
-
 
 			it_exchange_clear_session_data( 'pps_transient_transaction_id' );
 
