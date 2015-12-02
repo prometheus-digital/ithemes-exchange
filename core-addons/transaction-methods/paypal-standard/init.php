@@ -744,22 +744,20 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 					$transient_data = it_exchange_get_transient_transaction( 'pps', $tmp_txn_id );
 					if ( !empty( $transient_data ) && empty( $transient_data['transaction_id'] ) ) {
 						if ( 'subscr_signup' === $request['txn_type'] ) {
+							$transaction_object = $transient_data['transaction_object'];
+
 							if ( isset( $request['amount1'] ) ) {
-								$transient_data['transaction_object']->total = $request['amount1'];
-								$transient_data['transaction_object']->subtotal = $request['amount1'];
-							} else {
-								$transaction_object = $transient_data['transaction_object'];
+								$transaction_object->total = $request['amount1'];
+								$transaction_object->subtotal = $request['amount1'];
+							} else if ( ! empty( $transaction_object->products ) ) {
 
-								if ( ! empty( $transaction_object->products ) ) {
+								foreach ( $transaction_object->products as $key => $product ) {
 
-									foreach ( $transaction_object->products as $key => $product ) {
+									if ( it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
 
-										if ( it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
-
-											//make sure the product has the trial enabled
-											$transaction_object->total    = '0.00'; //should be 0.00 ... since this is a free trial!
-											$transaction_object->subtotal = '0.00'; //should be 0.00 ... since this is a free trial!
-										}
+										//make sure the product has the trial enabled
+										$transaction_object->total    = '0.00'; //should be 0.00 ... since this is a free trial!
+										$transaction_object->subtotal = '0.00'; //should be 0.00 ... since this is a free trial!
 									}
 								}
 							}
