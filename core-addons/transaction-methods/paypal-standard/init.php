@@ -182,11 +182,11 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 	}
 
 	try {
-		if ( ! $lock === null ) {
-			it_exchange_lock( $lock, 2 );
-		}
-
 		if ( ! empty( $transaction_id ) && ! empty( $transient_transaction_id ) && null !== $transaction_amount && ! empty( $transaction_status ) ) {
+
+			if ( $lock ) {
+				it_exchange_lock( $lock, 2 );
+			}
 
 			$general_settings = it_exchange_get_option( 'settings_general' );
 			$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard' );
@@ -239,6 +239,12 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 
 			//Check to see if the transient transaction was for a free trial membership and then proceed as necessary...
 			$transient_transaction_id = it_exchange_get_session_data( 'pps_transient_transaction_id' );
+			$lock = "pps-$transient_transaction_id";
+
+			if ( $lock ) {
+				it_exchange_lock( $lock, 2 );
+			}
+
 
 			it_exchange_clear_session_data( 'pps_transient_transaction_id' );
 
