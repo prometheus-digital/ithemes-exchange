@@ -131,6 +131,31 @@ function it_exchange_get_transactions( $args=array() ) {
 }
 
 /**
+ * Get a transaction by its cart ID.
+ *
+ * @since 1.32.1
+ *
+ * @param string $cart_id
+ *
+ * @return IT_Exchange_Transaction|null
+ */
+function it_exchange_get_transaction_by_cart_id( $cart_id ) {
+
+	$transactions = it_exchange_get_transactions(array(
+		'meta_query' => array(
+			'key'   => '_it_exchange_cart_id',
+			'value' => $cart_id
+		)
+	) );
+
+	foreach ( $transactions as $transaction ) {
+		return $transaction;
+	}
+
+	return null;
+}
+
+/**
  * Generates the transaction object used by the transaction methods
  *
  * @since 0.4.20
@@ -317,6 +342,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		update_post_meta( $transaction_id, '_it_exchange_customer_id',           $customer_id );
 		update_post_meta( $transaction_id, '_it_exchange_customer_ip',           it_exchange_get_ip() );
 		update_post_meta( $transaction_id, '_it_exchange_cart_object',           $cart_object );
+		update_post_meta( $transaction_id, '_it_exchange_cart_id',               $cart_object->cart_id );
 
 		// Transaction Hash for confirmation lookup
 		update_post_meta( $transaction_id, '_it_exchange_transaction_hash', it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) );

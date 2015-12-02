@@ -505,8 +505,18 @@ class IT_Exchange_Shopping_Cart {
 			
 			$transaction_object = apply_filters( 'it_exchange_transaction_object', $transaction_object, $requested_transaction_method );
 
-			// Do the transaction
-			return it_exchange_do_transaction( $requested_transaction_method, $transaction_object );
+			try {
+				// Do the transaction
+				return it_exchange_do_transaction( $requested_transaction_method, $transaction_object );
+			} catch ( IT_Exchange_Locking_Exception $e ) {
+				sleep( 2 );
+
+				$transaction = it_exchange_get_transaction_by_cart_id( it_exchange_get_cart_id() );
+
+				if ( $transaction ) {
+					return $transaction->ID;
+				}
+			}
 
 		}
 
