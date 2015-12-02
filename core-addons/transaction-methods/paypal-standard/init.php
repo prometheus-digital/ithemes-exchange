@@ -834,9 +834,29 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 
 							if ( it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
 
-								//make sure the product has the trial enabled
-								$transaction_object->total    = '0.00'; //should be 0.00 ... since this is a free trial!
-								$transaction_object->subtotal = '0.00'; //should be 0.00 ... since this is a free trial!
+								$allow_trial = true;
+
+								if ( 'membership-product-type' === it_exchange_get_product_type( $product['product_id'] ) ) {
+									if ( is_user_logged_in() ) {
+										if ( function_exists( 'it_exchange_get_session_data' ) ) {
+											$member_access = it_exchange_get_session_data( 'member_access' );
+											$children      = (array) it_exchange_membership_addon_get_all_the_children( $product['product_id'] );
+											$parents       = (array) it_exchange_membership_addon_get_all_the_parents( $product['product_id'] );
+											foreach ( $member_access as $prod_id => $txn_id ) {
+												if ( $prod_id === $product['product_id'] || in_array( $prod_id, $children ) || in_array( $prod_id, $parents ) ) {
+													$allow_trial = false;
+													break;
+												}
+											}
+										}
+									}
+								}
+
+								if ( $allow_trial ) {
+									//make sure the product has the trial enabled
+									$transaction_object->total    = '0.00'; //should be 0.00 ... since this is a free trial!
+									$transaction_object->subtotal = '0.00'; //should be 0.00 ... since this is a free trial!
+								}
 							}
 						}
 					}
