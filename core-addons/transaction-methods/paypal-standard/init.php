@@ -211,6 +211,20 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 				} else {
 					//Transaction shouldn't have been created yet...
 					if ( false === $txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $transaction_id ) ) {
+
+						if ( ! empty( $transaction_object->products ) ) {
+
+							foreach ( $transaction_object->products as $key => $product ) {
+
+								if ( it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
+
+									//make sure the product has the trial enabled
+									$transaction_object->total    = '0.00'; //should be 0.00 ... since this is a free trial!
+									$transaction_object->subtotal = '0.00'; //should be 0.00 ... since this is a free trial!
+								}
+							}
+						}
+
 						//If the transient didn't exist and there isn't a transaction with this ID already, create it.
 						$txn_id = it_exchange_add_transaction( 'paypal-standard', $transaction_id, $transaction_status, $it_exchange_customer->id, $transaction_object );
 						if ( ! empty( $transient_data ) ) {
