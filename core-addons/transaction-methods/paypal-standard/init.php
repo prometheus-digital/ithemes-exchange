@@ -808,8 +808,8 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 
 					// free trial
 					if ( isset( $request['amount1'] ) ) {
-						$transaction_object->total    = $request['amount1'];
-						$transaction_object->subtotal = $request['amount1'];
+						$transaction_object->total     = $request['amount1'];
+						$transaction_object->sub_total = $request['amount1'];
 					}
 
 					$new_status = 'Completed';
@@ -843,7 +843,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 											$children      = (array) it_exchange_membership_addon_get_all_the_children( $product['product_id'] );
 											$parents       = (array) it_exchange_membership_addon_get_all_the_parents( $product['product_id'] );
 											foreach ( $member_access as $prod_id => $txn_id ) {
-												if ( $prod_id === $product['product_id'] || in_array( $prod_id, $children ) || in_array( $prod_id, $parents ) ) {
+												if ( $prod_id == $product['product_id'] || in_array( $prod_id, $children ) || in_array( $prod_id, $parents ) ) {
 													$allow_trial = false;
 													break;
 												}
@@ -855,7 +855,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 								if ( $allow_trial ) {
 									//make sure the product has the trial enabled
 									$transaction_object->total    = '0.00'; //should be 0.00 ... since this is a free trial!
-									$transaction_object->subtotal = '0.00'; //should be 0.00 ... since this is a free trial!
+									$transaction_object->sub_total = '0.00'; //should be 0.00 ... since this is a free trial!
 								}
 							}
 						}
