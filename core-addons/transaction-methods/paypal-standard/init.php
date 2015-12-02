@@ -827,38 +827,6 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 				}
 
 				if ( empty( $txn_id ) && isset( $method_id ) && isset( $new_status ) ) {
-
-					if ( ! empty( $transaction_object->products ) ) {
-
-						foreach ( $transaction_object->products as $key => $product ) {
-
-							if ( it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
-
-								$allow_trial = true;
-
-								if ( 'membership-product-type' === it_exchange_get_product_type( $product['product_id'] ) ) {
-
-									$member_access = it_exchange_membership_addon_get_customer_memberships($customer_id);
-									$children      = (array) it_exchange_membership_addon_get_all_the_children( $product['product_id'] );
-									$parents       = (array) it_exchange_membership_addon_get_all_the_parents( $product['product_id'] );
-
-									foreach ( $member_access as $prod_id => $txn_id ) {
-										if ( $prod_id == $product['product_id'] || in_array( $prod_id, $children ) || in_array( $prod_id, $parents ) ) {
-											$allow_trial = false;
-											break;
-										}
-									}
-								}
-
-								if ( $allow_trial ) {
-									//make sure the product has the trial enabled
-									$transaction_object->total    = '0.00'; //should be 0.00 ... since this is a free trial!
-									$transaction_object->sub_total = '0.00'; //should be 0.00 ... since this is a free trial!
-								}
-							}
-						}
-					}
-
 					$txn_id = it_exchange_add_transaction( 'paypal-standard', $method_id, $new_status, $customer_id, $transaction_object );
 				}
 
