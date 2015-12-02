@@ -748,7 +748,23 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 							$custom_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] );
 							$real_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['txn_id'] );
 							if ( empty( $custom_txn_id ) && empty( $real_txn_id ) ) {
-								$txn_id = it_exchange_add_transaction( 'paypal-standard', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transient_data['transaction_object'] );
+
+								$transaction_object = $transient_data['transaction_object'];
+
+								if ( ! empty( $transaction_object->products ) ) {
+
+									foreach ( $transaction_object->products as $key => $product ) {
+
+										if ( it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
+
+											//make sure the product has the trial enabled
+											$transaction_object->total    = '0.00'; //should be 0.00 ... since this is a free trial!
+											$transaction_object->subtotal = '0.00'; //should be 0.00 ... since this is a free trial!
+										}
+									}
+								}
+
+								$txn_id = it_exchange_add_transaction( 'paypal-standard', $request['txn_id'], $request['payment_status'], $transient_data['customer_id'], $transaction_object );
 							} else {
 								if ( !empty( $custom_txn_id ) ) {
 									$txn_id = $custom_txn_id;
