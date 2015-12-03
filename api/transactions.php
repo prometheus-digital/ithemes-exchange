@@ -208,6 +208,7 @@ function it_exchange_generate_transaction_object() {
 	$transaction_object->products               = $products;
 	$transaction_object->coupons                = it_exchange_get_applied_coupons();
 	$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
+	$transaction_object->customer_ip            = it_exchange_get_ip();
 
 	// Tack on Tax information
 	$transaction_object->taxes_formated         = apply_filters( 'it_exchange_set_transaction_objet_cart_taxes_formatted', false );
@@ -344,7 +345,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		update_post_meta( $transaction_id, '_it_exchange_transaction_method_id', $method_id );
 		update_post_meta( $transaction_id, '_it_exchange_transaction_status',    $status );
 		update_post_meta( $transaction_id, '_it_exchange_customer_id',           $customer_id );
-		update_post_meta( $transaction_id, '_it_exchange_customer_ip',           it_exchange_get_ip() );
+		update_post_meta( $transaction_id, '_it_exchange_customer_ip',           ! empty( $cart_object->customer_ip ) ? $cart_object->customer_ip : it_exchange_get_ip() );
 		update_post_meta( $transaction_id, '_it_exchange_cart_object',           $cart_object );
 		update_post_meta( $transaction_id, '_it_exchange_cart_id',               $cart_object->cart_id );
 
