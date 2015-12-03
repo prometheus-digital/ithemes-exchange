@@ -188,7 +188,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 			$it_exchange_customer = it_exchange_get_current_customer();
 
 			if ( $transient_transaction_id ) {
-				$lock = "pps-$transient_transaction_id";
+				$lock = "ppss-$transient_transaction_id";
 			} else {
 				$lock = null;
 			}
@@ -287,7 +287,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 
 				//Check to see if the transient transaction was for a free trial membership and then proceed as necessary...
 				$transient_transaction_id = it_exchange_get_session_data( 'ppss_transient_transaction_id' );
-				$lock                     = "pps-{$transient_transaction_id[0]}";
+				$lock                     = "ppss-{$transient_transaction_id[0]}";
 
 				if ( $lock ) {
 					it_exchange_lock( $lock, 2 );
