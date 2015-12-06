@@ -835,38 +835,53 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 			$customer_id        = $transient_data['customer_id'];
 			$transaction_object = $transient_data['transaction_object'];
 
+			// the custom variable holds the transient transaction ID we generated before sending the customer to paypal
+			// this is tepmorarily stored as the 'method_id'
 			$custom_txn_id = ! empty( $request['custom'] ) ? it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) : false;
+
+			// when a user completes their payment, we update the method ID to be paypal's transaction ID
 			$real_txn_id = ! empty( $request['txn_id'] ) ? it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['txn_id'] ) : false;
 
 			if ( ! empty( $transient_data ) && empty( $transient_data['transaction_id'] ) ) {
 
+				/* The subscriber signup event is sent whenever a customer is subscribed
+				   to a recurring payment. This includes free trials. This event, however,
+				   isn't guaranteed to arrive before or after the subscription payment event.
+				*/
 				if ( 'subscr_signup' === $request['txn_type'] ) {
 
-					// free trial
+					// PayPal stores the amount the customer paid for the trial in this variable
 					if ( isset( $request['amount1'] ) ) {
 						$transaction_object->total     = $request['amount1'];
 						$transaction_object->sub_total = $request['amount1'];
 					}
 
+					// When this event arrives, the customer has successfully paid for their membership
+					// or this is a free trial
 					$new_status = 'Completed';
 					$method_id  = $request['custom'];
 
 				} else if ( ! empty( $request['txn_id'] ) && ! empty( $request['payment_status'] ) ) {
+
+					// otherwise, this is a payment event, and we should create the txn with the given status
+
 					$new_status = $request['payment_status'];
 					$method_id  = $request['txn_id'];
 				}
 
+				// determine the transaction ID in exchange, but give priority to the transient transaction ID
 				if ( ! empty( $custom_txn_id ) ) {
-					$txn_id = $custom_txn_id;
+					$exchange_txn_id = $custom_txn_id;
 				} else if ( ! empty( $real_txn_id ) ) {
-					$txn_id = $real_txn_id;
+					$exchange_txn_id = $real_txn_id;
 				}
 
-				if ( empty( $txn_id ) && isset( $method_id ) && isset( $new_status ) ) {
-					$txn_id = it_exchange_add_transaction( 'paypal-standard', $method_id, $new_status, $customer_id, $transaction_object );
+				if ( empty( $exchange_txn_id ) && isset( $method_id ) && isset( $new_status ) ) {
+					// if we don't have an exchange txn ID, this is a new transaction and create it.
+					$exchange_txn_id = it_exchange_add_transaction( 'paypal-standard', $method_id, $new_status, $customer_id, $transaction_object );
 				}
 
-				it_exchange_update_transient_transaction( 'pps', $tmp_txn_id, $customer_id, $transaction_object, $txn_id );
+				it_exchange_update_transient_transaction( 'pps', $tmp_txn_id, $customer_id, $transaction_object, $exchange_txn_id );
 			}
 		}
 
@@ -877,11 +892,16 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 			case 'subscr_payment':
 
 				if ( $request['payment_status'] == 'Completed' ) {
-					if ( $temp_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) { //this is a free trial
-						/* We need to do some free trial magic! */
+					// if we can still retrieve the transaction by its transient transaction ID
+					// then this payment is a free trial being converted to a full subscription
+					if ( $temp_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) {
+
 						$transaction = it_exchange_get_transaction( $temp_txn_id );
+						// update the method ID to be paypal's internal transaction ID
 						$transaction->update_transaction_meta( 'method_id', $request['txn_id'] );
 					}
+
+					// attempt to update the payment status for a transaction
 					if ( ! it_exchange_paypal_standard_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
 						//If the transaction isn't found, we've got a new payment
 						$GLOBALS['it_exchange']['child_transaction'] = true;
@@ -890,12 +910,15 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 						//If it is found, make sure the subscriber ID is attached to it
 						it_exchange_paypal_standard_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
 					}
+
+					// if we have a good payment, make sure to keep the subscription status as active
 					it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'active' );
 					break;
 				}
 				break;
 
 			case 'subscr_signup':
+
 				/* We need to do some free trial magic! */
 				if ( it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) {
 					it_exchange_paypal_standard_addon_update_subscriber_id( $request['custom'], $subscriber_id );
@@ -903,6 +926,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 				} else if ( isset( $request['txn_id'] ) && it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['txn_id'] ) ) {
 					it_exchange_paypal_standard_addon_update_subscriber_id( $request['txn_id'], $subscriber_id );
 				}
+
 				it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'active' );
 				break;
 
