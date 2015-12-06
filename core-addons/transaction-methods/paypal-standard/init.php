@@ -85,6 +85,8 @@ add_action( 'it_exchange_print_paypal-standard_wizard_settings', 'it_exchange_pr
  *
  * @param string $url passed by WP filter.
  * @param string $url transaction URL
+ *
+ * @return string
  */
 function it_exchange_refund_url_for_paypal_standard( $url ) {
 
@@ -101,6 +103,8 @@ add_filter( 'it_exchange_refund_url_for_paypal-standard', 'it_exchange_refund_ur
  *
  * @param bool|int $processed If this transaction has already been processed.
  * @param bool|int $processed False or iThemes Exchange Transaction ID for this transaction
+ *
+ * @return int|bool
  */
 function handle_purchase_cart_request_already_processed_for_paypal_standard( $processed ) {
 
@@ -991,9 +995,9 @@ function it_exchange_paypal_standard_addon_get_ite_transaction_id( $paypal_stand
  *
  * @since 0.4.0
  *
- * @param integer $paypal_standard_id id of paypal transaction
+ * @param int $paypal_standard_id PayPal's internal transaction ID.
  *
- * @return transaction object
+ * @return IT_Exchange_Transaction[] object
  */
 function it_exchange_paypal_standard_addon_get_transaction_id( $paypal_standard_id ) {
 	$args = array(
@@ -1010,9 +1014,9 @@ function it_exchange_paypal_standard_addon_get_transaction_id( $paypal_standard_
  *
  * @since 0.4.0
  *
- * @param integer $paypal_standard_id id of paypal transaction
+ * @param int $subscriber_id Subscriber ID for this transaction.
  *
- * @return transaction object
+ * @return IT_Exchange_Transaction[]
  */
 function it_exchange_paypal_standard_addon_get_transaction_id_by_subscriber_id( $subscriber_id ) {
 	$args = array(
@@ -1055,9 +1059,10 @@ function it_exchange_paypal_standard_addon_update_transaction_status( $paypal_st
  *
  * @since 1.3.0
  *
- * @param integer $paypal_standard_id id of paypal transaction
- * @param string  $payment_status     new status
- * @param string  $subscriber_id      from PayPal (optional)
+ * @param integer  $paypal_standard_id id of paypal transaction
+ * @param string   $payment_status     new status
+ * @param int|bool $subscriber_id      from PayPal (optional)
+ * @param string   $amount             Amount the customer paid.
  *
  * @return bool
  */
@@ -1142,7 +1147,7 @@ function it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber
 
 			if ( $transaction->has_children() ) {
 				//Get the last child and make sure it hasn't been fully refunded
-				$args                   = array(
+				$args = array(
 					'numberposts' => 1,
 					'order'       => 'ASC',
 				);
@@ -1207,8 +1212,8 @@ add_filter( 'it_exchange_transaction_status_label_paypal-standard', 'it_exchange
  *
  * @since 0.4.2
  *
- * @param boolean $cleared passed in through WP filter. Ignored here.
- * @param object  $transaction
+ * @param boolean                 $cleared If the txn has already been cleared by another add-on
+ * @param IT_Exchange_Transaction $transaction
  *
  * @return boolean
  */
@@ -1225,7 +1230,7 @@ function it_exchange_paypal_standard_transaction_is_cleared_for_delivery( $clear
 
 add_filter( 'it_exchange_paypal-standard_transaction_is_cleared_for_delivery', 'it_exchange_paypal_standard_transaction_is_cleared_for_delivery', 10, 2 );
 
-/*
+/**
  * Returns the unsubscribe action for PayPal autorenewing payments
  *
  * @since 1.3.0
@@ -1521,6 +1526,11 @@ class IT_Exchange_PayPal_Standard_Add_On {
 
 	}
 
+	/**
+	 * Save the PayPal configuration done from the setup wizard.
+	 *
+	 * @return array|void
+	 */
 	function paypal_standard_save_wizard_settings() {
 		if ( empty( $_REQUEST['it_exchange_settings-wizard-submitted'] ) ) {
 			return;
@@ -1528,7 +1538,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 
 		$paypal_standard_settings = array();
 
-		$fields                                  = array(
+		$fields = array(
 			'live-email-address',
 			'purchase-button-label',
 		);
@@ -1554,7 +1564,6 @@ class IT_Exchange_PayPal_Standard_Add_On {
 		}
 
 		return;
-
 	}
 
 	/**
@@ -1563,7 +1572,10 @@ class IT_Exchange_PayPal_Standard_Add_On {
 	 * Returns string of errors if anything is invalid
 	 *
 	 * @since 0.4.0
-	 * @return void
+	 *
+	 * @param array $values
+	 *
+	 * @return array
 	 */
 	function get_form_errors( $values ) {
 

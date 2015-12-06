@@ -386,7 +386,8 @@ class IT_Exchange_Transaction {
 	 * Gets the transactions children.
 	 *
 	 * @since 1.3.0
-	 * @return bool
+	 *
+	 * @return WP_Post[]
 	*/
 	function get_children( $args=array() ) {
 		$defaults = array(
@@ -394,6 +395,7 @@ class IT_Exchange_Transaction {
 			'post_type'   => 'it_exchange_tran',
 		);
 		$args = wp_parse_args( $args, $defaults );
+
 		return get_children( $args );
 	}
 
