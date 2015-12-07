@@ -226,6 +226,11 @@ class IT_Exchange_Transaction {
 	 * @return string
 	*/
 	function get_subtotal() {
+
+		if ( isset( $this->cart_details->sub_total ) ) {
+			return $this->cart_details->sub_total;
+		}
+
 		$products = $this->get_products();
 		$subtotal = 0;
 		foreach( (array) $products as $key => $data ) {
