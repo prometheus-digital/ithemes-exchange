@@ -204,7 +204,7 @@ add_filter( 'it_exchange_get_offline-payments_make_payment_button', 'it_exchange
 */
 function it_exchange_get_offline_payments_name( $name ) {
 	$options = it_exchange_get_option( 'addon_offline_payments' );
-	if ( ! empty( $options['offline-payments-title'] ) )
+	if ( ! empty( $options['offline-payments-title'] ) && ! is_admin() )
 		$name = $options['offline-payments-title'];
 	return $name;
 }
