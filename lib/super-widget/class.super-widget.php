@@ -396,6 +396,11 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			global $wp_registered_widgets;
 
 			$widgets = wp_get_sidebars_widgets();
+
+			if ( ! isset( $widgets[ $index ] ) ) {
+				return;
+			}
+
 			$widgets = $widgets[ $index ];
 
 			foreach ( $widgets as $widget ) {
