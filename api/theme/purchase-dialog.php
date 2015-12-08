@@ -87,10 +87,11 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	*/
 	function cc_first_name( $options=array() ) {
 		$defaults      = array(
-			'format'      => 'html',
-			'label'       => __( 'Name on Card', 'it-l10n-ithemes-exchange' ),
-			'placeholder' => '',
-			'required'    => (boolean) in_array( 'first-name', $this->_required_fields ),
+			'format'       => 'html',
+			'label'        => __( 'Name on Card', 'it-l10n-ithemes-exchange' ),
+			'placeholder'  => '',
+			'required'     => (boolean) in_array( 'first-name', $this->_required_fields ),
+			'autocomplete' => 'cc-given-name'
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -108,10 +109,11 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	*/
 	function cc_last_name( $options=array() ) {
 		$defaults      = array(
-			'format'      => 'html',
-			'label'       => __( 'Last Name on card', 'it-l10n-ithemes-exchange' ),
-			'placeholder' => '',
-			'required'    => (boolean) in_array( 'last-name', $this->_required_fields ),
+			'format'       => 'html',
+			'label'        => __( 'Last Name on card', 'it-l10n-ithemes-exchange' ),
+			'placeholder'  => '',
+			'required'     => (boolean) in_array( 'last-name', $this->_required_fields ),
+			'autocomplete' => 'cc-family-name'
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -129,10 +131,11 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	*/
 	function cc_number( $options=array() ) {
 		$defaults      = array(
-			'format'      => 'html',
-			'label'       => __( 'Card Number', 'it-l10n-ithemes-exchange' ),
-			'placeholder' => '',
-			'required'    => (boolean) in_array( 'number', $this->_required_fields ),
+			'format'       => 'html',
+			'label'        => __( 'Card Number', 'it-l10n-ithemes-exchange' ),
+			'placeholder'  => '',
+			'required'     => (boolean) in_array( 'number', $this->_required_fields ),
+			'autocomplete' => 'cc-number'
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -150,10 +153,11 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	*/
 	function cc_expiration_month_year( $options=array() ) {
 		$defaults      = array(
-			'format'      => 'html',
-			'label'       => __( 'Expiration Date', 'it-l10n-ithemes-exchange' ),
-			'placeholder' => '',
-			'required'    => (boolean) in_array( 'expiration-month-year', $this->_required_fields ),
+			'format'       => 'html',
+			'label'        => __( 'Expiration Date', 'it-l10n-ithemes-exchange' ),
+			'placeholder'  => '',
+			'required'     => (boolean) in_array( 'expiration-month-year', $this->_required_fields ),
+			'autocomplete' => 'cc-exp'
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -171,10 +175,11 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	*/
 	function cc_expiration_month( $options=array() ) {
 		$defaults      = array(
-			'format'      => 'html',
-			'label'       => __( 'Expiration Month', 'it-l10n-ithemes-exchange' ),
-			'placeholder' => '',
-			'required'    => (boolean) in_array( 'expiration-month', $this->_required_fields ),
+			'format'       => 'html',
+			'label'        => __( 'Expiration Month', 'it-l10n-ithemes-exchange' ),
+			'placeholder'  => '',
+			'required'     => (boolean) in_array( 'expiration-month', $this->_required_fields ),
+			'autocomplete' => 'cc-exp-month'
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -192,10 +197,11 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	*/
 	function cc_expiration_year( $options=array() ) {
 		$defaults      = array(
-			'format'      => 'html',
-			'label'       => __( 'Expiration Year', 'it-l10n-ithemes-exchange' ),
-			'placeholder' => '',
-			'required'    => (boolean) in_array( 'expiration-year', $this->_required_fields ),
+			'format'       => 'html',
+			'label'        => __( 'Expiration Year', 'it-l10n-ithemes-exchange' ),
+			'placeholder'  => '',
+			'required'     => (boolean) in_array( 'expiration-year', $this->_required_fields ),
+			'autocomplete' => 'cc-exp-year'
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -213,10 +219,11 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	*/
 	function cc_code( $options=array() ) {
 		$defaults = array(
-			'format'      => 'html',
-			'label'       => __( 'CVC Code', 'it-l10n-ithemes-exchange' ),
-			'placeholder' => '',
-			'required'    => (boolean) in_array( 'code', $this->_required_fields ),
+			'format'       => 'html',
+			'label'        => __( 'CVC Code', 'it-l10n-ithemes-exchange' ),
+			'placeholder'  => '',
+			'required'     => (boolean) in_array( 'code', $this->_required_fields ),
+			'autocomplete' => 'off'
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -260,6 +267,16 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 		$required = empty( $options['required'] ) ? '' : 'class="required" ';
 		$output = '';
 
+		if ( empty( $options['autocomplete'] ) ) {
+			$autocomplete = '';
+		} else {
+			$autocomplete = " autocomplete=\"{$options['autocomplete']}\"";
+
+			if ( $options['autocomplete'] !== 'on' && $options['autocomplete'] !== 'off' ) {
+				$autocomplete .= " x-autocompletetype=\"{$options['autocomplete']}\"";
+			}
+		}
+
 		switch( $options['format'] ) {
 
 			case 'field-id':
@@ -272,12 +289,12 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 				$output = $options['label'];
 				break;
 			case 'field':
-				$output .= '<input type="text" id="' . esc_attr( $field_id ) . '" '. $required . 'placeholder="' . esc_attr( $options['placeholder'] ) . '" name="' . esc_attr( $field_name ) . '" value="" />';
+				$output .= '<input type="text" id="' . esc_attr( $field_id ) . '" '. $required . 'placeholder="' . esc_attr( $options['placeholder'] ) . '" name="' . esc_attr( $field_name ) . '"' . $autocomplete .' value="" />';
 				break;
 			case 'html':
 			default:
 				$output = '<label for="' . esc_attr( $field_id ) . '">' . $options['label'] . '</label>';
-				$output .= '<input type="text" id="' . esc_attr( $field_id ) . '" placeholder="' . esc_attr( $options['placeholder'] ) . '" name="' . esc_attr( $field_name ) . '" value="" />';
+				$output .= '<input type="text" id="' . esc_attr( $field_id ) . '" placeholder="' . esc_attr( $options['placeholder'] ) . '" name="' . esc_attr( $field_name ) . '"' . $autocomplete .' value="" />';
 		}
 
 		return $output;
