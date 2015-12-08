@@ -901,8 +901,9 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 					if ( $temp_txn_id = it_exchange_paypal_standard_addon_get_ite_transaction_id( $request['custom'] ) ) {
 
 						$transaction = it_exchange_get_transaction( $temp_txn_id );
-						// update the method ID to be paypal's internal transaction ID
-						$transaction->update_transaction_meta( 'method_id', $request['txn_id'] );
+						// update the method ID to be an MD5 of paypal's internal ID
+						// paypal doesn't have a txn id for the trial payment, so we generated a different ID as not to conflict
+						$transaction->update_transaction_meta( 'method_id', md5( $request['txn_id'] ) );
 					}
 
 					// attempt to update the payment status for a transaction
