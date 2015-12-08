@@ -479,6 +479,16 @@ class IT_Exchange_Product_Post_Type {
 		$wp_post_types['it_exchange_prod']->labels->edit_item = $label;
 	}
 
+	/**
+	 * Close comments and pings for products if their product type does not support wp-comments.
+	 *
+	 * @since 1.32.0
+	 *
+	 * @param array $data
+	 * @param array $postarr
+	 *
+	 * @return array
+	 */
 	public function override_comments_open( $data, $postarr) {
 
 		if ( get_post_type( $postarr['ID'] ) !== 'it_exchange_prod' ) {
