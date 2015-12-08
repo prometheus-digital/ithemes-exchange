@@ -22,6 +22,11 @@ class IT_Exchange_SW_Shortcode {
 	private $hide_parts = array();
 
 	/**
+	 * @var array
+	 */
+	private $add_parts = array();
+
+	/**
 	 * IT_Exchange_Shortcodes constructor.
 	 */
 	public function __construct() {
@@ -128,13 +133,17 @@ class IT_Exchange_SW_Shortcode {
 						return;
 					}
 
-					var desc = '';
+					var desc = '', title = '';
 
 					if (jQuery("#it-exchange-sw-description").is(':checked')) {
 						desc = ' description="yes"';
 					}
 
-					var short = '[it_exchange_sw product="' + prod + '"' + desc + ']';
+					if (jQuery("#it-exchange-sw-title").is(':checked')) {
+						title = ' title="yes"';
+					}
+
+					var short = '[it_exchange_sw product="' + prod + '"' + desc + title + ']';
 
 					window.send_to_editor(short);
 					tb_remove();
@@ -156,6 +165,13 @@ class IT_Exchange_SW_Shortcode {
 							</option>
 						<?php endforeach; ?>
 					</select>
+
+					<br><br>
+
+					<input type="checkbox" id="it-exchange-sw-title">
+					<label for="it-exchange-sw-title">
+						<?php _e( "Include product title?", 'it-l10n-ithemes-exchange' ); ?>
+					</label>
 
 					<br><br>
 
@@ -198,7 +214,7 @@ class IT_Exchange_SW_Shortcode {
 			return '';
 		}
 
-		$atts = shortcode_atts( array( 'product' => null, 'description' => 'no' ), $atts, 'it_exchange_sw' );
+		$atts = shortcode_atts( array( 'product' => null, 'description' => 'no', 'title' => 'no' ), $atts, 'it_exchange_sw' );
 
 		$product = it_exchange_get_product( $atts['product'] );
 
@@ -228,9 +244,14 @@ class IT_Exchange_SW_Shortcode {
 			$this->hide_parts[] = 'description';
 		}
 
+		if ( $atts['title'] === 'yes' ) {
+			$this->add_parts[] = 'title';
+		}
+
 		add_filter( 'it_exchange_super_widget_empty_product_id', array( $this, 'set_sw_product_id' ) );
-		add_filter( 'it_exchange_get_content_product_product_info_loop_elements', array( $this, 'hide_templates' ) );
+		add_filter( 'it_exchange_get_content_product_product_info_loop_elements', array( $this, 'modify_templates' ) );
 		add_filter( 'it_exchange_super_widget_args', array( $this, 'prevent_hide_css' ) );
+		add_filter('it_exchange_api_theme_product_title_options', array( $this, 'modify_product_title_tag' ) );
 
 		ob_start();
 
@@ -239,7 +260,8 @@ class IT_Exchange_SW_Shortcode {
 		$html = ob_get_clean();
 
 		remove_filter( 'it_exchange_super_widget_empty_product_id', array( $this, 'set_sw_product_id' ) );
-		remove_filter( 'it_exchange_get_content_product_product_info_loop_elements', array( $this, 'hide_templates' ) );
+		remove_filter( 'it_exchange_get_content_product_product_info_loop_elements', array( $this, 'modify_templates' ) );
+		remove_filter('it_exchange_api_theme_product_title_options', array( $this, 'modify_product_title_tag' ) );
 
 		return $html;
 	}
@@ -263,7 +285,7 @@ class IT_Exchange_SW_Shortcode {
 	}
 
 	/**
-	 * Hide template parts.
+	 * Modify template parts.
 	 *
 	 * @since 1.32
 	 *
@@ -271,7 +293,11 @@ class IT_Exchange_SW_Shortcode {
 	 *
 	 * @return array
 	 */
-	public function hide_templates( $parts ) {
+	public function modify_templates( $parts ) {
+
+		if ( $this->add_parts ) {
+			$parts = array_merge( $this->add_parts, $parts );
+		}
 
 		foreach ( $this->hide_parts as $part ) {
 
@@ -298,6 +324,19 @@ class IT_Exchange_SW_Shortcode {
 		$args['enqueue_hide_script'] = false;
 
 		return $args;
+	}
+
+	/**
+	 * Modify the product title tag.
+	 *
+	 * @param array $options
+	 *
+	 * @return array
+	 */
+	public function modify_product_title_tag( $options ) {
+		$options['wrap'] = 'h2';
+
+		return $options;
 	}
 }
 
