@@ -200,8 +200,7 @@ class IT_Exchange_SW_Shortcode {
 
 		$atts = shortcode_atts( array( 'product' => null, 'description' => 'no' ), $atts, 'it_exchange_sw' );
 
-		$product      = it_exchange_get_product( $atts['product'] );
-		$product_type = it_exchange_get_product_type( $product->ID );
+		$product = it_exchange_get_product( $atts['product'] );
 
 		if ( ! $product ) {
 			if ( current_user_can( 'edit_post', $GLOBALS['post']->ID ) ) {
@@ -209,7 +208,7 @@ class IT_Exchange_SW_Shortcode {
 			}
 
 			return '';
-		} else if ( ! it_exchange_product_type_supports_feature( $product_type, 'sw-shortcode' ) ) {
+		} else if ( ! it_exchange_product_type_supports_feature( it_exchange_get_product_type( $product->ID ), 'sw-shortcode' ) ) {
 
 			if ( current_user_can( 'edit_post', $GLOBALS['post']->ID ) ) {
 				return __( "This product does not support being embedded in shortcodes.", 'it-l10n-ithemes-exchange' );
