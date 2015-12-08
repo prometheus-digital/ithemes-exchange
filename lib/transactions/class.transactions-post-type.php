@@ -306,7 +306,6 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return array  modified sortable columnns
 	*/
 	function make_transaction_custom_columns_sortable( $sortables ) {
-		$sortables['it_exchange_transaction_status_column'] = 'it_exchange_transaction_status_column';
 		$sortables['it_exchange_transaction_date_column']   = 'date';
 
 		return $sortables;
