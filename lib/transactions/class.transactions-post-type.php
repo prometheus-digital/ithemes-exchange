@@ -307,6 +307,7 @@ class IT_Exchange_Transaction_Post_Type {
 	*/
 	function make_transaction_custom_columns_sortable( $sortables ) {
 		$sortables['it_exchange_transaction_date_column']   = 'date';
+		$sortables['it_exchange_transaction_method_column'] = 'it_exchange_transaction_method_column';
 
 		return $sortables;
 	}
@@ -381,6 +382,10 @@ class IT_Exchange_Transaction_Post_Type {
 					case 'it_exchange_transaction_status_column':
 						$request['orderby'] = 'meta_value';
 						$request['meta_key'] = '_it_exchange_transaction_status';
+						break;
+					case 'it_exchange_transaction_method_column':
+						$request['orderby'] = 'meta_value';
+						$request['meta_key'] = '_it_exchange_transaction_method';
 						break;
 				}
 			}
