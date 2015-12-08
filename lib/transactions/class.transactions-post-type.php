@@ -275,7 +275,7 @@ class IT_Exchange_Transaction_Post_Type {
 			'it_exchange_transaction_status_column'   => __( 'Status', 'it-l10n-ithemes-exchange' ),
 			'it_exchange_transaction_customer_column' => __( 'Customer', 'it-l10n-ithemes-exchange' ),
 			'it_exchange_transaction_method_column'   => __( 'Method', 'it-l10n-ithemes-exchange' ),
-			'date'                                    => __( 'Date', 'it-l10n-ithemes-exchange' ),
+			'it_exchange_transaction_date_column'     => __( 'Date', 'it-l10n-ithemes-exchange' ),
 		);
 
 		// Merge ours back with existing to preserve any 3rd party columns
@@ -306,7 +306,8 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return array  modified sortable columnns
 	*/
 	function make_transaction_custom_columns_sortable( $sortables ) {
-		$sortables['it_exchange_transaction_status_column']   = 'it_exchange_transaction_status_column';
+		$sortables['it_exchange_transaction_status_column'] = 'it_exchange_transaction_status_column';
+		$sortables['it_exchange_transaction_date_column']   = 'date';
 
 		return $sortables;
 	}
@@ -339,6 +340,22 @@ class IT_Exchange_Transaction_Post_Type {
 			case 'it_exchange_transaction_total_column' :
 				esc_attr_e( it_exchange_get_transaction_total( $transaction ) );
 				break;
+			case 'it_exchange_transaction_date_column' :
+
+				$m_time = $transaction->post_date;
+				$time = get_post_time( 'G', true, $post );
+
+				$time_diff = time() - $time;
+
+				if ( $time_diff > 0 && $time_diff < DAY_IN_SECONDS ) {
+					$h_time = sprintf( __( '%s ago' ), human_time_diff( $time ) );
+				} else {
+					$h_time = mysql2date( __( 'Y/m/d' ), $m_time );
+				}
+
+				echo esc_attr( $h_time );
+				break;
+
 		}
 	}
 
