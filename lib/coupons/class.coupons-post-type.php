@@ -22,6 +22,7 @@ class IT_Exchange_Coupon_Post_Type {
 		$this->init();
 		add_action( 'save_post', array( $this, 'save_coupon' ) );
 		add_filter( 'disable_months_dropdown', array( $this, 'disable_months_dropdown' ), 10, 2 );
+		add_filter( 'default_hidden_columns', array( $this, 'hide_customer_column' ), 10, 2 );
 	}
 
 	/**
@@ -153,6 +154,25 @@ class IT_Exchange_Coupon_Post_Type {
 		}
 
 		return $disabled;
+	}
+
+	/**
+	 * Hide the coupon customer column by default.
+	 *
+	 * @since 1.33
+	 *
+	 * @param array     $hidden
+	 * @param WP_Screen $screen
+	 *
+	 * @return array
+	 */
+	public function hide_customer_column( $hidden, $screen ) {
+
+		if ( $screen->id == 'edit-it_exchange_coupon' ) {
+			$hidden[] = 'it_exchange_coupon_customer';
+		}
+
+		return $hidden;
 	}
 }
 $IT_Exchange_Coupon_Post_Type = new IT_Exchange_Coupon_Post_Type();

@@ -115,3 +115,6 @@ input[type="radio"] + label{display:inline !important;}
 
 /** -----------------------------------------------------:[ misc ]:---------- */
 .post-type-it_exchange_coupon #post-query-submit {display: none}
+.post-type-it_exchange_coupon .column-it_exchange_coupon_discount{width: 100px}
+.post-type-it_exchange_coupon .column-it_exchange_coupon_date{width: 133px}
+.post-type-it_exchange_coupon .column-it_exchange_coupon_quantity{width: 100px}
