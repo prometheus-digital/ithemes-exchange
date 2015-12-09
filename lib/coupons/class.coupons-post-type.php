@@ -13,6 +13,8 @@
 */
 class IT_Exchange_Coupon_Post_Type {
 
+	public $post_type;
+
 	/**
 	 * Class Constructor
 	 *
@@ -23,6 +25,7 @@ class IT_Exchange_Coupon_Post_Type {
 		add_action( 'save_post', array( $this, 'save_coupon' ) );
 		add_filter( 'disable_months_dropdown', array( $this, 'disable_months_dropdown' ), 10, 2 );
 		add_filter( 'default_hidden_columns', array( $this, 'hide_customer_column' ), 10, 2 );
+		add_filter( 'view_mode_post_types', array( $this, 'remove_view_modes' ) );
 	}
 
 	/**
@@ -173,6 +176,21 @@ class IT_Exchange_Coupon_Post_Type {
 		}
 
 		return $hidden;
+	}
+
+	/**
+	 * Remove the 'list' and 'excerpt' view mode from the screen options.
+	 *
+	 * @since 1.33
+	 *
+	 * @param array $post_types
+	 *
+	 * @return array
+	 */
+	public function remove_view_modes( $post_types ) {
+		unset( $post_types[ $this->post_type ] );
+
+		return $post_types;
 	}
 }
 $IT_Exchange_Coupon_Post_Type = new IT_Exchange_Coupon_Post_Type();
