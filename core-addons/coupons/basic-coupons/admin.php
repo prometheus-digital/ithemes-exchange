@@ -253,8 +253,8 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		$values['code']             = $coupon->get_code();
 		$values['amount-number']    = $amount;
 		$values['amount-type']      = $coupon->get_amount_type();
-		$values['start-date']       = $coupon->get_start_date() ? $coupon->get_start_date()->format( 'Y-m-d H:i:s' ) : '';
-		$values['end-date']         = $coupon->get_end_date() ? $coupon->get_end_date()->format( 'Y-m-d H:i:s' ) : '';
+		$values['start-date']       = $coupon->get_start_date() ? $coupon->get_start_date()->format( 'm/d/Y' ) : '';
+		$values['end-date']         = $coupon->get_end_date() ? $coupon->get_end_date()->format( 'm/d/Y' ) : '';
 		$values['limit-quantity']   = $coupon->is_quantity_limited();
 		$values['quantity']         = $coupon->get_remaining_quantity();
 		$values['limit-product']    = $coupon->is_product_limited();
