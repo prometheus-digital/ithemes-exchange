@@ -112,3 +112,6 @@ input[type="radio"] + label{display:inline !important;}
 .ui-datepicker-rtl .ui-datepicker-group{float:right;}
 .ui-datepicker-rtl .ui-datepicker-group-last .ui-datepicker-header,
 .ui-datepicker-rtl .ui-datepicker-group-middle .ui-datepicker-header{border-right-width:0;border-left-width:1px;}
+
+/** -----------------------------------------------------:[ misc ]:---------- */
+.post-type-it_exchange_coupon #post-query-submit {display: none}

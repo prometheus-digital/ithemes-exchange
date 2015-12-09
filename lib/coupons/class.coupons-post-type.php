@@ -21,6 +21,7 @@ class IT_Exchange_Coupon_Post_Type {
 	function __construct() {
 		$this->init();
 		add_action( 'save_post', array( $this, 'save_coupon' ) );
+		add_filter( 'disable_months_dropdown', array( $this, 'disable_months_dropdown' ), 10, 2 );
 	}
 
 	/**
@@ -132,6 +133,25 @@ class IT_Exchange_Coupon_Post_Type {
 
 		// This is called any time save_post hook
 		do_action( 'it_exchange_save_coupon', $post );
+	}
+
+	/**
+	 * Disable the months dropdown for coupons.
+	 *
+	 * @since 1.33
+	 *
+	 * @param bool $disabled
+	 * @param string $post_type
+	 *
+	 * @return bool
+	 */
+	public function disable_months_dropdown( $disabled, $post_type ) {
+
+		if  ( $post_type === $this->post_type ) {
+			$disabled = true;
+		}
+
+		return $disabled;
 	}
 }
 $IT_Exchange_Coupon_Post_Type = new IT_Exchange_Coupon_Post_Type();
