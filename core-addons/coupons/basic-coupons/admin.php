@@ -480,8 +480,6 @@ function it_exchange_basic_coupons_sortable_columns( $sortables ) {
 	$sortables['it_exchange_coupon_code']       = 'it-exchange-coupon-code';
 	$sortables['it_exchange_coupon_discount']   = 'it-exchange-coupon-discount';
 	$sortables['it_exchange_coupon_quantity']   = 'it-exchange-coupon-quantity';
-	$sortables['it_exchange_coupon_product_id'] = 'it-exchange-coupon-product-id';
-	$sortables['it_exchange_coupon_customer']   = 'it-exchange-coupon-customer';
 
 	return $sortables;
 }
