@@ -186,7 +186,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @return string
 	 */
 	public function get_amount_type() {
-		return $this->amount_type;
+		return get_post_meta( $this->get_ID(), '_it-basic-amount-type', true );
 	}
 
 	/**
@@ -199,7 +199,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @return float
 	 */
 	public function get_amount_number() {
-		return it_exchange_convert_from_database_number( $this->amount_number );
+		return it_exchange_convert_from_database_number( get_post_meta( $this->get_ID(), '_it-basic-amount-number', true ) );
 	}
 
 	/**
@@ -211,12 +211,14 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 */
 	public function get_start_date() {
 
-		if ( ! $this->start_date ) {
+		$start = get_post_meta( $this->get_ID(), '_it-basic-start-date', true );
+
+		if ( ! $start ) {
 			return null;
 		}
 
 		try {
-			return new DateTime( $this->start_date );
+			return new DateTime( $start );
 		}
 		catch ( Exception $e ) {
 			return null;
@@ -232,12 +234,14 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 */
 	public function get_end_date() {
 
-		if ( ! $this->end_date ) {
+		$end = get_post_meta( $this->get_ID(), '_it-basic-end-date', true );
+
+		if ( ! $end ) {
 			return null;
 		}
 
 		try {
-			return new DateTime( $this->end_date );
+			return new DateTime( $end );
 		}
 		catch ( Exception $e ) {
 			return null;
@@ -252,7 +256,10 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @return bool
 	 */
 	public function is_quantity_limited() {
-		return ! empty( $this->limit_quantity );
+
+		$limit_quantity = get_post_meta( $this->get_ID(), '_it-basic-limit-quantity', true );
+
+		return ! empty( $limit_quantity );
 	}
 
 	/**
@@ -263,7 +270,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @return int
 	 */
 	public function get_remaining_quantity() {
-		return (int) $this->quantity;
+		return (int) get_post_meta( $this->get_ID(), '_it-basic-quantity', true );
 	}
 
 	/**
@@ -274,7 +281,10 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @return bool
 	 */
 	public function is_product_limited() {
-		return ! empty( $this->limit_product );
+
+		$limit_product = get_post_meta( $this->get_ID(), '_it-basic-limit-product', true );
+
+		return ! empty( $limit_product );
 	}
 
 	/**
@@ -296,7 +306,10 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @return bool
 	 */
 	public function is_customer_limited() {
-		return ! empty( $this->limit_customer );
+
+		$limit_customer = get_post_meta( $this->get_ID(), '_it-basic-limit-customer', true );
+
+		return ! empty( $limit_customer );
 	}
 
 	/**
@@ -307,7 +320,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @return IT_Exchange_Customer
 	 */
 	public function get_customer() {
-		return it_exchange_get_customer( $this->customer );
+		return it_exchange_get_customer( get_post_meta( $this->get_ID(), '_it-basic-customer', true ) );
 	}
 
 	/**
@@ -318,7 +331,10 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @return bool
 	 */
 	public function is_frequency_limited() {
-		return ! empty( $this->limit_frequency );
+
+		$limit_frequency = get_post( $this->get_ID(), '_it-basic-limit-frequency', true );
+
+		return ! empty( $limit_frequency );
 	}
 
 	/**
@@ -331,7 +347,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @return int
 	 */
 	public function get_frequency_times() {
-		return (int) $this->frequency_times;
+		return (int) get_post_meta( $this->get_ID(), '_it-basic-frequency-times', true );
 	}
 
 	/**
@@ -372,7 +388,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @return int
 	 */
 	public function get_frequency_length() {
-		return (int) $this->frequency_length;
+		return (int) get_post_meta( $this->get_ID(), '_it-basic-frequency-length', true );
 	}
 
 	/**
@@ -385,7 +401,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @return string One of 'years', 'months', 'weeks', 'days'.
 	 */
 	public function get_frequency_units() {
-		return $this->frequency_units;
+		return get_post_meta( $this->get_ID(), '_it-basic-frequency-units', true );
 	}
 
 	/* ------------------------------------------------
