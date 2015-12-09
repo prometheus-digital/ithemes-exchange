@@ -42,6 +42,7 @@ class IT_Exchange_Coupon_Post_Type {
 			'name'          => __( 'Coupons', 'it-l10n-ithemes-exchange' ),
 			'singular_name' => __( 'Coupon', 'it-l10n-ithemes-exchange' ),
 			'edit_item'     => __( 'Edit Coupon', 'it-l10n-ithemes-exchange' ),
+			'search_items'  => __( 'Search Coupons', 'it-l10n-ithemes-exchange' )
 		);
 
 		// We're not going to add this to the menu. Individual add-ons will need to do that.
