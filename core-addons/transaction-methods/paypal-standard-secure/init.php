@@ -1039,7 +1039,7 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 					if ( $temp_txn_id = it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $request['custom'] ) ) { //this is a free trial
 						/* We need to do some free trial magic! */
 						$transaction = it_exchange_get_transaction( $temp_txn_id );
-						$transaction->update_transaction_meta( 'method_id', $request['txn_id'] );
+						$transaction->update_transaction_meta( 'method_id', md5( $request['txn_id'] ) );
 					}
 					if ( ! it_exchange_paypal_standard_secure_addon_update_transaction_status( $request['txn_id'], $request['payment_status'] ) ) {
 						//If the transaction isn't found, we've got a new payment
