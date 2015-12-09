@@ -960,7 +960,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 					it_exchange_paypal_standard_addon_update_transaction_status( $request['parent_txn_id'], $request['payment_status'] );
 					it_exchange_paypal_standard_addon_add_refund_to_transaction( $request['parent_txn_id'], $request['mc_gross'] );
 					if ( $subscriber_id ) {
-						it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'refunded' );
+						it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
 					}
 					break;
 
