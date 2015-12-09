@@ -666,7 +666,7 @@ function it_exchange_basic_coupons_get_discount_label( $label, $options = array(
 		return '';
 	}
 
-	if ( IT_Exchange_Cart_Coupon::TYPE_FLAT == $coupon->get_amount_number() ) {
+	if ( IT_Exchange_Cart_Coupon::TYPE_FLAT == $coupon->get_amount_type() ) {
 		return it_exchange_format_price( $coupon->get_amount_number() );
 	} else {
 		return $coupon->get_amount_number() . '%';
