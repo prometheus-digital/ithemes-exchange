@@ -56,8 +56,11 @@ class IT_Exchange_Menu_Customizer {
 		if ( 'exchange-casper' === $type ) {
 
 			$pages = it_exchange_get_pages( true, array( 'type' => 'exchange' ) );
-			unset( $pages['product'] );
-			unset( $pages['transaction'] );
+
+			foreach ( array( 'transaction', 'product', 'confirmation', 'logout' ) as $exclude ) {
+				unset( $pages[ $exclude ] );
+			}
+
 			$pages = array_slice( $pages, 10 * $page, 10 );
 
 			foreach ( $pages as $page ) {
