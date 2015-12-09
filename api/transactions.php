@@ -641,17 +641,17 @@ function it_exchange_get_transaction_date( $transaction, $format=false, $gmt=fal
  * @return string date
 */
 function it_exchange_get_transaction_subtotal( $transaction, $format_currency=true ) {
+
+	$subtotal = false;
+
 	// Try to locate the IT_Exchange_Transaction object from the var
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
-		if ( $subtotal = $transaction->get_subtotal() ) {
+		$subtotal = $transaction->get_subtotal();
 
-			$subtotal = $format_currency ? it_exchange_format_price( $subtotal ) : $subtotal;
-			return apply_filters( 'it_exchange_get_transaction_subtotal', $subtotal, $transaction, $format_currency );
-
-		}
+		$subtotal = $format_currency ? it_exchange_format_price( $subtotal ) : $subtotal;
 	}
 
-	return apply_filters( 'it_exchange_get_transaction_subtotal', false, $transaction, $format_currency );
+	return apply_filters( 'it_exchange_get_transaction_subtotal', $subtotal, $transaction, $format_currency );
 }
 
 /**

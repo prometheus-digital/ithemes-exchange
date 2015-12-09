@@ -28,16 +28,20 @@
 			<?php $classname = it_exchange_transaction_is_cleared_for_delivery( $transaction ) ? 'cleared-for-delivery' : 'not-cleared-for-delivery'; ?>
 			<div class="columns-wrapper columns-recent">
 				<div class="column column-date">
-					<span><?php esc_attr_e( it_exchange_get_transaction_date( $transaction ) ); ?></span>
+					<span><?php echo esc_attr( it_exchange_get_transaction_date( $transaction ) ); ?></span>
 				</div>
 				<div class="column column-number">
-					<span><?php esc_attr_e( it_exchange_get_transaction_order_number( $transaction ) ); ?></span>
+					<span>
+						<a href="<?php echo esc_url( get_permalink( $transaction->ID ) ); ?>">
+							<?php echo esc_attr( it_exchange_get_transaction_order_number( $transaction ) ); ?>
+						</a>
+					</span>
 				</div>
 				<div class="column column-status <?php echo $classname; ?>">
-					<span><?php esc_attr_e( it_exchange_get_transaction_status_label( $transaction ) ); ?></span>
+					<span><?php echo esc_attr( it_exchange_get_transaction_status_label( $transaction ) ); ?></span>
 				</div>
 				<div class="column column-total">
-					<span><?php esc_attr_e( it_exchange_get_transaction_total( $transaction ) ); ?></span>
+					<span><?php echo esc_attr( it_exchange_get_transaction_total( $transaction ) ); ?></span>
 				</div>
 			</div>
 		<?php endforeach; ?>

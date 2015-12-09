@@ -179,12 +179,7 @@ function it_exchange_verify_offline_transaction_unique_uniqid( $uniqid ) {
 function it_exchange_offline_payments_addon_make_payment_button( $options ) {
 
 	if ( 0 >= it_exchange_get_cart_total( false ) )
-		return;
-
-	$general_settings = it_exchange_get_option( 'settings_general' );
-	$stripe_settings = it_exchange_get_option( 'addon_offline_payments' );
-
-	$products = it_exchange_get_cart_data( 'products' );
+		return '';
 
 	$disable_on_submit = ' onSubmit="document.getElementById(\'offline-payments-button\').disabled=true;" ';
 	$payment_form = '<form id="offline_payment_form" action="' . it_exchange_get_page_url( 'transaction' ) . '" ' . $disable_on_submit . 'method="post">';
@@ -194,19 +189,6 @@ function it_exchange_offline_payments_addon_make_payment_button( $options ) {
 	$payment_form .= '<input type="submit" id="offline-payments-button" name="offline_payments_purchase" value="' . it_exchange_get_transaction_method_name_from_slug( 'offline-payments' ) .'" />';
 
 	$payment_form .= '</form>';
-
-	/*
-	 * Going to remove this for now. It should be
-	 * the responsibility of the site owner to
-	 * notify if Javascript is disabled, but I will
-	 * revisit this in case we want to a notifications.
-	 *
-	$payment_form .= '<div class="hide-if-js">';
-
-	$payment_form .= '<h3>' . __( 'JavaScript disabled: Stripe Payment Gateway cannot be loaded!', 'it-l10n-ithemes-exchange' ) . '</h3>';
-
-	$payment_form .= '</div>';
-	*/
 
 	return $payment_form;
 
@@ -222,7 +204,7 @@ add_filter( 'it_exchange_get_offline-payments_make_payment_button', 'it_exchange
 */
 function it_exchange_get_offline_payments_name( $name ) {
 	$options = it_exchange_get_option( 'addon_offline_payments' );
-	if ( ! empty( $options['offline-payments-title'] ) )
+	if ( ! empty( $options['offline-payments-title'] ) && ! is_admin() )
 		$name = $options['offline-payments-title'];
 	return $name;
 }

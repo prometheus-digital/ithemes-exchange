@@ -28,6 +28,7 @@ class IT_Exchange_Transaction_Post_Type {
 			add_filter( 'manage_edit-it_exchange_tran_columns', array( $this, 'modify_all_transactions_table_columns' ) );
 			add_filter( 'manage_edit-it_exchange_tran_sortable_columns', array( $this, 'make_transaction_custom_columns_sortable' ) );
 			add_filter( 'manage_it_exchange_tran_posts_custom_column', array( $this, 'add_transaction_method_info_to_view_all_table_rows' ) );
+			add_filter( 'request', array( $this, 'modify_wp_query_request_on_edit_php' ) );
 			add_filter( 'it_exchange_transaction_metabox_callback', array( $this, 'register_transaction_details_admin_metabox' ) );
 			add_filter( 'post_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
 			add_filter( 'page_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
@@ -233,7 +234,7 @@ class IT_Exchange_Transaction_Post_Type {
 	function modify_all_transactions_table_columns( $existing ) {
 
 		// Add a filter to replace the title text with the Date
-		add_filter( 'the_title', array( $this, 'replace_transaction_title_with_order_number' ) );
+		add_filter( 'the_title', array( $this, 'replace_transaction_title_with_order_number' ), 10, 2 );
 
 		// Remove Checkbox - adding it back below
 		if ( isset( $existing['cb'] ) ) {
@@ -274,7 +275,7 @@ class IT_Exchange_Transaction_Post_Type {
 			'it_exchange_transaction_status_column'   => __( 'Status', 'it-l10n-ithemes-exchange' ),
 			'it_exchange_transaction_customer_column' => __( 'Customer', 'it-l10n-ithemes-exchange' ),
 			'it_exchange_transaction_method_column'   => __( 'Method', 'it-l10n-ithemes-exchange' ),
-			'date'                                    => __( 'Date', 'it-l10n-ithemes-exchange' ),
+			'it_exchange_transaction_date_column'     => __( 'Date', 'it-l10n-ithemes-exchange' ),
 		);
 
 		// Merge ours back with existing to preserve any 3rd party columns
@@ -288,12 +289,12 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @since 0.4.0
 	 *
 	 * @param string $title the real title
+	 * @param int    $ID
+	 *
 	 * @return string
 	*/
-	function replace_transaction_title_with_order_number( $title ) {
-		global $post;
-		$transaction = it_exchange_get_transaction($post);
-		return it_exchange_get_transaction_order_number( $post );
+	function replace_transaction_title_with_order_number( $title, $ID ) {
+		return it_exchange_get_transaction_order_number( $ID );
 	}
 
 	/**
@@ -301,13 +302,13 @@ class IT_Exchange_Transaction_Post_Type {
 	 *
 	 * @since 0.3.3
 	 * @param array $sortables  existing sortable columns
+	 *
 	 * @return array  modified sortable columnns
 	*/
 	function make_transaction_custom_columns_sortable( $sortables ) {
-		$sortables['it_exchange_transaction_method_column']   = 'it_exchange_transaction_method_column';
-		$sortables['it_exchange_transaction_status_column']   = 'it_exchange_transaction_status_column';
-		$sortables['it_exchange_transaction_customer_column'] = 'it_exchange_transaction_customer_column';
-		$sortables['it_exchange_transaction_total_column']    = 'it_exchange_transaction_total_column';
+		$sortables['it_exchange_transaction_date_column']   = 'date';
+		$sortables['it_exchange_transaction_method_column'] = 'it_exchange_transaction_method_column';
+
 		return $sortables;
 	}
 
@@ -320,7 +321,7 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return void
 	*/
 	function add_transaction_method_info_to_view_all_table_rows( $column ) {
-		global $post, $wp_post_statuses;
+		global $post;
 		$transaction = it_exchange_get_transaction( $post );
 		switch( $column ) {
 			case 'it_exchange_transaction_method_column' :
@@ -339,7 +340,58 @@ class IT_Exchange_Transaction_Post_Type {
 			case 'it_exchange_transaction_total_column' :
 				esc_attr_e( it_exchange_get_transaction_total( $transaction ) );
 				break;
+			case 'it_exchange_transaction_date_column' :
+
+				$m_time = $transaction->post_date;
+				$time = get_post_time( 'G', true, $post );
+
+				$time_diff = time() - $time;
+
+				if ( $time_diff > 0 && $time_diff < DAY_IN_SECONDS ) {
+					$h_time = sprintf( __( '%s ago' ), human_time_diff( $time ) );
+				} else {
+					$h_time = mysql2date( __( 'Y/m/d' ), $m_time );
+				}
+
+				echo esc_attr( $h_time );
+				break;
+
 		}
+	}
+
+	/**
+	 * Modify sort of transactions in edit.php for custom columns
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param string $request original request
+	 *
+	 * @return array
+	 */
+	function modify_wp_query_request_on_edit_php( $request ) {
+		global $hook_suffix;
+
+		if ( 'edit.php' === $hook_suffix ) {
+			if ( 'it_exchange_tran' === $request['post_type'] && isset( $request['orderby'] ) ) {
+				switch( $request['orderby'] ) {
+					case 'menu_order title':
+						$request['order'] = 'desc';
+					case 'title':
+						$request['orderby'] = 'ID';
+						break;
+					case 'it_exchange_transaction_status_column':
+						$request['orderby'] = 'meta_value';
+						$request['meta_key'] = '_it_exchange_transaction_status';
+						break;
+					case 'it_exchange_transaction_method_column':
+						$request['orderby'] = 'meta_value';
+						$request['meta_key'] = '_it_exchange_transaction_method';
+						break;
+				}
+			}
+		}
+
+		return $request;
 	}
 
 	/**
