@@ -460,9 +460,8 @@ function it_exchange_basic_coupons_product_columns( $existing ) {
 	$columns['title'] = __( 'Title', 'it-l10n-ithemes-exchange' );
 	$columns['it_exchange_coupon_code']       = __( 'Coupon Code', 'it-l10n-ithemes-exchange' );
 	$columns['it_exchange_coupon_discount']   = __( 'Discount', 'it-l10n-ithemes-exchange' );
-	$columns['it_exchange_coupon_start_date'] = __( 'Start Date', 'it-l10n-ithemes-exchange' );
-	$columns['it_exchange_coupon_end_date']   = __( 'End Date', 'it-l10n-ithemes-exchange' );
-	$columns['it_exchange_coupon_quantity']   = __( 'Available', 'it-l10n-ithemes-exchange' );
+	$columns['it_exchange_coupon_date']       = __( 'Availability', 'it-l10n-ithemes-exchange' );
+	$columns['it_exchange_coupon_quantity']   = __( 'Quantity', 'it-l10n-ithemes-exchange' );
 	$columns['it_exchange_coupon_product_id'] = __( 'Product', 'it-l10n-ithemes-exchange' );
 	$columns['it_exchange_coupon_customer']   = __( 'Customer', 'it-l10n-ithemes-exchange' );
 
@@ -480,8 +479,6 @@ add_filter( 'manage_edit-it_exchange_coupon_columns', 'it_exchange_basic_coupons
 function it_exchange_basic_coupons_sortable_columns( $sortables ) {
 	$sortables['it_exchange_coupon_code']       = 'it-exchange-coupon-code';
 	$sortables['it_exchange_coupon_discount']   = 'it-exchange-coupon-discount';
-	$sortables['it_exchange_coupon_start_date'] = 'it-exchange-coupon-start-date';
-	$sortables['it_exchange_coupon_end_date']   = 'it-exchange-coupon-end-date';
 	$sortables['it_exchange_coupon_quantity']   = 'it-exchange-coupon-quantity';
 	$sortables['it_exchange_coupon_product_id'] = 'it-exchange-coupon-product-id';
 	$sortables['it_exchange_coupon_customer']   = 'it-exchange-coupon-customer';
@@ -516,11 +513,31 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 		case 'it_exchange_coupon_discount':
 			echo esc_attr( it_exchange_get_coupon_discount_label( $coupon ) );
 			break;
-		case 'it_exchange_coupon_start_date':
-			esc_attr_e( $coupon->get_start_date() ? $coupon->get_start_date()->format( $format ) : '' );
-			break;
-		case 'it_exchange_coupon_end_date':
-			esc_attr_e( $coupon->get_end_date() ? $coupon->get_end_date()->format( $format ) : '' );
+		case 'it_exchange_coupon_date':
+
+			$start = $coupon->get_start_date() ? $coupon->get_start_date()->format( $format ) : '';
+			$end   = $coupon->get_end_date() ? $coupon->get_end_date()->format( $format ) : '';
+
+			if ( $start && $end ) {
+
+				$same_year = $coupon->get_start_date()->format( 'Y' ) === $coupon->get_end_date()->format( 'Y' );
+				$same_month = $coupon->get_start_date()->format( 'n' ) === $coupon->get_end_date()->format( 'n' ) && $same_year;
+
+				if ( $same_month ) {
+					$start = $coupon->get_start_date()->format( 'M d' );
+					$end = $coupon->get_end_date()->format( 'd, Y' );
+				} else if ( $same_year ) {
+					$start = $coupon->get_start_date()->format( 'M d' );
+					$end = $coupon->get_end_date()->format( 'M d, Y' );
+				}
+
+				echo esc_attr( $start . ' – ' . $end );
+			} elseif ( $start ) {
+				echo esc_attr( sprintf( __( 'Starts %f', 'it-l10n-ithemes-exchange' ), $start ) );
+			} elseif ( $end ) {
+				echo esc_attr( sprintf( __( 'Ends %s', 'it-l10n-ithemes-exchange' ), $end ) );
+			}
+
 			break;
 		case 'it_exchange_coupon_quantity':
 
@@ -584,7 +601,7 @@ function it_exchange_basic_coupons_modify_wp_query_request_on_edit_php( $request
 					$request['orderby']  = 'meta_value_num';
 					$request['meta_key'] = '_it-basic-amount-number';
 					break;
-				case 'it-exchange-coupon-start-date':
+				case 'it-exchange-coupon-date':
 					$request['orderby']  = 'meta_value_date';
 					$request['meta_key'] = '_it-basic-start-date';
 					break;
