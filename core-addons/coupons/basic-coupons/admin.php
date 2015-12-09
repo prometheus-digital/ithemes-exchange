@@ -531,7 +531,7 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 
 				echo esc_attr( $start . ' – ' . $end );
 			} elseif ( $start ) {
-				echo esc_attr( sprintf( __( 'Starts %f', 'it-l10n-ithemes-exchange' ), $start ) );
+				echo esc_attr( sprintf( __( 'Starts %s', 'it-l10n-ithemes-exchange' ), $start ) );
 			} elseif ( $end ) {
 				echo esc_attr( sprintf( __( 'Ends %s', 'it-l10n-ithemes-exchange' ), $end ) );
 			}
