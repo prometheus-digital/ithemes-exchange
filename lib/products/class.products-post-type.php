@@ -22,6 +22,7 @@ class IT_Exchange_Product_Post_Type {
 		$this->init();
 
 		add_action( 'template_redirect', array( $this, 'load_product' ) );
+		add_action( 'wp_insert_post_data', array( $this, 'override_comments_open' ), 10, 2 );
 		add_action( 'save_post_it_exchange_prod', array( $this, 'save_product' ) );
 		add_action( 'admin_init', array( $this, 'set_add_new_item_label' ) );
 		add_action( 'admin_init', array( $this, 'set_edit_item_label' ) );
@@ -61,7 +62,7 @@ class IT_Exchange_Product_Post_Type {
 		if ( ! is_admin() ) {
 			if ( is_singular( 'it_exchange_prod' ) ) {
 				global $post;
-				$GLOBALS['it_exchange']['product'] = it_exchange_get_product( $post );
+				it_exchange_set_product( $post->ID );
 			}
 		}
 	}
@@ -476,6 +477,32 @@ class IT_Exchange_Product_Post_Type {
 		$singular = empty( $product['options']['labels']['singular_name'] ) ? $product['name'] : $product['options']['labels']['singular_name'];
 		$label = apply_filters( 'it_exchange_edit_product_label_' . $product['slug'], __( 'Edit ', 'it-l10n-ithemes-exchange' ) . $singular );
 		$wp_post_types['it_exchange_prod']->labels->edit_item = $label;
+	}
+
+	/**
+	 * Close comments and pings for products if their product type does not support wp-comments.
+	 *
+	 * @since 1.32.0
+	 *
+	 * @param array $data
+	 * @param array $postarr
+	 *
+	 * @return array
+	 */
+	public function override_comments_open( $data, $postarr) {
+
+		if ( get_post_type( $postarr['ID'] ) !== 'it_exchange_prod' ) {
+			return $data;
+		}
+
+		$type = get_post_meta( $postarr['ID'], '_it_exchange_product_type', true );
+
+		if ( $type && ! it_exchange_product_type_supports_feature( $type, 'wp-comments' ) ) {
+			$data['comment_status'] = 'closed';
+			$data['ping_status']    = 'closed';
+		}
+
+		return $data;
 	}
 
 	/**

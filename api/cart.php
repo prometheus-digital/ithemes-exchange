@@ -168,10 +168,10 @@ function it_exchange_is_current_product_in_cart() {
 	$product_id    = false;
 	$in_cart       = false;
 	$cart_products = it_exchange_get_cart_products();
-	$product       = empty( $GLOBALS['post'] ) ? false : it_exchange_get_product( $GLOBALS['post'] );
+	$product       = it_exchange_get_the_product_id();
 
 	if ( ! empty( $product ) ) {
-		$product_id = $product->ID;
+		$product_id = $product;
 	} else if ( ! empty( $_GET['sw-product'] ) ) {
 		$product_id = $_GET['sw-product'];
 	}
@@ -184,6 +184,31 @@ function it_exchange_is_current_product_in_cart() {
 
 	$in_cart = apply_filters( 'it_exchange_is_current_product_in_cart', $in_cart, $product_id, $product, $cart_products );
 	return $in_cart;
+}
+
+/**
+ * Check if a product is in the cart.
+ *
+ * @since 1.32
+ *
+ * @param int $product_id
+ *
+ * @return bool
+ */
+function it_exchange_is_product_in_cart( $product_id ) {
+
+	$in_cart       = false;
+	$cart_products = it_exchange_get_cart_products();
+
+	foreach( $cart_products as $cart_product ) {
+		if ( ! empty( $cart_product['product_id'] ) && $product_id == $cart_product['product_id'] ) {
+			$in_cart = true;
+
+			break;
+		}
+	}
+
+	return apply_filters( 'it_exchange_is_product_in_cart', $in_cart, $product_id, $cart_products );
 }
 
 /**

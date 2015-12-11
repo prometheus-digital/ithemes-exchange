@@ -1186,3 +1186,14 @@
 	PayPal Quantum-Locking
 	Transient Transaction Code Cleanup
 	General Code Cleanup
+1.32.0 - Lew Ayotte, Elise Alley, Timothy B. Jacobs
+	Major: Template parts have been updated: super-widget-product, super-widget-cart
+	Add: The SuperWidget can now be embedded using the [it_exchange_sw] shortcode
+	Add: Products can now have a sale price
+	Add: New core-addon Sale Schedule to restrict sale availability
+	Tweak: Make deactivating a plugin from the core-addons page more straightforward
+	Tweak: Replace usages of get_class with instanceof to allow for more robust add-ons
+	Tweak: Remove the downloads hash from the downloads page by default
+	Fix: Adding categories from the edit product page
+	Fix: Update the transaction status property when the status changes
+	Fix: Ensure comment and ping status is closed. WordPress 4.4 compatibility

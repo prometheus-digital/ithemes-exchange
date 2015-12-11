@@ -52,7 +52,7 @@ class IT_Exchange_Customer {
 	*/
 	function __construct( $user ) {
 
-		if ( is_object( $user ) && 'WP_User' == get_class( $user ) ) {
+		if ( $user instanceof WP_User ) {
 			$this->id  = $user->ID;
 			$this->wp_user = $user;
 			$this->set_customer_data();

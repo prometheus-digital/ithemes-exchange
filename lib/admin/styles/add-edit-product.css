@@ -40,10 +40,17 @@
 #it_exchange_normal-sortables textarea{box-sizing:border-box;width:100%;padding:10px;border:1px solid #d6d6d6;border-radius:2px;font-size:16px;font-family: 'Open Sans', 'Helvetica Neue',Helvetica,Arial,'Lucida Grande',sans-serif;line-height:1.2;color:#4e5559;}
 #it_exchange_normal-sortables input{font-size:24px;}
 #it_exchange_normal-sortables textarea{line-height:1.6;}
-#it_exchange_normal-sortables #it-exchange-product-title{float:left;width:80%;}
-#it_exchange_normal-sortables #it-exchange-product-title .inside{padding-right:3em;}
+
+#it_exchange_normal-sortables #it-exchange-product-title{float:left;width:calc(100% - 40% - 1.0em);}
+#it_exchange_normal-sortables #it-exchange-product-title .inside{padding-right:2em;}
+
 #it_exchange_normal-sortables #it-exchange-base-price{float:left;width:20%;}
 #it_exchange_normal-sortables #it-exchange-base-price input{text-align:right;}
+#it_exchange_normal-sortables #it-exchange-base-price .inside {padding-right: .75em;}
+#it_exchange_normal-sortables #it-exchange-product-sale-price {float:left;width:20%;}
+#it_exchange_normal-sortables #it-exchange-product-sale-price input{text-align:right;}
+#it_exchange_normal-sortables #it-exchange-product-sale-price .inside {padding-left:.75em;}
+
 #it_exchange_normal-sortables #it-exchange-product-description{clear:both;width:100%;}
 #it_exchange_normal-sortables .wp-core-ui .quicktags-toolbar input.button.button-small {font-size: 12px; }
 

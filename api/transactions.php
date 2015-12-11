@@ -22,7 +22,7 @@
  * @return string the transaction method
  */
 function it_exchange_get_transaction_method( $transaction=false ) {
-	if ( is_object( $transaction ) && 'IT_Exchange_Transaction' == get_class( $transaction ) )
+	if ( $transaction instanceof IT_Exchange_Transaction )
 		return $transaction->transaction_method;
 
 	if ( ! $transaction ) {
@@ -51,7 +51,7 @@ function it_exchange_get_transaction_method( $transaction=false ) {
  * @return IT_Exchange_Transaction IT_Exchange_Transaction object for passed post
 */
 function it_exchange_get_transaction( $post ) {
-	if ( is_object( $post ) && 'IT_Exchange_Transaction' == get_class( $post ) )
+	if ( $post instanceof IT_Exchange_Transaction )
 		return apply_filters( 'it_exchange_get_transaction', $post );
 
 	try {
@@ -520,7 +520,7 @@ function it_exchange_update_transaction( $args ) {
 */
 function it_exchange_update_transaction_status( $transaction, $status ) {
 
-	if ( is_object( $transaction ) && 'IT_Exchange_Transaction' != get_class( $transaction ) ) {
+	if ( $transaction instanceof IT_Exchange_Transaction ) {
 		$transaction = it_exchange_get_transaction( $transaction );
 	}
 

@@ -53,6 +53,10 @@ function it_exchange_register_addon( $slug, $params ) {
 		if ( in_array( $key, $allowed_keys ) )
 			$options[$key] = $value;
 
+	if ( empty( $options['supports'] ) ) {
+		$options['supports'] = array();
+	}
+
 	if ( empty( $options['category'] ) )
 		$options['category'] = 'other';
 

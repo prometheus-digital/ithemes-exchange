@@ -71,7 +71,7 @@ class IT_Exchange_Product {
 			$post = get_post( (int) $post );
 
 		// Ensure that $post is a WP_Post object
-		if ( is_object( $post ) && 'WP_Post' != get_class( $post ) )
+		if ( is_object( $post ) && ! $post instanceof WP_Post )
 			$post = false;
 
 		// Ensure this is a product post type

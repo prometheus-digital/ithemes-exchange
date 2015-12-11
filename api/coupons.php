@@ -52,7 +52,11 @@ function it_exchange_get_coupons( $options=array() ) {
 function it_exchange_get_coupon( $post ) {
 
 	try {
-		$coupon = ( is_object( $post ) && 'IT_Exchange_Coupon' == get_class( $post ) ) ? $post : new IT_Exchange_Coupon( $post );
+		if ( $post instanceof IT_Exchange_Coupon ) {
+			$coupon = $post;
+		} else {
+			$coupon = new IT_Exchange_Coupon( $post );
+		}
 	}
 	catch ( Exception $e ) {
 		return false;

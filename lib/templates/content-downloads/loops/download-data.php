@@ -25,7 +25,7 @@
 		<?php while( it_exchange( 'transaction', 'product-download-hashes' ) ) : ?>
 			<?php it_exchange_set_global( 'downloads_found', true ); ?>
 			<li class="it-exchange-download-data">
-				<?php foreach( it_exchange_get_template_part_elements( 'content_downloads', 'download_meta', array( 'download-hash', 'download-expiration' ) ) as $detail ): ?>
+				<?php foreach( it_exchange_get_template_part_elements( 'content_downloads', 'download_meta', array( 'download-expiration' ) ) as $detail ): ?>
 					<?php it_exchange_get_template_part( 'content-downloads/elements/' . $detail ); ?>
 				<?php endforeach; ?>
 			</li>

@@ -100,7 +100,7 @@ abstract class IT_Exchange_Shipping_Method {
 		}
 
 		// Set the property
-		if ( is_object( $product ) && 'IT_Exchange_Product' == get_class( $product ) )
+		if ( $product instanceof IT_Exchange_Product )
 			$this->product = $product;
 		else
 			$this->product = false;
