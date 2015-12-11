@@ -12,6 +12,9 @@ require( $this->_plugin_path . 'lib/classes/load.php' );
 // Other Functions
 require( $this->_plugin_path . 'lib/functions/functions.php' );
 
+// Locking
+require( $this->_plugin_path . 'lib/functions/locks.php' );
+
 // IT Fonts
 require( $this->_plugin_path . 'lib/icon-fonts/load.php' );
 

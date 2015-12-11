@@ -250,7 +250,14 @@ function it_exchange_process_webhooks() {
 			$webhook_diff = array_diff_assoc( $parsed_requested_webhook_url, $parsed_required_webhook_url );
 
 			if ( empty( $webhook_diff ) ) { //No differences in the requested webhook and the required webhook
-				do_action( 'it_exchange_webhook_' . $param, $_REQUEST );
+
+				try {
+					do_action( 'it_exchange_webhook_' . $param, $_REQUEST );
+				} catch ( IT_Exchange_Locking_Exception $e ) {
+					status_header( 500 );
+					error_log( "Locking exception during webooks: {$e->getMessage()}" );
+					die();
+				}
 			} else {
 				wp_die( sprintf( __( 'Invalid webhook request for this site. The webhook request should be: %s', 'it-l10n-ithemes-exchange' ), $required_webhook_url ), __( 'iThemes Exchange Webhook Process Error', 'it-l10n-ithemes-exchange' ), array( 'response' => 400 ) );
 			}
