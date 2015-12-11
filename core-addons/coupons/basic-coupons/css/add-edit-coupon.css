@@ -34,3 +34,35 @@
 .it-exchange-add-basic-coupon .date .start-date{margin-right:15px;}
 .it-exchange-add-basic-coupon .date input{width:120px;}
 .it-exchange-add-basic-coupon .quantity input{max-width:80px;text-align:right;}
+
+/** -----------------------------------------------------:[ advanced ]:---------- */
+.js #it_exchange_advanced-sortables .postbox{display:none;}
+#it-exchange-advanced-tabs{margin: 3em 0;background:#F5F5F5;border-radius:4px;border:1px solid #DEDEDE;width: 100%;max-width: 800px;}
+#it-exchange-advanced-tabs:after{content:' ';display:block;clear:both;visibility:hidden;line-height:0;height:0;}
+#it-exchange-advanced-tabs * {box-sizing: border-box;}
+#it-exchange-advanced-tabs .ui-tabs-nav{float:left;width:20%;margin:0;}
+#it-exchange-advanced-tabs .ui-tabs-panel{float:right;width:80%;border-left:1px solid #DEDEDE;border-radius:0 4px 4px 0;}
+#it-exchange-advanced-tabs .ui-tabs-panel .inner{padding:20px;background:#FFF;border-radius:0 4px 4px 0;}
+#it-exchange-advanced-tabs .ui-tabs-panel .inner > *:first-child{margin-top:0;padding-top:0;}
+#it-exchange-advanced-tabs .ui-tabs-panel .inner textarea{width:100%;}
+#it-exchange-advanced-tabs #it-exchange-product-purchase-quantity input[type="text"]{display:block;margin-top:1em;}
+#it-exchange-advanced-tabs input[type="text"],
+#it-exchange-advanced-tabs input[type="email"],
+#it-exchange-advanced-tabs input[type="password"],
+#it-exchange-advanced-tabs input[type="number"],
+#it-exchange-advanced-tabs textarea{background:#fff;border:1px solid #d6d6d6;border-radius:3px;font-size:18px;padding:10px;color:#3d4142;width:260px;}
+#it-exchange-advanced-tabs input[type="text"]:focus,
+#it-exchange-advanced-tabs input[type="email"]:focus,
+#it-exchange-advanced-tabs input[type="password"]:focus,
+#it-exchange-advanced-tabs input[type="number"]:focus,
+#it-exchange-advanced-tabs textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
+
+#it-exchange-advanced-tabs input[type="text"] { height:auto; }
+
+#it-exchange-advanced-tab-nav .ui-state-default{outline:none;margin-bottom:0;border-width:1px 0 1px;border-style:solid;border-color:transparent;}
+#it-exchange-advanced-tab-nav .ui-state-default:first-child{border-top:0;border-radius:4px 0 0 0;}
+#it-exchange-advanced-tab-nav .ui-state-default:last-child{border-bottom:0;border-radius:0 0 0 4px;}
+#it-exchange-advanced-tab-nav .ui-state-default a{outline:none;padding:10px;display:block;text-decoration:none;color:#747474;-webkit-transition:background .2s linear;transition:background .2s linear;}
+#it-exchange-advanced-tab-nav .ui-state-default a:hover{background:#EEE;}
+#it-exchange-advanced-tab-nav .ui-state-active{position:relative;margin-right:-2px;background:#FFF;border-color:#DEDEDE;}
+#it-exchange-advanced-tab-nav .ui-state-active a:hover{background:#FFF;}

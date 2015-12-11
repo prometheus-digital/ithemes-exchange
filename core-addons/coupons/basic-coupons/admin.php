@@ -25,7 +25,7 @@ function it_exchange_basic_coupons_enqueue_js_css() {
 		// Enqueue JS / CSS based on current filter
 		if ( 'admin_print_scripts' == $current_filter ) {
 			// JS
-			$deps = array( 'jquery', 'jquery-ui-tooltip', 'jquery-ui-datepicker' );
+			$deps = array( 'jquery', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'jquery-ui-tabs' );
 			wp_enqueue_script( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-coupon.js', $deps );
 		} else if ( 'admin_print_styles' == $current_filter ) {
 			// CSS
@@ -323,95 +323,125 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 					<?php $form->add_drop_down( 'amount-type', array( '%' => __( '% Percent', 'it-l10n-ithemes-exchange' ), 'amount' => $symbol . ' ' . $currency ) ); ?>
 				</div>
 
-				<div class="field date" data-alert="<?php _e( 'Please select an end date that is after the start date.', 'it-l10n-ithemes-exchange' ); ?>">
-					<div class="start-date">
-						<label for="start-date"><?php _e( 'Start Date', 'it-l10n-ithemes-exchange' ); ?></label>
-						<?php $form->add_text_box( 'start-date', array( 'class' => 'datepicker', 'data-append' => 'end-date' ) ); ?>
+				<div id="it-exchange-advanced-tabs">
+					<ul id="it-exchange-advanced-tab-nav">
+						<li><a href="#general">General</a></li>
+						<li><a href="#usage">Usage</a></li>
+						<li><a href="#customer">Customers</a></li>
+						<li><a href="#product">Products</a></li>
+					</ul>
+					<div id="general">
+						<div class="inner">
+							<div class="inside">
+								<div class="field date" data-alert="<?php _e( 'Please select an end date that is after the start date.', 'it-l10n-ithemes-exchange' ); ?>">
+									<div class="start-date">
+										<label for="start-date"><?php _e( 'Start Date', 'it-l10n-ithemes-exchange' ); ?></label>
+										<?php $form->add_text_box( 'start-date', array( 'class' => 'datepicker', 'data-append' => 'end-date' ) ); ?>
+									</div>
+									<div class="end-date">
+										<label for="end-date"><?php _e( 'End Date', 'it-l10n-ithemes-exchange' ); ?></label>
+										<?php $form->add_text_box( 'end-date', array( 'class' => 'datepicker', 'data-append' => 'start-date' ) ); ?>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div class="end-date">
-						<label for="end-date"><?php _e( 'End Date', 'it-l10n-ithemes-exchange' ); ?></label>
-						<?php $form->add_text_box( 'end-date', array( 'class' => 'datepicker', 'data-append' => 'start-date' ) ); ?>
+
+					<div id="usage">
+						<div class="inner">
+							<div class="inside">
+								<div class="field limit-quantity">
+									<?php $form->add_check_box( 'limit-quantity' ); ?>
+									<label for="limit-quantity">
+										<?php _e( 'Limit number of coupons', 'it-l10n-ithemes-exchange' ); ?>
+										<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times this coupon can be used', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
+									</label>
+								</div>
+
+								<div class="field quantity">
+									<?php $form->add_text_box( 'quantity', array( 'type' => 'number' ) ); ?>
+									<span class="tip" title="<?php _e( 'How many times can this coupon be used before it is disabled?', 'it-l10n-ithemes-exchange' ); ?>">i</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="customer">
+						<div class="inner">
+							<div class="inside">
+								<div class="field limit-customer">
+									<?php $form->add_check_box( 'limit-customer' ); ?>
+									<label for="limit-customer">
+										<?php _e( 'Limit to a specific customer', 'it-l10n-ithemes-exchange' ); ?>
+										<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the coupon discount to a specific customer.', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
+									</label>
+								</div>
+
+								<div class="field customer">
+									<?php
+									$customer_options = array( 0 => __( 'Select a customer', 'it-l10n-ithemes-exchange' ) );
+									$customers        = get_users( array( 'number' => -1 ) );
+									foreach( (array) $customers as $customer ) {
+										$customer_options[$customer->ID] = $customer->display_name;
+									}
+									?>
+									<?php $form->add_drop_down( 'customer', $customer_options ); ?>
+									<span class="tip" title="<?php _e( 'Restrict this coupon to a single customer.', 'it-l10n-ithemes-exchange' ); ?>">i</span>
+								</div>
+
+								<div class="field limit-frequency">
+									<?php $form->add_check_box( 'limit-frequency' ); ?>
+									<label for="limit-frequency">
+										<?php _e( 'Limit frequency of use per customer', 'it-l10n-ithemes-exchange' ); ?>
+										<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times each customer can use the coupon during a specified time frame', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
+									</label>
+								</div>
+
+								<div class="field frequency-limitations">
+									<?php
+									$thirty = array();
+									for( $i=1;$i<=30;$i++ ) {
+										$thirty[$i] = $i;
+									}
+									$frequency_times  = apply_filters( 'it_exchange_limit_coupon_freqency_times_options', $thirty );
+									$frequency_length = apply_filters( 'it_exchange_limit_coupon_freqency_length_options', $thirty );
+									$frequency_units  = array( 'day' => __( 'Day(s)', 'it-l10n-ithemes-exchange' ), 'week' =>  __( 'Week(s)', 'it-l10n-ithemes-exchange' ), 'year' => __( 'Year(s)', 'it-l10n-ithemes-exchange' ) );
+									_e( 'Limit this coupon to ', 'it-l10n-ithemes-exchange' );
+									$form->add_drop_down( 'frequency-times', $frequency_times );
+									_e( ' use(s) per customer for every ', 'it-l10n-ithemes-exchange' );
+									$form->add_drop_down( 'frequency-length', $frequency_length );
+									$form->add_drop_down( 'frequency-units', $frequency_units );
+									?>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="product">
+						<div class="inner">
+							<div class="inside">
+								<div class="field limit-product">
+									<?php $form->add_check_box( 'limit-product' ); ?>
+									<label for="limit-product">
+										<?php _e( 'Limit to a specific product', 'it-l10n-ithemes-exchange' ); ?>
+										<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the coupon discount to a specific product price, not the cart total', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
+									</label>
+								</div>
+
+								<div class="field product-id">
+									<?php
+									$product_options = array( 0 => __( 'Select a product', 'it-l10n-ithemes-exchange' ) );
+									$products        = it_exchange_get_products( array( 'show_hidden' => true, 'posts_per_page' => -1 ) );
+									foreach( (array) $products as $id => $product ) {
+										$product_options[$product->ID] = $product->post_title;
+									}
+									?>
+									<?php $form->add_drop_down( 'product-id', $product_options ); ?>
+									<span class="tip" title="<?php _e( 'Select a product to use with this coupon.', 'it-l10n-ithemes-exchange' ); ?>">i</span>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
-
-				<div class="field limit-quantity">
-					<?php $form->add_check_box( 'limit-quantity' ); ?>
-					<label for="limit-quantity">
-						<?php _e( 'Limit number of coupons', 'it-l10n-ithemes-exchange' ); ?>
-						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times this coupon can be used', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
-					</label>
-				</div>
-
-				<div class="field quantity">
-					<?php $form->add_text_box( 'quantity', array( 'type' => 'number' ) ); ?>
-					<span class="tip" title="<?php _e( 'How many times can this coupon be used before it is disabled?', 'it-l10n-ithemes-exchange' ); ?>">i</span>
-				</div>
-
-				<div class="field limit-product">
-					<?php $form->add_check_box( 'limit-product' ); ?>
-					<label for="limit-product">
-						<?php _e( 'Limit to a specific product', 'it-l10n-ithemes-exchange' ); ?>
-						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the coupon discount to a specific product price, not the cart total', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
-					</label>
-				</div>
-
-				<div class="field product-id">
-					<?php
-					$product_options = array( 0 => __( 'Select a product', 'it-l10n-ithemes-exchange' ) );
-					$products        = it_exchange_get_products( array( 'show_hidden' => true, 'posts_per_page' => -1 ) );
-					foreach( (array) $products as $id => $product ) {
-						$product_options[$product->ID] = $product->post_title;
-					}
-					?>
-					<?php $form->add_drop_down( 'product-id', $product_options ); ?>
-					<span class="tip" title="<?php _e( 'Select a product to use with this coupon.', 'it-l10n-ithemes-exchange' ); ?>">i</span>
-				</div>
-
-				<div class="field limit-customer">
-					<?php $form->add_check_box( 'limit-customer' ); ?>
-					<label for="limit-customer">
-						<?php _e( 'Limit to a specific customer', 'it-l10n-ithemes-exchange' ); ?>
-						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the coupon discount to a specific customer.', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
-					</label>
-				</div>
-
-				<div class="field customer">
-					<?php
-					$customer_options = array( 0 => __( 'Select a customer', 'it-l10n-ithemes-exchange' ) );
-					$customers        = get_users( array( 'number' => -1 ) );
-					foreach( (array) $customers as $customer ) {
-						$customer_options[$customer->ID] = $customer->display_name;
-					}
-					?>
-					<?php $form->add_drop_down( 'customer', $customer_options ); ?>
-					<span class="tip" title="<?php _e( 'Restrict this coupon to a single customer.', 'it-l10n-ithemes-exchange' ); ?>">i</span>
-				</div>
-
-				<div class="field limit-frequency">
-					<?php $form->add_check_box( 'limit-frequency' ); ?>
-					<label for="limit-frequency">
-						<?php _e( 'Limit frequency of use per customer', 'it-l10n-ithemes-exchange' ); ?>
-						<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times each customer can use the coupon during a specified time frame', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
-					</label>
-				</div>
-
-				<div class="field frequency-limitations">
-					<?php
-					$thirty = array();
-					for( $i=1;$i<=30;$i++ ) {
-						$thirty[$i] = $i;
-					}
-					$frequency_times  = apply_filters( 'it_exchange_limit_coupon_freqency_times_options', $thirty );
-					$frequency_length = apply_filters( 'it_exchange_limit_coupon_freqency_length_options', $thirty );
-					$frequency_units  = array( 'day' => __( 'Day(s)', 'it-l10n-ithemes-exchange' ), 'week' =>  __( 'Week(s)', 'it-l10n-ithemes-exchange' ), 'year' => __( 'Year(s)', 'it-l10n-ithemes-exchange' ) );
-					_e( 'Limit this coupon to ', 'it-l10n-ithemes-exchange' );
-					$form->add_drop_down( 'frequency-times', $frequency_times );
-					_e( ' use(s) per customer for every ', 'it-l10n-ithemes-exchange' );
-					$form->add_drop_down( 'frequency-length', $frequency_length );
-					$form->add_drop_down( 'frequency-units', $frequency_units );
-					?>
-				</div>
-
 				<?php do_action( 'it_exchange_basics_coupon_coupon_edit_screen_end_fields', $form ); ?>
 
 				<div class="field">

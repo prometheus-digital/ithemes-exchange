@@ -81,6 +81,19 @@ jQuery( document ).ready( function($) {
 		}
 	}
 	$('#limit-frequency').change(itExchangeBasicCouponsShowHideFrequency).triggerHandler("change");
+
+	// init tabbed section
+	$( '#it-exchange-advanced-tabs' ).tabs();
+
+	// set initial height of tab content, then reset on resize
+	setTimeout(function() {
+		$( '#it-exchange-advanced-tabs .inner').css( 'min-height', $( '#it-exchange-advanced-tabs').height() );
+	}, 0 );
+
+	$( window ).resize( function() {
+		$( '#it-exchange-advanced-tabs .inner').css( 'min-height', $( '#it-exchange-advanced-tabs').height() );
+	});
+
 });
 
 /**
