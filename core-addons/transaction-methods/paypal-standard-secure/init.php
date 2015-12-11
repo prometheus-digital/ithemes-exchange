@@ -217,7 +217,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 					
 					$response = wp_remote_post( $paypal_api_url, array( 'body' => $request ) );
 					
-					if ( ! is_wp_error( $response ) ) {
+					if ( is_wp_error( $response ) ) {
 						throw new Exception( $response->get_error_message() );
 					}
 
