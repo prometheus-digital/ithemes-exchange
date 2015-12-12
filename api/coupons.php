@@ -111,11 +111,16 @@ function it_exchange_get_coupon_from_code( $code, $type ) {
  *
  * @since 0.4.0
  * @param array $args same args passed to wp_insert_post plus any additional needed
- * @param object|bool $cart_object passed cart object
+ * @param object|bool $deprecated deprecated
  *
  * @return mixed post id or false
 */
-function it_exchange_add_coupon( $args=array(), $cart_object=false ) {
+function it_exchange_add_coupon( $args=array(), $deprecated = false ) {
+
+	if ( $deprecated !== false ) {
+		_deprecated_argument( 'it_exchange_add_coupon', '1.33' );
+	}
+
 	$defaults = array(
 		'post_type'   => 'it_exchange_coupon',
 		'post_status' => 'publish',
@@ -133,7 +138,7 @@ function it_exchange_add_coupon( $args=array(), $cart_object=false ) {
 		foreach ( (array) $post_meta as $key => $value ) {
 			update_post_meta( $coupon_id, $key, $value );
 		}
-		do_action( 'it_exchange_add_coupon_success', $coupon_id, $cart_object );
+		do_action( 'it_exchange_add_coupon_success', $coupon_id, $deprecated );
 		return $coupon_id;
 	}
 	do_action( 'it_exchange_add_coupon_failed', $args );
