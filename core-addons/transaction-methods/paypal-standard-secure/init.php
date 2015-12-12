@@ -983,7 +983,7 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
 		if ( ! empty( $tmp_txn_id ) ) {
 
-			$transient_data     = it_exchange_get_transient_transaction( 'pps', $tmp_txn_id );
+			$transient_data     = it_exchange_get_transient_transaction( 'ppss', $tmp_txn_id );
 
 			$customer_id        = $transient_data['customer_id'];
 			$transaction_object = $transient_data['transaction_object'];

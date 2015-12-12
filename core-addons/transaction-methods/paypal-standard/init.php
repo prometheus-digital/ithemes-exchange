@@ -154,8 +154,7 @@ add_filter( 'handle_purchase_cart_request_already_processed_for_paypal-standard'
  */
 function it_exchange_process_paypal_standard_addon_transaction( $status, $transaction_object ) {
 
-	if ( $status ) //if this has been modified as true already, return.
-	{
+	if ( $status ) { //if this has been modified as true already, return.
 		return $status;
 	}
 
@@ -167,11 +166,9 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 		return false;
 	}
 
-	if ( ! empty( $_REQUEST['tx'] ) ) //if PDT is enabled
-	{
+	if ( ! empty( $_REQUEST['tx'] ) ) { //if PDT is enabled
 		$paypal_id = $_REQUEST['tx'];
-	} else if ( ! empty( $_REQUEST['txn_id'] ) ) //if PDT is not enabled
-	{
+	} else if ( ! empty( $_REQUEST['txn_id'] ) ) { //if PDT is not enabled
 		$paypal_id = $_REQUEST['txn_id'];
 	} else {
 		$paypal_id = null;
@@ -185,21 +182,17 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 		$transient_transaction_id = null;
 	}
 
-	if ( ! empty( $_REQUEST['amt'] ) ) //if PDT is enabled
-	{
+	if ( ! empty( $_REQUEST['amt'] ) ) { //if PDT is enabled
 		$transaction_amount = $_REQUEST['amt'];
-	} else if ( ! empty( $_REQUEST['mc_gross'] ) ) //if PDT is not enabled
-	{
+	} else if ( ! empty( $_REQUEST['mc_gross'] ) ) { //if PDT is not enabled
 		$transaction_amount = $_REQUEST['mc_gross'];
 	} else {
 		$transaction_amount = null;
 	}
 
-	if ( ! empty( $_REQUEST['st'] ) ) //if PDT is enabled
-	{
+	if ( ! empty( $_REQUEST['st'] ) ) { //if PDT is enabled
 		$paypal_status = $_REQUEST['st'];
-	} else if ( ! empty( $_REQUEST['payment_status'] ) ) //if PDT is not enabled
-	{
+	} else if ( ! empty( $_REQUEST['payment_status'] ) ) { //if PDT is not enabled
 		$paypal_status = $_REQUEST['payment_status'];
 	} else {
 		$paypal_status = null;
@@ -834,7 +827,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 
 		if ( ! empty( $tmp_txn_id ) ) {
 
-			$transient_data     = it_exchange_get_transient_transaction( 'pps', $tmp_txn_id );
+			$transient_data = it_exchange_get_transient_transaction( 'pps', $tmp_txn_id );
 
 			$customer_id        = $transient_data['customer_id'];
 			$transaction_object = $transient_data['transaction_object'];
@@ -1148,7 +1141,7 @@ function it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber
 
 			if ( $transaction->has_children() ) {
 				//Get the last child and make sure it hasn't been fully refunded
-				$args = array(
+				$args                   = array(
 					'numberposts' => 1,
 					'order'       => 'ASC',
 				);
@@ -1236,10 +1229,11 @@ add_filter( 'it_exchange_paypal-standard_transaction_is_cleared_for_delivery', '
  *
  * @since 1.3.0
  *
- * @param string $output Should be an empty string
- * @param array $options Array of options passed from Recurring Payments add-on
+ * @param string $output  Should be an empty string
+ * @param array  $options Array of options passed from Recurring Payments add-on
+ *
  * @return string $output Unsubscribe action
-*/
+ */
 function it_exchange_paypal_standard_unsubscribe_action( $output, $options ) {
 	$paypal_settings = it_exchange_get_option( 'addon_paypal_standard' );
 	$paypal_url      = PAYPAL_PAYMENT_LIVE_URL;
@@ -1539,7 +1533,7 @@ class IT_Exchange_PayPal_Standard_Add_On {
 
 		$paypal_standard_settings = array();
 
-		$fields = array(
+		$fields                                  = array(
 			'live-email-address',
 			'purchase-button-label',
 		);
