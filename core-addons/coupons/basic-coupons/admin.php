@@ -325,10 +325,10 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 
 				<div id="it-exchange-advanced-tabs">
 					<ul id="it-exchange-advanced-tab-nav">
-						<li><a href="#general">General</a></li>
-						<li><a href="#usage">Usage</a></li>
-						<li><a href="#customer">Customers</a></li>
-						<li><a href="#product">Products</a></li>
+						<li><a href="#general"><?php _e( 'General', 'it-l10n-ithemes-exchange' ); ?></a></li>
+						<li><a href="#usage"><?php _e( 'Usage', 'it-l10n-ithemes-exchange' ); ?></a></li>
+						<li><a href="#customer"><?php _e( 'Customers', 'it-l10n-ithemes-exchange' ); ?></a></li>
+						<li><a href="#product"><?php _e( 'Product', 'it-l10n-ithemes-exchange' ); ?></a></li>
 					</ul>
 					<div id="general">
 						<div class="inner">
