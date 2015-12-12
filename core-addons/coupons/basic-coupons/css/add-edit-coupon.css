@@ -14,6 +14,7 @@
 }
 
 /** -----------------------------------------------------:[ general ]:---------- */
+.it-exchange-add-basic-coupon {margin-top: 20px}
 .it-exchange-add-basic-coupon label{display:block;font-size:13px;font-weight:bold;color:#3d4142;margin-bottom:5px;margin-left:2px;}
 .it-exchange-add-basic-coupon input[type="text"],
 .it-exchange-add-basic-coupon input[type="email"],
