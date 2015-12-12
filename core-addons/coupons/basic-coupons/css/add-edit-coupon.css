@@ -24,6 +24,7 @@
 .it-exchange-add-basic-coupon input[type="password"]:focus,
 .it-exchange-add-basic-coupon textarea:focus{outline:none;border:1px solid #c9c9c9;border-bottom-color:#aaaaaa;}
 .it-exchange-add-basic-coupon .field{margin-top:20px;}
+.it-exchange-add-basic-coupon div.field:first-of-type{margin-top: 0}
 
 /** -----------------------------------------------------:[ form ]:---------- */
 .it-exchange-add-basic-coupon .amount input{max-width:80px;text-align:right;}
