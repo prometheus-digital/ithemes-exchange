@@ -332,7 +332,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 */
 	public function is_frequency_limited() {
 
-		$limit_frequency = get_post( $this->get_ID(), '_it-basic-limit-frequency', true );
+		$limit_frequency = get_post_meta( $this->get_ID(), '_it-basic-limit-frequency', true );
 
 		return ! empty( $limit_frequency );
 	}
