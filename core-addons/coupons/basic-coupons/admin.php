@@ -83,6 +83,7 @@ function it_exchange_basic_coupons_save_coupon() {
 
 	// Convert name to post_title
 	$data['post_title'] = $data['name'];
+	$data['post_content'] = $data['code'];
 	unset( $data['name'] );
 
 	// Update message or added message
