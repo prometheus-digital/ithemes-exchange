@@ -354,7 +354,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 									<?php $form->add_check_box( 'limit-quantity' ); ?>
 									<label for="limit-quantity">
 										<?php _e( 'Limit number of coupons', 'it-l10n-ithemes-exchange' ); ?>
-										<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times this coupon can be used', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
+										<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the number of times this coupon can be used. This limit is applied globally.', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
 									</label>
 								</div>
 
@@ -386,7 +386,6 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 									}
 									?>
 									<?php $form->add_drop_down( 'customer', $customer_options ); ?>
-									<span class="tip" title="<?php _e( 'Restrict this coupon to a single customer.', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 								</div>
 
 								<div class="field limit-frequency">
@@ -423,7 +422,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 									<?php $form->add_check_box( 'limit-product' ); ?>
 									<label for="limit-product">
 										<?php _e( 'Limit to a specific product', 'it-l10n-ithemes-exchange' ); ?>
-										<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the coupon discount to a specific product price, not the cart total', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
+										<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the discount to a specific product\'s price <em>instead</em> of the cart total.', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
 									</label>
 								</div>
 
@@ -436,7 +435,6 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 									}
 									?>
 									<?php $form->add_drop_down( 'product-id', $product_options ); ?>
-									<span class="tip" title="<?php _e( 'Select a product to use with this coupon.', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 								</div>
 							</div>
 						</div>
