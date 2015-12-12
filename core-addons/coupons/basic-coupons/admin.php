@@ -542,27 +542,41 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 			break;
 		case 'it_exchange_coupon_date':
 
-			$start = $coupon->get_start_date() ? $coupon->get_start_date()->format( $format ) : '';
-			$end   = $coupon->get_end_date() ? $coupon->get_end_date()->format( $format ) : '';
+			$start = $coupon->get_start_date();
+			$end   = $coupon->get_end_date();
 
 			if ( $start && $end ) {
 
-				$same_year = $coupon->get_start_date()->format( 'Y' ) === $coupon->get_end_date()->format( 'Y' );
-				$same_month = $coupon->get_start_date()->format( 'n' ) === $coupon->get_end_date()->format( 'n' ) && $same_year;
+				$same_year = $start->format( 'Y' ) === $end->format( 'Y' );
+				$same_month = $start->format( 'n' ) === $end->format( 'n' ) && $same_year;
 
 				if ( $same_month ) {
-					$start = $coupon->get_start_date()->format( 'M d' );
-					$end = $coupon->get_end_date()->format( 'd, Y' );
+					$start = $start->format( 'M d' );
+					$end = $end->format( 'd, Y' );
 				} else if ( $same_year ) {
-					$start = $coupon->get_start_date()->format( 'M d' );
-					$end = $coupon->get_end_date()->format( 'M d, Y' );
+					$start = $start->format( 'M d' );
+					$end = $end->format( 'M d, Y' );
 				}
 
 				echo esc_attr( $start . ' – ' . $end );
 			} elseif ( $start ) {
-				echo esc_attr( sprintf( __( 'Starts %s', 'it-l10n-ithemes-exchange' ), $start ) );
+
+				$now = new DateTime();
+
+				if ( $start < $now ) {
+					echo esc_attr( sprintf( __( 'Started %s', 'it-l10n-ithemes-exchange' ), $start->format( $format ) ) );
+				} else {
+					echo esc_attr( sprintf( __( 'Starts %s', 'it-l10n-ithemes-exchange' ), $start->format( $format ) ) );
+				}
 			} elseif ( $end ) {
-				echo esc_attr( sprintf( __( 'Ends %s', 'it-l10n-ithemes-exchange' ), $end ) );
+
+				$now = new DateTime();
+
+				if ( $end < $now ) {
+					echo esc_attr( sprintf( __( 'Ended %s', 'it-l10n-ithemes-exchange' ), $end->format( $format ) ) );
+				} else {
+					echo esc_attr( sprintf( __( 'Ends %s', 'it-l10n-ithemes-exchange' ), $end->format( $format ) ) );
+				}
 			}
 
 			break;
