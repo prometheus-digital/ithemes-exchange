@@ -239,7 +239,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 				$message = sprintf( $message, reset( $names ) );
 			} else {
 				$message = __( "To use this coupon, add any of the following products to your cart: %s." );
-				$message = sprintf( $message, implode( ', ', $message ) );
+				$message = sprintf( $message, implode( ', ', $names ) );
 			}
 
 			it_exchange_add_message( 'error', $message );
