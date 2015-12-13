@@ -63,6 +63,9 @@ require( $this->_plugin_path . 'lib/shipping/class.shipping.php' );
 // Shortcodes
 require( $this->_plugin_path . 'lib/shortcodes/shortcodes.php' );
 
+// Upgrades
+require( $this->_plugin_path . 'lib/upgrades/load.php' );
+
 // Deprecated Features
 require( $this->_plugin_path . 'lib/deprecated/init.php' );
 
