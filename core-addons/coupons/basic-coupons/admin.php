@@ -365,7 +365,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 									<?php $form->add_text_box( 'quantity', array( 'type' => 'number' ) ); ?>
 									<span class="tip" title="<?php _e( 'How many times can this coupon be used before it is disabled?', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 
-									<?php if ( $coupon->get_total_uses() ): ?>
+									<?php if ( $coupon && $coupon->get_total_uses() ): ?>
 										<p class="description">
 											<?php printf( _n(
 												'This coupon has been used %d time.',
