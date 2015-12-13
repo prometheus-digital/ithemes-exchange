@@ -524,7 +524,6 @@ add_filter( 'manage_edit-it_exchange_coupon_columns', 'it_exchange_basic_coupons
 function it_exchange_basic_coupons_sortable_columns( $sortables ) {
 	$sortables['it_exchange_coupon_code']       = 'it-exchange-coupon-code';
 	$sortables['it_exchange_coupon_discount']   = 'it-exchange-coupon-discount';
-	$sortables['it_exchange_coupon_quantity']   = 'it-exchange-coupon-quantity';
 
 	return $sortables;
 }
@@ -606,7 +605,7 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 				$out_of = $coupon->get_allotted_quantity();
 			}
 
-			printf( '%d/%s', $coupon->get_total_uses(), $out_of );
+			printf( '%d &frasl; %s', $coupon->get_total_uses(), $out_of );
 
 			break;
 		case 'it_exchange_coupon_product_id':
