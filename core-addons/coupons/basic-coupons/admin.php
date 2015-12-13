@@ -579,6 +579,8 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 				} else {
 					echo esc_attr( sprintf( __( 'Ends %s', 'it-l10n-ithemes-exchange' ), $end->format( $format ) ) );
 				}
+			} else {
+				echo '&ndash;';
 			}
 
 			break;
