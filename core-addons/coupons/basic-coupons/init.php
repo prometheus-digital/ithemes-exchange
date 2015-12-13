@@ -217,7 +217,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	}
 
 	// Abort if product not in cart
-	if ( $coupon->is_product_limited() && ( it_exchange_get_cart_product_quantity_by_product_id( $coupon->product_id ) < 1 ) ) {
+	if ( $coupon->is_product_limited() ) {
 
 		$has_product = false;
 
