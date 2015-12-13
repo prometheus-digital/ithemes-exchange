@@ -43,10 +43,12 @@ class IT_Exchange_Coupon_Post_Type {
 	function init() {
 		$this->post_type = 'it_exchange_coupon';
 		$labels    = array(
-			'name'          => __( 'Coupons', 'it-l10n-ithemes-exchange' ),
-			'singular_name' => __( 'Coupon', 'it-l10n-ithemes-exchange' ),
-			'edit_item'     => __( 'Edit Coupon', 'it-l10n-ithemes-exchange' ),
-			'search_items'  => __( 'Search Coupons', 'it-l10n-ithemes-exchange' )
+			'name'               => __( 'Coupons', 'it-l10n-ithemes-exchange' ),
+			'singular_name'      => __( 'Coupon', 'it-l10n-ithemes-exchange' ),
+			'edit_item'          => __( 'Edit Coupon', 'it-l10n-ithemes-exchange' ),
+			'search_items'       => __( 'Search Coupons', 'it-l10n-ithemes-exchange' ),
+			'not_found'          => __( 'No coupons found.', 'it-l10n-ithemes-exchange' ),
+			'not_found_in_trash' => __( 'No coupons found in Trash.', 'it-l10n-ithemes-exchange' )
 		);
 
 		// We're not going to add this to the menu. Individual add-ons will need to do that.
