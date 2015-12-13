@@ -25,9 +25,11 @@ function it_exchange_basic_coupons_enqueue_js_css() {
 		// Enqueue JS / CSS based on current filter
 		if ( 'admin_print_scripts' == $current_filter ) {
 			// JS
-			$deps = array( 'jquery', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'jquery-ui-tabs' );
+			$deps = array( 'jquery', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'jquery-ui-tabs', 'it-exchange-select2' );
 			wp_enqueue_script( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-coupon.js', $deps );
-			wp_enqueue_script( 'it-exchange-select2' );
+			wp_localize_script( 'it-exchange-add-edit-coupon', 'IT_EXCHANGE', array(
+				'productPlaceholder' => __( 'Select a product', 'it-l10n-ithemes-exchange' )
+			) );
 		} else if ( 'admin_print_styles' == $current_filter ) {
 			// CSS
 			wp_enqueue_style( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/add-edit-coupon.css' );
@@ -443,7 +445,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 
 								<div class="field product-id">
 									<?php
-									$product_options = array( 0 => __( 'Select a product', 'it-l10n-ithemes-exchange' ) );
+									$product_options = array();
 									$products        = it_exchange_get_products( array( 'show_hidden' => true, 'posts_per_page' => -1 ) );
 									foreach( (array) $products as $id => $product ) {
 										$product_options[$product->ID] = $product->post_title;

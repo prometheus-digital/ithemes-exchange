@@ -37,8 +37,9 @@
 .it-exchange-add-basic-coupon .date input{width:120px;}
 .it-exchange-add-basic-coupon .quantity input{max-width:80px;text-align:right;}
 
-.select2-container {width: 400px !important;}
-.select2-container--focus .select2-selection--multiple {border: 1px solid #aaa !important;}
+.it-exchange-add-basic-coupon .select2-container {width: 400px !important;height: 67px !important;}
+.it-exchange-add-basic-coupon .select2-selection__rendered {margin-top: 4px !important;}
+.it-exchange-add-basic-coupon .select2-container--focus .select2-selection--multiple {border: 1px solid #aaa !important;}
 
 /** -----------------------------------------------------:[ advanced ]:---------- */
 .js #it_exchange_advanced-sortables .postbox{display:none;}

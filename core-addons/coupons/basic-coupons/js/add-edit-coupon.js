@@ -82,7 +82,9 @@ jQuery( document ).ready( function($) {
 	}
 	$('#limit-frequency').change(itExchangeBasicCouponsShowHideFrequency).triggerHandler("change");
 
-	$("#product-id").select2();
+	$("#product-id").select2( {
+		placeholder: IT_EXCHANGE.productPlaceholder
+	});
 
 	// init tabbed section
 	$( '#it-exchange-advanced-tabs' ).tabs();
