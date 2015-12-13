@@ -158,7 +158,7 @@ function it_exchange_basic_coupons_data_is_valid() {
 		it_exchange_add_message( 'error', __( 'Coupon Discount must be a postive number', 'it-l10n-ithemes-exchange' ) );
 	if ( ! empty( $data['limit-quantity'] ) && ! is_numeric( $data['quantity'] ) )
 		it_exchange_add_message( 'error', __( 'Available Coupons must be a number', 'it-l10n-ithemes-exchange' ) );
-	if ( ! empty( $data['limit-product'] ) && ! it_exchange_get_product( $data['product-id'] ) )
+	if ( ! empty( $data['limit-product'] ) && empty( $data['product-id'] ) )
 		it_exchange_add_message( 'error', __( 'Please select a product.', 'it-l10n-ithemes-exchange' ) );
 	if ( ! empty( $data['limit-frequency'] ) && ! is_numeric( $data['frequency-times'] ) && ! is_numeric( $data['frequency-length'] ) )
 		it_exchange_add_message( 'error', __( 'Please select a frequency limitation', 'it-l10n-ithemes-exchange' ) );
@@ -259,7 +259,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		$values['limit-quantity']   = $coupon->is_quantity_limited();
 		$values['quantity']         = $coupon->get_remaining_quantity();
 		$values['limit-product']    = $coupon->is_product_limited();
-		$values['product-id']       = $coupon->product_id; // for now
+		$values['product-id']       = $coupon->get_limited_products(); // for now
 		$values['limit-frequency']  = $coupon->is_frequency_limited();
 		$values['frequency-times']  = $coupon->get_frequency_times();
 		$values['frequency-length'] = $coupon->get_frequency_length();
@@ -435,7 +435,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 										$product_options[$product->ID] = $product->post_title;
 									}
 									?>
-									<?php $form->add_drop_down( 'product-id', $product_options ); ?>
+									<?php $form->add_drop_down( 'product-id[]', array( 'value' => $product_options, 'multiple' => true ) ); ?>
 								</div>
 							</div>
 						</div>

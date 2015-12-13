@@ -135,6 +135,16 @@ class IT_Exchange_Product {
 	}
 
 	/**
+	 * The __toString method allows a class to decide how it will react when it is converted to a string.
+	 *
+	 * @return string
+	 * @link http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.tostring
+	 */
+	public function __toString() {
+		return (string) $this->ID;
+	}
+
+	/**
 	 * Sets the product_type property.
 	 *
 	 * If the custom value is already set, it uses that.

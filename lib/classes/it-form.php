@@ -2,7 +2,7 @@
 
 /*
 Written by Chris Jean for iThemes.com
-Version 2.7.1
+Version 2.7.2
 
 Version History
 	2.0.0 - 2011-02-22 - Chris Jean
@@ -35,6 +35,9 @@ Version History
 		Updated get_option(), set_option(), and _get_simple_input() to handle input groups properly.
 	2.7.1 - 2015-07-10 - Chris Jean
 		Fixed bug that prevents dropdowns with nested options from defaulting to the current value properly.
+	2.7.2 - 2015-11-30 - Chris Jean
+		Updated handling of select inputs to allow for arrays of existing values so that selects with the multiple
+			attribute can be supported.
 
 Notes:
 	Need to fix $this->_var support or handle used_inputs better
@@ -722,6 +725,14 @@ if ( ! class_exists( 'ITForm' ) ) {
 				$retval = "<select $attributes>\n";
 				
 				if ( isset( $options['value'] ) && is_array( $options['value'] ) ) {
+					if ( is_array( $val ) ) {
+						foreach ( $val as $index => $value ) {
+							$val[$index] = (string) $value;
+						}
+					} else if ( ! is_null( $val ) ) {
+						$val = array( (string) $val );
+					}
+					
 					foreach ( (array) $options['value'] as $content => $name ) {
 						if ( is_array( $name ) ) {
 							if ( preg_match( '/^__optgroup_\d+$/', $content ) ) {
@@ -731,14 +742,14 @@ if ( ! class_exists( 'ITForm' ) ) {
 							}
 							
 							foreach ( (array) $name as $content => $sub_name ) {
-								$selected = ( ! is_null( $val ) && ( (string) $val === (string) $content ) ) ? ' selected="selected"' : '';
+								$selected = ( ! is_null( $val ) && in_array( (string) $content, $val ) ) ? ' selected="selected"' : '';
 								$retval .= "<option value=\"" . ITForm::esc_value_attr( $content ) . "\"$selected>$sub_name</option>\n";
 							}
 							
 							$retval .= "</optgroup>\n";
 						}
 						else {
-							$selected = ( ! is_null( $val ) && ( (string) $val === (string) $content ) ) ? ' selected="selected"' : '';
+							$selected = ( ! is_null( $val ) && in_array( (string) $content, $val ) ) ? ' selected="selected"' : '';
 							$retval .= "<option value=\"" . ITForm::esc_value_attr( $content ) . "\"$selected>$name</option>\n";
 						}
 					}
