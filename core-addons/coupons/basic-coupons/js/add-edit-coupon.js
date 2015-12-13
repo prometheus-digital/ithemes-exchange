@@ -82,6 +82,8 @@ jQuery( document ).ready( function($) {
 	}
 	$('#limit-frequency').change(itExchangeBasicCouponsShowHideFrequency).triggerHandler("change");
 
+	$("#product-id").select2();
+
 	// init tabbed section
 	$( '#it-exchange-advanced-tabs' ).tabs();
 

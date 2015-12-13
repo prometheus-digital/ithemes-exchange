@@ -1503,6 +1503,7 @@ Order: %s
 
 		wp_register_script( 'it-exchange-dialog', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tips.js', array( 'jquery-ui-dialog' ) );
 		wp_register_script( 'ithemes-chartjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/Chart.min.js', array( 'jquery' ), '0.2', true );
+		wp_register_script( 'it-exchange-select2', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/select2.min.js', array( 'jquery' ), '4.0.1', true );
 		
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			$deps = array( 'post', 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'autosave', 'it-exchange-dialog' );
@@ -1582,6 +1583,8 @@ Order: %s
 			else
 				$post_type = NULL;
 		}
+
+		wp_register_style( 'it-exchange-select2', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/select2.min.css', array(), '4.0.1' );
 
 		// All WP Admin pages
 		wp_enqueue_style( 'it-exchange-wp-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/wp-admin.css' );

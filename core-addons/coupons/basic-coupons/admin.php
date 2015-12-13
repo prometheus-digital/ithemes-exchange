@@ -27,9 +27,11 @@ function it_exchange_basic_coupons_enqueue_js_css() {
 			// JS
 			$deps = array( 'jquery', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'jquery-ui-tabs' );
 			wp_enqueue_script( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-coupon.js', $deps );
+			wp_enqueue_script( 'it-exchange-select2' );
 		} else if ( 'admin_print_styles' == $current_filter ) {
 			// CSS
 			wp_enqueue_style( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/add-edit-coupon.css' );
+			wp_enqueue_style( 'it-exchange-select2' );
 		}
 	}
 }
