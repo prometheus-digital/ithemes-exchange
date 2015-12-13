@@ -596,6 +596,12 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 
 			if ( ! $coupon->is_product_limited() ) {
 				esc_attr_e( 'All Products', 'it-l10n-ithemes-exchange' );
+			} elseif ( count( $coupon->get_limited_products() ) === 1 ) {
+				$products = $coupon->get_limited_products();
+
+				$product = reset( $products );
+
+				echo esc_attr( $product->post_title );
 			} else {
 
 				$product_names = array();
@@ -604,7 +610,10 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 					$product_names[] = $product->post_title;
 				}
 
-				esc_attr_e( implode( ', ', $product_names ) );
+				$tip = implode( ', ', $product_names );
+
+				esc_attr_e( 'Multiple', 'it-l10n-ithemes-exchange' );
+				echo "<span class='tip' title='$tip'>i</span>";
 			}
 			break;
 		case 'it_exchange_coupon_customer':
