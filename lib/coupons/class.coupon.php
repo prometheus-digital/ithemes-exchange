@@ -195,6 +195,17 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	}
 
 	/**
+	 * Get the total uses of this coupon.
+	 *
+	 * @since 1.33
+	 *
+	 * @return int
+	 */
+	public function get_total_uses() {
+		return count( $this->get_uses() );
+	}
+
+	/**
 	 * Record that this coupon was used by a transaction.
 	 *
 	 * @since 1.33

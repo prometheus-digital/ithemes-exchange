@@ -274,6 +274,24 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	}
 
 	/**
+	 * Get the total coupons allotted.
+	 *
+	 * @since 1.33
+	 *
+	 * @return int
+	 */
+	public function get_allotted_quantity() {
+
+		$quantity = (int) get_post_meta( $this->get_ID(), '_it-basic-allotted-quantity', true );
+
+		if ( ! $quantity && $this->is_quantity_limited() ) {
+			$quantity = $this->get_remaining_quantity();
+		}
+
+		return $quantity;
+	}
+
+	/**
 	 * Is this coupon product limited.
 	 *
 	 * @since 1.33

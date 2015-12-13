@@ -92,21 +92,21 @@ function it_exchange_basic_coupons_save_coupon() {
 	$msg = empty( $data['ID'] ) ? 'added' : 'updated';
 
 	// Convert code, amount-number, amount-type, start-date, end-date to meta
-	$data['post_meta']['_it-basic-code']             = $data['code'];
-	$data['post_meta']['_it-basic-amount-number']    = it_exchange_convert_to_database_number( $data['amount-number'] );
-	$data['post_meta']['_it-basic-amount-type']      = $data['amount-type'];
-	$data['post_meta']['_it-basic-start-date']       = $data['start-date'];
-	$data['post_meta']['_it-basic-end-date']         = $data['end-date'];
-	$data['post_meta']['_it-basic-limit-quantity']   = $data['limit-quantity'];
-	$data['post_meta']['_it-basic-quantity']         = $data['quantity'];
-	$data['post_meta']['_it-basic-limit-product']    = $data['limit-product'];
-	$data['post_meta']['_it-basic-product-id']       = $data['product-id'];
-	$data['post_meta']['_it-basic-limit-frequency']  = $data['limit-frequency'];
-	$data['post_meta']['_it-basic-frequency-times']  = $data['frequency-times'];
-	$data['post_meta']['_it-basic-frequency-length'] = $data['frequency-length'];
-	$data['post_meta']['_it-basic-frequency-units']  = $data['frequency-units'];
-	$data['post_meta']['_it-basic-customer']         = $data['customer'];
-	$data['post_meta']['_it-basic-limit-customer']   = $data['limit-customer'];
+	$data['post_meta']['_it-basic-code']              = $data['code'];
+	$data['post_meta']['_it-basic-amount-number']     = it_exchange_convert_to_database_number( $data['amount-number'] );
+	$data['post_meta']['_it-basic-amount-type']       = $data['amount-type'];
+	$data['post_meta']['_it-basic-start-date']        = $data['start-date'];
+	$data['post_meta']['_it-basic-end-date']          = $data['end-date'];
+	$data['post_meta']['_it-basic-limit-quantity']    = $data['limit-quantity'];
+	$data['post_meta']['_it-basic-allotted-quantity'] = $data['quantity'];
+	$data['post_meta']['_it-basic-limit-product']     = $data['limit-product'];
+	$data['post_meta']['_it-basic-product-id']        = $data['product-id'];
+	$data['post_meta']['_it-basic-limit-frequency']   = $data['limit-frequency'];
+	$data['post_meta']['_it-basic-frequency-times']   = $data['frequency-times'];
+	$data['post_meta']['_it-basic-frequency-length']  = $data['frequency-length'];
+	$data['post_meta']['_it-basic-frequency-units']   = $data['frequency-units'];
+	$data['post_meta']['_it-basic-customer']          = $data['customer'];
+	$data['post_meta']['_it-basic-limit-customer']    = $data['limit-customer'];
 	unset( $data['code'] );
 	unset( $data['amount-number'] );
 	unset( $data['amount-type'] );
@@ -259,7 +259,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		$values['start-date']       = $coupon->get_start_date() ? $coupon->get_start_date()->format( 'm/d/Y' ) : '';
 		$values['end-date']         = $coupon->get_end_date() ? $coupon->get_end_date()->format( 'm/d/Y' ) : '';
 		$values['limit-quantity']   = $coupon->is_quantity_limited();
-		$values['quantity']         = $coupon->get_remaining_quantity();
+		$values['quantity']         = $coupon->get_allotted_quantity();
 		$values['limit-product']    = $coupon->is_product_limited();
 		$values['product-id']       = $coupon->get_limited_products(); // for now
 		$values['limit-frequency']  = $coupon->is_frequency_limited();
@@ -364,6 +364,18 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 								<div class="field quantity">
 									<?php $form->add_text_box( 'quantity', array( 'type' => 'number' ) ); ?>
 									<span class="tip" title="<?php _e( 'How many times can this coupon be used before it is disabled?', 'it-l10n-ithemes-exchange' ); ?>">i</span>
+
+									<?php if ( $coupon->get_total_uses() ): ?>
+										<p class="description">
+											<?php printf( _n(
+												'This coupon has been used %d time.',
+												'This coupon has been used %d times.',
+												$coupon->get_total_uses(),
+												'it-l10n-ithemes-exchange'),
+												$coupon->get_total_uses()
+											); ?>
+										</p>
+									<?php endif; ?>
 								</div>
 							</div>
 						</div>
@@ -492,7 +504,7 @@ function it_exchange_basic_coupons_product_columns( $existing ) {
 	$columns['it_exchange_coupon_code']       = __( 'Coupon Code', 'it-l10n-ithemes-exchange' );
 	$columns['it_exchange_coupon_discount']   = __( 'Discount', 'it-l10n-ithemes-exchange' );
 	$columns['it_exchange_coupon_date']       = __( 'Availability', 'it-l10n-ithemes-exchange' );
-	$columns['it_exchange_coupon_quantity']   = __( 'Quantity', 'it-l10n-ithemes-exchange' );
+	$columns['it_exchange_coupon_quantity']   = __( 'Uses', 'it-l10n-ithemes-exchange' );
 	$columns['it_exchange_coupon_product_id'] = __( 'Product', 'it-l10n-ithemes-exchange' );
 	$columns['it_exchange_coupon_customer']   = __( 'Customer', 'it-l10n-ithemes-exchange' );
 
@@ -587,12 +599,13 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 		case 'it_exchange_coupon_quantity':
 
 			if ( ! $coupon->is_quantity_limited() ) {
-				$quantity_label = __( 'Unlimited', 'it-l10n-ithemes-exchange' );
+				$out_of = '&infin;';
 			} else {
-				$quantity_label = $coupon->get_remaining_quantity();
+				$out_of = $coupon->get_allotted_quantity();
 			}
 
-			esc_attr_e( $quantity_label );
+			printf( '%d/%s', $coupon->get_total_uses(), $out_of );
+
 			break;
 		case 'it_exchange_coupon_product_id':
 
