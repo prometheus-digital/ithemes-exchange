@@ -816,7 +816,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 
 			if ( empty( $exchange_txn_id ) ) {
 
-				$transient_data = it_exchange_get_transient_transaction( 'pps', $request['txn_id'] );
+				$transient_data = it_exchange_get_transient_transaction( 'pps', $request['custom'] );
 
 				$method_id = $request['txn_id'];
 				$customer = $transient_data['customer_id'];
@@ -824,6 +824,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 				$cart = $transient_data['transaction_object'];
 
 				it_exchange_add_transaction( 'paypal-standard', $method_id, $status, $customer, $cart );
+				it_exchange_update_transient_transaction( 'pps', $tmp_txn_id, $customer, $cart, $txn_id );
 
 				return;
 			}

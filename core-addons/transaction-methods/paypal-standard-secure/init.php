@@ -972,15 +972,16 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 
 			if ( empty( $exchange_txn_id ) ) {
 
-				$transient_data = it_exchange_get_transient_transaction( 'ppss', $request['txn_id'] );
+				$transient_data = it_exchange_get_transient_transaction( 'ppss', $request['custom'] );
 
 				$method_id = $request['txn_id'];
 				$customer = $transient_data['customer_id'];
 				$status = $request['payment_status'];
 				$cart = $transient_data['transaction_object'];
 
-				it_exchange_add_transaction( 'paypal-standard-secure', $method_id, $status, $customer, $cart );
+				$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $method_id, $status, $customer, $cart );
 
+				it_exchange_update_transient_transaction( 'ppss', $tmp_txn_id, $customer, $cart, $txn_id );
 				return;
 			}
 
