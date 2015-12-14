@@ -395,6 +395,8 @@ class IT_Exchange_Admin {
 			$settings_callback = apply_filters( 'it_exchange_general_settings_tab_callback_' . $this->_current_tab, $settings_callback );
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->get_admin_menu_capability( 'it-exchange-settings' ), 'it-exchange-settings', $settings_callback );
 
+		add_submenu_page( 'it-exchange', 'iThemes Exchange Tools', 'Tools', $this->get_admin_menu_capability( 'it-exchange-tools' ), 'it-exchange-tools', array( $this, 'print_tools_page' ) );
+
 		// Add Add-ons menu item
 		$add_ons_callback = array( $this, 'print_exchange_add_ons_page' );
 		if ( 'it-exchange-addons' == $this->_current_page && ! empty( $this->_current_tab ) ) {
@@ -587,6 +589,13 @@ class IT_Exchange_Admin {
 	*/
 	function print_help_page() {
 		include( 'views/admin-help.php' );
+	}
+
+	/**
+	 * Print the tools page.
+	 */
+	function print_tools_page() {
+		include dirname( __FILE__ ) . '/views/admin-tools.php';
 	}
 
 	/**
