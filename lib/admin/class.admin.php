@@ -1560,7 +1560,11 @@ Order: %s
 		} else if ( 'exchange_page_it-exchange-help' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip' );
 			wp_enqueue_script( 'it-exchange-help', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/help.js', $deps );
+		} else if ( 'exchange_page_it-exchange-tools' === $hook_suffix ) {
+			$deps = array( 'jquery-ui-core' );
+			wp_enqueue_script('it-exchange-tools', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tools.js', $deps );
 		}
+
 		do_action( 'it_exchange_admin_wp_enqueue_scripts', $hook_suffix, $post_type );
 	}
 
@@ -1624,6 +1628,8 @@ Order: %s
 			wp_enqueue_style( 'it-exchange-dashboard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/dashboard.css' );
 		} else if ( 'exchange_page_it-exchange-help' === $hook_suffix ) {
 			wp_enqueue_style( 'it-exchange-help', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/help.css' );
+		} else if ( 'exchange_page_it-exchange-tools' === $hook_suffix ) {
+			wp_enqueue_style('it-exchange-tools', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/tools.css' );
 		}
 		do_action( 'it_exchange_admin_wp_enqueue_styles', $hook_suffix, $post_type );
 	}
