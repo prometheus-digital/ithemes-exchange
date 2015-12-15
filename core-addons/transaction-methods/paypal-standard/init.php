@@ -899,8 +899,6 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 			}
 		}
 
-		it_exchange_release_lock( "pps-$tmp_txn_id" );
-
 		switch ( $request['txn_type'] ) {
 
 			case 'subscr_payment':
@@ -957,6 +955,10 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 				it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'deactivated' );
 				break;
 
+		}
+
+		if ( $tmp_txn_id ) {
+			it_exchange_release_lock( "pps-$tmp_txn_id" );
 		}
 
 	} else {
