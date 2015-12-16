@@ -81,12 +81,12 @@ class IT_Exchange_Upgrade_Handler_Ajax {
 		 * @param int                          $rate
 		 * @param IT_Exchange_UpgradeInterface $upgrade
 		 */
-		$rate = apply_filters( 'it_exchange_ajax_upgrade_rate', 10, $upgrade );
+		$rate = apply_filters( 'it_exchange_ajax_upgrade_rate', 1, $upgrade );
 
 		wp_send_json_success( array(
 			'slug'      => $upgrade->get_slug(),
 			'itemCount' => $upgrade->get_total_records_to_process(),
-			'rate'      => $rate
+			'rate'      => absint( $rate )
 		) );
 	}
 

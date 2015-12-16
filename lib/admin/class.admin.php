@@ -1563,6 +1563,11 @@ Order: %s
 		} else if ( 'exchange_page_it-exchange-tools' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-core' );
 			wp_enqueue_script('it-exchange-tools', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tools.js', $deps );
+			wp_localize_script( 'it-exchange-tools', 'EXCHANGE', array(
+				'nonce' => wp_create_nonce( 'it-exchange-upgrade' ),
+				'viewDetails' => __( 'View Details', 'it-l10n-ithemes-exchange' ),
+				'hideDetails' => __( 'Hide Details', 'it-l10n-ithemes-exchange' )
+			));
 		}
 
 		do_action( 'it_exchange_admin_wp_enqueue_scripts', $hook_suffix, $post_type );

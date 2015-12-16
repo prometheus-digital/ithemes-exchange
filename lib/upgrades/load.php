@@ -15,8 +15,12 @@ require_once dirname( __FILE__ ) . '/interface.upgrade.php';
 require_once dirname( __FILE__ ) . '/class.upgrader.php';
 require_once dirname( __FILE__ ) . '/functions.php';
 
+// load skins and handlers
 require_once dirname( __FILE__ ) . '/skins/class.ajax.php';
 require_once dirname( __FILE__ ) . '/handlers/class.ajax.php';
+
+// load routines
+require_once dirname( __FILE__ ) . '/routines/class.coupons.php';
 
 if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 	$ajax_handler = new IT_Exchange_Upgrade_Handler_Ajax( it_exchange_make_upgrader() );
