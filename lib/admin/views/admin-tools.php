@@ -23,6 +23,7 @@ $upgrader = it_exchange_make_upgrader();
 			<?php
 			$completed = $upgrader->is_upgrade_completed( $upgrade ) ? ' completed' : '';
 			$partial   = $upgrader->is_upgrade_in_progress( $upgrade ) ? ' in-progress' : '';
+			$button    = $partial ? 'button-primary' : 'button-secondary';
 			?>
 
 			<div class="upgrade-row<?php echo $completed . $partial; ?>" data-upgrade="<?php echo $upgrade->get_slug(); ?>">
@@ -31,7 +32,7 @@ $upgrader = it_exchange_make_upgrader();
 
 				<?php if ( ! $completed ) : ?>
 
-					<button class="button button-secondary">
+					<button class="button <?php echo $button; ?>">
 
 						<?php if ( $partial ) : ?>
 							<?php _e( 'Resume', 'it-l10n-ithemes-exchange' ); ?>
