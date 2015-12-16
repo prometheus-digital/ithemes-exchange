@@ -64,6 +64,10 @@
 	margin-bottom: 1em;
 }
 
+.upgrades-container .upgrade-row.completed p {
+	margin-bottom: 0;
+}
+
 .upgrades-container .upgrade-row button {
 	display: block;
 }
