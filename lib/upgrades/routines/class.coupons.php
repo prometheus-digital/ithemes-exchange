@@ -87,6 +87,19 @@ class IT_Exchange_Upgrade_Routine_Coupons implements IT_Exchange_UpgradeInterfac
 	 */
 	public function upgrade( IT_Exchange_Upgrade_Config $config, IT_Exchange_Upgrade_SkinInterface $skin ) {
 
+		$coupons = it_exchange_get_coupons( array(
+			'posts_per_page' => $config->get_number(),
+			'paged'          => $config->get_step(),
+			'meta_query'     => array(
+				'key'     => '_it-basic-code',
+				'compare' => 'EXISTS'
+			)
+		) );
+
+		foreach ( $coupons as $coupon ) {
+			$skin->debug( $coupon->post_title );
+		}
+
 		$skin->tick( $config->get_number() );
 
 		sleep( 2 );
