@@ -17,6 +17,7 @@ function it_exchange_make_upgrader() {
 
 	$upgrader = new IT_Exchange_Upgrader();
 	$upgrader->add_upgrade( new IT_Exchange_Upgrade_Routine_Coupons() );
+	$upgrader->add_upgrade( new IT_Exchange_Upgrade_Routine_Demo() );
 
 	/**
 	 * Fires when upgrade routines should be attached to the upgrader.

@@ -18,43 +18,34 @@ $upgrader = it_exchange_make_upgrader();
 
 	<div class="upgrades-container">
 
-		<?php foreach ( $upgrader->get_available_upgrades() as $upgrade ): ?>
+		<?php foreach ( $upgrader->get_upgrades( true ) as $upgrade ): ?>
 
-			<div class="upgrade-row" data-upgrade="<?php echo $upgrade->get_slug(); ?>">
+			<?php $completed = $upgrader->is_upgrade_completed( $upgrade ) ? ' completed' : ''; ?>
+
+			<div class="upgrade-row<?php echo $completed; ?>" data-upgrade="<?php echo $upgrade->get_slug(); ?>">
 				<h3><?php echo $upgrade->get_name(); ?></h3>
 				<p class="description"><?php echo $upgrade->get_description(); ?></p>
-				<button class="button button-secondary"><?php _e( 'Upgrade', 'it-l10n-ithemes-exchange' ); ?></button>
 
-				<div class="upgrade-progress">
-					<a href="javascript:"><?php _e( 'View Details', 'it-l10n-ithemes-exchange' ); ?></a>
-					<progress value="0" max="100"></progress>
-				</div>
+				<?php if ( ! $completed ) : ?>
 
-				<div class="upgrade-feedback">
-					<label for="upgrade-feedback-<?php echo $upgrade->get_slug(); ?>" class="screen-reader-text">
-						<?php _e( 'Upgrade Feedback', 'it-l10n-ithemes-exchange' ); ?>
-					</label>
-					<textarea readonly id="upgrade-feedback-<?php echo $upgrade->get_slug(); ?>"></textarea>
-				</div>
+					<button class="button button-secondary"><?php _e( 'Upgrade', 'it-l10n-ithemes-exchange' ); ?></button>
+
+					<div class="upgrade-progress">
+						<a href="javascript:"><?php _e( 'View Details', 'it-l10n-ithemes-exchange' ); ?></a>
+						<progress value="0" max="100"></progress>
+					</div>
+
+					<div class="upgrade-feedback">
+						<label for="upgrade-feedback-<?php echo $upgrade->get_slug(); ?>" class="screen-reader-text">
+							<?php _e( 'Upgrade Feedback', 'it-l10n-ithemes-exchange' ); ?>
+						</label>
+						<textarea readonly id="upgrade-feedback-<?php echo $upgrade->get_slug(); ?>"></textarea>
+					</div>
+
+				<?php endif; ?>
 			</div>
 
 		<?php endforeach; ?>
-
-		<div class="upgrade-row">
-			<h3>Orders</h3>
-			<p class="description">This is a description of the orders upgrade.</p>
-			<button class="button button-secondary">Upgrade</button>
-
-			<div class="upgrade-progress">
-				<a href="javascript:">View Details</a>
-				<progress value="10" max="100"></progress>
-			</div>
-
-			<div class="upgrade-feedback">
-				<label for="upgrade-feedback-{upgrade}" class="screen-reader-text">Upgrade Feedback</label>
-				<textarea readonly id="upgrade-feedback-{upgrade}">This is some feedback</textarea>
-			</div>
-		</div>
 	</div>
 
 </div>

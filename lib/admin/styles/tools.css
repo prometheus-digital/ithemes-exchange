@@ -17,6 +17,14 @@
 	overflow: hidden;
 	padding: 30px;
 	border-bottom: 1px solid #CCC;
+	background: none;
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
+}
+
+.upgrades-container .upgrade-row.completed {
+	background: #ececec;
 }
 
 .upgrades-container .upgrade-row h3 {
