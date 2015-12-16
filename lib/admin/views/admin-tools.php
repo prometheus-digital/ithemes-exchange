@@ -20,15 +20,25 @@ $upgrader = it_exchange_make_upgrader();
 
 		<?php foreach ( $upgrader->get_upgrades( true ) as $upgrade ): ?>
 
-			<?php $completed = $upgrader->is_upgrade_completed( $upgrade ) ? ' completed' : ''; ?>
+			<?php
+			$completed = $upgrader->is_upgrade_completed( $upgrade ) ? ' completed' : '';
+			$partial   = $upgrader->is_upgrade_in_progress( $upgrade ) ? ' in-progress' : '';
+			?>
 
-			<div class="upgrade-row<?php echo $completed; ?>" data-upgrade="<?php echo $upgrade->get_slug(); ?>">
+			<div class="upgrade-row<?php echo $completed . $partial; ?>" data-upgrade="<?php echo $upgrade->get_slug(); ?>">
 				<h3><?php echo $upgrade->get_name(); ?></h3>
 				<p class="description"><?php echo $upgrade->get_description(); ?></p>
 
 				<?php if ( ! $completed ) : ?>
 
-					<button class="button button-secondary"><?php _e( 'Upgrade', 'it-l10n-ithemes-exchange' ); ?></button>
+					<button class="button button-secondary">
+
+						<?php if ( $partial ) : ?>
+							<?php _e( 'Resume', 'it-l10n-ithemes-exchange' ); ?>
+						<?php else: ?>
+							<?php _e( 'Upgrade', 'it-l10n-ithemes-exchange' ); ?>
+						<?php endif; ?>
+					</button>
 
 					<div class="upgrade-progress">
 						<a href="javascript:"><?php _e( 'View Details', 'it-l10n-ithemes-exchange' ); ?></a>
