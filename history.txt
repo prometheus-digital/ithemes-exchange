@@ -1197,3 +1197,10 @@
 	Fix: Adding categories from the edit product page
 	Fix: Update the transaction status property when the status changes
 	Fix: Ensure comment and ping status is closed. WordPress 4.4 compatibility
+1.32.1 - Lew Ayotte, Elise Alley, Timothy B. Jacobs
+	Tweak: PayPal Locking Mechanism Updates
+	Fix: Create transactions for web_accept in PayPal during IPN, if necessary
+	Fix: Adding user nickname/nicename to Profile loop template, required in
+	WP4.4 now
+	Fix: DBSessions, esnure sessiosn IDs are valid MD5 hash
+	Minor: CSS updates
