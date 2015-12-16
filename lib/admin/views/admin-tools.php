@@ -22,7 +22,7 @@ $upgrader = it_exchange_make_upgrader();
 
 			<?php
 			$completed = $upgrader->is_upgrade_completed( $upgrade ) ? ' completed' : '';
-			$partial   = $upgrader->is_upgrade_in_progress( $upgrade ) ? ' in-progress' : '';
+			$partial   = ! $completed && $upgrader->is_upgrade_in_progress( $upgrade ) ? ' in-progress' : '';
 			$button    = $partial ? 'button-primary' : 'button-secondary';
 			?>
 
