@@ -56,6 +56,19 @@ class IT_Exchange_Upgrade_Routine_Coupons implements IT_Exchange_UpgradeInterfac
 	}
 
 	/**
+	 * Get the group this upgrade belongs to.
+	 *
+	 * Example 'Core' or 'Membership'.
+	 *
+	 * @since 1.33
+	 *
+	 * @return string
+	 */
+	public function get_group() {
+		return __( 'Core', 'it-l10n-ithemes-exchange' );
+	}
+
+	/**
 	 * Get the total records needed to be processed for this upgrade.
 	 *
 	 * This is used to build the upgrade UI.

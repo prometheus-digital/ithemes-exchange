@@ -27,7 +27,12 @@ $upgrader = it_exchange_make_upgrader();
 			?>
 
 			<div class="upgrade-row<?php echo $completed . $partial; ?>" data-upgrade="<?php echo $upgrade->get_slug(); ?>">
-				<h3><?php echo $upgrade->get_name(); ?></h3>
+
+				<header>
+					<h3><?php echo $upgrade->get_name(); ?></h3>
+					<h4><?php echo $upgrade->get_group() . ' &ndash; v' . $upgrade->get_version(); ?></h4>
+				</header>
+
 				<p class="description"><?php echo $upgrade->get_description(); ?></p>
 
 				<?php if ( ! $completed ) : ?>

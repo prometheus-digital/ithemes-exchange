@@ -56,6 +56,19 @@ class IT_Exchange_Upgrade_Routine_Demo implements IT_Exchange_UpgradeInterface {
 	}
 
 	/**
+	 * Get the group this upgrade belongs to.
+	 *
+	 * Example 'Core' or 'Membership'.
+	 *
+	 * @since 1.33
+	 *
+	 * @return string
+	 */
+	public function get_group() {
+		return __( 'Membership', 'it-l10n-ithemes-exchange' );
+	}
+
+	/**
 	 * Get the total records needed to be processed for this upgrade.
 	 *
 	 * This is used to build the upgrade UI.

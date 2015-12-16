@@ -48,6 +48,17 @@ interface IT_Exchange_UpgradeInterface {
 	public function get_description();
 
 	/**
+	 * Get the group this upgrade belongs to.
+	 *
+	 * Example 'Core' or 'Membership'.
+	 *
+	 * @since 1.33
+	 *
+	 * @return string
+	 */
+	public function get_group();
+
+	/**
 	 * Get the total records needed to be processed for this upgrade.
 	 *
 	 * This is used to build the upgrade UI.

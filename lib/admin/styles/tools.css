@@ -31,12 +31,36 @@
 	background: rgba(140, 197, 62, .2);
 }
 
+.upgrades-container .upgrade-row header {
+	margin-bottom: 7px;
+}
+
+.upgrades-container .upgrade-row header * {
+	margin: 0;
+	padding: 0;
+}
+
+.upgrades-container .upgrade-row header:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
 .upgrades-container .upgrade-row h3 {
-	margin-top: 0;
-	margin-bottom: .5em;
+	float: left;
+}
+
+.upgrades-container .upgrade-row h4 {
+	float: right;
+	background: #d7dde2;
+	color: #494f53;
+	border-radius: 3px;
+	padding: 3px 6px 4px;
 }
 
 .upgrades-container .upgrade-row p {
+	margin-top: 0;
+	padding-top: 0;
 	margin-bottom: 1em;
 }
 
