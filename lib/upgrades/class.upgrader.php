@@ -56,6 +56,19 @@ class IT_Exchange_Upgrader {
 	}
 
 	/**
+	 * Get an upgrade object by it's slug.
+	 *
+	 * @since 1.33
+	 *
+	 * @param string $slug
+	 *
+	 * @return IT_Exchange_UpgradeInterface|null
+	 */
+	public function get_upgrade( $slug ) {
+		return isset( $this->upgrades[ $slug ] ) ? $this->upgrades[ $slug ] : null;
+	}
+
+	/**
 	 * Get available upgrades.
 	 *
 	 * @since 1.33
