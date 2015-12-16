@@ -82,7 +82,7 @@ class IT_Exchange_Upgrade_Handler_Ajax {
 		 * @param int                          $rate
 		 * @param IT_Exchange_UpgradeInterface $upgrade
 		 */
-		$rate = apply_filters( 'it_exchange_ajax_upgrade_rate', 1, $upgrade );
+		$rate = apply_filters( 'it_exchange_ajax_upgrade_rate', 5, $upgrade );
 
 		$this->upgrader->begin( $upgrade );
 

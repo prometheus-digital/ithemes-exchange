@@ -144,6 +144,7 @@ class IT_Exchange_Upgrade_Routine_Coupons implements IT_Exchange_UpgradeInterfac
 		}
 
 		$skin->debug( 'Upgraded Coupon: ' . $coupon->get_code() );
+		$skin->debug( '' );
 	}
 
 	/**
