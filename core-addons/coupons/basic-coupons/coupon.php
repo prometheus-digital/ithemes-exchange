@@ -226,6 +226,22 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	}
 
 	/**
+	 * Set the coupon start date.
+	 *
+	 * @since 1.33
+	 *
+	 * @param DateTime|null $start
+	 */
+	public function set_start_date( DateTime $start = null ) {
+
+		if ( $start ) {
+			update_post_meta( $this->get_ID(), '_it-basic-start-date', $start->format( 'Y-m-d H:i:s' ) );
+		} else {
+			delete_post_meta( $this->get_ID(), '_it-basic-start-date' );
+		}
+	}
+
+	/**
 	 * Get the coupon end date.
 	 *
 	 * @since 1.33
@@ -245,6 +261,22 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 		}
 		catch ( Exception $e ) {
 			return null;
+		}
+	}
+
+	/**
+	 * Set the coupon end date.
+	 *
+	 * @since 1.33
+	 *
+	 * @param DateTime $end
+	 */
+	public function set_end_date( DateTime $end = null ) {
+
+		if ( $end ) {
+			update_post_meta( $this->get_ID(), '_it-basic-end-date', $end->format( 'Y-m-d H:i:s' ) );
+		} else {
+			delete_post_meta( $this->get_ID(), '_it-basic-end-date' );
 		}
 	}
 
@@ -289,6 +321,17 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 		}
 
 		return $quantity;
+	}
+
+	/**
+	 * Set the allotted coupon quantity.
+	 *
+	 * @since 1.33
+	 *
+	 * @param int $quantity
+	 */
+	public function set_allotted_quantity( $quantity ) {
+		update_post_meta( $this->get_ID(), '_it-basic-allotted-quantity', (int) $quantity );
 	}
 
 	/**
