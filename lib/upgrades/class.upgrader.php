@@ -170,10 +170,13 @@ class IT_Exchange_Upgrader {
 	 */
 	public function begin( IT_Exchange_UpgradeInterface $upgrade ) {
 
-		$in_progress   = $this->get_upgrades_in_progress();
-		$in_progress[] = $upgrade->get_slug();
+		$in_progress = $this->get_upgrades_in_progress();
 
-		update_option( 'it_exchange_upgrades_in_progress', $in_progress );
+		if ( ! array_search( $upgrade->get_slug(), $in_progress, true ) ) {
+			$in_progress[] = $upgrade->get_slug();
+
+			update_option( 'it_exchange_upgrades_in_progress', $in_progress );
+		}
 
 		return $this;
 	}
