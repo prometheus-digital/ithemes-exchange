@@ -134,21 +134,37 @@ class IT_Exchange_Upgrade_Routine_Coupons implements IT_Exchange_UpgradeInterfac
 				$skin->debug( sprintf( 'Setting allotted coupon quantity to %d', $coupon->get_remaining_quantity() ) );
 			}
 
-			if ( $coupon->get_start_date() ) {
-				// this changes dates to be saved as Y-m-d H:i:s instead of m/d/y
-				$coupon->set_start_date( $coupon->get_start_date() );
+			try {
+				if ( $coupon->get_start_date() ) {
 
-				if ( $verbose ) {
-					$skin->debug( 'Converting start date format.' );
+					// this changes dates to be saved as Y-m-d H:i:s instead of m/d/y
+					$coupon->set_start_date( $coupon->get_start_date() );
+
+					if ( $verbose ) {
+						$skin->debug( 'Converting start date format.' );
+					}
 				}
 			}
+			catch ( Exception $e ) {
+				$skin->error( sprintf(
+					'Coupon %s: Exception thrown while trying to convert the start date format. %s',
+					$coupon->get_code(), $e->getMessage() ) );
+			}
 
-			if ( $coupon->get_end_date() ) {
-				$coupon->set_end_date( $coupon->get_end_date() );
+			try {
+				if ( $coupon->get_end_date() ) {
 
-				if ( $verbose ) {
-					$skin->debug( 'Converting end date format.' );
+					$coupon->set_end_date( $coupon->get_end_date() );
+
+					if ( $verbose ) {
+						$skin->debug( 'Converting end date format.' );
+					}
 				}
+			}
+			catch ( Exception $e ) {
+				$skin->error( sprintf(
+					'Coupon %s: Exception thrown while trying to convert the end date format. %s',
+					$coupon->get_code(), $e->getMessage() ) );
 			}
 		}
 
