@@ -97,8 +97,8 @@ function it_exchange_basic_coupons_save_coupon() {
 	$data['post_meta']['_it-basic-code']              = $data['code'];
 	$data['post_meta']['_it-basic-amount-number']     = it_exchange_convert_to_database_number( $data['amount-number'] );
 	$data['post_meta']['_it-basic-amount-type']       = $data['amount-type'];
-	$data['post_meta']['_it-basic-start-date']        = $data['start-date'];
-	$data['post_meta']['_it-basic-end-date']          = $data['end-date'];
+	$data['post_meta']['_it-basic-start-date']        = date( 'Y-m-d H:i:s', strtotime( $data['start-date'] ) );
+	$data['post_meta']['_it-basic-end-date']          = date( 'Y-m-d H:i:s', strtotime( $data['end-date'] ) );
 	$data['post_meta']['_it-basic-limit-quantity']    = $data['limit-quantity'];
 	$data['post_meta']['_it-basic-allotted-quantity'] = $data['quantity'];
 	$data['post_meta']['_it-basic-limit-product']     = $data['limit-product'];
