@@ -118,8 +118,9 @@ class IT_Exchange_Upgrade_Routine_Coupons implements IT_Exchange_UpgradeInterfac
 	 *
 	 * @param IT_Exchange_Coupon                $coupon
 	 * @param IT_Exchange_Upgrade_SkinInterface $skin
+	 * @param bool                              $verbose
 	 */
-	protected function upgrade_coupon( IT_Exchange_Coupon $coupon, IT_Exchange_Upgrade_SkinInterface $skin ) {
+	protected function upgrade_coupon( IT_Exchange_Coupon $coupon, IT_Exchange_Upgrade_SkinInterface $skin, $verbose ) {
 
 		$skin->debug( 'Upgrading Coupon: ' . $coupon->get_code() );
 
@@ -127,23 +128,32 @@ class IT_Exchange_Upgrade_Routine_Coupons implements IT_Exchange_UpgradeInterfac
 
 			$coupon->set_allotted_quantity( $coupon->get_remaining_quantity() );
 
-			$skin->debug( sprintf( 'Setting allotted coupon quantity to %d', $coupon->get_remaining_quantity() ) );
+			if ( $verbose ) {
+				$skin->debug( sprintf( 'Setting allotted coupon quantity to %d', $coupon->get_remaining_quantity() ) );
+			}
 
 			if ( $coupon->get_start_date() ) {
 				// this changes dates to be saved as Y-m-d H:i:s instead of m/d/y
 				$coupon->set_start_date( $coupon->get_start_date() );
 
-				$skin->debug( 'Converting start date format.' );
+				if ( $verbose ) {
+					$skin->debug( 'Converting start date format.' );
+				}
 			}
 
 			if ( $coupon->get_end_date() ) {
 				$coupon->set_end_date( $coupon->get_end_date() );
 
-				$skin->debug( 'Converting end date format.' );
+				if ( $verbose ) {
+					$skin->debug( 'Converting end date format.' );
+				}
 			}
 		}
 
-		$skin->debug( 'Upgraded Coupon: ' . $coupon->get_code() );
+		if ( $verbose ) {
+			$skin->debug( 'Upgraded Coupon: ' . $coupon->get_code() );
+		}
+
 		$skin->debug( '' );
 	}
 
@@ -164,7 +174,7 @@ class IT_Exchange_Upgrade_Routine_Coupons implements IT_Exchange_UpgradeInterfac
 		$coupons = $this->get_coupons_to_upgrade( $config->get_number(), $config->get_step() );
 
 		foreach ( $coupons as $coupon ) {
-			$this->upgrade_coupon( $coupon, $skin );
+			$this->upgrade_coupon( $coupon, $skin, $config->is_verbose() );
 			$skin->tick();
 		}
 
