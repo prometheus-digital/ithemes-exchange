@@ -126,6 +126,18 @@ class IT_Exchange_Upgrade_Routine_Coupons implements IT_Exchange_UpgradeInterfac
 			$skin->debug( 'Upgrading Coupon: ' . $coupon->get_code() );
 		}
 
+		if ( $coupon->post_content !== $coupon->get_code() ) {
+
+			if ( $verbose ) {
+				$skin->debug( 'Setting post_content to coupon code.' );
+			}
+
+			wp_update_post( array(
+				'ID'           => $coupon->get_ID(),
+				'post_content' => $coupon->get_code()
+			) );
+		}
+
 		if ( $coupon instanceof IT_Exchange_Cart_Coupon ) {
 
 			$coupon->set_allotted_quantity( $coupon->get_remaining_quantity() );
