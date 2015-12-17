@@ -122,7 +122,9 @@ class IT_Exchange_Upgrade_Routine_Coupons implements IT_Exchange_UpgradeInterfac
 	 */
 	protected function upgrade_coupon( IT_Exchange_Coupon $coupon, IT_Exchange_Upgrade_SkinInterface $skin, $verbose ) {
 
-		$skin->debug( 'Upgrading Coupon: ' . $coupon->get_code() );
+		if ( $verbose ) {
+			$skin->debug( 'Upgrading Coupon: ' . $coupon->get_code() );
+		}
 
 		if ( $coupon instanceof IT_Exchange_Cart_Coupon ) {
 
@@ -152,9 +154,8 @@ class IT_Exchange_Upgrade_Routine_Coupons implements IT_Exchange_UpgradeInterfac
 
 		if ( $verbose ) {
 			$skin->debug( 'Upgraded Coupon: ' . $coupon->get_code() );
+			$skin->debug( '' );
 		}
-
-		$skin->debug( '' );
 	}
 
 	/**
