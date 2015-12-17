@@ -673,26 +673,6 @@ function it_exchange_basic_coupons_modify_wp_query_request_on_edit_php( $request
 						$request['orderby']  = 'meta_value_num';
 						$request['meta_key'] = '_it-basic-amount-number';
 						break;
-					case 'it-exchange-coupon-date':
-						$request['orderby']  = 'meta_value_date';
-						$request['meta_key'] = '_it-basic-start-date';
-						break;
-					case 'it-exchange-coupon-end-date':
-						$request['orderby']  = 'meta_value_date';
-						$request['meta_key'] = '_it-basic-end-date';
-						break;
-					case 'it-exchange-coupon-quantity':
-						$request['orderby']  = 'meta_value_num';
-						$request['meta_key'] = '_it-basic-quantity';
-						break;
-					case 'it-exchange-coupon-product-id':
-						$request['orderby']  = 'meta_value_num';
-						$request['meta_key'] = '_it-basic-product-id';
-						break;
-					case 'it-exchange-coupon-customer':
-						$request['orderby']  = 'meta_value_num';
-						$request['meta_key'] = '_it-basic-customer';
-						break;
 				}
 			}
 
