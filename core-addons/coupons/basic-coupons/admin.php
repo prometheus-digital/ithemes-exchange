@@ -28,9 +28,10 @@ function it_exchange_basic_coupons_enqueue_js_css() {
 		wp_localize_script( 'it-exchange-add-edit-coupon', 'IT_EXCHANGE', array(
 			'productPlaceholder' => __( 'Select a product', 'it-l10n-ithemes-exchange' )
 		) );
+
 		// CSS
-		wp_enqueue_style( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/add-edit-coupon.css' );
-		wp_enqueue_style( 'it-exchange-select2' );
+		$deps = array( 'it-exchange-select2' );
+		wp_enqueue_style( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/add-edit-coupon.css', $deps );
 	} else if ( $screen->post_type === 'it_exchange_coupon' ) {
 
 		$deps = array( 'jquery-ui-datepicker' );
