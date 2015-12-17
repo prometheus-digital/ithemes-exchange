@@ -12,8 +12,9 @@ $upgrader = it_exchange_make_upgrader();
 	<h1><?php _e( 'Tools', 'it-l10n-ithemes-exchange' ); ?></h1>
 
 	<h2 class="nav-tab-wrapper">
-		<a href="" class="nav-tab nav-tab-active">Upgrades</a>
-		<a href="" class="nav-tab">System Status</a>
+		<a href="<?php echo admin_url( 'admin.php?page=it-exchange-tools' ); ?>" class="nav-tab nav-tab-active">
+			<?php _e( 'Upgrades', 'it-l10n-ithemes-exchange' ); ?>
+		</a>
 	</h2>
 
 	<div class="upgrades-container">
