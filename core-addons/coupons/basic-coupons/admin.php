@@ -13,32 +13,33 @@
  * @return void
 */
 function it_exchange_basic_coupons_enqueue_js_css() {
-	$screen         = get_current_screen();
-	$current_filter = current_filter();
+	$screen = get_current_screen();
 
 	// Abort if screen wasn't found
 	if ( empty( $screen ) )
 		return;
 
 	// Abort if not adding, editing or on the coupons list screen.
-	if ( 'exchange_page_it-exchange-edit-basic-coupon' == $screen->base || 'exchange_page_it-exchange-add-basic-coupon' == $screen->base || 'edit-it_exchange_coupon' == $screen->id ) {
-		// Enqueue JS / CSS based on current filter
-		if ( 'admin_print_scripts' == $current_filter ) {
-			// JS
-			$deps = array( 'jquery', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'jquery-ui-tabs', 'it-exchange-select2' );
-			wp_enqueue_script( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-coupon.js', $deps );
-			wp_localize_script( 'it-exchange-add-edit-coupon', 'IT_EXCHANGE', array(
-				'productPlaceholder' => __( 'Select a product', 'it-l10n-ithemes-exchange' )
-			) );
-		} else if ( 'admin_print_styles' == $current_filter ) {
-			// CSS
-			wp_enqueue_style( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/add-edit-coupon.css' );
-			wp_enqueue_style( 'it-exchange-select2' );
-		}
+	if ( 'exchange_page_it-exchange-edit-basic-coupon' == $screen->base || 'exchange_page_it-exchange-add-basic-coupon' == $screen->base ) {
+
+		// JS
+		$deps = array( 'jquery', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'jquery-ui-tabs', 'it-exchange-select2' );
+		wp_enqueue_script( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-coupon.js', $deps );
+		wp_localize_script( 'it-exchange-add-edit-coupon', 'IT_EXCHANGE', array(
+			'productPlaceholder' => __( 'Select a product', 'it-l10n-ithemes-exchange' )
+		) );
+		// CSS
+		wp_enqueue_style( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/add-edit-coupon.css' );
+		wp_enqueue_style( 'it-exchange-select2' );
+	} else if ( $screen->post_type === 'it_exchange_coupon' ) {
+
+		$deps = array( 'jquery-ui-datepicker' );
+
+		wp_enqueue_script( 'it-exchange-list-table-coupons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/list-table.js', $deps );
+		wp_enqueue_style( 'it-exchange-list-table-coupons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/list-table.css' );
 	}
 }
-add_action( 'admin_print_styles', 'it_exchange_basic_coupons_enqueue_js_css' );
-add_action( 'admin_print_scripts', 'it_exchange_basic_coupons_enqueue_js_css' );
+add_action( 'admin_enqueue_scripts', 'it_exchange_basic_coupons_enqueue_js_css' );
 
 /**
  * Adds Basic Coupons post type to list of post type to remove the quick edit
@@ -97,8 +98,8 @@ function it_exchange_basic_coupons_save_coupon() {
 	$data['post_meta']['_it-basic-code']              = $data['code'];
 	$data['post_meta']['_it-basic-amount-number']     = it_exchange_convert_to_database_number( $data['amount-number'] );
 	$data['post_meta']['_it-basic-amount-type']       = $data['amount-type'];
-	$data['post_meta']['_it-basic-start-date']        = date( 'Y-m-d H:i:s', strtotime( $data['start-date'] ) );
-	$data['post_meta']['_it-basic-end-date']          = date( 'Y-m-d H:i:s', strtotime( $data['end-date'] ) );
+	$data['post_meta']['_it-basic-start-date']        = ! empty( $data['start-date'] ) ? date( 'Y-m-d H:i:s', strtotime( $data['start-date'] ) ) : '';
+	$data['post_meta']['_it-basic-end-date']          = ! empty( $data['end-date'] ) ? date( 'Y-m-d H:i:s', strtotime( $data['end-date'] ) ) : '';
 	$data['post_meta']['_it-basic-limit-quantity']    = $data['limit-quantity'];
 	$data['post_meta']['_it-basic-allotted-quantity'] = $data['quantity'];
 	$data['post_meta']['_it-basic-limit-product']     = $data['limit-product'];
@@ -659,37 +660,63 @@ function it_exchange_basic_coupons_modify_wp_query_request_on_edit_php( $request
 	global $hook_suffix;
 
 	if ( 'edit.php' === $hook_suffix ) {
-		if ( 'it_exchange_coupon' === $request['post_type'] && isset( $request['orderby'] ) ) {
-			switch( $request['orderby'] ) {
-				case 'it-exchange-coupon-code' :
-					$request['orderby']  = 'meta_value';
-					$request['meta_key'] = '_it-basic-code';
-					break;
-				case 'it-exchange-coupon-discount':
-					$request['orderby']  = 'meta_value_num';
-					$request['meta_key'] = '_it-basic-amount-number';
-					break;
-				case 'it-exchange-coupon-date':
-					$request['orderby']  = 'meta_value_date';
-					$request['meta_key'] = '_it-basic-start-date';
-					break;
-				case 'it-exchange-coupon-end-date':
-					$request['orderby']  = 'meta_value_date';
-					$request['meta_key'] = '_it-basic-end-date';
-					break;
-				case 'it-exchange-coupon-quantity':
-					$request['orderby']  = 'meta_value_num';
-					$request['meta_key'] = '_it-basic-quantity';
-					break;
-				case 'it-exchange-coupon-product-id':
-					$request['orderby']  = 'meta_value_num';
-					$request['meta_key'] = '_it-basic-product-id';
-					break;
-				case 'it-exchange-coupon-customer':
-					$request['orderby']  = 'meta_value_num';
-					$request['meta_key'] = '_it-basic-customer';
-					break;
+		if ( 'it_exchange_coupon' === $request['post_type'] ) {
+
+			if ( isset( $request['orderby'] ) ) {
+				switch ( $request['orderby'] ) {
+					case 'it-exchange-coupon-code' :
+						$request['orderby']  = 'meta_value';
+						$request['meta_key'] = '_it-basic-code';
+						break;
+					case 'it-exchange-coupon-discount':
+						$request['orderby']  = 'meta_value_num';
+						$request['meta_key'] = '_it-basic-amount-number';
+						break;
+					case 'it-exchange-coupon-date':
+						$request['orderby']  = 'meta_value_date';
+						$request['meta_key'] = '_it-basic-start-date';
+						break;
+					case 'it-exchange-coupon-end-date':
+						$request['orderby']  = 'meta_value_date';
+						$request['meta_key'] = '_it-basic-end-date';
+						break;
+					case 'it-exchange-coupon-quantity':
+						$request['orderby']  = 'meta_value_num';
+						$request['meta_key'] = '_it-basic-quantity';
+						break;
+					case 'it-exchange-coupon-product-id':
+						$request['orderby']  = 'meta_value_num';
+						$request['meta_key'] = '_it-basic-product-id';
+						break;
+					case 'it-exchange-coupon-customer':
+						$request['orderby']  = 'meta_value_num';
+						$request['meta_key'] = '_it-basic-customer';
+						break;
+				}
 			}
+
+			$meta_query = ! empty( $request['meta_query'] ) ? $request['meta_query'] : array();
+			$meta_query['relation'] = 'AND';
+
+			if ( ! empty( $_GET['start_date'] ) && ( $t = strtotime( $_GET['start_date'] ) ) ) {
+				$meta_query[] = array(
+					'key'       => '_it-basic-start-date',
+					'value'     => date( 'Y-m-d', $t ),
+					'compare'   => '>',
+					'type'      => 'DATETIME'
+				);
+			}
+
+			if ( ! empty( $_GET['end_date'] ) && ( $t = strtotime( $_GET['end_date'] ) ) ) {
+				$meta_query[] = array(
+					'key'       => '_it-basic-end-date',
+					'value'     => date( 'Y-m-d', $t ),
+					'compare'   => '<',
+					'type'      => 'DATETIME'
+				);
+			}
+
+			$request['meta_query'] = $meta_query;
 		}
 	}
 
@@ -711,3 +738,33 @@ function it_exchange_basic_coupons_register_exchange_admin_page( $pages ) {
 	return $pages;
 }
 add_filter( 'it_exchange_admin_pages', 'it_exchange_basic_coupons_register_exchange_admin_page' );
+
+/**
+ * Add a coupon availability filter to the coupons list table.
+ *
+ * @since 1.33
+ *
+ * @param string $post_type
+ */
+function it_exchange_basic_coupons_add_availability_filter( $post_type ) {
+
+	if ( $post_type !== 'it_exchange_coupon' ) {
+		return;
+	}
+
+	$s = isset( $_GET['start_date'] ) ? $_GET['start_date'] : '';
+	$e = isset( $_GET['end_date'] ) ? $_GET['end_date'] : '';
+
+	$start = "<input type=\"text\" class=\"datepicker\" name=\"start_date\" id=\"start-date\" value=\"{$s}\">";
+	$end = "<input type=\"text\" class=\"datepicker\" name=\"end_date\" id=\"end-date\" value=\"{$e}\">";
+	?>
+
+	<label for="start-date" class="screen-reader-text"><?php _e( 'Availability Start Date', 'it-l10n-ithemes-exchange' ); ?></label>
+	<label for="end-date" class="screen-reader-text"><?php _e( 'Availability End Date', 'it-l10n-ithemes-exchange' ); ?></label>
+
+	<?php printf( __( 'Available between %s and %s', 'it-l10n-ithemes-exchange' ), $start, $end ); ?>
+
+<?php
+}
+
+add_action( 'restrict_manage_posts', 'it_exchange_basic_coupons_add_availability_filter' );
