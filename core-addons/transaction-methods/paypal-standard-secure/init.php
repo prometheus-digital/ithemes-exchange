@@ -538,7 +538,7 @@ function it_exchange_paypal_standard_secure_addon_make_payment_button( $options 
 	$it_exchange_customer = it_exchange_get_current_customer();
 
 	$payment_form .= '<form action="" method="post">';
-	$payment_form .= '<input type="submit" class="it-exchange-paypal-standard-button" name="paypal_standard_secure_purchase" value="' . esc_attr( $paypal_settings['purchase-button-label'] ) .'" />';
+	$payment_form .= '<input type="submit" class="it-exchange-paypal-standard-secure-button" name="paypal_standard_secure_purchase" value="' . esc_attr( $paypal_settings['purchase-button-label'] ) .'" />';
 	$payment_form .= '</form>';
 
 	return $payment_form;
