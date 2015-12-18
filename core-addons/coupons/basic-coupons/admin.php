@@ -307,8 +307,6 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		<div class="it-exchange-add-basic-coupon">
 			<div class="fields">
 
-				<?php do_action( 'it_exchange_basics_coupon_coupon_edit_screen_begin_fields', $form ); ?>
-
 				<div class="field">
 					<label for="name"><?php _e( 'Name', 'it-l10n-ithemes-exchange' ); ?> <span class="tip" title="<?php _e( 'What do you want to call this coupon? This is just for your reference.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 					<?php $form->add_text_box( 'name' ); ?>
@@ -330,12 +328,16 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 					<?php $form->add_drop_down( 'amount-type', array( '%' => __( '% Percent', 'it-l10n-ithemes-exchange' ), 'amount' => $symbol . ' ' . $currency ) ); ?>
 				</div>
 
+				<?php do_action( 'it_exchange_basics_coupon_coupon_edit_screen_begin_fields', $form ); ?>
+
 				<div id="it-exchange-advanced-tabs">
 					<ul id="it-exchange-advanced-tab-nav">
 						<li><a href="#general"><?php _e( 'General', 'it-l10n-ithemes-exchange' ); ?></a></li>
 						<li><a href="#usage"><?php _e( 'Usage', 'it-l10n-ithemes-exchange' ); ?></a></li>
 						<li><a href="#customer"><?php _e( 'Customers', 'it-l10n-ithemes-exchange' ); ?></a></li>
 						<li><a href="#product"><?php _e( 'Product', 'it-l10n-ithemes-exchange' ); ?></a></li>
+
+						<?php do_action( 'it_exchange_basic_coupons_coupon_edit_tabs', $form ); ?>
 					</ul>
 					<div id="general">
 						<div class="inner">
@@ -350,6 +352,8 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 										<?php $form->add_text_box( 'end-date', array( 'class' => 'datepicker', 'data-append' => 'start-date' ) ); ?>
 									</div>
 								</div>
+
+								<?php do_action( 'it_exchange_basic_coupons_coupon_edit_tab_general', $form ); ?>
 							</div>
 						</div>
 					</div>
@@ -381,6 +385,8 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 										</p>
 									<?php endif; ?>
 								</div>
+
+								<?php do_action( 'it_exchange_basic_coupons_coupon_edit_tab_usage', $form ); ?>
 							</div>
 						</div>
 					</div>
@@ -431,6 +437,8 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 									$form->add_drop_down( 'frequency-units', $frequency_units );
 									?>
 								</div>
+
+								<?php do_action( 'it_exchange_basic_coupons_coupon_edit_tab_customer', $form ); ?>
 							</div>
 						</div>
 					</div>
@@ -455,9 +463,13 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 									?>
 									<?php $form->add_drop_down( 'product-id[]', array( 'value' => $product_options, 'multiple' => true ) ); ?>
 								</div>
+
+								<?php do_action( 'it_exchange_basic_coupons_coupon_edit_tab_product', $form ); ?>
 							</div>
 						</div>
 					</div>
+
+					<?php do_action( 'it_exchange_basic_coupons_coupon_edit_tabs_end', $form ); ?>
 				</div>
 				<?php do_action( 'it_exchange_basics_coupon_coupon_edit_screen_end_fields', $form ); ?>
 
