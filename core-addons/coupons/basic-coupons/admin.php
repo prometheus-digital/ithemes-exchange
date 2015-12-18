@@ -105,6 +105,7 @@ function it_exchange_basic_coupons_save_coupon() {
 	$data['post_meta']['_it-basic-allotted-quantity'] = $data['quantity'];
 	$data['post_meta']['_it-basic-limit-product']     = $data['limit-product'];
 	$data['post_meta']['_it-basic-product-id']        = $data['product-id'];
+	$data['post_meta']['_it-basic-excluded-products'] = $data['excluded-products'];
 	$data['post_meta']['_it-basic-limit-frequency']   = $data['limit-frequency'];
 	$data['post_meta']['_it-basic-frequency-times']   = $data['frequency-times'];
 	$data['post_meta']['_it-basic-frequency-length']  = $data['frequency-length'];
@@ -164,7 +165,7 @@ function it_exchange_basic_coupons_data_is_valid() {
 		it_exchange_add_message( 'error', __( 'Coupon Discount must be a postive number', 'it-l10n-ithemes-exchange' ) );
 	if ( ! empty( $data['limit-quantity'] ) && ! is_numeric( $data['quantity'] ) )
 		it_exchange_add_message( 'error', __( 'Available Coupons must be a number', 'it-l10n-ithemes-exchange' ) );
-	if ( ! empty( $data['limit-product'] ) && empty( $data['product-id'] ) )
+	if ( ! empty( $data['limit-product'] ) && empty( $data['product-id'] ) && empty( $data['excluded-products'] ) )
 		it_exchange_add_message( 'error', __( 'Please select a product.', 'it-l10n-ithemes-exchange' ) );
 	if ( ! empty( $data['limit-frequency'] ) && ! is_numeric( $data['frequency-times'] ) && ! is_numeric( $data['frequency-length'] ) )
 		it_exchange_add_message( 'error', __( 'Please select a frequency limitation', 'it-l10n-ithemes-exchange' ) );
@@ -256,22 +257,23 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 			$amount = it_exchange_format_price( $amount, false );
 		}
 
-		$values['name']             = $coupon->get_title( true );
-		$values['code']             = $coupon->get_code();
-		$values['amount-number']    = $amount;
-		$values['amount-type']      = $coupon->get_amount_type();
-		$values['start-date']       = $coupon->get_start_date() ? $coupon->get_start_date()->format( 'm/d/Y' ) : '';
-		$values['end-date']         = $coupon->get_end_date() ? $coupon->get_end_date()->format( 'm/d/Y' ) : '';
-		$values['limit-quantity']   = $coupon->is_quantity_limited();
-		$values['quantity']         = $coupon->get_allotted_quantity();
-		$values['limit-product']    = $coupon->is_product_limited();
-		$values['product-id']       = $coupon->get_limited_products(); // for now
-		$values['limit-frequency']  = $coupon->is_frequency_limited();
-		$values['frequency-times']  = $coupon->get_frequency_times();
-		$values['frequency-length'] = $coupon->get_frequency_length();
-		$values['frequency-units']  = $coupon->get_frequency_units();
-		$values['limit-customer']   = $coupon->is_customer_limited();
-		$values['customer']         = $coupon->get_customer() ? $coupon->get_customer()->id : 0;
+		$values['name']              = $coupon->get_title( true );
+		$values['code']              = $coupon->get_code();
+		$values['amount-number']     = $amount;
+		$values['amount-type']       = $coupon->get_amount_type();
+		$values['start-date']        = $coupon->get_start_date() ? $coupon->get_start_date()->format( 'm/d/Y' ) : '';
+		$values['end-date']          = $coupon->get_end_date() ? $coupon->get_end_date()->format( 'm/d/Y' ) : '';
+		$values['limit-quantity']    = $coupon->is_quantity_limited();
+		$values['quantity']          = $coupon->get_allotted_quantity();
+		$values['limit-product']     = $coupon->is_product_limited();
+		$values['product-id']        = $coupon->get_limited_products();
+		$values['excluded-products'] = $coupon->get_excluded_products();
+		$values['limit-frequency']   = $coupon->is_frequency_limited();
+		$values['frequency-times']   = $coupon->get_frequency_times();
+		$values['frequency-length']  = $coupon->get_frequency_length();
+		$values['frequency-units']   = $coupon->get_frequency_units();
+		$values['limit-customer']    = $coupon->is_customer_limited();
+		$values['customer']          = $coupon->get_customer() ? $coupon->get_customer()->id : 0;
 	}
 
 	$errors = it_exchange_get_messages( 'error' );
@@ -448,12 +450,13 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 								<div class="field limit-product">
 									<?php $form->add_check_box( 'limit-product' ); ?>
 									<label for="limit-product">
-										<?php _e( 'Limit to a specific product', 'it-l10n-ithemes-exchange' ); ?>
+										<?php _e( 'Limit to certain products', 'it-l10n-ithemes-exchange' ); ?>
 										<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the discount to a specific product\'s price <em>instead</em> of the cart total.', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
 									</label>
 								</div>
 
 								<div class="field product-id">
+									<label for="product-id"><?php _e( 'Included Products', 'it-l10n-ithemes-exchange' ); ?></label>
 									<?php
 									$product_options = array();
 									$products        = it_exchange_get_products( array( 'show_hidden' => true, 'posts_per_page' => -1 ) );
@@ -462,6 +465,18 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 									}
 									?>
 									<?php $form->add_drop_down( 'product-id[]', array( 'value' => $product_options, 'multiple' => true ) ); ?>
+								</div>
+
+								<div class="field excluded-products">
+									<label for="excluded-products"><?php _e( 'Excluded Products', 'it-l10n-ithemes-exchange' ); ?></label>
+									<?php
+									$product_options = array();
+									$products        = it_exchange_get_products( array( 'show_hidden' => true, 'posts_per_page' => -1 ) );
+									foreach( (array) $products as $id => $product ) {
+										$product_options[$product->ID] = $product->post_title;
+									}
+									?>
+									<?php $form->add_drop_down( 'excluded-products[]', array( 'value' => $product_options, 'multiple' => true ) ); ?>
 								</div>
 
 								<?php do_action( 'it_exchange_basic_coupons_coupon_edit_tab_product', $form ); ?>
@@ -631,7 +646,22 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 
 				$product = reset( $products );
 
-				echo esc_attr( $product->post_title );
+				if ( $product ) {
+					echo esc_attr( $product->post_title );
+				}
+			} elseif ( $coupon->get_excluded_products() ) {
+
+				$product_names = array();
+
+				foreach ( $coupon->get_excluded_products() as $product ) {
+					$product_names[] = $product->post_title;
+				}
+
+				$tip = implode( ', ', $product_names );
+
+				esc_attr_e( 'Excluded', 'it-l10n-ithemes-exchange' );
+				echo "<span class='tip' title='$tip'>i</span>";
+
 			} else {
 
 				$product_names = array();

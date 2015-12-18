@@ -43,7 +43,7 @@ jQuery( document ).ready( function($) {
 	// Show hide product limit based on checkbox
 	function itExchangeBasicCouponsShowHideProduct() {
 		var selected = $(this).is( ':checked' );
-		var $fields  = $('.product-id');
+		var $fields  = $('.product-id, .excluded-products');
 
 		$fields.addClass('hide-if-js');
 		if ( selected ) {
@@ -82,7 +82,7 @@ jQuery( document ).ready( function($) {
 	}
 	$('#limit-frequency').change(itExchangeBasicCouponsShowHideFrequency).triggerHandler("change");
 
-	$("#product-id").select2( {
+	$("#product-id, #excluded-products").select2( {
 		placeholder: IT_EXCHANGE.productPlaceholder
 	});
 

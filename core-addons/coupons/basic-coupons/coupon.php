@@ -35,6 +35,8 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 		} else {
 			$this->products[] = it_exchange_get_product( $this->product_id );
 		}
+
+		$this->products = array_filter( $this->products );
 	}
 
 	/**
@@ -357,6 +359,24 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 */
 	public function get_limited_products() {
 		return $this->products;
+	}
+
+	/**
+	 * Get the products that are excluded from this coupon.
+	 *
+	 * @since 1.33
+	 *
+	 * @return IT_Exchange_Product[]
+	 */
+	public function get_excluded_products() {
+
+		$products = get_post_meta( $this->get_ID(), '_it-basic-excluded-products', true );
+
+		if ( ! $products ) {
+			$products = array();
+		}
+
+		return array_filter( array_map( 'it_exchange_get_product', $products ) );
 	}
 
 	/**
