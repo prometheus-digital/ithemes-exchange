@@ -1,5 +1,7 @@
 jQuery( document ).ready( function ( $ ) {
 
+	$('.tip' ).tooltip();
+
 	$( '.datepicker' ).datepicker( {
 		prevText: '',
 		nextText: '',

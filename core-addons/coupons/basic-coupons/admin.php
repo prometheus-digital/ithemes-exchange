@@ -34,7 +34,7 @@ function it_exchange_basic_coupons_enqueue_js_css() {
 		wp_enqueue_style( 'it-exchange-add-edit-coupon', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/add-edit-coupon.css', $deps );
 	} else if ( $screen->post_type === 'it_exchange_coupon' ) {
 
-		$deps = array( 'jquery-ui-datepicker' );
+		$deps = array( 'jquery-ui-datepicker', 'jquery-ui-tooltip' );
 
 		wp_enqueue_script( 'it-exchange-list-table-coupons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/list-table.js', $deps );
 		wp_enqueue_style( 'it-exchange-list-table-coupons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/css/list-table.css' );
