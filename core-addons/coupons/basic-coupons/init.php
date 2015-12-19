@@ -228,7 +228,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	}
 
 	if ( ! $has_product ) {
-		it_exchange_add_message( 'error', __( 'Invalid product for cart.', 'it-l10n-ithemes-exchange' ) );
+		it_exchange_add_message( 'error', __( 'Invalid coupon for current cart products.', 'it-l10n-ithemes-exchange' ) );
 
 		return false;
 	}
