@@ -659,39 +659,74 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 
 			if ( ! $coupon->is_product_limited() ) {
 				esc_attr_e( 'All Products', 'it-l10n-ithemes-exchange' );
-			} elseif ( count( $coupon->get_limited_products() ) === 1 ) {
-				$products = $coupon->get_limited_products();
-
-				$product = reset( $products );
-
-				if ( $product ) {
-					echo esc_attr( $product->post_title );
-				}
-			} elseif ( $coupon->get_excluded_products() ) {
-
-				$product_names = array();
-
-				foreach ( $coupon->get_excluded_products() as $product ) {
-					$product_names[] = $product->post_title;
-				}
-
-				$tip = implode( ', ', $product_names );
-
-				esc_attr_e( 'Excluded', 'it-l10n-ithemes-exchange' );
-				echo "<span class='tip' title='$tip'>i</span>";
-
 			} else {
 
-				$product_names = array();
+				$category_names = array();
 
-				foreach ( $coupon->get_limited_products() as $product ) {
-					$product_names[] = $product->post_title;
+				foreach ( $coupon->get_product_categories() as $category ) {
+					$category_names[] = $category->name;
 				}
 
-				$tip = implode( ', ', $product_names );
+				$included_names = array();
 
-				esc_attr_e( 'Multiple', 'it-l10n-ithemes-exchange' );
-				echo "<span class='tip' title='$tip'>i</span>";
+				foreach ( $coupon->get_limited_products() as $product ) {
+					$included_names[] = $product->post_title;
+				}
+
+				$excluded_names = array();
+
+				foreach ( $coupon->get_excluded_products() as $product ) {
+					$excluded_names[] = $product->post_title;
+				}
+
+				if ( $included_names && ! $category_names && ! $excluded_names ) {
+
+					if ( count( $included_names ) === 1) {
+						$label = reset( $included_names );
+					} else {
+						$label = __( 'Multiple', 'it-l10n-ithemes-exchange' );
+						$tip = implode( ', ', $included_names );
+					}
+				} else if ( $category_names && ! $included_names && ! $excluded_names ) {
+
+					if ( count( $category_names ) === 1 ) {
+						$label = sprintf( __( '%s category', 'it-l10n-ithemes-exchange' ), reset( $category_names ) );
+					} else {
+						$label = __( 'Categories', 'it-l10n-ithemes-exchange' );
+						$tip = implode( ', ', $category_names );
+					}
+				} else if ( $excluded_names && ! $included_names && ! $category_names ) {
+
+					if ( count( $excluded_names ) === 1 ) {
+						$label = sprintf( __( 'Excluded: %s', 'it-l10n-ithemes-exchange' ), reset( $excluded_names ) );
+					} else {
+						$label = __( 'Excluded', 'it-l10n-ithemes-exchange' );
+						$tip = implode( ', ', $excluded_names );
+					}
+				} else {
+
+					$label = __( 'Complex', 'it-l10n-ithemes-exchange' );
+
+					$tip = '';
+
+					if ( $category_names ) {
+						$tip .= sprintf( __( 'Categories: %s.', 'it-l10n-ithemes-exchange' ), implode( ', ', $category_names ) ) . ' ';
+					}
+
+					if ( $included_names ) {
+						$tip .= sprintf( __( 'Included: %s.', 'it-l10n-ithemes-exchange' ), implode( ', ', $included_names ) ) . ' ';
+					}
+
+					if ( $excluded_names ) {
+						$tip .= sprintf( __( 'Excluded: %s.', 'it-l10n-ithemes-exchange' ), implode( ', ', $excluded_names ) );
+					}
+				}
+
+				if ( isset( $tip, $label ) ) {
+					echo "{$label} <span class='tip' title='{$tip}'>i</span>";
+				} else {
+					echo $label;
+				}
 			}
 			break;
 		case 'it_exchange_coupon_customer':
