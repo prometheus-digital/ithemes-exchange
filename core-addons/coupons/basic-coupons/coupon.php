@@ -380,6 +380,45 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	}
 
 	/**
+	 * Get the product categories this coupon is limited to.
+	 *
+	 * @since 1.33
+	 *
+	 * @param bool $ids Only return term IDs.
+	 *
+	 * @return WP_Term[]
+	 */
+	public function get_product_categories( $ids = false ) {
+
+		if ( ! taxonomy_exists( 'it_exchange_category' ) ) {
+			return array();
+		}
+
+		$term_ids = get_post_meta( $this->get_ID(), '_it-basic-product-categories', true );
+
+		if ( ! $term_ids ) {
+			$term_ids = array();
+		}
+
+		$terms = array();
+
+		foreach ( $term_ids as $term_id ) {
+			$term = get_term( $term_id, 'it_exchange_category' );
+
+			if ( $term && ! is_wp_error( $term ) ) {
+
+				if ( $ids ) {
+					$terms[] = $term->term_id;
+				} else {
+					$terms[] = $term;
+				}
+			}
+		}
+
+		return $terms;
+	}
+
+	/**
 	 * Is this coupon limited to a customer.
 	 *
 	 * @since 1.33

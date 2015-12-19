@@ -39,7 +39,8 @@
 
 .it-exchange-add-basic-coupon .select2-container {width: 400px !important;height: 67px !important;}
 .it-exchange-add-basic-coupon .select2-container--focus .select2-selection--multiple {border: 1px solid #aaa !important;}
-.it-exchange-add-basic-coupon .excluded-products.field {margin-top: 0}
+.it-exchange-add-basic-coupon #product .field {margin-top: 0}
+.it-exchange-add-basic-coupon .limit-product {margin-bottom: 20px}
 
 /** -----------------------------------------------------:[ advanced ]:---------- */
 .js #it_exchange_advanced-sortables .postbox{display:none;}

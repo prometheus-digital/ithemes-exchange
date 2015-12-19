@@ -96,22 +96,23 @@ function it_exchange_basic_coupons_save_coupon() {
 	$msg = empty( $data['ID'] ) ? 'added' : 'updated';
 
 	// Convert code, amount-number, amount-type, start-date, end-date to meta
-	$data['post_meta']['_it-basic-code']              = $data['code'];
-	$data['post_meta']['_it-basic-amount-number']     = it_exchange_convert_to_database_number( $data['amount-number'] );
-	$data['post_meta']['_it-basic-amount-type']       = $data['amount-type'];
-	$data['post_meta']['_it-basic-start-date']        = ! empty( $data['start-date'] ) ? date( 'Y-m-d H:i:s', strtotime( $data['start-date'] ) ) : '';
-	$data['post_meta']['_it-basic-end-date']          = ! empty( $data['end-date'] ) ? date( 'Y-m-d H:i:s', strtotime( $data['end-date'] ) ) : '';
-	$data['post_meta']['_it-basic-limit-quantity']    = $data['limit-quantity'];
-	$data['post_meta']['_it-basic-allotted-quantity'] = $data['quantity'];
-	$data['post_meta']['_it-basic-limit-product']     = $data['limit-product'];
-	$data['post_meta']['_it-basic-product-id']        = $data['product-id'];
-	$data['post_meta']['_it-basic-excluded-products'] = $data['excluded-products'];
-	$data['post_meta']['_it-basic-limit-frequency']   = $data['limit-frequency'];
-	$data['post_meta']['_it-basic-frequency-times']   = $data['frequency-times'];
-	$data['post_meta']['_it-basic-frequency-length']  = $data['frequency-length'];
-	$data['post_meta']['_it-basic-frequency-units']   = $data['frequency-units'];
-	$data['post_meta']['_it-basic-customer']          = $data['customer'];
-	$data['post_meta']['_it-basic-limit-customer']    = $data['limit-customer'];
+	$data['post_meta']['_it-basic-code']               = $data['code'];
+	$data['post_meta']['_it-basic-amount-number']      = it_exchange_convert_to_database_number( $data['amount-number'] );
+	$data['post_meta']['_it-basic-amount-type']        = $data['amount-type'];
+	$data['post_meta']['_it-basic-start-date']         = ! empty( $data['start-date'] ) ? date( 'Y-m-d H:i:s', strtotime( $data['start-date'] ) ) : '';
+	$data['post_meta']['_it-basic-end-date']           = ! empty( $data['end-date'] ) ? date( 'Y-m-d H:i:s', strtotime( $data['end-date'] ) ) : '';
+	$data['post_meta']['_it-basic-limit-quantity']     = $data['limit-quantity'];
+	$data['post_meta']['_it-basic-allotted-quantity']  = $data['quantity'];
+	$data['post_meta']['_it-basic-limit-product']      = $data['limit-product'];
+	$data['post_meta']['_it-basic-product-categories'] = $data['product-category'];
+	$data['post_meta']['_it-basic-product-id']         = $data['product-id'];
+	$data['post_meta']['_it-basic-excluded-products']  = $data['excluded-products'];
+	$data['post_meta']['_it-basic-limit-frequency']    = $data['limit-frequency'];
+	$data['post_meta']['_it-basic-frequency-times']    = $data['frequency-times'];
+	$data['post_meta']['_it-basic-frequency-length']   = $data['frequency-length'];
+	$data['post_meta']['_it-basic-frequency-units']    = $data['frequency-units'];
+	$data['post_meta']['_it-basic-customer']           = $data['customer'];
+	$data['post_meta']['_it-basic-limit-customer']     = $data['limit-customer'];
 	unset( $data['code'] );
 	unset( $data['amount-number'] );
 	unset( $data['amount-type'] );
@@ -165,7 +166,7 @@ function it_exchange_basic_coupons_data_is_valid() {
 		it_exchange_add_message( 'error', __( 'Coupon Discount must be a postive number', 'it-l10n-ithemes-exchange' ) );
 	if ( ! empty( $data['limit-quantity'] ) && ! is_numeric( $data['quantity'] ) )
 		it_exchange_add_message( 'error', __( 'Available Coupons must be a number', 'it-l10n-ithemes-exchange' ) );
-	if ( ! empty( $data['limit-product'] ) && empty( $data['product-id'] ) && empty( $data['excluded-products'] ) )
+	if ( ! empty( $data['limit-product'] ) && empty( $data['product-id'] ) && empty( $data['excluded-products'] ) && empty( $data['product-category']) )
 		it_exchange_add_message( 'error', __( 'Please select a product.', 'it-l10n-ithemes-exchange' ) );
 	if ( ! empty( $data['limit-frequency'] ) && ! is_numeric( $data['frequency-times'] ) && ! is_numeric( $data['frequency-length'] ) )
 		it_exchange_add_message( 'error', __( 'Please select a frequency limitation', 'it-l10n-ithemes-exchange' ) );
@@ -268,6 +269,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		$values['limit-product']     = $coupon->is_product_limited();
 		$values['product-id']        = $coupon->get_limited_products();
 		$values['excluded-products'] = $coupon->get_excluded_products();
+		$values['product-category']  = $coupon->get_product_categories( true );
 		$values['limit-frequency']   = $coupon->is_frequency_limited();
 		$values['frequency-times']   = $coupon->get_frequency_times();
 		$values['frequency-length']  = $coupon->get_frequency_length();
@@ -454,6 +456,22 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 										<span class="tip" title="<?php esc_attr_e( __( 'Check to limit the discount to a specific product\'s price <em>instead</em> of the cart total.', 'it-l10n-ithemes-exchange' ) ); ?>">i</span>
 									</label>
 								</div>
+
+								<?php if ( taxonomy_exists( 'it_exchange_category' ) && ( $terms = get_terms( 'it_exchange_category' ) ) ): ?>
+
+									<div class="field product-category">
+										<label for="product-category"><?php _e( 'Product Categories', 'it-l10n-ithemes-exchange' ); ?></label>
+										<?php
+										$category_options = array();
+
+										foreach( (array) $terms as $term ) {
+											$category_options[ $term->term_id ] = $term->name;
+										}
+										?>
+										<?php $form->add_drop_down( 'product-category[]', array( 'value' => $category_options, 'multiple' => true ) ); ?>
+									</div>
+
+								<?php endif; ?>
 
 								<div class="field product-id">
 									<label for="product-id"><?php _e( 'Included Products', 'it-l10n-ithemes-exchange' ); ?></label>
