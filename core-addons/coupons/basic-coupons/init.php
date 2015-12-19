@@ -219,50 +219,19 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	// Abort if product not in cart
 	if ( $coupon->is_product_limited() ) {
 
-		$excluded = $coupon->get_excluded_products();
-
-		if ( ! empty( $excluded ) ) {
-
-			$has_product = false;
-
-			foreach ( $excluded as $product ) {
-
-				if ( it_exchange_get_cart_product_quantity_by_product_id( $product->ID ) ) {
-					$has_product = true;
-				}
-			}
-
-			if ( $has_product &&  ( ! it_exchange_is_multi_item_cart_allowed() || it_exchange_get_cart_products_count() === 1 ) ) {
-				it_exchange_add_message( 'error', __( 'You can\'t you that coupon with this product.', 'it-l10n-ithemes-exchange' ) );
-
-				return false;
-			}
-		}
-
 		$has_product = false;
 
-		$names = array();
+		foreach ( it_exchange_get_cart_products() as $product ) {
 
-		foreach ( $coupon->get_limited_products() as $product ) {
-
-			$names[] = $product->post_title;
-
-			if ( it_exchange_get_cart_product_quantity_by_product_id( $product->ID ) >= 1 ) {
+			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product, $coupon ) ) {
 				$has_product = true;
+
+				break;
 			}
 		}
 
-		if ( ! $has_product && $names ) {
-
-			if ( count( $names ) == 1 ) {
-				$message = __( "To use this coupon, add the %s product to your cart.", 'it-l10n-ithemes-exchange' );
-				$message = sprintf( $message, reset( $names ) );
-			} else {
-				$message = __( "To use this coupon, add any of the following products to your cart: %s." );
-				$message = sprintf( $message, implode( ', ', $names ) );
-			}
-
-			it_exchange_add_message( 'error', $message );
+		if ( ! $has_product ) {
+			it_exchange_add_message( 'error', __( 'Invalid product for cart.', 'it-l10n-ithemes-exchange' ) );
 
 			return false;
 		}
@@ -577,6 +546,15 @@ function it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $cou
 	if ( ! $coupon->is_product_limited() ) {
 		$valid = true;
 	} else {
+
+		foreach ( $coupon->get_product_categories() as $term ) {
+
+			if ( is_object_in_term( $cart_product['product_id'], 'it_exchange_category', $term->term_id ) ) {
+				$valid = true;
+
+				break;
+			}
+		}
 
 		if ( count( $coupon->get_limited_products() ) ) {
 			foreach ( $coupon->get_limited_products() as $product ) {
