@@ -419,6 +419,17 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	}
 
 	/**
+	 * Are items on sale excluded from discounts.
+	 *
+	 * @since 1.33
+	 *
+	 * @return bool
+	 */
+	public function is_sale_item_excluded() {
+		return (bool) get_post_meta( $this->get_ID(), '_it-basic-sales-excluded', true );
+	}
+
+	/**
 	 * Is this coupon limited to a customer.
 	 *
 	 * @since 1.33

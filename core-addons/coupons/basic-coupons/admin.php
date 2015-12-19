@@ -107,6 +107,7 @@ function it_exchange_basic_coupons_save_coupon() {
 	$data['post_meta']['_it-basic-product-categories'] = $data['product-category'];
 	$data['post_meta']['_it-basic-product-id']         = $data['product-id'];
 	$data['post_meta']['_it-basic-excluded-products']  = $data['excluded-products'];
+	$data['post_meta']['_it-basic-sales-excluded']     = $data['sales-excluded'];
 	$data['post_meta']['_it-basic-limit-frequency']    = $data['limit-frequency'];
 	$data['post_meta']['_it-basic-frequency-times']    = $data['frequency-times'];
 	$data['post_meta']['_it-basic-frequency-length']   = $data['frequency-length'];
@@ -270,6 +271,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		$values['product-id']        = $coupon->get_limited_products();
 		$values['excluded-products'] = $coupon->get_excluded_products();
 		$values['product-category']  = $coupon->get_product_categories( true );
+		$values['sales-excluded']    = $coupon->is_sale_item_excluded();
 		$values['limit-frequency']   = $coupon->is_frequency_limited();
 		$values['frequency-times']   = $coupon->get_frequency_times();
 		$values['frequency-length']  = $coupon->get_frequency_length();
@@ -495,6 +497,13 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 									}
 									?>
 									<?php $form->add_drop_down( 'excluded-products[]', array( 'value' => $product_options, 'multiple' => true ) ); ?>
+								</div>
+
+								<div class="field sales-excluded">
+									<?php $form->add_check_box( 'sales-excluded' ); ?>
+									<label for="sales-excluded">
+										<?php _e( 'Exclude sale items', 'it-l10n-ithemes-exchange' ); ?>
+									</label>
 								</div>
 
 								<?php do_action( 'it_exchange_basic_coupons_coupon_edit_tab_product', $form ); ?>
