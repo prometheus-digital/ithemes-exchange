@@ -216,25 +216,21 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 		return false;
 	}
 
-	// Abort if product not in cart
-	if ( $coupon->is_product_limited() ) {
+	$has_product = false;
 
-		$has_product = false;
+	foreach ( it_exchange_get_cart_products() as $product ) {
 
-		foreach ( it_exchange_get_cart_products() as $product ) {
+		if ( it_exchange_basic_coupons_valid_product_for_coupon( $product, $coupon ) ) {
+			$has_product = true;
 
-			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product, $coupon ) ) {
-				$has_product = true;
-
-				break;
-			}
+			break;
 		}
+	}
 
-		if ( ! $has_product ) {
-			it_exchange_add_message( 'error', __( 'Invalid product for cart.', 'it-l10n-ithemes-exchange' ) );
+	if ( ! $has_product ) {
+		it_exchange_add_message( 'error', __( 'Invalid product for cart.', 'it-l10n-ithemes-exchange' ) );
 
-			return false;
-		}
+		return false;
 	}
 
 	$now = new DateTime();
@@ -576,6 +572,10 @@ function it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $cou
 				break;
 			}
 		}
+	}
+
+	if ( $coupon->is_sale_item_excluded() && it_exchange_is_product_sale_active( $cart_product['product_id'] ) ) {
+		$valid = false;
 	}
 
 	/**
