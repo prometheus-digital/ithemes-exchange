@@ -74,6 +74,8 @@ class IT_Exchange_Upgrade_Handler_Ajax {
 			) );
 		}
 
+		$rate = $upgrade->get_suggested_rate();
+
 		/**
 		 * Filter the rate at which upgrade reords should be processed.
 		 *
@@ -82,7 +84,7 @@ class IT_Exchange_Upgrade_Handler_Ajax {
 		 * @param int                          $rate
 		 * @param IT_Exchange_UpgradeInterface $upgrade
 		 */
-		$rate = apply_filters( 'it_exchange_ajax_upgrade_rate', 5, $upgrade );
+		$rate = apply_filters( 'it_exchange_ajax_upgrade_rate', $rate, $upgrade );
 
 		$this->upgrader->begin( $upgrade );
 

@@ -70,6 +70,17 @@ interface IT_Exchange_UpgradeInterface {
 	public function get_total_records_to_process();
 
 	/**
+	 * Get the suggested rate at which the upgrade routine should be processed.
+	 *
+	 * The rate refers to how many items are upgraded in one step.
+	 *
+	 * @since 1.33
+	 *
+	 * @return int
+	 */
+	public function get_suggested_rate();
+
+	/**
 	 * Perform the upgrade according to the given configuration.
 	 *
 	 * Throwing an upgrade exception will halt the upgrade process and notify the user.

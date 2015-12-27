@@ -187,6 +187,19 @@ class IT_Exchange_Upgrade_Routine_Coupons implements IT_Exchange_UpgradeInterfac
 	}
 
 	/**
+	 * Get the suggested rate at which the upgrade routine should be processed.
+	 *
+	 * The rate refers to how many items are upgraded in one step.
+	 *
+	 * @since 1.33
+	 *
+	 * @return int
+	 */
+	public function get_suggested_rate() {
+		return 10;
+	}
+
+	/**
 	 * Perform the upgrade according to the given configuration.
 	 *
 	 * Throwing an upgrade exception will halt the upgrade process and notify the user.
