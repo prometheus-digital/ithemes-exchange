@@ -71,6 +71,12 @@ class IT_Exchange_SW_Shortcode {
 	 */
 	public function insert_button() {
 
+		// media buttons can be displayed on the front-end.
+		// bail if we aren't in the admin
+		if ( ! is_admin() ) {
+			return;
+		}
+
 		$screen = get_current_screen();
 
 		$post_type        = ! empty( $screen->post_type ) ? $screen->post_type : get_post_type();

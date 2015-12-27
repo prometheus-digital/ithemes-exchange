@@ -32,7 +32,7 @@
 				</div>
 				<div class="column column-number">
 					<span>
-						<a href="<?php echo esc_url( get_permalink( $transaction->ID ) ); ?>">
+						<a href="<?php echo esc_url( get_edit_post_link( $transaction->ID ) ); ?>">
 							<?php echo esc_attr( it_exchange_get_transaction_order_number( $transaction ) ); ?>
 						</a>
 					</span>

@@ -226,6 +226,11 @@ class IT_Exchange_Transaction {
 	 * @return string
 	*/
 	function get_subtotal() {
+
+		if ( isset( $this->cart_details->sub_total ) ) {
+			return $this->cart_details->sub_total;
+		}
+
 		$products = $this->get_products();
 		$subtotal = 0;
 		foreach( (array) $products as $key => $data ) {
@@ -386,7 +391,8 @@ class IT_Exchange_Transaction {
 	 * Gets the transactions children.
 	 *
 	 * @since 1.3.0
-	 * @return bool
+	 *
+	 * @return WP_Post[]
 	*/
 	function get_children( $args=array() ) {
 		$defaults = array(
@@ -394,6 +400,7 @@ class IT_Exchange_Transaction {
 			'post_type'   => 'it_exchange_tran',
 		);
 		$args = wp_parse_args( $args, $defaults );
+
 		return get_children( $args );
 	}
 

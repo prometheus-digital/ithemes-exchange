@@ -153,8 +153,10 @@ function it_exchange_get_products( $args=array() ) {
 
 			$product = it_exchange_get_product( $product );
 
-			if ( it_exchange_is_product_sale_active( $product ) ) {
-				$products[$key] = $product;
+			$products[$key] = $product;
+
+			if ( ! it_exchange_is_product_sale_active( $product ) && $args['only_on_sale'] ) {
+				unset( $products[$key] );
 			}
 		}
 	}
