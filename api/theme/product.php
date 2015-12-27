@@ -127,6 +127,16 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			);
 			$options = ITUtility::merge_defaults( $options, $defaults );
 
+			/**
+			 * Filter the options used to render the product title.
+			 *
+			 * @since 1.32.0
+			 *
+			 * @param array               $options
+			 * @param IT_Exchange_Product $product
+			 */
+			$options = apply_filters( 'it_exchange_api_theme_product_title_options', $options, $this->product );
+
 			if ( 'html' == $options['format'] )
 				$result .= '<' . $options['wrap'] . ' class="entry-title">';
 
@@ -707,10 +717,12 @@ class IT_Theme_API_Product implements IT_Theme_API {
 				default :
 					if ( ! empty( $product_images ) ) {
 
+						$first = reset( $product_images );
+
 						$featured = array(
-							'full'  => wp_get_attachment_image_src( $product_images[0], 'full' ),
-							'large' => wp_get_attachment_image_src( $product_images[0], 'large' ),
-							'thumb' => wp_get_attachment_image_src( $product_images[0], 'thumbnail' ),
+							'full'  => wp_get_attachment_image_src( $first, 'full' ),
+							'large' => wp_get_attachment_image_src( $first, 'large' ),
+							'thumb' => wp_get_attachment_image_src( $first, 'thumbnail' ),
 						);
 
 						ob_start();

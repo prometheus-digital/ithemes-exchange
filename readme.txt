@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.5
-Stable tag: 1.31.0
+Stable tag: 1.32.1
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,25 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.32.1 =
+* Tweak: PayPal Locking Mechanism Updates
+* Fix: Create transactions for web_accept in PayPal during IPN, if necessary
+* Fix: Adding user nickname/nicename to Profile loop template, required in WP4.4 now
+* Fix: DBSessions, esnure sessiosn IDs are valid MD5 hash
+* Minor: CSS updates
+
+= 1.32.0 =
+* Major: Template parts have been updated: super-widget-product, super-widget-cart
+* Add: The SuperWidget can now be embedded using the [it_exchange_sw] shortcode
+* Add: Products can now have a sale price
+* Add: New core-addon Sale Schedule to restrict sale availability
+* Tweak: Make deactivating a plugin from the core-addons page more straightforward
+* Tweak: Replace usages of get_class with instanceof to allow for more robust add-ons
+* Tweak: Remove the downloads hash from the downloads page by default
+* Fix: Adding categories from the edit product page
+* Fix: Update the transaction status property when the status changes
+* Fix: Ensure comment and ping status is closed. WordPress 4.4 compatibility
 
 = 1.31.0 =
 * PayPal Quantum-Locking

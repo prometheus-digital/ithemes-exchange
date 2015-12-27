@@ -12,6 +12,9 @@ require( $this->_plugin_path . 'lib/classes/load.php' );
 // Other Functions
 require( $this->_plugin_path . 'lib/functions/functions.php' );
 
+// Locking
+require( $this->_plugin_path . 'lib/functions/locks.php' );
+
 // IT Fonts
 require( $this->_plugin_path . 'lib/icon-fonts/load.php' );
 
@@ -44,6 +47,7 @@ require( $this->_plugin_path . 'lib/customers/class.customer.php' );
 
 // Pages
 require( $this->_plugin_path . 'lib/pages/class.pages.php' );
+require( $this->_plugin_path . 'lib/pages/class.customize.php' );
 
 // Super Widget
 require( $this->_plugin_path . 'lib/super-widget/class.super-widget.php' );

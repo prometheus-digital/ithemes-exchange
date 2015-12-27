@@ -14,10 +14,10 @@
 #it-exchange-dashboard-reporting-widget .columns-recent{padding:.5em 0;border-bottom:1px solid #DDD;}
 #it-exchange-dashboard-reporting-widget .not-cleared-for-delivery{color:#aaa;}
 #it-exchange-dashboard-reporting-widget .column{}
-#it-exchange-dashboard-reporting-widget .column-date,
-#it-exchange-dashboard-reporting-widget .column-status,
+#it-exchange-dashboard-reporting-widget .column-date{width: 37%;}
+#it-exchange-dashboard-reporting-widget .column-status{width: 20%;}
 #it-exchange-dashboard-reporting-widget .column-number{width:25%;}
-#it-exchange-dashboard-reporting-widget .column-total{width:25%;text-align:right;}
+#it-exchange-dashboard-reporting-widget .column-total{width:18%;text-align:right;}
 #it-exchange-dashboard-reporting-widget .column-number{padding-left: 5px;margin-right: -5px;}
 /** -----------------------------------------------------:[ dashboard right now ]:---------- */
 #dashboard_right_now li a.it-exchange-glance-products:before,

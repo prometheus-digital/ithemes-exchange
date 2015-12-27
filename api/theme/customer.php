@@ -30,6 +30,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		'formopen'        => 'form_open',
 		'username'        => 'username',
 		'avatar'          => 'avatar',
+		'nickname'        => 'nickname',
 		'firstname'       => 'first_name',
 		'lastname'        => 'last_name',
 		'displayname'     => 'display_name',
@@ -139,6 +140,48 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 
 		return get_avatar( $this->_customer->data->ID, apply_filters( 'it_exchange_avatar_size', (int) $options['size'] ), apply_filters( 'it_exchange_default_avatar', 'blank' ) );
 	}
+
+	/**
+	 * Outputs the customer's nickname data
+	 *
+	 * @since CHANGEME
+	 * @return string
+	*/
+	function nickname( $options=array() ) {
+		$defaults = array(
+			'format' => 'html',
+			'label'  => __( 'Nick Name', 'it-l10n-ithemes-exchange' ),
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		$field_id = 'nickname';
+		$field_name = $field_id;
+		$field_value = $this->_customer->data->user_nicename;
+		
+		switch( $options['format'] ) {
+
+			case 'field-id':
+				$output = $field_id;
+				break;
+			case 'field-name':
+				$output = $field_name;
+				break;
+			case 'field-value':
+				$output = $field_value;
+				break;
+			case 'label':
+				$output = $options['label'];
+				break;
+			case 'html':
+			default:
+				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
+				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
+
+		}
+
+		return $output;
+	}
+
 
 	/**
 	 * Outputs the customer's first name data
