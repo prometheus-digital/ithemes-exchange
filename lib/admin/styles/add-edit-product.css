@@ -169,7 +169,7 @@
 #it-exchange-advanced-tabs input[type="email"],
 #it-exchange-advanced-tabs input[type="password"],
 #it-exchange-advanced-tabs input[type="number"],
-#it-exchange-advanced-tabs textarea{background:#fff;border:1px solid #d6d6d6;border-radius:3px;font-size:18px;padding:10px;color:#3d4142;width:260px;}
+#it-exchange-advanced-tabs textarea{background:#fff;border:1px solid #d6d6d6;border-radius:3px;font-size:18px;padding:10px;color:#3d4142;width:260px;height: auto;}
 #it-exchange-advanced-tabs input[type="text"]:focus,
 #it-exchange-advanced-tabs input[type="email"]:focus,
 #it-exchange-advanced-tabs input[type="password"]:focus,
