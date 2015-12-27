@@ -32,7 +32,7 @@ class IT_Exchange_Menu_Customizer {
 
 		$item_types[] = array(
 			'title'  => 'iThemes Exchange',
-			'type'   => 'exchange-casper',
+			'type'   => 'it-exchange-ghost-page',
 			'object' => 'exchange-page'
 		);
 
@@ -53,7 +53,7 @@ class IT_Exchange_Menu_Customizer {
 	 */
 	public function items_ajax( $items, $type, $object, $page ) {
 
-		if ( 'exchange-casper' === $type ) {
+		if ( 'it-exchange-ghost-page' === $type ) {
 
 			$pages = it_exchange_get_pages( true, array( 'type' => 'exchange' ) );
 
@@ -63,15 +63,15 @@ class IT_Exchange_Menu_Customizer {
 
 			$pages = array_slice( $pages, 10 * $page, 10 );
 
-			foreach ( $pages as $page ) {
+			foreach ( $pages as $name => $page ) {
 				$items[] = array(
 					'id'         => "casper-{$page['slug']}",
+					'ID'         => $name,
 					'title'      => $page['name'],
-					'type'       => 'custom',
-					'type_label' => 'Custom Link',
-					'object'     => (object) $page,
-					'object_id'  => $page['slug'],
-					'url'        => it_exchange_get_page_url( $page['slug'] )
+					'type'       => 'it-exchange-ghost-page',
+					'type_label' => 'iThemes Exchange',
+					'object'     => $name,
+					'url'        => it_exchange_get_page_url( $name )
 				);
 			}
 		}
