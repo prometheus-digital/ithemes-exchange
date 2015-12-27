@@ -196,7 +196,7 @@ function it_exchange_is_page_ghost_page( $page, $break_cache=false ) {
  *
  * @param string|bool $page optional. the exchange page were checking for
  *
- * @return boolean
+ * @return string|boolean Returns name of current page if $page is false. Otherwise bool whether current page is passed.
 */
 function it_exchange_is_page( $page=false ) {
 	global $wpdb;
@@ -356,6 +356,27 @@ function it_exchange_get_registered_pages( $options=array() ) {
 	}
 
 	return $pages;
+}
+
+/**
+ * Retrieve the account based pages.
+ *
+ * @since 1.33
+ *
+ * @return array
+ */
+function it_exchange_get_account_based_pages() {
+
+	$account_based_pages = array( 'account', 'profile', 'downloads', 'purchases' );
+
+	/**
+	 * Filter the account based pages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $account_based_pages
+	 */
+	return apply_filters( 'it_exchange_account_based_pages', $account_based_pages );
 }
 
 /**

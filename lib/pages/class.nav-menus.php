@@ -26,6 +26,7 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 		}
 
 		add_filter( 'wp_setup_nav_menu_item', array( $this, 'setup_menu_item' ), 10, 2 );
+		add_filter( 'nav_menu_css_class', array( $this, 'add_current_menu_item_class' ), 10, 2 );
 	}
 
 	/**
@@ -186,6 +187,29 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 		$menu_item->xfn        = 'it-exchange-' . esc_attr( $page );
 
 		return $menu_item;
+	}
+
+	/**
+	 * Add the 'current-menu-item' class to the nav menu item if the item is the current Exchange page.
+	 *
+	 * @since 1.33
+	 *
+	 * @param array $classes
+	 * @param object $item
+	 *
+	 * @return array
+	 */
+	public function add_current_menu_item_class( $classes, $item ) {
+
+		if ( $item->type === 'it-exchange-ghost-page' ) {
+			if ( it_exchange_is_page( $item->object ) ) {
+				$classes[] = 'current-menu-item';
+			} else if ( $item->object === 'account' && in_array( it_exchange_is_page(), it_exchange_get_account_based_pages() ) ) {
+				$classes[] = 'current-menu-item';
+			}
+		}
+
+		return $classes;
 	}
 
 	/**
