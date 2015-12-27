@@ -150,13 +150,13 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	function nickname( $options=array() ) {
 		$defaults = array(
 			'format' => 'html',
-			'label'  => __( 'Nick Name', 'it-l10n-ithemes-exchange' ),
+			'label'  => __( 'Nickname', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		$field_id = 'nickname';
 		$field_name = $field_id;
-		$field_value = $this->_customer->data->user_nicename;
+		$field_value = $this->_customer->wp_user->nickname;
 		
 		switch( $options['format'] ) {
 
