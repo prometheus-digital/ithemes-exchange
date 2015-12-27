@@ -131,6 +131,31 @@ function it_exchange_get_transactions( $args=array() ) {
 }
 
 /**
+ * Get a transaction by its cart ID.
+ *
+ * @since 1.32.1
+ *
+ * @param string $cart_id
+ *
+ * @return IT_Exchange_Transaction|null
+ */
+function it_exchange_get_transaction_by_cart_id( $cart_id ) {
+
+	$transactions = it_exchange_get_transactions(array(
+		'meta_query' => array(
+			'key'   => '_it_exchange_cart_id',
+			'value' => $cart_id
+		)
+	) );
+
+	foreach ( $transactions as $transaction ) {
+		return $transaction;
+	}
+
+	return null;
+}
+
+/**
  * Generates the transaction object used by the transaction methods
  *
  * @since 0.4.20
@@ -202,6 +227,7 @@ function it_exchange_generate_transaction_object() {
 
 	$transaction_object->coupons                = $coupons;
 	$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
+	$transaction_object->customer_ip            = it_exchange_get_ip();
 
 	// Tack on Tax information
 	$transaction_object->taxes_formated         = apply_filters( 'it_exchange_set_transaction_objet_cart_taxes_formatted', false );
@@ -239,7 +265,11 @@ function it_exchange_generate_transaction_object() {
 */
 function it_exchange_update_transient_transaction( $method, $temp_id, $customer_id = false, $transaction_object, $transaction_id = false ) {
     update_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id, current_time( 'timestamp' ) + apply_filters( 'it_exchange_transient_transaction_expiry', 60 * 60 * 4 ) );
-    update_option( 'ite_temp_tnx_' . $method . '_' . $temp_id, array( 'customer_id' => $customer_id, 'transaction_object' => $transaction_object, 'transaction_id' => $transaction_id ) );
+    update_option( 'ite_temp_tnx_' . $method . '_' . $temp_id, array(
+		    'customer_id' => $customer_id,
+		    'transaction_object' => $transaction_object,
+		    'transaction_id' => $transaction_id
+    ) );
     return true;
 }
 
@@ -338,8 +368,9 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		update_post_meta( $transaction_id, '_it_exchange_transaction_method_id', $method_id );
 		update_post_meta( $transaction_id, '_it_exchange_transaction_status',    $status );
 		update_post_meta( $transaction_id, '_it_exchange_customer_id',           $customer_id );
-		update_post_meta( $transaction_id, '_it_exchange_customer_ip',           it_exchange_get_ip() );
+		update_post_meta( $transaction_id, '_it_exchange_customer_ip',           ! empty( $cart_object->customer_ip ) ? $cart_object->customer_ip : it_exchange_get_ip() );
 		update_post_meta( $transaction_id, '_it_exchange_cart_object',           $cart_object );
+		update_post_meta( $transaction_id, '_it_exchange_cart_id',               $cart_object->cart_id );
 
 		// Transaction Hash for confirmation lookup
 		update_post_meta( $transaction_id, '_it_exchange_transaction_hash', it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) );

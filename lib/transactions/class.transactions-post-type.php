@@ -373,9 +373,10 @@ class IT_Exchange_Transaction_Post_Type {
 
 		if ( 'edit.php' === $hook_suffix ) {
 			if ( 'it_exchange_tran' === $request['post_type'] && isset( $request['orderby'] ) ) {
+
 				switch( $request['orderby'] ) {
-					case 'menu_order title':
-						$request['order'] = 'desc';
+/*					case 'menu_order title':
+						$request['order'] = 'desc'; */
 					case 'title':
 						$request['orderby'] = 'ID';
 						break;
