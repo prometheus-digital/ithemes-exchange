@@ -204,5 +204,4 @@ class IT_Exchange_Upgrader {
 	protected function get_upgrades_in_progress() {
 		return get_option( 'it_exchange_upgrades_in_progress', array() );
 	}
-
 }
