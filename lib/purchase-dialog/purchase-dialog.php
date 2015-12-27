@@ -68,8 +68,9 @@ class IT_Exchange_Purchase_Dialog{
 
 		$defaults = array(
 			'form-attributes'    => array(
-				'action' => it_exchange_get_page_url( 'transaction' ),
-				'method' => 'post',
+				'action'       => it_exchange_get_page_url( 'transaction' ),
+				'method'       => 'post',
+				'autocomplete' => 'on'
 			),
 			'required-cc-fields' => array(
 				'first-name',
