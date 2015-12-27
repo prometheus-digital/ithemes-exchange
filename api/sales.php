@@ -27,6 +27,13 @@ function it_exchange_is_product_sale_active( $product ) {
 		return false;
 	}
 
+	$base = it_exchange_get_product_feature( $product->ID, 'base-price' );
+	$sale = it_exchange_get_product_feature( $product->ID, 'sale-price' );
+
+	if ( it_exchange_convert_to_database_number( $base ) == it_exchange_convert_to_database_number( $sale ) ) {
+		return false;
+	}
+
 	/**
 	 * Filters whether or not a product sale is active.
 	 *
