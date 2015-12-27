@@ -15,7 +15,7 @@
 /** -----------------------------------------------------:[ transaction details ]:---------- */
 #it-exchange-transaction-details{max-width:760px;}
 #it-exchange-transaction-details .customer-avatar img{border-radius:3px;}
-#it-exchange-transaction-details .customer-display-name{display:inline;margin-top:0;line-height:1;}
+#it-exchange-transaction-details .customer-display-name{display:inline;margin-top:0;padding-left: 0;line-height:1;}
 #it-exchange-transaction-details .customer-info{margin-left:95px;}
 #it-exchange-transaction-details .customer-profile{margin-top:1.4em;}
 #it-exchange-transaction-details .customer-profile a{text-decoration:none;}
