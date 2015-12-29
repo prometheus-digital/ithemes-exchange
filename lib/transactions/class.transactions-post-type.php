@@ -451,6 +451,18 @@ class IT_Exchange_Transaction_Post_Type {
 			<?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?>
 		</div>
 
+		<?php if ( $post->post_parent ): ?>
+			<div class="spacing-wrapper parent-txn-link bottom-border">
+				<span class="dashicons dashicons-arrow-left-alt2"></span>
+				<a href="<?php echo esc_url( get_edit_post_link( $post->post_parent ) ); ?>">
+					<?php printf(
+						__( 'View Parent Subscription Payment %s', 'it-l10n-ithemes-exchange' ),
+						it_exchange_get_transaction_order_number( $post->post_parent )
+					); ?>
+				</a>
+			</div>
+		<?php endif; ?>
+
 		<?php do_action( 'it_exchange_transaction_details_before_customer_data', $post ); ?>
 
 		<div class="customer-data spacing-wrapper">
