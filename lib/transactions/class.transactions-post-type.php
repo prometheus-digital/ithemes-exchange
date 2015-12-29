@@ -533,16 +533,12 @@ class IT_Exchange_Transaction_Post_Type {
 				// Grab products attached to transaction
 				$transaction_products = it_exchange_get_transaction_products( $post );
 
-				// Grab all hashes attached to transaction
-				$hashes   = it_exchange_get_transaction_download_hash_index( $post );
+				if ( empty( $transaction_products ) && $post->post_parent ) {
+					$transaction_products = it_exchange_get_transaction_products( $post->post_parent );
+				}
 			?>
 
 			<?php foreach ( $transaction_products as $transaction_product ) : ?>
-				<?php
-					$product_id = $transaction_product['product_id'];
-
-					$db_product = it_exchange_get_product( $transaction_product );
-				?>
 				<div class="product spacing-wrapper">
 					<div class="product-header clearfix">
 						<?php do_action( 'it_exchange_transaction_details_begin_product_header', $post, $transaction_product ); ?>
