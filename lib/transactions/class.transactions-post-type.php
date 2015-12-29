@@ -475,9 +475,12 @@ class IT_Exchange_Transaction_Post_Type {
 				<div class="customer-email">
 					<?php esc_attr_e( it_exchange_get_transaction_customer_email( $post ) ); ?>
 				</div>
+
+				<?php if ( ! $post->post_parent ) : ?>
 				<div class="customer-ip-address">
 					<?php esc_attr_e( it_exchange_get_transaction_customer_ip_address( $post ) ); ?>
 				</div>
+				<?php endif; ?>
 
 				
 				<?php if ( apply_filters( 'it_exchange_transaction_detail_has_customer_profile', true, $post ) ) : ?>
