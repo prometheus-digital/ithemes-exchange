@@ -24,6 +24,8 @@ function it_exchange_guest_checkout_bump_session() {
  * @since 1.6.0
  *
  * @param string $email
+ * @param bool   $return_exchange_customer
+ *
  * @return object
 */
 function it_exchange_guest_checkout_generate_guest_user_object( $email, $return_exchange_customer=false ) {

@@ -400,7 +400,12 @@ function it_exchange_guest_checkout_modify_transaction_customer( $customer, $tra
 	if ( empty( $transaction->cart_details->is_guest_checkout ) )
 		return $customer;
 
-	$customer = ( ! empty( $transaction->customer_id ) && is_email( $transaction->customer_id ) ) ? it_exchange_guest_checkout_generate_guest_user_object( $transaction->customer_id ) : false;
+	if ( ( ! empty( $transaction->customer_id ) && is_email( $transaction->customer_id ) ) ) {
+		$customer = it_exchange_guest_checkout_generate_guest_user_object( $transaction->customer_id, true );
+	} else {
+		$customer = false;
+	}
+
 	if ( ! empty( $customer ) ) {
 		$customer->wp_user = new stdClass();
 		$customer->wp_user->display_name = sprintf( __( 'Guest Customer (%s)', 'it-l10n-ithemes-exchange' ), $customer->ID );
