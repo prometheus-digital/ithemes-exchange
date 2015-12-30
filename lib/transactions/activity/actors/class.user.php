@@ -63,4 +63,19 @@ class IT_Exchange_Txn_Activity_User_Actor implements IT_Exchange_Txn_Activity_Ac
 	public function get_detail_url() {
 		return get_edit_user_link( $this->user->ID );
 	}
+
+	/**
+	 * Attach this actor to an activity item.
+	 *
+	 * @since 1.34
+	 *
+	 * @param IT_Exchange_Txn_Activity $activity
+	 *
+	 * @return self
+	 */
+	public function attach( IT_Exchange_Txn_Activity $activity ) {
+		update_post_meta( $activity->get_ID(), '_actor_user_id', $this->user->ID );
+
+		return $this;
+	}
 }

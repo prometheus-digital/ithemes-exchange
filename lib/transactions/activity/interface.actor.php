@@ -41,4 +41,15 @@ interface IT_Exchange_Txn_Activity_Actor {
 	 * @return string
 	 */
 	public function get_detail_url();
+
+	/**
+	 * Attach this actor to an activity item.
+	 *
+	 * @since 1.34
+	 *
+	 * @param IT_Exchange_Txn_Activity $activity
+	 *
+	 * @return self
+	 */
+	public function attach( IT_Exchange_Txn_Activity $activity );
 }

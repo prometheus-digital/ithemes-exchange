@@ -47,6 +47,28 @@ class IT_Exchange_Txn_Activity_Factory {
 	}
 
 	/**
+	 * Get the post type activity is stored as.
+	 *
+	 * @since 1.34
+	 *
+	 * @return string
+	 */
+	public function get_post_type() {
+		return $this->post_type;
+	}
+
+	/**
+	 * Get the taxonomy for controlling the activity type.
+	 *
+	 * @since 1.34
+	 *
+	 * @return string
+	 */
+	public function get_type_taxonomy() {
+		return $this->type_taxonomy;
+	}
+
+	/**
 	 * Register an activity type.
 	 *
 	 * @since 1.34

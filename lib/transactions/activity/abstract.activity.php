@@ -88,4 +88,17 @@ abstract class IT_Exchange_Txn_AbstractActivity implements IT_Exchange_Txn_Activ
 	public function get_actor() {
 		return $this->actor;
 	}
+
+	/**
+	 * Is this activity public.
+	 *
+	 * The customer is notified for public activities.
+	 *
+	 * @since 1.34
+	 *
+	 * @return bool
+	 */
+	public function is_public() {
+		return (bool) get_post_meta( $this->get_ID(), '_is_public', true );
+	}
 }

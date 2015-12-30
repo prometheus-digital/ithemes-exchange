@@ -77,6 +77,6 @@ class IT_Exchange_Txn_Note_Activity extends IT_Exchange_Txn_AbstractActivity {
 			return true;
 		}
 
-		return (bool) get_post_meta( $this->get_ID(), '_is_public', true );
+		return parent::is_public();
 	}
 }
