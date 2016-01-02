@@ -816,7 +816,7 @@ function it_exchange_get_cart_product_subtotal( $product, $format=true ) {
  * Returns the cart subtotal
  *
  * @since 0.3.7
- * @since 1.34 Add support for limiting subtotal to products with a feature.
+ * @since 1.33 Add support for limiting subtotal to products with a feature.
 
  * @param boolean $format should we format the price
  * @param  array  $options {
