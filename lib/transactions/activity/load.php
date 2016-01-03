@@ -12,6 +12,7 @@ require_once dirname( __FILE__ ) . '/abstract.activity.php';
 require_once dirname( __FILE__ ) . '/interface.actor.php';
 require_once dirname( __FILE__ ) . '/class.builder.php';
 require_once dirname( __FILE__ ) . '/class.factory.php';
+require_once dirname( __FILE__ ) . '/class.collection.php';
 
 // activity actors
 require_once dirname( __FILE__ ) . '/actors/class.factory.php';
