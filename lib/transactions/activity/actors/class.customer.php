@@ -70,6 +70,19 @@ class IT_Exchange_Txn_Activity_Customer_Actor implements IT_Exchange_Txn_Activit
 	}
 
 	/**
+	 * Get the type of this actor.
+	 *
+	 * Ex: 'user', 'customer'.
+	 *
+	 * @since 1.34
+	 *
+	 * @return string
+	 */
+	public function get_type() {
+		return 'customer';
+	}
+
+	/**
 	 * Attach this actor to an activity item.
 	 *
 	 * @since 1.34

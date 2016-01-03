@@ -63,6 +63,19 @@ class IT_Exchange_Txn_Activity_Site_Actor implements IT_Exchange_Txn_Activity_Ac
 	}
 
 	/**
+	 * Get the type of this actor.
+	 *
+	 * Ex: 'user', 'customer'.
+	 *
+	 * @since 1.34
+	 *
+	 * @return string
+	 */
+	public function get_type() {
+		return 'site';
+	}
+
+	/**
 	 * Attach this actor to an activity item.
 	 *
 	 * @since 1.34

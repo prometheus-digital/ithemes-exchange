@@ -43,6 +43,17 @@ interface IT_Exchange_Txn_Activity_Actor {
 	public function get_detail_url();
 
 	/**
+	 * Get the type of this actor.
+	 *
+	 * Ex: 'user', 'customer'.
+	 *
+	 * @since 1.34
+	 *
+	 * @return string
+	 */
+	public function get_type();
+
+	/**
 	 * Attach this actor to an activity item.
 	 *
 	 * @since 1.34
