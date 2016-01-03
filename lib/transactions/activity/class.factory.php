@@ -27,12 +27,18 @@ class IT_Exchange_Txn_Activity_Factory {
 	private $type_taxonomy;
 
 	/**
+	 * @var IT_Exchange_Txn_Activity_Actor_Factory
+	 */
+	private $actor_factory;
+
+	/**
 	 * IT_Exchange_Txn_Activity_Factory constructor.
 	 *
-	 * @param $post_type
-	 * @param $type_taxonomy
+	 * @param string                                 $post_type
+	 * @param string                                 $type_taxonomy
+	 * @param IT_Exchange_Txn_Activity_Actor_Factory $actor_factory
 	 */
-	public function __construct( $post_type, $type_taxonomy ) {
+	public function __construct( $post_type, $type_taxonomy, IT_Exchange_Txn_Activity_Actor_Factory $actor_factory ) {
 
 		if ( ! post_type_exists( $post_type ) ) {
 			throw new InvalidArgumentException( "Post type '{$post_type} does not exist." );
@@ -44,6 +50,7 @@ class IT_Exchange_Txn_Activity_Factory {
 
 		$this->post_type     = $post_type;
 		$this->type_taxonomy = $type_taxonomy;
+		$this->actor_factory = $actor_factory;
 	}
 
 	/**
@@ -74,7 +81,7 @@ class IT_Exchange_Txn_Activity_Factory {
 	 * @since 1.34
 	 *
 	 * @param string   $type
-	 * @param callable $function Function called to make the object.
+	 * @param callable $function Function called to make the object. Passed ID and Actor object.
 	 *
 	 * @return $this
 	 */
@@ -120,7 +127,7 @@ class IT_Exchange_Txn_Activity_Factory {
 
 		$function = $this->types[ $type ];
 
-		$activity = $function( $id );
+		$activity = $function( $id, $this->actor_factory->make( $id ) );
 
 		if ( ! $activity instanceof IT_Exchange_Txn_Activity ) {
 			throw new UnexpectedValueException( "Activity with ID '{$id}', is not valid." );
