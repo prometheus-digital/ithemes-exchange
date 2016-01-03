@@ -161,6 +161,7 @@ final class IT_Exchange_Txn_Activity_Builder {
 		$activity = $factory->make( $ID );
 
 		if ( $activity && $this->actor ) {
+			update_post_meta( $ID, '_actor_type', $this->actor->get_type() );
 			$this->actor->attach( $activity );
 		}
 
