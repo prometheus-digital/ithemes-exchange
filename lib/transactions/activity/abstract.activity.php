@@ -68,6 +68,17 @@ abstract class IT_Exchange_Txn_AbstractActivity implements IT_Exchange_Txn_Activ
 	}
 
 	/**
+	 * Get the transaction this activity belongs to.
+	 *
+	 * @since 1.34
+	 *
+	 * @return IT_Exchange_Transaction
+	 */
+	public function get_transaction() {
+		return it_exchange_get_transaction( $this->post->post_parent );
+	}
+
+	/**
 	 * Does this activity item have an actor.
 	 *
 	 * @since 1.34

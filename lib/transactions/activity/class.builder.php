@@ -134,7 +134,8 @@ final class IT_Exchange_Txn_Activity_Builder {
 
 		$data = array(
 			'post_content' => $this->description,
-			'post_type'    => $factory->get_post_type()
+			'post_type'    => $factory->get_post_type(),
+			'post_parent'  => $this->transaction->ID
 		);
 
 		if ( $this->time ) {

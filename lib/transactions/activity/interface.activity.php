@@ -61,6 +61,15 @@ interface IT_Exchange_Txn_Activity {
 	public function is_public();
 
 	/**
+	 * Get the transaction this activity belongs to.
+	 *
+	 * @since 1.34
+	 *
+	 * @return IT_Exchange_Transaction
+	 */
+	public function get_transaction();
+
+	/**
 	 * Does this activity item have an actor.
 	 *
 	 * @since 1.34
