@@ -79,9 +79,6 @@ class IT_Exchange_Txn_Activity_Customer_Actor implements IT_Exchange_Txn_Activit
 	 * @return self
 	 */
 	public function attach( IT_Exchange_Txn_Activity $activity ) {
-
-		update_post_meta( $activity->get_ID(), '_actor_customer', true );
-
 		return $this;
 	}
 }

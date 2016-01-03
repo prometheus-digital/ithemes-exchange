@@ -72,8 +72,6 @@ class IT_Exchange_Txn_Activity_Site_Actor implements IT_Exchange_Txn_Activity_Ac
 	 * @return self
 	 */
 	public function attach( IT_Exchange_Txn_Activity $activity ) {
-		update_post_meta( $activity->get_ID(), '_actor_site', true );
-
 		return $this;
 	}
 }
