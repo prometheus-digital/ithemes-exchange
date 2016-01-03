@@ -160,7 +160,7 @@ final class IT_Exchange_Txn_Activity_Builder {
 
 		$activity = $factory->make( $ID );
 
-		if ( $activity ) {
+		if ( $activity && $this->actor ) {
 			$this->actor->attach( $activity );
 		}
 
