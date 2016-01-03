@@ -21,3 +21,5 @@ require_once dirname( __FILE__ ) . '/actors/class.user.php';
 
 // activity types
 require_once dirname( __FILE__ ) . '/types/class.note.php';
+
+require_once dirname( __FILE__ ) . '/functions.php';

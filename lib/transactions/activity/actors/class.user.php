@@ -26,6 +26,21 @@ class IT_Exchange_Txn_Activity_User_Actor implements IT_Exchange_Txn_Activity_Ac
 	}
 
 	/**
+	 * Make a user actor from an activity ID.
+	 *
+	 * This is used as a callback from the actor factory, it should not be called directly.
+	 *
+	 * @internal
+	 *
+	 * @param int $activity_id
+	 *
+	 * @return IT_Exchange_Txn_Activity_User_Actor
+	 */
+	public static function make( $activity_id ) {
+		return new self( get_user_by( 'id', get_post_meta( $activity_id, '_actor_user_id', true ) ) );
+	}
+
+	/**
 	 * Get the actor's name.
 	 *
 	 * @since 1.34

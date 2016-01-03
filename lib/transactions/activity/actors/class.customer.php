@@ -26,6 +26,26 @@ class IT_Exchange_Txn_Activity_Customer_Actor implements IT_Exchange_Txn_Activit
 	}
 
 	/**
+	 * Make a customer actor from an activity ID.
+	 *
+	 * This is used as a callback from the actor factory, it should not be called directly.
+	 *
+	 * @internal
+	 *
+	 * @param int $activity_id
+	 *
+	 * @return IT_Exchange_Txn_Activity_Customer_Actor
+	 */
+	public static function make( $activity_id ) {
+
+		// this sucks, it breaks encapsulation,
+		// unfortunately we can't trust the customer ID because of guest transactions
+		$txn_id = wp_get_post_parent_id( $activity_id );
+
+		return new self( it_exchange_get_transaction_customer( $txn_id ) );
+	}
+
+	/**
 	 * Get the actor's name.
 	 *
 	 * @since 1.34

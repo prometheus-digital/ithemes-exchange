@@ -14,38 +14,23 @@ class IT_Exchange_Txn_Note_Activity extends IT_Exchange_Txn_AbstractActivity {
 	/**
 	 * Retrieve a note activity item.
 	 *
+	 * This is used by the activity factory, and should not be called directly.
+	 *
 	 * @since 1.34
 	 *
-	 * @param int $id
+	 * @internal
+	 *
+	 * @param int                            $id
+	 * @param IT_Exchange_Txn_Activity_Actor $actor
 	 *
 	 * @return IT_Exchange_Txn_Note_Activity|null
 	 */
-	public static function get( $id ) {
+	public static function make( $id, IT_Exchange_Txn_Activity_Actor $actor = null ) {
 
 		$post = get_post( $id );
 
 		if ( ! $post instanceof WP_Post ) {
 			return null;
-		}
-
-		$actor   = null;
-		$user_id = get_post_meta( $post->ID, '_actor_user_id', true );
-
-		if ( $user_id ) {
-
-			$user = get_user_by( 'id', $user_id );
-
-			if ( $user instanceof WP_User ) {
-				$actor = new IT_Exchange_Txn_Activity_User_Actor( $user );
-			}
-		} else {
-			$transaction = it_exchange_get_transaction( $post->post_parent );
-
-			$customer = it_exchange_get_transaction_customer( $transaction );
-
-			if ( $customer instanceof IT_Exchange_Customer ) {
-				$actor = new IT_Exchange_Txn_Activity_Customer_Actor( $customer );
-			}
 		}
 
 		return new self( $post, $actor );
