@@ -86,7 +86,7 @@ abstract class IT_Exchange_Txn_AbstractActivity implements IT_Exchange_Txn_Activ
 	 * @return bool
 	 */
 	public function has_actor() {
-		return $this->actor !== null;
+		return $this->get_actor() !== null;
 	}
 
 	/**

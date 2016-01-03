@@ -47,6 +47,7 @@ function it_exchange_get_txn_activity_factory() {
 		'ite_txn_activity', 'ite_txn_activity_type', it_exchange_get_txn_activity_actor_factory()
 	);
 	$factory->register( 'note', array( 'IT_Exchange_Txn_Note_Activity', 'make' ) );
+	$factory->register( 'renewal', array( 'IT_Exchange_Txn_Renewal_Activity', 'make' ) );
 
 	return $factory;
 }
