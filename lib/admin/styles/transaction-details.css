@@ -14,7 +14,7 @@
 #it-exchange-transaction-details .bottom-top{border-top:1px solid #DFDFDF;}
 
 /** -----------------------------------------------------:[ transaction details ]:---------- */
-#it-exchange-transaction-details{max-width:760px;}
+#it-exchange-transaction-details{max-width:660px;}
 #it-exchange-transaction-details .parent-txn-link {padding: 1.3em}
 #it-exchange-transaction-details .customer-avatar img{border-radius:3px;}
 #it-exchange-transaction-details .customer-display-name{display:inline;margin-top:0;padding-left: 0;line-height:1;}
@@ -65,3 +65,8 @@
 #it-exchange-update-transaction-status-failed,
 #it-exchange-update-transaction-status-success{position:absolute;top:3px;right:95px;padding:2px 4px;background:#407D28;border-radius:2px;color:#FFF;font-weight:100;opacity:0;}
 #it-exchange-update-transaction-status-failed{background:#D72E3A;}
+
+/** -----------------------------------------------------:[ transaction activity ]:---------- */
+#it-exchange-transaction-activity {
+	width: auto;
+}

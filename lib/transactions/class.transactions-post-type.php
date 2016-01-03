@@ -10,15 +10,25 @@
  * Registers the it_exchange_tran post type
  *
  * @since 0.3.3
-*/
+ */
 class IT_Exchange_Transaction_Post_Type {
+
+	/**
+	 * @var string
+	 */
+	var $post_type;
+
+	/**
+	 * @var array
+     */
+	var $options;
 
 	/**
 	 * Class Constructor
 	 *
 	 * @since 0.3.3
-	*/
-	function __construct() {
+	 */
+	public function __construct() {
 		$this->init();
 
 		add_action( 'save_post_it_exchange_tran', array( $this, 'save_transaction' ) );
@@ -44,20 +54,28 @@ class IT_Exchange_Transaction_Post_Type {
 	 *
 	 * @deprecated
 	 */
-	function IT_Exchange_Transaction_Post_Type() {
+	public function IT_Exchange_Transaction_Post_Type() {
 
 		self::__construct();
 
 		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
-	function init() {
+	/**
+	 * Initialize the post type.
+	 *
+	 * @since 1.0
+     */
+	public function init() {
+
 		$this->post_type = 'it_exchange_tran';
-		$labels    = array(
+
+		$labels = array(
 			'name'          => __( 'Payments', 'it-l10n-ithemes-exchange' ),
 			'singular_name' => __( 'Payment', 'it-l10n-ithemes-exchange' ),
 			'edit_item'     => __( 'Payment Details', 'it-l10n-ithemes-exchange' ),
 		);
+
 		$this->options = array(
 			'labels'               => $labels,
 			'description'          => __( 'An iThemes Exchange Post Type for storing all Payments in the system', 'it-l10n-ithemes-exchange' ),
@@ -94,12 +112,16 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @since 0.4.0
 	 *
 	 * @param array $actions actions array
-	 * @param object $post wp_post object
+	 * @param WP_Post $post object
+	 *
 	 * @return array
-	*/
-	function rename_edit_to_details( $actions, $post ) {
-		if ( 'it_exchange_tran' === $post->post_type )
-		$actions['edit'] = '<a href="' . get_edit_post_link( $post->ID, true ) . '" title="' . esc_attr( __( 'View the transaction details', 'it-l10n-ithemes-exchange' ) ) . '">' . __( 'Details', 'it-l10n-ithemes-exchange' ) . '</a>';
+	 */
+	public function rename_edit_to_details( $actions, $post ) {
+		if ( 'it_exchange_tran' === $post->post_type ) {
+			$actions['edit'] = '<a href="' . get_edit_post_link( $post->ID, true ) . '" title="' .
+			esc_attr( __( 'View the transaction details', 'it-l10n-ithemes-exchange' ) ) . '">' .
+			 __( 'Details', 'it-l10n-ithemes-exchange' ) . '</a>';
+		}
 
 		return $actions;
 	}
@@ -109,11 +131,13 @@ class IT_Exchange_Transaction_Post_Type {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param $columns Existing array of how many colunns to show for a post type
+	 * @param array $columns Existing array of how many columns to show for a post type
+	 *
 	 * @return array Filtered array
-	*/
-	function modify_details_page_layout( $columns ) {
-		$columns['it_exchange_tran'] = 1;
+	 */
+	public function modify_details_page_layout( $columns ) {
+		$columns['it_exchange_tran'] = 2;
+
 		return $columns;
 	}
 
@@ -122,19 +146,22 @@ class IT_Exchange_Transaction_Post_Type {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return 2
-	*/
-	function update_user_column_options( $existing ) {
-		return 1;
+	 * @param int $existing
+	 *
+	 * @return int
+	 */
+	public function update_user_column_options( $existing ) {
+		return 2;
 	}
 
 	/**
 	 * Actually registers the post type
 	 *
 	 * @since 0.3.3
+	 *
 	 * @return void
-	*/
-	function register_the_post_type() {
+	 */
+	public function register_the_post_type() {
 		register_post_type( $this->post_type, $this->options );
 	}
 
@@ -143,16 +170,20 @@ class IT_Exchange_Transaction_Post_Type {
 	 *
 	 * @since 0.3.3
 	 * @uses it_exchange_get_enabled_add_ons()
+	 *
+	 * @param WP_Post $post
+	 *
 	 * @return void
-	*/
-	function meta_box_callback( $post ) {
+	 */
+	public function meta_box_callback( $post ) {
 		$transaction = it_exchange_get_transaction( $post );
 
 		// Add action for current product type
 		if ( $transaction_methods = it_exchange_get_enabled_addons( array( 'category' => array( 'transaction-method' ) ) ) ) {
 			foreach( $transaction_methods as $addon_slug => $params ) {
-				if ( $addon_slug == $transaction->transaction_method )
+				if ( $addon_slug == $transaction->transaction_method ) {
 					do_action( 'it_exchange_transaction_metabox_callback_' . $addon_slug, $transaction );
+				}
 			}
 		}
 
@@ -172,13 +203,17 @@ class IT_Exchange_Transaction_Post_Type {
 	 * - it_exchange_save_transaction-[transaction-method]             // Runs every time a specific iThemes Exchange transaction-method is saved if not an autosave and if user has permission to save post
 	 *
 	 * @since 0.3.3
+	 *
+	 * @param WP_Post $post
+	 *
 	 * @return void
-	*/
-	function save_transaction( $post ) {
+	 */
+	public function save_transaction( $post ) {
 
 		// Exit if not it_exchange_prod post_type
-		if ( ! 'it_exchange_tran' == get_post_type( $post ) )
+		if ( ! 'it_exchange_tran' == get_post_type( $post ) ) {
 			return;
+		}
 
 		// Grab enabled transaction-method add-ons
 		$transaction_method_addons = it_exchange_get_enabled_addons( array( 'category' => 'transaction-method' ) );
@@ -188,6 +223,7 @@ class IT_Exchange_Transaction_Post_Type {
 
 		// These hooks fire off any time a it_exchange_tran post is saved w/o validations
 		do_action( 'it_exchange_save_transaction_unvalidated', $post );
+
 		foreach( (array) $transaction_method_addons as $slug => $params ) {
 			if ( $slug == $transaction_method ) {
 				do_action( 'it_exchange_save_transaction_unvalidated_' . $slug, $post );
@@ -195,11 +231,13 @@ class IT_Exchange_Transaction_Post_Type {
 		}
 
 		// Fire off actions with validations that most instances need to use.
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
+		}
 
-		if ( ! current_user_can( 'edit_post', $post ) )
+		if ( ! current_user_can( 'edit_post', $post ) ) {
 			return;
+		}
 
 		// This is called any time save_post hook
 		do_action( 'it_exchange_save_transaction', $post );
@@ -214,13 +252,17 @@ class IT_Exchange_Transaction_Post_Type {
 	 * Sets the post transaction_method on post creation
 	 *
 	 * @since 0.3.3
+	 *
+	 * @param WP_Post $post
+	 *
 	 * @return void
-	*/
-	function set_initial_post_transaction_method( $post ) {
-		global $pagenow;
+	 */
+	public function set_initial_post_transaction_method( $post ) {
+
 		if ( $transaction = it_exchange_get_transaction( $post ) ) {
-			if ( ! empty( $transaction->transaction_method ) && ! get_post_meta( $transaction->ID, '_it_exchange_transaction_method', true ) )
+			if ( ! empty( $transaction->transaction_method ) && ! get_post_meta( $transaction->ID, '_it_exchange_transaction_method', true ) ) {
 				update_post_meta( $transaction->ID, '_it_exchange_transaction_method', $transaction->transaction_method );
+			}
 		}
 	}
 
@@ -228,10 +270,12 @@ class IT_Exchange_Transaction_Post_Type {
 	 * Adds the transaction method column to the View All transactions table
 	 *
 	 * @since 0.3.3
+	 *
 	 * @param array $existing  exisiting columns array
+	 *
 	 * @return array  modified columns array
-	*/
-	function modify_all_transactions_table_columns( $existing ) {
+	 */
+	public function modify_all_transactions_table_columns( $existing ) {
 
 		// Add a filter to replace the title text with the Date
 		add_filter( 'the_title', array( $this, 'replace_transaction_title_with_order_number' ), 10, 2 );
@@ -243,33 +287,39 @@ class IT_Exchange_Transaction_Post_Type {
 		}
 
 		// Remove Title - adding it back below
-		if ( isset( $existing['title'] ) )
+		if ( isset( $existing['title'] ) ) {
 			unset( $existing['title'] );
+		}
 
 		// Remove Format
-		if ( isset( $existing['format'] ) )
+		if ( isset( $existing['format'] ) ) {
 			unset( $existing['format'] );
+		}
 
 		// Remove Author
-		if ( isset( $existing['author'] ) )
+		if ( isset( $existing['author'] ) ) {
 			unset( $existing['author'] );
+		}
 
 		// Remove Comments
-		if ( isset( $existing['comments'] ) )
+		if ( isset( $existing['comments'] ) ) {
 			unset( $existing['comments'] );
+		}
 
 		// Remove Date
-		if ( isset( $existing['date'] ) )
+		if ( isset( $existing['date'] ) ) {
 			unset( $existing['date'] );
+		}
 
 		// Remove Builder
-		if ( isset( $existing['builder_layout'] ) )
+		if ( isset( $existing['builder_layout'] ) )	{
 			unset( $existing['builder_layout'] );
+		}
 
 
 		// All Core should be removed at this point. Build ours back (including date from core)
 		$exchange_columns = array(
-			'cb'                                      => $check,
+			'cb'                                      => isset( $check ) ? $check : '',
 			'title'                                   => __( 'Order Number', 'it-l10n-ithemes-exchange' ),
 			'it_exchange_transaction_total_column'    => __( 'Total', 'it-l10n-ithemes-exchange' ),
 			'it_exchange_transaction_status_column'   => __( 'Status', 'it-l10n-ithemes-exchange' ),
@@ -280,6 +330,7 @@ class IT_Exchange_Transaction_Post_Type {
 
 		// Merge ours back with existing to preserve any 3rd party columns
 		$columns = array_merge( $exchange_columns, $existing );
+
 		return $columns;
 	}
 
@@ -292,8 +343,8 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @param int    $ID
 	 *
 	 * @return string
-	*/
-	function replace_transaction_title_with_order_number( $title, $ID ) {
+	 */
+	public function replace_transaction_title_with_order_number( $title, $ID ) {
 		return it_exchange_get_transaction_order_number( $ID );
 	}
 
@@ -301,11 +352,12 @@ class IT_Exchange_Transaction_Post_Type {
 	 * Makes some of the custom transaction columns added above sortable
 	 *
 	 * @since 0.3.3
+	 *
 	 * @param array $sortables  existing sortable columns
 	 *
 	 * @return array  modified sortable columnns
-	*/
-	function make_transaction_custom_columns_sortable( $sortables ) {
+	 */
+	public function make_transaction_custom_columns_sortable( $sortables ) {
 		$sortables['it_exchange_transaction_date_column']   = 'date';
 		$sortables['it_exchange_transaction_method_column'] = 'it_exchange_transaction_method_column';
 
@@ -316,10 +368,12 @@ class IT_Exchange_Transaction_Post_Type {
 	 * Adds the values to each row of the custom columns added above
 	 *
 	 * @since 0.3.3
+	 *
 	 * @param string $column  column title
 	 * @param integer $post  post ID
+	 *
 	 * @return void
-	*/
+	 */
 	function add_transaction_method_info_to_view_all_table_rows( $column ) {
 		global $post;
 		$transaction = it_exchange_get_transaction( $post );
@@ -329,16 +383,18 @@ class IT_Exchange_Transaction_Post_Type {
 				echo empty( $method_name ) ? $transaction->transaction_method : $method_name;
 				break;
 			case 'it_exchange_transaction_status_column' :
-				esc_attr_e( it_exchange_get_transaction_status_label( $post ) );
+				echo it_exchange_get_transaction_status_label( $post );
 				break;
 			case 'it_exchange_transaction_customer_column' :
-				if ( $customer = it_exchange_get_transaction_customer( $transaction ) )
+				if ( $customer = it_exchange_get_transaction_customer( $transaction ) ) {
 					esc_attr_e( empty( $customer->wp_user->display_name ) ? $customer->wp_user->user_login : $customer->wp_user->display_name );
-				else
-					esc_attr_e( __( 'Unknown', 'it-l10n-ithemes-exchange' ) );
+				}
+				else {
+					esc_attr_e( 'Unknown', 'it-l10n-ithemes-exchange' );
+				}
 				break;
 			case 'it_exchange_transaction_total_column' :
-				esc_attr_e( it_exchange_get_transaction_total( $transaction ) );
+				echo it_exchange_get_transaction_total( $transaction );
 				break;
 			case 'it_exchange_transaction_date_column' :
 
@@ -353,9 +409,8 @@ class IT_Exchange_Transaction_Post_Type {
 					$h_time = mysql2date( __( 'Y/m/d' ), $m_time );
 				}
 
-				echo esc_attr( $h_time );
+				echo $h_time;
 				break;
-
 		}
 	}
 
@@ -375,17 +430,15 @@ class IT_Exchange_Transaction_Post_Type {
 			if ( 'it_exchange_tran' === $request['post_type'] && isset( $request['orderby'] ) ) {
 
 				switch( $request['orderby'] ) {
-/*					case 'menu_order title':
-						$request['order'] = 'desc'; */
 					case 'title':
 						$request['orderby'] = 'ID';
 						break;
 					case 'it_exchange_transaction_status_column':
-						$request['orderby'] = 'meta_value';
+						$request['orderby']  = 'meta_value';
 						$request['meta_key'] = '_it_exchange_transaction_status';
 						break;
 					case 'it_exchange_transaction_method_column':
-						$request['orderby'] = 'meta_value';
+						$request['orderby']  = 'meta_value';
 						$request['meta_key'] = '_it_exchange_transaction_method';
 						break;
 				}
@@ -400,14 +453,14 @@ class IT_Exchange_Transaction_Post_Type {
 	 *
 	 * @since 0.3.3
 	 * @return void
-	*/
-	function modify_post_type_features() {
-		global $pagenow;
-		$post = empty( $_GET['post'] ) ? false : get_post( $_GET['post'] );
-		if ( ! $post )
-			return false;
+	 */
+	public function modify_post_type_features() {
 
-		it_exchange_get_transaction( $post );
+		$post = empty( $_GET['post'] ) ? false : get_post( $_GET['post'] );
+
+		if ( $post && $post->post_type === 'it_exchange_tran' ) {
+			it_exchange_get_transaction( $post );
+		}
 	}
 
 	/**
@@ -415,10 +468,12 @@ class IT_Exchange_Transaction_Post_Type {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param object $post post object
+	 * @param WP_Post $post post object
+	 *
 	 * @return void
-	*/
+	 */
 	function register_transaction_details_admin_metabox( $post ) {
+
 		// Remove Publish metabox
 		remove_meta_box( 'submitdiv', 'it_exchange_tran', 'side' );
 
@@ -428,25 +483,29 @@ class IT_Exchange_Transaction_Post_Type {
 		// Remove screen options tab
 		add_filter('screen_options_show_screen', '__return_false');
 
-		// Transaction Details
-		$title     = __( 'Transaction Details', 'it-l10n-ithemes-exchange' );
-		$callback  = array( $this, 'print_transaction_details_metabox' );
-		$post_type = 'it_exchange_tran';
-		add_meta_box( 'it-exchange-transaction-details', $title, $callback, $post_type, 'normal', 'high' );
+		add_action( 'edit_form_after_editor', array( $this, 'print_transaction_details_metabox' ) );
 
+		add_meta_box( 'it-exchange-transaction-activity', __( 'Activity', 'it-l10n-ithemes-exchange' ),
+			array( $this, 'print_activity' ), 'it_exchange_tran', 'side', 'low'
+		);
 	}
 
 	/**
 	 * Prints the transaction details metabox
 	 *
 	 * @since 0.4.0
+	 *
 	 * @param object $post post object
+	 *
 	 * @return void
-	*/
+	 */
 	function print_transaction_details_metabox( $post ) {
-		$confirmation_url = it_exchange_get_transaction_confirmation_url( $post->ID );
+
 		do_action( 'it_exchange_before_payment_details', $post );
+
 		?>
+		<div class="postbox" id="it-exchange-transaction-details">
+		<div class="inside">
 		<div class="transaction-stamp hidden <?php esc_attr_e( strtolower( it_exchange_get_transaction_status_label( $post ) ) ); ?>">
 			<?php esc_attr_e( it_exchange_get_transaction_status_label( $post ) ); ?>
 		</div>
@@ -489,12 +548,11 @@ class IT_Exchange_Transaction_Post_Type {
 				</div>
 
 				<?php if ( ! $post->post_parent ) : ?>
-				<div class="customer-ip-address">
-					<?php esc_attr_e( it_exchange_get_transaction_customer_ip_address( $post ) ); ?>
-				</div>
+					<div class="customer-ip-address">
+						<?php esc_attr_e( it_exchange_get_transaction_customer_ip_address( $post ) ); ?>
+					</div>
 				<?php endif; ?>
 
-				
 				<?php if ( apply_filters( 'it_exchange_transaction_detail_has_customer_profile', true, $post ) ) : ?>
 					<div class="customer-profile">
 						<a href="<?php esc_attr_e( it_exchange_get_transaction_customer_admin_profile_url( $post ) ); ?>">
@@ -511,22 +569,24 @@ class IT_Exchange_Transaction_Post_Type {
 		<?php
 		$shipping_address = it_exchange_get_transaction_shipping_address( $post->ID );
 		$shipping_address = array_filter( (array) $shipping_address ); // Make it false if all values are empty
-		$shipping_address =  it_exchange_transaction_includes_shipping( $post ) ? $shipping_address : false;
+		$shipping_address = it_exchange_transaction_includes_shipping( $post ) ? $shipping_address : false;
 		$billing_address  = it_exchange_get_transaction_billing_address( $post->ID );
-		$billing_address = array_filter( (array) $billing_address ); // Make it false if all values are empty
+		$billing_address  = array_filter( (array) $billing_address ); // Make it false if all values are empty
 
 		if ( $shipping_address || $billing_address ) : ?>
 			<div class="billing-shipping-wrapper columns-wrapper">
+
 				<?php if ( $shipping_address ) : ?>
-					<div class="shipping-address column c-30">
+					<div class="shipping-address column">
 						<div class="column-inner">
 							<div class="shipping-address-label address-label"><?php _e( 'Shipping Address', 'it-l10n-ithemes-exchange' ); ?></div>
 							<p><?php echo it_exchange_get_formatted_shipping_address( $shipping_address ); ?></p>
 						</div>
 					</div>
 				<?php endif; ?>
+
 				<?php if ( $billing_address ) : ?>
-					<div class="billing-address column c-30">
+					<div class="billing-address column">
 						<div class="column-inner">
 							<div class="billing-address-label address-label"><?php _e( 'Billing Address', 'it-l10n-ithemes-exchange' ); ?></div>
 							<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
@@ -545,12 +605,12 @@ class IT_Exchange_Transaction_Post_Type {
 				<span class="right"><?php _e( 'Amount', 'it-l10n-ithemes-exchange' ); ?></span>
 			</div>
 			<?php
-				// Grab products attached to transaction
-				$transaction_products = it_exchange_get_transaction_products( $post );
+			// Grab products attached to transaction
+			$transaction_products = it_exchange_get_transaction_products( $post );
 
-				if ( empty( $transaction_products ) && $post->post_parent ) {
-					$transaction_products = it_exchange_get_transaction_products( $post->post_parent );
-				}
+			if ( empty( $transaction_products ) && $post->post_parent ) {
+				$transaction_products = it_exchange_get_transaction_products( $post->post_parent );
+			}
 			?>
 
 			<?php foreach ( $transaction_products as $transaction_product ) : ?>
@@ -600,6 +660,7 @@ class IT_Exchange_Transaction_Post_Type {
 		<?php do_action( 'it_exchange_transaction_details_before_costs', $post ); ?>
 
 		<div class="transaction-costs clearfix spacing-wrapper bottom-border">
+
 			<div class="transaction-costs-subtotal right clearfix">
 				<div class="transaction-costs-subtotal-label left"><?php _e( 'Subtotal', 'it-l10n-ithemes-exchange' ); ?></div>
 				<div class="transaction-costs-subtotal-price">
@@ -623,10 +684,6 @@ class IT_Exchange_Transaction_Post_Type {
 					<?php foreach ( $coupon as $data ) : ?>
 						<div class="transaction-cost-coupon">
 							<span class="code"><?php echo $data['code'] ?></span>
-							<!--
-								NOTE Plan to edit this later when more variables are added to the output of the coupon. - Koop
-							-->
-							<!-- <span class="code amount"><?php echo $data['amount_number'] ?><?php echo $data['amount_type'] ?></span> -->
 						</div>
 					<?php endforeach; ?>
 				<?php endforeach; ?>
@@ -703,12 +760,12 @@ class IT_Exchange_Transaction_Post_Type {
 				<?php endif; ?>
 			</div>
 		</div>
-		<?php
-		if ( it_exchange_transaction_status_can_be_manually_changed( $post ) ) :
-			?>
+		<?php if ( it_exchange_transaction_status_can_be_manually_changed( $post ) ) : ?>
 			<div class="transaction-status-update clearfix spacing-wrapper hide-if-no-js bottom-border">
 				<div class="update-status-label left">
-					<?php _e( 'Change Status', 'it-l10n-ithemes-exchange' ); ?>
+					<label for="it-exchange-update-transaction-status">
+						<?php _e( 'Change Status', 'it-l10n-ithemes-exchange' ); ?>
+					</label>
 					<span class="tip" title="<?php _e( 'The customer will receive an email When this is changed from a status that is not cleared for delivery to a status that is cleared for delivery', 'it-l10n-ithemes-exchange' ); ?>">i</span>
 				</div>
 				<div class="update-status-setting right">
@@ -734,9 +791,22 @@ class IT_Exchange_Transaction_Post_Type {
 					<div id="it-exchange-update-transaction-status-success"><?php _e( 'Saved!', 'it-l10n-ithemes-exchange' ); ?></div>
 				</div>
 			</div>
-			<?php
-		endif;
+			<?php endif; ?>
+
+		<?php
 		do_action( 'it_exchange_after_payment_details', $post );
+		echo '</div></div>';
+	}
+
+	/**
+	 * Print the activity meta box.
+	 *
+	 * @since 1.34
+	 *
+	 * @param WP_Post $post
+	 */
+	public function print_activity( $post ) {
+		echo $post->ID;
 	}
 
 	/**
@@ -745,34 +815,39 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @since 0.4.11
 	 *
 	 * @return void
-	*/
-	function ajax_update_status() {
+	 */
+	public function ajax_update_status() {
 		$transaction_id = empty( $_POST['it-exchange-transaction-id'] ) ? false: absint( $_POST['it-exchange-transaction-id'] );
 		$nonce          = empty( $_POST['it-exchange-nonce'] ) ? false: $_POST['it-exchange-nonce'];
 		$current_status = empty( $_POST['it-exchange-current-status'] ) ? false : $_POST['it-exchange-current-status'];
 		$new_status     = empty( $_POST['it-exchange-new-status'] ) ? false : $_POST['it-exchange-new-status'];
 
 		// Fail if we don't have all the data
-		if ( ! $transaction_id || ! $nonce || ! $current_status || ! $new_status )
+		if ( ! $transaction_id || ! $nonce || ! $current_status || ! $new_status ) {
 			die( 'failed' );
+		}
 
 		// Fail if we don't have a valid nonce
-		if ( ! wp_verify_nonce( $nonce, 'update-transaction-status' . $transaction_id ) )
+		if ( ! wp_verify_nonce( $nonce, 'update-transaction-status' . $transaction_id ) ) {
 			die( 'failed' );
+		}
 
 		// Fail if status is the same as old status
-		if ( $current_status == $new_status )
+		if ( $current_status == $new_status ) {
 			die( 'failed' );
+		}
 
 		// Fail if transaction isn't found
-		if ( ! $transaction = it_exchange_get_transaction( $transaction_id ) )
+		if ( ! $transaction = it_exchange_get_transaction( $transaction_id ) ) {
 			die( 'failed' );
+		}
 
 		// Attempt to change status
-		if ( $current_status != it_exchange_update_transaction_status( $transaction, $new_status ) )
+		if ( $current_status != it_exchange_update_transaction_status( $transaction, $new_status ) ) {
 			die( 'success' );
-		else
-			die ('failed' );
+		} else {
+			die( 'failed' );
+		}
 	}
 
 	/**
@@ -781,13 +856,17 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @since 1.10.0
 	 *
 	 * @param  array $actions incoming options
+	 *
 	 * @return array
-	*/
-	function edit_bulk_actions( $actions ) {
+	 */
+	public function edit_bulk_actions( $actions ) {
+
 		if ( isset( $actions['edit'] ) ) {
 			unset( $actions['edit'] );
 		}
+
 		return $actions;
 	}
 }
+
 $IT_Exchange_Transaction_Post_Type = new IT_Exchange_Transaction_Post_Type();
