@@ -830,7 +830,7 @@ class IT_Exchange_Transaction_Post_Type {
 		</div>
 
 		<script type="text/template" id="exchange-activity-tpl">
-			<li>
+			<li id="activity-item-<%= a.getID() %>">
 				<header><%= moment( a.getTime() ).calendar() %></header>
 				<article>
 					<p><%= a.getDescription() %></p>
@@ -848,7 +848,11 @@ class IT_Exchange_Transaction_Post_Type {
 					<%= a.getIcon().html() %>
 				<% } %>
 
-				<%= a.getNameHTML() %>
+				<% if ( a.getURL() ) { %>
+					<a href="<%= a.getURL() %>"><%= a.getName() %></a>
+				<% } else { %>
+					<%= a.getName() %>
+				<% } %>
 			</footer>
 		</script>
 
