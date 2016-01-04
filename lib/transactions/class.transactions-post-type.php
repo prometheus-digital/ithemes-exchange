@@ -3,8 +3,8 @@
  * Creates the post type for Transactions
  *
  * @package IT_Exchange
- * @since 0.3.3
-*/
+ * @since   0.3.3
+ */
 
 /**
  * Registers the it_exchange_tran post type
@@ -20,7 +20,7 @@ class IT_Exchange_Transaction_Post_Type {
 
 	/**
 	 * @var array
-     */
+	 */
 	var $options;
 
 	/**
@@ -35,15 +35,30 @@ class IT_Exchange_Transaction_Post_Type {
 
 		if ( is_admin() ) {
 			add_action( 'admin_init', array( $this, 'modify_post_type_features' ) );
-			add_filter( 'manage_edit-it_exchange_tran_columns', array( $this, 'modify_all_transactions_table_columns' ) );
-			add_filter( 'manage_edit-it_exchange_tran_sortable_columns', array( $this, 'make_transaction_custom_columns_sortable' ) );
-			add_filter( 'manage_it_exchange_tran_posts_custom_column', array( $this, 'add_transaction_method_info_to_view_all_table_rows' ) );
+			add_filter( 'manage_edit-it_exchange_tran_columns', array(
+				$this,
+				'modify_all_transactions_table_columns'
+			) );
+			add_filter( 'manage_edit-it_exchange_tran_sortable_columns', array(
+				$this,
+				'make_transaction_custom_columns_sortable'
+			) );
+			add_filter( 'manage_it_exchange_tran_posts_custom_column', array(
+				$this,
+				'add_transaction_method_info_to_view_all_table_rows'
+			) );
 			add_filter( 'request', array( $this, 'modify_wp_query_request_on_edit_php' ) );
-			add_filter( 'it_exchange_transaction_metabox_callback', array( $this, 'register_transaction_details_admin_metabox' ) );
+			add_filter( 'it_exchange_transaction_metabox_callback', array(
+				$this,
+				'register_transaction_details_admin_metabox'
+			) );
 			add_filter( 'post_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
 			add_filter( 'page_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
 			add_filter( 'screen_layout_columns', array( $this, 'modify_details_page_layout' ) );
-			add_filter( 'get_user_option_screen_layout_it_exchange_tran', array( $this, 'update_user_column_options' ) );
+			add_filter( 'get_user_option_screen_layout_it_exchange_tran', array(
+				$this,
+				'update_user_column_options'
+			) );
 			add_filter( 'bulk_actions-edit-it_exchange_tran', array( $this, 'edit_bulk_actions' ) );
 			add_action( 'wp_ajax_it-exchange-update-transaction-status', array( $this, 'ajax_update_status' ) );
 		}
@@ -65,7 +80,7 @@ class IT_Exchange_Transaction_Post_Type {
 	 * Initialize the post type.
 	 *
 	 * @since 1.0
-     */
+	 */
 	public function init() {
 
 		$this->post_type = 'it_exchange_tran';
@@ -82,7 +97,8 @@ class IT_Exchange_Transaction_Post_Type {
 			'public'               => false,
 			'show_ui'              => true,
 			'show_in_nav_menus'    => false,
-			'show_in_menu'         => false, // We will be adding it manually with various labels based on available product-type add-ons
+			'show_in_menu'         => false,
+			// We will be adding it manually with various labels based on available product-type add-ons
 			'show_in_admin_bar'    => false,
 			'hierarchical'         => apply_filters( 'it_exchange_transactions_post_type_hierarchical', true ),
 			'register_meta_box_cb' => array( $this, 'meta_box_callback' ),
@@ -111,16 +127,16 @@ class IT_Exchange_Transaction_Post_Type {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param array $actions actions array
-	 * @param WP_Post $post object
+	 * @param array   $actions actions array
+	 * @param WP_Post $post    object
 	 *
 	 * @return array
 	 */
 	public function rename_edit_to_details( $actions, $post ) {
 		if ( 'it_exchange_tran' === $post->post_type ) {
 			$actions['edit'] = '<a href="' . get_edit_post_link( $post->ID, true ) . '" title="' .
-			esc_attr( __( 'View the transaction details', 'it-l10n-ithemes-exchange' ) ) . '">' .
-			 __( 'Details', 'it-l10n-ithemes-exchange' ) . '</a>';
+			                   esc_attr( __( 'View the transaction details', 'it-l10n-ithemes-exchange' ) ) . '">' .
+			                   __( 'Details', 'it-l10n-ithemes-exchange' ) . '</a>';
 		}
 
 		return $actions;
@@ -136,7 +152,7 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return array Filtered array
 	 */
 	public function modify_details_page_layout( $columns ) {
-		$columns['it_exchange_tran'] = 2;
+		$columns['it_exchange_tran'] = 1;
 
 		return $columns;
 	}
@@ -151,7 +167,7 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return int
 	 */
 	public function update_user_column_options( $existing ) {
-		return 2;
+		return 1;
 	}
 
 	/**
@@ -169,7 +185,7 @@ class IT_Exchange_Transaction_Post_Type {
 	 * Callback hook for transaction post type admin views
 	 *
 	 * @since 0.3.3
-	 * @uses it_exchange_get_enabled_add_ons()
+	 * @uses  it_exchange_get_enabled_add_ons()
 	 *
 	 * @param WP_Post $post
 	 *
@@ -180,7 +196,7 @@ class IT_Exchange_Transaction_Post_Type {
 
 		// Add action for current product type
 		if ( $transaction_methods = it_exchange_get_enabled_addons( array( 'category' => array( 'transaction-method' ) ) ) ) {
-			foreach( $transaction_methods as $addon_slug => $params ) {
+			foreach ( $transaction_methods as $addon_slug => $params ) {
 				if ( $addon_slug == $transaction->transaction_method ) {
 					do_action( 'it_exchange_transaction_metabox_callback_' . $addon_slug, $transaction );
 				}
@@ -224,7 +240,7 @@ class IT_Exchange_Transaction_Post_Type {
 		// These hooks fire off any time a it_exchange_tran post is saved w/o validations
 		do_action( 'it_exchange_save_transaction_unvalidated', $post );
 
-		foreach( (array) $transaction_method_addons as $slug => $params ) {
+		foreach ( (array) $transaction_method_addons as $slug => $params ) {
 			if ( $slug == $transaction_method ) {
 				do_action( 'it_exchange_save_transaction_unvalidated_' . $slug, $post );
 			}
@@ -241,7 +257,7 @@ class IT_Exchange_Transaction_Post_Type {
 
 		// This is called any time save_post hook
 		do_action( 'it_exchange_save_transaction', $post );
-		foreach( (array) $transaction_method_addons as $slug => $params ) {
+		foreach ( (array) $transaction_method_addons as $slug => $params ) {
 			if ( $slug == $transaction_method ) {
 				do_action( 'it_exchange_save_transaction_' . $slug, $post );
 			}
@@ -271,7 +287,7 @@ class IT_Exchange_Transaction_Post_Type {
 	 *
 	 * @since 0.3.3
 	 *
-	 * @param array $existing  exisiting columns array
+	 * @param array $existing exisiting columns array
 	 *
 	 * @return array  modified columns array
 	 */
@@ -312,7 +328,7 @@ class IT_Exchange_Transaction_Post_Type {
 		}
 
 		// Remove Builder
-		if ( isset( $existing['builder_layout'] ) )	{
+		if ( isset( $existing['builder_layout'] ) ) {
 			unset( $existing['builder_layout'] );
 		}
 
@@ -353,7 +369,7 @@ class IT_Exchange_Transaction_Post_Type {
 	 *
 	 * @since 0.3.3
 	 *
-	 * @param array $sortables  existing sortable columns
+	 * @param array $sortables existing sortable columns
 	 *
 	 * @return array  modified sortable columnns
 	 */
@@ -369,15 +385,15 @@ class IT_Exchange_Transaction_Post_Type {
 	 *
 	 * @since 0.3.3
 	 *
-	 * @param string $column  column title
-	 * @param integer $post  post ID
+	 * @param string  $column column title
+	 * @param integer $post   post ID
 	 *
 	 * @return void
 	 */
 	function add_transaction_method_info_to_view_all_table_rows( $column ) {
 		global $post;
 		$transaction = it_exchange_get_transaction( $post );
-		switch( $column ) {
+		switch ( $column ) {
 			case 'it_exchange_transaction_method_column' :
 				$method_name = esc_attr( it_exchange_get_transaction_method_name( $transaction ) );
 				echo empty( $method_name ) ? $transaction->transaction_method : $method_name;
@@ -388,8 +404,7 @@ class IT_Exchange_Transaction_Post_Type {
 			case 'it_exchange_transaction_customer_column' :
 				if ( $customer = it_exchange_get_transaction_customer( $transaction ) ) {
 					esc_attr_e( empty( $customer->wp_user->display_name ) ? $customer->wp_user->user_login : $customer->wp_user->display_name );
-				}
-				else {
+				} else {
 					esc_attr_e( 'Unknown', 'it-l10n-ithemes-exchange' );
 				}
 				break;
@@ -399,7 +414,7 @@ class IT_Exchange_Transaction_Post_Type {
 			case 'it_exchange_transaction_date_column' :
 
 				$m_time = $transaction->post_date;
-				$time = get_post_time( 'G', true, $post );
+				$time   = get_post_time( 'G', true, $post );
 
 				$time_diff = time() - $time;
 
@@ -429,7 +444,7 @@ class IT_Exchange_Transaction_Post_Type {
 		if ( 'edit.php' === $hook_suffix ) {
 			if ( 'it_exchange_tran' === $request['post_type'] && isset( $request['orderby'] ) ) {
 
-				switch( $request['orderby'] ) {
+				switch ( $request['orderby'] ) {
 					case 'title':
 						$request['orderby'] = 'ID';
 						break;
@@ -481,13 +496,13 @@ class IT_Exchange_Transaction_Post_Type {
 		remove_meta_box( 'slugdiv', 'it_exchange_tran', 'normal' );
 
 		// Remove screen options tab
-		add_filter('screen_options_show_screen', '__return_false');
+		add_filter( 'screen_options_show_screen', '__return_false' );
 
 		add_action( 'edit_form_after_editor', array( $this, 'print_transaction_details_metabox' ) );
 
-		add_meta_box( 'it-exchange-transaction-activity', __( 'Activity', 'it-l10n-ithemes-exchange' ),
+		/*add_meta_box( 'it-exchange-transaction-activity', __( 'Activity', 'it-l10n-ithemes-exchange' ),
 			array( $this, 'print_activity' ), 'it_exchange_tran', 'side', 'low'
-		);
+		);*/
 	}
 
 	/**
@@ -639,7 +654,7 @@ class IT_Exchange_Transaction_Post_Type {
 						<?php endif; ?>
 
 						<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : ?>
-							<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
+							<?php foreach ( $product_downloads as $download_id => $download_data ) : ?>
 								<div class="product-download product-download-<?php esc_attr_e( $download_id ); ?>">
 									<h4 class="product-download-title">
 										<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_download_title', $post, $download_id, $download_data ); ?>
@@ -773,7 +788,7 @@ class IT_Exchange_Transaction_Post_Type {
 						<?php
 						if ( $options = it_exchange_get_status_options_for_transaction( $post ) ) {
 							$current_status = it_exchange_get_transaction_status( $post );
-							foreach( $options as $key => $label ) {
+							foreach ( $options as $key => $label ) {
 								$status_label = it_exchange_get_transaction_status_label( $post, array( 'status' => $key ) );
 								?>
 								<option value="<?php esc_attr_e( $key ); ?>" <?php selected( $key, $current_status ); ?>>
@@ -791,11 +806,13 @@ class IT_Exchange_Transaction_Post_Type {
 					<div id="it-exchange-update-transaction-status-success"><?php _e( 'Saved!', 'it-l10n-ithemes-exchange' ); ?></div>
 				</div>
 			</div>
-			<?php endif; ?>
+		<?php endif; ?>
 
 		<?php
 		do_action( 'it_exchange_after_payment_details', $post );
 		echo '</div></div>';
+
+		$this->print_activity( $post );
 	}
 
 	/**
@@ -806,7 +823,39 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @param WP_Post $post
 	 */
 	public function print_activity( $post ) {
-		echo $post->ID;
+		?>
+
+		<div id="it-exchange-transaction-activity">
+			<ul id="activity-stream"></ul>
+		</div>
+
+		<script type="text/template" id="exchange-activity-tpl">
+			<li>
+				<header><%= moment( a.getTime() ).calendar() %></header>
+				<article>
+					<p><%= a.getDescription() %></p>
+
+					<% if ( a.hasActor() ) { %>
+						<%= a.getActor().html() %>
+					<% } %>
+				</article>
+			</li>
+		</script>
+
+		<script type="text/template" id="exchange-activity-actor-tpl">
+			<footer>
+				<% if ( a.hasIcon() ) { %>
+					<%= a.getIcon().html() %>
+				<% } %>
+
+				<%= a.getNameHTML() %>
+			</footer>
+		</script>
+
+		<script type="text/template" id="exchange-icon-tpl">
+			<img class="exchange-icon" src="<%= url %>">
+		</script>
+		<?php
 	}
 
 	/**
@@ -817,8 +866,8 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return void
 	 */
 	public function ajax_update_status() {
-		$transaction_id = empty( $_POST['it-exchange-transaction-id'] ) ? false: absint( $_POST['it-exchange-transaction-id'] );
-		$nonce          = empty( $_POST['it-exchange-nonce'] ) ? false: $_POST['it-exchange-nonce'];
+		$transaction_id = empty( $_POST['it-exchange-transaction-id'] ) ? false : absint( $_POST['it-exchange-transaction-id'] );
+		$nonce          = empty( $_POST['it-exchange-nonce'] ) ? false : $_POST['it-exchange-nonce'];
 		$current_status = empty( $_POST['it-exchange-current-status'] ) ? false : $_POST['it-exchange-current-status'];
 		$new_status     = empty( $_POST['it-exchange-new-status'] ) ? false : $_POST['it-exchange-new-status'];
 
