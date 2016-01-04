@@ -823,9 +823,25 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @param WP_Post $post
 	 */
 	public function print_activity( $post ) {
+
+		$factory = it_exchange_get_txn_activity_factory();
 		?>
 
 		<div id="it-exchange-transaction-activity">
+
+			<label for="exchange-activity-filter" class="screen-reader-text">
+				<?php _e( 'Filter by Activity Type', 'it-l10n-ithemes-exchange' ); ?>
+			</label>
+
+			<select id="exchange-activity-filter">
+
+				<option value=""><?php _e( 'All Activity', 'it-l10n-ithemes-exchange' ); ?></option>
+
+				<?php foreach ( $factory->get_types() as $type ): ?>
+					<option value="<?php echo esc_attr( $type ); ?>"><?php echo ucfirst( $type ); ?></option>
+				<?php endforeach; ?>
+
+			</select>
 			<ul id="activity-stream"></ul>
 		</div>
 

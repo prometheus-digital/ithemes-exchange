@@ -288,6 +288,10 @@
 	margin: 1px 0 0 0;
 }
 
+#exchange-activity-filter {
+	margin: 20px;
+}
+
 #activity-stream {
 	border-left: 3px solid #909090;
 	list-style: disc;

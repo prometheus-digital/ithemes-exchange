@@ -76,6 +76,17 @@ class IT_Exchange_Txn_Activity_Factory {
 	}
 
 	/**
+	 * Get all activity types.
+	 *
+	 * @since 1.34
+	 *
+	 * @return array
+	 */
+	public function get_types() {
+		return array_keys( $this->types );
+	}
+
+	/**
 	 * Register an activity type.
 	 *
 	 * @since 1.34
