@@ -119,6 +119,53 @@ function it_exchange_add_activity_on_renewal( $transaction_id ) {
 add_action( 'it_exchange_add_child_transaction_success', 'it_exchange_add_activity_on_renewal' );
 
 /**
+ * Add an activity item when the subscriber status changes.
+ *
+ * @since 1.34
+ *
+ * @param IT_Exchange_Transaction $transaction
+ * @param string                  $status
+ * @param string                  $old_status
+ */
+function it_exchange_add_activity_on_subscriber_status( $transaction, $status, $old_status = '' ) {
+
+	$labels = array(
+		'active'      => __( 'Active', 'it-l10n-ithemes-exchange' ),
+		'suspended'   => __( 'Suspended', 'it-l10n-ithemes-exchange' ),
+		'cancelled'   => __( 'Cancelled', 'it-l10n-ithemes-exchange' ),
+		'deactivated' => __( 'Deactivated', 'it-l10n-ithemes-exchange' )
+	);
+
+	$status_label     = isset( $labels[ $status ] ) ? $labels[ $status ] : __( 'Unknown', 'it-l10n-ithemes-exchange' );
+	$old_status_label = isset( $labels[ $old_status ] ) ? $labels[ $old_status ] : __( 'Unknown', 'it-l10n-ithemes-exchange' );
+
+	if ( $old_status ) {
+		$message = sprintf( __( 'Subscriber status changed from %s to %s.', 'it-l10n-ithemes-exchange' ),
+			$old_status_label, $status_label
+		);
+	} else {
+		$message = sprintf( __( 'Subscriber status changed to %s.', 'it-l10n-ithemes-exchange' ), $status_label );
+	}
+
+	$builder = new IT_Exchange_Txn_Activity_Builder( $transaction, 'status' );
+	$builder->set_description( $message );
+
+	if ( is_user_logged_in() ) {
+		$actor = new IT_Exchange_Txn_Activity_User_Actor( wp_get_current_user() );
+	} elseif ( ( $wh = it_exchange_doing_webhook() ) && ( $addon = it_exchange_get_addon( $wh ) ) ) {
+		$actor = new IT_Exchange_Txn_Activity_Gateway_Actor( $addon );
+	} else {
+		$actor = new IT_Exchange_Txn_Activity_Site_Actor();
+	}
+
+	$builder->set_actor( $actor );
+	$builder->build( it_exchange_get_txn_activity_factory() );
+}
+
+add_action( 'it_exchange_recurring_payments_addon_update_transaction_subscriber_status',
+	'it_exchange_add_activity_on_subscriber_status', 10, 3 );
+
+/**
  * Get the txn activity factory.
  *
  * @since 1.34
