@@ -868,7 +868,7 @@ class IT_Exchange_Transaction_Post_Type {
 			<li id="activity-item-<%= a.getID() %>" class="<%= 'type-' + a.getType() %> <%= a.isPublic() ? 'is-public' : '' %>">
 				<header><%= moment( a.getTime() ).calendar() %></header>
 				<article>
-					<p><%= _.escape( a.getDescription() ).replace(new RegExp('\r?\n','g'), '<br>') %></p>
+					<p><%= a.getDescription().replace(new RegExp('\r?\n','g'), '<br>') %></p>
 
 					<% if ( a.hasActor() ) { %>
 						<%= a.getActor().html() %>
@@ -946,7 +946,7 @@ class IT_Exchange_Transaction_Post_Type {
 	public function ajax_add_note() {
 
 		$nonce = empty( $_POST['nonce'] ) ? '' : $_POST['nonce'];
-		$note = empty( $_POST['note'] ) ? '' : stripslashes( $_POST['note'] );
+		$note = empty( $_POST['note'] ) ? '' : wp_kses( stripslashes( $_POST['note'] ), wp_kses_allowed_html() );
 		$public = empty( $_POST['isPublic'] ) ? false : (bool) $_POST['isPublic'];
 		$txn = empty( $_POST['txn'] ) ? false : it_exchange_get_transaction( $_POST['txn'] );
 
