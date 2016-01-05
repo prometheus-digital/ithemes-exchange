@@ -858,6 +858,8 @@ class IT_Exchange_Transaction_Post_Type {
 				</span>
 			</div>
 
+			<p id="exchange-no-activity-found"><?php _e( 'No activity found.', 'it-l10n-ithemes-exchange' ); ?></p>
+
 			<ul id="activity-stream"></ul>
 		</div>
 
@@ -865,7 +867,7 @@ class IT_Exchange_Transaction_Post_Type {
 			<li id="activity-item-<%= a.getID() %>" class="<%= 'type-' + a.getType() %> <%= a.isPublic() ? 'is-public' : '' %>">
 				<header><%= moment( a.getTime() ).calendar() %></header>
 				<article>
-					<p><%= a.getDescription() %></p>
+					<p><%- a.getDescription() %></p>
 
 					<% if ( a.hasActor() ) { %>
 						<%= a.getActor().html() %>
