@@ -1181,9 +1181,7 @@ function it_exchange_paypal_standard_secure_addon_update_transaction_status( $pa
 	foreach( $transactions as $transaction ) { //really only one
 		$current_status = it_exchange_get_transaction_status( $transaction );
 		if ( $new_status !== $current_status )
-			it_exchange_update_transaction_status( $transaction, $new_status, new IT_Exchange_Txn_Activity_Gateway_Actor(
-				it_exchange_get_addon( 'paypal-standard-secure' )
-			) );
+			it_exchange_update_transaction_status( $transaction, $new_status );
 		return true;
 	}
 	return false;

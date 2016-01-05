@@ -64,13 +64,10 @@ add_action( 'it_exchange_build_txn_activity', 'it_exchange_send_public_note_to_c
  *
  * @since 1.34
  *
- * @param IT_Exchange_Transaction        $transaction
- * @param string                         $old_status
- * @param bool                           $a
- * @param string                         $b
- * @param IT_Exchange_Txn_Activity_Actor $actor
+ * @param IT_Exchange_Transaction $transaction
+ * @param string                  $old_status
  */
-function it_exchange_add_note_on_status_change( $transaction, $old_status, $a, $b, $actor ) {
+function it_exchange_add_note_on_status_change( $transaction, $old_status ) {
 
 	$old_status_label = it_exchange_get_transaction_status_label( $transaction, array(
 		'status' => $old_status
@@ -85,19 +82,16 @@ function it_exchange_add_note_on_status_change( $transaction, $old_status, $a, $
 	$builder = new IT_Exchange_Txn_Activity_Builder( $transaction, 'status' );
 	$builder->set_description( $message );
 
-	if ( is_null( $actor ) ) {
-		if ( is_user_logged_in() ) {
-			$actor = new IT_Exchange_Txn_Activity_User_Actor( wp_get_current_user() );
-		} else {
-			$actor = new IT_Exchange_Txn_Activity_Site_Actor();
-		}
+	if ( is_user_logged_in() ) {
+		$builder->set_actor( new IT_Exchange_Txn_Activity_User_Actor( wp_get_current_user() ) );
+	} else {
+		$builder->set_actor( new IT_Exchange_Txn_Activity_Site_Actor() );
 	}
 
-	$builder->set_actor( $actor );
 	$builder->build( it_exchange_get_txn_activity_factory() );
 }
 
-add_action( 'it_exchange_update_transaction_status', 'it_exchange_add_note_on_status_change', 10, 5 );
+add_action( 'it_exchange_update_transaction_status', 'it_exchange_add_note_on_status_change', 10, 2 );
 
 /**
  * Add a renewal note when a child transaction is created.
