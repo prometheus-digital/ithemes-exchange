@@ -798,6 +798,9 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 	$body           = wp_remote_retrieve_body( $response );
 
 	if ( 'VERIFIED' !== $body ) {
+
+		status_header( 400 );
+
 		error_log( sprintf( __( 'Invalid IPN sent from PayPal - PayLoad: %s', 'it-l10n-ithemes-exchange' ), maybe_serialize( $payload ) ) );
 		error_log( sprintf( __( 'Invalid IPN sent from PayPal - Response: %s', 'it-l10n-ithemes-exchange' ), maybe_serialize( $response ) ) );
 
