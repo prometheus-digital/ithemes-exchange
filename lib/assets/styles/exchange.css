@@ -217,7 +217,8 @@ a.it-exchange-button {text-decoration:none;}
 #it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-table-row{border-bottom:0;}
 #it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-table-column-inner{padding:10px 10px 0;}
 #it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-confirmation-totals-title {text-align:right;border-right:1px solid #DDD;}
-#it-exchange-confirmation .it-exchnage-transaction-summary-loop .it-exchange-confirmation-totals-amount {border-right:1px solid #DDD;}
+#it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-cart-totals-title {text-align:right;border-right:1px solid #DDD;}
+#it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-confirmation-totals-amount {border-right:1px solid #DDD;}
 #it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-cart-totals-total .it-exchange-table-column-inner{padding:10px;border-bottom:1px solid #DDD;}
 #it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-confirmation-totals-amount .it-exchange-table-column-inner {}
 /** -----------------------------------------------------:[ store ]:---------- */

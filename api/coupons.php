@@ -13,7 +13,7 @@
  *
  * @param array $options
  *
- * @return array an array of posts from our coupon post type
+ * @return IT_Exchange_Coupon[] an array of posts from our coupon post type
 */
 function it_exchange_get_coupons( $options=array() ) {
 	$defaults = array(
@@ -44,28 +44,66 @@ function it_exchange_get_coupons( $options=array() ) {
  * Retreives a coupon object by passing it the WP post object or post id
  *
  * @since 0.4.0
+ * @since 1.33 Add $type parameter.
  *
  * @param WP_Post|int|IT_Exchange_Coupon $post post object or post id
+ * @param string                         $type Coupon type. If empty, will try to infer.
  *
  * @return IT_Exchange_Coupon|bool object for passed post
 */
-function it_exchange_get_coupon( $post ) {
+function it_exchange_get_coupon( $post, $type = '' ) {
 
 	try {
 		if ( $post instanceof IT_Exchange_Coupon ) {
 			$coupon = $post;
 		} else {
-			$coupon = new IT_Exchange_Coupon( $post );
+
+			if ( ! $type ) {
+				$ID = $post instanceof WP_Post ? $post->ID : $post;
+
+				if ( get_post_meta( $ID, '_it-basic-code', true ) ) {
+					$type = 'cart';
+				}
+			}
+
+			// if invalid type, will fall back to IT_Exchange_Coupon
+			$class = it_exchange_get_coupon_type_class( $type );
+
+			/** @var IT_Exchange_Coupon $coupon */
+			$coupon = new $class( $post );
 		}
 	}
 	catch ( Exception $e ) {
 		return false;
 	}
 
-	if ( $coupon->ID )
+	if ( $coupon->get_ID() )
 		return apply_filters( 'it_exchange_get_coupon', $coupon, $post );
 
 	return false;
+}
+
+/**
+ * Get a coupon from its code and type.
+ *
+ * @since 1.33
+ *
+ * @param string $code
+ * @param string $type
+ *
+ * @return IT_Exchange_Coupon|null
+ */
+function it_exchange_get_coupon_from_code( $code, $type ) {
+
+	/**
+	 * Filter the coupon corresponding to a certain code.
+	 *
+	 * @since 1.33
+	 *
+	 * @param IT_Exchange_Coupon|null $coupon
+	 * @pparam string                 $code
+	 */
+	return apply_filters( 'it_exchange_get_' . $type . '_coupon_from_code', null, $code );
 }
 
 /**
@@ -73,11 +111,16 @@ function it_exchange_get_coupon( $post ) {
  *
  * @since 0.4.0
  * @param array $args same args passed to wp_insert_post plus any additional needed
- * @param object|bool $cart_object passed cart object
+ * @param object|bool $deprecated deprecated
  *
  * @return mixed post id or false
 */
-function it_exchange_add_coupon( $args=array(), $cart_object=false ) {
+function it_exchange_add_coupon( $args=array(), $deprecated = false ) {
+
+	if ( $deprecated !== false ) {
+		_deprecated_argument( 'it_exchange_add_coupon', '1.33' );
+	}
+
 	$defaults = array(
 		'post_type'   => 'it_exchange_coupon',
 		'post_status' => 'publish',
@@ -95,7 +138,7 @@ function it_exchange_add_coupon( $args=array(), $cart_object=false ) {
 		foreach ( (array) $post_meta as $key => $value ) {
 			update_post_meta( $coupon_id, $key, $value );
 		}
-		do_action( 'it_exchange_add_coupon_success', $coupon_id, $cart_object );
+		do_action( 'it_exchange_add_coupon_success', $coupon_id, $deprecated );
 		return $coupon_id;
 	}
 	do_action( 'it_exchange_add_coupon_failed', $args );
@@ -108,19 +151,43 @@ function it_exchange_add_coupon( $args=array(), $cart_object=false ) {
  * Add-ons should call this.
  *
  * @since 0.4.0
+ * @since 1.33 Add $class parameter.
  *
  * @param string $type type of coupon
+ * @param string $class Model class used to instantiate coupon objects.
  *
- * @return void
+ * @throws Exception If invalid coupon class.
 */
-function it_exchange_register_coupon_type( $type ) {
-	if ( empty( $GLOBALS['it_exchange']['coupon_types'] ) )
+function it_exchange_register_coupon_type( $type, $class = 'IT_Exchange_Coupon' ) {
+
+	if ( $class !== 'IT_Exchange_Coupon' && ! is_subclass_of( $class, 'IT_Exchange_Coupon' ) ) {
+		throw new Exception( 'Invalid coupon class. Class must extend IT_Exchange_Coupon' );
+	}
+
+	if ( empty( $GLOBALS['it_exchange']['coupon_types'] ) ) {
 		$GLOBALS['it_exchange']['coupon_types'] = array();
+	}
 
-	if ( ! in_array( $type, $GLOBALS['it_exchange']['coupon_types'] ) )
+	if ( empty( $GLOBALS['it_exchange']['coupon_types_meta'] ) ) {
+		$GLOBALS['it_exchange']['coupon_types_meta'] = array();
+	}
+
+	if ( ! in_array( $type, $GLOBALS['it_exchange']['coupon_types'] ) ) {
 		$GLOBALS['it_exchange']['coupon_types'][] = $type;
+		$GLOBALS['it_exchange']['coupon_types_meta'][$type] = array(
+			'class' => $class
+		);
+	}
 
-	do_action( 'it_exchange_register_coupon_type', $type );
+	/**
+	 * Fires when a coupon type is registered.
+	 *
+	 * @since 1.33 Add $class parameter.
+	 *
+	 * @param string $type
+	 * @param string $class
+	 */
+	do_action( 'it_exchange_register_coupon_type', $type, $class );
 }
 
 /**
@@ -136,6 +203,28 @@ function it_exchange_get_coupon_types() {
 
 	return apply_filters( 'it_exchange_get_coupon_types', $coupon_types );
 
+}
+
+/**
+ * Get the model class used for a certain coupon type.
+ *
+ * @since 1.33
+ *
+ * @param string $type
+ *
+ * @return string
+ */
+function it_exchange_get_coupon_type_class( $type ) {
+
+	if ( empty( $GLOBALS['it_exchange']['coupon_types_meta'][$type] ) ) {
+		return 'IT_Exchange_Coupon';
+	}
+
+	if ( empty( $GLOBALS['it_exchange']['coupon_types_meta'][$type]['class'] ) ) {
+		return 'IT_Exchange_Coupon';
+	}
+
+	return $GLOBALS['it_exchange']['coupon_types_meta'][$type]['class'];
 }
 
 /**
@@ -157,13 +246,13 @@ function it_exchange_supports_coupon_type( $type ) {
 /**
  * Return the currently applied coupons
  *
- * We're going to ask the add-ons for this info. Default is no.
+ * We're going to ask the add-ons for this info.
  *
  * @since 0.4.0
  *
- * @param string|bool $type the type of coupon to check for
+ * @param string|bool $type Coupon type to check for. If false, all coupons will be returned.
  *
- * @return boolean
+ * @return IT_Exchange_Coupon[]
 */
 function it_exchange_get_applied_coupons( $type=false ) {
 
@@ -299,13 +388,19 @@ function it_exchange_get_total_coupons_discount( $type=false, $options=array() )
  *
  * @since 0.4.0
  *
+ * @deprecated 1.33
+ *
  * @param integer $coupon_id the coupon id
  * @param array   $options optional.
  *
  * @return string|bool
 */
 function it_exchange_get_coupon_discount_method( $coupon_id, $options=array() ) {
+
+	_deprecated_function( 'it_exchange_get_coupon_discount_method', '1.33' );
+
 	$options['id'] = $coupon_id;
+
 	return apply_filters( 'it_exchange_get_coupon_discount_method', false, $options );
 }
 

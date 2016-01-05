@@ -201,12 +201,31 @@ function it_exchange_generate_transaction_object() {
 	// Package it up and send it to the transaction method add-on
 	$transaction_object = new stdClass();
 	$transaction_object->cart_id                = $cart_id;
+	$transaction_object->customer_id            = it_exchange_get_current_customer_id();
 	$transaction_object->total                  = $cart_total;
 	$transaction_object->sub_total              = $cart_sub_total;
 	$transaction_object->currency               = $currency;
 	$transaction_object->description            = it_exchange_get_cart_description();
 	$transaction_object->products               = $products;
-	$transaction_object->coupons                = it_exchange_get_applied_coupons();
+
+	$coupons = array();
+
+	/** @var IT_Exchange_Coupon[] $coupon_objects */
+	$coupon_objects = array();
+
+	foreach ( it_exchange_get_applied_coupons() as $type => $type_coupons ) {
+
+		foreach ( $type_coupons as $coupon ) {
+			if ( $coupon instanceof IT_Exchange_Coupon ) {
+				$coupon_objects[] = $coupon;
+				$coupons[$type][] = $coupon->get_data_for_transaction_object();
+			} else {
+				$coupons[$type][] = $coupon;
+			}
+		}
+	}
+
+	$transaction_object->coupons                = $coupons;
 	$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
 	$transaction_object->customer_ip            = it_exchange_get_ip();
 
@@ -224,8 +243,12 @@ function it_exchange_generate_transaction_object() {
 	$transaction_object->shipping_total         = it_exchange_convert_to_database_number( it_exchange_get_cart_shipping_cost( false, false ) );
 
 	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object );
-	return $transaction_object;
 
+	foreach ( $coupon_objects as $coupon_object ) {
+		$coupon_object->use_coupon( $transaction_object );
+	}
+
+	return $transaction_object;
 }
 
 /**
@@ -324,13 +347,13 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 
 	if ( !$customer_id )
 		$customer_id = it_exchange_get_current_customer_id();
-		
+
 	$customer = it_exchange_get_customer( $customer_id );
 
 	// If we don't have a title, create one
 	if ( empty( $args['post_title'] ) )
 		$args['post_title'] = $method . '-' . $method_id . '-' . date_i18n( 'Y-m-d-H:i:s' );
-		
+
 	if ( $subscription_details = it_exchange_get_session_data( 'cancel_subscription' ) ) {
 		foreach( $subscription_details as $cancel_subscription ) {
 			if ( !empty( $cancel_subscription['old_transaction_method'] ) )
@@ -358,16 +381,16 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 			foreach( $products as $cart_id => $data ) {
 				$product = new IT_Exchange_Product( $data['product_id'] );
 				$product->add_transaction_to_product( $transaction_id );
-				
+
 			}
 		}
 
 		$customer->add_transaction_to_user( $transaction_id );
-		
+
 		return apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $cart_object, $args );
 	}
 	do_action( 'it_exchange_add_transaction_failed', $method, $method_id, $status, $customer_id, $cart_object, $args );
-	
+
 	return apply_filters( 'it_exchange_add_transaction', false, $method, $method_id, $status, $customer_id, $cart_object, $args);
 }
 
@@ -897,7 +920,7 @@ function it_exchange_get_transaction_customer_email( $transaction ) {
 /**
  * Returns the transaction customer's IP Address
  *
- * @since 1.11.5 
+ * @since 1.11.5
  *
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *

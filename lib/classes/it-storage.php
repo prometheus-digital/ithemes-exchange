@@ -307,20 +307,24 @@ if ( ! class_exists( 'ITStorage2' ) ) {
 			$this->_data = $data;
 			$GLOBALS["it_storage_cache_{$this->_var}"] = $data;
 			
-			
 			if ( $original_data !== $data )
 				$this->save( $data );
 			
 			return $data;
 		}
 		
-		function save( $data ) {
+		function save( $data, $flush_cache = false ) {
 			$data = apply_filters( "it_storage_filter_save_{$this->_var}", $data );
 			
 			$old_data = @get_option( $this->_option_name );
 			
 			if ( $data === $old_data )
 				return true;
+			
+			// This is optional and disabled by default since that is the legacy behavior.
+			if ( $flush_cache ) {
+				$GLOBALS["it_storage_cache_{$this->_var}"] = $data;
+			}
 			
 			if ( false === $old_data )
 				return @add_option( $this->_option_name, $data, '', $this->_autoload );
