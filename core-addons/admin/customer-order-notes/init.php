@@ -78,6 +78,22 @@ function it_exchange_customer_order_notes_sw_save_note() {
 add_action( 'it_exchange_processing_super_widget_ajax_customer-order-note', 'it_exchange_customer_order_notes_sw_save_note' );
 
 /**
+ * Save the customer order note from the checkout screen.
+ *
+ * @since 1.34
+ */
+function it_exchange_customer_order_notes_checkout_save_note() {
+
+	if ( ! empty( $_POST['it-exchange-edit-customer-order-note'] ) ) {
+		$note = isset( $_POST['it-exchange-customer-order-note'] ) ? $_POST['it-exchange-customer-order-note'] : '';
+
+		it_exchange_customer_order_notes_store_current_note( wp_strip_all_tags( stripslashes( $note ) ) );
+	}
+}
+
+add_action( 'init', 'it_exchange_customer_order_notes_checkout_save_note' );
+
+/**
  * Get the current order note from the session.
  *
  * @since 1.34
