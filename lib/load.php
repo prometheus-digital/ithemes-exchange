@@ -57,6 +57,7 @@ require( $this->_plugin_path . 'lib/super-widget/class.super-widget.php' );
 // Coupons
 require( $this->_plugin_path . 'lib/coupons/class.coupons-post-type.php' );
 require( $this->_plugin_path . 'lib/coupons/class.coupon.php' );
+require( $this->_plugin_path . 'lib/coupons/hooks.php' );
 
 // Email Notifications
 require( $this->_plugin_path . 'lib/email-notifications/class.email-notifications.php' );
@@ -66,6 +67,9 @@ require( $this->_plugin_path . 'lib/shipping/class.shipping.php' );
 
 // Shortcodes
 require( $this->_plugin_path . 'lib/shortcodes/shortcodes.php' );
+
+// Upgrades
+require( $this->_plugin_path . 'lib/upgrades/load.php' );
 
 // Deprecated Features
 require( $this->_plugin_path . 'lib/deprecated/init.php' );

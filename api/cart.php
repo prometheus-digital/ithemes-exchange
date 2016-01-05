@@ -816,13 +816,15 @@ function it_exchange_get_cart_product_subtotal( $product, $format=true ) {
  * Returns the cart subtotal
  *
  * @since 0.3.7
+ * @since 1.33 Add support for limiting subtotal to products with a feature.
 
  * @param boolean $format should we format the price
  * @param  array  $options {
  *      An array of possible options passed to the function
  *
- *      @type mixed $use_cached_customer_cart If contains a customer ID, we grab cart
+ *      @type bool $use_cached_customer_cart If contains a customer ID, we grab cart
  *                                            data from the cached cart
+ *      @type string $feature                Limit to products with this feature.
  * }
  *
  * @return mixed subtotal of cart
@@ -833,7 +835,10 @@ function it_exchange_get_cart_subtotal( $format=true, $options=array() ) {
 		return 0;
 
 	foreach( (array) $products as $product ) {
-		$subtotal += it_exchange_get_cart_product_subtotal( $product, false );
+
+		if ( empty( $options['feature'] ) || it_exchange_product_has_feature( $product['product_id'], $options['feature'] ) ) {
+			$subtotal += it_exchange_get_cart_product_subtotal( $product, false );
+		}
 	}
 	$subtotal = apply_filters( 'it_exchange_get_cart_subtotal', $subtotal, $options );
 

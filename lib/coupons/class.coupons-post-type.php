@@ -13,6 +13,8 @@
 */
 class IT_Exchange_Coupon_Post_Type {
 
+	public $post_type;
+
 	/**
 	 * Class Constructor
 	 *
@@ -21,6 +23,9 @@ class IT_Exchange_Coupon_Post_Type {
 	function __construct() {
 		$this->init();
 		add_action( 'save_post', array( $this, 'save_coupon' ) );
+		add_filter( 'disable_months_dropdown', array( $this, 'disable_months_dropdown' ), 10, 2 );
+		add_filter( 'default_hidden_columns', array( $this, 'hide_customer_column' ), 10, 2 );
+		add_filter( 'view_mode_post_types', array( $this, 'remove_view_modes' ) );
 	}
 
 	/**
@@ -38,9 +43,12 @@ class IT_Exchange_Coupon_Post_Type {
 	function init() {
 		$this->post_type = 'it_exchange_coupon';
 		$labels    = array(
-			'name'          => __( 'Coupons', 'it-l10n-ithemes-exchange' ),
-			'singular_name' => __( 'Coupon', 'it-l10n-ithemes-exchange' ),
-			'edit_item'     => __( 'Edit Coupon', 'it-l10n-ithemes-exchange' ),
+			'name'               => __( 'Coupons', 'it-l10n-ithemes-exchange' ),
+			'singular_name'      => __( 'Coupon', 'it-l10n-ithemes-exchange' ),
+			'edit_item'          => __( 'Edit Coupon', 'it-l10n-ithemes-exchange' ),
+			'search_items'       => __( 'Search Coupons', 'it-l10n-ithemes-exchange' ),
+			'not_found'          => __( 'No coupons found.', 'it-l10n-ithemes-exchange' ),
+			'not_found_in_trash' => __( 'No coupons found in Trash.', 'it-l10n-ithemes-exchange' )
 		);
 
 		// We're not going to add this to the menu. Individual add-ons will need to do that.
@@ -132,6 +140,59 @@ class IT_Exchange_Coupon_Post_Type {
 
 		// This is called any time save_post hook
 		do_action( 'it_exchange_save_coupon', $post );
+	}
+
+	/**
+	 * Disable the months dropdown for coupons.
+	 *
+	 * @since 1.33
+	 *
+	 * @param bool $disabled
+	 * @param string $post_type
+	 *
+	 * @return bool
+	 */
+	public function disable_months_dropdown( $disabled, $post_type ) {
+
+		if  ( $post_type === $this->post_type ) {
+			$disabled = true;
+		}
+
+		return $disabled;
+	}
+
+	/**
+	 * Hide the coupon customer column by default.
+	 *
+	 * @since 1.33
+	 *
+	 * @param array     $hidden
+	 * @param WP_Screen $screen
+	 *
+	 * @return array
+	 */
+	public function hide_customer_column( $hidden, $screen ) {
+
+		if ( $screen->id == 'edit-it_exchange_coupon' ) {
+			$hidden[] = 'it_exchange_coupon_customer';
+		}
+
+		return $hidden;
+	}
+
+	/**
+	 * Remove the 'list' and 'excerpt' view mode from the screen options.
+	 *
+	 * @since 1.33
+	 *
+	 * @param array $post_types
+	 *
+	 * @return array
+	 */
+	public function remove_view_modes( $post_types ) {
+		unset( $post_types[ $this->post_type ] );
+
+		return $post_types;
 	}
 }
 $IT_Exchange_Coupon_Post_Type = new IT_Exchange_Coupon_Post_Type();

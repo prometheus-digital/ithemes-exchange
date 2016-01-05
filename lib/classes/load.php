@@ -2,11 +2,11 @@
 
 /*
 Written by Chris Jean for iThemes.com
-Version 2.4.6
+Version 2.4.7
 */
 
 
-$it_registration_list_version   = '2.4.6';
+$it_registration_list_version   = '2.4.7';
 $it_registration_list_library   = 'classes';
 $it_registration_list_init_file = dirname( __FILE__ ) . '/init.php';
 

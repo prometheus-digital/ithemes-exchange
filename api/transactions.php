@@ -201,12 +201,31 @@ function it_exchange_generate_transaction_object() {
 	// Package it up and send it to the transaction method add-on
 	$transaction_object = new stdClass();
 	$transaction_object->cart_id                = $cart_id;
+	$transaction_object->customer_id            = it_exchange_get_current_customer_id();
 	$transaction_object->total                  = $cart_total;
 	$transaction_object->sub_total              = $cart_sub_total;
 	$transaction_object->currency               = $currency;
 	$transaction_object->description            = it_exchange_get_cart_description();
 	$transaction_object->products               = $products;
-	$transaction_object->coupons                = it_exchange_get_applied_coupons();
+
+	$coupons = array();
+
+	/** @var IT_Exchange_Coupon[] $coupon_objects */
+	$coupon_objects = array();
+
+	foreach ( it_exchange_get_applied_coupons() as $type => $type_coupons ) {
+
+		foreach ( $type_coupons as $coupon ) {
+			if ( $coupon instanceof IT_Exchange_Coupon ) {
+				$coupon_objects[] = $coupon;
+				$coupons[$type][] = $coupon->get_data_for_transaction_object();
+			} else {
+				$coupons[$type][] = $coupon;
+			}
+		}
+	}
+
+	$transaction_object->coupons                = $coupons;
 	$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
 	$transaction_object->customer_ip            = it_exchange_get_ip();
 
@@ -224,8 +243,12 @@ function it_exchange_generate_transaction_object() {
 	$transaction_object->shipping_total         = it_exchange_convert_to_database_number( it_exchange_get_cart_shipping_cost( false, false ) );
 
 	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object );
-	return $transaction_object;
 
+	foreach ( $coupon_objects as $coupon_object ) {
+		$coupon_object->use_coupon( $transaction_object );
+	}
+
+	return $transaction_object;
 }
 
 /**
