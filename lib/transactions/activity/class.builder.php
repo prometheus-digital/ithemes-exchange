@@ -166,6 +166,18 @@ final class IT_Exchange_Txn_Activity_Builder {
 			$this->actor->attach( $activity );
 		}
 
-		return $factory->make( $ID );
+		$activity = $factory->make( $ID );
+
+		/**
+		 * Fires when a txn activity is created.
+		 *
+		 * @since 1.34
+		 *
+		 * @param IT_Exchange_Txn_Activity         $activity
+		 * @param IT_Exchange_Txn_Activity_Builder $this
+		 */
+		do_action( 'it_exchange_build_txn_activity', $activity, $this );
+
+		return $activity;
 	}
 }

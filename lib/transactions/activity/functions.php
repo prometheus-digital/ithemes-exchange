@@ -35,6 +35,31 @@ function it_exchange_register_txn_activity_taxonomy() {
 add_action( 'init', 'it_exchange_register_txn_activity_taxonomy' );
 
 /**
+ * Send a public note to a customer via email.
+ *
+ * @since 1.34
+ *
+ * @param IT_Exchange_Txn_Activity $activity
+ */
+function it_exchange_send_public_note_to_customer( IT_Exchange_Txn_Activity $activity ) {
+
+	if ( ! $activity->is_public() ) {
+		return;
+	}
+
+	$subject = sprintf( __( 'New note about your order %s', 'it-l10n-ithemes-exchange' ),
+		$activity->get_transaction()->get_order_number()
+	);
+
+	do_action( 'it_exchange_send_email_notification',
+		it_exchange_get_transaction_customer_id( $activity->get_transaction() ),
+		$subject, $activity->get_description()
+	);
+}
+
+add_action( 'it_exchange_build_txn_activity', 'it_exchange_send_public_note_to_customer' );
+
+/**
  * Get the txn activity factory.
  *
  * @since 1.34
