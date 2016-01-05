@@ -9,7 +9,7 @@
 	max-width: 760px;
 }
 
-#post-body{
+#post-body {
 	margin-right: 280px;
 }
 
@@ -312,6 +312,10 @@
 	width: 100%;
 }
 
+.exchange-note-writing-container textarea.exchange-new-note-public {
+	background: lightyellow;
+}
+
 .exchange-note-writing-meta {
 	width: 100%;
 	display: inline-block;
@@ -393,7 +397,7 @@
 
 @media screen and (max-width: 850px) {
 
-	#post-body{
+	#post-body {
 		margin-right: 280px;
 	}
 
@@ -404,7 +408,7 @@
 	#it-exchange-transaction-activity {
 		width: 100% !important;
 		margin: 1px 0 0 0;
-		float:left;
+		float: left;
 	}
 
 	#activity-stream {
