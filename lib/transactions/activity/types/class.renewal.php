@@ -37,6 +37,17 @@ class IT_Exchange_Txn_Renewal_Activity extends IT_Exchange_Txn_AbstractActivity 
 	}
 
 	/**
+	 * Get the renewal transaction.
+	 *
+	 * @since 1.34
+	 *
+	 * @return IT_Exchange_Transaction
+	 */
+	public function get_renewal_transaction() {
+		return it_exchange_get_transaction( get_post_meta( $this->get_ID(), '_child_txn', true ) );
+	}
+
+	/**
 	 * Get this activity's actor.
 	 *
 	 * @since 1.34
@@ -74,8 +85,8 @@ class IT_Exchange_Txn_Renewal_Activity extends IT_Exchange_Txn_AbstractActivity 
 	public function get_description() {
 		/* translators: %1$s is transaction order number, %2$s is dollar amount. */
 		return sprintf( __( 'Renewal payment %1$s of %2$s.', 'it-l10n-ithemes-exchange' ),
-			$this->get_transaction()->get_order_number(),
-			it_exchange_get_transaction_total( $this->get_transaction() ) );
+			$this->get_renewal_transaction()->get_order_number(),
+			it_exchange_get_transaction_total( $this->get_renewal_transaction() ) );
 	}
 
 	/**

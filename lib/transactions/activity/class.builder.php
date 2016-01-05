@@ -42,6 +42,11 @@ final class IT_Exchange_Txn_Activity_Builder {
 	private $public = false;
 
 	/**
+	 * @var IT_Exchange_Transaction
+	 */
+	private $child;
+
+	/**
 	 * IT_Exchange_Txn_Activity_Builder constructor.
 	 *
 	 * @param IT_Exchange_Transaction $transaction
@@ -122,6 +127,26 @@ final class IT_Exchange_Txn_Activity_Builder {
 	}
 
 	/**
+	 * Set the child transaction.
+	 *
+	 * @since 1.34
+	 *
+	 * @param IT_Exchange_Transaction $transaction
+	 *
+	 * @return $this
+	 */
+	public function set_child( IT_Exchange_Transaction $transaction ) {
+
+		if ( get_post_meta( $transaction->ID, '_it_exchange_parent_tx_id', true ) !== $this->transaction->ID ) {
+			throw new InvalidArgumentException( 'Child transaction has invalid parent.' );
+		}
+
+		$this->child = $transaction;
+
+		return $this;
+	}
+
+	/**
 	 * Create the activity item.
 	 *
 	 * @since 1.34
@@ -158,6 +183,10 @@ final class IT_Exchange_Txn_Activity_Builder {
 		}
 
 		update_post_meta( $ID, '_is_public', $this->public );
+
+		if ( $this->child ) {
+			update_post_meta( $ID, '_child_txn', $this->child->ID );
+		}
 
 		$activity = $factory->make( $ID );
 
