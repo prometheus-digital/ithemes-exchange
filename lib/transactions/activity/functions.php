@@ -83,11 +83,14 @@ function it_exchange_add_note_on_status_change( $transaction, $old_status ) {
 	$builder->set_description( $message );
 
 	if ( is_user_logged_in() ) {
-		$builder->set_actor( new IT_Exchange_Txn_Activity_User_Actor( wp_get_current_user() ) );
+		$actor = new IT_Exchange_Txn_Activity_User_Actor( wp_get_current_user() );
+	} elseif ( ( $wh = it_exchange_doing_webhook() ) && ( $addon = it_exchange_get_addon( $wh ) ) ) {
+		$actor = new IT_Exchange_Txn_Activity_Gateway_Actor( $addon );
 	} else {
-		$builder->set_actor( new IT_Exchange_Txn_Activity_Site_Actor() );
+		$actor = new IT_Exchange_Txn_Activity_Site_Actor();
 	}
 
+	$builder->set_actor( $actor );
 	$builder->build( it_exchange_get_txn_activity_factory() );
 }
 

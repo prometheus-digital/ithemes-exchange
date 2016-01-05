@@ -324,13 +324,13 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 
 	if ( !$customer_id )
 		$customer_id = it_exchange_get_current_customer_id();
-		
+
 	$customer = it_exchange_get_customer( $customer_id );
 
 	// If we don't have a title, create one
 	if ( empty( $args['post_title'] ) )
 		$args['post_title'] = $method . '-' . $method_id . '-' . date_i18n( 'Y-m-d-H:i:s' );
-		
+
 	if ( $subscription_details = it_exchange_get_session_data( 'cancel_subscription' ) ) {
 		foreach( $subscription_details as $cancel_subscription ) {
 			if ( !empty( $cancel_subscription['old_transaction_method'] ) )
@@ -358,16 +358,16 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 			foreach( $products as $cart_id => $data ) {
 				$product = new IT_Exchange_Product( $data['product_id'] );
 				$product->add_transaction_to_product( $transaction_id );
-				
+
 			}
 		}
 
 		$customer->add_transaction_to_user( $transaction_id );
-		
+
 		return apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $cart_object, $args );
 	}
 	do_action( 'it_exchange_add_transaction_failed', $method, $method_id, $status, $customer_id, $cart_object, $args );
-	
+
 	return apply_filters( 'it_exchange_add_transaction', false, $method, $method_id, $status, $customer_id, $cart_object, $args);
 }
 
@@ -897,7 +897,7 @@ function it_exchange_get_transaction_customer_email( $transaction ) {
 /**
  * Returns the transaction customer's IP Address
  *
- * @since 1.11.5 
+ * @since 1.11.5
  *
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
@@ -1217,6 +1217,37 @@ function it_exchange_get_webhook( $key ) {
 	$webhooks = it_exchange_get_webhooks();
 	$webhook = empty( $GLOBALS['it_exchange']['webhooks'][$key] ) ? false : $GLOBALS['it_exchange']['webhooks'][$key];
 	return apply_filters( 'it_exchange_get_webhook', $webhook, $key );
+}
+
+/**
+ * Check what webhook is being processed.
+ *
+ * @since 1.34
+ *
+ * @param string $webhook Optionally, specify the webhook to compare against.
+ *
+ * @return bool|string
+ */
+function it_exchange_doing_webhook( $webhook = '' ) {
+
+	if ( $webhook ) {
+		$param = it_exchange_get_webhook( $webhook );
+
+		if ( ! empty( $_REQUEST[$param] ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	foreach ( it_exchange_get_webhooks() as $key => $param ) {
+
+		if ( ! empty( $_REQUEST[$param] ) ) {
+			return $key;
+		}
+	}
+
+	return false;
 }
 
 /**
