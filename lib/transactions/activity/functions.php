@@ -129,6 +129,10 @@ add_action( 'it_exchange_add_child_transaction_success', 'it_exchange_add_activi
  */
 function it_exchange_add_activity_on_subscriber_status( $transaction, $status, $old_status = '' ) {
 
+	if ( $status === $old_status ) {
+		return;
+	}
+
 	$labels = array(
 		'active'      => __( 'Active', 'it-l10n-ithemes-exchange' ),
 		'suspended'   => __( 'Suspended', 'it-l10n-ithemes-exchange' ),
