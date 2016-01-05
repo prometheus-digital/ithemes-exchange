@@ -311,10 +311,10 @@
 }
 
 #activity-stream {
-	border-left: 3px solid #909090;
 	list-style: disc;
 	overflow-y: scroll;
 	margin: 0;
+	padding: 0 0 0 5px;
 }
 
 #activity-stream p {
@@ -323,11 +323,24 @@
 }
 
 #activity-stream li {
-	margin-left: 18px;
 	color: #909090;
 	font-size: 24px;
-	padding-top: 15px;
+	padding: 15px 0 0 15px;
 	margin-bottom: 0;
+	list-style-type: none;
+	position: relative;
+	border-left: 2px solid #909090;
+}
+
+#activity-stream li:before {
+	content: '';
+	width: 10px;
+	height: 10px;
+	background: #909090;
+	position: absolute;
+	top: 20px;
+	left: -6px;
+	border-radius: 100%;
 }
 
 #activity-stream li header {
