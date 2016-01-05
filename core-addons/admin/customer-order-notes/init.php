@@ -105,7 +105,7 @@ function it_exchange_customer_order_notes_get_current_note() {
 	$data = it_exchange_get_session_data( 'customer-order-note' );
 
 	if ( empty( $data ) || ! is_array( $data ) || empty( $data['note'] ) ) {
-		return 'My Default';
+		return '';
 	}
 
 	return $data['note'];
@@ -123,3 +123,48 @@ function it_exchange_customer_order_notes_store_current_note( $note ) {
 		'note' => $note
 	) );
 }
+
+/**
+ * Store the customer order notes to the transaction object.
+ *
+ * @since 1.34
+ *
+ * @param stdClass $object
+ *
+ * @return stdClass
+ */
+function it_exchange_customer_order_notes_txn_object( $object ) {
+
+	$object->customer_order_notes = it_exchange_customer_order_notes_get_current_note();
+
+	return $object;
+}
+
+add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_customer_order_notes_txn_object' );
+
+/**
+ * Create the activity item when the transaction is created.
+ *
+ * @since 1.34
+ *
+ * @param int $transaction_id
+ */
+function it_exchange_customer_order_notes_create_activity( $transaction_id ) {
+
+	$transaction = it_exchange_get_transaction( $transaction_id );
+
+	$cart_object = $transaction->cart_details;
+
+	if ( ! empty( $cart_object->customer_order_notes ) ) {
+		$note = $cart_object->customer_order_notes;
+
+		$builder = new IT_Exchange_Txn_Activity_Builder( $transaction, 'note' );
+		$builder->set_actor( new IT_Exchange_Txn_Activity_Customer_Actor(
+			it_exchange_get_transaction_customer( $transaction )
+		) );
+		$builder->set_description( $note );
+		$builder->build( it_exchange_get_txn_activity_factory() );
+	}
+}
+
+add_action( 'it_exchange_add_transaction_success', 'it_exchange_customer_order_notes_create_activity' );

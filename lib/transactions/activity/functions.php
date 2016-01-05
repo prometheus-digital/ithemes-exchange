@@ -47,6 +47,10 @@ function it_exchange_send_public_note_to_customer( IT_Exchange_Txn_Activity $act
 		return;
 	}
 
+	if ( $activity->has_actor() && $activity->get_actor() instanceof IT_Exchange_Txn_Activity_Customer_Actor ) {
+		return;
+	}
+
 	$subject = sprintf( __( 'New note about your order %s', 'it-l10n-ithemes-exchange' ),
 		$activity->get_transaction()->get_order_number()
 	);
