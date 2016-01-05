@@ -291,8 +291,23 @@
 	margin: 1px -280px 0 0;
 }
 
-#exchange-activity-filter {
-	margin: 20px;
+.exchange-filter-action-container {
+	margin: 0 20px 20px 20px;
+	text-align: center;
+}
+
+.exchange-note-writing-container {
+	display: none;
+}
+
+.exchange-note-writing-container textarea {
+	width: 100%;
+}
+
+.exchange-note-writing-meta {
+	width: 100%;
+	display: inline-block;
+	text-align: right;
 }
 
 #activity-stream {
@@ -327,6 +342,10 @@
 	color: #444;
 	padding: 15px;
 	font-size: 13px;
+}
+
+#activity-stream li.is-public article {
+	background: lightyellow;
 }
 
 #activity-stream li article footer {

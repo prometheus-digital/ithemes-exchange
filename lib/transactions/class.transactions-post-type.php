@@ -833,20 +833,39 @@ class IT_Exchange_Transaction_Post_Type {
 				<?php _e( 'Filter by Activity Type', 'it-l10n-ithemes-exchange' ); ?>
 			</label>
 
-			<select id="exchange-activity-filter">
+			<div class="exchange-filter-action-container">
+				<select id="exchange-activity-filter">
+					<option value=""><?php _e( 'All Activity', 'it-l10n-ithemes-exchange' ); ?></option>
 
-				<option value=""><?php _e( 'All Activity', 'it-l10n-ithemes-exchange' ); ?></option>
+					<?php foreach ( $factory->get_types() as $slug => $type ): ?>
+						<option value="<?php echo esc_attr( $slug ); ?>"><?php echo $type['label']; ?></option>
+					<?php endforeach; ?>
+				</select>
 
-				<?php foreach ( $factory->get_types() as $type ): ?>
-					<option value="<?php echo esc_attr( $type ); ?>"><?php echo ucfirst( $type ); ?></option>
-				<?php endforeach; ?>
+				<button id="exchange-add-note" class="button button-secondary">
+					<?php _e( 'Add Note', 'it-l10n-ithemes-exchange' ); ?>
+				</button>
+			</div>
 
-			</select>
+			<div class="exchange-note-writing-container">
+
+				<textarea id="exchange-note-editor" placeholder="<?php _e( 'Type your message here...', 'it-l10n-ithemes-exchange' ); ?>"></textarea>
+
+				<span class="exchange-note-writing-meta">
+					<label for="exchange-notify-customer">
+						<input type="checkbox" id="exchange-notify-customer">
+						<?php _e( 'Notify customer', 'it-l10n-ithemes-exchange' ); ?>
+					</label>
+
+					<button id="exchange-post-note" class="button button-primary"><?php _e( 'Post', 'it-l10n-ithemes-exchange' ); ?></button>
+				</span>
+			</div>
+
 			<ul id="activity-stream"></ul>
 		</div>
 
 		<script type="text/template" id="exchange-activity-tpl">
-			<li id="activity-item-<%= a.getID() %>">
+			<li id="activity-item-<%= a.getID() %>" class="<%= 'type-' + a.getType() %> <%= a.isPublic() ? 'is-public' : '' %>">
 				<header><%= moment( a.getTime() ).calendar() %></header>
 				<article>
 					<p><%= a.getDescription() %></p>

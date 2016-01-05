@@ -83,7 +83,7 @@ class IT_Exchange_Txn_Activity_Factory {
 	 * @return array
 	 */
 	public function get_types() {
-		return array_keys( $this->types );
+		return $this->types;
 	}
 
 	/**
@@ -92,17 +92,21 @@ class IT_Exchange_Txn_Activity_Factory {
 	 * @since 1.34
 	 *
 	 * @param string   $type
+	 * @param string   $label
 	 * @param callable $function Function called to make the object. Passed ID and Actor object.
 	 *
 	 * @return $this
 	 */
-	public function register( $type, $function ) {
+	public function register( $type, $label, $function ) {
 
 		if ( ! is_callable( $function, false ) ) {
 			throw new InvalidArgumentException( "Function for '{$type}' type is not callable." );
 		}
 
-		$this->types[ $type ] = $function;
+		$this->types[ $type ] = array(
+			'fn'    => $function,
+			'label' => $label
+		);
 
 		return $this;
 	}
@@ -132,7 +136,7 @@ class IT_Exchange_Txn_Activity_Factory {
 
 		$type = reset( $terms );
 
-		if ( ! isset( $this->types[ $type ] ) ) {
+		if ( ! isset( $this->types[ $type ]['fn'] ) ) {
 			return null;
 		}
 

@@ -46,8 +46,14 @@ function it_exchange_get_txn_activity_factory() {
 	$factory = new IT_Exchange_Txn_Activity_Factory(
 		'ite_txn_activity', 'ite_txn_activity_type', it_exchange_get_txn_activity_actor_factory()
 	);
-	$factory->register( 'note', array( 'IT_Exchange_Txn_Note_Activity', 'make' ) );
-	$factory->register( 'renewal', array( 'IT_Exchange_Txn_Renewal_Activity', 'make' ) );
+	$factory->register( 'note', __( 'Notes', 'it-l10n-ithemes-exchange' ), array(
+		'IT_Exchange_Txn_Note_Activity',
+		'make'
+	) );
+	$factory->register( 'renewal', __( 'Renewals', 'it-l10n-ithemes-exchange' ), array(
+		'IT_Exchange_Txn_Renewal_Activity',
+		'make'
+	) );
 
 	return $factory;
 }
