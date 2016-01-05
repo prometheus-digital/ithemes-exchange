@@ -61,8 +61,9 @@ class IT_Exchange_Txn_Activity_Gateway_Actor implements IT_Exchange_Txn_Activity
 	 * @return string
 	 */
 	public function get_icon_url( $size ) {
-		if ( ! empty( $this->addon['icon'] ) ) {
-			return $this->addon['icon'];
+
+		if ( ! empty( $this->addon['options']['icon'] ) ) {
+			return $this->addon['options']['icon'];
 		}
 
 		/** @var IT_Exchange */
