@@ -19,7 +19,7 @@ class IT_Exchange_Txn_Activity_Collection {
 	/**
 	 * @var IT_Exchange_Txn_Activity[]
 	 */
-	private $activity;
+	private $activity = array();
 
 	/**
 	 * @var int
