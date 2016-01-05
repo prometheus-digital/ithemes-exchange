@@ -137,10 +137,23 @@ function it_exchange_customer_order_notes_txn_object( $object ) {
 
 	$object->customer_order_notes = it_exchange_customer_order_notes_get_current_note();
 
+	it_exchange_clear_session_data( 'customer-order-note' );
+
 	return $object;
 }
 
 add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_customer_order_notes_txn_object' );
+
+/**
+ * When the cart is emptied, clear the customer-order-note session data.
+ *
+ * @since 1.34
+ */
+function it_exchange_customer_order_notes_empty_cart() {
+	it_exchange_clear_session_data( 'customer-order-note' );
+}
+
+add_action( 'it_exchange_empty_shopping_cart', 'it_exchange_customer_order_notes_empty_cart' );
 
 /**
  * Create the activity item when the transaction is created.
