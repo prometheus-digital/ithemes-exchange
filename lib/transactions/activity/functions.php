@@ -65,7 +65,7 @@ add_action( 'it_exchange_build_txn_activity', 'it_exchange_send_public_note_to_c
  * @since 1.34
  *
  * @param IT_Exchange_Transaction $transaction
- * @param string $old_status
+ * @param string                  $old_status
  */
 function it_exchange_add_note_on_status_change( $transaction, $old_status ) {
 

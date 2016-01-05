@@ -62,6 +62,7 @@ class IT_Exchange_Transaction_Post_Type {
 			add_filter( 'bulk_actions-edit-it_exchange_tran', array( $this, 'edit_bulk_actions' ) );
 			add_action( 'wp_ajax_it-exchange-update-transaction-status', array( $this, 'ajax_update_status' ) );
 			add_action( 'wp_ajax_it-exchange-add-note', array( $this, 'ajax_add_note' ) );
+			add_filter( 'heartbeat_received', array( $this, 'activity_heartbeat' ), 10, 2);
 		}
 	}
 
@@ -976,6 +977,46 @@ class IT_Exchange_Transaction_Post_Type {
 		wp_send_json_success( array(
 			'activity' => $note->to_array()
 		) );
+	}
+
+	/**
+	 * Add new activity items to the heartbeat pulse.
+     *
+     * @since 1.34
+     *
+	 * @param array $response
+	 * @param array $data
+	 *
+	 * @return array
+     */
+	public function activity_heartbeat( $response, $data ) {
+
+		if ( isset( $data['it-exchange-txn-activity'] ) && current_user_can( 'manage_options' ) ) {
+
+			$latest      = $data['it-exchange-txn-activity']['latest'];
+			$transaction = it_exchange_get_transaction( $data['it-exchange-txn-activity']['txn'] );
+
+			if ( $latest ) {
+				$args = array(
+					'date_query' => array(
+						'after' => get_date_from_gmt( $latest )
+					)
+				);
+			} else {
+				$args = array();
+			}
+
+			$collection = new IT_Exchange_Txn_Activity_Collection( $transaction, $args );
+			$activity   = $collection->get_activity();
+
+			if ( ! empty( $activity ) ) {
+				foreach ( $activity as $item ) {
+					$response['it-exchange-txn-activity']['items'][] = $item->to_array();
+				}
+			}
+		}
+
+		return $response;
 	}
 
 	/**

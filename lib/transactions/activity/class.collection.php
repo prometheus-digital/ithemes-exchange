@@ -59,7 +59,7 @@ class IT_Exchange_Txn_Activity_Collection {
 			'paged'          => $args['page'],
 			'orderby'        => $args['orderby'],
 			'order'          => $args['order'],
-			'date_query'     => array()
+			'date_query'     => $args['date_query']
 		);
 
 		if ( ! empty( $args['type'] ) && $args['type'] !== 'any' ) {
