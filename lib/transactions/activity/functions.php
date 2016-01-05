@@ -60,6 +60,40 @@ function it_exchange_send_public_note_to_customer( IT_Exchange_Txn_Activity $act
 add_action( 'it_exchange_build_txn_activity', 'it_exchange_send_public_note_to_customer' );
 
 /**
+ * Add a note when a transaction's status is changed.
+ *
+ * @since 1.34
+ *
+ * @param IT_Exchange_Transaction $transaction
+ * @param string $old_status
+ */
+function it_exchange_add_note_on_status_change( $transaction, $old_status ) {
+
+	$old_status_label = it_exchange_get_transaction_status_label( $transaction, array(
+		'status' => $old_status
+	) );
+
+	$new_status_label = it_exchange_get_transaction_status_label( $transaction );
+
+	$message = sprintf( __( 'Status changed from %s to %s.', 'it-l10n-ithemes-exchange' ),
+		$old_status_label, $new_status_label
+	);
+
+	$builder = new IT_Exchange_Txn_Activity_Builder( $transaction, 'status' );
+	$builder->set_description( $message );
+
+	if ( is_user_logged_in() ) {
+		$builder->set_actor( new IT_Exchange_Txn_Activity_User_Actor( wp_get_current_user() ) );
+	} else {
+		$builder->set_actor( new IT_Exchange_Txn_Activity_Site_Actor() );
+	}
+
+	$builder->build( it_exchange_get_txn_activity_factory() );
+}
+
+add_action( 'it_exchange_update_transaction_status', 'it_exchange_add_note_on_status_change', 10, 2 );
+
+/**
  * Get the txn activity factory.
  *
  * @since 1.34
@@ -77,6 +111,10 @@ function it_exchange_get_txn_activity_factory() {
 	) );
 	$factory->register( 'renewal', __( 'Renewals', 'it-l10n-ithemes-exchange' ), array(
 		'IT_Exchange_Txn_Renewal_Activity',
+		'make'
+	) );
+	$factory->register( 'status', __( 'Order Status', 'it-l10n-ithemes-exchange' ), array(
+		'IT_Exchange_Txn_Status_Activity',
 		'make'
 	) );
 
