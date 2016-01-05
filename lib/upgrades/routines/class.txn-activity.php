@@ -132,25 +132,74 @@ class IT_Exchange_Upgrade_Routine_Txn_Activity implements IT_Exchange_UpgradeInt
 	 */
 	protected function upgrade_transaction( IT_Exchange_Transaction $transaction, IT_Exchange_Upgrade_SkinInterface $skin, $verbose ) {
 
+		if ( $verbose ) {
+			$skin->debug( 'Upgrading Txn: ' . $transaction->ID );
+		}
+
 		$child_txns = new WP_Query( array(
 			'post_type'   => 'it_exchange_tran',
 			'post_parent' => $transaction->ID
 		) );
 
 		foreach ( $child_txns->get_posts() as $post ) {
-			$child = it_exchange_get_transaction( $post );
 
-			$builder = new IT_Exchange_Txn_Activity_Builder( $transaction, 'renewal' );
-			$builder->set_child( $child );
-			$builder->set_time( new DateTime( $child->post_date_gmt, new DateTimeZone( 'UTC' ) ) );
-			$builder->set_actor( new IT_Exchange_Txn_Activity_Gateway_Actor( it_exchange_get_addon(
-				it_exchange_get_transaction_method( $transaction )
-			) ) );
+			try {
+				$child = it_exchange_get_transaction( $post );
 
-			$builder->build( $this->activity_factory );
+				if ( ! $child ) {
+					continue;
+				}
+
+				if ( $verbose ) {
+					$skin->debug( 'Adding Activity: ' . $child->ID );
+				}
+
+				$builder = new IT_Exchange_Txn_Activity_Builder( $transaction, 'renewal' );
+				$builder->set_child( $child );
+
+				try {
+					$builder->set_time( new DateTime( $child->post_date_gmt, new DateTimeZone( 'UTC' ) ) );
+				}
+				catch ( Exception $e ) {
+					$skin->error( sprintf( 'Transaction %d – Child %d: Exception while setting activity date %s.',
+						$transaction->ID, $child->ID, $e->getMessage()
+					) );
+				}
+
+				try {
+					$builder->set_actor( new IT_Exchange_Txn_Activity_Gateway_Actor( it_exchange_get_addon(
+						it_exchange_get_transaction_method( $transaction )
+					) ) );
+				}
+				catch ( InvalidArgumentException $e ) {
+					$skin->error( sprintf( 'Transaction %d – Child %d: Exception while setting actor %s.',
+						$transaction->ID, $child->ID, $e->getMessage()
+					) );
+				}
+
+				try {
+					$builder->build( $this->activity_factory );
+				}
+				catch ( UnexpectedValueException $e ) {
+					$skin->error( sprintf( 'Transaction %d – Child %d: Exception while building activity %s.',
+						$transaction->ID, $child->ID, $e->getMessage()
+					) );
+				}
+			}
+			catch ( InvalidArgumentException $e ) {
+				$skin->error( sprintf( 'Transaction %d: Exception thrown %s', $transaction->ID, $e->getMessage() ) );
+			}
+			catch ( UnexpectedValueException $e ) {
+				$skin->error( sprintf( 'Transaction %d: Exception thrown %s', $transaction->ID, $e->getMessage() ) );
+			}
 		}
 
 		update_post_meta( $transaction->ID, '_upgrade_completed', $this->get_slug() );
+
+		if ( $verbose ) {
+			$skin->debug( 'Upgraded Txn: ' . $transaction->ID );
+			$skin->debug( '' );
+		}
 	}
 
 	/**
