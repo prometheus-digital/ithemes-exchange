@@ -137,7 +137,7 @@ final class IT_Exchange_Txn_Activity_Builder {
 	 */
 	public function set_child( IT_Exchange_Transaction $transaction ) {
 
-		if ( get_post_meta( $transaction->ID, '_it_exchange_parent_tx_id', true ) !== $this->transaction->ID ) {
+		if ( (int) get_post_meta( $transaction->ID, '_it_exchange_parent_tx_id', true ) !== (int) $this->transaction->ID ) {
 			throw new InvalidArgumentException( 'Child transaction has invalid parent.' );
 		}
 
