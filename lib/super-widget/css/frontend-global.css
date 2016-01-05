@@ -80,6 +80,17 @@
 .it-exchange-super-widget .it-exchange-sw-billing-address label{display:block;margin:1em 0 .5em;}
 .it-exchange-super-widget .it-exchange-sw-billing-address .it-exchange-submit{margin:1em 0;}
 
+/** ----------------------------------------:[ order notes ]:--- */
+.it-exchange-super-widget .cart-customer-order-note {text-align:left;font-size:1em;line-height:1.5;}
+.it-exchange-super-widget .cart-customer-order-note a {float:right;}
+.it-exchange-super-widget .it-exchange-sw-processing-customer-order-note {padding: 0 20px;}
+.it-exchange-super-widget .it-exchange-sw-customer-order-note-form label{display:block;margin:1em 0 .5em;}
+.it-exchange-super-widget .it-exchange-sw-customer-order-note-form .it-exchange-submit{margin:1em 0;}
+.it-exchange-super-widget .it-exchange-sw-customer-order-note-form textarea {min-width: 230px; width: 100%;resize: vertical}
+.it-exchange-super-widget .it-exchange-customer-order-note-actions {text-align: right;width: 100%}
+.it-exchange-super-widget .it-exchange-customer-order-note-cancel {padding-right: 5px;}
+.it-exchange-super-widget .it-exchange-sw-processing-customer-order-note p {text-align: left;font-style: oblique;opacity: .8;max-width: 270px;padding-top: 5px;margin-bottom: 0}
+
 /** ----------------------------------------:[ guest checkout ]:--- */
 .it-exchange-super-widget .it-exchange-sw-processing-guest-checkout{padding:1em;}
 .it-exchange-super-widget .it-exchange-guest-checkout-form div{margin-bottom:2em;}
