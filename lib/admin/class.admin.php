@@ -1520,10 +1520,14 @@ Order: %s
 			);
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {
 			$deps = array( 'jquery-ui-tooltip', 'ithemes-momentjs' );
+
+			$collection = new IT_Exchange_Txn_Activity_Collection( it_exchange_get_transaction( $GLOBALS['post'] ) );
+
 			wp_enqueue_script( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/transaction-details.js', $deps );
 			wp_localize_script( 'it-exchange-transaction-details', 'EXCHANGE', array(
 				'nonce' => wp_create_nonce( 'it-exchange-add-note' ),
-				'txn'   => $GLOBALS['post']->ID
+				'txn'   => $GLOBALS['post']->ID,
+				'items' => array_map( create_function( '$a', 'return $a->to_array();' ), $collection->get_activity() )
 			) );
 			wp_dequeue_script( 'autosave' );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
