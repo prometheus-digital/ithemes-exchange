@@ -515,10 +515,11 @@ function it_exchange_update_transaction( $args ) {
  * @since 0.3.3
  * @param WP_Post|int|IT_Exchange_Transaction $transaction the transaction id or object
  * @param string $status the new transaction status
+ * @param IT_Exchange_Txn_Activity_Actor $context
  *
  * @return string|bool Status or false
 */
-function it_exchange_update_transaction_status( $transaction, $status ) {
+function it_exchange_update_transaction_status( $transaction, $status, IT_Exchange_Txn_Activity_Actor $context = null ) {
 
 	if ( $transaction instanceof IT_Exchange_Transaction ) {
 		$transaction = it_exchange_get_transaction( $transaction );
@@ -531,8 +532,23 @@ function it_exchange_update_transaction_status( $transaction, $status ) {
 	$old_status_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction );
 	$transaction->update_status( $status );
 
-	do_action( 'it_exchange_update_transaction_status', $transaction, $old_status, $old_status_cleared, $status );
-	do_action( 'it_exchange_update_transaction_status_' . $transaction->transaction_method, $transaction, $old_status, $old_status_cleared, $status );
+	/**
+	 * Fires when a transaction's status is changed.
+	 *
+	 * @since 1.0
+	 *
+	 * @param IT_Exchange_Transaction        $transaction
+	 * @param string                         $old_status
+	 * @param bool                           $old_status_cleared
+	 * @param string                         $status New status
+	 * @param IT_Exchange_Txn_Activity_Actor $context
+	 */
+	do_action( 'it_exchange_update_transaction_status', $transaction, $old_status, $old_status_cleared, $status, $context );
+
+	do_action( 'it_exchange_update_transaction_status_' . $transaction->transaction_method, $transaction, $old_status,
+		$old_status_cleared, $status, $context
+	);
+
 	return $transaction->get_status();
 }
 
