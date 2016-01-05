@@ -168,3 +168,52 @@ function it_exchange_customer_order_notes_create_activity( $transaction_id ) {
 }
 
 add_action( 'it_exchange_add_transaction_success', 'it_exchange_customer_order_notes_create_activity' );
+
+/**
+ * Display the 'order_notes' email tag on the settings page.
+ *
+ * @since 1.34
+ */
+function it_exchange_customer_order_notes_display_email_tag() {
+	echo '<li>order_notes – ' . __( "The customer's order notes, if any.", 'it-l10n-ithemes-exchange' ) . '</li>';
+}
+
+add_action( 'it_exchange_email_template_tags_list', 'it_exchange_customer_order_notes_display_email_tag' );
+
+/**
+ * Register our callback function for replacing the 'order_notes' tag.
+ *
+ * @since 1.34
+ *
+ * @param array $functions
+ *
+ * @return array
+ */
+function it_exchange_customer_order_notes_add_email_tag( $functions ) {
+
+	$functions['order_notes'] = 'it_exchange_customer_order_notes_replace_email_tag';
+
+	return $functions;
+}
+
+add_filter( 'it_exchange_email_notification_shortcode_functions', 'it_exchange_customer_order_notes_add_email_tag' );
+
+/**
+ * Replace our 'order_notes' email tag.
+ *
+ * @since 1.34
+ *
+ * @param IT_Exchange_Email_Notifications $email
+ *
+ * @return string
+ */
+function it_exchange_customer_order_notes_replace_email_tag( IT_Exchange_Email_Notifications $email ) {
+
+	$transaction = it_exchange_get_transaction( $email->transaction_id );
+
+	if ( ! empty ( $transaction->cart_details->customer_order_notes ) ) {
+		return $transaction->cart_details->customer_order_notes;
+	}
+
+	return '';
+}
