@@ -815,6 +815,11 @@ function it_exchange_basic_coupons_get_discount_method( $mehod, $options=array()
 add_filter( 'it_exchange_get_coupon_discount_method', 'it_exchange_basic_coupons_get_discount_method', 10, 2 );
 
 function it_exchange_addon_basic_coupons_replace_order_table_tag_before_total_row( $email_obj, $options ) {
+
+	if ( ! it_exchange_get_transaction_coupons_total_discount( $email_obj->transaction_id, false ) ) {
+		return;
+	}
+
 	?>
 	<tr>
 		<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Savings', 'it-l10n-ithemes-exchange' ); ?></td>
