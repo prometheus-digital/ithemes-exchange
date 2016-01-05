@@ -107,6 +107,9 @@ function it_exchange_add_activity_on_renewal( $transaction_id ) {
 
 	$builder = new IT_Exchange_Txn_Activity_Builder( $parent, 'renewal' );
 	$builder->set_child( it_exchange_get_transaction( $transaction_id ) );
+	$builder->set_actor( new IT_Exchange_Txn_Activity_Gateway_Actor( it_exchange_get_addon(
+		it_exchange_get_transaction_method( $parent )
+	) ) );
 	$builder->build( it_exchange_get_txn_activity_factory() );
 }
 
@@ -153,6 +156,7 @@ function it_exchange_get_txn_activity_actor_factory() {
 	$factory->register( 'site', 'IT_Exchange_Txn_Activity_Site_Actor' );
 	$factory->register( 'customer', array( 'IT_Exchange_Txn_Activity_Customer_Actor', 'make' ) );
 	$factory->register( 'user', array( 'IT_Exchange_Txn_Activity_User_Actor', 'make' ) );
+	$factory->register( 'gateway', array( 'IT_Exchange_Txn_Activity_Gateway_Actor', 'make' ) );
 
 	return $factory;
 }

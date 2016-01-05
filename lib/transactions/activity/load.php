@@ -19,6 +19,7 @@ require_once dirname( __FILE__ ) . '/actors/class.factory.php';
 require_once dirname( __FILE__ ) . '/actors/class.customer.php';
 require_once dirname( __FILE__ ) . '/actors/class.site.php';
 require_once dirname( __FILE__ ) . '/actors/class.user.php';
+require_once dirname( __FILE__ ) . '/actors/class.gateway.php';
 
 // activity types
 require_once dirname( __FILE__ ) . '/types/class.note.php';
