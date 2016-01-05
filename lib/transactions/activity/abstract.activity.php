@@ -112,4 +112,24 @@ abstract class IT_Exchange_Txn_AbstractActivity implements IT_Exchange_Txn_Activ
 	public function is_public() {
 		return (bool) get_post_meta( $this->get_ID(), '_is_public', true );
 	}
+
+	/**
+	 * Convert the activity to an array of data.
+	 *
+	 * Substitute for jsonSerialize because 5.2 ;(
+	 *
+	 * @since 1.34
+	 *
+	 * @return array
+	 */
+	public function to_array() {
+		return array(
+			'ID'          => $this->get_ID(),
+			'description' => $this->get_description(),
+			'time'        => $this->get_time()->format( DateTime::RFC3339 ),
+			'type'        => $this->get_type(),
+			'public'      => $this->is_public(),
+			'actor'       => $this->has_actor() ? $this->get_actor()->to_array() : null
+		);
+	}
 }

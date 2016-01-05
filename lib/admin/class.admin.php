@@ -1521,6 +1521,10 @@ Order: %s
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {
 			$deps = array( 'jquery-ui-tooltip', 'ithemes-momentjs' );
 			wp_enqueue_script( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/transaction-details.js', $deps );
+			wp_localize_script( 'it-exchange-transaction-details', 'EXCHANGE', array(
+				'nonce' => wp_create_nonce( 'it-exchange-add-note' ),
+				'txn'   => $GLOBALS['post']->ID
+			) );
 			wp_dequeue_script( 'autosave' );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip', 'jquery-ui-sortable' );

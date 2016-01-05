@@ -57,7 +57,7 @@ class IT_Exchange_Txn_Activity_Actor_Factory {
 
 		$function = $this->types[ $type ];
 
-		if ( class_exists( $function ) ) {
+		if ( is_string( $function ) && class_exists( $function ) ) {
 			$actor = new $function();
 		} else {
 			$actor = $function( $activity_post_id );

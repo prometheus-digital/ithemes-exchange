@@ -114,4 +114,21 @@ class IT_Exchange_Txn_Activity_Customer_Actor implements IT_Exchange_Txn_Activit
 	public function attach( IT_Exchange_Txn_Activity $activity ) {
 		return $this;
 	}
+
+	/**
+	 * Convert the actor to an array of data.
+	 *
+	 * Substitute for jsonSerialize because 5.2 ;(
+	 *
+	 * @since 1.34
+	 *
+	 * @return array
+	 */
+	public function to_array() {
+		return array(
+			'name' => $this->get_name(),
+			'icon' => $this->get_icon_url( 48 ),
+			'url'  => $this->get_detail_url()
+		);
+	}
 }

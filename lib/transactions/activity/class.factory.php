@@ -140,7 +140,7 @@ class IT_Exchange_Txn_Activity_Factory {
 			return null;
 		}
 
-		$function = $this->types[ $type ];
+		$function = $this->types[ $type ]['fn'];
 
 		$activity = $function( $id, $this->actor_factory->make( $id ) );
 

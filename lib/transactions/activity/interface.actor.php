@@ -63,4 +63,15 @@ interface IT_Exchange_Txn_Activity_Actor {
 	 * @return self
 	 */
 	public function attach( IT_Exchange_Txn_Activity $activity );
+
+	/**
+	 * Convert the actor to an array of data.
+	 *
+	 * Substitute for jsonSerialize because 5.2 ;(
+	 *
+	 * @since 1.34
+	 *
+	 * @return array
+	 */
+	public function to_array();
 }

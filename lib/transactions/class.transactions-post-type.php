@@ -61,6 +61,7 @@ class IT_Exchange_Transaction_Post_Type {
 			) );
 			add_filter( 'bulk_actions-edit-it_exchange_tran', array( $this, 'edit_bulk_actions' ) );
 			add_action( 'wp_ajax_it-exchange-update-transaction-status', array( $this, 'ajax_update_status' ) );
+			add_action( 'wp_ajax_it-exchange-add-note', array( $this, 'ajax_add_note' ) );
 		}
 	}
 
@@ -499,10 +500,6 @@ class IT_Exchange_Transaction_Post_Type {
 		add_filter( 'screen_options_show_screen', '__return_false' );
 
 		add_action( 'edit_form_after_editor', array( $this, 'print_transaction_details_metabox' ) );
-
-		/*add_meta_box( 'it-exchange-transaction-activity', __( 'Activity', 'it-l10n-ithemes-exchange' ),
-			array( $this, 'print_activity' ), 'it_exchange_tran', 'side', 'low'
-		);*/
 	}
 
 	/**
@@ -936,6 +933,47 @@ class IT_Exchange_Transaction_Post_Type {
 		} else {
 			die( 'failed' );
 		}
+	}
+
+	/**
+	 * Add a note via AJAX.
+     *
+	 * @since 1.34
+	 */
+	public function ajax_add_note() {
+
+		$nonce = empty( $_POST['nonce'] ) ? '' : $_POST['nonce'];
+		$note = empty( $_POST['note'] ) ? '' : stripslashes( $_POST['note'] );
+		$public = empty( $_POST['isPublic'] ) ? false : (bool) $_POST['isPublic'];
+		$txn = empty( $_POST['txn'] ) ? false : it_exchange_get_transaction( $_POST['txn'] );
+
+		if ( ! wp_verify_nonce( $nonce, 'it-exchange-add-note' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'Request Expired. Please refresh and try again.', 'it-l10n-ithemes-exchange' )
+			) );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'You don\'t have permission to do that.', 'it-l10n-ithemes-exchange' )
+			) );
+		}
+
+		if ( empty( $note ) || ! $txn instanceof IT_Exchange_Transaction ) {
+			wp_send_json_error( array(
+				'message' => __( 'Invalid response format.', 'it-l10n-ithemes-exchange' )
+			) );
+		}
+
+		$builder = new IT_Exchange_Txn_Activity_Builder( $txn, 'note' );
+		$builder->set_public( $public );
+		$builder->set_description( $note );
+		$builder->set_actor( new IT_Exchange_Txn_Activity_User_Actor( wp_get_current_user() ) );
+		$note = $builder->build( it_exchange_get_txn_activity_factory() );
+
+		wp_send_json_success( array(
+			'activity' => $note->to_array()
+		) );
 	}
 
 	/**

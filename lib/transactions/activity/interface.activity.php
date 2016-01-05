@@ -87,4 +87,14 @@ interface IT_Exchange_Txn_Activity {
 	 */
 	public function get_actor();
 
+	/**
+	 * Convert the activity to an array of data.
+	 *
+	 * Substitute for jsonSerialize because 5.2 ;(
+	 *
+	 * @since 1.34
+	 *
+	 * @return array
+	 */
+	public function to_array();
 }

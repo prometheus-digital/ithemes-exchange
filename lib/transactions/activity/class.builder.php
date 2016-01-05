@@ -166,6 +166,6 @@ final class IT_Exchange_Txn_Activity_Builder {
 			$this->actor->attach( $activity );
 		}
 
-		return $activity;
+		return $factory->make( $ID );
 	}
 }
