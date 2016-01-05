@@ -51,9 +51,27 @@ function it_exchange_send_public_note_to_customer( IT_Exchange_Txn_Activity $act
 		$activity->get_transaction()->get_order_number()
 	);
 
+	$message = <<<NOWDOC
+
+Hello [it_exchange_email show=name],
+
+A new note has been added to your order:
+
+<blockquote>{$activity->get_description()}</blockquote>
+
+For your reference, your order's details are below.
+Order: [it_exchange_email show=receipt_id]
+
+[it_exchange_email show=order_table]
+
+NOWDOC;
+
+	$subject = apply_filters( 'it_exchange_send_public_note_to_customer_subject', $subject, $activity );
+	$message = apply_filters( 'it_exchange_send_public_note_to_customer_message', $message, $activity );
+
 	do_action( 'it_exchange_send_email_notification',
 		it_exchange_get_transaction_customer_id( $activity->get_transaction() ),
-		$subject, $activity->get_description()
+		$subject, $message, $activity->get_transaction()->ID
 	);
 }
 
