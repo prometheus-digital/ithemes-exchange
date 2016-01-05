@@ -61,6 +61,25 @@ class IT_Exchange_Txn_Renewal_Activity extends IT_Exchange_Txn_AbstractActivity 
 	}
 
 	/**
+	 * Get this activity's actor.
+	 *
+	 * @since 1.34
+	 *
+	 * @return IT_Exchange_Txn_Activity_Actor
+	 */
+	public function get_actor() {
+		$actor = parent::get_actor();
+
+		if ( is_null( $actor ) ) {
+			$actor = new IT_Exchange_Txn_Activity_Customer_Actor(
+				it_exchange_get_transaction_customer( $this->get_renewal_transaction() )
+			);
+		}
+
+		return $actor;
+	}
+
+	/**
 	 * Get the activity description.
 	 *
 	 * This is typically 1-2 sentences.
