@@ -876,7 +876,7 @@ class IT_Exchange_Transaction_Post_Type {
 					<% } %>
 				</article>
 
-				<a href="#" class="exchange-delete-activity" data-id="<%= a.getID() %>">
+				<a href="#" class="exchange-delete-activity">
 					<?php _e( 'Delete', 'it-l10n-ithemes-exchange' ); ?>
 				</a>
 			</li>
