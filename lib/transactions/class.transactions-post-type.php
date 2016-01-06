@@ -92,6 +92,7 @@ class IT_Exchange_Transaction_Post_Type {
 			'name'          => __( 'Payments', 'it-l10n-ithemes-exchange' ),
 			'singular_name' => __( 'Payment', 'it-l10n-ithemes-exchange' ),
 			'edit_item'     => __( 'Payment Details', 'it-l10n-ithemes-exchange' ),
+			'search_items'  => __( 'Search Payments', 'it-l10n-ithemes-exchange' )
 		);
 
 		$this->options = array(
@@ -103,7 +104,7 @@ class IT_Exchange_Transaction_Post_Type {
 			'show_in_menu'         => false,
 			// We will be adding it manually with various labels based on available product-type add-ons
 			'show_in_admin_bar'    => false,
-			'hierarchical'         => apply_filters( 'it_exchange_transactions_post_type_hierarchical', true ),
+			'hierarchical'         => apply_filters( 'it_exchange_transactions_post_type_hierarchical', false ),
 			'register_meta_box_cb' => array( $this, 'meta_box_callback' ),
 			'delete_with_user'     => false,
 			'supports'             => array( // Support everything but page-attributes for add-on flexibility
