@@ -18,7 +18,7 @@ function it_exchange_register_txn_activity_post_type() {
 	) );
 }
 
-add_action( 'init', 'it_exchange_register_txn_activity_post_type' );
+add_action( 'init', 'it_exchange_register_txn_activity_post_type', 0 );
 
 /**
  * Register the txn activity taxonomy type.
@@ -32,7 +32,7 @@ function it_exchange_register_txn_activity_taxonomy() {
 	) );
 }
 
-add_action( 'init', 'it_exchange_register_txn_activity_taxonomy' );
+add_action( 'init', 'it_exchange_register_txn_activity_taxonomy', 0 );
 
 /**
  * Send a public note to a customer via email.
@@ -199,6 +199,10 @@ add_action( 'it_exchange_recurring_payments_addon_update_transaction_subscriber_
  * @return IT_Exchange_Txn_Activity_Factory
  */
 function it_exchange_get_txn_activity_factory() {
+
+	if ( ! did_action( 'init' ) ) {
+		return null;
+	}
 
 	$factory = new IT_Exchange_Txn_Activity_Factory(
 		'ite_txn_activity', 'ite_txn_activity_type', it_exchange_get_txn_activity_actor_factory()
