@@ -828,36 +828,39 @@ class IT_Exchange_Transaction_Post_Type {
 
 		<div id="it-exchange-transaction-activity">
 
-			<label for="exchange-activity-filter" class="screen-reader-text">
-				<?php _e( 'Filter by Activity Type', 'it-l10n-ithemes-exchange' ); ?>
-			</label>
+			<div class="exchange-activity-stream-header">
 
-			<div class="exchange-filter-action-container">
-				<select id="exchange-activity-filter">
-					<option value=""><?php _e( 'All Activity', 'it-l10n-ithemes-exchange' ); ?></option>
+				<label for="exchange-activity-filter" class="screen-reader-text">
+					<?php _e( 'Filter by Activity Type', 'it-l10n-ithemes-exchange' ); ?>
+				</label>
 
-					<?php foreach ( $factory->get_types() as $slug => $type ): ?>
-						<option value="<?php echo esc_attr( $slug ); ?>"><?php echo $type['label']; ?></option>
-					<?php endforeach; ?>
-				</select>
+				<div class="exchange-filter-action-container">
+					<select id="exchange-activity-filter">
+						<option value=""><?php _e( 'All Activity', 'it-l10n-ithemes-exchange' ); ?></option>
 
-				<button id="exchange-add-note" class="button button-secondary">
-					<?php _e( 'Add Note', 'it-l10n-ithemes-exchange' ); ?>
-				</button>
-			</div>
+						<?php foreach ( $factory->get_types() as $slug => $type ): ?>
+							<option value="<?php echo esc_attr( $slug ); ?>"><?php echo $type['label']; ?></option>
+						<?php endforeach; ?>
+					</select>
 
-			<div class="exchange-note-writing-container">
+					<button id="exchange-add-note" class="button button-secondary">
+						<?php _e( 'Add Note', 'it-l10n-ithemes-exchange' ); ?>
+					</button>
+				</div>
 
-				<textarea id="exchange-note-editor" placeholder="<?php _e( 'Type your message here...', 'it-l10n-ithemes-exchange' ); ?>"></textarea>
+				<div class="exchange-note-writing-container">
 
-				<span class="exchange-note-writing-meta">
-					<label for="exchange-notify-customer">
-						<input type="checkbox" id="exchange-notify-customer">
-						<?php _e( 'Notify customer', 'it-l10n-ithemes-exchange' ); ?>
-					</label>
+					<textarea id="exchange-note-editor" placeholder="<?php _e( 'Type your message here...', 'it-l10n-ithemes-exchange' ); ?>"></textarea>
 
-					<button id="exchange-post-note" class="button button-primary"><?php _e( 'Post', 'it-l10n-ithemes-exchange' ); ?></button>
-				</span>
+					<span class="exchange-note-writing-meta">
+						<label for="exchange-notify-customer">
+							<input type="checkbox" id="exchange-notify-customer">
+							<?php _e( 'Notify customer', 'it-l10n-ithemes-exchange' ); ?>
+						</label>
+
+						<button id="exchange-post-note" class="button button-primary"><?php _e( 'Post', 'it-l10n-ithemes-exchange' ); ?></button>
+					</span>
+				</div>
 			</div>
 
 			<p id="exchange-no-activity-found"><?php _e( 'No activity found.', 'it-l10n-ithemes-exchange' ); ?></p>

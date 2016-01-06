@@ -289,6 +289,7 @@
 	width: 250px;
 	float: right;
 	margin: 1px -280px 0 0;
+	overflow-y: scroll;
 }
 
 #exchange-no-activity-found {
@@ -299,8 +300,19 @@
 	font-weight: bold;
 }
 
+.exchange-activity-stream-header {
+	padding: 20px;
+	position: fixed;
+	z-index: 5;
+	background: white;
+	border: #ccc solid 1px;
+	border-radius: 0 0 10px 10px;
+	box-shadow: 0 0 10px #dddddd;
+	width: 250px;
+	box-sizing: border-box;
+}
+
 .exchange-filter-action-container {
-	margin: 0 20px 20px 20px;
 	text-align: center;
 }
 
@@ -325,8 +337,7 @@
 
 #activity-stream {
 	list-style: disc;
-	overflow-y: scroll;
-	margin: 0;
+	margin: 65px 0 0 0;
 	padding: 0 0 0 5px;
 }
 
@@ -338,7 +349,7 @@
 #activity-stream li {
 	color: #909090;
 	font-size: 24px;
-	padding: 15px 0 0 15px;
+	padding: 5px 0 0 15px;
 	margin-bottom: 0;
 	list-style-type: none;
 	position: relative;
@@ -351,9 +362,17 @@
 	height: 10px;
 	background: #909090;
 	position: absolute;
-	top: 20px;
+	top: 10px;
 	left: -6px;
 	border-radius: 100%;
+}
+
+#activity-stream li:first-of-type {
+	padding-top: 30px;
+}
+
+#activity-stream li:first-of-type:before {
+	top: 35px;
 }
 
 #activity-stream li header {
