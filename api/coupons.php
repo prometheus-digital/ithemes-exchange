@@ -263,11 +263,11 @@ function it_exchange_get_applied_coupons( $type=false ) {
 			if ( $coupons = it_exchange_get_applied_coupons( $type ) )
 				$applied = array_merge( $applied, array( $type => $coupons ) );
 		}
-		return empty( $applied ) ? false : $applied;
+		return empty( $applied ) ? array() : $applied;
 	}
 
 	// If type was set, return just the applied coupons for the type
-	return apply_filters( 'it_exchange_get_applied_' . $type . '_coupons', false );
+	return apply_filters( 'it_exchange_get_applied_' . $type . '_coupons', array() );
 }
 
 /**
