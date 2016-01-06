@@ -88,6 +88,15 @@ interface IT_Exchange_Txn_Activity {
 	public function get_actor();
 
 	/**
+	 * Delete an activity item.
+	 *
+	 * @since 1.34
+	 *
+	 * @return bool
+	 */
+	public function delete();
+
+	/**
 	 * Convert the activity to an array of data.
 	 *
 	 * Substitute for jsonSerialize because 5.2 ;(

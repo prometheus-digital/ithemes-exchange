@@ -114,6 +114,23 @@ abstract class IT_Exchange_Txn_AbstractActivity implements IT_Exchange_Txn_Activ
 	}
 
 	/**
+	 * Delete an activity item.
+	 *
+	 * @since 1.34
+	 *
+	 * @return bool
+	 */
+	public function delete() {
+		$res = wp_delete_post( $this->get_ID(), true );
+
+		if ( is_wp_error( $res ) ) {
+			throw new UnexpectedValueException( $res->get_error_message() );
+		}
+
+		return (bool) $res;
+	}
+
+	/**
 	 * Convert the activity to an array of data.
 	 *
 	 * Substitute for jsonSerialize because 5.2 ;(

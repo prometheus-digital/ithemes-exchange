@@ -383,6 +383,14 @@
 	padding-right: 5px;
 }
 
+#activity-stream .exchange-delete-activity {
+	font-size: 12px;
+	text-align: right;
+	width: 100%;
+	display: inline-block;
+	color: #c46857;
+}
+
 /** -----------------------------------------------------:[ responsive ]:---------- */
 
 @media screen and (min-width: 850px) {

@@ -62,6 +62,7 @@ class IT_Exchange_Transaction_Post_Type {
 			add_filter( 'bulk_actions-edit-it_exchange_tran', array( $this, 'edit_bulk_actions' ) );
 			add_action( 'wp_ajax_it-exchange-update-transaction-status', array( $this, 'ajax_update_status' ) );
 			add_action( 'wp_ajax_it-exchange-add-note', array( $this, 'ajax_add_note' ) );
+			add_action( 'wp_ajax_it-exchange-remove-activity', array( $this, 'ajax_remove_activity' ) );
 			add_filter( 'heartbeat_received', array( $this, 'activity_heartbeat' ), 10, 2);
 		}
 	}
@@ -874,6 +875,10 @@ class IT_Exchange_Transaction_Post_Type {
 						<%= a.getActor().html() %>
 					<% } %>
 				</article>
+
+				<a href="#" class="exchange-delete-activity" data-id="<%= a.getID() %>">
+					<?php _e( 'Delete', 'it-l10n-ithemes-exchange' ); ?>
+				</a>
 			</li>
 		</script>
 
@@ -977,6 +982,52 @@ class IT_Exchange_Transaction_Post_Type {
 		wp_send_json_success( array(
 			'activity' => $note->to_array()
 		) );
+	}
+
+	/**
+	 * Remove a note via AJAX.
+     *
+	 * @since 1.34
+	 */
+	public function ajax_remove_activity() {
+
+		$nonce = empty( $_POST['nonce'] ) ? '' : $_POST['nonce'];
+		$ID = empty( $_POST['ID'] ) ? false : $_POST['ID'];
+		$txn = empty( $_POST['txn'] ) ? false : it_exchange_get_transaction( $_POST['txn'] );
+
+		if ( ! wp_verify_nonce( $nonce, 'it-exchange-add-note' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'Request Expired. Please refresh and try again.', 'it-l10n-ithemes-exchange' )
+			) );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'You don\'t have permission to do that.', 'it-l10n-ithemes-exchange' )
+			) );
+		}
+
+		if ( empty( $ID ) || ! $txn instanceof IT_Exchange_Transaction ) {
+			wp_send_json_error( array(
+				'message' => __( 'Invalid response format.', 'it-l10n-ithemes-exchange' )
+			) );
+		}
+
+		try {
+
+			if ( it_exchange_get_txn_activity( $ID )->delete() ) {
+				wp_send_json_success();
+			} else {
+				wp_send_json_error( array(
+					'message' => __( 'An unexpected error occurred.', 'it-l10n-ithemes-exchange' )
+				) );
+			}
+
+		} catch ( UnexpectedValueException $e ) {
+			wp_send_json_error( array(
+				'message' => $e->getMessage()
+			) );
+		}
 	}
 
 	/**
