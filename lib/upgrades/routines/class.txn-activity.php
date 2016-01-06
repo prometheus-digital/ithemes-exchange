@@ -17,13 +17,6 @@ class IT_Exchange_Upgrade_Routine_Txn_Activity implements IT_Exchange_UpgradeInt
 	private $activity_factory;
 
 	/**
-	 * IT_Exchange_Upgrade_Routine_Txn_Activity constructor.
-	 */
-	public function __construct() {
-		$this->activity_factory = it_exchange_get_txn_activity_factory();
-	}
-
-	/**
 	 * Get the iThemes Exchange version this upgrade applies to.
 	 *
 	 * @since 1.34
@@ -110,6 +103,11 @@ class IT_Exchange_Upgrade_Routine_Txn_Activity implements IT_Exchange_UpgradeInt
 			'page'           => $page,
 			'post_parent'    => 0,
 			'meta_query'     => array(
+				'relation' => 'OR',
+				array(
+					'key'     => '_upgrade_completed',
+					'compare' => 'NOT EXISTS'
+				),
 				array(
 					'key'     => '_upgrade_completed',
 					'value'   => $this->get_slug(),
@@ -212,7 +210,7 @@ class IT_Exchange_Upgrade_Routine_Txn_Activity implements IT_Exchange_UpgradeInt
 	 * @return int
 	 */
 	public function get_suggested_rate() {
-		return 10;
+		return 1;
 	}
 
 	/**
@@ -230,6 +228,8 @@ class IT_Exchange_Upgrade_Routine_Txn_Activity implements IT_Exchange_UpgradeInt
 	public function upgrade( IT_Exchange_Upgrade_Config $config, IT_Exchange_Upgrade_SkinInterface $skin ) {
 
 		$transactions = $this->get_transactions( $config->get_number(), $config->get_step() );
+
+		$this->activity_factory = it_exchange_get_txn_activity_factory();
 
 		foreach ( $transactions as $coupon ) {
 			$this->upgrade_transaction( $coupon, $skin, $config->is_verbose() );
