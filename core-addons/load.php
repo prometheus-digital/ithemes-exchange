@@ -270,6 +270,7 @@ function it_exchange_register_core_addons() {
 			'file'              => dirname( __FILE__ ) . '/admin/ithemes-security/init.php',
 			'category'          => 'other',
 			'tag'               => 'core',
+			'icon'              => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/admin/ithemes-security/logo.png' ),
 		),
 	);
 	$add_ons = apply_filters( 'it_exchange_core_addons', $add_ons );
