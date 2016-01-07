@@ -264,7 +264,7 @@ function it_exchange_register_core_addons() {
 		),
 		'ithemes-security'      => array(
 			'name'              => __( 'iThemes Security', 'it-l10n-ithemes-exchange' ),
-			'description'       => __( 'Use iThemes Security to power recaptcha for login and registration forms.', 'it-l10n-ithemes-exchange' ),
+			'description'       => __( 'Secure your Exchange login and registration forms with iThemes Security.', 'it-l10n-ithemes-exchange' ),
 			'author'            => 'iThemes',
 			'author_url'        => 'http://ithemes.com',
 			'file'              => dirname( __FILE__ ) . '/admin/ithemes-security/init.php',
