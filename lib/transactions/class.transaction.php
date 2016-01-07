@@ -293,7 +293,19 @@ class IT_Exchange_Transaction {
 	 * @return string
 	*/
 	function get_description() {
-		return empty( $this->cart_details->description ) ? false : $this->cart_details->description;
+		if ( ! empty( $this->cart_details->description ) && trim( $this->cart_details->description ) !== '' ) {
+			return $this->cart_details->description;
+		} else if ( $p = get_post_meta( $this->ID, '_it_exchange_parent_tx_id', true ) ) {
+
+			$parent = it_exchange_get_transaction( $p );
+
+			$description = it_exchange_get_transaction_description( $parent );
+			$description .= ' ' . __( '(Renewal)', 'it-l10n-ithemes-exchange' );
+
+			return $description;
+		} else {
+			return '';
+		}
 	}
 
 	/**
