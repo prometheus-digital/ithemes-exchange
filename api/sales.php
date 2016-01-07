@@ -17,7 +17,13 @@
  */
 function it_exchange_is_product_sale_active( $product ) {
 
-	$product = it_exchange_get_product( is_int( $product ) ? $product : $product->ID );
+	if ( is_int( $product ) ) {
+		$product = it_exchange_get_product( $product );
+	} elseif ( isset( $product->ID ) ) {
+		$product = it_exchange_get_product( $product->ID );
+	} else {
+		return false;
+	}
 
 	if ( ! $product ) {
 		return false;
