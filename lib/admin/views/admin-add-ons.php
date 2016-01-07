@@ -38,7 +38,7 @@
 		$display_names = array();
 		foreach( (array) $addons as $key => $data ) {
 			if ( empty( $key ) ) { continue; }
-			$name = empty( $data['name'] ) ? $key : $data['name'];
+			$name = empty( $data['name'] ) ? $key : strtolower( $data['name'] );
 			$display_names[$key] = $name;
 		}
 		if ( apply_filters( 'it_exchange_sort_addons_by_display_name', true ) ) {
