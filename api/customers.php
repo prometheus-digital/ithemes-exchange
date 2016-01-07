@@ -236,7 +236,19 @@ function it_exchange_register_user( $user_data=array() ) {
 
 	do_action( 'it_exchange_register_user' );
 
-	// Register user via WP function
+	/**
+	 * Filter the result from registering a user.
+	 *
+	 * @since 1.34
+	 *
+	 * @param WP_Error $errors
+	 */
+	$errors = apply_filters( 'it_exchange_register_user_errors', null );
+
+	if ( $errors instanceof WP_Error ) {
+		return $errors;
+	}
+
 	return edit_user();
 }
 
