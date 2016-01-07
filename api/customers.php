@@ -245,7 +245,7 @@ function it_exchange_register_user( $user_data=array() ) {
 	 */
 	$errors = apply_filters( 'it_exchange_register_user_errors', null );
 
-	if ( $errors instanceof WP_Error ) {
+	if ( is_wp_error( $errors ) ) {
 		return $errors;
 	}
 

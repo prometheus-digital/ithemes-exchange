@@ -97,6 +97,21 @@ if ( 'login' == $action ) {
 	$creds['user_password'] = empty( $_POST['pwd'] ) ? '' : urldecode( $_POST['pwd'] );
 	$creds['remember']      = empty( $_POST['rememberme'] ) ? '' : urldecode( $_POST['rememberme'] );
 
+	/**
+	 * Pre-login SW errors.
+	 *
+	 * @since 1.34
+	 *
+	 * @param WP_Error $pre_login_errors
+	 */
+	$pre_login_errors = apply_filters( 'it_exchange_pre_sw_login_errors', null );
+
+	if ( is_wp_error( $pre_login_errors ) ) {
+		it_exchange_add_message( 'error', $pre_login_errors->get_error_message() );
+
+		die( '0' );
+	}
+
 	$user = wp_signon( $creds, false );
 	if ( ! is_wp_error( $user ) ) {
 		it_exchange_add_message( 'notice', __( 'Logged in as ', 'it-l10n-ithemes-exchange' ) . $user->user_login );

@@ -56,6 +56,21 @@ add_action( 'it_exchange_super_widget_registration_end_fields_loop', 'it_exchang
 add_action( 'it_exchange_content_registration_end_fields_loop', 'it_exchange_security_add_recaptcha_to_registration' );
 
 /**
+ * Add the recaptcha to the login SW state and page.
+ */
+function it_exchange_security_add_recaptcha_to_login() {
+
+	if ( ! it_exchange_security_recaptcha_login() ) {
+		return;
+	}
+
+	ITSEC_Recaptcha::show_field( true, true, 0, 0, 20, 0 );
+}
+
+add_action( 'it_exchange_super_widget_login_end_fields_loop', 'it_exchange_security_add_recaptcha_to_login' );
+add_action( 'it_exchange_content_login_after_fields_loop', 'it_exchange_security_add_recaptcha_to_login' );
+
+/**
  * Validate the recpatcha on the SW registration screen.
  *
  * @since 1.34
@@ -67,6 +82,47 @@ add_action( 'it_exchange_content_registration_end_fields_loop', 'it_exchange_sec
 function it_exchange_security_validate_recaptcha_registration( $errors ) {
 
 	if ( ! it_exchange_security_recaptcha_registration() ) {
+		return $errors;
+	}
+
+	$success = ITSEC_Recaptcha::validate_captcha();
+
+	switch ( $success ) {
+
+		case - 1:
+			return new WP_Error( 'recaptcha_error',
+				__( 'You must verify you are indeed a human to register on this site', 'it-l10n-ithemes-exchange' )
+			);
+			break;
+		case 0:
+			return new WP_Error( 'recaptcha_error',
+				__( 'The captcha response you submitted does not appear to be valid. Please try again.', 'it-l10n-ithemes-exchange' )
+			);
+			break;
+		case - 2:
+			return new WP_Error( 'recaptcha_error',
+				__( 'We cannot verify that you are indeed human. Please try again.', 'it-l10n-ithemes-exchange' )
+			);
+			break;
+	}
+
+	return $errors;
+}
+
+add_filter( 'it_exchange_register_user_errors', 'it_exchange_security_validate_recaptcha_registration' );
+
+/**
+ * Validate the recpatcha on SW login.
+ *
+ * @since 1.34
+ *
+ * @param WP_Error|null $errors
+ *
+ * @return WP_Error
+ */
+function it_exchange_security_validate_sw_recaptcha_login( $errors ) {
+
+	if ( ! it_exchange_security_recaptcha_login() ) {
 		return $errors;
 	}
 
@@ -94,4 +150,4 @@ function it_exchange_security_validate_recaptcha_registration( $errors ) {
 	return $errors;
 }
 
-add_filter( 'it_exchange_register_user_errors', 'it_exchange_security_validate_recaptcha_registration' );
+add_filter( 'it_exchange_pre_sw_login_errors', 'it_exchange_security_validate_sw_recaptcha_login' );
