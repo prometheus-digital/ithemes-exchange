@@ -345,10 +345,11 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 	);
 	$args = wp_parse_args( $args, $defaults );
 
-	if ( !$customer_id )
-		$customer_id = it_exchange_get_current_customer_id();
-
-	$customer = it_exchange_get_customer( $customer_id );
+	if ( ! $customer_id ) {
+		$customer = it_exchange_get_current_customer();
+	} else {
+		$customer = it_exchange_get_customer( $customer_id );
+	}
 
 	// If we don't have a title, create one
 	if ( empty( $args['post_title'] ) )
