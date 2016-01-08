@@ -826,7 +826,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 				$status = $request['payment_status'];
 				$cart = $transient_data['transaction_object'];
 
-				it_exchange_add_transaction( 'paypal-standard', $method_id, $status, $customer, $cart );
+				$txn_id = it_exchange_add_transaction( 'paypal-standard', $method_id, $status, $customer, $cart );
 				it_exchange_update_transient_transaction( 'pps', $tmp_txn_id, $customer, $cart, $txn_id );
 
 				return;
