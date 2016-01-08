@@ -386,8 +386,10 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 			}
 		}
 
-		$customer->add_transaction_to_user( $transaction_id );
-
+		if ( $customer instanceof IT_Exchange_Customer ) {
+			$customer->add_transaction_to_user( $transaction_id );
+		}
+		
 		return apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $cart_object, $args );
 	}
 	do_action( 'it_exchange_add_transaction_failed', $method, $method_id, $status, $customer_id, $cart_object, $args );
