@@ -421,13 +421,6 @@
 
 /** -----------------------------------------------------:[ responsive ]:---------- */
 
-@media screen and (min-width: 850px) {
-
-	#it-exchange-transaction-details {
-		margin-right: 20px;
-	}
-}
-
 @media screen and (max-width: 850px) {
 
 	#post-body {
