@@ -307,9 +307,18 @@
 	background: white;
 	border: #ccc solid 1px;
 	border-radius: 0 0 10px 10px;
-	box-shadow: 0 0 10px #dddddd;
 	width: 250px;
 	box-sizing: border-box;
+	box-shadow: none;
+	-webkit-transition: boxshadow .2s ease-in-out;
+	-moz-transition: boxshadow .2s ease-in-out;
+	-ms-transition: boxshadow .2s ease-in-out;
+	-o-transition: boxshadow .2s ease-in-out;
+	transition: boxshadow .2s ease-in-out;
+}
+
+.exchange-activity-stream-header.exchange-shadowed {
+	box-shadow: 0 0 10px #dddddd;
 }
 
 .exchange-filter-action-container {
