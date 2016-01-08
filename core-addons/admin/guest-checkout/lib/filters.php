@@ -64,6 +64,8 @@ add_action( 'template_redirect', 'it_exchange_guest_checkout_init_login' );
  * @param boolean $has_transaction the value coming in from the WP filter
  * @param integer $transaction_id  the transaction ID
  * @param mixed   $user_id         normally the WP user ID but could be something different if changed by an add-on
+ *
+ * @return bool
 */
 function it_exchange_guest_checkout_guest_has_transaction( $has_transaction, $transaction_id, $user_id ) {
 	if ( ! it_exchange_doing_guest_checkout() )
@@ -158,7 +160,7 @@ function it_exchange_guest_checkout_handle_cart_billing_address( $cart_billing )
 			$guest_billing[$key] = '';
 		}
 	} else {
-		$guest_billing = $guest_billing;
+		$guest_billing = $cart_billing;
 	}
 
 	return $guest_billing;
@@ -196,7 +198,8 @@ add_action( 'it_exchange_save_customer_billing_address', 'it_exchange_guest_chec
  *
  * @since 1.6.0
  *
- * @param array $shipping_address the shipping address returned from customer meta
+ * @param array $address the shipping address returned from customer meta
+ *
  * @return mixed
 */
 function it_exchange_guest_checkout_handle_shipping_address( $address ) {
@@ -217,6 +220,8 @@ add_filter( 'it_exchange_get_customer_shipping_address', 'it_exchange_guest_chec
  *
  * @param string $email the email passed through from the WP filter
  * @param mixed  $transaction the id or the object
+ *
+ * @return string
 */
 function it_exchange_get_guest_checkout_transaction_email( $email, $transaction ) {
 	$transaction = it_exchange_get_transaction( $transaction );
@@ -234,6 +239,8 @@ add_filter( 'it_exchange_get_transaction_customer_email', 'it_exchange_get_guest
  *
  * @param string $id          the id passed through from the WP filter
  * @param mixed  $transaction the id or the object
+ *
+ * @return int|string
 */
 function it_exchange_get_guest_checkout_transaction_id( $id, $transaction ) {
 	$transaction = it_exchange_get_transaction( $transaction );
@@ -249,8 +256,9 @@ add_filter( 'it_exchange_get_transaction_customer_id', 'it_exchange_get_guest_ch
  *
  * @since 1.6.0
  *
- * @param  boolean $display_link yes or no
- * @param  object  $wp_post      the wp post_type for the transaction
+ * @param boolean $display_link yes or no
+ * @param WP_Post $wp_post      the wp post_type for the transaction
+ *
  * @return boolean
 */
 function it_exchange_hide_admin_customer_details_link_on_transaction_details_page( $display_link, $wp_post ) {
@@ -281,7 +289,7 @@ function it_exchange_guest_checkout_handle_cart_shipping_address( $cart_shipping
 			$guest_shipping[$key] = '';
 		}
 	} else {
-		$guest_shipping = $guest_shipping;
+		$guest_shipping = $cart_shipping;
 	}
 
 	return $guest_shipping;
@@ -295,6 +303,7 @@ add_filter( 'it_exchange_get_cart_shipping_address', 'it_exchange_guest_checkout
  * @since 1.6.0
  *
  * @param array $address the address array that is supposed to be added to the customer
+ *
  * @return array
 */
 function it_exchange_guest_checkout_handle_update_shipping_address( $address ) {
@@ -321,6 +330,7 @@ add_action( 'it_exchange_save_customer_shipping_address', 'it_exchange_guest_che
 function it_exchange_guest_checkout_set_customer_data( $data, $customer_id ) {
 	// Set initial guest status on saved usermeta
 	$data->registered_as_guest = (boolean) get_user_meta( $customer_id, 'it-exchange-registered-as-guest', true );
+
 	return $data;
 }
 add_filter( 'it_exchange_set_customer_data', 'it_exchange_guest_checkout_set_customer_data', 10, 2 );
@@ -331,6 +341,7 @@ add_filter( 'it_exchange_set_customer_data', 'it_exchange_guest_checkout_set_cus
  * @since 1.6.0
  *
  * @param object $transaction_object the transaction object right before being added to database
+ *
  * @return object
 */
 function it_exchange_flag_transaction_as_guest_checkout( $transaction_object ) {
@@ -349,7 +360,8 @@ add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_flag_transac
  *
  * @since 1.6.0
  *
- * @param integer $transaction_id
+ * @param int $transaction_id
+ *
  * @return void
 */
 function it_exchange_flag_transaction_post_as_guest_checkout( $transaction_id ) {
@@ -357,8 +369,6 @@ function it_exchange_flag_transaction_post_as_guest_checkout( $transaction_id ) 
 
 	if ( ! empty( $transaction->cart_details->is_guest_checkout ) )
 		update_post_meta( $transaction_id, '_it-exchange-is-guest-checkout', true );
-
-	return $transaction;
 }
 add_action( 'it_exchange_add_transaction_success', 'it_exchange_flag_transaction_post_as_guest_checkout' );
 
@@ -371,6 +381,7 @@ add_action( 'it_exchange_add_transaction_success', 'it_exchange_flag_transaction
  * @since 1.6.0
  *
  * @param array $args wp post args used for the post query
+ *
  * @return array
 */
 function it_exchange_guest_checkout_filter_frontend_purchases( $args ) {
@@ -384,6 +395,7 @@ function it_exchange_guest_checkout_filter_frontend_purchases( $args ) {
 		'key'     => '_it-exchange-is-guest-checkout',
 		'compare' => 'NOT EXISTS',
 	);
+
 	return $args;
 }
 add_filter( 'it_exchange_get_transactions_get_posts_args', 'it_exchange_guest_checkout_filter_frontend_purchases' );
@@ -394,7 +406,8 @@ add_filter( 'it_exchange_get_transactions_get_posts_args', 'it_exchange_guest_ch
  * @since 1.6.0
  *
  * @param object $customer the customer object
- * @return object
+ *
+ * @return IT_Exchange_Customer
 */
 function it_exchange_guest_checkout_modify_transaction_customer( $customer, $transaction ) {
 	if ( empty( $transaction->cart_details->is_guest_checkout ) )
@@ -418,16 +431,21 @@ add_filter( 'it_exchange_get_transaction_customer', 'it_exchange_guest_checkout_
  * @since 1.6.0
  *
  * @param object $customer the customer object
- * @return object
+ *
+ * @return IT_Exchange_Customer
 */
 function it_exchange_guest_checkout_modify_customer( $customer ) {
 
-	if ( ! it_exchange_doing_guest_checkout() || ( is_admin() && ! defined( 'DOING_AJAX' ) ) || ( is_admin() && defined( 'DOING_AJAX' ) && ! DOING_AJAX ) )
+	if ( ! it_exchange_doing_guest_checkout() )
+		return $customer;
+
+	if ( ( is_admin() && ! defined( 'DOING_AJAX' ) ) || ( is_admin() && defined( 'DOING_AJAX' ) && ! DOING_AJAX ) )
 		return $customer;
 
 	$email = it_exchange_get_cart_data( 'guest-checkout-user' );
 	$email = is_array( $email ) ? reset( $email ) : $email;
 	$customer = it_exchange_guest_checkout_generate_guest_user_object( $email, true );
+
 	return $customer;
 }
 add_filter( 'it_exchange_get_customer', 'it_exchange_guest_checkout_modify_customer' );
@@ -448,6 +466,7 @@ function it_exchange_guest_checkout_modify_loginout_link( $url, $redirect ) {
 		return $url;
 
 	$url = add_query_arg( array( 'it-exchange-guest-logout' => 1 ), esc_url( $redirect ) );
+
 	return $url;
 }
 add_filter( 'logout_url', 'it_exchange_guest_checkout_modify_loginout_link', 10, 2 );
@@ -488,6 +507,7 @@ add_action( 'wp_footer', 'it_exchange_logout_guest_checkout_session_on_confirmat
  *
  * @param boolean  $setting the default setting
  * @param array    $hash_data the download has data
+ *
  * @return boolean
 */
 function it_exchange_allow_file_downloads_for_guest_checkout( $setting, $hash_data ) {
@@ -504,11 +524,14 @@ add_filter( 'it_exchange_require_user_login_for_download', 'it_exchange_allow_fi
  * @since 1.6.0
  *
  * @param  mixed $incoming Whatever is coming from WP hook API. We don't use it.
- * @return void
+ *
+ * @return WP_User|null
 */
 function it_exchange_end_guest_checkout_on_login_attempt( $incoming ) {
-	if ( it_exchange_doing_guest_checkout() )
+	if ( it_exchange_doing_guest_checkout() ) {
 		it_exchange_kill_guest_checkout_session();
+	}
+
 	return $incoming;
 }
 add_filter( 'authenticate', 'it_exchange_end_guest_checkout_on_login_attempt' );
