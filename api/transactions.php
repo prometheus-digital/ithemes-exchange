@@ -143,7 +143,7 @@ function it_exchange_get_transactions( $args=array() ) {
 function it_exchange_get_transaction_by_method_id( $method, $method_id ) {
 
 	$transactions = it_exchange_get_transactions( array(
-		'number' => 1,
+		'numberposts' => 1,
 		'meta_query' => array(
 			'relation' => 'AND',
 			array(

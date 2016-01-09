@@ -401,7 +401,7 @@ function it_exchange_guest_checkout_filter_frontend_purchases( $args ) {
 
 	return $args;
 }
-add_filter( 'it_exchange_get_transactions_get_posts_args', 'it_exchange_guest_checkout_filter_frontend_purchases' );
+//add_filter( 'it_exchange_get_transactions_get_posts_args', 'it_exchange_guest_checkout_filter_frontend_purchases' );
 
 /**
  * Modifies the Transaction Customer data when dealing with a guest checkout
