@@ -129,7 +129,8 @@ add_action( 'it_exchange_super_widget_ajax_top', 'it_exchange_handle_guest_check
  *
  * @since 1.6.0
  *
- * @param array $billing_address the billing address returned from customer meta
+ * @param array $address the billing address returned from customer meta
+ *
  * @return mixed
 */
 function it_exchange_guest_checkout_handle_billing_address( $address ) {
@@ -148,6 +149,8 @@ add_filter( 'it_exchange_get_customer_billing_address', 'it_exchange_guest_check
  *
  * @since 1.6.0
  *
+ * @param array $cart_billing
+ *
  * @return array
 */
 function it_exchange_guest_checkout_handle_cart_billing_address( $cart_billing ) {
@@ -155,12 +158,12 @@ function it_exchange_guest_checkout_handle_cart_billing_address( $cart_billing )
 	if ( ! it_exchange_doing_guest_checkout() )
 		return $cart_billing;
 
-	if ( ! $guest_billing = it_exchange_get_cart_data( 'guest-billing-address' ) ) {
+	$guest_billing = it_exchange_get_cart_data( 'guest-billing-address' );
+
+	if ( ! $guest_billing ) {
 		foreach( $cart_billing as $key => $value ) {
 			$guest_billing[$key] = '';
 		}
-	} else {
-		$guest_billing = $cart_billing;
 	}
 
 	return $guest_billing;
@@ -284,12 +287,12 @@ function it_exchange_guest_checkout_handle_cart_shipping_address( $cart_shipping
 	if ( ! it_exchange_doing_guest_checkout() )
 		return $cart_shipping;
 
-	if ( ! $guest_shipping = it_exchange_get_cart_data( 'guest-shipping-address' ) ) {
+	$guest_shipping = it_exchange_get_cart_data( 'guest-shipping-address' );
+
+	if ( ! $guest_shipping ) {
 		foreach( $cart_shipping as $key => $value ) {
 			$guest_shipping[$key] = '';
 		}
-	} else {
-		$guest_shipping = $cart_shipping;
 	}
 
 	return $guest_shipping;
