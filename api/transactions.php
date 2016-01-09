@@ -131,6 +131,40 @@ function it_exchange_get_transactions( $args=array() ) {
 }
 
 /**
+ * Get a transaction by method ID.
+ *
+ * @since 1.33
+ *
+ * @param string $method
+ * @param string $method_id
+ *
+ * @return IT_Exchange_Transaction|null
+ */
+function it_exchange_get_transaction_by_method_id( $method, $method_id ) {
+
+	$transactions = it_exchange_get_transactions( array(
+		'number' => 1,
+		'meta_query' => array(
+			'relation' => 'AND',
+			array(
+				'key' => '_it_exchange_transaction_method',
+				'value' => $method
+			),
+			array(
+				'key' => '_it_exchange_transaction_method_id',
+				'value' => $method_id
+			)
+		)
+	) );
+
+	foreach ( $transactions as $transaction ) {
+		return $transaction;
+	}
+
+	return null;
+}
+
+/**
  * Get a transaction by its cart ID.
  *
  * @since 1.32.1
@@ -349,6 +383,13 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		$customer = it_exchange_get_current_customer();
 	} else {
 		$customer = it_exchange_get_customer( $customer_id );
+	}
+
+	if ( it_exchange_get_transaction_by_method_id( $method, $method_id ) ) {
+
+		do_action( 'it_exchange_add_transaction_failed', $method, $method_id, $status, $customer_id, $cart_object, $args );
+
+		return apply_filters( 'it_exchange_add_transaction', false, $method, $method_id, $status, $customer_id, $cart_object, $args );
 	}
 
 	// If we don't have a title, create one
