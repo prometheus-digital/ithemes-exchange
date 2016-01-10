@@ -128,6 +128,15 @@ function it_exchange_basic_coupons_save_coupon() {
 	unset( $data['frequency-length'] );
 	unset( $data['frequency-units'] );
 
+	if ( empty( $data['ID'] ) ) {
+		$data['post_meta']['_it-basic-quantity'] = $data['post_meta']['_it-basic-allotted-quantity'];
+	} else {
+		/** @var IT_Exchange_Cart_Coupon $coupon */
+		$coupon = it_exchange_get_coupon( $data['ID'], 'cart' );
+
+		$prev_allotted = $coupon->get_allotted_quantity();
+	}
+
 	/**
 	 * Allow for addon's to save additional coupon data.
 	 *
@@ -136,6 +145,16 @@ function it_exchange_basic_coupons_save_coupon() {
 	$data = apply_filters( 'it_exchange_basic_coupons_save_coupon', $data );
 
 	if ( $post_id = it_exchange_add_coupon( $data ) ) {
+
+		if ( isset( $prev_allotted ) ) {
+			/** @var IT_Exchange_Cart_Coupon $coupon */
+			$coupon = it_exchange_get_coupon( $post_id, 'cart' );
+
+			if ( $prev_allotted !== $coupon->get_allotted_quantity() ) {
+				$coupon->modify_quantity_available( $coupon->get_allotted_quantity() - $prev_allotted );
+			}
+		}
+
 		/**
 		 * Fires when a coupon is successfully saved.
 		 *

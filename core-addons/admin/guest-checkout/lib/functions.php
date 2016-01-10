@@ -26,7 +26,7 @@ function it_exchange_guest_checkout_bump_session() {
  * @param string $email
  * @param bool   $return_exchange_customer
  *
- * @return object
+ * @return IT_Exchange_Customer|object
 */
 function it_exchange_guest_checkout_generate_guest_user_object( $email, $return_exchange_customer=false ) {
 	$user     = new WP_User();

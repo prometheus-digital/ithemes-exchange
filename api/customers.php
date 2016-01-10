@@ -106,6 +106,17 @@ function it_exchange_get_customer_transactions( $customer_id ) {
 		'numberposts' => -1,
 		'customer_id' => $customer->id,
 	);
+
+	/**
+	 * Filter the args used to get a customer's transactions.
+	 *
+	 * @since 1.33.0
+	 *
+	 * @param array $args
+	 * @param IT_Exchange_Customer $customer
+	 */
+	$args = apply_filters( 'it_exchange_get_customer_transactions_args', $args, $customer );
+
 	return apply_filters( 'it_exchange_get_customer_transactions', it_exchange_get_transactions( $args ), $customer_id, $args );
 }
 
