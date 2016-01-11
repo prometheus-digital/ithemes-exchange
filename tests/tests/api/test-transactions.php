@@ -518,16 +518,14 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 			'post_type' => 'it_exchange_prod'
 		) );
 
-		$product_data = $products = array(
-			"$product-test-product-hash" => array(
-				'product_id'   => $product,
-				'product_name' => 'My Name'
-			)
+		$product_data = array(
+			'product_id'   => $product,
+			'product_name' => 'My Name'
 		);
 
 		$this->assertEquals( 'My Name', it_exchange_get_transaction_product_feature( $product_data, 'product_name' ) );
 		$this->assertEquals( 'My Name', it_exchange_get_transaction_product_feature( $product_data, 'title' ) );
-		$this->assertEquals( 'My Name', it_exchange_get_transaction_product_feature( $product_data, 'feature' ) );
+		$this->assertEquals( 'My Name', it_exchange_get_transaction_product_feature( $product_data, 'name' ) );
 		$this->assertEquals( $product, it_exchange_get_transaction_product_feature( $product_data, 'product_id' ) );
 	}
 
