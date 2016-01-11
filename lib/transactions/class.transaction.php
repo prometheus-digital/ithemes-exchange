@@ -309,15 +309,19 @@ class IT_Exchange_Transaction {
 	*/
 	function get_products() {
 		$products = empty( $this->cart_details->products ) ? array() : $this->cart_details->products;
-		return apply_filters( 'it_exchange_get_transaction_products', $products, $this->ID );
+		return apply_filters( 'it_exchange_get_transaction_products', $products, $this );
 	}
 
 	/**
 	 * Add the transaction refund amount.
 	 *
 	 * @since 0.4.0
+	 *
+	 * @param string $refund Amount
+	 * @param string $date Date refund occurred. In mysql format.
+	 * @param array  $options Additional refund options.
 	*/
-	function add_refund( $refund, $date=false, $options=array() ) {
+	function add_refund( $refund, $date = '', $options = array() ) {
 		$date = empty( $date ) ? date_i18n( 'Y-m-d H:i:s' ) : $date;
 		$args = array(
 			'amount'  => $refund,
