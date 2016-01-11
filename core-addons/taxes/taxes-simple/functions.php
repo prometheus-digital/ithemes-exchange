@@ -15,7 +15,7 @@ function it_exchange_addon_get_simple_taxes_for_cart( $format_price=true ) {
 
 	// Grab the tax rate
 	$options  = it_exchange_get_option( 'addon_taxes_simple' );
-	$tax_rate = empty( $options['default-tax-rate'] ) ? 1 : (float) $options['default-tax-rate'];
+	$tax_rate = empty( $options['default-tax-rate'] ) ? 0 : (float) $options['default-tax-rate'];
 	$process_after_discounts = ! empty( $options['calculate-after-discounts'] );
 
 	// Grab the cart subtotal or the cart total depending on the process after discounts option
