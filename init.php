@@ -49,6 +49,7 @@ class IT_Exchange {
 		$this->set_plugin_locations();
 		$this->set_textdomain();
 
+		include( $this->_plugin_path . 'vendor/autoload.php' );
 		// Load supporting libraries
 		require( $this->_plugin_path . 'lib/load.php' );
 		require( $this->_plugin_path . 'api/load.php' );
