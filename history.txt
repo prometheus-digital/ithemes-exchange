@@ -1208,3 +1208,20 @@
 	Don't autosort transactions by ID.
 	Fix link to transaction details in reporting widget.
 	PayPal Secure Button should have it's own class name
+1.33 – Lew Ayotte, Elise Alley, Timothy B. Jacobs, Ty Carlson
+	Add: Support for per-customer coupons, per-product category coupons, and excluding products.
+	Add: Track number of coupon uses.
+	Add: Reduce coupon usage count on cancellation
+	Add: Upgrade routine for coupons.
+	Add: Support for Exchange Ghost pages in the Customizer
+	Add: Autocomplete support for purchase dialogs
+	Tweak: Mobile improvements for purchase dialogs
+	Tweak: Allow searching by coupon code
+	Tweak: Improve coupon error messages
+	Tweak: Display sale price in products list table
+	Tweak: Style tweaks
+	Fix: Prevent PayPal from adding multiple transactions during guest checkout
+	Fix: Allow a simple tax rate of 0%
+	Fix: Allow for non-physical products to be excluded from shipping calculations
+
+
