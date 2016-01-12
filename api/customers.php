@@ -144,11 +144,6 @@ function it_exchange_customer_has_transaction( $transaction_id, $customer_id = N
 	else if ( ! $customer = it_exchange_get_customer( $customer_id ) )
 		return array();
 
-	// Get transactions args
-	$args = array(
-		'numberposts' => -1,
-		'customer_id' => $customer->id,
-	);
 	return apply_filters( 'it_exchange_customer_has_transaction', $customer->has_transaction( $transaction_id ), $transaction_id, $customer_id );
 }
 
