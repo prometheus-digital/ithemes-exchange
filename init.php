@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: iThemes Exchange
- * Version: 1.32.2
+ * Version: 1.33
  * Text Domain: it-l10n-ithemes-exchange
  * Description: Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordPress
  * Plugin URI: http://ithemes.com/exchange/
