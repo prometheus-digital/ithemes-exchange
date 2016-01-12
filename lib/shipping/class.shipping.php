@@ -390,6 +390,16 @@ class IT_Exchange_Shipping {
 				),
 			);
 		}
+
+		$form_fields = array_merge( $form_fields, array(
+			array(
+				'type'    => 'yes_no_drop_down',
+				'label'   => __( 'Exclude non-shippable products from per-order price calculations', 'it-l10n-ithemes-exchange' ),
+				'slug'    => 'exclude_non_shippable',
+				'default' => 0
+			)
+		) );
+
 		$form_fields = array_merge( $form_fields, $measurements );
 		return $form_fields;
 	}
