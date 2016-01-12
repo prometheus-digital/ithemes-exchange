@@ -83,6 +83,8 @@
 #it-exchange-add-ons-wrap .pro-pack.open a.btn-pro {clear:left;float:left;}
 #it-exchange-add-ons-wrap .pro-pack.open a.dismiss {display:block;}
 
+#it-exchange-add-ons-wrap .add-on-block.add-on-slug-ithemes-security .add-on-actions a {background: #EBEBEB;box-shadow: 0 2px 0 #808080;color: #606060;}
+#it-exchange-add-ons-wrap .add-on-block.add-on-slug-ithemes-security .add-on-actions a:hover {background:#EBEBEB;box-shadow:inset 0 1px 3px rgba(0,0,0,0.2);color:#606060;}
 
 @media only screen and ( max-width:600px ) {
 
