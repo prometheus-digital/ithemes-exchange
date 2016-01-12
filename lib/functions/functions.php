@@ -1316,7 +1316,12 @@ function it_exchange_add_product( $args=array() ) {
 	$post_args['post_status']  = $args['status'];
 	$post_args['post_type']    = 'it_exchange_prod';
 	$post_args['post_title']   = empty( $args['title'] ) ? '' : $args['title'];
-	$post_args['post_content'] = ( it_exchange_product_type_supports_feature( $args['type'], 'extended-description' ) && ! empty( $args['extended-description'] ) ) ? $args['extended-description'] : '';
+
+	if ( it_exchange_product_type_supports_feature( $args['type'], 'extended-description' ) && ! empty( $args['extended-description'] ) ) {
+		$post_args['post_content'] = $args['extended-description'];
+	} else {
+		$post_args['post_content'] = '';
+	}
 
 	// Insert Post and get ID
 	if ( $product_id = wp_insert_post( $post_args ) ) {

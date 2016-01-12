@@ -45,6 +45,13 @@ function _manually_load_plugin() {
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
+tests_add_filter( 'it_exchange_register_addons', function () {
+
+	tests_add_filter( 'it_exchange_get_enabled_addons', function () {
+		return it_exchange_get_addons();
+	} );
+} );
+
 require $test_root . '/includes/bootstrap.php';
 
 require dirname( __FILE__ ) . '/framework/test-case.php';
@@ -53,3 +60,4 @@ activate_plugin( 'ithemes-exchange/init.php' );
 
 \WP_Mock::setUsePatchwork( true );
 \WP_Mock::bootstrap();
+

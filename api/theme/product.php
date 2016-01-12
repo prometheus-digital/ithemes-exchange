@@ -512,17 +512,26 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	}
 
 	/**
-	 * The product's dates purchase availability
-	 *
-	 * Use type of 'start', 'end', 'both', either in options
+	 * The product's visibility.
 	 *
 	 * @since 0.4.0
+	 *
+	 * @param array $options
+	 *
 	 * @return string
 	*/
-	function visibility( $options=array() ) {
+	function visibility( $options = array() ) {
+
+		if ( empty( $options['product_id'] ) ) {
+			return false;
+		}
+
+		$product_id = $options['product_id'];
+
 		// Return boolean if has flag was set
-		if ( $options['has'] )
+		if ( $options['has'] ) {
 			return ( false !== get_post_meta( $product_id, '_it-exchange-visibility', true ) );
+		}
 
 		return get_post_meta( $product_id, '_it-exchange-visibility', true );
 	}

@@ -16,14 +16,15 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 	 */
 	protected $exchange_admin;
 
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+	}
+
 	/**
 	 * Do custom initialization.
 	 */
 	public function setUp() {
 		parent::setUp();
-
-		it_exchange_temporarily_load_addons( array_keys( it_exchange_get_addons() ) );
-		it_exchange_add_feature_support_to_product_type( 'recurring-payments', 'digital-downloads-product-type' );
 
 		$null                 = null;
 		$this->exchange_admin = new IT_Exchange_Admin( $null );

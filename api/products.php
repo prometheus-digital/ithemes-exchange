@@ -28,9 +28,11 @@ function it_exchange_is_product( $post=false ) {
  *
  * @since 0.3.1
  *
+ * @param IT_Exchange_Product|int|WP_Post $post
+ *
  * @return string the product type
 */
-function it_exchange_get_product_type( $post=false ) {
+function it_exchange_get_product_type( $post = 0 ) {
 	if ( ! $post )
 		global $post;
 
@@ -80,16 +82,22 @@ function it_exchange_get_product_type_options( $product_type ) {
  * Retreives a product object by passing it the WP post object or post id
  *
  * @since 0.3.2
- * @param mixed $post  post object or post id
  *
- * @return IT_Exchange_Product object for passed post
+ * @param WP_Post|int|IT_Exchange_Product $post  post object or post id
+ *
+ * @return IT_Exchange_Product|bool Product object, or false on error.
 */
 function it_exchange_get_product( $post ) {
 
-	try {
-		$product = new IT_Exchange_Product( $post );
-	} catch ( Exception $e ) {
-		return false;
+	if ( $post instanceof IT_Exchange_Product ) {
+		$product = $post;
+	} else {
+		try {
+			$product = new IT_Exchange_Product( $post );
+		}
+		catch ( Exception $e ) {
+			return false;
+		}
 	}
 
 	if ( $product->ID )
@@ -197,7 +205,7 @@ function it_exchange_set_the_product_id( $product_id=false ) {
 */
 function it_exchange_set_product( $product ) {
 
-	$product = $product instanceof IT_Exchange_Product ? $product : it_exchange_get_product( $product );
+	$product = it_exchange_get_product( $product );
 
 	if ( $product instanceof IT_Exchange_Product ) {
 		$GLOBALS['it_exchange']['product'] = $product;
@@ -270,15 +278,20 @@ function it_exchange_is_product_available( $product_id=false ) {
  *
  * @since 0.4.0
  *
+ * @deprecated 1.35
+ *
  * @param int|bool $product_id Product ID
  *
  * @return boolean
 */
 function it_exchange_is_product_visible( $product_id=false ) {
+
+	_deprecated_function( 'it_exchange_is_product_visible', '1.35', 'it_exchange_is_product_available' );
+
 	if ( ! it_exchange_get_product( $product_id ) )
 		return false;
 
-	// Check start time
+	// Check it has visibility
 	if ( it_exchange( 'product', 'has-visibility' ) ) {
 		if ( 'hidden' === get_post_meta( $product_id, '_it-exchange-visibility', true ) )
 			return apply_filters( 'it_exchange_is_product_visible', false, $product_id );
@@ -292,6 +305,8 @@ function it_exchange_is_product_visible( $product_id=false ) {
  * Returns an array of all transactions for a product
  *
  * @since 0.4.2
+ *
+ * todo make this performant
  *
  * @param mixed $product the product ID or object
  * @param string $type do you want an array of ids or an array of objects returned

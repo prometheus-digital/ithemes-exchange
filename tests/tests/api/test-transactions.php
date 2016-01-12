@@ -9,7 +9,7 @@
 /**
  * Class IT_Exchange_API_Transactions_Test
  *
- * @group transactions
+ * @group transactions-api
  */
 class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
