@@ -13,15 +13,19 @@
 	</testsuites>
 
 	<filter>
-		<whitelist processUncoveredFilesFromWhitelist="true">
+		<whitelist>
 			<directory suffix=".php">./api</directory>
 			<directory suffix=".php">./lib</directory>
 			<directory suffix=".php">./core-addons</directory>
 			<exclude>
-				<directory suffix=".php">./lib/templates</directory>
-				<directory suffix=".php">./lib/admin/views</directory>
+				<directory suffix=".php">./vendor/</directory>
+				<directory suffix=".php">./lib/templates/</directory>
+				<directory suffix=".php">./lib/admin/views/</directory>
 				<directory suffix=".php">./api/theme/</directory>
 			</exclude>
 		</whitelist>
 	</filter>
+	<logging>
+		<log type="coverage-clover" target="./coverage.xml"/>
+	</logging>
 </phpunit>
