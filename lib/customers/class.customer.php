@@ -143,7 +143,7 @@ class IT_Exchange_Customer {
      * @since 0.4.0
      *
      * @param integer $transaction_id id of the transaction
-     * @return void
+     * @return bool
     */
 	function has_transaction( $transaction_id ) {
 		$transaction_ids = (array) get_user_meta( $this->id, '_it_exchange_transaction_id' );
@@ -212,8 +212,11 @@ function handle_it_exchange_customer_registration_action() {
 
         $user_id = it_exchange_register_user();
 
-        if ( is_wp_error( $user_id ) )
-            return it_exchange_add_message( 'error', $user_id->get_error_message());
+        if ( is_wp_error( $user_id ) ) {
+	        it_exchange_add_message( 'error', $user_id->get_error_message() );
+
+	        return;
+        }
 
         $creds = array(
             'user_login'    => $_POST['user_login'],
@@ -222,8 +225,11 @@ function handle_it_exchange_customer_registration_action() {
 
         $user = wp_signon( $creds );
 
-        if ( is_wp_error( $user ) )
-            return it_exchange_add_message( 'error', $result->get_error_message() );
+        if ( is_wp_error( $user ) ) {
+	        it_exchange_add_message( 'error', $user->get_error_message() );
+
+	        return;
+        }
 
         $registration_url = trailingslashit( it_exchange_get_page_url( 'registration' ) );
         $checkout_url     = trailingslashit( it_exchange_get_page_url( 'checkout' ) );

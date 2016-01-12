@@ -681,6 +681,11 @@ class IT_Exchange_Product_Post_Type {
 			case 'it_exchange_product_price':
 				$price = it_exchange_format_price( it_exchange_get_product_feature( $post->ID, 'base-price' ) );
 
+				if ( it_exchange_is_product_sale_active( $post->ID ) ) {
+					$sale = it_exchange_format_price( it_exchange_get_product_feature( $post->ID, 'sale-price' ) );
+					$price = "<del>{$price}</del> <ins>{$sale}</ins>";
+				}
+
 				/**
 				 * Filters the price label used in the admin list table for products.
 				 *
@@ -691,7 +696,7 @@ class IT_Exchange_Product_Post_Type {
 				 */
 				$price = apply_filters( 'it_exchange_admin_product_list_price_column', $price, $post->ID );
 
-				echo esc_attr( $price );
+				echo $price;
 				break;
 			case 'it_exchange_product_show_in_store':
 				$product_visibility = get_post_meta( $post->ID, '_it-exchange-visibility', true );

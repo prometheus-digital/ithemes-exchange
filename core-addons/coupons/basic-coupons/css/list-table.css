@@ -1,0 +1,5 @@
+.column-it_exchange_coupon_discount{width: 100px}
+.column-it_exchange_coupon_date{width: 133px}
+.column-it_exchange_coupon_quantity{width: 100px}
+.datepicker {width:105px}
+label[for="start-date"], label[for="end-date"] {margin-top: -5px;display: inline-block;}

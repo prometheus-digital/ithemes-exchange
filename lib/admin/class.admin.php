@@ -395,6 +395,8 @@ class IT_Exchange_Admin {
 			$settings_callback = apply_filters( 'it_exchange_general_settings_tab_callback_' . $this->_current_tab, $settings_callback );
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->get_admin_menu_capability( 'it-exchange-settings' ), 'it-exchange-settings', $settings_callback );
 
+		add_submenu_page( 'it-exchange', 'iThemes Exchange Tools', 'Tools', $this->get_admin_menu_capability( 'it-exchange-tools' ), 'it-exchange-tools', array( $this, 'print_tools_page' ) );
+
 		// Add Add-ons menu item
 		$add_ons_callback = array( $this, 'print_exchange_add_ons_page' );
 		if ( 'it-exchange-addons' == $this->_current_page && ! empty( $this->_current_tab ) ) {
@@ -587,6 +589,13 @@ class IT_Exchange_Admin {
 	*/
 	function print_help_page() {
 		include( 'views/admin-help.php' );
+	}
+
+	/**
+	 * Print the tools page.
+	 */
+	function print_tools_page() {
+		include dirname( __FILE__ ) . '/views/admin-tools.php';
 	}
 
 	/**
@@ -1503,6 +1512,7 @@ Order: %s
 
 		wp_register_script( 'it-exchange-dialog', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tips.js', array( 'jquery-ui-dialog' ) );
 		wp_register_script( 'ithemes-chartjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/Chart.min.js', array( 'jquery' ), '0.2', true );
+		wp_register_script( 'it-exchange-select2', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/select2.min.js', array( 'jquery' ), '4.0.1', true );
 		
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			$deps = array( 'post', 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'autosave', 'it-exchange-dialog' );
@@ -1550,7 +1560,16 @@ Order: %s
 		} else if ( 'exchange_page_it-exchange-help' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip' );
 			wp_enqueue_script( 'it-exchange-help', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/help.js', $deps );
+		} else if ( 'exchange_page_it-exchange-tools' === $hook_suffix ) {
+			$deps = array( 'jquery-ui-core' );
+			wp_enqueue_script('it-exchange-tools', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tools.js', $deps );
+			wp_localize_script( 'it-exchange-tools', 'EXCHANGE', array(
+				'nonce' => wp_create_nonce( 'it-exchange-upgrade' ),
+				'viewDetails' => __( 'View Details', 'it-l10n-ithemes-exchange' ),
+				'hideDetails' => __( 'Hide Details', 'it-l10n-ithemes-exchange' )
+			));
 		}
+
 		do_action( 'it_exchange_admin_wp_enqueue_scripts', $hook_suffix, $post_type );
 	}
 
@@ -1583,6 +1602,8 @@ Order: %s
 				$post_type = NULL;
 		}
 
+		wp_register_style( 'it-exchange-select2', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/select2.min.css', array(), '4.0.1' );
+
 		// All WP Admin pages
 		wp_enqueue_style( 'it-exchange-wp-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/wp-admin.css' );
 
@@ -1612,6 +1633,8 @@ Order: %s
 			wp_enqueue_style( 'it-exchange-dashboard', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/dashboard.css' );
 		} else if ( 'exchange_page_it-exchange-help' === $hook_suffix ) {
 			wp_enqueue_style( 'it-exchange-help', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/help.css' );
+		} else if ( 'exchange_page_it-exchange-tools' === $hook_suffix ) {
+			wp_enqueue_style('it-exchange-tools', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/tools.css' );
 		}
 		do_action( 'it_exchange_admin_wp_enqueue_styles', $hook_suffix, $post_type );
 	}

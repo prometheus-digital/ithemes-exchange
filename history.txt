@@ -1204,3 +1204,7 @@
 	WP4.4 now
 	Fix: DBSessions, esnure sessiosn IDs are valid MD5 hash
 	Minor: CSS updates
+1.32.2 - Lew Ayotte, Elise Alley, Timothy B. Jacobs
+	Don't autosort transactions by ID.
+	Fix link to transaction details in reporting widget.
+	PayPal Secure Button should have it's own class name

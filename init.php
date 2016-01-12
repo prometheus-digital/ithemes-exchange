@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: iThemes Exchange
- * Version: 1.32.1
+ * Version: 1.32.2
  * Text Domain: it-l10n-ithemes-exchange
  * Description: Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordPress
  * Plugin URI: http://ithemes.com/exchange/
@@ -24,7 +24,7 @@
 */
 class IT_Exchange {
 
-	var $_version         = '1.32.1';
+	var $_version         = '1.32.2';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'ithemes-exchange';
 	var $_name            = 'iThemes Exchange';
@@ -188,6 +188,20 @@ add_action( 'plugins_loaded', 'load_it_exchange' );
 function it_exchange_activation_hook() {
     add_option('_it-exchange-register-activation-hook', true);
     add_option('_it-exchange-flush-rewrites', true );
+
+	if ( ! get_option( 'it-exchange-versions', false ) ) {
+
+		// if this is a new install, mark all our upgrades as completed
+
+		require_once plugin_dir_path( __FILE__ ) . 'lib/upgrades/load.php';
+
+		$upgrader = it_exchange_make_upgrader();
+
+		foreach ( $upgrader->get_upgrades() as $upgrade ) {
+			$upgrader->complete( $upgrade );
+		}
+	}
+
 }
 register_activation_hook( __FILE__, 'it_exchange_activation_hook' );
 

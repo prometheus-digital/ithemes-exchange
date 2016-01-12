@@ -538,7 +538,7 @@ function it_exchange_paypal_standard_secure_addon_make_payment_button( $options 
 	$it_exchange_customer = it_exchange_get_current_customer();
 
 	$payment_form .= '<form action="" method="post">';
-	$payment_form .= '<input type="submit" class="it-exchange-paypal-standard-button" name="paypal_standard_secure_purchase" value="' . esc_attr( $paypal_settings['purchase-button-label'] ) .'" />';
+	$payment_form .= '<input type="submit" class="it-exchange-paypal-standard-secure-button" name="paypal_standard_secure_purchase" value="' . esc_attr( $paypal_settings['purchase-button-label'] ) .'" />';
 	$payment_form .= '</form>';
 
 	return $payment_form;
@@ -954,6 +954,9 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 	$body           = wp_remote_retrieve_body( $response );
 
 	if ( 'VERIFIED' !== $body ) {
+
+		status_header( 400 );
+
 		error_log( sprintf( __( 'Invalid IPN sent from PayPal - PayLoad: %s', 'it-l10n-ithemes-exchange' ), maybe_serialize( $payload ) ) );
 		error_log( sprintf( __( 'Invalid IPN sent from PayPal - Response: %s', 'it-l10n-ithemes-exchange' ), maybe_serialize( $response ) ) );
 

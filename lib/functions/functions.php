@@ -139,7 +139,7 @@ function it_exchange_load_public_scripts( $current_view ) {
 
 		// Enqueue purchase dialog JS on checkout screen
 		$file = dirname( dirname( __FILE__ ) ) . '/purchase-dialog/js/exchange-purchase-dialog.js';
-		wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type' ), false, true );
+		wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type', 'jquery.payment' ), false, true );
 
 		// Register select to autocomplte
 		wp_enqueue_style( 'it-exchange-autocomplete-style' );
@@ -196,10 +196,12 @@ function it_exchange_register_scripts() {
 	wp_register_script( 'jquery-colorbox', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.colorbox.min.js' ), array( 'jquery' ), false, true );
 
 	// Detect CC Type
-	wp_register_script( 'detect-credit-card-type', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/detect-credit-card-type.js' ), array( 'jquery' ), false, true );
+	wp_register_script( 'detect-credit-card-type', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/detect-credit-card-type.js' ), array( 'jquery', 'jquery.payment' ), false, true );
 
 	// Detect CC Type
 	wp_register_script( 'it-exchange-event-manager', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/event-manager.js' ), array(), false, true );
+
+	wp_register_script( 'jquery.payment', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/assets/js/jquery.payment.min.js', array( 'jquery' ), '1.3.2', true );
 
 	// Select to Autocomplete
 	wp_register_script( 'jquery-select-to-autocomplete', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' ), array( 'jquery', 'jquery-ui-autocomplete' ) );

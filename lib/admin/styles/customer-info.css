@@ -75,6 +75,6 @@
 .info-user-edit-block .notes{width:80%;max-width:700px;margin:15px;}
 .info-user-edit-block .notes label{display:block;font-size:13px;font-weight:bold;color:#3d4142;margin-bottom:5px;}
 .info-user-edit-block .notes textarea{width:100%;}
-.info-user-edit-block .avatar{width:20%;max-width:80px;overflow:hidden;margin-top:15px;border-radius:50%;}
+.info-user-edit-block .avatar{width:20%;max-width:80px;overflow:hidden;margin-top:15px;}
 .info-user-edit-block .avatar img{display:block;width:100%;height:auto;border-radius:50%;}
 .update-user-info {margin-top:15px;}

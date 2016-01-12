@@ -48,6 +48,7 @@ require( $this->_plugin_path . 'lib/customers/class.customer.php' );
 // Pages
 require( $this->_plugin_path . 'lib/pages/class.pages.php' );
 require( $this->_plugin_path . 'lib/pages/class.customize.php' );
+require( $this->_plugin_path . 'lib/pages/class.nav-menus.php' );
 
 // Super Widget
 require( $this->_plugin_path . 'lib/super-widget/class.super-widget.php' );
@@ -55,6 +56,7 @@ require( $this->_plugin_path . 'lib/super-widget/class.super-widget.php' );
 // Coupons
 require( $this->_plugin_path . 'lib/coupons/class.coupons-post-type.php' );
 require( $this->_plugin_path . 'lib/coupons/class.coupon.php' );
+require( $this->_plugin_path . 'lib/coupons/hooks.php' );
 
 // Email Notifications
 require( $this->_plugin_path . 'lib/email-notifications/class.email-notifications.php' );
@@ -65,6 +67,9 @@ require( $this->_plugin_path . 'lib/shipping/class.shipping.php' );
 // Shortcodes
 require( $this->_plugin_path . 'lib/shortcodes/shortcodes.php' );
 
+// Upgrades
+require( $this->_plugin_path . 'lib/upgrades/load.php' );
+
 // Deprecated Features
 require( $this->_plugin_path . 'lib/deprecated/init.php' );
 
@@ -72,6 +77,5 @@ require( $this->_plugin_path . 'lib/deprecated/init.php' );
 if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 	require( $this->_plugin_path . 'lib/cart/class.cart.php' );
 } else {
-	require( $this->_plugin_path . 'lib/pages/class.nav-menus.php' );
 	require( $this->_plugin_path . 'lib/admin/class-settings-form.php' );
 }

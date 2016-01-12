@@ -17,13 +17,26 @@
  */
 function it_exchange_is_product_sale_active( $product ) {
 
-	$product = it_exchange_get_product( is_int( $product ) ? $product : $product->ID );
+	if ( is_int( $product ) ) {
+		$product = it_exchange_get_product( $product );
+	} elseif ( isset( $product->ID ) ) {
+		$product = it_exchange_get_product( $product->ID );
+	} else {
+		return false;
+	}
 
 	if ( ! $product ) {
 		return false;
 	}
 
 	if ( ! it_exchange_product_has_feature( $product->ID, 'sale-price' ) ) {
+		return false;
+	}
+
+	$base = it_exchange_get_product_feature( $product->ID, 'base-price' );
+	$sale = it_exchange_get_product_feature( $product->ID, 'sale-price' );
+
+	if ( it_exchange_convert_to_database_number( $base ) == it_exchange_convert_to_database_number( $sale ) ) {
 		return false;
 	}
 

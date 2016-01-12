@@ -364,3 +364,7 @@
 	Compatibility Fix: Updated constructors to prevent warnings in PHP 7 while maintaining backwards compatibility.
 2.4.6 - 2015-11-16 - Chris Jean
 	Bug Fix: Fixed URL to file path and file path to URL conversions on multisite installations where the site's absolute path may vary.
+2.4.7 - 2015-11-30 - Chris Jean
+	Bug Fix: Added an option to flush ITStorage2 cache after saving data. This fixes an issue with some projects that
+		expect this behavior.
+	Enhancement: Added support for select inputs with the multiple attribute.

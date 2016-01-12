@@ -228,8 +228,17 @@ function it_exchange_clean_query_args( $exempt=array(), $additional=array() ) {
  * @return string url
 */
 function it_exchange_wp_get_nav_menu_items_filter( $items, $menu, $args ) {
-	if ( is_user_logged_in() && 'disabled' != it_exchange_get_page_type( 'logout' ) ) {
+	if ( is_user_logged_in() && 'disabled' != it_exchange_get_page_type( 'logout' ) && ! is_admin() ) {
 		foreach ( $items as $item ) {
+
+			if ( $item->type === 'it-exchange-ghost-page' && $item->object === 'login' ) {
+
+				$item->url = it_exchange_get_page_url( 'logout' );
+				$item->title = it_exchange_get_page_name( 'logout' );
+
+				continue;
+			}
+
 			//We really just want to compare the URL PATH, so grab that and compare later
 			if ( '' == get_option( 'permalink_structure' ) ) {
 				// No permalinks

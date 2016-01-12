@@ -391,12 +391,14 @@ class IT_Exchange_Shopping_Cart {
 	 *
 	 * @since 1.3.0
 	 *
-	 * @return void
+	 * @return bool
 	*/
 	function handle_update_billing_address_request() {
 
+		$action = 'it-exchange-update-checkout-billing-address-' . it_exchange_get_session_id();
+
 		// Validate nonce
-		if ( empty( $_REQUEST['it-exchange-update-billing-address'] ) || ! wp_verify_nonce( $_REQUEST['it-exchange-update-billing-address'], 'it-exchange-update-checkout-billing-address-' . it_exchange_get_session_id() ) ) {
+		if ( empty( $_REQUEST['it-exchange-update-billing-address'] ) || ! wp_verify_nonce( $_REQUEST['it-exchange-update-billing-address'], $action ) ) {
 			it_exchange_add_message( 'error', __( 'Error adding Billing Address. Please try again.', 'it-l10n-ithemes-exchange' ) );
 			$GLOBALS['it_exchange']['billing-address-error'] = true;
 			return false;
