@@ -1323,6 +1323,10 @@ function it_exchange_add_product( $args=array() ) {
 		$post_args['post_content'] = '';
 	}
 
+	if ( ! empty( $args['post_meta'] ) ) {
+		$post_args['meta_input'] = $args['post_meta'];
+	}
+
 	// Insert Post and get ID
 	if ( $product_id = wp_insert_post( $post_args ) ) {
 		update_post_meta( $product_id, '_it_exchange_product_type', $args['type'] );
@@ -1341,6 +1345,7 @@ function it_exchange_add_product( $args=array() ) {
 		unset( $args['status'] );
 		unset( $args['extended-description'] );
 		unset( $args['type'] );
+		unset( $args['post_meta'] );
 
 		foreach( $args as $key => $value ) {
 			if ( it_exchange_product_type_supports_feature( $type, $key ) )

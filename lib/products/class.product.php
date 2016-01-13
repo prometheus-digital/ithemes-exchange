@@ -145,6 +145,61 @@ class IT_Exchange_Product {
 	}
 
 	/**
+	 * Check if this product supports a feature.
+	 *
+	 * @since 1.35
+	 *
+	 * @param string $feature
+	 * @param array  $options
+	 *
+	 * @return bool
+	 */
+	public function supports_feature( $feature, $options = array() ) {
+		return it_exchange_product_supports_feature( $this->ID, $feature, $options );
+	}
+
+	/**
+	 * Check if this product has a feature.
+	 *
+	 * @since 1.35
+	 *
+	 * @param string $feature
+	 * @param array  $options
+	 *
+	 * @return bool
+	 */
+	public function has_feature( $feature, $options = array() ) {
+		return it_exchange_product_has_feature( $this->ID, $feature, $options );
+	}
+
+	/**
+	 * Update a product feature.
+	 *
+	 * @since 1.35
+	 *
+	 * @param string $feature
+	 * @param mixed  $value
+	 * @param array  $options
+	 */
+	public function update_feature( $feature, $value, $options = array() ) {
+		it_exchange_update_product_feature( $this->ID, $feature, $value, $options );
+	}
+
+	/**
+	 * Get a product feature's value.
+	 *
+	 * @since 1.35
+	 *
+	 * @param string $feature
+	 * @param array  $options
+	 *
+	 * @return mixed
+	 */
+	public function get_feature( $feature, $options = array() ) {
+		return it_exchange_get_product_feature( $this->ID, $feature, $options );
+	}
+
+	/**
 	 * Sets the product_type property.
 	 *
 	 * If the custom value is already set, it uses that.
@@ -219,7 +274,7 @@ class IT_Exchange_Product {
     function set_add_edit_screen_supports() {
 		global $pagenow;
         $supports = array(
-            'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 
+            'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks',
             'custom-fields', 'comments', 'revisions', 'post-formats', 'page-attributes'
         );
 
@@ -230,7 +285,7 @@ class IT_Exchange_Product {
 		if ( $addon = it_exchange_get_addon( $this->product_type ) ) {
 			// Remove any supports args that the product add-on does not want.
 			foreach( $supports as $option ) {
-			
+
 				// Map Core WP post_type supports to our addon names
 				if ( 'title' == $option ) {
 					$exchange_product_feature = 'title';
