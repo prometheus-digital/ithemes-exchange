@@ -80,7 +80,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 		it_exchange_update_transient_transaction( 'test-method', 'test-temp-id', false, new stdClass(), false );
 
-		usleep( 750000 ); // yeah, life sucks
+		sleep( 1 );
 
 		WP_Mock::wpFunction( 'it_exchange_delete_transient_transaction', array(
 			'args'  => array( 'test-method', 'test-temp-id' ),
