@@ -397,8 +397,9 @@ function it_exchange_get_wp_pages( $options=array() ) {
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
 
-	if ( ! $pages = get_posts( $options ) )
-		$returnval = array();
+	$pages = get_posts( $options );
+
+	$returnval = array();
 
 	foreach( $pages as $page ) {
 		$returnval[$page->ID] = get_the_title( $page->ID );
