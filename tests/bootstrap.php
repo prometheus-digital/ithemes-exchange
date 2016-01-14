@@ -48,7 +48,9 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 tests_add_filter( 'it_exchange_register_addons', function () {
 
 	tests_add_filter( 'it_exchange_get_enabled_addons', function () {
-		return it_exchange_get_addons();
+		return array_filter( it_exchange_get_addons(), function ( $addon ) {
+			return strpos( $addon['slug'], 'test' ) === false;
+		} );
 	} );
 } );
 

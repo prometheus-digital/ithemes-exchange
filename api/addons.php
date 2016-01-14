@@ -196,7 +196,7 @@ function it_exchange_temporarily_load_addon( $add_on ) {
  *
  * @param string $slug  the add-on's slug
  *
- * @return array  the add_on array
+ * @return array|bool  the add_on array
 */
 function it_exchange_get_addon( $slug ) {
 	if ( $add_ons = it_exchange_get_addons() ) {
@@ -452,7 +452,7 @@ function it_exchange_disable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
 	$enabled_addons = it_exchange_get_enabled_addons( array( 'break_cache' => true ) );
 	$success = false;
-	
+
 	do_action( 'it_exchange_add_on_before_disable', $add_on );
 
 	if ( ! empty( $enabled_addons[$add_on] ) ) {
@@ -510,7 +510,7 @@ function it_exchange_add_addon_support( $add_on, $feature ) {
 		return false;
 
 	// Set add-on support to true for this add-on / feature combo
-	if ( empty( $add_ons[$add_on]['options'] ) )
+	if ( ! empty( $add_ons[$add_on] ) )
 		$GLOBALS['it_exchange']['add_ons']['registered'][$add_on]['options']['supports'][$feature] = true;
 }
 
@@ -532,7 +532,7 @@ function it_exchange_remove_addon_support( $add_on, $feature ) {
 		return false;
 
 	// Set add-on support to false for this add-on / feature combo
-	if ( empty( $add_ons[$add_on]['options'] ) )
+	if ( ! empty( $add_ons[$add_on]) )
 		$GLOBALS['it_exchange']['add_ons']['registered'][$add_on]['options']['supports'][$feature] = false;
 }
 
@@ -569,7 +569,7 @@ function it_exchange_is_core_addon( $slug ) {
 	$addon = it_exchange_get_addon( $slug );
 	if ( empty( $addon['file'] ) )
 		return false;
-	
+
 	// Don't add a filter here.
-	return ( preg_match( '#ithemes-exchange.*/core-addons/.*#', plugin_basename( $addon['file'] ) ) );
+	return (bool) ( preg_match( '#ithemes-exchange.*/core-addons/.*#', plugin_basename( $addon['file'] ) ) );
 }
