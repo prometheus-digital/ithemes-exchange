@@ -16,9 +16,20 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 	 */
 	protected $exchange_admin;
 
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-	}
+	/**
+	 * @var IT_Exchange_Test_Factory_For_Products
+	 */
+	protected $product_factory;
+
+	/**
+	 * @var IT_Exchange_Test_Factory_For_Downloads
+	 */
+	protected $download_factory;
+
+	/**
+	 * @var IT_Exchange_Test_Factory_For_Transactions
+	 */
+	protected $transaction_factory;
 
 	/**
 	 * Do custom initialization.
@@ -26,8 +37,11 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$null                 = null;
-		$this->exchange_admin = new IT_Exchange_Admin( $null );
+		$null                      = null;
+		$this->exchange_admin      = new IT_Exchange_Admin( $null );
+		$this->product_factory     = new IT_Exchange_Test_Factory_For_Products( self::factory() );
+		$this->download_factory    = new IT_Exchange_Test_Factory_For_Downloads( self::factory() );
+		$this->transaction_factory = new IT_Exchange_Test_Factory_For_Transactions( self::factory() );
 
 		it_exchange_save_option( 'settings_general',
 			$this->exchange_admin->set_general_settings_defaults( array() ) );
@@ -44,11 +58,9 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 
 		WP_Mock::tearDown();
 
+		unset( $this->download_factory );
 		unset( $this->product_factory );
-		unset( $this->key_factory );
-		unset( $this->activation_factory );
-		unset( $this->release_factory );
-		unset( $this->update_factory );
+		unset( $this->transaction_factory );
 	}
 
 	/**

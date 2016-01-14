@@ -917,10 +917,12 @@ function it_exchange_get_transaction_description( $transaction ) {
  * @return IT_Exchange_Customer|false
 */
 function it_exchange_get_transaction_customer( $transaction ) {
+
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
 		$customer = empty( $transaction->customer_id ) ? false : it_exchange_get_customer( $transaction->customer_id );
 		return apply_filters( 'it_exchange_get_transaction_customer', $customer, $transaction );
 	}
+
 	return apply_filters( 'it_exchange_get_transaction_customer', false, $transaction );
 }
 
