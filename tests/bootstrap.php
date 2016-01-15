@@ -47,11 +47,17 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 tests_add_filter( 'it_exchange_register_addons', function () {
 
-	tests_add_filter( 'it_exchange_get_enabled_addons', function () {
-		return array_filter( it_exchange_get_addons(), function ( $addon ) {
+	tests_add_filter( 'it_exchange_get_enabled_addons', function ( $addons, $options ) {
+		$addons = array_filter( it_exchange_get_addons(), function ( $addon ) {
 			return strpos( $addon['slug'], 'test' ) === false;
 		} );
-	} );
+
+		if ( ! empty( $options['category'] ) ) {
+			return it_exchange_filter_addons_by_category( $addons, $options['category'] );
+		} else {
+			return $addons;
+		}
+	}, 10, 2 );
 } );
 
 require $test_root . '/includes/bootstrap.php';

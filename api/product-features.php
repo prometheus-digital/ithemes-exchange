@@ -112,18 +112,19 @@ function it_exchange_product_type_supports_feature( $product_type, $feature_key 
 
 	$product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 
-	if ( empty($product_types[$product_type])) {
+	if ( empty( $product_types[$product_type] ) ) {
 		return false;
 	}
 
-	if ( array_key_exists( $feature_key, $product_types[$product_type]['options']['supports'] ) ) {
+	if ( ! empty( $product_features[$feature_key]['product_types'][$product_type] ) ) {
 		return true;
 	}
 
-	if ( empty( $product_features[$feature_key]['product_types'][$product_type] ) )
-		return false;
+	if ( isset( $product_types[$product_type]['options']['supports'][$feature_key] ) ) {
+		return $product_types[$product_type]['options']['supports'][$feature_key];
+	}
 
-	return true;
+	return false;
 }
 
 /**
