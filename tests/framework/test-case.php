@@ -32,6 +32,11 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 	protected $transaction_factory;
 
 	/**
+	 * @var IT_Exchange_Test_Factory_For_Basic_Coupons
+	 */
+	protected $coupon_factory;
+
+	/**
 	 * Do custom initialization.
 	 */
 	public function setUp() {
@@ -42,6 +47,7 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 		$this->product_factory     = new IT_Exchange_Test_Factory_For_Products( self::factory() );
 		$this->download_factory    = new IT_Exchange_Test_Factory_For_Downloads( self::factory() );
 		$this->transaction_factory = new IT_Exchange_Test_Factory_For_Transactions( self::factory() );
+		$this->coupon_factory      = new IT_Exchange_Test_Factory_For_Basic_Coupons( self::factory() );
 
 		it_exchange_save_option( 'settings_general',
 			$this->exchange_admin->set_general_settings_defaults( array() ) );

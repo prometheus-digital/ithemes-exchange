@@ -230,8 +230,6 @@ function it_exchange_get_coupon_type_class( $type ) {
 /**
  * Dow we support a specific type of coupon
  *
- * Ask the addon
- *
  * @since 0.4.0
  *
  * @param string $type the type of coupon
@@ -306,9 +304,13 @@ function it_exchange_get_coupon_type_apply_field( $type, $options=array() ) {
  *
  * @since 0.4.0
  *
+ * @param string $type
+ * @param string $code
+ * @param array  $options
+ *
  * @return string
 */
-function it_exchange_get_remove_coupon_html( $type, $code, $options=array() ) {
+function it_exchange_get_remove_coupon_html( $type, $code, $options = array() ) {
 	$options['code'] = $code;
 	return apply_filters( 'it_exchange_remove_' . $type . '_coupon_html', '', $code, $options );
 }
@@ -346,7 +348,7 @@ function it_exchange_apply_coupon( $type, $code, $options=array() ) {
 */
 function it_exchange_remove_coupon( $type, $code, $options=array() ) {
 	$options['code'] = $code;
-	return apply_filters( 'it_exchange_remove_coupon_for_' . $type, 'false', $options );
+	return apply_filters( 'it_exchange_remove_coupon_for_' . $type, false, $options );
 }
 
 /**
@@ -369,8 +371,9 @@ function it_exchange_get_total_coupons_discount( $type=false, $options=array() )
 	if ( ! $type ) {
 		$total = 0;
 		foreach( it_exchange_get_coupon_types() as $type ) {
-			if ( $discount = it_exchange_get_total_coupons_discount( $type, array( 'format_price' => false ) ) )
+			if ( $discount = it_exchange_get_total_coupons_discount( $type, array( 'format_price' => false ) ) ) {
 				$total += $discount;
+			}
 		}
 
 		if ( $options['format_price'] )

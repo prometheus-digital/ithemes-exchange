@@ -56,6 +56,7 @@ tests_add_filter( 'it_exchange_register_addons', function () {
 
 require $test_root . '/includes/bootstrap.php';
 
+require dirname( __FILE__ ) . '/framework/coupon-factory.php';
 require dirname( __FILE__ ) . '/framework/transaction-factory.php';
 require dirname( __FILE__ ) . '/framework/product-factory.php';
 require dirname( __FILE__ ) . '/framework/download-factory.php';
