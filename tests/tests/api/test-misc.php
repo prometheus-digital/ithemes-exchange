@@ -347,4 +347,156 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 	public function test_convert_from_database_number( $db_num, $expected ) {
 		$this->assertEquals( $expected, it_exchange_convert_from_database_number( $db_num ) );
 	}
+
+	public function test_get_currency_symbol() {
+		$this->assertEquals( 'Z$', it_exchange_get_currency_symbol( 'ZWR' ) );
+	}
+
+	public function test_get_currency_symbol_default_usd() {
+		$this->assertEquals( '$', it_exchange_get_currency_symbol( 'fake' ) );
+	}
+
+	public function test_set_get_global() {
+
+		it_exchange_set_global( 'test-key', 'test-value' );
+		$this->assertEquals( 'test-value', it_exchange_get_global( 'test-key' ) );
+	}
+
+	public function test_register_purchase_requirement() {
+
+		$props = array(
+			'priority'               => 2,
+			'requirement-met'        => '__return_false',
+			'sw-template-part'       => 'my-template-part',
+			'checkout-template-part' => 'my-template-part',
+			'notification'           => 'My Notification'
+		);
+
+		it_exchange_register_purchase_requirement( 'my-pr', $props );
+
+		$props['slug'] = 'my-pr';
+
+		$reqs = it_exchange_get_purchase_requirements();
+
+		$this->assertArrayHasKey( 'my-pr', $reqs );
+		$this->assertEquals( $props, $reqs['my-pr'] );
+	}
+
+	public function test_unregister_purchase_requirements() {
+
+		it_exchange_register_purchase_requirement( 'test-pr' );
+		it_exchange_unregister_purchase_requirement( 'test-pr' );
+
+		$this->assertArrayNotHasKey( 'test-pr', it_exchange_get_purchase_requirements() );
+	}
+
+	public function test_get_next_purchase_requirement() {
+
+		$backup = $GLOBALS['it_exchange']['purchase-requirements'];
+
+		$GLOBALS['it_exchange']['purchase-requirements'] = array();
+
+		it_exchange_register_purchase_requirement( 'test1', array(
+			'requirement-met' => '__return_false',
+			'priority'        => 10
+		) );
+
+		it_exchange_register_purchase_requirement( 'test2', array(
+			'requirement-met' => '__return_true',
+			'priority'        => 2
+		) );
+
+		$next = it_exchange_get_next_purchase_requirement();
+		$this->assertEquals( 'test1', $next['slug'] );
+
+		it_exchange_unregister_purchase_requirement( 'test1' );
+		it_exchange_unregister_purchase_requirement( 'test2' );
+		$GLOBALS['it_exchange']['purchase-requirements'] = $backup;
+	}
+
+	public function test_get_all_purchase_requirement_checkout_element_template_parts() {
+
+		$backup = $GLOBALS['it_exchange']['purchase-requirements'];
+
+		$GLOBALS['it_exchange']['purchase-requirements'] = array();
+
+		it_exchange_register_purchase_requirement( 'test1', array(
+			'requirement-met'        => '__return_false',
+			'priority'               => 10,
+			'checkout-template-part' => 'test1-part'
+		) );
+
+		it_exchange_register_purchase_requirement( 'test2', array(
+			'requirement-met'        => '__return_true',
+			'priority'               => 2,
+			'checkout-template-part' => 'test2-part'
+		) );
+
+		$parts = it_exchange_get_all_purchase_requirement_checkout_element_template_parts();
+		$this->assertEquals( array( 'test2-part', 'test1-part' ), $parts );
+
+		it_exchange_unregister_purchase_requirement( 'test1' );
+		it_exchange_unregister_purchase_requirement( 'test2' );
+		$GLOBALS['it_exchange']['purchase-requirements'] = $backup;
+	}
+
+	/**
+	 * @depends test_get_next_purchase_requirement
+	 */
+	public function test_get_next_purchase_requirement_property() {
+
+		$backup = $GLOBALS['it_exchange']['purchase-requirements'];
+
+		$GLOBALS['it_exchange']['purchase-requirements'] = array();
+
+		it_exchange_register_purchase_requirement( 'test1', array(
+			'requirement-met' => '__return_false',
+			'priority'        => 10,
+			'notification'    => 'Test 1'
+
+		) );
+
+		it_exchange_register_purchase_requirement( 'test2', array(
+			'requirement-met' => '__return_true',
+			'priority'        => 2,
+			'notification'    => 'Test 2'
+		) );
+
+		$prop = it_exchange_get_next_purchase_requirement_property( 'notification' );
+		$this->assertEquals( 'Test 1', $prop );
+
+		it_exchange_unregister_purchase_requirement( 'test1' );
+		it_exchange_unregister_purchase_requirement( 'test2' );
+		$GLOBALS['it_exchange']['purchase-requirements'] = $backup;
+	}
+
+	public function test_get_pending_purchase_requirements() {
+
+		$backup = $GLOBALS['it_exchange']['purchase-requirements'];
+
+		$GLOBALS['it_exchange']['purchase-requirements'] = array();
+
+		it_exchange_register_purchase_requirement( 'test1', array(
+			'requirement-met' => '__return_false',
+			'priority'        => 10,
+			'notification'    => 'Test 1'
+
+		) );
+		it_exchange_register_purchase_requirement( 'test2', array(
+			'requirement-met' => '__return_true',
+			'priority'        => 2,
+		) );
+		it_exchange_register_purchase_requirement( 'test3', array(
+			'requirement-met' => '__return_false',
+			'priority'        => 1,
+		) );
+
+		$pending = it_exchange_get_pending_purchase_requirements();
+		$this->assertEquals( array( 'test3', 'test1' ), $pending );
+
+		it_exchange_unregister_purchase_requirement( 'test1' );
+		it_exchange_unregister_purchase_requirement( 'test2' );
+		it_exchange_unregister_purchase_requirement( 'test3' );
+		$GLOBALS['it_exchange']['purchase-requirements'] = $backup;
+	}
 }
