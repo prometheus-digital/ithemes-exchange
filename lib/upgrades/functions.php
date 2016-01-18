@@ -67,6 +67,12 @@ function it_exchange_show_upgrades_available_nag() {
 
 	$show_nag = get_option( 'it_exchange_show_upgrades_nag', false );
 
+	if ( ! count( it_exchange_make_upgrader()->get_available_upgrades() ) ) {
+		update_option( 'it_exchange_show_upgrades_nag', false );
+
+		return;
+	}
+
 	if ( $show_nag && ( empty( $_GET['page'] ) || $_GET['page'] != 'it-exchange-tools' ) ) {
 		$upgrades_url = admin_url( 'admin.php?page=it-exchange-tools' );
 
