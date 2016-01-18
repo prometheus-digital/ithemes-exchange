@@ -292,6 +292,8 @@ class IT_Exchange_Purchase_Dialog{
 			$cc_data[$value] = empty( $_POST[$key] ) ? false : $_POST[$key];
 		}
 
+		$cc_data['number'] = str_replace( ' ', '', $cc_data['number'] );
+
 		// Filter available in ithemes-exchange/api/purchase-dialog.php
 		return $cc_data;
 	}
