@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.5
-Stable tag: 1.32.1
+Stable tag: 1.33
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,22 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.33 =
+* Add: Support for per-customer coupons, per-product category coupons, and excluding products.
+* Add: Track number of coupon uses.
+* Add: Reduce coupon usage count on cancellation
+* Add: Upgrade routine for coupons.
+* Add: Support for Exchange Ghost pages in the Customizer
+* Add: Autocomplete support for purchase dialogs
+* Tweak: Mobile improvements for purchase dialogs
+* Tweak: Allow searching by coupon code
+* Tweak: Improve coupon error messages
+* Tweak: Display sale price in products list table
+* Tweak: Style tweaks
+* Fix: Prevent PayPal from adding multiple transactions during guest checkout
+* Fix: Allow a simple tax rate of 0%
+* Fix: Allow for non-physical products to be excluded from shipping calculations
 
 = 1.32.1 =
 * Tweak: PayPal Locking Mechanism Updates
