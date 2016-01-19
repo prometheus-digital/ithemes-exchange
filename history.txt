@@ -1223,5 +1223,6 @@
 	Fix: Prevent PayPal from adding multiple transactions during guest checkout
 	Fix: Allow a simple tax rate of 0%
 	Fix: Allow for non-physical products to be excluded from shipping calculations
-
+1.33.1 – Elise Alley, Timothy B. Jacobs
+	Fix: Issue with Authorize.net
 
