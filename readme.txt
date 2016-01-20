@@ -88,7 +88,7 @@ http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
 
-= 1.34.0
+= 1.34.0 =
 * Add: Transaction Activity Timeline
 * Add: Customer Order Notes core-addon
 * Add: Support for internal order notes
