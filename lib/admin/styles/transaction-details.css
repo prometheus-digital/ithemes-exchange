@@ -362,6 +362,12 @@
 	width: 100%;
 }
 
+label[for="exchange-notify-customer"] {
+	margin-right: 4px;
+	height: 28px;
+	line-height: 28px;
+}
+
 .exchange-note-writing-container textarea.exchange-new-note-public,
 #activity-stream li.is-public article {
 	background: #F1FFDE;
