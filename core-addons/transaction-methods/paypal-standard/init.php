@@ -1197,6 +1197,7 @@ function it_exchange_paypal_standard_addon_transaction_status_label( $status ) {
 		case 'success':
 		case 'canceled_reversal':
 		case 'processed' :
+		case 'succeeded':
 			return __( 'Paid', 'it-l10n-ithemes-exchange' );
 		case 'refunded':
 		case 'refund':
@@ -1239,6 +1240,7 @@ function it_exchange_paypal_standard_transaction_is_cleared_for_delivery( $clear
 		'success',
 		'canceled_reversal',
 		'processed',
+		'succeeded'
 	);
 
 	return in_array( strtolower( it_exchange_get_transaction_status( $transaction ) ), $valid_stati );
