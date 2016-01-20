@@ -22,7 +22,7 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	*/
 	function __construct() {
-		add_action( 'it_exchange_send_email_notification', array( $this, 'it_exchange_send_email_notification' ), 20, 3 );
+		add_action( 'it_exchange_send_email_notification', array( $this, 'it_exchange_send_email_notification' ), 20, 4 );
 
 		// Send emails on successfull transaction
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'send_purchase_emails' ), 20 );
@@ -49,9 +49,9 @@ class IT_Exchange_Email_Notifications {
 		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
-	function it_exchange_send_email_notification( $customer_id, $subject, $content ) {
+	function it_exchange_send_email_notification( $customer_id, $subject, $content, $transaction_id = false ) {
 
-		$this->transaction_id = apply_filters( 'it_exchange_send_email_notification_transaction_id', false );
+		$this->transaction_id = apply_filters( 'it_exchange_send_email_notification_transaction_id', $transaction_id );
 		$this->customer_id    = $customer_id;
 		$this->user           = it_exchange_get_customer( $customer_id );
 

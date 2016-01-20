@@ -262,6 +262,25 @@ function it_exchange_register_core_addons() {
 			'category'          => 'other',
 			'tag'               => 'core',
 		),
+		'ithemes-security'      => array(
+			'name'              => __( 'iThemes Security', 'it-l10n-ithemes-exchange' ),
+			'description'       => __( 'Secure your Exchange login and registration forms with iThemes Security.', 'it-l10n-ithemes-exchange' ),
+			'author'            => 'iThemes',
+			'author_url'        => 'http://ithemes.com',
+			'file'              => dirname( __FILE__ ) . '/admin/ithemes-security/init.php',
+			'category'          => 'other',
+			'tag'               => 'core',
+			'icon'              => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/admin/ithemes-security/logo.png' ),
+		),
+		'customer-order-notes'  => array(
+			'name'              => __( 'Customer Order Notes', 'it-l10n-ithemes-exchange' ),
+			'description'       => __( 'Allow your customers to leave a note while placing an order.', 'it-l10n-ithemes-exchange' ),
+			'author'            => 'iThemes',
+			'author_url'        => 'http://ithemes.com',
+			'file'              => dirname( __FILE__ ) . '/admin/customer-order-notes/init.php',
+			'category'          => 'other',
+			'tag'               => 'core',
+		),
 	);
 	$add_ons = apply_filters( 'it_exchange_core_addons', $add_ons );
 

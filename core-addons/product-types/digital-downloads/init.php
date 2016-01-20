@@ -36,6 +36,7 @@ function it_exchange_digital_downloads_duplicate_product_addon_default_product_m
 	$args = array(
 		'post_type'   => 'it_exchange_download',
 		'post_parent' => $old_post_id,
+		'numberposts' => -1
 	);
 	$downloads = get_posts( $args );
 

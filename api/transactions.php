@@ -1287,6 +1287,37 @@ function it_exchange_get_webhook( $key ) {
 }
 
 /**
+ * Check what webhook is being processed.
+ *
+ * @since 1.34
+ *
+ * @param string $webhook Optionally, specify the webhook to compare against.
+ *
+ * @return bool|string
+ */
+function it_exchange_doing_webhook( $webhook = '' ) {
+
+	if ( $webhook ) {
+		$param = it_exchange_get_webhook( $webhook );
+
+		if ( ! empty( $_REQUEST[$param] ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	foreach ( it_exchange_get_webhooks() as $key => $param ) {
+
+		if ( ! empty( $_REQUEST[$param] ) ) {
+			return $key;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Get the confirmation URL for a transaction
  *
  * @since 0.4.0

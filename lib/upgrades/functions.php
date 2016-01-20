@@ -17,6 +17,7 @@ function it_exchange_make_upgrader() {
 
 	$upgrader = new IT_Exchange_Upgrader();
 	$upgrader->add_upgrade( new IT_Exchange_Upgrade_Routine_Coupons() );
+	$upgrader->add_upgrade( new IT_Exchange_Upgrade_Routine_Txn_Activity() );
 
 	/**
 	 * Fires when upgrade routines should be attached to the upgrader.
@@ -65,6 +66,12 @@ function it_exchange_show_upgrades_available_nag() {
 	}
 
 	$show_nag = get_option( 'it_exchange_show_upgrades_nag', false );
+
+	if ( ! count( it_exchange_make_upgrader()->get_available_upgrades() ) ) {
+		update_option( 'it_exchange_show_upgrades_nag', false );
+
+		return;
+	}
 
 	if ( $show_nag && ( empty( $_GET['page'] ) || $_GET['page'] != 'it-exchange-tools' ) ) {
 		$upgrades_url = admin_url( 'admin.php?page=it-exchange-tools' );

@@ -63,6 +63,12 @@ class IT_Exchange_Transaction {
 	var $status;
 
 	/**
+	 * @var object
+	 * @internal
+	 */
+	var $cart_details;
+
+	/**
 	 * Constructor. Loads post data and transaction data
 	 *
 	 * @since 0.3.3
@@ -204,12 +210,24 @@ class IT_Exchange_Transaction {
 	}
 
 	/**
+	 * Get the order number.
+	 *
+	 * @since 1.34
+	 *
+	 * @return string
+	 */
+	public function get_order_number() {
+		return it_exchange_get_transaction_order_number( $this );
+	}
+
+	/**
 	 * Gets the date property.
 	 *
-	 * If the custom value is already set, it uses that.
-	 * If the custom value is not set and we're on post-add.php, check for a URL param
-	 *
 	 * @since 0.4.0
+	 *
+	 * @param bool $gmt
+	 *
+	 * @return string
 	*/
 	function get_date( $gmt=false ) {
 		if ( $gmt )
@@ -275,7 +293,19 @@ class IT_Exchange_Transaction {
 	 * @return string
 	*/
 	function get_description() {
-		return empty( $this->cart_details->description ) ? false : $this->cart_details->description;
+		if ( ! empty( $this->cart_details->description ) && trim( $this->cart_details->description ) !== '' ) {
+			return $this->cart_details->description;
+		} else if ( $p = get_post_meta( $this->ID, '_it_exchange_parent_tx_id', true ) ) {
+
+			$parent = it_exchange_get_transaction( $p );
+
+			$description = it_exchange_get_transaction_description( $parent );
+			$description .= ' ' . __( '(Renewal)', 'it-l10n-ithemes-exchange' );
+
+			return $description;
+		} else {
+			return '';
+		}
 	}
 
 	/**

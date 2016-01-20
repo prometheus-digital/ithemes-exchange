@@ -38,7 +38,7 @@
 		$display_names = array();
 		foreach( (array) $addons as $key => $data ) {
 			if ( empty( $key ) ) { continue; }
-			$name = empty( $data['name'] ) ? $key : $data['name'];
+			$name = empty( $data['name'] ) ? $key : strtolower( $data['name'] );
 			$display_names[$key] = $name;
 		}
 		if ( apply_filters( 'it_exchange_sort_addons_by_display_name', true ) ) {
@@ -67,7 +67,7 @@
 				?>
 
 				<?php $icon = empty( $addon['options']['icon'] ) ? $default_icon : $addon['options']['icon']; ?>
-				<div class="add-on-block">
+				<div class="add-on-block add-on-slug-<?php echo esc_attr( $addon['slug'] ); ?>">
 					<div class="add-on-icon">
 						<div class="image-wrapper">
 							<img src="<?php echo $icon; ?>" alt="" />
@@ -82,19 +82,28 @@
 						<p class="add-on-description"><?php echo $addon['description']; ?></p>
 					</div>
 					<div class="add-on-actions">
-						<?php if ( it_exchange_is_addon_enabled( $addon['slug'] ) ) : ?>
-							<?php if ( it_exchange_is_core_addon( $addon['slug'] ) ) {
-								$url = wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-disable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-disable-add-on' );
-							} else {
-								$url = admin_url() . 'plugins.php?s=' . urlencode( $addon['name'] );
-							} ?>
-							<div class="add-on-enabled"><a href="<?php echo $url; ?>" data-text-disable="&times;&nbsp; Disable" data-text-enabled="&#x2714;&nbsp; Enabled">&#x2714;&nbsp; Enabled</a></div>
-						<?php else : ?>
-							<div class="add-on-disabled"><a href="<?php echo wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-enable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-enable-add-on' ); ?>" data-text-enable="&#x2714;&nbsp; Enable" data-text-disabled="&times;&nbsp; Disabled">&times;&nbsp; Disabled</a></div>
-						<?php endif; ?>
 
-						<?php if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) ) : ?>
-							<div class="add-on-settings"><a href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&add-on-settings=' . $addon['slug'] ); ?>">S</a></div>
+						<?php if ( $addon['slug'] === 'ithemes-security' && ! class_exists( 'ITSEC_Recaptcha' ) ): ?>
+							<div class="add-on-buy-now">
+								<a href="https://ithemes.com/security/">
+									<?php _e( 'Purchase', 'it-l10n-ithemes-exchange' ); ?>
+								</a>
+							</div>
+						<?php else : ?>
+							<?php if ( it_exchange_is_addon_enabled( $addon['slug'] ) ) : ?>
+								<?php if ( it_exchange_is_core_addon( $addon['slug'] ) ) {
+									$url = wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-disable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-disable-add-on' );
+								} else {
+									$url = admin_url() . 'plugins.php?s=' . urlencode( $addon['name'] );
+								} ?>
+								<div class="add-on-enabled"><a href="<?php echo $url; ?>" data-text-disable="&times;&nbsp; Disable" data-text-enabled="&#x2714;&nbsp; Enabled">&#x2714;&nbsp; Enabled</a></div>
+							<?php else : ?>
+								<div class="add-on-disabled"><a href="<?php echo wp_nonce_url( get_site_url() . '/wp-admin/admin.php?page=it-exchange-addons&it-exchange-enable-addon=' . $addon['slug'] . '&tab=' . $tab, 'exchange-enable-add-on' ); ?>" data-text-enable="&#x2714;&nbsp; Enable" data-text-disabled="&times;&nbsp; Disabled">&times;&nbsp; Disabled</a></div>
+							<?php endif; ?>
+
+							<?php if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) ) : ?>
+								<div class="add-on-settings"><a href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&add-on-settings=' . $addon['slug'] ); ?>">S</a></div>
+							<?php endif; ?>
 						<?php endif; ?>
 					</div>
 				</div>

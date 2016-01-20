@@ -238,9 +238,12 @@ function it_exchange_addon_taxes_simple_enqueue_admin_css() {
 add_action( 'admin_print_styles', 'it_exchange_addon_taxes_simple_enqueue_admin_css' );
 
 function it_exchange_addon_taxes_simple_replace_order_table_tag_before_total_row( $email_obj, $options ) {
+
+	$label = it_exchange_add_simple_taxes_get_label( 'tax' );
+
 	?>
 	<tr>
-		<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Tax', 'it-l10n-ithemes-exchange' ); ?></td>
+		<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php echo $label; ?></td>
 		<td style="padding: 10px;border:1px solid #DDD;"><?php echo it_exchange_addon_get_simple_taxes_for_transaction( $email_obj->transaction_id ); ?></td>
 	</tr>
 	<?php

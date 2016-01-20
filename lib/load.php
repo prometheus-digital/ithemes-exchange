@@ -35,6 +35,7 @@ require( $this->_plugin_path . 'lib/transactions/class.transactions-post-type.ph
 
 // Transaction Object
 require( $this->_plugin_path . 'lib/transactions/class.transaction.php' );
+require( $this->_plugin_path . 'lib/transactions/activity/load.php' );
 
 // Template Functions
 require( $this->_plugin_path . 'lib/functions/template-functions.php' );

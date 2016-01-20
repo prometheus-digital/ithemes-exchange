@@ -170,6 +170,12 @@ a.it-exchange-button {text-decoration:none;}
 .it-exchange-checkout .it-exchange-visual-cc-wrap{margin-top:1em;}
 .it-exchange-checkout .it-exchange-visual-cc{float:right;}
 
+/** ---:[ customer order note ]:--- */
+.it-exchange-checkout .it-exchange-customer-order-note p {margin-bottom: 5px;}
+.it-exchange-checkout .it-exchange-customer-order-notes-form textarea {width: 240px; resize: vertical;margin-bottom: 15px;}
+.it-exchange-checkout .it-exchange-customer-order-note-actions {width: 240px;text-align: right}
+.it-exchange-checkout .it-exchange-customer-order-note-cancel {padding-right: 5px}
+
 /** -----------------------------------------------------:[ transaction methods ]:---------- */
 .it-exchange-checkout .it-exchange-checkout-transaction-methods form{margin-top:.5em;}
 .it-exchange-checkout .it-exchange-checkout_cancel{margin-top:.5em;}
