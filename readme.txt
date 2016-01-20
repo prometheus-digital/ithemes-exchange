@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.5
-Stable tag: 1.33.1
+Stable tag: 1.34.0
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,19 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.34.0
+* Add: Transaction Activity Timeline
+* Add: Customer Order Notes core-addon
+* Add: Support for internal order notes
+* Add: iThemes Security Recaptcha Integration
+* Tweak: Improve Child Transaction UI
+* Tweak: Add succeeded as a valid PayPal status for child payments
+* Fix: Changing label in Simple Taxes does not change email receipt
+* Fix: Remove upgrades available nag, when no upgrades available.
+* Fix: Not all download files are carried over when product duplicated
+* Fix: Mitigate possible corrupt session data
+* Fix: Remove metabox drag styles on mobile
 
 = 1.33.1 =
 * Fix: Issue with Authorize.net
