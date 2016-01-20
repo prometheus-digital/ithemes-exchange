@@ -851,9 +851,14 @@ class IT_Exchange_Transaction_Post_Type {
 
 				<div class="exchange-note-writing-container">
 
+					<button id="exchange-close-note" class="dashicons-before dashicons-no-alt">
+						<span class="screen-reader-text"><?php _e( 'Close Editor', 'it-l10n-ithemes-exchange' ); ?></span>
+					</button>
+
 					<textarea id="exchange-note-editor" placeholder="<?php _e( 'Type your message here...', 'it-l10n-ithemes-exchange' ); ?>"></textarea>
 
 					<span class="exchange-note-writing-meta">
+
 						<label for="exchange-notify-customer">
 							<input type="checkbox" id="exchange-notify-customer">
 							<?php _e( 'Notify customer', 'it-l10n-ithemes-exchange' ); ?>

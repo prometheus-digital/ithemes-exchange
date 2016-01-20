@@ -325,6 +325,31 @@
 	box-shadow: 0 0 10px #dddddd;
 }
 
+#exchange-close-note {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	cursor: pointer;
+	background: none repeat scroll 0 0 transparent;
+	border: medium none;
+	border-spacing: 0;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	text-decoration: none;
+	text-indent: 0;
+	opacity: .5;
+}
+
+#exchange-close-note::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+#exchange-close-note:hover {
+	opacity: .8;
+}
+
 .exchange-filter-action-container {
 	text-align: center;
 }
