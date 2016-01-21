@@ -25,7 +25,11 @@
 */
 function it_exchange_get_cart_data( $key = false, $options=array() ) {
 	// Grab cart data from the session or from the cached cart based on options
-	$data = empty( $options['use_cached_customer_cart'] ) ? it_exchange_get_session_data( $key ) : it_exchange_get_cached_customer_cart( $options['use_cached_customer_cart'] );
+	if ( empty( $options['use_cached_customer_cart'] ) ) {
+		$data = it_exchange_get_session_data( $key );
+	} else {
+		$data = it_exchange_get_cached_customer_cart( $options['use_cached_customer_cart'] );
+	}
 
 	// Pass through filter and return
 	return apply_filters( 'it_exchange_get_cart_data', $data, $key, $options );
@@ -35,6 +39,9 @@ function it_exchange_get_cart_data( $key = false, $options=array() ) {
  * Updates the data
  *
  * @since 0.4.0
+ *
+ * @param string $key
+ * @param array  $data Data will always be converted to an array before storage.
  *
  * @return void
 */
@@ -85,6 +92,9 @@ function it_exchange_get_cart_products( $options=array() ) {
  *
  * @since 0.4.0
  *
+ * @param string $cart_product_id
+ * @param array  $product Cart product data
+ *
  * @return void
 */
 function it_exchange_add_cart_product( $cart_product_id, $product ) {
@@ -98,6 +108,9 @@ function it_exchange_add_cart_product( $cart_product_id, $product ) {
  * Updates product into the cart session
  *
  * @since 0.4.0
+ *
+ * @param string $cart_product_id
+ * @param array  $product Cart product data. This must be the entire new data, not a partial diff.
  *
  * @return void
 */
@@ -119,9 +132,9 @@ function it_exchange_update_cart_product( $cart_product_id, $product ) {
  *
  * @since 0.4.0
  *
- * @param int $cart_product_id
+ * @param string $cart_product_id
  *
- * @return array
+ * @return void
 */
 function it_exchange_delete_cart_product( $cart_product_id ) {
 	$products = it_exchange_get_session_data( 'products' );
@@ -178,11 +191,7 @@ function it_exchange_is_current_product_in_cart() {
 		$product_id = $_GET['sw-product'];
 	}
 
-	foreach( $cart_products as $cart_product ) {
-		if ( ! empty( $cart_product['product_id'] ) && $product_id == $cart_product['product_id'] ) {
-			$in_cart = true;
-		}
-	}
+	$in_cart = it_exchange_is_product_in_cart( $product_id );
 
 	$in_cart = apply_filters( 'it_exchange_is_current_product_in_cart', $in_cart, $product_id, $product, $cart_products );
 	return $in_cart;
@@ -217,18 +226,22 @@ function it_exchange_is_product_in_cart( $product_id ) {
  * Adds a product to the shopping cart based on the product_id
  *
  * @since 0.3.7
+ * @since 1.35 Add $return_cart_id parameter.
+ *
+ *
  * @param string $product_id a valid wp post id with an iThemes Exchange product post_typp
  * @param int $quantity (optional) how many?
+ * @param bool $return_cart_id
  *
- * @return boolean|void
+ * @return boolean|string Cart ID if $return_cart_id is true.
 */
-function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
+function it_exchange_add_product_to_shopping_cart( $product_id, $quantity = 1, $return_cart_id = false ) {
 
 	if ( ! $product_id )
-		return;
+		return false;
 
 	if ( ! $product = it_exchange_get_product( $product_id ) )
-		return;
+		return false;
 
 	$quantity = absint( (int) $quantity );
 	if ( $quantity < 1 )
@@ -283,29 +296,19 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 
 	// If product is in cart already, bump the quanity. Otherwise, add it to the cart
 	if ( ! empty ($session_products[$product_id . '-' . $itemized_hash] ) ) {
-		$product = $session_products[$product_id . '-' . $itemized_hash];
+		$res = it_exchange_update_cart_product_quantity( $product_id . '-' . $itemized_hash, $quantity );
 
-		return it_exchange_update_cart_product_quantity( $product_id . '-' . $itemized_hash, $quantity );
-
+		return $return_cart_id ? $product_id . '-' . $itemized_hash : $res;
 	} else {
 
 		// If we don't support purchase quanity, quantity will always be 1
-		if ( it_exchange_product_supports_feature( $product_id, 'purchase-quantity' ) && $multi_item_product_allowed ) {
+		if ( $product->supports_feature( 'purchase-quantity' ) && $multi_item_product_allowed ) {
 
-			// Get max quantity setting
-			$max_purchase_quantity = it_exchange_get_product_feature( $product_id, 'purchase-quantity' );
-			$max_purchase_quantity = trim( $max_purchase_quantity );
+			$max_purchase_quantity = it_exchange_get_max_product_quantity_allowed( $product );
 
-			$supports_inventory = it_exchange_product_supports_feature( $product_id, 'inventory' );
-			$inventory = it_exchange_get_product_feature( $product_id, 'inventory' );
-
-			if ( $supports_inventory && $max_purchase_quantity === '' ) {
-				$max_purchase_quantity = $inventory;
-			} else if ( $supports_inventory && $inventory && (int) $max_purchase_quantity > 0 && (int) $max_purchase_quantity > $inventory ) {
-				$max_purchase_quantity = $inventory;
-			}
-
-			$max_purchase_quantity = apply_filters( 'it_exchange_max_purchase_quantity_cart_check', $max_purchase_quantity, $product_id, $itemized_data, $additional_data, $itemized_hash );
+			$max_purchase_quantity = apply_filters( 'it_exchange_max_purchase_quantity_cart_check', $max_purchase_quantity,
+				$product_id, $itemized_data, $additional_data, $itemized_hash
+			);
 
 			if ( $max_purchase_quantity !== '' && $quantity > $max_purchase_quantity ) {
 				$count = $max_purchase_quantity;
@@ -333,9 +336,9 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
 		it_exchange_update_cart_id( $existing_cart_id );
 
 		do_action( 'it_exchange_product_added_to_cart', $product_id );
-		return true;
+
+		return $return_cart_id ? $product_id . '-' . $itemized_hash : true;
 	}
-	return false;
 }
 
 /**
@@ -349,7 +352,7 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity=1 ) {
  *
  * @return bool|void
 */
-function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, $add_to_existing=true ) {
+function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, $add_to_existing = true ) {
 	// Get cart products
 	$cart_products = it_exchange_get_cart_products();
 
@@ -363,22 +366,11 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
 			// If we don't support purchase quanity, quanity will always be 1
 			if ( it_exchange_product_supports_feature( $cart_product['product_id'], 'purchase-quantity' ) && it_exchange_is_multi_item_product_allowed( $cart_product['product_id'] ) ) {
 
-				// Get max quantity setting
-				$max_purchase_quantity = it_exchange_get_product_feature( $cart_product['product_id'], 'purchase-quantity' );
-				$max_purchase_quantity = trim( $max_purchase_quantity );
-
-				$supports_inventory = it_exchange_product_supports_feature( $cart_product['product_id'], 'inventory' );
-				$inventory = it_exchange_get_product_feature( $cart_product['product_id'], 'inventory' );
-
-				// Zero out existing if we're not adding incoming quantity to it.
-				if ( ! $add_to_existing )
+				if ( ! $add_to_existing ) {
 					$cart_product['count'] = 0;
-
-				if ( $max_purchase_quantity === '' && $supports_inventory ) {
-					$max_purchase_quantity = $inventory;
-				} else if ( $supports_inventory && $inventory && (int) $max_purchase_quantity > 0 && (int) $max_purchase_quantity > $inventory ) {
-					$max_purchase_quantity = $inventory;
 				}
+
+				$max_purchase_quantity = it_exchange_get_max_product_quantity_allowed( $cart_product['product_id'] );
 
 				$new_count = $cart_product['count'] + $quantity;
 
@@ -395,6 +387,44 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
 			do_action( 'it_exchange_cart_prouduct_count_updated', $cart_product_id );
 			return true;
 		}
+	}
+}
+
+/**
+ * Get the max product quantity that is allowed to be purchased.
+ *
+ * @since 1.35
+ *
+ * @param int|WP_Post|IT_Exchange_Product $product
+ *
+ * @return int|string Empty string if max product quantity allowed is unlimited.
+ */
+function it_exchange_get_max_product_quantity_allowed( $product ) {
+
+	$product = it_exchange_get_product( $product );
+
+	// If we don't support purchase quanity, quantity will always be 1
+	if ( ! $product->supports_feature( 'purchase-quantity' ) ) {
+		return 1;
+	}
+
+	// Get max quantity setting
+	$max_purchase_quantity = $product->get_feature( 'purchase-quantity' );
+	$max_purchase_quantity = trim( $max_purchase_quantity );
+
+	$supports_inventory = $product->supports_feature( 'inventory' );
+	$inventory = $product->get_feature( 'inventory' );
+
+	if ( $supports_inventory && $max_purchase_quantity === '' ) {
+		$max_purchase_quantity = $inventory;
+	} else if ( $supports_inventory && $inventory && (int) $max_purchase_quantity > 0 && (int) $max_purchase_quantity > $inventory ) {
+		$max_purchase_quantity = $inventory;
+	}
+
+	if ( $max_purchase_quantity > $inventory ) {
+		return $inventory;
+	} else {
+		return $max_purchase_quantity;
 	}
 }
 
@@ -694,10 +724,14 @@ function it_exchange_get_cart_product_quantity( $product ) {
 }
 
 /**
- * Returns the quantity for a cart product
+ * Returns the quantity for a cart product.
+ *
+ * Caution: This will return unexpected results for variants
+ * if more than one variant of a product is in the cart.
  *
  * @since 0.4.4
- * @param int $product_id
+ *
+*@param int $product_id
  *
  * @return integer quantity
 */
@@ -728,22 +762,26 @@ function it_exchange_get_cart_products_count( $true_count=false, $feature=false 
 	$count = 0;
 	if ( $true_count ) {
 		foreach( $products as $product ) {
-			if ( empty( $product['product_id'] ) || empty( $product['count'] ) || ( !empty( $feature ) && !it_exchange_product_has_feature( $product['product_id'], $feature ) )  ) {
+			if ( empty( $product['product_id'] ) || empty( $product['count'] ) ) {
 				continue;
 			}
+
+			if ( ! empty( $feature ) && ! it_exchange_product_has_feature( $product['product_id'], $feature ) ) {
+				continue;
+			}
+
 			$count += $product['count'];
 		}
 		return absint( $count );
 	} else {
 		foreach( $products as $product ) {
-			if ( !empty( $feature ) && !it_exchange_product_has_feature( $product['product_id'], $feature ) ) {
+			if ( ! empty( $feature ) && ! it_exchange_product_has_feature( $product['product_id'], $feature ) ) {
 				continue;
 			}
 			$count++;
 		}
 		return absint( $count );
 	}
-	return $count;
 }
 
 /**
@@ -1068,8 +1106,8 @@ function it_exchange_create_cart_id() {
  *
  * @return string returns the ID
 */
-function it_exchange_update_cart_id( $id=false ) {
-	if ( empty( $id ) ) {
+function it_exchange_update_cart_id( $id = false ) {
+	if ( ! empty( $id ) ) {
 		$id = it_exchange_create_cart_id();
 		it_exchange_update_cart_data( 'cart_id', $id );
 	}
