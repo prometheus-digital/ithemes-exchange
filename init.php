@@ -145,7 +145,7 @@ class IT_Exchange {
 				} else {
 					it_exchange_disable_addon( $slug );
 					if ( is_admin() ) {
-						wp_safe_redirect('admin.php?page=it-exchange-addons&message=addon-auto-disabled-' . $addon );
+						wp_safe_redirect('admin.php?page=it-exchange-addons&message=addon-auto-disabled-' . $slug );
 						die();
 					}
 				}
