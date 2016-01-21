@@ -157,8 +157,9 @@ class IT_Exchange {
 
 		// Auto enable all 3rd party addons
 		foreach( $registered as $slug => $params ) {
-			if ( ! it_exchange_is_core_addon( $slug ) && ! isset( $enabled_addons[$slug] ) )
+			if ( ! it_exchange_is_core_addon( $slug ) && ! isset( $enabled_addons[$slug] ) && ! empty( $params['options']['auto-enable'] ) ) {
 				it_exchange_enable_addon( $slug );
+			}
 		}
 		do_action( 'it_exchange_enabled_addons_loaded' );
 	}
