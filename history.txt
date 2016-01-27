@@ -1237,4 +1237,6 @@
 	Fix: Not all download files are carried over when product duplicated
 	Fix: Mitigate possible corrupt session data
 	Fix: Remove metabox drag styles on mobile
-
+1.34.1 - Elise Alley, Timothy B. Jacobs
+	Add: Support for non auto-enabling add-ons
+	Fix: Bug preventing PayPal Sandbox from working
