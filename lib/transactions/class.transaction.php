@@ -416,6 +416,7 @@ class IT_Exchange_Transaction {
 		$defaults = array(
 			'post_parent' => $this->ID,
 			'post_type'   => 'it_exchange_tran',
+			'numberposts' => 1
 		);
 		$args = wp_parse_args( $args, $defaults );
 		return (bool) get_children( $args );
