@@ -66,6 +66,11 @@ class IT_Exchange_Txn_Activity_Customer_Actor implements IT_Exchange_Txn_Activit
 	 * @return string
 	 */
 	public function get_icon_url( $size ) {
+
+		if ( ! function_exists( 'get_avatar_url' ) ) {
+			return '';
+		}
+
 		return get_avatar_url( $this->customer->data->user_email, array(
 			'size' => $size
 		) );

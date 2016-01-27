@@ -16,6 +16,7 @@
  * - other               Everything else
  *
  * @since 0.2.0
+ * @since 1.34.1 Add support for not auto-enabling 3rd party add-ons
  *
  * @param string $slug         string for identifying the add-on in code
  * @param array $params        key / value pairs.
@@ -47,18 +48,24 @@ function it_exchange_register_addon( $slug, $params ) {
 	if ( ! $file )
 		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Exchange Add-ons require a file parameter.', 'it-l10n-ithemes-exchange' ) );
 
-	$allowed_keys = array( 'category', 'tag', 'supports', 'labels', 'settings-callback', 'icon', 'wizard-icon' );
+	$allowed_keys = array( 'category', 'tag', 'supports', 'labels', 'settings-callback', 'icon', 'wizard-icon', 'auto-enable' );
 
 	foreach ( $params as $key => $value )
-		if ( in_array( $key, $allowed_keys ) )
-			$options[$key] = $value;
+		if ( in_array( $key, $allowed_keys ) ) {
+			$options[ $key ] = $value;
+	}
 
 	if ( empty( $options['supports'] ) ) {
 		$options['supports'] = array();
 	}
 
-	if ( empty( $options['category'] ) )
+	if ( empty( $options['category'] ) ) {
 		$options['category'] = 'other';
+	}
+
+	if ( ! isset( $options['auto-enable'] ) ) {
+		$options['auto-enable'] = true;
+	}
 
 	// Add the add-on to our Global
 	$GLOBALS['it_exchange']['add_ons']['registered'][$slug] = apply_filters( 'it_exchange_register_addon', array(
@@ -196,7 +203,7 @@ function it_exchange_temporarily_load_addon( $add_on ) {
  *
  * @param string $slug  the add-on's slug
  *
- * @return array  the add_on array
+ * @return array|bool  the add_on array
 */
 function it_exchange_get_addon( $slug ) {
 	if ( $add_ons = it_exchange_get_addons() ) {
@@ -260,10 +267,12 @@ function it_exchange_get_enabled_addons( $options=array() ) {
 		}
 	}
 
-	if ( ! empty( $options['category'] ) )
+	if ( ! empty( $options['category'] ) ) {
 		$enabled = it_exchange_filter_addons_by_category( $enabled, $options['category'] );
+	}
 
 	ksort( $enabled );
+
 	return apply_filters( 'it_exchange_get_enabled_addons', empty( $enabled ) ? array() : $enabled, $options );
 }
 
@@ -389,11 +398,19 @@ function it_exchange_enable_addon( $add_on ) {
 	$success = false;
 
 	if ( isset( $registered[$add_on] ) && ! isset( $enabled_add_ons[$add_on] ) ) {
-		$enabled_add_ons[$add_on] = $registered[$add_on];
+
+		$enabled_add_ons[$add_on] = array(
+			'slug' => $add_on
+		);
+
 		if ( it_exchange_save_option( 'enabled_add_ons', $enabled_add_ons ) ) {
+
 			include_once( $registered[$add_on]['file'] );
+
 			do_action( 'it_exchange_add_on_enabled', $registered[$add_on] );
+
 			update_option( '_it-exchange-flush-rewrites', true );
+
 			$success = true;
 		}
 	}
@@ -452,7 +469,7 @@ function it_exchange_disable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
 	$enabled_addons = it_exchange_get_enabled_addons( array( 'break_cache' => true ) );
 	$success = false;
-	
+
 	do_action( 'it_exchange_add_on_before_disable', $add_on );
 
 	if ( ! empty( $enabled_addons[$add_on] ) ) {
@@ -510,7 +527,7 @@ function it_exchange_add_addon_support( $add_on, $feature ) {
 		return false;
 
 	// Set add-on support to true for this add-on / feature combo
-	if ( empty( $add_ons[$add_on]['options'] ) )
+	if ( ! empty( $add_ons[$add_on] ) )
 		$GLOBALS['it_exchange']['add_ons']['registered'][$add_on]['options']['supports'][$feature] = true;
 }
 
@@ -532,7 +549,7 @@ function it_exchange_remove_addon_support( $add_on, $feature ) {
 		return false;
 
 	// Set add-on support to false for this add-on / feature combo
-	if ( empty( $add_ons[$add_on]['options'] ) )
+	if ( ! empty( $add_ons[$add_on]) )
 		$GLOBALS['it_exchange']['add_ons']['registered'][$add_on]['options']['supports'][$feature] = false;
 }
 
@@ -569,7 +586,7 @@ function it_exchange_is_core_addon( $slug ) {
 	$addon = it_exchange_get_addon( $slug );
 	if ( empty( $addon['file'] ) )
 		return false;
-	
+
 	// Don't add a filter here.
-	return ( preg_match( '#ithemes-exchange.*/core-addons/.*#', plugin_basename( $addon['file'] ) ) );
+	return (bool) ( preg_match( '#ithemes-exchange.*/core-addons/.*#', plugin_basename( $addon['file'] ) ) );
 }

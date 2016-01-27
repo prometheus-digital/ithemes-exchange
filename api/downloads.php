@@ -17,7 +17,7 @@
  * @param string $hash
  * @param array $hash_data
  *
- * @return mixed
+ * @return int|bool Meta id on success, bool false on error.
 */
 function it_exchange_add_download_hash_data( $download_id, $hash, $hash_data ) {
 	// If hash already exists, something went wrong
@@ -70,11 +70,14 @@ function it_exchange_update_download_hash_data( $hash, $hash_data ) {
  * @return array hash data
 */
 function it_exchange_get_download_info( $download_id ) {
-	return apply_filters( 'it_exchange_get_download_info', get_post_meta( $download_id, '_it-exchange-download-info', true ), $download_id );
+	return (array) apply_filters( 'it_exchange_get_download_info', get_post_meta( $download_id, '_it-exchange-download-info', true ), $download_id );
 }
 
 /**
  * Get a requested file hash
+ *
+ * This function is preferred over it_exchange_get_download_data_from_hash(),
+ * if you already have access to the download ID as the call is cached.
  *
  * @since 0.4.0
  *
@@ -84,17 +87,19 @@ function it_exchange_get_download_info( $download_id ) {
  * @return array hash data
 */
 function it_exchange_get_download_data( $download_id, $hash ) {
-	return apply_filters( 'it_exchange_get_download_data', get_post_meta( $download_id, '_download_hash_' . $hash, true ), $download_id, $hash );
+	return (array) apply_filters( 'it_exchange_get_download_data', get_post_meta( $download_id, '_download_hash_' . $hash, true ), $download_id, $hash );
 }
 
 /**
- * Get a requested file hash
+ * Get a requested file hash.
+ *
+ * This is not a cached function.
  *
  * @since 0.4.0
  *
  * @param string $hash The hash holding the meta for the file
  *
- * @return array hash data
+ * @return array|bool hash data or False on error.
 */
 function it_exchange_get_download_data_from_hash( $hash ) {
 	global $wpdb;
@@ -121,14 +126,22 @@ function it_exchange_get_download_hashes_for_transaction_product( $transaction, 
 		return false;
 
 	// Grab the product key from the tranaction product or return false
-	if ( false === ( $product_id = empty( $transaction_product['product_id'] ) ? false : $transaction_product['product_id'] ) )
+	if ( empty( $transaction_product['product_id'] ) ) {
 		return false;
+	} else if ( false === ( $product_id = $transaction_product['product_id'] ) ) {
+		return false;
+	}
 
 	// Grab an array of all download hashes for this transaction, grouped by product
 	$transaction_hash_index = it_exchange_get_transaction_download_hash_index( $transaction->ID );
 	
 	// If the requested download / product / transaction combination is in the hash_index, use that to look up the hash data
-	$hashes = empty( $transaction_hash_index[$product_id][$download_id] ) ? it_exchange_update_download_hashes_for_transaction_product( $transaction->ID, $product_id, $download_id ) : $transaction_hash_index[$product_id][$download_id];
+	if ( empty( $transaction_hash_index[ $product_id ][ $download_id ] ) ) {
+		$hashes = it_exchange_update_download_hashes_for_transaction_product( $transaction->ID, $product_id, $download_id );
+	} else {
+		$hashes = $transaction_hash_index[ $product_id ][ $download_id ];
+	}
+
 	return apply_filters( 'it_exchange_get_download_hashes_for_transaction_product', $hashes, $transaction, $transaction_product, $download_id );
 }
 
@@ -137,16 +150,21 @@ function it_exchange_get_download_hashes_for_transaction_product( $transaction, 
  *
  * @since CHANGEME
  *
- * @param $transaction_id Transaction ID
- * @param $product_id Product ID
- * @param $download_id Download ID
+ * @param $transaction_id int Transaction ID
+ * @param $product_id int|IT_Exchange_Product Product
+ * @param $download_id int Download ID
+ *
  * @return array with Download's new hash value
 */
 function it_exchange_update_download_hashes_for_transaction_product( $transaction_id, $product_id, $download_id ) {
 	$expire_time = false;
-	$expires = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expires' ) );
-	$int = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire-int' ) );
-	$units = it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'expire-units' ) );
+
+	$product = it_exchange_get_product( $product_id );
+
+	$expires = $product->get_feature( 'downloads', array( 'setting' => 'expires' ) );
+	$int = $product->get_feature( 'downloads', array( 'setting' => 'expire-int' ) );
+	$units = $product->get_feature( 'downloads', array( 'setting' => 'expire-units' ) );
+
 	if ( $expires ) {
 		$expire_time = strtotime( '+' . $int . ' ' . $units );
 	}
@@ -157,19 +175,19 @@ function it_exchange_update_download_hashes_for_transaction_product( $transactio
 	$hash_data = array(
 		'hash'           => $hash,
 		'transaction_id' => $transaction_id,
-		'product_id'     => $product_id,
+		'product_id'     => $product->ID,
 		'file_id'        => $download_id,
 		'customer_id'    => it_exchange_get_transaction_customer_id( $transaction_id ),
 		'expires'        => $expires,
 		'expire_int'     => $int,
 		'expire_units'   => $units,
 		'expire_time'    => $expire_time,
-		'download_limit' => it_exchange_get_product_feature( $product_id, 'downloads', array( 'setting' => 'limit' ) ),
+		'download_limit' => $product->get_feature( 'downloads', array( 'setting' => 'limit' ) ),
 		'downloads'      => '0',
 	);
 
 	// Add hash and data to DB as file post_meta
-	$pm_id = it_exchange_add_download_hash_data( $download_id, $hash, $hash_data );
+	it_exchange_add_download_hash_data( $download_id, $hash, $hash_data );
 	
 	return array( $hash );
 }
@@ -192,11 +210,11 @@ function it_exchange_get_transaction_download_hash_index( $transaction ) {
  * This updates the index of hashes per product per transaction stored in the transaction
  *
  * @param IT_Exchange_Transaction|int|WP_Post $transaction         transaction ID or object
- * @param array   $product this is the product array found in cart_details property in the transaction object
+ * @param int     $product this is the product array found in cart_details property in the transaction object
  * @param integer $download_id         the id of the download attached to the product passed in param 2
  * @param string  $hash                the has we're adding to the index
  *
- * @return boolean true for success | false for failure
+ * @return int|bool Meta ID on success, False on failure.
 */
 function it_exchange_update_transaction_download_hash_index( $transaction, $product, $download_id, $hash ) {
 	// Grab transaction object
@@ -204,7 +222,15 @@ function it_exchange_update_transaction_download_hash_index( $transaction, $prod
 		return false;
 
 	// Grab existing hash index
-	$hash_index = (array) it_exchange_get_transaction_download_hash_index( $transaction );
+	$hash_index = it_exchange_get_transaction_download_hash_index( $transaction );
+
+	if ( ! is_array( $hash_index ) ) {
+		$hash_index = array();
+	}
+
+	if ( empty( $hash_index[$product] ) || ! is_array( $hash_index[$product] ) ) {
+		$hash_index[$product] = array();
+	}
 
 	// Add hash to existing hash index
 	if ( empty( $hash_index[$product][$download_id] ) || ! is_array( $hash_index[$product][$download_id] ) )
@@ -224,7 +250,7 @@ function it_exchange_update_transaction_download_hash_index( $transaction, $prod
  * @param IT_Exchange_Transaction|int|WP_Post  $transaction the ID or object
  * @param string $hash        the hash we're looking for
  *
- * @return boolean true for success | false for failure
+ * @return int|bool Meta ID on success, False on error.
 */
 function it_exchange_delete_hash_from_transaction_hash_index( $transaction, $hash ) {
 	// Grab transaction object
@@ -235,10 +261,14 @@ function it_exchange_delete_hash_from_transaction_hash_index( $transaction, $has
 	$hash_index = (array) it_exchange_get_transaction_download_hash_index( $transaction );
 
 	// Delete if it exists
-	foreach( $hash_index as $product ) {
-		foreach( $product as $download => $hashes ) {
-			if ( in_array( $hash, $download ) )
-				unset( $hash_index[$product][$download][$hash] );
+	foreach( $hash_index as $product => $downloads ) {
+		foreach( $downloads as $download => $hashes ) {
+
+			$idx = array_search( $hash, $hashes );
+
+			if ( $idx !== false ) {
+				unset( $hash_index[ $product ][ $download ][ $idx ] );
+			}
 		}
 	}
 
@@ -270,18 +300,19 @@ function it_exchange_clear_transaction_hash_index( $transaction ) {
  * @since 0.4.0
  *
  * @param array $hash_data from download hash
- * @param string $purchase_date post_date from transaction post_type
  * @param string|bool $date_format optional. the format to display the date in.
  *
  * @return string
 */
-function it_exchange_get_download_expiration_date( $hash_data, $date_format=false ) {
+function it_exchange_get_download_expiration_date( $hash_data, $date_format = false ) {
 	if ( empty( $hash_data['expire_time'] ) )
 		return false;
 
 	$date_format = empty( $date_format ) ? get_option( 'date_format' ) : $date_format;
 
-	return apply_filters( 'it_exchange_get_download_expiration_date', date_i18n( $date_format, $hash_data['expire_time'] ), $hash_data, $date_format );
+	$formatted = date_i18n( $date_format, $hash_data['expire_time'] );
+
+	return apply_filters( 'it_exchange_get_download_expiration_date', $formatted, $hash_data, $date_format );
 }
 
 /**
@@ -402,13 +433,16 @@ function it_exchange_serve_product_download( $hash_data ) {
  *
  * @param array   $hash_data file hash data
  * @param boolean $increment_admin_downloads Default is false
- * @return void
+ *
+ * @return bool
 */
-function it_exchange_increment_download_count( $hash_data, $increment_admin_downloads=false ) {
-	if ( current_user_can( 'administrator' ) && $increment_admin_downloads )
-		return;
+function it_exchange_increment_download_count( $hash_data, $increment_admin_downloads = false ) {
+	if ( current_user_can( 'administrator' ) && ! $increment_admin_downloads )
+		return false;
 
 	$hash_data['downloads']++;
 	it_exchange_update_download_hash_data( $hash_data['hash'], $hash_data );
 	do_action( 'it_exchange_increment_download_count', $hash_data, $increment_admin_downloads );
+
+	return true;
 }

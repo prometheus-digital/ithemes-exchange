@@ -124,7 +124,7 @@ function it_exchange_convert_to_database_number( $price ) {
  * @return float converted price
 */
 function it_exchange_convert_from_database_number( $price ) {
-	return number_format( $price /= 100, 2, '.', '' );
+	return number_format( $price / 100, 2, '.', '' );
 }
 
 /**
@@ -299,6 +299,9 @@ if ( ! function_exists( 'wp_nav_menu_disabled_check' ) && version_compare( $GLOB
  * @return array
 */
 function it_exchange_get_currency_options() {
+
+	_deprecated_function( __FUNCTION__, '1.2.0', 'it_exchange_get_data_set' );
+
 	return it_exchange_get_data_set( 'currencies' );
 }
 
@@ -312,7 +315,7 @@ function it_exchange_get_currency_options() {
  * @return string
 */
 function it_exchange_get_currency_symbol( $country_code ) {
-	$currencies = it_exchange_get_currency_options();
+	$currencies = it_exchange_get_data_set( 'currencies' );;
 	$symbol = empty( $currencies[$country_code] ) ? '$' : $currencies[$country_code];
 	$symbol = ( is_array( $symbol ) && ! empty( $symbol['symbol'] ) ) ? $symbol['symbol'] : '$';
 	return apply_filters( 'it_exchange_get_currency_symbol', $symbol );
@@ -370,7 +373,7 @@ function it_exchange_register_purchase_requirement( $slug, $properties=array() )
 	$properties['slug'] = $slug;
 
 	// Don't allow false notification value. If you don't want a notification, make it ''.
-	$properties['notification'] = ( false === $properties['notification'] ) ? $defaults['notification'] : $properties['notification'];
+	$properties['notification'] = (string) $properties['notification'];
 
 	// Grab existing requirements
 	$requirements = it_exchange_get_purchase_requirements();
@@ -422,7 +425,7 @@ function it_exchange_get_purchase_requirements() {
  *
  * @since 1.2.0
  *
- * @return string|bool requirement string
+ * @return array|bool requirement string
 */
 function it_exchange_get_next_purchase_requirement() {
 	$requirements = it_exchange_get_purchase_requirements();
@@ -486,7 +489,7 @@ function it_exchange_get_next_purchase_requirement_property( $prop ) {
  *
  * @since 1.3.0
  *
- * @return array
+ * @return string[]
 */
 function it_exchange_get_pending_purchase_requirements() {
 	$pending      = array();

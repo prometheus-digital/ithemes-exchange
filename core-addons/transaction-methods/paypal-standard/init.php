@@ -794,7 +794,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 	}
 
 	$paypal_api_url = ! empty( $_REQUEST['test_ipn'] ) ? PAYPAL_PAYMENT_SANDBOX_URL : PAYPAL_PAYMENT_LIVE_URL;
-	$response       = wp_remote_post( $paypal_api_url, array( 'body' => $payload ) );
+	$response       = wp_remote_post( $paypal_api_url, array( 'body' => $payload, 'httpversion' => '1.1' ) );
 	$body           = wp_remote_retrieve_body( $response );
 
 	if ( 'VERIFIED' !== $body ) {
@@ -1197,6 +1197,7 @@ function it_exchange_paypal_standard_addon_transaction_status_label( $status ) {
 		case 'success':
 		case 'canceled_reversal':
 		case 'processed' :
+		case 'succeeded':
 			return __( 'Paid', 'it-l10n-ithemes-exchange' );
 		case 'refunded':
 		case 'refund':
@@ -1239,6 +1240,7 @@ function it_exchange_paypal_standard_transaction_is_cleared_for_delivery( $clear
 		'success',
 		'canceled_reversal',
 		'processed',
+		'succeeded'
 	);
 
 	return in_array( strtolower( it_exchange_get_transaction_status( $transaction ) ), $valid_stati );

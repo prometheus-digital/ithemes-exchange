@@ -49,6 +49,10 @@ class IT_Exchange {
 		$this->set_plugin_locations();
 		$this->set_textdomain();
 
+		if ( file_exists( $this->_plugin_path . 'vendor/autoload.php' ) ) {
+			include( $this->_plugin_path . 'vendor/autoload.php' );
+		}
+
 		// Load supporting libraries
 		require( $this->_plugin_path . 'lib/load.php' );
 		require( $this->_plugin_path . 'api/load.php' );
@@ -145,7 +149,7 @@ class IT_Exchange {
 				} else {
 					it_exchange_disable_addon( $slug );
 					if ( is_admin() ) {
-						wp_safe_redirect('admin.php?page=it-exchange-addons&message=addon-auto-disabled-' . $addon );
+						wp_safe_redirect('admin.php?page=it-exchange-addons&message=addon-auto-disabled-' . $slug );
 						die();
 					}
 				}
@@ -157,8 +161,9 @@ class IT_Exchange {
 
 		// Auto enable all 3rd party addons
 		foreach( $registered as $slug => $params ) {
-			if ( ! it_exchange_is_core_addon( $slug ) && ! isset( $enabled_addons[$slug] ) )
+			if ( ! it_exchange_is_core_addon( $slug ) && ! isset( $enabled_addons[$slug] ) && ! empty( $params['options']['auto-enable'] ) ) {
 				it_exchange_enable_addon( $slug );
+			}
 		}
 		do_action( 'it_exchange_enabled_addons_loaded' );
 	}

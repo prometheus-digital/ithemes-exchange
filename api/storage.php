@@ -7,15 +7,19 @@
 */
 
 /**
- * Retrieve options
+ * Retrieve options.
+ *
+ * This is mainly used for storing settings, you should not use this
+ * for general storage purpose.
  *
  * Default values can be set for any option by adding a filter:
- * - it_storage_get_defaults_$key
+ * - it_storage_get_defaults_exchange_$key
  *
  * @since 0.3.6
  * @param string $key option key
  * @param boolean $break_cache clear the ITStorage2 cache before returning options?
- * @param boolean $merge_defaults attempt to merge with default values
+ * @param boolean $merge_defaults Attempt to merge with default values
+ *                                Once defaults are merged, they cannot be unmerged.
  *
  * @return mixed value of passed key
 */
@@ -51,6 +55,8 @@ function it_exchange_save_option( $key, $value ) {
  * Clear the cache for a key
  *
  * @since 0.4.0
+ *
+ * @param string $key
  *
  * @return void
 */

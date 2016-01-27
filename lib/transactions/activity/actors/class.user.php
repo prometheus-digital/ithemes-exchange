@@ -61,6 +61,11 @@ class IT_Exchange_Txn_Activity_User_Actor implements IT_Exchange_Txn_Activity_Ac
 	 * @return string
 	 */
 	public function get_icon_url( $size ) {
+
+		if ( ! function_exists( 'get_avatar_url' ) ) {
+			return '';
+		}
+
 		return get_avatar_url( $this->user->ID, array(
 			'size' => $size
 		) );

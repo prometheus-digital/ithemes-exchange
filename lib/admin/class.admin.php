@@ -904,21 +904,41 @@ Order: %s
 		if ( ! $enable_addon && ! $disable_addon )
 			return;
 
-		$registered    = it_exchange_get_addons();
+		$registered = it_exchange_get_addons();
 
 		// Enable or Disable addon requested by user
 		if ( $enable_addon ) {
-			if ( $nonce_valid = wp_verify_nonce( $_GET['_wpnonce'], 'exchange-enable-add-on' ) )
-				$enabled = it_exchange_enable_addon( $enable_addon );
+
+			if ( $nonce_valid = wp_verify_nonce( $_GET['_wpnonce'], 'exchange-enable-add-on' ) ) {
+				it_exchange_enable_addon( $enable_addon );
+			}
+
 			$message = 'enabled';
 		} else if ( $disable_addon ) {
-			if ( $nonce_valid = wp_verify_nonce( $_GET['_wpnonce'], 'exchange-disable-add-on' ) )
-				$enabled = it_exchange_disable_addon( $disable_addon );
+
+			if ( $nonce_valid = wp_verify_nonce( $_GET['_wpnonce'], 'exchange-disable-add-on' ) ) {
+
+				if ( ! it_exchange_is_core_addon( $disable_addon ) ) {
+					$addon = it_exchange_get_addon( $disable_addon );
+
+					$redirect = admin_url() . 'plugins.php?s=' . urlencode( $addon['name'] );
+				} else {
+					$redirect = '';
+				}
+
+				it_exchange_disable_addon( $disable_addon );
+
+				if ( $redirect = apply_filters( 'it_exchange_redirect_on_disable_3rd_party_addon', $redirect, $disable_addon ) ) {
+					wp_redirect( $redirect );
+					die();
+				}
+			}
+
 			$message = 'disabled';
 		}
 
 		// Redirect if nonce not valid
-		if ( ! $nonce_valid ) {
+		if ( empty( $nonce_valid ) ) {
 			wp_safe_redirect( admin_url( '/admin.php?page=it-exchange-addons&tab=' . $tab . '&error=' . $message ) );
 			die();
 		}

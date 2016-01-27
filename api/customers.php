@@ -32,14 +32,21 @@ function it_exchange_register_customer( $customer_data, $args=array() ) {
 function it_exchange_get_customer( $customer_id ) {
     // Grab the WP User
 
-	try {
-		$customer = new IT_Exchange_Customer( $customer_id );
-	} catch ( Exception $e ) {
-		return false;
+	if ( $customer_id instanceof IT_Exchange_Customer ) {
+		$customer = $customer_id;
+	} else {
+
+		try {
+			$customer = new IT_Exchange_Customer( $customer_id );
+		}
+		catch ( Exception $e ) {
+			return false;
+		}
 	}
 
-	if ( empty( $customer->wp_user->ID ) )
+	if ( ! $customer->is_wp_user() ) {
 		$customer = false;
+	}
 
 	return apply_filters( 'it_exchange_get_customer', $customer, $customer_id );
 }
@@ -137,11 +144,6 @@ function it_exchange_customer_has_transaction( $transaction_id, $customer_id = N
 	else if ( ! $customer = it_exchange_get_customer( $customer_id ) )
 		return array();
 
-	// Get transactions args
-	$args = array(
-		'numberposts' => -1,
-		'customer_id' => $customer->id,
-	);
 	return apply_filters( 'it_exchange_customer_has_transaction', $customer->has_transaction( $transaction_id ), $transaction_id, $customer_id );
 }
 
