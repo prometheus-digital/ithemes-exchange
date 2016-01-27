@@ -794,7 +794,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 	}
 
 	$paypal_api_url = ! empty( $_REQUEST['test_ipn'] ) ? PAYPAL_PAYMENT_SANDBOX_URL : PAYPAL_PAYMENT_LIVE_URL;
-	$response       = wp_remote_post( $paypal_api_url, array( 'body' => $payload ) );
+	$response       = wp_remote_post( $paypal_api_url, array( 'body' => $payload, 'httpversion' => '1.1' ) );
 	$body           = wp_remote_retrieve_body( $response );
 
 	if ( 'VERIFIED' !== $body ) {

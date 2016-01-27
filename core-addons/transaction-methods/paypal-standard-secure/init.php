@@ -608,295 +608,296 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id ) {
 	$paypal_api_password  = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-password'] : $paypal_settings['live-api-password'];
 	$paypal_api_signature = ( $paypal_settings['sandbox-mode'] ) ? $paypal_settings['sandbox-api-signature'] : $paypal_settings['live-api-signature'];
 
-	if ( ! empty( $paypal_email )
-		&& ! empty( $paypal_api_username )
-		&& ! empty( $paypal_api_password )
-		&& ! empty( $paypal_api_signature ) ) {
+	if ( empty( $paypal_email ) || empty( $paypal_api_username ) || empty( $paypal_api_password ) || empty( $paypal_api_signature ) ) {
+		return false;
+	}
 
-		$subscription = false;
-		$it_exchange_customer = it_exchange_get_current_customer();
+	$subscription = false;
+	$it_exchange_customer = it_exchange_get_current_customer();
 
-		remove_filter( 'the_title', 'wptexturize' ); // remove this because it screws up the product titles in PayPal
-		$cart = it_exchange_get_cart_products();
+	remove_filter( 'the_title', 'wptexturize' ); // remove this because it screws up the product titles in PayPal
+	$cart = it_exchange_get_cart_products();
 
-		if ( 1 === absint( count( $cart ) ) ) {
-			foreach( $cart as $product ) {
-				if ( it_exchange_product_supports_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
-					if ( it_exchange_product_has_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
-						$trial_enabled = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) );
-						$trial_interval = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-interval' ) );
-						$trial_interval_count = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-interval-count' ) );
-						$auto_renew = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) );
-						$interval = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'interval' ) );
-						$interval_count = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'interval-count' ) );
-	
-						switch( $interval ) {
-							case 'year':
-								$unit = 'Y';
-								break;
-							case 'week':
-								$unit = 'W';
-								break;
-							case 'day':
-								$unit = 'D';
-								break;
-							case 'month':
-							default:
-								$unit = 'M';
-								break;
-						}
-						$duration = apply_filters( 'it_exchange_paypal_standard_secure_addon_subscription_duration', $interval_count, $product );
-				
-						$trial_unit = NULL;
-						$trial_duration = NULL;
-						if ( $trial_enabled ) {
-							$allow_trial = true;
-							//Should we all trials?
-							if ( 'membership-product-type' === it_exchange_get_product_type( $product['product_id'] ) ) {
-								if ( is_user_logged_in() ) {
-									if ( function_exists( 'it_exchange_get_session_data' ) ) {
-										$member_access = it_exchange_get_session_data( 'member_access' );
-										$children = (array)it_exchange_membership_addon_get_all_the_children( $product['product_id'] );
-										$parents = (array)it_exchange_membership_addon_get_all_the_parents( $product['product_id'] );
-										foreach( $member_access as $prod_id => $txn_id ) {
-											if ( $prod_id === $product['product_id'] || in_array( $prod_id, $children ) || in_array( $prod_id, $parents ) ) {
-												$allow_trial = false;
-												break;
-											}								
+	if ( 1 === absint( count( $cart ) ) ) {
+		foreach( $cart as $product ) {
+			if ( it_exchange_product_supports_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
+				if ( it_exchange_product_has_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) ) ) {
+					$trial_enabled = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-enabled' ) );
+					$trial_interval = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-interval' ) );
+					$trial_interval_count = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'trial-interval-count' ) );
+					$auto_renew = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'auto-renew' ) );
+					$interval = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'interval' ) );
+					$interval_count = it_exchange_get_product_feature( $product['product_id'], 'recurring-payments', array( 'setting' => 'interval-count' ) );
+
+					switch( $interval ) {
+						case 'year':
+							$unit = 'Y';
+							break;
+						case 'week':
+							$unit = 'W';
+							break;
+						case 'day':
+							$unit = 'D';
+							break;
+						case 'month':
+						default:
+							$unit = 'M';
+							break;
+					}
+					$duration = apply_filters( 'it_exchange_paypal_standard_secure_addon_subscription_duration', $interval_count, $product );
+
+					$trial_unit = NULL;
+					$trial_duration = NULL;
+					if ( $trial_enabled ) {
+						$allow_trial = true;
+						//Should we all trials?
+						if ( 'membership-product-type' === it_exchange_get_product_type( $product['product_id'] ) ) {
+							if ( is_user_logged_in() ) {
+								if ( function_exists( 'it_exchange_get_session_data' ) ) {
+									$member_access = it_exchange_get_session_data( 'member_access' );
+									$children = (array)it_exchange_membership_addon_get_all_the_children( $product['product_id'] );
+									$parents = (array)it_exchange_membership_addon_get_all_the_parents( $product['product_id'] );
+									foreach( $member_access as $prod_id => $txn_id ) {
+										if ( $prod_id === $product['product_id'] || in_array( $prod_id, $children ) || in_array( $prod_id, $parents ) ) {
+											$allow_trial = false;
+											break;
 										}
 									}
 								}
 							}
-					
-							$allow_trial = apply_filters( 'it_exchange_paypal_standard_secure_addon_get_payment_url_allow_trial', $allow_trial, $product['product_id'] );
-							
-							if ( $allow_trial && 0 < $trial_interval_count ) {
-								switch ( $trial_interval ) {
-									case 'year':
-										$trial_unit = 'Y';
-										break;
-									case 'week':
-										$trial_unit = 'W';
-										break;
-									case 'day':
-										$trial_unit = 'D';
-										break;
-									case 'month':
-									default:
-										$trial_unit = 'M';
-										break;
-								}
-								$trial_duration = apply_filters( 'it_exchange_paypal_standard_secure_addon_subscription_trial_duration', $trial_interval_count, $product );
-							}
 						}
-						
-						$subscription = true;
-						$product_id = $product['product_id'];
+
+						$allow_trial = apply_filters( 'it_exchange_paypal_standard_secure_addon_get_payment_url_allow_trial', $allow_trial, $product['product_id'] );
+
+						if ( $allow_trial && 0 < $trial_interval_count ) {
+							switch ( $trial_interval ) {
+								case 'year':
+									$trial_unit = 'Y';
+									break;
+								case 'week':
+									$trial_unit = 'W';
+									break;
+								case 'day':
+									$trial_unit = 'D';
+									break;
+								case 'month':
+								default:
+									$trial_unit = 'M';
+									break;
+							}
+							$trial_duration = apply_filters( 'it_exchange_paypal_standard_secure_addon_subscription_trial_duration', $trial_interval_count, $product );
+						}
 					}
-				}
-			}
-		}
 
-		$button_request = array(
-			'USER'           => trim( $paypal_api_username ),
-			'PWD'            => trim( $paypal_api_password ),
-			'SIGNATURE'      => trim( $paypal_api_signature ),
-			'VERSION'        => '96.0', //The PayPal API version
-			'METHOD'         => 'BMCreateButton',
-			'BUTTONCODE'     => 'ENCRYPTED',
-			'BUTTONIMAGE'    => 'REG',
-			'BUYNOWTEXT'     => 'PAYNOW',
-		);
-
-		$upgrade_downgrade = it_exchange_get_session_data( 'updowngrade_details' );
-		if ( !empty( $upgrade_downgrade ) ) {
-			foreach( $cart as $product ) {
-				if ( !empty( $upgrade_downgrade[$product['product_id']] ) ) {
+					$subscription = true;
 					$product_id = $product['product_id'];
-					if (   !empty( $upgrade_downgrade[$product_id]['old_transaction_id'] ) 
-						&& !empty( $upgrade_downgrade[$product_id]['old_transaction_method'] ) ) {
-						$subscription_details[$product_id] = array(
-							'product_id'             => $product_id,
-							'free_days'              => $upgrade_downgrade[$product_id]['free_days'],
-							'credit'                 => $upgrade_downgrade[$product_id]['credit'],
-							'old_transaction_id'     => $upgrade_downgrade[$product_id]['old_transaction_id'],
-							'old_transaction_method' => $upgrade_downgrade[$product_id]['old_transaction_method'],
-						);
-						if ( !empty( $upgrade_downgrade[$product_id]['old_subscriber_id'] ) )
-							$subscription_details[$product_id]['old_subscriber_id'] = $upgrade_downgrade[$product_id]['old_subscriber_id'];
-						it_exchange_update_session_data( 'cancel_subscription', $subscription_details );
-					}
 				}
 			}
-		} else {
-			it_exchange_clear_session_data( 'cancel_subscription' );
 		}
-				
-		if ( $subscription ) {
-			//https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/#id08A6HI00JQU
-			//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
-			//a2, t2, p2 are for the second trial period, which is not supported with the Recurring Payments add-on
-			//a3, t3, p3 are required for the actual subscription details
-			$trial_duration_1 = empty( $upgrade_downgrade[$product_id]['free_days'] ) ? $trial_duration : $upgrade_downgrade[$product_id]['free_days'];			$trial_duration_2 = 0;
+	}
 
-			$button_request['BUTTONTYPE'] = 'SUBSCRIBE';
-			if ( !empty( $trial_duration_1 ) ) {
-				/*
-				D – for days; allowable range for p2 is 1 to 90
-				W – for weeks; allowable range for p2 is 1 to 52
-				M – for months; allowable range for p2 is 1 to 24
-				Y – for years; allowable range for p2 is 1 to 5
-				Source: https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/#id08A6HF00TZS
-				*/
-			
-				$trial_unit_1 = ( !empty( $trial_unit ) ) ? $trial_unit : 'D'; //Days by default
-				$trial_unit_2 = 'D';
-				if ( 90 < $trial_duration_1 ) { //If greater than 90 days, we need to modify
-					$years = floor( $trial_duration_1 / 365 );
-					$years_remainder = $trial_duration_1 % 365;
-					$months = floor( $trial_duration_1 / 30 );
-					$months_remainder = $trial_duration_1 % 30;
-					$weeks = floor( $trial_duration_1 / 7 );
-					$weeks_remainder = $trial_duration_1 % 7;
-					
-					if ( 10 == $years ) { //the most we can do
-						$trial_unit_1 = 'Y';
-						$trial_duration_1 = 5;
-						$trial_unit_2 = 'Y';
-						$trial_duration_2 = 5;
-					} else if ( !empty( $years ) && 5 >= $years ) {
-						$trial_unit_1 = 'Y';
-						$trial_duration_1 = $years;
-						if ( !empty( $years_remainder ) )
-							$trial_duration_2 = $years_remainder;
-					} else if ( !empty( $months ) && 24 >= $months ) {
-						$trial_unit_1 = 'M';
-						$trial_duration_1 = $months;
-						if ( !empty( $months_remainder ) )
-							$trial_duration_2 = $months_remainder;
-					} else if ( !empty( $weeks ) && 52 >= $weeks ) {
-						$trial_unit_1 = 'W';
-						$trial_duration_1 = $weeks;
-						if ( !empty( $weeks_remainder ) )
-							$trial_duration_2 = $weeks_remainder;
-					} else {
-						$trial_duration_1 = 0;
-						$trial_duration_2 = 0;
-					}
-				}
-				
-				if ( 90 < $trial_duration_2 ) { //If greater than 90 days, we need to modify
-					$weeks = floor( $trial_duration_2 / 7 );
-					$months = floor( $trial_duration_2 / 30 );
-					$years = floor( $trial_duration_2 / 365 );
-					
-					if ( !empty( $weeks ) &&  52 >= $weeks ) {
-						$trial_unit_2 = 'W';
-						$trial_duration_2 = $weeks;
-					} else if ( !empty( $months ) &&  24 >= $months ) {
-						$trial_unit_2 = 'M';
-						$trial_duration_2 = $months;
-					} else if ( !empty( $years ) &&  5 >= $years ) {
-						$trial_unit_2 = 'Y';
-						$trial_duration_2 = $years;
-					} else {
-						$trial_duration_2 = 0;
-					}
-				}
-			
-				if ( $trial_duration_1 ) {
-					$L_BUTTONVARS[] = 'a1=0'; //Free trial subscription price.
-					$L_BUTTONVARS[] = 'p1=' . $trial_duration_1; //Trial period.
-					$L_BUTTONVARS[] = 't1=' . $trial_unit_1;
-				}
-				if ( $trial_duration_2 ) {
-					$L_BUTTONVARS[] = 'a2=0.01'; //Free trial subscription price. (needs to be greater than 0)
-					$L_BUTTONVARS[] = 'p2=' . $trial_duration_2; //Trial period.
-					$L_BUTTONVARS[] = 't2=' . $trial_unit_2;
+	$button_request = array(
+		'USER'           => trim( $paypal_api_username ),
+		'PWD'            => trim( $paypal_api_password ),
+		'SIGNATURE'      => trim( $paypal_api_signature ),
+		'VERSION'        => '96.0', //The PayPal API version
+		'METHOD'         => 'BMCreateButton',
+		'BUTTONCODE'     => 'ENCRYPTED',
+		'BUTTONIMAGE'    => 'REG',
+		'BUYNOWTEXT'     => 'PAYNOW',
+	);
+
+	$upgrade_downgrade = it_exchange_get_session_data( 'updowngrade_details' );
+	if ( !empty( $upgrade_downgrade ) ) {
+		foreach( $cart as $product ) {
+			if ( !empty( $upgrade_downgrade[$product['product_id']] ) ) {
+				$product_id = $product['product_id'];
+				if (   !empty( $upgrade_downgrade[$product_id]['old_transaction_id'] )
+				       && !empty( $upgrade_downgrade[$product_id]['old_transaction_method'] ) ) {
+					$subscription_details[$product_id] = array(
+						'product_id'             => $product_id,
+						'free_days'              => $upgrade_downgrade[$product_id]['free_days'],
+						'credit'                 => $upgrade_downgrade[$product_id]['credit'],
+						'old_transaction_id'     => $upgrade_downgrade[$product_id]['old_transaction_id'],
+						'old_transaction_method' => $upgrade_downgrade[$product_id]['old_transaction_method'],
+					);
+					if ( !empty( $upgrade_downgrade[$product_id]['old_subscriber_id'] ) )
+						$subscription_details[$product_id]['old_subscriber_id'] = $upgrade_downgrade[$product_id]['old_subscriber_id'];
+					it_exchange_update_session_data( 'cancel_subscription', $subscription_details );
 				}
 			}
-				
-			$L_BUTTONVARS[] = 'a3=' . number_format( it_exchange_get_cart_total( false ), 2, '.', '' ); //Regular subscription price.
-			$L_BUTTONVARS[] = 'p3=' . $duration; //Subscription duration. Specify an integer value in the allowable range for the units of duration that you specify with t3.
-			$L_BUTTONVARS[] = 't3=' . $unit; //Regular subscription units of duration. (D, W, M, Y) -- we only use M,Y by default
-			$L_BUTTONVARS[] = 'src=1'; //Recurring payments.
-
-		} else {
-			$button_request['BUTTONTYPE'] = 'BUYNOW';
-			$L_BUTTONVARS[] = 'amount=' . number_format( it_exchange_get_cart_total( false ), 2, '.', '' );
-			$L_BUTTONVARS[] = 'quantity=1';
-
 		}
-		
-		$nonce = wp_create_nonce( 'ppss-nonce' );
+	} else {
+		it_exchange_clear_session_data( 'cancel_subscription' );
+	}
 
-		$L_BUTTONVARS[] = 'business=' . $paypal_email;
-		$L_BUTTONVARS[] = 'item_name=' . it_exchange_get_cart_description();
-		$L_BUTTONVARS[] = 'return=' . add_query_arg( array( 'it-exchange-transaction-method' => 'paypal-standard-secure', 'paypal-standard-secure-nonce' => $nonce ), it_exchange_get_page_url( 'transaction' ) );
-		$L_BUTTONVARS[] = 'currency_code=' . $general_settings['default-currency'];
-		$L_BUTTONVARS[] = 'notify_url=' . get_home_url() . '/?' . it_exchange_get_webhook( 'paypal-standard-secure' ) . '=1';
-		$L_BUTTONVARS[] = 'no_note=1';
-		$L_BUTTONVARS[] = 'shipping=0';
-		$L_BUTTONVARS[] = 'email=' . $it_exchange_customer->data->user_email;
-		$L_BUTTONVARS[] = 'rm=2'; //Return  Method - https://developer.paypal.com/webapps/developer/docs/classic/button-manager/integration-guide/ButtonManagerHTMLVariables/
-		$L_BUTTONVARS[] = 'cancel_return=' . ( it_exchange_is_multi_item_cart_allowed() ? it_exchange_get_page_url( 'cart' ) : get_home_url() );
-		$L_BUTTONVARS[] = 'custom=' . $temp_id;
-		
-		$purchase_requirements = it_exchange_get_purchase_requirements();
-		// If we have the shipping info, we may as well include it in the fields sent to PayPal
-		if ( !empty( $purchase_requirements['shipping-address'] ) ) {
-			$shipping_address = it_exchange_get_cart_shipping_address();
-			$L_BUTTONVARS[] = 'address_override=1';
-			$L_BUTTONVARS[] = 'no_shipping=2';
-			$L_BUTTONVARS[] = 'first_name=' . ( !empty( $shipping_address['first-name'] ) ? $shipping_address['first-name'] : '' );
-			$L_BUTTONVARS[] = 'last_name='  . ( !empty( $shipping_address['last-name'] )  ? $shipping_address['last-name']  : '' );
-			$L_BUTTONVARS[] = 'address1='   . ( !empty( $shipping_address['address1'] )   ? $shipping_address['address1']   : '' );
-			$L_BUTTONVARS[] = 'address2='   . ( !empty( $shipping_address['address2'] )   ? $shipping_address['address2']   : '' );
-			$L_BUTTONVARS[] = 'city='       . ( !empty( $shipping_address['city'] )       ? $shipping_address['city']       : '' );
-			$L_BUTTONVARS[] = 'state='      . ( !empty( $shipping_address['state'] )      ? $shipping_address['state']      : '' );
-			$L_BUTTONVARS[] = 'zip='        . ( !empty( $shipping_address['zip'] )        ? $shipping_address['zip']        : '' );
-			$L_BUTTONVARS[] = 'country='    . ( !empty( $shipping_address['country'] )    ? $shipping_address['country']    : '' );
-		} else {
-			$L_BUTTONVARS[] = 'no_shipping=1';
-		}	
-		
-		$L_BUTTONVARS = apply_filters( 'it_exchange_paypal_standard_secure_button_vars', $L_BUTTONVARS );
+	if ( $subscription ) {
+		//https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/#id08A6HI00JQU
+		//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
+		//a2, t2, p2 are for the second trial period, which is not supported with the Recurring Payments add-on
+		//a3, t3, p3 are required for the actual subscription details
+		$trial_duration_1 = empty( $upgrade_downgrade[$product_id]['free_days'] ) ? $trial_duration : $upgrade_downgrade[$product_id]['free_days'];			$trial_duration_2 = 0;
 
-		$count = 0;
-		foreach( $L_BUTTONVARS as $L_BUTTONVAR ) {
+		$button_request['BUTTONTYPE'] = 'SUBSCRIBE';
+		if ( !empty( $trial_duration_1 ) ) {
+			/*
+			D – for days; allowable range for p2 is 1 to 90
+			W – for weeks; allowable range for p2 is 1 to 52
+			M – for months; allowable range for p2 is 1 to 24
+			Y – for years; allowable range for p2 is 1 to 5
+			Source: https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/#id08A6HF00TZS
+			*/
 
-			$button_request['L_BUTTONVAR' . $count] = $L_BUTTONVAR;
-			$count++;
+			$trial_unit_1 = ( !empty( $trial_unit ) ) ? $trial_unit : 'D'; //Days by default
+			$trial_unit_2 = 'D';
+			if ( 90 < $trial_duration_1 ) { //If greater than 90 days, we need to modify
+				$years = floor( $trial_duration_1 / 365 );
+				$years_remainder = $trial_duration_1 % 365;
+				$months = floor( $trial_duration_1 / 30 );
+				$months_remainder = $trial_duration_1 % 30;
+				$weeks = floor( $trial_duration_1 / 7 );
+				$weeks_remainder = $trial_duration_1 % 7;
 
-		}
-						
-		$button_request = apply_filters( 'it_exchange_paypal_standard_secure_button_request', $button_request );
-		
-		$response = wp_remote_post( $paypal_api_url, array( 'body' => $button_request ) );
-
-		if ( !is_wp_error( $response ) ) {
-
-			parse_str( wp_remote_retrieve_body( $response ), $response_array );
-
-			if ( !empty( $response_array['ACK'] ) && 'Success' === $response_array['ACK'] ) {
-
-				if ( !empty( $response_array['WEBSITECODE'] ) )
-					$payment_form = str_replace( array( "\r\n", "\r", "\n" ), '', stripslashes( $response_array['WEBSITECODE'] ) );
-					//Strip out the newline characters because parse_str/PayPal adds a \n to the encrypted code, whic breaks the digital ID
-
+				if ( 10 == $years ) { //the most we can do
+					$trial_unit_1 = 'Y';
+					$trial_duration_1 = 5;
+					$trial_unit_2 = 'Y';
+					$trial_duration_2 = 5;
+				} else if ( !empty( $years ) && 5 >= $years ) {
+					$trial_unit_1 = 'Y';
+					$trial_duration_1 = $years;
+					if ( !empty( $years_remainder ) )
+						$trial_duration_2 = $years_remainder;
+				} else if ( !empty( $months ) && 24 >= $months ) {
+					$trial_unit_1 = 'M';
+					$trial_duration_1 = $months;
+					if ( !empty( $months_remainder ) )
+						$trial_duration_2 = $months_remainder;
+				} else if ( !empty( $weeks ) && 52 >= $weeks ) {
+					$trial_unit_1 = 'W';
+					$trial_duration_1 = $weeks;
+					if ( !empty( $weeks_remainder ) )
+						$trial_duration_2 = $weeks_remainder;
+				} else {
+					$trial_duration_1 = 0;
+					$trial_duration_2 = 0;
+				}
 			}
 
-		}
-		
-		if ( preg_match( '/-----BEGIN PKCS7-----.*-----END PKCS7-----/i', $payment_form, $matches ) ) {
-			$query = array(
-				'cmd'       => '_s-xclick',
-				'encrypted' => $matches[0],
-			);
-			$paypal_payment_url = $paypal_payment_url . '?' .  http_build_query( $query );
+			if ( 90 < $trial_duration_2 ) { //If greater than 90 days, we need to modify
+				$weeks = floor( $trial_duration_2 / 7 );
+				$months = floor( $trial_duration_2 / 30 );
+				$years = floor( $trial_duration_2 / 365 );
 
-			return $paypal_payment_url;
+				if ( !empty( $weeks ) &&  52 >= $weeks ) {
+					$trial_unit_2 = 'W';
+					$trial_duration_2 = $weeks;
+				} else if ( !empty( $months ) &&  24 >= $months ) {
+					$trial_unit_2 = 'M';
+					$trial_duration_2 = $months;
+				} else if ( !empty( $years ) &&  5 >= $years ) {
+					$trial_unit_2 = 'Y';
+					$trial_duration_2 = $years;
+				} else {
+					$trial_duration_2 = 0;
+				}
+			}
+
+			if ( $trial_duration_1 ) {
+				$L_BUTTONVARS[] = 'a1=0'; //Free trial subscription price.
+				$L_BUTTONVARS[] = 'p1=' . $trial_duration_1; //Trial period.
+				$L_BUTTONVARS[] = 't1=' . $trial_unit_1;
+			}
+			if ( $trial_duration_2 ) {
+				$L_BUTTONVARS[] = 'a2=0.01'; //Free trial subscription price. (needs to be greater than 0)
+				$L_BUTTONVARS[] = 'p2=' . $trial_duration_2; //Trial period.
+				$L_BUTTONVARS[] = 't2=' . $trial_unit_2;
+			}
 		}
+
+		$L_BUTTONVARS[] = 'a3=' . number_format( it_exchange_get_cart_total( false ), 2, '.', '' ); //Regular subscription price.
+		$L_BUTTONVARS[] = 'p3=' . $duration; //Subscription duration. Specify an integer value in the allowable range for the units of duration that you specify with t3.
+		$L_BUTTONVARS[] = 't3=' . $unit; //Regular subscription units of duration. (D, W, M, Y) -- we only use M,Y by default
+		$L_BUTTONVARS[] = 'src=1'; //Recurring payments.
+
+	} else {
+		$button_request['BUTTONTYPE'] = 'BUYNOW';
+		$L_BUTTONVARS[] = 'amount=' . number_format( it_exchange_get_cart_total( false ), 2, '.', '' );
+		$L_BUTTONVARS[] = 'quantity=1';
+
+	}
+
+	$nonce = wp_create_nonce( 'ppss-nonce' );
+
+	$L_BUTTONVARS[] = 'business=' . $paypal_email;
+	$L_BUTTONVARS[] = 'item_name=' . it_exchange_get_cart_description();
+	$L_BUTTONVARS[] = 'return=' . add_query_arg( array( 'it-exchange-transaction-method' => 'paypal-standard-secure', 'paypal-standard-secure-nonce' => $nonce ), it_exchange_get_page_url( 'transaction' ) );
+	$L_BUTTONVARS[] = 'currency_code=' . $general_settings['default-currency'];
+	$L_BUTTONVARS[] = 'notify_url=' . get_home_url() . '/?' . it_exchange_get_webhook( 'paypal-standard-secure' ) . '=1';
+	$L_BUTTONVARS[] = 'no_note=1';
+	$L_BUTTONVARS[] = 'shipping=0';
+	$L_BUTTONVARS[] = 'email=' . $it_exchange_customer->data->user_email;
+	$L_BUTTONVARS[] = 'rm=2'; //Return  Method - https://developer.paypal.com/webapps/developer/docs/classic/button-manager/integration-guide/ButtonManagerHTMLVariables/
+	$L_BUTTONVARS[] = 'cancel_return=' . ( it_exchange_is_multi_item_cart_allowed() ? it_exchange_get_page_url( 'cart' ) : get_home_url() );
+	$L_BUTTONVARS[] = 'custom=' . $temp_id;
+
+	$purchase_requirements = it_exchange_get_purchase_requirements();
+	// If we have the shipping info, we may as well include it in the fields sent to PayPal
+	if ( !empty( $purchase_requirements['shipping-address'] ) ) {
+		$shipping_address = it_exchange_get_cart_shipping_address();
+		$L_BUTTONVARS[] = 'address_override=1';
+		$L_BUTTONVARS[] = 'no_shipping=2';
+		$L_BUTTONVARS[] = 'first_name=' . ( !empty( $shipping_address['first-name'] ) ? $shipping_address['first-name'] : '' );
+		$L_BUTTONVARS[] = 'last_name='  . ( !empty( $shipping_address['last-name'] )  ? $shipping_address['last-name']  : '' );
+		$L_BUTTONVARS[] = 'address1='   . ( !empty( $shipping_address['address1'] )   ? $shipping_address['address1']   : '' );
+		$L_BUTTONVARS[] = 'address2='   . ( !empty( $shipping_address['address2'] )   ? $shipping_address['address2']   : '' );
+		$L_BUTTONVARS[] = 'city='       . ( !empty( $shipping_address['city'] )       ? $shipping_address['city']       : '' );
+		$L_BUTTONVARS[] = 'state='      . ( !empty( $shipping_address['state'] )      ? $shipping_address['state']      : '' );
+		$L_BUTTONVARS[] = 'zip='        . ( !empty( $shipping_address['zip'] )        ? $shipping_address['zip']        : '' );
+		$L_BUTTONVARS[] = 'country='    . ( !empty( $shipping_address['country'] )    ? $shipping_address['country']    : '' );
+	} else {
+		$L_BUTTONVARS[] = 'no_shipping=1';
+	}
+
+	$L_BUTTONVARS = apply_filters( 'it_exchange_paypal_standard_secure_button_vars', $L_BUTTONVARS );
+
+	$count = 0;
+	foreach( $L_BUTTONVARS as $L_BUTTONVAR ) {
+
+		$button_request['L_BUTTONVAR' . $count] = $L_BUTTONVAR;
+		$count++;
+
+	}
+
+	$button_request = apply_filters( 'it_exchange_paypal_standard_secure_button_request', $button_request );
+
+	$response = wp_remote_post( $paypal_api_url, array( 'body' => $button_request, 'httpversion' => '1.1' ) );
+
+	if ( !is_wp_error( $response ) ) {
+
+		parse_str( wp_remote_retrieve_body( $response ), $response_array );
+
+		if ( !empty( $response_array['ACK'] ) && 'Success' === $response_array['ACK'] ) {
+
+			if ( !empty( $response_array['WEBSITECODE'] ) ) {
+				$payment_form = str_replace( array(
+					"\r\n",
+					"\r",
+					"\n"
+				), '', stripslashes( $response_array['WEBSITECODE'] ) );
+			}
+			//Strip out the newline characters because parse_str/PayPal adds a \n to the encrypted code, whic breaks the digital ID
+		}
+	}
+
+	if ( preg_match( '/-----BEGIN PKCS7-----.*-----END PKCS7-----/i', $payment_form, $matches ) ) {
+		$query = array(
+			'cmd'       => '_s-xclick',
+			'encrypted' => $matches[0],
+		);
+		$paypal_payment_url = $paypal_payment_url . '?' .  http_build_query( $query );
+
+		return $paypal_payment_url;
 	}
 
 	return false;
@@ -950,7 +951,7 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 	}
 
 	$paypal_api_url = ! empty( $_REQUEST['test_ipn'] ) ? PAYPAL_PAYMENT_SANDBOX_URL : PAYPAL_PAYMENT_LIVE_URL;
-	$response       = wp_remote_post( $paypal_api_url, array( 'body' => $payload ) );
+	$response       = wp_remote_post( $paypal_api_url, array( 'body' => $payload, 'httpversion' => '1.1' ) );
 	$body           = wp_remote_retrieve_body( $response );
 
 	if ( 'VERIFIED' !== $body ) {
