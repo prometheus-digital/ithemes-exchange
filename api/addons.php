@@ -16,7 +16,7 @@
  * - other               Everything else
  *
  * @since 0.2.0
- * @since 1.35.0 Add support for not auto-enabling 3rd party add-ons
+ * @since 1.34.1 Add support for not auto-enabling 3rd party add-ons
  *
  * @param string $slug         string for identifying the add-on in code
  * @param array $params        key / value pairs.
