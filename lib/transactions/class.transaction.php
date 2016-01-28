@@ -174,6 +174,76 @@ class IT_Exchange_Transaction {
 	}
 
 	/**
+	 * Add metadata.
+	 *
+	 * @since 1.35
+	 *
+	 * @param string $key
+	 * @param string $value
+	 * @param bool   $unique
+	 *
+	 * @return false|int
+	 */
+	public function add_meta( $key, $value, $unique = false ) {
+		return add_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $value, $unique );
+	}
+
+	/**
+	 * Get meta.
+	 *
+	 * @since 1.35
+	 *
+	 * @param string $key
+	 * @param bool   $single
+	 *
+	 * @return mixed
+	 */
+	public function get_meta( $key, $single = true ) {
+		return get_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $single );
+	}
+
+	/**
+	 * Update meta data.
+	 *
+	 * @since 1.35
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 *
+	 * @return int|bool Meta ID on new, true on update, false on fail.
+	 */
+	public function update_meta($key, $value) {
+		update_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $value );
+	}
+
+	/**
+	 * Delete meta.
+	 *
+	 * @since 1.35
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 *
+	 * @return bool
+	 */
+	public function delete_meta( $key, $value = '' ) {
+		return delete_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $value );
+	}
+
+	/**
+	 * Check if meta exists.
+	 *
+	 * @since 1.35
+	 *
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	public function meta_exists( $key ) {
+		return metadata_exists( 'post', $this->ID, '_it_exchange_transaction_' . $key );
+	}
+
+	/**
 	 * Gets a transaction meta property.
 	 *
 	 * If the custom value is already set, it uses that.
@@ -182,7 +252,7 @@ class IT_Exchange_Transaction {
 	 * @since 1.3.0
 	*/
 	function get_transaction_meta( $key, $single = true ) {
-		return get_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $single );
+		return $this->get_meta( $key, $single );
 	}
 
 	/**
@@ -194,7 +264,7 @@ class IT_Exchange_Transaction {
 	 * @since 1.3.0
 	*/
 	function update_transaction_meta( $key, $value ) {
-		update_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $value );
+		$this->update_meta( $key, $value );
 	}
 
 	/**
@@ -206,7 +276,7 @@ class IT_Exchange_Transaction {
 	 * @since 1.3.0
 	*/
 	function delete_transaction_meta( $key, $value = '' ) {
-		delete_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $value );
+		$this->delete_meta( $key, $value );
 	}
 
 	/**
