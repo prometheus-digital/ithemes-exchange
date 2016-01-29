@@ -26,6 +26,7 @@ require( $this->_plugin_path . 'lib/products/class.products-post-type.php' );
 
 // Product Object
 require( $this->_plugin_path . 'lib/products/class.product.php' );
+require_once( $this->_plugin_path  . 'lib/products/class.factory.php' );
 
 // Product Features
 require( $this->_plugin_path . 'lib/product-features/load.php' );

@@ -94,6 +94,22 @@ class IT_Exchange_API_Addons_Test extends IT_Exchange_UnitTestCase {
 		$this->_unregister( 'test-addon' );
 	}
 
+	public function test_register_product_type_addon_with_class() {
+
+		$error = it_exchange_register_addon( 'test-product-type', array(
+			'name'    => 'Test Product Type',
+			'file'    => __FILE__,
+			'options' => array(
+				'class'    => 'Basic_Object',
+				'category' => 'product-type'
+			)
+		) );
+
+		$this->assertWPError( $error );
+
+		$this->_unregister( 'test-addon' );
+	}
+
 	public function test_register_addon_category() {
 
 		it_exchange_register_addon_category( 'my-test-category', 'My Test Category', 'This is my test category' );
