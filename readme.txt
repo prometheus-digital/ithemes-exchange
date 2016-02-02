@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.5
-Stable tag: 1.34.1
+Stable tag: 1.34.2
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,9 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.34.2 =
+* Fix: Fatal error on coupons list table for coupons spanning more than one year.
 
 = 1.34.1 =
 * Add: Support for non auto-enabling add-ons

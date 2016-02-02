@@ -646,6 +646,9 @@ function it_exchange_basic_coupons_custom_column_info( $column ) {
 				} else if ( $same_year ) {
 					$start = $start->format( 'M d' );
 					$end = $end->format( 'M d, Y' );
+				} else {
+					$start = $start->format( 'M d, Y' );
+					$end   = $end->format( 'M d, Y' );
 				}
 
 				echo esc_attr( $start . ' – ' . $end );
