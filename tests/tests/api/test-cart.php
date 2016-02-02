@@ -385,6 +385,25 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( 5, $data['count'] );
 	}
 
+	public function test_add_product_to_shopping_cart_quantity_capped_to_purchase_quantity_when_inventory_disabled() {
+
+		$product = $this->getMockBuilder( 'IT_Exchange_Product' )->disableOriginalConstructor()->getMock();
+		$product->method( 'supports_feature' )->willReturnMap( array(
+			array( 'purchase-quantity', array(), true ),
+			array( 'inventory', array(), false )
+		) );
+		$product->method( 'get_feature' )->willReturnMap( array(
+			array( 'purchase-quantity', array(), 3 ),
+			array( 'inventory', array(), 0 )
+		) );
+		$product->ID = 1;
+
+		$cart_product_id = it_exchange_add_product_to_shopping_cart( $product, 5, true );
+
+		$data = it_exchange_get_cart_product( $cart_product_id );
+		$this->assertEquals( 3, $data['count'] );
+	}
+
 	public function test_update_cart_product_quantity_add_to_existing() {
 
 		$ID = it_exchange_add_product( array(
