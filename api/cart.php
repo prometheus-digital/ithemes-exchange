@@ -320,6 +320,10 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity = 1, $
 			$count = 1;
 		}
 
+		if ( $count < 1 ) {
+			$count = 1;
+		}
+
 		$product = array(
 			'product_cart_id' => $product_id . '-' . $itemized_hash,
 			'product_id'      => $product_id,
@@ -421,7 +425,7 @@ function it_exchange_get_max_product_quantity_allowed( $product ) {
 		$max_purchase_quantity = $inventory;
 	}
 
-	if ( $max_purchase_quantity > $inventory ) {
+	if ( $inventory && $max_purchase_quantity > $inventory ) {
 		return $inventory;
 	} else {
 		return $max_purchase_quantity;
