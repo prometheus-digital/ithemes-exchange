@@ -329,6 +329,10 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 					$state = 'product';
 				}
 
+				if ( ! $multi_item_cart_allowed && $state == 'cart' ) {
+					$state = it_exchange_get_next_purchase_requirement_property( 'sw-template-part' );
+				}
+
 			} else if ( $multi_item_cart_allowed ) {
 				$state = 'cart';
 			} else if ( ! $multi_item_cart_allowed ) {
