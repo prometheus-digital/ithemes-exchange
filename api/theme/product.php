@@ -329,9 +329,6 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( 'html' == $options['format'] )
 			$result .= $options['before'];
 
-		$extended_desc = wpautop( $extended_desc );
-		$extended_desc = shortcode_unautop( $extended_desc );
-		$extended_desc = do_shortcode( $extended_desc );
 		$result .= $extended_desc;
 
 		if ( 'html' == $options['format'] )
