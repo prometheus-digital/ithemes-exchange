@@ -292,7 +292,7 @@ class IT_Exchange_Product {
 				} else if ( 'editor' == $option ) {
 					$exchange_product_feature = 'extended-description';
 				} else if ( 'author' == $option ) {
-					$exchange_product_feature = 'author';
+					$exchange_product_feature = 'wp-author';
 				} else if ( 'thumbnail' == $option ) {
 					$exchange_product_feature = 'featured-image';
 				} else if ( 'excerpt' == $option ) {
