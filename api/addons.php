@@ -17,6 +17,7 @@
  *
  * @since 0.2.0
  * @since 1.34.1 Add support for not auto-enabling 3rd party add-ons
+ * @since 1.35   Add support for per product type classes.
  *
  * @param string $slug         string for identifying the add-on in code
  * @param array $params        key / value pairs.
@@ -48,7 +49,7 @@ function it_exchange_register_addon( $slug, $params ) {
 	if ( ! $file )
 		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Exchange Add-ons require a file parameter.', 'it-l10n-ithemes-exchange' ) );
 
-	$allowed_keys = array( 'category', 'tag', 'supports', 'labels', 'settings-callback', 'icon', 'wizard-icon', 'auto-enable' );
+	$allowed_keys = array( 'category', 'tag', 'supports', 'labels', 'settings-callback', 'icon', 'wizard-icon', 'auto-enable', 'class' );
 
 	foreach ( $params as $key => $value )
 		if ( in_array( $key, $allowed_keys ) ) {
@@ -65,6 +66,16 @@ function it_exchange_register_addon( $slug, $params ) {
 
 	if ( ! isset( $options['auto-enable'] ) ) {
 		$options['auto-enable'] = true;
+	}
+
+	if ( ! empty( $options['class'] ) ) {
+
+		if ( $options['category'] == 'product-type' ) {
+			if ( ! is_subclass_of( $options['class'], 'IT_Exchange_Product' ) ) {
+				return new WP_Error( 'invalid_class', __('$class must subclass IT_Exchange_Product', 'it-l10n-ithemes-exchange' ) );
+			}
+		}
+
 	}
 
 	// Add the add-on to our Global

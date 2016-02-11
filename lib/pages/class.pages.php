@@ -483,7 +483,8 @@ class IT_Exchange_Pages {
 	 * @since 0.4.0
 	 *
 	 * @param string $content exising default content
-	 * @param string content generated from template part
+	 *
+	 * @return string Content generated from template part
 	*/
 	function fallback_filter_for_page_template( $content ) {
 		$global_post = empty( $GLOBALS['post']->ID ) ? 0 : $GLOBALS['post']->ID;

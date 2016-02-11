@@ -101,6 +101,7 @@ function it_exchange_basic_coupons_save_coupon() {
 	$data['post_meta']['_it-basic-amount-type']        = $data['amount-type'];
 	$data['post_meta']['_it-basic-start-date']         = ! empty( $data['start-date'] ) ? date( 'Y-m-d H:i:s', strtotime( $data['start-date'] ) ) : '';
 	$data['post_meta']['_it-basic-end-date']           = ! empty( $data['end-date'] ) ? date( 'Y-m-d H:i:s', strtotime( $data['end-date'] ) ) : '';
+	$data['post_meta']['_it-basic-apply-discount']     = $data['apply-discount'];
 	$data['post_meta']['_it-basic-limit-quantity']     = $data['limit-quantity'];
 	$data['post_meta']['_it-basic-allotted-quantity']  = $data['quantity'];
 	$data['post_meta']['_it-basic-limit-product']      = $data['limit-product'];
@@ -284,6 +285,7 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 		$values['amount-type']       = $coupon->get_amount_type();
 		$values['start-date']        = $coupon->get_start_date() ? $coupon->get_start_date()->format( 'm/d/Y' ) : '';
 		$values['end-date']          = $coupon->get_end_date() ? $coupon->get_end_date()->format( 'm/d/Y' ) : '';
+		$values['apply-discount']    = $coupon->get_application_method();
 		$values['limit-quantity']    = $coupon->is_quantity_limited();
 		$values['quantity']          = $coupon->get_allotted_quantity();
 		$values['limit-product']     = $coupon->is_product_limited();
@@ -376,6 +378,11 @@ function it_exchange_basic_coupons_print_add_edit_coupon_screen() {
 										<label for="end-date"><?php _e( 'End Date', 'it-l10n-ithemes-exchange' ); ?></label>
 										<?php $form->add_text_box( 'end-date', array( 'class' => 'datepicker', 'data-append' => 'start-date' ) ); ?>
 									</div>
+								</div>
+
+								<div class="field discount-method">
+									<label for="discount-method"><?php _e( 'Apply Discount', 'it-l10n-ithemes-exchange' ); ?></label>
+									<?php $form->add_drop_down( 'apply-discount', array( 'cart' => __( 'Entire Cart', 'it-l10n-ithemes-exchange' ), 'product' => __( 'Per-product', 'it-l10n-ithemes-exchange' ) ) ); ?>
 								</div>
 
 								<?php do_action( 'it_exchange_basic_coupons_coupon_edit_tab_general', $form ); ?>

@@ -93,7 +93,8 @@ function it_exchange_get_product( $post ) {
 		$product = $post;
 	} else {
 		try {
-			$product = new IT_Exchange_Product( $post );
+			$factory = new IT_Exchange_Product_Factory();
+			$product = $factory->make( $post );
 		}
 		catch ( Exception $e ) {
 			return false;

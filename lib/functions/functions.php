@@ -1327,6 +1327,10 @@ function it_exchange_add_product( $args=array() ) {
 		$post_args['meta_input'] = $args['post_meta'];
 	}
 
+	if ( ! empty( $args['tax_input'] ) ) {
+		$post_args['tax_input'] = $args['tax_input'];
+	}
+
 	// Insert Post and get ID
 	if ( $product_id = wp_insert_post( $post_args ) ) {
 		update_post_meta( $product_id, '_it_exchange_product_type', $args['type'] );
@@ -1346,6 +1350,7 @@ function it_exchange_add_product( $args=array() ) {
 		unset( $args['extended-description'] );
 		unset( $args['type'] );
 		unset( $args['post_meta'] );
+		unset( $args['tax_input'] );
 
 		foreach( $args as $key => $value ) {
 			if ( it_exchange_product_type_supports_feature( $type, $key ) )

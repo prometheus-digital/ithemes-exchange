@@ -36,10 +36,11 @@ class IT_Exchange_API_Coupons_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_get_coupon_from_code() {
 
-		WP_Mock::onFilter( 'it_exchange_get_my-test_coupon_from_code' )
-		       ->with( null, 'MYCODE' );
+		add_filter( 'it_exchange_get_my-test_coupon_from_code', function ( $val, $code ) {
+			return $code;
+		}, 10, 2 );
 
-		it_exchange_get_coupon_from_code( 'MYCODE', 'my-test' );
+		$this->assertEquals( 'MYCODE', it_exchange_get_coupon_from_code( 'MYCODE', 'my-test' ) );
 	}
 
 	public function test_get_coupons() {

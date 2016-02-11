@@ -205,63 +205,10 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 		return false;
 	}
 
-	// Abort if coupon limit has been reached
-	if ( $coupon->is_quantity_limited() && ! $coupon->get_remaining_quantity() ) {
-		it_exchange_add_message( 'error', __( 'This coupon has reached its maximum uses.', 'it-l10n-ithemes-exchange' ) );
-		return false;
-	}
-
-	if ( $coupon->is_customer_limited() && it_exchange_get_current_customer_id() != $coupon->get_customer()->id ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
-		return false;
-	}
-
-	$has_product = false;
-
-	foreach ( it_exchange_get_cart_products() as $product ) {
-
-		if ( it_exchange_basic_coupons_valid_product_for_coupon( $product, $coupon ) ) {
-			$has_product = true;
-
-			break;
-		}
-	}
-
-	if ( ! $has_product ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon for current cart products.', 'it-l10n-ithemes-exchange' ) );
-
-		return false;
-	}
-
-	$now = new DateTime();
-
-	// Abort if not within start and end dates
-	$start_okay = ! $coupon->get_start_date() || $coupon->get_start_date() < $now;
-	$end_okay   = ! $coupon->get_end_date() || $now < $coupon->get_end_date();
-
-	if ( ! $start_okay ) {
-
-		$message = sprintf(
-			__( 'This coupon is not valid until %s.', 'it-l10n-ithemes-exchange' ),
-			$coupon->get_start_date()->format( get_option( 'date_format' ) )
-		);
-
-		it_exchange_add_message( 'error', $message );
-
-		return false;
-	}
-
-	if ( ! $end_okay ) {
-		it_exchange_add_message( 'error', __( 'This coupon has expired.', 'it-l10n-ithemes-exchange' ) );
-
-		return false;
-	}
-
-	// Get previous uses. Returns array of timestamps
-	if ( it_exchange_basic_coupon_frequency_limit_met_by_customer( $coupon ) ) {
-
-		// todo, refactor error handling to coupon class and provide better error message
-		it_exchange_add_message( 'error', __( "This coupon's frequency limit has been met.", 'it-l10n-ithemes-exchange' ) );
+	try {
+		$coupon->validate();
+	} catch ( Exception $e ) {
+		it_exchange_add_message( 'error', $e->getMessage() );
 
 		return false;
 	}
@@ -490,20 +437,34 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount = fals
 
 	$coupons = it_exchange_get_applied_coupons( 'cart' );
 
+	$has_valid = false;
+
 	foreach( (array) $coupons as $coupon ) {
 
 		if ( empty( $coupon ) || ! $coupon instanceof IT_Exchange_Cart_Coupon ) {
 			continue;
 		}
 
+		$method = $coupon->get_application_method();
+		$type   = $coupon->get_amount_type();
+
 		$cart_products = it_exchange_get_cart_products();
 
 		foreach( $cart_products as $cart_product ) {
 
-			if ( it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $coupon ) ) {
+			if ( it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $coupon ) || $method === IT_Exchange_Cart_Coupon::APPLY_CART ) {
+
+				$has_valid = true;
+
+				if ( $method === IT_Exchange_Cart_Coupon::APPLY_CART && $type === IT_Exchange_Cart_Coupon::TYPE_FLAT ) {
+					$discount += $coupon->get_amount_number();
+
+					break;
+				}
+
 				$base_price = it_exchange_get_cart_product_base_price( $cart_product, false );
 
-				if ( $coupon->get_amount_type() == IT_Exchange_Cart_Coupon::TYPE_PERCENT ) {
+				if ( $type === IT_Exchange_Cart_Coupon::TYPE_PERCENT ) {
 					$product_discount = ( $coupon->get_amount_number() / 100 ) * $base_price;
 				} else {
 					$product_discount = $coupon->get_amount_number();
@@ -516,6 +477,10 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount = fals
 	}
 
 	$discount = round( $discount, 2 );
+
+	if ( ! $has_valid ) {
+		$discount = 0.00;
+	}
 
 	if ( $options['format_price'] ) {
 		$discount = it_exchange_format_price( $discount );
@@ -530,7 +495,7 @@ add_filter( 'it_exchange_get_total_discount_for_cart', 'it_exchange_basic_coupon
  *
  * @since 1.10.6
  *
- * @param $cart_product object
+ * @param $cart_product array
  * @param $coupon       IT_Exchange_Cart_Coupon
  *
  * @return bool
@@ -561,7 +526,7 @@ function it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $cou
 					break;
 				}
 			}
-		} else {
+		} elseif ( ! $coupon->get_product_categories() ) {
 			$valid = true;
 		}
 
@@ -671,7 +636,7 @@ function it_exchange_basic_coupons_bump_for_customer_on_checkout( $transaction_i
 */
 function it_exchange_basic_coupons_get_discount_label( $label, $options = array() ) {
 
-	$coupon = empty( $options['coupon']->ID ) ? false : $options['coupon'];
+	$coupon = empty( $options['coupon'] ) ? false : $options['coupon'];
 
 	if ( ! $coupon || ! $coupon instanceof IT_Exchange_Cart_Coupon ) {
 		return '';

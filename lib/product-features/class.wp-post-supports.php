@@ -177,7 +177,8 @@ class IT_Exchange_WP_Post_Supports {
 	 *
 	 * @since 0.3.8
 	 * @param mixed $description the values passed in by the WP Filter API. Ignored here.
-	 * @param integer product_id the WordPress post ID
+	 * @param integer $product_id the WordPress post ID
+	 *
 	 * @return string post_content (product descritpion)
 	*/
 	function get_extended_description( $description, $product_id ) {
@@ -248,7 +249,7 @@ class IT_Exchange_WP_Post_Supports {
 	function get_wp_author( $wp_author, $product_id ) {
 		$product = it_exchange_get_product( $product_id );
 		if ( empty( $product->post_author ) )
-			return;
+			return '';
 
 		if ( $author = get_the_author_meta( 'display_name', $product->post_author ) )
 			return $author;

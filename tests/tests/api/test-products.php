@@ -62,6 +62,26 @@ class IT_Exchange_API_Products_Test extends IT_Exchange_UnitTestCase {
 		$this->assertFalse( it_exchange_get_product( 1 ) );
 	}
 
+	public function test_get_product_uses_custom_class() {
+
+		it_exchange_register_addon( 'test-product-type', array(
+			'name'    => 'Test Product Type',
+			'file'    => __FILE__,
+			'options' => array(
+				'class'    => 'IT_Exchange_Mock_Product_Type',
+				'category' => 'product-type'
+			)
+		) );
+
+		$ID = $this->product_factory->create(
+			array(
+				'type' => 'test-product-type'
+			)
+		);
+
+		$this->assertInstanceOf( 'IT_Exchange_Mock_Product_Type', it_exchange_get_product( $ID ) );
+	}
+
 	public function test_get_products() {
 
 		$ID = it_exchange_add_product( array(

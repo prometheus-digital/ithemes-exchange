@@ -228,7 +228,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 					$transaction_status = $response_array['PAYMENTSTATUS'];
 
 					if ( $transaction_id != $response_array['TRANSACTIONID'] )
-						throw new Exception( __( 'Error: Transaction IDs do not match! %s, %s', 'it-l10n-ithemes-exchange' ) );
+						throw new Exception( sprintf( __( 'Error: Transaction IDs do not match! %s, %s', 'it-l10n-ithemes-exchange' ), $transaction_id, $response_array['TRANSACTIONID'] ) );
 
 					if ( number_format( $response_array['AMT'], '2', '', '' ) != number_format( $transaction_object->total, '2', '', '' ) ) {
 						throw new Exception( sprintf( __( 'Error: Amount charged is not the same as the cart total! %s | %s', 'it-l10n-ithemes-exchange' ), $response_array['AMT'], $transaction_object->total ) );
