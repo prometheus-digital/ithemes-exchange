@@ -78,8 +78,13 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	public function decrement_usage( $transaction_object ) {
 		parent::decrement_usage( $transaction_object );
 
-		$this->modify_quantity_available( + 1 );
-		$this->reduce_customer_coupon_frequency( $transaction_object );
+		if ( $this->is_quantity_limited() ) {
+			$this->modify_quantity_available( + 1 );
+		}
+
+		if ( $this->is_frequency_limited() ) {
+			$this->reduce_customer_coupon_frequency( $transaction_object );
+		}
 	}
 
 	/**
