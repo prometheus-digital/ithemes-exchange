@@ -14,6 +14,9 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	const TYPE_PERCENT = '%';
 	const TYPE_FLAT = 'amount';
 
+	const APPLY_CART = 'cart';
+	const APPLY_PRODUCT = 'per-product';
+
 	/**
 	 * @var IT_Exchange_Product[]
 	 */
@@ -264,6 +267,24 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 		catch ( Exception $e ) {
 			return null;
 		}
+	}
+
+	/**
+	 * Get the application method.
+	 *
+	 * @since 1.35
+	 *
+	 * @return string
+	 */
+	public function get_application_method() {
+
+		$method = get_post_meta( $this->get_ID(), '_it-basic-apply-discount', true );
+
+		if ( empty( $method ) ) {
+			$method = self::APPLY_CART;
+		}
+
+		return $method;
 	}
 
 	/**
