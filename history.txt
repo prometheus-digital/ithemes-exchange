@@ -1244,3 +1244,10 @@
 	Fix: Fatal error on coupons list table for coupons spanning more than one year
 1.34.3 - Elise Alley, Timothy B. Jacobs
 	Fix: Ensure purchase quantity is always at least one
+1.35.0 - Elise Alley, Timothy B. Jacobs
+	Add: IT_Exchange_Product_Factory to allow for custom classes per-product type
+	Add: Support for per-cart and per-product coupon discount types
+	Fix: Allow for wp-author product feature
+	Fix: Ensure upgrade routine progress bar is set to 100% when upgrade completes
+	Fix: Don't get stuck in the cart state if multi-item cart is disabled in the SW shortcode
+	Fix: Don't duplicate the_content functions on the extended-description

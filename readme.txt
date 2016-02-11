@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.5
-Stable tag: 1.34.3
+Stable tag: 1.35.0
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,14 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.35.0 =
+* Add: IT_Exchange_Product_Factory to allow for custom classes per-product type
+* Add: Support for per-cart and per-product coupon discount types
+* Fix: Allow for wp-author product feature
+* Fix: Ensure upgrade routine progress bar is set to 100% when upgrade completes
+* Fix: Don't get stuck in the cart state if multi-item cart is disabled in the SW shortcode
+* Fix: Don't duplicate the_content functions on the extended-description
 
 = 1.34.3 =
 * Fix: Ensure purchase quantity is always at least one
