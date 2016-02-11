@@ -498,19 +498,26 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount = fals
 			continue;
 		}
 
+		$method = $coupon->get_application_method();
+		$type   = $coupon->get_amount_type();
+
 		$cart_products = it_exchange_get_cart_products();
 
 		foreach( $cart_products as $cart_product ) {
 
-			if ( it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $coupon ) || $coupon->get_application_method() === IT_Exchange_Cart_Coupon::APPLY_CART ) {
+			if ( it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $coupon ) || $method === IT_Exchange_Cart_Coupon::APPLY_CART ) {
 
-				if ( it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $coupon ) ) {
-					$has_valid = true;
+				$has_valid = true;
+
+				if ( $method === IT_Exchange_Cart_Coupon::APPLY_CART && $type === IT_Exchange_Cart_Coupon::TYPE_FLAT ) {
+					$discount += $coupon->get_amount_number();
+
+					break;
 				}
 
 				$base_price = it_exchange_get_cart_product_base_price( $cart_product, false );
 
-				if ( $coupon->get_amount_type() == IT_Exchange_Cart_Coupon::TYPE_PERCENT ) {
+				if ( $type === IT_Exchange_Cart_Coupon::TYPE_PERCENT ) {
 					$product_discount = ( $coupon->get_amount_number() / 100 ) * $base_price;
 				} else {
 					$product_discount = $coupon->get_amount_number();
