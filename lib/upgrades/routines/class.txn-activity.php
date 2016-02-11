@@ -210,7 +210,7 @@ class IT_Exchange_Upgrade_Routine_Txn_Activity implements IT_Exchange_UpgradeInt
 	 * @return int
 	 */
 	public function get_suggested_rate() {
-		return 1;
+		return 5;
 	}
 
 	/**
