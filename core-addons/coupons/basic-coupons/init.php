@@ -205,63 +205,10 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 		return false;
 	}
 
-	// Abort if coupon limit has been reached
-	if ( $coupon->is_quantity_limited() && ! $coupon->get_remaining_quantity() ) {
-		it_exchange_add_message( 'error', __( 'This coupon has reached its maximum uses.', 'it-l10n-ithemes-exchange' ) );
-		return false;
-	}
-
-	if ( $coupon->is_customer_limited() && it_exchange_get_current_customer_id() != $coupon->get_customer()->id ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
-		return false;
-	}
-
-	$has_product = false;
-
-	foreach ( it_exchange_get_cart_products() as $product ) {
-
-		if ( it_exchange_basic_coupons_valid_product_for_coupon( $product, $coupon ) ) {
-			$has_product = true;
-
-			break;
-		}
-	}
-
-	if ( ! $has_product ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon for current cart products.', 'it-l10n-ithemes-exchange' ) );
-
-		return false;
-	}
-
-	$now = new DateTime();
-
-	// Abort if not within start and end dates
-	$start_okay = ! $coupon->get_start_date() || $coupon->get_start_date() < $now;
-	$end_okay   = ! $coupon->get_end_date() || $now < $coupon->get_end_date();
-
-	if ( ! $start_okay ) {
-
-		$message = sprintf(
-			__( 'This coupon is not valid until %s.', 'it-l10n-ithemes-exchange' ),
-			$coupon->get_start_date()->format( get_option( 'date_format' ) )
-		);
-
-		it_exchange_add_message( 'error', $message );
-
-		return false;
-	}
-
-	if ( ! $end_okay ) {
-		it_exchange_add_message( 'error', __( 'This coupon has expired.', 'it-l10n-ithemes-exchange' ) );
-
-		return false;
-	}
-
-	// Get previous uses. Returns array of timestamps
-	if ( it_exchange_basic_coupon_frequency_limit_met_by_customer( $coupon ) ) {
-
-		// todo, refactor error handling to coupon class and provide better error message
-		it_exchange_add_message( 'error', __( "This coupon's frequency limit has been met.", 'it-l10n-ithemes-exchange' ) );
+	try {
+		$coupon->validate();
+	} catch ( Exception $e ) {
+		it_exchange_add_message( 'error', $e->getMessage() );
 
 		return false;
 	}

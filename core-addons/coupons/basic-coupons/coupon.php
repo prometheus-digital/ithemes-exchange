@@ -17,6 +17,13 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	const APPLY_CART = 'cart';
 	const APPLY_PRODUCT = 'per-product';
 
+	const E_NO_QUANTITY = 100;
+	const E_INVALID_CUSTOMER = 101;
+	const E_INVALID_PRODUCTS = 102;
+	const E_INVALID_START = 103;
+	const E_INVALID_END = 104;
+	const E_FREQUENCY = 105;
+
 	/**
 	 * @var IT_Exchange_Product[]
 	 */
@@ -166,6 +173,63 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 		$data['end_date']      = $this->get_end_date() ? $this->get_end_date()->format( 'Y-m-d H:i:s' ) : '';
 
 		return $data;
+	}
+
+	/**
+	 * Validate the coupon.
+	 *
+	 * @since 1.35
+	 *
+	 * @throws Exception
+	 */
+	public function validate() {
+
+		if ( $this->is_quantity_limited() && ! $this->get_remaining_quantity() ) {
+			throw new Exception( __( 'This coupon has reached its maximum uses.', 'it-l10n-ithemes-exchange' ), self::E_NO_QUANTITY );
+		}
+
+		if ( $this->is_customer_limited() && it_exchange_get_current_customer_id() != $this->get_customer()->ID ) {
+			throw new Exception( __( 'Invalid coupon.', 'it-l10n-ithemes-exchange' ), self::E_INVALID_CUSTOMER );
+		}
+
+		$has_product = false;
+
+		foreach ( it_exchange_get_cart_products() as $product ) {
+
+			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product, $this ) ) {
+				$has_product = true;
+
+				break;
+			}
+		}
+
+		if ( ! $has_product ) {
+			throw new Exception( __( 'Invalid coupon for current cart products.', 'it-l10n-ithemes-exchange' ), self::E_INVALID_PRODUCTS );
+		}
+
+		$now = new DateTime();
+
+		// Abort if not within start and end dates
+		$start_okay = ! $this->get_start_date() || $this->get_start_date() < $now;
+		$end_okay   = ! $this->get_end_date() || $now < $this->get_end_date();
+
+		if ( ! $start_okay ) {
+
+			$message = sprintf(
+				__( 'This coupon is not valid until %s.', 'it-l10n-ithemes-exchange' ),
+				$this->get_start_date()->format( get_option( 'date_format' ) )
+			);
+
+			throw new Exception( $message, self::E_INVALID_START );
+		}
+
+		if ( ! $end_okay ) {
+			throw new Exception( __( 'This coupon has expired.', 'it-l10n-ithemes-exchange' ), self::E_INVALID_END );
+		}
+
+		if ( it_exchange_basic_coupon_frequency_limit_met_by_customer( $this ) ) {
+			throw new Exception( __( "This coupon's frequency limit has been met.", 'it-l10n-ithemes-exchange' ), self::E_FREQUENCY );
+		}
 	}
 
 	/**
@@ -417,8 +481,8 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 
 		$term_ids = get_post_meta( $this->get_ID(), '_it-basic-product-categories', true );
 
-		if ( ! $term_ids ) {
-			$term_ids = array();
+		if ( ! is_array( $term_ids ) ) {
+			return array();
 		}
 
 		$terms = array();
