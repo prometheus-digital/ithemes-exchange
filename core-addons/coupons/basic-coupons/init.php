@@ -495,7 +495,7 @@ add_filter( 'it_exchange_get_total_discount_for_cart', 'it_exchange_basic_coupon
  *
  * @since 1.10.6
  *
- * @param $cart_product object
+ * @param $cart_product array
  * @param $coupon       IT_Exchange_Cart_Coupon
  *
  * @return bool
@@ -526,7 +526,7 @@ function it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $cou
 					break;
 				}
 			}
-		} else {
+		} elseif ( ! $coupon->get_product_categories() ) {
 			$valid = true;
 		}
 
@@ -636,7 +636,7 @@ function it_exchange_basic_coupons_bump_for_customer_on_checkout( $transaction_i
 */
 function it_exchange_basic_coupons_get_discount_label( $label, $options = array() ) {
 
-	$coupon = empty( $options['coupon']->ID ) ? false : $options['coupon'];
+	$coupon = empty( $options['coupon'] ) ? false : $options['coupon'];
 
 	if ( ! $coupon || ! $coupon instanceof IT_Exchange_Cart_Coupon ) {
 		return '';
