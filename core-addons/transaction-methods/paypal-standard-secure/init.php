@@ -215,13 +215,18 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 						'TRANSACTIONID' => $transaction_id,
 					);
 					
-					$response = wp_remote_post( $paypal_api_url, array( 'body' => $request ) );
+					$response = wp_remote_post( $paypal_api_url, array( 'body' => $request, 'httpversion' => '1.1' ) );
 					
 					if ( is_wp_error( $response ) ) {
 						throw new Exception( $response->get_error_message() );
 					}
 
 					parse_str( wp_remote_retrieve_body( $response ), $response_array );
+
+					if ( ! isset( $response_array['PAYERID'] ) ) {
+						error_log( 'Invalid PayPal response format: ' . print_r( $response_array, true ) );
+						throw new Exception( __( 'Invalid PayPal response. Please try again later.', 'LION' ) );
+					}
 
 					it_exchange_set_paypal_standard_secure_addon_customer_id( $it_exchange_customer->id, $response_array['PAYERID'] );
 					it_exchange_set_paypal_standard_secure_addon_customer_email( $it_exchange_customer->id, $response_array['EMAIL'] );

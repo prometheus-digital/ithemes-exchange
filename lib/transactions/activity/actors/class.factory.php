@@ -60,7 +60,7 @@ class IT_Exchange_Txn_Activity_Actor_Factory {
 		if ( is_string( $function ) && class_exists( $function ) ) {
 			$actor = new $function();
 		} else {
-			$actor = $function( $activity_post_id );
+			$actor = call_user_func( $function, $activity_post_id );
 		}
 
 		if ( ! $actor instanceof IT_Exchange_Txn_Activity_Actor ) {
