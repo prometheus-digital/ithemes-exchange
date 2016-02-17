@@ -223,6 +223,11 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 
 					parse_str( wp_remote_retrieve_body( $response ), $response_array );
 
+					if ( ! isset( $response_array['PAYERID'] ) ) {
+						error_log( 'Invalid PayPal response format: ' . print_r( $response_array, true ) );
+						throw new Exception( __( 'Invalid PayPal response. Please try again later.', 'LION' ) );
+					}
+
 					it_exchange_set_paypal_standard_secure_addon_customer_id( $it_exchange_customer->id, $response_array['PAYERID'] );
 					it_exchange_set_paypal_standard_secure_addon_customer_email( $it_exchange_customer->id, $response_array['EMAIL'] );
 					$transaction_status = $response_array['PAYMENTSTATUS'];
