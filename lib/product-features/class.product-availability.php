@@ -117,7 +117,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 	*/
 	function print_metabox( $post ) {
 
-		$date_format = get_option( 'date_format' );
+		$date_format = str_replace( 'F', 'M', get_option( 'date_format' ) );
 		$jquery_date_format = it_exchange_php_date_format_to_jquery_datepicker_format( $date_format );
 
 		// Grab the iThemes Exchange Product object from the WP $post object
