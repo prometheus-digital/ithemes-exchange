@@ -215,7 +215,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 						'TRANSACTIONID' => $transaction_id,
 					);
 					
-					$response = wp_remote_post( $paypal_api_url, array( 'body' => $request ) );
+					$response = wp_remote_post( $paypal_api_url, array( 'body' => $request, 'httpversion' => '1.1' ) );
 					
 					if ( is_wp_error( $response ) ) {
 						throw new Exception( $response->get_error_message() );
