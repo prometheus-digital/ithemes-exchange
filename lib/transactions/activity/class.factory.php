@@ -142,7 +142,7 @@ class IT_Exchange_Txn_Activity_Factory {
 
 		$function = $this->types[ $type ]['fn'];
 
-		$activity = $function( $id, $this->actor_factory->make( $id ) );
+		$activity = call_user_func( $function, $id, $this->actor_factory->make( $id ) );
 
 		if ( ! $activity instanceof IT_Exchange_Txn_Activity ) {
 			throw new UnexpectedValueException( "Activity with ID '{$id}', is not valid." );
