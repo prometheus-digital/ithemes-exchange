@@ -1251,3 +1251,7 @@
 	Fix: Ensure upgrade routine progress bar is set to 100% when upgrade completes
 	Fix: Don't get stuck in the cart state if multi-item cart is disabled in the SW shortcode
 	Fix: Don't duplicate the_content functions on the extended-description
+1.35.1 - Elise Alley, Timothy B. Jacobs
+	Tweak: Use shorter date format in the admin
+	Fix: Error for PHP 5.3
+	Fix: Use HTTP/1.1 for PayPal requests
