@@ -1071,7 +1071,10 @@ class IT_Exchange_Transaction_Post_Type {
 
 			if ( ! empty( $activity ) ) {
 				foreach ( $activity as $item ) {
-					$response['it-exchange-txn-activity']['items'][] = $item->to_array();
+
+					if ( $item ) {
+						$response['it-exchange-txn-activity']['items'][] = $item->to_array();
+					}
 				}
 			}
 		}
