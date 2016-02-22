@@ -1255,3 +1255,9 @@
 	Tweak: Use shorter date format in the admin
 	Fix: Error for PHP 5.3
 	Fix: Use HTTP/1.1 for PayPal requests
+1.35.2 - Elise Alley, Timothy B.Jacobs
+	Fix: Ensure line breaks are preserved
+    Fix: Make it possible for add-ons to register custom upgrades
+    Fix: Possible null error with transaction activity
+    Fix: Runaway upgrades
+    Tweak: Better display for upgrade exceptions
