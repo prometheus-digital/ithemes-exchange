@@ -22,8 +22,3 @@ require_once dirname( __FILE__ ) . '/handlers/class.ajax.php';
 // load routines
 require_once dirname( __FILE__ ) . '/routines/class.coupons.php';
 require_once dirname( __FILE__ ) . '/routines/class.txn-activity.php';
-
-if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-	$ajax_handler = new IT_Exchange_Upgrade_Handler_Ajax( it_exchange_make_upgrader() );
-	$ajax_handler->hooks();
-}

@@ -32,6 +32,32 @@ function it_exchange_make_upgrader() {
 }
 
 /**
+ * Register upgrade handlers.
+ *
+ * @since 1.35.2
+ */
+function it_exchange_register_upgrade_handlers() {
+
+	$upgrader = it_exchange_make_upgrader();
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		$ajax_handler = new IT_Exchange_Upgrade_Handler_Ajax( $upgrader );
+		$ajax_handler->hooks();
+	}
+
+	/**
+	 * Fires when any additional upgrade handlers should be run, such as WP-CLI
+	 *
+	 * @since 1.35.2
+	 *
+	 * @param IT_Exchange_Upgrader $upgrader
+	 */
+	do_action( 'it_exchange_register_upgrade_handlers', $upgrader );
+}
+
+add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_register_upgrade_handlers', 100 );
+
+/**
  * Activates the nag when version is updated if an upgrade is available.
  *
  * @since 1.33
