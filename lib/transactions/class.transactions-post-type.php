@@ -754,6 +754,7 @@ class IT_Exchange_Transaction_Post_Type {
 				<div class="payment-method-name">
 					<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_method_name', $post ); ?>
 					<?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?>
+					<code><?php echo it_exchange_get_transaction_method_id( $post ); ?></code>
 					<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_method_name', $post ); ?>
 				</div>
 			</div>

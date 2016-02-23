@@ -246,6 +246,11 @@
 #it-exchange-transaction-details .payment-method .payment-method-label {
 	font-size: .8em;
 	font-weight: bold;
+	padding-bottom: 6px;
+}
+
+#it-exchange-transaction-details .payment-method .payment-method-name code {
+	font-size: .6em;
 }
 
 #it-exchange-transaction-details .payment-original-total-label,
