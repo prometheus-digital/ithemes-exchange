@@ -42,6 +42,8 @@ class IT_Exchange_Email_Customizer {
 		add_filter( 'customize_loaded_components', array( $this, 'restrict_components' ) );
 		add_filter( 'customize_section_active', array( $this, 'restrict_sections' ), 20, 2 );
 		add_filter( 'template_include', array( $this, 'overload_template' ), 100 );
+		add_action( 'customize_controls_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'init', array( $this, 'dequeue_scripts_and_actions' ) );
 
 		$this->capability = it_exchange_get_admin_menu_capability( 'email-customize' );
 	}
@@ -194,6 +196,74 @@ class IT_Exchange_Email_Customizer {
 		$tpl = it_exchange_get_template_part( 'email', null, false );
 
 		return $tpl;
+	}
+
+	/**
+	 * Enqueue our control script when the email customizer is loaded.
+	 *
+	 * @since 1.36
+	 */
+	public function enqueue_scripts() {
+		if ( self::is_active() ) {
+			wp_enqueue_script( 'it-exchange-email-customizer', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/email-customizer.js' );
+		}
+	}
+
+	/**
+	 * Dequeue scripts and actions when we are in the email customizer.
+	 *
+	 * @since 1.36
+	 */
+	public function dequeue_scripts_and_actions() {
+
+		if ( ! self::is_active() ) {
+			return;
+		}
+
+		global $wp_scripts, $wp_styles;
+
+		$exceptions = array(
+			'jquery',
+			'query-monitor',
+			'customize-preview',
+			'customize-controls',
+			'it-exchange-email-customizer'
+		);
+
+		if ( is_object( $wp_scripts ) && isset( $wp_scripts->queue ) && is_array( $wp_scripts->queue ) ) {
+			foreach ( $wp_scripts->queue as $handle ) {
+				if ( in_array( $handle, $exceptions ) ) {
+					continue;
+				}
+				wp_dequeue_script( $handle );
+			}
+		}
+
+		if ( is_object( $wp_styles ) && isset( $wp_styles->queue ) && is_array( $wp_styles->queue ) ) {
+			foreach ( $wp_styles->queue as $handle ) {
+				if ( in_array( $handle, $exceptions ) ) {
+					continue;
+				}
+				wp_dequeue_style( $handle );
+			}
+		}
+
+		// Now remove actions
+		$action_exceptions = array(
+			'wp_print_footer_scripts',
+			'wp_admin_bar_render',
+		);
+
+		// No core action in header
+		remove_all_actions( 'wp_header' );
+
+		global $wp_filter;
+		foreach ( $wp_filter['wp_footer'] as $priority => $handle ) {
+			if ( in_array( key( $handle ), $action_exceptions ) ) {
+				continue;
+			}
+			unset( $wp_filter['wp_footer'][ $priority ] );
+		}
 	}
 
 	/**
