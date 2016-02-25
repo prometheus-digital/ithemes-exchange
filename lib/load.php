@@ -61,7 +61,7 @@ require( $this->_plugin_path . 'lib/coupons/class.coupon.php' );
 require( $this->_plugin_path . 'lib/coupons/hooks.php' );
 
 // Email Notifications
-require( $this->_plugin_path . 'lib/email-notifications/class.email-notifications.php' );
+require( $this->_plugin_path . 'lib/email-notifications/load.php' );
 
 // Shipping
 require( $this->_plugin_path . 'lib/shipping/class.shipping.php' );
