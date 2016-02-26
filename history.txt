@@ -1261,3 +1261,7 @@
     Fix: Possible null error with transaction activity
     Fix: Runaway upgrades
     Tweak: Better display for upgrade exceptions
+1.35.3 - Elise Alley, Timothy B. Jacobs
+	Add activity item whenever a method ID changes
+	Display method ID in transaction details
+
