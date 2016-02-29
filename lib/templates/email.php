@@ -22,7 +22,7 @@
 </head>
 <body>
 
-This is just filer to get things working.
+<span class="email-text-color">This is just filer to get things working.</span>
 
 <!-- o:Background -->
 
