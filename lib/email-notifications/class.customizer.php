@@ -82,9 +82,6 @@ class IT_Exchange_Email_Customizer {
 	 */
 	public function on_register( WP_Customize_Manager $customizer ) {
 
-		require_once dirname( __FILE__ ) . '/class.font-control.php';
-		$customizer->register_control_type( 'IT_Exchange_Customizer_Font_Control' );
-
 		$this->sections = $this->get_sections( $customizer );
 
 		foreach ( $this->sections as $section ) {
