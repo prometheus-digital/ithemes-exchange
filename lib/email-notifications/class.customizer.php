@@ -780,4 +780,18 @@ class IT_Exchange_Email_Customizer {
 	public static function is_active() {
 		return isset( $_GET['it-exchange-customizer'] ) && $_GET['it-exchange-customizer'] === 'emails';
 	}
+
+	/**
+	 * Get a link to the customizer preview.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public static function get_link() {
+		return add_query_arg( array(
+			'url'    => urlencode( add_query_arg( 'it-exchange-customizer', 'emails', site_url() ) ),
+			'return' => rawurlencode( admin_url( 'admin.php?page=it-exchange-settings&tab=email' ) ),
+		), admin_url( 'customize.php' ) );
+	}
 }
