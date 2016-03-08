@@ -562,13 +562,13 @@ class IT_Exchange_Email_Customizer {
 			'default' => array(
 				'label'    => __( 'Default', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
-					'text_color' => '#909090'
+					'body_text_color' => '#909090'
 				)
 			),
 			'dark'    => array(
 				'label'    => __( 'Dark', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
-					'text_color' => '#FFA500'
+					'body_text_color' => '#FFA500'
 				)
 			),
 			'white'   => array(
@@ -686,12 +686,11 @@ class IT_Exchange_Email_Customizer {
 	 * @since 1.36
 	 */
 	public function enqueue_control_scripts() {
-		if ( self::is_active() || true ) {
-			wp_enqueue_script( 'it-exchange-email-customizer-controls', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/assets/controls.js', array(
-				'jquery',
-				'underscore'
-			) );
-		}
+		wp_enqueue_script( 'it-exchange-email-customizer-controls', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/assets/controls.js', array(
+			'jquery',
+			'underscore',
+			'customize-controls',
+		) );
 	}
 
 	/**
