@@ -17,6 +17,11 @@ class IT_Exchange_Email_Notifications {
 	public $user;
 
 	/**
+	 * @var IT_Exchange_Email_Notification[]
+	 */
+	private $notifications = array();
+
+	/**
 	 * Constructor. Sets up the class
 	 *
 	 * @since 0.4.0
@@ -34,7 +39,32 @@ class IT_Exchange_Email_Notifications {
 		add_action( 'it_exchange_update_transaction_status', array( $this, 'resend_if_transaction_status_gets_cleared_for_delivery' ), 10, 3 );
 
 		add_shortcode( 'it_exchange_email', array( $this, 'ithemes_exchange_email_notification_shortcode' ) );
+	}
 
+	/**
+	 * Register a notification.
+	 *
+	 * @since 1.36
+	 *
+	 * @param IT_Exchange_Email_Notification $notification
+	 *
+	 * @return self
+	 */
+	public function register_notification( IT_Exchange_Email_Notification $notification ) {
+		$this->notifications[] = $notification;
+
+		return $this;
+	}
+
+	/**
+	 * Retrieve all registered notifications.
+	 *
+	 * @since 1.36
+	 *
+	 * @return IT_Exchange_Email_Notification[]
+	 */
+	public function get_notifications() {
+		return $this->notifications;
 	}
 
 	/**
@@ -429,11 +459,11 @@ class IT_Exchange_Email_Notifications {
 		}
 		return $name;
 	}
-	
+
 	/**
 	 * Replacement Tag
 	 *
-	 * @since 1.14.0 
+	 * @since 1.14.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
 	 * @return string Replaced value
@@ -709,4 +739,3 @@ class IT_Exchange_Email_Notifications {
 			$this->send_purchase_emails( $transaction, false );
 	}
 }
-$IT_Exchange_Email_Notifications = new IT_Exchange_Email_Notifications();

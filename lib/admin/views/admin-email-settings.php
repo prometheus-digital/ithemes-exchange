@@ -23,10 +23,32 @@ global $wp_version;
 
 	<h<?php echo $h; ?>>
 		<?php _e( 'Emails', 'it-l10n-ithemes-exchange' ); ?>
-		<a href="<?php echo ( IT_Exchange_Email_Customizer::get_link() ); ?>" class="<?php echo $class; ?>">
+		<a href="<?php echo( IT_Exchange_Email_Customizer::get_link() ); ?>" class="<?php echo $class; ?>">
 			<?php _e( 'Customizer Appearance', 'it-l10n-ithemes-exchange' ); ?>
 		</a>
 	</h<?php echo $h; ?>>
+
+	<table class="widefat striped">
+		<thead>
+		<tr>
+			<th style="width: auto%"><?php _e( 'Email', 'it-l10n-ithemes-exchange' ); ?></th>
+			<th style="width: 30px;"><?php _e( 'Active', 'it-l10n-ithemes-exchange' ); ?></th>
+			<th style="width: 30px"></th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>Receipt</td>
+			<td><span class="dashicons dashicons-yes"></span></td>
+			<td><span class="dashicons dashicons-admin-generic"></span></td>
+		</tr>
+		<tr>
+			<td>Admin Order Notification</td>
+			<td><span class="dashicons dashicons-yes"></span></td>
+			<td><span class="dashicons dashicons-admin-generic"></span></td>
+		</tr>
+		</tbody>
+	</table>
 
 	<table class="form-table">
 		<?php do_action( 'it_exchange_general_settings_email_top' ); ?>

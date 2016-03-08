@@ -687,7 +687,7 @@ class IT_Exchange_Email_Customizer {
 	 */
 	public function enqueue_control_scripts() {
 		if ( self::is_active() || true ) {
-			wp_enqueue_script( 'it-exchange-email-customizer-controls', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/controls.js', array(
+			wp_enqueue_script( 'it-exchange-email-customizer-controls', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/assets/controls.js', array(
 				'jquery',
 				'underscore'
 			) );
@@ -701,11 +701,11 @@ class IT_Exchange_Email_Customizer {
 	 */
 	public function enqueue_preview_scripts() {
 		if ( self::is_active() ) {
-			wp_enqueue_script( 'it-exchange-email-customizer-preview', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/preview.js', array(
+			wp_enqueue_script( 'it-exchange-email-customizer-preview', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/assets/preview.js', array(
 				'jquery',
 				'underscore'
 			) );
-			wp_enqueue_style( 'it-exchange-email-customizer-preview', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/email-customizer.css' );
+			wp_enqueue_style( 'it-exchange-email-customizer-preview', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/assets/email-customizer.css' );
 
 			wp_localize_script( 'it-exchange-email-customizer-preview', '_exchangeEmailCustomizer', array(
 				'presets' => $this->get_presets()
