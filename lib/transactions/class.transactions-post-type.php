@@ -541,7 +541,7 @@ class IT_Exchange_Transaction_Post_Type {
 
 		<div class="customer-data spacing-wrapper">
 			<div class="customer-avatar left">
-				<?php echo get_avatar( it_exchange_get_transaction_customer_id( $post->ID ), 80 ); ?>
+				<?php echo get_avatar( it_exchange_get_transaction_customer_id( $post->ID ), 80, '', '', array( 'force_display' => true ) ); ?>
 			</div>
 			<div class="transaction-data right">
 				<div class="transaction-order-number">

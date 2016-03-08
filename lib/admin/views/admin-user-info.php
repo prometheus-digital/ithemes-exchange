@@ -15,7 +15,7 @@ $user_object = get_userdata( $user_id );
 
 if ( !empty( $_POST['_it_exchange_customer_info_nonce'] ) && !wp_verify_nonce( $_POST['_it_exchange_customer_info_nonce'], 'update-it-exchange-customer-info' ) ) {
 
-	it_exchange_get_add_message( 'error', __( 'Error verifying security token. Please try again.', 'it-l10n-ithemes-exchange' ) );
+	it_exchange_add_message( 'error', __( 'Error verifying security token. Please try again.', 'it-l10n-ithemes-exchange' ) );
 
 } else {
 
@@ -32,7 +32,7 @@ if ( !empty( $_POST['_it_exchange_customer_info_nonce'] ) && !wp_verify_nonce( $
         <label for="it_exchange_customer_note"><?php _e( 'Notes', 'it-l10n-ithemes-exchange' ); ?></label>
         <textarea name="it_exchange_customer_note" cols="30" rows="10"><?php echo get_user_meta( $user_id, '_it_exchange_customer_note', true ); ?></textarea>
     </div>
-    <div class="avatar"><?php echo get_avatar( $user_id, 160 ); ?></div>
+    <div class="avatar"><?php echo get_avatar( $user_id, 160, '', '', array( 'force_display' => true ) ); ?></div>
 </div>
 
 <?php wp_nonce_field( 'update-it-exchange-customer-info', '_it_exchange_customer_info_nonce' ); ?>
