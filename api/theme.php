@@ -29,6 +29,7 @@ include( $this->_plugin_path . '/api/theme/shipping.php' );
 include( $this->_plugin_path . '/api/theme/shipping-method.php' );
 include( $this->_plugin_path . '/api/theme/billing.php' );
 include( $this->_plugin_path . '/api/theme/purchase-dialog.php' );
+include( $this->_plugin_path . '/api/theme/email.php' );
 
 /**
  * Defines the main it_exchange function
@@ -64,7 +65,7 @@ function it_exchange() {
 	// Die if we don't have any args
 	if ( $num_args < 1 ) {
 		it_exchange_add_message( 'error', sprintf( __( 'Coding Error: Incorrect number of args passed to %s', 'it-l10n-ithemes-exchange' ), 'it_exchange()' ) );
-		return;
+		return false;
 	}
 
 	$passed_params = func_get_args();
@@ -141,7 +142,7 @@ function it_exchange() {
 		// Does the class exist and return an iThemes Exchange theme API context?
 		if ( ! is_callable( array( $class_name, 'get_api_context' ) ) ) {
 			it_exchange_add_message( 'error', sprintf( __( 'Coding Error: <em>%s</em> is not a valid Exchange theme API context', 'it-l10n-ithemes-exchange' ), $context ) );
-			return;
+			return false;
 		}
 
 		// Set the object

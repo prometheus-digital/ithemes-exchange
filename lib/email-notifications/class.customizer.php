@@ -261,7 +261,8 @@ class IT_Exchange_Email_Customizer {
 			new WP_Customize_Setting( $customizer, 'it-exchange-email[footer_logo_size]', array(
 				'capability' => $this->capability,
 				'type'       => 'option',
-				'transport'  => 'postMessage'
+				'transport'  => 'postMessage',
+				'default'    => 75
 			) ),
 			new WP_Customize_Setting( $customizer, 'it-exchange-email[background_color]', array(
 				'capability' => $this->capability,
@@ -325,7 +326,7 @@ class IT_Exchange_Email_Customizer {
 				'label'           => __( 'Logo Size', 'it-l10n-ithemes-exchange' ),
 				'type'            => 'range',
 				'input_attrs'     => array(
-					'min' => 16,
+					'min' => 50,
 					'max' => 350
 				),
 				'active_callback' => function () {
@@ -359,7 +360,7 @@ class IT_Exchange_Email_Customizer {
 				'type'            => 'range',
 				'input_attrs'     => array(
 					'min' => 12,
-					'max' => 72
+					'max' => 96
 				),
 				'active_callback' => function () {
 					return (bool) IT_Exchange_Email_Customizer::get_setting( 'header_show_store_name' );
@@ -377,8 +378,8 @@ class IT_Exchange_Email_Customizer {
 				'capability'  => $this->capability,
 				'section'     => 'it-exchange-email-header',
 				'label'       => __( 'Header Image', 'it-l10n-ithemes-exchange' ),
-				'width'       => 750,
-				'height'      => 300,
+				'width'       => 640,
+				'height'      => 225,
 				'flex-height' => true
 			) ),
 			new WP_Customize_Color_Control( $customizer, 'it-exchange-email[header_background]', array(
@@ -422,7 +423,7 @@ class IT_Exchange_Email_Customizer {
 				'type'        => 'range',
 				'input_attrs' => array(
 					'min' => 8,
-					'max' => 32
+					'max' => 18
 				),
 			) ),
 			new WP_Customize_Color_Control( $customizer, 'it-exchange-email[body_background_color]', array(
@@ -706,8 +707,11 @@ class IT_Exchange_Email_Customizer {
 			) );
 			wp_enqueue_style( 'it-exchange-email-customizer-preview', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/assets/email-customizer.css' );
 
+			$general = it_exchange_get_option( 'settings_general' );
+
 			wp_localize_script( 'it-exchange-email-customizer-preview', '_exchangeEmailCustomizer', array(
-				'presets' => $this->get_presets()
+				'presets'   => $this->get_presets(),
+				'storeName' => $general['company-name']
 			) );
 		}
 	}

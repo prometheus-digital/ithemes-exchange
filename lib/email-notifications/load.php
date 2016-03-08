@@ -14,6 +14,8 @@ require_once dirname( __FILE__ ) . '/class.email-notification.php';
 require_once dirname( __FILE__ ) . '/class.admin-email-notification.php';
 require_once dirname( __FILE__ ) . '/class.customer-email-notification.php';
 
+require_once dirname( __FILE__ ) . '/class.email-template.php';
+
 new IT_Exchange_Email_Customizer();
 
 /**
