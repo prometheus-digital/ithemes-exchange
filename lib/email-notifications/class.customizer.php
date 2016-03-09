@@ -786,9 +786,11 @@ class IT_Exchange_Email_Customizer {
 			return $template;
 		}
 
-		$tpl = it_exchange_get_template_part( 'email', null, false );
+		$GLOBALS['it_exchange']['demo-receipt'] = true;
 
-		return $tpl;
+		$tpl = new IT_Exchange_Email_Template( 'receipt' );
+
+		return $tpl->get_file( array() );
 	}
 
 	/**

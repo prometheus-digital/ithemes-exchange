@@ -111,7 +111,7 @@ function it_exchange_convert_to_database_number( $price ) {
 	} else { //if we don't find a decimal separator, we want to multiply by 100 for future decimal operations
 		$price = preg_replace( '/[^0-9]*/', '', $price ) * 100;
 	}
-	
+
 	return $price;
 }
 
@@ -549,10 +549,10 @@ function it_exchange_get_formatted_billing_address( $billing_address=false ) {
  * @param array $args  {
  *      Additional args used to specify how an address is formatted.
  *
- *      @type string $open-block String rendered before the contents of the address are outputted. HTML is allowed.
+ *      @type string $open-block  String rendered before the contents of the address are outputted. HTML is allowed.
  *      @type string $close-block String rendered after the contents of the address are outputted. HTML is allowed.
- *      @type string $open-line  String used to open up a new line. Defaults to an empty string. HTML is allowed.
- *      @type string $close-line String used to close a line. Defaults to an empty string. HTML is allowed.
+ *      @type string $open-line   String used to open up a new line. Defaults to an empty string. HTML is allowed.
+ *      @type string $close-line  String used to close a line. Defaults to an empty string. HTML is allowed.
  * }
  * @param array $format. Optionally, override the format.
  *
@@ -576,9 +576,9 @@ function it_exchange_format_address( $address, $args = array(), $format = null )
 	 *
 	 * @since 1.36
 	 *
-	 * @param array $format.  Format for address, see default_format for example.
-	 * @param array $address. Raw address to be formatted.
-	 * @param array $args.    Additional args used to format the address.
+	 * @param array $format   Format for address, see default_format for example.
+	 * @param array $address  Raw address to be formatted.
+	 * @param array $args     Additional args used to format the address.
 	 */
 	$format = apply_filters( 'it_exchange_format_address_format', $format, $address, $args );
 
@@ -595,9 +595,9 @@ function it_exchange_format_address( $address, $args = array(), $format = null )
 	 *
 	 * @since 1.36
 	 *
-	 * @param array $args.    Args used for controlling address format.
-	 * @param array $address. Raw address to be formatted.
-	 * @param array $format.  Format used.
+	 * @param array $args     Args used for controlling address format.
+	 * @param array $address  Raw address to be formatted.
+	 * @param array $format   Format used.
 	 */
 	$args = apply_filters( 'it_exchange_format_address_args', $args, $address, $format );
 
@@ -629,7 +629,7 @@ function it_exchange_format_address( $address, $args = array(), $format = null )
 	$output = $args['open-block'];
 
 	foreach ( $replaced as $replaced_line ) {
-		if ( ! empty( $replaced_line ) ) {
+		if ( trim( $replaced_line ) !== '' ) {
 			$output .= $open . $replaced_line . $close;
 		}
 	}
@@ -641,10 +641,10 @@ function it_exchange_format_address( $address, $args = array(), $format = null )
 	 *
 	 * @since 1.36
 	 *
-	 * @param string $output.  Final formatted address.
-	 * @param array  $address. Raw address before formatting.
-	 * @param array  $args.    Additional args used to format the address.
-	 * @param array  $format.  Format used to format this address.
+	 * @param string $output  Final formatted address.
+	 * @param array  $address Raw address before formatting.
+	 * @param array  $args    Additional args used to format the address.
+	 * @param array  $format  Format used to format this address.
 	 */
 	$output = apply_filters( 'it_exchange_format_address_output', $output, $address, $args, $format );
 
@@ -691,7 +691,7 @@ function it_exchange_redirect( $url, $context='', $options=array(), $status=302 
  *
  * Copied from Better WP Security (HT: Chris Wiegman)
  *
- * @since 1.11.5 
+ * @since 1.11.5
  *
  * @return string Current IP address for customer
 */

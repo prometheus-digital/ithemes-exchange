@@ -36,12 +36,44 @@ class IT_Exchange_Email_Template {
 	 */
 	public function get_html( $context ) {
 
-		$GLOBALS['it_exchange']['email_context'] = $context;
+		$this->globalize_context( $context );
 
 		ob_start();
 
-		it_exchange_get_template_part( 'email', $this->name );
+		it_exchange_get_template_part( 'emails/email', $this->name );
 
 		return ob_get_clean();
+	}
+
+	/**
+	 * Get the email template file.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $context
+	 *
+	 * @return string
+	 */
+	public function get_file( $context ) {
+
+		$this->globalize_context( $context );
+
+		return it_exchange_get_template_part( 'emails/email', $this->name, false );
+	}
+
+	/**
+	 * Globalize the context for the theme API.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $context
+	 */
+	protected function globalize_context( $context ) {
+
+		$GLOBALS['it_exchange']['email_context'] = $context;
+
+		if ( ! empty( $context['transaction'] ) ) {
+			$GLOBALS['it_exchange']['transaction'] = it_exchange_get_transaction( $context['transaction'] );
+		}
 	}
 }

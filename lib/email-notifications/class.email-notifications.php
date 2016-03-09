@@ -216,6 +216,9 @@ class IT_Exchange_Email_Notifications {
 			$headers     = apply_filters( 'it_exchange_send_purchase_emails_headers', $headers, $transaction, $settings, $this );
 			$attachments = apply_filters( 'it_exchange_send_purchase_emails_attachments', array(), $transaction, $settings, $this );
 
+			$template = new IT_Exchange_Email_Template('receipt');
+			$body = $template->get_html(array('transaction' => $transaction->ID));
+
 			wp_mail( $to, strip_tags( $subject ), $body, $headers, $attachments );
 		}
 
