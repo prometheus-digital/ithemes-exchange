@@ -91,6 +91,11 @@ class IT_Exchange_Email_Customizer {
 		$this->settings = $this->get_settings( $customizer );
 
 		foreach ( $this->settings as $setting ) {
+
+			if ( empty( $setting->default ) ) {
+				$setting->default = $this->get_default( $setting->id );
+			}
+
 			$customizer->add_setting( $setting );
 		}
 
@@ -563,26 +568,106 @@ class IT_Exchange_Email_Customizer {
 			'default' => array(
 				'label'    => __( 'Default', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
-					'body_text_color' => '#909090'
+					'header_show_store_name'  => true,
+					'header_store_name_font'  => 'serif',
+					'header_store_name_size'  => 64,
+					'header_store_name_color' => '#444444',
+					'header_background'       => '#efefef',
+					'body_font'               => 'serif',
+					'body_text_color'         => '#444444',
+					'body_highlight_color'    => '#444444',
+					'body_button_color'       => '#ffffff',
+					'body_font_size'          => '14',
+					'body_background_color'   => '#efefef',
+					'body_border_color'       => '#dddddd',
+					'footer_text_color'       => '#444444',
+					'footer_show_logo'        => false,
+					'background_color'        => '#efefef',
 				)
 			),
 			'dark'    => array(
 				'label'    => __( 'Dark', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
-					'body_text_color' => '#FFA500'
+					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image1.jpg' ),
+					'header_show_store_name'  => false,
+					'header_store_name_font'  => 'monospace',
+					'header_store_name_size'  => 64,
+					'header_store_name_color' => '#ffffff',
+					'header_background'       => '#383e43',
+					'body_font'               => 'sans-serif',
+					'body_text_color'         => '#ffffff',
+					'body_highlight_color'    => '#383e43',
+					'body_button_color'       => '#ffffff',
+					'body_font_size'          => '14',
+					'body_background_color'   => '#2a2f33',
+					'body_border_color'       => '#dddddd',
+					'footer_text_color'       => '#ffffff',
+					'footer_show_logo'        => false,
+					'background_color'        => '#2a2f33',
 				)
 			),
 			'white'   => array(
 				'label'    => __( 'White', 'it-l10n-ithemes-exchange' ),
-				'settings' => array()
+				'settings' => array(
+					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image1.jpg' ),
+					'header_show_store_name'  => false,
+					'header_store_name_font'  => 'serif',
+					'header_store_name_size'  => 64,
+					'header_store_name_color' => '#efefef',
+					'header_background'       => '#444444',
+					'body_font'               => 'sans-serif',
+					'body_text_color'         => '#444444',
+					'body_highlight_color'    => '#efefef',
+					'body_button_color'       => '#444444',
+					'body_font_size'          => '14',
+					'body_background_color'   => '#ffffff',
+					'body_border_color'       => '#dedede',
+					'footer_text_color'       => '#444444',
+					'footer_show_logo'        => false,
+					'background_color'        => '#ffffff',
+				)
 			),
 			'ocean'   => array(
 				'label'    => __( 'Ocean', 'it-l10n-ithemes-exchange' ),
-				'settings' => array()
+				'settings' => array(
+					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image2.jpg' ),
+					'header_show_store_name'  => false,
+					'header_store_name_font'  => 'sans-serif',
+					'header_store_name_size'  => 64,
+					'header_store_name_color' => '#efefef',
+					'header_background'       => '#006186',
+					'body_font'               => 'sans-serif',
+					'body_text_color'         => '#40636f',
+					'body_highlight_color'    => '#40636f',
+					'body_button_color'       => '#444444',
+					'body_font_size'          => '14',
+					'body_background_color'   => '#ffffff',
+					'body_border_color'       => '#eae1c1',
+					'footer_text_color'       => '#ffffff',
+					'footer_show_logo'        => false,
+					'background_color'        => '#338ea6',
+				)
 			),
 			'gold'    => array(
 				'label'    => __( 'Gold', 'it-l10n-ithemes-exchange' ),
-				'settings' => array()
+				'settings' => array(
+					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image1.jpg' ),
+					'header_show_store_name'  => false,
+					'header_store_name_font'  => 'sans-serif',
+					'header_store_name_size'  => 64,
+					'header_store_name_color' => '#efefef',
+					'header_background'       => '#bc9400',
+					'body_font'               => 'sans-serif',
+					'body_text_color'         => '#40636f',
+					'body_highlight_color'    => '#bc9400',
+					'body_button_color'       => '#444444',
+					'body_font_size'          => '14',
+					'body_background_color'   => '#ffffff',
+					'body_border_color'       => '#eae1c1',
+					'footer_text_color'       => '#40636f',
+					'footer_show_logo'        => false,
+					'background_color'        => '#e9e0bf',
+				)
 			)
 		);
 
@@ -611,6 +696,31 @@ class IT_Exchange_Email_Customizer {
 		$labels = wp_list_pluck( $presets, 'label' );
 
 		return array_combine( $keys, $labels );
+	}
+
+	/**
+	 * Get the default value for a setting.
+	 *
+	 * This is based off the default preset.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $setting
+	 *
+	 * @return string
+	 */
+	private function get_default( $setting ) {
+
+		$setting = str_replace( array( 'it-exchange-email[', ']' ), '', $setting );
+
+		$presets = $this->get_presets();
+		$default = $presets['default'];
+
+		if ( isset( $default['settings'][ $setting ] ) ) {
+			return $default['settings'][ $setting ];
+		}
+
+		return '';
 	}
 
 	/**
@@ -691,6 +801,9 @@ class IT_Exchange_Email_Customizer {
 			'jquery',
 			'underscore',
 			'customize-controls',
+		) );
+		wp_localize_script( 'it-exchange-email-customizer-controls', '_exchangeEmailCustomizer', array(
+			'presets' => $this->get_presets(),
 		) );
 	}
 

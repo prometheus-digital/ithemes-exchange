@@ -42,9 +42,9 @@
 					<tr>
 						<td width="640">
 			<![endif]-->
-			<table id="header" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'header-background' ); ?>; margin: 40px auto 0 auto; min-height: 225px" class="wrapper">
+			<table id="header" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'header-background' ); ?>; margin: 40px auto 0 auto; <?php echo it_exchange( 'email', 'has-header-image' ) ? 'min-height:225px;' : ''; ?>" class="wrapper">
 				<tr>
-					<td align="center" valign="top" style="padding: 54px 25px; background: url(<?php it_exchange( 'email', 'header-image' ); ?>) top center no-repeat; background-size: cover; border-top: 5px solid <?php it_exchange( 'email', 'header-background' ); ?>; border-bottom: 0; border-radius: 5px 5px 0 0;">
+					<td align="center" valign="top" style="padding: 54px 25px; background-image: url(<?php it_exchange( 'email', 'header-image' ); ?>); background-position: top center; background-repeat: no-repeat; background-size: cover; border-top: 5px solid <?php it_exchange( 'email', 'header-background' ); ?>; border-bottom: 0; border-radius: 5px 5px 0 0;">
 						<?php if ( it_exchange( 'email', 'has-header-logo' ) ): ?>
 							<img src="<?php it_exchange( 'email', 'header-logo' ); ?>" width="<?php it_exchange( 'email', 'header-logo-size' ); ?>" />
 						<?php endif; ?>
@@ -74,7 +74,7 @@
 					<tr>
 						<td width="640">
 			<![endif]-->
-			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'body-background-color' ); ?>;  margin: 25px auto 0 auto; border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>;" class="wrapper body-bkg-color">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'body-background-color' ); ?>;  margin: 25px auto 0 auto; border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>;" class="wrapper body-bkg-color body-border-color">
 				<tr>
 					<td valign="top" style="padding: 20px 25px;">
 						<table width="100%">
@@ -157,37 +157,37 @@
 					<td valign="top" style="padding: 20px 25px; ">
 						<table width="100%" style="line-height: 1.2;">
 							<tr>
-								<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 0 0 10px 0;">Description</th>
-								<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 0 0 10px 0;">Qty</th>
-								<th align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 0 0 10px 0;">Price</th>
+								<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 0 0 10px 0;" class="body-border-color">Description</th>
+								<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 0 0 10px 0;" class="body-border-color">Qty</th>
+								<th align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 0 0 10px 0;" class="body-border-color">Price</th>
 							</tr>
 							<tr>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-top: 10px;">
+								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-top: 10px;" class="body-border-color">
 									<table>
 										<tr>
 											<td>
-												<img src="product-image.jpg" style="margin-right: 20px;" />
+												<img src="product-image.png" style="margin-right: 20px;" />
 											</td>
 											<td style="">
 												<strong>Lewis Trouser Strap</strong><br>
 												Size: 36<br>
 												Color: Russet<br>
-												<p style="border-left: 4px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-left: 10px; max-width: 300px; font-size: .8em">
+												<p style="border-left: 4px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-left: 10px; max-width: 300px; font-size: .9em" class="body-border-color">
 													Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed sem eu mauris lobortis congue. Vivamus nec elit id ex luctus aliquam ut et elit.
 												</p>
 											</td>
 										</tr>
 									</table>
 								</td>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-top: 10px;">1</td>
-								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-top: 10px;">$85</td>
+								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-top: 10px;" class="body-border-color">1</td>
+								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-top: 10px;" class="body-border-color">$85</td>
 							</tr>
 							<tr>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; ">
+								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; " class="body-border-color">
 									<table>
 										<tr>
 											<td>
-												<img src="product-image.jpg" style="margin-right: 20px;" />
+												<img src="product-image.png" style="margin-right: 20px;" />
 											</td>
 											<td style="">
 												<strong>Lewis Trouser Strap</strong><br>
@@ -197,15 +197,15 @@
 										</tr>
 									</table>
 								</td>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; ">1</td>
-								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; ">$85</td>
+								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; " class="body-border-color">1</td>
+								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; " class="body-border-color">$85</td>
 							</tr>
 							<tr>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>;">
+								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>;" class="body-border-color">
 									<table>
 										<tr>
 											<td>
-												<img src="product-image.jpg" style="margin-right: 20px;" />
+												<img src="product-image.png" style="margin-right: 20px;" />
 											</td>
 											<td style="">
 												<strong>Lewis Trouser Strap</strong><br>
@@ -215,8 +215,8 @@
 										</tr>
 									</table>
 								</td>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; ">1</td>
-								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; ">$85</td>
+								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; " class="body-border-color">1</td>
+								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; " class="body-border-color">$85</td>
 							</tr>
 						</table>
 					</td>
@@ -288,7 +288,7 @@
 					<td valign="top" align="center" style="padding: 10px 25px 100px 25px; ">
 						<table width="100%">
 							<tr style="text-align: center;">
-								<td style="color: <?php it_exchange( 'email', 'footer-text-color' ); ?>;">
+								<td style="color: <?php it_exchange( 'email', 'footer-text-color' ); ?>;" class="footer-text-container">
 									<?php it_exchange( 'email', 'footer-text' ); ?>
 								</td>
 							</tr>

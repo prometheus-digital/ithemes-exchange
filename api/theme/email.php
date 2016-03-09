@@ -210,7 +210,9 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	 * @return string
 	 */
 	public function header_background( $options = array() ) {
-		return IT_Exchange_Email_Customizer::get_setting( 'header_background' );
+		$color = IT_Exchange_Email_Customizer::get_setting( 'header_background' );
+
+		return $color ? $color : 'transparent';
 	}
 
 	/**
@@ -288,7 +290,9 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	 * @return string
 	 */
 	public function body_background_color( $options = array() ) {
-		return IT_Exchange_Email_Customizer::get_setting( 'body_background_color' );
+		$color = IT_Exchange_Email_Customizer::get_setting( 'body_background_color' );
+
+		return $color ? $color : 'transparent';
 	}
 
 	/**
