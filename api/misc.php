@@ -532,26 +532,123 @@ function it_exchange_is_checkout_mode( $mode, $context='content' ) {
  * @return string HTML
 */
 function it_exchange_get_formatted_billing_address( $billing_address=false ) {
-	$formatted   = array();
-	$billing     = empty( $billing_address ) ? it_exchange_get_cart_billing_address() : $billing_address;
-	$formatted[] = implode( ' ', array( $billing['first-name'], $billing['last-name'] ) );
-	if ( ! empty( $billing['company-name'] ) )
-		$formatted[] = $billing['company-name'];
-	if ( ! empty( $billing['address1'] ) )
-		$formatted[] = $billing['address1'];
-	if ( ! empty( $billing['address2'] ) )
-		$formatted[] = $billing['address2'];
-	if ( ! empty( $billing['city'] ) || ! empty( $billing['state'] ) || ! empty( $billing['zip'] ) ) {
-		$formatted[] = implode( ' ', array( ( empty( $billing['city'] ) ? '': $billing['city'] .',' ),
-			( empty( $billing['state'] ) ? '': $billing['state'] ),
-			( empty( $billing['zip'] ) ? '': $billing['zip'] ),
-		) );
-	}
-	if ( ! empty( $billing['country'] ) )
-		$formatted[] = $billing['country'];
 
-	$formatted = implode( '<br />', $formatted );
+	$billing = empty( $billing_address ) ? it_exchange_get_cart_billing_address() : $billing_address;
+
+	$formatted = it_exchange_format_address( $billing );
+
 	return apply_filters( 'it_exchange_get_formatted_billing_address', $formatted );
+}
+
+/**
+ * Format any address.
+ *
+ * @since 1.36
+ *
+ * @param array $address Raw parts of the address.
+ * @param array $args  {
+ *      Additional args used to specify how an address is formatted.
+ *
+ *      @type string $open-block String rendered before the contents of the address are outputted. HTML is allowed.
+ *      @type string $close-block String rendered after the contents of the address are outputted. HTML is allowed.
+ *      @type string $open-line  String used to open up a new line. Defaults to an empty string. HTML is allowed.
+ *      @type string $close-line String used to close a line. Defaults to an empty string. HTML is allowed.
+ * }
+ * @param array $format. Optionally, override the format.
+ *
+ * @return string
+ */
+function it_exchange_format_address( $address, $args = array(), $format = null ) {
+
+	$default_format = array(
+		'{first-name} {last-name}',
+		'{company-name}',
+		'{address1}',
+		'{address2}',
+		'{city} {state} {zip}',
+		'{country}'
+	);
+
+	$format = $format === null ? $default_format : (array) $format;
+
+	/**
+	 * Filter the format used to format an address.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $format.  Format for address, see default_format for example.
+	 * @param array $address. Raw address to be formatted.
+	 * @param array $args.    Additional args used to format the address.
+	 */
+	$format = apply_filters( 'it_exchange_format_address_format', $format, $address, $args );
+
+	$defaults = array(
+		'open-block'    => '',
+		'close-block'   => '',
+		'open-line'     => '',
+		'close-line'    => '<br>'
+	);
+	$args = ITUtility::merge_defaults( $args, $defaults );
+
+	/**
+	 * Filter the formatting args.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $args.    Args used for controlling address format.
+	 * @param array $address. Raw address to be formatted.
+	 * @param array $format.  Format used.
+	 */
+	$args = apply_filters( 'it_exchange_format_address_args', $args, $address, $format );
+
+	$address_parts = array();
+
+	foreach ( $address as $part_name => $part_val ) {
+		$address_parts[ $part_name ] = '{' . $part_name . '}';
+	}
+
+	$replaced = array();
+
+	foreach ( $format as $line ) {
+
+		$replaced_line = $line;
+
+		foreach ( $address_parts as $part_name => $replace_tag ) {
+			$replaced_line = str_replace( $replace_tag, isset( $address[ $part_name ] ) ? $address[ $part_name ] : '', $replaced_line );
+		}
+
+		$replaced[] = trim( $replaced_line );
+	}
+
+	// get rid of any remaining, un-replaced tags
+	$replaced = preg_replace( "/{.*?}/", "", $replaced );
+
+	$open   = $args['open-line'];
+	$close  = $args['close-line'];
+
+	$output = $args['open-block'];
+
+	foreach ( $replaced as $replaced_line ) {
+		if ( ! empty( $replaced_line ) ) {
+			$output .= $open . $replaced_line . $close;
+		}
+	}
+
+	$output .= $args['close-block'];
+
+	/**
+	 * Filter the final output of the formatted address.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $output.  Final formatted address.
+	 * @param array  $address. Raw address before formatting.
+	 * @param array  $args.    Additional args used to format the address.
+	 * @param array  $format.  Format used to format this address.
+	 */
+	$output = apply_filters( 'it_exchange_format_address_output', $output, $address, $args, $format );
+
+	return $output;
 }
 
 /**
