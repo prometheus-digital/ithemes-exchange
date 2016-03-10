@@ -28,7 +28,7 @@
 
 <!-- HIDDEN PREHEADER TEXT -->
 <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-	Pre-header text. This should show up in the mail client preview lines. Could be used as a sort of sub-subject line to entice an open.
+	<?php printf( __( 'Receipt for your purchase of %s.', 'it-l10n-ithemes-exchange' ), it_exchange( 'transaction', 'get-description' ) ); ?>
 </div>
 
 

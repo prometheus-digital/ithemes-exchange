@@ -50,6 +50,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		'productattribute'      => 'product_attribute',
 		'purchasemessage'       => 'purchase_message',
 		'variants'              => 'variants',
+		'description'           => 'description',
 		'productdownloads'      => 'product_downloads',
 		'productdownload'       => 'product_download',
 		'productdownloadhashes' => 'product_download_hashes',
@@ -388,7 +389,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		}
 
 		if ( ! empty( $options['has'] ) ) {
-			return ! empty( $address );
+			return ! empty( $address ) && ! empty( $address['address1'] );
 		}
 
 		// Set options
@@ -588,6 +589,26 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	}
 
 	/**
+	 * Get the transaction description.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $options
+	 *
+	 * @return bool|string
+	 */
+	function description( $options = array() ) {
+
+		$description = it_exchange_get_transaction_description( $this->_transaction );
+
+		if ( ! empty( $options['has'] ) ) {
+			return (bool) trim( $description );
+		}
+
+		return $description;
+	}
+
+	/**
 	 * Print the varaints.
 	 *
 	 * @since 1.36
@@ -692,7 +713,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
 				<div class="featured-image-wrapper">
 					<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>"
-					     data-src-thumb="<?php echo $feature_image['thumb'] ?>"/>
+					     data-src-thumb="<?php echo $feature_image['thumb'] ?>" />
 				</div>
 			</div>
 			<?php
@@ -928,7 +949,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
 				<div class="featured-image-wrapper">
 					<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>"
-					     data-src-thumb="<?php echo $feature_image['thumb'] ?>"/>
+					     data-src-thumb="<?php echo $feature_image['thumb'] ?>" />
 				</div>
 			</div>
 			<?php
