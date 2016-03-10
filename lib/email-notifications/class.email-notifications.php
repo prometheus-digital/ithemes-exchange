@@ -1,15 +1,15 @@
 <?php
 /**
  * Contains the class or the email notifications object
- * @since 0.4.0
+ * @since   0.4.0
  * @package IT_Exchange
-*/
+ */
 
 /**
  * The IT_Exchange_Email_Notifications class is for sending out email notification using wp_mail()
  *
  * @since 0.4.0
-*/
+ */
 class IT_Exchange_Email_Notifications {
 
 	public $transaction_id;
@@ -25,9 +25,12 @@ class IT_Exchange_Email_Notifications {
 	 * Constructor. Sets up the class
 	 *
 	 * @since 0.4.0
-	*/
+	 */
 	function __construct() {
-		add_action( 'it_exchange_send_email_notification', array( $this, 'it_exchange_send_email_notification' ), 20, 4 );
+		add_action( 'it_exchange_send_email_notification', array(
+			$this,
+			'it_exchange_send_email_notification'
+		), 20, 4 );
 
 		// Send emails on successfull transaction
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'send_purchase_emails' ), 20 );
@@ -36,7 +39,10 @@ class IT_Exchange_Email_Notifications {
 		add_action( 'admin_init', array( $this, 'handle_resend_confirmation_email_requests' ) );
 
 		// Resends email notifications when status is changed from one that's not cleared for delivery to one that is cleared
-		add_action( 'it_exchange_update_transaction_status', array( $this, 'resend_if_transaction_status_gets_cleared_for_delivery' ), 10, 3 );
+		add_action( 'it_exchange_update_transaction_status', array(
+			$this,
+			'resend_if_transaction_status_gets_cleared_for_delivery'
+		), 10, 3 );
 
 		add_shortcode( 'it_exchange_email', array( $this, 'ithemes_exchange_email_notification_shortcode' ) );
 	}
@@ -91,7 +97,10 @@ class IT_Exchange_Email_Notifications {
 		if ( empty( $settings['receipt-email-name'] ) && ! isset( $IT_Exchange_Admin ) ) {
 			global $IT_Exchange;
 			include_once( dirname( dirname( __FILE__ ) ) . '/admin/class.admin.php' );
-			add_filter( 'it_storage_get_defaults_exchange_settings_email', array( 'IT_Exchange_Admin', 'set_email_settings_defaults' ) );
+			add_filter( 'it_storage_get_defaults_exchange_settings_email', array(
+				'IT_Exchange_Admin',
+				'set_email_settings_defaults'
+			) );
 			$settings = it_exchange_get_option( 'settings_email', true );
 		}
 
@@ -116,11 +125,12 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @return void
-	*/
+	 */
 	function handle_resend_confirmation_email_requests() {
 		// Abort if not requested
-		if ( empty( $_GET[ 'it-exchange-customer-transaction-action' ] ) || $_GET[ 'it-exchange-customer-transaction-action' ] != 'resend' )
+		if ( empty( $_GET['it-exchange-customer-transaction-action'] ) || $_GET['it-exchange-customer-transaction-action'] != 'resend' ) {
 			return;
+		}
 
 		// Abort if no transaction or invalid transaction was passed
 		$transaction = it_exchange_get_transaction( $_GET['id'] );
@@ -162,14 +172,16 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param mixed $transaction ID or object
-	 * @param int $customer_id The customer ID
+	 * @param int   $customer_id The customer ID
+	 *
 	 * @return void
-	*/
-	function send_purchase_emails( $transaction, $send_admin_email=true ) {
+	 */
+	function send_purchase_emails( $transaction, $send_admin_email = true ) {
 
 		$transaction = it_exchange_get_transaction( $transaction );
-		if ( empty( $transaction->ID ) )
+		if ( empty( $transaction->ID ) ) {
 			return;
+		}
 
 		$this->transaction_id = $transaction->ID;
 		$this->customer_id    = it_exchange_get_transaction_customer_id( $this->transaction_id );
@@ -181,7 +193,10 @@ class IT_Exchange_Email_Notifications {
 		if ( empty( $settings['receipt-email-name'] ) && ! isset( $IT_Exchange_Admin ) ) {
 			global $IT_Exchange;
 			include_once( dirname( dirname( __FILE__ ) ) . '/admin/class.admin.php' );
-			add_filter( 'it_storage_get_defaults_exchange_settings_email', array( 'IT_Exchange_Admin', 'set_email_settings_defaults' ) );
+			add_filter( 'it_storage_get_defaults_exchange_settings_email', array(
+				'IT_Exchange_Admin',
+				'set_email_settings_defaults'
+			) );
 			$settings = it_exchange_get_option( 'settings_email', true );
 		}
 
@@ -206,7 +221,7 @@ class IT_Exchange_Email_Notifications {
 			$subject = do_shortcode( $settings['receipt-email-subject'] );
 			$body    = apply_filters( 'send_purchase_emails_body', $settings['receipt-email-template'], $transaction );
 			$body    = apply_filters( 'send_purchase_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body, $transaction );
-			$body    = $this->body_header() . '<div>' . wpautop( do_shortcode( $body ) ) . '</div>' . $this->body_footer();
+			$body    = do_shortcode( shortcode_unautop( wpautop( $body ) ) );
 
 			// Filters
 			$to          = empty( $this->user->data->user_email ) ? false : $this->user->data->user_email;
@@ -216,8 +231,11 @@ class IT_Exchange_Email_Notifications {
 			$headers     = apply_filters( 'it_exchange_send_purchase_emails_headers', $headers, $transaction, $settings, $this );
 			$attachments = apply_filters( 'it_exchange_send_purchase_emails_attachments', array(), $transaction, $settings, $this );
 
-			$template = new IT_Exchange_Email_Template('receipt');
-			$body = $template->get_html(array('transaction' => $transaction->ID));
+			$template = new IT_Exchange_Email_Template( 'receipt' );
+			$body     = $template->get_html( array(
+				'transaction' => $transaction->ID,
+				'message'     => $body
+			) );
 
 			wp_mail( $to, strip_tags( $subject ), $body, $headers, $attachments );
 		}
@@ -249,8 +267,9 @@ class IT_Exchange_Email_Notifications {
 		}
 
 		// Clear temp data
-		if ( isset( $GLOBALS['it_exchange']['email-confirmation-data'] ) )
+		if ( isset( $GLOBALS['it_exchange']['email-confirmation-data'] ) ) {
 			unset( $GLOBALS['it_exchange']['email-confirmation-data'] );
+		}
 
 	}
 
@@ -260,16 +279,16 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @return string HTML header
-	*/
+	 */
 	function body_header() {
 		$data = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
 		ob_start();
 		?>
-			<html>
-			<head>
-				<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-			</head>
-			<body>
+		<html>
+		<head>
+			<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		</head>
+		<body>
 		<?php
 
 		$output = ob_get_clean();
@@ -284,12 +303,12 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @return string HTML footer
-	*/
+	 */
 	function body_footer() {
 		$data = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
 		ob_start();
 		?>
-			</body>
+		</body>
 		</html>
 		<?php
 
@@ -306,7 +325,7 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @return array available replacement template tags
-	*/
+	 */
 	function get_shortcode_functions() {
 
 		$data = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
@@ -340,12 +359,14 @@ class IT_Exchange_Email_Notifications {
 	 * This shortcode is intended to print an email arguments for email templates
 	 *
 	 * @since 0.4.0
-	 * @param array $atts attributess passed from WP Shortcode API
+	 *
+	 * @param array  $atts    attributess passed from WP Shortcode API
 	 * @param string $content data passed from WP Shortcode API
+	 *
 	 * @return string html for the 'Add to Shopping Cart' HTML
-	*/
-	function ithemes_exchange_email_notification_shortcode( $atts, $content='' ) {
-		$data = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
+	 */
+	function ithemes_exchange_email_notification_shortcode( $atts, $content = '' ) {
+		$data            = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
 		$supported_pairs = array(
 			'show'    => '',
 			'options' => '',
@@ -357,11 +378,15 @@ class IT_Exchange_Email_Notifications {
 
 		$return = false;
 
-		if ( !empty( $shortcode_functions[$show] ) ) {
-			if ( is_callable( array( $this, $shortcode_functions[$show] ) ) )
-				$return = call_user_func( array( $this, $shortcode_functions[$show] ), $this, explode( ',', $options ), $atts );
-			else if ( is_callable( $shortcode_functions[$show] ) )
-				$return = call_user_func( $shortcode_functions[$show], $this, explode( ',', $options ), $atts );
+		if ( ! empty( $shortcode_functions[ $show ] ) ) {
+			if ( is_callable( array( $this, $shortcode_functions[ $show ] ) ) ) {
+				$return = call_user_func( array(
+					$this,
+					$shortcode_functions[ $show ]
+				), $this, explode( ',', $options ), $atts );
+			} else if ( is_callable( $shortcode_functions[ $show ] ) ) {
+				$return = call_user_func( $shortcode_functions[ $show ], $this, explode( ',', $options ), $atts );
+			}
 		}
 
 		return apply_filters( 'it_exchange_email_notification_shortcode_' . $atts['show'], $return, $atts, $content, $data );
@@ -373,23 +398,24 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_download_list_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_download_list_tag( $args, $options = null ) {
 		$status_notice = '';
 		ob_start();
 		// Grab products attached to transaction
 		$transaction_products = it_exchange_get_transaction_products( $args->transaction_id );
 
 		// Grab all hashes attached to transaction
-		$hashes   = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
-		if ( !empty( $hashes ) ) {
-		?>
+		$hashes = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
+		if ( ! empty( $hashes ) ) {
+			?>
 			<div style="border-top: 1px solid #EEE">
 				<?php foreach ( $transaction_products as $transaction_product ) : ?>
 					<?php
-						$product_id = $transaction_product['product_id'];
-						$db_product = it_exchange_get_product( $transaction_product );
+					$product_id = $transaction_product['product_id'];
+					$db_product = it_exchange_get_product( $transaction_product );
 					?>
 					<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : $downloads_exist_for_transaction = true; ?>
 						<?php if ( ! it_exchange_transaction_is_cleared_for_delivery( $args->transaction_id ) ) : ?>
@@ -410,19 +436,20 @@ class IT_Exchange_Email_Notifications {
 								<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
 								<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%s%sEach link has its own download limits and you can view the details on your %sdownloads%s page.', 'it-l10n-ithemes-exchange' ), $count, '<br />', '<br />', '<a href="' . esc_url( $downloads_url ) . '">', '</a>' ); ?></p>
 							<?php endif; ?>
-							<?php foreach( $product_downloads as $download_id => $download_data ) : ?>
+							<?php foreach ( $product_downloads as $download_id => $download_data ) : ?>
 								<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $args->transaction_id, $transaction_product, $download_id ); ?>
 								<?php $hashes_found = ( ! empty( $hashes_found ) || ! empty( $hashes_for_product_transaction ) ); // If someone purchases a product prior to downloads existing, they dont' get hashes/downloads ?>
 								<h5><?php esc_attr_e( get_the_title( $download_id ) ); ?></h5>
 								<ul class="download-hashes">
-									<?php foreach( (array) $hashes_for_product_transaction as $hash ) : ?>
+									<?php foreach ( (array) $hashes_for_product_transaction as $hash ) : ?>
 										<?php
 										$hash_data      = it_exchange_get_download_data_from_hash( $hash );
 										$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'it-l10n-ithemes-exchange' ) : $hash_data['download_limit'];
 										$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
 										?>
 										<li>
-											<a href="<?php echo esc_url( add_query_arg( 'it-exchange-download', $hash, get_home_url() ) ); ?>"><?php _e( 'Download link', 'it-l10n-ithemes-exchange' ); ?></a> <span style="font-family: Monaco, monospace;font-size:12px;color:#AAA;">(<?php esc_attr_e( $hash ); ?>)</span>
+											<a href="<?php echo esc_url( add_query_arg( 'it-exchange-download', $hash, get_home_url() ) ); ?>"><?php _e( 'Download link', 'it-l10n-ithemes-exchange' ); ?></a>
+											<span style="font-family: Monaco, monospace;font-size:12px;color:#AAA;">(<?php esc_attr_e( $hash ); ?>)</span>
 										</li>
 									<?php endforeach; ?>
 								</ul>
@@ -431,11 +458,12 @@ class IT_Exchange_Email_Notifications {
 					<?php endif; ?>
 				<?php endforeach; ?>
 			</div>
-		<?php
+			<?php
 		}
 
 		if ( empty( $downloads_exist_for_transaction ) || empty( $hashes_found ) ) {
 			echo $status_notice;
+
 			return ob_get_clean();
 		} else {
 			return ob_get_clean();
@@ -448,11 +476,12 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_name_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_name_tag( $args, $options = null ) {
 		$name = '';
-		if ( !empty( $this->user->data->first_name ) ) {
+		if ( ! empty( $this->user->data->first_name ) ) {
 			$name = $this->user->data->first_name;
 		} else if ( ! empty( $this->user->data->display_name ) ) {
 			$name = $this->user->data->display_name;
@@ -460,6 +489,7 @@ class IT_Exchange_Email_Notifications {
 			// Guest Chekcout
 			$name = $GLOBALS['it_exchange']['email-confirmation-data'][0]->customer_id;
 		}
+
 		return $name;
 	}
 
@@ -469,9 +499,10 @@ class IT_Exchange_Email_Notifications {
 	 * @since 1.14.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_email_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_email_tag( $args, $options = null ) {
 		$email = '';
 
 		if ( ! empty( $this->user->data->user_email ) ) {
@@ -487,9 +518,10 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_fullname_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_fullname_tag( $args, $options = null ) {
 		$fullname = '';
 
 		if ( ! empty( $this->user->data->first_name ) && ! empty( $this->user->data->last_name ) ) {
@@ -507,9 +539,10 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_username_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_username_tag( $args, $options = null ) {
 		return empty( $this->user->data->user_login ) ? '' : $this->user->data->user_login;
 	}
 
@@ -519,59 +552,61 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_order_table_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_order_table_tag( $args, $options = null ) {
 
-		$purchase_messages_heading  = '<h3>' . __( 'Important Information', 'it-l10n-ithemes-exchange' ). '</h3>';
-		$purchase_messages          = '';
-		$purchase_message_on        = false;
+		$purchase_messages_heading = '<h3>' . __( 'Important Information', 'it-l10n-ithemes-exchange' ) . '</h3>';
+		$purchase_messages         = '';
+		$purchase_message_on       = false;
 
-		if ( in_array( 'purchase_message', $options ) )
+		if ( in_array( 'purchase_message', $options ) ) {
 			$purchase_message_on = true;
+		}
 
 		ob_start();
 		?>
-			<table style="text-align: left; background: #FBFBFB; margin-bottom: 1.5em;border:1px solid #DDD;border-collapse: collapse;">
-				<thead style="background:#F3F3F3;">
+		<table style="text-align: left; background: #FBFBFB; margin-bottom: 1.5em;border:1px solid #DDD;border-collapse: collapse;">
+			<thead style="background:#F3F3F3;">
+			<tr>
+				<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Product', 'it-l10n-ithemes-exchange' ); ?></th>
+				<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Quantity', 'it-l10n-ithemes-exchange' ); ?></th>
+				<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total Price', 'it-l10n-ithemes-exchange' ); ?></th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php if ( $products = it_exchange_get_transaction_products( $this->transaction_id ) ) : ?>
+				<?php foreach ( $products as $product ) : ?>
 					<tr>
-						<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Product', 'it-l10n-ithemes-exchange' ); ?></th>
-						<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Quantity', 'it-l10n-ithemes-exchange' ); ?></th>
-						<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total Price', 'it-l10n-ithemes-exchange' ); ?></th>
+						<td style="padding: 10px;border:1px solid #DDD;">
+							<?php echo apply_filters( 'it_exchange_email_notification_order_table_product_name', it_exchange_get_transaction_product_feature( $product, 'product_name' ), $product ); ?>
+						</td>
+						<td style="padding: 10px;border:1px solid #DDD;"><?php echo apply_filters( 'it_exchange_email_notification_order_table_product_count', it_exchange_get_transaction_product_feature( $product, 'count' ), $product ); ?></td>
+						<td style="padding: 10px;border:1px solid #DDD;"><?php echo apply_filters( 'it_exchange_email_notification_order_table_product_subtotal', it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ), $product ) ); ?></td>
 					</tr>
-				</thead>
-				<tbody>
-					<?php if ( $products = it_exchange_get_transaction_products( $this->transaction_id ) ) : ?>
-						<?php foreach ( $products as $product ) : ?>
-							<tr>
-								<td style="padding: 10px;border:1px solid #DDD;">
-								<?php echo apply_filters( 'it_exchange_email_notification_order_table_product_name', it_exchange_get_transaction_product_feature( $product, 'product_name' ), $product ); ?>
-                                </td>
-								<td style="padding: 10px;border:1px solid #DDD;"><?php echo apply_filters( 'it_exchange_email_notification_order_table_product_count', it_exchange_get_transaction_product_feature( $product, 'count' ), $product ); ?></td>
-								<td style="padding: 10px;border:1px solid #DDD;"><?php echo apply_filters( 'it_exchange_email_notification_order_table_product_subtotal', it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ), $product ) ); ?></td>
-							</tr>
 
-							<?php
-							// Generate Purchase Messages
-							if ( $purchase_message_on && it_exchange_product_has_feature( $product['product_id'], 'purchase-message' ) ) {
-								$purchase_messages .= '<h4>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'product_name' ) ) . '</h4>';
-								$purchase_messages .= '<p>' . it_exchange_get_product_feature( $product['product_id'], 'purchase-message' ) . '</p>';
-								$purchase_messages = apply_filters( 'it_exchange_email_notification_order_table_purchase_message', $purchase_messages, $product );
-							}
-							?>
+					<?php
+					// Generate Purchase Messages
+					if ( $purchase_message_on && it_exchange_product_has_feature( $product['product_id'], 'purchase-message' ) ) {
+						$purchase_messages .= '<h4>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'product_name' ) ) . '</h4>';
+						$purchase_messages .= '<p>' . it_exchange_get_product_feature( $product['product_id'], 'purchase-message' ) . '</p>';
+						$purchase_messages = apply_filters( 'it_exchange_email_notification_order_table_purchase_message', $purchase_messages, $product );
+					}
+					?>
 
-						<?php endforeach; ?>
-					<?php endif; ?>
-				</tbody>
-				<tfoot style="background:#F3F3F3;">
-					<?php do_action( 'it_exchange_replace_order_table_tag_before_total_row', $args, $options ); ?>
-					<tr>
-						<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total', 'it-l10n-ithemes-exchange' ); ?></td>
-						<td style="padding: 10px;border:1px solid #DDD;"><?php echo it_exchange_get_transaction_total( $this->transaction_id, true ) ?></td>
-					</tr>
-					<?php do_action( 'it_exchange_replace_order_table_tag_after_total_row', $args, $options ); ?>
-				</tfoot>
-			</table>
+				<?php endforeach; ?>
+			<?php endif; ?>
+			</tbody>
+			<tfoot style="background:#F3F3F3;">
+			<?php do_action( 'it_exchange_replace_order_table_tag_before_total_row', $args, $options ); ?>
+			<tr>
+				<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total', 'it-l10n-ithemes-exchange' ); ?></td>
+				<td style="padding: 10px;border:1px solid #DDD;"><?php echo it_exchange_get_transaction_total( $this->transaction_id, true ) ?></td>
+			</tr>
+			<?php do_action( 'it_exchange_replace_order_table_tag_after_total_row', $args, $options ); ?>
+			</tfoot>
+		</table>
 		<?php
 
 		$table = ob_get_clean();
@@ -586,9 +621,10 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_purchase_date_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_purchase_date_tag( $args, $options = null ) {
 		return it_exchange_get_transaction_date( $this->transaction_id );
 	}
 
@@ -598,9 +634,10 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_total_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_total_tag( $args, $options = null ) {
 		return it_exchange_get_transaction_total( $this->transaction_id, true );
 	}
 
@@ -610,9 +647,10 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_payment_id_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_payment_id_tag( $args, $options = null ) {
 		return it_exchange_get_gateway_id_for_transaction( $this->transaction_id );
 	}
 
@@ -622,9 +660,10 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_receipt_id_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_receipt_id_tag( $args, $options = null ) {
 		return it_exchange_get_transaction_order_number( $this->transaction_id );
 	}
 
@@ -634,9 +673,10 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_payment_method_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_payment_method_tag( $args, $options = null ) {
 		return it_exchange_get_transaction_method( $this->transaction_id );
 	}
 
@@ -646,9 +686,10 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_sitename_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_sitename_tag( $args, $options = null ) {
 		return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
 	}
 
@@ -658,9 +699,10 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_receipt_link_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_receipt_link_tag( $args, $options = null ) {
 		return it_exchange_get_transaction_confirmation_url( $this->transaction_id );
 	}
 
@@ -670,9 +712,10 @@ class IT_Exchange_Email_Notifications {
 	 * @since 1.0.2
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_login_link_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_login_link_tag( $args, $options = null ) {
 		return it_exchange_get_page_url( 'login' );
 	}
 
@@ -682,9 +725,10 @@ class IT_Exchange_Email_Notifications {
 	 * @since 1.4.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Replaced value
-	*/
-	function it_exchange_replace_account_link_tag( $args, $options = NULL ) {
+	 */
+	function it_exchange_replace_account_link_tag( $args, $options = null ) {
 		return it_exchange_get_page_url( 'account' );
 	}
 
@@ -694,15 +738,18 @@ class IT_Exchange_Email_Notifications {
 	 * @since 1.10.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Shipping Address
-	*/
-	function it_exchange_replace_shipping_address_tag( $args, $options = NULL, $atts=array() ) {
+	 */
+	function it_exchange_replace_shipping_address_tag( $args, $options = null, $atts = array() ) {
 		if ( it_exchange_transaction_includes_shipping( $this->transaction_id ) ) {
 			$address = it_exchange_get_transaction_shipping_address( $this->transaction_id );
 			$before  = empty( $atts['before'] ) ? '' : $atts['before'];
 			$after   = empty( $atts['after'] ) ? '' : $atts['after'];
+
 			return empty( $address ) ? '' : $before . it_exchange_get_formatted_shipping_address( $address ) . $after;
 		}
+
 		return '';
 	}
 
@@ -712,14 +759,17 @@ class IT_Exchange_Email_Notifications {
 	 * @since 1.10.0
 	 *
 	 * @param object $args of IT_Exchange_Email_Notifications
+	 *
 	 * @return string Billing Address
-	*/
-	function it_exchange_replace_billing_address_tag( $args, $options = NULL, $atts=array() ) {
+	 */
+	function it_exchange_replace_billing_address_tag( $args, $options = null, $atts = array() ) {
 		$address = it_exchange_get_transaction_billing_address( $this->transaction_id );
-		if ( empty( $address ) )
+		if ( empty( $address ) ) {
 			return '';
-		$before  = empty( $atts['before'] ) ? '' : $atts['before'];
-		$after   = empty( $atts['after'] ) ? '' : $atts['after'];
+		}
+		$before = empty( $atts['before'] ) ? '' : $atts['before'];
+		$after  = empty( $atts['after'] ) ? '' : $atts['after'];
+
 		return empty( $address ) ? '' : $before . it_exchange_get_formatted_billing_address( $address ) . $after;
 	}
 
@@ -728,17 +778,19 @@ class IT_Exchange_Email_Notifications {
 	 *
 	 * @since 0.4.11
 	 *
-	 * @param object $transaction the transaction object
-	 * @param string $old_status the status it was just changed from
+	 * @param object  $transaction        the transaction object
+	 * @param string  $old_status         the status it was just changed from
 	 * @param boolean $old_status_cleared was the old status cleared for delivery?
+	 *
 	 * @return void
-	*/
+	 */
 	function resend_if_transaction_status_gets_cleared_for_delivery( $transaction, $old_status, $old_status_cleared ) {
 		// Using ->ID here so that get_transaction forces a reload and doesn't use the old object with the old status
-		$new_status = it_exchange_get_transaction_status( $transaction->ID );
+		$new_status         = it_exchange_get_transaction_status( $transaction->ID );
 		$new_status_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction->ID );
 
-		if ( ( $new_status != $old_status ) && ! $old_status_cleared && $new_status_cleared )
+		if ( ( $new_status != $old_status ) && ! $old_status_cleared && $new_status_cleared ) {
 			$this->send_purchase_emails( $transaction, false );
+		}
 	}
 }

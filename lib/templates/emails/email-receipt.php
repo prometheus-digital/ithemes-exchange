@@ -98,6 +98,39 @@
 	</tr>
 	<!-- end content heading -->
 
+	<!-- begin custom content -->
+	<?php if ( it_exchange( 'email', 'has-message' ) ): ?>
+		<tr>
+			<td align="center">
+				<!--[if mso]>
+				<center>
+					<table>
+						<tr>
+							<td width="640">
+				<![endif]-->
+				<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'body-background-color' ); ?>;" class="wrapper body-bkg-color">
+					<tr>
+						<td valign="top" style="padding: 10px 25px;">
+							<table width="100%">
+								<tr>
+									<td>
+										<?php it_exchange( 'email', 'message' ); ?>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+
+				<!--[if mso]>
+				</td></tr></table>
+				</center>
+				<![endif]-->
+			</td>
+		</tr>
+	<?php endif; ?>
+	<!-- end custom content -->
+
 	<!-- begin order meta -->
 	<tr>
 		<td align="center">

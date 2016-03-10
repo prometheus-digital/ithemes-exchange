@@ -27,6 +27,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	 * @var array
 	 */
 	public $_tag_map = array(
+		'message'                 => 'message',
 		'logo'                    => 'logo',
 		'headerlogo'              => 'header_logo',
 		'headerlogosize'          => 'header_logo_size',
@@ -62,6 +63,26 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	 */
 	public function get_api_context() {
 		return 'email';
+	}
+
+	/**
+	 * Returns the custom message for the email.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $options
+	 *
+	 * @return bool|string
+	 */
+	public function message( $options = array() ) {
+
+		$message = empty( $this->context['message'] ) ? '' : trim( $this->context['message'] );
+
+		if ( ! empty( $options['has'] ) ) {
+			return (bool) $message;
+		}
+
+		return $message;
 	}
 
 	/**
