@@ -11,7 +11,7 @@
  * file's content to the exchange directory located
  * at your templates root.
  *
- * Example: theme/exchange/email.php
+ * Example: theme/exchange/emails/email-receipt.php
  */
 ?>
 <!DOCTYPE html>
@@ -33,37 +33,8 @@
 
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<!-- begin site name / logo header -->
-	<tr>
-		<td align="center">
-			<!--[if mso]>
-			<center>
-				<table>
-					<tr>
-						<td width="640">
-			<![endif]-->
-			<table id="header" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'header-background' ); ?>; margin: 40px auto 0 auto; <?php echo it_exchange( 'email', 'has-header-image' ) ? 'min-height:225px;' : ''; ?>" class="wrapper">
-				<tr>
-					<td align="center" valign="top" style="padding: 54px 25px; background-image: url(<?php it_exchange( 'email', 'header-image' ); ?>); background-position: top center; background-repeat: no-repeat; background-size: cover; border-top: 5px solid <?php it_exchange( 'email', 'header-background' ); ?>; border-bottom: 0; border-radius: 5px 5px 0 0;">
-						<?php if ( it_exchange( 'email', 'has-header-logo' ) ): ?>
-							<img src="<?php it_exchange( 'email', 'header-logo' ); ?>" width="<?php it_exchange( 'email', 'header-logo-size' ); ?>" />
-						<?php endif; ?>
 
-						<?php if ( it_exchange( 'email', 'has-header-store-name' ) ): ?>
-							<h1 style="color: <?php it_exchange( 'email', 'header-store-name-color' ); ?>; font-family: <?php it_exchange( 'email', 'header-store-name-font' ); ?>; font-size: <?php it_exchange( 'email', 'header-store-name-size' ); ?>px; margin: 20px 0 0 0;">
-								<?php it_exchange( 'email', 'header-store-name' ); ?>
-							</h1>
-						<?php endif; ?>
-					</td>
-				</tr>
-			</table>
-			<!--[if mso]>
-			</td></tr></table>
-			</center>
-			<![endif]-->
-		</td>
-	</tr>
-	<!-- end site name / logo header -->
+	<?php it_exchange_get_template_part( 'emails/partials/header' ); ?>
 
 	<!-- begin content heading -->
 	<tr>
@@ -98,38 +69,9 @@
 	</tr>
 	<!-- end content heading -->
 
-	<!-- begin custom content -->
 	<?php if ( it_exchange( 'email', 'has-message' ) ): ?>
-		<tr>
-			<td align="center">
-				<!--[if mso]>
-				<center>
-					<table>
-						<tr>
-							<td width="640">
-				<![endif]-->
-				<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'body-background-color' ); ?>;" class="wrapper body-bkg-color">
-					<tr>
-						<td valign="top" style="padding: 10px 25px;">
-							<table width="100%">
-								<tr>
-									<td>
-										<?php it_exchange( 'email', 'message' ); ?>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
-
-				<!--[if mso]>
-				</td></tr></table>
-				</center>
-				<![endif]-->
-			</td>
-		</tr>
+		<?php it_exchange_get_template_part( 'emails/partials/message' ); ?>
 	<?php endif; ?>
-	<!-- end custom content -->
 
 	<!-- begin order meta -->
 	<tr>
@@ -333,32 +275,8 @@
 		<!-- end order meta -->
 	<?php endif; ?>
 
-	<!-- begin footer -->
-	<tr>
-		<td align="center">
-			<table id="footer" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; padding-top: 20px;" class="wrapper">
-				<tr>
-					<td valign="top" align="center" style="padding: 10px 25px 100px 25px; ">
-						<table width="100%">
-							<tr style="text-align: center;">
-								<td style="color: <?php it_exchange( 'email', 'footer-text-color' ); ?>;" class="footer-text-container">
-									<?php it_exchange( 'email', 'footer-text' ); ?>
-								</td>
-							</tr>
-							<tr class="footer-logo-container" style="text-align: center">
-								<td>
-									<?php if ( it_exchange( 'email', 'has-footer-logo' ) ): ?>
-										<img src="<?php it_exchange( 'email', 'footer-logo' ); ?>" width="<?php it_exchange( 'email', 'footer-logo-size' ); ?>" style="margin-top: 40px;" />
-									<?php endif; ?>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<!-- end footer -->
+	<?php it_exchange_get_template_part( 'emails/partials/footer' ); ?>
+
 </table>
 <?php if ( is_customize_preview() ) {
 	wp_footer();
