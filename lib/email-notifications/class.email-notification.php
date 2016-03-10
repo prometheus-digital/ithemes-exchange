@@ -37,15 +37,22 @@ abstract class IT_Exchange_Email_Notification {
 	private $active = true;
 
 	/**
+	 * @var IT_Exchange_Email_Template
+	 */
+	private $template;
+
+	/**
 	 * IT_Exchange_Email_Notification constructor.
 	 *
-	 * @param string $name
-	 * @param string $slug
-	 * @param array  $defaults
+	 * @param string                     $name
+	 * @param string                     $slug
+	 * @param IT_Exchange_Email_Template $template
+	 * @param array                      $defaults
 	 */
-	public function __construct( $name, $slug, array $defaults = array() ) {
-		$this->name = $name;
-		$this->slug = $slug;
+	public function __construct( $name, $slug, IT_Exchange_Email_Template $template = null, array $defaults = array() ) {
+		$this->name     = $name;
+		$this->slug     = $slug;
+		$this->template = $template ? $template : new IT_Exchange_Email_Template( '' );
 
 		$emails = it_exchange_get_option( 'emails' );
 
@@ -187,6 +194,17 @@ abstract class IT_Exchange_Email_Notification {
 		$this->active = $active;
 
 		return $this;
+	}
+
+	/**
+	 * Get the template for this notification.
+	 *
+	 * @since 1.36
+	 *
+	 * @return IT_Exchange_Email_Template
+	 */
+	public function get_template() {
+		return $this->template;
 	}
 
 	/**
