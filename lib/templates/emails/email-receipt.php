@@ -14,27 +14,14 @@
  * Example: theme/exchange/emails/email-receipt.php
  */
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>iThemes Exchange</title>
+<?php it_exchange_get_template_part( 'emails/partials/head' ); ?>
 
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<!-- HIDDEN PREHEADER TEXT -->
+	<div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
+		<?php printf( __( 'Receipt for your purchase of %s.', 'it-l10n-ithemes-exchange' ), it_exchange( 'transaction', 'get-description' ) ); ?>
+	</div>
 
-</head>
-<body style="margin: 0 !important; padding: 0 10px !important; background: <?php it_exchange( 'email', 'background-color' ); ?>; font-family: <?php it_exchange( 'email', 'body-font' ); ?>; color: <?php it_exchange( 'email', 'body-text-color' ); ?>; font-size: <?php it_exchange( 'email', 'body-font-size' ); ?>px;">
-
-<!-- HIDDEN PREHEADER TEXT -->
-<div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-	<?php printf( __( 'Receipt for your purchase of %s.', 'it-l10n-ithemes-exchange' ), it_exchange( 'transaction', 'get-description' ) ); ?>
-</div>
-
-
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-
-	<?php it_exchange_get_template_part( 'emails/partials/header' ); ?>
+<?php it_exchange_get_template_part( 'emails/partials/header' ); ?>
 
 	<!-- begin content heading -->
 	<tr>
@@ -69,9 +56,9 @@
 	</tr>
 	<!-- end content heading -->
 
-	<?php if ( it_exchange( 'email', 'has-message' ) ): ?>
-		<?php it_exchange_get_template_part( 'emails/partials/message' ); ?>
-	<?php endif; ?>
+<?php if ( it_exchange( 'email', 'has-message' ) ): ?>
+	<?php it_exchange_get_template_part( 'emails/partials/message' ); ?>
+<?php endif; ?>
 
 	<!-- begin order meta -->
 	<tr>
@@ -232,54 +219,48 @@
 	</tr>
 	<!-- end cart totals -->
 
-	<?php if ( it_exchange( 'transaction', 'has-note' ) || it_exchange( 'transaction', 'has-shipping-method' ) ): ?>
+<?php if ( it_exchange( 'transaction', 'has-note' ) || it_exchange( 'transaction', 'has-shipping-method' ) ): ?>
 
-		<!-- begin order meta -->
-		<tr>
-			<td align="center">
-				<!--[if mso]>
-				<center>
-					<table>
-						<tr>
-							<td width="640">
-				<![endif]-->
-				<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'body-background-color' ); ?>; padding-bottom: 20px; margin: 0 auto;" class="wrapper body-bkg-color">
+	<!-- begin order meta -->
+	<tr>
+		<td align="center">
+			<!--[if mso]>
+			<center>
+				<table>
 					<tr>
-						<td valign="top" style="padding: 20px 25px; ">
-							<table width="100%">
-								<tr>
-									<?php if ( it_exchange( 'transaction', 'has-note' ) ): ?>
-										<td style="line-height: 1.4; vertical-align: top;">
-											<strong><?php _e( 'Order Note', 'it-l10n-ithemes-exchange' ); ?></strong><br>
-											<?php it_exchange( 'transaction', 'note' ); ?>
-										</td>
-									<?php endif; ?>
+						<td width="640">
+			<![endif]-->
+			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'body-background-color' ); ?>; padding-bottom: 20px; margin: 0 auto;" class="wrapper body-bkg-color">
+				<tr>
+					<td valign="top" style="padding: 20px 25px; ">
+						<table width="100%">
+							<tr>
+								<?php if ( it_exchange( 'transaction', 'has-note' ) ): ?>
+									<td style="line-height: 1.4; vertical-align: top;">
+										<strong><?php _e( 'Order Note', 'it-l10n-ithemes-exchange' ); ?></strong><br>
+										<?php it_exchange( 'transaction', 'note' ); ?>
+									</td>
+								<?php endif; ?>
 
-									<?php if ( it_exchange( 'transaction', 'has-shipping-method' ) ): ?>
-										<td style="line-height: 1.4; vertical-align: top;">
-											<strong><?php _e( 'Shipping Method', 'it-l10n-ithemes-exchange' ) ?></strong><br>
-											<?php it_exchange( 'transaction', 'shipping-method' ); ?>
-										</td>
-									<?php endif; ?>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
-				<!--[if mso]>
-				</td></tr></table>
-				</center>
-				<![endif]-->
-			</td>
-		</tr>
-		<!-- end order meta -->
-	<?php endif; ?>
+								<?php if ( it_exchange( 'transaction', 'has-shipping-method' ) ): ?>
+									<td style="line-height: 1.4; vertical-align: top;">
+										<strong><?php _e( 'Shipping Method', 'it-l10n-ithemes-exchange' ) ?></strong><br>
+										<?php it_exchange( 'transaction', 'shipping-method' ); ?>
+									</td>
+								<?php endif; ?>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<!--[if mso]>
+			</td></tr></table>
+			</center>
+			<![endif]-->
+		</td>
+	</tr>
+	<!-- end order meta -->
+<?php endif; ?>
 
-	<?php it_exchange_get_template_part( 'emails/partials/footer' ); ?>
-
-</table>
-<?php if ( is_customize_preview() ) {
-	wp_footer();
-} ?>
-</body>
-</html>
+<?php it_exchange_get_template_part( 'emails/partials/footer' ); ?>
+<?php it_exchange_get_template_part( 'emails/partials/foot' ); ?>

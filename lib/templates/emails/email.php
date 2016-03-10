@@ -14,62 +14,44 @@
  * Example: theme/exchange/emails/email-receipt.php
  */
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>iThemes Exchange</title>
 
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<?php it_exchange_get_template_part( 'emails/partials/head' ); ?>
+<?php it_exchange_get_template_part( 'emails/partials/header' ); ?>
 
-</head>
-<body style="margin: 0 !important; padding: 0 10px !important; background: <?php it_exchange( 'email', 'background-color' ); ?>; font-family: <?php it_exchange( 'email', 'body-font' ); ?>; color: <?php it_exchange( 'email', 'body-text-color' ); ?>; font-size: <?php it_exchange( 'email', 'body-font-size' ); ?>px;">
-
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-
-	<?php it_exchange_get_template_part( 'emails/partials/header' ); ?>
-
-	<!-- begin content heading -->
-	<tr>
-		<td align="center">
-			<!--[if mso]>
-			<center>
-				<table>
-					<tr>
-						<td width="640">
-			<![endif]-->
-			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'body-background-color' ); ?>;  margin: 25px auto 0 auto; border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>;" class="wrapper body-bkg-color body-border-color">
+<!-- begin content heading -->
+<tr>
+	<td align="center">
+		<!--[if mso]>
+		<center>
+			<table>
 				<tr>
-					<td valign="top" style="padding: 20px 25px;">
-						<table width="100%">
-							<tr>
-								<td style="font-weight: bold; ">
-									<strong><?php it_exchange( 'email', 'date' ); ?></strong>
-								</td>
-								<td align="right" style="font-weight: bold; ">
-									<strong><?php it_exchange( 'transaction', 'order-number', array( 'label' => __( 'Order: %s', 'it-l10n-ithemes-exchange' ) ) ); ?></strong>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-			<!--[if mso]>
-			</td></tr></table>
-			</center>
-			<![endif]-->
-		</td>
-	</tr>
-	<!-- end content heading -->
+					<td width="640">
+		<![endif]-->
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'body-background-color' ); ?>;  margin: 25px auto 0 auto; border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>;" class="wrapper body-bkg-color body-border-color">
+			<tr>
+				<td valign="top" style="padding: 20px 25px;">
+					<table width="100%">
+						<tr>
+							<td style="font-weight: bold; ">
+								<strong><?php it_exchange( 'email', 'date' ); ?></strong>
+							</td>
+							<td align="right" style="font-weight: bold; ">
+								<strong><?php it_exchange( 'transaction', 'order-number', array( 'label' => __( 'Order: %s', 'it-l10n-ithemes-exchange' ) ) ); ?></strong>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<!--[if mso]>
+		</td></tr></table>
+		</center>
+		<![endif]-->
+	</td>
+</tr>
+<!-- end content heading -->
 
-	<?php it_exchange_get_template_part( 'emails/partials/message' ); ?>
+<?php it_exchange_get_template_part( 'emails/partials/message' ); ?>
 
-	<?php it_exchange_get_template_part( 'emails/partials/footer' ); ?>
-
-</table>
-<?php if ( is_customize_preview() ) {
-	wp_footer();
-} ?>
-</body>
-</html>
+<?php it_exchange_get_template_part( 'emails/partials/footer' ); ?>
+<?php it_exchange_get_template_part( 'emails/partials/foot' ); ?>
