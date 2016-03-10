@@ -85,6 +85,16 @@ class IT_Exchange_Email_Notifications {
 		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
+	/**
+	 * Send an email notification.
+	 *
+	 * @since 1.36
+	 *
+	 * @param int    $customer_id
+	 * @param string $subject
+	 * @param string $content
+	 * @param bool   $transaction_id
+	 */
 	function it_exchange_send_email_notification( $customer_id, $subject, $content, $transaction_id = false ) {
 
 		$this->transaction_id = apply_filters( 'it_exchange_send_email_notification_transaction_id', $transaction_id );
@@ -111,9 +121,15 @@ class IT_Exchange_Email_Notifications {
 
 		$subject = do_shortcode( $subject );
 		$body    = apply_filters( 'it_exchange_send_email_notification_body', $content );
-		$body    = $this->body_header() . '<div>' . wpautop( do_shortcode( $body ) ) . '</div>' . $this->body_footer();
+		$body    = do_shortcode( shortcode_unautop( wpautop( $body ) ) );
 
 		$headers = apply_filters( 'it_exchange_send_email_notification_headers', $headers );
+
+		$template = new IT_Exchange_Email_Template( null );
+		$body     = $template->get_html( array(
+			'message'     => $body,
+			'transaction' => it_exchange_get_transaction( $this->transaction_id )
+		) );
 
 		wp_mail( $this->user->data->user_email, strip_tags( $subject ), $body, $headers );
 

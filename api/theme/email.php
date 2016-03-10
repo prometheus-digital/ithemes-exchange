@@ -28,6 +28,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	 */
 	public $_tag_map = array(
 		'message'                 => 'message',
+		'date'                    => 'date',
 		'logo'                    => 'logo',
 		'headerlogo'              => 'header_logo',
 		'headerlogosize'          => 'header_logo_size',
@@ -83,6 +84,30 @@ class IT_Theme_API_Email implements IT_Theme_API {
 		}
 
 		return $message;
+	}
+
+	/**
+	 * Return the current date.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $options
+	 *
+	 * @return string
+	 */
+	public function date( $options = array() ) {
+
+		// Set options
+		$defaults = array(
+			'before' => '',
+			'after'  => '',
+			'format' => get_option( 'date_format' ),
+		);
+		$options  = ITUtility::merge_defaults( $options, $defaults );
+
+		$date = empty( $this->context['date'] ) ? time() : $this->context['date'];
+
+		return $options['before'] . date( $options['format'], $date ) . $options['after'];
 	}
 
 	/**

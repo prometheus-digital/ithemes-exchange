@@ -26,12 +26,6 @@
 </head>
 <body style="margin: 0 !important; padding: 0 10px !important; background: <?php it_exchange( 'email', 'background-color' ); ?>; font-family: <?php it_exchange( 'email', 'body-font' ); ?>; color: <?php it_exchange( 'email', 'body-text-color' ); ?>; font-size: <?php it_exchange( 'email', 'body-font-size' ); ?>px;">
 
-<!-- HIDDEN PREHEADER TEXT -->
-<div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-	Pre-header text. This should show up in the mail client preview lines. Could be used as a sort of sub-subject line to entice an open.
-</div>
-
-
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<!-- begin site name / logo header -->
 	<tr>
@@ -80,10 +74,10 @@
 						<table width="100%">
 							<tr>
 								<td style="font-weight: bold; ">
-									<strong>February 23, 2016</strong>
+									<strong><?php it_exchange( 'email', 'date' ); ?></strong>
 								</td>
 								<td align="right" style="font-weight: bold; ">
-									<strong>$143.85</strong>
+									<strong><?php it_exchange( 'transaction', 'order-number', array( 'label' => __( 'Order: %s', 'it-l10n-ithemes-exchange' ) ) ); ?></strong>
 								</td>
 							</tr>
 						</table>
@@ -97,8 +91,6 @@
 		</td>
 	</tr>
 	<!-- end content heading -->
-
-	<!-- begin order meta -->
 	<tr>
 		<td align="center">
 			<!--[if mso]>
@@ -107,178 +99,26 @@
 					<tr>
 						<td width="640">
 			<![endif]-->
-			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'body-background-color' ); ?>; padding-bottom: 20px; margin: 0 auto;" class="wrapper body-bkg-color">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'body-background-color' ); ?>;" class="wrapper body-bkg-color">
 				<tr>
-					<td valign="top" style="padding: 20px 25px; ">
+					<td valign="top" style="padding: 10px 25px;">
 						<table width="100%">
 							<tr>
-								<td style="line-height: 1.4; ">
-									<strong>Billing Address</strong><br>
-									Ty Carlson<br>
-									833 NW 34th St.<br>
-									Oklahoma City, OK 73118<br>
-								</td>
-								<td style="line-height: 1.4; ">
-									<strong>Shipping Address</strong><br>
-									Ty Carlson<br>
-									833 NW 34th St.<br>
-									Oklahoma City, OK 73118<br>
-								</td>
-								<td style="line-height: 1.1; ">
-									<strong>Payment Method</strong><br>
-									Stripe (Credit Card)<br><br>
-									<strong>Order Number</strong><br>
-									568713<br>
+								<td>
+									<?php it_exchange( 'email', 'message' ); ?>
 								</td>
 							</tr>
 						</table>
 					</td>
 				</tr>
 			</table>
-			<!--[if mso]>
-			</td></tr></table>
-			</center>
-			<![endif]-->
-		</td>
-	</tr>
-	<!-- end order meta -->
 
-	<!-- begin cart details -->
-	<tr>
-		<td align="center">
-			<!--[if mso]>
-			<center>
-				<table>
-					<tr>
-						<td width="640">
-			<![endif]-->
-			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'body-background-color' ); ?>; margin: 0 auto;" class="wrapper body-bkg-color">
-				<tr>
-					<td valign="top" style="padding: 20px 25px; ">
-						<table width="100%" style="line-height: 1.2;">
-							<tr>
-								<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 0 0 10px 0;" class="body-border-color">Description</th>
-								<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 0 0 10px 0;" class="body-border-color">Qty</th>
-								<th align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 0 0 10px 0;" class="body-border-color">Price</th>
-							</tr>
-							<tr>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-top: 10px;" class="body-border-color">
-									<table>
-										<tr>
-											<td>
-												<img src="product-image.png" style="margin-right: 20px;" />
-											</td>
-											<td style="">
-												<strong>Lewis Trouser Strap</strong><br>
-												Size: 36<br>
-												Color: Russet<br>
-												<p style="border-left: 4px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-left: 10px; max-width: 300px; font-size: .9em" class="body-border-color">
-													Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed sem eu mauris lobortis congue. Vivamus nec elit id ex luctus aliquam ut et elit.
-												</p>
-											</td>
-										</tr>
-									</table>
-								</td>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-top: 10px;" class="body-border-color">1</td>
-								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-top: 10px;" class="body-border-color">$85</td>
-							</tr>
-							<tr>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; " class="body-border-color">
-									<table>
-										<tr>
-											<td>
-												<img src="product-image.png" style="margin-right: 20px;" />
-											</td>
-											<td style="">
-												<strong>Lewis Trouser Strap</strong><br>
-												Size: 36<br>
-												Color: Russet<br>
-											</td>
-										</tr>
-									</table>
-								</td>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; " class="body-border-color">1</td>
-								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; " class="body-border-color">$85</td>
-							</tr>
-							<tr>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>;" class="body-border-color">
-									<table>
-										<tr>
-											<td>
-												<img src="product-image.png" style="margin-right: 20px;" />
-											</td>
-											<td style="">
-												<strong>Lewis Trouser Strap</strong><br>
-												Size: 36<br>
-												Color: Russet<br>
-											</td>
-										</tr>
-									</table>
-								</td>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; " class="body-border-color">1</td>
-								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; " class="body-border-color">$85</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
 			<!--[if mso]>
 			</td></tr></table>
 			</center>
 			<![endif]-->
 		</td>
 	</tr>
-	<!-- end cart details -->
-
-	<!-- begin cart totals -->
-	<tr>
-		<td align="center">
-			<!--[if mso]>
-			<center>
-				<table>
-					<tr>
-						<td width="640">
-			<![endif]-->
-			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background: <?php it_exchange( 'email', 'body-background-color' ); ?>; max-width: 640px; padding-bottom: 50px;" class="wrapper body-bkg-color">
-				<tr>
-					<td valign="top" style="padding: 0 25px;">
-						<table width="100%" style="line-height: 1.2;">
-							<tr>
-								<td></td>
-								<td align="right" style="padding: 10px; ">
-									<strong>Subtotal</strong></td>
-								<td align="right" style="padding: 10px 0 10px 10px; ">$130</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td align="right" style="padding: 10px; ">
-									<strong>Taxes</strong></td>
-								<td align="right" style="padding: 10px 0 10px 10px; ">$5.85</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td align="right" style="padding: 10px; ">
-									<strong>Shipping</strong></td>
-								<td align="right" style="padding: 10px 0 10px 10px; ">$8</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td align="right" style="padding: 10px; ">
-									<strong>Total</strong></td>
-								<td align="right" style="padding: 10px 0 10px 10px; ">
-									<strong>$143.85</strong></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-			<!--[if mso]>
-			</td></tr></table>
-			</center>
-			<![endif]-->
-		</td>
-	</tr>
-	<!-- end cart totals -->
 
 	<!-- begin order meta -->
 	<tr>
