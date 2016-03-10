@@ -9,6 +9,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 	/**
 	 * API context
+	 *
 	 * @var string $_context
 	 * @since 0.4.0
 	 */
@@ -16,6 +17,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 	/**
 	 * The current transaction
+	 *
 	 * @var array
 	 * @since 0.4.0
 	 */
@@ -28,6 +30,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 	/**
 	 * Maps api tags to methods
+	 *
 	 * @var array $_tag_map
 	 * @since 0.4.0
 	 */
@@ -59,6 +62,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 	/**
 	 * The current transaction product
+	 *
 	 * @var array $_transaction_product
 	 * @since 0.4.0
 	 */
@@ -66,6 +70,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 	/**
 	 * The current transaction cart object
+	 *
 	 * @var array $_transaction_cart_object
 	 * @since 1.4.0
 	 */
@@ -342,7 +347,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		}
 
 		if ( ! empty( $options['has'] ) ) {
-			return ! empty( $address );
+			return ! empty( $address ) && ! empty( $address['address1'] );
 		}
 
 		// Set options
@@ -481,6 +486,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * Use this to get a transaction product attribute like title, description, price, etc.
 	 *
 	 * See lib/templates/content-downloads/ files for examples
+	 *
 	 * @since 0.4.0
 	 * @return string
 	 */
@@ -594,6 +600,10 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 		$product = $this->_transaction_product;
 
+		if ( empty( $product['itemized_data'] ) ) {
+			return '';
+		}
+
 		$itemized_data = maybe_unserialize( $product['itemized_data'] );
 
 		if ( empty( $itemized_data['it_variant_combo_hash'] ) || ! function_exists( 'it_exchange_get_variant_combo_attributes_from_hash' ) ) {
@@ -681,7 +691,8 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			?>
 			<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
 				<div class="featured-image-wrapper">
-					<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>" data-src-thumb="<?php echo $feature_image['thumb'] ?>" />
+					<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>"
+					     data-src-thumb="<?php echo $feature_image['thumb'] ?>"/>
 				</div>
 			</div>
 			<?php
@@ -700,8 +711,8 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * If used with the has- prefix, it returns a boolean of true/false
 	 * If it returns true, you may then continue your while loop with the product-download api method
 	 *
-	 * eg: while( it_exchange( 'transaction', 'product-downloads' ) ) { it_exchange( 'transaction', 'product_download', array( 'title' ) ); }
-	 * See lib/templates/content-downloads/ files for examples
+	 * eg: while( it_exchange( 'transaction', 'product-downloads' ) ) { it_exchange( 'transaction', 'product_download',
+	 * array( 'title' ) ); } See lib/templates/content-downloads/ files for examples
 	 *
 	 * @param array $options
 	 *
@@ -747,8 +758,8 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * Returns attributes for a download that is a part of a specific transaction
 	 *
 	 * Intended to be used inside a while loop with it_exchange( 'transaction', 'product-downloads' );
-	 * Use the attribute option to indicated what type of download attribute you want. ie: array( 'attribute' => 'title' );
-	 * See lib/templates/content-downloads/ files for examples
+	 * Use the attribute option to indicated what type of download attribute you want. ie: array( 'attribute' =>
+	 * 'title' ); See lib/templates/content-downloads/ files for examples
 	 *
 	 * @param array $options
 	 *
@@ -916,7 +927,8 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			?>
 			<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
 				<div class="featured-image-wrapper">
-					<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>" data-src-thumb="<?php echo $feature_image['thumb'] ?>" />
+					<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>"
+					     data-src-thumb="<?php echo $feature_image['thumb'] ?>"/>
 				</div>
 			</div>
 			<?php

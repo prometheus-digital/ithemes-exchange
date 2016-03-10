@@ -113,20 +113,20 @@
 						<table width="100%">
 							<tr>
 								<?php if ( it_exchange( 'transaction', 'has-billing-address' ) ): ?>
-									<td style="line-height: 1.4; ">
+									<td style="line-height: 1.4; vertical-align: top;">
 										<strong>Billing Address</strong><br>
 										<?php it_exchange( 'transaction', 'billing-address' ); ?>
 									</td>
 								<?php endif; ?>
 
 								<?php if ( it_exchange( 'transaction', 'has-shipping-address' ) ): ?>
-									<td style="line-height: 1.4; ">
+									<td style="line-height: 1.4; vertical-align: top;">
 										<strong>Shipping Address</strong><br>
 										<?php it_exchange( 'transaction', 'shipping-address' ); ?>
 									</td>
 								<?php endif; ?>
 
-								<td style="line-height: 1.4; ">
+								<td style="line-height: 1.1; vertical-align: top; ">
 									<strong>Payment Method</strong><br>
 									<?php it_exchange( 'transaction', 'method' ); ?><br><br>
 									<strong>Order Number</strong><br>
@@ -173,7 +173,7 @@
 														<img src="<?php it_exchange( 'transaction', 'featured-image', 'format=url&size=thumbnail' ); ?>" width="80" style="margin-right: 20px;" />
 													</td>
 												<?php endif; ?>
-												<td style="vertical-align: top">
+												<td style="/*vertical-align: top*/">
 													<strong><?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_name' ); ?></strong><br>
 													<?php it_exchange( 'transaction', 'variants' ); ?>
 													<?php if ( it_exchange( 'transaction', 'has-purchase-message' ) ): ?>
