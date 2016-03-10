@@ -247,7 +247,7 @@
 					<tr>
 						<td width="640">
 			<![endif]-->
-			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background: <?php it_exchange( 'email', 'body-background-color' ); ?>; max-width: 640px; padding-bottom: 50px;" class="wrapper body-bkg-color">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background: <?php it_exchange( 'email', 'body-background-color' ); ?>; max-width: 640px; padding-bottom: 30px;" class="wrapper body-bkg-color">
 				<tr>
 					<td valign="top" style="padding: 0 25px;">
 						<table width="100%" style="line-height: 1.2;">
@@ -290,7 +290,50 @@
 	</tr>
 	<!-- end cart totals -->
 
-	<!-- begin order meta -->
+	<?php if ( it_exchange( 'transaction', 'has-note' ) || it_exchange( 'transaction', 'has-shipping-method' ) ): ?>
+
+		<!-- begin order meta -->
+		<tr>
+			<td align="center">
+				<!--[if mso]>
+				<center>
+					<table>
+						<tr>
+							<td width="640">
+				<![endif]-->
+				<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'body-background-color' ); ?>; padding-bottom: 20px; margin: 0 auto;" class="wrapper body-bkg-color">
+					<tr>
+						<td valign="top" style="padding: 20px 25px; ">
+							<table width="100%">
+								<tr>
+									<?php if ( it_exchange( 'transaction', 'has-note' ) ): ?>
+										<td style="line-height: 1.4; vertical-align: top;">
+											<strong><?php _e( 'Order Note', 'it-l10n-ithemes-exchange' ); ?></strong><br>
+											<?php it_exchange( 'transaction', 'note' ); ?>
+										</td>
+									<?php endif; ?>
+
+									<?php if ( it_exchange( 'transaction', 'has-shipping-method' ) ): ?>
+										<td style="line-height: 1.4; vertical-align: top;">
+											<strong><?php _e( 'Shipping Method', 'it-l10n-ithemes-exchange' ) ?></strong><br>
+											<?php it_exchange( 'transaction', 'shipping-method' ); ?>
+										</td>
+									<?php endif; ?>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<!--[if mso]>
+				</td></tr></table>
+				</center>
+				<![endif]-->
+			</td>
+		</tr>
+		<!-- end order meta -->
+	<?php endif; ?>
+
+	<!-- begin footer -->
 	<tr>
 		<td align="center">
 			<table id="footer" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; padding-top: 20px;" class="wrapper">
@@ -315,7 +358,7 @@
 			</table>
 		</td>
 	</tr>
-	<!-- end order meta -->
+	<!-- end footer -->
 </table>
 <?php if ( is_customize_preview() ) {
 	wp_footer();

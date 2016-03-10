@@ -39,12 +39,14 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		'status'                => 'status',
 		'date'                  => 'date',
 		'method'                => 'method',
+		'note'                  => 'note',
 		'total'                 => 'total',
 		'subtotal'              => 'subtotal',
 		'savingstotal'          => 'savings_total',
 		'shippingtotal'         => 'shipping_total',
 		'instructions'          => 'instructions',
 		'shippingaddress'       => 'shipping_address',
+		'shippingmethod'        => 'shipping_method',
 		'billingaddress'        => 'billing_address',
 		'products'              => 'products',
 		'productattribute'      => 'product_attribute',
@@ -220,6 +222,34 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	}
 
 	/**
+	 * Retrieve the order note.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $options
+	 *
+	 * @return string
+	 */
+	public function note( $options = array() ) {
+
+		if ( ! empty ( $this->_transaction->cart_details->customer_order_notes ) ) {
+			$note = $this->_transaction->cart_details->customer_order_notes;
+		} else {
+			$note = '';
+		}
+
+		if ( $this->demo ) {
+			$note = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed sem eu mauris lobortis congue. Vivamus nec elit id ex luctus aliquam ut et elit.';
+		}
+
+		if ( ! empty( $options['has'] ) ) {
+			return (bool) $note;
+		}
+
+		return $note;
+	}
+
+	/**
 	 * Returns the transaction total
 	 *
 	 * @since 0.4.0
@@ -318,6 +348,47 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		$total = $options['format_currency'] ? it_exchange_format_price( $total ) : $total;
 
 		return $options['before'] . $total . $options['after'];
+	}
+
+	/**
+	 * Get the shipping method for the transaction.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $options
+	 *
+	 * @return string
+	 */
+	public function shipping_method( $options = array() ) {
+
+		$defaults = array(
+			'open-line'  => '',
+			'close-line' => '<br>'
+		);
+
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		if ( ! empty( $options['has'] ) ) {
+			return it_exchange_transaction_includes_shipping( $this->_transaction );
+		}
+
+		$method = it_exchange_get_transaction_shipping_method( $this->_transaction );
+
+		if ( $method->slug === 'multiple-methods' ) {
+
+			$out = '';
+
+			foreach ( it_exchange_get_transaction_products( $this->_transaction ) as $product ) {
+				$name   = get_the_title( $product['product_id'] );
+				$method = it_exchange_get_transaction_shipping_method_for_product( $this->_transaction, $product['product_cart_id'] );
+
+				$out .= $options['open-line'] . $name . ': ' . $method . $options['close-line'];
+			}
+		} else {
+			$out = it_exchange_get_transaction_shipping_method( $this->_transaction )->label;
+		}
+
+		return $out;
 	}
 
 	/**
