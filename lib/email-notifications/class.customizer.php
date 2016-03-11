@@ -68,6 +68,8 @@ class IT_Exchange_Email_Customizer {
 
 		if ( isset( $settings[ $setting ] ) ) {
 			return $settings[ $setting ];
+		} elseif ( ( $default = self::get_default( $setting ) ) !== '' ) {
+			return $default;
 		}
 
 		return null;
@@ -562,7 +564,7 @@ class IT_Exchange_Email_Customizer {
 	 *
 	 * @return array
 	 */
-	protected function get_presets() {
+	protected static function get_presets() {
 
 		$presets = array(
 			'default' => array(
@@ -709,11 +711,11 @@ class IT_Exchange_Email_Customizer {
 	 *
 	 * @return string
 	 */
-	private function get_default( $setting ) {
+	private static function get_default( $setting ) {
 
 		$setting = str_replace( array( 'it-exchange-email[', ']' ), '', $setting );
 
-		$presets = $this->get_presets();
+		$presets = self::get_presets();
 		$default = $presets['default'];
 
 		if ( isset( $default['settings'][ $setting ] ) ) {
