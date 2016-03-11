@@ -42,8 +42,6 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 	 */
 	public function send( IT_Exchange_Email $email ) {
 
-		error_log('sending');
-
 		$settings = it_exchange_get_option( 'settings_email' );
 
 		// Edge case where sale is made before admin visits email settings.

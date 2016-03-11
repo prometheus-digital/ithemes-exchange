@@ -153,7 +153,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Returns the admin_menu_capability
 	 *
-	 * @since 1.11.15 
+	 * @since 1.11.15
 	 *
 	 * @return string
 	*/
@@ -1295,6 +1295,21 @@ Order: %s
 			it_exchange_save_option( 'settings_email', $settings );
 			$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
 		}
+
+		$notifications = it_exchange_email_notifications();
+
+		foreach ( $_POST['email'] as $slug => $data ) {
+			$notification = $notifications->get_notification( $slug );
+
+			if ( ! $notification ) {
+				continue;
+			}
+
+			$notification->set_subject( $data['subject'] );
+			$notification->set_body( stripslashes( $data['body'] ) );
+			$notification->set_active( empty( $data['active'] ) ? false : it_exchange_str_true( $data['active'] ) );
+			$notification->save();
+		}
 	}
 
 	/**
@@ -1581,6 +1596,8 @@ Order: %s
 			} else if ( $_GET['tab'] == 'shipping') {
 				$deps = array( 'jquery-ui-tooltip' );
 				wp_enqueue_script( 'it-exchange-settings-pages', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/settings-pages.js', $deps );
+			} else if ( $_GET['tab'] == 'email' ) {
+				wp_enqueue_script( 'it-exchange-settings-email', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/email-settings.js' );
 			}
 		} else if ( 'exchange_page_it-exchange-setup' === $hook_suffix ) {
 			$deps = array( 'jquery-ui-tooltip' );
@@ -1640,7 +1657,7 @@ Order: %s
 		// All admin exchange pages
 		if ( preg_match('|(it_exchange)|i', str_replace( '-', '_', $hook_suffix ) ) || ( isset( $post_type ) && preg_match('|(it_exchange)|i', str_replace( '-', '_', $post_type ) ) ) ) {
 			wp_enqueue_style( 'it-exchange-exchange-only-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/exchange-admin.css' );
-			
+
 			if ( $wp_version <= 3.7 ) {
 				wp_enqueue_style( 'it-exchange-exchange-only-admin-pre-3.8', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/exchange-admin-pre-3.8.css' );
 			}

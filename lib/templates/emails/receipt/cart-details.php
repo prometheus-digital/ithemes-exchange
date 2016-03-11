@@ -53,10 +53,10 @@
 										</tr>
 									</table>
 								</td>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-top: 10px;" class="body-border-color">
+								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 10px 0;" class="body-border-color">
 									<?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_count' ); ?>
 								</td>
-								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-top: 10px;" class="body-border-color">
+								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 10px 0;" class="body-border-color">
 									<?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_subtotal' ); ?>
 								</td>
 							</tr>

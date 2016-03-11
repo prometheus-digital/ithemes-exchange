@@ -8,6 +8,8 @@
 
 global $wp_version;
 
+$email_notifications = it_exchange_email_notifications();
+
 ?>
 <div class="wrap">
 	<?php
@@ -17,8 +19,8 @@ global $wp_version;
 	$form->start_form( $form_options, 'exchange-email-settings' );
 	do_action( 'it_exchange_general_settings_email_form_top' );
 
-	$h     = version_compare( $GLOBALS['wp_version'], '4.4', '>=' ) ? '1' : '2';
-	$class = version_compare( $GLOBALS['wp_version'], '4.4', '>=' ) ? 'page-title-action' : 'add-new-h2';
+	$h     = version_compare( $wp_version, '4.4', '>=' ) ? '1' : '2';
+	$class = version_compare( $wp_version, '4.4', '>=' ) ? 'page-title-action' : 'add-new-h2';
 	?>
 
 	<h<?php echo $h; ?>>
@@ -31,129 +33,118 @@ global $wp_version;
 	<table class="widefat striped">
 		<thead>
 		<tr>
-			<th style="width: auto%"><?php _e( 'Email', 'it-l10n-ithemes-exchange' ); ?></th>
+			<th style="width: auto"><?php _e( 'Email', 'it-l10n-ithemes-exchange' ); ?></th>
+			<th style="width: auto"><?php _e( 'Recipient', 'it-l10n-ithemes-exchange' ); ?></th>
 			<th style="width: 30px;"><?php _e( 'Active', 'it-l10n-ithemes-exchange' ); ?></th>
 			<th style="width: 30px"></th>
 		</tr>
 		</thead>
 		<tbody>
-		<tr>
-			<td>Receipt</td>
-			<td><span class="dashicons dashicons-yes"></span></td>
-			<td><span class="dashicons dashicons-admin-generic"></span></td>
-		</tr>
-		<tr>
-			<td>Admin Order Notification</td>
-			<td><span class="dashicons dashicons-yes"></span></td>
-			<td><span class="dashicons dashicons-admin-generic"></span></td>
-		</tr>
+		<?php foreach ( $email_notifications->get_notifications() as $notification ) : ?>
+			<tr>
+				<td><?php echo $notification->get_name(); ?></td>
+				<td>
+					<?php if ( $notification instanceof IT_Exchange_Customer_Email_Notification ): ?>
+						<?php _e( 'Customer', 'it-l10n-ithemes-exchange' ); ?>
+					<?php elseif ( $notification instanceof IT_Exchange_Admin_Email_Notification ): ?>
+						<?php echo implode( ', ', $notification->get_emails() ); ?>
+					<?php endif; ?>
+				</td>
+				<td>
+					<span class="dashicons dashicons-<?php echo $notification->is_active() ? 'yes' : 'no'; ?>"></span>
+				</td>
+				<td>
+					<a href="#" data-email="<?php echo $notification->get_slug(); ?>" class="show-email-settings">
+						<span class="dashicons dashicons-admin-generic"></span>
+						<span class="screen-reader-text"><?php _e( 'Configure', 'it-l10n-ithemes-exchange' ); ?></span>
+					</a>
+				</td>
+			</tr>
+		<?php endforeach; ?>
 		</tbody>
 	</table>
+
+	<?php foreach ( $email_notifications->get_notifications() as $notification ) : ?>
+
+		<div class="email-<?php echo $notification->get_slug(); ?> email-settings-container hide-if-js">
+
+			<h3><?php echo $notification->get_name(); ?></h3>
+
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row">
+						<label for="email-<?php echo $notification->get_slug(); ?>-active">
+							<?php _e( 'Active', 'it-l10n-ithemes-exchange' ); ?>
+						</label>
+					</th>
+					<td>
+						<input type="checkbox" id="email-<?php echo $notification->get_slug(); ?>-active" name="email[<?php echo $notification->get_slug() ?>][active]" <?php checked( $notification->is_active() ); ?>>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="email-<?php echo $notification->get_slug(); ?>-subject">
+							<?php _e( 'Subject', 'it-l10n-ithemes-exchange' ); ?>
+						</label>
+					</th>
+					<td>
+						<input type="text" id="email-<?php echo $notification->get_slug(); ?>-subject" name="email[<?php echo $notification->get_slug() ?>][subject]" value="<?php echo $notification->get_subject(); ?>">
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="email-<?php echo $notification->get_slug(); ?>-body">
+							<?php _e( 'Body', 'it-l10n-ithemes-exchange' ); ?>
+						</label>
+					</th>
+					<td>
+						<?php wp_editor( $notification->get_body(), "email-{$notification->get_slug()}-body", array(
+							'textarea_name' => "email[{$notification->get_slug()}][body]",
+							'textarea_rows' => 10,
+							'editor_height' => 400
+						) ); ?>
+
+						<p class="description">
+							<?php
+							_e( 'HTML is accepted. Available shortcode functions:', 'it-l10n-ithemes-exchange' );
+							echo '<br />';
+							printf( __( 'You call these shortcode functions like this: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=order_table option=purchase_message]' );
+							echo '<ul>';
+							echo '<li>download_list - ' . __( 'A list of download links for each download purchased', 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>name - ' . __( "The buyer's first name", 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>fullname - ' . __( "The buyer's full name, first and last", 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>username - ' . __( "The buyer's username on the site, if they registered an account", 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>email - ' . __( "The buyer's email on the site", 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>order_table - ' . __( 'A table of the order details. Accept "purchase_message" option.', 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>purchase_date - ' . __( 'The date of the purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>total - ' . __( 'The total price of the purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>payment_id - ' . __( 'The unique ID number for this purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>receipt_id - ' . __( 'The unique ID number for this transaction', 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>payment_method - ' . __( 'The method of payment used for this purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>shipping_address - ' . __( 'The shipping address for this product. Blank if shipping is not required. Also accepts "before" and "after" arguments.', 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>billing_address - ' . __( 'The billing address for this product. Blank if shipping is not required. Also accepts "before" and "after" arguments.', 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>sitename - ' . __( 'Your site name', 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>receipt_link - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the email correctly.', 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>login_link - ' . __( 'Adds a link to the login page on your website.', 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>account_link - ' . __( 'Adds a link to the customer\'s account page on your website.', 'it-l10n-ithemes-exchange' ) . '</li>';
+							do_action( 'it_exchange_email_template_tags_list' );
+							echo '</ul>';
+							?>
+						</p>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+	<?php endforeach; ?>
+
+	<h3><?php _e( 'Global Settings', 'it-l10n-ithemes-exchange' ); ?></h3>
 
 	<table class="form-table">
 		<?php do_action( 'it_exchange_general_settings_email_top' ); ?>
 		<tr valign="top">
-			<th scope="row"><strong><?php _e( 'Admin Notifications', 'it-l10n-ithemes-exchange' ); ?></strong></th>
-			<td></td>
-		</tr>
-		<tr valign="top">
 			<th scope="row">
-				<label for="notification-email-address"><?php _e( 'Sales Notification Email Address', 'it-l10n-ithemes-exchange' ) ?></label>
-			</th>
-			<td>
-				<?php $form->add_text_box( 'notification-email-address', array( 'class' => 'large-text' ) ); ?>
-				<br /><span class="description"><?php _e( 'Enter the email address(es) that should receive a notification anytime a sale is made, comma separated', 'it-l10n-ithemes-exchange' ); ?></span>
-			</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">
-				<label for="admin-email-address"><?php _e( 'Email Address', 'it-l10n-ithemes-exchange' ) ?></label></th>
-			<td>
-				<?php $form->add_text_box( 'admin-email-address', array( 'class' => 'normal-text' ) ); ?>
-				<br /><span class="description"><?php _e( 'Email address used for admin notification emails.', 'it-l10n-ithemes-exchange' ); ?></span>
-			</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">
-				<label for="admin-email-name"><?php _e( 'Email Name', 'it-l10n-ithemes-exchange' ) ?></label></th>
-			<td>
-				<?php $form->add_text_box( 'admin-email-name', array( 'class' => 'normal-text' ) ); ?>
-				<br /><span class="description"><?php _e( 'Name used for account that sends admin notification emails.', 'it-l10n-ithemes-exchange' ); ?></span>
-			</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">
-				<label for="admin-email-subject"><?php _e( 'Notification Subject Line', 'it-l10n-ithemes-exchange' ) ?></label>
-			</th>
-			<td>
-				<?php $form->add_text_box( 'admin-email-subject', array( 'class' => 'large-text' ) ); ?>
-				<br /><span class="description"><?php _e( 'Subject line used for admin notification emails.', 'it-l10n-ithemes-exchange' ); ?></span>
-			</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">
-				<label for="admin-email-template"><?php _e( 'Notification Email Template', 'it-l10n-ithemes-exchange' ) ?></label>
-			</th>
-			<td>
-				<?php
-				if ( $wp_version >= 3.3 && function_exists( 'wp_editor' ) ) {
-					wp_editor( $settings['admin-email-template'], 'admin-email-template', array(
-						'textarea_name' => 'it_exchange_email_settings-admin-email-template',
-						'textarea_rows' => 10,
-						'textarea_cols' => 30,
-						'editor_class'  => 'large-text'
-					) );
-
-					//We do this for some ITForm trickery... just to add receipt-email-template to the used inputs field
-					$form->get_text_area( 'admin-email-template', array(
-						'rows'  => 10,
-						'cols'  => 30,
-						'class' => 'large-text'
-					) );
-				} else {
-					$form->add_text_area( 'admin-email-template', array(
-						'rows'  => 10,
-						'cols'  => 30,
-						'class' => 'large-text'
-					) );
-				}
-				?>
-				<p class="description">
-					<?php
-					_e( 'Enter the email that is sent to administrator after a customer completes a successful purchase. HTML is accepted. Available shortcode functions:', 'it-l10n-ithemes-exchange' );
-					echo '<br />';
-					printf( __( 'You call these shortcode functions like this: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=order_table option=purchase_message]' );
-					echo '<ul>';
-					echo '<li>download_list - ' . __( 'A list of download links for each download purchased', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>name - ' . __( "The buyer's first name", 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>fullname - ' . __( "The buyer's full name, first and last", 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>username - ' . __( "The buyer's username on the site, if they registered an account", 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>email - ' . __( "The buyer's email on the site", 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>order_table - ' . __( 'A table of the order details. Accepts "purchase_message" option.', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>purchase_date - ' . __( 'The date of the purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>total - ' . __( 'The total price of the purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>payment_id - ' . __( 'The unique ID number for this purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>receipt_id - ' . __( 'The unique ID number for this transaction', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>payment_method - ' . __( 'The method of payment used for this purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>shipping_address - ' . __( 'The shipping address for this product. Blank if shipping is not required. Also accepts "before" and "after" arguments.', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>billing_address - ' . __( 'The billing address for this product. Blank if shipping is not required. Also accepts "before" and "after" arguments.', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>sitename - ' . __( 'Your site name', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>receipt_link - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the email correctly.', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>login_link - ' . __( 'Adds a link to the login page on your website.', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>account_link - ' . __( 'Adds a link to the customer\'s account page on your website.', 'it-l10n-ithemes-exchange' ) . '</li>';
-					do_action( 'it_exchange_email_template_tags_list' );
-					echo '</ul>';
-					?>
-				</p>
-			</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row"><strong><?php _e( 'Customer Receipt Emails', 'it-l10n-ithemes-exchange' ); ?></strong></th>
-			<td></td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">
-				<label for="receipt-email-address"><?php _e( 'Email Address', 'it-l10n-ithemes-exchange' ) ?></label>
+				<label for="receipt-email-address"><?php _e( 'Email Sender Address', 'it-l10n-ithemes-exchange' ) ?></label>
 			</th>
 			<td>
 				<?php $form->add_text_box( 'receipt-email-address', array( 'class' => 'normal-text' ) ); ?>
@@ -162,84 +153,23 @@ global $wp_version;
 		</tr>
 		<tr valign="top">
 			<th scope="row">
-				<label for="receipt-email-name"><?php _e( 'Email Name', 'it-l10n-ithemes-exchange' ) ?></label></th>
+				<label for="receipt-email-name"><?php _e( 'Email Sender Name', 'it-l10n-ithemes-exchange' ) ?></label>
+			</th>
 			<td>
 				<?php $form->add_text_box( 'receipt-email-name', array( 'class' => 'normal-text' ) ); ?>
 				<br /><span class="description"><?php _e( 'Name used for account that sends customer receipt emails.', 'it-l10n-ithemes-exchange' ); ?></span>
 			</td>
 		</tr>
-		<tr valign="top">
-			<th scope="row">
-				<label for="receipt-email-subject"><?php _e( 'Subject Line', 'it-l10n-ithemes-exchange' ) ?></label>
-			</th>
-			<td>
-				<?php $form->add_text_box( 'receipt-email-subject', array( 'class' => 'large-text' ) ); ?>
-				<br /><span class="description"><?php _e( 'Subject line used for customer receipt emails.', 'it-l10n-ithemes-exchange' ); ?></span>
-			</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">
-				<label for="receipt-email-template"><?php _e( 'Email Template', 'it-l10n-ithemes-exchange' ) ?></label>
-			</th>
-			<td>
-				<?php
-				if ( $wp_version >= 3.3 && function_exists( 'wp_editor' ) ) {
-					wp_editor( $settings['receipt-email-template'], 'receipt-email-template', array(
-						'textarea_name' => 'it_exchange_email_settings-receipt-email-template',
-						'textarea_rows' => 10,
-						'textarea_cols' => 30,
-						'editor_class'  => 'large-text'
-					) );
 
-					//We do this for some ITForm trickery... just to add receipt-email-template to the used inputs field
-					$form->get_text_area( 'receipt-email-template', array(
-						'rows'  => 10,
-						'cols'  => 30,
-						'class' => 'large-text'
-					) );
-				} else {
-					$form->add_text_area( 'receipt-email-template', array(
-						'rows'  => 10,
-						'cols'  => 30,
-						'class' => 'large-text'
-					) );
-				}
-				?>
-				<p class="description">
-					<?php
-					_e( 'Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available shortcode functions:', 'it-l10n-ithemes-exchange' );
-					echo '<br />';
-					printf( __( 'You call these shortcode functions like this: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=order_table option=purchase_message]' );
-					echo '<ul>';
-					echo '<li>download_list - ' . __( 'A list of download links for each download purchased', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>name - ' . __( "The buyer's first name", 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>fullname - ' . __( "The buyer's full name, first and last", 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>username - ' . __( "The buyer's username on the site, if they registered an account", 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>email - ' . __( "The buyer's email on the site", 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>order_table - ' . __( 'A table of the order details. Accept "purchase_message" option.', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>purchase_date - ' . __( 'The date of the purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>total - ' . __( 'The total price of the purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>payment_id - ' . __( 'The unique ID number for this purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>receipt_id - ' . __( 'The unique ID number for this transaction', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>payment_method - ' . __( 'The method of payment used for this purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>shipping_address - ' . __( 'The shipping address for this product. Blank if shipping is not required. Also accepts "before" and "after" arguments.', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>billing_address - ' . __( 'The billing address for this product. Blank if shipping is not required. Also accepts "before" and "after" arguments.', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>sitename - ' . __( 'Your site name', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>receipt_link - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the email correctly.', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>login_link - ' . __( 'Adds a link to the login page on your website.', 'it-l10n-ithemes-exchange' ) . '</li>';
-					echo '<li>account_link - ' . __( 'Adds a link to the customer\'s account page on your website.', 'it-l10n-ithemes-exchange' ) . '</li>';
-					do_action( 'it_exchange_email_template_tags_list' );
-					echo '</ul>';
-					?>
-				</p>
-			</td>
-		</tr>
 		<?php do_action( 'it_exchange_general_settings_email_table_bottom' ); ?>
 	</table>
+
 	<?php wp_nonce_field( 'save-email-settings', 'exchange-email-settings' ); ?>
+
 	<p class="submit">
 		<input type="submit" value="<?php _e( 'Save Changes', 'it-l10n-ithemes-exchange' ); ?>" class="button button-primary" />
 	</p>
+
 	<?php
 	do_action( 'it_exchange_general_settings_email_form_bottom' );
 	$form->end_form();
