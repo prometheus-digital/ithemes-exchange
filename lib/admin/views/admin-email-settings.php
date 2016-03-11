@@ -81,6 +81,19 @@ $email_notifications = it_exchange_email_notifications();
 						<input type="checkbox" id="email-<?php echo $notification->get_slug(); ?>-active" name="email[<?php echo $notification->get_slug() ?>][active]" <?php checked( $notification->is_active() ); ?>>
 					</td>
 				</tr>
+				<?php if ( $notification instanceof IT_Exchange_Admin_Email_Notification ): ?>
+					<tr valign="top">
+						<th scope="row">
+							<label for="email-<?php echo $notification->get_slug(); ?>-emails">
+								<?php _e( 'Email Address', 'it-l10n-ithemes-exchange' ); ?>
+							</label>
+						</th>
+						<td>
+							<input type="text" id="email-<?php echo $notification->get_slug(); ?>-emails" name="email[<?php echo $notification->get_slug() ?>][emails]" value="<?php echo implode( ',', $notification->get_emails() ); ?>">
+							<p class="description"><?php _e( 'Email address used for admin notification emails.', 'it-l10n-ithemes-exchange' ); ?></p>
+						</td>
+					</tr>
+				<?php endif ?>
 				<tr valign="top">
 					<th scope="row">
 						<label for="email-<?php echo $notification->get_slug(); ?>-subject">

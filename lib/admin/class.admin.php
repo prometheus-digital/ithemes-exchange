@@ -1308,6 +1308,11 @@ Order: %s
 			$notification->set_subject( $data['subject'] );
 			$notification->set_body( stripslashes( $data['body'] ) );
 			$notification->set_active( empty( $data['active'] ) ? false : it_exchange_str_true( $data['active'] ) );
+
+			if ( $notification instanceof IT_Exchange_Admin_Email_Notification ) {
+				$notification->set_emails( array_map( 'trim', explode( ',', $data['emails'] ) ) );
+			}
+
 			$notification->save();
 		}
 	}
