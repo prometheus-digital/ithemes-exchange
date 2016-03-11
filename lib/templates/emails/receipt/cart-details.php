@@ -33,7 +33,7 @@
 						</tr>
 						<?php while ( it_exchange( 'transaction', 'products' ) ): ?>
 							<tr>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-top: 10px;" class="body-border-color">
+								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 10px 0;" class="body-border-color">
 									<table>
 										<tr>
 											<?php if ( it_exchange( 'transaction', 'has-featured-image' ) ): ?>
