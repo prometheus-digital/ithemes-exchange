@@ -32,14 +32,24 @@ class IT_Exchange_Email {
 	private $notification;
 
 	/**
+	 * @var array
+	 */
+	private $context = array();
+
+	/**
 	 * IT_Exchange_Email constructor.
 	 *
 	 * @param IT_Exchange_Email_Recipient    $recipient
 	 * @param IT_Exchange_Email_Notification $notification
+	 * @param array                          $context
 	 */
-	public function __construct( IT_Exchange_Email_Recipient $recipient, IT_Exchange_Email_Notification $notification ) {
+	public function __construct( IT_Exchange_Email_Recipient $recipient, IT_Exchange_Email_Notification $notification, array $context = array() ) {
 		$this->recipient    = $recipient;
 		$this->notification = $notification;
+
+		foreach ( $context as $key => $val ) {
+			$this->add_context( $val, $key );
+		}
 	}
 
 	/**
@@ -72,5 +82,83 @@ class IT_Exchange_Email {
 		return $this;
 	}
 
+	/**
+	 * Add context to the email.
+	 *
+	 * @since 1.36
+	 *
+	 * @param mixed|stdClass|Serializable $context
+	 * @param string                      $key
+	 *
+	 * @return self
+	 */
+	public function add_context( $context, $key ) {
 
+		if ( is_object( $context ) && ! $context instanceof stdClass && ! $context instanceof Serializable ) {
+			throw new InvalidArgumentException( 'If $context is an object, it must implement Serializable.' );
+		}
+
+		if ( ! is_string( $key ) || trim( $key ) !== '' ) {
+			throw new InvalidArgumentException( '$key must be a non-empty string.' );
+		}
+
+		$this->context[] = $context;
+
+		return $this;
+	}
+
+	/**
+	 * Get the recipient for this email.
+	 *
+	 * @since 1.36
+	 *
+	 * @return IT_Exchange_Email_Recipient
+	 */
+	public function get_recipient() {
+		return $this->recipient;
+	}
+
+	/**
+	 * Get the CCs for this email.
+	 *
+	 * @since 1.36
+	 *
+	 * @return IT_Exchange_Email_Recipient[]
+	 */
+	public function get_ccs() {
+		return $this->ccs;
+	}
+
+	/**
+	 * Get the BCCs for this email.
+	 *
+	 * @since 1.36
+	 *
+	 * @return IT_Exchange_Email_Recipient[]
+	 */
+	public function get_bccs() {
+		return $this->bccs;
+	}
+
+	/**
+	 * Get the notification this email is based on.
+	 *
+	 * @since 1.36
+	 *
+	 * @return IT_Exchange_Email_Notification
+	 */
+	public function get_notification() {
+		return $this->notification;
+	}
+
+	/**
+	 * Get the context for this email.
+	 *
+	 * @since 1.36
+	 *
+	 * @return array
+	 */
+	public function get_context() {
+		return $this->context;
+	}
 }
