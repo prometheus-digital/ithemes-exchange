@@ -94,15 +94,11 @@ class IT_Exchange_Email {
 	 */
 	public function add_context( $context, $key ) {
 
-		if ( is_object( $context ) && ! $context instanceof stdClass && ! $context instanceof Serializable ) {
-			throw new InvalidArgumentException( 'If $context is an object, it must implement Serializable.' );
-		}
-
-		if ( ! is_string( $key ) || trim( $key ) !== '' ) {
+		if ( ! is_string( $key ) || trim( $key ) === '' ) {
 			throw new InvalidArgumentException( '$key must be a non-empty string.' );
 		}
 
-		$this->context[] = $context;
+		$this->context[ $key ] = $context;
 
 		return $this;
 	}

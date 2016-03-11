@@ -73,7 +73,11 @@ class IT_Exchange_Email_Template {
 		$GLOBALS['it_exchange']['email_context'] = $context;
 
 		if ( ! empty( $context['transaction'] ) ) {
-			$GLOBALS['it_exchange']['transaction'] = it_exchange_get_transaction( $context['transaction'] );
+			if ( is_numeric( $context['transaction'] ) ) {
+				$GLOBALS['it_exchange']['transaction'] = it_exchange_get_transaction( $context['transaction'] );
+			} else {
+				$GLOBALS['it_exchange']['transaction'] = $context['transaction'];
+			}
 		}
 	}
 }

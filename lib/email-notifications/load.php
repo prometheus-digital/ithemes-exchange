@@ -15,13 +15,14 @@ require_once dirname( __FILE__ ) . '/class.admin-email-notification.php';
 require_once dirname( __FILE__ ) . '/class.customer-email-notification.php';
 
 require_once dirname( __FILE__ ) . '/class.email-template.php';
-
+require_once dirname( __FILE__ ) . '/class.email.php';
 require_once dirname( __FILE__ ) . '/interface.email-recipient.php';
 require_once dirname( __FILE__ ) . '/class.email-recipient-transaction.php';
 
 require_once dirname( __FILE__ ) . '/class.delivery-exception.php';
 require_once dirname( __FILE__ ) . '/interface.sender.php';
 require_once dirname( __FILE__ ) . '/class.wp-mail-sender.php';
+require_once dirname( __FILE__ ) . '/class.email-tag-replacer.php';
 
 new IT_Exchange_Email_Customizer();
 
@@ -37,7 +38,11 @@ function it_exchange_email_notifications() {
 	static $notifications = null;
 
 	if ( ! $notifications ) {
-		$notifications = new IT_Exchange_Email_Notifications();
+
+		$replacer = new IT_Exchange_Email_Tag_Replacer();
+		$sender   = new IT_Exchange_WP_Mail_Sender( $replacer );
+
+		$notifications = new IT_Exchange_Email_Notifications( $sender, $replacer );
 	}
 
 	return $notifications;
@@ -54,7 +59,7 @@ function it_exchange_register_email_notifications() {
 
 	it_exchange_email_notifications()
 		->register_notification( new IT_Exchange_Admin_Email_Notification(
-			'admin-order-notification', __( 'Admin Order Notification', 'it-l10n-ithemes-exchange' ), null, array(
+			__( 'Admin Order Notification', 'it-l10n-ithemes-exchange' ), 'admin-order-notification', null, array(
 				'subject' => sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
 				'body'    => sprintf( __( 'Your friend %s just bought all this awesomeness from your store!
 
@@ -64,7 +69,7 @@ Order: %s
 			)
 		) )
 		->register_notification( new IT_Exchange_Customer_Email_Notification(
-			'new-order', __( 'New Order', 'it-l10n-ithemes-exchange' ), new IT_Exchange_Email_Template( 'receipt' ), array(
+			__( 'New Order', 'it-l10n-ithemes-exchange' ), 'new-order', new IT_Exchange_Email_Template( 'receipt' ), array(
 				'subject' => sprintf( __( 'Receipt for Purchase: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
 				'body'    => sprintf( __( "Hello %s,
 

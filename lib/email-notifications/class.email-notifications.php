@@ -17,6 +17,16 @@ class IT_Exchange_Email_Notifications {
 	public $user;
 
 	/**
+	 * @var IT_Exchange_Email_Sender
+	 */
+	private $sender;
+
+	/**
+	 * @var IT_Exchange_Email_Tag_Replacer
+	 */
+	private $replacer;
+
+	/**
 	 * @var IT_Exchange_Email_Notification[]
 	 */
 	private $notifications = array();
@@ -25,8 +35,15 @@ class IT_Exchange_Email_Notifications {
 	 * Constructor. Sets up the class
 	 *
 	 * @since 0.4.0
+	 *
+	 * @param IT_Exchange_Email_Sender       $sender
+	 * @param IT_Exchange_Email_Tag_Replacer $replacer
 	 */
-	function __construct() {
+	function __construct( IT_Exchange_Email_Sender $sender, IT_Exchange_Email_Tag_Replacer $replacer ) {
+
+		$this->sender   = $sender;
+		$this->replacer = $replacer;
+
 		add_action( 'it_exchange_send_email_notification', array(
 			$this,
 			'it_exchange_send_email_notification'
@@ -44,7 +61,7 @@ class IT_Exchange_Email_Notifications {
 			'resend_if_transaction_status_gets_cleared_for_delivery'
 		), 10, 3 );
 
-		add_shortcode( 'it_exchange_email', array( $this, 'ithemes_exchange_email_notification_shortcode' ) );
+		//add_shortcode( 'it_exchange_email', array( $this, 'ithemes_exchange_email_notification_shortcode' ) );
 	}
 
 	/**
@@ -57,9 +74,22 @@ class IT_Exchange_Email_Notifications {
 	 * @return self
 	 */
 	public function register_notification( IT_Exchange_Email_Notification $notification ) {
-		$this->notifications[] = $notification;
+		$this->notifications[ $notification->get_slug() ] = $notification;
 
 		return $this;
+	}
+
+	/**
+	 * Get a notification.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $slug
+	 *
+	 * @return IT_Exchange_Email_Notification|null
+	 */
+	public function get_notification( $slug ) {
+		return isset( $this->notifications[ $slug ] ) ? $this->notifications[ $slug ] : null;
 	}
 
 	/**
@@ -132,7 +162,6 @@ class IT_Exchange_Email_Notifications {
 		) );
 
 		wp_mail( $this->user->data->user_email, strip_tags( $subject ), $body, $headers );
-
 	}
 
 	/**
@@ -199,7 +228,7 @@ class IT_Exchange_Email_Notifications {
 			return;
 		}
 
-		$this->transaction_id = $transaction->ID;
+		/*$this->transaction_id = $transaction->ID;
 		$this->customer_id    = it_exchange_get_transaction_customer_id( $this->transaction_id );
 		$this->user           = it_exchange_get_customer( $this->customer_id );
 
@@ -217,7 +246,7 @@ class IT_Exchange_Email_Notifications {
 		}
 
 		// Sets Temporary GLOBAL information
-		$GLOBALS['it_exchange']['email-confirmation-data'] = array( $transaction, $this );
+		$GLOBALS['it_exchange']['email-confirmation-data'] = array( $transaction, $this );*/
 
 		/**
 		 * Determine whether purchase emails should be sent to a customer.
@@ -229,7 +258,19 @@ class IT_Exchange_Email_Notifications {
 		 */
 		if ( apply_filters( 'it_exchange_send_purchase_email_to_customer', true, $this ) ) {
 
-			$headers[] = 'From: ' . $settings['receipt-email-name'] . ' <' . $settings['receipt-email-address'] . '>';
+			$notification = $this->get_notification( 'new-order' );
+
+			if ( $notification ) {
+				$recipient = new IT_Exchange_Email_Recipient_Transaction( $transaction );
+
+				$email = new IT_Exchange_Email( $recipient, $notification, array(
+					'transaction' => $transaction,
+					'customer'    => it_exchange_get_transaction_customer( $transaction )
+				) );
+				$this->sender->send( $email );
+			}
+
+			/*$headers[] = 'From: ' . $settings['receipt-email-name'] . ' <' . $settings['receipt-email-address'] . '>';
 			$headers[] = 'MIME-Version: 1.0';
 			$headers[] = 'Content-Type: text/html';
 			$headers[] = 'charset=utf-8';
@@ -253,7 +294,7 @@ class IT_Exchange_Email_Notifications {
 				'message'     => $body
 			) );
 
-			wp_mail( $to, strip_tags( $subject ), $body, $headers, $attachments );
+			wp_mail( $to, strip_tags( $subject ), $body, $headers, $attachments );*/
 		}
 
 		/**
@@ -286,7 +327,6 @@ class IT_Exchange_Email_Notifications {
 		if ( isset( $GLOBALS['it_exchange']['email-confirmation-data'] ) ) {
 			unset( $GLOBALS['it_exchange']['email-confirmation-data'] );
 		}
-
 	}
 
 	/**

@@ -17,6 +17,20 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 	private $email;
 
 	/**
+	 * @var IT_Exchange_Email_Tag_Replacer
+	 */
+	private $replacer;
+
+	/**
+	 * IT_Exchange_WP_Mail_Sender constructor.
+	 *
+	 * @param IT_Exchange_Email_Tag_Replacer $replacer
+	 */
+	public function __construct( IT_Exchange_Email_Tag_Replacer $replacer ) {
+		$this->replacer = $replacer;
+	}
+
+	/**
 	 * Send the email.
 	 *
 	 * @since 1.36
@@ -28,10 +42,12 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 	 */
 	public function send( IT_Exchange_Email $email ) {
 
+		error_log('sending');
+
 		$settings = it_exchange_get_option( 'settings_email' );
 
 		// Edge case where sale is made before admin visits email settings.
-		if ( empty( $settings['receipt-email-name'] ) && ! isset( $IT_Exchange_Admin ) ) {
+		if ( empty( $settings['receipt-email-name'] ) && ! isset( $GLOBALS['IT_Exchange_Admin'] ) ) {
 
 			include_once( dirname( dirname( __FILE__ ) ) . '/admin/class.admin.php' );
 
@@ -60,8 +76,13 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 		$this->email  = $email;
 		$notification = $email->get_notification();
 
+		$subject = $this->replacer->replace( $notification->get_subject(), $email->get_context() );
+		$message = $this->replacer->replace( shortcode_unautop( wpautop( $notification->get_body() ) ), $email->get_context() );
+
+		$body = $notification->get_template()->get_html( array_merge( array( 'message' => $message ), $email->get_context() ) );
+
 		add_action( 'wp_mail_failed', array( $this, 'wp_mail_failed' ) );
-		$res = wp_mail( $email->get_recipient()->get_email(), $notification->get_subject(), $notification->get_body(), $headers );
+		$res = wp_mail( $email->get_recipient()->get_email(), strip_tags( $subject ), $body, $headers );
 		remove_action( 'wp_mail_failed', array( $this, 'wp_mail_failed' ) );
 
 		return $res;
