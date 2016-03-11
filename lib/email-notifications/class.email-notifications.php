@@ -39,7 +39,7 @@ class IT_Exchange_Email_Notifications {
 	 * @param IT_Exchange_Email_Sender       $sender
 	 * @param IT_Exchange_Email_Tag_Replacer $replacer
 	 */
-	function __construct( IT_Exchange_Email_Sender $sender, IT_Exchange_Email_Tag_Replacer $replacer ) {
+	function __construct( IT_Exchange_Email_Sender $sender = null, IT_Exchange_Email_Tag_Replacer $replacer = null ) {
 
 		$this->sender   = $sender;
 		$this->replacer = $replacer;
@@ -60,8 +60,6 @@ class IT_Exchange_Email_Notifications {
 			$this,
 			'resend_if_transaction_status_gets_cleared_for_delivery'
 		), 10, 3 );
-
-		//add_shortcode( 'it_exchange_email', array( $this, 'ithemes_exchange_email_notification_shortcode' ) );
 	}
 
 	/**
@@ -224,6 +222,7 @@ class IT_Exchange_Email_Notifications {
 	function send_purchase_emails( $transaction, $send_admin_email = true ) {
 
 		$transaction = it_exchange_get_transaction( $transaction );
+
 		if ( empty( $transaction->ID ) ) {
 			return;
 		}
@@ -308,7 +307,7 @@ class IT_Exchange_Email_Notifications {
 		$send_admin_email = apply_filters( 'it_exchange_send_purchase_email_to_admin', $send_admin_email, $this );
 
 		// Send admin notification if param is true and email is provided in settings
-		if ( $send_admin_email && ! empty( $settings['notification-email-address'] ) ) {
+		if ( false && $send_admin_email && ! empty( $settings['notification-email-address'] ) ) {
 
 			$subject = do_shortcode( $settings['admin-email-subject'] );
 			$body    = apply_filters( 'send_admin_emails_body', $settings['admin-email-template'], $transaction );

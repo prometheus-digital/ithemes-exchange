@@ -248,8 +248,8 @@ class IT_Exchange_Email_Tag_Replacer {
 
 		$email = '';
 
-		if ( ! empty( $this->user->data->user_email ) ) {
-			$email = $this->user->data->user_email;
+		if ( ! empty( $args->user->data->user_email ) ) {
+			$email = $args->user->data->user_email;
 		}
 
 		return $email;
@@ -268,10 +268,10 @@ class IT_Exchange_Email_Tag_Replacer {
 	public function replace_fullname_tag( $args, $options = null ) {
 		$fullname = '';
 
-		if ( ! empty( $this->user->data->first_name ) && ! empty( $this->user->data->last_name ) ) {
-			$fullname = $this->user->data->first_name . ' ' . $this->user->data->last_name;
-		} else if ( ! empty( $this->user->data->display_name ) ) {
-			$fullname = $this->user->data->display_name;
+		if ( ! empty( $args->user->data->first_name ) && ! empty( $args->user->data->last_name ) ) {
+			$fullname = $args->user->data->first_name . ' ' . $args->user->data->last_name;
+		} else if ( ! empty( $args->user->data->display_name ) ) {
+			$fullname = $args->user->data->display_name;
 		}
 
 		return $fullname;
@@ -288,7 +288,7 @@ class IT_Exchange_Email_Tag_Replacer {
 	 * @return string Replaced value
 	 */
 	public function replace_username_tag( $args, $options = null ) {
-		return empty( $this->user->data->user_login ) ? '' : $this->user->data->user_login;
+		return empty( $args->user->data->user_login ) ? '' : $args->user->data->user_login;
 	}
 
 	/**
