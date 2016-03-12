@@ -125,41 +125,21 @@ class IT_Exchange_Email_Notifications {
 	 */
 	function it_exchange_send_email_notification( $customer_id, $subject, $content, $transaction_id = false ) {
 
-		$this->transaction_id = apply_filters( 'it_exchange_send_email_notification_transaction_id', $transaction_id );
-		$this->customer_id    = $customer_id;
-		$this->user           = it_exchange_get_customer( $customer_id );
+		$transaction_id = apply_filters( 'it_exchange_send_email_notification_transaction_id', $transaction_id );
+		$customer       = it_exchange_get_customer( $customer_id );
 
-		$settings = it_exchange_get_option( 'settings_email' );
-
-		// Edge case where sale is made before admin visits email settings.
-		if ( empty( $settings['receipt-email-name'] ) && ! isset( $IT_Exchange_Admin ) ) {
-			global $IT_Exchange;
-			include_once( dirname( dirname( __FILE__ ) ) . '/admin/class.admin.php' );
-			add_filter( 'it_storage_get_defaults_exchange_settings_email', array(
-				'IT_Exchange_Admin',
-				'set_email_settings_defaults'
-			) );
-			$settings = it_exchange_get_option( 'settings_email', true );
-		}
-
-		$headers[] = 'From: ' . $settings['receipt-email-name'] . ' <' . $settings['receipt-email-address'] . '>';
-		$headers[] = 'MIME-Version: 1.0';
-		$headers[] = 'Content-Type: text/html';
-		$headers[] = 'charset=utf-8';
-
-		$subject = do_shortcode( $subject );
-		$body    = apply_filters( 'it_exchange_send_email_notification_body', $content );
-		$body    = do_shortcode( shortcode_unautop( wpautop( $body ) ) );
-
-		$headers = apply_filters( 'it_exchange_send_email_notification_headers', $headers );
-
-		$template = new IT_Exchange_Email_Template( null );
-		$body     = $template->get_html( array(
-			'message'     => $body,
-			'transaction' => it_exchange_get_transaction( $this->transaction_id )
+		$recipient    = new IT_Exchange_Email_Recipient_Customer( $customer );
+		$notification = new IT_Exchange_Customer_Email_Notification( 'custom', 'Custom', new IT_Exchange_Email_Template( null ), array(
+			'subject' => $subject,
+			'message' => $content
 		) );
 
-		wp_mail( $this->user->data->user_email, strip_tags( $subject ), $body, $headers );
+		$email = new IT_Exchange_Email( $recipient, $notification, array(
+			'customer'    => $customer,
+			'transaction' => $transaction_id
+		) );
+
+		$this->sender->send( $email );
 	}
 
 	/**
@@ -227,26 +207,6 @@ class IT_Exchange_Email_Notifications {
 			return;
 		}
 
-		/*$this->transaction_id = $transaction->ID;
-		$this->customer_id    = it_exchange_get_transaction_customer_id( $this->transaction_id );
-		$this->user           = it_exchange_get_customer( $this->customer_id );
-
-		$settings = it_exchange_get_option( 'settings_email' );
-
-		// Edge case where sale is made before admin visits email settings.
-		if ( empty( $settings['receipt-email-name'] ) && ! isset( $IT_Exchange_Admin ) ) {
-			global $IT_Exchange;
-			include_once( dirname( dirname( __FILE__ ) ) . '/admin/class.admin.php' );
-			add_filter( 'it_storage_get_defaults_exchange_settings_email', array(
-				'IT_Exchange_Admin',
-				'set_email_settings_defaults'
-			) );
-			$settings = it_exchange_get_option( 'settings_email', true );
-		}
-
-		// Sets Temporary GLOBAL information
-		$GLOBALS['it_exchange']['email-confirmation-data'] = array( $transaction, $this );*/
-
 		/**
 		 * Determine whether purchase emails should be sent to a customer.
 		 *
@@ -257,9 +217,9 @@ class IT_Exchange_Email_Notifications {
 		 */
 		if ( apply_filters( 'it_exchange_send_purchase_email_to_customer', true, $this ) ) {
 
-			$notification = $this->get_notification( 'new-order' );
+			$notification = $this->get_notification( 'receipt' );
 
-			if ( $notification ) {
+			if ( $notification && $notification->is_active() ) {
 				$recipient = new IT_Exchange_Email_Recipient_Transaction( $transaction );
 
 				$email = new IT_Exchange_Email( $recipient, $notification, array(
@@ -268,32 +228,6 @@ class IT_Exchange_Email_Notifications {
 				) );
 				$this->sender->send( $email );
 			}
-
-			/*$headers[] = 'From: ' . $settings['receipt-email-name'] . ' <' . $settings['receipt-email-address'] . '>';
-			$headers[] = 'MIME-Version: 1.0';
-			$headers[] = 'Content-Type: text/html';
-			$headers[] = 'charset=utf-8';
-
-			$subject = do_shortcode( $settings['receipt-email-subject'] );
-			$body    = apply_filters( 'send_purchase_emails_body', $settings['receipt-email-template'], $transaction );
-			$body    = apply_filters( 'send_purchase_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body, $transaction );
-			$body    = do_shortcode( shortcode_unautop( wpautop( $body ) ) );
-
-			// Filters
-			$to          = empty( $this->user->data->user_email ) ? false : $this->user->data->user_email;
-			$to          = apply_filters( 'it_exchange_send_purchase_emails_to', $to, $transaction, $settings, $this );
-			$subject     = apply_filters( 'it_exchange_send_purchase_emails_subject', $subject, $transaction, $settings, $this );
-			$body        = apply_filters( 'it_exchange_send_purchase_emails_body', $body, $transaction, $settings, $this );
-			$headers     = apply_filters( 'it_exchange_send_purchase_emails_headers', $headers, $transaction, $settings, $this );
-			$attachments = apply_filters( 'it_exchange_send_purchase_emails_attachments', array(), $transaction, $settings, $this );
-
-			$template = new IT_Exchange_Email_Template( 'receipt' );
-			$body     = $template->get_html( array(
-				'transaction' => $transaction->ID,
-				'message'     => $body
-			) );
-
-			wp_mail( $to, strip_tags( $subject ), $body, $headers, $attachments );*/
 		}
 
 		/**
@@ -307,19 +241,22 @@ class IT_Exchange_Email_Notifications {
 		$send_admin_email = apply_filters( 'it_exchange_send_purchase_email_to_admin', $send_admin_email, $this );
 
 		// Send admin notification if param is true and email is provided in settings
-		if ( false && $send_admin_email && ! empty( $settings['notification-email-address'] ) ) {
+		if ( $send_admin_email && ! empty( $settings['notification-email-address'] ) ) {
 
-			$subject = do_shortcode( $settings['admin-email-subject'] );
-			$body    = apply_filters( 'send_admin_emails_body', $settings['admin-email-template'], $transaction );
-			$body    = apply_filters( 'send_admin_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $body, $transaction );
-			$body    = $this->body_header() . wpautop( do_shortcode( $body ) ) . $this->body_footer();
+			$notification = $this->get_notification( 'admin-order' );
 
-			$emails = explode( ',', $settings['notification-email-address'] );
+			if ( $notification && $notification->is_active() ) {
 
-			foreach ( $emails as $email ) {
-				wp_mail( trim( $email ), strip_tags( $subject ), $body, $headers );
+				foreach ( $notification->get_emails() as $email ) {
+					$recipient = new IT_Exchange_Email_Recipient_Email( $email );
+
+					$email = new IT_Exchange_Email( $recipient, $notification, array(
+						'transaction' => $transaction,
+						'customer'    => it_exchange_get_transaction_customer( $transaction )
+					) );
+					$this->sender->send( $email );
+				}
 			}
-
 		}
 
 		// Clear temp data

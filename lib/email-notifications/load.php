@@ -18,6 +18,7 @@ require_once dirname( __FILE__ ) . '/class.email-template.php';
 require_once dirname( __FILE__ ) . '/class.email.php';
 require_once dirname( __FILE__ ) . '/interface.email-recipient.php';
 require_once dirname( __FILE__ ) . '/class.email-recipient-transaction.php';
+require_once dirname( __FILE__ ) . '/class.email-recipient-email.php';
 
 require_once dirname( __FILE__ ) . '/class.delivery-exception.php';
 require_once dirname( __FILE__ ) . '/interface.sender.php';
@@ -59,7 +60,7 @@ function it_exchange_register_email_notifications() {
 
 	it_exchange_email_notifications()
 		->register_notification( new IT_Exchange_Admin_Email_Notification(
-			__( 'Admin Order Notification', 'it-l10n-ithemes-exchange' ), 'admin-order-notification', null, array(
+			__( 'Admin Order Notification', 'it-l10n-ithemes-exchange' ), 'admin-order', null, array(
 				'subject' => sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
 				'body'    => sprintf( __( 'Your friend %s just bought all this awesomeness from your store!
 
@@ -69,7 +70,7 @@ Order: %s
 			)
 		) )
 		->register_notification( new IT_Exchange_Customer_Email_Notification(
-			__( 'New Order', 'it-l10n-ithemes-exchange' ), 'new-order', new IT_Exchange_Email_Template( 'receipt' ), array(
+			__( 'Purchase Receipt', 'it-l10n-ithemes-exchange' ), 'receipt', new IT_Exchange_Email_Template( 'receipt' ), array(
 				'subject' => sprintf( __( 'Receipt for Purchase: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
 				'body'    => sprintf( __( "Hello %s,
 
