@@ -126,17 +126,18 @@ class IT_Exchange_Email_Notifications {
 	function it_exchange_send_email_notification( $customer_id, $subject, $content, $transaction_id = false ) {
 
 		$transaction_id = apply_filters( 'it_exchange_send_email_notification_transaction_id', $transaction_id );
+		$transaction    = $transaction_id ? it_exchange_get_transaction( $transaction_id ) : null;
 		$customer       = it_exchange_get_customer( $customer_id );
 
 		$recipient    = new IT_Exchange_Email_Recipient_Customer( $customer );
 		$notification = new IT_Exchange_Customer_Email_Notification( 'custom', 'Custom', new IT_Exchange_Email_Template( null ), array(
 			'subject' => $subject,
-			'message' => $content
+			'body'    => $content
 		) );
 
 		$email = new IT_Exchange_Email( $recipient, $notification, array(
 			'customer'    => $customer,
-			'transaction' => $transaction_id
+			'transaction' => $transaction
 		) );
 
 		$this->sender->send( $email );

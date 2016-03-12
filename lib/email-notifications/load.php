@@ -18,6 +18,7 @@ require_once dirname( __FILE__ ) . '/class.email-template.php';
 require_once dirname( __FILE__ ) . '/class.email.php';
 require_once dirname( __FILE__ ) . '/interface.email-recipient.php';
 require_once dirname( __FILE__ ) . '/class.email-recipient-transaction.php';
+require_once dirname( __FILE__ ) . '/class.email-recipient-customer.php';
 require_once dirname( __FILE__ ) . '/class.email-recipient-email.php';
 
 require_once dirname( __FILE__ ) . '/class.delivery-exception.php';
