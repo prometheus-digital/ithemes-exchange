@@ -37,6 +37,8 @@ class IT_Exchange_Email_Tag_Replacer {
 
 		$this->context = $context;
 
+		$GLOBALS['it_exchange']['email-confirmation-data'] = $this->get_data();
+
 		it_exchange_email_notifications()->transaction_id = empty( $context['transaction'] ) ? false : $context['transaction']->ID;
 		it_exchange_email_notifications()->customer_id    = empty( $context['customer'] ) ? false : $context['customer']->id;
 		it_exchange_email_notifications()->user           = it_exchange_get_customer( it_exchange_email_notifications()->customer_id );
@@ -99,9 +101,10 @@ class IT_Exchange_Email_Tag_Replacer {
 
 		$supported_pairs = array( 'show' => '', 'options' => '' );
 
-		$atts = shortcode_atts( $supported_pairs, $atts );
-		$tag  = $atts['show'];
-		$opts = explode( ',', $atts['options'] );
+		$atts    = shortcode_atts( $supported_pairs, $atts );
+		$tag     = $atts['show'];
+		$opts    = explode( ',', $atts['options'] );
+		$context = $this->context;
 
 		$functions = $this->get_shortcode_functions();
 
@@ -109,12 +112,9 @@ class IT_Exchange_Email_Tag_Replacer {
 
 		if ( ! empty( $functions[ $tag ] ) ) {
 			if ( is_callable( array( $this, $functions[ $tag ] ) ) ) {
-				$r = call_user_func( array(
-					$this,
-					$functions[ $tag ]
-				), it_exchange_email_notifications(), $opts, $atts );
+				$r = call_user_func( array( $this, $functions[ $tag ] ), $context, $opts, $atts );
 			} else if ( is_callable( $functions[ $tag ] ) ) {
-				$r = call_user_func( $functions[ $tag ], it_exchange_email_notifications(), $opts, $atts );
+				$r = call_user_func( $functions[ $tag ], it_exchange_email_notifications(), $opts, $atts, $context );
 			}
 		}
 
@@ -127,8 +127,9 @@ class IT_Exchange_Email_Tag_Replacer {
 		 * @param array  $atts
 		 * @param string $content
 		 * @param array  $data
+		 * @param array  $context
 		 */
-		return apply_filters( "it_exchange_email_notification_shortcode_{$tag}", $r, $atts, $content, $data );
+		return apply_filters( "it_exchange_email_notification_shortcode_{$tag}", $r, $atts, $content, $data, $context );
 	}
 
 	/**
@@ -136,30 +137,31 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param IT_Exchange_Email_Notifications $args
-	 * @param array                           $options
+	 * @param array $context
 	 *
 	 * @return string
 	 */
-	public function replace_download_list_tag( $args, $options = array() ) {
+	public function replace_download_list_tag( $context = array() ) {
 
-		if ( ! $args || ! $args->transaction_id ) {
+		if ( empty( $context['transaction'] ) ) {
 			return '';
 		}
+
+		$transaction = $context['transaction'];
 
 		$status_notice = '';
 		ob_start();
 		// Grab products attached to transaction
-		$transaction_products = it_exchange_get_transaction_products( $args->transaction_id );
+		$transaction_products = it_exchange_get_transaction_products( $transaction );
 
 		// Grab all hashes attached to transaction
-		$hashes = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
+		$hashes = it_exchange_get_transaction_download_hash_index( $transaction );
 		if ( ! empty( $hashes ) ) {
 			?>
 			<div style="border-top: 1px solid #EEE">
 				<?php foreach ( $transaction_products as $transaction_product ) : ?>
 					<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : $downloads_exist_for_transaction = true; ?>
-						<?php if ( ! it_exchange_transaction_is_cleared_for_delivery( $args->transaction_id ) ) : ?>
+						<?php if ( ! it_exchange_transaction_is_cleared_for_delivery( $transaction ) ) : ?>
 							<?php
 							/* Status notice is blank by default and printed here, in the email if downloads are available.
 							 * If downloads are not available for this transaction (tested in loop below), this echo of the status notice won't be printed.
@@ -173,12 +175,12 @@ class IT_Exchange_Email_Tag_Replacer {
 						<?php else : ?>
 							<h4><?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?></h4>
 							<?php $count = it_exchange_get_transaction_product_feature( $transaction_product, 'count' ); ?>
-							<?php if ( $count > 1 && apply_filters( 'it_exchange_print_downlods_page_link_in_email', true, $args->transaction_id ) ) : ?>
+							<?php if ( $count > 1 && apply_filters( 'it_exchange_print_downlods_page_link_in_email', true, $transaction ) ) : ?>
 								<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
 								<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%s%sEach link has its own download limits and you can view the details on your %sdownloads%s page.', 'it-l10n-ithemes-exchange' ), $count, '<br />', '<br />', '<a href="' . esc_url( $downloads_url ) . '">', '</a>' ); ?></p>
 							<?php endif; ?>
 							<?php foreach ( $product_downloads as $download_id => $download_data ) : ?>
-								<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $args->transaction_id, $transaction_product, $download_id ); ?>
+								<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $transaction, $transaction_product, $download_id ); ?>
 								<?php $hashes_found = ( ! empty( $hashes_found ) || ! empty( $hashes_for_product_transaction ) ); // If someone purchases a product prior to downloads existing, they dont' get hashes/downloads ?>
 								<h5><?php esc_attr_e( get_the_title( $download_id ) ); ?></h5>
 								<ul class="download-hashes">
@@ -213,22 +215,24 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
+	 * @param array $context
 	 *
 	 * @return string Replaced value
 	 */
-	public function replace_name_tag( $args, $options = array() ) {
+	public function replace_name_tag( $context ) {
 
 		$name = '';
 
-		if ( ! empty( $args->user->data->first_name ) ) {
-			$name = $args->user->data->first_name;
-		} else if ( ! empty( $args->user->data->display_name ) ) {
-			$name = $args->user->data->display_name;
-		} else if ( ! empty( $GLOBALS['it_exchange']['email-confirmation-data'][0]->customer_id ) && is_email( $GLOBALS['it_exchange']['email-confirmation-data'][0]->customer_id ) ) {
-			// Guest Chekcout
-			$name = $GLOBALS['it_exchange']['email-confirmation-data'][0]->customer_id;
+		if ( ! empty( $context['customer'] ) ) {
+			$customer = $context['customer'];
+
+			if ( ! empty( $customer->wp_user->first_name ) ) {
+				$name = $customer->wp_user->first_name;
+			} elseif ( ! empty( $customer->wp_user->display_name ) ) {
+				$name = $customer->wp_user->display_name;
+			}
+		} elseif ( is_email( it_exchange_get_transaction_customer_id( $context['transaction'] ) ) ) {
+			$name = it_exchange_get_transaction_customer_id( $context['transaction'] );
 		}
 
 		return $name;
@@ -239,17 +243,18 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.14.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
+	 * @param array $context
 	 *
 	 * @return string Replaced value
 	 */
-	public function replace_email_tag( $args, $options = null ) {
+	public function replace_email_tag( $context ) {
 
 		$email = '';
 
-		if ( ! empty( $args->user->data->user_email ) ) {
-			$email = $args->user->data->user_email;
+		if ( ! empty( $context['customer']->wp_user->user_email ) ) {
+			$email = $context['customer']->wp_user->user_email;
+		} elseif ( ! empty( $context['transaction'] ) ) {
+			$email = it_exchange_get_transaction_customer_email( $context['transaction'] );
 		}
 
 		return $email;
@@ -260,18 +265,18 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
+	 * @param array $context
 	 *
 	 * @return string Replaced value
 	 */
-	public function replace_fullname_tag( $args, $options = null ) {
+	public function replace_fullname_tag( $context ) {
+
 		$fullname = '';
 
-		if ( ! empty( $args->user->data->first_name ) && ! empty( $args->user->data->last_name ) ) {
-			$fullname = $args->user->data->first_name . ' ' . $args->user->data->last_name;
-		} else if ( ! empty( $args->user->data->display_name ) ) {
-			$fullname = $args->user->data->display_name;
+		if ( ! empty( $context['user']->data->first_name ) && ! empty( $context['user']->data->last_name ) ) {
+			$fullname = $context['user']->data->first_name . ' ' . $context['user']->data->last_name;
+		} else if ( ! empty( $context['user']->data->display_name ) ) {
+			$fullname = $context['user']->data->display_name;
 		}
 
 		return $fullname;
@@ -282,13 +287,12 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
+	 * @param array $context
 	 *
 	 * @return string Replaced value
 	 */
-	public function replace_username_tag( $args, $options = null ) {
-		return empty( $args->user->data->user_login ) ? '' : $args->user->data->user_login;
+	public function replace_username_tag( $context ) {
+		return empty( $context['user']->data->user_login ) ? '' : $context['user']->data->user_login;
 	}
 
 	/**
@@ -296,12 +300,12 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
+	 * @param array $context
+	 * @param array $options
 	 *
 	 * @return string Replaced value
 	 */
-	public function replace_order_table_tag( $args, $options = null ) {
+	public function replace_order_table_tag( $context, $options = null ) {
 
 		$purchase_messages_heading = '<h3>' . __( 'Important Information', 'it-l10n-ithemes-exchange' ) . '</h3>';
 		$purchase_messages         = '';
@@ -322,14 +326,18 @@ class IT_Exchange_Email_Tag_Replacer {
 			</tr>
 			</thead>
 			<tbody>
-			<?php if ( $products = it_exchange_get_transaction_products( $args->transaction_id ) ) : ?>
+			<?php if ( $products = it_exchange_get_transaction_products( $context['transaction'] ) ) : ?>
 				<?php foreach ( $products as $product ) : ?>
 					<tr>
 						<td style="padding: 10px;border:1px solid #DDD;">
 							<?php echo apply_filters( 'it_exchange_email_notification_order_table_product_name', it_exchange_get_transaction_product_feature( $product, 'product_name' ), $product ); ?>
 						</td>
-						<td style="padding: 10px;border:1px solid #DDD;"><?php echo apply_filters( 'it_exchange_email_notification_order_table_product_count', it_exchange_get_transaction_product_feature( $product, 'count' ), $product ); ?></td>
-						<td style="padding: 10px;border:1px solid #DDD;"><?php echo apply_filters( 'it_exchange_email_notification_order_table_product_subtotal', it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ), $product ) ); ?></td>
+						<td style="padding: 10px;border:1px solid #DDD;">
+							<?php echo apply_filters( 'it_exchange_email_notification_order_table_product_count', it_exchange_get_transaction_product_feature( $product, 'count' ), $product ); ?>
+						</td>
+						<td style="padding: 10px;border:1px solid #DDD;">
+							<?php echo apply_filters( 'it_exchange_email_notification_order_table_product_subtotal', it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ), $product ) ); ?>
+						</td>
 					</tr>
 
 					<?php
@@ -345,12 +353,12 @@ class IT_Exchange_Email_Tag_Replacer {
 			<?php endif; ?>
 			</tbody>
 			<tfoot style="background:#F3F3F3;">
-			<?php do_action( 'replace_order_table_tag_before_total_row', $args, $options ); ?>
+			<?php do_action( 'replace_order_table_tag_before_total_row', $context, $options ); ?>
 			<tr>
 				<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total', 'it-l10n-ithemes-exchange' ); ?></td>
-				<td style="padding: 10px;border:1px solid #DDD;"><?php echo it_exchange_get_transaction_total( $args->transaction_id, true ) ?></td>
+				<td style="padding: 10px;border:1px solid #DDD;"><?php echo it_exchange_get_transaction_total( $context['transaction'], true ) ?></td>
 			</tr>
-			<?php do_action( 'replace_order_table_tag_after_total_row', $args, $options ); ?>
+			<?php do_action( 'replace_order_table_tag_after_total_row', $context, $options ); ?>
 			</tfoot>
 		</table>
 		<?php
@@ -366,13 +374,12 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
+	 * @param array $context
 	 *
 	 * @return string Replaced value
 	 */
-	function replace_purchase_date_tag( $args, $options = null ) {
-		return it_exchange_get_transaction_date( $args->transaction_id );
+	function replace_purchase_date_tag( $context ) {
+		return it_exchange_get_transaction_date( $context['transaction'] );
 	}
 
 	/**
@@ -380,13 +387,12 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
+	 * @param array $context
 	 *
 	 * @return string Replaced value
 	 */
-	function replace_total_tag( $args, $options = null ) {
-		return it_exchange_get_transaction_total( $args->transaction_id, true );
+	function replace_total_tag( $context ) {
+		return it_exchange_get_transaction_total( $context['transaction'], true );
 	}
 
 	/**
@@ -394,13 +400,12 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
+	 * @param array $context
 	 *
 	 * @return string Replaced value
 	 */
-	function replace_payment_id_tag( $args, $options = null ) {
-		return it_exchange_get_gateway_id_for_transaction( $args->transaction_id );
+	function replace_payment_id_tag( $context ) {
+		return it_exchange_get_gateway_id_for_transaction( $context['transaction'] );
 	}
 
 	/**
@@ -408,13 +413,12 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
+	 * @param array $context
 	 *
 	 * @return string Replaced value
 	 */
-	function replace_receipt_id_tag( $args, $options = null ) {
-		return it_exchange_get_transaction_order_number( $args->transaction_id );
+	function replace_receipt_id_tag( $context ) {
+		return it_exchange_get_transaction_order_number( $context['transaction'] );
 	}
 
 	/**
@@ -422,13 +426,12 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
+	 * @param array $context
 	 *
 	 * @return string Replaced value
 	 */
-	function replace_payment_method_tag( $args, $options = null ) {
-		return it_exchange_get_transaction_method( $args->transaction_id );
+	function replace_payment_method_tag( $context ) {
+		return it_exchange_get_transaction_method( $context['transaction'] );
 	}
 
 	/**
@@ -436,12 +439,9 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
-	 *
 	 * @return string Replaced value
 	 */
-	function replace_sitename_tag( $args, $options = null ) {
+	function replace_sitename_tag() {
 		return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
 	}
 
@@ -450,13 +450,12 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
+	 * @param array $context
 	 *
 	 * @return string Replaced value
 	 */
-	function replace_receipt_link_tag( $args, $options = null ) {
-		return it_exchange_get_transaction_confirmation_url( $args->transaction_id );
+	function replace_receipt_link_tag( $context ) {
+		return it_exchange_get_transaction_confirmation_url( $context['transaction'] );
 	}
 
 	/**
@@ -464,12 +463,9 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
-	 *
 	 * @return string Replaced value
 	 */
-	function replace_login_link_tag( $args, $options = null ) {
+	function replace_login_link_tag() {
 		return it_exchange_get_page_url( 'login' );
 	}
 
@@ -478,12 +474,9 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.4.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
-	 *
 	 * @return string Replaced value
 	 */
-	function replace_account_link_tag( $args, $options = null ) {
+	function replace_account_link_tag() {
 		return it_exchange_get_page_url( 'account' );
 	}
 
@@ -492,15 +485,15 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.10.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
-	 * @param array  $atts
+	 * @param array $context
+	 * @param array $options
+	 * @param array $atts
 	 *
 	 * @return string Shipping Address
 	 */
-	function replace_shipping_address_tag( $args, $options = null, $atts = array() ) {
-		if ( it_exchange_transaction_includes_shipping( $args->transaction_id ) ) {
-			$address = it_exchange_get_transaction_shipping_address( $args->transaction_id );
+	function replace_shipping_address_tag( $context, $options = null, $atts = array() ) {
+		if ( it_exchange_transaction_includes_shipping( $context['transaction'] ) ) {
+			$address = it_exchange_get_transaction_shipping_address( $context['transaction'] );
 			$before  = empty( $atts['before'] ) ? '' : $atts['before'];
 			$after   = empty( $atts['after'] ) ? '' : $atts['after'];
 
@@ -515,14 +508,14 @@ class IT_Exchange_Email_Tag_Replacer {
 	 *
 	 * @since 1.10.0
 	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 * @param array  $options
-	 * @param array  $atts
+	 * @param array $context
+	 * @param array $options
+	 * @param array $atts
 	 *
 	 * @return string Billing Address
 	 */
-	function replace_billing_address_tag( $args, $options = null, $atts = array() ) {
-		$address = it_exchange_get_transaction_billing_address( $args->transaction_id );
+	function replace_billing_address_tag( $context, $options = null, $atts = array() ) {
+		$address = it_exchange_get_transaction_billing_address( $context['transaction'] );
 		if ( empty( $address ) ) {
 			return '';
 		}

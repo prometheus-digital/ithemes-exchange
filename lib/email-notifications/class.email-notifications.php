@@ -259,10 +259,26 @@ class IT_Exchange_Email_Notifications {
 				}
 			}
 		}
+	}
 
-		// Clear temp data
-		if ( isset( $GLOBALS['it_exchange']['email-confirmation-data'] ) ) {
-			unset( $GLOBALS['it_exchange']['email-confirmation-data'] );
+	/**
+	 * Resends the email to the customer if the transaction status was changed from not cleared for delivery to cleared.
+	 *
+	 * @since 0.4.11
+	 *
+	 * @param object  $transaction        the transaction object
+	 * @param string  $old_status         the status it was just changed from
+	 * @param boolean $old_status_cleared was the old status cleared for delivery?
+	 *
+	 * @return void
+	 */
+	function resend_if_transaction_status_gets_cleared_for_delivery( $transaction, $old_status, $old_status_cleared ) {
+		// Using ->ID here so that get_transaction forces a reload and doesn't use the old object with the old status
+		$new_status         = it_exchange_get_transaction_status( $transaction->ID );
+		$new_status_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction->ID );
+
+		if ( ( $new_status != $old_status ) && ! $old_status_cleared && $new_status_cleared ) {
+			$this->send_purchase_emails( $transaction, false );
 		}
 	}
 
@@ -312,478 +328,36 @@ class IT_Exchange_Email_Notifications {
 	}
 
 	/**
-	 * Get available template tags
-	 * Array of tags (key) and callback functions (value)
+	 * Back-compat magic method.
 	 *
-	 * @since 0.4.0
+	 * @since 1.36
 	 *
-	 * @return array available replacement template tags
+	 * @param string $name
+	 * @param array  $arguments
+	 *
+	 * @return bool|mixed
 	 */
-	function get_shortcode_functions() {
+	public function __call( $name, $arguments ) {
 
-		$data = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
-		//Key = replacement tag
-		//Value = callback function
-		$shortcode_functions = array(
-			'download_list'    => 'it_exchange_replace_download_list_tag',
-			'name'             => 'it_exchange_replace_name_tag',
-			'email'            => 'it_exchange_replace_email_tag',
-			'fullname'         => 'it_exchange_replace_fullname_tag',
-			'username'         => 'it_exchange_replace_username_tag',
-			'order_table'      => 'it_exchange_replace_order_table_tag',
-			'purchase_date'    => 'it_exchange_replace_purchase_date_tag',
-			'total'            => 'it_exchange_replace_total_tag',
-			'payment_id'       => 'it_exchange_replace_payment_id_tag',
-			'receipt_id'       => 'it_exchange_replace_receipt_id_tag',
-			'payment_method'   => 'it_exchange_replace_payment_method_tag',
-			'sitename'         => 'it_exchange_replace_sitename_tag',
-			'receipt_link'     => 'it_exchange_replace_receipt_link_tag',
-			'login_link'       => 'it_exchange_replace_login_link_tag',
-			'account_link'     => 'it_exchange_replace_account_link_tag',
-			'shipping_address' => 'it_exchange_replace_shipping_address_tag',
-			'billing_address'  => 'it_exchange_replace_billing_address_tag',
-		);
+		if ( method_exists( $this->replacer, $name ) ) {
 
-		return apply_filters( 'it_exchange_email_notification_shortcode_functions', $shortcode_functions, $data );
+			$new_name = str_replace( 'it_exchange_', '', $name );
 
-	}
+			_deprecated_function( __CLASS__ . '::' . $name, '1.36', "IT_Exchange_Email_Tag_Replacer::$new_name" );
 
-	/**
-	 * This shortcode is intended to print an email arguments for email templates
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param array  $atts    attributess passed from WP Shortcode API
-	 * @param string $content data passed from WP Shortcode API
-	 *
-	 * @return string html for the 'Add to Shopping Cart' HTML
-	 */
-	function ithemes_exchange_email_notification_shortcode( $atts, $content = '' ) {
-		$data            = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
-		$supported_pairs = array(
-			'show'    => '',
-			'options' => '',
-		);
-		// Merge supported_pairs with passed attributes
-		extract( shortcode_atts( $supported_pairs, $atts ) );
+			/** @var IT_Exchange_Email_Notifications $notifications */
+			$notifications = $arguments[0];
 
-		$shortcode_functions = $this->get_shortcode_functions();
+			$context = array(
+				'transaction' => it_exchange_get_transaction( $notifications->transaction_id ),
+				'customer'    => $notifications->user
+			);
 
-		$return = false;
+			$arguments[0] = $context;
 
-		if ( ! empty( $shortcode_functions[ $show ] ) ) {
-			if ( is_callable( array( $this, $shortcode_functions[ $show ] ) ) ) {
-				$return = call_user_func( array(
-					$this,
-					$shortcode_functions[ $show ]
-				), $this, explode( ',', $options ), $atts );
-			} else if ( is_callable( $shortcode_functions[ $show ] ) ) {
-				$return = call_user_func( $shortcode_functions[ $show ], $this, explode( ',', $options ), $atts );
-			}
+			return call_user_func_array( array( $this->replacer, $new_name ), $arguments );
 		}
 
-		return apply_filters( 'it_exchange_email_notification_shortcode_' . $atts['show'], $return, $atts, $content, $data );
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_download_list_tag( $args, $options = null ) {
-		$status_notice = '';
-		ob_start();
-		// Grab products attached to transaction
-		$transaction_products = it_exchange_get_transaction_products( $args->transaction_id );
-
-		// Grab all hashes attached to transaction
-		$hashes = it_exchange_get_transaction_download_hash_index( $args->transaction_id );
-		if ( ! empty( $hashes ) ) {
-			?>
-			<div style="border-top: 1px solid #EEE">
-				<?php foreach ( $transaction_products as $transaction_product ) : ?>
-					<?php
-					$product_id = $transaction_product['product_id'];
-					$db_product = it_exchange_get_product( $transaction_product );
-					?>
-					<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : $downloads_exist_for_transaction = true; ?>
-						<?php if ( ! it_exchange_transaction_is_cleared_for_delivery( $args->transaction_id ) ) : ?>
-							<?php
-							/* Status notice is blank by default and printed here, in the email if downloads are available.
-							 * If downloads are not available for this transaction (tested in loop below), this echo of the status notice won't be printed.
-							 * But we know that downloads will be available if the status changes so we set print the message instead of the files.
-							 * If no files exist for the transaction, then there is no need to print this message even if status is pending
-							 * Clear as mud.
-							*/
-							$status_notice = '<p>' . __( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an approved status, you will receive a follow-up email with your download links.', 'it-l10n-ithemes-exchange' ) . '</p>';
-							$status_notice = '<h3>' . __( 'Available Downloads', 'it-l10n-ithemes-exchange' ) . '</h3>' . $status_notice;
-							?>
-						<?php else : ?>
-							<h4><?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?></h4>
-							<?php $count = it_exchange_get_transaction_product_feature( $transaction_product, 'count' ); ?>
-							<?php if ( $count > 1 && apply_filters( 'it_exchange_print_downlods_page_link_in_email', true, $this->transaction_id ) ) : ?>
-								<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
-								<p><?php printf( __( 'You have purchased %d unique download link(s) for each file available with this product.%s%sEach link has its own download limits and you can view the details on your %sdownloads%s page.', 'it-l10n-ithemes-exchange' ), $count, '<br />', '<br />', '<a href="' . esc_url( $downloads_url ) . '">', '</a>' ); ?></p>
-							<?php endif; ?>
-							<?php foreach ( $product_downloads as $download_id => $download_data ) : ?>
-								<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $args->transaction_id, $transaction_product, $download_id ); ?>
-								<?php $hashes_found = ( ! empty( $hashes_found ) || ! empty( $hashes_for_product_transaction ) ); // If someone purchases a product prior to downloads existing, they dont' get hashes/downloads ?>
-								<h5><?php esc_attr_e( get_the_title( $download_id ) ); ?></h5>
-								<ul class="download-hashes">
-									<?php foreach ( (array) $hashes_for_product_transaction as $hash ) : ?>
-										<?php
-										$hash_data      = it_exchange_get_download_data_from_hash( $hash );
-										$download_limit = ( 'unlimited' == $hash_data['download_limit'] ) ? __( 'Unlimited', 'it-l10n-ithemes-exchange' ) : $hash_data['download_limit'];
-										$downloads      = empty( $hash_data['downloads'] ) ? (int) 0 : absint( $hash_data['downloads'] );
-										?>
-										<li>
-											<a href="<?php echo esc_url( add_query_arg( 'it-exchange-download', $hash, get_home_url() ) ); ?>"><?php _e( 'Download link', 'it-l10n-ithemes-exchange' ); ?></a>
-											<span style="font-family: Monaco, monospace;font-size:12px;color:#AAA;">(<?php esc_attr_e( $hash ); ?>)</span>
-										</li>
-									<?php endforeach; ?>
-								</ul>
-							<?php endforeach; ?>
-						<?php endif; ?>
-					<?php endif; ?>
-				<?php endforeach; ?>
-			</div>
-			<?php
-		}
-
-		if ( empty( $downloads_exist_for_transaction ) || empty( $hashes_found ) ) {
-			echo $status_notice;
-
-			return ob_get_clean();
-		} else {
-			return ob_get_clean();
-		}
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_name_tag( $args, $options = null ) {
-		$name = '';
-		if ( ! empty( $this->user->data->first_name ) ) {
-			$name = $this->user->data->first_name;
-		} else if ( ! empty( $this->user->data->display_name ) ) {
-			$name = $this->user->data->display_name;
-		} else if ( ! empty( $GLOBALS['it_exchange']['email-confirmation-data'][0]->customer_id ) && is_email( $GLOBALS['it_exchange']['email-confirmation-data'][0]->customer_id ) ) {
-			// Guest Chekcout
-			$name = $GLOBALS['it_exchange']['email-confirmation-data'][0]->customer_id;
-		}
-
-		return $name;
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 1.14.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_email_tag( $args, $options = null ) {
-		$email = '';
-
-		if ( ! empty( $this->user->data->user_email ) ) {
-			$email = $this->user->data->user_email;
-		}
-
-		return $email;
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_fullname_tag( $args, $options = null ) {
-		$fullname = '';
-
-		if ( ! empty( $this->user->data->first_name ) && ! empty( $this->user->data->last_name ) ) {
-			$fullname = $this->user->data->first_name . ' ' . $this->user->data->last_name;
-		} else if ( ! empty( $this->user->data->display_name ) ) {
-			$fullname = $this->user->data->display_name;
-		}
-
-		return $fullname;
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_username_tag( $args, $options = null ) {
-		return empty( $this->user->data->user_login ) ? '' : $this->user->data->user_login;
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_order_table_tag( $args, $options = null ) {
-
-		$purchase_messages_heading = '<h3>' . __( 'Important Information', 'it-l10n-ithemes-exchange' ) . '</h3>';
-		$purchase_messages         = '';
-		$purchase_message_on       = false;
-
-		if ( in_array( 'purchase_message', $options ) ) {
-			$purchase_message_on = true;
-		}
-
-		ob_start();
-		?>
-		<table style="text-align: left; background: #FBFBFB; margin-bottom: 1.5em;border:1px solid #DDD;border-collapse: collapse;">
-			<thead style="background:#F3F3F3;">
-			<tr>
-				<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Product', 'it-l10n-ithemes-exchange' ); ?></th>
-				<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Quantity', 'it-l10n-ithemes-exchange' ); ?></th>
-				<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total Price', 'it-l10n-ithemes-exchange' ); ?></th>
-			</tr>
-			</thead>
-			<tbody>
-			<?php if ( $products = it_exchange_get_transaction_products( $this->transaction_id ) ) : ?>
-				<?php foreach ( $products as $product ) : ?>
-					<tr>
-						<td style="padding: 10px;border:1px solid #DDD;">
-							<?php echo apply_filters( 'it_exchange_email_notification_order_table_product_name', it_exchange_get_transaction_product_feature( $product, 'product_name' ), $product ); ?>
-						</td>
-						<td style="padding: 10px;border:1px solid #DDD;"><?php echo apply_filters( 'it_exchange_email_notification_order_table_product_count', it_exchange_get_transaction_product_feature( $product, 'count' ), $product ); ?></td>
-						<td style="padding: 10px;border:1px solid #DDD;"><?php echo apply_filters( 'it_exchange_email_notification_order_table_product_subtotal', it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ), $product ) ); ?></td>
-					</tr>
-
-					<?php
-					// Generate Purchase Messages
-					if ( $purchase_message_on && it_exchange_product_has_feature( $product['product_id'], 'purchase-message' ) ) {
-						$purchase_messages .= '<h4>' . esc_attr( it_exchange_get_transaction_product_feature( $product, 'product_name' ) ) . '</h4>';
-						$purchase_messages .= '<p>' . it_exchange_get_product_feature( $product['product_id'], 'purchase-message' ) . '</p>';
-						$purchase_messages = apply_filters( 'it_exchange_email_notification_order_table_purchase_message', $purchase_messages, $product );
-					}
-					?>
-
-				<?php endforeach; ?>
-			<?php endif; ?>
-			</tbody>
-			<tfoot style="background:#F3F3F3;">
-			<?php do_action( 'it_exchange_replace_order_table_tag_before_total_row', $args, $options ); ?>
-			<tr>
-				<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total', 'it-l10n-ithemes-exchange' ); ?></td>
-				<td style="padding: 10px;border:1px solid #DDD;"><?php echo it_exchange_get_transaction_total( $this->transaction_id, true ) ?></td>
-			</tr>
-			<?php do_action( 'it_exchange_replace_order_table_tag_after_total_row', $args, $options ); ?>
-			</tfoot>
-		</table>
-		<?php
-
-		$table = ob_get_clean();
-		$table .= empty( $purchase_messages ) ? '' : $purchase_messages_heading . $purchase_messages;
-
-		return $table;
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_purchase_date_tag( $args, $options = null ) {
-		return it_exchange_get_transaction_date( $this->transaction_id );
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_total_tag( $args, $options = null ) {
-		return it_exchange_get_transaction_total( $this->transaction_id, true );
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_payment_id_tag( $args, $options = null ) {
-		return it_exchange_get_gateway_id_for_transaction( $this->transaction_id );
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_receipt_id_tag( $args, $options = null ) {
-		return it_exchange_get_transaction_order_number( $this->transaction_id );
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_payment_method_tag( $args, $options = null ) {
-		return it_exchange_get_transaction_method( $this->transaction_id );
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_sitename_tag( $args, $options = null ) {
-		return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_receipt_link_tag( $args, $options = null ) {
-		return it_exchange_get_transaction_confirmation_url( $this->transaction_id );
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_login_link_tag( $args, $options = null ) {
-		return it_exchange_get_page_url( 'login' );
-	}
-
-	/**
-	 * Replacement Tag
-	 *
-	 * @since 1.4.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Replaced value
-	 */
-	function it_exchange_replace_account_link_tag( $args, $options = null ) {
-		return it_exchange_get_page_url( 'account' );
-	}
-
-	/**
-	 * Replacement Shipping Address Tag
-	 *
-	 * @since 1.10.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Shipping Address
-	 */
-	function it_exchange_replace_shipping_address_tag( $args, $options = null, $atts = array() ) {
-		if ( it_exchange_transaction_includes_shipping( $this->transaction_id ) ) {
-			$address = it_exchange_get_transaction_shipping_address( $this->transaction_id );
-			$before  = empty( $atts['before'] ) ? '' : $atts['before'];
-			$after   = empty( $atts['after'] ) ? '' : $atts['after'];
-
-			return empty( $address ) ? '' : $before . it_exchange_get_formatted_shipping_address( $address ) . $after;
-		}
-
-		return '';
-	}
-
-	/**
-	 * Replacement Billing Address Tag
-	 *
-	 * @since 1.10.0
-	 *
-	 * @param object $args of IT_Exchange_Email_Notifications
-	 *
-	 * @return string Billing Address
-	 */
-	function it_exchange_replace_billing_address_tag( $args, $options = null, $atts = array() ) {
-		$address = it_exchange_get_transaction_billing_address( $this->transaction_id );
-		if ( empty( $address ) ) {
-			return '';
-		}
-		$before = empty( $atts['before'] ) ? '' : $atts['before'];
-		$after  = empty( $atts['after'] ) ? '' : $atts['after'];
-
-		return empty( $address ) ? '' : $before . it_exchange_get_formatted_billing_address( $address ) . $after;
-	}
-
-	/**
-	 * Resends the email to the customer if the transaction status was changed from not cleared for delivery to cleared.
-	 *
-	 * @since 0.4.11
-	 *
-	 * @param object  $transaction        the transaction object
-	 * @param string  $old_status         the status it was just changed from
-	 * @param boolean $old_status_cleared was the old status cleared for delivery?
-	 *
-	 * @return void
-	 */
-	function resend_if_transaction_status_gets_cleared_for_delivery( $transaction, $old_status, $old_status_cleared ) {
-		// Using ->ID here so that get_transaction forces a reload and doesn't use the old object with the old status
-		$new_status         = it_exchange_get_transaction_status( $transaction->ID );
-		$new_status_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction->ID );
-
-		if ( ( $new_status != $old_status ) && ! $old_status_cleared && $new_status_cleared ) {
-			$this->send_purchase_emails( $transaction, false );
-		}
+		return false;
 	}
 }
