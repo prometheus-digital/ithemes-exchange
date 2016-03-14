@@ -753,7 +753,44 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 			$options = ITUtility::merge_defaults( $options, $defaults );
 
-			$product_images = it_exchange_get_product_feature( $product_id, 'product-images' );
+			if ( ! empty( $this->_transaction_product['itemized_data'] ) ) {
+				$itemized = maybe_unserialize( $this->_transaction_product['itemized_data'] );
+
+				if ( ! empty( $itemized['it_variant_combo_hash'] ) ) {
+					$combo_hash = $itemized['it_variant_combo_hash'];
+				}
+			}
+
+			$images_located = false;
+
+			if ( isset( $combo_hash ) && function_exists( 'it_exchange_variants_addon_get_product_feature_controller' ) ) {
+
+				$variant_combos_data = it_exchange_get_variant_combo_attributes_from_hash( $product_id, $combo_hash );
+				$combos_array        = empty( $variant_combos_data['combo'] ) ? array() : $variant_combos_data['combo'];
+				$alt_hashes          = it_exchange_addon_get_selected_variant_alts( $combos_array, $product_id );
+
+				$controller = it_exchange_variants_addon_get_product_feature_controller( $product_id, 'product-images', array( 'setting' => 'variants' ) );
+
+				if ( $variant_combos_data['hash'] == $combo_hash ) {
+					if ( ! empty( $controller->post_meta[ $combo_hash ]['value'] ) ) {
+						$product_images = $controller->post_meta[ $combo_hash ]['value'];
+						$images_located = true;
+					}
+				}
+				// Look for alt hashes if direct match was not found
+				if ( ! $images_located && ! empty( $alt_hashes ) ) {
+					foreach ( $alt_hashes as $alt_hash ) {
+						if ( ! empty( $controller->post_meta[ $alt_hash ]['value'] ) ) {
+							$product_images = $controller->post_meta[ $alt_hash ]['value'];
+							$images_located = true;
+						}
+					}
+				}
+			}
+
+			if ( ! $images_located || ! isset( $product_images ) ) {
+				$product_images = it_exchange_get_product_feature( $product_id, 'product-images' );
+			}
 
 			$feature_image = array(
 				'id'    => $product_images[0],
