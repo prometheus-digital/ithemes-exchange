@@ -10,20 +10,22 @@ require_once dirname( __FILE__ ) . '/class.email-notifications.php';
 
 require_once dirname( __FILE__ ) . '/class.customizer.php';
 
-require_once dirname( __FILE__ ) . '/class.email-notification.php';
-require_once dirname( __FILE__ ) . '/class.admin-email-notification.php';
-require_once dirname( __FILE__ ) . '/class.customer-email-notification.php';
+require_once dirname( __FILE__ ) . '/notifications/class.email-notification.php';
+require_once dirname( __FILE__ ) . '/notifications/class.admin-email-notification.php';
+require_once dirname( __FILE__ ) . '/notifications/class.customer-email-notification.php';
 
 require_once dirname( __FILE__ ) . '/class.email-template.php';
 require_once dirname( __FILE__ ) . '/class.email.php';
-require_once dirname( __FILE__ ) . '/interface.email-recipient.php';
-require_once dirname( __FILE__ ) . '/class.email-recipient-transaction.php';
-require_once dirname( __FILE__ ) . '/class.email-recipient-customer.php';
-require_once dirname( __FILE__ ) . '/class.email-recipient-email.php';
+
+require_once dirname( __FILE__ ) . '/recipients/interface.email-recipient.php';
+require_once dirname( __FILE__ ) . '/recipients/class.email-recipient-transaction.php';
+require_once dirname( __FILE__ ) . '/recipients/class.email-recipient-customer.php';
+require_once dirname( __FILE__ ) . '/recipients/class.email-recipient-email.php';
+
+require_once dirname( __FILE__ ) . '/senders/interface.sender.php';
+require_once dirname( __FILE__ ) . '/senders/class.wp-mail-sender.php';
 
 require_once dirname( __FILE__ ) . '/class.delivery-exception.php';
-require_once dirname( __FILE__ ) . '/interface.sender.php';
-require_once dirname( __FILE__ ) . '/class.wp-mail-sender.php';
 require_once dirname( __FILE__ ) . '/class.email-tag-replacer.php';
 
 new IT_Exchange_Email_Customizer();
@@ -50,7 +52,7 @@ function it_exchange_email_notifications() {
 	return $notifications;
 }
 
-$GLOBALS[' IT_Exchange_Email_Notifications'] = it_exchange_email_notifications();
+$GLOBALS['IT_Exchange_Email_Notifications'] = it_exchange_email_notifications();
 
 /**
  * Register email notifications.
@@ -82,7 +84,7 @@ Thank you for your order. Your order's details are below.
 			)
 		) )
 		->register_notification( new IT_Exchange_Customer_Email_Notification(
-			__( 'Customer Order Note', 'it-l10n-ithemes-exchange' ), 'customer-order-note', new IT_Exchange_Email_Template( 'order-note' ), array(
+			__( 'New Public Transaction Activity', 'it-l10n-ithemes-exchange' ), 'customer-order-note', new IT_Exchange_Email_Template( 'order-note' ), array(
 				'subject' => sprintf( __( 'New note about your order %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
 				'body'    => sprintf( __( "Hello %s,
 
