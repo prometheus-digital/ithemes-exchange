@@ -26,7 +26,9 @@ require_once dirname( __FILE__ ) . '/senders/interface.sender.php';
 require_once dirname( __FILE__ ) . '/senders/class.wp-mail-sender.php';
 
 require_once dirname( __FILE__ ) . '/class.delivery-exception.php';
-require_once dirname( __FILE__ ) . '/class.email-tag-replacer.php';
+
+require_once dirname( __FILE__ ) . '/tag-replacers/interface.php';
+require_once dirname( __FILE__ ) . '/tag-replacers/class.shortcode.php';
 
 new IT_Exchange_Email_Customizer();
 
@@ -43,7 +45,7 @@ function it_exchange_email_notifications() {
 
 	if ( ! $notifications ) {
 
-		$replacer = new IT_Exchange_Email_Tag_Replacer();
+		$replacer = new IT_Exchange_Email_Shortcode_Tag_Replacer();
 		$sender   = new IT_Exchange_WP_Mail_Sender( $replacer );
 
 		$notifications = new IT_Exchange_Email_Notifications( $sender, $replacer );

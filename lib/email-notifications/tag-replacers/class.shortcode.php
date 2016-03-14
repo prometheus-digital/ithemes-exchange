@@ -7,9 +7,9 @@
  */
 
 /**
- * Class IT_Exchange_Email_Tag_Replacer
+ * Class IT_Exchange_Email_Shortcode_Tag_Replacer
  */
-class IT_Exchange_Email_Tag_Replacer {
+class IT_Exchange_Email_Shortcode_Tag_Replacer implements IT_Exchange_Email_Tag_Replacer {
 
 	/**
 	 * @var array
