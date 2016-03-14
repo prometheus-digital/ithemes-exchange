@@ -51,32 +51,19 @@ function it_exchange_send_public_note_to_customer( IT_Exchange_Txn_Activity $act
 		return;
 	}
 
-	$subject = sprintf( __( 'New note about your order %s', 'it-l10n-ithemes-exchange' ),
-		$activity->get_transaction()->get_order_number()
-	);
+	$notification = it_exchange_email_notifications()->get_notification( 'customer-order-note' );
 
-	$message = <<<NOWDOC
+	if ( $notification && $notification->is_active() ) {
+		$recipient = new IT_Exchange_Email_Recipient_Transaction( $activity->get_transaction() );
 
-Hello [it_exchange_email show=name],
+		$email = new IT_Exchange_Email( $recipient, $notification, array(
+			'transaction'          => $activity->get_transaction(),
+			'customer'             => it_exchange_get_transaction_customer( $activity->get_transaction() ),
+			'transaction-activity' => $activity
+		) );
 
-A new note has been added to your order:
-
-<blockquote>{$activity->get_description()}</blockquote>
-
-For your reference, your order's details are below.
-Order: [it_exchange_email show=receipt_id]
-
-[it_exchange_email show=order_table]
-
-NOWDOC;
-
-	$subject = apply_filters( 'it_exchange_send_public_note_to_customer_subject', $subject, $activity );
-	$message = apply_filters( 'it_exchange_send_public_note_to_customer_message', $message, $activity );
-
-	do_action( 'it_exchange_send_email_notification',
-		it_exchange_get_transaction_customer_id( $activity->get_transaction() ),
-		$subject, $message, $activity->get_transaction()->ID
-	);
+		it_exchange_email_notifications()->get_sender()->send( $email );
+	}
 }
 
 add_action( 'it_exchange_build_txn_activity', 'it_exchange_send_public_note_to_customer' );

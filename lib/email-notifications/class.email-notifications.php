@@ -102,6 +102,17 @@ class IT_Exchange_Email_Notifications {
 	}
 
 	/**
+	 * Get the sender.
+	 *
+	 * @since 1.36
+	 *
+	 * @return IT_Exchange_Email_Sender
+	 */
+	public function get_sender() {
+		return $this->sender;
+	}
+
+	/**
 	 * Deprecated PHP 4 style constructor.
 	 *
 	 * @deprecated

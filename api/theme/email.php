@@ -28,6 +28,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	 */
 	public $_tag_map = array(
 		'message'                 => 'message',
+		'context'                 => 'context',
 		'date'                    => 'date',
 		'logo'                    => 'logo',
 		'headerlogo'              => 'header_logo',
@@ -84,6 +85,28 @@ class IT_Theme_API_Email implements IT_Theme_API {
 		}
 
 		return $message;
+	}
+
+	/**
+	 * Get a context item.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $options
+	 *
+	 * @return string|bool
+	 */
+	public function context( $options = array() ) {
+
+		if ( empty( $options['key'] ) ) {
+			return false;
+		}
+
+		if ( ! empty( $options['has'] ) ) {
+			return array_key_exists( $options['key'], $this->context );
+		}
+
+		return $this->context[ $options['key'] ];
 	}
 
 	/**

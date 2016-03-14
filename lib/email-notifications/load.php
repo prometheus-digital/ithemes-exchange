@@ -80,6 +80,15 @@ Thank you for your order. Your order's details are below.
 %s", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=name]', '[it_exchange_email show=download_list]'
 				),
 			)
+		) )
+		->register_notification( new IT_Exchange_Customer_Email_Notification(
+			__( 'Customer Order Note', 'it-l10n-ithemes-exchange' ), 'customer-order-note', new IT_Exchange_Email_Template( 'order-note' ), array(
+				'subject' => sprintf( __( 'New note about your order %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
+				'body'    => sprintf( __( "Hello %s,
+
+A new note has been added to your order.", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=name]'
+				)
+			)
 		) );
 }
 
