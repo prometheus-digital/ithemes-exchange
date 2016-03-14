@@ -27,26 +27,45 @@
 				<td valign="top" style="padding: 20px 25px; ">
 					<table width="100%">
 						<tr>
+							<?php do_action( 'it_exchange_email_template_receipt_meta-top_begin' ); ?>
+
 							<?php if ( it_exchange( 'transaction', 'has-billing-address' ) ): ?>
+								<?php do_action( 'it_exchange_email_template_receipt_meta-top_before_billing' ); ?>
 								<td style="line-height: 1.4; vertical-align: top;">
+									<?php do_action( 'it_exchange_email_template_receipt_meta-top_begin_billing' ); ?>
 									<strong><?php _e( 'Billing Address', 'it-l10n-ithemes-exchange' ); ?></strong><br>
 									<?php it_exchange( 'transaction', 'billing-address' ); ?>
+									<?php do_action( 'it_exchange_email_template_receipt_meta-top_end_billing' ); ?>
 								</td>
+								<?php do_action( 'it_exchange_email_template_receipt_meta-top_after_billing' ); ?>
 							<?php endif; ?>
 
 							<?php if ( it_exchange( 'transaction', 'has-shipping-address' ) ): ?>
+								<?php do_action( 'it_exchange_email_template_receipt_meta-top_before_shipping' ); ?>
 								<td style="line-height: 1.4; vertical-align: top;">
+									<?php do_action( 'it_exchange_email_template_receipt_meta-top_begin_shipping' ); ?>
 									<strong><?php _e( 'Shipping Address', 'it-l10n-ithemes-exchange' ); ?></strong><br>
 									<?php it_exchange( 'transaction', 'shipping-address' ); ?>
+									<?php do_action( 'it_exchange_email_template_receipt_meta-top_end_shipping' ); ?>
 								</td>
+								<?php do_action( 'it_exchange_email_template_receipt_meta-top_after_shipping' ); ?>
 							<?php endif; ?>
 
+							<?php do_action( 'it_exchange_email_template_receipt_meta-top_before_third_block' ); ?>
 							<td style="line-height: 1.1; vertical-align: top; ">
+								<?php do_action( 'it_exchange_email_template_receipt_meta-top_begin_payment_method' ); ?>
 								<strong><?php _e( 'Payment Method', 'it-l10n-ithemes-exchange' ); ?></strong><br>
 								<?php it_exchange( 'transaction', 'method' ); ?><br><br>
+								<?php do_action( 'it_exchange_email_template_receipt_meta-top_end_payment_method' ); ?>
+
+								<?php do_action( 'it_exchange_email_template_receipt_meta-top_begin_order_number' ); ?>
 								<strong><?php _e( 'Order Number', 'it-l10n-ithemes-exchange' ); ?></strong><br>
 								<?php it_exchange( 'transaction', 'order-number', array( 'label' => '%s' ) ); ?><br>
+								<?php do_action( 'it_exchange_email_template_receipt_meta-top_end_order_number' ); ?>
 							</td>
+							<?php do_action( 'it_exchange_email_template_receipt_meta-top_after_third_block' ); ?>
+
+							<?php do_action( 'it_exchange_email_template_receipt_meta-top_end' ); ?>
 						</tr>
 					</table>
 				</td>

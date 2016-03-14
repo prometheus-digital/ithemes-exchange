@@ -27,19 +27,31 @@
 				<td valign="top" style="padding: 20px 25px; ">
 					<table width="100%">
 						<tr>
+							<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_begin' ); ?>
+
 							<?php if ( it_exchange( 'transaction', 'has-note' ) ): ?>
+								<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_before_note' ); ?>
 								<td style="line-height: 1.4; vertical-align: top;">
+									<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_begin_note' ); ?>
 									<strong><?php _e( 'Order Note', 'it-l10n-ithemes-exchange' ); ?></strong><br>
 									<?php it_exchange( 'transaction', 'note' ); ?>
+									<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_end_note' ); ?>
 								</td>
+								<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_after_note' ); ?>
 							<?php endif; ?>
 
 							<?php if ( it_exchange( 'transaction', 'has-shipping-method' ) ): ?>
+								<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_before_shipping' ); ?>
 								<td style="line-height: 1.4; vertical-align: top;">
+									<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_begin_shipping' ); ?>
 									<strong><?php _e( 'Shipping Method', 'it-l10n-ithemes-exchange' ) ?></strong><br>
 									<?php it_exchange( 'transaction', 'shipping-method' ); ?>
+									<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_end_shipping' ); ?>
 								</td>
+								<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_after_shipping' ); ?>
 							<?php endif; ?>
+
+							<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_end' ); ?>
 						</tr>
 					</table>
 				</td>

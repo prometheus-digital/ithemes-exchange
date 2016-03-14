@@ -387,7 +387,14 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	 * @return string
 	 */
 	public function footer_text( $options = array() ) {
-		return IT_Exchange_Email_Customizer::get_setting( 'footer_text' );
+
+		$text = IT_Exchange_Email_Customizer::get_setting( 'footer_text' );
+
+		if ( ! empty( $options['has'] ) ) {
+			return trim( $text ) !== '';
+		}
+
+		return $text;
 	}
 
 	/**

@@ -21,18 +21,31 @@
 			<tr>
 				<td valign="top" align="center" style="padding: 10px 25px 100px 25px; ">
 					<table width="100%">
+						<?php do_action( 'it_exchange_email_template_before_footer_text_row' ); ?>
 						<tr style="text-align: center;">
 							<td style="color: <?php it_exchange( 'email', 'footer-text-color' ); ?>;" class="footer-text-container">
-								<?php it_exchange( 'email', 'footer-text' ); ?>
-							</td>
-						</tr>
-						<tr class="footer-logo-container" style="text-align: center">
-							<td>
-								<?php if ( it_exchange( 'email', 'has-footer-logo' ) ): ?>
-									<img src="<?php it_exchange( 'email', 'footer-logo' ); ?>" width="<?php it_exchange( 'email', 'footer-logo-size' ); ?>" style="margin-top: 40px;" />
+								<?php if ( it_exchange( 'email', 'has-footer-text' ) ): ?>
+									<?php do_action( 'it_exchange_email_template_before_footer_text' ); ?>
+									<?php it_exchange( 'email', 'footer-text' ); ?>
+									<?php do_action( 'it_exchange_email_template_after_footer_text' ); ?>
 								<?php endif; ?>
 							</td>
 						</tr>
+						<?php do_action( 'it_exchange_email_template_after_footer_text_row' ); ?>
+
+						<?php do_action( 'it_exchange_email_template_before_footer_logo_row' ); ?>
+						<tr class="footer-logo-container" style="text-align: center">
+							<?php do_action( 'it_exchange_email_template_before_footer_logo_container' ); ?>
+							<td>
+								<?php if ( it_exchange( 'email', 'has-footer-logo' ) ): ?>
+									<?php do_action( 'it_exchange_email_template_before_footer_logo' ); ?>
+									<img src="<?php it_exchange( 'email', 'footer-logo' ); ?>" width="<?php it_exchange( 'email', 'footer-logo-size' ); ?>" style="margin-top: 40px;" />
+									<?php do_action( 'it_exchange_email_template_after_footer_logo' ); ?>
+								<?php endif; ?>
+							</td>
+							<?php do_action( 'it_exchange_email_template_after_footer_logo_container' ); ?>
+						</tr>
+						<?php do_action( 'it_exchange_email_template_after_footer_logo_row' ); ?>
 					</table>
 				</td>
 			</tr>

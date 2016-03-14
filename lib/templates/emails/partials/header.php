@@ -23,19 +23,31 @@
 					<td width="640">
 		<![endif]-->
 		<table id="header" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'header-background' ); ?>; margin: 40px auto 0 auto; <?php echo it_exchange( 'email', 'has-header-image' ) ? 'min-height:225px;' : ''; ?>" class="wrapper">
+			<?php do_action( 'it_exchange_email_template_before_header_row' ); ?>
 			<tr>
 				<td align="center" valign="top" style="padding: 54px 25px; background-image: url(<?php it_exchange( 'email', 'header-image' ); ?>); background-position: top center; background-repeat: no-repeat; background-size: cover; border-top: 5px solid <?php it_exchange( 'email', 'header-background' ); ?>; border-bottom: 0; border-radius: 5px 5px 0 0;">
+					<?php do_action( 'it_exchange_email_template_begin_header' ); ?>
+
 					<?php if ( it_exchange( 'email', 'has-header-logo' ) ): ?>
+						<?php do_action( 'it_exchange_email_template_before_header_logo' ); ?>
 						<img src="<?php it_exchange( 'email', 'header-logo' ); ?>" width="<?php it_exchange( 'email', 'header-logo-size' ); ?>" />
+						<?php do_action( 'it_exchange_email_template_after_header_logo' ); ?>
 					<?php endif; ?>
 
 					<?php if ( it_exchange( 'email', 'has-header-store-name' ) ): ?>
+						<?php do_action( 'it_exchange_email_template_before_header_store_name' ); ?>
 						<h1 style="color: <?php it_exchange( 'email', 'header-store-name-color' ); ?>; font-family: <?php it_exchange( 'email', 'header-store-name-font' ); ?>; font-size: <?php it_exchange( 'email', 'header-store-name-size' ); ?>px; margin: 20px 0 0 0;">
+							<?php do_action( 'it_exchange_email_template_begin_header_store_name' ); ?>
 							<?php it_exchange( 'email', 'header-store-name' ); ?>
+							<?php do_action( 'it_exchange_email_template_end_header_store_name' ); ?>
 						</h1>
+						<?php do_action( 'it_exchange_email_template_after_header_store_name' ); ?>
 					<?php endif; ?>
+
+					<?php do_action( 'it_exchange_email_template_end_header' ); ?>
 				</td>
 			</tr>
+			<?php do_action( 'it_exchange_email_template_after_header_row' ); ?>
 		</table>
 		<!--[if mso]>
 		</td></tr></table>

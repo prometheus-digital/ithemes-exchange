@@ -26,11 +26,15 @@
 			<tr>
 				<td valign="top" style="padding: 20px 25px; ">
 					<table width="100%" style="line-height: 1.2;">
+						<?php do_action( 'it_exchange_email_template_receipt_cart-details_before_header_row' ); ?>
 						<tr>
 							<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 0 0 10px 0;" class="body-border-color"><?php _e( 'Description', 'it-l10n-ithemes-exchange' ); ?></th>
 							<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 0 0 10px 0;" class="body-border-color"><?php _ex( 'Qty', 'Product Quantity', 'it-l10n-ithemes-exchange' ); ?></th>
 							<th align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 0 0 10px 0;" class="body-border-color"><?php _e( 'Price', 'it-l10n-ithemes-exchange' ); ?></th>
 						</tr>
+						<?php do_action( 'it_exchange_email_template_receipt_cart-details_after_header_row' ); ?>
+
+						<?php do_action( 'it_exchange_email_template_receipt_cart-details_begin_products' ); ?>
 						<?php while ( it_exchange( 'transaction', 'products' ) ): ?>
 							<tr>
 								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 10px 0;" class="body-border-color">
@@ -42,7 +46,9 @@
 												</td>
 											<?php endif; ?>
 											<td style="/*vertical-align: top*/">
+												<?php do_action( 'it_exchange_email_template_receipt_cart-details_before_product_name' ); ?>
 												<strong><?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_name' ); ?></strong><br>
+												<?php do_action( 'it_exchange_email_template_receipt_cart-details_after_product_name' ); ?>
 												<?php it_exchange( 'transaction', 'variants' ); ?>
 												<?php if ( it_exchange( 'transaction', 'has-purchase-message' ) ): ?>
 													<p style="border-left: 4px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding-left: 10px; max-width: 300px; font-size: .9em" class="body-border-color">
@@ -61,6 +67,7 @@
 								</td>
 							</tr>
 						<?php endwhile; ?>
+						<?php do_action( 'it_exchange_email_template_receipt_cart-details_end_products' ); ?>
 					</table>
 				</td>
 			</tr>

@@ -28,7 +28,9 @@
 					<table width="100%">
 						<tr>
 							<td>
+								<?php do_action( 'it_exchange_email_template_before_message' ); ?>
 								<?php it_exchange( 'email', 'message' ); ?>
+								<?php do_action( 'it_exchange_email_template_after_message' ); ?>
 							</td>
 						</tr>
 					</table>

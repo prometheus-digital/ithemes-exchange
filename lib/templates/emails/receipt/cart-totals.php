@@ -26,6 +26,7 @@
 			<tr>
 				<td valign="top" style="padding: 0 25px;">
 					<table width="100%" style="line-height: 1.2;">
+						<?php do_action( 'it_exchange_email_template_receipt_cart-totals_before_subtotal' ); ?>
 						<tr>
 							<td></td>
 							<td align="right" style="padding: 10px; ">
@@ -35,6 +36,8 @@
 								<?php it_exchange( 'transaction', 'subtotal' ); ?>
 							</td>
 						</tr>
+						<?php do_action( 'it_exchange_email_template_receipt_cart-totals_after_subtotal' ); ?>
+						<?php do_action( 'it_exchange_email_template_receipt_cart-totals_before_shipping' ); ?>
 						<tr>
 							<td></td>
 							<td align="right" style="padding: 10px; ">
@@ -44,6 +47,8 @@
 								<?php it_exchange( 'transaction', 'shipping-total' ); ?>
 							</td>
 						</tr>
+						<?php do_action( 'it_exchange_email_template_receipt_cart-totals_after_shipping' ); ?>
+						<?php do_action( 'it_exchange_email_template_receipt_cart-totals_before_total' ); ?>
 						<tr>
 							<td></td>
 							<td align="right" style="padding: 10px; ">
@@ -53,6 +58,7 @@
 								<strong><?php it_exchange( 'transaction', 'total' ); ?></strong>
 							</td>
 						</tr>
+						<?php do_action( 'it_exchange_email_template_receipt_cart-totals_after_total' ); ?>
 					</table>
 				</td>
 			</tr>

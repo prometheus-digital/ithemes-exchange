@@ -1,4 +1,3 @@
-
 <?php
 /**
  * This file contains the markup for the order-note activity email template.
@@ -27,13 +26,19 @@
 			<tr>
 				<td valign="top" style="padding: 0 25px;">
 					<blockquote style="border-left: 5px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 5px 0 5px 20px;">
+						<?php do_action( 'it_exchange_email_template_order-note_activity_before_description' ); ?>
 						<?php it_exchange( 'transaction-activity', 'description' ); ?>
+						<?php do_action( 'it_exchange_email_template_order-note_activity_after_description' ); ?>
 
 						<?php if ( it_exchange( 'transaction-activity', 'has-actor' ) ): ?>
 							<p>
+								<?php do_action( 'it_exchange_email_template_order-note_activity_before_cite' ); ?>
 								<cite style="font-style: italic">
+									<?php do_action( 'it_exchange_email_template_order-note_activity_begin_cite' ); ?>
 									&mdash; <?php it_exchange( 'transaction-activity', 'actor' ); ?>
+									<?php do_action( 'it_exchange_email_template_order-note_activity_end_cite' ); ?>
 								</cite>
+								<?php do_action( 'it_exchange_email_template_order-note_activity_after_cite' ); ?>
 							</p>
 						<?php endif; ?>
 					</blockquote>
