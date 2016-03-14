@@ -50,7 +50,28 @@ function it_exchange_email_notifications() {
 	if ( ! $notifications ) {
 
 		$replacer = new IT_Exchange_Email_Shortcode_Tag_Replacer();
-		$sender   = new IT_Exchange_WP_Mail_Sender( $replacer );
+
+		if ( defined( 'IT_EXCHANGE_DISABLE_EMAILS' ) && IT_EXCHANGE_DISABLE_EMAILS ) {
+			$sender = new IT_Exchange_Email_Null_Sender();
+		} else {
+			$sender = new IT_Exchange_WP_Mail_Sender( $replacer );
+		}
+
+		/**
+		 * Filter the sender object.
+		 *
+		 * The return value must implement IT_Exchange_Email_Sender
+		 *
+		 * @since 1.36
+		 *
+		 * @param IT_Exchange_Email_Sender       $sender
+		 * @param IT_Exchange_Email_Tag_Replacer $replacer
+		 */
+		$filtered = apply_filters( 'it_exchange_email_notifications_sender', $sender, $replacer );
+
+		if ( $filtered instanceof IT_Exchange_Email_Sender ) {
+			$sender = $filtered;
+		}
 
 		$notifications = new IT_Exchange_Email_Notifications( $sender, $replacer );
 	}
