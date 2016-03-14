@@ -6,6 +6,8 @@
  * @license GPLv2
  */
 
+require_once dirname( __FILE__ ) . '/deprecated.php';
+
 require_once dirname( __FILE__ ) . '/class.email-notifications.php';
 
 require_once dirname( __FILE__ ) . '/class.customizer.php';
@@ -15,6 +17,7 @@ require_once dirname( __FILE__ ) . '/notifications/class.admin-email-notificatio
 require_once dirname( __FILE__ ) . '/notifications/class.customer-email-notification.php';
 
 require_once dirname( __FILE__ ) . '/class.email-template.php';
+require_once dirname( __FILE__ ) . '/interface.sendable.php';
 require_once dirname( __FILE__ ) . '/class.email.php';
 
 require_once dirname( __FILE__ ) . '/recipients/interface.email-recipient.php';
@@ -22,8 +25,9 @@ require_once dirname( __FILE__ ) . '/recipients/class.email-recipient-transactio
 require_once dirname( __FILE__ ) . '/recipients/class.email-recipient-customer.php';
 require_once dirname( __FILE__ ) . '/recipients/class.email-recipient-email.php';
 
-require_once dirname( __FILE__ ) . '/senders/interface.sender.php';
-require_once dirname( __FILE__ ) . '/senders/class.wp-mail-sender.php';
+require_once dirname( __FILE__ ) . '/senders/interface.php';
+require_once dirname( __FILE__ ) . '/senders/class.null.php';
+require_once dirname( __FILE__ ) . '/senders/class.wp-mail.php';
 
 require_once dirname( __FILE__ ) . '/class.delivery-exception.php';
 

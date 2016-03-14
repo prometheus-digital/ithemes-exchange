@@ -16,10 +16,10 @@ interface IT_Exchange_Email_Sender {
 	 *
 	 * @since 1.36
 	 *
-	 * @param IT_Exchange_Email $email
+	 * @param IT_Exchange_Sendable $email
 	 *
 	 * @return bool
 	 * @throws IT_Exchange_Email_Delivery_Exception
 	 */
-	public function send( IT_Exchange_Email $email );
+	public function send( IT_Exchange_Sendable $email );
 }

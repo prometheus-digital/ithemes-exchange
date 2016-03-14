@@ -12,7 +12,7 @@
 class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 
 	/**
-	 * @var IT_Exchange_Email
+	 * @var IT_Exchange_Sendable
 	 */
 	private $email;
 
@@ -35,12 +35,12 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 	 *
 	 * @since 1.36
 	 *
-	 * @param IT_Exchange_Email $email
+	 * @param IT_Exchange_Sendable $email
 	 *
 	 * @return bool
 	 * @throws IT_Exchange_Email_Delivery_Exception By proxy.
 	 */
-	public function send( IT_Exchange_Email $email ) {
+	public function send( IT_Exchange_Sendable $email ) {
 
 		$settings = it_exchange_get_option( 'settings_email' );
 
@@ -71,35 +71,17 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 			$headers[] = $this->header_from_recipient( $bcc, 'Bcc' );
 		}
 
-		$this->email  = $email;
-		$notification = $email->get_notification();
-		$context      = $email->get_context();
-		$content      = $notification->get_body();
+		$this->email = $email;
+		$context     = $email->get_context();
+		$content     = $email->get_body();
 
-		if ( $notification->get_slug() === 'purchase' ) {
-			$transaction = $context['transaction'];
-			$content     = apply_filters( 'send_purchase_emails_body', $content, $transaction );
-			$content     = apply_filters( 'send_purchase_emails_body_' . it_exchange_get_transaction_method( $transaction->ID ), $content, $transaction );
-		} else {
-			$headers = apply_filters( 'it_exchange_send_email_notification_headers', $headers );
-			$content = apply_filters( 'it_exchange_send_email_notification_body', $content );
-		}
+		$headers = apply_filters( 'it_exchange_send_email_notification_wp_mail_headers', $headers );
+		$content = apply_filters( 'it_exchange_send_email_notification_wp_mail_body', $content );
 
 		$to      = $email->get_recipient()->get_email();
-		$subject = $this->replacer->replace( $notification->get_subject(), $context );
+		$subject = $this->replacer->replace( $email->get_subject(), $context );
 		$message = $this->replacer->replace( shortcode_unautop( wpautop( $content ) ), $context );
-		$body    = $notification->get_template()->get_html( array_merge( array( 'message' => $message ), $context ) );
-
-		if ( $notification->get_slug() === 'purchase' ) {
-
-			$transaction = $context['transaction'];
-			$bc          = it_exchange_email_notifications();
-
-			$to      = apply_filters( 'it_exchange_send_purchase_emails_to', $to, $transaction, $settings, $bc );
-			$subject = apply_filters( 'it_exchange_send_purchase_emails_subject', $subject, $transaction, $settings, $bc );
-			$body    = apply_filters( 'it_exchange_send_purchase_emails_body', $body, $transaction, $settings, $bc );
-			$headers = apply_filters( 'it_exchange_send_purchase_emails_headers', $headers, $transaction, $settings, $bc );
-		}
+		$body    = $email->get_template()->get_html( array_merge( array( 'message' => $message ), $context ) );
 
 		add_action( 'wp_mail_failed', array( $this, 'wp_mail_failed' ) );
 		$res = wp_mail( $to, strip_tags( $subject ), $body, $headers );

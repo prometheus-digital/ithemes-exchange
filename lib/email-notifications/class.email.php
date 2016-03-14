@@ -9,7 +9,7 @@
 /**
  * Class IT_Exchange_Email
  */
-class IT_Exchange_Email {
+class IT_Exchange_Email implements IT_Exchange_Sendable {
 
 	/**
 	 * @var IT_Exchange_Email_Recipient
@@ -101,6 +101,45 @@ class IT_Exchange_Email {
 		$this->context[ $key ] = $context;
 
 		return $this;
+	}
+
+	/**
+	 * Get the subject line.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function get_subject() {
+
+		$subject = $this->get_notification()->get_subject();
+
+		return apply_filters( "it_exchange_email_{$this->get_notification()->get_slug()}_subject", $subject, $this );
+	}
+
+	/**
+	 * Get the body.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function get_body() {
+
+		$body = $this->get_notification()->get_body();
+
+		return apply_filters( "it_exchange_email_{$this->get_notification()->get_slug()}_body", $body, $this );
+	}
+
+	/**
+	 * Get the email template.
+	 *
+	 * @since 1.36
+	 *
+	 * @return IT_Exchange_Email_Template
+	 */
+	public function get_template() {
+		return $this->get_notification()->get_template();
 	}
 
 	/**
