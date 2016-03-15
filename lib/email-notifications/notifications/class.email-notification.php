@@ -231,7 +231,7 @@ abstract class IT_Exchange_Email_Notification {
 	 */
 	public function save() {
 
-		$emails = it_exchange_get_option( 'emails' );
+		$emails = it_exchange_get_option( 'emails', true );
 
 		$emails[ $this->get_slug() ] = $this->get_data_to_save();
 
