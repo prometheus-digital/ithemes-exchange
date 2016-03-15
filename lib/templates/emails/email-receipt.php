@@ -41,7 +41,10 @@
 									<strong><?php it_exchange( 'transaction', 'date' ); ?></strong>
 								</td>
 								<td align="right" style="font-weight: bold; ">
-									<strong><?php it_exchange( 'transaction', 'total' ); ?></strong>
+									<strong>
+										<?php it_exchange( 'transaction', 'total' ); ?>&nbsp;&mdash;
+										<?php it_exchange( 'transaction', 'status', 'label=<span class="%s">%s</span>' ); ?>
+									</strong>
 								</td>
 							</tr>
 						</table>
