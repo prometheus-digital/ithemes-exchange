@@ -37,17 +37,21 @@
 							</td>
 						</tr>
 						<?php do_action( 'it_exchange_email_template_receipt_cart-totals_after_subtotal' ); ?>
-						<?php do_action( 'it_exchange_email_template_receipt_cart-totals_before_shipping' ); ?>
-						<tr>
-							<td></td>
-							<td align="right" style="padding: 10px; ">
-								<strong><?php _e( 'Shipping', 'it-l10n-ithemes-exchange' ); ?></strong>
-							</td>
-							<td align="right" style="padding: 10px 0 10px 10px; ">
-								<?php it_exchange( 'transaction', 'shipping-total' ); ?>
-							</td>
-						</tr>
-						<?php do_action( 'it_exchange_email_template_receipt_cart-totals_after_shipping' ); ?>
+
+						<?php if ( it_exchange( 'transaction', 'has-shipping-method' ) ): ?>
+							<?php do_action( 'it_exchange_email_template_receipt_cart-totals_before_shipping' ); ?>
+							<tr>
+								<td></td>
+								<td align="right" style="padding: 10px; ">
+									<strong><?php _e( 'Shipping', 'it-l10n-ithemes-exchange' ); ?></strong>
+								</td>
+								<td align="right" style="padding: 10px 0 10px 10px; ">
+									<?php it_exchange( 'transaction', 'shipping-total' ); ?>
+								</td>
+							</tr>
+							<?php do_action( 'it_exchange_email_template_receipt_cart-totals_after_shipping' ); ?>
+						<?php endif; ?>
+
 						<?php do_action( 'it_exchange_email_template_receipt_cart-totals_before_total' ); ?>
 						<tr>
 							<td></td>
