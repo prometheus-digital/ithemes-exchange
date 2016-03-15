@@ -210,7 +210,7 @@ add_filter( 'it_exchange_get_cart_total', 'it_exchange_addon_taxes_simple_modify
 /**
  * Adds the cart taxes to the transaction object
  *
- * @since 1.11.0 
+ * @since 1.11.0
  *
  * @param string $taxes incoming from WP Filter. False by default.
  * @return string
@@ -249,3 +249,33 @@ function it_exchange_addon_taxes_simple_replace_order_table_tag_before_total_row
 	<?php
 }
 add_action( 'it_exchange_replace_order_table_tag_before_total_row', 'it_exchange_addon_taxes_simple_replace_order_table_tag_before_total_row', 10, 2 );
+
+/**
+ * Add a taxes row to the receipt.
+ *
+ * @since 1.36
+ */
+function it_exchange_simple_taxes_add_taxes_row_to_receipt() {
+
+	if ( empty( $GLOBALS['it_exchange']['transaction'] ) ) {
+		return;
+	}
+
+	$transaction = $GLOBALS['it_exchange']['transaction'];
+
+	$label = it_exchange_add_simple_taxes_get_label( 'tax' );
+
+	?>
+	<tr>
+		<td></td>
+		<td align="right" style="padding: 10px; ">
+			<strong><?php echo $label; ?></strong>
+		</td>
+		<td align="right" style="padding: 10px 0 10px 10px; ">
+			<?php echo it_exchange_addon_get_simple_taxes_for_transaction( $transaction ); ?>
+		</td>
+	</tr>
+	<?php
+}
+
+add_action( 'it_exchange_email_template_receipt_cart-totals_after_subtotal', 'it_exchange_simple_taxes_add_taxes_row_to_receipt' );
