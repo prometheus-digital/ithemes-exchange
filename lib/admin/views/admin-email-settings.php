@@ -26,7 +26,7 @@ $email_notifications = it_exchange_email_notifications();
 	<h<?php echo $h; ?>>
 		<?php _e( 'Emails', 'it-l10n-ithemes-exchange' ); ?>
 		<a href="<?php echo( IT_Exchange_Email_Customizer::get_link() ); ?>" class="<?php echo $class; ?>">
-			<?php _e( 'Customizer Appearance', 'it-l10n-ithemes-exchange' ); ?>
+			<?php _e( 'Customize Appearance', 'it-l10n-ithemes-exchange' ); ?>
 		</a>
 	</h<?php echo $h; ?>>
 
