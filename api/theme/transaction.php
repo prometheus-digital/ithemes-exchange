@@ -863,19 +863,15 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 */
 	function downloads( $options = array() ) {
 
-		if ( $this->demo ) {
-			return false;
-		}
-
 		while ( $this->products() ) {
 			while ( $this->product_downloads() ) {
-				if ( ! $this->product_download_hashes( array( 'has' => true ) ) ) {
-					return false;
+				if ( $this->product_download_hashes( array( 'has' => true ) ) ) {
+					return true;
 				}
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	/**
