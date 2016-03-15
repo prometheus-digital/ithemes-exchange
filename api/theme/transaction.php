@@ -152,12 +152,12 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		);
 		$options  = ITUtility::merge_defaults( $options, $defaults );
 
-		$status = it_exchange_get_transaction_status( $this->_transaction );
-		$label  = it_exchange_get_transaction_status_label( $this->_transaction );
-
 		if ( $this->demo ) {
 			$status = 'paid';
 			$label  = 'Paid';
+		} else {
+			$status = it_exchange_get_transaction_status( $this->_transaction );
+			$label  = it_exchange_get_transaction_status_label( $this->_transaction );
 		}
 
 		return $options['before'] . sprintf( $options['label'], $status, $label ) . $options['after'];

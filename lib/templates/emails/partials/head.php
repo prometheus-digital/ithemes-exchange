@@ -24,6 +24,16 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
 </head>
-<body style="margin: 0 !important; padding: 0 10px !important; background: <?php it_exchange( 'email', 'background-color' ); ?>; font-family: <?php it_exchange( 'email', 'body-font' ); ?>; color: <?php it_exchange( 'email', 'body-text-color' ); ?>; font-size: <?php it_exchange( 'email', 'body-font-size' ); ?>px;">
+<body style="
+	margin: 0 !important; padding: 0 10px !important; background-color: <?php it_exchange( 'email', 'background-color' ); ?>;
+	font-family: <?php it_exchange( 'email', 'body-font' ); ?>; color: <?php it_exchange( 'email', 'body-text-color' ); ?>;
+	font-size: <?php it_exchange( 'email', 'body-font-size' ); ?>px;
+
+<?php if ( it_exchange( 'email', 'has-background-image' ) ): ?>
+	background-image: url(<?php it_exchange('email', 'background-image');  ?>);
+	background-position: <?php it_exchange( 'email', 'background-image-position' ); ?>;
+	background-repeat: <?php it_exchange( 'email', 'background-image-repeat' ); ?>;
+<?php endif; ?>
+	">
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">

@@ -473,12 +473,13 @@ class IT_Theme_API_Email implements IT_Theme_API {
 		) );
 
 		$attachment = IT_Exchange_Email_Customizer::get_setting( 'background_image' );
+		$url        = is_numeric( $attachment ) ? wp_get_attachment_image_url( $attachment, $options['size'] ) : $attachment;
 
 		if ( $options['has'] ) {
-			return (bool) $attachment;
+			return (bool) $url;
 		}
 
-		return wp_get_attachment_image_url( $attachment, $options['size'] );
+		return $url;
 	}
 
 	/**
