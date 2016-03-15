@@ -410,6 +410,16 @@ class IT_Exchange_Email_Customizer {
 					'monospace'  => 'Monospace'
 				)
 			) ),
+			new WP_Customize_Control( $customizer, 'it-exchange-email[body_font_size]', array(
+				'capability'  => $this->capability,
+				'section'     => 'it-exchange-email-body',
+				'label'       => __( 'Font Size', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'range',
+				'input_attrs' => array(
+					'min' => 8,
+					'max' => 18
+				),
+			) ),
 			new WP_Customize_Color_Control( $customizer, 'it-exchange-email[body_text_color]', array(
 				'capability' => $this->capability,
 				'section'    => 'it-exchange-email-body',
@@ -424,16 +434,6 @@ class IT_Exchange_Email_Customizer {
 				'capability' => $this->capability,
 				'section'    => 'it-exchange-email-body',
 				'label'      => __( 'Button Text Color', 'it-l10n-ithemes-exchange' )
-			) ),
-			new WP_Customize_Control( $customizer, 'it-exchange-email[body_font_size]', array(
-				'capability'  => $this->capability,
-				'section'     => 'it-exchange-email-body',
-				'label'       => __( 'Font Size', 'it-l10n-ithemes-exchange' ),
-				'type'        => 'range',
-				'input_attrs' => array(
-					'min' => 8,
-					'max' => 18
-				),
 			) ),
 			new WP_Customize_Color_Control( $customizer, 'it-exchange-email[body_background_color]', array(
 				'capability' => $this->capability,
