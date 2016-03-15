@@ -24,6 +24,16 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	public $_transaction = false;
 
 	/**
+	 * @var array
+	 */
+	public $_transaction_product_download = false;
+
+	/**
+	 * @var array
+	 */
+	public $_transaction_product_download_hash = false;
+
+	/**
 	 * @var bool
 	 */
 	private $demo;
@@ -53,6 +63,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		'purchasemessage'       => 'purchase_message',
 		'variants'              => 'variants',
 		'description'           => 'description',
+		'downloads'             => 'downloads',
 		'productdownloads'      => 'product_downloads',
 		'productdownload'       => 'product_download',
 		'productdownloadhashes' => 'product_download_hashes',
@@ -842,6 +853,28 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	}
 
 	/**
+	 * Check if there are downloads.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $options
+	 *
+	 * @return bool
+	 */
+	function downloads( $options = array() ) {
+
+		while ( $this->products() ) {
+			while ( $this->product_downloads() ) {
+				if ( ! $this->product_download_hashes( array( 'has' => true ) ) ) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Grabs a list of all downloads for a specific transaction product.
 	 *
 	 * Intended to be used in a while statement.
@@ -873,7 +906,8 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		// This will init/reset the transaction_product_downloads global and loop through them.
 		if ( empty( $GLOBALS['it_exchange']['transaction_product_downloads'][ $product_id ] ) ) {
 			$GLOBALS['it_exchange']['transaction_product_downloads'][ $product_id ] = it_exchange_get_product_feature( $product_id, 'downloads' );
-			$GLOBALS['it_exchange']['transaction_product_download']                 = reset( $GLOBALS['it_exchange']['transaction_product_downloads'][ $product_id ] );
+
+			$GLOBALS['it_exchange']['transaction_product_download'] = reset( $GLOBALS['it_exchange']['transaction_product_downloads'][ $product_id ] );
 
 			return true;
 		} else {
@@ -911,8 +945,14 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			return false;
 		}
 
-		if ( 'title' == $options['attribute'] || 'name' == $options['attribute'] ) {
+		$attribute = $options['attribute'];
+
+		if ( 'title' == $attribute || 'name' == $attribute ) {
 			$value = get_the_title( $this->_transaction_product_download['id'] );
+		} elseif ( isset( $this->_transaction_product_download[ $attribute ] ) ) {
+			$value = $this->_transaction_product_download[ $attribute ];
+		} else {
+			$value = false;
 		}
 
 		return $value;
@@ -935,7 +975,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 		// Return boolean if we're just checking
 		if ( ! empty( $options['has'] ) ) {
-			return (boolean) it_exchange_get_download_hashes_for_transaction_product( $this->_transaction, $this->_transaction_product, $this->_transaction_product_download['id'] );
+			return (bool) it_exchange_get_download_hashes_for_transaction_product( $this->_transaction, $this->_transaction_product, $this->_transaction_product_download['id'] );
 		}
 
 		// Download ID
@@ -945,7 +985,8 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		// This will init/reset the transaction_product_download_hashes global and loop through them.
 		if ( empty( $GLOBALS['it_exchange']['transaction_product_download_hashes'][ $download_id ] ) ) {
 			$GLOBALS['it_exchange']['transaction_product_download_hashes'][ $download_id ] = it_exchange_get_download_hashes_for_transaction_product( $this->_transaction, $this->_transaction_product, $download_id );
-			$GLOBALS['it_exchange']['transaction_product_download_hash']                   = reset( $GLOBALS['it_exchange']['transaction_product_download_hashes'][ $download_id ] );
+
+			$GLOBALS['it_exchange']['transaction_product_download_hash'] = reset( $GLOBALS['it_exchange']['transaction_product_download_hashes'][ $download_id ] );
 
 			return true;
 		} else {
@@ -984,6 +1025,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		$options  = ITUtility::merge_defaults( $options, $defaults );
 
 		$hash_data = it_exchange_get_download_data_from_hash( $this->_transaction_product_download_hash );
+
 		if ( 'title' == $options['attribute'] || 'name' == $options['attribute'] ) {
 			$options['attribute'] = 'hash';
 		} else if ( 'download-limit' == $options['attribute'] ) {
@@ -993,7 +1035,6 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		}
 
 		if ( 'expiration-date' == $options['attribute'] ) {
-
 			$date_format = empty( $options['date-format'] ) ? false : $options['date-format'];
 			$date        = it_exchange_get_download_expiration_date( $hash_data, $date_format );
 			$value       = empty( $date ) ? false : $date;

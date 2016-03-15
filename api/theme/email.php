@@ -311,6 +311,51 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	}
 
 	/**
+	 * Check if a color is light.
+	 *
+	 * @link http://stackoverflow.com/a/1855903
+	 *
+	 * @since 1.36
+	 *
+	 * @param int $r
+	 * @param int $g
+	 * @param int $b
+	 *
+	 * @return bool
+	 */
+	protected function is_color_light( $r, $g, $b ) {
+
+		$a = 1 - ( 0.299 * $r + 0.587 * $g + 0.114 * $b ) / 255;
+
+		return $a < 0.5;
+	}
+
+	/**
+	 * Convert hex to RGB.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $hex
+	 *
+	 * @return object
+	 */
+	protected function hex2rgb( $hex ) {
+		$hex = str_replace( "#", "", $hex );
+
+		if ( strlen( $hex ) == 3 ) {
+			$r = hexdec( substr( $hex, 0, 1 ) . substr( $hex, 0, 1 ) );
+			$g = hexdec( substr( $hex, 1, 1 ) . substr( $hex, 1, 1 ) );
+			$b = hexdec( substr( $hex, 2, 1 ) . substr( $hex, 2, 1 ) );
+		} else {
+			$r = hexdec( substr( $hex, 0, 2 ) );
+			$g = hexdec( substr( $hex, 2, 2 ) );
+			$b = hexdec( substr( $hex, 4, 2 ) );
+		}
+
+		return (object) array( 'r' => $r, 'g' => $g, 'b' => $b );
+	}
+
+	/**
 	 * Get the body highlight color.
 	 *
 	 * @since 1.36
@@ -333,7 +378,16 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	 * @return string
 	 */
 	public function body_button_color( $options = array() ) {
-		return IT_Exchange_Email_Customizer::get_setting( 'body_button_color' );
+
+		$highlight = IT_Exchange_Email_Customizer::get_setting( 'body_highlight_color' );
+
+		$rgb = $this->hex2rgb( $highlight );
+
+		if ( $this->is_color_light( $rgb->r, $rgb->g, $rgb->b ) ) {
+			return '#000000';
+		} else {
+			return '#ffffff';
+		}
 	}
 
 	/**

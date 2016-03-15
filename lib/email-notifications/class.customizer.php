@@ -229,22 +229,12 @@ class IT_Exchange_Email_Customizer {
 				'type'       => 'option',
 				'transport'  => 'postMessage'
 			) ),
-			new WP_Customize_Setting( $customizer, 'it-exchange-email[body_button_color]', array(
-				'capability' => $this->capability,
-				'type'       => 'option',
-				'transport'  => 'postMessage'
-			) ),
 			new WP_Customize_Setting( $customizer, 'it-exchange-email[body_font_size]', array(
 				'capability' => $this->capability,
 				'type'       => 'option',
 				'transport'  => 'postMessage'
 			) ),
 			new WP_Customize_Setting( $customizer, 'it-exchange-email[body_background_color]', array(
-				'capability' => $this->capability,
-				'type'       => 'option',
-				'transport'  => 'postMessage'
-			) ),
-			new WP_Customize_Setting( $customizer, 'it-exchange-email[body_border_color]', array(
 				'capability' => $this->capability,
 				'type'       => 'option',
 				'transport'  => 'postMessage'
@@ -430,20 +420,10 @@ class IT_Exchange_Email_Customizer {
 				'section'    => 'it-exchange-email-body',
 				'label'      => __( 'Highlight Color', 'it-l10n-ithemes-exchange' )
 			) ),
-			new WP_Customize_Color_Control( $customizer, 'it-exchange-email[body_button_color]', array(
-				'capability' => $this->capability,
-				'section'    => 'it-exchange-email-body',
-				'label'      => __( 'Button Text Color', 'it-l10n-ithemes-exchange' )
-			) ),
 			new WP_Customize_Color_Control( $customizer, 'it-exchange-email[body_background_color]', array(
 				'capability' => $this->capability,
 				'section'    => 'it-exchange-email-body',
 				'label'      => __( 'Background Color', 'it-l10n-ithemes-exchange' )
-			) ),
-			new WP_Customize_Color_Control( $customizer, 'it-exchange-email[body_border_color]', array(
-				'capability' => $this->capability,
-				'section'    => 'it-exchange-email-body',
-				'label'      => __( 'Body Border Color', 'it-l10n-ithemes-exchange' )
 			) ),
 
 			/** Footer */
@@ -579,14 +559,13 @@ class IT_Exchange_Email_Customizer {
 					'header_background'       => '#efefef',
 					'body_font'               => 'serif',
 					'body_text_color'         => '#444444',
-					'body_highlight_color'    => '#444444',
-					'body_button_color'       => '#ffffff',
+					'body_highlight_color'    => '#dddddd',
 					'body_font_size'          => '14',
 					'body_background_color'   => '#efefef',
-					'body_border_color'       => '#dddddd',
 					'footer_text_color'       => '#444444',
 					'footer_show_logo'        => false,
 					'background_color'        => '#efefef',
+					'background_image'        => '',
 				)
 			),
 			'dark'    => array(
@@ -600,14 +579,13 @@ class IT_Exchange_Email_Customizer {
 					'header_background'       => '#383e43',
 					'body_font'               => 'sans-serif',
 					'body_text_color'         => '#ffffff',
-					'body_highlight_color'    => '#383e43',
-					'body_button_color'       => '#ffffff',
+					'body_highlight_color'    => '#dddddd',
 					'body_font_size'          => '14',
 					'body_background_color'   => '#2a2f33',
-					'body_border_color'       => '#dddddd',
 					'footer_text_color'       => '#ffffff',
 					'footer_show_logo'        => false,
 					'background_color'        => '#2a2f33',
+					'background_image'        => '',
 				)
 			),
 			'white'   => array(
@@ -621,14 +599,13 @@ class IT_Exchange_Email_Customizer {
 					'header_background'       => '#444444',
 					'body_font'               => 'sans-serif',
 					'body_text_color'         => '#444444',
-					'body_highlight_color'    => '#efefef',
-					'body_button_color'       => '#444444',
+					'body_highlight_color'    => '#dedede',
 					'body_font_size'          => '14',
 					'body_background_color'   => '#ffffff',
-					'body_border_color'       => '#dedede',
 					'footer_text_color'       => '#444444',
 					'footer_show_logo'        => false,
 					'background_color'        => '#ffffff',
+					'background_image'        => '',
 				)
 			),
 			'ocean'   => array(
@@ -642,14 +619,13 @@ class IT_Exchange_Email_Customizer {
 					'header_background'       => '#006186',
 					'body_font'               => 'sans-serif',
 					'body_text_color'         => '#40636f',
-					'body_highlight_color'    => '#40636f',
-					'body_button_color'       => '#444444',
+					'body_highlight_color'    => '#eae1c1',
 					'body_font_size'          => '14',
 					'body_background_color'   => '#ffffff',
-					'body_border_color'       => '#eae1c1',
 					'footer_text_color'       => '#ffffff',
 					'footer_show_logo'        => false,
 					'background_color'        => '#338ea6',
+					'background_image'        => '',
 				)
 			),
 			'gold'    => array(
@@ -663,14 +639,13 @@ class IT_Exchange_Email_Customizer {
 					'header_background'       => '#bc9400',
 					'body_font'               => 'sans-serif',
 					'body_text_color'         => '#40636f',
-					'body_highlight_color'    => '#bc9400',
-					'body_button_color'       => '#444444',
+					'body_highlight_color'    => '#eae1c1',
 					'body_font_size'          => '14',
 					'body_background_color'   => '#ffffff',
-					'body_border_color'       => '#eae1c1',
 					'footer_text_color'       => '#40636f',
 					'footer_show_logo'        => false,
 					'background_color'        => '#e9e0bf',
+					'background_image'        => '',
 				)
 			)
 		);

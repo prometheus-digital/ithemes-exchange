@@ -71,5 +71,9 @@
 	<?php it_exchange_get_template_part( 'emails/receipt/meta-bottom' ); ?>
 <?php endif; ?>
 
+<?php if ( it_exchange( 'transaction', 'has-downloads' ) ): ?>
+	<?php it_exchange_get_template_part( 'emails/receipt/downloads' ); ?>
+<?php endif; ?>
+
 <?php it_exchange_get_template_part( 'emails/partials/footer' ); ?>
 <?php it_exchange_get_template_part( 'emails/partials/foot' ); ?>
