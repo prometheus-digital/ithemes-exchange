@@ -503,7 +503,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 */
 	function products( $options = array() ) {
 		// Return boolean if has flag was set
-		if ( $options['has'] ) {
+		if ( ! empty( $options['has'] ) ) {
 
 			if ( $this->demo ) {
 				return true;
