@@ -207,7 +207,7 @@ class IT_Exchange_Email_Notifications {
 	 * @since 0.4.0
 	 *
 	 * @param mixed $transaction ID or object
-	 * @param int   $customer_id The customer ID
+	 * @param bool  $send_admin_email
 	 *
 	 * @return void
 	 */
