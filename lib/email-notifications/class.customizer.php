@@ -655,6 +655,25 @@ class IT_Exchange_Email_Customizer {
 					'background_color'        => '#e9e0bf',
 					'background_image'        => '',
 				)
+			),
+			'floral'  => array(
+				'label'    => __( 'Floral', 'it-l10n-ithemes-exchange' ),
+				'settings' => array(
+					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image3.jpg' ),
+					'header_show_store_name'  => false,
+					'header_store_name_font'  => 'serif',
+					'header_store_name_size'  => '51',
+					'header_store_name_color' => '#ffffff',
+					'header_background'       => '#192936',
+					'body_font'               => 'serif',
+					'body_highlight_color'    => '#a1d7ca',
+					'body_background_color'   => '#ffffff',
+					'body_text_color'         => '#124340',
+					'footer_text_color'       => '#112a31',
+					'background_color'        => '#bbccc6',
+					'footer_show_logo'        => true,
+					'footer_logo_size'        => '79',
+				)
 			)
 		);
 
