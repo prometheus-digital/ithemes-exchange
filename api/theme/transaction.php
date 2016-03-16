@@ -840,7 +840,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
 				<div class="featured-image-wrapper">
 					<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>"
-					     data-src-thumb="<?php echo $feature_image['thumb'] ?>" />
+					     data-src-thumb="<?php echo $feature_image['thumb'] ?>"/>
 				</div>
 			</div>
 			<?php
@@ -863,15 +863,21 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 */
 	function downloads( $options = array() ) {
 
-		while ( $this->products() ) {
-			while ( $this->product_downloads() ) {
-				if ( $this->product_download_hashes( array( 'has' => true ) ) ) {
-					return true;
+		// this can't be optimized to return early,
+		// otherwise the globals won't be properly reset
+		$has = false;
+
+		while ( it_exchange( 'transaction', 'products' ) ) {
+			if ( it_exchange( 'transaction', 'has-product-downloads' ) ) {
+				while ( it_exchange( 'transaction', 'product-downloads' ) ) {
+					if ( it_exchange( 'transaction', 'has-product-download-hashes' ) ) {
+						$has = true;
+					}
 				}
 			}
 		}
 
-		return false;
+		return $has;
 	}
 
 	/**
@@ -1106,7 +1112,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
 				<div class="featured-image-wrapper">
 					<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>"
-					     data-src-thumb="<?php echo $feature_image['thumb'] ?>" />
+					     data-src-thumb="<?php echo $feature_image['thumb'] ?>"/>
 				</div>
 			</div>
 			<?php
