@@ -422,9 +422,9 @@ class IT_Exchange_Email_Customizer {
 				'label'      => __( 'Highlight Color', 'it-l10n-ithemes-exchange' )
 			) ),
 			new WP_Customize_Color_Control( $customizer, 'it-exchange-email[body_background_color]', array(
-				'capability' => $this->capability,
-				'section'    => 'it-exchange-email-body',
-				'label'      => __( 'Background Color', 'it-l10n-ithemes-exchange' ),
+				'capability'  => $this->capability,
+				'section'     => 'it-exchange-email-body',
+				'label'       => __( 'Background Color', 'it-l10n-ithemes-exchange' ),
 				'description' => __( 'Leave blank to make the background transparent.', 'it-l10n-ithemes-exchange' )
 			) ),
 
@@ -562,8 +562,9 @@ class IT_Exchange_Email_Customizer {
 					'header_show_store_name'  => true,
 					'header_store_name_font'  => 'serif',
 					'header_store_name_size'  => 64,
-					'header_store_name_color' => '#444444',
-					'header_background'       => '#efefef',
+					'header_store_name_color' => '#666666',
+					'header_background'       => '',
+					'header_image'            => '',
 					'body_font'               => 'serif',
 					'body_text_color'         => '#444444',
 					'body_highlight_color'    => '#dddddd',
