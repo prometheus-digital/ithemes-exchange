@@ -63,6 +63,11 @@ $email_notifications = it_exchange_email_notifications();
 		<?php endforeach; ?>
 		</tbody>
 	</table>
+	<p style="float:right;">
+		<a href="<?php IT_Exchange_Email_Customizer::get_link(); ?>" class="button">
+			<?php _e( 'Customize Appearance', 'it-l10n-ithemes-exchange' ); ?>
+		</a>
+	</p>
 
 	<?php foreach ( $email_notifications->get_notifications() as $notification ) : ?>
 
