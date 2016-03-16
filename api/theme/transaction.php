@@ -258,7 +258,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		}
 
 		if ( $this->demo ) {
-			$note = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed sem eu mauris lobortis congue. Vivamus nec elit id ex luctus aliquam ut et elit.';
+			$note = 'Suspendisse a ligula placerat, gravida ipsum at, gravida lectus. Nulla ullamcorper nunc vitae libero feugiat, nec tempor metus dignissim.';
 		}
 
 		if ( ! empty( $options['has'] ) ) {
