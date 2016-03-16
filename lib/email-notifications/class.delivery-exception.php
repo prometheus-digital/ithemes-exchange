@@ -56,7 +56,14 @@ class IT_Exchange_Email_Delivery_Exception extends Exception {
 		$message = $this->message;
 
 		if ( $email ) {
-			$message .= sprintf( ' Email %s sent to %s.', $email->get_notification()->get_name(), $email->get_recipient()->get_email() );
+
+			if ( $email instanceof IT_Exchange_Email ) {
+				$identifier = $email->get_notification()->get_slug();
+			} else {
+				$identifier = $email->get_subject();
+			}
+
+			$message .= sprintf( ' Email %s sent to %s.', $identifier, $email->get_recipient()->get_email() );
 		}
 
 		$message = __CLASS__ . ": {$message}";
