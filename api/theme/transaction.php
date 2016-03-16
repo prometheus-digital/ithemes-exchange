@@ -18,7 +18,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * The current transaction
 	 *
-	 * @var array
+	 * @var IT_Exchange_Transaction
 	 * @since 0.4.0
 	 */
 	public $_transaction = false;
@@ -515,8 +515,19 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		// If we made it here, we're doing a loop of transaction_products for the current query.
 		// This will init/reset the transaction_products global and loop through them.
 		if ( empty( $GLOBALS['it_exchange']['transaction_products'] ) ) {
-			$GLOBALS['it_exchange']['transaction_products'] = $this->demo ? $this->get_demo_products() : it_exchange_get_transaction_products( $this->_transaction );
-			$GLOBALS['it_exchange']['transaction_product']  = reset( $GLOBALS['it_exchange']['transaction_products'] );
+			if ( $this->demo ) {
+				$GLOBALS['it_exchange']['transaction_products'] = $this->get_demo_products();
+			} else {
+
+				$products = it_exchange_get_transaction_products( $this->_transaction );
+
+				if ( empty( $products ) && ! empty( $this->_transaction->post_parent ) ) {
+					$products = it_exchange_get_transaction_products( $this->_transaction->post_parent );
+				}
+
+				$GLOBALS['it_exchange']['transaction_products'] = $products;
+			}
+			$GLOBALS['it_exchange']['transaction_product'] = reset( $GLOBALS['it_exchange']['transaction_products'] );
 
 			return true;
 		} else {
@@ -840,7 +851,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
 				<div class="featured-image-wrapper">
 					<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>"
-					     data-src-thumb="<?php echo $feature_image['thumb'] ?>"/>
+					     data-src-thumb="<?php echo $feature_image['thumb'] ?>" />
 				</div>
 			</div>
 			<?php
@@ -1114,7 +1125,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
 				<div class="featured-image-wrapper">
 					<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>"
-					     data-src-thumb="<?php echo $feature_image['thumb'] ?>"/>
+					     data-src-thumb="<?php echo $feature_image['thumb'] ?>" />
 				</div>
 			</div>
 			<?php
