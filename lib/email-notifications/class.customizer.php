@@ -693,7 +693,7 @@ class IT_Exchange_Email_Customizer {
 					'footer_show_logo'        => true,
 					'footer_logo_size'        => '80',
 					'header_show_logo'        => false,
-					'background_color'        => '#2d2222',
+					'background_color'        => '#161616',
 				)
 			)
 		);
