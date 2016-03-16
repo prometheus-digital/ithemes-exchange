@@ -832,7 +832,8 @@ class IT_Exchange_Email_Customizer {
 			'customize-controls',
 		) );
 		wp_localize_script( 'it-exchange-email-customizer-controls', '_exchangeEmailCustomizer', array(
-			'presets' => $this->get_presets(),
+			'presets'             => $this->get_presets(),
+			'sendsAttachmentData' => version_compare( $GLOBALS['wp_version'], '4.5', '>=' )
 		) );
 	}
 
