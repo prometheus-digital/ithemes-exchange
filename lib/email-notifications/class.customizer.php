@@ -639,7 +639,7 @@ class IT_Exchange_Email_Customizer {
 			'gold'    => array(
 				'label'    => __( 'Gold', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
-					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image1.jpg' ),
+					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image4.jpg' ),
 					'header_show_store_name'  => false,
 					'header_store_name_font'  => 'sans-serif',
 					'header_store_name_size'  => 64,
