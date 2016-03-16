@@ -681,7 +681,7 @@ class IT_Exchange_Email_Customizer {
 					'header_show_store_name'  => true,
 					'header_store_name_font'  => 'monospace',
 					'header_store_name_size'  => '50',
-					'header_store_name_color' => '#161616',
+					'header_store_name_color' => '#01ff00',
 					'header_image'            => '',
 					'header_background'       => '',
 					'body_highlight_color'    => '#3a3a3a',
