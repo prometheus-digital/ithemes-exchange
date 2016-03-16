@@ -32,31 +32,44 @@
 									<?php _e( 'Downloads', 'it-l10n-ithemes-exchange' ); ?>
 								</h3>
 
-								<?php while ( it_exchange( 'transaction', 'products' ) ): ?>
-									<?php if ( it_exchange( 'transaction', 'has-product-downloads' ) ): ?>
+								<?php if ( ! it_exchange( 'transaction', 'cleared-for-delivery' ) ): ?>
 
-										<h4 style="margin:.5em 0;">
-											<?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_name' ); ?>
-										</h4>
+									<p>
+										<?php
+										_e( 'The status for this transaction does not grant access to downloadable files.', 'it-l10n-ithemes-exchange' );
+										_e(' Once the transaction is updated to an approved status, you will receive a follow-up email with your download links.', 'it-l10n-ithemes-exchange' );
+										?>
+									</p>
 
-										<?php while ( it_exchange( 'transaction', 'product-downloads' ) ): ?>
+								<?php else: ?>
 
-											<ul style="list-style: none;margin: 0;padding: 0;">
-												<?php while ( it_exchange( 'transaction', 'product-download-hashes' ) ): ?>
-													<li>
-														<a href="<?php it_exchange( 'transaction', 'product-download-hash', 'attribute=download-url' ); ?>" class="button"
-														   style="
-															   padding: 10px 20px; margin: 5px 0; display: inline-block; background: <?php it_exchange( 'email', 'body-highlight-color' ); ?>;
-															   color: <?php it_exchange( 'email', 'body-button-color' ); ?>; text-decoration: none;font-weight: bold;">
-															<?php it_exchange( 'transaction', 'product-download', 'attribute=title' ); ?>
-														</a>
-													</li>
-												<?php break; endwhile; ?>
-											</ul>
+									<?php while ( it_exchange( 'transaction', 'products' ) ): ?>
+										<?php if ( it_exchange( 'transaction', 'has-product-downloads' ) ): ?>
 
-										<?php endwhile; ?>
-									<?php endif; ?>
-								<?php endwhile; ?>
+											<h4 style="margin:.5em 0;">
+												<?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_name' ); ?>
+											</h4>
+
+											<?php while ( it_exchange( 'transaction', 'product-downloads' ) ): ?>
+
+												<ul style="list-style: none;margin: 0;padding: 0;">
+													<?php while ( it_exchange( 'transaction', 'product-download-hashes' ) ): ?>
+														<li>
+															<a href="<?php it_exchange( 'transaction', 'product-download-hash', 'attribute=download-url' ); ?>" class="button"
+															   style="
+																   padding: 10px 20px; margin: 5px 0; display: inline-block; background: <?php it_exchange( 'email', 'body-highlight-color' ); ?>;
+																   color: <?php it_exchange( 'email', 'body-button-color' ); ?>; text-decoration: none;font-weight: bold;">
+																<?php it_exchange( 'transaction', 'product-download', 'attribute=title' ); ?>
+															</a>
+														</li>
+													<?php break; endwhile; ?>
+												</ul>
+
+											<?php endwhile; ?>
+										<?php endif; ?>
+									<?php endwhile; ?>
+
+								<?php endif; ?>
 							</td>
 						</tr>
 					</table>
