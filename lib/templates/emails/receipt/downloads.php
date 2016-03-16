@@ -34,11 +34,12 @@
 
 								<?php while ( it_exchange( 'transaction', 'products' ) ): ?>
 									<?php if ( it_exchange( 'transaction', 'has-product-downloads' ) ): ?>
-										<?php while ( it_exchange( 'transaction', 'product-downloads' ) ): ?>
 
-											<h4 style="margin:.5em 0;">
-												<?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_name' ); ?>
-											</h4>
+										<h4 style="margin:.5em 0;">
+											<?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_name' ); ?>
+										</h4>
+
+										<?php while ( it_exchange( 'transaction', 'product-downloads' ) ): ?>
 
 											<ul style="list-style: none;margin: 0;padding: 0;">
 												<?php while ( it_exchange( 'transaction', 'product-download-hashes' ) ): ?>
@@ -50,7 +51,7 @@
 															<?php it_exchange( 'transaction', 'product-download', 'attribute=title' ); ?>
 														</a>
 													</li>
-												<?php endwhile; ?>
+												<?php break; endwhile; ?>
 											</ul>
 
 										<?php endwhile; ?>
