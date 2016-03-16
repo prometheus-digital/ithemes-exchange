@@ -253,7 +253,7 @@ class IT_Exchange_Email_Notifications {
 		$send_admin_email = apply_filters( 'it_exchange_send_purchase_email_to_admin', $send_admin_email, $this );
 
 		// Send admin notification if param is true and email is provided in settings
-		if ( $send_admin_email && ! empty( $settings['notification-email-address'] ) ) {
+		if ( $send_admin_email ) {
 
 			$notification = $this->get_notification( 'admin-order' );
 

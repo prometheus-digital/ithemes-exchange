@@ -71,7 +71,7 @@ class IT_Exchange_Admin_Email_Notification extends IT_Exchange_Email_Notificatio
 	 * @return self
 	 */
 	public function set_emails( array $emails = array() ) {
-		$this->emails = $emails;
+		$this->emails = array_filter( array_map( 'trim', $emails ) );
 
 		return $this;
 	}

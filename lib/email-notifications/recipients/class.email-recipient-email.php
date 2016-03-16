@@ -22,7 +22,12 @@ class IT_Exchange_Email_Recipient_Email implements IT_Exchange_Email_Recipient {
 	 * @param string $email
 	 */
 	public function __construct( $email ) {
-		$this->email;
+
+		if ( empty( $email ) || ! is_string( $email ) || ! is_email( $email ) ) {
+			throw new InvalidArgumentException( '$email must be a valid email string.' );
+		}
+
+		$this->email = $email;
 	}
 
 	/**
