@@ -556,7 +556,7 @@ class IT_Exchange_Email_Customizer {
 	protected static function get_presets() {
 
 		$presets = array(
-			'default' => array(
+			'default'  => array(
 				'label'    => __( 'Default', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
 					'header_show_store_name'  => true,
@@ -576,7 +576,7 @@ class IT_Exchange_Email_Customizer {
 					'background_image'        => '',
 				)
 			),
-			'dark'    => array(
+			'dark'     => array(
 				'label'    => __( 'Dark', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
 					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image1.jpg' ),
@@ -596,7 +596,7 @@ class IT_Exchange_Email_Customizer {
 					'background_image'        => '',
 				)
 			),
-			'white'   => array(
+			'white'    => array(
 				'label'    => __( 'White', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
 					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image1.jpg' ),
@@ -616,7 +616,7 @@ class IT_Exchange_Email_Customizer {
 					'background_image'        => '',
 				)
 			),
-			'ocean'   => array(
+			'ocean'    => array(
 				'label'    => __( 'Ocean', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
 					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image2.jpg' ),
@@ -636,7 +636,7 @@ class IT_Exchange_Email_Customizer {
 					'background_image'        => '',
 				)
 			),
-			'gold'    => array(
+			'gold'     => array(
 				'label'    => __( 'Gold', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
 					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image4.jpg' ),
@@ -656,7 +656,7 @@ class IT_Exchange_Email_Customizer {
 					'background_image'        => '',
 				)
 			),
-			'floral'  => array(
+			'floral'   => array(
 				'label'    => __( 'Floral', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
 					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image3.jpg' ),
@@ -672,7 +672,28 @@ class IT_Exchange_Email_Customizer {
 					'footer_text_color'       => '#112a31',
 					'background_color'        => '#bbccc6',
 					'footer_show_logo'        => true,
-					'footer_logo_size'        => '79',
+					'footer_logo_size'        => '80',
+				)
+			),
+			'homebrew' => array(
+				'label'    => __( 'Homebrew', 'it-l10n-ithemes-exchange' ),
+				'settings' => array(
+					'header_show_store_name'  => true,
+					'header_store_name_font'  => 'monospace',
+					'header_store_name_size'  => '50',
+					'header_store_name_color' => '#161616',
+					'header_image'            => '',
+					'header_background'       => '',
+					'body_highlight_color'    => '#3a3a3a',
+					'body_background_color'   => '',
+					'body_text_color'         => '#ffffff',
+					'body_font'               => 'monospace',
+					'body_font_size'          => '13',
+					'footer_text_color'       => '#ffffff',
+					'footer_show_logo'        => true,
+					'footer_logo_size'        => '80',
+					'header_show_logo'        => false,
+					'background_color'        => '#2d2222',
 				)
 			)
 		);
