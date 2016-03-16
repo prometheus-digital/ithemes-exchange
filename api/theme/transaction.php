@@ -877,7 +877,9 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			}
 		}
 
-		return $has;
+		$show = apply_filters( 'it_exchange_print_downlods_page_link_in_email', true, $this->_transaction );
+
+		return $has && $show;
 	}
 
 	/**
