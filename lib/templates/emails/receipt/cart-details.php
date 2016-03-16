@@ -28,16 +28,22 @@
 					<table width="100%" style="line-height: 1.2;">
 						<?php do_action( 'it_exchange_email_template_receipt_cart-details_before_header_row' ); ?>
 						<tr>
-							<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 0 0 10px 0;" ><?php _e( 'Description', 'it-l10n-ithemes-exchange' ); ?></th>
-							<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 0 0 10px 0;" ><?php _ex( 'Qty', 'Product Quantity', 'it-l10n-ithemes-exchange' ); ?></th>
-							<th align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 0 0 10px 0;" ><?php _e( 'Price', 'it-l10n-ithemes-exchange' ); ?></th>
+							<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 0 0 10px 0;" class="border-highlight-color">
+								<?php _e( 'Description', 'it-l10n-ithemes-exchange' ); ?>
+							</th>
+							<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 0 0 10px 0;" class="border-highlight-color">
+								<?php _ex( 'Qty', 'Product Quantity', 'it-l10n-ithemes-exchange' ); ?>
+							</th>
+							<th align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 0 0 10px 0;" class="border-highlight-color">
+								<?php _e( 'Price', 'it-l10n-ithemes-exchange' ); ?>
+							</th>
 						</tr>
 						<?php do_action( 'it_exchange_email_template_receipt_cart-details_after_header_row' ); ?>
 
 						<?php do_action( 'it_exchange_email_template_receipt_cart-details_begin_products' ); ?>
 						<?php while ( it_exchange( 'transaction', 'products' ) ): ?>
 							<tr>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" >
+								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" class="border-highlight-color">
 									<table>
 										<tr>
 											<?php if ( it_exchange( 'transaction', 'has-featured-image' ) ): ?>
@@ -51,7 +57,7 @@
 												<?php do_action( 'it_exchange_email_template_receipt_cart-details_after_product_name' ); ?>
 												<?php it_exchange( 'transaction', 'variants' ); ?>
 												<?php if ( it_exchange( 'transaction', 'has-purchase-message' ) ): ?>
-													<p style="border-left: 4px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding-left: 10px; max-width: 300px; font-size: .9em" >
+													<p style="border-left: 4px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding-left: 10px; max-width: 300px; font-size: .9em" class="border-highlight-color">
 														<?php it_exchange( 'transaction', 'purchase-message' ); ?>
 													</p>
 												<?php endif; ?>
@@ -59,10 +65,10 @@
 										</tr>
 									</table>
 								</td>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" >
+								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" class="border-highlight-color">
 									<?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_count' ); ?>
 								</td>
-								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" >
+								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" class="border-highlight-color">
 									<?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_subtotal' ); ?>
 								</td>
 							</tr>
