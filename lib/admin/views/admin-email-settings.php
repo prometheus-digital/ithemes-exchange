@@ -119,6 +119,9 @@ $email_notifications = it_exchange_email_notifications();
 
 						<p class="description">
 							<?php
+							if ( $notification->has_description() ) {
+								echo $notification->get_description() . '<br><br>';
+							}
 							_e( 'HTML is accepted. Available shortcode functions:', 'it-l10n-ithemes-exchange' );
 							echo '<br />';
 							printf( __( 'You call these shortcode functions like this: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=order_table option=purchase_message]' );
@@ -131,7 +134,7 @@ $email_notifications = it_exchange_email_notifications();
 							echo '<li>order_table - ' . __( 'A table of the order details. Accept "purchase_message" option.', 'it-l10n-ithemes-exchange' ) . '</li>';
 							echo '<li>purchase_date - ' . __( 'The date of the purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
 							echo '<li>total - ' . __( 'The total price of the purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>payment_id - ' . __( 'The unique ID number for this purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
+							echo '<li>payment_id - ' . __( 'The payment gateway ID number for this purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
 							echo '<li>receipt_id - ' . __( 'The unique ID number for this transaction', 'it-l10n-ithemes-exchange' ) . '</li>';
 							echo '<li>payment_method - ' . __( 'The method of payment used for this purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
 							echo '<li>shipping_address - ' . __( 'The shipping address for this product. Blank if shipping is not required. Also accepts "before" and "after" arguments.', 'it-l10n-ithemes-exchange' ) . '</li>';
@@ -157,20 +160,20 @@ $email_notifications = it_exchange_email_notifications();
 		<?php do_action( 'it_exchange_general_settings_email_top' ); ?>
 		<tr valign="top">
 			<th scope="row">
-				<label for="receipt-email-address"><?php _e( 'Email Sender Address', 'it-l10n-ithemes-exchange' ) ?></label>
+				<label for="receipt-email-address"><?php _e( 'Email From Address', 'it-l10n-ithemes-exchange' ) ?></label>
 			</th>
 			<td>
 				<?php $form->add_text_box( 'receipt-email-address', array( 'class' => 'normal-text' ) ); ?>
-				<br /><span class="description"><?php _e( 'Email address used for customer receipt emails.', 'it-l10n-ithemes-exchange' ); ?></span>
+				<br /><span class="description"><?php _e( 'Email address used for customer emails.', 'it-l10n-ithemes-exchange' ); ?></span>
 			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row">
-				<label for="receipt-email-name"><?php _e( 'Email Sender Name', 'it-l10n-ithemes-exchange' ) ?></label>
+				<label for="receipt-email-name"><?php _e( 'Email From Name', 'it-l10n-ithemes-exchange' ) ?></label>
 			</th>
 			<td>
 				<?php $form->add_text_box( 'receipt-email-name', array( 'class' => 'normal-text' ) ); ?>
-				<br /><span class="description"><?php _e( 'Name used for account that sends customer receipt emails.', 'it-l10n-ithemes-exchange' ); ?></span>
+				<br /><span class="description"><?php _e( 'Name used for account that sends customer emails.', 'it-l10n-ithemes-exchange' ); ?></span>
 			</td>
 		</tr>
 

@@ -42,19 +42,26 @@ abstract class IT_Exchange_Email_Notification {
 	private $template;
 
 	/**
+	 * @var string
+	 */
+	private $description = '';
+
+	/**
 	 * IT_Exchange_Email_Notification constructor.
 	 *
 	 * @param string                     $name
 	 * @param string                     $slug
 	 * @param IT_Exchange_Email_Template $template
-	 * @param array                      $defaults
+	 * @param array                      $args
 	 */
-	public function __construct( $name, $slug, IT_Exchange_Email_Template $template = null, array $defaults = array() ) {
+	public function __construct( $name, $slug, IT_Exchange_Email_Template $template = null, array $args = array() ) {
 		$this->name     = $name;
 		$this->slug     = $slug;
 		$this->template = $template ? $template : new IT_Exchange_Email_Template( '' );
 
 		$emails = it_exchange_get_option( 'emails' );
+
+		$defaults = isset( $args['defaults'] ) ? $args['defaults'] : array();
 
 		if ( ! is_array( $emails ) || ! isset( $emails[ $this->get_slug() ] ) ) {
 			$data = $defaults;
@@ -65,6 +72,10 @@ abstract class IT_Exchange_Email_Notification {
 		$data = ITUtility::merge_defaults( $data, $defaults );
 
 		$this->setup_properties( $data );
+
+		if ( ! empty( $args['description'] ) ) {
+			$this->description = $args['description'];
+		}
 	}
 
 	/**
@@ -205,6 +216,28 @@ abstract class IT_Exchange_Email_Notification {
 	 */
 	public function get_template() {
 		return $this->template;
+	}
+
+	/**
+	 * Get the notification description.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function get_description() {
+		return $this->description;
+	}
+
+	/**
+	 * Check if the notification has a description.
+	 *
+	 * @since 1.36
+	 *
+	 * @return bool
+	 */
+	public function has_description() {
+		return trim( $this->get_description() ) !== '';
 	}
 
 	/**
