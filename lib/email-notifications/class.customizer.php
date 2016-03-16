@@ -382,9 +382,10 @@ class IT_Exchange_Email_Customizer {
 				'flex-height' => true
 			) ),
 			new WP_Customize_Color_Control( $customizer, 'it-exchange-email[header_background]', array(
-				'capability' => $this->capability,
-				'section'    => 'it-exchange-email-header',
-				'label'      => __( 'Background Color', 'it-l10n-ithemes-exchange' )
+				'capability'  => $this->capability,
+				'section'     => 'it-exchange-email-header',
+				'label'       => __( 'Background Color', 'it-l10n-ithemes-exchange' ),
+				'description' => __( 'Leave blank to make the background transparent.', 'it-l10n-ithemes-exchange' )
 			) ),
 
 			/** Body */
@@ -423,7 +424,8 @@ class IT_Exchange_Email_Customizer {
 			new WP_Customize_Color_Control( $customizer, 'it-exchange-email[body_background_color]', array(
 				'capability' => $this->capability,
 				'section'    => 'it-exchange-email-body',
-				'label'      => __( 'Background Color', 'it-l10n-ithemes-exchange' )
+				'label'      => __( 'Background Color', 'it-l10n-ithemes-exchange' ),
+				'description' => __( 'Leave blank to make the background transparent.', 'it-l10n-ithemes-exchange' )
 			) ),
 
 			/** Footer */
@@ -465,14 +467,19 @@ class IT_Exchange_Email_Customizer {
 			/** Background */
 
 			new WP_Customize_Color_Control( $customizer, 'it-exchange-email[background_color]', array(
-				'capability' => $this->capability,
-				'section'    => 'it-exchange-email-background',
-				'label'      => __( 'Background Color', 'it-l10n-ithemes-exchange' ),
+				'capability'  => $this->capability,
+				'section'     => 'it-exchange-email-background',
+				'label'       => __( 'Background Color', 'it-l10n-ithemes-exchange' ),
+				'description' =>
+					__( 'For best compatibility, always provide a background color. Even when a background image is in use. ', 'it-l10n-ithemes-exchange' )
 			) ),
 			new WP_Customize_Image_Control( $customizer, 'it-exchange-email[background_image]', array(
-				'capability' => $this->capability,
-				'section'    => 'it-exchange-email-background',
-				'label'      => __( 'Background Image', 'it-l10n-ithemes-exchange' ),
+				'capability'  => $this->capability,
+				'section'     => 'it-exchange-email-background',
+				'label'       => __( 'Background Image', 'it-l10n-ithemes-exchange' ),
+				'description' =>
+					sprintf( __( 'We recommend using a %ssubtle pattern%s as a background image.', 'it-l10n-ithemes-exchange' ),
+						'<a href="http://subtlepatterns.com">', '</a>' )
 			) ),
 			new WP_Customize_Control( $customizer, 'it-exchange-email[background_image_position]', array(
 				'capability'      => $this->capability,
