@@ -266,7 +266,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 			return (bool) $attachment;
 		}
 
-		return wp_get_attachment_image_url( $attachment, $options['size'] );
+		return is_numeric( $attachment ) ? wp_get_attachment_image_url( $attachment, $options['size'] ) : $attachment;
 	}
 
 	/**
@@ -313,7 +313,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Check if a color is light.
 	 *
-	 * @link http://stackoverflow.com/a/1855903
+	 * @link  http://stackoverflow.com/a/1855903
 	 *
 	 * @since 1.36
 	 *
