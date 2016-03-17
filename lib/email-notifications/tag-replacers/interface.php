@@ -37,6 +37,17 @@ interface IT_Exchange_Email_Tag_Replacer {
 	public function add_tag( IT_Exchange_Email_Tag $tag );
 
 	/**
+	 * Get a tag object for a given tag.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $tag
+	 *
+	 * @return IT_Exchange_Email_Tag|null
+	 */
+	public function get_tag( $tag );
+
+	/**
 	 * Get all registered tags.
 	 *
 	 * @since 1.36

@@ -131,23 +131,11 @@ $email_notifications = it_exchange_email_notifications();
 							echo '<br />';
 							printf( __( 'You call these shortcode functions like this: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=order_table option=purchase_message]' );
 							echo '<ul>';
-							echo '<li>download_list - ' . __( 'A list of download links for each download purchased', 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>name - ' . __( "The buyer's first name", 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>fullname - ' . __( "The buyer's full name, first and last", 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>username - ' . __( "The buyer's username on the site, if they registered an account", 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>email - ' . __( "The buyer's email on the site", 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>order_table - ' . __( 'A table of the order details. Accept "purchase_message" option.', 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>purchase_date - ' . __( 'The date of the purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>total - ' . __( 'The total price of the purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>payment_id - ' . __( 'The payment gateway ID number for this purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>receipt_id - ' . __( 'The unique ID number for this transaction', 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>payment_method - ' . __( 'The method of payment used for this purchase', 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>shipping_address - ' . __( 'The shipping address for this product. Blank if shipping is not required. Also accepts "before" and "after" arguments.', 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>billing_address - ' . __( 'The billing address for this product. Blank if shipping is not required. Also accepts "before" and "after" arguments.', 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>sitename - ' . __( 'Your site name', 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>receipt_link - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the email correctly.', 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>login_link - ' . __( 'Adds a link to the login page on your website.', 'it-l10n-ithemes-exchange' ) . '</li>';
-							echo '<li>account_link - ' . __( 'Adds a link to the customer\'s account page on your website.', 'it-l10n-ithemes-exchange' ) . '</li>';
+
+							foreach ( $email_notifications->get_replacer()->get_tags_for( $notification ) as $tag ) {
+								echo "<li><code>{$tag->get_tag()}</code> &ndash; {$tag->get_description()}</li>";
+							}
+
 							do_action( 'it_exchange_email_template_tags_list' );
 							echo '</ul>';
 							?>

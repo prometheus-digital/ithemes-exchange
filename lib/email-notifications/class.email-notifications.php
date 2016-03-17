@@ -363,7 +363,8 @@ class IT_Exchange_Email_Notifications {
 
 		if ( method_exists( $this->replacer, $name ) ) {
 
-			$new_name = str_replace( 'it_exchange_', '', $name );
+			$new_name = str_replace( 'it_exchange_replace', '', $name );
+			$new_name = str_replace( '_tag', '', $new_name );
 
 			_deprecated_function( __CLASS__ . '::' . $name, '1.36', "IT_Exchange_Email_Tag_Replacer::$new_name" );
 

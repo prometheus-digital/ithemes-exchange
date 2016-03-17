@@ -33,7 +33,12 @@ require_once dirname( __FILE__ ) . '/senders/class.wp-mail.php';
 require_once dirname( __FILE__ ) . '/class.delivery-exception.php';
 
 require_once dirname( __FILE__ ) . '/tag-replacers/interface.php';
+require_once dirname( __FILE__ ) . '/tag-replacers/class.base.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.shortcode.php';
+
+require_once dirname( __FILE__ ) . '/tag/interface.php';
+require_once dirname( __FILE__ ) . '/tag/class.base.php';
+require_once dirname( __FILE__ ) . '/tag/load.php';
 
 new IT_Exchange_Email_Customizer();
 
@@ -104,14 +109,14 @@ function it_exchange_email_notifications() {
 	return $notifications;
 }
 
-$GLOBALS['IT_Exchange_Email_Notifications'] = it_exchange_email_notifications();
-
 /**
  * Register email notifications.
  *
  * @since 1.36
  */
 function it_exchange_register_email_notifications() {
+
+	$GLOBALS['IT_Exchange_Email_Notifications'] = it_exchange_email_notifications();
 
 	it_exchange_email_notifications()
 		->register_notification( new IT_Exchange_Admin_Email_Notification(

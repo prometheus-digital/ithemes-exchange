@@ -26,9 +26,22 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	 * @return self
 	 */
 	public function add_tag( IT_Exchange_Email_Tag $tag ) {
-		$this->tags[] = $tag;
+		$this->tags[ $tag->get_tag() ] = $tag;
 
 		return $this;
+	}
+
+	/**
+	 * Get a tag object for a given tag.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $tag
+	 *
+	 * @return IT_Exchange_Email_Tag|null
+	 */
+	public function get_tag( $tag ) {
+		return isset( $this->tags[ $tag ] ) ? $this->tags[ $tag ] : null;
 	}
 
 	/**

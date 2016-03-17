@@ -67,8 +67,9 @@ interface IT_Exchange_Email_Tag {
 	 * @since 1.36
 	 *
 	 * @param array $context
+	 * @param array $options
 	 *
 	 * @return string
 	 */
-	public function render( $context );
+	public function render( $context, $options = array() );
 }
