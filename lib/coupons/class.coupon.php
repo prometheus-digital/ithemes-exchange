@@ -213,7 +213,7 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	 * @param string $cart_id
 	 */
 	protected function record_used_by( $cart_id ) {
-		add_post_meta( $this->get_ID(), '_used_by', $cart_id, true );
+		add_post_meta( $this->get_ID(), '_used_by', $cart_id );
 	}
 
 	/**
