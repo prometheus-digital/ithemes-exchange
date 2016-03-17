@@ -247,7 +247,7 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	 * @return bool
 	 */
 	protected function is_used_by( $cart_id ) {
-		return in_array( $cart_id, $this->get_uses() );
+		return in_array( $cart_id, $this->get_uses(), true );
 	}
 
 	/**
