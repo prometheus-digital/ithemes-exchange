@@ -52,6 +52,30 @@ function it_exchange_email_notifications() {
 
 		$replacer = new IT_Exchange_Email_Shortcode_Tag_Replacer();
 
+		/**
+		 * Filter the tag replacer.
+		 *
+		 * The return value must implement IT_Exchange_Email_Tag_Replacer.
+		 *
+		 * @since 1.36
+		 *
+		 * @param IT_Exchange_Email_Tag_Replacer $replacer
+		 */
+		$filtered = apply_filters( 'it_exchange_email_notifications_tag_replacer', $replacer );
+
+		if ( $filtered instanceof IT_Exchange_Email_Tag_Replacer ) {
+			$replacer = $filtered;
+		}
+
+		/**
+		 * Fires when replacement tags should be registered.
+		 *
+		 * @since 1.36
+		 *
+		 * @param IT_Exchange_Email_Tag_Replacer $replacer
+		 */
+		do_action( 'it_Exchange_email_notifications_register_tags', $replacer );
+
 		if ( defined( 'IT_EXCHANGE_DISABLE_EMAILS' ) && IT_EXCHANGE_DISABLE_EMAILS ) {
 			$sender = new IT_Exchange_Email_Null_Sender();
 		} else {

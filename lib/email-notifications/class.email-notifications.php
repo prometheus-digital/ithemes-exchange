@@ -113,6 +113,17 @@ class IT_Exchange_Email_Notifications {
 	}
 
 	/**
+	 * Get the tag replacer.
+	 *
+	 * @since 1.36
+	 *
+	 * @return IT_Exchange_Email_Tag_Replacer
+	 */
+	public function get_replacer() {
+		return $this->replacer;
+	}
+
+	/**
 	 * Deprecated PHP 4 style constructor.
 	 *
 	 * @deprecated
