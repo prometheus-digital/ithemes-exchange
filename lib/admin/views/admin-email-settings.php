@@ -64,7 +64,7 @@ $email_notifications = it_exchange_email_notifications();
 		</tbody>
 	</table>
 	<p style="float:right;">
-		<a href="<?php IT_Exchange_Email_Customizer::get_link(); ?>" class="button">
+		<a href="<?php echo IT_Exchange_Email_Customizer::get_link(); ?>" class="button">
 			<?php _e( 'Customize Appearance', 'it-l10n-ithemes-exchange' ); ?>
 		</a>
 	</p>
