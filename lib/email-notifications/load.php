@@ -18,20 +18,19 @@ require_once dirname( __FILE__ ) . '/notifications/class.admin-email-notificatio
 require_once dirname( __FILE__ ) . '/notifications/class.customer-email-notification.php';
 
 require_once dirname( __FILE__ ) . '/class.email-template.php';
-require_once dirname( __FILE__ ) . '/interface.sendable.php';
-require_once dirname( __FILE__ ) . '/class.email.php';
-require_once dirname( __FILE__ ) . '/class.simple-email.php';
+require_once dirname( __FILE__ ) . '/sendable/interface.sendable.php';
+require_once dirname( __FILE__ ) . '/sendable/class.email.php';
+require_once dirname( __FILE__ ) . '/sendable/class.simple-email.php';
 
 require_once dirname( __FILE__ ) . '/recipients/interface.email-recipient.php';
 require_once dirname( __FILE__ ) . '/recipients/class.email-recipient-transaction.php';
 require_once dirname( __FILE__ ) . '/recipients/class.email-recipient-customer.php';
 require_once dirname( __FILE__ ) . '/recipients/class.email-recipient-email.php';
 
-require_once dirname( __FILE__ ) . '/senders/interface.php';
-require_once dirname( __FILE__ ) . '/senders/class.null.php';
-require_once dirname( __FILE__ ) . '/senders/class.wp-mail.php';
-
-require_once dirname( __FILE__ ) . '/class.delivery-exception.php';
+require_once dirname( __FILE__ ) . '/delivery/interface.php';
+require_once dirname( __FILE__ ) . '/delivery/class.null.php';
+require_once dirname( __FILE__ ) . '/delivery/class.wp-mail.php';
+require_once dirname( __FILE__ ) . '/delivery/class.exception.php';
 
 require_once dirname( __FILE__ ) . '/tag-replacers/interface.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.base.php';
