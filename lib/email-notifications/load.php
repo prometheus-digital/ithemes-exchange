@@ -79,7 +79,7 @@ function it_exchange_email_notifications() {
 		 *
 		 * @param IT_Exchange_Email_Tag_Replacer $replacer
 		 */
-		do_action( 'it_Exchange_email_notifications_register_tags', $replacer );
+		do_action( 'it_exchange_email_notifications_register_tags', $replacer );
 
 		if ( defined( 'IT_EXCHANGE_DISABLE_EMAILS' ) && IT_EXCHANGE_DISABLE_EMAILS ) {
 			$sender = new IT_Exchange_Email_Null_Sender();

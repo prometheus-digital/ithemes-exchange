@@ -17,7 +17,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 * IT_Exchange_Email_Register_Default_Tags constructor.
 	 */
 	public function __construct() {
-		add_action( 'it_Exchange_email_notifications_register_tags', array( $this, 'register' ) );
+		add_action( 'it_exchange_email_notifications_register_tags', array( $this, 'register' ) );
 	}
 
 	/**
