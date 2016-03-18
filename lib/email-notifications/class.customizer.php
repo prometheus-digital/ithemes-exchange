@@ -328,9 +328,10 @@ class IT_Exchange_Email_Customizer {
 					'min' => 50,
 					'max' => 350
 				),
-				'active_callback' => function () {
-					return (bool) IT_Exchange_Email_Customizer::get_setting( 'header_show_logo' );
-				}
+				'active_callback' => array(
+					new IT_Exchange_Email_Customize_Active_Callback( 'header_show_logo' ),
+					'active'
+				)
 			) ),
 			new WP_Customize_Control( $customizer, 'it-exchange-email[header_show_store_name]', array(
 				'capability' => $this->capability,
@@ -348,9 +349,10 @@ class IT_Exchange_Email_Customizer {
 					'sans-serif' => 'Sans-serif',
 					'monospace'  => 'Monospace'
 				),
-				'active_callback' => function () {
-					return (bool) IT_Exchange_Email_Customizer::get_setting( 'header_show_store_name' );
-				}
+				'active_callback' => array(
+					new IT_Exchange_Email_Customize_Active_Callback( 'header_show_store_name' ),
+					'active'
+				)
 			) ),
 			new WP_Customize_Control( $customizer, 'it-exchange-email[header_store_name_size]', array(
 				'capability'      => $this->capability,
@@ -361,17 +363,19 @@ class IT_Exchange_Email_Customizer {
 					'min' => 12,
 					'max' => 96
 				),
-				'active_callback' => function () {
-					return (bool) IT_Exchange_Email_Customizer::get_setting( 'header_show_store_name' );
-				}
+				'active_callback' => array(
+					new IT_Exchange_Email_Customize_Active_Callback( 'header_show_store_name' ),
+					'active'
+				)
 			) ),
 			new WP_Customize_Color_Control( $customizer, 'it-exchange-email[header_store_name_color]', array(
 				'capability'      => $this->capability,
 				'section'         => 'it-exchange-email-header',
 				'label'           => __( 'Store Name Color', 'it-l10n-ithemes-exchange' ),
-				'active_callback' => function () {
-					return (bool) IT_Exchange_Email_Customizer::get_setting( 'header_show_store_name' );
-				}
+				'active_callback' => array(
+					new IT_Exchange_Email_Customize_Active_Callback( 'header_show_store_name' ),
+					'active'
+				)
 			) ),
 			new WP_Customize_Cropped_Image_Control( $customizer, 'it-exchange-email[header_image]', array(
 				'capability'  => $this->capability,
@@ -440,9 +444,10 @@ class IT_Exchange_Email_Customizer {
 				'capability'      => $this->capability,
 				'section'         => 'it-exchange-email-footer',
 				'label'           => __( 'Text Color', 'it-l10n-ithemes-exchange' ),
-				'active_callback' => function () {
-					return trim( IT_Exchange_Email_Customizer::get_setting( 'footer_text' ) );
-				}
+				'active_callback' => array(
+					new IT_Exchange_Email_Customize_Active_Callback( 'footer_text' ),
+					'active'
+				)
 			) ),
 			new WP_Customize_Control( $customizer, 'it-exchange-email[footer_show_logo]', array(
 				'capability' => $this->capability,
@@ -459,9 +464,10 @@ class IT_Exchange_Email_Customizer {
 					'min' => 16,
 					'max' => 350
 				),
-				'active_callback' => function () {
-					return (bool) IT_Exchange_Email_Customizer::get_setting( 'footer_show_logo' );
-				}
+				'active_callback' => array(
+					new IT_Exchange_Email_Customize_Active_Callback( 'footer_show_logo' ),
+					'active'
+				)
 			) ),
 
 			/** Background */
@@ -491,9 +497,10 @@ class IT_Exchange_Email_Customizer {
 					'center' => __( 'Center', 'it-l10n-ithemes-exchange' ),
 					'right'  => __( 'Right', 'it-l10n-ithemes-exchange' ),
 				),
-				'active_callback' => function () {
-					return (bool) IT_Exchange_Email_Customizer::get_setting( 'background_image' );
-				}
+				'active_callback' => array(
+					new IT_Exchange_Email_Customize_Active_Callback( 'background_image' ),
+					'active'
+				)
 			) ),
 			new WP_Customize_Control( $customizer, 'it-exchange-email[background_image_repeat]', array(
 				'capability'      => $this->capability,
@@ -506,9 +513,10 @@ class IT_Exchange_Email_Customizer {
 					'repeat-x'  => __( 'Tile Horizontally', 'it-l10n-ithemes-exchange' ),
 					'repeat-y'  => __( 'Tile Vertically', 'it-l10n-ithemes-exchange' ),
 				),
-				'active_callback' => function () {
-					return (bool) IT_Exchange_Email_Customizer::get_setting( 'background_image' );
-				}
+				'active_callback' => array(
+					new IT_Exchange_Email_Customize_Active_Callback( 'background_image' ),
+					'active'
+				)
 			) ),
 
 			/** Presets */

@@ -11,6 +11,7 @@ require_once dirname( __FILE__ ) . '/deprecated.php';
 require_once dirname( __FILE__ ) . '/class.email-notifications.php';
 
 require_once dirname( __FILE__ ) . '/class.customizer.php';
+require_once dirname( __FILE__ ) . '/class.customize-active-callback.php';
 
 require_once dirname( __FILE__ ) . '/notifications/class.email-notification.php';
 require_once dirname( __FILE__ ) . '/notifications/class.admin-email-notification.php';
