@@ -496,7 +496,7 @@ class IT_Exchange_Offline_Payments_Add_On {
 	*/
 	function set_default_settings( $defaults ) {
 		$defaults['offline-payments-title']          = __( 'Pay with check', 'it-l10n-ithemes-exchange' );
-		$defaults['offline-payments-instructions']   = __( 'Thank you for your order. We will contact you shortly for payment.', 'it-l10n-ithemes-exchange' );
+		$defaults['offline-payments-instructions']   = __( 'We will contact you shortly for payment.', 'it-l10n-ithemes-exchange' );
 		$defaults['offline-payments-default-status'] = 'pending';
 		return $defaults;
 	}
