@@ -678,9 +678,10 @@ class IT_Exchange_Email_Customizer {
 					'body_background_color'   => '#ffffff',
 					'body_text_color'         => '#124340',
 					'footer_text_color'       => '#112a31',
-					'background_color'        => '#bbccc6',
 					'footer_show_logo'        => true,
 					'footer_logo_size'        => '80',
+					'background_color'        => '#bbccc6',
+					'background_image'        => '',
 				)
 			),
 			'homebrew' => array(
@@ -702,6 +703,7 @@ class IT_Exchange_Email_Customizer {
 					'footer_logo_size'        => '80',
 					'header_show_logo'        => false,
 					'background_color'        => '#161616',
+					'background_image'        => '',
 				)
 			)
 		);
