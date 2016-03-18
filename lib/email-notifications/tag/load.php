@@ -161,68 +161,80 @@ class IT_Exchange_Email_Register_Default_Tags {
 
 		$transaction = $context['transaction'];
 
-		$status_notice = '';
+		$notice = '';
 		ob_start();
-		// Grab products attached to transaction
-		$transaction_products = it_exchange_get_transaction_products( $transaction );
 
-		// Grab all hashes attached to transaction
-		$hashes = it_exchange_get_transaction_download_hash_index( $transaction );
-		if ( ! empty( $hashes ) ) {
-			?>
+		$transaction_products = it_exchange_get_transaction_products( $transaction );
+		$hashes               = it_exchange_get_transaction_download_hash_index( $transaction );
+
+		if ( ! empty( $hashes ) ) : ?>
 			<div style="border-top: 1px solid #EEE">
-				<?php foreach ( $transaction_products as $transaction_product ) : ?>
-					<?php if ( $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) : $downloads_exist_for_transaction = true; ?>
-						<?php if ( ! it_exchange_transaction_is_cleared_for_delivery( $transaction ) ) : ?>
-							<?php
-							/* Status notice is blank by default and printed here, in the email if downloads are available.
-							 * If downloads are not available for this transaction (tested in loop below), this echo of the status notice won't be printed.
-							 * But we know that downloads will be available if the status changes so we set print the message instead of the files.
-							 * If no files exist for the transaction, then there is no need to print this message even if status is pending
-							 * Clear as mud.
-							*/
-							$status_notice = '<p>' . __( 'The status for this transaction does not grant access to downloadable files. Once the transaction is updated to an approved status, you will receive a follow-up email with your download links.', 'it-l10n-ithemes-exchange' ) . '</p>';
-							$status_notice = '<h3>' . __( 'Available Downloads', 'it-l10n-ithemes-exchange' ) . '</h3>' . $status_notice;
-							?>
-						<?php else : ?>
-							<h4><?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?></h4>
-							<?php $count = it_exchange_get_transaction_product_feature( $transaction_product, 'count' ); ?>
-							<?php if ( $count > 1 && apply_filters( 'it_exchange_print_downlods_page_link_in_email', true, $transaction ) ) : ?>
-								<?php $downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
-								<p>
-									<?php
-									printf(
-										__( 'You have purchased %d unique download link(s) for each file available with this product.', 'it-l10n-ithemes-exchange' ) .
-										__( '%s%sEach link has its own download limits and you can view the details on your %sdownloads%s page.', 'it-l10n-ithemes-exchange' ),
-										$count, '<br />', '<br />', '<a href="' . esc_url( $downloads_url ) . '">', '</a>'
-									);
-									?>
-								</p>
-							<?php endif; ?>
-							<?php foreach ( $product_downloads as $download_id => $download_data ) : ?>
-								<?php $hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $transaction, $transaction_product, $download_id ); ?>
-								<?php $hashes_found = ( ! empty( $hashes_found ) || ! empty( $hashes_for_product_transaction ) ); // If someone purchases a product prior to downloads existing, they dont' get hashes/downloads ?>
-								<h5><?php esc_attr_e( get_the_title( $download_id ) ); ?></h5>
-								<ul class="download-hashes">
-									<?php foreach ( (array) $hashes_for_product_transaction as $hash ) : ?>
-										<li>
-											<a href="<?php echo esc_url( add_query_arg( 'it-exchange-download', $hash, get_home_url() ) ); ?>">
-												<?php _e( 'Download link', 'it-l10n-ithemes-exchange' ); ?>
-											</a>
-											<span style="font-family: Monaco, monospace;font-size:12px;color:#AAA;">(<?php esc_attr_e( $hash ); ?>)</span>
-										</li>
-									<?php endforeach; ?>
-								</ul>
-							<?php endforeach; ?>
-						<?php endif; ?>
+				<?php foreach ( $transaction_products as $transaction_product ) :
+
+					if ( ! $product_downloads = it_exchange_get_product_feature( $transaction_product['product_id'], 'downloads' ) ) :
+						continue;
+					endif;
+
+					$downloads_exist_for_transaction = true;
+
+					if ( ! it_exchange_transaction_is_cleared_for_delivery( $transaction ) ) :
+
+						/* Status notice is blank by default and printed here, in the email if downloads are available.
+						 * If downloads are not available for this transaction (tested in loop below), this echo of the status notice won't be printed.
+						 * But we know that downloads will be available if the status changes so we set print the message instead of the files.
+						 * If no files exist for the transaction, then there is no need to print this message even if status is pending
+						 * Clear as mud.
+						*/
+						$notice = __( 'The status for this transaction does not grant access to downloadable files.', 'it-l10n-ithemes-exchange' ) . ' ' .
+						          __( 'Once the transaction is updated to an approved status, you will receive a follow-up email with your download links.', 'it-l10n-ithemes-exchange' );
+
+						$notice = "<p>$notice</p>";
+						$notice = '<h3>' . __( 'Available Downloads', 'it-l10n-ithemes-exchange' ) . '</h3>' . $notice;
+
+					else : ?>
+						<h4><?php esc_attr_e( it_exchange_get_transaction_product_feature( $transaction_product, 'title' ) ); ?></h4>
+
+						<?php $count = it_exchange_get_transaction_product_feature( $transaction_product, 'count' );
+
+						if ( $count && apply_filters( 'it_exchange_print_downlods_page_link_in_email', true, $transaction ) ) :
+							$downloads_url = it_exchange_get_page_url( 'downloads' ); ?>
+							<p>
+								<?php printf(
+									__( 'You have purchased %d unique download link(s) for each file available with this product.', 'it-l10n-ithemes-exchange' ) . ' ' .
+									__( '%s%sEach link has its own download limits and you can view the details on your %sdownloads%s page.', 'it-l10n-ithemes-exchange' ),
+									$count, '<br />', '<br />', '<a href="' . esc_url( $downloads_url ) . '">', '</a>'
+								); ?>
+							</p>
+						<?php endif;
+
+						foreach ( $product_downloads as $download_id => $download_data ) :
+
+							$hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $transaction, $transaction_product, $download_id );
+
+							$hashes_found                   = ! empty( $hashes_found ) || ! empty( $hashes_for_product_transaction ); ?>
+
+							<h5><?php esc_attr_e( get_the_title( $download_id ) ); ?></h5>
+
+							<ul class="download-hashes">
+								<?php foreach ( (array) $hashes_for_product_transaction as $hash ) : ?>
+									<li>
+										<a href="<?php echo esc_url( add_query_arg( 'it-exchange-download', $hash, get_home_url() ) ); ?>">
+											<?php _e( 'Download link', 'it-l10n-ithemes-exchange' ); ?>
+										</a>
+										<span style="font-family: Monaco, monospace;font-size:12px;color:#AAA;">
+											(<?php esc_attr_e( $hash ); ?>)
+										</span>
+									</li>
+								<?php endforeach; ?>
+							</ul>
+						<?php endforeach; ?>
 					<?php endif; ?>
 				<?php endforeach; ?>
 			</div>
-			<?php
-		}
+		<?php endif;
 
 		if ( empty( $downloads_exist_for_transaction ) || empty( $hashes_found ) ) {
-			echo $status_notice;
+			echo $notice;
 
 			return ob_get_clean();
 		} else {
@@ -350,13 +362,16 @@ class IT_Exchange_Email_Register_Default_Tags {
 				<?php foreach ( $products as $product ) : ?>
 					<tr>
 						<td style="padding: 10px;border:1px solid #DDD;">
-							<?php echo apply_filters( 'it_exchange_email_notification_order_table_product_name', it_exchange_get_transaction_product_feature( $product, 'product_name' ), $product ); ?>
+							<?php $name = it_exchange_get_transaction_product_feature( $product, 'product_name' ); ?>
+							<?php echo apply_filters( 'it_exchange_email_notification_order_table_product_name', $name, $product ); ?>
 						</td>
 						<td style="padding: 10px;border:1px solid #DDD;">
-							<?php echo apply_filters( 'it_exchange_email_notification_order_table_product_count', it_exchange_get_transaction_product_feature( $product, 'count' ), $product ); ?>
+							<?php $count = it_exchange_get_transaction_product_feature( $product, 'count' ); ?>
+							<?php echo apply_filters( 'it_exchange_email_notification_order_table_product_count', $count, $product ); ?>
 						</td>
 						<td style="padding: 10px;border:1px solid #DDD;">
-							<?php echo apply_filters( 'it_exchange_email_notification_order_table_product_subtotal', it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ), $product ) ); ?>
+							<?php $subtotal = it_exchange_format_price( it_exchange_get_transaction_product_feature( $product, 'product_subtotal' ) ); ?>
+							<?php echo apply_filters( 'it_exchange_email_notification_order_table_product_subtotal', $subtotal, $product ); ?>
 						</td>
 					</tr>
 
@@ -398,7 +413,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Replaced value
 	 */
-	function purchase_date( $context ) {
+	public function purchase_date( $context ) {
 		return it_exchange_get_transaction_date( $context['transaction'] );
 	}
 
@@ -411,7 +426,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Replaced value
 	 */
-	function total( $context ) {
+	public function total( $context ) {
 		return it_exchange_get_transaction_total( $context['transaction'], true );
 	}
 
@@ -424,7 +439,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Replaced value
 	 */
-	function payment_id( $context ) {
+	public function payment_id( $context ) {
 		return it_exchange_get_gateway_id_for_transaction( $context['transaction'] );
 	}
 
@@ -437,7 +452,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Replaced value
 	 */
-	function receipt_id( $context ) {
+	public function receipt_id( $context ) {
 		return it_exchange_get_transaction_order_number( $context['transaction'] );
 	}
 
@@ -450,7 +465,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Replaced value
 	 */
-	function payment_method( $context ) {
+	public function payment_method( $context ) {
 		return it_exchange_get_transaction_method_name( $context['transaction'] );
 	}
 
@@ -461,7 +476,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Replaced value
 	 */
-	function sitename() {
+	public function sitename() {
 		return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
 	}
 
@@ -474,7 +489,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Replaced value
 	 */
-	function receipt_link( $context ) {
+	public function receipt_link( $context ) {
 		return it_exchange_get_transaction_confirmation_url( $context['transaction'] );
 	}
 
@@ -485,7 +500,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Replaced value
 	 */
-	function login_link() {
+	public function login_link() {
 		return it_exchange_get_page_url( 'login' );
 	}
 
@@ -496,7 +511,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Replaced value
 	 */
-	function account_link() {
+	public function account_link() {
 		return it_exchange_get_page_url( 'account' );
 	}
 
@@ -510,7 +525,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Shipping Address
 	 */
-	function shipping_address( $context, $options = null ) {
+	public function shipping_address( $context, $options = null ) {
 
 		if ( it_exchange_transaction_includes_shipping( $context['transaction'] ) ) {
 
@@ -534,7 +549,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Billing Address
 	 */
-	function billing_address( $context, $options = null ) {
+	public function billing_address( $context, $options = null ) {
 
 		$address = it_exchange_get_transaction_billing_address( $context['transaction'] );
 
