@@ -134,16 +134,9 @@ function it_exchange_register_email_notifications() {
 					'subject' => sprintf( __( 'Receipt for Purchase: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
 					'body'    => sprintf( __( "Hello %s, \r\n\r\n Thank you for your order. Your order's details are below.", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=name]' ),
 				),
-				'description' => sprintf( __( 'The following is already included in the template: %s.', 'it-l10n-ithemes-exchange' ),
-					implode( ', ', array(
-						'billing_address',
-						'shipping_address',
-						'payment_method',
-						'receipt_id',
-						'purchase_date',
-						'total',
-						'download_list'
-					) ) )
+				'description' =>
+					__( "The customer's shipping and billing address, as well as the cart details, payment method, download links, total and purchase date are already included in the template.",
+						'it-l10n-ithemes-exchange' )
 			)
 		) )
 		->register_notification( new IT_Exchange_Customer_Email_Notification(
