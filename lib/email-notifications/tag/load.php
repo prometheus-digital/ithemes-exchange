@@ -271,8 +271,8 @@ class IT_Exchange_Email_Register_Default_Tags {
 
 		$email = '';
 
-		if ( ! empty( $context['customer']->wp_user->user_email ) ) {
-			$email = $context['customer']->wp_user->user_email;
+		if ( ! empty( $context['customer']->data->user_email ) ) {
+			$email = $context['customer']->data->user_email;
 		} elseif ( ! empty( $context['transaction'] ) ) {
 			$email = it_exchange_get_transaction_customer_email( $context['transaction'] );
 		}
@@ -511,7 +511,9 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 * @return string Shipping Address
 	 */
 	function shipping_address( $context, $options = null ) {
+
 		if ( it_exchange_transaction_includes_shipping( $context['transaction'] ) ) {
+
 			$address = it_exchange_get_transaction_shipping_address( $context['transaction'] );
 			$before  = empty( $options['before'] ) ? '' : $options['before'];
 			$after   = empty( $options['after'] ) ? '' : $options['after'];
@@ -533,10 +535,13 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 * @return string Billing Address
 	 */
 	function billing_address( $context, $options = null ) {
+
 		$address = it_exchange_get_transaction_billing_address( $context['transaction'] );
-		if ( empty( $address ) ) {
+
+		if ( empty( $address ) || empty( $address['address1'] ) ) {
 			return '';
 		}
+
 		$before = empty( $options['before'] ) ? '' : $options['before'];
 		$after  = empty( $options['after'] ) ? '' : $options['after'];
 
