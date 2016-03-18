@@ -11,11 +11,34 @@
  */
 class IT_Exchange_Simple_Email implements IT_Exchange_Sendable {
 
+	/**
+	 * @var string
+	 */
 	private $subject;
+
+	/**
+	 * @var string
+	 */
 	private $message;
+
+	/**
+	 * @var IT_Exchange_Email_Recipient
+	 */
 	private $recipient;
+
+	/**
+	 * @var array
+	 */
 	private $context;
+
+	/**
+	 * @var IT_Exchange_Email_Recipient[]
+	 */
 	private $ccs = array();
+
+	/**
+	 * @var IT_Exchange_Email_Recipient[]
+	 */
 	private $bccs = array();
 
 	/**
