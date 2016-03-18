@@ -293,10 +293,10 @@ class IT_Exchange_Email_Register_Default_Tags {
 
 		$fullname = '';
 
-		if ( ! empty( $context['user']->data->first_name ) && ! empty( $context['user']->data->last_name ) ) {
-			$fullname = $context['user']->data->first_name . ' ' . $context['user']->data->last_name;
-		} else if ( ! empty( $context['user']->data->display_name ) ) {
-			$fullname = $context['user']->data->display_name;
+		if ( ! empty( $context['customer']->data->first_name ) && ! empty( $context['customer']->data->last_name ) ) {
+			$fullname = $context['customer']->data->first_name . ' ' . $context['customer']->data->last_name;
+		} else if ( ! empty( $context['customer']->data->display_name ) ) {
+			$fullname = $context['customer']->data->display_name;
 		}
 
 		return $fullname;
@@ -312,7 +312,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 * @return string Replaced value
 	 */
 	public function username( $context ) {
-		return empty( $context['user']->data->user_login ) ? '' : $context['user']->data->user_login;
+		return empty( $context['customer']->data->user_login ) ? '' : $context['customer']->data->user_login;
 	}
 
 	/**
