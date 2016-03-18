@@ -451,7 +451,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 * @return string Replaced value
 	 */
 	function payment_method( $context ) {
-		return it_exchange_get_transaction_method( $context['transaction'] );
+		return it_exchange_get_transaction_method_name( $context['transaction'] );
 	}
 
 	/**
