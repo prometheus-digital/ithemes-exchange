@@ -62,7 +62,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 			),
 			'receipt_id'       => array(
 				'name'      => __( 'Receipt ID', 'it-l10n-ithemes-exchange' ),
-				'desc'      => __( 'The unique ID number for this transaction.', 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( 'The unique ID number for this purchase.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order' )
 			),
@@ -74,13 +74,13 @@ class IT_Exchange_Email_Register_Default_Tags {
 			),
 			'shipping_address' => array(
 				'name'      => __( 'Shipping Address', 'it-l10n-ithemes-exchange' ),
-				'desc'      => __( 'The shipping address for this product. Blank if shipping is not required.', 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( 'The shipping address for this purchase. Blank if shipping is not required.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order' )
 			),
 			'billing_address'  => array(
 				'name'      => __( 'Billing Address', 'it-l10n-ithemes-exchange' ),
-				'desc'      => __( 'The billing address for this product. Blank if billing is not required.', 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( 'The billing address for this purchase. Blank if billing is not required.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order' )
 			),
