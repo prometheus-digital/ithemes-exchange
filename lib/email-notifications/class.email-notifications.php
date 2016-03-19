@@ -12,8 +12,13 @@
  */
 class IT_Exchange_Email_Notifications {
 
+	/** @deprecated 1.36 */
 	public $transaction_id;
+
+	/** @deprecated 1.36 */
 	public $customer_id;
+
+	/** @deprecated 1.36 */
 	public $user;
 
 	/**
@@ -307,11 +312,16 @@ class IT_Exchange_Email_Notifications {
 	/**
 	 * Returns Email HTML header
 	 *
-	 * @since 0.4.0
+	 * @since      0.4.0
+	 *
+	 * @deprecated 1.36
 	 *
 	 * @return string HTML header
 	 */
 	function body_header() {
+
+		_deprecated_function( __METHOD__, '1.36' );
+
 		$data = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
 		ob_start();
 		?>
@@ -331,11 +341,16 @@ class IT_Exchange_Email_Notifications {
 	/**
 	 * Returns Email HTML footer
 	 *
-	 * @since 0.4.0
+	 * @since      0.4.0
+	 *
+	 * @deprecated 1.36
 	 *
 	 * @return string HTML footer
 	 */
 	function body_footer() {
+
+		_deprecated_function( __METHOD__, '1.36' );
+
 		$data = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
 		ob_start();
 		?>
