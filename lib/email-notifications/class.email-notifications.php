@@ -385,7 +385,10 @@ class IT_Exchange_Email_Notifications {
 				'customer'    => $notifications->user
 			);
 
+			$arguments = array_pad( $arguments, 3, array() );
+
 			$arguments[0] = $context;
+			$arguments[1] = array_merge( $arguments[1], $arguments[2] );
 
 			return call_user_func_array( array( $this->replacer, $new_name ), $arguments );
 		}
