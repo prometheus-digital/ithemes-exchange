@@ -44,15 +44,12 @@ class IT_Exchange_Email_Notifications {
 	 * @param IT_Exchange_Email_Sender       $sender
 	 * @param IT_Exchange_Email_Tag_Replacer $replacer
 	 */
-	function __construct( IT_Exchange_Email_Sender $sender = null, IT_Exchange_Email_Tag_Replacer $replacer = null ) {
+	public function __construct( IT_Exchange_Email_Sender $sender = null, IT_Exchange_Email_Tag_Replacer $replacer = null ) {
 
 		$this->replacer = $replacer ? $replacer : new IT_Exchange_Email_Shortcode_Tag_Replacer();
 		$this->sender   = $sender ? $sender : new IT_Exchange_WP_Mail_Sender( $this->replacer );
 
-		add_action( 'it_exchange_send_email_notification', array(
-			$this,
-			'it_exchange_send_email_notification'
-		), 20, 4 );
+		add_action( 'it_exchange_send_email_notification', array( $this, 'it_exchange_send_email_notification' ), 20, 4 );
 
 		// Send emails on successfull transaction
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'send_purchase_emails' ), 20 );
@@ -61,10 +58,7 @@ class IT_Exchange_Email_Notifications {
 		add_action( 'admin_init', array( $this, 'handle_resend_confirmation_email_requests' ) );
 
 		// Resends email notifications when status is changed from one that's not cleared for delivery to one that is cleared
-		add_action( 'it_exchange_update_transaction_status', array(
-			$this,
-			'resend_if_transaction_status_gets_cleared_for_delivery'
-		), 10, 3 );
+		add_action( 'it_exchange_update_transaction_status', array(	$this, 'resend_if_transaction_status_gets_cleared_for_delivery'	), 10, 3 );
 	}
 
 	/**
@@ -150,7 +144,7 @@ class IT_Exchange_Email_Notifications {
 	 * @param string $content
 	 * @param bool   $transaction_id
 	 */
-	function it_exchange_send_email_notification( $customer_id, $subject, $content, $transaction_id = false ) {
+	public function it_exchange_send_email_notification( $customer_id, $subject, $content, $transaction_id = false ) {
 
 		$transaction_id = apply_filters( 'it_exchange_send_email_notification_transaction_id', $transaction_id );
 		$transaction    = $transaction_id ? it_exchange_get_transaction( $transaction_id ) : null;
@@ -177,7 +171,7 @@ class IT_Exchange_Email_Notifications {
 	 *
 	 * @return void
 	 */
-	function handle_resend_confirmation_email_requests() {
+	public function handle_resend_confirmation_email_requests() {
 		// Abort if not requested
 		if ( empty( $_GET['it-exchange-customer-transaction-action'] ) || $_GET['it-exchange-customer-transaction-action'] != 'resend' ) {
 			return;
@@ -227,7 +221,7 @@ class IT_Exchange_Email_Notifications {
 	 *
 	 * @return void
 	 */
-	function send_purchase_emails( $transaction, $send_admin_email = true ) {
+	public function send_purchase_emails( $transaction, $send_admin_email = true ) {
 
 		$transaction = it_exchange_get_transaction( $transaction );
 
@@ -299,7 +293,7 @@ class IT_Exchange_Email_Notifications {
 	 *
 	 * @return void
 	 */
-	function resend_if_transaction_status_gets_cleared_for_delivery( $transaction, $old_status, $old_status_cleared ) {
+	public function resend_if_transaction_status_gets_cleared_for_delivery( $transaction, $old_status, $old_status_cleared ) {
 		// Using ->ID here so that get_transaction forces a reload and doesn't use the old object with the old status
 		$new_status         = it_exchange_get_transaction_status( $transaction->ID );
 		$new_status_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction->ID );
@@ -318,7 +312,7 @@ class IT_Exchange_Email_Notifications {
 	 *
 	 * @return string HTML header
 	 */
-	function body_header() {
+	public function body_header() {
 
 		_deprecated_function( __METHOD__, '1.36' );
 
@@ -347,7 +341,7 @@ class IT_Exchange_Email_Notifications {
 	 *
 	 * @return string HTML footer
 	 */
-	function body_footer() {
+	public function body_footer() {
 
 		_deprecated_function( __METHOD__, '1.36' );
 
