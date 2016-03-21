@@ -126,6 +126,12 @@ class IT_Exchange_Email_Register_Default_Tags {
 				'context'   => array(),
 				'available' => array()
 			),
+			'company_name'     => array(
+				'name'      => __( 'Company Name', 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( 'The name of your company specified in the general settings.' ),
+				'context'   => array(),
+				'available' => array()
+			)
 		);
 
 		foreach ( $tags as $tag => $config ) {
@@ -211,7 +217,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 
 							$hashes_for_product_transaction = it_exchange_get_download_hashes_for_transaction_product( $transaction, $transaction_product, $download_id );
 
-							$hashes_found                   = ! empty( $hashes_found ) || ! empty( $hashes_for_product_transaction ); ?>
+							$hashes_found = ! empty( $hashes_found ) || ! empty( $hashes_for_product_transaction ); ?>
 
 							<h5><?php esc_attr_e( get_the_title( $download_id ) ); ?></h5>
 
@@ -513,6 +519,20 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 */
 	public function account_link() {
 		return it_exchange_get_page_url( 'account' );
+	}
+
+	/**
+	 * Replace the company name tag.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function company_name() {
+
+		$settings = it_exchange_get_option( 'settings-general' );
+
+		return $settings['company-name'];
 	}
 
 	/**
