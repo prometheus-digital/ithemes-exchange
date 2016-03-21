@@ -31,10 +31,25 @@ $email_notifications = it_exchange_email_notifications();
 
 	<?php $this->print_general_settings_tabs(); ?>
 
-	<table class="widefat striped">
+	<ul class="subsubsub">
+		<li>
+			<a href="javascript:" class="current" data-group="all">
+				<?php _e( 'All', 'it-l10n-ithemes-exchange' ); ?>
+			</a>
+		</li>
+		<?php foreach ( $email_notifications->get_groups() as $group ): ?>
+			<li>
+				| <a href="javascript:" data-group="<?php echo $group; ?>">
+					<?php echo $group; ?>
+				</a>
+			</li>
+		<?php endforeach; ?>
+	</ul>
+
+	<table class="widefat striped emails">
 		<thead>
 		<tr>
-			<th style="width: auto"><?php _e( 'Email', 'it-l10n-ithemes-exchange' ); ?></th>
+			<th style="width: 40%"><?php _e( 'Email', 'it-l10n-ithemes-exchange' ); ?></th>
 			<th style="width: 75px"><?php _e( 'Group', 'it-l10n-ithemes-exchange' ); ?></th>
 			<th style="width: auto"><?php _e( 'Recipient', 'it-l10n-ithemes-exchange' ); ?></th>
 			<th style="width: 30px;"><?php _e( 'Active', 'it-l10n-ithemes-exchange' ); ?></th>
@@ -43,7 +58,7 @@ $email_notifications = it_exchange_email_notifications();
 		</thead>
 		<tbody>
 		<?php foreach ( $email_notifications->get_notifications() as $notification ) : ?>
-			<tr>
+			<tr data-group="<?php echo $notification->get_group(); ?>">
 				<td><?php echo $notification->get_name(); ?></td>
 				<td><?php echo $notification->get_group();  ?></td>
 				<td>

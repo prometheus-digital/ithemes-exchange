@@ -10,7 +10,7 @@
 	ITUtility::screen_icon( 'it-exchange' );
 	do_action( 'it_exchange_general_settings_page_top' );
 
-	$h = version_compare( $wp_version, '4.4', '>=' ) ? '1' : '2';
+	$h = version_compare( $GLOBALS['wp_version'], '4.4', '>=' ) ? '1' : '2';
 	?>
 
 	<h<?php echo $h; ?> class="screen-reader-text">

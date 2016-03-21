@@ -101,6 +101,24 @@ class IT_Exchange_Email_Notifications {
 	}
 
 	/**
+	 * Get all the email notification groups.
+	 * 
+	 * @since 1.36
+	 * 
+	 * @return array
+	 */
+	public function get_groups() {
+		
+		$groups = array();
+		
+		foreach ( $this->get_notifications() as $notification ) {
+			$groups[ $notification->get_group() ] = $notification->get_group();
+		}
+		
+		return $groups;
+	}
+
+	/**
 	 * Get the sender.
 	 *
 	 * @since 1.36

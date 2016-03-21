@@ -19,7 +19,7 @@
 	$pages            = it_exchange_get_registered_pages();
 	$wp_pages         = array( 0 => __( 'Select a Page', 'it-l10n-ithemes-exchange' ) ) + it_exchange_get_wp_pages();
 
-	$h = version_compare( $wp_version, '4.4', '>=' ) ? '1' : '2';
+	$h = version_compare( $GLOBALS['wp_version'], '4.4', '>=' ) ? '1' : '2';
 	?>
 
 	<h<?php echo $h; ?> class="screen-reader-text">
