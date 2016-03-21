@@ -31,20 +31,22 @@ $email_notifications = it_exchange_email_notifications();
 
 	<?php $this->print_general_settings_tabs(); ?>
 
-	<ul class="subsubsub">
-		<li>
-			<a href="javascript:" class="current" data-group="all">
-				<?php _e( 'All', 'it-l10n-ithemes-exchange' ); ?>
-			</a>
-		</li>
-		<?php foreach ( $email_notifications->get_groups() as $group ): ?>
+	<?php if ( count( $email_notifications->get_groups() ) > 1 ): ?>
+		<ul class="subsubsub">
 			<li>
-				| <a href="javascript:" data-group="<?php echo $group; ?>">
-					<?php echo $group; ?>
+				<a href="javascript:" class="current" data-group="all">
+					<?php _e( 'All', 'it-l10n-ithemes-exchange' ); ?>
 				</a>
 			</li>
-		<?php endforeach; ?>
-	</ul>
+			<?php foreach ( $email_notifications->get_groups() as $group ): ?>
+				<li>
+					| <a href="javascript:" data-group="<?php echo $group; ?>">
+						<?php echo $group; ?>
+					</a>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+	<?php endif; ?>
 
 	<table class="widefat striped emails">
 		<thead>
@@ -60,7 +62,7 @@ $email_notifications = it_exchange_email_notifications();
 		<?php foreach ( $email_notifications->get_notifications() as $notification ) : ?>
 			<tr data-group="<?php echo $notification->get_group(); ?>">
 				<td><?php echo $notification->get_name(); ?></td>
-				<td><?php echo $notification->get_group();  ?></td>
+				<td><?php echo $notification->get_group(); ?></td>
 				<td>
 					<?php if ( $notification instanceof IT_Exchange_Customer_Email_Notification ): ?>
 						<?php _e( 'Customer', 'it-l10n-ithemes-exchange' ); ?>
