@@ -1137,7 +1137,7 @@ function it_exchange_clean_duplicate_user_post_meta( $versions ) {
 	if ( version_compare( '1.8.1', $versions['previous'], '>' ) ) {
 		global $wpdb;
 
-		$wpdb->query( 
+		$wpdb->query(
 			"
 			DELETE n1 
 			FROM $wpdb->postmeta n1, $wpdb->postmeta n2 
@@ -1693,13 +1693,13 @@ add_action( 'wp', 'it_exchange_transient_transactions_garbage_collection' );
 */
 function it_exchange_trans_txn_cleanup() {
 	global $wpdb;
-	
+
 	if ( defined( 'WP_SETUP_CONFIG' ) ) {
 		return;
 	}
-	
+
 	if ( ! defined( 'WP_INSTALLING' ) ) {
-		
+
 		$expiration_keys = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE 'ite_temp_tnx_expires_%'" );
 
 		$now = time();
@@ -1729,3 +1729,47 @@ function it_exchange_trans_txn_cleanup() {
 	do_action( 'it_exchange_trans_txn_cleanup' );
 }
 add_action( 'it_exchange_trans_txn_garbage_collection', 'it_exchange_trans_txn_cleanup' );
+
+/**
+ * Mark a filter as deprecated and inform when it has been used.
+ *
+ * @since 1.36
+ *
+ * @param string $filter      The Filter that was called.
+ * @param string $version     The version of WordPress that deprecated the function.
+ * @param string $replacement Optional. The function that should have been called. Default null.
+ */
+function it_exchange_deprecated_filter( $filter, $version, $replacement = null ) {
+
+	/**
+	 * Fires when a deprecated filter is called.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $filter    The function that was called.
+	 * @param string $replacement The function that should have been called.
+	 * @param string $version     The version of WordPress that deprecated the function.
+	 */
+	do_action( 'it_exchange_deprecated_filter_run', $filter, $replacement, $version );
+
+	/**
+	 * Filter whether to trigger an error for deprecated filters.
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param bool $trigger Whether to trigger the error for deprecated functions. Default true.
+	 */
+	if ( WP_DEBUG && apply_filters( 'it_exchange_deprecated_filter_trigger_error', true ) ) {
+		if ( function_exists( '__' ) ) {
+			if ( ! is_null( $replacement ) )
+				trigger_error( sprintf( __('The %1$s filter is <strong>deprecated</strong> since version %2$s! Use %3$s instead.'), $filter, $version, $replacement ) );
+			else
+				trigger_error( sprintf( __('The %1$s filter is <strong>deprecated</strong> since version %2$s with no alternative available.'), $filter, $version ) );
+		} else {
+			if ( ! is_null( $replacement ) )
+				trigger_error( sprintf( 'The %1$s filter is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', $filter, $version, $replacement ) );
+			else
+				trigger_error( sprintf( 'The %1$s filter is <strong>deprecated</strong> since version %2$s with no alternative available.', $filter, $version ) );
+		}
+	}
+}

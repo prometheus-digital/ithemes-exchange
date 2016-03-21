@@ -185,10 +185,14 @@ class IT_Exchange_Shipping {
 	function print_shipping_tab() {
 		$settings = it_exchange_get_option( 'addon_shipping', true );
 
+		$h = version_compare( $GLOBALS['wp_version'], '4.4', '>=' ) ? '1' : '2';
 		?>
 		<div class="wrap">
+			<?php ITUtility::screen_icon( 'it-exchange' ); ?>
+			<h<?php echo $h; ?> class="screen-reader-text">
+				<?php _e( 'Shipping Settings', 'it-l10n-ithemes-exchange' ); ?>
+			</h>
 			<?php
-			ITUtility::screen_icon( 'it-exchange' );
 			// Print Admin Settings Tabs
 			$GLOBALS['IT_Exchange_Admin']->print_general_settings_tabs();
 
@@ -246,7 +250,11 @@ class IT_Exchange_Shipping {
 				$provider = it_exchange_get_registered_shipping_provider( $provider['slug'] );
 				if ( empty( $provider->has_settings_page ) )
 					continue;
-				?><a class="shipping-provider-link<?php echo ( $current == $provider->get_slug() ) ? ' it-exchange-current' : ''; ?>" href="<?php echo esc_url( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping', 'provider' => $provider->get_slug() ), admin_url( 'admin.php' ) ) ); ?>"><?php esc_html_e( $provider->get_label() ); ?></a><?php
+				?>
+				<a class="shipping-provider-link<?php echo ( $current == $provider->get_slug() ) ? ' it-exchange-current' : ''; ?>" href="<?php echo esc_url( add_query_arg( array( 'page' => 'it-exchange-settings', 'tab' => 'shipping', 'provider' => $provider->get_slug() ), admin_url( 'admin.php' ) ) ); ?>">
+					<?php esc_html_e( $provider->get_label() ); ?>
+				</a>
+				<?php
 			}
 			?>
 		</div>

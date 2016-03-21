@@ -181,7 +181,7 @@ function load_it_exchange() {
 	global $IT_Exchange;
 	$IT_Exchange = new IT_Exchange();
 }
-add_action( 'plugins_loaded', 'load_it_exchange' );
+add_action( 'plugins_loaded', 'load_it_exchange', 0 );
 
 /**
  * Sets up options to perform after activation

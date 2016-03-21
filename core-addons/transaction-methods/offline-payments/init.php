@@ -622,7 +622,7 @@ class IT_Exchange_Offline_Payments_Add_On {
 	 */
 	function set_default_settings( $defaults ) {
 		$defaults['offline-payments-title']          = __( 'Pay with check', 'it-l10n-ithemes-exchange' );
-		$defaults['offline-payments-instructions']   = __( 'Thank you for your order. We will contact you shortly for payment.', 'it-l10n-ithemes-exchange' );
+		$defaults['offline-payments-instructions']   = __( 'We will contact you shortly for payment.', 'it-l10n-ithemes-exchange' );
 		$defaults['offline-payments-default-status'] = 'pending';
 
 		return $defaults;
@@ -752,24 +752,46 @@ function it_exchange_process_offline_payments_recurring_payment_cancel() {
 
 add_action( 'admin_init', 'it_exchange_process_offline_payments_recurring_payment_cancel' );
 
-function it_exchange_offline_payments_email_template_tags_list() {
-	echo '<li>offline_payments_message - ' . __( 'Adds the instructions after purchase message from the Offline Payments gateway settings.', 'it-l10n-ithemes-exchange' ) . '</li>';
+/**
+ * Register the offline payments message email tag replacement.
+ *
+ * @since 1.36
+ *
+ * @param IT_Exchange_Email_Tag_Replacer $replacer
+ */
+function it_exchange_offline_payments_message_register_tag( IT_Exchange_Email_Tag_Replacer $replacer ) {
+
+	$tag = new IT_Exchange_Email_Tag_Base(
+		'offline_payments_message', __( 'Offline Payments MEssage', 'it-l10n-ithemes-exchange' ),
+		__( 'Adds the instructions after purchase message from the Offline Payments gateway settings.', 'it-l10n-ithemes-exchange' ),
+		'it_exchange_offline_payments_email_notification_message'
+	);
+
+	$tag->add_required_context( 'transaction' );
+	$tag->add_available_for( 'receipt' );
+
+	$replacer->add_tag( $tag );
 }
 
-add_action( 'it_exchange_email_template_tags_list', 'it_exchange_offline_payments_email_template_tags_list' );
+add_action( 'it_exchange_email_notifications_register_tags', 'it_exchange_offline_payments_message_register_tag' );
 
-function it_exchange_offline_payments_email_notification_shortcode_functions( $shortcode_functions, $data ) {
-	$shortcode_functions['offline_payments_message'] = 'it_exchange_offline_payments_email_notification_message';
+/**
+ * Render the offline payments email notification message.
+ *
+ * @param array $context
+ *
+ * @return string
+ */
+function it_exchange_offline_payments_email_notification_message( $context ) {
 
-	return $shortcode_functions;
-}
+	$transaction = $context['transaction'];
 
-add_filter( 'it_exchange_email_notification_shortcode_functions', 'it_exchange_offline_payments_email_notification_shortcode_functions', 10, 2 );
-
-function it_exchange_offline_payments_email_notification_message( $email_obj, $options, $atts ) {
 	$instructions = '';
-	if ( 'offline-payments' === it_exchange_get_transaction_method( $email_obj->transaction_id ) ) {
+
+	if ( 'offline-payments' === it_exchange_get_transaction_method( $transaction ) ) {
+
 		$options = it_exchange_get_option( 'addon_offline_payments' );
+
 		if ( ! empty( $options['offline-payments-instructions'] ) ) {
 			$instructions = $options['offline-payments-instructions'];
 		}

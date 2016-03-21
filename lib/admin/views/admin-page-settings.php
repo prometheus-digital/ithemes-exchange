@@ -8,18 +8,25 @@
 ?>
 <div class="wrap page-settings-wrap">
 	<?php
-		ITUtility::screen_icon( 'it-exchange' );
+	ITUtility::screen_icon( 'it-exchange' );
 
-		$this->print_general_settings_tabs();
-		do_action( 'it_exchange_general_settings_page_page_top' );
+	do_action( 'it_exchange_general_settings_page_page_top' );
 
-		$form->start_form( $form_options, 'exchange-page-settings' );
-		do_action( 'it_exchange_general_settings_page_form_top' );
+	$form->start_form( $form_options, 'exchange-page-settings' );
+	do_action( 'it_exchange_general_settings_page_form_top' );
 
-		$general_settings = it_exchange_get_option( 'settings_general' );
-		$pages            = it_exchange_get_registered_pages();
-		$wp_pages         = array( 0 => __( 'Select a Page', 'it-l10n-ithemes-exchange' ) ) + it_exchange_get_wp_pages();
+	$general_settings = it_exchange_get_option( 'settings_general' );
+	$pages            = it_exchange_get_registered_pages();
+	$wp_pages         = array( 0 => __( 'Select a Page', 'it-l10n-ithemes-exchange' ) ) + it_exchange_get_wp_pages();
+
+	$h = version_compare( $GLOBALS['wp_version'], '4.4', '>=' ) ? '1' : '2';
 	?>
+
+	<h<?php echo $h; ?> class="screen-reader-text">
+		<?php _e( 'Email Settings', 'it-l10n-ithemes-exchange' ); ?>
+	</h<?php echo $h; ?>>
+
+	<?php $this->print_general_settings_tabs(); ?>
 
 	<?php do_action( 'it_exchange_general_settings_page_top' ); ?>
 

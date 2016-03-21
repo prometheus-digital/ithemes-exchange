@@ -183,46 +183,40 @@ function it_exchange_customer_order_notes_create_activity( $transaction_id ) {
 add_action( 'it_exchange_add_transaction_success', 'it_exchange_customer_order_notes_create_activity' );
 
 /**
- * Display the 'order_notes' email tag on the settings page.
+ * Register the customer order notes email tag replacement.
  *
- * @since 1.34
+ * @since 1.36
+ *
+ * @param IT_Exchange_Email_Tag_Replacer $replacer
  */
-function it_exchange_customer_order_notes_display_email_tag() {
-	echo '<li>order_notes – ' . __( "The customer's order notes, if any.", 'it-l10n-ithemes-exchange' ) . '</li>';
+function it_exchange_customer_order_notes_register_tag( IT_Exchange_Email_Tag_Replacer $replacer ) {
+
+	$tag = new IT_Exchange_Email_Tag_Base(
+		'order_notes', __( 'Customer Order Notes', 'it-l10n-ithemes-exchange' ),
+		__( 'The customer\'s order notes, if any.', 'it-l10n-ithemes-exchange' ),
+		'it_exchange_customer_order_notes_replace_email_tag'
+	);
+
+	$tag->add_required_context( 'transaction' );
+	$tag->add_available_for( 'admin-order' );
+
+	$replacer->add_tag( $tag );
 }
 
-add_action( 'it_exchange_email_template_tags_list', 'it_exchange_customer_order_notes_display_email_tag' );
-
-/**
- * Register our callback function for replacing the 'order_notes' tag.
- *
- * @since 1.34
- *
- * @param array $functions
- *
- * @return array
- */
-function it_exchange_customer_order_notes_add_email_tag( $functions ) {
-
-	$functions['order_notes'] = 'it_exchange_customer_order_notes_replace_email_tag';
-
-	return $functions;
-}
-
-add_filter( 'it_exchange_email_notification_shortcode_functions', 'it_exchange_customer_order_notes_add_email_tag' );
+add_action( 'it_exchange_email_notifications_register_tags', 'it_exchange_customer_order_notes_register_tag' );
 
 /**
  * Replace our 'order_notes' email tag.
  *
  * @since 1.34
  *
- * @param IT_Exchange_Email_Notifications $email
+ * @param array $context
  *
  * @return string
  */
-function it_exchange_customer_order_notes_replace_email_tag( IT_Exchange_Email_Notifications $email ) {
+function it_exchange_customer_order_notes_replace_email_tag( $context ) {
 
-	$transaction = it_exchange_get_transaction( $email->transaction_id );
+	$transaction = $context['transaction'];
 
 	if ( ! empty ( $transaction->cart_details->customer_order_notes ) ) {
 		return $transaction->cart_details->customer_order_notes;

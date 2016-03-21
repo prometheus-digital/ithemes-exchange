@@ -1,9 +1,9 @@
 <?php
 /**
  * These are hooks that add-ons should use for form actions
- * @since 0.3.7
+ * @since   0.3.7
  * @package IT_Exchange
-*/
+ */
 
 /**
  * Generate a unique hash, with microtime and uniqid this should always be unique
@@ -11,7 +11,7 @@
  * @since 0.4.0
  *
  * @return string the hash
-*/
+ */
 function it_exchange_create_unique_hash() {
 	$hash = str_replace( '.', '', microtime( true ) . uniqid() ); //Remove the period from microtime, cause it's ugly
 	return apply_filters( 'it_exchange_generate_unique_hash', $hash );
@@ -21,39 +21,52 @@ function it_exchange_create_unique_hash() {
  * Pass a PHP date format string to this function to return its jQuery datepicker equivalent
  *
  * @since 0.4.16
+ *
  * @param string $date_format PHP Date Format
+ *
  * @return string jQuery datePicker Format
-*/
+ */
 function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format ) {
 
 	//http://us2.php.net/manual/en/function.date.php
 	//http://api.jqueryui.com/datepicker/#utility-formatDate
 	$php_format = array(
 		//day
-		'/d/', //Day of the month, 2 digits with leading zeros
-		'/D/', //A textual representation of a day, three letters
-		'/j/', //Day of the month without leading zeros
-		'/l/', //A full textual representation of the day of the week
+		'/d/',
+		//Day of the month, 2 digits with leading zeros
+		'/D/',
+		//A textual representation of a day, three letters
+		'/j/',
+		//Day of the month without leading zeros
+		'/l/',
+		//A full textual representation of the day of the week
 		//'/N/', //ISO-8601 numeric representation of the day of the week (added in PHP 5.1.0)
 		//'/S/', //English ordinal suffix for the day of the month, 2 characters
 		//'/w/', //Numeric representation of the day of the week
-		'/z/', //The day of the year (starting from 0)
+		'/z/',
+		//The day of the year (starting from 0)
 
 		//week
 		//'/W/', //ISO-8601 week number of year, weeks starting on Monday (added in PHP 4.1.0)
 
 		//month
-		'/F/', //A full textual representation of a month, such as January or March
-		'/m/', //Numeric representation of a month, with leading zeros
-		'/M/', //A short textual representation of a month, three letters
-		'/n/', //numeric month no leading zeros
+		'/F/',
+		//A full textual representation of a month, such as January or March
+		'/m/',
+		//Numeric representation of a month, with leading zeros
+		'/M/',
+		//A short textual representation of a month, three letters
+		'/n/',
+		//numeric month no leading zeros
 		//'t/', //Number of days in the given month
 
 		//year
 		//'/L/', //Whether it's a leap year
 		//'/o/', //ISO-8601 year number. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead. (added in PHP 5.1.0)
-		'/Y/', //A full numeric representation of a year, 4 digits
-		'/y/', //A two digit representation of a year
+		'/Y/',
+		//A full numeric representation of a year, 4 digits
+		'/y/',
+		//A two digit representation of a year
 	);
 
 	$datepicker_format = array(
@@ -91,13 +104,14 @@ function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format )
  * Returns an integer value of the price passed
  *
  * @since 0.4.16
+ *
  * @param string|int|float price to convert to database integer
  *
  * @return string|int converted price
-*/
+ */
 function it_exchange_convert_to_database_number( $price ) {
 	$settings = it_exchange_get_option( 'settings_general' );
-	$sep = $settings['currency-decimals-separator'];
+	$sep      = $settings['currency-decimals-separator'];
 
 	$price = html_entity_decode( trim( $price ), ENT_COMPAT, 'UTF-8' );
 	$price = preg_replace( '/[^0-9\\' . $sep . ']*/', '', $price );
@@ -106,12 +120,12 @@ function it_exchange_convert_to_database_number( $price ) {
 		if ( '.' !== $sep ) {
 			$price = str_replace( $sep, '.', $price );
 		}
-		$price = number_format( (float)$price, 2 ); //make sure we have 2 decimal places!
+		$price = number_format( (float) $price, 2 ); //make sure we have 2 decimal places!
 		$price = preg_replace( '/[^0-9]*/', '', $price );
 	} else { //if we don't find a decimal separator, we want to multiply by 100 for future decimal operations
 		$price = preg_replace( '/[^0-9]*/', '', $price ) * 100;
 	}
-	
+
 	return $price;
 }
 
@@ -119,10 +133,11 @@ function it_exchange_convert_to_database_number( $price ) {
  * Returns a float value of the price passed from database
  *
  * @since 0.4.16
+ *
  * @param string|int price from database integer
  *
  * @return float converted price
-*/
+ */
 function it_exchange_convert_from_database_number( $price ) {
 	return number_format( $price / 100, 2, '.', '' );
 }
@@ -131,13 +146,15 @@ function it_exchange_convert_from_database_number( $price ) {
  * Returns a field name used in links and forms
  *
  * @since 0.4.0
+ *
  * @param string $var var being requested
  *
  * @return string var used in links / forms for different actions
-*/
+ */
 function it_exchange_get_field_name( $var ) {
 	$field_names = it_exchange_get_field_names();
-	$field_name = empty( $field_names[$var] ) ? false : $field_names[$var];
+	$field_name  = empty( $field_names[ $var ] ) ? false : $field_names[ $var ];
+
 	return apply_filters( 'it_exchange_get_field_name', $field_name, $var );
 }
 
@@ -147,7 +164,7 @@ function it_exchange_get_field_name( $var ) {
  * @since 0.4.0
  *
  * @return array
-*/
+ */
 function it_exchange_get_field_names() {
 	// required field names
 	$required = array(
@@ -170,6 +187,7 @@ function it_exchange_get_field_names() {
 		'sw_ajax_product'          => 'sw-product',
 		'sw_ajax_quantity'         => 'sw-quantity',
 	);
+
 	//We don't want users to modify the core vars, but we should let them add new ones.
 	return apply_filters( 'it_exchange_get_field_names', array_merge( $required, apply_filters( 'it_exchange_default_field_names', array() ) ) );
 }
@@ -182,28 +200,28 @@ function it_exchange_get_field_names() {
  *
  * @since 0.4.0
  *
- * @param array $exempt optional array of query args not to clean
+ * @param array $exempt     optional array of query args not to clean
  * @param array $additional optional array of params to clean even if not found in register params
  *
  * @return string
-*/
-function it_exchange_clean_query_args( $exempt=array(), $additional=array() ) {
+ */
+function it_exchange_clean_query_args( $exempt = array(), $additional = array() ) {
 	// Get registered
 	$registered = array_values( (array) it_exchange_get_field_names() );
 	$registered = array_merge( $registered, (array) array_values( $additional ) );
 
 	// Additional args
 	$registered[] = '_wpnonce';
-	$registered[] = apply_filters( 'it_exchange_purchase_product_nonce_var' , '_wpnonce' );
-	$registered[] = apply_filters( 'it_exchange_cart_action_nonce_var' , '_wpnonce' );
-	$registered[] = apply_filters( 'it_exchange_remove_product_from_cart_nonce_var' , '_wpnonce' );
-	$registered[] = apply_filters( 'it_exchange_checkout_action_nonce_var' , '_wpnonce' );
+	$registered[] = apply_filters( 'it_exchange_purchase_product_nonce_var', '_wpnonce' );
+	$registered[] = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
+	$registered[] = apply_filters( 'it_exchange_remove_product_from_cart_nonce_var', '_wpnonce' );
+	$registered[] = apply_filters( 'it_exchange_checkout_action_nonce_var', '_wpnonce' );
 	$registered[] = 'it-exchange-basic-coupons-remove-coupon-cart';
 
 	$registered = array_unique( $registered );
 
 	$url = false;
-	foreach( $registered as $key => $param ) {
+	foreach ( $registered as $key => $param ) {
 		if ( ! in_array( $param, $exempt ) ) {
 			$url = remove_query_arg( $param, $url );
 		}
@@ -221,19 +239,19 @@ function it_exchange_clean_query_args( $exempt=array(), $additional=array() ) {
  *
  * @since 0.4.0
  *
- * @param array $items page setting
+ * @param array  $items page setting
  * @param string $menu
- * @param array $args
+ * @param array  $args
  *
  * @return string url
-*/
+ */
 function it_exchange_wp_get_nav_menu_items_filter( $items, $menu, $args ) {
 	if ( is_user_logged_in() && 'disabled' != it_exchange_get_page_type( 'logout' ) && ! is_admin() ) {
 		foreach ( $items as $item ) {
 
 			if ( $item->type === 'it-exchange-ghost-page' && $item->object === 'login' ) {
 
-				$item->url = it_exchange_get_page_url( 'logout' );
+				$item->url   = it_exchange_get_page_url( 'logout' );
 				$item->title = it_exchange_get_page_name( 'logout' );
 
 				continue;
@@ -242,25 +260,27 @@ function it_exchange_wp_get_nav_menu_items_filter( $items, $menu, $args ) {
 			//We really just want to compare the URL PATH, so grab that and compare later
 			if ( '' == get_option( 'permalink_structure' ) ) {
 				// No permalinks
-				$item_url_path = parse_url( $item->url, PHP_URL_QUERY );
-				$login_url_path = parse_url( it_exchange_get_page_url( 'login' ), PHP_URL_QUERY );
+				$item_url_path   = parse_url( $item->url, PHP_URL_QUERY );
+				$login_url_path  = parse_url( it_exchange_get_page_url( 'login' ), PHP_URL_QUERY );
 				$logout_url_path = parse_url( it_exchange_get_page_url( 'logout' ), PHP_URL_QUERY );
 			} else {
 				// Permalinks
-				$item_url_path = parse_url( $item->url, PHP_URL_PATH );
-				$login_url_path = parse_url( it_exchange_get_page_url( 'login' ), PHP_URL_PATH );
+				$item_url_path   = parse_url( $item->url, PHP_URL_PATH );
+				$login_url_path  = parse_url( it_exchange_get_page_url( 'login' ), PHP_URL_PATH );
 				$logout_url_path = parse_url( it_exchange_get_page_url( 'logout' ), PHP_URL_PATH );
 			}
 
 			if ( $item_url_path == $login_url_path || $item_url_path == $logout_url_path ) {
-				$item->url = it_exchange_get_page_url( 'logout' );
+				$item->url   = it_exchange_get_page_url( 'logout' );
 				$item->title = it_exchange_get_page_name( 'logout' );
 			}
 		}
 	}
+
 	return apply_filters( 'it_exchange_wp_get_nav_menu_items_filter', $items, $menu, $args );
 
 }
+
 add_filter( 'wp_get_nav_menu_items', 'it_exchange_wp_get_nav_menu_items_filter', 10, 3 );
 
 if ( ! function_exists( 'wp_nav_menu_disabled_check' ) && version_compare( $GLOBALS['wp_version'], '3.5.3', '<=' ) ) {
@@ -271,17 +291,19 @@ if ( ! function_exists( 'wp_nav_menu_disabled_check' ) && version_compare( $GLOB
 	 *
 	 * @since 0.4.0
 	 *
-	 * @uses global $one_theme_location_no_menus to determine if no menus exist
-	 * @uses disabled() to output the disabled attribute in $other_attributes param in submit_button()
+	 * @uses  global $one_theme_location_no_menus to determine if no menus exist
+	 * @uses  disabled() to output the disabled attribute in $other_attributes param in submit_button()
 	 *
 	 * @param int|string $nav_menu_selected_id (id, name or slug) of the currently-selected menu
+	 *
 	 * @return string Disabled attribute if at least one menu exists, false if not
-	*/
+	 */
 	function wp_nav_menu_disabled_check( $nav_menu_selected_id ) {
 		global $one_theme_location_no_menus;
 
-		if ( $one_theme_location_no_menus )
+		if ( $one_theme_location_no_menus ) {
 			return false;
+		}
 
 		return disabled( $nav_menu_selected_id, 0 );
 	}
@@ -293,11 +315,11 @@ if ( ! function_exists( 'wp_nav_menu_disabled_check' ) && version_compare( $GLOB
  *
  * Deprecated in 1.2.0.
  *
- * @since 0.3.4
+ * @since      0.3.4
  *
  * @deprecated 1.2.0 Use it_exchange_get_data_set( 'currencies' );
  * @return array
-*/
+ */
 function it_exchange_get_currency_options() {
 
 	_deprecated_function( __FUNCTION__, '1.2.0', 'it_exchange_get_data_set' );
@@ -313,11 +335,12 @@ function it_exchange_get_currency_options() {
  * @param string $country_code country code for the currency
  *
  * @return string
-*/
+ */
 function it_exchange_get_currency_symbol( $country_code ) {
 	$currencies = it_exchange_get_data_set( 'currencies' );;
-	$symbol = empty( $currencies[$country_code] ) ? '$' : $currencies[$country_code];
+	$symbol = empty( $currencies[ $country_code ] ) ? '$' : $currencies[ $country_code ];
 	$symbol = ( is_array( $symbol ) && ! empty( $symbol['symbol'] ) ) ? $symbol['symbol'] : '$';
+
 	return apply_filters( 'it_exchange_get_currency_symbol', $symbol );
 }
 
@@ -326,13 +349,13 @@ function it_exchange_get_currency_symbol( $country_code ) {
  *
  * @since 0.4.0
  *
- * @param string $key in the GLOBALS array
- * @param mixed $value in the GLOBALS array
+ * @param string $key   in the GLOBALS array
+ * @param mixed  $value in the GLOBALS array
  *
  * @return void
-*/
+ */
 function it_exchange_set_global( $key, $value ) {
-	$GLOBALS['it_exchange'][$key] = $value;
+	$GLOBALS['it_exchange'][ $key ] = $value;
 }
 
 /**
@@ -343,9 +366,9 @@ function it_exchange_set_global( $key, $value ) {
  * @param string $key in the GLOBALS array
  *
  * @return mixed value from the GLOBALS
-*/
+ */
 function it_exchange_get_global( $key ) {
-	return isset( $GLOBALS['it_exchange'][$key] ) ? $GLOBALS['it_exchange'][$key] : NULL;
+	return isset( $GLOBALS['it_exchange'][ $key ] ) ? $GLOBALS['it_exchange'][ $key ] : null;
 }
 
 /**
@@ -354,17 +377,19 @@ function it_exchange_get_global( $key ) {
  * @since 1.2.0
  *
  * @param string $slug
- * @param array $properties
+ * @param array  $properties
  *
  * @return void
-*/
-function it_exchange_register_purchase_requirement( $slug, $properties=array() ) {
+ */
+function it_exchange_register_purchase_requirement( $slug, $properties = array() ) {
 	$defaults = array(
 		'priority'               => 10,
-		'requirement-met'        => '__return_true', // This is a callback, not a boolean.
+		'requirement-met'        => '__return_true',
+		// This is a callback, not a boolean.
 		'sw-template-part'       => 'checkout',
 		'checkout-template-part' => 'checkout',
-		'notification'           => __( 'Please complete all purchase requirements before checkout out.', 'it-l10n-ithemes-exchange' ), // This really needs to be customized.
+		'notification'           => __( 'Please complete all purchase requirements before checkout out.', 'it-l10n-ithemes-exchange' ),
+		// This really needs to be customized.
 	);
 
 	// Merge Defaults
@@ -379,7 +404,7 @@ function it_exchange_register_purchase_requirement( $slug, $properties=array() )
 	$requirements = it_exchange_get_purchase_requirements();
 
 	// Add the purchase requriement
-	$requirements[$slug] = $properties;
+	$requirements[ $slug ] = $properties;
 
 	// Write updated to global
 	$GLOBALS['it_exchange']['purchase-requirements'] = $requirements;
@@ -393,10 +418,10 @@ function it_exchange_register_purchase_requirement( $slug, $properties=array() )
  * @param string $slug the purchase requirement slug that we want to unregister
  *
  * @return void
-*/
+ */
 function it_exchange_unregister_purchase_requirement( $slug ) {
-	if ( isset( $GLOBALS['it_exchange']['purchase-requirements'][$slug] ) ) {
-		unset( $GLOBALS['it_exchange']['purchase-requirements'][$slug] );
+	if ( isset( $GLOBALS['it_exchange']['purchase-requirements'][ $slug ] ) ) {
+		unset( $GLOBALS['it_exchange']['purchase-requirements'][ $slug ] );
 	}
 }
 
@@ -406,17 +431,18 @@ function it_exchange_unregister_purchase_requirement( $slug ) {
  * @since 1.2.0
  *
  * @return array
-*/
+ */
 function it_exchange_get_purchase_requirements() {
-	$requirements  = empty( $GLOBALS['it_exchange']['purchase-requirements'] ) ? array() : (array) $GLOBALS['it_exchange']['purchase-requirements'];
+	$requirements = empty( $GLOBALS['it_exchange']['purchase-requirements'] ) ? array() : (array) $GLOBALS['it_exchange']['purchase-requirements'];
 	$requirements = (array) apply_filters( 'it_exchange_get_purchase_requirments', $requirements );
 
 	// Sort the array by priority
 	$priorities = array();
-	foreach( $requirements as $key => $requirement ) {
-		$priorities[$key] = $requirement['priority'];
+	foreach ( $requirements as $key => $requirement ) {
+		$priorities[ $key ] = $requirement['priority'];
 	}
 	array_multisort( $priorities, SORT_ASC, SORT_NUMERIC, $requirements );
+
 	return $requirements;
 }
 
@@ -426,21 +452,24 @@ function it_exchange_get_purchase_requirements() {
  * @since 1.2.0
  *
  * @return array|bool requirement string
-*/
+ */
 function it_exchange_get_next_purchase_requirement() {
 	$requirements = it_exchange_get_purchase_requirements();
 
 	// Loop through each purchase requirement and check their callback to see if it's requirement is met
-	foreach( (array) $requirements as $slug => $requirement ) {
-		if ( is_callable( $requirement['requirement-met'] ) )
+	foreach ( (array) $requirements as $slug => $requirement ) {
+		if ( is_callable( $requirement['requirement-met'] ) ) {
 			$requirement_met = (boolean) call_user_func( $requirement['requirement-met'] );
-		else
+		} else {
 			$requirement_met = true;
+		}
 
 		// If the requirement is not met, return the purchase requirement details
-		if ( ! $requirement_met )
+		if ( ! $requirement_met ) {
 			return $requirement;
+		}
 	}
+
 	return false;
 }
 
@@ -453,13 +482,16 @@ function it_exchange_get_next_purchase_requirement() {
  * @since 1.2.0
  *
  * @return array
-*/
+ */
 function it_exchange_get_all_purchase_requirement_checkout_element_template_parts() {
 	$template_parts = array();
-	foreach( (array) it_exchange_get_purchase_requirements() as $slug => $requirement ) {
-		if ( ! empty( $requirement['checkout-template-part'] ) );
-			$template_parts[] = $requirement['checkout-template-part'];
+	foreach ( (array) it_exchange_get_purchase_requirements() as $slug => $requirement ) {
+		if ( ! empty( $requirement['checkout-template-part'] ) ) {
+			;
+		}
+		$template_parts[] = $requirement['checkout-template-part'];
 	}
+
 	return $template_parts;
 }
 
@@ -471,16 +503,18 @@ function it_exchange_get_all_purchase_requirement_checkout_element_template_part
  * @param string $prop the registered property we are looking for
  *
  * @return mixed
-*/
+ */
 function it_exchange_get_next_purchase_requirement_property( $prop ) {
 	$requirement = it_exchange_get_next_purchase_requirement();
-	$property    = ! isset( $requirement[$prop] ) ? false : $requirement[$prop];
+	$property    = ! isset( $requirement[ $prop ] ) ? false : $requirement[ $prop ];
 
 	// Send them to checkout in the SuperWidget if a template-part wasn't
-	if ( 'sw-template-part' == $prop && ! $property )
+	if ( 'sw-template-part' == $prop && ! $property ) {
 		$property = 'checkout';
+	}
 
 	$property = apply_filters( 'it_exchange_get_next_purchase_requirement_property', $property, $prop );
+
 	return $property;
 }
 
@@ -490,20 +524,23 @@ function it_exchange_get_next_purchase_requirement_property( $prop ) {
  * @since 1.3.0
  *
  * @return string[]
-*/
+ */
 function it_exchange_get_pending_purchase_requirements() {
 	$pending      = array();
 	$requirements = it_exchange_get_purchase_requirements();
 
-	foreach( (array) $requirements as $slug => $requirement ) {
-		if ( is_callable( $requirement['requirement-met'] ) )
+	foreach ( (array) $requirements as $slug => $requirement ) {
+		if ( is_callable( $requirement['requirement-met'] ) ) {
 			$requirement_met = (boolean) call_user_func( $requirement['requirement-met'] );
-		else
+		} else {
 			$requirement_met = true;
+		}
 
-		if ( ! $requirement_met )
+		if ( ! $requirement_met ) {
 			$pending[] = $requirement['slug'];
+		}
 	}
+
 	return $pending;
 }
 
@@ -512,46 +549,144 @@ function it_exchange_get_pending_purchase_requirements() {
  *
  * @since 1.5.0
  *
- * @param  string  $mode    the checkout mode we're testing
- * @param string   $context 'content' or 'sw'
+ * @param  string $mode    the checkout mode we're testing
+ * @param string  $context 'content' or 'sw'
  *
  * @return boolean
-*/
-function it_exchange_is_checkout_mode( $mode, $context='content' ) {
+ */
+function it_exchange_is_checkout_mode( $mode, $context = 'content' ) {
 	return apply_filters( 'it_exchange_is_' . $context . '_' . $mode . '_checkout_mode', false );
 }
 
 /**
  * Formats the Billing Address for display
  *
- * @todo this function sucks. Lets make a function for formatting any address. ^gta
+ * @todo  this function sucks. Lets make a function for formatting any address. ^gta
  * @since 1.3.0
  *
  * @param array|bool $billing_address
  *
  * @return string HTML
-*/
-function it_exchange_get_formatted_billing_address( $billing_address=false ) {
-	$formatted   = array();
-	$billing     = empty( $billing_address ) ? it_exchange_get_cart_billing_address() : $billing_address;
-	$formatted[] = implode( ' ', array( $billing['first-name'], $billing['last-name'] ) );
-	if ( ! empty( $billing['company-name'] ) )
-		$formatted[] = $billing['company-name'];
-	if ( ! empty( $billing['address1'] ) )
-		$formatted[] = $billing['address1'];
-	if ( ! empty( $billing['address2'] ) )
-		$formatted[] = $billing['address2'];
-	if ( ! empty( $billing['city'] ) || ! empty( $billing['state'] ) || ! empty( $billing['zip'] ) ) {
-		$formatted[] = implode( ' ', array( ( empty( $billing['city'] ) ? '': $billing['city'] .',' ),
-			( empty( $billing['state'] ) ? '': $billing['state'] ),
-			( empty( $billing['zip'] ) ? '': $billing['zip'] ),
-		) );
-	}
-	if ( ! empty( $billing['country'] ) )
-		$formatted[] = $billing['country'];
+ */
+function it_exchange_get_formatted_billing_address( $billing_address = false ) {
 
-	$formatted = implode( '<br />', $formatted );
+	$billing = empty( $billing_address ) ? it_exchange_get_cart_billing_address() : $billing_address;
+
+	$formatted = it_exchange_format_address( $billing );
+
 	return apply_filters( 'it_exchange_get_formatted_billing_address', $formatted );
+}
+
+/**
+ * Format any address.
+ *
+ * @since 1.36
+ *
+ * @param array $address Raw parts of the address.
+ * @param array $args    {
+ *                       Additional args used to specify how an address is formatted.
+ *
+ * @type string $open    -block  String rendered before the contents of the address are outputted. HTML is allowed.
+ * @type string $close   -block String rendered after the contents of the address are outputted. HTML is allowed.
+ * @type string $open    -line   String used to open up a new line. Defaults to an empty string. HTML is allowed.
+ * @type string $close   -line  String used to close a line. Defaults to an empty string. HTML is allowed.
+ * }
+ *
+ * @param array $format  . Optionally, override the format.
+ *
+ * @return string
+ */
+function it_exchange_format_address( $address, $args = array(), $format = null ) {
+
+	$default_format = array(
+		'{first-name} {last-name}',
+		'{company-name}',
+		'{address1}',
+		'{address2}',
+		'{city} {state} {zip}',
+		'{country}'
+	);
+
+	$format = $format === null ? $default_format : (array) $format;
+
+	/**
+	 * Filter the format used to format an address.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $format  Format for address, see default_format for example.
+	 * @param array $address Raw address to be formatted.
+	 * @param array $args    Additional args used to format the address.
+	 */
+	$format = apply_filters( 'it_exchange_format_address_format', $format, $address, $args );
+
+	$defaults = array(
+		'open-block'  => '',
+		'close-block' => '',
+		'open-line'   => '',
+		'close-line'  => '<br>'
+	);
+	$args     = ITUtility::merge_defaults( $args, $defaults );
+
+	/**
+	 * Filter the formatting args.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $args    Args used for controlling address format.
+	 * @param array $address Raw address to be formatted.
+	 * @param array $format  Format used.
+	 */
+	$args = apply_filters( 'it_exchange_format_address_args', $args, $address, $format );
+
+	$address_parts = array();
+
+	foreach ( $address as $part_name => $part_val ) {
+		$address_parts[ $part_name ] = '{' . $part_name . '}';
+	}
+
+	$replaced = array();
+
+	foreach ( $format as $line ) {
+
+		$replaced_line = $line;
+
+		foreach ( $address_parts as $part_name => $replace_tag ) {
+			$replaced_line = str_replace( $replace_tag, isset( $address[ $part_name ] ) ? $address[ $part_name ] : '', $replaced_line );
+		}
+
+		$replaced[] = trim( $replaced_line );
+	}
+
+	// get rid of any remaining, un-replaced tags
+	$replaced = preg_replace( "/{.*?}/", "", $replaced );
+
+	$open  = $args['open-line'];
+	$close = $args['close-line'];
+
+	$output = $args['open-block'];
+
+	foreach ( $replaced as $replaced_line ) {
+		if ( trim( $replaced_line ) !== '' ) {
+			$output .= $open . $replaced_line . $close;
+		}
+	}
+
+	$output .= $args['close-block'];
+
+	/**
+	 * Filter the final output of the formatted address.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $output  Final formatted address.
+	 * @param array  $address Raw address before formatting.
+	 * @param array  $args    Additional args used to format the address.
+	 * @param array  $format  Format used to format this address.
+	 */
+	$output = apply_filters( 'it_exchange_format_address_output', $output, $address, $args, $format );
+
+	return $output;
 }
 
 /**
@@ -559,16 +694,18 @@ function it_exchange_get_formatted_billing_address( $billing_address=false ) {
  *
  * @since 1.3.1
  *
- * @param array  $options options for the class constructor
+ * @param array $options options for the class constructor
  *
  * @return void
-*/
+ */
 function it_exchange_print_admin_settings_form( $options ) {
-	if ( ! is_admin() )
+	if ( ! is_admin() ) {
 		return;
+	}
 
-	if ( $settings_form = new IT_Exchange_Admin_Settings_Form( $options ) )
+	if ( $settings_form = new IT_Exchange_Admin_Settings_Form( $options ) ) {
 		$settings_form->print_form();
+	}
 }
 
 /**
@@ -582,10 +719,10 @@ function it_exchange_print_admin_settings_form( $options ) {
  * @param  int    $status  HTTP code passed to wp_redirect's 2nd param
  *
  * @return void
-*/
-function it_exchange_redirect( $url, $context='', $options=array(), $status=302 ) {
+ */
+function it_exchange_redirect( $url, $context = '', $options = array(), $status = 302 ) {
 	$options['context'] = $context;
-	$url = apply_filters( 'it_exchange_redirect_for-' . $context, $url, $options, $status );
+	$url                = apply_filters( 'it_exchange_redirect_for-' . $context, $url, $options, $status );
 	wp_redirect( $url, $status );
 }
 
@@ -594,46 +731,113 @@ function it_exchange_redirect( $url, $context='', $options=array(), $status=302 
  *
  * Copied from Better WP Security (HT: Chris Wiegman)
  *
- * @since 1.11.5 
+ * @since 1.11.5
  *
  * @return string Current IP address for customer
-*/
+ */
 function it_exchange_get_ip() {
-    //Just get the headers if we can or else use the SERVER global
-    if ( function_exists( 'apache_request_headers' ) ) {
+	//Just get the headers if we can or else use the SERVER global
+	if ( function_exists( 'apache_request_headers' ) ) {
 
-        $headers = apache_request_headers();
+		$headers = apache_request_headers();
 
-    } else {
+	} else {
 
-        $headers = $_SERVER;
+		$headers = $_SERVER;
 
-    }
+	}
 
-    //Get the forwarded IP if it exists
-    if ( array_key_exists( 'X-Forwarded-For', $headers ) &&
-         (
-             filter_var( $headers['X-Forwarded-For'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ||
-             filter_var( $headers['X-Forwarded-For'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) )
-    ) {
+	//Get the forwarded IP if it exists
+	if ( array_key_exists( 'X-Forwarded-For', $headers ) &&
+	     (
+		     filter_var( $headers['X-Forwarded-For'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ||
+		     filter_var( $headers['X-Forwarded-For'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) )
+	) {
 
-        $the_ip = $headers['X-Forwarded-For'];
+		$the_ip = $headers['X-Forwarded-For'];
 
-    } elseif (
-        array_key_exists( 'HTTP_X_FORWARDED_FOR', $headers ) &&
-        (
-            filter_var( $headers['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ||
-            filter_var( $headers['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 )
-        )
-    ) {
+	} elseif (
+		array_key_exists( 'HTTP_X_FORWARDED_FOR', $headers ) &&
+		(
+			filter_var( $headers['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ||
+			filter_var( $headers['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 )
+		)
+	) {
 
-        $the_ip = $headers['HTTP_X_FORWARDED_FOR'];
+		$the_ip = $headers['HTTP_X_FORWARDED_FOR'];
 
-    } else {
+	} else {
 
-        $the_ip = $_SERVER['REMOTE_ADDR'];
+		$the_ip = $_SERVER['REMOTE_ADDR'];
 
-    }
+	}
 
-    return esc_sql( $the_ip );
+	return esc_sql( $the_ip );
+}
+
+/**
+ * Send an email.
+ *
+ * @since 1.36
+ *
+ * @param IT_Exchange_Sendable|string                                         $email_or_message
+ * @param string                                                              $subject
+ * @param string|IT_Exchange_Email_Recipient|IT_Exchange_Customer|WP_User|int $recipient
+ * @param int|IT_Exchange_Transaction                                         $transaction
+ * @param array                                                               $context
+ *
+ * @return bool
+ * @throws IT_Exchange_Email_Delivery_Exception
+ * @throws InvalidArgumentException
+ */
+function it_exchange_send_email( $email_or_message, $subject = '', $recipient = '', $transaction = 0, $context = array() ) {
+
+	if ( ! $email_or_message instanceof IT_Exchange_Sendable ) {
+		if ( ! is_string( $email_or_message ) ) {
+			throw new InvalidArgumentException( '$email_or_message must be a string if not instanceof IT_Exchange_Sendable' );
+		}
+
+		if ( empty( $subject ) || ! is_string( $subject ) ) {
+			throw new InvalidArgumentException( '$subject must be a non-empty string.' );
+		}
+
+		$transaction = it_exchange_get_transaction( $transaction );
+
+		if ( ! $recipient instanceof IT_Exchange_Email_Recipient ) {
+
+			if ( is_numeric( $recipient ) ) {
+				$customer = it_exchange_get_customer( $recipient );
+			} elseif ( $recipient instanceof WP_User ) {
+				$customer = it_exchange_get_customer( $recipient->ID );
+			} elseif ( $recipient instanceof IT_Exchange_Customer ) {
+				$customer = $recipient;
+			}
+
+			if ( ! empty( $customer ) ) {
+				$recipient = new IT_Exchange_Email_Recipient_Customer( $customer );
+			} elseif ( is_string( $recipient ) && is_email( $recipient ) ) {
+				$recipient = new IT_Exchange_Email_Recipient_Email( $recipient );
+			}
+
+			if ( empty( $recipient ) && $transaction instanceof IT_Exchange_Transaction ) {
+				$recipient = new IT_Exchange_Email_Recipient_Transaction( $transaction );
+			}
+		}
+
+		if ( ! $recipient instanceof IT_Exchange_Email_Recipient ) {
+			throw new InvalidArgumentException( 'Unable to create an email recipient from given data.' );
+		}
+
+		if ( $transaction instanceof IT_Exchange_Transaction && empty( $context['transaction'] ) ) {
+			$context['transaction'] = $transaction;
+		}
+
+		if ( ! empty( $customer ) && empty( $context['customer'] ) ) {
+			$context['customer'] = $customer;
+		}
+
+		$email_or_message = new IT_Exchange_Simple_Email( $subject, $email_or_message, $recipient, $context );
+	}
+
+	return it_exchange_email_notifications()->get_sender()->send( $email_or_message );
 }

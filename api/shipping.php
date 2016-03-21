@@ -223,25 +223,11 @@ function it_exchange_print_shipping_address_value( $field, $customer_id=false ) 
  * @return string HTML
 */
 function it_exchange_get_formatted_shipping_address( $shipping_address=false ) {
-	$formatted   = array();
-	$shipping     = empty( $shipping_address ) ? it_exchange_get_cart_shipping_address() : $shipping_address;
-	$formatted[] = implode( ' ', array( $shipping['first-name'], $shipping['last-name'] ) );
-	if ( ! empty( $shipping['company-name'] ) )
-		$formatted[] = $shipping['company-name'];
-	if ( ! empty( $shipping['address1'] ) )
-		$formatted[] = $shipping['address1'];
-	if ( ! empty( $shipping['address2'] ) )
-		$formatted[] = $shipping['address2'];
-	if ( ! empty( $shipping['city'] ) || ! empty( $shipping['state'] ) || ! empty( $shipping['zip'] ) ) {
-		$formatted[] = implode( ' ', array( ( empty( $shipping['city'] ) ? '': $shipping['city'] .',' ),
-			( empty( $shipping['state'] ) ? '': $shipping['state'] ),
-			( empty( $shipping['zip'] ) ? '': $shipping['zip'] ),
-		) );
-	}
-	if ( ! empty( $shipping['country'] ) )
-		$formatted[] = $shipping['country'];
 
-	$formatted = implode( '<br />', $formatted );
+	$shipping = empty( $shipping_address ) ? it_exchange_get_cart_shipping_address() : $shipping_address;
+
+	$formatted = it_exchange_format_address( $shipping );
+
 	return apply_filters( 'it_exchange_get_formatted_shipping_address', $formatted );
 }
 
