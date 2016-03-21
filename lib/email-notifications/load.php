@@ -125,7 +125,8 @@ function it_exchange_register_email_notifications() {
 					'subject' => sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
 					'body'    => sprintf( __( "Your friend %s just bought all this awesomeness from your store! \r\n\r\n Order: %s \r\n\r\n %s", 'it-l10n-ithemes-exchange' ),
 						'[it_exchange_email show=fullname]', '[it_exchange_email show=receipt_id]', '[it_exchange_email show=order_table]' ),
-				)
+				),
+				'group'    => __( 'Core', 'it-l10n-ithemes-exchange' )
 			)
 		) )
 		->register_notification( new IT_Exchange_Customer_Email_Notification(
@@ -134,6 +135,7 @@ function it_exchange_register_email_notifications() {
 					'subject' => sprintf( __( 'Receipt for Purchase: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
 					'body'    => sprintf( __( "Hello %s, \r\n\r\n Thank you for your order. Your order's details are below.", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=name]' ),
 				),
+				'group'       => __( 'Core', 'it-l10n-ithemes-exchange' ),
 				'description' =>
 					__( "The customer's shipping and billing address, as well as the cart details, payment method, download links, total and purchase date are already included in the template.",
 						'it-l10n-ithemes-exchange' )
@@ -144,7 +146,8 @@ function it_exchange_register_email_notifications() {
 				'defaults' => array(
 					'subject' => sprintf( __( 'New note about your order %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
 					'body'    => sprintf( __( "Hello %s, \r\n\r\n A new note has been added to your order.", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=name]' )
-				)
+				),
+				'group'    => __( 'Core', 'it-l10n-ithemes-exchange' ),
 			)
 		) );
 }

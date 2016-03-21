@@ -47,6 +47,11 @@ abstract class IT_Exchange_Email_Notification {
 	private $description = '';
 
 	/**
+	 * @var string
+	 */
+	private $group;
+
+	/**
 	 * IT_Exchange_Email_Notification constructor.
 	 *
 	 * @param string                     $name
@@ -75,6 +80,10 @@ abstract class IT_Exchange_Email_Notification {
 
 		if ( ! empty( $args['description'] ) ) {
 			$this->description = $args['description'];
+		}
+
+		if ( ! empty( $args['group'] ) ) {
+			$this->group = $args['group'];
 		}
 	}
 
@@ -238,6 +247,17 @@ abstract class IT_Exchange_Email_Notification {
 	 */
 	public function has_description() {
 		return trim( $this->get_description() ) !== '';
+	}
+
+	/**
+	 * Get the group this notification belongs to.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function get_group() {
+		return $this->group;
 	}
 
 	/**

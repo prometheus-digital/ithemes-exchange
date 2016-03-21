@@ -34,6 +34,7 @@ $email_notifications = it_exchange_email_notifications();
 		<thead>
 		<tr>
 			<th style="width: auto"><?php _e( 'Email', 'it-l10n-ithemes-exchange' ); ?></th>
+			<th style="width: 75px"><?php _e( 'Group', 'it-l10n-ithemes-exchange' ); ?></th>
 			<th style="width: auto"><?php _e( 'Recipient', 'it-l10n-ithemes-exchange' ); ?></th>
 			<th style="width: 30px;"><?php _e( 'Active', 'it-l10n-ithemes-exchange' ); ?></th>
 			<th style="width: 30px"></th>
@@ -43,6 +44,7 @@ $email_notifications = it_exchange_email_notifications();
 		<?php foreach ( $email_notifications->get_notifications() as $notification ) : ?>
 			<tr>
 				<td><?php echo $notification->get_name(); ?></td>
+				<td><?php echo $notification->get_group();  ?></td>
 				<td>
 					<?php if ( $notification instanceof IT_Exchange_Customer_Email_Notification ): ?>
 						<?php _e( 'Customer', 'it-l10n-ithemes-exchange' ); ?>
