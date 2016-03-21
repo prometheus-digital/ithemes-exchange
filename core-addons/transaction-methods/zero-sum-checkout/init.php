@@ -232,3 +232,68 @@ function it_exchange_process_zero_sum_recurring_payment_cancel() {
 	}
 }
 add_action( 'admin_init', 'it_exchange_process_zero_sum_recurring_payment_cancel' );
+
+/**
+ * Mark all transaction subscriptions as active when a transaction is made.
+ *
+ * @since 1.35.4
+ *
+ * @param int $transaction_id
+ */
+function it_exchange_zero_sum_mark_subscriptions_as_active_on_purchase( $transaction_id ) {
+
+	if ( ! it_exchange_transaction_is_cleared_for_delivery( $transaction_id ) ) {
+		return;
+	}
+
+	if ( ! function_exists( 'it_exchange_get_transaction_subscriptions' ) ) {
+		return;
+	}
+
+	$subs = it_exchange_get_transaction_subscriptions( it_exchange_get_transaction( $transaction_id ) );
+
+	try {
+		foreach ( $subs as $sub ) {
+			$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+		}
+	}
+	catch ( Exception $e ) {
+		error_log( $e->getMessage() );
+	}
+}
+
+add_action( 'it_exchange_add_transaction_success', 'it_exchange_zero_sum_mark_subscriptions_as_active_on_purchase', 20 );
+
+/**
+ * Mark subscriptions as active when the transaction is marked as cleared for delivery.
+ *
+ * @since 1.35.4
+ *
+ * @param IT_Exchange_Transaction $transaction
+ * @param string                  $old_status
+ * @param bool                    $old_cleared
+ */
+function it_exchange_zero_sum_mark_subscriptions_as_active_on_clear( $transaction, $old_status, $old_cleared ) {
+
+	if ( ! function_exists( 'it_exchange_get_transaction_subscriptions' ) ) {
+		return;
+	}
+
+	$new_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction );
+
+	if ( $new_cleared && ! $old_cleared ) {
+
+		$subs = it_exchange_get_transaction_subscriptions( $transaction );
+
+		foreach ( $subs as $sub ) {
+			$sub_status = $sub->get_status();
+
+			if ( empty( $sub_status ) ) {
+				$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+			}
+		}
+	}
+
+}
+
+add_action( 'it_exchange_update_transaction_status', 'it_exchange_zero_sum_mark_subscriptions_as_active_on_clear', 10, 3 );

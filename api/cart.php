@@ -509,7 +509,7 @@ function it_exchange_add_current_session_to_customer_active_carts( $customer_id=
 	// Abort if we don't have a logged in customer
 	if ( empty( $customer->id ) )
 		return false;
-	
+
 	// Get the current customer's session ID
 	$current_session_string  = it_exchange_get_session_id();
 	$current_session_parts   = explode( '||', $current_session_string );
@@ -791,7 +791,7 @@ function it_exchange_get_cart_products_count( $true_count=false, $feature=false 
 /**
  * Return total weight for cart
  *
- * @since 1.11.0 
+ * @since 1.11.0
  *
  * @return float
 */
@@ -848,7 +848,7 @@ function it_exchange_get_cart_product_subtotal( $product, $format=true ) {
 	} else {
 		$base_price = it_exchange_get_cart_product_base_price( $product, false );
 		$subtotal_price = apply_filters( 'it_exchange_get_cart_product_subtotal', $base_price * $product['count'], $product );
-	}	
+	}
 
 	if ( $format )
 		$subtotal_price = it_exchange_format_price( $subtotal_price );
@@ -1111,10 +1111,13 @@ function it_exchange_create_cart_id() {
  * @return string returns the ID
 */
 function it_exchange_update_cart_id( $id = false ) {
-	if ( ! empty( $id ) ) {
+
+	if ( empty( $id ) ) {
 		$id = it_exchange_create_cart_id();
-		it_exchange_update_cart_data( 'cart_id', $id );
 	}
+
+	it_exchange_update_cart_data( 'cart_id', $id );
+
 	return $id;
 }
 
