@@ -2,15 +2,15 @@
 /**
  * Offline Transaction Method
  *
- * @since 0.3.0
+ * @since   0.3.0
  * @package IT_Exchange
-*/
+ */
 
 /**
  * Mark this transaction method as okay to manually change transactions
  *
  * @since 0.4.11
-*/
+ */
 add_filter( 'it_exchange_offline-payments_transaction_status_can_be_manually_changed', '__return_true' );
 
 /**
@@ -18,7 +18,7 @@ add_filter( 'it_exchange_offline-payments_transaction_status_can_be_manually_cha
  *
  * @since 0.3.6
  * @return void
-*/
+ */
 function it_exchange_offline_payments_get_default_status_options() {
 	$options = array(
 		'pending'  => _x( 'Pending', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
@@ -26,8 +26,10 @@ function it_exchange_offline_payments_get_default_status_options() {
 		'refunded' => _x( 'Refunded', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
 		'voided'   => _x( 'Voided', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
 	);
+
 	return $options;
 }
+
 add_filter( 'it_exchange_get_status_options_for_offline-payments_transaction', 'it_exchange_offline_payments_get_default_status_options' );
 
 /**
@@ -37,7 +39,7 @@ add_filter( 'it_exchange_get_status_options_for_offline-payments_transaction', '
  *
  * @since 0.3.6
  * @return void
-*/
+ */
 function it_exchange_offline_payments_settings_callback() {
 	$IT_Exchange_Offline_Payments_Add_On = new IT_Exchange_Offline_Payments_Add_On();
 	$IT_Exchange_Offline_Payments_Add_On->print_settings_page();
@@ -47,24 +49,27 @@ function it_exchange_offline_payments_settings_callback() {
  * Outputs wizard settings for Offline Payments
  *
  * @since 0.4.0
- * @todo make this better, probably
+ * @todo  make this better, probably
+ *
  * @param object $form Current IT Form object
+ *
  * @return void
-*/
+ */
 function it_exchange_print_offline_payments_wizard_settings( $form ) {
 	$IT_Exchange_Offline_Payments_Add_On = new IT_Exchange_Offline_Payments_Add_On();
-	$settings = it_exchange_get_option( 'addon_offline_payments', true );
-	$form_values = ITUtility::merge_defaults( ITForm::get_post_data(), $settings );
-	$hide_if_js =  it_exchange_is_addon_enabled( 'offline-payments' ) ? '' : 'hide-if-js';
+	$settings                            = it_exchange_get_option( 'addon_offline_payments', true );
+	$form_values                         = ITUtility::merge_defaults( ITForm::get_post_data(), $settings );
+	$hide_if_js                          = it_exchange_is_addon_enabled( 'offline-payments' ) ? '' : 'hide-if-js';
 	?>
 	<div class="field offline-payments-wizard <?php echo $hide_if_js; ?>">
-	<?php if ( empty( $hide_if_js ) ) { ?>
-        <input class="enable-offline-payments" type="hidden" name="it-exchange-transaction-methods[]" value="offline-payments" />
-    <?php } ?>
-	<?php $IT_Exchange_Offline_Payments_Add_On->get_offline_payment_form_table( $form, $form_values ); ?>
+		<?php if ( empty( $hide_if_js ) ) { ?>
+			<input class="enable-offline-payments" type="hidden" name="it-exchange-transaction-methods[]" value="offline-payments" />
+		<?php } ?>
+		<?php $IT_Exchange_Offline_Payments_Add_On->get_offline_payment_form_table( $form, $form_values ); ?>
 	</div>
 	<?php
 }
+
 add_action( 'it_exchange_print_offline-payments_wizard_settings', 'it_exchange_print_offline_payments_wizard_settings' );
 
 /**
@@ -73,14 +78,17 @@ add_action( 'it_exchange_print_offline-payments_wizard_settings', 'it_exchange_p
  * @since 0.4.0
  *
  * @return void
-*/
+ */
 function it_exchange_save_offline_payments_wizard_settings( $errors ) {
-	if ( ! empty( $errors ) )
+	if ( ! empty( $errors ) ) {
 		return $errors;
+	}
 
 	$IT_Exchange_Offline_Payments_Add_On = new IT_Exchange_Offline_Payments_Add_On();
+
 	return $IT_Exchange_Offline_Payments_Add_On->offline_payments_save_wizard_settings();
 }
+
 add_action( 'it_exchange_save_offline-payments_wizard_settings', 'it_exchange_save_offline_payments_wizard_settings' );
 
 /**
@@ -88,18 +96,20 @@ add_action( 'it_exchange_save_offline-payments_wizard_settings', 'it_exchange_sa
  *
  * @since 0.4.0
  *
- * @param string $status passed by WP filter.
+ * @param string $status             passed by WP filter.
  * @param object $transaction_object The transaction object
-*/
+ */
 function it_exchange_offline_payments_addon_process_transaction( $status, $transaction_object ) {
 
 	// If this has been modified as true already, return.
-	if ( $status )
+	if ( $status ) {
 		return $status;
+	}
 
 	// Verify nonce
 	if ( ! empty( $_REQUEST['_offline_payments_nonce'] ) && ! wp_verify_nonce( $_REQUEST['_offline_payments_nonce'], 'offline-payments-checkout' ) ) {
 		it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'it-l10n-ithemes-exchange' ) );
+
 		return false;
 
 	} else {
@@ -118,6 +128,7 @@ function it_exchange_offline_payments_addon_process_transaction( $status, $trans
 	return false;
 
 }
+
 add_action( 'it_exchange_do_transaction_offline-payments', 'it_exchange_offline_payments_addon_process_transaction', 10, 2 );
 
 
@@ -127,12 +138,13 @@ add_action( 'it_exchange_do_transaction_offline-payments', 'it_exchange_offline_
  * @since 0.4.0
  *
  * @return string
-*/
+ */
 function it_exchange_get_offline_transaction_uniqid() {
 	$uniqid = uniqid( '', true );
 
-	if( !it_exchange_verify_offline_transaction_unique_uniqid( $uniqid ) )
+	if ( ! it_exchange_verify_offline_transaction_unique_uniqid( $uniqid ) ) {
 		$uniqid = it_exchange_get_offline_transaction_uniqid();
+	}
 
 	return $uniqid;
 }
@@ -143,28 +155,31 @@ function it_exchange_get_offline_transaction_uniqid() {
  * @since 0.4.0
  *
  * @param string $uniqid The id we're checking
+ *
  * @return boolean
-*/
+ */
 function it_exchange_verify_offline_transaction_unique_uniqid( $uniqid ) {
 
 	if ( ! empty( $uniqid ) ) { //verify we get a valid 32 character md5 hash
 		$args = array(
-			'post_type' => 'it_exchange_tran',
+			'post_type'  => 'it_exchange_tran',
 			'meta_query' => array(
 				array(
-					'key' => '_it_exchange_transaction_method',
+					'key'   => '_it_exchange_transaction_method',
 					'value' => 'offline-payments',
 				),
 				array(
-					'key' => '_it_exchange_transaction_method_id',
-					'value' => $uniqid ,
+					'key'   => '_it_exchange_transaction_method_id',
+					'value' => $uniqid,
 				),
 			),
 		);
 
 		$query = new WP_Query( $args );
-		return ( !empty( $query ) );
+
+		return ( ! empty( $query ) );
 	}
+
 	return false;
 }
 
@@ -174,40 +189,48 @@ function it_exchange_verify_offline_transaction_unique_uniqid( $uniqid ) {
  * @since 0.4.0
  *
  * @param array $options
+ *
  * @return string
-*/
+ */
 function it_exchange_offline_payments_addon_make_payment_button( $options ) {
 
-	if ( 0 >= it_exchange_get_cart_total( false ) )
+	if ( 0 >= it_exchange_get_cart_total( false ) ) {
 		return '';
+	}
 
 	$disable_on_submit = ' onSubmit="document.getElementById(\'offline-payments-button\').disabled=true;" ';
-	$payment_form = '<form id="offline_payment_form" action="' . it_exchange_get_page_url( 'transaction' ) . '" ' . $disable_on_submit . 'method="post">';
+	$payment_form      = '<form id="offline_payment_form" action="' . it_exchange_get_page_url( 'transaction' ) . '" ' . $disable_on_submit . 'method="post">';
 	$payment_form .= '<input type="hidden" name="it-exchange-transaction-method" value="offline-payments" />';
 	$payment_form .= wp_nonce_field( 'offline-payments-checkout', '_offline_payments_nonce', true, false );
 
-	$payment_form .= '<input type="submit" id="offline-payments-button" name="offline_payments_purchase" value="' . it_exchange_get_transaction_method_name_from_slug( 'offline-payments' ) .'" />';
+	$payment_form .= '<input type="submit" id="offline-payments-button" name="offline_payments_purchase" value="' . it_exchange_get_transaction_method_name_from_slug( 'offline-payments' ) . '" />';
 
 	$payment_form .= '</form>';
 
 	return $payment_form;
 
 }
+
 add_filter( 'it_exchange_get_offline-payments_make_payment_button', 'it_exchange_offline_payments_addon_make_payment_button', 10, 2 );
 
 /**
  * Replace Offline name with what is set in admin settings
  *
  * @since 0.3.7
+ *
  * @param string $name the name passed in from the WP filter API
+ *
  * @return string
-*/
+ */
 function it_exchange_get_offline_payments_name( $name ) {
 	$options = it_exchange_get_option( 'addon_offline_payments' );
-	if ( ! empty( $options['offline-payments-title'] ) && ! is_admin() )
+	if ( ! empty( $options['offline-payments-title'] ) && ! is_admin() ) {
 		$name = $options['offline-payments-title'];
+	}
+
 	return $name;
 }
+
 add_filter( 'it_exchange_get_transaction_method_name_offline-payments', 'it_exchange_get_offline_payments_name', 9 );
 
 /**
@@ -215,12 +238,15 @@ add_filter( 'it_exchange_get_transaction_method_name_offline-payments', 'it_exch
  *
  * @since 0.3.8
  * @return array of possible template paths + offline-payments template path
-*/
+ */
 function it_exchange_offline_payments_add_template_path( $paths ) {
-	if ( it_exchange_is_page( 'confirmation' ) )
+	if ( it_exchange_is_page( 'confirmation' ) ) {
 		$paths[] = dirname( __FILE__ ) . '/templates/';
+	}
+
 	return $paths;
 }
+
 add_filter( 'it_exchange_possible_template_paths', 'it_exchange_offline_payments_add_template_path' );
 
 /**
@@ -229,15 +255,19 @@ add_filter( 'it_exchange_possible_template_paths', 'it_exchange_offline_payments
  * @since 0.4.0
  *
  * @param string $instructions passed in via filter. Ignored here.
+ *
  * @return string
-*/
+ */
 function it_exchange_transaction_instructions_offline_payments( $instructions ) {
 	$options = it_exchange_get_option( 'addon_offline_payments' );
-	if ( ! empty( $options['offline-payments-instructions'] ) )
+	if ( ! empty( $options['offline-payments-instructions'] ) ) {
 		$instructions = $options['offline-payments-instructions'];
+	}
+
 	return $instructions;
 
 }
+
 add_filter( 'it_exchange_transaction_instructions_offline-payments', 'it_exchange_transaction_instructions_offline_payments' );
 
 /**
@@ -246,8 +276,9 @@ add_filter( 'it_exchange_transaction_instructions_offline-payments', 'it_exchang
  * @since 0.4.0
  *
  * @param string $status the string of the stripe transaction
+ *
  * @return string translaction transaction status
-*/
+ */
 function it_exchange_offline_payments_addon_transaction_status_label( $status ) {
 
 	switch ( $status ) {
@@ -269,6 +300,7 @@ function it_exchange_offline_payments_addon_transaction_status_label( $status ) 
 	}
 
 }
+
 add_filter( 'it_exchange_transaction_status_label_offline-payments', 'it_exchange_offline_payments_addon_transaction_status_label' );
 
 /**
@@ -277,57 +309,125 @@ add_filter( 'it_exchange_transaction_status_label_offline-payments', 'it_exchang
  * @since 0.4.2
  *
  * @param boolean $cleared passed in through WP filter. Ignored here.
- * @param object $transaction
+ * @param mixed   $transaction
+ *
  * @return boolean
-*/
+ */
 function it_exchange_offline_payments_transaction_is_cleared_for_delivery( $cleared, $transaction ) {
-    $valid_stati = array( 'succeeded', 'paid' );
-    return in_array( it_exchange_get_transaction_status( $transaction ), $valid_stati );
+	$valid_stati = array( 'succeeded', 'paid' );
+
+	return in_array( it_exchange_get_transaction_status( $transaction ), $valid_stati );
 }
+
 add_filter( 'it_exchange_offline-payments_transaction_is_cleared_for_delivery', 'it_exchange_offline_payments_transaction_is_cleared_for_delivery', 10, 2 );
+
+/**
+ * Mark all transaction subscriptions as active when a transaction is made.
+ *
+ * @since 1.35.4
+ *
+ * @param int $transaction_id
+ */
+function it_exchange_offline_payments_mark_subscriptions_as_active_on_purchase( $transaction_id ) {
+
+	if ( ! it_exchange_transaction_is_cleared_for_delivery( $transaction_id ) ) {
+		return;
+	}
+
+	if ( ! function_exists( 'it_exchange_get_transaction_subscriptions' ) ) {
+		return;
+	}
+
+	$subs = it_exchange_get_transaction_subscriptions( it_exchange_get_transaction( $transaction_id ) );
+
+	try {
+		foreach ( $subs as $sub ) {
+			$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+		}
+	}
+	catch ( Exception $e ) {
+		error_log( $e->getMessage() );
+	}
+}
+
+add_action( 'it_exchange_add_transaction_success', 'it_exchange_offline_payments_mark_subscriptions_as_active_on_purchase', 20 );
+
+/**
+ * Mark subscriptions as active when the transaction is marked as cleared for delivery.
+ *
+ * @since 1.35.4
+ *
+ * @param IT_Exchange_Transaction $transaction
+ * @param string                  $old_status
+ * @param bool                    $old_cleared
+ */
+function it_exchange_offline_payments_mark_subscriptions_as_active_on_clear( $transaction, $old_status, $old_cleared ) {
+
+	if ( ! function_exists( 'it_exchange_get_transaction_subscriptions' ) ) {
+		return;
+	}
+
+	$new_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction );
+
+	if ( $new_cleared && ! $old_cleared ) {
+
+		$subs = it_exchange_get_transaction_subscriptions( $transaction );
+
+		foreach ( $subs as $sub ) {
+			$sub_status = $sub->get_status();
+
+			if ( empty( $sub_status ) ) {
+				$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+			}
+		}
+	}
+
+}
+
+add_action( 'it_exchange_update_transaction_status', 'it_exchange_offline_payments_mark_subscriptions_as_active_on_clear', 10, 3 );
 
 /**
  * Class for Offline
  * @since 0.3.6
-*/
+ */
 class IT_Exchange_Offline_Payments_Add_On {
 
 	/**
 	 * @var boolean $_is_admin true or false
 	 * @since 0.3.6
-	*/
+	 */
 	var $_is_admin;
 
 	/**
 	 * @var string $_current_page Current $_GET['page'] value
 	 * @since 0.3.6
-	*/
+	 */
 	var $_current_page;
 
 	/**
 	 * @var string $_current_add_on Current $_GET['add-on-settings'] value
 	 * @since 0.3.6
-	*/
+	 */
 	var $_current_add_on;
 
 	/**
 	 * @var string $status_message will be displayed if not empty
 	 * @since 0.3.6
-	*/
+	 */
 	var $status_message;
 
 	/**
 	 * @var string $error_message will be displayed if not empty
 	 * @since 0.3.6
-	*/
+	 */
 	var $error_message;
 
 	/**
- 	 * Class constructor
+	 * Class constructor
 	 *
 	 * Sets up the class.
 	 * @since 0.3.6
-	*/
+	 */
 	function __construct() {
 		$this->_is_admin       = is_admin();
 		$this->_current_page   = empty( $_GET['page'] ) ? false : $_GET['page'];
@@ -354,50 +454,67 @@ class IT_Exchange_Offline_Payments_Add_On {
 	}
 
 	function print_settings_page() {
-		$settings = it_exchange_get_option( 'addon_offline_payments', true );
+		$settings     = it_exchange_get_option( 'addon_offline_payments', true );
 		$form_values  = empty( $this->error_message ) ? $settings : ITForm::get_post_data();
 		$form_options = array(
 			'id'      => apply_filters( 'it_exchange_add_on_offline_payments', 'it-exchange-add-on-offline-payments-settings' ),
 			'enctype' => apply_filters( 'it_exchange_add_on_offline_payments_settings_form_enctype', false ),
 			'action'  => 'admin.php?page=it-exchange-addons&add-on-settings=offline-payments',
 		);
-		$form = new ITForm( $form_values, array( 'prefix' => 'it-exchange-add-on-offline-payments' ) );
+		$form         = new ITForm( $form_values, array( 'prefix' => 'it-exchange-add-on-offline-payments' ) );
 
-		if ( ! empty ( $this->status_message ) )
+		if ( ! empty ( $this->status_message ) ) {
 			ITUtility::show_status_message( $this->status_message );
-		if ( ! empty( $this->error_message ) )
+		}
+		if ( ! empty( $this->error_message ) ) {
 			ITUtility::show_error_message( $this->error_message );
+		}
 		include( 'view-add-on-settings.php' );
 	}
 
 	function get_offline_payment_form_table( $form, $settings = array() ) {
 		$default_status_options = it_exchange_offline_payments_get_default_status_options();
 
-		if ( !empty( $settings ) )
-			foreach ( $settings as $key => $var )
+		if ( ! empty( $settings ) ) {
+			foreach ( $settings as $key => $var ) {
 				$form->set_option( $key, $var );
+			}
+		}
 
-        if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] ) : ?>
-            <h3><?php _e( 'Offline Payments', 'it-l10n-ithemes-exchange' ); ?></h3>
-        <?php endif; ?>
-        <p><?php _e( 'Offline payments allow customers to purchase products from your site using check or cash. Transactions can be set as pending until you receive payment.', 'it-l10n-ithemes-exchange' ); ?></p>
-        <p><?php _e( 'Video:', 'it-l10n-ithemes-exchange' ); ?>&nbsp;<a href="http://ithemes.com/tutorials/using-offline-payments-in-exchange/" target="_blank"><?php _e( 'Setting Up Offline Payments in Exchange', 'it-l10n-ithemes-exchange' ); ?></a></p>
-        <p><?php _e( 'To process payments offline, complete the settings below.', 'it-l10n-ithemes-exchange' ); ?></p>
+		if ( ! empty( $_GET['page'] ) && 'it-exchange-setup' == $_GET['page'] ) : ?>
+			<h3><?php _e( 'Offline Payments', 'it-l10n-ithemes-exchange' ); ?></h3>
+		<?php endif; ?>
+		<p><?php _e( 'Offline payments allow customers to purchase products from your site using check or cash. Transactions can be set as pending until you receive payment.', 'it-l10n-ithemes-exchange' ); ?></p>
+		<p><?php _e( 'Video:', 'it-l10n-ithemes-exchange' ); ?>&nbsp;<a href="http://ithemes.com/tutorials/using-offline-payments-in-exchange/" target="_blank"><?php _e( 'Setting Up Offline Payments in Exchange', 'it-l10n-ithemes-exchange' ); ?></a>
+		</p>
+		<p><?php _e( 'To process payments offline, complete the settings below.', 'it-l10n-ithemes-exchange' ); ?></p>
 		<table class="form-table">
 			<?php do_action( 'it_exchange_offline_payments_settings_table_top' ); ?>
 			<tr valign="top">
-				<th scope="row"><label for="offline-payments-title"><?php _e( 'Title', 'it-l10n-ithemes-exchange' ) ?> <span class="tip" title="<?php _e( 'What would you like to title this payment option? eg: Check', 'it-l10n-ithemes-exchange' ); ?>">i</span></label></th>
+				<th scope="row"><label for="offline-payments-title"><?php _e( 'Title', 'it-l10n-ithemes-exchange' ) ?>
+						<span class="tip" title="<?php _e( 'What would you like to title this payment option? eg: Check', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
+				</th>
 				<td>
-					<?php $form->add_text_box( 'offline-payments-title', array( 'class' => 'normal-text' ) ); ?>				</td>
+					<?php $form->add_text_box( 'offline-payments-title', array( 'class' => 'normal-text' ) ); ?>                </td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="offline-payments-instructions"><?php _e( 'Instructions after purchase', 'it-l10n-ithemes-exchange' ) ?> <span class="tip" title="<?php _e( 'This will be the notification customers see after using this method of payment.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label></th>
+				<th scope="row">
+					<label for="offline-payments-instructions"><?php _e( 'Instructions after purchase', 'it-l10n-ithemes-exchange' ) ?>
+						<span class="tip" title="<?php _e( 'This will be the notification customers see after using this method of payment.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
+				</th>
 				<td>
-					<?php $form->add_text_area( 'offline-payments-instructions', array( 'cols' => 50, 'rows' => 5, 'class' => 'normal-text' ) ); ?>
+					<?php $form->add_text_area( 'offline-payments-instructions', array(
+						'cols'  => 50,
+						'rows'  => 5,
+						'class' => 'normal-text'
+					) ); ?>
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="offline-payments-default-status"><?php _e( 'Default Payment Status', 'it-l10n-ithemes-exchange' ) ?> <span class="tip" title="<?php _e( 'This is the default payment status applied to all offline payment transactions.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label></th>
+				<th scope="row">
+					<label for="offline-payments-default-status"><?php _e( 'Default Payment Status', 'it-l10n-ithemes-exchange' ) ?>
+						<span class="tip" title="<?php _e( 'This is the default payment status applied to all offline payment transactions.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
+				</th>
 				<td>
 					<?php $form->add_drop_down( 'offline-payments-default-status', $default_status_options ); ?>
 				</td>
@@ -413,14 +530,15 @@ class IT_Exchange_Offline_Payments_Add_On {
 	 *
 	 * @since 0.3.6
 	 * @return void
-	*/
+	 */
 	function save_settings() {
-		$defaults = it_exchange_get_option( 'addon_offline_payments' );
+		$defaults   = it_exchange_get_option( 'addon_offline_payments' );
 		$new_values = wp_parse_args( ITForm::get_post_data(), $defaults );
 
 		// Check nonce
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'it-exchange-offline-payments-settings' ) ) {
 			$this->error_message = __( 'Error. Please try again', 'it-l10n-ithemes-exchange' );
+
 			return;
 		}
 
@@ -428,7 +546,7 @@ class IT_Exchange_Offline_Payments_Add_On {
 		if ( ! $errors && it_exchange_save_option( 'addon_offline_payments', $new_values ) ) {
 			ITUtility::show_status_message( __( 'Settings saved.', 'it-l10n-ithemes-exchange' ) );
 		} else if ( $errors ) {
-			$errors = implode( '<br />', $errors );
+			$errors              = implode( '<br />', $errors );
 			$this->error_message = $errors;
 		} else {
 			$this->status_message = __( 'Settings not saved.', 'it-l10n-ithemes-exchange' );
@@ -436,17 +554,22 @@ class IT_Exchange_Offline_Payments_Add_On {
 	}
 
 	function offline_payments_save_wizard_settings() {
-		if ( !isset( $_REQUEST['it_exchange_settings-wizard-submitted'] ) )
+		if ( ! isset( $_REQUEST['it_exchange_settings-wizard-submitted'] ) ) {
 			return;
+		}
 
 		$offline_payments_settings = array();
 
-		$default_wizard_offline_payments_settings = apply_filters( 'default_wizard_offline_payments_settings', array( 'offline-payments-title', 'offline-payments-instructions', 'offline-payments-default-status' ) );
+		$default_wizard_offline_payments_settings = apply_filters( 'default_wizard_offline_payments_settings', array(
+			'offline-payments-title',
+			'offline-payments-instructions',
+			'offline-payments-default-status'
+		) );
 
-		foreach( $default_wizard_offline_payments_settings as $var ) {
+		foreach ( $default_wizard_offline_payments_settings as $var ) {
 
-			if ( isset( $_REQUEST['it_exchange_settings-' . $var] ) ) {
-				$offline_payments_settings[$var] = $_REQUEST['it_exchange_settings-' . $var];
+			if ( isset( $_REQUEST[ 'it_exchange_settings-' . $var ] ) ) {
+				$offline_payments_settings[ $var ] = $_REQUEST[ 'it_exchange_settings-' . $var ];
 			}
 
 		}
@@ -473,17 +596,20 @@ class IT_Exchange_Offline_Payments_Add_On {
 	 *
 	 * @since 0.3.6
 	 * @return void
-	*/
+	 */
 	function get_form_errors( $values ) {
 		$errors = array();
-		if ( empty( $values['offline-payments-title'] ) )
+		if ( empty( $values['offline-payments-title'] ) ) {
 			$errors[] = __( 'The Title field cannot be left blank', 'it-l10n-ithemes-exchange' );
-		if ( empty( $values['offline-payments-instructions'] ) )
+		}
+		if ( empty( $values['offline-payments-instructions'] ) ) {
 			$errors[] = __( 'Please leave some instructions for customers checking out with this transaction method', 'it-l10n-ithemes-exchange' );
+		}
 
 		$valid_status_options = it_exchange_offline_payments_get_default_status_options();
-		if ( empty( $values['offline-payments-default-status'] ) || empty( $valid_status_options[$values['offline-payments-default-status']] ) )
+		if ( empty( $values['offline-payments-default-status'] ) || empty( $valid_status_options[ $values['offline-payments-default-status'] ] ) ) {
 			$errors[] = __( 'Please select a valid default transaction status.', 'it-l10n-ithemes-exchange' );
+		}
 
 		return $errors;
 	}
@@ -493,37 +619,41 @@ class IT_Exchange_Offline_Payments_Add_On {
 	 *
 	 * @since 0.3.6
 	 * @return array settings
-	*/
+	 */
 	function set_default_settings( $defaults ) {
 		$defaults['offline-payments-title']          = __( 'Pay with check', 'it-l10n-ithemes-exchange' );
 		$defaults['offline-payments-instructions']   = __( 'Thank you for your order. We will contact you shortly for payment.', 'it-l10n-ithemes-exchange' );
 		$defaults['offline-payments-default-status'] = 'pending';
+
 		return $defaults;
 	}
 }
 
-/*
+/**
  * Handles expired transactions that are offline payments
  * If this product autorenews and is an offline payment, it should auto-renew
  * unless the susbcriber status has been deactivated already
  * If it autorenews, it creates an offline payment child transaction
  *
  * @since 1.3.1
- * @param bool $true Default True bool, passed from recurring payments expire schedule
- * @param int $product_id iThemes Exchange Product ID
+ *
+ * @param bool   $true        Default True bool, passed from recurring payments expire schedule
+ * @param int    $product_id  iThemes Exchange Product ID
  * @param object $transaction iThemes Exchange Transaction Object
+ *
  * @return bool True if expired, False if not Expired
-*/
+ */
 function it_exchange_offline_payments_handle_expired( $true, $product_id, $transaction ) {
 	$transaction_method = it_exchange_get_transaction_method( $transaction->ID );
 
 	if ( 'offline-payments' === $transaction_method ) {
 
 		$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product_id, true );
-		$status = $transaction->get_transaction_meta( 'subscriber_status', true );
+		$status     = $transaction->get_transaction_meta( 'subscriber_status', true );
 		if ( $autorenews && empty( $status ) ) { //if the subscriber status is empty, it hasn't been set, which really means it's active for offline payments
 			//if the transaction autorenews and is an offline payment, we want to create a new child transaction until deactivated
 			it_exchange_offline_payments_add_child_transaction( $transaction );
+
 			return false;
 		}
 
@@ -531,6 +661,7 @@ function it_exchange_offline_payments_handle_expired( $true, $product_id, $trans
 
 	return $true;
 }
+
 add_filter( 'it_exchange_recurring_payments_handle_expired', 'it_exchange_offline_payments_handle_expired', 10, 3 );
 
 /**
@@ -541,18 +672,21 @@ add_filter( 'it_exchange_recurring_payments_handle_expired', 'it_exchange_offlin
  * @since 1.3.1
  *
  * @param string $parent_txn_id Parent Transaction ID
+ *
  * @return bool
-*/
+ */
 function it_exchange_offline_payments_add_child_transaction( $parent_txn ) {
-	$settings = it_exchange_get_option( 'addon_offline_payments' );
+	$settings    = it_exchange_get_option( 'addon_offline_payments' );
 	$customer_id = get_post_meta( $parent_txn->ID, '_it_exchange_customer_id', true );
 	if ( $customer_id ) {
-		$uniqid = it_exchange_get_offline_transaction_uniqid();
-		$transaction_object = new stdClass;
+		$uniqid                    = it_exchange_get_offline_transaction_uniqid();
+		$transaction_object        = new stdClass;
 		$transaction_object->total = $parent_txn->cart_details->total;
 		it_exchange_add_child_transaction( 'offline-payments', $uniqid, $settings['offline-payments-default-status'], $customer_id, $parent_txn->ID, $transaction_object );
+
 		return true;
 	}
+
 	return false;
 }
 
@@ -562,27 +696,28 @@ function it_exchange_offline_payments_add_child_transaction( $parent_txn ) {
  * @since 1.3.1
  *
  * @param object $transaction iThemes Transaction object
+ *
  * @return void
-*/
+ */
 function it_exchange_offline_payments_checkout_after_payment_details_cancel_url( $transaction ) {
 	$cart_object = get_post_meta( $transaction->ID, '_it_exchange_cart_object', true );
-	if ( !empty( $cart_object->products ) ) {
+	if ( ! empty( $cart_object->products ) ) {
 		foreach ( $cart_object->products as $product ) {
 			$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product['product_id'], true );
 			if ( $autorenews ) {
 				$status = $transaction->get_transaction_meta( 'subscriber_status', true );
-				switch( $status ) {
-	
+				switch ( $status ) {
+
 					case false: //active
 					case '':
 						$output = '<a href="' . esc_url( add_query_arg( 'offline-payments-recurring-payment', 'cancel' ) ) . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . '</a>';
 						break;
-	
+
 					case 'deactivated':
 					default:
 						$output = __( 'Recurring payment has been deactivated', 'it-l10n-ithemes-exchange' );
 						break;
-	
+
 				}
 				?>
 				<div class="transaction-autorenews clearfix spacing-wrapper">
@@ -596,6 +731,7 @@ function it_exchange_offline_payments_checkout_after_payment_details_cancel_url(
 		}
 	}
 }
+
 add_action( 'it_exchange_after_payment_details_cancel_url_for_offline-payments', 'it_exchange_offline_payments_checkout_after_payment_details_cancel_url' );
 
 /**
@@ -604,26 +740,30 @@ add_action( 'it_exchange_after_payment_details_cancel_url_for_offline-payments',
  * @since 1.3.1
  *
  * @return void
-*/
+ */
 function it_exchange_process_offline_payments_recurring_payment_cancel() {
-	if ( !empty( $_REQUEST['offline-payments-recurring-payment'] ) && 'cancel' === $_REQUEST['offline-payments-recurring-payment'] ) {
-		if ( !empty( $_REQUEST['post'] ) && $post_id = $_REQUEST['post'] ) {
+	if ( ! empty( $_REQUEST['offline-payments-recurring-payment'] ) && 'cancel' === $_REQUEST['offline-payments-recurring-payment'] ) {
+		if ( ! empty( $_REQUEST['post'] ) && $post_id = $_REQUEST['post'] ) {
 			$transaction = it_exchange_get_transaction( $post_id );
-			$status = $transaction->update_transaction_meta( 'subscriber_status', 'cancel' );
+			$status      = $transaction->update_transaction_meta( 'subscriber_status', 'cancel' );
 		}
 	}
 }
+
 add_action( 'admin_init', 'it_exchange_process_offline_payments_recurring_payment_cancel' );
 
 function it_exchange_offline_payments_email_template_tags_list() {
 	echo '<li>offline_payments_message - ' . __( 'Adds the instructions after purchase message from the Offline Payments gateway settings.', 'it-l10n-ithemes-exchange' ) . '</li>';
 }
+
 add_action( 'it_exchange_email_template_tags_list', 'it_exchange_offline_payments_email_template_tags_list' );
 
 function it_exchange_offline_payments_email_notification_shortcode_functions( $shortcode_functions, $data ) {
 	$shortcode_functions['offline_payments_message'] = 'it_exchange_offline_payments_email_notification_message';
+
 	return $shortcode_functions;
 }
+
 add_filter( 'it_exchange_email_notification_shortcode_functions', 'it_exchange_offline_payments_email_notification_shortcode_functions', 10, 2 );
 
 function it_exchange_offline_payments_email_notification_message( $email_obj, $options, $atts ) {
@@ -634,5 +774,6 @@ function it_exchange_offline_payments_email_notification_message( $email_obj, $o
 			$instructions = $options['offline-payments-instructions'];
 		}
 	}
+
 	return $instructions;
 }
