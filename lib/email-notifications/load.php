@@ -116,9 +116,11 @@ function it_exchange_email_notifications() {
  */
 function it_exchange_register_email_notifications() {
 
-	$GLOBALS['IT_Exchange_Email_Notifications'] = it_exchange_email_notifications();
+	$notifications = it_exchange_email_notifications();
 
-	it_exchange_email_notifications()
+	$GLOBALS['IT_Exchange_Email_Notifications'] = $notifications;
+
+	$notifications
 		->register_notification( new IT_Exchange_Admin_Email_Notification(
 			__( 'Admin Order Notification', 'it-l10n-ithemes-exchange' ), 'admin-order', null, array(
 				'defaults' => array(
@@ -150,6 +152,15 @@ function it_exchange_register_email_notifications() {
 				'group'    => __( 'Core', 'it-l10n-ithemes-exchange' ),
 			)
 		) );
+
+	/**
+	 * Fires when add-ons should register additional email notifications.
+	 *
+	 * @since 1.36
+	 *
+	 * @param IT_Exchange_Email_Notifications $notifications
+	 */
+	do_action( 'it_exchange_register_email_notifications', $notifications );
 }
 
 add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_register_email_notifications' );
