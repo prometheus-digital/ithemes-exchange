@@ -14,7 +14,6 @@ $email_notifications = it_exchange_email_notifications();
 <div class="wrap">
 	<?php
 	ITUtility::screen_icon( 'it-exchange' );
-	$this->print_general_settings_tabs();
 	do_action( 'it_exchange_general_settings_email_page_top' );
 	$form->start_form( $form_options, 'exchange-email-settings' );
 	do_action( 'it_exchange_general_settings_email_form_top' );
@@ -29,6 +28,8 @@ $email_notifications = it_exchange_email_notifications();
 			<?php _e( 'Customize Appearance', 'it-l10n-ithemes-exchange' ); ?>
 		</a>
 	</h<?php echo $h; ?>>
+
+	<?php $this->print_general_settings_tabs(); ?>
 
 	<table class="widefat striped">
 		<thead>

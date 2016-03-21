@@ -8,10 +8,16 @@
 <div class="wrap">
 	<?php
 	ITUtility::screen_icon( 'it-exchange' );
-	$this->print_general_settings_tabs();
 	do_action( 'it_exchange_general_settings_page_top' );
 
+	$h = version_compare( $wp_version, '4.4', '>=' ) ? '1' : '2';
 	?>
+
+	<h<?php echo $h; ?> class="screen-reader-text">
+		<?php _e( 'General Settings', 'it-l10n-ithemes-exchange' ); ?>
+	</h<?php echo $h; ?>>
+
+	<?php $this->print_general_settings_tabs(); ?>
 
 	<div class="it-exchange-general-settings columns-2">
 
