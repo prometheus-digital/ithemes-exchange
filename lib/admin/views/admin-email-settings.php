@@ -75,6 +75,10 @@ $email_notifications = it_exchange_email_notifications();
 
 			<h3><?php echo $notification->get_name(); ?></h3>
 
+			<?php if ( $notification->has_description() ): ?>
+				<p class="description"><?php echo $notification->get_description(); ?></p>
+			<?php endif; ?>
+
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row">
@@ -124,9 +128,6 @@ $email_notifications = it_exchange_email_notifications();
 
 						<p class="description">
 							<?php
-							if ( $notification->has_description() ) {
-								echo $notification->get_description() . '<br><br>';
-							}
 							_e( 'HTML is accepted. Available shortcode functions:', 'it-l10n-ithemes-exchange' );
 							echo '<br />';
 							printf( __( 'You call these shortcode functions like this: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=order_table option=purchase_message]' );
