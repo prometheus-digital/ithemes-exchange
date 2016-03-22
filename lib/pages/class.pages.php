@@ -55,6 +55,11 @@ class IT_Exchange_Pages {
 			add_filter( 'query_vars', array( $this, 'register_query_vars' ) );
 			add_filter( 'template_include', array( $this, 'fetch_template' ) );
 			add_filter( 'template_include', array( $this, 'load_casper' ), 11 );
+
+			if ( it_exchange_is_pages_compat_mode() ) {
+				add_filter( 'it_exchange_get_page_url', array( $this, 'transaction_compat_mode' ), 10, 2 );
+				add_filter( 'it_exchange_get_transaction_confirmation_url', array( $this, 'confirmation_compat_mode' ), 10, 2 );
+			}
 		}
 	}
 
@@ -617,6 +622,54 @@ class IT_Exchange_Pages {
 			if ( $wpid == $post_id )
 				add_option('_it-exchange-flush-rewrites', true );
 		}
+	}
+
+	/**
+	 * Override the transaction URL when in compat-mode.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $url
+	 * @param string $page
+	 *
+	 * @return string
+	 */
+	public function transaction_compat_mode( $url, $page ) {
+
+		if ( $page === 'transaction' ) {
+			$url = add_query_arg( 'transaction', 1, site_url() );
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Override the confirmation URL to not use pretty permalinks when we are in compat-mode.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $url
+	 * @param int    $transaction_id
+	 *
+	 * @return bool|string
+	 */
+	public function confirmation_compat_mode( $url, $transaction_id ) {
+
+		// If we can't grab the hash, return false
+		if ( ! $transaction_hash = it_exchange_get_transaction_hash( $transaction_id ) ) {
+
+			return false;
+		}
+
+		// Get base page URL
+
+		$confirmation_url = it_exchange_get_page_url( 'confirmation' );
+		$slug             = it_exchange_get_page_slug( 'confirmation' );
+
+		$confirmation_url = remove_query_arg( $slug, $confirmation_url );
+		$confirmation_url = add_query_arg( $slug, $transaction_hash, $confirmation_url );
+
+		return $confirmation_url;
 	}
 }
 global $IT_Exchange_Pages; // We need it inside casper

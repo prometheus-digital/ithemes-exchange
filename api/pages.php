@@ -406,3 +406,19 @@ function it_exchange_get_wp_pages( $options=array() ) {
 	}
 	return apply_filters( 'it_exchange_get_wp_pages', $returnval, $options );
 }
+
+/**
+ * Is pages in compatibility mode.
+ *
+ * @since 1.36
+ *
+ * @param bool $break_cache
+ *
+ * @return bool
+ */
+function it_exchange_is_pages_compat_mode( $break_cache = false ) {
+
+	$settings = it_exchange_get_option( 'settings_pages', $break_cache );
+
+	return ! empty( $settings['compat-mode'] );
+}
