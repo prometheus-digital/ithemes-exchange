@@ -56,10 +56,8 @@ class IT_Exchange_Pages {
 			add_filter( 'template_include', array( $this, 'fetch_template' ) );
 			add_filter( 'template_include', array( $this, 'load_casper' ), 11 );
 
-			if ( it_exchange_is_pages_compat_mode() ) {
-				add_filter( 'it_exchange_get_page_url', array( $this, 'transaction_compat_mode' ), 10, 2 );
-				add_filter( 'it_exchange_get_transaction_confirmation_url', array( $this, 'confirmation_compat_mode' ), 10, 2 );
-			}
+			add_filter( 'it_exchange_get_page_url', array( $this, 'transaction_compat_mode' ), 10, 2 );
+			add_filter( 'it_exchange_get_transaction_confirmation_url', array( $this, 'confirmation_compat_mode' ), 10, 2 );
 		}
 	}
 
@@ -635,6 +633,10 @@ class IT_Exchange_Pages {
 	 * @return string
 	 */
 	public function transaction_compat_mode( $url, $page ) {
+		
+		if ( ! it_exchange_is_pages_compat_mode() ) {
+			return $url;
+		}
 
 		if ( $page === 'transaction' ) {
 			$url = add_query_arg( 'transaction', 1, site_url() );
@@ -654,6 +656,10 @@ class IT_Exchange_Pages {
 	 * @return bool|string
 	 */
 	public function confirmation_compat_mode( $url, $transaction_id ) {
+		
+		if ( ! it_exchange_is_pages_compat_mode() ) {
+			return $url;
+		}
 
 		// If we can't grab the hash, return false
 		if ( ! $transaction_hash = it_exchange_get_transaction_hash( $transaction_id ) ) {
