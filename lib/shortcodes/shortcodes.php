@@ -213,7 +213,7 @@ class IT_Exchange_SW_Shortcode {
 	public function callback( $atts ) {
 
 		if ( $this->product ) {
-			if ( current_user_can( 'edit_post', $GLOBALS['post']->ID ) ) {
+			if ( current_user_can( 'edit_it_product', $GLOBALS['post']->ID ) ) {
 				return __( "Only one Super Widget can be embedded per-page.", 'it-l10n-ithemes-exchange' );
 			}
 
@@ -225,14 +225,14 @@ class IT_Exchange_SW_Shortcode {
 		$product = it_exchange_get_product( $atts['product'] );
 
 		if ( ! $product ) {
-			if ( current_user_can( 'edit_post', $GLOBALS['post']->ID ) ) {
+			if ( current_user_can( 'edit_it_product', $GLOBALS['post']->ID ) ) {
 				return __( "Invalid product ID.", 'it-l10n-ithemes-exchange' );
 			}
 
 			return '';
 		} else if ( ! it_exchange_product_type_supports_feature( it_exchange_get_product_type( $product->ID ), 'sw-shortcode' ) ) {
 
-			if ( current_user_can( 'edit_post', $GLOBALS['post']->ID ) ) {
+			if ( current_user_can( 'edit_it_product', $GLOBALS['post']->ID ) ) {
 				return __( "This product does not support being embedded in shortcodes.", 'it-l10n-ithemes-exchange' );
 			}
 

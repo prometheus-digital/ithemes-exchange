@@ -532,7 +532,7 @@ class IT_Exchange_Product_Post_Type {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
 			return;
 
-		if ( ! current_user_can( 'edit_post', $post_id ) )
+		if ( ! current_user_can( 'edit_it_product', $post_id ) )
 			return;
 
 		if ( isset( $_POST['it-exchange-visibility'] ) )
