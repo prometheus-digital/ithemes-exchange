@@ -1015,7 +1015,7 @@ class IT_Exchange_Transaction_Post_Type {
 			) );
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'edit_it_transaction', $txn ) ) {
 			wp_send_json_error( array(
 				'message' => __( 'You don\'t have permission to do that.', 'it-l10n-ithemes-exchange' )
 			) );
@@ -1056,7 +1056,13 @@ class IT_Exchange_Transaction_Post_Type {
      */
 	public function activity_heartbeat( $response, $data ) {
 
-		if ( isset( $data['it-exchange-txn-activity'] ) && current_user_can( 'manage_options' ) ) {
+		if ( isset( $data['it-exchange-txn-activity'] ) && ! empty( $data['it-exchange-txn-activity']['txn'] ) ) {
+			$txn = $data['it-exchange-txn-activity']['txn'];
+		} else {
+			$txn = false;
+		}
+
+		if ( $txn && current_user_can( 'edit_it_transaction', $txn ) ) {
 
 			$latest      = $data['it-exchange-txn-activity']['latest'];
 			$transaction = it_exchange_get_transaction( $data['it-exchange-txn-activity']['txn'] );
