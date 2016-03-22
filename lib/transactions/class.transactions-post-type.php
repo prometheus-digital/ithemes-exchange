@@ -935,6 +935,10 @@ class IT_Exchange_Transaction_Post_Type {
 			die( 'failed' );
 		}
 
+		if ( ! current_user_can( 'edit_it_transaction', $transaction_id ) ) {
+			die( 'failed' );
+		}
+
 		// Fail if status is the same as old status
 		if ( $current_status == $new_status ) {
 			die( 'failed' );
@@ -971,7 +975,7 @@ class IT_Exchange_Transaction_Post_Type {
 			) );
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'edit_it_transaction', $txn ) ) {
 			wp_send_json_error( array(
 				'message' => __( 'You don\'t have permission to do that.', 'it-l10n-ithemes-exchange' )
 			) );
