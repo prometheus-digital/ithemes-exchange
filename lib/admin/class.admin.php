@@ -745,6 +745,10 @@ Order: %s
 	 * @return void
 	*/
 	function print_pages_settings_page() {
+
+		$page_settings  = it_exchange_get_option( 'settings_pages', true );
+		$compat_mode    = ! empty( $page_settings['compat-mode'] );
+
 		$flush_cache  = ! empty( $_POST );
 		$pages    = it_exchange_get_pages( $flush_cache );
 		$settings = array();
@@ -756,6 +760,9 @@ Order: %s
 			$settings[$page . '-type'] = it_exchange_get_page_type( $page );
 			$settings[$page . '-wpid'] = it_exchange_get_page_wpid( $page );
 		}
+
+		$settings['compat-mode'] = $compat_mode;
+
 		$form_values  = empty( $this->error_message ) ? $settings : ITForm::get_post_data();
 		$form         = new ITForm( $form_values, array( 'prefix' => 'it_exchange_page_settings' ) );
 		$form_options = array(
@@ -1367,8 +1374,10 @@ Order: %s
 	 * @return void
 	*/
 	function save_core_page_settings() {
-		if ( empty( $_POST ) || 'it-exchange-settings' != $this->_current_page || 'pages' != $this->_current_tab )
+
+		if ( empty( $_POST ) || 'it-exchange-settings' != $this->_current_page || 'pages' != $this->_current_tab ) {
 			return;
+		}
 
 		// Grab page settings from DB
 		$existing = it_exchange_get_pages( true );
@@ -1381,35 +1390,53 @@ Order: %s
 			$settings[$page . '-type'] = it_exchange_get_page_type( $page );
 			$settings[$page . '-wpid'] = it_exchange_get_page_wpid( $page );
 		}
+
 		$settings = wp_parse_args( ITForm::get_post_data(), $settings );
 
+		$compat_mode = ! empty( $settings['compat-mode'] );
+		unset( $settings['compat-mode'] );
 
 		// If WordPress page is set to 0 somehow, use exchange page
 		foreach( $existing as $page => $data ) {
-			if ( 'wordpress' == $settings[$page . '-type'] && empty( $settings[$page . '-wpid'] ) )
-				$settings[$page . '-type'] = 'exchange';
+			if ( 'wordpress' == $settings[$page . '-type'] && empty( $settings[$page . '-wpid'] ) ) {
+				$settings[ $page . '-type' ] = 'exchange';
+			}
 		}
 
         // Check nonce
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-page-settings' ) ) {
             $this->error_message = __( 'Error. Please try again', 'it-l10n-ithemes-exchange' );
-            return;
+
+	        return;
         }
 
 		// Trim all slug settings
 		foreach( $settings as $key => $value ) {
-			if ( 'slug' == substr( $key, -4 ) )
-				$settings[$key] = sanitize_title( $value );
-			else
-				$settings[$key] = trim($value);
+			if ( 'slug' == substr( $key, -4 ) ) {
+				$settings[ $key ] = sanitize_title( $value );
+			} else {
+				$settings[ $key ] = trim( $value );
+			}
 		}
 
 		if ( ! empty( $this->error_message ) || $error_msg = $this->page_settings_are_invalid( $settings ) ) {
-			if ( ! empty( $error_msg ) )
+			if ( ! empty( $error_msg ) ) {
 				$this->error_message = $error_msg;
+			}
 		} else {
+
+			$current = it_exchange_get_option( 'settings_pages', true );
+
+			$settings['compat-mode'] = $compat_mode;
+
 			it_exchange_save_option( 'settings_pages', $settings );
 			$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
+
+			//error_log(print_r($current,true));
+
+			if ( empty( $current['compat-mode'] ) && $compat_mode ) {
+				$this->auto_create_wordpress_pages();
+			}
 
 			// Flag rewrites to be updated
 			add_option( '_it-exchange-flush-rewrites', true );
@@ -1472,7 +1499,8 @@ Order: %s
 	 * Validate page settings
 	 *
 	 * @since 0.3.7
-	 * @param string $settings submitted settings
+	 * @param array $settings submitted settings
+	 *
 	 * @return false or error message
 	*/
 	function page_settings_are_invalid( $settings ) {
@@ -1497,6 +1525,43 @@ Order: %s
 			return '<p>' . implode( '<br />', $errors ) . '</p>';
 		else
 			return false;
+	}
+
+	/**
+	 * Auto create WordPress pages with Exchange shortcodes.
+	 *
+	 * @since 1.36
+	 */
+	protected function auto_create_wordpress_pages() {
+
+		$pages   = it_exchange_get_pages( true, array( 'type' => 'exchange' ) );
+		$account = it_exchange_get_account_based_pages();
+
+		foreach ( $pages as $page => $data ) {
+
+			if ( ! in_array( $page, array( 'transaction', 'product' ) ) ) {
+
+				if ( in_array( $page, $account ) && $page !== 'account' ) {
+					$parent = it_exchange_get_page_wpid( 'account', true );
+				} else {
+					$parent = 0;
+				}
+
+				$ID = wp_insert_post( array(
+					'post_title'    => $data['name'],
+					'post_content'  => "[it-exchange-page page='{$page}']",
+					'post_type'     => 'page',
+					'post_status'   => 'publish',
+					'post_parent'   => $parent
+				) );
+
+				$settings = it_exchange_get_option( 'settings_pages', true );
+				$settings[$page . '-type'] = 'wordpress';
+				$settings[$page . '-wpid'] = $ID;
+
+				it_exchange_save_option( 'settings_pages', $settings );
+			}
+		}
 	}
 
 	/**

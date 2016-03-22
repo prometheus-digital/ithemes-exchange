@@ -12,6 +12,7 @@
 
 	do_action( 'it_exchange_general_settings_page_page_top' );
 
+	/** @var ITForm $form */
 	$form->start_form( $form_options, 'exchange-page-settings' );
 	do_action( 'it_exchange_general_settings_page_form_top' );
 
@@ -62,10 +63,6 @@
 			<div class="it-row">
 				<div class="it-column column-1">
 					<span><?php esc_attr_e( $data['settings-name'] ); ?><?php if ( ! empty( $data['tip'] ) ) echo '<span class="tip" title="' . esc_attr( $data['tip'] ) . '">i</span>'; ?></span>
-					<!--
-						Do we need this page var? - KOOP
-						<span class="page-var"><?php esc_attr_e( $page ); ?></span>
-					-->
 				</div>
 				<div class="it-column column-2">
 					<div class="it-column column-2-half page-type">
@@ -127,6 +124,14 @@
 				</div>
 			</div>
 		<?php endforeach; ?>
+
+		<div>
+			<label>
+				<?php $form->add_check_box( 'compat-mode' ); ?>
+
+				<?php _e( 'Enable compatibility mode and auto-create WordPress pages.', 'it-l10n-ithemes-exchange' ); ?>
+			</label>
+		</div>
 	</div>
 	<?php do_action( 'it_exchange_general_settings_page_table_bottom' ); ?>
 
