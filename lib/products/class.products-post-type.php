@@ -145,6 +145,8 @@ class IT_Exchange_Product_Post_Type {
 				'slug'       => 'product',
 				'with_front' => false,
 			),
+			'capability_type' => IT_Exchange_Capabilities::PRODUCT,
+			'map_meta_cap'    => true
 		);
 
 		// We need to register in a different order during admin to catch updating the permalinks.

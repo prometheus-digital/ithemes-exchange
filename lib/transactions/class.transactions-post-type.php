@@ -119,8 +119,8 @@ class IT_Exchange_Transaction_Post_Type {
 				'edit_others_posts' => 'edit_others_posts',
 				'publish_posts'     => 'publish_posts',
 			),
-			'map_meta_cap'         => true,
-			'capability_type'      => 'post',
+			'capability_type' => IT_Exchange_Capabilities::TRANSACTION,
+			'map_meta_cap'    => true
 		);
 
 		add_action( 'init', array( $this, 'register_the_post_type' ) );

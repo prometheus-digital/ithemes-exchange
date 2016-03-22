@@ -21,6 +21,9 @@ require( $this->_plugin_path . 'lib/icon-fonts/load.php' );
 // Admin Functionality
 require( $this->_plugin_path . 'lib/admin/class.admin.php' );
 
+// Capabilities
+require( $this->_plugin_path . 'lib/capabilities/load.php' );
+
 // Product Post Type
 require( $this->_plugin_path . 'lib/products/class.products-post-type.php' );
 
