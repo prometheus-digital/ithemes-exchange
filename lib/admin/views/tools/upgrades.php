@@ -1,21 +1,18 @@
 <?php
 /**
- * This file contains the contents of the Tools page
- * @since   1.33
- * @package IT_Exchange
+ * Contains the contents of the upgrades page.
+ *
+ * @since   1.36
+ * @license GPLv2
  */
 
 $upgrader = it_exchange_make_upgrader();
 ?>
 <div class="wrap tools-wrap tools-upgrade-wrap">
 	<?php ITUtility::screen_icon( 'it-exchange' ); ?>
-	<h1><?php _e( 'Tools', 'it-l10n-ithemes-exchange' ); ?></h1>
+	<h1><?php _e( 'Upgrades', 'it-l10n-ithemes-exchange' ); ?></h1>
 
-	<h2 class="nav-tab-wrapper">
-		<a href="<?php echo admin_url( 'admin.php?page=it-exchange-tools' ); ?>" class="nav-tab nav-tab-active">
-			<?php _e( 'Upgrades', 'it-l10n-ithemes-exchange' ); ?>
-		</a>
-	</h2>
+	<?php $this->print_tools_tab(); ?>
 
 	<div class="upgrades-container">
 
@@ -66,3 +63,4 @@ $upgrader = it_exchange_make_upgrader();
 	</div>
 
 </div>
+

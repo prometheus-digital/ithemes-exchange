@@ -1,6 +1,8 @@
+/*
 .tools-upgrade-wrap.wrap h2.nav-tab-wrapper {
 	border-bottom: none;
 }
+*/
 
 .tools-upgrade-wrap.wrap h2.nav-tab-wrapper .nav-tab-active {
 	border-bottom: 1px solid #CCC;
@@ -115,7 +117,8 @@
 	width: 100%;
 }
 
-.upgrades-container .upgrade-feedback textarea {
+.upgrades-container .upgrade-feedback textarea,
+#system-info {
 	font-family: monospace;
 	width: 100%;
 	margin: 0;

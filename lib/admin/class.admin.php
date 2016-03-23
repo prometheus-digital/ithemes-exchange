@@ -108,6 +108,9 @@ class IT_Exchange_Admin {
 
 		// Page Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_pages', array( $this, 'set_pages_settings_defaults' ) );
+		
+		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'sysinfo_tab' ) );
+		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'upgrades_tab' ) );
 
 		// Add-on Page Filters
 		add_action( 'it_exchange_print_add_ons_page_tab_links', array( $this, 'print_enabled_add_ons_tab_link' ) );
@@ -597,7 +600,71 @@ class IT_Exchange_Admin {
 	 * Print the tools page.
 	 */
 	function print_tools_page() {
-		include dirname( __FILE__ ) . '/views/admin-tools.php';
+		
+		$tab = empty( $_GET['tab'] ) ? 'sysinfo' : $_GET['tab'];
+		
+		$tab = str_replace( '.', '', $tab );
+		
+		if ( file_exists( dirname(__FILE__) . "/views/tools/$tab.php" ) ) {
+			include dirname( __FILE__ ) . "/views/tools/$tab.php";
+		} else {
+			do_action( 'it_exchange_print_tools_page', $tab );
+		}
+	}
+
+	/**
+	 * Print the tools tabs.
+	 * 
+	 * @since 1.36
+	 */
+	public function print_tools_tab() {
+
+		if ( empty( $_GET['tab'] ) ) {
+			$tab = 'sysinfo';
+		} else {
+			$tab = $_GET['tab'];
+		}
+		?>
+
+		<h2 class="nav-tab-wrapper">
+			<?php do_action( 'it_exchange_print_tools_tab_links', $tab ); ?>
+		</h2>
+
+		<?php
+	}
+
+	/**
+	 * Print the system info tab.
+	 * 
+	 * @since 1.36
+	 * 
+	 * @param string $current_tab
+	 */
+	public function sysinfo_tab( $current_tab ) {
+
+		$active = 'sysinfo' == $current_tab ? 'nav-tab-active' : '';
+		?>
+		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-tools&tab=sysinfo' ); ?>">
+			<?php _e( 'System Info', 'it-l10n-ithemes-exchange' ); ?>
+		</a>
+		<?php
+	}
+
+	/**
+	 * Print the upgrades tab.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $current_tab
+	 */
+	public function upgrades_tab( $current_tab ) {
+
+		$active = 'upgrades' == $current_tab ? 'nav-tab-active' : '';
+		?>
+		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-tools&tab=upgrades' ); ?>">
+			<?php _e( 'Upgrades', 'it-l10n-ithemes-exchange' ); ?>
+		</a>
+		<?php
 	}
 
 	/**

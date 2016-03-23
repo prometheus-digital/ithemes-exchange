@@ -1886,26 +1886,32 @@ function it_exchange_get_system_info() {
 		$info['Active Plugins'][ $plugin['Name'] ] = $plugin['Version'];
 	}
 
-	$plugins        = wp_get_active_network_plugins();
-	$active_plugins = get_site_option( 'active_sitewide_plugins', array() );
+	foreach ( get_mu_plugins() as $plugin ) {
+		$info['MU Plugins'][ $plugin['Name'] ] = $plugin['Version'];
+	}
 
-	foreach( $plugins as $plugin_path ) {
+	if ( is_multisite() ) {
+		$plugins        = wp_get_active_network_plugins();
+		$active_plugins = get_site_option( 'active_sitewide_plugins', array() );
 
-		$plugin_base = plugin_basename( $plugin_path );
+		foreach ( $plugins as $plugin_path ) {
 
-		if ( ! array_key_exists( $plugin_base, $active_plugins ) ) {
-			continue;
+			$plugin_base = plugin_basename( $plugin_path );
+
+			if ( ! array_key_exists( $plugin_base, $active_plugins ) ) {
+				continue;
+			}
+
+			$plugin = get_plugin_data( $plugin_path );
+
+			$info['Network Active Plugins'][ $plugin['Name'] ] = $plugin['Version'];
 		}
-
-		$plugin = get_plugin_data( $plugin_path );
-
-		$info['Network Active Plugins'][ $plugin['Name'] ] = $plugin['Version'];
 	}
 
 	$info['Webserver Configuration'] = array(
 		'PHP Version'       => PHP_VERSION,
 		'MySQL Version'     => $wpdb->db_version(),
-		'Use MySQLi'        => $wpdb->use_mysqli,
+		'Use MySQLi'        => $wpdb->use_mysqli ? 'Yes' : 'No',
 		'Webserver Info'    => $_SERVER['SERVER_SOFTWARE'],
 		'Host'              => it_exchange_get_host()
 	);
@@ -1968,7 +1974,7 @@ function it_exchange_get_host() {
 		$host = 'Flywheel';
 	} else {
 		// Adding a general fallback for data gathering
-		$host = 'DBH: ' . DB_HOST . ', SRV: ' . $_SERVER['SERVER_NAME'];
+		$host = 'DBH/' . DB_HOST . ', SRV/' . $_SERVER['SERVER_NAME'];
 	}
 	
 	return $host;
