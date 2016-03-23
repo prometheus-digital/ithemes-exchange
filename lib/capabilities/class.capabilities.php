@@ -40,6 +40,9 @@ class IT_Exchange_Capabilities {
 			case 'create_it_coupons':
 				$caps = array( 'edit_it_coupons' );
 				break;
+			case 'create_it_products':
+				$caps = array( 'edit_it_products' );
+				break;
 		}
 
 		return $caps;
