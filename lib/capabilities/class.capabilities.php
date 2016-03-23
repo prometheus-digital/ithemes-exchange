@@ -36,7 +36,11 @@ class IT_Exchange_Capabilities {
 	 */
 	public function map_meta_cap( $caps, $cap, $user_id, $args ) {
 
-		// no need for anything yet
+		switch ( $cap ) {
+			case 'create_it_coupons':
+				$caps = array( 'edit_it_coupons' );
+				break;
+		}
 
 		return $caps;
 	}
@@ -65,9 +69,9 @@ class IT_Exchange_Capabilities {
 
 	/**
 	 * Get capabilities for the coupon post type.
-	 * 
+	 *
 	 * @since 1.36
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_caps_for_coupons() {
@@ -85,9 +89,6 @@ class IT_Exchange_Capabilities {
 	 */
 	public function get_post_type_caps_for( $type ) {
 		return array(
-			"edit_{$type}",
-			"read_{$type}",
-			"delete_{$type}",
 			"edit_{$type}s",
 			"edit_others_{$type}s",
 			"publish_{$type}s",
