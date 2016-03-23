@@ -19,7 +19,7 @@ $sysinfo = it_exchange_get_system_info();
 	</label>
 
 	<p class="description" style="padding: 20px 0 5px">
-		<?php _e( 'Please copy and paste the following information in your ticket when contacting support.', 'it-l10n-ithemes-exchange' ); ?>
+		<?php _e( 'Please include the following information in your ticket when contacting support.', 'it-l10n-ithemes-exchange' ); ?>
 	</p>
 
 <textarea readonly id="system-info">
