@@ -108,13 +108,7 @@ class IT_Exchange_Transaction {
 
 		// Set the transaction method
 		$this->set_transaction_method();
-
-		// Set the transaction data
-		if ( did_action( 'init' ) ) {
-			$this->set_transaction_supports_and_data();
-		} else {
-			add_action( 'init', array( $this, 'set_transaction_supports_and_data' ) );
-		}
+		$this->set_transaction_supports_and_data();
 	}
 
 	/**
