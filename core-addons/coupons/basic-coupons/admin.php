@@ -81,6 +81,13 @@ function it_exchange_basic_coupons_save_coupon() {
 
 	$data = ITForm::get_post_data();
 
+	if ( ! current_user_can( 'edit_it_coupon', empty( $data['ID'] ) ? null : $data['ID'] ) ) {
+
+		it_exchange_add_message( 'error', __( "You don't have permission to edit this coupon.", 'it-l10n-ithemes-exchange' ) );
+
+		return;
+	}
+
 	if ( ! it_exchange_basic_coupons_data_is_valid() )
 		return;
 
@@ -237,6 +244,11 @@ function it_exchange_basic_coupons_redirect_core_add_edit_screens() {
 
 	// Redirect for add new screen
 	if ( 'post-new.php' == $pagenow && 'it_exchange_coupon' == $post_type ) {
+
+		if ( ! current_user_can( 'create_it_coupons' ) ) {
+			wp_die( __( "You don't have permission to create coupons.", 'it-l10n-ithemes-exchange' ) );
+		}
+
 		wp_safe_redirect( add_query_arg( array( 'page' => 'it-exchange-add-basic-coupon' ), get_admin_url() . 'admin.php' ) );
 		die();
 	}
@@ -248,12 +260,39 @@ function it_exchange_basic_coupons_redirect_core_add_edit_screens() {
 	$coupon = it_exchange_get_coupon( $post_id );
 	if ( 'post.php' == $pagenow ) {
 		if ( $post_id && $coupon ) {
+
+			if ( ! current_user_can( 'edit_it_coupon', $post_id ) ) {
+				wp_die( __( "You don't have permission to edit this coupon.", 'it-l10n-ithemes-exchange' ) );
+			}
+
 			wp_safe_redirect( add_query_arg( array( 'page' => 'it-exchange-edit-basic-coupon', 'post' => $post_id ), get_admin_url() . 'admin.php' ) );
 			die();
 		}
 	}
 }
 add_action( 'admin_init', 'it_exchange_basic_coupons_redirect_core_add_edit_screens' );
+
+/**
+ * Perform a permissions check on the edit coupons page.
+ *
+ * @since 1.36
+ */
+function it_exchange_basic_coupons_permissions_check() {
+
+	if ( empty( $_GET['page'] ) || $_GET['page'] != 'it-exchange-edit-basic-coupon' ) {
+		return;
+	}
+	
+	if ( empty( $_GET['post'] ) && ! current_user_can( 'create_it_coupons' ) ) {
+		wp_die( __( "You don't have permission to create coupons.", 'it-l10n-ithemes-exchange' ) );
+	}
+	
+	if ( ! empty( $_GET['post'] ) && ! current_user_can( 'edit_it_coupon', $_GET['post'] ) ) {
+		wp_die( __( "You don't have permission to edit this coupon.", 'it-l10n-ithemes-exchange' ) );
+	}
+}
+
+add_action( 'admin_init', 'it_exchange_basic_coupons_permissions_check' );
 
 /**
  * Prints the add coupon screen

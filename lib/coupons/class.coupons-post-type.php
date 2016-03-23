@@ -73,14 +73,9 @@ class IT_Exchange_Coupon_Post_Type {
 				'comments',
 				'revisions',
 				'post-formats',
-			), // We're going to build our own add / edit screen
-			'capabilities'         => array(
-				'edit_posts'        => 'edit_posts',
-				'edit_others_posts' => 'edit_others_posts',
-				'publish_posts'     => 'publish_posts',
 			),
 			'map_meta_cap'         => true,
-			'capability_type'      => 'post',
+			'capability_type'      => IT_Exchange_Capabilities::COUPON,
 		);
 
 		add_action( 'init', array( $this, 'register_the_post_type' ) );

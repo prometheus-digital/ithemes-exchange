@@ -13,6 +13,33 @@ class IT_Exchange_Capabilities {
 
 	const PRODUCT = 'it_product';
 	const TRANSACTION = 'it_transaction';
+	const COUPON = 'it_coupon';
+
+	/**
+	 * IT_Exchange_Capabilities constructor.
+	 */
+	public function __construct() {
+		add_filter( 'map_meta_cap', array( $this, 'map_meta_cap' ), 10, 4 );
+	}
+
+	/**
+	 * Map meta capabilities.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array  $caps
+	 * @param string $cap
+	 * @param int    $user_id
+	 * @param array  $args
+	 *
+	 * @return array
+	 */
+	public function map_meta_cap( $caps, $cap, $user_id, $args ) {
+
+		// no need for anything yet
+
+		return $caps;
+	}
 
 	/**
 	 * Get capabilities for the product post type.
@@ -27,13 +54,24 @@ class IT_Exchange_Capabilities {
 
 	/**
 	 * Get capabilities for the transaction post type.
+	 *
+	 * @since 1.36
+	 *
+	 * @return array
+	 */
+	public function get_caps_for_transaction() {
+		return $this->get_post_type_caps_for( self::TRANSACTION );
+	}
+
+	/**
+	 * Get capabilities for the coupon post type.
 	 * 
 	 * @since 1.36
 	 * 
 	 * @return array
 	 */
-	public function get_caps_for_transaction() {
-		return $this->get_post_type_caps_for( self::TRANSACTION );
+	public function get_caps_for_coupons() {
+		return $this->get_post_type_caps_for( self::COUPON );
 	}
 
 	/**
