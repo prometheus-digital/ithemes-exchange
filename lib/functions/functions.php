@@ -1773,3 +1773,203 @@ function it_exchange_deprecated_filter( $filter, $version, $replacement = null )
 		}
 	}
 }
+
+/**
+ * Get System Info.
+ * 
+ * @since 1.36
+ * 
+ * @return array
+ */
+function it_exchange_get_system_info() {
+
+	/** @var $wpdb wpdb */
+	global $wpdb;
+
+	/** @var $IT_Exchange IT_Exchange */
+	global $IT_Exchange;
+
+	$info = array();
+
+	$info['Site Info'] = array(
+		'Site URL'  => site_url(),
+		'Home URL'  => home_url(),
+		'Multisite' => is_multisite() ? 'Yes' : 'No'
+	);
+
+	$wp_config =  array(
+		'Version'       => get_bloginfo( 'version' ),
+		'Language'      => defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US',
+		'Permalink'     => get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default',
+		'Theme'         => wp_get_theme()->Name . ' ' . wp_get_theme()->Version,
+		'Show on Front' => get_option( 'show_on_front' )
+	);
+
+	if ( get_option( 'show_on_front' ) == 'page' ) {
+		$front_page_id  = get_option( 'page_on_front' );
+		$blog_page_id   = get_option( 'page_for_posts' );
+
+		$wp_config['Page On Front'] = $front_page_id ? get_the_title( $front_page_id ) . " (#$front_page_id)" : 'Unset';
+		$wp_config['Page For Posts'] = $blog_page_id ? get_the_title( $blog_page_id ) . " (#$blog_page_id)" : 'Unset';
+	}
+
+	$wp_config['ABSPATH']       = ABSPATH;
+	$wp_config['Table Prefix']  = 'Length: ' . strlen( $wpdb->prefix ) . ' Status: ' . ( strlen( $wpdb->prefix ) > 16 ? 'Too long' : 'Acceptable' );
+	$wp_config['WP_DEBUG']      = defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled' : 'Disabled' : 'Not set';
+	$wp_config['WP_DEBUG_LOG']  = defined( 'WP_DEBUG_LOG' ) ? WP_DEBUG_LOG ? 'Enabled' : 'Disabled' : 'Not set';
+	$wp_config['SCRIPT_DEBUG']  = defined( 'SCRIPT_DEBUG' ) ? SCRIPT_DEBUG ? 'Enabled' : 'Disabled' : 'Not set';
+	$wp_config['Object Cache']  = wp_using_ext_object_cache() ? 'Yes' : 'No';
+	$wp_config['Memory Limit']  = WP_MEMORY_LIMIT;
+	$info['WordPress Configuration'] = $wp_config;
+
+	$versions = get_option( 'it-exchange-versions' );
+	$settings = it_exchange_get_option( 'settings_general' );
+
+	$upgrader = it_exchange_make_upgrader();
+	$completed = array();
+
+	foreach ( $upgrader->get_upgrades() as $upgrade ) {
+		if ( $upgrader->is_upgrade_completed( $upgrade ) ) {
+			$completed[] = $upgrade->get_name();
+		}
+	}
+
+	$addons = array();
+
+	foreach ( it_exchange_get_enabled_addons() as $addon ) {
+		$addons[] = $addon['name'];
+	}
+
+	$info['iThemes Exchange'] = array(
+		'Version'               => $IT_Exchange->_version,
+		'Previous'              => empty( $versions ) || empty( $versions['previous'] ) ? '' : $versions['previous'],
+		'Currency Code'         => $settings['default-currency'],
+		'Currency Symbol'       => it_exchange_get_currency_symbol( $settings['default-currency'] ),
+		'Currency Position'     => ucfirst( $settings['currency-symbol-position'] ),
+		'Thousands Separator'   => $settings['currency-thousands-separator'],
+		'Decimals Separator'    => $settings['currency-decimals-separator'],
+		'Registration'          => $settings['site-registration'] == 'it' ? 'Exchange' : 'WordPress',
+		'Completed Upgrades'    => implode( ', ', $completed ),
+		'Add-ons'               => implode( ', ', $addons )
+	);
+
+	$pages = it_exchange_get_pages();
+
+	$info['Pages']['Compat Mode'] = it_exchange_is_pages_compat_mode() ? 'Yes' : 'No';
+
+	foreach ( $pages as $page => $data ) {
+
+		if ( $data['type'] == 'wordpress' ) {
+			$detail = "WordPress (#{$data['wpid']})";
+		} elseif ( $data['type'] == 'exchange' ) {
+			$detail = 'Exchange';
+		} elseif ( $data['type'] == 'disabled' ) {
+			$detail = 'Disabled';
+		} else {
+			$detail = '';
+		}
+
+		if ( $detail ) {
+			$info['Pages'][ $page ] = $detail;
+		}
+	}
+
+	$plugins        = get_plugins();
+	$active_plugins = get_option( 'active_plugins', array() );
+
+	foreach ( $plugins as $plugin_path => $plugin ) {
+
+		if ( ! in_array( $plugin_path, $active_plugins ) ) {
+			continue;
+		}
+
+		$info['Active Plugins'][ $plugin['Name'] ] = $plugin['Version'];
+	}
+
+	$plugins        = wp_get_active_network_plugins();
+	$active_plugins = get_site_option( 'active_sitewide_plugins', array() );
+
+	foreach( $plugins as $plugin_path ) {
+
+		$plugin_base = plugin_basename( $plugin_path );
+
+		if ( ! array_key_exists( $plugin_base, $active_plugins ) ) {
+			continue;
+		}
+
+		$plugin = get_plugin_data( $plugin_path );
+
+		$info['Network Active Plugins'][ $plugin['Name'] ] = $plugin['Version'];
+	}
+
+	$info['Webserver Configuration'] = array(
+		'PHP Version'       => PHP_VERSION,
+		'MySQL Version'     => $wpdb->db_version(),
+		'Use MySQLi'        => $wpdb->use_mysqli,
+		'Webserver Info'    => $_SERVER['SERVER_SOFTWARE'],
+		'Host'              => it_exchange_get_host()
+	);
+	
+	$info['PHP Configuration'] = array(
+		'Safe Mode'             => ini_get( 'safe_mode' ) ? 'Enabled' : 'Disabled',
+		'Memory Limit'          => ini_get( 'memory_limit' ),
+		'Upload Max Size'       => ini_get( 'upload_max_filesize' ),
+		'Post Max Size'         => ini_get( 'post_max_size' ),
+		'Upload Max Filesize'   => ini_get( 'upload_max_filesize' ),
+		'Time Limit'            => ini_get( 'max_execution_time' ),
+		'Max Input Vars'        => ini_get( 'max_input_vars' ),
+		'Display Errors'        => ini_get( 'display_errors' ) ? 'On (' . ini_get( 'display_errors' ) . ')' : 'N/A'
+	);
+
+	$info['PHP Extensions'] = array(
+		'cURL'          => function_exists( 'curl_init' ) ? 'Supported' : 'Not Supported',
+		'fsockopen'     => function_exists( 'fsockopen' ) ? 'Supported' : 'Not Supported',
+		'SOAP Client'   => class_exists( 'SoapClient' ) ? 'Installed' : 'Not Installed',
+		'Suhosin'       => extension_loaded( 'suhosin' ) ? 'Installed' : 'Not Installed'
+	);
+
+	return $info;
+}
+
+/**
+ * Get user host
+ *
+ * Returns the webhost this site is using if possible.
+ * 
+ * Credit goes to Easy Digital Downloads
+ *
+ * @since 1.36
+ *        
+ * @return string
+ */
+function it_exchange_get_host() {
+	
+	if ( defined( 'WPE_APIKEY' ) ) {
+		$host = 'WP Engine';
+	} elseif ( defined( 'PAGELYBIN' ) ) {
+		$host = 'Pagely';
+	} elseif ( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
+		$host = 'ICDSoft';
+	} elseif ( DB_HOST == 'mysqlv5' ) {
+		$host = 'NetworkSolutions';
+	} elseif ( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
+		$host = 'iPage';
+	} elseif ( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
+		$host = 'IPower';
+	} elseif ( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
+		$host = 'MediaTemple Grid';
+	} elseif ( strpos( DB_HOST, '.pair.com' ) !== false ) {
+		$host = 'pair Networks';
+	} elseif ( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
+		$host = 'Rackspace Cloud';
+	} elseif ( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
+		$host = 'SysFix.eu Power Hosting';
+	} elseif ( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
+		$host = 'Flywheel';
+	} else {
+		// Adding a general fallback for data gathering
+		$host = 'DBH: ' . DB_HOST . ', SRV: ' . $_SERVER['SERVER_NAME'];
+	}
+	
+	return $host;
+}
