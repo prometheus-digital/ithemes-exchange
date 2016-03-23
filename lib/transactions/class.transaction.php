@@ -3,99 +3,106 @@
  * This file holds the class for an iThemes Exchange Transaction
  *
  * @package IT_Exchange
- * @since 0.3.3
-*/
+ * @since   0.3.3
+ */
 
 /**
  * Merges a WP Post with iThemes Exchange Transaction data
  *
  * @since 0.3.3
-*/
+ */
 class IT_Exchange_Transaction {
 
 	// WP Post Type Properties
-	var $ID;
-	var $post_author;
-	var $post_date;
-	var $post_date_gmt;
-	var $post_content;
-	var $post_title;
-	var $post_excerpt;
-	var $post_status;
-	var $comment_status;
-	var $ping_status;
-	var $post_password;
-	var $post_name;
-	var $to_ping;
-	var $pinged;
-	var $post_modified;
-	var $post_modified_gmt;
-	var $post_content_filtered;
-	var $post_parent;
-	var $guid;
-	var $menu_order;
-	var $post_type;
-	var $post_mime_type;
-	var $comment_count;
+	public $ID;
+	public $post_author;
+	public $post_date;
+	public $post_date_gmt;
+	public $post_content;
+	public $post_title;
+	public $post_excerpt;
+	public $post_status;
+	public $comment_status;
+	public $ping_status;
+	public $post_password;
+	public $post_name;
+	public $to_ping;
+	public $pinged;
+	public $post_modified;
+	public $post_modified_gmt;
+	public $post_content_filtered;
+	public $post_parent;
+	public $guid;
+	public $menu_order;
+	public $post_type;
+	public $post_mime_type;
+	public $comment_count;
 
 	/**
 	 * @param string $transaction_method The transaction method for this transaction
+	 *
 	 * @since 0.3.3
-	*/
-	var $transaction_method;
-
+	 */
+	public $transaction_method;
 
 	/**
 	 * @param array $transaction_supports what features does this transaction support
+	 *
 	 * @since 0.3.3
-	*/
-	var $transaction_supports;
+	 */
+	public $transaction_supports;
 
 	/**
-	 * @param array $transaction_data  any custom data registered by the transaction-method for this transaction
+	 * @param array $transaction_data any custom data registered by the transaction-method for this transaction
+	 *
 	 * @since 0.3.3
-	*/
-	var $transaction_data = array();
+	 */
+	public $transaction_data = array();
 
 	/**
 	 * @var string
 	 */
-	var $status;
+	public $status;
 
 	/**
 	 * @var object
 	 * @internal
 	 */
-	var $cart_details;
+	public $cart_details;
 
 	/**
 	 * Constructor. Loads post data and transaction data
 	 *
 	 * @since 0.3.3
-	 * @param mixed $post  wp post id or post object. optional.
+	 *
+	 * @param mixed $post wp post id or post object. optional.
 	 *
 	 * @throws Exception
-	*/
-	function __construct( $post=false ) {
+	 */
+	public function __construct( $post = false ) {
 
 		// If not an object, try to grab the WP object
-		if ( ! is_object( $post ) )
+		if ( ! is_object( $post ) ) {
 			$post = get_post( (int) $post );
+		}
 
 		// Ensure that $post is a WP_Post object
-		if ( is_object( $post ) && ! $post instanceof WP_Post )
+		if ( is_object( $post ) && ! $post instanceof WP_Post ) {
 			$post = false;
+		}
 
 		// Ensure this is a transaction post type
-		if ( 'it_exchange_tran' != get_post_type( $post ) )
+		if ( 'it_exchange_tran' != get_post_type( $post ) ) {
 			$post = false;
+		}
 
 		// Return a WP Error if we don't have the $post object by this point
-		if ( ! $post )
+		if ( ! $post ) {
 			throw new Exception( __( 'The IT_Exchange_Transaction class must have a WP post object or ID passed to its constructor', 'it-l10n-ithemes-exchange' ) );
+		}
 
 		// Grab the $post object vars and populate this objects vars
-		foreach( (array) get_object_vars( $post ) as $var => $value ) {
+		foreach ( (array) get_object_vars( $post ) as $var => $value ) {
 			$this->$var = $value;
 		}
 
@@ -103,18 +110,11 @@ class IT_Exchange_Transaction {
 		$this->set_transaction_method();
 
 		// Set the transaction data
-		if ( did_action( 'init' ) )
+		if ( did_action( 'init' ) ) {
 			$this->set_transaction_supports_and_data();
-		else
+		} else {
 			add_action( 'init', array( $this, 'set_transaction_supports_and_data' ) );
-
-
-		// Set supports for new and edit screens
-		if ( did_action( 'admin_init' ) )
-			$this->set_add_edit_screen_supports();
-		else
-			add_action( 'admin_init', array( $this, 'set_add_edit_screen_supports' ) );
-
+		}
 	}
 
 	/**
@@ -138,12 +138,13 @@ class IT_Exchange_Transaction {
 	 * If the custom value is not set and we're on post-add.php, check for a URL param
 	 *
 	 * @since 0.3.3
-	*/
+	 */
 	function set_transaction_method() {
 		global $pagenow;
 		if ( ! $transaction_method = get_post_meta( $this->ID, '_it_exchange_transaction_method', true ) ) {
-			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['transaction-method'] ) )
+			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['transaction-method'] ) ) {
 				$transaction_method = $_GET['transaction-method'];
+			}
 		}
 		$this->transaction_method = $transaction_method;
 	}
@@ -155,7 +156,7 @@ class IT_Exchange_Transaction {
 	 * If the custom value is not set and we're on post-add.php, check for a URL param
 	 *
 	 * @since 0.4.0
-	*/
+	 */
 	function get_status() {
 		return get_post_meta( $this->ID, '_it_exchange_transaction_status', true );
 	}
@@ -167,7 +168,7 @@ class IT_Exchange_Transaction {
 	 * If the custom value is not set and we're on post-add.php, check for a URL param
 	 *
 	 * @since 0.4.0
-	*/
+	 */
 	function update_status( $new_status ) {
 		update_post_meta( $this->ID, '_it_exchange_transaction_status', $new_status );
 		$this->status = $new_status;
@@ -212,7 +213,7 @@ class IT_Exchange_Transaction {
 	 *
 	 * @return int|bool Meta ID on new, true on update, false on fail.
 	 */
-	public function update_meta($key, $value) {
+	public function update_meta( $key, $value ) {
 		update_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $value );
 	}
 
@@ -222,7 +223,7 @@ class IT_Exchange_Transaction {
 	 * @since 1.35
 	 *
 	 * @param string $key
-	 * @param mixed $value
+	 * @param mixed  $value
 	 *
 	 * @return bool
 	 */
@@ -250,7 +251,7 @@ class IT_Exchange_Transaction {
 	 * If the custom value is not set and we're on post-add.php, check for a URL param
 	 *
 	 * @since 1.3.0
-	*/
+	 */
 	function get_transaction_meta( $key, $single = true ) {
 		return $this->get_meta( $key, $single );
 	}
@@ -262,7 +263,7 @@ class IT_Exchange_Transaction {
 	 * If the custom value is not set and we're on post-add.php, check for a URL param
 	 *
 	 * @since 1.3.0
-	*/
+	 */
 	function update_transaction_meta( $key, $value ) {
 		$this->update_meta( $key, $value );
 	}
@@ -274,7 +275,7 @@ class IT_Exchange_Transaction {
 	 * If the custom value is not set and we're on post-add.php, check for a URL param
 	 *
 	 * @since 1.3.0
-	*/
+	 */
 	function delete_transaction_meta( $key, $value = '' ) {
 		$this->delete_meta( $key, $value );
 	}
@@ -298,10 +299,11 @@ class IT_Exchange_Transaction {
 	 * @param bool $gmt
 	 *
 	 * @return string
-	*/
-	function get_date( $gmt=false ) {
-		if ( $gmt )
+	 */
+	function get_date( $gmt = false ) {
+		if ( $gmt ) {
 			return $this->post_date_gmt;
+		}
 
 		return $this->post_date;
 	}
@@ -312,7 +314,7 @@ class IT_Exchange_Transaction {
 	 * @since 0.4.0
 	 *
 	 * @return string
-	*/
+	 */
 	function get_subtotal() {
 
 		if ( isset( $this->cart_details->sub_total ) ) {
@@ -321,9 +323,10 @@ class IT_Exchange_Transaction {
 
 		$products = $this->get_products();
 		$subtotal = 0;
-		foreach( (array) $products as $key => $data ) {
+		foreach ( (array) $products as $key => $data ) {
 			$subtotal += $data['product_subtotal'];
 		}
+
 		return empty( $subtotal ) ? false : $subtotal;
 	}
 
@@ -333,13 +336,15 @@ class IT_Exchange_Transaction {
 	 * @since 0.4.0
 	 *
 	 * @param boolean $without_refunds if true, the original total before refunds will be given
+	 *
 	 * @return string
-	*/
-	function get_total( $subtract_refunds=true ) {
+	 */
+	function get_total( $subtract_refunds = true ) {
 		$total = empty( $this->cart_details->total ) ? false : $this->cart_details->total;
 
-		if ( $total && $subtract_refunds && $refunds_total = it_exchange_get_transaction_refunds_total( $this->ID, false ) )
+		if ( $total && $subtract_refunds && $refunds_total = it_exchange_get_transaction_refunds_total( $this->ID, false ) ) {
 			$total = $total - $refunds_total;
+		}
 
 		return apply_filters( 'it_exchange_get_transaction_total', $total, $this->ID );
 	}
@@ -349,10 +354,11 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 0.4.0
 	 * @return string
-	*/
+	 */
 	function get_currency() {
-		$settings = it_exchange_get_option( 'settings_general' );
+		$settings         = it_exchange_get_option( 'settings_general' );
 		$default_currency = $settings['default-currency'];
+
 		return empty( $this->cart_details->currency ) ? $default_currency : $this->cart_details->currency;
 	}
 
@@ -361,7 +367,7 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 0.4.0
 	 * @return string
-	*/
+	 */
 	function get_description() {
 		if ( ! empty( $this->cart_details->description ) && trim( $this->cart_details->description ) !== '' ) {
 			return $this->cart_details->description;
@@ -384,7 +390,7 @@ class IT_Exchange_Transaction {
 	 * @since 0.4.0
 	 *
 	 * @return string
-	*/
+	 */
 	function get_coupons() {
 		return empty( $this->cart_details->coupons ) ? false : $this->cart_details->coupons;
 	}
@@ -395,7 +401,7 @@ class IT_Exchange_Transaction {
 	 * @since 0.4.0
 	 *
 	 * @return string
-	*/
+	 */
 	function get_coupons_total_discount() {
 		return empty( $this->cart_details->coupons_total_discount ) ? false : $this->cart_details->coupons_total_discount;
 	}
@@ -406,9 +412,10 @@ class IT_Exchange_Transaction {
 	 * @since 0.4.0
 	 *
 	 * @return array
-	*/
+	 */
 	function get_products() {
 		$products = empty( $this->cart_details->products ) ? array() : $this->cart_details->products;
+
 		return apply_filters( 'it_exchange_get_transaction_products', $products, $this );
 	}
 
@@ -417,10 +424,10 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param string $refund Amount
-	 * @param string $date Date refund occurred. In mysql format.
+	 * @param string $refund  Amount
+	 * @param string $date    Date refund occurred. In mysql format.
 	 * @param array  $options Additional refund options.
-	*/
+	 */
 	function add_refund( $refund, $date = '', $options = array() ) {
 		$date = empty( $date ) ? date_i18n( 'Y-m-d H:i:s' ) : $date;
 		$args = array(
@@ -436,7 +443,7 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 1.3.0
 	 * @return bool
-	*/
+	 */
 	function has_refunds() {
 		return (bool) get_post_meta( $this->ID, '_it_exchange_transaction_refunds' );
 	}
@@ -445,7 +452,7 @@ class IT_Exchange_Transaction {
 	 * Get the transaction refunds.
 	 *
 	 * @since 0.4.0
-	*/
+	 */
 	function get_transaction_refunds() {
 		return get_post_meta( $this->ID, '_it_exchange_transaction_refunds' );
 	}
@@ -455,7 +462,7 @@ class IT_Exchange_Transaction {
 	 *
 	 * @ since 0.3.2
 	 * @return void
-	*/
+	 */
 	function set_transaction_supports_and_data() {
 
 		// Set status
@@ -481,14 +488,15 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 1.3.0
 	 * @return bool
-	*/
-	function has_children( $args=array() ) {
+	 */
+	function has_children( $args = array() ) {
 		$defaults = array(
 			'post_parent' => $this->ID,
 			'post_type'   => 'it_exchange_tran',
 			'numberposts' => 1
 		);
-		$args = wp_parse_args( $args, $defaults );
+		$args     = wp_parse_args( $args, $defaults );
+
 		return (bool) get_children( $args );
 	}
 
@@ -498,13 +506,13 @@ class IT_Exchange_Transaction {
 	 * @since 1.3.0
 	 *
 	 * @return WP_Post[]
-	*/
-	function get_children( $args=array() ) {
+	 */
+	function get_children( $args = array() ) {
 		$defaults = array(
 			'post_parent' => $this->ID,
 			'post_type'   => 'it_exchange_tran',
 		);
-		$args = wp_parse_args( $args, $defaults );
+		$args     = wp_parse_args( $args, $defaults );
 
 		return get_children( $args );
 	}
@@ -514,7 +522,7 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 0.4.0
 	 * @return mixed
-	*/
+	 */
 	function get_gateway_id_for_transaction() {
 		return empty( $this->gateway_id_for_transaction ) ? false : $this->gateway_id_for_transaction;
 	}
@@ -523,29 +531,10 @@ class IT_Exchange_Transaction {
 	 * Sets the supports array for the post_type.
 	 *
 	 * @since 0.3.3
-	*/
+	 *
+	 * @deprecated
+	 */
 	function set_add_edit_screen_supports() {
-		global $pagenow;
-		$supports = array(
-			'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields',
-			'comments', 'revisions', 'post-formats',
-		);
-
-		// If is_admin and is post-new.php or post.php, only register supports for current transaction-method
-		if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow )
-			return; // Don't remove any if not on post-new / or post.php
-
-		if ( $addon = it_exchange_get_addon( $this->transaction_method ) ) {
-			// Remove any supports args that the transaction add-on does not want.
-			foreach( $supports as $option ) {
-				if ( empty( $addon['options']['supports'][$option] ) )
-					remove_post_type_support( 'it_exchange_tran', $option );
-			}
-		} else {
-			// Can't find the transaction - remove everything
-			foreach( $supports as $option ) {
-				remove_post_type_support( 'it_exchange_tran', $option );
-			}
-		}
+		_deprecated_function( __METHOD__, '1.36' );
 	}
 }

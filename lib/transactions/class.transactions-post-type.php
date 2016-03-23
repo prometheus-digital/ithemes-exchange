@@ -63,7 +63,7 @@ class IT_Exchange_Transaction_Post_Type {
 			add_action( 'wp_ajax_it-exchange-update-transaction-status', array( $this, 'ajax_update_status' ) );
 			add_action( 'wp_ajax_it-exchange-add-note', array( $this, 'ajax_add_note' ) );
 			add_action( 'wp_ajax_it-exchange-remove-activity', array( $this, 'ajax_remove_activity' ) );
-			add_filter( 'heartbeat_received', array( $this, 'activity_heartbeat' ), 10, 2);
+			add_filter( 'heartbeat_received', array( $this, 'activity_heartbeat' ), 10, 2 );
 		}
 	}
 
@@ -471,11 +471,45 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return void
 	 */
 	public function modify_post_type_features() {
+	
+		global $pagenow;
 
 		$post = empty( $_GET['post'] ) ? false : get_post( $_GET['post'] );
 
 		if ( $post && $post->post_type === 'it_exchange_tran' ) {
-			it_exchange_get_transaction( $post );
+			$transaction = it_exchange_get_transaction( $post );
+			
+			$supports = array(
+				'title',
+				'editor',
+				'author',
+				'thumbnail',
+				'excerpt',
+				'trackbacks',
+				'custom-fields',
+				'comments',
+				'revisions',
+				'post-formats',
+			);
+	
+			// If is_admin and is post-new.php or post.php, only register supports for current transaction-method
+			if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow ) {
+				return;
+			} // Don't remove any if not on post-new / or post.php
+	
+			if ( $addon = it_exchange_get_addon( $transaction->transaction_method ) ) {
+				// Remove any supports args that the transaction add-on does not want.
+				foreach ( $supports as $option ) {
+					if ( empty( $addon['options']['supports'][ $option ] ) ) {
+						remove_post_type_support( 'it_exchange_tran', $option );
+					}
+				}
+			} else {
+				// Can't find the transaction - remove everything
+				foreach ( $supports as $option ) {
+					remove_post_type_support( 'it_exchange_tran', $option );
+				}
+			}
 		}
 	}
 
