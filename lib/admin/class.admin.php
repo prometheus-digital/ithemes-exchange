@@ -111,6 +111,7 @@ class IT_Exchange_Admin {
 		
 		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'sysinfo_tab' ) );
 		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'upgrades_tab' ) );
+		add_action( 'admin_init', array( $this, 'upgrades_tab_permissions_check' ) );
 
 		// Add-on Page Filters
 		add_action( 'it_exchange_print_add_ons_page_tab_links', array( $this, 'print_enabled_add_ons_tab_link' ) );
@@ -658,6 +659,10 @@ class IT_Exchange_Admin {
 	 * @param string $current_tab
 	 */
 	public function upgrades_tab( $current_tab ) {
+		
+		if ( ! current_user_can( 'it_perform_upgrades' ) ) {
+			return;
+		}
 
 		$active = 'upgrades' == $current_tab ? 'nav-tab-active' : '';
 		?>
@@ -665,6 +670,26 @@ class IT_Exchange_Admin {
 			<?php _e( 'Upgrades', 'it-l10n-ithemes-exchange' ); ?>
 		</a>
 		<?php
+	}
+
+	/**
+	 * Check if the user has permission to perform upgrades if on the upgrades tab.
+	 * 
+	 * @since 1.36
+	 */
+	public function upgrades_tab_permissions_check() {
+		
+		if ( empty( $_GET['page'] ) || $_GET['page'] !== 'it-exchange-tools' ) {
+			return;
+		}
+		
+		if ( empty( $_GET['tab'] ) || $_GET['tab'] !== 'upgrades' ) {
+			return;
+		}
+		
+		if ( ! current_user_can( 'it_perform_upgrades' ) ) {
+			wp_die( __( "You don't have permission to perform upgrades.", 'it-l10n-ithemes-exchange' ) );
+		}
 	}
 
 	/**

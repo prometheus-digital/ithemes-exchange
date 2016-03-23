@@ -61,6 +61,8 @@ class IT_Exchange_Roles {
 			$wp_roles->get_role( 'administrator' )->add_cap( $cap );
 		}
 
+		$wp_roles->get_role( 'administrator' )->add_cap( 'it_perform_upgrades' );
+
 		do_action( 'it_exchange_add_caps_to_roles', $this );
 	}
 

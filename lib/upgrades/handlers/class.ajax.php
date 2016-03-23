@@ -60,7 +60,7 @@ class IT_Exchange_Upgrade_Handler_Ajax {
 			) );
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'it_perform_upgrades' ) ) {
 			wp_send_json_error( array(
 				'message' => __( 'You don\'t have permission to do this.', 'it-l10n-ithemes-exchange' )
 			) );
@@ -124,7 +124,7 @@ class IT_Exchange_Upgrade_Handler_Ajax {
 			) );
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'it_perform_upgrades' ) ) {
 			wp_send_json_error( array(
 				'message' => __( 'You don\'t have permission to do this.', 'it-l10n-ithemes-exchange' )
 			) );
@@ -175,7 +175,7 @@ class IT_Exchange_Upgrade_Handler_Ajax {
 			) );
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'it_perform_upgrades' ) ) {
 			wp_send_json_error( array(
 				'message' => __( 'You don\'t have permission to do this.', 'it-l10n-ithemes-exchange' )
 			) );
