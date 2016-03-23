@@ -35,30 +35,15 @@ class IT_Exchange_Transaction_Post_Type {
 
 		if ( is_admin() ) {
 			add_action( 'admin_init', array( $this, 'modify_post_type_features' ) );
-			add_filter( 'manage_edit-it_exchange_tran_columns', array(
-				$this,
-				'modify_all_transactions_table_columns'
-			) );
-			add_filter( 'manage_edit-it_exchange_tran_sortable_columns', array(
-				$this,
-				'make_transaction_custom_columns_sortable'
-			) );
-			add_filter( 'manage_it_exchange_tran_posts_custom_column', array(
-				$this,
-				'add_transaction_method_info_to_view_all_table_rows'
-			) );
+			add_filter( 'manage_edit-it_exchange_tran_columns', array( $this, 'modify_all_transactions_table_columns' ) );
+			add_filter( 'manage_edit-it_exchange_tran_sortable_columns', array( $this, 'make_transaction_custom_columns_sortable' ) );
+			add_filter( 'manage_it_exchange_tran_posts_custom_column', array( $this, 'add_transaction_method_info_to_view_all_table_rows' ) );
 			add_filter( 'request', array( $this, 'modify_wp_query_request_on_edit_php' ) );
-			add_filter( 'it_exchange_transaction_metabox_callback', array(
-				$this,
-				'register_transaction_details_admin_metabox'
-			) );
+			add_filter( 'it_exchange_transaction_metabox_callback', array( $this, 'register_transaction_details_admin_metabox' ) );
 			add_filter( 'post_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
 			add_filter( 'page_row_actions', array( $this, 'rename_edit_to_details' ), 10, 2 );
 			add_filter( 'screen_layout_columns', array( $this, 'modify_details_page_layout' ) );
-			add_filter( 'get_user_option_screen_layout_it_exchange_tran', array(
-				$this,
-				'update_user_column_options'
-			) );
+			add_filter( 'get_user_option_screen_layout_it_exchange_tran', array( $this,	'update_user_column_options' ) );
 			add_filter( 'bulk_actions-edit-it_exchange_tran', array( $this, 'edit_bulk_actions' ) );
 			add_action( 'wp_ajax_it-exchange-update-transaction-status', array( $this, 'ajax_update_status' ) );
 			add_action( 'wp_ajax_it-exchange-add-note', array( $this, 'ajax_add_note' ) );
@@ -303,36 +288,7 @@ class IT_Exchange_Transaction_Post_Type {
 			unset( $existing['cb'] );
 		}
 
-		// Remove Title - adding it back below
-		if ( isset( $existing['title'] ) ) {
-			unset( $existing['title'] );
-		}
-
-		// Remove Format
-		if ( isset( $existing['format'] ) ) {
-			unset( $existing['format'] );
-		}
-
-		// Remove Author
-		if ( isset( $existing['author'] ) ) {
-			unset( $existing['author'] );
-		}
-
-		// Remove Comments
-		if ( isset( $existing['comments'] ) ) {
-			unset( $existing['comments'] );
-		}
-
-		// Remove Date
-		if ( isset( $existing['date'] ) ) {
-			unset( $existing['date'] );
-		}
-
-		// Remove Builder
-		if ( isset( $existing['builder_layout'] ) ) {
-			unset( $existing['builder_layout'] );
-		}
-
+		unset( $existing['title'], $existing['format'], $existing['author'], $existing['comments'], $existing['date'], $existing['builder_layout'] );
 
 		// All Core should be removed at this point. Build ours back (including date from core)
 		$exchange_columns = array(
@@ -375,6 +331,7 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return array  modified sortable columnns
 	 */
 	public function make_transaction_custom_columns_sortable( $sortables ) {
+
 		$sortables['it_exchange_transaction_date_column']   = 'date';
 		$sortables['it_exchange_transaction_method_column'] = 'it_exchange_transaction_method_column';
 
@@ -387,13 +344,14 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @since 0.3.3
 	 *
 	 * @param string  $column column title
-	 * @param integer $post   post ID
 	 *
 	 * @return void
 	 */
 	function add_transaction_method_info_to_view_all_table_rows( $column ) {
 		global $post;
+
 		$transaction = it_exchange_get_transaction( $post );
+
 		switch ( $column ) {
 			case 'it_exchange_transaction_method_column' :
 				$method_name = esc_attr( it_exchange_get_transaction_method_name( $transaction ) );
@@ -442,22 +400,19 @@ class IT_Exchange_Transaction_Post_Type {
 	function modify_wp_query_request_on_edit_php( $request ) {
 		global $hook_suffix;
 
-		if ( 'edit.php' === $hook_suffix ) {
-			if ( 'it_exchange_tran' === $request['post_type'] && isset( $request['orderby'] ) ) {
-
-				switch ( $request['orderby'] ) {
-					case 'title':
-						$request['orderby'] = 'ID';
-						break;
-					case 'it_exchange_transaction_status_column':
-						$request['orderby']  = 'meta_value';
-						$request['meta_key'] = '_it_exchange_transaction_status';
-						break;
-					case 'it_exchange_transaction_method_column':
-						$request['orderby']  = 'meta_value';
-						$request['meta_key'] = '_it_exchange_transaction_method';
-						break;
-				}
+		if ( 'edit.php' === $hook_suffix && 'it_exchange_tran' === $request['post_type'] && isset( $request['orderby'] ) ) {
+			switch ( $request['orderby'] ) {
+				case 'title':
+					$request['orderby'] = 'ID';
+					break;
+				case 'it_exchange_transaction_status_column':
+					$request['orderby']  = 'meta_value';
+					$request['meta_key'] = '_it_exchange_transaction_status';
+					break;
+				case 'it_exchange_transaction_method_column':
+					$request['orderby']  = 'meta_value';
+					$request['meta_key'] = '_it_exchange_transaction_method';
+					break;
 			}
 		}
 
