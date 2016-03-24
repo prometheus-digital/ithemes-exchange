@@ -522,7 +522,7 @@ function it_exchange_get_gateway_id_for_transaction( $transaction ) {
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
 		return;
 
-	$gateway_transaction_id = $transaction->get_gateway_id_for_transaction();
+	$gateway_transaction_id = $transaction->get_method_id();
 	return apply_filters( 'it_exchange_get_gateway_id_for_transaction', $gateway_transaction_id, $transaction );
 }
 
@@ -604,15 +604,12 @@ function it_exchange_update_transaction_status( $transaction, $status ) {
 
 	$transaction = it_exchange_get_transaction( $transaction );
 
-	if ( ! $transaction )
+	if ( ! $transaction ) {
 		return false;
+	}
 
-	$old_status         = $transaction->get_status();
-	$old_status_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction );
 	$transaction->update_status( $status );
 
-	do_action( 'it_exchange_update_transaction_status', $transaction, $old_status, $old_status_cleared, $status );
-	do_action( 'it_exchange_update_transaction_status_' . $transaction->transaction_method, $transaction, $old_status, $old_status_cleared, $status );
 	return $transaction->get_status();
 }
 
@@ -625,9 +622,10 @@ function it_exchange_update_transaction_status( $transaction, $status ) {
  * @return string the transaction status
 */
 function it_exchange_get_transaction_status( $transaction ) {
-    $transaction = it_exchange_get_transaction( $transaction );
-	$transaction_status = empty( $transaction->status ) ? false : $transaction->status;
-    return apply_filters( 'it_exchange_get_transaction_status', $transaction_status, $transaction );
+
+	$transaction = it_exchange_get_transaction( $transaction );
+
+    return apply_filters( 'it_exchange_get_transaction_status', $transaction->get_status(), $transaction );
 }
 
 /**
@@ -640,8 +638,11 @@ function it_exchange_get_transaction_status( $transaction ) {
  * @return array
 */
 function it_exchange_get_status_options_for_transaction( $transaction ) {
-	if ( ! $method = it_exchange_get_transaction_method( $transaction ) )
+
+	if ( ! $method = it_exchange_get_transaction_method( $transaction ) ) {
 		return array();
+	}
+
 	return apply_filters( 'it_exchange_get_status_options_for_' . $method . '_transaction', array(), $transaction );
 }
 
@@ -678,7 +679,7 @@ function it_exchange_get_transaction_status_label( $transaction, $options=array(
 		'status' => it_exchange_get_transaction_status( $transaction ),
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
-	return apply_filters( 'it_exchange_transaction_status_label_' . $transaction->transaction_method, $options['status'], $options );
+	return apply_filters( 'it_exchange_transaction_status_label_' . $transaction->get_method(), $options['status'], $options );
 }
 
 /**
@@ -692,7 +693,7 @@ function it_exchange_get_transaction_status_label( $transaction, $options=array(
 */
 function it_exchange_get_transaction_instructions( $transaction ){
 	$transaction = it_exchange_get_transaction( $transaction );
-	return apply_filters( 'it_exchange_transaction_instructions_' . $transaction->transaction_method, '' );
+	return apply_filters( 'it_exchange_transaction_instructions_' . $transaction->get_method(), '' );
 }
 
 /**
@@ -919,8 +920,7 @@ function it_exchange_get_transaction_description( $transaction ) {
 function it_exchange_get_transaction_customer( $transaction ) {
 
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
-		$customer = empty( $transaction->customer_id ) ? false : it_exchange_get_customer( $transaction->customer_id );
-		return apply_filters( 'it_exchange_get_transaction_customer', $customer, $transaction );
+		return $transaction->get_customer();
 	}
 
 	return apply_filters( 'it_exchange_get_transaction_customer', false, $transaction );
@@ -958,8 +958,11 @@ function it_exchange_get_transaction_customer_display_name( $transaction ) {
 function it_exchange_get_transaction_customer_id( $transaction ) {
 	$unknown = 0;
 
-	if ( $customer = it_exchange_get_transaction_customer( $transaction ) )
-		return apply_filters( 'it_exchange_get_transaction_customer_id', empty( $customer->wp_user->ID ) ? $unknown : $customer->wp_user->ID, $transaction );
+	if ( $customer = it_exchange_get_transaction_customer( $transaction ) ) {
+		$ID = empty( $customer->wp_user->ID ) ? $unknown : $customer->wp_user->ID;
+
+		return apply_filters( 'it_exchange_get_transaction_customer_id', $ID, $transaction );
+	}
 
 	return apply_filters( 'it_exchange_get_transaction_customer_id', $unknown, $transaction );
 }
@@ -976,8 +979,11 @@ function it_exchange_get_transaction_customer_id( $transaction ) {
 function it_exchange_get_transaction_customer_email( $transaction ) {
 	$unknown = __( 'Unknown', 'it-l10n-ithemes-exchange' );
 
-	if ( $customer = it_exchange_get_transaction_customer( $transaction ) )
-		return apply_filters( 'it_exchange_get_transaction_customer_email', empty( $customer->wp_user->user_email ) ? $unknown : $customer->wp_user->user_email, $transaction );
+	if ( $customer = it_exchange_get_transaction_customer( $transaction ) ) {
+		$email = empty( $customer->wp_user->user_email ) ? $unknown : $customer->wp_user->user_email;
+
+		return apply_filters( 'it_exchange_get_transaction_customer_email', $email, $transaction );
+	}
 
 	return apply_filters( 'it_exchange_get_transaction_customer_email', $unknown, $transaction );
 }
@@ -997,8 +1003,8 @@ function it_exchange_get_transaction_customer_ip_address( $transaction, $label =
 	$transaction = it_exchange_get_transaction( $transaction );
 
 	$return = $label ? __( 'IP Address: %s', 'it-l10n-ithemes-exchange' ) : '%s';
-
-	$ip = get_post_meta( $transaction->ID, '_it_exchange_customer_ip', true );
+	
+	$ip = $transaction->get_customer_ip();	
 
 	if ( ! empty( $ip ) ) {
 		return sprintf( $return, $ip );
@@ -1100,8 +1106,10 @@ function it_exchange_get_transaction_billing_address( $transaction ) {
  * @return array
 */
 function it_exchange_get_transaction_products( $transaction ) {
-	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
+
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) ) {
 		return apply_filters( 'it_exchange_get_transaction_products', array(), $transaction );
+	}
 
 	return $transaction->get_products();
 }
@@ -1117,8 +1125,13 @@ function it_exchange_get_transaction_products( $transaction ) {
  * @return object
 */
 function it_exchange_get_transaction_product( $transaction, $product_cart_id ) {
-	if ( $products = it_exchange_get_transaction_products( $transaction ) )
-		return apply_filters( 'it_exchange_get_transaction_product', empty( $products[$product_cart_id] ) ? false : $products[$product_cart_id], $transaction, $product_cart_id );
+
+	if ( $products = it_exchange_get_transaction_products( $transaction ) ) {
+
+		$product = empty( $products[ $product_cart_id ] ) ? false : $products[ $product_cart_id ];
+		
+		return apply_filters( 'it_exchange_get_transaction_product', $product, $transaction, $product_cart_id );
+	}
 
 	return apply_filters( 'it_exchange_get_transaction_product', false, $transaction, $product_cart_id );
 }

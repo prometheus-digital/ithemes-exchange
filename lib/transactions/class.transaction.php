@@ -207,12 +207,42 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param string $new_status
+	 * @param string $status
 	 */
-	public function update_status( $new_status ) {
-		update_post_meta( $this->ID, '_it_exchange_transaction_status', $new_status );
+	public function update_status( $status ) {
 
-		$this->status = $new_status;
+		$old_status   = $this->status;
+		$old_cleared  = $this->is_cleared_for_delivery();
+		$this->status = $status;
+
+		update_post_meta( $this->ID, '_it_exchange_transaction_status', $status );
+
+		/**
+		 * Fires when the transaction's status is updated.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param IT_Exchange_Transaction $this
+		 * @param string                  $old_status
+		 * @param bool                    $old_cleared
+		 * @param string                  $old_status
+		 */
+		do_action( 'it_exchange_update_transaction_status', $this, $old_status, $old_cleared, $status );
+		
+		/**
+		 * Fires when the transaction's status is updated.
+		 * 
+		 * The dynamic portion of the hook name, `$this->get_method()`, refers to the
+		 * method slug used for this transaction.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param IT_Exchange_Transaction $this
+		 * @param string                  $old_status
+		 * @param bool                    $old_cleared
+		 * @param string                  $old_status
+		 */
+		do_action( "it_exchange_update_transaction_status_{$this->get_method()}", $this, $old_status, $old_cleared, $status );
 	}
 
 	/**
@@ -285,7 +315,31 @@ class IT_Exchange_Transaction {
 	 * @return bool|IT_Exchange_Customer
 	 */
 	public function get_customer() {
-		return it_exchange_get_customer( $this->customer_id );
+		$customer = it_exchange_get_customer( $this->customer_id );
+
+		return apply_filters( 'it_exchange_get_transaction_customer', $customer, $this );
+	}
+
+	/**
+	 * Does this transaction have a parent.
+	 *
+	 * @since 1.36
+	 *
+	 * @return bool
+	 */
+	public function has_parent() {
+		return ! empty( $this->post_parent );
+	}
+
+	/**
+	 * Get the parent transaction.
+	 *
+	 * @since 1.36
+	 *
+	 * @return IT_Exchange_Transaction
+	 */
+	public function get_parent() {
+		return it_exchange_get_transaction( $this->post_parent );
 	}
 
 	/**
@@ -524,6 +578,17 @@ class IT_Exchange_Transaction {
 	 */
 	public function get_transaction_refunds() {
 		return get_post_meta( $this->ID, '_it_exchange_transaction_refunds' );
+	}
+
+	/**
+	 * Get the customer's IP address for this transaction.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function get_customer_ip() {
+		return get_post_meta( $this->ID, '_it_exchange_customer_ip', true );
 	}
 
 	/**
