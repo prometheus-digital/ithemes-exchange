@@ -530,7 +530,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 */
 	public function company_name() {
 
-		$settings = it_exchange_get_option( 'settings-general' );
+		$settings = it_exchange_get_option( 'settings_general' );
 
 		return $settings['company-name'];
 	}
