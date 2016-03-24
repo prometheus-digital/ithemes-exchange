@@ -157,6 +157,37 @@ class IT_Exchange_Transaction {
 	}
 
 	/**
+	 * Get the transaction ID.
+	 *
+	 * @since 1.36
+	 *
+	 * @return int
+	 */
+	public function get_ID() {
+		return $this->ID;
+	}
+
+	/**
+	 * Get the order number.
+	 *
+	 * @since 1.34
+	 *
+	 * @param string $prefix
+	 *
+	 * @return string
+	 */
+	public function get_order_number( $prefix = '#' ) {
+
+		// Translate default prefix
+		$prefix = ( '#' == $prefix ) ? __( '#', 'it-l10n-ithemes-exchange' ) : $prefix;
+
+		$order_number = sprintf( '%06d', $this->get_ID() );
+		$order_number = empty( $prefix ) ? $order_number : $prefix . $order_number;
+
+		return $order_number;
+	}
+
+	/**
 	 * Gets the transaction_status property.
 	 *
 	 * If the custom value is already set, it uses that.
@@ -204,6 +235,57 @@ class IT_Exchange_Transaction {
 	 */
 	public function get_method_id() {
 		return $this->method_id;
+	}
+
+	/**
+	 * Update the method ID.
+	 *
+	 * @since 1.36
+	 *
+	 * @param $method_id
+	 *
+	 * @return bool|int
+	 */
+	public function update_method_id( $method_id ) {
+
+		$previous_method_id = $this->method_id;
+		$this->method_id    = $method_id;
+
+		$success = update_post_meta( $this->ID, '_it_exchange_transaction_method_id', $method_id );
+
+		/**
+		 * Fires when the transaction method ID is updated.
+		 *
+		 * @since 1.36
+		 *
+		 * @param IT_Exchange_Transaction $this
+		 * @param string                  $previous_method_id
+		 */
+		do_action( 'it_exchange_update_transaction_method_id', $this, $previous_method_id );
+
+		return $success;
+	}
+
+	/**
+	 * Is this transaction cleared for delivery.
+	 *
+	 * @since 1.36
+	 *
+	 * @return bool
+	 */
+	public function is_cleared_for_delivery() {
+		return apply_filters( "it_exchange_{$this->get_method()}_transaction_is_cleared_for_delivery", false, $this );
+	}
+
+	/**
+	 * Get the transaction customer.
+	 *
+	 * @since 1.36
+	 *
+	 * @return bool|IT_Exchange_Customer
+	 */
+	public function get_customer() {
+		return it_exchange_get_customer( $this->customer_id );
 	}
 
 	/**
@@ -274,17 +356,6 @@ class IT_Exchange_Transaction {
 	 */
 	public function meta_exists( $key ) {
 		return metadata_exists( 'post', $this->ID, '_it_exchange_transaction_' . $key );
-	}
-
-	/**
-	 * Get the order number.
-	 *
-	 * @since 1.34
-	 *
-	 * @return string
-	 */
-	public function get_order_number() {
-		return it_exchange_get_transaction_order_number( $this );
 	}
 
 	/**
@@ -618,7 +689,6 @@ class IT_Exchange_Transaction {
 	/* Deprecated Properties */
 
 	/** @deprecated */
-	public $gateway_id_for_transaction;
 	public $post_author;
 	public $post_date;
 	public $post_date_gmt;

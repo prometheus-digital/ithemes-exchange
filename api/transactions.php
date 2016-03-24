@@ -1049,11 +1049,7 @@ function it_exchange_get_transaction_order_number( $transaction, $prefix='#' ) {
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
 		return false;
 
-	// Translate default prefix
-	$prefix = ( '#' == $prefix ) ? __( '#', 'it-l10n-ithemes-exchange' ) : $prefix;
-
-	$order_number = sprintf( '%06d', $transaction->ID );
-	$order_number = empty( $prefix ) ? $order_number : $prefix . $order_number;
+	$order_number = $transaction->get_order_number( $prefix );
 
 	return apply_filters( 'it_exchange_get_transaction_order_number', $order_number, $transaction, $prefix );
 }
@@ -1190,8 +1186,7 @@ function it_exchange_get_transaction_method_name( $transaction ) {
  * @return string
 */
 function it_exchange_update_transaction_method_id( $transaction, $method_id ) {
-	$transaction = it_exchange_get_transaction( $transaction );
-	return update_post_meta( $transaction->ID, '_it_exchange_transaction_method_id', $method_id );
+	return it_exchange_get_transaction( $transaction )->update_method_id( $method_id );
 }
 
 /**
@@ -1222,7 +1217,7 @@ function it_exchange_get_transaction_method_id( $transaction ) {
 
 	$transaction = it_exchange_get_transaction( $transaction );
 
-	return apply_filters( 'it_exchange_get_transaction_method_id', $transaction->get_gateway_id_for_transaction(), $transaction );
+	return apply_filters( 'it_exchange_get_transaction_method_id', $transaction->get_method_id(), $transaction );
 }
 
 /**
@@ -1254,8 +1249,7 @@ function it_exchange_transaction_is_cleared_for_delivery( $transaction ) {
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
 		return false;
 
-	$transaction_method = it_exchange_get_transaction_method( $transaction );
-	return apply_filters( 'it_exchange_' . $transaction_method . '_transaction_is_cleared_for_delivery', false, $transaction );
+	return $transaction->is_cleared_for_delivery();
 }
 
 /**
