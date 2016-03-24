@@ -47,7 +47,6 @@ class IT_Exchange_Transaction {
 
 	/**
 	 * @var object
-	 * @internal
 	 */
 	private $cart_details;
 
@@ -79,7 +78,7 @@ class IT_Exchange_Transaction {
 
 		// Return a WP Error if we don't have the $post object by this point
 		if ( ! $post ) {
-			throw new Exception( __( 'The IT_Exchange_Transaction class must have a WP post object or ID passed to its constructor', 'it-l10n-ithemes-exchange' ) );
+			throw new Exception( 'The IT_Exchange_Transaction class must have a WP post object or ID passed to its constructor' );
 		}
 
 		// Grab the $post object vars and populate this objects vars

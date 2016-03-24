@@ -21,23 +21,26 @@
  *
  * @return string the transaction method
  */
-function it_exchange_get_transaction_method( $transaction=false ) {
+function it_exchange_get_transaction_method( $transaction = false ) {
+	
 	if ( $transaction instanceof IT_Exchange_Transaction )
-		return $transaction->transaction_method;
+		return $transaction->get_method();
 
 	if ( ! $transaction ) {
-		global $post;
-		$transaction = $post;
+		$transaction = $GLOBALS['post'];
 	}
 
 	// Return value from IT_Exchange_Transaction if we are able to locate it
 	$transaction = it_exchange_get_transaction( $transaction );
-	if ( is_object( $transaction ) && ! empty ( $transaction->transaction_method ) && ! is_null( $transaction->transaction_method ) )
-		return apply_filters( 'it_exchange_get_transaction_method', $transaction->transaction_method, $transaction );
+
+	if ( is_object( $transaction ) && $transaction->get_method() ) {
+		return apply_filters( 'it_exchange_get_transaction_method', $transaction->get_method(), $transaction );
+	}
 
 	// Return query arg if is present
-	if ( ! empty ( $_GET['transaction-method'] ) )
+	if ( ! empty ( $_GET['transaction-method'] ) ) {
 		return apply_filters( 'it_exchange_get_transaction_method', $_GET['transaction-method'], $transaction );
+	}
 
 	return apply_filters( 'it_exchange_get_transaction_method', false, $transaction );
 }
