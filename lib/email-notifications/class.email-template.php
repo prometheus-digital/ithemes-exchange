@@ -87,5 +87,16 @@ class IT_Exchange_Email_Template {
 				$GLOBALS['it_exchange']['transaction-activity'] = $context['transaction-activity'];
 			}
 		}
+
+		/**
+		 * Fires when additional context should be globalized.
+		 *
+		 * This is mainly to be provided to the Theme API.
+		 *
+		 * @since 1.36
+		 *
+		 * @param array $context
+		 */
+		do_action( 'it_exchange_email_template_globalize_context', $context );
 	}
 }
