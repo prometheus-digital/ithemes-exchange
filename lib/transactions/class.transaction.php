@@ -13,62 +13,43 @@
  */
 class IT_Exchange_Transaction {
 
-	// WP Post Type Properties
-	public $ID;
-	public $post_author;
-	public $post_date;
-	public $post_date_gmt;
-	public $post_content;
-	public $post_title;
-	public $post_excerpt;
-	public $post_status;
-	public $comment_status;
-	public $ping_status;
-	public $post_password;
-	public $post_name;
-	public $to_ping;
-	public $pinged;
-	public $post_modified;
-	public $post_modified_gmt;
-	public $post_content_filtered;
-	public $post_parent;
-	public $guid;
-	public $menu_order;
-	public $post_type;
-	public $post_mime_type;
-	public $comment_count;
+	/**
+	 * @var int
+	 */
+	private $ID;
+
+	/**
+	 * @var array
+	 */
+	private $refunds;
+
+	/**
+	 * @var int
+	 */
+	private $customer_id;
+
+	/**
+	 * @var string
+	 */
+	private $method_id;
 
 	/**
 	 * @param string $transaction_method The transaction method for this transaction
 	 *
 	 * @since 0.3.3
 	 */
-	public $transaction_method;
-
-	/**
-	 * @param array $transaction_supports what features does this transaction support
-	 *
-	 * @since 0.3.3
-	 */
-	public $transaction_supports;
-
-	/**
-	 * @param array $transaction_data any custom data registered by the transaction-method for this transaction
-	 *
-	 * @since 0.3.3
-	 */
-	public $transaction_data = array();
+	private $transaction_method;
 
 	/**
 	 * @var string
 	 */
-	public $status;
+	private $status;
 
 	/**
 	 * @var object
 	 * @internal
 	 */
-	public $cart_details;
+	private $cart_details;
 
 	/**
 	 * Constructor. Loads post data and transaction data
@@ -133,14 +114,46 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 0.3.3
 	 */
-	function set_transaction_method() {
+	protected function set_transaction_method() {
+
 		global $pagenow;
+
+		// todo refactor out reliance on pagenow
+
 		if ( ! $transaction_method = get_post_meta( $this->ID, '_it_exchange_transaction_method', true ) ) {
 			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['transaction-method'] ) ) {
 				$transaction_method = $_GET['transaction-method'];
 			}
 		}
+
 		$this->transaction_method = $transaction_method;
+	}
+
+	/**
+	 * Sets the transaction_data property from appropriate transaction-method options and assoicated post_meta
+	 *
+	 * @since 0.3.2
+	 *
+	 * @return void
+	 */
+	protected function set_transaction_supports_and_data() {
+
+		// Set status
+		$this->status = $this->get_status();
+
+		// Set refunds
+		$this->refunds = $this->get_transaction_refunds();
+
+		// Set customer ID
+		$this->customer_id = get_post_meta( $this->ID, '_it_exchange_customer_id', true );
+
+		// Set Cart information
+		$this->cart_details = get_post_meta( $this->ID, '_it_exchange_cart_object', true );
+
+		// Gateway ID for the transaction
+		$this->method_id = get_post_meta( $this->ID, '_it_exchange_transaction_method_id', true );
+
+		do_action( 'it_exchange_set_transaction_supports_and_data', $this->ID );
 	}
 
 	/**
@@ -151,7 +164,7 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 0.4.0
 	 */
-	function get_status() {
+	public function get_status() {
 		return get_post_meta( $this->ID, '_it_exchange_transaction_status', true );
 	}
 
@@ -162,10 +175,35 @@ class IT_Exchange_Transaction {
 	 * If the custom value is not set and we're on post-add.php, check for a URL param
 	 *
 	 * @since 0.4.0
+	 *
+	 * @param string $new_status
 	 */
-	function update_status( $new_status ) {
+	public function update_status( $new_status ) {
 		update_post_meta( $this->ID, '_it_exchange_transaction_status', $new_status );
+
 		$this->status = $new_status;
+	}
+
+	/**
+	 * Get the method used.
+	 *
+	 * @param bool $label
+	 *
+	 * @return string
+	 */
+	public function get_method( $label = false ) {
+		return $label ? it_exchange_get_transaction_method_name_from_slug( $this->transaction_method ) : $this->transaction_method;
+	}
+
+	/**
+	 * Get the method ID.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function get_method_id() {
+		return $this->method_id;
 	}
 
 	/**
@@ -239,42 +277,6 @@ class IT_Exchange_Transaction {
 	}
 
 	/**
-	 * Gets a transaction meta property.
-	 *
-	 * If the custom value is already set, it uses that.
-	 * If the custom value is not set and we're on post-add.php, check for a URL param
-	 *
-	 * @since 1.3.0
-	 */
-	function get_transaction_meta( $key, $single = true ) {
-		return $this->get_meta( $key, $single );
-	}
-
-	/**
-	 * Updates a transaction meta property.
-	 *
-	 * If the custom value is already set, it uses that.
-	 * If the custom value is not set and we're on post-add.php, check for a URL param
-	 *
-	 * @since 1.3.0
-	 */
-	function update_transaction_meta( $key, $value ) {
-		$this->update_meta( $key, $value );
-	}
-
-	/**
-	 * Deletes a transaction meta property.
-	 *
-	 * If the custom value is already set, it uses that.
-	 * If the custom value is not set and we're on post-add.php, check for a URL param
-	 *
-	 * @since 1.3.0
-	 */
-	function delete_transaction_meta( $key, $value = '' ) {
-		$this->delete_meta( $key, $value );
-	}
-
-	/**
 	 * Get the order number.
 	 *
 	 * @since 1.34
@@ -294,12 +296,31 @@ class IT_Exchange_Transaction {
 	 *
 	 * @return string
 	 */
-	function get_date( $gmt = false ) {
+	public function get_date( $gmt = false ) {
 		if ( $gmt ) {
 			return $this->post_date_gmt;
 		}
 
 		return $this->post_date;
+	}
+
+	/**
+	 * Returns the transaction total
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param bool $subtract_refunds If true, return total less refunds.
+	 *
+	 * @return string
+	 */
+	public function get_total( $subtract_refunds = true ) {
+		$total = empty( $this->cart_details->total ) ? false : $this->cart_details->total;
+
+		if ( $total && $subtract_refunds && $refunds_total = it_exchange_get_transaction_refunds_total( $this->ID, false ) ) {
+			$total = $total - $refunds_total;
+		}
+
+		return apply_filters( 'it_exchange_get_transaction_total', $total, $this->ID );
 	}
 
 	/**
@@ -309,7 +330,7 @@ class IT_Exchange_Transaction {
 	 *
 	 * @return string
 	 */
-	function get_subtotal() {
+	public function get_subtotal() {
 
 		if ( isset( $this->cart_details->sub_total ) ) {
 			return $this->cart_details->sub_total;
@@ -325,31 +346,13 @@ class IT_Exchange_Transaction {
 	}
 
 	/**
-	 * Returns the transaction total
-	 *
-	 * @since 0.4.0
-	 *
-	 * @param boolean $without_refunds if true, the original total before refunds will be given
-	 *
-	 * @return string
-	 */
-	function get_total( $subtract_refunds = true ) {
-		$total = empty( $this->cart_details->total ) ? false : $this->cart_details->total;
-
-		if ( $total && $subtract_refunds && $refunds_total = it_exchange_get_transaction_refunds_total( $this->ID, false ) ) {
-			$total = $total - $refunds_total;
-		}
-
-		return apply_filters( 'it_exchange_get_transaction_total', $total, $this->ID );
-	}
-
-	/**
 	 * Returns the transaction currency
 	 *
 	 * @since 0.4.0
+	 *
 	 * @return string
 	 */
-	function get_currency() {
+	public function get_currency() {
 		$settings         = it_exchange_get_option( 'settings_general' );
 		$default_currency = $settings['default-currency'];
 
@@ -360,9 +363,10 @@ class IT_Exchange_Transaction {
 	 * Returns the description
 	 *
 	 * @since 0.4.0
+	 *
 	 * @return string
 	 */
-	function get_description() {
+	public function get_description() {
 		if ( ! empty( $this->cart_details->description ) && trim( $this->cart_details->description ) !== '' ) {
 			return $this->cart_details->description;
 		} else if ( $p = get_post_meta( $this->ID, '_it_exchange_parent_tx_id', true ) ) {
@@ -385,7 +389,7 @@ class IT_Exchange_Transaction {
 	 *
 	 * @return string
 	 */
-	function get_coupons() {
+	public function get_coupons() {
 		return empty( $this->cart_details->coupons ) ? false : $this->cart_details->coupons;
 	}
 
@@ -396,7 +400,7 @@ class IT_Exchange_Transaction {
 	 *
 	 * @return string
 	 */
-	function get_coupons_total_discount() {
+	public function get_coupons_total_discount() {
 		return empty( $this->cart_details->coupons_total_discount ) ? false : $this->cart_details->coupons_total_discount;
 	}
 
@@ -407,7 +411,7 @@ class IT_Exchange_Transaction {
 	 *
 	 * @return array
 	 */
-	function get_products() {
+	public function get_products() {
 		$products = empty( $this->cart_details->products ) ? array() : $this->cart_details->products;
 
 		return apply_filters( 'it_exchange_get_transaction_products', $products, $this );
@@ -422,7 +426,7 @@ class IT_Exchange_Transaction {
 	 * @param string $date    Date refund occurred. In mysql format.
 	 * @param array  $options Additional refund options.
 	 */
-	function add_refund( $refund, $date = '', $options = array() ) {
+	public function add_refund( $refund, $date = '', $options = array() ) {
 		$date = empty( $date ) ? date_i18n( 'Y-m-d H:i:s' ) : $date;
 		$args = array(
 			'amount'  => $refund,
@@ -438,7 +442,7 @@ class IT_Exchange_Transaction {
 	 * @since 1.3.0
 	 * @return bool
 	 */
-	function has_refunds() {
+	public function has_refunds() {
 		return (bool) get_post_meta( $this->ID, '_it_exchange_transaction_refunds' );
 	}
 
@@ -447,49 +451,27 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 0.4.0
 	 */
-	function get_transaction_refunds() {
+	public function get_transaction_refunds() {
 		return get_post_meta( $this->ID, '_it_exchange_transaction_refunds' );
-	}
-
-	/**
-	 * Sets the transaction_data property from appropriate transaction-method options and assoicated post_meta
-	 *
-	 * @ since 0.3.2
-	 * @return void
-	 */
-	function set_transaction_supports_and_data() {
-
-		// Set status
-		$this->status = $this->get_status();
-
-		// Set refunds
-		$this->refunds = $this->get_transaction_refunds();
-
-		// Set customer ID
-		$this->customer_id = get_post_meta( $this->ID, '_it_exchange_customer_id', true );
-
-		// Set Cart information
-		$this->cart_details = get_post_meta( $this->ID, '_it_exchange_cart_object', true );
-
-		// Gateway ID for the transaction
-		$this->gateway_id_for_transaction = get_post_meta( $this->ID, '_it_exchange_transaction_method_id', true );
-
-		do_action( 'it_exchange_set_transaction_supports_and_data', $this->ID );
 	}
 
 	/**
 	 * checks if the transaction has children.
 	 *
 	 * @since 1.3.0
+	 *
+	 * @param array $args
+	 *
 	 * @return bool
 	 */
-	function has_children( $args = array() ) {
+	public function has_children( $args = array() ) {
 		$defaults = array(
 			'post_parent' => $this->ID,
 			'post_type'   => 'it_exchange_tran',
 			'numberposts' => 1
 		);
-		$args     = wp_parse_args( $args, $defaults );
+
+		$args = wp_parse_args( $args, $defaults );
 
 		return (bool) get_children( $args );
 	}
@@ -501,24 +483,125 @@ class IT_Exchange_Transaction {
 	 *
 	 * @return WP_Post[]
 	 */
-	function get_children( $args = array() ) {
+	public function get_children( $args = array() ) {
 		$defaults = array(
 			'post_parent' => $this->ID,
 			'post_type'   => 'it_exchange_tran',
 		);
-		$args     = wp_parse_args( $args, $defaults );
+
+		$args = wp_parse_args( $args, $defaults );
 
 		return get_children( $args );
 	}
 
 	/**
-	 * Returns the transaction ID used by the gateway
+	 * is triggered when invoking inaccessible methods in an object context.
 	 *
-	 * @since 0.4.0
+	 * @since 1.36
+	 *
+	 * @param $name      string
+	 * @param $arguments array
+	 *
+	 * @return mixed
+	 *
+	 * @throws Exception
+	 */
+	public function __call( $name, $arguments ) {
+
+		switch ( $name ) {
+			case 'set_transaction_supports_and_data':
+				$this->set_transaction_supports_and_data();
+				break;
+			case 'set_transaction_method':
+				$this->set_transaction_method();
+				break;
+			case 'get_gateway_id_for_transaction':
+				return $this->get_method_id();
+		}
+
+
+		throw new Exception( "Method not found: $name" );
+	}
+
+	/**
+	 * Provide backwards compatibility for deprecated properties.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $name
+	 *
 	 * @return mixed
 	 */
-	function get_gateway_id_for_transaction() {
-		return empty( $this->gateway_id_for_transaction ) ? false : $this->gateway_id_for_transaction;
+	public function __get( $name ) {
+
+		if ( $name === 'gateway_id_for_transaction' ) {
+			return $this->get_method_id();
+		}
+
+		if ( in_array( $name, array( 'transaction_supports', 'transaction_data' ) ) ) {
+			return array();
+		}
+
+		if ( in_array( $name, array(
+			'ID',
+			'refunds',
+			'customer_id',
+			'transaction_method',
+			'status',
+			'cart_details'
+		) ) ) {
+			return $this->$name;
+		}
+	}
+
+	/**
+	 * Gets a transaction meta property.
+	 *
+	 * If the custom value is already set, it uses that.
+	 * If the custom value is not set and we're on post-add.php, check for a URL param
+	 *
+	 * @since      1.3.0
+	 * @deprecated 1.36
+	 *
+	 * @param string $key
+	 * @param bool   $single
+	 *
+	 * @return mixed
+	 */
+	public function get_transaction_meta( $key, $single = true ) {
+		return $this->get_meta( $key, $single );
+	}
+
+	/**
+	 * Updates a transaction meta property.
+	 *
+	 * If the custom value is already set, it uses that.
+	 * If the custom value is not set and we're on post-add.php, check for a URL param
+	 *
+	 * @since      1.3.0
+	 * @deprecated 1.36
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 */
+	public function update_transaction_meta( $key, $value ) {
+		$this->update_meta( $key, $value );
+	}
+
+	/**
+	 * Deletes a transaction meta property.
+	 *
+	 * If the custom value is already set, it uses that.
+	 * If the custom value is not set and we're on post-add.php, check for a URL param
+	 *
+	 * @since      1.3.0
+	 * @deprecated 1.36
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 */
+	public function delete_transaction_meta( $key, $value = '' ) {
+		$this->delete_meta( $key, $value );
 	}
 
 	/**
@@ -531,4 +614,31 @@ class IT_Exchange_Transaction {
 	function set_add_edit_screen_supports() {
 		_deprecated_function( __METHOD__, '1.36' );
 	}
+
+	/* Deprecated Properties */
+
+	/** @deprecated */
+	public $gateway_id_for_transaction;
+	public $post_author;
+	public $post_date;
+	public $post_date_gmt;
+	public $post_content;
+	public $post_title;
+	public $post_excerpt;
+	public $post_status;
+	public $comment_status;
+	public $ping_status;
+	public $post_password;
+	public $post_name;
+	public $to_ping;
+	public $pinged;
+	public $post_modified;
+	public $post_modified_gmt;
+	public $post_content_filtered;
+	public $post_parent;
+	public $guid;
+	public $menu_order;
+	public $post_type;
+	public $post_mime_type;
+	public $comment_count;
 }
