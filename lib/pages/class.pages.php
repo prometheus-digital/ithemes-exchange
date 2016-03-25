@@ -639,7 +639,7 @@ class IT_Exchange_Pages {
 		}
 
 		if ( $page === 'transaction' ) {
-			$url = add_query_arg( 'transaction', 1, site_url() );
+			$url = add_query_arg( 'transaction', 1, trailingslashit( site_url() ) );
 		}
 
 		return $url;
