@@ -20,7 +20,7 @@
  *
  * @since 0.3.3
 */
-class IT_Exchange_Session {
+class IT_Exchange_Session implements IT_Exchange_SessionInterface {
 
 	/**
 	 * @param array $_session  an array of any additional data needed by iThemes Exchange
@@ -215,4 +215,3 @@ class IT_Exchange_Session {
 	}
 
 }
-$GLOBALS['it_exchange']['session'] = new IT_Exchange_Session();
