@@ -48,13 +48,13 @@
 
 	switch ( $tab ) {
 		case 'transactions':
-			include( 'admin-user-transactions.php' );
+			include( 'transactions.php' );
 			break;
 		case 'info':
-			include( 'admin-user-info.php' );
+			include( 'info.php' );
 			break;
 		case 'products':
-			include( 'admin-user-products.php' );
+			include( 'products.php' );
 			break;
 		default :
 			do_action( 'it_exchange_print_user_edit_page_content', $tab );

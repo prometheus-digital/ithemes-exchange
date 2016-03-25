@@ -241,7 +241,7 @@ class IT_Exchange_Admin {
 	function it_exchange_user_profile( $profileuser ) {
 
 		if ( current_user_can('edit_users') )
-			include( 'views/admin-user-profile.php' );
+			include( 'views/user/profile.php' );
 
 	}
 
@@ -263,7 +263,7 @@ class IT_Exchange_Admin {
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_transactions_user_edit_tab_link' ) );
 			add_action( 'it_exchange_print_user_edit_page_tab_links', array( $this, 'print_info_user_edit_tab_link' ) );
 
-			include( 'views/admin-user-edit.php' );
+			include( 'views/user/edit.php' );
 			include( ABSPATH . 'wp-admin/admin-footer.php');
 			die();
 
@@ -357,7 +357,7 @@ class IT_Exchange_Admin {
 			return;
 
 		if ( 'it-exchange-setup' != $this->_current_page )
-			include( 'views/admin-wizard-notice.php' );
+			include( 'views/notices/wizard.php' );
 	}
 
 	/**
@@ -573,7 +573,7 @@ class IT_Exchange_Admin {
 		if ( 'installed' == $error )
 			ITUtility::show_error_message( __( 'Error: Add-on not installed.', 'it-l10n-ithemes-exchange' ) );
 
-		include( 'views/admin-get-more-addons.php' );
+		include( 'views/add-ons/get-more.php' );
 	}
 
 	/**
@@ -594,7 +594,7 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function print_help_page() {
-		include( 'views/admin-help.php' );
+		include( 'views/help.php' );
 	}
 
 	/**
@@ -719,7 +719,7 @@ class IT_Exchange_Admin {
 			}
 			it_exchange_clear_messages( 'error' );
 		}
-		include( 'views/admin-wizard.php' );
+		include( 'views/wizard.php' );
 	}
 
 	/**
@@ -806,7 +806,7 @@ Order: %s
 			ITUtility::show_status_message( $this->status_message );
 		if ( ! empty( $this->error_message ) )
 			ITUtility::show_error_message( $this->error_message );
-		include( 'views/admin-settings.php' );
+		include( 'views/settings/general.php' );
 	}
 
 	/**
@@ -829,7 +829,7 @@ Order: %s
 			ITUtility::show_status_message( $this->status_message );
 		if ( ! empty( $this->error_message ) )
 			ITUtility::show_error_message( $this->error_message );
-		include( 'views/admin-email-settings.php' );
+		include( 'views/settings/email.php' );
 	}
 
 	/**
@@ -868,7 +868,7 @@ Order: %s
 			ITUtility::show_status_message( $this->status_message );
 		if ( ! empty( $this->error_message ) )
 			ITUtility::show_error_message( $this->error_message );
-		include( 'views/admin-page-settings.php' );
+		include( 'views/settings/pages.php' );
 	}
 
 	/**
@@ -915,7 +915,7 @@ Order: %s
 		else if ( 'disabled' == $error )
 			ITUtility::show_error_message( __( 'Error: Add-on not disabled.', 'it-l10n-ithemes-exchange' ) );
 
-		include( 'views/admin-add-ons.php' );
+		include( 'views/add-ons/all.php' );
 	}
 
 	/**

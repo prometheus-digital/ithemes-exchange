@@ -55,7 +55,7 @@
 				</div>
 			<?php } ?>
 
-			<?php $default_icon = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/exchange50px.png' ); ?>
+			<?php $default_icon = ITUtility::get_url_from_file( dirname( dirname( dirname( __FILE__ ) ) ) . '/images/exchange50px.png' ); ?>
 
 			<?php foreach( (array) $addons as $addon ) : ?>
 

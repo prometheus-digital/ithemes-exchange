@@ -104,7 +104,7 @@ function it_exchange_show_upgrades_available_nag() {
 
 		$dismiss_url = add_query_arg( array( 'it-exchange-dismiss-upgrades-nag' => 1 ) ); // escaped in included file
 
-		include( dirname( dirname( __FILE__ ) ) . '/admin/views/admin-upgrades-available-notice.php' );
+		include( dirname( dirname( __FILE__ ) ) . '/admin/views/notices/upgrades-available.php' );
 	}
 }
 
