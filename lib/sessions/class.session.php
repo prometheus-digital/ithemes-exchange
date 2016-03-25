@@ -65,28 +65,30 @@ class IT_Exchange_Session {
 	}
 
 	/**
-	 * Inits the DB Sessions and returns the object
+	 * Initialize the DB Sessions and returns the object
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return object
+	 * @return IT_Exchange_DB_Sessions
 	*/
 	function init() {
 		$this->_session = IT_Exchange_DB_Sessions::get_instance();
+
 		return $this->_session;
 	}
 
 	/**
 	 * Returns session data
 	 *
-	 * All data or optionaly, data for a specific key
+	 * All data or optionally, data for a specific key
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param string $key data key
+	 * @param string|bool $key Specify the data to retrieve, if false all data will be retrieved.
+	 *
 	 * @return mixed. serialized string
 	*/
-	function get_session_data( $key=false ) {
+	function get_session_data( $key = false ) {
 		if ( $key ) {
 			$key = sanitize_key( $key );
 
@@ -118,6 +120,7 @@ class IT_Exchange_Session {
 	 *
 	 * @param string $key key for the data
 	 * @param mixed  $data data to be stored. will be serialized if not already
+	 *
 	 * @return void
 	*/
 	function add_session_data( $key, $data ) {
@@ -136,8 +139,10 @@ class IT_Exchange_Session {
 	 * Updates session data by key
 	 *
 	 * @since 0.4.0
+	 *
 	 * @param string $key key for the data
 	 * @param mixed  $data data to be stored. will be serialized if not already
+	 *
 	 * @return void
 	*/
 	function update_session_data( $key, $data ) {
@@ -151,10 +156,11 @@ class IT_Exchange_Session {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param string $key
+	 * @param string|bool $key Specify the key to clear, or clear all data if false.
+	 *
 	 * @return void
 	*/
-	function clear_session_data( $key=false ) {
+	function clear_session_data( $key = false ) {
 		if ( !empty( $key ) ) {
 			$key = sanitize_key( $key );
 
@@ -174,8 +180,10 @@ class IT_Exchange_Session {
 	 * Clears all session data
 	 *
 	 * @since 0.4.0
+	 *
+	 * @param bool $hard If true, old delete sessions as well.
 	*/
-	function clear_session( $hard=false ) {
+	function clear_session( $hard = false ) {
 		it_exchange_db_session_regenerate_id( $hard );
 		it_exchange_db_session_commit();
 	}
