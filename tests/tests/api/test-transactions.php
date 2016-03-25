@@ -440,8 +440,8 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_get_transaction_order_number() {
 
-		$transaction     = $this->getMockBuilder( 'IT_Exchange_Transaction' )->disableOriginalConstructor()->getMock();
-		$transaction->ID = 1;
+		$transaction = $this->getMockBuilder( 'IT_Exchange_Transaction' )->disableOriginalConstructor()->setMethods( array( 'get_ID' ) )->getMock();
+		$transaction->method( 'get_ID' )->willReturn( 1 );
 
 		$this->assertEquals( '#000001', it_exchange_get_transaction_order_number( $transaction ) );
 	}
