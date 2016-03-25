@@ -14,8 +14,8 @@
  * This grabs you a copy of the IT_Exchange_Session object
  *
  * @since 0.3.3
- * @return IT_Exchange_Session|bool instance of IT_Exchange_Session
-*/
+ * @return IT_Exchange_SessionInterface|bool instance of IT_Exchange_Session
+ */
 function it_exchange_get_session() {
 	$session = empty( $GLOBALS['it_exchange']['session'] ) ? false : $GLOBALS['it_exchange']['session'];
 	return apply_filters( 'it_exchange_get_session', $session );

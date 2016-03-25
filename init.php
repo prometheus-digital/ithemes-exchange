@@ -244,7 +244,7 @@ function it_exchange_flush_rewrite_rules() {
 add_action( 'admin_init', 'it_exchange_flush_rewrite_rules', 99 );
 
 // Init DB sessions
-require( plugin_dir_path( __FILE__ ) . 'lib/sessions/class.session.php' );
+require( plugin_dir_path( __FILE__ ) . 'lib/sessions/load.php' );
 
 /**
  * Register all sync verbs
