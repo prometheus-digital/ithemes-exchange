@@ -40,6 +40,8 @@ function it_exchange_db_session_commit() {
  * Load a JSON-encoded string into the current session.
  *
  * @param string $data
+ * 
+ * @return bool
  */
 function it_exchange_db_session_decode( $data ) {
 	$it_exchange_db_session = IT_Exchange_DB_Sessions::get_instance();
