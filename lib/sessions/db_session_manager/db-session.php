@@ -21,6 +21,8 @@
 /**
  * Return the current cache expire setting.
  *
+ * @internal
+ *
  * @return int
  */
 function it_exchange_db_session_cache_expire() {
@@ -31,6 +33,8 @@ function it_exchange_db_session_cache_expire() {
 
 /**
  * Alias of it_exchange_db_session_write_close()
+ *
+ * @internal
  */
 function it_exchange_db_session_commit() {
 	it_exchange_db_session_write_close();
@@ -38,6 +42,8 @@ function it_exchange_db_session_commit() {
 
 /**
  * Load a JSON-encoded string into the current session.
+ *
+ * @internal
  *
  * @param string $data
  * 
@@ -52,6 +58,8 @@ function it_exchange_db_session_decode( $data ) {
 /**
  * Encode the current session's data as a JSON string.
  *
+ * @internal
+ *
  * @return string
  */
 function it_exchange_db_session_encode() {
@@ -62,6 +70,8 @@ function it_exchange_db_session_encode() {
 
 /**
  * Regenerate the session ID.
+ *
+ * @internal
  *
  * @param bool $delete_old_session
  *
@@ -80,6 +90,8 @@ function it_exchange_db_session_regenerate_id( $delete_old_session = false ) {
  *
  * Resumes an existing session based on a value sent by the _it_exchange_db_session cookie.
  *
+ * @internal
+ *
  * @return bool
  */
 function it_exchange_db_session_start() {
@@ -92,6 +104,8 @@ add_action( 'init', 'it_exchange_db_session_start', -1 );
 
 /**
  * Return the current session status.
+ *
+ * @internal
  *
  * @return int
  */
@@ -107,6 +121,8 @@ function it_exchange_db_session_status() {
 
 /**
  * Unset all session variables.
+ *
+ * @internal
  */
 function it_exchange_db_session_unset() {
 	$it_exchange_db_session = IT_Exchange_DB_Sessions::get_instance();
@@ -116,6 +132,8 @@ function it_exchange_db_session_unset() {
 
 /**
  * Write session data and end session
+ *
+ * @internal
  */
 function it_exchange_db_session_write_close() {
 	$it_exchange_db_session = IT_Exchange_DB_Sessions::get_instance();
@@ -131,6 +149,8 @@ add_action( 'shutdown', 'it_exchange_db_session_write_close' );
  *
  * This method should never be called directly and should instead be triggered as part
  * of a scheduled task or cron job.
+ *
+ * @internal
  */
 function it_exchange_db_session_cleanup() {
 	global $wpdb;
@@ -175,6 +195,8 @@ add_action( 'it_exchange_db_session_garbage_collection', 'it_exchange_db_session
  * the WordPress options table.
  *
  * This method probably shouldn't be called in a production environment
+ *
+ * @internal
  */
 function it_exchange_db_delete_all_sessions() {
 	global $wpdb;
@@ -193,6 +215,8 @@ function it_exchange_db_delete_all_sessions() {
 
 /**
  * Register the garbage collector as a twice daily event.
+ *
+ * @internal
  */
 function it_exchange_db_session_register_garbage_collection() {
 	if ( ! wp_next_scheduled( 'it_exchange_db_session_garbage_collection' ) ) {
