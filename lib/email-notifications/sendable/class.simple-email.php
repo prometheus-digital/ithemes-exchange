@@ -29,7 +29,7 @@ class IT_Exchange_Simple_Email implements IT_Exchange_Sendable {
 	/**
 	 * @var array
 	 */
-	private $context;
+	private $context = array();
 
 	/**
 	 * @var IT_Exchange_Email_Recipient[]
