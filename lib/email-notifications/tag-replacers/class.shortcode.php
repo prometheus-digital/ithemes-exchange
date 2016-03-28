@@ -37,11 +37,11 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 
 		$this->context = $context;
 
-		$GLOBALS['it_exchange']['email-confirmation-data'] = $this->get_data();
-
 		it_exchange_email_notifications()->transaction_id = empty( $context['transaction'] ) ? false : $context['transaction']->ID;
 		it_exchange_email_notifications()->customer_id    = empty( $context['customer'] ) ? false : $context['customer']->id;
 		it_exchange_email_notifications()->user           = it_exchange_get_customer( it_exchange_email_notifications()->customer_id );
+		
+		$GLOBALS['it_exchange']['email-confirmation-data'] = $this->get_data();
 
 		return do_shortcode( $content );
 	}
@@ -55,16 +55,21 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 	 */
 	protected function get_shortcode_functions() {
 
-		$shortcode_functions = array();
+		if ( has_filter( 'it_exchange_email_notification_shortcode_functions' ) ) {
+			it_exchange_deprecated_filter( 'it_exchange_email_notification_shortcode_functions', '1.36',
+				'IT_Exchange_Email_Tag_Replacer::add_tag' );
+		}
 
 		/**
 		 * Filter the available shortcode functions.
 		 *
-		 * @since 1.0
+		 * @deprecated 1.36
+		 *
+		 * @since      1.0
 		 *
 		 * @param array $shortcode_functions
 		 */
-		return apply_filters( 'it_exchange_email_notification_shortcode_functions', $shortcode_functions, $this->get_data() );
+		return apply_filters( 'it_exchange_email_notification_shortcode_functions', array(), $this->get_data() );
 	}
 
 	/**
@@ -72,22 +77,22 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 	 *
 	 * @since 1.36
 	 *
-	 * @param array  $atts
+	 * @param array  $all_atts
 	 * @param string $content
 	 *
 	 * @return string
 	 */
-	public function shortcode( $atts, $content = '' ) {
+	public function shortcode( $all_atts, $content = '' ) {
 
 		$data = $this->get_data();
 
 		$supported_pairs = array( 'show' => '', 'options' => '' );
 
-		$atts = shortcode_atts( $supported_pairs, $atts );
+		$atts = shortcode_atts( $supported_pairs, $all_atts );
 		$show = $atts['show'];
 
-		unset( $atts['show'] );
 		$opts = explode( ',', $atts['options'] );
+		unset( $all_atts['show'], $all_atts['options'] );
 
 		$context = $this->context;
 
@@ -101,12 +106,12 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 			if ( count( array_diff( $tag->get_required_context(), array_keys( $context ) ) ) > 0 ) {
 				$r = '';
 			} else {
-				$opts = array_merge( $opts, $atts );
+				$opts = array_merge( $opts, $all_atts );
 				$r    = $tag->render( $context, $opts );
 			}
 
 		} elseif ( is_callable( $functions[ $show ] ) ) {
-			$r = call_user_func( $functions[ $show ], it_exchange_email_notifications(), $opts, $atts, $context );
+			$r = call_user_func( $functions[ $show ], it_exchange_email_notifications(), $opts, $all_atts, $context );
 		}
 
 		/**
@@ -120,7 +125,7 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 		 * @param array  $data
 		 * @param array  $context
 		 */
-		return apply_filters( "it_exchange_email_notification_shortcode_{$show}", $r, $atts, $content, $data, $context );
+		return apply_filters( "it_exchange_email_notification_shortcode_{$show}", $r, $all_atts, $content, $data, $context );
 	}
 
 	/**
