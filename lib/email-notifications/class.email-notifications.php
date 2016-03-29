@@ -10,7 +10,7 @@
  *
  * @since 0.4.0
  */
-class IT_Exchange_Email_Notifications {
+class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware {
 
 	/** @deprecated 1.36 */
 	public $transaction_id;
@@ -127,6 +127,17 @@ class IT_Exchange_Email_Notifications {
 	 */
 	public function get_sender() {
 		return $this->sender;
+	}
+
+	/**
+	 * Set the email sender to be used.
+	 *
+	 * @since 1.36
+	 *
+	 * @param IT_Exchange_Email_Sender $sender
+	 */
+	public function set_sender( IT_Exchange_Email_Sender $sender ) {
+		$this->sender = $sender;
 	}
 
 	/**

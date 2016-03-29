@@ -8,7 +8,6 @@
 
 require_once dirname( __FILE__ ) . '/deprecated.php';
 
-require_once dirname( __FILE__ ) . '/class.email-notifications.php';
 
 require_once dirname( __FILE__ ) . '/class.customizer.php';
 require_once dirname( __FILE__ ) . '/class.customize-active-callback.php';
@@ -18,6 +17,7 @@ require_once dirname( __FILE__ ) . '/notifications/class.admin-email-notificatio
 require_once dirname( __FILE__ ) . '/notifications/class.customer-email-notification.php';
 
 require_once dirname( __FILE__ ) . '/class.email-template.php';
+require_once dirname( __FILE__ ) . '/sendable/interface.sender-aware.php';
 require_once dirname( __FILE__ ) . '/sendable/interface.sendable.php';
 require_once dirname( __FILE__ ) . '/sendable/class.email.php';
 require_once dirname( __FILE__ ) . '/sendable/class.simple-email.php';
@@ -39,6 +39,8 @@ require_once dirname( __FILE__ ) . '/tag-replacers/class.shortcode.php';
 require_once dirname( __FILE__ ) . '/tag/interface.php';
 require_once dirname( __FILE__ ) . '/tag/class.base.php';
 require_once dirname( __FILE__ ) . '/tag/load.php';
+
+require_once dirname( __FILE__ ) . '/class.email-notifications.php';
 
 new IT_Exchange_Email_Customizer();
 
