@@ -288,6 +288,6 @@ abstract class IT_Exchange_Email_Notification {
 
 		$emails[ $this->get_slug() ] = $this->get_data_to_save();
 
-		return it_exchange_save_option( 'emails', $emails );
+		return it_exchange_save_option( 'emails', $emails, true );
 	}
 }

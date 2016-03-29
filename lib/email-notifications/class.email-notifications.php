@@ -250,7 +250,7 @@ class IT_Exchange_Email_Notifications {
 		/**
 		 * Determine whether purchase emails should be sent to a customer.
 		 *
-		 * @since 1.29.0x
+		 * @since 1.29.0
 		 *
 		 * @param bool                            $send
 		 * @param IT_Exchange_Email_Notifications $this
