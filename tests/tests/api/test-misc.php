@@ -499,4 +499,304 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 		it_exchange_unregister_purchase_requirement( 'test3' );
 		$GLOBALS['it_exchange']['purchase-requirements'] = $backup;
 	}
+
+	/**
+	 * @group emails
+	 */
+	public function test_send_email_with_sendable() {
+
+		$sendable = $this->getMockForAbstractClass( 'IT_Exchange_Sendable' );
+
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender->expects( $this->once() )->method( 'send' )->with( $sendable )->willReturn( true );
+
+		$original = it_exchange_email_notifications()->get_sender();
+		it_exchange_email_notifications()->set_sender( $sender );
+
+		$this->assertTrue( it_exchange_send_email( $sendable ) );
+
+		it_exchange_email_notifications()->set_sender( $original );
+	}
+
+	/**
+	 * @group emails
+	 */
+	public function test_send_email_original_recipient_object_kept() {
+
+		$recipient = $this->getMock( 'IT_Exchange_Email_Recipient' );
+
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) use ( $recipient ) {
+
+			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
+				return false;
+			}
+
+			$recipient = $sendable->get_recipient();
+
+			if ( ! $recipient === $recipient ) {
+				return false;
+			}
+
+			return true;
+		} ) )->willReturn( true );
+
+		$original = it_exchange_email_notifications()->get_sender();
+		it_exchange_email_notifications()->set_sender( $sender );
+
+		$this->assertTrue( it_exchange_send_email( 'Message', 'Subject', $recipient ) );
+
+		it_exchange_email_notifications()->set_sender( $original );
+	}
+
+	/**
+	 * @group emails
+	 */
+	public function test_send_email_recipient_from_email() {
+
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) {
+
+			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
+				return false;
+			}
+
+			$recipient = $sendable->get_recipient();
+
+			if ( ! $recipient instanceof IT_Exchange_Email_Recipient_Email ) {
+				return false;
+			}
+
+			if ( $recipient->get_email() !== 'example@example.org' ) {
+				return false;
+			}
+
+			return true;
+		} ) )->willReturn( true );
+
+		$original = it_exchange_email_notifications()->get_sender();
+		it_exchange_email_notifications()->set_sender( $sender );
+
+		$this->assertTrue( it_exchange_send_email( 'Message', 'Subject', 'example@example.org' ) );
+
+		it_exchange_email_notifications()->set_sender( $original );
+	}
+
+	/**
+	 * @group emails
+	 */
+	public function test_send_email_recipient_from_user_id() {
+
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) {
+
+			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
+				return false;
+			}
+
+			$recipient = $sendable->get_recipient();
+
+			if ( ! $recipient instanceof IT_Exchange_Email_Recipient_Customer ) {
+				return false;
+			}
+
+			if ( $recipient->get_email() !== get_user_by( 'id', 1 )->user_email ) {
+				return false;
+			}
+
+			return true;
+		} ) )->willReturn( true );
+
+		$original = it_exchange_email_notifications()->get_sender();
+		it_exchange_email_notifications()->set_sender( $sender );
+
+		$this->assertTrue( it_exchange_send_email( 'Message', 'Subject', 1 ) );
+
+		it_exchange_email_notifications()->set_sender( $original );
+	}
+
+	/**
+	 * @group emails
+	 */
+	public function test_send_email_recipient_from_wp_user() {
+
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) {
+
+			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
+				return false;
+			}
+
+			$recipient = $sendable->get_recipient();
+
+			if ( ! $recipient instanceof IT_Exchange_Email_Recipient_Customer ) {
+				return false;
+			}
+
+			if ( $recipient->get_email() !== get_user_by( 'id', 1 )->user_email ) {
+				return false;
+			}
+
+			return true;
+		} ) )->willReturn( true );
+
+		$original = it_exchange_email_notifications()->get_sender();
+		it_exchange_email_notifications()->set_sender( $sender );
+
+		$this->assertTrue( it_exchange_send_email( 'Message', 'Subject', get_user_by( 'id', 1 ) ) );
+
+		it_exchange_email_notifications()->set_sender( $original );
+	}
+
+	/**
+	 * @group emails
+	 */
+	public function test_send_email_recipient_from_customer_object() {
+
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) {
+
+			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
+				return false;
+			}
+
+			$recipient = $sendable->get_recipient();
+
+			if ( ! $recipient instanceof IT_Exchange_Email_Recipient_Customer ) {
+				return false;
+			}
+
+			if ( $recipient->get_email() !== get_user_by( 'id', 1 )->user_email ) {
+				return false;
+			}
+
+			return true;
+		} ) )->willReturn( true );
+
+		$original = it_exchange_email_notifications()->get_sender();
+		it_exchange_email_notifications()->set_sender( $sender );
+
+		$this->assertTrue( it_exchange_send_email( 'Message', 'Subject', it_exchange_get_customer( 1 ) ) );
+
+		it_exchange_email_notifications()->set_sender( $original );
+	}
+
+	/**
+	 * @group emails
+	 */
+	public function test_send_email_recipient_from_transaction() {
+
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) {
+
+			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
+				return false;
+			}
+
+			$recipient = $sendable->get_recipient();
+
+			if ( ! $recipient instanceof IT_Exchange_Email_Recipient_Transaction ) {
+				return false;
+			}
+
+			if ( $recipient->get_email() !== get_user_by( 'id', 1 )->user_email ) {
+				return false;
+			}
+
+			return true;
+		} ) )->willReturn( true );
+
+		$original = it_exchange_email_notifications()->get_sender();
+		it_exchange_email_notifications()->set_sender( $sender );
+
+		$this->assertTrue( it_exchange_send_email( 'Message', 'Subject', '', $this->transaction_factory->create() ) );
+
+		it_exchange_email_notifications()->set_sender( $original );
+	}
+
+	/**
+	 * @group emails
+	 */
+	public function test_send_email_context_retrieved_from_given_customer_and_transaction() {
+
+		$transaction = $this->transaction_factory->create();
+
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) use ( $transaction ) {
+
+			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
+				return false;
+			}
+
+			$context = $sendable->get_context();
+
+			if ( ! isset( $context['transaction'], $context['customer'], $context['extra'] ) ) {
+				return false;
+			}
+
+			if ( $context['transaction']->get_ID() != $transaction ) {
+				return false;
+			}
+
+			if ( $context['customer']->id != 1 ) {
+				return false;
+			}
+
+			if ( $context['extra'] !== 'data' ) {
+				return false;
+			}
+
+			return true;
+		} ) )->willReturn( true );
+
+		$original = it_exchange_email_notifications()->get_sender();
+		it_exchange_email_notifications()->set_sender( $sender );
+
+		$this->assertTrue( it_exchange_send_email( 'Message', 'Subject', 1, $transaction, array(
+			'extra' => 'data'
+		) ) );
+
+		it_exchange_email_notifications()->set_sender( $original );
+	}
+
+	/**
+	 * @group emails
+	 */
+	public function test_send_email_provided_customer_and_transaction_context_not_trampled() {
+
+		$c1 = it_exchange_get_customer( 1 );
+		$c2 = it_exchange_get_customer( $this->factory()->user->create() );
+		$t1 = $this->transaction_factory->create();
+		$t2 = $this->transaction_factory->create();
+
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) use ( $c2, $t2 ) {
+
+			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
+				return false;
+			}
+
+			$context = $sendable->get_context();
+
+			if ( $context['transaction'] !== $t2 ) {
+				return false;
+			}
+
+			if ( $context['customer'] !== $c2 ) {
+				return false;
+			}
+
+			return true;
+		} ) )->willReturn( true );
+
+		$original = it_exchange_email_notifications()->get_sender();
+		it_exchange_email_notifications()->set_sender( $sender );
+
+		$this->assertTrue( it_exchange_send_email( 'Message', 'Subject', $c1, $t1, array(
+			'customer'    => $c2,
+			'transaction' => $t2
+		) ) );
+
+		it_exchange_email_notifications()->set_sender( $original );
+	}
 }
