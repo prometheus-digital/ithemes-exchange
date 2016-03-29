@@ -26,7 +26,7 @@ function it_exchange_get_transaction_method( $transaction = false ) {
 	if ( $transaction instanceof IT_Exchange_Transaction )
 		return $transaction->get_method();
 
-	if ( ! $transaction ) {
+	if ( ! $transaction && ! empty( $GLOBALS['post'] ) ) {
 		$transaction = $GLOBALS['post'];
 	}
 

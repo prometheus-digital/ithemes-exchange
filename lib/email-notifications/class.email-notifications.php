@@ -243,7 +243,7 @@ class IT_Exchange_Email_Notifications {
 
 		$transaction = it_exchange_get_transaction( $transaction );
 
-		if ( empty( $transaction->ID ) ) {
+		if ( ! $transaction ) {
 			return;
 		}
 

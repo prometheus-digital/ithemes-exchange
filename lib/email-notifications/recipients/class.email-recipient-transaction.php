@@ -45,13 +45,16 @@ class IT_Exchange_Email_Recipient_Transaction implements IT_Exchange_Email_Recip
 	 */
 	public function get_first_name() {
 
-		if ( $this->transaction->cart_details->is_guest_checkout ) {
-			return $this->get_full_name();
+		if ( ! empty( $this->transaction->cart_details->is_guest_checkout ) ) {
+
+			$parts = explode( '@', $this->get_email() );
+
+			return $parts[0];
 		}
 
 		$user = it_exchange_get_transaction_customer( $this->transaction )->wp_user;
 
-		return $user->first_name;
+		return empty( $user->first_name ) ? $user->display_name : $user->first_name;
 	}
 
 	/**

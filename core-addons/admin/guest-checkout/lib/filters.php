@@ -408,15 +408,17 @@ add_filter( 'it_exchange_get_customer_transactions_args', 'it_exchange_guest_che
  *
  * @since 1.6.0
  *
- * @param object $customer the customer object
+ * @param IT_Exchange_Customer    $customer the customer object
+ * @param IT_Exchange_Transaction $transaction
  *
  * @return IT_Exchange_Customer
 */
 function it_exchange_guest_checkout_modify_transaction_customer( $customer, $transaction ) {
+	
 	if ( empty( $transaction->cart_details->is_guest_checkout ) )
 		return $customer;
 
-	if ( ( ! empty( $transaction->customer_id ) && is_email( $transaction->customer_id ) ) ) {
+	if ( is_email( $transaction->customer_id ) ) {
 		$customer = it_exchange_guest_checkout_generate_guest_user_object( $transaction->customer_id, true );
 	} else {
 		$customer = false;

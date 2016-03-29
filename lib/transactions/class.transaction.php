@@ -47,8 +47,9 @@ class IT_Exchange_Transaction {
 
 	/**
 	 * @var object
+	 * @deprecated
 	 */
-	private $cart_details;
+	public $cart_details;
 
 	/**
 	 * Constructor. Loads post data and transaction data
@@ -227,10 +228,10 @@ class IT_Exchange_Transaction {
 		 * @param string                  $old_status
 		 */
 		do_action( 'it_exchange_update_transaction_status', $this, $old_status, $old_cleared, $status );
-		
+
 		/**
 		 * Fires when the transaction's status is updated.
-		 * 
+		 *
 		 * The dynamic portion of the hook name, `$this->get_method()`, refers to the
 		 * method slug used for this transaction.
 		 *
@@ -683,10 +684,23 @@ class IT_Exchange_Transaction {
 			'customer_id',
 			'transaction_method',
 			'status',
-			'cart_details'
 		) ) ) {
 			return $this->$name;
 		}
+
+		return null;
+	}
+
+	/**
+	 * is triggered by calling isset() or empty() on inaccessible members.
+	 *
+	 * @param $name string
+	 *
+	 * @return bool
+	 * @link http://php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.members
+	 */
+	public function __isset( $name ) {
+		return null !== $this->__get( $name );
 	}
 
 	/**
