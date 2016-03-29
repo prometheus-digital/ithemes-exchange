@@ -16,7 +16,7 @@ class IT_Exchange_Transaction {
 	/**
 	 * @var int
 	 */
-	public $ID;
+	private $ID;
 
 	/**
 	 * @var array
@@ -47,9 +47,8 @@ class IT_Exchange_Transaction {
 
 	/**
 	 * @var object
-	 * @deprecated
 	 */
-	public $cart_details;
+	private $cart_details;
 
 	/**
 	 * Constructor. Loads post data and transaction data
@@ -684,6 +683,7 @@ class IT_Exchange_Transaction {
 			'customer_id',
 			'transaction_method',
 			'status',
+			'cart_details',
 		) ) ) {
 			return $this->$name;
 		}
