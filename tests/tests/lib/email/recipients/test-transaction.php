@@ -94,7 +94,7 @@ class Test_IT_Exchange_Email_Recipient_Transaction extends IT_Exchange_UnitTestC
 		) );
 
 		$recipient = new IT_Exchange_Email_Recipient_Transaction( $txn );
-		$this->assertEquals( 'john', $recipient->get_first_name() );
+		$this->assertEquals( 'john.doe', $recipient->get_first_name() );
 	}
 
 	public function test_get_full_name_guest_checkout() {
@@ -107,6 +107,6 @@ class Test_IT_Exchange_Email_Recipient_Transaction extends IT_Exchange_UnitTestC
 		) );
 
 		$recipient = new IT_Exchange_Email_Recipient_Transaction( $txn );
-		$this->assertEquals( 'Guest Customer (john.doe@gmail.com)', $recipient->get_full_name() );
+		$this->assertEquals( 'john.doe@gmail.com', $recipient->get_full_name() );
 	}
 }

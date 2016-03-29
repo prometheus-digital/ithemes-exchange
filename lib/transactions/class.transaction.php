@@ -692,6 +692,22 @@ class IT_Exchange_Transaction {
 	}
 
 	/**
+	 * Back-compat.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $name
+	 *
+	 * @return bool
+	 */
+	public function __isset( $name ) {
+
+		$val = $this->__get( $name );
+
+		return ! empty( $val );
+	}
+
+	/**
 	 * Gets a transaction meta property.
 	 *
 	 * If the custom value is already set, it uses that.

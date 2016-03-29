@@ -700,8 +700,6 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_get_update_cart_id() {
 
-		$this->markTestSkipped();
-
 		$id = it_exchange_create_cart_id();
 		it_exchange_update_cart_id( $id );
 

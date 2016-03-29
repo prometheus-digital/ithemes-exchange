@@ -65,6 +65,11 @@ class IT_Exchange_Email_Recipient_Transaction implements IT_Exchange_Email_Recip
 	 * @return string
 	 */
 	public function get_full_name() {
+
+		if ( ! empty( $this->transaction->cart_details->is_guest_checkout ) ) {
+			return $this->get_email();
+		}
+		
 		return it_exchange_get_transaction_customer_display_name( $this->transaction );
 	}
 }
