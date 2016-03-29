@@ -35,6 +35,9 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 		it_exchange_get_option( 'settings_general', true );
 
 		WP_Mock::setUp();
+
+		add_filter( 'it_exchange_send_purchase_email_to_customer', '__return_false' );
+		add_filter( 'it_exchange_send_purchase_email_to_admin', '__return_false' );
 	}
 
 	/**

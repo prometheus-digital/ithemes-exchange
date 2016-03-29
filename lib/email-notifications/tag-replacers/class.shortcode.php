@@ -37,7 +37,7 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 
 		$this->context = $context;
 
-		it_exchange_email_notifications()->transaction_id = empty( $context['transaction'] ) ? false : $context['transaction']->ID;
+		it_exchange_email_notifications()->transaction_id = empty( $context['transaction'] ) ? false : $context['transaction']->get_ID();
 		it_exchange_email_notifications()->customer_id    = empty( $context['customer'] ) ? false : $context['customer']->id;
 		it_exchange_email_notifications()->user           = it_exchange_get_customer( it_exchange_email_notifications()->customer_id );
 		

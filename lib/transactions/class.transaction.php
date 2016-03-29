@@ -16,7 +16,7 @@ class IT_Exchange_Transaction {
 	/**
 	 * @var int
 	 */
-	private $ID;
+	public $ID;
 
 	/**
 	 * @var array
@@ -689,18 +689,6 @@ class IT_Exchange_Transaction {
 		}
 
 		return null;
-	}
-
-	/**
-	 * is triggered by calling isset() or empty() on inaccessible members.
-	 *
-	 * @param $name string
-	 *
-	 * @return bool
-	 * @link http://php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.members
-	 */
-	public function __isset( $name ) {
-		return null !== $this->__get( $name );
 	}
 
 	/**
