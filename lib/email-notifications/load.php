@@ -87,7 +87,7 @@ function it_exchange_email_notifications() {
 		if ( defined( 'IT_EXCHANGE_DISABLE_EMAILS' ) && IT_EXCHANGE_DISABLE_EMAILS ) {
 			$sender = new IT_Exchange_Email_Null_Sender();
 		} else {
-			$sender = new IT_Exchange_Email_Postmark_Sender( 'a9dd15f4-b367-4670-8c28-6f68833b21f7', $replacer );
+			$sender = new IT_Exchange_WP_Mail_Sender( $replacer );
 		}
 
 		/**
