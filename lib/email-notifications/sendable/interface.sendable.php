@@ -9,7 +9,7 @@
 /**
  * Class IT_Exchange_Email
  */
-interface IT_Exchange_Sendable {
+interface IT_Exchange_Sendable extends Serializable {
 
 	/**
 	 * Get the subject line.

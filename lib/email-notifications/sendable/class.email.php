@@ -196,4 +196,45 @@ class IT_Exchange_Email implements IT_Exchange_Sendable {
 	public function get_context() {
 		return $this->context;
 	}
+
+	/**
+	 * String representation of object
+	 * @link  http://php.net/manual/en/serializable.serialize.php
+	 * @return string the string representation of the object or null
+	 * @since 5.1.0
+	 */
+	public function serialize() {
+
+		$data = array(
+			'notification' => $this->get_notification()->get_slug(),
+			'context'      => $this->get_context(),
+			'ccs'          => $this->get_ccs(),
+			'bccs'         => $this->get_bccs(),
+			'recipient'    => $this->get_recipient()
+		);
+
+		return serialize( $data );
+	}
+
+	/**
+	 * Constructs the object
+	 * @link  http://php.net/manual/en/serializable.unserialize.php
+	 *
+	 * @param string $serialized <p>
+	 *                           The string representation of the object.
+	 *                           </p>
+	 *
+	 * @return void
+	 * @since 5.1.0
+	 */
+	public function unserialize( $serialized ) {
+
+		$data = unserialize( $serialized );
+
+		$this->notification = it_exchange_email_notifications()->get_notification( $data['notification'] );
+		$this->context      = $data['context'];
+		$this->ccs          = $data['ccs'];
+		$this->bccs         = $data['bccs'];
+		$this->recipient    = $data['recipient'];
+	}
 }

@@ -62,6 +62,17 @@ class IT_Exchange_Email_Template {
 	}
 
 	/**
+	 * Get the template name.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function get_name() {
+		return $this->name;
+	}
+
+	/**
 	 * Globalize the context for the theme API.
 	 *
 	 * @since 1.36
