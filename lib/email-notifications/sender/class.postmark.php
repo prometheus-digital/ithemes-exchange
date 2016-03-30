@@ -19,12 +19,19 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	private $server_token;
 
 	/**
+	 * @var IT_Exchange_Email_Tag_Replacer
+	 */
+	private $replacer;
+
+	/**
 	 * IT_Exchange_Email_Postmark_Sender constructor.
 	 *
-	 * @param string $server_token
+	 * @param string                         $server_token
+	 * @param IT_Exchange_Email_Tag_Replacer $replacer
 	 */
-	public function __construct( $server_token ) {
+	public function __construct( $server_token, IT_Exchange_Email_Tag_Replacer $replacer ) {
 		$this->server_token = $server_token;
+		$this->replacer     = $replacer;
 	}
 
 	/**
@@ -90,8 +97,8 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 		$api_format = array(
 			'From'     => $this->get_from_address(),
 			'To'       => $sendable->get_recipient()->get_email(),
-			'Subject'  => $sendable->get_subject(),
-			'HtmlBody' => $sendable->get_body()
+			'Subject'  => $this->replacer->replace( $sendable->get_subject(), $sendable->get_context() ),
+			'HtmlBody' => $this->replacer->replace( shortcode_unautop( wpautop( $sendable->get_body() ) ), $sendable->get_context() )
 		);
 
 		if ( $sendable->get_ccs() ) {
