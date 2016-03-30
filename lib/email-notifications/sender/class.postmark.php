@@ -24,14 +24,24 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	private $replacer;
 
 	/**
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * IT_Exchange_Email_Postmark_Sender constructor.
 	 *
 	 * @param string                         $server_token
 	 * @param IT_Exchange_Email_Tag_Replacer $replacer
+	 * @param array                          $config Additional configuration options.
 	 */
-	public function __construct( $server_token, IT_Exchange_Email_Tag_Replacer $replacer ) {
+	public function __construct( $server_token, IT_Exchange_Email_Tag_Replacer $replacer, array $config = array() ) {
 		$this->server_token = $server_token;
 		$this->replacer     = $replacer;
+
+		$this->config = ITUtility::merge_defaults( $config, array(
+			'TrackOpens' => true
+		) );
 	}
 
 	/**
@@ -111,6 +121,12 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 		if ( $sendable->get_bccs() ) {
 			$api_format['Bcc'] = implode( ',', array_map( array( $this, '_map_address' ), $sendable->get_bccs() ) );
 		}
+
+		if ( $sendable instanceof IT_Exchange_Email ) {
+			$api_format['Tag'] = $sendable->get_notification()->get_name();
+		}
+
+		$api_format = array_merge( $api_format, $this->config );
 
 		/**
 		 * Filter the email data after it is prepared for Postmark.
