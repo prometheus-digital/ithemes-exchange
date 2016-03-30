@@ -40,7 +40,7 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 		it_exchange_email_notifications()->transaction_id = empty( $context['transaction'] ) ? false : $context['transaction']->get_ID();
 		it_exchange_email_notifications()->customer_id    = empty( $context['customer'] ) ? false : $context['customer']->id;
 		it_exchange_email_notifications()->user           = it_exchange_get_customer( it_exchange_email_notifications()->customer_id );
-		
+
 		$GLOBALS['it_exchange']['email-confirmation-data'] = $this->get_data();
 
 		return do_shortcode( $content );
@@ -110,7 +110,7 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 				$r    = $tag->render( $context, $opts );
 			}
 
-		} elseif ( is_callable( $functions[ $show ] ) ) {
+		} elseif ( isset( $functions[ $show ] ) && is_callable( $functions[ $show ] ) ) {
 			$r = call_user_func( $functions[ $show ], it_exchange_email_notifications(), $opts, $all_atts, $context );
 		}
 
