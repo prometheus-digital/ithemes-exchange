@@ -94,11 +94,14 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 			throw new IT_Exchange_Email_Delivery_Exception( 'A maximum of 50 Bcc addresses are supported.' );
 		}
 
+		$message = $this->replacer->replace( shortcode_unautop( wpautop( $sendable->get_body() ) ), $sendable->get_context() );
+		$html    = $sendable->get_template()->get_html( array_merge( array( 'message' => $message ), $sendable->get_context() ) );
+
 		$api_format = array(
 			'From'     => $this->get_from_address(),
 			'To'       => $sendable->get_recipient()->get_email(),
 			'Subject'  => $this->replacer->replace( $sendable->get_subject(), $sendable->get_context() ),
-			'HtmlBody' => $this->replacer->replace( shortcode_unautop( wpautop( $sendable->get_body() ) ), $sendable->get_context() )
+			'HtmlBody' => $html
 		);
 
 		if ( $sendable->get_ccs() ) {
