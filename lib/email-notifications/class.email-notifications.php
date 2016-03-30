@@ -232,18 +232,22 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 			die();
 		}
 
+		$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
+		
 		try {
 			// Resend w/o admin notification
 			$this->send_purchase_emails( $transaction, false );
 
 			it_exchange_add_message( 'notice', __( 'Confirmation email resent', 'it-l10n-ithemes-exchange' ) );
-		} catch ( IT_Exchange_Email_Delivery_Exception $e ) {
-			it_exchange_add_message(' error', $e->getMessage() );
-		}
+			it_exchange_redirect( $url, 'admin-confirmation-email-resend-success' );
+			die();
 
-		$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
-		it_exchange_redirect( $url, 'admin-confirmation-email-resend-success' );
-		die();
+		} catch ( IT_Exchange_Email_Delivery_Exception $e ) {
+
+			it_exchange_add_message(' error', $e->getMessage() );
+			it_exchange_redirect( $url, 'admin-confirmation-email-resend-failed' );
+			die();
+		}
 	}
 
 	/**

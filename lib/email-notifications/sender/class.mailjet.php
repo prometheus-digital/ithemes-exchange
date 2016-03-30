@@ -1,22 +1,27 @@
 <?php
 /**
- * Contains the Postmark email sender.
+ * Contains the Mailjet sender class.
  *
  * @since   1.36
  * @license GPLv2
  */
 
 /**
- * Class IT_Exchange_Email_Postmark_Sender
+ * Class IT_Exchange_Email_Mailjet_Sender
  */
-class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
+class IT_Exchange_Email_Mailjet_Sender implements IT_Exchange_Email_Sender {
 
-	const URL = 'https://api.postmarkapp.com/';
+	const URL = 'https://api.mailjet.com/v3/';
 
 	/**
 	 * @var string
 	 */
-	private $server_token;
+	private $public_key = '';
+
+	/**
+	 * @var string
+	 */
+	private $private_key = '';
 
 	/**
 	 * @var IT_Exchange_Email_Tag_Replacer
@@ -26,21 +31,22 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * @var array
 	 */
-	private $config;
+	private $config = array();
 
 	/**
-	 * IT_Exchange_Email_Postmark_Sender constructor.
+	 * IT_Exchange_Email_Mailjet_Sender constructor.
 	 *
-	 * @param string                         $server_token
+	 * @param string                         $private_key
+	 * @param string                         $public_key
 	 * @param IT_Exchange_Email_Tag_Replacer $replacer
-	 * @param array                          $config Additional configuration options.
+	 * @param array                          $config
 	 */
-	public function __construct( $server_token, IT_Exchange_Email_Tag_Replacer $replacer, array $config = array() ) {
-		$this->server_token = $server_token;
-		$this->replacer     = $replacer;
-
-		$this->config = ITUtility::merge_defaults( $config, array(
-			'TrackOpens' => true
+	public function __construct( $private_key, $public_key, IT_Exchange_Email_Tag_Replacer $replacer, array $config = array() ) {
+		$this->private_key = $private_key;
+		$this->public_key  = $public_key;
+		$this->replacer    = $replacer;
+		$this->config      = ITUtility::merge_defaults( $config, array(
+			'Mj-trackopen' => true
 		) );
 	}
 
@@ -55,7 +61,7 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	 * @throws IT_Exchange_Email_Delivery_Exception
 	 */
 	public function send( IT_Exchange_Sendable $email ) {
-		return $this->make_api_request( 'email', $this->convert_sendable_to_api_format( $email ), $email );
+		return $this->make_api_request( $this->convert_sendable_to_api_format( $email ), $email );
 	}
 
 	/**
@@ -71,17 +77,21 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	 */
 	public function bulk_send( array $emails ) {
 
-		$data = array();
+		$messages = array();
 
 		foreach ( $emails as $email ) {
 			if ( ! $email instanceof IT_Exchange_Sendable ) {
 				throw new InvalidArgumentException( '$email must implement IT_Exchange_Sendable interface.' );
 			}
 
-			$data[] = $this->convert_sendable_to_api_format( $email );
+			$messages[] = $this->convert_sendable_to_api_format( $email );
 		}
 
-		return $this->make_api_request( 'email/batch', $data, reset( $emails ) );
+		$data = array(
+			'Messages' => $messages
+		);
+
+		return $this->make_api_request( $data, reset( $emails ) );
 	}
 
 	/**
@@ -108,10 +118,10 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 		$html    = $sendable->get_template()->get_html( array_merge( array( 'message' => $message ), $sendable->get_context() ) );
 
 		$api_format = array(
-			'From'     => $this->get_from_address(),
-			'To'       => $sendable->get_recipient()->get_email(),
-			'Subject'  => $this->replacer->replace( $sendable->get_subject(), $sendable->get_context() ),
-			'HtmlBody' => $html
+			'FromEmail' => $this->get_from_address(),
+			'To'        => $sendable->get_recipient()->get_email(),
+			'Subject'   => $this->replacer->replace( $sendable->get_subject(), $sendable->get_context() ),
+			'Html-part' => $html
 		);
 
 		if ( $sendable->get_ccs() ) {
@@ -122,46 +132,40 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 			$api_format['Bcc'] = implode( ',', array_map( array( $this, '_map_address' ), $sendable->get_bccs() ) );
 		}
 
-		if ( $sendable instanceof IT_Exchange_Email ) {
-			$api_format['Tag'] = $sendable->get_notification()->get_name();
-		}
-
 		$api_format = array_merge( $api_format, $this->config );
 
 		/**
-		 * Filter the email data after it is prepared for Postmark.
+		 * Filter the email data after it is prepared for Mailjet.
 		 *
 		 * @since 1.36
 		 *
 		 * @param array                $api_format
 		 * @param IT_Exchange_Sendable $sendable
 		 */
-		$api_format = apply_filters( 'it_exchange_send_email_notification_postmark_api_format', $api_format, $sendable );
+		$api_format = apply_filters( 'it_exchange_send_email_notification_mailjet_api_format', $api_format, $sendable );
 
 		return $api_format;
 	}
 
 	/**
-	 * Make an API request to Postmark.
+	 * Perform an API request.
 	 *
 	 * @since 1.36
 	 *
-	 * @param string               $endpoint
-	 * @param array                $data
-	 * @param IT_Exchange_Sendable $sendable Mainly used to provide extra context to the delivery exception.
+	 * @param array                     $data
+	 * @param IT_Exchange_Sendable|null $sendable
 	 *
 	 * @return bool
 	 * @throws IT_Exchange_Email_Delivery_Exception
 	 */
-	protected function make_api_request( $endpoint, $data, IT_Exchange_Sendable $sendable = null ) {
+	protected function make_api_request( $data, IT_Exchange_Sendable $sendable = null ) {
 
 		$headers = array(
-			'Content-Type'            => 'application/json',
-			'Accept'                  => 'application/json',
-			'X-Postmark-Server-Token' => $this->server_token
+			'Content-type'  => 'application/json',
+			'Authorization' => 'Basic ' . base64_encode( "{$this->public_key}:{$this->private_key}" )
 		);
 
-		$response = wp_safe_remote_post( self::URL . $endpoint, array(
+		$response = wp_safe_remote_post( self::URL . 'send', array(
 			'headers' => $headers,
 			'body'    => wp_json_encode( $data )
 		) );
@@ -176,51 +180,39 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 
 		switch ( $code ) {
 			case 200:
+			case 201:
 				return true;
-			case 401:
-				throw new IT_Exchange_Email_Delivery_Exception( 'Invalid Postmark server token provided.', $sendable );
-			case 422:
-
-				$message = '';
-
-				if ( ! empty( $body['ErrorCode'] ) ) {
-					$message = $body['ErrorCode'];
-				}
-
-				if ( ! empty( $body['Message'] ) ) {
-					if ( empty( $message ) ) {
-						$message = $body['Message'];
-					} else {
-						$message .= ": {$body['Message']}";
-					}
-				}
-
-				if ( ! empty( $message ) ) {
-					throw new IT_Exchange_Email_Delivery_Exception( $message, $sendable );
-				}
-
-				throw new IT_Exchange_Email_Delivery_Exception( 'Invalid data sent to Postmark.', $sendable );
 			case 500:
-			case 503:
-				throw new IT_Exchange_Email_Delivery_Exception( 'A temporary problem occurred with Postmark\'s servers. Try again later.' );
-		}
+				throw new IT_Exchange_Email_Delivery_Exception( 'A temporary problem occurred with Mailjet\'s servers. Try again later.' );
+			default:
 
-		return ( ! empty( $body['Message'] ) && $body['Message'] === 'Ok' );
+				$error_info    = empty( $body['ErrorInfo'] ) ? '' : $body['ErrorInfo'];
+				$error_message = empty( $body['ErrorMessage'] ) ? '' : $body['ErrorMessage'];
+				$error_code    = empty( $body['StatusCode'] ) ? '' : $body['StatusCode'];
+
+				throw new IT_Exchange_Email_Delivery_Exception( "$error_code:$error_info. $error_message" );
+		}
 	}
 
+
 	/**
-	 * Map the address from the recipient object.
-	 *
-	 * @internal
+	 * Convert a recipient to an address line.
 	 *
 	 * @since 1.36
+	 *
+	 * @internal
 	 *
 	 * @param IT_Exchange_Email_Recipient $recipient
 	 *
 	 * @return string
 	 */
 	public function _map_address( IT_Exchange_Email_Recipient $recipient ) {
-		return $recipient->get_email();
+
+		if ( $recipient->get_full_name() ) {
+			return "{$recipient->get_full_name()} <{$recipient->get_email()}>";
+		} else {
+			return $recipient->get_email();
+		}
 	}
 
 	/**
@@ -235,7 +227,7 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 		$settings = it_exchange_get_option( 'settings_email' );
 
 		// Edge case where sale is made before admin visits email settings.
-		if ( empty( $settings['receipt-email-name'] ) && ! isset( $GLOBALS['IT_Exchange_Admin'] ) ) {
+		if ( empty( $settings['receipt-email-address'] ) && ! isset( $GLOBALS['IT_Exchange_Admin'] ) ) {
 
 			include_once( IT_Exchange::$dir . 'lib/admin/class.admin.php' );
 
@@ -247,7 +239,11 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 			$settings = it_exchange_get_option( 'settings_email', true );
 		}
 
-		return $settings['receipt-email-address'];
+		if ( empty( $settings['receipt-email-name'] ) ) {
+			return $settings['receipt-email-address'];
+		}
+
+		return $settings['receipt-email-name'] . '<' . $settings['receipt-email-address'] . '>';
 	}
 
 }

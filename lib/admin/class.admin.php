@@ -762,26 +762,8 @@ class IT_Exchange_Admin {
 	*/
 	static function set_email_settings_defaults( $values ) {
 		$defaults = array(
-			'notification-email-address' => esc_attr( get_bloginfo( 'admin_email' ) ),
-			'admin-email-address'      => esc_attr( get_bloginfo( 'admin_email' ) ),
-			'admin-email-name'         => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
-			'admin-email-subject'      => sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
-			'admin-email-template'     => sprintf( __( "Your friend %s just bought all this awesomeness from your store!
-
-Order: %s
-
-%s", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=fullname]', '[it_exchange_email show=receipt_id]', '[it_exchange_email show=order_table]' ),
 			'receipt-email-address'      => esc_attr( get_bloginfo( 'admin_email' ) ),
-			'receipt-email-name'         => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
-			'receipt-email-subject'      => sprintf( __( 'Receipt for Purchase: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
-			'receipt-email-template'     => sprintf( __( "Hello %s,
-
-Thank you for your order. Your order's details are below.
-Order: %s
-
-%s
-
-%s", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=name]', '[it_exchange_email show=receipt_id]', '[it_exchange_email show=order_table options=purchase_message]', '[it_exchange_email show=download_list]' ),
+			'receipt-email-name'         => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES )
 		);
 		$values = ITUtility::merge_defaults( $values, $defaults );
 		return $values;

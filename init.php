@@ -23,16 +23,33 @@
  * @since 0.1.0
 */
 class IT_Exchange {
+	
+	const VERSION = '1.35.4';
 
-	var $_version         = '1.35.4';
+	/**
+	 * @var string
+	 */
+	static $dir;
+
+	/**
+	 * @var string
+	 */
+	static $url;
+	
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'ithemes-exchange';
 	var $_name            = 'iThemes Exchange';
 	var $_series          = '';
-
-	var $_plugin_path     = '';
-	var $_plugin_url      = '';
 	var $_plugin_base     = '';
+	
+	/** @deprecated 1.36 */
+	var $_plugin_path = '';
+
+	/** @deprecated 1.36 */
+	var $_plugin_url = '';
+
+	/** @deprecated 1.36 */
+	var $_version;
 
 	/**
 	 * Setup the plugin
@@ -45,6 +62,9 @@ class IT_Exchange {
 	 * @since 0.1.0
 	*/
 	function __construct() {
+		
+		$this->_version = self::VERSION;
+		
 		// Setup Plugin
 		$this->set_plugin_locations();
 		$this->set_textdomain();
@@ -98,8 +118,12 @@ class IT_Exchange {
 	 * @return void
 	*/
 	function set_plugin_locations() {
-		$this->_plugin_path = plugin_dir_path( __FILE__ );
-		$this->_plugin_url  = plugins_url( '', __FILE__ );
+		
+		self::$dir = plugin_dir_path( __FILE__ );
+		self::$url = plugins_url( __FILE__ );
+		
+		$this->_plugin_path = self::$dir;
+		$this->_plugin_url  = self::$url;
 		$this->_plugin_base = plugin_basename( __FILE__ );
 	}
 

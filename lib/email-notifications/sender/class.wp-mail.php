@@ -47,7 +47,7 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 		// Edge case where sale is made before admin visits email settings.
 		if ( empty( $settings['receipt-email-name'] ) && ! isset( $GLOBALS['IT_Exchange_Admin'] ) ) {
 
-			include_once( dirname( dirname( __FILE__ ) ) . '/admin/class.admin.php' );
+			include_once( IT_Exchange::$dir . 'lib/admin/class.admin.php' );
 
 			add_filter( 'it_storage_get_defaults_exchange_settings_email', array(
 				'IT_Exchange_Admin',
