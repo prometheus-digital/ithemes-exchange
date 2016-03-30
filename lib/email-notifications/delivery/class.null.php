@@ -24,4 +24,19 @@ class IT_Exchange_Email_Null_Sender implements IT_Exchange_Email_Sender {
 	public function send( IT_Exchange_Sendable $email ) {
 		return true;
 	}
+
+	/**
+	 * Bulk send emails.
+	 *
+	 * @since 1.36
+	 *
+	 * @param IT_Exchange_Sendable[] $emails
+	 *
+	 * @return bool
+	 * @throws InvalidArgumentException If a given email does not implement IT_Exchange_Sendable
+	 * @throws IT_Exchange_Email_Delivery_Exception
+	 */
+	public function bulk_send( array $emails ) {
+		return true;
+	}
 }

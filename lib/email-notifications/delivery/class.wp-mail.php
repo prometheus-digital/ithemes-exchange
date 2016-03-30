@@ -91,6 +91,30 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 	}
 
 	/**
+	 * Bulk send emails.
+	 *
+	 * @since 1.36
+	 *
+	 * @param IT_Exchange_Sendable[] $emails
+	 *
+	 * @return bool
+	 */
+	public function bulk_send( array $emails ) {
+
+		$ret = true;
+
+		foreach ( $emails as $email ) {
+			if ( ! $email instanceof IT_Exchange_Sendable ) {
+				throw new InvalidArgumentException( '$email must implement IT_Exchange_Sendable interface.' );
+			}
+
+			$ret = $ret && $this->send( $email );
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * Generate a header from a recipient.
 	 *
 	 * @since 1.36
