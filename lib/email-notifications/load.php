@@ -27,10 +27,11 @@ require_once dirname( __FILE__ ) . '/recipients/class.email-recipient-transactio
 require_once dirname( __FILE__ ) . '/recipients/class.email-recipient-customer.php';
 require_once dirname( __FILE__ ) . '/recipients/class.email-recipient-email.php';
 
-require_once dirname( __FILE__ ) . '/delivery/interface.php';
-require_once dirname( __FILE__ ) . '/delivery/class.null.php';
-require_once dirname( __FILE__ ) . '/delivery/class.wp-mail.php';
-require_once dirname( __FILE__ ) . '/delivery/class.exception.php';
+require_once dirname( __FILE__ ) . '/sender/interface.php';
+require_once dirname( __FILE__ ) . '/sender/class.null.php';
+require_once dirname( __FILE__ ) . '/sender/class.wp-mail.php';
+require_once dirname( __FILE__ ) . '/sender/class.postmark.php';
+require_once dirname( __FILE__ ) . '/sender/class.exception.php';
 
 require_once dirname( __FILE__ ) . '/tag-replacers/interface.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.base.php';
