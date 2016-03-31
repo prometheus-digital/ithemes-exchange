@@ -58,6 +58,27 @@ class IT_Exchange_Email_Recipient_Transaction implements IT_Exchange_Email_Recip
 	}
 
 	/**
+	 * Get the recipient's last name.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function get_last_name() {
+
+		if ( ! empty( $this->transaction->cart_details->is_guest_checkout ) ) {
+
+			$parts = explode( '@', $this->get_email() );
+
+			return $parts[0];
+		}
+
+		$user = it_exchange_get_transaction_customer( $this->transaction )->wp_user;
+
+		return empty( $user->last_name ) ? $user->display_name : $user->last_name;
+	}
+
+	/**
 	 * Get the recipient's full name.
 	 *
 	 * @since 1.36
@@ -69,7 +90,18 @@ class IT_Exchange_Email_Recipient_Transaction implements IT_Exchange_Email_Recip
 		if ( ! empty( $this->transaction->cart_details->is_guest_checkout ) ) {
 			return $this->get_email();
 		}
-		
+
 		return it_exchange_get_transaction_customer_display_name( $this->transaction );
+	}
+
+	/**
+	 * Get the recipient's username, if one exists.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function get_username() {
+		return it_exchange_get_transaction_customer( $this->transaction )->data->user_login;
 	}
 }

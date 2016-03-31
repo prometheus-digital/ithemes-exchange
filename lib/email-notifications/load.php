@@ -130,7 +130,7 @@ function it_exchange_register_email_notifications() {
 				'defaults' => array(
 					'subject' => sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
 					'body'    => sprintf( __( "Your friend %s just bought all this awesomeness from your store! \r\n\r\n Order: %s \r\n\r\n %s", 'it-l10n-ithemes-exchange' ),
-						'[it_exchange_email show=fullname]', '[it_exchange_email show=receipt_id]', '[it_exchange_email show=order_table]' ),
+						'[it_exchange_email show=customer_fullname]', '[it_exchange_email show=receipt_id]', '[it_exchange_email show=order_table]' ),
 				),
 				'group'    => __( 'Core', 'it-l10n-ithemes-exchange' )
 			)
@@ -139,7 +139,7 @@ function it_exchange_register_email_notifications() {
 			__( 'Purchase Receipt', 'it-l10n-ithemes-exchange' ), 'receipt', new IT_Exchange_Email_Template( 'receipt' ), array(
 				'defaults'    => array(
 					'subject' => sprintf( __( 'Receipt for Purchase: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
-					'body'    => sprintf( __( "Hello %s, \r\n\r\n Thank you for your order. Your order's details are below.", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=name]' ),
+					'body'    => sprintf( __( "Hello %s, \r\n\r\n Thank you for your order. Your order's details are below.", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=first_name]' ),
 				),
 				'group'       => __( 'Core', 'it-l10n-ithemes-exchange' ),
 				'description' =>
@@ -151,7 +151,7 @@ function it_exchange_register_email_notifications() {
 			__( 'New Public Transaction Activity', 'it-l10n-ithemes-exchange' ), 'customer-order-note', new IT_Exchange_Email_Template( 'order-note' ), array(
 				'defaults' => array(
 					'subject' => sprintf( __( 'New note about your order %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
-					'body'    => sprintf( __( "Hello %s, \r\n\r\n A new note has been added to your order.", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=name]' )
+					'body'    => sprintf( __( "Hello %s, \r\n\r\n A new note has been added to your order.", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=first_name]' )
 				),
 				'group'    => __( 'Core', 'it-l10n-ithemes-exchange' ),
 			)

@@ -30,6 +30,15 @@ interface IT_Exchange_Email_Recipient {
 	public function get_first_name();
 
 	/**
+	 * Get the recipient's last name.
+	 * 
+	 * @since 1.36
+	 * 
+	 * @return string
+	 */
+	public function get_last_name();
+
+	/**
 	 * Get the recipient's full name.
 	 *
 	 * @since 1.36
@@ -37,4 +46,13 @@ interface IT_Exchange_Email_Recipient {
 	 * @return string
 	 */
 	public function get_full_name();
+
+	/**
+	 * Get the recipient's username, if one exists.
+	 * 
+	 * @since 1.36
+	 * 
+	 * @return string
+	 */
+	public function get_username();
 }

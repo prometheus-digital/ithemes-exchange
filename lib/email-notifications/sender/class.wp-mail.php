@@ -72,7 +72,7 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 		}
 
 		$this->email = $email;
-		$context     = $email->get_context();
+		$context     = array_merge( array( 'recipient' => $email->get_recipient() ), $email->get_context() );
 		$content     = $email->get_body();
 
 		$headers = apply_filters( 'it_exchange_send_email_notification_wp_mail_headers', $headers );

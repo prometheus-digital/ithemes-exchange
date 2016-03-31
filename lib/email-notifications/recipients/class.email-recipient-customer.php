@@ -55,6 +55,24 @@ class IT_Exchange_Email_Recipient_Customer implements IT_Exchange_Email_Recipien
 	}
 
 	/**
+	 * Get the recipient's last name.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function get_last_name() {
+		
+		if ( ! empty( $this->customer->data->last_name ) ) {
+			return $this->customer->data->last_name;
+		} else if ( ! empty( $this->customer->data->display_name ) ) {
+			return $this->customer->data->display_name;
+		}
+
+		return '';
+	}
+
+	/**
 	 * Get the recipient's full name.
 	 *
 	 * @since 1.36
@@ -70,5 +88,16 @@ class IT_Exchange_Email_Recipient_Customer implements IT_Exchange_Email_Recipien
 		}
 
 		return '';
+	}
+
+	/**
+	 * Get the recipient's username, if one exists.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function get_username() {
+		return $this->customer->data->user_login;
 	}
 }

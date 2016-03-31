@@ -60,7 +60,7 @@ class IT_Exchange_Email_Tag_Base implements IT_Exchange_Email_Tag {
 		$this->description = $description;
 
 		if ( ! is_callable( $render, false ) ) {
-			throw new InvalidArgumentException( '$render must be callable.' );
+			throw new InvalidArgumentException( '$render must be callable for tag ' . $tag );
 		}
 
 		$this->render = $render;

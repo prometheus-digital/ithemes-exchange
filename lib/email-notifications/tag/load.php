@@ -30,103 +30,139 @@ class IT_Exchange_Email_Register_Default_Tags {
 	public function register( IT_Exchange_Email_Tag_Replacer $replacer ) {
 
 		$tags = array(
-			'download_list'    => array(
+			'download_list'       => array(
 				'name'      => __( 'Download List', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'A list of download links for each download purchased.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order' )
 			),
-			'order_table'      => array(
+			'order_table'         => array(
 				'name'      => __( 'Order Table', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'A table of the order details. Accept "purchase_message" option.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order' )
 			),
-			'purchase_date'    => array(
+			'purchase_date'       => array(
 				'name'      => __( 'Purchase Date', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'The date of the purchase.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order', 'receipt' )
 			),
-			'total'            => array(
+			'total'               => array(
 				'name'      => __( 'Total', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'The total price of the purchase.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order', 'receipt' )
 			),
-			'payment_id'       => array(
+			'payment_id'          => array(
 				'name'      => __( 'Method ID', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'The payment method ID for this purchase.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order', 'receipt' )
 			),
-			'receipt_id'       => array(
+			'receipt_id'          => array(
 				'name'      => __( 'Receipt ID', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'The unique ID number for this purchase.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order' )
 			),
-			'payment_method'   => array(
+			'payment_method'      => array(
 				'name'      => __( 'Payment Method', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'The method of payment used for this purchase.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order' )
 			),
-			'shipping_address' => array(
+			'shipping_address'    => array(
 				'name'      => __( 'Shipping Address', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'The shipping address for this purchase. Blank if shipping is not required.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order' )
 			),
-			'billing_address'  => array(
+			'billing_address'     => array(
 				'name'      => __( 'Billing Address', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'The billing address for this purchase. Blank if billing is not required.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order' )
 			),
-			'receipt_link'     => array(
+			'receipt_link'        => array(
 				'name'      => __( 'Receipt URL', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'Adds a link so users can view their receipt directly on your website.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order', 'receipt' )
 			),
-			'name'             => array(
+			'first_name'          => array(
 				'name'      => __( 'First Name', 'it-l10n-ithemes-exchange' ),
-				'desc'      => __( "The buyer's first name.", 'it-l10n-ithemes-exchange' ),
-				'context'   => array( 'customer' ),
+				'desc'      => __( "The recipient's first name, or display name if none given.", 'it-l10n-ithemes-exchange' ),
+				'context'   => array( 'recipient' ),
 				'available' => array()
 			),
-			'fullname'         => array(
+			'last_name'           => array(
+				'name'      => __( 'Last Name', 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( "The recipient's last name, or display name if none given.", 'it-l10n-ithemes-exchange' ),
+				'context'   => array( 'recipient' ),
+				'available' => array()
+			),
+			'fullname'            => array(
 				'name'      => __( 'Full Name', 'it-l10n-ithemes-exchange' ),
-				'desc'      => __( "The buyer's full name, first and last.", 'it-l10n-ithemes-exchange' ),
-				'context'   => array( 'customer' ),
+				'desc'      => __( "The recipient's full name.", 'it-l10n-ithemes-exchange' ),
+				'context'   => array( 'recipient' ),
 				'available' => array()
 			),
-			'username'         => array(
+			'username'            => array(
 				'name'      => __( 'Username', 'it-l10n-ithemes-exchange' ),
-				'desc'      => __( "The buyer's username on the site, if they registered an account.", 'it-l10n-ithemes-exchange' ),
-				'context'   => array( 'customer' ),
+				'desc'      => __( "The recipient's username on the site, if any.", 'it-l10n-ithemes-exchange' ),
+				'context'   => array( 'recipient' ),
 				'available' => array()
 			),
-			'email'            => array(
+			'email'               => array(
 				'name'      => __( 'Email', 'it-l10n-ithemes-exchange' ),
-				'desc'      => __( "The buyer's email on the site.", 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( "The recipient's email address.", 'it-l10n-ithemes-exchange' ),
+				'context'   => array( 'recipient' ),
+				'available' => array()
+			),
+			'customer_first_name' => array(
+				'name'      => __( 'First Name', 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( "The customer's first name, or display name if empty.", 'it-l10n-ithemes-exchange' ),
+				'context'   => array( 'recipient' ),
+				'available' => array()
+			),
+			'customer_last_name'  => array(
+				'name'      => __( 'Last Name', 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( "The customer's last name, or display name if empty.", 'it-l10n-ithemes-exchange' ),
+				'context'   => array( 'recipient' ),
+				'available' => array()
+			),
+			'customer_fullname'   => array(
+				'name'      => __( 'Full Name', 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( "The customer's full name.", 'it-l10n-ithemes-exchange' ),
+				'context'   => array( 'recipient' ),
+				'available' => array()
+			),
+			'customer_username'   => array(
+				'name'      => __( 'Username', 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( "The customer's username on the site, if they registered an account.", 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'customer' ),
 				'available' => array()
 			),
-			'login_link'       => array(
+			'customer_email'      => array(
+				'name'      => __( 'Email', 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( "The customer's email address.", 'it-l10n-ithemes-exchange' ),
+				'context'   => array( 'customer' ),
+				'available' => array()
+			),
+			'login_link'          => array(
 				'name'      => __( 'Login URL', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'Adds a link to the login page on your website.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array(),
 				'available' => array()
 			),
-			'account_link'     => array(
+			'account_link'        => array(
 				'name'      => __( 'Account URL', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'Adds a link to the customer\'s account page on your website.', 'it-l10n-ithemes-exchange' ),
 				'context'   => array(),
 				'available' => array()
 			),
-			'company_name'     => array(
+			'company_name'        => array(
 				'name'      => __( 'Company Name', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'The name of your company specified in the general settings.' ),
 				'context'   => array(),
@@ -249,7 +285,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	}
 
 	/**
-	 * Replace the name tag.
+	 * Replace the first name tag.
 	 *
 	 * @since 1.0
 	 *
@@ -257,7 +293,72 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Replaced value
 	 */
-	public function name( $context ) {
+	public function first_name( $context ) {
+		return $context['recipient']->get_first_name();
+	}
+
+	/**
+	 * Replace the last name tag.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $context
+	 *
+	 * @return string Replaced value
+	 */
+	public function last_name( $context ) {
+		return $context['recipient']->get_last_name();
+	}
+
+	/**
+	 * Replace the email tag.
+	 *
+	 * @since 1.14.0
+	 *
+	 * @param array $context
+	 *
+	 * @return string Replaced value
+	 */
+	public function email( $context ) {
+		return $context['recipient']->get_email();
+	}
+
+	/**
+	 * Replace the fullname tag.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $context
+	 *
+	 * @return string Replaced value
+	 */
+	public function fullname( $context ) {
+		return $context['recipient']->get_full_name();
+	}
+
+	/**
+	 * Replace the username tag.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $context
+	 *
+	 * @return string Replaced value
+	 */
+	public function username( $context ) {
+		return $context['recipient']->get_username();
+	}
+
+	/**
+	 * Replace the first name tag.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $context
+	 *
+	 * @return string Replaced value
+	 */
+	public function customer_first_name( $context ) {
 
 		$name = '';
 
@@ -277,6 +378,34 @@ class IT_Exchange_Email_Register_Default_Tags {
 	}
 
 	/**
+	 * Replace the last name tag.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $context
+	 *
+	 * @return string Replaced value
+	 */
+	public function customer_last_name( $context ) {
+
+		$name = '';
+
+		if ( ! empty( $context['customer'] ) ) {
+			$customer = $context['customer'];
+
+			if ( ! empty( $customer->wp_user->last_name ) ) {
+				$name = $customer->wp_user->last_name;
+			} elseif ( ! empty( $customer->wp_user->display_name ) ) {
+				$name = $customer->wp_user->display_name;
+			}
+		} elseif ( is_email( it_exchange_get_transaction_customer_id( $context['transaction'] ) ) ) {
+			$name = it_exchange_get_transaction_customer_id( $context['transaction'] );
+		}
+
+		return $name;
+	}
+
+	/**
 	 * Replace the email tag.
 	 *
 	 * @since 1.14.0
@@ -285,7 +414,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Replaced value
 	 */
-	public function email( $context ) {
+	public function customer_email( $context ) {
 
 		$email = '';
 
@@ -307,7 +436,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Replaced value
 	 */
-	public function fullname( $context ) {
+	public function customer_fullname( $context ) {
 
 		$fullname = '';
 
@@ -329,7 +458,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 *
 	 * @return string Replaced value
 	 */
-	public function username( $context ) {
+	public function customer_username( $context ) {
 		return empty( $context['customer']->data->user_login ) ? '' : $context['customer']->data->user_login;
 	}
 

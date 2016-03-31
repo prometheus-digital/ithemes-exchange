@@ -56,6 +56,17 @@ class IT_Exchange_Email_Recipient_Email implements IT_Exchange_Email_Recipient {
 	}
 
 	/**
+	 * Get the recipient's last name.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function get_last_name() {
+		return $this->get_first_name();
+	}
+
+	/**
 	 * Get the recipient's full name.
 	 *
 	 * @since 1.36
@@ -64,5 +75,22 @@ class IT_Exchange_Email_Recipient_Email implements IT_Exchange_Email_Recipient {
 	 */
 	public function get_full_name() {
 		return $this->get_first_name();
+	}
+
+	/**
+	 * Get the recipient's username, if one exists.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function get_username() {
+		$user = get_user_by( 'email', $this->get_email() );
+
+		if ( $user ) {
+			return $user->user_login;
+		}
+
+		return '';
 	}
 }
