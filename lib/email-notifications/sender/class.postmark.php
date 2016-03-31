@@ -29,19 +29,31 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	private $config;
 
 	/**
+	 * @var WP_Http
+	 */
+	private $http;
+
+	/**
 	 * IT_Exchange_Email_Postmark_Sender constructor.
 	 *
-	 * @param string                         $server_token
 	 * @param IT_Exchange_Email_Tag_Replacer $replacer
+	 * @param WP_Http                        $http
 	 * @param array                          $config Additional configuration options.
 	 */
-	public function __construct( $server_token, IT_Exchange_Email_Tag_Replacer $replacer, array $config = array() ) {
-		$this->server_token = $server_token;
-		$this->replacer     = $replacer;
+	public function __construct( IT_Exchange_Email_Tag_Replacer $replacer, WP_Http $http, array $config = array() ) {
+		$this->replacer = $replacer;
+		$this->http     = $http;
 
-		$this->config = ITUtility::merge_defaults( $config, array(
-			'TrackOpens' => true
+		$config = ITUtility::merge_defaults( $config, array(
+			'server-token' => '',
+			'TrackOpens'   => true,
 		) );
+
+		$this->server_token = $config['server-token'];
+
+		unset( $config['server-token'] );
+
+		$this->config = $config;
 	}
 
 	/**
@@ -161,9 +173,10 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 			'X-Postmark-Server-Token' => $this->server_token
 		);
 
-		$response = wp_safe_remote_post( self::URL . $endpoint, array(
-			'headers' => $headers,
-			'body'    => wp_json_encode( $data )
+		$response = $this->http->post( self::URL . $endpoint, array(
+			'reject_unsafe_urls' => true,
+			'headers'            => $headers,
+			'body'               => wp_json_encode( $data )
 		) );
 
 		if ( is_wp_error( $response ) ) {

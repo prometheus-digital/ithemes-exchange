@@ -29,6 +29,11 @@ class IT_Exchange_Email_Mailjet_Sender implements IT_Exchange_Email_Sender {
 	private $replacer;
 
 	/**
+	 * @var WP_Http
+	 */
+	private $http;
+
+	/**
 	 * @var array
 	 */
 	private $config = array();
@@ -36,18 +41,26 @@ class IT_Exchange_Email_Mailjet_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * IT_Exchange_Email_Mailjet_Sender constructor.
 	 *
-	 * @param string                         $private_key
-	 * @param string                         $public_key
 	 * @param IT_Exchange_Email_Tag_Replacer $replacer
+	 * @param WP_Http                        $http
 	 * @param array                          $config
 	 */
-	public function __construct( $private_key, $public_key, IT_Exchange_Email_Tag_Replacer $replacer, array $config = array() ) {
-		$this->private_key = $private_key;
-		$this->public_key  = $public_key;
-		$this->replacer    = $replacer;
-		$this->config      = ITUtility::merge_defaults( $config, array(
-			'Mj-trackopen' => true
+	public function __construct( IT_Exchange_Email_Tag_Replacer $replacer, WP_Http $http, array $config = array() ) {
+		$this->replacer = $replacer;
+		$this->http     = $http;
+
+		$config = ITUtility::merge_defaults( $config, array(
+			'public'       => '',
+			'private'      => '',
+			'Mj-trackopen' => true,
 		) );
+
+		$this->public_key  = $config['public'];
+		$this->private_key = $config['private'];
+
+		unset( $config['public'], $config['private'] );
+
+		$this->config = $config;
 	}
 
 	/**
@@ -165,9 +178,10 @@ class IT_Exchange_Email_Mailjet_Sender implements IT_Exchange_Email_Sender {
 			'Authorization' => 'Basic ' . base64_encode( "{$this->public_key}:{$this->private_key}" )
 		);
 
-		$response = wp_safe_remote_post( self::URL . 'send', array(
-			'headers' => $headers,
-			'body'    => wp_json_encode( $data )
+		$response = $this->http->post( self::URL . 'send', array(
+			'reject_unsafe_urls' => true,
+			'headers'            => $headers,
+			'body'               => wp_json_encode( $data )
 		) );
 
 		if ( is_wp_error( $response ) ) {
