@@ -780,7 +780,7 @@ function it_exchange_get_ip() {
  *
  * @since 1.36
  *
- * @param IT_Exchange_Sendable|string                                         $email_or_message
+ * @param IT_Exchange_Sendable|IT_Exchange_Sendable[]|string                  $email_or_message
  * @param string                                                              $subject
  * @param string|IT_Exchange_Email_Recipient|IT_Exchange_Customer|WP_User|int $recipient
  * @param int|IT_Exchange_Transaction                                         $transaction
@@ -791,6 +791,10 @@ function it_exchange_get_ip() {
  * @throws InvalidArgumentException
  */
 function it_exchange_send_email( $email_or_message, $subject = '', $recipient = '', $transaction = 0, $context = array() ) {
+
+	if ( is_array( $email_or_message ) ) {
+		return it_exchange_email_notifications()->get_sender()->bulk_send( $email_or_message );
+	}
 
 	if ( ! $email_or_message instanceof IT_Exchange_Sendable ) {
 		if ( ! is_string( $email_or_message ) ) {
