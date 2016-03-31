@@ -162,6 +162,12 @@ class IT_Exchange_Email_Register_Default_Tags {
 				'context'   => array(),
 				'available' => array()
 			),
+			'profile_link'        => array(
+				'name'      => __( 'Profile URL', 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( 'Adds a link to the customer\'s profile page on your website.', 'it-l10n-ithemes-exchange' ),
+				'context'   => array(),
+				'available' => array()
+			),
 			'company_name'        => array(
 				'name'      => __( 'Company Name', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'The name of your company specified in the general settings.' ),
@@ -648,6 +654,17 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 */
 	public function account_link() {
 		return it_exchange_get_page_url( 'account' );
+	}
+
+	/**
+	 * Replace the profile link tag.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string Replaced value
+	 */
+	public function profile_link() {
+		return it_exchange_get_page_url( 'profile' );
 	}
 
 	/**
