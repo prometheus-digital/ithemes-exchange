@@ -196,15 +196,22 @@ class IT_Exchange_Email_Mailjet_Sender implements IT_Exchange_Email_Sender {
 			case 200:
 			case 201:
 				return true;
+			case 401:
+			case 403:
+				throw new IT_Exchange_Email_Delivery_Exception( 'Invalid Mailjet credentials.', $sendable );
 			case 500:
-				throw new IT_Exchange_Email_Delivery_Exception( 'A temporary problem occurred with Mailjet\'s servers. Try again later.' );
+				throw new IT_Exchange_Email_Delivery_Exception( 'A temporary problem occurred with Mailjet\'s servers. Try again later.', $sendable );
 			default:
 
 				$error_info    = empty( $body['ErrorInfo'] ) ? '' : $body['ErrorInfo'];
-				$error_message = empty( $body['ErrorMessage'] ) ? '' : $body['ErrorMessage'];
-				$error_code    = empty( $body['StatusCode'] ) ? '' : $body['StatusCode'];
+				$error_message = empty( $body['ErrorMessage'] ) ? '' : $body['ErrorMessage'] . '.';
+				$error_code    = empty( $body['StatusCode'] ) ? '' : $body['StatusCode'] . ':';
 
-				throw new IT_Exchange_Email_Delivery_Exception( "$error_code:$error_info. $error_message" );
+				if ( empty( $error_info ) && empty( $error_message ) && empty( $error_code ) ) {
+					throw new IT_Exchange_Email_Delivery_Exception( 'An unexpected error occurred with Mailjet.', $sendable );
+				}
+
+				throw new IT_Exchange_Email_Delivery_Exception( "$error_code:$error_info $error_message", $sendable );
 		}
 	}
 
