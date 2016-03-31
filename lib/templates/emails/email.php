@@ -41,7 +41,9 @@
 									<strong><?php it_exchange( 'email', 'date' ); ?></strong>
 								</td>
 								<td align="right" style="font-weight: bold; ">
-									<strong><?php it_exchange( 'transaction', 'order-number', array( 'label' => __( 'Order: %s', 'it-l10n-ithemes-exchange' ) ) ); ?></strong>
+									<?php if ( it_exchange( 'email', 'has-context', 'key=email' ) ): ?>
+										<strong><?php it_exchange( 'transaction', 'order-number', array( 'label' => __( 'Order: %s', 'it-l10n-ithemes-exchange' ) ) ); ?></strong>
+									<?php endif; ?>
 								</td>
 							</tr>
 						</table>
