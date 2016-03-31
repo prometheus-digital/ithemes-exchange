@@ -798,6 +798,9 @@ class IT_Exchange_Admin {
 	 * @return void
 	*/
 	function print_email_settings_page() {
+
+		remove_editor_styles();
+
 		$flush_cache  = ! empty( $_POST );
 		$settings     = it_exchange_get_option( 'settings_email', $flush_cache );
 		$form_values  = empty( $this->error_message ) ? $settings : ITForm::get_post_data();
