@@ -52,7 +52,7 @@ $email_notifications = it_exchange_email_notifications();
 		<thead>
 		<tr>
 			<th style="width: 40%"><?php _e( 'Email', 'it-l10n-ithemes-exchange' ); ?></th>
-			<th style="width: 75px"><?php _e( 'Group', 'it-l10n-ithemes-exchange' ); ?></th>
+			<th style="width: 150px"><?php _e( 'Group', 'it-l10n-ithemes-exchange' ); ?></th>
 			<th style="width: auto"><?php _e( 'Recipient', 'it-l10n-ithemes-exchange' ); ?></th>
 			<th style="width: 30px;"><?php _e( 'Active', 'it-l10n-ithemes-exchange' ); ?></th>
 			<th style="width: 30px"></th>

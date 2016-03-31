@@ -127,13 +127,15 @@ class IT_Exchange_Email_Mailjet_Sender implements IT_Exchange_Email_Sender {
 			throw new IT_Exchange_Email_Delivery_Exception( 'A maximum of 50 Bcc addresses are supported.' );
 		}
 
-		$message = $this->replacer->replace( shortcode_unautop( wpautop( $sendable->get_body() ) ), $sendable->get_context() );
-		$html    = $sendable->get_template()->get_html( array_merge( array( 'message' => $message ), $sendable->get_context() ) );
+		$context = array_merge( array( 'recipient' => $sendable->get_recipient() ), $sendable->get_context() );
+
+		$message = $this->replacer->replace( shortcode_unautop( wpautop( $sendable->get_body() ) ), $context );
+		$html    = $sendable->get_template()->get_html( array_merge( array( 'message' => $message ), $context ) );
 
 		$api_format = array(
 			'FromEmail' => $this->get_from_address(),
 			'To'        => $sendable->get_recipient()->get_email(),
-			'Subject'   => $this->replacer->replace( $sendable->get_subject(), $sendable->get_context() ),
+			'Subject'   => $this->replacer->replace( $sendable->get_subject(), $context ),
 			'Html-part' => $html
 		);
 
