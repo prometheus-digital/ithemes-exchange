@@ -1391,7 +1391,7 @@ class IT_Exchange_Admin {
 				continue;
 			}
 
-			$notification->set_subject( $data['subject'] );
+			$notification->set_subject( stripslashes( $data['subject'] ) );
 			$notification->set_body( stripslashes( $data['body'] ) );
 			$notification->set_active( empty( $data['active'] ) ? false : it_exchange_str_true( $data['active'] ) );
 
