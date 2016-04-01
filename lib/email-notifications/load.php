@@ -89,6 +89,18 @@ function it_exchange_email_notifications() {
 			$sender = new IT_Exchange_Email_Null_Sender();
 		} else {
 			$sender = new IT_Exchange_WP_Mail_Sender( $replacer );
+
+			if ( class_exists( 'Postmark_Mail' ) ) {
+
+				$settings = get_option( 'postmark_settings', '' );
+				$settings = json_decode( $settings, true );
+
+				if ( $settings['api_key'] && $settings['enabled'] ) {
+					$sender = new IT_Exchange_Email_Postmark_Sender( $replacer, _wp_http_get_object(), array(
+						'server-token' => $settings['api_key']
+					) );
+				}
+			}
 		}
 
 		/**
