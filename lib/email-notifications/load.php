@@ -100,6 +100,17 @@ function it_exchange_email_notifications() {
 						'server-token' => $settings['api_key']
 					) );
 				}
+			} elseif ( class_exists( 'WP_Mailjet' ) && get_option( 'mailjet_enabled' ) ) {
+
+				$public  = get_option( 'mailjet_username' );
+				$private = get_option( 'mailjet_password' );
+
+				if ( $public && $private ) {
+					$sender = new IT_Exchange_Email_Mailjet_Sender( $replacer, _wp_http_get_object(), array(
+						'public'  => $public,
+						'private' => $private
+					) );
+				}
 			}
 		}
 
