@@ -120,7 +120,7 @@ class IT_Exchange {
 	function set_plugin_locations() {
 		
 		self::$dir = plugin_dir_path( __FILE__ );
-		self::$url = plugins_url( __FILE__ );
+		self::$url = plugins_url( '', __FILE__ );
 		
 		$this->_plugin_path = self::$dir;
 		$this->_plugin_url  = self::$url;
