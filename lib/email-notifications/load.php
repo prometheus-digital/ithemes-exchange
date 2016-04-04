@@ -147,13 +147,15 @@ function it_exchange_register_email_notifications() {
 
 	$GLOBALS['IT_Exchange_Email_Notifications'] = $notifications;
 
+	$r = $notifications->get_replacer();
+
 	$notifications
 		->register_notification( new IT_Exchange_Admin_Email_Notification(
 			__( 'Admin Order Notification', 'it-l10n-ithemes-exchange' ), 'admin-order', null, array(
 				'defaults' => array(
-					'subject' => sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
+					'subject' => sprintf( __( 'You made a sale! Yabba Dabba Doo! %s', 'it-l10n-ithemes-exchange' ), $r->format_tag( 'receipt_id' ) ),
 					'body'    => sprintf( __( "Your friend %s just bought all this awesomeness from your store! \r\n\r\n Order: %s \r\n\r\n %s", 'it-l10n-ithemes-exchange' ),
-						'[it_exchange_email show=customer_fullname]', '[it_exchange_email show=receipt_id]', '[it_exchange_email show=order_table]' ),
+						$r->format_tag( 'customer_fullname' ), $r->format_tag( 'receipt_id' ), $r->format_tag( 'order_table' ) ),
 				),
 				'group'    => __( 'Core', 'it-l10n-ithemes-exchange' )
 			)
@@ -161,8 +163,8 @@ function it_exchange_register_email_notifications() {
 		->register_notification( new IT_Exchange_Customer_Email_Notification(
 			__( 'Purchase Receipt', 'it-l10n-ithemes-exchange' ), 'receipt', new IT_Exchange_Email_Template( 'receipt' ), array(
 				'defaults'    => array(
-					'subject' => sprintf( __( 'Receipt for Purchase: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
-					'body'    => sprintf( __( "Hello %s, \r\n\r\n Thank you for your order. Your order's details are below.", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=first_name]' ),
+					'subject' => sprintf( __( 'Receipt for Purchase: %s', 'it-l10n-ithemes-exchange' ), $r->format_tag( 'receipt_id' ) ),
+					'body'    => sprintf( __( "Hello %s, \r\n\r\n Thank you for your order. Your order's details are below.", 'it-l10n-ithemes-exchange' ), $r->format_tag( 'first_name' ) ),
 				),
 				'group'       => __( 'Core', 'it-l10n-ithemes-exchange' ),
 				'description' =>
@@ -173,8 +175,8 @@ function it_exchange_register_email_notifications() {
 		->register_notification( new IT_Exchange_Customer_Email_Notification(
 			__( 'New Public Transaction Activity', 'it-l10n-ithemes-exchange' ), 'customer-order-note', new IT_Exchange_Email_Template( 'order-note' ), array(
 				'defaults' => array(
-					'subject' => sprintf( __( 'New note about your order %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=receipt_id]' ),
-					'body'    => sprintf( __( "Hello %s, \r\n\r\n A new note has been added to your order.", 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=first_name]' )
+					'subject' => sprintf( __( 'New note about your order %s', 'it-l10n-ithemes-exchange' ), $r->format_tag( 'receipt_id' ) ),
+					'body'    => sprintf( __( "Hello %s, \r\n\r\n A new note has been added to your order.", 'it-l10n-ithemes-exchange' ), $r->format_tag( 'first_name' ) )
 				),
 				'group'    => __( 'Core', 'it-l10n-ithemes-exchange' ),
 			)

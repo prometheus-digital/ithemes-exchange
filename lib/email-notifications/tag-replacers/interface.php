@@ -24,6 +24,17 @@ interface IT_Exchange_Email_Tag_Replacer {
 	public function replace( $content, $context );
 
 	/**
+	 * Format a tag.
+	 *
+	 * @since 1.36
+	 *
+	 * @param IT_Exchange_Email_Tag|string $tag
+	 *
+	 * @return string
+	 */
+	public function format_tag( $tag );
+
+	/**
 	 * Add a tag to be replaced.
 	 *
 	 * @since 1.36

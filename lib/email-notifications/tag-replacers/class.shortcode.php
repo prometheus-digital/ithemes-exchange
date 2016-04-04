@@ -47,6 +47,28 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 	}
 
 	/**
+	 * Format a tag.
+	 *
+	 * @since 1.36
+	 *
+	 * @param IT_Exchange_Email_Tag|string $tag
+	 *
+	 * @return string
+	 */
+	public function format_tag( $tag ) {
+
+		if ( ! $tag instanceof IT_Exchange_Email_Tag ) {
+			$tag = $this->get_tag( $tag );
+		}
+
+		if ( ! $tag ) {
+			return '';
+		}
+
+		return "[it_exchange_email show={$tag->get_tag()}]";
+	}
+
+	/**
 	 * Get shortcode functions.
 	 *
 	 * @since 1.36
