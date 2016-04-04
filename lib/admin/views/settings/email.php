@@ -148,13 +148,12 @@ $email_notifications = it_exchange_email_notifications();
 
 						<p class="description">
 							<?php
-							_e( 'HTML is accepted. Available shortcode functions:', 'it-l10n-ithemes-exchange' );
+							_e( 'HTML is accepted. Available email tags:', 'it-l10n-ithemes-exchange' );
 							echo '<br />';
-							printf( __( 'You call these shortcode functions like this: %s', 'it-l10n-ithemes-exchange' ), '[it_exchange_email show=order_table option=purchase_message]' );
 							echo '<ul>';
 
 							foreach ( $email_notifications->get_replacer()->get_tags_for( $notification ) as $tag ) {
-								echo "<li><code>{$tag->get_tag()}</code> &ndash; {$tag->get_description()}</li>";
+								echo "<li><code>{$email_notifications->get_replacer()->format_tag($tag)}</code> &ndash; {$tag->get_description()}</li>";
 							}
 
 							do_action( 'it_exchange_email_template_tags_list' );
