@@ -616,6 +616,7 @@ class IT_Exchange_Email_Customizer {
 			'dark'     => array(
 				'label'    => __( 'Dark', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
+					'layout'                  => 'boxed',
 					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image1.jpg' ),
 					'header_show_store_name'  => false,
 					'header_store_name_font'  => 'monospace',
@@ -636,6 +637,7 @@ class IT_Exchange_Email_Customizer {
 			'white'    => array(
 				'label'    => __( 'White', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
+					'layout'                  => 'boxed',
 					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image1.jpg' ),
 					'header_show_store_name'  => false,
 					'header_store_name_font'  => 'serif',
@@ -656,6 +658,7 @@ class IT_Exchange_Email_Customizer {
 			'ocean'    => array(
 				'label'    => __( 'Ocean', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
+					'layout'                  => 'boxed',
 					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image2.jpg' ),
 					'header_show_store_name'  => false,
 					'header_store_name_font'  => 'sans-serif',
@@ -676,6 +679,7 @@ class IT_Exchange_Email_Customizer {
 			'gold'     => array(
 				'label'    => __( 'Gold', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
+					'layout'                  => 'boxed',
 					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image4.jpg' ),
 					'header_show_store_name'  => false,
 					'header_store_name_font'  => 'sans-serif',
@@ -696,6 +700,7 @@ class IT_Exchange_Email_Customizer {
 			'floral'   => array(
 				'label'    => __( 'Floral', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
+					'layout'                  => 'boxed',
 					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image3.jpg' ),
 					'header_show_store_name'  => false,
 					'header_store_name_font'  => 'serif',
@@ -716,6 +721,7 @@ class IT_Exchange_Email_Customizer {
 			'homebrew' => array(
 				'label'    => __( 'Homebrew', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
+					'layout'                  => 'boxed',
 					'header_show_store_name'  => true,
 					'header_store_name_font'  => 'monospace',
 					'header_store_name_size'  => '50',
