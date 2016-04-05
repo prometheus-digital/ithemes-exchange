@@ -119,10 +119,10 @@ class IT_Exchange_Email_Customizer {
 	 */
 	protected function get_sections( WP_Customize_Manager &$customizer ) {
 		return array(
-			new WP_Customize_Section( $customizer, 'it-exchange-email-identity', array(
+			new WP_Customize_Section( $customizer, 'it-exchange-email-structure', array(
 				'capability'      => $this->capability,
 				'active_callback' => array( __CLASS__, 'is_active' ),
-				'title'           => __( 'Identity', 'it-l10n-ithemes-exchange' ),
+				'title'           => __( 'Structure', 'it-l10n-ithemes-exchange' ),
 				'priority'        => 1
 			) ),
 			new WP_Customize_Section( $customizer, 'it-exchange-email-header', array(
@@ -173,6 +173,12 @@ class IT_Exchange_Email_Customizer {
 				'capability' => $this->capability,
 				'type'       => 'option',
 				'transport'  => 'postMessage'
+			) ),
+			new WP_Customize_Setting( $customizer, 'it-exchange-email[layout]', array(
+				'capability' => $this->capability,
+				'type'       => 'option',
+				'transport'  => 'refresh',
+				'default'    => 'boxed'
 			) ),
 			new WP_Customize_Setting( $customizer, 'it-exchange-email[header_show_logo]', array(
 				'capability' => $this->capability,
@@ -261,6 +267,11 @@ class IT_Exchange_Email_Customizer {
 				'transport'  => 'postMessage',
 				'default'    => 75
 			) ),
+			new WP_Customize_Setting( $customizer, 'it-exchange-email[footer_background]', array(
+				'capability' => $this->capability,
+				'type'       => 'option',
+				'transport'  => 'postMessage',
+			) ),
 			new WP_Customize_Setting( $customizer, 'it-exchange-email[background_color]', array(
 				'capability' => $this->capability,
 				'type'       => 'option',
@@ -303,12 +314,23 @@ class IT_Exchange_Email_Customizer {
 	protected function get_controls( WP_Customize_Manager &$customizer ) {
 		return array(
 
-			/** Identity */
+			/** Structure */
 
 			new WP_Customize_Image_Control( $customizer, 'it-exchange-email[logo]', array(
 				'capability' => $this->capability,
-				'section'    => 'it-exchange-email-identity',
+				'section'    => 'it-exchange-email-structure',
 				'label'      => __( 'Logo', 'it-l10n-ithemes-exchange' )
+			) ),
+
+			new WP_Customize_Control( $customizer, 'it-exchange-email[layout]', array(
+				'capability' => $this->capability,
+				'section'    => 'it-exchange-email-structure',
+				'label'      => __( 'Layout', 'it-l10n-ithemes-exchange' ),
+				'type'       => 'radio',
+				'choices'    => array(
+					'full'  => __( 'Full-width', 'it-l10n-ithemes-exchange' ),
+					'boxed' => __( 'Boxed', 'it-l10n-ithemes-exchange' ),
+				)
 			) ),
 
 			/** Header */
@@ -469,6 +491,12 @@ class IT_Exchange_Email_Customizer {
 					'active'
 				)
 			) ),
+			new WP_Customize_Color_Control( $customizer, 'it-exchange-email[footer_background]', array(
+				'capability'  => $this->capability,
+				'section'     => 'it-exchange-email-footer',
+				'label'       => __( 'Background Color', 'it-l10n-ithemes-exchange' ),
+				'description' => __( 'Leave blank to make the background transparent.', 'it-l10n-ithemes-exchange' )
+			) ),
 
 			/** Background */
 
@@ -567,6 +595,7 @@ class IT_Exchange_Email_Customizer {
 			'default'  => array(
 				'label'    => __( 'Default', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
+					'layout'                  => 'boxed',
 					'header_show_store_name'  => true,
 					'header_store_name_font'  => 'serif',
 					'header_store_name_size'  => 64,

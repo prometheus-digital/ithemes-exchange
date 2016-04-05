@@ -31,6 +31,9 @@ class IT_Theme_API_Email implements IT_Theme_API {
 		'context'                 => 'context',
 		'date'                    => 'date',
 		'logo'                    => 'logo',
+		'layout'                  => 'layout',
+		'bodyelbkg'               => 'body_el_bkg',
+		'backgroundelstyles'      => 'background_el_styles',
 		'headerlogo'              => 'header_logo',
 		'headerlogosize'          => 'header_logo_size',
 		'headerstorename'         => 'header_store_name',
@@ -50,6 +53,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 		'footertextcolor'         => 'footer_text_color',
 		'footerlogo'              => 'footer_logo',
 		'footerlogosize'          => 'footer_logo_size',
+		'footerbackground'        => 'footer_background',
 		'backgroundcolor'         => 'background_color',
 		'backgroundimage'         => 'background_image',
 		'backgroundimageposition' => 'background_image_position',
@@ -156,6 +160,57 @@ class IT_Theme_API_Email implements IT_Theme_API {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Retrieve the layout mode.
+	 *
+	 * Either 'boxed' or 'full'.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function layout() {
+		return IT_Exchange_Email_Customizer::get_setting( 'layout' );
+	}
+
+	/**
+	 * Get the background color for the <bode> element.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function body_el_bkg() {
+
+		$color = IT_Exchange_Email_Customizer::get_setting( 'footer_background' );
+
+		if ( ! $color || $this->layout() === 'boxed' ) {
+			$color = IT_Exchange_Email_Customizer::get_setting( 'background_color' );
+		}
+
+		return $color;
+	}
+
+	/**
+	 * Concatenated background styles.
+	 *
+	 * @since 1.36
+	 *
+	 * @return string
+	 */
+	public function background_el_styles() {
+
+		$styles = "background-color: {$this->background_color()};";
+
+		if ( $this->background_image( array( 'has' => true ) ) ) {
+			$styles .= "background-image: url({$this->background_image( array( 'has' => false ) )});";
+			$styles .= "background-position: {$this->background_image_position()};";
+			$styles .= "background-repeat: {$this->background_image_repeat()};";
+		}
+
+		return $styles;
 	}
 
 	/**
@@ -496,6 +551,21 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	 */
 	public function footer_logo_size( $options = array() ) {
 		return IT_Exchange_Email_Customizer::get_setting( 'footer_logo_size' );
+	}
+
+	/**
+	 * Get the footer background color.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $options
+	 *
+	 * @return string
+	 */
+	public function footer_background( $options = array() ) {
+		$color = IT_Exchange_Email_Customizer::get_setting( 'footer_background' );
+
+		return $color ? $color : 'transparent';
 	}
 
 	/**

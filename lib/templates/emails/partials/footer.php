@@ -13,11 +13,18 @@
  *
  * Example: theme/exchange/emails/partial/footer.php
  */
+
+$layout      = it_exchange( 'email', 'get-layout' );
+$row_bkg     = $layout == 'boxed' ? 'none' : it_exchange( 'email', 'get-footer-background' );
+$table_bkg   = $layout == 'full' ? 'none' : it_exchange( 'email', 'get-footer-background' );
+$row_class   = $layout == 'boxed' ? '' : 'footer-bkg';
+$table_class = $layout == 'full' ? '' : 'footer-bkg';
 ?>
+<tr><td style="height: 40px;"></td></tr>
 <!-- begin footer -->
-<tr>
+<tr style="background: <?php echo $row_bkg; ?>;" class="<?php echo $row_class; ?>">
 	<td align="center">
-		<table id="footer" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; padding-top: 20px;" class="wrapper">
+		<table id="footer" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; padding-top: 20px; background: <?php echo $table_bkg; ?>;" class="<?php echo $table_class; ?>">
 			<tr>
 				<td valign="top" align="center" style="padding: 10px 25px 100px 25px; ">
 					<table width="100%">

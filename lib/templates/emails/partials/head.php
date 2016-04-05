@@ -25,15 +25,15 @@
 
 </head>
 <body style="
-	margin: 0 !important; padding: 0 10px !important; background-color: <?php it_exchange( 'email', 'background-color' ); ?>;
-	font-family: <?php it_exchange( 'email', 'body-font' ); ?>; color: <?php it_exchange( 'email', 'body-text-color' ); ?>;
-	font-size: <?php it_exchange( 'email', 'body-font-size' ); ?>px;
+<?php if ( it_exchange( 'email', 'get-layout' ) === 'boxed' || it_exchange( 'email', 'get-footer-background' ) === 'transparent' ): ?>
+	<?php it_exchange( 'email', 'background-el-styles' ); ?>
+<?php endif; ?>
 
-<?php if ( it_exchange( 'email', 'has-background-image' ) ): ?>
-	background-image: url(<?php it_exchange('email', 'background-image');  ?>);
-	background-position: <?php it_exchange( 'email', 'background-image-position' ); ?>;
-	background-repeat: <?php it_exchange( 'email', 'background-image-repeat' ); ?>;
+	margin: 0 !important; padding: 0 !important; font-family: <?php it_exchange( 'email', 'body-font' ); ?>; background-color: <?php it_exchange( 'email', 'body-el-bkg' ); ?>;
+	color: <?php it_exchange( 'email', 'body-text-color' ); ?>; font-size: <?php it_exchange( 'email', 'body-font-size' ); ?>px;">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="main" style="height: 100%;
+<?php if ( it_exchange( 'email', 'get-layout' ) === 'full' ): ?>
+	<?php it_exchange( 'email', 'background-el-styles' ); ?>
 <?php endif; ?>
 	">
-
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
