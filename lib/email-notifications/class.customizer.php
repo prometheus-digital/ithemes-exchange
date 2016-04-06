@@ -177,7 +177,7 @@ class IT_Exchange_Email_Customizer {
 			new WP_Customize_Setting( $customizer, 'it-exchange-email[layout]', array(
 				'capability' => $this->capability,
 				'type'       => 'option',
-				'transport'  => 'refresh',
+				'transport'  => 'postMessage',
 				'default'    => 'boxed'
 			) ),
 			new WP_Customize_Setting( $customizer, 'it-exchange-email[header_show_logo]', array(
@@ -297,7 +297,7 @@ class IT_Exchange_Email_Customizer {
 			new WP_Customize_Setting( $customizer, 'it-exchange-email[preset]', array(
 				'capability' => $this->capability,
 				'type'       => 'option',
-				'transport'  => 'postMessage',
+				//'transport'  => 'postMessage',
 			) )
 		);
 	}
@@ -609,6 +609,7 @@ class IT_Exchange_Email_Customizer {
 					'body_background_color'   => '#efefef',
 					'footer_text_color'       => '#444444',
 					'footer_show_logo'        => false,
+					'footer_background'       => '',
 					'background_color'        => '#efefef',
 					'background_image'        => '',
 				)
@@ -630,6 +631,7 @@ class IT_Exchange_Email_Customizer {
 					'body_background_color'   => '#2a2f33',
 					'footer_text_color'       => '#ffffff',
 					'footer_show_logo'        => false,
+					'footer_background'       => '',
 					'background_color'        => '#2a2f33',
 					'background_image'        => '',
 				)
@@ -651,6 +653,7 @@ class IT_Exchange_Email_Customizer {
 					'body_background_color'   => '#ffffff',
 					'footer_text_color'       => '#444444',
 					'footer_show_logo'        => false,
+					'footer_background'       => '',
 					'background_color'        => '#ffffff',
 					'background_image'        => '',
 				)
@@ -672,6 +675,7 @@ class IT_Exchange_Email_Customizer {
 					'body_background_color'   => '#ffffff',
 					'footer_text_color'       => '#ffffff',
 					'footer_show_logo'        => false,
+					'footer_background'       => '',
 					'background_color'        => '#338ea6',
 					'background_image'        => '',
 				)
@@ -693,6 +697,7 @@ class IT_Exchange_Email_Customizer {
 					'body_background_color'   => '#ffffff',
 					'footer_text_color'       => '#40636f',
 					'footer_show_logo'        => false,
+					'footer_background'       => '',
 					'background_color'        => '#e9e0bf',
 					'background_image'        => '',
 				)
@@ -714,6 +719,7 @@ class IT_Exchange_Email_Customizer {
 					'footer_text_color'       => '#112a31',
 					'footer_show_logo'        => true,
 					'footer_logo_size'        => '80',
+					'footer_background'       => '',
 					'background_color'        => '#bbccc6',
 					'background_image'        => '',
 				)
@@ -736,6 +742,7 @@ class IT_Exchange_Email_Customizer {
 					'footer_text_color'       => '#ffffff',
 					'footer_show_logo'        => true,
 					'footer_logo_size'        => '80',
+					'footer_background'       => '',
 					'header_show_logo'        => false,
 					'background_color'        => '#161616',
 					'background_image'        => '',

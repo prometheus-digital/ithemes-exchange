@@ -24,7 +24,7 @@ $table_bkg   = $layout == 'full' ? 'none' : it_exchange( 'email', 'get-header-ba
 $row_class   = $layout == 'boxed' ? '' : 'header-bkg';
 $table_class = $layout == 'full' ? '' : 'header-bkg';
 ?>
-<tr style="background: <?php echo $row_bkg; ?>;" class="<?php echo $row_class; ?>">
+<tr style="background: <?php echo $row_bkg; ?>;" class="header-row <?php echo $row_class; ?>">
 	<td align="center">
 		<!--[if mso]>
 		<center>

@@ -22,7 +22,7 @@ $table_class = $layout == 'full' ? '' : 'footer-bkg';
 ?>
 <tr><td style="height: 40px;"></td></tr>
 <!-- begin footer -->
-<tr style="background: <?php echo $row_bkg; ?>;" class="<?php echo $row_class; ?>">
+<tr style="background: <?php echo $row_bkg; ?>;" class="footer-row <?php echo $row_class; ?>">
 	<td align="center">
 		<table id="footer" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; padding-top: 20px; background: <?php echo $table_bkg; ?>;" class="<?php echo $table_class; ?>">
 			<tr>
