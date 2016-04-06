@@ -11,6 +11,8 @@
  */
 class IT_Exchange_Email_Middleware_Handler {
 
+	const SPACING = 5;
+
 	/**
 	 * @var IT_Exchange_Email_Middleware[]
 	 */
@@ -22,12 +24,23 @@ class IT_Exchange_Email_Middleware_Handler {
 	 * @since 1.36
 	 *
 	 * @param IT_Exchange_Email_Middleware $middleware
+	 * @param int                          $priority
 	 *
 	 * @return self
 	 */
-	public function push( IT_Exchange_Email_Middleware $middleware ) {
+	public function push( IT_Exchange_Email_Middleware $middleware, $priority = null ) {
 
-		$this->middleware[] = $middleware;
+		if ( $priority === null ) {
+			$keys = array_keys( $this->middleware );
+
+			if ( empty( $keys ) ) {
+				$priority = 0;
+			} else {
+				$priority = (int) end( $keys ) + self::SPACING;
+			}
+		}
+
+		$this->middleware[ $priority ] = $middleware;
 
 		return $this;
 	}
@@ -42,6 +55,8 @@ class IT_Exchange_Email_Middleware_Handler {
 	 * @return bool
 	 */
 	public function handle( IT_Exchange_Sendable_Mutable_Wrapper $sendable ) {
+
+		ksort( $this->middleware );
 
 		foreach ( $this->middleware as $middleware ) {
 			if ( ! $middleware->handle( $sendable ) ) {

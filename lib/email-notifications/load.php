@@ -41,6 +41,10 @@ require_once dirname( __FILE__ ) . '/middleware/class.formatter.php';
 require_once dirname( __FILE__ ) . '/middleware/class.contextualizer.php';
 require_once dirname( __FILE__ ) . '/middleware/class.style-links.php';
 
+if ( version_compare( PHP_VERSION, '5.3', '>=' ) ) {
+	require_once dirname( __FILE__ ) . '/middleware/class.auto-linker.php';
+}
+
 require_once dirname( __FILE__ ) . '/tag-replacers/interface.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.base.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.shortcode.php';
@@ -94,10 +98,10 @@ function it_exchange_email_notifications() {
 
 		$middleware = new IT_Exchange_Email_Middleware_Handler();
 		$middleware
-			->push( new IT_Exchange_Email_Middleware_Formatter() )
-			->push( new IT_Exchange_Email_Middleware_Contextualizer() )
-			->push( $replacer )
-			->push( new IT_Exchange_Email_Middleware_Style_Links() );
+			->push( new IT_Exchange_Email_Middleware_Formatter(), 0 )
+			->push( new IT_Exchange_Email_Middleware_Contextualizer(), 10 )
+			->push( $replacer, 20 )
+			->push( new IT_Exchange_Email_Middleware_Style_Links(), 30 );
 
 		/**
 		 * Fires when add-ons should register additional middleware.

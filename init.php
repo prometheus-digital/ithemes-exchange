@@ -69,7 +69,7 @@ class IT_Exchange {
 		$this->set_plugin_locations();
 		$this->set_textdomain();
 
-		if ( file_exists( $this->_plugin_path . 'vendor/autoload.php' ) ) {
+		if ( file_exists( $this->_plugin_path . 'vendor/autoload.php' ) && version_compare( PHP_VERSION, '5.3', '>=' ) ) {
 			include( $this->_plugin_path . 'vendor/autoload.php' );
 		}
 
