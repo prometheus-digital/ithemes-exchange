@@ -124,31 +124,31 @@ class IT_Exchange_Email_Register_Default_Tags {
 				'name'      => __( 'First Name', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( "The customer's first name, or display name if empty.", 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'recipient' ),
-				'available' => array()
+				'available' => array( 'admin-order', 'receipt', 'customer-order-note' )
 			),
 			'customer_last_name'  => array(
 				'name'      => __( 'Last Name', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( "The customer's last name, or display name if empty.", 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'recipient' ),
-				'available' => array()
+				'available' => array( 'admin-order', 'receipt', 'customer-order-note' )
 			),
 			'customer_fullname'   => array(
 				'name'      => __( 'Full Name', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( "The customer's full name.", 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'recipient' ),
-				'available' => array()
+				'available' => array( 'admin-order', 'receipt', 'customer-order-note' )
 			),
 			'customer_username'   => array(
 				'name'      => __( 'Username', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( "The customer's username on the site, if they registered an account.", 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'customer' ),
-				'available' => array()
+				'available' => array( 'admin-order', 'receipt', 'customer-order-note' )
 			),
 			'customer_email'      => array(
 				'name'      => __( 'Email', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( "The customer's email address.", 'it-l10n-ithemes-exchange' ),
 				'context'   => array( 'customer' ),
-				'available' => array()
+				'available' => array( 'admin-order', 'receipt', 'customer-order-note' )
 			),
 			'login_link'          => array(
 				'name'      => __( 'Login URL', 'it-l10n-ithemes-exchange' ),
