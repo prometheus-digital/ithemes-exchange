@@ -57,6 +57,28 @@ interface IT_Exchange_Email_Tag {
 	 * @return bool
 	 */
 	public function is_available_for( IT_Exchange_Email_Notification $notification );
+	
+	/**
+	 * Add a notification this tag is available for.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $notification_slug
+	 *
+	 * @return self
+	 */
+	public function add_available_for( $notification_slug );
+
+	/**
+	 * Add a notification that this tag is NOT available for.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $notification_slug
+	 *
+	 * @return $this
+	 */
+	public function add_not_available_for( $notification_slug );
 
 	/**
 	 * Render the email tag.
