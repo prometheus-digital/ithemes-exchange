@@ -507,7 +507,7 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 
 		$sendable = $this->getMockForAbstractClass( 'IT_Exchange_Sendable' );
 
-		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send', 'bulk_send' ) )->getMock();
 		$sender->expects( $this->once() )->method( 'send' )->with( $sendable )->willReturn( true );
 
 		$original = it_exchange_email_notifications()->get_sender();
@@ -525,7 +525,7 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 
 		$recipient = $this->getMock( 'IT_Exchange_Email_Recipient' );
 
-		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send', 'bulk_send' ) )->getMock();
 		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) use ( $recipient ) {
 
 			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
@@ -554,7 +554,7 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 	 */
 	public function test_send_email_recipient_from_email() {
 
-		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send', 'bulk_send' ) )->getMock();
 		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) {
 
 			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
@@ -587,7 +587,7 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 	 */
 	public function test_send_email_recipient_from_user_id() {
 
-		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send', 'bulk_send' ) )->getMock();
 		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) {
 
 			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
@@ -620,7 +620,7 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 	 */
 	public function test_send_email_recipient_from_wp_user() {
 
-		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send', 'bulk_send' ) )->getMock();
 		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) {
 
 			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
@@ -653,7 +653,7 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 	 */
 	public function test_send_email_recipient_from_customer_object() {
 
-		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send', 'bulk_send' ) )->getMock();
 		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) {
 
 			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
@@ -686,7 +686,7 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 	 */
 	public function test_send_email_recipient_from_transaction() {
 
-		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send', 'bulk_send' ) )->getMock();
 		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) {
 
 			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
@@ -721,7 +721,7 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 
 		$transaction = $this->transaction_factory->create();
 
-		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send', 'bulk_send' ) )->getMock();
 		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) use ( $transaction ) {
 
 			if ( ! $sendable instanceof IT_Exchange_Sendable ) {
@@ -769,7 +769,7 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 		$t1 = $this->transaction_factory->create();
 		$t2 = $this->transaction_factory->create();
 
-		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send' ) )->getMock();
+		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send', 'bulk_send' ) )->getMock();
 		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) use ( $c2, $t2 ) {
 
 			if ( ! $sendable instanceof IT_Exchange_Sendable ) {

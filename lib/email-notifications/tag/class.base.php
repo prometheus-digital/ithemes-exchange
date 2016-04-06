@@ -42,6 +42,11 @@ class IT_Exchange_Email_Tag_Base implements IT_Exchange_Email_Tag {
 	private $available_for = array();
 
 	/**
+	 * @var array
+	 */
+	private $not_available_for = array();
+
+	/**
 	 * IT_Exchange_Email_Tag_Base constructor.
 	 *
 	 * @param string   $tag
@@ -142,6 +147,10 @@ class IT_Exchange_Email_Tag_Base implements IT_Exchange_Email_Tag {
 	 * @return bool
 	 */
 	public function is_available_for( IT_Exchange_Email_Notification $notification ) {
+		
+		if ( in_array( $notification->get_slug(), $this->not_available_for ) ) {
+			return false;
+		}
 
 		if ( empty( $this->available_for ) ) {
 			return true;
@@ -162,11 +171,33 @@ class IT_Exchange_Email_Tag_Base implements IT_Exchange_Email_Tag {
 	public function add_available_for( $notification_slug ) {
 
 		if ( ! is_string( $notification_slug ) ) {
-			throw new InvalidArgumentException( '$notification_slug' );
+			throw new InvalidArgumentException( '$notification_slug must be a string.' );
 		}
 
 		if ( ! in_array( $notification_slug, $this->available_for ) ) {
 			$this->available_for[] = $notification_slug;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Add a notification that this tag is NOT available for.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $notification_slug
+	 *
+	 * @return $this
+	 */
+	public function add_not_available_for( $notification_slug ) {
+
+		if ( ! is_string( $notification_slug ) ) {
+			throw new InvalidArgumentException( '$notification_slug must be a string.' );
+		}
+
+		if ( ! in_array( $notification_slug, $this->not_available_for ) ) {
+			$this->not_available_for[] = $notification_slug;
 		}
 
 		return $this;

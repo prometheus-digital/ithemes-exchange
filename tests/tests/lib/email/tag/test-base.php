@@ -70,9 +70,22 @@ class Test_IT_Exchange_Email_Tag_Base extends IT_Exchange_UnitTestCase {
 		} );
 
 		$tag->add_available_for( 'test' );
+		$tag->add_not_available_for( 'not-available' );
 
 		$this->assertTrue( $tag->is_available_for( new IT_Exchange_Customer_Email_Notification( 'Test', 'test' ) ) );
 		$this->assertFalse( $tag->is_available_for( new IT_Exchange_Customer_Email_Notification( 'Fake', 'fake' ) ) );
+		$this->assertFalse( $tag->is_available_for( new IT_Exchange_Customer_Email_Notification( 'Not Available', 'not-available' ) ) );
+	}
+
+	public function test_not_available_only() {
+
+		$tag = new IT_Exchange_Email_Tag_Base( 'tag', 'Tag', 'Description', function () {
+		} );
+
+		$tag->add_not_available_for( 'not-available' );
+
+		$this->assertTrue( $tag->is_available_for( new IT_Exchange_Customer_Email_Notification( 'Test', 'test' ) ) );
+		$this->assertFalse( $tag->is_available_for( new IT_Exchange_Customer_Email_Notification( 'Not Available', 'not-available' ) ) );
 	}
 
 	public function test_render() {
