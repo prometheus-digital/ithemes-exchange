@@ -297,7 +297,7 @@ class IT_Exchange_Email_Customizer {
 			new WP_Customize_Setting( $customizer, 'it-exchange-email[preset]', array(
 				'capability' => $this->capability,
 				'type'       => 'option',
-				//'transport'  => 'postMessage',
+				'transport'  => 'postMessage',
 			) )
 		);
 	}
