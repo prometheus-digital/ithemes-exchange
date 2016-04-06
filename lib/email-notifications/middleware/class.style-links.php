@@ -70,7 +70,7 @@ class IT_Exchange_Email_Middleware_Style_Links implements IT_Exchange_Email_Midd
 		list( $full, $match ) = $existing_styles;
 
 		// if a color attribute isn't already present
-		if ( ! preg_match( '/["\';\s*]color\s?:/is', $match ) ) {
+		if ( ! preg_match( '/[;\s]color\s*:/is', $match ) ) {
 
 			$highlight = it_exchange( 'email', 'get-body-highlight-color' );
 
