@@ -19,6 +19,7 @@ require_once dirname( __FILE__ ) . '/notifications/class.customer-email-notifica
 require_once dirname( __FILE__ ) . '/class.email-template.php';
 require_once dirname( __FILE__ ) . '/sendable/interface.sender-aware.php';
 require_once dirname( __FILE__ ) . '/sendable/interface.sendable.php';
+require_once dirname( __FILE__ ) . '/sendable/class.mutable-wrapper.php';
 require_once dirname( __FILE__ ) . '/sendable/class.email.php';
 require_once dirname( __FILE__ ) . '/sendable/class.simple-email.php';
 
