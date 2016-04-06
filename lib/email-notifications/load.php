@@ -39,6 +39,7 @@ require_once dirname( __FILE__ ) . '/middleware/class.handler.php';
 require_once dirname( __FILE__ ) . '/middleware/interface.php';
 require_once dirname( __FILE__ ) . '/middleware/class.formatter.php';
 require_once dirname( __FILE__ ) . '/middleware/class.contextualizer.php';
+require_once dirname( __FILE__ ) . '/middleware/class.style-links.php';
 
 require_once dirname( __FILE__ ) . '/tag-replacers/interface.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.base.php';
@@ -95,7 +96,8 @@ function it_exchange_email_notifications() {
 		$middleware
 			->push( new IT_Exchange_Email_Middleware_Formatter() )
 			->push( new IT_Exchange_Email_Middleware_Contextualizer() )
-			->push( $replacer );
+			->push( $replacer )
+			->push( new IT_Exchange_Email_Middleware_Style_Links() );
 
 		/**
 		 * Fires when add-ons should register additional middleware.
@@ -117,9 +119,9 @@ function it_exchange_email_notifications() {
 				$settings = json_decode( $settings, true );
 
 				if ( $settings['api_key'] && $settings['enabled'] ) {
-					$sender = new IT_Exchange_Email_Postmark_Sender( $middleware, _wp_http_get_object(), array(
+					/*$sender = new IT_Exchange_Email_Postmark_Sender( $middleware, _wp_http_get_object(), array(
 						'server-token' => $settings['api_key']
-					) );
+					) );*/
 				}
 			} elseif ( class_exists( 'WP_Mailjet' ) && get_option( 'mailjet_enabled' ) ) {
 
