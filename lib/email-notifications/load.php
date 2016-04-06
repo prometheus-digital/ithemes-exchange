@@ -35,6 +35,9 @@ require_once dirname( __FILE__ ) . '/sender/class.postmark.php';
 require_once dirname( __FILE__ ) . '/sender/class.mailjet.php';
 require_once dirname( __FILE__ ) . '/sender/class.exception.php';
 
+require_once dirname( __FILE__ ) . '/middleware/class.handler.php';
+require_once dirname( __FILE__ ) . '/middleware/interface.php';
+
 require_once dirname( __FILE__ ) . '/tag-replacers/interface.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.base.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.shortcode.php';

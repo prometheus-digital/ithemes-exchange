@@ -7,9 +7,9 @@
  */
 
 /**
- * Class IT_Exchange_Mutable_Sendable
+ * Class IT_Exchange_Sendable_Mutable_Wrapper
  */
-class IT_Exchange_Mutable_Sendable implements IT_Exchange_Sendable {
+class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 
 	/**
 	 * @var IT_Exchange_Sendable
@@ -37,7 +37,7 @@ class IT_Exchange_Mutable_Sendable implements IT_Exchange_Sendable {
 	protected $additional_bccs = array();
 
 	/**
-	 * IT_Exchange_Mutable_Sendable constructor.
+	 * IT_Exchange_Sendable_Mutable_Wrapper constructor.
 	 *
 	 * @param IT_Exchange_Sendable $sendable
 	 */

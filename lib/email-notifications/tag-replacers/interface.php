@@ -9,7 +9,7 @@
 /**
  * Class IT_Exchange_Email_Shortcode_Tag_Replacer
  */
-interface IT_Exchange_Email_Tag_Replacer {
+interface IT_Exchange_Email_Tag_Replacer extends IT_Exchange_Email_Middleware {
 
 	/**
 	 * Replace the email tags.
