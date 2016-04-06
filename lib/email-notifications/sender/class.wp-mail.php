@@ -19,15 +19,15 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * @var IT_Exchange_Email_Tag_Replacer
 	 */
-	private $replacer;
+	private $middleware;
 
 	/**
 	 * IT_Exchange_WP_Mail_Sender constructor.
 	 *
-	 * @param IT_Exchange_Email_Tag_Replacer $replacer
+	 * @param IT_Exchange_Email_Middleware_Handler $middleware
 	 */
-	public function __construct( IT_Exchange_Email_Tag_Replacer $replacer ) {
-		$this->replacer = $replacer;
+	public function __construct( IT_Exchange_Email_Middleware_Handler $middleware ) {
+		$this->middleware = $middleware;
 	}
 
 	/**
@@ -71,18 +71,18 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 			$headers[] = $this->header_from_recipient( $bcc, 'Bcc' );
 		}
 
-		$this->email = $email;
-		$context     = array_merge( array( 'recipient' => $email->get_recipient() ), $email->get_context() );
-		$content     = $email->get_body();
-
-		$headers = apply_filters( 'it_exchange_send_email_notification_wp_mail_headers', $headers );
-		$content = apply_filters( 'it_exchange_send_email_notification_wp_mail_body', $content );
+		$email = new IT_Exchange_Sendable_Mutable_Wrapper( $email );
+		$this->middleware->handle( $email );
 
 		$to      = $email->get_recipient()->get_email();
-		$subject = $this->replacer->replace( $email->get_subject(), $context );
-		$message = $this->replacer->replace( shortcode_unautop( wpautop( $content ) ), $context );
-		$body    = $email->get_template()->get_html( array_merge( array( 'message' => $message ), $context ) );
+		$subject = $email->get_subject();
+		$message = $email->get_body();
+		$body    = $email->get_template()->get_html( array_merge( array( 'message' => $message ), $email->get_context() ) );
 
+		$headers = apply_filters( 'it_exchange_send_email_notification_wp_mail_headers', $headers );
+		$body    = apply_filters( 'it_exchange_send_email_notification_wp_mail_body', $body );
+
+		$this->email = $email;
 		add_action( 'wp_mail_failed', array( $this, 'wp_mail_failed' ) );
 		$res = wp_mail( $to, strip_tags( $subject ), $body, $headers );
 		remove_action( 'wp_mail_failed', array( $this, 'wp_mail_failed' ) );

@@ -57,6 +57,10 @@ class IT_Exchange_Email_Delivery_Exception extends Exception {
 
 		if ( $email ) {
 
+			if ( $email instanceof IT_Exchange_Sendable_Mutable_Wrapper ) {
+				$email = $email->get_original();
+			}
+
 			if ( $email instanceof IT_Exchange_Email ) {
 				$identifier = $email->get_notification()->get_slug();
 			} else {

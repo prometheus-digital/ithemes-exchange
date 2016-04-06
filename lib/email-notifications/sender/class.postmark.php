@@ -19,9 +19,9 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	private $server_token;
 
 	/**
-	 * @var IT_Exchange_Email_Tag_Replacer
+	 * @var IT_Exchange_Email_Middleware_Handler
 	 */
-	private $replacer;
+	private $middleware;
 
 	/**
 	 * @var array
@@ -36,13 +36,13 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * IT_Exchange_Email_Postmark_Sender constructor.
 	 *
-	 * @param IT_Exchange_Email_Tag_Replacer $replacer
-	 * @param WP_Http                        $http
-	 * @param array                          $config Additional configuration options.
+	 * @param IT_Exchange_Email_Middleware_Handler $middleware
+	 * @param WP_Http                              $http
+	 * @param array                                $config Additional configuration options.
 	 */
-	public function __construct( IT_Exchange_Email_Tag_Replacer $replacer, WP_Http $http, array $config = array() ) {
-		$this->replacer = $replacer;
-		$this->http     = $http;
+	public function __construct( IT_Exchange_Email_Middleware_Handler $middleware, WP_Http $http, array $config = array() ) {
+		$this->middleware = $middleware;
+		$this->http       = $http;
 
 		$config = ITUtility::merge_defaults( $config, array(
 			'server-token' => '',
@@ -116,15 +116,15 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 			throw new IT_Exchange_Email_Delivery_Exception( 'A maximum of 50 Bcc addresses are supported.' );
 		}
 
-		$context = array_merge( array( 'recipient' => $sendable->get_recipient() ), $sendable->get_context() );
+		$sendable = new IT_Exchange_Sendable_Mutable_Wrapper( $sendable );
+		$this->middleware->handle( $sendable );
 
-		$message = $this->replacer->replace( shortcode_unautop( wpautop( $sendable->get_body() ) ), $context );
-		$html    = $sendable->get_template()->get_html( array_merge( array( 'message' => $message ), $context ) );
+		$html = $sendable->get_template()->get_html( array_merge( array( 'message' => $sendable->get_body() ), $sendable->get_context() ) );
 
 		$api_format = array(
 			'From'     => $this->get_from_address(),
 			'To'       => $sendable->get_recipient()->get_email(),
-			'Subject'  => $this->replacer->replace( $sendable->get_subject(), $context ),
+			'Subject'  => $sendable->get_subject(),
 			'HtmlBody' => $html
 		);
 
@@ -136,8 +136,8 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 			$api_format['Bcc'] = implode( ',', array_map( array( $this, '_map_address' ), $sendable->get_bccs() ) );
 		}
 
-		if ( $sendable instanceof IT_Exchange_Email ) {
-			$api_format['Tag'] = $sendable->get_notification()->get_name();
+		if ( $sendable->get_original() instanceof IT_Exchange_Email ) {
+			$api_format['Tag'] = $sendable->get_original()->get_notification()->get_name();
 		}
 
 		$api_format = array_merge( $api_format, $this->config );

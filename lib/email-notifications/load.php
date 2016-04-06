@@ -37,6 +37,8 @@ require_once dirname( __FILE__ ) . '/sender/class.exception.php';
 
 require_once dirname( __FILE__ ) . '/middleware/class.handler.php';
 require_once dirname( __FILE__ ) . '/middleware/interface.php';
+require_once dirname( __FILE__ ) . '/middleware/class.formatter.php';
+require_once dirname( __FILE__ ) . '/middleware/class.contextualizer.php';
 
 require_once dirname( __FILE__ ) . '/tag-replacers/interface.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.base.php';
@@ -89,10 +91,25 @@ function it_exchange_email_notifications() {
 		 */
 		do_action( 'it_exchange_email_notifications_register_tags', $replacer );
 
+		$middleware = new IT_Exchange_Email_Middleware_Handler();
+		$middleware
+			->push( new IT_Exchange_Email_Middleware_Formatter() )
+			->push( new IT_Exchange_Email_Middleware_Contextualizer() )
+			->push( $replacer );
+
+		/**
+		 * Fires when add-ons should register additional middleware.
+		 *
+		 * @since 1.36
+		 *
+		 * @param IT_Exchange_Email_Middleware_Handler
+		 */
+		do_action( 'it_exchange_email_notifications_register_middleware', $middleware );
+
 		if ( defined( 'IT_EXCHANGE_DISABLE_EMAILS' ) && IT_EXCHANGE_DISABLE_EMAILS ) {
 			$sender = new IT_Exchange_Email_Null_Sender();
 		} else {
-			$sender = new IT_Exchange_WP_Mail_Sender( $replacer );
+			$sender = new IT_Exchange_WP_Mail_Sender( $middleware );
 
 			if ( class_exists( 'Postmark_Mail' ) ) {
 
@@ -100,7 +117,7 @@ function it_exchange_email_notifications() {
 				$settings = json_decode( $settings, true );
 
 				if ( $settings['api_key'] && $settings['enabled'] ) {
-					$sender = new IT_Exchange_Email_Postmark_Sender( $replacer, _wp_http_get_object(), array(
+					$sender = new IT_Exchange_Email_Postmark_Sender( $middleware, _wp_http_get_object(), array(
 						'server-token' => $settings['api_key']
 					) );
 				}
@@ -110,7 +127,7 @@ function it_exchange_email_notifications() {
 				$private = get_option( 'mailjet_password' );
 
 				if ( $public && $private ) {
-					$sender = new IT_Exchange_Email_Mailjet_Sender( $replacer, _wp_http_get_object(), array(
+					$sender = new IT_Exchange_Email_Mailjet_Sender( $middleware, _wp_http_get_object(), array(
 						'public'  => $public,
 						'private' => $private
 					) );

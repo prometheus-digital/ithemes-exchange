@@ -90,5 +90,7 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 
 		$sendable->override_subject( $this->replace( $sendable->get_subject(), $sendable->get_context() ) );
 		$sendable->override_body( $this->replace( $sendable->get_body(), $sendable->get_context() ) );
+		
+		return true;
 	}
 }

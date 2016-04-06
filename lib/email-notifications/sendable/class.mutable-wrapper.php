@@ -37,6 +37,11 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	protected $additional_bccs = array();
 
 	/**
+	 * @var array
+	 */
+	protected $additional_context = array();
+
+	/**
 	 * IT_Exchange_Sendable_Mutable_Wrapper constructor.
 	 *
 	 * @param IT_Exchange_Sendable $sendable
@@ -189,7 +194,30 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	 * @return array
 	 */
 	public function get_context() {
-		return $this->sendable->get_context();
+		return $this->additional_context + $this->sendable->get_context();
+	}
+
+	/**
+	 * Add additional context.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $key
+	 * @param mixed  $context
+	 *
+	 * @return self
+	 */
+	public function add_context( $key, $context ) {
+
+		if ( ! is_string( $key ) || trim( $key ) === '' ) {
+			throw new InvalidArgumentException( '$key must be a non-empty string.' );
+		}
+
+		if ( ! array_key_exists( $key, $this->get_context() ) ) {
+			$this->additional_context[ $key ] = $context;
+		}
+
+		return $this;
 	}
 
 	/**
