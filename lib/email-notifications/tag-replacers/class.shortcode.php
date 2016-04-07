@@ -14,7 +14,7 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 	/**
 	 * @var array
 	 */
-	private $context;
+	private $context = array();
 
 	/**
 	 * IT_Exchange_Email_Tag_Replacer constructor.
