@@ -31,7 +31,7 @@
 
 							<?php if ( it_exchange( 'transaction', 'has-note' ) ): ?>
 								<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_before_note' ); ?>
-								<td style="line-height: 1.4; vertical-align: top;">
+								<td style="line-height: 1.4; vertical-align: top; width: 50%">
 									<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_begin_note' ); ?>
 									<strong><?php _e( 'Order Note', 'it-l10n-ithemes-exchange' ); ?></strong><br>
 									<?php it_exchange( 'transaction', 'note' ); ?>
@@ -42,7 +42,7 @@
 
 							<?php if ( it_exchange( 'transaction', 'has-shipping-method' ) ): ?>
 								<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_before_shipping' ); ?>
-								<td style="line-height: 1.4; vertical-align: top;">
+								<td style="line-height: 1.4; vertical-align: top; width: 50%">
 									<?php do_action( 'it_exchange_email_template_receipt_meta-bottom_begin_shipping' ); ?>
 									<strong><?php _e( 'Shipping Method', 'it-l10n-ithemes-exchange' ) ?></strong><br>
 									<?php it_exchange( 'transaction', 'shipping-method' ); ?>

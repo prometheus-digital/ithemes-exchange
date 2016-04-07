@@ -31,7 +31,7 @@
 
 							<?php if ( it_exchange( 'transaction', 'has-billing-address' ) ): ?>
 								<?php do_action( 'it_exchange_email_template_receipt_meta-top_before_billing' ); ?>
-								<td style="line-height: 1.4; vertical-align: top;">
+								<td style="line-height: 1.4; vertical-align: top; width: 35%;">
 									<?php do_action( 'it_exchange_email_template_receipt_meta-top_begin_billing' ); ?>
 									<strong><?php _e( 'Billing Address', 'it-l10n-ithemes-exchange' ); ?></strong><br>
 									<?php it_exchange( 'transaction', 'billing-address' ); ?>
@@ -42,7 +42,7 @@
 
 							<?php if ( it_exchange( 'transaction', 'has-shipping-address' ) ): ?>
 								<?php do_action( 'it_exchange_email_template_receipt_meta-top_before_shipping' ); ?>
-								<td style="line-height: 1.4; vertical-align: top;">
+								<td style="line-height: 1.4; vertical-align: top; width: 35%">
 									<?php do_action( 'it_exchange_email_template_receipt_meta-top_begin_shipping' ); ?>
 									<strong><?php _e( 'Shipping Address', 'it-l10n-ithemes-exchange' ); ?></strong><br>
 									<?php it_exchange( 'transaction', 'shipping-address' ); ?>
@@ -52,7 +52,7 @@
 							<?php endif; ?>
 
 							<?php do_action( 'it_exchange_email_template_receipt_meta-top_before_third_block' ); ?>
-							<td style="line-height: 1.1; vertical-align: top; ">
+							<td style="line-height: 1.1; vertical-align: top; width: 30%;">
 								<?php do_action( 'it_exchange_email_template_receipt_meta-top_begin_payment_method' ); ?>
 								<strong><?php _e( 'Payment Method', 'it-l10n-ithemes-exchange' ); ?></strong><br>
 								<?php it_exchange( 'transaction', 'method' ); ?><br><br>
