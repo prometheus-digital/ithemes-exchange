@@ -490,7 +490,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 
 		ob_start();
 		?>
-		<table style="text-align: left; background: #FBFBFB; margin-bottom: 1.5em;border:1px solid #DDD;border-collapse: collapse;">
+		<table style="text-align: left; background: #FBFBFB; margin-bottom: 1.5em;border:1px solid #DDD;border-collapse: collapse;color:#1f1f1f;">
 			<thead style="background:#F3F3F3;">
 			<tr>
 				<th style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Product', 'it-l10n-ithemes-exchange' ); ?></th>
