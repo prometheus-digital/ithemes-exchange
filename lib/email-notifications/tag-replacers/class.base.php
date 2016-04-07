@@ -118,7 +118,7 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 		$this->context = $context;
 
 		$this->back_compat_globals( $context );
-		
+
 		return $content;
 	}
 
@@ -168,6 +168,40 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 		$r = apply_filters( "it_exchange_email_replace_tag", $r, $tag, $context, $options );
 
 		return $r;
+	}
+
+	/**
+	 * Replace a legacy tag.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $tag
+	 * @param array  $options
+	 *
+	 * @return string|bool
+	 */
+	protected function replace_legacy( $tag, $options ) {
+
+		$functions = $this->get_legacy_functions();
+
+		if ( ! isset( $functions[ $tag ] ) || ! is_callable( $functions[ $tag ] ) ) {
+			return false;
+		}
+
+		$r = call_user_func( $functions[ $tag ], it_exchange_email_notifications(), $options, array() );
+
+		/**
+		 * Filter the shortcode response.
+		 *
+		 * @since 1.0
+		 *
+		 * @param string $r
+		 * @param array  $atts
+		 * @param string $content
+		 * @param array  $data
+		 * @param array  $context
+		 */
+		return apply_filters( "it_exchange_email_notification_shortcode_{$tag}", $r, $options, '', $this->get_data() );
 	}
 
 	/**

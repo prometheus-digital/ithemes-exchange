@@ -62,47 +62,24 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 	 *
 	 * @since 1.36
 	 *
-	 * @param array  $all_atts
-	 * @param string $content
+	 * @param array $all_atts
 	 *
 	 * @return string
 	 */
-	public function shortcode( $all_atts, $content = '' ) {
+	public function shortcode( $all_atts ) {
 
 		$supported_pairs = array( 'show' => '', 'options' => '' );
 
 		$atts = shortcode_atts( $supported_pairs, $all_atts );
 		$show = $atts['show'];
 
-		$opts = explode( ',', $atts['options'] );
-		unset( $all_atts['show'], $all_atts['options'] );
-
+		$opts    = explode( ',', $atts['options'] );
 		$context = $this->context;
 
-		$functions = $this->get_legacy_functions();
-		$tag       = $this->get_tag( $show );
-
-		$r = false;
-
-		if ( $tag ) {
-			$r = $this->replace_tag( $tag, $context, array_merge( $opts, $all_atts ) );
-		} elseif ( isset( $functions[ $show ] ) && is_callable( $functions[ $show ] ) ) {
-			$r = call_user_func( $functions[ $show ], it_exchange_email_notifications(), $opts, $all_atts, $context );
-
-			$data = $this->get_data();
-
-			/**
-			 * Filter the shortcode response.
-			 *
-			 * @since 1.0
-			 *
-			 * @param string $r
-			 * @param array  $atts
-			 * @param string $content
-			 * @param array  $data
-			 * @param array  $context
-			 */
-			$r = apply_filters( "it_exchange_email_notification_shortcode_{$show}", $r, $all_atts, $content, $data );
+		if ( $tag = $this->get_tag( $show ) ) {
+			$r = $this->replace_tag( $tag, $context, $opts );
+		} else {
+			$r = $this->replace_legacy( $show, $opts );
 		}
 
 		return $r;

@@ -8,7 +8,6 @@
 
 require_once dirname( __FILE__ ) . '/deprecated.php';
 
-
 require_once dirname( __FILE__ ) . '/class.customizer.php';
 require_once dirname( __FILE__ ) . '/class.customize-active-callback.php';
 
@@ -48,6 +47,7 @@ if ( version_compare( PHP_VERSION, '5.3', '>=' ) ) {
 require_once dirname( __FILE__ ) . '/tag-replacers/interface.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.base.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.shortcode.php';
+require_once dirname( __FILE__ ) . '/tag-replacers/class.curly.php';
 
 require_once dirname( __FILE__ ) . '/tag/interface.php';
 require_once dirname( __FILE__ ) . '/tag/class.base.php';
@@ -70,7 +70,7 @@ function it_exchange_email_notifications() {
 
 	if ( ! $notifications ) {
 
-		$replacer = new IT_Exchange_Email_Shortcode_Tag_Replacer();
+		$replacer = new IT_Exchange_Email_Curly_Tag_Replacer();
 
 		/**
 		 * Filter the tag replacer.
