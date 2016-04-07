@@ -33,7 +33,11 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 	 *
 	 * @return string
 	 */
-	public function replace( $content, $context ) {
+	public function replace( $content, $context = array() ) {
+
+		if ( ! is_array( $context ) && ! $context instanceof ArrayAccess ) {
+			throw new InvalidArgumentException( '$context must be an array.' );
+		}
 
 		$this->context = $context;
 
