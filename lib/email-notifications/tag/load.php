@@ -529,12 +529,12 @@ class IT_Exchange_Email_Register_Default_Tags {
 			<?php endif; ?>
 			</tbody>
 			<tfoot style="background:#F3F3F3;">
-			<?php do_action( 'order_table_tag_before_total_row', $context, $options ); ?>
+			<?php do_action( 'it_exchange_replace_order_table_tag_before_total_row', it_exchange_email_notifications(), $options ); ?>
 			<tr>
 				<td colspan="2" style="padding: 10px;border:1px solid #DDD;"><?php _e( 'Total', 'it-l10n-ithemes-exchange' ); ?></td>
 				<td style="padding: 10px;border:1px solid #DDD;"><?php echo it_exchange_get_transaction_total( $context['transaction'], true ) ?></td>
 			</tr>
-			<?php do_action( 'order_table_tag_after_total_row', $context, $options ); ?>
+			<?php do_action( 'it_exchange_replace_order_table_tag_after_total_row', it_exchange_email_notifications(), $options ); ?>
 			</tfoot>
 		</table>
 		<?php
