@@ -22,18 +22,14 @@ class Test_IT_Exchange_Lib_Email_Sender_WP_Mail extends IT_Exchange_UnitTestCase
 			return $data;
 		} );
 
-		$replacer = $this->getMockForAbstractClass( 'IT_Exchange_Email_Tag_Replacer', array( 'replace' ) );
-		$replacer->method( 'replace' )->willReturnArgument( 0 );
-
 		$recipient = $this->getMockForAbstractClass( 'IT_Exchange_Email_Recipient', array( 'get_email' ) );
 		$recipient->method( 'get_email' )->willReturn( 'example@example.org' );
 
 		$template = $this->getMockBuilder( 'IT_Exchange_Email_Template' )->disableOriginalConstructor()
 		                 ->setMethods( array( 'get_html' ) )->getMock();
 		$template->method( 'get_html' )->with( array(
-			'message'   => "<p>Body</p>\n",
-			'extra'     => 'details',
-			'recipient' => $recipient
+			'message' => "Body",
+			'extra'   => 'details',
 		) )->willReturnCallback( function ( $context ) {
 			return $context['message'];
 		} );
@@ -60,7 +56,7 @@ class Test_IT_Exchange_Lib_Email_Sender_WP_Mail extends IT_Exchange_UnitTestCase
 			'args'  => array(
 				'example@example.org',
 				'Subject',
-				"<p>Body</p>\n",
+				"Body",
 				array(
 					'From: Test Store <exchange@example.org>',
 					'MIME-Version: 1.0',
@@ -72,7 +68,7 @@ class Test_IT_Exchange_Lib_Email_Sender_WP_Mail extends IT_Exchange_UnitTestCase
 			)
 		) );
 
-		$sender = new IT_Exchange_WP_Mail_Sender( $replacer );
+		$sender = new IT_Exchange_WP_Mail_Sender( new IT_Exchange_Email_Middleware_Handler() );
 		$sender->send( $sendable );
 	}
 
