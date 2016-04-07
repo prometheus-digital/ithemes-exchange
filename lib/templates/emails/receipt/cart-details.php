@@ -31,7 +31,7 @@
 							<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 0 0 10px 0;" class="border-highlight-color">
 								<?php _e( 'Description', 'it-l10n-ithemes-exchange' ); ?>
 							</th>
-							<th align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 0 0 10px 0;" class="border-highlight-color">
+							<th align="center" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 0 0 10px 0;" class="border-highlight-color">
 								<?php _ex( 'Qty', 'Product Quantity', 'it-l10n-ithemes-exchange' ); ?>
 							</th>
 							<th align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 0 0 10px 0;" class="border-highlight-color">
@@ -65,7 +65,7 @@
 										</tr>
 									</table>
 								</td>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" class="border-highlight-color">
+								<td align="center" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" class="border-highlight-color">
 									<?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_count' ); ?>
 								</td>
 								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" class="border-highlight-color">

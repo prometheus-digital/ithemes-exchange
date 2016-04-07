@@ -29,10 +29,10 @@
 						<?php do_action( 'it_exchange_email_template_receipt_cart-totals_before_subtotal' ); ?>
 						<tr>
 							<td></td>
-							<td align="right" style="padding: 10px; ">
+							<td align="right" style="padding: 10px; width: 75%;">
 								<strong><?php _e( 'Subtotal', 'it-l10n-ithemes-exchange' ); ?></strong>
 							</td>
-							<td align="right" style="padding: 10px 0 10px 10px; ">
+							<td align="right" style="padding: 10px 0 10px 10px; width: 25%;">
 								<?php it_exchange( 'transaction', 'subtotal' ); ?>
 							</td>
 						</tr>
