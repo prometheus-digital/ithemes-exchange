@@ -12,11 +12,6 @@
 class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Replacer_Base {
 
 	/**
-	 * @var array
-	 */
-	private $context = array();
-
-	/**
 	 * IT_Exchange_Email_Tag_Replacer constructor.
 	 */
 	public function __construct() {
@@ -35,17 +30,7 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 	 */
 	public function replace( $content, $context = array() ) {
 
-		if ( ! is_array( $context ) && ! $context instanceof ArrayAccess ) {
-			throw new InvalidArgumentException( '$context must be an array.' );
-		}
-
-		$this->context = $context;
-
-		it_exchange_email_notifications()->transaction_id = empty( $context['transaction'] ) ? false : $context['transaction']->get_ID();
-		it_exchange_email_notifications()->customer_id    = empty( $context['customer'] ) ? false : $context['customer']->id;
-		it_exchange_email_notifications()->user           = it_exchange_get_customer( it_exchange_email_notifications()->customer_id );
-
-		$GLOBALS['it_exchange']['email-confirmation-data'] = $this->get_data();
+		$content = parent::replace( $content, $context );
 
 		return do_shortcode( $content );
 	}
@@ -73,32 +58,6 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 	}
 
 	/**
-	 * Get shortcode functions.
-	 *
-	 * @since 1.36
-	 *
-	 * @return array
-	 */
-	protected function get_shortcode_functions() {
-
-		if ( has_filter( 'it_exchange_email_notification_shortcode_functions' ) ) {
-			it_exchange_deprecated_filter( 'it_exchange_email_notification_shortcode_functions', '1.36',
-				'IT_Exchange_Email_Tag_Replacer::add_tag' );
-		}
-
-		/**
-		 * Filter the available shortcode functions.
-		 *
-		 * @deprecated 1.36
-		 *
-		 * @since      1.0
-		 *
-		 * @param array $shortcode_functions
-		 */
-		return apply_filters( 'it_exchange_email_notification_shortcode_functions', array(), $this->get_data() );
-	}
-
-	/**
 	 * Shortcode callback.
 	 *
 	 * @since 1.36
@@ -110,8 +69,6 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 	 */
 	public function shortcode( $all_atts, $content = '' ) {
 
-		$data = $this->get_data();
-
 		$supported_pairs = array( 'show' => '', 'options' => '' );
 
 		$atts = shortcode_atts( $supported_pairs, $all_atts );
@@ -122,49 +79,32 @@ class IT_Exchange_Email_Shortcode_Tag_Replacer extends IT_Exchange_Email_Tag_Rep
 
 		$context = $this->context;
 
-		$functions = $this->get_shortcode_functions();
+		$functions = $this->get_legacy_functions();
 		$tag       = $this->get_tag( $show );
 
 		$r = false;
 
 		if ( $tag ) {
-
-			if ( count( array_diff( $tag->get_required_context(), array_keys( $context ) ) ) > 0 ) {
-				$r = '';
-			} else {
-				$opts = array_merge( $opts, $all_atts );
-				$r    = $tag->render( $context, $opts );
-			}
-
+			$r = $this->replace_tag( $tag, $context, array_merge( $opts, $all_atts ) );
 		} elseif ( isset( $functions[ $show ] ) && is_callable( $functions[ $show ] ) ) {
 			$r = call_user_func( $functions[ $show ], it_exchange_email_notifications(), $opts, $all_atts, $context );
+
+			$data = $this->get_data();
+
+			/**
+			 * Filter the shortcode response.
+			 *
+			 * @since 1.0
+			 *
+			 * @param string $r
+			 * @param array  $atts
+			 * @param string $content
+			 * @param array  $data
+			 * @param array  $context
+			 */
+			$r = apply_filters( "it_exchange_email_notification_shortcode_{$show}", $r, $all_atts, $content, $data );
 		}
 
-		/**
-		 * Filter the shortcode response.
-		 *
-		 * @since 1.0
-		 *
-		 * @param string $r
-		 * @param array  $atts
-		 * @param string $content
-		 * @param array  $data
-		 * @param array  $context
-		 */
-		return apply_filters( "it_exchange_email_notification_shortcode_{$show}", $r, $all_atts, $content, $data, $context );
-	}
-
-	/**
-	 * Get the data array. This is mainly for back-compat.
-	 *
-	 * @since 1.36
-	 *
-	 * @return array
-	 */
-	protected function get_data() {
-		return array(
-			0 => empty( $this->context['transaction'] ) ? null : it_exchange_get_transaction( $this->context['transaction'] ),
-			1 => it_exchange_email_notifications()
-		);
+		return $r;
 	}
 }

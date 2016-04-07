@@ -17,6 +17,11 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	private $tags = array();
 
 	/**
+	 * @var array
+	 */
+	protected $context = array();
+
+	/**
 	 * Add a tag to be replaced.
 	 *
 	 * @since 1.36
@@ -90,7 +95,136 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 
 		$sendable->override_subject( $this->replace( $sendable->get_subject(), $sendable->get_context() ) );
 		$sendable->override_body( $this->replace( $sendable->get_body(), $sendable->get_context() ) );
-		
+
 		return true;
+	}
+
+	/**
+	 * Replace the email tags.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $content
+	 * @param array  $context
+	 *
+	 * @return string
+	 */
+	public function replace( $content, $context ) {
+
+		if ( ! is_array( $context ) && ! $context instanceof ArrayAccess ) {
+			throw new InvalidArgumentException( '$context must be an array.' );
+		}
+
+		$this->context = $context;
+
+		$this->back_compat_globals( $context );
+		
+		return $content;
+	}
+
+	/**
+	 * Replace an individual tag.
+	 *
+	 * @since 1.36
+	 *
+	 * @param IT_Exchange_Email_Tag $tag
+	 * @param array                 $context
+	 * @param array                 $options
+	 *
+	 * @return string
+	 */
+	protected function replace_tag( IT_Exchange_Email_Tag $tag, $context, $options ) {
+
+		if ( count( array_diff( $tag->get_required_context(), array_keys( $context ) ) ) > 0 ) {
+			$r = '';
+		} else {
+			$r = $tag->render( $context, $options );
+		}
+
+		/**
+		 * Filter the replaced email tag.
+		 *
+		 * The dynamic portion of this hook, `{$tag->get_tag()}`, refers to the email tag.
+		 *
+		 * @since 1.36
+		 *
+		 * @param string                $r
+		 * @param IT_Exchange_Email_Tag $tag
+		 * @param array                 $context
+		 * @param array                 $options
+		 */
+		$r = apply_filters( "it_exchange_email_replace_tag_{$tag->get_tag()}", $r, $tag, $context, $options );
+
+		/**
+		 * Filter the replaced email tag.
+		 *
+		 * @since 1.36
+		 *
+		 * @param string                $r
+		 * @param IT_Exchange_Email_Tag $tag
+		 * @param array                 $context
+		 * @param array                 $options
+		 */
+		$r = apply_filters( "it_exchange_email_replace_tag", $r, $tag, $context, $options );
+
+		return $r;
+	}
+
+	/**
+	 * Get legacy tag replacement functions.
+	 *
+	 * @since 1.36
+	 *
+	 * @return array
+	 */
+	protected function get_legacy_functions() {
+
+		if ( has_filter( 'it_exchange_email_notification_shortcode_functions' ) ) {
+			it_exchange_deprecated_filter( 'it_exchange_email_notification_shortcode_functions', '1.36',
+				'IT_Exchange_Email_Tag_Replacer::add_tag' );
+		}
+
+		/**
+		 * Filter the available shortcode functions.
+		 *
+		 * @deprecated 1.36
+		 *
+		 * @since      1.0
+		 *
+		 * @param array $shortcode_functions
+		 */
+		return apply_filters( 'it_exchange_email_notification_shortcode_functions', array(), $this->get_data() );
+	}
+
+	/**
+	 * Set globals for backwards compat.
+	 *
+	 * These should not be relied upon.
+	 *
+	 * @since 1.36
+	 *
+	 * @param array $context
+	 */
+	protected function back_compat_globals( $context ) {
+
+		it_exchange_email_notifications()->transaction_id = empty( $context['transaction'] ) ? false : $context['transaction']->get_ID();
+		it_exchange_email_notifications()->customer_id    = empty( $context['customer'] ) ? false : $context['customer']->id;
+		it_exchange_email_notifications()->user           = it_exchange_get_customer( it_exchange_email_notifications()->customer_id );
+
+		$GLOBALS['it_exchange']['email-confirmation-data'] = $this->get_data();
+	}
+
+	/**
+	 * Get the data array. This is mainly for back-compat.
+	 *
+	 * @since 1.36
+	 *
+	 * @return array
+	 */
+	protected function get_data() {
+		return array(
+			0 => empty( $this->context['transaction'] ) ? null : it_exchange_get_transaction( $this->context['transaction'] ),
+			1 => it_exchange_email_notifications()
+		);
 	}
 }
