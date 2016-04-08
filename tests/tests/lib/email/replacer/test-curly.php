@@ -131,4 +131,37 @@ class Test_IT_Exchange_Email_Curly_Tag_Replacer extends IT_Exchange_UnitTestCase
 		$this->assertEquals( $transaction, $GLOBALS['it_exchange']['email-confirmation-data'][0] );
 		$this->assertEquals( it_exchange_email_notifications(), $GLOBALS['it_exchange']['email-confirmation-data'][1] );
 	}
+
+	public function test_replacement_map() {
+
+		$context = array( 'key' => 'val' );
+
+		$tag1 = $this->getMockBuilder( 'IT_Exchange_Email_Tag' )->setMethods( array( 'render', 'get_tag' ) )
+		             ->getMockForAbstractClass();
+		$tag1->method( 'get_tag' )->willReturn( 'test1' );
+		$tag1->method( 'get_required_context' )->willReturn( array() );
+		$tag1->expects( $this->once() )->method( 'render' )->with( $context )->willReturn( 'content1' );
+
+		$tag2 = $this->getMockBuilder( 'IT_Exchange_Email_Tag' )->setMethods( array( 'render', 'get_tag' ) )
+		             ->getMockForAbstractClass();
+		$tag2->method( 'get_tag' )->willReturn( 'test2' );
+		$tag2->method( 'get_required_context' )->willReturn( array() );
+		$tag2->expects( $this->once() )->method( 'render' )->with( $context )->willReturn( 'content2' );
+
+		$replacer = new IT_Exchange_Email_Curly_Tag_Replacer();
+		$replacer->add_tag( $tag1 )->add_tag( $tag2 );
+		$map = $replacer->get_replacement_map( 'This is a {{test1}} with {{test2}}.', $context );
+
+		$this->assertEquals( array( 'test1' => 'content1', 'test2' => 'content2' ), $map );
+	}
+
+	public function test_transform_tags_to_format() {
+
+		$content = 'This is a {{test1}} with {{test2}} and {{test1}}';
+
+		$replacer    = new IT_Exchange_Email_Curly_Tag_Replacer();
+		$transformed = $replacer->transform_tags_to_format( '*|', '|*', $content );
+
+		$this->assertEquals( 'This is a *|test1|* with *|test2|* and *|test1|*', $transformed );
+	}
 }
