@@ -105,10 +105,20 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 		}
 
 		$data = array(
-			'options'    => $this->config,
+			'options'    => $this->get_config(),
 			'recipients' => $recipients,
 			'content'    => $this->build_inline_content_attributes( $email, $headers )
 		);
+
+		/**
+		 * Filter the data passed to SparkPost for sending a single email.
+		 *
+		 * @since 1.36
+		 *
+		 * @param array                                $data
+		 * @param IT_Exchange_Sendable_Mutable_Wrapper $email
+		 */
+		$data = apply_filters( 'it_exchange_send_email_notification_sparkpost_api_format_single', $data, $email );
 
 		return $this->make_api_request( $data, $email );
 	}
@@ -224,10 +234,21 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 		}
 
 		$data = array(
-			'options'    => (object) $this->config,
+			'options'    => $this->get_config(),
 			'recipients' => $recipients,
 			'content'    => $this->build_inline_content_attributes( $email, $headers ) // we can use any email we want
 		);
+
+		/**
+		 * Filter the data passed to SparkPost for group sending.
+		 *
+		 * @since 1.36
+		 *
+		 * @param array                                  $data
+		 * @param IT_Exchange_Sendable_Mutable_Wrapper[] $emails
+		 * @param IT_Exchange_Sendable_Mutable_Wrapper   $email
+		 */
+		$data = apply_filters( 'it_exchange_send_email_notification_sparkpost_api_format_group', $data, $emails, $email );
 
 		return $this->make_api_request( $data );
 	}
@@ -354,5 +375,24 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 
 				throw new IT_Exchange_Email_Delivery_Exception( "Error from SparkPost: $message" );
 		}
+	}
+
+	/**
+	 * Get the configuration.
+	 *
+	 * @since 1.36
+	 *
+	 * @return stdClass
+	 */
+	protected function get_config() {
+
+		/**
+		 * Filter the SparkPost API Configuration.
+		 *
+		 * @since 1.36
+		 *
+		 * @param stdClass $config
+		 */
+		return apply_filters( 'it_exchange_send_email_notification_sparkpost_api_config', (object) $this->config );
 	}
 }
