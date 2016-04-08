@@ -31,6 +31,7 @@ require_once dirname( __FILE__ ) . '/sender/interface.php';
 require_once dirname( __FILE__ ) . '/sender/class.null.php';
 require_once dirname( __FILE__ ) . '/sender/class.wp-mail.php';
 require_once dirname( __FILE__ ) . '/sender/class.postmark.php';
+require_once dirname( __FILE__ ) . '/sender/class.sparkpost.php';
 require_once dirname( __FILE__ ) . '/sender/class.mailjet.php';
 require_once dirname( __FILE__ ) . '/sender/class.exception.php';
 
@@ -46,7 +47,6 @@ if ( version_compare( PHP_VERSION, '5.3', '>=' ) ) {
 
 require_once dirname( __FILE__ ) . '/tag-replacers/interface.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.base.php';
-require_once dirname( __FILE__ ) . '/tag-replacers/class.shortcode.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.curly.php';
 
 require_once dirname( __FILE__ ) . '/tag/interface.php';
@@ -125,6 +125,15 @@ function it_exchange_email_notifications() {
 				if ( $settings['api_key'] && $settings['enabled'] ) {
 					$sender = new IT_Exchange_Email_Postmark_Sender( $middleware, _wp_http_get_object(), array(
 						'server-token' => $settings['api_key']
+					) );
+				}
+			} elseif ( class_exists( 'SparkPost' ) && SparkPost::get_option( 'enable_sparkpost' ) ) {
+
+				$api_key = SparkPost::get_option( 'password' );
+
+				if ( $api_key ) {
+					$sender = new IT_Exchange_Email_SparkPost_Sender( $middleware, $replacer, _wp_http_get_object(), array(
+						'api-key' => $api_key
 					) );
 				}
 			} elseif ( class_exists( 'WP_Mailjet' ) && get_option( 'mailjet_enabled' ) ) {
