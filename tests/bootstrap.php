@@ -29,9 +29,9 @@ if ( false !== getenv( 'WP_DEVELOP_DIR' ) ) {
 	$test_root = '/tmp/wordpress-tests-lib';
 }
 
-require_once $test_root . '/includes/functions.php';
-
 require_once dirname( __FILE__ ) . '/../vendor/antecedent/patchwork/Patchwork.php';
+
+require_once $test_root . '/includes/functions.php';
 
 $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
