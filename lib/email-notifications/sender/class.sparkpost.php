@@ -82,12 +82,32 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 			return false;
 		}
 
+		$substitutions = $this->replacer->get_replacement_map( $email->get_subject() . $email->get_body(), $email->get_context() );
+
+		$recipients   = array();
+		$recipients[] = $this->build_recipient_attributes( $email->get_recipient(), $substitutions );
+
+		$ccs = array();
+
+		foreach ( $email->get_ccs() as $cc ) {
+			$ccs[]        = $cc->get_email();
+			$recipients[] = $this->build_recipient_attributes( $cc, $substitutions, $email->get_recipient()->get_email() );
+		}
+
+		foreach ( $email->get_bccs() as $bcc ) {
+			$recipients[] = $this->build_recipient_attributes( $bcc, $substitutions, $email->get_recipient()->get_email() );
+		}
+
+		$headers = array();
+
+		if ( ! empty( $ccs ) ) {
+			$headers['CC'] = implode( ',', $ccs );
+		}
+
 		$data = array(
 			'options'    => $this->config,
-			'recipients' => array(
-				$this->build_recipient_attributes( $email )
-			),
-			'content'    => $this->build_inline_content_attributes( $email )
+			'recipients' => $recipients,
+			'content'    => $this->build_inline_content_attributes( $email, $headers )
 		);
 
 		return $this->make_api_request( $data, $email );
@@ -156,19 +176,57 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 		}
 
 		$recipients = array();
+		$ccs        = array();
 
 		foreach ( $emails as $email ) {
-			$recipients[] = $this->build_recipient_attributes( $email );
+
+			$skip = false;
+
+			$email_ccs        = array();
+			$email_recipients = array();
+
+			$substitutions      = $this->replacer->get_replacement_map( $email->get_subject() . $email->get_body(), $email->get_context() );
+			$email_recipients[] = $this->build_recipient_attributes( $email->get_recipient(), $substitutions );
+
+			foreach ( $email->get_ccs() as $cc ) {
+				$email_ccs[]        = $cc->get_email();
+				$email_recipients[] = $this->build_recipient_attributes( $cc, $substitutions, $email->get_recipient() );
+			}
+
+			foreach ( $email->get_bccs() as $bcc ) {
+				if ( in_array( $bcc->get_email(), $email_ccs ) || in_array( $bcc->get_email(), $ccs ) ) {
+					// if there is already a CC with this email address, we need to send this email separately
+					$this->send( $email );
+
+					$skip = true;
+					break;
+				} else {
+					$email_recipients[] = $this->build_recipient_attributes( $bcc, $substitutions, $email->get_recipient() );
+				}
+			}
+
+			if ( $skip ) {
+				$this->send( $email );
+			} else {
+				$recipients = array_merge( $recipients, $email_recipients );
+				$ccs        = array_merge( $ccs, $email_ccs );
+			}
 		}
 
 		/** @var IT_Exchange_Sendable_Mutable_Wrapper $email */
 		$email = reset( $emails );
 		$email->override_body( $this->replacer->transform_tags_to_format( '{{{', '}}}', $email->get_body() ) );
 
+		$headers = array();
+
+		if ( ! empty( $ccs ) ) {
+			$headers['CC'] = implode( ',', $ccs );
+		}
+
 		$data = array(
 			'options'    => (object) $this->config,
 			'recipients' => $recipients,
-			'content'    => $this->build_inline_content_attributes( $email ) // we can use any email we want
+			'content'    => $this->build_inline_content_attributes( $email, $headers ) // we can use any email we want
 		);
 
 		return $this->make_api_request( $data );
@@ -177,22 +235,21 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Build recipient attributes from a sendable object.
 	 *
-	 * @sicne 1.36
+	 * @since 1.36
 	 *
-	 * @param IT_Exchange_Sendable $sendable
+	 * @param IT_Exchange_Email_Recipient $recipient
+	 * @param array                       $substitutions
+	 * @param string                      $header_to
 	 *
 	 * @return array
 	 */
-	protected function build_recipient_attributes( IT_Exchange_Sendable $sendable ) {
-
-		$content = $sendable->get_subject() . $sendable->get_body();
-
-		$substitutions = $this->replacer->get_replacement_map( $content, $sendable->get_context() );
+	protected function build_recipient_attributes( IT_Exchange_Email_Recipient $recipient, $substitutions = array(), $header_to = '' ) {
 
 		$attributes = array(
 			'address' => (object) array(
-				'email' => $sendable->get_recipient()->get_email(),
-				'name'  => $sendable->get_recipient()->get_full_name()
+				'email'     => $recipient->get_email(),
+				'name'      => $recipient->get_full_name(),
+				'header_to' => $header_to
 			)
 		);
 
@@ -209,10 +266,11 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 	 * @since 1.36
 	 *
 	 * @param IT_Exchange_Sendable $sendable
+	 * @param array                $headers
 	 *
 	 * @return array
 	 */
-	protected function build_inline_content_attributes( IT_Exchange_Sendable $sendable ) {
+	protected function build_inline_content_attributes( IT_Exchange_Sendable $sendable, $headers = array() ) {
 
 		$settings = it_exchange_get_option( 'settings_email' );
 
@@ -234,6 +292,7 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 		return (object) array(
 			'html'    => $html,
 			'subject' => $sendable->get_subject(),
+			'headers' => $headers,
 			'from'    => (object) array(
 				'name'  => $settings['receipt-email-name'],
 				'email' => $settings['receipt-email-address']
