@@ -50,7 +50,7 @@ class IT_Exchange_Email_Middleware_Auto_Linker implements IT_Exchange_Email_Midd
 	 */
 	public function handle( IT_Exchange_Sendable_Mutable_Wrapper $sendable ) {
 
-		$sendable->override_body( $this->autolink->convert( $sendable->get_body() ) );
+		$sendable->override_body( $this->autolink->convertEmail( $this->autolink->convert( $sendable->get_body() ) ) );
 
 		return true;
 	}
