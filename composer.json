@@ -22,5 +22,10 @@
             "type": "vcs",
             "url": "https://github.com/TimothyBJacobs/php-autolink"
         }
-    ]
+    ],
+    "config": {
+      "platform": {
+            "php": "5.3.29"
+        }
+    }
 }
