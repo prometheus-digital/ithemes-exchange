@@ -52,3 +52,10 @@ input.small-text{max-width:50px;}
 	.it-exchange-general-settings.columns-2 {margin-right: 0;}
 	.it-exchange-general-settings #postbox-container-1 {display:none;}
 }
+
+/** -----------------------------------------------------:[ email settings ]:---------- */
+
+#it-exchange-email-settings .subject {
+	width: 500px !important;
+	max-width: 100%;
+}

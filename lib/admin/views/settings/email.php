@@ -130,7 +130,7 @@ $email_notifications = it_exchange_email_notifications();
 						</label>
 					</th>
 					<td>
-						<input type="text" id="email-<?php echo $notification->get_slug(); ?>-subject" name="email[<?php echo $notification->get_slug() ?>][subject]" value="<?php echo $notification->get_subject(); ?>">
+						<input type="text" class="subject" id="email-<?php echo $notification->get_slug(); ?>-subject" name="email[<?php echo $notification->get_slug() ?>][subject]" value="<?php echo $notification->get_subject(); ?>">
 					</td>
 				</tr>
 				<tr valign="top">
