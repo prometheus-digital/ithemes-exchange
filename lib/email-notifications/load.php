@@ -98,10 +98,10 @@ function it_exchange_email_notifications() {
 
 		$middleware = new IT_Exchange_Email_Middleware_Handler();
 		$middleware
-			->push( new IT_Exchange_Email_Middleware_Formatter(), 0 )
-			->push( new IT_Exchange_Email_Middleware_Contextualizer(), 10 )
-			->push( $replacer, 20 )
-			->push( new IT_Exchange_Email_Middleware_Style_Links(), 30 );
+			->push( new IT_Exchange_Email_Middleware_Formatter(), 'formatter' )
+			->push( new IT_Exchange_Email_Middleware_Contextualizer() )
+			->push( $replacer, 'replacer' )
+			->push( new IT_Exchange_Email_Middleware_Style_Links(), 'style-links' );
 
 		/**
 		 * Fires when add-ons should register additional middleware.
@@ -123,9 +123,9 @@ function it_exchange_email_notifications() {
 				$settings = json_decode( $settings, true );
 
 				if ( $settings['api_key'] && $settings['enabled'] ) {
-					/*$sender = new IT_Exchange_Email_Postmark_Sender( $middleware, _wp_http_get_object(), array(
+					$sender = new IT_Exchange_Email_Postmark_Sender( $middleware, _wp_http_get_object(), array(
 						'server-token' => $settings['api_key']
-					) );*/
+					) );
 				}
 			} elseif ( class_exists( 'WP_Mailjet' ) && get_option( 'mailjet_enabled' ) ) {
 
@@ -148,10 +148,11 @@ function it_exchange_email_notifications() {
 		 *
 		 * @since 1.36
 		 *
-		 * @param IT_Exchange_Email_Sender       $sender
-		 * @param IT_Exchange_Email_Tag_Replacer $replacer
+		 * @param IT_Exchange_Email_Sender             $sender
+		 * @param IT_Exchange_Email_Middleware_Handler $middleware
+		 * @param IT_Exchange_Email_Tag_Replacer       $replacer
 		 */
-		$filtered = apply_filters( 'it_exchange_email_notifications_sender', $sender, $replacer );
+		$filtered = apply_filters( 'it_exchange_email_notifications_sender', $sender, $middleware, $replacer );
 
 		if ( $filtered instanceof IT_Exchange_Email_Sender ) {
 			$sender = $filtered;

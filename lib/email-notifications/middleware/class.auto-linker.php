@@ -35,7 +35,7 @@ class IT_Exchange_Email_Middleware_Auto_Linker implements IT_Exchange_Email_Midd
 
 		add_action( 'it_exchange_email_notifications_register_middleware',
 			function ( IT_Exchange_Email_Middleware_Handler $middleware ) use ( $self ) {
-				$middleware->push( $self, 29 );
+				$middleware->before( $self, 'style-links', 'auto-linker' );
 			} );
 	}
 

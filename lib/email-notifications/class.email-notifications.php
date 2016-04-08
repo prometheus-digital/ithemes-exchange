@@ -47,7 +47,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	public function __construct( IT_Exchange_Email_Sender $sender = null, IT_Exchange_Email_Tag_Replacer $replacer = null ) {
 
 		$this->replacer = $replacer ? $replacer : new IT_Exchange_Email_Shortcode_Tag_Replacer();
-		$this->sender   = $sender ? $sender : new IT_Exchange_WP_Mail_Sender( $this->replacer );
+		$this->sender   = $sender ? $sender : new IT_Exchange_Email_Null_Sender();
 
 		add_action( 'it_exchange_send_email_notification', array( $this, 'it_exchange_send_email_notification' ), 20, 4 );
 
