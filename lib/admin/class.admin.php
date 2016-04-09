@@ -1415,27 +1415,9 @@ class IT_Exchange_Admin {
 		if ( empty( $settings['receipt-email-address'] )
 			|| ( !empty( $settings['receipt-email-address'] ) && ! is_email( $settings['receipt-email-address'] ) ) )
 			$errors[] = __( 'Please provide a valid email address.', 'it-l10n-ithemes-exchange' );
+
 		if ( empty( $settings['receipt-email-name'] ) )
 			$errors[] = __( 'Email Name cannot be empty', 'it-l10n-ithemes-exchange' );
-		if ( empty( $settings['receipt-email-subject'] ) )
-			$errors[] = __( 'Email Subject cannot be empty', 'it-l10n-ithemes-exchange' );
-		if ( empty( $settings['receipt-email-template'] ) )
-			$errors[] = __( 'Email Template cannot be empty', 'it-l10n-ithemes-exchange' );
-
-		if ( !empty( $settings['notification-email-address'] ) ) {
-
-			$emails = explode( ',', $settings['notification-email-address'] );
-
-			foreach( $emails as $email ) {
-
-				if ( !is_email( trim( $email ) ) ) {
-					$errors[] = __( 'Invalid email address in Sales Notification Email Address', 'it-l10n-ithemes-exchange' );
-					break;
-				}
-
-			}
-
-		}
 
 		$errors = apply_filters( 'it_exchange_email_settings_validation_errors', $errors );
 		if ( ! empty ( $errors ) )
