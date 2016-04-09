@@ -87,7 +87,7 @@ class IT_Exchange_Email_Middleware_Handler {
 			$all[] = $middleware;
 		}
 
-		$all = $all + array_slice( $this->middleware, $before_position, count( $this->middleware ) - $before_position, true );
+		$all = array_merge( $all, array_slice( $this->middleware, $before_position, count( $this->middleware ) - $before_position, true ) );
 
 		$this->middleware = $all;
 
@@ -127,13 +127,15 @@ class IT_Exchange_Email_Middleware_Handler {
 
 		$after_position += 1;
 
+		$all = array_slice( $this->middleware, 0, $after_position, true );
+
 		if ( $named ) {
 			$all[ $named ] = $middleware;
 		} else {
 			$all[] = $middleware;
 		}
 
-		$all = $all + array_slice( $this->middleware, $after_position, count( $this->middleware ) - $after_position, true );
+		$all = array_merge( $all, array_slice( $this->middleware, $after_position, count( $this->middleware ) - $after_position, true ) );
 
 		$this->middleware = $all;
 
@@ -164,7 +166,7 @@ class IT_Exchange_Email_Middleware_Handler {
 			$new[] = $middleware;
 		}
 
-		$this->middleware = $new + $this->middleware;
+		$this->middleware = array_merge( $new, $this->middleware );
 
 		return $this;
 	}
