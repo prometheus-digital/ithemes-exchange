@@ -320,7 +320,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$result        = false;
 		$extended_desc = it_exchange_get_product_feature( $this->product->ID, 'extended-description' );
 		$defaults      = array(
-			'before' => '<div class="entry-content">',
+			'before' => '<div>',
 			'after'  => '</div>',
 			'format' => 'html',
 		);
