@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/TimothyBJacobs/php-autolink.git",
-                "reference": "41d19942c4c50d0f207a0c52679e913e628e2c34"
+                "reference": "77a72dbf6c99ff28dd58f42c1741726163e955ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TimothyBJacobs/php-autolink/zipball/41d19942c4c50d0f207a0c52679e913e628e2c34",
-                "reference": "41d19942c4c50d0f207a0c52679e913e628e2c34",
+                "url": "https://api.github.com/repos/TimothyBJacobs/php-autolink/zipball/77a72dbf6c99ff28dd58f42c1741726163e955ff",
+                "reference": "77a72dbf6c99ff28dd58f42c1741726163e955ff",
                 "shasum": ""
             },
             "require": {
@@ -47,7 +47,7 @@
             "support": {
                 "source": "https://github.com/TimothyBJacobs/php-autolink/tree/master"
             },
-            "time": "2016-04-08 19:01:52"
+            "time": "2016-04-09 20:35:38"
         },
         {
             "name": "windwalker/dom",
