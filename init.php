@@ -36,11 +36,11 @@ class IT_Exchange {
 	 */
 	static $url;
 	
-	var $_wp_minimum      = '3.5';
-	var $_slug            = 'ithemes-exchange';
-	var $_name            = 'iThemes Exchange';
-	var $_series          = '';
-	var $_plugin_base     = '';
+	var $_wp_minimum  = '4.3';
+	var $_slug        = 'ithemes-exchange';
+	var $_name        = 'iThemes Exchange';
+	var $_series      = '';
+	var $_plugin_base = '';
 	
 	/** @deprecated 1.36 */
 	var $_plugin_path = '';
@@ -93,6 +93,8 @@ class IT_Exchange {
 				do_action( 'it_exchange_version_updated', $versions );
 			}
 		}
+
+		add_action( 'admin_notices', array( $this, 'minimum_wp_notice' ) );
 
 		do_action( 'it_exchange_loaded' );
 		add_action( 'it_libraries_loaded', array( $this, 'addons_init' ) );
@@ -151,6 +153,25 @@ class IT_Exchange {
 
 		load_textdomain( 'it-l10n-ithemes-exchange', $dir . 'it-l10n-ithemes-exchange-' . $locale . '.mo' );
 		load_plugin_textdomain( 'it-l10n-ithemes-exchange', false, $plugin_name . '/lang/' );
+	}
+
+	/**
+	 * Display a notice if the minimum WordPress version is not met.
+	 *
+	 * @since 1.36.0
+	 */
+	public function minimum_wp_notice() {
+
+		if ( version_compare( $GLOBALS['wp_version'], $this->_wp_minimum, '<' ) ) {
+			$required    = $this->_wp_minimum;
+			$running     = $GLOBALS['wp_version'];
+			$upgrade_url = admin_url ('update-core.php' );
+
+			echo '<div class="notice notice-error"><p>';
+			echo sprintf( __( 'iThemes Exchange requires version %s of WordPress or greater. You are running version %s.', 'it-l10n-ithemes-exchange' ), $required, $running );
+			echo ' ' . sprintf( __( '%sUpgrade Now%s.', 'it-l10n-ithemes-exchange' ), "<a href=\"$upgrade_url\">", '</a>' );
+			echo '</p></div>';
+		}
 	}
 
 	/**
