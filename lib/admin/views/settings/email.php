@@ -24,9 +24,12 @@ $email_notifications = it_exchange_email_notifications();
 
 	<h<?php echo $h; ?>>
 		<?php _e( 'Emails', 'it-l10n-ithemes-exchange' ); ?>
-		<a href="<?php echo( IT_Exchange_Email_Customizer::get_link() ); ?>" class="<?php echo $class; ?>">
-			<?php _e( 'Customize Appearance', 'it-l10n-ithemes-exchange' ); ?>
-		</a>
+
+		<?php if ( IT_Exchange_Email_Customizer::is_available() ): ?>
+			<a href="<?php echo( IT_Exchange_Email_Customizer::get_link() ); ?>" class="<?php echo $class; ?>">
+				<?php _e( 'Customize Appearance', 'it-l10n-ithemes-exchange' ); ?>
+			</a>
+		<?php endif; ?>
 	</h<?php echo $h; ?>>
 
 	<?php $this->print_general_settings_tabs(); ?>
@@ -83,11 +86,14 @@ $email_notifications = it_exchange_email_notifications();
 		<?php endforeach; ?>
 		</tbody>
 	</table>
-	<p style="float:right;">
-		<a href="<?php echo IT_Exchange_Email_Customizer::get_link(); ?>" class="button">
-			<?php _e( 'Customize Appearance', 'it-l10n-ithemes-exchange' ); ?>
-		</a>
-	</p>
+
+	<?php if ( IT_Exchange_Email_Customizer::is_available() ): ?>
+		<p style="float:right;">
+			<a href="<?php echo IT_Exchange_Email_Customizer::get_link(); ?>" class="button">
+				<?php _e( 'Customize Appearance', 'it-l10n-ithemes-exchange' ); ?>
+			</a>
+		</p>
+	<?php endif; ?>
 
 	<?php foreach ( $email_notifications->get_notifications() as $notification ) : ?>
 

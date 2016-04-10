@@ -992,4 +992,17 @@ class IT_Exchange_Email_Customizer {
 			'return' => rawurlencode( admin_url( 'admin.php?page=it-exchange-settings&tab=email' ) ),
 		), admin_url( 'customize.php' ) );
 	}
+
+	/**
+	 * Check if the email customizer is available.
+	 * 
+	 * Ensures that the user is running WordPress 4.3+
+	 * 
+	 * @since 1.36
+	 * 
+	 * @return bool
+	 */
+	public static function is_available() {
+		return version_compare( $GLOBALS['wp_version'], '4.3.0', '>=' );
+	}
 }

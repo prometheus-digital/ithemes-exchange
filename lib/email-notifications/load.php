@@ -55,7 +55,9 @@ require_once dirname( __FILE__ ) . '/tag/load.php';
 
 require_once dirname( __FILE__ ) . '/class.email-notifications.php';
 
-new IT_Exchange_Email_Customizer();
+if ( IT_Exchange_Email_Customizer::is_available() ) {
+	new IT_Exchange_Email_Customizer();
+}
 
 /**
  * Retrieve the email notifications object.
