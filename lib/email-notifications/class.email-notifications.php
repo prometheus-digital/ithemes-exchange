@@ -244,7 +244,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 
 		} catch ( IT_Exchange_Email_Delivery_Exception $e ) {
 
-			it_exchange_add_message(' error', $e->getMessage() );
+			it_exchange_add_message( 'error', $e->getMessage() );
 			it_exchange_redirect( $url, 'admin-confirmation-email-resend-failed' );
 			die();
 		}

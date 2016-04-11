@@ -268,11 +268,14 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 
 		$attributes = array(
 			'address' => (object) array(
-				'email'     => $recipient->get_email(),
-				'name'      => $recipient->get_full_name(),
-				'header_to' => $header_to
+				'email' => $recipient->get_email(),
+				'name'  => $recipient->get_full_name(),
 			)
 		);
+
+		if ( ! empty( $header_to ) ) {
+			$attributes['address']->header_to = $header_to;
+		}
 
 		if ( ! empty( $substitutions ) ) {
 			$attributes['substitution_data'] = (object) $substitutions;
@@ -310,15 +313,20 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 
 		$html = $sendable->get_template()->get_html( array_merge( array( 'message' => $sendable->get_body() ), $sendable->get_context() ) );
 
-		return (object) array(
+		$attributes =  (object) array(
 			'html'    => $html,
 			'subject' => $sendable->get_subject(),
-			'headers' => $headers,
 			'from'    => (object) array(
 				'name'  => $settings['receipt-email-name'],
 				'email' => $settings['receipt-email-address']
 			)
 		);
+
+		if ( ! empty( $headers ) ) {
+			$attributes->headers = $headers;
+		}
+
+		return $attributes;
 	}
 
 	/**
