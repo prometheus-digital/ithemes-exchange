@@ -24,7 +24,7 @@
 */
 class IT_Exchange {
 	
-	const VERSION = '1.35.4';
+	const VERSION = '1.36.0';
 
 	/**
 	 * @var string
