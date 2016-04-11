@@ -102,19 +102,22 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 
 	/**
 	 * Get all the email notification groups.
-	 * 
+	 *
 	 * @since 1.36
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_groups() {
-		
+
 		$groups = array();
-		
+
 		foreach ( $this->get_notifications() as $notification ) {
 			$groups[ $notification->get_group() ] = $notification->get_group();
 		}
-		
+
+		$groups = array_keys( $groups );
+		natsort( $groups );
+
 		return $groups;
 	}
 
@@ -228,7 +231,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 		}
 
 		$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
-		
+
 		try {
 			// Resend w/o admin notification
 			$this->send_purchase_emails( $transaction, false );
