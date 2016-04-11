@@ -48,7 +48,11 @@ class IT_Exchange_Simple_Email implements IT_Exchange_Sendable {
 	 * @param string                      $message
 	 * @param IT_Exchange_Email_Recipient $recipient
 	 * @param array                       $context
-	 * @param array                       $args May contain 'cc' or 'bcc' values which should each be an array of recipient.
+	 * @param array                       $args {
+	 *                                          
+	 *      @type IT_Exchange_Email_Recipient[]|IT_Exchange_Email_Recipient $cc  List of Cc recipients or single Cc.                                       
+	 *      @type IT_Exchange_Email_Recipient[]|IT_Exchange_Email_Recipient $bcc List of Bcc recipients or single Bcc.
+	 * }
 	 */
 	public function __construct( $subject, $message, IT_Exchange_Email_Recipient $recipient, $context = array(), $args = array() ) {
 		$this->subject   = $subject;
@@ -172,6 +176,7 @@ class IT_Exchange_Simple_Email implements IT_Exchange_Sendable {
 			'ccs'       => $this->get_ccs(),
 			'bccs'      => $this->get_bccs(),
 			'recipient' => $this->get_recipient(),
+			'context'   => $this->context
 		);
 
 		return serialize( $data );
@@ -197,5 +202,6 @@ class IT_Exchange_Simple_Email implements IT_Exchange_Sendable {
 		$this->ccs       = $data['ccs'];
 		$this->bccs      = $data['bccs'];
 		$this->recipient = $data['recipient'];
+		$this->context   = $data['context'];
 	}
 }
