@@ -115,10 +115,10 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 			$groups[ $notification->get_group() ] = $notification->get_group();
 		}
 
-		$groups = array_keys( $groups );
-		natsort( $groups );
+		$groups = array_filter( $groups );
+		natcasesort( $groups );
 
-		return $groups;
+		return array_values( $groups );
 	}
 
 	/**
@@ -185,8 +185,8 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 		$recipient = new IT_Exchange_Email_Recipient_Customer( $customer );
 
 		$email = new IT_Exchange_Simple_Email( $subject, $content, $recipient, array(
-			'customer'      => $customer,
-			'transaction'   => $transaction
+			'customer'    => $customer,
+			'transaction' => $transaction
 		) );
 		$this->sender->send( $email );
 	}
@@ -240,7 +240,8 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 			it_exchange_redirect( $url, 'admin-confirmation-email-resend-success' );
 			die();
 
-		} catch ( IT_Exchange_Email_Delivery_Exception $e ) {
+		}
+		catch ( IT_Exchange_Email_Delivery_Exception $e ) {
 
 			it_exchange_add_message( 'error', $e->getMessage() );
 			it_exchange_redirect( $url, 'admin-confirmation-email-resend-failed' );
