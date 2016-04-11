@@ -6,12 +6,29 @@
  * @license GPLv2
  */
 
-new IT_Exchange_Email_Register_Default_Tags();
+IT_Exchange_Email_Register_Default_Tags::get_instance();
 
 /**
  * Class IT_Exchange_Email_Register_Default_Tags
  */
 class IT_Exchange_Email_Register_Default_Tags {
+
+	/**
+	 * @var IT_Exchange_Email_Register_Default_Tags
+	 */
+	private static $instance = null;
+
+	/**
+	 * @return IT_Exchange_Email_Register_Default_Tags
+	 */
+	public static function get_instance() {
+		
+		if ( ! self::$instance ) {
+			self::$instance = new self();
+		}
+		
+		return self::$instance;
+	}
 
 	/**
 	 * IT_Exchange_Email_Register_Default_Tags constructor.
