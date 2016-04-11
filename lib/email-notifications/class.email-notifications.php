@@ -179,17 +179,12 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 		$transaction    = $transaction_id ? it_exchange_get_transaction( $transaction_id ) : null;
 		$customer       = it_exchange_get_customer( $customer_id );
 
-		$recipient    = new IT_Exchange_Email_Recipient_Customer( $customer );
-		$notification = new IT_Exchange_Customer_Email_Notification( 'custom', 'Custom', new IT_Exchange_Email_Template( null ), array(
-			'subject' => $subject,
-			'body'    => $content
-		) );
+		$recipient = new IT_Exchange_Email_Recipient_Customer( $customer );
 
-		$email = new IT_Exchange_Email( $recipient, $notification, array(
-			'customer'    => $customer,
-			'transaction' => $transaction
+		$email = new IT_Exchange_Simple_Email( $subject, $content, $recipient, array(
+			'customer'      => $customer,
+			'transaction'   => $transaction
 		) );
-
 		$this->sender->send( $email );
 	}
 
