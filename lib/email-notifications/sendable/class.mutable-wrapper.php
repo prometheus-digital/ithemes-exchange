@@ -244,6 +244,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 			'body'     => $this->body,
 			'ccs'      => $this->additional_ccs,
 			'bccs'     => $this->additional_bccs,
+			'context'  => $this->additional_context
 		) );
 	}
 
@@ -262,10 +263,11 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 
 		$data = unserialize( $serialized );
 
-		$this->sendable        = $data['sendable'];
-		$this->subject         = $data['subject'];
-		$this->body            = $data['body'];
-		$this->additional_ccs  = $data['ccs'];
-		$this->additional_bccs = $data['bccs'];
+		$this->sendable           = $data['sendable'];
+		$this->subject            = $data['subject'];
+		$this->body               = $data['body'];
+		$this->additional_ccs     = $data['ccs'];
+		$this->additional_bccs    = $data['bccs'];
+		$this->additional_context = $data['context'];
 	}
 }
