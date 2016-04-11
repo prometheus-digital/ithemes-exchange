@@ -46,13 +46,15 @@ class IT_Exchange_Email_Middleware_Style_Links implements IT_Exchange_Email_Midd
 
 		$highlight = it_exchange( 'email', 'get-body-highlight-color' );
 
-		$style = preg_replace_callback( '/style=[\'"](.*)[\'"]/is', array( $this, '_replace_style' ), $part );
+		$style = preg_replace_callback( '/style=[\'"](.*)[\'"]/is', array( $this, '_replace_style' ), $part, -1, $count );
 
-		// if there already is a style attribute on the link tag
+		// if we already modified the style attribute to add our color tag
 		if ( $style != $part ) {
 			$ret = "$style>";
-		} else {
+		} elseif ( ! $count ) { // no style attributes were found
 			$ret = "$part style=\"color: $highlight;\">";
+		} else { // a style attribute was found with a color tag already
+			$ret = $full;
 		}
 
 		return $ret;
@@ -70,7 +72,7 @@ class IT_Exchange_Email_Middleware_Style_Links implements IT_Exchange_Email_Midd
 		list( $full, $match ) = $existing_styles;
 
 		// if a color attribute isn't already present
-		if ( ! preg_match( '/[;\s]color\s*:/is', $match ) ) {
+		if ( ! preg_match( '/(?:[;\s]|^)color\s*:/is', $match ) ) {
 
 			$highlight = it_exchange( 'email', 'get-body-highlight-color' );
 
