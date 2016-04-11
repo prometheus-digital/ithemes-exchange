@@ -205,8 +205,14 @@ class IT_Exchange_Email implements IT_Exchange_Sendable {
 	 */
 	public function serialize() {
 
+		if ( it_exchange_email_notifications()->get_notification( $this->get_notification()->get_slug() ) ) {
+			$notification = $this->get_notification()->get_slug();
+		} else {
+			$notification = $this->get_notification();
+		}
+
 		$data = array(
-			'notification' => $this->get_notification()->get_slug(),
+			'notification' => $notification,
 			'context'      => $this->get_context(),
 			'ccs'          => $this->get_ccs(),
 			'bccs'         => $this->get_bccs(),
@@ -231,10 +237,15 @@ class IT_Exchange_Email implements IT_Exchange_Sendable {
 
 		$data = unserialize( $serialized );
 
-		$this->notification = it_exchange_email_notifications()->get_notification( $data['notification'] );
-		$this->context      = $data['context'];
-		$this->ccs          = $data['ccs'];
-		$this->bccs         = $data['bccs'];
-		$this->recipient    = $data['recipient'];
+		if ( is_string( $data['notification'] ) ) {
+			$this->notification = it_exchange_email_notifications()->get_notification( $data['notification'] );
+		} else {
+			$this->notification = $data['notification'];
+		}
+
+		$this->context   = $data['context'];
+		$this->ccs       = $data['ccs'];
+		$this->bccs      = $data['bccs'];
+		$this->recipient = $data['recipient'];
 	}
 }
