@@ -1480,6 +1480,8 @@ class IT_Exchange_Admin {
 			$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
 		}
 
+		$all_non_default = true;
+
 		$notifications = it_exchange_email_notifications();
 
 		foreach ( $_POST['email'] as $slug => $data ) {
@@ -1498,6 +1500,23 @@ class IT_Exchange_Admin {
 			}
 
 			$notification->save();
+
+			$all_non_default = $all_non_default && $notification->is_non_default();
+		}
+
+		if ( $all_non_default ) {
+
+			$versions         = get_option( 'it-exchange-versions', array() );
+			$previous_version = empty( $versions['previous'] ) ? false : $versions['previous'];
+
+			if ( ! $previous_version || version_compare( $previous_version, '1.36.0', '>=' ) ) {
+				return;
+			}
+
+			set_user_setting( 'it-exchange-previous-emails', 'off' );
+
+			$this->status_message .= ' ' . __( "Congratulations! All your emails have been updated. We've hidden your legacy emails automatically.", 'it-l10n-ithemes-exchange' );
+			$this->status_message .= ' ' . __( "You can re-display them at anytime in the Screen Options tab.", 'it-l10n-ithemes-exchange' );
 		}
 	}
 
