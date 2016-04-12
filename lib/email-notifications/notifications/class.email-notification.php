@@ -307,13 +307,13 @@ abstract class IT_Exchange_Email_Notification {
 	 */
 	public function is_non_default() {
 
-		$data = $this->args;
+		$defaults = isset( $this->args['defaults'] ) ? $this->args['defaults'] : array();
 
-		if ( ! isset( $defaults['subject'] ) || trim( $this->subject ) !== trim( $data['subject'] ) ) {
+		if ( ! isset( $defaults['subject'] ) || preg_replace('/\s+/', '', $this->subject ) !== preg_replace('/\s+/', '', $defaults['subject'] ) ) {
 			return true;
 		}
 
-		if ( ! isset( $defaults['body'] ) || trim( $this->body ) !== trim( $data['body'] ) ) {
+		if ( ! isset( $defaults['body'] ) || preg_replace('/\s+/', '', $this->body ) !== preg_replace('/\s+/', '', $defaults['body'] ) ) {
 			return true;
 		}
 
