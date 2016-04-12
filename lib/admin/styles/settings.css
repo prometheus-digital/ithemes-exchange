@@ -59,3 +59,24 @@ input.small-text{max-width:50px;}
 	width: 500px !important;
 	max-width: 100%;
 }
+
+#it-exchange-email-settings .previous-email {
+	vertical-align: top;
+	max-width: 100%;
+	width: 400px;
+}
+
+#it-exchange-email-settings .previous-email textarea {
+	font-family: monospace;
+	max-width: 100%;
+	width: 400px !important;
+	height: 400px;
+	margin: 0;
+	padding: 20px;
+	resize: none;
+	font-size: 12px;
+	line-height: 20px;
+	outline: 0;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}

@@ -52,6 +52,11 @@ abstract class IT_Exchange_Email_Notification {
 	private $group;
 
 	/**
+	 * @var string
+	 */
+	private $previous = '';
+
+	/**
 	 * IT_Exchange_Email_Notification constructor.
 	 *
 	 * @param string                     $name
@@ -84,6 +89,10 @@ abstract class IT_Exchange_Email_Notification {
 
 		if ( ! empty( $args['group'] ) ) {
 			$this->group = $args['group'];
+		}
+
+		if ( ! empty( $args['previous'] ) ) {
+			$this->previous = $args['previous'];
 		}
 	}
 
@@ -247,6 +256,28 @@ abstract class IT_Exchange_Email_Notification {
 	 */
 	public function has_description() {
 		return trim( $this->get_description() ) !== '';
+	}
+
+	/**
+	 * Get the previous email contents.
+	 * 
+	 * @since 1.36
+	 * 
+	 * @return string
+	 */
+	public function get_previous() {
+		return $this->previous;
+	}
+
+	/**
+	 * Check if this notification has a previous value.
+	 * 
+	 * @since 1.36
+	 * 
+	 * @return bool
+	 */
+	public function has_previous() {
+		return trim( $this->get_previous() ) !== '';
 	}
 
 	/**

@@ -182,6 +182,8 @@ function it_exchange_email_notifications() {
  */
 function it_exchange_register_email_notifications() {
 
+	$settings = it_exchange_get_option( 'settings_email' );
+
 	$notifications = it_exchange_email_notifications();
 
 	$GLOBALS['IT_Exchange_Email_Notifications'] = $notifications;
@@ -196,7 +198,8 @@ function it_exchange_register_email_notifications() {
 					'body'    => sprintf( __( "Your friend %s just bought all this awesomeness from your store! \r\n\r\n Order: %s \r\n\r\n %s", 'it-l10n-ithemes-exchange' ),
 						$r->format_tag( 'customer_fullname' ), $r->format_tag( 'receipt_id' ), $r->format_tag( 'order_table' ) ),
 				),
-				'group'    => __( 'Core', 'it-l10n-ithemes-exchange' )
+				'group'    => __( 'Core', 'it-l10n-ithemes-exchange' ),
+				'previous' => empty( $settings['admin-email-template'] ) ? '' : $settings['admin-email-template']
 			)
 		) )
 		->register_notification( new IT_Exchange_Customer_Email_Notification(
@@ -208,7 +211,8 @@ function it_exchange_register_email_notifications() {
 				'group'       => __( 'Core', 'it-l10n-ithemes-exchange' ),
 				'description' =>
 					__( "The customer's shipping and billing address, as well as the cart details, payment method, download links, total and purchase date are already included in the template.",
-						'it-l10n-ithemes-exchange' )
+						'it-l10n-ithemes-exchange' ),
+				'previous' => empty( $settings['receipt-email-template'] ) ? '' : $settings['receipt-email-template']
 			)
 		) )
 		->register_notification( new IT_Exchange_Customer_Email_Notification(

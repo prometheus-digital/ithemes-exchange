@@ -167,6 +167,17 @@ $email_notifications = it_exchange_email_notifications();
 							?>
 						</p>
 					</td>
+
+					<?php if ( $notification->has_previous() ): ?>
+
+						<td class="previous-email <?php echo get_user_setting( 'it-exchange-previous-emails', 'on' ) === 'on' ? '' : 'hidden'; ?>">
+							<h4><?php _e( 'Legacy Email', 'it-l10n-ithemes-exchange' ); ?></h4>
+							<textarea readonly>
+								<?php echo $notification->get_previous(); ?>
+							</textarea>
+						</td>
+
+					<?php endif; ?>
 				</tr>
 			</table>
 		</div>
