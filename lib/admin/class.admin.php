@@ -878,7 +878,7 @@ class IT_Exchange_Admin {
 	             __( 'Version 1.36.0 of Exchange now includes rich email templates that allow you to create specific branding and styling in your Exchange emails to match your site.', 'it-l10n-ithemes-exchange' ) . ' ' .
 	             __('Some templates already include the important information, such as the products ordered, price and shipping address.', 'it-l10n-ithemes-exchange' ) .
                  '</p><p>' .
-	             __( 'To use this new system, we’ve made some changes to how you create your Exchange emails which we think will make email creation easier and faster.', 'it-l10n-ithemes-exchange' ) . ' ' .
+	             __( 'To use this new system, we’ve made some changes to how you create your Exchange emails which we think will make email creation simpler and faster.', 'it-l10n-ithemes-exchange' ) . ' ' .
 	             __( 'For reference, please see your legacy email template alongside the new templates.', 'it-l10n-ithemes-exchange' ) .
 	             '</p>'
 		) );

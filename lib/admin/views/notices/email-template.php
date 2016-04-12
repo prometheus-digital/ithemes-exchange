@@ -11,7 +11,7 @@
 		<?php _e('Some templates already include the important information, such as the products ordered, price and shipping address.', 'it-l10n-ithemes-exchange' ); ?>
 	</p>
 	<p>
-		<?php _e( 'To use this new system, we’ve made some changes to how you create your Exchange emails which we think will make email creation easier and faster.', 'it-l10n-ithemes-exchange' ); ?>
+		<?php _e( 'To use this new system, we’ve made some changes to how you create your Exchange emails which we think will make email creation simpler and faster.', 'it-l10n-ithemes-exchange' ); ?>
 		<?php _e( 'For reference, please see your legacy email template alongside the new templates.', 'it-l10n-ithemes-exchange' ); ?>
 	</p>
 	<a class="btn" href="<?php echo esc_url( admin_url( 'admin.php?page=it-exchange-settings&tab=email' ) ); ?>"><?php _e('Customize', 'it-l10n-ithemes-exchange') ?></a>
