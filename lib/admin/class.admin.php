@@ -1513,10 +1513,13 @@ class IT_Exchange_Admin {
 				return;
 			}
 
-			set_user_setting( 'it-exchange-previous-emails', 'off' );
+			// only set the display to off if the user hasn't manually changed their preference
+			if ( get_user_setting( 'it-exchange-previous-emails', null ) === null ) {
+				set_user_setting( 'it-exchange-previous-emails', 'off' );
 
-			$this->status_message .= ' ' . __( "Congratulations! All your emails have been updated. We've hidden your legacy emails automatically.", 'it-l10n-ithemes-exchange' );
-			$this->status_message .= ' ' . __( "You can re-display them at anytime in the Screen Options tab.", 'it-l10n-ithemes-exchange' );
+				$this->status_message .= ' ' . __( "Congratulations! All your emails have been updated. We've hidden your legacy emails automatically.", 'it-l10n-ithemes-exchange' );
+				$this->status_message .= ' ' . __( "You can re-display them at anytime in the Screen Options tab.", 'it-l10n-ithemes-exchange' );
+			}
 		}
 	}
 
