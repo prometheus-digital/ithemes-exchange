@@ -57,9 +57,9 @@ abstract class IT_Exchange_Email_Notification {
 	private $previous = '';
 
 	/**
-	 * @var bool
+	 * @var array
 	 */
-	private $non_default = false;
+	private $args = array();
 
 	/**
 	 * IT_Exchange_Email_Notification constructor.
@@ -99,14 +99,8 @@ abstract class IT_Exchange_Email_Notification {
 		if ( ! empty( $args['previous'] ) ) {
 			$this->previous = $args['previous'];
 		}
-		
-		if ( isset( $defaults['subject'] ) && trim( $this->subject ) !== trim( $data['subject'] ) ) {
-			$this->non_default = true;
-		}
 
-		if ( isset( $defaults['body'] ) && trim( $this->body ) !== trim( $data['body'] ) ) {
-			$this->non_default = true;
-		}
+		$this->args = $args;
 	}
 
 	/**
@@ -312,7 +306,18 @@ abstract class IT_Exchange_Email_Notification {
 	 * @return bool
 	 */
 	public function is_non_default() {
-		return $this->non_default;		
+
+		$data = $this->args;
+
+		if ( ! isset( $defaults['subject'] ) || trim( $this->subject ) !== trim( $data['subject'] ) ) {
+			return true;
+		}
+
+		if ( ! isset( $defaults['body'] ) || trim( $this->body ) !== trim( $data['body'] ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
