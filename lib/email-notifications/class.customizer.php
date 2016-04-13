@@ -618,7 +618,7 @@ class IT_Exchange_Email_Customizer {
 				'label'    => __( 'Dark', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
 					'layout'                  => 'boxed',
-					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image1.jpg' ),
+					'header_image'            => self::sideload( ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image1.jpg' ) ),
 					'header_show_store_name'  => false,
 					'header_store_name_font'  => 'monospace',
 					'header_store_name_size'  => 64,
@@ -640,7 +640,7 @@ class IT_Exchange_Email_Customizer {
 				'label'    => __( 'White', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
 					'layout'                  => 'boxed',
-					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image1.jpg' ),
+					'header_image'            => self::sideload( ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image1.jpg' ) ),
 					'header_show_store_name'  => false,
 					'header_store_name_font'  => 'serif',
 					'header_store_name_size'  => 64,
@@ -662,7 +662,7 @@ class IT_Exchange_Email_Customizer {
 				'label'    => __( 'Ocean', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
 					'layout'                  => 'boxed',
-					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image2.jpg' ),
+					'header_image'            => self::sideload( ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image2.jpg' ) ),
 					'header_show_store_name'  => false,
 					'header_store_name_font'  => 'sans-serif',
 					'header_store_name_size'  => 64,
@@ -684,7 +684,7 @@ class IT_Exchange_Email_Customizer {
 				'label'    => __( 'Gold', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
 					'layout'                  => 'boxed',
-					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image4.jpg' ),
+					'header_image'            => self::sideload( ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image4.jpg' ) ),
 					'header_show_store_name'  => false,
 					'header_store_name_font'  => 'sans-serif',
 					'header_store_name_size'  => 64,
@@ -706,7 +706,7 @@ class IT_Exchange_Email_Customizer {
 				'label'    => __( 'Floral', 'it-l10n-ithemes-exchange' ),
 				'settings' => array(
 					'layout'                  => 'boxed',
-					'header_image'            => ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image3.jpg' ),
+					'header_image'            => self::sideload( ITUtility::get_url_from_file( dirname( __FILE__ ) . '/assets/header-image3.jpg' ) ),
 					'header_show_store_name'  => false,
 					'header_store_name_font'  => 'serif',
 					'header_store_name_size'  => '51',
@@ -758,6 +758,64 @@ class IT_Exchange_Email_Customizer {
 		 * @param array $presets
 		 */
 		return apply_filters( 'it_exchange_email_template_presets', $presets );
+	}
+
+	/**
+	 * Sideload an image.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $file
+	 *
+	 * @return int|string
+	 */
+	protected static function sideload( $file ) {
+
+		if ( ! function_exists( 'download_url' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+		}
+
+		if ( ! function_exists( 'media_handle_sideload' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/media.php';
+		}
+
+		if ( ! function_exists( 'wp_read_image_metadata' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/image.php';
+		}
+
+		preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png)\b/i', $file, $matches );
+
+		if ( ! $matches ) {
+			return $file;
+		}
+
+		$basename = basename( $matches[0] );
+
+		$uploaded = get_option( 'it-exchange-email-customizer-uploads', array() );
+
+		if ( isset( $uploaded[ $basename ] ) ) {
+			return $uploaded[ $basename ];
+		}
+
+		$file_array = array();
+
+		$file_array['name'] = basename( $matches[0] );
+
+		// Download file to temp location.
+		$file_array['tmp_name'] = download_url( $file );
+
+		// Do the validation and storage stuff.
+		$id = media_handle_sideload( $file_array, 0 );
+
+		if ( is_wp_error( $id ) ) {
+			return $file;
+		}
+
+		$uploaded[ $basename ] = $id;
+
+		update_option( 'it-exchange-email-customizer-uploads', $uploaded );
+
+		return $id;
 	}
 
 	/**
@@ -995,11 +1053,11 @@ class IT_Exchange_Email_Customizer {
 
 	/**
 	 * Check if the email customizer is available.
-	 * 
+	 *
 	 * Ensures that the user is running WordPress 4.3+
-	 * 
+	 *
 	 * @since 1.36
-	 * 
+	 *
 	 * @return bool
 	 */
 	public static function is_available() {
