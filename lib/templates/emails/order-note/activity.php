@@ -25,7 +25,7 @@
 		<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php it_exchange( 'email', 'body-background-color' ); ?>;" class="wrapper body-bkg-color">
 			<tr>
 				<td valign="top" style="padding: 0 25px;">
-					<blockquote style="border-left: 5px solid <?php it_exchange( 'email', 'body-border-color' ); ?>; padding: 5px 0 5px 20px;">
+					<blockquote style="border-left: 5px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 5px 0 5px 20px;">
 						<?php do_action( 'it_exchange_email_template_order-note_activity_before_description' ); ?>
 						<?php it_exchange( 'transaction-activity', 'description' ); ?>
 						<?php do_action( 'it_exchange_email_template_order-note_activity_after_description' ); ?>
