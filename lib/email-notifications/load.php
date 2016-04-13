@@ -222,6 +222,8 @@ function it_exchange_register_email_notifications() {
 					'body'    => sprintf( __( "Hello %s, \r\n\r\n A new note has been added to your order.", 'it-l10n-ithemes-exchange' ), $r->format_tag( 'first_name' ) )
 				),
 				'group'    => __( 'Core', 'it-l10n-ithemes-exchange' ),
+				'description' =>
+					__( "The order note and cart details are already included in the template.", 'it-l10n-ithemes-exchange' ),
 			)
 		) );
 
