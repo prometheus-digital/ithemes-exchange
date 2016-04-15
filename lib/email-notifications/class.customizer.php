@@ -801,8 +801,14 @@ class IT_Exchange_Email_Customizer {
 
 		$file_array['name'] = basename( $matches[0] );
 
+		$download = download_url( $file );
+
+		if ( is_wp_error( $download ) ) {
+			return $file;
+		}
+
 		// Download file to temp location.
-		$file_array['tmp_name'] = download_url( $file );
+		$file_array['tmp_name'] = $download;
 
 		// Do the validation and storage stuff.
 		$id = media_handle_sideload( $file_array, 0 );
