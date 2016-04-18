@@ -80,10 +80,15 @@ function it_exchange_basic_coupons_save_coupon() {
 		return;
 
 	$data = ITForm::get_post_data();
+	$id   = empty( $data['ID'] ) ? null : $data['ID'];
 
-	if ( ! current_user_can( 'edit_it_coupon', empty( $data['ID'] ) ? null : $data['ID'] ) ) {
-
+	if ( $id && ! current_user_can( 'edit_it_coupon', $id ) ) {
 		it_exchange_add_message( 'error', __( "You don't have permission to edit this coupon.", 'it-l10n-ithemes-exchange' ) );
+
+		return;
+	} elseif ( ! current_user_can( 'create_it_coupons' ) ) {
+
+		it_exchange_add_message( 'error', __( "You don't have permission to create coupons.", 'it-l10n-ithemes-exchange' ) );
 
 		return;
 	}
