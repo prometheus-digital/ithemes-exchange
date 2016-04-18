@@ -84,7 +84,7 @@ function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format )
 		'y',  //month name long
 	);
 
-	return preg_replace( $php_format, $datepicker_format, preg_quote( $date_format ) );
+	return stripslashes( preg_replace( $php_format, $datepicker_format, preg_quote( $date_format ) ) );
 }
 
 /**
