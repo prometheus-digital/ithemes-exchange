@@ -250,6 +250,10 @@ function it_exchange_zero_sum_mark_subscriptions_as_active_on_purchase( $transac
 		return;
 	}
 
+	if ( it_exchange_get_transaction_method( $transaction_id ) !== 'zero-sum-checkout' ) {
+		return;
+	}
+
 	$subs = it_exchange_get_transaction_subscriptions( it_exchange_get_transaction( $transaction_id ) );
 
 	try {
@@ -276,6 +280,10 @@ add_action( 'it_exchange_add_transaction_success', 'it_exchange_zero_sum_mark_su
 function it_exchange_zero_sum_mark_subscriptions_as_active_on_clear( $transaction, $old_status, $old_cleared ) {
 
 	if ( ! function_exists( 'it_exchange_get_transaction_subscriptions' ) ) {
+		return;
+	}
+
+	if ( it_exchange_get_transaction_method( $transaction ) !== 'zero-sum-checkout' ) {
 		return;
 	}
 
