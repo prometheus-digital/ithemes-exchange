@@ -150,7 +150,7 @@ function it_exchange_zero_sum_checkout_handle_expired( $true, $product_id, $tran
 	return $true;
 
 }
-add_filter( 'it_exchange_recurring_payments_handle_expired', 'it_exchange_zero_sum_checkout_handle_expired', 10, 3 );
+//add_filter( 'it_exchange_recurring_payments_handle_expired', 'it_exchange_zero_sum_checkout_handle_expired', 10, 3 );
 
 /**
  * Add a new transaction, really only used for subscription payments.
@@ -254,7 +254,7 @@ function it_exchange_zero_sum_mark_subscriptions_as_active_on_purchase( $transac
 
 	try {
 		foreach ( $subs as $sub ) {
-			$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+			$sub->set_status( IT_Exchange_Subscription::STATUS_COMPLIMENTARY );
 		}
 	}
 	catch ( Exception $e ) {
@@ -289,7 +289,7 @@ function it_exchange_zero_sum_mark_subscriptions_as_active_on_clear( $transactio
 			$sub_status = $sub->get_status();
 
 			if ( empty( $sub_status ) ) {
-				$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+				$sub->set_status( IT_Exchange_Subscription::STATUS_COMPLIMENTARY );
 			}
 		}
 	}
