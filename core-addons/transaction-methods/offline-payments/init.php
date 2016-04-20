@@ -338,6 +338,10 @@ function it_exchange_offline_payments_mark_subscriptions_as_active_on_purchase( 
 		return;
 	}
 
+	if ( it_exchange_get_transaction_method( $transaction_id ) !== 'offline-payments' ) {
+		return;
+	}
+
 	$subs = it_exchange_get_transaction_subscriptions( it_exchange_get_transaction( $transaction_id ) );
 
 	try {
@@ -364,6 +368,10 @@ add_action( 'it_exchange_add_transaction_success', 'it_exchange_offline_payments
 function it_exchange_offline_payments_mark_subscriptions_as_active_on_clear( $transaction, $old_status, $old_cleared ) {
 
 	if ( ! function_exists( 'it_exchange_get_transaction_subscriptions' ) ) {
+		return;
+	}
+
+	if ( it_exchange_get_transaction_method( $transaction ) !== 'offline-payments' ) {
 		return;
 	}
 
