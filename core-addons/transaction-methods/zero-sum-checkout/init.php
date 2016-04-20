@@ -190,17 +190,17 @@ function it_exchange_zero_sum_checkout_after_payment_details_cancel_url( $transa
 			if ( $autorenews ) {
 				$status = $transaction->get_transaction_meta( 'subscriber_status', true );
 				switch( $status ) {
-	
+
 					case false: //active
 					case '':
 						$output = '<a href="' . esc_url( add_query_arg( 'zero-sum-recurring-payment', 'cancel' ) ) . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . '</a>';
 						break;
-	
+
 					case 'deactivated':
 					default:
 						$output = __( 'Recurring payment has been deactivated', 'it-l10n-ithemes-exchange' );
 						break;
-	
+
 				}
 				?>
 				<div class="transaction-autorenews clearfix spacing-wrapper">
@@ -256,9 +256,11 @@ function it_exchange_zero_sum_mark_subscriptions_as_active_on_purchase( $transac
 
 	$subs = it_exchange_get_transaction_subscriptions( it_exchange_get_transaction( $transaction_id ) );
 
+	$status = defined( 'IT_Exchange_Subscription::STATUS_COMPLIMENTARY' ) ? IT_Exchange_Subscription::STATUS_COMPLIMENTARY : IT_Exchange_Subscription::STATUS_ACTIVE;
+
 	try {
 		foreach ( $subs as $sub ) {
-			$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+			$sub->set_status( $status );
 		}
 	}
 	catch ( Exception $e ) {
@@ -289,6 +291,8 @@ function it_exchange_zero_sum_mark_subscriptions_as_active_on_clear( $transactio
 
 	$new_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction );
 
+	$status = defined( 'IT_Exchange_Subscription::STATUS_COMPLIMENTARY' ) ? IT_Exchange_Subscription::STATUS_COMPLIMENTARY : IT_Exchange_Subscription::STATUS_ACTIVE;
+
 	if ( $new_cleared && ! $old_cleared ) {
 
 		$subs = it_exchange_get_transaction_subscriptions( $transaction );
@@ -297,7 +301,7 @@ function it_exchange_zero_sum_mark_subscriptions_as_active_on_clear( $transactio
 			$sub_status = $sub->get_status();
 
 			if ( empty( $sub_status ) ) {
-				$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+				$sub->set_status( $status );
 			}
 		}
 	}
