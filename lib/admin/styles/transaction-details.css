@@ -459,7 +459,6 @@ label[for="exchange-notify-customer"] {
 	color: #c46857;
 }
 
-#activity-stream li article,
 #activity-stream li article code {
 	word-wrap: break-word;
 	word-break: break-all;
