@@ -383,6 +383,10 @@ function it_exchange_offline_payments_mark_subscriptions_as_active_on_clear( $tr
 
 	if ( $new_cleared && ! $old_cleared ) {
 
+		while ( $transaction->post_parent && $parent = it_exchange_get_transaction( $transaction->post_parent ) ) {
+			$transaction = $parent;
+		}
+
 		$subs = it_exchange_get_transaction_subscriptions( $transaction );
 
 		foreach ( $subs as $sub ) {
@@ -671,6 +675,13 @@ function it_exchange_offline_payments_handle_expired( $true, $product_id, $trans
 			$subscription = it_exchange_get_subscription_by_transaction( $transaction, $product );
 
 			if ( $subscription->is_auto_renewing() && $subscription->get_status() === $subscription::STATUS_ACTIVE ) {
+
+				if ( it_exchange_offline_payments_default_status() !== 'paid' ) {
+					add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
+					$subscription->set_status( $subscription::STATUS_SUSPENDED );
+					remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
+				}
+
 				it_exchange_offline_payments_add_child_transaction( $transaction );
 
 				return false;
@@ -706,13 +717,14 @@ add_filter( 'it_exchange_recurring_payments_handle_expired', 'it_exchange_offlin
  * @return bool
  */
 function it_exchange_offline_payments_add_child_transaction( $parent_txn ) {
-	$settings    = it_exchange_get_option( 'addon_offline_payments' );
+
 	$customer_id = get_post_meta( $parent_txn->ID, '_it_exchange_customer_id', true );
 	if ( $customer_id ) {
+
 		$uniqid                    = it_exchange_get_offline_transaction_uniqid();
 		$transaction_object        = new stdClass;
 		$transaction_object->total = $parent_txn->cart_details->total;
-		it_exchange_add_child_transaction( 'offline-payments', $uniqid, $settings['offline-payments-default-status'], $customer_id, $parent_txn->ID, $transaction_object );
+		it_exchange_add_child_transaction( 'offline-payments', $uniqid, it_exchange_offline_payments_default_status(), $customer_id, $parent_txn->ID, $transaction_object );
 
 		return true;
 	}
@@ -807,4 +819,18 @@ function it_exchange_offline_payments_email_notification_message( $email_obj, $o
 	}
 
 	return $instructions;
+}
+
+/**
+ * Retrieve the default payment status for offline payments.
+ *
+ * @since 1.35.5
+ *
+ * @return string
+ */
+function it_exchange_offline_payments_default_status() {
+
+	$settings = it_exchange_get_option( 'addon_offline_payments' );
+
+	return $settings['offline-payments-default-status'];
 }
