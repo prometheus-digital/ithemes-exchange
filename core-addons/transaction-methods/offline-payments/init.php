@@ -321,6 +321,8 @@ function it_exchange_offline_payments_transaction_is_cleared_for_delivery( $clea
 
 add_filter( 'it_exchange_offline-payments_transaction_is_cleared_for_delivery', 'it_exchange_offline_payments_transaction_is_cleared_for_delivery', 10, 2 );
 
+add_filter( 'it_exchange_auto_activate_non_renewing_offline-payments_subscriptions', '__return_false' );
+
 /**
  * Mark all transaction subscriptions as active when a transaction is made.
  *
@@ -346,7 +348,9 @@ function it_exchange_offline_payments_mark_subscriptions_as_active_on_purchase( 
 
 	try {
 		foreach ( $subs as $sub ) {
+			add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 			$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+			remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 		}
 	}
 	catch ( Exception $e ) {
@@ -385,7 +389,9 @@ function it_exchange_offline_payments_mark_subscriptions_as_active_on_clear( $tr
 			$sub_status = $sub->get_status();
 
 			if ( empty( $sub_status ) ) {
+				add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 				$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+				remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 			}
 		}
 	}
