@@ -183,6 +183,9 @@ function it_exchange_zero_sum_checkout_add_child_transaction( $parent_txn ) {
  * @return void
 */
 function it_exchange_zero_sum_checkout_after_payment_details_cancel_url( $transaction ) {
+
+	_deprecated_function( __FUNCTION__, '1.35.5' );
+
 	$cart_object = get_post_meta( $transaction->ID, '_it_exchange_cart_object', true );
 	if ( !empty( $cart_object->products ) ) {
 		foreach ( $cart_object->products as $product ) {
@@ -214,7 +217,6 @@ function it_exchange_zero_sum_checkout_after_payment_details_cancel_url( $transa
 		}
 	}
 }
-add_action( 'it_exchange_after_payment_details_cancel_url_for_zero-sum-checkout', 'it_exchange_zero_sum_checkout_after_payment_details_cancel_url' );
 
 /**
  * Process Zero Sum Recurring Payments cancellations
