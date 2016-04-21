@@ -658,19 +658,35 @@ class IT_Exchange_Offline_Payments_Add_On {
  * @return bool True if expired, False if not Expired
  */
 function it_exchange_offline_payments_handle_expired( $true, $product_id, $transaction ) {
+
+	$transaction = it_exchange_get_transaction( $transaction );
+	$product     = it_exchange_get_product( $product_id );
+
 	$transaction_method = it_exchange_get_transaction_method( $transaction->ID );
 
 	if ( 'offline-payments' === $transaction_method ) {
 
-		$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product_id, true );
-		$status     = $transaction->get_transaction_meta( 'subscriber_status', true );
-		if ( $autorenews && empty( $status ) ) { //if the subscriber status is empty, it hasn't been set, which really means it's active for offline payments
-			//if the transaction autorenews and is an offline payment, we want to create a new child transaction until deactivated
-			it_exchange_offline_payments_add_child_transaction( $transaction );
+		if ( function_exists( 'it_exchange_get_subscription_by_transaction' ) ) {
 
-			return false;
+			$subscription = it_exchange_get_subscription_by_transaction( $transaction, $product );
+
+			if ( $subscription->is_auto_renewing() && $subscription->get_status() === $subscription::STATUS_ACTIVE ) {
+				it_exchange_offline_payments_add_child_transaction( $transaction );
+
+				return false;
+			}
+
+		} else {
+			$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product_id, true );
+			$status     = $transaction->get_transaction_meta( 'subscriber_status', true );
+
+			if ( $autorenews && empty( $status ) ) { //if the subscriber status is empty, it hasn't been set, which really means it's active for offline payments
+				//if the transaction autorenews and is an offline payment, we want to create a new child transaction until deactivated
+				it_exchange_offline_payments_add_child_transaction( $transaction );
+
+				return false;
+			}
 		}
-
 	}
 
 	return $true;
@@ -685,7 +701,7 @@ add_filter( 'it_exchange_recurring_payments_handle_expired', 'it_exchange_offlin
  *
  * @since 1.3.1
  *
- * @param string $parent_txn_id Parent Transaction ID
+ * @param IT_Exchange_Transaction $parent_txn
  *
  * @return bool
  */
