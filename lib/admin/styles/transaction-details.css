@@ -330,6 +330,10 @@
 	box-shadow: 0 0 10px #dddddd;
 }
 
+#exchange-activity-filter {
+	max-width: 120px;
+}
+
 #exchange-close-note {
 	position: absolute;
 	top: 3px;
