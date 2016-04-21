@@ -218,6 +218,15 @@ function it_exchange_get_txn_activity_factory() {
 		'make'
 	) );
 
+	/**
+	 * Fires when an activity factory is made.
+	 *
+	 * @since 1.35.5
+	 *
+	 * @param IT_Exchange_Txn_Activity_Factory $factory
+	 */
+	do_action( 'it_exchange_get_txn_activity_factory', $factory );
+
 	return $factory;
 }
 
@@ -235,6 +244,15 @@ function it_exchange_get_txn_activity_actor_factory() {
 	$factory->register( 'customer', array( 'IT_Exchange_Txn_Activity_Customer_Actor', 'make' ) );
 	$factory->register( 'user', array( 'IT_Exchange_Txn_Activity_User_Actor', 'make' ) );
 	$factory->register( 'gateway', array( 'IT_Exchange_Txn_Activity_Gateway_Actor', 'make' ) );
+
+	/**
+	 * Fires when an activity actor factory is made.
+	 *
+	 * @since 1.35.5
+	 *
+	 * @param IT_Exchange_Txn_Activity_Actor_Factory $factory
+	 */
+	do_action( 'it_exchange_get_txn_activity_actor_factory', $factory );
 
 	return $factory;
 }
