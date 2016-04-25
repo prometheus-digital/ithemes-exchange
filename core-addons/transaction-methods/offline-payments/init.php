@@ -379,12 +379,15 @@ function it_exchange_offline_payments_mark_subscriptions_as_active_on_clear( $tr
 		return;
 	}
 
+	$transaction = it_exchange_get_transaction( $transaction );
 	$new_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction );
+	$is_child    = false;
 
 	if ( $new_cleared && ! $old_cleared ) {
 
 		while ( $transaction->post_parent && $parent = it_exchange_get_transaction( $transaction->post_parent ) ) {
 			$transaction = $parent;
+			$is_child    = true;
 		}
 
 		$subs = it_exchange_get_transaction_subscriptions( $transaction );
@@ -392,7 +395,7 @@ function it_exchange_offline_payments_mark_subscriptions_as_active_on_clear( $tr
 		foreach ( $subs as $sub ) {
 			$sub_status = $sub->get_status();
 
-			if ( empty( $sub_status ) ) {
+			if ( empty( $sub_status ) || ( $is_child && $sub_status === $sub::STATUS_SUSPENDED ) ) {
 				add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 				$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
 				remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
