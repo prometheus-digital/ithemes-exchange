@@ -123,7 +123,7 @@ function it_exchange_get_transactions( $args=array() ) {
 
 	if ( $transactions = get_posts( $args ) ) {
 		
-		if ( $args['fields'] !== 'ids' ) {
+		if ( empty( $args['fields'] ) || $args['fields'] !== 'ids' ) {
 			foreach ( $transactions as $key => $transaction ) {
 				$transactions[ $key ] = it_exchange_get_transaction( $transaction );
 			}
