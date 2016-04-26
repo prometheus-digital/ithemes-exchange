@@ -21,3 +21,22 @@
 /** ----------------------------------------:[ add-ons menu item ]:------ */
 #adminmenu .wp-submenu a[href|="admin.php?page=it-exchange-addons"],
 #adminmenu .wp-submenu li.current a[href|="admin.php?page=it-exchange-addons"]{ color:#8cc53e; }
+
+/** ----------------------------------------:[ pikaday theme ]:-------*/
+.pika-single.it-exchange {color: #444;background: #444;border: 0;}
+.pika-single.it-exchange .pika-lendar {margin: 0;width: auto;}
+.pika-single.it-exchange .pika-title {padding: .5em 1em;}
+.pika-single.it-exchange .pika-title,
+.pika-single.it-exchange .pika-label {background-color: #444;color: #fff;}
+.pika-single.it-exchange .pika-prev,
+.pika-single.it-exchange .is-rtl .pika-next {background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAeCAQAAACGG/bgAAAAQ0lEQVR4Ae3KIQ4AIBTD0N0/IeHGI3UIRA3ut/Zl+ltXc5++htVAmIAwAWECwgSEKbgthEoIlRAqIVRCqINQB9nDgQd7ktwFo6UpWQAAAABJRU5ErkJggg==');}
+.pika-single.it-exchange .pika-next,
+.pika-single.it-exchange .is-rtl .pika-prev {background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAeCAQAAACGG/bgAAAAP0lEQVQ4y+3TMQoAMAgEwfwfAvvjTZ1uGzuvHhBPPGczEG+FRqqRaqQaqUaqkX6QBmmjacvQ6qEVTjsh+xizebvlaWptGXZAAAAAAElFTkSuQmCC');}
+.pika-single.it-exchange .pika-table {background: #fff;}
+.pika-single.it-exchange .pika-table th {color: #999;}
+.pika-single.it-exchange .pika-button {color: #444;background: #fff;border-radius: 0;padding: 12px;}
+.pika-single.it-exchange .pika-week {color: #999;}
+.pika-single.it-exchange .is-today .pika-button {color: #8ac733;padding: 12px;}
+.pika-single.it-exchange .is-selected .pika-button {color: #fff;background: #8ac733;box-shadow: none !important;border-radius: 0 !important;}
+.pika-single.it-exchange .is-disabled .pika-button {background: #efefef;color: #999;opacity: .5;}
+.pika-single.it-exchange .pika-button:hover {color: #fff !important;background: #8ac733 !important;border-radius: 0;}
