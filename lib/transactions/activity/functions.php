@@ -114,9 +114,22 @@ function it_exchange_add_note_on_status_change( $transaction, $old_status ) {
 
 	$builder->set_actor( $actor );
 	$builder->build( it_exchange_get_txn_activity_factory() );
+
+	if ( $transaction->post_parent ) {
+
+		$parent = $transaction->post_parent;
+		$parent = it_exchange_get_transaction( $parent );
+
+		$builder = new IT_Exchange_Txn_Activity_Builder( $parent, 'renewal' );
+		$builder->set_child( $transaction );
+		$builder->set_actor( new IT_Exchange_Txn_Activity_Gateway_Actor( it_exchange_get_addon(
+			it_exchange_get_transaction_method( $parent )
+		) ) );
+		$builder->build( it_exchange_get_txn_activity_factory() );
+	}
 }
 
-add_action( 'it_exchange_update_transaction_status', 'it_exchange_add_note_on_status_change', 10, 2 );
+add_action( 'it_exchange_update_transaction_status', 'it_exchange_add_note_on_status_change', 9, 2 );
 
 /**
  * Add a renewal note when a child transaction is created.

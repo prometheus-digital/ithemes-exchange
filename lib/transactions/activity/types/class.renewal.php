@@ -90,13 +90,43 @@ class IT_Exchange_Txn_Renewal_Activity extends IT_Exchange_Txn_AbstractActivity 
 	 */
 	public function get_description() {
 
-		$link =  get_edit_post_link( $this->get_renewal_transaction()->ID );
+		$link = get_edit_post_link( $this->get_renewal_transaction()->ID );
 		$link = "<a href=\"$link\">" . $this->get_renewal_transaction()->get_order_number() . '</a>';
 
-		/* translators: %1$s is transaction order number, %2$s is dollar amount. */
-		return sprintf( __( 'Renewal payment %1$s of %2$s.', 'it-l10n-ithemes-exchange' ),
-			$link,
-			it_exchange_get_transaction_total( $this->get_renewal_transaction() ) );
+		if ( $this->has_cleared_meta() && ! $this->is_cleared() ) {
+			/* translators: %1$s is transaction order number, %2$s is dollar amount. */
+			$message = __( 'Pending renewal payment %1$s of %2$s.', 'it-l10n-ithemes-exchange' );
+		} elseif ( $this->has_cleared_meta() && $this->is_cleared() ) {
+			/* translators: %1$s is transaction order number. */
+			$message = __( 'Renewal payment %1$s was cleared.', 'it-l10n-ithemes-exchange' );
+		} else {
+			/* translators: %1$s is transaction order number, %2$s is dollar amount. */
+			$message = __( 'Renewal payment %1$s of %2$s.', 'it-l10n-ithemes-exchange' );
+		}
+
+		return sprintf( $message, $link, it_exchange_get_transaction_total( $this->get_renewal_transaction() ) );
+	}
+
+	/**
+	 * Check if we have cleared meta data.
+	 *
+	 * @since 1.35.5
+	 *
+	 * @return bool
+	 */
+	protected function has_cleared_meta() {
+		return metadata_exists( 'post', $this->get_ID(), '_child_txn_cleared' );
+	}
+
+	/**
+	 * Was the renewal payment cleared when the activity item was logged.
+	 *
+	 * @since 1.35.5
+	 *
+	 * @return bool
+	 */
+	protected function is_cleared() {
+		return (bool) get_post_meta( $this->get_ID(), '_child_txn_cleared', true );
 	}
 
 	/**

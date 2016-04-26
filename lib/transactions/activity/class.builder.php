@@ -186,6 +186,7 @@ final class IT_Exchange_Txn_Activity_Builder {
 
 		if ( $this->child ) {
 			update_post_meta( $ID, '_child_txn', $this->child->ID );
+			update_post_meta( $ID, '_child_txn_cleared', it_exchange_transaction_is_cleared_for_delivery( $this->child ) );
 		}
 
 		$activity = $factory->make( $ID );
