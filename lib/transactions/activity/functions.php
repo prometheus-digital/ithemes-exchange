@@ -299,7 +299,7 @@ function it_exchange_get_txn_activity( $ID ) {
 	 */
 	$filtered = apply_filters( 'it_exchange_get_txn_activity', $activity );
 
-	if ( get_class( $filtered ) !== get_class( $activity ) && ! is_subclass_of( $filtered, get_class( $activity ) ) ) {
+	if ( ! empty( $activity ) && get_class( $filtered ) !== get_class( $activity ) && ! is_subclass_of( $filtered, get_class( $activity ) ) ) {
 		throw new UnexpectedValueException( 'Invalid txn activity object returned from filter.' );
 	}
 
