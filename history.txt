@@ -1268,3 +1268,14 @@
 	Fix: Cart ID should always be present
     Fix: Coupons not being counted more than once
     Tweak: Mark Zero Sum Checkout and Offline Payments subscriptions as Active when paid
+1.35.5 - Elise Alley, Timothy B. Jacobs
+	Tweak: Extract session interface, IT_Exchange_SessionInterface, for managing sessions.
+	Tweak: Better activity messages for renewal payments.
+	Fix: Zero Sum Checkout subscriptions losing access
+	Fix: Offline Payments subscriptions losing access
+	Fix: Stripsllashes after jquery date format is replaced
+	Fix: Move subscription status activity reporting to Recurring Payments
+	Fix: Remove cancel URLs for zero sum checkout and offline payments
+	Fix: Only break-words on code tags in the activity stream
+	Fix: Logic for toggling offline payment subscriptions back to active after a payment has been received
+	Fix: Warning with get_class()
