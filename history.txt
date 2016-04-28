@@ -1279,3 +1279,6 @@
 	Fix: Only break-words on code tags in the activity stream
 	Fix: Logic for toggling offline payment subscriptions back to active after a payment has been received
 	Fix: Warning with get_class()
+1.35.6 - Elise Alley, Timothy B. Jacobs
+	Fix: Metaboxes on the menus page were being incorrectly hidden.
+	Fix: t_paamayim_nekudotayim on PHP 5.2
