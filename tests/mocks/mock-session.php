@@ -93,7 +93,7 @@ class IT_Exchange_Mock_Session implements IT_Exchange_SessionInterface {
 
 			unset( $this->session[ $key ] );
 		} else {
-			unset( $this->session );
+			$this->session = array();
 		}
 	}
 
@@ -105,6 +105,6 @@ class IT_Exchange_Mock_Session implements IT_Exchange_SessionInterface {
 	 * @param bool $hard If true, old delete sessions as well.
 	 */
 	public function clear_session( $hard = false ) {
-		unset( $this->session );
+		$this->session = array();
 	}
 }
