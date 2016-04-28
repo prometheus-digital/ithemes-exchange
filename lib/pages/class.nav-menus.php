@@ -245,6 +245,8 @@ class IT_Exchange_Nav_Menu_Meta_Box {
 			$result = array(
 				'nav-menu-theme-locations',
 				'add-page',
+				'add-post-type-page',
+				'add-post-type-post',
 				'add-custom-links',
 				'add-category',
 				'it-exchange-pages',
