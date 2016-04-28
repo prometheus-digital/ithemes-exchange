@@ -19,7 +19,7 @@ class IT_Exchange_Addons_Basic_Coupons_API_Test extends IT_Exchange_UnitTestCase
 	public function setUp() {
 		parent::setUp();
 
-		$GLOBALS['it_exchange']['session'] = new IT_Exchange_Session();
+		$GLOBALS['it_exchange']['session'] = new IT_Exchange_Mock_Session();
 	}
 
 	public function test_coupon_type_registered() {

@@ -18,7 +18,7 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$GLOBALS['it_exchange']['session'] = new IT_Exchange_Session();
+		$GLOBALS['it_exchange']['session'] = new IT_Exchange_Mock_Session();
 	}
 
 	public function test_add_get_cart_data() {

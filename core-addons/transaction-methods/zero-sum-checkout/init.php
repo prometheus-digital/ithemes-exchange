@@ -183,6 +183,9 @@ function it_exchange_zero_sum_checkout_add_child_transaction( $parent_txn ) {
  * @return void
 */
 function it_exchange_zero_sum_checkout_after_payment_details_cancel_url( $transaction ) {
+
+	_deprecated_function( __FUNCTION__, '1.35.5' );
+
 	$cart_object = get_post_meta( $transaction->ID, '_it_exchange_cart_object', true );
 	if ( !empty( $cart_object->products ) ) {
 		foreach ( $cart_object->products as $product ) {
@@ -190,17 +193,17 @@ function it_exchange_zero_sum_checkout_after_payment_details_cancel_url( $transa
 			if ( $autorenews ) {
 				$status = $transaction->get_transaction_meta( 'subscriber_status', true );
 				switch( $status ) {
-	
+
 					case false: //active
 					case '':
 						$output = '<a href="' . esc_url( add_query_arg( 'zero-sum-recurring-payment', 'cancel' ) ) . '">' . __( 'Cancel Recurring Payment', 'it-l10n-ithemes-exchange' ) . '</a>';
 						break;
-	
+
 					case 'deactivated':
 					default:
 						$output = __( 'Recurring payment has been deactivated', 'it-l10n-ithemes-exchange' );
 						break;
-	
+
 				}
 				?>
 				<div class="transaction-autorenews clearfix spacing-wrapper">
@@ -214,7 +217,6 @@ function it_exchange_zero_sum_checkout_after_payment_details_cancel_url( $transa
 		}
 	}
 }
-add_action( 'it_exchange_after_payment_details_cancel_url_for_zero-sum-checkout', 'it_exchange_zero_sum_checkout_after_payment_details_cancel_url' );
 
 /**
  * Process Zero Sum Recurring Payments cancellations
@@ -233,6 +235,8 @@ function it_exchange_process_zero_sum_recurring_payment_cancel() {
 }
 add_action( 'admin_init', 'it_exchange_process_zero_sum_recurring_payment_cancel' );
 
+add_filter( 'it_exchange_auto_activate_non_renewing_zero-sum-checkout_subscriptions', '__return_false' );
+
 /**
  * Mark all transaction subscriptions as active when a transaction is made.
  *
@@ -250,11 +254,19 @@ function it_exchange_zero_sum_mark_subscriptions_as_active_on_purchase( $transac
 		return;
 	}
 
+	if ( it_exchange_get_transaction_method( $transaction_id ) !== 'zero-sum-checkout' ) {
+		return;
+	}
+
 	$subs = it_exchange_get_transaction_subscriptions( it_exchange_get_transaction( $transaction_id ) );
+
+	$status = defined( 'IT_Exchange_Subscription::STATUS_COMPLIMENTARY' ) ? IT_Exchange_Subscription::STATUS_COMPLIMENTARY : IT_Exchange_Subscription::STATUS_ACTIVE;
 
 	try {
 		foreach ( $subs as $sub ) {
-			$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+			add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
+			$sub->set_status( $status );
+			remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 		}
 	}
 	catch ( Exception $e ) {
@@ -279,7 +291,13 @@ function it_exchange_zero_sum_mark_subscriptions_as_active_on_clear( $transactio
 		return;
 	}
 
+	if ( it_exchange_get_transaction_method( $transaction ) !== 'zero-sum-checkout' ) {
+		return;
+	}
+
 	$new_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction );
+
+	$status = defined( 'IT_Exchange_Subscription::STATUS_COMPLIMENTARY' ) ? IT_Exchange_Subscription::STATUS_COMPLIMENTARY : IT_Exchange_Subscription::STATUS_ACTIVE;
 
 	if ( $new_cleared && ! $old_cleared ) {
 
@@ -289,7 +307,9 @@ function it_exchange_zero_sum_mark_subscriptions_as_active_on_clear( $transactio
 			$sub_status = $sub->get_status();
 
 			if ( empty( $sub_status ) ) {
-				$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+				add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
+				$sub->set_status( $status );
+				remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 			}
 		}
 	}

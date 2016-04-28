@@ -122,8 +122,11 @@ function it_exchange_get_transactions( $args=array() ) {
 	$args = apply_filters( 'it_exchange_get_transactions_get_posts_args', $args );
 
 	if ( $transactions = get_posts( $args ) ) {
-		foreach( $transactions as $key => $transaction ) {
-			$transactions[$key] = it_exchange_get_transaction( $transaction );
+		
+		if ( empty( $args['fields'] ) || $args['fields'] !== 'ids' ) {
+			foreach ( $transactions as $key => $transaction ) {
+				$transactions[ $key ] = it_exchange_get_transaction( $transaction );
+			}
 		}
 	}
 

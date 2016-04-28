@@ -69,6 +69,7 @@ require dirname( __FILE__ ) . '/framework/download-factory.php';
 require dirname( __FILE__ ) . '/framework/test-case.php';
 
 require_once dirname( __FILE__ ) . '/mocks/mock-product-type-class.php';
+require_once dirname( __FILE__ ) . '/mocks/mock-session.php';
 
 activate_plugin( 'ithemes-exchange/init.php' );
 

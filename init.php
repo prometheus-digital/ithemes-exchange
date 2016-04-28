@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: iThemes Exchange
- * Version: 1.35.4
+ * Version: 1.35.5
  * Text Domain: it-l10n-ithemes-exchange
  * Description: Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordPress
  * Plugin URI: http://ithemes.com/exchange/
@@ -24,7 +24,7 @@
 */
 class IT_Exchange {
 
-	var $_version         = '1.35.4';
+	var $_version         = '1.35.5';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'ithemes-exchange';
 	var $_name            = 'iThemes Exchange';
@@ -244,7 +244,7 @@ function it_exchange_flush_rewrite_rules() {
 add_action( 'admin_init', 'it_exchange_flush_rewrite_rules', 99 );
 
 // Init DB sessions
-require( plugin_dir_path( __FILE__ ) . 'lib/sessions/class.session.php' );
+require( plugin_dir_path( __FILE__ ) . 'lib/sessions/load.php' );
 
 /**
  * Register all sync verbs
