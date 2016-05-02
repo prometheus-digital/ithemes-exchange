@@ -20,6 +20,8 @@ interface ITE_Contract_Prorate_Credit_Provider {
 	 * @param IT_Exchange_Product|null $to  Optionally, provide the product this credit will be applied to.
 	 *
 	 * @return float Available credit
+	 *               
+	 * @throws InvalidArgumentException If the `$for` product is invalid.
 	 */
 	public function get_available_prorate_credit( IT_Exchange_Product $for, IT_Exchange_Product $to = null );
 }
