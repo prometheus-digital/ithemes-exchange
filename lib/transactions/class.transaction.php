@@ -11,7 +11,7 @@
  *
  * @since 0.3.3
 */
-class IT_Exchange_Transaction {
+class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 
 	// WP Post Type Properties
 	var $ID;
@@ -517,6 +517,35 @@ class IT_Exchange_Transaction {
 	*/
 	function get_gateway_id_for_transaction() {
 		return empty( $this->gateway_id_for_transaction ) ? false : $this->gateway_id_for_transaction;
+	}
+
+	/**
+	 * Get the available prorate credit this object provides.
+	 *
+	 * @since 1.36
+	 *
+	 * @param IT_Exchange_Product      $for Product we are request credit for.
+	 * @param IT_Exchange_Product|null $to  Optionally, provide the product this credit will be applied to.
+	 *
+	 * @return float Available credit
+	 */
+	public function get_available_prorate_credit( IT_Exchange_Product $for, IT_Exchange_Product $to = null ) {
+
+		foreach ( $this->get_products() as $product ) {
+			if ( $product['product_id'] == $for->ID ) {
+				$amount = (float) $product['product_subtotal'];
+			}
+		}
+
+		if ( ! isset( $amount ) ) {
+			throw new InvalidArgumentException( "Product with ID '$for->ID' not found in transaction '$this->ID'." );
+		}
+
+		if ( (float) $this->get_total( false ) < $amount ) {
+			$amount = (float) $this->get_total( false );
+		}
+
+		return $amount;
 	}
 
 	/**
