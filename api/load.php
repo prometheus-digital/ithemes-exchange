@@ -15,8 +15,6 @@ if ( ! is_admin() || ( is_admin() && defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 	include( $this->_plugin_path . 'api/theme.php' );
 }
 
-require_once dirname( __FILE__ ) . '/contracts/load.php';
-
 // Contains functions for registering / retreiving Add-ons, Add-on categories, and Add-on sets
 include( $this->_plugin_path . 'api/addons.php' );
 

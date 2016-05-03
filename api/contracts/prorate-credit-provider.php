@@ -12,16 +12,27 @@
 interface ITE_Contract_Prorate_Credit_Provider {
 
 	/**
-	 * Get the available prorate credit this object provides.
+	 * Handle a prorate credit request.
+	 *
+	 * Should set the amount of available credit on the request object.
 	 *
 	 * @since 1.36
 	 *
-	 * @param IT_Exchange_Product      $for Product we are request credit for.
-	 * @param IT_Exchange_Product|null $to  Optionally, provide the product this credit will be applied to.
+	 * @param ITE_Prorate_Credit_Request $request    Prorate credit request.
+	 * @param ITE_Daily_Price_Calculator $calculator Daily price calculator.
 	 *
-	 * @return float Available credit
-	 *               
-	 * @throws InvalidArgumentException If the `$for` product is invalid.
+	 * @throws InvalidArgumentException If the product providing credit is invalid.
 	 */
-	public function get_available_prorate_credit( IT_Exchange_Product $for, IT_Exchange_Product $to = null );
+	public static function handle_prorate_credit_request( ITE_Prorate_Credit_Request $request, ITE_Daily_Price_Calculator $calculator );
+
+	/**
+	 * Determine if this credit provider is able to accept this type of credit request.
+	 *
+	 * @since 1.36
+	 *
+	 * @param ITE_Prorate_Credit_Request $request Prorate credit request.
+	 *
+	 * @return bool
+	 */
+	public static function accepts_prorate_credit_request( ITE_Prorate_Credit_Request $request );
 }

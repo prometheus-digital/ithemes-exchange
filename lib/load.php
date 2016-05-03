@@ -2,9 +2,11 @@
 /**
  * This file loads the iThemes Exchange Framework
  *
- * @since 0.2.0
+ * @since   0.2.0
  * @package IT_Exchange
-*/
+ */
+
+require_once dirname( __FILE__ ) . '/../api/contracts/load.php';
 
 // IT Classes
 require( $this->_plugin_path . 'lib/classes/load.php' );
@@ -26,7 +28,7 @@ require( $this->_plugin_path . 'lib/products/class.products-post-type.php' );
 
 // Product Object
 require( $this->_plugin_path . 'lib/products/class.product.php' );
-require_once( $this->_plugin_path  . 'lib/products/class.factory.php' );
+require_once( $this->_plugin_path . 'lib/products/class.factory.php' );
 
 // Product Features
 require( $this->_plugin_path . 'lib/product-features/load.php' );
