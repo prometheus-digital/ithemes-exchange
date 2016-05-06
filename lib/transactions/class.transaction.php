@@ -566,6 +566,11 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 		}
 
 		$request->set_credit( $amount );
+		
+		$request->update_session_details( array(
+			'old_transaction_id'        => $transaction->ID,
+			'old_transaction_method'    => $transaction->transaction_method
+		) );
 	}
 
 	/**
