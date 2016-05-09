@@ -277,7 +277,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	function shipping( $options=array() ) {
 
 		// Abort if shipping is not enabled
-		if ( ! it_exchange_get_available_shipping_methods_for_cart_products() && ! apply_filters( 'it_exchange_shipping_address_purchase_requirement_enabled', false ) )
+		if ( ! it_exchange_get_available_shipping_methods_for_cart_products() || ! apply_filters( 'it_exchange_shipping_address_purchase_requirement_enabled', false ) )
 			return;
 
 		$defaults      = array(
