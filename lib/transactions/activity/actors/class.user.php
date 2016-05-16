@@ -12,16 +12,16 @@
 class IT_Exchange_Txn_Activity_User_Actor implements IT_Exchange_Txn_Activity_Actor {
 
 	/**
-	 * @var WP_User
+	 * @var WP_User|null
 	 */
 	private $user;
 
 	/**
 	 * IT_Exchange_Txn_Activity_User_Actor constructor.
 	 *
-	 * @param WP_User $user
+	 * @param WP_User|null $user Pass null if user is deleted.
 	 */
-	public function __construct( WP_User $user ) {
+	public function __construct( WP_User $user = null ) {
 		$this->user = $user;
 	}
 
@@ -40,14 +40,14 @@ class IT_Exchange_Txn_Activity_User_Actor implements IT_Exchange_Txn_Activity_Ac
 
 		$user_id = get_post_meta( $activity_id, '_actor_user_id', true );
 
-		if ( ! is_int( $user_id ) ) {
+		if ( ! is_numeric( $user_id ) ) {
 			return null;
 		}
 
 		$user = get_user_by( 'id', $user_id );
 
-		if ( ! $user ) {
-			return null;
+		if ( ! $user instanceof WP_User ) {
+			$user = null;
 		}
 
 		return new self( $user );
@@ -61,7 +61,7 @@ class IT_Exchange_Txn_Activity_User_Actor implements IT_Exchange_Txn_Activity_Ac
 	 * @return string
 	 */
 	public function get_name() {
-		return $this->user->display_name;
+		return $this->user ? $this->user->display_name : __( 'Deleted User', 'it-l10n-ithemes-exchange' );
 	}
 
 	/**
@@ -74,6 +74,10 @@ class IT_Exchange_Txn_Activity_User_Actor implements IT_Exchange_Txn_Activity_Ac
 	 * @return string
 	 */
 	public function get_icon_url( $size ) {
+
+		if ( ! $this->user ) {
+			return '';
+		}
 
 		if ( ! function_exists( 'get_avatar_url' ) ) {
 			return '';
@@ -94,7 +98,7 @@ class IT_Exchange_Txn_Activity_User_Actor implements IT_Exchange_Txn_Activity_Ac
 	 * @return string
 	 */
 	public function get_detail_url() {
-		return get_edit_user_link( $this->user->ID );
+		return $this->user ? get_edit_user_link( $this->user->ID ) : '';
 	}
 
 	/**
