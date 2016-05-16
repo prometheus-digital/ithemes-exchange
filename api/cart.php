@@ -1146,3 +1146,16 @@ function it_exchange_get_cart_id() {
 function it_exchange_remove_cart_id() {
 	it_exchange_remove_cart_data( 'cart_id' );
 }
+
+/**
+ * Are we doing guest checkout?
+ *
+ * @since 1.6.0
+ * @since 1.35.7 Move
+ *
+ * @return boolean
+ */
+function it_exchange_doing_guest_checkout() {
+	$data = it_exchange_get_cart_data( 'guest-checkout' );
+	return ! empty( $data[0] );
+}
