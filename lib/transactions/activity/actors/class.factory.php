@@ -63,7 +63,7 @@ class IT_Exchange_Txn_Activity_Actor_Factory {
 			$actor = call_user_func( $function, $activity_post_id );
 		}
 
-		if ( ! $actor instanceof IT_Exchange_Txn_Activity_Actor ) {
+		if ( $actor && ! $actor instanceof IT_Exchange_Txn_Activity_Actor ) {
 			throw new UnexpectedValueException( "Actor for activity with ID '{$activity_post_id}', is not valid." );
 		}
 
