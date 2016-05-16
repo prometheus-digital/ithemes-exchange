@@ -37,7 +37,20 @@ class IT_Exchange_Txn_Activity_User_Actor implements IT_Exchange_Txn_Activity_Ac
 	 * @return IT_Exchange_Txn_Activity_User_Actor
 	 */
 	public static function make( $activity_id ) {
-		return new self( get_user_by( 'id', get_post_meta( $activity_id, '_actor_user_id', true ) ) );
+
+		$user_id = get_post_meta( $activity_id, '_actor_user_id', true );
+
+		if ( ! is_int( $user_id ) ) {
+			return null;
+		}
+
+		$user = get_user_by( 'id', $user_id );
+
+		if ( ! $user ) {
+			return null;
+		}
+
+		return new self( $user );
 	}
 
 	/**
