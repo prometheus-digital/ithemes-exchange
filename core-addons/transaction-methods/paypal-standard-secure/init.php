@@ -741,7 +741,8 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id ) {
 		//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
 		//a2, t2, p2 are for the second trial period, which is not supported with the Recurring Payments add-on
 		//a3, t3, p3 are required for the actual subscription details
-		$trial_duration_1 = empty( $upgrade_downgrade[$product_id]['free_days'] ) ? $trial_duration : $upgrade_downgrade[$product_id]['free_days'];			$trial_duration_2 = 0;
+		$trial_duration_1 = empty( $upgrade_downgrade[$product_id]['free_days'] ) ? $trial_duration : $upgrade_downgrade[$product_id]['free_days'];			
+		$trial_duration_2 = 0;
 
 		$button_request['BUTTONTYPE'] = 'SUBSCRIBE';
 		if ( !empty( $trial_duration_1 ) ) {
