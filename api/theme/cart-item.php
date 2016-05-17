@@ -156,24 +156,14 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 		$options = ITUtility::merge_defaults( $options, $defaults );
 		$var_key = it_exchange_get_field_name( 'product_purchase_quantity' );
 		$var_value = it_exchange_get_cart_product_quantity( $this->_cart_item );
-		$max_quantity = it_exchange_get_product_feature( $this->_cart_item['product_id'], 'purchase-quantity' );
 		
 		if ( apply_filters( 'it_exchange_multi_item_product_allowed', true, $this->_cart_item['product_id'] ) ) {
+
+			$max_quantity = it_exchange_get_max_product_quantity_allowed( $this->_cart_item['product_id'], $this->_cart_item['product_cart_id'] );
 	
-			if ( it_exchange_product_supports_feature( $this->_cart_item['product_id'], 'inventory' ) ) {
-	
-				$inventory = (int)it_exchange_get_product_feature( $this->_cart_item['product_id'], 'inventory' );
-		
-				if ( trim( $max_quantity ) === '' ) {
-					$max_quantity = $inventory;
-				} else if ( $inventory && (int) $max_quantity > 0 && (int) $max_quantity > $inventory ) {
-					$max_quantity = $inventory;
-				}
-	
-			}
-	
-			if ( (int) $max_quantity > 0 && $var_value > $max_quantity )
+			if ( (int) $max_quantity > 0 && $var_value > $max_quantity ) {
 				$var_value = $max_quantity;
+			}
 	
 			switch ( $options['format'] ) {
 				case 'var_key' :
