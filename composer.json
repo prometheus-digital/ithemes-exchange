@@ -14,5 +14,10 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {},
+    "config": {
+        "platform": {
+            "php": "5.3.29"
+        }
+    }
 }
