@@ -514,17 +514,29 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 * Gets the transactions children.
 	 *
 	 * @since 1.3.0
+	 * @since ?
 	 *
-	 * @return WP_Post[]
+	 * @param array $args                Arguments to filter children.
+	 * @param bool  $return_transactions Return transaction objects.
+	 *
+	 * @return WP_Post[]|IT_Exchange_Transaction[]
 	 */
-	function get_children( $args = array() ) {
+	function get_children( $args = array(), $return_transactions = false ) {
+
 		$defaults = array(
 			'post_parent' => $this->ID,
 			'post_type'   => 'it_exchange_tran',
 		);
-		$args     = wp_parse_args( $args, $defaults );
 
-		return get_children( $args );
+		$args = wp_parse_args( $args, $defaults );
+
+		$posts = get_children( $args );
+		
+		if ( $return_transactions ) {
+			$posts = array_map( 'it_exchange_get_transaction', $posts );
+		}
+		
+		return $posts;
 	}
 
 	/**
