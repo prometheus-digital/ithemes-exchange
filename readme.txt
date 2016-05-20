@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.6
-Stable tag: 1.35.6
+Stable tag: 1.35.7
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,12 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.35.7 =
+* Add: Filter to the max quantity check for Variants
+* Tweak: Only require shipping address when necessary
+* Fix: Errors with deleted users and transaction activity
+* Fix: Errors with Guest Checkout and transaction activity
 
 = 1.35.6 =
 * Fix: Metaboxes on the menus page were being incorrectly hidden.
