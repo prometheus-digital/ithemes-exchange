@@ -709,6 +709,7 @@ function it_exchange_paypal_standard_addon_get_payment_url( $temp_id ) {
 			'rm'            => '2',
 			'cancel_return' => ( it_exchange_is_multi_item_cart_allowed() ? it_exchange_get_page_url( 'cart' ) : get_home_url() ),
 			'custom'        => $temp_id,
+			'bn'            => 'iThemes_SP'
 		);
 
 		$purchase_requirements = it_exchange_get_purchase_requirements();
