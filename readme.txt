@@ -90,6 +90,7 @@ http://ithemes.com/codex/page/Exchange_Installation
 
 = 1.35.7 =
 * Add: Filter to the max quantity check for Variants
+* Add: BN Code to PayPal Gateways
 * Tweak: Only require shipping address when necessary
 * Fix: Errors with deleted users and transaction activity
 * Fix: Errors with Guest Checkout and transaction activity
