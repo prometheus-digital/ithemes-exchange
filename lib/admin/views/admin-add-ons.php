@@ -83,7 +83,7 @@
 					</div>
 					<div class="add-on-actions">
 
-						<?php if ( $addon['slug'] === 'ithemes-security' && ! class_exists( 'ITSEC_Recaptcha' ) ): ?>
+						<?php if ( $addon['slug'] === 'ithemes-security' && ( ! class_exists( 'ITSEC_Core' ) || ! ITSEC_Core::is_pro() ) ): ?>
 							<div class="add-on-buy-now">
 								<a href="https://ithemes.com/security/">
 									<?php _e( 'Purchase', 'it-l10n-ithemes-exchange' ); ?>
