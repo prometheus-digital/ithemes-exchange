@@ -111,7 +111,7 @@ function it_exchange_convert_to_database_number( $price ) {
 	} else { //if we don't find a decimal separator, we want to multiply by 100 for future decimal operations
 		$price = preg_replace( '/[^0-9]*/', '', $price ) * 100;
 	}
-	
+
 	return $price;
 }
 
@@ -594,7 +594,7 @@ function it_exchange_redirect( $url, $context='', $options=array(), $status=302 
  *
  * Copied from Better WP Security (HT: Chris Wiegman)
  *
- * @since 1.11.5 
+ * @since 1.11.5
  *
  * @return string Current IP address for customer
 */
@@ -636,4 +636,28 @@ function it_exchange_get_ip() {
     }
 
     return esc_sql( $the_ip );
+}
+
+/**
+ * Convert a country code to its opposite format.
+ *
+ * @since 1.35.8
+ *
+ * @param string $code Either a 2-digit or 3-digit code.
+ *
+ * @return string|false False if no transposition is found.
+ */
+function it_exchange_convert_country_code( $code ) {
+
+	$codes = it_exchange_get_data_set( 'country-codes' );
+
+	if ( strlen( $code ) === 3 ) {
+		$codes = array_flip( $codes );
+	}
+
+	if ( isset( $codes[ $code ] ) ) {
+		return $codes[$code];
+	}
+
+	return false;
 }

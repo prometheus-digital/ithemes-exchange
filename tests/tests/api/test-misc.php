@@ -499,4 +499,25 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 		it_exchange_unregister_purchase_requirement( 'test3' );
 		$GLOBALS['it_exchange']['purchase-requirements'] = $backup;
 	}
+
+	/**
+	 * @dataProvider _dp_convert_country_code
+	 *
+	 * @param $code
+	 * @param $converted
+	 */
+	public function test_convert_country_code( $code, $converted ) {
+		$this->assertEquals( $converted, it_exchange_convert_country_code( $code ) );
+	}
+
+	public function _dp_convert_country_code() {
+		return array(
+			array( 'US', 'USA' ),
+			array( 'USA', 'US' ),
+			array( 'AU', 'AUS' ),
+			array( 'AUS', 'AU' ),
+			array( 'BAD', false ),
+			array( 'ZZ', false ),
+		);
+	}
 }
