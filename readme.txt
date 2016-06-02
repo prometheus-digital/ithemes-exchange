@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.6
-Stable tag: 1.35.7
+Stable tag: 1.35.8
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,12 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.35.8 =
+* Add: it_exchange_convert_country_code() API function
+* Fix: Don't overwrite existing columns on the products list table
+* Fix: ITSEC Recaptcha Integration
+* Fix: Ensure tooltip dialog clears other DOM elements
 
 = 1.35.7 =
 * Add: Filter to the max quantity check for Variants

@@ -1288,3 +1288,8 @@
     Tweak: Only require shipping address when necessary
     Fix: Errors with deleted users and transaction activity
     Fix: Errors with Guest Checkout and transaction activity
+1.35.8 - Aaron Campbell, Elise Alley, Timothy Jacobs, Ty Carlson
+	Add: it_exchange_convert_country_code() API function
+	Fix: Don't overwrite existing columns on the products list table
+	Fix: ITSEC Recaptcha Integration
+	Fix: Ensure tooltip dialog clears other DOM elements
