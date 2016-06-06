@@ -304,12 +304,12 @@ function it_exchange_update_transient_transaction( $method, $temp_id, $customer_
 
 	$expires = current_time( 'timestamp' ) + apply_filters( 'it_exchange_transient_transaction_expiry', 60 * 60 * 4 );
 
-    update_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id, $expires );
+    update_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id, $expires, false );
     update_option( 'ite_temp_tnx_' . $method . '_' . $temp_id, array(
 		    'customer_id' => $customer_id,
 		    'transaction_object' => $transaction_object,
 		    'transaction_id' => $transaction_id
-    ) );
+    ), false );
     return true;
 }
 
