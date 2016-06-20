@@ -63,7 +63,7 @@ if ( 'empty-cart' == $action ) {
 
 // Remove item from cart
 if ( 'remove-from-cart' == $action && ! empty( $cart_product ) ) {
-	it_exchange_delete_cart_product( $cart_product );
+	it_exchange_get_current_cart()->remove_item( 'product', $cart_product );
 	die(1);
 }
 

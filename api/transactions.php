@@ -202,8 +202,10 @@ function it_exchange_get_transaction_by_cart_id( $cart_id ) {
 function it_exchange_generate_transaction_object() {
 
 	// Verify products exist
-	$products = it_exchange_get_cart_products();
-	if ( count( $products ) < 1 ) {
+	$cart          = it_exchange_get_current_cart();
+	$cart_products = $cart->get_items( 'product' );
+
+	if ( count( $cart_products ) < 1 ) {
 		do_action( 'it_exchange_error-no_products_to_purchase' );
 		it_exchange_add_message( 'error', __( 'You cannot checkout without any items in your cart.', 'it-l10n-ithemes-exchange' ) );
 		return false;
@@ -226,6 +228,12 @@ function it_exchange_generate_transaction_object() {
 	// Grab cart ID
 	$cart_id = it_exchange_get_cart_data( 'cart_id' );
 	$cart_id = empty( $cart_id[0] ) ? 0 : $cart_id[0];
+	
+	$products = array();
+	
+	foreach ( $cart_products as $cart_product ) {
+		$products[ $cart_product->get_id() ] = $cart_product->get_data_to_save();
+	}
 
 	// Add totals to each product
 	foreach( $products as $key => $product ) {
@@ -265,10 +273,12 @@ function it_exchange_generate_transaction_object() {
 	$transaction_object->coupons                = $coupons;
 	$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
 	$transaction_object->customer_ip            = it_exchange_get_ip();
-
+	
+	$taxes = $cart->calculate_total( 'tax', true );
+	
 	// Tack on Tax information
-	$transaction_object->taxes_formated         = apply_filters( 'it_exchange_set_transaction_objet_cart_taxes_formatted', false );
-	$transaction_object->taxes_raw              = apply_filters( 'it_exchange_set_transaction_objet_cart_taxes_raw', false );
+	$transaction_object->taxes_formated         = it_exchange_format_price( $taxes );
+	$transaction_object->taxes_raw              = $taxes;
 
 	// Tack on Shipping and Billing address
 	$transaction_object->shipping_address       = it_exchange_get_cart_shipping_address();

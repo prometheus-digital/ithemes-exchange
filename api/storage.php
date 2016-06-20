@@ -41,14 +41,17 @@ function it_exchange_get_option( $key, $break_cache=false, $merge_defaults=true 
  * Save options
  *
  * @since 0.3.6
- * @param string $key the options key
- * @param mixed $value the values to save to the options key
+ * @since 1.36 Add $flush_cache parameter.
+ *        
+ * @param string $key        The options key
+ * @param mixed  $value       The values to save to the options key
+ * @param bool   $flush_cache  Flush the internal ITStorage cache.
  *
  * @return bool
 */
-function it_exchange_save_option( $key, $value ) {
+function it_exchange_save_option( $key, $value, $flush_cache = false ) {
 	$storage = it_exchange_get_storage( $key );
-	return apply_filters( 'it_exchange_save_option', $storage->save( $value ), $key, $value );
+	return apply_filters( 'it_exchange_save_option', $storage->save( $value, $flush_cache ), $key, $value );
 }
 
 /**

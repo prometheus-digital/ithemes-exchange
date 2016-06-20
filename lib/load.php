@@ -77,9 +77,6 @@ require( $this->_plugin_path . 'lib/upgrades/load.php' );
 // Deprecated Features
 require( $this->_plugin_path . 'lib/deprecated/init.php' );
 
-// Sessions
-if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-	require( $this->_plugin_path . 'lib/cart/class.cart.php' );
-} else {
-	require( $this->_plugin_path . 'lib/admin/class-settings-form.php' );
-}
+require( $this->_plugin_path . 'lib/cart/load.php' );
+require( $this->_plugin_path . 'lib/settings/class.settings-form.php' );
+require( $this->_plugin_path . 'lib/settings/class.controller.php' );

@@ -80,13 +80,20 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 
 		// Return boolean if has flag was set
 		if ( $options['has'] )
-			return count( it_exchange_get_cart_products() ) > 0 ;
+			return count( it_exchange_get_current_cart()->get_items( 'product' ) ) > 0 ;
 
 		// If we made it here, we're doing a loop of products for the current cart.
 		// We're accessing the SESSION directly to make looping easier.
 		// This will init/reset the SESSION products and loop through them. the /api/theme/cart-item.php file will handle individual products.
 		if ( empty( $GLOBALS['it_exchange']['cart-item'] ) ) {
-			$GLOBALS['it_exchange']['products'] = it_exchange_get_cart_products();
+			
+			$cart_products = array();
+			
+			foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+				$cart_products[ $product->get_id() ] = $product->get_data_to_save();
+			}
+			
+			$GLOBALS['it_exchange']['products'] = $cart_products;
 			$GLOBALS['it_exchange']['cart-item'] = reset( $GLOBALS['it_exchange']['products'] );
 			return true;
 		} else {

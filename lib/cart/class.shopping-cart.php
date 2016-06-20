@@ -267,7 +267,7 @@ class IT_Exchange_Shopping_Cart {
 		}
 
 		foreach( (array) $car_product_ids as $car_product_id ) {
-			it_exchange_delete_cart_product( $car_product_id );
+			it_exchange_get_current_cart()->remove_item( 'product', $car_product_id );
 		}
 
 		$var = it_exchange_get_field_name( 'alert_message' );
@@ -551,8 +551,7 @@ class IT_Exchange_Shopping_Cart {
 		if ( empty( $checkout ) || ! it_exchange_is_page( 'checkout' ) )
 			return;
 
-		$products = it_exchange_get_cart_products();
-		if ( empty( $products ) ){
+		if ( ! it_exchange_get_current_cart()->get_items( 'product' )->count() ){
 			it_exchange_redirect( $cart, 'checkout-empty-send-to-cart' );
 			die();
 		}

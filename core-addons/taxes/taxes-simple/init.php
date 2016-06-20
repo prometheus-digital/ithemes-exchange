@@ -191,7 +191,7 @@ function it_exchange_addon_taxes_simple_register_templates( $template_paths, $te
 	$template_paths[] = dirname( __FILE__ ) . '/templates';
 	return $template_paths;
 }
-add_filter( 'it_exchange_possible_template_paths', 'it_exchange_addon_taxes_simple_register_templates', 10, 2 );
+//add_filter( 'it_exchange_possible_template_paths', 'it_exchange_addon_taxes_simple_register_templates', 10, 2 );
 
 /**
  * Adjusts the cart total
@@ -205,7 +205,34 @@ function it_exchange_addon_taxes_simple_modify_total( $total ) {
 	$taxes = it_exchange_addon_get_simple_taxes_for_cart( false );
 	return $total + $taxes;
 }
-add_filter( 'it_exchange_get_cart_total', 'it_exchange_addon_taxes_simple_modify_total' );
+//add_filter( 'it_exchange_get_cart_total', 'it_exchange_addon_taxes_simple_modify_total' );
+
+/**
+ * Add the simple taxes line item.
+ *
+ * @since 1.36
+ *
+ * @param \ITE_Cart_Product $item
+ * @param \ITE_Cart         $cart
+ */
+function it_exchange_simple_taxes_add_line_item( ITE_Cart_Product $item, ITE_Cart $cart ) {
+
+	if ( ! $cart->is_current() ) {
+		return;
+	}
+
+	$options  = it_exchange_get_option( 'addon_taxes_simple' );
+	$tax_rate = empty( $options['default-tax-rate'] ) ? 0 : (float) $options['default-tax-rate'];
+
+	$tax = new ITE_Simple_Tax_Line_Item( $tax_rate, array(), $item );
+	
+	if ( $tax->applies_to( $item ) ) {
+		$item->add_tax( $tax );
+		$item->persist( $cart->get_repository() );
+	}
+}
+
+add_action( 'it_exchange_add_product_to_cart', 'it_exchange_simple_taxes_add_line_item', 10, 2 );
 
 /**
  * Adds the cart taxes to the transaction object

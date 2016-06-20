@@ -32,9 +32,17 @@ class IT_Exchange_Mock_Session implements IT_Exchange_SessionInterface {
 
 			$key = sanitize_key( $key );
 
-			return isset( $this->session[ $key ] ) ? $this->session[ $key ] : array();
+			if ( isset( $this->session[ $key ] ) ) {
+				if ( is_array( $this->session[ $key ] ) ) {
+					return array_map( 'maybe_unserialize', $this->session[ $key ] );
+				} else {
+					return maybe_unserialize( $this->session[ $key ] );
+				}
+			} else {
+				return array();
+			}
 		} else {
-			return $this->session;
+			return array_map( 'maybe_unserialize', $this->session );
 		}
 	}
 

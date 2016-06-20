@@ -93,10 +93,10 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 			foreach( $cart_methods as $method ) {
 				$options .= '<option value="' . esc_attr( $method->slug ) . '" ' . selected( $current_method, $method->slug, false ) . '>' . $method->label . ' (' . it_exchange_get_cart_shipping_cost( $method->slug ) . ')</option>';
 			}
-			if ( (array) it_exchange_get_cart_products() > 1 ) {
+			if ( count( it_exchange_get_current_cart()->get_items( 'product' ) ) > 1 ) {
 				$cart_products_with_shipping = 0;
-				foreach( (array) it_exchange_get_cart_products() as $cart_product ) {
-					if ( it_exchange_product_has_feature( $cart_product['product_id'], 'shipping' ) )
+				foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $cart_product ) {
+					if ( $cart_product->get_product()->has_feature( 'shipping' ) )
 						$cart_products_with_shipping++;
 				}
 				if ( $cart_products_with_shipping > 1 && count( $cart_product_methods ) > 1 ) {
@@ -118,32 +118,32 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 			?>
 			<div class="it-exchange-itemized-checkout-methods it-exchange-clearfix">
 				<?php
-				foreach( (array) it_exchange_get_cart_products() as $product ) {
-					if ( ! it_exchange_product_has_feature( $product['product_id'], 'shipping' ) )
+				foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+					if ( ! $product->has_feature( 'shipping' ) )
 						continue;
 
 					echo '<div class="it-exchange-itemized-checkout-method">';
 
-						echo '<span class="it-exchange-shipping-product-title">' . it_exchange_get_cart_product_title( $product ) . '</span>';
-						$selected_multiple_method = it_exchange_get_multiple_shipping_method_for_cart_product( $product['product_cart_id'] );
-						$enabled_shipping_methods = (array) it_exchange_get_enabled_shipping_methods_for_product( it_exchange_get_product( $product['product_id'] ) );
+						echo '<span class="it-exchange-shipping-product-title">' . it_exchange_get_cart_product_title( $product->get_data_to_save() ) . '</span>';
+						$selected_multiple_method = it_exchange_get_multiple_shipping_method_for_cart_product( $product->get_id() );
+						$enabled_shipping_methods = (array) it_exchange_get_enabled_shipping_methods_for_product( $product->get_product() );
 
 						if ( count( $enabled_shipping_methods ) > 1 ) {
 							?>
-							<select class="it-exchange-multiple-shipping-methods-select it-exchange-right" data-it-exchange-product-cart-id="<?php esc_attr_e( $product['product_cart_id'] ); ?>" name="it-exchange-shipping-method-for-<?php esc_attr_e( $product['product_cart_id'] ); ?>" >
+							<select class="it-exchange-multiple-shipping-methods-select it-exchange-right" data-it-exchange-product-cart-id="<?php esc_attr_e( $product->get_id() ); ?>" name="it-exchange-shipping-method-for-<?php esc_attr_e( $product->get_id() ); ?>" >
 								<?php foreach( $enabled_shipping_methods as $product_method ) : ?>
 									<?php if ( empty( $product_method->slug ) ) continue; ?>
 									<option value="<?php esc_attr_e( $product_method->slug ); ?>" <?php selected( $selected_multiple_method, $product_method->slug ); ?>>
 										<?php echo $product_method->label; ?>
-										(<?php echo it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product, true ); ?>)
+										(<?php echo it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product->get_data_to_save(), true ); ?>)
 									</option>
 								<?php endforeach; ?>
 							</select><br />
 							<?php
 						} else {
 							$product_method = reset( $enabled_shipping_methods );
-							it_exchange_update_multiple_shipping_method_for_cart_product( $product['product_cart_id'], $product_method->slug );
-							echo '<span class="it-exchange-right">' . $product_method->label . ' (' . it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product, true ) . ')</span>';
+							it_exchange_update_multiple_shipping_method_for_cart_product( $product->get_id(), $product_method->slug );
+							echo '<span class="it-exchange-right">' . $product_method->label . ' (' . it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product->get_data_to_save(), true ) . ')</span>';
 						}
 
 					echo '</div>';

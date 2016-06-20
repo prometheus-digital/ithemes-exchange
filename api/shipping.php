@@ -370,9 +370,9 @@ function it_exchange_get_available_shipping_methods_for_cart( $only_return_metho
 	$product_i = 0;
 
 	// Grab all the products in the cart
-	foreach( it_exchange_get_cart_products() as $cart_product ) {
+	foreach( it_exchange_get_current_cart()->get_items( 'product' ) as $cart_product ) {
 		// Skip foreach element if it isn't an exchange product - just to be safe
-		if ( empty( $cart_product['product_id'] ) || false === ( $product = it_exchange_get_product( $cart_product['product_id'] ) ) )
+		if ( ! ( $product = it_exchange_get_product( $cart_product->get_product()->ID ) ) )
 			continue;
 
 		// Skip product if it doesn't have shipping.
@@ -439,18 +439,22 @@ function it_exchange_get_available_shipping_methods_for_cart_products() {
  * @return mixed
 */
 function it_exchange_get_cart_shipping_cost( $shipping_method=false, $format_price=true ) {
-	if ( ! $cart_products = it_exchange_get_cart_products() )
+
+	$cart_products = it_exchange_get_current_cart()->get_items( 'product' );
+
+	if ( $cart_products->count() === 0 ) {
 		return false;
+	}
 
 	$cart_shipping_method = empty( $shipping_method ) ? it_exchange_get_cart_shipping_method() : $shipping_method;
 	$cart_cost       = 0;
 
-	foreach( (array) $cart_products as $cart_product ) {
-		if ( empty( $cart_product['product_id'] ) || ! it_exchange_product_has_feature( $cart_product['product_id'], 'shipping' ) )
+	foreach( $cart_products as $cart_product ) {
+		if ( ! $cart_product->get_product()->has_feature( 'shipping' ) )
 			continue;
 
 		if ( 'multiple-methods' == $cart_shipping_method )
-			$shipping_method = it_exchange_get_multiple_shipping_method_for_cart_product( $cart_product['product_cart_id'] );
+			$shipping_method = it_exchange_get_multiple_shipping_method_for_cart_product( $cart_product->get_id() );
 		else
 			$shipping_method = $cart_shipping_method;
 
@@ -458,7 +462,8 @@ function it_exchange_get_cart_shipping_cost( $shipping_method=false, $format_pri
 	}
 	$cart_cost = empty( $format_price ) ? $cart_cost : it_exchange_format_price( $cart_cost );
 	
-	return apply_filters( 'it_exchange_get_cart_shipping_cost', $cart_cost, $cart_shipping_method, $cart_products, $format_price );
+	return apply_filters( 'it_exchange_get_cart_shipping_cost',
+		$cart_cost, $cart_shipping_method, it_exchange_get_session_data( 'products' ), $format_price );
 }
 
 /**

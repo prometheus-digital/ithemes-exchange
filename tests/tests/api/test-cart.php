@@ -161,9 +161,7 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 		) );
 
 		$this->assertFalse( it_exchange_is_current_product_in_cart() );
-		it_exchange_add_cart_product( $ID . '-hash', array(
-			'product_id' => $ID
-		) );
+		it_exchange_add_product_to_shopping_cart( $ID );
 		$this->assertTrue( it_exchange_is_current_product_in_cart() );
 	}
 
@@ -173,9 +171,8 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 			'type'  => 'simple-product-type',
 			'title' => 'My Product'
 		) );
-		it_exchange_add_cart_product( $ID . '-hash', array(
-			'product_id' => $ID
-		) );
+
+		it_exchange_add_product_to_shopping_cart( $ID );
 
 		$_GET['sw-product'] = $ID;
 
@@ -192,9 +189,7 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 		) );
 
 		$this->assertFalse( it_exchange_is_product_in_cart( $ID ) );
-		it_exchange_add_cart_product( $ID . '-hash', array(
-			'product_id' => $ID
-		) );
+		it_exchange_add_product_to_shopping_cart( $ID );
 		$this->assertTrue( it_exchange_is_product_in_cart( $ID ) );
 	}
 
@@ -479,7 +474,7 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 
 		$cart_id = it_exchange_add_product_to_shopping_cart( $ID, 2, true );
 
-		$this->assertEquals( 2, it_exchange_get_cart_product_quantity( it_exchange_Get_cart_product( $cart_id ) ) );
+		$this->assertEquals( 2, it_exchange_get_cart_product_quantity( it_exchange_get_cart_product( $cart_id ) ) );
 	}
 
 	public function test_get_cart_product_quantity_defaults_to_0() {

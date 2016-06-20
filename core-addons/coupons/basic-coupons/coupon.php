@@ -199,9 +199,8 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 
 		$has_product = false;
 
-		foreach ( it_exchange_get_cart_products() as $product ) {
-
-			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product, $this ) ) {
+		foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product->get_data_to_save(), $this ) ) {
 				$has_product = true;
 
 				break;

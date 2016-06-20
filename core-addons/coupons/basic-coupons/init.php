@@ -448,11 +448,9 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount = fals
 		$method = $coupon->get_application_method();
 		$type   = $coupon->get_amount_type();
 
-		$cart_products = it_exchange_get_cart_products();
+		foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
 
-		foreach( $cart_products as $cart_product ) {
-
-			if ( it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $coupon ) || $method === IT_Exchange_Cart_Coupon::APPLY_CART ) {
+			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product->get_data_to_save(), $coupon ) || $method === IT_Exchange_Cart_Coupon::APPLY_CART ) {
 
 				$has_valid = true;
 
@@ -462,7 +460,7 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount = fals
 					break;
 				}
 
-				$base_price = it_exchange_get_cart_product_base_price( $cart_product, false );
+				$base_price = it_exchange_get_cart_product_base_price( $product->get_data_to_save(), false );
 
 				if ( $type === IT_Exchange_Cart_Coupon::TYPE_PERCENT ) {
 					$product_discount = ( $coupon->get_amount_number() / 100 ) * $base_price;
@@ -470,7 +468,7 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount = fals
 					$product_discount = $coupon->get_amount_number();
 				}
 
-				$product_discount *= $cart_product['count'];
+				$product_discount *= $product->get_quantity();
 				$discount += $product_discount;
 			}
 		}
