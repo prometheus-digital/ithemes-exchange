@@ -171,6 +171,12 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		unset( $items[ $item->get_id() ] );
 		$this->session->update_session_data( $type, $items );
 
+		if ( $item instanceof ITE_Aggregate_Line_Item ) {
+			foreach ( $item->get_line_items() as $aggregatable ) {
+				$this->delete( $aggregatable );
+			}
+		}
+
 		/**
 		 * Fires when a line item is deleted.
 		 *
