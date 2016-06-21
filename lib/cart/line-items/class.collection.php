@@ -107,6 +107,19 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	}
 
 	/**
+	 * Clone this collection with only items that pass the given callback.
+	 *
+	 * @since 1.36
+	 *
+	 * @param callable $callback
+	 *
+	 * @return \ITE_Line_Item_Collection
+	 */
+	public function filter( $callback ) {
+		return new self( array_filter( $this->items, $callback ), $this->repository );
+	}
+
+	/**
 	 * Calculate the total of all items in this collection.
 	 *
 	 * @since 1.36
