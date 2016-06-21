@@ -32,6 +32,11 @@ class ITE_Cart {
 	private $item_validators = array();
 
 	/**
+	 * @var bool
+	 */
+	private $doing_merge = false;
+
+	/**
 	 * ITE_Cart constructor.
 	 *
 	 * @param ITE_Line_Item_Repository $repository
@@ -82,6 +87,17 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Returns true if the cart is undergoing a merge.
+	 *
+	 * @since 1.36
+	 *
+	 * @return boolean
+	 */
+	public function is_doing_merge() {
+		return $this->doing_merge;
+	}
+
+	/**
 	 * Add a line item to the cart.
 	 *
 	 * @since 1.36
@@ -103,7 +119,6 @@ class ITE_Cart {
 
 		if ( ! method_exists( $this, $method ) || $this->{$method}( $item ) !== false ) {
 			$this->items[ $item->get_type() ][] = $item;
-			$this->get_repository()->save( $item );
 		}
 
 		if ( ( $coerce && ! $this->coerce( $item ) ) || ( ! $coerce && ! $this->validate() ) ) {
@@ -111,6 +126,8 @@ class ITE_Cart {
 
 			return false;
 		}
+
+		$this->get_repository()->save( $item );
 
 		/**
 		 * Fires when a line item is added to the cart.
@@ -146,8 +163,14 @@ class ITE_Cart {
 	 * @param bool   $flatten Whether to flatten aggregate line items.
 	 *
 	 * @return ITE_Line_Item_Collection|ITE_Line_Item[]
+	 *
+	 * @throws InvalidArgumentException If $type is invalid.
 	 */
 	public function get_items( $type = '', $flatten = false ) {
+
+		if ( $type ) {
+			self::assert_type( $type );
+		}
 
 		if ( $flatten ) {
 			$items = array();
@@ -198,11 +221,12 @@ class ITE_Cart {
 	 */
 	protected final function unravel( ITE_Aggregate_Line_Item $item ) {
 		$nested = array();
-		foreach ( $item->get_line_items() as $item ) {
-			if ( $item instanceof ITE_Aggregate_Line_Item ) {
-				$nested += $this->unravel( $item );
+
+		foreach ( $item->get_line_items() as $child ) {
+			if ( $child instanceof ITE_Aggregate_Line_Item ) {
+				$nested = array_merge( $nested, $this->unravel( $child ) );
 			} else {
-				$nested[] = $item;
+				$nested[] = $child;
 			}
 		}
 
@@ -218,12 +242,10 @@ class ITE_Cart {
 	 * @param string|int $id
 	 *
 	 * @return \ITE_Line_Item|null
+	 *
+	 * @throws InvalidArgumentException If $type is invalid.
 	 */
 	public function get_item( $type, $id ) {
-
-		if ( empty( $type ) || ! is_string( $type ) ) {
-			throw new InvalidArgumentException( '$type must be non-zero length string.' );
-		}
 
 		$items = $this->get_items( $type );
 
@@ -329,6 +351,11 @@ class ITE_Cart {
 		ITE_Cart_Product::generate_cart_product_id( $product );
 
 		if ( $dupe = $this->get_item( 'product', $product->get_id() ) ) {
+
+			if ( $this->is_doing_merge() ) {
+				return false; // Don't combine quantities when doing a merge
+			}
+
 			$dupe->set_quantity( $product->get_quantity() + $dupe->get_quantity() );
 			$dupe->persist( $this->get_repository() );
 
@@ -442,6 +469,55 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Merge another cart into this cart.
+	 *
+	 * @since 1.36
+	 *
+	 * @param \ITE_Cart $cart
+	 * @param bool      $coerce
+	 */
+	public function merge( ITE_Cart $cart, $coerce = true ) {
+
+		$this->doing_merge = true;
+		$cart->doing_merge = true;
+
+		/**
+		 * Fires before a cart has been merged into another cart.
+		 *
+		 * @since 1.36
+		 *
+		 * @param \ITE_Cart $this The primary cart.
+		 * @param \ITE_Cart $cart The cart being merged.
+		 * @param bool      $coerce
+		 */
+		do_action( 'it_exchange_merge_cart', $this, $cart, $coerce );
+
+		foreach ( $cart->get_items() as $item ) {
+			$this->add_item( $item, false );
+		}
+
+		$cart->remove_all();
+
+		if ( $coerce ) {
+			$this->coerce();
+		}
+
+		/**
+		 * Fires before a cart has been merged into another cart.
+		 *
+		 * @since 1.36
+		 *
+		 * @param \ITE_Cart $this The primary cart.
+		 * @param \ITE_Cart $cart The cart being merged.
+		 * @param bool      $coerce
+		 */
+		do_action( 'it_exchange_merged_cart', $this, $cart, $coerce );
+
+		$this->doing_merge = false;
+		$cart->doing_merge = false;
+	}
+
+	/**
 	 * Add a cart wide validator.
 	 *
 	 * @since 1.36
@@ -510,5 +586,20 @@ class ITE_Cart {
 	 */
 	public function get_repository() {
 		return $this->repository;
+	}
+
+	/**
+	 * Assert that the given type is valid.
+	 *
+	 * @since 1.36
+	 *
+	 * @param string $type
+	 *
+	 * @throws InvalidArgumentException
+	 */
+	protected static function assert_type( $type ) {
+		if ( ! is_string( $type ) || trim( $type ) === '' ) {
+			throw new InvalidArgumentException( '$type must be non-zero length string.' );
+		}
 	}
 }

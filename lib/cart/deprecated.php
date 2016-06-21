@@ -17,7 +17,7 @@
  */
 function ite_fire_deprecated_quantity_hook( ITE_Line_Item $item, ITE_Line_Item $old = null, ITE_Line_Item_Repository $repo ) {
 
-	if ( ! $repo instanceof ITE_Line_Item_Session_Repository ) {
+	if ( ! $repo instanceof ITE_Line_Item_Session_Repository || $repo instanceof ITE_Line_Item_Cached_Session_Repository ) {
 		return;
 	}
 

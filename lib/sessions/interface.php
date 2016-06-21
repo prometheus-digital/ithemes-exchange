@@ -1,11 +1,9 @@
 <?php
 /**
- * File Description
+ * Session Interface.
  *
- * @author    Iron Bound Designs
- * @since     1.0
- * @license   AGPL
- * @copyright Iron Bound Designs, 2016.
+ * @since   1.36
+ * @license GPLv2
  */
 
 /**

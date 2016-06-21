@@ -22,7 +22,9 @@ function it_exchange_get_current_cart() {
 	static $cart = null;
 
 	if ( $cart === null || true ) {
-		$cart = new \ITE_Cart( new ITE_Line_Item_Session_Repository( it_exchange_get_session() ) );
+		$cart = new \ITE_Cart(
+			new ITE_Line_Item_Session_Repository( it_exchange_get_session(), new ITE_Line_Item_Repository_Events() ) 
+		);
 		$cart->add_cart_validator( new ITE_Multi_Item_Cart_Validator() );
 		$cart->add_item_validator( new ITE_Multi_Item_Product_Validator() );
 	}
@@ -196,7 +198,7 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity = 1, $
 */
 function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, $add_to_existing = true ) {
 
-	if ( empty( $quantity ) || $quantity < 1 ) {
+	if ( ! is_numeric( $quantity ) || $quantity < 1 ) {
 		return it_exchange_get_current_cart()->remove_item( 'product', $cart_product_id );
 	}
 
@@ -262,7 +264,7 @@ function it_exchange_get_max_product_quantity_allowed( $product ) {
 */
 function it_exchange_empty_shopping_cart() {
 	do_action( 'it_exchange_before_empty_shopping_cart', it_exchange_get_session_data() );
-	it_exchange_get_current_cart()->remove_all( 'product' );
+	it_exchange_get_current_cart()->remove_all();
 	do_action( 'it_exchange_empty_shopping_cart' );
 }
 
@@ -275,13 +277,14 @@ function it_exchange_empty_shopping_cart() {
  *
  * @return void
 */
-function it_exchange_cache_customer_cart( $customer_id=false ) {
+function it_exchange_cache_customer_cart( $customer_id = false ) {
 	// Grab the current customer
-	$customer = empty( $customer_id ) ? it_exchange_get_current_customer() : it_exchange_get_customer( $customer_id );
+	$customer = ! $customer_id ? it_exchange_get_current_customer() : it_exchange_get_customer( $customer_id );
 
 	// Abort if we don't have a logged in customer
-	if ( empty( $customer->id ) )
+	if ( ! $customer || ! is_numeric( $customer->id ) || $customer->id <= 0 ) {
 		return;
+	}
 
 	$cart_data = it_exchange_get_cart_data();
 
@@ -297,18 +300,23 @@ function it_exchange_cache_customer_cart( $customer_id=false ) {
  *
  * @param  int|bool $customer_id the id of an exchange customer
  *
- * @return array|bool
+ * @return array|false
 */
-function it_exchange_get_cached_customer_cart( $customer_id=false ) {
+function it_exchange_get_cached_customer_cart( $customer_id = false ) {
 	// Grab the current customer
-	$customer = empty( $customer_id ) ? it_exchange_get_current_customer() : it_exchange_get_customer( $customer_id );
+	$customer = ! $customer_id ? it_exchange_get_current_customer() : it_exchange_get_customer( $customer_id );
 
 	// Abort if we don't have a logged in customer
-	if ( empty( $customer->id ) )
+	if ( ! $customer || ! is_numeric( $customer->id ) || $customer->id <= 0 ) {
 		return false;
+	}
 
 	// Grab the data
 	$cart = get_user_meta( $customer->id, '_it_exchange_cached_cart', true );
+
+	if ( ! is_array( $cart ) ) {
+		$cart = array();
+	}
 
 	return apply_filters( 'it_exchange_get_chached_customer_cart', $cart, $customer->id );
 }
@@ -318,24 +326,47 @@ function it_exchange_get_cached_customer_cart( $customer_id=false ) {
  *
  * @since 1.9.0
  *
- * @return void|bool
+ * @param int|bool $customer_id Pass false to retrieve the current customer's ID.
+ *
+ * @return void|false
 */
-function it_exchange_add_current_session_to_customer_active_carts( $customer_id=false ) {
+function it_exchange_add_current_session_to_customer_active_carts( $customer_id = false ) {
 
-	$customer_id = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
+	if ( ! $customer_id ) {
+		$customer_id = it_exchange_get_current_customer_id();
+	}
 
 	// Grab the current customer
 	$customer = it_exchange_get_customer( $customer_id );
 
 	// Abort if we don't have a logged in customer
-	if ( empty( $customer->id ) )
+	if ( ! $customer || ! is_numeric( $customer->id ) || $customer->id <= 0 ) {
 		return false;
+	}
+
+	if ( ! empty( $_GLOBALS['it_exchange']['logging_out_user'] ) ) {
+		return false;
+	}
 
 	// Get the current customer's session ID
 	$current_session_string  = it_exchange_get_session_id();
 	$current_session_parts   = explode( '||', $current_session_string );
-	$current_session_id      = empty( $current_session_parts[0] ) ? false : $current_session_parts[0];
-	$current_session_expires = empty( $current_session_parts[1] ) ? false : $current_session_parts[1];
+
+	if ( ! empty( $current_session_parts[0] ) ) {
+		$current_session_id = $current_session_parts[0];
+	} else {
+		return false;
+	}
+
+	if ( ! empty( $current_session_parts[1] ) ) {
+		$current_session_expires = $current_session_parts[1];
+	} else {
+		return false;
+	}
+
+	if ( ! $current_session_id || $current_session_expires ) {
+		return false;
+	}
 
 	// Get all active carts for customer (across devices / browsers )
 	$active_carts = it_exchange_get_active_carts_for_customer( false, $customer->id );
@@ -343,13 +374,8 @@ function it_exchange_add_current_session_to_customer_active_carts( $customer_id=
 	// Add or update current session data to active sessions
 	if ( ! isset( $active_carts[$current_session_id] ) || ( isset( $active_carts[$current_session_id] ) && $active_carts[$current_session_id] < time() ) ) {
 		$active_carts[$current_session_id] = $current_session_expires;
-
-		// Update user meta
-		if ( empty( $_GLOBALS['it_exchange']['logging_out_user'] ) ) {
-			update_user_meta( $customer->id, '_it_exchange_active_user_carts', $active_carts );
-		}
+		update_user_meta( $customer->id, '_it_exchange_active_user_carts', $active_carts );
 	}
-
 }
 
 /**
@@ -368,20 +394,21 @@ function it_exchange_remove_current_session_from_customer_active_carts() {
 /**
  * Grabs current active Users carts
  *
- * @since @1.9.0
+ * @since 1.9.0
  *
- * @param boolean $include_current_cart defaults to false
- * @param int $customer_id optional. uses current customer id if null
+ * @param bool     $include_current_cart defaults to false
+ * @param int|null $customer_id optional. uses current customer id if null
  *
  * @return array
 */
 function it_exchange_get_active_carts_for_customer( $include_current_cart=false, $customer_id=null ) {
 	// Get the customer
-	$customer = is_null( $customer_id ) ? it_exchange_get_current_customer() : it_exchange_get_customer( $customer_id );
+	$customer = null === $customer_id ? it_exchange_get_current_customer() : it_exchange_get_customer( $customer_id );
 
 	// Abort if we don't have a logged in customer
-	if ( empty( $customer->id ) )
+	if ( ! $customer || ! is_numeric( $customer->id ) || $customer->id <= 0 ) {
 		return apply_filters( 'it_exchange_get_active_carts_for_customer', array(), $customer_id );
+	}
 
 	// Get current session ID
 	$current_session_string = it_exchange_get_session_id();
@@ -393,8 +420,9 @@ function it_exchange_get_active_carts_for_customer( $include_current_cart=false,
 	$active_carts = get_user_meta( $customer->id, '_it_exchange_active_user_carts', true );
 
 	// If active_carts is false, this is probably the first call with no previously active carts, so add the current one.
-	if ( empty( $active_carts ) )
+	if ( ! is_array( $active_carts ) || count( $active_carts ) === 0 ) {
 		$active_carts = array( $current_session_id => $current_session_exp );
+	}
 
 	// Current time
 	$time = time();
@@ -402,13 +430,15 @@ function it_exchange_get_active_carts_for_customer( $include_current_cart=false,
 	// Loop through active sessions
 	foreach( (array) $active_carts as $session_id => $expires ) {
 		// Remove expired carts
-		if ( $time > $expires )
-			unset( $active_carts[$session_id] );
+		if ( $time > $expires ) {
+			unset( $active_carts[ $session_id ] );
+		}
 	}
 
 	// Remove current cart if not needed
-	if ( empty( $include_current_cart ) && isset( $active_carts[$current_session_id] ) )
-		unset( $active_carts[$current_session_id] );
+	if ( ! $include_current_cart && $current_session_id ) {
+		unset( $active_carts[ $current_session_id ] );
+	}
 
 	return apply_filters( 'it_exchange_get_active_carts_for_customer', $active_carts, $customer_id );
 }
@@ -418,55 +448,36 @@ function it_exchange_get_active_carts_for_customer( $include_current_cart=false,
  *
  * @since 1.9.0
  *
- * @param $user_login string
- * @param $user WP_User
+ * @deprecated 1.36.0
  *
- * @return bool|void
+ * @param $user_login string
+ * @param $user       WP_User
+ *
+ * @return void|false
 */
 function it_exchange_merge_cached_customer_cart_into_current_session( $user_login, $user ) {
 	// Grab the current customer
 	$customer = it_exchange_get_customer( $user->ID );
 
 	// Abort if we don't have a logged in customer
-	if ( empty( $customer->id ) )
+	if ( ! $customer || ! is_numeric( $customer->id ) || $customer->id <= 0 ) {
 		return false;
-
-	// Current Cart Products prior to merge
-	$current_products = it_exchange_get_cart_products();
-
-	// Grab cached cart data and insert into current sessio
-	$cached_cart = it_exchange_get_cached_customer_cart( $customer->id );
-
-	/**
-	 * Loop through data. Override non-product data.
-	 * If product exists in current cart, bump the quantity
-	*/
-	foreach( (array) $cached_cart as $key => $data ) {
-		if ( 'products' != $key || empty( $current_products ) ) {
-			it_exchange_update_cart_data( $key, $data );
-		} else {
-			foreach( (array) $data as $product_id => $product_data ) {
-				if ( ! empty( $current_products[$product_id]['count'] ) ) {
-					$data[$product_id]['count'] = $current_products[$product_id]['count'];
-					unset( $current_products[$product_id] );
-				}
-			}
-			// If current products hasn't been absored into cached cart, tack it to cached cart and load cached cart into current session
-			if ( is_array( $current_products ) && ! empty ( $current_products ) ) {
-				foreach( $current_products as $product_id => $product_atts ) {
-					$data[$product_id] = $product_atts;
-				}
-			}
-
-			it_exchange_update_cart_data( 'products', $data );
-		}
 	}
+
+	try {
+		it_exchange_get_current_cart()->merge(
+			new ITE_Cart( ITE_Line_Item_Cached_Session_Repository::from_customer( $customer ) )
+		);
+	} catch ( UnexpectedValueException $e ) {
+
+	}
+
 
 	// This is a new customer session after loggin in so add this session to active carts
 	it_exchange_add_current_session_to_customer_active_carts( $customer->id );
 
 	// If there are items in the cart, cache and sync
-	if ( it_exchange_get_cart_products() ) {
+	if ( it_exchange_get_current_cart()->get_items() ) {
 		it_exchange_cache_customer_cart( $customer->id );
 		it_exchange_sync_current_cart_with_all_active_customer_carts();
 	}
@@ -495,11 +506,13 @@ function it_exchange_sync_current_cart_with_all_active_customer_carts() {
  * Default is no. Addons must tell us yes as well as provide any pages needed for a cart / checkout / etc.
  *
  * @since 0.4.0
+ *        
+ * @param \ITE_Cart|null $cart
  *
  * @return boolean
 */
-function it_exchange_is_multi_item_cart_allowed() {
-	return apply_filters( 'it_exchange_multi_item_cart_allowed', false );
+function it_exchange_is_multi_item_cart_allowed( \ITE_Cart $cart = null ) {
+	return apply_filters( 'it_exchange_multi_item_cart_allowed', false, $cart ? $cart : it_exchange_get_current_cart() );
 }
 
 /**

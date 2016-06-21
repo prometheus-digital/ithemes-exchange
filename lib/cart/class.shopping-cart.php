@@ -599,8 +599,9 @@ class IT_Exchange_Shopping_Cart {
 	function sync_customer_active_carts() {
 
 		// Don't do this if user is logging out
-		if ( ! empty( $GLOBALS['it_exchange']['logging_out_user'] ) )
+		if ( ! empty( $GLOBALS['it_exchange']['logging_out_user'] ) ) {
 			return;
+		}
 
 		remove_action( 'it_exchange_clear_session', array( $this, 'sync_customer_active_carts' ) );
 		remove_action( 'it_exchange_clear_session_data', array( $this, 'sync_customer_active_carts' ) );

@@ -372,6 +372,11 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 * @inheritDoc
 	 */
 	public function add_item( ITE_Aggregatable_Line_Item $item ) {
+
+		if ( $item instanceof ITE_Tax_Line_Item && ! in_array( $item, $this->get_taxes(), true ) ) {
+			return $this->add_tax( $item );
+		}
+
 		$item->set_aggregate( $this );
 		$this->aggregate[] = $item;
 	}

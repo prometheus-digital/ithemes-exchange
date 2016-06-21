@@ -19,7 +19,7 @@ class ITE_Multi_Item_Cart_Validator implements ITE_Cart_Validator {
 	 * @inheritDoc
 	 */
 	public function validate( ITE_Cart $cart ) {
-		if ( it_exchange_is_multi_item_cart_allowed() ) {
+		if ( it_exchange_is_multi_item_cart_allowed( $cart ) ) {
 			return true;
 		}
 

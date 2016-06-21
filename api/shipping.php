@@ -458,7 +458,7 @@ function it_exchange_get_cart_shipping_cost( $shipping_method=false, $format_pri
 		else
 			$shipping_method = $cart_shipping_method;
 
-		$cart_cost = $cart_cost + it_exchange_get_shipping_method_cost_for_cart_item( $shipping_method, $cart_product );
+		$cart_cost += it_exchange_get_shipping_method_cost_for_cart_item( $shipping_method, $cart_product->get_data_to_save() );
 	}
 	$cart_cost = empty( $format_price ) ? $cart_cost : it_exchange_format_price( $cart_cost );
 	

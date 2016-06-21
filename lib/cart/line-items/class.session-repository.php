@@ -12,14 +12,21 @@
 class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 
 	/** @var IT_Exchange_SessionInterface */
-	private $session;
+	protected $session;
+
+	/** @var ITE_Line_Item_Repository_Events */
+	private $events;
 
 	/**
 	 * ITE_Line_Item_Session_Repository constructor.
 	 *
-	 * @param \IT_Exchange_SessionInterface $session
+	 * @param \IT_Exchange_SessionInterface    $session
+	 * @param \ITE_Line_Item_Repository_Events $events
 	 */
-	public function __construct( \IT_Exchange_SessionInterface $session ) { $this->session = $session; }
+	public function __construct( \IT_Exchange_SessionInterface $session, ITE_Line_Item_Repository_Events $events ) {
+		$this->session = $session;
+		$this->events  = $events;
+	}
 
 	/**
 	 * @inheritDoc
@@ -103,30 +110,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		$type = self::normalize_type( $item->get_type() );
 		$this->session->add_session_data( $type, array( $item->get_id() => $this->get_data( $item ) ) );
 
-		/**
-		 * Fires when a line item is saved.
-		 *
-		 * @since 1.36
-		 *
-		 * @param \ITE_Line_Item            $item
-		 * @param \ITE_Line_Item|null       $old
-		 * @param \ITE_Line_Item_Repository $repository
-		 */
-		do_action( 'it_exchange_save_line_item', $item, $old, $this );
-
-		/**
-		 * Fires when a line item is saved.
-		 *
-		 * The dynamic portion of this hook refers to the type of the line item being saved.
-		 * Ex: 'product' or 'tax'.
-		 *
-		 * @since 1.36
-		 *
-		 * @param \ITE_Line_Item            $item
-		 * @param \ITE_Line_Item|null       $old
-		 * @param \ITE_Line_Item_Repository $repository
-		 */
-		do_action( "it_exchange_save_{$item->get_type()}_item", $item, $old, $this );
+		$this->events->on_save( $item, $old, $this );
 	}
 
 	/**
@@ -150,11 +134,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 
 			$old = $olds[ $item->get_type() ][ $item->get_id() ];
 
-			// This hook is documented in lib/cart/line-items/class.session-repository.php
-			do_action( 'it_exchange_save_line_item', $item, $old, $this );
-
-			// This hook is documented in lib/cart/line-items/class.session-repository.php
-			do_action( "it_exchange_save_{$item->get_type()}_item", $item, $old, $this );
+			$this->events->on_save( $item, $old, $this );
 		}
 
 		return true;
@@ -177,28 +157,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			}
 		}
 
-		/**
-		 * Fires when a line item is deleted.
-		 *
-		 * @since 1.36
-		 *
-		 * @param \ITE_Line_Item            $item
-		 * @param \ITE_Line_Item_Repository $repository
-		 */
-		do_action( 'it_exchange_delete_line_item', $item, $this );
-
-		/**
-		 * Fires when a line item is deleted.
-		 *
-		 * The dynamic portion of this hook refers to the type of the line item being saved.
-		 * Ex: 'product' or 'tax'.
-		 *
-		 * @since 1.36
-		 *
-		 * @param \ITE_Line_Item            $item
-		 * @param \ITE_Line_Item_Repository $repository
-		 */
-		do_action( "it_exchange_delete_{$item->get_type()}_item", $item, $this );
+		$this->events->on_delete( $item, $this );
 
 		return true;
 	}
@@ -275,7 +234,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 
 		$this->set_additional_properties( $item, $_data, $aggregate );
 
-		return $item;
+		return $this->events->on_get( $item, $this );
 	}
 
 	/**
@@ -291,41 +250,74 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	 */
 	protected final function set_additional_properties( ITE_Line_Item $item, array $data, ITE_Aggregate_Line_Item $aggregate = null ) {
 
-		$parent        = isset( $data['_parent'] ) ? $data['_parent'] : null;
-		$aggregatables = isset( $data['_aggregate'] ) ? $data['_aggregate'] : array();
+		$this->set_repository( $item );
+		$this->set_aggregate( $item, $data, $aggregate );
+		$this->set_aggregatables( $item, $data );
+	}
 
+	/**
+	 * Set the repository for a line item if necessary.
+	 *
+	 * @since 1.36
+	 *
+	 * @param \ITE_Line_Item $item
+	 */
+	protected final function set_repository( ITE_Line_Item $item ) {
 		if ( $item instanceof ITE_Line_Item_Repository_Aware ) {
 			$item->set_line_item_repository( $this );
 		}
+	}
 
-		if ( $parent && $item instanceof ITE_Aggregatable_Line_Item ) {
+	/**
+	 * Set the aggregate on a line item if necessary.
+	 *
+	 * @since 1.36
+	 *
+	 * @param \ITE_Line_Item                $item
+	 * @param array                         $data
+	 * @param \ITE_Aggregate_Line_Item|null $aggregate
+	 */
+	protected final function set_aggregate( ITE_Line_Item $item, array $data, ITE_Aggregate_Line_Item $aggregate = null ) {
 
-			if ( ! $aggregate ) {
-				$aggregate = $this->get( $parent['type'], $parent['id'] );
+		if ( $item instanceof ITE_Aggregatable_Line_Item && ! empty( $data['_parent'] ) ) {
+
+			if ( ! $aggregate && ! empty( $data['_parent']['type'] ) && ! empty( $data['_parent']['id'] ) ) {
+				$aggregate = $this->get( $data['_parent']['type'], $data['_parent']['type'] );
 			}
 
 			if ( $aggregate instanceof ITE_Aggregate_Line_Item ) {
 				$item->set_aggregate( $aggregate );
 			}
 		}
+	}
 
-		if ( $aggregatables && $item instanceof ITE_Aggregate_Line_Item ) {
-			foreach ( $aggregatables as $aggregatable ) {
+	/**
+	 * Set the aggregatable line items on the given line item if necessary.
+	 *
+	 * @since 1.36
+	 *
+	 * @param \ITE_Line_Item $item
+	 * @param array          $data
+	 */
+	protected final function set_aggregatables( ITE_Line_Item $item, array $data ) {
 
-				$all_of_type = $this->session->get_session_data( self::normalize_type( $aggregatable['type'] ) );
+		if ( $item instanceof ITE_Aggregate_Line_Item && ! empty( $data['_aggregate'] ) ) {
+			foreach ( $data['_aggregate'] as $aggregatable_data ) {
 
-				if ( ! $all_of_type || ! isset( $aggregatable['id'] ) ) {
+				$all_of_type = $this->session->get_session_data( self::normalize_type( $aggregatable_data['type'] ) );
+
+				if ( ! $all_of_type || empty( $aggregatable_data['id'] ) ) {
 					continue;
 				}
 
-				$id = $aggregatable['id'];
+				$id = $aggregatable_data['id'];
 
 				if ( isset( $all_of_type[ $id ] ) ) {
-					$aggregate = $this->construct_item( $id, $all_of_type[ $id ], $item );
-				}
+					$aggregatable = $this->construct_item( $id, $all_of_type[ $id ], $item );
 
-				if ( $aggregate instanceof ITE_Aggregatable_Line_Item ) {
-					$item->add_item( $aggregate );
+					if ( $aggregatable instanceof ITE_Aggregatable_Line_Item ) {
+						$item->add_item( $aggregatable );
+					}
 				}
 			}
 		}
