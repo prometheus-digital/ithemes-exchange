@@ -263,9 +263,7 @@ function it_exchange_get_max_product_quantity_allowed( $product ) {
  * @return void
 */
 function it_exchange_empty_shopping_cart() {
-	do_action( 'it_exchange_before_empty_shopping_cart', it_exchange_get_session_data() );
-	it_exchange_get_current_cart()->remove_all();
-	do_action( 'it_exchange_empty_shopping_cart' );
+	it_exchange_get_current_cart()->empty_cart();
 }
 
 /**

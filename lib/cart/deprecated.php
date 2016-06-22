@@ -96,6 +96,38 @@ function ite_fire_deprecated_delete_cart_product_hook( ITE_Cart_Product $product
 
 add_action( 'it_exchange_remove_product_from_cart', 'ite_fire_deprecated_delete_cart_product_hook', 10, 2 );
 
+/**
+ * Fire deprecated empty cart hook.
+ * 
+ * @since 1.36
+ * 
+ * @param \ITE_Cart $cart
+ */
+function ite_fire_deprecated_empty_cart_hook( ITE_Cart $cart ) {
+	
+	if ( $cart->is_current() ) {
+		do_action( 'it_exchange_before_empty_shopping_cart', it_exchange_get_session_data() );
+	}
+}
+
+add_action( 'it_exchange_empty_cart', 'ite_fire_deprecated_empty_cart_hook' );
+
+/**
+ * Fire deprecated emptied cart hook.
+ * 
+ * @since 1.36
+ * 
+ * @param \ITE_Cart $cart
+ */
+function ite_fire_deprecated_emptied_cart_hook( ITE_Cart $cart ) {
+
+	if ( $cart->is_current() ) {
+		do_action( 'it_exchange_empty_shopping_cart' );
+	}
+}
+
+add_action( 'it_exchange_emptied_cart', 'ite_fire_deprecated_emptied_cart_hook' );
+
 /* === Deprecate API Functions === */
 
 /**

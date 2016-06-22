@@ -83,7 +83,9 @@ class ITE_Cart {
 	 * @return bool
 	 */
 	public function is_current() {
-		return $this->get_repository() instanceof ITE_Line_Item_Session_Repository;
+		return
+			$this->get_repository() instanceof ITE_Line_Item_Session_Repository &&
+			! $this->get_repository() instanceof ITE_Line_Item_Cached_Session_Repository;
 	}
 
 	/**
@@ -466,6 +468,36 @@ class ITE_Cart {
 		}
 
 		return $valid;
+	}
+
+	/**
+	 * Empty the cart.
+	 *
+	 * @since 1.36
+	 */
+	public function empty_cart() {
+
+		/**
+		 * Fires when the cart is about to be emptied.
+		 *
+		 * @since 1.36
+		 *
+		 * @param \ITE_Cart $cart
+		 */
+		do_action( 'it_exchange_empty_cart', $this );
+
+		$items = $this->get_items();
+		$this->remove_all();
+
+		/**
+		 * Fires when the cart was just emptied.
+		 *
+		 * @since 1.36
+		 *
+		 * @param \ITE_Cart                 $cart
+		 * @param \ITE_Line_Item_Collection $items Items removed from the cart.
+		 */
+		do_action( 'it_exchange_emptied_cart', $this, $items );
 	}
 
 	/**
