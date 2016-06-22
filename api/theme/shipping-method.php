@@ -119,7 +119,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 			<div class="it-exchange-itemized-checkout-methods it-exchange-clearfix">
 				<?php
 				foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
-					if ( ! $product->has_feature( 'shipping' ) )
+					if ( ! $product->get_product()->has_feature( 'shipping' ) )
 						continue;
 
 					echo '<div class="it-exchange-itemized-checkout-method">';
