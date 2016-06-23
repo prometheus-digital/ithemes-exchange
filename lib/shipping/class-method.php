@@ -8,27 +8,32 @@ abstract class IT_Exchange_Shipping_Method {
 	/**
 	 * @var string $slug the identifying key of the shipping feature
 	*/
-	var $slug;
+	public $slug;
+
+	/**
+	 * @var string
+	 */
+	public $label;
 
 	/**
 	 * @var object $product the current product object
 	*/
-	var $product  = false;
+	public $product  = false;
 
 	/**
 	 * @var boolean $enabled is this shipping feature enabled
 	*/
-	var $enabled = false;
+	public $enabled = false;
 
 	/**
 	 * @var boolean $available is this shipping feature available to the current product
 	*/
-	var $available = false;
+	public $available = false;
 
 	/**
 	 * @var array $settings the fields that will be added to the settings page of the provider
 	*/
-	var $settings = array();
+	public $settings = array();
 
 	/**
 	 * Class constructor
@@ -37,7 +42,7 @@ abstract class IT_Exchange_Shipping_Method {
 	 *
 	 * @param int|bool $product_id exchange product id or empty to attempt to pick up the global product
 	*/
-	function __construct( $product_id=false ) {
+	public function __construct( $product_id=false ) {
 
 		// Set slug
 		$this->set_slug();
@@ -61,7 +66,7 @@ abstract class IT_Exchange_Shipping_Method {
 		$this->set_features();
 	}
 
-	abstract function set_slug();
+	abstract public function set_slug();
 
 	/**
 	 * Sets the product if one is available
@@ -72,7 +77,7 @@ abstract class IT_Exchange_Shipping_Method {
 	 * @param  int  $product exchange product id or empty to attempt to pick up the global product
 	 * @return void
 	*/
-	function set_product( $product_id=false ) {
+	public function set_product( $product_id=false ) {
 		$product = false;
 
 		// If a product ID is passed, use it
@@ -116,19 +121,19 @@ abstract class IT_Exchange_Shipping_Method {
 	 *
 	 * @return void
 	*/
-	abstract function set_availability();
+	abstract public function set_availability();
 
-	abstract function set_label();
+	abstract public function set_label();
 
-	abstract function set_settings();
+	abstract public function set_settings();
 
-	abstract function set_enabled();
+	abstract public function set_enabled();
 
-	abstract function set_features();
+	abstract public function set_features();
 
-	abstract function get_shipping_cost_for_product( $cart_product );
+	abstract public function get_shipping_cost_for_product( $cart_product );
 
-	function add_setting( $setting ) {
+	public function add_setting( $setting ) {
 		$settings = (array) $this->settings;
 		$this->settings[] = $setting;
 	}

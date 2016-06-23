@@ -25,9 +25,11 @@ require_once dirname( __FILE__ ) . '/line-items/interface.aggregatable.php';
 require_once dirname( __FILE__ ) . '/line-items/interface.aggregate.php';
 require_once dirname( __FILE__ ) . '/line-items/interface.tax.php';
 require_once dirname( __FILE__ ) . '/line-items/interface.taxable.php';
+require_once dirname( __FILE__ ) . '/line-items/interface.shipping.php';
 
 require_once dirname( __FILE__ ) . '/line-items/class.cart-product.php';
 require_once dirname( __FILE__ ) . '/line-items/class.simple-tax.php';
+require_once dirname( __FILE__ ) . '/line-items/class.base-shipping.php';
 require_once dirname( __FILE__ ) . '/line-items/class.collection.php';
 
 require_once dirname( __FILE__ ) . '/validators/class.multi-item-cart.php';

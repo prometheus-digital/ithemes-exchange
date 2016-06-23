@@ -8,7 +8,9 @@
 */
 function it_exchange_addon_simple_shipping_register_free_shipping_method() {
 	// Exchange Free Shipping Method
-	it_exchange_register_shipping_method( 'exchange-free-shipping', 'IT_Exchange_Simple_Shipping_Free_Method' );
+	it_exchange_register_shipping_method( 'exchange-free-shipping', 'IT_Exchange_Simple_Shipping_Free_Method', array(
+		'provider' => 'simple-shipping'
+	) );
 }
 add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_addon_simple_shipping_register_free_shipping_method' );
 
