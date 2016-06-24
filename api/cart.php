@@ -223,16 +223,18 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
  * @since 1.35
  *
  * @param int|WP_Post|IT_Exchange_Product $product
+ * @param string                          $cart_product_id
  *
  * @return int|string Empty string if max product quantity allowed is unlimited.
  */
-function it_exchange_get_max_product_quantity_allowed( $product ) {
+function it_exchange_get_max_product_quantity_allowed( $product, $cart_product_id = '' ) {
 
 	$product = it_exchange_get_product( $product );
 
 	// If we don't support purchase quanity, quantity will always be 1
 	if ( ! $product->supports_feature( 'purchase-quantity' ) ) {
-		return 1;
+		// This filter is documented in api/cart.php
+		return apply_filters( 'it_exchange_get_max_product_quantity_allowed', 1, $product, $cart_product_id );
 	}
 
 	// Get max quantity setting
@@ -249,10 +251,21 @@ function it_exchange_get_max_product_quantity_allowed( $product ) {
 	}
 
 	if ( $inventory && $max_purchase_quantity > $inventory ) {
-		return $inventory;
+		$allowed = $inventory;
 	} else {
-		return $max_purchase_quantity;
+		$allowed = $max_purchase_quantity;
 	}
+
+	/**
+	 * Filter the maximum product quantity allowed to be purchased.
+	 * 
+	 * @since 1.35.7
+	 *        
+	 * @param int                 $allowed          Maximum quantity allowed.
+	 * @param IT_Exchange_Product $product          Product being purchased.
+	 * @param string              $cart_product_id  Cart product ID. May be empty if new purchase request.
+	 */
+	return apply_filters( 'it_exchange_get_max_product_quantity_allowed', $allowed, $product, $cart_product_id );
 }
 
 /**
@@ -1004,4 +1017,17 @@ function it_exchange_get_cart_id() {
 */
 function it_exchange_remove_cart_id() {
 	it_exchange_remove_cart_data( 'cart_id' );
+}
+
+/**
+ * Are we doing guest checkout?
+ *
+ * @since 1.6.0
+ * @since 1.35.7 Move
+ *
+ * @return boolean
+ */
+function it_exchange_doing_guest_checkout() {
+	$data = it_exchange_get_cart_data( 'guest-checkout' );
+	return ! empty( $data[0] );
 }

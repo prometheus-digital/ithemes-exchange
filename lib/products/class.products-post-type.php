@@ -616,18 +616,22 @@ class IT_Exchange_Product_Post_Type {
 	 * @return array  modified columns array
 	*/
 	function it_exchange_product_columns( $existing ) {
+
 		add_filter( 'the_excerpt', array( $this, 'replace_excerpt_in_products_table_with_description' ) );
-		$columns['cb']                                = '<input type="checkbox" />';
-		$columns['title']                             = __( 'Title', 'it-l10n-ithemes-exchange' );
-		$columns['it_exchange_product_price']         = __( 'Price', 'it-l10n-ithemes-exchange' );
-		$columns['it_exchange_product_show_in_store'] = __( 'Show in Store', 'it-l10n-ithemes-exchange' );
-		$columns['it_exchange_product_inventory']     = __( 'Inventory', 'it-l10n-ithemes-exchange' );
-		$columns['it_exchange_product_purchases']     = __( 'Purchases', 'it-l10n-ithemes-exchange' );
+
+		unset( $existing['date'], $existing['author'], $existing['comments'] );
+
+		$existing['cb']                                = '<input type="checkbox" />';
+		$existing['title']                             = __( 'Title', 'it-l10n-ithemes-exchange' );
+		$existing['it_exchange_product_price']         = __( 'Price', 'it-l10n-ithemes-exchange' );
+		$existing['it_exchange_product_show_in_store'] = __( 'Show in Store', 'it-l10n-ithemes-exchange' );
+		$existing['it_exchange_product_inventory']     = __( 'Inventory', 'it-l10n-ithemes-exchange' );
+		$existing['it_exchange_product_purchases']     = __( 'Purchases', 'it-l10n-ithemes-exchange' );
 
 		if ( 1 < count( it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) ) ) )
-			$columns['it_exchange_product_type']          = __( 'Product Type', 'it-l10n-ithemes-exchange' );
+			$existing['it_exchange_product_type']          = __( 'Product Type', 'it-l10n-ithemes-exchange' );
 
-		return $columns;
+		return $existing;
 	}
 
 	/**

@@ -710,6 +710,7 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id ) {
 		'BUTTONCODE'     => 'ENCRYPTED',
 		'BUTTONIMAGE'    => 'REG',
 		'BUYNOWTEXT'     => 'PAYNOW',
+		'bn'             => 'iThemes_SP'
 	);
 
 	$upgrade_downgrade = it_exchange_get_session_data( 'updowngrade_details' );
