@@ -177,7 +177,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			'_class' => get_class( $item )
 		);
 
-		if ( $item instanceof ITE_Aggregatable_Line_Item ) {
+		if ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) {
 			$additional['_parent'] = array(
 				'type' => $item->get_aggregate()->get_type(),
 				'id'   => $item->get_aggregate()->get_id(),

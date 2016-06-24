@@ -169,7 +169,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 
 	public function get_shipping_cost_for_product( $cart_product ) {
 		$count = empty( $cart_product['count'] ) ? 1 : $cart_product['count'];
-		$cost = it_exchange_get_shipping_feature_for_product( 'exchange-flat-rate-shipping-cost', $this->product->ID );
+		$cost = it_exchange_get_shipping_feature_for_product( 'exchange-flat-rate-shipping-cost', $cart_product['product_id']);
 		$cost = empty( $cost->cost ) ? 0 : $cost->cost;
 		$cost = it_exchange_convert_from_database_number( $cost );
 		return $cost * $count;

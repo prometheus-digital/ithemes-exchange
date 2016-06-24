@@ -63,7 +63,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item {
 	 * @inheritDoc
 	 */
 	public function get_id() {
-		return $this->get_method()->slug;
+		return $this->id;
 	}
 
 	/**
@@ -91,7 +91,11 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item {
 	 * @inheritDoc
 	 */
 	public function get_amount() {
-		return $this->aggregate ? $this->get_method()->get_shipping_cost_for_product( $this->aggregate->get_data_to_save() ) : 0;
+		if ( $this->aggregate ) {
+			return $this->get_method()->get_shipping_cost_for_product( $this->aggregate->get_data_to_save() );
+		} else {
+			return $this->get_method()->get_additional_cost_for_cart( it_exchange_get_current_cart() );
+		}
 	}
 
 	/**
@@ -186,7 +190,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item {
 
 		$self = new self(
 			it_exchange_get_registered_shipping_method( $data['method'] ),
-			it_exchange_get_registered_shipping_provider( $data['slug'] ),
+			it_exchange_get_registered_shipping_provider( $data['provider'] ),
 			$data['cart_wide']
 		);
 

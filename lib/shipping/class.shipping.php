@@ -10,7 +10,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * Constructor.
 	 */
-	function __construct() {
+	public function __construct() {
 		// We need to include the abstract methods class regardless
 		include_once( dirname( __FILE__ ) . '/class-method.php' );
 		include_once( dirname( __FILE__ ) . '/class-shipping-feature.php' );
@@ -23,14 +23,14 @@ class IT_Exchange_Shipping {
 	 *
 	 * @deprecated
 	 */
-	function IT_Exchange_Shipping() {
+	public function IT_Exchange_Shipping() {
 
 		self::__construct();
 
 		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
 
-	function maybe_init() {
+	public function maybe_init() {
 		$enabled_shipping_addons = (boolean) it_exchange_get_enabled_addons( array( 'category' => 'shipping' ) );
 		if ( !$enabled_shipping_addons )
 			return; //If not shipping addons, just exit this class
@@ -73,15 +73,15 @@ class IT_Exchange_Shipping {
 		add_action( 'wp_head', array( $this, 'add_js_to_checkout_header' ) );
 
 		// Adjusts the cart total
-		add_filter( 'it_exchange_get_cart_total', array( $this, 'modify_shipping_total' ) );
+		//add_filter( 'it_exchange_get_cart_total', array( $this, 'modify_shipping_total' ) );
 
 		// Remove Shipping information from cart data when cart is emptied or when item is added to cart
 		add_action( 'it_exchange_empty_shopping_cart', array( $this, 'clear_cart_shipping_data' ) );
-		add_action( 'it_exchange_add_cart_product', array( $this, 'clear_cart_shipping_data' ) );
-		add_action( 'it_exchange_update_cart_product', array( $this, 'clear_cart_shipping_data' ) );
+		/* add_action( 'it_exchange_add_cart_product', array( $this, 'clear_cart_shipping_data' ) );
+		add_action( 'it_exchange_update_cart_product', array( $this, 'clear_cart_shipping_data' ) );*/
 		add_action( 'it_exchange_delete_cart_product', array( $this, 'clear_cart_shipping_data' ) );
 		add_action( 'it_exchange_shipping_address_updated', array( $this, 'clear_cart_shipping_method' ) );
-		
+
 		add_action( 'it_exchange_replace_order_table_tag_before_total_row', array( $this, 'add_shipping_to_order_table_tag_before_total_row' ), 10, 2 );
 
 	}
@@ -90,7 +90,7 @@ class IT_Exchange_Shipping {
 	 * Init Shipping Address Purchase Requirement
 	 *
 	*/
-	function init_shipping_address_purchase_requirements() {
+	public function init_shipping_address_purchase_requirements() {
 		if ( is_admin() )
 			return;
 		$this->register_shipping_address_purchase_requirement();
@@ -100,14 +100,14 @@ class IT_Exchange_Shipping {
 	/**
 	 * Registers the shipping address purchase requirement
 	 *
-	 * Use the it_exchange_register_purchase_requirement function to tell exchange
+	 * Use the it_exchange_register_purchase_requirement public function to tell exchange
 	 * that your add-on requires certain conditionals to be set prior to purchase.
 	 * For more details see api/misc.php
 	 *
 	 * @since  1.4.0
 	 * @return void
 	*/
-	function register_shipping_address_purchase_requirement() {
+	public function register_shipping_address_purchase_requirement() {
 		// User must have a shipping address to purchase
 		$properties = array(
 			'requirement-met'        => 'it_exchange_get_customer_shipping_address', // This is a PHP callback
@@ -124,14 +124,14 @@ class IT_Exchange_Shipping {
 	/**
 	 * Registers the shipping method purchase requirement
 	 *
-	 * Use the it_exchange_register_purchase_requirement function to tell exchange
+	 * Use the it_exchange_register_purchase_requirement public function to tell exchange
 	 * that your add-on requires certain conditionals to be set prior to purchase.
 	 * For more details see api/misc.php
 	 *
 	 * @since  1.4.0
 	 * @return void
 	*/
-	function register_shipping_method_purchase_requirement() {
+	public function register_shipping_method_purchase_requirement() {
 		// User must have a shipping address to purchase
 		$properties = array(
 			'requirement-met'        => 'it_exchange_get_cart_shipping_method', // This is a PHP callback
@@ -153,7 +153,7 @@ class IT_Exchange_Shipping {
 	 * @param  string $current_tab the current tab being requested
 	 * @return void
 	*/
-	function print_shipping_tab_link( $current_tab ) {
+	public function print_shipping_tab_link( $current_tab ) {
 		$active = 'shipping' == $current_tab ? 'nav-tab-active' : '';
 		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=shipping' ); ?>"><?php _e( 'Shipping', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
@@ -161,13 +161,13 @@ class IT_Exchange_Shipping {
 	/**
 	 * Register the callback for the settings page
 	 *
-	 * I hate that this was setup like this. Seems like an uneeded function
+	 * I hate that this was setup like this. Seems like an uneeded public function
 	 *
 	 * @since 1.4.0
 	 *
 	 * @return string the callback
 	*/
-	function register_settings_tab_callback() {
+	public function register_settings_tab_callback() {
 		return apply_filters( 'it_exchange_shipping_register_settings_tab_callback', array( $this, 'print_shipping_tab' ) );
 	}
 
@@ -182,7 +182,7 @@ class IT_Exchange_Shipping {
 	 *
 	 * @return void
 	*/
-	function print_shipping_tab() {
+	public function print_shipping_tab() {
 		$settings = it_exchange_get_option( 'addon_shipping', true );
 
 		?>
@@ -225,7 +225,7 @@ class IT_Exchange_Shipping {
 	 *
 	 * @return html
 	*/
-	function print_provider_settings_tabs() {
+	public function print_provider_settings_tabs() {
 
 		// Return empty string if there aren't any registered shipping providers
 		if ( ! $providers = it_exchange_get_registered_shipping_providers() )
@@ -260,7 +260,7 @@ class IT_Exchange_Shipping {
 	 *
 	 * @return array
 	*/
-	function get_general_settings_country_states_js() {
+	public function get_general_settings_country_states_js() {
 		$country_state_option = array(
 			'country-id'        => 'product-ships-from-country',
 			'states-id'         => '#product-ships-from-state',
@@ -276,7 +276,7 @@ class IT_Exchange_Shipping {
 	 *
 	 * @return array
 	*/
-	function get_general_settings_fields() {
+	public function get_general_settings_fields() {
 		$form_fields = array(
 			array(
 				'type'  => 'heading',
@@ -412,7 +412,7 @@ class IT_Exchange_Shipping {
 	 * @param array $elements list of existing elements
 	 * @return array
 	*/
-	function add_shipping_to_template_totals_loops( $elements ) {
+	public function add_shipping_to_template_totals_loops( $elements ) {
 
 		// Abort of total number of shipping methods available to cart is 0
 		if ( count( it_exchange_get_available_shipping_methods_for_cart() ) < 1 )
@@ -435,7 +435,7 @@ class IT_Exchange_Shipping {
 	 * @param array $loops list of existing elements
 	 * @return array
 	*/
-	function add_shipping_address_to_sw_template_totals_loops( $loops ) {
+	public function add_shipping_address_to_sw_template_totals_loops( $loops ) {
 
 		// Abort of total number of shipping methods available to cart is 0
 		if ( count( it_exchange_get_available_shipping_methods_for_cart() ) < 1 )
@@ -459,7 +459,7 @@ class IT_Exchange_Shipping {
 	 * @param array $loops list of existing elements
 	 * @return array
 	*/
-	function add_shipping_method_to_sw_template_totals_loops( $loops ) {
+	public function add_shipping_method_to_sw_template_totals_loops( $loops ) {
 
 		// Abort of total number of shipping methods available to cart is 0
 		if ( count( it_exchange_get_available_shipping_methods_for_cart() ) < 1 )
@@ -489,7 +489,7 @@ class IT_Exchange_Shipping {
 	 *
 	 * @return void
 	*/
-	function process_ajax_request() {
+	public function process_ajax_request() {
 		// Parse data
 		$name     = empty( $_POST['shippingName'] ) ? false : $_POST['shippingName'];
 		$address1 = empty( $_POST['shippingAddress1'] ) ? false : $_POST['shippingAddress1'];
@@ -499,14 +499,14 @@ class IT_Exchange_Shipping {
 		$zip      = empty( $_POST['shippingZip'] ) ? false : $_POST['shippingZip'];
 		$country  = empty( $_POST['shippingCountry'] ) ? false : $_POST['shippingCountry'];
 		$customer = empty( $_POST['shippingCustomer'] ) ? false : $_POST['shippingCustomer'];
-		
+
 		$required_fields = apply_filter( 'it_exchange_required_shipping_address_fields', array( 'name', 'address1', 'city', 'state', 'zip', 'country', 'customer' ) );
-		
+
 		$states = it_exchange_get_data_set( 'states', array( 'country' => $country ) );
 		if ( empty( $states ) && $key = array_search( 'state', $required_fields ) ) {
 			unset( $required_fields[$key] );
 		}
-		
+
 		foreach( $required_fields as $field ) {
 			if ( !$$field ) {
 				$invalid = true;
@@ -539,7 +539,7 @@ class IT_Exchange_Shipping {
 	 *
 	 * @return void
 	*/
-	function process_update_address_request() {
+	public function process_update_address_request() {
 
 		// Abandon if not processing
 		if ( ! it_exchange_is_page( 'checkout' ) || empty( $_POST['it-exchange-shipping-add-address-from-checkout'] ) )
@@ -553,14 +553,14 @@ class IT_Exchange_Shipping {
 		$state    = empty( $_POST['it-exchange-addon-shipping-state'] ) ? false : $_POST['it-exchange-addon-shipping-state'];
 		$zip      = empty( $_POST['it-exchange-addon-shipping-zip'] ) ? false : $_POST['it-exchange-addon-shipping-zip'];
 		$country  = empty( $_POST['it-exchange-addon-shipping-country'] ) ? false : $_POST['it-exchange-addon-shipping-country'];
-		
-		$required_fields = apply_filter( 'it_exchange_required_shipping_address_fields', array( 'name', 'address1', 'city', 'state', 'zip', 'country' ) );
-		
+
+		$required_fields = apply_filters( 'it_exchange_required_shipping_address_fields', array( 'name', 'address1', 'city', 'state', 'zip', 'country' ) );
+
 		$states = it_exchange_get_data_set( 'states', array( 'country' => $country ) );
 		if ( empty( $states ) && $key = array_search( 'state', $required_fields ) ) {
 			unset( $required_fields[$key] );
-		}		
-			
+		}
+
 		foreach( $required_fields as $field ) {
 			if ( !$$field ) {
 				$invalid = true;
@@ -588,7 +588,7 @@ class IT_Exchange_Shipping {
 	 *
 	 * @return void
 	*/
-	function clear_cart_address() {
+	public function clear_cart_address() {
 		it_exchange_remove_cart_data( 'shipping-address' );
 	}
 
@@ -600,7 +600,7 @@ class IT_Exchange_Shipping {
 	 * @param $total the total passed to us by Exchange.
 	 * @return
 	*/
-	function modify_shipping_total( $total ) {
+	public function modify_shipping_total( $total ) {
 		$shipping = it_exchange_get_cart_shipping_cost( false, false );
 		return $total + $shipping;
 	}
@@ -613,7 +613,7 @@ class IT_Exchange_Shipping {
 	 *
 	 * @return void
 	*/
-	function enqueue_checkout_page_scripts() {
+	public function enqueue_checkout_page_scripts() {
 		if ( it_exchange_is_page( 'checkout' )  ) {
 			// Register select to autocomplte
 			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' );
@@ -634,7 +634,7 @@ class IT_Exchange_Shipping {
 	 *
 	 * @since 1.4.0
 	*/
-	function enqueue_settings_js() {
+	public function enqueue_settings_js() {
 		$current_screen = get_current_screen();
 		if ( ! empty( $current_screen->base ) && 'exchange_page_it-exchange-settings' == $current_screen->base && ! empty( $_GET['tab'] ) && 'shipping' == $_GET['tab'] ) {
 			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/admin/js/settings-shipping.js' );
@@ -643,13 +643,13 @@ class IT_Exchange_Shipping {
 	}
 
 	/**
-	 * This function hooks into the AJAX call generated in general settings for country/states sync
+	 * This public function hooks into the AJAX call generated in general settings for country/states sync
 	 *
 	 * @since 1.4.0
 	 *
 	 * @return void
 	*/
-	function update_general_settings_state_field() {
+	public function update_general_settings_state_field() {
 		$base_country = empty( $_POST['ite_base_country_ajax'] ) ? false : $_POST['ite_base_country_ajax'];
 		$base_state   = empty( $_POST['ite_base_state_ajax'] ) ? '' : $_POST['ite_base_state_ajax'];
 		$states       = it_exchange_get_data_set( 'states', array( 'country' => $base_country ) );
@@ -673,18 +673,67 @@ class IT_Exchange_Shipping {
 	}
 
 	// Update cart shipping mehtod
-	function update_cart_shipping_method() {
+	public function update_cart_shipping_method() {
+
+		$cart = it_exchange_get_current_cart();
+
 		if ( ! empty( $_GET['ite-checkout-refresh'] ) ) {
-			$cart_product_id = empty( $_POST['cart-product-id'] ) ? false : $_POST['cart-product-id'];
+			$cart_product_id = empty( $_POST['cart-product-id'] ) ? '' : $_POST['cart-product-id'];
 			$shipping_method = empty( $_POST['shipping-method'] ) ? '0': $_POST['shipping-method'];
 
-			if ( ! empty( $cart_product_id ) ) {
+			if ( $cart_product_id ) {
 				it_exchange_update_multiple_shipping_method_for_cart_product( $cart_product_id, $shipping_method );
-				it_exchange_get_template_part( 'content-checkout' );
+				/** @var ITE_Cart_Product $cart_product */
+				$cart_product = $cart->get_item( 'product', $cart_product_id );
+
+				if ( $cart_product ) {
+					foreach ( $cart_product->get_line_items()->with_only( 'shipping' ) as $shipping ) {
+						$cart_product->remove_item( $shipping->get_id() );
+						$cart->get_repository()->delete( $shipping );
+					}
+					$cart_product->persist( $cart->get_repository() );
+
+					$args = it_exchange_get_registered_shipping_method_args( $shipping_method );
+
+					if ( ! empty( $args['provider'] ) ) {
+						$provider = it_exchange_get_registered_shipping_provider( $args['provider'] );
+						$method   = it_exchange_get_registered_shipping_method( $shipping_method );
+
+						$cart_product->add_item( new ITE_Base_Shipping_Line_Item( $method, $provider ) );
+						$cart->add_item( new ITE_Base_Shipping_Line_Item( $method, $provider, true ) );
+						$cart_product->persist( $cart->get_repository() );
+					}
+				}
 			} else {
 				it_exchange_update_cart_data('shipping-method', $shipping_method );
-				it_exchange_get_template_part( 'content-checkout' );
+
+				/** @var ITE_Cart_Product $item */
+				foreach ( $cart->get_items( 'product' ) as $item ) {
+					foreach ( $item->get_line_items()->with_only( 'shipping' ) as $shipping ) {
+						$item->remove_item( $shipping->get_id() );
+						$cart->get_repository()->delete( $shipping );
+					}
+
+					$item->persist( $cart->get_repository() );
+				}
+
+				$args = it_exchange_get_registered_shipping_method_args( $shipping_method );
+
+				if ( ! empty( $args['provider'] ) ) {
+					$provider = it_exchange_get_registered_shipping_provider( $args['provider'] );
+					$method   = it_exchange_get_registered_shipping_method( $shipping_method );
+
+					/** @var ITE_Cart_Product $item */
+					foreach ( $cart->get_items( 'product' ) as $item ) {
+						$item->add_item( new ITE_Base_Shipping_Line_Item( $method, $provider ) );
+						$item->persist( $cart->get_repository() );
+					}
+
+					$cart->add_item( new ITE_Base_Shipping_Line_Item( $method, $provider, true ) );
+				}
 			}
+
+			it_exchange_get_template_part( 'content-checkout' );
 			die();
 		}
 		// TEMP LOGIC
@@ -701,7 +750,7 @@ class IT_Exchange_Shipping {
 	 *
 	 * @return void
 	*/
-	function add_js_to_checkout_header() {
+	public function add_js_to_checkout_header() {
 		if ( ! it_exchange_is_page( 'checkout' ) )
 			return;
 
@@ -719,7 +768,7 @@ class IT_Exchange_Shipping {
 	 *
 	 * @return void
 	*/
-	function clear_cart_shipping_data() {
+	public function clear_cart_shipping_data() {
 		it_exchange_remove_cart_data( 'shipping-address' );
 		it_exchange_remove_cart_data( 'shipping-method' );
 	}
@@ -731,18 +780,18 @@ class IT_Exchange_Shipping {
 	 *
 	 * @return void
 	*/
-	function clear_cart_shipping_method() {
+	public function clear_cart_shipping_method() {
 		it_exchange_remove_cart_data( 'shipping-method' );
 	}
-	
+
 	/**
-	 * 
+	 *
 	 *
 	 * @since CHANGEME
 	 *
 	 * @return void
 	*/
-	function add_shipping_to_order_table_tag_before_total_row( $email_obj, $options ) {
+	public function add_shipping_to_order_table_tag_before_total_row( $email_obj, $options ) {
 		$shipping = it_exchange_get_transaction_shipping_total( $email_obj->transaction_id, true );
 		if ( !empty( $shipping ) ) {
 		?>

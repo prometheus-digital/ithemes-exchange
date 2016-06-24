@@ -484,27 +484,40 @@ function it_exchange_get_cart_shipping_cost( $shipping_method = false, $format_p
 		return false;
 	}
 
-	$cart_shipping_method = $shipping_method ? $shipping_method : it_exchange_get_cart_shipping_method();
-	$cart_cost            = 0.0;
+	$cart_cost = 0.00;
 
-	foreach( $cart_products as $cart_product ) {
-		if ( ! $cart_product->get_product()->has_feature( 'shipping' ) ) {
-			continue;
+	if ( $shipping_method ) {
+		foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+			$cart_cost += it_exchange_get_shipping_method_cost_for_cart_item(
+				$shipping_method, $product->get_data_to_save()
+			);
 		}
+	} else {
 
-		if ( 'multiple-methods' === $cart_shipping_method ) {
-			$shipping_method = it_exchange_get_multiple_shipping_method_for_cart_product( $cart_product->get_id() );
-		} else {
-			$shipping_method = $cart_shipping_method;
-		}
+		$shipping_method = it_exchange_get_cart_shipping_method();
 
-		$cart_cost += it_exchange_get_shipping_method_cost_for_cart_item( $shipping_method, $cart_product->get_data_to_save() );
+		$cart_cost = it_exchange_get_current_cart()->get_items( 'shipping', true )
+           ->filter( function ( ITE_Shipping_Line_Item $shipping ) use ( $shipping_method ) {
+
+               if ( $shipping_method === 'multiple-methods' ) {
+
+                   if ( ! $shipping->get_aggregate() ) {
+                       return true;
+                   }
+
+	               $shipping_method = it_exchange_get_multiple_shipping_method_for_cart_product(
+                       $shipping->get_aggregate()->get_id()
+                   );
+               }
+
+               return $shipping->get_method()->slug === $shipping_method;
+           } )->total();
 	}
 
 	$cart_cost = $format_price ? it_exchange_format_price( $cart_cost ) : $cart_cost;
 	
 	return apply_filters( 'it_exchange_get_cart_shipping_cost',
-		$cart_cost, $cart_shipping_method, it_exchange_get_session_data( 'products' ), $format_price );
+		$cart_cost, $shipping_method, it_exchange_get_session_data( 'products' ), $format_price );
 }
 
 /**
@@ -525,7 +538,18 @@ function it_exchange_get_shipping_method_cost_for_cart_item( $method_slug, $cart
 		return 0;
 	}
 
-	$cost = $method->get_shipping_cost_for_product( $cart_product );
+	$shipping = it_exchange_get_current_cart()
+		->get_item( 'product', $cart_product['product_cart_id'] )
+		->get_line_items()->with_only( 'shipping' )->filter( function ( ITE_Shipping_Line_Item $item ) use( $method_slug ) {
+			return $item->get_method()->slug === $method_slug;
+		} );
+
+	if ( $shipping->count() === 0 ) {
+		$cost = $method->get_shipping_cost_for_product( $cart_product );
+	} else {
+		$cost = $shipping->total();
+	}
+
 	$cost = is_numeric( $cost ) ? $cost : 0;
 
 	$cost = $format_price ? it_exchange_format_price( $cost ) : $cost;
