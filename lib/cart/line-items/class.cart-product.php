@@ -323,7 +323,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 
 		if ( $found ) {
 			reset( $this->taxes );
-			$this->remove_item( $id );
+			$this->remove_item( 'tax', $id );
 		}
 
 		return $found;
@@ -384,12 +384,12 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	/**
 	 * @inheritDoc
 	 */
-	public function remove_item( $id ) {
+	public function remove_item( $type, $id ) {
 
 		$found = false;
 
 		foreach ( $this->aggregate as $i => $item ) {
-			if ( $item->get_id() === $id ) {
+			if ( $item->get_type() === $type && $item->get_id() === $id ) {
 				unset( $this->aggregate[ $i ] );
 				$found = true;
 

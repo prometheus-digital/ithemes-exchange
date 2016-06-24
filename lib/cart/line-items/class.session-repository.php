@@ -131,10 +131,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		}
 
 		foreach ( $items as $item ) {
-
-			$old = $olds[ $item->get_type() ][ $item->get_id() ];
-
-			$this->events->on_save( $item, $old, $this );
+			$this->events->on_save( $item, $olds[ $item->get_type() ][ $item->get_id() ], $this );
 		}
 
 		return true;
@@ -144,6 +141,11 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	 * @inheritDoc
 	 */
 	public function delete( ITE_Line_Item $item ) {
+
+		if ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) {
+			$item->get_aggregate()->remove_item( $item->get_type(), $item->get_id() );
+			$this->save( $item->get_aggregate() );
+		}
 
 		$type = self::normalize_type( $item->get_type() );
 

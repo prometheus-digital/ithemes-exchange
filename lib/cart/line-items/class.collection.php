@@ -148,6 +148,17 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	}
 
 	/**
+	 * Remove all of the items in this collection.
+	 * 
+	 * @since 1.36
+	 */
+	public function delete() {
+		foreach ( $this->items as $item ) {
+			$this->repository->delete( $item );
+		}
+	}
+
+	/**
 	 * Get a single line item from the collection.
 	 *
 	 * @since 1.36

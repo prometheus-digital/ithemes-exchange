@@ -315,13 +315,14 @@ class ITE_Cart {
 	 *
 	 * @since 1.36
 	 *
-	 * @param string $type The item type. Optionally. If unspecified, all item types will be removed.
+	 * @param string $type    The item type. Optionally. If unspecified, all item types will be removed.
+	 * @param bool   $flatten Whether to remove all items, including aggregates' children.
 	 *
 	 * @return bool
 	 */
-	public function remove_all( $type = '' ) {
+	public function remove_all( $type = '', $flatten = false ) {
 
-		foreach ( $this->get_items( $type ) as $item ) {
+		foreach ( $this->get_items( $type, $flatten ) as $item ) {
 			$this->get_repository()->delete( $item );
 
 			// This hook is documented in lib/cart/class.customer-cart.php

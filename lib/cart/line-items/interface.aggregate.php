@@ -39,7 +39,7 @@ interface ITE_Aggregate_Line_Item extends ITE_Line_Item {
 	 * @return ITE_Line_Item_Collection|ITE_Aggregatable_Line_Item[]
 	 */
 	public function get_line_items();
-	
+
 	/**
 	 * Add a line item to this aggregate.
 	 *
@@ -53,12 +53,13 @@ interface ITE_Aggregate_Line_Item extends ITE_Line_Item {
 
 	/**
 	 * Remove an item from the aggregate.
-	 * 
+	 *
 	 * @since 1.36
-	 * 
+	 *
+	 * @param string     $type
 	 * @param string|int $id
 	 *
 	 * @return bool
 	 */
-	public function remove_item( $id );
+	public function remove_item( $type, $id );
 }

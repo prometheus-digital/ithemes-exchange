@@ -103,12 +103,7 @@ abstract class IT_Exchange_Shipping_Method {
 
 			// If we have a post ID, get the post object
 			if ( $post_id ) {
-				$post = get_post( $post_id );
-			}
-
-			// If we have a post object, grab the product
-			if ( ! empty( $post ) && is_object( $post ) ) {
-				$product = it_exchange_get_product( $post );
+				$product = it_exchange_get_product( $post_id );
 			}
 		}
 
