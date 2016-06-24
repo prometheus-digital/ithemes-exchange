@@ -41,6 +41,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item {
 		IT_Exchange_Shipping_Provider $provider,
 		$cart_wide = false
 	) {
+		$this->bag       = new ITE_Array_Parameter_Bag();
 		$this->method    = $method;
 		$this->provider  = $provider;
 		$this->cart_wide = $cart_wide;
@@ -62,16 +63,12 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_id() {
-		return $this->id;
-	}
+	public function get_id() { return $this->id; }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_name() {
-		return $this->get_method()->label;
-	}
+	public function get_name() { return $this->get_method()->label; }
 
 	/**
 	 * @inheritDoc
@@ -83,9 +80,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_quantity() {
-		return 1;
-	}
+	public function get_quantity() { return 1; }
 
 	/**
 	 * @inheritDoc
@@ -108,9 +103,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item {
 	/**
 	 * @inheritDoc
 	 */
-	public function is_summary_only() {
-		return true;
-	}
+	public function is_summary_only() {	return true; }
 
 	/**
 	 * @inheritDoc
@@ -122,23 +115,17 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_provider() {
-		return $this->provider;
-	}
+	public function get_provider() { return $this->provider; }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_method() {
-		return $this->method;
-	}
+	public function get_method() { return $this->method; }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function is_cart_wide() {
-		return $this->cart_wide;
-	}
+	public function is_cart_wide() { return $this->cart_wide; }
 
 	/**
 	 * @inheritDoc
