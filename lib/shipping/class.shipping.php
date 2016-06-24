@@ -136,7 +136,7 @@ class IT_Exchange_Shipping {
 	public function register_shipping_method_purchase_requirement() {
 		// User must have a shipping address to purchase
 		$properties = array(
-			'requirement-met'        => 'it_exchange_get_cart_shipping_method', // This is a PHP callback
+			'requirement-met'        => array( $this, 'method_purchase_requirement_complete' ), // This is a PHP callback
 			'sw-template-part'       => 'shipping-method',
 			'checkout-template-part' => 'shipping-method',
 			'notification'           => __( 'You must select a shipping method before you can checkout', 'it-l10n-ithemes-exchange' ),
@@ -145,6 +145,36 @@ class IT_Exchange_Shipping {
 		if ( it_exchange_get_available_shipping_methods_for_cart_products() || apply_filters( 'it_exchange_shipping_method_purchase_requirement_enabled', false ) ) {
 			it_exchange_register_purchase_requirement( 'shipping-method', $properties );
 		}
+	}
+
+	/**
+	 * Determine if the shipping method purchase requirement is complete.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function method_purchase_requirement_complete() {
+		$method = it_exchange_get_cart_shipping_method();
+
+		if ( ! $method ) {
+			return false;
+		}
+
+		if ( $method === 'multiple-methods' ) {
+			$methods = it_exchange_get_session_data( 'multiple-shipping-methods' );
+			$cart_product_ids = array();
+
+			foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+				$cart_product_ids[] = $product->get_id();
+			}
+
+			$diff = array_diff( $cart_product_ids, array_keys( $methods ) );
+
+			return count( $diff ) === 0;
+		}
+
+		return true;
 	}
 
 	/**
@@ -823,6 +853,7 @@ class IT_Exchange_Shipping {
 	public function clear_cart_shipping_data() {
 		it_exchange_remove_cart_data( 'shipping-address' );
 		it_exchange_remove_cart_data( 'shipping-method' );
+		it_exchange_remove_cart_data( 'multiple-shipping-methods' );
 
 		it_exchange_get_current_cart()->remove_all( 'shipping', true );
 	}
@@ -836,6 +867,7 @@ class IT_Exchange_Shipping {
 	 */
 	public function clear_cart_shipping_method() {
 		it_exchange_remove_cart_data( 'shipping-method' );
+		it_exchange_remove_cart_data( 'multiple-shipping-methods' );
 
 		it_exchange_get_current_cart()->remove_all( 'shipping', true );
 	}

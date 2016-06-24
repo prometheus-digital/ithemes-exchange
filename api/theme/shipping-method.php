@@ -114,7 +114,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 			<?php
 		}
 
-		if ( 'multiple-methods' == $current_method && $multiple_shipping_methods_allowed ) :
+		if ( 'multiple-methods' === $current_method && $multiple_shipping_methods_allowed ) :
 			?>
 			<div class="it-exchange-itemized-checkout-methods it-exchange-clearfix">
 				<?php
@@ -131,6 +131,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 						if ( count( $enabled_shipping_methods ) > 1 ) {
 							?>
 							<select class="it-exchange-multiple-shipping-methods-select it-exchange-right" data-it-exchange-product-cart-id="<?php esc_attr_e( $product->get_id() ); ?>" name="it-exchange-shipping-method-for-<?php esc_attr_e( $product->get_id() ); ?>" >
+								<option value="0"><?php _e( 'Select a shipping method', 'it-l10n-ithemes-exchange' ); ?></option>
 								<?php foreach( $enabled_shipping_methods as $product_method ) : ?>
 									<?php if ( empty( $product_method->slug ) ) continue; ?>
 									<option value="<?php esc_attr_e( $product_method->slug ); ?>" <?php selected( $selected_multiple_method, $product_method->slug ); ?>>
@@ -153,8 +154,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 			<?php
 		endif;
 
-		$return = ob_get_clean();
-		return $return;
+		return ob_get_clean();
 	}
 
 	/**
