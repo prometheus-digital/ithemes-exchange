@@ -27,11 +27,31 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	);
 
 	/**
+	 * @var array|\string[]
+	 */
+	public $cart_methods = array();
+	
+	/**
+	 * @var array
+	 */
+	public $cart_product_methods = array();
+	
+	/**
+	 * @var bool
+	 */
+	public $multiple_shipping_methods_allowed = false;
+	
+	/**
+	 * @var string
+	 */
+	public $current_method;
+
+	/**
 	 * Constructor
 	 *
 	 * @since 0.4.0
 	*/
-	function __construct() {
+	public function __construct() {
 		$this->cart_methods                      = it_exchange_get_available_shipping_methods_for_cart();
 		$this->cart_product_methods              = it_exchange_get_available_shipping_methods_for_cart_products();
 		$this->multiple_shipping_methods_allowed = false;
@@ -43,7 +63,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 *
 	 * @deprecated
 	 */
-	function IT_Theme_API_Shipping_Method() {
+	public function IT_Theme_API_Shipping_Method() {
 
 		self::__construct();
 
@@ -57,7 +77,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 *
 	 * @return string
 	*/
-	function get_api_context() {
+	public function get_api_context() {
 		return $this->_context;
 	}
 
@@ -69,7 +89,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 * @param  array  $options
 	 * @return string
 	*/
-	function form( $options=array() ) {
+	public function form( $options=array() ) {
 		ob_start();
 
 		$cart_methods                      = $this->cart_methods;
@@ -165,11 +185,14 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 * @since 1.4.0
 	 *
 	 * @param array $options
+	 * 
+	 * @return string
 	*/
-	function cancel( $options=array() ) {
+	public function cancel( $options=array() ) {
 
-		if ( empty( $this->current_method ) )
+		if ( ! $this->current_method ) {
 			return '';
+		}
 
 		$defaults = array(
 			'label' => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
@@ -191,11 +214,14 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 * @since 1.4.0
 	 *
 	 * @param array $options
+	 * 
+	 * @return string
 	*/
-	function submit( $options=array() ) {
+	public function submit( $options=array() ) {
 
-		if ( empty( $this->current_method ) )
+		if ( ! $this->current_method ) {
 			return '';
+		}
 
 		$defaults = array(
 			'label' => __( 'Next', 'it-l10n-ithemes-exchange' ),
@@ -216,9 +242,9 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 *
 	 * @since 1.4.0
 	 *
+	 * @return string
 	*/
-	function current( $options=array() ) {
-		$method = it_exchange_get_registered_shipping_method( $this->current_method );
-		return $method->label;
+	public function current( $options=array() ) {
+		return it_exchange_get_registered_shipping_method( $this->current_method )->label;
 	}
 }

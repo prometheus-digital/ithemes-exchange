@@ -488,9 +488,11 @@ function it_exchange_get_cart_shipping_cost( $shipping_method = false, $format_p
 
 	if ( $shipping_method ) {
 		foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
-			$cart_cost += it_exchange_get_shipping_method_cost_for_cart_item(
-				$shipping_method, $product->get_data_to_save()
-			);
+			if ( $product->get_product()->has_feature( 'shipping' ) ) {
+				$cart_cost += it_exchange_get_shipping_method_cost_for_cart_item(
+					$shipping_method, $product->get_data_to_save()
+				);
+			}
 		}
 	} else {
 
@@ -541,7 +543,7 @@ function it_exchange_get_shipping_method_cost_for_cart_item( $method_slug, $cart
 	$shipping = it_exchange_get_current_cart()
 		->get_item( 'product', $cart_product['product_cart_id'] )
 		->get_line_items()->with_only( 'shipping' )->filter( function ( ITE_Shipping_Line_Item $item ) use( $method_slug ) {
-			return $item->get_method()->slug === $method_slug;
+			return $item->get_method()->slug === $method_slug && $item->get_aggregate();
 		} );
 
 	if ( $shipping->count() === 0 ) {

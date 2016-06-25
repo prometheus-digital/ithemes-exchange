@@ -245,7 +245,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	public function set_quantity( $quantity ) {
 
 		$quantity = max( 1, $quantity );
-		$max      = it_exchange_get_max_product_quantity_allowed( $this->get_product() );
+		$max      = it_exchange_get_max_product_quantity_allowed( $this->get_product(), $this->get_id() );
 
 		if ( $max !== '' && $quantity > $max ) {
 			$quantity = $max;

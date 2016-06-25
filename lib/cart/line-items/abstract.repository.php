@@ -59,6 +59,9 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Delete a line item.
 	 *
+	 * If an aggregatable line item is passed, the repository should remove the line item from the aggregate,
+	 * if one exists.
+	 *
 	 * @since 1.36
 	 *
 	 * @param \ITE_Line_Item $item
