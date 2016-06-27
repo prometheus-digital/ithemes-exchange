@@ -565,10 +565,12 @@ function it_exchange_get_shipping_method_cost_for_cart_item( $method_slug, $cart
 		} );
 
 	if ( $shipping->count() === 0 ) {
-		$cost = $method->get_shipping_cost_for_product( $cart_product ) + $method->get_additional_cost_for_cart( $cart );
+		$cost = $method->get_shipping_cost_for_product( $cart_product );
 	} else {
 		$cost = $shipping->total();
 	}
+
+	$cost += $method->get_additional_cost_for_cart( $cart );
 
 	$cost = is_numeric( $cost ) ? $cost : 0;
 
