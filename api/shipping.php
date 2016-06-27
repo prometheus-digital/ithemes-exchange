@@ -478,7 +478,8 @@ function it_exchange_get_available_shipping_methods_for_cart_products() {
 */
 function it_exchange_get_cart_shipping_cost( $shipping_method = false, $format_price = true ) {
 
-	$cart_products = it_exchange_get_current_cart()->get_items( 'product' );
+	$cart          = it_exchange_get_current_cart();
+	$cart_products = $cart->get_items( 'product' );
 
 	if ( $cart_products->count() === 0 ) {
 		return false;
@@ -486,19 +487,35 @@ function it_exchange_get_cart_shipping_cost( $shipping_method = false, $format_p
 
 	$cart_cost = 0.00;
 
-	if ( $shipping_method ) {
-		foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+	if ( $shipping_method = trim( $shipping_method ) ) {
+		$additional_cost = array();
+		foreach ( $cart->get_items( 'product' ) as $product ) {
 			if ( $product->get_product()->has_feature( 'shipping' ) ) {
 				$cart_cost += it_exchange_get_shipping_method_cost_for_cart_item(
 					$shipping_method, $product->get_data_to_save()
 				);
+
+				if ( $method = it_exchange_get_registered_shipping_method( $shipping_method ) ) {
+					if ( ! isset( $additional_cost[$shipping_method] ) ) {
+						$additional_cost[$shipping_method] = 0;
+					} else {
+						$additional_cost[$shipping_method]++;
+					}
+				}
+			}
+		}
+
+		foreach ( $additional_cost as $method => $times ) {
+			while ( $times > 0 ) { // intentionally > 0 not >= 0 so that only one additional cost remains.
+				$times--;
+				$cart_cost-= it_exchange_get_registered_shipping_method( $method )->get_additional_cost_for_cart( $cart );
 			}
 		}
 	} else {
 
 		$shipping_method = it_exchange_get_cart_shipping_method();
 
-		$cart_cost = it_exchange_get_current_cart()->get_items( 'shipping', true )
+		$cart_cost = $cart->get_items( 'shipping', true )
            ->filter( function ( ITE_Shipping_Line_Item $shipping ) use ( $shipping_method ) {
 
                if ( $shipping_method === 'multiple-methods' ) {
@@ -539,15 +556,16 @@ function it_exchange_get_shipping_method_cost_for_cart_item( $method_slug, $cart
 	if ( ! $method || ! $method->slug ) {
 		return 0;
 	}
+	
+	$cart = it_exchange_get_current_cart();
 
-	$shipping = it_exchange_get_current_cart()
-		->get_item( 'product', $cart_product['product_cart_id'] )
-		->get_line_items()->with_only( 'shipping' )->filter( function ( ITE_Shipping_Line_Item $item ) use( $method_slug ) {
+	$shipping = $cart->get_item( 'product', $cart_product['product_cart_id'] )
+		->get_line_items()->with_only( 'shipping' )->filter( function ( ITE_Shipping_Line_Item $item ) use ( $method_slug ) {
 			return $item->get_method()->slug === $method_slug && $item->get_aggregate();
 		} );
 
 	if ( $shipping->count() === 0 ) {
-		$cost = $method->get_shipping_cost_for_product( $cart_product );
+		$cost = $method->get_shipping_cost_for_product( $cart_product ) + $method->get_additional_cost_for_cart( $cart );
 	} else {
 		$cost = $shipping->total();
 	}
