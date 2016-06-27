@@ -300,7 +300,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 
 		foreach ( $this->get_line_items() as $item ) {
 			if ( $item instanceof ITE_Taxable_Line_Item ) {
-				$item->add_tax( $tax );
+				$item->add_tax( $tax->create_scoped_for_taxable( $item ) );
 			}
 		}
 	}
@@ -372,13 +372,16 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 * @inheritDoc
 	 */
 	public function add_item( ITE_Aggregatable_Line_Item $item ) {
+		
+		$item->set_aggregate( $this );
 
 		if ( $item instanceof ITE_Tax_Line_Item && ! in_array( $item, $this->get_taxes(), true ) ) {
-			return $this->add_tax( $item );
+			$this->add_tax( $item );
+		} else {
+			$this->aggregate[] = $item;
 		}
 
-		$item->set_aggregate( $this );
-		$this->aggregate[] = $item;
+		return $this;
 	}
 
 	/**
