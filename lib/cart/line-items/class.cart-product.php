@@ -333,7 +333,11 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 * @inheritDoc
 	 */
 	public function remove_all_taxes() {
-		$this->taxes = array();
+		$taxes = $this->taxes;
+		
+		foreach ( $taxes as $tax ) {
+			$this->remove_tax( $tax->get_id() );
+		}
 	}
 
 	/**
