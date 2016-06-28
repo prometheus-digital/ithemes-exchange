@@ -23,7 +23,8 @@ function it_exchange_get_current_cart() {
 
 	if ( $cart === null || true ) {
 		$cart = new \ITE_Cart(
-			new ITE_Line_Item_Session_Repository( it_exchange_get_session(), new ITE_Line_Item_Repository_Events() ) 
+			new ITE_Line_Item_Session_Repository( it_exchange_get_session(), new ITE_Line_Item_Repository_Events() ),
+			it_exchange_get_cart_id( true )
 		);
 		$cart->add_cart_validator( new ITE_Multi_Item_Cart_Validator() );
 		$cart->add_item_validator( new ITE_Multi_Item_Product_Validator() );
@@ -476,13 +477,13 @@ function it_exchange_merge_cached_customer_cart_into_current_session( $user_logi
 	}
 
 	try {
-		it_exchange_get_current_cart()->merge(
-			new ITE_Cart( ITE_Line_Item_Cached_Session_Repository::from_customer( $customer ) )
-		);
+		$repository = ITE_Line_Item_Cached_Session_Repository::from_customer( $customer );
+		it_exchange_get_current_cart()->merge( new \ITE_Cart( 
+			$repository, $repository->get_cart_id(), $customer 
+		) );
 	} catch ( UnexpectedValueException $e ) {
 
 	}
-
 
 	// This is a new customer session after loggin in so add this session to active carts
 	it_exchange_add_current_session_to_customer_active_carts( $customer->id );
@@ -997,14 +998,20 @@ function it_exchange_update_cart_id( $id = false ) {
  * Get a cart id from the session
  *
  * @since 1.10.0
+ *        
+ * @param bool $generate Generate a cart ID is one does not exist.
  *
  * @return string returns the ID
 */
-function it_exchange_get_cart_id() {
+function it_exchange_get_cart_id( $generate = false ) {
 	$id = it_exchange_get_cart_data( 'cart_id' );
 
 	// Expects ID to be a single item array
-	$id = empty( $id[0] ) ? false : $id[0];
+	if ( empty( $id[0] ) ) {
+		$id = $generate ? it_exchange_update_cart_id() : false;
+	} else {
+		$id = $id[0];
+	}
 	return $id;
 }
 

@@ -17,6 +17,9 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	/** @var string|null */
 	protected $session_id;
 
+	/** @var string */
+	protected $cart_id;
+
 	/**
 	 * @inheritDoc
 	 */
@@ -56,6 +59,10 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 			new ITE_Line_Item_Repository_Events()
 		);
 		$self->session->set_save( array( $self, '_do_cache_save' ) );
+
+		if ( isset( $session['cart_id'], $session['cart_id'][0] ) ) {
+			$self->cart_id = $session['cart_id'][0];
+		}
 
 		return $self;
 	}
@@ -98,7 +105,92 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 		) );
 		$self->session_id = $session_id;
 
+		if ( isset( $session['cart_id'], $session['cart_id'][0] ) ) {
+			$self->cart_id = $session['cart_id'][0];
+		}
+
 		return $self;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_shipping_address() {
+
+		$customer = $this->customer;
+
+		$customer_data = empty( $customer->data ) ? new stdClass() : $customer->data;
+
+		// Default values for first time use.
+		$defaults = array(
+			'first-name'   => empty( $customer_data->first_name ) ? '' : $customer_data->first_name,
+			'last-name'    => empty( $customer_data->last_name ) ? '' : $customer_data->last_name,
+			'company-name' => '',
+			'address1'     => '',
+			'address2'     => '',
+			'city'         => '',
+			'state'        => '',
+			'zip'          => '',
+			'country'      => '',
+			'email'        => empty( $customer_data->user_email ) ? '' : $customer_data->user_email,
+			'phone'        => '',
+		);
+
+		// See if the customer has a shipping address saved. If so, overwrite defaults with saved shipping address
+		if ( ! empty( $customer_data->shipping_address ) ) {
+			$defaults = ITUtility::merge_defaults( $customer_data->shipping_address, $defaults );
+		}
+
+		// If data exists in the session, use that as the most recent
+		$session_data = $this->session->get_session_data( 'shipping-address' );
+
+		return ITUtility::merge_defaults( $session_data, $defaults );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_billing_address() {
+
+		$customer = $this->customer;
+
+		$customer_data = empty( $customer->data ) ? new stdClass() : $customer->data;
+
+		// Default values for first time use.
+		$defaults = array(
+			'first-name'   => empty( $customer_data->first_name ) ? '' : $customer_data->first_name,
+			'last-name'    => empty( $customer_data->last_name ) ? '' : $customer_data->last_name,
+			'company-name' => '',
+			'address1'     => '',
+			'address2'     => '',
+			'city'         => '',
+			'state'        => '',
+			'zip'          => '',
+			'country'      => '',
+			'email'        => empty( $customer_data->user_email ) ? '' : $customer_data->user_email,
+			'phone'        => '',
+		);
+
+		// See if the customer has a billing address saved. If so, overwrite defaults with saved billing address
+		if ( ! empty( $customer_data->billing_address ) ) {
+			$defaults = ITUtility::merge_defaults( $customer_data->billing_address, $defaults );
+		}
+
+		// If data exists in the session, use that as the most recent
+		$session_data = $this->session->get_session_data( 'billing-address' );
+
+		return ITUtility::merge_defaults( $session_data, $defaults );
+	}
+
+	/**
+	 * Get the cart ID.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_cart_id() {
+		return $this->cart_id;
 	}
 
 	/**

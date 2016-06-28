@@ -11,44 +11,53 @@
  */
 class ITE_Cart {
 
-	/**
-	 * @var \ITE_Line_Item_Repository
-	 */
+	/** @var \ITE_Line_Item_Repository */
 	private $repository;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	private $items = array();
 
-	/**
-	 * @var ITE_Cart_Validator[]
-	 */
+	/** @var ITE_Cart_Validator[] */
 	private $cart_validators = array();
 
-	/**
-	 * @var ITE_Line_Item_Validator[]
-	 */
+	/** @var ITE_Line_Item_Validator[] */
 	private $item_validators = array();
 
-	/**
-	 * @var bool
-	 */
+	/** @var string */
+	private $cart_id;
+
+	/** @var IT_Exchange_Customer|null */
+	private $customer;
+
+	/** @var bool */
 	private $doing_merge = false;
 
 	/**
 	 * ITE_Cart constructor.
 	 *
 	 * @param ITE_Line_Item_Repository $repository
+	 * @param string                   $cart_id
+	 * @param IT_Exchange_Customer     $customer
 	 */
-	public function __construct( ITE_Line_Item_Repository $repository ) {
+	public function __construct( ITE_Line_Item_Repository $repository, $cart_id, IT_Exchange_Customer $customer = null ) {
 		$this->repository = $repository;
+		$this->cart_id    = $cart_id;
 
 		$all = $repository->all();
 
 		foreach ( $all as $item ) {
 			$this->items[ $item->get_type() ][] = $item;
 		}
+
+		if ( ! $customer && $this->is_current() ) {
+			$customer = it_exchange_get_current_customer();
+
+			if ( ! $customer instanceof IT_Exchange_Customer ) {
+				$customer = null;
+			}
+		}
+
+		$this->customer = $customer;
 	}
 
 	/**
@@ -59,7 +68,7 @@ class ITE_Cart {
 	 * @return string
 	 */
 	public function get_id() {
-		return it_exchange_get_cart_id();
+		return $this->cart_id;
 	}
 
 	/**
@@ -70,9 +79,7 @@ class ITE_Cart {
 	 * @return IT_Exchange_Customer|null
 	 */
 	public function get_customer() {
-		$customer = it_exchange_get_current_customer();
-
-		return $customer ? $customer : null;
+		return $this->customer;
 	}
 
 	/**
@@ -83,9 +90,7 @@ class ITE_Cart {
 	 * @return bool
 	 */
 	public function is_current() {
-		return
-			$this->get_repository() instanceof ITE_Line_Item_Session_Repository &&
-			! $this->get_repository() instanceof ITE_Line_Item_Cached_Session_Repository;
+		return $this->get_id() === it_exchange_get_cart_id();
 	}
 
 	/**
@@ -97,6 +102,28 @@ class ITE_Cart {
 	 */
 	public function is_doing_merge() {
 		return $this->doing_merge;
+	}
+
+	/**
+	 * Get the customer's shipping address.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array
+	 */
+	public function get_shipping_address() {
+		return $this->get_repository()->get_shipping_address();
+	}
+
+	/**
+	 * Get the customer's billing address.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array
+	 */
+	public function get_billing_address() {
+		return $this->get_repository()->get_billing_address();
 	}
 
 	/**
@@ -181,9 +208,9 @@ class ITE_Cart {
 			foreach ( $this->get_items() as $item ) {
 				if ( $item instanceof ITE_Aggregate_Line_Item ) {
 					$items = array_merge( $items, $this->unravel( $item ) );
-				} else {
-					$items[] = $item;
 				}
+
+				$items[] = $item;
 			}
 
 			$items = new ITE_Line_Item_Collection( $items, $this->get_repository() );

@@ -165,6 +165,32 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function get_shipping_address() {
+		$shipping = it_exchange_get_cart_shipping_address();
+
+		if ( ! is_array( $shipping ) ) {
+			return array();
+		}
+
+		return $shipping;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_billing_address() {
+		$billing = it_exchange_get_cart_billing_address();
+
+		if ( ! is_array( $billing ) ) {
+			return array();
+		}
+
+		return $billing;
+	}
+
+	/**
 	 * Get the data that will be committed.
 	 *
 	 * @since 1.36

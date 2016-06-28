@@ -69,4 +69,22 @@ abstract class ITE_Line_Item_Repository {
 	 * @return bool
 	 */
 	abstract public function delete( ITE_Line_Item $item );
+
+	/**
+	 * Get the customer's shipping address.
+	 * 
+	 * @since 1.36
+	 * 
+	 * @return array
+	 */
+	abstract public function get_shipping_address();
+
+	/**
+	 * Get the customer's billing address.
+	 * 
+	 * @since 1.36
+	 * 
+	 * @return array
+	 */
+	abstract public function get_billing_address();
 }

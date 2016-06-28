@@ -9,7 +9,7 @@
 /**
  * Class ITE_Tax_Line_Item
  */
-class ITE_Simple_Tax_Line_Item implements ITE_Line_Item, ITE_Aggregatable_Line_Item, ITE_Tax_Line_Item {
+class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 
 	/** @var ITE_Parameter_Bag */
 	private $bag;
@@ -100,7 +100,11 @@ class ITE_Simple_Tax_Line_Item implements ITE_Line_Item, ITE_Aggregatable_Line_I
 	 * @inheritDoc
 	 */
 	public function get_name() {
-		return it_exchange_add_simple_taxes_get_label( 'taxes' );
+		if ( function_exists( 'it_exchange_add_simple_taxes_get_label' ) ) {
+			return it_exchange_add_simple_taxes_get_label( 'taxes' );
+		} else {
+			return __( 'Taxes', 'it-l10n-ithemes-exchange' );
+		}
 	}
 
 	/**
@@ -210,13 +214,6 @@ class ITE_Simple_Tax_Line_Item implements ITE_Line_Item, ITE_Aggregatable_Line_I
 			'rate'   => $this->get_rate(),
 			'codes'  => $this->codes,
 		);
-
-		if ( $this->taxable ) {
-			$data['taxable'] = array(
-				'type' => $this->taxable->get_type(),
-				'id'   => $this->taxable->get_id()
-			);
-		}
 
 		return $data;
 	}

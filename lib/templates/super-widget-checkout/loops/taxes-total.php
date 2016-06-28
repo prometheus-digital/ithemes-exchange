@@ -21,9 +21,7 @@ foreach ( $cart->get_items( 'tax', true ) as $item ) {
 <?php foreach ( $segmented as $segment ): ?>
 	<div class="cart-taxes cart-totals-row">
 		<?php do_action( 'it_exchange_super_widget_checkout_begin_taxes_element' ); ?>
-		<?php echo $segment->first()->get_name();
-		_ex( ':', 'Used in superwidget for taxes. eg Tax: ', 'it-l10n-ithemes-exchange' ); ?>
-		<?php echo it_exchange_format_price( $segment->total() ); ?>
+		<?php printf( __( '%s: %s', 'it-l10n-ithemes-exchange' ), $segment->first()->get_name(), it_exchange_format_price( $segment->total() ) ); ?>
 		<?php do_action( 'it_exchange_super_widget_checkout_end_taxes_element' ); ?>
 	</div>
 <?php endforeach; ?>

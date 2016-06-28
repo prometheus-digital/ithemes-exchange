@@ -22,14 +22,18 @@ foreach ( $cart->get_items( 'tax', true ) as $item ) {
 	<div class="it-exchange-cart-totals-title it-exchange-table-column">
 		<?php do_action( 'it_exchange_content_cart_begin_totals_taxes_element_label' ); ?>
 		<div class="it-exchange-table-column-inner">
+			<?php do_action( 'it_exchange_content_cart_begin_totals_taxes_inner_element_label' ); ?>
 			<?php echo $segment->first()->get_name(); ?>
+			<?php do_action( 'it_exchange_content_cart_end_totals_taxes_inner_element_label' ); ?>
 		</div>
 		<?php do_action( 'it_exchange_content_cart_end_totals_taxes_element_label' ); ?>
 	</div>
 	<div class="it-exchange-cart-totals-amount it-exchange-table-column">
 		<?php do_action( 'it_exchange_content_cart_begin_totals_taxes_element_value' ); ?>
 		<div class="it-exchange-table-column-inner">
+			<?php do_action( 'it_exchange_content_cart_begin_totals_taxes_inner_element_value' ); ?>
 			<?php echo it_exchange_format_price( $segment->total() ); ?>
+			<?php do_action( 'it_exchange_content_cart_end_totals_taxes_inner_element_value' ); ?>
 		</div>
 		<?php do_action( 'it_exchange_content_cart_end_totals_taxes_element_value' ); ?>
 	</div>
