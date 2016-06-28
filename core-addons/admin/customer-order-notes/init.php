@@ -53,7 +53,7 @@ function it_exchange_add_customer_order_note_to_sw_template_totals_loops( $loops
 
 	// Set index to end of array.
 	$index = array_search( 'discounts', $loops );
-	$index = ( false === $index ) ? array_search( 'totals-taxes-simple', $loops ) : $index;
+	$index = ( false === $index ) ? array_search( 'totals-taxes', $loops ) : $index;
 	$index = ( false === $index ) ? count( $loops ) - 1 : $index;
 
 	array_splice( $loops, $index, 0, 'customer-order-note' );

@@ -160,7 +160,7 @@ function it_exchange_addon_add_taxes_simple_to_sw_template_totals_loops( $loops 
 	array_splice( $loops, $index, 0, 'taxes-simple' );
 	return $loops;
 }
-add_filter( 'it_exchange_get_super-widget-checkout_after-cart-items_loops', 'it_exchange_addon_add_taxes_simple_to_sw_template_totals_loops' );
+//add_filter( 'it_exchange_get_super-widget-checkout_after-cart-items_loops', 'it_exchange_addon_add_taxes_simple_to_sw_template_totals_loops' );
 
 /**
  * Adds our templates directory to the list of directories

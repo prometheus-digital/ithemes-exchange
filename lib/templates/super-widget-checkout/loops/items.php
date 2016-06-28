@@ -38,9 +38,13 @@
 	 * If add-ons want to add to or remove from the loops that are included here,
 	 * they can hook into the filter found inside it_exchange_get_template_part_loops
 	*/
-	$loops = array('taxes-total');
+	$loops = array();
+
 	if ( it_exchange( 'coupons', 'has-applied', array( 'type' => 'cart' ) ) )
 		$loops[] = 'discounts';
+
+	$loops[] = 'totals-taxes';
+
 	if ( it_exchange_get_cart_subtotal( false ) !== it_exchange_get_cart_total( false ) )
 		$loops[] = 'cart-total';
 	foreach( it_exchange_get_template_part_loops( 'super-widget-checkout', 'after-cart-items', $loops ) as $loop ) :

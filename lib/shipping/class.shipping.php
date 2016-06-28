@@ -479,7 +479,7 @@ class IT_Exchange_Shipping {
 		}
 
 		// Locate the discounts key in elements array (if it exists)
-		$index = array_search( 'totals-savings', $elements );
+		$index = array_search( 'discounts', $elements );
 		if ( false === $index ) {
 			$index = count( $elements ) - 1;
 		}
