@@ -50,6 +50,13 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function get_type() {
+		return 'cart';
+	}
+
+	/**
 	 * Increment usage of this coupon.
 	 *
 	 * @since 1.33
@@ -85,6 +92,89 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 		if ( $this->is_frequency_limited() ) {
 			$this->reduce_customer_coupon_frequency( $transaction_object );
 		}
+	}
+
+	/**
+	 * Apply a coupon to the cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Cart $cart
+	 *
+	 * @return bool
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public function apply( ITE_Cart $cart ) {
+
+		if ( $this->get_application_method() === self::APPLY_CART ) {
+			return $this->apply_for_cart( $cart );
+		} elseif ( $this->get_application_method() === self::APPLY_PRODUCT ) {
+			return $this->apply_for_product( $cart );
+		}
+	}
+
+	/**
+	 * Apply a cart-wide coupon.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Cart $cart
+	 *
+	 * @return bool
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	private function apply_for_cart( ITE_Cart $cart ) {
+
+		$apply_to = array();
+
+		foreach ( $cart->get_items( 'product' ) as $product ) {
+			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product->get_data_to_save(), $this ) ) {
+				$apply_to[] = $product;
+			}
+		}
+
+		$amount = $this->get_amount_number() / count( $apply_to );
+
+		/** @var ITE_Cart_Product $product */
+		foreach ( $apply_to as $product ) {
+			if ( $this->get_amount_type() === self::TYPE_FLAT ) {
+				$product->add_item( new ITE_Coupon_Line_Item( $this, $amount ) );
+			} else {
+				$product->add_item( new ITE_Coupon_Line_Item(
+					$this, ( $amount / 100 ) * ( $product->get_amount() * $product->get_quantity() )
+				) );
+			}
+		}
+
+		return $cart->get_repository()->save_many( $apply_to );
+	}
+
+	private function apply_for_product( ITE_Cart $cart ) {
+
+		$apply_to = array();
+
+		foreach ( $cart->get_items( 'product' ) as $product ) {
+			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product->get_data_to_save(), $this ) ) {
+				$apply_to[] = $product;
+			}
+		}
+
+		$amount = $this->get_amount_number();
+
+		/** @var ITE_Cart_Product $product */
+		foreach ( $apply_to as $product ) {
+			if ( $this->get_amount_type() === self::TYPE_FLAT ) {
+				$product->add_item( new ITE_Coupon_Line_Item( $this, $amount ) );
+			} else {
+				$product->add_item( new ITE_Coupon_Line_Item(
+					$this, ( $amount / 100 ) * ( $product->get_amount() * $product->get_quantity() )
+				) );
+			}
+		}
+
+		return $cart->get_repository()->save_many( $apply_to );
 	}
 
 	/**

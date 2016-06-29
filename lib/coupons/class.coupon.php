@@ -102,8 +102,8 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 		 * @param array   $properties
 		 * @param WP_Post $post
 		 */
-		$additional_properties = apply_filters( 'it_exchange_coupon_additional_data', array(), $post );
-		foreach ( $additional_properties as $key => $value ) {
+		$additional = apply_filters_deprecated( 'it_exchange_coupon_additional_data', array( array(), $post ), '1.33' );
+		foreach ( $additional as $key => $value ) {
 			$this->coupon_data[ $key ] = $value;
 			$this->$key                = $value;
 		}
@@ -126,6 +126,15 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 
 		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
+
+	/**
+	 * Get the type of this coupon.
+	 * 
+	 * @since 1.36.0
+	 * 
+	 * @return string
+	 */
+	public function get_type() { return ''; }
 
 	/**
 	 * This method is called when a coupon is used for a transaction.

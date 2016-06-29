@@ -1733,7 +1733,7 @@ add_action( 'it_exchange_trans_txn_garbage_collection', 'it_exchange_trans_txn_c
 if ( ! function_exists( 'apply_filters_deprecated' ) ) {
 	function apply_filters_deprecated( $tag, $args, $version, $replacement = false, $message = null ) {
 		if ( ! has_filter( $tag ) ) {
-			return;
+			return $args[0];
 		}
 
 		_deprecated_hook( $tag, $version, $replacement, $message );

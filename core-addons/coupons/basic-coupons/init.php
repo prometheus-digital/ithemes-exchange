@@ -228,9 +228,10 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	$addon_result = apply_filters( 'it_exchange_basic_coupons_apply_coupon_to_cart', null, $options, $coupon );
 
 	if ( $addon_result === false ) {
-
 		return $addon_result;
 	}
+	
+	$coupon->apply( it_exchange_get_current_cart() );
 
 	// Format data for session
 	$coupon = array(
@@ -245,6 +246,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	do_action( 'it_exchange_basic_coupon_applied', $data );
 
 	it_exchange_add_message( 'notice', __( 'Coupon applied', 'it-l10n-ithemes-exchange' ) );
+	
 	return true;
 }
 
@@ -417,7 +419,7 @@ function it_exchange_basic_coupons_apply_discount_to_cart_total( $total ) {
 
 	return $total;
 }
-add_filter( 'it_exchange_get_cart_total', 'it_exchange_basic_coupons_apply_discount_to_cart_total' );
+//add_filter( 'it_exchange_get_cart_total', 'it_exchange_basic_coupons_apply_discount_to_cart_total' );
 
 /**
  * Returns the total discount from applied coupons
