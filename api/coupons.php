@@ -330,6 +330,19 @@ function it_exchange_get_remove_coupon_html( $type, $code, $options = array() ) 
 */
 function it_exchange_apply_coupon( $type, $code, $options=array() ) {
 	$options['code'] = $code;
+	
+	if ( $coupon = it_exchange_get_coupon_from_code( $code, $type ) ) {
+		try {
+			$cart = it_exchange_get_current_cart();
+			$coupon->validate( $cart );
+			$coupon->apply( $cart );
+		} catch ( Exception $e ) {
+			it_exchange_add_message( 'error', $e->getMessage() );
+
+			return false;
+		}
+	}
+	
 	return apply_filters( 'it_exchange_apply_coupon_to_' . $type, false, $options );
 }
 

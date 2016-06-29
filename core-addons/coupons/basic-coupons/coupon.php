@@ -95,15 +95,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	}
 
 	/**
-	 * Apply a coupon to the cart.
-	 *
-	 * @since 1.36.0
-	 *
-	 * @param \ITE_Cart $cart
-	 *
-	 * @return bool
-	 *
-	 * @throws \InvalidArgumentException
+	 * @inheritdoc
 	 */
 	public function apply( ITE_Cart $cart ) {
 
@@ -111,6 +103,8 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 			return $this->apply_for_cart( $cart );
 		} elseif ( $this->get_application_method() === self::APPLY_PRODUCT ) {
 			return $this->apply_for_product( $cart );
+		} else {
+			return false;
 		}
 	}
 
@@ -151,6 +145,17 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 		return $cart->get_repository()->save_many( $apply_to );
 	}
 
+	/**
+	 * Apply a per-product coupon.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Cart $cart
+	 *
+	 * @return bool
+	 * 
+	 * @throws \InvalidArgumentException
+	 */
 	private function apply_for_product( ITE_Cart $cart ) {
 
 		$apply_to = array();
@@ -277,19 +282,21 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 *
 	 * @throws Exception
 	 */
-	public function validate() {
+	public function validate( ITE_Cart $cart = null ) {
+		
+		$cart = $cart ? $cart : it_exchange_get_current_cart();
 
 		if ( $this->is_quantity_limited() && ! $this->get_remaining_quantity() ) {
 			throw new Exception( __( 'This coupon has reached its maximum uses.', 'it-l10n-ithemes-exchange' ), self::E_NO_QUANTITY );
 		}
 
-		if ( $this->is_customer_limited() && it_exchange_get_current_customer_id() != $this->get_customer()->ID ) {
+		if ( $this->is_customer_limited() && $cart->get_customer()->ID != $this->get_customer()->ID ) {
 			throw new Exception( __( 'Invalid coupon.', 'it-l10n-ithemes-exchange' ), self::E_INVALID_CUSTOMER );
 		}
 
 		$has_product = false;
 
-		foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+		foreach ( $cart->get_items( 'product' ) as $product ) {
 			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product->get_data_to_save(), $this ) ) {
 				$has_product = true;
 

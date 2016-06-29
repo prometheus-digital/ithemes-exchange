@@ -301,6 +301,34 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	}
 
 	/**
+	 * Apply this coupon to a cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Cart $cart
+	 *
+	 * @return bool
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public function apply( ITE_Cart $cart ) {
+		return false;
+	}
+
+	/**
+	 * Validate the coupon for a given cart.
+	 * 
+	 * @since 1.36.0
+	 * 
+	 * @param \ITE_Cart|null $cart If null, default to the current cart.
+	 * 
+	 * @throws Exception
+	 */
+	public function validate( ITE_Cart $cart = null ) {
+		
+	}
+
+	/**
 	 * The __toString method allows a class to decide how it will react when it is converted to a string.
 	 *
 	 * @since 1.33

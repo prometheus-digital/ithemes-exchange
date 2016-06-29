@@ -38,3 +38,28 @@ function it_exchange_revert_coupon_use_on_cancellation( IT_Exchange_Transaction 
 }
 
 add_action( 'it_exchange_update_transaction_status', 'it_exchange_revert_coupon_use_on_cancellation', 10, 3 );
+
+/**
+ * Reapply coupons to the cart if an item is added or removed to the cart.
+ *
+ * @since 1.36.0
+ *
+ * @param \ITE_Line_Item $item
+ * @param \ITE_Cart      $cart
+ */
+function it_exchange_reapply_coupons( ITE_Line_Item $item, ITE_Cart $cart ) {
+
+	if ( $item->get_type() === 'coupon' ) {
+		return;
+	}
+
+	$coupons = $cart->get_items( 'coupon', true );
+	$coupons->delete();
+
+	foreach ( $coupons as $coupon ) {
+		$cart->add_item( $coupon );
+	}
+}
+
+add_action( 'it_exchange_add_line_item_to_cart', 'it_exchange_reapply_coupons', 10, 2 );
+add_action( 'it_exchange_remove_line_item_from_cart', 'it_exchange_reapply_coupons', 10, 2 );

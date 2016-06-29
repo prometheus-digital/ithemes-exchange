@@ -205,14 +205,6 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 		return false;
 	}
 
-	try {
-		$coupon->validate();
-	} catch ( Exception $e ) {
-		it_exchange_add_message( 'error', $e->getMessage() );
-
-		return false;
-	}
-
 	/**
 	 * Fires before a coupon is applied to the cart.
 	 *
@@ -230,8 +222,6 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	if ( $addon_result === false ) {
 		return $addon_result;
 	}
-	
-	$coupon->apply( it_exchange_get_current_cart() );
 
 	// Format data for session
 	$coupon = array(
