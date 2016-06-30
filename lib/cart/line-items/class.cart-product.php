@@ -9,7 +9,8 @@
 /**
  * Class ITE_Cart_Product
  */
-class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware {
+class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item,
+                                  ITE_Discountable_Line_Item, ITE_Line_Item_Repository_Aware {
 
 	/**
 	 * @var ITE_Aggregatable_Line_Item[]
@@ -257,6 +258,22 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	/**
 	 * @inheritDoc
 	 */
+	public function get_amount_to_discount() {
+
+		$base = $this->get_base_amount();
+
+		foreach ( $this->aggregate as $item ) {
+			if ( $item instanceof ITE_Discountable_Line_Item ) {
+				$base += $item->get_amount_to_discount();
+			}
+		}
+
+		return $base;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function is_tax_exempt() {
 		return false;
 	}
@@ -273,7 +290,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 */
 	public function get_taxable_amount() {
 
-		$base = it_exchange_get_cart_product_base_price( $this->get_data_to_save(), false );
+		$base = $this->get_base_amount();
 
 		foreach ( $this->aggregate as $aggregate ) {
 			if ( $aggregate instanceof ITE_Taxable_Line_Item ) {
@@ -334,7 +351,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 */
 	public function remove_all_taxes() {
 		$taxes = $this->taxes;
-		
+
 		foreach ( $taxes as $tax ) {
 			$this->remove_tax( $tax->get_id() );
 		}
@@ -376,7 +393,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 * @inheritDoc
 	 */
 	public function add_item( ITE_Aggregatable_Line_Item $item ) {
-		
+
 		$item->set_aggregate( $this );
 
 		if ( $item instanceof ITE_Tax_Line_Item && ! in_array( $item, $this->get_taxes(), true ) ) {
@@ -449,8 +466,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 */
 	public function get_amount() {
 
-		$base = $this->get_product()->get_feature( 'base-price' );
-		$base = apply_filters( 'it_exchange_get_cart_product_base_price', $base, $this->get_data_to_save(), false );
+		$base = $this->get_base_amount();
 
 		foreach ( $this->aggregate as $aggregate ) {
 			if ( ! $aggregate->is_summary_only() ) {
@@ -459,6 +475,20 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 		}
 
 		return $base;
+	}
+
+	/**
+	 * Get the base amount, before any aggregatables are applied.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return float
+	 */
+	protected function get_base_amount() {
+
+		$base = $this->get_product()->get_feature( 'base-price' );
+
+		return apply_filters( 'it_exchange_get_cart_product_base_price', $base, $this->get_data_to_save(), false );
 	}
 
 	/**

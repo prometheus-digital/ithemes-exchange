@@ -120,6 +120,35 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	}
 
 	/**
+	 * Return a unique collection of items.
+	 * 
+	 * If no callback is given, uniques will be detected by the ID and type.
+	 * 
+	 * @since 1.36.0
+	 *        
+	 * @param callable $callback
+	 * 
+	 * @return \ITE_Line_Item_Collection
+	 */
+	public function unique( $callback = null ) {
+
+		$items = array();
+
+		foreach ( $this->items as $item ) {
+			
+			if ( $callback ) {
+				$key = $callback($item);
+			} else {
+				$key = $item->get_type() . $item->get_id();
+			}
+			
+			$items[ $key ] = $item;
+		}
+
+		return new self( array_values( $items ), $this->repository );
+	}
+
+	/**
 	 * Calculate the total of all items in this collection.
 	 *
 	 * @since 1.36
@@ -149,7 +178,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 
 	/**
 	 * Remove all of the items in this collection.
-	 * 
+	 *
 	 * @since 1.36
 	 */
 	public function delete() {

@@ -11,13 +11,16 @@
  */
 class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item {
 
+	const PERCENT = '%';
+	const FLAT = 'flat';
+
 	/** @var IT_Exchange_Coupon */
 	private $coupon;
 
 	/** @var ITE_Parameter_Bag */
 	private $bag;
 
-	/** @var ITE_Aggregate_Line_Item */
+	/** @var ITE_Aggregate_Line_Item|ITE_Cart_Product */
 	private $aggregate;
 
 	/** @var string */
@@ -26,15 +29,20 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item {
 	/** @var float */
 	private $amount;
 
+	/** @var string */
+	private $type;
+
 	/**
 	 * ITE_Coupon_Line_Item constructor.
 	 *
 	 * @param \IT_Exchange_Coupon $coupon
-	 * @param float               $amount
+	 * @param \ITE_Cart_Product   $product
+	 * @param float               $amount Amount to discount.
+	 * @param string              $type   Either '%' or 'flat'.
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct( \IT_Exchange_Coupon $coupon, $amount ) {
+	public function __construct( IT_Exchange_Coupon $coupon, ITE_Cart_Product $product = null, $amount, $type ) {
 
 		if ( ! $coupon->get_type() ) {
 			throw new InvalidArgumentException(
@@ -42,13 +50,19 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item {
 			);
 		}
 
-		if ( $amount >= 0 ) {
-			$amount = -$amount;
+		if ( $product ) {
+			$this->id = md5( $coupon->get_code() . '-' . $product->get_id() );
+		} else {
+			$this->id = md5( $coupon->get_code() );
 		}
 
-		$this->id     = $coupon->get_code();
 		$this->coupon = $coupon;
 		$this->amount = $amount;
+		$this->type   = $type;
+
+		if ( $product ) {
+			$this->set_aggregate( $product );
+		}
 	}
 
 	/**
@@ -59,6 +73,31 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item {
 	 * @return \IT_Exchange_Coupon
 	 */
 	public function get_coupon() { return $this->coupon; }
+
+	/**
+	 * Calculate the number of items this coupon applies to.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return int
+	 */
+	protected function calculate_num_items() {
+
+		// need to fix this, this is all reaching into crazy scopes
+		if ( $this->get_coupon()->get_application_method() === 'per-product' ) {
+			return 1;
+		}
+
+		$i = 0;
+
+		foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+			if ( $this->get_coupon()->valid_for_product( $product ) ) {
+				$i += $product->get_quantity();
+			}
+		}
+
+		return $i;
+	}
 
 	/**
 	 * @inheritDoc
@@ -93,7 +132,20 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_amount() { return $this->amount; }
+	public function get_amount() {
+
+		$amount = $this->amount / $this->calculate_num_items();
+
+		if ( $this->type === self::FLAT ) {
+			return - $amount;
+		} elseif ( $this->type === self::PERCENT ) {
+			$product = $this->get_aggregate();
+
+			return - ( ( $amount / 100 ) * ( $product->get_amount_to_discount() * $product->get_quantity() ) );
+		} else {
+			return 0;
+		}
+	}
 
 	/**
 	 * @inheritDoc
@@ -149,9 +201,10 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item {
 	 */
 	public function get_data_to_save( \ITE_Line_Item_Repository $repository = null ) {
 		return array(
-			'code'   => $this->get_coupon()->get_code(),
-			'type'   => $this->get_coupon()->get_type(),
-			'amount' => $this->get_amount(),
+			'code'        => $this->get_coupon()->get_code(),
+			'coupon_type' => $this->get_coupon()->get_type(),
+			'amount'      => $this->amount,
+			'type'        => $this->type,
 		);
 	}
 
@@ -160,7 +213,9 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item {
 	 */
 	public static function from_data( $id, array $data, ITE_Line_Item_Repository $repository ) {
 
-		$self     = new self( it_exchange_get_coupon_from_code( $data['code'], $data['type'] ), $data['amount'] );
+		$coupon = it_exchange_get_coupon_from_code( $data['code'], $data['coupon_type'] );
+
+		$self     = new self( $coupon, null, $data['amount'], $data['type'] );
 		$self->id = $id;
 
 		return $self;

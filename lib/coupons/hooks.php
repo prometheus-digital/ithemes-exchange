@@ -53,11 +53,15 @@ function it_exchange_reapply_coupons( ITE_Line_Item $item, ITE_Cart $cart ) {
 		return;
 	}
 
-	$coupons = $cart->get_items( 'coupon', true );
+	$coupons = $cart->get_items( 'coupon', true )->unique( function ( ITE_Coupon_Line_Item $item ) {
+		return $item->get_coupon()->get_type() . $item->get_coupon()->get_code();
+	} );
+
 	$coupons->delete();
 
+	/** @var ITE_Coupon_Line_Item $coupon */
 	foreach ( $coupons as $coupon ) {
-		$cart->add_item( $coupon );
+		$coupon->get_coupon()->apply( $cart );
 	}
 }
 

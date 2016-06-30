@@ -101,6 +101,11 @@ function it_exchange_format_price( $price, $show_symbol = true ) {
 			$before = $currency;
 	}
 
+	if ( $price < 0 ) {
+		$before = '&minus;' . $before;
+		$price  = abs( $price );
+	}
+
 	return $before . number_format( $price, 2, $settings['currency-decimals-separator'], $settings['currency-thousands-separator'] ) . $after;
 }
 

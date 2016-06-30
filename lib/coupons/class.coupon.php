@@ -129,9 +129,9 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 
 	/**
 	 * Get the type of this coupon.
-	 * 
+	 *
 	 * @since 1.36.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_type() { return ''; }
@@ -317,15 +317,28 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 
 	/**
 	 * Validate the coupon for a given cart.
-	 * 
+	 *
 	 * @since 1.36.0
-	 * 
+	 *
 	 * @param \ITE_Cart|null $cart If null, default to the current cart.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public function validate( ITE_Cart $cart = null ) {
-		
+
+	}
+
+	/**
+	 * Whether this coupon is valid for a given product.
+	 * 
+	 * @since 1.36.0
+	 * 
+	 * @param \ITE_Cart_Product $product
+	 *
+	 * @return bool
+	 */
+	public function valid_for_product( ITE_Cart_Product $product ) {
+		return false;
 	}
 
 	/**
