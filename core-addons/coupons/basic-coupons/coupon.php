@@ -110,7 +110,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 		/** @var ITE_Cart_Product $product */
 		foreach ( $apply_to as $product ) {
 			$item = new ITE_Coupon_Line_Item(
-				$this, $product, $this->get_amount_number(), $this->get_amount_type()
+				$this, $product, $this->get_amount_number(), $this->get_amount_type(), $this->get_application_method()
 			);
 			$product->add_item( $item );
 		}

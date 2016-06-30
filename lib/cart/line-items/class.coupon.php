@@ -14,6 +14,9 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item {
 	const PERCENT = '%';
 	const FLAT = 'flat';
 
+	const PRODUCT = 'per-product';
+	const CART = 'cart';
+
 	/** @var IT_Exchange_Coupon */
 	private $coupon;
 
@@ -32,6 +35,9 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item {
 	/** @var string */
 	private $type;
 
+	/** @var string */
+	private $method;
+
 	/**
 	 * ITE_Coupon_Line_Item constructor.
 	 *
@@ -39,10 +45,11 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item {
 	 * @param \ITE_Cart_Product   $product
 	 * @param float               $amount Amount to discount.
 	 * @param string              $type   Either '%' or 'flat'.
+	 * @param string              $method Either 'per-product' or 'cart'.
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct( IT_Exchange_Coupon $coupon, ITE_Cart_Product $product = null, $amount, $type ) {
+	public function __construct( IT_Exchange_Coupon $coupon, ITE_Cart_Product $product = null, $amount, $type, $method ) {
 
 		if ( ! $coupon->get_type() ) {
 			throw new InvalidArgumentException(
@@ -59,6 +66,7 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item {
 		$this->coupon = $coupon;
 		$this->amount = $amount;
 		$this->type   = $type;
+		$this->method = $method;
 
 		if ( $product ) {
 			$this->set_aggregate( $product );
@@ -83,8 +91,7 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item {
 	 */
 	protected function calculate_num_items() {
 
-		// need to fix this, this is all reaching into crazy scopes
-		if ( $this->get_coupon()->get_application_method() === 'per-product' ) {
+		if ( $this->method === 'per-product' || $this->type === self::PERCENT ) {
 			return 1;
 		}
 

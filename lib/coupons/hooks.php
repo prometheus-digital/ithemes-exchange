@@ -66,4 +66,4 @@ function it_exchange_reapply_coupons( ITE_Line_Item $item, ITE_Cart $cart ) {
 }
 
 add_action( 'it_exchange_add_line_item_to_cart', 'it_exchange_reapply_coupons', 10, 2 );
-add_action( 'it_exchange_remove_line_item_from_cart', 'it_exchange_reapply_coupons', 10, 2 );
+//add_action( 'it_exchange_remove_line_item_from_cart', 'it_exchange_reapply_coupons', 10, 2 );
