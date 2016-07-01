@@ -365,6 +365,7 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 			'amount'      => $this->amount,
 			'type'        => $this->type,
 			'method'      => $this->method,
+			'params'      => $this->get_params(),
 		);
 	}
 
@@ -377,6 +378,10 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 
 		$self     = new self( $coupon, null, $data['amount'], $data['type'], $data['method'] );
 		$self->id = $id;
+
+		if ( ! empty( $data['params'] ) ) {
+			$self->bag = new ITE_Array_Parameter_Bag( $data['params'] );
+		}
 
 		return $self;
 	}

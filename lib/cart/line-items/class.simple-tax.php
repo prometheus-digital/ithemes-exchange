@@ -226,8 +226,8 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 		$item     = new self( $data['rate'], $data['codes'] );
 		$item->id = $id;
 
-		foreach ( $data['params'] as $key => $value ) {
-			$item->bag->set_param( $key, $value );
+		if ( ! empty( $data['params'] ) ) {
+			$item->bag = new ITE_Array_Parameter_Bag( $data['params'] );
 		}
 
 		return $item;

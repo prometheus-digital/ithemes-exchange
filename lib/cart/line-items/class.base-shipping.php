@@ -339,6 +339,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 			'method'    => $this->get_method()->slug,
 			'provider'  => $this->get_provider()->slug,
 			'cart_wide' => $this->is_cart_wide(),
+			'params'    => $this->get_params(),
 		);
 	}
 
@@ -354,6 +355,10 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 		);
 
 		$self->id = $id;
+
+		if ( ! empty( $data['params'] ) ) {
+			$self->bag = new ITE_Array_Parameter_Bag( $data['params'] );
+		}
 
 		return $self;
 	}
