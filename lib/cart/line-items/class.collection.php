@@ -149,6 +149,51 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	}
 
 	/**
+	 * Flatten the collection.
+	 * 
+	 * @since 1.36.0
+	 * 
+	 * @return \ITE_Line_Item_Collection
+	 */
+	public function flatten() {
+		
+		$items = array();
+		
+		foreach ( $this->items as $item ) {
+			if ( $item instanceof ITE_Aggregate_Line_Item ) {
+				$items = array_merge( $items, $this->unravel( $item ) );
+			}
+			
+			$items[] = $item;
+		}
+		
+		return new self( $items, $this->repository );
+	}
+
+	/**
+	 * Unravel an aggregate line item.
+	 *
+	 * @since 1.36
+	 *
+	 * @param \ITE_Aggregate_Line_Item $item
+	 *
+	 * @return \ITE_Line_Item[]
+	 */
+	protected final function unravel( ITE_Aggregate_Line_Item $item ) {
+		$nested = array();
+
+		foreach ( $item->get_line_items() as $child ) {
+			if ( $child instanceof ITE_Aggregate_Line_Item ) {
+				$nested = array_merge( $nested, $this->unravel( $child ) );
+			}
+
+			$nested[] = $child;
+		}
+
+		return $nested;
+	}
+
+	/**
 	 * Calculate the total of all items in this collection.
 	 *
 	 * @since 1.36

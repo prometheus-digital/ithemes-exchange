@@ -95,6 +95,24 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	 * @inheritDoc
 	 */
 	public function get_amount() {
+
+		$base = $this->get_base_amount();
+
+		foreach ( $this->aggregatables as $aggregatable ) {
+			$base += $aggregatable->get_amount() * $aggregatable->get_quantity();
+		}
+
+		return $base;
+	}
+
+	/**
+	 * Get the base amount.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return float
+	 */
+	protected function get_base_amount() {
 		if ( $this->aggregate ) {
 			return $this->get_method()->get_shipping_cost_for_product( $this->aggregate->get_data_to_save() );
 		} else {
@@ -152,16 +170,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	 * @inheritDoc
 	 */
 	public function get_taxable_amount() {
-
-		$base = it_exchange_get_cart_product_base_price( $this->get_data_to_save(), false );
-
-		foreach ( $this->aggregate as $aggregate ) {
-			if ( $aggregate instanceof ITE_Taxable_Line_Item ) {
-				$base += $aggregate->get_taxable_amount();
-			}
-		}
-
-		return $base;
+		return $this->get_base_amount();
 	}
 
 	/**
@@ -179,7 +188,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 		$this->add_item( $tax );
 
 		foreach ( $this->get_line_items() as $item ) {
-			if ( $item instanceof ITE_Taxable_Line_Item ) {
+			if ( $item instanceof ITE_Taxable_Line_Item && $tax->applies_to( $item ) ) {
 				$item->add_tax( $tax->create_scoped_for_taxable( $item ) );
 			}
 		}
@@ -213,7 +222,12 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	 * @inheritDoc
 	 */
 	public function remove_all_taxes() {
-		$this->taxes = array();
+
+		$taxes = $this->get_taxes();
+
+		foreach ( $taxes as $tax ) {
+			$this->remove_tax( $tax->get_id() );
+		}
 	}
 
 	/**

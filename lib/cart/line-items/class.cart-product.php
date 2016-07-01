@@ -289,16 +289,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 * @inheritDoc
 	 */
 	public function get_taxable_amount() {
-
-		$base = $this->get_base_amount();
-
-		foreach ( $this->aggregate as $aggregate ) {
-			if ( $aggregate instanceof ITE_Taxable_Line_Item ) {
-				$base += $aggregate->get_taxable_amount();
-			}
-		}
-
-		return $base;
+		return $this->get_base_amount();
 	}
 
 	/**
@@ -316,7 +307,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 		$this->add_item( $tax );
 
 		foreach ( $this->get_line_items() as $item ) {
-			if ( $item instanceof ITE_Taxable_Line_Item ) {
+			if ( $item instanceof ITE_Taxable_Line_Item && $tax->applies_to( $item ) ) {
 				$item->add_tax( $tax->create_scoped_for_taxable( $item ) );
 			}
 		}

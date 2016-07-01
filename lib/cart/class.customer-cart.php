@@ -202,18 +202,7 @@ class ITE_Cart {
 		}
 
 		if ( $flatten ) {
-			$items = array();
-
-			// unravel
-			foreach ( $this->get_items() as $item ) {
-				if ( $item instanceof ITE_Aggregate_Line_Item ) {
-					$items = array_merge( $items, $this->unravel( $item ) );
-				}
-
-				$items[] = $item;
-			}
-
-			$items = new ITE_Line_Item_Collection( $items, $this->get_repository() );
+			$items = $this->get_items()->flatten();
 
 			if ( $type ) {
 				return $items->with_only( $type );
@@ -237,29 +226,6 @@ class ITE_Cart {
 		} else {
 			return new ITE_Line_Item_Collection( array(), $this->get_repository() );
 		}
-	}
-
-	/**
-	 * Unravel an aggregate line item.
-	 *
-	 * @since 1.36
-	 *
-	 * @param \ITE_Aggregate_Line_Item $item
-	 *
-	 * @return \ITE_Line_Item[]
-	 */
-	protected final function unravel( ITE_Aggregate_Line_Item $item ) {
-		$nested = array();
-
-		foreach ( $item->get_line_items() as $child ) {
-			if ( $child instanceof ITE_Aggregate_Line_Item ) {
-				$nested = array_merge( $nested, $this->unravel( $child ) );
-			} else {
-				$nested[] = $child;
-			}
-		}
-
-		return $nested;
 	}
 
 	/**
