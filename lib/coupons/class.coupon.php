@@ -13,6 +13,12 @@
  */
 class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 
+	const TYPE_PERCENT = '%';
+	const TYPE_FLAT = 'amount';
+
+	const APPLY_CART = 'cart';
+	const APPLY_PRODUCT = 'per-product';
+
 	// WP Post Type Properties
 	var $ID;
 	var $post_author;
@@ -135,6 +141,37 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	 * @return string
 	 */
 	public function get_type() { return ''; }
+
+	/**
+	 * Get the application method.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_application_method() { return ''; }
+
+	/**
+	 * Get the type of the discount.
+	 *
+	 * Either '%' or 'amount', but you should evaluate against the constants provided.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_amount_type() { return ''; }
+
+	/**
+	 * Get the total amount of the discount.
+	 *
+	 * ie, the 5 in 5% or the 10 in $10 off.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return float
+	 */
+	public function get_amount_number() { return 0.00; }
 
 	/**
 	 * This method is called when a coupon is used for a transaction.

@@ -9,28 +9,14 @@
 /**
  * Class ITE_Coupon_Line_Item
  */
-class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_Item, ITE_Aggregate_Line_Item, ITE_Line_Item_Repository_Aware {
-
-	const PERCENT = '%';
-	const FLAT = 'flat';
-
-	const PRODUCT = 'per-product';
-	const CART = 'cart';
+class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Aggregate_Line_Item,
+                                      ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware {
 
 	/** @var IT_Exchange_Coupon */
 	private $coupon;
 
 	/** @var string */
 	private $id;
-
-	/** @var float */
-	private $amount;
-
-	/** @var string */
-	private $type;
-
-	/** @var string */
-	private $method;
 
 	/** @var ITE_Parameter_Bag */
 	private $bag;
@@ -49,13 +35,10 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	 *
 	 * @param \IT_Exchange_Coupon $coupon
 	 * @param \ITE_Cart_Product   $product
-	 * @param float               $amount Amount to discount.
-	 * @param string              $type   Either '%' or 'flat'.
-	 * @param string              $method Either 'per-product' or 'cart'.
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct( IT_Exchange_Coupon $coupon, ITE_Cart_Product $product = null, $amount, $type, $method ) {
+	public function __construct( IT_Exchange_Coupon $coupon, ITE_Cart_Product $product = null ) {
 
 		if ( ! $coupon->get_type() ) {
 			throw new InvalidArgumentException(
@@ -70,9 +53,6 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 		}
 
 		$this->coupon = $coupon;
-		$this->amount = $amount;
-		$this->type   = $type;
-		$this->method = $method;
 
 		if ( $product ) {
 			$this->set_aggregate( $product );
@@ -97,7 +77,11 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	 */
 	protected function calculate_num_items() {
 
-		if ( $this->method === 'per-product' || $this->type === self::PERCENT ) {
+		if ( $this->get_coupon()->get_application_method() === IT_Exchange_Coupon::APPLY_PRODUCT ) {
+			return 1;
+		}
+		
+		if ( $this->get_coupon()->get_amount_type() === IT_Exchange_Coupon::TYPE_PERCENT ) {
 			return 1;
 		}
 
@@ -293,11 +277,11 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	 */
 	protected function get_base_amount() {
 
-		$amount = $this->amount / $this->calculate_num_items();
+		$amount = $this->get_coupon()->get_amount_number() / $this->calculate_num_items();
 
-		if ( $this->type === self::FLAT ) {
+		if ( $this->get_coupon()->get_amount_type() === IT_Exchange_Coupon::TYPE_FLAT ) {
 			return - $amount;
-		} elseif ( $this->type === self::PERCENT ) {
+		} elseif ( $this->get_coupon()->get_amount_type() === IT_Exchange_Coupon::TYPE_PERCENT ) {
 			$product = $this->get_aggregate();
 
 			return - ( ( $amount / 100 ) * ( $product->get_amount_to_discount() * $product->get_quantity() ) );
@@ -362,9 +346,6 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 		return array(
 			'code'        => $this->get_coupon()->get_code(),
 			'coupon_type' => $this->get_coupon()->get_type(),
-			'amount'      => $this->amount,
-			'type'        => $this->type,
-			'method'      => $this->method,
 			'params'      => $this->get_params(),
 		);
 	}
@@ -376,7 +357,7 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 
 		$coupon = it_exchange_get_coupon_from_code( $data['code'], $data['coupon_type'] );
 
-		$self     = new self( $coupon, null, $data['amount'], $data['type'], $data['method'] );
+		$self     = new self( $coupon, null );
 		$self->id = $id;
 
 		if ( ! empty( $data['params'] ) ) {
