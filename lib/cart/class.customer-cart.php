@@ -58,6 +58,10 @@ class ITE_Cart {
 		}
 
 		$this->customer = $customer;
+
+		$this->add_cart_validator( new ITE_Multi_Item_Cart_Validator() );
+		$this->add_item_validator( new ITE_Multi_Item_Product_Validator() );
+		$this->add_item_validator( new ITE_Product_Inventory_Validator() );
 	}
 
 	/**
@@ -409,12 +413,14 @@ class ITE_Cart {
 	 *
 	 * @since 1.36
 	 *
+	 * @param \ITE_Cart_Feedback|null $feedback
+	 *
 	 * @return bool
 	 */
-	public function validate() {
+	public function validate( ITE_Cart_Feedback $feedback = null ) {
 
 		foreach ( $this->cart_validators as $cart_validator ) {
-			if ( ! $cart_validator->validate( $this ) ) {
+			if ( ! $cart_validator->validate( $this, $feedback ) ) {
 				return false;
 			}
 		}
@@ -423,7 +429,7 @@ class ITE_Cart {
 
 		foreach ( $this->item_validators as $item_validator ) {
 			foreach ( $items as $item ) {
-				if ( $item_validator->accepts( $item->get_type() ) && ! $item_validator->validate( $item, $this ) ) {
+				if ( $item_validator->accepts( $item->get_type() ) && ! $item_validator->validate( $item, $this, $feedback ) ) {
 					return false;
 				}
 			}
@@ -437,16 +443,20 @@ class ITE_Cart {
 	 *
 	 * @since 1.36
 	 *
-	 * @param \ITE_LIne_Item $new_item
+	 * @param \ITE_Line_Item     $new_item
+	 * @param \ITE_Cart_Feedback $feedback
 	 *
-	 * @return bool False if the coercion failed.
+	 * @return bool
+	 *
+	 * @throws \ITE_Line_Item_Coercion_Failed_Exception
+	 * @throws \ITE_Cart_Coercion_Failed_Exception
 	 */
-	public function coerce( ITE_Line_Item $new_item = null ) {
+	public function coerce( ITE_Line_Item $new_item = null, ITE_Cart_Feedback $feedback = null ) {
 
 		$valid = true;
 
 		foreach ( $this->cart_validators as $cart_validator ) {
-			if ( ! $cart_validator->coerce( $this, $new_item ) ) {
+			if ( ! $cart_validator->coerce( $this, $new_item, $feedback ) ) {
 				$valid = false;
 			}
 		}
@@ -455,7 +465,7 @@ class ITE_Cart {
 
 		foreach ( $this->item_validators as $item_validator ) {
 			foreach ( $items as $item ) {
-				if ( $item_validator->accepts( $item->get_type() ) && ! $item_validator->coerce( $item, $this ) ) {
+				if ( $item_validator->accepts( $item->get_type() ) && ! $item_validator->coerce( $item, $this, $feedback ) ) {
 					$valid = false;
 				}
 			}

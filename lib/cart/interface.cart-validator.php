@@ -25,21 +25,25 @@ interface ITE_Cart_Validator {
 	 *
 	 * @since 1.36
 	 *
-	 * @param \ITE_Cart $cart
+	 * @param \ITE_Cart          $cart
+	 * @param \ITE_Cart_Feedback $feedback
 	 *
 	 * @return bool
 	 */
-	public function validate( ITE_Cart $cart );
+	public function validate( ITE_Cart $cart, ITE_Cart_Feedback $feedback = null );
 
 	/**
 	 * Coerce a cart to be valid.
 	 *
 	 * @since 1.36
 	 *
-	 * @param \ITE_Cart      $cart
-	 * @param \ITE_Line_Item $new_item The most recently added item.
+	 * @param \ITE_Cart          $cart
+	 * @param \ITE_Line_Item     $new_item The most recently added item.
+	 * @param \ITE_Cart_Feedback $feedback
 	 *
-	 * @return bool Returns false if the cart could not be coerced.
+	 * @return bool True if coercion took place, false if not.
+	 *
+	 * @throws ITE_Cart_Coercion_Failed_Exception
 	 */
-	public function coerce( ITE_Cart $cart, \ITE_Line_Item $new_item = null );
+	public function coerce( ITE_Cart $cart, \ITE_Line_Item $new_item = null, ITE_Cart_Feedback $feedback = null );
 }

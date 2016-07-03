@@ -500,7 +500,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 * @inheritDoc
 	 */
 	public function persist( ITE_Line_Item_Repository $repository ) {
-		$repository->save( $this );
+		return $repository->save( $this );
 	}
 
 	/**

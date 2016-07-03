@@ -149,9 +149,7 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	/**
 	 * @inheritDoc
 	 */
-	public function persist( ITE_Line_Item_Repository $repository ) {
-		$repository->save( $this );
-	}
+	public function persist( ITE_Line_Item_Repository $repository ) { return $repository->save( $this ); }
 
 	/**
 	 * @inheritDoc

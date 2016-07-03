@@ -11,6 +11,8 @@ require_once dirname( __FILE__ ) . '/deprecated.php';
 require_once dirname( __FILE__ ) . '/class.customer-cart.php';
 require_once dirname( __FILE__ ) . '/class.parameter-bag.php';
 require_once dirname( __FILE__ ) . '/class.shopping-cart.php';
+require_once dirname( __FILE__ ) . '/class.feedback.php';
+require_once dirname( __FILE__ ) . '/class.feedback-item.php';
 require_once dirname( __FILE__ ) . '/interface.cart-validator.php';
 require_once dirname( __FILE__ ) . '/interface.line-item-validator.php';
 require_once dirname( __FILE__ ) . '/interface.line-item.php';
@@ -34,5 +36,9 @@ require_once dirname( __FILE__ ) . '/line-items/class.base-shipping.php';
 require_once dirname( __FILE__ ) . '/line-items/class.coupon.php';
 require_once dirname( __FILE__ ) . '/line-items/class.collection.php';
 
+require_once dirname( __FILE__ ) . '/validators/class.inventory.php';
 require_once dirname( __FILE__ ) . '/validators/class.multi-item-cart.php';
 require_once dirname( __FILE__ ) . '/validators/class.multi-item-product.php';
+
+require_once dirname( __FILE__ ) . '/exceptions/class.cart-coercion-failed.php';
+require_once dirname( __FILE__ ) . '/exceptions/class.line-item-coercion-failed.php';

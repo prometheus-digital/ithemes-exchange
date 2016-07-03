@@ -26,8 +26,6 @@ function it_exchange_get_current_cart() {
 			new ITE_Line_Item_Session_Repository( it_exchange_get_session(), new ITE_Line_Item_Repository_Events() ),
 			it_exchange_get_cart_id( true )
 		);
-		$cart->add_cart_validator( new ITE_Multi_Item_Cart_Validator() );
-		$cart->add_item_validator( new ITE_Multi_Item_Product_Validator() );
 	}
 
 	return $cart;

@@ -36,22 +36,27 @@ interface ITE_Line_Item_Validator {
 	 *
 	 * @since 1.36
 	 *
-	 * @param \ITE_Line_Item $item
-	 * @param \ITE_Cart      $cart
+	 * @param \ITE_Line_Item     $item
+	 * @param \ITE_Cart          $cart
+	 * @param \ITE_Cart_Feedback $feedback
 	 *
 	 * @return bool
 	 */
-	public function validate( ITE_Line_Item $item, ITE_Cart $cart );
+	public function validate( ITE_Line_Item $item, ITE_Cart $cart, ITE_Cart_Feedback $feedback = null );
 
 	/**
 	 * Coerce a cart to be valid.
 	 *
 	 * @since 1.36
 	 *
-	 * @param \ITE_Line_Item $item
-	 * @param \ITE_Cart      $cart
+	 * @param \ITE_Line_Item     $item
+	 * @param \ITE_Cart          $cart
 	 *
-	 * @return bool Returns false if the cart could not be coerced.
+	 * @param \ITE_Cart_Feedback $feedback
+	 *
+	 * @return bool True if the line item was coerced, false if not.
+	 * 
+	 * @throws ITE_Line_Item_Coercion_Failed_Exception
 	 */
-	public function coerce( ITE_Line_Item $item, ITE_Cart $cart );
+	public function coerce( ITE_Line_Item $item, ITE_Cart $cart, ITE_Cart_Feedback $feedback = null );
 }
