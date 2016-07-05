@@ -222,7 +222,9 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			}
 		}
 
-		return array_merge( $additional, $item->get_data_to_save( $this ) );
+		$data = $item instanceof ITE_Cart_Product ? $item->bc() : array( '_params' => $item->get_params() );
+
+		return array_merge( $additional, $data );
 	}
 
 	/**
@@ -252,9 +254,12 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			return null;
 		}
 
+		if ( $class === 'ITE_Cart_Product' ) {
+			$data = $this->back_compat_cart_product( $data );
+		}
 
-		$args = array( $id, $data, $this );
-		$item = call_user_func_array( array( $class, 'from_data' ), $args );
+		$params = isset( $data['_params'] ) && is_array( $data['_params'] ) ? $data['_params'] : array();
+		$item   = new $class( $id, new ITE_Array_Parameter_Bag( $params ) );
 
 		if ( ! $item ) {
 			return null;
@@ -263,6 +268,28 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		$this->set_additional_properties( $item, $_data, $aggregate );
 
 		return $this->events->on_get( $item, $this );
+	}
+
+	/**
+	 * Back-compat for cart products.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	private function back_compat_cart_product( $data ) {
+
+		if ( isset( $data['itemized_data'] ) && is_serialized( $data['itemized_data'] ) ) {
+			$data['itemized_data'] = unserialize( $data['itemized_data'] );
+		}
+
+		if ( isset( $data['additional_data'] ) && is_serialized( $data['additional_data'] ) ) {
+			$data['additional_data'] = unserialize( $data['additional_data'] );
+		}
+
+		return array( '_params' => $data );
 	}
 
 	/**
@@ -277,7 +304,6 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	 *                                            aggregatables construct the aggregate.
 	 */
 	protected final function set_additional_properties( ITE_Line_Item $item, array $data, ITE_Aggregate_Line_Item $aggregate = null ) {
-
 		$this->set_repository( $item );
 		$this->set_aggregate( $item, $data, $aggregate );
 		$this->set_aggregatables( $item, $data );

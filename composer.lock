@@ -4,34 +4,38 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b8a61dde64fb84081f5202ddf9d31d7f",
-    "content-hash": "7f9cdc95f8d3aebdb44c1792c1bb67c9",
+    "hash": "e2df524cc2e1d58a1fe846397337ec1a",
+    "content-hash": "44b182b4f24f634ab40245b2beedc0aa",
     "packages": [
         {
-            "name": "jeremeamia/SuperClosure",
-            "version": "1.0.2",
+            "name": "doctrine/collections",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jeremeamia/super_closure.git",
-                "reference": "4d89ca74994feab128ea46d5b3add92e6cb84554"
+                "url": "https://github.com/doctrine/collections.git",
+                "reference": "6c1e4eef75f310ea1b3e30945e9f06e652128b8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jeremeamia/super_closure/zipball/4d89ca74994feab128ea46d5b3add92e6cb84554",
-                "reference": "4d89ca74994feab128ea46d5b3add92e6cb84554",
+                "url": "https://api.github.com/repos/doctrine/collections/zipball/6c1e4eef75f310ea1b3e30945e9f06e652128b8a",
+                "reference": "6c1e4eef75f310ea1b3e30945e9f06e652128b8a",
                 "shasum": ""
             },
             "require": {
-                "nikic/php-parser": "~0.9",
-                "php": ">=5.3.3"
+                "php": ">=5.3.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "~3.7"
+                "phpunit/phpunit": "~4.0"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
-                    "Jeremeamia\\SuperClosure": "src/"
+                    "Doctrine\\Common\\Collections\\": "lib/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -40,65 +44,225 @@
             ],
             "authors": [
                 {
-                    "name": "Jeremy Lindblom"
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
                 }
             ],
-            "description": "Doing interesting things with closures like serialization.",
-            "homepage": "https://github.com/jeremeamia/super_closure",
+            "description": "Collections Abstraction library",
+            "homepage": "http://www.doctrine-project.org",
             "keywords": [
-                "closure",
-                "function",
-                "parser",
-                "serializable",
-                "serialize",
-                "tokenizer"
+                "array",
+                "collections",
+                "iterator"
             ],
-            "time": "2015-01-10 01:09:28"
+            "time": "2015-04-14 22:21:58"
         },
         {
-            "name": "nikic/php-parser",
-            "version": "v0.9.5",
+            "name": "doctrine/inflector",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "ef70767475434bdb3615b43c327e2cae17ef12eb"
+                "url": "https://github.com/doctrine/inflector.git",
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ef70767475434bdb3615b43c327e2cae17ef12eb",
-                "reference": "ef70767475434bdb3615b43c327e2cae17ef12eb",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/90b2128806bfde671b6952ab8bea493942c1fdae",
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae",
                 "shasum": ""
             },
             "require": {
-                "ext-tokenizer": "*",
-                "php": ">=5.2"
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.9-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
                 "psr-0": {
-                    "PHPParser": "lib/"
+                    "Doctrine\\Common\\Inflector\\": "lib/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3-Clause"
+                "MIT"
             ],
             "authors": [
                 {
-                    "name": "Nikita Popov"
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
                 }
             ],
-            "description": "A PHP parser written in PHP",
+            "description": "Common String Manipulations with regard to casing and singular/plural rules.",
+            "homepage": "http://www.doctrine-project.org",
             "keywords": [
-                "parser",
-                "php"
+                "inflection",
+                "pluralize",
+                "singularize",
+                "string"
             ],
-            "time": "2014-07-23 18:24:17"
+            "time": "2015-11-06 14:35:42"
+        },
+        {
+            "name": "ironbound/cache",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iron-bound-designs/IronBound-Cache.git",
+                "reference": "6f706e7dd0d1cfa1a153dbd6de79e2db99fe0589"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iron-bound-designs/IronBound-Cache/zipball/6f706e7dd0d1cfa1a153dbd6de79e2db99fe0589",
+                "reference": "6f706e7dd0d1cfa1a153dbd6de79e2db99fe0589",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "IronBound\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Iron Bound Designs",
+                    "email": "info@ironbounddesigns.com"
+                }
+            ],
+            "description": "Provides wrappers for WordPress' object cache to make storing and retrieving models easier.",
+            "time": "2015-10-05 05:36:49"
+        },
+        {
+            "name": "ironbound/db",
+            "version": "2.0.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iron-bound-designs/IronBound-DB.git",
+                "reference": "5f73d20370afdeda7fa4d6081a251f97382e25ab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iron-bound-designs/IronBound-DB/zipball/5f73d20370afdeda7fa4d6081a251f97382e25ab",
+                "reference": "5f73d20370afdeda7fa4d6081a251f97382e25ab",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/collections": "^1.3",
+                "doctrine/inflector": "^1.1",
+                "ironbound/cache": "^1.0.0",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "ironbound/wpevents": "^1.0",
+                "phpunit/phpunit": "^4.8"
+            },
+            "suggest": {
+                "ironbound/wpevents": "Allows for firing events when certain actions occur on a model."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "IronBound\\DB\\": "src/",
+                    "IronBound\\DB\\Tests\\": "tests/"
+                },
+                "files": [
+                    "src/load.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Iron Bound Designs",
+                    "email": "info@ironbounddesigns.com"
+                }
+            ],
+            "description": "Provides models and custom query objects for custom database tables in WordPress.",
+            "time": "2016-06-13 05:21:01"
+        },
+        {
+            "name": "ironbound/wpevents",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iron-bound-designs/IronBound-WPEvents.git",
+                "reference": "bb2f4d1b3a408a59992ce57d9bdcd65041d8704a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iron-bound-designs/IronBound-WPEvents/zipball/bb2f4d1b3a408a59992ce57d9bdcd65041d8704a",
+                "reference": "bb2f4d1b3a408a59992ce57d9bdcd65041d8704a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "10up/wp_mock": "dev-master",
+                "phpunit/phpunit": "^4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "IronBound\\WPEvents\\": "src/",
+                    "IronBound\\WPEvents\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Timothy Jacobs",
+                    "email": "timothy@ironbounddesigns.com"
+                }
+            ],
+            "description": "Object orineted events library for WordPRess",
+            "time": "2016-04-17 23:01:15"
         }
     ],
     "packages-dev": [
@@ -281,6 +445,54 @@
             "time": "2015-05-11 14:41:42"
         },
         {
+            "name": "jeremeamia/SuperClosure",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jeremeamia/super_closure.git",
+                "reference": "4d89ca74994feab128ea46d5b3add92e6cb84554"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jeremeamia/super_closure/zipball/4d89ca74994feab128ea46d5b3add92e6cb84554",
+                "reference": "4d89ca74994feab128ea46d5b3add92e6cb84554",
+                "shasum": ""
+            },
+            "require": {
+                "nikic/php-parser": "~0.9",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Jeremeamia\\SuperClosure": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeremy Lindblom"
+                }
+            ],
+            "description": "Doing interesting things with closures like serialization.",
+            "homepage": "https://github.com/jeremeamia/super_closure",
+            "keywords": [
+                "closure",
+                "function",
+                "parser",
+                "serializable",
+                "serialize",
+                "tokenizer"
+            ],
+            "time": "2015-01-10 01:09:28"
+        },
+        {
             "name": "mockery/mockery",
             "version": "0.9.4",
             "source": {
@@ -344,6 +556,51 @@
                 "testing"
             ],
             "time": "2015-04-02 19:54:00"
+        },
+        {
+            "name": "nikic/php-parser",
+            "version": "v0.9.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/PHP-Parser.git",
+                "reference": "ef70767475434bdb3615b43c327e2cae17ef12eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ef70767475434bdb3615b43c327e2cae17ef12eb",
+                "reference": "ef70767475434bdb3615b43c327e2cae17ef12eb",
+                "shasum": ""
+            },
+            "require": {
+                "ext-tokenizer": "*",
+                "php": ">=5.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "PHPParser": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Popov"
+                }
+            ],
+            "description": "A PHP parser written in PHP",
+            "keywords": [
+                "parser",
+                "php"
+            ],
+            "time": "2014-07-23 18:24:17"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -1250,7 +1507,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "ironbound/db": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

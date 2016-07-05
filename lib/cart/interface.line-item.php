@@ -93,28 +93,4 @@ interface ITE_Line_Item extends ITE_Parameter_Bag {
 	 * @return bool
 	 */
 	public function persist( ITE_Line_Item_Repository $repository );
-
-	/**
-	 * Get the data to save.
-	 *
-	 * @since 1.36
-	 *
-	 * @param \ITE_Line_Item_Repository $repository
-	 *
-	 * @return array
-	 */
-	public function get_data_to_save( \ITE_Line_Item_Repository $repository = null );
-
-	/**
-	 * Construct a new line item from the data persisted.
-	 *
-	 * @since 1.36
-	 *
-	 * @param string|int                $id
-	 * @param array                     $data
-	 * @param \ITE_Line_Item_Repository $repository
-	 *
-	 * @return self
-	 */
-	public static function from_data( $id, array $data, ITE_Line_Item_Repository $repository );
 }

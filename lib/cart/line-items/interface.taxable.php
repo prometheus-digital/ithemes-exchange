@@ -9,7 +9,7 @@
 /**
  * Interface ITE_Taxable_Line_Item
  */
-interface ITE_Taxable_Line_Item extends ITE_Line_Item {
+interface ITE_Taxable_Line_Item extends ITE_Aggregate_Line_Item {
 	
 	/**
 	 * Is this particular instance of the line item taxable.

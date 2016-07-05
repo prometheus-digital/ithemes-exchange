@@ -794,8 +794,8 @@ class IT_Exchange_Shipping {
 						$provider = it_exchange_get_registered_shipping_provider( $args['provider'] );
 						$method   = it_exchange_get_registered_shipping_method( $shipping_method );
 
-						$cart_product->add_item( new ITE_Base_Shipping_Line_Item( $method, $provider ) );
-						$cart->add_item( new ITE_Base_Shipping_Line_Item( $method, $provider, true ) );
+						$cart_product->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
+						$cart->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
 						$cart_product->persist( $cart->get_repository() );
 					}
 				}
@@ -812,11 +812,11 @@ class IT_Exchange_Shipping {
 
 					/** @var ITE_Cart_Product $item */
 					foreach ( $cart->get_items( 'product' ) as $item ) {
-						$item->add_item( new ITE_Base_Shipping_Line_Item( $method, $provider ) );
+						$item->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
 						$item->persist( $cart->get_repository() );
 					}
 
-					$cart->add_item( new ITE_Base_Shipping_Line_Item( $method, $provider, true ) );
+					$cart->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
 				}
 			}
 

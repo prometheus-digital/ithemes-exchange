@@ -102,16 +102,14 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 		$apply_to = array();
 
 		foreach ( $cart->get_items( 'product' ) as $product ) {
-			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product->get_data_to_save(), $this ) ) {
+			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product->bc(), $this ) ) {
 				$apply_to[] = $product;
 			}
 		}
 
 		/** @var ITE_Cart_Product $product */
 		foreach ( $apply_to as $product ) {
-			$item = new ITE_Coupon_Line_Item(
-				$this, $product, $this->get_amount_number(), $this->get_amount_type(), $this->get_application_method()
-			);
+			$item = ITE_Coupon_Line_Item::create( $this, $product );
 			$product->add_item( $item );
 		}
 
@@ -122,7 +120,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @inheritDoc
 	 */
 	public function valid_for_product( ITE_Cart_Product $product ) {
-		return it_exchange_basic_coupons_valid_product_for_coupon( $product->get_data_to_save(), $this );
+		return it_exchange_basic_coupons_valid_product_for_coupon( $product->bc(), $this );
 	}
 
 	/**
@@ -240,7 +238,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 		$has_product = false;
 
 		foreach ( $cart->get_items( 'product' ) as $product ) {
-			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product->get_data_to_save(), $this ) ) {
+			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product->bc(), $this ) ) {
 				$has_product = true;
 
 				break;

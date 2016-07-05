@@ -9,19 +9,10 @@
 /**
  * Class ITE_Base_Shipping_Line_Item
  */
-class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable_Line_Item, ITE_Aggregate_Line_Item, ITE_Line_Item_Repository_Aware {
+class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware {
 
 	/** @var ITE_Parameter_Bag */
 	private $bag;
-
-	/** @var IT_Exchange_Shipping_Method */
-	private $method;
-
-	/** @var IT_Exchange_Shipping_Provider */
-	private $provider;
-
-	/** @var bool */
-	private $cart_wide = false;
 
 	/** @var ITE_Aggregate_Line_Item */
 	private $aggregate;
@@ -41,20 +32,38 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	/**
 	 * ITE_Base_Shipping_Line_Item constructor.
 	 *
+	 * @param string             $id
+	 * @param \ITE_Parameter_Bag $bag
+	 */
+	public function __construct( $id, ITE_Parameter_Bag $bag ) {
+		$this->id  = $id;
+		$this->bag = $bag;
+	}
+
+	/**
+	 * Create a new base shipping line item.
+	 *
+	 * @since 1.36.0
+	 *
 	 * @param \IT_Exchange_Shipping_Method   $method
 	 * @param \IT_Exchange_Shipping_Provider $provider
 	 * @param bool                           $cart_wide
+	 *
+	 * @return \ITE_Base_Shipping_Line_Item
 	 */
-	public function __construct(
+	public static function create(
 		IT_Exchange_Shipping_Method $method,
 		IT_Exchange_Shipping_Provider $provider,
 		$cart_wide = false
 	) {
-		$this->bag       = new ITE_Array_Parameter_Bag();
-		$this->method    = $method;
-		$this->provider  = $provider;
-		$this->cart_wide = $cart_wide;
-		$this->id        = md5( $this->get_method()->slug . '-' . (string) $cart_wide . '-' . microtime() );
+		$bag = new ITE_Array_Parameter_Bag();
+		$bag->set_param( 'method', $method->slug );
+		$bag->set_param( 'provider', $provider->get_slug() );
+		$bag->set_param( 'cart_wide', $cart_wide );
+
+		$id = md5( $method->slug . '-' . (string) $cart_wide . '-' . microtime() );
+
+		return new self( $id, $bag );
 	}
 
 	/**
@@ -114,7 +123,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	 */
 	protected function get_base_amount() {
 		if ( $this->aggregate ) {
-			return $this->get_method()->get_shipping_cost_for_product( $this->aggregate->get_data_to_save() );
+			return $this->get_method()->get_shipping_cost_for_product( $this->aggregate->bc() );
 		} else {
 			return $this->get_method()->get_additional_cost_for_cart( it_exchange_get_current_cart() );
 		}
@@ -140,17 +149,21 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	/**
 	 * @inheritDoc
 	 */
-	public function get_provider() { return $this->provider; }
+	public function get_provider() {
+		return it_exchange_get_registered_shipping_provider( $this->get_param( 'provider' ) );
+	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_method() { return $this->method; }
+	public function get_method() { 
+		return it_exchange_get_registered_shipping_method( $this->get_param( 'method' ) ); 
+	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function is_cart_wide() { return $this->cart_wide; }
+	public function is_cart_wide() { return $this->get_param( 'cart_wide' ); }
 
 	/**
 	 * @inheritDoc
@@ -330,38 +343,6 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	 * @inheritDoc
 	 */
 	public function persist_deferred_params() { $this->bag->persist_deferred_params(); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_data_to_save( \ITE_Line_Item_Repository $repository = null ) {
-		return array(
-			'method'    => $this->get_method()->slug,
-			'provider'  => $this->get_provider()->slug,
-			'cart_wide' => $this->is_cart_wide(),
-			'params'    => $this->get_params(),
-		);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function from_data( $id, array $data, ITE_Line_Item_Repository $repository ) {
-
-		$self = new self(
-			it_exchange_get_registered_shipping_method( $data['method'] ),
-			it_exchange_get_registered_shipping_provider( $data['provider'] ),
-			$data['cart_wide']
-		);
-
-		$self->id = $id;
-
-		if ( ! empty( $data['params'] ) ) {
-			$self->bag = new ITE_Array_Parameter_Bag( $data['params'] );
-		}
-
-		return $self;
-	}
 
 	/**
 	 * @inheritDoc

@@ -108,7 +108,7 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 		 * @param array   $properties
 		 * @param WP_Post $post
 		 */
-		$additional = apply_filters_deprecated( 'it_exchange_coupon_additional_data', array( array(), $post ), '1.33' );
+		$additional = apply_filters( 'it_exchange_coupon_additional_data', array(), $post );
 		foreach ( $additional as $key => $value ) {
 			$this->coupon_data[ $key ] = $value;
 			$this->$key                = $value;

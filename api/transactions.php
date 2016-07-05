@@ -232,7 +232,7 @@ function it_exchange_generate_transaction_object() {
 	$products = array();
 	
 	foreach ( $cart_products as $cart_product ) {
-		$products[ $cart_product->get_id() ] = $cart_product->get_data_to_save();
+		$products[ $cart_product->get_id() ] = $cart_product->bc();
 	}
 
 	// Add totals to each product

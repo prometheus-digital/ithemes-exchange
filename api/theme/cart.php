@@ -90,7 +90,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			$cart_products = array();
 			
 			foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
-				$cart_products[ $product->get_id() ] = $product->get_data_to_save();
+				$cart_products[ $product->get_id() ] = $product->bc();
 			}
 			
 			$GLOBALS['it_exchange']['products'] = $cart_products;

@@ -224,7 +224,7 @@ function it_exchange_simple_taxes_add_line_item( ITE_Cart_Product $item, ITE_Car
 	$options  = it_exchange_get_option( 'addon_taxes_simple' );
 	$tax_rate = empty( $options['default-tax-rate'] ) ? 0 : (float) $options['default-tax-rate'];
 
-	$tax = new ITE_Simple_Tax_Line_Item( $tax_rate, array(), $item );
+	$tax = ITE_Simple_Tax_Line_Item::create( $tax_rate, array(), $item );
 	
 	if ( $tax->applies_to( $item ) ) {
 		$item->add_tax( $tax );

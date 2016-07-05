@@ -492,7 +492,7 @@ function it_exchange_get_cart_shipping_cost( $shipping_method = false, $format_p
 		foreach ( $cart->get_items( 'product' ) as $product ) {
 			if ( $product->get_product()->has_feature( 'shipping' ) ) {
 				$cart_cost += it_exchange_get_shipping_method_cost_for_cart_item(
-					$shipping_method, $product->get_data_to_save()
+					$shipping_method, $product->bc()
 				);
 
 				if ( $method = it_exchange_get_registered_shipping_method( $shipping_method ) ) {

@@ -144,7 +144,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 
 					echo '<div class="it-exchange-itemized-checkout-method">';
 
-						echo '<span class="it-exchange-shipping-product-title">' . it_exchange_get_cart_product_title( $product->get_data_to_save() ) . '</span>';
+						echo '<span class="it-exchange-shipping-product-title">' . it_exchange_get_cart_product_title( $product->bc() ) . '</span>';
 						$selected_multiple_method = it_exchange_get_multiple_shipping_method_for_cart_product( $product->get_id() );
 						$enabled_shipping_methods = (array) it_exchange_get_enabled_shipping_methods_for_product( $product->get_product() );
 
@@ -156,7 +156,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 									<?php if ( empty( $product_method->slug ) ) continue; ?>
 									<option value="<?php esc_attr_e( $product_method->slug ); ?>" <?php selected( $selected_multiple_method, $product_method->slug ); ?>>
 										<?php echo $product_method->label; ?>
-										(<?php echo it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product->get_data_to_save(), true ); ?>)
+										(<?php echo it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product->bc(), true ); ?>)
 									</option>
 								<?php endforeach; ?>
 							</select><br />
@@ -164,7 +164,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 						} else {
 							$product_method = reset( $enabled_shipping_methods );
 							it_exchange_update_multiple_shipping_method_for_cart_product( $product->get_id(), $product_method->slug );
-							echo '<span class="it-exchange-right">' . $product_method->label . ' (' . it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product->get_data_to_save(), true ) . ')</span>';
+							echo '<span class="it-exchange-right">' . $product_method->label . ' (' . it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product->bc(), true ) . ')</span>';
 						}
 
 					echo '</div>';

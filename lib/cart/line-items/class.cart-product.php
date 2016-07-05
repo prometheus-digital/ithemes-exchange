@@ -9,56 +9,57 @@
 /**
  * Class ITE_Cart_Product
  */
-class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item,
-                                  ITE_Discountable_Line_Item, ITE_Line_Item_Repository_Aware {
+class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_Item, ITE_Line_Item_Repository_Aware {
 
-	/**
-	 * @var ITE_Aggregatable_Line_Item[]
-	 */
-	private $aggregate = array();
+	/** @var ITE_Aggregatable_Line_Item[] */
+	private $aggregatables = array();
 
-	/**
-	 * @var array
-	 */
-	private $itemized = array();
-
-	/**
-	 * @var array
-	 */
-	private $additional = array();
-
-	/**
-	 * @var ITE_Parameter_Bag
-	 */
+	/** @var ITE_Parameter_Bag */
 	private $bag;
 
-	/**
-	 * @var IT_Exchange_Product
-	 */
+	/** @var IT_Exchange_Product */
 	private $product;
 
-	/**
-	 * @var ITE_Tax_Line_Item[]
-	 */
+	/** @var ITE_Tax_Line_Item[] */
 	private $taxes = array();
 
-	/**
-	 * @var ITE_Line_Item_Repository
-	 */
+	/** @var ITE_Line_Item_Repository */
 	private $repository;
 
 	/**
 	 * ITE_Cart_Product constructor.
 	 *
+	 * @param string             $id
+	 * @param \ITE_Parameter_Bag $bag
+	 *
+	 * @throws \OutOfBoundsException
+	 */
+	public function __construct( $id, ITE_Parameter_Bag $bag ) {
+		$this->bag = $bag;
+		$this->set_id( $id );
+		$this->product = it_exchange_get_product( $this->get_param( 'product_id' ) );
+	}
+
+	/**
+	 * Create a product line item.
+	 *
+	 * @since 1.36.0
+	 *
 	 * @param \IT_Exchange_Product $product
 	 * @param int                  $quantity
+	 *
+	 * @return self
 	 */
-	public function __construct( IT_Exchange_Product $product, $quantity = 1 ) {
-		$this->bag     = new ITE_Array_Parameter_Bag();
-		$this->product = $product;
+	public static function create( IT_Exchange_Product $product, $quantity = 1 ) {
 
-		$this->set_quantity( $quantity );
-		$this->set_param( 'product_id', $product->ID );
+		$bag = new ITE_Array_Parameter_Bag();
+		$bag->set_param( 'product_id', $product->ID );
+
+		$self = new self( '', $bag );
+		self::generate_cart_product_id( $self );
+		$self->set_quantity( $quantity );
+
+		return $self;
 	}
 
 	/**
@@ -71,7 +72,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 * @return bool
 	 */
 	public function has_itemized_data( $key ) {
-		return array_key_exists( $key, $this->itemized );
+		return array_key_exists( $key, $this->get_itemized_data() );
 	}
 
 	/**
@@ -93,15 +94,17 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 */
 	public function get_itemized_data( $key = '' ) {
 
+		$data = $this->has_param( 'itemized_data' ) ? $this->get_param( 'itemized_data' ) : array();
+
 		if ( ! $key ) {
-			return $this->itemized;
+			return $data;
 		}
 
 		if ( ! $this->has_itemized_data( $key ) ) {
 			throw new OutOfBoundsException( "No itemized data found for key '$key'." );
 		}
 
-		return $this->itemized[ $key ];
+		return $data[ $key ];
 	}
 
 	/**
@@ -115,11 +118,16 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 * @return bool
 	 */
 	public function set_itemized_data( $key, $value ) {
-		$this->itemized[ $key ] = $value;
 
-		self::generate_cart_product_id( $this );
+		$data         = $this->get_itemized_data();
+		$data[ $key ] = $value;
+		$success      = $this->set_param( 'itemized_data', $data );
 
-		return true;
+		if ( $success ) {
+			self::generate_cart_product_id( $this );
+		}
+
+		return $success;
 	}
 
 	/**
@@ -136,11 +144,15 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	public function remove_itemized_data( $key ) {
 
 		if ( $this->has_itemized_data( $key ) ) {
-			unset( $this->itemized[ $key ] );
+			$data = $this->get_itemized_data();
+			unset( $data[ $key ] );
+			$success = $this->set_param( 'itemized_data', $data );
 
-			self::generate_cart_product_id( $this );
+			if ( $success ) {
+				self::generate_cart_product_id( $this );
+			}
 
-			return true;
+			return $success;
 		}
 
 		return false;
@@ -156,7 +168,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 * @return bool
 	 */
 	public function has_additional_data( $key ) {
-		return array_key_exists( $key, $this->additional );
+		return array_key_exists( $key, $this->get_additional_data() );
 	}
 
 	/**
@@ -174,15 +186,17 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 */
 	public function get_additional_data( $key = '' ) {
 
+		$data = $this->has_param( 'additional_data' ) ? $this->get_param( 'additional_data' ) : array();
+
 		if ( ! $key ) {
-			return $this->additional;
+			return $data;
 		}
 
 		if ( ! $this->has_additional_data( $key ) ) {
 			throw new OutOfBoundsException( "No additional data found for key '$key'." );
 		}
 
-		return $this->additional[ $key ];
+		return $data[ $key ];
 	}
 
 	/**
@@ -196,9 +210,10 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 * @return bool
 	 */
 	public function set_additional_data( $key, $value ) {
-		$this->additional[ $key ] = $value;
+		$data         = $this->get_additional_data();
+		$data[ $key ] = $value;
 
-		return true;
+		return $this->set_param( 'additional_data', $data );
 	}
 
 	/**
@@ -215,11 +230,10 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	public function remove_additional_data( $key ) {
 
 		if ( $this->has_itemized_data( $key ) ) {
-			unset( $this->additional[ $key ] );
+			$data = $this->get_additional_data();
+			unset( $data[ $key ] );
 
-			self::generate_cart_product_id( $this );
-
-			return true;
+			return $this->set_param( 'additional_data', $data );
 		}
 
 		return false;
@@ -262,7 +276,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 
 		$base = $this->get_base_amount();
 
-		foreach ( $this->aggregate as $item ) {
+		foreach ( $this->aggregatables as $item ) {
 			if ( $item instanceof ITE_Discountable_Line_Item ) {
 				$base += $item->get_amount_to_discount();
 			}
@@ -360,7 +374,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 			) );
 		}
 
-		return new ITE_Line_Item_Collection( $this->aggregate, $this->repository );
+		return new ITE_Line_Item_Collection( $this->aggregatables, $this->repository );
 	}
 
 	/**
@@ -374,8 +388,8 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	 * @inheritDoc
 	 */
 	public function get_primary() {
-		$clone            = clone $this;
-		$clone->aggregate = array();
+		$clone                = clone $this;
+		$clone->aggregatables = array();
 
 		return $clone;
 	}
@@ -390,7 +404,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 		if ( $item instanceof ITE_Tax_Line_Item && ! in_array( $item, $this->get_taxes(), true ) ) {
 			$this->add_tax( $item );
 		} else {
-			$this->aggregate[] = $item;
+			$this->aggregatables[] = $item;
 		}
 
 		return $this;
@@ -403,16 +417,16 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 
 		$found = false;
 
-		foreach ( $this->aggregate as $i => $item ) {
+		foreach ( $this->aggregatables as $i => $item ) {
 			if ( $item->get_type() === $type && $item->get_id() === $id ) {
-				unset( $this->aggregate[ $i ] );
+				unset( $this->aggregatables[ $i ] );
 				$found = true;
 
 				break;
 			}
 		}
 
-		reset( $this->aggregate );
+		reset( $this->aggregatables );
 
 		return $found;
 	}
@@ -459,7 +473,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 
 		$base = $this->get_base_amount();
 
-		foreach ( $this->aggregate as $aggregate ) {
+		foreach ( $this->aggregatables as $aggregate ) {
 			if ( ! $aggregate->is_summary_only() ) {
 				$base += $aggregate->get_amount();
 			}
@@ -479,7 +493,7 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 
 		$base = $this->get_product()->get_feature( 'base-price' );
 
-		return apply_filters( 'it_exchange_get_cart_product_base_price', $base, $this->get_data_to_save(), false );
+		return apply_filters( 'it_exchange_get_cart_product_base_price', $base, $this->bc(), false );
 	}
 
 	/**
@@ -557,32 +571,24 @@ class ITE_Cart_Product implements ITE_Aggregate_Line_Item, ITE_Taxable_Line_Item
 	}
 
 	/**
-	 * @inheritDoc
+	 * Back-compat representation of a cart-product.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array
 	 */
-	public function get_data_to_save( \ITE_Line_Item_Repository $repository = null ) {
-		$data                    = $this->get_params();
-		$data['itemized_data']   = serialize( $this->get_itemized_data() );
-		$data['additional_data'] = serialize( array() ); // TODO: Add proper support for additional_data
+	public function bc() {
+
+		$data = wp_parse_args( $this->get_params(), array(
+			'itemized_data'   => array(),
+			'additional_data' => array()
+		) );
+
+		$data['itemized_data']   = serialize( $data['itemized_data'] );
+		$data['additional_data'] = serialize( $data['additional_data'] );
 		$data['itemized_hash']   = md5( $data['itemized_data'] );
 
 		return $data;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function from_data( $id, array $data, ITE_Line_Item_Repository $repository ) {
-
-		$item = new self( it_exchange_get_product( $data['product_id'] ), $data['count'] );
-
-		$item->itemized = unserialize( $data['itemized_data'] );
-		unset( $data['itemized_data'], $data['itemized_hash'] );
-
-		foreach ( $data as $key => $val ) {
-			$item->bag->set_param( $key, $val );
-		}
-
-		return $item;
 	}
 
 	/**

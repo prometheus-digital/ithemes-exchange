@@ -14,12 +14,6 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	/** @var ITE_Parameter_Bag */
 	private $bag;
 
-	/** @var float */
-	private $rate;
-
-	/** @var array */
-	private $codes = array();
-
 	/** @var ITE_Taxable_Line_Item */
 	private $taxable;
 
@@ -29,35 +23,57 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	/**
 	 * ITE_Simple_Tax_Line_Item constructor.
 	 *
-	 * @param float                       $rate Tax rate as a percentage.
-	 * @param array                       $codes
-	 * @param \ITE_Taxable_Line_Item|null $item
+	 * @param string            $id
+	 * @param ITE_Parameter_Bag $bag
 	 *
 	 * @throws \InvalidArgumentException If the rate is invalid.
 	 */
-	public function __construct( $rate, array $codes = array(), ITE_Taxable_Line_Item $item = null ) {
+	public function __construct( $id, ITE_Parameter_Bag $bag ) {
+		$this->id  = $id;
+		$this->bag = $bag;
+	}
+
+	/**
+	 * Create a new tax line item.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param float                       $rate
+	 * @param array                       $codes
+	 * @param \ITE_Taxable_Line_Item|null $item
+	 *
+	 * @return self
+	 */
+	public static function create( $rate, array $codes = array(), ITE_Taxable_Line_Item $item = null ) {
 
 		if ( ! is_numeric( $rate ) || $rate < 0 || $rate > 100 ) {
 			throw new InvalidArgumentException( "Invalid rate '$rate'." );
 		}
 
-		$this->rate    = (float) $rate;
-		$this->codes   = $codes;
-		$this->bag     = new ITE_Array_Parameter_Bag();
-		$this->taxable = $item;
+		$bag = new ITE_Array_Parameter_Bag();
+		$bag->set_param( 'rate', (float) $rate );
+		$bag->set_param( 'codes', $codes );
 
 		if ( $item ) {
-			$this->id = md5( json_encode( $codes ) . '-' . $rate . '-' . $item->get_id() );
+			$id = md5( json_encode( $codes ) . '-' . $rate . '-' . $item->get_id() );
 		} else {
-			$this->id = md5( json_encode( $codes ) . '-' . $rate );
+			$id = md5( json_encode( $codes ) . '-' . $rate );
 		}
+
+		$self = new self( $id, $bag );
+
+		if ( $item ) {
+			$self->set_aggregate( $item );
+		}
+
+		return $self;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function get_rate() {
-		return $this->rate;
+		return $this->get_param( 'rate' );
 	}
 
 	/**
@@ -75,7 +91,9 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 			}
 		}
 
-		if ( ! empty( $this->codes ) && ! in_array( $item->get_tax_code(), $this->codes ) ) {
+		$codes = $this->get_param( 'codes' );
+
+		if ( count( $codes ) !== 0 && ! in_array( $item->get_tax_code(), $codes ) ) {
 			return false;
 		}
 
@@ -86,7 +104,7 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	 * @inheritdoc
 	 */
 	public function create_scoped_for_taxable( ITE_Taxable_Line_Item $item ) {
-		return new self( $this->get_rate(), $this->codes, $item );
+		return self::create( $this->get_rate(), $this->get_param( 'codes' ), $item );
 	}
 
 	/**
@@ -110,16 +128,12 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_description() {
-		// TODO: Implement get_description() method.
-	}
+	public function get_description() { return ''; }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_quantity() {
-		return 1;
-	}
+	public function get_quantity() { return 1; }
 
 	/**
 	 * @inheritDoc
@@ -142,9 +156,7 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	/**
 	 * @inheritDoc
 	 */
-	public function is_summary_only() {
-		return true;
-	}
+	public function is_summary_only() { return true; }
 
 	/**
 	 * @inheritDoc
@@ -154,23 +166,17 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	/**
 	 * @inheritDoc
 	 */
-	public function has_param( $param ) {
-		return $this->bag->has_param( $param );
-	}
+	public function has_param( $param ) { return $this->bag->has_param( $param ); }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_param( $param ) {
-		return $this->bag->get_param( $param );
-	}
+	public function get_param( $param ) { return $this->bag->get_param( $param ); }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_params() {
-		return $this->bag->get_params();
-	}
+	public function get_params() { return $this->bag->get_params(); }
 
 	/**
 	 * @inheritDoc
@@ -202,32 +208,4 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	 * @inheritDoc
 	 */
 	public function get_aggregate() { return $this->taxable; }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_data_to_save( \ITE_Line_Item_Repository $repository = null ) {
-		$data = array(
-			'params' => $this->get_params(),
-			'rate'   => $this->get_rate(),
-			'codes'  => $this->codes,
-		);
-
-		return $data;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function from_data( $id, array $data, ITE_Line_Item_Repository $repository ) {
-
-		$item     = new self( $data['rate'], $data['codes'] );
-		$item->id = $id;
-
-		if ( ! empty( $data['params'] ) ) {
-			$item->bag = new ITE_Array_Parameter_Bag( $data['params'] );
-		}
-
-		return $item;
-	}
 }

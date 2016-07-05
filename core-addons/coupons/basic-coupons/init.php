@@ -498,7 +498,7 @@ function it_exchange_basic_coupons_valid_product_for_coupon( $cart_product, $cou
 	 * Can be used by addons to modify if a target product is valid for a coupon.
 	 *
 	 * @param $valid        bool
-	 * @param $cart_product object
+	 * @param $cart_product array
 	 * @param $coupon       IT_Exchange_Coupon
 	 */
 	return apply_filters( 'it_exchange_basic_coupons_valid_product_for_coupon', $valid, $cart_product, $coupon );

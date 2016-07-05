@@ -26,7 +26,7 @@ function ite_fire_deprecated_quantity_hook( ITE_Line_Item $item, ITE_Line_Item $
 	}
 
 	if ( $item->get_quantity() != $old->get_quantity() ) {
-		do_action( 'it_exchange_cart_prouduct_count_updated', $item->get_id() );
+		do_action_deprecated( 'it_exchange_cart_prouduct_count_updated', array( $item->get_id() ), '1.36.0' );
 	}
 }
 
@@ -46,8 +46,8 @@ function ite_fire_deprecated_add_cart_product_hook( ITE_Cart_Product $item, ITE_
 		return;
 	}
 
-	do_action( 'it_exchange_add_cart_product', $item->get_data_to_save() );
-	do_action( 'it_exchange_product_added_to_cart', $item->get_product()->ID );
+	do_action_deprecated( 'it_exchange_add_cart_product', array( $item->bc() ), '1.36.0' );
+	do_action_deprecated( 'it_exchange_product_added_to_cart', array( $item->get_product()->ID ), '1.36.0' );
 }
 
 add_action( 'it_exchange_add_product_to_cart', 'ite_fire_deprecated_add_cart_product_hook', 10, 2 );
@@ -57,11 +57,11 @@ add_action( 'it_exchange_add_product_to_cart', 'ite_fire_deprecated_add_cart_pro
  *
  * @since 1.36
  *
- * @param \ITE_Line_Item            $item
+ * @param \ITE_Cart_Product         $item
  * @param \ITE_Line_Item            $old
  * @param \ITE_Line_Item_Repository $repo
  */
-function ite_fire_deprecated_update_cart_product_hook( ITE_Line_Item $item, ITE_Line_Item $old = null, ITE_Line_Item_Repository $repo ) {
+function ite_fire_deprecated_update_cart_product_hook( ITE_Cart_Product $item, ITE_Line_Item $old = null, ITE_Line_Item_Repository $repo ) {
 
 	if ( ! $old ) {
 		return;
@@ -71,8 +71,11 @@ function ite_fire_deprecated_update_cart_product_hook( ITE_Line_Item $item, ITE_
 		return;
 	}
 
-	do_action( 'it_exchange_update_cart_product',
-		$item->get_id(), $item->get_data_to_save(), it_exchange_get_session()->get_session_data( 'products' ) );
+	do_action_deprecated( 'it_exchange_update_cart_product', array(
+		$item->get_id(),
+		$item->bc(),
+		it_exchange_get_session()->get_session_data( 'products' )
+	), '1.36.0' );
 }
 
 add_action( 'it_exchange_save_product_item', 'ite_fire_deprecated_update_cart_product_hook', 10, 3 );
@@ -91,22 +94,25 @@ function ite_fire_deprecated_delete_cart_product_hook( ITE_Cart_Product $product
 		return;
 	}
 
-	do_action( 'it_exchange_delete_cart_product', $product->get_id(), it_exchange_get_session_data( 'products' ) );
+	do_action_deprecated( 'it_exchange_delete_cart_product', array(
+		$product->get_id(),
+		it_exchange_get_session_data( 'products' )
+	), '1.36.0' );
 }
 
 add_action( 'it_exchange_remove_product_from_cart', 'ite_fire_deprecated_delete_cart_product_hook', 10, 2 );
 
 /**
  * Fire deprecated empty cart hook.
- * 
+ *
  * @since 1.36
- * 
+ *
  * @param \ITE_Cart $cart
  */
 function ite_fire_deprecated_empty_cart_hook( ITE_Cart $cart ) {
-	
+
 	if ( $cart->is_current() ) {
-		do_action( 'it_exchange_before_empty_shopping_cart', it_exchange_get_session_data() );
+		do_action_deprecated( 'it_exchange_before_empty_shopping_cart', array( it_exchange_get_session_data() ), '1.36.0' );
 	}
 }
 
@@ -114,15 +120,15 @@ add_action( 'it_exchange_empty_cart', 'ite_fire_deprecated_empty_cart_hook' );
 
 /**
  * Fire deprecated emptied cart hook.
- * 
+ *
  * @since 1.36
- * 
+ *
  * @param \ITE_Cart $cart
  */
 function ite_fire_deprecated_emptied_cart_hook( ITE_Cart $cart ) {
 
 	if ( $cart->is_current() ) {
-		do_action( 'it_exchange_empty_shopping_cart' );
+		do_action_deprecated( 'it_exchange_empty_shopping_cart', array(), '1.36.0' );
 	}
 }
 
@@ -167,10 +173,12 @@ function it_exchange_get_cart_products( $options = array() ) {
  * @return void
  */
 function it_exchange_add_cart_product( $cart_product_id, $product ) {
+	_deprecated_function( __FUNCTION__, '1.36.0' );
+
 	if ( ! empty( $cart_product_id ) && ! empty( $product ) ) {
 		it_exchange_add_session_data( 'products', array( $cart_product_id => $product ) );
 	}
-	do_action( 'it_exchange_add_cart_product', $product );
+	do_action_deprecated( 'it_exchange_add_cart_product', array( $product ), '1.36.0' );
 }
 
 /**
@@ -186,6 +194,8 @@ function it_exchange_add_cart_product( $cart_product_id, $product ) {
  * @return void
  */
 function it_exchange_update_cart_product( $cart_product_id, $product ) {
+	_deprecated_function( __FUNCTION__, '1.36.0' );
+
 	if ( ! empty( $cart_product_id ) && ! empty( $product ) ) {
 		$products = it_exchange_get_session_data( 'products' );
 		if ( isset( $products[ $cart_product_id ] ) ) {
@@ -194,7 +204,11 @@ function it_exchange_update_cart_product( $cart_product_id, $product ) {
 		} else {
 			it_exchange_add_cart_product( $cart_product_id, $product );
 		}
-		do_action( 'it_exchange_update_cart_product', $cart_product_id, $product, $products );
+		do_action_deprecated( 'it_exchange_update_cart_product', array(
+			$cart_product_id,
+			$product,
+			$products
+		), '1.36.0' );
 	}
 }
 
@@ -210,12 +224,14 @@ function it_exchange_update_cart_product( $cart_product_id, $product ) {
  * @return void
  */
 function it_exchange_delete_cart_product( $cart_product_id ) {
+	_deprecated_function( __FUNCTION__, '1.36.0', 'ITE_Cart::remove_item()' );
+
 	$products = it_exchange_get_session_data( 'products' );
 	if ( isset( $products[ $cart_product_id ] ) ) {
 		unset( $products[ $cart_product_id ] );
 		it_exchange_update_session_data( 'products', $products );
 	}
-	do_action( 'it_exchange_delete_cart_product', $cart_product_id, $products );
+	do_action_deprecated( 'it_exchange_delete_cart_product', array( $cart_product_id, $products ), '1.36.0' );
 }
 
 /**
@@ -241,5 +257,9 @@ function it_exchange_get_cart_product( $id, $options = array() ) {
 		return false;
 	}
 
-	return apply_filters( 'it_exchange_get_cart_product', $products[ $id ], $id, $options );
+	return apply_filters_deprecated( 'it_exchange_get_cart_product', array(
+		$products[ $id ],
+		$id,
+		$options
+	), '1.36.0' );
 }

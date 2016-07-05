@@ -159,9 +159,9 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity = 1, $
 		it_exchange_create_cart_id();
 	}
 
-	$item = new ITE_Cart_Product( $product, $quantity );
+	$item = ITE_Cart_Product::create( $product, $quantity );
 
-	// Deprecated hook. Use IT_Exchange_Cart_Product::set_itemized_data()
+	// Deprecated hook. Use ITE_Cart_Product::set_itemized_data()
 	$itemized_data = apply_filters( 'it_exchange_add_itemized_data_to_cart_product', array(), $product_id );
 	$itemized_data = maybe_unserialize( $itemized_data );
 
@@ -169,7 +169,7 @@ function it_exchange_add_product_to_shopping_cart( $product_id, $quantity = 1, $
 		$item->set_itemized_data( $key, $value );
 	}
 
-	// Deprecated hook. Use IT_Exchange_Cart_Product::set_additional_data()
+	// Deprecated hook. Use ITE_Cart_Product::set_additional_data()
 	$additional_data = apply_filters( 'it_exchange_add_additional_data_to_cart_product', array(), $product_id );
 	$additional_data = maybe_unserialize( $additional_data );
 
@@ -231,7 +231,7 @@ function it_exchange_get_max_product_quantity_allowed( $product, $cart_product_i
 	$product = it_exchange_get_product( $product );
 
 	// If we don't support purchase quanity, quantity will always be 1
-	if ( ! $product->supports_feature( 'purchase-quantity' ) ) {
+	if ( ! $product || ! $product->supports_feature( 'purchase-quantity' ) ) {
 		// This filter is documented in api/cart.php
 		return apply_filters( 'it_exchange_get_max_product_quantity_allowed', 1, $product, $cart_product_id );
 	}
@@ -578,7 +578,7 @@ function it_exchange_get_cart_product_quantity( $product ) {
 		return 0;
 	}
 
-	return apply_filters( 'it_exchange_get_cart_product_quantity', $item->get_quantity(), $item->get_data_to_save() );
+	return apply_filters( 'it_exchange_get_cart_product_quantity', $item->get_quantity(), $item->bc() );
 }
 
 /**
@@ -713,7 +713,7 @@ function it_exchange_get_cart_product_subtotal( $product, $format=true ) {
 		$subtotal = 0;
 	} else {
 		$subtotal = $item->get_amount() * $item->get_quantity();
-		$subtotal = apply_filters( 'it_exchange_get_cart_product_subtotal', $subtotal, $item->get_data_to_save() );
+		$subtotal = apply_filters( 'it_exchange_get_cart_product_subtotal', $subtotal, $item->bc() );
 	}
 
 	return $format ? it_exchange_format_price( $subtotal ) : $subtotal;
@@ -819,7 +819,7 @@ function it_exchange_get_cart_description( $options=array() ) {
 			$string .= ' (' . $count . ')';
 		}
 
-		$description[] = apply_filters( 'it_exchange_get_cart_description_for_product', $string, $item->get_data_to_save() );
+		$description[] = apply_filters( 'it_exchange_get_cart_description_for_product', $string, $item->bc() );
 	}
 
 	return apply_filters( 'it_exchange_get_cart_description', implode( ', ', $description ), $description, $options );

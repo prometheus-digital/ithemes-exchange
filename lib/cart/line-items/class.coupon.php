@@ -9,8 +9,7 @@
 /**
  * Class ITE_Coupon_Line_Item
  */
-class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Aggregate_Line_Item,
-                                      ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware {
+class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware {
 
 	/** @var IT_Exchange_Coupon */
 	private $coupon;
@@ -33,12 +32,29 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Aggregate_
 	/**
 	 * ITE_Coupon_Line_Item constructor.
 	 *
-	 * @param \IT_Exchange_Coupon $coupon
-	 * @param \ITE_Cart_Product   $product
+	 * @param string             $id
+	 * @param \ITE_Parameter_Bag $bag
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct( IT_Exchange_Coupon $coupon, ITE_Cart_Product $product = null ) {
+	public function __construct( $id, ITE_Parameter_Bag $bag ) {
+		$this->id     = $id;
+		$this->bag    = $bag;
+		$this->coupon = it_exchange_get_coupon( $this->get_param( 'id' ), $this->get_param( 'type' ) );
+	}
+
+	/**
+	 * Create a coupon line item.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \IT_Exchange_Coupon    $coupon
+	 * @param \ITE_Cart_Product|null $product
+	 *
+	 * @return \ITE_Coupon_Line_Item
+	 * @throws \InvalidArgumentException
+	 */
+	public static function create( IT_Exchange_Coupon $coupon, ITE_Cart_Product $product = null ) {
 
 		if ( ! $coupon->get_type() ) {
 			throw new InvalidArgumentException(
@@ -46,17 +62,24 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Aggregate_
 			);
 		}
 
+		$bag = new ITE_Array_Parameter_Bag( array(
+			'id'   => $coupon->get_ID(),
+			'type' => $coupon->get_type(),
+		) );
+
 		if ( $product ) {
-			$this->id = md5( $coupon->get_code() . '-' . $product->get_id() );
+			$id = md5( $coupon->get_code() . '-' . $product->get_id() );
 		} else {
-			$this->id = md5( $coupon->get_code() );
+			$id = md5( $coupon->get_code() );
 		}
 
-		$this->coupon = $coupon;
+		$self = new self( $id, $bag );
 
 		if ( $product ) {
-			$this->set_aggregate( $product );
+			$self->set_aggregate( $product );
 		}
+
+		return $self;
 	}
 
 	/**
@@ -80,7 +103,7 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Aggregate_
 		if ( $this->get_coupon()->get_application_method() === IT_Exchange_Coupon::APPLY_PRODUCT ) {
 			return 1;
 		}
-		
+
 		if ( $this->get_coupon()->get_amount_type() === IT_Exchange_Coupon::TYPE_PERCENT ) {
 			return 1;
 		}
@@ -338,32 +361,4 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Aggregate_
 	 * @inheritDoc
 	 */
 	public function persist_deferred_params() { return $this->bag->persist_deferred_params(); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_data_to_save( \ITE_Line_Item_Repository $repository = null ) {
-		return array(
-			'code'        => $this->get_coupon()->get_code(),
-			'coupon_type' => $this->get_coupon()->get_type(),
-			'params'      => $this->get_params(),
-		);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function from_data( $id, array $data, ITE_Line_Item_Repository $repository ) {
-
-		$coupon = it_exchange_get_coupon_from_code( $data['code'], $data['coupon_type'] );
-
-		$self     = new self( $coupon, null );
-		$self->id = $id;
-
-		if ( ! empty( $data['params'] ) ) {
-			$self->bag = new ITE_Array_Parameter_Bag( $data['params'] );
-		}
-
-		return $self;
-	}
 }

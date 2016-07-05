@@ -35,9 +35,9 @@ class ITE_Cart {
 	/**
 	 * ITE_Cart constructor.
 	 *
-	 * @param ITE_Line_Item_Repository $repository
-	 * @param string                   $cart_id
-	 * @param IT_Exchange_Customer     $customer
+	 * @param ITE_Line_Item_Repository  $repository
+	 * @param string                    $cart_id
+	 * @param IT_Exchange_Customer|null $customer
 	 */
 	public function __construct( ITE_Line_Item_Repository $repository, $cart_id, IT_Exchange_Customer $customer = null ) {
 		$this->repository = $repository;
@@ -139,6 +139,9 @@ class ITE_Cart {
 	 * @param bool           $coerce
 	 *
 	 * @return bool
+	 *
+	 * @throws \ITE_Line_Item_Coercion_Failed_Exception
+	 * @throws \ITE_Cart_Coercion_Failed_Exception
 	 */
 	public function add_item( ITE_Line_Item $item, $coerce = true ) {
 
@@ -154,7 +157,11 @@ class ITE_Cart {
 			$this->items[ $item->get_type() ][] = $item;
 		}
 
-		if ( ( $coerce && ! $this->coerce( $item ) ) || ( ! $coerce && ! $this->validate() ) ) {
+		if ( $coerce ) {
+			$this->coerce( $item );
+		}
+
+		if ( ! $this->validate() ) {
 			$this->items = $_items;
 
 			return false;
