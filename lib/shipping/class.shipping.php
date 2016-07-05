@@ -73,14 +73,10 @@ class IT_Exchange_Shipping {
 		// Add var to checkout header
 		add_action( 'wp_head', array( $this, 'add_js_to_checkout_header' ) );
 
-		// Adjusts the cart total
-		//add_filter( 'it_exchange_get_cart_total', array( $this, 'modify_shipping_total' ) );
-
 		// Remove Shipping information from cart data when cart is emptied or when item is added to cart
 		add_action( 'it_exchange_empty_shopping_cart', array( $this, 'clear_cart_shipping_data' ) );
-		add_action( 'it_exchange_add_cart_product', array( $this, 'clear_cart_shipping_data' ) );
-		//add_action( 'it_exchange_update_cart_product', array( $this, 'clear_cart_shipping_data' ) );
-		add_action( 'it_exchange_delete_cart_product', array( $this, 'clear_cart_shipping_data' ) );
+		add_action( 'it_exchange_add_product_to_cart', array( $this, 'clear_cart_shipping_data' ) );
+		add_action( 'it_exchange_remove_product_from_cart', array( $this, 'clear_cart_shipping_data' ) );
 		add_action( 'it_exchange_shipping_address_updated', array( $this, 'clear_cart_shipping_method' ) );
 
 		add_action( 'it_exchange_replace_order_table_tag_before_total_row', array( $this, 'add_shipping_to_order_table_tag_before_total_row' ), 10, 2 );
