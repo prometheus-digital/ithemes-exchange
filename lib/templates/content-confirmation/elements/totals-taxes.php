@@ -17,7 +17,7 @@ $segmented   = $taxes->segment( function ( ITE_Line_Item $item ) {
 	<div class="it-exchange-confirmation-totals-amount it-exchange-table-column">
 		<?php do_action( 'it_exchange_content_confirmation_begin_totals_taxes_simple_element_value' ); ?>
 		<div class="it-exchange-table-column-inner">
-			<?php echo $segment->total(); ?>
+			<?php echo it_exchange_format_price( $segment->total() ); ?>
 		</div>
 		<?php do_action( 'it_exchange_content_confirmation_end_totals_taxes_simple_element_value' ); ?>
 	</div>

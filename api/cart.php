@@ -548,14 +548,17 @@ function it_exchange_is_multi_item_product_allowed( $product_id ) {
  * @since 0.3.7
  * @param array $product cart product
  *
- * @return string product title
+ * @return string|false product title
 */
 function it_exchange_get_cart_product_title( $product ) {
-	if ( ! $db_product = it_exchange_get_product( $product['product_id'] ) )
-		return false;
 
-	$title = get_the_title( $db_product->ID );
-	return apply_filters( 'it_exchange_get_cart_product_title', $title, $product );
+	if ( empty( $product['product_cart_id'] ) ) {
+		return false;
+	}
+
+	$item = it_exchange_get_current_cart()->get_item( 'product', $product['product_cart_id'] );
+
+	return $item ? $item->get_name() : false;
 }
 
 /**
@@ -712,8 +715,7 @@ function it_exchange_get_cart_product_subtotal( $product, $format=true ) {
 	if ( ! $item || ! $item->get_quantity() ) {
 		$subtotal = 0;
 	} else {
-		$subtotal = $item->get_amount() * $item->get_quantity();
-		$subtotal = apply_filters( 'it_exchange_get_cart_product_subtotal', $subtotal, $item->bc() );
+		$subtotal = $item->get_total();
 	}
 
 	return $format ? it_exchange_format_price( $subtotal ) : $subtotal;
@@ -729,17 +731,20 @@ function it_exchange_get_cart_product_subtotal( $product, $format=true ) {
  * @param  array  $options {
  *      An array of possible options passed to the function
  *
- *      @type bool $use_cached_customer_cart If contains a customer ID, we grab cart
- *                                            data from the cached cart
- *      @type string $feature                Limit to products with this feature.
+ *      @type \ITE_Cart $cart
+ *      @type bool      $use_cached_customer_cart If contains a customer ID, we grab cart
+ *                                                data from the cached cart
+ *      @type string    $feature                  Limit to products with this feature.
  * }
  *
  * @return mixed subtotal of cart
 */
 function it_exchange_get_cart_subtotal( $format=true, $options=array() ) {
+	
+	$cart = empty( $options['cart'] ) ? it_exchange_get_current_cart() : $options['cart'];
 
 	$subtotal = 0;
-	$items    = it_exchange_get_current_cart()->get_items( 'product' );
+	$items    = $cart->get_items( 'product' );
 
 	if ( ! $items ) {
 		return 0;
@@ -768,16 +773,19 @@ function it_exchange_get_cart_subtotal( $format=true, $options=array() ) {
  * @param  array  $options {
  *      An array of possible options passed to the function
  *
- *      @type mixed $use_cached_customer_cart If contains a customer ID, we grab cart
- *                                            data from the cached cart
+ *      @type \ITE_Cart $cart
+ *      @type mixed     $use_cached_customer_cart If contains a customer ID, we grab cart
+ *                                                data from the cached cart
  * }
  *
  * @return mixed total of cart
 */
 function it_exchange_get_cart_total( $format=true, $options=array() ) {
 
+	$cart = empty( $options['cart'] ) ? it_exchange_get_current_cart() : $options['cart'];
+	
 	$total = it_exchange_get_cart_subtotal( false, $options );
-	$total += it_exchange_get_current_cart()->get_items( '', true )->without( 'product' )->filter( function ( ITE_Line_Item $item ) {
+	$total += $cart->get_items( '', true )->without( 'product' )->filter( function ( ITE_Line_Item $item ) {
 		return $item->is_summary_only();
 	} )->total();
 
@@ -813,7 +821,7 @@ function it_exchange_get_cart_description( $options=array() ) {
 	}
 
 	foreach ( $items as $item ) {
-		$string = it_exchange_get_cart_product_title( array( 'product_id' => $item->get_product()->ID ) );
+		$string = it_exchange_get_cart_product_title( $item->bc() );
 
 		if (  1 < $count = it_exchange_get_cart_product_quantity( array( 'product_cart_id' => $item->get_product()->ID ) ) ) {
 			$string .= ' (' . $count . ')';

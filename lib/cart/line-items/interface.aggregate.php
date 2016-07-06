@@ -12,26 +12,6 @@
 interface ITE_Aggregate_Line_Item extends ITE_Line_Item {
 
 	/**
-	 * Check if this aggregate has a primary line item.
-	 *
-	 * @since 1.36
-	 *
-	 * @return bool
-	 */
-	public function has_primary();
-
-	/**
-	 * Get the primary line item.
-	 *
-	 * @since 1.36
-	 *
-	 * @return ITE_Line_Item
-	 *
-	 * @throws UnexpectedValueException If no primary line item exists.
-	 */
-	public function get_primary();
-
-	/**
 	 * Get all of the line items being represented.
 	 *
 	 * @since 1.36

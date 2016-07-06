@@ -197,12 +197,14 @@ function it_exchange_get_transaction_by_cart_id( $cart_id ) {
  *
  * @since 0.4.20
  *
+ * @param \ITE_Cart|null $cart
+ *
  * @return stdClass Transaction object not an IT_Exchange_Transaction
 */
-function it_exchange_generate_transaction_object() {
+function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 
 	// Verify products exist
-	$cart          = it_exchange_get_current_cart();
+	$cart          = $cart ? $cart : it_exchange_get_current_cart();
 	$cart_products = $cart->get_items( 'product' );
 
 	if ( count( $cart_products ) < 1 ) {
@@ -212,8 +214,8 @@ function it_exchange_generate_transaction_object() {
 	}
 
 	// Verify cart total is a positive number
-	$cart_total    = number_format( it_exchange_get_cart_total( false ), 2, '.', '' );
-	$cart_sub_total = number_format( it_exchange_get_cart_subtotal( false ), 2, '.', '' );
+	$cart_total    = number_format( it_exchange_get_cart_total( false, array( 'cart' => $cart ) ), 2, '.', '' );
+	$cart_sub_total = number_format( it_exchange_get_cart_subtotal( false, array( 'cart' => $cart ) ), 2, '.', '' );
 	if ( number_format( $cart_total, 2, '', '' ) < 0 ) {
 		do_action( 'it_exchange_error_negative_cart_total_on_checkout', $cart_total );
 		it_exchange_add_message( 'error', __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'it-l10n-ithemes-exchange' ) );
@@ -224,29 +226,25 @@ function it_exchange_generate_transaction_object() {
 	$settings = it_exchange_get_option( 'settings_general' );
 	$currency = $settings['default-currency'];
 	unset( $settings );
-
-	// Grab cart ID
-	$cart_id = it_exchange_get_cart_data( 'cart_id' );
-	$cart_id = empty( $cart_id[0] ) ? 0 : $cart_id[0];
 	
 	$products = array();
 	
 	foreach ( $cart_products as $cart_product ) {
-		$products[ $cart_product->get_id() ] = $cart_product->bc();
+		$products[ $cart_product->get_id() ] = array_merge( $cart_product->bc(), array(
+			'product_base_price' => $cart_product->get_amount(),
+			'product_subtotal'   => $cart_product->get_total(),
+			'product_name'       => $cart_product->get_name(),
+		) );
 	}
 
-	// Add totals to each product
 	foreach( $products as $key => $product ) {
-		$products[$key]['product_base_price'] = it_exchange_get_cart_product_base_price( $product, false );
-		$products[$key]['product_subtotal']   = it_exchange_get_cart_product_subtotal( $product, false );
-		$products[$key]['product_name']       = it_exchange_get_cart_product_title( $product );
 		$products = apply_filters( 'it_exchange_generate_transaction_object_products', $products, $key, $product );
 	}
 
 	// Package it up and send it to the transaction method add-on
 	$transaction_object = new stdClass();
-	$transaction_object->cart_id                = $cart_id;
-	$transaction_object->customer_id            = it_exchange_get_current_customer_id();
+	$transaction_object->cart_id                = $cart->get_id();
+	$transaction_object->customer_id            = $cart->get_customer() ? $cart->get_customer()->ID : 0;
 	$transaction_object->total                  = $cart_total;
 	$transaction_object->sub_total              = $cart_sub_total;
 	$transaction_object->currency               = $currency;
@@ -258,36 +256,60 @@ function it_exchange_generate_transaction_object() {
 	/** @var IT_Exchange_Coupon[] $coupon_objects */
 	$coupon_objects = array();
 
-	foreach ( it_exchange_get_applied_coupons() as $type => $type_coupons ) {
-
-		foreach ( $type_coupons as $coupon ) {
-			if ( $coupon instanceof IT_Exchange_Coupon ) {
-				$coupon_objects[] = $coupon;
-				$coupons[$type][] = $coupon->get_data_for_transaction_object();
-			} else {
-				$coupons[$type][] = $coupon;
-			}
+	foreach ( $cart->get_items( 'coupon' ) as $coupon_line_item ) {
+		/** @var IT_Exchange_Coupon $coupon */
+		$coupon = $coupon_line_item->get_coupon();
+		$type   = $coupon->get_type();
+		if ( $coupon instanceof IT_Exchange_Coupon ) {
+			$coupon_objects[] = $coupon;
+			$coupons[$type][] = $coupon->get_data_for_transaction_object();
+		} else {
+			$coupons[$type][] = $coupon;
 		}
 	}
 
 	$transaction_object->coupons                = $coupons;
-	$transaction_object->coupons_total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ));
+	$transaction_object->coupons_total_discount = $cart->calculate_total( 'coupon' );
 	$transaction_object->customer_ip            = it_exchange_get_ip();
 	
-	$taxes = $cart->calculate_total( 'tax', true );
+	$taxes = $cart->calculate_total( 'tax' );
 	
 	// Tack on Tax information
 	$transaction_object->taxes_formated         = it_exchange_format_price( $taxes );
 	$transaction_object->taxes_raw              = $taxes;
 
 	// Tack on Shipping and Billing address
-	$transaction_object->shipping_address       = it_exchange_get_cart_shipping_address();
-	$transaction_object->billing_address        = apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) ? it_exchange_get_cart_billing_address() : false;
+	$transaction_object->shipping_address       = $cart->get_shipping_address();
+
+	if ( apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) ) {
+		$transaction_object->billing_address = $cart->get_billing_address();
+	} else {
+		$transaction_object->billing_address = false;
+	}
+
+	/** @var ITE_Shipping_Line_Item[]|ITE_Line_Item_Collection $shipping_methods */
+	$shipping_methods = $cart->get_items( 'shipping', true )->unique( function( ITE_Shipping_Line_Item $shipping ) {
+		return $shipping->get_method()->slug;
+	} );
+
+	$shipping_method = $shipping_methods->count() === 1 ? $shipping_methods->first()->get_method()->slug : 'multiple-methods';
+
+	if ( $shipping_method === 'multiple-methods' ) {
+		$multiple_methods = array();
+
+		foreach ( $shipping_methods as $method ) {
+			if ( $method->get_aggregate() instanceof ITE_Cart_Product ) {
+				$multiple_methods[ $method->get_aggregate()->get_id() ] = $method->get_method()->slug;
+			}
+		}
+	} else {
+		$multiple_methods = false;
+	}
 
 	// Shipping Method and total
-	$transaction_object->shipping_method        = it_exchange_get_cart_shipping_method();
-	$transaction_object->shipping_method_multi  = it_exchange_get_cart_data( 'multiple-shipping-methods' );
-	$transaction_object->shipping_total         = it_exchange_convert_to_database_number( it_exchange_get_cart_shipping_cost( false, false ) );
+	$transaction_object->shipping_method        = $shipping_method;
+	$transaction_object->shipping_method_multi  = $multiple_methods;
+	$transaction_object->shipping_total         = it_exchange_convert_to_database_number( $cart->calculate_total( 'shipping' ) );
 
 	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object );
 
@@ -387,7 +409,7 @@ function it_exchange_delete_transient_transaction( $method, $temp_id ) {
  * @param string $method_id ID from transaction method
  * @param string $status Transaction status
  * @param int|bool $customer Customer ID
- * @param stdClass $cart_object passed cart object
+ * @param stdClass|ITE_Cart $cart_object passed cart object
  * @param array $args same args passed to wp_insert_post plus any additional needed
  *
  * @return mixed post id or false
@@ -403,6 +425,13 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		$customer = it_exchange_get_current_customer();
 	} else {
 		$customer = it_exchange_get_customer( $customer );
+	}
+	
+	if ( $cart_object instanceof ITE_Cart ) {
+		$cart        = $cart_object;
+		$cart_object = it_exchange_generate_transaction_object( $cart );
+	} else {
+		$cart = it_exchange_get_current_cart();
 	}
 
 	if ( it_exchange_get_transaction_by_method_id( $method, $method_id ) ) {
@@ -453,9 +482,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 			$customer->add_transaction_to_user( $transaction_id );
 		}
 
-		$cart = it_exchange_get_current_cart();
 		$transaction = new IT_Exchange_Transaction( $transaction_id ); // intentionally unfiltered call
-
 		$repo = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
 		$repo->save_many( $cart->get_items()->flatten()->to_array() );
 

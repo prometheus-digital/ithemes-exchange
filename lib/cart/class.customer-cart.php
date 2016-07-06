@@ -399,7 +399,7 @@ class ITE_Cart {
 	 *
 	 * @return float
 	 */
-	public function calculate_total( $type = '', $unravel = false ) {
+	public function calculate_total( $type = '', $unravel = true ) {
 
 		$items = $this->get_items( $type, $unravel );
 		$total = 0.00;

@@ -384,23 +384,6 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	/**
 	 * @inheritDoc
 	 */
-	public function has_primary() {
-		return true;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_primary() {
-		$clone                = clone $this;
-		$clone->aggregatables = array();
-
-		return $clone;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	public function add_item( ITE_Aggregatable_Line_Item $item ) {
 
 		$item->set_aggregate( $this );
@@ -453,7 +436,13 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	 * @inheritDoc
 	 */
 	public function get_name() {
-		return $this->frozen->has_param( 'name' ) ? $this->frozen->get_param( 'name' ) : $this->get_param( 'product_name' );
+		if ( $this->frozen->has_param( 'name' ) ) {
+			return $this->frozen->get_param( 'name' );
+		} else {
+			$title = $this->get_param( 'product_name' );
+
+			return apply_filters( 'it_exchange_get_cart_product_title', $title, $this->bc() );
+		}
 	}
 
 	/**
@@ -483,7 +472,21 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 			}
 		}
 
-		return $base;
+		return (float) $base;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_total() {
+
+		if ( $this->frozen->has_param( 'total' ) ) {
+			return $this->frozen->get_param( 'total' );
+		}
+
+		$subtotal = $this->get_amount() * $this->get_quantity();
+
+		return apply_filters( 'it_exchange_get_cart_product_subtotal', $subtotal, $this->bc() );
 	}
 
 	/**

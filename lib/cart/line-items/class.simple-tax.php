@@ -131,7 +131,7 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	 * @inheritDoc
 	 */
 	public function get_description() {
-		return $this->frozen->has_param( 'description' ) ? $this->frozen->get_param( 'description' ) : ''; 
+		return $this->frozen->has_param( 'description' ) ? $this->frozen->get_param( 'description' ) : '';
 	}
 
 	/**
@@ -143,16 +143,23 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	 * @inheritDoc
 	 */
 	public function get_amount() {
-		
+
 		if ( $this->frozen->has_param( 'amount' ) ) {
 			return $this->frozen->get_param( 'amount' );
 		}
-		
+
 		if ( $this->taxable ) {
 			return $this->taxable->get_taxable_amount() * ( $this->get_rate() / 100 );
 		} else {
 			return 0;
 		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_total() {
+		return $this->get_amount() * $this->get_quantity();
 	}
 
 	/**

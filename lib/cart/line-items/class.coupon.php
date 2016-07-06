@@ -141,20 +141,6 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 
 	/**
 	 * @inheritDoc
-	 */
-	public function has_primary() {
-		return true;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_primary() {
-		return $this;
-	}
-
-	/**
-	 * @inheritDoc
 	 * @throws \UnexpectedValueException
 	 */
 	public function get_line_items() {
@@ -300,6 +286,13 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 		return $base;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function get_total() {
+		return $this->get_amount() * $this->get_quantity();
+	}
+	
 	/**
 	 * Get the base amount to be charged.
 	 *

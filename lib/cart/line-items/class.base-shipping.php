@@ -122,6 +122,13 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function get_total() {
+		return $this->get_amount() * $this->get_quantity();
+	}
+
+	/**
 	 * Get the base amount.
 	 *
 	 * @since 1.36.0
@@ -270,23 +277,6 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 		}
 
 		return new ITE_Line_Item_Collection( $this->aggregatables, $this->repository );
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function has_primary() {
-		return true;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_primary() {
-		$clone                = clone $this;
-		$clone->aggregatables = array();
-
-		return $clone;
 	}
 
 	/**

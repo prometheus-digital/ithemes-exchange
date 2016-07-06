@@ -235,7 +235,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 		$total = 0.00;
 
 		foreach ( $this->items as $item ) {
-			$total += $item->get_amount() * $item->get_quantity();
+			$total += $item->get_total();
 		}
 
 		return $total;

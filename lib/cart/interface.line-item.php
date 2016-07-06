@@ -73,6 +73,17 @@ interface ITE_Line_Item extends ITE_Parameter_Bag {
 	public function get_amount();
 
 	/**
+	 * Get the total amount.
+	 * 
+	 * Most often, this is simply the amount multiplied by the quantity.
+	 * 
+	 * @since 1.36.0
+	 * 
+	 * @return float
+	 */
+	public function get_total();
+
+	/**
 	 * Get the type of the line item.
 	 *
 	 * @since 1.36
