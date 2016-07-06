@@ -462,7 +462,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		update_post_meta( $transaction_id, '_it_exchange_customer_id',           $customer ? $customer->id : false );
 		update_post_meta( $transaction_id, '_it_exchange_customer_ip',           ! empty( $cart_object->customer_ip ) ? $cart_object->customer_ip : it_exchange_get_ip() );
 		update_post_meta( $transaction_id, '_it_exchange_cart_object',           $cart_object );
-		update_post_meta( $transaction_id, '_it_exchange_cart_id',               $cart_object->cart_id );
+		update_post_meta( $transaction_id, '_it_exchange_cart_id',               $cart->get_id() );
 
 		// Transaction Hash for confirmation lookup
 		$hash =  it_exchange_generate_transaction_hash( $transaction_id, $customer ? $customer->id  : false );

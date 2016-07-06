@@ -308,11 +308,12 @@ function it_exchange_cache_customer_cart( $customer_id = false ) {
  *
  * @since 1.9.0
  *
- * @param  int|bool $customer_id the id of an exchange customer
+ * @param int|bool $customer_id The id of an exchange customer
+ * @param bool $session_only    Only return the session data not an \ITE_Cart object.
  *
- * @return array|false
+ * @return array|ITE_Cart|false
 */
-function it_exchange_get_cached_customer_cart( $customer_id = false ) {
+function it_exchange_get_cached_customer_cart( $customer_id = false, $session_only = true ) {
 	// Grab the current customer
 	$customer = ! $customer_id ? it_exchange_get_current_customer() : it_exchange_get_customer( $customer_id );
 
@@ -320,15 +321,26 @@ function it_exchange_get_cached_customer_cart( $customer_id = false ) {
 	if ( ! $customer || ! is_numeric( $customer->id ) || $customer->id <= 0 ) {
 		return false;
 	}
+	
+	if ( $session_only ) {
 
-	// Grab the data
-	$cart = get_user_meta( $customer->id, '_it_exchange_cached_cart', true );
+		// Grab the data
+		$cart = get_user_meta( $customer->id, '_it_exchange_cached_cart', true );
 
-	if ( ! is_array( $cart ) ) {
-		$cart = array();
+		if ( ! is_array( $cart ) ) {
+			$cart = array();
+		}
+
+		return apply_filters( 'it_exchange_get_chached_customer_cart', $cart, $customer->id );
+	} else {
+		try {
+			$repository = ITE_Line_Item_Cached_Session_Repository::from_customer( $customer );
+			
+			return new \ITE_Cart( $repository, $repository->get_cart_id(), $customer );
+		} catch ( UnexpectedValueException $e ) {
+			return false;
+		}
 	}
-
-	return apply_filters( 'it_exchange_get_chached_customer_cart', $cart, $customer->id );
 }
 
 /**
@@ -581,7 +593,7 @@ function it_exchange_get_cart_product_quantity( $product ) {
 		return 0;
 	}
 
-	return apply_filters( 'it_exchange_get_cart_product_quantity', $item->get_quantity(), $item->bc() );
+	return $item->get_quantity();
 }
 
 /**
@@ -739,9 +751,20 @@ function it_exchange_get_cart_product_subtotal( $product, $format=true ) {
  *
  * @return mixed subtotal of cart
 */
-function it_exchange_get_cart_subtotal( $format=true, $options=array() ) {
+function it_exchange_get_cart_subtotal( $format = true, $options = array() ) {
+
+	if ( ! empty( $options['use_cached_customer_cart'] ) ) {
+		$cart = it_exchange_get_cached_customer_cart( $options['use_cached_customer_cart'], false );
+	}
+	elseif ( ! empty( $options['cart'] ) ) {
+		$cart = $options['cart'];
+	} else {
+		$cart = it_exchange_get_current_cart();
+	}
 	
-	$cart = empty( $options['cart'] ) ? it_exchange_get_current_cart() : $options['cart'];
+	if ( ! $cart instanceof ITE_Cart ) {
+		return 0;
+	}
 
 	$subtotal = 0;
 	$items    = $cart->get_items( 'product' );
@@ -780,9 +803,20 @@ function it_exchange_get_cart_subtotal( $format=true, $options=array() ) {
  *
  * @return mixed total of cart
 */
-function it_exchange_get_cart_total( $format=true, $options=array() ) {
+function it_exchange_get_cart_total( $format = true, $options = array() ) {
+	
+	if ( ! empty( $options['use_cached_customer_cart'] ) ) {
+		$cart = it_exchange_get_cached_customer_cart( $options['use_cached_customer_cart'], false );
+	}
+	elseif ( ! empty( $options['cart'] ) ) {
+		$cart = $options['cart'];
+	} else {
+		$cart = it_exchange_get_current_cart();
+	}
 
-	$cart = empty( $options['cart'] ) ? it_exchange_get_current_cart() : $options['cart'];
+	if ( ! $cart instanceof ITE_Cart ) {
+		return 0;
+	}
 	
 	$total = it_exchange_get_cart_subtotal( false, $options );
 	$total += $cart->get_items( '', true )->without( 'product' )->filter( function ( ITE_Line_Item $item ) {
@@ -805,23 +839,37 @@ function it_exchange_get_cart_total( $format=true, $options=array() ) {
  * @param  array  $options {
  *      An array of possible options passed to the function
  *
- *      @type mixed $use_cached_customer_cart If contains a customer ID, we grab cart
+ *      @type \ITE_Cart $cart
+ *      @type mixed     $use_cached_customer_cart If contains a customer ID, we grab cart
  *                                            data from the cached cart
  * }
  *
  * @return string description
 */
-function it_exchange_get_cart_description( $options=array() ) {
+function it_exchange_get_cart_description( $options = array() ) {
+	
+	if ( ! empty( $options['use_cached_customer_cart'] ) ) {
+		$cart = it_exchange_get_cached_customer_cart( $options['use_cached_customer_cart'], false );
+	}
+	elseif ( ! empty( $options['cart'] ) ) {
+		$cart = $options['cart'];
+	} else {
+		$cart = it_exchange_get_current_cart();
+	}
 
+	if ( ! $cart instanceof ITE_Cart ) {
+		return '';
+	}
+	
 	$description = array();
-	$items       = it_exchange_get_current_cart()->get_items( 'product' );
+	$items       = $cart->get_items( 'product' );
 
-	if ( ! $items ) {
+	if ( ! $items->count() ) {
 		return '';
 	}
 
 	foreach ( $items as $item ) {
-		$string = it_exchange_get_cart_product_title( $item->bc() );
+		$string = $item->get_name();
 
 		if (  1 < $count = it_exchange_get_cart_product_quantity( array( 'product_cart_id' => $item->get_product()->ID ) ) ) {
 			$string .= ' (' . $count . ')';

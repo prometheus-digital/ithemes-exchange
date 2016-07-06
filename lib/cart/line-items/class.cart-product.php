@@ -456,7 +456,11 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	 * @inheritDoc
 	 */
 	public function get_quantity() {
-		return $this->frozen->has_param( 'quantity' ) ? $this->frozen->get_param( 'quantity' ) : $this->get_param( 'count' );
+		if ( $this->frozen->has_param( 'quantity' ) ) {
+			return $this->frozen->get_param( 'quantity' );
+		} else {
+			return apply_filters( 'it_exchange_get_cart_product_quantity', $this->get_param( 'count' ), $this->bc() );
+		}
 	}
 
 	/**
