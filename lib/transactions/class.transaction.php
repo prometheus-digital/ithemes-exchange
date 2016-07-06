@@ -142,6 +142,44 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	}
 
 	/**
+	 * Get all items in this transaction.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $type
+	 * @param bool   $flatten
+	 *
+	 * @return \ITE_Line_Item_Collection|\ITE_Line_Item[]
+	 */
+	public function get_items( $type = '', $flatten = false ) {
+		$repository = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $this );
+
+		if ( $flatten ) {
+			$items = $this->get_items()->flatten();
+
+			return $type ? $items->with_only( $type ) : $items;
+		}
+
+		return $repository->all( $type );
+	}
+
+	/**
+	 * Get a line item.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $type
+	 * @param string $id
+	 *
+	 * @return \ITE_Line_Item|null
+	 */
+	public function get_item( $type, $id ) {
+		$repository = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $this );
+
+		return $repository->get( $type, $id );
+	}
+
+	/**
 	 * Sets the transaction_method property.
 	 *
 	 * If the custom value is already set, it uses that.
@@ -531,11 +569,11 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 		$args = wp_parse_args( $args, $defaults );
 
 		$posts = get_children( $args );
-		
+
 		if ( $return_transactions ) {
 			$posts = array_map( 'it_exchange_get_transaction', $posts );
 		}
-		
+
 		return $posts;
 	}
 
@@ -557,7 +595,7 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 		if ( ! self::accepts_prorate_credit_request( $request ) ) {
 			throw new DomainException( "This credit request can't be handled by this provider." );
 		}
-		
+
 		/** @var IT_Exchange_Transaction $transaction */
 		$transaction = $request->get_transaction();
 
@@ -578,10 +616,10 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 		}
 
 		$request->set_credit( $amount );
-		
+
 		$request->update_additional_session_details( array(
-			'old_transaction_id'        => $transaction->ID,
-			'old_transaction_method'    => $transaction->transaction_method
+			'old_transaction_id'     => $transaction->ID,
+			'old_transaction_method' => $transaction->transaction_method
 		) );
 	}
 

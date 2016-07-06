@@ -215,11 +215,7 @@ class ITE_Cart {
 		if ( $flatten ) {
 			$items = $this->get_items()->flatten();
 
-			if ( $type ) {
-				return $items->with_only( $type );
-			} else {
-				return $items;
-			}
+			return $type ? $items->with_only( $type ) : $items;
 		}
 
 		if ( ! $type ) {

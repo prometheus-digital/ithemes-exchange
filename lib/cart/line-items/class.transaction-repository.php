@@ -71,7 +71,9 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	 */
 	public function all( $type = '' ) {
 
-		$models = ITE_Transaction_Line_Item_Model::query()->where( 'transaction', true, $this->get_transaction()->ID );
+		$models = ITE_Transaction_Line_Item_Model::query()
+		                                         ->where( '_parent', true, 0 )
+		                                         ->and_where( 'transaction', true, $this->get_transaction()->ID );
 
 		if ( $type ) {
 			$models->and_where( 'type', $type );
@@ -84,7 +86,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 			$items[] = $this->model_to_item( $model );
 		}
 
-		return $items;
+		return new ITE_Line_Item_Collection( $items, $this );
 	}
 
 	/**
