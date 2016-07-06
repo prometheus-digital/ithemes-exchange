@@ -71,7 +71,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	 */
 	public function all( $type = '' ) {
 
-		$models = ITE_Transaction_Line_Item_Model::query()->where( 'transaction', $this->get_transaction()->ID );
+		$models = ITE_Transaction_Line_Item_Model::query()->where( 'transaction', true, $this->get_transaction()->ID );
 
 		if ( $type ) {
 			$models->and_where( 'type', $type );
@@ -99,7 +99,13 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 
 			if ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) {
 				$parent = $this->find_model_for_item( $item->get_aggregate() );
-				$parent = $parent ? $parent->get_pk() : 0;
+				if ( $parent ) {
+					$parent = $parent->get_pk();
+				} else {
+					$this->save( $item->get_aggregate() );
+					$parent = $this->find_model_for_item( $item->get_aggregate() );
+					$parent = $parent ? $parent->get_pk() : 0;
+				}
 			} else {
 				$parent = 0;
 			}
@@ -144,12 +150,6 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	 */
 	public function delete( ITE_Line_Item $item ) {
 
-		if ( $item instanceof ITE_Aggregate_Line_Item ) {
-			foreach ( $item->get_line_items() as $aggregatable ) {
-				$this->delete( $aggregatable );
-			}
-		}
-
 		$model = $this->find_model_for_item( $item );
 
 		if ( ! $model ) {
@@ -159,6 +159,12 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 		$result = $model->delete();
 
 		if ( $result ) {
+			if ( $item instanceof ITE_Aggregate_Line_Item ) {
+				foreach ( $item->get_line_items() as $aggregatable ) {
+					$this->delete( $aggregatable );
+				}
+			}
+
 			$this->events->on_delete( $item, $this );
 		}
 
@@ -185,9 +191,9 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 		}
 
 		return ITE_Transaction_Line_Item_Model::query()
-		                                      ->where( 'type', $type )
-		                                      ->and_where( 'id', $id )
-		                                      ->and_where( 'transaction', $this->get_transaction()->ID )
+		                                      ->where( 'type', true, $type )
+		                                      ->and_where( 'id', true, $id )
+		                                      ->and_where( 'transaction', true, $this->get_transaction()->ID )
 		                                      ->first();
 	}
 
@@ -289,7 +295,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 			return;
 		}
 
-		$children = ITE_Transaction_Line_Item_Model::query()->where( '_parent', $model->get_pk() )->results();
+		$children = ITE_Transaction_Line_Item_Model::query()->where( '_parent', true, $model->get_pk() )->results();
 
 		foreach ( $children as $child ) {
 			$aggregatable = $this->model_to_item( $child, $item );

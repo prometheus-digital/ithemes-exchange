@@ -136,6 +136,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 
 		return true;
 	}
+	
 
 	/**
 	 * @inheritDoc
