@@ -292,7 +292,13 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 		return $shipping->get_method()->slug;
 	} );
 
-	$shipping_method = $shipping_methods->count() === 1 ? $shipping_methods->first()->get_method()->slug : 'multiple-methods';
+	if ( $shipping_methods->count() === 1 ) {
+		$shipping_method = $shipping_methods->first()->get_method()->slug;
+	} elseif ( $shipping_methods->count() > 1) {
+		$shipping_method = 'multiple-methods';
+	} else {
+		$shipping_method = false;
+	}
 
 	if ( $shipping_method === 'multiple-methods' ) {
 		$multiple_methods = array();
