@@ -1,20 +1,9 @@
 <?php
 
-$cart = it_exchange_get_current_cart();
-/** @var ITE_Line_Item_Collection[] $segmented */
-$segmented = array();
-
-foreach ( $cart->get_items( 'tax', true ) as $item ) {
-
-	$key = get_class( $item ) . $item->get_name();
-
-	if ( isset( $segmented[ $key ] ) ) {
-		$segmented[ $key ]->add( $item );
-	} else {
-		$segmented[ $key ] = new ITE_Line_Item_Collection( array( $item ), $cart->get_repository() );
-	}
-}
-
+$cart      = it_exchange_get_current_cart();
+$segmented = $cart->get_items( 'tax', true )->segment( function ( ITE_Line_Item $item ) {
+	return get_class( $item ) . $item->get_name();
+} );
 ?>
 <?php do_action( 'it_exchange_content_cart_before_totals_taxes_element' ); ?>
 

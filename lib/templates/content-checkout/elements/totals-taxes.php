@@ -2,19 +2,9 @@
 
 $cart      = it_exchange_get_current_cart();
 $taxes     = $cart->get_items( 'tax', true );
-$segmented = array();
-
-foreach ( $taxes as $item ) {
-
-	$key = get_class( $item ) . $item->get_name();
-
-	if ( isset( $segmented[ $key ] ) ) {
-		$segmented[ $key ]->add( $item );
-	} else {
-		$segmented[ $key ] = new ITE_Line_Item_Collection( array( $item ), $cart->get_repository() );
-	}
-}
-
+$segmented = $taxes->segment( function ( ITE_Line_Item $item ) {
+	return get_class( $item ) . $item->get_name();
+} );
 ?>
 <?php do_action( 'it_exchange_content_checkout_before_totals_taxes_element' ); ?>
 

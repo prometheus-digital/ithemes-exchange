@@ -121,13 +121,13 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 
 	/**
 	 * Return a unique collection of items.
-	 * 
+	 *
 	 * If no callback is given, uniques will be detected by the ID and type.
-	 * 
+	 *
 	 * @since 1.36.0
-	 *        
+	 *
 	 * @param callable $callback
-	 * 
+	 *
 	 * @return \ITE_Line_Item_Collection
 	 */
 	public function unique( $callback = null ) {
@@ -135,13 +135,13 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 		$items = array();
 
 		foreach ( $this->items as $item ) {
-			
+
 			if ( $callback ) {
-				$key = $callback($item);
+				$key = $callback( $item );
 			} else {
 				$key = $item->get_type() . $item->get_id();
 			}
-			
+
 			$items[ $key ] = $item;
 		}
 
@@ -149,24 +149,55 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	}
 
 	/**
-	 * Flatten the collection.
-	 * 
+	 * Segment this collection into multiple collections based on a callaback function.
+	 *
 	 * @since 1.36.0
-	 * 
+	 *
+	 * @param callable $callback Receives a Line Item, should return a string to identify the bucket.
+	 *                           If none given, will segment by type.
+	 *
+	 * @return ITE_Line_Item_Collection[]
+	 */
+	public function segment( $callback = null ) {
+
+		$segmented = array();
+
+		foreach ( $this->items as $item ) {
+			if ( $callback ) {
+				$key = $callback( $item );
+			} else {
+				$key = $item->get_type();
+			}
+
+			if ( isset( $segmented[ $key ] ) ) {
+				$segmented[ $key ]->add( $item );
+			} else {
+				$segmented[ $key ] = new self( array( $item ), $this->repository );
+			}
+		}
+
+		return $segmented;
+	}
+
+	/**
+	 * Flatten the collection.
+	 *
+	 * @since 1.36.0
+	 *
 	 * @return \ITE_Line_Item_Collection
 	 */
 	public function flatten() {
-		
+
 		$items = array();
-		
+
 		foreach ( $this->items as $item ) {
 			if ( $item instanceof ITE_Aggregate_Line_Item ) {
 				$items = array_merge( $items, $this->unravel( $item ) );
 			}
-			
+
 			$items[] = $item;
 		}
-		
+
 		return new self( $items, $this->repository );
 	}
 

@@ -1,20 +1,9 @@
 <?php
 $transaction = it_exchange_get_transaction( $GLOBALS['it_exchange']['transaction'] );
 $taxes       = $transaction->get_items( 'tax', true );
-$segmented   = array();
-
-foreach ( $taxes as $item ) {
-
-	$key = get_class( $item ) . $item->get_name();
-
-	if ( isset( $segmented[ $key ] ) ) {
-		$segmented[ $key ]->add( $item );
-	} else {
-		$segmented[ $key ] = new ITE_Line_Item_Collection(
-			array( $item ), new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction )
-		);
-	}
-}
+$segmented   = $taxes->segment( function ( ITE_Line_Item $item ) {
+	return get_class( $item ) . $item->get_name();
+} );
 ?>
 <?php foreach ( $segmented as $segment ): ?>
 	<?php do_action( 'it_exchange_content_confirmation_before_totals_taxes_simple_element' ); ?>
