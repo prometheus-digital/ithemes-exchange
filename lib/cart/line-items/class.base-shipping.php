@@ -29,15 +29,20 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	/** @var string|int */
 	private $id;
 
+	/** @var ITE_Parameter_Bag */
+	private $frozen;
+
 	/**
 	 * ITE_Base_Shipping_Line_Item constructor.
 	 *
 	 * @param string             $id
 	 * @param \ITE_Parameter_Bag $bag
+	 * @param \ITE_Parameter_Bag $frozen
 	 */
-	public function __construct( $id, ITE_Parameter_Bag $bag ) {
-		$this->id  = $id;
-		$this->bag = $bag;
+	public function __construct( $id, ITE_Parameter_Bag $bag, ITE_Parameter_Bag $frozen ) {
+		$this->id     = $id;
+		$this->bag    = $bag;
+		$this->frozen = $frozen;
 	}
 
 	/**
@@ -63,7 +68,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 
 		$id = md5( $method->slug . '-' . (string) $cart_wide . '-' . microtime() );
 
-		return new self( $id, $bag );
+		return new self( $id, $bag, new ITE_Array_Parameter_Bag() );
 	}
 
 	/**
@@ -86,13 +91,15 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	/**
 	 * @inheritDoc
 	 */
-	public function get_name() { return $this->get_method()->label; }
+	public function get_name() {
+		return $this->frozen->has_param( 'name' ) ? $this->frozen->get_param( 'name' ) : $this->get_method()->label;
+	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function get_description() {
-		return '';
+		return $this->frozen->has_param( 'description' ) ? $this->frozen->get_param( 'description' ) : '';
 	}
 
 	/**
@@ -122,6 +129,11 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	 * @return float
 	 */
 	protected function get_base_amount() {
+
+		if ( $this->frozen->has_param( 'amount' ) ) {
+			return $this->frozen->get_param( 'amount' );
+		}
+
 		if ( $this->aggregate ) {
 			return $this->get_method()->get_shipping_cost_for_product( $this->aggregate->bc() );
 		} else {
@@ -139,7 +151,9 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	/**
 	 * @inheritDoc
 	 */
-	public function is_summary_only() { return true; }
+	public function is_summary_only() {
+		return $this->frozen->has_param( 'summary_only' ) ? $this->frozen->get_param( 'summary_only' ) : true;
+	}
 
 	/**
 	 * @inheritDoc
@@ -156,8 +170,8 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	/**
 	 * @inheritDoc
 	 */
-	public function get_method() { 
-		return it_exchange_get_registered_shipping_method( $this->get_param( 'method' ) ); 
+	public function get_method() {
+		return it_exchange_get_registered_shipping_method( $this->get_param( 'method' ) );
 	}
 
 	/**

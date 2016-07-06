@@ -12,6 +12,16 @@
 interface ITE_Line_Item extends ITE_Parameter_Bag {
 
 	/**
+	 * ITE_Cart_Product constructor.
+	 *
+	 * @param string             $id
+	 * @param \ITE_Parameter_Bag $bag
+	 *
+	 * @param \ITE_Parameter_Bag $frozen
+	 */
+	public function __construct( $id, ITE_Parameter_Bag $bag, ITE_Parameter_Bag $frozen );
+
+	/**
 	 * Get the ID of this line item.
 	 *
 	 * This need only be unique across line items of the same type.

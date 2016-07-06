@@ -29,18 +29,21 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	/** @var ITE_Line_Item_Repository */
 	private $repository;
 
+	/** @var ITE_Parameter_Bag */
+	private $frozen;
+
 	/**
 	 * ITE_Coupon_Line_Item constructor.
 	 *
 	 * @param string             $id
 	 * @param \ITE_Parameter_Bag $bag
-	 *
-	 * @throws \InvalidArgumentException
+	 * @param \ITE_Parameter_Bag $frozen
 	 */
-	public function __construct( $id, ITE_Parameter_Bag $bag ) {
+	public function __construct( $id, ITE_Parameter_Bag $bag, ITE_Parameter_Bag $frozen ) {
 		$this->id     = $id;
 		$this->bag    = $bag;
 		$this->coupon = it_exchange_get_coupon( $this->get_param( 'id' ), $this->get_param( 'type' ) );
+		$this->frozen = $frozen;
 	}
 
 	/**
@@ -73,7 +76,7 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 			$id = md5( $coupon->get_code() );
 		}
 
-		$self = new self( $id, $bag );
+		$self = new self( $id, $bag, new ITE_Array_Parameter_Bag() );
 
 		if ( $product ) {
 			$self->set_aggregate( $product );
@@ -268,7 +271,13 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	/**
 	 * @inheritDoc
 	 */
-	public function get_description() { return $this->get_coupon()->get_code(); }
+	public function get_description() {
+		if ( $this->frozen->has_param( 'description' ) ) {
+			return $this->frozen->get_param( 'description' );
+		} else {
+			return $this->get_coupon()->get_code();
+		}
+	}
 
 	/**
 	 * @inheritDoc
@@ -300,6 +309,10 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	 */
 	protected function get_base_amount() {
 
+		if ( $this->frozen->has_param( 'amount' ) ) {
+			return $this->frozen->get_param( 'amount' );
+		}
+
 		$amount = $this->get_coupon()->get_amount_number() / $this->calculate_num_items();
 
 		if ( $this->get_coupon()->get_amount_type() === IT_Exchange_Coupon::TYPE_FLAT ) {
@@ -323,7 +336,9 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	/**
 	 * @inheritDoc
 	 */
-	public function is_summary_only() { return true; }
+	public function is_summary_only() {
+		return $this->frozen->has_param( 'summary_only' ) ? $this->frozen->get_param( 'summary_only' ) : true;
+	}
 
 	/**
 	 * @inheritDoc

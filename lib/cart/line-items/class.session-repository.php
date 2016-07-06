@@ -259,7 +259,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		}
 
 		$params = isset( $data['_params'] ) && is_array( $data['_params'] ) ? $data['_params'] : array();
-		$item   = new $class( $id, new ITE_Array_Parameter_Bag( $params ) );
+		$item   = new $class( $id, new ITE_Array_Parameter_Bag( $params ), new ITE_Array_Parameter_Bag() );
 
 		if ( ! $item ) {
 			return null;
@@ -307,19 +307,6 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		$this->set_repository( $item );
 		$this->set_aggregate( $item, $data, $aggregate );
 		$this->set_aggregatables( $item, $data );
-	}
-
-	/**
-	 * Set the repository for a line item if necessary.
-	 *
-	 * @since 1.36
-	 *
-	 * @param \ITE_Line_Item $item
-	 */
-	protected final function set_repository( ITE_Line_Item $item ) {
-		if ( $item instanceof ITE_Line_Item_Repository_Aware ) {
-			$item->set_line_item_repository( $this );
-		}
 	}
 
 	/**

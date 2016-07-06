@@ -357,13 +357,17 @@ function it_exchange_basic_coupons_bump_customer_coupon_frequency( $coupon_id, $
  * Clear cart coupons when cart is emptied
  *
  * @since 0.4.0
+ *        
+ * @param \ITE_Cart $cart
  *
  * @return void
 */
-function it_exchange_clear_cart_coupons_on_empty() {
-	it_exchange_remove_cart_data( 'basic_coupons' );
+function it_exchange_clear_cart_coupons_on_empty( ITE_Cart $cart ) {
+	if ( $cart->is_current() ) {
+		it_exchange_remove_cart_data( 'basic_coupons' );
+	}
 }
-add_action( 'it_exchange_empty_shopping_cart', 'it_exchange_clear_cart_coupons_on_empty' );
+add_action( 'it_exchange_empty_cart', 'it_exchange_clear_cart_coupons_on_empty' );
 
 /**
  * Return the form checkbox for removing a coupon code to a cart

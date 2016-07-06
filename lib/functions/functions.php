@@ -1066,13 +1066,18 @@ add_filter( 'it_exchange_get_super-widget-checkout_after-cart-items_loops', 'it_
  * Clear Billing Address when the cart is emptied or a user logs out.
  *
  * @since 1.3.0
+ *        
+ * @param \ITE_Cart $cart
  *
  * @return void
 */
-function it_exchange_clear_billing_on_cart_empty() {
-    it_exchange_remove_cart_data( 'billing-address' );
+function it_exchange_clear_billing_on_cart_empty( ITE_Cart $cart ) {
+	
+	if ( $cart->is_current() ) {
+		it_exchange_remove_cart_data( 'billing-address' );
+	}
 }
-add_action( 'it_exchange_empty_shopping_cart', 'it_exchange_clear_billing_on_cart_empty' );
+add_action( 'it_exchange_empty_cart', 'it_exchange_clear_billing_on_cart_empty' );
 add_action( 'wp_logout', 'it_exchange_clear_billing_on_cart_empty' );
 
 /**

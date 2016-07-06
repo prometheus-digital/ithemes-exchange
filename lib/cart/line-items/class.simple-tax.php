@@ -20,17 +20,21 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	/** @var string */
 	private $id;
 
+	/** @var ITE_Parameter_Bag */
+	private $frozen;
+
 	/**
 	 * ITE_Simple_Tax_Line_Item constructor.
 	 *
-	 * @param string            $id
-	 * @param ITE_Parameter_Bag $bag
+	 * @param string             $id
+	 * @param ITE_Parameter_Bag  $bag
 	 *
-	 * @throws \InvalidArgumentException If the rate is invalid.
+	 * @param \ITE_Parameter_Bag $frozen
 	 */
-	public function __construct( $id, ITE_Parameter_Bag $bag ) {
-		$this->id  = $id;
-		$this->bag = $bag;
+	public function __construct( $id, ITE_Parameter_Bag $bag, ITE_Parameter_Bag $frozen ) {
+		$this->id     = $id;
+		$this->bag    = $bag;
+		$this->frozen = $frozen;
 	}
 
 	/**
@@ -60,7 +64,7 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 			$id = md5( json_encode( $codes ) . '-' . $rate );
 		}
 
-		$self = new self( $id, $bag );
+		$self = new self( $id, $bag, new ITE_Array_Parameter_Bag() );
 
 		if ( $item ) {
 			$self->set_aggregate( $item );
@@ -72,9 +76,7 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	/**
 	 * @inheritdoc
 	 */
-	public function get_rate() {
-		return $this->get_param( 'rate' );
-	}
+	public function get_rate() { return $this->get_param( 'rate' ); }
 
 	/**
 	 * @inheritdoc
@@ -128,7 +130,9 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_description() { return ''; }
+	public function get_description() {
+		return $this->frozen->has_param( 'description' ) ? $this->frozen->get_param( 'description' ) : ''; 
+	}
 
 	/**
 	 * @inheritDoc
@@ -139,6 +143,11 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	 * @inheritDoc
 	 */
 	public function get_amount() {
+		
+		if ( $this->frozen->has_param( 'amount' ) ) {
+			return $this->frozen->get_param( 'amount' );
+		}
+		
 		if ( $this->taxable ) {
 			return $this->taxable->get_taxable_amount() * ( $this->get_rate() / 100 );
 		} else {
@@ -156,7 +165,9 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	/**
 	 * @inheritDoc
 	 */
-	public function is_summary_only() { return true; }
+	public function is_summary_only() {
+		return $this->frozen->has_param( 'summary_only' ) ? $this->frozen->get_param( 'summary_only' ) : true;
+	}
 
 	/**
 	 * @inheritDoc

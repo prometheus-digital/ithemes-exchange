@@ -148,12 +148,16 @@ add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_customer_ord
  * When the cart is emptied, clear the customer-order-note session data.
  *
  * @since 1.34
+ *        
+ * @param \ITE_Cart $cart
  */
-function it_exchange_customer_order_notes_empty_cart() {
-	it_exchange_clear_session_data( 'customer-order-note' );
+function it_exchange_customer_order_notes_empty_cart( ITE_Cart $cart ) {
+	if ( $cart->is_current() ) {
+		it_exchange_clear_session_data( 'customer-order-note' );
+	}
 }
 
-add_action( 'it_exchange_empty_shopping_cart', 'it_exchange_customer_order_notes_empty_cart' );
+add_action( 'it_exchange_empty_cart', 'it_exchange_customer_order_notes_empty_cart' );
 
 /**
  * Create the activity item when the transaction is created.

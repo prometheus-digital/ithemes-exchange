@@ -61,7 +61,7 @@ class IT_Exchange_Shipping {
 		add_action( 'template_redirect', array( $this, 'process_update_address_request' ) );
 
 		// Clear the cart address when the cart is cleared
-		add_action( 'it_exchange_empty_shopping_cart', array( $this, 'clear_cart_address' ) );
+		add_action( 'it_exchange_empty_cart', array( $this, 'clear_cart_address' ) );
 
 		// Updates the general settings states field in the admin
 		add_action( 'it_exchange_admin_country_states_sync_for_shipping-general', array( $this, 'update_general_settings_state_field' ) );
@@ -74,7 +74,7 @@ class IT_Exchange_Shipping {
 		add_action( 'wp_head', array( $this, 'add_js_to_checkout_header' ) );
 
 		// Remove Shipping information from cart data when cart is emptied or when item is added to cart
-		add_action( 'it_exchange_empty_shopping_cart', array( $this, 'clear_cart_shipping_data' ) );
+		add_action( 'it_exchange_empty_cart', array( $this, 'clear_cart_shipping_data' ) );
 		add_action( 'it_exchange_add_product_to_cart', array( $this, 'clear_cart_shipping_data' ) );
 		add_action( 'it_exchange_remove_product_from_cart', array( $this, 'clear_cart_shipping_data' ) );
 		add_action( 'it_exchange_shipping_address_updated', array( $this, 'clear_cart_shipping_method' ) );
@@ -665,11 +665,15 @@ class IT_Exchange_Shipping {
 	 * Clears the shipping address value when the cart is emptied
 	 *
 	 * @since 1.1.0
+	 *        
+	 * @param \ITE_Cart $cart
 	 *
 	 * @return void
 	 */
-	public function clear_cart_address() {
-		it_exchange_remove_cart_data( 'shipping-address' );
+	public function clear_cart_address( ITE_Cart $cart ) {
+		if ( $cart->is_current() ) {
+			it_exchange_remove_cart_data( 'shipping-address' );
+		}
 	}
 
 	/**
@@ -853,6 +857,11 @@ class IT_Exchange_Shipping {
 	 * @return void
 	 */
 	public function clear_cart_shipping_data() {
+		
+		if ( func_get_arg( 0 ) instanceof ITE_Cart && ! func_get_arg( 0 )->is_current() ) {
+			return;
+		}
+		
 		it_exchange_remove_cart_data( 'shipping-address' );
 		it_exchange_remove_cart_data( 'shipping-method' );
 		it_exchange_remove_cart_data( 'multiple-shipping-methods' );

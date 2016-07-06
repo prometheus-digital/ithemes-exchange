@@ -87,4 +87,17 @@ abstract class ITE_Line_Item_Repository {
 	 * @return array
 	 */
 	abstract public function get_billing_address();
+
+	/**
+	 * Set the repository for a line item if necessary.
+	 *
+	 * @since 1.36
+	 *
+	 * @param \ITE_Line_Item $item
+	 */
+	protected final function set_repository( ITE_Line_Item $item ) {
+		if ( $item instanceof ITE_Line_Item_Repository_Aware ) {
+			$item->set_line_item_repository( $this );
+		}
+	}
 }

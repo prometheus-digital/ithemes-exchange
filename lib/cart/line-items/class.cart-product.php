@@ -26,18 +26,21 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	/** @var ITE_Line_Item_Repository */
 	private $repository;
 
+	/** @var ITE_Parameter_Bag */
+	private $frozen;
+
 	/**
 	 * ITE_Cart_Product constructor.
 	 *
 	 * @param string             $id
 	 * @param \ITE_Parameter_Bag $bag
-	 *
-	 * @throws \OutOfBoundsException
+	 * @param \ITE_Parameter_Bag $frozen
 	 */
-	public function __construct( $id, ITE_Parameter_Bag $bag ) {
+	public function __construct( $id, ITE_Parameter_Bag $bag, ITE_Parameter_Bag $frozen ) {
 		$this->bag = $bag;
 		$this->set_id( $id );
 		$this->product = it_exchange_get_product( $this->get_param( 'product_id' ) );
+		$this->frozen  = $frozen;
 	}
 
 	/**
@@ -54,8 +57,9 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 
 		$bag = new ITE_Array_Parameter_Bag();
 		$bag->set_param( 'product_id', $product->ID );
+		$bag->set_param( 'product_name', get_the_title( $product->ID ) );
 
-		$self = new self( '', $bag );
+		$self = new self( '', $bag, new ITE_Array_Parameter_Bag() );
 		self::generate_cart_product_id( $self );
 		$self->set_quantity( $quantity );
 
@@ -449,21 +453,21 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	 * @inheritDoc
 	 */
 	public function get_name() {
-		return $this->get_param( 'product_name' );
+		return $this->frozen->has_param( 'name' ) ? $this->frozen->get_param( 'name' ) : $this->get_param( 'product_name' );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function get_description() {
-
+		return $this->frozen->has_param( 'description' ) ? $this->frozen->get_param( 'description' ) : '';
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function get_quantity() {
-		return (int) $this->get_param( 'count' );
+		return $this->frozen->has_param( 'quantity' ) ? $this->frozen->get_param( 'quantity' ) : $this->get_param( 'count' );
 	}
 
 	/**
@@ -491,6 +495,10 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	 */
 	protected function get_base_amount() {
 
+		if ( $this->frozen->has_param( 'amount' ) ) {
+			return $this->frozen->get_param( 'amount' );
+		}
+
 		$base = $this->get_product()->get_feature( 'base-price' );
 
 		return apply_filters( 'it_exchange_get_cart_product_base_price', $base, $this->bc(), false );
@@ -507,7 +515,7 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	 * @inheritDoc
 	 */
 	public function is_summary_only() {
-		return false;
+		return $this->frozen->has_param( 'summary_only' ) ? $this->frozen->get_param( 'summary_only' ) : false;
 	}
 
 	/**

@@ -453,6 +453,12 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 			$customer->add_transaction_to_user( $transaction_id );
 		}
 
+		$cart = it_exchange_get_current_cart();
+		$transaction = new IT_Exchange_Transaction( $transaction_id ); // intentionally unfiltered call
+
+		$repo = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
+		$repo->save_many( $cart->get_items()->flatten()->to_array() );
+
 		return apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer, $cart_object, $args );
 	}
 	do_action( 'it_exchange_add_transaction_failed', $method, $method_id, $status, $customer, $cart_object, $args );
