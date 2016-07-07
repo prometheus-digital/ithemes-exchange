@@ -51,11 +51,10 @@ interface ITE_Parameter_Bag {
 	 *
 	 * @param string $param
 	 * @param mixed  $value
-	 * @param bool   $deferred
 	 *
 	 * @return bool
 	 */
-	public function set_param( $param, $value, $deferred = false );
+	public function set_param( $param, $value );
 
 	/**
 	 * Remove a parameter.
@@ -65,18 +64,8 @@ interface ITE_Parameter_Bag {
 	 * @since 1.36
 	 *
 	 * @param string $param
-	 * @param bool   $deferred
 	 *
 	 * @return bool
 	 */
-	public function remove_param( $param, $deferred = false );
-
-	/**
-	 * Persist any deferred parameter changes.
-	 *
-	 * @since 1.36
-	 *
-	 * @return bool
-	 */
-	public function persist_deferred_params();
+	public function remove_param( $param );
 }

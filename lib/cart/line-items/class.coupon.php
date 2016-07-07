@@ -387,17 +387,12 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	/**
 	 * @inheritDoc
 	 */
-	public function set_param( $param, $value, $deferred = false ) {
-		return $this->bag->set_param( $param, $value, $deferred );
+	public function set_param( $param, $value ) {
+		return $this->bag->set_param( $param, $value );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function remove_param( $param, $deferred = false ) { return $this->bag->remove_param( $param, $deferred ); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function persist_deferred_params() { return $this->bag->persist_deferred_params(); }
+	public function remove_param( $param ) { return $this->bag->remove_param( $param ); }
 }

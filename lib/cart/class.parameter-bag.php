@@ -17,21 +17,14 @@ class ITE_Array_Parameter_Bag implements ITE_Parameter_Bag {
 	protected $params = array();
 
 	/**
-	 * @var array
-	 */
-	protected $deferred_params = array();
-
-	/**
 	 * ITE_Array_Parameter_Bag constructor.
 	 *
 	 * @param array $params
 	 */
 	public function __construct( array $params = array() ) {
-		$this->params          = $params;
-		$this->deferred_params = $this->params;
+		$this->params = $params;
 	}
-
-
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -60,13 +53,9 @@ class ITE_Array_Parameter_Bag implements ITE_Parameter_Bag {
 	/**
 	 * @inheritDoc
 	 */
-	public function set_param( $param, $value, $deferred = false ) {
+	public function set_param( $param, $value ) {
 
-		$this->deferred_params[ $param ] = $value;
-
-		if ( ! $deferred ) {
-			$this->params[ $param ] = $value;
-		}
+		$this->params[ $param ] = $value;
 
 		return true;
 	}
@@ -74,21 +63,10 @@ class ITE_Array_Parameter_Bag implements ITE_Parameter_Bag {
 	/**
 	 * @inheritDoc
 	 */
-	public function remove_param( $param, $deferred = false ) {
+	public function remove_param( $param ) {
 
-		if ( $deferred ) {
-			unset( $this->deferred_params[ $param ] );
-		} else {
-			unset( $this->params[ $param ] );
-		}
+		unset( $this->params[ $param ] );
 
 		return true;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function persist_deferred_params() {
-		$this->params = $this->deferred_params;
 	}
 }
