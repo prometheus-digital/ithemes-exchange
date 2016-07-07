@@ -95,28 +95,6 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	public function apply( ITE_Cart $cart ) {
-
-		$apply_to = array();
-
-		foreach ( $cart->get_items( 'product' ) as $product ) {
-			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product->bc(), $this ) ) {
-				$apply_to[] = $product;
-			}
-		}
-
-		/** @var ITE_Cart_Product $product */
-		foreach ( $apply_to as $product ) {
-			$item = ITE_Coupon_Line_Item::create( $this, $product );
-			$product->add_item( $item );
-		}
-
-		return $cart->get_repository()->save_many( $apply_to );
-	}
-
-	/**
 	 * @inheritDoc
 	 */
 	public function valid_for_product( ITE_Cart_Product $product ) {

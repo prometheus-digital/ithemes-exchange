@@ -349,7 +349,22 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	 * @throws \InvalidArgumentException
 	 */
 	public function apply( ITE_Cart $cart ) {
-		return false;
+		
+		$apply_to = array();
+
+		foreach ( $cart->get_items( 'product' ) as $product ) {
+			if ( $this->valid_for_product( $product ) ) {
+				$apply_to[] = $product;
+			}
+		}
+
+		/** @var ITE_Cart_Product $product */
+		foreach ( $apply_to as $product ) {
+			$item = ITE_Coupon_Line_Item::create( $this, $product );
+			$product->add_item( $item );
+		}
+
+		return $cart->get_repository()->save_many( $apply_to );
 	}
 
 	/**
