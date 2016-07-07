@@ -155,22 +155,6 @@ class ITE_Line_Item_Transaction_Object_Converter {
 			foreach ( $products as $product ) {
 				$product->add_item( $item );
 			}
-
-			$item = ITE_Coupon_Line_Item::create( $coupon );
-			$item = new ITE_Coupon_Line_Item(
-				$item->get_id(),
-				new ITE_Array_Parameter_Bag( $item->get_params() ),
-				new ITE_Array_Parameter_Bag( array(
-					'name'         => __( 'Savings', 'it-l10n-ithemes-exchange' ),
-					'description'  => $coupon_data['code'],
-					'amount'       => 0,
-					'quantity'     => 1,
-					'total'        => 0,
-					'summary_only' => true,
-				) )
-			);
-
-			$repository->save( $item );
 		}
 
 		$repository->save_many( $products );

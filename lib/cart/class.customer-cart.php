@@ -388,6 +388,28 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Callback to perform custom processing when a coupon line item is added to the cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Coupon_Line_Item $coupon
+	 *
+	 * @return bool
+	 */
+	protected function add_coupon_item( ITE_Coupon_Line_Item $coupon ) {
+
+		/** @var ITE_Cart_Product $product */
+		foreach ( $this->get_items( 'product' ) as $product ) {
+			if ( $coupon->get_coupon()->valid_for_product( $product ) ) {
+				$product->add_item( $coupon->create_scoped_for_product( $product ) );
+				$this->get_repository()->save( $product );
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Calculate the total of all line items or a given line item type.
 	 *
 	 * This calculation is not cached.
@@ -400,15 +422,7 @@ class ITE_Cart {
 	 * @return float
 	 */
 	public function calculate_total( $type = '', $unravel = true ) {
-
-		$items = $this->get_items( $type, $unravel );
-		$total = 0.00;
-
-		foreach ( $items as $item ) {
-			$total += $item->get_amount() * $item->get_quantity();
-		}
-
-		return $total;
+		return $this->get_items( $type, $unravel )->total();
 	}
 
 	/**

@@ -95,6 +95,19 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	public function get_coupon() { return $this->coupon; }
 
 	/**
+	 * Create a duplicate of this coupon, scoped for a given product.
+	 * 
+	 * @since 1.36.0
+	 * 
+	 * @param \ITE_Cart_Product $product
+	 *
+	 * @return \ITE_Coupon_Line_Item
+	 */
+	public function create_scoped_for_product( ITE_Cart_Product $product ) {
+		return self::create( $this->get_coupon(), $product );
+	}
+
+	/**
 	 * Calculate the number of items this coupon applies to.
 	 *
 	 * @since 1.36.0
@@ -292,7 +305,7 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	public function get_total() {
 		return $this->get_amount() * $this->get_quantity();
 	}
-	
+
 	/**
 	 * Get the base amount to be charged.
 	 *
