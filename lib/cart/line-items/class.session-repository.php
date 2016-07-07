@@ -148,17 +148,17 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			$this->save( $item->get_aggregate() );
 		}
 
-		$type = self::normalize_type( $item->get_type() );
-
-		$items = $this->session->get_session_data( $type );
-		unset( $items[ $item->get_id() ] );
-		$this->session->update_session_data( $type, $items );
-
 		if ( $item instanceof ITE_Aggregate_Line_Item ) {
 			foreach ( $item->get_line_items() as $aggregatable ) {
 				$this->delete( $aggregatable );
 			}
 		}
+
+		$type = self::normalize_type( $item->get_type() );
+
+		$items = $this->session->get_session_data( $type );
+		unset( $items[ $item->get_id() ] );
+		$this->session->update_session_data( $type, $items );
 
 		$this->events->on_delete( $item, $this );
 

@@ -509,7 +509,13 @@ class IT_Exchange_Shopping_Cart {
 
 			try {
 				// Do the transaction
-				return it_exchange_do_transaction( $requested_transaction_method, $transaction_object );
+				$transaction_id = it_exchange_do_transaction( $requested_transaction_method, $transaction_object );
+
+				if ( $transaction_id ) {
+					it_exchange_empty_shopping_cart();
+				}
+
+				return $transaction_id;
 			} catch ( IT_Exchange_Locking_Exception $e ) {
 				sleep( 2 );
 
@@ -520,6 +526,7 @@ class IT_Exchange_Shopping_Cart {
 				$transaction = it_exchange_get_transaction_by_cart_id( it_exchange_get_cart_id() );
 
 				if ( $transaction ) {
+					it_exchange_empty_shopping_cart();
 					return $transaction->ID;
 				} else {
 
