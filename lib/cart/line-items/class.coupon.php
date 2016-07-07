@@ -104,7 +104,13 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	 * @return \ITE_Coupon_Line_Item
 	 */
 	public function create_scoped_for_product( ITE_Cart_Product $product ) {
-		return self::create( $this->get_coupon(), $product );
+		$coupon = self::create( $this->get_coupon(), $product );
+
+		if ( $this->repository ) {
+			$coupon->set_line_item_repository( $this->repository );
+		}
+
+		return $coupon;
 	}
 
 	/**
@@ -175,6 +181,14 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 		$item->set_aggregate( $this );
 
 		$this->aggregatables[] = $item;
+
+		if ( $item instanceof ITE_Taxable_Line_Item ) {
+			foreach ( $this->get_taxes() as $tax ) {
+				if ( $tax->applies_to( $item ) ) {
+					$item->add_tax( $tax->create_scoped_for_taxable( $item ) );
+				}
+			}
+		}
 
 		return $this;
 	}
@@ -325,6 +339,10 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 			return - $amount;
 		} elseif ( $this->get_coupon()->get_amount_type() === IT_Exchange_Coupon::TYPE_PERCENT ) {
 			$product = $this->get_aggregate();
+
+			if ( ! $product ) {
+				return 0.00;
+			}
 
 			return - ( ( $amount / 100 ) * ( $product->get_amount_to_discount() * $product->get_quantity() ) );
 		} else {

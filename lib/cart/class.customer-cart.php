@@ -155,6 +155,7 @@ class ITE_Cart {
 
 		if ( ! method_exists( $this, $method ) || $this->{$method}( $item ) !== false ) {
 			$this->items[ $item->get_type() ][] = $item;
+			$this->get_repository()->save( $item );
 		}
 
 		if ( $coerce ) {
@@ -166,8 +167,6 @@ class ITE_Cart {
 
 			return false;
 		}
-
-		$this->get_repository()->save( $item );
 
 		/**
 		 * Fires when a line item is added to the cart.

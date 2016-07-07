@@ -292,6 +292,14 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 			$this->aggregatables[] = $item;
 		}
 
+		if ( $item instanceof ITE_Taxable_Line_Item ) {
+			foreach ( $this->get_taxes() as $tax ) {
+				if ( $tax->applies_to( $item ) ) {
+					$item->add_tax( $tax->create_scoped_for_taxable( $item ) );
+				}
+			}
+		}
+
 		return $this;
 	}
 

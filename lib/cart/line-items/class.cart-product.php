@@ -394,6 +394,14 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 			$this->aggregatables[] = $item;
 		}
 
+		if ( $item instanceof ITE_Taxable_Line_Item ) {
+			foreach ( $this->get_taxes() as $tax ) {
+				if ( $tax->applies_to( $item ) ) {
+					$item->add_tax( $tax->create_scoped_for_taxable( $item ) );
+				}
+			}
+		}
+
 		return $this;
 	}
 
