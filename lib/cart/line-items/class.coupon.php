@@ -9,7 +9,7 @@
 /**
  * Class ITE_Coupon_Line_Item
  */
-class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware {
+class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware, ITE_Cart_Aware {
 
 	/** @var IT_Exchange_Coupon */
 	private $coupon;
@@ -28,6 +28,9 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 
 	/** @var ITE_Line_Item_Repository */
 	private $repository;
+
+	/** @var ITE_Cart */
+	private $cart;
 
 	/** @var ITE_Parameter_Bag */
 	private $frozen;
@@ -96,9 +99,9 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 
 	/**
 	 * Create a duplicate of this coupon, scoped for a given product.
-	 * 
+	 *
 	 * @since 1.36.0
-	 * 
+	 *
 	 * @param \ITE_Cart_Product $product
 	 *
 	 * @return \ITE_Coupon_Line_Item
@@ -108,6 +111,10 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 
 		if ( $this->repository ) {
 			$coupon->set_line_item_repository( $this->repository );
+		}
+		
+		if ( $this->cart ) {
+			$coupon->set_cart( $this->cart );
 		}
 
 		return $coupon;
@@ -130,9 +137,10 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 			return 1;
 		}
 
-		$i = 0;
+		$cart = $this->cart ? $this->cart : it_exchange_get_current_cart();
+		$i    = 0;
 
-		foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+		foreach ( $cart->get_items( 'product' ) as $product ) {
 			if ( $this->get_coupon()->valid_for_product( $product ) ) {
 				$i += $product->get_quantity();
 			}
@@ -147,6 +155,11 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	public function set_line_item_repository( ITE_Line_Item_Repository $repository ) {
 		$this->repository = $repository;
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function set_cart( ITE_Cart $cart ) { $this->cart = $cart; }
 
 	/**
 	 * @inheritDoc

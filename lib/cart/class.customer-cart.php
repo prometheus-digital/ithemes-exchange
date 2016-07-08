@@ -46,6 +46,14 @@ class ITE_Cart {
 		$all = $repository->all();
 
 		foreach ( $all as $item ) {
+			if ( $item instanceof ITE_Cart_Aware ) {
+				$item->set_cart( $this );
+			}
+
+			if ( $item instanceof ITE_Line_Item_Repository_Aware ) {
+				$item->set_line_item_repository( $repository );
+			}
+
 			$this->items[ $item->get_type() ][] = $item;
 		}
 
@@ -147,6 +155,10 @@ class ITE_Cart {
 
 		if ( $item instanceof ITE_Line_Item_Repository_Aware ) {
 			$item->set_line_item_repository( $this->get_repository() );
+		}
+
+		if ( $item instanceof ITE_Cart_Aware ) {
+			$item->set_cart( $this );
 		}
 
 		$_items = $this->items;
