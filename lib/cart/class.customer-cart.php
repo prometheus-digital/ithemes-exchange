@@ -14,9 +14,6 @@ class ITE_Cart {
 	/** @var \ITE_Line_Item_Repository */
 	private $repository;
 
-	/** @var array */
-	private $items = array();
-
 	/** @var ITE_Cart_Validator[] */
 	private $cart_validators = array();
 
@@ -43,20 +40,6 @@ class ITE_Cart {
 		$this->repository = $repository;
 		$this->cart_id    = $cart_id;
 
-		$all = $repository->all();
-
-		foreach ( $all as $item ) {
-			if ( $item instanceof ITE_Cart_Aware ) {
-				$item->set_cart( $this );
-			}
-
-			if ( $item instanceof ITE_Line_Item_Repository_Aware ) {
-				$item->set_line_item_repository( $repository );
-			}
-
-			$this->items[ $item->get_type() ][] = $item;
-		}
-
 		if ( ! $customer && $this->is_current() ) {
 			$customer = it_exchange_get_current_customer();
 
@@ -67,9 +50,13 @@ class ITE_Cart {
 
 		$this->customer = $customer;
 
-		$this->add_cart_validator( new ITE_Multi_Item_Cart_Validator() );
-		$this->add_item_validator( new ITE_Multi_Item_Product_Validator() );
-		$this->add_item_validator( new ITE_Product_Inventory_Validator() );
+		foreach ( self::validators() as $validator ) {
+			if ( $validator instanceof ITE_Cart_Validator ) {
+				$this->add_cart_validator( $validator );
+			} elseif ( $validator instanceof ITE_Line_Item_Validator ) {
+				$this->add_item_validator( $validator );
+			}
+		}
 	}
 
 	/**
@@ -161,12 +148,9 @@ class ITE_Cart {
 			$item->set_cart( $this );
 		}
 
-		$_items = $this->items;
-
 		$method = "add_{$item->get_type()}_item";
 
 		if ( ! method_exists( $this, $method ) || $this->{$method}( $item ) !== false ) {
-			$this->items[ $item->get_type() ][] = $item;
 			$this->get_repository()->save( $item );
 		}
 
@@ -175,8 +159,6 @@ class ITE_Cart {
 		}
 
 		if ( ! $this->validate() ) {
-			$this->items = $_items;
-
 			return false;
 		}
 
@@ -229,21 +211,7 @@ class ITE_Cart {
 			return $type ? $items->with_only( $type ) : $items;
 		}
 
-		if ( ! $type ) {
-			$items = array();
-
-			foreach ( $this->items as $item ) {
-				$items = array_merge( $items, $item );
-			}
-
-			return new ITE_Line_Item_Collection( $items, $this->get_repository() );
-		}
-
-		if ( isset( $this->items[ $type ] ) ) {
-			return new ITE_Line_Item_Collection( $this->items[ $type ], $this->get_repository() );
-		} else {
-			return new ITE_Line_Item_Collection( array(), $this->get_repository() );
-		}
+		return $this->get_repository()->all( $type )->set_cart( $this );
 	}
 
 	/**
@@ -280,45 +248,44 @@ class ITE_Cart {
 	 * @param string|int $id
 	 *
 	 * @return bool False if item could not be found.
+	 *
+	 * @throws \InvalidArgumentException If invalid type given.
 	 */
 	public function remove_item( $type, $id ) {
 
-		if ( ! isset( $this->items[ $type ] ) ) {
+		$item = $this->get_item( $type, $id );
+
+		if ( ! $item ) {
 			return false;
 		}
 
-		foreach ( $this->items[ $type ] as $i => $item ) {
-			if ( $item->get_id() === $id ) {
-				unset( $this->items[ $type ][ $i ] );
-				$this->get_repository()->delete( $item );
+		$deleted = $this->get_repository()->delete( $item );
 
-				/**
-				 * Fires when a line item is removed from the cart.
-				 *
-				 * @since 1.36
-				 *
-				 * @param \ITE_Line_Item $item
-				 * @param \ITE_Cart      $cart
-				 */
-				do_action( 'it_exchange_remove_line_item_from_cart', $item, $this );
+		if ( $deleted ) {
+			/**
+			 * Fires when a line item is removed from the cart.
+			 *
+			 * @since 1.36
+			 *
+			 * @param \ITE_Line_Item $item
+			 * @param \ITE_Cart      $cart
+			 */
+			do_action( 'it_exchange_remove_line_item_from_cart', $item, $this );
 
-				/**
-				 * Fires when a line item is removed from the cart.
-				 *
-				 * The dynamic portion of this hook refers to the line item type.
-				 *
-				 * @since 1.36
-				 *
-				 * @param \ITE_Line_Item $item
-				 * @param \ITE_Cart      $cart
-				 */
-				do_action( "it_exchange_remove_{$item->get_type()}_from_cart", $item, $this );
-
-				return true;
-			}
+			/**
+			 * Fires when a line item is removed from the cart.
+			 *
+			 * The dynamic portion of this hook refers to the line item type.
+			 *
+			 * @since 1.36
+			 *
+			 * @param \ITE_Line_Item $item
+			 * @param \ITE_Cart      $cart
+			 */
+			do_action( "it_exchange_remove_{$item->get_type()}_from_cart", $item, $this );
 		}
 
-		return false;
+		return $deleted;
 	}
 
 	/**
@@ -330,6 +297,8 @@ class ITE_Cart {
 	 * @param bool   $flatten Whether to remove all items, including aggregates' children.
 	 *
 	 * @return bool
+	 *
+	 * @throws \InvalidArgumentException If invalid type given.
 	 */
 	public function remove_all( $type = '', $flatten = false ) {
 
@@ -341,12 +310,6 @@ class ITE_Cart {
 
 			// This hook is documented in lib/cart/class.customer-cart.php
 			do_action( "it_exchange_remove_{$item->get_type()}_from_cart", $item, $this );
-		}
-
-		if ( $type ) {
-			unset( $this->items[ $type ] );
-		} else {
-			$this->items = array();
 		}
 
 		return true;
@@ -665,5 +628,29 @@ class ITE_Cart {
 		if ( ! is_string( $type ) || trim( $type ) === '' ) {
 			throw new InvalidArgumentException( '$type must be non-zero length string.' );
 		}
+	}
+
+	/**
+	 * Get all available validators.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return (\ITE_Line_Item_Validator|\ITE_Cart_Validator)[]
+	 */
+	private static function validators() {
+		$validators = array(
+			new ITE_Multi_Item_Cart_Validator(),
+			new ITE_Multi_Item_Product_Validator(),
+			new ITE_Product_Inventory_Validator()
+		);
+
+		/**
+		 * Filter the available validators.
+		 *
+		 * @since 1.36.0
+		 *
+		 * @param array $validators
+		 */
+		return apply_filters( 'it_exchange_cart_validators', $validators );
 	}
 }

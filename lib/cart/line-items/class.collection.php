@@ -107,6 +107,45 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	}
 
 	/**
+	 * Return a new collection with only the taxable line items.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Line_Item_Collection
+	 */
+	public function taxable() {
+		$taxable = array();
+
+		foreach ( $this->items as $item ) {
+			if ( $item instanceof ITE_Taxable_Line_Item ) {
+				$taxable[] = $item;
+			}
+		}
+
+		return new self( $taxable, $this->repository );
+	}
+
+	/**
+	 * Return a new collection with only the discountable line items.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Line_Item_Collection
+	 */
+	public function discountable() {
+
+		$discountable = array();
+
+		foreach ( $this->items as $item ) {
+			if ( $item instanceof ITE_Discountable_Line_Item ) {
+				$discountable[] = $item;
+			}
+		}
+
+		return new self( $discountable, $this->repository );
+	}
+
+	/**
 	 * Clone this collection with only items that pass the given callback.
 	 *
 	 * @since 1.36
@@ -199,6 +238,27 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 		}
 
 		return new self( $items, $this->repository );
+	}
+
+	/**
+	 * Set the cart on all cart aware line items.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Cart $cart
+	 *
+	 * @return \ITE_Line_Item_Collection
+	 */
+	public function set_cart( \ITE_Cart $cart ) {
+		$items = $this->flatten();
+		
+		foreach ( $items as $item ) {
+			if ( $item instanceof ITE_Cart_Aware ) {
+				$item->set_cart( $cart );
+			}
+		}
+
+		return $this;
 	}
 
 	/**

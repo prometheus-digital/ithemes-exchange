@@ -61,7 +61,7 @@ function it_exchange_reapply_coupons( ITE_Line_Item $item, ITE_Cart $cart ) {
 
 	/** @var ITE_Coupon_Line_Item $coupon */
 	foreach ( $coupons as $coupon ) {
-		$coupon->get_coupon()->apply( $cart );
+		$cart->add_item( ITE_Coupon_Line_Item::create( $coupon->get_coupon() ) );
 	}
 }
 
