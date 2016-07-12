@@ -292,15 +292,15 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	/**
 	 * @inheritDoc
 	 */
-	public function is_tax_exempt() {
-		return false;
+	public function is_tax_exempt( ITE_Tax_Provider $for ) {
+		return $for->is_product_tax_exempt( $this->get_product() );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_tax_code() {
-		return 0;
+	public function get_tax_code( ITE_Tax_Provider $for ) {
+		return $for->get_tax_code_for_product( $this->get_product() );
 	}
 
 	/**

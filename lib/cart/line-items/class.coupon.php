@@ -112,7 +112,7 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 		if ( $this->repository ) {
 			$coupon->set_line_item_repository( $this->repository );
 		}
-		
+
 		if ( $this->cart ) {
 			$coupon->set_cart( $this->cart );
 		}
@@ -230,15 +230,15 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	/**
 	 * @inheritDoc
 	 */
-	public function is_tax_exempt() {
-		return $this->get_aggregate() ? $this->get_aggregate()->is_tax_exempt() : false;
+	public function is_tax_exempt( ITE_Tax_Provider $for ) {
+		return $this->get_aggregate() ? $this->get_aggregate()->is_tax_exempt( $for ) : false;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_tax_code() {
-		return $this->get_aggregate() ? $this->get_aggregate()->get_tax_code() : 0;
+	public function get_tax_code( ITE_Tax_Provider $for ) {
+		return $this->get_aggregate() ? $this->get_aggregate()->get_tax_code( $for ) : 0;
 	}
 
 	/**

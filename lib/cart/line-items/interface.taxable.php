@@ -10,7 +10,7 @@
  * Interface ITE_Taxable_Line_Item
  */
 interface ITE_Taxable_Line_Item extends ITE_Aggregate_Line_Item {
-	
+
 	/**
 	 * Is this particular instance of the line item taxable.
 	 *
@@ -18,24 +18,28 @@ interface ITE_Taxable_Line_Item extends ITE_Aggregate_Line_Item {
 	 *
 	 * @since 1.36
 	 *
+	 * @param ITE_Tax_Provider $for
+	 *
 	 * @return bool
 	 */
-	public function is_tax_exempt();
+	public function is_tax_exempt( ITE_Tax_Provider $for );
 
 	/**
 	 * Get the tax code this product falls in.
 	 *
 	 * @since 1.36
 	 *
+	 * @param ITE_Tax_Provider $for
+	 *
 	 * @return int
 	 */
-	public function get_tax_code();
+	public function get_tax_code( ITE_Tax_Provider $for );
 
 	/**
 	 * Get the total amount of this line item without any tax applied.
-	 * 
+	 *
 	 * @since 1.36
-	 * 
+	 *
 	 * @return float
 	 */
 	public function get_taxable_amount();

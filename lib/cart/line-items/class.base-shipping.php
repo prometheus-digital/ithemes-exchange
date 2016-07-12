@@ -189,7 +189,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	/**
 	 * @inheritDoc
 	 */
-	public function is_tax_exempt() {
+	public function is_tax_exempt( ITE_Tax_Provider $for ) {
 		$settings = it_exchange_get_option( 'shipping-general' );
 
 		return empty( $settings['taxable'] );
@@ -198,7 +198,9 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	/**
 	 * @inheritDoc
 	 */
-	public function get_tax_code() { return $this->get_aggregate() ? $this->get_aggregate()->get_tax_code() : ''; }
+	public function get_tax_code( ITE_Tax_Provider $for ) {
+		return $this->get_aggregate() ? $this->get_aggregate()->get_tax_code( $for ) : '';
+	}
 
 	/**
 	 * @inheritDoc

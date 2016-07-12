@@ -76,6 +76,11 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	/**
 	 * @inheritdoc
 	 */
+	public function get_provider() { return new ITE_Simple_Taxes_Provider(); }
+
+	/**
+	 * @inheritdoc
+	 */
 	public function get_rate() { return $this->get_param( 'rate' ); }
 
 	/**
@@ -83,7 +88,7 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 	 */
 	public function applies_to( ITE_Taxable_Line_Item $item ) {
 
-		if ( $item->is_tax_exempt() ) {
+		if ( $item->is_tax_exempt( $this->get_provider() ) ) {
 			return false;
 		}
 
@@ -95,7 +100,7 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 
 		$codes = $this->get_param( 'codes' );
 
-		if ( count( $codes ) !== 0 && ! in_array( $item->get_tax_code(), $codes ) ) {
+		if ( count( $codes ) !== 0 && ! in_array( $item->get_tax_code( $this->get_provider() ), $codes ) ) {
 			return false;
 		}
 
