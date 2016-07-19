@@ -130,11 +130,9 @@ function it_exchange_addon_add_taxes_simple_to_template_totals_loops( $elements 
 		$index++;
 
 	array_splice( $elements, $index, 0, 'totals-taxes-simple' );
+
 	return $elements;
 }
-add_filter( 'it_exchange_get_content_cart_totals_elements', 'it_exchange_addon_add_taxes_simple_to_template_totals_loops' );
-add_filter( 'it_exchange_get_content_checkout_totals_elements', 'it_exchange_addon_add_taxes_simple_to_template_totals_loops' );
-add_filter( 'it_exchange_get_content_confirmation_transaction_summary_elements', 'it_exchange_addon_add_taxes_simple_to_template_totals_loops' );
 
 /**
  * Add Simple Taxes to the super-widget-checkout totals loop
@@ -158,9 +156,9 @@ function it_exchange_addon_add_taxes_simple_to_sw_template_totals_loops( $loops 
 		$index++;
 
 	array_splice( $loops, $index, 0, 'taxes-simple' );
+
 	return $loops;
 }
-//add_filter( 'it_exchange_get_super-widget-checkout_after-cart-items_loops', 'it_exchange_addon_add_taxes_simple_to_sw_template_totals_loops' );
 
 /**
  * Adds our templates directory to the list of directories
@@ -191,7 +189,6 @@ function it_exchange_addon_taxes_simple_register_templates( $template_paths, $te
 	$template_paths[] = dirname( __FILE__ ) . '/templates';
 	return $template_paths;
 }
-//add_filter( 'it_exchange_possible_template_paths', 'it_exchange_addon_taxes_simple_register_templates', 10, 2 );
 
 /**
  * Adjusts the cart total
@@ -203,9 +200,9 @@ function it_exchange_addon_taxes_simple_register_templates( $template_paths, $te
 */
 function it_exchange_addon_taxes_simple_modify_total( $total ) {
 	$taxes = it_exchange_addon_get_simple_taxes_for_cart( false );
+
 	return $total + $taxes;
 }
-//add_filter( 'it_exchange_get_cart_total', 'it_exchange_addon_taxes_simple_modify_total' );
 
 /**
  * Add the simple taxes line item.
@@ -245,10 +242,9 @@ add_action( 'it_exchange_add_product_to_cart', 'it_exchange_simple_taxes_add_lin
 */
 function it_exchange_addon_taxes_simple_add_cart_taxes_to_txn_object() {
 	$formatted = ( 'it_exchange_set_transaction_objet_cart_taxes_formatted' == current_filter() );
+
 	return it_exchange_addon_get_simple_taxes_for_cart( $formatted );
 }
-add_filter( 'it_exchange_set_transaction_objet_cart_taxes_formatted', 'it_exchange_addon_taxes_simple_add_cart_taxes_to_txn_object' );
-add_filter( 'it_exchange_set_transaction_objet_cart_taxes_raw', 'it_exchange_addon_taxes_simple_add_cart_taxes_to_txn_object' );
 
 /**
  * Enqueue css for settings page

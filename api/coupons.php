@@ -361,8 +361,23 @@ function it_exchange_apply_coupon( $type, $code, $options=array() ) {
  *
  * @return boolean
 */
-function it_exchange_remove_coupon( $type, $code, $options=array() ) {
+function it_exchange_remove_coupon( $type, $code, $options = array() ) {
+
 	$options['code'] = $code;
+
+	if ( ( $coupon = it_exchange_get_coupon_from_code( $code, $type ) ) && $coupon->get_type() ) {
+		try {
+			$cart = it_exchange_get_current_cart();
+			$cart->get_items( 'coupon', true )->filter( function ( ITE_Coupon_Line_Item $item ) use ( $coupon ) {
+				return $item->get_coupon()->get_code() === $coupon->get_code();
+			} )->delete();
+		} catch ( Exception $e ) {
+			it_exchange_add_message( 'error', $e->getMessage() );
+
+			return false;
+		}
+	}
+
 	return apply_filters( 'it_exchange_remove_coupon_for_' . $type, false, $options );
 }
 

@@ -40,14 +40,14 @@ function it_exchange_revert_coupon_use_on_cancellation( IT_Exchange_Transaction 
 add_action( 'it_exchange_update_transaction_status', 'it_exchange_revert_coupon_use_on_cancellation', 10, 3 );
 
 /**
- * Reapply coupons to the cart if an item is added or removed to the cart.
+ * Reapply coupons to the cart if an item is added to the cart.
  *
  * @since 1.36.0
  *
  * @param \ITE_Line_Item $item
  * @param \ITE_Cart      $cart
  */
-function it_exchange_reapply_coupons( ITE_Line_Item $item, ITE_Cart $cart ) {
+function it_exchange_reapply_coupons_on_add_item( ITE_Line_Item $item, ITE_Cart $cart ) {
 
 	if ( $item->get_type() === 'coupon' ) {
 		return;
@@ -65,5 +65,32 @@ function it_exchange_reapply_coupons( ITE_Line_Item $item, ITE_Cart $cart ) {
 	}
 }
 
-add_action( 'it_exchange_add_line_item_to_cart', 'it_exchange_reapply_coupons', 10, 2 );
-//add_action( 'it_exchange_remove_line_item_from_cart', 'it_exchange_reapply_coupons', 10, 2 );
+add_action( 'it_exchange_add_line_item_to_cart', 'it_exchange_reapply_coupons_on_add_item', 10, 2 );
+
+/**
+ * Reapply coupons to the cart if an item is removed from the cart.
+ *
+ * @since 1.36.0
+ *
+ * @param \ITE_Line_Item $item
+ * @param \ITE_Cart      $cart
+ */
+function it_exchange_reapply_coupons_on_remove_item( ITE_Line_Item $item, ITE_Cart $cart ) {
+
+	$coupons = $cart->get_items( 'coupon', true )->unique( function ( ITE_Coupon_Line_Item $item ) {
+		return $item->get_coupon()->get_type() . $item->get_coupon()->get_code();
+	} );
+
+	remove_action( 'it_exchange_remove_line_item_from_cart', 'it_exchange_reapply_coupons_on_remove_item', 10, 2 );
+
+	$coupons->delete();
+
+	/** @var ITE_Coupon_Line_Item $coupon */
+	foreach ( $coupons as $coupon ) {
+		$cart->add_item( ITE_Coupon_Line_Item::create( $coupon->get_coupon() ) );
+	}
+
+	add_action( 'it_exchange_remove_line_item_from_cart', 'it_exchange_reapply_coupons_on_remove_item', 10, 2 );
+}
+
+add_action( 'it_exchange_remove_line_item_from_cart', 'it_exchange_reapply_coupons_on_remove_item', 10, 2 );

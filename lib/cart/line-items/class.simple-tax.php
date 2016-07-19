@@ -104,6 +104,12 @@ class ITE_Simple_Tax_Line_Item implements ITE_Tax_Line_Item {
 			return false;
 		}
 
+		$settings = it_exchange_get_option( 'addon_taxes_simple', true );
+
+		if ( empty( $settings['calculate-after-discounts'] ) && $item->get_type() === 'coupon' ) {
+			return false;
+		}
+
 		return true;
 	}
 
