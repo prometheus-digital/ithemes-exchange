@@ -136,7 +136,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 
 		return true;
 	}
-	
+
 
 	/**
 	 * @inheritDoc
@@ -260,7 +260,12 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		}
 
 		$params = isset( $data['_params'] ) && is_array( $data['_params'] ) ? $data['_params'] : array();
-		$item   = new $class( $id, new ITE_Array_Parameter_Bag( $params ), new ITE_Array_Parameter_Bag() );
+
+		if ( $class === 'ITE_Cart_Product' ) {
+			$params = $this->back_compat_filter_cart_product( $params );
+		}
+
+		$item = new $class( $id, new ITE_Array_Parameter_Bag( $params ), new ITE_Array_Parameter_Bag() );
 
 		if ( ! $item ) {
 			return null;
@@ -269,6 +274,23 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		$this->set_additional_properties( $item, $_data, $aggregate );
 
 		return $this->events->on_get( $item, $this );
+	}
+
+	/**
+	 * Back-compat filter the cart product.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	protected function back_compat_filter_cart_product( $data ) {
+		return apply_filters_deprecated( 'it_exchange_get_cart_product', array(
+			$data,
+			$data['product_cart_id'],
+			array()
+		), '1.36.0' );
 	}
 
 	/**

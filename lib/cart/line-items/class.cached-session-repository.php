@@ -218,4 +218,15 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	public function _do_active_save( array $session ) {
 		update_option( '_it_exchange_db_session_' . $this->session_id, $session, false );
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function back_compat_filter_cart_product( $data ) {
+		return apply_filters_deprecated( 'it_exchange_get_cart_product', array(
+			$data,
+			$data['product_cart_id'],
+			array( 'use_cached_customer_cart' => $this->get_cart_id() )
+		), '1.36.0' );
+	}
 }
