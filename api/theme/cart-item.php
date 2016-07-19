@@ -21,6 +21,9 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	*/
 	public $_cart_item = false;
 
+	/** @var ITE_Cart_Product|null */
+	private $_cart_product = null;
+
 	/**
 	 * Maps api tags to methods
 	 * @var array $_tag_map
@@ -45,6 +48,12 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	*/
 	function __construct() {
 		$this->_cart_item = empty( $GLOBALS['it_exchange']['cart-item'] ) ? false : $GLOBALS['it_exchange']['cart-item'];
+
+		if ( $this->_cart_item ) {
+			$this->_cart_product = it_exchange_get_current_cart()->get_item( 'product', $this->_cart_item['product_cart_id'] );
+		} else {
+			$this->_cart_product = null;
+		}
 	}
 
 	/**
@@ -200,7 +209,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	 *
 	*/
 	function price( $options=array() ) {
-		return apply_filters( 'it_exchange_api_theme_cart_item_price', it_exchange_get_cart_product_base_price( $this->_cart_item ), $this->_cart_item );
+		return apply_filters( 'it_exchange_api_theme_cart_item_price', it_exchange_get_cart_product_base_price( $this->_cart_item ), $this->_cart_item, $this->_cart_product );
 	}
 
 	/**
@@ -211,7 +220,7 @@ class IT_Theme_API_Cart_Item implements IT_Theme_API {
 	 * @return string
 	*/
 	function sub_total( $options=array() ) {
-		return apply_filters( 'it_exchange_api_theme_cart_item_sub_total', it_exchange_get_cart_product_subtotal( $this->_cart_item ), $this->_cart_item );
+		return apply_filters( 'it_exchange_api_theme_cart_item_sub_total', it_exchange_get_cart_product_subtotal( $this->_cart_item ), $this->_cart_item, $this->_cart_product );
 	}
 
 	/**

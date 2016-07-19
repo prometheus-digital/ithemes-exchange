@@ -414,7 +414,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	}
 
 	/**
-	 * @inheritDoc
+	 * @return ArrayIterator|ITE_Line_Item[]
 	 */
 	public function getIterator() {
 		return new ArrayIterator( $this->items );

@@ -271,8 +271,11 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	$transaction_object->coupons                = $coupons;
 	$transaction_object->coupons_total_discount = $cart->calculate_total( 'coupon' );
 	$transaction_object->customer_ip            = it_exchange_get_ip();
-	
-	$taxes = $cart->calculate_total( 'tax' );
+
+	// Back-compat
+	$taxes       = $cart->calculate_total( 'tax' );
+	$raw_taxes   = apply_filters( 'it_exchange_set_transaction_objet_cart_taxes_raw', 0 );
+	$taxes      += $raw_taxes;
 	
 	// Tack on Tax information
 	$transaction_object->taxes_formated         = it_exchange_format_price( $taxes );

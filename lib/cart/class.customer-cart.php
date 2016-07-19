@@ -355,6 +355,7 @@ class ITE_Cart {
 		foreach ( $this->get_items() as $item ) {
 			if ( $item instanceof ITE_Taxable_Line_Item && $tax->applies_to( $item ) ) {
 				$item->add_tax( $tax->create_scoped_for_taxable( $item ) );
+				$this->get_repository()->save( $item );
 			}
 		}
 
@@ -633,7 +634,7 @@ class ITE_Cart {
 	/**
 	 * Get all available validators.
 	 *
-	 * @since 1.36.0
+	 * @since  1.36.0
 	 *
 	 * @return (\ITE_Line_Item_Validator|\ITE_Cart_Validator)[]
 	 */
