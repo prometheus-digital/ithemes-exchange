@@ -151,7 +151,11 @@ class ITE_Cart {
 		$method = "add_{$item->get_type()}_item";
 
 		if ( ! method_exists( $this, $method ) || $this->{$method}( $item ) !== false ) {
-			$this->get_repository()->save( $item );
+			$item->persist( $this->get_repository() );
+
+			$new_added = true;
+		} else {
+			$new_added = false;
 		}
 
 		if ( $coerce ) {
@@ -160,6 +164,10 @@ class ITE_Cart {
 
 		if ( ! $this->validate() ) {
 			return false;
+		}
+
+		if ( ! $new_added ) {
+			return true;
 		}
 
 		/**
@@ -171,6 +179,8 @@ class ITE_Cart {
 		 * @param \ITE_Cart      $cart
 		 */
 		do_action( 'it_exchange_add_line_item_to_cart', $item, $this );
+
+		$item = $this->get_item( $item->get_type(), $item->get_id() );
 
 		/**
 		 * Fires when a line item is added to the cart.

@@ -150,6 +150,43 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	}
 
 	/**
+	 * Get the base amount to be charged.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return float
+	 */
+	protected function get_base_amount() {
+
+		if ( $this->frozen->has_param( 'amount' ) ) {
+			return $this->frozen->get_param( 'amount' );
+		}
+
+		$amount_number = $this->get_coupon()->get_amount_number();
+		$num_items     = $this->calculate_num_items();
+
+		$amount = $amount_number / $num_items;
+
+		if ( $this->get_aggregate() ) {
+			$amount *= $this->get_aggregate()->get_quantity();
+		}
+
+		if ( $this->get_coupon()->get_amount_type() === IT_Exchange_Coupon::TYPE_FLAT ) {
+			return - $amount;
+		} elseif ( $this->get_coupon()->get_amount_type() === IT_Exchange_Coupon::TYPE_PERCENT ) {
+			$product = $this->get_aggregate();
+
+			if ( ! $product ) {
+				return 0.00;
+			}
+
+			return - ( ( $amount / 100 ) * ( $product->get_amount_to_discount() * $product->get_quantity() ) );
+		} else {
+			return 0.00;
+		}
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function set_line_item_repository( ITE_Line_Item_Repository $repository ) {
@@ -331,36 +368,6 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	 */
 	public function get_total() {
 		return $this->get_amount() * $this->get_quantity();
-	}
-
-	/**
-	 * Get the base amount to be charged.
-	 *
-	 * @since 1.36.0
-	 *
-	 * @return float
-	 */
-	protected function get_base_amount() {
-
-		if ( $this->frozen->has_param( 'amount' ) ) {
-			return $this->frozen->get_param( 'amount' );
-		}
-
-		$amount = $this->get_coupon()->get_amount_number() / $this->calculate_num_items();
-
-		if ( $this->get_coupon()->get_amount_type() === IT_Exchange_Coupon::TYPE_FLAT ) {
-			return - $amount;
-		} elseif ( $this->get_coupon()->get_amount_type() === IT_Exchange_Coupon::TYPE_PERCENT ) {
-			$product = $this->get_aggregate();
-
-			if ( ! $product ) {
-				return 0.00;
-			}
-
-			return - ( ( $amount / 100 ) * ( $product->get_amount_to_discount() * $product->get_quantity() ) );
-		} else {
-			return 0.00;
-		}
 	}
 
 	/**

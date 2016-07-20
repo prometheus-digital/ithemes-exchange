@@ -57,7 +57,7 @@ function it_exchange_reapply_coupons_on_add_item( ITE_Line_Item $item, ITE_Cart 
 		return $item->get_coupon()->get_type() . $item->get_coupon()->get_code();
 	} );
 
-	$coupons->delete();
+	$cart->get_items( 'coupon', true )->delete();
 
 	/** @var ITE_Coupon_Line_Item $coupon */
 	foreach ( $coupons as $coupon ) {
@@ -93,4 +93,4 @@ function it_exchange_reapply_coupons_on_remove_item( ITE_Line_Item $item, ITE_Ca
 	add_action( 'it_exchange_remove_line_item_from_cart', 'it_exchange_reapply_coupons_on_remove_item', 10, 2 );
 }
 
-add_action( 'it_exchange_remove_line_item_from_cart', 'it_exchange_reapply_coupons_on_remove_item', 10, 2 );
+//add_action( 'it_exchange_remove_line_item_from_cart', 'it_exchange_reapply_coupons_on_remove_item', 10, 2 );
