@@ -365,7 +365,7 @@ class ITE_Cart {
 		foreach ( $this->get_items() as $item ) {
 			if ( $item instanceof ITE_Taxable_Line_Item && $tax->applies_to( $item ) ) {
 				$item->add_tax( $tax->create_scoped_for_taxable( $item ) );
-				$this->get_repository()->save( $item );
+				$item->persist( $this->get_repository() );
 			}
 		}
 
@@ -387,7 +387,7 @@ class ITE_Cart {
 		foreach ( $this->get_items( 'product' ) as $product ) {
 			if ( $coupon->get_coupon()->valid_for_product( $product ) ) {
 				$product->add_item( $coupon->create_scoped_for_product( $product ) );
-				$this->get_repository()->save( $product );
+				$product->persist( $this->get_repository() );
 			}
 		}
 

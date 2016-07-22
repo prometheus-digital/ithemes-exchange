@@ -767,15 +767,15 @@ function it_exchange_get_cart_subtotal( $format = true, $options = array() ) {
 	}
 
 	$subtotal = 0;
-	$items    = $cart->get_items( 'product' );
+	$items    = $cart->get_items();
 
-	if ( ! $items ) {
+	if ( ! $items->count() ) {
 		return 0;
 	}
 
 	foreach( $items as $item ) {
-		if ( empty( $options['feature'] ) || $item->get_product()->get_feature( $options['feature'] ) ) {
-			$subtotal += it_exchange_get_cart_product_subtotal( array( 'product_cart_id' => $item->get_id() ), false );
+		if ( ! $item instanceof ITE_Cart_Product || empty( $options['feature'] ) || $item->get_product()->get_feature( $options['feature'] ) ) {
+			$subtotal += $item->get_total();
 		}
 	}
 

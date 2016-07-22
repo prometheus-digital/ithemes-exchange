@@ -16,10 +16,16 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 	/**
 	 * The current transaction
-	 * @var array
+	 * @var IT_Exchange_Transaction
 	 * @since 0.4.0
 	*/
 	public $_transaction = false;
+
+	/** @var array */
+	public $_transaction_product_download = false;
+
+	/** @var string */
+	public $_transaction_product_download_hash = false;
 
 	/**
 	 * Maps api tags to methods
@@ -38,6 +44,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		'shippingaddress'       => 'shipping_address',
 		'billingaddress'        => 'billing_address',
 		'products'              => 'products',
+		'lineitems'             => 'line_items',
 		'productattribute'      => 'product_attribute',
 		'productdownloads'      => 'product_downloads',
 		'productdownload'       => 'product_download',
@@ -315,26 +322,76 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
     function products( $options=array() ) {
         // Return boolean if has flag was set
         if ( $options['has'] )
-            return count( it_exchange_get_transaction_products( $this->_transaction ) ) > 0 ;
+            return count( it_exchange_get_transaction_products( $this->_transaction ) ) > 0;
 
         // If we made it here, we're doing a loop of transaction_products for the current query.
         // This will init/reset the transaction_products global and loop through them.
         if ( empty( $GLOBALS['it_exchange']['transaction_products'] ) ) {
             $GLOBALS['it_exchange']['transaction_products'] = it_exchange_get_transaction_products( $this->_transaction );
             $GLOBALS['it_exchange']['transaction_product'] = reset( $GLOBALS['it_exchange']['transaction_products'] );
+	        $GLOBALS['it_exchange']['line-item'] = $this->_transaction->get_item( 'product', $GLOBALS['it_exchange']['transaction_product']['product_cart_id'] );
             return true;
         } else {
             if ( next( $GLOBALS['it_exchange']['transaction_products'] ) ) {
                 $GLOBALS['it_exchange']['transaction_product'] = current( $GLOBALS['it_exchange']['transaction_products'] );
+	            $GLOBALS['it_exchange']['line-item'] = $this->_transaction->get_item( 'product', $GLOBALS['it_exchange']['transaction_product']['product_cart_id'] );
                 return true;
             } else {
 				$GLOBALS['it_exchange']['transaction_products'] = array();
         		end( $GLOBALS['it_exchange']['transaction_products'] );
                 $GLOBALS['it_exchange']['transaction_product'] = false;
+	            $GLOBALS['it_exchange']['line-item'] = null;
                 return false;
             }
         }
     }
+
+    /**
+	 * Iterate over all the line items in the transaction.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $options
+	 *
+	 * @return bool
+	 */
+	public function line_items( array $options = array() ) {
+
+		$options = ITUtility::merge_defaults( $options, array( 'without' => '' ) );
+
+		$transaction = $this->_transaction;
+
+		if ( $transaction ) {
+			$items = $transaction->get_items()->non_summary_only();
+		} else {
+			return false;
+		}
+
+		if ( $options['without'] ) {
+			$items = $items->without( $options['without'] );
+		}
+
+		if ( $options['has'] ) {
+			return $items->count() > 0;
+		}
+
+		if ( empty( $GLOBALS['it_exchange']['line-item'] ) ) {
+			$GLOBALS['it_exchange']['line-items'] = $items->to_array();
+			$GLOBALS['it_exchange']['line-item']  = reset( $GLOBALS['it_exchange']['line-items'] );
+
+			return true;
+		} elseif ( next( $GLOBALS['it_exchange']['line-items'] ) ) {
+			$GLOBALS['it_exchange']['line-item'] = current( $GLOBALS['it_exchange']['line-items'] );
+
+			return true;
+		} else {
+			$GLOBALS['it_exchange']['line-items'] = array();
+			end( $GLOBALS['it_exchange']['line-items'] );
+			$GLOBALS['it_exchange']['line-item'] = null;
+
+			return false;
+		}
+	}
 
 	/**
 	 * Returns boolean is the transaction cleared for delivery or not

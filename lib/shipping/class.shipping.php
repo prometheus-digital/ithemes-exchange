@@ -812,8 +812,10 @@ class IT_Exchange_Shipping {
 
 					/** @var ITE_Cart_Product $item */
 					foreach ( $cart->get_items( 'product' ) as $item ) {
-						$item->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
-						$item->persist( $cart->get_repository() );
+						if ( $item->get_product()->has_feature( 'shipping' ) ) {
+							$item->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
+							$item->persist( $cart->get_repository() );
+						}
 					}
 
 					$cart->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );

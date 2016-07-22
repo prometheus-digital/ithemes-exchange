@@ -314,6 +314,25 @@ class IT_Exchange_Shopping_Cart {
 			}
 		}
 
+		$current_cart = it_exchange_get_current_cart();
+
+		$var_name = it_exchange_get_field_name( 'line_item_quantity' );
+		if ( ! empty( $_REQUEST[ $var_name ] ) ) {
+			foreach ( (array) $_REQUEST[ $var_name ] as $id_type => $quantity ) {
+				list( $id, $type ) = explode( ':', $id_type );
+				$item = $current_cart->get_item( $type, $id );
+
+				if ( $item && $item instanceof ITE_Quantity_Modifiable_Item && $item->is_quantity_modifiable() ) {
+					$max = $item->get_max_quantity_available();
+
+					if ( $max !== '' && (int) $quantity <= $max ) {
+						$item->set_quantity( (int) $quantity );
+						$item->persist( $current_cart->get_repository() );
+					}
+				}
+			}
+		}
+
 		do_action( 'it_exchange_update_cart' );
 
 		$message_var = it_exchange_get_field_name( 'alert_message' );
@@ -558,7 +577,7 @@ class IT_Exchange_Shopping_Cart {
 		if ( empty( $checkout ) || ! it_exchange_is_page( 'checkout' ) )
 			return;
 
-		if ( ! it_exchange_get_current_cart()->get_items( 'product' )->count() ){
+		if ( ! it_exchange_get_current_cart()->get_items()->count() ){
 			it_exchange_redirect( $cart, 'checkout-empty-send-to-cart' );
 			die();
 		}

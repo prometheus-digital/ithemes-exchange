@@ -83,3 +83,7 @@ require( $this->_plugin_path . 'lib/deprecated/init.php' );
 require( $this->_plugin_path . 'lib/cart/load.php' );
 require( $this->_plugin_path . 'lib/settings/class.settings-form.php' );
 require( $this->_plugin_path . 'lib/settings/class.controller.php' );
+
+add_action('init', function() {
+	$items = it_exchange_get_current_cart()->get_items();
+});

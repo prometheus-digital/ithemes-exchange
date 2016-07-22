@@ -298,7 +298,7 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	public function add_tax( ITE_Tax_Line_Item $tax ) {
 		$this->add_item( $tax );
 
-		foreach ( $this->get_line_items()->with_only_instances_of( 'ITE_Taxable_Line_Item' ) as $item ) {
+		foreach ( $this->get_line_items()->taxable() as $item ) {
 			if ( $tax->applies_to( $item ) ) {
 				$item->add_tax( $tax->create_scoped_for_taxable( $item ) );
 			}
@@ -356,7 +356,7 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 
 		foreach ( $this->aggregatables as $aggregatable ) {
 			if ( ! $aggregatable->is_summary_only() ) {
-				$base += $aggregatable->get_amount() * $aggregatable->get_quantity();
+				$base += $aggregatable->get_total();
 			}
 		}
 

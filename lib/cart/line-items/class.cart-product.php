@@ -9,7 +9,7 @@
 /**
  * Class ITE_Cart_Product
  */
-class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_Item, ITE_Line_Item_Repository_Aware {
+class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_Item, ITE_Quantity_Modifiable_Item, ITE_Line_Item_Repository_Aware {
 
 	/** @var ITE_Aggregatable_Line_Item[] */
 	private $aggregatables = array();
@@ -264,13 +264,28 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	public function set_quantity( $quantity ) {
 
 		$quantity = max( 1, $quantity );
-		$max      = it_exchange_get_max_product_quantity_allowed( $this->get_product(), $this->get_id() );
+		$max      = $this->get_max_quantity_available();
 
 		if ( $max !== '' && $quantity > $max ) {
 			$quantity = $max;
 		}
 
 		$this->set_param( 'count', $quantity );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function is_quantity_modifiable() {
+		return $this->get_product()->supports_feature( 'purchase-quantity' ) &&
+		       it_exchange_is_multi_item_product_allowed( $this->get_product()->ID );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get_max_quantity_available() {
+		return it_exchange_get_max_product_quantity_allowed( $this->get_product(), $this->get_id() );
 	}
 
 	/**

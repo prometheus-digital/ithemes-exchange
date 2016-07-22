@@ -17,7 +17,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	/** @var ITE_Aggregate_Line_Item */
 	private $aggregate;
 
-	/** @var array ITE_Aggregatable_Line_Item[] */
+	/** @var ITE_Aggregatable_Line_Item[] */
 	private $aggregatables = array();
 
 	/** @var ITE_Tax_Line_Item[] */
@@ -344,9 +344,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	/**
 	 * @inheritDoc
 	 */
-	public function set_param( $param, $value ) {
-		return $this->bag->set_param( $param, $value );
-	}
+	public function set_param( $param, $value ) { return $this->bag->set_param( $param, $value ); }
 
 	/**
 	 * @inheritDoc

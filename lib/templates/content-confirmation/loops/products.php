@@ -17,7 +17,7 @@
 <?php if ( it_exchange( 'transaction', 'has-products' ) ) : ?>
 	<?php it_exchange_get_template_part( 'content-confirmation/elements/purchases-label' ); ?>
 	<?php do_action( 'it_exchange_content_confirmation_begin_products_loop' ); ?>
-	<div class="it-exchange-transaction-products">
+	<div class="it-exchange-transaction-products it-exchange-table">
 		<?php while( it_exchange( 'transaction', 'products' ) ) : ?>
 			<?php foreach( it_exchange_get_template_part_elements( 'content_confirmation', 'products_loop', array( 'product' ) ) as $detail ) : ?>
 				<?php it_exchange_get_template_part( 'content-confirmation/elements/' . $detail ); ?>
@@ -25,6 +25,7 @@
 		<?php endwhile; ?>
 	</div>
 	<?php do_action( 'it_exchange_content_confirmation_end_products_loop' ); ?>
+	<?php it_exchange_get_template_part( 'content-confirmation/loops/line-items' ); ?>
 	<?php do_action( 'it_exchange_content_confirmation_begin_transaction_summary_loop' ); ?>
 	<div class="it-exchange-transaction-summary-loop it-exchange-table">
 		<?php foreach( it_exchange_get_template_part_elements( 'content_confirmation', 'transaction_summary', array( 'totals-subtotal', 'totals-shipping', 'totals-savings', 'totals-taxes', 'totals-total' ) ) as $total ) : ?>

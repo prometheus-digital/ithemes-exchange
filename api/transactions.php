@@ -199,7 +199,7 @@ function it_exchange_get_transaction_by_cart_id( $cart_id ) {
  *
  * @param \ITE_Cart|null $cart
  *
- * @return stdClass Transaction object not an IT_Exchange_Transaction
+ * @return stdClass|false Transaction object not an IT_Exchange_Transaction
 */
 function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 
@@ -207,9 +207,10 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	$cart          = $cart ? $cart : it_exchange_get_current_cart();
 	$cart_products = $cart->get_items( 'product' );
 
-	if ( count( $cart_products ) < 1 ) {
+	if ( $cart->get_items()->count() < 1 ) {
 		do_action( 'it_exchange_error-no_products_to_purchase' );
 		it_exchange_add_message( 'error', __( 'You cannot checkout without any items in your cart.', 'it-l10n-ithemes-exchange' ) );
+
 		return false;
 	}
 
@@ -219,6 +220,7 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	if ( number_format( $cart_total, 2, '', '' ) < 0 ) {
 		do_action( 'it_exchange_error_negative_cart_total_on_checkout', $cart_total );
 		it_exchange_add_message( 'error', __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'it-l10n-ithemes-exchange' ) );
+
 		return false;
 	}
 

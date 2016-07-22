@@ -37,11 +37,13 @@ require_once dirname( __FILE__ ) . '/line-items/interface.tax.php';
 require_once dirname( __FILE__ ) . '/line-items/interface.taxable.php';
 require_once dirname( __FILE__ ) . '/line-items/interface.shipping.php';
 require_once dirname( __FILE__ ) . '/line-items/interface.discountable.php';
+require_once dirname( __FILE__ ) . '/line-items/interface.quantity-modifiable.php';
 
 require_once dirname( __FILE__ ) . '/line-items/class.cart-product.php';
 require_once dirname( __FILE__ ) . '/line-items/class.simple-tax.php';
 require_once dirname( __FILE__ ) . '/line-items/class.base-shipping.php';
 require_once dirname( __FILE__ ) . '/line-items/class.coupon.php';
+require_once dirname( __FILE__ ) . '/line-items/class.fee.php';
 require_once dirname( __FILE__ ) . '/line-items/class.collection.php';
 
 require_once dirname( __FILE__ ) . '/validators/class.inventory.php';
