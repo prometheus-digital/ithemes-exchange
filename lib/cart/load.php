@@ -18,7 +18,7 @@ require_once dirname( __FILE__ ) . '/class.feedback-item.php';
 require_once dirname( __FILE__ ) . '/class.converter.php';
 require_once dirname( __FILE__ ) . '/interface.cart-validator.php';
 require_once dirname( __FILE__ ) . '/interface.line-item-validator.php';
-require_once dirname( __FILE__ ) . '/interface.line-item.php';
+require_once dirname( __FILE__ ) . '/class.line-item.php';
 require_once dirname( __FILE__ ) . '/interface.cart-aware.php';
 
 require_once dirname( __FILE__ ) . '/line-items/class.repository-events.php';

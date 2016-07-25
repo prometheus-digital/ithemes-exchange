@@ -9,7 +9,22 @@
 /**
  * Interface ITE_Line_Item
  */
-interface ITE_Line_Item extends ITE_Parameter_Bag {
+abstract class ITE_Line_Item implements ITE_Parameter_Bag {
+
+	/**
+	 * @var string
+	 */
+	private $id;
+
+	/**
+	 * @var \ITE_Parameter_Bag
+	 */
+	protected $bag;
+
+	/**
+	 * @var \ITE_Parameter_Bag
+	 */
+	protected $frozen;
 
 	/**
 	 * ITE_Cart_Product constructor.
@@ -19,7 +34,11 @@ interface ITE_Line_Item extends ITE_Parameter_Bag {
 	 *
 	 * @param \ITE_Parameter_Bag $frozen
 	 */
-	public function __construct( $id, ITE_Parameter_Bag $bag, ITE_Parameter_Bag $frozen );
+	public function __construct( $id, ITE_Parameter_Bag $bag, ITE_Parameter_Bag $frozen ) {
+		$this->id     = $id;
+		$this->bag    = $bag;
+		$this->frozen = $frozen;
+	}
 
 	/**
 	 * Get the ID of this line item.
@@ -30,7 +49,7 @@ interface ITE_Line_Item extends ITE_Parameter_Bag {
 	 *
 	 * @return string|int
 	 */
-	public function get_id();
+	public function get_id() { return $this->id; }
 
 	/**
 	 * Get the name of this line item.
@@ -39,7 +58,7 @@ interface ITE_Line_Item extends ITE_Parameter_Bag {
 	 *
 	 * @return string
 	 */
-	public function get_name();
+	public abstract function get_name();
 
 	/**
 	 * Get the description for this line item.
@@ -50,7 +69,7 @@ interface ITE_Line_Item extends ITE_Parameter_Bag {
 	 *
 	 * @return string
 	 */
-	public function get_description();
+	public abstract function get_description();
 
 	/**
 	 * Get the quantity of this line item.
@@ -59,7 +78,7 @@ interface ITE_Line_Item extends ITE_Parameter_Bag {
 	 *
 	 * @return int
 	 */
-	public function get_quantity();
+	public abstract function get_quantity();
 
 	/**
 	 * Get the base amount of this line item.
@@ -70,18 +89,18 @@ interface ITE_Line_Item extends ITE_Parameter_Bag {
 	 *
 	 * @return float
 	 */
-	public function get_amount();
+	public abstract function get_amount();
 
 	/**
 	 * Get the total amount.
-	 * 
+	 *
 	 * Most often, this is simply the amount multiplied by the quantity.
-	 * 
+	 *
 	 * @since 1.36.0
-	 * 
+	 *
 	 * @return float
 	 */
-	public function get_total();
+	public function get_total() { return $this->get_amount() * $this->get_quantity(); }
 
 	/**
 	 * Get the type of the line item.
@@ -92,7 +111,7 @@ interface ITE_Line_Item extends ITE_Parameter_Bag {
 	 *
 	 * @return string
 	 */
-	public function get_type( $label = false );
+	public abstract function get_type( $label = false );
 
 	/**
 	 * Should this line item be displayed only in the summary view of the cart,
@@ -102,7 +121,7 @@ interface ITE_Line_Item extends ITE_Parameter_Bag {
 	 *
 	 * @return bool
 	 */
-	public function is_summary_only();
+	public abstract function is_summary_only();
 
 	/**
 	 * Persist the line item to the session.
@@ -113,5 +132,30 @@ interface ITE_Line_Item extends ITE_Parameter_Bag {
 	 *
 	 * @return bool
 	 */
-	public function persist( ITE_Line_Item_Repository $repository );
+	public function persist( ITE_Line_Item_Repository $repository ) { return $repository->save( $this ); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_params() { return $this->bag->get_params(); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function has_param( $param ) { return $this->bag->has_param( $param ); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_param( $param ) { return $this->bag->get_param( $param ); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function set_param( $param, $value ) { return $this->bag->set_param( $param, $value ); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function remove_param( $param ) { return $this->bag->remove_param( $param ); }
 }

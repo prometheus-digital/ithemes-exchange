@@ -9,25 +9,16 @@
 /**
  * Class ITE_Cart_Product
  */
-class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_Item, ITE_Quantity_Modifiable_Item, ITE_Line_Item_Repository_Aware {
+class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, ITE_Discountable_Line_Item, ITE_Quantity_Modifiable_Item, ITE_Line_Item_Repository_Aware {
 
 	/** @var ITE_Aggregatable_Line_Item[] */
 	private $aggregatables = array();
 
-	/** @var ITE_Parameter_Bag */
-	private $bag;
-
 	/** @var IT_Exchange_Product */
 	private $product;
 
-	/** @var ITE_Tax_Line_Item[] */
-	private $taxes = array();
-
 	/** @var ITE_Line_Item_Repository */
 	private $repository;
-
-	/** @var ITE_Parameter_Bag */
-	private $frozen;
 
 	/**
 	 * ITE_Cart_Product constructor.
@@ -37,10 +28,9 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	 * @param \ITE_Parameter_Bag $frozen
 	 */
 	public function __construct( $id, ITE_Parameter_Bag $bag, ITE_Parameter_Bag $frozen ) {
-		$this->bag = $bag;
+		parent::__construct( $id, $bag, $frozen );
 		$this->set_id( $id );
 		$this->product = it_exchange_get_product( $this->get_param( 'product_id' ) );
-		$this->frozen  = $frozen;
 	}
 
 	/**
@@ -75,9 +65,7 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	 *
 	 * @return bool
 	 */
-	public function has_itemized_data( $key ) {
-		return array_key_exists( $key, $this->get_itemized_data() );
-	}
+	public function has_itemized_data( $key ) {	return array_key_exists( $key, $this->get_itemized_data() ); }
 
 	/**
 	 * Get itemized data.
@@ -171,9 +159,7 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	 *
 	 * @return bool
 	 */
-	public function has_additional_data( $key ) {
-		return array_key_exists( $key, $this->get_additional_data() );
-	}
+	public function has_additional_data( $key ) { return array_key_exists( $key, $this->get_additional_data() ); }
 
 	/**
 	 * Get additional data.
@@ -250,9 +236,7 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	 *
 	 * @return \IT_Exchange_Product
 	 */
-	public function get_product() {
-		return $this->product;
-	}
+	public function get_product() {	return $this->product; }
 
 	/**
 	 * Set the product quantity.
@@ -307,40 +291,34 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	/**
 	 * @inheritDoc
 	 */
-	public function is_tax_exempt( ITE_Tax_Provider $for ) {
-		return $for->is_product_tax_exempt( $this->get_product() );
-	}
+	public function is_tax_exempt( ITE_Tax_Provider $for ) { return $for->is_product_tax_exempt( $this->get_product() ); }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_tax_code( ITE_Tax_Provider $for ) {
-		return $for->get_tax_code_for_product( $this->get_product() );
-	}
+	public function get_tax_code( ITE_Tax_Provider $for ) {	return $for->get_tax_code_for_product( $this->get_product() ); }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_taxable_amount() {
-		return $this->get_base_amount();
-	}
+	public function get_taxable_amount() { return $this->get_base_amount();	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function get_taxes() {
-		return $this->taxes;
+		return $this->get_line_items()->with_only_instances_of( 'ITE_Tax_Line_Item' )->to_array();
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function add_tax( ITE_Tax_Line_Item $tax ) {
-		$this->taxes[] = $tax;
 		$this->add_item( $tax );
 
-		foreach ( $this->get_line_items() as $item ) {
-			if ( $item instanceof ITE_Taxable_Line_Item && $tax->applies_to( $item ) ) {
+		/** @var ITE_Taxable_Line_Item $item */
+		foreach ( $this->get_line_items()->taxable() as $item ) {
+			if ( $tax->applies_to( $item ) ) {
 				$item->add_tax( $tax->create_scoped_for_taxable( $item ) );
 			}
 		}
@@ -350,33 +328,14 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	 * @inheritDoc
 	 */
 	public function remove_tax( $id ) {
-
-		$found = false;
-
-		foreach ( $this->taxes as $i => $tax ) {
-			if ( $tax->get_id() === $id ) {
-				unset( $this->taxes[ $i ] );
-				$found = true;
-
-				break;
-			}
-		}
-
-		if ( $found ) {
-			reset( $this->taxes );
-			$this->remove_item( 'tax', $id );
-		}
-
-		return $found;
+		return $this->remove_item( 'tax', $id );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function remove_all_taxes() {
-		$taxes = $this->taxes;
-
-		foreach ( $taxes as $tax ) {
+		foreach ( $this->get_taxes() as $tax ) {
 			$this->remove_tax( $tax->get_id() );
 		}
 	}
@@ -403,11 +362,7 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 
 		$item->set_aggregate( $this );
 
-		if ( $item instanceof ITE_Tax_Line_Item && ! in_array( $item, $this->get_taxes(), true ) ) {
-			$this->add_tax( $item );
-		} else {
-			$this->aggregatables[] = $item;
-		}
+		$this->aggregatables[] = $item;
 
 		if ( $item instanceof ITE_Taxable_Line_Item ) {
 			foreach ( $this->get_taxes() as $tax ) {
@@ -511,9 +466,7 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 			return $this->frozen->get_param( 'total' );
 		}
 
-		$subtotal = $this->get_amount() * $this->get_quantity();
-
-		return apply_filters( 'it_exchange_get_cart_product_subtotal', $subtotal, $this->bc() );
+		return apply_filters( 'it_exchange_get_cart_product_subtotal', parent::get_total(), $this->bc() );
 	}
 
 	/**
@@ -546,48 +499,6 @@ class ITE_Cart_Product implements ITE_Taxable_Line_Item, ITE_Discountable_Line_I
 	 */
 	public function is_summary_only() {
 		return $this->frozen->has_param( 'summary_only' ) ? $this->frozen->get_param( 'summary_only' ) : false;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function persist( ITE_Line_Item_Repository $repository ) {
-		return $repository->save( $this );
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function has_param( $param ) {
-		return $this->bag->has_param( $param );
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_param( $param ) {
-		return $this->bag->get_param( $param );
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_params() {
-		return $this->bag->get_params();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function set_param( $param, $value ) {
-		return $this->bag->set_param( $param, $value );
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function remove_param( $param ) {
-		return $this->bag->remove_param( $param );
 	}
 
 	/**

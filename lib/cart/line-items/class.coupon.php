@@ -9,16 +9,10 @@
 /**
  * Class ITE_Coupon_Line_Item
  */
-class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware, ITE_Cart_Aware {
+class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware, ITE_Cart_Aware {
 
 	/** @var IT_Exchange_Coupon */
 	private $coupon;
-
-	/** @var string */
-	private $id;
-
-	/** @var ITE_Parameter_Bag */
-	private $bag;
 
 	/** @var ITE_Aggregate_Line_Item|ITE_Cart_Product */
 	private $aggregate;
@@ -32,9 +26,6 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	/** @var ITE_Cart */
 	private $cart;
 
-	/** @var ITE_Parameter_Bag */
-	private $frozen;
-
 	/**
 	 * ITE_Coupon_Line_Item constructor.
 	 *
@@ -43,10 +34,8 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	 * @param \ITE_Parameter_Bag $frozen
 	 */
 	public function __construct( $id, ITE_Parameter_Bag $bag, ITE_Parameter_Bag $frozen ) {
-		$this->id     = $id;
-		$this->bag    = $bag;
+		parent::__construct( $id, $bag, $frozen );
 		$this->coupon = it_exchange_get_coupon( $this->get_param( 'id' ), $this->get_param( 'type' ) );
-		$this->frozen = $frozen;
 	}
 
 	/**
@@ -87,15 +76,6 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 
 		return $self;
 	}
-
-	/**
-	 * Get the coupon.
-	 *
-	 * @since 1.36.0
-	 *
-	 * @return \IT_Exchange_Coupon
-	 */
-	public function get_coupon() { return $this->coupon; }
 
 	/**
 	 * Create a duplicate of this coupon, scoped for a given product.
@@ -185,28 +165,6 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 			return 0.00;
 		}
 	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function set_line_item_repository( ITE_Line_Item_Repository $repository ) {
-		$this->repository = $repository;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function set_cart( ITE_Cart $cart ) { $this->cart = $cart; }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function set_aggregate( ITE_Aggregate_Line_Item $aggregate ) { $this->aggregate = $aggregate; }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_aggregate() { return $this->aggregate; }
 
 	/**
 	 * @inheritDoc
@@ -324,11 +282,6 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	/**
 	 * @inheritDoc
 	 */
-	public function get_id() { return $this->id; }
-
-	/**
-	 * @inheritDoc
-	 */
 	public function get_name() { return __( 'Savings', 'it-l10n-ithemes-exchange' ); }
 
 	/**
@@ -366,16 +319,7 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	/**
 	 * @inheritDoc
 	 */
-	public function get_total() {
-		return $this->get_amount() * $this->get_quantity();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_type( $label = false ) {
-		return $label ? __( 'Coupon', 'it-l10n-ithemes-exchange' ) : 'coupon';
-	}
+	public function get_type( $label = false ) { return $label ? __( 'Coupon', 'it-l10n-ithemes-exchange' ) : 'coupon'; }
 
 	/**
 	 * @inheritDoc
@@ -387,32 +331,31 @@ class ITE_Coupon_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Li
 	/**
 	 * @inheritDoc
 	 */
-	public function persist( ITE_Line_Item_Repository $repository ) { return $repository->save( $this ); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_params() { return $this->bag->get_params(); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function has_param( $param ) { return $this->bag->has_param( $param ); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_param( $param ) { return $this->bag->get_param( $param ); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function set_param( $param, $value ) {
-		return $this->bag->set_param( $param, $value );
+	public function set_line_item_repository( ITE_Line_Item_Repository $repository ) {
+		$this->repository = $repository;
 	}
 
 	/**
+	 * Get the coupon.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \IT_Exchange_Coupon
+	 */
+	public function get_coupon() { return $this->coupon; }
+
+	/**
+	 * @inheritdoc
+	 */
+	public function set_cart( ITE_Cart $cart ) { $this->cart = $cart; }
+
+	/**
 	 * @inheritDoc
 	 */
-	public function remove_param( $param ) { return $this->bag->remove_param( $param ); }
+	public function set_aggregate( ITE_Aggregate_Line_Item $aggregate ) { $this->aggregate = $aggregate; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_aggregate() { return $this->aggregate; }
 }

@@ -9,7 +9,7 @@
 /**
  * Interface ITE_Aggregatable_Line_Item
  */
-interface ITE_Aggregatable_Line_Item extends ITE_Line_Item {
+interface ITE_Aggregatable_Line_Item {
 
 	/**
 	 * Set the aggregate line item.

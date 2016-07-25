@@ -9,7 +9,7 @@
 /**
  * Interface ITE_Quantity_Modifiable_Item
  */
-interface ITE_Quantity_Modifiable_Item extends ITE_Line_Item {
+interface ITE_Quantity_Modifiable_Item {
 
 	/**
 	 * Set the item's new quantity.

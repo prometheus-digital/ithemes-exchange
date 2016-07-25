@@ -9,10 +9,7 @@
 /**
  * Class ITE_Base_Shipping_Line_Item
  */
-class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware {
-
-	/** @var ITE_Parameter_Bag */
-	private $bag;
+class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware {
 
 	/** @var ITE_Aggregate_Line_Item */
 	private $aggregate;
@@ -20,30 +17,8 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	/** @var ITE_Aggregatable_Line_Item[] */
 	private $aggregatables = array();
 
-	/** @var ITE_Tax_Line_Item[] */
-	private $taxes = array();
-
 	/** @var ITE_Line_Item_Repository */
 	private $repository;
-
-	/** @var string|int */
-	private $id;
-
-	/** @var ITE_Parameter_Bag */
-	private $frozen;
-
-	/**
-	 * ITE_Base_Shipping_Line_Item constructor.
-	 *
-	 * @param string             $id
-	 * @param \ITE_Parameter_Bag $bag
-	 * @param \ITE_Parameter_Bag $frozen
-	 */
-	public function __construct( $id, ITE_Parameter_Bag $bag, ITE_Parameter_Bag $frozen ) {
-		$this->id     = $id;
-		$this->bag    = $bag;
-		$this->frozen = $frozen;
-	}
 
 	/**
 	 * Create a new base shipping line item.
@@ -70,23 +45,6 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 
 		return new self( $id, $bag, new ITE_Array_Parameter_Bag() );
 	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function set_aggregate( ITE_Aggregate_Line_Item $aggregate ) {
-		$this->aggregate = $aggregate;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_aggregate() { return $this->aggregate; }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_id() { return $this->id; }
 
 	/**
 	 * @inheritDoc
@@ -122,13 +80,6 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	}
 
 	/**
-	 * @inheritDoc
-	 */
-	public function get_total() {
-		return $this->get_amount() * $this->get_quantity();
-	}
-
-	/**
 	 * Get the base amount.
 	 *
 	 * @since 1.36.0
@@ -161,11 +112,6 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	public function is_summary_only() {
 		return $this->frozen->has_param( 'summary_only' ) ? $this->frozen->get_param( 'summary_only' ) : true;
 	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function persist( ITE_Line_Item_Repository $repository ) { return $repository->save( $this ); }
 
 	/**
 	 * @inheritDoc
@@ -213,18 +159,17 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	 * @inheritDoc
 	 */
 	public function get_taxes() {
-		return $this->taxes;
+		return $this->get_line_items()->with_only_instances_of( 'ITE_Tax_Line_Item' )->to_array();
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function add_tax( ITE_Tax_Line_Item $tax ) {
-		$this->taxes[] = $tax;
 		$this->add_item( $tax );
 
-		foreach ( $this->get_line_items() as $item ) {
-			if ( $item instanceof ITE_Taxable_Line_Item && $tax->applies_to( $item ) ) {
+		foreach ( $this->get_line_items()->taxable() as $item ) {
+			if ( $tax->applies_to( $item ) ) {
 				$item->add_tax( $tax->create_scoped_for_taxable( $item ) );
 			}
 		}
@@ -234,34 +179,14 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	 * @inheritDoc
 	 */
 	public function remove_tax( $id ) {
-
-		$found = false;
-
-		foreach ( $this->taxes as $i => $tax ) {
-			if ( $tax->get_id() === $id ) {
-				unset( $this->taxes[ $i ] );
-				$found = true;
-
-				break;
-			}
-		}
-
-		if ( $found ) {
-			reset( $this->taxes );
-			$this->remove_item( 'tax', $id );
-		}
-
-		return $found;
+		return $this->remove_item( 'tax', $id );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function remove_all_taxes() {
-
-		$taxes = $this->get_taxes();
-
-		foreach ( $taxes as $tax ) {
+		foreach ( $this->get_taxes() as $tax ) {
 			$this->remove_tax( $tax->get_id() );
 		}
 	}
@@ -288,11 +213,7 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 
 		$item->set_aggregate( $this );
 
-		if ( $item instanceof ITE_Tax_Line_Item && ! in_array( $item, $this->get_taxes(), true ) ) {
-			$this->add_tax( $item );
-		} else {
-			$this->aggregatables[] = $item;
-		}
+		$this->aggregatables[] = $item;
 
 		if ( $item instanceof ITE_Taxable_Line_Item ) {
 			foreach ( $this->get_taxes() as $tax ) {
@@ -329,32 +250,19 @@ class ITE_Base_Shipping_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable
 	/**
 	 * @inheritDoc
 	 */
-	public function get_params() { return $this->bag->get_params(); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function has_param( $param ) { return $this->bag->has_param( $param ); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_param( $param ) { return $this->bag->get_param( $param ); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function set_param( $param, $value ) { return $this->bag->set_param( $param, $value ); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function remove_param( $param ) { return $this->bag->remove_param( $param ); }
-
-	/**
-	 * @inheritDoc
-	 */
 	public function set_line_item_repository( ITE_Line_Item_Repository $repository ) {
 		$this->repository = $repository;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function set_aggregate( ITE_Aggregate_Line_Item $aggregate ) {
+		$this->aggregate = $aggregate;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_aggregate() { return $this->aggregate; }
 }

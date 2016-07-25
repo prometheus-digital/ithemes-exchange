@@ -9,7 +9,7 @@
 /**
  * Interface ITE_Aggregate_Line_Item
  */
-interface ITE_Aggregate_Line_Item extends ITE_Line_Item {
+interface ITE_Aggregate_Line_Item {
 
 	/**
 	 * Get all of the line items being represented.

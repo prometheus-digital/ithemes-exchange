@@ -9,7 +9,7 @@
 /**
  * Interface ITE_Discountable_Line_Item
  */
-interface ITE_Discountable_Line_Item extends ITE_Line_Item {
+interface ITE_Discountable_Line_Item {
 
 	/**
 	 * Get the amount to discount.

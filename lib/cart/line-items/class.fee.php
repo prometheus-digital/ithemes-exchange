@@ -9,16 +9,7 @@
 /**
  * Class ITE_Fee_Line_Item
  */
-class ITE_Fee_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware {
-
-	/** @var string */
-	private $id;
-
-	/** @var \ITE_Parameter_Bag */
-	private $bag;
-
-	/** @var \ITE_Parameter_Bag */
-	private $frozen;
+class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware {
 
 	/** @var ITE_Aggregate_Line_Item */
 	private $aggregate;
@@ -30,14 +21,16 @@ class ITE_Fee_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_
 	private $repository;
 
 	/**
-	 * @inheritDoc
+	 * Create a new Fee.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $name
+	 * @param float  $amount
+	 * @param bool   $tax_exempt
+	 *
+	 * @return \ITE_Fee_Line_Item
 	 */
-	public function __construct( $id, \ITE_Parameter_Bag $bag, \ITE_Parameter_Bag $frozen ) {
-		$this->id     = $id;
-		$this->bag    = $bag;
-		$this->frozen = $frozen;
-	}
-
 	public static function create( $name, $amount, $tax_exempt = false ) {
 
 		$id = md5( uniqid( 'FEE', true ) );
@@ -48,9 +41,7 @@ class ITE_Fee_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_
 			'tax_exempt' => $tax_exempt
 		) );
 
-		$self = new self( $id, $bag, new ITE_Array_Parameter_Bag() );
-
-		return $self;
+		return new self( $id, $bag, new ITE_Array_Parameter_Bag() );
 	}
 
 	/**
@@ -120,11 +111,6 @@ class ITE_Fee_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_
 	/**
 	 * @inheritDoc
 	 */
-	public function get_id() { return $this->id; }
-
-	/**
-	 * @inheritDoc
-	 */
 	public function get_name() {
 		return $this->get_param( 'name' );
 	}
@@ -156,10 +142,6 @@ class ITE_Fee_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_
 		return $base;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function get_total() { return $this->get_amount() * $this->get_quantity(); }
 
 	/**
 	 * @inheritDoc
@@ -172,11 +154,6 @@ class ITE_Fee_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_
 	 * @inheritDoc
 	 */
 	public function is_summary_only() { return false; }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function persist( ITE_Line_Item_Repository $repository ) { return $repository->save( $this ); }
 
 	/**
 	 * @inheritDoc
@@ -239,31 +216,6 @@ class ITE_Fee_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_
 			$this->remove_tax( $tax->get_id() );
 		}
 	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_params() { return $this->bag->get_params(); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function has_param( $param ) { return $this->bag->has_param( $param ); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_param( $param ) { return $this->bag->get_param( $param ); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function set_param( $param, $value ) { return $this->bag->set_param( $param, $value ); }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function remove_param( $param ) { return $this->bag->remove_param( $param ); }
 
 	/**
 	 * @inheritDoc
