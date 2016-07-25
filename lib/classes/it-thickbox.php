@@ -29,8 +29,11 @@ Version History
 if ( ! class_exists( 'ITThickbox' ) ) {
 	class ITThickbox {
 		public static function render_thickbox( $content_func ) {
+			$args = func_get_args();
+			$args = array_slice( $args, 1 );
+
 			$plugin_url = ITUtility::get_url_from_file( dirname( __FILE__ ) );
-			
+
 ?>
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	<html xmlns="http://www.w3.org/1999/xhtml" <?php do_action( 'admin_xml_ns' ); ?> <?php language_attributes(); ?> class="thickbox-html">
@@ -44,7 +47,7 @@ if ( ! class_exists( 'ITThickbox' ) ) {
 /*				if ( 0 === strpos( $content_func, 'media' ) )
 					wp_enqueue_style( 'media' );*/
 				wp_enqueue_style( 'ie' );
-				
+
 				wp_enqueue_script( 'it-thickbox-script', $plugin_url . '/js/it-thickbox.js' );
 			?>
 			<script type="text/javascript">
@@ -63,11 +66,7 @@ if ( ! class_exists( 'ITThickbox' ) ) {
 		</head>
 		<body style="height:auto;"<?php if ( isset( $GLOBALS['body_id'] ) ) echo ' id="' . $GLOBALS['body_id'] . '"'; ?>>
 			<div style="padding:10px;" id="thickbox-content-container">
-				<?php
-					$args = func_get_args();
-					$args = array_slice( $args, 1 );
-					call_user_func_array( $content_func, $args );
-				?>
+				<?php call_user_func_array( $content_func, $args ); ?>
 				<script type="text/javascript">if(typeof wpOnload=='function') wpOnload();</script>
 				<script type="text/javascript">auto_resize_thickbox_height();</script>
 				<?php do_action( 'admin_print_footer_scripts' ); ?>
@@ -75,11 +74,11 @@ if ( ! class_exists( 'ITThickbox' ) ) {
 		</body>
 	</html>
 <?php
-			
+
 		}
-		
+
 		public static function close_thickbox( $js = '' ) {
-			
+
 ?>
 	<script type="text/javascript">
 		/* <![CDATA[ */
@@ -88,37 +87,37 @@ if ( ! class_exists( 'ITThickbox' ) ) {
 		/* ]]> */
 	</script>
 <?php
-			
+
 		}
-		
+
 		public static function delete_parent_table_row( $entry_id, $table_id, $row_class_prefix = 'entry-' ) {
-			
+
 ?>
 	<script type="text/javascript">
 		/* <![CDATA[ */
 			var win = window.dialogArguments || opener || parent || top;
 			win.jQuery("table<?php echo $table_id; ?> #<?php echo $row_class_prefix; ?><?php echo $entry_id; ?>").remove();
-			
+
 			win.jQuery("tr[id^='<?php echo $row_class_prefix; ?>']:even").addClass("alternate");
 			win.jQuery("tr[id^='<?php echo $row_class_prefix; ?>']:odd").removeClass("alternate");
 		/* ]]> */
 	</script>
 <?php
-			
+
 		}
-		
+
 		public static function add_parent_table_row( $entry_id, $entry_description, $entry, $table_id, $description_link_title, $row_class_prefix = 'entry-', $insert_position = 'alpha', $enable_highlight = true, $highlight_color = '#66FF66' ) {
 			$entry = str_replace( "'", "\\'", $entry );
 			$entry = str_replace( "\r", '', $entry );
 			$entry = str_replace( "\n", '', $entry );
-			
+
 ?>
 	<script type="text/javascript">
 		/* <![CDATA[ */
 			var win = window.dialogArguments || opener || parent || top;
-			
+
 			var newRow = '<?php echo $entry; ?>';
-			
+
 			<?php if ( 'alpha' === $insert_position ) : ?>
 				var rows = win.jQuery("tr[id^='<?php echo $row_class_prefix; ?>']");
 				var i;
@@ -127,9 +126,9 @@ if ( ! class_exists( 'ITThickbox' ) ) {
 						break;
 					}
 				}
-				
+
 				i--;
-				
+
 				if((rows.get().length > 0) && (i >= 0)) {
 					win.jQuery("tr[id^='<?php echo $row_class_prefix; ?>']:eq(" + i + ")").after(newRow);
 				}
@@ -146,20 +145,20 @@ if ( ! class_exists( 'ITThickbox' ) ) {
 			<?php else : ?>
 				win.jQuery("table<?php echo $table_id; ?> > tbody").append(newRow);
 			<?php endif; ?>
-			
+
 			win.jQuery("tr[id^='<?php echo $row_class_prefix; ?>']:even").addClass("alternate");
 			win.jQuery("tr[id^='<?php echo $row_class_prefix; ?>']:odd").removeClass("alternate");
-			
+
 			<?php if ( true === $enable_highlight ) : ?>
 				var origColor = win.jQuery("#<?php echo $row_class_prefix; ?><?php echo $entry_id; ?>").css("background-color");
 				win.jQuery("#<?php echo $row_class_prefix; ?><?php echo $entry_id; ?>").css("background-color", "<?php echo $highlight_color; ?>").fadeIn("slow").animate({backgroundColor:origColor}, 400).css('background-color', '');
 			<?php endif; ?>
-			
+
 			win.tb_init("#<?php echo $row_class_prefix; ?><?php echo $entry_id; ?> a[href*='TB_iframe']");
 		/* ]]> */
 	</script>
 <?php
-			
+
 		}
 	}
 }

@@ -3,7 +3,9 @@ body {
 }
 #it-dialog-content-container {
 	float: left;
-/*	padding: 20px 20px 15px 20px;*/
+}
+#it-dialog-content-pad {
+	padding: 20px 20px 15px 20px;
 }
 #it-dialog-content-container img {
 	line-height: 0;
