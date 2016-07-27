@@ -763,14 +763,14 @@ function it_exchange_get_cart_subtotal( $format = true, $options = array() ) {
 	}
 	
 	if ( ! $cart instanceof ITE_Cart ) {
-		return 0;
+		return $format ? it_exchange_format_price( 0 ) : 0;
 	}
 
 	$subtotal = 0;
 	$items    = $cart->get_items();
 
 	if ( ! $items->count() ) {
-		return 0;
+		return $format ? it_exchange_format_price( 0 ) : 0;
 	}
 
 	foreach( $items as $item ) {

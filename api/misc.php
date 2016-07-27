@@ -509,6 +509,19 @@ function it_exchange_get_pending_purchase_requirements() {
 }
 
 /**
+ * Check if a purchase requirement is registered.
+ *
+ * @since 1.36.0
+ *
+ * @param string $requirement_slug
+ *
+ * @return bool
+ */
+function it_exchange_is_purchase_requirement_registered( $requirement_slug ) {
+	return isset( $GLOBALS['it_exchange']['purchase-requirements'][ $requirement_slug ] );
+}
+
+/**
  * Returns boolean if passed paramater is the current checkout mode
  *
  * @since 1.5.0

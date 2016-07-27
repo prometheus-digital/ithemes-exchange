@@ -9,6 +9,7 @@ $segmented = $taxes->segment( function ( ITE_Line_Item $item ) {
 <?php do_action( 'it_exchange_content_checkout_before_totals_taxes_element' ); ?>
 
 <?php foreach ( $segmented as $segment ) : ?>
+<div class="it-exchange-table-row it-exchange-cart-totals-taxes">
 	<div class="it-exchange-cart-totals-title it-exchange-table-column">
 		<?php do_action( 'it_exchange_content_checkout_begin_totals_taxes_element_label' ); ?>
 		<div class="it-exchange-table-column-inner">
@@ -27,5 +28,6 @@ $segmented = $taxes->segment( function ( ITE_Line_Item $item ) {
 		</div>
 		<?php do_action( 'it_exchange_content_checkout_end_totals_taxes_element_value' ); ?>
 	</div>
+</div>
 <?php endforeach; ?>
 <?php do_action( 'it_exchange_content_checkout_after_totals_taxes_element' ); ?>

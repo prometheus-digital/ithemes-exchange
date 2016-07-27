@@ -29,7 +29,9 @@
 	<?php do_action( 'it_exchange_content_confirmation_begin_transaction_summary_loop' ); ?>
 	<div class="it-exchange-transaction-summary-loop it-exchange-table">
 		<?php foreach( it_exchange_get_template_part_elements( 'content_confirmation', 'transaction_summary', array( 'totals-subtotal', 'totals-shipping', 'totals-savings', 'totals-taxes', 'totals-total' ) ) as $total ) : ?>
-			<div class="it-exchange-table-row it-exchange-cart-<?php echo $total; ?>">
+			<?php if ( $total !== 'totals-taxes' ): ?>
+				<div class="it-exchange-table-row it-exchange-cart-<?php echo $total; ?>">
+			<?php endif; ?>
 				<?php
 				/**
 				 * Theme and add-on devs should add code to this loop by
@@ -38,7 +40,11 @@
 				*/
 				it_exchange_get_template_part( 'content-confirmation/elements/' . $total );
 				?>
-			</div>
+
+			<?php if ( $total !== 'totals-taxes' ): ?>
+				</div>
+			<?php endif; ?>
+
 		<?php endforeach; ?>
 	</div>
 	<?php do_action( 'it_exchange_content_confirmation_end_products_loop' ); ?>

@@ -79,13 +79,13 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 
 			$first = reset( $data );
 
-			if ( ! isset( $first['_class'] ) ) {
+			if ( ! isset( $first['_class'] ) && $type !== 'products' ) {
 				continue;
 			}
 
 			foreach ( $data as $id => $item_data ) {
 
-				if ( ! empty( $item_data['_parent'] ) ) {
+				if ( ! empty( $item_data['_parent'] ) || empty( $item_data['_class'] ) ) {
 					continue;
 				}
 
@@ -169,6 +169,11 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	 * @inheritDoc
 	 */
 	public function get_shipping_address() {
+
+		if ( ! it_exchange_is_purchase_requirement_registered( 'shipping-address' ) ) {
+			return array();
+		}
+
 		$shipping = it_exchange_get_cart_shipping_address();
 
 		if ( ! is_array( $shipping ) ) {
