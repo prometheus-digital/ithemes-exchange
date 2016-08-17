@@ -101,6 +101,11 @@ function it_exchange_format_price( $price, $show_symbol = true ) {
 			$before = $currency;
 	}
 
+	if ( $price < 0 ) {
+		$before = '&minus;' . $before;
+		$price  = abs( $price );
+	}
+
 	return $before . number_format( $price, 2, $settings['currency-decimals-separator'], $settings['currency-thousands-separator'] ) . $after;
 }
 
@@ -1049,7 +1054,7 @@ function it_exchange_add_billing_address_to_sw_template_totals_loops( $loops ) {
 
 	// Set index to end of array.
 	$index = array_search( 'discounts', $loops );
-	$index = ( false === $index ) ? array_search( 'totals-taxes-simple', $loops ) : $index;
+	$index = ( false === $index ) ? array_search( 'totals-taxes', $loops ) : $index;
 	$index = ( false === $index ) ? count($loops) -1 : $index;
 
 	array_splice( $loops, $index, 0, 'billing-address' );
@@ -1061,14 +1066,29 @@ add_filter( 'it_exchange_get_super-widget-checkout_after-cart-items_loops', 'it_
  * Clear Billing Address when the cart is emptied or a user logs out.
  *
  * @since 1.3.0
+ *        
+ * @param \ITE_Cart $cart
  *
  * @return void
 */
-function it_exchange_clear_billing_on_cart_empty() {
-    it_exchange_remove_cart_data( 'billing-address' );
+function it_exchange_clear_billing_on_cart_empty( ITE_Cart $cart ) {
+	
+	if ( $cart->is_current() ) {
+		it_exchange_remove_cart_data( 'billing-address' );
+	}
 }
-add_action( 'it_exchange_empty_shopping_cart', 'it_exchange_clear_billing_on_cart_empty' );
-add_action( 'wp_logout', 'it_exchange_clear_billing_on_cart_empty' );
+add_action( 'it_exchange_empty_cart', 'it_exchange_clear_billing_on_cart_empty' );
+
+/**
+ * Clear the billing address when a user logs out.
+ *
+ * @since 1.36.0
+ */
+function it_exchange_clear_billing_on_logout() {
+	it_exchange_remove_cart_data( 'billing-address' );
+}
+
+add_action( 'wp_logout', 'it_exchange_clear_billing_on_logout' );
 
 /**
  * AJAX callback for Country / State drop downs
@@ -1137,7 +1157,7 @@ function it_exchange_clean_duplicate_user_post_meta( $versions ) {
 	if ( version_compare( '1.8.1', $versions['previous'], '>' ) ) {
 		global $wpdb;
 
-		$wpdb->query(
+		$wpdb->query( 
 			"
 			DELETE n1 
 			FROM $wpdb->postmeta n1, $wpdb->postmeta n2 
@@ -1776,9 +1796,9 @@ function it_exchange_deprecated_filter( $filter, $version, $replacement = null )
 
 /**
  * Get System Info.
- * 
+ *
  * @since 1.36
- * 
+ *
  * @return array
  */
 function it_exchange_get_system_info() {
@@ -1915,7 +1935,7 @@ function it_exchange_get_system_info() {
 		'Webserver Info'    => $_SERVER['SERVER_SOFTWARE'],
 		'Host'              => it_exchange_get_host()
 	);
-	
+
 	$info['PHP Configuration'] = array(
 		'Safe Mode'             => ini_get( 'safe_mode' ) ? 'Enabled' : 'Disabled',
 		'Memory Limit'          => ini_get( 'memory_limit' ),
@@ -1941,15 +1961,15 @@ function it_exchange_get_system_info() {
  * Get user host
  *
  * Returns the webhost this site is using if possible.
- * 
+ *
  * Credit goes to Easy Digital Downloads
  *
  * @since 1.36
- *        
+ *
  * @return string
  */
 function it_exchange_get_host() {
-	
+
 	if ( defined( 'WPE_APIKEY' ) ) {
 		$host = 'WP Engine';
 	} elseif ( defined( 'PAGELYBIN' ) ) {
@@ -1976,6 +1996,6 @@ function it_exchange_get_host() {
 		// Adding a general fallback for data gathering
 		$host = 'DBH/' . DB_HOST . ', SRV/' . $_SERVER['SERVER_NAME'];
 	}
-	
+
 	return $host;
 }

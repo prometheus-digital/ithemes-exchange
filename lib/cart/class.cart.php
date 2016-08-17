@@ -13,9 +13,11 @@ class IT_Exchange_Shopping_Cart {
 	 *
 	 * @since 0.3.8
 	*/
-	function __construct() {
+	public function __construct() {
 		add_action( 'template_redirect', array( $this, 'handle_it_exchange_cart_function' ) );
 		add_filter( 'it_exchange_process_transaction', array( $this, 'handle_purchase_cart_request' ) );
+		add_action( 'template_redirect', array( $this, 'prepare_for_purchase' ) );
+		add_action( 'template_redirect', array( $this, 'convert_feedback_to_notices' ) );
 
 		// Filters to sync cart across devices
 		add_action( 'it_exchange_clear_session', array( $this, 'sync_customer_active_carts' ) );
@@ -43,7 +45,7 @@ class IT_Exchange_Shopping_Cart {
 	 * @since 0.4.0
 	 * @return void
 	*/
-	function handle_it_exchange_cart_function() {
+	public function handle_it_exchange_cart_function() {
 
 		$this->redirect_checkout_if_empty_cart(); //if on checkout but have empty cart, redirect
 
@@ -110,7 +112,7 @@ class IT_Exchange_Shopping_Cart {
 	 * @since 0.3.8
 	 * @return void
 	*/
-	function handle_buy_now_request() {
+	public function handle_buy_now_request() {
 		$buy_now_var = it_exchange_get_field_name( 'buy_now' );
 		$product_id = empty( $_REQUEST[$buy_now_var] ) ? 0 : $_REQUEST[$buy_now_var];
 		$product    = it_exchange_get_product( $product_id );
@@ -155,7 +157,7 @@ class IT_Exchange_Shopping_Cart {
 	 * @since 0.3.8
 	 * @return void
 	*/
-	function handle_add_product_to_cart_request() {
+	public function handle_add_product_to_cart_request() {
 
 		$add_to_cart_var = it_exchange_get_field_name( 'add_product_to_cart' );
 		$product_id = empty( $_REQUEST[$add_to_cart_var] ) ? 0 : $_REQUEST[$add_to_cart_var];
@@ -203,7 +205,7 @@ class IT_Exchange_Shopping_Cart {
 	 * @since 0.3.8
 	 * @return void
 	*/
-	function handle_empty_shopping_cart_request() {
+	public function handle_empty_shopping_cart_request() {
 		// Verify nonce
 		$nonce_var   = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
 		$error_var   = it_exchange_get_field_name( 'error_message' );
@@ -239,12 +241,12 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Removes a single product from the shopping cart
 	 *
-	 * This listens for REQUESTS to remove a product from the cart, verifies the request, and passes it along to the correct function
+	 * This listens for REQUESTS to remove a product from the cart, verifies the request, and passes it along to the correct public function
 	 *
 	 * @since 0.3.8
 	 * @return void
 	*/
-	function handle_remove_product_from_cart_request() {
+	public function handle_remove_product_from_cart_request() {
 		$var             = it_exchange_get_field_name( 'remove_product_from_cart' );
 		$car_product_ids = empty( $_REQUEST[$var] ) ? array() : $_REQUEST[$var];
 		$session_id      = it_exchange_get_session_id();
@@ -267,7 +269,7 @@ class IT_Exchange_Shopping_Cart {
 		}
 
 		foreach( (array) $car_product_ids as $car_product_id ) {
-			it_exchange_delete_cart_product( $car_product_id );
+			it_exchange_get_current_cart()->remove_item( 'product', $car_product_id );
 		}
 
 		$var = it_exchange_get_field_name( 'alert_message' );
@@ -279,12 +281,12 @@ class IT_Exchange_Shopping_Cart {
 	}
 
 	/**
-	 * Listens for the REQUEST to update the shopping cart, verifies it, and calls the correct function
+	 * Listens for the REQUEST to update the shopping cart, verifies it, and calls the correct public function
 	 *
 	 * @since 0.3.8
 	 * @return void
 	*/
-	function handle_update_cart_request( $redirect=true ) {
+	public function handle_update_cart_request( $redirect=true ) {
 		$session_id = it_exchange_get_session_id();
 		// Verify nonce
 		$nonce_var = apply_filters( 'it_exchange_cart_action_nonce_var', '_wpnonce' );
@@ -314,6 +316,25 @@ class IT_Exchange_Shopping_Cart {
 			}
 		}
 
+		$current_cart = it_exchange_get_current_cart();
+
+		$var_name = it_exchange_get_field_name( 'line_item_quantity' );
+		if ( ! empty( $_REQUEST[ $var_name ] ) ) {
+			foreach ( (array) $_REQUEST[ $var_name ] as $id_type => $quantity ) {
+				list( $id, $type ) = explode( ':', $id_type );
+				$item = $current_cart->get_item( $type, $id );
+
+				if ( $item && $item instanceof ITE_Quantity_Modifiable_Item && $item->is_quantity_modifiable() ) {
+					$max = $item->get_max_quantity_available();
+
+					if ( $max !== '' && (int) $quantity <= $max ) {
+						$item->set_quantity( (int) $quantity );
+						$current_cart->get_repository()->save( $item );
+					}
+				}
+			}
+		}
+
 		do_action( 'it_exchange_update_cart' );
 
 		$message_var = it_exchange_get_field_name( 'alert_message' );
@@ -333,14 +354,15 @@ class IT_Exchange_Shopping_Cart {
 	 *
 	 * @since 1.4.0
 	 *
-	 * @return void
+	 * @return bool
 	*/
-	function handle_update_shipping_address_request() {
+	public function handle_update_shipping_address_request() {
 
 		// Validate nonce
 		if ( empty( $_REQUEST['it-exchange-update-shipping-address'] ) || ! wp_verify_nonce( $_REQUEST['it-exchange-update-shipping-address'], 'it-exchange-update-checkout-shipping-address-' . it_exchange_get_session_id() ) ) {
 			it_exchange_add_message( 'error', __( 'Error adding Shipping Address. Please try again.', 'it-l10n-ithemes-exchange' ) );
 			$GLOBALS['it_exchange']['shipping-address-error'] = true;
+
 			return false;
 		}
 
@@ -350,8 +372,8 @@ class IT_Exchange_Shopping_Cart {
 		$states = it_exchange_get_data_set( 'states', array( 'country' => $_REQUEST['it-exchange-shipping-address-country'] ) );
 		if ( empty( $states ) && $key = array_search( 'state', $required_fields ) ) {
 			unset( $required_fields[$key] );
-		}	
-		
+		}
+
 		foreach( $required_fields as $field ) {
 			if ( empty( $_REQUEST['it-exchange-shipping-address-' . $field] ) ) {
 				it_exchange_add_message( 'error', __( 'Please fill out all required fields', 'it-l10n-ithemes-exchange' ) );
@@ -379,10 +401,14 @@ class IT_Exchange_Shopping_Cart {
 			$shipping[$field] = empty( $_REQUEST['it-exchange-shipping-address-' . $field] ) ? '' : $_REQUEST['it-exchange-shipping-address-' . $field];
 		}
 
-		if ( it_exchange_save_shipping_address( $shipping, it_exchange_get_current_customer_id() ) ) {
+		$location = new ITE_In_Memory_Address( $shipping );
+
+		if ( it_exchange_get_current_cart()->set_shipping_address( $location ) ) {
 			it_exchange_add_message( 'notice', __( 'Shipping Address Saved', 'it-l10n-ithemes-exchange' ) );
+
 			return true;
 		}
+
 		return false;
 	}
 
@@ -393,7 +419,7 @@ class IT_Exchange_Shopping_Cart {
 	 *
 	 * @return bool
 	*/
-	function handle_update_billing_address_request() {
+	public function handle_update_billing_address_request() {
 
 		$action = 'it-exchange-update-checkout-billing-address-' . it_exchange_get_session_id();
 
@@ -406,11 +432,11 @@ class IT_Exchange_Shopping_Cart {
 
 		// Validate required fields
 		$required_fields = apply_filters( 'it_exchange_required_billing_address_fields', array( 'first-name', 'last-name', 'address1', 'city', 'state', 'country', 'zip' ) );
-		
+
 		$states = it_exchange_get_data_set( 'states', array( 'country' => $_REQUEST['it-exchange-billing-address-country'] ) );
 		if ( empty( $states ) && $key = array_search( 'state', $required_fields ) ) {
 			unset( $required_fields[$key] );
-		}			
+		}
 
 		foreach( $required_fields as $field ) {
 			if ( empty( $_REQUEST['it-exchange-billing-address-' . $field] ) ) {
@@ -444,12 +470,14 @@ class IT_Exchange_Shopping_Cart {
 			$billing[$field] = empty( $_REQUEST['it-exchange-billing-address-' . $field] ) ? '' : $_REQUEST['it-exchange-billing-address-' . $field];
 		}
 
-		if ( it_exchange_save_customer_billing_address( $billing ) ) {
+		$location = new ITE_In_Memory_Address( $billing );
+
+		if ( it_exchange_get_current_cart()->set_billing_address( $location ) ) {
 			it_exchange_add_message( 'notice', __( 'Billing Address Saved', 'it-l10n-ithemes-exchange' ) );
 
 			// Update Shipping if checked
 			if ( ! empty( $_REQUEST['it-exchange-ship-to-billing'] ) && '1' == $_REQUEST['it-exchange-ship-to-billing'] )
-				it_exchange_save_shipping_address( $billing, it_exchange_get_current_customer_id() );
+				it_exchange_get_current_cart()->set_shipping_address( $location );
 
 		}
 		return true;
@@ -461,7 +489,7 @@ class IT_Exchange_Shopping_Cart {
 	 * @since 0.3.8
 	 * @return void
 	*/
-	function proceed_to_checkout() {
+	public function proceed_to_checkout() {
 
 		// Update cart info before redirecting.
 		$this->handle_update_cart_request( false );
@@ -482,7 +510,7 @@ class IT_Exchange_Shopping_Cart {
 	 * @param bool $status
 	 * @return boolean
 	*/
-	function handle_purchase_cart_request( $status ) {
+	public function handle_purchase_cart_request( $status ) {
 
 		if ( $status ) //if this has been modified as true already, return.
 			return $status;
@@ -499,17 +527,23 @@ class IT_Exchange_Shopping_Cart {
 
 		$transaction_object = it_exchange_generate_transaction_object();
 		if ( empty( $transaction_object ) && false !== ( $transaction_id = apply_filters( 'handle_purchase_cart_request_already_processed_for_' . $requested_transaction_method, false ) ) ) {
-			
+
 			it_exchange_clear_messages( 'error' ); //we really need a way to only remove certain errors
 			return $transaction_id;
-			
+
 		} else {
-			
+
 			$transaction_object = apply_filters( 'it_exchange_transaction_object', $transaction_object, $requested_transaction_method );
 
 			try {
 				// Do the transaction
-				return it_exchange_do_transaction( $requested_transaction_method, $transaction_object );
+				$transaction_id = it_exchange_do_transaction( $requested_transaction_method, $transaction_object );
+
+				if ( $transaction_id ) {
+					it_exchange_empty_shopping_cart();
+				}
+
+				return $transaction_id;
 			} catch ( IT_Exchange_Locking_Exception $e ) {
 				sleep( 2 );
 
@@ -520,6 +554,7 @@ class IT_Exchange_Shopping_Cart {
 				$transaction = it_exchange_get_transaction_by_cart_id( it_exchange_get_cart_id() );
 
 				if ( $transaction ) {
+					it_exchange_empty_shopping_cart();
 					return $transaction->ID;
 				} else {
 
@@ -539,20 +574,57 @@ class IT_Exchange_Shopping_Cart {
 	}
 
 	/**
+	 * Prepare the cart for purchase on the checkout page.
+	 *
+	 * @since 1.36.0
+	 */
+	public function prepare_for_purchase() {
+
+		if ( it_exchange_is_page( 'checkout' ) ) {
+			it_exchange_get_current_cart()->prepare_for_purchase();
+		}
+	}
+
+	/**
+	 * Convert feedback to notices.
+	 *
+	 * @sicne 1.36.0
+	 */
+	public function convert_feedback_to_notices() {
+
+		$cart = it_exchange_get_current_cart( false );
+
+		if ( ! $cart ) {
+			return;
+		}
+
+		$feedback = $cart->get_feedback();
+
+		foreach ( $feedback->errors() as $error ) {
+			it_exchange_add_message( 'error', $error );
+		}
+
+		foreach ( $feedback->notices() as $notice ) {
+			it_exchange_add_message( 'notice', $notice );
+		}
+
+		$feedback->clear();
+	}
+
+	/**
 	 * Redirect from checkout to cart if there are no items in the cart
 	 *
 	 * @since 0.3.8
 	 * @return void
 	*/
-	function redirect_checkout_if_empty_cart() {
+	public function redirect_checkout_if_empty_cart() {
 		$cart     = it_exchange_get_page_url( 'cart' );
 		$checkout = it_exchange_get_page_url( 'checkout' );
 
 		if ( empty( $checkout ) || ! it_exchange_is_page( 'checkout' ) )
 			return;
 
-		$products = it_exchange_get_cart_products();
-		if ( empty( $products ) ){
+		if ( ! it_exchange_get_current_cart()->get_items()->count() ){
 			it_exchange_redirect( $cart, 'checkout-empty-send-to-cart' );
 			die();
 		}
@@ -565,7 +637,7 @@ class IT_Exchange_Shopping_Cart {
 	 * @param string $key
 	 * @return string
 	*/
-	function get_cart_message( $key ) {
+	public function get_cart_message( $key ) {
 		$message = $this->default_cart_messages();
 		return ( !empty( $message[$key] ) ) ? $message[$key] : __( 'Unknown error. Please try again.', 'it-l10n-ithemes-exchange' );;
 	}
@@ -576,7 +648,7 @@ class IT_Exchange_Shopping_Cart {
 	 * @since 0.4.0
 	 * @return array
 	*/
-	function default_cart_messages() {
+	public function default_cart_messages() {
 		$messages['bad-transaction-method'] = __( 'Please select a payment method', 'it-l10n-ithemes-exchange' );
 		$messages['failed-transaction']     = __( 'There was an error processing your transaction. Please try again.', 'it-l10n-ithemes-exchange' );
 		$messages['product-not-removed']    = __( 'Product not removed from cart. Please try again.', 'it-l10n-ithemes-exchange' );
@@ -593,15 +665,16 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Makes calls to sync carts when customer modifies cart data
 	 *
-	 * @since 1.9.0 
+	 * @since 1.9.0
 	 *
 	 * @return void
 	*/
-	function sync_customer_active_carts() {
+	public function sync_customer_active_carts() {
 
 		// Don't do this if user is logging out
-		if ( ! empty( $GLOBALS['it_exchange']['logging_out_user'] ) )
+		if ( ! empty( $GLOBALS['it_exchange']['logging_out_user'] ) ) {
 			return;
+		}
 
 		remove_action( 'it_exchange_clear_session', array( $this, 'sync_customer_active_carts' ) );
 		remove_action( 'it_exchange_clear_session_data', array( $this, 'sync_customer_active_carts' ) );

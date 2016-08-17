@@ -2,9 +2,11 @@
 /**
  * This file loads the iThemes Exchange Framework
  *
- * @since 0.2.0
+ * @since   0.2.0
  * @package IT_Exchange
-*/
+ */
+
+require_once dirname( __FILE__ ) . '/../api/contracts/load.php';
 
 // IT Classes
 require( $this->_plugin_path . 'lib/classes/load.php' );
@@ -34,12 +36,17 @@ require_once( $this->_plugin_path  . 'lib/products/class.factory.php' );
 // Product Features
 require( $this->_plugin_path . 'lib/product-features/load.php' );
 
-// Transaction Post Type
-require( $this->_plugin_path . 'lib/transactions/class.transactions-post-type.php' );
+// Cart
+require( $this->_plugin_path . 'lib/cart/load.php' );
 
-// Transaction Object
-require( $this->_plugin_path . 'lib/transactions/class.transaction.php' );
-require( $this->_plugin_path . 'lib/transactions/activity/load.php' );
+// Tax
+require( $this->_plugin_path . 'lib/tax/load.php' );
+
+// Location
+require( $this->_plugin_path . 'lib/location/load.php' );
+
+// Transaction Module
+require( $this->_plugin_path . 'lib/transactions/load.php' );
 
 // Template Functions
 require( $this->_plugin_path . 'lib/functions/template-functions.php' );
@@ -78,9 +85,5 @@ require( $this->_plugin_path . 'lib/upgrades/load.php' );
 // Deprecated Features
 require( $this->_plugin_path . 'lib/deprecated/init.php' );
 
-// Sessions
-if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-	require( $this->_plugin_path . 'lib/cart/class.cart.php' );
-} else {
-	require( $this->_plugin_path . 'lib/admin/class-settings-form.php' );
-}
+require( $this->_plugin_path . 'lib/settings/class.settings-form.php' );
+require( $this->_plugin_path . 'lib/settings/class.controller.php' );

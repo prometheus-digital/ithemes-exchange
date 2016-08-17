@@ -299,11 +299,46 @@ function it_exchange_get_customer_data( $data_key, $customer_id=false ) {
  *
  * @param integer|bool $customer_id the customer id. leave blank to use the current customer.
  *
- * @return array
+ * @return array|false
 */
-function it_exchange_get_customer_shipping_address( $customer_id=false ) {
-	$shipping_address = it_exchange_get_customer_data( 'shipping_address', $customer_id );
-	return apply_filters( 'it_exchange_get_customer_shipping_address', $shipping_address, $customer_id );
+function it_exchange_get_customer_shipping_address( $customer_id = false ) {
+
+	$customer = $customer_id ? it_exchange_get_customer( $customer_id ) : it_exchange_get_current_customer();
+
+	if ( ! $customer ) {
+		return false;
+	}
+
+	$address = $customer->get_shipping_address();
+
+	return $address ? $address->to_array() : array();
+}
+
+/**
+ * Save the shipping address based on the User's ID
+ *
+ * @since 1.4.0
+ *
+ * @param array    $address the shipping address as an array
+ * @param int|bool $customer_id optional. if empty, will attempt to get he current user's ID
+ *
+ * @return boolean Will fail if no user ID was provided or found
+ */
+function it_exchange_save_shipping_address( $address, $customer_id = false ) {
+
+	$customer = $customer_id ? it_exchange_get_customer( $customer_id ) : it_exchange_get_current_customer();
+
+	if ( ! $customer ) {
+		return false;
+	}
+
+	try {
+		$location = $customer->set_shipping_address( new ITE_In_Memory_Address( $address ) );
+
+		return $location !== null;
+	} catch ( InvalidArgumentException $e ) {
+		return false;
+	}
 }
 
 /**
@@ -316,11 +351,19 @@ function it_exchange_get_customer_shipping_address( $customer_id=false ) {
  *
  * @param integer|bool $customer_id the customer id. leave blank to use the current customer.
  *
- * @return array
+ * @return array|false
 */
-function it_exchange_get_customer_billing_address( $customer_id=false ) {
-	$billing_address = it_exchange_get_customer_data( 'billing_address', $customer_id );
-	return apply_filters( 'it_exchange_get_customer_billing_address', $billing_address, $customer_id );
+function it_exchange_get_customer_billing_address( $customer_id = false ) {
+
+	$customer = $customer_id ? it_exchange_get_customer( $customer_id ) : it_exchange_get_current_customer();
+
+	if ( ! $customer ) {
+		return false;
+	}
+
+	$address = $customer->get_billing_address();
+
+	return $address ? $address->to_array() : array();
 }
 
 /**
@@ -333,15 +376,19 @@ function it_exchange_get_customer_billing_address( $customer_id=false ) {
  *
  * @return boolean
 */
-function it_exchange_save_customer_billing_address( $address, $customer_id=false ) {
-	$customer_id = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
+function it_exchange_save_customer_billing_address( $address, $customer_id = false ) {
 
-	$billing = apply_filters( 'it_exchange_save_customer_billing_address', $address, $customer_id );
+	$customer = $customer_id ? it_exchange_get_customer( $customer_id ) : it_exchange_get_current_customer();
 
-	if ( false !== $billing ) {
-		update_user_meta( $customer_id, 'it-exchange-billing-address', $billing );
-		do_action( 'it_exchange_customer_billing_address_updated', $billing, $customer_id );
-		return true;
+	if ( ! $customer ) {
+		return false;
 	}
-	return false;
+
+	try {
+		$location = $customer->set_billing_address( new ITE_In_Memory_Address( $address ) );
+
+		return $location !== null;
+	} catch ( InvalidArgumentException $e ) {
+		return false;
+	}
 }

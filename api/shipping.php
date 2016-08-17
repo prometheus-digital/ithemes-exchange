@@ -166,33 +166,6 @@ function it_exchange_get_registered_shipping_methods( $filtered=array() ) {
 }
 
 /**
- * Save the shipping address based on the User's ID
- *
- * @since 1.4.0
- *
- * @param array    $address the shipping address as an array
- * @param int|bool $customer_id optional. if empty, will attempt to get he current user's ID
- *
- * @return boolean Will fail if no user ID was provided or found
-*/
-function it_exchange_save_shipping_address( $address, $customer_id=false ) {
-	$customer_id = empty( $customer_id ) ? it_exchange_get_current_customer_id() : $customer_id;
-
-	if ( ! it_exchange_get_customer( $customer_id ) )
-		return false;
-
-	$address = apply_filters( 'it_exchange_save_customer_shipping_address', $address, $customer_id );
-
-	// Add to usermeta
-	if ( false !== $address ) {
-		update_user_meta( $customer_id, 'it-exchange-shipping-address', $address );
-		do_action( 'it_exchange_shipping_address_updated', $address, $customer_id );
-		return true;
-	}
-	return false;
-}
-
-/**
  * Returns the value of an address field for the address form.
  *
  * @since 1.4.0

@@ -11,7 +11,7 @@
  *
  * @since 0.3.3
  */
-class IT_Exchange_Transaction {
+class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 
 	/**
 	 * @var int
@@ -47,6 +47,7 @@ class IT_Exchange_Transaction {
 
 	/**
 	 * @var object
+	 * @internal
 	 */
 	private $cart_details;
 
@@ -103,6 +104,44 @@ class IT_Exchange_Transaction {
 		self::__construct();
 
 		_deprecated_constructor( __CLASS__, '1.24.0' );
+	}
+
+	/**
+	 * Get all items in this transaction.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $type
+	 * @param bool   $flatten
+	 *
+	 * @return \ITE_Line_Item_Collection|\ITE_Line_Item[]
+	 */
+	public function get_items( $type = '', $flatten = false ) {
+		$repository = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $this );
+
+		if ( $flatten ) {
+			$items = $this->get_items()->flatten();
+
+			return $type ? $items->with_only( $type ) : $items;
+		}
+
+		return $repository->all( $type );
+	}
+
+	/**
+	 * Get a line item.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $type
+	 * @param string $id
+	 *
+	 * @return \ITE_Line_Item|null
+	 */
+	public function get_item( $type, $id ) {
+		$repository = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $this );
+
+		return $repository->get( $type, $id );
 	}
 
 	/**
@@ -412,6 +451,42 @@ class IT_Exchange_Transaction {
 	}
 
 	/**
+	 * Gets a transaction meta property.
+	 *
+	 * If the custom value is already set, it uses that.
+	 * If the custom value is not set and we're on post-add.php, check for a URL param
+	 *
+	 * @since 1.3.0
+	 */
+	function get_transaction_meta( $key, $single = true ) {
+		return $this->get_meta( $key, $single );
+	}
+
+	/**
+	 * Updates a transaction meta property.
+	 *
+	 * If the custom value is already set, it uses that.
+	 * If the custom value is not set and we're on post-add.php, check for a URL param
+	 *
+	 * @since 1.3.0
+	 */
+	function update_transaction_meta( $key, $value ) {
+		$this->update_meta( $key, $value );
+	}
+
+	/**
+	 * Deletes a transaction meta property.
+	 *
+	 * If the custom value is already set, it uses that.
+	 * If the custom value is not set and we're on post-add.php, check for a URL param
+	 *
+	 * @since 1.3.0
+	 */
+	function delete_transaction_meta( $key, $value = '' ) {
+		$this->delete_meta( $key, $value );
+	}
+
+	/**
 	 * Gets the date property.
 	 *
 	 * @since 0.4.0
@@ -467,6 +542,46 @@ class IT_Exchange_Transaction {
 		}
 
 		return empty( $subtotal ) ? false : $subtotal;
+	}
+
+	/**
+	 * Get the billing address.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Location|null
+	 */
+	public function get_billing_address() {
+
+		$address = empty( $this->cart_details->billing_address ) ? array() : $this->cart_details->billing_address;
+
+		$address = apply_filters( 'it_exchange_get_transaction_billing_address', $address, $this );
+
+		if ( empty( $address ) ) {
+			return null;
+		}
+
+		return new ITE_In_Memory_Address( $address );
+	}
+
+	/**
+	 * Get the shipping address.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Location|null
+	 */
+	public function get_shipping_address() {
+
+		$address = empty( $this->cart_details->shipping_address ) ? array() : $this->cart_details->shipping_address;
+
+		$address = apply_filters( 'it_exchange_get_transaction_shipping_address', $address, $this );
+
+		if ( empty( $address ) ) {
+			return null;
+		}
+
+		return new ITE_In_Memory_Address( $address );
 	}
 
 	/**
@@ -616,9 +731,13 @@ class IT_Exchange_Transaction {
 	 *
 	 * @since 1.3.0
 	 *
+	 * @param array $args                Arguments to filter children.
+	 * @param bool  $return_transactions Return transaction objects.
+	 *
 	 * @return WP_Post[]
 	 */
-	public function get_children( $args = array() ) {
+	public function get_children( $args = array(), $return_transactions = false ) {
+
 		$defaults = array(
 			'post_parent' => $this->ID,
 			'post_type'   => 'it_exchange_tran',
@@ -626,7 +745,49 @@ class IT_Exchange_Transaction {
 
 		$args = wp_parse_args( $args, $defaults );
 
-		return get_children( $args );
+		$posts = get_children( $args );
+
+		if ( $return_transactions ) {
+			$posts = array_map( 'it_exchange_get_transaction', $posts );
+		}
+
+		return $posts;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public static function handle_prorate_credit_request( ITE_Prorate_Credit_Request $request, ITE_Daily_Price_Calculator $calculator ) {
+
+		if ( ! self::accepts_prorate_credit_request( $request ) ) {
+			throw new DomainException( "This credit request can't be handled by this provider." );
+		}
+
+		/** @var IT_Exchange_Transaction $transaction */
+		$transaction = $request->get_transaction();
+
+		$for = $request->get_product_providing_credit();
+
+		foreach ( $transaction->get_products() as $product ) {
+			if ( $product['product_id'] == $for->ID ) {
+				$amount = (float) $product['product_subtotal'];
+			}
+		}
+
+		if ( ! isset( $amount ) ) {
+			throw new InvalidArgumentException( "Product with ID '$for->ID' not found in transaction '$transaction->ID'." );
+		}
+
+		if ( (float) $transaction->get_total( false ) < $amount ) {
+			$amount = (float) $transaction->get_total( false );
+		}
+
+		$request->set_credit( $amount );
+
+		$request->update_additional_session_details( array(
+			'old_transaction_id'     => $transaction->ID,
+			'old_transaction_method' => $transaction->transaction_method
+		) );
 	}
 
 	/**
@@ -708,63 +869,13 @@ class IT_Exchange_Transaction {
 	}
 
 	/**
-	 * Gets a transaction meta property.
-	 *
-	 * If the custom value is already set, it uses that.
-	 * If the custom value is not set and we're on post-add.php, check for a URL param
-	 *
-	 * @since      1.3.0
-	 * @deprecated 1.36
-	 *
-	 * @param string $key
-	 * @param bool   $single
-	 *
-	 * @return mixed
-	 */
-	public function get_transaction_meta( $key, $single = true ) {
-		return $this->get_meta( $key, $single );
-	}
-
-	/**
-	 * Updates a transaction meta property.
-	 *
-	 * If the custom value is already set, it uses that.
-	 * If the custom value is not set and we're on post-add.php, check for a URL param
-	 *
-	 * @since      1.3.0
-	 * @deprecated 1.36
-	 *
-	 * @param string $key
-	 * @param mixed  $value
-	 */
-	public function update_transaction_meta( $key, $value ) {
-		$this->update_meta( $key, $value );
-	}
-
-	/**
-	 * Deletes a transaction meta property.
-	 *
-	 * If the custom value is already set, it uses that.
-	 * If the custom value is not set and we're on post-add.php, check for a URL param
-	 *
-	 * @since      1.3.0
-	 * @deprecated 1.36
-	 *
-	 * @param string $key
-	 * @param mixed  $value
-	 */
-	public function delete_transaction_meta( $key, $value = '' ) {
-		$this->delete_meta( $key, $value );
-	}
-
-	/**
 	 * Sets the supports array for the post_type.
 	 *
 	 * @since 0.3.3
 	 *
 	 * @deprecated
 	 */
-	function set_add_edit_screen_supports() {
+	public function set_add_edit_screen_supports() {
 		_deprecated_function( __METHOD__, '1.36' );
 	}
 
