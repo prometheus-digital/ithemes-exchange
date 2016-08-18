@@ -62,15 +62,8 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	 * @since 0.4.0
 	 * @return string
 	*/
-	function found( $options=array() ) {
-		// Return boolean if has flag was set
-		if ( it_exchange_is_page( 'purchases' ) || it_exchange_is_page( 'downloads' ) ) {
-			if ( ! $customer = it_exchange_get_current_customer() )
-				return;
-			return count( it_exchange_get_customer_transactions( $customer->id ) ) > 0;
-		} else {
-			return count( it_exchange_get_transactions() ) > 0 ;
-		}
+	public function found( $options=array() ) {
+		return count( $this->get_transactions() ) > 0;
 	}
 
 	/**
@@ -79,19 +72,24 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	 * It return false when it reaches the last transaction
 	 *
 	 * @since 0.4.0
-	 * @return string
+	 *
+	 * @param array $options
+	 *
+	 * @return bool
 	*/
-	function exist( $options=array() ) {
+	public function exist( $options=array() ) {
 		// This will init/reset the transactions global and loop through them. the /api/theme/transaction.php file will handle individual transactions.
 		if ( empty( $GLOBALS['it_exchange']['transactions'] ) ) {
-			if ( it_exchange_is_page( 'purchases' ) || it_exchange_is_page( 'downloads' ) ) {
-				if ( ! $customer = it_exchange_get_current_customer() )
-					return;
-				$GLOBALS['it_exchange']['transactions'] = it_exchange_get_customer_transactions( $customer->id );
-			} else {
-				$GLOBALS['it_exchange']['transactions'] = it_exchange_get_transactions( array( 'posts_per_page' => -1 ) );
+
+			$transactions = $this->get_transactions();
+
+			if ( ! $transactions ) {
+				return false;
 			}
+
+			$GLOBALS['it_exchange']['transactions'] = $transactions;
 			$GLOBALS['it_exchange']['transaction'] = reset( $GLOBALS['it_exchange']['transactions'] );
+
 			return true;
 		} else {
 			if ( next( $GLOBALS['it_exchange']['transactions'] ) ) {
@@ -103,6 +101,42 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 				$GLOBALS['it_exchange']['transaction'] = false;
 				return false;
 			}
+		}
+	}
+
+	/**
+	 * Retrieve the transactions.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \IT_Exchange_Transaction[]
+	 */
+	protected function get_transactions() {
+
+		if ( it_exchange_is_page( 'purchases' ) || it_exchange_is_page( 'downloads' ) ) {
+
+			if ( ! $customer = it_exchange_get_current_customer() ) {
+				return array();
+			}
+
+			return it_exchange_get_customer_transactions( $customer->id );
+		} elseif ( it_exchange_is_page( 'confirmation' ) ) {
+			$confirmation_slug = it_exchange_get_page_slug( 'confirmation' );
+			$transaction_hash = get_query_var( $confirmation_slug );
+
+			if ( ! $transaction_hash ) {
+				return array();
+			}
+
+			$transaction = it_exchange_get_transaction_id_from_hash( $transaction_hash );
+
+			if ( ! $transaction ) {
+				return array();
+			}
+
+			return array( it_exchange_get_transaction( $transaction ) );
+		} else {
+			return it_exchange_get_transactions();
 		}
 	}
 }

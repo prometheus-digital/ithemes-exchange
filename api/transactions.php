@@ -80,17 +80,6 @@ function it_exchange_get_transactions( $args=array() ) {
 		'post_type' => 'it_exchange_tran',
 	);
 
-	// Different defaults depending on where we are.
-	$confirmation_slug = it_exchange_get_page_slug( 'confirmation' );
-	if ( it_exchange_is_page( 'confirmation' ) ) {
-		if ( $transaction_hash = get_query_var( $confirmation_slug ) ) {
-			if ( $transaction_id = it_exchange_get_transaction_id_from_hash( $transaction_hash ) )
-				$defaults['p'] = $transaction_id;
-		}
-		if ( empty( $transaction_id ) )
-			return array();
-	}
-
 	$args = wp_parse_args( $args, $defaults );
 	$args['meta_query'] = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
 
@@ -211,7 +200,9 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 
 	if ( $cart->get_items()->count() < 1 ) {
 		do_action( 'it_exchange_error-no_products_to_purchase' );
-		it_exchange_add_message( 'error', __( 'You cannot checkout without any items in your cart.', 'it-l10n-ithemes-exchange' ) );
+		it_exchange_add_message(
+			'error', __( 'You cannot checkout without any items in your cart.', 'it-l10n-ithemes-exchange' )
+		);
 
 		return false;
 	}
@@ -219,9 +210,13 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	// Verify cart total is a positive number
 	$cart_total    = number_format( it_exchange_get_cart_total( false, array( 'cart' => $cart ) ), 2, '.', '' );
 	$cart_sub_total = number_format( it_exchange_get_cart_subtotal( false, array( 'cart' => $cart ) ), 2, '.', '' );
-	if ( number_format( $cart_total, 2, '', '' ) < 0 ) {
+
+	if ( $cart_total < 0 ) {
 		do_action( 'it_exchange_error_negative_cart_total_on_checkout', $cart_total );
-		it_exchange_add_message( 'error', __( 'The cart total must be greater than 0 for you to checkout. Please try again.', 'it-l10n-ithemes-exchange' ) );
+		it_exchange_add_message(
+			'error',
+			__( 'The cart total must be at least $0 for you to checkout. Please try again.', 'it-l10n-ithemes-exchange' )
+		);
 
 		return false;
 	}
@@ -470,7 +465,9 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 
 	if ( $transaction_id = wp_insert_post( $args ) ) {
 
-		update_post_meta( $transaction_id, '_it_exchange_customer_ip', ! empty( $cart_object->customer_ip ) ? $cart_object->customer_ip : it_exchange_get_ip() );
+		$customer_ip = ! empty( $cart_object->customer_ip ) ? $cart_object->customer_ip : it_exchange_get_ip();
+
+		update_post_meta( $transaction_id, '_it_exchange_customer_ip', $customer_ip );
 		update_post_meta( $transaction_id, '_it_exchange_cart_object', $cart_object );
 
 		$hash = it_exchange_generate_transaction_hash( $transaction_id, $customer ? $customer->id  : false );
@@ -581,9 +578,13 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 		IT_Exchange_Transaction::create( $purchase_args );
 
 		do_action( 'it_exchange_add_child_transaction_success', $transaction_id );
-		return apply_filters( 'it_exchange_add_child_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $parent_tx_id, $cart_object, $args );
+
+		return apply_filters(
+			'it_exchange_add_child_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $parent_tx_id, $cart_object, $args
+		);
 	}
 	do_action( 'it_exchange_add_child_transaction_failed', $method, $method_id, $status, $customer_id, $parent_tx_id, $cart_object, $args );
+
 	return apply_filters( 'it_exchange_add_child_transaction', false, $method, $method_id, $status, $customer_id, $parent_tx_id, $cart_object, $args );
 }
 
@@ -847,9 +848,10 @@ function it_exchange_get_transaction_date( $transaction, $format = false, $gmt =
 
 	// Try to locate the IT_Exchange_Transaction object from the var
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
-		$date = $transaction->get_date( $gmt );
+		$date      = $transaction->get_date( $gmt );
+		$formatted = date_i18n( $format, strtotime( $date ), $gmt );
 
-		return apply_filters( 'it_exchange_get_transaction_date', date_i18n( $format, strtotime( $date ), $gmt ), $transaction, $format, $gmt );
+		return apply_filters( 'it_exchange_get_transaction_date', $formatted, $transaction, $format, $gmt );
 	}
 
 	return apply_filters( 'it_exchange_get_transaction_date', false, $transaction, $format, $gmt );
@@ -1538,9 +1540,11 @@ function it_exchange_doing_webhook( $webhook = '' ) {
  * @return string url
 */
 function it_exchange_get_transaction_confirmation_url( $transaction_id ) {
+
 	// If we can't grab the hash, return false
-	if ( ! $transaction_hash = it_exchange_get_transaction_hash( $transaction_id ) )
+	if ( ! $transaction_hash = it_exchange_get_transaction_hash( $transaction_id ) ) {
 		return apply_filters( 'it_exchange_get_transaction_confirmation_url', false, $transaction_id );
+	}
 
 	// Get base page URL
 	$confirmation_url = it_exchange_get_page_url( 'confirmation' );
@@ -1566,7 +1570,7 @@ function it_exchange_get_transaction_confirmation_url( $transaction_id ) {
  * @return boolean
 */
 function it_exchange_transaction_status_can_be_manually_changed( $transaction ) {
-	if( ! $method = it_exchange_get_transaction_method( $transaction ) ) {
+	if ( ! $method = it_exchange_get_transaction_method( $transaction ) ) {
 		return false;
 	}
 
@@ -1597,17 +1601,19 @@ function it_exchange_transaction_includes_shipping( $transaction ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction the id or object
  * @param bool $format_price
  *
- * @return string
+ * @return float|string|false
 */
-function it_exchange_get_transaction_shipping_total( $transaction, $format_price=false ) {
-	if( ! $transaction= it_exchange_get_transaction( $transaction ) )
+function it_exchange_get_transaction_shipping_total( $transaction, $format_price = false ) {
+
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) ) {
 		return false;
+	}
 
-	$shipping_total = empty( $transaction->cart_details->shipping_total ) ? false : it_exchange_convert_from_database_number( $transaction->cart_details->shipping_total );
-	if ( ! empty( $shipping_total ) && $format_price )
-		$shipping_total = it_exchange_format_price( $shipping_total );
+	$total = $transaction->get_items( 'shipping', true )->total();
 
-	return apply_filters( 'it_exchange_get_transaction_shipping_total', $shipping_total, $transaction );
+	$total = apply_filters( 'it_exchange_get_transaction_shipping_total', $total, $transaction );
+
+	return $format_price ? it_exchange_format_price( $total ) : $total;
 }
 
 /**
@@ -1619,19 +1625,26 @@ function it_exchange_get_transaction_shipping_total( $transaction, $format_price
  *
  * @param WP_Post|int|IT_Exchange_Transaction $transaction the id or object
  *
- * @return object|boolean
+ * @return object|false
 */
 function it_exchange_get_transaction_shipping_method( $transaction ) {
-	if( ! $transaction= it_exchange_get_transaction( $transaction ) )
-		return false;
 
-	$shipping_method = empty( $transaction->cart_details->shipping_method ) ? false : $transaction->cart_details->shipping_method;
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) ) {
+		return false;
+	}
+
+	if ( empty( $transaction->cart_details->shipping_method ) ) {
+		$shipping_method = false;
+	} else {
+		$shipping_method = $transaction->cart_details->shipping_method;
+	}
 
 	// If Multiple, Just return the string since its not a registered method
-	if ( 'multiple-methods' == $shipping_method ) {
+	if ( 'multiple-methods' === $shipping_method ) {
 		$method = new stdClass();
 		$method->slug  = 'multiple-methods';
 		$method->label = __( 'Multiple Shipping Methods', 'it-l10n-ithemes-exchange' );
+
 		return apply_filters( 'it_exchange_get_transaction_shipping_method', $method, $transaction );
 	}
 
@@ -1650,12 +1663,21 @@ function it_exchange_get_transaction_shipping_method( $transaction ) {
  * @return string
 */
 function it_exchange_get_transaction_shipping_method_for_product( $transaction, $product_cart_id ) {
-	if( ! $transaction= it_exchange_get_transaction( $transaction ) )
+
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) ) {
 		return false;
+	}
 
 	$transaction_method = it_exchange_get_transaction_shipping_method( $transaction );
-	if ( 'multiple-methods' == $transaction_method->slug ) {
-		$product_method = empty( $transaction->cart_details->shipping_method_multi[$product_cart_id] ) ? false : $transaction->cart_details->shipping_method_multi[$product_cart_id];
+
+	if ( 'multiple-methods' === $transaction_method->slug ) {
+
+		if ( empty( $transaction->cart_details->shipping_method_multi[ $product_cart_id ] ) ) {
+			$product_method = false;
+		} else {
+			$product_method = $transaction->cart_details->shipping_method_multi[ $product_cart_id ];
+		}
+
 		$product_method = it_exchange_get_registered_shipping_method( $product_method );
 		$method = empty( $product_method->label ) ? __( 'Unknown Method', 'it-l10n-ithemes-exchange' ) : $product_method->label;
 	} else {
@@ -1663,5 +1685,4 @@ function it_exchange_get_transaction_shipping_method_for_product( $transaction, 
 	}
 
 	return apply_filters( 'it_exchange_get_transaction_shipping_method_for_product', $method, $transaction, $product_cart_id );
-
 }
