@@ -2,8 +2,8 @@
 Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
-Tested up to: 4.5
-Stable tag: 1.35.4
+Tested up to: 4.6
+Stable tag: 1.35.8
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,36 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.35.8 =
+* Add: it_exchange_convert_country_code() API function
+* Fix: Don't overwrite existing columns on the products list table
+* Fix: ITSEC Recaptcha Integration
+* Fix: Ensure tooltip dialog clears other DOM elements
+
+= 1.35.7 =
+* Add: Filter to the max quantity check for Variants
+* Add: BN Code to PayPal Gateways
+* Tweak: Only require shipping address when necessary
+* Fix: Errors with deleted users and transaction activity
+* Fix: Errors with Guest Checkout and transaction activity
+
+= 1.35.6 =
+* Fix: Metaboxes on the menus page were being incorrectly hidden.
+* Fix: t_paamayim_nekudotayim on PHP 5.2
+
+= 1.35.5 =
+
+* Tweak: Extract session interface, IT_Exchange_SessionInterface, for managing sessions.
+* Tweak: Better activity messages for renewal payments.
+* Fix: Zero Sum Checkout subscriptions losing access
+* Fix: Offline Payments subscriptions losing access
+* Fix: Stripsllashes after jquery date format is replaced
+* Fix: Move subscription status activity reporting to Recurring Payments
+* Fix: Remove cancel URLs for zero sum checkout and offline payments
+* Fix: Only break-words on code tags in the activity stream
+* Fix: Logic for toggling offline payment subscriptions back to active after a payment has been received
+* Fix: Warning with get_class()
 
 = 1.35.4 =
 * Fix: Cart ID should always be present

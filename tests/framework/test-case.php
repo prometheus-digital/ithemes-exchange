@@ -22,6 +22,11 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 	protected $exchange_admin;
 
 	/**
+	 * @var array
+	 */
+	protected $expected_hooks = array();
+
+	/**
 	 * Do custom initialization.
 	 */
 	public function setUp() {
@@ -38,6 +43,22 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 
 		add_filter( 'it_exchange_send_purchase_email_to_customer', '__return_false' );
 		add_filter( 'it_exchange_send_purchase_email_to_admin', '__return_false' );
+	}
+
+	/**
+	 * Expect a hook to be fired.
+	 *
+	 * @param string $hook
+	 */
+	public function expectHook( $hook ) {
+		$fired                         = false;
+		$this->expected_hooks[ $hook ] = &$fired;
+
+		add_filter( $hook, function ( $_ = null ) use ( &$fired ) {
+			$fired = true;
+
+			return $_;
+		} );
 	}
 
 	/**
@@ -119,6 +140,13 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 	 * Teardown the test case.
 	 */
 	function tearDown() {
+		
+		foreach ( $this->expected_hooks as $hook => $fired ) {
+			if ( ! $fired ) {
+				$this->fail( "Expected hook '$hook' was not fired." );
+			}
+		}
+		
 		parent::tearDown();
 
 		WP_Mock::tearDown();

@@ -361,11 +361,7 @@ class IT_Exchange_Transaction_Post_Type {
 				echo it_exchange_get_transaction_status_label( $post );
 				break;
 			case 'it_exchange_transaction_customer_column' :
-				if ( $customer = it_exchange_get_transaction_customer( $transaction ) ) {
-					esc_attr_e( empty( $customer->wp_user->display_name ) ? $customer->wp_user->user_login : $customer->wp_user->display_name );
-				} else {
-					esc_attr_e( 'Unknown', 'it-l10n-ithemes-exchange' );
-				}
+				echo it_exchange_get_transaction_customer_display_name( $transaction );
 				break;
 			case 'it_exchange_transaction_total_column' :
 				echo it_exchange_get_transaction_total( $transaction );
@@ -936,7 +932,7 @@ class IT_Exchange_Transaction_Post_Type {
 		}
 
 		// Attempt to change status
-		if ( $current_status != it_exchange_update_transaction_status( $transaction, $new_status ) ) {
+		if ( it_exchange_update_transaction_status( $transaction, $new_status ) ) {
 			die( 'success' );
 		} else {
 			die( 'failed' );

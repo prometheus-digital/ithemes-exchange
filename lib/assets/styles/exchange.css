@@ -111,6 +111,22 @@ a.it-exchange-button {text-decoration:none;}
 #it-exchange-cart .it-exchange-cart-item-subtotal{text-align:right;width:15%;}
 #it-exchange-cart .it-exchange-cart-item-remove{text-align:right;width:7%;}
 #it-exchange-cart .it-exchange-cart-item-remove a{text-decoration:none;}
+#it-exchange-cart .it-exchange-line-item-description { font-size: 80%; margin-bottom: 0; }
+
+#it-exchange-cart .it-exchange-table-row-parent { border-bottom-style: dotted; }
+#it-exchange-cart .it-exchange-child-item { font-size: 80%; border-bottom: none; }
+#it-exchange-cart .it-exchange-child-item + div:not(.it-exchange-child-item) { border-top: 1px solid #DDD; }
+#it-exchange-cart div.it-exchange-table-row:last-of-type { border-bottom: 1px solid #DDD; }
+
+#it-exchange-cart .it-exchange-line-item-name-column { width: 50%; }
+#it-exchange-cart .it-exchange-child-item .it-exchange-line-item-name::before { content: '-'; padding-right: 5px; }
+#it-exchange-cart .it-exchange-line-item-quantity-column { width: 15%; }
+#it-exchange-cart .it-exchange-line-item-quantity-column input { width: 100%; }
+#it-exchange-cart .it-exchange-line-item-total-column { width: 15%; text-align: right; }
+#it-exchange-cart .it-exchange-child-item .it-exchange-line-item-total-column .it-exchange-table-column-inner::before { content: '('; font-size: 80%; }
+#it-exchange-cart .it-exchange-child-item .it-exchange-line-item-total-column .it-exchange-table-column-inner::after { content: ')'; font-size: 80%; }
+
+#it-exchange-cart #it-exchange-line-items { border-top: none; }
 
 /** ---:[ coupons ]:--- */
 #it-exchange-cart-coupons{border-top:0;}
@@ -227,6 +243,27 @@ a.it-exchange-button {text-decoration:none;}
 #it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-confirmation-totals-amount {border-right:1px solid #DDD;}
 #it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-cart-totals-total .it-exchange-table-column-inner{padding:10px;border-bottom:1px solid #DDD;}
 #it-exchange-confirmation .it-exchange-transaction-summary-loop .it-exchange-confirmation-totals-amount .it-exchange-table-column-inner {}
+
+#it-exchange-confirmation .it-exchange-line-item-description { font-size: 80%; margin-bottom: 0; }
+
+#it-exchange-confirmation .it-exchange-table-row-parent { border-bottom-style: dotted; }
+#it-exchange-confirmation .it-exchange-child-item { font-size: 80%; border-bottom: none; }
+#it-exchange-confirmation .it-exchange-child-item + div:not(.it-exchange-child-item) { border-top: 1px solid #DDD; }
+#it-exchange-confirmation div.it-exchange-table-row:last-of-type { border-bottom: 1px solid #DDD; }
+
+#it-exchange-confirmation .it-exchange-line-item-name-column { width: 80%; }
+#it-exchange-confirmation .it-exchange-child-item .it-exchange-line-item-name { font-size: .8rem; font-weight: normal; }
+#it-exchange-confirmation .it-exchange-child-item .it-exchange-line-item-name::before { content: '-'; padding-right: 5px; }
+#it-exchange-confirmation .it-exchange-line-item-quantity-total-column { width: 20%; }
+#it-exchange-confirmation .it-exchange-line-item-quantity-total-column input { width: 100%; }
+#it-exchange-confirmation .it-exchange-line-item-total-column { width: 15%; text-align: right; }
+#it-exchange-confirmation .it-exchange-child-item .it-exchange-line-item-total-column-part::before { content: '('; font-size: 80%; }
+#it-exchange-confirmation .it-exchange-child-item .it-exchange-line-item-total-column-part::after { content: ')'; font-size: 80%; }
+
+#it-exchange-confirmation #it-exchange-line-items { border-top: none; }
+#it-exchange-confirmation #it-exchange-line-items .it-exchange-table-column-inner,
+#it-exchange-confirmation .it-exchange-transaction-products .it-exchange-table-column-inner { padding: 20px; }
+#it-exchange-confirmation #it-exchange-line-items .it-exchange-line-item-quantity-total-column .it-exchange-table-column-inner { padding-top: 0; }
 /** -----------------------------------------------------:[ store ]:---------- */
 #it-exchange-store .it-exchange-products {margin: 0;padding: 0;}
 #it-exchange-store .it-exchange-products li {list-style: none;display: block;float:left;width: 45%;margin: 0 0 5em 0;vertical-align: top;}

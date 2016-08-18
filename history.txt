@@ -1268,3 +1268,28 @@
 	Fix: Cart ID should always be present
     Fix: Coupons not being counted more than once
     Tweak: Mark Zero Sum Checkout and Offline Payments subscriptions as Active when paid
+1.35.5 - Elise Alley, Timothy B. Jacobs
+	Tweak: Extract session interface, IT_Exchange_SessionInterface, for managing sessions.
+	Tweak: Better activity messages for renewal payments.
+	Fix: Zero Sum Checkout subscriptions losing access
+	Fix: Offline Payments subscriptions losing access
+	Fix: Stripsllashes after jquery date format is replaced
+	Fix: Move subscription status activity reporting to Recurring Payments
+	Fix: Remove cancel URLs for zero sum checkout and offline payments
+	Fix: Only break-words on code tags in the activity stream
+	Fix: Logic for toggling offline payment subscriptions back to active after a payment has been received
+	Fix: Warning with get_class()
+1.35.6 - Elise Alley, Timothy B. Jacobs
+	Fix: Metaboxes on the menus page were being incorrectly hidden.
+	Fix: t_paamayim_nekudotayim on PHP 5.2
+1.35.7 - Elise Alley, TImothy B. Jacobs
+	Add: Filter to the max quantity check for Variants
+	Add: BN Code to PayPal Gateways
+    Tweak: Only require shipping address when necessary
+    Fix: Errors with deleted users and transaction activity
+    Fix: Errors with Guest Checkout and transaction activity
+1.35.8 - Aaron Campbell, Elise Alley, Timothy Jacobs, Ty Carlson
+	Add: it_exchange_convert_country_code() API function
+	Fix: Don't overwrite existing columns on the products list table
+	Fix: ITSEC Recaptcha Integration
+	Fix: Ensure tooltip dialog clears other DOM elements

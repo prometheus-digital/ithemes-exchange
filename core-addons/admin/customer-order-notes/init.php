@@ -53,7 +53,7 @@ function it_exchange_add_customer_order_note_to_sw_template_totals_loops( $loops
 
 	// Set index to end of array.
 	$index = array_search( 'discounts', $loops );
-	$index = ( false === $index ) ? array_search( 'totals-taxes-simple', $loops ) : $index;
+	$index = ( false === $index ) ? array_search( 'totals-taxes', $loops ) : $index;
 	$index = ( false === $index ) ? count( $loops ) - 1 : $index;
 
 	array_splice( $loops, $index, 0, 'customer-order-note' );
@@ -148,12 +148,16 @@ add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_customer_ord
  * When the cart is emptied, clear the customer-order-note session data.
  *
  * @since 1.34
+ *        
+ * @param \ITE_Cart $cart
  */
-function it_exchange_customer_order_notes_empty_cart() {
-	it_exchange_clear_session_data( 'customer-order-note' );
+function it_exchange_customer_order_notes_empty_cart( ITE_Cart $cart ) {
+	if ( $cart->is_current() ) {
+		it_exchange_clear_session_data( 'customer-order-note' );
+	}
 }
 
-add_action( 'it_exchange_empty_shopping_cart', 'it_exchange_customer_order_notes_empty_cart' );
+add_action( 'it_exchange_empty_cart', 'it_exchange_customer_order_notes_empty_cart' );
 
 /**
  * Create the activity item when the transaction is created.

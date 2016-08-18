@@ -330,6 +330,10 @@
 	box-shadow: 0 0 10px #dddddd;
 }
 
+#exchange-activity-filter {
+	max-width: 120px;
+}
+
 #exchange-close-note {
 	position: absolute;
 	top: 3px;
@@ -459,7 +463,6 @@ label[for="exchange-notify-customer"] {
 	color: #c46857;
 }
 
-#activity-stream li article,
 #activity-stream li article code {
 	word-wrap: break-word;
 	word-break: break-all;

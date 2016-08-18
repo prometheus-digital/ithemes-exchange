@@ -19,8 +19,11 @@
 <div id="it-exchange-cart-totals" class="it-exchange-table">
 <?php do_action( 'it_exchange_content_checkout_before_totals_loop' ); ?>
 	<?php do_action( 'it_exchange_content_checkout_begi_totalsn_loop' ); ?>
-		<?php foreach ( it_exchange_get_template_part_elements( 'content_checkout', 'totals', array( 'totals-subtotal', 'totals-savings', 'totals-total' ) ) as $totals ) : ?>
-			<div class="it-exchange-table-row it-exchange-cart-<?php echo $totals; ?>">
+		<?php foreach ( it_exchange_get_template_part_elements( 'content_checkout', 'totals', array( 'totals-subtotal', 'totals-savings', 'totals-taxes', 'totals-total' ) ) as $totals ) : ?>
+			<?php if ( $totals !== 'totals-taxes' ): ?>
+				<div class="it-exchange-table-row it-exchange-cart-<?php echo $totals; ?>">
+			<?php endif; ?>
+
 				<?php
 				/**
 				 * Theme and add-on devs should add code to this loop by
@@ -29,7 +32,10 @@
 				*/
 				it_exchange_get_template_part( 'content-checkout/elements/' . $totals );
 				?>
-			</div>
+
+			<?php if ( $totals !== 'totals-taxes' ): ?>
+				</div>
+			<?php endif; ?>
 		<?php endforeach; ?>
 	<?php do_action( 'it_exchange_content_checkout_end_totals_loop' ); ?>
 <?php do_action( 'it_exchange_content_checkout_before_totals_loop' ); ?>

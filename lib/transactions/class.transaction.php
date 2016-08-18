@@ -5,49 +5,37 @@
  * @package IT_Exchange
  * @since   0.3.3
  */
+use IronBound\DB\Model;
+use IronBound\DB\Relations\HasForeign;
+use IronBound\DB\Relations\HasOne;
 
 /**
  * Merges a WP Post with iThemes Exchange Transaction data
  *
  * @since 0.3.3
+ *
+ * @property int                           $ID
+ * @property-read int                      $customer_id
+ * @property-read string                   $customer_email
+ * @property string                        $status
+ * @property-read string                   $method
+ * @property string                        $method_id
+ * @property-read string                   $hash
+ * @property-read string                   $cart_id
+ * @property-read float                    $total
+ * @property-read float                    $subtotal
+ * @property-read \DateTime                $order_date
+ * @property-read \IT_Exchange_Transaction $parent
  */
-class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
+class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Credit_Provider {
 
 	/**
-	 * @var int
+	 * @var WP_Post
 	 */
-	private $ID;
+	private $post;
 
 	/**
-	 * @var array
-	 */
-	private $refunds;
-
-	/**
-	 * @var int
-	 */
-	private $customer_id;
-
-	/**
-	 * @var string
-	 */
-	private $method_id;
-
-	/**
-	 * @param string $transaction_method The transaction method for this transaction
-	 *
-	 * @since 0.3.3
-	 */
-	private $transaction_method;
-
-	/**
-	 * @var string
-	 */
-	private $status;
-
-	/**
-	 * @var object
-	 * @internal
+	 * @var stdClass
 	 */
 	private $cart_details;
 
@@ -56,54 +44,194 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 *
 	 * @since 0.3.3
 	 *
-	 * @param mixed $post wp post id or post object. optional.
+	 * @param array|stdClass|WP_Post|int $post_or_data
 	 *
 	 * @throws Exception
 	 */
-	public function __construct( $post = false ) {
+	public function __construct( $post_or_data = 0 ) {
 
-		// If not an object, try to grab the WP object
-		if ( ! is_object( $post ) ) {
-			$post = get_post( (int) $post );
+		if ( func_num_args() === 0 ) {
+			parent::__construct();
+
+			return;
 		}
 
-		// Ensure that $post is a WP_Post object
-		if ( is_object( $post ) && ! $post instanceof WP_Post ) {
-			$post = false;
+		if ( $post_or_data === false || is_numeric( $post_or_data ) ) {
+			$post_or_data = get_post( (int) $post_or_data );
+
+			$this->assert_post( $post_or_data );
+
+			if ( $post_or_data->post_type !== 'it_exchange_tran' ) {
+				throw new Exception( "Unable to construct IT_Exchange_Transaction #{$post_or_data->ID}. Incorrect post type." );
+			}
 		}
 
-		// Ensure this is a transaction post type
-		if ( 'it_exchange_tran' != get_post_type( $post ) ) {
-			$post = false;
+		if ( $this->is_post_like( $post_or_data ) ) {
+
+			if ( $post_or_data->post_type !== 'it_exchange_tran' ) {
+				throw new Exception( "Unable to construct IT_Exchange_Transaction #{$post_or_data->ID}. Incorrect post type." );
+			}
+
+			$this->post = $post_or_data;
+			$data       = self::get_data_from_pk( $post_or_data->ID );
+
+			if ( ! $data ) {
+				$upgraded = static::upgrade( $post_or_data );
+
+				if ( $upgraded ) {
+					$data = $upgraded->get_raw_attributes();
+				} else {
+					throw new Exception( "Unable to construct IT_Exchange_Transaction #{$post_or_data->ID}" );
+				}
+			}
+
+			$this->_exists = true;
+
+			parent::__construct( $data );
+		} else {
+			parent::__construct( $post_or_data );
 		}
 
-		// Return a WP Error if we don't have the $post object by this point
-		if ( ! $post ) {
-			throw new Exception( 'The IT_Exchange_Transaction class must have a WP post object or ID passed to its constructor' );
-		}
-
-		// Grab the $post object vars and populate this objects vars
-		foreach ( (array) get_object_vars( $post ) as $var => $value ) {
-			$this->$var = $value;
-		}
-
-		// Set the transaction method
-		$this->set_transaction_method();
 		$this->set_transaction_supports_and_data();
 	}
 
 	/**
-	 * Deprecated PHP 4 style constructor.
+	 * Assert the post is valid.
 	 *
-	 * @deprecated
+	 * @since 1.36.0
 	 *
-	 * @throws Exception
+	 * @param mixed $post
+	 *
+	 * @throws \Exception
 	 */
-	function IT_Exchange_Transaction() {
+	private function assert_post( $post ) {
+		if ( ! $this->is_post_like( $post ) ) {
+			throw new Exception( 'The IT_Exchange_Transaction class must have a WP post object or ID passed to its constructor' );
+		}
+	}
 
-		self::__construct();
+	/**
+	 * Check if a value is post like.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param mixed $post
+	 *
+	 * @return bool
+	 */
+	private function is_post_like( $post ) {
+		return $post instanceof WP_Post || ( $post instanceof stdClass && isset( $post->post_type ) );
+	}
 
-		_deprecated_constructor( __CLASS__, '1.24.0' );
+	/**
+	 * @inheritDoc
+	 */
+	protected static function _do_create( array $attributes = array() ) {
+
+		/** @var IT_Exchange_Transaction $txn */
+		$txn = parent::_do_create( $attributes );
+
+		update_post_meta( $txn->ID, '_it_exchange_transaction_method', $txn->get_method() );
+		update_post_meta( $txn->ID, '_it_exchange_transaction_method_id', $txn->get_method_id() );
+		update_post_meta( $txn->ID, '_it_exchange_transaction_status', $txn->get_status() );
+		update_post_meta( $txn->ID, '_it_exchange_customer_id', $txn->get_customer() ? $txn->get_customer()->ID : 0 );
+		update_post_meta( $txn->ID, '_it_exchange_cart_id', $txn->cart_id );
+		update_post_meta( $txn->ID, '_it_exchange_transaction_hash', $txn->hash );
+
+		if ( $txn->has_parent() ) {
+			update_post_meta( $txn->ID, '_it_exchange_parent_tx_id', $txn->parent->ID );
+		}
+
+		return $txn;
+	}
+
+	/**
+	 * Upgrade a transaction to be saved in the database table as well.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param WP_Post $post
+	 *
+	 * @return $this
+	 */
+	public static function upgrade( $post ) {
+
+		$post_id      = $post->ID;
+		$cart_details = get_post_meta( $post_id, '_it_exchange_cart_object', true );
+
+		$customer_id    = get_post_meta( $post_id, '_it_exchange_customer_id', true );
+		$customer_email = '';
+
+		if ( is_numeric( $customer_id ) ) {
+			if ( $user = get_user_by( 'id', $customer_id ) ) {
+				$customer_email = $user->user_email;
+			}
+		} else {
+			$customer_email = $customer_id;
+			$customer_id    = 0;
+		}
+
+		$billing = $shipping = 0;
+
+		if ( ! empty( $cart_details->billing_address ) ) {
+			try {
+				$billing = ITE_Saved_Address::query()->first_or_create( array_merge(
+					array_intersect_key( $cart_details->billing_address, ITE_Saved_Address::table()->get_column_defaults() ),
+					array( 'customer' => $customer_id )
+				) );
+				$billing = $billing ? $billing->get_pk() : 0;
+			}
+			catch ( Exception $e ) {
+
+			}
+		}
+
+		if ( ! empty( $cart_details->shipping_address ) ) {
+			try {
+				$shipping = ITE_Saved_Address::query()->first_or_create( array_merge(
+					array_intersect_key( $cart_details->shipping_address, ITE_Saved_Address::table()->get_column_defaults() ),
+					array( 'customer' => $customer_id )
+				) );
+				$shipping = $shipping ? $shipping->get_pk() : 0;
+			}
+			catch ( Exception $e ) {
+
+			}
+		}
+
+		$data = array(
+			'ID'             => $post_id,
+			'customer_id'    => $customer_id,
+			'customer_email' => $customer_email,
+			'status'         => get_post_meta( $post_id, '_it_exchange_transaction_status', true ),
+			'method'         => get_post_meta( $post_id, '_it_exchange_transaction_method', true ),
+			'method_id'      => get_post_meta( $post_id, '_it_exchange_transaction_method_id', true ),
+			'hash'           => get_post_meta( $post_id, '_it_exchange_transaction_hash', true ),
+			'cart_id'        => get_post_meta( $post_id, '_it_exchange_cart_id', true ),
+			'total'          => $cart_details->total,
+			'subtotal'       => $cart_details->sub_total,
+			'order_date'     => $post->post_date_gmt,
+			'cleared'        => false,
+			'billing'        => $billing,
+			'shipping'       => $shipping
+		);
+
+		if ( $p = get_post_meta( $post_id, '_it_exchange_parent_tx_id', true ) ) {
+			$p = it_exchange_get_transaction( $p );
+
+			if ( $p ) {
+				$data['parent'] = $p->ID;
+			}
+		}
+
+		$transaction = static::create( $data );
+
+		if ( $transaction && $transaction->is_cleared_for_delivery() ) {
+			$transaction->set_attribute( 'cleared', true );
+			$transaction->save();
+		}
+
+		return $transaction;
 	}
 
 	/**
@@ -145,29 +273,6 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	}
 
 	/**
-	 * Sets the transaction_method property.
-	 *
-	 * If the custom value is already set, it uses that.
-	 * If the custom value is not set and we're on post-add.php, check for a URL param
-	 *
-	 * @since 0.3.3
-	 */
-	protected function set_transaction_method() {
-
-		global $pagenow;
-
-		// todo refactor out reliance on pagenow
-
-		if ( ! $transaction_method = get_post_meta( $this->ID, '_it_exchange_transaction_method', true ) ) {
-			if ( is_admin() && 'post-new.php' == $pagenow && ! empty( $_GET['transaction-method'] ) ) {
-				$transaction_method = $_GET['transaction-method'];
-			}
-		}
-
-		$this->transaction_method = $transaction_method;
-	}
-
-	/**
 	 * Sets the transaction_data property from appropriate transaction-method options and assoicated post_meta
 	 *
 	 * @since 0.3.2
@@ -176,22 +281,10 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 */
 	protected function set_transaction_supports_and_data() {
 
-		// Set status
-		$this->status = $this->get_status();
-
-		// Set refunds
-		$this->refunds = $this->get_transaction_refunds();
-
-		// Set customer ID
-		$this->customer_id = get_post_meta( $this->ID, '_it_exchange_customer_id', true );
-
 		// Set Cart information
 		$this->cart_details = get_post_meta( $this->ID, '_it_exchange_cart_object', true );
 
-		// Gateway ID for the transaction
-		$this->method_id = get_post_meta( $this->ID, '_it_exchange_transaction_method_id', true );
-
-		do_action( 'it_exchange_set_transaction_supports_and_data', $this->ID );
+		do_action_deprecated( 'it_exchange_set_transaction_supports_and_data', array( $this->ID ), '1.36.0' );
 	}
 
 	/**
@@ -217,24 +310,25 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	public function get_order_number( $prefix = '#' ) {
 
 		// Translate default prefix
-		$prefix = ( '#' == $prefix ) ? __( '#', 'it-l10n-ithemes-exchange' ) : $prefix;
+		$prefix = ( '#' === $prefix ) ? __( '#', 'it-l10n-ithemes-exchange' ) : $prefix;
 
 		$order_number = sprintf( '%06d', $this->get_ID() );
 		$order_number = empty( $prefix ) ? $order_number : $prefix . $order_number;
 
-		return $order_number;
+		return apply_filters( 'it_exchange_get_transaction_order_number', $order_number, $this, $prefix );
 	}
 
 	/**
-	 * Gets the transaction_status property.
+	 * Gets the transaction's payment status.
 	 *
-	 * If the custom value is already set, it uses that.
-	 * If the custom value is not set and we're on post-add.php, check for a URL param
+	 * There isn't a set list of transaction statuses available. Each payment gateway dynamically declares their own.
 	 *
 	 * @since 0.4.0
+	 *
+	 * @return string
 	 */
 	public function get_status() {
-		return get_post_meta( $this->ID, '_it_exchange_transaction_status', true );
+		return apply_filters( 'it_exchange_get_transaction_status', $this->status, $this );
 	}
 
 	/**
@@ -244,16 +338,22 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 * If the custom value is not set and we're on post-add.php, check for a URL param
 	 *
 	 * @since 0.4.0
+	 * @since 1.36.0 Add return value.
 	 *
 	 * @param string $status
+	 *
+	 * @return bool
 	 */
 	public function update_status( $status ) {
 
-		$old_status   = $this->status;
-		$old_cleared  = $this->is_cleared_for_delivery();
+		$old_status  = $this->get_status();
+		$old_cleared = $this->is_cleared_for_delivery();
+
 		$this->status = $status;
 
-		update_post_meta( $this->ID, '_it_exchange_transaction_status', $status );
+		if ( ! $this->save() ) {
+			return false;
+		}
 
 		/**
 		 * Fires when the transaction's status is updated.
@@ -281,17 +381,33 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 		 * @param string                  $old_status
 		 */
 		do_action( "it_exchange_update_transaction_status_{$this->get_method()}", $this, $old_status, $old_cleared, $status );
+
+		$this->set_attribute( 'cleared', $this->is_cleared_for_delivery() );
+		$this->save();
+
+		return true;
 	}
 
 	/**
 	 * Get the method used.
+	 *
+	 * @since 1.36.0
 	 *
 	 * @param bool $label
 	 *
 	 * @return string
 	 */
 	public function get_method( $label = false ) {
-		return $label ? it_exchange_get_transaction_method_name_from_slug( $this->transaction_method ) : $this->transaction_method;
+
+		$method = apply_filters( 'it_exchange_get_transaction_method', $this->method, $this );
+
+		if ( $label ) {
+			$label = it_exchange_get_transaction_method_name_from_slug( $method );
+
+			return apply_filters( 'it_exchange_get_transaction_method_name', $label, $this );
+		} else {
+			return $method;
+		}
 	}
 
 	/**
@@ -302,7 +418,7 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 * @return string
 	 */
 	public function get_method_id() {
-		return $this->method_id;
+		return apply_filters( 'it_exchange_get_transaction_method_id', $this->method_id, $this );
 	}
 
 	/**
@@ -316,26 +432,33 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 */
 	public function update_method_id( $method_id ) {
 
-		$previous_method_id = $this->method_id;
-		$this->method_id    = $method_id;
+		$previous_method_id = $this->get_method_id();
 
-		$success = update_post_meta( $this->ID, '_it_exchange_transaction_method_id', $method_id );
+		$this->method_id = $method_id;
 
-		/**
-		 * Fires when the transaction method ID is updated.
-		 *
-		 * @since 1.36
-		 *
-		 * @param IT_Exchange_Transaction $this
-		 * @param string                  $previous_method_id
-		 */
-		do_action( 'it_exchange_update_transaction_method_id', $this, $previous_method_id );
+		$success = $this->save();
+
+		if ( $success ) {
+
+			/**
+			 * Fires when the transaction method ID is updated.
+			 *
+			 * @since 1.36
+			 *
+			 * @param IT_Exchange_Transaction $this
+			 * @param string                  $previous_method_id
+			 */
+			do_action( 'it_exchange_update_transaction_method_id', $this, $previous_method_id );
+		}
 
 		return $success;
 	}
 
 	/**
 	 * Is this transaction cleared for delivery.
+	 *
+	 * This should always be used over the `cleared` property. The `cleared` property is a cached value for assistance
+	 * in querying.
 	 *
 	 * @since 1.36
 	 *
@@ -350,12 +473,26 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 *
 	 * @since 1.36
 	 *
-	 * @return bool|IT_Exchange_Customer
+	 * @return IT_Exchange_Customer|false
 	 */
 	public function get_customer() {
-		$customer = it_exchange_get_customer( $this->customer_id );
+
+		$customer_id = get_post_meta( $this->ID, '_it_exchange_customer_id', true );
+		$customer    = it_exchange_get_customer( $customer_id );
+		$customer    = $customer instanceof IT_Exchange_Customer ? $customer : null;
 
 		return apply_filters( 'it_exchange_get_transaction_customer', $customer, $this );
+	}
+
+	/**
+	 * Get the customer's email address.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_customer_email() {
+		return apply_filters( 'it_exchange_get_transaction_customer_email', $this->customer_email, $this );
 	}
 
 	/**
@@ -366,7 +503,7 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 * @return bool
 	 */
 	public function has_parent() {
-		return ! empty( $this->post_parent );
+		return (bool) $this->get_raw_attribute( 'parent' );
 	}
 
 	/**
@@ -377,7 +514,7 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 * @return IT_Exchange_Transaction
 	 */
 	public function get_parent() {
-		return it_exchange_get_transaction( $this->post_parent );
+		return $this->parent;
 	}
 
 	/**
@@ -451,42 +588,6 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	}
 
 	/**
-	 * Gets a transaction meta property.
-	 *
-	 * If the custom value is already set, it uses that.
-	 * If the custom value is not set and we're on post-add.php, check for a URL param
-	 *
-	 * @since 1.3.0
-	 */
-	function get_transaction_meta( $key, $single = true ) {
-		return $this->get_meta( $key, $single );
-	}
-
-	/**
-	 * Updates a transaction meta property.
-	 *
-	 * If the custom value is already set, it uses that.
-	 * If the custom value is not set and we're on post-add.php, check for a URL param
-	 *
-	 * @since 1.3.0
-	 */
-	function update_transaction_meta( $key, $value ) {
-		$this->update_meta( $key, $value );
-	}
-
-	/**
-	 * Deletes a transaction meta property.
-	 *
-	 * If the custom value is already set, it uses that.
-	 * If the custom value is not set and we're on post-add.php, check for a URL param
-	 *
-	 * @since 1.3.0
-	 */
-	function delete_transaction_meta( $key, $value = '' ) {
-		$this->delete_meta( $key, $value );
-	}
-
-	/**
 	 * Gets the date property.
 	 *
 	 * @since 0.4.0
@@ -496,11 +597,12 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 * @return string
 	 */
 	public function get_date( $gmt = false ) {
+
 		if ( $gmt ) {
-			return $this->post_date_gmt;
+			return $this->order_date->format( 'Y-m-d H:i:s' );
 		}
 
-		return $this->post_date;
+		return get_date_from_gmt( $this->order_date->format( 'Y-m-d H:i:s' ) );
 	}
 
 	/**
@@ -510,16 +612,17 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 *
 	 * @param bool $subtract_refunds If true, return total less refunds.
 	 *
-	 * @return string
+	 * @return float
 	 */
 	public function get_total( $subtract_refunds = true ) {
-		$total = empty( $this->cart_details->total ) ? false : $this->cart_details->total;
+
+		$total = $this->total;
 
 		if ( $total && $subtract_refunds && $refunds_total = it_exchange_get_transaction_refunds_total( $this->ID, false ) ) {
-			$total = $total - $refunds_total;
+			$total -= $refunds_total;
 		}
 
-		return apply_filters( 'it_exchange_get_transaction_total', $total, $this->ID );
+		return apply_filters( 'it_exchange_get_transaction_total', $total, $this->ID, false, $subtract_refunds );
 	}
 
 	/**
@@ -527,21 +630,10 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return string
+	 * @return float
 	 */
 	public function get_subtotal() {
-
-		if ( isset( $this->cart_details->sub_total ) ) {
-			return $this->cart_details->sub_total;
-		}
-
-		$products = $this->get_products();
-		$subtotal = 0;
-		foreach ( (array) $products as $key => $data ) {
-			$subtotal += $data['product_subtotal'];
-		}
-
-		return empty( $subtotal ) ? false : $subtotal;
+		return apply_filters( 'it_exchange_get_transaction_subtotal', $this->subtotal, $this, false );
 	}
 
 	/**
@@ -549,19 +641,30 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @return \ITE_Location|null
+	 * @return \ITE_Saved_Address|null
 	 */
 	public function get_billing_address() {
 
-		$address = empty( $this->cart_details->billing_address ) ? array() : $this->cart_details->billing_address;
+		/** @var ITE_Saved_Address|null $address */
+		$address = $this->billing;
 
-		$address = apply_filters( 'it_exchange_get_transaction_billing_address', $address, $this );
+		$raw = $address ? $address->to_array() : array();
 
-		if ( empty( $address ) ) {
+		$filtered = apply_filters_deprecated(
+			'it_exchange_get_transaction_billing_address', array( $raw, $this ), '1.36'
+		);
+
+		if ( ! $filtered && ! $address ) {
 			return null;
 		}
 
-		return new ITE_In_Memory_Address( $address );
+		if ( $filtered && $raw !== $filtered ) {
+			foreach ( $filtered as $field => $value ) {
+				$address[ $field ] = $value;
+			}
+		}
+
+		return $address;
 	}
 
 	/**
@@ -569,19 +672,30 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @return \ITE_Location|null
+	 * @return \ITE_Saved_Address|null
 	 */
 	public function get_shipping_address() {
 
-		$address = empty( $this->cart_details->shipping_address ) ? array() : $this->cart_details->shipping_address;
+		/** @var ITE_Saved_Address|null $address */
+		$address = $this->shipping;
 
-		$address = apply_filters( 'it_exchange_get_transaction_shipping_address', $address, $this );
+		$raw = $address ? $address->to_array() : array();
 
-		if ( empty( $address ) ) {
+		$filtered = apply_filters_deprecated(
+			'it_exchange_get_transaction_shipping_address', array( $raw, $this ), '1.36'
+		);
+
+		if ( ! $filtered && ! $address ) {
 			return null;
 		}
 
-		return new ITE_In_Memory_Address( $address );
+		if ( $filtered && $raw !== $filtered ) {
+			foreach ( $filtered as $field => $value ) {
+				$address[ $field ] = $value;
+			}
+		}
+
+		return $address;
 	}
 
 	/**
@@ -595,7 +709,9 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 		$settings         = it_exchange_get_option( 'settings_general' );
 		$default_currency = $settings['default-currency'];
 
-		return empty( $this->cart_details->currency ) ? $default_currency : $this->cart_details->currency;
+		$currency = empty( $this->cart_details->currency ) ? $default_currency : $this->cart_details->currency;
+
+		return apply_filters( 'it_exchange_get_transaction_currency', $currency, $this );
 	}
 
 	/**
@@ -607,18 +723,18 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 */
 	public function get_description() {
 		if ( ! empty( $this->cart_details->description ) && trim( $this->cart_details->description ) !== '' ) {
-			return $this->cart_details->description;
-		} else if ( $p = get_post_meta( $this->ID, '_it_exchange_parent_tx_id', true ) ) {
+			$description = $this->cart_details->description;
+		} else if ( $this->has_parent() ) {
 
-			$parent = it_exchange_get_transaction( $p );
+			$parent = $this->get_parent();
 
 			$description = it_exchange_get_transaction_description( $parent );
 			$description .= ' ' . __( '(Renewal)', 'it-l10n-ithemes-exchange' );
-
-			return $description;
 		} else {
-			return '';
+			$description = '';
 		}
+
+		return apply_filters( 'it_exchange_get_transaction_description', $description, $this );
 	}
 
 	/**
@@ -626,10 +742,13 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function get_coupons() {
-		return empty( $this->cart_details->coupons ) ? false : $this->cart_details->coupons;
+
+		$coupons = empty( $this->cart_details->coupons ) ? false : $this->cart_details->coupons;
+
+		return apply_filters( 'it_exchange_get_transaction_coupons', $coupons, $this );
 	}
 
 	/**
@@ -637,10 +756,12 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return string
+	 * @return float
 	 */
 	public function get_coupons_total_discount() {
-		return empty( $this->cart_details->coupons_total_discount ) ? false : $this->cart_details->coupons_total_discount;
+		$discount = empty( $this->cart_details->coupons_total_discount ) ? 0 : $this->cart_details->coupons_total_discount;
+
+		return apply_filters( 'it_exchange_get_transaction_coupons_total_discount', $discount, $this, false );
 	}
 
 	/**
@@ -661,18 +782,23 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param string $refund  Amount
+	 * @param string $amount  Amount
 	 * @param string $date    Date refund occurred. In mysql format.
 	 * @param array  $options Additional refund options.
 	 */
-	public function add_refund( $refund, $date = '', $options = array() ) {
-		$date = empty( $date ) ? date_i18n( 'Y-m-d H:i:s' ) : $date;
+	public function add_refund( $amount, $date = '', $options = array() ) {
+
+		$date = $date ? $date : current_time( 'mysql', true );
+
 		$args = array(
-			'amount'  => $refund,
+			'amount'  => $amount,
 			'date'    => $date,
 			'options' => $options,
 		);
+
 		add_post_meta( $this->ID, '_it_exchange_transaction_refunds', $args );
+
+		do_action( 'it_exchange_add_refund_to_transaction', $this, $amount, $date, $options );
 	}
 
 	/**
@@ -682,16 +808,28 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 * @return bool
 	 */
 	public function has_refunds() {
-		return (bool) get_post_meta( $this->ID, '_it_exchange_transaction_refunds' );
+
+		$has_refunds = count( $this->get_transaction_refunds() ) > 0;
+
+		return apply_filters( 'it_exchange_has_transaction_refunds', $has_refunds, $this );
 	}
 
 	/**
 	 * Get the transaction refunds.
 	 *
 	 * @since 0.4.0
+	 *
+	 * @return array
 	 */
 	public function get_transaction_refunds() {
-		return get_post_meta( $this->ID, '_it_exchange_transaction_refunds' );
+
+		$refunds = get_post_meta( $this->ID, '_it_exchange_transaction_refunds' );
+
+		if ( ! is_array( $refunds ) ) {
+			$refunds = array();
+		}
+
+		return apply_filters( 'it_exchange_get_transaction_refunds', $refunds, $this );
 	}
 
 	/**
@@ -730,11 +868,12 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	 * Gets the transactions children.
 	 *
 	 * @since 1.3.0
+	 * @since 1.36.0 Introduce `$return_transactions` parameter.
 	 *
 	 * @param array $args                Arguments to filter children.
 	 * @param bool  $return_transactions Return transaction objects.
 	 *
-	 * @return WP_Post[]
+	 * @return WP_Post[]|IT_Exchange_Transaction[]
 	 */
 	public function get_children( $args = array(), $return_transactions = false ) {
 
@@ -752,6 +891,39 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 		}
 
 		return $posts;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get_pk() {
+		return $this->ID;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected static function get_table() {
+		return static::$_db_manager->get( 'ite-transactions' );
+	}
+
+	protected function _billing_relation() {
+		return new HasForeign( 'billing', $this, '\ITE_Saved_Address' );
+	}
+
+	protected function _shipping_relation() {
+		return new HasForeign( 'shipping', $this, '\ITE_Saved_Address' );
+	}
+
+	protected function _parent_relation() {
+		return new HasForeign( 'parent', $this, get_class() );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function accepts_prorate_credit_request( ITE_Prorate_Credit_Request $request ) {
+		return $request instanceof ITE_Prorate_Forever_Credit_Request;
 	}
 
 	/**
@@ -786,8 +958,23 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 
 		$request->update_additional_session_details( array(
 			'old_transaction_id'     => $transaction->ID,
-			'old_transaction_method' => $transaction->transaction_method
+			'old_transaction_method' => $transaction->get_method()
 		) );
+	}
+
+	/**
+	 * Post helper.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \WP_Post
+	 */
+	private function post() {
+		if ( ! $this->post ) {
+			$this->post = get_post( $this->id );
+		}
+
+		return $this->post;
 	}
 
 	/**
@@ -809,7 +996,7 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 				$this->set_transaction_supports_and_data();
 				break;
 			case 'set_transaction_method':
-				$this->set_transaction_method();
+				// Do nothing
 				break;
 			case 'get_gateway_id_for_transaction':
 				return $this->get_method_id();
@@ -831,41 +1018,58 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 	public function __get( $name ) {
 
 		if ( $name === 'gateway_id_for_transaction' ) {
-			return $this->get_method_id();
+			return $this->method_id;
 		}
 
-		if ( in_array( $name, array( 'transaction_supports', 'transaction_data' ) ) ) {
+		if ( $name === 'refunds' ) {
+			return $this->get_transaction_refunds();
+		}
+
+		if ( $name === 'transaction_method' ) {
+			return $this->method;
+		}
+
+		if ( $name === 'cart_details' ) {
+			return $this->cart_details;
+		}
+
+		if ( in_array( $name, array( 'transaction_supports', 'transaction_data' ), true ) ) {
 			return array();
 		}
 
 		if ( in_array( $name, array(
-			'ID',
-			'refunds',
-			'customer_id',
-			'transaction_method',
-			'status',
-			'cart_details',
-		) ) ) {
-			return $this->$name;
+			'post_author',
+			'post_date',
+			'post_date_gmt',
+			'post_content',
+			'post_title',
+			'post_excerpt',
+			'post_status',
+			'comment_status',
+			'ping_status',
+			'post_password',
+			'post_name',
+			'to_ping',
+			'pinged',
+			'post_modified',
+			'post_modified_gmt',
+			'post_content_filtered',
+			'post_parent',
+			'guid',
+			'menu_order',
+			'post_type',
+			'post_mime_type',
+			'comment_count',
+			'filter',
+		), true ) ) {
+			return $this->post()->$name;
 		}
 
-		return null;
-	}
+		if ( $name === 'ID' ) {
+			return $this->get_raw_attribute( 'ID' );
+		}
 
-	/**
-	 * Back-compat.
-	 *
-	 * @since 1.36
-	 *
-	 * @param string $name
-	 *
-	 * @return bool
-	 */
-	public function __isset( $name ) {
-
-		$val = $this->__get( $name );
-
-		return ! empty( $val );
+		return parent::__get( $name );
 	}
 
 	/**
@@ -879,29 +1083,36 @@ class IT_Exchange_Transaction implements ITE_Contract_Prorate_Credit_Provider {
 		_deprecated_function( __METHOD__, '1.36' );
 	}
 
-	/* Deprecated Properties */
+	/**
+	 * Gets a transaction meta property.
+	 *
+	 * @since      1.3.0
+	 *
+	 * @deprecated 1.36.0
+	 */
+	function get_transaction_meta( $key, $single = true ) {
+		return $this->get_meta( $key, $single );
+	}
 
-	/** @deprecated */
-	public $post_author;
-	public $post_date;
-	public $post_date_gmt;
-	public $post_content;
-	public $post_title;
-	public $post_excerpt;
-	public $post_status;
-	public $comment_status;
-	public $ping_status;
-	public $post_password;
-	public $post_name;
-	public $to_ping;
-	public $pinged;
-	public $post_modified;
-	public $post_modified_gmt;
-	public $post_content_filtered;
-	public $post_parent;
-	public $guid;
-	public $menu_order;
-	public $post_type;
-	public $post_mime_type;
-	public $comment_count;
+	/**
+	 * Updates a transaction meta property.
+	 *
+	 * @since      1.3.0
+	 *
+	 * @deprecated 1.36.0
+	 */
+	function update_transaction_meta( $key, $value ) {
+		$this->update_meta( $key, $value );
+	}
+
+	/**
+	 * Deletes a transaction meta property.
+	 *
+	 * @since      1.3.0
+	 *
+	 * @deprecated 1.36.0
+	 */
+	function delete_transaction_meta( $key, $value = '' ) {
+		$this->delete_meta( $key, $value );
+	}
 }

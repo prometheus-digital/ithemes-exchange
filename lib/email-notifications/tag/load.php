@@ -598,7 +598,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	 * @return string Replaced value
 	 */
 	public function payment_id( $context ) {
-		return it_exchange_get_gateway_id_for_transaction( $context['transaction'] );
+		return it_exchange_get_transaction_method_id( $context['transaction'] );
 	}
 
 	/**

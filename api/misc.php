@@ -1,7 +1,7 @@
 <?php
 /**
  * These are hooks that add-ons should use for form actions
- * @since   0.3.7
+ * @since 0.3.7
  * @package IT_Exchange
  */
 
@@ -32,41 +32,30 @@ function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format )
 	//http://api.jqueryui.com/datepicker/#utility-formatDate
 	$php_format = array(
 		//day
-		'/d/',
-		//Day of the month, 2 digits with leading zeros
-		'/D/',
-		//A textual representation of a day, three letters
-		'/j/',
-		//Day of the month without leading zeros
-		'/l/',
-		//A full textual representation of the day of the week
+		'/d/', //Day of the month, 2 digits with leading zeros
+		'/D/', //A textual representation of a day, three letters
+		'/j/', //Day of the month without leading zeros
+		'/l/', //A full textual representation of the day of the week
 		//'/N/', //ISO-8601 numeric representation of the day of the week (added in PHP 5.1.0)
 		//'/S/', //English ordinal suffix for the day of the month, 2 characters
 		//'/w/', //Numeric representation of the day of the week
-		'/z/',
-		//The day of the year (starting from 0)
+		'/z/', //The day of the year (starting from 0)
 
 		//week
 		//'/W/', //ISO-8601 week number of year, weeks starting on Monday (added in PHP 4.1.0)
 
 		//month
-		'/F/',
-		//A full textual representation of a month, such as January or March
-		'/m/',
-		//Numeric representation of a month, with leading zeros
-		'/M/',
-		//A short textual representation of a month, three letters
-		'/n/',
-		//numeric month no leading zeros
+		'/F/', //A full textual representation of a month, such as January or March
+		'/m/', //Numeric representation of a month, with leading zeros
+		'/M/', //A short textual representation of a month, three letters
+		'/n/', //numeric month no leading zeros
 		//'t/', //Number of days in the given month
 
 		//year
 		//'/L/', //Whether it's a leap year
 		//'/o/', //ISO-8601 year number. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead. (added in PHP 5.1.0)
-		'/Y/',
-		//A full numeric representation of a year, 4 digits
-		'/y/',
-		//A two digit representation of a year
+		'/Y/', //A full numeric representation of a year, 4 digits
+		'/y/', //A two digit representation of a year
 	);
 
 	$datepicker_format = array(
@@ -171,6 +160,7 @@ function it_exchange_get_field_names() {
 		'add_product_to_cart'      => 'it-exchange-add-product-to-cart',
 		'buy_now'                  => 'it-exchange-buy-now',
 		'remove_product_from_cart' => 'it-exchange-remove-product-from-cart',
+		'line_item_quantity'       => 'it-exchange-update-line-item-quantity',
 		'update_cart_action'       => 'it-exchange-update-cart-request',
 		'empty_cart'               => 'it-exchange-empty-cart',
 		'continue_shopping'        => 'it-exchange-continue-shopping',
@@ -545,6 +535,19 @@ function it_exchange_get_pending_purchase_requirements() {
 }
 
 /**
+ * Check if a purchase requirement is registered.
+ *
+ * @since 1.36.0
+ *
+ * @param string $requirement_slug
+ *
+ * @return bool
+ */
+function it_exchange_is_purchase_requirement_registered( $requirement_slug ) {
+	return isset( $GLOBALS['it_exchange']['purchase-requirements'][ $requirement_slug ] );
+}
+
+/**
  * Returns boolean if passed paramater is the current checkout mode
  *
  * @since 1.5.0
@@ -773,6 +776,30 @@ function it_exchange_get_ip() {
 	}
 
 	return esc_sql( $the_ip );
+}
+
+/**
+ * Convert a country code to its opposite format.
+ *
+ * @since 1.35.8
+ *
+ * @param string $code Either a 2-digit or 3-digit code.
+ *
+ * @return string|false False if no transposition is found.
+ */
+function it_exchange_convert_country_code( $code ) {
+
+	$codes = it_exchange_get_data_set( 'country-codes' );
+
+	if ( strlen( $code ) === 3 ) {
+		$codes = array_flip( $codes );
+	}
+
+	if ( isset( $codes[ $code ] ) ) {
+		return $codes[$code];
+	}
+
+	return false;
 }
 
 /**

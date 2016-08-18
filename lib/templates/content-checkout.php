@@ -24,13 +24,13 @@
 
 		<?php
 		it_exchange_get_template_part( 'content-checkout/loops/purchase-requirements' );
-		$purchase_requirements_class = ( false !== ( $notification = it_exchange_get_next_purchase_requirement() ) ) ? ' it-exchange-requirements-active' : '';
-		$purchase_requirements_class = apply_filters( 'it_exchange_purchase_requirements_class_for_order_details', $purchase_requirements_class );
+		$purchase_req_class = ( false !== ( $notification = it_exchange_get_next_purchase_requirement() ) ) ? ' it-exchange-requirements-active' : '';
+		$purchase_req_class = apply_filters( 'it_exchange_purchase_requirements_class_for_order_details', $purchase_req_class );
 		?>
-		<div class="it-exchange-order-details<?php echo esc_attr_e( $purchase_requirements_class ); ?>">
+		<div class="it-exchange-order-details<?php esc_attr_e( $purchase_req_class ); ?>">
 			<?php
 				// Loops we want to include, in the order we want them.
-				$loops = array( 'items', 'coupons', 'totals', 'actions' );
+				$loops = array( 'items', 'line-items', 'coupons', 'totals', 'actions' );
 				foreach ( it_exchange_get_template_part_loops( 'content-cart', 'has-cart-item', $loops ) as $loop ) :
 					it_exchange_get_template_part( 'content-checkout/loops/' . $loop );
 				endforeach;

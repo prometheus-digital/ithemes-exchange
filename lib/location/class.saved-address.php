@@ -219,6 +219,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	 * @param \ITE_Location|null    $current
 	 * @param \IT_Exchange_Customer $customer
 	 * @param string                $type
+	 * @param bool                  $validate
 	 * @param bool                  $filter Call the deprecated validation filter.
 	 *
 	 * @return \ITE_Saved_Address
@@ -226,10 +227,14 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	 * @throws \InvalidArgumentException If location fails validation.
 	 */
 	public static function convert_to_saved(
-		ITE_Location $location, ITE_Location $current = null, IT_Exchange_Customer $customer, $type, $filter = false
+		ITE_Location $location, ITE_Location $current = null, IT_Exchange_Customer $customer = null, $type, $validate = true, $filter = false
 	) {
 
-		$location = self::validate_location( $location, $type, $filter ? $customer->id : false );
+		$cid = $customer ? $customer->ID : 0;
+
+		if ( $validate ) {
+			$location = self::validate_location( $location, $type, $filter ? $cid : false );
+		}
 
 		if ( $current && $location instanceof ITE_Saved_Address ) {
 			if ( $current instanceof ITE_Saved_Address && $current->get_pk() === $location->get_pk() ) {
@@ -246,14 +251,14 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 					$current->delete();
 				}
 
-				$location->customer = $customer->id;
+				$location->customer = $cid;
 				$location->type     = $type;
 				$location->make_primary();
 
 				return $location;
 			}
 		} elseif ( $location instanceof ITE_Saved_Address ) {
-			$location->customer = $customer->id;
+			$location->customer = $cid;
 			$location->primary  = true;
 			$location->type     = $type;
 
@@ -261,7 +266,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 		}
 
 		return ITE_Saved_Address::create( array_merge( $location->to_array(), array(
-			'customer' => $customer->id,
+			'customer' => $cid,
 			'primary'  => true,
 			'type'     => $type,
 		) ) );

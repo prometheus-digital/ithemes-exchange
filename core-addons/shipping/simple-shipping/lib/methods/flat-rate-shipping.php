@@ -8,7 +8,9 @@
 */
 function it_exchange_addon_simple_shipping_register_flat_rate_shipping_method() {
 	// Exchange Flat Rate Shipping Method
-	it_exchange_register_shipping_method( 'exchange-flat-rate-shipping', 'IT_Exchange_Simple_Shipping_Flat_Rate_Method' );
+	it_exchange_register_shipping_method( 'exchange-flat-rate-shipping', 'IT_Exchange_Simple_Shipping_Flat_Rate_Method', array(
+		'provider' => 'simple-shipping'
+	) );
 }
 add_action( 'it_exchange_enabled_addons_loaded', 'it_exchange_addon_simple_shipping_register_flat_rate_shipping_method' );
 
@@ -48,7 +50,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	 *
 	 * @param int|bool $product_id optional product id for current product
 	*/
-	function __construct( $product_id=false ) {
+	public function __construct( $product_id=false ) {
 		parent::__construct( $product_id );
 		add_filter( 'it_exchange_save_admin_form_settings_for_simple-shipping', array( $this, 'convert_to_database_format_on_default_settings_save' ) );
 	}
@@ -60,7 +62,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	 *
 	 * @return void
 	*/
-	function set_slug() {
+	public function set_slug() {
 		$this->slug = 'exchange-flat-rate-shipping';
 	}
 
@@ -71,7 +73,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	 *
 	 * @return void
 	*/
-	function set_label() {
+	public function set_label() {
 		$settings = it_exchange_get_option( 'simple-shipping' );
 		$this->label = empty( $settings['flat-rate-shipping-label'] ) ? __( 'Flat Rate Shipping', 'it-l10n-ithemes-exchange' ) : $settings['flat-rate-shipping-label'];
 	}
@@ -83,7 +85,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	 *
 	 * @return void
 	*/
-	function set_features() {
+	public function set_features() {
 		$this->shipping_features = array(
 			'exchange-flat-rate-shipping-cost',
 		);
@@ -96,7 +98,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	 *
 	 * @return void
 	*/
-	function set_enabled() {
+	public function set_enabled() {
 		$break_cache   = is_admin() && ! empty( $_POST );
 		$options       = it_exchange_get_option( 'simple-shipping', $break_cache );
 		$this->enabled = ! empty( $options['enable-flat-rate-shipping'] );
@@ -109,7 +111,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	 *
 	 * @return void
 	*/
-	function set_availability() {
+	public function set_availability() {
 		$this->available = $this->enabled;
 	}
 
@@ -120,7 +122,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 	 *
 	 * @return void
 	*/
-	function set_settings() {
+	public function set_settings() {
 		$general_settings = it_exchange_get_option( 'settings_general' );
 		$currency         = it_exchange_get_currency_symbol( $general_settings['default-currency'] );
 
@@ -165,15 +167,15 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 		}
 	}
 
-	function get_shipping_cost_for_product( $cart_product ) {
+	public function get_shipping_cost_for_product( $cart_product ) {
 		$count = empty( $cart_product['count'] ) ? 1 : $cart_product['count'];
-		$cost = it_exchange_get_shipping_feature_for_product( 'exchange-flat-rate-shipping-cost', $this->product->ID );
+		$cost = it_exchange_get_shipping_feature_for_product( 'exchange-flat-rate-shipping-cost', $cart_product['product_id']);
 		$cost = empty( $cost->cost ) ? 0 : $cost->cost;
 		$cost = it_exchange_convert_from_database_number( $cost );
 		return $cost * $count;
 	}
 
-	function override_default_shipping_field( $form_values ) {
+	public function override_default_shipping_field( $form_values ) {
 		$general_settings = it_exchange_get_option( 'settings_general' );
 		$currency         = it_exchange_get_currency_symbol( $general_settings['default-currency'] );
 		$field_value      = empty( $form_values['flat-rate-shipping-amount'] ) ? false : $form_values['flat-rate-shipping-amount'];
@@ -192,7 +194,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 		<?php
 	}
 
-	function convert_to_database_format_on_default_settings_save( $values ) {
+	public function convert_to_database_format_on_default_settings_save( $values ) {
 		if ( ! empty( $values['flat-rate-shipping-amount'] ) && empty( $GLOBALS['it_exchange']['shipping']['flat-rate-shipping-amount-converted-on-save'] ) ) {
 			$values['flat-rate-shipping-amount'] = it_exchange_convert_to_database_number( $values['flat-rate-shipping-amount'] );
 			$GLOBALS['it_exchange']['shipping']['flat-rate-shipping-amount-converted-on-save'] = true;
@@ -209,32 +211,32 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Method extends IT_Exchange_Shipping_
 */
 class IT_Exchange_Simple_Shipping_Flat_Rate_Shipping_Cost extends IT_Exchange_Shipping_Feature {
 
-	var $slug = 'exchange-flat-rate-shipping-cost';
+	public $slug = 'exchange-flat-rate-shipping-cost';
 
 	/**
 	 * Constructor
 	 *
 	 * @param int|bool $product_id
 	*/
-	function __construct( $product_id=false ) {
+	public function __construct( $product_id=false ) {
 		parent::__construct( $product_id );
 	}
 
 	/**
 	 * Sets the availability
 	*/
-	function set_availability() {
+	public function set_availability() {
 		$this->available = true;
 	}
 
-	function set_enabled() {
+	public function set_enabled() {
 		$this->enabled = true;
 	}
 
 	/**
 	 * Sets the values
 	*/
-	function set_values() {
+	public function set_values() {
 
 		// Init values object as standard class
 		$values = new stdClass();
@@ -256,7 +258,7 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Shipping_Cost extends IT_Exchange_Sh
 	 *
 	 * Saves the values when the add/edit product screen is saved
 	*/
-	function update_on_product_save() {
+	public function update_on_product_save() {
 		if ( ! empty( $_POST['it-exchange-flat-rate-shipping-cost'] ) ) {
 			$value = it_exchange_convert_to_database_number( $_POST['it-exchange-flat-rate-shipping-cost'] );
 			$this->update_value( $value );
@@ -267,14 +269,14 @@ class IT_Exchange_Simple_Shipping_Flat_Rate_Shipping_Cost extends IT_Exchange_Sh
 	 * Updates the value to the passed paramater
 	 *
 	*/
-	function update_value( $new_value ) {
+	public function update_value( $new_value ) {
 		update_post_meta( $this->product->ID, '_it_exchange_shipping_flat-rate-shipping-default-amount', $new_value );
 	}
 
 	/**
 	 * Prints the interior of the feature box in the add/edit product view
 	*/
-	function print_add_edit_feature_box_interior() {
+	public function print_add_edit_feature_box_interior() {
 		$settings = it_exchange_get_option( 'settings_general' );
 		$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
 		?>

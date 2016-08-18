@@ -101,9 +101,22 @@ function it_exchange_add_note_on_status_change( $transaction, $old_status ) {
 
 	$builder->set_actor( $actor );
 	$builder->build( it_exchange_get_txn_activity_factory() );
+
+	if ( $transaction->post_parent ) {
+
+		$parent = $transaction->post_parent;
+		$parent = it_exchange_get_transaction( $parent );
+
+		$builder = new IT_Exchange_Txn_Activity_Builder( $parent, 'renewal' );
+		$builder->set_child( $transaction );
+		$builder->set_actor( new IT_Exchange_Txn_Activity_Gateway_Actor( it_exchange_get_addon(
+			it_exchange_get_transaction_method( $parent )
+		) ) );
+		$builder->build( it_exchange_get_txn_activity_factory() );
+	}
 }
 
-add_action( 'it_exchange_update_transaction_status', 'it_exchange_add_note_on_status_change', 10, 2 );
+add_action( 'it_exchange_update_transaction_status', 'it_exchange_add_note_on_status_change', 9, 2 );
 
 /**
  * Add a renewal note when a child transaction is created.
@@ -205,6 +218,15 @@ function it_exchange_get_txn_activity_factory() {
 		'make'
 	) );
 
+	/**
+	 * Fires when an activity factory is made.
+	 *
+	 * @since 1.35.5
+	 *
+	 * @param IT_Exchange_Txn_Activity_Factory $factory
+	 */
+	do_action( 'it_exchange_get_txn_activity_factory', $factory );
+
 	return $factory;
 }
 
@@ -222,6 +244,15 @@ function it_exchange_get_txn_activity_actor_factory() {
 	$factory->register( 'customer', array( 'IT_Exchange_Txn_Activity_Customer_Actor', 'make' ) );
 	$factory->register( 'user', array( 'IT_Exchange_Txn_Activity_User_Actor', 'make' ) );
 	$factory->register( 'gateway', array( 'IT_Exchange_Txn_Activity_Gateway_Actor', 'make' ) );
+
+	/**
+	 * Fires when an activity actor factory is made.
+	 *
+	 * @since 1.35.5
+	 *
+	 * @param IT_Exchange_Txn_Activity_Actor_Factory $factory
+	 */
+	do_action( 'it_exchange_get_txn_activity_actor_factory', $factory );
 
 	return $factory;
 }
@@ -255,7 +286,7 @@ function it_exchange_get_txn_activity( $ID ) {
 	 */
 	$filtered = apply_filters( 'it_exchange_get_txn_activity', $activity );
 
-	if ( get_class( $filtered ) !== get_class( $activity ) && ! is_subclass_of( $filtered, get_class( $activity ) ) ) {
+	if ( ! empty( $activity ) && get_class( $filtered ) !== get_class( $activity ) && ! is_subclass_of( $filtered, get_class( $activity ) ) ) {
 		throw new UnexpectedValueException( 'Invalid txn activity object returned from filter.' );
 	}
 

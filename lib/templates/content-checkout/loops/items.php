@@ -22,7 +22,7 @@
 	<?php do_action( 'it_exchange_content_checkout_begin_items_loop' ); ?>
 
 	<?php do_action( 'it_exchange_content_checkout_before_items_table_row' ); ?>
-	<div class="it-exchange-table-row">
+	<div class="it-exchange-table-row <?php echo it_exchange( 'cart-item', 'has-children' ) ? 'it-exchange-table-row-parent' : ''; ?>">
 		<?php do_action( 'it_exchange_content_checkout_begin_items_table_row' ); ?>
 
 		<?php foreach ( it_exchange_get_template_part_elements( 'content_checkout', 'items', array( 'item-featured-image', 'item-title', 'item-quantity', 'item-subtotal' ) ) as $item ) : ?>
@@ -37,6 +37,11 @@
 		<?php endforeach; ?>
 		<?php do_action( 'it_exchange_content_checkout_end_items_table_row' ); ?>
 	</div>
+
+	<?php if ( it_exchange( 'cart-item', 'has-children' ) ): ?>
+		<?php it_exchange_get_template_part( 'content-checkout/loops/item-children' ); ?>
+	<?php endif; ?>
+
 	<?php do_action( 'it_exchange_content_checkout_after_items_table_row' ); ?>
 
 	<?php do_action( 'it_exchange_content_checkout_end_items_loop' ); ?>

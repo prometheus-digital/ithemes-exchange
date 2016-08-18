@@ -501,6 +501,27 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 	}
 
 	/**
+	 * @dataProvider _dp_convert_country_code
+	 *
+	 * @param $code
+	 * @param $converted
+	 */
+	public function test_convert_country_code( $code, $converted ) {
+		$this->assertEquals( $converted, it_exchange_convert_country_code( $code ) );
+	}
+
+	public function _dp_convert_country_code() {
+		return array(
+			array( 'US', 'USA' ),
+			array( 'USA', 'US' ),
+			array( 'AU', 'AUS' ),
+			array( 'AUS', 'AU' ),
+			array( 'BAD', false ),
+			array( 'ZZ', false ),
+		);
+	}
+
+	/**
 	 * @group emails
 	 */
 	public function test_send_email_with_sendable() {

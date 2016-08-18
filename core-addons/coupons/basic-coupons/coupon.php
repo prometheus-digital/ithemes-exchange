@@ -50,6 +50,13 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function get_type() {
+		return 'cart';
+	}
+
+	/**
 	 * Increment usage of this coupon.
 	 *
 	 * @since 1.33
@@ -85,6 +92,13 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 		if ( $this->is_frequency_limited() ) {
 			$this->reduce_customer_coupon_frequency( $transaction_object );
 		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function valid_for_product( ITE_Cart_Product $product ) {
+		return it_exchange_basic_coupons_valid_product_for_coupon( $product->bc(), $this );
 	}
 
 	/**
@@ -187,21 +201,22 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 *
 	 * @throws Exception
 	 */
-	public function validate() {
+	public function validate( ITE_Cart $cart = null ) {
+
+		$cart = $cart ? $cart : it_exchange_get_current_cart();
 
 		if ( $this->is_quantity_limited() && ! $this->get_remaining_quantity() ) {
 			throw new Exception( __( 'This coupon has reached its maximum uses.', 'it-l10n-ithemes-exchange' ), self::E_NO_QUANTITY );
 		}
 
-		if ( $this->is_customer_limited() && it_exchange_get_current_customer_id() != $this->get_customer()->ID ) {
+		if ( $this->is_customer_limited() && $cart->get_customer()->ID != $this->get_customer()->ID ) {
 			throw new Exception( __( 'Invalid coupon.', 'it-l10n-ithemes-exchange' ), self::E_INVALID_CUSTOMER );
 		}
 
 		$has_product = false;
 
-		foreach ( it_exchange_get_cart_products() as $product ) {
-
-			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product, $this ) ) {
+		foreach ( $cart->get_items( 'product' ) as $product ) {
+			if ( it_exchange_basic_coupons_valid_product_for_coupon( $product->bc(), $this ) ) {
 				$has_product = true;
 
 				break;

@@ -13,6 +13,14 @@
  * @group addons/basic-coupons
  */
 class IT_Exchange_Addons_Basic_Coupons_Model_Test extends IT_Exchange_UnitTestCase {
+	/**
+	 * @inheritDoc
+	 */
+	public function setUp() {
+		parent::setUp();
+		
+		$GLOBALS['it_exchange']['session'] = new IT_Exchange_Mock_Session();
+	}
 
 	public function test_increment_usage() {
 
@@ -147,11 +155,7 @@ class IT_Exchange_Addons_Basic_Coupons_Model_Test extends IT_Exchange_UnitTestCa
 			)
 		) );
 
-		$cart_product = array( 'product_id' => 1 );
-
-		WP_Mock::wpFunction( 'it_exchange_get_cart_products', array(
-			'return' => array( $cart_product )
-		) );
+		it_exchange_add_product_to_shopping_cart( $this->product_factory->create() );
 
 		WP_Mock::wpFunction( 'it_exchange_basic_coupons_valid_product_for_coupon', array(
 			'return' => true
@@ -171,12 +175,8 @@ class IT_Exchange_Addons_Basic_Coupons_Model_Test extends IT_Exchange_UnitTestCa
 			)
 		) );
 
-		$cart_product = array( 'product_id' => 1 );
-
-		WP_Mock::wpFunction( 'it_exchange_get_cart_products', array(
-			'return' => array( $cart_product )
-		) );
-
+		it_exchange_add_product_to_shopping_cart( $this->product_factory->create() );
+		
 		WP_Mock::wpFunction( 'it_exchange_basic_coupons_valid_product_for_coupon', array(
 			'return' => true
 		) );

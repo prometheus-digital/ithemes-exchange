@@ -321,6 +321,8 @@ function it_exchange_offline_payments_transaction_is_cleared_for_delivery( $clea
 
 add_filter( 'it_exchange_offline-payments_transaction_is_cleared_for_delivery', 'it_exchange_offline_payments_transaction_is_cleared_for_delivery', 10, 2 );
 
+add_filter( 'it_exchange_auto_activate_non_renewing_offline-payments_subscriptions', '__return_false' );
+
 /**
  * Mark all transaction subscriptions as active when a transaction is made.
  *
@@ -346,7 +348,9 @@ function it_exchange_offline_payments_mark_subscriptions_as_active_on_purchase( 
 
 	try {
 		foreach ( $subs as $sub ) {
+			add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 			$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+			remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 		}
 	}
 	catch ( Exception $e ) {
@@ -376,16 +380,24 @@ function it_exchange_offline_payments_mark_subscriptions_as_active_on_clear( $tr
 	}
 
 	$new_cleared = it_exchange_transaction_is_cleared_for_delivery( $transaction );
+	$is_child    = false;
 
 	if ( $new_cleared && ! $old_cleared ) {
+
+		while ( $transaction->post_parent && $parent = it_exchange_get_transaction( $transaction->post_parent ) ) {
+			$transaction = $parent;
+			$is_child    = true;
+		}
 
 		$subs = it_exchange_get_transaction_subscriptions( $transaction );
 
 		foreach ( $subs as $sub ) {
 			$sub_status = $sub->get_status();
 
-			if ( empty( $sub_status ) ) {
+			if ( empty( $sub_status ) || ( $is_child && $sub_status === IT_Exchange_Subscription::STATUS_SUSPENDED ) ) {
+				add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 				$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
+				remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 			}
 		}
 	}
@@ -630,7 +642,7 @@ class IT_Exchange_Offline_Payments_Add_On {
 	 */
 	function set_default_settings( $defaults ) {
 		$defaults['offline-payments-title']          = __( 'Pay with check', 'it-l10n-ithemes-exchange' );
-		$defaults['offline-payments-instructions']   = __( 'We will contact you shortly for payment.', 'it-l10n-ithemes-exchange' );
+		$defaults['offline-payments-instructions']   = __( 'Thank you for your order. We will contact you shortly for payment.', 'it-l10n-ithemes-exchange' );
 		$defaults['offline-payments-default-status'] = 'pending';
 
 		return $defaults;
@@ -652,19 +664,42 @@ class IT_Exchange_Offline_Payments_Add_On {
  * @return bool True if expired, False if not Expired
  */
 function it_exchange_offline_payments_handle_expired( $true, $product_id, $transaction ) {
+
+	$transaction = it_exchange_get_transaction( $transaction );
+	$product     = it_exchange_get_product( $product_id );
+
 	$transaction_method = it_exchange_get_transaction_method( $transaction->ID );
 
 	if ( 'offline-payments' === $transaction_method ) {
 
-		$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product_id, true );
-		$status     = $transaction->get_transaction_meta( 'subscriber_status', true );
-		if ( $autorenews && empty( $status ) ) { //if the subscriber status is empty, it hasn't been set, which really means it's active for offline payments
-			//if the transaction autorenews and is an offline payment, we want to create a new child transaction until deactivated
-			it_exchange_offline_payments_add_child_transaction( $transaction );
+		if ( function_exists( 'it_exchange_get_subscription_by_transaction' ) ) {
 
-			return false;
+			$subscription = it_exchange_get_subscription_by_transaction( $transaction, $product );
+
+			if ( $subscription->is_auto_renewing() && $subscription->get_status() === IT_Exchange_Subscription::STATUS_ACTIVE ) {
+
+				if ( it_exchange_offline_payments_default_status() !== 'paid' ) {
+					add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
+					$subscription->set_status( IT_Exchange_Subscription::STATUS_SUSPENDED );
+					remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
+				}
+
+				it_exchange_offline_payments_add_child_transaction( $transaction );
+
+				return false;
+			}
+
+		} else {
+			$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product_id, true );
+			$status     = $transaction->get_transaction_meta( 'subscriber_status', true );
+
+			if ( $autorenews && empty( $status ) ) { //if the subscriber status is empty, it hasn't been set, which really means it's active for offline payments
+				//if the transaction autorenews and is an offline payment, we want to create a new child transaction until deactivated
+				it_exchange_offline_payments_add_child_transaction( $transaction );
+
+				return false;
+			}
 		}
-
 	}
 
 	return $true;
@@ -679,18 +714,19 @@ add_filter( 'it_exchange_recurring_payments_handle_expired', 'it_exchange_offlin
  *
  * @since 1.3.1
  *
- * @param string $parent_txn_id Parent Transaction ID
+ * @param IT_Exchange_Transaction $parent_txn
  *
  * @return bool
  */
 function it_exchange_offline_payments_add_child_transaction( $parent_txn ) {
-	$settings    = it_exchange_get_option( 'addon_offline_payments' );
+
 	$customer_id = get_post_meta( $parent_txn->ID, '_it_exchange_customer_id', true );
 	if ( $customer_id ) {
+
 		$uniqid                    = it_exchange_get_offline_transaction_uniqid();
 		$transaction_object        = new stdClass;
 		$transaction_object->total = $parent_txn->cart_details->total;
-		it_exchange_add_child_transaction( 'offline-payments', $uniqid, $settings['offline-payments-default-status'], $customer_id, $parent_txn->ID, $transaction_object );
+		it_exchange_add_child_transaction( 'offline-payments', $uniqid, it_exchange_offline_payments_default_status(), $customer_id, $parent_txn->ID, $transaction_object );
 
 		return true;
 	}
@@ -708,6 +744,9 @@ function it_exchange_offline_payments_add_child_transaction( $parent_txn ) {
  * @return void
  */
 function it_exchange_offline_payments_checkout_after_payment_details_cancel_url( $transaction ) {
+
+	_deprecated_function( __FUNCTION__, '1.35.5' );
+
 	$cart_object = get_post_meta( $transaction->ID, '_it_exchange_cart_object', true );
 	if ( ! empty( $cart_object->products ) ) {
 		foreach ( $cart_object->products as $product ) {
@@ -739,8 +778,6 @@ function it_exchange_offline_payments_checkout_after_payment_details_cancel_url(
 		}
 	}
 }
-
-add_action( 'it_exchange_after_payment_details_cancel_url_for_offline-payments', 'it_exchange_offline_payments_checkout_after_payment_details_cancel_url' );
 
 /**
  * Process Offline Payments Recurring Payments cancellations
@@ -806,4 +843,18 @@ function it_exchange_offline_payments_email_notification_message( $context ) {
 	}
 
 	return $instructions;
+}
+
+/**
+ * Retrieve the default payment status for offline payments.
+ *
+ * @since 1.35.5
+ *
+ * @return string
+ */
+function it_exchange_offline_payments_default_status() {
+
+	$settings = it_exchange_get_option( 'addon_offline_payments' );
+
+	return $settings['offline-payments-default-status'];
 }

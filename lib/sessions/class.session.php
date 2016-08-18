@@ -33,12 +33,15 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface {
 	 *
 	 * @since 0.3.3
 	 */
-	function __construct() {
-		if( ! defined( 'IT_EXCHANGE_SESSION_COOKIE' ) )
-			define( 'IT_EXCHANGE_SESSION_COOKIE', 'it_exchange_session_' . COOKIEHASH );
+	public function __construct() {
 
-		if ( ! class_exists( 'Recursive_ArrayAccess' ) )
-			require_once( dirname( __FILE__ ) .  '/db_session_manager/class-recursive-arrayaccess.php' );
+		if ( ! defined( 'IT_EXCHANGE_SESSION_COOKIE' ) ) {
+			define( 'IT_EXCHANGE_SESSION_COOKIE', 'it_exchange_session_' . COOKIEHASH );
+		}
+
+		if ( ! class_exists( 'Recursive_ArrayAccess' ) ) {
+			require_once( dirname( __FILE__ ) . '/db_session_manager/class-recursive-arrayaccess.php' );
+		}
 
 		// Only include the functionality if it's not pre-defined.
 		if ( ! class_exists( 'IT_Exchange_DB_Sessions' ) ) {
@@ -71,7 +74,7 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface {
 	 *
 	 * @return IT_Exchange_DB_Sessions
 	*/
-	function init() {
+	public function init() {
 		$this->_session = IT_Exchange_DB_Sessions::get_instance();
 
 		return $this->_session;
@@ -88,7 +91,7 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface {
 	 *
 	 * @return mixed. serialized string
 	*/
-	function get_session_data( $key = false ) {
+	public function get_session_data( $key = false ) {
 		if ( $key ) {
 			$key = sanitize_key( $key );
 
@@ -123,7 +126,7 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface {
 	 *
 	 * @return void
 	*/
-	function add_session_data( $key, $data ) {
+	public function add_session_data( $key, $data ) {
 		$key = sanitize_key( $key );
 
 		if ( ! empty( $this->_session[$key] ) ) {
@@ -145,7 +148,7 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface {
 	 *
 	 * @return void
 	*/
-	function update_session_data( $key, $data ) {
+	public function update_session_data( $key, $data ) {
 		$key = sanitize_key( $key );
 		$this->_session[$key] = maybe_serialize( (array)$data );
 		it_exchange_db_session_commit();
@@ -160,7 +163,7 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface {
 	 *
 	 * @return void
 	*/
-	function clear_session_data( $key = false ) {
+	public function clear_session_data( $key = false ) {
 		if ( !empty( $key ) ) {
 			$key = sanitize_key( $key );
 
@@ -183,7 +186,7 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface {
 	 *
 	 * @param bool $hard If true, old delete sessions as well.
 	*/
-	function clear_session( $hard = false ) {
+	public function clear_session( $hard = false ) {
 		it_exchange_db_session_regenerate_id( $hard );
 		it_exchange_db_session_commit();
 	}
@@ -197,7 +200,7 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface {
 	 *
 	 * @return void
 	*/
-	function reset_session_and_cache_cart_on_logout() {
+	public function reset_session_and_cache_cart_on_logout() {
 		$current_filter = current_filter();
 		if ( 'wp_logout' == $current_filter ) {
 

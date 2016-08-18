@@ -83,7 +83,9 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 		$items  = array();
 
 		foreach ( $models as $model ) {
-			$items[] = $this->model_to_item( $model );
+			if ( $item = $this->model_to_item( $model ) ) {
+				$items[] = $item;
+			}
 		}
 
 		return new ITE_Line_Item_Collection( $items, $this );
@@ -207,7 +209,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	 * @param \ITE_Transaction_Line_Item_Model $model
 	 * @param \ITE_Aggregate_Line_Item|null    $aggregate
 	 *
-	 * @return \ITE_Line_Item
+	 * @return \ITE_Line_Item|null
 	 */
 	protected final function model_to_item( ITE_Transaction_Line_Item_Model $model, ITE_Aggregate_Line_Item $aggregate = null ) {
 
@@ -229,6 +231,10 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 		) );
 
 		$class = $model->_class;
+
+		if ( ! class_exists( $class ) ) {
+			return null;
+		}
 
 		/** @var ITE_Line_Item $item */
 		$item = new $class( $model->id, $bag, $frozen );
@@ -313,39 +319,63 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	 * @inheritDoc
 	 */
 	public function get_shipping_address() {
-		$address = it_exchange_get_transaction_shipping_address( $this->get_transaction() );
-
-		if ( ! is_array( $address ) ) {
-			return new ITE_In_Memory_Address();
-		}
-
-		return new ITE_In_Memory_Address( $address );
+		return $this->get_transaction()->get_shipping_address();
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function get_billing_address() {
-		$address = it_exchange_get_transaction_billing_address( $this->get_transaction() );
-
-		if ( ! is_array( $address ) ) {
-			return new ITE_In_Memory_Address();
-		}
-
-		return new ITE_In_Memory_Address( $address );
+		return $this->get_transaction()->get_billing_address();
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function set_billing_address( ITE_Location $location = null ) {
-		// TODO: Implement set_billing_address() method.
+
+		if ( $location === null ) {
+			$this->get_transaction()->billing = 0;
+
+			return $this->get_transaction()->save();
+		} else {
+			$saved = ITE_Saved_Address::convert_to_saved(
+				$location, $this->get_billing_address(), $this->get_transaction()->get_customer(), 'billing', false
+			);
+
+			if ( ! $saved ) {
+				return false;
+			}
+
+			// If this doesn't actually cause a change, we will just return true, so no need to check the PK changes
+			$this->get_transaction()->billing = $saved->get_pk();
+
+			return $this->get_transaction()->save();
+		}
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function set_shipping_address( ITE_Location $location = null ) {
-		// TODO: Implement set_shipping_address() method.
+
+		if ( $location === null ) {
+			$this->get_transaction()->shipping = 0;
+
+			return $this->get_transaction()->save();
+		} else {
+			$saved = ITE_Saved_Address::convert_to_saved(
+				$location, $this->get_shipping_address(), $this->get_transaction()->get_customer(), 'shipping', false
+			);
+
+			if ( ! $saved ) {
+				return false;
+			}
+
+			// If this doesn't actually cause a change, we will just return true, so no need to check the PK changes
+			$this->get_transaction()->shipping = $saved->get_pk();
+
+			return $this->get_transaction()->save();
+		}
 	}
 }

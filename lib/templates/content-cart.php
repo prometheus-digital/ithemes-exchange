@@ -28,7 +28,7 @@
 
 			<?php
 			// Loops we want to include, in the order we want them.
-			$loops = array( 'items', 'coupons', 'totals', 'actions' );
+			$loops = array( 'items', 'line-items', 'coupons', 'totals', 'actions' );
 			foreach( it_exchange_get_template_part_loops( 'content-cart', 'has-cart-item', $loops ) as $loop ) :
 				it_exchange_get_template_part( 'content-cart/loops/' . $loop );
 			endforeach;

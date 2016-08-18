@@ -214,13 +214,14 @@ function it_exchange_temporarily_load_addon( $add_on ) {
  *
  * @param string $slug  the add-on's slug
  *
- * @return array|bool  the add_on array
+ * @return array|false  the add_on array
 */
 function it_exchange_get_addon( $slug ) {
 	if ( $add_ons = it_exchange_get_addons() ) {
 		if ( ! empty( $add_ons[$slug] ) )
 			return $add_ons[$slug];
 	}
+
 	return apply_filters( 'it_exchange_get_addon', false, $slug, $add_ons );
 }
 

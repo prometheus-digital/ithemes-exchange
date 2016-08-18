@@ -27,11 +27,31 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	);
 
 	/**
+	 * @var array|\string[]
+	 */
+	public $cart_methods = array();
+	
+	/**
+	 * @var array
+	 */
+	public $cart_product_methods = array();
+	
+	/**
+	 * @var bool
+	 */
+	public $multiple_shipping_methods_allowed = false;
+	
+	/**
+	 * @var string
+	 */
+	public $current_method;
+
+	/**
 	 * Constructor
 	 *
 	 * @since 0.4.0
 	*/
-	function __construct() {
+	public function __construct() {
 		$this->cart_methods                      = it_exchange_get_available_shipping_methods_for_cart();
 		$this->cart_product_methods              = it_exchange_get_available_shipping_methods_for_cart_products();
 		$this->multiple_shipping_methods_allowed = false;
@@ -43,7 +63,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 *
 	 * @deprecated
 	 */
-	function IT_Theme_API_Shipping_Method() {
+	public function IT_Theme_API_Shipping_Method() {
 
 		self::__construct();
 
@@ -57,7 +77,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 *
 	 * @return string
 	*/
-	function get_api_context() {
+	public function get_api_context() {
 		return $this->_context;
 	}
 
@@ -69,7 +89,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 * @param  array  $options
 	 * @return string
 	*/
-	function form( $options=array() ) {
+	public function form( $options=array() ) {
 		ob_start();
 
 		$cart_methods                      = $this->cart_methods;
@@ -93,10 +113,10 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 			foreach( $cart_methods as $method ) {
 				$options .= '<option value="' . esc_attr( $method->slug ) . '" ' . selected( $current_method, $method->slug, false ) . '>' . $method->label . ' (' . it_exchange_get_cart_shipping_cost( $method->slug ) . ')</option>';
 			}
-			if ( (array) it_exchange_get_cart_products() > 1 ) {
+			if ( count( it_exchange_get_current_cart()->get_items( 'product' ) ) > 1 ) {
 				$cart_products_with_shipping = 0;
-				foreach( (array) it_exchange_get_cart_products() as $cart_product ) {
-					if ( it_exchange_product_has_feature( $cart_product['product_id'], 'shipping' ) )
+				foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $cart_product ) {
+					if ( $cart_product->get_product()->has_feature( 'shipping' ) )
 						$cart_products_with_shipping++;
 				}
 				if ( $cart_products_with_shipping > 1 && count( $cart_product_methods ) > 1 ) {
@@ -114,36 +134,37 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 			<?php
 		}
 
-		if ( 'multiple-methods' == $current_method && $multiple_shipping_methods_allowed ) :
+		if ( 'multiple-methods' === $current_method && $multiple_shipping_methods_allowed ) :
 			?>
 			<div class="it-exchange-itemized-checkout-methods it-exchange-clearfix">
 				<?php
-				foreach( (array) it_exchange_get_cart_products() as $product ) {
-					if ( ! it_exchange_product_has_feature( $product['product_id'], 'shipping' ) )
+				foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+					if ( ! $product->get_product()->has_feature( 'shipping' ) )
 						continue;
 
 					echo '<div class="it-exchange-itemized-checkout-method">';
 
-						echo '<span class="it-exchange-shipping-product-title">' . it_exchange_get_cart_product_title( $product ) . '</span>';
-						$selected_multiple_method = it_exchange_get_multiple_shipping_method_for_cart_product( $product['product_cart_id'] );
-						$enabled_shipping_methods = (array) it_exchange_get_enabled_shipping_methods_for_product( it_exchange_get_product( $product['product_id'] ) );
+						echo '<span class="it-exchange-shipping-product-title">' . it_exchange_get_cart_product_title( $product->bc() ) . '</span>';
+						$selected_multiple_method = it_exchange_get_multiple_shipping_method_for_cart_product( $product->get_id() );
+						$enabled_shipping_methods = (array) it_exchange_get_enabled_shipping_methods_for_product( $product->get_product() );
 
 						if ( count( $enabled_shipping_methods ) > 1 ) {
 							?>
-							<select class="it-exchange-multiple-shipping-methods-select it-exchange-right" data-it-exchange-product-cart-id="<?php esc_attr_e( $product['product_cart_id'] ); ?>" name="it-exchange-shipping-method-for-<?php esc_attr_e( $product['product_cart_id'] ); ?>" >
+							<select class="it-exchange-multiple-shipping-methods-select it-exchange-right" data-it-exchange-product-cart-id="<?php esc_attr_e( $product->get_id() ); ?>" name="it-exchange-shipping-method-for-<?php esc_attr_e( $product->get_id() ); ?>" >
+								<option value="0"><?php _e( 'Select a shipping method', 'it-l10n-ithemes-exchange' ); ?></option>
 								<?php foreach( $enabled_shipping_methods as $product_method ) : ?>
 									<?php if ( empty( $product_method->slug ) ) continue; ?>
 									<option value="<?php esc_attr_e( $product_method->slug ); ?>" <?php selected( $selected_multiple_method, $product_method->slug ); ?>>
 										<?php echo $product_method->label; ?>
-										(<?php echo it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product, true ); ?>)
+										(<?php echo it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product->bc(), true ); ?>)
 									</option>
 								<?php endforeach; ?>
 							</select><br />
 							<?php
 						} else {
 							$product_method = reset( $enabled_shipping_methods );
-							it_exchange_update_multiple_shipping_method_for_cart_product( $product['product_cart_id'], $product_method->slug );
-							echo '<span class="it-exchange-right">' . $product_method->label . ' (' . it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product, true ) . ')</span>';
+							it_exchange_update_multiple_shipping_method_for_cart_product( $product->get_id(), $product_method->slug );
+							echo '<span class="it-exchange-right">' . $product_method->label . ' (' . it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product->bc(), true ) . ')</span>';
 						}
 
 					echo '</div>';
@@ -153,8 +174,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 			<?php
 		endif;
 
-		$return = ob_get_clean();
-		return $return;
+		return ob_get_clean();
 	}
 
 	/**
@@ -165,11 +185,14 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 * @since 1.4.0
 	 *
 	 * @param array $options
+	 * 
+	 * @return string
 	*/
-	function cancel( $options=array() ) {
+	public function cancel( $options=array() ) {
 
-		if ( empty( $this->current_method ) )
+		if ( ! $this->current_method ) {
 			return '';
+		}
 
 		$defaults = array(
 			'label' => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
@@ -191,11 +214,14 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 * @since 1.4.0
 	 *
 	 * @param array $options
+	 * 
+	 * @return string
 	*/
-	function submit( $options=array() ) {
+	public function submit( $options=array() ) {
 
-		if ( empty( $this->current_method ) )
+		if ( ! $this->current_method ) {
 			return '';
+		}
 
 		$defaults = array(
 			'label' => __( 'Next', 'it-l10n-ithemes-exchange' ),
@@ -216,9 +242,9 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 	 *
 	 * @since 1.4.0
 	 *
+	 * @return string
 	*/
-	function current( $options=array() ) {
-		$method = it_exchange_get_registered_shipping_method( $this->current_method );
-		return $method->label;
+	public function current( $options=array() ) {
+		return it_exchange_get_registered_shipping_method( $this->current_method )->label;
 	}
 }

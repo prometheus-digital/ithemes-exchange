@@ -13,6 +13,12 @@
  */
 class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 
+	const TYPE_PERCENT = '%';
+	const TYPE_FLAT = 'amount';
+
+	const APPLY_CART = 'cart';
+	const APPLY_PRODUCT = 'per-product';
+
 	// WP Post Type Properties
 	var $ID;
 	var $post_author;
@@ -102,8 +108,8 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 		 * @param array   $properties
 		 * @param WP_Post $post
 		 */
-		$additional_properties = apply_filters( 'it_exchange_coupon_additional_data', array(), $post );
-		foreach ( $additional_properties as $key => $value ) {
+		$additional = apply_filters( 'it_exchange_coupon_additional_data', array(), $post );
+		foreach ( $additional as $key => $value ) {
 			$this->coupon_data[ $key ] = $value;
 			$this->$key                = $value;
 		}
@@ -126,6 +132,46 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 
 		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
+
+	/**
+	 * Get the type of this coupon.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_type() { return ''; }
+
+	/**
+	 * Get the application method.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_application_method() { return ''; }
+
+	/**
+	 * Get the type of the discount.
+	 *
+	 * Either '%' or 'amount', but you should evaluate against the constants provided.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_amount_type() { return ''; }
+
+	/**
+	 * Get the total amount of the discount.
+	 *
+	 * ie, the 5 in 5% or the 10 in $10 off.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return float
+	 */
+	public function get_amount_number() { return 0.00; }
 
 	/**
 	 * This method is called when a coupon is used for a transaction.
@@ -289,6 +335,32 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	 */
 	public function decrement_usage( $transaction_object ) {
 		// add-ons should overwrite this method
+	}
+
+	/**
+	 * Validate the coupon for a given cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Cart|null $cart If null, default to the current cart.
+	 *
+	 * @throws Exception
+	 */
+	public function validate( ITE_Cart $cart = null ) {
+
+	}
+
+	/**
+	 * Whether this coupon is valid for a given product.
+	 * 
+	 * @since 1.36.0
+	 * 
+	 * @param \ITE_Cart_Product $product
+	 *
+	 * @return bool
+	 */
+	public function valid_for_product( ITE_Cart_Product $product ) {
+		return false;
 	}
 
 	/**

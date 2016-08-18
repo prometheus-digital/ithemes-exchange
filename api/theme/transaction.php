@@ -23,14 +23,10 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 */
 	public $_transaction = false;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	public $_transaction_product_download = false;
 
-	/**
-	 * @var array
-	 */
+	/** @var string */
 	public $_transaction_product_download_hash = false;
 
 	/**
@@ -59,6 +55,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		'shippingmethod'        => 'shipping_method',
 		'billingaddress'        => 'billing_address',
 		'products'              => 'products',
+		'lineitems'             => 'line_items',
 		'productattribute'      => 'product_attribute',
 		'purchasemessage'       => 'purchase_message',
 		'variants'              => 'variants',
@@ -77,7 +74,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * The current transaction product
 	 *
-	 * @var array $_transaction_product
+	 * @var array|false $_transaction_product
 	 * @since 0.4.0
 	 */
 	public $_transaction_product = false;
@@ -85,7 +82,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * The current transaction cart object
 	 *
-	 * @var array $_transaction_cart_object
+	 * @var array|false $_transaction_cart_object
 	 * @since 1.4.0
 	 */
 	public $_transaction_cart_object = false;
@@ -153,8 +150,11 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @since 0.4.0
 	 *
+	 * @param array $options
+	 *
+	 * @return string
 	 */
-	function status( $options = array() ) {
+	public function status( $options = array() ) {
 		// Set options
 		$defaults = array(
 			'before' => '',
@@ -179,8 +179,11 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @since 0.4.0
 	 *
+	 * @param array $options
+	 *
+	 * @return string
 	 */
-	function instructions( $options = array() ) {
+	public function instructions( $options = array() ) {
 		// Set options
 		$defaults = array(
 			'before' => '',
@@ -200,7 +203,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function date( $options = array() ) {
+	public function date( $options = array() ) {
 
 		// Set options
 		$defaults = array(
@@ -226,7 +229,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function method( $options = array() ) {
+	public function method( $options = array() ) {
 
 		$defaults = array(
 			'before' => '',
@@ -277,7 +280,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function total( $options = array() ) {
+	public function total( $options = array() ) {
 		// Set options
 		$defaults = array(
 			'before'          => '',
@@ -301,7 +304,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function subtotal( $options = array() ) {
+	public function subtotal( $options = array() ) {
 		// Set options
 		$defaults = array(
 			'before'          => '',
@@ -325,7 +328,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function savings_total( $options = array() ) {
+	public function savings_total( $options = array() ) {
 		if ( ! empty( $options['has'] ) ) {
 			return (bool) it_exchange_get_transaction_coupons( $this->_transaction );
 		}
@@ -350,7 +353,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function shipping_total( $options = array() ) {
+	public function shipping_total( $options = array() ) {
 		if ( ! empty( $options['has'] ) ) {
 			return (bool) it_exchange_get_transaction_shipping_total( $this->_transaction );
 		}
@@ -419,9 +422,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function shipping_address( $options = array() ) {
-
-		$address = empty( $this->_transaction->cart_details->shipping_address ) ? array() : $this->_transaction->cart_details->shipping_address;
+	public function shipping_address( $options = array() ) {
 
 		if ( $this->demo ) {
 			$address = array(
@@ -435,6 +436,8 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 				'email'        => '',
 				'phone'        => '',
 			);
+		} else {
+			$address = it_exchange_get_transaction_shipping_address( $this->_transaction );
 		}
 
 		if ( ! empty( $options['has'] ) ) {
@@ -460,9 +463,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function billing_address( $options = array() ) {
-
-		$address = empty( $this->_transaction->cart_details->billing_address ) ? array() : $this->_transaction->cart_details->billing_address;
+	public function billing_address( $options = array() ) {
 
 		if ( $this->demo ) {
 			$address = array(
@@ -476,6 +477,8 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 				'email'        => '',
 				'phone'        => '',
 			);
+		} else {
+			$address = it_exchange_get_transaction_billing_address( $this->_transaction );
 		}
 
 		if ( ! empty( $options['has'] ) ) {
@@ -492,56 +495,118 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		return $options['before'] . it_exchange_get_formatted_billing_address( $address ) . $options['after'];
 	}
 
-	/**
-	 * This loops through the transaction_products GLOBAL and updates the transaction_product global.
-	 *
-	 * It return false when it reaches the last product
-	 * If the has flag has been passed, it just returns a boolean
-	 *
-	 * @since 0.4.0
-	 * @return string
-	 */
-	function products( $options = array() ) {
-		// Return boolean if has flag was set
-		if ( ! empty( $options['has'] ) ) {
+    /**
+     * This loops through the transaction_products GLOBAL and updates the transaction_product global.
+     *
+     * It return false when it reaches the last product
+     * If the has flag has been passed, it just returns a boolean
+     *
+     * @since 0.4.0
+     *
+     * @param array $options
+     *
+     * @return string
+    */
+    public function products( $options=array() ) {
 
-			if ( $this->demo ) {
-				return true;
-			}
+        if ( $options['has'] ) {
+
+        	if ( $this->demo ) {
+        		return true;
+	        }
 
 			return count( it_exchange_get_transaction_products( $this->_transaction ) ) > 0;
+        }
+
+        // If we made it here, we're doing a loop of transaction_products for the current query.
+        // This will init/reset the transaction_products global and loop through them.
+        if ( empty( $GLOBALS['it_exchange']['transaction_products'] ) ) {
+
+        	if ( $this->demo ) {
+        		$GLOBALS['it_exchange']['transaction_products'] = $this->get_demo_products();
+	        } else {
+		        $products = it_exchange_get_transaction_products( $this->_transaction );
+
+		        if ( ! $products && ! empty( $this->_transaction->parent ) ) {
+			        $products = it_exchange_get_transaction_products( $this->_transaction->parent );
+		        }
+
+		        $GLOBALS['it_exchange']['transaction_products'] = $products;
+		        $GLOBALS['it_exchange']['transaction_product']  = reset( $GLOBALS['it_exchange']['transaction_products'] );
+
+		        if ( $this->_transaction ) {
+			        $GLOBALS['it_exchange']['line-item'] = $this->_transaction->get_item(
+				        'product', $GLOBALS['it_exchange']['transaction_product']['product_cart_id']
+			        );
+		        }
+	        }
+
+            return true;
+        } else {
+            if ( next( $GLOBALS['it_exchange']['transaction_products'] ) ) {
+                $GLOBALS['it_exchange']['transaction_product'] = current( $GLOBALS['it_exchange']['transaction_products'] );
+
+	            if ( $this->_transaction ) {
+		            $GLOBALS['it_exchange']['line-item'] = $this->_transaction->get_item(
+			            'product', $GLOBALS['it_exchange']['transaction_product']['product_cart_id']
+		            );
+	            }
+
+                return true;
+            } else {
+				$GLOBALS['it_exchange']['transaction_products'] = array();
+        		end( $GLOBALS['it_exchange']['transaction_products'] );
+                $GLOBALS['it_exchange']['transaction_product'] = false;
+	            $GLOBALS['it_exchange']['line-item'] = null;
+                return false;
+            }
+        }
+    }
+
+    /**
+	 * Iterate over all the line items in the transaction.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $options
+	 *
+	 * @return bool
+	 */
+	public function line_items( array $options = array() ) {
+
+		$options = ITUtility::merge_defaults( $options, array( 'without' => '' ) );
+
+		$transaction = $this->_transaction;
+
+		if ( $transaction ) {
+			$items = $transaction->get_items()->non_summary_only();
+		} else {
+			return false;
 		}
 
-		// If we made it here, we're doing a loop of transaction_products for the current query.
-		// This will init/reset the transaction_products global and loop through them.
-		if ( empty( $GLOBALS['it_exchange']['transaction_products'] ) ) {
-			if ( $this->demo ) {
-				$GLOBALS['it_exchange']['transaction_products'] = $this->get_demo_products();
-			} else {
+		if ( $options['without'] ) {
+			$items = $items->without( $options['without'] );
+		}
 
-				$products = it_exchange_get_transaction_products( $this->_transaction );
+		if ( $options['has'] ) {
+			return $items->count() > 0;
+		}
 
-				if ( empty( $products ) && ! empty( $this->_transaction->post_parent ) ) {
-					$products = it_exchange_get_transaction_products( $this->_transaction->post_parent );
-				}
+		if ( empty( $GLOBALS['it_exchange']['line-item'] ) ) {
+			$GLOBALS['it_exchange']['line-items'] = $items->to_array();
+			$GLOBALS['it_exchange']['line-item']  = reset( $GLOBALS['it_exchange']['line-items'] );
 
-				$GLOBALS['it_exchange']['transaction_products'] = $products;
-			}
-			$GLOBALS['it_exchange']['transaction_product'] = reset( $GLOBALS['it_exchange']['transaction_products'] );
+			return true;
+		} elseif ( next( $GLOBALS['it_exchange']['line-items'] ) ) {
+			$GLOBALS['it_exchange']['line-item'] = current( $GLOBALS['it_exchange']['line-items'] );
 
 			return true;
 		} else {
-			if ( next( $GLOBALS['it_exchange']['transaction_products'] ) ) {
-				$GLOBALS['it_exchange']['transaction_product'] = current( $GLOBALS['it_exchange']['transaction_products'] );
+			$GLOBALS['it_exchange']['line-items'] = array();
+			end( $GLOBALS['it_exchange']['line-items'] );
+			$GLOBALS['it_exchange']['line-item'] = null;
 
-				return true;
-			} else {
-				$GLOBALS['it_exchange']['transaction_products'] = array();
-				end( $GLOBALS['it_exchange']['transaction_products'] );
-				$GLOBALS['it_exchange']['transaction_product'] = false;
-
-				return false;
-			}
+			return false;
 		}
 	}
 
@@ -592,7 +657,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * @since 0.4.0
 	 * @return string
 	 */
-	function product_attribute( $options = array() ) {
+	public function product_attribute( $options = array() ) {
 
 		// Set defaults
 		$defaults = array(
@@ -664,7 +729,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function purchase_message( $options = array() ) {
+	public function purchase_message( $options = array() ) {
 
 		if ( $this->demo ) {
 
@@ -698,7 +763,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return bool|string
 	 */
-	function description( $options = array() ) {
+	public function description( $options = array() ) {
 
 		$description = it_exchange_get_transaction_description( $this->_transaction );
 
@@ -718,7 +783,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function variants( $options = array() ) {
+	public function variants( $options = array() ) {
 
 		$product = $this->_transaction_product;
 
@@ -753,7 +818,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function featured_image( $options = array() ) {
+	public function featured_image( $options = array() ) {
 
 		// Get the real product item or return empty
 		if ( ( ! $product_id = empty( $this->_transaction_product['product_id'] ) ? false : $this->_transaction_product['product_id'] ) && ! $this->demo ) {
@@ -872,7 +937,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return bool
 	 */
-	function downloads( $options = array() ) {
+	public function downloads( $options = array() ) {
 
 		// this can't be optimized to return early,
 		// otherwise the globals won't be properly reset
@@ -907,7 +972,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return boolean
 	 */
-	function product_downloads( $options = array() ) {
+	public function product_downloads( $options = array() ) {
 		// Return false if we don't have a product id
 		if ( empty( $this->_transaction_product['product_id'] ) ) {
 			return false;
@@ -955,7 +1020,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function product_download( $options = array() ) {
+	public function product_download( $options = array() ) {
 		if ( ! empty( $options['has'] ) ) {
 			return (boolean) $this->_transaction_product_download;
 		}
@@ -986,7 +1051,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return bool
 	 */
-	function product_download_hashes( $options = array() ) {
+	public function product_download_hashes( $options = array() ) {
 		// Return false if we don't have a product id
 		if ( empty( $this->_transaction_product['product_id'] ) || empty( $this->_transaction_product_download ) ) {
 			return false;
@@ -1029,7 +1094,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function product_download_hash( $options = array() ) {
+	public function product_download_hash( $options = array() ) {
 		if ( ! empty( $options['has'] ) ) {
 			return (boolean) $this->_transaction_product_download_hash;
 		}
@@ -1078,7 +1143,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function product_featured_image( $options = array() ) {
+	public function product_featured_image( $options = array() ) {
 
 		// Get the real product item or return empty
 		if ( ! $product_id = empty( $this->_transaction_product['product_id'] ) ? false : $this->_transaction_product['product_id'] ) {

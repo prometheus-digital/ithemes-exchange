@@ -21,10 +21,16 @@
 	<?php do_action( 'it_exchange_content_cart_begin_items_loop' ); ?>
 
 	<?php do_action( 'it_exchange_content_cart_before_items_loop_table_row' ); ?>
-	<div class="it-exchange-table-row">
+	<div class="it-exchange-table-row it-exchange-line-item it-exchange-product-item <?php echo it_exchange( 'cart-item', 'has-children' ) ? 'it-exchange-table-row-parent' : ''; ?>">
 		<?php do_action( 'it_exchange_content_cart_begin_items_loop_table_row' ); ?>
 
-		<?php foreach ( it_exchange_get_template_part_elements( 'content_cart', 'items', array( 'item-featured-image', 'item-title', 'item-quantity', 'item-subtotal', 'item-remove' ) ) as $item ) : ?>
+		<?php foreach ( it_exchange_get_template_part_elements( 'content_cart', 'items', array(
+			'item-featured-image',
+			'item-title',
+			'item-quantity',
+			'item-subtotal',
+			'item-remove' )
+		) as $item ) : ?>
 			<?php
 			/**
 			 * Theme and add-on devs should add code to this loop by
@@ -36,6 +42,11 @@
 		<?php endforeach; ?>
 		<?php do_action( 'it_exchange_content_cart_end_items_loop_table_row' ); ?>
 	</div>
+
+	<?php if ( it_exchange( 'cart-item', 'has-children' ) ): ?>
+		<?php it_exchange_get_template_part( 'content-cart/loops/item-children' ); ?>
+	<?php endif; ?>
+
 	<?php do_action( 'it_exchange_content_cart_after_items_loop_table_row' ); ?>
 
 	<?php do_action( 'it_exchange_content_cart_end_items_loop' ); ?>

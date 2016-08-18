@@ -947,10 +947,7 @@ function it_exchange_get_cart_billing_address() {
  * @return string
 */
 function it_exchange_create_cart_id() {
-	$cart_id = it_exchange_create_unique_hash();
-	$cart_id = apply_filters( 'it_exchange_create_cart_id', $cart_id );
-
-	return $cart_id;
+	return apply_filters( 'it_exchange_create_cart_id', it_exchange_create_unique_hash() );
 }
 
 /**

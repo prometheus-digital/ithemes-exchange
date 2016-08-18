@@ -19,7 +19,8 @@
 <div class="it-exchange-cart-item-title it-exchange-table-column">
 	<?php do_action( 'it_exchange_content_checkout_begin_item_title_element_label' ); ?>
 	<div class="it-exchange-table-column-inner">
-		<?php it_exchange( 'cart-item', 'title' );	 ?>
+		<?php it_exchange( 'cart-item', 'title' ); ?>
+		<?php it_exchange( 'cart-item', 'description' ); ?>
 	</div>
 	<?php do_action( 'it_exchange_content_checkout_end_item_title_element_label' ); ?>
 </div>

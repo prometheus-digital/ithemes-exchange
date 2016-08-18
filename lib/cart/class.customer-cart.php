@@ -775,6 +775,15 @@ class ITE_Cart {
 		}
 	}
 
+	/**
+	 * Clone this cart, saving its contents to a new repository.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Line_Item_Repository $repository
+	 *
+	 * @return \ITE_Cart
+	 */
 	public function with_new_repository( ITE_Line_Item_Repository $repository ) {
 
 		$repository->save_many( $this->get_items()->flatten()->to_array() );

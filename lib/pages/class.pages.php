@@ -337,7 +337,7 @@ class IT_Exchange_Pages {
 		if ( 'checkout' != $this->_current_view )
 			return;
 
-		if ( ! it_exchange_get_cart_products() ) {
+		if ( ! it_exchange_get_current_cart()->get_items( 'product' )->count() ) {
 			$cart = it_exchange_get_page_url( 'cart' );
 			it_exchange_redirect( $cart, 'checkout-empty-send-to-cart' );
 			die();
@@ -383,13 +383,9 @@ class IT_Exchange_Pages {
 				wp_redirect( it_exchange_get_page_url( 'checkout' ) ); // no filter or it_exchange_redirect on this one
 			} else {
 
-				foreach ( it_exchange_get_cart_products() as $product ) {
-
-					if ( ! empty($product['product_id'])) {
-						wp_redirect( get_permalink( $product['product_id'] ) );
-
-						die();
-					}
+				foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+					wp_redirect( get_permalink( $product->get_product()->ID ) );
+					die();
 				}
 
 				wp_redirect( it_exchange_get_page_url( 'store' ) ); // no filter or it_exchange_redirect

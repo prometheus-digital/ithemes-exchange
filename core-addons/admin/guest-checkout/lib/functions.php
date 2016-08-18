@@ -83,15 +83,3 @@ function it_exchange_init_guest_checkout_session( $customer_email ) {
 
 	do_action( 'it_exchange_init_guest_checkout', $customer_email );
 }
-
-/**
- * Are we doing guest checkout?
- *
- * @since 1.6.0
- *
- * @return boolean
-*/
-function it_exchange_doing_guest_checkout() {
-	$data = it_exchange_get_cart_data( 'guest-checkout' );
-	return ! empty( $data[0] );
-}

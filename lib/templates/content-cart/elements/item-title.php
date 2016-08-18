@@ -20,6 +20,7 @@
 	<?php do_action( 'it_exchange_content_cart_begin_item_title_element' ); ?>
 	<div class="it-exchange-table-column-inner">
 		<a href="<?php it_exchange( 'cart-item', 'permalink' ); ?>"><?php it_exchange( 'cart-item', 'title' ); ?></a>
+		<?php it_exchange( 'cart-item', 'description' ); ?>
 	</div>
 	<?php do_action( 'it_exchange_content_cart_begin_item_title_element' ); ?>
 </div>

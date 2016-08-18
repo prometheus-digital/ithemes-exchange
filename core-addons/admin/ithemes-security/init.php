@@ -19,6 +19,12 @@ if ( ! class_exists( 'ITSEC_Recaptcha' ) ) {
  */
 function it_exchange_security_recaptcha_login() {
 
+	// For newer versions of iThemes Security
+	if ( class_exists( 'ITSEC_Modules' ) ) {
+		return ITSEC_Modules::get_setting( 'recaptcha', 'login', false );
+	}
+
+	// For older versions of iThemes Security
 	$settings = get_site_option( 'itsec_recaptcha' );
 
 	return ! empty( $settings['login'] );
@@ -33,6 +39,12 @@ function it_exchange_security_recaptcha_login() {
  */
 function it_exchange_security_recaptcha_registration() {
 
+	// For newer versions of iThemes Security
+	if ( class_exists( 'ITSEC_Modules' ) ) {
+		return ITSEC_Modules::get_setting( 'recaptcha', 'register', false );
+	}
+
+	// For older versions of iThemes Security
 	$settings = get_site_option( 'itsec_recaptcha' );
 
 	return ! empty( $settings['register'] );
@@ -49,7 +61,16 @@ function it_exchange_security_add_recaptcha_to_registration() {
 		return;
 	}
 
-	ITSEC_Recaptcha::show_field();
+	$method = new ReflectionMethod( 'ITSEC_Recaptcha', 'show_field' );
+	if ( $method->isStatic() ) {
+		// For older versions of iThemes Security
+		ITSEC_Recaptcha::show_field();
+	} else {
+		// For newer versions of iThemes Security
+		$recaptcha = new ITSEC_Recaptcha();
+		$recaptcha->setup();
+		$recaptcha->show_field();
+	}
 }
 
 add_action( 'it_exchange_super_widget_registration_end_fields_loop', 'it_exchange_security_add_recaptcha_to_registration' );
@@ -64,7 +85,16 @@ function it_exchange_security_add_recaptcha_to_login() {
 		return;
 	}
 
-	ITSEC_Recaptcha::show_field( true, true, 0, 0, 20, 0 );
+	$method = new ReflectionMethod( 'ITSEC_Recaptcha', 'show_field' );
+	if ( $method->isStatic() ) {
+		// For older versions of iThemes Security
+		ITSEC_Recaptcha::show_field( true, true, 0, 0, 20, 0 );
+	} else {
+		// For newer versions of iThemes Security
+		$recaptcha = new ITSEC_Recaptcha();
+		$recaptcha->setup();
+		$recaptcha->show_field( true, true, 0, 0, 20, 0 );
+	}
 }
 
 add_action( 'it_exchange_super_widget_login_end_fields_loop', 'it_exchange_security_add_recaptcha_to_login' );
@@ -85,7 +115,16 @@ function it_exchange_security_validate_recaptcha_registration( $errors ) {
 		return $errors;
 	}
 
-	$success = ITSEC_Recaptcha::validate_captcha();
+	$method = new ReflectionMethod( 'ITSEC_Recaptcha', 'validate_captcha' );
+	if ( $method->isStatic() ) {
+		// For older versions of iThemes Security
+		$success = ITSEC_Recaptcha::validate_captcha();
+	} else {
+		// For newer versions of iThemes Security
+		$recaptcha = new ITSEC_Recaptcha();
+		$recaptcha->setup();
+		$success = $recaptcha->validate_captcha();
+	}
 
 	switch ( $success ) {
 
@@ -126,7 +165,16 @@ function it_exchange_security_validate_sw_recaptcha_login( $errors ) {
 		return $errors;
 	}
 
-	$success = ITSEC_Recaptcha::validate_captcha();
+	$method = new ReflectionMethod( 'ITSEC_Recaptcha', 'validate_captcha' );
+	if ( $method->isStatic() ) {
+		// For older versions of iThemes Security
+		$success = ITSEC_Recaptcha::validate_captcha();
+	} else {
+		// For newer versions of iThemes Security
+		$recaptcha = new ITSEC_Recaptcha();
+		$recaptcha->setup();
+		$success = $recaptcha->validate_captcha();
+	}
 
 	switch ( $success ) {
 

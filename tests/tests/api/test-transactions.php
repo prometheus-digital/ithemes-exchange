@@ -205,6 +205,14 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_update_transaction_status() {
 
+		if ( ! class_exists( 'ITE_Prorate_Credit_Request' ) ) {
+			$this->getMockBuilder( 'ITE_Prorate_Credit_Request' )->getMock();
+		}
+
+		if ( ! class_exists( 'ITE_Daily_Price_Calculator' ) ) {
+			$this->getMockBuilder( 'ITE_Daily_Price_Calculator' )->getMock();
+		}
+
 		$txn = $this->getMockBuilder( 'IT_Exchange_Transaction' )->disableOriginalConstructor()->getMock();
 		$txn->expects( $this->once() )->method( 'update_status' )->with( 'paid' );
 

@@ -70,7 +70,8 @@ class IT_Exchange_Purchase_Dialog{
 			'form-attributes'    => array(
 				'action'       => it_exchange_get_page_url( 'transaction' ),
 				'method'       => 'post',
-				'autocomplete' => 'on'
+				'autocomplete' => 'on',
+				'nonce-action' => $this->addon_slug . '-checkout',
 			),
 			'required-cc-fields' => array(
 				'first-name',
@@ -203,7 +204,7 @@ class IT_Exchange_Purchase_Dialog{
 	*/
 	function get_form_hidden_fields() {
 		$fields  = '<input type="hidden" name="' . esc_attr( it_exchange_get_field_name('transaction_method') ) . '" value="' . esc_attr( $this->addon_slug ) . '" />';
-		$fields .= wp_nonce_field( $this->addon_slug . '-checkout', 'ite-' . $this->addon_slug . '-purchase-dialog-nonce', true, false );
+		$fields .= wp_nonce_field( $this->form_attributes['nonce-action'], 'ite-' . $this->addon_slug . '-purchase-dialog-nonce', true, false );
 		return $fields;
 	}
 
@@ -253,9 +254,23 @@ class IT_Exchange_Purchase_Dialog{
 	 * @return string HTML
 	*/
 	function get_purchase_button() {
-		$error_class = it_exchange_purchase_dialog_has_error( $this->addon_slug ) ? ' has-errors' : '';
+		
 		it_exchange_clear_purchase_dialog_error_flag( $this->addon_slug );
-		return '<input type="submit" class="it-exchange-purchase-dialog-trigger-' . esc_attr( $this->addon_slug ) . ' it-exchange-purchase-dialog-trigger' . $error_class . '" value="' . esc_attr( $this->purchase_label ) . '" data-addon-slug="' . esc_attr( $this->addon_slug ) . '" />';
+		
+		$classes = array(
+			"it-exchange-purchase-dialog-trigger-{$this->addon_slug}",
+			"it-exchange-purchase-dialog-trigger",
+			"it-exchange-purchase-button-{$this->addon_slug}",
+			"it-exchange-purchase-button",
+		);
+		
+		if ( it_exchange_purchase_dialog_has_error( $this->addon_slug ) ) {
+			$classes[] = 'has-errors';
+		}
+		
+		$classes = esc_attr( implode( ' ', $classes ) );
+		
+		return '<input type="submit" class="' . $classes . '" value="' . esc_attr( $this->purchase_label ) . '" data-addon-slug="' . esc_attr( $this->addon_slug ) . '" />';
 	}
 
 	/**
@@ -316,7 +331,7 @@ class IT_Exchange_Purchase_Dialog{
 
 		// Validate nonce
 		$nonce = empty( $_POST['ite-' . $this->addon_slug . '-purchase-dialog-nonce'] ) ? false : $_POST['ite-' . $this->addon_slug . '-purchase-dialog-nonce'];
-		if ( ! wp_verify_nonce( $nonce, $this->addon_slug . '-checkout' ) ) {
+		if ( ! wp_verify_nonce( $nonce, $this->form_attributes['nonce-action'] ) ) {
 			it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'it-l10n-ithemes-exchange' ) );
 			it_exchange_flag_purchase_dialog_error( $this->addon_slug );
 			return false;

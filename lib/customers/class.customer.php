@@ -330,7 +330,7 @@ class IT_Exchange_Customer {
 	 * @throws \InvalidArgumentException
 	 */
 	protected function persist_address( ITE_Location $location, ITE_Location $current = null, $type ) {
-		return ITE_Saved_Address::convert_to_saved( $location, $current, $this, $type, true );
+		return ITE_Saved_Address::convert_to_saved( $location, $current, $this, $type, true, true );
 	}
 
 	/**

@@ -27,6 +27,10 @@ function it_exchange_get_data_set_properties( $data_key=false ) {
 			'file'     => dirname( __FILE__ ) . '/data-sets/countries.php',
 			'function' => 'it_exchange_get_countries',
 		),
+		'country-codes' => array(
+			'file'     => dirname( __FILE__ ) . '/data-sets/countries.php',
+			'function' => 'it_exchange_get_iso3_country_codes',
+		),
 		'provinces' => array(
 			'file'     => dirname( __FILE__ ) . '/data-sets/states.php',
 			'function' => 'it_exchange_get_country_states',

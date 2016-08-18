@@ -15,10 +15,10 @@
 ?>
 
 <?php do_action( 'it_exchange_content_confirmation_before_product_element' ); ?>
-<div class="it-exchange-transaction-product it-exchange-columns-wrapper it-exchange-clearfix">
+<div class="it-exchange-transaction-product it-exchange-table-row  <?php echo it_exchange( 'line-item', 'has-children' ) ? 'it-exchange-table-row-parent' : ''; ?>">
 	<?php do_action( 'it_exchange_content_confirmation_before_product_details' ); ?>
-	<div class="it-exchange-transaction-product-details it-exchange-column">
-		<div class="it-exchange-column-inner">
+	<div class="it-exchange-transaction-product-details it-exchange-table-column">
+		<div class="it-exchange-table-column-inner">
 			<?php do_action( 'it_exchange_content_confirmation_before_product_attibutes' ); ?>
 			<div class="it-exchange-transaction-product-attributes it-exchange-clearfix it-exchange-transaction-product-<?php echo ( it_exchange( 'transaction', 'has-featured-image' ) ) ? 'has-featured-image' : 'no-featured-image' ?>">
 				<?php do_action( 'it_exchange_content_confirmation_before_product_featured_image' ); ?>
@@ -66,12 +66,16 @@
 	<?php do_action( 'it_exchange_content_confirmation_after_product_details' ); ?>
 
 	<?php do_action( 'it_exchange_content_confirmation_before_product_cart_object' ); ?>
-	<div class="it-exchange-transaction-product-cart-object it-exchange-column">
-		<div class="it-exchange-column-inner">
+	<div class="it-exchange-transaction-product-cart-object it-exchange-table-column">
+		<div class="it-exchange-table-column-inner">
 			<?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'product_count' ) ); ?>
 			<span class="it-exchange-right"><?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'product_base_price' ) ); ?></span>
 		</div>
 	</div>
 	<?php do_action( 'it_exchange_content_confirmation_after_product_cart_object' ); ?>
 </div>
+
+<?php if ( it_exchange( 'line-item', 'has-children' ) ): ?>
+	<?php it_exchange_get_template_part( 'content-confirmation/loops/item-children' ); ?>
+<?php endif; ?>
 <?php do_action( 'it_exchange_content_confirmation_after_product_element' ); ?>
