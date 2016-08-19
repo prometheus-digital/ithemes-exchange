@@ -7,7 +7,6 @@
  */
 use IronBound\DB\Model;
 use IronBound\DB\Relations\HasForeign;
-use IronBound\DB\Relations\HasOne;
 
 /**
  * Merges a WP Post with iThemes Exchange Transaction data
@@ -60,10 +59,6 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 			$post_or_data = get_post( (int) $post_or_data );
 
 			$this->assert_post( $post_or_data );
-
-			if ( $post_or_data->post_type !== 'it_exchange_tran' ) {
-				throw new Exception( "Unable to construct IT_Exchange_Transaction #{$post_or_data->ID}. Incorrect post type." );
-			}
 		}
 
 		if ( $this->is_post_like( $post_or_data ) ) {
@@ -477,11 +472,13 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 */
 	public function get_customer() {
 
-		$customer_id = get_post_meta( $this->ID, '_it_exchange_customer_id', true );
+		$customer_id = $this->customer_id;
 		$customer    = it_exchange_get_customer( $customer_id );
 		$customer    = $customer instanceof IT_Exchange_Customer ? $customer : null;
 
-		return apply_filters( 'it_exchange_get_transaction_customer', $customer, $this );
+		$customer = apply_filters( 'it_exchange_get_transaction_customer', $customer, $this );
+
+		return $customer instanceof IT_Exchange_Customer ? $customer : null;
 	}
 
 	/**

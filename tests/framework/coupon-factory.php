@@ -40,6 +40,8 @@ class IT_Exchange_Test_Factory_For_Basic_Coupons extends WP_UnitTest_Factory_For
 
 		$args['post_meta']['_it-basic-code'] = $args['code'];
 
+		unset( $args['code'] );
+
 		return it_exchange_add_coupon( $args );
 	}
 

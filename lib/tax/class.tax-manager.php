@@ -101,7 +101,9 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 				}
 
 				continue;
-			} elseif ( $zone->contains( $zone->mask( $this->current_location ) ) ) {
+			} elseif ( $zone && $zone->contains( $zone->mask( $this->current_location ) ) ) {
+				$this->add_taxes_to_item( $item, $provider );
+			} elseif ( ! $zone ) {
 				$this->add_taxes_to_item( $item, $provider );
 			}
 		}

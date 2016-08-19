@@ -40,6 +40,10 @@ if ( ! defined( 'COOKIEHASH' ) ) {
 }
 
 function _manually_load_plugin() {
+	require_once dirname( __FILE__ ) . '/../lib/sessions/interface.php';
+	require_once dirname( __FILE__ ) . '/../lib/sessions/class.in-memory.php';
+	$GLOBALS['it_exchange']['session'] = new IT_Exchange_In_Memory_Session( null );
+
 	require_once dirname( __FILE__ ) . '/../init.php';
 }
 
@@ -69,7 +73,6 @@ require dirname( __FILE__ ) . '/framework/download-factory.php';
 require dirname( __FILE__ ) . '/framework/test-case.php';
 
 require_once dirname( __FILE__ ) . '/mocks/mock-product-type-class.php';
-require_once dirname( __FILE__ ) . '/mocks/mock-session.php';
 
 activate_plugin( 'ithemes-exchange/init.php' );
 

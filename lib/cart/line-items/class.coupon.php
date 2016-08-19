@@ -142,12 +142,20 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 			return $this->frozen->get_param( 'amount' );
 		}
 
+		if ( $this->get_aggregate() && ! $this->get_coupon()->valid_for_product( $this->get_aggregate() ) ) {
+			return 0.00;
+		}
+
 		$amount_number = $this->get_coupon()->get_amount_number();
 		$num_items     = $this->calculate_num_items();
 
+		if ( $num_items === 0 ) {
+			return 0.00;
+		}
+
 		$amount = $amount_number / $num_items;
 
-		if ( $this->get_aggregate() ) {
+		if ( $this->get_aggregate() && $this->get_coupon()->get_amount_type() === IT_Exchange_Coupon::TYPE_FLAT ) {
 			$amount *= $this->get_aggregate()->get_quantity();
 		}
 
@@ -160,7 +168,10 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 				return 0.00;
 			}
 
-			return - ( ( $amount / 100 ) * ( $product->get_amount_to_discount() * $product->get_quantity() ) );
+			$as_decimal         = $amount / 100;
+			$amount_to_discount = $product->get_amount_to_discount() * $product->get_quantity();
+
+			return - ( $as_decimal * $amount_to_discount );
 		} else {
 			return 0.00;
 		}

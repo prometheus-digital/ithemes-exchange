@@ -19,7 +19,7 @@ class IT_Exchange_Addons_Basic_Coupons_API_Test extends IT_Exchange_UnitTestCase
 	public function setUp() {
 		parent::setUp();
 
-		$GLOBALS['it_exchange']['session'] = new IT_Exchange_Mock_Session();
+		$GLOBALS['it_exchange']['session']->clear_session();
 	}
 
 	public function test_coupon_type_registered() {
@@ -98,11 +98,6 @@ class IT_Exchange_Addons_Basic_Coupons_API_Test extends IT_Exchange_UnitTestCase
 
 	public function test_get_total_discount_for_cart__flat_and_cart() {
 
-		$coupon = $this->getMockBuilder( 'IT_Exchange_Cart_Coupon' )->disableOriginalConstructor()->getMock();
-		$coupon->method( 'get_application_method' )->willReturn( IT_Exchange_Cart_Coupon::APPLY_CART );
-		$coupon->method( 'get_amount_type' )->willReturn( IT_Exchange_Cart_Coupon::TYPE_FLAT );
-		$coupon->method( 'get_amount_number' )->willReturn( 2.50 );
-
 		$p1 = $this->product_factory->create( array(
 			'base-price' => '5.00'
 		) );
@@ -110,21 +105,26 @@ class IT_Exchange_Addons_Basic_Coupons_API_Test extends IT_Exchange_UnitTestCase
 			'base-price' => '15.00'
 		) );
 
+		$coupon = $this->coupon_factory->create_and_get( array(
+			'code'      => 'CODE',
+			'post_meta' => array(
+				'_it-basic-apply-discount' => IT_Exchange_Cart_Coupon::APPLY_CART,
+				'_it-basic-amount-type'    => IT_Exchange_Cart_Coupon::TYPE_FLAT,
+				'_it-basic-amount-number'  => it_exchange_convert_to_database_number( 2.50 ),
+			)
+		) );
+
 		it_exchange_add_product_to_shopping_cart( $p1, 1 );
 		it_exchange_add_product_to_shopping_cart( $p2, 2 );
 
-		WP_Mock::wpFunction( 'it_exchange_get_applied_coupons', array(
-			'args'   => 'cart',
-			'return' => array( $coupon )
-		) );
+		$this->assertTrue( it_exchange_apply_coupon( 'cart', 'CODE' ) );
 
 		$this->assertEquals( '2.50', it_exchange_basic_coupons_get_total_discount_for_cart( false, array(
 			'format_price' => false
 		) ) );
 
-		WP_Mock::wpFunction( 'it_exchange_basic_coupons_valid_product_for_coupon', array(
-			'return_in_order' => array( true, false )
-		) );
+		update_post_meta( $coupon->ID, '_it-basic-limit-product', true );
+		update_post_meta( $coupon->ID, '_it-basic-excluded-products', array( $p2 ) );
 
 		$this->assertEquals( '2.50', it_exchange_basic_coupons_get_total_discount_for_cart( false, array(
 			'format_price' => false
@@ -133,11 +133,6 @@ class IT_Exchange_Addons_Basic_Coupons_API_Test extends IT_Exchange_UnitTestCase
 
 	public function test_get_total_discount_for_cart__percent_and_cart() {
 
-		$coupon = $this->getMockBuilder( 'IT_Exchange_Cart_Coupon' )->disableOriginalConstructor()->getMock();
-		$coupon->method( 'get_application_method' )->willReturn( IT_Exchange_Cart_Coupon::APPLY_CART );
-		$coupon->method( 'get_amount_type' )->willReturn( IT_Exchange_Cart_Coupon::TYPE_PERCENT );
-		$coupon->method( 'get_amount_number' )->willReturn( 10 );
-
 		$p1 = $this->product_factory->create( array(
 			'base-price' => '5.00'
 		) );
@@ -148,31 +143,31 @@ class IT_Exchange_Addons_Basic_Coupons_API_Test extends IT_Exchange_UnitTestCase
 		it_exchange_add_product_to_shopping_cart( $p1, 1 );
 		it_exchange_add_product_to_shopping_cart( $p2, 2 );
 
-		WP_Mock::wpFunction( 'it_exchange_get_applied_coupons', array(
-			'args'   => 'cart',
-			'return' => array( $coupon )
+		$coupon = $this->coupon_factory->create_and_get( array(
+			'code'      => 'CODE',
+			'post_meta' => array(
+				'_it-basic-apply-discount' => IT_Exchange_Cart_Coupon::APPLY_CART,
+				'_it-basic-amount-type'    => IT_Exchange_Cart_Coupon::TYPE_PERCENT,
+				'_it-basic-amount-number'  => it_exchange_convert_to_database_number( 10.00 ),
+			)
 		) );
+
+		$this->assertTrue( it_exchange_apply_coupon( 'cart', 'CODE' ) );
 
 		$this->assertEquals( '3.50', it_exchange_basic_coupons_get_total_discount_for_cart( false, array(
 			'format_price' => false
 		) ) );
 
-		WP_Mock::wpFunction( 'it_exchange_basic_coupons_valid_product_for_coupon', array(
-			'return_in_order' => array( true, false )
-		) );
+		update_post_meta( $coupon->ID, '_it-basic-limit-product', true );
+		update_post_meta( $coupon->ID, '_it-basic-excluded-products', array( $p2 ) );
 
-		$this->assertEquals( '3.50', it_exchange_basic_coupons_get_total_discount_for_cart( false, array(
+		$this->assertEquals( '0.50', it_exchange_basic_coupons_get_total_discount_for_cart( false, array(
 			'format_price' => false
 		) ) );
 	}
 
 	public function test_get_total_discount_for_cart__flat_and_product() {
 
-		$coupon = $this->getMockBuilder( 'IT_Exchange_Cart_Coupon' )->disableOriginalConstructor()->getMock();
-		$coupon->method( 'get_application_method' )->willReturn( IT_Exchange_Cart_Coupon::APPLY_PRODUCT );
-		$coupon->method( 'get_amount_type' )->willReturn( IT_Exchange_Cart_Coupon::TYPE_FLAT );
-		$coupon->method( 'get_amount_number' )->willReturn( 2.50 );
-
 		$p1 = $this->product_factory->create( array(
 			'base-price' => '5.00'
 		) );
@@ -183,18 +178,23 @@ class IT_Exchange_Addons_Basic_Coupons_API_Test extends IT_Exchange_UnitTestCase
 		it_exchange_add_product_to_shopping_cart( $p1, 1 );
 		it_exchange_add_product_to_shopping_cart( $p2, 2 );
 
-		WP_Mock::wpFunction( 'it_exchange_get_applied_coupons', array(
-			'args'   => 'cart',
-			'return' => array( $coupon )
+		$coupon = $this->coupon_factory->create_and_get( array(
+			'code'      => 'CODE',
+			'post_meta' => array(
+				'_it-basic-apply-discount' => IT_Exchange_Cart_Coupon::APPLY_PRODUCT,
+				'_it-basic-amount-type'    => IT_Exchange_Cart_Coupon::TYPE_FLAT,
+				'_it-basic-amount-number'  => it_exchange_convert_to_database_number( 2.50 ),
+			)
 		) );
+
+		$this->assertTrue( it_exchange_apply_coupon( 'cart', 'CODE' ) );
 
 		$this->assertEquals( '7.50', it_exchange_basic_coupons_get_total_discount_for_cart( false, array(
 			'format_price' => false
 		) ) );
 
-		WP_Mock::wpFunction( 'it_exchange_basic_coupons_valid_product_for_coupon', array(
-			'return_in_order' => array( true, false )
-		) );
+		update_post_meta( $coupon->ID, '_it-basic-limit-product', true );
+		update_post_meta( $coupon->ID, '_it-basic-excluded-products', array( $p2 ) );
 
 		$this->assertEquals( '2.50', it_exchange_basic_coupons_get_total_discount_for_cart( false, array(
 			'format_price' => false
@@ -203,11 +203,6 @@ class IT_Exchange_Addons_Basic_Coupons_API_Test extends IT_Exchange_UnitTestCase
 
 	public function test_get_total_discount_for_cart__percent_and_product() {
 
-		$coupon = $this->getMockBuilder( 'IT_Exchange_Cart_Coupon' )->disableOriginalConstructor()->getMock();
-		$coupon->method( 'get_application_method' )->willReturn( IT_Exchange_Cart_Coupon::APPLY_PRODUCT );
-		$coupon->method( 'get_amount_type' )->willReturn( IT_Exchange_Cart_Coupon::TYPE_PERCENT );
-		$coupon->method( 'get_amount_number' )->willReturn( 10 );
-
 		$p1 = $this->product_factory->create( array(
 			'base-price' => '5.00'
 		) );
@@ -218,18 +213,23 @@ class IT_Exchange_Addons_Basic_Coupons_API_Test extends IT_Exchange_UnitTestCase
 		it_exchange_add_product_to_shopping_cart( $p1, 1 );
 		it_exchange_add_product_to_shopping_cart( $p2, 2 );
 
-		WP_Mock::wpFunction( 'it_exchange_get_applied_coupons', array(
-			'args'   => 'cart',
-			'return' => array( $coupon )
+		$coupon = $this->coupon_factory->create_and_get( array(
+			'code'      => 'CODE',
+			'post_meta' => array(
+				'_it-basic-apply-discount' => IT_Exchange_Cart_Coupon::APPLY_PRODUCT,
+				'_it-basic-amount-type'    => IT_Exchange_Cart_Coupon::TYPE_PERCENT,
+				'_it-basic-amount-number'  => it_exchange_convert_to_database_number( 10.00 ),
+			)
 		) );
+
+		$this->assertTrue( it_exchange_apply_coupon( 'cart', 'CODE' ) );
 
 		$this->assertEquals( '3.50', it_exchange_basic_coupons_get_total_discount_for_cart( false, array(
 			'format_price' => false
 		) ) );
 
-		WP_Mock::wpFunction( 'it_exchange_basic_coupons_valid_product_for_coupon', array(
-			'return_in_order' => array( true, false )
-		) );
+		update_post_meta( $coupon->ID, '_it-basic-limit-product', true );
+		update_post_meta( $coupon->ID, '_it-basic-excluded-products', array( $p2 ) );
 
 		$this->assertEquals( '0.50', it_exchange_basic_coupons_get_total_discount_for_cart( false, array(
 			'format_price' => false

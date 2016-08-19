@@ -164,7 +164,13 @@ class IT_Exchange_Customer {
 	 * @return string
 	 */
 	public function get_email() {
-		return $this->data->user_email;
+		if ( isset( $this->data->user_email ) ) {
+			return $this->data->user_email;
+		} elseif ( is_email( $this->ID ) ) {
+			return $this->ID;
+		} else {
+			return '';
+		}
 	}
 
 	/**

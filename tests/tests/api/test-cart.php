@@ -18,7 +18,7 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$GLOBALS['it_exchange']['session'] = new IT_Exchange_Mock_Session();
+		$GLOBALS['it_exchange']['session']->clear_session();
 	}
 
 	public function test_add_get_cart_data() {
@@ -53,6 +53,9 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 		$this->assertInternalType( 'array', $products );
 	}
 
+	/**
+	 * @expectedDeprecated it_exchange_add_cart_product
+	 */
 	public function test_add_get_cart_products() {
 
 		$ID = it_exchange_add_product( array(
@@ -70,6 +73,10 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( $ID, $products[ $ID . '-hash' ]['product_id'] );
 	}
 
+	/**
+	 * @expectedDeprecated it_exchange_add_cart_product
+	 * @expectedDeprecated it_exchange_update_cart_product
+	 */
 	public function test_update_cart_product() {
 
 		$ID = it_exchange_add_product( array(
@@ -82,14 +89,18 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 		) );
 		$new_data = array(
 			'product_id' => $ID,
-			'quantity'   => 2
+			'count'      => 2
 		);
 		it_exchange_update_cart_product( $ID . '-hash', $new_data );
 
 		$products = it_exchange_get_cart_products();
-		$this->assertEquals( $new_data, $products[ $ID . '-hash' ] );
+		$this->assertEquals( $new_data['count'], $products[ $ID . '-hash' ]['count'] );
 	}
 
+	/**
+	 * @expectedDeprecated it_exchange_update_cart_product
+	 * @expectedDeprecated it_exchange_add_cart_product
+	 */
 	public function test_update_cart_products_adds_product() {
 
 		$ID = it_exchange_add_product( array(
@@ -106,6 +117,10 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( $ID, $products[ $ID . '-hash' ]['product_id'] );
 	}
 
+	/**
+	 * @expectedDeprecated it_exchange_add_cart_product
+	 * @expectedDeprecated it_exchange_delete_cart_product
+	 */
 	public function test_delete_cart_product() {
 
 		$ID = it_exchange_add_product( array(
@@ -122,27 +137,14 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEmpty( it_Exchange_get_cart_products() );
 	}
 
+	/**
+	 * @expectedDeprecated it_exchange_delete_cart_product
+	 */
 	public function test_delete_cart_product_non_existent_product() {
 
 		it_exchange_delete_cart_product( 'i-dont-exist' );
 
 		$this->assertEmpty( it_exchange_get_cart_products() );
-	}
-
-	public function test_get_cart_product() {
-
-		$ID = it_exchange_add_product( array(
-			'type'  => 'simple-product-type',
-			'title' => 'My Product'
-		) );
-
-		$product = array(
-			'product_id' => $ID
-		);
-
-		it_exchange_add_cart_product( $ID . '-hash', $product );
-
-		$this->assertEquals( $product, it_exchange_get_cart_product( $ID . '-hash' ) );
 	}
 
 	public function test_get_cart_product_returns_false_for_invalid_product() {
@@ -298,6 +300,10 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 		$product->method( 'supports_feature' )->with( 'purchase-quantity' )->willReturn( false );
 		$product->ID = 1;
 
+		WP_Mock::wpFunction( 'it_exchange_get_product', array(
+			'return' => $product,
+		) );
+
 		$cart_product_id = it_exchange_add_product_to_shopping_cart( $product, 2, true );
 
 		$data = it_exchange_get_cart_product( $cart_product_id );
@@ -316,6 +322,10 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 			array( 'inventory', array(), 2 )
 		) );
 		$product->ID = 1;
+
+		WP_Mock::wpFunction( 'it_exchange_get_product', array(
+			'return' => $product,
+		) );
 
 		$cart_product_id = it_exchange_add_product_to_shopping_cart( $product, 3, true );
 
@@ -336,6 +346,10 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 		) );
 		$product->ID = 1;
 
+		WP_Mock::wpFunction( 'it_exchange_get_product', array(
+			'return' => $product,
+		) );
+
 		$cart_product_id = it_exchange_add_product_to_shopping_cart( $product, 3, true );
 
 		$data = it_exchange_get_cart_product( $cart_product_id );
@@ -354,6 +368,10 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 			array( 'inventory', array(), 2 )
 		) );
 		$product->ID = 1;
+
+		WP_Mock::wpFunction( 'it_exchange_get_product', array(
+			'return' => $product,
+		) );
 
 		$cart_product_id = it_exchange_add_product_to_shopping_cart( $product, 5, true );
 
@@ -374,6 +392,10 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 		) );
 		$product->ID = 1;
 
+		WP_Mock::wpFunction( 'it_exchange_get_product', array(
+			'return' => $product,
+		) );
+
 		$cart_product_id = it_exchange_add_product_to_shopping_cart( $product, 5, true );
 
 		$data = it_exchange_get_cart_product( $cart_product_id );
@@ -392,6 +414,10 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 			array( 'inventory', array(), 0 )
 		) );
 		$product->ID = 1;
+
+		WP_Mock::wpFunction( 'it_exchange_get_product', array(
+			'return' => $product,
+		) );
 
 		$cart_product_id = it_exchange_add_product_to_shopping_cart( $product, 5, true );
 
@@ -460,8 +486,10 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 			'title' => 'My Product'
 		) );
 
+		$cid = it_exchange_add_product_to_shopping_cart( $ID, 1, true );
+
 		$this->assertEquals( 'My Product', it_exchange_get_cart_product_title( array(
-			'product_id' => $ID
+			'product_cart_id' => $cid
 		) ) );
 	}
 
@@ -631,6 +659,16 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_get_cart_shipping_address_defaults() {
 
+		$properties = array(
+			'requirement-met'        => 'it_exchange_get_customer_shipping_address', // This is a PHP callback
+			'sw-template-part'       => 'shipping-address',
+			'checkout-template-part' => 'shipping-address',
+			'notification'           => __( 'You must enter a shipping address before you can checkout', 'it-l10n-ithemes-exchange' ),
+			'priority'               => 5.12
+		);
+
+		it_exchange_register_purchase_requirement( 'shipping-address', $properties );
+
 		wp_set_current_user( 1 );
 		$user = wp_get_current_user();
 
@@ -659,6 +697,8 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( $user->user_email, $shipping['email'] );
 
 		wp_set_current_user( 0 );
+
+		it_exchange_unregister_purchase_requirement( 'shipping-address' );
 	}
 
 	public function test_get_cart_billing_address_defaults() {
@@ -666,7 +706,7 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 		wp_set_current_user( 1 );
 		$user = wp_get_current_user();
 
-		$billing = it_exchange_get_cart_shipping_address();
+		$billing = it_exchange_get_cart_billing_address();
 
 		$keys = array(
 			'first-name',

@@ -209,7 +209,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 			throw new Exception( __( 'This coupon has reached its maximum uses.', 'it-l10n-ithemes-exchange' ), self::E_NO_QUANTITY );
 		}
 
-		if ( $this->is_customer_limited() && $cart->get_customer()->ID != $this->get_customer()->ID ) {
+		if ( $this->is_customer_limited() && ( ! $cart->get_customer() || $cart->get_customer()->ID != $this->get_customer()->ID ) ) {
 			throw new Exception( __( 'Invalid coupon.', 'it-l10n-ithemes-exchange' ), self::E_INVALID_CUSTOMER );
 		}
 
@@ -288,7 +288,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	 * @return float
 	 */
 	public function get_amount_number() {
-		return it_exchange_convert_from_database_number( get_post_meta( $this->get_ID(), '_it-basic-amount-number', true ) );
+		return (float) it_exchange_convert_from_database_number( get_post_meta( $this->get_ID(), '_it-basic-amount-number', true ) );
 	}
 
 	/**

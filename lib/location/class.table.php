@@ -96,7 +96,7 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 	 */
 	protected function get_keys() {
 		return array_merge( parent::get_keys(), array(
-			'KEY customer__type__primary (customer,type,primary)',
+			'KEY customer__type__primary (customer,type,`primary`)',
 			'KEY country (country)'
 		) );
 	}

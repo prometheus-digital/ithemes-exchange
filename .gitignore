@@ -4,5 +4,7 @@ Thumbs.db
 _notes
 exchange-unit-tests/
 coverage.xml
+.idea
 
 /vendor/
+.DS_STORE

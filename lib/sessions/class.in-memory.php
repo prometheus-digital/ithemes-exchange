@@ -144,6 +144,10 @@ class IT_Exchange_In_Memory_Session implements IT_Exchange_SessionInterface {
 	public function clear_session( $hard = false ) {
 		$this->session = array();
 
+		if ( $c = it_exchange_get_current_cart( false ) ) {
+			$c->destroy();
+		}
+
 		$this->save();
 	}
 

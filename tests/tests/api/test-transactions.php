@@ -12,6 +12,14 @@
  * @group transactions-api
  */
 class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
+	/**
+	 * @inheritDoc
+	 */
+	public function setUp() {
+		parent::setUp();
+
+		$GLOBALS['it_exchange']['session']->clear_session();
+	}
 
 	/**
 	 * Get a transaction for testing.
@@ -55,7 +63,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 	}
 
 	public function test_get_transaction_returns_false_for_invalid_post_type() {
-		$this->assertFalse( it_exchange_get_transaction( get_post( 1 ) ) );
+		$this->assertFalse( it_exchange_get_transaction( self::factory()->post->create_and_get() ) );
 	}
 
 	public function test_get_transaction_by_method_id() {
@@ -191,8 +199,15 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( $parent, wp_get_post_parent_id( $child ) );
 	}
 
+	/**
+	 * @expectedDeprecated it_exchange_get_gateway_id_for_transaction
+	 */
 	public function test_get_gateway_id_for_transaction() {
 		$this->assertEquals( 'test-method-id', it_exchange_get_gateway_id_for_transaction( $this->_get_txn() ) );
+	}
+
+	public function test_get_method_id_for_transaction() {
+		$this->assertEquals( 'test-method-id', it_exchange_get_transaction_method_id( $this->_get_txn() ) );
 	}
 
 	public function test_get_transaction_id_from_hash() {
@@ -465,7 +480,10 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 			'shipping_address' => $shipping
 		) );
 
-		$this->assertEquals( $shipping, it_exchange_get_transaction_shipping_address( $txn ) );
+		$saved = it_exchange_get_transaction_shipping_address( $txn );
+
+		$this->assertEquals( 'John', $saved['first-name'] );
+		$this->assertEquals( 'Doe', $saved['last-name'] );
 	}
 
 	public function test_get_transaction_billing_address() {
@@ -479,7 +497,10 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 			'billing_address' => $billing
 		) );
 
-		$this->assertEquals( $billing, it_exchange_get_transaction_billing_address( $txn ) );
+		$saved = it_exchange_get_transaction_billing_address( $txn );
+
+		$this->assertEquals( 'John', $saved['first-name'] );
+		$this->assertEquals( 'Doe', $saved['last-name'] );
 	}
 
 	public function test_get_transaction_products() {

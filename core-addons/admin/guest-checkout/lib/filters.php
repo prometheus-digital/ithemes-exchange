@@ -125,96 +125,36 @@ add_action( 'template_redirect', 'it_exchange_handle_guest_checkout_session', 9 
 add_action( 'it_exchange_super_widget_ajax_top', 'it_exchange_handle_guest_checkout_session', 9 );
 
 /**
- * Modify customer billing address
+ * Save the billing address to the guest checkout session for BC.
  *
- * @since 1.6.0
+ * @since 1.36.0
  *
- * @param array $address the billing address returned from customer meta
- *
- * @return mixed
-*/
-function it_exchange_guest_checkout_handle_billing_address( $address ) {
-	if ( ! it_exchange_doing_guest_checkout() )
-		return $address;
+ * @param \ITE_Cart $cart
+ */
+function it_exchange_guest_checkout_deprecated_billing_address_shipping( ITE_Cart $cart ) {
 
-	if ( ! $guest_billing = it_exchange_get_cart_data( 'guest-billing-address' ) )
-		$guest_billing = false;
-
-	return $guest_billing;
-}
-add_filter( 'it_exchange_get_customer_billing_address', 'it_exchange_guest_checkout_handle_billing_address' );
-
-/**
- * Modify cart billing address
- *
- * @since 1.6.0
- *
- * @param array $cart_billing
- *
- * @return array
-*/
-function it_exchange_guest_checkout_handle_cart_billing_address( $cart_billing ) {
-
-	if ( ! it_exchange_doing_guest_checkout() )
-		return $cart_billing;
-
-	$guest_billing = it_exchange_get_cart_data( 'guest-billing-address' );
-
-	if ( ! $guest_billing ) {
-		foreach( $cart_billing as $key => $value ) {
-			$guest_billing[$key] = '';
-		}
+	if ( $cart->is_current() && it_exchange_doing_guest_checkout() ) {
+		it_exchange_update_cart_data( 'guest-billing-address', $cart->get_billing_address()->to_array() );
 	}
-
-	return $guest_billing;
-
 }
-add_filter( 'it_exchange_get_cart_billing_address', 'it_exchange_guest_checkout_handle_cart_billing_address' );
+
+add_action( 'it_exchange_set_cart_billing_address', 'ite_save_main_billing_address_on_current_update' );
 
 /**
- * Do not update the Customer's Billing address if doing guest checkout. Add it to the session instead
+ * Save the shipping address to the guest checkout session for BC.
  *
- * @since 1.6.0
+ * @since 1.36.0
  *
- * @param array $address the address array that is supposed to be added to the customer
- * @return array
-*/
-function it_exchange_guest_checkout_handle_update_billing_address( $address ) {
-	if ( ! it_exchange_doing_guest_checkout() )
-		return $address;
+ * @param \ITE_Cart $cart
+ */
+function it_exchange_guest_checkout_deprecated_shipping_address_shipping( ITE_Cart $cart ) {
 
-	// Add the address to our cart
-	it_exchange_update_cart_data( 'guest-billing-address', $address );
-
-	// Update shipping too if checked
-	if ( ! empty( $_REQUEST['it-exchange-ship-to-billing'] ) ) {
-		it_exchange_update_cart_data( 'guest-shipping-address', $address );
+	if ( $cart->is_current() && it_exchange_doing_guest_checkout() ) {
+		it_exchange_update_cart_data( 'guest-shipping-address', $cart->get_shipping_address()->to_array() );
 	}
-
-	// Return false so that the customer address doesn't get updated
-	return false;
 }
-add_action( 'it_exchange_save_customer_billing_address', 'it_exchange_guest_checkout_handle_update_billing_address' );
 
-/**
- * Modify customer shipping address
- *
- * @since 1.6.0
- *
- * @param array $address the shipping address returned from customer meta
- *
- * @return mixed
-*/
-function it_exchange_guest_checkout_handle_shipping_address( $address ) {
-	if ( ! it_exchange_doing_guest_checkout() )
-		return $address;
-
-	if ( ! $guest_shipping = it_exchange_get_cart_data( 'guest-shipping-address' ) )
-		$guest_shipping = false;
-
-	return $guest_shipping;
-}
-add_filter( 'it_exchange_get_customer_shipping_address', 'it_exchange_guest_checkout_handle_shipping_address' );
+add_action( 'it_exchange_set_cart_shipping_address', 'ite_save_main_shipping_address_on_current_update' );
 
 /**
  * Returns the customer email for a guest transaction
@@ -274,52 +214,6 @@ function it_exchange_hide_admin_customer_details_link_on_transaction_details_pag
 	return $display_link;
 }
 add_filter( 'it_exchange_transaction_detail_has_customer_profile', 'it_exchange_hide_admin_customer_details_link_on_transaction_details_page', 10, 2 );
-
-/**
- * Modify cart shipping address
- *
- * @since 1.6.0
- *
- * @return array
-*/
-function it_exchange_guest_checkout_handle_cart_shipping_address( $cart_shipping ) {
-
-	if ( ! it_exchange_doing_guest_checkout() )
-		return $cart_shipping;
-
-	$guest_shipping = it_exchange_get_cart_data( 'guest-shipping-address' );
-
-	if ( ! $guest_shipping ) {
-		foreach( $cart_shipping as $key => $value ) {
-			$guest_shipping[$key] = '';
-		}
-	}
-
-	return $guest_shipping;
-
-}
-add_filter( 'it_exchange_get_cart_shipping_address', 'it_exchange_guest_checkout_handle_cart_shipping_address' );
-
-/**
- * Do not update the Customer's shipping address if doing guest checkout. Add it to the session instead
- *
- * @since 1.6.0
- *
- * @param array $address the address array that is supposed to be added to the customer
- *
- * @return array
-*/
-function it_exchange_guest_checkout_handle_update_shipping_address( $address ) {
-	if ( ! it_exchange_doing_guest_checkout() )
-		return $address;
-
-	// Add the address to our cart
-	it_exchange_update_cart_data( 'guest-shipping-address', $address );
-
-	// Return false so that the customer address doesn't get updated
-	return false;
-}
-add_action( 'it_exchange_save_customer_shipping_address', 'it_exchange_guest_checkout_handle_update_shipping_address' );
 
 /**
  * Flags the user as someone who registered as a guest

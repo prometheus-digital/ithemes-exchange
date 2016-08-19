@@ -178,6 +178,8 @@ class IT_Exchange_API_Products_Test extends IT_Exchange_UnitTestCase {
 
 	protected function _setup_get_transactions_for_product() {
 
+		$GLOBALS['it_exchange']['session']->clear_session();
+
 		$ID = it_exchange_add_product( array(
 			'title' => 'My Product',
 			'type'  => 'simple-product-type'

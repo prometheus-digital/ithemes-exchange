@@ -5,8 +5,10 @@
  * In addition to the functions found below, iThemes Exchange offers the following actions related to transactions
  * - it_exchange_save_transaction_unvalidated                       // Runs every time a transaction is saved.
  * - it_exchange_save_transaction_unavalidated-[txn-method] // Runs every time a specific transaction method is saved.
- * - it_exchange_save_transaction                           // Runs every time a transaction is saved if not an autosave and if user has permission to save post
- * - it_exchange_save_transaction-[txn-method]             // Runs every time a specific transaction method is saved if not an autosave and if user has permission to save transaction
+ * - it_exchange_save_transaction                           // Runs every time a transaction is saved if not an
+ * autosave and if user has permission to save post
+ * - it_exchange_save_transaction-[txn-method]             // Runs every time a specific transaction method is saved if
+ * not an autosave and if user has permission to save transaction
  *
  * @package IT_Exchange
  * @since 0.3.3
@@ -439,7 +441,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		$cart        = $cart_object;
 		$cart_object = it_exchange_generate_transaction_object( $cart );
 	} else {
-		$cart = it_exchange_get_current_cart();
+		$cart = it_exchange_get_current_cart( false );
 	}
 
 	if ( it_exchange_get_transaction_by_method_id( $method, $method_id ) ) {
@@ -472,14 +474,23 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 
 		$hash = it_exchange_generate_transaction_hash( $transaction_id, $customer ? $customer->id  : false );
 
+		/** @var mixed $cart_object */
+		if ( isset( $cart_object->cart_id ) ) {
+			$cart_id = $cart_object->cart_id;
+		} elseif ( $cart ) {
+			$cart_id = $cart->get_id();
+		} else {
+			$cart_id = null;
+		}
+
 		$purchase_args = array(
 			'ID'            => $transaction_id,
 			'status'        => $status,
 			'method'        => $method,
 			'method_id'     => $method_id,
-			'cart_id'       => $cart->get_id(),
-			'total'         => $cart_object->total,
-			'subtotal'      => $cart_object->sub_total,
+			'cart_id'       => $cart_id,
+			'total'         => isset( $cart_object->total ) ? $cart_object->total : 0,
+			'subtotal'      => isset( $cart_object->sub_total ) ? $cart_object->sub_total : 0,
 			'order_date'    => current_time( 'mysql', true ),
 			'hash'          => $hash,
 		);
@@ -494,32 +505,49 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 
 		$transaction = IT_Exchange_Transaction::create( $purchase_args );
 
-		do_action( 'it_exchange_add_transaction_success', $transaction_id );
-
-		if ( $products = it_exchange_get_transaction_products( $transaction_id ) ) {
-			// Loop through products
-			foreach( $products as $cart_id => $data ) {
-				$product = new IT_Exchange_Product( $data['product_id'] );
-				$product->add_transaction_to_product( $transaction_id );
-
-			}
-		}
-
 		if ( $customer instanceof IT_Exchange_Customer ) {
 			$customer->add_transaction_to_user( $transaction_id );
 		}
 
-		$cart->get_items()->flatten()->freeze();
-
 		$repo = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
-		$cart->with_new_repository( $repo );
+
+		if ( $cart ) {
+			/** @var ITE_Cart_Product $product */
+			foreach ( $cart->get_items( 'product' ) as $product ) {
+				$product->get_product()->add_transaction_to_product( $transaction_id );
+			}
+
+			$cart->get_items()->flatten()->freeze();
+			$cart->with_new_repository( $repo );
+		} elseif ( ! empty( $cart_object->products ) ) {
+			foreach ( $cart_object->products as $product ) {
+				$product = new IT_Exchange_Product( $product['product_id'] );
+				$product->add_transaction_to_product( $transaction_id );
+			}
+		}
+
+		if ( ! $cart && ! empty( $cart_object->billing_address ) && is_array( $cart_object->billing_address ) ) {
+			$repo->set_billing_address( new ITE_In_Memory_Address( $cart_object->billing_address ) );
+		}
+
+		if ( ! $cart && ! empty( $cart_object->shipping_address ) && is_array( $cart_object->shipping_address ) ) {
+			$repo->set_shipping_address( new ITE_In_Memory_Address( $cart_object->shipping_address ) );
+		}
 
 		if ( $transaction->is_cleared_for_delivery() ) {
 			$transaction->set_attribute( 'cleared', true );
 			$transaction->save();
 		}
 
-		return apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer, $cart_object, $args );
+		do_action( 'it_exchange_add_transaction_success', $transaction_id );
+
+		$r = apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer, $cart_object, $args );
+
+		if ( $cart ) {
+			$cart->destroy();
+		}
+
+		return $r;
 	}
 
 	do_action( 'it_exchange_add_transaction_failed', $method, $method_id, $status, $customer, $cart_object, $args );
@@ -556,6 +584,9 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 	$args['post_parent'] = $parent_tx_id;
 
 	if ( $transaction_id = wp_insert_post( $args ) ) {
+
+		update_post_meta( $transaction_id, '_it_exchange_cart_object', $cart_object );
+
 		$purchase_args = array(
 			'ID'            => $transaction_id,
 			'status'        => $status,

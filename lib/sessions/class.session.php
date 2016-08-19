@@ -189,6 +189,10 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface {
 	public function clear_session( $hard = false ) {
 		it_exchange_db_session_regenerate_id( $hard );
 		it_exchange_db_session_commit();
+
+		if ( $c = it_exchange_get_current_cart( false ) ) {
+			$c->destroy();
+		}
 	}
 
 	/**

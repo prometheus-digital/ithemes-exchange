@@ -18,8 +18,8 @@ class IT_Exchange_Addons_Basic_Coupons_Model_Test extends IT_Exchange_UnitTestCa
 	 */
 	public function setUp() {
 		parent::setUp();
-		
-		$GLOBALS['it_exchange']['session'] = new IT_Exchange_Mock_Session();
+
+		$GLOBALS['it_exchange']['session']->clear_session();
 	}
 
 	public function test_increment_usage() {

@@ -123,6 +123,9 @@ class IT_Exchange_API_Customers_Test extends IT_Exchange_UnitTestCase {
 
 		it_exchange_save_customer_billing_address( $address, 1 );
 
-		$this->assertEquals( $address, it_exchange_get_customer_billing_address( 1 ) );
+		$saved = it_exchange_get_customer_billing_address( 1 );
+
+		$this->assertEquals( 'John', $saved['first-name'] );
+		$this->assertEquals( 'Doe', $saved['last-name'] );
 	}
 }

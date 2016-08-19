@@ -40,7 +40,7 @@ class IT_Exchange_Test_Factory_For_Transactions extends WP_UnitTest_Factory_For_
 			'method'      => 'test-method',
 			'status'      => 'pending',
 			'customer'    => 1,
-			'cart_object' => new stdClass(),
+			'cart_object' => (object) array( 'total' => 0, 'sub_total' => 0 ),
 			'cart_id'     => it_exchange_create_cart_id(),
 		);
 

@@ -435,7 +435,6 @@ function it_exchange_basic_coupons_get_total_discount_for_cart( $discount = fals
 	$options = ITUtility::merge_defaults( $options, $defaults );
 
 	$cart    = it_exchange_get_current_cart();
-	$products = $cart->get_items('product');
 	$coupons = $cart->get_items( 'coupon', true )->filter( function ( ITE_Coupon_Line_Item $item ) {
 		return $item->get_coupon()->get_type() === 'cart';
 	} );

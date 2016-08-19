@@ -21,13 +21,18 @@
  */
 function it_exchange_get_current_cart( $create_if_not_started = true ) {
 
+	/** @var ITE_Cart $cart */
 	static $cart = null;
 
-	if ( $cart === null && $create_if_not_started ) {
+	if ( $create_if_not_started && ( $cart === null || ! $cart->get_id() ) ) {
 		$cart = new \ITE_Cart(
 			new ITE_Line_Item_Session_Repository( it_exchange_get_session(), new ITE_Line_Item_Repository_Events() ),
 			it_exchange_get_cart_id( true )
 		);
+	}
+
+	if ( $cart && ! $cart->get_id() ) {
+		$cart = null;
 	}
 
 	return $cart;
@@ -255,9 +260,9 @@ function it_exchange_get_max_product_quantity_allowed( $product, $cart_product_i
 
 	/**
 	 * Filter the maximum product quantity allowed to be purchased.
-	 * 
+	 *
 	 * @since 1.35.7
-	 *        
+	 *
 	 * @param int                 $allowed          Maximum quantity allowed.
 	 * @param IT_Exchange_Product $product          Product being purchased.
 	 * @param string              $cart_product_id  Cart product ID. May be empty if new purchase request.
@@ -319,7 +324,7 @@ function it_exchange_get_cached_customer_cart( $customer_id = false, $session_on
 	if ( ! $customer || ! is_numeric( $customer->id ) || $customer->id <= 0 ) {
 		return false;
 	}
-	
+
 	if ( $session_only ) {
 
 		// Grab the data
@@ -333,7 +338,7 @@ function it_exchange_get_cached_customer_cart( $customer_id = false, $session_on
 	} else {
 		try {
 			$repository = ITE_Line_Item_Cached_Session_Repository::from_customer( $customer );
-			
+
 			return new \ITE_Cart( $repository, $repository->get_cart_id(), $customer );
 		} catch ( UnexpectedValueException $e ) {
 			return false;
@@ -486,8 +491,8 @@ function it_exchange_merge_cached_customer_cart_into_current_session( $user_logi
 
 	try {
 		$repository = ITE_Line_Item_Cached_Session_Repository::from_customer( $customer );
-		it_exchange_get_current_cart()->merge( new \ITE_Cart( 
-			$repository, $repository->get_cart_id(), $customer 
+		it_exchange_get_current_cart()->merge( new \ITE_Cart(
+			$repository, $repository->get_cart_id(), $customer
 		) );
 	} catch ( UnexpectedValueException $e ) {
 
@@ -526,7 +531,7 @@ function it_exchange_sync_current_cart_with_all_active_customer_carts() {
  * Default is no. Addons must tell us yes as well as provide any pages needed for a cart / checkout / etc.
  *
  * @since 0.4.0
- *        
+ *
  * @param \ITE_Cart|null $cart
  *
  * @return boolean
@@ -759,7 +764,7 @@ function it_exchange_get_cart_subtotal( $format = true, $options = array() ) {
 	} else {
 		$cart = it_exchange_get_current_cart();
 	}
-	
+
 	if ( ! $cart instanceof ITE_Cart ) {
 		return $format ? it_exchange_format_price( 0 ) : 0;
 	}
@@ -802,7 +807,7 @@ function it_exchange_get_cart_subtotal( $format = true, $options = array() ) {
  * @return mixed total of cart
 */
 function it_exchange_get_cart_total( $format = true, $options = array() ) {
-	
+
 	if ( ! empty( $options['use_cached_customer_cart'] ) ) {
 		$cart = it_exchange_get_cached_customer_cart( $options['use_cached_customer_cart'], false );
 	}
@@ -815,7 +820,7 @@ function it_exchange_get_cart_total( $format = true, $options = array() ) {
 	if ( ! $cart instanceof ITE_Cart ) {
 		return 0;
 	}
-	
+
 	$total = it_exchange_get_cart_subtotal( false, $options );
 	$total += $cart->get_items( '', true )->without( 'product' )->filter( function ( ITE_Line_Item $item ) {
 		return $item->is_summary_only();
@@ -845,7 +850,7 @@ function it_exchange_get_cart_total( $format = true, $options = array() ) {
  * @return string description
 */
 function it_exchange_get_cart_description( $options = array() ) {
-	
+
 	if ( ! empty( $options['use_cached_customer_cart'] ) ) {
 		$cart = it_exchange_get_cached_customer_cart( $options['use_cached_customer_cart'], false );
 	}
@@ -858,7 +863,7 @@ function it_exchange_get_cart_description( $options = array() ) {
 	if ( ! $cart instanceof ITE_Cart ) {
 		return '';
 	}
-	
+
 	$description = array();
 	$items       = $cart->get_items( 'product' );
 
@@ -934,7 +939,14 @@ function it_exchange_get_cart_shipping_address() {
  * @return array
 */
 function it_exchange_get_cart_billing_address() {
-	return it_exchange_get_current_cart()->get_billing_address()->to_array();
+
+	$address = it_exchange_get_current_cart()->get_billing_address();
+
+	if ( $address === null ) {
+		return array();
+	} else {
+		return $address->to_array();
+	}
 }
 
 /**
@@ -976,7 +988,7 @@ function it_exchange_update_cart_id( $id = false ) {
  * Get a cart id from the session
  *
  * @since 1.10.0
- *        
+ *
  * @param bool $generate Generate a cart ID is one does not exist.
  *
  * @return string returns the ID

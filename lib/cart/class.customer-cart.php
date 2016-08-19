@@ -523,7 +523,10 @@ class ITE_Cart {
 	 * @return bool
 	 */
 	protected function add_product_item( ITE_Cart_Product $product ) {
-		ITE_Cart_Product::generate_cart_product_id( $product );
+
+		if ( ! $product->get_id() ) {
+			ITE_Cart_Product::generate_cart_product_id( $product );
+		}
 
 		if ( $dupe = $this->get_item( 'product', $product->get_id() ) ) {
 
@@ -773,6 +776,8 @@ class ITE_Cart {
 		if ( $this->is_current() ) {
 			it_exchange_remove_cart_id();
 		}
+
+		$this->cart_id = null;
 	}
 
 	/**

@@ -15,7 +15,7 @@
  */
 function ite_save_main_billing_address_on_current_update( ITE_Cart $cart ) {
 
-	if ( $cart->is_current() && $cart->get_customer() ) {
+	if ( $cart->is_current() && $cart->get_customer() && is_numeric( $cart->get_customer()->ID ) ) {
 		it_exchange_save_customer_billing_address( $cart->get_billing_address()->to_array(), $cart->get_customer()->ID );
 	}
 }
@@ -31,7 +31,7 @@ add_action( 'it_exchange_set_cart_billing_address', 'ite_save_main_billing_addre
  */
 function ite_save_main_shipping_address_on_current_update( ITE_Cart $cart ) {
 
-	if ( $cart->is_current() && $cart->get_customer() ) {
+	if ( $cart->is_current() && $cart->get_customer() && is_numeric( $cart->get_customer()->ID ) ) {
 		it_exchange_save_shipping_address( $cart->get_shipping_address()->to_array(), $cart->get_customer()->ID );
 	}
 }
@@ -207,9 +207,26 @@ function it_exchange_get_cart_products( $options = array() ) {
 function it_exchange_add_cart_product( $cart_product_id, $product ) {
 	_deprecated_function( __FUNCTION__, '1.36.0' );
 
-	if ( ! empty( $cart_product_id ) && ! empty( $product ) ) {
-		it_exchange_add_session_data( 'products', array( $cart_product_id => $product ) );
+	if ( $cart_product_id && $product ) {
+
+		if ( empty( $product['product_id'] ) ) {
+			return;
+		}
+
+		$item = new ITE_Cart_Product( $cart_product_id, new ITE_Array_Parameter_Bag(
+			array_merge( array(
+				'count'           => 1,
+				'product_name'    => get_the_title( $product['product_id'] ),
+				'itemized_data'   => array(),
+				'additional_data' => array(),
+				'product_cart_id' => $cart_product_id,
+				'itemized_hash'   => '',
+			), $product )
+		), new ITE_Array_Parameter_Bag() );
+
+		it_exchange_get_current_cart()->add_item( $item );
 	}
+
 	do_action_deprecated( 'it_exchange_add_cart_product', array( $product ), '1.36.0' );
 }
 
@@ -231,7 +248,11 @@ function it_exchange_update_cart_product( $cart_product_id, $product ) {
 	if ( ! empty( $cart_product_id ) && ! empty( $product ) ) {
 		$products = it_exchange_get_session_data( 'products' );
 		if ( isset( $products[ $cart_product_id ] ) ) {
-			$products[ $cart_product_id ] = $product;
+
+			foreach ( $product as $key => $value ) {
+				$products[ $cart_product_id ][ $key ] = $value;
+			}
+
 			it_exchange_update_session_data( 'products', $products );
 		} else {
 			it_exchange_add_cart_product( $cart_product_id, $product );
@@ -278,7 +299,7 @@ function it_exchange_delete_cart_product( $cart_product_id ) {
  * @param mixed  $id id for the cart's product data
  * @param  array $options
  *
- * @return array|bool
+ * @return array|false
  */
 function it_exchange_get_cart_product( $id, $options = array() ) {
 	if ( ! $products = it_exchange_get_cart_products( $options ) ) {
