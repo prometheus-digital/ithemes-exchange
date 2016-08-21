@@ -386,21 +386,29 @@ function it_exchange_delete_transient_transaction( $method, $temp_id ) {
  * Adds a transaction post_type to WP
  *
  * @since 0.3.3
+ *
  * @param string $method Transaction method (e.g. paypal, stripe, etc)
  * @param string $method_id ID from transaction method
  * @param string $status Transaction status
- * @param int|bool $customer Customer ID
- * @param stdClass|ITE_Cart $cart_object passed cart object
+ * @param IT_Exchange_Customer|int|ITE_Cart $customer_or_cart Customer or Cart
+ * @param stdClass|ITE_Cart $cart_object Cart or Transaction object {@see it_exchange_generate_transaction_object()}
  * @param array $args same args passed to wp_insert_post plus any additional needed
  *
- * @return mixed post id or false
+ * @return int|false Transaction ID or false on failure
 */
-function it_exchange_add_transaction( $method, $method_id, $status = 'pending', $customer = false, $cart_object, $args = array() ) {
+function it_exchange_add_transaction( $method, $method_id, $status = 'pending', $customer_or_cart = 0, $cart_object = null, $args = array() ) {
 	$defaults = array(
 		'post_type'          => 'it_exchange_tran',
 		'post_status'        => 'publish',
 	);
 	$args = wp_parse_args( $args, $defaults );
+
+	if ( $customer_or_cart instanceof ITE_Cart ) {
+		$cart_object = $customer_or_cart;
+		$customer    = $customer_or_cart->get_customer();
+	} else {
+		$customer = $customer_or_cart;
+	}
 
 	if ( $cart_object instanceof ITE_Cart ) {
 		$cart        = $cart_object;
@@ -415,6 +423,10 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		$customer = $cart->get_customer();
 	} else {
 		$customer = it_exchange_get_current_customer();
+	}
+
+	if ( ! $cart_object ) {
+		throw new InvalidArgumentException( 'Either a \ITE_Cart or cart object must be provided.' );
 	}
 
 	if ( it_exchange_get_transaction_by_method_id( $method, $method_id ) ) {
