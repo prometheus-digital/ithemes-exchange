@@ -44,7 +44,7 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 			'address1'     => new StringBased( 'VARCHAR', 'address1', array( 'NOT NULL' ), array( '191' ) ),
 			'address2'     => new StringBased( 'VARCHAR', 'address2', array( 'NOT NULL' ), array( '191' ) ),
 			'city'         => new StringBased( 'VARCHAR', 'city', array( 'NOT NULL' ), array( '100' ) ),
-			'state'        => new StringBased( 'VARCHAR', 'state', array( 'NOT NULL' ), array( '3' ) ),
+			'state'        => new StringBased( 'VARCHAR', 'state', array( 'NOT NULL' ), array( '100' ) ),
 			'zip'          => new StringBased( 'VARCHAR', 'zip', array( 'NOT NULL' ), array( '20' ) ),
 			'country'      => new StringBased( 'VARCHAR', 'country', array( 'NOT NULL' ), array( '3' ) ),
 			'email'        => new StringBased( 'VARCHAR', 'email', array( 'NOT NULL' ), array( '191' ) ),
@@ -58,7 +58,7 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 	 */
 	public function get_column_defaults() {
 		return array(
-			'pk'           => 0,
+			'pk'           => null,
 			'customer'     => 0,
 			'label'        => '',
 			'primary'      => false,

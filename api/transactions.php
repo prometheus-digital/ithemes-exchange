@@ -137,27 +137,10 @@ function it_exchange_get_transactions( $args=array() ) {
  * @return IT_Exchange_Transaction|null
  */
 function it_exchange_get_transaction_by_method_id( $method, $method_id ) {
-
-	$transactions = it_exchange_get_transactions( array(
-		'numberposts' => 1,
-		'meta_query' => array(
-			'relation' => 'AND',
-			array(
-				'key' => '_it_exchange_transaction_method',
-				'value' => $method
-			),
-			array(
-				'key' => '_it_exchange_transaction_method_id',
-				'value' => $method_id
-			)
-		)
-	) );
-
-	foreach ( $transactions as $transaction ) {
-		return $transaction;
-	}
-
-	return null;
+	return IT_Exchange_Transaction::query()->where( array(
+		'method' => $method,
+		'method_id' => $method_id
+	) )->take( 1 )->first();
 }
 
 /**
@@ -170,19 +153,7 @@ function it_exchange_get_transaction_by_method_id( $method, $method_id ) {
  * @return IT_Exchange_Transaction|null
  */
 function it_exchange_get_transaction_by_cart_id( $cart_id ) {
-
-	$transactions = it_exchange_get_transactions(array(
-		'meta_query' => array(
-			'key'   => '_it_exchange_cart_id',
-			'value' => $cart_id
-		)
-	) );
-
-	foreach ( $transactions as $transaction ) {
-		return $transaction;
-	}
-
-	return null;
+	return IT_Exchange_Transaction::query()->where( 'cart_id', '=', $cart_id )->take( 1 )->first();
 }
 
 /**
@@ -431,17 +402,19 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 	);
 	$args = wp_parse_args( $args, $defaults );
 
-	if ( ! $customer ) {
-		$customer = it_exchange_get_current_customer();
-	} else {
-		$customer = it_exchange_get_customer( $customer );
-	}
-	
 	if ( $cart_object instanceof ITE_Cart ) {
 		$cart        = $cart_object;
 		$cart_object = it_exchange_generate_transaction_object( $cart );
 	} else {
 		$cart = it_exchange_get_current_cart( false );
+	}
+
+	if ( $customer ) {
+		$customer = it_exchange_get_customer( $customer );
+	} elseif ( $cart ) {
+		$customer = $cart->get_customer();
+	} else {
+		$customer = it_exchange_get_current_customer();
 	}
 
 	if ( it_exchange_get_transaction_by_method_id( $method, $method_id ) ) {

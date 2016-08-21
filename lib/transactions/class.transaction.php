@@ -194,17 +194,19 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 			}
 		}
 
+		$method_id = get_post_meta( $post_id, '_it_exchange_transaction_method_id', true );
+
 		$data = array(
 			'ID'             => $post_id,
 			'customer_id'    => $customer_id,
 			'customer_email' => $customer_email,
 			'status'         => get_post_meta( $post_id, '_it_exchange_transaction_status', true ),
 			'method'         => get_post_meta( $post_id, '_it_exchange_transaction_method', true ),
-			'method_id'      => get_post_meta( $post_id, '_it_exchange_transaction_method_id', true ),
+			'method_id'      => $method_id ? $method_id : uniqid( 'RAND', true ),
 			'hash'           => get_post_meta( $post_id, '_it_exchange_transaction_hash', true ),
 			'cart_id'        => get_post_meta( $post_id, '_it_exchange_cart_id', true ),
-			'total'          => $cart_details->total,
-			'subtotal'       => $cart_details->sub_total,
+			'total'          => isset( $cart_details->total ) ? $cart_details->total : 0,
+			'subtotal'       => isset( $cart_details->sub_total ) ? $cart_details->sub_total : 0,
 			'order_date'     => $post->post_date_gmt,
 			'cleared'        => false,
 			'billing'        => $billing,
