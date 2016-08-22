@@ -69,25 +69,6 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_
 	 * @inheritDoc
 	 */
 	public function get_amount() {
-
-		$base = $this->get_base_amount();
-
-		foreach ( $this->aggregatables as $aggregatable ) {
-			$base += $aggregatable->get_amount() * $aggregatable->get_quantity();
-		}
-
-		return $base;
-	}
-
-	/**
-	 * Get the base amount.
-	 *
-	 * @since 1.36.0
-	 *
-	 * @return float
-	 */
-	protected function get_base_amount() {
-
 		if ( $this->frozen->has_param( 'amount' ) ) {
 			return $this->frozen->get_param( 'amount' );
 		}
@@ -152,7 +133,7 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_
 	 * @inheritDoc
 	 */
 	public function get_taxable_amount() {
-		return $this->get_base_amount();
+		return $this->get_amount();
 	}
 
 	/**

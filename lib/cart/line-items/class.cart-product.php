@@ -484,16 +484,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	 * @inheritDoc
 	 */
 	public function get_amount() {
-
-		$base = $this->get_base_amount();
-
-		foreach ( $this->aggregatables as $aggregate ) {
-			if ( ! $aggregate->is_summary_only() ) {
-				$base += $aggregate->get_amount();
-			}
-		}
-
-		return (float) $base;
+		return (float) $this->get_base_amount();
 	}
 
 	/**

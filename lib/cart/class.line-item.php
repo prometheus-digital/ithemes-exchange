@@ -100,7 +100,17 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	 *
 	 * @return float
 	 */
-	public function get_total() { return $this->get_amount() * $this->get_quantity(); }
+	public function get_total() {
+		$total = $this->get_amount() * $this->get_quantity();
+
+		if ( $this instanceof ITE_Aggregate_Line_Item ) {
+			foreach ( $this->get_line_items()->non_summary_only() as $item ) {
+				$total += $item->get_total();
+			}
+		}
+
+		return $total;
+	}
 
 	/**
 	 * Get the type of the line item.

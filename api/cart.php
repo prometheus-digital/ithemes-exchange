@@ -770,7 +770,7 @@ function it_exchange_get_cart_subtotal( $format = true, $options = array() ) {
 	}
 
 	$subtotal = 0;
-	$items    = $cart->get_items();
+	$items    = $cart->get_items()->non_summary_only();
 
 	if ( ! $items->count() ) {
 		return $format ? it_exchange_format_price( 0 ) : 0;
@@ -822,9 +822,7 @@ function it_exchange_get_cart_total( $format = true, $options = array() ) {
 	}
 
 	$total = it_exchange_get_cart_subtotal( false, $options );
-	$total += $cart->get_items( '', true )->without( 'product' )->filter( function ( ITE_Line_Item $item ) {
-		return $item->is_summary_only();
-	} )->total();
+	$total += $cart->get_items( '', true )->without( 'product' )->summary_only()->total();
 
 	$total = apply_filters( 'it_exchange_get_cart_total', $total );
 	$total = max( 0, $total );

@@ -45,15 +45,6 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	}
 
 	/**
-	 * Get the base amount of this fee.
-	 *
-	 * @since 1.36.0
-	 *
-	 * @return float
-	 */
-	protected function get_base_amount() { return (float) $this->get_param( 'amount' ); }
-
-	/**
 	 * @inheritDoc
 	 * @throws \UnexpectedValueException
 	 */
@@ -130,18 +121,7 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	/**
 	 * @inheritDoc
 	 */
-	public function get_amount() {
-		$base = $this->get_base_amount();
-
-		foreach ( $this->aggregatables as $aggregatable ) {
-			if ( ! $aggregatable->is_summary_only() ) {
-				$base += $aggregatable->get_total();
-			}
-		}
-
-		return $base;
-	}
-
+	public function get_amount() { return (float) $this->get_param( 'amount' );	}
 
 	/**
 	 * @inheritDoc
