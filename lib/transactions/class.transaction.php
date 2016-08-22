@@ -321,10 +321,20 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 * There isn't a set list of transaction statuses available. Each payment gateway dynamically declares their own.
 	 *
 	 * @since 0.4.0
+	 * @since 1.36.0 Added $label parameter.
+	 *
+	 * @param bool $label
 	 *
 	 * @return string
 	 */
-	public function get_status() {
+	public function get_status( $label = false ) {
+
+		if ( $label ) {
+			return apply_filters( 'it_exchange_transaction_status_label_' . $this->get_method(), $this->status, array(
+				'status' => $this->status
+			) );
+		}
+
 		return apply_filters( 'it_exchange_get_transaction_status', $this->status, $this );
 	}
 
@@ -890,6 +900,27 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 		}
 
 		return $posts;
+	}
+
+	/**
+	 * Convert a cart object to line items.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function convert_cart_object() {
+
+		if ( $this->get_meta( 'cart_object_converted', true ) ) {
+			return false;
+		}
+
+		$converter = new ITE_Line_Item_Transaction_Object_Converter();
+		$converter->convert( $this->cart_details, $this );
+
+		$this->update_meta( 'cart_object_converted', true );
+
+		return true;
 	}
 
 	/**
