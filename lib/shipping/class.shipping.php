@@ -774,9 +774,10 @@ class IT_Exchange_Shipping {
 	// Update cart shipping mehtod
 	public function update_cart_shipping_method() {
 
-		$cart = it_exchange_get_current_cart();
-
 		if ( ! empty( $_GET['ite-checkout-refresh'] ) ) {
+
+			$cart = it_exchange_get_current_cart();
+
 			$cart_product_id = empty( $_POST['cart-product-id'] ) ? '' : $_POST['cart-product-id'];
 			$shipping_method = empty( $_POST['shipping-method'] ) ? '0' : $_POST['shipping-method'];
 
