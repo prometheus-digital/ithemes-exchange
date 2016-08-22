@@ -49,7 +49,7 @@ interface ITE_Taxable_Line_Item extends ITE_Aggregate_Line_Item {
 	 *
 	 * @since 1.36
 	 *
-	 * @return ITE_Tax_Line_Item[]
+	 * @return ITE_Line_Item_Collection|ITE_Tax_Line_Item[]
 	 */
 	public function get_taxes();
 

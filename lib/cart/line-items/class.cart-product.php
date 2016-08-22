@@ -346,7 +346,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	 * @inheritDoc
 	 */
 	public function get_taxes() {
-		return $this->get_line_items()->with_only_instances_of( 'ITE_Tax_Line_Item' )->to_array();
+		return $this->get_line_items()->with_only_instances_of( 'ITE_Tax_Line_Item' );
 	}
 
 	/**
