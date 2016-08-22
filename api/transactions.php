@@ -1702,3 +1702,27 @@ function it_exchange_get_transaction_shipping_method_for_product( $transaction, 
 
 	return apply_filters( 'it_exchange_get_transaction_shipping_method_for_product', $method, $transaction, $product_cart_id );
 }
+
+/**
+ * Get the shipping method for any line item.
+ *
+ * @since 1.36.0
+ *
+ * @param \ITE_Line_Item $item
+ *
+ * @return \IT_Exchange_Shipping_Method;
+ */
+function it_exchange_get_transaction_shipping_method_for_item( ITE_Line_Item $item ) {
+
+	if ( ! $item instanceof ITE_Aggregate_Line_Item ) {
+		return null;
+	}
+
+	$shipping = $item->get_line_items()->with_only( 'shipping' )->first();
+
+	if ( $shipping instanceof ITE_Shipping_Line_Item ) {
+		return $shipping->get_method();
+	}
+
+	return null;
+}

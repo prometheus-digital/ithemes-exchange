@@ -45,7 +45,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * @param string $type
 	 *
-	 * @return self
+	 * @return \ITE_Line_Item_Collection
 	 */
 	public function without( $type ) {
 
@@ -68,7 +68,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * @param string $type
 	 *
-	 * @return self
+	 * @return \ITE_Line_Item_Collection
 	 */
 	public function with_only( $type ) {
 
@@ -91,7 +91,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * @param string $class
 	 *
-	 * @return self
+	 * @return \ITE_Line_Item_Collection
 	 */
 	public function with_only_instances_of( $class ) {
 
@@ -111,7 +111,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * @since 1.36.0
 	 *
-	 * @return self
+	 * @return \ITE_Line_Item_Collection
 	 */
 	public function summary_only() {
 
@@ -131,7 +131,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * @since 1.36.0
 	 *
-	 * @return self
+	 * @return \ITE_Line_Item_Collection
 	 */
 	public function non_summary_only() {
 
@@ -151,7 +151,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * @since 1.36.0
 	 *
-	 * @return self
+	 * @return \ITE_Line_Item_Collection
 	 */
 	public function taxable() {
 		$taxable = array();
@@ -170,7 +170,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * @since 1.36.0
 	 *
-	 * @return self
+	 * @return \ITE_Line_Item_Collection
 	 */
 	public function discountable() {
 
@@ -192,7 +192,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * @param callable $callback
 	 *
-	 * @return self
+	 * @return \ITE_Line_Item_Collection
 	 */
 	public function filter( $callback ) {
 		return new self( array_filter( $this->items, $callback ), $this->repository );
@@ -207,7 +207,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * @param callable $callback
 	 *
-	 * @return self
+	 * @return \ITE_Line_Item_Collection
 	 */
 	public function unique( $callback = null ) {
 
@@ -263,7 +263,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * @since 1.36.0
 	 *
-	 * @return self
+	 * @return \ITE_Line_Item_Collection
 	 */
 	public function flatten() {
 
@@ -287,7 +287,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * @param \ITE_Cart $cart
 	 *
-	 * @return self
+	 * @return \ITE_Line_Item_Collection
 	 */
 	public function set_cart( \ITE_Cart $cart ) {
 		$items = $this->flatten();

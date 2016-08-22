@@ -1,0 +1,420 @@
+<?php
+
+$txn = it_exchange_get_transaction( $post );
+
+if ( isset( $_GET['convert'] ) ) {
+	$txn->convert_cart_object();
+}
+
+do_action( 'it_exchange_before_payment_details', $post );
+
+?>
+	<div class="postbox" id="it-exchange-transaction-details">
+	<div class="inside">
+	<div class="transaction-stamp hidden <?php esc_attr_e( strtolower( $txn->get_status( true ) ) ); ?>">
+		<?php esc_attr_e( $txn->get_status( true ) ); ?>
+	</div>
+
+<?php if ( $txn->has_parent() ): ?>
+	<div class="spacing-wrapper parent-txn-link bottom-border">
+		<span class="dashicons dashicons-arrow-left-alt2"></span>
+		<a href="<?php echo esc_url( get_edit_post_link( $txn->get_parent()->ID ) ); ?>">
+			<?php printf(
+				__( 'View Parent Subscription Payment %s', 'it-l10n-ithemes-exchange' ),
+				$txn->get_order_number()
+			); ?>
+		</a>
+	</div>
+<?php endif; ?>
+
+<?php do_action( 'it_exchange_transaction_details_before_customer_data', $post ); ?>
+
+	<div class="customer-data spacing-wrapper">
+		<div class="customer-avatar left">
+			<?php echo get_avatar( $txn->get_customer() ? $txn->get_customer()->ID : 0, 80, '', '', array( 'force_display' => true ) ); ?>
+		</div>
+		<div class="transaction-data right">
+			<div class="transaction-order-number">
+				<?php esc_attr_e( $txn->get_order_number() ); ?>
+			</div>
+			<div class="transaction-date">
+				<?php esc_attr_e( it_exchange_get_transaction_date( $txn ) ); ?>
+			</div>
+			<div class="transaction-status <?php esc_attr_e( strtolower( $txn->get_status( true ) ) ); ?>">
+				<?php esc_attr_e( $txn->get_status( true ) ); ?>
+			</div>
+		</div>
+		<div class="customer-info">
+			<h2 class="customer-display-name">
+				<?php esc_attr_e( it_exchange_get_transaction_customer_display_name( $txn ) ); ?>
+			</h2>
+			<div class="customer-email">
+				<?php esc_attr_e( $txn->get_customer_email() ); ?>
+			</div>
+
+			<?php if ( ! $post->post_parent ) : ?>
+				<div class="customer-ip-address">
+					<?php esc_attr_e( $txn->get_customer_ip() ); ?>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( apply_filters( 'it_exchange_transaction_detail_has_customer_profile', true, $post ) ) : ?>
+				<div class="customer-profile">
+					<a href="<?php esc_attr_e( it_exchange_get_transaction_customer_admin_profile_url( $post ) ); ?>">
+						<?php _e( 'View Customer Data', 'it-l10n-ithemes-exchange' ); ?>
+					</a>
+				</div>
+			<?php endif; ?>
+		</div>
+	</div>
+
+<?php do_action( 'it_exchange_transaction_details_after_customer_data', $post ); ?>
+<?php do_action( 'it_exchange_transaction_details_before_shipping_and_billing', $post ); ?>
+
+<?php
+$billing_address  = $txn->get_billing_address();
+$shipping_address = $txn->get_shipping_address();
+
+if ( $shipping_address || $billing_address ) : ?>
+	<div class="billing-shipping-wrapper columns-wrapper">
+
+		<?php if ( $shipping_address ) : ?>
+			<div class="shipping-address column">
+				<div class="column-inner">
+					<div class="shipping-address-label address-label"><?php _e( 'Shipping Address', 'it-l10n-ithemes-exchange' ); ?></div>
+					<p><?php echo it_exchange_get_formatted_shipping_address( $shipping_address ); ?></p>
+				</div>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( $billing_address ) : ?>
+			<div class="billing-address column">
+				<div class="column-inner">
+					<div class="billing-address-label address-label"><?php _e( 'Billing Address', 'it-l10n-ithemes-exchange' ); ?></div>
+					<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
+				</div>
+			</div>
+		<?php endif; ?>
+	</div>
+<?php endif; ?>
+
+<?php do_action( 'it_exchange_transaction_details_after_shipping_and_bililng', $post ); ?>
+<?php do_action( 'it_exchange_transaction_details_before_products', $post ); ?>
+
+	<div class="products cart-items bottom-border">
+		<div class="products-header spacing-wrapper bottom-border">
+			<span><?php _e( 'Cart Items', 'it-l10n-ithemes-exchange' ); ?></span>
+			<span class="right"><?php _e( 'Amount', 'it-l10n-ithemes-exchange' ); ?></span>
+		</div>
+		<?php
+
+		$items = $txn->get_items();
+
+		if ( ! $items->count() && $txn->has_parent() ) {
+			$items = $txn->get_parent()->get_items();
+		}
+
+		$product_items = $items->with_only( 'product' );
+		$other_items   = $items->without( 'product', 'shipping' );
+
+		$download_index = it_exchange_get_transaction_download_hash_index( $txn );
+		?>
+
+		<?php foreach ( $product_items as $product_item ) : /** @var \ITE_Cart_Product $product_item */ ?>
+			<div class="item product spacing-wrapper">
+				<div class="product-header item-header clearfix">
+					<?php do_action( 'it_exchange_transaction_details_begin_product_header', $post, $product_item->bc() ); ?>
+					<div class="product-title item-title left">
+						<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_title', $post, $product_item->bc() ); ?>
+						<?php echo $product_item->get_name(); ?> (<?php echo $product_item->get_quantity(); ?>)
+						<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_title', $post, $product_item->bc() ); ?>
+					</div>
+					<div class="product-subtotal item-subtotal right">
+						<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_subtotal', $post, $product_item->bc() ); ?>
+						<?php esc_attr_e( it_exchange_format_price( $product_item->get_total() ) ); ?>
+						<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_subtotal', $post, $product_item->bc() ); ?>
+					</div>
+					<?php do_action( 'it_exchange_transaction_details_end_product_header', $post, $product_item->bc() ); ?>
+				</div>
+				<div class="product-details">
+					<?php do_action( 'it_exchange_transaction_details_begin_product_details', $post, $product_item->bc() ); ?>
+
+					<?php if ( it_exchange_transaction_includes_shipping( $txn ) && $product_item->get_line_items()->with_only( 'shipping' )->count() > 0 ) : ?>
+						<div class="product-shipping-method item-shipping-method">
+							<?php printf( __( 'Ship this item with %s.', 'it-l10n-ithemes-exchange' ), it_exchange_get_transaction_shipping_method_for_product( $post, $product_item->get_id() ) ); ?>
+						</div>
+					<?php endif; ?>
+
+					<?php if ( isset( $download_index[ $product_item->get_param( 'product_id' ) ] ) ) : ?>
+						<?php foreach ( $download_index[ $product_item->get_param( 'product_id' ) ] as $download_id => $hash ) : ?>
+							<?php $download_data = it_exchange_get_download_data_from_hash( $hash[0] ); ?>
+							<div class="product-download product-download-<?php esc_attr_e( $download_id ); ?>">
+								<h4 class="product-download-title">
+									<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_download_title', $post, $download_id, $download_data ); ?>
+									<?php echo __( 'Download:', 'it-l10n-ithemes-exchange' ) . ' ' . get_the_title( $download_id ); ?>
+									<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_download_title', $post, $download_id, $download_data ); ?>
+								</h4>
+							</div>
+						<?php endforeach; ?>
+					<?php endif; ?>
+					<?php do_action( 'it_exchange_transaction_details_end_product_details', $post, $product_item->bc() ); ?>
+				</div>
+
+				<?php $children = $product_item->get_line_items()->non_summary_only(); ?>
+
+				<?php if ( $children->count() > 0 ): ?>
+					<ul class="product-children line-item-children">
+						<?php foreach ( $children->to_array() as $child ) : /** @var \ITE_Line_Item $child */ ?>
+							<li>
+								<span class="item-title">
+									<?php echo $child->get_name(); ?>
+									<?php if ( $child instanceof ITE_Quantity_Modifiable_Item && $child->is_quantity_modifiable() ): ?>
+										(<?php echo $child->get_quantity(); ?>)
+									<?php endif; ?>
+								</span>
+
+								<span class="item-subtotal right">
+									(<?php echo it_exchange_format_price( $child->get_total() ); ?>)
+								</span>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
+
+				<?php do_action( 'it_exchange_transaction_details_end_product_container', $post, $product_item->bc() ); ?>
+			</div>
+		<?php endforeach; ?>
+
+		<?php foreach ( $other_items as $other_item ) : /** @var \ITE_Line_Item $other_item */ ?>
+			<div class="item <?php echo $other_item->get_type(); ?> spacing-wrapper">
+				<div class="<?php echo $other_item->get_type(); ?>-header item-header clearfix">
+					<?php do_action( 'it_exchange_transaction_details_begin_item_header', $txn, $other_item ); ?>
+					<div class="<?php echo $other_item->get_type(); ?>--title item-title left">
+						<?php do_action( 'it_exchange_transaction_print_metabox_before_item_title', $txn, $other_item ); ?>
+						<?php echo $other_item->get_name(); ?>
+						<?php if ( $other_item instanceof ITE_Quantity_Modifiable_Item && $other_item->is_quantity_modifiable() ): ?>
+							(<?php echo $other_item->get_quantity(); ?>)
+						<?php endif; ?>
+						<?php do_action( 'it_exchange_transaction_print_metabox_after_item_title', $txn, $other_item ); ?>
+					</div>
+					<div class="<?php echo $other_item->get_type(); ?>--subtotal item-subtotal right">
+						<?php do_action( 'it_exchange_transaction_print_metabox_before_item_total', $txn, $other_item ); ?>
+						<?php esc_attr_e( it_exchange_format_price( $other_item->get_total() ) ); ?>
+						<?php do_action( 'it_exchange_transaction_print_metabox_after_item_total', $txn, $other_item ); ?>
+					</div>
+					<?php do_action( 'it_exchange_transaction_details_end_item_header', $txn, $other_item ); ?>
+				</div>
+				<div class="<?php echo $other_item->get_type(); ?>-details item-details">
+					<?php do_action( 'it_exchange_transaction_details_begin_item_details', $txn, $other_item ); ?>
+
+					<?php if ( it_exchange_transaction_includes_shipping( $txn ) && $method = it_exchange_get_transaction_shipping_method_for_item( $other_item ) ) : ?>
+						<div class="<?php echo $other_item->get_type(); ?>-shipping-method item-shipping-method">
+							<?php printf( __( 'Ship this item with %s.', 'it-l10n-ithemes-exchange' ), $method->label ); ?>
+						</div>
+					<?php endif; ?>
+
+					<?php do_action( 'it_exchange_transaction_details_end_item_details', $txn, $other_item ); ?>
+				</div>
+
+				<?php $children = $other_item instanceof ITE_Aggregate_Line_Item ? $other_item->get_line_items()->non_summary_only()->to_array() : array(); ?>
+
+				<?php if ( $children ) : ?>
+					<ul class="<?php echo $other_item->get_type(); ?>-children line-item-children">
+						<?php foreach ( $children as $child ) : /** @var \ITE_Line_Item $child */ ?>
+							<li>
+								<span class="<?php echo $child->get_type(); ?>-title item-title">
+									<?php echo $child->get_name(); ?>
+									<?php if ( $child instanceof ITE_Quantity_Modifiable_Item && $child->is_quantity_modifiable() ): ?>
+										(<?php echo $child->get_quantity(); ?>)
+									<?php endif; ?>
+								</span>
+
+								<span class="<?php echo $child->get_type(); ?>-subtotal item-subtotal right">
+									(<?php echo it_exchange_format_price( $child->get_total() ); ?>)
+								</span>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
+
+				<?php do_action( 'it_exchange_transaction_details_end_item_container', $txn, $other_item ); ?>
+			</div>
+		<?php endforeach; ?>
+	</div>
+
+<?php do_action( 'it_exchange_transaction_details_after_products', $post ); ?>
+<?php do_action( 'it_exchange_transaction_details_before_costs', $post ); ?>
+
+	<div class="transaction-costs clearfix spacing-wrapper bottom-border">
+
+		<div class="transaction-costs-subtotal right clearfix">
+			<div class="transaction-costs-subtotal-label left"><?php _e( 'Subtotal', 'it-l10n-ithemes-exchange' ); ?></div>
+			<div class="transaction-costs-subtotal-price">
+				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_subtotal', $post ); ?>
+				<?php esc_attr_e( it_exchange_get_transaction_subtotal( $post ) ); ?>
+				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_subtotal', $post ); ?>
+			</div>
+		</div>
+
+		<?php if ( $coupons = it_exchange_get_transaction_coupons( $post ) ) : ?>
+			<div class="transaction-costs-coupons right">
+				<div class="transaction-costs-coupon-total-label left"><?php _e( 'Total Discount', 'it-l10n-ithemes-exchange' ); ?></div>
+				<div class="transaction-costs-coupon-total-amount">
+					<?php do_action( 'it_exchange_transaction_print_metabox_before_coupons_total_discount', $post ); ?>
+					<?php esc_attr_e( it_exchange_get_transaction_coupons_total_discount( $post ) ); ?>
+					<?php do_action( 'it_exchange_transaction_print_metabox_after_coupons_total_discount', $post ); ?>
+				</div>
+			</div>
+			<label><strong><?php _e( 'Coupons', 'it-l10n-ithemes-exchange' ); ?></strong></label>
+			<?php foreach ( $coupons as $type => $coupon ) : ?>
+				<?php foreach ( $coupon as $data ) : ?>
+					<div class="transaction-cost-coupon">
+						<span class="code"><?php echo $data['code'] ?></span>
+					</div>
+				<?php endforeach; ?>
+			<?php endforeach; ?>
+		<?php endif; ?>
+
+		<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
+			<div class="transaction-costs-refunds right">
+				<div class="transaction-costs-refund-total">
+					<div class="transaction-costs-refund-total-label left"><?php _e( 'Total Refund', 'it-l10n-ithemes-exchange' ); ?></div>
+					<div class="transaction-costs-refund-total-amount">
+						<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_refunds_total', $post ); ?>
+						<?php esc_attr_e( it_exchange_get_transaction_refunds_total( $post ) ); ?>
+						<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_refunds_total', $post ); ?>
+					</div>
+				</div>
+			</div>
+			<div class="transaction-refunds-list">
+				<label><strong><?php _e( 'Refunds', 'it-l10n-ithemes-exchange' ); ?></strong></label>
+				<?php foreach ( $refunds as $refund ) : ?>
+					<div class="transaction-costs-refund">
+						<span class="code">
+							<?php echo esc_html( sprintf(
+								/* translators: $1$s refund amount %2$s refund date. */
+								__( '%1$s on %2$s', 'it-l10n-ithemes-exchange' ), it_exchange_format_price( $refund['amount'] ), $refund['date']
+							) ); ?>
+						</span>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		<?php endif; ?>
+	</div>
+
+<?php
+$totals = $txn->get_items( '', true )->summary_only()->without( 'shipping', 'coupon' )->segment();
+
+foreach ( $totals as $total_by_type ):
+	$segmented = $total_by_type->segment( function ( ITE_Line_Item $item ) { return get_class( $item ) . $item->get_name(); } );
+	foreach ( $segmented as $segment ):
+		$type = $segment->first()->get_type();
+		$description = $segment->filter( function ( ITE_Line_Item $item ) { return trim( $item->get_description() !== '' ); } )->first();
+		?>
+		<div class="summary-item summary-item-<?php echo $type; ?> clearfix spacing-wrapper bottom-border">
+			<div class="summary-item-description left">
+				<?php if ( $description ): ?>
+					<p class="description"><?php echo $description->get_description(); ?></p>
+				<?php endif; ?>
+			</div>
+			<div class="summary-item-cost right clearfix">
+				<div class="summary-item-cost-label left"><?php echo $segment->first()->get_name(); ?></div>
+				<div class="summary-item-cost-price">
+					<?php do_action( "it_exchange_transaction_print_metabox_before_transaction_{$type}_total", $txn ); ?>
+					<?php esc_attr_e( it_exchange_format_price( $segment->total() ) ); ?>
+					<?php do_action( "it_exchange_transaction_print_metabox_after_transaction_{$type}_total", $txn ); ?>
+				</div>
+			</div>
+		</div>
+	<?php endforeach;
+endforeach; ?>
+
+<?php if ( it_exchange_transaction_includes_shipping( $post ) ) : ?>
+	<div class="transaction-shipping-summary clearfix spacing-wrapper bottom-border">
+		<div class="payment-shipping left">
+			<div class="payment-shipping-label"><?php _e( 'Shipping Method', 'it-l10n-ithemes-exchange' ); ?></div>
+			<div class="payment-shipping-name">
+				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_shipping_name', $post ); ?>
+				<?php esc_attr_e( empty( it_exchange_get_transaction_shipping_method( $post )->label ) ? __( 'Unknown Shipping Method', 'it-l10n-ithemes-exchange' ) : it_exchange_get_transaction_shipping_method( $post )->label ); ?>
+				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_shipping_name', $post ); ?>
+			</div>
+		</div>
+
+		<div class="payment-shipping-total right clearfix">
+			<div class="payment-shipping-total-label left"><?php _e( 'Shipping', 'it-l10n-ithemes-exchange' ); ?></div>
+			<div class="payment-shipping-total-amount">
+				<?php do_action( 'it_exchange_transaction_print_metabox_before_shipping_total', $post ); ?>
+				<?php echo it_exchange_format_price( it_exchange_get_transaction_shipping_total( $post ) ); ?>
+				<?php do_action( 'it_exchange_transaction_print_metabox_after_shipping_total', $post ); ?>
+			</div>
+		</div>
+	</div>
+<?php endif; ?>
+
+	<div class="transaction-summary clearfix spacing-wrapper bottom-border">
+		<div class="payment-method left">
+			<div class="payment-method-label"><?php _e( 'Payment Method', 'it-l10n-ithemes-exchange' ); ?></div>
+			<div class="payment-method-name">
+				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_method_name', $post ); ?>
+				<?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?>
+				<code><?php echo it_exchange_get_transaction_method_id( $post ); ?></code>
+				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_method_name', $post ); ?>
+			</div>
+		</div>
+		<div class="payment-total right clearfix">
+			<div class="payment-total-label left"><?php _e( 'Total', 'it-l10n-ithemes-exchange' ); ?></div>
+			<div class="payment-total-amount">
+				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_total', $post ); ?>
+				<?php _e( it_exchange_get_transaction_total( $post ) ); ?>
+				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_total', $post ); ?>
+			</div>
+
+			<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
+				<div class="payment-original-total-label left"><?php _e( 'Total before refunds', 'it-l10n-ithemes-exchange' ); ?></div>
+				<div class="payment-original-total-amount">
+					<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_total_before_refunds', $post ); ?>
+					<?php _e( it_exchange_get_transaction_total( $post, true, false ) ); ?>
+					<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_total_before_refunds', $post ); ?>
+				</div>
+			<?php endif; ?>
+		</div>
+	</div>
+
+<?php if ( it_exchange_transaction_status_can_be_manually_changed( $txn ) ) : ?>
+	<div class="transaction-status-update clearfix spacing-wrapper hide-if-no-js bottom-border">
+		<div class="update-status-label left">
+			<label for="it-exchange-update-transaction-status">
+				<?php _e( 'Change Status', 'it-l10n-ithemes-exchange' ); ?>
+			</label>
+			<span class="tip" title="<?php _e( 'The customer will receive an email When this is changed from a status that is not cleared for delivery to a status that is cleared for delivery', 'it-l10n-ithemes-exchange' ); ?>">i</span>
+		</div>
+		<div class="update-status-setting right">
+			<select id='it-exchange-update-transaction-status'>
+				<?php
+				if ( $options = it_exchange_get_status_options_for_transaction( $txn ) ) {
+					$current_status = it_exchange_get_transaction_status( $txn );
+					foreach ( $options as $key => $label ) {
+						$status_label = it_exchange_get_transaction_status_label( $txn, array( 'status' => $key ) );
+						?>
+						<option value="<?php esc_attr_e( $key ); ?>" <?php selected( $key, $current_status ); ?>>
+							<?php esc_attr_e( $status_label ); ?>
+						</option>
+						<?php
+					}
+				}
+				?>
+			</select>
+			<?php wp_nonce_field( 'update-transaction-status' . $post->ID, 'it-exchange-update-transaction-nonce' ); ?>
+			<input type="hidden" id="it-exchange-update-transaction-current-status" value="<?php esc_attr_e( $current_status ); ?>" />
+			<input type="hidden" id="it-exchange-update-transaction-id" value="<?php esc_attr_e( $post->ID ); ?>" />
+			<div id="it-exchange-update-transaction-status-failed"><?php _e( 'Not Saved.', 'it-l10n-ithemes-exchange' ); ?></div>
+			<div id="it-exchange-update-transaction-status-success"><?php _e( 'Saved!', 'it-l10n-ithemes-exchange' ); ?></div>
+		</div>
+	</div>
+<?php endif; ?>
+
+<?php
+do_action( 'it_exchange_after_payment_details', $post );
+echo '</div></div>';
+
+IT_Exchange_Transaction_Post_Type::print_activity( $post );

@@ -98,7 +98,11 @@ class ITE_Line_Item_Transaction_Object_Converter {
 		$rate = ( $taxes / $sub_total ) * 100;
 
 		if ( metadata_exists( 'post', $repository->get_transaction()->ID, '_it_exchange_easy_us_sales_taxes' ) ) {
-			$item = ITE_TaxCloud_Line_Item::create( $rate );
+			if ( class_exists( 'ITE_TaxCloud_Line_Item' ) ) {
+				$item = ITE_TaxCloud_Line_Item::create( $rate );
+			} else {
+				return;
+			}
 		} else {
 			$item = ITE_Simple_Tax_Line_Item::create( $rate );
 		}

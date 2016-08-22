@@ -88,3 +88,16 @@ require( $this->_plugin_path . 'lib/deprecated/init.php' );
 require( $this->_plugin_path . 'lib/settings/class.settings-form.php' );
 require( $this->_plugin_path . 'lib/settings/class.controller.php' );
 
+add_action( 'template_redirect', function () {
+
+	if ( isset( $_GET['add'] ) ) {
+		/** @var ITE_Cart_Product $product */
+		$product = it_exchange_get_current_cart()->get_item( 'product', '140-40cd750bba9870f18aada2478b24840a' );
+
+		$product->add_item( ITE_Fee_Line_Item::create( 'Child Fee', 3.00, true ) );
+		it_exchange_get_current_cart()->get_repository()->save( $product );
+
+		it_exchange_get_current_cart()->add_item( ITE_Fee_Line_Item::create( 'My Fee', 4.00, true ) );
+	}
+
+} );

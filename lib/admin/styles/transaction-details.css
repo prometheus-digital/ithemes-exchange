@@ -132,30 +132,34 @@
 	padding: 0 2em 1em;
 }
 
-#it-exchange-transaction-details .products {
+#it-exchange-transaction-details .items {
 	padding-bottom: 2em;
 }
 
-#it-exchange-transaction-details .products-header {
+#it-exchange-transaction-details .items-header {
 	padding-bottom: 1em;
 	padding-top: 1em;
 	font-weight: bold;
 }
 
-#it-exchange-transaction-details .product.spacing-wrapper {
+#it-exchange-transaction-details .item.spacing-wrapper {
 	padding-bottom: 0;
 }
 
-#it-exchange-transaction-details .product-header {
+#it-exchange-transaction-details .cart-items div.item:last-of-type {
+	padding-bottom: 2em;
+}
+
+#it-exchange-transaction-details .item-header {
 	font-size: 1.3em;
 	line-height: 2;
 }
 
-#it-exchange-transaction-details .product-header .product-title {
+#it-exchange-transaction-details .item-header .item-title {
 	font-weight: bold;
 }
 
-#it-exchange-transaction-details .product-details {
+#it-exchange-transaction-details .item-details {
 	margin-left: 1em;
 }
 
@@ -236,6 +240,28 @@
 	font-weight: bold;
 	line-height: 1.6em;
 	width: 60%;
+}
+
+#it-exchange-transaction-details .line-item-children {
+	list-style-type: square;
+	padding-left: 30px;
+	margin-bottom: 0;
+}
+
+#it-exchange-transaction-details .summary-item .left {
+	line-height: 1.6em;
+	width: 60%;
+}
+
+#it-exchange-transaction-details .summary-item .summary-item-cost-label {
+	font-size: .8em;
+	font-weight: bold;
+}
+
+#it-exchange-transaction-details .summary-item .right {
+	font-size: 1.2em;
+	width: 100%;
+	max-width: 250px;
 }
 
 #it-exchange-transaction-details .payment-total-amount {
