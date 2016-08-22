@@ -508,7 +508,9 @@ class ITE_Cart {
 			do_action( "it_exchange_remove_{$item->get_type()}_from_cart", $item, $this );
 		}
 
-		$this->destroy();
+		if ( $type === '' ) {
+			$this->destroy();
+		}
 
 		return true;
 	}
