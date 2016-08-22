@@ -121,7 +121,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 				'description'  => $item->get_description(),
 				'amount'       => $item->get_amount(),
 				'quantity'     => $item->get_quantity(),
-				'total'        => $item->get_total(),
+				'total'        => $item->frozen()->has_param( 'total' ) ? $item->frozen()->get_param( 'total' ) : $item->get_total(),
 				'summary_only' => $item->is_summary_only(),
 				'transaction'  => $this->get_transaction()->ID,
 				'_class'       => get_class( $item ),

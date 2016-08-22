@@ -488,15 +488,44 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	}
 
 	/**
+	 * Get the product's subtotal.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return float
+	 */
+	protected function get_subtotal() {
+		$subtotal = $this->get_amount() * $this->get_quantity();
+
+		return (float) apply_filters( 'it_exchange_get_cart_product_subtotal', $subtotal, $this->bc() );
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function get_total() {
 
 		if ( $this->frozen->has_param( 'total' ) ) {
-			return $this->frozen->get_param( 'total' );
+			return parent::get_total();
 		}
 
-		return apply_filters( 'it_exchange_get_cart_product_subtotal', parent::get_total(), $this->bc() );
+		$subtotal = $this->get_subtotal();
+
+		foreach ( $this->get_line_items()->non_summary_only() as $item ) {
+			$subtotal += $item->get_total();
+		}
+
+		return $subtotal;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function freeze() {
+		parent::freeze();
+
+		$this->frozen->remove_param( 'total' );
+		$this->frozen->set_param( 'total', $this->get_subtotal() );
 	}
 
 	/**

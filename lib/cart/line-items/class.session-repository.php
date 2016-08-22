@@ -373,7 +373,11 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			}
 		}
 
-		$data = $item instanceof ITE_Cart_Product ? $item->bc() : array( '_params' => $item->get_params() );
+		$data = $item instanceof ITE_Cart_Product ? $item->bc() : array(
+			'_params' => $item->get_params(),
+		);
+
+		$data['_frozen'] = $item->frozen()->get_params();
 
 		return array_merge( $additional, $data );
 	}
@@ -410,12 +414,13 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		}
 
 		$params = isset( $data['_params'] ) && is_array( $data['_params'] ) ? $data['_params'] : array();
+		$frozen = isset( $data['_frozen'] ) && is_array( $data['_frozen'] ) ? $data['_frozen'] : array();
 
 		if ( $class === 'ITE_Cart_Product' ) {
 			$params = $this->back_compat_filter_cart_product( $params );
 		}
 
-		$item = new $class( $id, new ITE_Array_Parameter_Bag( $params ), new ITE_Array_Parameter_Bag() );
+		$item = new $class( $id, new ITE_Array_Parameter_Bag( $params ), new ITE_Array_Parameter_Bag( $frozen ) );
 
 		if ( ! $item ) {
 			return null;
@@ -462,7 +467,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			$data['additional_data'] = unserialize( $data['additional_data'] );
 		}
 
-		return array( '_params' => $data );
+		return array( '_params' => $data, '_frozen' => isset( $data['_frozen'] ) ? $data['_frozen'] : array() );
 	}
 
 	/**

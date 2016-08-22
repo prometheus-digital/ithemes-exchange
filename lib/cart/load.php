@@ -11,7 +11,6 @@ use IronBound\DB\Extensions\Meta\BaseMetaTable;
 require_once dirname( __FILE__ ) . '/deprecated.php';
 
 require_once dirname( __FILE__ ) . '/class.customer-cart.php';
-require_once dirname( __FILE__ ) . '/class.parameter-bag.php';
 require_once dirname( __FILE__ ) . '/class.shopping-cart.php';
 require_once dirname( __FILE__ ) . '/class.feedback.php';
 require_once dirname( __FILE__ ) . '/class.feedback-item.php';

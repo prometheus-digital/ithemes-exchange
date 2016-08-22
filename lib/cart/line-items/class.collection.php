@@ -350,6 +350,8 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 		foreach ( $this->items as $item ) {
 			$item->freeze();
 		}
+
+		$this->save();
 	}
 
 	/**

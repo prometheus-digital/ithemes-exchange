@@ -11,6 +11,9 @@ require_once dirname( __FILE__ ) . '/../api/contracts/load.php';
 // IT Classes
 require( $this->_plugin_path . 'lib/classes/load.php' );
 
+//Util
+require( $this->_plugin_path . 'lib/util/load.php' );
+
 // Other Functions
 require( $this->_plugin_path . 'lib/functions/functions.php' );
 

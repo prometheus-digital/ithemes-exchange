@@ -101,7 +101,12 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	 * @return float
 	 */
 	public function get_total() {
-		$total = $this->get_amount() * $this->get_quantity();
+
+		if ( $this->frozen->has_param( 'total' ) ) {
+			$total = $this->frozen->get_param( 'total' );
+		} else {
+			$total = $this->get_amount() * $this->get_quantity();
+		}
 
 		if ( $this instanceof ITE_Aggregate_Line_Item ) {
 			foreach ( $this->get_line_items()->non_summary_only() as $item ) {
@@ -134,13 +139,28 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	public abstract function is_summary_only();
 
 	/**
-	 * Freeze this line item's stae.
+	 * Freeze this line item's state.
 	 *
 	 * This should take any configuration that might change, and persist that to parameterized storage.
 	 *
 	 * @since 1.36.0
 	 */
-	public function freeze() {}
+	public function freeze() {
+		$this->frozen->set_param( 'total', $this->get_amount() * $this->get_quantity() );
+	}
+
+	/**
+	 * Get the line item's frozen state.
+	 *
+	 * @internal
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Read_Only_Parameter_Bag
+	 */
+	public function frozen() {
+		return new ITE_Read_Only_Parameter_Bag( $this->frozen );
+	}
 
 	/**
 	 * @inheritDoc

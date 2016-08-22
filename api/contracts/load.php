@@ -7,4 +7,3 @@
  */
 
 require_once dirname( __FILE__ ) . '/prorate-credit-provider.php';
-require_once dirname( __FILE__ ) . '/parameter-bag.php';
