@@ -33,13 +33,21 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 			return false;
 		}
 
+		if ( $this->primary ) {
+			return true;
+		}
+
 		/** @var static $other */
 		$other = static::query()->where( 'customer', '=', $this->customer->ID )->and_where( 'primary', '=', true )
 		               ->and_where( 'type', '=', $this->type )->first();
 
 		if ( $other ) {
 			$other->primary = false;
-			$other->save();
+
+
+			if ( ! $other->save() ) {
+				return false;
+			}
 		}
 
 		$this->primary = true;
@@ -259,7 +267,6 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 			}
 		} elseif ( $location instanceof ITE_Saved_Address ) {
 			$location->customer = $cid;
-			$location->primary  = true;
 			$location->type     = $type;
 
 			return $location;
@@ -267,7 +274,6 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 
 		return ITE_Saved_Address::create( array_merge( $location->to_array(), array(
 			'customer' => $cid,
-			'primary'  => true,
 			'type'     => $type,
 		) ) );
 	}
