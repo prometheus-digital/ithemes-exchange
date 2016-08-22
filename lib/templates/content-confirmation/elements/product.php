@@ -68,8 +68,8 @@
 	<?php do_action( 'it_exchange_content_confirmation_before_product_cart_object' ); ?>
 	<div class="it-exchange-transaction-product-cart-object it-exchange-table-column">
 		<div class="it-exchange-table-column-inner">
-			<?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'product_count' ) ); ?>
-			<span class="it-exchange-right"><?php it_exchange( 'transaction', 'product-attribute', array( 'attribute' => 'product_base_price' ) ); ?></span>
+			<?php it_exchange( 'line-item', 'quantity', 'format=var_value' ); ?>
+			<span class="it-exchange-right"><?php it_exchange( 'line-item', 'total' ); ?></span>
 		</div>
 	</div>
 	<?php do_action( 'it_exchange_content_confirmation_after_product_cart_object' ); ?>
