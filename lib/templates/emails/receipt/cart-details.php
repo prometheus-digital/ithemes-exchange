@@ -32,7 +32,7 @@
 								<?php _e( 'Description', 'it-l10n-ithemes-exchange' ); ?>
 							</th>
 							<th align="center" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 0 0 10px 0;" class="border-highlight-color">
-								<?php _ex( 'Qty', 'Product Quantity', 'it-l10n-ithemes-exchange' ); ?>
+								<?php _ex( 'Qty', 'Line Item Quantity', 'it-l10n-ithemes-exchange' ); ?>
 							</th>
 							<th align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 0 0 10px 0;" class="border-highlight-color">
 								<?php _e( 'Price', 'it-l10n-ithemes-exchange' ); ?>
@@ -41,9 +41,9 @@
 						<?php do_action( 'it_exchange_email_template_receipt_cart-details_after_header_row' ); ?>
 
 						<?php do_action( 'it_exchange_email_template_receipt_cart-details_begin_products' ); ?>
-						<?php while ( it_exchange( 'transaction', 'products' ) ): ?>
+						<?php while ( it_exchange( 'transaction', 'line-items' ) ): ?>
 							<tr>
-								<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" class="border-highlight-color">
+								<td align="left" style="border-bottom: 1px <?php echo it_exchange( 'line-item', 'has-children' ) ? 'dashed' : 'solid'; ?> <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" class="border-highlight-color">
 									<table>
 										<tr>
 											<?php if ( it_exchange( 'transaction', 'has-featured-image' ) ): ?>
@@ -53,9 +53,16 @@
 											<?php endif; ?>
 											<td>
 												<?php do_action( 'it_exchange_email_template_receipt_cart-details_before_product_name' ); ?>
-												<strong><?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_name' ); ?></strong><br>
+												<strong><?php it_exchange( 'line-item', 'name' ); ?></strong><br>
 												<?php do_action( 'it_exchange_email_template_receipt_cart-details_after_product_name' ); ?>
 												<?php it_exchange( 'transaction', 'variants' ); ?>
+
+												<?php if ( it_exchange( 'line-item', 'has-description' ) ): ?>
+													<p style="border-left: 4px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding-left: 10px; max-width: 300px; font-size: .9em" class="border-highlight-color">
+														<?php it_exchange( 'line-item', 'description' ); ?>
+													</p>
+												<?php endif; ?>
+
 												<?php if ( it_exchange( 'transaction', 'has-purchase-message' ) ): ?>
 													<p style="border-left: 4px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding-left: 10px; max-width: 300px; font-size: .9em" class="border-highlight-color">
 														<?php it_exchange( 'transaction', 'purchase-message' ); ?>
@@ -65,13 +72,56 @@
 										</tr>
 									</table>
 								</td>
-								<td align="center" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" class="border-highlight-color">
-									<?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_count' ); ?>
+								<td align="center" style="border-bottom: 1px <?php echo it_exchange( 'line-item', 'has-children' ) ? 'dashed' : 'solid'; ?> <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" class="border-highlight-color">
+									<?php if ( it_exchange( 'line-item', 'supports-quantity' ) ) : ?>
+										<?php it_exchange( 'line-item', 'quantity', 'format=var_value' ); ?>
+									<?php else: ?>
+										&nbsp;
+									<?php endif; ?>
 								</td>
-								<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" class="border-highlight-color">
-									<?php it_exchange( 'transaction', 'product-attribute', 'attribute=product_subtotal' ); ?>
+								<td align="right" style="border-bottom: 1px <?php echo it_exchange( 'line-item', 'has-children' ) ? 'dashed' : 'solid'; ?> <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" class="border-highlight-color">
+									<?php it_exchange( 'line-item', 'total' ); ?>
 								</td>
 							</tr>
+							<?php if ( it_exchange( 'line-item', 'has-children' ) ) : ?>
+								<?php while ( it_exchange( 'line-item', 'children' ) ) : ?>
+									<tr>
+										<td align="left" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0;" class="border-highlight-color">
+											<table>
+												<tr>
+													<td style="font-size: 80%;">
+														<?php do_action( 'it_exchange_email_template_receipt_cart-details_before_product_name' ); ?>
+														&ndash; <?php it_exchange( 'line-item', 'name' ); ?><br>
+														<?php do_action( 'it_exchange_email_template_receipt_cart-details_after_product_name' ); ?>
+
+														<?php if ( it_exchange( 'line-item', 'has-description' ) ): ?>
+															<p style="border-left: 4px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding-left: 10px; max-width: 300px; font-size: .9em" class="border-highlight-color">
+																<?php it_exchange( 'line-item', 'description' ); ?>
+															</p>
+														<?php endif; ?>
+
+														<?php if ( it_exchange( 'transaction', 'has-purchase-message' ) ): ?>
+															<p style="border-left: 4px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding-left: 10px; max-width: 300px; font-size: .9em" class="border-highlight-color">
+																<?php it_exchange( 'transaction', 'purchase-message' ); ?>
+															</p>
+														<?php endif; ?>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td align="center" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0; font-size: 80%;" class="border-highlight-color">
+											<?php if ( it_exchange( 'line-item', 'supports-quantity' ) ) : ?>
+												<?php it_exchange( 'line-item', 'quantity', 'format=var_value' ); ?>
+											<?php else: ?>
+												&nbsp;
+											<?php endif; ?>
+										</td>
+										<td align="right" style="border-bottom: 1px solid <?php it_exchange( 'email', 'body-highlight-color' ); ?>; padding: 10px 0; font-size: 80%;" class="border-highlight-color">
+											(<?php it_exchange( 'line-item', 'total' ); ?>)
+										</td>
+									</tr>
+								<?php endwhile; ?>
+							<?php endif; ?>
 						<?php endwhile; ?>
 						<?php do_action( 'it_exchange_email_template_receipt_cart-details_end_products' ); ?>
 					</table>

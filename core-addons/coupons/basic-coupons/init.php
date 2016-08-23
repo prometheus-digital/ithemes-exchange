@@ -748,35 +748,3 @@ function it_exchange_addon_basic_coupons_replace_order_table_tag_before_total_ro
 	<?php
 }
 add_action( 'it_exchange_replace_order_table_tag_before_total_row', 'it_exchange_addon_basic_coupons_replace_order_table_tag_before_total_row', 10, 2 );
-
-/**
- * Add a savings row to the receipt.
- *
- * @since 1.36
- */
-function it_exchange_basic_coupons_add_savings_row_to_receipt() {
-
-	if ( empty( $GLOBALS['it_exchange']['transaction'] ) ) {
-		return;
-	}
-
-	$transaction = $GLOBALS['it_exchange']['transaction'];
-
-	if ( ! it_exchange_get_transaction_coupons_total_discount( $transaction, false ) ) {
-		return;
-	}
-
-	?>
-	<tr>
-		<td></td>
-		<td align="right" style="padding: 10px; ">
-			<strong><?php _e( 'Savings', 'it-l10n-ithemes-exchange' ); ?></strong>
-		</td>
-		<td align="right" style="padding: 10px 0 10px 10px; ">
-			&minus; <?php echo it_exchange_get_transaction_coupons_total_discount( $transaction, true ); ?>
-		</td>
-	</tr>
-<?php
-}
-
-add_action( 'it_exchange_email_template_receipt_cart-totals_before_total', 'it_exchange_basic_coupons_add_savings_row_to_receipt' );

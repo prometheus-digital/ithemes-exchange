@@ -15,6 +15,6 @@
 ?>
 <div class="it-exchange-table-column it-exchange-line-item-name-column">
 	<div class="it-exchange-table-column-inner">
-		<?php it_exchange( 'line-item', 'name', array( 'before' => '<h3 class="$CLASS$">', 'after' => '</h3>' ) ); ?>
+		<?php it_exchange( 'line-item', 'name', array( 'wrap' => 'h3' ) ); ?>
 	</div>
 </div>

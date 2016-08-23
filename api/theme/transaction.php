@@ -8,14 +8,6 @@
 class IT_Theme_API_Transaction implements IT_Theme_API {
 
 	/**
-	 * API context
-	 *
-	 * @var string $_context
-	 * @since 0.4.0
-	 */
-	private $_context = 'transaction';
-
-	/**
 	 * The current transaction
 	 *
 	 * @var IT_Exchange_Transaction
@@ -26,13 +18,27 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/** @var array */
 	public $_transaction_product_download = false;
 
+	/**
+	 * The current transaction product
+	 *
+	 * @var array|false $_transaction_product
+	 * @since 0.4.0
+	 */
+	public $_transaction_product = false;
+
+	/**
+	 * The current transaction cart object
+	 *
+	 * @var array|false $_transaction_cart_object
+	 * @since 1.4.0
+	 */
+	public $_transaction_cart_object = false;
+
 	/** @var string */
 	public $_transaction_product_download_hash = false;
 
-	/**
-	 * @var bool
-	 */
-	private $demo;
+	/** @var array */
+	private $_total_line = array();
 
 	/**
 	 * Maps api tags to methods
@@ -56,6 +62,8 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		'billingaddress'        => 'billing_address',
 		'products'              => 'products',
 		'lineitems'             => 'line_items',
+		'totals'                => 'totals',
+		'totalline'             => 'total_line',
 		'productattribute'      => 'product_attribute',
 		'purchasemessage'       => 'purchase_message',
 		'variants'              => 'variants',
@@ -72,20 +80,17 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	);
 
 	/**
-	 * The current transaction product
-	 *
-	 * @var array|false $_transaction_product
-	 * @since 0.4.0
+	 * @var bool
 	 */
-	public $_transaction_product = false;
+	private $demo;
 
 	/**
-	 * The current transaction cart object
+	 * API context
 	 *
-	 * @var array|false $_transaction_cart_object
-	 * @since 1.4.0
+	 * @var string $_context
+	 * @since 0.4.0
 	 */
-	public $_transaction_cart_object = false;
+	private $_context = 'transaction';
 
 	/**
 	 * Constructor
@@ -96,10 +101,27 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 		$this->demo = empty( $GLOBALS['it_exchange']['demo-receipt'] ) ? false : true;
 
-		$this->_transaction                       = empty( $GLOBALS['it_exchange']['transaction'] ) ? false : $GLOBALS['it_exchange']['transaction'];
-		$this->_transaction_product               = empty( $GLOBALS['it_exchange']['transaction_product'] ) ? false : $GLOBALS['it_exchange']['transaction_product'];
-		$this->_transaction_product_download      = empty( $GLOBALS['it_exchange']['transaction_product_download'] ) ? false : $GLOBALS['it_exchange']['transaction_product_download'];
-		$this->_transaction_product_download_hash = empty( $GLOBALS['it_exchange']['transaction_product_download_hash'] ) ? false : $GLOBALS['it_exchange']['transaction_product_download_hash'];
+		if ( ! empty( $GLOBALS['it_exchange']['transaction'] ) ) {
+			$this->_transaction = $GLOBALS['it_exchange']['transaction'];
+		}
+
+		if ( ! empty( $GLOBALS['it_exchange']['transaction_product'] ) ) {
+			$this->_transaction_product = $GLOBALS['it_exchange']['transaction_product'];
+		} elseif ( ! empty( $GLOBALS['it_exchange']['line-item'] ) && $GLOBALS['it_exchange']['line-item'] instanceof ITE_Cart_Product ) {
+			$this->_transaction_product = $GLOBALS['it_exchange']['line-item']->bc();
+		}
+
+		if ( ! empty( $GLOBALS['it_exchange']['transaction_product_download'] ) ) {
+			$this->_transaction_product_download = $GLOBALS['it_exchange']['transaction_product_download'];
+		}
+
+		if ( ! empty( $GLOBALS['it_exchange']['transaction_product_download_hash'] ) ) {
+			$this->_transaction_product_download_hash = $GLOBALS['it_exchange']['transaction_product_download_hash'];
+		}
+
+		if ( ! empty( $GLOBALS['it_exchange']['transaction-total'] ) ) {
+			$this->_total_line = $GLOBALS['it_exchange']['transaction-total'];
+		}
 	}
 
 	/**
@@ -495,75 +517,76 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		return $options['before'] . it_exchange_get_formatted_billing_address( $address ) . $options['after'];
 	}
 
-    /**
-     * This loops through the transaction_products GLOBAL and updates the transaction_product global.
-     *
-     * It return false when it reaches the last product
-     * If the has flag has been passed, it just returns a boolean
-     *
-     * @since 0.4.0
-     *
-     * @param array $options
-     *
-     * @return string
-    */
-    public function products( $options=array() ) {
+	/**
+	 * This loops through the transaction_products GLOBAL and updates the transaction_product global.
+	 *
+	 * It return false when it reaches the last product
+	 * If the has flag has been passed, it just returns a boolean
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param array $options
+	 *
+	 * @return string
+	 */
+	public function products( $options = array() ) {
 
-        if ( $options['has'] ) {
+		if ( $options['has'] ) {
 
-        	if ( $this->demo ) {
-        		return true;
-	        }
+			if ( $this->demo ) {
+				return true;
+			}
 
 			return count( it_exchange_get_transaction_products( $this->_transaction ) ) > 0;
-        }
+		}
 
-        // If we made it here, we're doing a loop of transaction_products for the current query.
-        // This will init/reset the transaction_products global and loop through them.
-        if ( empty( $GLOBALS['it_exchange']['transaction_products'] ) ) {
+		// If we made it here, we're doing a loop of transaction_products for the current query.
+		// This will init/reset the transaction_products global and loop through them.
+		if ( empty( $GLOBALS['it_exchange']['transaction_products'] ) ) {
 
-        	if ( $this->demo ) {
-        		$GLOBALS['it_exchange']['transaction_products'] = $this->get_demo_products();
-	        } else {
-		        $products = it_exchange_get_transaction_products( $this->_transaction );
+			if ( $this->demo ) {
+				$GLOBALS['it_exchange']['transaction_products'] = $this->get_demo_products();
+			} else {
+				$products = it_exchange_get_transaction_products( $this->_transaction );
 
-		        if ( ! $products && ! empty( $this->_transaction->parent ) ) {
-			        $products = it_exchange_get_transaction_products( $this->_transaction->parent );
-		        }
+				if ( ! $products && ! empty( $this->_transaction->parent ) ) {
+					$products = it_exchange_get_transaction_products( $this->_transaction->parent );
+				}
 
-		        $GLOBALS['it_exchange']['transaction_products'] = $products;
-		        $GLOBALS['it_exchange']['transaction_product']  = reset( $GLOBALS['it_exchange']['transaction_products'] );
+				$GLOBALS['it_exchange']['transaction_products'] = $products;
+				$GLOBALS['it_exchange']['transaction_product']  = reset( $GLOBALS['it_exchange']['transaction_products'] );
 
-		        if ( $this->_transaction ) {
-			        $GLOBALS['it_exchange']['line-item'] = $this->_transaction->get_item(
-				        'product', $GLOBALS['it_exchange']['transaction_product']['product_cart_id']
-			        );
-		        }
-	        }
+				if ( $this->_transaction ) {
+					$GLOBALS['it_exchange']['line-item'] = $this->_transaction->get_item(
+						'product', $GLOBALS['it_exchange']['transaction_product']['product_cart_id']
+					);
+				}
+			}
 
-            return true;
-        } else {
-            if ( next( $GLOBALS['it_exchange']['transaction_products'] ) ) {
-                $GLOBALS['it_exchange']['transaction_product'] = current( $GLOBALS['it_exchange']['transaction_products'] );
+			return true;
+		} else {
+			if ( next( $GLOBALS['it_exchange']['transaction_products'] ) ) {
+				$GLOBALS['it_exchange']['transaction_product'] = current( $GLOBALS['it_exchange']['transaction_products'] );
 
-	            if ( $this->_transaction ) {
-		            $GLOBALS['it_exchange']['line-item'] = $this->_transaction->get_item(
-			            'product', $GLOBALS['it_exchange']['transaction_product']['product_cart_id']
-		            );
-	            }
+				if ( $this->_transaction ) {
+					$GLOBALS['it_exchange']['line-item'] = $this->_transaction->get_item(
+						'product', $GLOBALS['it_exchange']['transaction_product']['product_cart_id']
+					);
+				}
 
-                return true;
-            } else {
+				return true;
+			} else {
 				$GLOBALS['it_exchange']['transaction_products'] = array();
-        		end( $GLOBALS['it_exchange']['transaction_products'] );
-                $GLOBALS['it_exchange']['transaction_product'] = false;
-	            $GLOBALS['it_exchange']['line-item'] = null;
-                return false;
-            }
-        }
-    }
+				end( $GLOBALS['it_exchange']['transaction_products'] );
+				$GLOBALS['it_exchange']['transaction_product'] = false;
+				$GLOBALS['it_exchange']['line-item']           = null;
 
-    /**
+				return false;
+			}
+		}
+	}
+
+	/**
 	 * Iterate over all the line items in the transaction.
 	 *
 	 * @since 1.36.0
@@ -608,6 +631,109 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 			return false;
 		}
+	}
+
+	/**
+	 * Iterate over transaction totals.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $options
+	 *
+	 * @return bool
+	 */
+	public function totals( array $options = array() ) {
+
+		if ( ! $this->_transaction ) {
+			return false;
+		}
+
+		$totals_info = array();
+
+		$totals = $this->_transaction->get_items( '', true )->summary_only()->segment();
+
+		foreach ( $totals as $total_by_type ) {
+			$segmented = $total_by_type->segment( function ( ITE_Line_Item $item ) {
+				return get_class( $item ) . $item->get_name();
+			} );
+
+			foreach ( $segmented as $segment ) {
+				$type        = $segment->first()->get_type();
+				$name        = $segment->first()->get_name();
+				$total       = $segment->total();
+				$description = $segment->filter( function ( ITE_Line_Item $item ) {
+					return trim( $item->get_description() !== '' );
+				} )->first();
+
+				$totals_info[] = array(
+					'type'        => $type,
+					'name'        => $name,
+					'total'       => $total,
+					'description' => $description
+				);
+			}
+		}
+
+		if ( $options['has'] ) {
+			return count( $totals_info ) > 0;
+		}
+
+		if ( empty( $GLOBALS['it_exchange']['transaction-totals'] ) ) {
+			$GLOBALS['it_exchange']['transaction-totals'] = $totals_info;
+			$GLOBALS['it_exchange']['transaction-total']  = reset( $GLOBALS['it_exchange']['transaction-totals'] );
+
+			return true;
+		} elseif ( next( $GLOBALS['it_exchange']['transaction-totals'] ) ) {
+			$GLOBALS['it_exchange']['transaction-total'] = current( $GLOBALS['it_exchange']['transaction-totals'] );
+
+			return true;
+		} else {
+			$GLOBALS['it_exchange']['transaction-totals'] = array();
+			end( $GLOBALS['it_exchange']['transaction-totals'] );
+			$GLOBALS['it_exchange']['transaction-total'] = null;
+
+			return false;
+		}
+	}
+
+	/**
+	 * Get information about a total line.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $options
+	 *
+	 * @return string
+	 */
+	public function total_line( array $options = array() ) {
+
+		$defaults = array(
+			'field'        => '',
+			'format_price' => 'true',
+		);
+		$options  = ITUtility::merge_defaults( $options, $defaults );
+
+		if ( ! $options['field'] ) {
+			return '';
+		}
+
+		$field = $options['field'];
+
+		if ( ! isset( $this->_total_line[ $field ] ) ) {
+			return '';
+		}
+
+		$value = $this->_total_line[ $field ];
+
+		if ( $options['has'] ) {
+			return $value !== '';
+		}
+
+		if ( $field === 'total' && $options['format_price'] ) {
+			$value = it_exchange_format_price( $value );
+		}
+
+		return $value;
 	}
 
 	/**

@@ -75,7 +75,7 @@ do_action( 'it-exchange-before-admin-user-products' );
 							<?php $download_info = it_exchange_get_download_info( $download_id ); ?>
 
 							<?php if ( ! empty( $download_info['source'] ) ) : ?>
-								<h4><?php echo get_the_title( $download_id ) ?><span><?php echo end( ( explode( '/', $download_info['source'] ) ) ) ?></span></h4>
+								<h4><?php echo get_the_title( $download_id ) ?><span><?php $file_parts = explode( '/', $download_info['source'] ); echo end( $file_parts ); ?></span></h4>
 								<ul class="download-hashes">
 									<?php foreach ( $download_hashes as $download_hash ) : ?>
 										<?php $download_data = it_exchange_get_download_data( $download_id, $download_hash ); ?>

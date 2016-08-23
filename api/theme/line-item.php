@@ -59,8 +59,9 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	public function name( array $options = array() ) {
 
 		$defaults = array(
-			'before' => '<span class="$CLASS$">',
-			'after'  => '</span>',
+			'before' => '',
+			'after'  => '',
+			'wrap'   => 'span',
 			'class'  => "it-exchange-line-item-name it-exchange-{$this->item->get_type()}-item-name"
 		);
 		$options  = ITUtility::merge_defaults( $options, $defaults );
@@ -69,7 +70,7 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 			return trim( $this->item->get_name() ) !== '';
 		}
 
-		$before = str_replace( '$CLASS$', $options['class'], $options['before'] );
+		$before = $options['before'] . "<{$options['wrap']} class=\"{$options['class']}\">";
 
 		return $before . $this->item->get_name() . $options['after'];
 	}
@@ -86,8 +87,9 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	public function description( array $options = array() ) {
 
 		$defaults = array(
-			'before' => '<p class="$CLASS$">',
-			'after'  => '</p>',
+			'before' => '',
+			'after'  => '',
+			'wrap'   => 'p',
 			'class'  => "it-exchange-line-item-description it-exchange-{$this->item->get_type()}-item-description"
 		);
 		$options  = ITUtility::merge_defaults( $options, $defaults );
@@ -96,7 +98,7 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 			return trim( $this->item->get_description() ) !== '';
 		}
 
-		$before = str_replace( '$CLASS$', $options['class'], $options['before'] );
+		$before = $options['before'] . "<{$options['wrap']} class=\"{$options['class']}\">";
 
 		return $before . $this->item->get_description() . $options['after'];
 	}

@@ -38,19 +38,19 @@
 						</tr>
 						<?php do_action( 'it_exchange_email_template_receipt_cart-totals_after_subtotal' ); ?>
 
-						<?php if ( it_exchange( 'transaction', 'has-shipping-method' ) ): ?>
-							<?php do_action( 'it_exchange_email_template_receipt_cart-totals_before_shipping' ); ?>
+						<?php while ( it_exchange( 'transaction', 'totals' ) ) : ?>
+							<?php do_action( 'it_exchange_email_template_receipt_cart-totals_before_' . it_exchange( 'transaction', 'get-total-line', 'field=type' ) ); ?>
 							<tr>
 								<td></td>
 								<td align="right" style="padding: 10px; ">
-									<strong><?php _e( 'Shipping', 'it-l10n-ithemes-exchange' ); ?></strong>
+									<strong><?php it_exchange( 'transaction', 'total-line', 'field=name' ); ?></strong>
 								</td>
 								<td align="right" style="padding: 10px 0 10px 10px; ">
-									<?php it_exchange( 'transaction', 'shipping-total' ); ?>
+									<?php it_exchange( 'transaction', 'total-line', 'field=total' ); ?>
 								</td>
 							</tr>
-							<?php do_action( 'it_exchange_email_template_receipt_cart-totals_after_shipping' ); ?>
-						<?php endif; ?>
+							<?php do_action( 'it_exchange_email_template_receipt_cart-totals_after_'. it_exchange( 'transaction', 'get-total-line', 'field=type' ) ); ?>
+						<?php endwhile; ?>
 
 						<?php do_action( 'it_exchange_email_template_receipt_cart-totals_before_total' ); ?>
 						<tr>
