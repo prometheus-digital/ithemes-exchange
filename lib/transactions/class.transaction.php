@@ -168,30 +168,46 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 
 		$billing = $shipping = 0;
 
-		if ( ! empty( $cart_details->billing_address ) ) {
-			try {
-				$billing = ITE_Saved_Address::query()->first_or_create( array_merge(
-					array_intersect_key( $cart_details->billing_address, ITE_Saved_Address::table()->get_column_defaults() ),
-					array( 'customer' => $customer_id )
-				) );
-				$billing = $billing ? $billing->get_pk() : 0;
-			}
-			catch ( Exception $e ) {
+		if ( ! empty( $cart_details->billing_address ) && is_array( $cart_details->billing_address ) ) {
+			if ( $customer_id ) {
+				try {
+					$billing = ITE_Saved_Address::query()->first_or_create( array_merge(
+						array_intersect_key( $cart_details->billing_address, ITE_Saved_Address::table()->get_column_defaults() ),
+						array( 'customer' => $customer_id, 'type' => ITE_Saved_Address::T_BILLING )
+					) );
+				}
+				catch ( Exception $e ) {
 
+				}
+			} else {
+				$billing = ITE_Saved_Address::create( array_merge(
+					array_intersect_key( $cart_details->billing_address, ITE_Saved_Address::table()->get_column_defaults() ),
+					array( 'type' => ITE_Saved_Address::T_BILLING )
+				) );
 			}
+
+			$billing = $billing ? $billing->get_pk() : 0;
 		}
 
-		if ( ! empty( $cart_details->shipping_address ) ) {
-			try {
-				$shipping = ITE_Saved_Address::query()->first_or_create( array_merge(
-					array_intersect_key( $cart_details->shipping_address, ITE_Saved_Address::table()->get_column_defaults() ),
-					array( 'customer' => $customer_id )
-				) );
-				$shipping = $shipping ? $shipping->get_pk() : 0;
-			}
-			catch ( Exception $e ) {
+		if ( ! empty( $cart_details->shipping_address ) && is_array( $cart_details->shipping_address ) ) {
+			if ( $customer_id ) {
+				try {
+					$shipping = ITE_Saved_Address::query()->first_or_create( array_merge(
+						array_intersect_key( $cart_details->shipping_address, ITE_Saved_Address::table()->get_column_defaults() ),
+						array( 'customer' => $customer_id, 'type' => ITE_Saved_Address::T_SHIPPING )
+					) );
+				}
+				catch ( Exception $e ) {
 
+				}
+			} else {
+				$shipping = ITE_Saved_Address::create( array_merge(
+					array_intersect_key( $cart_details->shipping_address, ITE_Saved_Address::table()->get_column_defaults() ),
+					array( 'type' => ITE_Saved_Address::T_SHIPPING )
+				) );
 			}
+
+			$shipping = $shipping ? $shipping->get_pk() : 0;
 		}
 
 		$method_id = get_post_meta( $post_id, '_it_exchange_transaction_method_id', true );
