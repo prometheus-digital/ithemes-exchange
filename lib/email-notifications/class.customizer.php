@@ -117,7 +117,7 @@ class IT_Exchange_Email_Customizer {
 	 *
 	 * @return WP_Customize_Section[]
 	 */
-	protected function get_sections( WP_Customize_Manager &$customizer ) {
+	protected function get_sections( WP_Customize_Manager $customizer ) {
 		return array(
 			new WP_Customize_Section( $customizer, 'it-exchange-email-structure', array(
 				'capability'      => $this->capability,
@@ -167,7 +167,7 @@ class IT_Exchange_Email_Customizer {
 	 *
 	 * @return WP_Customize_Setting[]
 	 */
-	protected function get_settings( WP_Customize_Manager &$customizer ) {
+	protected function get_settings( WP_Customize_Manager $customizer ) {
 		return array(
 			new WP_Customize_Setting( $customizer, 'it-exchange-email[logo]', array(
 				'capability' => $this->capability,
@@ -311,7 +311,7 @@ class IT_Exchange_Email_Customizer {
 	 *
 	 * @return WP_Customize_Control[]
 	 */
-	protected function get_controls( WP_Customize_Manager &$customizer ) {
+	protected function get_controls( WP_Customize_Manager $customizer ) {
 		return array(
 
 			/** Structure */
@@ -771,18 +771,6 @@ class IT_Exchange_Email_Customizer {
 	 */
 	protected static function sideload( $file ) {
 
-		if ( ! function_exists( 'download_url' ) ) {
-			require_once ABSPATH . '/wp-admin/includes/file.php';
-		}
-
-		if ( ! function_exists( 'media_handle_sideload' ) ) {
-			require_once ABSPATH . '/wp-admin/includes/media.php';
-		}
-
-		if ( ! function_exists( 'wp_read_image_metadata' ) ) {
-			require_once ABSPATH . '/wp-admin/includes/image.php';
-		}
-
 		preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png)\b/i', $file, $matches );
 
 		if ( ! $matches ) {
@@ -795,6 +783,18 @@ class IT_Exchange_Email_Customizer {
 
 		if ( isset( $uploaded[ $basename ] ) ) {
 			return $uploaded[ $basename ];
+		}
+
+		if ( ! function_exists( 'download_url' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+		}
+
+		if ( ! function_exists( 'media_handle_sideload' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/media.php';
+		}
+
+		if ( ! function_exists( 'wp_read_image_metadata' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/image.php';
 		}
 
 		$file_array = array();
@@ -903,7 +903,7 @@ class IT_Exchange_Email_Customizer {
 	 * @param bool                 $active
 	 * @param WP_Customize_Section $section
 	 *
-	 * @return array
+	 * @return bool
 	 */
 	public function restrict_sections( $active, $section ) {
 
