@@ -300,6 +300,11 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	 * @inheritDoc
 	 */
 	public function is_quantity_modifiable() {
+
+		if ( ! $this->get_product() ) {
+			return true;
+		}
+
 		return $this->get_product()->supports_feature( 'purchase-quantity' ) &&
 		       it_exchange_is_multi_item_product_allowed( $this->get_product()->ID );
 	}

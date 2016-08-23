@@ -532,12 +532,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	public function products( $options = array() ) {
 
 		if ( $options['has'] ) {
-
-			if ( $this->demo ) {
-				return true;
-			}
-
-			return count( it_exchange_get_transaction_products( $this->_transaction ) ) > 0;
+			return $this->demo || count( it_exchange_get_transaction_products( $this->_transaction ) ) > 0;
 		}
 
 		// If we made it here, we're doing a loop of transaction_products for the current query.
@@ -546,6 +541,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 			if ( $this->demo ) {
 				$GLOBALS['it_exchange']['transaction_products'] = $this->get_demo_products();
+				$GLOBALS['it_exchange']['transaction_product']  = reset( $GLOBALS['it_exchange']['transaction_products'] );
 			} else {
 				$products = it_exchange_get_transaction_products( $this->_transaction );
 
@@ -601,7 +597,9 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 		$transaction = $this->_transaction;
 
-		if ( $transaction ) {
+		if ( $this->demo ) {
+			$items = $this->get_demo_items();
+		} elseif ( $transaction ) {
 			$items = $transaction->get_items()->non_summary_only();
 		} else {
 			return false;
@@ -737,6 +735,35 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	}
 
 	/**
+	 * Get the demo line items.
+	 *
+	 * @since 1.36
+	 *
+	 * @return \ITE_Line_Item[]
+	 */
+	protected function get_demo_items() {
+		return new ITE_Line_Item_Collection( array(
+			new ITE_Cart_Product( '', new ITE_Array_Parameter_Bag( array( 'product_id' => 0 ) ), new ITE_Array_Parameter_Bag( array(
+				'total' => 170.00,
+				'quantity' => 2,
+				'name' => 'Lewis Trouser Strap',
+				'description' => '',
+				'amount' => 85.00
+			) ) ),
+			new ITE_Cart_Product( '', new ITE_Array_Parameter_Bag( array( 'product_id' => 0 ) ), new ITE_Array_Parameter_Bag( array(
+				'total' => 85.00,
+				'quantity' => 1,
+				'name' => 'Lewis Trouser Strap',
+				'description' => '',
+				'amount' => 85.00
+			) ) ),
+		), new ITE_Line_Item_Cached_Session_Repository(
+			new IT_Exchange_In_Memory_Session( null ), it_exchange_get_current_customer(),
+			new ITE_Line_Item_Repository_Events()
+		) );
+	}
+
+	/**
 	 * Get the demo products.
 	 *
 	 * @since 1.36
@@ -772,7 +799,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 * @return boolean
 	 */
 	function cleared_for_delivery( $options = array() ) {
-		return it_exchange_transaction_is_cleared_for_delivery( $this->_transaction->ID );
+		return it_exchange_transaction_is_cleared_for_delivery( $this->_transaction ) || $this->demo;
 	}
 
 	/**
@@ -1069,11 +1096,13 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		// otherwise the globals won't be properly reset
 		$has = false;
 
-		while ( it_exchange( 'transaction', 'products' ) ) {
-			if ( it_exchange( 'transaction', 'has-product-downloads' ) ) {
-				while ( it_exchange( 'transaction', 'product-downloads' ) ) {
-					if ( it_exchange( 'transaction', 'has-product-download-hashes' ) ) {
-						$has = true;
+		if ( it_exchange( 'transaction', 'has-products' ) ) {
+			while ( it_exchange( 'transaction', 'products' ) ) {
+				if ( it_exchange( 'transaction', 'has-product-downloads' ) ) {
+					while ( it_exchange( 'transaction', 'product-downloads' ) ) {
+						if ( it_exchange( 'transaction', 'has-product-download-hashes' ) ) {
+							$has = true;
+						}
 					}
 				}
 			}
@@ -1081,7 +1110,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 		$show = apply_filters( 'it_exchange_print_downlods_page_link_in_email', true, $this->_transaction );
 
-		return $has && $show;
+		return ( $has && $show );
 	}
 
 	/**
