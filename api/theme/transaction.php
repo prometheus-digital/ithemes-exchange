@@ -642,33 +642,37 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 */
 	public function totals( array $options = array() ) {
 
-		if ( ! $this->_transaction ) {
-			return false;
-		}
+		if ( $this->demo ) {
+			$totals_info = $this->get_demo_totals();
+		} else {
+			if ( ! $this->_transaction ) {
+				return false;
+			}
 
-		$totals_info = array();
+			$totals_info = array();
 
-		$totals = $this->_transaction->get_items( '', true )->summary_only()->segment();
+			$totals = $this->_transaction->get_items( '', true )->summary_only()->segment();
 
-		foreach ( $totals as $total_by_type ) {
-			$segmented = $total_by_type->segment( function ( ITE_Line_Item $item ) {
-				return get_class( $item ) . $item->get_name();
-			} );
+			foreach ( $totals as $total_by_type ) {
+				$segmented = $total_by_type->segment( function ( ITE_Line_Item $item ) {
+					return get_class( $item ) . $item->get_name();
+				} );
 
-			foreach ( $segmented as $segment ) {
-				$type        = $segment->first()->get_type();
-				$name        = $segment->first()->get_name();
-				$total       = $segment->total();
-				$description = $segment->filter( function ( ITE_Line_Item $item ) {
-					return trim( $item->get_description() !== '' );
-				} )->first();
+				foreach ( $segmented as $segment ) {
+					$type        = $segment->first()->get_type();
+					$name        = $segment->first()->get_name();
+					$total       = $segment->total();
+					$description = $segment->filter( function ( ITE_Line_Item $item ) {
+						return trim( $item->get_description() !== '' );
+					} )->first();
 
-				$totals_info[] = array(
-					'type'        => $type,
-					'name'        => $name,
-					'total'       => $total,
-					'description' => $description
-				);
+					$totals_info[] = array(
+						'type'        => $type,
+						'name'        => $name,
+						'total'       => $total,
+						'description' => $description
+					);
+				}
 			}
 		}
 
@@ -739,23 +743,23 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	 *
 	 * @since 1.36
 	 *
-	 * @return \ITE_Line_Item[]
+	 * @return \ITE_Line_Item_Collection
 	 */
 	protected function get_demo_items() {
 		return new ITE_Line_Item_Collection( array(
 			new ITE_Cart_Product( '', new ITE_Array_Parameter_Bag( array( 'product_id' => 0 ) ), new ITE_Array_Parameter_Bag( array(
-				'total' => 170.00,
-				'quantity' => 2,
-				'name' => 'Lewis Trouser Strap',
+				'total'       => 170.00,
+				'quantity'    => 2,
+				'name'        => 'Lewis Trouser Strap',
 				'description' => '',
-				'amount' => 85.00
+				'amount'      => 85.00
 			) ) ),
 			new ITE_Cart_Product( '', new ITE_Array_Parameter_Bag( array( 'product_id' => 0 ) ), new ITE_Array_Parameter_Bag( array(
-				'total' => 85.00,
-				'quantity' => 1,
-				'name' => 'Lewis Trouser Strap',
+				'total'       => 85.00,
+				'quantity'    => 1,
+				'name'        => 'Lewis Trouser Strap',
 				'description' => '',
-				'amount' => 85.00
+				'amount'      => 85.00
 			) ) ),
 		), new ITE_Line_Item_Cached_Session_Repository(
 			new IT_Exchange_In_Memory_Session( null ), it_exchange_get_current_customer(),
@@ -786,6 +790,24 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 				'product_subtotal'   => '85.00',
 				'product_base_price' => '85.00',
 			),
+		);
+	}
+
+	/**
+	 * Get the demo totals.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array
+	 */
+	protected function get_demo_totals() {
+		return array(
+			array(
+				'type'        => 'shipping',
+				'name'        => __( 'Shipping', 'it-l10n-ithemes-exchange' ),
+				'total'       => 8.85,
+				'description' => '',
+			)
 		);
 	}
 
