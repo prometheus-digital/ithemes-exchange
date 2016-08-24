@@ -34,7 +34,11 @@ class ITE_Line_Item_Transaction_Object_Converter {
 		}
 
 		if ( $cart_object->taxes_raw ) {
-			$this->taxes( $cart_object->taxes_raw, $cart_object->sub_total, $products, $repository );
+			$res = $this->taxes( $cart_object->taxes_raw, $cart_object->sub_total, $products, $repository );
+
+			if ( ! $res ) {
+				$transaction->add_meta( 'failed_tax_upgrade', true );
+			}
 		}
 
 		if ( $cart_object->coupons_total_discount ) {
@@ -92,17 +96,257 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	 * @param float                                 $sub_total
 	 * @param \ITE_Cart_Product[]                   $products
 	 * @param \ITE_Line_Item_Transaction_Repository $repository
+	 *
+	 * @return bool
 	 */
 	protected function taxes( $taxes, $sub_total, array $products, ITE_Line_Item_Transaction_Repository $repository ) {
 
+		$tid = $repository->get_transaction()->ID;
+
 		$rate = ( $taxes / $sub_total ) * 100;
 
-		if ( metadata_exists( 'post', $repository->get_transaction()->ID, '_it_exchange_easy_us_sales_taxes' ) ) {
+		if ( metadata_exists( 'post', $tid, '_it_exchange_easy_us_sales_taxes' ) ) {
 			if ( class_exists( 'ITE_TaxCloud_Line_Item' ) ) {
 				$item = ITE_TaxCloud_Line_Item::create( $rate );
 			} else {
-				return;
+				return false;
 			}
+		} elseif ( metadata_exists( 'post', $tid, '_it_exchange_easy_canadian_sales_taxes' ) ) {
+
+			if ( ! class_exists( 'ITE_Canadian_Tax_Item' ) ) {
+				return false;
+			}
+
+			$data = get_post_meta( $tid, '_it_exchange_easy_canadian_sales_taxes', true );
+
+			if ( ! is_array( $data ) ) {
+				return false;
+			}
+
+			if ( $repository->get_transaction()->get_shipping_address() ) {
+				$state = $repository->get_shipping_address()->offsetGet( 'state' );
+			} elseif ( $repository->get_billing_address() ) {
+				$state = $repository->get_billing_address()->offsetGet( 'state' );
+			} else {
+				return false;
+			}
+
+			$settings = it_exchange_get_option( 'addon_easy_canadian_sales_taxes', true, false );
+
+			if ( empty( $settings['tax-rates'] ) ) {
+				$settings = it_exchange_get_option( 'addon_easy_canadian_sales_taxes', true );
+			}
+
+			foreach ( $data as $tax_type ) {
+				$code = '';
+
+				foreach ( $settings[ $state ] as $index => $rate_data ) {
+					if ( $rate_data['type'] == $tax_type['type'] ) {
+						$code = "$state:$index";
+						break;
+					}
+				}
+
+				$total_tax_amount = 0;
+
+				foreach ( $products as $product ) {
+
+					$product_price = $product->get_amount() * $product->get_quantity();
+					$tax_amount    = $product_price / ( $tax_type['rate'] / 100 );
+
+					$item = new ITE_Canadian_Tax_Item(
+						md5( uniqid( 'CANADIAN', true ) . $tax_type['type'] ),
+						new ITE_Array_Parameter_Bag( array(
+							'code'                => $code,
+							'rate'                => $tax_type['rate'],
+							'applies_to_shipping' => $tax_type['shipping']
+						) ),
+						new ITE_Array_Parameter_Bag( array(
+							'quantity' => 1,
+							'name'     => $tax_type['type'],
+							'amount'   => $tax_amount,
+							'total'    => $tax_amount,
+						) )
+					);
+
+					$tax = $item->create_scoped_for_taxable( $product );
+					$product->add_tax( $tax );
+
+					$total_tax_amount += $tax_amount;
+				}
+
+				if ( $total_tax_amount < $tax_type['total'] ) {
+					$repository->save( new ITE_Canadian_Tax_Item(
+						md5( uniqid( 'CANADIAN', true ) . $tax_type['type'] ),
+						new ITE_Array_Parameter_Bag( array(
+							'code'                => $code,
+							'rate'                => $tax_type['rate'],
+							'applies_to_shipping' => $tax_type['shipping']
+						) ),
+						new ITE_Array_Parameter_Bag( array(
+							'quantity' => 1,
+							'name'     => $tax_type['type'],
+							'amount'   => $tax_type['total'] - $total_tax_amount,
+							'total'    => $tax_type['total'] - $total_tax_amount,
+						) )
+					) );
+				}
+			}
+
+			return true;
+		} elseif ( metadata_exists( 'post', $tid, '_it_exchange_easy_eu_value_added_taxes_taxes_total' ) ) {
+
+			if ( ! class_exists( 'ITE_EU_VAT_Line_Item' ) ) {
+				return false;
+			}
+
+			$settings = it_exchange_get_option( 'addon_easy_eu_value_added_taxes' );
+
+			$regular_taxes = get_post_meta( $tid, '_it_exchange_easy_eu_value_added_taxes', true );
+			$moss_taxes    = get_post_meta( $tid, '_it_exchange_easy_eu_value_added_vat_moss_taxes', true );
+
+			if ( is_array( $regular_taxes ) ) {
+				foreach ( $regular_taxes as $regular_tax ) {
+
+					if ( empty( $regular_tax['total'] ) ) {
+						continue;
+					}
+
+					$code = '';
+
+					foreach ( $settings['tax-rates'] as $index => $rate_data ) {
+						if ( $rate_data['rate'] == $regular_tax['tax-rate']['rate'] ) {
+							$code = "vat:$index";
+							break;
+						}
+					}
+
+					$rate_data = $regular_tax['tax-rate'];
+					$rate      = $rate_data['rate'];
+					$shipping  = ! empty( $rate_data['shipping'] )
+					             && in_array( $rate_data['shipping'], array( 'on', true ), true );
+
+					$total_tax_amount = 0;
+
+					foreach ( $products as $product ) {
+
+						$product_price = $product->get_amount() * $product->get_quantity();
+						$tax_amount    = $product_price / ( $rate / 100 );
+
+						$item = new ITE_EU_VAT_Line_Item(
+							md5( uniqid( 'VAT', true ) . $rate ),
+							new ITE_Array_Parameter_Bag( array(
+								'code'                => $code,
+								'rate'                => $rate,
+								'applies_to_shipping' => $shipping
+							) ),
+							new ITE_Array_Parameter_Bag( array(
+								'name'   => $rate_data['label'] ?: __( 'VAT', 'it-l10n-ithemes-exchange' ),
+								'amount' => $tax_amount,
+								'total'  => $tax_amount,
+							) )
+						);
+
+						$tax = $item->create_scoped_for_taxable( $product );
+						$product->add_tax( $tax );
+
+						$total_tax_amount += $tax_amount;
+					}
+
+					if ( $total_tax_amount < $regular_tax['total'] ) {
+						$repository->save( new ITE_EU_VAT_Line_Item(
+							md5( uniqid( 'VAT', true ) . $rate ),
+							new ITE_Array_Parameter_Bag( array(
+								'code'                => $code,
+								'rate'                => $rate,
+								'applies_to_shipping' => $shipping,
+							) ),
+							new ITE_Array_Parameter_Bag( array(
+								'name'   => $rate_data['label'] ?: __( 'VAT', 'it-l10n-ithemes-exchange' ),
+								'amount' => $regular_tax['total'] - $total_tax_amount,
+								'total'  => $regular_tax['total'] - $total_tax_amount,
+							) )
+						) );
+					}
+				}
+			}
+
+			if ( is_array( $moss_taxes ) ) {
+
+				if ( $repository->get_transaction()->get_shipping_address() ) {
+					$country = $repository->get_shipping_address()->offsetGet( 'country' );
+				} elseif ( $repository->get_billing_address() ) {
+					$country = $repository->get_billing_address()->offsetGet( 'country' );
+				} else {
+					return false;
+				}
+
+				foreach ( $moss_taxes as $moss_tax ) {
+
+					if ( empty( $moss_tax['total'] ) ) {
+						continue;
+					}
+
+					$code = '';
+
+					foreach ( $settings['vat-moss-tax-rates'][ $country ] as $index => $rate_data ) {
+						if ( $rate_data['rate'] == $moss_tax['tax-rate']['rate'] ) {
+							$code = "moss:$country:$index";
+							break;
+						}
+					}
+
+					$rate_data = $moss_tax['tax-rate'];
+					$rate      = $rate_data['rate'];
+					$shipping  = ! empty( $rate_data['shipping'] )
+					             && in_array( $rate_data['shipping'], array( 'on', true ), true );
+
+					$total_tax_amount = 0;
+
+					foreach ( $products as $product ) {
+
+						$product_price = $product->get_amount() * $product->get_quantity();
+						$tax_amount    = $product_price / ( $rate / 100 );
+
+						$item = new ITE_EU_VAT_Line_Item(
+							md5( uniqid( 'VAT', true ) . $rate ),
+							new ITE_Array_Parameter_Bag( array(
+								'code'                => $code,
+								'rate'                => $rate,
+								'applies_to_shipping' => $shipping
+							) ),
+							new ITE_Array_Parameter_Bag( array(
+								'name'   => $rate_data['label'] ?: __( 'VAT', 'it-l10n-ithemes-exchange' ),
+								'amount' => $tax_amount,
+								'total'  => $tax_amount,
+							) )
+						);
+
+						$tax = $item->create_scoped_for_taxable( $product );
+						$product->add_tax( $tax );
+
+						$total_tax_amount += $tax_amount;
+					}
+
+					if ( $total_tax_amount < $moss_tax['total'] ) {
+						$repository->save( new ITE_EU_VAT_Line_Item(
+							md5( uniqid( 'VAT', true ) . $rate ),
+							new ITE_Array_Parameter_Bag( array(
+								'code'                => $code,
+								'rate'                => $rate,
+								'applies_to_shipping' => $shipping,
+							) ),
+							new ITE_Array_Parameter_Bag( array(
+								'name'   => $rate_data['label'] ?: __( 'VAT', 'it-l10n-ithemes-exchange' ),
+								'amount' => $moss_tax['total'] - $total_tax_amount,
+								'total'  => $moss_tax['total'] - $total_tax_amount,
+							) )
+						) );
+					}
+				}
+			}
+
+			return true;
 		} else {
 			$item = ITE_Simple_Tax_Line_Item::create( $rate );
 		}
@@ -113,6 +357,8 @@ class ITE_Line_Item_Transaction_Object_Converter {
 		}
 
 		$repository->save_many( $products );
+
+		return true;
 	}
 
 	/**
