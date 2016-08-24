@@ -143,7 +143,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 			foreach ( $data as $tax_type ) {
 				$code = '';
 
-				foreach ( $settings[ $state ] as $index => $rate_data ) {
+				foreach ( $settings['tax-rates'][ $state ] as $index => $rate_data ) {
 					if ( $rate_data['type'] == $tax_type['type'] ) {
 						$code = "$state:$index";
 						break;
@@ -172,8 +172,8 @@ class ITE_Line_Item_Transaction_Object_Converter {
 						) )
 					);
 
-					$tax = $item->create_scoped_for_taxable( $product );
-					$product->add_tax( $tax );
+					$item->set_aggregate( $product );
+					$product->add_tax( $item );
 
 					$total_tax_amount += $tax_amount;
 				}
@@ -252,8 +252,8 @@ class ITE_Line_Item_Transaction_Object_Converter {
 							) )
 						);
 
-						$tax = $item->create_scoped_for_taxable( $product );
-						$product->add_tax( $tax );
+						$item->set_aggregate( $product );
+						$product->add_tax( $item );
 
 						$total_tax_amount += $tax_amount;
 					}
@@ -329,8 +329,8 @@ class ITE_Line_Item_Transaction_Object_Converter {
 							) )
 						);
 
-						$tax = $item->create_scoped_for_taxable( $product );
-						$product->add_tax( $tax );
+						$item->set_aggregate( $product );
+						$product->add_tax( $item );
 
 						$total_tax_amount += $tax_amount;
 					}
