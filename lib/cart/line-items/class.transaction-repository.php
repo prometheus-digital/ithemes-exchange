@@ -133,6 +133,10 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 			throw new UnexpectedValueException( "Model failed to save for {$item->get_type()} {$item->get_id()}" );
 		}
 
+		if ( $item instanceof ITE_Aggregate_Line_Item ) {
+			$this->save_many( $item->get_line_items()->to_array() );
+		}
+
 		foreach ( $item->get_params() as $param => $value ) {
 			$model->update_meta( $param, $value );
 		}
