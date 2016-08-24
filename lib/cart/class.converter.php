@@ -27,10 +27,12 @@ class ITE_Line_Item_Transaction_Object_Converter {
 
 		$products = $this->products( $cart_object->products, $repository );
 
+		$shipping_total = it_exchange_convert_from_database_number( $cart_object->shipping_total );
+
 		if ( $cart_object->shipping_method && $cart_object->shipping_method !== 'multiple-methods' ) {
-			$this->shipping_single( $cart_object->shipping_method, $cart_object->shipping_total, $repository );
+			$this->shipping_single( $cart_object->shipping_method, $shipping_total, $repository );
 		} elseif ( $cart_object->shipping_method === 'multiple-methods' ) {
-			$this->shipping_multi( $cart_object->shipping_method_multi, $cart_object->shipping_total, $products, $repository );
+			$this->shipping_multi( $cart_object->shipping_method_multi, $shipping_total, $products, $repository );
 		}
 
 		if ( $cart_object->taxes_raw ) {
@@ -452,6 +454,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 				'summary_only' => true
 			) )
 		);
+		$item->set_line_item_repository( $repository );
 
 		$repository->save( $item );
 
@@ -498,6 +501,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					'summary_only' => true
 				) )
 			);
+			$item->set_line_item_repository( $repository );
 
 			$items[] = $item;
 
@@ -514,6 +518,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					'summary_only' => true
 				) )
 			);
+			$item->set_line_item_repository( $repository );
 
 			$products[ $cart_product_id ]->add_item( $item );
 			$repository->save( $products[ $cart_product_id ] );
