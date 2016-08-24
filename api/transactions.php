@@ -524,7 +524,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 			$transaction->save();
 		}
 
-		do_action( 'it_exchange_add_transaction_success', $transaction_id );
+		do_action( 'it_exchange_add_transaction_success', $transaction_id, $cart );
 
 		$r = apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer, $cart_object, $args );
 
