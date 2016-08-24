@@ -80,6 +80,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					'summary_only' => false,
 				) ) );
 			$items[ $item->get_id() ] = $item;
+			$item->set_line_item_repository( $repository );
 		}
 
 		$repository->save_many( $items );
@@ -152,7 +153,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 				foreach ( $products as $product ) {
 
 					$product_price = $product->get_amount() * $product->get_quantity();
-					$tax_amount    = $product_price / ( $tax_type['rate'] / 100 );
+					$tax_amount    = $product_price * ( $tax_type['rate'] / 100 );
 
 					$item = new ITE_Canadian_Tax_Item(
 						md5( uniqid( 'CANADIAN', true ) . $tax_type['type'] ),
@@ -174,6 +175,8 @@ class ITE_Line_Item_Transaction_Object_Converter {
 
 					$total_tax_amount += $tax_amount;
 				}
+
+				$repository->save_many( $products );
 
 				if ( $total_tax_amount < $tax_type['total'] ) {
 					$repository->save( new ITE_Canadian_Tax_Item(
@@ -231,7 +234,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					foreach ( $products as $product ) {
 
 						$product_price = $product->get_amount() * $product->get_quantity();
-						$tax_amount    = $product_price / ( $rate / 100 );
+						$tax_amount    = $product_price * ( $rate / 100 );
 
 						$item = new ITE_EU_VAT_Line_Item(
 							md5( uniqid( 'VAT', true ) . $rate ),
@@ -252,6 +255,8 @@ class ITE_Line_Item_Transaction_Object_Converter {
 
 						$total_tax_amount += $tax_amount;
 					}
+
+					$repository->save_many( $products );
 
 					if ( $total_tax_amount < $regular_tax['total'] ) {
 						$repository->save( new ITE_EU_VAT_Line_Item(
@@ -306,7 +311,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					foreach ( $products as $product ) {
 
 						$product_price = $product->get_amount() * $product->get_quantity();
-						$tax_amount    = $product_price / ( $rate / 100 );
+						$tax_amount    = $product_price * ( $rate / 100 );
 
 						$item = new ITE_EU_VAT_Line_Item(
 							md5( uniqid( 'VAT', true ) . $rate ),
@@ -327,6 +332,8 @@ class ITE_Line_Item_Transaction_Object_Converter {
 
 						$total_tax_amount += $tax_amount;
 					}
+
+					$repository->save_many( $products );
 
 					if ( $total_tax_amount < $moss_tax['total'] ) {
 						$repository->save( new ITE_EU_VAT_Line_Item(
