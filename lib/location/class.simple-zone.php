@@ -133,4 +133,20 @@ class ITE_Simple_Zone implements ITE_Zone, IteratorAggregate, ArrayAccess {
 
 		return $masked;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_precision() {
+
+		$priority = array( 'country', 'state', 'zip', 'city' );
+
+		foreach ( $priority as $i => $field ) {
+			if ( empty( $this[ $field ] ) || $this[ $field ] === self::WILD ) {
+				return $priority[ $i - 1 ];
+			}
+		}
+
+		throw new UnexpectedValueException( 'Unable to determine zone precision.' );
+	}
 }

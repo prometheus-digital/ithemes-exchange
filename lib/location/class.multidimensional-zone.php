@@ -47,6 +47,9 @@ class ITE_Multidimensional_Zone implements ITE_Zone {
 	/** @var array */
 	private static $priority = array( 'country', 'state', 'zip', 'city' );
 
+	/** @var string */
+	private $precision;
+
 	/**
 	 * ITE_Multidimensional_Zone constructor.
 	 *
@@ -89,6 +92,9 @@ class ITE_Multidimensional_Zone implements ITE_Zone {
 
 			$processed[] = $value;
 		} elseif ( $zone instanceof ITE_Simple_Zone ) {
+
+			$this->precision = $zone->get_precision();
+
 			for ( $i = 0; $i <= $last_field; $i ++ ) {
 				if ( isset( $processed[ $i ] ) ) {
 					$zone[ self::$priority[ $i ] ] = $processed[ $i ];
@@ -129,5 +135,12 @@ class ITE_Multidimensional_Zone implements ITE_Zone {
 		} while ( ! $zone instanceof ITE_Simple_Zone );
 
 		return $zone->mask( $location );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_precision() {
+		return $this->precision;
 	}
 }

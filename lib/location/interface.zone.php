@@ -41,4 +41,15 @@ interface ITE_Zone {
 	 * @return \ITE_Location Masked location. This should be a NEW object.
 	 */
 	public function mask( ITE_Location $location );
+
+	/**
+	 * Get the precision of this zone.
+	 *
+	 * For example 'city' if rates vary all the way down to city level.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_precision();
 }

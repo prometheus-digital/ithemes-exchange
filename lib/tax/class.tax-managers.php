@@ -35,14 +35,17 @@ final class ITE_Tax_Managers {
 			self::$managers[ $cart->get_id() ]->hooks();
 
 			foreach ( self::$providers as $provider ) {
-				self::$managers[ $cart->get_id() ]->register_provider( $provider );
+				self::$managers[ $cart->get_id() ]->register_provider( $provider, false );
 			}
+
+			self::$managers[ $cart->get_id() ]->sort_providers();
 		}
 
 		return self::$managers[ $cart->get_id() ];
 	}
 
 	/**
+	 * Register a tax provider.
 	 *
 	 * @since 1.36.0
 	 *

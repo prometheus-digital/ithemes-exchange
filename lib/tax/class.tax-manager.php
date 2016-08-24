@@ -48,16 +48,70 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 
 	/**
 	 * Register a tax provider.
+	 *
 	 * @since 1.36.0
 	 *
-	 * @param \ITE_Tax_Provider $provider
+	 * @param \ITE_Tax_Provider $provider Tax provider. Take care to only register it once.
+	 * @param bool              $sort     Whether to automatically resort the providers.
+	 *                                    If false, the registration should be followed by a call to `sort_providers()`.
 	 *
 	 * @return $this
 	 */
-	public function register_provider( ITE_Tax_Provider $provider ) {
+	public function register_provider( ITE_Tax_Provider $provider, $sort = true ) {
 		$this->providers[] = $provider;
 
+		if ( $sort ) {
+			$this->providers = $this->do_sort_providers( $this->providers );
+		}
+
 		return $this;
+	}
+
+	/**
+	 * Sort all tax providers.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return $this
+	 */
+	public function sort_providers() {
+		$this->providers = $this->do_sort_providers( $this->providers );
+
+		return $this;
+	}
+
+	/**
+	 * Sort tax providers by their location.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $providers
+	 *
+	 * @return array
+	 */
+	protected function do_sort_providers( array $providers ) {
+		usort( $providers, function ( ITE_Tax_Provider $a, ITE_Tax_Provider $b ) {
+
+			if ( ! $a->is_restricted_to_location() ) {
+				return 1;
+			}
+
+			if ( ! $b->is_restricted_to_location() ) {
+				return -1;
+			}
+
+			$pa = $a->is_restricted_to_location()->get_precision();
+			$pb = $b->is_restricted_to_location()->get_precision();
+
+			$priority = array( 'country', 'state', 'zip', 'city' );
+
+			$pai = array_search( $pa, $priority, true );
+			$pbi = array_search( $pb, $priority, true );
+
+			return $pbi - $pai;
+		} );
+
+		return $providers;
 	}
 
 	/**
@@ -98,13 +152,19 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 			if ( ! $this->current_location ) {
 				if ( ! $zone ) {
 					$this->add_taxes_to_item( $item, $provider );
+
+					return;
 				}
 
 				continue;
 			} elseif ( $zone && $zone->contains( $zone->mask( $this->current_location ) ) ) {
 				$this->add_taxes_to_item( $item, $provider );
+
+				return;
 			} elseif ( ! $zone ) {
 				$this->add_taxes_to_item( $item, $provider );
+
+				return;
 			}
 		}
 	}
@@ -204,11 +264,11 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	 */
 	protected function handle_address_update( ITE_Location $new_address = null ) {
 
+		$added = false;
+
 		foreach ( $this->providers as $provider ) {
 
-			if ( ( $zone = $provider->is_restricted_to_location() ) === null ) {
-				continue;
-			}
+			$zone = $provider->is_restricted_to_location();
 
 			if ( $new_address === null ) {
 				$this->cart->get_items( 'tax', true )->with_only_instances_of( $provider->get_item_class() )->delete();
@@ -216,15 +276,20 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 				continue;
 			}
 
-			$masked = $zone->mask( $new_address );
+			$masked = $zone ? $zone->mask( $new_address ) : $new_address;
 
 			if ( $this->current_location->equals( $masked ) ) {
 				continue;
-			} elseif ( $zone->contains( $masked ) ) {
+			} elseif ( ! $zone || $zone->contains( $masked ) ) {
 				$this->cart->get_items( 'tax', true )->with_only_instances_of( $provider->get_item_class() )->delete();
-				foreach ( $this->cart->get_items()->taxable() as $item ) {
-					$this->add_taxes_to_item( $item, $provider );
+
+				if ( ! $added ) {
+					foreach ( $this->cart->get_items()->taxable() as $item ) {
+						$this->add_taxes_to_item( $item, $provider );
+					}
 				}
+
+				$added = true;
 			} else {
 				$this->cart->get_items( 'tax', true )->with_only_instances_of( $provider->get_item_class() )->delete();
 			}
