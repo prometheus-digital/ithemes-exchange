@@ -128,9 +128,11 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 				return;
 			}
 
-			$might_remove = false;
+			$might_remove  = false;
+			$remove_others = true;
 		} else {
-			$might_remove = true;
+			$remove_others = false;
+			$might_remove  = true;
 		}
 
 		// Some JS we're going to need
@@ -145,7 +147,9 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			var itExchangeCartBillingAddress = <?php echo esc_js( (boolean) it_exchange_get_customer_billing_address() ? 1 : 0); ?>;
 			jQuery(function () {
 
-				jQuery('.it-exchange-super-widget[data-might-remove="1"]').remove();
+				<?php if ( $remove_others ) : ?>
+					jQuery('.it-exchange-super-widget[data-might-remove="1"]').remove();
+				<?php endif; ?>
 
 				<?php $shipping_addons = it_exchange_get_enabled_addons( array( 'category' => 'shipping' ) ); if ( ! empty( $shipping_addons) ) : ?>
 				// Shipping Init country/state fields
