@@ -24,10 +24,12 @@ function it_exchange_get_current_cart( $create_if_not_started = true ) {
 	/** @var ITE_Cart $cart */
 	static $cart = null;
 
-	if ( $create_if_not_started && ( $cart === null || ! $cart->get_id() ) ) {
+	$cart_id = it_exchange_get_cart_id( $create_if_not_started );
+
+	if ( $cart_id && ( $cart === null || ! $cart->get_id() ) ) {
 		$cart = new \ITE_Cart(
 			new ITE_Line_Item_Session_Repository( it_exchange_get_session(), new ITE_Line_Item_Repository_Events() ),
-			it_exchange_get_cart_id( true )
+			$cart_id
 		);
 	}
 
@@ -537,7 +539,7 @@ function it_exchange_sync_current_cart_with_all_active_customer_carts() {
  * @return boolean
 */
 function it_exchange_is_multi_item_cart_allowed( \ITE_Cart $cart = null ) {
-	return apply_filters( 'it_exchange_multi_item_cart_allowed', false, $cart ? $cart : it_exchange_get_current_cart() );
+	return apply_filters( 'it_exchange_multi_item_cart_allowed', false, $cart ?: it_exchange_get_current_cart( false ) );
 }
 
 /**
@@ -989,7 +991,7 @@ function it_exchange_update_cart_id( $id = false ) {
  *
  * @param bool $generate Generate a cart ID is one does not exist.
  *
- * @return string returns the ID
+ * @return string|false returns the ID
 */
 function it_exchange_get_cart_id( $generate = false ) {
 	$id = it_exchange_get_cart_data( 'cart_id' );

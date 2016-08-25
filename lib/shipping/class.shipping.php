@@ -92,6 +92,10 @@ class IT_Exchange_Shipping {
 			return;
 		}
 
+		if ( ! it_exchange_get_current_cart( false ) ) {
+			return;
+		}
+
 		$this->register_shipping_address_purchase_requirement();
 		$this->register_shipping_method_purchase_requirement();
 	}
