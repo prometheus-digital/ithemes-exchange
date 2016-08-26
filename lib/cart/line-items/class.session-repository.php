@@ -213,7 +213,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function remove_param( $key ) {
+	public function remove_meta( $key ) {
 
 		$params = $this->get_all_meta();
 
