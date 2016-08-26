@@ -322,6 +322,11 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 	/**
 	 * @inheritDoc
 	 */
+	public function get_object_id() { return $this->get_param( 'id' ); }
+
+	/**
+	 * @inheritDoc
+	 */
 	public function set_line_item_repository( ITE_Line_Item_Repository $repository ) {
 		$this->repository = $repository;
 	}

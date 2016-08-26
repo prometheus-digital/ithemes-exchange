@@ -526,6 +526,11 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	/**
 	 * @inheritDoc
 	 */
+	public function get_object_id() { return $this->get_param( 'product_id' ); }
+
+	/**
+	 * @inheritDoc
+	 */
 	public function freeze() {
 		parent::freeze();
 

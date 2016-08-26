@@ -139,6 +139,15 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	public abstract function is_summary_only();
 
 	/**
+	 * Get the line item object ID.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return int
+	 */
+	public function get_object_id() { return 0; }
+
+	/**
 	 * Freeze this line item's state.
 	 *
 	 * This should take any configuration that might change, and persist that to parameterized storage.
@@ -158,9 +167,7 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	 *
 	 * @return \ITE_Read_Only_Parameter_Bag
 	 */
-	public function frozen() {
-		return new ITE_Read_Only_Parameter_Bag( $this->frozen );
-	}
+	public function frozen() { return new ITE_Read_Only_Parameter_Bag( $this->frozen ); }
 
 	/**
 	 * @inheritDoc
