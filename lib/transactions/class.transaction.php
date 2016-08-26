@@ -449,11 +449,17 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 *
 	 * @since 1.36
 	 *
-	 * @param $method_id
+	 * @param string $method_id
 	 *
 	 * @return bool|int
+	 *
+	 * @throws InvalidArgumentException
 	 */
 	public function update_method_id( $method_id ) {
+
+		if ( ! is_string( $method_id ) || trim( $method_id ) === '' ) {
+			throw new InvalidArgumentException( '$method_id must be non-zero length string.' );
+		}
 
 		$previous_method_id = $this->get_method_id();
 
