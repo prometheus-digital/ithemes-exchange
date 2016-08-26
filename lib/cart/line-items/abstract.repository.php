@@ -71,6 +71,60 @@ abstract class ITE_Line_Item_Repository {
 	abstract public function delete( ITE_Line_Item $item );
 
 	/**
+	 * Get all meta stored on the cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array
+	 */
+	abstract public function get_all_meta();
+
+	/**
+	 * Determine if the cart has a given meta key.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	abstract public function has_meta( $key );
+
+	/**
+	 * Retrieve metadata from the cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	abstract public function get_meta( $key );
+
+	/**
+	 * Set a meta value for the cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 *
+	 * @return bool
+	 */
+	abstract public function set_meta( $key, $value );
+
+	/**
+	 * Remove metadata from the cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	abstract public function remove_meta( $key );
+
+	/**
 	 * Get the customer's shipping address.
 	 * 
 	 * @since 1.36

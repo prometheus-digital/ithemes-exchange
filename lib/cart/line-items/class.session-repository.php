@@ -168,6 +168,63 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * @inheritDoc
 	 */
+	public function get_all_meta() {
+		$params = $this->session->get_session_data( 'cart_meta' );
+
+		return ! is_array( $params ) ? array() : $params;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function has_meta( $key ) {
+
+		$params = $this->get_all_meta();
+
+		return array_key_exists( $key, $params );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_meta( $key ) {
+
+		if ( ! $this->has_meta( $key ) ) {
+			throw new OutOfBoundsException( "Parameter {$key} does not exist." );
+		}
+
+		$params = $this->get_all_meta();
+
+		return $params[ $key ];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function set_meta( $key, $value ) {
+
+		$params = $this->get_all_meta();
+
+		$params[ $key ] = $value;
+
+		return $this->session->update_session_data( 'cart_meta', $params );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function remove_param( $key ) {
+
+		$params = $this->get_all_meta();
+
+		unset( $params[ $key ] );
+
+		return $this->session->update_session_data( 'cart_meta', $params );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_shipping_address() {
 
 		if ( ! it_exchange_is_purchase_requirement_registered( 'shipping-address' ) ) {

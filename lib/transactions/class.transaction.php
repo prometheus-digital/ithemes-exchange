@@ -582,7 +582,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 * @return int|bool Meta ID on new, true on update, false on fail.
 	 */
 	public function update_meta( $key, $value ) {
-		update_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $value );
+		return update_post_meta( $this->ID, '_it_exchange_transaction_' . $key, $value );
 	}
 
 	/**

@@ -17,6 +17,9 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	/** @var IT_Exchange_Transaction */
 	protected $transaction;
 
+	/** @var ITE_Parameter_Bag */
+	protected $bag;
+
 	/**
 	 * ITE_Line_Item_Transaction_Repository constructor.
 	 *
@@ -26,6 +29,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	public function __construct( ITE_Line_Item_Repository_Events $events, IT_Exchange_Transaction $transaction ) {
 		$this->events      = $events;
 		$this->transaction = $transaction;
+		$this->bag         = new ITE_Meta_Parameter_Bag( $transaction->ID, 'post', '_it_exchange_cart_' );
 	}
 
 	/**
@@ -318,6 +322,41 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 				$item->add_item( $aggregatable );
 			}
 		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_all_meta() {
+		return $this->bag->get_params();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function has_meta( $key ) {
+		return $this->bag->has_param( $key );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_meta( $ley ) {
+		return $this->bag->get_param( $key );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function set_meta( $key, $value ) {
+		return $this->bag->set_param( $key, $value );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function remove_meta( $key ) {
+		return $this->bag->remove_param( $key );
 	}
 
 	/**

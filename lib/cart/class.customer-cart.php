@@ -670,6 +670,72 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Get all meta stored on the cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array
+	 */
+	public function get_all_meta() {
+		return $this->get_repository()->get_all_meta();
+	}
+
+	/**
+	 * Determine if the cart has a given meta key.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	public function has_meta( $key ) {
+		return $this->get_repository()->has_meta( $key );
+	}
+
+	/**
+	 * Retrieve metadata from the cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 *
+	 * @throws OutOfBoundsException
+	 */
+	public function get_meta( $key ) {
+		return $this->get_repository()->get_meta( $key );
+	}
+
+	/**
+	 * Set a meta value for the cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 *
+	 * @return bool
+	 */
+	public function set_meta( $key, $value ) {
+		return $this->get_repository()->set_meta( $key, $value );
+	}
+
+	/**
+	 * Remove metadata from the cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	public function remove_meta( $key ) {
+		return $this->get_repository()->remove_meta( $key );
+	}
+
+	/**
 	 * Prepare the cart for purchase.
 	 *
 	 * @since 1.36.0
@@ -688,6 +754,8 @@ class ITE_Cart {
 
 	/**
 	 * Empty the cart.
+	 *
+	 * This will remove all items, not just products. The cart will also be destroyed.
 	 *
 	 * @since 1.36
 	 */
@@ -796,6 +864,10 @@ class ITE_Cart {
 		$repository->save_many( $this->get_items()->flatten()->to_array() );
 		$repository->set_billing_address( $this->get_billing_address() );
 		$repository->set_shipping_address( $this->get_shipping_address() );
+
+		foreach ( $this->get_all_meta() as $key => $value ) {
+			$repository->set_meta( $key, $value );
+		}
 
 		$clone             = clone $this;
 		$clone->repository = $repository;

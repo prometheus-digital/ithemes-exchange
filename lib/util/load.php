@@ -9,3 +9,4 @@
 require_once dirname( __FILE__ ) . '/interface.parameter-bag.php';
 require_once dirname( __FILE__ ) . '/class.array-parameter-bag.php';
 require_once dirname( __FILE__ ) . '/class.read-only-paramter-bag.php';
+require_once dirname( __FILE__ ) . '/class.meta-parameter-bag.php';
