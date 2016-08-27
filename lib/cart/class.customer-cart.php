@@ -719,7 +719,23 @@ class ITE_Cart {
 	 * @return bool
 	 */
 	public function set_meta( $key, $value ) {
-		return $this->get_repository()->set_meta( $key, $value );
+		if ( $this->get_repository()->set_meta( $key, $value ) ) {
+
+			/**
+			 * Fires when cart meta is set.
+			 *
+			 * @since 1.36.0
+			 *
+			 * @param string    $key
+			 * @param string    $value
+			 * @param \ITE_Cart $this
+			 */
+			do_action( 'it_exchange_set_cart_meta', $key, $value, $this );
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -732,7 +748,22 @@ class ITE_Cart {
 	 * @return bool
 	 */
 	public function remove_meta( $key ) {
-		return $this->get_repository()->remove_meta( $key );
+		if ( $this->get_repository()->remove_meta( $key ) ) {
+
+			/**
+			 * Fires when cart meta is removed.
+			 *
+			 * @since 1.36.0
+			 *
+			 * @param string    $key
+			 * @param \ITE_Cart $this
+			 */
+			do_action( 'it_exchange_remove_cart_meta', $key, $this );
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

@@ -925,6 +925,19 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	}
 
 	/**
+	 * Get the cart object for the transaction.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Cart
+	 */
+	public function cart() {
+		$repo = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $this );
+
+		return new ITE_Cart( $repo, $this->cart_id, $this->get_customer() );
+	}
+
+	/**
 	 * Convert a cart object to line items.
 	 *
 	 * @since 1.36.0

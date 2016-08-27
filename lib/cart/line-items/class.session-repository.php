@@ -207,7 +207,9 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 
 		$params[ $key ] = $value;
 
-		return $this->session->update_session_data( 'cart_meta', $params );
+		$this->session->update_session_data( 'cart_meta', $params );
+
+		return true;
 	}
 
 	/**
@@ -219,7 +221,9 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 
 		unset( $params[ $key ] );
 
-		return $this->session->update_session_data( 'cart_meta', $params );
+		$this->session->update_session_data( 'cart_meta', $params );
+
+		return true;
 	}
 
 	/**
