@@ -8,6 +8,8 @@
  * @package IT_Exchange
 */
 
+require_once dirname( __FILE__ ) . '/class.meta.php';
+
 /**
  * Loads the deprecated template parts
  *

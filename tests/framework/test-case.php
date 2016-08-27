@@ -61,6 +61,13 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 		} );
 	}
 
+	public function expectDeprecated() {
+		parent::expectDeprecated();
+
+		add_action( 'it_exchange_deprecated_meta_run', array( $this, 'deprecated_function_run' ) );
+		add_filter( 'it_exchange_deprecated_meta_run_trigger_error', '__return_false' );
+	}
+
 	/**
 	 * @return IT_Exchange_Test_Factory_For_Products|null
 	 */
@@ -140,13 +147,13 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 	 * Teardown the test case.
 	 */
 	function tearDown() {
-		
+
 		foreach ( $this->expected_hooks as $hook => $fired ) {
 			if ( ! $fired ) {
 				$this->fail( "Expected hook '$hook' was not fired." );
 			}
 		}
-		
+
 		parent::tearDown();
 
 		WP_Mock::tearDown();

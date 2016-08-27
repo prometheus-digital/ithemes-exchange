@@ -9,7 +9,7 @@
 /**
  * Class ITE_Transaction_Deprecated_Meta
  */
-class ITE_Transaction_Deprecated_Meta {
+class ITE_Transaction_Meta_Sync {
 
 	/** @var bool */
 	private $doing_meta_update = false;
