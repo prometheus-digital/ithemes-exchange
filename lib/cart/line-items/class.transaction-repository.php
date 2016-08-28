@@ -80,7 +80,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 		                                         ->and_where( 'transaction', true, $this->get_transaction()->ID );
 
 		if ( $type ) {
-			$models->and_where( 'type', $type );
+			$models->and_where( 'type', true, $type );
 		}
 
 		$models = $models->results();
