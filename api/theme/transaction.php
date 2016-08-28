@@ -651,7 +651,13 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 			$totals_info = array();
 
-			$totals = $this->_transaction->get_items( '', true )->summary_only()->segment();
+			$summary_only = $this->_transaction->get_items( '', true )->summary_only();
+
+			if ( ! $summary_only->count() ) {
+				return false;
+			}
+
+			$totals = $summary_only->segment();
 
 			foreach ( $totals as $total_by_type ) {
 				$segmented = $total_by_type->segment( function ( ITE_Line_Item $item ) {

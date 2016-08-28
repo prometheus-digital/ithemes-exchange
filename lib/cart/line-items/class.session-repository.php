@@ -528,7 +528,11 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			$data['additional_data'] = unserialize( $data['additional_data'] );
 		}
 
-		return array( '_params' => $data, '_frozen' => isset( $data['_frozen'] ) ? $data['_frozen'] : array() );
+		$data = array( '_params' => $data, '_frozen' => isset( $data['_frozen'] ) ? $data['_frozen'] : array() );
+
+		unset( $data['_params']['_frozen'] );
+
+		return $data;
 	}
 
 	/**

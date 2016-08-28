@@ -98,52 +98,61 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function save( ITE_Line_Item $item ) {
+	public function save( ITE_Line_Item $item, $recurse = true ) {
+
+		if ( $recurse && ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) ) {
+			$this->save( $item->get_aggregate(), false );
+		}
 
 		$old   = $this->get( $item->get_type(), $item->get_id() );
 		$model = $this->find_model_for_item( $item );
 
-		if ( ! $model ) {
+		$attributes = array(
+			'name'         => $item->get_name(),
+			'description'  => $item->get_description(),
+			'amount'       => $item->get_amount(),
+			'quantity'     => $item->get_quantity(),
+			'total'        => $item->frozen()->has_param( 'total' ) ? $item->frozen()->get_param( 'total' ) : $item->get_total(),
+			'summary_only' => $item->is_summary_only(),
+			'object_id'    => $item->get_object_id(),
+		);
+
+		if ( $model ) {
+
+			foreach ( $attributes as $attribute => $value ) {
+				$model->set_attribute( $attribute, $value );
+			}
+
+			$model->save();
+
+		} else {
 
 			if ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) {
 				$parent = $this->find_model_for_item( $item->get_aggregate() );
+
 				if ( $parent ) {
-					$parent = $parent->get_pk();
-				} else {
-					$this->save( $item->get_aggregate() );
-					$parent = $this->find_model_for_item( $item->get_aggregate() );
-					$parent = $parent ? $parent->get_pk() : 0;
+					$attributes['_parent'] = $parent->get_pk();
 				}
-			} else {
-				$parent = 0;
 			}
 
-			$model = ITE_Transaction_Line_Item_Model::create( array(
-				'id'           => $item->get_id(),
-				'type'         => $item->get_type(),
-				'name'         => $item->get_name(),
-				'description'  => $item->get_description(),
-				'amount'       => $item->get_amount(),
-				'quantity'     => $item->get_quantity(),
-				'total'        => $item->frozen()->has_param( 'total' ) ? $item->frozen()->get_param( 'total' ) : $item->get_total(),
-				'summary_only' => $item->is_summary_only(),
-				'transaction'  => $this->get_transaction()->ID,
-				'object_id'    => $item->get_object_id(),
-				'_class'       => get_class( $item ),
-				'_parent'      => $parent,
-			) );
-		}
+			$attributes['id']          = $item->get_id();
+			$attributes['type']        = $item->get_type();
+			$attributes['_class']      = get_class( $item );
+			$attributes['transaction'] = $this->get_transaction()->ID;
 
-		if ( ! $model ) {
-			throw new UnexpectedValueException( "Model failed to save for {$item->get_type()} {$item->get_id()}" );
-		}
+			$model = ITE_Transaction_Line_Item_Model::create( $attributes );
 
-		if ( $item instanceof ITE_Aggregate_Line_Item ) {
-			$this->save_many( $item->get_line_items()->to_array() );
+			if ( ! $model ) {
+				throw new UnexpectedValueException( "Model failed to save for {$item->get_type()} {$item->get_id()}" );
+			}
 		}
 
 		foreach ( $item->get_params() as $param => $value ) {
 			$model->update_meta( $param, $value );
+		}
+
+		if ( $item instanceof ITE_Aggregate_Line_Item ) {
+			$this->save_many( $item->get_line_items()->to_array(), false );
 		}
 
 		$this->events->on_save( $item, $old, $this );
@@ -152,9 +161,9 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function save_many( array $items ) {
+	public function save_many( array $items, $recurse = true ) {
 		foreach ( $items as $item ) {
-			$this->save( $item );// this can be optimized
+			$this->save( $item, $recurse );// this can be optimized
 		}
 	}
 
