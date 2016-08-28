@@ -205,6 +205,16 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	protected static function _do_create( array $attributes = array() ) {
+
+		$attributes = array_intersect_key( $attributes, static::table()->get_column_defaults() );
+
+		return parent::_do_create( $attributes );
+	}
+
+	/**
 	 * Get the address columns.
 	 *
 	 * @since 1.36.0

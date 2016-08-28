@@ -153,4 +153,11 @@ class ITE_Simple_Tax_Line_Item extends ITE_Line_Item implements ITE_Tax_Line_Ite
 	 * @inheritDoc
 	 */
 	public function get_aggregate() { return $this->taxable; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __destruct() {
+		unset( $this->taxable );
+	}
 }

@@ -181,7 +181,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 				}
 			} else {
 				$billing = ITE_Saved_Address::create( array_merge(
-					array_intersect_key( $cart_details->billing_address, ITE_Saved_Address::table()->get_column_defaults() ),
+					$cart_details->billing_address,
 					array( 'type' => ITE_Saved_Address::T_BILLING )
 				) );
 			}
@@ -202,7 +202,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 				}
 			} else {
 				$shipping = ITE_Saved_Address::create( array_merge(
-					array_intersect_key( $cart_details->shipping_address, ITE_Saved_Address::table()->get_column_defaults() ),
+					$cart_details->shipping_address,
 					array( 'type' => ITE_Saved_Address::T_SHIPPING )
 				) );
 			}

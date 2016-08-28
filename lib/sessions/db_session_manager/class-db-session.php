@@ -148,6 +148,10 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 			return;
 		}
 
+		if ( headers_sent() ) {
+			return;
+		}
+
 		$secure = apply_filters( 'wp_session_cookie_secure', false );
 		$httponly = apply_filters( 'wp_session_cookie_httponly', false );
 		setcookie( IT_EXCHANGE_SESSION_COOKIE, $this->session_id . '||' . $this->expires . '||' . $this->exp_variant , $this->expires, COOKIEPATH, COOKIE_DOMAIN, $secure, $httponly );

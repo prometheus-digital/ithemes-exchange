@@ -354,4 +354,11 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 	 * @inheritDoc
 	 */
 	public function get_aggregate() { return $this->aggregate; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __destruct() {
+		unset( $this->aggregate, $this->aggregatables, $this->repository, $this->cart );
+	}
 }

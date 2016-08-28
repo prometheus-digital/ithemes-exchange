@@ -254,22 +254,24 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	$transaction_object->taxes_raw              = $taxes;
 
 	// Tack on Shipping and Billing address
-	$transaction_object->shipping_address       = $cart->get_shipping_address();
+	$transaction_object->shipping_address = $cart->get_shipping_address() ? $cart->get_shipping_address()->to_array() : array();
 
 	if ( apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) ) {
-		$transaction_object->billing_address = $cart->get_billing_address();
+		$transaction_object->billing_address = $cart->get_billing_address()->to_array();
 	} else {
 		$transaction_object->billing_address = false;
 	}
 
 	/** @var ITE_Shipping_Line_Item[]|ITE_Line_Item_Collection $shipping_methods */
-	$shipping_methods = $cart->get_items( 'shipping', true )->unique( function( ITE_Shipping_Line_Item $shipping ) {
+	$shipping_methods = $cart->get_items( 'shipping', true )->filter( function( ITE_Shipping_Line_Item $shipping ) {
+		return (bool) $shipping->get_aggregate();
+	} )->unique( function( ITE_Shipping_Line_Item $shipping ) {
 		return $shipping->get_method()->slug;
 	} );
 
 	if ( $shipping_methods->count() === 1 ) {
 		$shipping_method = $shipping_methods->first()->get_method()->slug;
-	} elseif ( $shipping_methods->count() > 1) {
+	} elseif ( $shipping_methods->count() > 1 ) {
 		$shipping_method = 'multiple-methods';
 	} else {
 		$shipping_method = false;
@@ -288,9 +290,9 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	}
 
 	// Shipping Method and total
-	$transaction_object->shipping_method        = $shipping_method;
-	$transaction_object->shipping_method_multi  = $multiple_methods;
-	$transaction_object->shipping_total         = it_exchange_convert_to_database_number( $cart->calculate_total( 'shipping' ) );
+	$transaction_object->shipping_method       = $shipping_method;
+	$transaction_object->shipping_method_multi = $multiple_methods;
+	$transaction_object->shipping_total        = it_exchange_convert_to_database_number( $cart->calculate_total( 'shipping' ) );
 
 	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object );
 
@@ -1674,7 +1676,7 @@ function it_exchange_get_transaction_shipping_method( $transaction ) {
  * @since 1.4.0
  *
  * @param WP_Post|int|IT_Exchange_Transaction $transaction
- * @param int $product_cart_id
+ * @param string                              $product_cart_id
  *
  * @return string
 */
@@ -1686,43 +1688,33 @@ function it_exchange_get_transaction_shipping_method_for_product( $transaction, 
 
 	$transaction_method = it_exchange_get_transaction_shipping_method( $transaction );
 
+	/** @var ITE_Cart_Product $item */
+	$item = $transaction->get_item( 'product', $product_cart_id );
+
+	if ( ! $item ) {
+		return false;
+	}
+
 	if ( 'multiple-methods' === $transaction_method->slug ) {
 
-		if ( empty( $transaction->cart_details->shipping_method_multi[ $product_cart_id ] ) ) {
-			$product_method = false;
+		/** @var ITE_Shipping_Line_Item $shipping_line */
+		$shipping_line = $item->get_line_items()->with_only( 'shipping' )->first();
+
+		if ( $shipping_line ) {
+			$method = $shipping_line->get_method();
 		} else {
-			$product_method = $transaction->cart_details->shipping_method_multi[ $product_cart_id ];
+			$method = false;
 		}
 
-		$product_method = it_exchange_get_registered_shipping_method( $product_method );
-		$method = empty( $product_method->label ) ? __( 'Unknown Method', 'it-l10n-ithemes-exchange' ) : $product_method->label;
+		if ( $method ) {
+			$method = $method->label;
+		} else {
+			$method = __( 'Unknown Method', 'it-l10n-ithemes-exchange' );
+		}
+
 	} else {
 		$method = $transaction_method->label;
 	}
 
 	return apply_filters( 'it_exchange_get_transaction_shipping_method_for_product', $method, $transaction, $product_cart_id );
-}
-
-/**
- * Get the shipping method for any line item.
- *
- * @since 1.36.0
- *
- * @param \ITE_Line_Item $item
- *
- * @return \IT_Exchange_Shipping_Method;
- */
-function it_exchange_get_transaction_shipping_method_for_item( ITE_Line_Item $item ) {
-
-	if ( ! $item instanceof ITE_Aggregate_Line_Item ) {
-		return null;
-	}
-
-	$shipping = $item->get_line_items()->with_only( 'shipping' )->first();
-
-	if ( $shipping instanceof ITE_Shipping_Line_Item ) {
-		return $shipping->get_method();
-	}
-
-	return null;
 }

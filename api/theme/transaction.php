@@ -422,9 +422,15 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 			$out = '';
 
-			foreach ( it_exchange_get_transaction_products( $this->_transaction ) as $product ) {
-				$name   = get_the_title( $product['product_id'] );
-				$method = it_exchange_get_transaction_shipping_method_for_product( $this->_transaction, $product['product_cart_id'] );
+			/** @var ITE_Cart_Product $item */
+			foreach ( $this->_transaction->get_items( 'product' ) as $item ) {
+
+				if ( ! $item->get_line_items()->with_only( 'shipping' )->count() > 0 ) {
+					continue;
+				}
+
+				$name   = $item->get_name();
+				$method = it_exchange_get_transaction_shipping_method_for_product( $this->_transaction, $item->get_id() );
 
 				$out .= $options['open-line'] . $name . ': ' . $method . $options['close-line'];
 			}
@@ -1085,7 +1091,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			$img_src = apply_filters( 'it_exchange_theme_api_transaction_product_featured_image_src', $img_src, $this->_transaction_product, $this->_transaction );
 
 			if ( $this->demo ) {
-				$img_src = $GLOBALS['IT_Exchange']->_plugin_url . '/lib/email-notifications/assets/product-image.png';
+				$img_src = IT_Exchange::$url . '/lib/email-notifications/assets/product-image.png';
 			}
 
 			if ( $options['format'] === 'url' ) {
@@ -1094,7 +1100,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 
 			ob_start();
 			?>
-			<div class="it-exchange-feature-image-<?php echo get_the_id(); ?> it-exchange-featured-image">
+			<div class="it-exchange-feature-image-<?php echo $feature_image['id']; ?> it-exchange-featured-image">
 				<div class="featured-image-wrapper">
 					<img alt="" src="<?php echo $img_src ?>" data-src-large="<?php echo $feature_image['large'] ?>"
 					     data-src-thumb="<?php echo $feature_image['thumb'] ?>" />

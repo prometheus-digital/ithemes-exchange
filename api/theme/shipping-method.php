@@ -99,37 +99,49 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 
 		$cart_methods_count = count( $cart_methods );
 		$cart_product_methods_count = count( $cart_product_methods );
-		
-		if ( 1 === $cart_product_methods_count && $cart_product_methods_count >= $cart_methods_count ) {
-			$method = reset($cart_methods);
-			it_exchange_update_cart_data( 'shipping-method', $method->slug );
-			echo $method->label . ' (' . it_exchange_get_cart_shipping_cost() . ')';
-		} else {
-			?>
-			<form method="post" action="">
-			<select class="it-exchange-shipping-method-select" name="it-exchange-shipping-method">
-			<?php
-			$options = '<option value="0">' . __( 'Select a shipping method', 'it-l10n-ithemes-exchange' );
-			foreach( $cart_methods as $method ) {
-				$options .= '<option value="' . esc_attr( $method->slug ) . '" ' . selected( $current_method, $method->slug, false ) . '>' . $method->label . ' (' . it_exchange_get_cart_shipping_cost( $method->slug ) . ')</option>';
-			}
-			if ( count( it_exchange_get_current_cart()->get_items( 'product' ) ) > 1 ) {
-				$cart_products_with_shipping = 0;
-				foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $cart_product ) {
-					if ( $cart_product->get_product()->has_feature( 'shipping' ) )
-						$cart_products_with_shipping++;
-				}
-				if ( $cart_products_with_shipping > 1 && count( $cart_product_methods ) > 1 ) {
-					$multiple_shipping_methods_allowed = apply_filters( 'it_exchange_shipping_method_form_multiple_shipping_methods_allowed', true );
-					if ( $multiple_shipping_methods_allowed ) {
-						$options .= '<option value="multiple-methods" ' . selected( $current_method, 'multiple-methods', false ) . '>' . __( 'Use multiple shipping methods', 'it-l10n-ithemes-exchange' ) . '</option>';
-					}
+
+		$cart = it_exchange_get_current_cart();
+
+		if ( $cart->get_items( 'product' )->count() > 1 ) {
+
+			$cart_products_with_shipping = 0;
+
+			foreach ( $cart->get_items( 'product' ) as $cart_product ) {
+				if ( $cart_product->get_product()->has_feature( 'shipping' ) ) {
+					$cart_products_with_shipping ++;
 				}
 			}
 
-			echo $options;
+			if ( $cart_products_with_shipping > 1 && count( $cart_product_methods ) > 1 ) {
+				$multiple_shipping_methods_allowed = apply_filters( 'it_exchange_shipping_method_form_multiple_shipping_methods_allowed', true );
+			}
+		}
+		
+		if ( 1 === $cart_product_methods_count && 1 === $cart_methods_count ) {
+			$method = reset( $cart_methods );
+			echo $method->label . ' (' . it_exchange_get_cart_shipping_cost() . ')';
+		} elseif ( count( $cart_methods ) > 0 ) {
 			?>
-			</select>
+			<form method="post" action="">
+				<select class="it-exchange-shipping-method-select" name="it-exchange-shipping-method">
+				<?php
+				$options = '<option value="0">' . __( 'Select a shipping method', 'it-l10n-ithemes-exchange' ) . '</option>';
+
+				foreach( $cart_methods as $method ) {
+					$options .= '<option value="' . esc_attr( $method->slug ) . '" ' . selected( $current_method, $method->slug, false ) . '>';
+					$options .= $method->label . ' (' . it_exchange_get_cart_shipping_cost( $method->slug ) . ')';
+					$options .= '</option>';
+				}
+
+				if ( $multiple_shipping_methods_allowed ) {
+					$options .= '<option value="multiple-methods" ' . selected( $current_method, 'multiple-methods', false ) . '>';
+		            $options .=__( 'Use multiple shipping methods', 'it-l10n-ithemes-exchange' );
+					$options .= '</option>';
+				}
+
+				echo $options;
+				?>
+				</select>
 			</form>
 			<?php
 		}

@@ -207,7 +207,7 @@ if ( $shipping_address || $billing_address ) : ?>
 				<div class="<?php echo $other_item->get_type(); ?>-details item-details">
 					<?php do_action( 'it_exchange_transaction_details_begin_item_details', $txn, $other_item ); ?>
 
-					<?php if ( it_exchange_transaction_includes_shipping( $txn ) && $method = it_exchange_get_transaction_shipping_method_for_item( $other_item ) ) : ?>
+					<?php if ( it_exchange_transaction_includes_shipping( $txn ) && $method = it_exchange_get_shipping_method_for_item( $other_item ) ) : ?>
 						<div class="<?php echo $other_item->get_type(); ?>-shipping-method item-shipping-method">
 							<?php printf( __( 'Ship this item with %s.', 'it-l10n-ithemes-exchange' ), $method->label ); ?>
 						</div>

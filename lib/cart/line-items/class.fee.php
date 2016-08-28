@@ -213,4 +213,11 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	public function set_line_item_repository( ITE_Line_Item_Repository $repository ) {
 		$this->repository = $repository;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __destruct() {
+		unset( $this->aggregate, $this->aggregatables, $this->repository );
+	}
 }

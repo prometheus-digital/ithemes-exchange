@@ -170,10 +170,13 @@ class IT_Exchange_Shipping {
 
 		if ( $method === 'multiple-methods' ) {
 			$methods = it_exchange_get_session_data( 'multiple-shipping-methods' );
+			$methods = array_filter( $methods );
 			$cart_product_ids = array();
 
 			foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
-				$cart_product_ids[] = $product->get_id();
+				if ( $product->get_product()->has_feature( 'shipping' ) ) {
+					$cart_product_ids[] = $product->get_id();
+				}
 			}
 
 			$diff = array_diff( $cart_product_ids, array_keys( $methods ) );
@@ -481,7 +484,7 @@ class IT_Exchange_Shipping {
 	public function add_shipping_to_template_totals_loops( $elements ) {
 
 		// Abort of total number of shipping methods available to cart is 0
-		if ( count( it_exchange_get_available_shipping_methods_for_cart() ) < 1 ) {
+		if ( ! $this->should_show_shipping_totals() ) {
 			return $elements;
 		}
 
@@ -508,7 +511,7 @@ class IT_Exchange_Shipping {
 	public function add_shipping_address_to_sw_template_totals_loops( $loops ) {
 
 		// Abort of total number of shipping methods available to cart is 0
-		if ( count( it_exchange_get_available_shipping_methods_for_cart() ) < 1 ) {
+		if ( ! $this->should_show_shipping_totals() ) {
 			return $loops;
 		}
 
@@ -521,6 +524,26 @@ class IT_Exchange_Shipping {
 		array_splice( $loops, $index, 0, 'shipping-address' );
 
 		return $loops;
+	}
+
+	/**
+	 * Should the shipping totals be displayed.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	protected function should_show_shipping_totals() {
+
+		if ( it_exchange_get_cart_shipping_method() === 'multiple-methods' ) {
+			return true;
+		}
+
+		if ( count( it_exchange_get_available_shipping_methods_for_cart() ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -785,52 +808,26 @@ class IT_Exchange_Shipping {
 			$cart_product_id = empty( $_POST['cart-product-id'] ) ? '' : $_POST['cart-product-id'];
 			$shipping_method = empty( $_POST['shipping-method'] ) ? '0' : $_POST['shipping-method'];
 
+			$item = $cart->get_item( 'product', $cart_product_id );
+			$cart->set_shipping_method( $shipping_method, $item );
+
 			if ( $cart_product_id ) {
-				$old_method = it_exchange_get_multiple_shipping_method_for_cart_product( $cart_product_id );
 				it_exchange_update_multiple_shipping_method_for_cart_product( $cart_product_id, $shipping_method );
-				/** @var ITE_Cart_Product $cart_product */
-				$cart_product = $cart->get_item( 'product', $cart_product_id );
-
-				if ( $cart_product ) {
-					$cart_product->get_line_items()->with_only( 'shipping' )->delete();
-
-					if ( $old_method ) {
-						$cart->get_items( 'shipping' )->filter( function ( ITE_Shipping_Line_Item $shipping ) use ( $old_method ) {
-							return $shipping->get_method()->slug === $old_method;
-						} )->delete();
-					}
-
-					$args = it_exchange_get_registered_shipping_method_args( $shipping_method );
-
-					if ( ! empty( $args['provider'] ) ) {
-						$provider = it_exchange_get_registered_shipping_provider( $args['provider'] );
-						$method   = it_exchange_get_registered_shipping_method( $shipping_method );
-
-						$cart_product->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
-						$cart->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
-						$cart->get_repository()->save( $cart_product );
-					}
-				}
 			} else {
 				it_exchange_update_cart_data( 'shipping-method', $shipping_method );
+				it_exchange_remove_cart_data( 'multiple-shipping-methods' );
 
-				$cart->remove_all( 'shipping', true );
+				if ( $shipping_method === 'multiple-methods' ) {
+					/** @var ITE_Cart_Product $product */
+					foreach ( $cart->get_items( 'product' ) as $product ) {
+						$enabled_methods = it_exchange_get_enabled_shipping_methods_for_product( $product->get_product() );
 
-				$args = it_exchange_get_registered_shipping_method_args( $shipping_method );
-
-				if ( ! empty( $args['provider'] ) ) {
-					$provider = it_exchange_get_registered_shipping_provider( $args['provider'] );
-					$method   = it_exchange_get_registered_shipping_method( $shipping_method );
-
-					/** @var ITE_Cart_Product $item */
-					foreach ( $cart->get_items( 'product' ) as $item ) {
-						if ( $item->get_product()->has_feature( 'shipping' ) ) {
-							$item->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
-							$cart->get_repository()->save( $item );
+						if ( is_array( $enabled_methods ) && count( $enabled_methods ) === 1 ) {
+							$method = key( $enabled_methods );
+							$cart->set_shipping_method( $method, $product );
+							it_exchange_update_multiple_shipping_method_for_cart_product( $product->get_id(), $method );
 						}
 					}
-
-					$cart->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
 				}
 			}
 

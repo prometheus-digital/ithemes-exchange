@@ -670,6 +670,102 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Set the shipping method for the cart.
+	 *
+	 * This function does not handle updating the session, so behavior is consistent among cart types.
+	 * See IT_Exchange_Shipping::update_cart_shipping_method() for how the session should be updated.
+	 *
+	 * For example, when setting a single method for the entire cart.
+	 *
+	 * $cart->set_shipping_method( 'exchange-free-shipping' );
+	 *
+	 * Or when using multiple methods.
+	 *
+	 * $cart->set_shipping_method( 'multiple-methods' ); // Only needs to be done once
+	 * $cart->set_shipping_method( 'exchange-free-shipping', $product_a );
+	 * $cart->set_shipping_method( 'exchange-flat-rate-shipping', $product_b );
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string                        $method New shipping method slug. Or empty to remove.
+	 * @param \ITE_Aggregate_Line_Item|null $for    Update the shipping method for a given item only. For use with
+	 *                                              multiple methods per-cart.
+	 *
+	 * @return bool
+	 */
+	public function set_shipping_method( $method, ITE_Aggregate_Line_Item $for = null ) {
+
+		if ( $for ) {
+			if ( $for instanceof ITE_Cart_Product ) {
+				$old_method = it_exchange_get_multiple_shipping_method_for_cart_product( $for, $this );
+			} else {
+				$old_method = it_exchange_get_shipping_method_for_item( $for );
+				$old_method = $old_method ? $old_method->slug : false;
+			}
+
+			$for->get_line_items()->with_only( 'shipping' )->delete();
+
+			if ( $old_method ) {
+				$this->get_items( 'shipping' )->filter( function ( ITE_Shipping_Line_Item $shipping ) use ( $old_method ) {
+					return $shipping->get_method()->slug === $old_method;
+				} )->delete();
+			}
+
+			if ( empty( $method ) ) {
+				return true;
+			}
+
+			$args = it_exchange_get_registered_shipping_method_args( $method );
+
+			if ( ! empty( $args['provider'] ) ) {
+				$provider = it_exchange_get_registered_shipping_provider( $args['provider'] );
+				$method   = it_exchange_get_registered_shipping_method( $method );
+
+				if ( $method === false ) {
+					return false;
+				}
+
+				$for->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
+				$this->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
+				$this->get_repository()->save( $for );
+
+				return true;
+			}
+		} else {
+			$this->remove_all( 'shipping', true );
+
+			if ( $method === 'multiple-methods' ) {
+				return true;
+			}
+
+			$args = it_exchange_get_registered_shipping_method_args( $method );
+
+			if ( ! empty( $args['provider'] ) ) {
+				$provider = it_exchange_get_registered_shipping_provider( $args['provider'] );
+				$method   = it_exchange_get_registered_shipping_method( $method );
+
+				if ( $method === false ) {
+					return false;
+				}
+
+				/** @var ITE_Cart_Product $item */
+				foreach ( $this->get_items( 'product' ) as $item ) {
+					if ( $item->get_product()->has_feature( 'shipping' ) ) {
+						$item->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
+						$this->get_repository()->save( $item );
+					}
+				}
+
+				$this->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Get all meta stored on the cart.
 	 *
 	 * @since 1.36.0

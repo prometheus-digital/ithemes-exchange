@@ -246,4 +246,11 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_
 	 * @inheritDoc
 	 */
 	public function get_aggregate() { return $this->aggregate; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __destruct() {
+		unset( $this->aggregate, $this->aggregatables, $this->repository );
+	}
 }

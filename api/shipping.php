@@ -279,7 +279,19 @@ function it_exchange_get_available_shipping_methods_for_product( $product ) {
 	return apply_filters( 'it_exchange_get_available_shipping_methods_for_product', $available_methods, $product );
 }
 
-function it_exchange_get_enabled_shipping_methods_for_product( $product, $return='object' ) {
+/**
+ * Get all of the enabled shipping methods for this product.
+ *
+ * A product can have certain shipping methods disabled, even though the product might otherwise be eligible for them.
+ *
+ * @since 1.4.0
+ *
+ * @param IT_Exchange_Product $product
+ * @param string              $return  Return value for shipping methods. Either 'slug' or 'object'.
+ *
+ * @return IT_Exchange_Shipping_Method[]|string[]|false
+ */
+function it_exchange_get_enabled_shipping_methods_for_product( $product, $return = 'object' ) {
 
 	// Are we viewing a new product?
 	$screen         = is_admin() ? get_current_screen() : false;
@@ -337,11 +349,34 @@ function it_exchange_get_cart_shipping_method() {
 
 	$cart_methods_count = count( $cart_methods );
 	$cart_product_methods_count = count( $cart_product_methods );
+
+	$single_method = reset( $cart_methods );
 	
-	if ( 1 === $cart_product_methods_count && $cart_product_methods_count >= $cart_methods_count ) {
-		$single_method = reset($cart_methods);
+	if ( 1 === $cart_product_methods_count && $cart_methods_count && $single_method->slug !== $method ) {
 		it_exchange_update_cart_data( 'shipping-method', $single_method->slug );
+		it_exchange_get_current_cart()->set_shipping_method( $single_method->slug );
+
 		return $single_method->slug;
+	} elseif ( 0 === $cart_methods_count && ! $method ) {
+
+		$cart = it_exchange_get_current_cart();
+
+		it_exchange_update_cart_data( 'shipping-method', 'multiple-methods' );
+		$cart->set_shipping_method( 'multiple-methods' );
+		it_exchange_remove_cart_data( 'multiple-shipping-methods' );
+
+		/** @var ITE_Cart_Product $product */
+		foreach ( $cart->get_items( 'product' ) as $product ) {
+			$enabled_methods = it_exchange_get_enabled_shipping_methods_for_product( $product->get_product() );
+
+			if ( is_array( $enabled_methods ) && count( $enabled_methods ) === 1 ) {
+				$method = key( $enabled_methods );
+				$cart->set_shipping_method( $method, $product );
+				it_exchange_update_multiple_shipping_method_for_cart_product( $product->get_id(), key( $enabled_methods ) );
+			}
+		}
+
+		return 'multiple-methods';
 	}
 
 	return $method;
@@ -359,22 +394,26 @@ function it_exchange_get_cart_shipping_method() {
  *
  * @param boolean $only_return_methods_available_to_all_cart_products defaults to true.
  *
- * @return string[]
+ * @return IT_Exchange_Shipping_Method[]
 */
 function it_exchange_get_available_shipping_methods_for_cart( $only_return_methods_available_to_all_cart_products = true ) {
-	$GLOBALS['it_exchange']['shipping']['only_return_methods_available_to_all_cart_products'] = $only_return_methods_available_to_all_cart_products; //I need this as a global for some hooks later with Table Rate Shipping (and possibly other future add-ons)
+
+	// I need this as a global for some hooks later with Table Rate Shipping (and possibly other future add-ons
+	$GLOBALS['it_exchange']['shipping']['only_return_methods_available_to_all_cart_products'] = $only_return_methods_available_to_all_cart_products;
+
 	$methods   = array();
 	$product_i = 0;
 
-	// Grab all the products in the cart
+	/** @var ITE_Cart_Product $cart_product */
 	foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $cart_product ) {
-		// Skip foreach element if it isn't an exchange product - just to be safe
-		if ( ! ( $product = it_exchange_get_product( $cart_product->get_product()->ID ) ) )
-			continue;
 
-		// Skip product if it doesn't have shipping.
-		if ( ! it_exchange_product_has_feature( $product->ID, 'shipping' ) )
+		if ( ! $product = $cart_product->get_product() ) {
 			continue;
+		}
+
+		if ( ! $product->has_feature( 'shipping' ) ) {
+			continue;
+		}
 
 		// Bump product incrementer
 		$product_i++;
@@ -382,9 +421,11 @@ function it_exchange_get_available_shipping_methods_for_cart( $only_return_metho
 
 		// Loop through shipping methods available for this product
 		foreach( (array) it_exchange_get_enabled_shipping_methods_for_product( $product ) as $method ) {
+
 			// Skip if method is false
-			if ( empty( $method->slug ) )
+			if ( empty( $method->slug ) ) {
 				continue;
+			}
 
 			// If this is the first product, put all available methods in methods array
 			if ( ! empty( $method->slug ) && 1 === $product_i ) {
@@ -392,8 +433,9 @@ function it_exchange_get_available_shipping_methods_for_cart( $only_return_metho
 			}
 
 			// If we're returning all methods, even when they aren't available to other products, tack them onto the array
-			if ( ! $only_return_methods_available_to_all_cart_products )
-				$methods[$method->slug] = $method;
+			if ( ! $only_return_methods_available_to_all_cart_products ) {
+				$methods[ $method->slug ] = $method;
+			}
 
 			// Keep track of all this products methods
 			$product_methods[] = $method->slug;
@@ -402,8 +444,9 @@ function it_exchange_get_available_shipping_methods_for_cart( $only_return_metho
 		// Remove any methods previously added that aren't supported by this product
 		if ( $only_return_methods_available_to_all_cart_products ) {
 			foreach( $methods as $slug => $object ) {
-				if ( ! in_array( $slug, $product_methods ) )
-					unset( $methods[$slug] );
+				if ( ! in_array( $slug, $product_methods ) ) {
+					unset( $methods[ $slug ] );
+				}
 			}
 		}
 	}
@@ -426,7 +469,8 @@ function it_exchange_get_available_shipping_methods_for_cart_products() {
 /**
  * Returns the cost of shipping for the cart based on selected shipping method(s)
  *
- * If called without the method param, it uses the selected cart method. Use with a param to get estimates for an unselected method
+ * If called without the method param, it uses the selected cart method. Use with a param to get estimates for an
+ * unselected method
  *
  * @since 1.4.0
  *
@@ -437,10 +481,10 @@ function it_exchange_get_available_shipping_methods_for_cart_products() {
 */
 function it_exchange_get_cart_shipping_cost( $shipping_method = false, $format_price = true ) {
 
-	$cart          = it_exchange_get_current_cart();
-	$cart_products = $cart->get_items( 'product' );
+	$cart  = it_exchange_get_current_cart();
+	$items = $cart->get_items();
 
-	if ( $cart_products->count() === 0 ) {
+	if ( $items->count() === 0 ) {
 		return false;
 	}
 
@@ -501,13 +545,13 @@ function it_exchange_get_cart_shipping_cost( $shipping_method = false, $format_p
 /**
  * This will return the shipping cost for a specific method/product combination in the cart.
  *
- * @since unknown 
+ * @since 1.4.0
  *
  * @param string  $method_slug  the shipping method slug
  * @param array   $cart_product the cart product array
  * @param boolean $format_price format the price for a display
  *
- * @return mixed
+ * @return float|string
 */
 function it_exchange_get_shipping_method_cost_for_cart_item( $method_slug, $cart_product, $format_price=false ) {
 	$method = it_exchange_get_registered_shipping_method( $method_slug, $cart_product['product_id'] );
@@ -545,16 +589,39 @@ function it_exchange_get_shipping_method_cost_for_cart_item( $method_slug, $cart
  *
  * @since 1.4.0
  *
- * @param string $product_cart_id the product_cart_id in the cart session. NOT the database ID of the product
+ * @param string|ITE_Cart $product the product_cart_id in the cart session. NOT the database ID of the product
+ * @param \ITE_Cart|null  $cart
  *
  * @return string
 */
-function it_exchange_get_multiple_shipping_method_for_cart_product( $product_cart_id ) {
-	$selected_multiple_methods = it_exchange_get_cart_data( 'multiple-shipping-methods' );
-	$selected_multiple_methods = empty( $selected_multiple_methods ) ? false : $selected_multiple_methods;
+function it_exchange_get_multiple_shipping_method_for_cart_product( $product, ITE_Cart $cart = null ) {
 
-	$method = empty( $selected_multiple_methods[$product_cart_id] ) ? false : $selected_multiple_methods[$product_cart_id];
-	return apply_filters( 'it_exchange_get_multiple_shipping_method_for_cart_product', $method, $selected_multiple_methods, $product_cart_id );
+	if ( ! $cart ) {
+		$cart = it_exchange_get_current_cart();
+	}
+
+	if ( is_string( $product ) ) {
+		$product = $cart->get_item( 'product', $product );
+	}
+
+	if ( ! $product ) {
+		return false;
+	}
+
+	$method   = it_exchange_get_shipping_method_for_item( $product );
+	$selected = array();
+
+	foreach ( $cart->get_items( 'product' ) as $other_product ) {
+		$product_method = it_exchange_get_shipping_method_for_item( $other_product );
+
+		if ( $product_method ) {
+			$selected[ $other_product->get_id() ] = $product_method->slug;
+		}
+	}
+
+	$slug = $method ? $method->slug : false;
+
+	return apply_filters( 'it_exchange_get_multiple_shipping_method_for_cart_product', $slug, $selected, $product->get_id() );
 }
 
 /**

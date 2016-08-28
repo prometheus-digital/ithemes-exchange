@@ -311,8 +311,9 @@ class IT_Exchange_Super_Widget_Ajax {
 			case 'update-shipping-method':
 
 				it_exchange_update_cart_data( 'shipping-method', $this->shipping_method );
+				it_exchange_remove_cart_data( 'multiple-shipping-methods' );
 
-				return ! empty( $this->shipping_method );
+				return $this->shipping_method && $this->cart->set_shipping_method( $this->shipping_method );
 		}
 
 		// If we made it this far, allow addons to hook in and do their thing.

@@ -171,7 +171,7 @@ class IT_Theme_API_Cart_Item extends IT_Theme_API_Line_Item {
 		$var_key   = it_exchange_get_field_name( 'product_purchase_quantity' );
 		$var_value = $this->item->get_quantity();
 
-		if ( $this->item->is_quantity_modifiable() ) {
+		if ( $this->item instanceof ITE_Quantity_Modifiable_Item && $this->item->is_quantity_modifiable() ) {
 
 			switch ( $options['format'] ) {
 				case 'var_key' :
@@ -316,29 +316,66 @@ class IT_Theme_API_Cart_Item extends IT_Theme_API_Line_Item {
 	 */
 	public function featured_image( $options = array() ) {
 
-		// Get the real product item or return empty
-		if ( ! $this->item ) {
+		if ( ! $this->item instanceof ITE_Cart_Product ) {
 			return false;
 		}
 
+		/** @var ITE_Cart_Product $item */
+		$item = $this->item;
+
 		// Return boolean if has flag was set
 		if ( $options['supports'] ) {
-			return $this->item->get_product()->supports_feature( 'product-images' );
+			return $item->get_product()->supports_feature( 'product-images' );
 		}
 
 		// Return boolean if has flag was set
 		if ( $options['has'] ) {
-			return $this->item->get_product()->has_feature( 'product-images' );
+			return $item->get_product()->has_feature( 'product-images' );
 		}
 
-		if ( $this->item->get_product()->supports_feature( 'product-images' ) && $this->item->get_product()->has_feature( 'product-images' ) ) {
+		if ( $item->get_product()->supports_feature( 'product-images' ) && $item->get_product()->has_feature( 'product-images' ) ) {
 
 			$defaults = array(
 				'size' => 'thumbnail'
 			);
 			$options  = ITUtility::merge_defaults( $options, $defaults );
 
-			$product_images = $this->item->get_product()->get_feature( 'product-images' );
+			if ( $item->has_itemized_data( 'it_variant_combo_hash' ) ) {
+				$combo_hash = $item->get_itemized_data( 'it_variant_combo_hash' );
+			}
+
+			$images_located = false;
+
+			if ( isset( $combo_hash ) && function_exists( 'it_exchange_variants_addon_get_product_feature_controller' ) ) {
+
+				$product_id = $item->get_param( 'product_id' );
+
+				$variant_combos_data = it_exchange_get_variant_combo_attributes_from_hash( $product_id, $combo_hash );
+				$combos_array        = empty( $variant_combos_data['combo'] ) ? array() : $variant_combos_data['combo'];
+				$alt_hashes          = it_exchange_addon_get_selected_variant_alts( $combos_array, $product_id );
+
+				$controller = it_exchange_variants_addon_get_product_feature_controller( $product_id, 'product-images', array( 'setting' => 'variants' ) );
+
+				if ( $variant_combos_data['hash'] == $combo_hash ) {
+					if ( ! empty( $controller->post_meta[ $combo_hash ]['value'] ) ) {
+						$product_images = $controller->post_meta[ $combo_hash ]['value'];
+						$images_located = true;
+					}
+				}
+				// Look for alt hashes if direct match was not found
+				if ( ! $images_located && ! empty( $alt_hashes ) ) {
+					foreach ( $alt_hashes as $alt_hash ) {
+						if ( ! empty( $controller->post_meta[ $alt_hash ]['value'] ) ) {
+							$product_images = $controller->post_meta[ $alt_hash ]['value'];
+							$images_located = true;
+						}
+					}
+				}
+			}
+
+			if ( ! $images_located || ! isset( $product_images ) ) {
+				$product_images = $this->item->get_product()->get_feature( 'product-images' );
+			}
 
 			$feature_image = array(
 				'id'    => $product_images[0],

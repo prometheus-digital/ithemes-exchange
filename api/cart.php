@@ -687,6 +687,30 @@ function it_exchange_get_cart_weight() {
 }
 
 /**
+ * Get the shipping method for any line item.
+ *
+ * @since 1.36.0
+ *
+ * @param \ITE_Line_Item $item
+ *
+ * @return \IT_Exchange_Shipping_Method|null
+ */
+function it_exchange_get_shipping_method_for_item( ITE_Line_Item $item ) {
+
+	if ( ! $item instanceof ITE_Aggregate_Line_Item ) {
+		return null;
+	}
+
+	$shipping = $item->get_line_items()->with_only( 'shipping' )->first();
+
+	if ( $shipping instanceof ITE_Shipping_Line_Item ) {
+		return $shipping->get_method();
+	}
+
+	return null;
+}
+
+/**
  * Returns the base_price for the cart product
  *
  * Other add-ons may modify this on the fly based on the product's itemized_data and additional_data arrays

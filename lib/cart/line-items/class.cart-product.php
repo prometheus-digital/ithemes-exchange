@@ -31,6 +31,14 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 		parent::__construct( $id, $bag, $frozen );
 		$this->set_id( $id );
 		$this->product = it_exchange_get_product( $this->get_param( 'product_id' ) );
+
+		if ( $this->has_param( 'itemized_data' ) ) {
+			$this->set_param( 'itemized_data', maybe_unserialize( $this->get_param( 'itemized_data' ) ) );
+		}
+
+		if ( $this->has_param( 'additional_data' ) ) {
+			$this->set_param( 'additional_data', maybe_unserialize( $this->get_param( 'additional_data' ) ) );
+		}
 	}
 
 	/**
@@ -607,5 +615,12 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	 */
 	public function set_line_item_repository( ITE_Line_Item_Repository $repository ) {
 		$this->repository = $repository;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __destruct() {
+		unset( $this->aggregatables, $this->repository );
 	}
 }
