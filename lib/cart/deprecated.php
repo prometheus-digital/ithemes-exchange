@@ -16,7 +16,10 @@
 function ite_save_main_billing_address_on_current_update( ITE_Cart $cart ) {
 
 	if ( $cart->is_current() && $cart->get_customer() && is_numeric( $cart->get_customer()->ID ) ) {
-		it_exchange_save_customer_billing_address( $cart->get_billing_address()->to_array(), $cart->get_customer()->ID );
+
+		if ( $cart->get_billing_address() ) {
+			$cart->get_customer()->set_billing_address( $cart->get_billing_address() );
+		}
 	}
 }
 
@@ -32,7 +35,10 @@ add_action( 'it_exchange_set_cart_billing_address', 'ite_save_main_billing_addre
 function ite_save_main_shipping_address_on_current_update( ITE_Cart $cart ) {
 
 	if ( $cart->is_current() && $cart->get_customer() && is_numeric( $cart->get_customer()->ID ) ) {
-		it_exchange_save_shipping_address( $cart->get_shipping_address()->to_array(), $cart->get_customer()->ID );
+
+		if ( $cart->get_shipping_address() ) {
+			$cart->get_customer()->set_shipping_address( $cart->get_shipping_address() );
+		}
 	}
 }
 
