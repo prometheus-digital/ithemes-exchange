@@ -1651,14 +1651,8 @@ function it_exchange_get_transaction_shipping_method( $transaction ) {
 		return false;
 	}
 
-	if ( empty( $transaction->cart_details->shipping_method ) ) {
-		$shipping_method = false;
-	} else {
-		$shipping_method = $transaction->cart_details->shipping_method;
-	}
-
 	// If Multiple, Just return the string since its not a registered method
-	if ( 'multiple-methods' === $shipping_method ) {
+	if ( it_exchange_does_transaction_have_multiple_shipping_methods( $transaction ) ) {
 		$method = new stdClass();
 		$method->slug  = 'multiple-methods';
 		$method->label = __( 'Multiple Shipping Methods', 'it-l10n-ithemes-exchange' );
@@ -1666,8 +1660,31 @@ function it_exchange_get_transaction_shipping_method( $transaction ) {
 		return apply_filters( 'it_exchange_get_transaction_shipping_method', $method, $transaction );
 	}
 
-	$shipping_method = it_exchange_get_registered_shipping_method( $shipping_method );
+	/** @var ITE_Shipping_Line_Item $shipping_item */
+	$shipping_item   = $transaction->get_items( 'shipping' )->first();
+	$shipping_method = $shipping_item ? $shipping_item->get_method() : false;
+
 	return apply_filters( 'it_exchange_get_transaction_shipping_method', $shipping_method, $transaction );
+}
+
+/**
+ * Check if a transaction has multiple shipping methods.
+ *
+ * @since 1.36.0
+ *
+ * @param int|IT_Exchange_Transaction $transaction
+ *
+ * @return bool
+ */
+function it_exchange_does_transaction_have_multiple_shipping_methods( $transaction ) {
+
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) ) {
+		return false;
+	}
+
+	return $transaction->get_items( 'shipping', true )->unique( function( ITE_Shipping_Line_Item $shipping ) {
+		return $shipping->get_method() ? $shipping->get_method()->slug : uniqid( '', true );
+	} )->count() > 1;
 }
 
 /**
