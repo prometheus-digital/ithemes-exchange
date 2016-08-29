@@ -712,7 +712,7 @@ class IT_Exchange_Product_Post_Type {
 				esc_attr_e( it_exchange_get_product_feature( $post->ID, 'inventory' ) );
 				break;
 			case 'it_exchange_product_purchases':
-				esc_attr_e( count( it_exchange_get_transactions_for_product( $post->ID, 'ids' ) ) );
+				esc_attr_e( it_exchange_get_transactions_for_product( $post->ID, 'count' ) );
 				break;
 			case 'it_exchange_product_type':
 				esc_attr_e( it_exchange_get_product_type_name( it_exchange_get_product_type( $post ) ) );

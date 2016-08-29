@@ -307,17 +307,17 @@ function it_exchange_is_product_visible( $product_id=false ) {
  *
  * @since 0.4.2
  *
- * todo make this performant
+ * @param IT_Exchange_Product $product                   The product to retrieve purchases for.
+ * @param string              $type                      Return value. Accepts 'objects', 'ids', or 'count'.
+ * @param bool                $only_cleared_for_delivery Only return transactions that have been cleared. Defaults true.
  *
- * @param mixed $product the product ID or object
- * @param string $type do you want an array of ids or an array of objects returned
- * @param bool $only_cleared_for_delivery defaults to true. Only return transactions cleared for delivery or return all
- *
- * @return array
+ * @return IT_Exchange_Transaction[]|int[]|int
 */
-function it_exchange_get_transactions_for_product( $product, $type = 'objects', $only_cleared_for_delivery=true ) {
-	if ( ! $product = it_exchange_get_product( $product ) )
+function it_exchange_get_transactions_for_product( $product, $type = 'objects', $only_cleared_for_delivery = true ) {
+
+	if ( ! $product = it_exchange_get_product( $product ) ) {
 		return array();
+	}
 
 	$query = IT_Exchange_Transaction::query();
 
@@ -332,9 +332,17 @@ function it_exchange_get_transactions_for_product( $product, $type = 'objects', 
 		}
 	);
 
+	if ( $type === 'count' ) {
+		$query->expression( 'COUNT', 'ID', 'count' );
+
+		$count = $query->results()->get( 'count' );
+
+		return apply_filters( 'it_exchange_get_transactions_count_for_product', $count, $product, $type );
+	}
+
 	$transactions = $query->results()->getValues();
 
-	if ( $type !== 'objects' ) {
+	if ( $type === 'ids' ) {
 		$transactions = array_map(
 			function( IT_Exchange_Transaction $transaction ) { return $transaction->ID; },
 			$transactions

@@ -221,6 +221,13 @@ class IT_Exchange_API_Products_Test extends IT_Exchange_UnitTestCase {
 		);
 	}
 
+	public function test_get_transactions_for_product_count() {
+
+		$setup = $this->_setup_get_transactions_for_product();
+
+		$this->assertEquals( 1, it_exchange_get_transactions_for_product( $setup['ID'], 'count' ) );
+	}
+
 	public function test_get_transactions_for_product_only_cleared_for_delivery() {
 
 		$setup = $this->_setup_get_transactions_for_product();
