@@ -185,14 +185,12 @@ class IT_Exchange_API_Products_Test extends IT_Exchange_UnitTestCase {
 			'type'  => 'simple-product-type'
 		) );
 
-		$object = (object) array(
-			'cart_id'  => it_exchange_create_cart_id(),
-			'products' => array(
-				$ID . '-product-hash' => array(
-					'product_id' => $ID
-				)
-			)
-		);
+		$cart = ITE_Cart::create(
+			new ITE_Line_Item_Session_Repository(
+				new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events()
+			), it_exchange_get_customer( 1 ) );
+
+		$cart->add_item( ITE_Cart_Product::create( it_exchange_get_product( $ID ) ) );
 
 		add_filter( 'it_exchange_test-method_transaction_is_cleared_for_delivery', function ( $cleared, $transaction ) {
 
@@ -205,11 +203,16 @@ class IT_Exchange_API_Products_Test extends IT_Exchange_UnitTestCase {
 			return false;
 		}, 10, 2 );
 
-		$t1 = it_exchange_add_transaction( 'test-method', 'test-method-id-1', 'pending', 1, $object );
+		$t1 = it_exchange_add_transaction( 'test-method', 'test-method-id-1', 'pending', $cart );
 
-		$object->cart_id = it_exchange_create_cart_id();
+		$cart = ITE_Cart::create(
+			new ITE_Line_Item_Session_Repository(
+				new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events()
+			), it_exchange_get_customer( 1 ) );
 
-		$t2 = it_exchange_add_transaction( 'test-method', 'test-method-id-2', 'paid', 1, $object );
+		$cart->add_item( ITE_Cart_Product::create( it_exchange_get_product( $ID ) ) );
+
+		$t2 = it_exchange_add_transaction( 'test-method', 'test-method-id-2', 'paid', $cart );
 
 		return array(
 			'ID' => $ID,

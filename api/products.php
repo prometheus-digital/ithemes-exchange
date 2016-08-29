@@ -315,25 +315,31 @@ function it_exchange_is_product_visible( $product_id=false ) {
  *
  * @return array
 */
-function it_exchange_get_transactions_for_product( $product, $type='objects', $only_cleared_for_delivery=true ) {
+function it_exchange_get_transactions_for_product( $product, $type = 'objects', $only_cleared_for_delivery=true ) {
 	if ( ! $product = it_exchange_get_product( $product ) )
 		return array();
 
-	// Get all meta
-	$transaction_ids = get_post_meta( $product->ID, '_it_exchange_transaction_id' );
-	$transaction_ids = array_unique ( $transaction_ids );
+	$query = IT_Exchange_Transaction::query();
 
-	$transactions = array();
-	foreach( $transaction_ids as $key => $id ) {
-		if ( ! $only_cleared_for_delivery || ( $only_cleared_for_delivery && it_exchange_transaction_is_cleared_for_delivery( $id ) ) )
-			$transaction = $id;
-		else
-			continue;
-
-		if ( 'objects' == $type && $transaction_obj = it_exchange_get_transaction( $transaction ) )
-				$transaction = $transaction_obj;
-
-		$transactions[] = $transaction;
+	if ( $only_cleared_for_delivery ) {
+		$query->and_where( 'cleared', '=', true );
 	}
+
+	$query->join( new ITE_Transaction_Line_Item_Table(), 'ID', 'transaction', '=',
+		function( \IronBound\DB\Query\FluentQuery $query ) use ( $product ) {
+			$query->and_where( 'type', '=', 'product' )
+			      ->and_where( 'object_id', '=', $product->ID );
+		}
+	);
+
+	$transactions = $query->results()->getValues();
+
+	if ( $type !== 'objects' ) {
+		$transactions = array_map(
+			function( IT_Exchange_Transaction $transaction ) { return $transaction->ID; },
+			$transactions
+		);
+	}
+
 	return apply_filters( 'it_exchange_get_transactions_for_product', $transactions, $product, $type );
 }
