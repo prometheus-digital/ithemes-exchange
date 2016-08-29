@@ -1999,3 +1999,44 @@ function it_exchange_get_host() {
 
 	return $host;
 }
+
+
+if ( ! function_exists( 'apply_filters_deprecated' ) ) {
+	function apply_filters_deprecated( $tag, $args, $version, $replacement = false, $message = null ) {
+		if ( ! has_filter( $tag ) ) {
+			return $args[0];
+		}
+
+		_deprecated_hook( $tag, $version, $replacement, $message );
+
+		return apply_filters_ref_array( $tag, $args );
+	}
+}
+
+if ( ! function_exists( 'do_action_deprecated' ) ) {
+	function do_action_deprecated( $tag, $args, $version, $replacement = false, $message = null ) {
+		if ( ! has_action( $tag ) ) {
+			return;
+		}
+
+		_deprecated_hook( $tag, $version, $replacement, $message );
+
+		do_action_ref_array( $tag, $args );
+	}
+}
+
+if ( ! function_exists( '_deprecated_hook' ) ) {
+	function _deprecated_hook( $hook, $version, $replacement = null, $message = null ) {
+
+		do_action( 'deprecated_hook_run', $hook, $replacement, $version, $message );
+
+		if ( WP_DEBUG && apply_filters( 'deprecated_hook_trigger_error', true ) ) {
+			$message = empty( $message ) ? '' : ' ' . $message;
+			if ( ! is_null( $replacement ) ) {
+				trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.' ), $hook, $version, $replacement ) . $message );
+			} else {
+				trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.' ), $hook, $version ) . $message );
+			}
+		}
+	}
+}
