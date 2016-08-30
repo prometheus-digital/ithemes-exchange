@@ -34,9 +34,23 @@ a.it-exchange-button {text-decoration:none;}
 .it-exchange-account .it-exchange-profile-save{margin:1.5em 0;}
 
 /** ----------------------------------------:[ navigation ]:--- */
-.it-exchange-account .it-exchange-customer-menu{list-style:none;margin:2em 0;padding:0;}
-.it-exchange-account .it-exchange-customer-menu li{display:inline;padding:0;margin:0 1em 1em 0;}
-.it-exchange-account .it-exchange-customer-menu li.current{font-weight:bold;}
+.it-exchange-account .it-exchange-customer-menu,
+#it-exchange-confirmation .it-exchange-customer-menu {
+	list-style:none;
+	margin:2em 0;
+	padding:0;
+}
+
+.it-exchange-account .it-exchange-customer-menu li,
+#it-exchange-confirmation .it-exchange-customer-menu li {
+	display:inline;
+	padding:0;
+	margin:0 1em 1em 0;
+}
+.it-exchange-account .it-exchange-customer-menu li.current,
+#it-exchange-confirmation .it-exchange-customer-menu li.current  {
+	font-weight:bold;
+}
 
 /** ----------------------------------------:[ purchases ]:--- */
 #it-exchange-purchases .it-exchange-purchase,
@@ -216,8 +230,8 @@ a.it-exchange-button {text-decoration:none;}
 /** -----------------------------------------------------:[ confirmation ]:---------- */
 #it-exchange-confirmation .it-exchange-transaction-meta p{margin-bottom:0;}
 
-#it-exchange-confirmation .it-exchange-customer-menu{list-style:none;}
-#it-exchange-confirmation .it-exchange-customer-menu li{margin-left:0;}
+#it-exchange-confirmation .it-exchange-thank-you-message {padding-bottom: 15px;}
+
 #it-exchange-confirmation .it-exchange-transaction-status .paid{color:#6BC43F;}
 #it-exchange-confirmation .it-exchange-transaction-instructions{margin-top:1em;}
 #it-exchange-confirmation .it-exchange-confirmation-billing-address-purchase-requirement,

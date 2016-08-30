@@ -59,6 +59,7 @@ require( $this->_plugin_path . 'lib/integrations/builder/init.php' );
 
 // Customer Class
 require( $this->_plugin_path . 'lib/customers/class.customer.php' );
+require( $this->_plugin_path . 'lib/customers/class.guest.php' );
 
 // Pages
 require( $this->_plugin_path . 'lib/pages/class.pages.php' );

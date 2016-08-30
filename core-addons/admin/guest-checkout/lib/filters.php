@@ -68,20 +68,11 @@ add_action( 'template_redirect', 'it_exchange_guest_checkout_init_login' );
  * @return bool
 */
 function it_exchange_guest_checkout_guest_has_transaction( $has_transaction, $transaction_id, $user_id ) {
-	if ( ! it_exchange_doing_guest_checkout() )
-		return $has_transaction;
 
-	$transaction = it_exchange_get_transaction( $transaction_id );
+	_deprecated_function( __FUNCTION__, '1.36.0' );
 
-	if ( empty( $transaction->cart_details->is_guest_checkout ) )
-		return $has_transaction;
-
-	if ( empty( $transaction->customer_id ) || $transaction->customer_id != $user_id )
-		return $has_transaction;
-
-	return true;
+	return $has_transaction;
 }
-add_filter( 'it_exchange_customer_has_transaction', 'it_exchange_guest_checkout_guest_has_transaction', 10, 3 );
 
 /**
  * Continues the guest checkout session or ends it based on timeout
@@ -167,13 +158,10 @@ add_action( 'it_exchange_set_cart_shipping_address', 'ite_save_main_shipping_add
  * @return string
 */
 function it_exchange_get_guest_checkout_transaction_email( $email, $transaction ) {
-	$transaction = it_exchange_get_transaction( $transaction );
-	if ( empty( $transaction->cart_details->is_guest_checkout ) )
-		return $email;
+	_deprecated_function( __FUNCTION__, '1.36.0' );
 
-	return ! empty( $transaction->customer_id ) && is_email( $transaction->customer_id ) ? $transaction->customer_id : $email;
+	return $email;
 }
-add_filter( 'it_exchange_get_transaction_customer_email', 'it_exchange_get_guest_checkout_transaction_email', 10, 2 );
 
 /**
  * Returns the customer id for a guest transaction
@@ -187,10 +175,12 @@ add_filter( 'it_exchange_get_transaction_customer_email', 'it_exchange_get_guest
 */
 function it_exchange_get_guest_checkout_transaction_id( $id, $transaction ) {
 	$transaction = it_exchange_get_transaction( $transaction );
-	if ( empty( $transaction->cart_details->is_guest_checkout ) )
-		return $id;
 
-	return ! empty( $transaction->customer_id ) && is_email( $transaction->customer_id ) ? $transaction->customer_id : $id;
+	if ( ! $transaction->is_guest_purchase() ) {
+		return $id;
+	}
+
+	return $transaction->customer_email;
 }
 add_filter( 'it_exchange_get_transaction_customer_id', 'it_exchange_get_guest_checkout_transaction_id', 10, 2 );
 
@@ -205,13 +195,16 @@ add_filter( 'it_exchange_get_transaction_customer_id', 'it_exchange_get_guest_ch
  * @return boolean
 */
 function it_exchange_hide_admin_customer_details_link_on_transaction_details_page( $display_link, $wp_post ) {
-	if ( ! $transaction = it_exchange_get_transaction( $wp_post->ID ) )
+
+	if ( ! $transaction = it_exchange_get_transaction( $wp_post->ID ) ) {
 		return $display_link;
+	}
 
-	if ( ! empty( $transaction->cart_details->is_guest_checkout ) )
-		return false;
+	if ( ! $transaction->is_guest_purchase() ) {
+		return $display_link;
+	}
 
-	return $display_link;
+	return false;
 }
 add_filter( 'it_exchange_transaction_detail_has_customer_profile', 'it_exchange_hide_admin_customer_details_link_on_transaction_details_page', 10, 2 );
 
@@ -225,12 +218,11 @@ add_filter( 'it_exchange_transaction_detail_has_customer_profile', 'it_exchange_
  * @return object
 */
 function it_exchange_guest_checkout_set_customer_data( $data, $customer_id ) {
-	// Set initial guest status on saved usermeta
-	$data->registered_as_guest = (boolean) get_user_meta( $customer_id, 'it-exchange-registered-as-guest', true );
+
+	_deprecated_function( __FUNCTION__, '1.36.0' );
 
 	return $data;
 }
-add_filter( 'it_exchange_set_customer_data', 'it_exchange_guest_checkout_set_customer_data', 10, 2 );
 
 /**
  * Flag transaction object as guest checkout
@@ -242,10 +234,13 @@ add_filter( 'it_exchange_set_customer_data', 'it_exchange_guest_checkout_set_cus
  * @return object
 */
 function it_exchange_flag_transaction_as_guest_checkout( $transaction_object ) {
-	if ( ! it_exchange_doing_guest_checkout() )
+
+	if ( ! it_exchange_doing_guest_checkout() ) {
 		return $transaction_object;
+	}
 
 	$transaction_object->is_guest_checkout = true;
+
 	return $transaction_object;
 }
 add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_flag_transaction_as_guest_checkout' );
@@ -264,8 +259,10 @@ add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_flag_transac
 function it_exchange_flag_transaction_post_as_guest_checkout( $transaction_id ) {
 	$transaction = it_exchange_get_transaction( $transaction_id );
 
-	if ( ! empty( $transaction->cart_details->is_guest_checkout ) )
+	if ( $transaction->is_guest_purchase() ) {
 		update_post_meta( $transaction_id, '_it-exchange-is-guest-checkout', true );
+		@setcookie( 'it-exchange-guest-email', $transaction->customer_email, time() + HOUR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN, '', true );
+	}
 }
 add_action( 'it_exchange_add_transaction_success', 'it_exchange_flag_transaction_post_as_guest_checkout' );
 
@@ -282,20 +279,11 @@ add_action( 'it_exchange_add_transaction_success', 'it_exchange_flag_transaction
  * @return array
 */
 function it_exchange_guest_checkout_filter_frontend_purchases( $args ) {
-	if ( is_admin() || it_exchange_is_page( 'confirmation' ) || it_exchange_is_page( 'transaction' ) )
-		return $args;
 
-	if ( empty( $args['meta_query'] ) )
-		$args['meta_query'] = array();
-
-	$args['meta_query'][] = array(
-		'key'     => '_it-exchange-is-guest-checkout',
-		'compare' => 'NOT EXISTS',
-	);
+	_deprecated_function( __FUNCTION__, '1.36.0' );
 
 	return $args;
 }
-add_filter( 'it_exchange_get_customer_transactions_args', 'it_exchange_guest_checkout_filter_frontend_purchases' );
 
 /**
  * Modifies the Transaction Customer data when dealing with a guest checkout
@@ -308,24 +296,24 @@ add_filter( 'it_exchange_get_customer_transactions_args', 'it_exchange_guest_che
  * @return IT_Exchange_Customer
 */
 function it_exchange_guest_checkout_modify_transaction_customer( $customer, $transaction ) {
-	
-	if ( empty( $transaction->cart_details->is_guest_checkout ) )
+
+	_deprecated_function( __FUNCTION__, '1.36.0' );
+
+	if ( ! $transaction->is_guest_purchase() ) {
 		return $customer;
-
-	if ( is_email( $transaction->customer_id ) ) {
-		$customer = it_exchange_guest_checkout_generate_guest_user_object( $transaction->customer_id, true );
-	} else {
-		$customer = false;
 	}
 
-	if ( ! empty( $customer ) ) {
-		$customer->wp_user = new stdClass();
-		$customer->wp_user->display_name = sprintf( __( 'Guest Customer (%s)', 'it-l10n-ithemes-exchange' ), $customer->ID );
+	if ( ! $transaction->customer_email ) {
+		return $customer;
 	}
+
+	$customer = it_exchange_guest_checkout_generate_guest_user_object( $transaction->customer_email, true );
+
+	$customer->wp_user = new stdClass();
+	$customer->wp_user->display_name = sprintf( __( 'Guest (%s)', 'it-l10n-ithemes-exchange' ), $customer->ID );
 
 	return $customer;
 }
-add_filter( 'it_exchange_get_transaction_customer', 'it_exchange_guest_checkout_modify_transaction_customer', 10, 2 );
 
 /**
  * Modifies the Customer data when dealing with a guest checkout
@@ -334,17 +322,19 @@ add_filter( 'it_exchange_get_transaction_customer', 'it_exchange_guest_checkout_
  *
  * @since 1.6.0
  *
- * @param object $customer the customer object
+ * @param IT_Exchange_Customer $customer the customer object
  *
  * @return IT_Exchange_Customer
 */
 function it_exchange_guest_checkout_modify_customer( $customer ) {
 
-	if ( ! it_exchange_doing_guest_checkout() )
+	if ( ! it_exchange_doing_guest_checkout() ) {
 		return $customer;
+	}
 
-	if ( ( is_admin() && ! defined( 'DOING_AJAX' ) ) || ( is_admin() && defined( 'DOING_AJAX' ) && ! DOING_AJAX ) )
+	if ( ( is_admin() && ! defined( 'DOING_AJAX' ) ) || ( is_admin() && defined( 'DOING_AJAX' ) && ! DOING_AJAX ) ) {
 		return $customer;
+	}
 
 	$email = it_exchange_get_cart_data( 'guest-checkout-user' );
 	$email = is_array( $email ) ? reset( $email ) : $email;
@@ -352,7 +342,7 @@ function it_exchange_guest_checkout_modify_customer( $customer ) {
 
 	return $customer;
 }
-add_filter( 'it_exchange_get_customer', 'it_exchange_guest_checkout_modify_customer' );
+
 add_filter( 'it_exchange_get_current_customer', 'it_exchange_guest_checkout_modify_customer' );
 
 /**
@@ -418,7 +408,7 @@ function it_exchange_allow_file_downloads_for_guest_checkout( $setting, $hash_da
 	if ( ! $transaction = it_exchange_get_transaction( $hash_data['transaction_id'] ) )
 		return $setting;
 
-	return empty( $transaction->cart_details->is_guest_checkout ) ? $setting : false;
+	return $transaction->is_guest_purchase() ? false : $setting;
 }
 add_filter( 'it_exchange_require_user_login_for_download', 'it_exchange_allow_file_downloads_for_guest_checkout', 10, 2 );
 
@@ -479,7 +469,11 @@ function it_exchange_guest_checkout_maybe_remove_download_page_link_from_email( 
 	if ( ! $transaction = it_exchange_get_transaction( $id ) )
 		return $boolean;
 
-	return empty( $transaction->cart_details->is_guest_checkout );
+	if ( ! $transaction->is_guest_purchase() ) {
+		return $boolean;
+	}
+
+	return false;
 }
 add_filter( 'it_exchange_print_downlods_page_link_in_email', 'it_exchange_guest_checkout_maybe_remove_download_page_link_from_email', 10, 2 );
 
@@ -493,9 +487,7 @@ add_filter( 'it_exchange_print_downlods_page_link_in_email', 'it_exchange_guest_
  * @return string
 */
 function it_exchange_guest_checkout_modify_confirmation_email_address( $to_email, $transaction ) {
-	if ( ! empty( $to_email ) || empty( $transaction->cart_details->is_guest_checkout ) )
-		return $to_email;
+	_deprecated_function( __FUNCTION__, '1.36.0' );
 
-	return is_email( $transaction->customer_id ) ? $transaction->customer_id : '';
+	return $to_email;
 }
-add_filter( 'it_exchange_send_purchase_emails_to', 'it_exchange_guest_checkout_modify_confirmation_email_address', 10, 2 );

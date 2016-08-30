@@ -17,6 +17,6 @@
 
 <?php do_action( 'it_exchange_confirmation_before_transaction_thank_you_message' ); ?>
 <div class="it-exchange-thank-you-message">
-	<p><?php it_exchange( 'customer', 'thank-you-message' ); ?></p>
+	<p><?php it_exchange( 'transaction', 'thank-you-message' ); ?></p>
 </div>
 <?php do_action( 'it_exchange_confirmation_after_transaction_thank_you_message' ); ?>

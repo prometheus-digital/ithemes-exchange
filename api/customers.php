@@ -20,14 +20,15 @@ function it_exchange_register_customer( $customer_data, $args=array() ) {
 }
 
 /**
- * Get a customer
- *
- * Will return customer data formated by the active customer management add-on
+ * Get a customer.
  *
  * @since 0.3.7
- * @param integer $customer_id id for the customer
+ * @since 1.36.0 Add support for retrieving a guest customer instance.
  *
- * @return IT_Exchange_Customer|bool customer data
+ * @param int|WP_User|string $customer_id User ID. User object. Or email address. If email given,
+ *                                        a guest customer object will be returned.
+ *
+ * @return IT_Exchange_Customer|false
 */
 function it_exchange_get_customer( $customer_id ) {
     // Grab the WP User
@@ -37,14 +38,18 @@ function it_exchange_get_customer( $customer_id ) {
 	} else {
 
 		try {
-			$customer = new IT_Exchange_Customer( $customer_id );
+			if ( is_string( $customer_id ) && is_email( $customer_id ) ) {
+				$customer = new IT_Exchange_Guest_Customer( $customer_id );
+			} else {
+				$customer = new IT_Exchange_Customer( $customer_id );
+			}
 		}
 		catch ( Exception $e ) {
 			return false;
 		}
 	}
 
-	if ( ! $customer->is_wp_user() ) {
+	if ( ! $customer->id || ! $customer->is_wp_user() ) {
 		$customer = false;
 	}
 
@@ -159,16 +164,19 @@ function it_exchange_get_customer_transactions( $customer_id, array $args = arra
  * @param integer $transaction_id
  * @param integer $customer_id
  *
- * @return array
+ * @return bool
 */
 function it_exchange_customer_has_transaction( $transaction_id, $customer_id = NULL ) {
 
-	if ( is_null( $customer_id ) )
-		$customer = it_exchange_get_current_customer();
-	else if ( ! $customer = it_exchange_get_customer( $customer_id ) )
-		return array();
+	$customer = $customer_id ? it_exchange_get_customer( $customer_id ) : it_exchange_get_current_customer();
 
-	return apply_filters( 'it_exchange_customer_has_transaction', $customer->has_transaction( $transaction_id ), $transaction_id, $customer_id );
+	if ( ! $customer ) {
+		return apply_filters( 'it_exchange_customer_has_transaction', false, $transaction_id, $customer_id );
+	}
+
+	$has = $customer->has_transaction( $transaction_id );
+
+	return apply_filters( 'it_exchange_customer_has_transaction', $has, $transaction_id, $customer_id );
 }
 
 /**

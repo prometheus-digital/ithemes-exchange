@@ -15,7 +15,7 @@
 
 <?php do_action( 'it_exchange_content_confirmation_before_header_loop' ); ?>
 	<?php do_action( 'it_exchange_content_confirmation_begin_header_loop' ); ?>
-	<?php foreach( it_exchange_get_template_part_loops( 'content_confirmation', 'header', array( 'message', 'menu' ) ) as $detail ) : ?>
+	<?php foreach( it_exchange_get_template_part_loops( 'content_confirmation', 'header', array( 'menu' ) ) as $detail ) : ?>
 		<?php it_exchange_get_template_part( 'content-confirmation/elements/' . $detail ); ?>
     <?php endforeach; ?>
 	<?php do_action( 'it_exchange_content_confirmation_end_header_loop' ); ?>

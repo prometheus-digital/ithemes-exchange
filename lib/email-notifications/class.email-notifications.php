@@ -284,7 +284,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 
 				$email = new IT_Exchange_Email( $recipient, $notification, array(
 					'transaction' => $transaction,
-					'customer'    => it_exchange_get_transaction_customer( $transaction )
+					'customer'    => $transaction->get_customer()
 				) );
 				$this->sender->send( $email );
 			}
@@ -312,7 +312,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 
 					$email = new IT_Exchange_Email( $recipient, $notification, array(
 						'transaction' => $transaction,
-						'customer'    => it_exchange_get_transaction_customer( $transaction )
+						'customer'    => $transaction->get_customer()
 					) );
 					$this->sender->send( $email );
 				}

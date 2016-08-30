@@ -60,14 +60,15 @@ class Test_IT_Exchange_Email_Recipient_Transaction extends IT_Exchange_UnitTestC
 	public function test_get_full_name() {
 
 		$uid = $this->factory()->user->create( array(
-			'user_email'   => 'john.doe@gmail.com',
-			'display_name' => 'JohnnyDoe'
+			'user_email' => 'john.doe@gmail.com',
+			'first_name' => 'Johnny',
+			'last_name'  => 'Doe'
 		) );
 
 		$txn = $this->transaction_factory->create_and_get( array( 'customer' => $uid ) );
 
 		$recipient = new IT_Exchange_Email_Recipient_Transaction( $txn );
-		$this->assertEquals( 'JohnnyDoe', $recipient->get_full_name() );
+		$this->assertEquals( 'Johnny Doe', $recipient->get_full_name() );
 	}
 
 	public function test_get_email_guest_checkout() {

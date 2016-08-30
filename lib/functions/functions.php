@@ -804,8 +804,14 @@ function it_exchange_add_page_shortcode( $atts ) {
 	if ( empty( $atts['page'] ) )
 		return false;
 
+	$page = $atts['page'];
+
+	if ( $page === 'confirmation' && $GLOBALS['IT_Exchange_Pages']->request_email_for_confirmation ) {
+		$page = 'confirmation-email-form';
+	}
+
 	ob_start();
-	it_exchange_get_template_part( 'content', $atts['page'] );
+	it_exchange_get_template_part( 'content', $page );
 	return ob_get_clean();
 }
 add_shortcode( 'it-exchange-page', 'it_exchange_add_page_shortcode' );
@@ -931,7 +937,7 @@ function it_exchange_register_default_purchase_requirements() {
 	// Billing Address Purchase Requirement
 	$properties = array(
 		'priority'               => 5.11,
-		'requirement-met'        => 'it_exchange_get_customer_billing_address',
+		'requirement-met'        => 'it_exchange_billing_address_purchase_requirement_complete',
 		'sw-template-part'       => apply_filters( 'it_exchange_sw_template_part_for_logged_in_purchase_requirement', 'billing-address' ),
 		'checkout-template-part' => 'billing-address',
 		'notification'           => __( 'We need a billing address before you can checkout', 'it-l10n-ithemes-exchange' ),
@@ -941,6 +947,27 @@ function it_exchange_register_default_purchase_requirements() {
 		it_exchange_register_purchase_requirement( 'billing-address', $properties );
 }
 add_action( 'init', 'it_exchange_register_default_purchase_requirements' );
+
+/**
+ * Check if the billing address purchase requirement is complete.
+ *
+ * @since 1.36.0
+ *
+ * @return bool
+ */
+function it_exchange_billing_address_purchase_requirement_complete() {
+	$cart = it_exchange_get_current_cart();
+
+	if ( ! $cart->get_billing_address() ) {
+		return false;
+	}
+
+	if ( ! $cart->get_billing_address()->offsetGet( 'address1' ) ) {
+		return false;
+	}
+
+	return true;
+}
 
 /**
  * The default checkout mode for the superwidget

@@ -31,6 +31,9 @@ class IT_Exchange_Pages {
 	*/
 	public $_pretty_permalinks = false;
 
+	/** @var bool */
+	public $request_email_for_confirmation = false;
+
 	/**
 	 * Constructor
 	 *
@@ -249,7 +252,7 @@ class IT_Exchange_Pages {
 	function protect_pages() {
 
 		// Don't give access to single product views if product is disabled
-		if ( 'product' == $this->_current_view ) {
+		if ( 'product' === $this->_current_view ) {
 			$enabled_product_types = it_exchange_get_enabled_addons( array( 'category' => 'product-type' ) );
 			$product_type = it_exchange_get_product_type();
 			if ( ! in_array( $product_type, array_keys( $enabled_product_types ) ) ) {
@@ -260,18 +263,26 @@ class IT_Exchange_Pages {
 		}
 
 		// If user is an admin, abandon this. They can see it all
-		if ( current_user_can( 'administrator' ) )
+		if ( current_user_can( 'administrator' ) ) {
 			return;
+		}
+
+		if ( $this->_current_view === 'confirmation' ) {
+			$this->protect_confirmation();
+
+			return;
+		}
 
 		// Set pages that we want to protect in one way or another
 		$pages_to_protect = array(
-			'account', 'profile', 'downloads', 'purchases', 'confirmation',
+			'account', 'profile', 'downloads', 'purchases',
 		);
 		$pages_to_protect = apply_filters( 'it_exchange_pages_to_protect', $pages_to_protect );
 
 		// Abandon if not a proteced page
-		if ( ! in_array( $this->_current_view, $pages_to_protect ) )
+		if ( ! in_array( $this->_current_view, $pages_to_protect ) ) {
 			return;
+		}
 
 		// If user isn't logged in, redirect
 		if ( ! is_user_logged_in() ) {
@@ -281,49 +292,83 @@ class IT_Exchange_Pages {
 			}
 
 			// If looking for registration page or purchases page, send to login, else send to register
-			$redirect_url = ( in_array( $this->_current_view, array( 'account', 'profile', 'downloads', 'purchases' ) ) ) ? it_exchange_get_page_url( 'login' ) : it_exchange_get_page_url( 'registration' );
-			$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_not_logged_in', $redirect_url, $this->_current_view );
+			$redirect = ( in_array( $this->_current_view, array( 'account', 'profile', 'downloads', 'purchases' ) ) ) ? it_exchange_get_page_url( 'login' ) : it_exchange_get_page_url( 'registration' );
+			$redirect = apply_filters( 'it_exchange_pages_to_protect_redirect_if_not_logged_in', $redirect, $this->_current_view );
 
 			$redirect_options = array( 'current-page' => $this->_current_view );
-			it_exchange_redirect( $redirect_url, 'protected-pages-to-registration-when-not-logged-in', $redirect_options );
+			it_exchange_redirect( $redirect, 'protected-pages-to-registration-when-not-logged-in', $redirect_options );
 			die();
-		} else if ( 'checkout' === $this->_current_view ) {
+		} elseif ( 'checkout' === $this->_current_view ) {
 			return; //We just want to make sure users are logged in to see the checkout page
 		}
 
 		// Get current user
 		$user_id = get_current_user_id();
 
-		if ( 'confirmation' === $this->_current_view  ) {
-
-			$transaction_id = false;
-			$page_slug = it_exchange_get_page_slug( 'confirmation', true );
-
-			if ( $transaction_hash = get_query_var( $page_slug ) )
-				$transaction_id = it_exchange_get_transaction_id_from_hash( $transaction_hash );
-
-			if ( ! it_exchange_customer_has_transaction( $transaction_id, $user_id ) ) {
-				$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_non_admin_requests_confirmation', it_exchange_get_page_url( 'purchases' ) );
-
-				$redirect_options = array( 'transaction_id' => $transaction_id, 'user_id' => $user_id );
-				it_exchange_redirect( $redirect_url, 'incorrect-confirmation-to-purchases', $redirect_options );
-				die();
-			}
-
-			return;
-
-		}
-
 		// If trying to view account and not an admin, and not the owner, redirect
 		if ( in_array( $this->_current_view, $pages_to_protect )
 				&& $this->_account != $user_id && ! current_user_can( 'administrator' ) ) {
-			$redirect_url = apply_filters( 'it_exchange_pages_to_protect_redirect_if_non_admin_requests_account' , it_exchange_get_page_url( 'store' ) );
+			$redirect = apply_filters( 'it_exchange_pages_to_protect_redirect_if_non_admin_requests_account' , it_exchange_get_page_url( 'store' ) );
 
-			it_exchange_redirect( $redirect_url, 'no-permission-account-to-store' );
+			it_exchange_redirect( $redirect, 'no-permission-account-to-store' );
 			die();
 		}
 
 		do_action( 'it_exchange_protect_pages' );
+	}
+
+	/**
+	 * Protect the confirmation page.
+	 *
+	 * @since 1.36.0
+	 */
+	protected function protect_confirmation() {
+
+		if ( isset( $_POST['it-exchange-guest-email'] ) ) {
+			$guest_email = trim( $_POST['it-exchange-guest-email'] );
+		} elseif ( isset( $_COOKIE['it-exchange-guest-email'] ) ) {
+			$guest_email = $_COOKIE['it-exchange-guest-email'];
+		} else {
+			$guest_email = '';
+		}
+
+		if ( $guest_email && is_email( $guest_email )) {
+			@setcookie( 'it-exchange-guest-email', $guest_email, time() + HOUR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN, '', true );
+		}
+
+		$customer       = it_exchange_get_current_customer();
+		$transaction    = null;
+		$transaction_id = false;
+		$page_slug      = it_exchange_get_page_slug( 'confirmation', true );
+
+		if ( $transaction_hash = get_query_var( $page_slug ) ) {
+			$transaction_id = it_exchange_get_transaction_id_from_hash( $transaction_hash );
+			$transaction    = it_exchange_get_transaction( $transaction_id );
+
+			if ( $transaction->is_guest_purchase() && $guest_email ) {
+				$customer = it_exchange_get_customer( $guest_email );
+			}
+		}
+
+		$has = it_exchange_customer_has_transaction( $transaction_id, $customer );
+
+		if ( ! $has && $transaction && $transaction->is_guest_purchase() ) {
+			$this->request_email_for_confirmation = true;
+
+			return;
+		}
+
+		if ( ! $has ) {
+			$redirect = it_exchange_get_page_url( 'purchases' );
+			$redirect = apply_filters( 'it_exchange_pages_to_protect_redirect_if_non_admin_requests_confirmation', $redirect );
+
+			$redirect_options = array(
+				'transaction_id' => $transaction_id,
+				'user_id'        => $customer ? $customer->ID : false
+			);
+			it_exchange_redirect( $redirect, 'incorrect-confirmation-to-purchases', $redirect_options );
+			die();
+		}
 	}
 
 	/**
@@ -423,12 +468,18 @@ class IT_Exchange_Pages {
 				return get_404_template();
 		}
 
+		$template = it_exchange_locate_template( $this->_current_view . '.php' );
+
+		if ( $this->_current_view === 'confirmation' && $this->request_email_for_confirmation ) {
+			$template = 'content-confirmation-email-form.php';
+		}
+
 		/**
 		 * 1) If we found an iThemes Exchange Page Template in the theme's /exchange/ folder, return it.
 		 * 2) If the found iThemes Exchange Theme Template has been filtered, return the filtered one instead and add the callback the_content filter
 		 * -- In the event of option 2, this is working much like the 'product' == $this_current_view clase below would act with page.php
 		*/
-		if ( $template = it_exchange_locate_template( $this->_current_view . '.php' ) ) {
+		if ( $template ) {
 			remove_filter( 'the_content', 'wpautop' );
 			$filtered_template = apply_filters( 'it_exchange_fetch_template_override_located_template', $template, $this );
 			if ( $filtered_template != $template && 'product' == $this->_current_view ) {

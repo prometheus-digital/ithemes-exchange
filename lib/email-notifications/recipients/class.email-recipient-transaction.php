@@ -33,7 +33,7 @@ class IT_Exchange_Email_Recipient_Transaction implements IT_Exchange_Email_Recip
 	 * @return string
 	 */
 	public function get_email() {
-		return it_exchange_get_transaction_customer_email( $this->transaction );
+		return $this->transaction->get_customer_email();
 	}
 
 	/**
@@ -45,16 +45,14 @@ class IT_Exchange_Email_Recipient_Transaction implements IT_Exchange_Email_Recip
 	 */
 	public function get_first_name() {
 
-		if ( ! empty( $this->transaction->cart_details->is_guest_checkout ) ) {
+		if ( $this->transaction->is_guest_purchase() && ! $this->transaction->get_customer()->get_first_name() ) {
 
 			$parts = explode( '@', $this->get_email() );
 
 			return $parts[0];
 		}
 
-		$user = it_exchange_get_transaction_customer( $this->transaction )->wp_user;
-
-		return empty( $user->first_name ) ? $user->display_name : $user->first_name;
+		return $this->transaction->get_customer()->get_first_name() ?: $this->transaction->get_customer()->get_display_name();
 	}
 
 	/**
@@ -66,16 +64,14 @@ class IT_Exchange_Email_Recipient_Transaction implements IT_Exchange_Email_Recip
 	 */
 	public function get_last_name() {
 
-		if ( ! empty( $this->transaction->cart_details->is_guest_checkout ) ) {
+		if ( $this->transaction->is_guest_purchase() && ! $this->transaction->get_customer()->get_last_name() ) {
 
 			$parts = explode( '@', $this->get_email() );
 
 			return $parts[0];
 		}
 
-		$user = it_exchange_get_transaction_customer( $this->transaction )->wp_user;
-
-		return empty( $user->last_name ) ? $user->display_name : $user->last_name;
+		return $this->transaction->get_customer()->get_last_name() ?: $this->transaction->get_customer()->get_display_name();
 	}
 
 	/**
@@ -87,11 +83,17 @@ class IT_Exchange_Email_Recipient_Transaction implements IT_Exchange_Email_Recip
 	 */
 	public function get_full_name() {
 
-		if ( ! empty( $this->transaction->cart_details->is_guest_checkout ) ) {
+		$customer = $this->transaction->get_customer();
+
+		if ( ! $customer ) {
 			return $this->get_email();
 		}
 
-		return it_exchange_get_transaction_customer_display_name( $this->transaction );
+		if ( $customer->get_full_name() ) {
+			return $customer->get_full_name();
+		}
+
+		return $this->get_email();
 	}
 
 	/**

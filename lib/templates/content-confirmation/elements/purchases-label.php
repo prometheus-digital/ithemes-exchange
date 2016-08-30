@@ -17,6 +17,6 @@
 
 <?php do_action( 'it_exchange_confirmation_before_transaction_purchases_label' ); ?>
 <div class="it-exchange-transaction-purchases-label">
-	<h3><?php _e( 'Purchases', 'it-l10n-ithemes-exchange' ); ?></h3>
+	<h3><?php _e( 'Cart Items', 'it-l10n-ithemes-exchange' ); ?></h3>
 </div>
 <?php do_action( 'it_exchange_confirmation_after_transaction_purchases_label' ); ?>

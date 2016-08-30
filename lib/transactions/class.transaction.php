@@ -510,13 +510,18 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 *
 	 * @since 1.36
 	 *
-	 * @return IT_Exchange_Customer|false
+	 * @return IT_Exchange_Customer|null
 	 */
 	public function get_customer() {
 
 		$customer_id = $this->customer_id;
-		$customer    = it_exchange_get_customer( $customer_id );
-		$customer    = $customer instanceof IT_Exchange_Customer ? $customer : null;
+
+		if ( $this->is_guest_purchase() ) {
+			$customer = IT_Exchange_Guest_Customer::from_transaction( $this );
+		} else {
+			$customer = it_exchange_get_customer( $customer_id );
+			$customer = $customer instanceof IT_Exchange_Customer ? $customer : null;
+		}
 
 		$customer = apply_filters( 'it_exchange_get_transaction_customer', $customer, $this );
 
@@ -532,6 +537,17 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 */
 	public function get_customer_email() {
 		return apply_filters( 'it_exchange_get_transaction_customer_email', $this->customer_email, $this );
+	}
+
+	/**
+	 * Check if this transaction is a guest purchase.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function is_guest_purchase() {
+		return ! empty( $this->cart_details->is_guest_checkout );
 	}
 
 	/**

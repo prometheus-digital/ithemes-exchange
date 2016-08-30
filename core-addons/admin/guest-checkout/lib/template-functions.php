@@ -420,11 +420,31 @@ add_filter( 'it_exchange_get_super_widget_login_actions_elements', 'it_exchange_
  * @return array modified loops missing the menu
 */
 function it_exchange_remove_customer_menu_when_doing_guest_checkout( $loops ) {
-    if ( ! it_exchange_doing_guest_checkout() )
-        return $loops;
 
-	if ( false !== ( $index = array_search( 'menu', $loops ) ) )
-		unset( $loops[$index] );
+	if ( ! isset( $GLOBALS['it_exchange']['transaction'] ) ) {
+		$page_slug      = it_exchange_get_page_slug( 'confirmation', true );
+
+		if ( $transaction_hash = get_query_var( $page_slug ) ) {
+			$transaction_id = it_exchange_get_transaction_id_from_hash( $transaction_hash );
+			$transaction    = it_exchange_get_transaction( $transaction_id );
+		} else {
+			return $loops;
+		}
+	} else {
+		$transaction = $GLOBALS['it_exchange']['transaction'];
+	}
+
+    if ( ! $transaction instanceof IT_Exchange_Transaction ) {
+	    return $loops;
+    }
+
+    if ( ! $transaction->is_guest_purchase() ) {
+    	return $loops;
+    }
+
+	if ( false !== ( $index = array_search( 'menu', $loops ) ) ) {
+		unset( $loops[ $index ] );
+	}
 
 	return $loops;
 }

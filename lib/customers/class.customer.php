@@ -153,7 +153,7 @@ class IT_Exchange_Customer {
 	public function has_transaction( $transaction_id ) {
 		$transaction_ids = (array) get_user_meta( $this->id, '_it_exchange_transaction_id' );
 
-		return ( in_array( $transaction_id, $transaction_ids ) );
+		return in_array( $transaction_id, $transaction_ids );
 	}
 
 	/**
@@ -171,6 +171,50 @@ class IT_Exchange_Customer {
 		} else {
 			return '';
 		}
+	}
+
+	/**
+	 * Get the customer's first name.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_first_name() {
+		return get_user_meta( $this->ID, 'first_name', true );
+	}
+
+	/**
+	 * Get the customer's last name.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_last_name() {
+		return get_user_meta( $this->ID, 'last_name', true );
+	}
+
+	/**
+	 * Get the customer's full name.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_full_name() {
+		return trim( "{$this->get_first_name()} {$this->get_last_name()}" );
+	}
+
+	/**
+	 * Get the customer's display name.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_display_name() {
+		return ! empty( $this->data->display_name ) ? $this->data->display_name : '';
 	}
 
 	/**

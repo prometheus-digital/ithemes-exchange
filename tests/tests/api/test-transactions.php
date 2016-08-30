@@ -164,6 +164,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 		$customer = $this->getMockBuilder( 'IT_Exchange_Customer' )->disableOriginalConstructor()->getMock();
 		$customer->expects( $this->once() )->method( 'add_transaction_to_user' );
 		$customer->method( 'is_wp_user' )->willReturn( true );
+		$customer->id = 1;
 
 		it_exchange_add_transaction( 'test-method', 'test-method-id', 'pending', $customer, $object );
 	}

@@ -357,7 +357,7 @@ function it_exchange_get_cart_shipping_method() {
 		it_exchange_get_current_cart()->set_shipping_method( $single_method->slug );
 
 		return $single_method->slug;
-	} elseif ( 0 === $cart_methods_count && ! $method ) {
+	} elseif ( 0 === $cart_methods_count && ! $method && it_exchange_cart_contains_shippable_product() ) {
 
 		$cart = it_exchange_get_current_cart();
 
@@ -380,6 +380,24 @@ function it_exchange_get_cart_shipping_method() {
 	}
 
 	return $method;
+}
+
+/**
+ * Check if the cart contains any shippable products.
+ *
+ * @since 1.36.0
+ *
+ * @param \ITE_Cart|null $cart
+ *
+ * @return bool
+ */
+function it_exchange_cart_contains_shippable_product( ITE_Cart $cart = null ) {
+
+	$cart = $cart ?: it_exchange_get_current_cart();
+
+	return $cart->get_items('product')->filter( function( ITE_Cart_Product $product ) {
+		$product->get_product()->has_feature( 'shipping' );
+	} )->count() > 0;
 }
 
 /**

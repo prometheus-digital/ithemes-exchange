@@ -1106,7 +1106,7 @@ function it_exchange_get_transaction_customer_display_name( $transaction ) {
 	$unknown = __( 'Deleted Customer', 'it-l10n-ithemes-exchange' );
 
 	if ( $customer = it_exchange_get_transaction_customer( $transaction ) ) {
-		$display_name = empty( $customer->wp_user->display_name ) ? $unknown : $customer->wp_user->display_name;
+		$display_name = $customer->get_display_name();
 		return apply_filters( 'it_exchange_get_transaction_customer_display_name', $display_name, $transaction );
 	}
 
