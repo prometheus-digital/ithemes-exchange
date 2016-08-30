@@ -23,6 +23,7 @@
 
 	<?php if ( it_exchange( 'transactions', 'found' ) ) : ?>
 		<?php it_exchange_get_template_part( 'content-purchases/loops/transactions' ); ?>
+		<?php it_exchange( 'transactions', 'pagination' ); ?>
 	<?php else : ?>
 		<?php it_exchange_get_template_part( 'content-purchases/elements/no-purchases-found' ); ?>
 	<?php endif; ?>

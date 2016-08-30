@@ -61,6 +61,8 @@ class IT_Exchange_Pages {
 
 			add_filter( 'it_exchange_get_page_url', array( $this, 'transaction_compat_mode' ), 10, 2 );
 			add_filter( 'it_exchange_get_transaction_confirmation_url', array( $this, 'confirmation_compat_mode' ), 10, 2 );
+
+			add_filter( 'redirect_canonical', array( $this, 'redirect_canonical' ), 10, 2 );
 		}
 	}
 
@@ -723,6 +725,27 @@ class IT_Exchange_Pages {
 		$confirmation_url = add_query_arg( $slug, $transaction_hash, $confirmation_url );
 
 		return $confirmation_url;
+	}
+
+	public function redirect_canonical( $redirect, $original ) {
+
+		if ( ! it_exchange_is_page( 'purchases' ) ) {
+			return $redirect;
+		}
+
+		if ( ! it_exchange_is_pages_compat_mode() ) {
+			return $redirect;
+		}
+
+		if ( ! get_query_var( 'page' ) ) {
+			return $redirect;
+		}
+
+		if ( strpos( $redirect, '/page/') === false ) {
+			return $redirect;
+		}
+
+		return false;
 	}
 }
 global $IT_Exchange_Pages; // We need it inside casper

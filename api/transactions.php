@@ -74,12 +74,18 @@ function it_exchange_get_transaction( $post ) {
  * @since 0.3.3
  *
  * @param array $args
+ * @param int   $total
  *
  * @return IT_Exchange_Transaction[]  an array of IT_Exchange_Transaction objects
 */
-function it_exchange_get_transactions( $args=array() ) {
+function it_exchange_get_transactions( $args=array(), &$total = null ) {
 	$defaults = array(
-		'post_type' => 'it_exchange_tran',
+		'numberposts' => 5,
+		'category' => 0, 'orderby' => 'date',
+		'order' => 'DESC', 'include' => array(),
+		'exclude' => array(), 'meta_key' => '',
+		'meta_value' =>'', 'post_type' => 'it_exchange_tran',
+		'suppress_filters' => true
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -115,12 +121,41 @@ function it_exchange_get_transactions( $args=array() ) {
 
 	$args = apply_filters( 'it_exchange_get_transactions_get_posts_args', $args );
 
-	if ( $transactions = get_posts( $args ) ) {
+	if ( empty( $args['post_status'] ) )
+		$args['post_status'] = ( 'attachment' == $args['post_type'] ) ? 'inherit' : 'publish';
+
+	if ( ! empty($args['numberposts']) && empty($args['posts_per_page']) )
+		$args['posts_per_page'] = $args['numberposts'];
+
+	if ( ! empty($args['category']) )
+		$args['cat'] = $args['category'];
+
+	if ( ! empty($args['include']) ) {
+		$incposts = wp_parse_id_list( $r['include'] );
+		$args['posts_per_page'] = count($incposts);  // only the number of posts included
+		$args['post__in'] = $incposts;
+	} elseif ( ! empty($r['exclude']) )
+		$args['post__not_in'] = wp_parse_id_list( $args['exclude'] );
+
+	$args['ignore_sticky_posts'] = true;
+	$args['no_found_rows'] = true;
+
+	if ( isset( $args['paged'] ) ) {
+		unset( $args['no_found_rows'] );
+	}
+
+	$query = new WP_Query( $args );
+
+	if ( $transactions = $query->get_posts() ) {
 		if ( empty( $args['fields'] ) || $args['fields'] !== 'ids' ) {
 			foreach ( $transactions as $key => $transaction ) {
 				$transactions[ $key ] = it_exchange_get_transaction( $transaction );
 			}
 		}
+	}
+
+	if ( isset( $args['paged'] ) ) {
+		$total = $query->found_posts;
 	}
 
 	return apply_filters( 'it_exchange_get_transactions', $transactions, $args );

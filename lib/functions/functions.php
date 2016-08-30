@@ -669,9 +669,11 @@ function it_exchange_get_core_page_rewrites( $page ) {
 				$account_slug = $account->post_name;
 			}
 
+			$paginate = '(?:/(\d*))?';
+
 			$rewrites = array(
-				$account_slug  . '/([^/]+)/' . $slug . '$' => 'index.php?' . $account_slug . '=$matches[1]&' . $slug . '=1',
-				$account_slug . '/' . $slug . '$' => 'index.php?' . $account_slug . '=1&' . $slug . '=1',
+				$account_slug  . '/([^/]+)/' . $slug . $paginate . '$' => 'index.php?' . $account_slug . '=$matches[1]&' . $slug . '=1&page=$matches[2]',
+				$account_slug . '/' . $slug . $paginate . '$' => 'index.php?' . $account_slug . '=1&' . $slug . '=1&page=$matches[1]',
 			);
 			return $rewrites;
 			break;

@@ -70,6 +70,8 @@ a.it-exchange-button {text-decoration:none;}
 #it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data .it-exchange-item-title{font-weight:bold;}
 #it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data .it-exchange-item-price,
 #it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data .it-exchange-item-quantity{font-weight:normal;}
+#it-exchange-purchases .page-numbers { list-style: none; }
+#it-exchange-purchases .page-numbers li { display: inline;  padding: 0 10px; }
 
 /** ----------------------------------------:[ downloads ]:--- */
 #it-exchange-downloads .it-exchange-download{clear:both;}

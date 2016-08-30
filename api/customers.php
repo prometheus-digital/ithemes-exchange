@@ -107,10 +107,11 @@ function it_exchange_update_customer( $customer_id, $customer_data, $args ) {
  *
  * @param integer $customer_id customer id
  * @param array   $args
+ * @param int     $total
  *
  * @return array
 */
-function it_exchange_get_customer_transactions( $customer_id, array $args = array() ) {
+function it_exchange_get_customer_transactions( $customer_id, array $args = array(), &$total = null ) {
 	if ( ! $customer = it_exchange_get_customer( $customer_id ) ) {
 		return array();
 	}
@@ -137,7 +138,7 @@ function it_exchange_get_customer_transactions( $customer_id, array $args = arra
 	$filtered = apply_filters_deprecated( 'it_exchange_get_customer_transactions_args', array( $wp, $customer ), '1.36.0' );
 
 	if ( $wp !== $filtered ) {
-		$transactions = it_exchange_get_transactions( $filtered );
+		$transactions = it_exchange_get_transactions( $filtered, $total );
 	} else {
 		$query = IT_Exchange_Transaction::query()->where( 'customer_id', '=', $customer_id )->and_where( 'parent', '=', 0 );
 
@@ -150,7 +151,13 @@ function it_exchange_get_customer_transactions( $customer_id, array $args = arra
 			$query->take( $args['per_page'] );
 		}
 
+		$query->order_by( 'order_date', 'DESC' );
+
 		$transactions = $query->results()->toArray();
+
+		if ( isset( $args['page'] ) ) {
+			$total = $query->total();
+		}
 	}
 
 	return apply_filters( 'it_exchange_get_customer_transactions', $transactions, $customer_id, $wp );

@@ -20,9 +20,16 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	 * @since 0.4.0
 	 */
 	public $_tag_map = array(
-		'found' => 'found',
-		'exist' => 'exist',
+		'found'      => 'found',
+		'exist'      => 'exist',
+		'pagination' => 'pagination'
 	);
+
+	/** @var int */
+	public static $per_page = 10;
+
+	/** @var int */
+	private static $total;
 
 	/**
 	 * Constructor
@@ -123,13 +130,23 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 				return array();
 			}
 
+			$page = get_query_var( 'page', 1 );
+
+			if ( ! $page ) {
+				$page = 1;
+			}
+
 			if ( $has ) {
 				$args = array( 'per_page' => 1 );
 			} else {
-				$args = array();
+				$args = array( 'per_page' => self::$per_page, 'page' => $page );
 			}
 
-			return it_exchange_get_customer_transactions( $customer->id, $args );
+			$transactions = it_exchange_get_customer_transactions( $customer->id, $args, $total );
+
+			self::$total = $total;
+
+			return $transactions;
 		} elseif ( it_exchange_is_page( 'confirmation' ) ) {
 			$confirmation_slug = it_exchange_get_page_slug( 'confirmation' );
 			$transaction_hash  = get_query_var( $confirmation_slug );
@@ -148,5 +165,24 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 		} else {
 			return it_exchange_get_transactions();
 		}
+	}
+
+	/**
+	 * Print pagination.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function pagination() {
+		return paginate_links( array(
+			'base'    => it_exchange_get_page_url( 'purchases' ) . '%_%',
+			'format'  => it_exchange_is_pages_compat_mode() ? '?page=%#%' : '%#%/',
+			'total'   => ceil( self::$total / self::$per_page ),
+			'current' => get_query_var( 'page' ) ? (int) get_query_var( 'page' ) : 1,
+			'type'    => 'list',
+			'prev_text' => __( '&laquo; Newer' ),
+			'next_text' => __( 'Older &raquo;' ),
+		) );
 	}
 }
