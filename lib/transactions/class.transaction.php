@@ -5,38 +5,45 @@
  * @package IT_Exchange
  * @since   0.3.3
  */
+use IronBound\DB\Collection;
 use IronBound\DB\Model;
 use IronBound\DB\Relations\HasForeign;
+use IronBound\DB\Relations\HasForeignPost;
+use IronBound\DB\Relations\HasMany;
 
 /**
  * Merges a WP Post with iThemes Exchange Transaction data
  *
  * @since 0.3.3
  *
- * @property int                           $ID
- * @property-read int                      $customer_id
- * @property-read string                   $customer_email
- * @property string                        $status
- * @property-read string                   $method
- * @property string                        $method_id
- * @property-read string                   $hash
- * @property-read string                   $cart_id
- * @property-read float                    $total
- * @property-read float                    $subtotal
- * @property-read \DateTime                $order_date
- * @property-read \IT_Exchange_Transaction $parent
+ * @property int                                       $ID
+ * @property-read int                                  $customer_id
+ * @property-read string                               $customer_email
+ * @property string                                    $status
+ * @property-read string                               $method
+ * @property string                                    $method_id
+ * @property-read string                               $hash
+ * @property-read string                               $cart_id
+ * @property-read float                                $total
+ * @property-read float                                $subtotal
+ * @property-read \DateTime                            $order_date
+ * @property-read \IT_Exchange_Transaction             $parent
+ * @property-read stdClass                             $cart_object // Internal
+ * @property-read Collection|IT_Exchange_Transaction[] $children
  */
 class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Credit_Provider {
+
+	/**
+	 * List of relations to be eager loaded.
+	 *
+	 * @var array
+	 */
+	protected static $_eager_load = array( 'ID' );
 
 	/**
 	 * @var WP_Post
 	 */
 	private $post;
-
-	/**
-	 * @var stdClass
-	 */
-	private $cart_details;
 
 	/**
 	 * Constructor. Loads post data and transaction data
@@ -87,7 +94,9 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 			parent::__construct( $post_or_data );
 		}
 
-		$this->set_transaction_supports_and_data();
+		if ( $this->exists() ) {
+			$this->set_transaction_supports_and_data();
+		}
 	}
 
 	/**
@@ -288,14 +297,13 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Sets the transaction_data property from appropriate transaction-method options and assoicated post_meta
 	 *
-	 * @since 0.3.2
+	 * @since      0.3.2
+	 *
+	 * @deprecated 1.36.0
 	 *
 	 * @return void
 	 */
 	protected function set_transaction_supports_and_data() {
-
-		// Set Cart information
-		$this->cart_details = get_post_meta( $this->ID, '_it_exchange_cart_object', true );
 
 		do_action_deprecated( 'it_exchange_set_transaction_supports_and_data', array( $this->ID ), '1.36.0' );
 	}
@@ -803,6 +811,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 * @return array
 	 */
 	public function get_products() {
+
 		$products = empty( $this->cart_details->products ) ? array() : $this->cart_details->products;
 
 		return apply_filters( 'it_exchange_get_transaction_products', $products, $this );
@@ -972,6 +981,22 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 		return static::$_db_manager->get( 'ite-transactions' );
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function set_raw_attribute( $attribute, $value ) {
+
+		if ( $attribute === 'ID' && is_object( $value ) ) {
+			$value = $value->ID;
+		}
+
+		return parent::set_raw_attribute( $attribute, $value );
+	}
+
+	protected function _ID_relation() {
+		return new HasForeignPost( 'ID', $this );
+	}
+
 	protected function _billing_relation() {
 		return new HasForeign( 'billing', $this, '\ITE_Saved_Address' );
 	}
@@ -982,6 +1007,10 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 
 	protected function _parent_relation() {
 		return new HasForeign( 'parent', $this, get_class() );
+	}
+
+	protected function _children_relation() {
+		return new HasMany( 'parent', 'IT_Exchange_Transaction', $this, 'children' );
 	}
 
 	/**
@@ -1095,7 +1124,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 		}
 
 		if ( $name === 'cart_details' ) {
-			return $this->cart_details;
+			return get_post_meta( $this->ID, '_it_exchange_cart_object', true );
 		}
 
 		if ( in_array( $name, array( 'transaction_supports', 'transaction_data' ), true ) ) {
@@ -1131,7 +1160,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 		}
 
 		if ( $name === 'ID' ) {
-			return $this->get_raw_attribute( 'ID' );
+			return (int) $this->get_raw_attribute( 'ID' );
 		}
 
 		return parent::__get( $name );

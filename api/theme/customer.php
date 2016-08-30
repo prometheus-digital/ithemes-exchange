@@ -622,6 +622,11 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	 * @return string
 	*/
 	function thank_you_message( $options=array() ) {
+
+		if ( ! $this->_customer ) {
+			return false;
+		}
+
 		$defaults = array(
 			'format' => 'html',
 			'before' => '',
@@ -629,8 +634,6 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 			'label' => __( 'Thank you for your order. An email confirmation has been sent to %s.', 'it-l10n-ithemes-exchange' ),
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
-
-		$url = it_exchange_get_page_url( 'account' );
 
 		switch( $options['format'] ) {
 

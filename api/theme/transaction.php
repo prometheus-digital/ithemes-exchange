@@ -76,6 +76,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		'productfeaturedimage'  => 'product_featured_image',
 		'clearedfordelivery'    => 'cleared_for_delivery',
 		'featuredimage'         => 'featured_image',
+		'thankyoumessage'       => 'thank_you_message',
 		'cartobject'            => 'cart_object',
 	);
 
@@ -1389,6 +1390,44 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Print the thank you message.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $options
+	 *
+	 * @return bool|string
+	 */
+	public function thank_you_message( $options = array() ) {
+
+		if ( ! $this->_transaction ) {
+			return false;
+		}
+
+		$defaults = array(
+			'format' => 'html',
+			'before' => '',
+			'after'  => '',
+			'label' => __( 'Thank you for your order. An email confirmation has been sent to %s.', 'it-l10n-ithemes-exchange' ),
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		switch( $options['format'] ) {
+
+			case 'label':
+				$output = $options['label'];
+				break;
+			case 'html':
+			default:
+				$output = sprintf( $options['label'], $this->_transaction->get_customer_email() );
+				break;
+
+		}
+
+		return $output;
 	}
 
 	function cart_object() {

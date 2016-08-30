@@ -1,24 +1,24 @@
 <?php
+
 /**
  * Transactions class for THEME API
  *
  * @since 0.4.0
-*/
-
+ */
 class IT_Theme_API_Transactions implements IT_Theme_API {
 
 	/**
 	 * API context
 	 * @var string $_context
 	 * @since 0.4.0
-	*/
+	 */
 	private $_context = 'transactions';
 
 	/**
 	 * Maps api tags to methods
 	 * @var array $_tag_map
 	 * @since 0.4.0
-	*/
+	 */
 	public $_tag_map = array(
 		'found' => 'found',
 		'exist' => 'exist',
@@ -28,7 +28,7 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	 * Constructor
 	 *
 	 * @since 0.4.0
-	*/
+	 */
 	function __construct() {
 	}
 
@@ -50,7 +50,7 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	 * @since 0.4.0
 	 *
 	 * @return string
-	*/
+	 */
 	function get_api_context() {
 		return $this->_context;
 	}
@@ -61,9 +61,9 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	 *
 	 * @since 0.4.0
 	 * @return string
-	*/
-	public function found( $options=array() ) {
-		return count( $this->get_transactions() ) > 0;
+	 */
+	public function found( $options = array() ) {
+		return count( $this->get_transactions( true ) ) > 0;
 	}
 
 	/**
@@ -76,8 +76,8 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	 * @param array $options
 	 *
 	 * @return bool
-	*/
-	public function exist( $options=array() ) {
+	 */
+	public function exist( $options = array() ) {
 		// This will init/reset the transactions global and loop through them. the /api/theme/transaction.php file will handle individual transactions.
 		if ( empty( $GLOBALS['it_exchange']['transactions'] ) ) {
 
@@ -88,17 +88,19 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 			}
 
 			$GLOBALS['it_exchange']['transactions'] = $transactions;
-			$GLOBALS['it_exchange']['transaction'] = reset( $GLOBALS['it_exchange']['transactions'] );
+			$GLOBALS['it_exchange']['transaction']  = reset( $GLOBALS['it_exchange']['transactions'] );
 
 			return true;
 		} else {
 			if ( next( $GLOBALS['it_exchange']['transactions'] ) ) {
 				$GLOBALS['it_exchange']['transaction'] = current( $GLOBALS['it_exchange']['transactions'] );
+
 				return true;
 			} else {
 				$GLOBALS['it_exchange']['transactions'] = array();
 				end( $GLOBALS['it_exchange']['transactions'] );
 				$GLOBALS['it_exchange']['transaction'] = false;
+
 				return false;
 			}
 		}
@@ -109,9 +111,11 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	 *
 	 * @since 1.36.0
 	 *
+	 * @param bool $has
+	 *
 	 * @return \IT_Exchange_Transaction[]
 	 */
-	protected function get_transactions() {
+	protected function get_transactions( $has = false ) {
 
 		if ( it_exchange_is_page( 'purchases' ) || it_exchange_is_page( 'downloads' ) ) {
 
@@ -119,10 +123,16 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 				return array();
 			}
 
-			return it_exchange_get_customer_transactions( $customer->id );
+			if ( $has ) {
+				$args = array( 'per_page' => 1 );
+			} else {
+				$args = array();
+			}
+
+			return it_exchange_get_customer_transactions( $customer->id, $args );
 		} elseif ( it_exchange_is_page( 'confirmation' ) ) {
 			$confirmation_slug = it_exchange_get_page_slug( 'confirmation' );
-			$transaction_hash = get_query_var( $confirmation_slug );
+			$transaction_hash  = get_query_var( $confirmation_slug );
 
 			if ( ! $transaction_hash ) {
 				return array();

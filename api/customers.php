@@ -101,18 +101,25 @@ function it_exchange_update_customer( $customer_id, $customer_data, $args ) {
  * @since 0.4.0
  *
  * @param integer $customer_id customer id
+ * @param array   $args
  *
  * @return array
 */
-function it_exchange_get_customer_transactions( $customer_id ) {
-	if ( ! $customer = it_exchange_get_customer( $customer_id ) )
+function it_exchange_get_customer_transactions( $customer_id, array $args = array() ) {
+	if ( ! $customer = it_exchange_get_customer( $customer_id ) ) {
 		return array();
+	}
 
-	// Get transactions args
-	$args = array(
-		'numberposts' => -1,
+	$wp = array(
 		'customer_id' => $customer->id,
 	);
+
+	if ( isset( $args['page'] ) ) {
+		$wp['paged']          = $args['page'];
+		$wp['posts_per_page'] = isset( $args['per_page'] ) ? $args['per_page'] : 10;
+	} else {
+		$wp['numberposts'] = -1;
+	}
 
 	/**
 	 * Filter the args used to get a customer's transactions.
@@ -122,9 +129,26 @@ function it_exchange_get_customer_transactions( $customer_id ) {
 	 * @param array $args
 	 * @param IT_Exchange_Customer $customer
 	 */
-	$args = apply_filters( 'it_exchange_get_customer_transactions_args', $args, $customer );
+	$filtered = apply_filters_deprecated( 'it_exchange_get_customer_transactions_args', array( $wp, $customer ), '1.36.0' );
 
-	return apply_filters( 'it_exchange_get_customer_transactions', it_exchange_get_transactions( $args ), $customer_id, $args );
+	if ( $wp !== $filtered ) {
+		$transactions = it_exchange_get_transactions( $filtered );
+	} else {
+		$query = IT_Exchange_Transaction::query()->where( 'customer_id', '=', $customer_id )->and_where( 'parent', '=', 0 );
+
+		if ( isset( $args['page'] ) ) {
+			$query->paginate(
+				$args['page'],
+				isset( $args['per_page'] ) ? $args['per_page'] : 10
+			);
+		} elseif ( isset( $args['per_page'] ) ) {
+			$query->take( $args['per_page'] );
+		}
+
+		$transactions = $query->results()->toArray();
+	}
+
+	return apply_filters( 'it_exchange_get_customer_transactions', $transactions, $customer_id, $wp );
 }
 
 /**
