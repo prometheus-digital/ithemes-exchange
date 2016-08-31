@@ -943,35 +943,14 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	*/
 	function superwidget( $options=array() ) {
 
-		$show = true;
-
-		global $wp_registered_widgets;
-
-		$sidebars = wp_get_sidebars_widgets();
-
-		foreach ( $sidebars as $widgets ) {
-			foreach ( $widgets as $widget ) {
-
-				if ( strpos( $widget, 'it-exchange-super-widget' ) !== false ) {
-					$show = false;
-
-					break 2;
-				}
-			}
-		}
-
 		// Return boolean if has flag was set. Just keeping this here since its in all other product.php methods
 		if ( $options['supports'] ) {
-			return $show;
+			return true;
 		}
 
 		// Return boolean if has flag was set
 		if ( $options['has'] ) {
-			return $show;
-		}
-
-		if ( ! $show ) {
-			return '';
+			return true;
 		}
 
 		// Parse options

@@ -1298,3 +1298,6 @@
 	Fix: Don't render the Super Widget in the sidebar if it is already displayed as a shortcode.
 	Tweak: Don't autoload transient transactions
 	Tweak: Update lib/classes
+1.35.10 - Elise Alley, Timothy Jacobs
+	Fix: Issue with the Super Widget not rendering correctly
+	Tweak: Add support for sale price to make a product free

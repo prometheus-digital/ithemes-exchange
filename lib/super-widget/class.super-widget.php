@@ -39,6 +39,16 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	var $it_exchange_view;
 
 	/**
+	 * @var bool
+	 */
+	private $in_sidebar = false;
+
+	/**
+	 * @var bool
+	 */
+	private $rendered = false;
+
+	/**
 	 * Constructor: Init
 	 *
 	 * @since 0.4.0
@@ -58,6 +68,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			add_action( 'template_redirect', array( $this, 'load_ajax' ), 1 );
 			add_action( 'template_redirect', array( $this, 'set_state' ), 11 );
 			add_action( 'dynamic_sidebar_before', array( $this, 'maybe_remove_sw_from_sidebar' ) );
+			add_action( 'dynamic_sidebar_after', array( $this, 'mark_out_of_sidebar' ) );
 		}
 	}
 
@@ -111,6 +122,19 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		 */
 		$args = apply_filters( 'it_exchange_super_widget_args', $args, $product_id );
 
+		if ( $this->rendered ) {
+
+			if ( ! $this->in_sidebar ) {
+				return;
+			}
+
+			$might_remove  = false;
+			$remove_others = true;
+		} else {
+			$remove_others = false;
+			$might_remove  = true;
+		}
+
 		// Some JS we're going to need
 		?>
 		<script type="text/javascript">
@@ -122,6 +146,10 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			var itExchangeCartShippingAddress = <?php echo esc_js( (boolean) it_exchange_get_customer_shipping_address() ? 1 : 0); ?>;
 			var itExchangeCartBillingAddress = <?php echo esc_js( (boolean) it_exchange_get_customer_billing_address() ? 1 : 0); ?>;
 			jQuery(function () {
+
+				<?php if ( $remove_others ) : ?>
+					jQuery('.it-exchange-super-widget[data-might-remove="1"]').remove();
+				<?php endif; ?>
 
 				<?php $shipping_addons = it_exchange_get_enabled_addons( array( 'category' => 'shipping' ) ); if ( ! empty( $shipping_addons) ) : ?>
 				// Shipping Init country/state fields
@@ -151,7 +179,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		// Print widget
 		echo $args['before_widget'];
 		?>
-		<div class="it-exchange-super-widget it-exchange-super-widget-<?php esc_attr_e( $this->get_state() ); ?>">
+		<div class="it-exchange-super-widget it-exchange-super-widget-<?php esc_attr_e( $this->get_state() ); ?>" data-might-remove="<?php echo $might_remove; ?>">
 			<style type="text/css">
 				.it-exchange-super-widget .spinner {
 					background: url('<?php echo get_admin_url(); ?>/images/wpspin_light.gif') no-repeat;
@@ -209,6 +237,8 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 		if ( isset( $GLOBALS['it_exchange']['in_superwidget'] ) ) {
 			unset( $GLOBALS['it_exchange']['in_superwidget'] );
 		}
+
+		$this->rendered = true;
 	}
 
 	/**
@@ -396,6 +426,8 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 */
 	public function maybe_remove_sw_from_sidebar( $index ) {
 
+		$this->in_sidebar = true;
+
 		if ( IT_Exchange_SW_Shortcode::has_shortcode() && ! ( is_archive() || is_home() ) ) {
 
 			global $wp_registered_widgets;
@@ -415,6 +447,15 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Mark that we are no longer in the sidebar.
+	 *
+	 * @since 1.36.0
+	 */
+	public function mark_out_of_sidebar() {
+		$this->in_sidebar = false;
 	}
 }
 

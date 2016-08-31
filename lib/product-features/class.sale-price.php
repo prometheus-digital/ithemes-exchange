@@ -45,7 +45,7 @@ class IT_Exchange_Sale_Price extends IT_Exchange_Product_Feature_Abstract {
 
 		$sale_price = it_exchange_get_product_feature( $product->ID, $this->slug );
 
-		if ( empty( $sale_price ) || $sale_price == '0.00' ) {
+		if ( ! $product->has_feature( $this->slug ) ) {
 			$sale_price = '';
 		} else {
 			$sale_price = it_exchange_format_price( $sale_price );
@@ -62,7 +62,7 @@ class IT_Exchange_Sale_Price extends IT_Exchange_Product_Feature_Abstract {
 		do_action( 'it_exchange_before_print_metabox_sale_price', $product );
 		?>
 		<label for="sale-price"><?php esc_html_e( $description ); ?></label>
-		<input type="text" placeholder="<?php esc_attr_e( it_exchange_format_price( 0 ) ); ?>"
+		<input type="text" placeholder=""
 		       id="sale-price" name="it-exchange-sale-price" value="<?php esc_attr_e( $sale_price ); ?>" tabindex="3"
 		       data-symbol="<?php esc_attr_e( $currency ); ?>" data-symbol-position="<?php esc_attr_e( $settings['currency-symbol-position'] ); ?>"
 		       data-thousands-separator="<?php esc_attr_e( $settings['currency-thousands-separator'] ); ?>"
@@ -99,10 +99,10 @@ class IT_Exchange_Sale_Price extends IT_Exchange_Product_Feature_Abstract {
 			return;
 		}
 
-		if ( ! empty( $_POST['it-exchange-sale-price'] ) ) {
+		if ( isset( $_POST['it-exchange-sale-price'] ) ) {
 			$new_price = $_POST['it-exchange-sale-price'];
 		} else {
-			$new_price = 0;
+			$new_price = '';
 		}
 
 		it_exchange_update_product_feature( $product_id, $this->slug, $new_price );
@@ -127,15 +127,15 @@ class IT_Exchange_Sale_Price extends IT_Exchange_Product_Feature_Abstract {
 
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
-		if ( $options['setting'] == 'sale-price' ) {
+		if ( $options['setting'] === 'sale-price' ) {
+
+			if ( $new_value === '' ) {
+				return delete_post_meta( $product_id, '_it_exchange_sale_price' );
+			}
 
 			$new_value = it_exchange_convert_to_database_number( $new_value );
 
-			if ( empty( $new_value ) ) {
-				return delete_post_meta( $product_id, '_it_exchange_sale_price' );
-			} else {
-				return update_post_meta( $product_id, '_it_exchange_sale_price', $new_value );
-			}
+			return update_post_meta( $product_id, '_it_exchange_sale_price', $new_value );
 		}
 
 		return false;
@@ -161,7 +161,7 @@ class IT_Exchange_Sale_Price extends IT_Exchange_Product_Feature_Abstract {
 		$options = ITUtility::merge_defaults( $options, $default );
 
 		if ( $options['setting'] == 'sale-price' ) {
-			return it_exchange_convert_from_database_number( get_post_meta( $product_id, '_it_exchange_sale_price', true ) );
+			return (float) it_exchange_convert_from_database_number( get_post_meta( $product_id, '_it_exchange_sale_price', true ) );
 		}
 
 		return false;
@@ -179,10 +179,7 @@ class IT_Exchange_Sale_Price extends IT_Exchange_Product_Feature_Abstract {
 	 * @return boolean
 	 */
 	public function product_has_feature( $result, $product_id, $options = array() ) {
-		$price     = it_exchange_get_product_feature( $product_id, $this->slug );
-		$db_number = (int) it_exchange_convert_to_database_number( $price );
-
-		return ! empty( $db_number );
+		return metadata_exists( 'post', $product_id, '_it_exchange_sale_price' );
 	}
 
 	/**
@@ -225,7 +222,11 @@ class IT_Exchange_Sale_Price extends IT_Exchange_Product_Feature_Abstract {
 			$base_price = it_exchange_get_product_feature( $product['product_id'], $this->slug );
 
 			if ( $format ) {
-				$base_price = it_exchange_format_price( $base_price );
+				if ( empty( $base_price ) ) {
+					$base_price = __( 'Free', 'it-l10n-ithemes-exchange' );
+				} else {
+					$base_price = it_exchange_format_price( $base_price );
+				}
 			}
 		}
 
