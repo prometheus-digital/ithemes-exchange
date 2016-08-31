@@ -316,38 +316,37 @@ function it_exchange_is_product_visible( $product_id=false ) {
 function it_exchange_get_transactions_for_product( $product, $type = 'objects', $only_cleared_for_delivery = true ) {
 
 	if ( ! $product = it_exchange_get_product( $product ) ) {
-		return array();
+		return $type === 'count' ? 0 : array();
 	}
 
-	$query = IT_Exchange_Transaction::query();
-
-	if ( $only_cleared_for_delivery ) {
-		$query->and_where( 'cleared', '=', true );
+	if ( $type === 'objects' ){
+		$return = 'object';
+	} elseif ( $type === 'ids' ) {
+		$return = 'ID';
+	} else {
+		$return = $type;
 	}
 
-	$query->join( new ITE_Transaction_Line_Item_Table(), 'ID', 'transaction', '=',
-		function( \IronBound\DB\Query\FluentQuery $query ) use ( $product ) {
-			$query->and_where( 'type', '=', 'product' )
-			      ->and_where( 'object_id', '=', $product->ID );
-		}
+	$args = array(
+		'return_value' => $return,
+		'items'        => array(
+			'product' => $product->ID
+		)
 	);
 
-	if ( $type === 'count' ) {
-		$query->expression( 'COUNT', 'ID', 'count' );
+	if ( $only_cleared_for_delivery ) {
+		$args['cleared'] = true;
+	}
 
-		$count = $query->results()->get( 'count' );
+	$query = new ITE_Transaction_Query( $args );
+
+	if ( $type === 'count' ) {
+		$count = $query->results();
 
 		return apply_filters( 'it_exchange_get_transactions_count_for_product', $count, $product, $type );
 	}
 
-	$transactions = $query->results()->getValues();
-
-	if ( $type === 'ids' ) {
-		$transactions = array_map(
-			function( IT_Exchange_Transaction $transaction ) { return $transaction->ID; },
-			$transactions
-		);
-	}
+	$transactions = array_values( $query->results() );
 
 	return apply_filters( 'it_exchange_get_transactions_for_product', $transactions, $product, $type );
 }

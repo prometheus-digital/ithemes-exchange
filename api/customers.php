@@ -140,20 +140,28 @@ function it_exchange_get_customer_transactions( $customer_id, array $args = arra
 	if ( $wp !== $filtered ) {
 		$transactions = it_exchange_get_transactions( $filtered, $total );
 	} else {
-		$query = IT_Exchange_Transaction::query()->where( 'customer_id', '=', $customer_id )->and_where( 'parent', '=', 0 );
+
+		$fq_args = array(
+			'customer' => $customer_id,
+			'parent'   => 0,
+			'order'    => array( 'order_date' => 'DESC' )
+		);
 
 		if ( isset( $args['page'] ) ) {
-			$query->paginate(
-				$args['page'],
-				isset( $args['per_page'] ) ? $args['per_page'] : 10
-			);
+			$fq_args['page'] = $args['page'];
+			$fq_args['items_per_page'] = isset( $args['per_page'] ) ? $args['per_page'] : 10;
 		} elseif ( isset( $args['per_page'] ) ) {
-			$query->take( $args['per_page'] );
+			$fq_args['items_per_page'] = $args['per_page'];
+			$fq_args['calc_found_rows'] = false;
 		}
 
-		$query->order_by( 'order_date', 'DESC' );
+		if ( isset( $args['with'] ) ) {
+			$fq_args['eager_load'] = $args['with'];
+		}
 
-		$transactions = $query->results()->toArray();
+		$query = new ITE_Transaction_Query( $fq_args );
+
+		$transactions = $query->results();
 
 		if ( isset( $args['page'] ) ) {
 			$total = $query->total();

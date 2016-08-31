@@ -99,7 +99,7 @@ class ITE_Transactions_Table extends BaseTable implements DeleteConstrained {
 	protected function get_keys() {
 		return array_merge( parent::get_keys(), array(
 			'KEY customer_id (customer_id)',
-			'KEY hash (hash)',
+			'UNIQUE KEY hash (hash)',
 			'UNIQUE KEY method__method_id (method,method_id)'
 		) );
 	}

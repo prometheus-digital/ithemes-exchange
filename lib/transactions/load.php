@@ -9,6 +9,7 @@
 require_once dirname( __FILE__ ) . '/class.transaction.php';
 require_once dirname( __FILE__ ) . '/class.transactions-post-type.php';
 require_once dirname( __FILE__ ) . '/class.transactions-table.php';
+require_once dirname( __FILE__ ) . '/class.query.php';
 require_once dirname( __FILE__ ) . '/class.meta-sync.php';
 
 require_once dirname( __FILE__ ) . '/activity/load.php';
