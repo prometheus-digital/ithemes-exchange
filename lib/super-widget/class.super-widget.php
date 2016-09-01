@@ -238,7 +238,9 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			unset( $GLOBALS['it_exchange']['in_superwidget'] );
 		}
 
-		$this->rendered = true;
+		if ( $this->in_sidebar || did_action( 'loop_start' ) ) {
+			$this->rendered = true;
+		}
 	}
 
 	/**
