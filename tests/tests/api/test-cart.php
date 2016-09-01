@@ -749,4 +749,27 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 
 		$this->assertFalse( it_exchange_get_cart_id() );
 	}
+
+	public function test_get_cart_description() {
+
+		$cart = ITE_Cart::create(
+			new ITE_Line_Item_Session_Repository( new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events() ),
+			it_exchange_get_customer( 1 )
+		);
+
+		$p1 = self::product_factory()->create_and_get( array( 'title' => 'Product 1' ) );
+		$p2 = self::product_factory()->create_and_get( array( 'title' => 'Product 2' ) );
+
+		$cart->add_item( ITE_Cart_Product::create( $p1 ) );
+		$cart->add_item( ITE_Cart_Product::create( $p2, 2 ) );
+		$cart->add_item( ITE_Fee_Line_Item::create( 'Fee', 49.99 ) );
+		$cart->add_item( ITE_Base_Shipping_Line_Item::create(
+			it_exchange_get_registered_shipping_method( 'exchange-flat-rate-shipping' ),
+			it_exchange_get_registered_shipping_provider( 'simple-shipping' )
+		) );
+
+		$description = it_exchange_get_cart_description( array( 'cart' => $cart ) );
+
+		$this->assertEquals( 'Product 1, Product 2 (2), Fee', $description );
+	}
 }

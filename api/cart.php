@@ -889,7 +889,7 @@ function it_exchange_get_cart_description( $options = array() ) {
 	}
 
 	$description = array();
-	$items       = $cart->get_items( 'product' );
+	$items       = $cart->get_items()->non_summary_only();
 
 	if ( ! $items->count() ) {
 		return '';
@@ -898,11 +898,25 @@ function it_exchange_get_cart_description( $options = array() ) {
 	foreach ( $items as $item ) {
 		$string = $item->get_name();
 
-		if (  1 < $count = it_exchange_get_cart_product_quantity( array( 'product_cart_id' => $item->get_product()->ID ) ) ) {
+		if ( 1 < $count = $item->get_quantity() ) {
 			$string .= ' (' . $count . ')';
 		}
 
-		$description[] = apply_filters( 'it_exchange_get_cart_description_for_product', $string, $item->bc() );
+		if ( $item instanceof ITE_Cart_Product ) {
+			$string = apply_filters( 'it_exchange_get_cart_description_for_product', $string, $item->bc() );
+		}
+
+		/**
+		 * Filter the description for an item.
+		 *
+		 * @since 1.36.0
+		 *
+		 * @param string         $string
+		 * @param \ITE_Line_Item $item
+		 */
+		$string = apply_filters( 'it_exchange_get_cart_description_for_item', $string, $item );
+
+		$description[] = $string;
 	}
 
 	return apply_filters( 'it_exchange_get_cart_description', implode( ', ', $description ), $description, $options );
