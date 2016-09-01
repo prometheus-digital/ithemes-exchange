@@ -6,10 +6,19 @@
  * @package IT_Exchange
 */
 
-if ( empty( $_REQUEST['user_id'] ) )
+if ( empty( $_REQUEST['user_id'] ) ) {
 	$user_id = get_current_user_id();
-else
+} else {
 	$user_id = $_REQUEST['user_id'];
+}
+
+if ( isset( $_GET['it-page'] ) ) {
+	$page = $_GET['it-page'];
+} else {
+	$page = 1;
+}
+
+$per_page = 25;
 
 $user_object = get_userdata( $user_id );
 
@@ -21,7 +30,10 @@ $headings = array(
 );
 
 $list = array();
-foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transaction ) {
+
+$transactions = (array) it_exchange_get_customer_transactions( $user_id, array( 'per_page' => $per_page, 'page' => $page ), $total );
+
+foreach( $transactions as $transaction ) {
 	// View URL
 	$view_url = add_query_arg( array( 'it-exchange-customer-transaction-action' => 'view', 'action' => 'edit', 'post' => esc_attr( $transaction->ID ) ), get_admin_url() . '/post.php' );
 	
@@ -93,3 +105,13 @@ foreach( (array) it_exchange_get_customer_transactions( $user_id ) as $transacti
 <?php endif; ?>
 
 </div>
+
+<?php echo paginate_links( array(
+	'base'    => add_query_arg( array( 'it_exchange_customer_data' => 1, 'tab' => 'transactions' ), get_edit_user_link( $user_id ) ) . '%_%',
+	'format'  => '&it-page=%#%',
+	'total'   => ceil( $total / $per_page ),
+	'current' => $page,
+	'type'    => 'list',
+	'prev_text' => __( '&laquo; Newer' ),
+	'next_text' => __( 'Older &raquo;' ),
+) ); ?>

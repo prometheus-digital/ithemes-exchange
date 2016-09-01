@@ -169,7 +169,7 @@ function it_exchange_get_customer_transactions( $customer_id, array $args = arra
 
 		$transactions = $query->results();
 
-		if ( isset( $args['page'] ) ) {
+		if ( isset( $args['page'] ) && func_num_args() === 3 ) {
 			$total = $query->total();
 		}
 	}

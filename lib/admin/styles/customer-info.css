@@ -50,6 +50,7 @@
 .transactions-user-edit-block .block-column-2{width:15%;}
 .transactions-user-edit-block .block-column-3{width:15%;}
 .transactions-user-edit-block .block-column-4{width:40%;padding: 11px 0;}
+.transactions-user-edit-block  + .page-numbers li {display: inline-block;	padding: 0 5px;}
 
 .add-manual-transaction{margin-top:15px;}
 

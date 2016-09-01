@@ -26,18 +26,10 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	);
 
 	/** @var int */
-	public static $per_page = 10;
+	public static $per_page = 25;
 
 	/** @var int */
 	private static $total;
-
-	/**
-	 * Constructor
-	 *
-	 * @since 0.4.0
-	 */
-	function __construct() {
-	}
 
 	/**
 	 * Deprecated PHP 4 style constructor.
