@@ -169,7 +169,7 @@ class ITE_Transaction_Query {
 
 		if ( $this->args['items_per_page'] !== - 1 && $this->args['calc_found_rows'] ) {
 			$this->query->paginate( $this->args['page'], $this->args['items_per_page'] );
-		} elseif ( ! $this->args['calc_found_rows'] ) {
+		} elseif ( $this->args['items_per_page'] !== -1 && ! $this->args['calc_found_rows'] ) {
 			$this->query->take( $this->args['items_per_page'] );
 			$this->query->offset( $this->args['items_per_page'] * ( $this->args['page'] - 1 ) );
 		}

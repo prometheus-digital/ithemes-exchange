@@ -157,6 +157,10 @@ function it_exchange_get_customer_transactions( $customer_id, array $args = arra
 			$fq_args['calc_found_rows'] = false;
 		}
 
+		if ( func_num_args() !== 3 ) {
+			$fq_args['calc_found_rows'] = false;
+		}
+
 		if ( isset( $args['with'] ) ) {
 			$fq_args['eager_load'] = $args['with'];
 		}
