@@ -431,4 +431,66 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 			return $this->get_transaction()->save();
 		}
 	}
+
+	/**
+	 * Convert a set of models to items.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param ITE_Transaction_Line_Item_Model[] $models
+	 *
+	 * @return \ITE_Line_Item[]
+	 */
+	public static function convert_to_items( array $models ) {
+
+		$by_transaction = array();
+
+		foreach ( $models as $model ) {
+			$by_transaction[ $model->transaction ][] = $model;
+		}
+
+		$items = array();
+
+		foreach ( $by_transaction as $transaction_id => $models ) {
+			$transaction = it_exchange_get_transaction( $transaction_id );
+			$repo        = new self( new ITE_Line_Item_Repository_Events(), $transaction );
+
+			foreach ( $models as $model ) {
+				$items[] = $repo->model_to_item( $model );
+			}
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Convert a set of models to items.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param ITE_Transaction_Line_Item_Model[] $models
+	 *
+	 * @return \ITE_Line_Item[]
+	 */
+	public static function convert_to_items_segmented( array $models ) {
+
+		$by_transaction = array();
+
+		foreach ( $models as $model ) {
+			$by_transaction[ $model->transaction ][] = $model;
+		}
+
+		$items = array();
+
+		foreach ( $by_transaction as $transaction_id => $models ) {
+			$transaction = it_exchange_get_transaction( $transaction_id );
+			$repo        = new self( new ITE_Line_Item_Repository_Events(), $transaction );
+
+			foreach ( $models as $model ) {
+				$items[ $transaction_id ][] = $repo->model_to_item( $model );
+			}
+		}
+
+		return $items;
+	}
 }

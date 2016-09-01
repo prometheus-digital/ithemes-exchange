@@ -5,12 +5,14 @@
  * @since 0.3.7
  * @package IT_Exchange
 */
+use IronBound\DB\Query\FluentQuery;
 
 /**
  * Registers a customer
  *
  * @since 0.3.7
- * @param array $customer_data array of customer data to be processed by the customer management add-on when creating a customer
+ * @param array $customer_data array of customer data to be processed by the customer management add-on when creating a
+ *                             customer
  * @param array $args optional array of arguments. not used by all add-ons
  *
  * @return mixed
@@ -204,23 +206,27 @@ function it_exchange_customer_has_transaction( $transaction_id, $customer_id = N
  * @return array
 */
 function it_exchange_get_customer_products( $customer_id ) {
-	// All products are attached to a transaction
-	$transactions = it_exchange_get_customer_transactions( $customer_id );
 
-	// Loop through transactions and build array of products
+	$models = ITE_Transaction_Line_Item_Model::query()
+		->where( 'type', '=', 'product' )
+		->join( new ITE_Transactions_Table(), 'transaction', 'ID', '=', function( FluentQuery $query ) use ( $customer_id ) {
+			$query->and_where( 'customer_id', '=', $customer_id );
+		} )
+		->order_by( 'created_at', 'DESC' )
+		->results()->toArray();
+
+	$items_by_txn = ITE_Line_Item_Transaction_Repository::convert_to_items_segmented( $models );
+
 	$products = array();
-	foreach( $transactions as $transaction ) {
 
-		// strip array values from each product to prevent ovewriting multiple purchases of same product
-		$transaction_products = (array) array_values( it_exchange_get_transaction_products( $transaction ) );
+	/** @var ITE_Cart_Product[] $items */
+	foreach ( $items_by_txn as $transaction => $items ) {
+		foreach ( $items as $item ) {
+			$product_info = $item->bc();
+			$product_info['transaction_id'] = $transaction;
 
-		// Add transaction ID to each products array
-		foreach( $transaction_products as $key => $data ) {
-			$transaction_products[$key]['transaction_id'] = $transaction->ID;
+			$products[] = $product_info;
 		}
-
-		// Merge with previously queried
-		$products = array_merge( $products, $transaction_products );
 	}
 
 	// Return
