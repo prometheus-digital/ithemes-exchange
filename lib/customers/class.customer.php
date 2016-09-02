@@ -414,6 +414,35 @@ class IT_Exchange_Customer {
 	}
 
 	/**
+	 * Get the customer's purchase count.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return int
+	 */
+	public function get_transactions_count() {
+		return IT_Exchange_Transaction::query()
+			->where( 'customer_id', '=', $this->ID )
+			->expression( 'COUNT', 'ID', 'count' )
+			->results()->get( 'count' );
+	}
+
+	/**
+	 * Get a customer's historical lifetime value.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return float
+	 */
+	public function get_lifetime_value() {
+		return IT_Exchange_Transaction::query()
+			->where( 'customer_id', '=', $this->ID )
+			->and_where( 'cleared', '=', true )
+			->expression( 'SUM', 'subtotal', 'sum' )
+			->results()->get( 'sum' );
+	}
+
+	/**
 	 * Returns true or false based on whether the $id property is a WP User id
 	 *
 	 * @since 0.3.8

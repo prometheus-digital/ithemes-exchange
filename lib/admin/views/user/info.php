@@ -12,6 +12,7 @@ else
 	$user_id = $_REQUEST['user_id'];
 
 $user_object = get_userdata( $user_id );
+$customer    = it_exchange_get_customer( $user_id );
 
 if ( !empty( $_POST['_it_exchange_customer_info_nonce'] ) && !wp_verify_nonce( $_POST['_it_exchange_customer_info_nonce'], 'update-it-exchange-customer-info' ) ) {
 
@@ -28,6 +29,13 @@ if ( !empty( $_POST['_it_exchange_customer_info_nonce'] ) && !wp_verify_nonce( $
 <form action="" method="post">
 
 <div class="user-edit-block <?php echo $tab; ?>-user-edit-block">
+
+	<label><?php _e( 'Total Orders', 'it-l10n-ithemes-exchange' ); ?></label>
+	<p><?php echo $customer->get_transactions_count(); ?></p>
+
+	<label><?php _e( 'Lifetime Value', 'it-l10n-ithemes-exchange' ); ?></label>
+	<p><?php echo it_exchange_format_price( $customer->get_lifetime_value() ); ?></p>
+
     <div class="notes">
         <label for="it_exchange_customer_note"><?php _e( 'Notes', 'it-l10n-ithemes-exchange' ); ?></label>
         <textarea name="it_exchange_customer_note" cols="30" rows="10"><?php echo get_user_meta( $user_id, '_it_exchange_customer_note', true ); ?></textarea>
