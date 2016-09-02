@@ -85,7 +85,11 @@ class IT_Exchange_Txn_Activity_Collection {
 		$this->total = $query->found_posts;
 
 		foreach ( $query->get_posts() as $post ) {
-			$this->activity[] = it_exchange_get_txn_activity( $post->ID );
+			$activity = it_exchange_get_txn_activity( $post->ID );
+
+			if ( $activity ) {
+				$this->activity[] = $activity;
+			}
 		}
 	}
 
