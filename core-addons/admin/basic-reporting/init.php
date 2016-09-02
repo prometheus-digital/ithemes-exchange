@@ -94,10 +94,10 @@ function it_exchange_basic_reporting_print_dashboard_widget() {
  * @param array $options
  * @return string
 */
-function it_exchange_basic_reporting_get_total ( $options=array() ) {
+function it_exchange_basic_reporting_get_total( $options=array() ) {
 	$defaults = array(
 		'start_time' => strtotime( 'today' ),
-		'end_time'   => current_time( 'timestamp' ),
+		'end_time'   => current_time( 'timestamp', true ),
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -105,31 +105,20 @@ function it_exchange_basic_reporting_get_total ( $options=array() ) {
 	$GLOBALS['it_exchange']['where_start'] = date_i18n( 'Y-m-d H:i:s', $options['start_time'], false );
 	$GLOBALS['it_exchange']['where_end']   = date_i18n( 'Y-m-d H:i:s', $options['end_time'], false );
 
-	// Add the filter
-	add_filter( 'posts_where', 'it_exchange_filter_where_clause_for_all_queries' );
+	$query = IT_Exchange_Transaction::query()
+		->where_date( array(
+			'before' => date( 'Y-m-d H:i:s', $options['end_time'] ),
+			'after'  => date( 'Y-m-d H:i:s', $options['start_time'] ),
+		), 'order_date' )
+		->and_where( 'cleared', '=', true )
+		->expression( 'SUM', 'total', 'sum' );
 
-	// Grab transactions
-	$transactions = it_exchange_get_transactions( array( 'posts_per_page' => -1, 'suppress_filters' => false ) );
-	if ( $transactions ) {
-		$total = 0;
-		// Loop through transactions and sum the totals if they are cleared for delivery
-		foreach( $transactions as $transaction ) {
-			if ( it_exchange_transaction_is_cleared_for_delivery( $transaction ) )
-				$total += it_exchange_get_transaction_total( $transaction, false );
-		}
-		$total = it_exchange_format_price( $total );
-	} else {
-		$total = it_exchange_format_price( '0' );
-	}
+	$total = $query->results()->get( 'sum' );
 
 	// Unset GLOBALS
-	unset( $GLOBALS['it_exchange']['where_start'] );
-	unset( $GLOBALS['it_exchange']['where_end'] );
+	unset( $GLOBALS['it_exchange']['where_start'], $GLOBALS['it_exchange']['where_end'] );
 
-	// Remove Filter
-	remove_filter( 'posts_where', 'it_exchange_filter_where_clause_for_all_queries' );
-
-	return $total;
+	return it_exchange_format_price( $total );
 }
 
 /**
@@ -144,39 +133,27 @@ function it_exchange_basic_reporting_get_total ( $options=array() ) {
 function it_exchange_basic_reporting_get_average( $options=array() ) {
 	$defaults = array(
 		'start_time' => date( 'Y-m-01' ), // PHP 5.3 only (sadpanda) strtotime( 'first day of this month' ),
-		'end_time'   => current_time( 'timestamp' ),
+		'end_time'   => current_time( 'timestamp', true ),
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
+
 
 	// Set GLOBALS for the WHERE filter
 	$GLOBALS['it_exchange']['where_start'] = date_i18n( 'Y-m-d H:i:s', $options['start_time'], false );
 	$GLOBALS['it_exchange']['where_end']   = date_i18n( 'Y-m-d H:i:s', $options['end_time'], false );
 
-	// Add the filter
-	add_filter( 'posts_where', 'it_exchange_filter_where_clause_for_all_queries' );
+	$query = IT_Exchange_Transaction::query()
+        ->where_date( array(
+            'before' => date( 'Y-m-d H:i:s', $options['end_time'] ),
+            'after'  => date( 'Y-m-d H:i:s', $options['start_time'] ),
+        ), 'order_date' )
+        ->and_where( 'cleared', '=', true )
+        ->expression( 'AVG', 'total', 'avg' );
 
-	// Grab transactions
-	$transactions = it_exchange_get_transactions( array( 'posts_per_page' => -1, 'suppress_filters' => false ) );
-	if ( $transactions  ) {
-		// Loop through transactions and sum the totals if they are cleared for delivery
-		$totals = array();
-		foreach( $transactions as $transaction ) {
-			if ( it_exchange_transaction_is_cleared_for_delivery( $transaction ) )
-				$totals[] = it_exchange_get_transaction_total( $transaction, false );
-		}
-		$sum   = array_sum( $totals );
-		$count = count( $totals );
-		$total = it_exchange_format_price( $sum / $count );
-	} else {
-		$total = it_exchange_format_price( '0' );
-	}
+	$total = $query->results()->get( 'avg' );
 
 	// Unset GLOBALS
-	unset( $GLOBALS['it_exchange']['where_start'] );
-	unset( $GLOBALS['it_exchange']['where_end'] );
-
-	// Remove Filter
-	remove_filter( 'posts_where', 'it_exchange_filter_where_clause_for_all_queries' );
+	unset( $GLOBALS['it_exchange']['where_start'], $GLOBALS['it_exchange']['where_end'] );
 
 	return $total;
 }
@@ -193,7 +170,7 @@ function it_exchange_basic_reporting_get_average( $options=array() ) {
 function it_exchange_basic_reporting_get_transactions_count( $options=array() ) {
 	$defaults = array(
 		'start_time' => date( 'Y-m-01' ), // PHP 5.3 only (sadpanda) strtotime( 'first day of this month' ),
-		'end_time'   => current_time( 'timestamp' ),
+		'end_time'   => current_time( 'timestamp', true ),
 	);
 	$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -201,29 +178,18 @@ function it_exchange_basic_reporting_get_transactions_count( $options=array() ) 
 	$GLOBALS['it_exchange']['where_start'] = date_i18n( 'Y-m-d H:i:s', $options['start_time'], false );
 	$GLOBALS['it_exchange']['where_end']   = date_i18n( 'Y-m-d H:i:s', $options['end_time'], false );
 
-	// Add the filter
-	add_filter( 'posts_where', 'it_exchange_filter_where_clause_for_all_queries' );
+	$query = IT_Exchange_Transaction::query()
+        ->where_date( array(
+            'before' => date( 'Y-m-d H:i:s', $options['end_time'] ),
+            'after'  => date( 'Y-m-d H:i:s', $options['start_time'] ),
+        ), 'order_date' )
+        ->and_where( 'cleared', '=', true )
+        ->expression( 'COUNT', 'ID', 'count' );
 
-	// Grab Transactions
-	$transactions = it_exchange_get_transactions( array( 'posts_per_page' => -1, 'suppress_filters' => false ) );
-
-	if ( $transactions ) {
-		// Loop through transactions and sum the totals if they are cleared for delivery
-		foreach( $transactions as $key => $transaction ) {
-			if ( ! it_exchange_transaction_is_cleared_for_delivery( $transaction ) )
-				unset( $transactions[$key] );
-		}
-		$count = count( $transactions );
-	} else {
-		$count = 0;
-	}
+	$count = $query->results()->get( 'count' );
 
 	// Unset GLOBALS
-	unset( $GLOBALS['it_exchange']['where_start'] );
-	unset( $GLOBALS['it_exchange']['where_end'] );
-
-	// Remove Filter
-	remove_filter( 'posts_where', 'it_exchange_filter_where_clause_for_all_queries' );
+	unset( $GLOBALS['it_exchange']['where_start'], $GLOBALS['it_exchange']['where_end'] );
 
 	return $count;
 }

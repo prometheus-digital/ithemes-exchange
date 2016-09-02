@@ -80,8 +80,7 @@ function it_exchange_get_transaction( $post ) {
 */
 function it_exchange_get_transactions( $args=array(), &$total = null ) {
 	$defaults = array(
-		'numberposts' => 5,
-		'category' => 0, 'orderby' => 'date',
+		'numberposts' => 5, 'orderby' => 'date',
 		'order' => 'DESC', 'include' => array(),
 		'exclude' => array(), 'meta_key' => '',
 		'meta_value' =>'', 'post_type' => 'it_exchange_tran',
@@ -121,27 +120,38 @@ function it_exchange_get_transactions( $args=array(), &$total = null ) {
 
 	$args = apply_filters( 'it_exchange_get_transactions_get_posts_args', $args );
 
-	if ( empty( $args['post_status'] ) )
-		$args['post_status'] = ( 'attachment' == $args['post_type'] ) ? 'inherit' : 'publish';
+	if ( empty( $args['post_status'] ) ) {
+		$args['post_status'] = 'publish';
+	}
 
-	if ( ! empty($args['numberposts']) && empty($args['posts_per_page']) )
+	if ( ! empty( $args['numberposts'] ) && empty( $args['posts_per_page'] ) ) {
 		$args['posts_per_page'] = $args['numberposts'];
+	}
 
-	if ( ! empty($args['category']) )
-		$args['cat'] = $args['category'];
-
-	if ( ! empty($args['include']) ) {
-		$incposts = wp_parse_id_list( $r['include'] );
-		$args['posts_per_page'] = count($incposts);  // only the number of posts included
+	if ( ! empty( $args['include'] ) ) {
+		$incposts = wp_parse_id_list( $args['include'] );
+		$args['posts_per_page'] = count( $incposts );  // only the number of posts included
 		$args['post__in'] = $incposts;
-	} elseif ( ! empty($r['exclude']) )
+	} elseif ( ! empty( $r['exclude'] ) ) {
 		$args['post__not_in'] = wp_parse_id_list( $args['exclude'] );
+	}
 
 	$args['ignore_sticky_posts'] = true;
 	$args['no_found_rows'] = true;
 
 	if ( isset( $args['paged'] ) ) {
 		unset( $args['no_found_rows'] );
+	}
+
+	$query = ITE_Transaction_Query::from_wp_args( $args );
+
+	if ( $query ) {
+
+		if ( isset( $args['paged'] ) ) {
+			$total = $query->total();
+		}
+
+		return apply_filters( 'it_exchange_get_transactions', $query->results(), $args );
 	}
 
 	$query = new WP_Query( $args );
@@ -233,9 +243,9 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	$settings = it_exchange_get_option( 'settings_general' );
 	$currency = $settings['default-currency'];
 	unset( $settings );
-	
+
 	$products = array();
-	
+
 	foreach ( $cart_products as $cart_product ) {
 		$products[ $cart_product->get_id() ] = array_merge( $cart_product->bc(), array(
 			'product_base_price' => $cart_product->get_amount(),
@@ -283,7 +293,7 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	$taxes       = $cart->calculate_total( 'tax' );
 	$raw_taxes   = apply_filters( 'it_exchange_set_transaction_objet_cart_taxes_raw', 0 );
 	$taxes      += $raw_taxes;
-	
+
 	// Tack on Tax information
 	$transaction_object->taxes_formated         = it_exchange_format_price( $taxes );
 	$transaction_object->taxes_raw              = $taxes;

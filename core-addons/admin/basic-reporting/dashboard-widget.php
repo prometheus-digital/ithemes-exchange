@@ -11,13 +11,17 @@
 		<label><?php _e( 'Sales Today', 'it-l10n-ithemes-exchange' ); ?></label>
 		<p><?php esc_attr_e( it_exchange_basic_reporting_get_total( array( 'start_time' => strtotime( 'today' ), 'end_time' => ( strtotime( 'tomorrow' ) - 1 ) ) ) ); ?></p>
 		<label><?php _e( 'Sales this Month', 'it-l10n-ithemes-exchange' ); ?></label>
-		<p><?php esc_attr_e( it_exchange_basic_reporting_get_total( array( 'start_time' => strtotime( date( 'Y-m-01' ) ) ) ) ); ?></p>
+		<p><?php esc_attr_e( it_exchange_basic_reporting_get_total( array( 'start_time' => strtotime( date( 'Y-m-01' ) ), 'end_time' => strtotime( 'tomorrow midnight UTC' ) ) ) ); ?></p>
+		<label><?php _e( 'Sales last Month', 'it-l10n-ithemes-exchange' ); ?></label>
+		<p><?php esc_attr_e( it_exchange_basic_reporting_get_total( array( 'start_time' => strtotime('first day of last month' ), 'end_time' => strtotime( 'last day of last month' ) ) ) ); ?></p>
 	</div>
 	<div class="column column-top column-transactions">
 		<label><?php _e( 'Transactions Today', 'it-l10n-ithemes-exchange' ); ?></label>
 		<p><?php esc_attr_e( it_exchange_basic_reporting_get_transactions_count( array( 'start_time' => strtotime( 'today' ), 'end_time' => ( strtotime( 'tomorrow' ) - 1 ) ) ) ); ?></p>
 		<label><?php _e( 'Transactions this Month', 'it-l10n-ithemes-exchange' ); ?></label>
-		<p><?php esc_attr_e( it_exchange_basic_reporting_get_transactions_count( array( 'start_time' => strtotime( date( 'Y-m-01' ) ) ) ) ); ?></p>
+		<p><?php esc_attr_e( it_exchange_basic_reporting_get_transactions_count( array( 'start_time' => strtotime( date( 'Y-m-01' ) ), 'end_time' => strtotime( 'tomorrow midnight UTC' ) ) ) ); ?></p>
+		<label><?php _e( 'Transactions last Month', 'it-l10n-ithemes-exchange' ); ?></label>
+		<p><?php esc_attr_e( it_exchange_basic_reporting_get_transactions_count( array( 'start_time' => strtotime('first day of last month' ), 'end_time' => strtotime( 'last day of last month' ) ) ) ); ?></p>
 	</div>
 </div>
 

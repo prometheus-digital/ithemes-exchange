@@ -1183,6 +1183,13 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function __isset( $name ) {
+		return parent::__isset( $name );
+	}
+
+	/**
 	 * Sets the supports array for the post_type.
 	 *
 	 * @since 0.3.3

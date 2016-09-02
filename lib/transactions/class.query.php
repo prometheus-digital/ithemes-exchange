@@ -6,6 +6,7 @@
  * @license GPLv2
  */
 use IronBound\DB\Query\FluentQuery;
+use IronBound\DB\WP\Posts;
 
 /**
  * Class ITE_Transactions_Query
@@ -30,6 +31,140 @@ class ITE_Transaction_Query {
 
 		$this->query = IT_Exchange_Transaction::query();
 		$this->args  = array_merge( $this->get_default_args(), $args );
+	}
+
+	/**
+	 * Build a transaction query from args that would be traditionally passed to `WP_Query`.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $wp_args
+	 *
+	 * @return \ITE_Transaction_Query|null
+	 */
+	public static function from_wp_args( array $wp_args ) {
+
+		if ( ! $wp_args['suppress_filters'] ) {
+			return null;
+		}
+
+		$meta_to_fields = array(
+			'_it_exchange_transaction_method'    => 'method',
+			'_it_exchange_transaction_method_id' => 'method_id',
+			'_it_exchange_transaction_status'    => 'status',
+			'_it_exchange_customer_id'           => 'customer',
+			'_it_exchange_cart_id'               => 'cart_id',
+			'_it_exchange_transaction_hash'      => 'hash',
+		);
+
+		$args = array();
+
+		if ( ! empty( $wp_args['post_status'] ) && $wp_args['post_status'] !== 'publish' && $wp_args['post_status'] !== 'any' ) {
+			unset( $wp_args['post_status'] );
+		}
+
+		if ( ! empty( $wp_args['date_query'] ) ) {
+			$args['order_date'] = $wp_args['date_query'];
+		}
+
+		if ( $wp_args['orderby'] === 'date' ) {
+			$args['order'] = array( 'order_date' => $wp_args['order'] );
+		} elseif ( in_array( $wp_args['orderby'], array( 'ID', 'parent' ), true ) ) {
+			$wp_args['order'] = array( 'ID' => $wp_args['order'] );
+		} elseif ( $wp_args['orderby'] === 'meta_key' && array_key_exists( $wp_args['meta_key'], $meta_to_fields ) ) {
+			$args['order'] = array(
+				$meta_to_fields[ $wp_args['meta_key'] ] => $wp_args['order']
+			);
+		} elseif ( $wp_args['orderby'] === 'none' ) {
+			$wp_args['order'] = array();
+		} else {
+			return null;
+		}
+
+		if ( ! empty( $wp_args['meta_key'] ) && ! empty( $wp_args['meta_value'] ) ) {
+			if ( array_key_exists( $wp_args['meta_key'], $meta_to_fields ) ) {
+
+				$key = $meta_to_fields[ $wp_args['meta_key'] ];
+
+				if ( isset( $wp_args['meta_compare'] ) &&
+				     in_array( $wp_args['meta_compare'], array( '!=', 'NOT IN' ), true )
+				) {
+					$args[ $key . '__not_in' ] = (array) $wp_args['meta_value'];
+				} else {
+					$args[ $key . '__in' ] = (array) $wp_args['meta_value'];
+				}
+			} else {
+				return null;
+			}
+		}
+
+		if ( ! empty( $wp_args['meta_query'] ) ) {
+			foreach ( $wp_args['meta_query'] as $key => $value ) {
+				if ( $key === 'relation' && $value === 'OR' ) {
+					return null;
+				}
+
+				// Something wrong with user input
+				if ( ! is_array( $value ) ) {
+					return null;
+				}
+
+				if ( ! isset( $value['key'] ) ) {
+					return null; // We don't
+				}
+
+				if ( ! isset( $meta_to_fields[ $value['key'] ] ) ) {
+					return null;
+				}
+
+				$field = $meta_to_fields[ $value['key'] ];
+
+				if ( isset( $value['compare'] ) &&
+				     in_array( $value['compare'], array( '!=', 'NOT IN' ), true )
+				) {
+					$args[ $field . '__not_in' ] = (array) $value['value'];
+				} else {
+					$args[ $field . '__in' ] = (array) $value['value'];
+				}
+			}
+		}
+
+		if ( ! empty( $wp_args['post__in'] ) ) {
+			$args['ID__in'] = $wp_args['post__in'];
+		}
+
+		if ( ! empty( $wp_args['post__not_in'] ) ) {
+			$args['ID__not_in'] = $wp_args['post__not_in'];
+		}
+
+		if ( empty( $wp_args['nopaging'] ) ) {
+			if ( isset( $wp_args['posts_per_page'] ) && $wp_args['posts_per_page'] !== - 1 ) {
+				$args['items_per_page'] = $wp_args['posts_per_page'];
+			}
+
+			if ( ! empty( $wp_args['paged'] ) ) {
+				$args['page'] = $wp_args['paged'];
+			}
+		}
+
+		$query = new self( $args );
+
+		if ( ! empty( $wp_args['offset'] ) && empty( $wp_args['nopaging'] ) ) {
+			$query->query->offset( $wp_args['offset'] );
+		}
+
+		$join_needed = array( 'post_status' );
+
+		if ( $intersect = array_intersect_key( array_flip( $join_needed ), array_keys( $wp_args ) ) ) {
+			/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+			$query->query->join( new Posts(), 'ID', 'ID', '=', function ( FluentQuery $query ) use ( $intersect ) {
+				foreach ( $intersect as $key => $value ) {
+					$query->and_where( $key, '=', $value );
+				}
+			} );
+		}
+
+		return $query;
 	}
 
 	/**
@@ -91,6 +226,7 @@ class ITE_Transaction_Query {
 			'customer_email'  => null,
 			'method'          => null,
 			'method_id'       => null,
+			'status'          => null,
 			'hash'            => null,
 			'cart_id'         => null,
 			'cleared'         => null,
@@ -169,12 +305,23 @@ class ITE_Transaction_Query {
 
 		if ( $this->args['items_per_page'] !== - 1 && $this->args['calc_found_rows'] ) {
 			$this->query->paginate( $this->args['page'], $this->args['items_per_page'] );
-		} elseif ( $this->args['items_per_page'] !== -1 && ! $this->args['calc_found_rows'] ) {
+		} elseif ( $this->args['items_per_page'] !== - 1 && ! $this->args['calc_found_rows'] ) {
 			$this->query->take( $this->args['items_per_page'] );
 			$this->query->offset( $this->args['items_per_page'] * ( $this->args['page'] - 1 ) );
 		}
 
-		$in_or_not_in = array( 'ID', 'customer', 'customer_email', 'method', 'method_id', 'hash', 'cart_id', 'cleared', 'parent' );
+		$in_or_not_in = array(
+			'ID',
+			'customer',
+			'customer_email',
+			'method',
+			'method_id',
+			'status',
+			'hash',
+			'cart_id',
+			'cleared',
+			'parent'
+		);
 
 		foreach ( $in_or_not_in as $arg ) {
 			$column = $arg;
