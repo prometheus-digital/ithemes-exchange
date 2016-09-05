@@ -6,6 +6,7 @@
  * @license GPLv2
  */
 use IronBound\DB\Query\FluentQuery;
+use IronBound\DB\WP\PostMeta;
 use IronBound\DB\WP\Posts;
 
 /**
@@ -430,35 +431,37 @@ class ITE_Transaction_Query {
 			}
 		}
 
-		if ( ! empty( $wp_args['meta_query'] ) ) {
-			foreach ( $wp_args['meta_query'] as $key => $value ) {
-				if ( $key === 'relation' && $value === 'OR' ) {
-					return null;
-				}
+		$meta_query = $wp_args['meta_query'];
 
-				// Something wrong with user input
-				if ( ! is_array( $value ) ) {
-					return null;
-				}
+		foreach ( $wp_args['meta_query'] as $key => $value ) {
+			if ( $key === 'relation' && $value === 'OR' ) {
+				return null;
+			}
 
-				if ( ! isset( $value['key'] ) ) {
-					return null; // We don't support nested meta queries yet
-				}
+			// Something wrong with user input
+			if ( $key !== 'relation' && ! is_array( $value ) ) {
+				return null;
+			}
 
-				// If the meta key doesn't map to a field, bail.
-				if ( ! isset( $meta_to_fields[ $value['key'] ] ) ) {
-					return null;
-				}
+			if ( ! isset( $value['key'] ) ) {
+				continue;
+			}
 
-				$field = $meta_to_fields[ $value['key'] ];
+			// If the meta key doesn't map to a field, bail.
+			if ( ! isset( $meta_to_fields[ $value['key'] ] ) ) {
+				continue;
+			}
 
-				if ( isset( $value['compare'] ) &&
-				     in_array( $value['compare'], array( '!=', 'NOT IN' ), true )
-				) {
-					$args[ $field . '__not_in' ] = (array) $value['value'];
-				} else {
-					$args[ $field . '__in' ] = (array) $value['value'];
-				}
+			unset( $meta_query[ $key ] );
+
+			$field = $meta_to_fields[ $value['key'] ];
+
+			if ( isset( $value['compare'] ) &&
+			     in_array( $value['compare'], array( '!=', 'NOT IN' ), true )
+			) {
+				$args[ $field . '__not_in' ] = (array) $value['value'];
+			} else {
+				$args[ $field . '__in' ] = (array) $value['value'];
 			}
 		}
 
@@ -482,25 +485,6 @@ class ITE_Transaction_Query {
 
 		$query = new self( $args );
 
-		if ( ! empty( $wp_args['offset'] ) && empty( $wp_args['nopaging'] ) ) {
-
-			// What we do for backwards compatability :)
-			$offset = null;
-			$offset =
-				function ( FluentQuery $fq, ITE_Transaction_Query $t_query )
-				use ( $query, $wp_args, &$offset ) {
-					if ( $query !== $t_query ) {
-						return;
-					}
-
-					$fq->offset( $wp_args['offset'] );
-
-					remove_action( 'it_exchange_transaction_query_after', $offset );
-				};
-
-			add_action( 'it_exchange_transaction_query_after', $offset, 10, 2 );
-		}
-
 		$needs_join = array( 'post_status' );
 		$intersect  = array_intersect_key( $wp_args, array_flip( $needs_join ) );
 
@@ -512,6 +496,28 @@ class ITE_Transaction_Query {
 				}
 			} );
 		}
+
+		// What we do for backwards compatibility :)
+		$post_process = null;
+		$post_process =
+			function ( FluentQuery $fq, ITE_Transaction_Query $t_query )
+			use ( $query, $wp_args, &$post_process, $meta_query ) {
+				if ( $query !== $t_query ) {
+					return;
+				}
+
+				if ( ! empty( $wp_args['offset'] ) && empty( $wp_args['nopaging'] ) ) {
+					$fq->offset( $wp_args['offset'] );
+				}
+
+				if ( $meta_query ) {
+					$fq->where_meta( $meta_query, new PostMeta(), 'post' );
+				}
+
+				remove_action( 'it_exchange_transaction_query_after', $post_process );
+			};
+
+		add_action( 'it_exchange_transaction_query_after', $post_process, 10, 2 );
 
 		return $query;
 	}

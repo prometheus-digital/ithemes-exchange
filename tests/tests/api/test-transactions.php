@@ -1045,6 +1045,132 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( 8, $total );
 	}
 
+	public function test_get_transactions_wp_args_conversion_unsupported_meta() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart );
+		add_post_meta( $t1, 'custom_key', 'custom-value' );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'paid', $cart );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				array(
+					'key'   => 'custom_key',
+					'value' => 'custom-value',
+				)
+			)
+		) );
+		$this->assertEquals( array( $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_conversion_unsupported_meta_field_combination() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart );
+		add_post_meta( $t1, 'custom_key', 'custom-value' );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'paid', $cart );
+		add_post_meta( $t2, 'custom_key', 'custom-value' );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				array(
+					'key'   => 'custom_key',
+					'value' => 'custom-value',
+				),
+				array(
+					'key'   => '_it_exchange_transaction_method_id',
+					'value' => 'method-id-1'
+				)
+			)
+		) );
+		$this->assertEquals( array( $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_conversion_unsupported_meta_field_or() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart );
+		add_post_meta( $t1, 'custom_key', 'custom-value' );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'paid', $cart );
+		add_post_meta( $t2, 'custom_key', 'custom-value' );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				'relation' => 'OR',
+				array(
+					'key'   => 'custom_key',
+					'value' => 'custom-value',
+				),
+				array(
+					'key'   => '_it_exchange_transaction_method_id',
+					'value' => 'method-id-1'
+				)
+			)
+		) );
+		$this->assertEquals( array( $t1, $t2 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_conversion_unsupported_meta_field_nesting_and() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart );
+		add_post_meta( $t1, 'custom_key', 'custom-value' );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'paid', $cart );
+		add_post_meta( $t2, 'custom_other_key', 'custom-other-value' );
+
+		$this->expectHook( 'it_exchange_transaction_query_after' );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				'relation' => 'AND',
+				array(
+					'relation' => 'OR',
+					array(
+						'key'   => 'custom_other_key',
+						'value' => 'custom-other-value',
+					),
+					array(
+						'key'   => 'custom_key',
+						'value' => 'custom-value',
+					),
+				),
+				array(
+					'key'   => '_it_exchange_transaction_method',
+					'value' => 'test-method'
+				)
+			)
+		) );
+		$this->assertEqualSets( array( $t1, $t2 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
 	public function _map_id( $transaction ) {
 		return $transaction->ID;
 	}
