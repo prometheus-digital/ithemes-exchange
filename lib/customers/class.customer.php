@@ -1,6 +1,7 @@
 <?php
 /**
  * Contains the class or the customer object
+ *
  * @since   0.3.8
  * @package IT_Exchange
  */
@@ -112,7 +113,12 @@ class IT_Exchange_Customer {
 	 * @return void
 	 */
 	public function set_customer_data() {
-		$data = (object) $this->data;
+
+		if ( ! $this->data instanceof _IT_Exchange_Customer_Data ) {
+			$this->data = new _IT_Exchange_Customer_Data( $this, (object) $this->data );
+		}
+
+		$data = $this->data;
 
 		if ( is_object( $this->wp_user->data ) ) {
 			$wp_user_data = get_object_vars( $this->wp_user->data );
@@ -124,8 +130,7 @@ class IT_Exchange_Customer {
 		$data->first_name = get_user_meta( $this->id, 'first_name', true );
 		$data->last_name  = get_user_meta( $this->id, 'last_name', true );
 
-		$data       = apply_filters( 'it_exchange_set_customer_data', $data, $this->id );
-		$this->data = $data;
+		$this->data = apply_filters( 'it_exchange_set_customer_data', $data, $this->id );
 	}
 
 	/**
@@ -422,9 +427,9 @@ class IT_Exchange_Customer {
 	 */
 	public function get_transactions_count() {
 		return IT_Exchange_Transaction::query()
-			->where( 'customer_id', '=', $this->ID )
-			->expression( 'COUNT', 'ID', 'count' )
-			->results()->get( 'count' );
+		                              ->where( 'customer_id', '=', $this->ID )
+		                              ->expression( 'COUNT', 'ID', 'count' )
+		                              ->results()->get( 'count' );
 	}
 
 	/**
@@ -436,10 +441,10 @@ class IT_Exchange_Customer {
 	 */
 	public function get_lifetime_value() {
 		return IT_Exchange_Transaction::query()
-			->where( 'customer_id', '=', $this->ID )
-			->and_where( 'cleared', '=', true )
-			->expression( 'SUM', 'subtotal', 'sum' )
-			->results()->get( 'sum' );
+		                              ->where( 'customer_id', '=', $this->ID )
+		                              ->and_where( 'cleared', '=', true )
+		                              ->expression( 'SUM', 'subtotal', 'sum' )
+		                              ->results()->get( 'sum' );
 	}
 
 	/**
@@ -462,6 +467,80 @@ class IT_Exchange_Customer {
 		$history = empty( $this->purchase_history ) ? false : $this->purchase_history;
 
 		return apply_filters( 'it_exchange_get_customer_purchase_history', $history, $this->id );
+	}
+}
+
+/**
+ * Class _IT_Exchange_Customer_Data
+ *
+ * @internal
+ */
+class _IT_Exchange_Customer_Data extends stdClass {
+
+	/** @var IT_Exchange_Customer */
+	private $customer;
+
+	/** @var stdClass */
+	private $data;
+
+	/**
+	 * _IT_Exchange_Customer_Data constructor.
+	 *
+	 * @param IT_Exchange_Customer $customer
+	 * @param stdClass             $data
+	 */
+	public function __construct( IT_Exchange_Customer $customer, stdClass $data ) {
+		$this->customer = $customer;
+		$this->data     = $data;
+	}
+
+	/**
+	 * Get a property.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $name
+	 *
+	 * @return mixed|null
+	 */
+	public function __get( $name ) {
+		if ( $name === 'billing_address' ) {
+			return $this->customer->get_billing_address();
+		}
+
+		if ( $name === 'shipping_address' ) {
+			return $this->customer->get_shipping_address();
+		}
+
+		return isset( $this->data->{$name} ) ? $this->data->{$name} : null;
+	}
+
+	/**
+	 * Magic set method.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $name
+	 * @param mixed  $value
+	 */
+	public function __set( $name, $value ) {
+
+		if ( $name !== 'shipping_address' && $name !== 'billing_address' ) {
+			$this->data->{$name} = $value;
+		}
+	}
+
+	/**
+	 * Magic isset method.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $name
+	 *
+	 * @return bool
+	 */
+	public function __isset( $name ) {
+		return $this->__get( $name ) !== null;
 	}
 }
 
