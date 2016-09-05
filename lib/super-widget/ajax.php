@@ -129,7 +129,13 @@ class IT_Exchange_Super_Widget_Ajax {
 
 				// If requesting checkout, make sure that all requirements are met first
 				if ( 'checkout' === $state ) {
-					it_exchange_get_template_part( 'super-widget', it_exchange_get_next_purchase_requirement_property( 'sw-template-part' ) );
+					$state = it_exchange_get_next_purchase_requirement_property( 'sw-template-part' );
+
+					if ( $state === 'checkout' ) {
+						it_exchange_get_current_cart()->prepare_for_purchase();
+					}
+
+					it_exchange_get_template_part( 'super-widget', $state );
 				} else {
 					it_exchange_get_template_part( 'super-widget', $state );
 				}
