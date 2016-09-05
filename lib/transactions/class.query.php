@@ -61,6 +61,36 @@ class ITE_Transaction_Query {
 	}
 
 	/**
+	 * Get a query var.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $query_var
+	 * @param string $default
+	 *
+	 * @return mixed|string
+	 */
+	public function get( $query_var, $default = '' ) {
+		return isset( $this->args[ $query_var ] ) ? $this->args[ $query_var ] : $default;
+	}
+
+	/**
+	 * Set a query var.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $query_var
+	 * @param mixed  $value
+	 *
+	 * @return $this
+	 */
+	public function set( $query_var, $value ) {
+		$this->args[ $query_var ] = $value;
+
+		return $this;
+	}
+
+	/**
 	 * Get the SQL statement for this query.
 	 *
 	 * @since 1.36.0
@@ -137,11 +167,11 @@ class ITE_Transaction_Query {
 			return $this->query;
 		}
 
-		do_action( 'it_exchange_transaction_query_before', $this->query, $this->args, $this );
+		do_action( 'it_exchange_transaction_query_before', $this->query, $this );
 
 		$this->build_query();
 
-		do_action( 'it_exchange_transaction_query_after', $this->query, $this->args, $this );
+		do_action( 'it_exchange_transaction_query_after', $this->query, $this );
 
 		$this->query->results();
 		$this->queried = true;
@@ -457,7 +487,7 @@ class ITE_Transaction_Query {
 			// What we do for backwards compatability :)
 			$offset = null;
 			$offset =
-				function ( FluentQuery $fq, $args, ITE_Transaction_Query $t_query )
+				function ( FluentQuery $fq, ITE_Transaction_Query $t_query )
 				use ( $query, $wp_args, &$offset ) {
 					if ( $query !== $t_query ) {
 						return;
@@ -468,7 +498,7 @@ class ITE_Transaction_Query {
 					remove_action( 'it_exchange_transaction_query_after', $offset );
 				};
 
-			add_action( 'it_exchange_transaction_query_after', $offset, 10, 3 );
+			add_action( 'it_exchange_transaction_query_after', $offset, 10, 2 );
 		}
 
 		$needs_join = array( 'post_status' );
