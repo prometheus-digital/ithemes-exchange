@@ -568,5 +568,484 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( 'new-test-method-id', it_exchange_get_transaction_method_id( $txn ) );
 	}
 
+	public function test_get_transactions_wp_args_conversion_method_id() {
 
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'paid', $cart );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t3 = it_exchange_add_transaction( 'test-method', 'method-id-3', 'paid', $cart );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 4 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				array(
+					'key'   => '_it_exchange_transaction_method_id',
+					'value' => 'method-id-1',
+				)
+			)
+		) );
+		$this->assertEquals( array( $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				array(
+					'key'     => '_it_exchange_transaction_method_id',
+					'value'   => array( 'method-id-1', 'method-id-2' ),
+					'compare' => 'IN'
+				)
+			)
+		) );
+		$this->assertEqualSets( array( $t1, $t2 ), array_map( array( $this, '_map_id' ), $transactions ) );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				array(
+					'key'     => '_it_exchange_transaction_method_id',
+					'value'   => array( 'method-id-2', 'method-id-3' ),
+					'compare' => 'NOT IN'
+				)
+			)
+		) );
+		$this->assertEquals( array( $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				array(
+					'key'     => '_it_exchange_transaction_method_id',
+					'value'   => 'method-id-1',
+					'compare' => '!='
+				)
+			)
+		) );
+		$this->assertEqualSets( array( $t2, $t3 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_conversion_method() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method-1', 'method-id', 'paid', $cart );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method-2', 'method-id', 'paid', $cart );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				array(
+					'key'   => '_it_exchange_transaction_method',
+					'value' => 'test-method-1',
+				)
+			)
+		) );
+		$this->assertEquals( array( $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_conversion_status() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'pending', $cart );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				array(
+					'key'   => '_it_exchange_transaction_status',
+					'value' => 'paid',
+				)
+			)
+		) );
+		$this->assertEquals( array( $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_conversion_customer() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart );
+
+		$cart = $this->cart( self::factory()->user->create() );
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'paid', $cart );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				array(
+					'key'   => '_it_exchange_customer_id',
+					'value' => 1,
+				)
+			)
+		) );
+		$this->assertEquals( array( $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_conversion_cart_id() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$cart_id = $cart->get_id();
+		$t1      = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'pending', $cart );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				array(
+					'key'   => '_it_exchange_cart_id',
+					'value' => $cart_id,
+				)
+			)
+		) );
+		$this->assertEquals( array( $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_conversion_transaction_hash() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'pending', $cart );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				array(
+					'key'   => '_it_exchange_transaction_hash',
+					'value' => it_exchange_get_transaction_hash( $t1 ),
+				)
+			)
+		) );
+		$this->assertEquals( array( $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_conversion_multiple_meta_keys() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'pending', $cart );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'meta_query' => array(
+				array(
+					'key'   => '_it_exchange_customer_id',
+					'value' => 1,
+				),
+				array(
+					'key'   => '_it_exchange_transaction_status',
+					'value' => 'paid',
+				)
+			)
+		) );
+		$this->assertEquals( array( $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_return_id() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'paid', $cart );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'fields' => 'ids'
+		) );
+		$this->assertEquals( array( (string) $t1, (string) $t2 ), $transactions );
+	}
+
+	public function test_get_transactions_wp_args_return_id_to_parent() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart );
+
+		$t2 = it_exchange_add_child_transaction( 'test-method', 'method-id-2', 'paid', 1, $t1, new stdClass() );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'fields' => 'id=>parent'
+		) );
+		$this->assertEquals( array( $t1 => 0, $t2 => $t1 ), $transactions );
+	}
+
+	public function test_get_transactions_wp_args_order_date() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart, null, array(
+			'post_date_gmt' => '2015-03-15'
+		) );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'paid', $cart, null, array(
+			'post_date_gmt' => '2015-02-15'
+		) );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'date_query' => array( 'month' => '03', 'year' => '2015' )
+		) );
+		$this->assertEquals( array( $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_order_by_date() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart, null, array(
+			'post_date_gmt' => '2015-02-15'
+		) );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'paid', $cart, null, array(
+			'post_date_gmt' => '2015-03-15'
+		) );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 2 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'orderby' => 'date'
+		) );
+		$this->assertEquals( array( $t2, $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+
+		$transactions = it_exchange_get_transactions( array(
+			'orderby' => 'date',
+			'order'   => 'ASC'
+		) );
+		$this->assertEquals( array( $t1, $t2 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_order_by_ID() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart, null, array(
+			'post_date_gmt' => '2015-03-15'
+		) );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'paid', $cart, null, array(
+			'post_date_gmt' => '2015-02-15'
+		) );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 2 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'orderby' => 'ID'
+		) );
+		$this->assertEquals( array( $t2, $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+
+		$transactions = it_exchange_get_transactions( array(
+			'orderby' => 'ID',
+			'order'   => 'ASC'
+		) );
+		$this->assertEquals( array( $t1, $t2 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_include_exclude() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'paid', $cart );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 2 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'include' => $t1,
+		) );
+		$this->assertEquals( array( $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+
+		$transactions = it_exchange_get_transactions( array(
+			'exclude' => $t1,
+		) );
+		$this->assertEquals( array( $t2 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_post_status() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'method-id-1', 'paid', $cart, null, array( 'post_status' => 'private' ) );
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'method-id-2', 'paid', $cart );
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'post_status' => 'private'
+		) );
+		$this->assertEquals( array( $t1 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_nopaging() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$expected = array();
+
+		for ( $i = 0; $i < 10; $i ++ ) {
+			$cart = $this->cart();
+			$cart->add_item( ITE_Cart_Product::create( $product ) );
+			$expected[] = it_exchange_add_transaction( 'test-method', "method-id-{$i}", 'paid', $cart );
+		}
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'nopaging' => true,
+			'orderby'  => 'ID',
+			'order'    => 'ASC'
+		) );
+		$this->assertEquals( $expected, array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_get_transactions_wp_args_numberposts() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$expected = array();
+
+		for ( $i = 0; $i < 7; $i ++ ) {
+			$cart = $this->cart();
+			$cart->add_item( ITE_Cart_Product::create( $product ) );
+			$expected[] = it_exchange_add_transaction( 'test-method', "method-id-{$i}", 'paid', $cart );
+		}
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'numberposts' => 5,
+			'orderby'     => 'ID',
+			'order'       => 'ASC'
+		), $total );
+		$this->assertEquals( array_slice( $expected, 0, 5 ), array_map( array( $this, '_map_id' ), $transactions ) );
+		$this->assertEquals( 7, $total );
+	}
+
+	public function test_get_transactions_wp_args_pagination() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$expected = array();
+
+		for ( $i = 0; $i < 15; $i ++ ) {
+			$cart = $this->cart();
+			$cart->add_item( ITE_Cart_Product::create( $product ) );
+			$expected[] = it_exchange_add_transaction( 'test-method', "method-id-{$i}", 'paid', $cart );
+		}
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'posts_per_page' => 5,
+			'paged'          => 2,
+			'orderby'        => 'ID',
+			'order'          => 'ASC'
+		), $total );
+		$this->assertEquals( array_slice( $expected, 5, 5 ), array_map( array( $this, '_map_id' ), $transactions ) );
+		$this->assertEquals( 15, $total );
+	}
+
+	public function test_get_transactions_wp_args_offset() {
+
+		$product = self::product_factory()->create_and_get();
+
+		$expected = array();
+
+		for ( $i = 0; $i < 8; $i ++ ) {
+			$cart = $this->cart();
+			$cart->add_item( ITE_Cart_Product::create( $product ) );
+			$expected[] = it_exchange_add_transaction( 'test-method', "method-id-{$i}", 'paid', $cart );
+		}
+
+		$this->expectHook( 'it_exchange_transaction_query_after', 1 );
+
+		$transactions = it_exchange_get_transactions( array(
+			'posts_per_page' => 5,
+			'offset'         => 1,
+			'orderby'        => 'ID',
+			'order'          => 'ASC'
+		), $total );
+		$this->assertEquals( array_slice( $expected, 1, 5 ), array_map( array( $this, '_map_id' ), $transactions ) );
+		$this->assertEquals( 8, $total );
+	}
+
+	public function _map_id( $transaction ) {
+		return $transaction->ID;
+	}
 }

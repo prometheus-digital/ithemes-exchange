@@ -49,13 +49,14 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 	 * Expect a hook to be fired.
 	 *
 	 * @param string $hook
+	 * @param int    $count
 	 */
-	public function expectHook( $hook ) {
-		$fired                         = false;
-		$this->expected_hooks[ $hook ] = &$fired;
+	public function expectHook( $hook, $count = 1 ) {
+		$c                             = $count;
+		$this->expected_hooks[ $hook ] = &$c;
 
-		add_filter( $hook, function ( $_ = null ) use ( &$fired ) {
-			$fired = true;
+		add_filter( $hook, function ( $_ = null ) use ( &$c ) {
+			$c --;
 
 			return $_;
 		} );
@@ -120,6 +121,13 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 		return $factory;
 	}
 
+	public function cart( $customer_id = 1 ) {
+		return ITE_Cart::create(
+			new ITE_Line_Item_Session_Repository( new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events() ),
+			it_exchange_get_customer( $customer_id )
+		);
+	}
+
 	/**
 	 * is utilized for reading data from inaccessible members.
 	 *
@@ -148,13 +156,13 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 	 */
 	function tearDown() {
 
+		parent::tearDown();
+
 		foreach ( $this->expected_hooks as $hook => $fired ) {
-			if ( ! $fired ) {
+			if ( $fired !== 0 ) {
 				$this->fail( "Expected hook '$hook' was not fired." );
 			}
 		}
-
-		parent::tearDown();
 
 		WP_Mock::tearDown();
 

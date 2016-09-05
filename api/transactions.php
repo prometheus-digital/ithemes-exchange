@@ -54,7 +54,7 @@ function it_exchange_get_transaction_method( $transaction = false ) {
  * @param WP_Post|int|IT_Exchange_Transaction $post  post object or post id
  *
  * @return IT_Exchange_Transaction|bool IT_Exchange_Transaction object for passed post
-*/
+ */
 function it_exchange_get_transaction( $post ) {
 	if ( $post instanceof IT_Exchange_Transaction )
 		return apply_filters( 'it_exchange_get_transaction', $post );
@@ -77,7 +77,7 @@ function it_exchange_get_transaction( $post ) {
  * @param int   $total
  *
  * @return IT_Exchange_Transaction[]  an array of IT_Exchange_Transaction objects
-*/
+ */
 function it_exchange_get_transactions( $args=array(), &$total = null ) {
 	$defaults = array(
 		'numberposts' => 5, 'orderby' => 'date',
@@ -132,7 +132,7 @@ function it_exchange_get_transactions( $args=array(), &$total = null ) {
 		$incposts = wp_parse_id_list( $args['include'] );
 		$args['posts_per_page'] = count( $incposts );  // only the number of posts included
 		$args['post__in'] = $incposts;
-	} elseif ( ! empty( $r['exclude'] ) ) {
+	} elseif ( ! empty( $args['exclude'] ) ) {
 		$args['post__not_in'] = wp_parse_id_list( $args['exclude'] );
 	}
 
@@ -143,28 +143,38 @@ function it_exchange_get_transactions( $args=array(), &$total = null ) {
 		unset( $args['no_found_rows'] );
 	}
 
+	if ( func_num_args() === 2 ) {
+		unset( $args['no_found_rows'] );
+	}
+
 	$query = ITE_Transaction_Query::from_wp_args( $args );
 
 	if ( $query ) {
 
-		if ( isset( $args['paged'] ) ) {
+		if ( empty( $args['no_found_rows'] ) ) {
 			$total = $query->total();
 		}
 
-		return apply_filters( 'it_exchange_get_transactions', $query->results(), $args );
+		$results = $query->results();
+
+		if ( empty( $args['fields'] ) || $args['fields'] !== 'id=>parent' ) {
+			$results = array_values( $results );
+		}
+
+		return apply_filters( 'it_exchange_get_transactions', $results, $args );
 	}
 
 	$query = new WP_Query( $args );
 
 	if ( $transactions = $query->get_posts() ) {
-		if ( empty( $args['fields'] ) || $args['fields'] !== 'ids' ) {
+		if ( empty( $args['fields'] ) || ( $args['fields'] !== 'ids' && $args['fields'] !== 'id=>parent' ) ) {
 			foreach ( $transactions as $key => $transaction ) {
 				$transactions[ $key ] = it_exchange_get_transaction( $transaction );
 			}
 		}
 	}
 
-	if ( isset( $args['paged'] ) ) {
+	if ( empty( $args['no_found_rows'] ) ) {
 		$total = $query->found_posts;
 	}
 
@@ -209,7 +219,7 @@ function it_exchange_get_transaction_by_cart_id( $cart_id ) {
  * @param \ITE_Cart|null $cart
  *
  * @return stdClass|false Transaction object not an IT_Exchange_Transaction
-*/
+ */
 function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 
 	// Verify products exist
@@ -359,18 +369,18 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
  * @param string|bool $transaction_id Transaction ID of real transaction or false if no real transaction created yet
  *
  * @return bool true or false depending on success
-*/
+ */
 function it_exchange_update_transient_transaction( $method, $temp_id, $customer_id = false, $transaction_object, $transaction_id = false ) {
 
 	$expires = current_time( 'timestamp' ) + apply_filters( 'it_exchange_transient_transaction_expiry', 60 * 60 * 4 );
 
-    update_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id, $expires );
-    update_option( 'ite_temp_tnx_' . $method . '_' . $temp_id, array(
-		    'customer_id' => $customer_id,
-		    'transaction_object' => $transaction_object,
-		    'transaction_id' => $transaction_id
-    ) );
-    return true;
+	update_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id, $expires );
+	update_option( 'ite_temp_tnx_' . $method . '_' . $temp_id, array(
+		'customer_id' => $customer_id,
+		'transaction_object' => $transaction_object,
+		'transaction_id' => $transaction_id
+	) );
+	return true;
 }
 
 /**
@@ -386,7 +396,7 @@ function it_exchange_update_transient_transaction( $method, $temp_id, $customer_
  * @param stdClass $transaction_object Object used to pass to transaction methods
  *
  * @return bool true or false depending on success
-*/
+ */
 function it_exchange_add_transient_transaction( $method, $temp_id, $customer_id = false, $transaction_object ) {
 
 	_deprecated_function( 'it_exchange_add_transient_transaction', '1.31', 'it_exchange_update_transient_transaction' );
@@ -402,12 +412,12 @@ function it_exchange_add_transient_transaction( $method, $temp_id, $customer_id 
  * @param string $temp_id temporary transaction ID created by the transient
  *
  * @return array|bool of customer_id and transaction_object False if expired.
-*/
+ */
 function it_exchange_get_transient_transaction( $method, $temp_id ) {
 	$expires = get_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id, false );
 	$txn_details = get_option( 'ite_temp_tnx_' . $method . '_' . $temp_id, false );
 	$now = current_time( 'timestamp' );
-    if ( !empty( $txn_details ) && $now > intval( $expires ) ) {
+	if ( !empty( $txn_details ) && $now > intval( $expires ) ) {
 		it_exchange_delete_transient_transaction( $method, $temp_id );
 		return false;
 	}
@@ -422,7 +432,7 @@ function it_exchange_get_transient_transaction( $method, $temp_id ) {
  * @param string $temp_id temporary transaction ID created by the transient
  *
  * @return bool true or false depending on success
-*/
+ */
 function it_exchange_delete_transient_transaction( $method, $temp_id ) {
 	delete_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id );
 	delete_option( 'ite_temp_tnx_' . $method . '_' . $temp_id );
@@ -442,7 +452,7 @@ function it_exchange_delete_transient_transaction( $method, $temp_id ) {
  * @param array $args same args passed to wp_insert_post plus any additional needed
  *
  * @return int|false Transaction ID or false on failure
-*/
+ */
 function it_exchange_add_transaction( $method, $method_id, $status = 'pending', $customer_or_cart = 0, $cart_object = null, $args = array() ) {
 	$defaults = array(
 		'post_type'          => 'it_exchange_tran',
@@ -523,7 +533,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 			'cart_id'       => $cart_id,
 			'total'         => isset( $cart_object->total ) ? $cart_object->total : 0,
 			'subtotal'      => isset( $cart_object->sub_total ) ? $cart_object->sub_total : 0,
-			'order_date'    => current_time( 'mysql', true ),
+			'order_date'    => get_post( $transaction_id )->post_date_gmt,
 			'hash'          => $hash,
 		);
 
@@ -601,7 +611,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
  * @param array $args same args passed to wp_insert_post plus any additional needed
  *
  * @return int|bool post id or false
-*/
+ */
 function it_exchange_add_child_transaction( $method, $method_id, $status = 'pending', $customer_id, $parent_tx_id, $cart_object, $args = array() ) {
 	$defaults = array(
 		'post_type'          => 'it_exchange_tran',
@@ -660,7 +670,7 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
  * @param integer  $customer_id the wp_users ID for the customer
  *
  * @return string
-*/
+ */
 function it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) {
 
 	// Targeted hash
@@ -683,7 +693,7 @@ function it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) 
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
  * @return string|void
-*/
+ */
 function it_exchange_get_gateway_id_for_transaction( $transaction ) {
 
 	_deprecated_function( __FUNCTION__, '1.36.0', 'it_exchange_get_transaction_method_id' );
@@ -703,7 +713,7 @@ function it_exchange_get_gateway_id_for_transaction( $transaction ) {
  * @param string $hash
  *
  * @return integer transaction id
-*/
+ */
 function it_exchange_get_transaction_id_from_hash( $hash ) {
 
 	$transaction = IT_Exchange_Transaction::query()->where( 'hash', '=', $hash )->take( 1 )->first();
@@ -729,7 +739,7 @@ function it_exchange_get_transaction_id_from_hash( $hash ) {
  * @param integer $id transaction_id
  *
  * @return string|bool ID or false
-*/
+ */
 function it_exchange_get_transaction_hash( $id ) {
 
 	if ( ! $transaction = it_exchange_get_transaction( $id ) ) {
@@ -749,7 +759,7 @@ function it_exchange_get_transaction_hash( $id ) {
  * @param array $args transaction args. Must include ID of a valid transaction post
  *
  * @return WP_Post transaction object
-*/
+ */
 function it_exchange_update_transaction( $args ) {
 
 	_deprecated_function( 'it_exchange_update_transaction', '1.35' );
@@ -783,7 +793,7 @@ function it_exchange_update_transaction( $args ) {
  * @param string $status the new transaction status
  *
  * @return string|false
-*/
+ */
 function it_exchange_update_transaction_status( $transaction, $status ) {
 
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -802,7 +812,7 @@ function it_exchange_update_transaction_status( $transaction, $status ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction the transaction id or object
  *
  * @return string|false the transaction status
-*/
+ */
 function it_exchange_get_transaction_status( $transaction ) {
 
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -820,7 +830,7 @@ function it_exchange_get_transaction_status( $transaction ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction transaction id or object
  *
  * @return array
-*/
+ */
 function it_exchange_get_status_options_for_transaction( $transaction ) {
 
 	if ( ! $method = it_exchange_get_transaction_method( $transaction ) ) {
@@ -840,7 +850,7 @@ function it_exchange_get_status_options_for_transaction( $transaction ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction id or object
  *
  * @return string|bool Status or false
-*/
+ */
 function it_exchange_get_default_transaction_status( $transaction ) {
 
 	if ( ! $method = it_exchange_get_transaction_method( $transaction ) ) {
@@ -859,7 +869,7 @@ function it_exchange_get_default_transaction_status( $transaction ) {
  * @param array $options
  *
  * @return string
-*/
+ */
 function it_exchange_get_transaction_status_label( $transaction, $options=array() ){
 	$transaction = it_exchange_get_transaction( $transaction );
 
@@ -883,7 +893,7 @@ function it_exchange_get_transaction_status_label( $transaction, $options=array(
  * @param WP_Post|int|IT_Exchange_Transaction $transaction transaction object or ID
  *
  * @return string
-*/
+ */
 function it_exchange_get_transaction_instructions( $transaction ) {
 
 	$transaction = it_exchange_get_transaction( $transaction );
@@ -905,7 +915,7 @@ function it_exchange_get_transaction_instructions( $transaction ) {
  * @param boolean $gmt return the gmt date?
  *
  * @return string date
-*/
+ */
 function it_exchange_get_transaction_date( $transaction, $format = false, $gmt = false ) {
 	$format = empty( $format ) ? get_option( 'date_format' ) : $format;
 
@@ -929,7 +939,7 @@ function it_exchange_get_transaction_date( $transaction, $format = false, $gmt =
  * @param bool $format_currency Format the price or just the raw value
  *
  * @return string date
-*/
+ */
 function it_exchange_get_transaction_subtotal( $transaction, $format_currency = true ) {
 
 	// Try to locate the IT_Exchange_Transaction object from the var
@@ -952,7 +962,7 @@ function it_exchange_get_transaction_subtotal( $transaction, $format_currency = 
  * @param boolean $subtract_refunds if refunds are present, subtract the difference?
  *
  * @return string total
-*/
+ */
 function it_exchange_get_transaction_total( $transaction, $format_currency = true, $subtract_refunds = true ) {
 	// Try to locate the IT_Exchange_Transaction object from the var
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -972,7 +982,7 @@ function it_exchange_get_transaction_total( $transaction, $format_currency = tru
  * @param WP_Post|int|IT_Exchange_Transaction   $transaction ID or object
  *
  * @return string|bool Currency
-*/
+ */
 function it_exchange_get_transaction_currency( $transaction ) {
 
 	// Try to locate the IT_Exchange_Transaction object from the var
@@ -991,7 +1001,7 @@ function it_exchange_get_transaction_currency( $transaction ) {
  * @param WP_Post|int|IT_Exchange_Transaction   $transaction ID or object
  *
  * @return string date
-*/
+ */
 function it_exchange_get_transaction_coupons( $transaction ) {
 
 	// Try to locate the IT_Exchange_Transaction object from the var
@@ -1011,7 +1021,7 @@ function it_exchange_get_transaction_coupons( $transaction ) {
  * @param bool $format Format the price
  *
  * @return string date
-*/
+ */
 function it_exchange_get_transaction_coupons_total_discount( $transaction, $format = true ) {
 
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1033,7 +1043,7 @@ function it_exchange_get_transaction_coupons_total_discount( $transaction, $form
  * @param string $amount
  * @param bool|string $date Date in Y-m-d H:i:s format
  * @param array $options
-*/
+ */
 function it_exchange_add_refund_to_transaction( $transaction, $amount, $date = false, $options = array() ) {
 
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1049,7 +1059,7 @@ function it_exchange_add_refund_to_transaction( $transaction, $amount, $date = f
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
  * @return array|false
-*/
+ */
 function it_exchange_get_transaction_refunds( $transaction ) {
 
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1067,7 +1077,7 @@ function it_exchange_get_transaction_refunds( $transaction ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
  * @return bool
-*/
+ */
 function it_exchange_has_transaction_refunds( $transaction ) {
 
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1086,7 +1096,7 @@ function it_exchange_has_transaction_refunds( $transaction ) {
  * @param bool $format Format the price
  *
  * @return mixed
-*/
+ */
 function it_exchange_get_transaction_refunds_total( $transaction, $format = true ) {
 
 	$refunds = it_exchange_get_transaction_refunds( $transaction );
@@ -1110,7 +1120,7 @@ function it_exchange_get_transaction_refunds_total( $transaction, $format = true
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
  * @return string
-*/
+ */
 function it_exchange_get_transaction_description( $transaction ) {
 
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1128,7 +1138,7 @@ function it_exchange_get_transaction_description( $transaction ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
  * @return IT_Exchange_Customer|false
-*/
+ */
 function it_exchange_get_transaction_customer( $transaction ) {
 
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1146,7 +1156,7 @@ function it_exchange_get_transaction_customer( $transaction ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
  * @return string
-*/
+ */
 function it_exchange_get_transaction_customer_display_name( $transaction ) {
 	$unknown = __( 'Deleted Customer', 'it-l10n-ithemes-exchange' );
 
@@ -1166,7 +1176,7 @@ function it_exchange_get_transaction_customer_display_name( $transaction ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
  * @return int|false
-*/
+ */
 function it_exchange_get_transaction_customer_id( $transaction ) {
 	$unknown = 0;
 
@@ -1187,7 +1197,7 @@ function it_exchange_get_transaction_customer_id( $transaction ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
  * @return string
-*/
+ */
 function it_exchange_get_transaction_customer_email( $transaction ) {
 	$unknown = __( 'Unknown', 'it-l10n-ithemes-exchange' );
 
@@ -1207,7 +1217,7 @@ function it_exchange_get_transaction_customer_email( $transaction ) {
  * @param bool                                $label Label or raw value.
  *
  * @return string
-*/
+ */
 function it_exchange_get_transaction_customer_ip_address( $transaction, $label = true ) {
 
 	$transaction = it_exchange_get_transaction( $transaction );
@@ -1236,7 +1246,7 @@ function it_exchange_get_transaction_customer_ip_address( $transaction, $label =
  * @param array $options
  *
  * @return string
-*/
+ */
 function it_exchange_get_transaction_customer_admin_profile_url( $transaction, $options=array() ) {
 
 	if ( ! $customer = it_exchange_get_transaction_customer( $transaction ) ) {
@@ -1266,7 +1276,7 @@ function it_exchange_get_transaction_customer_admin_profile_url( $transaction, $
  * @param string $prefix What to prefix the order number with, defaults to #
  *
  * @return string
-*/
+ */
 function it_exchange_get_transaction_order_number( $transaction, $prefix='#' ) {
 
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1284,7 +1294,7 @@ function it_exchange_get_transaction_order_number( $transaction, $prefix='#' ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction transaction object or ID
  *
  * @return array|false shipping address
-*/
+ */
 function it_exchange_get_transaction_shipping_address( $transaction ) {
 
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1304,7 +1314,7 @@ function it_exchange_get_transaction_shipping_address( $transaction ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction transaction object or ID
  *
  * @return array|false billing address
-*/
+ */
 function it_exchange_get_transaction_billing_address( $transaction ) {
 
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1324,7 +1334,7 @@ function it_exchange_get_transaction_billing_address( $transaction ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction id or object
  *
  * @return array
-*/
+ */
 function it_exchange_get_transaction_products( $transaction ) {
 
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1343,7 +1353,7 @@ function it_exchange_get_transaction_products( $transaction ) {
  * @param string $product_cart_id
  *
  * @return object
-*/
+ */
 function it_exchange_get_transaction_product( $transaction, $product_cart_id ) {
 
 	if ( $products = it_exchange_get_transaction_products( $transaction ) ) {
@@ -1365,7 +1375,7 @@ function it_exchange_get_transaction_product( $transaction, $product_cart_id ) {
  * @param string $feature
  *
  * @return mixed
-*/
+ */
 function it_exchange_get_transaction_product_feature( $product, $feature ) {
 
 	if ( 'title' === $feature || 'name' === $feature )
@@ -1384,7 +1394,7 @@ function it_exchange_get_transaction_product_feature( $product, $feature ) {
  * @param string $slug
  *
  * @return string
-*/
+ */
 function it_exchange_get_transaction_method_name_from_slug( $slug ) {
 
 	if ( $method = it_exchange_get_addon( $slug ) ) {
@@ -1402,7 +1412,7 @@ function it_exchange_get_transaction_method_name_from_slug( $slug ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
  * @return string
-*/
+ */
 function it_exchange_get_transaction_method_name( $transaction ) {
 
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1421,7 +1431,7 @@ function it_exchange_get_transaction_method_name( $transaction ) {
  * @param string $method_id ID from the transaction method
  *
  * @return string
-*/
+ */
 function it_exchange_update_transaction_method_id( $transaction, $method_id ) {
 
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1440,7 +1450,7 @@ function it_exchange_update_transaction_method_id( $transaction, $method_id ) {
  * @param object $cart_object Cart Object for specific transaction
  *
  * @return bool
-*/
+ */
 function it_exchange_update_transaction_cart_object( $transaction, $cart_object ) {
 	$transaction = it_exchange_get_transaction( $transaction );
 
@@ -1459,7 +1469,7 @@ function it_exchange_update_transaction_cart_object( $transaction, $cart_object 
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
  * @return string
-*/
+ */
 function it_exchange_get_transaction_method_id( $transaction ) {
 
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1478,7 +1488,7 @@ function it_exchange_get_transaction_method_id( $transaction ) {
  * @param object $transaction_object
  *
  * @return mixed
-*/
+ */
 function it_exchange_do_transaction( $method, $transaction_object ) {
 	return apply_filters( 'it_exchange_do_transaction_' . $method, false, $transaction_object );
 }
@@ -1493,7 +1503,7 @@ function it_exchange_do_transaction( $method, $transaction_object ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction id or object
  *
  * @return bool
-*/
+ */
 function it_exchange_transaction_is_cleared_for_delivery( $transaction ) {
 
 	if ( $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1514,7 +1524,7 @@ function it_exchange_transaction_is_cleared_for_delivery( $transaction ) {
  * @param array $options
  *
  * @return mixed
-*/
+ */
 function it_exchange_get_transaction_method_make_payment_button ( $transaction_method, $options=array() ) {
 	return apply_filters( 'it_exchange_get_' . $transaction_method . '_make_payment_button', '', $options );
 }
@@ -1525,7 +1535,7 @@ function it_exchange_get_transaction_method_make_payment_button ( $transaction_m
  * @since 0.4.0
  *
  * @return array
-*/
+ */
 function it_exchange_get_webhooks() {
 	$webhooks = empty( $GLOBALS['it_exchange']['webhooks'] ) ? array() : (array) $GLOBALS['it_exchange']['webhooks'];
 	return apply_filters( 'it_exchange_get_webhooks', $webhooks );
@@ -1540,7 +1550,7 @@ function it_exchange_get_webhooks() {
  * @param string $param the REQUEST param we are listening for
  *
  * @return void
-*/
+ */
 function it_exchange_register_webhook( $key, $param ) {
 	$GLOBALS['it_exchange']['webhooks'][$key] = $param;
 	do_action( 'it_exchange_register_webhook', $key, $param );
@@ -1554,7 +1564,7 @@ function it_exchange_register_webhook( $key, $param ) {
  * @param string $key the key for the param we are looking for
  *
  * @return string|bool or false
-*/
+ */
 function it_exchange_get_webhook( $key ) {
 
 	$webhook = empty( $GLOBALS['it_exchange']['webhooks'][$key] ) ? false : $GLOBALS['it_exchange']['webhooks'][$key];
@@ -1601,7 +1611,7 @@ function it_exchange_doing_webhook( $webhook = '' ) {
  * @param integer $transaction_id id of the transaction
  *
  * @return string url
-*/
+ */
 function it_exchange_get_transaction_confirmation_url( $transaction_id ) {
 
 	// If we can't grab the hash, return false
@@ -1631,7 +1641,7 @@ function it_exchange_get_transaction_confirmation_url( $transaction_id ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction the id or object
  *
  * @return boolean
-*/
+ */
 function it_exchange_transaction_status_can_be_manually_changed( $transaction ) {
 	if ( ! $method = it_exchange_get_transaction_method( $transaction ) ) {
 		return false;
@@ -1648,7 +1658,7 @@ function it_exchange_transaction_status_can_be_manually_changed( $transaction ) 
  * @param WP_Post|int|IT_Exchange_Transaction $transaction the id or object
  *
  * @return boolean
-*/
+ */
 function it_exchange_transaction_includes_shipping( $transaction ) {
 	$includes_shipping = it_exchange_get_transaction_shipping_method( $transaction );
 	$includes_shipping = ! empty( $includes_shipping->label );
@@ -1665,7 +1675,7 @@ function it_exchange_transaction_includes_shipping( $transaction ) {
  * @param bool $format_price
  *
  * @return float|string|false
-*/
+ */
 function it_exchange_get_transaction_shipping_total( $transaction, $format_price = false ) {
 
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1689,7 +1699,7 @@ function it_exchange_get_transaction_shipping_total( $transaction, $format_price
  * @param WP_Post|int|IT_Exchange_Transaction $transaction the id or object
  *
  * @return object|false
-*/
+ */
 function it_exchange_get_transaction_shipping_method( $transaction ) {
 
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) ) {
@@ -1741,7 +1751,7 @@ function it_exchange_does_transaction_have_multiple_shipping_methods( $transacti
  * @param string                              $product_cart_id
  *
  * @return string
-*/
+ */
 function it_exchange_get_transaction_shipping_method_for_product( $transaction, $product_cart_id ) {
 
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) ) {
