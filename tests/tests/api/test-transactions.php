@@ -43,7 +43,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 	}
 
 	public function test_get_transaction_method() {
-		$this->assertEquals( 'test-method', it_exchange_get_transaction_method( $this->_get_txn() ) );
+		$this->assertEquals( 'test-method', it_exchange_get_transaction_method( self::transaction_factory()->create() ) );
 	}
 
 	public function test_get_transaction_method_fallsback_to_query_var() {
@@ -55,11 +55,11 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 	}
 
 	public function test_get_transaction_by_id() {
-		$this->assertInstanceOf( 'IT_Exchange_Transaction', it_exchange_get_transaction( $this->_get_txn() ) );
+		$this->assertInstanceOf( 'IT_Exchange_Transaction', it_exchange_get_transaction( self::transaction_factory()->create() ) );
 	}
 
 	public function test_get_transaction_by_post() {
-		$this->assertInstanceOf( 'IT_Exchange_Transaction', it_exchange_get_transaction( get_post( $this->_get_txn() ) ) );
+		$this->assertInstanceOf( 'IT_Exchange_Transaction', it_exchange_get_transaction( get_post( self::transaction_factory()->create() ) ) );
 	}
 
 	public function test_get_transaction_returns_false_for_invalid_post_type() {
@@ -67,15 +67,15 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 	}
 
 	public function test_get_transaction_by_method_id() {
-		$txn = $this->_get_txn();
+		$txn = self::transaction_factory()->create_and_get();
 
-		$this->assertEquals( $txn, it_exchange_get_transaction_by_method_id( 'test-method', 'test-method-id' )->ID );
+		$this->assertEquals( $txn->ID, it_exchange_get_transaction_by_method_id( 'test-method', $txn->method_id )->ID );
 	}
 
 	public function test_get_transaction_by_cart_id() {
-		$txn = $this->_get_txn();
+		$txn = self::transaction_factory()->create_and_get();
 
-		$this->assertEquals( $txn, it_exchange_get_transaction_by_cart_id( 'test-cart-id' )->ID );
+		$this->assertEquals( $txn->ID, it_exchange_get_transaction_by_cart_id( $txn->cart_id )->ID );
 	}
 
 	public function test_expired_transient_transactions_are_deleted_upon_access() {
@@ -110,10 +110,10 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_add_transaction() {
 
+		WP_Mock::wpFunction( 'it_exchange_get_ip', array( 'return' => '127.0.0.1' ) );
+
 		// this is verging on implementation details...
-		$txn_object              = new stdClass();
-		$txn_object->customer_ip = '127.0.0.1';
-		$txn_object->cart_id     = it_exchange_create_cart_id();
+		$txn = $this->transaction_factory->create_and_get( array( 'method_id' => 'test-method-id' ) );
 
 		$meta = array(
 			'_it_exchange_transaction_method'    => 'test-method',
@@ -121,17 +121,15 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 			'_it_exchange_transaction_status'    => 'pending',
 			'_it_exchange_customer_id'           => 1,
 			'_it_exchange_customer_ip'           => '127.0.0.1',
-			'_it_exchange_cart_object'           => $txn_object,
-			'_it_exchange_cart_id'               => $txn_object->cart_id
+			'_it_exchange_cart_id'               => $txn->cart_id,
 		);
 
-		$txn = it_exchange_add_transaction( 'test-method', 'test-method-id', 'pending', 1, $txn_object );
-
 		foreach ( $meta as $key => $value ) {
-			$this->assertEquals( $value, get_post_meta( $txn, $key, true ), $key );
+			$this->assertEquals( $value, get_post_meta( $txn->ID, $key, true ), $key );
 		}
 
-		$this->assertNotFalse( get_post_meta( $txn, '_it_exchange_transaction_hash', true ) );
+		$this->assertNotFalse( get_post_meta( $txn->ID, '_it_exchange_transaction_hash', true ) );
+		$this->assertInstanceOf( 'stdClass', get_post_meta( $txn->ID, '_it_exchange_cart_object', true ) );
 	}
 
 	public function test_add_transaction_adds_txn_to_product() {
@@ -140,16 +138,10 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 			'post_type' => 'it_exchange_prod'
 		) );
 
-		$object = (object) array(
-			'products' => array(
-				"$product-test-product-hash" => array(
-					'product_id' => $product
-				)
-			),
-			'cart_id'  => it_exchange_create_cart_id()
-		);
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( it_exchange_get_product( $product ) ) );
 
-		$txn = it_exchange_add_transaction( 'test-method', 'test-method-id', 'pending', 1, $object );
+		$txn = it_exchange_add_transaction( 'test-method', 'test-method-id', 'pending', 1, $cart );
 
 		$product_purchases = get_post_meta( $product, '_it_exchange_transaction_id' );
 
@@ -157,9 +149,8 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 	}
 
 	public function test_add_transaction_adds_txn_to_user() {
-		$object = (object) array(
-			'cart_id' => it_exchange_create_cart_id()
-		);
+
+		$object = $this->cart( 1, true );
 
 		$customer = $this->getMockBuilder( 'IT_Exchange_Customer' )->disableOriginalConstructor()->getMock();
 		$customer->expects( $this->once() )->method( 'add_transaction_to_user' );
@@ -170,8 +161,8 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 	}
 
 	public function test_transaction_with_dupe_method_id_rejected() {
-		$this->_get_txn();
-		$this->assertFalse( $this->_get_txn() );
+		self::transaction_factory()->create( array( 'method_id' => 'test-method-id' ) );
+		$this->assertFalse( self::transaction_factory()->create( array( 'method_id' => 'test-method-id' ) ) );
 	}
 
 	public function test_add_child_transaction() {
@@ -180,7 +171,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 			'total' => '5.00'
 		);
 
-		$parent = $this->_get_txn();
+		$parent = self::transaction_factory()->create();
 
 		$meta = array(
 			'_it_exchange_transaction_method'    => 'test-method',
@@ -204,39 +195,36 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 	 * @expectedDeprecated it_exchange_get_gateway_id_for_transaction
 	 */
 	public function test_get_gateway_id_for_transaction() {
-		$this->assertEquals( 'test-method-id', it_exchange_get_gateway_id_for_transaction( $this->_get_txn() ) );
+		$this->assertEquals( 'test-method-id', it_exchange_get_gateway_id_for_transaction(
+			self::transaction_factory()->create_and_get( array( 'method_id' => 'test-method-id' ) )
+		) );
 	}
 
 	public function test_get_method_id_for_transaction() {
-		$this->assertEquals( 'test-method-id', it_exchange_get_transaction_method_id( $this->_get_txn() ) );
+		$this->assertEquals( 'test-method-id', it_exchange_get_transaction_method_id(
+			self::transaction_factory()->create_and_get( array( 'method_id' => 'test-method-id' ) )
+		) );
 	}
 
 	public function test_get_transaction_id_from_hash() {
 
-		$txn  = $this->_get_txn();
-		$hash = it_exchange_get_transaction_hash( $txn );
+		$txn  = self::transaction_factory()->create_and_get( array( 'method_id' => 'test-method-id' ) );
+		$hash = $txn->hash;
 
-		$this->assertEquals( $txn, it_exchange_get_transaction_id_from_hash( $hash ) );
+		$this->assertEquals( $txn->ID, it_exchange_get_transaction_id_from_hash( $hash ) );
 	}
 
 	public function test_update_transaction_status() {
 
-		if ( ! class_exists( 'ITE_Prorate_Credit_Request' ) ) {
-			$this->getMockBuilder( 'ITE_Prorate_Credit_Request' )->getMock();
-		}
-
-		if ( ! class_exists( 'ITE_Daily_Price_Calculator' ) ) {
-			$this->getMockBuilder( 'ITE_Daily_Price_Calculator' )->getMock();
-		}
-
-		$txn = $this->getMockBuilder( 'IT_Exchange_Transaction' )->disableOriginalConstructor()->getMock();
-		$txn->expects( $this->once() )->method( 'update_status' )->with( 'paid' );
+		$txn = self::transaction_factory()->create();
 
 		it_exchange_update_transaction_status( $txn, 'paid' );
+
+		$this->assertEquals( 'paid', it_exchange_get_transaction_status( $txn ) );
 	}
 
 	public function test_get_transaction_status() {
-		$this->assertEquals( 'pending', it_exchange_get_transaction_status( $this->_get_txn() ) );
+		$this->assertEquals( 'pending', it_exchange_get_transaction_status( self::transaction_factory()->create() ) );
 	}
 
 	public function test_get_status_options() {
@@ -249,7 +237,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 		add_filter( $action, $fn );
 
-		$this->assertEquals( $options, it_exchange_get_status_options_for_transaction( $this->_get_txn() ) );
+		$this->assertEquals( $options, it_exchange_get_status_options_for_transaction( self::transaction_factory()->create() ) );
 
 		remove_filter( $action, $fn );
 	}
@@ -264,7 +252,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 		add_filter( $action, $fn );
 
-		$this->assertEquals( $status, it_exchange_get_default_transaction_status( $this->_get_txn() ) );
+		$this->assertEquals( $status, it_exchange_get_default_transaction_status( self::transaction_factory()->create() ) );
 
 		remove_filter( $action, $fn );
 	}
@@ -279,11 +267,14 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 		add_filter( $action, $fn );
 
-		$this->assertEquals( $instructions, it_exchange_get_transaction_instructions( $this->_get_txn() ) );
+		$this->assertEquals( $instructions, it_exchange_get_transaction_instructions( self::transaction_factory()->create() ) );
 
 		remove_filter( $action, $fn );
 	}
 
+	/**
+	 * @expectedDeprecated it_exchange_add_transaction
+	 */
 	public function test_get_transaction_subtotal() {
 
 		$txn = $this->_get_txn( (object) array(
@@ -293,6 +284,9 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( '5.00', it_exchange_get_transaction_subtotal( $txn, false ) );
 	}
 
+	/**
+	 * @expectedDeprecated it_exchange_add_transaction
+	 */
 	public function test_get_transaction_total() {
 
 		$txn = $this->_get_txn( (object) array(
@@ -302,6 +296,9 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( '25.00', it_exchange_get_transaction_total( $txn, false, false ) );
 	}
 
+	/**
+	 * @expectedDeprecated it_exchange_add_transaction
+	 */
 	public function test_get_transaction_currency() {
 
 		$txn = $this->_get_txn( (object) array(
@@ -311,10 +308,16 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( 'EUR', it_exchange_get_transaction_currency( $txn ) );
 	}
 
+	/**
+	 * @expectedDeprecated it_exchange_add_transaction
+	 */
 	public function test_get_transaction_currency_fallsback_to_global_setting() {
 		$this->assertEquals( 'USD', it_exchange_get_transaction_currency( $this->_get_txn() ) );
 	}
 
+	/**
+	 * @expectedDeprecated it_exchange_add_transaction
+	 */
 	public function test_get_transaction_coupons() {
 
 		$coupons = array(
@@ -331,6 +334,9 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( $coupons, it_exchange_get_transaction_coupons( $txn ) );
 	}
 
+	/**
+	 * @expectedDeprecated it_exchange_add_transaction
+	 */
 	public function test_get_transaction_coupons_total_discount() {
 
 		$txn = $this->_get_txn( (object) array(
@@ -342,7 +348,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_add_refund_to_transaction() {
 
-		$txn = $this->_get_txn();
+		$txn = self::transaction_factory()->create();
 
 		$amt  = '5.00';
 		$time = current_time( 'mysql' );
@@ -362,7 +368,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 	 */
 	public function test_has_transaction_refunds() {
 
-		$txn = $this->_get_txn();
+		$txn = self::transaction_factory()->create();
 
 		$this->assertFalse( it_exchange_has_transaction_refunds( $txn ) );
 
@@ -376,7 +382,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 	 */
 	public function test_get_transaction_refunds_total() {
 
-		$txn = $this->_get_txn();
+		$txn = self::transaction_factory()->create();
 
 		$this->assertEquals( 0, it_exchange_get_transaction_refunds_total( $txn, false ) );
 
@@ -391,9 +397,12 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 	 */
 	public function test_get_transaction_total_without_refunds() {
 
-		$txn = $this->_get_txn( (object) array(
-			'total' => '25.00'
-		) );
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( self::product_factory()->create_and_get( array(
+			'base-price' => 25.00
+		) ) ) );
+
+		$txn = self::transaction_factory()->create( array( 'cart' => $cart ) );
 
 		it_exchange_add_refund_to_transaction( $txn, '5.00' );
 
@@ -403,16 +412,17 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 	public function test_get_transaction_description() {
 
 		$desc = 'My description';
-		$txn  = $this->_get_txn( (object) array(
-			'description' => $desc
-		) );
+
+		WP_Mock::wpFunction( 'it_exchange_get_cart_description', array( 'return' => $desc ) );
+
+		$txn = self::transaction_factory()->create();
 
 		$this->assertEquals( $desc, it_exchange_get_transaction_description( $txn ) );
 	}
 
 	public function test_get_transaction_customer() {
 
-		$customer = it_exchange_get_transaction_customer( $this->_get_txn() );
+		$customer = it_exchange_get_transaction_customer( self::transaction_factory()->create() );
 
 		$this->assertInstanceOf( 'IT_Exchange_Customer', $customer );
 		$this->assertEquals( 1, $customer->id );
@@ -422,33 +432,37 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 		$name = get_user_by( 'id', 1 )->display_name;
 
-		$this->assertEquals( $name, it_exchange_get_transaction_customer_display_name( $this->_get_txn() ) );
+		$this->assertEquals( $name, it_exchange_get_transaction_customer_display_name( self::transaction_factory()->create() ) );
 	}
 
 	public function test_get_deleted_transaction_customer_display_name() {
-		$this->assertEquals( 'Deleted Customer', it_exchange_get_transaction_customer_display_name( $this->_get_txn( null, 0 ) ) );
+		$customer    = self::factory()->user->create();
+		$transaction = self::transaction_factory()->create( array( 'customer' => $customer ) );
+		wp_delete_user( $customer );
+
+		$this->assertEquals( 'Deleted Customer', it_exchange_get_transaction_customer_display_name( $transaction ) );
 	}
 
 	public function test_get_transaction_customer_id() {
-		$this->assertEquals( 1, it_exchange_get_transaction_customer_id( $this->_get_txn() ) );
+		$this->assertEquals( 1, it_exchange_get_transaction_customer_id( self::transaction_factory()->create() ) );
 	}
 
 	public function test_get_transaction_customer_email() {
-		$this->assertEquals( WP_TESTS_EMAIL, it_exchange_get_transaction_customer_email( $this->_get_txn() ) );
+		$this->assertEquals( WP_TESTS_EMAIL, it_exchange_get_transaction_customer_email( self::transaction_factory()->create() ) );
 	}
 
 	public function test_get_transaction_customer_ip() {
 
-		$txn = $this->_get_txn( (object) array(
-			'customer_ip' => '127.0.0.1'
-		) );
+		WP_Mock::wpFunction( 'it_exchange_get_ip', array( 'return' => '127.0.0.1' ) );
+
+		$txn = self::transaction_factory()->create();
 
 		$this->assertEquals( '127.0.0.1', it_exchange_get_transaction_customer_ip_address( $txn, false ) );
 	}
 
 	public function test_get_customer_admin_profile_url() {
 
-		$url = it_exchange_get_transaction_customer_admin_profile_url( $this->_get_txn() );
+		$url = it_exchange_get_transaction_customer_admin_profile_url( self::transaction_factory()->create() );
 
 		parse_str( parse_url( $url, PHP_URL_QUERY ), $args );
 
@@ -472,14 +486,17 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_get_transaction_shipping_address() {
 
+		add_filter( 'it_exchange_shipping_address_purchase_requirement_enabled', '__return_true' );
+
+		IT_Exchange_Shipping::register_shipping_address_purchase_requirement();
+		IT_Exchange_Shipping::register_shipping_method_purchase_requirement();
+
 		$shipping = array(
 			'first-name' => 'John',
 			'last-name'  => 'Doe'
 		);
 
-		$txn = $this->_get_txn( (object) array(
-			'shipping_address' => $shipping
-		) );
+		$txn = $this->transaction_factory->create( array( 'shipping_address' => $shipping ) );
 
 		$saved = it_exchange_get_transaction_shipping_address( $txn );
 
@@ -494,9 +511,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 			'last-name'  => 'Doe'
 		);
 
-		$txn = $this->_get_txn( (object) array(
-			'billing_address' => $billing
-		) );
+		$txn = $this->transaction_factory->create( array( 'billing_address' => $billing ) );
 
 		$saved = it_exchange_get_transaction_billing_address( $txn );
 
@@ -506,40 +521,35 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_get_transaction_products() {
 
-		$product = self::factory()->post->create( array(
-			'post_type' => 'it_exchange_prod'
-		) );
+		$product = self::product_factory()->create_and_get();
+		$cart    = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
 
-		$products = array(
-			"$product-test-product-hash" => array(
-				'product_id' => $product
-			)
-		);
+		$txn       = self::transaction_factory()->create( array( 'cart' => $cart ) );
+		$products  = it_exchange_get_transaction_products( $txn );
+		$t_product = reset( $products );
 
-		$txn = $this->_get_txn( (object) array(
-			'products' => $products,
-		) );
-
-		$this->assertEquals( $products, it_exchange_get_transaction_products( $txn ) );
+		$this->assertInternalType( 'array', $products );
+		$this->assertStringStartsWith( (string) $product->ID, key( $products ) );
+		$this->assertEquals( $product->ID, $t_product['product_id'] );
+		$this->assertEquals( $product->post_title, $t_product['product_name'] );
 	}
 
+	/**
+	 * @depends test_get_transaction_products
+	 */
 	public function test_get_transaction_product() {
 
-		$product = self::factory()->post->create( array(
-			'post_type' => 'it_exchange_prod'
-		) );
+		$product = self::product_factory()->create_and_get();
+		$cart    = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
 
-		$products = array(
-			"$product-test-product-hash" => array(
-				'product_id' => $product
-			)
-		);
+		$txn       = self::transaction_factory()->create( array( 'cart' => $cart ) );
+		$products  = it_exchange_get_transaction_products( $txn );
+		$t_product = it_exchange_get_transaction_product( $txn, key( $products ) );
 
-		$txn = $this->_get_txn( (object) array(
-			'products' => $products,
-		) );
-
-		$this->assertEquals( reset( $products ), it_exchange_get_transaction_product( $txn, "$product-test-product-hash" ) );
+		$this->assertEquals( $product->ID, $t_product['product_id'] );
+		$this->assertEquals( $product->post_title, $t_product['product_name'] );
 	}
 
 	public function test_get_transaction_product_feature() {
@@ -561,7 +571,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_update_method_id() {
 
-		$txn = $this->_get_txn();
+		$txn = self::transaction_factory()->create();
 
 		it_exchange_update_transaction_method_id( $txn, 'new-test-method-id' );
 
@@ -1129,7 +1139,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 				)
 			)
 		) );
-		$this->assertEquals( array( $t1, $t2 ), array_map( array( $this, '_map_id' ), $transactions ) );
+		$this->assertEqualSets( array( $t1, $t2 ), array_map( array( $this, '_map_id' ), $transactions ) );
 	}
 
 	public function test_get_transactions_wp_args_conversion_unsupported_meta_field_nesting_and() {

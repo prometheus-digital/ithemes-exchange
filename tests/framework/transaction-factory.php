@@ -8,6 +8,8 @@
 
 /**
  * Class IT_Exchange_Test_Factory_For_Transactions
+ *
+ * @method IT_Exchange_Transaction create_and_get( array $args = array() )
  */
 class IT_Exchange_Test_Factory_For_Transactions extends WP_UnitTest_Factory_For_Post {
 
@@ -37,27 +39,54 @@ class IT_Exchange_Test_Factory_For_Transactions extends WP_UnitTest_Factory_For_
 	function create_object( $args ) {
 
 		$defaults = array(
-			'method'      => 'test-method',
-			'status'      => 'pending',
-			'customer'    => 1,
-			'cart_object' => (object) array( 'total' => 0, 'sub_total' => 0 ),
-			'cart_id'     => it_exchange_create_cart_id(),
+			'method'   => 'test-method',
+			'status'   => 'pending',
+			'customer' => 1,
+			'cart_id'  => it_exchange_create_cart_id(),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$method      = $args['method'];
-		$method_id   = $args['method_id'];
-		$status      = $args['status'];
-		$customer    = $args['customer'];
-		$cart_object = $args['cart_object'];
+		$method    = $args['method'];
+		$method_id = $args['method_id'];
+		$status    = $args['status'];
+		$customer  = $args['customer'];
 
-		if ( empty( $cart_object->cart_id ) ) {
-			$cart_object->cart_id = $args['cart_id'];
+		if ( ! empty( $args['cart_object'] ) ) {
+			$cart_object = $args['cart_object'];
+
+			if ( empty( $cart_object->cart_id ) ) {
+				$cart_object->cart_id = $args['cart_id'];
+			}
+		} elseif ( ! empty( $args['cart'] ) ) {
+			$cart_object = $args['cart'];
+		} else {
+			$product_factory = new IT_Exchange_Test_Factory_For_Products();
+			$cart_object     = ITE_Cart::create(
+				new ITE_Line_Item_Session_Repository( new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events() ),
+				it_exchange_get_customer( $args['customer'] )
+			);
+			$cart_object->add_item( ITE_Cart_Product::create( $product_factory->create_and_get() ) );
+
+			if ( ! empty( $args['shipping_address'] ) ) {
+				if ( $args['shipping_address'] instanceof ITE_Location ) {
+					$cart_object->set_shipping_address( $args['shipping_address'] );
+				} else {
+					$cart_object->set_shipping_address( new ITE_In_Memory_Address( $args['shipping_address'] ) );
+				}
+			}
+
+			if ( ! empty( $args['billing_address'] ) ) {
+				if ( $args['billing_address'] instanceof ITE_Location ) {
+					$cart_object->set_billing_address( $args['billing_address'] );
+				} else {
+					$cart_object->set_billing_address( new ITE_In_Memory_Address( $args['billing_address'] ) );
+				}
+			}
 		}
 
 		unset( $args['method'], $args['method_id'], $args['status'],
-			$args['customer'], $args['cart_object'], $args['cart_id'] );
+			$args['customer'], $args['cart_object'], $args['cart'], $args['cart_id'] );
 
 		return it_exchange_add_transaction( $method, $method_id, $status, $customer, $cart_object, $args );
 	}

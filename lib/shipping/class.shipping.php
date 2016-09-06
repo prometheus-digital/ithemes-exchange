@@ -96,8 +96,8 @@ class IT_Exchange_Shipping {
 			return;
 		}
 
-		$this->register_shipping_address_purchase_requirement();
-		$this->register_shipping_method_purchase_requirement();
+		self::register_shipping_address_purchase_requirement();
+		self::register_shipping_method_purchase_requirement();
 	}
 
 	/**
@@ -110,7 +110,7 @@ class IT_Exchange_Shipping {
 	 * @since  1.4.0
 	 * @return void
 	 */
-	public function register_shipping_address_purchase_requirement() {
+	public static function register_shipping_address_purchase_requirement() {
 		// User must have a shipping address to purchase
 		$properties = array(
 			'requirement-met'        => 'it_exchange_get_cart_shipping_address', // This is a PHP callback
@@ -137,10 +137,10 @@ class IT_Exchange_Shipping {
 	 * @since  1.4.0
 	 * @return void
 	 */
-	public function register_shipping_method_purchase_requirement() {
+	public static function register_shipping_method_purchase_requirement() {
 		// User must have a shipping address to purchase
 		$properties = array(
-			'requirement-met'        => array( $this, 'method_purchase_requirement_complete' ), // This is a PHP callback
+			'requirement-met'        => __CLASS__ . '::method_purchase_requirement_complete', // This is a PHP callback
 			'sw-template-part'       => 'shipping-method',
 			'checkout-template-part' => 'shipping-method',
 			'notification'           => __( 'You must select a shipping method before you can checkout', 'it-l10n-ithemes-exchange' ),
@@ -161,7 +161,7 @@ class IT_Exchange_Shipping {
 	 *
 	 * @return bool
 	 */
-	public function method_purchase_requirement_complete() {
+	public static function method_purchase_requirement_complete() {
 		$method = it_exchange_get_cart_shipping_method();
 
 		if ( ! $method ) {

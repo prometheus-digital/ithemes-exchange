@@ -581,6 +581,14 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 			$transaction->save();
 		}
 
+		if ( ! $cart ) {
+			_deprecated_argument(
+				__FUNCTION__, 'cart_object',
+				__( '$cart_object must be instance of \ITE_Cart or current cart must be available.', 'it-l10n-ithemes-exchange' )
+			);
+			$transaction->convert_cart_object();
+		}
+
 		do_action( 'it_exchange_add_transaction_success', $transaction_id, $cart );
 
 		$r = apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer, $cart_object, $args );

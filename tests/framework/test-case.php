@@ -121,11 +121,17 @@ class IT_Exchange_UnitTestCase extends WP_UnitTestCase {
 		return $factory;
 	}
 
-	public function cart( $customer_id = 1 ) {
-		return ITE_Cart::create(
+	public function cart( $customer_id = 1, $auto_add_product = false ) {
+		$cart = ITE_Cart::create(
 			new ITE_Line_Item_Session_Repository( new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events() ),
 			it_exchange_get_customer( $customer_id )
 		);
+
+		if ( $auto_add_product ) {
+			$cart->add_item( ITE_Cart_Product::create( self::product_factory()->create_and_get() ) );
+		}
+
+		return $cart;
 	}
 
 	/**

@@ -25,17 +25,27 @@ class ITE_Line_Item_Transaction_Object_Converter {
 
 		$repository = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
 
-		$products = $this->products( $cart_object->products, $repository );
-
-		$shipping_total = it_exchange_convert_from_database_number( $cart_object->shipping_total );
-
-		if ( $cart_object->shipping_method && $cart_object->shipping_method !== 'multiple-methods' ) {
-			$this->shipping_single( $cart_object->shipping_method, $shipping_total, $repository );
-		} elseif ( $cart_object->shipping_method === 'multiple-methods' ) {
-			$this->shipping_multi( $cart_object->shipping_method_multi, $shipping_total, $products, $repository );
+		if ( empty( $cart_object->products ) ) {
+			return;
 		}
 
-		if ( $cart_object->taxes_raw ) {
+		$products = $this->products( $cart_object->products, $repository );
+
+		if ( isset( $cart_object->shipping_total ) ) {
+			$shipping_total = it_exchange_convert_from_database_number( $cart_object->shipping_total );
+		} else {
+			$shipping_total = 0;
+		}
+
+		if ( $shipping_total ) {
+			if ( $cart_object->shipping_method && $cart_object->shipping_method !== 'multiple-methods' ) {
+				$this->shipping_single( $cart_object->shipping_method, $shipping_total, $repository );
+			} elseif ( $cart_object->shipping_method === 'multiple-methods' ) {
+				$this->shipping_multi( $cart_object->shipping_method_multi, $shipping_total, $products, $repository );
+			}
+		}
+
+		if ( ! empty( $cart_object->taxes_raw ) ) {
 			$res = $this->taxes( $cart_object->taxes_raw, $cart_object->sub_total, $products, $repository );
 
 			if ( ! $res ) {
@@ -43,7 +53,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 			}
 		}
 
-		if ( $cart_object->coupons_total_discount ) {
+		if ( ! empty( $cart_object->coupons_total_discount ) ) {
 			$this->coupons( $cart_object->coupons, $cart_object->coupons_total_discount, $products, $repository );
 		}
 	}
@@ -63,6 +73,18 @@ class ITE_Line_Item_Transaction_Object_Converter {
 		$items = array();
 
 		foreach ( $products as $id => $product ) {
+
+			$product = ITUtility::merge_defaults( $product, array(
+				'itemized_data'      => '',
+				'additional_data'    => '',
+				'product_id'         => 0,
+				'product_name'       => '',
+				'count'              => 1,
+				'itemized_hash'      => '',
+				'product_base_price' => 0.00,
+				'product_subtotal'   => 0,
+			) );
+
 			$item                     = new ITE_Cart_Product(
 				$id,
 				new ITE_Array_Parameter_Bag( array(

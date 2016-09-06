@@ -41,12 +41,8 @@ class IT_Exchange_API_Customers_Test extends IT_Exchange_UnitTestCase {
 		$u1 = 1;
 		$u2 = self::factory()->user->create();
 
-		$t1 = it_exchange_add_transaction( 'test-method', 'test-method-id-1', 'pending', $u1, (object) array(
-			'cart_id' => it_exchange_create_cart_id()
-		) );
-		$t2 = it_exchange_add_transaction( 'test-method', 'test-method-id-2', 'pending', $u2, (object) array(
-			'cart_id' => it_exchange_create_cart_id()
-		) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'test-method-id-1', 'pending', $this->cart( $u1, true ) );
+		$t2 = it_exchange_add_transaction( 'test-method', 'test-method-id-2', 'pending', $this->cart( $u2, true ) );
 
 		$transactions = it_exchange_get_customer_transactions( $u1 );
 		$this->assertEquals( 1, count( $transactions ) );
@@ -56,9 +52,7 @@ class IT_Exchange_API_Customers_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_customer_has_transaction() {
 
-		$t1 = it_exchange_add_transaction( 'test-method', 'test-method-id', 'pending', 1, (object) array(
-			'cart_id' => it_exchange_create_cart_id()
-		) );
+		$t1 = it_exchange_add_transaction( 'test-method', 'test-method-id', 'pending', $this->cart( 1, true ) );
 
 		$customer = new IT_Exchange_Customer( 1 );
 		$this->assertTrue( $customer->has_transaction( $t1 ) );
@@ -83,21 +77,13 @@ class IT_Exchange_API_Customers_Test extends IT_Exchange_UnitTestCase {
 			'title' => 'My Product 4'
 		) );
 
-		$cart = ITE_Cart::create(
-			new ITE_Line_Item_Session_Repository( new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events() ),
-			it_exchange_get_customer( 1 )
-		);
-
-		$cart->add_item( ITE_Cart_Product::create( it_exchange_get_product($p1 ) ) );
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( it_exchange_get_product( $p1 ) ) );
 		$cart->add_item( ITE_Cart_Product::create( it_exchange_get_product( $p2 ) ) );
 
 		$t1 = it_exchange_add_transaction( 'test-method', 'test-method-id-1', 'pending', $cart );
 
-		$cart = ITE_Cart::create(
-			new ITE_Line_Item_Session_Repository( new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events() ),
-			it_exchange_get_customer( 1 )
-		);
-
+		$cart = $this->cart();
 		$cart->add_item( ITE_Cart_Product::create( it_exchange_get_product( $p3 ) ) );
 
 		$t2 = it_exchange_add_transaction( 'test-method', 'test-method-id-2', 'pending', $cart );

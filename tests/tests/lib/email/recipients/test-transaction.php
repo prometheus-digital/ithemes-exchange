@@ -84,14 +84,12 @@ class Test_IT_Exchange_Email_Recipient_Transaction extends IT_Exchange_UnitTestC
 		$this->assertEquals( 'john.doe@gmail.com', $recipient->get_email() );
 	}
 
-
 	public function test_get_first_name_guest_checkout() {
 
+		WP_Mock::wpFunction( 'it_exchange_doing_guest_checkout', array( 'return' => true ) );
+
 		$txn = $this->transaction_factory->create_and_get( array(
-			'customer'    => 'john.doe@gmail.com',
-			'cart_object' => (object) array(
-				'is_guest_checkout' => true
-			)
+			'customer' => new IT_Exchange_Guest_Customer( 'john.doe@gmail.com' ),
 		) );
 
 		$recipient = new IT_Exchange_Email_Recipient_Transaction( $txn );
@@ -100,11 +98,10 @@ class Test_IT_Exchange_Email_Recipient_Transaction extends IT_Exchange_UnitTestC
 
 	public function test_get_full_name_guest_checkout() {
 
+		WP_Mock::wpFunction( 'it_exchange_doing_guest_checkout', array( 'return' => true ) );
+
 		$txn = $this->transaction_factory->create_and_get( array(
-			'customer'    => 'john.doe@gmail.com',
-			'cart_object' => (object) array(
-				'is_guest_checkout' => true
-			)
+			'customer' => new IT_Exchange_Guest_Customer( 'john.doe@gmail.com' ),
 		) );
 
 		$recipient = new IT_Exchange_Email_Recipient_Transaction( $txn );

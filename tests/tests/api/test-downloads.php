@@ -145,14 +145,12 @@ class IT_Exchange_API_Downloads_Test extends IT_Exchange_UnitTestCase {
 
 		$product  = $this->product_factory->create();
 		$download = $this->download_factory->create( array( 'product' => $product ) );
-		$txn      = $this->transaction_factory->create( array(
-			'cart_object' => (object) array(
-				'products' => array(
-					$product . '-hash' => array(
-						'product_id' => $product
-					)
-				)
-			)
+
+		$cart = $this->cart();
+		$cart->add_item( ITE_Cart_Product::create( it_exchange_get_product( $product ) ) );
+
+		$txn = $this->transaction_factory->create( array(
+			'cart' => $cart,
 		) );
 
 		$mock     = $this->getMockBuilder( 'IT_Exchange_Product' )->disableOriginalConstructor()->getMock();
