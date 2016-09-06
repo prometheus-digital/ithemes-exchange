@@ -18,7 +18,8 @@ class IT_Exchange_Shopping_Cart {
 		add_filter( 'it_exchange_process_transaction', array( $this, 'handle_purchase_cart_request' ) );
 		add_action( 'template_redirect', array( $this, 'prepare_for_purchase' ) );
 		add_action( 'template_redirect', array( $this, 'convert_feedback_to_notices' ) );
-		add_action( 'it_exchange_add_transaction_success', array( $this, 'clear_cart_meta_session' ), 10, 2 );
+		add_action( 'it_exchange_add_transaction_success', array( $this, 'clear_cart_meta_session_on_transaction' ), 10, 2 );
+		add_action( 'it_exchange_emptied_cart', array( $this, 'clear_cart_meta_session_on_clear' ), 10, 2 );
 
 		// Filters to sync cart across devices
 		add_action( 'it_exchange_clear_session', array( $this, 'sync_customer_active_carts' ) );
@@ -620,8 +621,21 @@ class IT_Exchange_Shopping_Cart {
 	 * @param int            $transaction_id
 	 * @param \ITE_Cart|null $cart
 	 */
-	public function clear_cart_meta_session( $transaction_id, ITE_Cart $cart = null ) {
+	public function clear_cart_meta_session_on_transaction( $transaction_id, ITE_Cart $cart = null ) {
 		if ( $cart && $cart->is_current() ) {
+			it_exchange_clear_session_data( 'cart_meta' );
+		}
+	}
+
+	/**
+	 * Clear cart meta when the cart is emptied.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Cart $cart
+	 */
+	public function clear_cart_meta_session_on_clear( ITE_Cart $cart ) {
+		if ( $cart->is_current() ) {
 			it_exchange_clear_session_data( 'cart_meta' );
 		}
 	}

@@ -451,6 +451,12 @@ class ITE_Cart {
 			return false;
 		}
 
+		if ( $this->get_items()->count() === 1 ) {
+			$this->empty_cart();
+
+			return $this->get_items()->count() === 0;
+		}
+
 		$deleted = $this->get_repository()->delete( $item );
 
 		if ( $deleted ) {
@@ -475,10 +481,6 @@ class ITE_Cart {
 			 * @param \ITE_Cart      $cart
 			 */
 			do_action( "it_exchange_remove_{$item->get_type()}_from_cart", $item, $this );
-
-			if ( ! $this->get_items()->count() ) {
-				$this->destroy();
-			}
 		}
 
 		return $deleted;
@@ -506,10 +508,6 @@ class ITE_Cart {
 
 			// This hook is documented in lib/cart/class.customer-cart.php
 			do_action( "it_exchange_remove_{$item->get_type()}_from_cart", $item, $this );
-		}
-
-		if ( $type === '' ) {
-			$this->destroy();
 		}
 
 		return true;
@@ -909,6 +907,8 @@ class ITE_Cart {
 		 * @param \ITE_Line_Item_Collection $items Items removed from the cart.
 		 */
 		do_action( 'it_exchange_emptied_cart', $this, $items );
+
+		$this->destroy();
 	}
 
 	/**
