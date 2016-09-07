@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.6
-Stable tag: 1.35.10.1
+Stable tag: 1.35.10.2
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,9 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.35.10.2 =
+* Fix: Issue with the Super Widget not rendering. Improve detection of "loop_start"
 
 = 1.35.10.1 =
 * Fix: Issue with the Super Widget not rendering when 'the_content' is applied before the main content area.
