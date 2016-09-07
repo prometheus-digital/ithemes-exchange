@@ -6,6 +6,9 @@
  * @package IT_Exchange
  */
 
+// Init DB sessions
+require( $this->_plugin_path . 'lib/sessions/load.php' );
+
 require_once dirname( __FILE__ ) . '/../api/contracts/load.php';
 
 // IT Classes

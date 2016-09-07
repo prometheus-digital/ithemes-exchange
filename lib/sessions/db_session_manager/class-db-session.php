@@ -6,7 +6,7 @@
  * for storing user session information.
  *
  * @subpackage Session
- * @since   0.4.0
+ * @since      0.4.0
  */
 
 /**
@@ -43,6 +43,9 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 */
 	protected $exp_variant;
 
+	/** @var ITE_Session_Model */
+	protected $model;
+
 	/**
 	 * Singleton instance.
 	 *
@@ -76,23 +79,30 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 
 		parent::__construct();
 
-		if ( isset( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ) {
-			$cookie = stripslashes( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] );
+		if ( isset( $_COOKIE[ IT_EXCHANGE_SESSION_COOKIE ] ) ) {
+			$cookie        = stripslashes( $_COOKIE[ IT_EXCHANGE_SESSION_COOKIE ] );
 			$cookie_crumbs = explode( '||', $cookie );
 
 			if ( $this->is_valid_md5( $cookie_crumbs[0] ) ) {
 				$this->session_id = $cookie_crumbs[0];
+				$this->model      = ITE_Session_Model::get( $this->session_id );
+
+				if ( $this->model ) {
+					$this->container = $this->model->data;
+				}
 			} else {
 				$this->regenerate_id( true );
 			}
 
-			$this->expires = $cookie_crumbs[1];
+			$this->expires     = $cookie_crumbs[1];
 			$this->exp_variant = $cookie_crumbs[2];
 
 			// Update the session expiration if we're past the variant time
-			if ( time() > $this->exp_variant ) {
+			if ( time() > $this->exp_variant && $this->model ) {
 				$this->set_expiration();
-				update_option( "_it_exchange_db_session_expires_{$this->session_id}", $this->expires );
+
+				$this->model->expires_at = new \DateTime( "@{$this->expires}" );
+				$this->model->save();
 			}
 
 			$this->option_key = $this->generate_option_key();
@@ -120,12 +130,13 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * every 24 minutes.  After 24 hours, the session will have been expired. No cookie will be sent by
 	 * the browser, and the old session will be queued for deletion by the garbage collector.
 	 *
-	 * @uses apply_filters Calls `it_exchange_db_session_expiration_variant` to get the max update window for session data.
+	 * @uses apply_filters Calls `it_exchange_db_session_expiration_variant` to get the max update window for session
+	 *       data.
 	 * @uses apply_filters Calls `it_exchange_db_session_expiration` to get the standard expiration time for sessions.
 	 */
 	protected function set_expiration() {
 		$this->exp_variant = time() + (int) apply_filters( 'it_exchange_db_session_expiration_variant', 24 * 60 );
-		$this->expires = time() + (int) apply_filters( 'it_exchange_db_session_expiration', 24 * 60 * 60 );
+		$this->expires     = time() + (int) apply_filters( 'it_exchange_db_session_expiration', 24 * 60 * 60 );
 	}
 
 	/**
@@ -152,9 +163,17 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 			return;
 		}
 
-		$secure = apply_filters( 'wp_session_cookie_secure', false );
+		$secure   = apply_filters( 'wp_session_cookie_secure', false );
 		$httponly = apply_filters( 'wp_session_cookie_httponly', false );
-		setcookie( IT_EXCHANGE_SESSION_COOKIE, $this->session_id . '||' . $this->expires . '||' . $this->exp_variant , $this->expires, COOKIEPATH, COOKIE_DOMAIN, $secure, $httponly );
+		setcookie(
+			IT_EXCHANGE_SESSION_COOKIE,
+			$this->session_id . '||' . $this->expires . '||' . $this->exp_variant,
+			$this->expires,
+			COOKIEPATH,
+			COOKIE_DOMAIN,
+			$secure,
+			$httponly
+		);
 	}
 
 	/**
@@ -163,7 +182,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * @return string
 	 */
 	protected function generate_id() {
-		require_once( ABSPATH . 'wp-includes/class-phpass.php');
+		require_once( ABSPATH . 'wp-includes/class-phpass.php' );
 		$hasher = new PasswordHash( 8, false );
 
 		return md5( $hasher->get_random_bytes( 32 ) );
@@ -178,7 +197,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 *
 	 * @return int
 	 */
-	protected function is_valid_md5( $md5 = '' ){
+	protected function is_valid_md5( $md5 = '' ) {
 		return preg_match( '/^[a-f0-9]{32}$/', $md5 );
 	}
 
@@ -195,7 +214,16 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 			return array();
 		}
 
-		$this->container = get_option( $this->option_key, array() );
+		$this->model = ITE_Session_Model::get( $this->session_id );
+
+		if ( ! $this->model && $this->container ) {
+			$this->dirty = true;
+			$this->model = $this->create_model();
+		} else {
+			return array();
+		}
+
+		$this->container = $this->model->data;
 
 		return $this->container;
 	}
@@ -204,15 +232,63 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * Write the data from the current session to the data storage system.
 	 */
 	public function write_data() {
+
 		// Only write the collection to the DB if it's changed.
-		if ( $this->dirty && $this->session_id ) {
-			if ( false === get_option( $this->option_key ) ) {
-				add_option( $this->option_key, $this->container, '', 'no' );
-				add_option( "_it_exchange_db_session_expires_{$this->session_id}", $this->expires, '', 'no' );
-			} else {
-				update_option( $this->option_key, $this->container );
+		if ( ! $this->dirty || ! $this->session_id ) {
+			return;
+		}
+
+		if ( ! empty( $this->container['cart_id'] ) ) {
+			$cart_id = unserialize( $this->container['cart_id'] );
+
+			if ( is_array( $cart_id ) ) {
+				$cart_id = reset( $cart_id );
 			}
 		}
+
+		if ( $this->model ) {
+			$this->model->data = $this->container;
+
+			if ( $cid = it_exchange_get_current_customer_id() ) {
+				$this->model->customer = $cid;
+			} else {
+				$this->model->customer = null;
+			}
+
+			if ( ! empty( $cart_id ) ) {
+				$this->model->cart_id = $cart_id;
+			} else {
+				$this->model->cart_id = null;
+			}
+
+			$this->model->save();
+		} else {
+			$this->model = $this->create_model();
+		}
+	}
+
+	/**
+	 * Create the model.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return $this
+	 */
+	private function create_model() {
+		$args = array(
+			'ID'   => $this->session_id,
+			'data' => $this->container
+		);
+
+		if ( $cid = it_exchange_get_current_customer_id() ) {
+			$args['customer'] = $cid;
+		}
+
+		if ( ! empty( $cart_id ) ) {
+			$args['cart_id'] = $cart_id;
+		}
+
+		return ITE_Session_Model::create( $args );
 	}
 
 	/**
@@ -264,6 +340,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 		$this->option_key = $this->generate_option_key();
 
 		$this->read_data();
+		$this->model = $this->create_model();
 
 		$this->set_cookie();
 	}
@@ -296,10 +373,15 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 */
 	public function regenerate_id( $delete_old = false ) {
 		if ( $delete_old ) {
-			delete_option( $this->option_key );
+			$model = ITE_Session_Model::get( $this->session_id );
+
+			if ( $model ) {
+				$model->delete();
+			}
 		}
 
 		$this->session_id = $this->generate_id();
+		$this->model      = $this->create_model();
 
 		$this->set_cookie();
 	}
@@ -310,7 +392,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * @return bool
 	 */
 	public function session_started() {
-		return !!self::$instance;
+		return ! ! self::$instance;
 	}
 
 	/**
