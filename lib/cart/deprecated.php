@@ -172,6 +172,29 @@ function ite_fire_deprecated_emptied_cart_hook( ITE_Cart $cart ) {
 
 add_action( 'it_exchange_emptied_cart', 'ite_fire_deprecated_emptied_cart_hook' );
 
+/**
+ * Handle deprecating the active user carts metadata.
+ *
+ * @since 1.36.0
+ *
+ * @param mixed  $value
+ * @param int    $user_id
+ * @param string $meta_key
+ * @param bool   $single
+ *
+ * @return mixed
+ */
+function it_exchange_handle_deprecated_active_carts_meta( $value, $user_id, $meta_key, $single ) {
+
+	if ( $meta_key !== '_it_exchange_active_user_carts' ) {
+		return $value;
+	}
+
+	return it_exchange_get_active_carts_for_customer( true, $user_id );
+}
+
+add_filter( 'get_user_metadata', 'it_exchange_handle_deprecated_active_carts_meta', 10, 4 );
+
 /* === Deprecate API Functions === */
 
 /**
@@ -321,4 +344,62 @@ function it_exchange_get_cart_product( $id, $options = array() ) {
 		$id,
 		$options
 	), '1.36.0' );
+}
+
+/**
+ * Add a session ID to the list of active customer cart sessions
+ *
+ * @since 1.9.0
+ *
+ * @deprecated 1.36.0
+ *
+ * @param int|bool $customer_id Pass false to retrieve the current customer's ID.
+ *
+ * @return void|false
+ */
+function it_exchange_add_current_session_to_customer_active_carts( $customer_id = false ) {
+	_deprecated_function( __FUNCTION__, '1.36.0' );
+
+	return false;
+}
+
+/**
+ * Remove session from a customer's active carts
+ *
+ * @since 1.9.0
+ *
+ * @deprecated 1.36.0
+ *
+ * @return void
+ */
+function it_exchange_remove_current_session_from_customer_active_carts() {
+	_deprecated_function( __FUNCTION__, '1.36.0' );
+}
+
+/**
+ * Syncs the current cart with all other active carts
+ *
+ * @since 1.9.0
+ *
+ * @deprecated 1.36.0
+ *
+ * @return void
+ */
+function it_exchange_sync_current_cart_with_all_active_customer_carts() {
+	_deprecated_function( __FUNCTION__, '1.36.0' );
+}
+
+/**
+ * Caches the user's cart in user meta if they are logged in
+ *
+ * @since 1.9.0
+ *
+ * @deprecated 1.36.0
+ *
+ * @param int|bool $customer_id
+ *
+ * @return void
+ */
+function it_exchange_cache_customer_cart( $customer_id = false ) {
+	_deprecated_function( __FUNCTION__, '1.36.0' );
 }

@@ -81,7 +81,10 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 
 		// Return boolean if has flag was set
 		if ( $options['has'] ) {
-			return count( it_exchange_get_current_cart()->get_items( 'product' ) ) > 0;
+
+			$cart = it_exchange_get_current_cart( false );
+
+			return $cart && count( $cart->get_items( 'product' ) ) > 0;
 		}
 
 		// If we made it here, we're doing a loop of products for the current cart.
