@@ -87,6 +87,15 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 				$this->session_id = $cookie_crumbs[0];
 				$this->model      = ITE_Session_Model::get( $this->session_id );
 
+				if ( $this->model && $this->model->customer ) {
+					if ( (int) it_exchange_get_current_customer_id() !== (int) $this->model->customer->ID ) {
+						$this->remove_cookie();
+						unset( $this->session_id, $this->model, $this->container );
+
+						return;
+					}
+				}
+
 				if ( ! $this->model && ( $cid = it_exchange_get_current_customer_id() ) && is_numeric( $cid ) ) {
 					$model = ITE_Session_Model::query()
 					                          ->where( 'customer', '=', $cid )
@@ -192,8 +201,8 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * @since 1.36.0
 	 */
 	public function remove_cookie() {
-		setcookie( IT_EXCHANGE_SESSION_COOKIE, '', time() - 3600 );
 		unset( $_COOKIE[ IT_EXCHANGE_SESSION_COOKIE ] );
+		setcookie( IT_EXCHANGE_SESSION_COOKIE, '', time() - 3600, '/' );
 	}
 
 	/**
