@@ -58,7 +58,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 *
 	 * @param bool $session_id Session ID from which to populate data.
 	 *
-	 * @return bool|IT_Exchange_DB_Sessions
+	 * @return IT_Exchange_DB_Sessions
 	 */
 	public static function get_instance() {
 		if ( ! self::$instance ) {
@@ -87,6 +87,27 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 				$this->session_id = $cookie_crumbs[0];
 				$this->model      = ITE_Session_Model::get( $this->session_id );
 
+				if ( $this->model && $this->model->customer ) {
+					if ( (int) it_exchange_get_current_customer_id() !== (int) $this->model->customer->ID ) {
+						$this->remove_cookie();
+						unset( $this->session_id, $this->model, $this->container );
+
+						return;
+					}
+				}
+
+				if ( ! $this->model && ( $cid = it_exchange_get_current_customer_id() ) && is_numeric( $cid ) ) {
+					$model = ITE_Session_Model::query()
+					                          ->where( 'customer', '=', $cid )
+					                          ->order_by( 'updated_at', 'DESC' )
+					                          ->first();
+
+					if ( $model ) {
+						$this->model      = $model;
+						$this->session_id = $model->ID;
+					}
+				}
+
 				if ( $this->model ) {
 					$this->container = $this->model->data;
 				}
@@ -106,8 +127,6 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 			}
 
 			$this->option_key = $this->generate_option_key();
-
-			$this->read_data();
 
 			$this->set_cookie();
 		} elseif ( is_user_logged_in() ) {
@@ -136,7 +155,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 */
 	protected function set_expiration() {
 		$this->exp_variant = time() + (int) apply_filters( 'it_exchange_db_session_expiration_variant', 24 * 60 );
-		$this->expires     = time() + (int) apply_filters( 'it_exchange_db_session_expiration', 24 * 60 * 60 );
+		$this->expires     = time() + (int) apply_filters( 'it_exchange_db_session_expiration', DAY_IN_SECONDS * 2 );
 	}
 
 	/**
@@ -177,15 +196,22 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	}
 
 	/**
+	 * Remove the cookie.
+	 *
+	 * @since 1.36.0
+	 */
+	public function remove_cookie() {
+		unset( $_COOKIE[ IT_EXCHANGE_SESSION_COOKIE ] );
+		setcookie( IT_EXCHANGE_SESSION_COOKIE, '', time() - 3600, '/' );
+	}
+
+	/**
 	 * Generate a cryptographically strong unique ID for the session token.
 	 *
 	 * @return string
 	 */
 	protected function generate_id() {
-		require_once( ABSPATH . 'wp-includes/class-phpass.php' );
-		$hasher = new PasswordHash( 8, false );
-
-		return md5( $hasher->get_random_bytes( 32 ) );
+		return md5( bin2hex( random_bytes( 32 ) ) );
 	}
 
 	/**
@@ -249,10 +275,8 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 		if ( $this->model ) {
 			$this->model->data = $this->container;
 
-			if ( $cid = it_exchange_get_current_customer_id() ) {
+			if ( ! $this->model->customer && $cid = it_exchange_get_current_customer_id() ) {
 				$this->model->customer = $cid;
-			} else {
-				$this->model->customer = null;
 			}
 
 			if ( ! empty( $cart_id ) ) {
@@ -265,6 +289,32 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 		} else {
 			$this->model = $this->create_model();
 		}
+
+		$this->dirty = false;
+	}
+
+	/**
+	 * Transfer the session
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Session_Model|null $model
+	 * @param bool                    $migrate_data
+	 */
+	public function transfer_session( ITE_Session_Model $model = null, $migrate_data = false ) {
+
+		if ( $migrate_data && $this->container && $model ) {
+			$model->data = array_merge( $model->data, $this->container );
+		}
+
+		if ( $this->model ) {
+			$this->model->delete();
+		}
+
+		$this->model = $model;
+
+		$this->session_id = $model ? $model->ID : null;
+		$this->container  = $model ? $model->data : array();
 	}
 
 	/**
@@ -272,7 +322,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 *
 	 * @since 1.36.0
 	 *
-	 * @return $this
+	 * @return ITE_Session_Model
 	 */
 	private function create_model() {
 		$args = array(

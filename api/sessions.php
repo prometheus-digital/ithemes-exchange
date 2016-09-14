@@ -104,9 +104,21 @@ function it_exchange_clear_session( $hard=false ) {
  * Returns the current session ID
  *
  * @since 1.3.0
+ * @since 1.36.0 Introduce `$id_only` parameter.
  *
- * @return string
+ * @param bool $id_only When true, only return the ID portion of the string. By default, this returns the entire cookie value.
+ *
+ * @return string|false
 */
-function it_exchange_get_session_id() {
-	return empty( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ? false : $_COOKIE[IT_EXCHANGE_SESSION_COOKIE];
+function it_exchange_get_session_id( $id_only = false ) {
+
+	$string = empty( $_COOKIE[IT_EXCHANGE_SESSION_COOKIE] ) ? false : $_COOKIE[IT_EXCHANGE_SESSION_COOKIE];
+
+	if ( ! $id_only || ! $string ) {
+		return $string;
+	}
+
+	$parts  = explode( '||', $string );
+
+	return empty( $parts[0] ) ? false : $parts[0];
 }

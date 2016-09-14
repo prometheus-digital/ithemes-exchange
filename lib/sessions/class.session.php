@@ -23,7 +23,7 @@
 class IT_Exchange_Session implements IT_Exchange_SessionInterface {
 
 	/**
-	 * @param array $_session  an array of any additional data needed by iThemes Exchange
+	 * @var IT_Exchange_DB_Sessions
 	 * @since 0.4.0
 	*/
 	private $_session;
@@ -205,17 +205,13 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface {
 	 * @return void
 	*/
 	public function reset_session_and_cache_cart_on_logout() {
-		$current_filter = current_filter();
-		if ( 'wp_logout' == $current_filter ) {
+
+		if ( 'wp_logout' === current_filter() ) {
 
 			// Flag this as a logout action
 			$GLOBALS['it_exchange']['logging_out_user'] = true;
 
-			// Cache the state of their cart
-			it_exchange_cache_customer_cart();
-
-			it_exchange_remove_current_session_from_customer_active_carts();
-			it_exchange_clear_session( true );
+			$this->_session->remove_cookie();
 
 			do_action( 'it_exchange_db_session_reset_on_logout' );
 		}

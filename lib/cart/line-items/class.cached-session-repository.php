@@ -20,6 +20,9 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	/** @var string */
 	protected $cart_id;
 
+	/** @var ITE_Session_Model */
+	protected $model;
+
 	/**
 	 * @inheritDoc
 	 */
@@ -42,29 +45,16 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	 *
 	 * @return self
 	 *
-	 * @throws \InvalidArgumentException
-	 * @throws UnexpectedValueException If the cart cannot be retrieved.
+	 * @throws InvalidArgumentException If the cart cannot be retrieved.
 	 */
 	public static function from_customer( \IT_Exchange_Customer $customer ) {
 
-		$session = it_exchange_get_cached_customer_cart( $customer->id );
+		$session = ITE_Session_Model::query()
+		                            ->where( 'customer', '=', $customer->id )
+		                            ->order_by( 'updated_at', 'ASC' )
+		                            ->first();
 
-		if ( ! is_array( $session ) || count( $session ) === 0 ) {
-			throw new UnexpectedValueException( "No cached cart can be retrieved for #{$customer->id}." );
-		}
-
-		$self = new self(
-			new IT_Exchange_In_Memory_Session( '', $session ),
-			$customer,
-			new ITE_Line_Item_Repository_Events()
-		);
-		$self->session->set_save( array( $self, '_do_cache_save' ) );
-
-		if ( isset( $session['cart_id'], $session['cart_id'][0] ) ) {
-			$self->cart_id = $session['cart_id'][0];
-		}
-
-		return $self;
+		return static::setup_from_session( $session, $customer );
 	}
 
 	/**
@@ -76,40 +66,70 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	 * @param string                $session_id
 	 *
 	 * @return self
-	 * @throws \InvalidArgumentException
-	 * @throws \UnexpectedValueException If cart cannot be retrieved.
+	 *
+	 * @throws \InvalidArgumentException If invalid session ID or cart cannot be retrieved.
 	 */
 	public static function from_session_id( \IT_Exchange_Customer $customer, $session_id ) {
 
-		$sessions = it_exchange_get_active_carts_for_customer( true, $customer->id );
+		$session = ITE_Session_Model::get( $session_id );
 
-		if ( ! isset( $sessions[ $session_id ] ) ) {
-			throw new UnexpectedValueException( "No cart can be retrieved for #{$customer->id} with ID '$session_id'." );
+		if ( $session && $session->customer->ID != $customer->id ) {
+			throw new InvalidArgumentException( "Session ID '{$session->ID}' does not match customer #{$customer->id}'" );
 		}
 
-		$session = get_option( '_it_exchange_db_session_' . $session_id, array() );
+		return static::setup_from_session( $session, $customer );
+	}
 
-		if ( ! is_array( $session ) || count( $session ) === 0 ) {
-			throw new UnexpectedValueException( "No cart can be retrieved for #{$customer->id} with ID '$session_id'." );
+	/**
+	 * Setup the repository from a session model.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Session_Model    $session
+	 * @param \IT_Exchange_Customer $customer
+	 *
+	 * @return \ITE_Line_Item_Cached_Session_Repository
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	private static function setup_from_session( ITE_Session_Model $session = null, IT_Exchange_Customer $customer ) {
+
+		if ( ! $session || ! $session->data || count( $session->data ) === 0 ) {
+			throw new InvalidArgumentException( "No cart can be retrieved for #{$customer->id}." );
 		}
 
 		$self = new self(
-			new IT_Exchange_In_Memory_Session( '', $session ),
+			new IT_Exchange_In_Memory_Session( static::get_saver( $session->ID ), $session->data ),
 			$customer,
 			new ITE_Line_Item_Repository_Events()
 		);
 
-		$self->session->set_save( array(
-			$self,
-			'_do_active_save'
-		) );
-		$self->session_id = $session_id;
-
-		if ( isset( $session['cart_id'], $session['cart_id'][0] ) ) {
-			$self->cart_id = $session['cart_id'][0];
-		}
+		$self->session_id = $session->ID;
+		$self->cart_id    = $session->cart_id;
+		$self->model      = $session;
 
 		return $self;
+	}
+
+	/**
+	 * Get the saver for the In Memory Session.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $session_id
+	 *
+	 * @return \Closure
+	 */
+	private static function get_saver( $session_id ) {
+
+		return function ( $data ) use ( $session_id ) {
+			$model = ITE_Session_Model::get( $session_id );
+
+			if ( $model ) {
+				$model->data = $data;
+				$model->save();
+			}
+		};
 	}
 
 	/**
@@ -138,29 +158,14 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	}
 
 	/**
-	 * Do the session saving.
+	 * Get the session model.
 	 *
-	 * @since 1.36
+	 * @since 1.36.0
 	 *
-	 * @internal
-	 *
-	 * @param array $session
+	 * @return \ITE_Session_Model
 	 */
-	public function _do_cache_save( array $session ) {
-		update_user_meta( $this->customer->id, '_it_exchange_cached_cart', $session );
-	}
-
-	/**
-	 * Do the session saving.
-	 *
-	 * @since 1.36
-	 *
-	 * @internal
-	 *
-	 * @param array $session
-	 */
-	public function _do_active_save( array $session ) {
-		update_option( '_it_exchange_db_session_' . $this->session_id, $session, false );
+	public function get_model() {
+		return $this->model;
 	}
 
 	/**
