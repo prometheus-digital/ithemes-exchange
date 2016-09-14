@@ -683,7 +683,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 						'type'        => $type,
 						'name'        => $name,
 						'total'       => $total,
-						'description' => $description
+						'description' => $description ? $description->get_description() : ''
 					);
 				}
 			}

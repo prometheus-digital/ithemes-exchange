@@ -764,6 +764,47 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Get the shipping method for the cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Line_Item $for
+	 *
+	 * @return \IT_Exchange_Shipping_Method|null|\stdClass
+	 */
+	public function get_shipping_method( \ITE_Line_Item $for = null ) {
+
+		if ( $for ) {
+			if ( $for instanceof ITE_Cart_Product ) {
+				$slug = it_exchange_get_multiple_shipping_method_for_cart_product( $for, $this );
+
+				return it_exchange_get_registered_shipping_method( $slug );
+			}
+
+			return it_exchange_get_shipping_method_for_item( $for );
+		}
+
+		$items = $this->get_items( 'shipping', true );
+
+		$uniqued = $items->unique( function ( ITE_Shipping_Line_Item $item ) {
+			return $item->get_method()->slug;
+		} );
+
+		if ( $uniqued->count() === 0 ) {
+			return null;
+		} elseif ( $uniqued->count() === 1 ) {
+			return $uniqued->first()->get_method();
+		} else {
+
+			$method        = new stdClass();
+			$method->slug  = 'multiple-methods';
+			$method->label = __( 'Multiple Shipping Methods', 'it-l10n-ithemes-exchange' );
+
+			return $method;
+		}
+	}
+
+	/**
 	 * Get all meta stored on the cart.
 	 *
 	 * @since 1.36.0

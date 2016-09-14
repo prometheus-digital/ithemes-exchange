@@ -19,10 +19,42 @@
  */
 class ITE_Session_Model extends \IronBound\DB\Model {
 
-	protected static $_cache = false;
-
 	public function get_pk() {
 		return $this->ID;
+	}
+
+	/**
+	 * Retrieve a session by cart ID.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $cart_id
+	 *
+	 * @return \ITE_Session_Model|null
+	 */
+	public static function from_cart_id( $cart_id ) {
+
+		$id = wp_cache_get( $cart_id, static::get_cache_group() . '-cart-id' );
+
+		if ( ! $id ) {
+			$model = self::query()->where( 'cart_id', '=', $cart_id )->first();
+
+			if ( ! $model ) {
+				return null;
+			}
+
+			wp_cache_set( $cart_id, $model->ID, static::get_cache_group() . '-cart-id' );
+		} else {
+			$model = static::get( $id );
+
+			if ( ! $model || $model->cart_id !== $cart_id ) {
+				wp_cache_delete( $cart_id, static::get_cache_group() . '-cart-id' );
+
+				return static::from_cart_id( $cart_id );
+			}
+		}
+
+		return $model;
 	}
 
 	protected function _access_data( $data ) {

@@ -94,3 +94,5 @@ require( $this->_plugin_path . 'lib/deprecated/init.php' );
 
 require( $this->_plugin_path . 'lib/settings/class.settings-form.php' );
 require( $this->_plugin_path . 'lib/settings/class.controller.php' );
+
+require_once( $this->_plugin_path . 'lib/REST/load.php' );

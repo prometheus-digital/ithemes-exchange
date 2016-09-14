@@ -73,10 +73,10 @@ class IT_Exchange_Shipping {
 		add_action( 'wp_head', array( $this, 'add_js_to_checkout_header' ) );
 
 		// Remove Shipping information from cart data when cart is emptied or when item is added to cart
-		add_action( 'it_exchange_empty_cart', array( $this, 'clear_cart_shipping_data' ) );
-		add_action( 'it_exchange_add_product_to_cart', array( $this, 'clear_cart_shipping_data' ) );
-		add_action( 'it_exchange_remove_product_from_cart', array( $this, 'clear_cart_shipping_data' ) );
-		add_action( 'it_exchange_shipping_address_updated', array( $this, 'clear_cart_shipping_method' ) );
+		add_action( 'it_exchange_empty_cart', array( $this, 'clear_cart_shipping_data_on_empty' ) );
+		add_action( 'it_exchange_add_product_to_cart', array( $this, 'clear_cart_shipping_data' ), 10, 2 );
+		add_action( 'it_exchange_remove_product_from_cart', array( $this, 'clear_cart_shipping_data' ), 10, 2 );
+		add_action( 'it_exchange_set_cart_shipping_address', array( $this, 'clear_cart_shipping_method' ) );
 
 		add_action( 'it_exchange_replace_order_table_tag_before_total_row', array( $this, 'add_shipping_to_order_table_tag_before_total_row' ), 10, 2 );
 
@@ -699,7 +699,7 @@ class IT_Exchange_Shipping {
 	 * Clears the shipping address value when the cart is emptied
 	 *
 	 * @since 1.1.0
-	 *        
+	 *
 	 * @param \ITE_Cart $cart
 	 *
 	 * @return void
@@ -861,23 +861,41 @@ class IT_Exchange_Shipping {
 	}
 
 	/**
-	 * Removes all cart_data related to shipping
+	 * Clear cart shipping data when the cart is emptied.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Cart $cart
+	 */
+	public function clear_cart_shipping_data_on_empty( ITE_Cart $cart ) {
+		$cart->remove_all( 'shipping',true );
+
+		if ( $cart->is_current() ) {
+			it_exchange_remove_cart_data( 'shipping-address' );
+			it_exchange_remove_cart_data( 'shipping-method' );
+			it_exchange_remove_cart_data( 'multiple-shipping-methods' );
+		}
+	}
+
+	/**
+	 * Removes all cart_data related to shipping when an item is added or removed from the cart.
 	 *
 	 * @since 1.4.0
 	 *
-	 * @return void
+	 * @param \ITE_Line_Item $item
+	 * @param \ITE_Cart      $cart
 	 */
-	public function clear_cart_shipping_data() {
-		
-		if ( func_get_arg( 0 ) instanceof ITE_Cart && ! func_get_arg( 0 )->is_current() ) {
-			return;
-		}
-		
-		it_exchange_remove_cart_data( 'shipping-address' );
-		it_exchange_remove_cart_data( 'shipping-method' );
-		it_exchange_remove_cart_data( 'multiple-shipping-methods' );
+	public function clear_cart_shipping_data( ITE_Line_Item $item = null, ITE_Cart $cart = null ) {
 
-		it_exchange_get_current_cart()->remove_all( 'shipping', true );
+		$cart = $cart ?: it_exchange_get_current_cart();
+
+		if ( $cart->is_current() ) {
+			it_exchange_remove_cart_data( 'shipping-address' );
+			it_exchange_remove_cart_data( 'shipping-method' );
+			it_exchange_remove_cart_data( 'multiple-shipping-methods' );
+		}
+
+		$cart->remove_all( 'shipping', true );
 	}
 
 	/**
@@ -885,13 +903,20 @@ class IT_Exchange_Shipping {
 	 *
 	 * @since 1.4.0
 	 *
+	 * @param \ITE_Cart $cart
+	 *
 	 * @return void
 	 */
-	public function clear_cart_shipping_method() {
-		it_exchange_remove_cart_data( 'shipping-method' );
-		it_exchange_remove_cart_data( 'multiple-shipping-methods' );
+	public function clear_cart_shipping_method( ITE_Cart $cart = null ) {
 
-		it_exchange_get_current_cart()->remove_all( 'shipping', true );
+		$cart = $cart ?: it_exchange_get_current_cart();
+
+		if ( $cart->is_current() ) {
+			it_exchange_remove_cart_data( 'shipping-method' );
+			it_exchange_remove_cart_data( 'multiple-shipping-methods' );
+		}
+
+		$cart->remove_all( 'shipping', true );
 	}
 
 	/**

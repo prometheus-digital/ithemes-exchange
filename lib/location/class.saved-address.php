@@ -225,7 +225,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 
 		$columns = array_keys( static::table()->get_column_defaults() );
 
-		return array_diff( $columns, array( 'pk', 'customer', 'label', 'primary' ) );
+		return array_diff( $columns, array( 'pk', 'customer', 'label', 'primary', 'type' ) );
 	}
 
 	/**

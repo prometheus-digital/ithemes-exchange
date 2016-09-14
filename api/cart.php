@@ -41,6 +41,34 @@ function it_exchange_get_current_cart( $create_if_not_started = true ) {
 }
 
 /**
+ * Get a cart by id.
+ *
+ * @since 1.36.0
+ *
+ * @param string $cart_id
+ *
+ * @return \ITE_Cart|null
+ */
+function it_exchange_get_cart( $cart_id ) {
+
+	if ( ! $cart_id ) {
+		return null;
+	}
+
+	if ( it_exchange_get_cart_id() === $cart_id ) {
+		return it_exchange_get_current_cart( false );
+	}
+
+	try {
+		$repo = ITE_Line_Item_Cached_Session_Repository::from_cart_id( $cart_id );
+	} catch ( InvalidArgumentException $e ) {
+		return null;
+	}
+
+	return new ITE_Cart( $repo, $cart_id, $repo->get_customer() );
+}
+
+/**
  * Returns an array of all data in the cart
  *
  * @since 0.3.7
