@@ -501,6 +501,11 @@ class ITE_Line_Item_Transaction_Object_Converter {
 		$items = array();
 
 		foreach ( $multiple as $cart_product_id => $method ) {
+
+			if ( ! isset( $products[ $cart_product_id ] ) ) {
+				continue;
+			}
+
 			$options = it_exchange_get_registered_shipping_method_args( $method );
 
 			if ( empty( $options['provider'] ) ) {
