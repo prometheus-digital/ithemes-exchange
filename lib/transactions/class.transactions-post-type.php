@@ -659,7 +659,7 @@ class IT_Exchange_Transaction_Post_Type {
 			) );
 		}
 
-		if ( ! current_user_can( 'edit_it_transaction', $txn ) ) {
+		if ( ! current_user_can( 'edit_it_transaction', $txn->ID ) ) {
 			wp_send_json_error( array(
 				'message' => __( 'You don\'t have permission to do that.', 'it-l10n-ithemes-exchange' )
 			) );
@@ -699,7 +699,7 @@ class IT_Exchange_Transaction_Post_Type {
 			) );
 		}
 
-		if ( ! current_user_can( 'edit_it_transaction', $txn ) ) {
+		if ( ! current_user_can( 'edit_it_transaction', $txn->ID ) ) {
 			wp_send_json_error( array(
 				'message' => __( 'You don\'t have permission to do that.', 'it-l10n-ithemes-exchange' )
 			) );
