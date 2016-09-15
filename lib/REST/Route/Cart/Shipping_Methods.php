@@ -114,9 +114,10 @@ class Shipping_Methods implements Getable, Putable {
 			'per_item'  => array(),
 		);
 
-		$selected     = $cart->get_shipping_method();
-		$selected     = $selected ? $selected->slug : '';
-		$cart_methods = it_exchange_get_available_shipping_methods_for_cart( true, $cart );
+		$selected              = $cart->get_shipping_method();
+		$selected              = $selected ? $selected->slug : '';
+		$cart_methods          = it_exchange_get_available_shipping_methods_for_cart( true, $cart );
+		$eligible_for_multiple = it_exchange_cart_is_eligible_for_multiple_shipping_methods( $cart );
 
 		foreach ( $cart_methods as $method ) {
 			$data['cart_wide'][] = array(
@@ -127,7 +128,14 @@ class Shipping_Methods implements Getable, Putable {
 			);
 		}
 
-		if ( ! it_exchange_cart_is_eligible_for_multiple_shipping_methods( $cart ) ) {
+		if ( $eligible_for_multiple ) {
+			$data['cart_wide'][] = array(
+				'id'       => 'multiple-methods',
+				'label'    => __( 'Multiple Methods', 'it-l10n-ithemes-exchange' ),
+				'total'    => null,
+				'selected' => 'multiple-methods' === $selected
+			);
+		} else {
 			return $data;
 		}
 
