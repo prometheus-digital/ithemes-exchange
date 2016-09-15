@@ -145,8 +145,12 @@ class Manager {
 
 						$callback = array( $route, 'user_can_' . strtolower( $verb ) );
 
-						if ( ! is_callable( $callback ) && is_callable( array( $route, 'user_can_get' ) ) ) {
-							$callback = array( $route, 'user_can_get' );
+						if ( ! is_callable( $callback ) ) {
+							if ( is_callable( array( $route, 'user_can_get' ) ) ) {
+								$callback = array( $route, 'user_can_get' );
+							} else {
+								continue;
+							}
 						}
 
 						if ( ( $r = call_user_func( $callback, $request, $user ) ) !== true ) {

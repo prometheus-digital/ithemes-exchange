@@ -50,14 +50,14 @@ class Carts implements Postable {
 		} else {
 			try {
 				// Guard against multiple carts per customer.
-				$repo    = \ITE_Line_Item_Cached_Session_Repository::from_customer( $user );
-				$request = new \WP_REST_Request( 200 );
-				$request->set_param( 'id', $repo->get_cart_id() );
-				$response = $this->cart->handle_get( $request );
+				$repo     = \ITE_Line_Item_Cached_Session_Repository::from_customer( $user );
+				$response = new \WP_REST_Response();
 				$response->set_status( 303 );
+				$response->header( 'Location', r\get_rest_url( $this->cart, array( 'id' => $repo->get_cart_id() ) ) );
 
 				return $response;
-			} catch ( \InvalidArgumentException $e ) {
+			}
+			catch ( \InvalidArgumentException $e ) {
 
 			}
 
@@ -74,10 +74,9 @@ class Carts implements Postable {
 		$session->data    = array_merge( $session->data, array( 'cart_id' => $cart->get_id() ) );
 		$session->save();
 
-		$request = new \WP_REST_Request( 200 );
-		$request->set_param( 'id', $cart->get_id() );
-		$response = $this->cart->handle_get( $request );
+		$response = new \WP_REST_Response();
 		$response->set_status( 303 );
+		$response->header( 'Location', r\get_rest_url( $this->cart, array( 'id' => $cart->get_id() ) ) );
 
 		return $response;
 	}
