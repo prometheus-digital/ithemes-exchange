@@ -46,7 +46,7 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \WP_User $user ) {
+	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
 		return $this->permission_check( $request, $user );
 	}
 
@@ -78,7 +78,7 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( \WP_REST_Request $request, \WP_User $user ) {
+	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
 		return $this->permission_check( $request, $user );
 	}
 
@@ -95,7 +95,7 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( \WP_REST_Request $request, \WP_User $user ) {
+	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
 		return $this->permission_check( $request, $user );
 	}
 
@@ -107,7 +107,7 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_path() { return 'carts/(?P<id>\w+)/'; }
+	public function get_path() { return '(?P<id>\w+)/'; }
 
 	/**
 	 * @inheritDoc
@@ -119,24 +119,24 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function has_parent() { return false; }
+	public function has_parent() { return true; }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_parent() { throw new \UnexpectedValueException( "No parent exists for {$this->get_path()}" ); }
+	public function get_parent() { return new Carts( $this ); }
 
 	/**
 	 * Perform a permission check.
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \WP_REST_Request $request
-	 * @param \WP_User         $user
+	 * @param \WP_REST_Request      $request
+	 * @param \IT_Exchange_Customer $user
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permission_check( \WP_REST_Request $request, \WP_User $user ) {
+	protected function permission_check( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
 
 		$url_params = $request->get_url_params();
 
@@ -148,15 +148,21 @@ class Cart implements Getable, Putable, Deletable {
 			);
 		}
 
-		/*if ( ! $cart->get_customer() || $cart->get_customer()->id !== $user->ID ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to access this cart.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
-		}*/
+		if ( $cart->is_guest() ) {
+			if ( $user instanceof \IT_Exchange_Guest_Customer && $user->get_email() === $cart->get_customer()->get_email() ) {
+				return true;
+			}
+		}
 
-		return true;
+		if ( $cart->get_customer() && $cart->get_customer()->id === $user->id ) {
+			return true;
+		}
+
+		return new \WP_Error(
+			'it_exchange_rest_forbidden_context',
+			__( 'Sorry, you are not allowed to access this cart.', 'it-l10n-ithemes-exchange' ),
+			array( 'status' => rest_authorization_required_code() )
+		);
 	}
 
 	/**

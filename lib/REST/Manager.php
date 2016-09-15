@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST;
 
 /**
  * Class Manager
+ *
  * @package iThemes\Exchange\REST
  */
 class Manager {
@@ -36,7 +37,9 @@ class Manager {
 	 *
 	 * @param string $namespace No forward or trailing slashes.
 	 */
-	public function __construct( $namespace ) { $this->namespace = $namespace; }
+	public function __construct( $namespace ) {
+		$this->namespace = $namespace;
+	}
 
 	/**
 	 * Register a route.
@@ -91,6 +94,8 @@ class Manager {
 			$this->register_with_server( $route );
 		}
 
+		add_filter( 'rest_authentication_errors', array( $this, 'authenticate' ) );
+
 		return $this;
 	}
 
@@ -134,7 +139,7 @@ class Manager {
 
 				$permission = function ( \WP_REST_Request $request ) use ( $verb, $routes ) {
 
-					$user = wp_get_current_user();
+					$user = it_exchange_get_current_customer() ?: null;
 
 					foreach ( $routes as $route ) {
 
@@ -182,5 +187,63 @@ class Manager {
 			$path,
 			$args
 		);
+	}
+
+	/**
+	 * Is the request going to our endpoint.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	protected function is_our_endpoint() {
+
+		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+			return false;
+		}
+
+		$rest_prefix = trailingslashit( rest_get_url_prefix() );
+
+		// Check if our endpoint.
+		return false !== strpos( $_SERVER['REQUEST_URI'], $rest_prefix . "{$this->get_namespace()}/" );
+	}
+
+	/**
+	 * Authenticate the user.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \WP_Error|null|bool $authed
+	 *
+	 * @return \WP_Error|null|bool
+	 */
+	public function authenticate( $authed ) {
+
+		if ( ! $this->is_our_endpoint() ) {
+			return $authed;
+		}
+
+		if ( $authed === true ) {
+			return $authed;
+		}
+
+		if (
+			! empty( $_SERVER['PHP_AUTH_USER'] ) &&
+			( empty( $_SERVER['PHP_AUTH_PW'] ) || trim( $_SERVER['PHP_AUTH_PH'] ) === '' ) &&
+			is_email( $_SERVER['PHP_AUTH_USER'] ) &&
+			function_exists( 'it_exchange_guest_checkout_generate_guest_user_object' )
+		) {
+			$email = $_SERVER['PHP_AUTH_USER'];
+
+			$GLOBALS['current_user'] = it_exchange_guest_checkout_generate_guest_user_object( $email );
+
+			add_filter( 'it_exchange_get_current_customer', function () use ( $email ) {
+				return it_exchange_get_customer( $email );
+			} );
+
+			return true;
+		}
+
+		return $authed;
 	}
 }

@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST;
 
+use iThemes\Exchange\REST\Route\Cart\Carts;
 use iThemes\Exchange\REST\Route\Cart\Item;
 use iThemes\Exchange\REST\Route\Cart\Item_Serializer;
 
@@ -46,7 +47,9 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 		$manager->register_route( new Item( $item_type, $route ) );
 	}
 
-	$manager->register_route( new Route\Cart\Cart( new Item_Serializer(), $item_routes ) );
+	$cart = new Route\Cart\Cart( new Item_Serializer(), $item_routes );
+	$manager->register_route( $cart );
+	$manager->register_route( new Carts( $cart ) );
 } );
 
 /**
@@ -112,8 +115,8 @@ function get_rest_manager() {
  */
 function response_to_array( \WP_REST_Response $response ) {
 
-	$data = (array) $response->get_data();
-	$links     = \WP_REST_Server::get_response_links( $response );
+	$data  = (array) $response->get_data();
+	$links = \WP_REST_Server::get_response_links( $response );
 
 	if ( $links ) {
 		$data['_links'] = $links;

@@ -28,7 +28,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	 */
 	public function __construct(
 		\IT_Exchange_In_Memory_Session $session,
-		\IT_Exchange_Customer $customer,
+		\IT_Exchange_Customer $customer = null,
 		\ITE_Line_Item_Repository_Events $events
 	) {
 		parent::__construct( $session, $events );
@@ -53,6 +53,8 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 		                            ->where( 'customer', '=', $customer->id )
 		                            ->order_by( 'updated_at', 'ASC' )
 		                            ->first();
+
+		$session = $session ?: null;
 
 		return static::setup_from_session( $session, $customer );
 	}
@@ -112,7 +114,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	 */
 	private static function setup_from_session( ITE_Session_Model $session = null, IT_Exchange_Customer $customer = null ) {
 
-		if ( ! $session || ! $session->data || count( $session->data ) === 0 ) {
+		if ( ! $session ) {
 			$cid = $customer ? $customer->id : 0;
 			throw new InvalidArgumentException( "No cart can be retrieved for #{$cid}." );
 		}

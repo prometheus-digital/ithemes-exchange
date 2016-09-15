@@ -52,6 +52,8 @@ class ITE_Cart {
 			if ( ! $customer instanceof IT_Exchange_Customer ) {
 				$customer = null;
 			}
+		} elseif ( $this->has_meta( 'guest-email' ) ) {
+			$customer = it_exchange_get_customer( $this->get_meta( 'guest-email' ) );
 		}
 
 		$this->customer = $customer;
@@ -665,6 +667,17 @@ class ITE_Cart {
 		}
 
 		return $valid;
+	}
+
+	/**
+	 * Is this a guest purchase.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function is_guest() {
+		return $this->has_meta( 'guest-email' );
 	}
 
 	/**

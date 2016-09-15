@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST;
 
 /**
  * Interface Putable
+ *
  * @package iThemes\Exchange\REST
  */
 interface Putable extends Route {
@@ -30,10 +31,10 @@ interface Putable extends Route {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \WP_REST_Request $request
-	 * @param \WP_User         $user
+	 * @param \WP_REST_Request      $request
+	 * @param \IT_Exchange_Customer $user
 	 *
 	 * @return bool
 	 */
-	public function user_can_put( \WP_REST_Request $request, \WP_User $user );
+	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user );
 }
