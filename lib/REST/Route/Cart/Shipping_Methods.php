@@ -57,28 +57,30 @@ class Shipping_Methods implements Getable, Putable {
 		$cart_method          = $cart_method ? $cart_method->slug : '';
 		$switched_to_multiple = false;
 
-		foreach ( $request['per_item'] as $item ) {
+		if ( it_exchange_cart_is_eligible_for_multiple_shipping_methods( $cart ) ) {
+			foreach ( $request['per_item'] as $item ) {
 
-			$line_item = $cart->get_item( $item['item']['type'], $item['item']['id'] );
+				$line_item = $cart->get_item( $item['item']['type'], $item['item']['id'] );
 
-			if ( ! $line_item ) {
-				continue;
-			}
+				if ( ! $line_item ) {
+					continue;
+				}
 
-			$current = $cart->get_shipping_method( $line_item );
-			$current = $current ? $current->slug : '';
+				$current = $cart->get_shipping_method( $line_item );
+				$current = $current ? $current->slug : '';
 
-			foreach ( $item['methods'] as $method ) {
-				if ( $method['selected'] && $method['id'] !== $current ) {
+				foreach ( $item['methods'] as $method ) {
+					if ( $method['selected'] && $method['id'] !== $current ) {
 
-					if ( ! $switched_to_multiple ) {
-						$cart->set_shipping_method( 'multiple-methods' );
-						$switched_to_multiple = true;
+						if ( ! $switched_to_multiple ) {
+							$cart->set_shipping_method( 'multiple-methods' );
+							$switched_to_multiple = true;
+						}
+
+						$cart->set_shipping_method( $method['id'], $line_item );
+
+						break;
 					}
-
-					$cart->set_shipping_method( $method['id'], $line_item );
-
-					break;
 				}
 			}
 		}
@@ -123,6 +125,10 @@ class Shipping_Methods implements Getable, Putable {
 				'total'    => it_exchange_get_cart_shipping_cost( $method->slug, false, $cart ),
 				'selected' => $method->slug === $selected,
 			);
+		}
+
+		if ( ! it_exchange_cart_is_eligible_for_multiple_shipping_methods( $cart ) ) {
+			return $data;
 		}
 
 		/** @var \ITE_Cart_Product $product */

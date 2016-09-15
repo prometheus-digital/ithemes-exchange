@@ -102,20 +102,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 
 		$cart = it_exchange_get_current_cart();
 
-		if ( $cart->get_items( 'product' )->count() > 1 ) {
-
-			$cart_products_with_shipping = 0;
-
-			foreach ( $cart->get_items( 'product' ) as $cart_product ) {
-				if ( $cart_product->get_product()->has_feature( 'shipping' ) ) {
-					$cart_products_with_shipping ++;
-				}
-			}
-
-			if ( $cart_products_with_shipping > 1 && count( $cart_product_methods ) > 1 ) {
-				$multiple_shipping_methods_allowed = apply_filters( 'it_exchange_shipping_method_form_multiple_shipping_methods_allowed', true );
-			}
-		}
+		$multiple_shipping_methods_allowed = it_exchange_cart_is_eligible_for_multiple_shipping_methods( $cart );
 		
 		if ( 1 === $cart_product_methods_count && 1 === $cart_methods_count ) {
 			$method = reset( $cart_methods );

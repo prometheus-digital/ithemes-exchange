@@ -622,6 +622,42 @@ function it_exchange_get_shipping_method_for_item( ITE_Line_Item $item ) {
 }
 
 /**
+ * Determine if a cart is eligible for using multiple shipping methods.
+ *
+ * @since 1.36.0
+ *
+ * @param \ITE_Cart|null $cart
+ *
+ * @return bool
+ */
+function it_exchange_cart_is_eligible_for_multiple_shipping_methods( ITE_Cart $cart = null ) {
+
+	$cart = $cart ?: it_exchange_get_current_cart();
+
+	$items_with_shipping = $cart->get_items('product')->filter( function( ITE_Cart_Product $product ) {
+		return $product->get_product()->has_feature( 'shipping' );
+	} );
+
+	if ( $items_with_shipping->count() === 1 ) {
+		return false;
+	}
+
+	$available_methods = it_exchange_get_available_shipping_methods_for_cart( true, $cart );
+
+	if ( count( $available_methods ) === 0 ) {
+		return true;
+	}
+
+	$eligible = count( it_exchange_get_available_shipping_methods_for_cart_products( $cart ) ) > 1;
+
+	if ( $eligible ) {
+		return apply_filters( 'it_exchange_shipping_method_form_multiple_shipping_methods_allowed', $eligible );
+	}
+
+	return false;
+}
+
+/**
  * Returns the base_price for the cart product
  *
  * Other add-ons may modify this on the fly based on the product's itemized_data and additional_data arrays
