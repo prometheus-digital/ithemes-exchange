@@ -11,6 +11,7 @@ namespace iThemes\Exchange\REST;
 use iThemes\Exchange\REST\Route\Cart\Carts;
 use iThemes\Exchange\REST\Route\Cart\Item;
 use iThemes\Exchange\REST\Route\Cart\Item_Serializer;
+use iThemes\Exchange\REST\Route\Cart\Shipping_Methods;
 
 /**
  * Register the rest routes on libraries loaded.
@@ -50,6 +51,7 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	$cart = new Route\Cart\Cart( new Item_Serializer(), $item_routes );
 	$manager->register_route( $cart );
 	$manager->register_route( new Carts( $cart ) );
+	$manager->register_route( new Shipping_Methods( $cart ) );
 } );
 
 /**

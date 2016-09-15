@@ -56,20 +56,12 @@ class Cart implements Getable, Putable, Deletable {
 	public function handle_put( \WP_REST_Request $request ) {
 		$cart = it_exchange_get_cart( $request['id'] );
 
-		if ( $cart->get_billing_address() ? $cart->get_billing_address()->to_array() : array() !== $request['billing'] ) {
-			$cart->set_billing_address( $request['billing'] ? new \ITE_In_Memory_Address( $request['billing'] ) : null );
+		if ( $cart->get_billing_address() ? $cart->get_billing_address()->to_array() : array() !== $request['billing_address'] ) {
+			$cart->set_billing_address( $request['billing_address'] ? new \ITE_In_Memory_Address( $request['billing_address'] ) : null );
 		}
 
-		if ( $cart->get_shipping_address() ? $cart->get_shipping_address()->to_array() : array() !== $request['shipping'] ) {
-			$cart->set_shipping_address( $request['shipping'] ? new \ITE_In_Memory_Address( $request['shipping'] ) : null );
-		}
-
-		/** @noinspection NotOptimalIfConditionsInspection */
-		if (
-			array_key_exists( 'shipping_method', $request->get_params() ) &&
-			array_key_exists( 'id', $request['shipping_method'] )
-		) {
-			$cart->set_shipping_method( $request['shipping_method']['id'] );
+		if ( $cart->get_shipping_address() ? $cart->get_shipping_address()->to_array() : array() !== $request['shipping_address'] ) {
+			$cart->set_shipping_address( $request['shipping_address'] ? new \ITE_In_Memory_Address( $request['shipping_address'] ) : null );
 		}
 
 		return $this->prepare_item_for_response( $cart, $request );
@@ -180,21 +172,11 @@ class Cart implements Getable, Putable, Deletable {
 		$data = array(
 			'id'               => $cart->get_id(),
 			'customer'         => $cart->get_customer() ? $cart->get_customer()->id : 0,
-			'shipping_method'  => new \stdClass(),
 			'shipping_address' => null,
 			'billing_address'  => null,
 			'subtotal'         => it_exchange_get_cart_subtotal( false, array( 'cart' => $cart ) ),
 			'total'            => $cart->calculate_total(),
 		);
-
-		if ( $shipping_method = $cart->get_shipping_method() ) {
-			$data['shipping_method'] = array(
-				'id'    => $shipping_method->slug,
-				'label' => $shipping_method->label,
-			);
-		} elseif ( ! it_exchange_cart_requires_shipping( $cart ) ) {
-			unset( $data['shipping_method'] );
-		}
 
 		if ( $cart->get_billing_address() ) {
 			$data['billing_address'] = $cart->get_billing_address()->to_array();
@@ -249,7 +231,10 @@ class Cart implements Getable, Putable, Deletable {
 
 		$data['total_lines'] = $totals_info;
 
-		return new \WP_REST_Response( $data );
+		$response = new \WP_REST_Response( $data );
+		$response->add_link( 'shipping_methods', r\get_rest_url( new Shipping_Methods( $this ), array( 'id' => $cart->get_id() ) ) );
+
+		return new \WP_REST_Response( r\response_to_array( $response ) );
 	}
 
 	/**
@@ -272,24 +257,6 @@ class Cart implements Getable, Putable, Deletable {
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
-				),
-				'shipping_method'  => array(
-					'description' => __( 'The selected shipping method for this cart.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'id'    => array(
-							'description' => __( 'The unique id for this shipping method.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'label' => array(
-							'description' => __( 'The label for this shipping method.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-					)
 				),
 				'billing_address'  => array(
 					'description' => __( 'The billing address for this cart.', 'it-l10n-ithemes-exchange' ),

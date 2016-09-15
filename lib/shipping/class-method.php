@@ -159,11 +159,12 @@ abstract class IT_Exchange_Shipping_Method {
 	 *
 	 * @since 1.4.0
 	 *
-	 * @param array $cart_product
+	 * @param array     $cart_product
+	 * @param \ITE_Cart $cart
 	 *
 	 * @return float
 	 */
-	abstract public function get_shipping_cost_for_product( $cart_product );
+	abstract public function get_shipping_cost_for_product( $cart_product, ITE_Cart $cart = null );
 
 	/**
 	 * Get any additional costs this method imposes on the cart as a whole, not an individual product.

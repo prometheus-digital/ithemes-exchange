@@ -507,11 +507,14 @@ function it_exchange_get_cart_product_quantity( $product ) {
  * @since 0.4.4
  *
  * @param int $product_id
+ * @param ITE_Cart $cart
  *
  * @return int
 */
-function it_exchange_get_cart_product_quantity_by_product_id( $product_id ) {
-	$products = it_exchange_get_current_cart()->get_items( 'product' );
+function it_exchange_get_cart_product_quantity_by_product_id( $product_id, ITE_Cart $cart = null ) {
+
+	$cart     = $cart ?: it_exchange_get_current_cart();
+	$products = $cart->get_items( 'product' );
 
 	foreach ( $products as $product ) {
 		if ( $product->get_product()->ID == $product_id ) {
@@ -530,11 +533,13 @@ function it_exchange_get_cart_product_quantity_by_product_id( $product_id ) {
  *
  * @param bool $true_count Whether or not to traverse cart products to get true count of items
  * @param bool|string $feature only include products with this feature
+ * @param \ITE_Cart   $cart
+ *
  * @return integer
 */
-function it_exchange_get_cart_products_count( $true_count=false, $feature=false ) {
+function it_exchange_get_cart_products_count( $true_count = false, $feature = false, ITE_Cart $cart = null ) {
 
-	$cart = it_exchange_get_current_cart( false );
+	$cart = $cart ?: it_exchange_get_current_cart( false );
 
 	if ( ! $cart ) {
 		return 0;
@@ -574,12 +579,15 @@ function it_exchange_get_cart_products_count( $true_count=false, $feature=false 
  *
  * @since 1.11.0
  *
+ * @param \ITE_Cart $cart
+ *
  * @return float
 */
-function it_exchange_get_cart_weight() {
+function it_exchange_get_cart_weight( ITE_Cart $cart = null ) {
 
 	$weight   = 0;
-	$products = it_exchange_get_current_cart()->get_items('product');
+	$cart     = $cart ?: it_exchange_get_current_cart();
+	$products = $cart->get_items('product');
 
 	foreach( $products as $product ) {
         $pm     = get_post_meta( $product->get_product()->ID, '_it_exchange_core_weight', true );
@@ -687,8 +695,7 @@ function it_exchange_get_cart_subtotal( $format = true, $options = array() ) {
 
 	if ( ! empty( $options['use_cached_customer_cart'] ) ) {
 		$cart = it_exchange_get_cached_customer_cart( $options['use_cached_customer_cart'], false );
-	}
-	elseif ( ! empty( $options['cart'] ) ) {
+	} elseif ( ! empty( $options['cart'] ) ) {
 		$cart = $options['cart'];
 	} else {
 		$cart = it_exchange_get_current_cart();
@@ -711,7 +718,7 @@ function it_exchange_get_cart_subtotal( $format = true, $options = array() ) {
 		}
 	}
 
-	$subtotal = apply_filters( 'it_exchange_get_cart_subtotal', $subtotal, $options );
+	$subtotal = apply_filters( 'it_exchange_get_cart_subtotal', $subtotal, $options, $cart );
 
 	return $format ? it_exchange_format_price( $subtotal ) : $subtotal;
 }
