@@ -30,6 +30,15 @@ abstract class ITE_Gateway {
 	public abstract function get_slug();
 
 	/**
+	 * Get the add-on slug.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public abstract function get_addon();
+
+	/**
 	 * Get the request handlers this gateway provides.
 	 *
 	 * @since 1.36
@@ -37,6 +46,25 @@ abstract class ITE_Gateway {
 	 * @return ITE_Gateway_Request_Handler[]
 	 */
 	public abstract function get_handlers();
+
+	/**
+	 * Get the handler for a given request.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Gateway_Request $request
+	 *
+	 * @return \ITE_Gateway_Request_Handler|null
+	 */
+	public function get_handler_for( ITE_Gateway_Request $request ) {
+		foreach ( $this->get_handlers() as $handler ) {
+			if ( $handler::can_handle( $request::get_name() ) ) {
+				return $handler;
+			}
+		}
+
+		return null;
+	}
 
 	/**
 	 * Is the gateway in sandbox mode.
@@ -74,7 +102,8 @@ abstract class ITE_Gateway {
 	 */
 	public function get_settings_form() {
 		return new IT_Exchange_Admin_Settings_Form( array(
-			'form-fields' => $this->get_settings_fields()
+			'form-fields' => $this->get_settings_fields(),
+			'prefix'      => $this->get_settings_name(),
 		) );
 	}
 

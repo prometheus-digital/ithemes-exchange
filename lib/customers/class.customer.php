@@ -454,7 +454,7 @@ class IT_Exchange_Customer {
 	 * @return boolean
 	 */
 	public function is_wp_user() {
-		return (bool) $this->wp_user;
+		return (bool) $this->wp_user->ID;
 	}
 
 	/**

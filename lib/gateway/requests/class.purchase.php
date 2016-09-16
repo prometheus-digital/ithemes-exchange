@@ -16,13 +16,18 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Request {
 	 */
 	protected $cart;
 
+	/** @var string */
+	protected $nonce;
+
 	/**
 	 * ITE_Gateway_Purchase_Request constructor.
 	 *
 	 * @param \ITE_Cart $cart
+	 * @param string    $nonce
 	 */
-	public function __construct( \ITE_Cart $cart ) {
-		$this->cart = $cart;
+	public function __construct( \ITE_Cart $cart, $nonce ) {
+		$this->cart  = $cart;
+		$this->nonce = $nonce;
 	}
 
 	/**
@@ -34,6 +39,17 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Request {
 	 */
 	public function get_cart() {
 		return $this->cart;
+	}
+
+	/**
+	 * Get the nonce.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_nonce() {
+		return $this->nonce;
 	}
 
 	/**

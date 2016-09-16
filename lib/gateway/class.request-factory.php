@@ -25,7 +25,10 @@ class ITE_Gateway_Request_Factory {
 
 		switch ( $request ) {
 			case ITE_Gateway_Purchase_Request::get_name():
-				return new ITE_Gateway_Purchase_Request( it_exchange_get_cart() );
+				$cart  = empty( $args['cart'] ) ? it_exchange_get_current_cart() : $args['cart'];
+				$nonce = empty( $args['nonce'] ) ? '' : $args['nonce'];
+
+				return new ITE_Gateway_Purchase_Request( $cart, $nonce );
 			default:
 				return null;
 		}

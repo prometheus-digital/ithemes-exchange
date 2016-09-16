@@ -338,6 +338,11 @@ function it_exchange_guest_checkout_modify_customer( $customer ) {
 
 	$email = it_exchange_get_cart_data( 'guest-checkout-user' );
 	$email = is_array( $email ) ? reset( $email ) : $email;
+
+	if ( ! $email ) {
+		return $customer;
+	}
+
 	$customer = it_exchange_guest_checkout_generate_guest_user_object( $email, true );
 
 	return $customer;

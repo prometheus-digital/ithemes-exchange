@@ -138,7 +138,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 		update_post_meta( $txn->ID, '_it_exchange_transaction_method', $txn->get_method() );
 		update_post_meta( $txn->ID, '_it_exchange_transaction_method_id', $txn->get_method_id() );
 		update_post_meta( $txn->ID, '_it_exchange_transaction_status', $txn->get_status() );
-		update_post_meta( $txn->ID, '_it_exchange_customer_id', $txn->get_customer() ? $txn->get_customer()->ID : 0 );
+		update_post_meta( $txn->ID, '_it_exchange_customer_id', $txn->customer_id );
 		update_post_meta( $txn->ID, '_it_exchange_cart_id', $txn->cart_id );
 		update_post_meta( $txn->ID, '_it_exchange_transaction_hash', $txn->hash );
 
@@ -251,6 +251,10 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 		if ( $transaction && $transaction->is_cleared_for_delivery() ) {
 			$transaction->set_attribute( 'cleared', true );
 			$transaction->save();
+		}
+
+		if ( $customer_email && ! empty( $cart_details->is_guest_checkout ) ) {
+			$transaction->cart()->set_meta( 'guest-email', $customer_email );
 		}
 
 		return $transaction;
@@ -547,7 +551,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 * @return bool
 	 */
 	public function is_guest_purchase() {
-		return ! empty( $this->cart_details->is_guest_checkout );
+		return (bool) get_post_meta( $this->ID, '_it-exchange-is-guest-checkout', true );
 	}
 
 	/**
@@ -1177,6 +1181,10 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 
 		if ( $name === 'ID' ) {
 			return (int) $this->get_raw_attribute( 'ID' );
+		}
+
+		if ( $name === 'customer_id' ) {
+			return (int) $this->get_raw_attribute( 'customer_id' );
 		}
 
 		return parent::__get( $name );

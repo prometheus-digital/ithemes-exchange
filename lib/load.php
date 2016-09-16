@@ -42,6 +42,8 @@ require_once( $this->_plugin_path . 'lib/products/class.factory.php' );
 // Product Features
 require( $this->_plugin_path . 'lib/product-features/load.php' );
 
+require( $this->_plugin_path . 'lib/gateway/load.php' );
+
 // Cart
 require( $this->_plugin_path . 'lib/cart/load.php' );
 

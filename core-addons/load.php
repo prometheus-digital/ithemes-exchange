@@ -20,7 +20,7 @@ function it_exchange_register_core_addons() {
 			'file'              => dirname( __FILE__ ) . '/transaction-methods/offline-payments/init.php',
 			'category'          => 'transaction-methods',
 			'tag'               => 'core',
-			'settings-callback' => 'it_exchange_offline_payments_settings_callback',
+			/*'settings-callback' => 'it_exchange_offline_payments_settings_callback',*/
 		),
 		//For situations when the Cart Total is 0 (free), we still want to record the transaction!
 		'zero-sum-checkout' => array(

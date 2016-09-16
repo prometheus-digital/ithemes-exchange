@@ -514,6 +514,10 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		update_post_meta( $transaction_id, '_it_exchange_customer_ip', $customer_ip );
 		update_post_meta( $transaction_id, '_it_exchange_cart_object', $cart_object );
 
+		if ( $customer instanceof IT_Exchange_Guest_Customer ) {
+			update_post_meta( $transaction_id, '_it-exchange-is-guest-checkout', 1 );
+		}
+
 		$hash = it_exchange_generate_transaction_hash( $transaction_id, $customer ? $customer->id  : false );
 
 		/** @var mixed $cart_object */

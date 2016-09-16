@@ -6,6 +6,13 @@
  * @package IT_Exchange
  */
 
+add_action( 'it_exchange_register_gateways', function( ITE_Gateways $gateways ) {
+	require_once dirname( __FILE__ ) . '/class.purchase-handler.php';
+	require_once dirname( __FILE__ ) . '/class.gateway.php';
+
+	$gateways::register( new ITE_Gateway_Offline_Payments() );
+} );
+
 /**
  * Mark this transaction method as okay to manually change transactions
  *
@@ -17,7 +24,8 @@ add_filter( 'it_exchange_offline-payments_transaction_status_can_be_manually_cha
  * Returns status options
  *
  * @since 0.3.6
- * @return void
+ *
+ * @return array
  */
 function it_exchange_offline_payments_get_default_status_options() {
 	$options = array(
@@ -129,7 +137,7 @@ function it_exchange_offline_payments_addon_process_transaction( $status, $trans
 
 }
 
-add_action( 'it_exchange_do_transaction_offline-payments', 'it_exchange_offline_payments_addon_process_transaction', 10, 2 );
+//add_action( 'it_exchange_do_transaction_offline-payments', 'it_exchange_offline_payments_addon_process_transaction', 10, 2 );
 
 
 /**
@@ -211,7 +219,7 @@ function it_exchange_offline_payments_addon_make_payment_button( $options ) {
 
 }
 
-add_filter( 'it_exchange_get_offline-payments_make_payment_button', 'it_exchange_offline_payments_addon_make_payment_button', 10, 2 );
+//add_filter( 'it_exchange_get_offline-payments_make_payment_button', 'it_exchange_offline_payments_addon_make_payment_button', 10, 2 );
 
 /**
  * Replace Offline name with what is set in admin settings
