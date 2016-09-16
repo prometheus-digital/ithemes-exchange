@@ -29,5 +29,8 @@
       "platform": {
             "php": "5.3.29"
         }
+    },
+    "autoload": {
+        "psr-4": {"iThemes\\Exchange\\REST\\": "lib/REST/"}
     }
 }

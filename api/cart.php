@@ -41,6 +41,34 @@ function it_exchange_get_current_cart( $create_if_not_started = true ) {
 }
 
 /**
+ * Get a cart by id.
+ *
+ * @since 1.36.0
+ *
+ * @param string $cart_id
+ *
+ * @return \ITE_Cart|null
+ */
+function it_exchange_get_cart( $cart_id ) {
+
+	if ( ! $cart_id ) {
+		return null;
+	}
+
+	if ( it_exchange_get_cart_id() === $cart_id ) {
+		return it_exchange_get_current_cart( false );
+	}
+
+	try {
+		$repo = ITE_Line_Item_Cached_Session_Repository::from_cart_id( $cart_id );
+	} catch ( InvalidArgumentException $e ) {
+		return null;
+	}
+
+	return new ITE_Cart( $repo, $cart_id, $repo->get_customer() );
+}
+
+/**
  * Returns an array of all data in the cart
  *
  * @since 0.3.7
@@ -479,11 +507,14 @@ function it_exchange_get_cart_product_quantity( $product ) {
  * @since 0.4.4
  *
  * @param int $product_id
+ * @param ITE_Cart $cart
  *
  * @return int
 */
-function it_exchange_get_cart_product_quantity_by_product_id( $product_id ) {
-	$products = it_exchange_get_current_cart()->get_items( 'product' );
+function it_exchange_get_cart_product_quantity_by_product_id( $product_id, ITE_Cart $cart = null ) {
+
+	$cart     = $cart ?: it_exchange_get_current_cart();
+	$products = $cart->get_items( 'product' );
 
 	foreach ( $products as $product ) {
 		if ( $product->get_product()->ID == $product_id ) {
@@ -502,11 +533,13 @@ function it_exchange_get_cart_product_quantity_by_product_id( $product_id ) {
  *
  * @param bool $true_count Whether or not to traverse cart products to get true count of items
  * @param bool|string $feature only include products with this feature
+ * @param \ITE_Cart   $cart
+ *
  * @return integer
 */
-function it_exchange_get_cart_products_count( $true_count=false, $feature=false ) {
+function it_exchange_get_cart_products_count( $true_count = false, $feature = false, ITE_Cart $cart = null ) {
 
-	$cart = it_exchange_get_current_cart( false );
+	$cart = $cart ?: it_exchange_get_current_cart( false );
 
 	if ( ! $cart ) {
 		return 0;
@@ -546,12 +579,15 @@ function it_exchange_get_cart_products_count( $true_count=false, $feature=false 
  *
  * @since 1.11.0
  *
+ * @param \ITE_Cart $cart
+ *
  * @return float
 */
-function it_exchange_get_cart_weight() {
+function it_exchange_get_cart_weight( ITE_Cart $cart = null ) {
 
 	$weight   = 0;
-	$products = it_exchange_get_current_cart()->get_items('product');
+	$cart     = $cart ?: it_exchange_get_current_cart();
+	$products = $cart->get_items('product');
 
 	foreach( $products as $product ) {
         $pm     = get_post_meta( $product->get_product()->ID, '_it_exchange_core_weight', true );
@@ -583,6 +619,42 @@ function it_exchange_get_shipping_method_for_item( ITE_Line_Item $item ) {
 	}
 
 	return null;
+}
+
+/**
+ * Determine if a cart is eligible for using multiple shipping methods.
+ *
+ * @since 1.36.0
+ *
+ * @param \ITE_Cart|null $cart
+ *
+ * @return bool
+ */
+function it_exchange_cart_is_eligible_for_multiple_shipping_methods( ITE_Cart $cart = null ) {
+
+	$cart = $cart ?: it_exchange_get_current_cart();
+
+	$items_with_shipping = $cart->get_items('product')->filter( function( ITE_Cart_Product $product ) {
+		return $product->get_product()->has_feature( 'shipping' );
+	} );
+
+	if ( $items_with_shipping->count() === 1 ) {
+		return false;
+	}
+
+	$available_methods = it_exchange_get_available_shipping_methods_for_cart( true, $cart );
+
+	if ( count( $available_methods ) === 0 ) {
+		return true;
+	}
+
+	$eligible = count( it_exchange_get_available_shipping_methods_for_cart_products( $cart ) ) > 1;
+
+	if ( $eligible ) {
+		return apply_filters( 'it_exchange_shipping_method_form_multiple_shipping_methods_allowed', $eligible );
+	}
+
+	return false;
 }
 
 /**
@@ -659,8 +731,7 @@ function it_exchange_get_cart_subtotal( $format = true, $options = array() ) {
 
 	if ( ! empty( $options['use_cached_customer_cart'] ) ) {
 		$cart = it_exchange_get_cached_customer_cart( $options['use_cached_customer_cart'], false );
-	}
-	elseif ( ! empty( $options['cart'] ) ) {
+	} elseif ( ! empty( $options['cart'] ) ) {
 		$cart = $options['cart'];
 	} else {
 		$cart = it_exchange_get_current_cart();
@@ -683,7 +754,7 @@ function it_exchange_get_cart_subtotal( $format = true, $options = array() ) {
 		}
 	}
 
-	$subtotal = apply_filters( 'it_exchange_get_cart_subtotal', $subtotal, $options );
+	$subtotal = apply_filters( 'it_exchange_get_cart_subtotal', $subtotal, $options, $cart );
 
 	return $format ? it_exchange_format_price( $subtotal ) : $subtotal;
 }

@@ -52,6 +52,8 @@ class ITE_Cart {
 			if ( ! $customer instanceof IT_Exchange_Customer ) {
 				$customer = null;
 			}
+		} elseif ( $this->has_meta( 'guest-email' ) ) {
+			$customer = it_exchange_get_customer( $this->get_meta( 'guest-email' ) );
 		}
 
 		$this->customer = $customer;
@@ -668,6 +670,17 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Is this a guest purchase.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function is_guest() {
+		return $this->has_meta( 'guest-email' );
+	}
+
+	/**
 	 * Set the shipping method for the cart.
 	 *
 	 * This function does not handle updating the session, so behavior is consistent among cart types.
@@ -694,12 +707,9 @@ class ITE_Cart {
 	public function set_shipping_method( $method, ITE_Aggregate_Line_Item $for = null ) {
 
 		if ( $for ) {
-			if ( $for instanceof ITE_Cart_Product ) {
-				$old_method = it_exchange_get_multiple_shipping_method_for_cart_product( $for, $this );
-			} else {
-				$old_method = it_exchange_get_shipping_method_for_item( $for );
-				$old_method = $old_method ? $old_method->slug : false;
-			}
+
+			$old_method = $this->get_shipping_method( $for );
+			$old_method = $old_method ? $old_method->slug : false;
 
 			$for->get_line_items()->with_only( 'shipping' )->delete();
 
@@ -761,6 +771,47 @@ class ITE_Cart {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get the shipping method for the cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Line_Item $for
+	 *
+	 * @return \IT_Exchange_Shipping_Method|null|\stdClass
+	 */
+	public function get_shipping_method( \ITE_Line_Item $for = null ) {
+
+		if ( $for ) {
+			if ( $for instanceof ITE_Cart_Product ) {
+				$slug = it_exchange_get_multiple_shipping_method_for_cart_product( $for, $this );
+
+				return it_exchange_get_registered_shipping_method( $slug );
+			}
+
+			return it_exchange_get_shipping_method_for_item( $for );
+		}
+
+		$items = $this->get_items( 'shipping', true );
+
+		$uniqued = $items->unique( function ( ITE_Shipping_Line_Item $item ) {
+			return $item->get_method()->slug;
+		} );
+
+		if ( $uniqued->count() === 0 ) {
+			return null;
+		} elseif ( $uniqued->count() === 1 ) {
+			return $uniqued->first()->get_method();
+		} else {
+
+			$method        = new stdClass();
+			$method->slug  = 'multiple-methods';
+			$method->label = __( 'Multiple Shipping Methods', 'it-l10n-ithemes-exchange' );
+
+			return $method;
+		}
 	}
 
 	/**

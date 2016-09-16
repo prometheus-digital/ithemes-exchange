@@ -28,7 +28,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	 */
 	public function __construct(
 		\IT_Exchange_In_Memory_Session $session,
-		\IT_Exchange_Customer $customer,
+		\IT_Exchange_Customer $customer = null,
 		\ITE_Line_Item_Repository_Events $events
 	) {
 		parent::__construct( $session, $events );
@@ -54,6 +54,8 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 		                            ->order_by( 'updated_at', 'ASC' )
 		                            ->first();
 
+		$session = $session ?: null;
+
 		return static::setup_from_session( $session, $customer );
 	}
 
@@ -73,11 +75,29 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 
 		$session = ITE_Session_Model::get( $session_id );
 
-		if ( $session && $session->customer->ID != $customer->id ) {
+		if ( $session && $session->customer && $session->customer->ID != $customer->id ) {
 			throw new InvalidArgumentException( "Session ID '{$session->ID}' does not match customer #{$customer->id}'" );
 		}
 
 		return static::setup_from_session( $session, $customer );
+	}
+
+	/**
+	 * Initialize the repository by cart id.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $cart_id
+	 *
+	 * @return \ITE_Line_Item_Cached_Session_Repository
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public static function from_cart_id( $cart_id ) {
+
+		$session = ITE_Session_Model::from_cart_id( $cart_id );
+
+		return static::setup_from_session( $session );
 	}
 
 	/**
@@ -92,10 +112,15 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	private static function setup_from_session( ITE_Session_Model $session = null, IT_Exchange_Customer $customer ) {
+	private static function setup_from_session( ITE_Session_Model $session = null, IT_Exchange_Customer $customer = null ) {
 
-		if ( ! $session || ! $session->data || count( $session->data ) === 0 ) {
-			throw new InvalidArgumentException( "No cart can be retrieved for #{$customer->id}." );
+		if ( ! $session ) {
+			$cid = $customer ? $customer->id : 0;
+			throw new InvalidArgumentException( "No cart can be retrieved for #{$cid}." );
+		}
+
+		if ( ! $customer && $session->customer ) {
+			$customer = it_exchange_get_customer( $session->customer );
 		}
 
 		$self = new self(
@@ -155,6 +180,17 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	 */
 	public function get_cart_id() {
 		return $this->cart_id;
+	}
+
+	/**
+	 * Get the repo's customer.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \IT_Exchange_Customer
+	 */
+	public function get_customer() {
+		return $this->customer;
 	}
 
 	/**

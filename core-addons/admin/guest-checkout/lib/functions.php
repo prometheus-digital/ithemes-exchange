@@ -12,6 +12,7 @@ function it_exchange_guest_checkout_bump_session() {
 	$customer_email = is_array( $customer_email ) ? reset( $customer_email ) : $customer_email;
 
 	it_exchange_update_cart_data( 'guest-checkout', $now );
+	it_exchange_get_current_cart()->set_meta( 'guest-email', $customer_email );
 
 	if (
 		it_exchange_is_page( 'checkout' ) || it_exchange_is_page( 'transaction' ) || it_exchange_is_page( 'confirmation' ) ||
