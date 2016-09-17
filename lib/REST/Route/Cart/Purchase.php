@@ -82,7 +82,7 @@ class Purchase implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user ) { return true; }
+	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) { return true; }
 
 	/**
 	 * @inheritDoc
@@ -123,7 +123,7 @@ class Purchase implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user ) { return true; }
+	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) { return true; }
 
 	/**
 	 * @inheritDoc

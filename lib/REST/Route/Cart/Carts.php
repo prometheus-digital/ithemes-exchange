@@ -84,8 +84,8 @@ class Carts implements Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
-		return (bool) $user->id;
+	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+		return (bool) $user && $user->id;
 	}
 
 	/**

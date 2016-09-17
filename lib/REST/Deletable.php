@@ -36,5 +36,5 @@ interface Deletable extends Route {
 	 *
 	 * @return bool
 	 */
-	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user );
+	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user = null );
 }

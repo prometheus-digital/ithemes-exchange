@@ -46,7 +46,7 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
+	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
 		return $this->permission_check( $request, $user );
 	}
 
@@ -70,7 +70,7 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
+	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
 		return $this->permission_check( $request, $user );
 	}
 
@@ -87,7 +87,7 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
+	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
 		return $this->permission_check( $request, $user );
 	}
 
@@ -128,7 +128,7 @@ class Cart implements Getable, Putable, Deletable {
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permission_check( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
+	protected function permission_check( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
 
 		$url_params = $request->get_url_params();
 
@@ -146,7 +146,7 @@ class Cart implements Getable, Putable, Deletable {
 			}
 		}
 
-		if ( $cart->get_customer() && $cart->get_customer()->id === $user->id ) {
+		if ( $cart->get_customer() && $user && $cart->get_customer()->id === $user->id ) {
 			return true;
 		}
 

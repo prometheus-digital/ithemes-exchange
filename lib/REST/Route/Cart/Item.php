@@ -63,7 +63,7 @@ class Item implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
+	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
 		return $this->permission_check( $request, $user );
 	}
 
@@ -94,7 +94,7 @@ class Item implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
+	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_non_editable_item',
@@ -122,7 +122,7 @@ class Item implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
+	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_non_editable_item',
@@ -144,7 +144,7 @@ class Item implements Getable, Putable, Deletable {
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permission_check( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
+	protected function permission_check( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
 
 		$url_params = $request->get_url_params();
 		$cart       = it_exchange_get_cart( $url_params['id'] );

@@ -43,7 +43,7 @@ class Shipping_Methods implements Getable, Putable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user ) { return true; }
+	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) { return true; }
 
 	/**
 	 * @inheritDoc
@@ -177,7 +177,7 @@ class Shipping_Methods implements Getable, Putable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user ) { return true; }
+	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) { return true; }
 
 	/**
 	 * @inheritDoc

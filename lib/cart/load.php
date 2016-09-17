@@ -54,6 +54,9 @@ require_once dirname( __FILE__ ) . '/validators/class.multi-item-product.php';
 require_once dirname( __FILE__ ) . '/exceptions/class.cart-coercion-failed.php';
 require_once dirname( __FILE__ ) . '/exceptions/class.line-item-coercion-failed.php';
 
+require_once dirname( __FILE__ ) . '/class.meta.php';
+require_once dirname( __FILE__ ) . '/class.meta-registry.php';
+
 \IronBound\DB\Manager::register( new ITE_Transaction_Line_Item_Table(), '', 'ITE_Transaction_Line_Item_Model' );
 \IronBound\DB\Manager::register( new BaseMetaTable( new ITE_Transaction_Line_Item_Table(), array(
 	'primary_id_column' => 'line_item'
@@ -147,3 +150,6 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'fee', array(
 	'show_in_rest'     => true,
 	'editable_in_rest' => false,
 ) ) );
+ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'tax', array( 'label' => __( 'Tax', 'it-l10n-ithemes-exchange' ) ) ) );
+ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'shipping', array( 'label' => __( 'Shipping', 'it-l10n-ithemes-exchange' ) ) ) );
+ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'coupon', array( 'label' => __( 'Coupon', 'it-l10n-ithemes-exchange' ) ) ) );

@@ -49,7 +49,7 @@ class Items implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
+	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
 
 		if ( ! $this->type->is_show_in_rest() ) {
 			return new \WP_Error(
@@ -86,7 +86,7 @@ class Items implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
+	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_type',
@@ -111,7 +111,7 @@ class Items implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user ) {
+	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_type',

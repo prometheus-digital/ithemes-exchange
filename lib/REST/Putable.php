@@ -36,5 +36,5 @@ interface Putable extends Route {
 	 *
 	 * @return bool
 	 */
-	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user );
+	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user = null );
 }
