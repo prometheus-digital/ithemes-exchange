@@ -63,7 +63,12 @@ function it_exchange_add_sale_information_to_base_price_theme( $price, $product_
 	if ( it_exchange_is_product_sale_active( $product_id ) ) {
 
 		$sale_price = it_exchange_get_product_feature( $product_id, 'sale-price' );
-		$sale_price = it_exchange_format_price( $sale_price );
+
+		if ( empty( $sale_price ) || $sale_price === 0.00 ) {
+			$sale_price = __( 'Free', 'it-l10n-ithemes-exchange' );
+		} else {
+			$sale_price = it_exchange_format_price( $sale_price );
+		}
 
 		remove_filter( 'it_exchange_api_theme_product_base_price', 'it_exchange_add_sale_information_to_base_price_theme', 20 );
 		$sale_price = apply_filters( 'it_exchange_api_theme_product_base_price', $sale_price, $product_id );

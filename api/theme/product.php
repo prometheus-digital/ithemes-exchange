@@ -944,12 +944,14 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	function superwidget( $options=array() ) {
 
 		// Return boolean if has flag was set. Just keeping this here since its in all other product.php methods
-		if ( $options['supports'] )
+		if ( $options['supports'] ) {
 			return true;
+		}
 
 		// Return boolean if has flag was set
-		if ( $options['has'] )
+		if ( $options['has'] ) {
 			return true;
+		}
 
 		// Parse options
 		$result        = false;

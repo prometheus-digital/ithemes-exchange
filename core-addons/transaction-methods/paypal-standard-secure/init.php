@@ -561,8 +561,6 @@ add_filter( 'it_exchange_get_paypal-standard-secure_make_payment_button', 'it_ex
 */
 function it_exchange_process_paypal_standard_secure_form() {
 
-	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard_secure' );
-
 	if ( ! empty( $_REQUEST['paypal_standard_secure_purchase'] ) ) {
 	
 		$customer = it_exchange_get_current_customer();
@@ -573,8 +571,11 @@ function it_exchange_process_paypal_standard_secure_form() {
 		it_exchange_update_transient_transaction( 'ppss', $temp_id, $customer->id, $transaction_object );
 		it_exchange_update_session_data( 'ppss_transient_transaction_id', $temp_id );
 		
-		if ( $url = it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id ) ) {
-			wp_redirect( $url );
+		if ( $encrypted = it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id, true ) ) {
+
+			$paypal_settings    = it_exchange_get_option( 'addon_paypal_standard_secure' );
+			$paypal_payment_url = ( $paypal_settings['sandbox-mode'] ) ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr';
+			require_once dirname( __FILE__ ) . '/interstitial.php';
 			die();
 		} else {
 			it_exchange_add_message( 'error', __( 'Error processing PayPal form. Missing valid PayPal information.', 'it-l10n-ithemes-exchange' ) );
@@ -594,9 +595,10 @@ add_action( 'template_redirect', 'it_exchange_process_paypal_standard_secure_for
  * @since 0.4.0
  *
  * @param string $temp_id Temporary ID we reference late with IPN
+ * @param bool  $encrypted_only 
  * @return string PayPal payment URL
 */
-function it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id ) {
+function it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id, $encrypted_only = false ) {
 
 	if ( 0 >= it_exchange_get_cart_total( false ) )
 		return;
@@ -887,17 +889,18 @@ function it_exchange_paypal_standard_secure_addon_get_payment_url( $temp_id ) {
 		if ( !empty( $response_array['ACK'] ) && 'Success' === $response_array['ACK'] ) {
 
 			if ( !empty( $response_array['WEBSITECODE'] ) ) {
-				$payment_form = str_replace( array(
-					"\r\n",
-					"\r",
-					"\n"
-				), '', stripslashes( $response_array['WEBSITECODE'] ) );
+				$payment_form = stripslashes( $response_array['WEBSITECODE'] );
 			}
 			//Strip out the newline characters because parse_str/PayPal adds a \n to the encrypted code, whic breaks the digital ID
 		}
 	}
 
 	if ( preg_match( '/-----BEGIN PKCS7-----.*-----END PKCS7-----/i', $payment_form, $matches ) ) {
+
+		if ( $encrypted_only ) {
+			return trim( $matches[0] );
+		}
+
 		$query = array(
 			'cmd'       => '_s-xclick',
 			'encrypted' => $matches[0],

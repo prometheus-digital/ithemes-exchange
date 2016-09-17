@@ -1293,3 +1293,15 @@
 	Fix: Don't overwrite existing columns on the products list table
 	Fix: ITSEC Recaptcha Integration
 	Fix: Ensure tooltip dialog clears other DOM elements
+1.35.9 - Elise Alley, Timothy Jacobs, Ty Carlson
+	Fix: PayPal Standard Secure intermittent 502 errors
+	Fix: Don't render the Super Widget in the sidebar if it is already displayed as a shortcode.
+	Tweak: Don't autoload transient transactions
+	Tweak: Update lib/classes
+1.35.10 - Elise Alley, Timothy Jacobs
+	Fix: Issue with the Super Widget not rendering correctly
+	Tweak: Add support for sale price to make a product free
+1.35.10.1 - Elise Alley, Timothy Jacobs
+	Fix: Issue with the Super Widget not rendering when 'the_content' is applied before the main content area.
+1.35.10.2 - Elise Alley, Timothy Jacobs
+	Fix: Issue with the Super Widget not rendering. Improve detection of "loop_start"
