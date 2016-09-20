@@ -46,6 +46,23 @@ class ITE_Gateways {
 			};
 		}
 
+		if ( $webhook_param = $gateway->get_webhook_param() ) {
+			it_exchange_register_webhook( $gateway->get_slug(), $webhook_param );
+		}
+
+		if ( $gateway->can_handle( 'webhook' ) ) {
+			add_action( "it_exchange_webhook_{$gateway->get_webhook_param()}", function ( $request ) use ( $gateway ) {
+				$factory = new ITE_Gateway_Request_Factory();
+
+				$request = $factory->make( 'webhook', array( 'webhook_data' => $request ) );
+
+				/** @var WP_HTTP_Response $response */
+				$response = $gateway->get_handler_for( $request )->handle( $request );
+
+				status_header( $response->get_status() );
+			} );
+		}
+
 		return true;
 	}
 

@@ -995,7 +995,7 @@ function it_exchange_paypal_standard_addon_process_webhook( $request ) {
 	}
 }
 
-add_action( 'it_exchange_webhook_it_exchange_paypal-standard', 'it_exchange_paypal_standard_addon_process_webhook' );
+//add_action( 'it_exchange_webhook_it_exchange_paypal-standard', 'it_exchange_paypal_standard_addon_process_webhook' );
 
 /**
  * Gets iThemes Exchange's Transaction ID from PayPal Standard's Transaction ID

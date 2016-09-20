@@ -29,6 +29,8 @@ class ITE_Gateway_Request_Factory {
 				$nonce = empty( $args['nonce'] ) ? '' : $args['nonce'];
 
 				return new ITE_Gateway_Purchase_Request( $cart, $nonce );
+			case ITE_Webhook_Gateway_Request::get_name():
+				return new ITE_Webhook_Gateway_Request( $args['webhook_data'] );
 			default:
 				return null;
 		}

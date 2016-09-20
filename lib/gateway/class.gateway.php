@@ -67,6 +67,25 @@ abstract class ITE_Gateway {
 	}
 
 	/**
+	 * Can the gateway handle a given request.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $request_name
+	 *
+	 * @return bool
+	 */
+	public function can_handle( $request_name ) {
+		foreach ( $this->get_handlers() as $handler ) {
+			if ( $handler::can_handle( $request_name ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Is the gateway in sandbox mode.
 	 *
 	 * @since 1.36
