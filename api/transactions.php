@@ -1616,6 +1616,19 @@ function it_exchange_doing_webhook( $webhook = '' ) {
 }
 
 /**
+ * Get a URL for a webhook.
+ *
+ * @since 1.36.0
+ *
+ * @param string $webook
+ *
+ * @return string
+ */
+function it_exchange_get_webhook_url( $webook ) {
+	return get_home_url() . '/?' . it_exchange_get_webhook( $webook ) . '=1';
+}
+
+/**
  * Get the confirmation URL for a transaction
  *
  * @since 0.4.0

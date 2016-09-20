@@ -26,7 +26,30 @@ class IT_Exchange {
 	
 	const VERSION = '1.36.0';
 
+	/**
+	 * @var string
+	 */
+	public static $dir;
 
+	/**
+	 * @var string
+	 */
+	public static $url;
+	
+	var $_wp_minimum  = '4.3';
+	var $_slug        = 'ithemes-exchange';
+	var $_name        = 'iThemes Exchange';
+	var $_series      = '';
+	var $_plugin_base = '';
+	
+	/** @deprecated 1.36 */
+	var $_plugin_path = '';
+
+	/** @deprecated 1.36 */
+	var $_plugin_url = '';
+
+	/** @deprecated 1.36 */
+	var $_version;
 
 	/**
 	 * Setup the plugin

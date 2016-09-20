@@ -10,7 +10,7 @@
  * Class ITE_Redirect_Purchase_Request_Handler
  */
 abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Request_Handler {
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -24,7 +24,7 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	 * @inheritDoc
 	 */
 	protected function get_form_action() {
-		
+
 		if ( it_exchange_is_multi_item_cart_allowed() ) {
 			return it_exchange_get_page_url( 'checkout' );
 		} else {
@@ -43,13 +43,15 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], $this->get_nonce_action() ) ) {
-			it_exchange_add_message( 'error', __( 'Request expired. Please try again.', 'it-l10n-ithemes-exchange' ) );
+		$nonce = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
 
-			return;
+		if ( isset( $_POST['cart_id'] ) ) {
+			$cart = it_exchange_get_cart( $_POST['cart_id'] );
+
+
 		}
 
-		$this->redirect( $this->factory->make( 'purchase' ) );
+		$this->redirect( $this->factory->make( 'purchase', array( 'nonce' => $nonce ) ) );
 	}
 
 	/**
