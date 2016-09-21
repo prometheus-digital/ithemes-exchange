@@ -14,6 +14,27 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	/**
 	 * @inheritDoc
 	 */
+	public function __construct( \ITE_Gateway $gateway, \ITE_Gateway_Request_Factory $factory ) {
+		parent::__construct( $gateway, $factory );
+
+		//add_action();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function render_payment_button() {
+
+		if ( ! $this->get_gateway()->settings()->get( 'live-email-address' ) ) {
+			return '';
+		}
+
+		return parent::render_payment_button();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	protected function get_redirect_url( ITE_Gateway_Purchase_Request $request ) {
 
 		$cart = $request->get_cart();
@@ -41,6 +62,12 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			'business'      => $paypal_email,
 			'item_name'     => strip_tags( it_exchange_get_cart_description( array( 'cart' => $cart ) ) ),
 			'currency_code' => $general_settings['default-currency'],
+			'return'        => add_query_arg( array(
+				'it-exchange-transaction-method' => 'paypal-standard',
+				'_wpnonce'                       => $this->get_nonce(),
+				'auto_return'                    => true,
+				'paypal-standard_purchase'       => 1,
+			), it_exchange_get_page_url( 'transaction' ) ),
 			'notify_url'    => it_exchange_get_webhook_url( $this->get_gateway()->get_webhook_param() ),
 			'no_note'       => 1,
 			'shipping'      => 0,
@@ -69,11 +96,14 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 		add_filter( 'the_title', 'wptexturize' );
 
-		return PAYPAL_PAYMENT_LIVE_URL . '?' . http_build_query( $query );
+		return PAYPAL_PAYMENT_SANDBOX_URL . '?' . http_build_query( $query );
 	}
 
 	/**
 	 * @inheritDoc
+	 *
+	 * @param ITE_Gateway_Purchase_Request $request
+	 *
 	 * @throws \IT_Exchange_Locking_Exception
 	 */
 	public function handle( $request ) {
@@ -111,6 +141,19 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			$cart = it_exchange_get_cart( $cart_id );
 		}
 
+		if ( ! wp_verify_nonce( $request->get_nonce(), $this->get_nonce_action() ) ) {
+
+			$error = __( 'Request expired. Please try again.', 'it-l10n-ithemes-exchange' );
+
+			if ( $cart ) {
+				$cart->get_feedback()->add_error( $error );
+			} else {
+				it_exchange_add_message( 'error', $error );
+			}
+
+			return null;
+		}
+
 		try {
 
 			if ( isset( $paypal_id, $cart_id, $cart, $paypal_total, $paypal_status ) ) {
@@ -128,20 +171,20 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 					it_exchange_release_lock( $lock );
 
-					return $transaction->ID;
+					return $transaction;
 				}
 
 				if ( $transaction = it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
 					it_exchange_release_lock( $lock );
 
-					return $transaction->ID;
+					return $transaction;
 				}
 
 				$txn_id = it_exchange_add_transaction( 'paypal-standard', $paypal_id, $paypal_status, $cart );
 
 				it_exchange_release_lock( $lock );
 
-				return $txn_id;
+				return it_exchange_get_transaction( $txn_id );
 			} elseif ( null === $paypal_id && null === $cart_id && null === $cart && null === $paypal_total && null === $paypal_status ) {
 
 				$cart_id = it_exchange_get_session_data( 'pps_transient_transaction_id' );
@@ -160,16 +203,16 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 				if ( $transaction = it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
 					it_exchange_release_lock( $lock );
 
-					return $transaction->ID;
+					return $transaction;
 				}
 
 				$txn_id = it_exchange_add_transaction( 'paypal-standard', $cart_id, 'Completed', $cart );
 
 				it_exchange_release_lock( $lock );
 
-				return $txn_id;
+				return it_exchange_get_transaction( $txn_id );
 			} else {
-				return false;
+				return null;
 			}
 		}
 		catch ( IT_Exchange_Locking_Exception $e ) {
@@ -183,7 +226,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 				it_exchange_add_message( 'error', $e->getMessage() );
 			}
 
-			return false;
+			return null;
 		}
 	}
 }

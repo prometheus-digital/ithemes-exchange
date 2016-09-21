@@ -361,7 +361,7 @@ function it_exchange_process_paypal_standard_addon_transaction( $status, $transa
 	return $txn_id;
 }
 
-add_action( 'it_exchange_do_transaction_paypal-standard', 'it_exchange_process_paypal_standard_addon_transaction', 10, 2 );
+//add_action( 'it_exchange_do_transaction_paypal-standard', 'it_exchange_process_paypal_standard_addon_transaction', 10, 2 );
 
 /**
  * Grab the paypal customer ID for a WP user
@@ -477,9 +477,8 @@ function it_exchange_paypal_standard_addon_default_settings( $values ) {
 		'live-email-address'    => '',
 		'purchase-button-label' => __( 'Pay with PayPal', 'it-l10n-ithemes-exchange' ),
 	);
-	$values   = ITUtility::merge_defaults( $values, $defaults );
 
-	return $values;
+	return ITUtility::merge_defaults( $values, $defaults );
 }
 
 add_filter( 'it_storage_get_defaults_exchange_addon_paypal_standard', 'it_exchange_paypal_standard_addon_default_settings' );
@@ -499,26 +498,41 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 		return;
 	}
 
-	$general_settings = it_exchange_get_option( 'settings_general' );
 	$paypal_settings  = it_exchange_get_option( 'addon_paypal_standard' );
 
 	$payment_form = '';
 
 	if ( $paypal_email = $paypal_settings['live-email-address'] ) {
-
-		$it_exchange_customer = it_exchange_get_current_customer();
-
 		$payment_form .= '<form action="" method="post">';
 		$payment_form .= '<input type="submit" class="it-exchange-paypal-standard-button" name="paypal_standard_purchase" value="' . $paypal_settings['purchase-button-label'] . '" />';
 		$payment_form .= '</form>';
-
 	}
 
 	return $payment_form;
 
 }
 
-add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_paypal_standard_addon_make_payment_button', 10, 2 );
+//add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_paypal_standard_addon_make_payment_button', 10, 2 );
+
+/**
+ * Override the payment method button name.
+ *
+ * @since 1.36.0
+ *
+ * @param string $name
+ *
+ * @return string
+ */
+function it_exchange_paypal_standard_override_method_name( $name ) {
+
+	if ( $g = ITE_Gateways::get('paypal-standard') ) {
+		$name = $g->settings()->get( 'purchase-button-label' );
+	}
+
+	return $name;
+}
+
+add_filter( 'it_exchange_get_transaction_method_name_paypal-standard', 'it_exchange_paypal_standard_override_method_name' );
 
 /**
  * Process the faux PayPal Standard form
@@ -769,7 +783,7 @@ function it_exchange_paypal_standard_addon_register_webhook() {
 	it_exchange_register_webhook( $key, $param );
 }
 
-add_filter( 'init', 'it_exchange_paypal_standard_addon_register_webhook' );
+//add_filter( 'init', 'it_exchange_paypal_standard_addon_register_webhook' );
 
 /**
  * Processes webhooks for PayPal Web Standard

@@ -43,12 +43,14 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 			return;
 		}
 
+		if ( isset( $_POST['auto_return'] ) ) {
+			return;
+		}
+
 		$nonce = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
 
 		if ( isset( $_POST['cart_id'] ) ) {
 			$cart = it_exchange_get_cart( $_POST['cart_id'] );
-
-
 		}
 
 		$this->redirect( $this->factory->make( 'purchase', array( 'nonce' => $nonce ) ) );
