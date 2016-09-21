@@ -252,7 +252,7 @@ function it_exchange_get_addon_categories() {
  *
  * @return array  Enabled add-ons
 */
-function it_exchange_get_enabled_addons( $options=array() ) {
+function it_exchange_get_enabled_addons( $options = array() ) {
 	$defaults = array(
 		'show_required' => true,
 		'break_cache'   => false,
@@ -284,6 +284,14 @@ function it_exchange_get_enabled_addons( $options=array() ) {
 	}
 
 	ksort( $enabled );
+
+	if ( ! empty( $options['return'] ) && $options['return'] === 'slug' ) {
+		$arrays = $enabled;
+
+		foreach ( $arrays as $slug => $_ ) {
+			$enabled[ $slug ] = array( 'slug' => $slug );
+		}
+	}
 
 	return apply_filters( 'it_exchange_get_enabled_addons', empty( $enabled ) ? array() : $enabled, $options );
 }
@@ -406,7 +414,7 @@ function it_exchange_filter_addons_by_category( $add_ons, $categories ) {
 */
 function it_exchange_enable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
-	$enabled_add_ons = it_exchange_get_enabled_addons( array( 'break_cache' => true ) );
+	$enabled_add_ons = it_exchange_get_enabled_addons( array( 'break_cache' => true, 'return' => 'slug' ) );
 	$success = false;
 
 	if ( isset( $registered[$add_on] ) && ! isset( $enabled_add_ons[$add_on] ) ) {
@@ -479,7 +487,7 @@ function it_exchange_is_addon_registered( $add_on_slug ) {
 */
 function it_exchange_disable_addon( $add_on ) {
 	$registered = it_exchange_get_addons();
-	$enabled_addons = it_exchange_get_enabled_addons( array( 'break_cache' => true ) );
+	$enabled_addons = it_exchange_get_enabled_addons( array( 'break_cache' => true, 'return' => 'slug' ) );
 	$success = false;
 
 	do_action( 'it_exchange_add_on_before_disable', $add_on );
