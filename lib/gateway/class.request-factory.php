@@ -19,7 +19,9 @@ class ITE_Gateway_Request_Factory {
 	 * @param string $request
 	 * @param array  $args
 	 *
-	 * @return ITE_Gateway_Request
+	 * @return ITE_Gateway_Request|null
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function make( $request, array $args = array() ) {
 
@@ -27,8 +29,25 @@ class ITE_Gateway_Request_Factory {
 			case ITE_Gateway_Purchase_Request::get_name():
 				$cart  = empty( $args['cart'] ) ? it_exchange_get_current_cart() : $args['cart'];
 				$nonce = empty( $args['nonce'] ) ? '' : $args['nonce'];
+				$http  = empty( $args['http_request'] ) ? array() : (array) $args['http_request'];
 
-				return new ITE_Gateway_Purchase_Request( $cart, $nonce );
+				$request = new ITE_Gateway_Purchase_Request( $cart, $nonce, $http );
+
+				if ( ! empty( $args['card'] ) ) {
+					$card = $args['card'];
+
+					if ( is_array( $card ) && isset( $card['number'], $card['year'], $card['month'], $card['cvc'] ) ) {
+						$card = new ITE_Gateway_Card( $card['number'], $card['year'], $card['month'], $card['cvc'] );
+					}
+
+					if ( ! $card instanceof ITE_Gateway_Card ) {
+						throw new InvalidArgumentException( 'Invalid `card` option.' );
+					}
+
+					$request->set_card( $args['card'] );
+				}
+
+				return $request;
 			case ITE_Webhook_Gateway_Request::get_name():
 				return new ITE_Webhook_Gateway_Request( $args['webhook_data'] );
 			default:

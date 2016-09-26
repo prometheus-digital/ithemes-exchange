@@ -65,6 +65,18 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 	protected function get_settings_fields() {
 		return array(
 			array(
+				'type' => 'html',
+				'slug' => 'preamble',
+				'html' =>
+					'<p>' . __( 'Offline payments allow customers to purchase products from your site using check or cash. Transactions can be set as pending until you receive payment.', 'it-l10n-ithemes-exchange' ) .
+					/* translators: %1$s opening link %2$s closing link */
+					'</p><p>' .
+					sprintf(
+						__( 'Video: %1$s Setting up Offline Payments in Exchange %2$s', 'it-l10n-ithemes-exchange' ),
+						'<a href="http://ithemes.com/tutorials/using-offline-payments-in-exchange/" target="_blank">', '</a>'
+					) . '</p>',
+			),
+			array(
 				'type'    => 'text_box',
 				'label'   => __( 'Payment option name', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'offline-payments-title',

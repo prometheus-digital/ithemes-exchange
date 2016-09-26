@@ -18,7 +18,10 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	 * ITE_PayPal_Standard_Gateway constructor.
 	 */
 	public function __construct() {
-		$this->handlers[] = new ITE_PayPal_Standard_Purchase_Handler( $this, new ITE_Gateway_Request_Factory() );
+		$factory = new ITE_Gateway_Request_Factory();
+
+		$this->handlers[] = new ITE_PayPal_Standard_Purchase_Handler( $this, $factory );
+		$this->handlers[] = new ITE_PayPal_Standard_Webhook_Handler( $this, $factory );
 	}
 
 	/**
@@ -64,7 +67,39 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
-	protected function get_settings_fields() { return array(); }
+	protected function get_settings_fields() {
+		return array(
+			array(
+				'type' => 'html',
+				'slug' => 'preamble',
+				'html' =>
+					'<p>' .
+					__( 'This is the simple and fast version to get PayPal setup for your store. You might use this version just to get your store going, but we highly suggest you switch to the PayPal Standard Secure option.', 'it-l10n-ithemes-exchange' ) . ' ' .
+					__( 'To get PayPal set up for use with Exchange, you\'ll need to add the following information from your PayPal account.', 'it-l10n-ithemes-exchange' ) .
+					'<p>' .
+					sprintf(
+						__( 'Video: %1$s Setting up PayPal Standard Basic in Exchange %2$s', 'it-l10n-ithemes-exchange' ),
+						'<a href="http://ithemes.com/tutorials/setting-up-paypal-standard-basic/" target="_blank">', '</a>'
+					) . '</p><p>' .
+					sprintf(
+						__( 'Don\'t have a PayPal account yet? %1$sGo set one up here%2$s.', 'it-l10n-ithemes-exchange' ),
+						'<a href="http://paypal.com" target="_blank">', '</a>'
+					) . '</p>',
+			),
+			array(
+				'type'    => 'email',
+				'label'   => __( 'PayPal Email Address', 'it-l10n-ithemes-exchange' ),
+				'slug'    => 'live-email-address',
+				'tooltip' => __( 'We need this to tie payments to your account.', 'it-l10n-ithemes-exchange' )
+			),
+			array(
+				'type'    => 'text_box',
+				'label'   => __( 'Purchase Button Label', 'it-l10n-ithemes-exchange' ),
+				'slug'    => 'purchase-button-label',
+				'tooltip' => __( 'This is the text inside the button your customers will press to purchase with PayPal Standard.', 'it-l10n-ithemes-exchange' )
+			),
+		);
+	}
 
 	/**
 	 * @inheritDoc

@@ -1054,6 +1054,44 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Generate an authentication secret.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param int $life Lifetime of the secret in seconds.
+	 *
+	 * @return string
+	 *
+	 * @throws \UnexpectedValueException
+	 */
+	public final function generate_auth_secret( $life = 300 ) {
+
+		$tick   = ceil( time() / $life );
+		$secret = hash_hmac( 'sha1', $this->get_id() . '|' . $tick, wp_salt() );
+
+		if ( ! $secret ) {
+			throw new UnexpectedValueException( "Unable to generate cart hash for {$this->get_id()}." );
+		}
+
+		return $secret;
+	}
+
+	/**
+	 * Validate an authentication secret.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $secret
+	 *
+	 * @return bool
+	 *
+	 * @throws \UnexpectedValueException
+	 */
+	public final function validate_auth_secret( $secret ) {
+		return hash_equals( $secret, $this->generate_auth_secret() );
+	}
+
+	/**
 	 * Get cart feedback.
 	 *
 	 * @since 1.36.0

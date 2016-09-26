@@ -10,7 +10,6 @@ namespace iThemes\Exchange\REST\Route\Cart;
 
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
-use iThemes\Exchange\REST\Route\Cart\Cart;
 
 /**
  * Class Purchase
@@ -51,7 +50,7 @@ class Purchase implements Getable, Postable {
 
 		foreach ( \ITE_Gateways::all() as $gateway ) {
 			if ( $handler = $gateway->get_handler_for( $purchase_request ) ) {
-				$data[] = $this->get_data_for_handler( $handler );
+				$data[] = $this->get_data_for_handler( $handler, $purchase_request );
 			}
 		}
 
@@ -64,16 +63,18 @@ class Purchase implements Getable, Postable {
 	 * @since 1.36.0
 	 *
 	 * @param \ITE_Purchase_Request_Handler $handler
+	 * @param \ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return array
 	 */
-	protected function get_data_for_handler( \ITE_Purchase_Request_Handler $handler ) {
+	protected function get_data_for_handler( \ITE_Purchase_Request_Handler $handler, \ITE_Gateway_Purchase_Request $request ) {
 
 		$data = array(
-			'id'    => $handler->get_gateway()->get_slug(),
-			'name'  => $handler->get_gateway()->get_name(),
-			'label' => $handler->get_payment_button_label(),
-			'nonce' => $handler->get_nonce(),
+			'id'     => $handler->get_gateway()->get_slug(),
+			'name'   => $handler->get_gateway()->get_name(),
+			'label'  => $handler->get_payment_button_label(),
+			'nonce'  => $handler->get_nonce(),
+			'method' => $handler->get_data_for_REST( $request ),
 		);
 
 		return $data;

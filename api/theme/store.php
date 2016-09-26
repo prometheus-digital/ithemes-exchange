@@ -22,6 +22,7 @@ class IT_Theme_API_Store implements IT_Theme_API {
 	public $_tag_map = array(
 		'products'       => 'products',
 		'productclasses' => 'product_classes',
+		'name'           => 'name',
 	);
 
 	/**
@@ -119,5 +120,19 @@ class IT_Theme_API_Store implements IT_Theme_API {
 		$classes = implode( ' ', $classes );
 		$classes = esc_attr( trim( $classes ) );
 		return $classes;
+	}
+
+	/**
+	 * Print the Store name.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function name() {
+
+		$settings = it_exchange_get_option( 'settings_general' );
+
+		return $settings['company-name'];
 	}
 }

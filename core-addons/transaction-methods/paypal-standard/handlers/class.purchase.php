@@ -35,7 +35,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	/**
 	 * @inheritDoc
 	 */
-	protected function get_redirect_url( ITE_Gateway_Purchase_Request $request ) {
+	public function get_redirect_url( ITE_Gateway_Purchase_Request $request ) {
 
 		$cart = $request->get_cart();
 
@@ -55,6 +55,20 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 		$general_settings = it_exchange_get_option( 'settings_general' );
 
+		$return_args = array(
+			'it-exchange-transaction-method' => 'paypal-standard',
+			'_wpnonce'                       => $this->get_nonce(),
+			'auto_return'                    => true,
+			'paypal-standard_purchase'       => 1,
+		);
+
+		if ( ! $cart->is_current() ) {
+			$return_args['cart_id']   = $cart->get_id();
+			$return_args['cart_auth'] = $cart->generate_auth_secret();
+		}
+
+		$return_url = add_query_arg( $return_args, it_exchange_get_page_url( 'transaction' ) );
+
 		$query = array(
 			'cmd'           => '_xclick',
 			'amount'        => number_format( it_exchange_get_cart_total( false, array( 'cart' => $cart ) ), 2, '.', '' ),
@@ -62,12 +76,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			'business'      => $paypal_email,
 			'item_name'     => strip_tags( it_exchange_get_cart_description( array( 'cart' => $cart ) ) ),
 			'currency_code' => $general_settings['default-currency'],
-			'return'        => add_query_arg( array(
-				'it-exchange-transaction-method' => 'paypal-standard',
-				'_wpnonce'                       => $this->get_nonce(),
-				'auto_return'                    => true,
-				'paypal-standard_purchase'       => 1,
-			), it_exchange_get_page_url( 'transaction' ) ),
+			'return'        => $return_url,
 			'notify_url'    => it_exchange_get_webhook_url( $this->get_gateway()->get_webhook_param() ),
 			'no_note'       => 1,
 			'shipping'      => 0,
@@ -96,7 +105,11 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 		add_filter( 'the_title', 'wptexturize' );
 
-		return PAYPAL_PAYMENT_SANDBOX_URL . '?' . http_build_query( $query );
+		if ( $this->get_gateway()->is_sandbox_mode() ) {
+			return PAYPAL_PAYMENT_SANDBOX_URL . '?' . http_build_query( $query );
+		} else {
+			return PAYPAL_PAYMENT_LIVE_URL . '?' . http_build_query( $query );
+		}
 	}
 
 	/**
@@ -108,31 +121,31 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	 */
 	public function handle( $request ) {
 
-		$pdt = $_REQUEST;
+		$pdt = $request->get_http_request();
 
 		$paypal_id = $cart_id = $cart = $paypal_total = $paypal_status = $lock = null;
 
 		if ( ! empty( $pdt['tx'] ) ) { //if PDT is enabled
 			$paypal_id = $pdt['tx'];
-		} else if ( ! empty( $pdt['txn_id'] ) ) { //if PDT is not enabled
+		} elseif ( ! empty( $pdt['txn_id'] ) ) { //if PDT is not enabled
 			$paypal_id = $pdt['txn_id'];
 		}
 
 		if ( ! empty( $pdt['cm'] ) ) {
 			$cart_id = $pdt['cm'];
-		} else if ( ! empty( $pdt['custom'] ) ) {
+		} elseif ( ! empty( $pdt['custom'] ) ) {
 			$cart_id = $pdt['custom'];
 		}
 
 		if ( ! empty( $pdt['amt'] ) ) { //if PDT is enabled
 			$paypal_total = $pdt['amt'];
-		} else if ( ! empty( $pdt['mc_gross'] ) ) { //if PDT is not enabled
+		} elseif ( ! empty( $pdt['mc_gross'] ) ) { //if PDT is not enabled
 			$paypal_total = $pdt['mc_gross'];
 		}
 
 		if ( ! empty( $pdt['st'] ) ) { //if PDT is enabled
 			$paypal_status = $pdt['st'];
-		} else if ( ! empty( $pdt['payment_status'] ) ) { //if PDT is not enabled
+		} elseif ( ! empty( $pdt['payment_status'] ) ) { //if PDT is not enabled
 			$paypal_status = $pdt['payment_status'];
 		}
 

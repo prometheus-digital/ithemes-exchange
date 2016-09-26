@@ -43,7 +43,7 @@ function it_exchange_register_core_addons() {
 			'file'              => dirname( __FILE__ ) . '/transaction-methods/paypal-standard/init.php',
 			'category'          => 'transaction-methods',
 			'tag'               => 'core',
-			'settings-callback' => 'it_exchange_paypal_standard_settings_callback',
+			/*'settings-callback' => 'it_exchange_paypal_standard_settings_callback',*/
 		),
 		// PayPal Standard Transaction Method
 		'paypal-standard-secure' => array(

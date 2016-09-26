@@ -52,7 +52,11 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 				}
 
 				$nonce = isset( $_REQUEST['_wpnonce'] ) ? $_REQUEST['_wpnonce'] : '';
-				$txn   = $self->handle( $factory->make( 'purchase', array( 'cart' => $cart, 'nonce' => $nonce ) ) );
+				$txn   = $self->handle( $factory->make( 'purchase', array(
+					'cart'         => $cart,
+					'nonce'        => $nonce,
+					'http_request' => $_REQUEST,
+				) ) );
 
 				return $txn ? $txn->ID : false;
 			},
@@ -151,4 +155,17 @@ HTML;
 	 * @return string
 	 */
 	protected function get_html_before_form_end() { return ''; }
+
+	/**
+	 * Get the data for REST API Purchase endpoint.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Gateway_Purchase_Request $request
+	 *
+	 * @return array
+	 */
+	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
+		return array( 'method' => 'REST' );
+	}
 }

@@ -20,6 +20,7 @@ if ( ! defined( 'PAYPAL_PAYMENT_SANDBOX_URL' ) ) {
 add_action( 'it_exchange_register_gateways', function( ITE_Gateways $gateways ) {
 
 	require_once dirname( __FILE__ ) . '/handlers/class.purchase.php';
+	require_once dirname( __FILE__ ) . '/handlers/class.webhook.php';
 	require_once dirname( __FILE__ ) . '/class.gateway.php';
 
 	$gateways::register( new ITE_PayPal_Standard_Gateway() );

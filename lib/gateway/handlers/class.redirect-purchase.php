@@ -36,6 +36,8 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	 * Maybe perform a redirect to an external payment gateway.
 	 *
 	 * @since 1.36
+	 * @throws \InvalidArgumentException
+	 * @throws \UnexpectedValueException
 	 */
 	public function maybe_redirect() {
 
@@ -50,10 +52,24 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 		$nonce = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
 
 		if ( isset( $_POST['cart_id'] ) ) {
-			$cart = it_exchange_get_cart( $_POST['cart_id'] );
+
+			$cart_id = $_POST['cart_id'];
+
+			$cart = it_exchange_get_cart( $cart_id );
+
+			if ( ! $cart ) {
+				throw new InvalidArgumentException( "No cart found for {$cart_id}." );
+			}
+
+			if ( empty( $_POST['cart_auth'] ) || ! $cart->validate_auth_secret( $_POST['cart_auth'] ) ) {
+				throw new InvalidArgumentException( "Invalid cart auth for {$cart_id}." );
+			}
+
+		} else {
+			$cart = it_exchange_get_current_cart();
 		}
 
-		$this->redirect( $this->factory->make( 'purchase', array( 'nonce' => $nonce ) ) );
+		$this->redirect( $this->factory->make( 'purchase', array( 'cart' => $cart, 'nonce' => $nonce ) ) );
 	}
 
 	/**
@@ -61,9 +77,20 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	 *
 	 * @since 1.36
 	 */
-	public function redirect( ITE_Gateway_Purchase_Request $request ) {
+	protected function redirect( ITE_Gateway_Purchase_Request $request ) {
 		wp_redirect( $this->get_redirect_url( $request ) );
 		die();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
+		return array(
+			'method' => 'redirect',
+			'url'    => $this->get_redirect_url( $request ),
+			'auth'   => $request->get_cart()->generate_auth_secret(),
+		);
 	}
 
 	/**
@@ -75,5 +102,5 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	 *
 	 * @return string
 	 */
-	protected abstract function get_redirect_url( ITE_Gateway_Purchase_Request $request );
+	public abstract function get_redirect_url( ITE_Gateway_Purchase_Request $request );
 }

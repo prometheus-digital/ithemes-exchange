@@ -12,6 +12,22 @@
  */
 class IT_Exchange_Admin_Settings_Form {
 
+	private static $html5 = array(
+		'color',
+		'date',
+		'datetime',
+		'datetime-local',
+		'email',
+		'month',
+		'number',
+		'range',
+		'search',
+		'tel',
+		'time',
+		'url',
+		'week'
+	);
+
 	public $prefix = false;
 	public $form_fields = array();
 	public $form_options = array();
@@ -245,16 +261,30 @@ class IT_Exchange_Admin_Settings_Form {
 	 * @return void
 	 */
 	public function print_fields() {
+		$i = 0;
 		?>
-		<table class="form-table">
-			<?php do_action( 'it_exchange_' . $this->prefix . '_top' ); ?>
+		<?php do_action( 'it_exchange_' . $this->prefix . '_top' ); ?>
+		<fieldset class="it-exchange-addon-settings">
 			<?php
 			foreach ( $this->form_fields as $row => $field ) {
 				$field['options'] = empty( $field['options'] ) ? array() : $field['options'];
 				if ( 'heading' === $field['type'] ) {
-					$this->print_heading_row( $field );
+					if ( $i === 0 ) {
+						echo '<legend>' . $field['label'] . '</legend>';
+					} else {
+						$this->print_heading_row( $field );
+					}
+				} elseif ( 'html' === $field['type'] ) {
+					$this->print_html_row( $field );
 				} else {
-					$form_method = 'add_' . $field['type'];
+
+					if ( in_array( $field['type'], self::$html5, true ) ) {
+						$form_method              = '_get_simple_input';
+						$field['options']['type'] = $field['type'];
+					} else {
+						$form_method = 'get_' . $field['type'];
+					}
+
 					// Allow forms to override this by providing a callback public function
 					if ( ! empty( $field['print_setting_field_override'] ) && is_callable( $field['print_setting_field_override'] ) ) {
 						// Force ITForm to include this input name in saveable inputs
@@ -266,12 +296,14 @@ class IT_Exchange_Admin_Settings_Form {
 						$this->print_uncallable_method_row( $field );
 					}
 				}
+
+				$i ++;
 			}
 			// Add a hidden field to identify this form
 			$this->form->add_hidden( 'it-exchange-saving-settings', true );
 			?>
 			<?php do_action( 'it_exchange_' . $this->prefix . '_bottom' ); ?>
-		</table>
+		</fieldset>
 		<?php
 
 		// Include Country State JS if needed
@@ -306,13 +338,28 @@ class IT_Exchange_Admin_Settings_Form {
 		$this->form->end_form();
 	}
 
+	/**
+	 * Print a heading row.
+	 *
+	 * @since 1.3.1
+	 *
+	 * @param array $heading
+	 */
 	public function print_heading_row( $heading ) {
 		?>
-		<tr valign="top">
-			<th scope="row"><strong><?php echo $heading['label']; ?></strong></th>
-			<td></td>
-		</tr>
+		<h2><?php echo $heading['label']; ?></h2>
 		<?php
+	}
+
+	/**
+	 * Print a preamble row.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $preamble
+	 */
+	protected function print_html_row( $preamble ) {
+		echo $preamble['html'];
 	}
 
 	/**
@@ -320,27 +367,37 @@ class IT_Exchange_Admin_Settings_Form {
 	 *
 	 * @since 1.3.1
 	 *
+	 * @param array  $setting
+	 * @param string $form_method
+	 *
 	 * @return void
 	 */
 	public function print_setting_row( $setting, $form_method ) {
+
+		if ( $setting['type'] === 'drop_down' && ! isset( $setting['options']['value'] ) ) {
+			$setting['options']['value'] = $setting['options'];
+		}
+
 		?>
-		<tr valign="top" id="<?php esc_attr_e( $setting['slug'] ); ?>-table-row">
-			<th scope="row" id="<?php esc_attr_e( $setting['slug'] ); ?>-table-row-head">
-				<label for="<?php esc_attr_e( $setting['slug'] ); ?>"><?php echo $setting['label']; ?>
-					<?php
-					if ( ! empty( $setting['tooltip'] ) ) {
-						echo '<span class="tip" title="' . esc_attr( $setting['tooltip'] ) . '">i</span>';
-					}
-					?>
-				</label>
-			</th>
-			<td id="<?php esc_attr_e( $setting['slug'] ); ?>-wrapper">
-				<?php echo empty( $setting['before'] ) ? '' : $setting['before']; ?>
-				<?php $this->form->$form_method( $setting['slug'], $setting['options'] ); ?>
-				<?php echo empty( $setting['after'] ) ? '' : $setting['after']; ?>
-			</td>
-		</tr>
+
+		<label for="<?php echo esc_attr( $setting['slug'] . '-' . $this->prefix ); ?>">
+			<?php echo $setting['label']; ?>
+
+			<?php if ( ! empty( $setting['tooltip'] ) ): ?>
+				<span class="tip" title="<?php echo esc_attr( $setting['tooltip'] ); ?>">i</span>
+			<?php endif; ?>
+		</label>
+
 		<?php
+		echo empty( $setting['before'] ) ? '' : $setting['before'];
+		echo $this->form->$form_method(
+			$setting['slug'],
+			ITUtility::merge_defaults( $setting['options'], array(
+				'id' => $setting['slug'] . '-' . $this->prefix
+			) ),
+			false
+		);
+		echo empty( $setting['after'] ) ? '' : $setting['after'];
 	}
 
 	/**
@@ -348,15 +405,18 @@ class IT_Exchange_Admin_Settings_Form {
 	 *
 	 * @since 1.3.1
 	 *
+	 * @param array $setting
+	 *
 	 * @return void
 	 */
 	public function print_uncallable_method_row( $setting ) {
 		?>
-		<tr valign="top">
-			<th scope="row" class="error"><strong><?php _e( 'Coding Error!', 'it-l10n-ithemes-exchange' ); ?></strong>
-			</th>
-			<td id="<?php esc_attr_e( $setting['slug'] ); ?>-wrapper"><?php printf( __( 'The setting for %s has an incorrect type argument. No such method exists in the ITForm class', 'it-l10n-ithemes-exchange' ), $setting['slug'] ); ?></td>
-		</tr>
+
+		<p>
+			<strong><?php _e( 'Coding Error!', 'it-l10n-ithemes-exchange' ); ?></strong>
+			<?php printf( __( 'The setting for %s has an incorrect type argument. No such method exists in the ITForm class', 'it-l10n-ithemes-exchange' ), $setting['slug'] ); ?>
+		</p>
+
 		<?php
 	}
 

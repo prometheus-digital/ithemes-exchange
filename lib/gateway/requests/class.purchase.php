@@ -11,23 +11,29 @@
  */
 class ITE_Gateway_Purchase_Request implements ITE_Gateway_Request {
 
-	/**
-	 * @var ITE_Cart
-	 */
+	/** @var ITE_Cart */
 	protected $cart;
+
+	/** @var array */
+	protected $http_request;
 
 	/** @var string */
 	protected $nonce;
+
+	/** @var ITE_Gateway_Card|null */
+	protected $card;
 
 	/**
 	 * ITE_Gateway_Purchase_Request constructor.
 	 *
 	 * @param \ITE_Cart $cart
 	 * @param string    $nonce
+	 * @param array     $http_request
 	 */
-	public function __construct( \ITE_Cart $cart, $nonce ) {
-		$this->cart  = $cart;
-		$this->nonce = $nonce;
+	public function __construct( \ITE_Cart $cart, $nonce, array $http_request = array() ) {
+		$this->cart         = $cart;
+		$this->http_request = $http_request;
+		$this->nonce        = $nonce;
 	}
 
 	/**
@@ -42,6 +48,17 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Request {
 	}
 
 	/**
+	 * Get the HTTP request.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array
+	 */
+	public function get_http_request() {
+		return $this->http_request;
+	}
+
+	/**
 	 * Get the nonce.
 	 *
 	 * @since 1.36.0
@@ -50,6 +67,28 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Request {
 	 */
 	public function get_nonce() {
 		return $this->nonce;
+	}
+
+	/**
+	 * Get the card being used for the purchase.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Gateway_Card|null
+	 */
+	public function get_card() {
+		return $this->card;
+	}
+
+	/**
+	 * Set the card to be used for the purchase.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Gateway_Card $card
+	 */
+	public function set_card( ITE_Gateway_Card $card ) {
+		$this->card = $card;
 	}
 
 	/**

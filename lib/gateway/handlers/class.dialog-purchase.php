@@ -33,4 +33,13 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 			)
 		);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
+		return array(
+			'method' => 'dialog'
+		);
+	}
 }
