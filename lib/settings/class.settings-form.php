@@ -485,7 +485,6 @@ class IT_Exchange_Admin_Settings_Form {
 		$country_id     = empty( $this->country_states_js['country-id'] ) ? '' : $this->country_states_js['country-id'];
 		$states_id      = empty( $this->country_states_js['states-id'] ) ? '' : $this->country_states_js['states-id'];
 		$states_wrapper = empty( $this->country_states_js['states-wrapper'] ) ? '' : $this->country_states_js['states-wrapper'];
-		$template_part  = empty( $this->country_states_js['template-part'] ) ? '' : $this->country_states_js['template-part'];
 		?>
 		<script type="text/javascript">
 			var itExchangeAjaxCountryStatesAjaxURL = '<?php echo esc_js( trailingslashit( get_home_url() ) ); ?>';

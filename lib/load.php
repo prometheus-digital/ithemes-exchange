@@ -7,94 +7,95 @@
  */
 
 // Init DB sessions
-require( $this->_plugin_path . 'lib/sessions/load.php' );
+require_once dirname( __FILE__ ) . '/sessions/load.php';
 
 require_once dirname( __FILE__ ) . '/../api/contracts/load.php';
 
 // IT Classes
-require( $this->_plugin_path . 'lib/classes/load.php' );
+require_once dirname( __FILE__ ) . '/classes/load.php';
 
 //Util
-require( $this->_plugin_path . 'lib/util/load.php' );
+require_once dirname( __FILE__ ) . '/util/load.php';
 
 // Other Functions
-require( $this->_plugin_path . 'lib/functions/functions.php' );
+require_once dirname( __FILE__ ) . '/functions/functions.php';
 
 // Locking
-require( $this->_plugin_path . 'lib/functions/locks.php' );
+require_once dirname( __FILE__ ) . '/functions/locks.php';
 
 // IT Fonts
-require( $this->_plugin_path . 'lib/icon-fonts/load.php' );
+require_once dirname( __FILE__ ) . '/icon-fonts/load.php';
 
 // Admin Functionality
-require( $this->_plugin_path . 'lib/admin/class.admin.php' );
+require_once dirname( __FILE__ ) . '/admin/class.admin.php';
 
 // Capabilities
-require( $this->_plugin_path . 'lib/capabilities/load.php' );
+require_once dirname( __FILE__ ) . '/capabilities/load.php';
 
 // Product Post Type
-require( $this->_plugin_path . 'lib/products/class.products-post-type.php' );
+require_once dirname( __FILE__ ) . '/products/class.products-post-type.php';
 
 // Product Object
-require( $this->_plugin_path . 'lib/products/class.product.php' );
-require_once( $this->_plugin_path . 'lib/products/class.factory.php' );
+require_once dirname( __FILE__ ) . '/products/class.product.php';
+require_once dirname( __FILE__ ) . '/products/class.factory.php';
 
 // Product Features
-require( $this->_plugin_path . 'lib/product-features/load.php' );
+require_once dirname( __FILE__ ) . '/product-features/load.php';
 
-require( $this->_plugin_path . 'lib/gateway/load.php' );
+require_once dirname( __FILE__ ) . '/gateway/load.php';
+require_once dirname( __FILE__ ) . '/tokens/load.php';
 
 // Cart
-require( $this->_plugin_path . 'lib/cart/load.php' );
+require_once dirname( __FILE__ ) . '/cart/load.php';
 
 // Tax
-require( $this->_plugin_path . 'lib/tax/load.php' );
+require_once dirname( __FILE__ ) . '/tax/load.php';
 
 // Location
-require( $this->_plugin_path . 'lib/location/load.php' );
+require_once dirname( __FILE__ ) . '/location/load.php';
 
 // Transaction Module
-require( $this->_plugin_path . 'lib/transactions/load.php' );
+require_once dirname( __FILE__ ) . '/transactions/load.php';
 
 // Template Functions
-require( $this->_plugin_path . 'lib/functions/template-functions.php' );
+require_once dirname( __FILE__ ) . '/functions/template-functions.php';
 
 // Integrations
-require( $this->_plugin_path . 'lib/integrations/builder/init.php' );
+require_once dirname( __FILE__ ) . '/integrations/builder/init.php';
 
 // Customer Class
-require( $this->_plugin_path . 'lib/customers/class.customer.php' );
-require( $this->_plugin_path . 'lib/customers/class.guest.php' );
+require_once dirname( __FILE__ ) . '/customers/class.customer.php';
+require_once dirname( __FILE__ ) . '/customers/class.guest.php';
 
 // Pages
-require( $this->_plugin_path . 'lib/pages/class.pages.php' );
-require( $this->_plugin_path . 'lib/pages/class.customize.php' );
-require( $this->_plugin_path . 'lib/pages/class.nav-menus.php' );
+require_once dirname( __FILE__ ) . '/pages/class.pages.php';
+require_once dirname( __FILE__ ) . '/pages/class.customize.php';
+require_once dirname( __FILE__ ) . '/pages/class.nav-menus.php';
 
 // Super Widget
-require( $this->_plugin_path . 'lib/super-widget/class.super-widget.php' );
+require_once dirname( __FILE__ ) . '/super-widget/class.super-widget.php';
 
 // Coupons
-require( $this->_plugin_path . 'lib/coupons/class.coupons-post-type.php' );
-require( $this->_plugin_path . 'lib/coupons/class.coupon.php' );
-require( $this->_plugin_path . 'lib/coupons/hooks.php' );
+require_once dirname( __FILE__ ) . '/coupons/class.coupons-post-type.php';
+require_once dirname( __FILE__ ) . '/coupons/class.coupon.php';
+require_once dirname( __FILE__ ) . '/coupons/hooks.php';
 
 // Email Notifications
-require( $this->_plugin_path . 'lib/email-notifications/load.php' );
+require_once dirname( __FILE__ ) . '/email-notifications/load.php';
 
 // Shipping
-require( $this->_plugin_path . 'lib/shipping/class.shipping.php' );
+require_once dirname( __FILE__ ) . '/shipping/class.shipping.php';
 
 // Shortcodes
-require( $this->_plugin_path . 'lib/shortcodes/shortcodes.php' );
+require_once dirname( __FILE__ ) . '/shortcodes/shortcodes.php';
 
 // Upgrades
-require( $this->_plugin_path . 'lib/upgrades/load.php' );
+require_once dirname( __FILE__ ) . '/upgrades/load.php';
 
 // Deprecated Features
-require( $this->_plugin_path . 'lib/deprecated/init.php' );
+require_once dirname( __FILE__ ) . '/deprecated/init.php';
 
-require( $this->_plugin_path . 'lib/settings/class.settings-form.php' );
-require( $this->_plugin_path . 'lib/settings/class.controller.php' );
+require_once dirname( __FILE__ ) . '/settings/class.settings-form.php';
+require_once dirname( __FILE__ ) . '/settings/class.controller.php';
 
-require_once( $this->_plugin_path . 'lib/REST/load.php' );
+require_once dirname( __FILE__ ) . '/REST/load.php';
