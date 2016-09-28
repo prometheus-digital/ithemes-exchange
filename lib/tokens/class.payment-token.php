@@ -5,7 +5,7 @@
  * @since   1.36.0
  * @license GPLv2
  */
-use IronBound\DB\Model;
+use IronBound\DB\Extensions\Meta\ModelWithMeta;
 
 /**
  * Class ITE_Payment_Token
@@ -18,7 +18,7 @@ use IronBound\DB\Model;
  * @property string                     $redacted
  * @property-read bool                  $primary
  */
-class ITE_Payment_Token extends Model {
+class ITE_Payment_Token extends ModelWithMeta {
 
 	/**
 	 * @inheritDoc
@@ -83,6 +83,11 @@ class ITE_Payment_Token extends Model {
 	 * @inheritDoc
 	 */
 	protected static function get_table() { return static::$_db_manager->get( 'ite-payment-tokens' ); }
+
+	/**
+	 * @inheritdoc
+	 */
+	public static function get_meta_table() { return static::$_db_manager->get( 'ite-payment-tokens-meta' ); }
 
 	// Retrieve an IT_Exchange_Customer instead of WP_User for 'customer'
 	protected function _access_customer( $value ) {
