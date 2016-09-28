@@ -23,6 +23,9 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Request {
 	/** @var ITE_Gateway_Card|null */
 	protected $card;
 
+	/** @var ITE_Payment_Token|null */
+	protected $token;
+
 	/**
 	 * ITE_Gateway_Purchase_Request constructor.
 	 *
@@ -89,6 +92,28 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Request {
 	 */
 	public function set_card( ITE_Gateway_Card $card ) {
 		$this->card = $card;
+	}
+
+	/**
+	 * Get the payment token.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Payment_Token|null
+	 */
+	public function get_token() {
+		return $this->token;
+	}
+
+	/**
+	 * Set the payment token.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Payment_Token|null $token
+	 */
+	public function set_token( ITE_Payment_Token $token ) {
+		$this->token = $token;
 	}
 
 	/**

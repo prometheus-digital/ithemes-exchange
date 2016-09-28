@@ -166,4 +166,11 @@ class IT_Exchange_Guest_Customer extends IT_Exchange_Customer {
 	public function set_shipping_address( ITE_Location $location ) {
 		// No-op
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_tokens() {
+		return array();
+	}
 }

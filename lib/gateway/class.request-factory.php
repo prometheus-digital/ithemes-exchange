@@ -47,6 +47,20 @@ class ITE_Gateway_Request_Factory {
 					$request->set_card( $args['card'] );
 				}
 
+				if ( ! empty( $args['token'] ) ) {
+					$token = $args['token'];
+
+					if ( is_int( $token ) ) {
+						$token = ITE_Payment_Token::get( $token );
+					}
+
+					if ( ! $token instanceof ITE_Payment_Token ) {
+						throw new InvalidArgumentException( 'Invalid `token` option.' );
+					}
+
+					$request->set_token( $token );
+				}
+
 				return $request;
 			case ITE_Webhook_Gateway_Request::get_name():
 				return new ITE_Webhook_Gateway_Request( $args['webhook_data'] );

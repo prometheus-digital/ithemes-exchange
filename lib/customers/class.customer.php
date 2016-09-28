@@ -448,6 +448,17 @@ class IT_Exchange_Customer {
 	}
 
 	/**
+	 * Get all payment tokens for this customer.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \IronBound\DB\Collection|\ITE_Payment_Token[]
+	 */
+	public function get_tokens() {
+		return ITE_Payment_Token::for_customer( $this );
+	}
+
+	/**
 	 * Returns true or false based on whether the $id property is a WP User id
 	 *
 	 * @since 0.3.8
