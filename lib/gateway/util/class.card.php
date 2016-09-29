@@ -14,7 +14,7 @@ class ITE_Gateway_Card {
 	/** @var string */
 	private $holder_name;
 
-	/** @var int */
+	/** @var string */
 	private $number;
 
 	/** @var int */
@@ -29,7 +29,7 @@ class ITE_Gateway_Card {
 	/**
 	 * ITE_Gateway_Card constructor.
 	 *
-	 * @param int    $number
+	 * @param string $number
 	 * @param int    $expiration_year
 	 * @param int    $expiration_month
 	 * @param int    $cvc
@@ -64,7 +64,7 @@ class ITE_Gateway_Card {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @return int
+	 * @return string
 	 */
 	public function get_number() {
 		return $this->number;

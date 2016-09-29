@@ -170,7 +170,7 @@ class IT_Exchange_Guest_Customer extends IT_Exchange_Customer {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_tokens() {
+	public function get_tokens( $gateway = '' ) {
 		return array();
 	}
 }

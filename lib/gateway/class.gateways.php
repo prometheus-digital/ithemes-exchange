@@ -89,4 +89,19 @@ class ITE_Gateways {
 	public static function all() {
 		return array_values( static::$gateways );
 	}
+
+	/**
+	 * Get all gateways that can handle a certain request.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $request_name
+	 *
+	 * @return \ITE_Gateway[]
+	 */
+	public static function handles( $request_name ) {
+		return array_filter( static::all(), function ( ITE_Gateway $gateway ) use ( $request_name ) {
+			return $gateway->can_handle( $request_name );
+		} );
+	}
 }

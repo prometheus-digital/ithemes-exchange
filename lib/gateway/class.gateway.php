@@ -75,7 +75,7 @@ abstract class ITE_Gateway {
 	 *
 	 * @return bool
 	 */
-	public function can_handle( $request_name ) {
+	final public function can_handle( $request_name ) {
 		foreach ( $this->get_handlers() as $handler ) {
 			if ( $handler::can_handle( $request_name ) ) {
 				return true;

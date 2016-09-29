@@ -7,11 +7,15 @@
  */
 
 require_once dirname( __FILE__ ) . '/util/class.card.php';
+require_once dirname( __FILE__ ) . '/util/class.account.php';
 
 require_once dirname( __FILE__ ) . '/interface.request.php';
 require_once dirname( __FILE__ ) . '/interface.request-handler.php';
 require_once dirname( __FILE__ ) . '/class.request-factory.php';
+
 require_once dirname( __FILE__ ) . '/requests/class.purchase.php';
+require_once dirname( __FILE__ ) . '/requests/class.tokenize.php';
+
 require_once dirname( __FILE__ ) . '/handlers/class.purchase.php';
 require_once dirname( __FILE__ ) . '/handlers/class.dialog-purchase.php';
 require_once dirname( __FILE__ ) . '/handlers/class.iframe-purchase.php';

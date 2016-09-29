@@ -16,8 +16,6 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	 */
 	public function __construct( \ITE_Gateway $gateway, \ITE_Gateway_Request_Factory $factory ) {
 		parent::__construct( $gateway, $factory );
-
-		//add_action();
 	}
 
 	/**

@@ -6,6 +6,7 @@
  * @license GPLv2
  */
 use IronBound\DB\Extensions\Meta\ModelWithMeta;
+use IronBound\DB\Query\FluentQuery;
 
 /**
  * Class ITE_Payment_Token
@@ -60,6 +61,33 @@ class ITE_Payment_Token extends ModelWithMeta {
 	}
 
 	/**
+	 * Make this a non-primary payment token.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public function make_non_primary() {
+
+		if ( ! $this->primary ) {
+			return true;
+		}
+
+		/** @var static $other */
+		$other = static::query()->where( 'customer', '=', $this->customer->ID )->and_where( 'primary', '=', true )->first();
+
+		if ( ! $other ) {
+			throw new InvalidArgumentException( 'At least one payment token must be primary.' );
+		}
+
+		$other->set_attribute( 'primary', false );
+
+		return $this->save();
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function __toString() {
@@ -77,6 +105,19 @@ class ITE_Payment_Token extends ModelWithMeta {
 	 */
 	public static function for_customer( IT_Exchange_Customer $customer ) {
 		return static::query()->where( 'customer', '=', $customer->ID )->results();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected static function boot() {
+		parent::boot();
+
+		static::register_global_scope( 'active', function ( FluentQuery $query ) {
+			$query->and_where( 'gateway', true, array_map( function ( ITE_Gateway $gateway ) {
+				return $gateway->get_slug();
+			}, ITE_Gateways::all() ) );
+		} );
 	}
 
 	/**

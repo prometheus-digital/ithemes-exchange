@@ -14,6 +14,8 @@ use iThemes\Exchange\REST\Route\Cart\Item_Serializer;
 use iThemes\Exchange\REST\Route\Cart\Meta;
 use iThemes\Exchange\REST\Route\Cart\Purchase;
 use iThemes\Exchange\REST\Route\Cart\Shipping_Methods;
+use iThemes\Exchange\REST\Route\Customer\Token\Serializer as TokenSerializer;
+use iThemes\Exchange\REST\Route\Customer\Token\Tokens;
 
 /**
  * Register the rest routes on libraries loaded.
@@ -56,6 +58,10 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	$manager->register_route( new Shipping_Methods( $cart ) );
 	$manager->register_route( new Purchase( $cart, new \ITE_Gateway_Request_Factory() ) );
 	$manager->register_route( new Meta( $cart ) );
+
+	$token = new Route\Customer\Token\Token( new TokenSerializer() );
+	$manager->register_route( $token );
+	$manager->register_route( new Tokens( new TokenSerializer(), new \ITE_Gateway_Request_Factory(), $token ) );
 } );
 
 /**

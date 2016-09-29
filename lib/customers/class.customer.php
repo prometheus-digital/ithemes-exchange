@@ -452,10 +452,20 @@ class IT_Exchange_Customer {
 	 *
 	 * @since 1.36.0
 	 *
+	 * @param string $gateway
+	 *
 	 * @return \IronBound\DB\Collection|\ITE_Payment_Token[]
 	 */
-	public function get_tokens() {
-		return ITE_Payment_Token::for_customer( $this );
+	public function get_tokens( $gateway = '' ) {
+
+		if ( ! $gateway ) {
+			return ITE_Payment_Token::query()->where( 'customer', '=', $this->ID )->results();
+		}
+
+		return ITE_Payment_Token::query_with_no_global_scopes()
+		                        ->where( 'customer', '=', $this->ID )
+		                        ->and_where( 'gateway', '=', $gateway )
+		                        ->results();
 	}
 
 	/**
