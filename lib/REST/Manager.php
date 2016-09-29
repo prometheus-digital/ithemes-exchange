@@ -94,7 +94,7 @@ class Manager {
 			$this->register_with_server( $route );
 		}
 
-		add_filter( 'rest_authentication_errors', array( $this, 'authenticate' ) );
+		add_filter( 'rest_authentication_errors', array( $this, 'authenticate' ), 20 );
 
 		return $this;
 	}
@@ -233,7 +233,7 @@ class Manager {
 
 		if (
 			! empty( $_SERVER['PHP_AUTH_USER'] ) &&
-			( empty( $_SERVER['PHP_AUTH_PW'] ) || trim( $_SERVER['PHP_AUTH_PH'] ) === '' ) &&
+			( empty( $_SERVER['PHP_AUTH_PW'] ) || trim( $_SERVER['PHP_AUTH_PW'] ) === '' ) &&
 			is_email( $_SERVER['PHP_AUTH_USER'] ) &&
 			function_exists( 'it_exchange_guest_checkout_generate_guest_user_object' )
 		) {

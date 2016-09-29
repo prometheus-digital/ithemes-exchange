@@ -15,13 +15,13 @@ require_once dirname( __FILE__ ) . '/class.request-factory.php';
 
 require_once dirname( __FILE__ ) . '/requests/class.purchase.php';
 require_once dirname( __FILE__ ) . '/requests/class.tokenize.php';
+require_once dirname( __FILE__ ) . '/requests/class.webhook.php';
 
 require_once dirname( __FILE__ ) . '/handlers/class.purchase.php';
 require_once dirname( __FILE__ ) . '/handlers/class.dialog-purchase.php';
 require_once dirname( __FILE__ ) . '/handlers/class.iframe-purchase.php';
 require_once dirname( __FILE__ ) . '/handlers/class.redirect-purchase.php';
 require_once dirname( __FILE__ ) . '/handlers/class.post-purchase.php';
-require_once dirname( __FILE__ ) . '/handlers/class.webhook.php';
 
 require_once dirname( __FILE__ ) . '/class.gateway.php';
 require_once dirname( __FILE__ ) . '/class.gateways.php';
