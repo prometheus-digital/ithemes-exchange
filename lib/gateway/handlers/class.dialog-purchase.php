@@ -14,7 +14,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 	/**
 	 * @inheritDoc
 	 */
-	public function render_payment_button() {
+	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
 		return it_exchange_generate_purchase_dialog( $this->gateway->get_slug(), $this->get_dialog_options() );
 	}
 

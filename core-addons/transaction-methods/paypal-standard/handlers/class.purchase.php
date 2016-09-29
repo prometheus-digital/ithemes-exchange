@@ -21,13 +21,13 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	/**
 	 * @inheritDoc
 	 */
-	public function render_payment_button() {
+	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
 
 		if ( ! $this->get_gateway()->settings()->get( 'live-email-address' ) ) {
 			return '';
 		}
 
-		return parent::render_payment_button();
+		return parent::render_payment_button( $request );
 	}
 
 	/**

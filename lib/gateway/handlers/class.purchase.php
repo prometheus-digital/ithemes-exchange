@@ -31,12 +31,14 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 		$this->gateway = $gateway;
 		$this->factory = $factory;
 
+		$self = $this;
+
 		add_filter(
 			"it_exchange_get_{$gateway->get_slug()}_make_payment_button",
-			array( $this, 'render_payment_button' )
+			function () use ( $self, $factory ) {
+				return $self->render_payment_button( $factory->make( 'purchase' ) );
+			}
 		);
-
-		$self = $this;
 
 		add_filter(
 			"it_exchange_do_transaction_{$gateway->get_slug()}",
@@ -81,9 +83,13 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 	}
 
 	/**
-	 * @inheritDoc
+	 * Render a payment button.
+	 *
+	 * @param \ITE_Gateway_Purchase_Request $request
+	 *
+	 * @return string
 	 */
-	public function render_payment_button() {
+	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
 
 		$action     = esc_attr( $this->get_form_action() );
 		$label      = esc_attr( $this->get_payment_button_label() );
@@ -95,7 +101,7 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 	name="{$this->gateway->get_slug()}_purchase" value="{$label}">
 	<input type="hidden" name="{$field_name}" value="{$this->gateway->get_slug()}">
 	{$this->get_nonce_field()}
-	{$this->get_html_before_form_end()}
+	{$this->get_html_before_form_end( $request )}
 </form>
 HTML;
 	}
@@ -152,9 +158,11 @@ HTML;
 	 *
 	 * @since 1.36
 	 *
+	 * @param \ITE_Gateway_Purchase_Request $request
+	 *
 	 * @return string
 	 */
-	protected function get_html_before_form_end() { return ''; }
+	protected function get_html_before_form_end( ITE_Gateway_Purchase_Request $request ) { return ''; }
 
 	/**
 	 * Get the data for REST API Purchase endpoint.
