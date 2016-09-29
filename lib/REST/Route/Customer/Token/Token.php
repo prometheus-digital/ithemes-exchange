@@ -98,13 +98,7 @@ class Token implements Getable, Putable, Deletable {
 
 		$url_params = $request->get_url_params();
 
-		if ( ! \ITE_Payment_Token::get( $url_params['token_id'] )->delete() ) {
-			return new \WP_Error(
-				'it_exchange_rest_cannot_delete',
-				__( 'The token could not be deleted.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::INTERNAL_SERVER_ERROR )
-			);
-		}
+		\ITE_Payment_Token::get( $url_params['token_id'] )->delete();
 
 		return new \WP_REST_Response( '', \WP_Http::NO_CONTENT );
 	}

@@ -48,7 +48,7 @@ class Tokens implements Getable, Postable {
 		$customer   = it_exchange_get_customer( $url_params['customer_id'] );
 
 		$tokens = $customer->get_tokens( $request['gateway'] );
-		$data   = array_map( array( $this->serializer, 'serialize' ), $tokens->toArray() );
+		$data   = array_map( array( $this->serializer, 'serialize' ), $tokens->getValues() );
 
 		return new \WP_REST_Response( $data );
 	}
