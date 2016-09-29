@@ -167,6 +167,10 @@ class IT_Exchange_Admin_Settings_Form {
 
 				$this->show_if[ $field['slug'] ] = $show_if;
 			}
+
+			if ( $field['type'] === 'file_upload' ) {
+				$this->form_options['enctype'] = 'multipart/form-data';
+			}
 		}
 	}
 
@@ -178,7 +182,11 @@ class IT_Exchange_Admin_Settings_Form {
 	 * @return void
 	 */
 	public function load_settings() {
-		add_filter( 'it_storage_get_defaults_exchange_' . $this->prefix, array( $this, 'get_default_settings' ) );
+
+		if ( ! has_filter('it_storage_get_defaults_exchange_' . $this->prefix ) ) {
+			add_filter( 'it_storage_get_defaults_exchange_' . $this->prefix, array( $this, 'get_default_settings' ) );
+		}
+
 		$settings       = it_exchange_get_option( $this->prefix, true );
 		$this->settings = apply_filters( 'it_exchange_load_admin_form_settings_for_' . $this->prefix, $settings );
 	}
@@ -510,6 +518,13 @@ class IT_Exchange_Admin_Settings_Form {
 		unset( $values['it-exchange-saving-settings'] );
 
 		$values = apply_filters( 'it_exchange_save_admin_form_settings_for_' . $this->prefix, $values );
+		$errors = apply_filters( 'it_exchange_validate_admin_form_settings_for_' . $this->prefix, null, $values );
+
+		if ( is_wp_error( $errors ) ) {
+			it_exchange_add_message( 'error', implode( ', ', $errors->get_error_messages() ) );
+
+			return;
+		}
 
 		it_exchange_save_option( $this->prefix, $values );
 		it_exchange_add_message( 'notice', __( 'Settings updated', 'it-l10n-ithemes-exchange' ) );
