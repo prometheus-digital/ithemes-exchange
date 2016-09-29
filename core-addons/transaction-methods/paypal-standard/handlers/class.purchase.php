@@ -43,7 +43,9 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			return null;
 		}
 
-		if ( ! ( $paypal_email = $this->get_gateway()->settings()->get( 'live-email-address' ) ) ) {
+		$setting = $this->get_gateway()->settings()->get( 'sandbox-mode' ) ? 'test-email-address' : 'live-email-address';
+
+		if ( ! ( $paypal_email = $this->get_gateway()->settings()->get( $setting ) ) ) {
 			$cart->get_feedback()->add_error( __( 'Invalid PayPal setup.', 'it-l10n-ithemes-exchange' ) );
 
 			return null;

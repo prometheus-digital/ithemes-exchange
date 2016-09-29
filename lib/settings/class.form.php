@@ -34,12 +34,16 @@ class IT_Exchange_Admin_Settings_Form {
 	public $field_values = array();
 	public $button_options = array();
 	public $saved_settings = array();
+	public $settings;
 
-	/** @var array| */
+	/** @var array|false */
 	public $country_states_js = false;
 
 	/** @public ITForm */
 	public $form;
+
+	/** @var array */
+	private $show_if = array();
 
 	/**
 	 * Constructor Sets up the object
@@ -120,7 +124,7 @@ class IT_Exchange_Admin_Settings_Form {
 	 *
 	 * @since 1.3.1
 	 *
-	 * @param  array $form_options the options for the HTML form tag
+	 * @param array $options the options for the HTML form tag
 	 *
 	 * @return void
 	 */
@@ -140,11 +144,30 @@ class IT_Exchange_Admin_Settings_Form {
 	 *
 	 * @since 1.3.1
 	 *
-	 * @return void
+	 * @param array $fields
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function set_form_fields( $fields ) {
 		// Update property
 		$this->form_fields = $fields;
+
+		foreach ( $fields as $field ) {
+			if ( isset( $field['show_if'] ) ) {
+
+				$show_if = $field['show_if'];
+
+				if ( ! is_array( $show_if ) ) {
+					throw new InvalidArgumentException( "`show_if` must be an array for {$field['slug']}." );
+				}
+
+				if ( ! isset( $show_if['field'], $show_if['compare'], $show_if['value'] ) ) {
+					throw new InvalidArgumentException( "Invalid `show_if` value for {$field['slug']}." );
+				}
+
+				$this->show_if[ $field['slug'] ] = $show_if;
+			}
+		}
 	}
 
 	/**
@@ -310,6 +333,8 @@ class IT_Exchange_Admin_Settings_Form {
 		if ( is_array( $this->country_states_js ) ) {
 			$this->print_country_states_js();
 		}
+
+		$this->generate_show_if_js();
 	}
 
 	/**
@@ -378,8 +403,10 @@ class IT_Exchange_Admin_Settings_Form {
 			$setting['options']['value'] = $setting['options'];
 		}
 
+		$id = $setting['slug'] . '-' . $this->prefix;
 		?>
 
+		<div class="<?php echo $this->should_show_field( $setting['slug'] ) ? '' : 'hidden'; ?>" id="<?php echo $id . '-container'; ?>">
 		<label for="<?php echo esc_attr( $setting['slug'] . '-' . $this->prefix ); ?>">
 			<?php echo $setting['label']; ?>
 
@@ -392,12 +419,11 @@ class IT_Exchange_Admin_Settings_Form {
 		echo empty( $setting['before'] ) ? '' : $setting['before'];
 		echo $this->form->$form_method(
 			$setting['slug'],
-			ITUtility::merge_defaults( $setting['options'], array(
-				'id' => $setting['slug'] . '-' . $this->prefix
-			) ),
+			ITUtility::merge_defaults( $setting['options'], array( 'id' => $id ) ),
 			false
 		);
 		echo empty( $setting['after'] ) ? '' : $setting['after'];
+		echo '</div>';
 	}
 
 	/**
@@ -418,6 +444,46 @@ class IT_Exchange_Admin_Settings_Form {
 		</p>
 
 		<?php
+	}
+
+	/**
+	 * Whether a field should be displayed based on the `show_if` rules.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $field
+	 *
+	 * @return bool
+	 *
+	 * @throws \UnexpectedValueException
+	 */
+	protected function should_show_field( $field ) {
+
+		if ( ! isset( $this->show_if[ $field ] ) ) {
+			return true;
+		}
+
+		$required_field = $this->show_if[ $field ]['field'];
+		$compare        = $this->show_if[ $field ]['compare'];
+		$required_value = $this->show_if[ $field ]['value'];
+		$actual_value   = $this->settings[ $required_field ];
+
+		switch ( $compare ) {
+			case '=':
+				return $actual_value == $required_value;
+			case '!=':
+				return $actual_value != $required_value;
+			case '<':
+				return $actual_value < $required_value;
+			case '<=':
+				return $actual_value <= $required_value;
+			case '>':
+				return $actual_value > $required_value;
+			case '>=':
+				return $actual_value >= $required_value;
+		}
+
+		throw new UnexpectedValueException( 'Invalid field operator.' );
 	}
 
 	/**
@@ -498,6 +564,49 @@ class IT_Exchange_Admin_Settings_Form {
 				).trigger( 'change' );
 			} );
 		</script>
+		<?php
+	}
+
+	/**
+	 * Generate show if JS.
+	 *
+	 * @since 1.36.0
+	 */
+	protected function generate_show_if_js() {
+
+		?>
+
+		<script type="text/javascript">
+
+			jQuery(document).ready( function( $ ) {
+				<?php foreach ( $this->show_if as $field => $show_if ):
+					$id       = $field . '-' . $this->prefix;
+				    $other_id = $show_if['field'] . '-' . $this->prefix;
+				    $compare  = $show_if['compare'] === '=' ? '==' : $show_if['compare'];
+					?>
+
+					$("#<?php echo esc_js( $other_id ); ?>").change( function() {
+
+						var thisVal,
+						 requiredVal = <?php echo esc_js( $show_if['value'] ); ?>,
+						 $container = $("#<?php echo esc_js( $id . '-container' ); ?>");
+
+						if ( $( this ).is( 'input:checkbox' ) ) {
+							thisVal = $( this ).is(':checked');
+						} else {
+							thisVal = $( this ).val();
+						}
+
+						if ( thisVal <?php echo $compare; ?> requiredVal ) {
+							$container.removeClass( 'hidden' );
+						} else {
+							$container.addClass( 'hidden' );
+						}
+					} );
+				<?php endforeach; ?>
+			});
+		</script>
+
 		<?php
 	}
 }

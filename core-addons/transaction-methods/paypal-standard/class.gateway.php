@@ -47,7 +47,7 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
-	public function is_sandbox_mode() { return false; }
+	public function is_sandbox_mode() { return $this->settings()->get( 'sandbox-mode' ); }
 
 	/**
 	 * @inheritDoc
@@ -87,16 +87,28 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 					) . '</p>',
 			),
 			array(
+				'type'    => 'text_box',
+				'label'   => __( 'Purchase Button Label', 'it-l10n-ithemes-exchange' ),
+				'slug'    => 'purchase-button-label',
+				'tooltip' => __( 'This is the text inside the button your customers will press to purchase with PayPal Standard.', 'it-l10n-ithemes-exchange' )
+			),
+			array(
 				'type'    => 'email',
 				'label'   => __( 'PayPal Email Address', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'live-email-address',
 				'tooltip' => __( 'We need this to tie payments to your account.', 'it-l10n-ithemes-exchange' )
 			),
 			array(
-				'type'    => 'text_box',
-				'label'   => __( 'Purchase Button Label', 'it-l10n-ithemes-exchange' ),
-				'slug'    => 'purchase-button-label',
-				'tooltip' => __( 'This is the text inside the button your customers will press to purchase with PayPal Standard.', 'it-l10n-ithemes-exchange' )
+				'type'    => 'check_box',
+				'label'   => __( 'Enable PayPal Sandbox Mode', 'it-l10n-ithemes-exchange' ),
+				'slug'    => 'sandbox-mode',
+			),
+			array(
+				'type'    => 'email',
+				'label'   => __( 'PayPal Sandbox Email Address', 'it-l10n-ithemes-exchange' ),
+				'slug'    => 'test-email-address',
+				'tooltip' => __( 'We need this to tie payments to your account.', 'it-l10n-ithemes-exchange' ),
+				'show_if' => array( 'field' => 'sandbox-mode', 'value' => true, 'compare' => '=' ),
 			),
 		);
 	}

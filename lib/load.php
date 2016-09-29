@@ -95,7 +95,7 @@ require_once dirname( __FILE__ ) . '/upgrades/load.php';
 // Deprecated Features
 require_once dirname( __FILE__ ) . '/deprecated/init.php';
 
-require_once dirname( __FILE__ ) . '/settings/class.settings-form.php';
+require_once dirname( __FILE__ ) . '/settings/class.form.php';
 require_once dirname( __FILE__ ) . '/settings/class.controller.php';
 
 require_once dirname( __FILE__ ) . '/REST/load.php';
