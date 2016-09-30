@@ -61,6 +61,24 @@ class ITE_Gateway_Request_Factory {
 					$request->set_token( $token );
 				}
 
+				if ( ! empty( $args['tokenize'] ) ) {
+
+					if ( ! is_object( $args['tokenize'] ) ) {
+						$tokenize = $this->make( 'tokenize', array(
+							'source'   => $args['tokenize'],
+							'customer' => $cart->get_customer()
+						) );
+					} else {
+						$tokenize = $args['tokenize'];
+					}
+
+					if ( ! $tokenize instanceof ITE_Gateway_Tokenize_Request ) {
+						throw new InvalidArgumentException( 'Invalid `tokenize` option.' );
+					}
+
+					$request->set_tokenize( $tokenize );
+				}
+
 				return $request;
 			case ITE_Webhook_Gateway_Request::get_name():
 				return new ITE_Webhook_Gateway_Request( $args['webhook_data'] );

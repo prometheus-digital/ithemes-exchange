@@ -26,6 +26,9 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Request {
 	/** @var ITE_Payment_Token|null */
 	protected $token;
 
+	/** @var ITE_Gateway_Tokenize_Request */
+	protected $tokenize;
+
 	/**
 	 * ITE_Gateway_Purchase_Request constructor.
 	 *
@@ -111,9 +114,40 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Request {
 	 * @since 1.36.0
 	 *
 	 * @param \ITE_Payment_Token|null $token
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function set_token( ITE_Payment_Token $token ) {
+
+		if ( ! $token->customer || $token->customer->ID !== $this->get_customer()->ID ) {
+			throw new InvalidArgumentException( 'Invalid token for customer.' );
+		}
+
 		$this->token = $token;
+	}
+
+	/**
+	 * Get the possible tokenize request.
+	 *
+	 * This might be used in scenarios like Guest Checkout.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Gateway_Tokenize_Request|null
+	 */
+	public function get_tokenize() {
+		return $this->tokenize;
+	}
+
+	/**
+	 * Set the tokenize request.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Gateway_Tokenize_Request $tokenize
+	 */
+	public function set_tokenize( ITE_Gateway_Tokenize_Request $tokenize ) {
+		$this->tokenize = $tokenize;
 	}
 
 	/**

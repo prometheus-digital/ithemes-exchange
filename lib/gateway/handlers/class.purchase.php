@@ -36,7 +36,11 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 		add_filter(
 			"it_exchange_get_{$gateway->get_slug()}_make_payment_button",
 			function () use ( $self, $factory ) {
-				return $self->render_payment_button( $factory->make( 'purchase' ) );
+				try {
+					return $self->render_payment_button( $factory->make( 'purchase' ) );
+				} catch ( Exception $e ) {
+					return '';
+				}
 			}
 		);
 
@@ -54,10 +58,13 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 				}
 
 				$nonce = isset( $_REQUEST['_wpnonce'] ) ? $_REQUEST['_wpnonce'] : '';
-				$txn   = $self->handle( $factory->make( 'purchase', array(
+				/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+				$txn = $self->handle( $factory->make( 'purchase', array(
 					'cart'         => $cart,
 					'nonce'        => $nonce,
 					'http_request' => $_REQUEST,
+					'token'        => empty( $_REQUEST['purchase_token'] ) ? '' : (int) $_REQUEST['purchase_token'],
+					'tokenize'     => empty( $_REQUEST['to_tokenize'] ) ? '' : $_REQUEST['to_tokenize']
 				) ) );
 
 				return $txn ? $txn->ID : false;
@@ -96,7 +103,7 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 		$field_name = esc_attr( it_exchange_get_field_name( 'transaction_method' ) );
 
 		return <<<HTML
-<form method="POST" action="{$action}">
+<form method="POST" action="{$action}" id="{$this->get_gateway()->get_slug()}-purchase-form">
 	<input type="submit" class="it-exchange-purchase-button it-exchange-purchase-button-{$this->gateway->get_slug()}" 
 	name="{$this->gateway->get_slug()}_purchase" value="{$label}">
 	<input type="hidden" name="{$field_name}" value="{$this->gateway->get_slug()}">

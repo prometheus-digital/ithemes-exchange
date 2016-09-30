@@ -26,7 +26,7 @@ abstract class ITE_IFrame_Purchase_Request_Handler extends ITE_Purchase_Request_
 	 * @inheritDoc
 	 */
 	protected function get_html_before_form_end( ITE_Gateway_Purchase_Request $request ) {
-		return parent::get_html_before_form_end( $request ) . "<script type='text'javascript'>{$this->get_inline_js( $request )}</script>";
+		return parent::get_html_before_form_end( $request ) . $this->get_inline_js( $request );
 	}
 
 	/**
