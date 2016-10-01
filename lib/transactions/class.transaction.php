@@ -27,6 +27,7 @@ use IronBound\DB\Relations\HasMany;
  * @property-read float                                $total
  * @property-read float                                $subtotal
  * @property-read \DateTime                            $order_date
+ * @property \ITE_Payment_Token|null                   $payment_token
  * @property-read \IT_Exchange_Transaction             $parent
  * @property-read stdClass                             $cart_object // Internal
  * @property-read Collection|IT_Exchange_Transaction[] $children

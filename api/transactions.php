@@ -457,8 +457,12 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 	$defaults = array(
 		'post_type'          => 'it_exchange_tran',
 		'post_status'        => 'publish',
+		'payment_token'      => 0,
 	);
 	$args = wp_parse_args( $args, $defaults );
+
+	$payment_token = empty( $args['payment_token'] ) ? 0 : $args['payment_token'];
+	unset( $args['payment_token'] );
 
 	if ( $customer_or_cart instanceof ITE_Cart ) {
 		$cart_object = $customer_or_cart;
@@ -540,6 +544,10 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 			'order_date'    => get_post( $transaction_id )->post_date_gmt,
 			'hash'          => $hash,
 		);
+
+		if ( $payment_token ) {
+			$purchase_args['payment_token'] = $payment_token;
+		}
 
 		if ( $customer ) {
 			if ( is_numeric( $customer->id ) ) {
