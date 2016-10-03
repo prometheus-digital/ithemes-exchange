@@ -90,7 +90,7 @@ a.it-exchange-button {text-decoration:none;}
 #it-exchange-product .it-exchange-product-standard-content {margin-bottom: 2em;}
 .it-exchange-product-price {font-size: 2em;border-top: 1px solid #ebebeb;border-bottom: 1px solid #ebebeb;margin-bottom: 1em; margin-top: 1em;}
 .it-exchange-product-price p {margin: 0;padding: .25em 0;}
-.it-exchange-product-sw {margin-top: 2em;}
+.it-exchange-product-sw {margin-top: 2em; min-width: 330px; width: 100%;}
 .it-exchange-product-price del {opacity: .6;}
 .it-exchange-product-price ins {color: #8cc53e;background:inherit;font-weight:700;}
 #it-exchange-product .it-exchange-product-sw {margin-top: 2em;}
@@ -305,6 +305,8 @@ a.it-exchange-button {text-decoration:none;}
 .it-exchange-required-star{color:#F35555;margin-left:3px;}
 
 /** -----------------------------------------------------:[ visual credit card ]:---------- */
+.it-exchange-credit-card-selector { padding-bottom: 10px; }
+.it-exchange-credit-card-selector + .it-exchange-visual-cc-wrap { display: none; }
 .it-exchange-visual-cc-wrap{margin-bottom:1em;}
 .it-exchange-visual-cc{max-width:300px;background:#F5F5F5;border: 1px solid #D6D6D6;border-bottom-width: 2px;border-radius: 4px;}
 .it-exchange-visual-cc input{min-height:35px;outline:none;}

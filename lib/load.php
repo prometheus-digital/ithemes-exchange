@@ -44,6 +44,7 @@ require_once dirname( __FILE__ ) . '/product-features/load.php';
 
 require_once dirname( __FILE__ ) . '/gateway/load.php';
 require_once dirname( __FILE__ ) . '/tokens/load.php';
+require_once dirname( __FILE__ ) . '/purchase-dialog/purchase-dialog.php';
 
 // Cart
 require_once dirname( __FILE__ ) . '/cart/load.php';

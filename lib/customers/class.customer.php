@@ -465,6 +465,7 @@ class IT_Exchange_Customer {
 		return ITE_Payment_Token::query_with_no_global_scopes()
 		                        ->where( 'customer', '=', $this->ID )
 		                        ->and_where( 'gateway', '=', $gateway )
+								->order_by( 'primary', 'DESC' )
 		                        ->results();
 	}
 

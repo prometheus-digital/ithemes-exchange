@@ -5,6 +5,9 @@
  * @package IT_Exchange
  * @since 1.3.0
 */
+use iThemes\Exchange\REST\Route\Customer\Token\Serializer;
+use iThemes\Exchange\REST\Route\Customer\Token\Token;
+use iThemes\Exchange\REST\Route\Customer\Token\Tokens;
 
 /**
  * Transaction methods call or extend this class to create a
@@ -18,43 +21,46 @@ class IT_Exchange_Purchase_Dialog{
 	 * @var string $addon_slug the slug for the addon invoking the class
 	 * @since 1.3.0
 	*/
-	var $addon_slug = false;
+	public $addon_slug = false;
 
 	/**
 	 * @param array a key => value array of form attributes like class, id, etc.
 	 * @since 1.3.0
 	*/
-	var $form_attributes = array();
+	public $form_attributes = array();
 
 	/**
 	 * @var array an array of the cc fields were using
 	 * @since 1.3.0
 	*/
-	var $active_cc_fields = array();
+	public $active_cc_fields = array();
 
 	/**
 	 * @var array an array of the required cc fields were using
 	 * @since 1.3.0
 	*/
-	var $required_cc_fields = array();
+	public $required_cc_fields = array();
 
 	/**
 	 * @var string the label used for the button that opens up the CC fields
 	 * @since 1.3.0
 	*/
-	var $purchase_label;
+	public $purchase_label;
 
 	/**
 	 * @var string the label used for the button that submits the CC fields
 	 * @since 1.3.0
 	*/
-	var $submit_label;
+	public $submit_label;
 
 	/**
 	 * @var string the label used for the cancel link to close the CC fields
 	 * @since 1.3.0
 	*/
-	var $cancel_label;
+	public $cancel_label;
+
+	/** @var bool */
+	private $show_saved = false;
 
 	/**
 	 * Class Constructor
@@ -64,14 +70,15 @@ class IT_Exchange_Purchase_Dialog{
 	 * @param string $transaction_method_slug
 	 * @param array  $options
 	*/
-	function __construct( $transaction_method_slug, $options=array() ) {
+	public function __construct( $transaction_method_slug, $options=array() ) {
 
 		$defaults = array(
 			'form-attributes'    => array(
 				'action'       => it_exchange_get_page_url( 'transaction' ),
 				'method'       => 'post',
 				'autocomplete' => 'on',
-				'nonce-action' => $this->addon_slug . '-checkout',
+				'nonce-action' => $transaction_method_slug . '-checkout',
+				'nonce-field'  => 'ite-' . $transaction_method_slug . '-purchase-dialog-nonce',
 			),
 			'required-cc-fields' => array(
 				'first-name',
@@ -80,9 +87,10 @@ class IT_Exchange_Purchase_Dialog{
 				'expiration-month',
 				'expiration-year',
 			),
-			'purchase-label' => __( 'Purchase', 'it-l10n-ithemes-exchange' ),
-			'submit-label'   => __( 'Complete Purchase', 'it-l10n-ithemes-exchange' ),
-			'cancel-label'   => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
+			'purchase-label'   => __( 'Purchase', 'it-l10n-ithemes-exchange' ),
+			'submit-label'     => __( 'Complete Purchase', 'it-l10n-ithemes-exchange' ),
+			'cancel-label'     => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
+			'show-saved-cards' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -97,6 +105,7 @@ class IT_Exchange_Purchase_Dialog{
 		$this->purchase_label     = $options['purchase-label'];
 		$this->submit_label       = $options['submit-label'];
 		$this->cancel_label       = $options['cancel-label'];
+		$this->show_saved         = (bool) $options['show-saved-cards'];
 	}
 
 	/**
@@ -121,7 +130,7 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @return string HTML
 	*/
-	function insert_dialog() {
+	public function insert_dialog() {
 		//$this->enqueue_js(); // We are now doing this in lib/functions/functions.php
 		$wrapper_open  = $this->get_wrapper_open();
 		$form          = $this->get_purchase_form();
@@ -138,9 +147,10 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @return string
 	*/
-	function get_wrapper_open() {
+	public function get_wrapper_open() {
 		$ssl_class = is_ssl() ? ' it-exchange-is-ssl' : ' it-exchange-no-ssl';
 		$html = '<div class="it-exchange-purchase-dialog it-exchange-purchase-dialog-' . esc_attr( $this->addon_slug ) . $ssl_class . '" data-addon-slug="' . esc_attr( $this->addon_slug ) . '">';
+
 		return $html;
 	}
 
@@ -151,9 +161,8 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @return string
 	*/
-	function get_wrapper_close() {
-		$html = '</div>';
-		return $html;
+	public function get_wrapper_close() {
+		return '</div>';
 	}
 
 	/**
@@ -163,16 +172,20 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @return string
 	*/
-	function get_purchase_form() {
+	public function get_purchase_form() {
+
+		$this->enqueue_js();
+
 		$GLOBALS['it_exchange']['purchase-dialog']['transaction-method-slug'] = $this->addon_slug;
 
 		$form_open          = $this->get_form_open();
 		$form_hidden_fields = $this->get_form_hidden_fields();
+		$saved_cards        = $this->get_saved_cards();
 		$form_fields        = $this->get_form_fields();
 		$form_actions       = $this->get_form_actions();
 		$form_close         = $this->get_form_close();
 
-		$form = $form_open . $form_hidden_fields . $form_fields . $form_actions . $form_close;
+		$form = $form_open . $form_hidden_fields . $saved_cards . $form_fields . $form_actions . $form_close;
 
 		unset( $GLOBALS['it_exchange']['purchase-dialog']['transaction-method-slug'] );
 		return $form;
@@ -185,14 +198,13 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @return string HTML
 	*/
-	function get_form_open() {
+	public function get_form_open() {
 		$form_attributes = '';
 		foreach( $this->form_attributes as $key => $value ) {
 			$form_attributes .= $key . '="' . esc_attr( $value ) . '" ';
 		}
-		$form_open = '<form ' . $form_attributes . '>';
 
-		return $form_open;
+		return '<form ' . $form_attributes . '>';
 	}
 
 	/**
@@ -202,9 +214,17 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @return string HTML
 	*/
-	function get_form_hidden_fields() {
-		$fields  = '<input type="hidden" name="' . esc_attr( it_exchange_get_field_name('transaction_method') ) . '" value="' . esc_attr( $this->addon_slug ) . '" />';
-		$fields .= wp_nonce_field( $this->form_attributes['nonce-action'], 'ite-' . $this->addon_slug . '-purchase-dialog-nonce', true, false );
+	public function get_form_hidden_fields() {
+
+		$method = esc_attr( it_exchange_get_field_name('transaction_method') );
+
+		$fields  = '<input type="hidden" name="' . $method . '" value="' . esc_attr( $this->addon_slug ) . '" />';
+		$fields .= wp_nonce_field(
+			$this->form_attributes['nonce-action'],
+			$this->form_attributes['nonce-field'],
+			true, false
+		);
+
 		return $fields;
 	}
 
@@ -215,11 +235,11 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @return string HTML
 	*/
-	function get_form_fields() {
+	public function get_form_fields() {
 		ob_start();
 		it_exchange_get_template_part( 'content', 'purchase-dialog' );
-		$fields = ob_get_clean();
-		return $fields;
+
+		return ob_get_clean();
 	}
 
 	/**
@@ -229,7 +249,7 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @return string HTML
 	*/
-	function get_form_actions() {
+	public function get_form_actions() {
 		$actions  = '<p><input type="submit" value="' . esc_attr( $this->submit_label ) . '" /><br />';
 		$actions .= '<a href="#" class="it-exchange-purchase-dialog-cancel" data-addon-slug="' . esc_attr( $this->addon_slug ) . '">' . esc_html( $this->cancel_label ) . '</a></p>';
 		return $actions;
@@ -241,9 +261,8 @@ class IT_Exchange_Purchase_Dialog{
 	 * @since 1.3.0
 	 * @return string HTML
 	*/
-	function get_form_close() {
-		$form_close = '</form>';
-		return $form_close;
+	public function get_form_close() {
+		return '</form>';
 	}
 
 	/**
@@ -253,24 +272,73 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @return string HTML
 	*/
-	function get_purchase_button() {
-		
+	public function get_purchase_button() {
+
 		it_exchange_clear_purchase_dialog_error_flag( $this->addon_slug );
-		
+
 		$classes = array(
 			"it-exchange-purchase-dialog-trigger-{$this->addon_slug}",
 			"it-exchange-purchase-dialog-trigger",
 			"it-exchange-purchase-button-{$this->addon_slug}",
 			"it-exchange-purchase-button",
 		);
-		
+
 		if ( it_exchange_purchase_dialog_has_error( $this->addon_slug ) ) {
 			$classes[] = 'has-errors';
 		}
-		
+
 		$classes = esc_attr( implode( ' ', $classes ) );
-		
+
 		return '<input type="submit" class="' . $classes . '" value="' . esc_attr( $this->purchase_label ) . '" data-addon-slug="' . esc_attr( $this->addon_slug ) . '" />';
+	}
+
+	/**
+	 * Get saved cards selector.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_saved_cards() {
+
+		if ( ! $this->show_saved ) {
+			return '';
+		}
+
+		$customer = it_exchange_get_current_customer();
+
+		if ( ! $customer ) {
+			return '';
+		}
+
+		$cards = $customer->get_tokens( $this->addon_slug );
+
+		if ( ! $cards->count() ) {
+			return '';
+		}
+
+		$html = '<div class="it-exchange-credit-card-selector">';
+
+		foreach ( $cards as $card ) {
+
+			if ( $card->label ) {
+				$label = $card->label;
+			} else {
+				$label = sprintf( __( 'Card ending in %s', 'it-l10n-ithemes-exchange' ), $card->redacted );
+			}
+
+			$selected = checked( $card->primary, true, false );
+
+			$html .= "<label><input type='radio' name='purchase_token' value='{$card->ID}' {$selected}>&nbsp;{$label}</label><br>";
+		}
+
+		$new_method = __( 'New Payment Method', 'it-l10n-ithemes-exchange' );
+
+		$html .= "<label><input type='radio' name='purchase_token' value='new_method' id='new-method-{$this->addon_slug}'>";
+		$html .= ' ' . $new_method . '</label>';
+		$html .= '</div>';
+
+		return $html;
 	}
 
 	/**
@@ -280,9 +348,28 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @return void
 	*/
-	function enqueue_js() {
-		//$file = dirname( __FILE__ ) . '/js/exchange-purchase-dialog.js';
-		//wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type' ), false, true );
+	public function enqueue_js() {
+
+		$customer = it_exchange_get_current_customer();
+
+		if ( ! $customer instanceof IT_Exchange_Guest_Customer ) {
+			$tokens_endpoint = \iThemes\Exchange\REST\get_rest_url(
+				new Tokens( new Serializer(), new ITE_Gateway_Request_Factory(), new Token( new Serializer() ) ),
+				array( 'customer_id' => $customer->ID )
+			);
+			$tokens_endpoint = wp_nonce_url( $tokens_endpoint, 'wp_rest' );
+		} else {
+			$tokens_endpoint = '';
+		}
+
+		$file = dirname( dirname( __FILE__ ) ) . '/purchase-dialog/js/exchange-purchase-dialog.js';
+		wp_enqueue_script(
+			'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ),
+			array( 'jquery', 'detect-credit-card-type', 'jquery.payment' ), false, true
+		);
+		wp_localize_script( 'exchange-purchase-dialog', 'itExchangePurchaseDialog', array(
+			'tokensEndpoint' => $tokens_endpoint
+		) );
 	}
 
 	/**
@@ -292,7 +379,7 @@ class IT_Exchange_Purchase_Dialog{
 	 *
 	 * @return array
 	*/
-	function get_submitted_form_values() {
+	public function get_submitted_form_values() {
 		$fields = array(
 			'it-exchange-purchase-dialog-cc-first-name'		   => 'first-name',
 			'it-exchange-purchase-dialog-cc-last-name'		   => 'last-name',
@@ -314,6 +401,29 @@ class IT_Exchange_Purchase_Dialog{
 	}
 
 	/**
+	 * Get a Gateway Card from the submitted form values.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Gateway_Card|null
+	 */
+	public function get_card_from_submitted_values() {
+		$cc = $this->get_submitted_form_values();
+
+		if ( empty( $cc['number'] ) || empty( $cc['expiration-month'] ) || empty( $cc['expiration-year'] ) ) {
+			return null;
+		}
+
+		return new ITE_Gateway_Card(
+			$cc['number'],
+			$cc['expiration-year'],
+			$cc['expiration-month'],
+			$cc['code'],
+			trim( $cc['first-name'] . ' ' . $cc['last-name'] )
+		);
+	}
+
+	/**
 	 * Validates the credit card fields were populated
 	 *
 	 * It is up to the transaction method add-on to validate if its a good/acceptible CC
@@ -325,12 +435,12 @@ class IT_Exchange_Purchase_Dialog{
 	 * @todo this method could use some TLC
 	 * @return boolean
 	*/
-	function is_submitted_form_valid() {
+	public function is_submitted_form_valid() {
 		// Grab the values
 		$values = $this->get_submitted_form_values();
 
 		// Validate nonce
-		$nonce = empty( $_POST['ite-' . $this->addon_slug . '-purchase-dialog-nonce'] ) ? false : $_POST['ite-' . $this->addon_slug . '-purchase-dialog-nonce'];
+		$nonce = empty( $_POST[ $this->form_attributes['nonce-field'] ] ) ? false : $_POST[ $this->form_attributes['nonce-field'] ];
 		if ( ! wp_verify_nonce( $nonce, $this->form_attributes['nonce-action'] ) ) {
 			it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'it-l10n-ithemes-exchange' ) );
 			it_exchange_flag_purchase_dialog_error( $this->addon_slug );

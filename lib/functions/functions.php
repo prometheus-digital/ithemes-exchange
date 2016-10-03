@@ -137,6 +137,14 @@ function it_exchange_load_public_scripts( $current_view ) {
 
 		wp_enqueue_script( 'it-exchange-product-public-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/exchange-product.js' ), $script_deps, false, true );
 		wp_enqueue_style( 'it-exchange-icon-fonts' );
+
+		$file = dirname( dirname( __FILE__ ) ) . '/purchase-dialog/js/exchange-purchase-dialog.js';
+		wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type', 'jquery.payment' ), false, true );
+	}
+
+	if ( it_exchange_is_page( 'product' ) ) {
+		$file = dirname( dirname( __FILE__ ) ) . '/purchase-dialog/js/exchange-purchase-dialog.js';
+		wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type', 'jquery.payment' ), false, true );
 	}
 
 	// ****** CHECKOUT SPECIFIC SCRIPTS *******

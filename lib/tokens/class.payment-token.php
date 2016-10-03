@@ -118,6 +118,10 @@ class ITE_Payment_Token extends ModelWithMeta {
 				return $gateway->get_slug();
 			}, ITE_Gateways::all() ) );
 		} );
+
+		static::register_global_scope( 'order', function ( FluentQuery $query ) {
+			$query->order_by( 'primary', 'DESC' );
+		} );
 	}
 
 	/**

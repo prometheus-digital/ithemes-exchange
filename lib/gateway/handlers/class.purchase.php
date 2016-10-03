@@ -38,7 +38,8 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 			function () use ( $self, $factory ) {
 				try {
 					return $self->render_payment_button( $factory->make( 'purchase' ) );
-				} catch ( Exception $e ) {
+				}
+				catch ( Exception $e ) {
 					return '';
 				}
 			}
@@ -57,19 +58,45 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 					return $_;
 				}
 
-				$nonce = isset( $_REQUEST['_wpnonce'] ) ? $_REQUEST['_wpnonce'] : '';
 				/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-				$txn = $self->handle( $factory->make( 'purchase', array(
-					'cart'         => $cart,
-					'nonce'        => $nonce,
-					'http_request' => $_REQUEST,
-					'token'        => empty( $_REQUEST['purchase_token'] ) ? '' : (int) $_REQUEST['purchase_token'],
-					'tokenize'     => empty( $_REQUEST['to_tokenize'] ) ? '' : $_REQUEST['to_tokenize']
-				) ) );
+				$txn = $self->handle( $factory->make(
+					'purchase',
+					$self->build_factory_args_from_global_state( $cart, $_REQUEST )
+				) );
 
 				return $txn ? $txn->ID : false;
 			},
 			10, 2
+		);
+	}
+
+	/**
+	 * Build factory args from the global state.
+	 *
+	 * This is used to build the intermediary layer between the Gateway Request framework
+	 * and the legacy cart system.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Cart $cart
+	 * @param array     $state
+	 *
+	 * @return array
+	 */
+	public function build_factory_args_from_global_state( ITE_Cart $cart, $state ) {
+
+		if ( ! empty( $state['purchase_token'] ) && $state['purchase_token'] !== 'new_method' ) {
+			$token = (int) $state['purchase_token'];
+		} else {
+			$token = '';
+		}
+
+		return array(
+			'cart'         => $cart,
+			'nonce'        => empty( $state['_wpnonce'] ) ? '' : $state['_wpnonce'],
+			'http_request' => $state,
+			'token'        => $token,
+			'tokenize'     => empty( $state['to_tokenize'] ) ? '' : $state['to_tokenize'],
 		);
 	}
 
