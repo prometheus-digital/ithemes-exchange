@@ -471,8 +471,8 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 *
 	 * @param \WP_Query $query
 	 */
-	public function mark_loop_did_start( WP_Query $query ) {
-		if ( $query->is_main_query() ) {
+	public function mark_loop_did_start( $query ) {
+		if ( $query instanceof WP_Query && $query->is_main_query() ) {
 			$this->did_loop_start = true;
 		}
 	}
