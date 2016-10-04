@@ -12,6 +12,26 @@
 abstract class ITE_Gateway {
 
 	/**
+	 * ITE_Gateway constructor.
+	 */
+	public function __construct() {
+
+		if ( $fields = $this->get_settings_fields() ) {
+			$defaults = array();
+
+			foreach ( $this->get_settings_fields() as $field ) {
+				if ( $field['type'] !== 'html' ) {
+					$defaults[ $field['slug'] ] = isset( $field['default'] ) ? $field['default'] : null;
+				}
+			}
+
+			add_filter( "it_storage_get_defaults_exchange_{$this->get_settings_name()}", function ( $values ) use ( $defaults ) {
+				return ITUtility::merge_defaults( $values, $defaults );
+			} );
+		}
+	}
+
+	/**
 	 * Get the name of the gateway.
 	 *
 	 * @since 1.36

@@ -425,11 +425,21 @@ class IT_Exchange_Admin_Settings_Form {
 
 		<?php
 		echo empty( $setting['before'] ) ? '' : $setting['before'];
+
+		if ( ! empty( $setting['desc'] ) && $setting['type'] === 'check_box' ) {
+			echo '<p class="description">' . $setting['desc'] . '</p>';
+		}
+
 		echo $this->form->$form_method(
 			$setting['slug'],
 			ITUtility::merge_defaults( $setting['options'], array( 'id' => $id ) ),
 			false
 		);
+
+		if ( ! empty( $setting['desc'] ) && $setting['type'] !== 'check_box' ) {
+			echo '<p class="description">' . $setting['desc'] . '</p>';
+		}
+
 		echo empty( $setting['after'] ) ? '' : $setting['after'];
 		echo '</div>';
 	}

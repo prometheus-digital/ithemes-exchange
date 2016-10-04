@@ -9,7 +9,7 @@
 #it-exchange-add-ons-wrap .nav-tab-wrapper .nav-tab-active{background:#FFF;border-bottom-color:#FFF;}
 #it-exchange-add-ons-wrap .top-description{color:#676c6e;font-size:14px;line-height:1.5;max-width:800px;}
 
-.it-exchange-addon-settings label{display:block;font-size:13px;color:#3d4142;margin-bottom:5px;margin-left:2px;}
+.it-exchange-addon-settings label{display:block;font-size:13px;color:#3d4142;margin-bottom:5px;margin-left:2px;font-weight: bold;}
 .it-exchange-addon-settings input[type="text"],
 .it-exchange-addon-settings input[type="email"],
 .it-exchange-addon-settings input[type="password"],
