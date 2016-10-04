@@ -15,7 +15,9 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 	 * @inheritDoc
 	 */
 	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
-		return it_exchange_generate_purchase_dialog( $this->get_gateway()->get_slug(), $this->get_dialog_options() );
+		return it_exchange_generate_purchase_dialog(
+			$this->get_gateway()->get_slug(), $this->get_dialog_options()
+		       ) . $this->get_html_before_form_end( $request );
 	}
 
 	/**
@@ -54,9 +56,13 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 		$factory_args = parent::build_factory_args_from_global_state( $cart, $state );
 
 		if ( $this->get_gateway()->can_handle( 'tokenize' ) ) {
-			$factory_args['tokenize'] = $this->get_dialog_controller()->get_card_from_submitted_values();
+			if ( empty( $factory_args['tokenize'] ) ) {
+				$factory_args['tokenize'] = $this->get_dialog_controller()->get_card_from_submitted_values();
+			}
 		} else {
-			$factory_args['card'] = $this->get_dialog_controller()->get_card_from_submitted_values();
+			if ( empty( $factory_args['card'] ) ) {
+				$factory_args['card'] = $this->get_dialog_controller()->get_card_from_submitted_values();
+			}
 		}
 
 		return $factory_args;
