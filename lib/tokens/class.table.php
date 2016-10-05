@@ -5,6 +5,8 @@
  * @since   1.36.0
  * @license GPLv2
  */
+use IronBound\DB\Extensions\Trash\TrashTable;
+use IronBound\DB\Table\Column\DateTime;
 use IronBound\DB\Table\Column\ForeignUser;
 use IronBound\DB\Table\Column\IntegerBased;
 use IronBound\DB\Table\Column\StringBased;
@@ -12,7 +14,7 @@ use IronBound\DB\Table\Column\StringBased;
 /**
  * Class ITE_Payment_Tokens_Table
  */
-class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable {
+class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable implements TrashTable {
 
 	/**
 	 * @inheritDoc
@@ -37,6 +39,8 @@ class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable {
 			'redacted' => new StringBased( 'VARCHAR', 'redacted', array(), array( 32 ) ),
 			'primary'  => new IntegerBased( 'TINYINT', 'primary', array( 'unsigned' ), array( 1 ) ),
 			'gateway'  => new StringBased( 'VARCHAR', 'gateway', array(), array( 64 ) ),
+			'deleted'  => new DateTime( 'deleted' ),
+			'type'     => new StringBased( 'VARCHAR', 'type', array(), array( 32 ) ),
 		);
 	}
 
@@ -51,6 +55,8 @@ class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable {
 			'label'    => '',
 			'redacted' => '',
 			'primary'  => false,
+			'deleted'  => '',
+			'type'     => 'cc',
 		);
 	}
 
@@ -63,4 +69,9 @@ class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable {
 	 * @inheritDoc
 	 */
 	public function get_version() { return 1; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_deleted_at_column() { return 'deleted'; }
 }
