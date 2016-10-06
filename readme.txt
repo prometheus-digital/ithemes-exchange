@@ -3,7 +3,7 @@ Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.6
-Stable tag: 1.35.10.2
+Stable tag: 1.35.11
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,12 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+
+= 1.35.11 =
+* Security: Fix serious XSS vulnerability
+* Fix: Issue with fallback SW filter being triggered in incorrect places
+* Fix: Compatibility with BuddyPress
+* Fix: Missing break statements in Theme API.
 
 = 1.35.10.2 =
 * Fix: Issue with the Super Widget not rendering. Improve detection of "loop_start"
@@ -1560,10 +1566,8 @@ http://ithemes.com/codex/page/Exchange_Installation
 * Proof of Concept
 
 == Upgrade Notice ==
-
-http://ithemes.com/codex/page/Exchange_Changelog
-
-See history.txt for a complete changelog
+= 1.35.11 =
+Fixes a serious security issue. Upgrade immediately.
 
 == Screenshots ==
 
