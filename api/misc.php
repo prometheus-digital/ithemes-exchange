@@ -655,14 +655,15 @@ function it_exchange_format_address( $address, $args = array(), $format = null )
 		$replaced_line = $line;
 
 		foreach ( $address_parts as $part_name => $replace_tag ) {
-			$replaced_line = str_replace( $replace_tag, isset( $address[ $part_name ] ) ? $address[ $part_name ] : '', $replaced_line );
+			$value         = isset( $address[ $part_name ] ) ? esc_html( $address[ $part_name ] ) : '';
+			$replaced_line = str_replace( $replace_tag, $value, $replaced_line );
 		}
 
 		$replaced[] = trim( $replaced_line );
 	}
 
 	// get rid of any remaining, un-replaced tags
-	$replaced = preg_replace( "/{.*?}/", "", $replaced );
+	$replaced = preg_replace( '/{.*?}/', '', $replaced );
 
 	$open  = $args['open-line'];
 	$close = $args['close-line'];
