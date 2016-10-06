@@ -224,22 +224,27 @@ function it_exchange_print_shipping_address_value( $field, $customer_id=false ) 
 */
 function it_exchange_get_formatted_shipping_address( $shipping_address=false ) {
 	$formatted   = array();
+
+	/** @var array $shipping */
 	$shipping     = empty( $shipping_address ) ? it_exchange_get_cart_shipping_address() : $shipping_address;
-	$formatted[] = implode( ' ', array( $shipping['first-name'], $shipping['last-name'] ) );
+
+	$formatted[] = implode( ' ', array( esc_html( $shipping['first-name'] ), esc_html( $shipping['last-name'] ) ) );
+
 	if ( ! empty( $shipping['company-name'] ) )
-		$formatted[] = $shipping['company-name'];
+		$formatted[] = esc_html( $shipping['company-name'] );
 	if ( ! empty( $shipping['address1'] ) )
-		$formatted[] = $shipping['address1'];
+		$formatted[] = esc_html( $shipping['address1'] );
 	if ( ! empty( $shipping['address2'] ) )
-		$formatted[] = $shipping['address2'];
+		$formatted[] = esc_html( $shipping['address2'] );
 	if ( ! empty( $shipping['city'] ) || ! empty( $shipping['state'] ) || ! empty( $shipping['zip'] ) ) {
-		$formatted[] = implode( ' ', array( ( empty( $shipping['city'] ) ? '': $shipping['city'] .',' ),
-			( empty( $shipping['state'] ) ? '': $shipping['state'] ),
-			( empty( $shipping['zip'] ) ? '': $shipping['zip'] ),
+		$formatted[] = implode( ' ', array( ( empty( $shipping['city'] ) ? '': esc_html( $shipping['city'] ) .',' ),
+			( empty( $shipping['state'] ) ? '': esc_html( $shipping['state'] ) ),
+			( empty( $shipping['zip'] ) ? '': esc_html( $shipping['zip'] ) ),
 		) );
 	}
+
 	if ( ! empty( $shipping['country'] ) )
-		$formatted[] = $shipping['country'];
+		$formatted[] = esc_html( $shipping['country'] );
 
 	$formatted = implode( '<br />', $formatted );
 	return apply_filters( 'it_exchange_get_formatted_shipping_address', $formatted );

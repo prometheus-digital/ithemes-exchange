@@ -1305,3 +1305,8 @@
 	Fix: Issue with the Super Widget not rendering when 'the_content' is applied before the main content area.
 1.35.10.2 - Elise Alley, Timothy Jacobs
 	Fix: Issue with the Super Widget not rendering. Improve detection of "loop_start"
+1.35.11 - Elise Alley, Timothy Jacobs
+	Security: Fix serious XSS vulnerability
+	Fix: Issue with fallback SW filter being triggered in incorrect places
+	Fix: Compatibility with BuddyPress
+	Fix: Missing break statements in Theme API.

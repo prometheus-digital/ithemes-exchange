@@ -31,6 +31,9 @@ class IT_Exchange_Pages {
 	*/
 	public $_pretty_permalinks = false;
 
+	/** @var bool */
+	public $_in_sidebar = false;
+
 	/**
 	 * Constructor
 	 *
@@ -55,6 +58,9 @@ class IT_Exchange_Pages {
 			add_filter( 'query_vars', array( $this, 'register_query_vars' ) );
 			add_filter( 'template_include', array( $this, 'fetch_template' ) );
 			add_filter( 'template_include', array( $this, 'load_casper' ), 11 );
+
+			add_action( 'dynamic_sidebar_before', array( $this, 'mark_in_sidebar' ) );
+			add_action( 'dynamic_sidebar_after', array( $this, 'mark_out_of_sidebar' ) );
 		}
 	}
 
@@ -486,10 +492,20 @@ class IT_Exchange_Pages {
 	 *
 	 * @return string Content generated from template part
 	*/
-	function fallback_filter_for_page_template( $content ) {
+	public function fallback_filter_for_page_template( $content ) {
 		$global_post = empty( $GLOBALS['post']->ID ) ? 0 : $GLOBALS['post']->ID;
-		if ( ! it_exchange_get_product( $global_post ) )
+
+		if ( ! it_exchange_get_product( $global_post ) ) {
 			return $content;
+		}
+
+		if ( $this->_in_sidebar ) {
+			return $content;
+		}
+		
+		if ( ! is_main_query() && ! is_singular( array( 'it_exchange_prod' ) ) ) {
+			return $content;
+		}
 
 		ob_start();
 		add_filter( 'the_content', 'wpautop' );
@@ -617,6 +633,24 @@ class IT_Exchange_Pages {
 			if ( $wpid == $post_id )
 				add_option('_it-exchange-flush-rewrites', true );
 		}
+	}
+
+	/**
+	 * Mark when we are currently rendering a sidebar.
+	 *
+	 * @since 1.36.0
+	 */
+	public function mark_in_sidebar() {
+		$this->_in_sidebar = true;
+	}
+
+	/**
+	 * Mark when we are out of a sidebar.
+	 *
+	 * @since 1.36.0
+	 */
+	public function mark_out_of_sidebar() {
+		$this->_in_sidebar = false;
 	}
 }
 global $IT_Exchange_Pages; // We need it inside casper
