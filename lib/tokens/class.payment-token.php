@@ -99,6 +99,19 @@ class ITE_Payment_Token extends ModelWithMeta {
 	}
 
 	/**
+	 * Get the token's label.
+	 *
+	 * This should fallback to a default value if a user-provided value is not available.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_label() {
+		return $this->label;
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function __toString() {

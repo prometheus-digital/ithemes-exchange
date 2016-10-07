@@ -17,6 +17,13 @@ class ITE_Payment_Token_Card extends ITE_Payment_Token {
 	protected static $token_type = 'card';
 
 	/**
+	 * @inheritDoc
+	 */
+	public function get_label() {
+		return parent::get_label() ?: sprintf( __( 'Card ending in %s', 'it-l10n-ithemes-exchange' ), $this->redacted );
+	}
+
+	/**
 	 * Get the Card's brand.
 	 *
 	 * @since 1.36.0

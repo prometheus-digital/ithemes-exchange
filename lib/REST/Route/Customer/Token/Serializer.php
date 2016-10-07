@@ -27,7 +27,10 @@ class Serializer {
 		return array(
 			'id'       => $token->get_pk(),
 			'gateway'  => $token->get_raw_attribute( 'gateway' ),
-			'label'    => $token->label,
+			'label'    => array(
+				'raw'      => $token->label,
+				'rendered' => $token->get_label()
+			),
 			'redacted' => $token->redacted,
 			'primary'  => (bool) $token->primary,
 		);

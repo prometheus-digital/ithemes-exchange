@@ -17,6 +17,13 @@ class ITE_Payment_Token_Bank_Account extends ITE_Payment_Token {
 	protected static $token_type = 'bank';
 
 	/**
+	 * @inheritDoc
+	 */
+	public function get_label() {
+		return parent::get_label() ?: sprintf( __( 'Bank account ending in %s', 'it-l10n-ithemes-exchange' ), $this->redacted );
+	}
+
+	/**
 	 * Get the Bank Account's institution name.
 	 *
 	 * @since 1.36.0

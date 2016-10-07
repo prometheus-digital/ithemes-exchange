@@ -321,11 +321,7 @@ class IT_Exchange_Purchase_Dialog{
 
 		foreach ( $cards as $card ) {
 
-			if ( $card->label ) {
-				$label = $card->label;
-			} else {
-				$label = sprintf( __( 'Card ending in %s', 'it-l10n-ithemes-exchange' ), $card->redacted );
-			}
+			$label = $card->get_label();
 
 			$selected = checked( $card->primary, true, false );
 
