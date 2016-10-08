@@ -56,7 +56,7 @@ class IT_Exchange_Customer {
 	 *
 	 * @param  mixed $user customer id or WP User object
 	 *
-	 * @throws Exception
+	 * @throws InvalidArgumentException
 	 */
 	public function __construct( $user ) {
 
@@ -72,7 +72,7 @@ class IT_Exchange_Customer {
 
 		// Return false if not a WP User
 		if ( ! $this->is_wp_user() ) {
-			throw new Exception( 'Invalid user.' );
+			throw new InvalidArgumentException( 'Invalid user.' );
 		}
 
 		$this->ID = $this->id; // back-compat
@@ -475,7 +475,7 @@ class IT_Exchange_Customer {
 	 * @return boolean
 	 */
 	public function is_wp_user() {
-		return (bool) $this->wp_user->ID;
+		return ! empty( $this->wp_user->ID );
 	}
 
 	/**

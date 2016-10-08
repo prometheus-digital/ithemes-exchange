@@ -66,22 +66,27 @@ class IT_Exchange_Guest_Customer extends IT_Exchange_Customer {
 	 *
 	 * @param \IT_Exchange_Transaction $transaction
 	 *
-	 * @return \IT_Exchange_Guest_Customer
+	 * @return \IT_Exchange_Guest_Customer|null
 	 */
 	public static function from_transaction( IT_Exchange_Transaction $transaction ) {
 
-		$props = array();
+		try {
 
-		if ( $transaction->get_billing_address() ) {
-			$props['first-name'] = $transaction->get_billing_address()->offsetGet( 'first-name' );
-			$props['last-name']  = $transaction->get_billing_address()->offsetGet( 'last-name' );
+			$props = array();
+
+			if ( $transaction->get_billing_address() ) {
+				$props['first-name'] = $transaction->get_billing_address()->offsetGet( 'first-name' );
+				$props['last-name']  = $transaction->get_billing_address()->offsetGet( 'last-name' );
+			}
+
+			$customer = new self( $transaction->customer_email, $props );
+
+			$customer->transaction = $transaction;
+
+			return $customer;
+		} catch ( InvalidArgumentException $e ) {
+			return null;
 		}
-
-		$customer = new self( $transaction->customer_email, $props );
-
-		$customer->transaction = $transaction;
-
-		return $customer;
 	}
 
 	/**
