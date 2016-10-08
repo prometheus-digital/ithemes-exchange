@@ -69,10 +69,17 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 		$return_url = add_query_arg( $return_args, it_exchange_get_page_url( 'transaction' ) );
 
-		$query = array(
-			'cmd'           => '_xclick',
-			'amount'        => number_format( it_exchange_get_cart_total( false, array( 'cart' => $cart ) ), 2, '.', '' ),
-			'quantity'      => 1,
+		if ( $sub_args = $this->get_subscription_args( $request ) ) {
+			$query = $sub_args;
+		} else {
+			$query = array(
+				'cmd'      => '_xclick',
+				'amount'   => number_format( it_exchange_get_cart_total( false, array( 'cart' => $cart ) ), 2, '.', '' ),
+				'quantity' => 1,
+			);
+		}
+
+		$query += array(
 			'business'      => $paypal_email,
 			'item_name'     => strip_tags( it_exchange_get_cart_description( array( 'cart' => $cart ) ) ),
 			'currency_code' => $general_settings['default-currency'],
@@ -83,7 +90,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			'email'         => $cart->get_customer() ? $cart->get_customer()->get_email() : '',
 			'rm'            => 2,
 			'cancel_return' => it_exchange_get_page_url( 'cart' ),
-			'custom'        => $cart->get_id(),
+			'custom'        => 'v2|' . $cart->get_id(),
 			'bn'            => 'iThemes_SP',
 		);
 
@@ -113,6 +120,110 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	}
 
 	/**
+	 * Get the subscription args to pass to PayPal.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Gateway_Purchase_Request $request
+	 *
+	 * @return array
+	 */
+	protected function get_subscription_args( ITE_Gateway_Purchase_Request $request ) {
+
+		$cart = $request->get_cart();
+
+		/** @var ITE_Cart_Product $cart_product */
+		$cart_product = $cart->get_items( 'product' )->filter( function ( ITE_Cart_Product $product ) {
+			return $product->get_product()->has_feature( 'recurring-payments', array( 'setting' => 'auto-renew' ) );
+		} )->first();
+
+		if ( ! $cart_product ) {
+			return array();
+		}
+
+		$product = $cart_product->get_product();
+		$bc      = $cart_product->bc();
+
+		$interval       = $product->get_feature( 'recurring-payments', array( 'setting' => 'interval' ) );
+		$interval_count = $product->get_feature( 'recurring-payments', array( 'setting' => 'interval-count' ) );
+
+		$trial_enabled    = $product->get_feature( 'recurring-payments', array( 'setting' => 'trial-enabled' ) );
+		$t_interval       = $product->get_feature( 'recurring-payments', array( 'setting' => 'trial-interval' ) );
+		$t_interval_count = $product->get_feature( 'recurring-payments', array( 'setting' => 'trial-interval-count' ) );
+
+		switch ( $interval ) {
+			case 'year':
+				$unit = 'Y';
+				break;
+			case 'week':
+				$unit = 'W';
+				break;
+			case 'day':
+				$unit = 'D';
+				break;
+			case 'month':
+			default:
+				$unit = 'M';
+				break;
+
+		}
+
+		$duration = apply_filters( 'it_exchange_paypal_standard_addon_subscription_duration', $interval_count, $bc );
+
+		$trial_unit = null;
+		$t_duration = null;
+
+		if ( $trial_enabled && function_exists( 'it_exchange_is_customer_eligible_for_trial' ) ) {
+			$allow_trial = it_exchange_is_customer_eligible_for_trial( $product, $cart->get_customer() );
+			$allow_trial = apply_filters( 'it_exchange_paypal_standard_addon_get_payment_url_allow_trial', $allow_trial, $product->ID );
+
+			if ( $allow_trial && $t_interval_count > 0 ) {
+				switch ( $t_interval ) {
+					case 'year':
+						$trial_unit = 'Y';
+						break;
+					case 'week':
+						$trial_unit = 'W';
+						break;
+					case 'day':
+						$trial_unit = 'D';
+						break;
+					case 'month':
+					default:
+						$trial_unit = 'M';
+						break;
+				}
+
+				$t_duration = apply_filters( 'it_exchange_paypal_standard_addon_subscription_trial_duration', $t_interval_count, $bc );
+			}
+		}
+
+		// https://developer.paypal.com/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/
+		//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
+		//a2, t2, p2 are for the second trial period, which is not supported with the Recurring Payments add-on
+		//a3, t3, p3 are required for the actual subscription details
+		$args = array(
+			'cmd' => '_xclick-subscriptions',
+			'a3'  => number_format( it_exchange_get_cart_total( false, array( 'cart' => $cart ) ), 2, '.', '' ),
+			//Regular subscription price.
+			'p3'  => $duration,
+			//Subscription duration. Specify an int value in the allowed range for the duration units specified in t3
+			't3'  => $unit,
+			//Regular subscription units of duration. (D, W, M, Y) -- we only use M,Y by default
+			'src' => 1,
+			//Recurring payments.
+		);
+
+		if ( ! empty( $trial_unit ) && ! empty( $t_duration ) ) {
+			$args['a1'] = 0;
+			$args['p1'] = $t_duration;
+			$args['t1'] = $trial_unit;
+		}
+
+		return $args;
+	}
+
+	/**
 	 * @inheritDoc
 	 *
 	 * @param ITE_Gateway_Purchase_Request $request
@@ -125,16 +236,25 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 		$paypal_id = $cart_id = $cart = $paypal_total = $paypal_status = $lock = null;
 
-		if ( ! empty( $pdt['tx'] ) ) { //if PDT is enabled
-			$paypal_id = $pdt['tx'];
-		} elseif ( ! empty( $pdt['txn_id'] ) ) { //if PDT is not enabled
-			$paypal_id = $pdt['txn_id'];
-		}
-
 		if ( ! empty( $pdt['cm'] ) ) {
 			$cart_id = $pdt['cm'];
 		} elseif ( ! empty( $pdt['custom'] ) ) {
 			$cart_id = $pdt['custom'];
+		}
+
+		if ( $cart_id && strpos( $cart_id, 'v2|' ) !== 0 ) {
+			$r = it_exchange_process_paypal_standard_addon_transaction(
+				false,
+				it_exchange_generate_transaction_object( $request->get_cart() )
+			);
+
+			return $r ? it_exchange_get_transaction( $r ) : null;
+		}
+
+		if ( ! empty( $pdt['tx'] ) ) { //if PDT is enabled
+			$paypal_id = $pdt['tx'];
+		} elseif ( ! empty( $pdt['txn_id'] ) ) { //if PDT is not enabled
+			$paypal_id = $pdt['txn_id'];
 		}
 
 		if ( ! empty( $pdt['amt'] ) ) { //if PDT is enabled
@@ -151,6 +271,10 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 		if ( $cart_id ) {
 			$lock = "pps-$cart_id";
+
+			// Remove the v2| from the beginning
+			$cart_id = substr( $cart_id, 3 );
+
 			$cart = it_exchange_get_cart( $cart_id );
 		}
 

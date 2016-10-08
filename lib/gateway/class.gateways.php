@@ -38,12 +38,26 @@ class ITE_Gateways {
 			$GLOBALS['it_exchange']['add_ons']['registered'][ $gateway->get_slug() ]['options']['settings-callback'] = function () use ( $gateway ) {
 				?>
 				<div class="wrap">
-					<h2><?php echo $gateway->get_name(); ?></h2>
+					<h1><?php echo $gateway->get_name(); ?></h1>
 					<?php $gateway->get_settings_form()->print_form(); ?>
 				</div>
 				<?php
 
 			};
+		}
+
+		if ( $fields = $gateway->get_settings_fields() ) {
+			$defaults = array();
+
+			foreach ( $gateway->get_settings_fields() as $field ) {
+				if ( $field['type'] !== 'html' ) {
+					$defaults[ $field['slug'] ] = isset( $field['default'] ) ? $field['default'] : null;
+				}
+			}
+
+			add_filter( "it_storage_get_defaults_exchange_{$gateway->get_settings_name()}", function ( $values ) use ( $defaults ) {
+				return ITUtility::merge_defaults( $values, $defaults );
+			} );
 		}
 
 		if ( $webhook_param = $gateway->get_webhook_param() ) {
@@ -60,6 +74,12 @@ class ITE_Gateways {
 				$response = $gateway->get_handler_for( $request )->handle( $request );
 
 				status_header( $response->get_status() );
+			} );
+		}
+
+		if ( $statuses = $gateway->get_statuses() ) {
+			add_filter( "it_exchange_get_status_options_for_{$gateway->get_slug()}_transaction", function () use ( $statuses ) {
+				return $statuses;
 			} );
 		}
 

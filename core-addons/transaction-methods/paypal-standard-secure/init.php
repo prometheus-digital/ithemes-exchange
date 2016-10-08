@@ -21,6 +21,15 @@ if ( !defined( 'PAYPAL_NVP_API_LIVE_URL' ) )
 if ( !defined( 'PAYPAL_NVP_API_SANDBOX_URL' ) )
 	define( 'PAYPAL_NVP_API_SANDBOX_URL', 'https://api-3t.sandbox.paypal.com/nvp' );
 
+add_action( 'it_exchange_register_gateways', function( ITE_Gateways $gateways ) {
+
+	require_once dirname( __FILE__ ) . '/class.gateway.php';
+	require_once dirname( __FILE__ ) . '/handlers/class.purchase.php';
+	require_once dirname( __FILE__ ) . '/handlers/class.webhook.php';
+
+	$gateways::register( new ITE_PayPal_Standard_Secure_Gateway() );
+} );
+
 /**
  * Mark this transaction method as okay to manually change transactions
  *
@@ -345,7 +354,7 @@ function it_exchange_process_paypal_standard_secure_addon_transaction( $status, 
 	return false;
 
 }
-add_action( 'it_exchange_do_transaction_paypal-standard-secure', 'it_exchange_process_paypal_standard_secure_addon_transaction', 10, 2 );
+//add_action( 'it_exchange_do_transaction_paypal-standard-secure', 'it_exchange_process_paypal_standard_secure_addon_transaction', 10, 2 );
 
 /**
  * Call to cancel PayPal subscription automatically (on upgrade/downgrade)
@@ -520,7 +529,7 @@ function it_exchange_paypal_standard_secure_addon_default_settings( $values ) {
 	$values = ITUtility::merge_defaults( $values, $defaults );
 	return $values;
 }
-add_filter( 'it_storage_get_defaults_exchange_addon_paypal_standard_secure', 'it_exchange_paypal_standard_secure_addon_default_settings' );
+//add_filter( 'it_storage_get_defaults_exchange_addon_paypal_standard_secure', 'it_exchange_paypal_standard_secure_addon_default_settings' );
 
 /**
  * Returns the button for making the PayPal faux payment button
@@ -549,7 +558,7 @@ function it_exchange_paypal_standard_secure_addon_make_payment_button( $options 
 	return $payment_form;
 
 }
-add_filter( 'it_exchange_get_paypal-standard-secure_make_payment_button', 'it_exchange_paypal_standard_secure_addon_make_payment_button', 10, 2 );
+//add_filter( 'it_exchange_get_paypal-standard-secure_make_payment_button', 'it_exchange_paypal_standard_secure_addon_make_payment_button', 10, 2 );
 
 /**
  * Process the faux PayPal Standard secure form
@@ -587,7 +596,7 @@ function it_exchange_process_paypal_standard_secure_form() {
 	}
 
 }
-add_action( 'template_redirect', 'it_exchange_process_paypal_standard_secure_form', 11 );
+//add_action( 'template_redirect', 'it_exchange_process_paypal_standard_secure_form', 11 );
 
 /**
  * Returns the button for making the payment
@@ -926,7 +935,7 @@ function it_exchange_paypal_standard_secure_addon_register_webhook() {
 	$param = apply_filters( 'it_exchange_paypal-standard-secure_webhook', 'it_exchange_paypal-standard-secure' );
 	it_exchange_register_webhook( $key, $param );
 }
-add_filter( 'init', 'it_exchange_paypal_standard_secure_addon_register_webhook' );
+//add_filter( 'init', 'it_exchange_paypal_standard_secure_addon_register_webhook' );
 
 /**
  * Processes webhooks for PayPal Web Standard

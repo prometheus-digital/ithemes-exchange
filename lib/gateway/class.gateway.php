@@ -16,19 +16,6 @@ abstract class ITE_Gateway {
 	 */
 	public function __construct() {
 
-		if ( $fields = $this->get_settings_fields() ) {
-			$defaults = array();
-
-			foreach ( $this->get_settings_fields() as $field ) {
-				if ( $field['type'] !== 'html' ) {
-					$defaults[ $field['slug'] ] = isset( $field['default'] ) ? $field['default'] : null;
-				}
-			}
-
-			add_filter( "it_storage_get_defaults_exchange_{$this->get_settings_name()}", function ( $values ) use ( $defaults ) {
-				return ITUtility::merge_defaults( $values, $defaults );
-			} );
-		}
 	}
 
 	/**
@@ -115,6 +102,17 @@ abstract class ITE_Gateway {
 	public abstract function is_sandbox_mode();
 
 	/**
+	 * Get the available transaction statuses.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array
+	 */
+	public function get_statuses() {
+		return array();
+	}
+
+	/**
 	 * Get the webhook param name.
 	 *
 	 * @since 1.36
@@ -130,7 +128,7 @@ abstract class ITE_Gateway {
 	 *
 	 * @return array
 	 */
-	protected abstract function get_settings_fields();
+	public abstract function get_settings_fields();
 
 	/**
 	 * Get the settings form controller.
@@ -153,7 +151,7 @@ abstract class ITE_Gateway {
 	 *
 	 * @return string
 	 */
-	protected abstract function get_settings_name();
+	public abstract function get_settings_name();
 
 	/**
 	 * Retrieve the settings controller for this gateway.

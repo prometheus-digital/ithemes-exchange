@@ -80,15 +80,7 @@ class IT_Exchange_Admin_Settings_Form {
 		}
 
 		// Set prefix and form fields
-		$this->prefix      = $options['prefix'];
-		$this->form_fields = $options['form-fields'];
-
-		// Update settings if form was submitted
-		if ( ! empty( $options['save-on-load'] ) ) {
-			$this->save_settings();
-		}
-
-		// Set form options
+		$this->prefix = $options['prefix'];
 		$this->form_options   = $options['form-options'];
 		$this->button_options = $options['button-options'];
 
@@ -97,6 +89,11 @@ class IT_Exchange_Admin_Settings_Form {
 
 		// Set form fields
 		$this->set_form_fields( $options['form-fields'] );
+
+		// Update settings if form was submitted
+		if ( ! empty( $options['save-on-load'] ) ) {
+			$this->save_settings();
+		}
 
 		// Loads settings saved previously
 		$this->load_settings();
@@ -149,10 +146,11 @@ class IT_Exchange_Admin_Settings_Form {
 	 * @throws \InvalidArgumentException
 	 */
 	public function set_form_fields( $fields ) {
-		// Update property
-		$this->form_fields = $fields;
 
 		foreach ( $fields as $field ) {
+
+			$this->form_fields[ $field['slug'] ] = $field;
+
 			if ( isset( $field['show_if'] ) ) {
 
 				$show_if = $field['show_if'];
@@ -297,7 +295,7 @@ class IT_Exchange_Admin_Settings_Form {
 		<?php do_action( 'it_exchange_' . $this->prefix . '_top' ); ?>
 		<fieldset class="it-exchange-addon-settings">
 			<?php
-			foreach ( $this->form_fields as $row => $field ) {
+			foreach ( $this->form_fields as $field ) {
 				$field['options'] = empty( $field['options'] ) ? array() : $field['options'];
 				if ( 'heading' === $field['type'] ) {
 					if ( $i === 0 ) {
@@ -470,12 +468,15 @@ class IT_Exchange_Admin_Settings_Form {
 	 * @since 1.36.0
 	 *
 	 * @param string $field
+     * @param array $settings
 	 *
 	 * @return bool
 	 *
 	 * @throws \UnexpectedValueException
 	 */
-	protected function should_show_field( $field ) {
+	protected function should_show_field( $field, $settings = null ) {
+
+		$settings = $settings === null ? $this->settings : $settings;
 
 		if ( ! isset( $this->show_if[ $field ] ) ) {
 			return true;
@@ -484,7 +485,7 @@ class IT_Exchange_Admin_Settings_Form {
 		$required_field = $this->show_if[ $field ]['field'];
 		$compare        = $this->show_if[ $field ]['compare'];
 		$required_value = $this->show_if[ $field ]['value'];
-		$actual_value   = $this->settings[ $required_field ];
+		$actual_value   = $settings[ $required_field ];
 
 		switch ( $compare ) {
 			case '=':
@@ -528,7 +529,33 @@ class IT_Exchange_Admin_Settings_Form {
 		unset( $values['it-exchange-saving-settings'] );
 
 		$values = apply_filters( 'it_exchange_save_admin_form_settings_for_' . $this->prefix, $values );
-		$errors = apply_filters( 'it_exchange_validate_admin_form_settings_for_' . $this->prefix, null, $values );
+
+		$missing = array();
+
+		foreach ( $values as $slug => $value ) {
+			if ( ! isset( $this->form_fields[ $slug ] ) ) {
+				continue;
+			}
+
+			$setting = $this->form_fields[ $slug ];
+
+			if ( ! empty( $setting['required'] ) && $this->should_show_field( $slug, $values ) && empty( $value ) ) {
+				$missing[] = $setting;
+			}
+		}
+
+		if ( $missing ) {
+			$msg = sprintf(
+				_n( 'Please specify the %s', 'Please specify the following required fields: %s', count( $missing ), 'it-l10n-ithemes-exchange' ),
+				implode(', ', array_map( function($field) { return $field['label']; }, $missing ) )
+			);
+
+			$errors = new WP_Error( 'required_fields', $msg, $missing );
+		} else {
+			$errors = null;
+		}
+
+		$errors = apply_filters( 'it_exchange_validate_admin_form_settings_for_' . $this->prefix, $errors, $values );
 
 		if ( is_wp_error( $errors ) ) {
 			it_exchange_add_message( 'error', implode( ', ', $errors->get_error_messages() ) );

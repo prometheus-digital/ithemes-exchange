@@ -18,6 +18,8 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	 * ITE_PayPal_Standard_Gateway constructor.
 	 */
 	public function __construct() {
+		parent::__construct();
+
 		$factory = new ITE_Gateway_Request_Factory();
 
 		$this->handlers[] = new ITE_PayPal_Standard_Purchase_Handler( $this, $factory );
@@ -67,7 +69,7 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
-	protected function get_settings_fields() {
+	public function get_settings_fields() {
 		return array(
 			array(
 				'type' => 'html',
@@ -116,5 +118,5 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
-	protected function get_settings_name() { return 'addon_paypal_standard'; }
+	public function get_settings_name() { return 'addon_paypal_standard'; }
 }

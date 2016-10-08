@@ -23,6 +23,7 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 		'makepayment'             => 'make_payment',
 		'interstitialdescription' => 'interstitial_description',
 		'interstitialtarget'      => 'interstitial_target',
+		'interstitialvars'        => 'interstitial_vars',
 		'interstitialvar'         => 'interstitial_var',
 		'interstitialvarkey'      => 'interstitial_var_key',
 		'interstitialvarvalue'    => 'interstitial_var_value',
@@ -141,7 +142,13 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 			return false;
 		}
 
-		self::$interstitial_vars = $this->interstitial['vars'];
+		if ( ! self::$interstitial_vars ) {
+			self::$interstitial_vars = $this->interstitial['vars'];
+			reset( self::$interstitial_vars );
+			self::$interstitial_var = key( self::$interstitial_vars );
+
+			return true;
+		}
 
 		if ( next( self::$interstitial_vars ) ) {
 			self::$interstitial_var = key( self::$interstitial_vars );

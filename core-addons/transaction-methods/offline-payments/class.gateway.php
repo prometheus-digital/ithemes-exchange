@@ -18,6 +18,9 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 	 * ITE_Gateway_Offline_Payments constructor.
 	 */
 	public function __construct() {
+
+		parent::__construct();
+
 		$this->handlers[] = new ITE_Offline_Payments_Purchase_Request_Handler( $this, new ITE_Gateway_Request_Factory() );
 	}
 
@@ -62,7 +65,7 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
-	protected function get_settings_fields() {
+	public function get_settings_fields() {
 		return array(
 			array(
 				'type' => 'html',
@@ -107,5 +110,5 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
-	protected function get_settings_name() { return 'addon_offline_payments'; }
+	public function get_settings_name() { return 'addon_offline_payments'; }
 }
