@@ -1823,7 +1823,9 @@ class IT_Exchange_Admin {
 			wp_localize_script( 'it-exchange-transaction-details', 'EXCHANGE', array(
 				'nonce' => wp_create_nonce( 'it-exchange-add-note' ),
 				'txn'   => $GLOBALS['post']->ID,
-				'items' => array_map( create_function( '$a', 'return $a->to_array();' ), $collection->get_activity() )
+				'items' => array_map( create_function( '$a', 'return $a->to_array();' ), $collection->get_activity() ),
+				'sent' => _x( 'Sent!', 'Notice when an email receipt has been successfully sent.', 'it-l10n-ithemes-exchange' ),
+				'failed' => _x( 'Failed!', 'Notice when an email receipt has failed to be sent.', 'it-l10n-ithemes-exchange' ),
 			) );
 			wp_dequeue_script( 'autosave' );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {

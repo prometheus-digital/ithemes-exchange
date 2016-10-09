@@ -15,19 +15,19 @@ do_action( 'it_exchange_before_payment_details', $post );
 		<?php esc_attr_e( $txn->get_status( true ) ); ?>
 	</div>
 
-<?php if ( $txn->has_parent() ): ?>
-	<div class="spacing-wrapper parent-txn-link bottom-border">
-		<span class="dashicons dashicons-arrow-left-alt2"></span>
-		<a href="<?php echo esc_url( get_edit_post_link( $txn->get_parent()->ID ) ); ?>">
-			<?php printf(
-				__( 'View Parent Subscription Payment %s', 'it-l10n-ithemes-exchange' ),
-				$txn->get_order_number()
-			); ?>
-		</a>
-	</div>
-<?php endif; ?>
+	<?php if ( $txn->has_parent() ): ?>
+		<div class="spacing-wrapper parent-txn-link bottom-border">
+			<span class="dashicons dashicons-arrow-left-alt2"></span>
+			<a href="<?php echo esc_url( get_edit_post_link( $txn->get_parent()->ID ) ); ?>">
+				<?php printf(
+					__( 'View Parent Subscription Payment %s', 'it-l10n-ithemes-exchange' ),
+					$txn->get_order_number()
+				); ?>
+			</a>
+		</div>
+	<?php endif; ?>
 
-<?php do_action( 'it_exchange_transaction_details_before_customer_data', $post ); ?>
+	<?php do_action( 'it_exchange_transaction_details_before_customer_data', $post ); ?>
 
 	<div class="customer-data spacing-wrapper">
 		<div class="customer-avatar left">
@@ -68,38 +68,38 @@ do_action( 'it_exchange_before_payment_details', $post );
 		</div>
 	</div>
 
-<?php do_action( 'it_exchange_transaction_details_after_customer_data', $post ); ?>
-<?php do_action( 'it_exchange_transaction_details_before_shipping_and_billing', $post ); ?>
+	<?php do_action( 'it_exchange_transaction_details_after_customer_data', $post ); ?>
+	<?php do_action( 'it_exchange_transaction_details_before_shipping_and_billing', $post ); ?>
 
-<?php
-$billing_address  = $txn->get_billing_address();
-$shipping_address = $txn->get_shipping_address();
+	<?php
+	$billing_address  = $txn->get_billing_address();
+	$shipping_address = $txn->get_shipping_address();
 
-if ( $shipping_address || $billing_address ) : ?>
-	<div class="billing-shipping-wrapper columns-wrapper">
+	if ( $shipping_address || $billing_address ) : ?>
+		<div class="billing-shipping-wrapper columns-wrapper">
 
-		<?php if ( $shipping_address ) : ?>
-			<div class="shipping-address column">
-				<div class="column-inner">
-					<div class="shipping-address-label address-label"><?php _e( 'Shipping Address', 'it-l10n-ithemes-exchange' ); ?></div>
-					<p><?php echo it_exchange_get_formatted_shipping_address( $shipping_address ); ?></p>
+			<?php if ( $shipping_address ) : ?>
+				<div class="shipping-address column">
+					<div class="column-inner">
+						<div class="shipping-address-label address-label"><?php _e( 'Shipping Address', 'it-l10n-ithemes-exchange' ); ?></div>
+						<p><?php echo it_exchange_get_formatted_shipping_address( $shipping_address ); ?></p>
+					</div>
 				</div>
-			</div>
-		<?php endif; ?>
+			<?php endif; ?>
 
-		<?php if ( $billing_address ) : ?>
-			<div class="billing-address column">
-				<div class="column-inner">
-					<div class="billing-address-label address-label"><?php _e( 'Billing Address', 'it-l10n-ithemes-exchange' ); ?></div>
-					<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
+			<?php if ( $billing_address ) : ?>
+				<div class="billing-address column">
+					<div class="column-inner">
+						<div class="billing-address-label address-label"><?php _e( 'Billing Address', 'it-l10n-ithemes-exchange' ); ?></div>
+						<p><?php echo it_exchange_get_formatted_billing_address( $billing_address ); ?></p>
+					</div>
 				</div>
-			</div>
-		<?php endif; ?>
-	</div>
-<?php endif; ?>
+			<?php endif; ?>
+		</div>
+	<?php endif; ?>
 
-<?php do_action( 'it_exchange_transaction_details_after_shipping_and_bililng', $post ); ?>
-<?php do_action( 'it_exchange_transaction_details_before_products', $post ); ?>
+	<?php do_action( 'it_exchange_transaction_details_after_shipping_and_bililng', $post ); ?>
+	<?php do_action( 'it_exchange_transaction_details_before_products', $post ); ?>
 
 	<div class="products cart-items bottom-border">
 		<div class="products-header spacing-wrapper bottom-border">
@@ -242,8 +242,8 @@ if ( $shipping_address || $billing_address ) : ?>
 		<?php endforeach; ?>
 	</div>
 
-<?php do_action( 'it_exchange_transaction_details_after_products', $post ); ?>
-<?php do_action( 'it_exchange_transaction_details_before_costs', $post ); ?>
+	<?php do_action( 'it_exchange_transaction_details_after_products', $post ); ?>
+	<?php do_action( 'it_exchange_transaction_details_before_costs', $post ); ?>
 
 	<div class="transaction-costs clearfix spacing-wrapper bottom-border">
 
@@ -292,7 +292,7 @@ if ( $shipping_address || $billing_address ) : ?>
 					<div class="transaction-costs-refund">
 						<span class="code">
 							<?php echo esc_html( sprintf(
-								/* translators: $1$s refund amount %2$s refund date. */
+							/* translators: $1$s refund amount %2$s refund date. */
 								__( '%1$s on %2$s', 'it-l10n-ithemes-exchange' ), it_exchange_format_price( $refund['amount'] ), $refund['date']
 							) ); ?>
 						</span>
@@ -302,41 +302,42 @@ if ( $shipping_address || $billing_address ) : ?>
 		<?php endif; ?>
 	</div>
 
-<?php
-$totals = $txn->get_items( '', true )->summary_only()->without( 'shipping', 'coupon' )->segment();
+	<?php
+	$totals = $txn->get_items( '', true )->summary_only()->without( 'shipping', 'coupon' )->segment();
 
-foreach ( $totals as $total_by_type ):
-	$segmented = $total_by_type->segment( function ( ITE_Line_Item $item ) { return get_class( $item ) . $item->get_name(); } );
-	foreach ( $segmented as $segment ):
-		$type = $segment->first()->get_type();
-		$description = $segment->filter( function ( ITE_Line_Item $item ) { return trim( $item->get_description() !== '' ); } )->first();
-		?>
-		<div class="summary-item summary-item-<?php echo $type; ?> clearfix spacing-wrapper bottom-border">
-			<div class="summary-item-description left">
-				<?php if ( $description ): ?>
-					<p class="description"><?php echo $description->get_description(); ?></p>
-				<?php endif; ?>
-			</div>
-			<div class="summary-item-cost right clearfix">
-				<div class="summary-item-cost-label left"><?php echo $segment->first()->get_name(); ?></div>
-				<div class="summary-item-cost-price">
-					<?php do_action( "it_exchange_transaction_print_metabox_before_transaction_{$type}_total", $txn ); ?>
-					<?php esc_attr_e( it_exchange_format_price( $segment->total() ) ); ?>
-					<?php do_action( "it_exchange_transaction_print_metabox_after_transaction_{$type}_total", $txn ); ?>
+	foreach ( $totals as $total_by_type ):
+		$segmented = $total_by_type->segment( function ( ITE_Line_Item $item ) { return get_class( $item ) . $item->get_name(); } );
+		foreach ( $segmented as $segment ):
+			$type = $segment->first()->get_type();
+			$description = $segment->filter( function ( ITE_Line_Item $item ) { return trim( $item->get_description() !== '' ); } )->first();
+			?>
+			<div class="summary-item summary-item-<?php echo $type; ?> clearfix spacing-wrapper bottom-border">
+				<div class="summary-item-description left">
+					<?php if ( $description ): ?>
+						<p class="description"><?php echo $description->get_description(); ?></p>
+					<?php endif; ?>
+				</div>
+				<div class="summary-item-cost right clearfix">
+					<div class="summary-item-cost-label left"><?php echo $segment->first()->get_name(); ?></div>
+					<div class="summary-item-cost-price">
+						<?php do_action( "it_exchange_transaction_print_metabox_before_transaction_{$type}_total", $txn ); ?>
+						<?php esc_attr_e( it_exchange_format_price( $segment->total() ) ); ?>
+						<?php do_action( "it_exchange_transaction_print_metabox_after_transaction_{$type}_total", $txn ); ?>
+					</div>
 				</div>
 			</div>
-		</div>
-	<?php endforeach;
-endforeach; ?>
+		<?php endforeach;
+	endforeach; ?>
 
-<?php if ( it_exchange_transaction_includes_shipping( $post ) ) : ?>
-	<div class="transaction-shipping-summary clearfix spacing-wrapper bottom-border">
-		<div class="payment-shipping left">
-			<div class="payment-shipping-label"><?php _e( 'Shipping Method', 'it-l10n-ithemes-exchange' ); ?></div>
-			<div class="payment-shipping-name">
-				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_shipping_name', $post ); ?>
-				<?php esc_attr_e( empty( it_exchange_get_transaction_shipping_method( $post )->label ) ? __( 'Unknown Shipping Method', 'it-l10n-ithemes-exchange' ) : it_exchange_get_transaction_shipping_method( $post )->label ); ?>
-				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_shipping_name', $post ); ?>
+	<?php if ( it_exchange_transaction_includes_shipping( $post ) ) : ?>
+		<div class="transaction-shipping-summary clearfix spacing-wrapper bottom-border">
+			<div class="payment-shipping left">
+				<div class="payment-shipping-label"><?php _e( 'Shipping Method', 'it-l10n-ithemes-exchange' ); ?></div>
+				<div class="payment-shipping-name">
+					<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_shipping_name', $post ); ?>
+					<?php esc_attr_e( empty( it_exchange_get_transaction_shipping_method( $post )->label ) ? __( 'Unknown Shipping Method', 'it-l10n-ithemes-exchange' ) : it_exchange_get_transaction_shipping_method( $post )->label ); ?>
+					<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_shipping_name', $post ); ?>
+				</div>
 			</div>
 		</div>
 
@@ -348,8 +349,7 @@ endforeach; ?>
 				<?php do_action( 'it_exchange_transaction_print_metabox_after_shipping_total', $post ); ?>
 			</div>
 		</div>
-	</div>
-<?php endif; ?>
+	<?php endif; ?>
 
 	<div class="transaction-summary clearfix spacing-wrapper bottom-border">
 		<div class="payment-method left">
@@ -358,6 +358,9 @@ endforeach; ?>
 				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_method_name', $post ); ?>
 				<?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?>
 				<code><?php echo it_exchange_get_transaction_method_id( $post ); ?></code>
+				<?php if ( $token = $txn->payment_token ) : ?>
+					<span class="payment-method-token"><?php echo $token->get_label(); ?></span>
+				<?php endif; ?>
 				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_method_name', $post ); ?>
 			</div>
 		</div>
@@ -380,38 +383,41 @@ endforeach; ?>
 		</div>
 	</div>
 
-<?php if ( it_exchange_transaction_status_can_be_manually_changed( $txn ) ) : ?>
-	<div class="transaction-status-update clearfix spacing-wrapper hide-if-no-js bottom-border">
-		<div class="update-status-label left">
-			<label for="it-exchange-update-transaction-status">
-				<?php _e( 'Change Status', 'it-l10n-ithemes-exchange' ); ?>
-			</label>
-			<span class="tip" title="<?php _e( 'The customer will receive an email When this is changed from a status that is not cleared for delivery to a status that is cleared for delivery', 'it-l10n-ithemes-exchange' ); ?>">i</span>
-		</div>
-		<div class="update-status-setting right">
-			<select id='it-exchange-update-transaction-status'>
+	<div class="spacing-wrapper bottom-border clearfix hide-if-no-js transaction-actions">
+		<?php if ( it_exchange_transaction_status_can_be_manually_changed( $txn ) && $options = it_exchange_get_status_options_for_transaction( $txn ) ): ?>
+			<select id='it-exchange-update-transaction-status' style="width: 150px">
+				<option style="display:none;" value="0" disabled selected>
+					<?php _e( 'Update Status', 'it-1l10n-ithemes-exchange' ); ?>
+				</option>
 				<?php
-				if ( $options = it_exchange_get_status_options_for_transaction( $txn ) ) {
-					$current_status = it_exchange_get_transaction_status( $txn );
-					foreach ( $options as $key => $label ) {
-						$status_label = it_exchange_get_transaction_status_label( $txn, array( 'status' => $key ) );
-						?>
-						<option value="<?php esc_attr_e( $key ); ?>" <?php selected( $key, $current_status ); ?>>
-							<?php esc_attr_e( $status_label ); ?>
-						</option>
-						<?php
-					}
+				$current_status = it_exchange_get_transaction_status( $txn );
+				foreach ( $options as $key => $label ) {
+					$status_label = it_exchange_get_transaction_status_label( $txn, array( 'status' => $key ) );
+					?>
+					<option value="<?php esc_attr_e( $key ); ?>">
+						<?php echo esc_html( $status_label ); ?>
+					</option>
+					<?php
 				}
 				?>
 			</select>
+
+			<?php it_exchange_admin_tooltip(
+				__( 'The customer will be emailed if the status changes from un-cleared for delivery to a status that is cleared for delivery.',
+					'it-l10n-ithemes-exchange'
+				) ); ?>
 			<?php wp_nonce_field( 'update-transaction-status' . $post->ID, 'it-exchange-update-transaction-nonce' ); ?>
 			<input type="hidden" id="it-exchange-update-transaction-current-status" value="<?php esc_attr_e( $current_status ); ?>" />
 			<input type="hidden" id="it-exchange-update-transaction-id" value="<?php esc_attr_e( $post->ID ); ?>" />
 			<div id="it-exchange-update-transaction-status-failed"><?php _e( 'Not Saved.', 'it-l10n-ithemes-exchange' ); ?></div>
 			<div id="it-exchange-update-transaction-status-success"><?php _e( 'Saved!', 'it-l10n-ithemes-exchange' ); ?></div>
-		</div>
+		<?php endif; ?>
+
+		<button class="button button-secondary right" id="resend-receipt">
+			<?php _e( 'Resend Receipt', 'it-l10n-ithemes-exchange' ); ?>
+		</button>
+		<?php wp_nonce_field( 'resend-receipt-transaction-' . $post->ID, 'it-exchange-resend-receipt-nonce' ); ?>
 	</div>
-<?php endif; ?>
 
 <?php
 do_action( 'it_exchange_after_payment_details', $post );

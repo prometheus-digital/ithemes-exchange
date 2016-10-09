@@ -46,6 +46,7 @@ class IT_Exchange_Transaction_Post_Type {
 			add_filter( 'get_user_option_screen_layout_it_exchange_tran', array( $this,	'update_user_column_options' ) );
 			add_filter( 'bulk_actions-edit-it_exchange_tran', array( $this, 'edit_bulk_actions' ) );
 			add_action( 'wp_ajax_it-exchange-update-transaction-status', array( $this, 'ajax_update_status' ) );
+			add_action( 'wp_ajax_it-exchange-resend-receipt-transaction', array( $this, 'ajax_resend_receipt' ) );
 			add_action( 'wp_ajax_it-exchange-add-note', array( $this, 'ajax_add_note' ) );
 			add_action( 'wp_ajax_it-exchange-remove-activity', array( $this, 'ajax_remove_activity' ) );
 			add_filter( 'heartbeat_received', array( $this, 'activity_heartbeat' ), 10, 2 );
@@ -639,6 +640,41 @@ class IT_Exchange_Transaction_Post_Type {
 		} else {
 			die( 'failed' );
 		}
+	}
+
+	/**
+	 * Resend receipt from transaction single view.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return void
+	 */
+	public function ajax_resend_receipt() {
+		$transaction_id = empty( $_POST['it-exchange-transaction-id'] ) ? false : absint( $_POST['it-exchange-transaction-id'] );
+		$nonce          = empty( $_POST['it-exchange-nonce'] ) ? false : $_POST['it-exchange-nonce'];
+
+		// Fail if we don't have all the data
+		if ( ! $transaction_id || ! $nonce ) {
+			die( 'failed' );
+		}
+
+		// Fail if we don't have a valid nonce
+		if ( ! wp_verify_nonce( $nonce, 'resend-receipt-transaction-' . $transaction_id ) ) {
+			die( 'failed' );
+		}
+
+		if ( ! current_user_can( 'edit_it_transaction', $transaction_id ) ) {
+			die( 'failed' );
+		}
+
+		// Fail if transaction isn't found
+		if ( ! $transaction = it_exchange_get_transaction( $transaction_id ) ) {
+			die( 'failed' );
+		}
+
+		it_exchange_email_notifications()->send_purchase_emails( $transaction, false );
+
+		die( 'success' );
 	}
 
 	/**

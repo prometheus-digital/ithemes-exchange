@@ -279,6 +279,11 @@
 	font-size: .6em;
 }
 
+#it-exchange-transaction-details .payment-method .payment-method-token {
+	line-height: 1.4em;
+	font-size: 13px;
+}
+
 #it-exchange-transaction-details .payment-original-total-label,
 #it-exchange-transaction-details .payment-original-total-amount {
 	margin-top: 1em;
@@ -287,6 +292,11 @@
 
 #it-exchange-transaction-details .payment-original-total-label {
 	margin-top: 1.416666667em;
+}
+
+#it-exchange-transaction-details .transaction-actions {
+	background: #F5F5F5;
+	position: relative;
 }
 
 #it-exchange-transaction-details .transaction-status-update {
@@ -306,7 +316,7 @@
 #it-exchange-update-transaction-status-success {
 	position: absolute;
 	top: 3px;
-	right: 95px;
+	left: 4px;
 	padding: 2px 4px;
 	background: #407D28;
 	border-radius: 2px;
@@ -318,6 +328,11 @@
 #it-exchange-update-transaction-status-failed {
 	background: #D72E3A;
 }
+
+#resend-receipt {
+	text-align: center !important;
+}
+
 
 /** -----------------------------------------------------:[ transaction activity ]:---------- */
 #it-exchange-transaction-activity {
