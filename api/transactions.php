@@ -1193,15 +1193,9 @@ function it_exchange_get_transaction_refunds_total( $transaction, $format = true
 		return 0.00;
 	}
 
-	$total_refund = 0;
+	$total = $transaction->get_refund_total();
 
-	foreach ( $transaction->refunds as $refund ) {
-		$total_refund += $refund->amount;
-	}
-
-	$total_refund = $format ? it_exchange_format_price( $total_refund ) : $total_refund;
-
-	return apply_filters( 'it_exchange_get_transaction_refunds_total', $total_refund, $transaction, $format );
+	return $format ? it_exchange_format_price( $total ) : $total;
 }
 
 /**

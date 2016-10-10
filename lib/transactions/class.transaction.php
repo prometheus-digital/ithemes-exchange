@@ -705,7 +705,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 
 		$total = $this->total;
 
-		if ( $total && $subtract_refunds && $refunds_total = it_exchange_get_transaction_refunds_total( $this->ID, false ) ) {
+		if ( $total && $subtract_refunds && $refunds_total = $this->get_refund_total() ) {
 			$total -= $refunds_total;
 		}
 
@@ -881,7 +881,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 		$date = $date ?: current_time( 'mysql', true );
 
 		if ( is_numeric( $date ) ) {
-			$datetime = new DateTime("@$date", new DateTimeZone( 'UTC' ) );
+			$datetime = new DateTime( "@$date", new DateTimeZone( 'UTC' ) );
 		} elseif ( ! $date instanceof DateTime ) {
 			$datetime = new DateTime( $date, new DateTimeZone( 'UTC' ) );
 		} else {
@@ -938,9 +938,35 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	}
 
 	/**
+	 * Returns the a sum of all the applied refund amounts for this transaction
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return float
+	 */
+	public function get_refund_total() {
+		$total = ITE_Refund::query()
+		                   ->and_where( 'transaction', '=', $this->ID )
+		                   ->expression( 'SUM', 'amount', 'SUM' )->results()->get( 'SUM' );
+
+		$total = (float) $total;
+
+		/**
+		 * Filter the total amount that has been refunded.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param float                   $total
+		 * @param IT_Exchange_Transaction $this
+		 * @param bool                    $format
+		 */
+		return apply_filters( 'it_exchange_get_transaction_refunds_total', $total, $this, false );
+	}
+
+	/**
 	 * Get the transaction refunds.
 	 *
-	 * @since 0.4.0
+	 * @since      0.4.0
 	 *
 	 * @deprecated 1.36.0
 	 *
