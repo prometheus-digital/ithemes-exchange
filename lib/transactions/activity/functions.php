@@ -119,6 +119,33 @@ function it_exchange_add_note_on_status_change( $transaction, $old_status ) {
 add_action( 'it_exchange_update_transaction_status', 'it_exchange_add_note_on_status_change', 9, 2 );
 
 /**
+ * Add activity item when a refund is processed.
+ *
+ * @since 1.36.0
+ *
+ * @param ITE_Refund               $refund
+ * @param \IT_Exchange_Transaction $transaction
+ */
+function it_exchange_add_activity_on_refund( ITE_Refund $refund, IT_Exchange_Transaction $transaction ) {
+
+	$builder = new IT_Exchange_Txn_Activity_Builder( $transaction, 'refund' );
+	$builder->set_refund( $refund );
+
+	if ( is_user_logged_in() ) {
+		$actor = new IT_Exchange_Txn_Activity_User_Actor( wp_get_current_user() );
+	} elseif ( ( $wh = it_exchange_doing_webhook() ) && ( $addon = it_exchange_get_addon( $wh ) ) ) {
+		$actor = new IT_Exchange_Txn_Activity_Gateway_Actor( $addon );
+	} else {
+		$actor = new IT_Exchange_Txn_Activity_Site_Actor();
+	}
+
+	$builder->set_actor( $actor );
+	$builder->build( it_exchange_get_txn_activity_factory() );
+}
+
+add_action( 'it_exchange_add_transaction_refund', 'it_exchange_add_activity_on_refund', 10, 4 );
+
+/**
  * Add a renewal note when a child transaction is created.
  *
  * @since 1.34
@@ -215,6 +242,11 @@ function it_exchange_get_txn_activity_factory() {
 	) );
 	$factory->register( 'status', __( 'Order Status', 'it-l10n-ithemes-exchange' ), array(
 		'IT_Exchange_Txn_Status_Activity',
+		'make'
+	) );
+
+	$factory->register( 'refund', __( 'Refunds', 'it-l10n-ithemes-exchange' ), array(
+		'IT_Exchange_Txn_Refund_Activity',
 		'make'
 	) );
 

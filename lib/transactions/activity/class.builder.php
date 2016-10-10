@@ -46,6 +46,9 @@ final class IT_Exchange_Txn_Activity_Builder {
 	 */
 	private $child;
 
+	/** @var ITE_Refund */
+	private $refund;
+
 	/**
 	 * IT_Exchange_Txn_Activity_Builder constructor.
 	 *
@@ -147,6 +150,22 @@ final class IT_Exchange_Txn_Activity_Builder {
 	}
 
 	/**
+	 * Set the refund.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Refund $refund
+	 *
+	 * @return $this
+	 */
+	public function set_refund( ITE_Refund $refund ) {
+
+		$this->refund = $refund;
+
+		return $this;
+	}
+
+	/**
 	 * Create the activity item.
 	 *
 	 * @since 1.34
@@ -182,14 +201,9 @@ final class IT_Exchange_Txn_Activity_Builder {
 			throw new UnexpectedValueException( $term_ids->get_error_message() );
 		}
 
-		update_post_meta( $ID, '_is_public', $this->public );
-
-		if ( $this->child ) {
-			update_post_meta( $ID, '_child_txn', $this->child->ID );
-			update_post_meta( $ID, '_child_txn_cleared', it_exchange_transaction_is_cleared_for_delivery( $this->child ) );
-		}
-
 		$activity = $factory->make( $ID );
+
+		$this->add_meta( $ID );
 
 		if ( $activity && $this->actor ) {
 			update_post_meta( $ID, '_actor_type', $this->actor->get_type() );
@@ -209,5 +223,26 @@ final class IT_Exchange_Txn_Activity_Builder {
 		do_action( 'it_exchange_build_txn_activity', $activity, $this );
 
 		return $activity;
+	}
+
+	/**
+	 * Attach metadata.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param int $ID
+	 */
+	protected function add_meta( $ID ) {
+
+		update_post_meta( $ID, '_is_public', $this->public );
+
+		if ( $this->child ) {
+			update_post_meta( $ID, '_child_txn', $this->child->ID );
+			update_post_meta( $ID, '_child_txn_cleared', it_exchange_transaction_is_cleared_for_delivery( $this->child ) );
+		}
+
+		if ( $this->refund ) {
+			update_post_meta( $ID, '_refund', $this->refund->ID );
+		}
 	}
 }

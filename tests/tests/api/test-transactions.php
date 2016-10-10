@@ -348,14 +348,35 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_add_refund_to_transaction() {
 
-		$txn = self::transaction_factory()->create();
+		/** @var IT_Exchange_Transaction $txn */
+		$txn = self::transaction_factory()->create_and_get();
 
 		$amt  = '5.00';
-		$time = current_time( 'mysql' );
+		$time = current_time( 'timestamp', 1 );
 
 		it_exchange_add_refund_to_transaction( $txn, $amt, $time );
-		$refunds = it_exchange_get_transaction_refunds( $txn );
 
+		$refund  = $txn->refunds->first();
+
+		self::assertInstanceOf( 'ITE_Refund', $refund );
+		self::assertEquals( $amt, $refund->amount );
+		self::assertEquals( $time, $refund->created_at->getTimestamp() );
+	}
+
+	/**
+	 * @expectedDeprecated IT_Exchange_Transaction::get_transaction_refunds
+	 */
+	public function test_get_transaction_refunds_deprecated() {
+
+		/** @var IT_Exchange_Transaction $txn */
+		$txn = self::transaction_factory()->create_and_get();
+
+		$amt  = '5.00';
+		$time = current_time( 'mysql', 1 );
+
+		it_exchange_add_refund_to_transaction( $txn, $amt, $time );
+
+		$refunds = $txn->get_transaction_refunds();
 		$this->assertEquals( array(
 			'amount'  => $amt,
 			'date'    => $time,

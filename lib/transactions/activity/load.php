@@ -25,5 +25,6 @@ require_once dirname( __FILE__ ) . '/actors/class.gateway.php';
 require_once dirname( __FILE__ ) . '/types/class.note.php';
 require_once dirname( __FILE__ ) . '/types/class.renewal.php';
 require_once dirname( __FILE__ ) . '/types/class.status.php';
+require_once dirname( __FILE__ ) . '/types/class.refund.php';
 
 require_once dirname( __FILE__ ) . '/functions.php';

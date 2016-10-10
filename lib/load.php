@@ -58,6 +58,9 @@ require_once dirname( __FILE__ ) . '/location/load.php';
 // Transaction Module
 require_once dirname( __FILE__ ) . '/transactions/load.php';
 
+// Refunds Module
+require_once dirname( __FILE__ ) . '/refunds/load.php';
+
 // Template Functions
 require_once dirname( __FILE__ ) . '/functions/template-functions.php';
 

@@ -114,6 +114,37 @@ class ITE_Gateway_Request_Factory {
 				}
 
 				return new ITE_Gateway_Tokenize_Request( $customer, $source, $label, $primary );
+			case ITE_Gateway_Refund_Request::get_name():
+
+				if ( empty( $args['transaction'] ) || ! $txn = it_exchange_get_transaction( $args['transaction'] ) ) {
+					throw new InvalidArgumentException( 'Invalid `transaction` option.' );
+				}
+
+				if ( empty( $args['amount'] ) || $args['amount'] <= 0.00 ) {
+					throw new InvalidArgumentException( 'Invalid `amount` option.' );
+				}
+
+				$reason = empty( $args['reason'] ) ? '' : $args['reason'];
+
+				$refund = new ITE_Gateway_Refund_Request( $txn, $args['amount'], $reason );
+
+				if ( ! empty( $args['issued_by'] ) ) {
+					$issued_by = $args['issued_by'];
+
+					if ( is_numeric( $issued_by ) ) {
+						$issued_by = get_user_by( 'id', $issued_by );
+					}
+
+					if ( ! $issued_by instanceof WP_User ) {
+						throw new InvalidArgumentException( 'Invalid `issued_by` option.' );
+					}
+
+					$refund->set_issued_by( $issued_by );
+				} elseif ( is_user_logged_in() ) {
+					$refund->set_issued_by( wp_get_current_user() );
+				}
+
+				return $refund;
 			default:
 				return null;
 		}

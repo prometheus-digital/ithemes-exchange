@@ -31,6 +31,7 @@ use IronBound\DB\Relations\HasMany;
  * @property-read \IT_Exchange_Transaction             $parent
  * @property-read stdClass                             $cart_object // Internal
  * @property-read Collection|IT_Exchange_Transaction[] $children
+ * @property-read Collection|ITE_Refund[]              $refunds
  */
 class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Credit_Provider {
 
@@ -846,32 +847,67 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 * @param string $amount  Amount
 	 * @param string $date    Date refund occurred. In mysql format.
 	 * @param array  $options Additional refund options.
+	 *
+	 * @return bool
 	 */
 	public function add_refund( $amount, $date = '', $options = array() ) {
 
-		$date = $date ? $date : current_time( 'mysql', true );
+		$date = $date ?: current_time( 'mysql', true );
 
-		$args = array(
-			'amount'  => $amount,
-			'date'    => $date,
-			'options' => $options,
+		if ( is_numeric( $date ) ) {
+			$datetime = new DateTime("@$date", new DateTimeZone( 'UTC' ) );
+		} elseif ( ! $date instanceof DateTime ) {
+			$datetime = new DateTime( $date, new DateTimeZone( 'UTC' ) );
+		} else {
+			$datetime = $date;
+		}
+
+		$refund = ITE_Refund::create( array(
+			'transaction' => $this,
+			'amount'      => $amount,
+			'created_at'  => $datetime,
+			'reason'      => empty( $options['reason'] ) ? '' : $options['reason'],
+		) );
+
+		foreach ( $options as $option => $value ) {
+			if ( $option !== 'reason' ) {
+				$refund->update_meta( $option, $value );
+			}
+		}
+
+		if ( ! $refund ) {
+			return false;
+		}
+
+		do_action_deprecated(
+			'it_exchange_add_refund_to_transaction',
+			array( $this, $amount, $date, $options ),
+			'1.36.0',
+			'it_exchange_add_transaction_refund'
 		);
 
-		add_post_meta( $this->ID, '_it_exchange_transaction_refunds', $args );
-
-		do_action( 'it_exchange_add_refund_to_transaction', $this, $amount, $date, $options );
+		return true;
 	}
 
 	/**
 	 * checks if the transaction has refunds.
 	 *
 	 * @since 1.3.0
+	 *
 	 * @return bool
 	 */
 	public function has_refunds() {
 
-		$has_refunds = count( $this->get_transaction_refunds() ) > 0;
+		$has_refunds = (bool) $this->refunds->count();
 
+		/**
+		 * Filter whether this transaction has any refunds.
+		 *
+		 * @since 1.3.0
+		 *
+		 * @param bool                     $has_refunds
+		 * @param \IT_Exchange_Transaction $this
+		 */
 		return apply_filters( 'it_exchange_has_transaction_refunds', $has_refunds, $this );
 	}
 
@@ -880,17 +916,25 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 *
 	 * @since 0.4.0
 	 *
+	 * @deprecated 1.36.0
+	 *
 	 * @return array
 	 */
 	public function get_transaction_refunds() {
 
-		$refunds = get_post_meta( $this->ID, '_it_exchange_transaction_refunds' );
+		_deprecated_function( __METHOD__, '1.36.0', 'IT_Exchange_Transaction::refunds' );
 
-		if ( ! is_array( $refunds ) ) {
-			$refunds = array();
+		$refunds = array();
+
+		foreach ( $this->refunds as $refund ) {
+			$refunds[] = array(
+				'amount'  => $refund->amount,
+				'date'    => $refund->created_at->format( 'Y-m-d H:i:s' ),
+				'options' => $refund->get_meta()
+			);
 		}
 
-		return apply_filters( 'it_exchange_get_transaction_refunds', $refunds, $this );
+		return apply_filters_deprecated( 'it_exchange_get_transaction_refunds', array( $refunds, $this ), '1.36.0' );
 	}
 
 	/**
@@ -1034,6 +1078,10 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 		return new HasMany( 'parent', 'IT_Exchange_Transaction', $this, 'children' );
 	}
 
+	protected function _refunds_relation() {
+		return new HasMany( 'transaction', 'ITE_Refund', $this, 'refunds' );
+	}
+
 	/**
 	 * @inheritDoc
 	 */
@@ -1086,7 +1134,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 */
 	private function post() {
 		if ( ! $this->post ) {
-			$this->post = get_post( $this->id );
+			$this->post = get_post( $this->ID );
 		}
 
 		return $this->post;
@@ -1136,10 +1184,6 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 			return $this->method_id;
 		}
 
-		if ( $name === 'refunds' ) {
-			return $this->get_transaction_refunds();
-		}
-
 		if ( $name === 'transaction_method' ) {
 			return $this->method;
 		}
@@ -1180,7 +1224,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 			return $this->post()->$name;
 		}
 
-		if ( $name === 'ID' ) {
+		if ( $name === 'ID' || $name === 'id' ) {
 			return (int) $this->get_raw_attribute( 'ID' );
 		}
 

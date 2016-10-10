@@ -1076,6 +1076,8 @@ function it_exchange_add_refund_to_transaction( $transaction, $amount, $date = f
  *
  * @since 0.4.0
  *
+ * @deprecated 1.36.0
+ *
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
  * @return array|false
@@ -1086,7 +1088,7 @@ function it_exchange_get_transaction_refunds( $transaction ) {
 		return $transaction->get_transaction_refunds();
 	}
 
-	return apply_filters( 'it_exchange_get_transaction_refunds', false, $transaction );
+	return apply_filters_deprecated( 'it_exchange_get_transaction_refunds', array( false, $this ), '1.36.0' );
 }
 
 /**
@@ -1115,19 +1117,23 @@ function it_exchange_has_transaction_refunds( $transaction ) {
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  * @param bool $format Format the price
  *
- * @return mixed
+ * @return float|string
  */
 function it_exchange_get_transaction_refunds_total( $transaction, $format = true ) {
 
-	$refunds = it_exchange_get_transaction_refunds( $transaction );
+	$transaction = it_exchange_get_transaction( $transaction );
+
+	if ( ! $transaction ) {
+		return 0.00;
+	}
 
 	$total_refund = 0;
 
-	foreach ( $refunds as $refund ) {
-		$total_refund += $refund['amount'];
+	foreach ( $transaction->refunds as $refund ) {
+		$total_refund += $refund->amount;
 	}
 
-	$total_refund = ( $format ) ? it_exchange_format_price( $total_refund ) : $total_refund;
+	$total_refund = $format ? it_exchange_format_price( $total_refund ) : $total_refund;
 
 	return apply_filters( 'it_exchange_get_transaction_refunds_total', $total_refund, $transaction, $format );
 }

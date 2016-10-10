@@ -47,6 +47,7 @@ class IT_Exchange_Transaction_Post_Type {
 			add_filter( 'bulk_actions-edit-it_exchange_tran', array( $this, 'edit_bulk_actions' ) );
 			add_action( 'wp_ajax_it-exchange-update-transaction-status', array( $this, 'ajax_update_status' ) );
 			add_action( 'wp_ajax_it-exchange-resend-receipt-transaction', array( $this, 'ajax_resend_receipt' ) );
+			add_action( 'wp_ajax_it-exchange-refund-transaction', array( $this, 'ajax_add_refund' ) );
 			add_action( 'wp_ajax_it-exchange-add-note', array( $this, 'ajax_add_note' ) );
 			add_action( 'wp_ajax_it-exchange-remove-activity', array( $this, 'ajax_remove_activity' ) );
 			add_filter( 'heartbeat_received', array( $this, 'activity_heartbeat' ), 10, 2 );
@@ -423,14 +424,14 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return void
 	 */
 	public function modify_post_type_features() {
-	
+
 		global $pagenow;
 
 		$post = empty( $_GET['post'] ) ? false : get_post( $_GET['post'] );
 
 		if ( $post && $post->post_type === 'it_exchange_tran' ) {
 			$transaction = it_exchange_get_transaction( $post );
-			
+
 			$supports = array(
 				'title',
 				'editor',
@@ -443,12 +444,12 @@ class IT_Exchange_Transaction_Post_Type {
 				'revisions',
 				'post-formats',
 			);
-	
+
 			// If is_admin and is post-new.php or post.php, only register supports for current transaction-method
 			if ( 'post-new.php' != $pagenow && 'post.php' != $pagenow ) {
 				return;
 			} // Don't remove any if not on post-new / or post.php
-	
+
 			if ( $addon = it_exchange_get_addon( $transaction->transaction_method ) ) {
 				// Remove any supports args that the transaction add-on does not want.
 				foreach ( $supports as $option ) {
@@ -678,6 +679,95 @@ class IT_Exchange_Transaction_Post_Type {
 	}
 
 	/**
+	 * Add a Refund from the transaction details page.
+	 *
+	 * @since 1.36.0
+	 */
+	public function ajax_add_refund() {
+
+		$txn_id = empty( $_POST['txnID'] ) ? null : $_POST['txnID'];
+		$amount = empty( $_POST['amount'] ) ? null : $_POST['amount'];
+		$nonce  = empty( $_POST['nonce'] ) ? null : $_POST['nonce'];
+
+		if ( $txn_id === null || $amount === null || $nonce === null ) {
+			wp_send_json_error( array(
+				'message' => __( 'Invalid request.', 'it-l10n-ithemes-exchange' )
+			) );
+		}
+
+		if ( ! wp_verify_nonce( $nonce, "it-exchange-add-refund-{$txn_id}-transaction" ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'Request Expired. Please refresh and try again.', 'it-l10n-ithemes-exchange' ),
+			) );
+		}
+
+		$transaction = it_exchange_get_transaction( $txn_id );
+
+		if ( ! $transaction ) {
+			wp_send_json_error( array(
+				'message' => __( 'Invalid transaction.', 'it-l10n-ithemes-exchange' )
+			) );
+		}
+
+		if ( ! current_user_can( 'edit_it_transaction', $transaction->ID ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'You do not have permission to do this.', 'it-l10n-ithemes-exchange' )
+			) );
+		}
+
+		if ( ! ( $gateway = ITE_Gateways::get($transaction->method ) ) || ! $gateway->can_handle( 'refund' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'Gateway does not support refunds.', 'it-l10n-ithemes-exchange' ),
+			) );
+		}
+
+		$amount = it_exchange_convert_from_database_number( it_exchange_convert_to_database_number( $amount ) );
+
+		if ( $amount <= 0.00 ) {
+			wp_send_json_error( array(
+				'message' => sprintf(
+					__( 'Refund amount must be greater than %s', 'it-l10n-ithemes-exchange' ),
+					it_exchange_format_price( 0 )
+				),
+			) );
+		}
+
+		try {
+
+			$factory = new ITE_Gateway_Request_Factory();
+			$request = $factory->make( 'refund', array( 'transaction' => $transaction, 'amount' => $amount ) );
+
+			/** @var ITE_Refund $refund */
+			$refund = $gateway->get_handler_for( $request )->handle( $request );
+
+			if ( ! $refund ) {
+				wp_send_json_error( array(
+					'message' => __( 'Unable to process refund.', 'it-l10n-ithemes-exchange' )
+				) );
+			}
+
+			$dtf = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+
+			wp_send_json_success( array(
+				'refund'        => $refund->to_array(),
+				'totalRefunds'  => it_exchange_get_transaction_refunds_total( $transaction ),
+				'newTotal'      => it_exchange_get_transaction_total( $transaction ),
+				'refundSummary' => esc_html( sprintf(
+					/* translators: $1$s refund amount %2$s refund date. */
+					__( '%1$s on %2$s', 'it-l10n-ithemes-exchange' ),
+					it_exchange_format_price( $refund->amount ),
+					get_date_from_gmt( $refund->created_at->format( DateTime::ISO8601 ), $dtf )
+				) )
+			) );
+
+		} catch ( Exception $e ) {
+			wp_send_json_error( array(
+				'message' => $e->getMessage()
+			) );
+		}
+	}
+
+	/**
 	 * Add a note via AJAX.
      *
 	 * @since 1.34
@@ -786,6 +876,11 @@ class IT_Exchange_Transaction_Post_Type {
 
 			$latest      = $data['it-exchange-txn-activity']['latest'];
 			$transaction = it_exchange_get_transaction( $data['it-exchange-txn-activity']['txn'] );
+
+			$response['it-exchange-txn-activity']['status'] = array(
+				'slug'  => $transaction->status,
+				'label' => $transaction->get_status( true )
+			);
 
 			if ( $latest ) {
 				$args = array(

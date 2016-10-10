@@ -7,7 +7,9 @@ if ( isset( $_GET['convert'] ) ) {
 }
 
 do_action( 'it_exchange_before_payment_details', $post );
-
+$settings = it_exchange_get_option( 'settings_general' );
+$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
+$dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 ?>
 	<div class="postbox" id="it-exchange-transaction-details">
 	<div class="inside">
@@ -275,31 +277,33 @@ do_action( 'it_exchange_before_payment_details', $post );
 			<?php endforeach; ?>
 		<?php endif; ?>
 
-		<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
+		<div class="transaction-refunds-container <?php echo $txn->has_refunds() ? '' : 'hidden'; ?>">
 			<div class="transaction-costs-refunds right">
 				<div class="transaction-costs-refund-total">
 					<div class="transaction-costs-refund-total-label left"><?php _e( 'Total Refund', 'it-l10n-ithemes-exchange' ); ?></div>
 					<div class="transaction-costs-refund-total-amount">
 						<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_refunds_total', $post ); ?>
-						<?php esc_attr_e( it_exchange_get_transaction_refunds_total( $post ) ); ?>
+						<span><?php esc_attr_e( it_exchange_get_transaction_refunds_total( $post ) ); ?></span>
 						<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_refunds_total', $post ); ?>
 					</div>
 				</div>
 			</div>
 			<div class="transaction-refunds-list">
 				<label><strong><?php _e( 'Refunds', 'it-l10n-ithemes-exchange' ); ?></strong></label>
-				<?php foreach ( $refunds as $refund ) : ?>
+				<?php foreach ( $txn->refunds as $refund ) : ?>
 					<div class="transaction-costs-refund">
 						<span class="code">
 							<?php echo esc_html( sprintf(
 							/* translators: $1$s refund amount %2$s refund date. */
-								__( '%1$s on %2$s', 'it-l10n-ithemes-exchange' ), it_exchange_format_price( $refund['amount'] ), $refund['date']
+								__( '%1$s on %2$s', 'it-l10n-ithemes-exchange' ),
+								it_exchange_format_price( $refund->amount ),
+								get_date_from_gmt( $refund->created_at->format( DateTime::ISO8601 ), $dtf )
 							) ); ?>
 						</span>
 					</div>
 				<?php endforeach; ?>
 			</div>
-		<?php endif; ?>
+		</div>
 	</div>
 
 	<?php
@@ -372,14 +376,14 @@ do_action( 'it_exchange_before_payment_details', $post );
 				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_total', $post ); ?>
 			</div>
 
-			<?php if ( $refunds = it_exchange_get_transaction_refunds( $post ) ) : ?>
-				<div class="payment-original-total-label left"><?php _e( 'Total before refunds', 'it-l10n-ithemes-exchange' ); ?></div>
-				<div class="payment-original-total-amount">
-					<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_total_before_refunds', $post ); ?>
-					<?php _e( it_exchange_get_transaction_total( $post, true, false ) ); ?>
-					<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_total_before_refunds', $post ); ?>
-				</div>
-			<?php endif; ?>
+			<div class="payment-original-total-label left <?php echo $txn->has_refunds() ? '' : 'hidden'; ?>">
+				<?php _e( 'Total before refunds', 'it-l10n-ithemes-exchange' ); ?>
+			</div>
+			<div class="payment-original-total-amount <?php echo $txn->has_refunds() ? '' : 'hidden'; ?>">
+				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_total_before_refunds', $post ); ?>
+				<?php _e( it_exchange_get_transaction_total( $post, true, false ) ); ?>
+				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_total_before_refunds', $post ); ?>
+			</div>
 		</div>
 	</div>
 
@@ -416,7 +420,36 @@ do_action( 'it_exchange_before_payment_details', $post );
 		<button class="button button-secondary right" id="resend-receipt">
 			<?php _e( 'Resend Receipt', 'it-l10n-ithemes-exchange' ); ?>
 		</button>
+
+		<?php if ( ( $gateway = ITE_Gateways::get( $txn->method ) ) && $gateway->can_handle( 'refund' ) ): ?>
+			<button class="button button-secondary right" id="open-refund-manager">
+				<?php _e( 'Refund', 'it-l10n-ithemes-exchange' ); ?>
+			</button>
+		<?php endif; ?>
+
 		<?php wp_nonce_field( 'resend-receipt-transaction-' . $post->ID, 'it-exchange-resend-receipt-nonce' ); ?>
+	</div>
+
+	<div class="hidden spacing-wrapper bottom-border clearfix" id="refund-manager">
+
+		<button class="button button-secondary left" id="cancel-refund">
+			<?php _e( 'Cancel', 'it-l10n-ithemes-exchange' ); ?>
+		</button>
+
+		<button class="button button-primary right" id="add-refund">
+			<?php printf( __( 'Refund from %s', 'it-l10n-ithemes-exchange' ), it_exchange_get_transaction_method_name( $txn ) ); ?>
+		</button>
+
+		<input type="text" placeholder="<?php echo esc_attr( it_exchange_format_price( 0 ) ); ?>"
+		       id="refund-amount" class="right"
+		       data-max="<?php echo esc_attr( $txn->get_total() ); ?>"
+		       data-symbol="<?php echo esc_attr( $currency ); ?>"
+		       data-symbol-position="<?php echo esc_attr( $settings['currency-symbol-position'] ); ?>"
+		       data-thousands-separator="<?php echo esc_attr( $settings['currency-thousands-separator'] ); ?>"
+		       data-decimals-separator="<?php echo esc_attr( $settings['currency-decimals-separator'] ); ?>" />
+
+		<?php wp_nonce_field( "it-exchange-add-refund-{$txn->ID}-transaction", 'it-exchange-refund-nonce' ); ?>
+
 	</div>
 
 <?php

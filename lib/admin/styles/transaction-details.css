@@ -299,6 +299,10 @@
 	position: relative;
 }
 
+#it-exchange-transaction-details .transaction-actions .button {
+	margin-left: 10px;
+}
+
 #it-exchange-transaction-details .transaction-status-update {
 	position: relative;
 }
@@ -331,6 +335,15 @@
 
 #resend-receipt {
 	text-align: center !important;
+}
+
+#it-exchange-transaction-details #refund-manager {
+	background: #F5F5F5;
+	position: relative;
+}
+
+#it-exchange-transaction-details #refund-manager #add-refund {
+	margin-left: 10px;
 }
 
 

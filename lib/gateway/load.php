@@ -16,6 +16,7 @@ require_once dirname( __FILE__ ) . '/class.request-factory.php';
 require_once dirname( __FILE__ ) . '/requests/class.purchase.php';
 require_once dirname( __FILE__ ) . '/requests/class.tokenize.php';
 require_once dirname( __FILE__ ) . '/requests/class.webhook.php';
+require_once dirname( __FILE__ ) . '/requests/class.refund.php';
 
 require_once dirname( __FILE__ ) . '/handlers/class.purchase.php';
 require_once dirname( __FILE__ ) . '/handlers/class.dialog-purchase.php';
