@@ -17,6 +17,10 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 		<?php esc_attr_e( $txn->get_status( true ) ); ?>
 	</div>
 
+	<?php if ( $txn->is_sandbox_purchase() ): ?>
+		<div class="ribbon"><?php _e( 'Sandbox', 'it-l10n-ithemes-exchange' ); ?></div>
+	<?php endif; ?>
+
 	<?php if ( $txn->has_parent() ): ?>
 		<div class="spacing-wrapper parent-txn-link bottom-border">
 			<span class="dashicons dashicons-arrow-left-alt2"></span>

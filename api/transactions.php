@@ -533,6 +533,16 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 			$cart_id = null;
 		}
 
+		$gateway = ITE_Gateways::get( $method );
+
+		if ( $gateway && $gateway->is_sandbox_mode() ) {
+			$mode = IT_Exchange_Transaction::P_MODE_SANDBOX;
+		} elseif ( $gateway && ! $gateway->is_sandbox_mode() ) {
+			$mode = IT_Exchange_Transaction::P_MODE_LIVE;
+		} else {
+			$mode = '';
+		}
+
 		$purchase_args = array(
 			'ID'            => $transaction_id,
 			'status'        => $status,
@@ -543,6 +553,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 			'subtotal'      => isset( $cart_object->sub_total ) ? $cart_object->sub_total : 0,
 			'order_date'    => get_post( $transaction_id )->post_date_gmt,
 			'hash'          => $hash,
+			'purchase_mode' => $mode,
 		);
 
 		if ( $payment_token ) {

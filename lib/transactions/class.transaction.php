@@ -28,12 +28,16 @@ use IronBound\DB\Relations\HasMany;
  * @property-read float                                $subtotal
  * @property-read \DateTime                            $order_date
  * @property \ITE_Payment_Token|null                   $payment_token
+ * @property string                                    $purchase_mode
  * @property-read \IT_Exchange_Transaction             $parent
  * @property-read stdClass                             $cart_object // Internal
  * @property-read Collection|IT_Exchange_Transaction[] $children
  * @property-read Collection|ITE_Refund[]              $refunds
  */
 class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Credit_Provider {
+
+	const P_MODE_LIVE = 'live';
+	const P_MODE_SANDBOX = 'sandbox';
 
 	/**
 	 * List of relations to be eager loaded.
@@ -577,6 +581,24 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	public function get_parent() {
 		return $this->parent;
 	}
+
+	/**
+	 * Was this transaction purchased in live mode.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function is_live_purchase() { return $this->purchase_mode === self::P_MODE_LIVE; }
+
+	/**
+	 * Was this transaction purchased in sandbox mode.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function is_sandbox_purchase() { return $this->purchase_mode === self::P_MODE_SANDBOX; }
 
 	/**
 	 * Add metadata.

@@ -78,6 +78,8 @@
 	max-width: 760px;
 	float: left;
 	width: 100%;
+	position: relative;
+	overflow: hidden;
 }
 
 #it-exchange-transaction-details .parent-txn-link {
@@ -346,6 +348,31 @@
 	margin-left: 10px;
 }
 
+#it-exchange-transaction-details .ribbon {
+	opacity: .9;
+	position: absolute;
+	padding: 0;
+	margin: 0;
+	text-align: center;
+	text-transform: uppercase;
+	white-space: nowrap;
+	overflow: hidden;
+	transform-origin: 0 100%;
+	box-shadow: 0 1px 6px 0 rgba(0, 0, 0, .12), 0 1px 6px 0 rgba(0, 0, 0, .12);
+	background-color: #ffeb3b;
+	color: rgba(0, 0, 0, 0.9);
+	height: 30px;
+	width: 200px;
+	top: 106px;
+	transform: rotateZ(45deg);
+	padding-left: 30px;
+	padding-right: 30px;
+	line-height: 30px;
+	left: -8.578644px;
+	-webkit-transform: rotateZ(-45deg);
+	-moz-transform: rotateZ(45deg);
+	-o-transform: rotateZ(45deg);
+}
 
 /** -----------------------------------------------------:[ transaction activity ]:---------- */
 #it-exchange-transaction-activity {
