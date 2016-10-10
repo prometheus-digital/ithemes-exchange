@@ -79,8 +79,39 @@ class ITE_Gateways {
 
 		if ( $statuses = $gateway->get_statuses() ) {
 			add_filter( "it_exchange_get_status_options_for_{$gateway->get_slug()}_transaction", function () use ( $statuses ) {
-				return $statuses;
+
+				$selectable = array();
+
+				foreach ( $statuses as $status => $opts ) {
+					if ( ! empty( $opts['selectable'] ) ) {
+						$selectable[ $status ] = $opts['label'];
+					}
+				}
+
+				return $selectable;
 			} );
+
+			add_filter( "it_exchange_{$gateway->get_slug()}_transaction_is_cleared_for_delivery",
+				function ( $cleared, $transaction ) use ( $statuses ) {
+
+					if ( ! $transaction ) {
+						return $cleared;
+					}
+
+					$status = $transaction->get_status();
+
+					if ( ! isset( $statuses[ $status ] ) ) {
+						return $cleared;
+					}
+
+					$status_opts = $statuses[ $status ];
+
+					if ( ! isset( $status_opts['cleared'] ) ) {
+						return $cleared;
+					}
+
+					return (bool) $status_opts['cleared'];
+				}, 9, 2 );
 		}
 
 		return true;

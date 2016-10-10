@@ -51,13 +51,36 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 	 * @inheritDoc
 	 */
 	public function get_statuses() {
-		return array(
-			'Pending'   => _x( 'Pending', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
-			'Completed' => _x( 'Paid', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
-			'Reversed'  => _x( 'Reversed', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
-			'Refunded'  => _x( 'Refunded', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
-			'Voided'    => _x( 'Voided', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
+
+		$statuses = array(
+			'Pending'   => array(
+				'label'      => _x( 'Pending', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
+				'cleared'    => false,
+				'selectable' => true,
+			),
+			'Completed' => array(
+				'label'      => _x( 'Paid', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
+				'cleared'    => true,
+				'selectable' => true,
+			),
+			'Reversed'  => array(
+				'label'      => _x( 'Reversed', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
+				'cleared'    => false,
+				'selectable' => true,
+			),
+			'Refunded'  => array(
+				'label'      => _x( 'Refunded', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
+				'cleared'    => false,
+				'selectable' => true,
+			),
+			'Voided'    => array(
+				'label'      => _x( 'Voided', 'Transaction Status', 'it-l10n-ithemes-exchange' ),
+				'cleared'    => false,
+				'selectable' => true,
+			)
 		);
+
+		return $statuses;
 	}
 
 	/**

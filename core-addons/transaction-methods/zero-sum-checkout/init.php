@@ -7,6 +7,14 @@
  * @package IT_Exchange
 */
 
+add_action( 'it_exchange_register_gateways', function( ITE_Gateways $gateways ) {
+
+	require_once dirname( __FILE__ ) . '/class.gateway.php';
+	require_once dirname( __FILE__ ) . '/handlers/class.purchase.php';
+
+	$gateways::register( new ITE_Zero_Sum_Checkout_Gateway() );
+} );
+
 /**
  * This proccesses a zer-sum transaction.
  *
@@ -35,7 +43,7 @@ function it_exchange_zero_sum_checkout_addon_process_transaction( $status, $tran
 
 	return false;
 }
-add_action( 'it_exchange_do_transaction_zero-sum-checkout', 'it_exchange_zero_sum_checkout_addon_process_transaction', 10, 2 );
+//add_action( 'it_exchange_do_transaction_zero-sum-checkout', 'it_exchange_zero_sum_checkout_addon_process_transaction', 10, 2 );
 
 /**
  * Returns a boolean. Is this transaction a status that warrants delivery of any products attached to it?
@@ -50,7 +58,7 @@ function it_exchange_zero_sum_checkout_transaction_is_cleared_for_delivery( $cle
 	$valid_stati = array( 'Completed' );
 	return in_array( it_exchange_get_transaction_status( $transaction ), $valid_stati );
 }
-add_filter( 'it_exchange_zero-sum-checkout_transaction_is_cleared_for_delivery', 'it_exchange_zero_sum_checkout_transaction_is_cleared_for_delivery', 10, 2 );
+//add_filter( 'it_exchange_zero-sum-checkout_transaction_is_cleared_for_delivery', 'it_exchange_zero_sum_checkout_transaction_is_cleared_for_delivery', 10, 2 );
 
 function it_exchange_get_zero_sum_checkout_transaction_uniqid() {
 	$uniqid = uniqid( '', true );
@@ -70,28 +78,7 @@ function it_exchange_get_zero_sum_checkout_transaction_uniqid() {
  * @return boolean true if it is, false otherwise
 */
 function it_exchange_verify_zero_sum_checkout_transaction_unique_uniqid( $uniqid ) {
-	if ( !empty( $uniqid ) ) { //verify we get a valid 32 character md5 hash
-
-		$args = array(
-			'post_type' => 'it_exchange_tran',
-			'meta_query' => array(
-				array(
-					'key' => '_it_exchange_transaction_method',
-					'value' => 'zero-sum-checkout',
-				),
-				array(
-					'key' => '_it_exchange_transaction_method_id',
-					'value' => $uniqid ,
-				),
-			),
-		);
-
-		$query = new WP_Query( $args );
-
-		return ( !empty( $query ) );
-	}
-
-	return false;
+	return ! it_exchange_get_transaction_by_method_id( 'zero-sum-checkout', $uniqid );
 }
 
 /**
@@ -119,7 +106,7 @@ function it_exchange_zero_sum_checkout_addon_make_payment_button( $options ) {
 
 	return $payment_form;
 }
-add_filter( 'it_exchange_get_zero-sum-checkout_make_payment_button', 'it_exchange_zero_sum_checkout_addon_make_payment_button', 10, 2 );
+//add_filter( 'it_exchange_get_zero-sum-checkout_make_payment_button', 'it_exchange_zero_sum_checkout_addon_make_payment_button', 10, 2 );
 
 /*
  * Handles expired transactions that are zero sum checkout

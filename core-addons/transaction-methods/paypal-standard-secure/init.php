@@ -54,7 +54,6 @@ function it_exchange_paypal_standard_secure_get_default_status_options() {
 	);
 	return $options;
 }
-add_filter( 'it_exchange_get_status_options_for_paypal-standard-secure_transaction', 'it_exchange_paypal_standard_secure_get_default_status_options' );
 
 /**
  * Outputs wizard settings for PayPal
@@ -1164,7 +1163,7 @@ function it_exchange_paypal_standard_secure_addon_process_webhook( $request ) {
 	}
 }
 
-add_action( 'it_exchange_webhook_it_exchange_paypal-standard-secure', 'it_exchange_paypal_standard_secure_addon_process_webhook' );
+//add_action( 'it_exchange_webhook_it_exchange_paypal-standard-secure', 'it_exchange_paypal_standard_secure_addon_process_webhook' );
 
 
 /**
