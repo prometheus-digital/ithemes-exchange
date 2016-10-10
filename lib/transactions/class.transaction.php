@@ -387,6 +387,10 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 */
 	public function update_status( $status ) {
 
+		if ( $this->get_status() === $status ) {
+			return true;
+		}
+
 		$old_status  = $this->get_status();
 		$old_cleared = $this->is_cleared_for_delivery();
 
