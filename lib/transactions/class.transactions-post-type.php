@@ -715,7 +715,7 @@ class IT_Exchange_Transaction_Post_Type {
 			) );
 		}
 
-		if ( ! ( $gateway = ITE_Gateways::get($transaction->method ) ) || ! $gateway->can_handle( 'refund' ) ) {
+		if ( ! it_exchange_transaction_can_be_refunded( $transaction ) ) {
 			wp_send_json_error( array(
 				'message' => __( 'Gateway does not support refunds.', 'it-l10n-ithemes-exchange' ),
 			) );
@@ -736,6 +736,7 @@ class IT_Exchange_Transaction_Post_Type {
 
 			$factory = new ITE_Gateway_Request_Factory();
 			$request = $factory->make( 'refund', array( 'transaction' => $transaction, 'amount' => $amount ) );
+			$gateway = ITE_Gateways::get( $transaction->get_method() );
 
 			/** @var ITE_Refund $refund */
 			$refund = $gateway->get_handler_for( $request )->handle( $request );

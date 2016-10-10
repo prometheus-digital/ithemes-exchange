@@ -1055,6 +1055,61 @@ function it_exchange_get_transaction_coupons_total_discount( $transaction, $form
 }
 
 /**
+ * Whether the given transaction can be refunded.
+ *
+ * @since 1.36.0
+ *
+ * @param IT_Exchange_Transaction|int $transaction
+ *
+ * @return bool
+ */
+function it_exchange_transaction_can_be_refunded( $transaction ) {
+
+	$transaction = it_exchange_get_transaction( $transaction );
+
+	if ( ! $transaction ) {
+		return false;
+	}
+
+	$gateway = ITE_Gateways::get( $transaction->get_method() ) ;
+
+	if ( ! $gateway ) {
+		return false;
+	}
+
+	if ( ! $gateway->can_handle( 'refund' ) ) {
+		return false;
+	}
+
+	if ( $transaction->get_total() <= 0 ) {
+		return false;
+	}
+
+
+	/**
+	 * Filter whether this transaction can be refunded.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param bool                     $eligible
+	 * @param \IT_Exchange_Transaction $transaction
+	 */
+	$eligible = apply_filters( 'it_exchange_transaction_can_be_refunded', true, $transaction );
+
+	/**
+	 * Filter whether this transaction can be refunded.
+	 *
+	 * The dynamic portion of this hook refers to the transaction method slug.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param bool                     $eligible
+	 * @param \IT_Exchange_Transaction $transaction
+	 */
+	return apply_filters( "it_exchange_{$transaction->get_method()}_transaction_can_be_refunded", $eligible, $transaction );
+}
+
+/**
  * Adds a refund to a transaction
  *
  * @since 0.4.0

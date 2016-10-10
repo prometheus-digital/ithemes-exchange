@@ -421,7 +421,7 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 			<?php _e( 'Resend Receipt', 'it-l10n-ithemes-exchange' ); ?>
 		</button>
 
-		<?php if ( ( $gateway = ITE_Gateways::get( $txn->method ) ) && $gateway->can_handle( 'refund' ) ): ?>
+		<?php if ( it_exchange_transaction_can_be_refunded( $txn ) ): ?>
 			<button class="button button-secondary right" id="open-refund-manager">
 				<?php _e( 'Refund', 'it-l10n-ithemes-exchange' ); ?>
 			</button>

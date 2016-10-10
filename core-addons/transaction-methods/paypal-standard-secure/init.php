@@ -88,6 +88,32 @@ function it_exchange_print_paypal_standard_secure_wizard_settings( $form ) {
 add_action( 'it_exchange_print_paypal-standard-secure_wizard_settings', 'it_exchange_print_paypal_standard_secure_wizard_settings' );
 
 /**
+ * Restrict PayPal Secure refunds to only be within 180 days.
+ *
+ * @since 1.36.0
+ *
+ * @param bool                     $eligible
+ * @param \IT_Exchange_Transaction $transaction
+ *
+ * @return bool
+ */
+function it_exchange_paypal_standard_secure_transaction_can_be_refunded( $eligible, IT_Exchange_Transaction $transaction ) {
+
+	if ( ! $eligible ) {
+		return $eligible;
+	}
+
+	$now    = new DateTime();
+	$placed = $transaction->order_date;
+
+	$diff = $placed->diff( $now );
+
+	return $diff->days < 179;
+}
+
+add_filter( 'it_exchange_paypal-standard-secure_transaction_can_be_refunded', 'it_exchange_paypal_standard_secure_transaction_can_be_refunded', 10, 2 );
+
+/**
  * PayPal URL to perform refunds
  *
  * @since 0.4.0
