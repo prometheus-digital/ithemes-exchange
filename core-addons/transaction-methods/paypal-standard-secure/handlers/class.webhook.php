@@ -151,12 +151,31 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 			//These IPNs don't have txn_types, why PayPal!? WHY!?
 			if ( ! empty( $webhook['reason_code'] ) && $webhook['reason_code'] === 'refund' ) {
 
-				it_exchange_paypal_standard_secure_addon_update_transaction_status( $webhook['parent_txn_id'], $webhook['payment_status'] );
-				it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $webhook['parent_txn_id'], $webhook['mc_gross'] );
+				$refund_id   = $webhook['txn_id'];
+				$transaction = it_exchange_get_transaction_by_method_id( 'paypal-standard-secure', $webhook['parent_txn_id'] );
+
+				if ( ! $transaction ) {
+					return new WP_HTTP_Response( '', 200 );
+				}
+
+				it_exchange_lock( "paypal-secure-refund-created-{$transaction->ID}", 2 );
+
+				$transaction->update_status( $webhook['payment_status'] );
+
+				$existing = ITE_Refund::query()
+					->and_where( 'gateway_id', '=', $refund_id )
+					->and_where('transaction', '=', $transaction->ID )
+					->first();
+
+				if ( ! $refund_id || ! $existing ) {
+					it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $webhook['parent_txn_id'], $webhook['mc_gross'] );
+				}
 
 				if ( $subscriber_id ) {
 					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
 				}
+
+				it_exchange_release_lock( "paypal-secure-refund-created-{$transaction->ID}" );
 			}
 		}
 
