@@ -10,13 +10,14 @@ namespace iThemes\Exchange\REST\Route\Cart;
 
 use iThemes\Exchange\REST as r;
 use iThemes\Exchange\REST\Postable;
+use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Carts
  *
  * @package iThemes\Exchange\REST\Route\Cart
  */
-class Carts implements Postable {
+class Carts extends Base implements Postable {
 
 	/** @var Cart */
 	private $cart;
@@ -50,10 +51,20 @@ class Carts implements Postable {
 		} else {
 			try {
 				// Guard against multiple carts per customer.
-				$repo     = \ITE_Line_Item_Cached_Session_Repository::from_customer( $user );
+				$repo    = \ITE_Line_Item_Cached_Session_Repository::from_customer( $user );
+				$cart_id = $repo->get_cart_id();
+
+				if ( ! $cart_id ) {
+					$cart    = \ITE_Cart::create( $repo, $user );
+					$cart_id = $cart->get_id();
+
+					$repo->get_model()->cart_id = $cart_id;
+					$repo->get_model()->save();
+				}
+
 				$response = new \WP_REST_Response();
-				$response->set_status( 303 );
-				$response->header( 'Location', r\get_rest_url( $this->cart, array( 'id' => $repo->get_cart_id() ) ) );
+				$response->set_status( \WP_Http::SEE_OTHER );
+				$response->header( 'Location', r\get_rest_url( $this->cart, array( 'id' => $cart_id ) ) );
 
 				return $response;
 			}
@@ -75,7 +86,7 @@ class Carts implements Postable {
 		$session->save();
 
 		$response = new \WP_REST_Response();
-		$response->set_status( 303 );
+		$response->set_status( \WP_Http::CREATED );
 		$response->header( 'Location', r\get_rest_url( $this->cart, array( 'id' => $cart->get_id() ) ) );
 
 		return $response;
@@ -91,42 +102,20 @@ class Carts implements Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_version() {
-		return 1;
-	}
+	public function get_version() { return 1; }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_path() {
-		return 'carts/';
-	}
+	public function get_path() { return 'carts/'; }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_query_args() {
-		return array();
-	}
+	public function get_query_args() { return array(); }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_schema() {
-		return $this->cart->get_schema();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function has_parent() {
-		return false;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_parent() {
-		throw new \UnexpectedValueException( "No parent exists for {$this->get_path()}" );
-	}
+	public function get_schema() { return $this->cart->get_schema(); }
 }

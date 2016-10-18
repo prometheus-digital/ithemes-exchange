@@ -12,12 +12,13 @@ use iThemes\Exchange\REST as r;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
+use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Cart
  * @package iThemes\Exchange\REST\Route\Cart
  */
-class Items implements Getable, Postable, Deletable {
+class Items extends Base implements Getable, Postable, Deletable {
 
 	/** @var Item_Serializer */
 	protected $serializer;
@@ -40,10 +41,13 @@ class Items implements Getable, Postable, Deletable {
 	 * @inheritDoc
 	 */
 	public function handle_get( \WP_REST_Request $request ) {
-		return $this->prepare_collection_for_response(
-			it_exchange_get_cart( $request['id'] )->get_items( $this->type->get_type() ),
-			$request
-		);
+
+		$cart       = it_exchange_get_cart( $request['id'] );
+		$serializer = $this->serializer;
+
+		return new \WP_REST_Response( array_map( function ( \ITE_Line_Item $item ) use ( $serializer, $cart ) {
+			return $serializer->serialize( $item, $cart );
+		}, $cart->get_items( $this->type->get_type() )->to_array() ) );
 	}
 
 	/**
@@ -70,10 +74,14 @@ class Items implements Getable, Postable, Deletable {
 		$id = $this->type->create_from_request( $request );
 
 		if ( $id ) {
-			return $this->prepare_collection_for_response(
-				it_exchange_get_cart( $request['id'] )->get_items( $this->type->get_type() ),
-				$request
-			);
+
+			$response = new \WP_REST_Response();
+			$response->set_status( \WP_Http::CREATED );
+			$response->header( 'Location', r\get_rest_url(
+				new Item( $this->type, $this->serializer ), array( 'id' => $request['id'], 'item' => $id )
+			) );
+
+			return $response;
 		}
 
 		return new \WP_Error(
@@ -136,136 +144,10 @@ class Items implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_query_args() {
-		return array();
-	}
+	public function get_query_args() { return array(); }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_schema() {
-		$schema = array(
-			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => $this->type->get_type(),
-			'type'       => 'object',
-			'properties' => array(
-				'id'          => array(
-					'description' => __( 'The unique id for this item.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'type'        => array(
-					'description' => __( 'The type of this item.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'name'        => array(
-					'description' => __( 'The name of this line item.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'description' => array(
-					'description' => __( 'The description of this line item.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'amount'      => array(
-					'description' => __( 'The cost of this line item.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'quantity'    => array(
-					'description' => __( 'The quantity purchased of this line item.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'selected' => array(
-							'description' => __( 'Selected quantity for the line item.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'default'     => 1,
-						),
-						'max'      => array(
-							'description' => __( 'Maximum purchase quantity for the line item.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'editable' => array(
-							'description' => __( 'Whether the item quantity can be edited.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'boolean',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-					)
-				),
-				'total'       => array(
-					'description' => __( 'The total amount of this line item.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-			),
-		);
-
-		foreach ( $this->type->get_additional_schema_props() as $prop => $schema_prop ) {
-			$schema['properties'][ $prop ] = $schema_prop;
-		}
-
-		return $schema;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function has_parent() { return true; }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_parent() { return new Cart( $this->serializer, array( $this->type->get_type() => $this ) ); }
-
-	/**
-	 * Prepare a cart for response.
-	 *
-	 * @since 1.36.0
-	 *
-	 * @param \ITE_Line_Item_Collection $collection
-	 * @param \WP_REST_Request          $request
-	 *
-	 * @return \WP_REST_Response
-	 */
-	public function prepare_collection_for_response( \ITE_Line_Item_Collection $collection, \WP_REST_Request $request ) {
-
-		$data = array();
-
-		foreach ( $collection as $item ) {
-			$data[] = r\response_to_array( $this->prepare_item_for_response( $item, $request ) );
-		}
-
-		return new \WP_REST_Response( $data );
-	}
-
-	/**
-	 * Prepare a line item for response.
-	 *
-	 * @since 1.36.0
-	 *
-	 * @param \ITE_Line_Item   $item
-	 * @param \WP_REST_Request $request
-	 *
-	 * @return \WP_REST_Response
-	 */
-	public function prepare_item_for_response( \ITE_Line_Item $item, \WP_REST_Request $request ) {
-
-		$response = new \WP_REST_Response( $this->serializer->serialize( $item, $this->get_schema(), it_exchange_get_cart( $request['id'] ) ) );
-		$response->add_link( 'cart', r\get_rest_url( $this, array( 'id' => $request['id'] ) ) );
-
-		return $response;
-	}
+	public function get_schema() { return $this->serializer->get_schema(); }
 }

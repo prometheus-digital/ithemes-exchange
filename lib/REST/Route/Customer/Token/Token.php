@@ -11,12 +11,13 @@ namespace iThemes\Exchange\REST\Route\Customer\Token;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
+use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Token
  * @package iThemes\Exchange\REST\Route\Customer\Token
  */
-class Token implements Getable, Putable, Deletable {
+class Token extends Base implements Getable, Putable, Deletable {
 
 	/** @var Serializer */
 	private $serializer;
@@ -162,54 +163,5 @@ class Token implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_schema() {
-		return array(
-			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => 'payment-token',
-			'type'       => 'object',
-			'properties' => array(
-				'id'       => array(
-					'description' => __( 'The unique id for this token.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'gateway'  => array(
-					'description' => __( 'The gateway slug for this token.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'string',
-					'enum'        => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-					'required'    => true,
-				),
-				'label'    => array(
-					'description' => __( 'The user-provided label for this token.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'redacted' => array(
-					'description' => __( 'The redacted form of the underlying payment source.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'primary'  => array(
-					'description' => __( 'Whether this is the primary payment token for this customer.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
-					'default'     => false,
-				),
-			)
-		);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function has_parent() { return true; }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_parent() { return new Tokens( $this->serializer, new \ITE_Gateway_Request_Factory(), $this ); }
+	public function get_schema() { return $this->serializer->get_schema(); }
 }

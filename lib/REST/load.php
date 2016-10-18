@@ -42,26 +42,33 @@ add_action( 'rest_api_init', function () {
 
 add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
-	$item_routes = array();
-
-	foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
-		$route = new Route\Cart\Items( $item_type->get_rest_serializer(), $item_type );
-
-		$item_routes[ $item_type->get_type() ] = $route;
-		$manager->register_route( $route );
-		$manager->register_route( new Item( $item_type, $route ) );
-	}
-
-	$cart = new Route\Cart\Cart( new Item_Serializer(), $item_routes );
+	$cart = new Route\Cart\Cart();
 	$manager->register_route( $cart );
 	$manager->register_route( new Carts( $cart ) );
-	$manager->register_route( new Shipping_Methods( $cart ) );
-	$manager->register_route( new Purchase( $cart, new \ITE_Gateway_Request_Factory() ) );
-	$manager->register_route( new Meta( $cart ) );
+
+	foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
+		$items_route = new Route\Cart\Items( $item_type->get_rest_serializer(), $item_type );
+		$item_route  = new Route\Cart\Item( $item_type, $item_type->get_rest_serializer() );
+
+		$manager->register_route( $items_route->set_parent( $cart ) );
+		$manager->register_route( $item_route->set_parent( $items_route ) );
+	}
+
+	$shipping_methods = new Route\Cart\Shipping_Methods();
+	$purchase         = new Route\Cart\Purchase( new \ITE_Gateway_Request_Factory() );
+	$meta             = new Route\Cart\Meta();
+
+	$manager->register_route( $shipping_methods->set_parent( $cart ) );
+	$manager->register_route( $purchase->set_parent( $cart ) );
+	$manager->register_route( $meta->set_parent( $cart ) );
+
+	// --- Tokens --- //
+
+	$tokens = new Tokens( new TokenSerializer(), new \ITE_Gateway_Request_Factory() );
+	$manager->register_route( $tokens );
 
 	$token = new Route\Customer\Token\Token( new TokenSerializer() );
-	$manager->register_route( $token );
-	$manager->register_route( new Tokens( new TokenSerializer(), new \ITE_Gateway_Request_Factory(), $token ) );
+	$manager->register_route( $token->set_parent( $tokens ) );
 } );
 
 /**

@@ -350,7 +350,7 @@ class IT_Exchange_Purchase_Dialog{
 
 		if ( ! $customer instanceof IT_Exchange_Guest_Customer ) {
 			$tokens_endpoint = \iThemes\Exchange\REST\get_rest_url(
-				new Tokens( new Serializer(), new ITE_Gateway_Request_Factory(), new Token( new Serializer() ) ),
+				new Tokens( new Serializer(), new ITE_Gateway_Request_Factory() ),
 				array( 'customer_id' => $customer->ID )
 			);
 			$tokens_endpoint = wp_nonce_url( $tokens_endpoint, 'wp_rest' );

@@ -10,25 +10,14 @@ namespace iThemes\Exchange\REST\Route\Cart;
 
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
+use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Meta
  *
  * @package iThemes\Exchange\REST\Route\Cart
  */
-class Meta implements Getable, Putable {
-
-	/** @var Cart */
-	private $cart;
-
-	/**
-	 * Meta constructor.
-	 *
-	 * @param Cart $cart
-	 */
-	public function __construct( Cart $cart ) {
-		$this->cart = $cart;
-	}
+class Meta extends Base implements Getable, Putable {
 
 	/**
 	 * @inheritDoc
@@ -170,19 +159,5 @@ class Meta implements Getable, Putable {
 				)
 			)
 		);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function has_parent() {
-		return true;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_parent() {
-		return $this->cart;
 	}
 }

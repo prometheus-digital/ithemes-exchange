@@ -135,41 +135,100 @@ class Manager {
 		foreach ( static::$interfaces as $verb => $interface ) {
 			$interface = "\\iThemes\\Exchange\\REST\\{$interface}";
 
-			if ( $route instanceof $interface ) {
+			if ( ! $route  instanceof $interface ) {
+				continue;
+			}
 
-				$permission = function ( \WP_REST_Request $request ) use ( $verb, $routes ) {
+			$permission = function ( \WP_REST_Request $request ) use ( $verb, $routes ) {
 
-					$user = it_exchange_get_current_customer() ?: null;
+				$user = it_exchange_get_current_customer() ?: null;
 
-					foreach ( $routes as $route ) {
-
-						$callback = array( $route, 'user_can_' . strtolower( $verb ) );
-
-						if ( ! is_callable( $callback ) ) {
-							if ( is_callable( array( $route, 'user_can_get' ) ) ) {
-								$callback = array( $route, 'user_can_get' );
-							} else {
-								continue;
-							}
-						}
-
-						if ( ( $r = call_user_func( $callback, $request, $user ) ) !== true ) {
-							return $r;
-						}
-					}
+				foreach ( $routes as $route ) {
 
 					$callback = array( $route, 'user_can_' . strtolower( $verb ) );
 
-					return call_user_func( $callback, $request, $user );
-				};
+					if ( ! is_callable( $callback ) ) {
+						if ( is_callable( array( $route, 'user_can_get' ) ) ) {
+							$callback = array( $route, 'user_can_get' );
+						} else {
+							continue;
+						}
+					}
 
-				$args[] = array(
-					'methods'             => $verb,
-					'callback'            => array( $route, 'handle_' . strtolower( $verb ) ),
-					'permission_callback' => $permission,
-					'args'                => $route->get_query_args(),
-				);
+					if ( ( $r = call_user_func( $callback, $request, $user ) ) !== true ) {
+						return $r;
+					}
+				}
+
+				$callback = array( $route, 'user_can_' . strtolower( $verb ) );
+
+				return call_user_func( $callback, $request, $user );
+			};
+
+			// TODO: Move to Middleware
+			$handle = function ( \WP_REST_Request $request ) use ( $verb, $route ) {
+				/** @var \WP_REST_Response|\WP_Error $response */
+				$response = call_user_func( array( $route, 'handle_' . strtolower( $verb ) ), $request );
+
+				if ( is_wp_error( $response ) ) {
+					return $response;
+				}
+
+				if ( $route->has_parent() ) {
+					try {
+						$up = get_rest_url( $route->get_parent(), $request->get_url_params() );
+
+						$data = $response->get_data();
+
+						if ( is_array( $data ) && ! \ITUtility::is_associative_array( $data ) ) {
+
+							$linked = array();
+
+							foreach ( $data as $i => $item ) {
+								if ( ! isset( $item['_links'] ) ) {
+									$item['_links'] = array();
+								}
+
+								$item['_links']['up'] = array(
+									'href' => $up
+								);
+
+								if ( isset( $item['id'] ) ) {
+
+									$item['_links']['self'] = array(
+										'href' => $up . $item['id'] . '/',
+									);
+								}
+
+								$linked[ $i ] = $item;
+							}
+
+							$response->set_data( $linked );
+						} else {
+							$response->add_link( 'up', $up );
+							$response->add_link( 'self', rest_url( $request->get_route() ) );
+						}
+					}
+					catch ( \UnexpectedValueException $e ) {
+
+					}
+				}
+
+				return $response;
+			};
+
+			if ( $verb === 'GET' ) {
+				$method_args = $this->generate_query_args_for_server( $route );
+			} else {
+				$method_args = $this->generate_endpoint_args_for_server( $route, $verb );
 			}
+
+			$args[] = array(
+				'methods'             => $verb,
+				'callback'            => $handle,
+				'permission_callback' => $permission,
+				'args'                => $method_args,
+			);
 		}
 
 		if ( ! $args ) {
@@ -177,10 +236,12 @@ class Manager {
 		}
 
 		$args['schema'] = function () use ( $route ) {
-			static $schema = null;
+			$schema = $route->get_schema();
 
-			if ( ! $schema ) {
-				$schema = $route->get_schema();
+			if ( isset( $schema['properties'] ) ) {
+				foreach ( $schema['properties'] as &$property ) {
+					unset( $property['arg_options'] );
+				}
 			}
 
 			return $schema;
@@ -191,6 +252,127 @@ class Manager {
 			$path,
 			$args
 		);
+	}
+
+	/**
+	 * Generate the endpoint args for the server.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \iThemes\Exchange\REST\Route $route
+	 * @param string                       $verb
+	 *
+	 * @return array
+	 */
+	protected function generate_endpoint_args_for_server( Route $route, $verb ) {
+
+		$schema = $route->get_schema();
+
+		$schema_properties = ! empty( $schema['properties'] ) ? $schema['properties'] : array();
+		$endpoint_args     = array();
+
+		foreach ( $schema_properties as $field_id => $params ) {
+
+			// Arguments specified as `readonly` are not allowed to be set.
+			if ( ! empty( $params['readonly'] ) ) {
+				continue;
+			}
+
+			$endpoint_args[ $field_id ] = array(
+				'validate_callback' => 'rest_validate_request_arg',
+				'sanitize_callback' => 'rest_sanitize_request_arg',
+			);
+
+			if ( \WP_REST_Server::CREATABLE === $verb && isset( $params['default'] ) ) {
+				$endpoint_args[ $field_id ]['default'] = $params['default'];
+			}
+
+			if ( \WP_REST_Server::CREATABLE === $verb && ! empty( $params['required'] ) ) {
+				$endpoint_args[ $field_id ]['required'] = true;
+			}
+
+			foreach ( array( 'type', 'format', 'enum' ) as $schema_prop ) {
+				if ( isset( $params[ $schema_prop ] ) ) {
+					$endpoint_args[ $field_id ][ $schema_prop ] = $params[ $schema_prop ];
+				}
+			}
+
+			// Merge in any options provided by the schema property.
+			if ( isset( $params['arg_options'] ) ) {
+
+				// Only use required / default from arg_options on CREATABLE endpoints.
+				if ( \WP_REST_Server::CREATABLE !== $verb ) {
+					$params['arg_options'] = array_diff_key( $params['arg_options'], array(
+						'required' => '',
+						'default'  => ''
+					) );
+				}
+
+				$endpoint_args[ $field_id ] = array_merge( $endpoint_args[ $field_id ], $params['arg_options'] );
+			}
+		}
+
+		return $endpoint_args;
+	}
+
+	/**
+	 * Generate query args for the server.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \iThemes\Exchange\REST\Route $route
+	 *
+	 * @return array
+	 */
+	protected function generate_query_args_for_server( Route $route ) {
+
+		$args = $route->get_query_args();
+
+		$args['context'] = $this->get_context_param( $route, array( 'default' => 'view' ) );
+
+		return $args;
+	}
+
+	/**
+	 * Get the magical context param.
+	 *
+	 * Ensures consistent description between endpoints, and populates enum from schema.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \iThemes\Exchange\REST\Route $route
+	 * @param array                        $args
+	 *
+	 * @return array
+	 */
+	protected function get_context_param( Route $route, $args = array() ) {
+		$param_details = array(
+			'description'       => __( 'Scope under which the request is made; determines fields present in response.' ),
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_key',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		$schema = $route->get_schema();
+
+		if ( empty( $schema['properties'] ) ) {
+			return array_merge( $param_details, $args );
+		}
+
+		$contexts = array();
+
+		foreach ( $schema['properties'] as $key => $attributes ) {
+			if ( ! empty( $attributes['context'] ) ) {
+				$contexts = array_merge( $contexts, $attributes['context'] );
+			}
+		}
+
+		if ( ! empty( $contexts ) ) {
+			$param_details['enum'] = array_unique( $contexts );
+			rsort( $param_details['enum'] );
+		}
+
+		return array_merge( $param_details, $args );
 	}
 
 	/**

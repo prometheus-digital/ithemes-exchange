@@ -10,15 +10,13 @@ namespace iThemes\Exchange\REST\Route\Cart;
 
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
+use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Purchase
  * @package iThemes\Exchange\REST\Route\Cart
  */
-class Purchase implements Getable, Postable {
-
-	/** @var Cart */
-	private $cart;
+class Purchase extends Base implements Getable, Postable {
 
 	/** @var \ITE_Gateway_Request_Factory */
 	private $request_factory;
@@ -26,11 +24,9 @@ class Purchase implements Getable, Postable {
 	/**
 	 * Purchase constructor.
 	 *
-	 * @param \iThemes\Exchange\REST\Route\Cart\Cart $cart
-	 * @param \ITE_Gateway_Request_Factory           $request_factory
+	 * @param \ITE_Gateway_Request_Factory $request_factory
 	 */
-	public function __construct( Cart $cart, \ITE_Gateway_Request_Factory $request_factory ) {
-		$this->cart            = $cart;
+	public function __construct( \ITE_Gateway_Request_Factory $request_factory ) {
 		$this->request_factory = $request_factory;
 	}
 
@@ -152,14 +148,4 @@ class Purchase implements Getable, Postable {
 			'properties' => array()
 		);
 	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function has_parent() { return true; }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_parent() { return $this->cart; }
 }

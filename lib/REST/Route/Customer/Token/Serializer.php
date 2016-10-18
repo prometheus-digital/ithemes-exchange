@@ -35,4 +35,52 @@ class Serializer {
 			'primary'  => (bool) $token->primary,
 		);
 	}
+
+	/**
+	 * Get the schema for Payment Tokens.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array
+	 */
+	public function get_schema() {
+		array(
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => 'payment-token',
+			'type'       => 'object',
+			'properties' => array(
+				'id'       => array(
+					'description' => __( 'The unique id for this token.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'integer',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'gateway'  => array(
+					'description' => __( 'The gateway slug for this token.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'string',
+					'enum'        => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+					'required'    => true,
+				),
+				'label'    => array(
+					'description' => __( 'The user-provided label for this token.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'redacted' => array(
+					'description' => __( 'The redacted form of the underlying payment source.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'primary'  => array(
+					'description' => __( 'Whether this is the primary payment token for this customer.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'boolean',
+					'context'     => array( 'view', 'edit' ),
+					'default'     => false,
+				),
+			)
+		);
+	}
 }

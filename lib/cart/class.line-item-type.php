@@ -54,12 +54,17 @@ class ITE_Line_Item_Type {
 			$this->editable_in_rest = (bool) $args['editable_in_rest'];
 		}
 
+		if ( ! empty( $args['schema'] ) ) {
+			$this->additional_schema_props = $args['schema'];
+		}
+
 		if ( isset( $args['rest_serializer'] ) ) {
 
-			if ( $args['rest_serializer'] instanceof Closure ) {
-				$this->rest_serializer = new Item_Serializer( $args['rest_serializer'] );
-			} elseif ( $args['rest_serializer'] instanceof Item_Serializer ) {
+			if ( $args['rest_serializer'] instanceof Item_Serializer ) {
 				$this->rest_serializer = $args['rest_serializer'];
+			} elseif ( $args['rest_serializer'] instanceof Closure ) {
+				$this->rest_serializer = new Item_Serializer( $this );
+				$this->rest_serializer->extend( $args['rest_serializer'] );
 			} else {
 				throw new InvalidArgumentException( sprintf(
 					'Invalid data type for rest_serializer. Expected Item_Serializer, received %s.',
@@ -67,11 +72,7 @@ class ITE_Line_Item_Type {
 				) );
 			}
 		} else {
-			$this->rest_serializer = new Item_Serializer();
-		}
-
-		if ( ! empty( $args['schema'] ) ) {
-			$this->additional_schema_props = $args['schema'];
+			$this->rest_serializer = new Item_Serializer( $this );
 		}
 
 		if ( ! empty( $args['create_from_request'] ) ) {

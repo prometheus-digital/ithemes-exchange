@@ -19,22 +19,8 @@ use iThemes\Exchange\REST\Putable;
  */
 class Cart implements Getable, Putable, Deletable {
 
-	/** @var Item_Serializer */
-	private $serializer;
-
-	/** @var \iThemes\Exchange\REST\Route\Cart\Items[] */
-	private $item_routes;
-
-	/**
-	 * Cart constructor.
-	 *
-	 * @param \iThemes\Exchange\REST\Route\Cart\Item_Serializer $serializer
-	 * @param \iThemes\Exchange\REST\Route\Cart\Items[]         $item_routes
-	 */
-	public function __construct( Item_Serializer $serializer, array $item_routes ) {
-		$this->serializer  = $serializer;
-		$this->item_routes = $item_routes;
-	}
+	/** @var array */
+	private $schema = array();
 
 	/**
 	 * @inheritDoc
@@ -191,9 +177,9 @@ class Cart implements Getable, Putable, Deletable {
 		$request = new \WP_REST_Request( 'GET' );
 		$request->set_param( 'id', $cart->get_id() );
 
-		foreach ( $this->item_routes as $type => $item_route ) {
-			foreach ( $cart->get_items( $type ) as $item ) {
-				$items[] = r\response_to_array( $item_route->prepare_item_for_response( $item, $request ) );
+		foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
+			foreach ( $cart->get_items( $item_type->get_type() ) as $item ) {
+				$items[] = $item_type->get_rest_serializer()->serialize( $item, $cart );
 			}
 		}
 
@@ -241,11 +227,30 @@ class Cart implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function get_schema() {
-		return array(
-			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => 'cart',
-			'type'       => 'object',
-			'properties' => array(
+
+		if ( $this->schema ) {
+			return $this->schema;
+		}
+
+		$item_definitions = array();
+		$item_references  = array();
+
+		foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
+
+			$type        = $item_type->get_type();
+			$item_schema = $item_type->get_rest_serializer()->get_schema();
+			unset( $item_schema['title'], $item_schema['$schema'] );
+
+			$item_references[]['$ref'] = "#definitions/{$type}";
+			$item_definitions[ $type ] = $item_schema;
+		}
+
+		$this->schema = array(
+			'$schema'     => 'http://json-schema.org/draft-04/schema#',
+			'definitions' => $item_definitions,
+			'title'       => 'cart',
+			'type'        => 'object',
+			'properties'  => array(
 				'id'               => array(
 					'description' => __( 'The unique id for this cart.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',
@@ -385,10 +390,7 @@ class Cart implements Getable, Putable, Deletable {
 					)
 				),
 				'items'            => array(
-					'description' => __( 'List of all line items in the cart.' ),
-					'type'        => 'list',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
+					'anyOf' => $item_references,
 				),
 				'subtotal'         => array(
 					'description' => __( 'The subtotal of the cart.', 'it-l10n-ithemes-exchange' ),
@@ -440,5 +442,7 @@ class Cart implements Getable, Putable, Deletable {
 				),
 			),
 		);
+
+		return $this->schema;
 	}
 }

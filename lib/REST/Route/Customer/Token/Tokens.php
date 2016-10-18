@@ -10,12 +10,13 @@ namespace iThemes\Exchange\REST\Route\Customer\Token;
 
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
+use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Tokens
  * @package iThemes\Exchange\REST\Customer\Token
  */
-class Tokens implements Getable, Postable {
+class Tokens extends Base implements Getable, Postable {
 
 	/** @var Serializer */
 	private $serializer;
@@ -23,20 +24,15 @@ class Tokens implements Getable, Postable {
 	/** @var \ITE_Gateway_Request_Factory */
 	private $request_factory;
 
-	/** @var Token */
-	private $token;
-
 	/**
 	 * Tokens constructor.
 	 *
 	 * @param \iThemes\Exchange\REST\Route\Customer\Token\Serializer $serializer
 	 * @param \ITE_Gateway_Request_Factory                           $request_factory
-	 * @param \iThemes\Exchange\REST\Route\Customer\Token\Token      $token
 	 */
-	public function __construct( Serializer $serializer, \ITE_Gateway_Request_Factory $request_factory, Token $token ) {
+	public function __construct( Serializer $serializer, \ITE_Gateway_Request_Factory $request_factory ) {
 		$this->serializer      = $serializer;
 		$this->request_factory = $request_factory;
-		$this->token           = $token;
 	}
 
 	/**
@@ -172,19 +168,5 @@ class Tokens implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_schema() {
-		return $this->token->get_schema();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function has_parent() { return false; }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_parent() {
-		throw new \UnexpectedValueException( "No parent exists for {$this->get_path()}" );
-	}
+	public function get_schema() { return $this->serializer->get_schema(); }
 }

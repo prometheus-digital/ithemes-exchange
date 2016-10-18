@@ -12,28 +12,29 @@ use iThemes\Exchange\REST as r;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
+use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Item
  * @package iThemes\Exchange\REST\Route\Cart
  */
-class Item implements Getable, Putable, Deletable {
+class Item extends Base implements Getable, Putable, Deletable {
 
 	/** @var \ITE_Line_Item_Type */
 	protected $type;
 
-	/** @var Items */
-	protected $collection_route;
+	/** @var \iThemes\Exchange\REST\Route\Cart\Item_Serializer */
+	protected $serializer;
 
 	/**
 	 * Item constructor.
 	 *
-	 * @param \ITE_Line_Item_Type                     $type
-	 * @param \iThemes\Exchange\REST\Route\Cart\Items $collection_route
+	 * @param \ITE_Line_Item_Type                               $type
+	 * @param \iThemes\Exchange\REST\Route\Cart\Item_Serializer $serializer
 	 */
-	public function __construct( \ITE_Line_Item_Type $type, Items $collection_route ) {
-		$this->type             = $type;
-		$this->collection_route = $collection_route;
+	public function __construct( \ITE_Line_Item_Type $type, Item_Serializer $serializer ) {
+		$this->type       = $type;
+		$this->serializer = $serializer;
 	}
 
 	/**
@@ -46,18 +47,7 @@ class Item implements Getable, Putable, Deletable {
 		$cart = it_exchange_get_cart( $url_params['id'] );
 		$item = $cart->get_item( $this->type->get_type(), $url_params['item'] );
 
-		if ( ! $item ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_item',
-				__( 'Invalid item.', 'it-l10n-ithemes-exchange' ),
-				404
-			);
-		}
-
-		$response = $this->collection_route->prepare_item_for_response( $item, $request );
-		$response->add_link( 'items', r\get_rest_url( $this->collection_route, array( 'id' => $url_params['id'] ) ) );
-
-		return $response;
+		return new \WP_REST_Response( $this->serializer->serialize( $item, $cart ) );
 	}
 
 	/**
@@ -85,10 +75,7 @@ class Item implements Getable, Putable, Deletable {
 			$item->set_quantity( $request['quantity']['selected'] );
 		}
 
-		$response = $this->collection_route->prepare_item_for_response( $item, $request );
-		$response->add_link( 'items', r\get_rest_url( $this->collection_route, array( 'id' => $url_params['id'] ) ) );
-
-		return $response;
+		return new \WP_REST_Response( $this->serializer->serialize( $item, $cart ) );
 	}
 
 	/**
@@ -178,21 +165,5 @@ class Item implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function has_parent() {
-		return true;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_parent() {
-		return $this->collection_route;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_schema() {
-		return $this->collection_route->get_schema();
-	}
+	public function get_schema() { return $this->serializer->get_schema(); }
 }
