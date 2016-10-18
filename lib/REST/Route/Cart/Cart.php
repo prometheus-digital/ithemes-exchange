@@ -218,9 +218,12 @@ class Cart implements Getable, Putable, Deletable {
 		$data['total_lines'] = $totals_info;
 
 		$response = new \WP_REST_Response( $data );
-		$response->add_link( 'shipping_methods', r\get_rest_url( new Shipping_Methods( $this ), array( 'id' => $cart->get_id() ) ) );
 
-		return new \WP_REST_Response( r\response_to_array( $response ) );
+		$shipping_methods = new Shipping_Methods();
+		$shipping_methods->set_parent( $this );
+		$response->add_link( 'shipping_methods', r\get_rest_url( $shipping_methods, array( 'id' => $cart->get_id() ) ) );
+
+		return $response;
 	}
 
 	/**
@@ -390,7 +393,7 @@ class Cart implements Getable, Putable, Deletable {
 					)
 				),
 				'items'            => array(
-					'anyOf' => $item_references,
+					'oneOf' => $item_references,
 				),
 				'subtotal'         => array(
 					'description' => __( 'The subtotal of the cart.', 'it-l10n-ithemes-exchange' ),
