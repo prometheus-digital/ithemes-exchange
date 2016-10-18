@@ -417,8 +417,8 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 			<?php wp_nonce_field( 'update-transaction-status' . $post->ID, 'it-exchange-update-transaction-nonce' ); ?>
 			<input type="hidden" id="it-exchange-update-transaction-current-status" value="<?php esc_attr_e( $current_status ); ?>" />
 			<input type="hidden" id="it-exchange-update-transaction-id" value="<?php esc_attr_e( $post->ID ); ?>" />
-			<div id="it-exchange-update-transaction-status-failed"><?php _e( 'Not Saved.', 'it-l10n-ithemes-exchange' ); ?></div>
-			<div id="it-exchange-update-transaction-status-success"><?php _e( 'Saved!', 'it-l10n-ithemes-exchange' ); ?></div>
+			<div id="it-exchange-update-transaction-status-failed"><?php _e('<p>Not Saved.</p>', 'it-l10n-ithemes-exchange' ); ?></div>
+			<div id="it-exchange-update-transaction-status-success"><?php _e( '<p>Saved!</p>', 'it-l10n-ithemes-exchange' ); ?></div>
 		<?php endif; ?>
 
 		<button class="button button-secondary right" id="resend-receipt">
