@@ -67,12 +67,19 @@ class Item extends Base implements Getable, Putable, Deletable {
 		$cart = it_exchange_get_cart( $url_params['id'] );
 		$item = $cart->get_item( $this->type->get_type(), $url_params['item'] );
 
-		if (
-			isset( $request['quantity'], $request['quantity']['selected'] ) &&
-			$item instanceof \ITE_Quantity_Modifiable_Item &&
-			$item->is_quantity_modifiable()
-		) {
-			$item->set_quantity( $request['quantity']['selected'] );
+		if ( $item instanceof \ITE_Quantity_Modifiable_Item && $item->is_quantity_modifiable() ) {
+			if ( isset( $request['quantity'], $request['quantity']['selected'] ) ) {
+				$quantity = $request['quantity']['selected'];
+			} elseif ( isset( $request['quantity'] ) && is_numeric( $request['quantity'] ) ) {
+				$quantity = $request['quantity'];
+			} else {
+				$quantity = $item->get_quantity();
+			}
+
+			if ( (int) $quantity !== (int) $item->get_quantity() ) {
+				$item->set_quantity( $quantity );
+				$cart->get_repository()->save( $item );
+			}
 		}
 
 		return new \WP_REST_Response( $this->serializer->serialize( $item, $cart ) );
