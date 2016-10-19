@@ -64,7 +64,7 @@ class Carts extends Base implements Postable {
 
 				$response = new \WP_REST_Response();
 				$response->set_status( \WP_Http::SEE_OTHER );
-				$response->header( 'Location', r\get_rest_url( $this->cart, array( 'id' => $cart_id ) ) );
+				$response->header( 'Location', r\get_rest_url( $this->cart, array( 'cart_id' => $cart_id ) ) );
 
 				return $response;
 			}
@@ -87,7 +87,7 @@ class Carts extends Base implements Postable {
 
 		$response = new \WP_REST_Response();
 		$response->set_status( \WP_Http::CREATED );
-		$response->header( 'Location', r\get_rest_url( $this->cart, array( 'id' => $cart->get_id() ) ) );
+		$response->header( 'Location', r\get_rest_url( $this->cart, array( 'cart_id' => $cart->get_id() ) ) );
 
 		return $response;
 	}

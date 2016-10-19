@@ -36,7 +36,7 @@ class Purchase extends Base implements Getable, Postable {
 	public function handle_get( \WP_REST_Request $request ) {
 
 		$url_params = $request->get_url_params();
-		$cart       = it_exchange_get_cart( $url_params['id'] );
+		$cart       = it_exchange_get_cart( $url_params['cart_id'] );
 
 		$cart->prepare_for_purchase();
 
@@ -87,11 +87,15 @@ class Purchase extends Base implements Getable, Postable {
 	public function handle_post( \WP_REST_Request $request ) {
 
 		$url_params = $request->get_url_params();
-		$cart       = it_exchange_get_cart( $url_params['id'] );
+		$cart       = it_exchange_get_cart( $url_params['cart_id'] );
 
+		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 		$purchase_request = $this->request_factory->make( 'purchase', array(
-			'cart'  => $cart,
-			'nonce' => $request['nonce']
+			'cart'     => $cart,
+			'nonce'    => $request['nonce'],
+			'card'     => $request['card'],
+			'token'    => $request['token'],
+			'tokenize' => $request['tokenize'],
 		) );
 		$gateway          = \ITE_Gateways::get( $request['id'] );
 		$handler          = $gateway->get_handler_for( $purchase_request );

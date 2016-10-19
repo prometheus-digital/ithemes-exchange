@@ -123,10 +123,13 @@ class Manager {
 
 		$path     = '';
 		$building = $route;
-		$routes   = array();
+		$parents  = array();
 
 		do {
-			array_unshift( $routes, $building );
+			if ( $building !== $route ) {
+				array_unshift( $parents, $building );
+			}
+
 			$path = $building->get_path() . $path;
 		} while ( $building->has_parent() && $building = $building->get_parent() );
 
@@ -135,21 +138,21 @@ class Manager {
 		foreach ( static::$interfaces as $verb => $interface ) {
 			$interface = "\\iThemes\\Exchange\\REST\\{$interface}";
 
-			if ( ! $route  instanceof $interface ) {
+			if ( ! $route instanceof $interface ) {
 				continue;
 			}
 
-			$permission = function ( \WP_REST_Request $request ) use ( $verb, $routes ) {
+			$permission = function ( \WP_REST_Request $request ) use ( $verb, $route, $parents ) {
 
 				$user = it_exchange_get_current_customer() ?: null;
 
-				foreach ( $routes as $route ) {
+				foreach ( $parents as $parent ) {
 
-					$callback = array( $route, 'user_can_' . strtolower( $verb ) );
+					$callback = array( $parent, 'user_can_' . strtolower( $verb ) );
 
 					if ( ! is_callable( $callback ) ) {
-						if ( is_callable( array( $route, 'user_can_get' ) ) ) {
-							$callback = array( $route, 'user_can_get' );
+						if ( is_callable( array( $parent, 'user_can_get' ) ) ) {
+							$callback = array( $parent, 'user_can_get' );
 						} else {
 							continue;
 						}
@@ -174,44 +177,50 @@ class Manager {
 					return $response;
 				}
 
-				if ( $route->has_parent() ) {
-					try {
+				try {
+					if ( $route->has_parent() ) {
 						$up = get_rest_url( $route->get_parent(), $request->get_url_params() );
+					} else {
+						$up = '';
+					}
 
-						$data = $response->get_data();
+					$data = $response->get_data();
 
-						if ( is_array( $data ) && ! \ITUtility::is_associative_array( $data ) ) {
+					if ( is_array( $data ) && ! \ITUtility::is_associative_array( $data ) ) {
 
-							$linked = array();
+						$linked = array();
 
-							foreach ( $data as $i => $item ) {
-								if ( ! isset( $item['_links'] ) ) {
-									$item['_links'] = array();
-								}
+						foreach ( $data as $i => $item ) {
+							if ( ! isset( $item['_links'] ) ) {
+								$item['_links'] = array();
+							}
 
+							if ( $up && $route->get_parent() instanceof Getable ) {
 								$item['_links']['up'] = array(
 									'href' => $up
 								);
-
-								if ( isset( $item['id'] ) ) {
-
-									$item['_links']['self'] = array(
-										'href' => $up . $item['id'] . '/',
-									);
-								}
-
-								$linked[ $i ] = $item;
 							}
 
-							$response->set_data( $linked );
-						} else {
-							$response->add_link( 'up', $up );
-							$response->add_link( 'self', rest_url( $request->get_route() ) );
-						}
-					}
-					catch ( \UnexpectedValueException $e ) {
+							if ( $up && isset( $item['id'] ) ) {
+								$item['_links']['self'] = array(
+									'href' => $up . $item['id'] . '/',
+								);
+							}
 
+							$linked[ $i ] = $item;
+						}
+
+						$response->set_data( $linked );
+					} else {
+						if ( $up && $route->get_parent() instanceof Getable ) {
+							$response->add_link( 'up', $up );
+						}
+
+						$response->add_link( 'self', rest_url( $request->get_route() ) );
 					}
+				}
+				catch ( \UnexpectedValueException $e ) {
+
 				}
 
 				return $response;
@@ -382,7 +391,7 @@ class Manager {
 	 *
 	 * @return bool
 	 */
-	protected function is_our_endpoint() {
+	public function is_our_endpoint() {
 
 		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
 			return false;

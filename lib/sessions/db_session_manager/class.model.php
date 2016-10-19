@@ -57,6 +57,27 @@ class ITE_Session_Model extends \IronBound\DB\Model {
 		return $model;
 	}
 
+	/**
+	 * Find the best model for a customer.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \IT_Exchange_Customer $customer
+	 *
+	 * @return ITE_Session_Model|null
+	 */
+	public static function find_best_for_customer( IT_Exchange_Customer $customer ) {
+
+		$session = ITE_Session_Model::query()
+		                            ->and_where( 'customer', '=', $customer->id )
+		                            ->order_by( 'cart_id', 'DESC' )
+		                            ->order_by( 'updated_at', 'DESC' )
+		                            ->take( 1 )
+		                            ->first();
+
+		return $session ?: null;
+	}
+
 	protected function _access_data( $data ) {
 		return $data ? unserialize( $data ) : array();
 	}

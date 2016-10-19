@@ -26,7 +26,7 @@ class Cart implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function handle_get( \WP_REST_Request $request ) {
-		return $this->prepare_item_for_response( it_exchange_get_cart( $request['id'] ), $request );
+		return $this->prepare_item_for_response( it_exchange_get_cart( $request['cart_id'] ), $request );
 	}
 
 	/**
@@ -40,7 +40,7 @@ class Cart implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function handle_put( \WP_REST_Request $request ) {
-		$cart = it_exchange_get_cart( $request['id'] );
+		$cart = it_exchange_get_cart( $request['cart_id'] );
 
 		if ( $cart->get_billing_address() ? $cart->get_billing_address()->to_array() : array() !== $request['billing_address'] ) {
 			$cart->set_billing_address( $request['billing_address'] ? new \ITE_In_Memory_Address( $request['billing_address'] ) : null );
@@ -64,7 +64,7 @@ class Cart implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function handle_delete( \WP_REST_Request $request ) {
-		$cart = it_exchange_get_cart( $request['id'] );
+		$cart = it_exchange_get_cart( $request['cart_id'] );
 		$cart->empty_cart();
 
 		return new \WP_HTTP_Response( '', 204 );
@@ -85,14 +85,12 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_path() { return '(?P<id>\w+)/'; }
+	public function get_path() { return '(?P<cart_id>\w+)/'; }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_query_args() {
-		return array();
-	}
+	public function get_query_args() { return array(); }
 
 	/**
 	 * @inheritDoc
@@ -118,7 +116,7 @@ class Cart implements Getable, Putable, Deletable {
 
 		$url_params = $request->get_url_params();
 
-		if ( ! $cart = it_exchange_get_cart( $url_params['id'] ) ) {
+		if ( ! $cart = it_exchange_get_cart( $url_params['cart_id'] ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_cart',
 				__( 'Invalid cart id.', 'it-l10n-ithemes-exchange' ),
@@ -175,7 +173,7 @@ class Cart implements Getable, Putable, Deletable {
 		$items = array();
 
 		$request = new \WP_REST_Request( 'GET' );
-		$request->set_param( 'id', $cart->get_id() );
+		$request->set_param( 'cart_id', $cart->get_id() );
 
 		foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
 			foreach ( $cart->get_items( $item_type->get_type() ) as $item ) {
@@ -221,7 +219,7 @@ class Cart implements Getable, Putable, Deletable {
 
 		$shipping_methods = new Shipping_Methods();
 		$shipping_methods->set_parent( $this );
-		$response->add_link( 'shipping_methods', r\get_rest_url( $shipping_methods, array( 'id' => $cart->get_id() ) ) );
+		$response->add_link( 'shipping_methods', r\get_rest_url( $shipping_methods, array( 'cart_id' => $cart->get_id() ) ) );
 
 		return $response;
 	}
@@ -241,11 +239,12 @@ class Cart implements Getable, Putable, Deletable {
 		foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
 
 			$type        = $item_type->get_type();
+			$title       = "cart_item_{$type}";
 			$item_schema = $item_type->get_rest_serializer()->get_schema();
 			unset( $item_schema['title'], $item_schema['$schema'] );
 
-			$item_references[]['$ref'] = "#definitions/{$type}";
-			$item_definitions[ $type ] = $item_schema;
+			$item_references[]['$ref']  = "#definitions/{$title}";
+			$item_definitions[ $title ] = $item_schema;
 		}
 
 		$this->schema = array(

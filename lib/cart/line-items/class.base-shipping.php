@@ -9,7 +9,7 @@
 /**
  * Class ITE_Base_Shipping_Line_Item
  */
-class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware {
+class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware, ITE_Cart_Aware {
 
 	/** @var ITE_Aggregate_Line_Item */
 	private $aggregate;
@@ -19,6 +19,9 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_
 
 	/** @var ITE_Line_Item_Repository */
 	private $repository;
+
+	/** @var ITE_Cart */
+	private $cart;
 
 	/**
 	 * Create a new base shipping line item.
@@ -73,10 +76,14 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_
 			return $this->frozen->get_param( 'amount' );
 		}
 
-		if ( $this->aggregate ) {
-			return $this->get_method()->get_shipping_cost_for_product( $this->aggregate->bc() );
+		if ( ! $this->cart ) {
+			$this->cart = it_exchange_get_current_cart();
+		}
+
+		if ( $this->aggregate instanceof ITE_Cart_Product ) {
+			return $this->get_method()->get_shipping_cost_for_product( $this->aggregate->bc(), $this->cart );
 		} else {
-			return $this->get_method()->get_additional_cost_for_cart( it_exchange_get_current_cart() );
+			return $this->get_method()->get_additional_cost_for_cart( $this->cart );
 		}
 	}
 
@@ -246,6 +253,13 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_
 	 * @inheritDoc
 	 */
 	public function get_aggregate() { return $this->aggregate; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function set_cart( ITE_Cart $cart ) {
+		$this->cart = $cart;
+	}
 
 	/**
 	 * @inheritDoc

@@ -44,8 +44,8 @@ class Item extends Base implements Getable, Putable, Deletable {
 
 		$url_params = $request->get_url_params();
 
-		$cart = it_exchange_get_cart( $url_params['id'] );
-		$item = $cart->get_item( $this->type->get_type(), $url_params['item'] );
+		$cart = it_exchange_get_cart( $url_params['cart_id'] );
+		$item = $cart->get_item( $this->type->get_type(), $url_params['item_id'] );
 
 		return new \WP_REST_Response( $this->serializer->serialize( $item, $cart ) );
 	}
@@ -64,8 +64,8 @@ class Item extends Base implements Getable, Putable, Deletable {
 
 		$url_params = $request->get_url_params();
 
-		$cart = it_exchange_get_cart( $url_params['id'] );
-		$item = $cart->get_item( $this->type->get_type(), $url_params['item'] );
+		$cart = it_exchange_get_cart( $url_params['cart_id'] );
+		$item = $cart->get_item( $this->type->get_type(), $url_params['item_id'] );
 
 		if ( $item instanceof \ITE_Quantity_Modifiable_Item && $item->is_quantity_modifiable() ) {
 			if ( isset( $request['quantity'], $request['quantity']['selected'] ) ) {
@@ -107,8 +107,8 @@ class Item extends Base implements Getable, Putable, Deletable {
 
 		$url_params = $request->get_url_params();
 
-		$cart = it_exchange_get_cart( $url_params['id'] );
-		$cart->remove_item( $this->type->get_type(), $url_params['item'] );
+		$cart = it_exchange_get_cart( $url_params['cart_id'] );
+		$cart->remove_item( $this->type->get_type(), $url_params['item_id'] );
 
 		return new \WP_REST_Response( null, 204 );
 	}
@@ -141,9 +141,9 @@ class Item extends Base implements Getable, Putable, Deletable {
 	protected function permission_check( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
 
 		$url_params = $request->get_url_params();
-		$cart       = it_exchange_get_cart( $url_params['id'] );
+		$cart       = it_exchange_get_cart( $url_params['cart_id'] );
 
-		if ( ! $cart->get_item( $this->type->get_type(), $url_params['item'] ) ) {
+		if ( ! $cart->get_item( $this->type->get_type(), $url_params['item_id'] ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_item',
 				__( 'Invalid item id.', 'it-l10n-ithemes-exchange' ),
@@ -162,7 +162,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_path() { return '(?P<item>[\w\-]+)/'; }
+	public function get_path() { return '(?P<item_id>[\w\-]+)/'; }
 
 	/**
 	 * @inheritDoc

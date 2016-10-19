@@ -129,9 +129,28 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 			$this->option_key = $this->generate_option_key();
 
 			$this->set_cookie();
-		} elseif ( ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) && is_user_logged_in() ) {
+		} elseif ( ! $this->is_rest_request() && is_user_logged_in() ) {
 			$this->initialize_new_session();
 		}
+	}
+
+	/**
+	 * Is this a REST request.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	protected function is_rest_request() {
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return true;
+		}
+
+		if ( \iThemes\Exchange\REST\get_rest_manager()->is_our_endpoint() ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -383,6 +402,27 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 * @since CHANGEME
 	 */
 	protected function initialize_new_session() {
+
+		if ( is_user_logged_in() ) {
+			$existing = ITE_Session_Model::find_best_for_customer( it_exchange_get_current_customer() );
+
+			if ( $existing ) {
+
+				$this->model      = $existing;
+				$this->session_id = $existing->ID;
+				$this->option_key = $this->generate_option_key();
+				$this->container  = $existing->data;
+				$this->set_expiration();
+
+				if ( $existing->expires_at ) {
+					$this->expires = $existing->expires_at->getTimestamp();
+				}
+
+				$this->set_cookie();
+
+				return;
+			}
+		}
 
 		$this->session_id = $this->generate_id();
 		$this->set_expiration();
