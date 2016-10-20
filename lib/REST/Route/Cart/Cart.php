@@ -15,6 +15,7 @@ use iThemes\Exchange\REST\Putable;
 
 /**
  * Class Cart
+ *
  * @package iThemes\Exchange\REST\Route\Cart
  */
 class Cart implements Getable, Putable, Deletable {
@@ -42,11 +43,29 @@ class Cart implements Getable, Putable, Deletable {
 	public function handle_put( \WP_REST_Request $request ) {
 		$cart = it_exchange_get_cart( $request['cart_id'] );
 
-		if ( $cart->get_billing_address() ? $cart->get_billing_address()->to_array() : array() !== $request['billing_address'] ) {
+		$c_billing = $cart->get_billing_address() ? $cart->get_billing_address()->to_array() : array();
+		$u_billing = $request['billing_address'];
+
+		$c_billing = array_filter( $c_billing );
+		$u_billing = array_filter( $u_billing );
+
+		ksort( $c_billing );
+		ksort( $u_billing );
+
+		if ( $c_billing !== $u_billing ) {
 			$cart->set_billing_address( $request['billing_address'] ? new \ITE_In_Memory_Address( $request['billing_address'] ) : null );
 		}
 
-		if ( $cart->get_shipping_address() ? $cart->get_shipping_address()->to_array() : array() !== $request['shipping_address'] ) {
+		$c_shipping = $cart->get_shipping_address() ? $cart->get_shipping_address()->to_array() : array();
+		$u_shipping = $request['shipping_address'];
+
+		$c_shipping = array_filter( $c_shipping );
+		$u_shipping = array_filter( $u_shipping );
+
+		ksort( $c_shipping );
+		ksort( $u_shipping );
+
+		if ( $c_shipping !== $u_shipping ) {
 			$cart->set_shipping_address( $request['shipping_address'] ? new \ITE_In_Memory_Address( $request['shipping_address'] ) : null );
 		}
 
@@ -171,9 +190,6 @@ class Cart implements Getable, Putable, Deletable {
 		}
 
 		$items = array();
-
-		$request = new \WP_REST_Request( 'GET' );
-		$request->set_param( 'cart_id', $cart->get_id() );
 
 		foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
 			foreach ( $cart->get_items( $item_type->get_type() ) as $item ) {

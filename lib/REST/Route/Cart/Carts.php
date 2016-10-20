@@ -85,9 +85,11 @@ class Carts extends Base implements Postable {
 		$session->data    = array_merge( $session->data, array( 'cart_id' => $cart->get_id() ) );
 		$session->save();
 
-		$response = new \WP_REST_Response();
+		$location = r\get_rest_url( $this->cart, array( 'cart_id' => $cart->get_id() ) );
+
+		$response = $this->cart->handle_get( \WP_REST_Request::from_url( $location ) );
 		$response->set_status( \WP_Http::CREATED );
-		$response->header( 'Location', r\get_rest_url( $this->cart, array( 'cart_id' => $cart->get_id() ) ) );
+		$response->header( 'Location', $location );
 
 		return $response;
 	}

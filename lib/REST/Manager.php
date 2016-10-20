@@ -211,7 +211,7 @@ class Manager {
 						}
 
 						$response->set_data( $linked );
-					} else {
+					} elseif ( $data ) {
 						if ( $up && $route->get_parent() instanceof Getable ) {
 							$response->add_link( 'up', $up );
 						}

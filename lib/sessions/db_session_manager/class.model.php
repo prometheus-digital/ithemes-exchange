@@ -24,6 +24,25 @@ class ITE_Session_Model extends \IronBound\DB\Model {
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	protected static function boot() {
+		parent::boot();
+
+		static::updated( function ( \IronBound\WPEvents\GenericEvent $event ) {
+
+			/** @var ITE_Session_Model $model */
+			$model = $event->get_subject();
+			$changed = $event->get_argument('changed');
+
+			if ( ! empty( $changed['cart_id'] ) ) {
+				wp_cache_delete( $model->get_pk(), $model::get_cache_group() . '-cart-id' );
+			}
+		} );
+	}
+
+
+	/**
 	 * Retrieve a session by cart ID.
 	 *
 	 * @since 1.36.0
