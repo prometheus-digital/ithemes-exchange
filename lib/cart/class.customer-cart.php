@@ -1082,13 +1082,12 @@ class ITE_Cart {
 	 * @since 1.36.0
 	 *
 	 * @param string $secret
+	 * @param int    $life
 	 *
 	 * @return bool
-	 *
-	 * @throws \UnexpectedValueException
 	 */
-	public final function validate_auth_secret( $secret ) {
-		return hash_equals( $secret, $this->generate_auth_secret() );
+	public final function validate_auth_secret( $secret, $life = 300 ) {
+		return hash_equals( $secret, $this->generate_auth_secret( $life ) );
 	}
 
 	/**
