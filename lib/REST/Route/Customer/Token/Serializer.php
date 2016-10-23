@@ -44,7 +44,7 @@ class Serializer {
 	 * @return array
 	 */
 	public function get_schema() {
-		array(
+		return array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'payment-token',
 			'type'       => 'object',
@@ -65,8 +65,20 @@ class Serializer {
 				),
 				'label'    => array(
 					'description' => __( 'The user-provided label for this token.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'string',
+					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
+					'properties'  => array(
+						'raw'      => array(
+							'type'        => 'string',
+							'context'     => array( 'edit' ),
+							'description' => __( 'The raw user provided label for the payment token.', 'it-l10n-ithemes-exchange' ),
+						),
+						'rendered' => array(
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+							'description' => __( 'The label for the payment token.', 'it-l10n-ithemes-exchange' ),
+						),
+					),
 				),
 				'redacted' => array(
 					'description' => __( 'The redacted form of the underlying payment source.', 'it-l10n-ithemes-exchange' ),

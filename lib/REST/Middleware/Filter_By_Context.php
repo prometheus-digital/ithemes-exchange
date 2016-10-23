@@ -30,7 +30,7 @@ class Filter_By_Context implements Middleware {
 		$data  = $response->get_data();
 		$route = $request->get_matched_route_controller();
 
-		$schema  = $route->get_schema();
+		$schema = $route->get_schema();
 		$context = $request['context'] ?: 'view';
 
 		if ( is_array( $data ) && \ITUtility::is_associative_array( $data ) ) {
@@ -66,6 +66,7 @@ class Filter_By_Context implements Middleware {
 	protected function filter_item_by_context( $item, $context, $schema ) {
 
 		foreach ( $item as $key => $value ) {
+
 			if ( empty( $schema['properties'][ $key ] ) || empty( $schema['properties'][ $key ]['context'] ) ) {
 				continue;
 			}
@@ -76,12 +77,14 @@ class Filter_By_Context implements Middleware {
 
 			if ( 'object' === $schema['properties'][ $key ]['type'] && ! empty( $schema['properties'][ $key ]['properties'] ) ) {
 				foreach ( $schema['properties'][ $key ]['properties'] as $attribute => $details ) {
+
 					if ( empty( $details['context'] ) ) {
 						continue;
 					}
+
 					if ( ! in_array( $context, $details['context'] ) ) {
-						if ( isset( $data[ $key ][ $attribute ] ) ) {
-							unset( $data[ $key ][ $attribute ] );
+						if ( isset( $item[ $key ][ $attribute ] ) ) {
+							unset( $item[ $key ][ $attribute ] );
 						}
 					}
 				}
