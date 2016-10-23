@@ -7,6 +7,7 @@
  */
 
 namespace iThemes\Exchange\REST;
+use iThemes\Exchange\REST\Middleware\Stack;
 
 /**
  * Class Manager
@@ -20,6 +21,9 @@ class Manager {
 
 	/** @var Route[] */
 	private $routes = array();
+
+	/** @var \iThemes\Exchange\REST\Middleware\Stack */
+	private $middleware;
 
 	/** @var bool */
 	private $initialized = false;
@@ -35,10 +39,12 @@ class Manager {
 	/**
 	 * Manager constructor.
 	 *
-	 * @param string $namespace No forward or trailing slashes.
+	 * @param string                                  $namespace No forward or trailing slashes.
+	 * @param \iThemes\Exchange\REST\Middleware\Stack $stack
 	 */
-	public function __construct( $namespace ) {
-		$this->namespace = $namespace;
+	public function __construct( $namespace, Stack $stack ) {
+		$this->namespace  = $namespace;
+		$this->middleware = $stack;
 	}
 
 	/**
@@ -111,6 +117,17 @@ class Manager {
 	}
 
 	/**
+	 * Get the Middleware Stack.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \iThemes\Exchange\REST\Middleware\Stack
+	 */
+	public function get_middleware() {
+		return $this->middleware;
+	}
+
+	/**
 	 * Register a route with the server.
 	 *
 	 * @since 1.36.0
@@ -168,106 +185,10 @@ class Manager {
 				return call_user_func( $callback, $request, $user );
 			};
 
-			// TODO: Move to Middleware
-			$handle = function ( \WP_REST_Request $request ) use ( $verb, $route ) {
-				/** @var \WP_REST_Response|\WP_Error $response */
-				$response = call_user_func( array( $route, 'handle_' . strtolower( $verb ) ), $request );
+			$middleware = $this->get_middleware();
 
-				if ( is_wp_error( $response ) ) {
-					return $response;
-				}
-
-				$data = $response->get_data();
-
-				if ( ! $data ) {
-					return $response;
-				}
-
-				$schema  = $route->get_schema();
-				$context = $request['context'] ?: 'view';
-
-				if ( is_array( $data ) && \ITUtility::is_associative_array( $data ) ) {
-
-					foreach ( $data as $key => $value ) {
-						if ( empty( $schema['properties'][ $key ] ) || empty( $schema['properties'][ $key ]['context'] ) ) {
-							continue;
-						}
-
-						if ( ! in_array( $context, $schema['properties'][ $key ]['context'] ) ) {
-							unset( $data[ $key ] );
-						}
-
-						if ( 'object' === $schema['properties'][ $key ]['type'] && ! empty( $schema['properties'][ $key ]['properties'] ) ) {
-							foreach ( $schema['properties'][ $key ]['properties'] as $attribute => $details ) {
-								if ( empty( $details['context'] ) ) {
-									continue;
-								}
-								if ( ! in_array( $context, $details['context'] ) ) {
-									if ( isset( $data[ $key ][ $attribute ] ) ) {
-										unset( $data[ $key ][ $attribute ] );
-									}
-								}
-							}
-						}
-					}
-
-					$response->set_data( $data );
-				}
-
-				try {
-
-					$current = $request->get_route() ? trailingslashit( $request->get_route() ) : '';
-
-					if ( $route->has_parent() ) {
-						$up = get_rest_url( $route->get_parent(), $request->get_url_params() );
-					} else {
-						$up = '';
-					}
-
-					$data = $response->get_data();
-
-					if ( is_array( $data ) && ! \ITUtility::is_associative_array( $data ) ) {
-
-						$linked = array();
-
-						foreach ( $data as $i => $item ) {
-							if ( ! isset( $item['_links'] ) ) {
-								$item['_links'] = array();
-							}
-
-							if ( $up && $route->get_parent() instanceof Getable ) {
-								$item['_links']['up'] = array(
-									'href' => $up
-								);
-							}
-
-							if ( $current && isset( $item['id'] ) ) {
-								$item['_links']['self'] = array(
-									'href' => $current . $item['id'] . '/',
-								);
-							}
-
-							$linked[ $i ] = $item;
-						}
-
-						$response->set_data( $linked );
-					} elseif ( $data ) {
-						if ( $up && $route->get_parent() instanceof Getable ) {
-							$response->add_link( 'up', $up );
-						}
-
-						if ( $verb === 'POST' && $current && isset( $data['id'] ) ) {
-							$response->add_link( 'self', $current . $data['id'] . '/' );
-						} else {
-							$response->add_link( 'self', rest_url( $request->get_route() ) );
-						}
-					}
-				}
-				catch ( \UnexpectedValueException $e ) {
-
-				}
-
-				return $response;
+			$handle = function ( \WP_REST_Request $request ) use ( $middleware, $route ) {
+				return $middleware->handle( $request, $route );
 			};
 
 			if ( $verb === 'GET' ) {

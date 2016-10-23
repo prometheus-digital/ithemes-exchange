@@ -8,6 +8,9 @@
 
 namespace iThemes\Exchange\REST;
 
+use iThemes\Exchange\REST\Middleware\Autolinker;
+use iThemes\Exchange\REST\Middleware\Filter_By_Context;
+use iThemes\Exchange\REST\Middleware\Stack;
 use iThemes\Exchange\REST\Route\Cart\Carts;
 use iThemes\Exchange\REST\Route\Cart\Item;
 use iThemes\Exchange\REST\Route\Cart\Meta;
@@ -68,8 +71,7 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
 	/* Tokens */
 	$tokens = new Tokens( new TokenSerializer(), new \ITE_Gateway_Request_Factory() );
-	$tokens->set_parent( $customer );
-	$manager->register_route( $tokens );
+	$manager->register_route( $tokens->set_parent( $customer ) );
 
 	$token = new Route\Customer\Token\Token( new TokenSerializer() );
 	$manager->register_route( $token->set_parent( $tokens ) );
@@ -102,7 +104,7 @@ function get_rest_url( Route $route, array $path_parameters ) {
 
 	foreach ( $path_parameters as $parameter => $value ) {
 
-		if ( ! is_string( $value ) && ! is_callable( array( $value, '__toString' ) ) ) {
+		if ( ! is_scalar( $value ) && ! is_callable( array( $value, '__toString' ) ) ) {
 			continue;
 		}
 
@@ -126,7 +128,12 @@ function get_rest_manager() {
 	static $manager;
 
 	if ( ! $manager ) {
-		$manager = new Manager( 'it_exchange' );
+
+		$stack = new Stack();
+		$stack->push( new Autolinker(), 'autolinker' );
+		$stack->push( new Filter_By_Context(), 'filter-by-context' );
+
+		$manager = new Manager( 'it_exchange', $stack );
 	}
 
 	return $manager;

@@ -156,7 +156,7 @@ class Tokens extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_path() { return 'customers/(?P<customer_id>\d+)/tokens/'; }
+	public function get_path() { return 'tokens/'; }
 
 	/**
 	 * @inheritDoc
@@ -174,9 +174,8 @@ class Tokens extends Base implements Getable, Postable {
 			'gateway' => array(
 				'description'       => __( 'Gateway the payment token belongs to.', 'it-l10n-ithemes-exchange' ),
 				'type'              => 'string',
-				'validate_callback' => function ( $value ) {
-					return ( $g = \ITE_Gateways::get( $value ) ) && $g->can_handle( 'tokenize' );
-				},
+				'enum'              => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
+				'validate_callback' => 'rest_validate_request_arg',
 			),
 		);
 	}
