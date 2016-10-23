@@ -34,7 +34,7 @@ if ( !empty( $_POST['_it_exchange_customer_info_nonce'] ) && !wp_verify_nonce( $
 	<p><?php echo $customer->get_transactions_count(); ?></p>
 
 	<label><?php _e( 'Lifetime Value', 'it-l10n-ithemes-exchange' ); ?></label>
-	<p><?php echo it_exchange_format_price( $customer->get_lifetime_value() ); ?></p>
+	<p><?php echo it_exchange_format_price( $customer->get_total_spent() ); ?></p>
 
     <div class="notes">
         <label for="it_exchange_customer_note"><?php _e( 'Notes', 'it-l10n-ithemes-exchange' ); ?></label>

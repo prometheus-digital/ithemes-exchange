@@ -177,6 +177,43 @@ class Manager {
 					return $response;
 				}
 
+				$data = $response->get_data();
+
+				if ( ! $data ) {
+					return $response;
+				}
+
+				$schema  = $route->get_schema();
+				$context = $request['context'] ?: 'view';
+
+				if ( is_array( $data ) && \ITUtility::is_associative_array( $data ) ) {
+
+					foreach ( $data as $key => $value ) {
+						if ( empty( $schema['properties'][ $key ] ) || empty( $schema['properties'][ $key ]['context'] ) ) {
+							continue;
+						}
+
+						if ( ! in_array( $context, $schema['properties'][ $key ]['context'] ) ) {
+							unset( $data[ $key ] );
+						}
+
+						if ( 'object' === $schema['properties'][ $key ]['type'] && ! empty( $schema['properties'][ $key ]['properties'] ) ) {
+							foreach ( $schema['properties'][ $key ]['properties'] as $attribute => $details ) {
+								if ( empty( $details['context'] ) ) {
+									continue;
+								}
+								if ( ! in_array( $context, $details['context'] ) ) {
+									if ( isset( $data[ $key ][ $attribute ] ) ) {
+										unset( $data[ $key ][ $attribute ] );
+									}
+								}
+							}
+						}
+					}
+
+					$response->set_data( $data );
+				}
+
 				try {
 
 					$current = $request->get_route() ? trailingslashit( $request->get_route() ) : '';

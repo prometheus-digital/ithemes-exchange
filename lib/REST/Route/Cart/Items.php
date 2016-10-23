@@ -71,14 +71,18 @@ class Items extends Base implements Getable, Postable, Deletable {
 	 */
 	public function handle_post( \WP_REST_Request $request ) {
 
-		$id = $this->type->create_from_request( $request );
+		$item = $this->type->create_from_request( $request );
 
-		if ( $id ) {
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
 
-			$response = new \WP_REST_Response();
+		if ( $item ) {
+
+			$response = new \WP_REST_Response( $this->serializer->serialize( $item, it_exchange_get_cart( $request['cart_id'] ) ) );
 			$response->set_status( \WP_Http::CREATED );
 			$response->header( 'Location', r\get_rest_url(
-				new Item( $this->type, $this->serializer ), array( 'cart_id' => $request['id'], 'item_id' => $id )
+				new Item( $this->type, $this->serializer ), array( 'cart_id' => $request['cart_id'], 'item_id' => $item->get_id() )
 			) );
 
 			return $response;

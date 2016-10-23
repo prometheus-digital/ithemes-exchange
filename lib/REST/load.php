@@ -10,10 +10,10 @@ namespace iThemes\Exchange\REST;
 
 use iThemes\Exchange\REST\Route\Cart\Carts;
 use iThemes\Exchange\REST\Route\Cart\Item;
-use iThemes\Exchange\REST\Route\Cart\Item_Serializer;
 use iThemes\Exchange\REST\Route\Cart\Meta;
 use iThemes\Exchange\REST\Route\Cart\Purchase;
 use iThemes\Exchange\REST\Route\Cart\Shipping_Methods;
+use iThemes\Exchange\REST\Route\Customer\Customer;
 use iThemes\Exchange\REST\Route\Customer\Token\Serializer as TokenSerializer;
 use iThemes\Exchange\REST\Route\Customer\Token\Tokens;
 
@@ -62,9 +62,13 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	$manager->register_route( $purchase->set_parent( $cart ) );
 	$manager->register_route( $meta->set_parent( $cart ) );
 
-	// --- Tokens --- //
+	// --- Customers --- //
+	$customer = new Customer();
+	$manager->register_route( $customer );
 
+	/* Tokens */
 	$tokens = new Tokens( new TokenSerializer(), new \ITE_Gateway_Request_Factory() );
+	$tokens->set_parent( $customer );
 	$manager->register_route( $tokens );
 
 	$token = new Route\Customer\Token\Token( new TokenSerializer() );
@@ -97,12 +101,17 @@ function get_rest_url( Route $route, array $path_parameters ) {
 	$regex = '/\(\?P\<#\>.+\)/';
 
 	foreach ( $path_parameters as $parameter => $value ) {
+
+		if ( ! is_string( $value ) && ! is_callable( array( $value, '__toString' ) ) ) {
+			continue;
+		}
+
 		$path_regex = str_replace( '#', $parameter, $regex );
 
 		$path = preg_replace( $path_regex, $value, $path );
 	}
 
-	return rest_url( $path );
+	return untrailingslashit( rest_url( $path ) );
 }
 
 /**

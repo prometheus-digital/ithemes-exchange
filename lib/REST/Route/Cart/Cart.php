@@ -237,6 +237,14 @@ class Cart implements Getable, Putable, Deletable {
 		$shipping_methods->set_parent( $this );
 		$response->add_link( 'shipping_methods', r\get_rest_url( $shipping_methods, array( 'cart_id' => $cart->get_id() ) ) );
 
+		if ( $cart->get_customer() && ! $cart->get_customer() instanceof \IT_Exchange_Guest_Customer ) {
+			$response->add_link(
+				'customer',
+				r\get_rest_url( new r\Route\Customer\Customer(), array( 'customer_id' => $cart->get_customer()->ID ) ),
+				array( 'embeddable' => true )
+			);
+		}
+
 		return $response;
 	}
 

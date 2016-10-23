@@ -153,14 +153,14 @@ class ITE_Line_Item_Type {
 	 *
 	 * @param \WP_REST_Request $request
 	 *
-	 * @return string
+	 * @return ITE_Line_Item|null
 	 */
 	public function create_from_request( WP_REST_Request $request ) {
 		if ( $this->create_from_request ) {
 			return call_user_func( $this->create_from_request, $request );
 		}
 
-		return '';
+		return null;
 	}
 
 	/**

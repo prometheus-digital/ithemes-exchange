@@ -138,10 +138,10 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 			$request['quantity']['selected']
 		);
 
-		$cart = it_exchange_get_cart( $request['id'] );
+		$cart = it_exchange_get_cart( $request['cart_id'] );
 		$cart->add_item( $item );
 
-		return $item->get_id();
+		return $item;
 	}
 ) ) );
 
