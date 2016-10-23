@@ -53,7 +53,19 @@ class Tokens extends Base implements Getable, Postable {
 	 * @inheritDoc
 	 */
 	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permissions_check( $request, $user );
+		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+			return $r;
+		}
+
+		if ( ! user_can( $user->wp_user, 'it_list_payment_tokens', $request['customer_id'] ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( "Sorry, you are not allowed to view this customer's payment tokens.", 'it-l10n-ithemes-exchange' ),
+				array( 'status' => \WP_Http::FORBIDDEN )
+			);
+		}
+
+		return true;
 	}
 
 	/**
@@ -87,7 +99,19 @@ class Tokens extends Base implements Getable, Postable {
 	 * @inheritDoc
 	 */
 	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permissions_check( $request, $user );
+		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+			return $r;
+		}
+
+		if ( ! user_can( $user->wp_user, 'it_create_payment_tokens', $request['customer_id'] ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( 'Sorry, you are not allowed to create payment tokens for this customer.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => \WP_Http::FORBIDDEN )
+			);
+		}
+
+		return true;
 	}
 
 	/**
@@ -102,7 +126,7 @@ class Tokens extends Base implements Getable, Postable {
 	 */
 	protected function permissions_check( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
 
-		if ( ! $user ) {
+		if ( ! $user || $user instanceof \IT_Exchange_Guest_Customer ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to access this customer.', 'it-l10n-ithemes-exchange' ),
@@ -118,14 +142,6 @@ class Tokens extends Base implements Getable, Postable {
 				'it_exchange_rest_invalid_customer',
 				__( 'Invalid customer.', 'it-l10n-ithemes-exchange' ),
 				array( 'status' => \WP_Http::NOT_FOUND )
-			);
-		}
-
-		if ( ! user_can( $user->wp_user, 'edit_user', $customer->ID ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to access this customer.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
 			);
 		}
 

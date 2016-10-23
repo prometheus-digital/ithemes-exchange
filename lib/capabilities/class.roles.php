@@ -63,7 +63,19 @@ class IT_Exchange_Roles {
 
 		$wp_roles->get_role( 'administrator' )->add_cap( 'it_perform_upgrades' );
 
-		do_action( 'it_exchange_add_caps_to_roles', $this );
+		$wp_roles->get_role( 'administrator' )->add_cap( 'it_list_others_payment_tokens' );
+		$wp_roles->get_role( 'administrator' )->add_cap( 'it_create_others_payment_tokens' );
+		$wp_roles->get_role( 'administrator' )->add_cap( 'it_edit_others_payment_tokens' );
+
+		/**
+		 * Fires when custom capabilities should be added to roles.
+		 *
+		 * @since 1.36.0
+		 *
+		 * @param \IT_Exchange_Roles $this
+		 * @param \WP_Roles          $wp_roles
+		 */
+		do_action( 'it_exchange_add_caps_to_roles', $this, $wp_roles );
 	}
 
 }

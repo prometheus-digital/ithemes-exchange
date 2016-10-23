@@ -178,6 +178,9 @@ class Manager {
 				}
 
 				try {
+
+					$current = $request->get_route() ? trailingslashit( $request->get_route() ) : '';
+
 					if ( $route->has_parent() ) {
 						$up = get_rest_url( $route->get_parent(), $request->get_url_params() );
 					} else {
@@ -201,9 +204,9 @@ class Manager {
 								);
 							}
 
-							if ( $up && isset( $item['id'] ) ) {
+							if ( $current && isset( $item['id'] ) ) {
 								$item['_links']['self'] = array(
-									'href' => $up . $item['id'] . '/',
+									'href' => $current . $item['id'] . '/',
 								);
 							}
 
@@ -216,7 +219,11 @@ class Manager {
 							$response->add_link( 'up', $up );
 						}
 
-						$response->add_link( 'self', rest_url( $request->get_route() ) );
+						if ( $verb === 'POST' && $current && isset( $data['id'] ) ) {
+							$response->add_link( 'self', $current . $data['id'] . '/' );
+						} else {
+							$response->add_link( 'self', rest_url( $request->get_route() ) );
+						}
 					}
 				}
 				catch ( \UnexpectedValueException $e ) {

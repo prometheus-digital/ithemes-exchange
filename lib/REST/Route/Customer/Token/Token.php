@@ -44,7 +44,19 @@ class Token extends Base implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permissions_check( $request, $user );
+		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+			return $r;
+		}
+
+		if ( ! user_can( $user->wp_user, 'it_read_payment_token', $request['token_id'] ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( 'Sorry, you are not allowed to view this payment token.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => \WP_Http::FORBIDDEN )
+			);
+		}
+
+		return true;
 	}
 
 	/**
@@ -89,7 +101,19 @@ class Token extends Base implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permissions_check( $request, $user );
+		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+			return $r;
+		}
+
+		if ( ! user_can( $user->wp_user, 'it_edit_payment_token', $request['token_id'] ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( 'Sorry, you are not allowed to edit this payment token.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => \WP_Http::FORBIDDEN )
+			);
+		}
+
+		return true;
 	}
 
 	/**
@@ -108,7 +132,19 @@ class Token extends Base implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permissions_check( $request, $user );
+		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+			return $r;
+		}
+
+		if ( ! user_can( $user->wp_user, 'it_delete_payment_token', $request['token_id'] ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( 'Sorry, you are not allowed to delete this payment token.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => \WP_Http::FORBIDDEN )
+			);
+		}
+
+		return true;
 	}
 
 	/**
@@ -131,14 +167,6 @@ class Token extends Base implements Getable, Putable, Deletable {
 				'it_exchange_rest_invalid_payment_token',
 				__( 'Invalid payment token.', 'it-l10n-ithemes-exchange' ),
 				array( 'status' => \WP_Http::NOT_FOUND )
-			);
-		}
-
-		if ( ! $token->customer || ! $user || $token->customer->ID !== $user->ID ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to access this payment token.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
 			);
 		}
 
