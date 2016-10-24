@@ -161,6 +161,8 @@ class Manager {
 
 			$permission = function ( \WP_REST_Request $request ) use ( $verb, $route, $parents ) {
 
+				$request = Request::from_wp( $request );
+
 				$user = it_exchange_get_current_customer() ?: null;
 
 				foreach ( $parents as $parent ) {

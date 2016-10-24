@@ -12,6 +12,7 @@ use iThemes\Exchange\REST as r;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
+use iThemes\Exchange\REST\Request;
 
 /**
  * Class Cart
@@ -26,21 +27,21 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_get( \WP_REST_Request $request ) {
-		return $this->prepare_item_for_response( it_exchange_get_cart( $request['cart_id'] ), $request );
+	public function handle_get( Request $request ) {
+		return $this->prepare_item_for_response( it_exchange_get_cart( $request['cart_id'] ) );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
 		return $this->permission_check( $request, $user );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_put( \WP_REST_Request $request ) {
+	public function handle_put( Request $request ) {
 		$cart = it_exchange_get_cart( $request['cart_id'] );
 
 		$c_billing = $cart->get_billing_address() ? $cart->get_billing_address()->to_array() : array();
@@ -69,20 +70,20 @@ class Cart implements Getable, Putable, Deletable {
 			$cart->set_shipping_address( $request['shipping_address'] ? new \ITE_In_Memory_Address( $request['shipping_address'] ) : null );
 		}
 
-		return $this->prepare_item_for_response( $cart, $request );
+		return $this->prepare_item_for_response( $cart );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
 		return $this->permission_check( $request, $user );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_delete( \WP_REST_Request $request ) {
+	public function handle_delete( Request $request ) {
 		$cart = it_exchange_get_cart( $request['cart_id'] );
 		$cart->empty_cart();
 
@@ -92,7 +93,7 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_delete( Request $request, \IT_Exchange_Customer $user = null ) {
 		return $this->permission_check( $request, $user );
 	}
 
@@ -126,12 +127,12 @@ class Cart implements Getable, Putable, Deletable {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \WP_REST_Request      $request
-	 * @param \IT_Exchange_Customer $user
+	 * @param \iThemes\Exchange\REST\Request $request
+	 * @param \IT_Exchange_Customer          $user
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permission_check( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	protected function permission_check( Request $request, \IT_Exchange_Customer $user = null ) {
 
 		$url_params = $request->get_url_params();
 
@@ -165,12 +166,11 @@ class Cart implements Getable, Putable, Deletable {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \ITE_Cart        $cart
-	 * @param \WP_REST_Request $request
+	 * @param \ITE_Cart $cart
 	 *
 	 * @return \WP_REST_Response
 	 */
-	protected function prepare_item_for_response( \ITE_Cart $cart, \WP_REST_Request $request ) {
+	protected function prepare_item_for_response( \ITE_Cart $cart ) {
 
 		$data = array(
 			'id'               => $cart->get_id(),

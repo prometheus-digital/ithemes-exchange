@@ -11,6 +11,7 @@ namespace iThemes\Exchange\REST\Route\Customer\Token;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
+use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 
 /**
@@ -32,7 +33,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_get( \WP_REST_Request $request ) {
+	public function handle_get( Request $request ) {
 
 		$url_params = $request->get_url_params();
 		$token      = \ITE_Payment_Token::get( $url_params['token_id'] );
@@ -43,7 +44,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
 			return $r;
 		}
@@ -62,7 +63,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_put( \WP_REST_Request $request ) {
+	public function handle_put( Request $request ) {
 
 		$url_params = $request->get_url_params();
 		$token      = \ITE_Payment_Token::get( $url_params['token_id'] );
@@ -100,7 +101,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
 			return $r;
 		}
@@ -119,7 +120,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_delete( \WP_REST_Request $request ) {
+	public function handle_delete( Request $request ) {
 
 		$url_params = $request->get_url_params();
 
@@ -131,7 +132,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_delete( Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
 			return $r;
 		}
@@ -152,12 +153,12 @@ class Token extends Base implements Getable, Putable, Deletable {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \WP_REST_Request           $request
-	 * @param \IT_Exchange_Customer|null $user
+	 * @param \iThemes\Exchange\REST\Request $request
+	 * @param \IT_Exchange_Customer|null     $user
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permissions_check( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	protected function permissions_check( Request $request, \IT_Exchange_Customer $user = null ) {
 
 		$url_params = $request->get_url_params();
 		$token      = \ITE_Payment_Token::get( $url_params['token_id'] );

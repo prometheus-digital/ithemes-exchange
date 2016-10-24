@@ -12,6 +12,7 @@ use iThemes\Exchange\REST as r;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
+use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 
 /**
@@ -40,7 +41,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_get( \WP_REST_Request $request ) {
+	public function handle_get( Request $request ) {
 
 		$cart       = it_exchange_get_cart( $request['cart_id'] );
 		$serializer = $this->serializer;
@@ -53,7 +54,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
 
 		if ( ! $this->type->is_show_in_rest() ) {
 			return new \WP_Error(
@@ -69,7 +70,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_post( \WP_REST_Request $request ) {
+	public function handle_post( Request $request ) {
 
 		$item = $this->type->create_from_request( $request );
 
@@ -98,7 +99,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_type',
@@ -113,7 +114,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_delete( \WP_REST_Request $request ) {
+	public function handle_delete( Request $request ) {
 		$cart = it_exchange_get_cart( $request['cart_id'] );
 		$cart->remove_all( $this->type->get_type() );
 
@@ -123,7 +124,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_delete( Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_type',

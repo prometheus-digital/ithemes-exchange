@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST\Route\Cart;
 
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
+use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 
 /**
@@ -33,7 +34,7 @@ class Purchase extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_get( \WP_REST_Request $request ) {
+	public function handle_get( Request $request ) {
 
 		$url_params = $request->get_url_params();
 		$cart       = it_exchange_get_cart( $url_params['cart_id'] );
@@ -79,12 +80,12 @@ class Purchase extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) { return true; }
+	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) { return true; }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_post( \WP_REST_Request $request ) {
+	public function handle_post( Request $request ) {
 
 		$url_params = $request->get_url_params();
 		$cart       = it_exchange_get_cart( $url_params['cart_id'] );
@@ -124,7 +125,7 @@ class Purchase extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) { return true; }
+	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) { return true; }
 
 	/**
 	 * @inheritDoc

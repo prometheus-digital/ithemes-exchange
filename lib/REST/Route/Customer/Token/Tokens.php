@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST\Route\Customer\Token;
 
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
+use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 
 /**
@@ -38,7 +39,7 @@ class Tokens extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_get( \WP_REST_Request $request ) {
+	public function handle_get( Request $request ) {
 
 		$url_params = $request->get_url_params();
 		$customer   = it_exchange_get_customer( $url_params['customer_id'] );
@@ -52,7 +53,7 @@ class Tokens extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
 			return $r;
 		}
@@ -71,7 +72,7 @@ class Tokens extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_post( \WP_REST_Request $request ) {
+	public function handle_post( Request $request ) {
 
 		$gateway = \ITE_Gateways::get( $request['gateway'] );
 
@@ -98,7 +99,7 @@ class Tokens extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
 			return $r;
 		}
@@ -119,12 +120,12 @@ class Tokens extends Base implements Getable, Postable {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \WP_REST_Request           $request
-	 * @param \IT_Exchange_Customer|null $user
+	 * @param \iThemes\Exchange\REST\Request $request
+	 * @param \IT_Exchange_Customer|null     $user
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permissions_check( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	protected function permissions_check( Request $request, \IT_Exchange_Customer $user = null ) {
 
 		if ( ! $user || $user instanceof \IT_Exchange_Guest_Customer ) {
 			return new \WP_Error(

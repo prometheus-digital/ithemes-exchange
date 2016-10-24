@@ -9,6 +9,7 @@
 namespace iThemes\Exchange\REST\Route\Customer;
 
 use iThemes\Exchange\REST\Getable;
+use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route;
 
 /**
@@ -23,7 +24,7 @@ class Customer extends Route\Base implements Getable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_get( \WP_REST_Request $request ) {
+	public function handle_get( Request $request ) {
 
 		$url_params = $request->get_url_params();
 		$customer   = it_exchange_get_customer( $url_params['customer_id'] );
@@ -88,7 +89,7 @@ class Customer extends Route\Base implements Getable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
 
 		if ( ! $user || $user instanceof \IT_Exchange_Guest_Customer ) {
 			return new \WP_Error(

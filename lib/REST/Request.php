@@ -28,13 +28,26 @@ class Request extends \WP_REST_Request {
 	 */
 	public static function from_wp( \WP_REST_Request $request ) {
 
-		$self = new self();
+		$self = new static();
 
 		foreach ( get_object_vars( $request ) as $key => $value ) {
 			$self->{$key} = $value;
 		}
 
 		return $self;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function from_url( $url ) {
+		$wp_request = parent::from_url( $url );
+
+		if ( $wp_request ) {
+			return static::from_wp( $wp_request );
+		}
+
+		return null;
 	}
 
 	/**

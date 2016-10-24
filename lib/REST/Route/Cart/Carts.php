@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST\Route\Cart;
 
 use iThemes\Exchange\REST as r;
 use iThemes\Exchange\REST\Postable;
+use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 
 /**
@@ -34,7 +35,7 @@ class Carts extends Base implements Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_post( \WP_REST_Request $request ) {
+	public function handle_post( Request $request ) {
 
 		$user = it_exchange_get_current_customer();
 
@@ -87,7 +88,7 @@ class Carts extends Base implements Postable {
 
 		$location = r\get_rest_url( $this->cart, array( 'cart_id' => $cart->get_id() ) );
 
-		$response = $this->cart->handle_get( \WP_REST_Request::from_url( $location ) );
+		$response = $this->cart->handle_get( Request::from_url( $location ) );
 		$response->set_status( \WP_Http::CREATED );
 		$response->header( 'Location', $location );
 
@@ -97,7 +98,7 @@ class Carts extends Base implements Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) {
 		return (bool) $user && $user->id;
 	}
 

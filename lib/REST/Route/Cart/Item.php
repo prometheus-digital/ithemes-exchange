@@ -12,6 +12,7 @@ use iThemes\Exchange\REST as r;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
+use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 
 /**
@@ -40,7 +41,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_get( \WP_REST_Request $request ) {
+	public function handle_get( Request $request ) {
 
 		$url_params = $request->get_url_params();
 
@@ -53,14 +54,14 @@ class Item extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
 		return $this->permission_check( $request, $user );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_put( \WP_REST_Request $request ) {
+	public function handle_put( Request $request ) {
 
 		$url_params = $request->get_url_params();
 
@@ -88,7 +89,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_non_editable_item',
@@ -103,7 +104,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_delete( \WP_REST_Request $request ) {
+	public function handle_delete( Request $request ) {
 
 		$url_params = $request->get_url_params();
 
@@ -116,7 +117,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_delete( Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_non_editable_item',
@@ -133,12 +134,12 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \WP_REST_Request      $request
-	 * @param \IT_Exchange_Customer $user
+	 * @param \iThemes\Exchange\REST\Request $request
+	 * @param \IT_Exchange_Customer          $user
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permission_check( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	protected function permission_check( Request $request, \IT_Exchange_Customer $user = null ) {
 
 		$url_params = $request->get_url_params();
 		$cart       = it_exchange_get_cart( $url_params['cart_id'] );

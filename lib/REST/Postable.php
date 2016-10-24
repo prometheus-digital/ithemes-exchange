@@ -20,21 +20,21 @@ interface Postable extends Route {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \WP_REST_Request $request
+	 * @param \iThemes\Exchange\REST\Request $request
 	 *
 	 * @return \WP_REST_Response
 	 */
-	public function handle_post( \WP_REST_Request $request );
+	public function handle_post( Request $request );
 
 	/**
 	 * Whether the user has permission to access this route.
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \WP_REST_Request      $request
-	 * @param \IT_Exchange_Customer $user
+	 * @param \iThemes\Exchange\REST\Request $request
+	 * @param \IT_Exchange_Customer          $user
 	 *
 	 * @return bool
 	 */
-	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user = null );
+	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null );
 }
