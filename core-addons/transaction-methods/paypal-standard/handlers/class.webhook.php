@@ -35,6 +35,16 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 		$cart = $lock = null;
 
 		if ( $cart_id ) {
+
+			if ( strpos( $cart_id, 'v2|' ) !== 0 ) {
+				it_exchange_paypal_standard_addon_process_webhook( $webhook );
+
+				return new WP_HTTP_Response( '', 200 );
+			}
+
+			// Remove the v2| from the beginning
+			$cart_id = substr( $cart_id, 3 );
+
 			$cart = it_exchange_get_cart( $cart_id );
 			$lock = "pps-$cart_id";
 			it_exchange_lock( $lock, 2 );
