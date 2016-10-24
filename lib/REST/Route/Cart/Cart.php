@@ -281,19 +281,19 @@ class Cart implements Getable, Putable, Deletable {
 				'id'               => array(
 					'description' => __( 'The unique id for this cart.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'customer'         => array(
 					'description' => __( 'The customer id for this cart.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'iis_main'         => array(
 					'description' => __( 'Is this the main cart for the customer.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 					'default'     => true,
 				),
@@ -429,19 +429,19 @@ class Cart implements Getable, Putable, Deletable {
 				'subtotal'         => array(
 					'description' => __( 'The subtotal of the cart.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'float',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'total'            => array(
 					'description' => __( 'The total of the cart.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'float',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'total_lines'      => array(
 					'description' => __( 'Line item totals of the cart.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 					'items'       => array(
 						'title'      => __( 'Line item total lines.', 'it-l10n-ithemes-exchange' ),
