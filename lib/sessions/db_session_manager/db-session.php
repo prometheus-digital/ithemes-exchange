@@ -160,8 +160,15 @@ function it_exchange_db_session_cleanup() {
 	}
 	
 	if ( ! defined( 'WP_INSTALLING' ) ) {
+
 		$wpdb->query( $wpdb->prepare(
-			"DELETE FROM {$wpdb->prefix}ite_sessions WHERE expires_at < %s", current_time( 'mysql', true )
+			"DELETE FROM {$wpdb->prefix}ite_sessions WHERE expires_at < %s AND purchased_at IS NULL", current_time( 'mysql', true )
+		) );
+
+		$week_ago = time() - ( DAY_IN_SECONDS * 7 );
+		$week_ago = gmdate( 'Y-m-d H:i:s', $week_ago );
+		$wpdb->query( $wpdb->prepare(
+			"DELETE FROM {$wpdb->prefix}ite_sessions WHERE purchaed_at < %s OR expires_at < %s", $week_ago, $week_ago
 		) );
 	}
 

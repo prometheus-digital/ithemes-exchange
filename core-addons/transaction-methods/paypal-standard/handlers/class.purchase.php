@@ -112,6 +112,8 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 		add_filter( 'the_title', 'wptexturize' );
 
+		$cart->mark_as_purchased();
+
 		if ( $this->get_gateway()->is_sandbox_mode() ) {
 			return PAYPAL_PAYMENT_SANDBOX_URL . '?' . http_build_query( $query );
 		} else {

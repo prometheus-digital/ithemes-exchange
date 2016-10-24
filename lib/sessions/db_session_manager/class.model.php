@@ -14,6 +14,8 @@
  * @property \WP_User       $customer
  * @property array          $data
  * @property \DateTime      $expires_at
+ * @property \DateTime      $purchased_at
+ * @property bool           $is_main
  * @property-read \DateTime $created_at
  * @property-read \DateTime $updated_at
  */
@@ -32,15 +34,22 @@ class ITE_Session_Model extends \IronBound\DB\Model {
 		static::updated( function ( \IronBound\WPEvents\GenericEvent $event ) {
 
 			/** @var ITE_Session_Model $model */
-			$model = $event->get_subject();
-			$changed = $event->get_argument('changed');
+			$model   = $event->get_subject();
+			$changed = $event->get_argument( 'changed' );
 
 			if ( ! empty( $changed['cart_id'] ) ) {
 				wp_cache_delete( $model->get_pk(), $model::get_cache_group() . '-cart-id' );
 			}
 		} );
-	}
 
+		static::register_global_scope( 'only-main', function ( \IronBound\DB\Query\FluentQuery $query ) {
+			$query->and_where( 'is_main', '=', true );
+		} );
+
+		static::register_global_scope( 'exclude-purchased', function ( \IronBound\DB\Query\FluentQuery $query ) {
+			$query->and_where( 'purchased_at', '=', null );
+		} );
+	}
 
 	/**
 	 * Retrieve a session by cart ID.
@@ -56,7 +65,7 @@ class ITE_Session_Model extends \IronBound\DB\Model {
 		$id = wp_cache_get( $cart_id, static::get_cache_group() . '-cart-id' );
 
 		if ( ! $id ) {
-			$model = self::query()->where( 'cart_id', '=', $cart_id )->first();
+			$model = self::without_global_scope( 'only-main' )->and_where( 'cart_id', '=', $cart_id )->first();
 
 			if ( ! $model ) {
 				return null;
@@ -95,6 +104,19 @@ class ITE_Session_Model extends \IronBound\DB\Model {
 		                            ->first();
 
 		return $session ?: null;
+	}
+
+	/**
+	 * Mark a cart as purchased.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function mark_purchased() {
+		$this->purchased_at = current_time( 'mysql', true );
+
+		return $this->save();
 	}
 
 	protected function _access_data( $data ) {

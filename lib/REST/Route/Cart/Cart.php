@@ -175,6 +175,7 @@ class Cart implements Getable, Putable, Deletable {
 		$data = array(
 			'id'               => $cart->get_id(),
 			'customer'         => $cart->get_customer() ? $cart->get_customer()->id : 0,
+			'is_main'          => $cart->is_main(),
 			'shipping_address' => null,
 			'billing_address'  => null,
 			'subtotal'         => it_exchange_get_cart_subtotal( false, array( 'cart' => $cart ) ),
@@ -288,6 +289,13 @@ class Cart implements Getable, Putable, Deletable {
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
+				),
+				'iis_main'         => array(
+					'description' => __( 'Is this the main cart for the customer.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'boolean',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+					'default'     => true,
 				),
 				'billing_address'  => array(
 					'description' => __( 'The billing address for this cart.', 'it-l10n-ithemes-exchange' ),

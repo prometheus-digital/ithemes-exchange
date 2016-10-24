@@ -181,6 +181,30 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Is this the main cart for a customer.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function is_main() {
+
+		$repo = $this->get_repository();
+
+		if ( $repo instanceof ITE_Line_Item_Cached_Session_Repository ) {
+			return (bool) $repo->get_model()->is_main;
+		}
+
+		if ( $repo instanceof ITE_Line_Item_Session_Repository ) {
+			$model = ITE_Session_Model::from_cart_id( $this->get_id() );
+
+			return $model && $model->is_main;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns true if the cart is undergoing a merge.
 	 *
 	 * @since 1.36
@@ -1026,6 +1050,34 @@ class ITE_Cart {
 		}
 
 		$this->cart_id = null;
+	}
+
+	/**
+	 * Mark a cart as having been purchased.
+	 *
+	 * This is used to prevent a cart from being deleted before an IPN has had time to process.
+	 *
+	 * This only effects Session backed carts. Carts marked as purchased will be deleted every 7 days.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function mark_as_purchased() {
+
+		$repo = $this->get_repository();
+
+		if ( $repo instanceof ITE_Line_Item_Cached_Session_Repository ) {
+			return $repo->get_model()->mark_purchased();
+		}
+
+		if ( $repo instanceof ITE_Line_Item_Session_Repository ) {
+			$model = ITE_Session_Model::from_cart_id( $this->get_id() );
+
+			return $model && $model->mark_purchased();
+		}
+
+		return true;
 	}
 
 	/**

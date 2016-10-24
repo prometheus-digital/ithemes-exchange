@@ -49,7 +49,7 @@ class Carts extends Base implements Postable {
 			$cart = \ITE_Cart::create( $repo, $user );
 			$cart->set_meta( 'guest-email', $user->get_email() );
 			$session = \ITE_Session_Model::get( $session->ID );
-		} else {
+		} elseif ( $request['is_main'] ) {
 			try {
 				// Guard against multiple carts per customer.
 				$repo    = \ITE_Line_Item_Cached_Session_Repository::from_customer( $user );
@@ -80,6 +80,15 @@ class Carts extends Base implements Postable {
 
 			$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
 			$cart = \ITE_Cart::create( $repo, $user );
+		} else {
+			$session = \ITE_Session_Model::create( array(
+				'ID'       => it_exchange_create_unique_hash(),
+				'customer' => $user->id,
+				'is_main'  => false,
+			) );
+
+			$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
+			$cart = \ITE_Cart::create( $repo, $user );
 		}
 
 		$session->cart_id = $cart->get_id();
@@ -87,8 +96,10 @@ class Carts extends Base implements Postable {
 		$session->save();
 
 		$location = r\get_rest_url( $this->cart, array( 'cart_id' => $cart->get_id() ) );
+		$request = Request::from_url( $location );
+		$request->set_url_params( array('cart_id' => $cart->get_id() ) );
 
-		$response = $this->cart->handle_get( Request::from_url( $location ) );
+		$response = $this->cart->handle_get( $request );
 		$response->set_status( \WP_Http::CREATED );
 		$response->header( 'Location', $location );
 
