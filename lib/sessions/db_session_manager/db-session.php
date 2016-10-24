@@ -168,7 +168,7 @@ function it_exchange_db_session_cleanup() {
 		$week_ago = time() - ( DAY_IN_SECONDS * 7 );
 		$week_ago = gmdate( 'Y-m-d H:i:s', $week_ago );
 		$wpdb->query( $wpdb->prepare(
-			"DELETE FROM {$wpdb->prefix}ite_sessions WHERE purchaed_at < %s OR expires_at < %s", $week_ago, $week_ago
+			"DELETE FROM {$wpdb->prefix}ite_sessions WHERE purchased_at < %s OR expires_at < %s", $week_ago, $week_ago
 		) );
 	}
 
