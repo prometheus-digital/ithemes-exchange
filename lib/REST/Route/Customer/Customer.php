@@ -26,8 +26,7 @@ class Customer extends Route\Base implements Getable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$url_params = $request->get_url_params();
-		$customer   = it_exchange_get_customer( $url_params['customer_id'] );
+		$customer = it_exchange_get_customer( $request->get_param( 'customer_id', 'URL' ) );
 
 		$data = array(
 			'id'               => $customer->ID,
@@ -99,8 +98,7 @@ class Customer extends Route\Base implements Getable {
 			);
 		}
 
-		$url_params = $request->get_url_params();
-		$customer   = it_exchange_get_customer( $url_params['customer_id'] );
+		$customer = it_exchange_get_customer( $request->get_param( 'customer_id', 'URL' ) );
 
 		if ( ! $customer ) {
 			return new \WP_Error(

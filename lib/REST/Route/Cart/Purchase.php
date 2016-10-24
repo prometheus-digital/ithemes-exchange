@@ -36,8 +36,7 @@ class Purchase extends Base implements Getable, Postable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$url_params = $request->get_url_params();
-		$cart       = it_exchange_get_cart( $url_params['cart_id'] );
+		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
 
 		$cart->prepare_for_purchase();
 
@@ -87,8 +86,7 @@ class Purchase extends Base implements Getable, Postable {
 	 */
 	public function handle_post( Request $request ) {
 
-		$url_params = $request->get_url_params();
-		$cart       = it_exchange_get_cart( $url_params['cart_id'] );
+		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
 
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 		$purchase_request = $this->request_factory->make( 'purchase', array(

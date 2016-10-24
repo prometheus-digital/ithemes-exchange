@@ -134,9 +134,7 @@ class Cart implements Getable, Putable, Deletable {
 	 */
 	protected function permission_check( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		$url_params = $request->get_url_params();
-
-		if ( ! $cart = it_exchange_get_cart( $url_params['cart_id'] ) ) {
+		if ( ! $cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_cart',
 				__( 'Invalid cart id.', 'it-l10n-ithemes-exchange' ),

@@ -25,8 +25,7 @@ class Meta extends Base implements Getable, Putable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$url_params = $request->get_url_params();
-		$cart       = it_exchange_get_cart( $url_params['cart_id'] );
+		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
 
 		return new \WP_REST_Response( $this->format_meta_for_cart( $cart ) );
 	}
@@ -43,8 +42,7 @@ class Meta extends Base implements Getable, Putable {
 	 */
 	public function handle_put( Request $request ) {
 
-		$url_params = $request->get_url_params();
-		$cart       = it_exchange_get_cart( $url_params['cart_id'] );
+		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
 
 		$keys = array();
 

@@ -75,4 +75,27 @@ class Request extends \WP_REST_Request {
 
 		return $this;
 	}
+
+	/**
+	 * Retrieves a parameter from the request.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $key  Parameter name.
+	 * @param string $type Type of param to draw from.
+	 *
+	 * @return mixed|null Value if set, null otherwise.
+	 */
+	public function get_param( $key, $type = '' ) {
+
+		if ( $type ) {
+			if ( isset( $this->params[ $type ], $this->params[ $type ][ $key ] ) ) {
+				return $this->params[ $type ][ $key ];
+			}
+
+			return null;
+		}
+
+		return parent::get_param( $key );
+	}
 }

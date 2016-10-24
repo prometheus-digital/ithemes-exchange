@@ -43,10 +43,8 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$url_params = $request->get_url_params();
-
-		$cart = it_exchange_get_cart( $url_params['cart_id'] );
-		$item = $cart->get_item( $this->type->get_type(), $url_params['item_id'] );
+		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
+		$item = $cart->get_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) );
 
 		return new \WP_REST_Response( $this->serializer->serialize( $item, $cart ) );
 	}
@@ -63,10 +61,8 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_put( Request $request ) {
 
-		$url_params = $request->get_url_params();
-
-		$cart = it_exchange_get_cart( $url_params['cart_id'] );
-		$item = $cart->get_item( $this->type->get_type(), $url_params['item_id'] );
+		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
+		$item = $cart->get_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) );
 
 		if ( $item instanceof \ITE_Quantity_Modifiable_Item && $item->is_quantity_modifiable() ) {
 			if ( isset( $request['quantity'], $request['quantity']['selected'] ) ) {
@@ -106,10 +102,8 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_delete( Request $request ) {
 
-		$url_params = $request->get_url_params();
-
-		$cart = it_exchange_get_cart( $url_params['cart_id'] );
-		$cart->remove_item( $this->type->get_type(), $url_params['item_id'] );
+		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
+		$cart->remove_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) );
 
 		return new \WP_REST_Response( null, 204 );
 	}
@@ -141,10 +135,9 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 */
 	protected function permission_check( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		$url_params = $request->get_url_params();
-		$cart       = it_exchange_get_cart( $url_params['cart_id'] );
+		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
 
-		if ( ! $cart->get_item( $this->type->get_type(), $url_params['item_id'] ) ) {
+		if ( ! $cart->get_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_item',
 				__( 'Invalid item id.', 'it-l10n-ithemes-exchange' ),

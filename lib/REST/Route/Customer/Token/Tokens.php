@@ -41,8 +41,7 @@ class Tokens extends Base implements Getable, Postable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$url_params = $request->get_url_params();
-		$customer   = it_exchange_get_customer( $url_params['customer_id'] );
+		$customer = it_exchange_get_customer( $request->get_param( 'customer_id', 'URL' ) );
 
 		$tokens = $customer->get_tokens( $request['gateway'] );
 		$data   = array_map( array( $this->serializer, 'serialize' ), $tokens->getValues() );
@@ -58,7 +57,7 @@ class Tokens extends Base implements Getable, Postable {
 			return $r;
 		}
 
-		if ( ! user_can( $user->wp_user, 'it_list_payment_tokens', $request['customer_id'] ) ) {
+		if ( ! user_can( $user->wp_user, 'it_list_payment_tokens', $request->get_param( 'customer_id', 'URL' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( "Sorry, you are not allowed to view this customer's payment tokens.", 'it-l10n-ithemes-exchange' ),
@@ -104,7 +103,7 @@ class Tokens extends Base implements Getable, Postable {
 			return $r;
 		}
 
-		if ( ! user_can( $user->wp_user, 'it_create_payment_tokens', $request['customer_id'] ) ) {
+		if ( ! user_can( $user->wp_user, 'it_create_payment_tokens', $request->get_param( 'customer_id', 'URL' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to create payment tokens for this customer.', 'it-l10n-ithemes-exchange' ),
@@ -135,8 +134,7 @@ class Tokens extends Base implements Getable, Postable {
 			);
 		}
 
-		$url_params = $request->get_url_params();
-		$customer   = it_exchange_get_customer( $url_params['customer_id'] );
+		$customer = it_exchange_get_customer( $request->get_param( 'customer_id', 'URL' ) );
 
 		if ( ! $customer ) {
 			return new \WP_Error(
