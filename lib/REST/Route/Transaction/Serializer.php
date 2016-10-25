@@ -46,6 +46,7 @@ class Serializer {
 			'subtotal'             => $t->get_subtotal(),
 			'total'                => $t->get_total(),
 			'total_before_refunds' => $t->get_total( false ),
+			'open_for_refund'      => it_exchange_transaction_can_be_refunded( $t ),
 			'currency'             => $t->get_currency(),
 			'description'          => $t->get_description(),
 			'billing_address'      => $t->get_billing_address() ? $t->get_billing_address()->to_array() : array(),
@@ -229,6 +230,12 @@ class Serializer {
 					'type'        => 'float',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
+				),
+				'open_for_refund'      => array(
+					'description' => __( 'Is the transaction open for refunds.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+					'context'     => array( 'edit' ),
 				),
 				'currency'             => array(
 					'description' => __( 'The transaction currency.', 'it-l10n-ithemes-exchange' ),

@@ -60,7 +60,7 @@ class IT_Exchange_Txn_Refund_Activity extends IT_Exchange_Txn_AbstractActivity {
 
 		if ( $refund->reason ) {
 			return sprintf(
-				__( 'Refund of %1$s issued. Reason: %1$s', 'it-l10n-ithemes-exchange' ),
+				__( 'Refund of %1$s issued. Reason: %2$s', 'it-l10n-ithemes-exchange' ),
 				it_exchange_format_price( $refund->amount ),
 				$refund->reason
 			);

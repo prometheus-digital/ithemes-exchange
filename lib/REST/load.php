@@ -21,6 +21,7 @@ use iThemes\Exchange\REST\Route\Customer\Customer;
 use iThemes\Exchange\REST\Route\Customer\Token\Serializer as TokenSerializer;
 use iThemes\Exchange\REST\Route\Customer\Token\Tokens;
 use iThemes\Exchange\REST\Route\Transaction\Activity\Serializer as ActivitySerializer;
+use iThemes\Exchange\REST\Route\Transaction\Refunds\Serializer as RefundSerializer;
 use iThemes\Exchange\REST\Route\Transaction\Serializer as TransactionSerializer;
 use iThemes\Exchange\REST\Route\Transaction\Transaction;
 
@@ -93,6 +94,13 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
 	$activity_item = new Route\Transaction\Activity\Item( new ActivitySerializer() );
 	$manager->register_route( $activity_item->set_parent( $activity ) );
+
+	/* Refunds */
+	$refunds = new Route\Transaction\Refunds\Refunds( new RefundSerializer(), new \ITE_Gateway_Request_Factory() );
+	$manager->register_route( $refunds->set_parent( $transaction ) );
+
+	$refund = new Route\Transaction\Refunds\Refund( new RefundSerializer() );
+	$manager->register_route( $refund->set_parent( $refunds ) );
 } );
 
 /**
