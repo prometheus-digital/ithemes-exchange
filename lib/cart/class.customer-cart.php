@@ -1061,20 +1061,22 @@ class ITE_Cart {
 	 *
 	 * @since 1.36.0
 	 *
+	 * @param bool $purchased
+	 *
 	 * @return bool
 	 */
-	public function mark_as_purchased() {
+	public function mark_as_purchased( $purchased = true ) {
 
 		$repo = $this->get_repository();
 
 		if ( $repo instanceof ITE_Line_Item_Cached_Session_Repository ) {
-			return $repo->get_model()->mark_purchased();
+			return $repo->get_model()->mark_purchased( $purchased );
 		}
 
 		if ( $repo instanceof ITE_Line_Item_Session_Repository ) {
 			$model = ITE_Session_Model::from_cart_id( $this->get_id() );
 
-			return $model && $model->mark_purchased();
+			return $model && $model->mark_purchased( $purchased );
 		}
 
 		return true;

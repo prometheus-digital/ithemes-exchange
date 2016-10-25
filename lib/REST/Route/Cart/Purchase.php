@@ -118,7 +118,7 @@ class Purchase extends Base implements Getable, Postable {
 		}
 
 		$route = $this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\Transaction\Transaction' );
-		$url   = \iThemes\Exchange\REST\get_rest_url( $route, array( 'transaction_id', $transaction->ID ) );
+		$url   = \iThemes\Exchange\REST\get_rest_url( $route, array( 'transaction_id' => $transaction->ID ) );
 
 		$response = new \WP_REST_Response();
 		$response->set_status( \WP_Http::SEE_OTHER );

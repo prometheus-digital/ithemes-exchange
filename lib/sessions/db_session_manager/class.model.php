@@ -65,7 +65,8 @@ class ITE_Session_Model extends \IronBound\DB\Model {
 		$id = wp_cache_get( $cart_id, static::get_cache_group() . '-cart-id' );
 
 		if ( ! $id ) {
-			$model = self::without_global_scope( 'only-main' )->and_where( 'cart_id', '=', $cart_id )->first();
+			$model = self::without_global_scopes( array( 'only-main', 'exclude-purchased' ) )
+				->and_where( 'cart_id', '=', $cart_id )->first();
 
 			if ( ! $model ) {
 				return null;
@@ -111,10 +112,12 @@ class ITE_Session_Model extends \IronBound\DB\Model {
 	 *
 	 * @since 1.36.0
 	 *
+	 * @param bool $purchased
+	 *
 	 * @return bool
 	 */
-	public function mark_purchased() {
-		$this->purchased_at = current_time( 'mysql', true );
+	public function mark_purchased( $purchased = true ) {
+		$this->purchased_at = $purchased ? current_time( 'mysql', true ) : null;
 
 		return $this->save();
 	}

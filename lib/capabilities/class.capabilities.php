@@ -52,6 +52,11 @@ class IT_Exchange_Capabilities {
 
 				return map_meta_cap( 'edit_it_transaction', $user_id, $txn->ID );
 			case 'edit_it_transaction':
+
+				if ( doing_action( 'save_post_it_exchange_tran' ) || doing_action( 'save_post' ) || doing_action( 'wp_insert_post' ) ) {
+					return array( 'edit_posts' );
+				}
+
 				if ( empty( $args[0] ) || ! $txn = it_exchange_get_transaction( $args[0] ) ) {
 					return array( 'do_not_allow' );
 				}
