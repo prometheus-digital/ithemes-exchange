@@ -61,10 +61,6 @@ class IT_Exchange_Capabilities {
 					return array( 'do_not_allow' );
 				}
 
-				if ( $txn->customer_id === (int) $user_id ) {
-					return array();
-				}
-
 				return array( 'edit_others_it_transactions' );
 			case 'delete_it_transaction':
 				return array( 'delete_others_it_transactions' );

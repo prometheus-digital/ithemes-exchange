@@ -68,7 +68,7 @@ class Transactions extends Base implements Getable {
 		if ( ! $user ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to  list transactions.', 'it-l10n-ithemes-exchange' ),
+				__( 'Sorry, you must be logged-in to view transactions.', 'it-l10n-ithemes-exchange' ),
 				array( 'status' => \WP_Http::UNAUTHORIZED )
 			);
 		}

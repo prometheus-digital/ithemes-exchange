@@ -20,6 +20,7 @@ use iThemes\Exchange\REST\Route\Cart\Shipping_Methods;
 use iThemes\Exchange\REST\Route\Customer\Customer;
 use iThemes\Exchange\REST\Route\Customer\Token\Serializer as TokenSerializer;
 use iThemes\Exchange\REST\Route\Customer\Token\Tokens;
+use iThemes\Exchange\REST\Route\Transaction\Activity\Serializer as ActivitySerializer;
 use iThemes\Exchange\REST\Route\Transaction\Serializer as TransactionSerializer;
 use iThemes\Exchange\REST\Route\Transaction\Transaction;
 
@@ -85,6 +86,13 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
 	$transaction = new Route\Transaction\Transaction( new TransactionSerializer() );
 	$manager->register_route( $transaction->set_parent( $transactions ) );
+
+	/* Activity */
+	$activity = new Route\Transaction\Activity\Activity( new ActivitySerializer() );
+	$manager->register_route( $activity->set_parent( $transaction ) );
+
+	$activity_item = new Route\Transaction\Activity\Item( new ActivitySerializer() );
+	$manager->register_route( $activity_item->set_parent( $activity ) );
 } );
 
 /**
