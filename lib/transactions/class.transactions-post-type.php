@@ -104,7 +104,7 @@ class IT_Exchange_Transaction_Post_Type {
 				'create_posts' => apply_filters( 'it_exchange_tran_create_posts_capabilities', 'do_not_allow' ),
 			),
 			'capability_type' => IT_Exchange_Capabilities::TRANSACTION,
-			'map_meta_cap'    => true
+			'map_meta_cap'    => false
 		);
 
 		add_action( 'init', array( $this, 'register_the_post_type' ) );

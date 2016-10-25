@@ -117,7 +117,14 @@ class Purchase extends Base implements Getable, Postable {
 			);
 		}
 
-		return new \WP_REST_Response( array( 'transaction' => $transaction->ID ) );
+		$route = $this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\Transaction\Transaction' );
+		$url   = \iThemes\Exchange\REST\get_rest_url( $route, array( 'transaction_id', $transaction->ID ) );
+
+		$response = new \WP_REST_Response();
+		$response->set_status( \WP_Http::SEE_OTHER );
+		$response->header( 'Location', $url );
+
+		return $response;
 	}
 
 	/**

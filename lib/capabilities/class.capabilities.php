@@ -41,6 +41,28 @@ class IT_Exchange_Capabilities {
 				return array( 'edit_it_coupons' );
 			case 'create_it_products':
 				return array( 'edit_it_products' );
+			case 'read_it_transaction':
+				if ( empty( $args[0] ) || ! $txn = it_exchange_get_transaction( $args[0] ) ) {
+					return array( 'do_not_allow' );
+				}
+
+				if ( $txn->customer_id === (int) $user_id ) {
+					return array();
+				}
+
+				return map_meta_cap( 'edit_it_transaction', $user_id, $txn->ID );
+			case 'edit_it_transaction':
+				if ( empty( $args[0] ) || ! $txn = it_exchange_get_transaction( $args[0] ) ) {
+					return array( 'do_not_allow' );
+				}
+
+				if ( $txn->customer_id === (int) $user_id ) {
+					return array();
+				}
+
+				return array( 'edit_others_it_transactions' );
+			case 'delete_it_transaction':
+				return array( 'delete_others_it_transactions' );
 			case 'it_list_payment_tokens':
 
 				if ( ! empty( $args[0] ) && $user_id === (int) $args[0] ) {

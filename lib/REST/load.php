@@ -20,6 +20,7 @@ use iThemes\Exchange\REST\Route\Cart\Shipping_Methods;
 use iThemes\Exchange\REST\Route\Customer\Customer;
 use iThemes\Exchange\REST\Route\Customer\Token\Serializer as TokenSerializer;
 use iThemes\Exchange\REST\Route\Customer\Token\Tokens;
+use iThemes\Exchange\REST\Route\Transaction\Transaction;
 
 /**
  * Register the rest routes on libraries loaded.
@@ -76,6 +77,9 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
 	$token = new Route\Customer\Token\Token( new TokenSerializer() );
 	$manager->register_route( $token->set_parent( $tokens ) );
+
+	// --- Transactions --- //
+	$manager->register_route( new Route\Transaction\Transaction() );
 } );
 
 /**
@@ -101,7 +105,7 @@ function get_rest_url( Route $route, array $path_parameters ) {
 
 	$path = $manager->get_namespace() . "/v{$route->get_version()}/$path";
 
-	$regex = '/\(\?P\<#\>.+\)/';
+	$regex = '/\(\?P\<#\>.+?\)/';
 
 	foreach ( $path_parameters as $parameter => $value ) {
 

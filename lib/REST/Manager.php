@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST;
 use iThemes\Exchange\REST\Middleware\Stack;
+use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Manager
@@ -64,6 +65,10 @@ class Manager {
 			throw new \UnexpectedValueException( 'Route Manager has already been initialized.' );
 		}
 
+		if ( $route instanceof Base ) {
+			$route->set_manager( $this );
+		}
+
 		$this->routes[] = $route;
 
 		return $this;
@@ -85,6 +90,48 @@ class Manager {
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Get the first route matching a given class.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $class
+	 *
+	 * @return \iThemes\Exchange\REST\Route|null
+	 */
+	public function get_first_route( $class ) {
+
+		foreach ( $this->routes as $route ) {
+			if ( $route instanceof $class ) {
+				return $route;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get all routes matching a given class.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $class
+	 *
+	 * @return \iThemes\Exchange\REST\Route[]
+	 */
+	public function get_routes_by_class( $class ) {
+
+		$routes = array();
+
+		foreach ( $this->routes as $route ) {
+			if ( $route instanceof $class ) {
+				$routes[] = $route;
+			}
+		}
+
+		return $routes;
 	}
 
 	/**
