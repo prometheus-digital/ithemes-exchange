@@ -68,6 +68,8 @@ class IT_Exchange_Capabilities {
 				return array( 'edit_others_it_transactions' );
 			case 'delete_it_transaction':
 				return array( 'delete_others_it_transactions' );
+			case 'list_it_transactions':
+				return array( 'edit_others_it_transactions' );
 			case 'it_list_payment_tokens':
 
 				if ( ! empty( $args[0] ) && $user_id === (int) $args[0] ) {
