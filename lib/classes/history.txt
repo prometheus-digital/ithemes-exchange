@@ -370,3 +370,6 @@
 		expect this behavior.
 	Bug Fix: Fixed padding around dialog pop-up overlays.
 	Enhancement: Added support for select inputs with the multiple attribute.
+2.4.8 - 2016-09-02 - Chris Jean
+	Bug Fix: Fixed a typo in error message output when certain required files cannot be found.
+	Enhancement: Removed pass-by-reference function argument on associative array check as it is no longer required. This can reduce memory usage on some servers.
