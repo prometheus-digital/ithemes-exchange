@@ -934,6 +934,65 @@ function it_exchange_get_cart_billing_address() {
 }
 
 /**
+ * Get the available transaction methods for a cart.
+ *
+ * @since 1.36.0
+ *
+ * @param ITE_Cart|null $cart
+ *
+ * @return ITE_Gateway[]
+ */
+function it_exchange_get_available_transaction_methods_for_cart( ITE_Cart $cart = null ) {
+
+	$cart = $cart ?: it_exchange_get_current_cart();
+
+	$total               = it_exchange_get_cart_total( false, array( 'cart' => $cart ) );
+	$contains_free_trial = $cart->get_items( 'product' )->filter( function ( ITE_Cart_Product $item ) use ( $cart ) {
+
+		if ( $item->get_total() > 0 ) {
+			return false;
+		}
+
+		$product = $item->get_product();
+
+		if ( ! $product->has_feature( 'recurring-payments' ) ) {
+			return false;
+		}
+
+		if ( ! $product->get_feature( 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
+			return false;
+		}
+
+		if (
+			function_exists( 'it_exchange_is_customer_eligible_for_trial' ) &&
+			! it_exchange_is_customer_eligible_for_trial( $product, $cart->get_customer() )
+		) {
+			return false;
+		}
+
+		return true;
+	} )->count() > 0;
+
+	$methods = array();
+
+	if ( $total <= 0 && ! $contains_free_trial ) {
+		$methods[] = ITE_Gateways::get( 'zero-sum-checkout' );
+	} elseif ( $contains_free_trial || $total > 0 ) {
+		$methods = ITE_Gateways::all();
+	}
+
+	/**
+	 * Filter the available transaction methods for a given cart.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Gateway[] $methods
+	 * @param \ITE_Cart      $cart
+	 */
+	return apply_filters( 'it_exchange_available_transaction_methods_for_cart', $methods, $cart );
+}
+
+/**
  * Generates and returns a unique Cart ID to share across sessions
  *
  * Wrapper to it_exchange_get_unique_hash but allows filter for cart id

@@ -44,7 +44,7 @@ class Purchase extends Base implements Getable, Postable {
 
 		$data = array();
 
-		foreach ( \ITE_Gateways::all() as $gateway ) {
+		foreach ( it_exchange_get_available_transaction_methods_for_cart( $cart ) as $gateway ) {
 			if ( $handler = $gateway->get_handler_for( $purchase_request ) ) {
 				$data[] = $this->get_data_for_handler( $handler, $purchase_request );
 			}
