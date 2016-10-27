@@ -1310,3 +1310,5 @@
 	Fix: Issue with fallback SW filter being triggered in incorrect places
 	Fix: Compatibility with BuddyPress
 	Fix: Missing break statements in Theme API.
+1.36.0 - Lew Ayotte, Elise Alley
+    Update: Updating lib/classes to 2.4.8
