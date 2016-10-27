@@ -80,7 +80,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 
 		if ( $item ) {
 
-			$cart = it_exchange_get_cart( $request->get_param( 'customer_id', 'URL' ) );
+			$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
 
 			$response = new \WP_REST_Response( $this->serializer->serialize( $item, $cart ) );
 			$response->set_status( \WP_Http::CREATED );
