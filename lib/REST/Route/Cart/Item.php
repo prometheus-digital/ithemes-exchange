@@ -43,7 +43,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
+		$cart = $request->get_cart();
 		$item = $cart->get_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) );
 
 		return new \WP_REST_Response( $this->serializer->serialize( $item, $cart ) );
@@ -61,7 +61,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_put( Request $request ) {
 
-		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
+		$cart = $request->get_cart();
 		$item = $cart->get_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) );
 
 		if ( $item instanceof \ITE_Quantity_Modifiable_Item && $item->is_quantity_modifiable() ) {
@@ -102,7 +102,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_delete( Request $request ) {
 
-		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
+		$cart = $request->get_cart();
 		$cart->remove_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) );
 
 		return new \WP_REST_Response( null, 204 );

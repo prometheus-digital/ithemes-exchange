@@ -24,8 +24,7 @@ class Shipping_Methods extends Base implements Getable, Putable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
-
+		$cart = $request->get_cart();
 		$data = $this->prepare_cart_for_response( $cart );
 
 		return new \WP_REST_Response( $data );
@@ -41,7 +40,7 @@ class Shipping_Methods extends Base implements Getable, Putable {
 	 */
 	public function handle_put( Request $request ) {
 
-		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
+		$cart = $request->get_cart();
 
 		$cart_method          = $cart->get_shipping_method();
 		$cart_method          = $cart_method ? $cart_method->slug : '';

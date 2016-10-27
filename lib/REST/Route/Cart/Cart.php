@@ -28,7 +28,7 @@ class Cart implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function handle_get( Request $request ) {
-		return $this->prepare_item_for_response( it_exchange_get_cart( $request['cart_id'] ) );
+		return $this->prepare_item_for_response( $request->get_cart());
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Cart implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function handle_put( Request $request ) {
-		$cart = it_exchange_get_cart( $request['cart_id'] );
+		$cart = $request->get_cart();
 
 		$c_billing = $cart->get_billing_address() ? $cart->get_billing_address()->to_array() : array();
 		$u_billing = $request['billing_address'];
@@ -84,7 +84,7 @@ class Cart implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function handle_delete( Request $request ) {
-		$cart = it_exchange_get_cart( $request['cart_id'] );
+		$cart = $request->get_cart();
 		$cart->empty_cart();
 
 		return new \WP_HTTP_Response( '', 204 );

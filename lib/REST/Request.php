@@ -17,6 +17,9 @@ class Request extends \WP_REST_Request {
 	/** @var Route */
 	private $matched_route_controller;
 
+	/** @var \ITE_Cart|null */
+	private $cart;
+
 	/**
 	 * Create a Request object from the WP_REST_Request object.
 	 *
@@ -72,6 +75,30 @@ class Request extends \WP_REST_Request {
 	 */
 	public function set_matched_route_controller( $matched_route_controller ) {
 		$this->matched_route_controller = $matched_route_controller;
+
+		return $this;
+	}
+
+	/**
+	 * Get the cart being operated on in this request.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Cart|null
+	 */
+	public function get_cart() { return $this->cart; }
+
+	/**
+	 * Set the cart being operated on in this request.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Cart $cart
+	 *
+	 * @return $this
+	 */
+	public function set_cart( \ITE_Cart $cart ) {
+		$this->cart = $cart;
 
 		return $this;
 	}

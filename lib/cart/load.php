@@ -121,7 +121,7 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 			)
 		),
 	),
-	'create_from_request' => function ( WP_REST_Request $request ) {
+	'create_from_request' => function ( \iThemes\Exchange\REST\Request $request ) {
 
 		$product = it_exchange_get_product( $request['product'] );
 
@@ -138,7 +138,7 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 			$request['quantity']['selected']
 		);
 
-		$cart = it_exchange_get_cart( $request['cart_id'] );
+		$cart = $request->get_cart();
 		$cart->add_item( $item );
 
 		return $item;
@@ -176,7 +176,7 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'coupon', array(
 			),
 		)
 	),
-	'create_from_request' => function ( WP_REST_Request $request ) {
+	'create_from_request' => function ( \iThemes\Exchange\REST\Request $request ) {
 
 		if ( is_array( $request['coupon'] ) && isset( $request['coupon']['code'] ) ) {
 			$code = $request['coupon']['code'];
@@ -196,7 +196,7 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'coupon', array(
 			$coupon
 		);
 
-		$cart = it_exchange_get_cart( $request['cart_id'] );
+		$cart = $request->get_cart();
 		$cart->add_item( $item );
 
 		return $item;

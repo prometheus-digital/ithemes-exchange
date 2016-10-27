@@ -151,11 +151,11 @@ class ITE_Line_Item_Type {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \WP_REST_Request $request
+	 * @param \iThemes\Exchange\REST\Request $request
 	 *
 	 * @return ITE_Line_Item|null
 	 */
-	public function create_from_request( WP_REST_Request $request ) {
+	public function create_from_request( \iThemes\Exchange\REST\Request $request ) {
 		if ( $this->create_from_request ) {
 			return call_user_func( $this->create_from_request, $request );
 		}
