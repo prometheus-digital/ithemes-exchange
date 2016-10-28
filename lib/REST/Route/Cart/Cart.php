@@ -28,7 +28,7 @@ class Cart implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function handle_get( Request $request ) {
-		return $this->prepare_item_for_response( $request->get_cart());
+		return $this->prepare_item_for_response( $request->get_cart() );
 	}
 
 	/**
