@@ -146,7 +146,23 @@ class ITE_Gateway_Request_Factory {
 
 				return $refund;
 			default:
-				return null;
+
+				/**
+				 * Filter the gateway request for an unknown request type.
+				 *
+				 * @since 1.36.0
+				 *
+				 * @param ITE_Gateway_Request $object
+				 * @param array               $args
+				 * @param string              $request
+				 */
+				$object = apply_filters( "it_exchange_make_{$request}_gateway_request", null, $args, $request );
+
+				if ( $object && ( ! $object instanceof ITE_Gateway_Request || $object->get_name() !== $request ) ) {
+					throw new UnexpectedValueException( "Unable to construct {$request} request." );
+				}
+
+				return $object;
 		}
 	}
 
