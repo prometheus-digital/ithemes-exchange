@@ -393,7 +393,11 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 
 	<?php do_action( 'it_exchange_after_payment_details', $post ); ?>
 
+	<?php do_action( 'it_exchange_before_payment_actions', $txn ); ?>
+
 	<div class="spacing-wrapper bottom-border clearfix hide-if-no-js transaction-actions">
+		<?php do_action( 'it_exchange_before_payment_update_status', $txn ); ?>
+
 		<?php if ( it_exchange_transaction_status_can_be_manually_changed( $txn ) && $options = it_exchange_get_status_options_for_transaction( $txn ) ): ?>
 			<select id='it-exchange-update-transaction-status' style="width: 150px">
 				<option style="display:none;" value="0" disabled selected>
@@ -423,9 +427,15 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 			<div id="it-exchange-update-transaction-status-success"><?php _e( 'Saved!', 'it-l10n-ithemes-exchange' ); ?></div>
 		<?php endif; ?>
 
+		<?php do_action( 'it_exchange_after_payment_update_status', $txn ); ?>
+		<?php do_action( 'it_exchange_before_payment_resend_receipt', $txn ); ?>
+
 		<button class="button button-secondary right" id="resend-receipt">
 			<?php _e( 'Resend Receipt', 'it-l10n-ithemes-exchange' ); ?>
 		</button>
+
+		<?php do_action( 'it_exchange_after_payment_resend_receipt', $txn ); ?>
+		<?php do_action( 'it_exchange_before_payment_refund', $txn ); ?>
 
 		<?php if ( it_exchange_transaction_can_be_refunded( $txn ) ): ?>
 			<button class="button button-secondary right" id="open-refund-manager">
@@ -433,13 +443,17 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 			</button>
 		<?php endif; ?>
 
+		<?php do_action( 'it_exchange_after_payment_refund', $txn ); ?>
+
 		<?php wp_nonce_field( 'resend-receipt-transaction-' . $post->ID, 'it-exchange-resend-receipt-nonce' ); ?>
 	</div>
+
+	<?php do_action( 'it_exchange_after_payment_actions', $txn ); ?>
 
 	<div class="hidden spacing-wrapper bottom-border clearfix" id="refund-manager">
 
 		<button class="button button-secondary left" id="cancel-refund">
-			<?php _e( 'Cancel', 'it-l10n-ithemes-exchange' ); ?>
+			<?php _e( 'Back', 'it-l10n-ithemes-exchange' ); ?>
 		</button>
 
 		<button class="button button-primary right" id="add-refund">

@@ -40,6 +40,7 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 					return $self->render_payment_button( $factory->make( 'purchase' ) );
 				}
 				catch ( Exception $e ) {
+					error_log( $e->getMessage() );
 					return '';
 				}
 			}

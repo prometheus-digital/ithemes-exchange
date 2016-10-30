@@ -55,7 +55,7 @@ class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable implements 
 			'label'    => '',
 			'redacted' => '',
 			'primary'  => false,
-			'deleted'  => '',
+			'deleted'  => null,
 			'type'     => 'cc',
 		);
 	}

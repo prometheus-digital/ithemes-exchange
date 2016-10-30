@@ -153,7 +153,7 @@ function get_rest_url( Route $route, array $path_parameters ) {
  */
 function get_rest_manager() {
 
-	static $manager;
+	static $manager = null;
 
 	if ( ! $manager ) {
 

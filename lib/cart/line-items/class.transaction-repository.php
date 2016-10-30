@@ -156,6 +156,8 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 		}
 
 		$this->events->on_save( $item, $old, $this );
+
+		return true;
 	}
 
 	/**
