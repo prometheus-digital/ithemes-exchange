@@ -1312,3 +1312,5 @@
 	Fix: Missing break statements in Theme API.
 1.36.0 - Lew Ayotte, Elise Alley
     Update: Updating lib/classes to 2.4.8
+1.36.1 - Lew Ayotte, Elise Alley
+	Fix: Variable name for superwidget error output
