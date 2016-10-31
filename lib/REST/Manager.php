@@ -103,10 +103,6 @@ class Manager {
 	 */
 	public function get_first_route( $class ) {
 
-		if ( $class === 'iThemes\Exchange\RecurringPayments\REST\Subscriptions\Cancel' ) {
-			var_dump( $this->routes );
-		}
-
 		foreach ( $this->routes as $route ) {
 			if ( $route instanceof $class ) {
 				return $route;

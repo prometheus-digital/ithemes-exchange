@@ -80,19 +80,19 @@ class Filter_By_Context implements Middleware {
 				continue;
 			}
 
-			// #definitions/object_title
+			// #/definitions/object_title
 			if ( isset( $v_schema['$ref'] ) ) {
 				$ref = $v_schema['$ref'];
 
 				$exploded = explode( '/', $ref );
 
-				if ( count( $exploded ) !== 2 ) {
+				if ( count( $exploded ) !== 3 ) {
 					continue; // Throw an exception? a _doing_it_wrong?
 				}
 
-				$search = $exploded[0];
+				$search = $exploded[1];
 				$search = substr( $search, 1 ); // Only support definitions found from the root of the document for now
-				$title  = $exploded[1];
+				$title  = $exploded[2];
 
 				if ( ! isset( $schema[ $search ], $schema[ $search ][ $title ] ) ) {
 					continue;
