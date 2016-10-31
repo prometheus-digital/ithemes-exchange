@@ -138,7 +138,7 @@ if ( 'register' == $action ) {
 		if ( ! is_wp_error( $user ) ) {
 			it_exchange_add_message( 'notice', __( 'Registered and logged in as ', 'it-l10n-ithemes-exchange' ) . $user->user_login );
 		} else {
-            it_exchange_add_message( 'error', $result->get_error_message() );
+            it_exchange_add_message( 'error', $user->get_error_message() );
 		}
 
 		// Clear form values we saved in case of error
