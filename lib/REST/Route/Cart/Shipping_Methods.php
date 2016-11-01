@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST\Route\Cart;
 
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
+use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 
 /**
@@ -21,11 +22,9 @@ class Shipping_Methods extends Base implements Getable, Putable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_get( \WP_REST_Request $request ) {
+	public function handle_get( Request $request ) {
 
-		$url_params = $request->get_url_params();
-		$cart       = it_exchange_get_cart( $url_params['id'] );
-
+		$cart = $request->get_cart();
 		$data = $this->prepare_cart_for_response( $cart );
 
 		return new \WP_REST_Response( $data );
@@ -34,15 +33,14 @@ class Shipping_Methods extends Base implements Getable, Putable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) { return true; }
+	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) { return true; }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_put( \WP_REST_Request $request ) {
+	public function handle_put( Request $request ) {
 
-		$url_params = $request->get_url_params();
-		$cart       = it_exchange_get_cart( $url_params['id'] );
+		$cart = $request->get_cart();
 
 		$cart_method          = $cart->get_shipping_method();
 		$cart_method          = $cart_method ? $cart_method->slug : '';
@@ -168,7 +166,7 @@ class Shipping_Methods extends Base implements Getable, Putable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) { return true; }
+	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) { return true; }
 
 	/**
 	 * @inheritDoc
@@ -223,7 +221,7 @@ class Shipping_Methods extends Base implements Getable, Putable {
 					)
 				)
 			),
-			'title'       => 'cart',
+			'title'       => 'cart_shipping_methods',
 			'type'        => 'object',
 			'properties'  => array(
 				'cart_wide' => array(

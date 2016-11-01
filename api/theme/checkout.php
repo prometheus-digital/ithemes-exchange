@@ -64,14 +64,27 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 	 * @return mixed
 	*/
 	function transaction_methods( $options=array() ) {
+
+		$methods = array_map(
+			function( ITE_Gateway $gateway ) { return $gateway->get_addon(); },
+			it_exchange_get_available_transaction_methods_for_cart()
+		);
+
+		foreach ( it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) ) as $addon ) {
+
+			if ( ! ITE_Gateways::get( $addon['slug'] ) ) {
+				$methods[] = $addon;
+			}
+		}
+
 		// Do we have any transaction methods
 		if ( ! empty( $options['has'] ) )
-			return (boolean) it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
+			return (boolean) $methods;
 
 		// If we made it here, we're doing a loop of applied coupons
 		// This will init/reset the applied_coupons global and loop through them.
 		if ( empty( $GLOBALS['it_exchange']['transaction_methods'] ) ) {
-			$GLOBALS['it_exchange']['transaction_methods'] = it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
+			$GLOBALS['it_exchange']['transaction_methods'] = $methods;
 			$GLOBALS['it_exchange']['transaction_method'] = reset( $GLOBALS['it_exchange']['transaction_methods'] );
 			return true;
 		} else {

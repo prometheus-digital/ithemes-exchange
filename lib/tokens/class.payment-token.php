@@ -24,7 +24,7 @@ use IronBound\DB\Query\FluentQuery;
 class ITE_Payment_Token extends ModelWithMeta {
 
 	/** @var array */
-	private static $token_types = array();
+	protected static $token_types = array();
 
 	/** @var string */
 	protected static $token_type;

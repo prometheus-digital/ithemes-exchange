@@ -11,6 +11,7 @@ namespace iThemes\Exchange\REST\Route\Customer\Token;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
+use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 
 /**
@@ -32,10 +33,9 @@ class Token extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_get( \WP_REST_Request $request ) {
+	public function handle_get( Request $request ) {
 
-		$url_params = $request->get_url_params();
-		$token      = \ITE_Payment_Token::get( $url_params['token_id'] );
+		$token = \ITE_Payment_Token::get( $request->get_param( 'token_id', 'URL' ) );
 
 		return new \WP_REST_Response( $this->serializer->serialize( $token ) );
 	}
@@ -43,17 +43,28 @@ class Token extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permissions_check( $request, $user );
+	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
+		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+			return $r;
+		}
+
+		if ( ! user_can( $user->wp_user, 'it_read_payment_token', $request->get_param( 'token_id', 'URL' ) ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( 'Sorry, you are not allowed to view this payment token.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => \WP_Http::FORBIDDEN )
+			);
+		}
+
+		return true;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_put( \WP_REST_Request $request ) {
+	public function handle_put( Request $request ) {
 
-		$url_params = $request->get_url_params();
-		$token      = \ITE_Payment_Token::get( $url_params['token_id'] );
+		$token = \ITE_Payment_Token::get( $request->get_param( 'token_id', 'URL' ) );
 
 		$token->label = $request['label'];
 
@@ -88,18 +99,28 @@ class Token extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permissions_check( $request, $user );
+	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
+		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+			return $r;
+		}
+
+		if ( ! user_can( $user->wp_user, 'it_edit_payment_token', $request->get_param( 'token_id', 'URL' ) ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( 'Sorry, you are not allowed to edit this payment token.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => \WP_Http::FORBIDDEN )
+			);
+		}
+
+		return true;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_delete( \WP_REST_Request $request ) {
+	public function handle_delete( Request $request ) {
 
-		$url_params = $request->get_url_params();
-
-		\ITE_Payment_Token::get( $url_params['token_id'] )->delete();
+		\ITE_Payment_Token::get( $request->get_param( 'token_id', 'URL' ) )->delete();
 
 		return new \WP_REST_Response( '', \WP_Http::NO_CONTENT );
 	}
@@ -107,8 +128,20 @@ class Token extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permissions_check( $request, $user );
+	public function user_can_delete( Request $request, \IT_Exchange_Customer $user = null ) {
+		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+			return $r;
+		}
+
+		if ( ! user_can( $user->wp_user, 'it_delete_payment_token', $request->get_param( 'token_id', 'URL' ) ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( 'Sorry, you are not allowed to delete this payment token.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => \WP_Http::FORBIDDEN )
+			);
+		}
+
+		return true;
 	}
 
 	/**
@@ -116,29 +149,20 @@ class Token extends Base implements Getable, Putable, Deletable {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \WP_REST_Request           $request
-	 * @param \IT_Exchange_Customer|null $user
+	 * @param \iThemes\Exchange\REST\Request $request
+	 * @param \IT_Exchange_Customer|null     $user
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permissions_check( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	protected function permissions_check( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		$url_params = $request->get_url_params();
-		$token      = \ITE_Payment_Token::get( $url_params['token_id'] );
+		$token = \ITE_Payment_Token::get( $request->get_param( 'token_id', 'URL' ) );
 
 		if ( ! $token ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_payment_token',
 				__( 'Invalid payment token.', 'it-l10n-ithemes-exchange' ),
 				array( 'status' => \WP_Http::NOT_FOUND )
-			);
-		}
-
-		if ( ! $token->customer || ! $user || $token->customer->ID !== $user->ID ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to access this payment token.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
 			);
 		}
 

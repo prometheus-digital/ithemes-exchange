@@ -189,19 +189,23 @@ add_action( 'it_exchange_update_cart', 'it_exchange_basic_coupons_handle_coupon_
  *
  * @since 0.4.0
  *
- * @param boolean $result this is default to false. gets set by apply_filters
- * @param array $options - must contain coupon key
+ * @param boolean   $result this is default to false. gets set by apply_filters
+ * @param array     $options - must contain coupon key
+ * @param \ITE_Cart $cart
+ *
  * @return boolean
 */
-function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
+function it_exchange_basic_coupons_apply_to_cart( $result, $options=array(), ITE_Cart $cart = null ) {
+
+	$cart = $cart ?: it_exchange_get_current_cart();
 
 	// Set coupon code. Return false if one is not available
 	$coupon_code = empty( $options['code'] ) ? false : $options['code'];
-
-	$coupon = it_exchange_get_cart_coupon_from_code( null, $coupon_code );
+	$coupon      = it_exchange_get_cart_coupon_from_code( null, $coupon_code );
 
 	if ( ! $coupon ) {
-		it_exchange_add_message( 'error', __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
+		$cart->get_feedback()->add_error( __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
+
 		return false;
 	}
 
@@ -213,11 +217,14 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 	 * Your addon should output an it_exchange_add_message( 'error', $message )
 	 * letting the user know the coupon was not applied.
 	 *
+	 * @since 1.36.0 Add $cart parameter.
+	 *
 	 * @param $addon_result  bool
 	 * @param $options       array
 	 * @param $coupon        IT_Exchange_Coupon
+	 * @param $cart          \ITE_Cart
 	 */
-	$addon_result = apply_filters( 'it_exchange_basic_coupons_apply_coupon_to_cart', null, $options, $coupon );
+	$addon_result = apply_filters( 'it_exchange_basic_coupons_apply_coupon_to_cart', null, $options, $coupon, $cart );
 
 	if ( $addon_result === false ) {
 		return $addon_result;
@@ -230,17 +237,21 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array() ) {
 		'code'          => $coupon->get_code()
 	);
 
-	// Add to session data
-	$data = array( $coupon['code'] => $coupon );
-	it_exchange_update_cart_data( 'basic_coupons', $data );
-	do_action( 'it_exchange_basic_coupon_applied', $data );
+	if ( $cart->is_current() ) {
+		// Add to session data
+		$data = array( $coupon['code'] => $coupon );
+		it_exchange_update_cart_data( 'basic_coupons', $data );
+		do_action_deprecated( 'it_exchange_basic_coupon_applied', array( $data ), '1.36.0', 'it_exchange_add_coupon_to_cart' );
+	}
 
-	it_exchange_add_message( 'notice', __( 'Coupon applied', 'it-l10n-ithemes-exchange' ) );
+	if ( $cart->is_current() ) {
+		$cart->get_feedback()->add_notice( __( 'Coupon applied', 'it-l10n-ithemes-exchange' ) );
+	}
 	
 	return true;
 }
 
-add_action( 'it_exchange_apply_coupon_to_cart', 'it_exchange_basic_coupons_apply_to_cart', 10, 2 );
+add_action( 'it_exchange_apply_coupon_to_cart', 'it_exchange_basic_coupons_apply_to_cart', 10, 3 );
 
 /**
  * Has the frequency limit for this coupon been met.

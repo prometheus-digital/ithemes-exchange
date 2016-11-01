@@ -17,6 +17,17 @@ class IT_Exchange_Txn_Activity_Actor_Factory {
 	private $types = array();
 
 	/**
+	 * Get the actor types.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array
+	 */
+	public function get_types() {
+		return array_keys( $this->types );
+	}
+
+	/**
 	 * Register an activity actor type.
 	 *
 	 * @since 1.34

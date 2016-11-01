@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST\Route\Cart;
 
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
+use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 
 /**
@@ -22,10 +23,9 @@ class Meta extends Base implements Getable, Putable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_get( \WP_REST_Request $request ) {
+	public function handle_get( Request $request ) {
 
-		$url_params = $request->get_url_params();
-		$cart       = it_exchange_get_cart( $url_params['id'] );
+		$cart = $request->get_cart();
 
 		return new \WP_REST_Response( $this->format_meta_for_cart( $cart ) );
 	}
@@ -33,17 +33,16 @@ class Meta extends Base implements Getable, Putable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
 		return true;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_put( \WP_REST_Request $request ) {
+	public function handle_put( Request $request ) {
 
-		$url_params = $request->get_url_params();
-		$cart       = it_exchange_get_cart( $url_params['id'] );
+		$cart = $request->get_cart();
 
 		$keys = array();
 
@@ -72,7 +71,7 @@ class Meta extends Base implements Getable, Putable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
 		return true;
 	}
 

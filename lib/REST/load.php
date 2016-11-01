@@ -8,14 +8,24 @@
 
 namespace iThemes\Exchange\REST;
 
+use iThemes\Exchange\REST\Middleware\Autolinker;
+use iThemes\Exchange\REST\Middleware\Cart_Decorator;
+use iThemes\Exchange\REST\Middleware\Cart_Feedback;
+use iThemes\Exchange\REST\Middleware\Error_Handler;
+use iThemes\Exchange\REST\Middleware\Filter_By_Context;
+use iThemes\Exchange\REST\Middleware\Stack;
 use iThemes\Exchange\REST\Route\Cart\Carts;
 use iThemes\Exchange\REST\Route\Cart\Item;
-use iThemes\Exchange\REST\Route\Cart\Item_Serializer;
 use iThemes\Exchange\REST\Route\Cart\Meta;
 use iThemes\Exchange\REST\Route\Cart\Purchase;
 use iThemes\Exchange\REST\Route\Cart\Shipping_Methods;
+use iThemes\Exchange\REST\Route\Customer\Customer;
 use iThemes\Exchange\REST\Route\Customer\Token\Serializer as TokenSerializer;
 use iThemes\Exchange\REST\Route\Customer\Token\Tokens;
+use iThemes\Exchange\REST\Route\Transaction\Activity\Serializer as ActivitySerializer;
+use iThemes\Exchange\REST\Route\Transaction\Refunds\Serializer as RefundSerializer;
+use iThemes\Exchange\REST\Route\Transaction\Serializer as TransactionSerializer;
+use iThemes\Exchange\REST\Route\Transaction\Transaction;
 
 /**
  * Register the rest routes on libraries loaded.
@@ -62,13 +72,37 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	$manager->register_route( $purchase->set_parent( $cart ) );
 	$manager->register_route( $meta->set_parent( $cart ) );
 
-	// --- Tokens --- //
+	// --- Customers --- //
+	$customer = new Customer();
+	$manager->register_route( $customer );
 
+	/* Tokens */
 	$tokens = new Tokens( new TokenSerializer(), new \ITE_Gateway_Request_Factory() );
-	$manager->register_route( $tokens );
+	$manager->register_route( $tokens->set_parent( $customer ) );
 
 	$token = new Route\Customer\Token\Token( new TokenSerializer() );
 	$manager->register_route( $token->set_parent( $tokens ) );
+
+	// --- Transactions --- //
+	$transactions = new Route\Transaction\Transactions( new TransactionSerializer() );
+	$manager->register_route( $transactions );
+
+	$transaction = new Route\Transaction\Transaction( new TransactionSerializer() );
+	$manager->register_route( $transaction->set_parent( $transactions ) );
+
+	/* Activity */
+	$activity = new Route\Transaction\Activity\Activity( new ActivitySerializer() );
+	$manager->register_route( $activity->set_parent( $transaction ) );
+
+	$activity_item = new Route\Transaction\Activity\Item( new ActivitySerializer() );
+	$manager->register_route( $activity_item->set_parent( $activity ) );
+
+	/* Refunds */
+	$refunds = new Route\Transaction\Refunds\Refunds( new RefundSerializer(), new \ITE_Gateway_Request_Factory() );
+	$manager->register_route( $refunds->set_parent( $transaction ) );
+
+	$refund = new Route\Transaction\Refunds\Refund( new RefundSerializer() );
+	$manager->register_route( $refund->set_parent( $refunds ) );
 } );
 
 /**
@@ -94,15 +128,20 @@ function get_rest_url( Route $route, array $path_parameters ) {
 
 	$path = $manager->get_namespace() . "/v{$route->get_version()}/$path";
 
-	$regex = '/\(\?P\<#\>.+\)/';
+	$regex = '/\(\?P\<#\>.+?\)/';
 
 	foreach ( $path_parameters as $parameter => $value ) {
+
+		if ( ! is_scalar( $value ) && ! is_callable( array( $value, '__toString' ) ) ) {
+			continue;
+		}
+
 		$path_regex = str_replace( '#', $parameter, $regex );
 
 		$path = preg_replace( $path_regex, $value, $path );
 	}
 
-	return rest_url( $path );
+	return untrailingslashit( rest_url( $path ) );
 }
 
 /**
@@ -117,7 +156,15 @@ function get_rest_manager() {
 	static $manager;
 
 	if ( ! $manager ) {
-		$manager = new Manager( 'it_exchange' );
+
+		$stack = new Stack();
+		$stack->push( new Error_Handler( defined( 'WP_DEBUG' ) && WP_DEBUG ), 'error-handler' );
+		$stack->push( new Cart_Decorator(), 'cart-decorator' );
+		$stack->push( new Autolinker(), 'autolinker' );
+		$stack->push( new Filter_By_Context(), 'filter-by-context' );
+		$stack->push( new Cart_Feedback(), 'cart-feedback' );
+
+		$manager = new Manager( 'it_exchange', $stack );
 	}
 
 	return $manager;

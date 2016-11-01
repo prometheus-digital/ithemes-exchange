@@ -439,7 +439,7 @@ class IT_Exchange_Customer {
 	 *
 	 * @return float
 	 */
-	public function get_lifetime_value() {
+	public function get_total_spent() {
 		return IT_Exchange_Transaction::query()
 		                              ->where( 'customer_id', '=', $this->ID )
 		                              ->and_where( 'cleared', '=', true )

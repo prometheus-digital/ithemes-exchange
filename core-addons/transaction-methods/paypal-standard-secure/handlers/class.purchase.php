@@ -174,6 +174,9 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		$payment_form = stripslashes( $response_array['WEBSITECODE'] );
 
 		if ( preg_match( '/-----BEGIN PKCS7-----.*-----END PKCS7-----/i', $payment_form, $matches ) ) {
+
+			$cart->mark_as_purchased();
+
 			return trim( $matches[0] );
 		}
 

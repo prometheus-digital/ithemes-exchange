@@ -65,7 +65,7 @@ class ITE_Multi_Item_Cart_Validator implements ITE_Cart_Validator {
 					. ' ' .
 					sprintf(
 						__( 'The following products were removed from your cart: %s.', 'it-l10n-ithemes-exchange' ),
-						implode( ',', $removed )
+						implode( ', ', $removed )
 					),
 					$new_item
 				);

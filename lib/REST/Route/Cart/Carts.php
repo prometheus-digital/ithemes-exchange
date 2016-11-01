@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST\Route\Cart;
 
 use iThemes\Exchange\REST as r;
 use iThemes\Exchange\REST\Postable;
+use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 
 /**
@@ -34,7 +35,7 @@ class Carts extends Base implements Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_post( \WP_REST_Request $request ) {
+	public function handle_post( Request $request ) {
 
 		$user = it_exchange_get_current_customer();
 
@@ -48,7 +49,7 @@ class Carts extends Base implements Postable {
 			$cart = \ITE_Cart::create( $repo, $user );
 			$cart->set_meta( 'guest-email', $user->get_email() );
 			$session = \ITE_Session_Model::get( $session->ID );
-		} else {
+		} elseif ( $request['is_main'] ) {
 			try {
 				// Guard against multiple carts per customer.
 				$repo    = \ITE_Line_Item_Cached_Session_Repository::from_customer( $user );
@@ -64,7 +65,7 @@ class Carts extends Base implements Postable {
 
 				$response = new \WP_REST_Response();
 				$response->set_status( \WP_Http::SEE_OTHER );
-				$response->header( 'Location', r\get_rest_url( $this->cart, array( 'id' => $cart_id ) ) );
+				$response->header( 'Location', r\get_rest_url( $this->cart, array( 'cart_id' => $cart_id ) ) );
 
 				return $response;
 			}
@@ -79,15 +80,28 @@ class Carts extends Base implements Postable {
 
 			$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
 			$cart = \ITE_Cart::create( $repo, $user );
+		} else {
+			$session = \ITE_Session_Model::create( array(
+				'ID'       => it_exchange_create_unique_hash(),
+				'customer' => $user->id,
+				'is_main'  => false,
+			) );
+
+			$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
+			$cart = \ITE_Cart::create( $repo, $user );
 		}
 
 		$session->cart_id = $cart->get_id();
 		$session->data    = array_merge( $session->data, array( 'cart_id' => $cart->get_id() ) );
 		$session->save();
 
-		$response = new \WP_REST_Response();
+		$location = r\get_rest_url( $this->cart, array( 'cart_id' => $cart->get_id() ) );
+		$request = Request::from_url( $location );
+		$request->set_url_params( array('cart_id' => $cart->get_id() ) );
+
+		$response = $this->cart->handle_get( $request );
 		$response->set_status( \WP_Http::CREATED );
-		$response->header( 'Location', r\get_rest_url( $this->cart, array( 'id' => $cart->get_id() ) ) );
+		$response->header( 'Location', $location );
 
 		return $response;
 	}
@@ -95,7 +109,7 @@ class Carts extends Base implements Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) {
 		return (bool) $user && $user->id;
 	}
 

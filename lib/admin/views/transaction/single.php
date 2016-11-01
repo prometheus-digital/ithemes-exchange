@@ -391,6 +391,8 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 		</div>
 	</div>
 
+	<?php do_action( 'it_exchange_after_payment_details', $post ); ?>
+
 	<div class="spacing-wrapper bottom-border clearfix hide-if-no-js transaction-actions">
 		<?php if ( it_exchange_transaction_status_can_be_manually_changed( $txn ) && $options = it_exchange_get_status_options_for_transaction( $txn ) ): ?>
 			<select id='it-exchange-update-transaction-status' style="width: 150px">
@@ -457,7 +459,6 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 	</div>
 
 <?php
-do_action( 'it_exchange_after_payment_details', $post );
 echo '</div></div>';
 
 IT_Exchange_Transaction_Post_Type::print_activity( $post );

@@ -64,7 +64,7 @@ class ITE_Cart_Feedback {
 	 * 
 	 * @since 1.36.0
 	 * 
-	 * @return \Iterator
+	 * @return \Iterator|ITE_Cart_Feedback_Item[]
 	 */
 	public function errors() {
 		return new ArrayIterator( $this->errors );
@@ -75,7 +75,7 @@ class ITE_Cart_Feedback {
 	 * 
 	 * @since 1.36.0
 	 * 
-	 * @return \Iterator
+	 * @return \Iterator|ITE_Cart_Feedback_Item[]
 	 */
 	public function notices() {
 		return new ArrayIterator( $this->notices );

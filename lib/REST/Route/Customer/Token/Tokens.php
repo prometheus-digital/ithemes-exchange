@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST\Route\Customer\Token;
 
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
+use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 
 /**
@@ -38,10 +39,9 @@ class Tokens extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_get( \WP_REST_Request $request ) {
+	public function handle_get( Request $request ) {
 
-		$url_params = $request->get_url_params();
-		$customer   = it_exchange_get_customer( $url_params['customer_id'] );
+		$customer = it_exchange_get_customer( $request->get_param( 'customer_id', 'URL' ) );
 
 		$tokens = $customer->get_tokens( $request['gateway'] );
 		$data   = array_map( array( $this->serializer, 'serialize' ), $tokens->getValues() );
@@ -52,14 +52,26 @@ class Tokens extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permissions_check( $request, $user );
+	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
+		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+			return $r;
+		}
+
+		if ( ! user_can( $user->wp_user, 'it_list_payment_tokens', $request->get_param( 'customer_id', 'URL' ) ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( "Sorry, you are not allowed to view this customer's payment tokens.", 'it-l10n-ithemes-exchange' ),
+				array( 'status' => \WP_Http::FORBIDDEN )
+			);
+		}
+
+		return true;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_post( \WP_REST_Request $request ) {
+	public function handle_post( Request $request ) {
 
 		$gateway = \ITE_Gateways::get( $request['gateway'] );
 
@@ -86,8 +98,20 @@ class Tokens extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permissions_check( $request, $user );
+	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) {
+		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+			return $r;
+		}
+
+		if ( ! user_can( $user->wp_user, 'it_create_payment_tokens', $request->get_param( 'customer_id', 'URL' ) ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( 'Sorry, you are not allowed to create payment tokens for this customer.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => \WP_Http::FORBIDDEN )
+			);
+		}
+
+		return true;
 	}
 
 	/**
@@ -95,14 +119,14 @@ class Tokens extends Base implements Getable, Postable {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \WP_REST_Request           $request
-	 * @param \IT_Exchange_Customer|null $user
+	 * @param \iThemes\Exchange\REST\Request $request
+	 * @param \IT_Exchange_Customer|null     $user
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permissions_check( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	protected function permissions_check( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		if ( ! $user ) {
+		if ( ! $user || $user instanceof \IT_Exchange_Guest_Customer ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to access this customer.', 'it-l10n-ithemes-exchange' ),
@@ -110,22 +134,13 @@ class Tokens extends Base implements Getable, Postable {
 			);
 		}
 
-		$url_params = $request->get_url_params();
-		$customer   = it_exchange_get_customer( $url_params['customer_id'] );
+		$customer = it_exchange_get_customer( $request->get_param( 'customer_id', 'URL' ) );
 
 		if ( ! $customer ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_customer',
 				__( 'Invalid customer.', 'it-l10n-ithemes-exchange' ),
 				array( 'status' => \WP_Http::NOT_FOUND )
-			);
-		}
-
-		if ( ! user_can( $user->wp_user, 'edit_user', $customer->ID ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to access this customer.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
 			);
 		}
 
@@ -140,7 +155,7 @@ class Tokens extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_path() { return 'customers/(?P<customer_id>\d+)/tokens/'; }
+	public function get_path() { return 'tokens/'; }
 
 	/**
 	 * @inheritDoc
@@ -158,9 +173,8 @@ class Tokens extends Base implements Getable, Postable {
 			'gateway' => array(
 				'description'       => __( 'Gateway the payment token belongs to.', 'it-l10n-ithemes-exchange' ),
 				'type'              => 'string',
-				'validate_callback' => function ( $value ) {
-					return ( $g = \ITE_Gateways::get( $value ) ) && $g->can_handle( 'tokenize' );
-				},
+				'enum'              => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
+				'validate_callback' => 'rest_validate_request_arg',
 			),
 		);
 	}

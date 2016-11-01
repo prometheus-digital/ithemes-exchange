@@ -44,7 +44,7 @@ class Serializer {
 	 * @return array
 	 */
 	public function get_schema() {
-		array(
+		return array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'payment-token',
 			'type'       => 'object',
@@ -52,32 +52,44 @@ class Serializer {
 				'id'       => array(
 					'description' => __( 'The unique id for this token.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'gateway'  => array(
 					'description' => __( 'The gateway slug for this token.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',
 					'enum'        => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 					'required'    => true,
 				),
 				'label'    => array(
 					'description' => __( 'The user-provided label for this token.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit', 'embed' ),
+					'properties'  => array(
+						'raw'      => array(
+							'type'        => 'string',
+							'context'     => array( 'edit' ),
+							'description' => __( 'The raw user provided label for the payment token.', 'it-l10n-ithemes-exchange' ),
+						),
+						'rendered' => array(
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit', 'embed' ),
+							'description' => __( 'The label for the payment token.', 'it-l10n-ithemes-exchange' ),
+						),
+					),
 				),
 				'redacted' => array(
 					'description' => __( 'The redacted form of the underlying payment source.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'primary'  => array(
 					'description' => __( 'Whether this is the primary payment token for this customer.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'default'     => false,
 				),
 			)

@@ -49,7 +49,8 @@ class IT_Exchange_Txn_Activity_Collection {
 			'page'       => 1,
 			'orderby'    => 'date',
 			'order'      => 'DESC',
-			'date_query' => array()
+			'date_query' => array(),
+			'is_public'  => null,
 		) );
 
 		$wp_args = array(
@@ -59,7 +60,9 @@ class IT_Exchange_Txn_Activity_Collection {
 			'paged'          => $args['page'],
 			'orderby'        => $args['orderby'],
 			'order'          => $args['order'],
-			'date_query'     => $args['date_query']
+			'date_query'     => $args['date_query'],
+			'meta_query'     => array(),
+			'post_status'    => array( 'publish', 'draft' )
 		);
 
 		if ( ! empty( $args['type'] ) && $args['type'] !== 'any' ) {
@@ -73,11 +76,16 @@ class IT_Exchange_Txn_Activity_Collection {
 		}
 
 		if ( ! empty( $args['actor_type'] ) && $args['actor_type'] !== 'any' ) {
-			$wp_args['meta_query'] = array(
-				array(
-					'key'   => '_actor_type',
-					'value' => $args['actor_type']
-				)
+			$wp_args['meta_query'][] = array(
+				'key'   => '_actor_type',
+				'value' => $args['actor_type']
+			);
+		}
+
+		if ( $args['is_public'] !== null ) {
+			$wp_args['meta_query'][] = array(
+				'key'   => '_is_public',
+				'value' => $args['is_public'],
 			);
 		}
 

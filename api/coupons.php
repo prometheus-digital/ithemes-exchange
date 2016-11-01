@@ -328,24 +328,33 @@ function it_exchange_get_remove_coupon_html( $type, $code, $options = array() ) 
  *
  * @return boolean
 */
-function it_exchange_apply_coupon( $type, $code, $options=array() ) {
+function it_exchange_apply_coupon( $type, $code, $options = array() ) {
+
+	$cart = empty( $options['cart'] ) ? it_exchange_get_current_cart() : $options['cart'];
+
 	$options['code'] = $code;
 	$valid = false;
 	
 	if ( ( $coupon = it_exchange_get_coupon_from_code( $code, $type ) ) && $coupon->get_type() ) {
 		try {
-			$cart = it_exchange_get_current_cart();
+			$item = ITE_Coupon_Line_Item::create( $coupon );
 			$coupon->validate( $cart );
-			$cart->add_item( ITE_Coupon_Line_Item::create( $coupon ) );
+			$cart->add_item( $item );
 			$valid = true;
 		} catch ( Exception $e ) {
+
+			$cart->get_feedback()->add_error(
+				$e->getMessage(),
+				isset( $item ) ? $item : null
+			);
+
 			it_exchange_add_message( 'error', $e->getMessage() );
 
 			return false;
 		}
 	}
 	
-	return apply_filters( 'it_exchange_apply_coupon_to_' . $type, $valid, $options );
+	return apply_filters( 'it_exchange_apply_coupon_to_' . $type, $valid, $options, $cart );
 }
 
 /**

@@ -12,9 +12,11 @@ use iThemes\Exchange\REST as r;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
+use iThemes\Exchange\REST\Request;
 
 /**
  * Class Cart
+ *
  * @package iThemes\Exchange\REST\Route\Cart
  */
 class Cart implements Getable, Putable, Deletable {
@@ -25,46 +27,64 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_get( \WP_REST_Request $request ) {
-		return $this->prepare_item_for_response( it_exchange_get_cart( $request['id'] ), $request );
+	public function handle_get( Request $request ) {
+		return $this->prepare_item_for_response( $request->get_cart() );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
 		return $this->permission_check( $request, $user );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_put( \WP_REST_Request $request ) {
-		$cart = it_exchange_get_cart( $request['id'] );
+	public function handle_put( Request $request ) {
+		$cart = $request->get_cart();
 
-		if ( $cart->get_billing_address() ? $cart->get_billing_address()->to_array() : array() !== $request['billing_address'] ) {
+		$c_billing = $cart->get_billing_address() ? $cart->get_billing_address()->to_array() : array();
+		$u_billing = $request['billing_address'];
+
+		$c_billing = array_filter( $c_billing );
+		$u_billing = array_filter( $u_billing );
+
+		ksort( $c_billing );
+		ksort( $u_billing );
+
+		if ( $c_billing !== $u_billing ) {
 			$cart->set_billing_address( $request['billing_address'] ? new \ITE_In_Memory_Address( $request['billing_address'] ) : null );
 		}
 
-		if ( $cart->get_shipping_address() ? $cart->get_shipping_address()->to_array() : array() !== $request['shipping_address'] ) {
+		$c_shipping = $cart->get_shipping_address() ? $cart->get_shipping_address()->to_array() : array();
+		$u_shipping = $request['shipping_address'];
+
+		$c_shipping = array_filter( $c_shipping );
+		$u_shipping = array_filter( $u_shipping );
+
+		ksort( $c_shipping );
+		ksort( $u_shipping );
+
+		if ( $c_shipping !== $u_shipping ) {
 			$cart->set_shipping_address( $request['shipping_address'] ? new \ITE_In_Memory_Address( $request['shipping_address'] ) : null );
 		}
 
-		return $this->prepare_item_for_response( $cart, $request );
+		return $this->prepare_item_for_response( $cart );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
 		return $this->permission_check( $request, $user );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_delete( \WP_REST_Request $request ) {
-		$cart = it_exchange_get_cart( $request['id'] );
+	public function handle_delete( Request $request ) {
+		$cart = $request->get_cart();
 		$cart->empty_cart();
 
 		return new \WP_HTTP_Response( '', 204 );
@@ -73,7 +93,7 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_delete( Request $request, \IT_Exchange_Customer $user = null ) {
 		return $this->permission_check( $request, $user );
 	}
 
@@ -85,14 +105,12 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_path() { return '(?P<id>\w+)/'; }
+	public function get_path() { return '(?P<cart_id>\w+)/'; }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_query_args() {
-		return array();
-	}
+	public function get_query_args() { return array(); }
 
 	/**
 	 * @inheritDoc
@@ -109,16 +127,14 @@ class Cart implements Getable, Putable, Deletable {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \WP_REST_Request      $request
-	 * @param \IT_Exchange_Customer $user
+	 * @param \iThemes\Exchange\REST\Request $request
+	 * @param \IT_Exchange_Customer          $user
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permission_check( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	protected function permission_check( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		$url_params = $request->get_url_params();
-
-		if ( ! $cart = it_exchange_get_cart( $url_params['id'] ) ) {
+		if ( ! $cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_cart',
 				__( 'Invalid cart id.', 'it-l10n-ithemes-exchange' ),
@@ -148,16 +164,16 @@ class Cart implements Getable, Putable, Deletable {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \ITE_Cart        $cart
-	 * @param \WP_REST_Request $request
+	 * @param \ITE_Cart $cart
 	 *
 	 * @return \WP_REST_Response
 	 */
-	protected function prepare_item_for_response( \ITE_Cart $cart, \WP_REST_Request $request ) {
+	protected function prepare_item_for_response( \ITE_Cart $cart ) {
 
 		$data = array(
 			'id'               => $cart->get_id(),
 			'customer'         => $cart->get_customer() ? $cart->get_customer()->id : 0,
+			'is_main'          => $cart->is_main(),
 			'shipping_address' => null,
 			'billing_address'  => null,
 			'subtotal'         => it_exchange_get_cart_subtotal( false, array( 'cart' => $cart ) ),
@@ -173,9 +189,6 @@ class Cart implements Getable, Putable, Deletable {
 		}
 
 		$items = array();
-
-		$request = new \WP_REST_Request( 'GET' );
-		$request->set_param( 'id', $cart->get_id() );
 
 		foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
 			foreach ( $cart->get_items( $item_type->get_type() ) as $item ) {
@@ -221,7 +234,15 @@ class Cart implements Getable, Putable, Deletable {
 
 		$shipping_methods = new Shipping_Methods();
 		$shipping_methods->set_parent( $this );
-		$response->add_link( 'shipping_methods', r\get_rest_url( $shipping_methods, array( 'id' => $cart->get_id() ) ) );
+		$response->add_link( 'shipping_methods', r\get_rest_url( $shipping_methods, array( 'cart_id' => $cart->get_id() ) ) );
+
+		if ( $cart->get_customer() && ! $cart->get_customer() instanceof \IT_Exchange_Guest_Customer ) {
+			$response->add_link(
+				'customer',
+				r\get_rest_url( new r\Route\Customer\Customer(), array( 'customer_id' => $cart->get_customer()->ID ) ),
+				array( 'embeddable' => true )
+			);
+		}
 
 		return $response;
 	}
@@ -241,11 +262,12 @@ class Cart implements Getable, Putable, Deletable {
 		foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
 
 			$type        = $item_type->get_type();
+			$title       = "cart_item_{$type}";
 			$item_schema = $item_type->get_rest_serializer()->get_schema();
 			unset( $item_schema['title'], $item_schema['$schema'] );
 
-			$item_references[]['$ref'] = "#definitions/{$type}";
-			$item_definitions[ $type ] = $item_schema;
+			$item_references[]['$ref']  = "#definitions/{$title}";
+			$item_definitions[ $title ] = $item_schema;
 		}
 
 		$this->schema = array(
@@ -257,14 +279,21 @@ class Cart implements Getable, Putable, Deletable {
 				'id'               => array(
 					'description' => __( 'The unique id for this cart.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'customer'         => array(
 					'description' => __( 'The customer id for this cart.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
+				),
+				'iis_main'         => array(
+					'description' => __( 'Is this the main cart for the customer.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'boolean',
+					'context'     => array( 'view', 'edit', 'embed' ),
+					'readonly'    => true,
+					'default'     => true,
 				),
 				'billing_address'  => array(
 					'description' => __( 'The billing address for this cart.', 'it-l10n-ithemes-exchange' ),
@@ -398,19 +427,19 @@ class Cart implements Getable, Putable, Deletable {
 				'subtotal'         => array(
 					'description' => __( 'The subtotal of the cart.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'float',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'total'            => array(
 					'description' => __( 'The total of the cart.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'float',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'total_lines'      => array(
 					'description' => __( 'Line item totals of the cart.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 					'items'       => array(
 						'title'      => __( 'Line item total lines.', 'it-l10n-ithemes-exchange' ),

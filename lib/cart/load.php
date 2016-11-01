@@ -121,7 +121,7 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 			)
 		),
 	),
-	'create_from_request' => function ( WP_REST_Request $request ) {
+	'create_from_request' => function ( \iThemes\Exchange\REST\Request $request ) {
 
 		$product = it_exchange_get_product( $request['product'] );
 
@@ -138,10 +138,68 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 			$request['quantity']['selected']
 		);
 
-		$cart = it_exchange_get_cart( $request['id'] );
+		$cart = $request->get_cart();
 		$cart->add_item( $item );
 
-		return $item->get_id();
+		return $item;
+	}
+) ) );
+
+ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'coupon', array(
+	'label'               => __( 'Coupon', 'it-l10n-ithemes-exchange' ),
+	'show_in_rest'        => true,
+	'editable_in_rest'    => true,
+	'rest_serializer'     => function ( array $data, ITE_Coupon_Line_Item $coupon, array $schema, ITE_Cart $cart ) {
+
+
+		if ( isset( $schema['properties']['coupon'] ) ) {
+			$data['coupon'] = array(
+				'code' => $coupon->get_coupon()->get_code()
+			);
+		}
+
+		return $data;
+	},
+	'schema'              => array(
+		'coupon' => array(
+			'description' => __( 'The applied coupon.', 'it-l10n-ithemes-exchange' ),
+			'type'        => 'object',
+			'context'     => array( 'view', 'edit' ),
+			'properties'  => array(
+				'code' => array(
+					'description' => __( 'The coupon code.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+					'required'    => true,
+					'readonly'    => true,
+				),
+			),
+		)
+	),
+	'create_from_request' => function ( \iThemes\Exchange\REST\Request $request ) {
+
+		if ( is_array( $request['coupon'] ) && isset( $request['coupon']['code'] ) ) {
+			$code = $request['coupon']['code'];
+		} else {
+			$code = $request['coupon'];
+		}
+
+		if ( ! $code || ! $coupon = it_exchange_get_coupon_from_code( $code, 'cart' ) ) {
+			return new WP_Error(
+				'it_exchange_rest_invalid_coupon',
+				__( 'Invalid coupon.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$item = ITE_Coupon_Line_Item::create(
+			$coupon
+		);
+
+		$cart = $request->get_cart();
+		$cart->add_item( $item );
+
+		return $item;
 	}
 ) ) );
 
@@ -152,4 +210,3 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'fee', array(
 ) ) );
 ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'tax', array( 'label' => __( 'Tax', 'it-l10n-ithemes-exchange' ) ) ) );
 ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'shipping', array( 'label' => __( 'Shipping', 'it-l10n-ithemes-exchange' ) ) ) );
-ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'coupon', array( 'label' => __( 'Coupon', 'it-l10n-ithemes-exchange' ) ) ) );

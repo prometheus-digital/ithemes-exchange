@@ -12,6 +12,7 @@ use iThemes\Exchange\REST as r;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
+use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 
 /**
@@ -40,9 +41,9 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_get( \WP_REST_Request $request ) {
+	public function handle_get( Request $request ) {
 
-		$cart       = it_exchange_get_cart( $request['id'] );
+		$cart       = $request->get_cart();
 		$serializer = $this->serializer;
 
 		return new \WP_REST_Response( array_map( function ( \ITE_Line_Item $item ) use ( $serializer, $cart ) {
@@ -53,7 +54,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
 
 		if ( ! $this->type->is_show_in_rest() ) {
 			return new \WP_Error(
@@ -69,16 +70,22 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_post( \WP_REST_Request $request ) {
+	public function handle_post( Request $request ) {
 
-		$id = $this->type->create_from_request( $request );
+		$item = $this->type->create_from_request( $request );
 
-		if ( $id ) {
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
 
-			$response = new \WP_REST_Response();
+		if ( $item ) {
+
+			$cart = $request->get_cart();
+
+			$response = new \WP_REST_Response( $this->serializer->serialize( $item, $cart ) );
 			$response->set_status( \WP_Http::CREATED );
 			$response->header( 'Location', r\get_rest_url(
-				new Item( $this->type, $this->serializer ), array( 'id' => $request['id'], 'item' => $id )
+				new Item( $this->type, $this->serializer ), array( 'cart_id' => $cart->get_id(), 'item_id' => $item->get_id() )
 			) );
 
 			return $response;
@@ -94,7 +101,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_type',
@@ -109,8 +116,8 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function handle_delete( \WP_REST_Request $request ) {
-		$cart = it_exchange_get_cart( $request['id'] );
+	public function handle_delete( Request $request ) {
+		$cart = $request->get_cart();
 		$cart->remove_all( $this->type->get_type() );
 
 		return new \WP_REST_Response( '', 204 );
@@ -119,7 +126,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( \WP_REST_Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_delete( Request $request, \IT_Exchange_Customer $user = null ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_type',

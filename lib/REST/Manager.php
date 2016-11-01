@@ -7,6 +7,8 @@
  */
 
 namespace iThemes\Exchange\REST;
+use iThemes\Exchange\REST\Middleware\Stack;
+use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Manager
@@ -20,6 +22,9 @@ class Manager {
 
 	/** @var Route[] */
 	private $routes = array();
+
+	/** @var \iThemes\Exchange\REST\Middleware\Stack */
+	private $middleware;
 
 	/** @var bool */
 	private $initialized = false;
@@ -35,10 +40,12 @@ class Manager {
 	/**
 	 * Manager constructor.
 	 *
-	 * @param string $namespace No forward or trailing slashes.
+	 * @param string                                  $namespace No forward or trailing slashes.
+	 * @param \iThemes\Exchange\REST\Middleware\Stack $stack
 	 */
-	public function __construct( $namespace ) {
-		$this->namespace = $namespace;
+	public function __construct( $namespace, Stack $stack ) {
+		$this->namespace  = $namespace;
+		$this->middleware = $stack;
 	}
 
 	/**
@@ -56,6 +63,10 @@ class Manager {
 
 		if ( $this->initialized ) {
 			throw new \UnexpectedValueException( 'Route Manager has already been initialized.' );
+		}
+
+		if ( $route instanceof Base ) {
+			$route->set_manager( $this );
 		}
 
 		$this->routes[] = $route;
@@ -79,6 +90,48 @@ class Manager {
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Get the first route matching a given class.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $class
+	 *
+	 * @return \iThemes\Exchange\REST\Route|null
+	 */
+	public function get_first_route( $class ) {
+
+		foreach ( $this->routes as $route ) {
+			if ( $route instanceof $class ) {
+				return $route;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get all routes matching a given class.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $class
+	 *
+	 * @return \iThemes\Exchange\REST\Route[]
+	 */
+	public function get_routes_by_class( $class ) {
+
+		$routes = array();
+
+		foreach ( $this->routes as $route ) {
+			if ( $route instanceof $class ) {
+				$routes[] = $route;
+			}
+		}
+
+		return $routes;
 	}
 
 	/**
@@ -111,6 +164,17 @@ class Manager {
 	}
 
 	/**
+	 * Get the Middleware Stack.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \iThemes\Exchange\REST\Middleware\Stack
+	 */
+	public function get_middleware() {
+		return $this->middleware;
+	}
+
+	/**
 	 * Register a route with the server.
 	 *
 	 * @since 1.36.0
@@ -123,10 +187,13 @@ class Manager {
 
 		$path     = '';
 		$building = $route;
-		$routes   = array();
+		$parents  = array();
 
 		do {
-			array_unshift( $routes, $building );
+			if ( $building !== $route ) {
+				array_unshift( $parents, $building );
+			}
+
 			$path = $building->get_path() . $path;
 		} while ( $building->has_parent() && $building = $building->get_parent() );
 
@@ -135,21 +202,23 @@ class Manager {
 		foreach ( static::$interfaces as $verb => $interface ) {
 			$interface = "\\iThemes\\Exchange\\REST\\{$interface}";
 
-			if ( ! $route  instanceof $interface ) {
+			if ( ! $route instanceof $interface ) {
 				continue;
 			}
 
-			$permission = function ( \WP_REST_Request $request ) use ( $verb, $routes ) {
+			$permission = function ( \WP_REST_Request $request ) use ( $verb, $route, $parents ) {
+
+				$request = Request::from_wp( $request );
 
 				$user = it_exchange_get_current_customer() ?: null;
 
-				foreach ( $routes as $route ) {
+				foreach ( $parents as $parent ) {
 
-					$callback = array( $route, 'user_can_' . strtolower( $verb ) );
+					$callback = array( $parent, 'user_can_' . strtolower( $verb ) );
 
 					if ( ! is_callable( $callback ) ) {
-						if ( is_callable( array( $route, 'user_can_get' ) ) ) {
-							$callback = array( $route, 'user_can_get' );
+						if ( is_callable( array( $parent, 'user_can_get' ) ) ) {
+							$callback = array( $parent, 'user_can_get' );
 						} else {
 							continue;
 						}
@@ -165,56 +234,10 @@ class Manager {
 				return call_user_func( $callback, $request, $user );
 			};
 
-			// TODO: Move to Middleware
-			$handle = function ( \WP_REST_Request $request ) use ( $verb, $route ) {
-				/** @var \WP_REST_Response|\WP_Error $response */
-				$response = call_user_func( array( $route, 'handle_' . strtolower( $verb ) ), $request );
+			$middleware = $this->get_middleware();
 
-				if ( is_wp_error( $response ) ) {
-					return $response;
-				}
-
-				if ( $route->has_parent() ) {
-					try {
-						$up = get_rest_url( $route->get_parent(), $request->get_url_params() );
-
-						$data = $response->get_data();
-
-						if ( is_array( $data ) && ! \ITUtility::is_associative_array( $data ) ) {
-
-							$linked = array();
-
-							foreach ( $data as $i => $item ) {
-								if ( ! isset( $item['_links'] ) ) {
-									$item['_links'] = array();
-								}
-
-								$item['_links']['up'] = array(
-									'href' => $up
-								);
-
-								if ( isset( $item['id'] ) ) {
-
-									$item['_links']['self'] = array(
-										'href' => $up . $item['id'] . '/',
-									);
-								}
-
-								$linked[ $i ] = $item;
-							}
-
-							$response->set_data( $linked );
-						} else {
-							$response->add_link( 'up', $up );
-							$response->add_link( 'self', rest_url( $request->get_route() ) );
-						}
-					}
-					catch ( \UnexpectedValueException $e ) {
-
-					}
-				}
-
-				return $response;
+			$handle = function ( \WP_REST_Request $request ) use ( $middleware, $route ) {
+				return $middleware->handle( $request, $route );
 			};
 
 			if ( $verb === 'GET' ) {
@@ -382,7 +405,7 @@ class Manager {
 	 *
 	 * @return bool
 	 */
-	protected function is_our_endpoint() {
+	public function is_our_endpoint() {
 
 		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
 			return false;

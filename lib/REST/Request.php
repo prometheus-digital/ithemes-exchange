@@ -1,0 +1,128 @@
+<?php
+/**
+ * REST Request.
+ *
+ * @since   1.36.0
+ * @license GPLv2
+ */
+
+namespace iThemes\Exchange\REST;
+
+/**
+ * Class Request
+ * @package iThemes\Exchange\REST
+ */
+class Request extends \WP_REST_Request {
+
+	/** @var Route */
+	private $matched_route_controller;
+
+	/** @var \ITE_Cart|null */
+	private $cart;
+
+	/**
+	 * Create a Request object from the WP_REST_Request object.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return \iThemes\Exchange\REST\Request
+	 */
+	public static function from_wp( \WP_REST_Request $request ) {
+
+		$self = new static();
+
+		foreach ( get_object_vars( $request ) as $key => $value ) {
+			$self->{$key} = $value;
+		}
+
+		return $self;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function from_url( $url ) {
+		$wp_request = parent::from_url( $url );
+
+		if ( $wp_request ) {
+			return static::from_wp( $wp_request );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the matched route controller.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \iThemes\Exchange\REST\Route|null
+	 */
+	public function get_matched_route_controller() {
+		return $this->matched_route_controller;
+	}
+
+	/**
+	 * Set the matched route controller.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \iThemes\Exchange\REST\Route $matched_route_controller
+	 *
+	 * @return $this
+	 */
+	public function set_matched_route_controller( $matched_route_controller ) {
+		$this->matched_route_controller = $matched_route_controller;
+
+		return $this;
+	}
+
+	/**
+	 * Get the cart being operated on in this request.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Cart|null
+	 */
+	public function get_cart() { return $this->cart; }
+
+	/**
+	 * Set the cart being operated on in this request.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \ITE_Cart $cart
+	 *
+	 * @return $this
+	 */
+	public function set_cart( \ITE_Cart $cart ) {
+		$this->cart = $cart;
+
+		return $this;
+	}
+
+	/**
+	 * Retrieves a parameter from the request.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $key  Parameter name.
+	 * @param string $type Type of param to draw from.
+	 *
+	 * @return mixed|null Value if set, null otherwise.
+	 */
+	public function get_param( $key, $type = '' ) {
+
+		if ( $type ) {
+			if ( isset( $this->params[ $type ], $this->params[ $type ][ $key ] ) ) {
+				return $this->params[ $type ][ $key ];
+			}
+
+			return null;
+		}
+
+		return parent::get_param( $key );
+	}
+}

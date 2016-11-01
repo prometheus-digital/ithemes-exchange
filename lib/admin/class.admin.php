@@ -1820,6 +1820,20 @@ class IT_Exchange_Admin {
 
 			$collection = new IT_Exchange_Txn_Activity_Collection( it_exchange_get_transaction( $GLOBALS['post'] ) );
 
+			$df = get_option( 'date_format' );
+			$tf = get_option( 'time_format' );
+
+			if ( strpos( $tf, 's' ) === false && $parts = explode( ':', $tf ) ) {
+				$last = array_pop( $parts );
+				$split = explode( ' ', $last );
+				$parts[] = array_shift( $split );
+				$parts[] = 's';
+				$tf = implode( ':', $parts );
+				$tf .= ' ' . implode( ' ', $split );
+			}
+
+			$dtf = $df . ' ' . $tf;
+
 			wp_enqueue_script( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/transaction-details.js', $deps );
 			wp_localize_script( 'it-exchange-transaction-details', 'EXCHANGE', array(
 				'nonce' => wp_create_nonce( 'it-exchange-add-note' ),
@@ -1827,6 +1841,7 @@ class IT_Exchange_Admin {
 				'items' => array_map( create_function( '$a', 'return $a->to_array();' ), $collection->get_activity() ),
 				'sent' => _x( 'Sent!', 'Notice when an email receipt has been successfully sent.', 'it-l10n-ithemes-exchange' ),
 				'failed' => _x( 'Failed!', 'Notice when an email receipt has failed to be sent.', 'it-l10n-ithemes-exchange' ),
+				'format' => it_exchange_convert_php_to_moment( $dtf )
 			) );
 			wp_dequeue_script( 'autosave' );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {

@@ -49,12 +49,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	 */
 	public static function from_customer( \IT_Exchange_Customer $customer ) {
 
-		$session = ITE_Session_Model::query()
-		                            ->where( 'customer', '=', $customer->id )
-		                            ->order_by( 'updated_at', 'ASC' )
-		                            ->first();
-
-		$session = $session ?: null;
+		$session = ITE_Session_Model::find_best_for_customer( $customer );
 
 		return static::setup_from_session( $session, $customer );
 	}

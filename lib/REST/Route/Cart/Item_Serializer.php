@@ -112,7 +112,7 @@ class Item_Serializer {
 	protected function generate_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => $this->type->get_type(),
+			'title'      => "cart_item_{$this->type->get_type()}",
 			'type'       => 'object',
 			'properties' => array(
 				'id'          => array(
