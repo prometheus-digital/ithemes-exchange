@@ -14,6 +14,7 @@ use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Transactions
+ *
  * @package iThemes\Exchange\REST\Route\Transaction
  */
 class Transactions extends Base implements Getable {
@@ -33,11 +34,14 @@ class Transactions extends Base implements Getable {
 	 */
 	public function handle_get( Request $request ) {
 
+		$page     = $request['page'];
+		$per_page = $request['per_page'];
+
 		$transactions = it_exchange_get_transactions( array(
 			'customer_id'    => $request['customer'],
-			'posts_per_page' => $request['per_page'],
-			'paged'          => $request['page'],
-		) );
+			'posts_per_page' => $per_page,
+			'paged'          => $page,
+		), $total );
 
 		$user = it_exchange_get_current_customer();
 		$data = array();
@@ -57,7 +61,39 @@ class Transactions extends Base implements Getable {
 			$data[] = $serialized;
 		}
 
-		return new \WP_REST_Response( $data );
+
+		$total_pages         = ceil( $total / $per_page );
+		$base_pagination_url = add_query_arg(
+			$request->get_query_params(),
+			\iThemes\Exchange\REST\get_rest_url( $this, array( $request->get_url_params() ) )
+		);
+
+		$response = new \WP_REST_Response( $data );
+		$response->header( 'X-WP-Total', $total );
+		$response->header( 'X-WP-TotalPages', ceil( $total / $total_pages ) );
+
+		$first_link = add_query_arg( 'page', 1, $base_pagination_url );
+		$response->link_header( 'first', $first_link );
+
+		if ( $page > 1 ) {
+			$prev_page = $page - 1;
+
+			if ( $prev_page > $total_pages ) {
+				$prev_page = $total_pages;
+			}
+
+			$prev_link = add_query_arg( 'page', $prev_page, $base_pagination_url );
+			$response->link_header( 'prev', $prev_link );
+		}
+
+		if ( $total_pages > $page ) {
+			$next_page = $page + 1;
+			$next_link = add_query_arg( 'page', $next_page, $base_pagination_url );
+
+			$response->link_header( 'next', $next_link );
+		}
+
+		return $response;
 	}
 
 	/**

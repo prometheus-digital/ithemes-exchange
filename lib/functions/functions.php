@@ -215,6 +215,8 @@ function it_exchange_register_scripts() {
 	wp_register_script( 'it-exchange-event-manager', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/event-manager.js' ), array(), false, true );
 
 	wp_register_script( 'jquery.payment', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/assets/js/jquery.payment.min.js', array( 'jquery' ), '1.3.2', true );
+	wp_register_script( 'backbonedeep', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/admin/js/backbone.modeldeep.min.js', array( 'backbone' ), '2.0.1', true );
+	wp_register_script( 'backbone.paginator', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/admin/js/backbone.paginator.min.js', array( 'backbone' ), '2.0.5', true );
 
 	// Select to Autocomplete
 	wp_register_script( 'jquery-select-to-autocomplete', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' ), array( 'jquery', 'jquery-ui-autocomplete' ) );

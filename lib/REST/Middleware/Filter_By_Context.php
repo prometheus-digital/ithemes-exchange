@@ -91,7 +91,6 @@ class Filter_By_Context implements Middleware {
 				}
 
 				$search = $exploded[1];
-				$search = substr( $search, 1 ); // Only support definitions found from the root of the document for now
 				$title  = $exploded[2];
 
 				if ( ! isset( $schema[ $search ], $schema[ $search ][ $title ] ) ) {

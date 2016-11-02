@@ -1,0 +1,36 @@
+<script type="text/template" id="tmpl-it-exchange-transaction-card">
+    <header>
+            <span class="it-exchange-transaction-card--total">
+               {{ data.totalFormatted }}
+            </span>
+
+            <span class="it-exchange-transaction-card--order-number">
+                {{ data.order_number }}
+            </span>
+
+            <span class="it-exchange-transaction-card--order-date">
+                {{ data.orderDateFormatted }}
+            </span>
+    </header>
+
+    <p class="it-exchange-transaction-card--description <# print ( data.description ? '' : 'it-exchange-transaction-card--no-description' ); #>">
+        {{ data.descriptionFormatted }}
+    </p>
+
+    <footer>
+        <img class="it-exchange-transaction-card--customer-avatar it-exchange-customer--avatar"
+             src="{{ data.customer_avatar }}" alt="{{ data.customer_name }}">
+
+            <span class="it-exchange-transaction-card--customer-name">
+                {{ data.customer_name }}
+            </span>
+
+        <ul class="it-exchange-transaction-card--tags">
+            <# _.each( data.tags, function( tag ) { #>
+                <li data-color="{{ tag.hex }}" style="background: {{ tag.hex }}; color: {{ tag.hex }}">
+                    {{ tag.label }}
+                </li>
+                <# }); #>
+        </ul>
+    </footer>
+</script>
