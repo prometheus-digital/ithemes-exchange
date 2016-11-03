@@ -221,6 +221,31 @@ function it_exchange_register_scripts() {
 	// Select to Autocomplete
 	wp_register_script( 'jquery-select-to-autocomplete', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' ), array( 'jquery', 'jquery-ui-autocomplete' ) );
 	wp_register_style( 'it-exchange-autocomplete-style', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/autocomplete.css' ) );
+
+	$settings = it_exchange_get_option( 'settings_general' );
+	$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
+
+	wp_register_script( 'it-exchange-common', IT_Exchange::$url . '/lib/assets/js/common.js' );
+	wp_localize_script( 'it-exchange-common', 'EXCHANGE_CONFIG', array(
+		'dateFormat'    => it_exchange_convert_php_to_moment( get_option( 'date_format' ) ),
+		'timeFormat'    => it_exchange_convert_php_to_moment( get_option( 'time_format' ) ),
+		'symbol'        => $currency,
+		'symbolPos'     => $settings['currency-symbol-position'],
+		'decimals'      => 2,
+		'thousandsSep'  => $settings['currency-thousands-separator'],
+		'decimalsSep'   => $settings['currency-decimals-separator'],
+		'restNonce'     => wp_create_nonce( 'wp_rest' ),
+		'restUrl'       => rest_url( 'it_exchange/v1/' ),
+	) );
+
+	wp_register_script(
+		'it-exchange-rest',
+		IT_Exchange::$url . '/lib/assets/js/rest.js',
+		array(
+			'backbone', 'underscore', 'it-exchange-common', 'wp-util', 'ithemes-momentjs', 'backbonedeep',
+			'wp-backbone', 'backbone.paginator'
+		)
+	);
 }
 add_action( 'wp_enqueue_scripts', 'it_exchange_register_scripts', 1 );
 add_action( 'admin_enqueue_scripts', 'it_exchange_register_scripts', 1 );

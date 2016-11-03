@@ -37,11 +37,22 @@ class Transactions extends Base implements Getable {
 		$page     = $request['page'];
 		$per_page = $request['per_page'];
 
-		$transactions = it_exchange_get_transactions( array(
+		$args = array(
 			'customer_id'    => $request['customer'],
 			'posts_per_page' => $per_page,
 			'paged'          => $page,
-		), $total );
+			'parent'         => $request['parent'],
+		);
+
+		if ( $request['order_number'] ) {
+			$args['ID'] = (int) preg_replace( '/\D/', '', $request['order_number'] );
+		}
+
+		if ( $request['cleared_for_delivery'] !== null ) {
+			$args['cleared'] = $request['cleared_for_delivery'];
+		}
+
+		$transactions = it_exchange_get_transactions( $args, $total );
 
 		$user = it_exchange_get_current_customer();
 		$data = array();
@@ -117,6 +128,22 @@ class Transactions extends Base implements Getable {
 			);
 		}
 
+		if ( $request['parent'] && ! user_can( $user->wp_user, 'edit_it_transaction', $request['parent'] ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( 'Sorry, you cannot edit that prent transaction.' ),
+				array( 'status' => \WP_Http::UNAUTHORIZED )
+			);
+
+		}
+		if ( $request['method_id'] && ! user_can( $user->wp_user, 'list_it_transactions' ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( 'Sorry, you cannot filter transactions by method id.' ),
+				array( 'status' => \WP_Http::UNAUTHORIZED )
+			);
+		}
+
 		return true;
 	}
 
@@ -135,7 +162,7 @@ class Transactions extends Base implements Getable {
 	 */
 	public function get_query_args() {
 		return array(
-			'page'     => array(
+			'page'                 => array(
 				'description'       => __( 'Current page of the collection.', 'it-l10n-ithemes-exchange' ),
 				'type'              => 'integer',
 				'default'           => 1,
@@ -143,7 +170,7 @@ class Transactions extends Base implements Getable {
 				'validate_callback' => 'rest_validate_request_arg',
 				'minimum'           => 1,
 			),
-			'per_page' => array(
+			'per_page'             => array(
 				'description'       => __( 'Maximum number of items to be returned in result set.', 'it-l10n-ithemes-exchange' ),
 				'type'              => 'integer',
 				'default'           => 10,
@@ -152,12 +179,37 @@ class Transactions extends Base implements Getable {
 				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
 			),
-			'customer' => array(
+			'customer'             => array(
 				'description'       => __( 'The customer whose transactions should be retrieved.', 'it-l10n-ithemes-exchange' ),
 				'type'              => 'integer',
 				'default'           => 0,
 				'sanitize_callback' => 'rest_sanitize_request_arg',
 				'validate_callback' => 'rest_validate_request_arg',
+			),
+			'parent'               => array(
+				'description'       => __( 'Retrieve child transactions of a given parent.', 'it-l10n-ithemes-exchange' ),
+				'type'              => 'integer',
+				'default'           => null,
+				'sanitize_callback' => 'rest_sanitize_request_arg'
+			),
+			'order_number'         => array(
+				'description' => __( 'Filter transactions by order number.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'string',
+			),
+			'cleared_for_delivery' => array(
+				'description'       => __( 'Only return transactions that have been cleared for delivery.', 'it-l10n-ithemes-exchange' ),
+				'type'              => 'boolean',
+				'default'           => null,
+				'sanitize_callback' => 'rest_sanitize_request_arg'
+			),
+			'method'               => array(
+				'description' => __( 'Filter by transaction method.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'string',
+				'enum'        => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::all() )
+			),
+			'method_id'            => array(
+				'description' => __( 'Filter by method id.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'string',
 			),
 		);
 	}

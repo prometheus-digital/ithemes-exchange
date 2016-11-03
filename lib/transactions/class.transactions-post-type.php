@@ -76,30 +76,14 @@ class IT_Exchange_Transaction_Post_Type {
 			'it-exchange-transactions',
 			function() {
 
-				$settings = it_exchange_get_option( 'settings_general' );
-				$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
 				$serializer = new \iThemes\Exchange\REST\Route\Transaction\Serializer();
 				$preload = rest_do_request( WP_REST_Request::from_url( rest_url( '/it_exchange/v1/transactions?per_page=20&context=embed' ) ) );
 				$headers =  $preload->get_headers();
 
-				wp_register_script( 'it-exchange-common', IT_Exchange::$url . '/lib/admin/js/common.js' );
-				wp_localize_script( 'it-exchange-common', 'EXCHANGE_CONFIG', array(
-					'dateFormat'    => it_exchange_convert_php_to_moment( get_option( 'date_format' ) ),
-					'timeFormat'    => it_exchange_convert_php_to_moment( get_option( 'time_format' ) ),
-					'symbol'        => $currency,
-					'symbolPos'     => $settings['currency-symbol-position'],
-					'decimals'      => 2,
-					'thousandsSep'  => $settings['currency-thousands-separator'],
-					'decimalsSep'   => $settings['currency-decimals-separator'],
-					'restNonce'     => wp_create_nonce( 'wp_rest' ),
-					'restUrl'       => rest_url( 'it_exchange/v1/' ),
-				) );
-
-				wp_enqueue_script( 'wp-api' );
 				wp_enqueue_script(
 					'it-exchange-transactions',
 					IT_Exchange::$url . '/lib/admin/js/transactions/transactions.js',
-					array( 'backbone', 'underscore', 'it-exchange-common', 'wp-util', 'ithemes-momentjs', 'backbonedeep', 'wp-backbone', 'backbone.paginator' )
+					array( 'it-exchange-rest' )
 				);
 				wp_localize_script( 'it-exchange-transactions', 'ITExchangeTransactions', array(
 					'transactions'       => $preload->get_data(),
@@ -118,7 +102,7 @@ class IT_Exchange_Transaction_Post_Type {
 				wp_enqueue_style( 'it-exchange-transactions', IT_Exchange::$url . '/lib/admin/styles/transactions.css' );
 ?>
 				<div class="wrap">
-					<h1>Transactions</h1>
+					<h1><?php _e( 'Transactions', 'it-l10n-ithemes-exchange' ); ?></h1>
 					<div id="it-exchange-transactions-pagination-container"></div>
 					<div id="it-exchange-transactions-container"></div>
 				</div>

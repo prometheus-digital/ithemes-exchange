@@ -9,6 +9,9 @@
 namespace iThemes\Exchange\REST;
 use iThemes\Exchange\REST\Middleware\Stack;
 use iThemes\Exchange\REST\Route\Base;
+use JsonSchema\Constraints\Constraint;
+use JsonSchema\Constraints\Factory;
+use JsonSchema\Validator;
 
 /**
  * Class Manager
