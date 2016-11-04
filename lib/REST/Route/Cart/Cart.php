@@ -426,13 +426,13 @@ class Cart implements Getable, Putable, Deletable {
 				),
 				'subtotal'         => array(
 					'description' => __( 'The subtotal of the cart.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'total'            => array(
 					'description' => __( 'The total of the cart.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
@@ -465,7 +465,7 @@ class Cart implements Getable, Putable, Deletable {
 							),
 							'total'       => array(
 								'description' => __( 'The total of the line item type.', 'it-l10n-ithemes-exchange' ),
-								'type'        => 'float',
+								'type'        => 'number',
 								'readonly'    => true,
 								'context'     => array( 'view', 'edit' )
 							),

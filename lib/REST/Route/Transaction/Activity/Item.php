@@ -15,6 +15,7 @@ use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Item
+ *
  * @package iThemes\Exchange\REST\Route\Transaction\Activity
  */
 class Item extends Base implements Getable, Deletable {
@@ -118,13 +119,11 @@ class Item extends Base implements Getable, Deletable {
 	public function get_query_args() {
 		return array(
 			'icon_size' => array(
-				'description'       => __( 'The size of the activity icons.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'integer',
-				'default'           => 96,
-				'minimum'           => 64,
-				'maximum'           => 256,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
+				'description' => __( 'The size of the activity icons.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'integer',
+				'default'     => 96,
+				'minimum'     => 64,
+				'maximum'     => 256,
 			),
 		);
 	}

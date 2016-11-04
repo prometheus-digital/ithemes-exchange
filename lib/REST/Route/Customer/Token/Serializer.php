@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST\Route\Customer\Token;
 
 /**
  * Class Serializer
+ *
  * @package iThemes\Exchange\REST\Route\Customer\Token
  */
 class Serializer {
@@ -60,25 +61,30 @@ class Serializer {
 					'type'        => 'string',
 					'enum'        => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
 					'context'     => array( 'view', 'edit', 'embed' ),
-					'readonly'    => true,
+					'writeonly'   => true,
 					'required'    => true,
 				),
 				'label'    => array(
 					'description' => __( 'The user-provided label for this token.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'object',
-					'context'     => array( 'view', 'edit', 'embed' ),
-					'properties'  => array(
-						'raw'      => array(
-							'type'        => 'string',
-							'context'     => array( 'edit' ),
-							'description' => __( 'The raw user provided label for the payment token.', 'it-l10n-ithemes-exchange' ),
+					'oneOf'       => array(
+						array(
+							'type'       => 'object',
+							'context'    => array( 'view', 'edit', 'embed' ),
+							'properties' => array(
+								'raw'      => array(
+									'type'        => 'string',
+									'context'     => array( 'edit' ),
+									'description' => __( 'The raw user provided label for the payment token.', 'it-l10n-ithemes-exchange' ),
+								),
+								'rendered' => array(
+									'type'        => 'string',
+									'context'     => array( 'view', 'edit', 'embed' ),
+									'description' => __( 'The label for the payment token.', 'it-l10n-ithemes-exchange' ),
+								),
+							),
 						),
-						'rendered' => array(
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit', 'embed' ),
-							'description' => __( 'The label for the payment token.', 'it-l10n-ithemes-exchange' ),
-						),
-					),
+						array( 'type' => 'string' )
+					)
 				),
 				'redacted' => array(
 					'description' => __( 'The redacted form of the underlying payment source.', 'it-l10n-ithemes-exchange' ),

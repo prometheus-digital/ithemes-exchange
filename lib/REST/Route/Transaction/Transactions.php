@@ -163,44 +163,36 @@ class Transactions extends Base implements Getable {
 	public function get_query_args() {
 		return array(
 			'page'                 => array(
-				'description'       => __( 'Current page of the collection.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'integer',
-				'default'           => 1,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
-				'minimum'           => 1,
+				'description' => __( 'Current page of the collection.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'integer',
+				'default'     => 1,
+				'minimum'     => 1,
 			),
 			'per_page'             => array(
-				'description'       => __( 'Maximum number of items to be returned in result set.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'integer',
-				'default'           => 10,
-				'minimum'           => 1,
-				'maximum'           => 100,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
+				'description' => __( 'Maximum number of items to be returned in result set.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'integer',
+				'default'     => 10,
+				'minimum'     => 1,
+				'maximum'     => 100,
 			),
 			'customer'             => array(
-				'description'       => __( 'The customer whose transactions should be retrieved.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'integer',
-				'default'           => 0,
-				'sanitize_callback' => 'rest_sanitize_request_arg',
-				'validate_callback' => 'rest_validate_request_arg',
+				'description' => __( 'The customer whose transactions should be retrieved.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'integer',
+				'default'     => 0,
 			),
 			'parent'               => array(
-				'description'       => __( 'Retrieve child transactions of a given parent.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'integer',
-				'default'           => null,
-				'sanitize_callback' => 'rest_sanitize_request_arg'
+				'description' => __( 'Retrieve child transactions of a given parent.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'integer',
+				'default'     => null,
 			),
 			'order_number'         => array(
 				'description' => __( 'Filter transactions by order number.', 'it-l10n-ithemes-exchange' ),
 				'type'        => 'string',
 			),
 			'cleared_for_delivery' => array(
-				'description'       => __( 'Only return transactions that have been cleared for delivery.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'boolean',
-				'default'           => null,
-				'sanitize_callback' => 'rest_sanitize_request_arg'
+				'description' => __( 'Only return transactions that have been cleared for delivery.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'boolean',
+				'default'     => null,
 			),
 			'method'               => array(
 				'description' => __( 'Filter by transaction method.', 'it-l10n-ithemes-exchange' ),

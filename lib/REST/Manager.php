@@ -7,10 +7,12 @@
  */
 
 namespace iThemes\Exchange\REST;
+
 use iThemes\Exchange\REST\Middleware\Stack;
 use iThemes\Exchange\REST\Route\Base;
 use JsonSchema\Constraints\Constraint;
 use JsonSchema\Constraints\Factory;
+use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;
 
 /**
@@ -28,6 +30,9 @@ class Manager {
 
 	/** @var \iThemes\Exchange\REST\Middleware\Stack */
 	private $middleware;
+
+	/** @var SchemaStorage */
+	private $schema_storage;
 
 	/** @var bool */
 	private $initialized = false;
@@ -47,8 +52,9 @@ class Manager {
 	 * @param \iThemes\Exchange\REST\Middleware\Stack $stack
 	 */
 	public function __construct( $namespace, Stack $stack ) {
-		$this->namespace  = $namespace;
-		$this->middleware = $stack;
+		$this->namespace      = $namespace;
+		$this->middleware     = $stack;
+		$this->schema_storage = new SchemaStorage();
 	}
 
 	/**
@@ -151,6 +157,7 @@ class Manager {
 		}
 
 		add_filter( 'rest_authentication_errors', array( $this, 'authenticate' ), 20 );
+		add_filter( 'rest_dispatch_request', array( $this, 'conform_request_to_schema' ), 10, 4 );
 
 		return $this;
 	}
@@ -187,6 +194,12 @@ class Manager {
 	 * @return bool
 	 */
 	private function register_with_server( Route $route ) {
+
+		if ( $schema = $route->get_schema() ) {
+			$transformed_schema = $this->transform_schema( $schema );
+			$schema_object      = json_decode( json_encode( $transformed_schema ) );
+			$this->schema_storage->addSchema( $transformed_schema['title'], $schema_object );
+		}
 
 		$path     = '';
 		$building = $route;
@@ -254,6 +267,7 @@ class Manager {
 				'callback'            => $handle,
 				'permission_callback' => $permission,
 				'args'                => $method_args,
+				'ite_route'           => $route,
 			);
 		}
 
@@ -281,6 +295,111 @@ class Manager {
 	}
 
 	/**
+	 * Conform a request to a schema.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param \WP_Error|\WP_HTTP_Response|null $response
+	 * @param \WP_REST_Request                 $request
+	 * @param string                           $route
+	 * @param array                            $handler
+	 *
+	 * @return null|\WP_Error
+	 */
+	public function conform_request_to_schema( $response, $request, $route, $handler ) {
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		if ( empty( $handler['ite_route'] ) || ! $handler['ite_route'] instanceof Route ) {
+			return $response;
+		}
+
+		/** @var Route $route */
+		$route      = $handler['ite_route'];
+		$request    = Request::from_wp( $request );
+		$schema     = $route->get_schema();
+		$query_args = $route->get_query_args();
+
+		$factory       = new Factory( $this->schema_storage, null, Constraint::CHECK_MODE_TYPE_CAST | Constraint::CHECK_MODE_COERCE );
+		$validator     = new Validator( $factory );
+		$schema_object = $this->schema_storage->getSchema( $schema['title'] );
+
+		$to_validate = array();
+
+		$types_to_check = $request->get_method() === 'GET' ? array( 'GET' ) : array( 'JSON', 'POST' );
+		$properties     = $request->get_method() === 'GET' ? $query_args : $schema['properties'];
+
+		foreach ( $properties as $property => $_ ) {
+			if ( $request->has_param( $property, $types_to_check ) ) {
+				$to_validate[ $property ] = $request[ $property ];
+			}
+		}
+
+		$to_validate = json_decode( json_encode( $to_validate ) );
+
+		if ( $request->get_method() === 'GET' ) {
+			$schema_object = json_decode( json_encode( array(
+				'type'       => 'object',
+				'properties' => $properties
+			) ) );
+		}
+
+		$validator->check( $to_validate, $schema_object );
+
+		foreach ( json_decode( json_encode( $to_validate ), true ) as $prop => $value ) {
+			$request[ $prop ] = $value;
+		}
+
+		if ( $validator->isValid() ) {
+			return null;
+		}
+
+		$invalid_params = array();
+
+		foreach ( $validator->getErrors() as $error ) {
+			$invalid_params[ $error['property'] ] = $error['message'];
+		}
+
+		return new \WP_Error(
+			'rest_invalid_param',
+			sprintf( __( 'Invalid parameter(s): %s' ), implode( ', ', array_keys( $invalid_params ) ) ),
+			array( 'status' => 400, 'params' => $invalid_params )
+		);
+	}
+
+	/**
+	 * Transform a schema to properly adhere to JSON schema.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $schema
+	 *
+	 * @return array
+	 */
+	protected function transform_schema( $schema ) {
+
+		if ( ! isset( $schema['properties'] ) ) {
+			return $schema;
+		}
+
+		$required = array();
+
+		foreach ( $schema['properties'] as $property => $config ) {
+			if ( ! empty( $config['required'] ) ) {
+				$required[] = $property;
+			}
+
+			unset( $config['required'] );
+		}
+
+		$schema['required'] = $required;
+
+		return $schema;
+	}
+
+	/**
 	 * Generate the endpoint args for the server.
 	 *
 	 * @since 1.36.0
@@ -305,8 +424,8 @@ class Manager {
 			}
 
 			$endpoint_args[ $field_id ] = array(
-				'validate_callback' => 'rest_validate_request_arg',
-				'sanitize_callback' => 'rest_sanitize_request_arg',
+				'validate_callback' => false,
+				'sanitize_callback' => false,
 			);
 
 			if ( \WP_REST_Server::CREATABLE === $verb && isset( $params['default'] ) ) {
@@ -353,6 +472,16 @@ class Manager {
 	protected function generate_query_args_for_server( Route $route ) {
 
 		$args = $route->get_query_args();
+
+		foreach ( $args as $arg ) {
+			if ( ! isset( $arg['sanitize_callback'] ) ) {
+				$arg['sanitize_callback'] = false;
+			}
+
+			if ( ! isset( $arg['validate_callback'] ) ) {
+				$arg['validate_callback'] = false;
+			}
+		}
 
 		$args['context'] = $this->get_context_param( $route, array( 'default' => 'view' ) );
 

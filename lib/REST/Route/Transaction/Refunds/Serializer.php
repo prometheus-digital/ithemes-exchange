@@ -13,6 +13,7 @@ use iThemes\Exchange\REST as r;
 
 /**
  * Class Serializer
+ *
  * @package iThemes\Exchange\REST\Route\Transaction\Refunds
  */
 class Serializer {
@@ -90,11 +91,10 @@ class Serializer {
 				),
 				'amount'     => array(
 					'description' => __( 'The total amount refunded.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 					'minimum'     => 0.00,
-					'validate'    => 'rest_validate_request_arg',
 				),
 				'reason'     => array(
 					'description' => __( 'The user-provided reason for this refund.', 'it-l10n-ithemes-exchange' ),

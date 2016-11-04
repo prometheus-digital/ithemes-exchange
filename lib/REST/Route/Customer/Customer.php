@@ -316,7 +316,7 @@ class Customer extends Route\Base implements Getable {
 				),
 				'total_spent'       => array(
 					'description' => __( 'The total amount the customer has spent in the store.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'stats' ),
 				),
 				'transaction_count' => array(

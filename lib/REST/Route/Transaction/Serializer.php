@@ -303,19 +303,19 @@ class Serializer {
 				),
 				'subtotal'             => array(
 					'description' => __( 'The transaction subtotal.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'total'                => array(
 					'description' => __( 'The transaction total.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'total_before_refunds' => array(
 					'description' => __( 'The transaction total before refunds have been applied.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
