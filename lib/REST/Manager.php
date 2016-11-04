@@ -472,6 +472,7 @@ class Manager {
 	protected function generate_query_args_for_server( Route $route ) {
 
 		$args = $route->get_query_args();
+		$args['context'] = $this->get_context_param( $route, array( 'default' => 'view' ) );
 
 		foreach ( $args as $arg ) {
 			if ( ! isset( $arg['sanitize_callback'] ) ) {
@@ -482,8 +483,6 @@ class Manager {
 				$arg['validate_callback'] = false;
 			}
 		}
-
-		$args['context'] = $this->get_context_param( $route, array( 'default' => 'view' ) );
 
 		return $args;
 	}
@@ -502,10 +501,8 @@ class Manager {
 	 */
 	protected function get_context_param( Route $route, $args = array() ) {
 		$param_details = array(
-			'description'       => __( 'Scope under which the request is made; determines fields present in response.' ),
+			'description'       => __( 'Scope under which the request is made; determines fields present in response.', 'it-l10n-ithemes-exchange' ),
 			'type'              => 'string',
-			'sanitize_callback' => 'sanitize_key',
-			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$schema = $route->get_schema();
