@@ -13,6 +13,7 @@ use iThemes\Exchange\REST\Route\Base;
 use JsonSchema\Constraints\Constraint;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\SchemaStorage;
+use JsonSchema\Uri\Retrievers\PredefinedArray;
 use JsonSchema\Validator;
 
 /**
@@ -322,7 +323,19 @@ class Manager {
 		$schema     = $route->get_schema();
 		$query_args = $route->get_query_args();
 
-		$factory       = new Factory( $this->schema_storage, null, Constraint::CHECK_MODE_TYPE_CAST | Constraint::CHECK_MODE_COERCE );
+		if ( ! $schema && ( $request->get_method() === 'POST' || $request->get_method() === 'PUT' ) ) {
+			return $response;
+		}
+
+		if ( ! $query_args && $request->get_method() === 'GET' ) {
+			return $response;
+		}
+
+		$factory       = new Factory(
+			$this->schema_storage,
+			null, //new PredefinedArray( array() ),
+			Constraint::CHECK_MODE_TYPE_CAST | Constraint::CHECK_MODE_COERCE
+		);
 		$validator     = new Validator( $factory );
 		$schema_object = $this->schema_storage->getSchema( $schema['title'] );
 
