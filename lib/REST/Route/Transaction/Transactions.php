@@ -52,6 +52,10 @@ class Transactions extends Base implements Getable {
 			$args['cleared'] = $request['cleared_for_delivery'];
 		}
 
+		if ( $request['s'] ) {
+			$args['s'] = $request['s'];
+		}
+
 		$transactions = it_exchange_get_transactions( $args, $total );
 
 		$user = it_exchange_get_current_customer();
@@ -73,7 +77,7 @@ class Transactions extends Base implements Getable {
 		}
 
 
-		$total_pages         = ceil( $total / $per_page );
+		$total_pages         = $total ? ceil( $total / $per_page ) : 0;
 		$base_pagination_url = add_query_arg(
 			$request->get_query_params(),
 			\iThemes\Exchange\REST\get_rest_url( $this, array( $request->get_url_params() ) )
@@ -81,7 +85,7 @@ class Transactions extends Base implements Getable {
 
 		$response = new \WP_REST_Response( $data );
 		$response->header( 'X-WP-Total', $total );
-		$response->header( 'X-WP-TotalPages', ceil( $total / $total_pages ) );
+		$response->header( 'X-WP-TotalPages', $total ? ceil( $total / $total_pages ) : 0 );
 
 		$first_link = add_query_arg( 'page', 1, $base_pagination_url );
 		$response->link_header( 'first', $first_link );
@@ -202,6 +206,12 @@ class Transactions extends Base implements Getable {
 			'method_id'            => array(
 				'description' => __( 'Filter by method id.', 'it-l10n-ithemes-exchange' ),
 				'type'        => 'string',
+			),
+			's'                    => array(
+				'description' => __( 'Search transactions.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'string',
+				'minLength'   => 3,
+				'maxLength'   => 300,
 			),
 		);
 	}

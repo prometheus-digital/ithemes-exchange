@@ -221,12 +221,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/iron-bound-designs/IronBound-DB.git",
-                "reference": "07036ccadeafcd9842965c0a12ade24299788c58"
+                "reference": "5e87e970ea14c1083e1d5a43766aec58bf25f82e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iron-bound-designs/IronBound-DB/zipball/07036ccadeafcd9842965c0a12ade24299788c58",
-                "reference": "07036ccadeafcd9842965c0a12ade24299788c58",
+                "url": "https://api.github.com/repos/iron-bound-designs/IronBound-DB/zipball/5e87e970ea14c1083e1d5a43766aec58bf25f82e",
+                "reference": "5e87e970ea14c1083e1d5a43766aec58bf25f82e",
                 "shasum": ""
             },
             "require": {
@@ -263,7 +263,7 @@
                 }
             ],
             "description": "Provides models and custom query objects for custom database tables in WordPress.",
-            "time": "2016-09-09 16:41:18"
+            "time": "2016-11-05 12:01:23"
         },
         {
             "name": "ironbound/wpevents",
@@ -1517,16 +1517,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.12",
+            "version": "v2.8.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "e7540734bad981fe59f8ef14b6fc194ae9df8d9c"
+                "reference": "396784cd06b91f3db576f248f2402d547a077787"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/e7540734bad981fe59f8ef14b6fc194ae9df8d9c",
-                "reference": "e7540734bad981fe59f8ef14b6fc194ae9df8d9c",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/396784cd06b91f3db576f248f2402d547a077787",
+                "reference": "396784cd06b91f3db576f248f2402d547a077787",
                 "shasum": ""
             },
             "require": {
@@ -1562,7 +1562,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-02 01:57:56"
+            "time": "2016-10-21 20:59:10"
         }
     ],
     "aliases": [],
