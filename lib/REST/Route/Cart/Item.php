@@ -167,4 +167,13 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function get_schema() { return $this->serializer->get_schema(); }
+
+	/**
+	 * Get the item type this endpoint represents.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Line_Item_Type
+	 */
+	public function get_type() { return $this->type; }
 }

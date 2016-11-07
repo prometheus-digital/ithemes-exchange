@@ -19,6 +19,8 @@ use iThemes\Exchange\REST\Route\Cart\Item;
 use iThemes\Exchange\REST\Route\Cart\Meta;
 use iThemes\Exchange\REST\Route\Cart\Purchase;
 use iThemes\Exchange\REST\Route\Cart\Shipping_Methods;
+use iThemes\Exchange\REST\Route\Cart\Types;
+use iThemes\Exchange\REST\Route\Cart\TypeSerializer;
 use iThemes\Exchange\REST\Route\Customer\Customer;
 use iThemes\Exchange\REST\Route\Customer\Token\Serializer as TokenSerializer;
 use iThemes\Exchange\REST\Route\Customer\Token\Tokens;
@@ -53,8 +55,13 @@ add_action( 'rest_api_init', function () {
 add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
 	$cart = new Route\Cart\Cart();
+	$carts = new Carts( $cart );
+
 	$manager->register_route( $cart );
-	$manager->register_route( new Carts( $cart ) );
+	$manager->register_route( $carts );
+
+	$item_types = new Route\Cart\Types( new TypeSerializer() );
+	$manager->register_route( $item_types );
 
 	foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
 		$items_route = new Route\Cart\Items( $item_type->get_rest_serializer(), $item_type );

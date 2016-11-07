@@ -309,6 +309,10 @@ class Manager {
 	 */
 	public function conform_request_to_schema( $response, $request, $route, $handler ) {
 
+		if ( $request->get_method() === 'DELETE' ) {
+			return null;
+		}
+
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		}
@@ -484,7 +488,7 @@ class Manager {
 	 */
 	protected function generate_query_args_for_server( Route $route ) {
 
-		$args = $route->get_query_args();
+		$args            = $route->get_query_args();
 		$args['context'] = $this->get_context_param( $route, array( 'default' => 'view' ) );
 
 		foreach ( $args as $arg ) {
@@ -514,8 +518,8 @@ class Manager {
 	 */
 	protected function get_context_param( Route $route, $args = array() ) {
 		$param_details = array(
-			'description'       => __( 'Scope under which the request is made; determines fields present in response.', 'it-l10n-ithemes-exchange' ),
-			'type'              => 'string',
+			'description' => __( 'Scope under which the request is made; determines fields present in response.', 'it-l10n-ithemes-exchange' ),
+			'type'        => 'string',
 		);
 
 		$schema = $route->get_schema();

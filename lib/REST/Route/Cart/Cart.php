@@ -288,7 +288,7 @@ class Cart implements Getable, Putable, Deletable {
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
-				'iis_main'         => array(
+				'is_main'          => array(
 					'description' => __( 'Is this the main cart for the customer.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'edit', 'embed' ),

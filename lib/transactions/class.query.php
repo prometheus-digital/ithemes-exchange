@@ -179,8 +179,6 @@ class ITE_Transaction_Query {
 		$this->query->results();
 		$this->queried = true;
 
-		error_log( $this->_get_sql() );
-
 		return $this->query;
 	}
 
