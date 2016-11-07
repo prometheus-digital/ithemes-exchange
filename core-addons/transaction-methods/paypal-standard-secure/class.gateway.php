@@ -25,6 +25,7 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 		$this->handlers[] = new ITE_PayPal_Standard_Secure_Purchase_Handler( $this, $factory );
 		$this->handlers[] = new ITE_PayPal_Standard_Secure_Webhook_Handler();
 		$this->handlers[] = new ITE_PayPal_Standard_Secure_Refund_Request_Handler( $this );
+		$this->handlers[] = new ITE_PayPal_Standard_Secure_Cancel_Subscription_Handler();
 	}
 
 	/**
