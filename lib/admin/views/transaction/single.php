@@ -137,7 +137,14 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 					</div>
 					<div class="product-subtotal item-subtotal right">
 						<?php do_action( 'it_exchange_transaction_print_metabox_before_product_feature_subtotal', $post, $product_item->bc() ); ?>
-						<?php esc_attr_e( it_exchange_format_price( $product_item->get_total() ) ); ?>
+						<?php
+							$total = $product_item->get_total();
+							$total_negative = $product_item->get_line_items()->filter( function ( ITE_Line_Item $item ) {
+								return ! $item->is_summary_only() && $item->get_total() < 0;
+							} )->total();
+							$total += $total_negative * -1;
+						?>
+						<?php esc_attr_e( it_exchange_format_price( $total ) ); ?>
 						<?php do_action( 'it_exchange_transaction_print_metabox_after_product_feature_subtotal', $post, $product_item->bc() ); ?>
 					</div>
 					<?php do_action( 'it_exchange_transaction_details_end_product_header', $post, $product_item->bc() ); ?>
@@ -205,7 +212,19 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 					</div>
 					<div class="<?php echo $other_item->get_type(); ?>--subtotal item-subtotal right">
 						<?php do_action( 'it_exchange_transaction_print_metabox_before_item_total', $txn, $other_item ); ?>
-						<?php esc_attr_e( it_exchange_format_price( $other_item->get_total() ) ); ?>
+						<?php
+						$total = $other_item->get_total();
+
+						if ( $other_item instanceof ITE_Aggregate_Line_Item ) {
+							$total_negative = $other_item->get_line_items()->filter( function ( ITE_Line_Item $item ) {
+								return ! $item->is_summary_only() && $item->get_total() < 0;
+							} )->total();
+
+							$total += $total_negative * -1;
+						}
+
+						esc_attr_e( it_exchange_format_price( $total ) );
+						?>
 						<?php do_action( 'it_exchange_transaction_print_metabox_after_item_total', $txn, $other_item ); ?>
 					</div>
 					<?php do_action( 'it_exchange_transaction_details_end_item_header', $txn, $other_item ); ?>

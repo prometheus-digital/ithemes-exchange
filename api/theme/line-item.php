@@ -147,10 +147,20 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 		);
 		$options  = ITUtility::merge_defaults( $options, $defaults );
 
+		$total = $this->item->get_total();
+
+		if ( $this->item instanceof ITE_Aggregate_Line_Item ) {
+			$total_negative = $this->item->get_line_items()->filter( function ( ITE_Line_Item $item ) {
+				return ! $item->is_summary_only() && $item->get_total() < 0;
+			} )->total();
+
+			$total += $total_negative * -1;
+		}
+
 		if ( $options['format'] ) {
-			return $options['before'] . it_exchange_format_price( $this->item->get_total() ) . $options['after'];
+			return $options['before'] . it_exchange_format_price( $total ) . $options['after'];
 		} else {
-			return $options['before'] . $this->item->get_total() . $options['after'];
+			return $options['before'] . $total . $options['after'];
 		}
 	}
 

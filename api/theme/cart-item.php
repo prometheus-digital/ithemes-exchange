@@ -221,7 +221,18 @@ class IT_Theme_API_Cart_Item extends IT_Theme_API_Line_Item {
 	 * @return string
 	 */
 	public function sub_total( $options = array() ) {
-		return apply_filters( 'it_exchange_api_theme_cart_item_sub_total', it_exchange_format_price( $this->item->get_total() ), $this->_cart_item, $this->item );
+
+		$total = $this->item->get_total();
+
+		if ( $this->item instanceof ITE_Aggregate_Line_Item ) {
+			$total_negative = $this->item->get_line_items()->filter( function ( ITE_Line_Item $item ) {
+				return ! $item->is_summary_only() && $item->get_total() < 0;
+			} )->total();
+
+			$total += $total_negative * -1;
+		}
+
+		return apply_filters( 'it_exchange_api_theme_cart_item_sub_total', it_exchange_format_price( $total ), $this->_cart_item, $this->item );
 	}
 
 	/**
