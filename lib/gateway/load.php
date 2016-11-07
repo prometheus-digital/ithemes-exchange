@@ -13,7 +13,7 @@ require_once dirname( __FILE__ ) . '/interface.request.php';
 require_once dirname( __FILE__ ) . '/interface.request-handler.php';
 require_once dirname( __FILE__ ) . '/class.request-factory.php';
 
-require_once dirname( __FILE__ ) . '/handlers/interface.purchase.php';
+require_once dirname( __FILE__ ) . '/requests/interface.purchase.php';
 require_once dirname( __FILE__ ) . '/requests/class.purchase.php';
 require_once dirname( __FILE__ ) . '/requests/class.tokenize.php';
 require_once dirname( __FILE__ ) . '/requests/class.webhook.php';
