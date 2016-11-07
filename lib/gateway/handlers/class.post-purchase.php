@@ -16,16 +16,16 @@ abstract class ITE_POST_Redirect_Purchase_Request_Handler extends ITE_Redirect_P
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
 	 * @return array
 	 */
-	protected abstract function get_vars_to_post( ITE_Gateway_Purchase_Request $request );
+	protected abstract function get_vars_to_post( ITE_Gateway_Purchase_Request_Interface $request );
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function redirect( ITE_Gateway_Purchase_Request $request ) {
+	protected function redirect( ITE_Gateway_Purchase_Request_Interface $request ) {
 		it_exchange_set_global( 'purchase_interstitial', array(
 			'gateway' => $this->get_gateway()->get_slug(),
 			'url'     => $this->get_redirect_url( $request ),
@@ -38,7 +38,7 @@ abstract class ITE_POST_Redirect_Purchase_Request_Handler extends ITE_Redirect_P
 	/**
 	 * @inheritDoc
 	 */
-	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
+	public function get_data_for_REST( ITE_Gateway_Purchase_Request_Interface $request ) {
 		return array_merge( parent::get_data_for_REST( $request ), array(
 			'vars' => $this->get_vars_to_post( $request ),
 		) );

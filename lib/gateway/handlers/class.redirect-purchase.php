@@ -77,7 +77,7 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	 *
 	 * @since 1.36
 	 */
-	protected function redirect( ITE_Gateway_Purchase_Request $request ) {
+	protected function redirect( ITE_Gateway_Purchase_Request_Interface $request ) {
 		wp_redirect( $this->get_redirect_url( $request ) );
 		die();
 	}
@@ -85,7 +85,7 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	/**
 	 * @inheritDoc
 	 */
-	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
+	public function get_data_for_REST( ITE_Gateway_Purchase_Request_Interface $request ) {
 		return array(
 			'method' => 'redirect',
 			'url'    => $this->get_redirect_url( $request ),
@@ -98,9 +98,9 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	 *
 	 * @since 1.36
 	 *
-	 * @param ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
 	 * @return string
 	 */
-	public abstract function get_redirect_url( ITE_Gateway_Purchase_Request $request );
+	public abstract function get_redirect_url( ITE_Gateway_Purchase_Request_Interface $request );
 }

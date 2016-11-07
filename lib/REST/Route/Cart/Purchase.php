@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST\Route\Cart;
 
+use ITE_Gateway_Purchase_Request_Interface;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
 use iThemes\Exchange\REST\Request;
@@ -58,12 +59,12 @@ class Purchase extends Base implements Getable, Postable {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \ITE_Purchase_Request_Handler $handler
-	 * @param \ITE_Gateway_Purchase_Request $request
+	 * @param \ITE_Purchase_Request_Handler          $handler
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
 	 * @return array
 	 */
-	protected function get_data_for_handler( \ITE_Purchase_Request_Handler $handler, \ITE_Gateway_Purchase_Request $request ) {
+	protected function get_data_for_handler( \ITE_Purchase_Request_Handler $handler, ITE_Gateway_Purchase_Request_Interface $request ) {
 
 		$data = array(
 			'id'     => $handler->get_gateway()->get_slug(),
