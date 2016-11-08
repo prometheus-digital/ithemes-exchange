@@ -9,6 +9,8 @@
 namespace iThemes\Exchange\REST\Middleware;
 
 use iThemes\Exchange\REST\Request;
+use JsonSchema\Constraints\Factory;
+use JsonSchema\Validator;
 
 /**
  * Class Filter_By_Context
@@ -58,9 +60,9 @@ class Filter_By_Context implements Middleware {
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param array  $item
-	 * @param string $context
-	 * @param array  $schema
+	 * @param array  $item    The data being filtered.
+	 * @param string $context The context being adhered to.
+	 * @param array  $schema  The entire document schema.
 	 *
 	 * @return array
 	 */
@@ -80,24 +82,16 @@ class Filter_By_Context implements Middleware {
 				continue;
 			}
 
-			// #/definitions/object_title
-			if ( isset( $v_schema['$ref'] ) ) {
-				$ref = $v_schema['$ref'];
+			$v_schema = $this->get_complex_v_schema( $v_schema, $schema, $value );
 
-				$exploded = explode( '/', $ref );
+			if ( isset( $v_schema['context'] ) && ! in_array( $context, $v_schema['context'] ) ) {
+				unset( $item[ $key ] );
 
-				if ( count( $exploded ) !== 3 ) {
-					continue; // Throw an exception? a _doing_it_wrong?
-				}
+				continue;
+			}
 
-				$search = $exploded[1];
-				$title  = $exploded[2];
-
-				if ( ! isset( $schema[ $search ], $schema[ $search ][ $title ] ) ) {
-					continue;
-				}
-
-				$v_schema = $schema[ $search ][ $title ];
+			if ( empty( $v_schema['type'] ) ) {
+				continue;
 			}
 
 			if ( 'object' === $v_schema['type'] && ! empty( $v_schema['properties'] ) ) {
@@ -126,7 +120,7 @@ class Filter_By_Context implements Middleware {
 				$object[ $attribute ] = $this->filter_object( $object[ $attribute ], $details, $context );
 			}
 
-			if ( empty( $details['context'] ) ) {
+			if ( empty( $details ) || empty( $details['context'] ) ) {
 				continue;
 			}
 
@@ -137,4 +131,87 @@ class Filter_By_Context implements Middleware {
 
 		return $object;
 	}
+
+	/**
+	 * Get a value schema for a complex entity.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $property The schema for just this value.
+	 * @param array $schema   The entire schema document.
+	 * @param array $value    The value being filtered.
+	 *
+	 * @return array|null
+	 */
+	protected function get_complex_v_schema( $property, $schema, $value ) {
+
+		if ( isset( $property['$ref'] ) ) {
+			return $this->handle_ref( $property, $schema );
+		}
+
+		if ( isset( $property['oneOf'] ) ) {
+			return $this->handle_one_of( $property, $schema, $value );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Handle a $ref in the schema properties.
+	 *
+	 * #/definitions/object_title
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $property
+	 * @param array $schema
+	 *
+	 * @return array|null
+	 */
+	protected function handle_ref( $property, $schema ) {
+		$ref = $property['$ref'];
+
+		$exploded = explode( '/', $ref );
+
+		if ( count( $exploded ) !== 3 ) {
+			return null;
+		}
+
+		$search = $exploded[1];
+		$title  = $exploded[2];
+
+		if ( ! isset( $schema[ $search ], $schema[ $search ][ $title ] ) ) {
+			return null;
+		}
+
+		return $schema[ $search ][ $title ];
+	}
+
+	/**
+	 * Handle a oneOf descriptor.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param array $property The schema for just this value.
+	 * @param array $schema   The entire schema document.
+	 * @param array $value    The value being filtered.
+	 *
+	 * @return array|null
+	 */
+	protected function handle_one_of( $property, $schema, $value ) {
+
+		foreach ( $property['oneOf'] as $one_of ) {
+
+			$validator = new Validator( new Factory() );
+			$validator->check( $value, $one_of );
+
+			// This is the matched schema.
+			if ( count( $validator->getErrors() ) === 0 ) {
+				return $one_of;
+			}
+		}
+
+		return null;
+	}
+
 }
