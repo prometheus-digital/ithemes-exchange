@@ -23,7 +23,7 @@ interface Middleware {
 	 * @param \iThemes\Exchange\REST\Request             $request
 	 * @param \iThemes\Exchange\REST\Middleware\Delegate $next
 	 *
-	 * @return \WP_REST_Response
+	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function handle( Request $request, Delegate $next );
 }

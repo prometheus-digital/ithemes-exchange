@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST;
 
+use iThemes\Exchange\REST\Middleware\Auth_Error_Code;
 use iThemes\Exchange\REST\Middleware\Autolinker;
 use iThemes\Exchange\REST\Middleware\Cart_Decorator;
 use iThemes\Exchange\REST\Middleware\Cart_Feedback;

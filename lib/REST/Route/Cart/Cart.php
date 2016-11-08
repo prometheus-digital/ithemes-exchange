@@ -155,7 +155,7 @@ class Cart implements Getable, Putable, Deletable {
 		return new \WP_Error(
 			'it_exchange_rest_forbidden_context',
 			__( 'Sorry, you are not allowed to access this cart.', 'it-l10n-ithemes-exchange' ),
-			array( 'status' => rest_authorization_required_code() )
+			array( 'status' => \WP_Http::UNAUTHORIZED )
 		);
 	}
 

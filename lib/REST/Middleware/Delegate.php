@@ -42,7 +42,7 @@ class Delegate {
 	 *
 	 * @param Request $request
 	 *
-	 * @return \WP_REST_Response
+	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function next( Request $request ) {
 
