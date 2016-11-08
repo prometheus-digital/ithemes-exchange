@@ -208,7 +208,7 @@ class Shipping_Methods extends Base implements Getable, Putable {
 						),
 						'total'    => array(
 							'description' => __( 'The total cost of this shipping method.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'float',
+							'type'        => 'number',
 							'readonly'    => true,
 							'context'     => array( 'view', 'edit' )
 						),

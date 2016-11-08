@@ -132,7 +132,7 @@ class Meta extends Base implements Getable, Putable {
 	public function get_schema() {
 		return array(
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
-			'title'   => 'cart',
+			'title'   => 'cart-meta',
 			'type'    => 'array',
 			'items'   => array(
 				'type'       => 'object',

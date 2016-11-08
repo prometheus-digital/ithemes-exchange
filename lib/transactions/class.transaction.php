@@ -506,6 +506,17 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	}
 
 	/**
+	 * Get the gateway used to pay for this transaction.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return ITE_Gateway|null
+	 */
+	public function get_gateway() {
+		return ITE_Gateways::get( $this->get_method() );
+	}
+
+	/**
 	 * Is this transaction cleared for delivery.
 	 *
 	 * This should always be used over the `cleared` property. The `cleared` property is a cached value for assistance

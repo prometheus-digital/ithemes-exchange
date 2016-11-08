@@ -15,6 +15,7 @@ use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Tokens
+ *
  * @package iThemes\Exchange\REST\Customer\Token
  */
 class Tokens extends Base implements Getable, Postable {
@@ -163,18 +164,15 @@ class Tokens extends Base implements Getable, Postable {
 	public function get_query_args() {
 		return array(
 			'context' => array(
-				'description'       => __( 'Scope under which the request is made; determines fields present in response.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'string',
-				'sanitize_callback' => 'sanitize_key',
-				'validate_callback' => 'rest_validate_request_arg',
-				'default'           => 'view',
-				'enum'              => array( 'view', 'edit' )
+				'description' => __( 'Scope under which the request is made; determines fields present in response.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'string',
+				'default'     => 'view',
+				'enum'        => array( 'view', 'edit' )
 			),
 			'gateway' => array(
-				'description'       => __( 'Gateway the payment token belongs to.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'string',
-				'enum'              => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
-				'validate_callback' => 'rest_validate_request_arg',
+				'description' => __( 'Gateway the payment token belongs to.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'string',
+				'enum'        => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
 			),
 		);
 	}

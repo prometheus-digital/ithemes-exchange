@@ -111,6 +111,8 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		$this->session->add_session_data( $type, array( $item->get_id() => $this->get_data( $item ) ) );
 
 		$this->events->on_save( $item, $old, $this );
+
+		return true;
 	}
 
 	/**

@@ -27,6 +27,7 @@ add_action( 'it_exchange_register_gateways', function( ITE_Gateways $gateways ) 
 	require_once dirname( __FILE__ ) . '/handlers/class.purchase.php';
 	require_once dirname( __FILE__ ) . '/handlers/class.webhook.php';
 	require_once dirname( __FILE__ ) . '/handlers/class.refund.php';
+	require_once dirname( __FILE__ ) . '/handlers/class.cancel-subscription.php';
 
 	$gateways::register( new ITE_PayPal_Standard_Secure_Gateway() );
 } );
@@ -1312,6 +1313,13 @@ function it_exchange_paypal_standard_secure_addon_update_subscriber_id( $paypal_
 function it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, $status ) {
 	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id_by_subscriber_id( $subscriber_id );
 	foreach( $transactions as $transaction ) { //really only one
+
+		$subscription = it_exchange_get_subscription_by_transaction( it_exchange_get_transaction( $transaction ) );
+
+		if ( $subscription->get_status() === IT_Exchange_Subscription::STATUS_CANCELLED && $status === 'cancelled' ) {
+			continue;
+		}
+
 		// If the subscription has been cancelled/suspended and fully refunded, they need to be deactivated
 		if ( !in_array( $status, array( 'active', 'deactivated' ) ) ) {
 			if ( $transaction->has_refunds() && 0 === it_exchange_get_transaction_total( $transaction, false ) )

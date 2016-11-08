@@ -93,7 +93,7 @@ class Serializer {
 							'description' => __( 'The activity item type label.', 'it-l10n-ithemes-exchange' ),
 							'type'        => 'string',
 							'enum'        => wp_list_pluck( it_exchange_get_txn_activity_factory()->get_types(), 'label' ),
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'view', 'edit', 'embed' ),
 						),
 					)
 				),

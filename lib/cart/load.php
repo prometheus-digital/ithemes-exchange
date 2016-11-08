@@ -133,10 +133,15 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 			);
 		}
 
-		$item = \ITE_Cart_Product::create(
-			$product,
-			$request['quantity']['selected']
-		);
+		if ( isset( $request['quantity'], $request['quantity']['selected'] ) ) {
+			$quantity = $request['quantity']['selected'];
+		} elseif ( isset( $request['quantity'] ) && is_numeric( $request['quantity'] ) ) {
+			$quantity = $request['quantity'];
+		} else {
+			$quantity = 1;
+		}
+
+		$item = \ITE_Cart_Product::create( $product, $quantity );
 
 		$cart = $request->get_cart();
 		$cart->add_item( $item );
@@ -151,7 +156,6 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'coupon', array(
 	'editable_in_rest'    => true,
 	'rest_serializer'     => function ( array $data, ITE_Coupon_Line_Item $coupon, array $schema, ITE_Cart $cart ) {
 
-
 		if ( isset( $schema['properties']['coupon'] ) ) {
 			$data['coupon'] = array(
 				'code' => $coupon->get_coupon()->get_code()
@@ -163,17 +167,22 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'coupon', array(
 	'schema'              => array(
 		'coupon' => array(
 			'description' => __( 'The applied coupon.', 'it-l10n-ithemes-exchange' ),
-			'type'        => 'object',
-			'context'     => array( 'view', 'edit' ),
-			'properties'  => array(
-				'code' => array(
-					'description' => __( 'The coupon code.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
-					'readonly'    => true,
+			'oneOf'       => array(
+				array(
+					'type'       => 'object',
+					'context'    => array( 'view', 'edit' ),
+					'properties' => array(
+						'code' => array(
+							'description' => __( 'The coupon code.', 'it-l10n-ithemes-exchange' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+							'required'    => true,
+							'readonly'    => true,
+						),
+					),
 				),
-			),
+				array( 'type' => 'string' )
+			)
 		)
 	),
 	'create_from_request' => function ( \iThemes\Exchange\REST\Request $request ) {

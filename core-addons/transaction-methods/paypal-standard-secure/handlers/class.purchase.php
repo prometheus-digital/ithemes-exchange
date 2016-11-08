@@ -14,7 +14,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	/**
 	 * @inheritDoc
 	 */
-	protected function get_vars_to_post( ITE_Gateway_Purchase_Request $request ) {
+	protected function get_vars_to_post( ITE_Gateway_Purchase_Request_Interface $request ) {
 		return array(
 			'cmd'       => '_s-xclick',
 			'encrypted' => $this->generate_encrypted_id( $request ),
@@ -24,7 +24,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	/**
 	 * @inheritDoc
 	 */
-	public function get_redirect_url( ITE_Gateway_Purchase_Request $request ) {
+	public function get_redirect_url( ITE_Gateway_Purchase_Request_Interface $request ) {
 		return $this->get_gateway()->is_sandbox_mode() ? PAYPAL_PAYMENT_SANDBOX_URL : PAYPAL_PAYMENT_LIVE_URL;
 	}
 
@@ -33,11 +33,11 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
 	 * @return string|false
 	 */
-	protected function generate_encrypted_id( ITE_Gateway_Purchase_Request $request ) {
+	protected function generate_encrypted_id( ITE_Gateway_Purchase_Request_Interface $request ) {
 
 		$general_settings = it_exchange_get_option( 'settings_general' );
 
@@ -113,8 +113,8 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		 *
 		 * @since 1.36.0
 		 *
-		 * @param array                         $button_vars
-		 * @param \ITE_Gateway_Purchase_Request $request
+		 * @param array                                  $button_vars
+		 * @param ITE_Gateway_Purchase_Request_Interface $request
 		 */
 		$button_vars = apply_filters( 'it_exchange_paypal_standard_secure_get_button_vars', $button_vars, $request );
 
@@ -148,8 +148,8 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		 *
 		 * @since 1.36.0 Added the `$request` parameter.
 		 *
-		 * @param array                        $button_request
-		 * @param ITE_Gateway_Purchase_Request $request
+		 * @param array                                  $button_request
+		 * @param ITE_Gateway_Purchase_Request_Interface $request
 		 */
 		$button_request = apply_filters( 'it_exchange_paypal_standard_secure_button_request', $button_request, $request );
 
@@ -188,11 +188,11 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
 	 * @return array
 	 */
-	protected function get_subscription_button_vars( ITE_Gateway_Purchase_Request $request ) {
+	protected function get_subscription_button_vars( ITE_Gateway_Purchase_Request_Interface $request ) {
 
 		$cart = $request->get_cart();
 
@@ -237,7 +237,13 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		$trial_unit = null;
 		$t_duration = null;
 
-		if ( $trial_enabled && function_exists( 'it_exchange_is_customer_eligible_for_trial' ) ) {
+		if ( $request instanceof ITE_Gateway_Prorate_Purchase_Request && ( $prorates = $request->get_prorate_requests() ) ) {
+			if ( isset( $prorates[ $product->ID ] ) && $prorates[ $product->ID ]->get_free_days() ) {
+				$t_duration = $prorates[ $product->ID ]->get_free_days();
+			}
+		}
+
+		if ( $trial_enabled && ! $t_duration && function_exists( 'it_exchange_is_customer_eligible_for_trial' ) ) {
 			$allow_trial = it_exchange_is_customer_eligible_for_trial( $product, $cart->get_customer() );
 			$allow_trial = apply_filters( 'it_exchange_paypal_standard_secure_addon_get_payment_url_allow_trial', $allow_trial, $product->ID );
 
@@ -359,7 +365,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	/**
 	 * @inheritDoc
 	 *
-	 * @param ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
 	 * @throws \IT_Exchange_Locking_Exception
 	 */
@@ -511,11 +517,9 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 			} else {
 				return null;
 			}
-		}
-		catch ( IT_Exchange_Locking_Exception $e ) {
+		} catch ( IT_Exchange_Locking_Exception $e ) {
 			throw $e;
-		}
-		catch ( Exception $e ) {
+		} catch ( Exception $e ) {
 
 			if ( $cart ) {
 				$cart->get_feedback()->add_error( $e->getMessage() );

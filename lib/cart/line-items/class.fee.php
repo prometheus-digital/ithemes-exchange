@@ -159,7 +159,7 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	/**
 	 * @inheritDoc
 	 */
-	public function get_taxable_amount() { return $this->get_taxable_amount(); }
+	public function get_taxable_amount() { return $this->get_amount(); }
 
 	/**
 	 * @inheritDoc

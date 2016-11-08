@@ -15,6 +15,7 @@ use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Activity
+ *
  * @package iThemes\Exchange\REST\Route\Transaction
  */
 class Activity extends Base implements Getable, Postable {
@@ -148,45 +149,35 @@ class Activity extends Base implements Getable, Postable {
 	public function get_query_args() {
 		return array(
 			'page'        => array(
-				'description'       => __( 'Current page of the collection.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'integer',
-				'default'           => 1,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
-				'minimum'           => 1,
+				'description' => __( 'Current page of the collection.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'integer',
+				'default'     => 1,
+				'minimum'     => 1,
 			),
 			'per_page'    => array(
-				'description'       => __( 'Maximum number of items to be returned in result set.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'integer',
-				'default'           => 50,
-				'minimum'           => 1,
-				'maximum'           => 100,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
+				'description' => __( 'Maximum number of items to be returned in result set.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'integer',
+				'default'     => 50,
+				'minimum'     => 1,
+				'maximum'     => 100,
 			),
 			'public_only' => array(
-				'description'       => __( 'The customer whose transactions should be retrieved.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'boolean',
-				'default'           => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-				'validate_callback' => 'rest_validate_request_arg',
+				'description' => __( 'The customer whose transactions should be retrieved.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'boolean',
+				'default'     => false,
 			),
 			'icon_size'   => array(
-				'description'       => __( 'The size of the activity icons.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'integer',
-				'default'           => 96,
-				'minimum'           => 64,
-				'maximum'           => 256,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
+				'description' => __( 'The size of the activity icons.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'integer',
+				'default'     => 96,
+				'minimum'     => 64,
+				'maximum'     => 256,
 			),
 			'type'        => array(
-				'description'       => __( 'The activity type.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'string',
-				'default'           => 'any',
-				'enum'              => array_merge( array_keys( it_exchange_get_txn_activity_factory()->get_types() ), array( 'any' ) ),
-				'sanitize_callback' => 'sanitize_key',
-				'validate_callback' => 'rest_validate_request_arg',
+				'description' => __( 'The activity type.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'string',
+				'default'     => 'any',
+				'enum'        => array_merge( array_keys( it_exchange_get_txn_activity_factory()->get_types() ), array( 'any' ) ),
 			),
 		);
 	}

@@ -155,7 +155,7 @@ class Cart implements Getable, Putable, Deletable {
 		return new \WP_Error(
 			'it_exchange_rest_forbidden_context',
 			__( 'Sorry, you are not allowed to access this cart.', 'it-l10n-ithemes-exchange' ),
-			array( 'status' => rest_authorization_required_code() )
+			array( 'status' => \WP_Http::UNAUTHORIZED )
 		);
 	}
 
@@ -288,7 +288,7 @@ class Cart implements Getable, Putable, Deletable {
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
-				'iis_main'         => array(
+				'is_main'          => array(
 					'description' => __( 'Is this the main cart for the customer.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'edit', 'embed' ),
@@ -426,13 +426,13 @@ class Cart implements Getable, Putable, Deletable {
 				),
 				'subtotal'         => array(
 					'description' => __( 'The subtotal of the cart.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'total'            => array(
 					'description' => __( 'The total of the cart.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
@@ -465,7 +465,7 @@ class Cart implements Getable, Putable, Deletable {
 							),
 							'total'       => array(
 								'description' => __( 'The total of the line item type.', 'it-l10n-ithemes-exchange' ),
-								'type'        => 'float',
+								'type'        => 'number',
 								'readonly'    => true,
 								'context'     => array( 'view', 'edit' )
 							),

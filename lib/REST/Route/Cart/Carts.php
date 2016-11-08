@@ -68,8 +68,7 @@ class Carts extends Base implements Postable {
 				$response->header( 'Location', r\get_rest_url( $this->cart, array( 'cart_id' => $cart_id ) ) );
 
 				return $response;
-			}
-			catch ( \InvalidArgumentException $e ) {
+			} catch ( \InvalidArgumentException $e ) {
 
 			}
 
@@ -96,8 +95,8 @@ class Carts extends Base implements Postable {
 		$session->save();
 
 		$location = r\get_rest_url( $this->cart, array( 'cart_id' => $cart->get_id() ) );
-		$request = Request::from_url( $location );
-		$request->set_url_params( array('cart_id' => $cart->get_id() ) );
+		$request  = Request::from_url( $location );
+		$request->set_url_params( array( 'cart_id' => $cart->get_id() ) );
 
 		$response = $this->cart->handle_get( $request );
 		$response->set_status( \WP_Http::CREATED );

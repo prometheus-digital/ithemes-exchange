@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST;
 
 /**
  * Class Request
+ *
  * @package iThemes\Exchange\REST
  */
 class Request extends \WP_REST_Request {
@@ -124,5 +125,42 @@ class Request extends \WP_REST_Request {
 		}
 
 		return parent::get_param( $key );
+	}
+
+	/**
+	 * Check if the request contains a parameter.
+	 *
+	 * Iterates over the parameter order, excluding defaults.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $key
+	 * @param array  $param_types_to_check Limit the check to certain parameter types.
+	 *
+	 * @return bool
+	 */
+	public function has_param( $key, array $param_types_to_check = array() ) {
+
+		$order = $this->get_parameter_order();
+
+		if ( $param_types_to_check ) {
+			$order = array_intersect( $order, $param_types_to_check );
+		}
+
+		if ( ( $i = array_search( 'defaults', $order, true ) ) !== false ) {
+			unset( $order[ $i ] );
+		}
+
+		foreach ( $order as $type ) {
+			if ( ! isset( $this->params[ $type ] ) ) {
+				continue;
+			}
+
+			if ( array_key_exists( $key, $this->params[ $type ] ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

@@ -42,7 +42,7 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 	 * @inheritDoc
 	 */
 	public function get_addon() {
-		return 'offline-payments';
+		return it_exchange_get_addon( 'offline-payments' );
 	}
 
 	/**

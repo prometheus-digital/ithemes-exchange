@@ -215,10 +215,37 @@ function it_exchange_register_scripts() {
 	wp_register_script( 'it-exchange-event-manager', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/event-manager.js' ), array(), false, true );
 
 	wp_register_script( 'jquery.payment', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/assets/js/jquery.payment.min.js', array( 'jquery' ), '1.3.2', true );
+	wp_register_script( 'backbonedeep', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/admin/js/backbone.modeldeep.min.js', array( 'backbone' ), '2.0.1', true );
+	wp_register_script( 'backbone.paginator', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/admin/js/backbone.paginator.min.js', array( 'backbone' ), '2.0.5', true );
 
 	// Select to Autocomplete
 	wp_register_script( 'jquery-select-to-autocomplete', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' ), array( 'jquery', 'jquery-ui-autocomplete' ) );
 	wp_register_style( 'it-exchange-autocomplete-style', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/autocomplete.css' ) );
+
+	$settings = it_exchange_get_option( 'settings_general' );
+	$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
+
+	wp_register_script( 'it-exchange-common', IT_Exchange::$url . '/lib/assets/js/common.js' );
+	wp_localize_script( 'it-exchange-common', 'EXCHANGE_CONFIG', array(
+		'dateFormat'    => it_exchange_convert_php_to_moment( get_option( 'date_format' ) ),
+		'timeFormat'    => it_exchange_convert_php_to_moment( get_option( 'time_format' ) ),
+		'symbol'        => $currency,
+		'symbolPos'     => $settings['currency-symbol-position'],
+		'decimals'      => 2,
+		'thousandsSep'  => $settings['currency-thousands-separator'],
+		'decimalsSep'   => $settings['currency-decimals-separator'],
+		'restNonce'     => wp_create_nonce( 'wp_rest' ),
+		'restUrl'       => rest_url( 'it_exchange/v1/' ),
+	) );
+
+	wp_register_script(
+		'it-exchange-rest',
+		IT_Exchange::$url . '/lib/assets/js/rest.js',
+		array(
+			'backbone', 'underscore', 'it-exchange-common', 'wp-util', 'ithemes-momentjs', 'backbonedeep',
+			'wp-backbone', 'backbone.paginator'
+		)
+	);
 }
 add_action( 'wp_enqueue_scripts', 'it_exchange_register_scripts', 1 );
 add_action( 'admin_enqueue_scripts', 'it_exchange_register_scripts', 1 );

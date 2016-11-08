@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST\Route\Cart;
 
 /**
  * Class Item_Serializer
+ *
  * @package iThemes\Exchange\REST\Route\Cart
  */
 class Item_Serializer {
@@ -141,38 +142,43 @@ class Item_Serializer {
 				),
 				'amount'      => array(
 					'description' => __( 'The cost of this line item.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'quantity'    => array(
 					'description' => __( 'The quantity purchased of this line item.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'selected' => array(
-							'description' => __( 'Selected quantity for the line item.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'default'     => 1,
+					'oneOf'       => array(
+						array(
+							'type'       => 'object',
+							'context'    => array( 'view', 'edit' ),
+							'properties' => array(
+								'selected' => array(
+									'description' => __( 'Selected quantity for the line item.', 'it-l10n-ithemes-exchange' ),
+									'type'        => 'integer',
+									'context'     => array( 'view', 'edit' ),
+									'default'     => 1,
+								),
+								'max'      => array(
+									'description' => __( 'Maximum purchase quantity for the line item.', 'it-l10n-ithemes-exchange' ),
+									'type'        => 'integer',
+									'context'     => array( 'view', 'edit' ),
+									'readonly'    => true,
+								),
+								'editable' => array(
+									'description' => __( 'Whether the item quantity can be edited.', 'it-l10n-ithemes-exchange' ),
+									'type'        => 'boolean',
+									'context'     => array( 'view', 'edit' ),
+									'readonly'    => true,
+								),
+							)
 						),
-						'max'      => array(
-							'description' => __( 'Maximum purchase quantity for the line item.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'editable' => array(
-							'description' => __( 'Whether the item quantity can be edited.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'boolean',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
+						array( 'type' => 'integer' )
 					)
 				),
 				'total'       => array(
 					'description' => __( 'The total amount of this line item.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),

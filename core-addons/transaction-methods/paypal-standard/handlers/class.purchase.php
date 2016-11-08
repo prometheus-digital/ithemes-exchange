@@ -21,7 +21,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	/**
 	 * @inheritDoc
 	 */
-	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
+	public function render_payment_button( ITE_Gateway_Purchase_Request_Interface $request ) {
 
 		if ( ! $this->get_gateway()->settings()->get( 'live-email-address' ) ) {
 			return '';
@@ -33,7 +33,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	/**
 	 * @inheritDoc
 	 */
-	public function get_redirect_url( ITE_Gateway_Purchase_Request $request ) {
+	public function get_redirect_url( ITE_Gateway_Purchase_Request_Interface $request ) {
 
 		$cart = $request->get_cart();
 
@@ -126,11 +126,11 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param \ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
 	 * @return array
 	 */
-	protected function get_subscription_args( ITE_Gateway_Purchase_Request $request ) {
+	protected function get_subscription_args( ITE_Gateway_Purchase_Request_Interface $request ) {
 
 		$cart = $request->get_cart();
 
@@ -228,7 +228,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	/**
 	 * @inheritDoc
 	 *
-	 * @param ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
 	 * @throws \IT_Exchange_Locking_Exception
 	 */

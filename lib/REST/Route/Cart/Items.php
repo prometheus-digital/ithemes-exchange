@@ -17,6 +17,7 @@ use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Cart
+ *
  * @package iThemes\Exchange\REST\Route\Cart
  */
 class Items extends Base implements Getable, Postable, Deletable {
@@ -85,7 +86,10 @@ class Items extends Base implements Getable, Postable, Deletable {
 			$response = new \WP_REST_Response( $this->serializer->serialize( $item, $cart ) );
 			$response->set_status( \WP_Http::CREATED );
 			$response->header( 'Location', r\get_rest_url(
-				new Item( $this->type, $this->serializer ), array( 'cart_id' => $cart->get_id(), 'item_id' => $item->get_id() )
+				new Item( $this->type, $this->serializer ), array(
+					'cart_id' => $cart->get_id(),
+					'item_id' => $item->get_id()
+				)
 			) );
 
 			return $response;
@@ -157,4 +161,13 @@ class Items extends Base implements Getable, Postable, Deletable {
 	 * @inheritDoc
 	 */
 	public function get_schema() { return $this->serializer->get_schema(); }
+
+	/**
+	 * Get the item type this endpoint represents.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Line_Item_Type
+	 */
+	public function get_type() { return $this->type; }
 }

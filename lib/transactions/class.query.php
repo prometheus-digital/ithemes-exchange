@@ -6,6 +6,7 @@
  * @license GPLv2
  */
 use IronBound\DB\Query\FluentQuery;
+use IronBound\DB\Query\Tag\Where;
 use IronBound\DB\WP\PostMeta;
 use IronBound\DB\WP\Posts;
 
@@ -118,6 +119,7 @@ class ITE_Transaction_Query {
 			'distinct'        => false,
 			'calc_found_rows' => true,
 			'eager_load'      => array(),
+			's'               => null,
 			'ID'              => null,
 			'customer'        => null,
 			'customer_email'  => null,
@@ -241,6 +243,7 @@ class ITE_Transaction_Query {
 			$this->parse_amount( $amount, $amount );
 		}
 
+		$this->parse_search();
 		$this->parse_items();
 
 		if ( $this->args['order_date'] ) {
@@ -250,6 +253,40 @@ class ITE_Transaction_Query {
 		if ( $this->args['eager_load'] ) {
 			$this->query->with( array_merge( array( 'ID' ), (array) $this->args['eager_load'] ) );
 		}
+	}
+
+	/**
+	 * Parse the search query.
+	 *
+	 * Checks against customer display names, item names, and item descriptions.
+	 *
+	 * @since 1.36.0
+	 */
+	protected function parse_search() {
+
+		if ( ! $this->args['s'] ) {
+			return;
+		}
+
+		$s = $GLOBALS['wpdb']->esc_like( $this->args['s'] );
+
+		$aliases = array();
+
+		$this->query->join( new \IronBound\DB\WP\Users(), 'customer_id', 'ID', '=',
+			function ( FluentQuery $query ) use ( &$aliases ) {
+				$aliases['users'] = $query->get_alias();
+			} );
+
+		$this->query->join( new ITE_Transaction_Line_Item_Table(), 'ID', 'transaction', '=',
+			function ( FluentQuery $query ) use ( &$aliases ) {
+				$aliases['items'] = $query->get_alias();
+			} );
+
+		$where = new Where( "{$aliases['users']}.display_name", 'LIKE', "%{$s}%" );
+		$where->qOr( new Where( "{$aliases['items']}.name", 'LIKE', "%{$s}%" ) );
+		$where->qOr( new Where( "{$aliases['items']}.description", 'LIKE', "%{$s}%" ) );
+
+		$this->query->and_where( $where );
 	}
 
 	/**
@@ -481,6 +518,10 @@ class ITE_Transaction_Query {
 			if ( ! empty( $wp_args['paged'] ) ) {
 				$args['page'] = $wp_args['paged'];
 			}
+		}
+
+		if ( ! empty( $wp_args['s'] ) ) {
+			$args['s'] = $wp_args['s'];
 		}
 
 		$query = new self( $args );

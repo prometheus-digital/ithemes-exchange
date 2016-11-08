@@ -34,6 +34,7 @@ class IT_Exchange_Transaction_Post_Type {
 		add_action( 'save_post_it_exchange_tran', array( $this, 'save_transaction' ) );
 
 		if ( is_admin() ) {
+			add_action( 'admin_menu', array( $this, 'register_menu' ) );
 			add_action( 'admin_init', array( $this, 'modify_post_type_features' ) );
 			add_filter( 'manage_edit-it_exchange_tran_columns', array( $this, 'modify_all_transactions_table_columns' ) );
 			add_filter( 'manage_edit-it_exchange_tran_sortable_columns', array( $this, 'make_transaction_custom_columns_sortable' ) );
@@ -64,6 +65,51 @@ class IT_Exchange_Transaction_Post_Type {
 		self::__construct();
 
 		_deprecated_constructor( __CLASS__, '1.24.0' );
+	}
+
+	public function register_menu() {
+		add_submenu_page(
+			'it-exchange',
+			__('Transactions'),
+			__('Transactions'),
+			'list_it_transactions',
+			'it-exchange-transactions',
+			function() {
+
+				$serializer = new \iThemes\Exchange\REST\Route\Transaction\Serializer();
+				$preload = rest_do_request( WP_REST_Request::from_url( rest_url( '/it_exchange/v1/transactions?per_page=20&context=embed' ) ) );
+				$headers =  $preload->get_headers();
+
+				wp_enqueue_script(
+					'it-exchange-transactions',
+					IT_Exchange::$url . '/lib/admin/js/transactions/transactions.js',
+					array( 'it-exchange-rest' )
+				);
+				wp_localize_script( 'it-exchange-transactions', 'ITExchangeTransactions', array(
+					'transactions'       => $preload->get_data(),
+					'transactionsTotal'  => (int) $headers['X-WP-Total'],
+					'transactionsSchema' => $serializer->get_schema(),
+					'perPage'            => 20,
+				) );
+				wp_add_inline_script(
+					'it-exchange-transactions',
+					include( IT_Exchange::$dir . '/lib/admin/js-templates/transactions/card.html' )
+				);
+				wp_add_inline_script(
+					'it-exchange-transactions',
+					include( IT_Exchange::$dir . '/lib/admin/js-templates/pagination.html' )
+				);
+				wp_enqueue_style( 'it-exchange-transactions', IT_Exchange::$url . '/lib/admin/styles/transactions.css' );
+?>
+				<div class="wrap">
+					<h1><?php _e( 'Transactions', 'it-l10n-ithemes-exchange' ); ?></h1>
+					<div id="it-exchange-transactions-pagination-container"></div>
+					<div id="it-exchange-transactions-container"></div>
+				</div>
+
+				<?php
+			}
+		);
 	}
 
 	/**

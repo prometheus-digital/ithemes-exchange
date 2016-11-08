@@ -17,7 +17,8 @@
     "require": {
         "asika/autolink": "dev-master",
         "ironbound/db": "dev-master",
-        "ironbound/wpevents": "^1.0"
+        "ironbound/wpevents": "^1.0",
+        "justinrainbow/json-schema": "^4.0"
     },
     "repositories": [
         {
