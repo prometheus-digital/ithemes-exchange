@@ -16,7 +16,7 @@ class IT_Exchange_Shopping_Cart {
 	 */
 	public function __construct() {
 		add_action( 'template_redirect', array( $this, 'handle_it_exchange_cart_function' ) );
-		add_filter( 'it_exchange_process_transaction', array( $this, 'handle_purchase_cart_request' ) );
+		add_filter( 'it_exchange_process_transaction', array( $this, 'handle_purchase_cart_request' ), 10, 2 );
 		add_action( 'template_redirect', array( $this, 'prepare_for_purchase' ) );
 		add_action( 'template_redirect', array( $this, 'convert_feedback_to_notices' ) );
 		add_action( 'it_exchange_add_transaction_success', array(
@@ -546,11 +546,12 @@ class IT_Exchange_Shopping_Cart {
 	 *
 	 * @since 0.3.8
 	 *
-	 * @param bool $status
+	 * @param bool           $status
+	 * @param \ITE_Cart|null $cart
 	 *
 	 * @return boolean
 	 */
-	public function handle_purchase_cart_request( $status ) {
+	public function handle_purchase_cart_request( $status, $cart = null ) {
 
 		if ( $status ) {
 			return $status;
@@ -565,18 +566,6 @@ class IT_Exchange_Shopping_Cart {
 			it_exchange_add_message( 'error', $this->get_cart_message( 'bad-transaction-method' ) );
 
 			return false;
-		}
-
-		if ( isset( $_GET['cart_id'] ) ) {
-			$cart = it_exchange_get_cart( $_GET['cart_id'] );
-
-			if ( ! $cart || ! isset( $_GET['cart_auth'] ) || ! $cart->validate_auth_secret( $_GET['cart_auth'], 3600 ) ) {
-				it_exchange_add_message( 'error', __( 'Invalid cart purchase.', 'it-l10n-ithemes-exchange' ) );
-
-				return false;
-			}
-		} else {
-			$cart = null;
 		}
 
 		$transaction_object = it_exchange_generate_transaction_object( $cart );

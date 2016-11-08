@@ -89,34 +89,16 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 	 */
 	function make_payment( $options = array() ) {
 
-		if ( ! empty( $_GET['cart_id'] ) ) {
+		try {
+			$cart = it_exchange_get_requested_cart_and_check_auth();
+		} catch ( UnexpectedValueException $e ) {
+			it_exchange_add_message( 'error', $e->getMessage() );
 
+			return '';
+		}
+
+		if ( $cart ) {
 			if ( ! \ITE_Gateways::get( $this->_transaction_method ) ) {
-				return '';
-			}
-
-			$cart_id = trim( $_GET['cart_id'] );
-			$cart    = it_exchange_get_cart( $cart_id );
-
-			if ( ! $cart ) {
-				it_exchange_add_message( 'error', __( 'Invalid cart.', 'it-l10n-ithemes-exchange' ) );
-
-				return '';
-			}
-
-			$user = it_exchange_get_current_customer();
-
-			if ( $cart->is_guest() ) {
-				if ( ! $user instanceof \IT_Exchange_Guest_Customer || $user->get_email() !== $cart->get_customer()->get_email() ) {
-					it_exchange_add_message( 'error', __( 'Invalid cart.', 'it-l10n-ithemes-exchange' ) );
-
-					return '';
-				}
-			}
-
-			if ( ! $cart->get_customer() || ! $user || $cart->get_customer()->id !== $user->id ) {
-				it_exchange_add_message( 'error', __( 'Invalid cart.', 'it-l10n-ithemes-exchange' ) );
-
 				return '';
 			}
 

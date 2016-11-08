@@ -1352,6 +1352,33 @@ function it_exchange_admin_tooltip( $text, $echo=true, $indicator='i' ) {
 }
 
 /**
+ * Get the requested cart and check the auth value.
+ *
+ * @since 1.36.0
+ *
+ * @param string $cart_var
+ * @param string $auth_var
+ *
+ * @return ITE_Cart|null
+ */
+function it_exchange_get_requested_cart_and_check_auth( $cart_var = 'cart_id', $auth_var = 'cart_auth' ) {
+
+	if ( ! empty( $_REQUEST[ $cart_var ] ) ) {
+
+		$cart_id = trim( $_REQUEST[ $cart_var ] );
+		$cart    = it_exchange_get_cart( $cart_id );
+
+		if ( ! $cart || ! isset( $_REQUEST[ $auth_var ] ) || ! $cart->validate_auth_secret( $_REQUEST[ $auth_var ], 3600 ) ) {
+			throw new UnexpectedValueException( __( 'Invalid cart authentication.', 'it-l10n-ithemes-exchange' ) );
+		}
+
+		return $cart;
+	}
+
+	return null;
+}
+
+/**
  * Blocks access to Download iThemes Exchange attachments
  *
  * @since 1.7.18

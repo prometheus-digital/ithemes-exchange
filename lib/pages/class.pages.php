@@ -404,8 +404,16 @@ class IT_Exchange_Pages {
 
 		if ( 'transaction' == $this->_current_view ) {
 
-			if ( is_user_logged_in() ) {
-				$transaction_id = apply_filters( 'it_exchange_process_transaction', false );
+			try {
+				$cart = it_exchange_get_requested_cart_and_check_auth();
+			} catch ( UnexpectedValueException $e ) {
+				it_exchange_add_message( 'error', $e->getMessage() );
+
+				return;
+			}
+
+			if ( is_user_logged_in() || $cart ) {
+				$transaction_id = apply_filters( 'it_exchange_process_transaction', false, $cart );
 
 				// If we made a transaction
 				if ( $transaction_id ) {
