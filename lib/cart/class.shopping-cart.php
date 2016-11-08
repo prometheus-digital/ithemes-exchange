@@ -552,8 +552,7 @@ class IT_Exchange_Shopping_Cart {
 	 */
 	public function handle_purchase_cart_request( $status ) {
 
-		if ( $status ) //if this has been modified as true already, return.
-		{
+		if ( $status ) {
 			return $status;
 		}
 
@@ -568,7 +567,19 @@ class IT_Exchange_Shopping_Cart {
 			return false;
 		}
 
-		$transaction_object = it_exchange_generate_transaction_object();
+		if ( isset( $_GET['cart_id'] ) ) {
+			$cart = it_exchange_get_cart( $_GET['cart_id'] );
+
+			if ( ! $cart || ! isset( $_GET['cart_auth'] ) || ! $cart->validate_auth_secret( $_GET['cart_auth'], 3600 ) ) {
+				it_exchange_add_message( 'error', __( 'Invalid cart purchase.', 'it-l10n-ithemes-exchange' ) );
+
+				return false;
+			}
+		} else {
+			$cart = null;
+		}
+
+		$transaction_object = it_exchange_generate_transaction_object( $cart );
 		if ( empty( $transaction_object ) && false !== ( $transaction_id = apply_filters( 'handle_purchase_cart_request_already_processed_for_' . $requested_transaction_method, false ) ) ) {
 
 			it_exchange_clear_messages( 'error' ); //we really need a way to only remove certain errors
