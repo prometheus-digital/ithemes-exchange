@@ -418,8 +418,10 @@ class IT_Exchange_Pages {
 				// If we made a transaction
 				if ( $transaction_id ) {
 
-					// Clear the cart
-					it_exchange_empty_shopping_cart();
+					if ( ! $cart ) {
+						// Clear the cart
+						it_exchange_empty_shopping_cart();
+					}
 
 					// Grab the transaction confirmation URL. fall back to store if confirmation url fails
 					$confirmation_url = it_exchange_get_transaction_confirmation_url( $transaction_id );
