@@ -481,6 +481,11 @@ function it_exchange_unregister_purchase_requirement( $slug ) {
  * @return array
  */
 function it_exchange_get_purchase_requirements() {
+
+	if ( it_exchange_get_requested_cart_and_check_auth() ) {
+		return array();
+	}
+
 	$requirements = empty( $GLOBALS['it_exchange']['purchase-requirements'] ) ? array() : (array) $GLOBALS['it_exchange']['purchase-requirements'];
 	$requirements = (array) apply_filters( 'it_exchange_get_purchase_requirments', $requirements );
 
@@ -502,6 +507,11 @@ function it_exchange_get_purchase_requirements() {
  * @return array|bool requirement string
  */
 function it_exchange_get_next_purchase_requirement() {
+
+	if ( it_exchange_get_requested_cart_and_check_auth() ) {
+		return false;
+	}
+
 	$requirements = it_exchange_get_purchase_requirements();
 
 	// Loop through each purchase requirement and check their callback to see if it's requirement is met

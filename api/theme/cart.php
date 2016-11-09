@@ -14,6 +14,9 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	 */
 	private $_context = 'cart';
 
+	/** @var ITE_Cart */
+	private $cart;
+
 	/**
 	 * Maps api tags to methods
 	 * @var array $_tag_map
@@ -43,6 +46,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	 * @since 0.4.0
 	 */
 	public function __construct() {
+		$this->cart = it_exchange_get_requested_cart_and_check_auth() ?: it_exchange_get_current_cart( false );
 	}
 
 	/**
@@ -81,10 +85,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 
 		// Return boolean if has flag was set
 		if ( $options['has'] ) {
-
-			$cart = it_exchange_get_current_cart( false );
-
-			return $cart && count( $cart->get_items( 'product' ) ) > 0;
+			return $this->cart && count( $this->cart->get_items( 'product' ) ) > 0;
 		}
 
 		// If we made it here, we're doing a loop of products for the current cart.
@@ -94,7 +95,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 
 			$cart_products = array();
 
-			foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+			foreach ( $this->cart->get_items( 'product' ) as $product ) {
 				$cart_products[ $product->get_id() ] = $product->bc();
 			}
 
@@ -130,7 +131,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 
 		$options = ITUtility::merge_defaults( $options, array( 'without' => '' ) );
 
-		$cart  = it_exchange_get_current_cart();
+		$cart  = $this->cart;
 		$items = $cart->get_items()->non_summary_only();
 
 		if ( $options['without'] ) {
@@ -311,6 +312,10 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 		);
 		$options  = ITUtility::merge_defaults( $options, $defaults );
 
+		if ( $this->cart && ! $this->cart->is_current() ) {
+			return '';
+		}
+
 		$class = empty( $options['class'] ) ? 'it-exchange-view-cart' : 'it-exchange-view-cart ' . esc_attr( $options['class'] );
 		$class = ( it_exchange_get_cart_products_count() < 2 ) ? $class : $class . ' no-sw-js';
 		$var   = it_exchange_get_field_name( 'view_cart' );
@@ -468,7 +473,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			$options['format'] = false;
 		}
 
-		return it_exchange_get_cart_subtotal( $options['format'] );
+		return it_exchange_get_cart_subtotal( $options['format'], array( 'cart' => $this->cart ) );
 	}
 
 	/**
@@ -489,7 +494,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 			$options['format'] = false;
 		}
 
-		return apply_filters( 'it_exchange_api_theme_cart_total', it_exchange_get_cart_total( $options['format'] ) );
+		return apply_filters( 'it_exchange_api_theme_cart_total', it_exchange_get_cart_total( $options['format'], array( 'cart' => $this->cart ) ) );
 	}
 
 	/**

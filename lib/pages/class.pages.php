@@ -384,12 +384,12 @@ class IT_Exchange_Pages {
 		if ( 'checkout' != $this->_current_view )
 			return;
 
-		if ( ! it_exchange_get_current_cart()->get_items( 'product' )->count() ) {
-			$cart = it_exchange_get_page_url( 'cart' );
-			it_exchange_redirect( $cart, 'checkout-empty-send-to-cart' );
+		$cart = it_exchange_get_requested_cart_and_check_auth() ?: it_exchange_get_current_cart();
+
+		if ( ! $cart->get_items()->count() ) {
+			it_exchange_redirect( it_exchange_get_page_url( 'cart' ), 'checkout-empty-send-to-cart' );
 			die();
 		}
-
 	}
 
 	/**

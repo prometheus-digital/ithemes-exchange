@@ -41,33 +41,17 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	 */
 	public function maybe_redirect() {
 
-		if ( ! isset( $_POST["{$this->gateway->get_slug()}_purchase"] ) ) {
+		if ( ! isset( $_REQUEST["{$this->gateway->get_slug()}_purchase"] ) ) {
 			return;
 		}
 
-		if ( isset( $_POST['auto_return'] ) ) {
+		if ( isset( $_REQUEST['auto_return'] ) ) {
 			return;
 		}
 
-		$nonce = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
+		$nonce = isset( $_REQUEST['_wpnonce'] ) ? $_REQUEST['_wpnonce'] : '';
 
-		if ( isset( $_POST['cart_id'] ) ) {
-
-			$cart_id = $_POST['cart_id'];
-
-			$cart = it_exchange_get_cart( $cart_id );
-
-			if ( ! $cart ) {
-				throw new InvalidArgumentException( "No cart found for {$cart_id}." );
-			}
-
-			if ( empty( $_POST['cart_auth'] ) || ! $cart->validate_auth_secret( $_POST['cart_auth'] ) ) {
-				throw new InvalidArgumentException( "Invalid cart auth for {$cart_id}." );
-			}
-
-		} else {
-			$cart = it_exchange_get_current_cart();
-		}
+		$cart = it_exchange_get_requested_cart_and_check_auth() ?: it_exchange_get_current_cart();
 
 		$this->redirect( $this->factory->make( 'purchase', array( 'cart' => $cart, 'nonce' => $nonce ) ) );
 	}
@@ -76,9 +60,17 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	 * Perform the redirect to an external gateway for payment.
 	 *
 	 * @since 1.36
+	 *
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 */
 	protected function redirect( ITE_Gateway_Purchase_Request_Interface $request ) {
-		wp_redirect( $this->get_redirect_url( $request ) );
+		$url = $this->get_redirect_url( $request );
+
+		if ( ! $url ) {
+			return;
+		}
+
+		wp_redirect( $url );
 		die();
 	}
 
@@ -86,10 +78,23 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	 * @inheritDoc
 	 */
 	public function get_data_for_REST( ITE_Gateway_Purchase_Request_Interface $request ) {
+
+		$query_args = array(
+			"{$this->gateway->get_slug()}_purchase" => 1,
+			'_wpnonce'                              => $this->get_nonce(),
+		);
+
+		if ( ! $request->get_cart()->is_current() ) {
+			$query_args['cart_id']   = $request->get_cart()->get_id();
+			$query_args['cart_auth'] = $request->get_cart()->generate_auth_secret( 3600 );
+		}
+
+		$url = it_exchange_get_page_url( 'transaction' );
+		$url = add_query_arg( $query_args, $url );
+
 		return array(
 			'method' => 'redirect',
-			'url'    => $this->get_redirect_url( $request ),
-			'auth'   => $request->get_cart()->generate_auth_secret(),
+			'url'    => $url,
 		);
 	}
 

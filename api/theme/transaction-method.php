@@ -98,7 +98,7 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 		}
 
 		if ( $cart ) {
-			if ( ! \ITE_Gateways::get( $this->_transaction_method ) ) {
+			if ( ! \ITE_Gateways::get( $this->_transaction_method['slug'] ) ) {
 				return '';
 			}
 

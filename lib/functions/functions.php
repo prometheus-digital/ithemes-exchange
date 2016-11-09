@@ -1372,6 +1372,10 @@ function it_exchange_get_requested_cart_and_check_auth( $cart_var = 'cart_id', $
 			throw new UnexpectedValueException( __( 'Invalid cart authentication.', 'it-l10n-ithemes-exchange' ) );
 		}
 
+		if ( ! $cart->is_guest() ) {
+			wp_set_current_user( $cart->get_customer()->ID );
+		}
+
 		return $cart;
 	}
 
