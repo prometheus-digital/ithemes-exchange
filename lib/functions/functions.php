@@ -268,10 +268,10 @@ function it_exchange_register_scripts() {
 	ob_start();
 
 	?>
-		var ITExchangeRESTTokenizers = {};
+		var ITExchangeTokenizers = {};
 
 		<?php foreach ( $js_tokenizers as $gateway => $tokenizer ) : ?>
-			ITExchangeRESTTokenizers.<?php echo esc_js( $gateway ); ?> = { fn: <?php echo $tokenizer['fn']; ?> };
+			ITExchangeTokenizers.<?php echo esc_js( $gateway ); ?> = { fn: <?php echo $tokenizer['fn']; ?> };
 		<?php endforeach; ?>
 	<?php
 
