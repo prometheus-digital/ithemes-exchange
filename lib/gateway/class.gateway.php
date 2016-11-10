@@ -74,6 +74,27 @@ abstract class ITE_Gateway {
 	}
 
 	/**
+	 * Get a handler by name.
+	 *
+	 * ::get_handler_for() should be the preferred method to use to retreive a handler.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $request_name
+	 *
+	 * @return \ITE_Gateway_Request_Handler|null
+	 */
+	public function get_handler_by_request_name( $request_name ) {
+		foreach ( $this->get_handlers() as $handler ) {
+			if ( $handler::can_handle( $request_name ) ) {
+				return $handler;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Can the gateway handle a given request.
 	 *
 	 * @since 1.36.0

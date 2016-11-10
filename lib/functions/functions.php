@@ -246,6 +246,38 @@ function it_exchange_register_scripts() {
 			'wp-backbone', 'backbone.paginator'
 		)
 	);
+
+	$js_tokenizers = array();
+
+	foreach ( ITE_Gateways::handles( 'tokenize' ) as $gateway ) {
+		$handler = $gateway->get_handler_by_request_name( 'tokenize' );
+
+		if ( ! $handler instanceof ITE_Gateway_JS_Tokenize_Handler ) {
+			continue;
+		}
+
+		$js_tokenizers[ $gateway->get_slug() ] = array(
+			'fn' => $handler->get_js()
+		);
+	}
+
+	$scripts = wp_scripts();
+
+	$data = $scripts->get_data( 'it-exchange-rest', 'data' ) ?: '';
+
+	ob_start();
+
+	?>
+		var ITExchangeRESTTokenizers = {};
+
+		<?php foreach ( $js_tokenizers as $gateway => $tokenizer ) : ?>
+			ITExchangeRESTTokenizers.<?php echo esc_js( $gateway ); ?> = { fn: <?php echo $tokenizer['fn']; ?> };
+		<?php endforeach; ?>
+	<?php
+
+	$data .= ob_get_clean();
+
+	$scripts->add_data( 'it-exchange-rest', 'data', $data );
 }
 add_action( 'wp_enqueue_scripts', 'it_exchange_register_scripts', 1 );
 add_action( 'admin_enqueue_scripts', 'it_exchange_register_scripts', 1 );
