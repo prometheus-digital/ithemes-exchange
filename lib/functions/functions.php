@@ -1368,7 +1368,7 @@ function it_exchange_get_requested_cart_and_check_auth( $cart_var = 'cart_id', $
 		$cart_id = trim( $_REQUEST[ $cart_var ] );
 		$cart    = it_exchange_get_cart( $cart_id );
 
-		if ( ! $cart || ! isset( $_REQUEST[ $auth_var ] ) || ! $cart->validate_auth_secret( $_REQUEST[ $auth_var ], 3600 ) ) {
+		if ( ! $cart || ! isset( $_REQUEST[ $auth_var ] ) || ! $cart->validate_auth_secret( $_REQUEST[ $auth_var ] ) ) {
 			throw new UnexpectedValueException( __( 'Invalid cart authentication.', 'it-l10n-ithemes-exchange' ) );
 		}
 

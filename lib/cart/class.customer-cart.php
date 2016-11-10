@@ -1110,16 +1110,13 @@ class ITE_Cart {
 	/**
 	 * Generate an authentication secret.
 	 *
-	 * The secret is only valid for a certain window of duration. For example, a 5 minute window, 300 seconds
-	 * means that the token will expire every 5 minutes, regardless of within that window the token was generated.
-	 *
 	 * Example:
 	 * Create at 3:00 -> Expires 3:05
 	 * Create at 3:02 -> Expires 3:05
 	 *
 	 * @since 1.36.0
 	 *
-	 * @param int $life The window for which the secret is valid.
+	 * @param int $life The key lifetime.
 	 *
 	 * @return string
 	 *
@@ -1127,10 +1124,16 @@ class ITE_Cart {
 	 */
 	public final function generate_auth_secret( $life = 300 ) {
 
-		$tick   = ceil( time() / $life );
-		$secret = hash_hmac( 'sha1', $this->get_id() . '|' . $tick, wp_salt() );
+		try {
+			$secret = \Firebase\JWT\JWT::encode( array(
+				'exp'     => time() + $life,
+				'cart_id' => $this->get_id()
+			), wp_salt() );
+		} catch ( Exception $e ) {
 
-		if ( ! $secret ) {
+		}
+
+		if ( empty( $secret ) ) {
 			throw new UnexpectedValueException( "Unable to generate cart hash for {$this->get_id()}." );
 		}
 
@@ -1143,12 +1146,18 @@ class ITE_Cart {
 	 * @since 1.36.0
 	 *
 	 * @param string $secret
-	 * @param int    $life
 	 *
 	 * @return bool
 	 */
-	public final function validate_auth_secret( $secret, $life = 300 ) {
-		return hash_equals( $secret, $this->generate_auth_secret( $life ) );
+	public final function validate_auth_secret( $secret ) {
+
+		try {
+			$decoded = \Firebase\JWT\JWT::decode( $secret, wp_salt(), array( 'HS256' ) );
+		} catch ( Exception $e ) {
+			return false;
+		}
+
+		return hash_equals( $this->get_id(), $decoded->cart_id );
 	}
 
 	/**
