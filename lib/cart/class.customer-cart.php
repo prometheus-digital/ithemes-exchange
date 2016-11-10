@@ -1110,9 +1110,16 @@ class ITE_Cart {
 	/**
 	 * Generate an authentication secret.
 	 *
+	 * The secret is only valid for a certain window of duration. For example, a 5 minute window, 300 seconds
+	 * means that the token will expire every 5 minutes, regardless of within that window the token was generated.
+	 *
+	 * Example:
+	 * Create at 3:00 -> Expires 3:05
+	 * Create at 3:02 -> Expires 3:05
+	 *
 	 * @since 1.36.0
 	 *
-	 * @param int $life Lifetime of the secret in seconds.
+	 * @param int $life The window for which the secret is valid.
 	 *
 	 * @return string
 	 *
