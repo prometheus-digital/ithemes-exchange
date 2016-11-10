@@ -617,6 +617,16 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		$r = apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer, $cart_object, $args );
 
 		if ( $cart ) {
+			if ( ( $g = ITE_Gateways::get( $method ) ) && ! $g->requires_cart_after_purchase() ) {
+				if ( $cart->get_repository() instanceof ITE_Line_Item_Session_Repository ) {
+					$model = ITE_Session_Model::from_cart_id( $cart->get_id() );
+
+					if ( $model ) {
+						$model->delete();
+					}
+				}
+			}
+
 			$cart->destroy();
 		}
 

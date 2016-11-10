@@ -123,6 +123,15 @@ abstract class ITE_Gateway {
 	public abstract function is_sandbox_mode();
 
 	/**
+	 * Does this gateway require the cart after the purchase has been made.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function requires_cart_after_purchase() { return false; }
+
+	/**
 	 * Get the available transaction statuses.
 	 *
 	 * @since 1.36.0

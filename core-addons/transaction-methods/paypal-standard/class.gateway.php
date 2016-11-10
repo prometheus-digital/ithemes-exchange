@@ -54,6 +54,11 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
+	public function requires_cart_after_purchase() { return true; }
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_webhook_param() {
 
 		/**
