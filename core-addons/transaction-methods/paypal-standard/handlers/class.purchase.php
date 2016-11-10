@@ -67,6 +67,10 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			$return_args['cart_auth'] = $cart->generate_auth_secret();
 		}
 
+		if ( $request->get_redirect_to() ) {
+			$return_args['redirect_to'] = $request->get_redirect_to();
+		}
+
 		$return_url = add_query_arg( $return_args, it_exchange_get_page_url( 'transaction' ) );
 
 		if ( $sub_args = $this->get_subscription_args( $request ) ) {

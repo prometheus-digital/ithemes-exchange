@@ -431,6 +431,11 @@ class IT_Exchange_Pages {
 						it_exchange_empty_shopping_cart();
 					}
 
+					if ( isset( $_REQUEST['redirect_to'] ) ) {
+						wp_safe_redirect( add_query_arg( 'transaction_id', $transaction_id, $_REQUEST['redirect_to'] ) );
+						die();
+					}
+
 					// Grab the transaction confirmation URL. fall back to store if confirmation url fails
 					$confirmation_url = it_exchange_get_transaction_confirmation_url( $transaction_id );
 

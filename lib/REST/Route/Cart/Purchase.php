@@ -16,6 +16,7 @@ use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Purchase
+ *
  * @package iThemes\Exchange\REST\Route\Cart
  */
 class Purchase extends Base implements Getable, Postable {
@@ -89,13 +90,22 @@ class Purchase extends Base implements Getable, Postable {
 
 		$cart = $request->get_cart();
 
+		if ( $request['redirect_to'] && ! wp_validate_redirect( wp_sanitize_redirect( $request['redirect_to'] ) ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_invalid_redirect_to',
+				__( 'Invalid redirect to URL.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => \WP_Http::BAD_REQUEST )
+			);
+		}
+
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 		$purchase_request = $this->request_factory->make( 'purchase', array(
-			'cart'     => $cart,
-			'nonce'    => $request['nonce'],
-			'card'     => $request['card'],
-			'token'    => $request['token'],
-			'tokenize' => $request['tokenize'],
+			'cart'        => $cart,
+			'nonce'       => $request['nonce'],
+			'card'        => $request['card'],
+			'token'       => $request['token'],
+			'tokenize'    => $request['tokenize'],
+			'redirect_to' => $request['redirect_to']
 		) );
 		$gateway          = \ITE_Gateways::get( $request['id'] );
 		$handler          = $gateway->get_handler_for( $purchase_request );

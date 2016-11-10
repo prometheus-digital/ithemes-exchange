@@ -95,4 +95,24 @@ interface ITE_Gateway_Purchase_Request_Interface extends ITE_Gateway_Request {
 	 * @param \ITE_Gateway_Tokenize_Request $tokenize
 	 */
 	public function set_tokenize( ITE_Gateway_Tokenize_Request $tokenize );
+
+	/**
+	 * Get the destination the customer should be redirected to after purchase.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_redirect_to();
+
+	/**
+	 * Set the destination the customer should be redirected to after purchase.
+	 *
+	 * This defaults to the confirmation page.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $redirect_to
+	 */
+	public function set_redirect_to( $redirect_to );
 }

@@ -40,13 +40,12 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 
 					$factory_opts = array();
 
-					if ( $options['cart'] ) {
+					if ( isset( $options['cart'] ) ) {
 						$factory_opts['cart'] = $options['cart'];
 					}
 
 					return $self->render_payment_button( $factory->make( 'purchase', $factory_opts ) );
-				}
-				catch ( Exception $e ) {
+				} catch ( Exception $e ) {
 					return '';
 				}
 			}, 10, 2
@@ -210,6 +209,11 @@ HTML;
 		if ( ! $request->get_cart()->is_current() && ( it_exchange_in_superwidget() || it_exchange_is_page( 'checkout' ) ) ) {
 			$html .= "<input type='hidden' name='cart_id' value='{$request->get_cart()->get_id()}'>";
 			$html .= "<input type='hidden' name='cart_auth' value='{$request->get_cart()->generate_auth_secret( 3600 )}'>";
+		}
+
+		if ( $request->get_redirect_to() ) {
+			$to = esc_url( $request->get_redirect_to() );
+			$html .= "<input type='hidden' name='redirect_to' value='{$to}'>";
 		}
 
 		return $html;

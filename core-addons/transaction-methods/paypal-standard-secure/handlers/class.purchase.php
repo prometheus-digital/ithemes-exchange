@@ -92,6 +92,10 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 			$return_args['cart_auth'] = $cart->generate_auth_secret();
 		}
 
+		if ( $request->get_redirect_to() ) {
+			$return_args['redirect_to'] = $request->get_redirect_to();
+		}
+
 		$return_url = add_query_arg( $return_args, it_exchange_get_page_url( 'transaction' ) );
 
 		$button_vars['return']        = $return_url;
