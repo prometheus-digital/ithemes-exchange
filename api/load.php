@@ -61,3 +61,4 @@ include( $this->_plugin_path . 'api/shipping.php' );
 include( $this->_plugin_path . 'api/shipping-features.php' );
 
 include( $this->_plugin_path . 'api/sales.php' );
+include( $this->_plugin_path . 'api/gateways.php' );

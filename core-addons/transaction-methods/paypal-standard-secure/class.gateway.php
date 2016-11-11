@@ -112,6 +112,11 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
+	public function get_ssl_mode() { return self::SSL_SUGGESTED; }
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_wizard_settings() {
 
 		$fields = array(

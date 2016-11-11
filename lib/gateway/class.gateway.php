@@ -11,6 +11,10 @@
  */
 abstract class ITE_Gateway {
 
+	const SSL_REQUIRED = 'required';
+	const SSL_SUGGESTED = 'suggested';
+	const SSL_NONE = 'none';
+
 	/**
 	 * ITE_Gateway constructor.
 	 */
@@ -150,6 +154,15 @@ abstract class ITE_Gateway {
 	 * @return string
 	 */
 	public abstract function get_webhook_param();
+
+	/**
+	 * Get the SSL mode of the gateway.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_ssl_mode() { return self::SSL_NONE; }
 
 	/**
 	 * Get settings fields configuration.

@@ -90,6 +90,7 @@ class IT_Exchange_Admin {
 		add_action( 'admin_init', array( $this, 'save_core_wizard_settings' ), 9 );
 		add_action( 'admin_init', array( $this, 'save_core_general_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_core_email_settings' ) );
+		add_action( 'admin_init', array( $this, 'save_core_gateway_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_core_page_settings' ), 9 ); // Priority 9 to catch product rewrites
 
 		// Email settings callback
@@ -102,6 +103,10 @@ class IT_Exchange_Admin {
 		// Page settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_pages', array( $this, 'register_pages_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_pages_settings_tab_link' ) );
+
+		// Gateways
+		add_filter( 'it_exchange_general_settings_tab_callback_gateways', array( $this, 'register_gateway_settings_tab_callback' ) );
+		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_gateway_settings_tab_link' ) );
 
 		// General Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_general', array( $this, 'set_general_settings_defaults' ) );
@@ -496,17 +501,71 @@ class IT_Exchange_Admin {
 	}
 
 	/**
+	 * Registers the callback for the gateway tab.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $default
+	 *
+	 * @return mixed function or class method name
+	 */
+	public function register_gateway_settings_tab_callback( $default ) {
+		return function() {
+
+			wp_enqueue_script( 'jquery-ui-tooltip' );
+
+			$form = new ITForm( array( 'prefix' => 'it-exchange-gateways' ) );
+			$form->set_input_group( 'accepting' );
+
+			foreach ( ITE_Gateways::all() as $gateway ) {
+				$form->set_option( $gateway->get_slug(), it_exchange_is_gateway_accepting_payments( $gateway ) );
+			}
+
+			$is_ssl = is_ssl();
+
+			if ( ! empty ( $this->status_message ) ) {
+				ITUtility::show_status_message( $this->status_message );
+			}
+
+			if ( ! empty( $this->error_message ) ) {
+				ITUtility::show_error_message( $this->error_message );
+			}
+
+			include_once dirname( __FILE__ ) . '/views/settings/gateways.php';
+		};
+	}
+
+	/**
+	 * Prints the gateway tab for general settings.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $current_tab the current tab
+	 *
+	 * @return void
+	 */
+	public function print_gateway_settings_tab_link( $current_tab ) {
+		$active = 'gateways' == $current_tab ? 'nav-tab-active' : '';
+
+		?>
+		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=gateways' ); ?>">
+		<?php _e( 'Gateways', 'it-l10n-ithemes-exchange' ); ?>
+		</a>
+		<?php
+	}
+
+	/**
 	 * Prints the tabs for the iThemes Exchange General Settings
 	 *
 	 * @since 0.3.4
 	 * @return void
-	*/
+	 */
 	function print_general_settings_tabs() {
 		$active = empty( $this->_current_tab ) ? 'nav-tab-active' : '';
 		?>
 		<h2 class="nav-tab-wrapper">
-		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings' ); ?>"><?php _e( 'General', 'it-l10n-ithemes-exchange' ); ?></a>
-		<?php do_action( 'it_exchange_print_general_settings_tab_links', $this->_current_tab ); ?>
+			<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings' ); ?>"><?php _e( 'General', 'it-l10n-ithemes-exchange' ); ?></a>
+			<?php do_action( 'it_exchange_print_general_settings_tab_links', $this->_current_tab ); ?>
 		</h2>
 		<?php
 	}
@@ -1524,6 +1583,35 @@ class IT_Exchange_Admin {
 	}
 
 	/**
+	 * Save core gateway settings.
+	 *
+	 * @since 1.36.0
+	 */
+	public function save_core_gateway_settings() {
+
+		if ( empty( $_POST ) || 'it-exchange-settings' != $this->_current_page || 'gateways' != $this->_current_tab )
+			return;
+
+		// Check nonce
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-gateway-settings' ) ) {
+			$this->error_message = __( 'Error. Please try again', 'it-l10n-ithemes-exchange' );
+			return;
+		}
+
+		$settings = ITForm::get_post_data();
+		$accepting = $settings['accepting'];
+
+		foreach ( ITE_Gateways::all() as $gateway ) {
+			if ( ! isset( $accepting[ $gateway->get_slug() ] ) && ! $gateway instanceof ITE_Zero_Sum_Checkout_Gateway ) {
+				$accepting[ $gateway->get_slug() ] = false;
+			}
+		}
+
+		update_option( 'it_exchange_gateways_accepting_payments', $accepting );
+		$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
+	}
+
+	/**
 	 * Validate email settings
 	 *
 	 * @since 0.3.6
@@ -1796,7 +1884,7 @@ class IT_Exchange_Admin {
 				$post_type = NULL;
 		}
 
-		wp_register_script( 'it-exchange-dialog', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tips.js', array( 'jquery-ui-dialog' ) );
+		wp_register_script( 'it-exchange-dialog', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tips.js', array( 'jquery-ui-dialog', 'jquery' ) );
 		wp_register_script( 'ithemes-chartjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/Chart.min.js', array( 'jquery' ), '0.2', true );
 		wp_register_script( 'it-exchange-select2', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/select2.min.js', array( 'jquery' ), '4.0.1', true );
 		wp_register_script( 'ithemes-momentjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/moment.min.js', array(), '2.11.0', true );
