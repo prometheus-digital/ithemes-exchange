@@ -888,6 +888,9 @@ class ITE_Cart {
 	 * @return bool
 	 */
 	public function set_meta( $key, $value ) {
+
+		$previous = $this->has_meta( $key ) ? $this->get_meta( $key ) : null;
+
 		if ( $this->get_repository()->set_meta( $key, $value ) ) {
 
 			/**
@@ -896,10 +899,11 @@ class ITE_Cart {
 			 * @since 1.36.0
 			 *
 			 * @param string    $key
-			 * @param string    $value
+			 * @param mixed     $value
 			 * @param \ITE_Cart $this
+			 * @param mixed     $previous
 			 */
-			do_action( 'it_exchange_set_cart_meta', $key, $value, $this );
+			do_action( 'it_exchange_set_cart_meta', $key, $value, $this, $previous );
 
 			return true;
 		}

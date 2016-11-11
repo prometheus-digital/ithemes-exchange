@@ -242,7 +242,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		$t_duration = null;
 
 		if ( $request instanceof ITE_Gateway_Prorate_Purchase_Request && ( $prorates = $request->get_prorate_requests() ) ) {
-			if ( isset( $prorates[ $product->ID ] ) && $prorates[ $product->ID ]->get_free_days() ) {
+			if ( isset( $prorates[ $product->ID ] ) && $prorates[ $product->ID ]->get_credit_type() === 'days' ) {
 				$t_duration = $prorates[ $product->ID ]->get_free_days();
 			}
 		}
