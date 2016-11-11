@@ -65,6 +65,29 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
+	public function get_wizard_settings() {
+
+		$fields = array(
+			'preamble',
+			'offline-payments-title',
+			'offline-payments-instructions',
+			'offline-payments-default-status',
+		);
+
+		$wizard = array();
+
+		foreach ( $this->get_settings_fields() as $field ) {
+			if ( in_array( $field['slug'], $fields ) ) {
+				$wizard[] = $field;
+			}
+		}
+
+		return $wizard;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_settings_fields() {
 		return array(
 			array(

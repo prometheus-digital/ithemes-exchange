@@ -99,16 +99,36 @@ class ITE_Settings_Controller {
 	 *
 	 * @param string $key
 	 * @param mixed  $val
+	 * @param bool   $save
 	 *
 	 * @return bool
 	 */
-	public function set( $key, $val ) {
+	public function set( $key, $val, $save = true ) {
 
 		$settings         = $this->lazy_load_settings();
 		$settings[ $key ] = $val;
 		$this->settings   = $settings;
 
-		return it_exchange_save_option( $this->name, $settings, true );
+		if ( $save ) {
+			return it_exchange_save_option( $this->name, $settings, true );
+		} else {
+			return true;
+		}
 	}
 
+	/**
+	 * Save settings.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function save() {
+
+		if ( ! $this->settings ) {
+			return false;
+		}
+
+		return it_exchange_save_option( $this->name, $this->settings, true );
+	}
 }

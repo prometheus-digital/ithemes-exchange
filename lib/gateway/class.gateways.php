@@ -60,6 +60,78 @@ class ITE_Gateways {
 			} );
 		}
 
+		if ( $wizard = $gateway->get_wizard_settings() ) {
+			add_action( "it_exchange_print_{$gateway->get_slug()}_wizard_settings", function ( ITForm $form ) use ( $wizard, $gateway ) {
+				$form_values = ITUtility::merge_defaults( ITForm::get_post_data(), $gateway->settings()->all() );
+
+				foreach ( $form_values as $key => $value ) {
+					$form->set_option( "{$gateway->get_slug()}-wizard-{$key}", $value );
+				}
+
+				foreach ( $wizard as &$setting ) {
+					$setting['slug'] = "{$gateway->get_slug()}-wizard-{$setting['slug']}";
+				}
+				unset( $setting );
+
+				$settings_form = new IT_Exchange_Admin_Settings_Form( array(
+					'form'        => $form,
+					'form-fields' => $wizard
+				) );
+				$hide_if_js    = it_exchange_is_addon_enabled( $gateway->get_slug() ) ? '' : 'hide-if-js';
+				?>
+
+				<div class="field <?php echo $gateway->get_slug(); ?>-wizard <?php echo $hide_if_js; ?>">
+					<h3><?php echo $gateway->get_name(); ?></h3>
+					<?php if ( empty( $hide_if_js ) ) { ?>
+						<input class="enable-<?php echo $gateway->get_slug(); ?>"
+						       type="hidden" name="it-exchange-transaction-methods[]"
+						       value="<?php echo $gateway->get_slug(); ?>"
+						/>
+					<?php } ?>
+					<?php $settings_form->print_fields(); ?>
+				</div>
+				<?php
+			} );
+
+			add_action( 'it_exchange_save_wizard_settings', function () use ( $wizard, $gateway ) {
+
+				if ( empty( $_REQUEST['it_exchange_settings-wizard-submitted'] ) ) {
+					return;
+				}
+
+				$settings_form = new IT_Exchange_Admin_Settings_Form( array(
+					'form-prefix' => 'it_exchange_settings-wizard-' . $gateway->get_slug(),
+					'form-fields' => $wizard
+				) );
+
+				$settings   = array();
+				$controller = $gateway->settings();
+
+				foreach ( $wizard as $setting ) {
+
+					$key = $setting['slug'];
+
+					if ( isset( $_REQUEST["it_exchange_settings-{$gateway->get_slug()}-wizard-{$key}"] ) ) {
+						$settings[ $key ] = $_REQUEST["it_exchange_settings-{$gateway->get_slug()}-wizard-{$key}"];
+					}
+				}
+
+				$settings_or_error = $settings_form->validate_settings( $settings );
+
+				if ( is_wp_error( $settings_or_error ) ) {
+					it_exchange_add_message( 'error', $settings_or_error->get_error_message() );
+
+					return;
+				}
+
+				foreach ( $settings_or_error as $key => $value ) {
+					$controller->set( $key, $value, false );
+				}
+
+				$controller->save();
+			} );
+		}
+
 		if ( $webhook_param = $gateway->get_webhook_param() ) {
 			it_exchange_register_webhook( $gateway->get_slug(), $webhook_param );
 		}

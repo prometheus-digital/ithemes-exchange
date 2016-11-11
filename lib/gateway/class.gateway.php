@@ -184,6 +184,15 @@ abstract class ITE_Gateway {
 	public abstract function get_settings_name();
 
 	/**
+	 * Get the settings that should be displayed in the wizard.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array
+	 */
+	public function get_wizard_settings() {	return array(); }
+
+	/**
 	 * Retrieve the settings controller for this gateway.
 	 *
 	 * @since 1.36
