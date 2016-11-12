@@ -409,7 +409,16 @@ class IT_Exchange_Admin {
 			$settings_callback = apply_filters( 'it_exchange_general_settings_tab_callback_' . $this->_current_tab, $settings_callback );
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->get_admin_menu_capability( 'it-exchange-settings' ), 'it-exchange-settings', $settings_callback );
 
-		add_submenu_page( 'it-exchange', 'iThemes Exchange Tools', 'Tools', $this->get_admin_menu_capability( 'it-exchange-tools' ), 'it-exchange-tools', array( $this, 'print_tools_page' ) );
+		$tools = __( 'Tools %s', 'it-l10n-ithemes-exchange' );
+		$bubble = '';
+
+		if ( $count = count( it_exchange_make_upgrader()->get_available_upgrades() ) ) {
+			$bubble .= "<span class=\"it-exchange-bubble-count count-{$count}\"><span>{$count}</span></span>";
+		}
+
+		$tools = sprintf( $tools, $bubble );
+
+		add_submenu_page( 'it-exchange', 'iThemes Exchange Tools', $tools, $this->get_admin_menu_capability( 'it-exchange-tools' ), 'it-exchange-tools', array( $this, 'print_tools_page' ) );
 
 		// Add Add-ons menu item
 		$add_ons_callback = array( $this, 'print_exchange_add_ons_page' );
@@ -728,10 +737,19 @@ class IT_Exchange_Admin {
 			return;
 		}
 
+		$upgrades = __( 'Upgrades %s', 'it-l10n-ithemes-exchange' );
+		$bubble = '';
+
+		if ( $count = count( it_exchange_make_upgrader()->get_available_upgrades() ) ) {
+			$bubble .= "<span class=\"it-exchange-bubble-count count-{$count}\"><span>{$count}</span></span>";
+		}
+
+		$upgrades = sprintf( $upgrades, $bubble );
+
 		$active = 'upgrades' == $current_tab ? 'nav-tab-active' : '';
 		?>
 		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-tools&tab=upgrades' ); ?>">
-			<?php _e( 'Upgrades', 'it-l10n-ithemes-exchange' ); ?>
+			<?php echo $upgrades; ?>
 		</a>
 		<?php
 	}

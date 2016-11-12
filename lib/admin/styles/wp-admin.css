@@ -21,3 +21,41 @@
 /** ----------------------------------------:[ add-ons menu item ]:------ */
 #adminmenu .wp-submenu a[href|="admin.php?page=it-exchange-addons"],
 #adminmenu .wp-submenu li.current a[href|="admin.php?page=it-exchange-addons"]{ color:#8cc53e; }
+
+#adminmenu .it-exchange-bubble-count {
+    display: inline-block;
+    background-color: #d54e21;
+    color: #fff;
+    font-size: 9px;
+    line-height: 17px;
+    font-weight: 600;
+    margin: -1px 0 0 2px;
+    vertical-align: top;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    z-index: 26;
+}
+
+#adminmenu li span.it-exchange-bubble-count span {
+    display: block;
+    padding: 0 6px;
+}
+
+.nav-tab-wrapper .nav-tab .it-exchange-bubble-count {
+    display: inline-block;
+    background-color: #d54e21;
+    color: #fff;
+    font-size: 9px;
+    line-height: 17px;
+    font-weight: 600;
+    margin: 4px 0 0 2px;
+    vertical-align: top;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    z-index: 26;
+}
+
+.nav-tab-wrapper .nav-tab span.it-exchange-bubble-count span {
+    display: block;
+    padding: 0 6px;
+}
