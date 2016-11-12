@@ -8,6 +8,7 @@
 /**
  * @var $form   ITForm
  * @var $is_ssl bool
+ * @var $gateways ITE_Gateway[]
  */
 ?>
 <div class="wrap">
@@ -32,18 +33,15 @@
 			</tr>
 			</thead>
 			<tbody>
-			<?php foreach ( ITE_Gateways::all() as $gateway ): ?>
-				<?php if ( $gateway instanceof ITE_Zero_Sum_Checkout_Gateway ) {
-					continue;
-				} ?>
+			<?php foreach ( $gateways as $gateway ): ?>
 				<tr>
 					<td><?php echo $gateway->get_name(); ?></td>
 					<td>
 						<?php $form->set_input_group( 'accepting' ); ?>
-						<label class="screen-reader-text">
+						<label class="screen-reader-text" for="accepting-<?php echo $gateway->get_slug(); ?>">
 							<?php _e( 'Is this gateway accepting new payments.', 'it-l10n-ithemes-exchange' ); ?>
-							<?php $form->add_check_box( $gateway->get_slug() ); ?>
 						</label>
+						<?php $form->add_check_box( $gateway->get_slug() ); ?>
 					</td>
 					<td>
 						<?php if ( $gateway->get_ssl_mode() === ITE_Gateway::SSL_REQUIRED && $is_ssl ) : ?>

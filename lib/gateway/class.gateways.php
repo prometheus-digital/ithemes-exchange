@@ -214,6 +214,34 @@ class ITE_Gateways {
 	}
 
 	/**
+	 * Retrieve all gateways accepting payments.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Gateway[]
+	 */
+	public static function accepting() {
+		return array_filter(
+			static::all(),
+			function ( $gateway ) { return it_exchange_is_gateway_accepting_payments( $gateway ); }
+		);
+	}
+
+	/**
+	 * Get all gateways except Zero Sum Checkout.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return \ITE_Gateway[]
+	 */
+	public static function non_zero_sum() {
+		return array_filter(
+			static::all(),
+			function ( $gateway ) { return ! $gateway instanceof ITE_Zero_Sum_Checkout_Gateway; }
+		);
+	}
+
+	/**
 	 * Get all gateways that can handle a certain request.
 	 *
 	 * @since 1.36.0

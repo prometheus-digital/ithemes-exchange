@@ -514,10 +514,12 @@ class IT_Exchange_Admin {
 
 			wp_enqueue_script( 'jquery-ui-tooltip' );
 
+			$gateways = ITE_Gateways::non_zero_sum();
+
 			$form = new ITForm( array( 'prefix' => 'it-exchange-gateways' ) );
 			$form->set_input_group( 'accepting' );
 
-			foreach ( ITE_Gateways::all() as $gateway ) {
+			foreach ( $gateways as $gateway ) {
 				$form->set_option( $gateway->get_slug(), it_exchange_is_gateway_accepting_payments( $gateway ) );
 			}
 
@@ -1601,8 +1603,8 @@ class IT_Exchange_Admin {
 		$settings = ITForm::get_post_data();
 		$accepting = $settings['accepting'];
 
-		foreach ( ITE_Gateways::all() as $gateway ) {
-			if ( ! isset( $accepting[ $gateway->get_slug() ] ) && ! $gateway instanceof ITE_Zero_Sum_Checkout_Gateway ) {
+		foreach ( ITE_Gateways::non_zero_sum() as $gateway ) {
+			if ( ! isset( $accepting[ $gateway->get_slug() ] ) ) {
 				$accepting[ $gateway->get_slug() ] = false;
 			}
 		}
