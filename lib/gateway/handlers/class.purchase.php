@@ -64,11 +64,17 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 					return $_;
 				}
 
-				/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-				$txn = $self->handle( $factory->make(
-					'purchase',
-					$self->build_factory_args_from_global_state( $cart, $_REQUEST )
-				) );
+				try {
+					$request = $factory->make(
+						'purchase',
+						$self->build_factory_args_from_global_state( $cart, $_REQUEST )
+					);
+					$txn     = $self->handle( $request );
+				} catch ( Exception $e ) {
+					$cart->get_feedback()->add_error( $e->getMessage() );
+
+					return null;
+				}
 
 				return $txn ? $txn->ID : false;
 			},

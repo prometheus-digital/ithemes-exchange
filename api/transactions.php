@@ -1694,12 +1694,12 @@ function it_exchange_doing_webhook( $webhook = '' ) {
  *
  * @since 1.36.0
  *
- * @param string $webook
+ * @param string $webhook_key
  *
  * @return string
  */
-function it_exchange_get_webhook_url( $webook ) {
-	return get_home_url() . '/?' . it_exchange_get_webhook( $webook ) . '=1';
+function it_exchange_get_webhook_url( $webhook_key ) {
+	return get_home_url() . '/?' . it_exchange_get_webhook( $webhook_key ) . '=1';
 }
 
 /**
