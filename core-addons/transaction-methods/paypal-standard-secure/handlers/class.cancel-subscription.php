@@ -26,7 +26,13 @@ class ITE_PayPal_Standard_Secure_Cancel_Subscription_Handler implements ITE_Gate
 
 		$paypal_settings = it_exchange_get_option( 'addon_paypal_standard_secure' );
 
-		$use_sandbox = $subscription->get_transaction()->is_sandbox_purchase() || $paypal_settings['sandbox-mode'];
+		if ( $transaction->is_sandbox_purchase() ) {
+			$use_sandbox = true;
+		} elseif ( $transaction->is_live_purchase() ) {
+			$use_sandbox = false;
+		} else {
+			$use_sandbox = $paypal_settings['sandbox-mode'];
+		}
 
 		$paypal_api_url = $use_sandbox ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
 
