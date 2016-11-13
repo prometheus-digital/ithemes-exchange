@@ -1114,10 +1114,6 @@ class ITE_Cart {
 	/**
 	 * Generate an authentication secret.
 	 *
-	 * Example:
-	 * Create at 3:00 -> Expires 3:05
-	 * Create at 3:02 -> Expires 3:05
-	 *
 	 * @since 1.36.0
 	 *
 	 * @param int $life The key lifetime.
