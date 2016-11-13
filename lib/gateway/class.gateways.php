@@ -92,9 +92,6 @@ class ITE_Gateways {
 					return $currencies;
 				}
 
-				/*var_dump(array_flip( $supported));
-				var_dump($currencies);*/
-
 				return array_intersect_key( $currencies, array_flip( $supported ) );
 			} );
 		}
