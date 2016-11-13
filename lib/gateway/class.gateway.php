@@ -165,6 +165,24 @@ abstract class ITE_Gateway {
 	public function get_ssl_mode() { return self::SSL_NONE; }
 
 	/**
+	 * Does this gateway reduce the currency options available.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function is_currency_support_limited() { return false; }
+
+	/**
+	 * Get supported currencies.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array A list of upper-case currency codes.
+	 */
+	public function get_supported_currencies() { return array(); }
+
+	/**
 	 * Get settings fields configuration.
 	 *
 	 * @since 1.36
