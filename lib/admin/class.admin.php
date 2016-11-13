@@ -96,9 +96,7 @@ class IT_Exchange_Admin {
 		// Email settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_email', array( $this, 'register_email_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_email_settings_tab_link' ) );
-		add_action( 'screen_settings', array( $this, 'print_previous_email_screen_option' ), 10, 2 );
 		add_action( 'current_screen', array( $this, 'add_email_help_tabs' ) );
-		add_action( 'admin_notices', array( $this, 'print_email_template_notice' ) );
 
 		// Page settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_pages', array( $this, 'register_pages_settings_tab_callback' ) );
@@ -900,36 +898,6 @@ class IT_Exchange_Admin {
 	}
 
 	/**
-	 * Print the previous email screen options.
-	 *
-	 * @since 1.36
-	 *
-	 * @param string    $settings
-	 * @param WP_Screen $screen
-	 *
-	 * @return string
-	 */
-	public function print_previous_email_screen_option( $settings, WP_Screen $screen ) {
-
-		if ( $screen->base !== 'exchange_page_it-exchange-settings' || ! isset( $_GET['tab'] ) || $_GET['tab'] !== 'email' ) {
-			return $settings;
-		}
-
-		$versions         = get_option( 'it-exchange-versions', array() );
-		$previous_version = empty( $versions['previous'] ) ? false : $versions['previous'];
-
-		if ( ! $previous_version || version_compare( $previous_version, '1.36.0', '>=' ) ) {
-			return $settings;
-		}
-
-		$settings .= '<fieldset class="previous-emails"><legend>' . __( 'Additional settings', 'it-l10n-ithemes-exchange' ) . '</legend><label for="previous-emails-toggle">';
-		$settings .= '<input type="checkbox" id="previous-emails-toggle"' . checked( get_user_setting( 'it-exchange-previous-emails', 'on' ), 'on', false ) . ' />';
-		$settings .= __( 'Display legacy emails.', 'it-l10n-ithemes-exchange' ) . '</label></fieldset>';
-
-		return $settings;
-	}
-
-	/**
 	 * Add help tabs to the email screen.
 	 *
 	 * @since 1.36
@@ -961,37 +929,6 @@ class IT_Exchange_Admin {
 	             __( 'For reference, please see your legacy email template alongside the new templates.', 'it-l10n-ithemes-exchange' ) .
 	             '</p>'
 		) );
-	}
-
-	/**
-	 * Print the new email template notice.
-	 *
-	 * @since 1.36
-	 */
-	public function print_email_template_notice() {
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		if ( isset( $_GET['page'], $_GET['tab'] ) && $_GET['page'] === 'it-exchange-settings' && $_GET['tab'] === 'email' ) {
-			return;
-		}
-
-		$versions         = get_option( 'it-exchange-versions', array() );
-		$previous_version = empty( $versions['previous'] ) ? false : $versions['previous'];
-
-		if ( ! $previous_version || version_compare( $previous_version, '1.36.0', '>=' ) ) {
-			return;
-		}
-
-		$settings = it_exchange_get_option( 'emails' );
-
-		if ( count( $settings ) > 1) {
-			return;
-		}
-
-		include( 'views/notices/email-template.php' );
 	}
 
 	/**
@@ -1559,8 +1496,6 @@ class IT_Exchange_Admin {
 			$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
 		}
 
-		$all_non_default = true;
-
 		$notifications = it_exchange_email_notifications();
 
 		foreach ( $_POST['email'] as $slug => $data ) {
@@ -1579,26 +1514,6 @@ class IT_Exchange_Admin {
 			}
 
 			$notification->save();
-
-			$all_non_default = $all_non_default && $notification->is_non_default();
-		}
-
-		if ( $all_non_default ) {
-
-			$versions         = get_option( 'it-exchange-versions', array() );
-			$previous_version = empty( $versions['previous'] ) ? false : $versions['previous'];
-
-			if ( ! $previous_version || version_compare( $previous_version, '1.36.0', '>=' ) ) {
-				return;
-			}
-
-			// only set the display to off if the user hasn't manually changed their preference
-			if ( get_user_setting( 'it-exchange-previous-emails', null ) === null ) {
-				set_user_setting( 'it-exchange-previous-emails', 'off' );
-
-				$this->status_message .= ' ' . __( "Congratulations! All your emails have been updated. We've hidden your legacy emails automatically.", 'it-l10n-ithemes-exchange' );
-				$this->status_message .= ' ' . __( "You can re-display them at anytime in the Screen Options tab.", 'it-l10n-ithemes-exchange' );
-			}
 		}
 	}
 
