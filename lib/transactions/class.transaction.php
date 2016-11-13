@@ -739,7 +739,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 *
 	 * @since 1.36.0
 	 *
-	 * @return \ITE_Saved_Address|null
+	 * @return \ITE_Location|null
 	 */
 	public function get_billing_address() {
 
@@ -770,7 +770,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 *
 	 * @since 1.36.0
 	 *
-	 * @return \ITE_Saved_Address|null
+	 * @return \ITE_Location|null
 	 */
 	public function get_shipping_address() {
 

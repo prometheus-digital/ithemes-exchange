@@ -9,7 +9,7 @@
 /**
  * Class ITE_Address
  *
- * @property int                   $pk
+ * @property int                   $ID
  * @property \IT_Exchange_Customer $customer
  * @property string                $label
  * @property bool                  $primary
@@ -121,7 +121,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	 * @inheritDoc
 	 */
 	public function get_pk() {
-		return $this->pk;
+		return $this->ID;
 	}
 
 	/**
@@ -137,8 +137,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	public function set_attribute( $attribute, $value ) {
 		try {
 			return parent::set_attribute( $attribute, $value );
-		}
-		catch ( OutOfBoundsException $e ) {
+		} catch ( OutOfBoundsException $e ) {
 			return $this;
 		}
 	}
@@ -245,7 +244,12 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	 * @throws \InvalidArgumentException If location fails validation.
 	 */
 	public static function convert_to_saved(
-		ITE_Location $location, ITE_Location $current = null, IT_Exchange_Customer $customer = null, $type, $validate = true, $filter = false
+		ITE_Location $location,
+		ITE_Location $current = null,
+		IT_Exchange_Customer $customer = null,
+		$type,
+		$validate = true,
+		$filter = false
 	) {
 
 		$cid = $customer ? $customer->ID : 0;
@@ -255,6 +259,14 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 		}
 
 		if ( $current && $location instanceof ITE_Saved_Address ) {
+
+			// This is an update to an address that is shared amongst
+			// multiple transactions. So as not to affect those other
+			// transactions we split this into a new record.
+			if ( $location->is_address_shared() ) {
+				return ITE_Saved_Address::create( $location->to_array() );
+			}
+
 			if ( $current instanceof ITE_Saved_Address && $current->get_pk() === $location->get_pk() ) {
 
 				$location->save();
@@ -282,10 +294,32 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 			return $location;
 		}
 
-		return ITE_Saved_Address::create( array_merge( $location->to_array(), array(
-			'customer' => $cid,
-			'type'     => $type,
-		) ) );
+		if ( $cid ) {
+			/** @noinspection PhpIncompatibleReturnTypeInspection */
+			return ITE_Saved_Address::query()->first_or_create( array_merge( $location->to_array(), array(
+				'customer' => $cid,
+				'type'     => $type,
+			) ) );
+		} else { // We don't want to share addresses amongst guest customers.
+			return ITE_Saved_Address::create( array_merge( $location->to_array(), array(
+				'type' => $type
+			) ) );
+		}
+	}
+
+	/**
+	 * Is this address shared among different transactions.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function is_address_shared() {
+		$results = IT_Exchange_Transaction::query()
+		                                  ->and_where( $this->type, '=', $this->get_pk() )
+		                                  ->expression( 'count', 'ID', 'count' )->results();
+
+		return $results->get( 'count' ) > 1;
 	}
 
 	/**
