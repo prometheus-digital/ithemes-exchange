@@ -123,7 +123,7 @@ function it_exchange_load_public_scripts( $current_view ) {
 
 	$settings = it_exchange_get_option( 'settings_general' );
 
-	wp_register_style( 'it-exchange-icon-fonts', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange-fonts.css' ) );
+	wp_register_style( 'it-exchange-icon-fonts', IT_Exchange::$url . '/lib/assets/styles/exchange-fonts.css' );
 
 	// Frontend Product JS
 	if ( is_singular( 'it_exchange_prod' ) || IT_Exchange_SW_Shortcode::has_shortcode() ) {
@@ -135,62 +135,75 @@ function it_exchange_load_public_scripts( $current_view ) {
 		if ( ( 1 == $settings['enable-gallery-popup'] ) )
 			array_push( $script_deps, 'jquery-colorbox' );
 
-		wp_enqueue_script( 'it-exchange-product-public-js', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/exchange-product.js' ), $script_deps, false, true );
+		wp_enqueue_script( 'it-exchange-product-public-js', IT_Exchange::$url . '/lib/assets/js/exchange-product.js', $script_deps, false, true );
 		wp_enqueue_style( 'it-exchange-icon-fonts' );
 
-		$file = dirname( dirname( __FILE__ ) ) . '/purchase-dialog/js/exchange-purchase-dialog.js';
-		wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type', 'jquery.payment' ), false, true );
+		wp_enqueue_script( 'exchange-purchase-dialog', IT_Exchange::$url . '/lib/purchase-dialog/js/exchange-purchase-dialog.js',
+			array( 'jquery', 'detect-credit-card-type', 'jquery.payment' ), false, true
+		);
 	}
 
 	if ( it_exchange_is_page( 'product' ) ) {
-		$file = dirname( dirname( __FILE__ ) ) . '/purchase-dialog/js/exchange-purchase-dialog.js';
-		wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type', 'jquery.payment' ), false, true );
+		wp_enqueue_script( 'exchange-purchase-dialog', IT_Exchange::$url . '/lib/purchase-dialog/js/exchange-purchase-dialog.js',
+			array( 'jquery', 'detect-credit-card-type', 'jquery.payment' ), false, true
+		);
 	}
 
 	// ****** CHECKOUT SPECIFIC SCRIPTS *******
 	if ( it_exchange_is_page( 'checkout' )  ) {
 
 		// Enqueue purchase dialog JS on checkout screen
-		$file = dirname( dirname( __FILE__ ) ) . '/purchase-dialog/js/exchange-purchase-dialog.js';
-		wp_enqueue_script( 'exchange-purchase-dialog', ITUtility::get_url_from_file( $file ), array( 'jquery', 'detect-credit-card-type', 'jquery.payment' ), false, true );
+		wp_enqueue_script( 'exchange-purchase-dialog', IT_Exchange::$url . '/lib/purchase-dialog/js/exchange-purchase-dialog.js',
+			array( 'jquery', 'detect-credit-card-type', 'jquery.payment' ), false, true
+		);
 
 		// Register select to autocomplte
 		wp_enqueue_style( 'it-exchange-autocomplete-style' );
 
 		// General Checkout
-		$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/checkout-page.js', array( 'it-exchange-event-manager', 'jquery' ) );
-		wp_enqueue_script( 'it-exchange-checkout-page', $script, array( 'jquery' ), false, true );
+		wp_enqueue_script( 'it-exchange-checkout-page', IT_Exchange::$url . '/lib/assets/js/checkout-page.js',
+			array( 'it-exchange-event-manager', 'jquery' ), false, true
+		);
 
 		// Load Logged In purchase requirement JS if not logged in and on checkout page.
 		if ( in_array( 'logged-in', $purchase_requirements ) && ! is_user_logged_in() ) {
-			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/logged-in-purchase-requirement.js' );
-			wp_enqueue_script( 'it-exchange-logged-in-purchase-requirement', $script, array( 'jquery' ), false, true );
+			wp_enqueue_script( 'it-exchange-logged-in-purchase-requirement', IT_Exchange::$url . '/lib/assets/js/logged-in-purchase-requirement.js',
+				array( 'jquery' ), false, true
+			);
 		}
 
 		// Load Billing Address purchase requirement JS if not logged in and on checkout page.
 		if ( in_array( 'billing-address', $purchase_requirements ) ) {
-			$script = ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/billing-address-purchase-requirement.js' );
-			wp_enqueue_script( 'it-exchange-billing-address-purchase-requirement', $script, array( 'jquery', 'it-exchange-country-states-sync' ), false, true );
+			wp_enqueue_script( 'it-exchange-billing-address-purchase-requirement',
+				IT_Exchange::$url . '/lib/assets/js/billing-address-purchase-requirement.js',
+				array( 'jquery', 'it-exchange-country-states-sync' ), false, true
+			);
 		}
 
 		// Load country / state field sync if on checkout page
-		wp_enqueue_script( 'it-exchange-country-states-sync', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/country-states-sync.js' ), array( 'jquery', 'jquery-ui-autocomplete', 'jquery-select-to-autocomplete' ), false, true );
+		wp_enqueue_script( 'it-exchange-country-states-sync', IT_Exchange::$url . '/lib/assets/js/country-states-sync.js',
+			array( 'jquery', 'jquery-ui-autocomplete', 'jquery-select-to-autocomplete' ), false, true
+		);
 
 	} // ****** END CHECKOUT SPECIFIC SCRIPTS *******
 
 	// Frontend Style
 	if ( ! apply_filters( 'it_exchange_disable_frontend_stylesheet', false ) )
-		wp_enqueue_style( 'it-exchange-public-css', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/exchange.css' ) );
+		wp_enqueue_style( 'it-exchange-public-css', IT_Exchange::$url. '/lib/assets/styles/exchange.css' );
 
 	// Parent theme /exchange/style.css if it exists
 	$parent_theme_css = get_template_directory() . '/exchange/style.css';
-	if ( is_file( $parent_theme_css ) )
+
+	if ( is_file( $parent_theme_css ) ) {
 		wp_enqueue_style( 'it-exchange-parent-theme-css', ITUtility::get_url_from_file( $parent_theme_css ) );
+	}
 
 	// Child theme /exchange/style.css if it exists
 	$child_theme_css = get_stylesheet_directory() . '/exchange/style.css';
-	if ( is_file( $child_theme_css ) && ( $parent_theme_css != $child_theme_css || ! is_file( $parent_theme_css ) ) )
+
+	if ( is_file( $child_theme_css ) && ( $parent_theme_css != $child_theme_css || ! is_file( $parent_theme_css ) ) ) {
 		wp_enqueue_style( 'it-exchange-child-theme-css', ITUtility::get_url_from_file( $child_theme_css ) );
+	}
 }
 add_action( 'wp_enqueue_scripts', 'it_exchange_load_public_scripts' );
 
@@ -203,24 +216,26 @@ add_action( 'wp_enqueue_scripts', 'it_exchange_load_public_scripts' );
 */
 function it_exchange_register_scripts() {
 	// jQuery Zoom
-	wp_register_script( 'jquery-zoom', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.zoom.min.js' ), array( 'jquery' ), false, true );
+	wp_register_script( 'jquery-zoom', IT_Exchange::$url . '/lib/assets/js/jquery.zoom.min.js', array( 'jquery' ), false, true );
 
 	// jQuery Colorbox
-	wp_register_script( 'jquery-colorbox', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.colorbox.min.js' ), array( 'jquery' ), false, true );
+	wp_register_script( 'jquery-colorbox', IT_Exchange::$url . '/lib/assets/js/jquery.colorbox.min.js', array( 'jquery' ), false, true );
 
 	// Detect CC Type
-	wp_register_script( 'detect-credit-card-type', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/detect-credit-card-type.js' ), array( 'jquery', 'jquery.payment' ), false, true );
+	wp_register_script( 'detect-credit-card-type', IT_Exchange::$url . '/lib/assets/js/detect-credit-card-type.js', array( 'jquery', 'jquery.payment' ), false, true );
 
 	// Detect CC Type
-	wp_register_script( 'it-exchange-event-manager', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/event-manager.js' ), array(), false, true );
+	wp_register_script( 'it-exchange-event-manager', IT_Exchange::$url . '/lib/assets/js/event-manager.js', array(), false, true );
 
-	wp_register_script( 'jquery.payment', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/assets/js/jquery.payment.min.js', array( 'jquery' ), '1.3.2', true );
-	wp_register_script( 'backbonedeep', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/admin/js/backbone.modeldeep.min.js', array( 'backbone' ), '2.0.1', true );
-	wp_register_script( 'backbone.paginator', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) ) . '/admin/js/backbone.paginator.min.js', array( 'backbone' ), '2.0.5', true );
+	wp_register_script( 'jquery.payment', IT_Exchange::$url . '/lib/assets/js/jquery.payment.min.js', array( 'jquery' ), '1.3.2', true );
+	wp_register_script( 'backbonedeep', IT_Exchange::$url . '/lib/admin/js/backbone.modeldeep.min.js', array( 'backbone' ), '2.0.1', true );
+	wp_register_script( 'backbone.paginator', IT_Exchange::$url . '/lib/admin/js/backbone.paginator.min.js', array( 'backbone' ), '2.0.5', true );
 
 	// Select to Autocomplete
-	wp_register_script( 'jquery-select-to-autocomplete', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/js/jquery.select-to-autocomplete.min.js' ), array( 'jquery', 'jquery-ui-autocomplete' ) );
-	wp_register_style( 'it-exchange-autocomplete-style', ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/assets/styles/autocomplete.css' ) );
+	wp_register_script( 'jquery-select-to-autocomplete', IT_Exchange::$url . '/lib/assets/js/jquery.select-to-autocomplete.min.js',
+		array( 'jquery', 'jquery-ui-autocomplete' )
+	);
+	wp_register_style( 'it-exchange-autocomplete-style', IT_Exchange::$url . '/lib/assets/styles/autocomplete.css' );
 
 	$settings = it_exchange_get_option( 'settings_general' );
 	$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
@@ -333,7 +348,14 @@ function it_exchange_process_webhooks() {
 					die();
 				}
 			} else {
-				wp_die( sprintf( __( 'Invalid webhook request for this site. The webhook request should be: %s', 'it-l10n-ithemes-exchange' ), $required_webhook_url ), __( 'iThemes Exchange Webhook Process Error', 'it-l10n-ithemes-exchange' ), array( 'response' => 400 ) );
+				wp_die(
+					sprintf(
+						__( 'Invalid webhook request for this site. The webhook request should be: %s', 'it-l10n-ithemes-exchange' ),
+						$required_webhook_url
+					),
+					__( 'iThemes Exchange Webhook Process Error', 'it-l10n-ithemes-exchange' ),
+					array( 'response' => 400 )
+				);
 			}
 
 			break; //we can stop processing here... no need to continue the foreach since we can only handle one webhook at a time
@@ -341,7 +363,11 @@ function it_exchange_process_webhooks() {
 	}
 	if ( $webhooks_processed ) {
 		do_action( 'it_exchange_webhooks_processed' );
-		wp_die( __( 'iThemes Exchange webhook process Complete', 'it-l10n-ithemes-exchange' ), __( 'iThemes Exchange Webhook Process Complete', 'it-l10n-ithemes-exchange' ), array( 'response' => 200 ) );
+		wp_die(
+			__( 'iThemes Exchange webhook process Complete', 'it-l10n-ithemes-exchange' ),
+			__( 'iThemes Exchange Webhook Process Complete', 'it-l10n-ithemes-exchange' ),
+			array( 'response' => 200 )
+		);
 	}
 }
 add_action( 'wp', 'it_exchange_process_webhooks' );
@@ -534,7 +560,8 @@ function it_exchange_register_core_pages() {
 		'rewrite-rules' => array( 105, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Customer Registration', 'it-l10n-ithemes-exchange' ),
-		'tip'           => __( 'Where customers register to login, download, etc.  You can turn off registration and allow guest checkouts in Exchange / Add-ons / Digital Downloads Settings.', 'it-l10n-ithemes-exchange' ),
+		'tip'           => __( 'Where customers register to login, download, etc. ', 'it-l10n-ithemes-exchange' ) .
+		' ' . __('You can turn off registration and allow guest checkouts in Exchange / Add-ons / Digital Downloads Settings.', 'it-l10n-ithemes-exchange'),
 		'type'          => 'exchange',
 		'menu'          => true,
 		'optional'      => true,
@@ -548,7 +575,7 @@ function it_exchange_register_core_pages() {
 		'rewrite-rules' => array( 135, 'it_exchange_get_core_page_rewrites' ),
 		'url'           => 'it_exchange_get_core_page_urls',
 		'settings-name' => __( 'Account Page', 'it-l10n-ithemes-exchange' ),
-		'tip'           => __( 'Customers get an account when they buy something, so they can login and download their purchases. This is the main landing page for customers after they log in.', 'it-l10n-ithemes-exchange' ),
+		'tip'           => __( 'This is the main landing page for customers after they log in to their account.', 'it-l10n-ithemes-exchange' ),
 		'type'          => 'exchange',
 		'menu'          => true,
 		'optional'      => false,
@@ -993,14 +1020,22 @@ function it_exchange_register_default_purchase_requirements() {
 	$cart_link  = '<a href="' . it_exchange_get_page_url( 'cart' ) . '">';
 	$close_link = '</a>';
 
+	$message = __( 'You must be logged in to complete your purchase.', 'it-l10n-ithemes-exchange' ) . ' ' . sprintf(
+		__( '%1$sLog in%2$s, %3$sRegister%4$s, or %5$sedit your car%6$st.', 'it-l10n-ithemes-exchange' ),
+		$login_link, $close_link,
+		$reg_link, $close_link,
+		$cart_link, $close_link
+	);
+
 	// User must be logged-in to checkout
 	$properties = array(
 		'priority'               => 1,
 		'requirement-met'        => 'is_user_logged_in',
-		'sw-template-part'       => it_exchange_get_default_sw_checkout_mode(), //apply_filters( 'it_exchange_sw_template_part_for_logged_in_purchase_requirement', 'registration' ),
-		'checkout-template-part' => 'logged-in', //apply_filters( 'it_exchange_checkout_template_part_for_logged_in_purchase_requirement', 'logged-in' ),
-		'notification'           => sprintf( __( 'You must be logged in to complete your purchase. %s' . $login . '%s, %s' . $register . '%s or %s' . $cart . '%s', 'it-l10n-ithemes-exchange' ), $login_link, $close_link, $reg_link, $close_link, $cart_link, $close_link ),
+		'sw-template-part'       => it_exchange_get_default_sw_checkout_mode(),
+		'checkout-template-part' => 'logged-in',
+		'notification'           => $message,
 	);
+
 	it_exchange_register_purchase_requirement( 'logged-in', $properties );
 
 	// Billing Address Purchase Requirement
@@ -1442,7 +1477,11 @@ function it_exchange_block_attachments() {
 	if ( empty( $results ) )
 		return;
 
-	wp_die( __( 'You do not have permission to view this file.', 'it-l10n-ithemes-exchange' ), __( 'Error', 'it-l10n-ithemes-exchange' ), array( 'response' => 403, 'back_link' => true ) );
+	wp_die(
+		__( 'You do not have permission to view this file.', 'it-l10n-ithemes-exchange' ),
+		__( 'Error', 'it-l10n-ithemes-exchange' ),
+		array( 'response' => 403, 'back_link' => true )
+	);
 }
 add_action( 'template_redirect', 'it_exchange_block_attachments' );
 
@@ -1796,6 +1835,10 @@ class Walker_ProductCategoryDropdown extends Walker {
  *************************************/
 
 function it_exchange_add_on_before_disable_payment_gateways( $add_on ) {
+
+	$message = __( 'Deactivating a payment gateway can cause customers to lose access to any membership products they have purchased using this payment gateway.', 'LION' );
+	$message .= ' ' . __( 'Are you sure you want to proceed? %s | %s', 'LION' );
+
 	if ( !empty( $_GET['page'] ) && 'it-exchange-setup' !== $_GET['page'] ) {
 		if ( empty( $_GET['remove-gateway'] ) || 'yes' !== $_GET['remove-gateway'] ) {
 			switch( $add_on ) {
@@ -1806,7 +1849,7 @@ function it_exchange_add_on_before_disable_payment_gateways( $add_on ) {
 					$title = __( 'Payment Gateway Warning', 'LION' );
 					$yes = '<a href="' . esc_url( add_query_arg( 'remove-gateway', 'yes' ) ) . '">' . __( 'Yes', 'LION' ) . '</a>';
 					$no  = '<a href="javascript:history.back()">' . __( 'No', 'LION' ) . '</a>';
-					$message = '<p>' . sprintf( __( 'Deactivating a payment gateway can cause customers to lose access to any membership products they have purchased using this payment gateway. Are you sure you want to proceed? %s | %s', 'LION' ), $yes, $no ) . '</p>';
+					$message = '<p>' . sprintf( $message, $yes, $no ) . '</p>';
 					$args = array(
 						'response'  => 200,
 						'back_link' => false,
