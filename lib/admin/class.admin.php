@@ -1858,6 +1858,10 @@ class IT_Exchange_Admin {
 			$dtf = $df . ' ' . $tf;
 
 			wp_enqueue_script( 'it-exchange-jquery-toastr', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/toastr.js' );
+			wp_localize_script( 'it-exchange-jquery-toastr', 'EXCHANGE', array(
+				'success' => _x( 'Reciept Sent!', 'it-l10n-ithemes-exchange' ),
+				'error' => _x( 'Failed!', 'Resending receipt failed', 'it-l10n-ithemes-exchange' ),
+			) );
 			wp_enqueue_script( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/transaction-details.js', $deps );
 			wp_localize_script( 'it-exchange-transaction-details', 'EXCHANGE', array(
 				'nonce' => wp_create_nonce( 'it-exchange-add-note' ),

@@ -62,7 +62,7 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 			'before' => '',
 			'after'  => '',
 			'wrap'   => 'span',
-			'class'  => "it-exchange-line-item-name it-exchange-{$this->item->get_type()}-item-name"
+			'class'  => "it-exchange-line-item-name it-exchange-{$this->item->get_type()}-item-name",
 		);
 		$options  = ITUtility::merge_defaults( $options, $defaults );
 
