@@ -978,7 +978,7 @@ function it_exchange_get_available_transaction_methods_for_cart( ITE_Cart $cart 
 	if ( $total <= 0 && ! $contains_free_trial ) {
 		$methods[] = ITE_Gateways::get( 'zero-sum-checkout' );
 	} elseif ( $contains_free_trial || $total > 0 ) {
-		foreach ( ITE_Gateways::all() as $gateway ) {
+		foreach ( ITE_Gateways::accepting() as $gateway ) {
 			if ( ! $gateway instanceof ITE_Zero_Sum_Checkout_Gateway ) {
 				$methods[] = $gateway;
 			}

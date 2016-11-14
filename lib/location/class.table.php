@@ -33,8 +33,8 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 	 */
 	public function get_columns() {
 		return array(
-			'pk'           =>
-				new IntegerBased( 'BIGINT', 'pk', array( 'unsigned', 'NOT NULL', 'auto_increment' ), array( 20 ) ),
+			'ID'           =>
+				new IntegerBased( 'BIGINT', 'ID', array( 'unsigned', 'NOT NULL', 'auto_increment' ), array( 20 ) ),
 			'customer'     => new ForeignUser( 'customer' ),
 			'label'        => new StringBased( 'VARCHAR', 'label', array( 'NOT NULL' ), array( '191' ) ),
 			'primary'      => new IntegerBased( 'TINYINT', 'primary', array( 'NOT NULL' ), array( 1 ) ),
@@ -58,7 +58,7 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 	 */
 	public function get_column_defaults() {
 		return array(
-			'pk'           => null,
+			'ID'           => null,
 			'customer'     => 0,
 			'label'        => '',
 			'primary'      => false,
@@ -81,7 +81,7 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 	 * @inheritDoc
 	 */
 	public function get_primary_key() {
-		return 'pk';
+		return 'ID';
 	}
 
 	/**

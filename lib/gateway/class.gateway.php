@@ -11,6 +11,10 @@
  */
 abstract class ITE_Gateway {
 
+	const SSL_REQUIRED = 'required';
+	const SSL_SUGGESTED = 'suggested';
+	const SSL_NONE = 'none';
+
 	/**
 	 * ITE_Gateway constructor.
 	 */
@@ -74,6 +78,27 @@ abstract class ITE_Gateway {
 	}
 
 	/**
+	 * Get a handler by name.
+	 *
+	 * ::get_handler_for() should be the preferred method to use to retreive a handler.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $request_name
+	 *
+	 * @return \ITE_Gateway_Request_Handler|null
+	 */
+	public function get_handler_by_request_name( $request_name ) {
+		foreach ( $this->get_handlers() as $handler ) {
+			if ( $handler::can_handle( $request_name ) ) {
+				return $handler;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Can the gateway handle a given request.
 	 *
 	 * @since 1.36.0
@@ -102,6 +127,15 @@ abstract class ITE_Gateway {
 	public abstract function is_sandbox_mode();
 
 	/**
+	 * Does this gateway require the cart after the purchase has been made.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function requires_cart_after_purchase() { return false; }
+
+	/**
 	 * Get the available transaction statuses.
 	 *
 	 * @since 1.36.0
@@ -120,6 +154,33 @@ abstract class ITE_Gateway {
 	 * @return string
 	 */
 	public abstract function get_webhook_param();
+
+	/**
+	 * Get the SSL mode of the gateway.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_ssl_mode() { return self::SSL_NONE; }
+
+	/**
+	 * Does this gateway reduce the currency options available.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return bool
+	 */
+	public function is_currency_support_limited() { return false; }
+
+	/**
+	 * Get supported currencies.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array A list of upper-case currency codes.
+	 */
+	public function get_supported_currencies() { return array(); }
 
 	/**
 	 * Get settings fields configuration.
@@ -152,6 +213,15 @@ abstract class ITE_Gateway {
 	 * @return string
 	 */
 	public abstract function get_settings_name();
+
+	/**
+	 * Get the settings that should be displayed in the wizard.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return array
+	 */
+	public function get_wizard_settings() {	return array(); }
 
 	/**
 	 * Retrieve the settings controller for this gateway.

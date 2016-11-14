@@ -90,18 +90,21 @@ class IT_Exchange_Admin {
 		add_action( 'admin_init', array( $this, 'save_core_wizard_settings' ), 9 );
 		add_action( 'admin_init', array( $this, 'save_core_general_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_core_email_settings' ) );
+		add_action( 'admin_init', array( $this, 'save_core_gateway_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_core_page_settings' ), 9 ); // Priority 9 to catch product rewrites
 
 		// Email settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_email', array( $this, 'register_email_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_email_settings_tab_link' ) );
-		add_action( 'screen_settings', array( $this, 'print_previous_email_screen_option' ), 10, 2 );
 		add_action( 'current_screen', array( $this, 'add_email_help_tabs' ) );
-		add_action( 'admin_notices', array( $this, 'print_email_template_notice' ) );
 
 		// Page settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_pages', array( $this, 'register_pages_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_pages_settings_tab_link' ) );
+
+		// Gateways
+		add_filter( 'it_exchange_general_settings_tab_callback_gateways', array( $this, 'register_gateway_settings_tab_callback' ) );
+		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_gateway_settings_tab_link' ) );
 
 		// General Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_general', array( $this, 'set_general_settings_defaults' ) );
@@ -404,7 +407,16 @@ class IT_Exchange_Admin {
 			$settings_callback = apply_filters( 'it_exchange_general_settings_tab_callback_' . $this->_current_tab, $settings_callback );
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->get_admin_menu_capability( 'it-exchange-settings' ), 'it-exchange-settings', $settings_callback );
 
-		add_submenu_page( 'it-exchange', 'iThemes Exchange Tools', 'Tools', $this->get_admin_menu_capability( 'it-exchange-tools' ), 'it-exchange-tools', array( $this, 'print_tools_page' ) );
+		$tools = __( 'Tools %s', 'it-l10n-ithemes-exchange' );
+		$bubble = '';
+
+		if ( $count = count( it_exchange_make_upgrader()->get_available_upgrades() ) ) {
+			$bubble .= "<span class=\"it-exchange-bubble-count count-{$count}\"><span>{$count}</span></span>";
+		}
+
+		$tools = sprintf( $tools, $bubble );
+
+		add_submenu_page( 'it-exchange', 'iThemes Exchange Tools', $tools, $this->get_admin_menu_capability( 'it-exchange-tools' ), 'it-exchange-tools', array( $this, 'print_tools_page' ) );
 
 		// Add Add-ons menu item
 		$add_ons_callback = array( $this, 'print_exchange_add_ons_page' );
@@ -496,17 +508,73 @@ class IT_Exchange_Admin {
 	}
 
 	/**
+	 * Registers the callback for the gateway tab.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $default
+	 *
+	 * @return mixed function or class method name
+	 */
+	public function register_gateway_settings_tab_callback( $default ) {
+		return function() {
+
+			wp_enqueue_script( 'jquery-ui-tooltip' );
+
+			$gateways = ITE_Gateways::non_zero_sum();
+
+			$form = new ITForm( array( 'prefix' => 'it-exchange-gateways' ) );
+			$form->set_input_group( 'accepting' );
+
+			foreach ( $gateways as $gateway ) {
+				$form->set_option( $gateway->get_slug(), it_exchange_is_gateway_accepting_payments( $gateway ) );
+			}
+
+			$is_ssl = is_ssl();
+
+			if ( ! empty ( $this->status_message ) ) {
+				ITUtility::show_status_message( $this->status_message );
+			}
+
+			if ( ! empty( $this->error_message ) ) {
+				ITUtility::show_error_message( $this->error_message );
+			}
+
+			include_once dirname( __FILE__ ) . '/views/settings/gateways.php';
+		};
+	}
+
+	/**
+	 * Prints the gateway tab for general settings.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $current_tab the current tab
+	 *
+	 * @return void
+	 */
+	public function print_gateway_settings_tab_link( $current_tab ) {
+		$active = 'gateways' == $current_tab ? 'nav-tab-active' : '';
+
+		?>
+		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=gateways' ); ?>">
+		<?php _e( 'Gateways', 'it-l10n-ithemes-exchange' ); ?>
+		</a>
+		<?php
+	}
+
+	/**
 	 * Prints the tabs for the iThemes Exchange General Settings
 	 *
 	 * @since 0.3.4
 	 * @return void
-	*/
+	 */
 	function print_general_settings_tabs() {
 		$active = empty( $this->_current_tab ) ? 'nav-tab-active' : '';
 		?>
 		<h2 class="nav-tab-wrapper">
-		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings' ); ?>"><?php _e( 'General', 'it-l10n-ithemes-exchange' ); ?></a>
-		<?php do_action( 'it_exchange_print_general_settings_tab_links', $this->_current_tab ); ?>
+			<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings' ); ?>"><?php _e( 'General', 'it-l10n-ithemes-exchange' ); ?></a>
+			<?php do_action( 'it_exchange_print_general_settings_tab_links', $this->_current_tab ); ?>
 		</h2>
 		<?php
 	}
@@ -667,10 +735,19 @@ class IT_Exchange_Admin {
 			return;
 		}
 
+		$upgrades = __( 'Upgrades %s', 'it-l10n-ithemes-exchange' );
+		$bubble = '';
+
+		if ( $count = count( it_exchange_make_upgrader()->get_available_upgrades() ) ) {
+			$bubble .= "<span class=\"it-exchange-bubble-count count-{$count}\"><span>{$count}</span></span>";
+		}
+
+		$upgrades = sprintf( $upgrades, $bubble );
+
 		$active = 'upgrades' == $current_tab ? 'nav-tab-active' : '';
 		?>
 		<a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-tools&tab=upgrades' ); ?>">
-			<?php _e( 'Upgrades', 'it-l10n-ithemes-exchange' ); ?>
+			<?php echo $upgrades; ?>
 		</a>
 		<?php
 	}
@@ -821,36 +898,6 @@ class IT_Exchange_Admin {
 	}
 
 	/**
-	 * Print the previous email screen options.
-	 *
-	 * @since 1.36
-	 *
-	 * @param string    $settings
-	 * @param WP_Screen $screen
-	 *
-	 * @return string
-	 */
-	public function print_previous_email_screen_option( $settings, WP_Screen $screen ) {
-
-		if ( $screen->base !== 'exchange_page_it-exchange-settings' || ! isset( $_GET['tab'] ) || $_GET['tab'] !== 'email' ) {
-			return $settings;
-		}
-
-		$versions         = get_option( 'it-exchange-versions', array() );
-		$previous_version = empty( $versions['previous'] ) ? false : $versions['previous'];
-
-		if ( ! $previous_version || version_compare( $previous_version, '1.36.0', '>=' ) ) {
-			return $settings;
-		}
-
-		$settings .= '<fieldset class="previous-emails"><legend>' . __( 'Additional settings', 'it-l10n-ithemes-exchange' ) . '</legend><label for="previous-emails-toggle">';
-		$settings .= '<input type="checkbox" id="previous-emails-toggle"' . checked( get_user_setting( 'it-exchange-previous-emails', 'on' ), 'on', false ) . ' />';
-		$settings .= __( 'Display legacy emails.', 'it-l10n-ithemes-exchange' ) . '</label></fieldset>';
-
-		return $settings;
-	}
-
-	/**
 	 * Add help tabs to the email screen.
 	 *
 	 * @since 1.36
@@ -882,37 +929,6 @@ class IT_Exchange_Admin {
 	             __( 'For reference, please see your legacy email template alongside the new templates.', 'it-l10n-ithemes-exchange' ) .
 	             '</p>'
 		) );
-	}
-
-	/**
-	 * Print the new email template notice.
-	 *
-	 * @since 1.36
-	 */
-	public function print_email_template_notice() {
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		if ( isset( $_GET['page'], $_GET['tab'] ) && $_GET['page'] === 'it-exchange-settings' && $_GET['tab'] === 'email' ) {
-			return;
-		}
-
-		$versions         = get_option( 'it-exchange-versions', array() );
-		$previous_version = empty( $versions['previous'] ) ? false : $versions['previous'];
-
-		if ( ! $previous_version || version_compare( $previous_version, '1.36.0', '>=' ) ) {
-			return;
-		}
-
-		$settings = it_exchange_get_option( 'emails' );
-
-		if ( count( $settings ) > 1) {
-			return;
-		}
-
-		include( 'views/notices/email-template.php' );
 	}
 
 	/**
@@ -1480,8 +1496,6 @@ class IT_Exchange_Admin {
 			$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
 		}
 
-		$all_non_default = true;
-
 		$notifications = it_exchange_email_notifications();
 
 		foreach ( $_POST['email'] as $slug => $data ) {
@@ -1500,27 +1514,36 @@ class IT_Exchange_Admin {
 			}
 
 			$notification->save();
+		}
+	}
 
-			$all_non_default = $all_non_default && $notification->is_non_default();
+	/**
+	 * Save core gateway settings.
+	 *
+	 * @since 1.36.0
+	 */
+	public function save_core_gateway_settings() {
+
+		if ( empty( $_POST ) || 'it-exchange-settings' != $this->_current_page || 'gateways' != $this->_current_tab )
+			return;
+
+		// Check nonce
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-gateway-settings' ) ) {
+			$this->error_message = __( 'Error. Please try again', 'it-l10n-ithemes-exchange' );
+			return;
 		}
 
-		if ( $all_non_default ) {
+		$settings = ITForm::get_post_data();
+		$accepting = $settings['accepting'];
 
-			$versions         = get_option( 'it-exchange-versions', array() );
-			$previous_version = empty( $versions['previous'] ) ? false : $versions['previous'];
-
-			if ( ! $previous_version || version_compare( $previous_version, '1.36.0', '>=' ) ) {
-				return;
-			}
-
-			// only set the display to off if the user hasn't manually changed their preference
-			if ( get_user_setting( 'it-exchange-previous-emails', null ) === null ) {
-				set_user_setting( 'it-exchange-previous-emails', 'off' );
-
-				$this->status_message .= ' ' . __( "Congratulations! All your emails have been updated. We've hidden your legacy emails automatically.", 'it-l10n-ithemes-exchange' );
-				$this->status_message .= ' ' . __( "You can re-display them at anytime in the Screen Options tab.", 'it-l10n-ithemes-exchange' );
+		foreach ( ITE_Gateways::non_zero_sum() as $gateway ) {
+			if ( ! isset( $accepting[ $gateway->get_slug() ] ) ) {
+				$accepting[ $gateway->get_slug() ] = false;
 			}
 		}
+
+		update_option( 'it_exchange_gateways_accepting_payments', $accepting );
+		$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
 	}
 
 	/**
@@ -1796,7 +1819,7 @@ class IT_Exchange_Admin {
 				$post_type = NULL;
 		}
 
-		wp_register_script( 'it-exchange-dialog', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tips.js', array( 'jquery-ui-dialog' ) );
+		wp_register_script( 'it-exchange-dialog', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tips.js', array( 'jquery-ui-dialog', 'jquery' ) );
 		wp_register_script( 'ithemes-chartjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/Chart.min.js', array( 'jquery' ), '0.2', true );
 		wp_register_script( 'it-exchange-select2', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/select2.min.js', array( 'jquery' ), '4.0.1', true );
 		wp_register_script( 'ithemes-momentjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/moment.min.js', array(), '2.11.0', true );

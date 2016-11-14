@@ -888,6 +888,9 @@ class ITE_Cart {
 	 * @return bool
 	 */
 	public function set_meta( $key, $value ) {
+
+		$previous = $this->has_meta( $key ) ? $this->get_meta( $key ) : null;
+
 		if ( $this->get_repository()->set_meta( $key, $value ) ) {
 
 			/**
@@ -896,10 +899,11 @@ class ITE_Cart {
 			 * @since 1.36.0
 			 *
 			 * @param string    $key
-			 * @param string    $value
+			 * @param mixed     $value
 			 * @param \ITE_Cart $this
+			 * @param mixed     $previous
 			 */
-			do_action( 'it_exchange_set_cart_meta', $key, $value, $this );
+			do_action( 'it_exchange_set_cart_meta', $key, $value, $this, $previous );
 
 			return true;
 		}
@@ -1110,9 +1114,13 @@ class ITE_Cart {
 	/**
 	 * Generate an authentication secret.
 	 *
+	 * Example:
+	 * Create at 3:00 -> Expires 3:05
+	 * Create at 3:02 -> Expires 3:05
+	 *
 	 * @since 1.36.0
 	 *
-	 * @param int $life Lifetime of the secret in seconds.
+	 * @param int $life The key lifetime.
 	 *
 	 * @return string
 	 *
@@ -1120,10 +1128,16 @@ class ITE_Cart {
 	 */
 	public final function generate_auth_secret( $life = 300 ) {
 
-		$tick   = ceil( time() / $life );
-		$secret = hash_hmac( 'sha1', $this->get_id() . '|' . $tick, wp_salt() );
+		try {
+			$secret = \Firebase\JWT\JWT::encode( array(
+				'exp'     => time() + $life,
+				'cart_id' => $this->get_id()
+			), wp_salt() );
+		} catch ( Exception $e ) {
 
-		if ( ! $secret ) {
+		}
+
+		if ( empty( $secret ) ) {
 			throw new UnexpectedValueException( "Unable to generate cart hash for {$this->get_id()}." );
 		}
 
@@ -1136,12 +1150,18 @@ class ITE_Cart {
 	 * @since 1.36.0
 	 *
 	 * @param string $secret
-	 * @param int    $life
 	 *
 	 * @return bool
 	 */
-	public final function validate_auth_secret( $secret, $life = 300 ) {
-		return hash_equals( $secret, $this->generate_auth_secret( $life ) );
+	public final function validate_auth_secret( $secret ) {
+
+		try {
+			$decoded = \Firebase\JWT\JWT::decode( $secret, wp_salt(), array( 'HS256' ) );
+		} catch ( Exception $e ) {
+			return false;
+		}
+
+		return hash_equals( $this->get_id(), $decoded->cart_id );
 	}
 
 	/**

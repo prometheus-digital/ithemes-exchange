@@ -519,6 +519,14 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 	*/
 	function menu( $options=array() ) {
 
+		if ( it_exchange_get_current_customer() instanceof IT_Exchange_Guest_Customer ) {
+			return '';
+		}
+
+		if ( isset( $_REQUEST['confirmation_auth'] ) && ! is_user_logged_in() ) {
+			return '';
+		}
+
 		$defaults = array(
 			'format' => 'html',
 			'pages'  => 'account,profile,purchases,downloads',

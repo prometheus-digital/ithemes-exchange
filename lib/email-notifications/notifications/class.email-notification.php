@@ -88,6 +88,22 @@ abstract class IT_Exchange_Email_Notification {
 
 		$this->setup_properties( $data );
 
+		if ( empty( $data['upgraded'] ) && ! empty( $data['previous'] ) ) {
+			$this->set_body( $this->convert_to_curly( $data['previous'] ) );
+
+			$emails = it_exchange_get_option( 'emails', true );
+
+			if ( ! is_array( $emails ) ) {
+				$emails = array();
+			}
+
+			$emails[ $this->get_slug() ] = $this->get_data_to_save();
+
+			$emails[ $this->get_slug() ]['upgraded'] = true;
+
+			it_exchange_save_option( 'emails', $emails, true );
+		}
+
 		if ( ! empty( $args['description'] ) ) {
 			$this->description = $args['description'];
 		}
@@ -300,20 +316,20 @@ abstract class IT_Exchange_Email_Notification {
 
 	/**
 	 * Check if the notification values are not at their default settings.
-	 * 
+	 *
 	 * @since 1.36
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function is_non_default() {
 
 		$defaults = isset( $this->args['defaults'] ) ? $this->args['defaults'] : array();
 
-		if ( ! isset( $defaults['subject'] ) || preg_replace('/\s+/', '', $this->subject ) !== preg_replace('/\s+/', '', $defaults['subject'] ) ) {
+		if ( ! isset( $defaults['subject'] ) || preg_replace( '/\s+/', '', $this->subject ) !== preg_replace( '/\s+/', '', $defaults['subject'] ) ) {
 			return true;
 		}
 
-		if ( ! isset( $defaults['body'] ) || preg_replace('/\s+/', '', $this->body ) !== preg_replace('/\s+/', '', $defaults['body'] ) ) {
+		if ( ! isset( $defaults['body'] ) || preg_replace( '/\s+/', '', $this->body ) !== preg_replace( '/\s+/', '', $defaults['body'] ) ) {
 			return true;
 		}
 
@@ -346,8 +362,45 @@ abstract class IT_Exchange_Email_Notification {
 
 		$emails = it_exchange_get_option( 'emails', true );
 
-		$emails[ $this->get_slug() ] = $this->get_data_to_save();
+		if ( ! is_array( $emails ) ) {
+			$emails = array();
+		}
+
+		$existing = isset( $emails[ $this->get_slug() ] ) ? $emails[ $this->get_slug() ] : array();
+
+		$emails[ $this->get_slug() ] = ITUtility::merge_defaults( $this->get_data_to_save(), $existing, true );
 
 		return it_exchange_save_option( 'emails', $emails, true );
+	}
+
+	/**
+	 * Convert content to curly tags instead of shortcodes.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $content
+	 *
+	 * @return string
+	 */
+	protected function convert_to_curly( $content ) {
+
+		$backup = $GLOBALS['shortcode_tags'];
+
+		$GLOBALS['shortcode_tags'] = array();
+
+		add_shortcode( 'it_exchange_email', function ( $atts ) {
+
+			if ( empty( $atts['show'] ) ) {
+				return '';
+			}
+
+			return '{{' . $atts['show'] . '}}';
+		} );
+
+		$converted = do_shortcode( $content );
+
+		$GLOBALS['shortcode_tags'] = $backup;
+
+		return $converted;
 	}
 }

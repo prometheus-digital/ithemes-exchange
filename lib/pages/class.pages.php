@@ -334,7 +334,7 @@ class IT_Exchange_Pages {
 			$guest_email = '';
 		}
 
-		if ( $guest_email && is_email( $guest_email )) {
+		if ( $guest_email && is_email( $guest_email ) ) {
 			@setcookie( 'it-exchange-guest-email', $guest_email, time() + HOUR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN, '', true );
 		}
 
@@ -349,6 +349,14 @@ class IT_Exchange_Pages {
 
 			if ( $transaction->is_guest_purchase() && $guest_email ) {
 				$customer = it_exchange_get_customer( $guest_email );
+			}
+		}
+
+		if ( isset( $_REQUEST['confirmation_auth'] ) ) {
+			$jwt = \Firebase\JWT\JWT::decode( $_REQUEST['confirmation_auth'], wp_salt(), array( 'HS256' ) );
+
+			if ( hash_equals( $jwt->transaction_hash, $transaction_hash ) ) {
+				return;
 			}
 		}
 
@@ -384,12 +392,12 @@ class IT_Exchange_Pages {
 		if ( 'checkout' != $this->_current_view )
 			return;
 
-		if ( ! it_exchange_get_current_cart()->get_items( 'product' )->count() ) {
-			$cart = it_exchange_get_page_url( 'cart' );
-			it_exchange_redirect( $cart, 'checkout-empty-send-to-cart' );
+		$cart = it_exchange_get_requested_cart_and_check_auth() ?: it_exchange_get_current_cart();
+
+		if ( ! $cart->get_items()->count() ) {
+			it_exchange_redirect( it_exchange_get_page_url( 'cart' ), 'checkout-empty-send-to-cart' );
 			die();
 		}
-
 	}
 
 	/**
@@ -404,19 +412,43 @@ class IT_Exchange_Pages {
 
 		if ( 'transaction' == $this->_current_view ) {
 
-			if ( is_user_logged_in() ) {
-				$transaction_id = apply_filters( 'it_exchange_process_transaction', false );
+			try {
+				$cart = it_exchange_get_requested_cart_and_check_auth();
+			} catch ( UnexpectedValueException $e ) {
+				it_exchange_add_message( 'error', $e->getMessage() );
+
+				return;
+			}
+
+			if ( is_user_logged_in() || $cart ) {
+				$transaction_id = apply_filters( 'it_exchange_process_transaction', false, $cart );
 
 				// If we made a transaction
 				if ( $transaction_id ) {
 
-					// Clear the cart
-					it_exchange_empty_shopping_cart();
+					if ( ! $cart ) {
+						// Clear the cart
+						it_exchange_empty_shopping_cart();
+					}
+
+					if ( isset( $_REQUEST['redirect_to'] ) ) {
+						wp_safe_redirect( add_query_arg( 'transaction_id', $transaction_id, $_REQUEST['redirect_to'] ) );
+						die();
+					}
 
 					// Grab the transaction confirmation URL. fall back to store if confirmation url fails
 					$confirmation_url = it_exchange_get_transaction_confirmation_url( $transaction_id );
-					if ( empty( $confirmation_url ) )
+
+					if ( empty( $confirmation_url ) ) {
 						$confirmation_url = it_exchange_get_page_url( 'store' );
+					} elseif ( $cart && ! is_user_logged_in() ) {
+						$auth = \Firebase\JWT\JWT::encode( array(
+							'exp'              => time() + HOUR_IN_SECONDS,
+							'transaction_hash' => it_exchange_get_transaction_hash( $transaction_id )
+						), wp_salt() );
+
+						$confirmation_url = add_query_arg( array( 'confirmation_auth' => $auth ), $confirmation_url );
+					}
 
 					// Redirect
 					wp_redirect( $confirmation_url ); // no filter or it_exchange_redirect on this one

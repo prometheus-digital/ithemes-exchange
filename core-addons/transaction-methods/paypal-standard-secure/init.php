@@ -85,7 +85,7 @@ function it_exchange_print_paypal_standard_secure_wizard_settings( $form ) {
 	</div>
 	<?php
 }
-add_action( 'it_exchange_print_paypal-standard-secure_wizard_settings', 'it_exchange_print_paypal_standard_secure_wizard_settings' );
+//add_action( 'it_exchange_print_paypal-standard-secure_wizard_settings', 'it_exchange_print_paypal_standard_secure_wizard_settings' );
 
 /**
  * Restrict PayPal Secure refunds to only be within 180 days.
@@ -530,7 +530,7 @@ function it_exchange_save_paypal_standard_secure_wizard_settings( $errors ) {
 	$IT_Exchange_paypal_standard_secure_Add_On = new IT_Exchange_paypal_standard_secure_Add_On();
 	return $IT_Exchange_paypal_standard_secure_Add_On->paypal_standard_secure_save_wizard_settings();
 }
-add_action( 'it_exchange_save_paypal-standard-secure_wizard_settings', 'it_exchange_save_paypal_standard_secure_wizard_settings' );
+//add_action( 'it_exchange_save_paypal-standard-secure_wizard_settings', 'it_exchange_save_paypal_standard_secure_wizard_settings' );
 
 /**
  * Default settings for paypal_standard_secure

@@ -78,7 +78,7 @@ function it_exchange_print_offline_payments_wizard_settings( $form ) {
 	<?php
 }
 
-add_action( 'it_exchange_print_offline-payments_wizard_settings', 'it_exchange_print_offline_payments_wizard_settings' );
+//add_action( 'it_exchange_print_offline-payments_wizard_settings', 'it_exchange_print_offline_payments_wizard_settings' );
 
 /**
  * Saves offline payments settings when the Wizard is saved
@@ -97,7 +97,7 @@ function it_exchange_save_offline_payments_wizard_settings( $errors ) {
 	return $IT_Exchange_Offline_Payments_Add_On->offline_payments_save_wizard_settings();
 }
 
-add_action( 'it_exchange_save_offline-payments_wizard_settings', 'it_exchange_save_offline_payments_wizard_settings' );
+//add_action( 'it_exchange_save_offline-payments_wizard_settings', 'it_exchange_save_offline_payments_wizard_settings' );
 
 /**
  * This proccesses an offline transaction.

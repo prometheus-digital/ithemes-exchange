@@ -34,13 +34,4 @@ abstract class ITE_POST_Redirect_Purchase_Request_Handler extends ITE_Redirect_P
 		it_exchange_get_template_part( 'purchase-interstitial' );
 		die();
 	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_data_for_REST( ITE_Gateway_Purchase_Request_Interface $request ) {
-		return array_merge( parent::get_data_for_REST( $request ), array(
-			'vars' => $this->get_vars_to_post( $request ),
-		) );
-	}
 }

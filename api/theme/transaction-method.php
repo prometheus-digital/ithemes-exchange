@@ -88,6 +88,23 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 	 * @return mixed
 	 */
 	function make_payment( $options = array() ) {
+
+		try {
+			$cart = it_exchange_get_requested_cart_and_check_auth();
+		} catch ( UnexpectedValueException $e ) {
+			it_exchange_add_message( 'error', $e->getMessage() );
+
+			return '';
+		}
+
+		if ( $cart ) {
+			if ( ! \ITE_Gateways::get( $this->_transaction_method['slug'] ) ) {
+				return '';
+			}
+
+			$options['cart'] = $cart;
+		}
+
 		return it_exchange_get_transaction_method_make_payment_button( $this->_transaction_method['slug'], $options );
 	}
 

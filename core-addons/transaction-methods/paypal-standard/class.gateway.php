@@ -54,6 +54,11 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
+	public function requires_cart_after_purchase() { return true; }
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_webhook_param() {
 
 		/**
@@ -64,6 +69,33 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 		 * @param string $param
 		 */
 		return apply_filters( 'it_exchange_paypal-standard_webhook', 'it_exchange_paypal-standard' );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_ssl_mode() { return self::SSL_SUGGESTED; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_wizard_settings() {
+
+		$fields = array(
+			'preamble',
+			'purchase-button-label',
+			'live-email-address',
+		);
+
+		$wizard = array();
+
+		foreach ( $this->get_settings_fields() as $field ) {
+			if ( in_array( $field['slug'], $fields ) ) {
+				$wizard[] = $field;
+			}
+		}
+
+		return $wizard;
 	}
 
 	/**

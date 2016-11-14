@@ -29,6 +29,9 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	/** @var ITE_Gateway_Tokenize_Request */
 	protected $tokenize;
 
+	/** @var string */
+	protected $redirect_to;
+
 	/**
 	 * ITE_Gateway_Purchase_Request constructor.
 	 *
@@ -148,6 +151,30 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	 */
 	public function set_tokenize( ITE_Gateway_Tokenize_Request $tokenize ) {
 		$this->tokenize = $tokenize;
+	}
+
+	/**
+	 * Get the destination the customer should be redirected to after purchase.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @return string
+	 */
+	public function get_redirect_to() {
+		return $this->redirect_to;
+	}
+
+	/**
+	 * Set the destination the customer should be redirected to after purchase.
+	 *
+	 * This defaults to the confirmation page.
+	 *
+	 * @since 1.36.0
+	 *
+	 * @param string $redirect_to
+	 */
+	public function set_redirect_to( $redirect_to ) {
+		$this->redirect_to = $redirect_to;
 	}
 
 	/**

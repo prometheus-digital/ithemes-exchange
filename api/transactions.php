@@ -501,16 +501,6 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 	if ( empty( $args['post_title'] ) )
 		$args['post_title'] = $method . '-' . $method_id . '-' . date_i18n( 'Y-m-d-H:i:s' );
 
-	// todo move to RP
-	if ( $subscription_details = it_exchange_get_session_data( 'cancel_subscription' ) ) {
-		foreach( $subscription_details as $cancel_subscription ) {
-			if ( !empty( $cancel_subscription['old_transaction_method'] ) )
-				do_action( 'it_exchange_cancel_' . $cancel_subscription['old_transaction_method'] . '_subscription', $cancel_subscription );
-		}
-	} else {
-		it_exchange_clear_session_data( 'cancel_subscription' ); // just in case, we don't want any lingering
-	}
-
 	if ( $transaction_id = wp_insert_post( $args ) ) {
 
 		$customer_ip = ! empty( $cart_object->customer_ip ) ? $cart_object->customer_ip : it_exchange_get_ip();
@@ -617,6 +607,16 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		$r = apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer, $cart_object, $args );
 
 		if ( $cart ) {
+			if ( ( $g = ITE_Gateways::get( $method ) ) && ! $g->requires_cart_after_purchase() ) {
+				if ( $cart->get_repository() instanceof ITE_Line_Item_Session_Repository ) {
+					$model = ITE_Session_Model::from_cart_id( $cart->get_id() );
+
+					if ( $model ) {
+						$model->delete();
+					}
+				}
+			}
+
 			$cart->destroy();
 		}
 
@@ -1694,12 +1694,12 @@ function it_exchange_doing_webhook( $webhook = '' ) {
  *
  * @since 1.36.0
  *
- * @param string $webook
+ * @param string $webhook_key
  *
  * @return string
  */
-function it_exchange_get_webhook_url( $webook ) {
-	return get_home_url() . '/?' . it_exchange_get_webhook( $webook ) . '=1';
+function it_exchange_get_webhook_url( $webhook_key ) {
+	return get_home_url() . '/?' . it_exchange_get_webhook( $webhook_key ) . '=1';
 }
 
 /**

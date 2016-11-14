@@ -13,24 +13,20 @@ $email_notifications = it_exchange_email_notifications();
 ?>
 <div class="wrap">
 	<?php
-	ITUtility::screen_icon( 'it-exchange' );
 	do_action( 'it_exchange_general_settings_email_page_top' );
 	$form->start_form( $form_options, 'exchange-email-settings' );
 	do_action( 'it_exchange_general_settings_email_form_top' );
-
-	$h     = version_compare( $wp_version, '4.4', '>=' ) ? '1' : '2';
-	$class = version_compare( $wp_version, '4.4', '>=' ) ? 'page-title-action' : 'add-new-h2';
 	?>
 
-	<h<?php echo $h; ?>>
+	<h1>
 		<?php _e( 'Emails', 'it-l10n-ithemes-exchange' ); ?>
 
 		<?php if ( IT_Exchange_Email_Customizer::is_available() ): ?>
-			<a href="<?php echo( IT_Exchange_Email_Customizer::get_link() ); ?>" class="<?php echo $class; ?>">
+			<a href="<?php echo( IT_Exchange_Email_Customizer::get_link() ); ?>" class="page-title-action">
 				<?php _e( 'Customize Appearance', 'it-l10n-ithemes-exchange' ); ?>
 			</a>
 		<?php endif; ?>
-	</h<?php echo $h; ?>>
+	</h1>
 
 	<?php $this->print_general_settings_tabs(); ?>
 
@@ -167,17 +163,6 @@ $email_notifications = it_exchange_email_notifications();
 							?>
 						</p>
 					</td>
-
-					<?php if ( $notification->has_previous() ): ?>
-
-						<td class="previous-email <?php echo get_user_setting( 'it-exchange-previous-emails', 'on' ) === 'on' ? '' : 'hidden'; ?>">
-							<h4><?php _e( 'Legacy Email', 'it-l10n-ithemes-exchange' ); ?></h4>
-							<textarea readonly>
-								<?php echo $notification->get_previous(); ?>
-							</textarea>
-						</td>
-
-					<?php endif; ?>
 				</tr>
 			</table>
 		</div>

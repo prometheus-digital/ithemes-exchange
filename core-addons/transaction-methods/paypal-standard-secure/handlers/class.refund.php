@@ -38,7 +38,14 @@ class ITE_PayPal_Standard_Secure_Refund_Request_Handler implements ITE_Gateway_R
 		$general_settings = it_exchange_get_option( 'settings_general' );
 
 		$paypal_settings = $this->get_gateway()->settings()->all();
-		$is_sandbox      = $this->get_gateway()->is_sandbox_mode();
+
+		if ( $transaction->is_sandbox_purchase() ) {
+			$use_sandbox = true;
+		} elseif ( $transaction->is_live_purchase() ) {
+			$use_sandbox = false;
+		} else {
+			$use_sandbox = $this->get_gateway()->is_sandbox_mode();
+		}
 
 		$paypal_email = $is_sandbox ? $paypal_settings['sandbox-email-address'] : $paypal_settings['live-email-address'];
 

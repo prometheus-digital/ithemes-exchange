@@ -81,6 +81,10 @@ class ITE_Gateway_Request_Factory {
 					$request->set_tokenize( $tokenize );
 				}
 
+				if ( ! empty( $args['redirect_to'] ) ) {
+					$request->set_redirect_to( $args['redirect_to'] );
+				}
+
 				break;
 			case ITE_Webhook_Gateway_Request::get_name():
 				$request = new ITE_Webhook_Gateway_Request( $args['webhook_data'] );

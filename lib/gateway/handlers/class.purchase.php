@@ -35,14 +35,20 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 
 		add_filter(
 			"it_exchange_get_{$gateway->get_slug()}_make_payment_button",
-			function () use ( $self, $factory ) {
+			function ( $_, $options ) use ( $self, $factory ) {
 				try {
-					return $self->render_payment_button( $factory->make( 'purchase' ) );
-				}
-				catch ( Exception $e ) {
+
+					$factory_opts = array();
+
+					if ( isset( $options['cart'] ) ) {
+						$factory_opts['cart'] = $options['cart'];
+					}
+
+					return $self->render_payment_button( $factory->make( 'purchase', $factory_opts ) );
+				} catch ( Exception $e ) {
 					return '';
 				}
-			}
+			}, 10, 2
 		);
 
 		add_filter(
@@ -58,11 +64,17 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 					return $_;
 				}
 
-				/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-				$txn = $self->handle( $factory->make(
-					'purchase',
-					$self->build_factory_args_from_global_state( $cart, $_REQUEST )
-				) );
+				try {
+					$request = $factory->make(
+						'purchase',
+						$self->build_factory_args_from_global_state( $cart, $_REQUEST )
+					);
+					$txn     = $self->handle( $request );
+				} catch ( Exception $e ) {
+					$cart->get_feedback()->add_error( $e->getMessage() );
+
+					return null;
+				}
 
 				return $txn ? $txn->ID : false;
 			},
@@ -196,7 +208,22 @@ HTML;
 	 *
 	 * @return string
 	 */
-	protected function get_html_before_form_end( ITE_Gateway_Purchase_Request_Interface $request ) { return ''; }
+	protected function get_html_before_form_end( ITE_Gateway_Purchase_Request_Interface $request ) {
+
+		$html = '';
+
+		if ( ! $request->get_cart()->is_current() && ( it_exchange_in_superwidget() || it_exchange_is_page( 'checkout' ) ) ) {
+			$html .= "<input type='hidden' name='cart_id' value='{$request->get_cart()->get_id()}'>";
+			$html .= "<input type='hidden' name='cart_auth' value='{$request->get_cart()->generate_auth_secret( 3600 )}'>";
+		}
+
+		if ( $request->get_redirect_to() ) {
+			$to = esc_url( $request->get_redirect_to() );
+			$html .= "<input type='hidden' name='redirect_to' value='{$to}'>";
+		}
+
+		return $html;
+	}
 
 	/**
 	 * Get the data for REST API Purchase endpoint.
