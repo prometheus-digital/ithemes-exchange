@@ -114,11 +114,6 @@ abstract class IT_Exchange_Txn_AbstractActivity implements IT_Exchange_Txn_Activ
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	public function subject() { return $this->get_transaction(); }
-
-	/**
 	 * Delete an activity item.
 	 *
 	 * @since 1.34

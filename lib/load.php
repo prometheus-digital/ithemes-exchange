@@ -54,9 +54,6 @@ require_once dirname( __FILE__ ) . '/tax/load.php';
 // Location
 require_once dirname( __FILE__ ) . '/location/load.php';
 
-// Activity
-require_once dirname( __FILE__ ) . '/activity/load.php';
-
 // Transaction Module
 require_once dirname( __FILE__ ) . '/transactions/load.php';
 
