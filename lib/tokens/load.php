@@ -10,6 +10,7 @@ use IronBound\DB\Extensions\Meta\BaseMetaTable;
 use IronBound\DB\Manager;
 
 require_once dirname( __FILE__ ) . '/class.table.php';
+require_once dirname( __FILE__ ) . '/class.object-type.php';
 require_once dirname( __FILE__ ) . '/class.payment-token.php';
 require_once dirname( __FILE__ ) . '/class.card.php';
 require_once dirname( __FILE__ ) . '/class.bank-account.php';
@@ -22,3 +23,6 @@ Manager::maybe_install_table( Manager::get( 'ite-payment-tokens-meta' ) );
 ITE_Payment_Token::register_token_type( 'card', 'ITE_Payment_Token_Card' );
 ITE_Payment_Token::register_token_type( 'bank', 'ITE_Payment_Token_Bank_Account' );
 
+add_action( 'it_exchange_register_object_types', function ( ITE_Object_Type_Registry $registry ) {
+	$registry->register( new ITE_Token_Object_Type() );
+} );

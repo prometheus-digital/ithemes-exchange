@@ -35,12 +35,8 @@ require_once dirname( __FILE__ ) . '/admin/class.admin.php';
 // Capabilities
 require_once dirname( __FILE__ ) . '/capabilities/load.php';
 
-// Product Post Type
-require_once dirname( __FILE__ ) . '/products/class.products-post-type.php';
-
-// Product Object
-require_once dirname( __FILE__ ) . '/products/class.product.php';
-require_once dirname( __FILE__ ) . '/products/class.factory.php';
+// Products
+require_once dirname( __FILE__ ) . '/products/load.php';
 
 // Product Features
 require_once dirname( __FILE__ ) . '/product-features/load.php';
@@ -73,9 +69,8 @@ require_once dirname( __FILE__ ) . '/functions/template-functions.php';
 // Integrations
 require_once dirname( __FILE__ ) . '/integrations/builder/init.php';
 
-// Customer Class
-require_once dirname( __FILE__ ) . '/customers/class.customer.php';
-require_once dirname( __FILE__ ) . '/customers/class.guest.php';
+// Customers
+require_once dirname( __FILE__ ) . '/customers/load.php';
 
 // Pages
 require_once dirname( __FILE__ ) . '/pages/class.pages.php';
@@ -86,9 +81,7 @@ require_once dirname( __FILE__ ) . '/pages/class.nav-menus.php';
 require_once dirname( __FILE__ ) . '/super-widget/class.super-widget.php';
 
 // Coupons
-require_once dirname( __FILE__ ) . '/coupons/class.coupons-post-type.php';
-require_once dirname( __FILE__ ) . '/coupons/class.coupon.php';
-require_once dirname( __FILE__ ) . '/coupons/hooks.php';
+require_once dirname( __FILE__ ) . '/coupons/load.php';
 
 // Email Notifications
 require_once dirname( __FILE__ ) . '/email-notifications/load.php';
