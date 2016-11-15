@@ -2,7 +2,7 @@
 /**
  * Line Item Types registrar.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -17,7 +17,7 @@ class ITE_Line_Item_Types {
 	/**
 	 * Register a line item type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item_Type $type
 	 */
@@ -28,7 +28,7 @@ class ITE_Line_Item_Types {
 	/**
 	 * Get a line item type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 *
@@ -41,7 +41,7 @@ class ITE_Line_Item_Types {
 	/**
 	 * Get all line item types.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item_Type[]
 	 */
@@ -52,7 +52,7 @@ class ITE_Line_Item_Types {
 	/**
 	 * Retrieve all line items that should be shown in REST.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item_Type[]
 	 */
@@ -72,7 +72,7 @@ class ITE_Line_Item_Types {
 	/**
 	 * Retrieve all line items that should not be shown in REST.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item_Type[]
 	 */
@@ -92,7 +92,7 @@ class ITE_Line_Item_Types {
 	/**
 	 * Retrieve all line items that should be editable via REST.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item_Type[]
 	 */

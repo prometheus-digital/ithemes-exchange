@@ -2,7 +2,7 @@
 /**
  * Purchase Route.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -58,7 +58,7 @@ class Purchase extends Base implements Getable, Postable {
 	/**
 	 * Get the data for a handler.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Purchase_Request_Handler          $handler
 	 * @param ITE_Gateway_Purchase_Request_Interface $request

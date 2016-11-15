@@ -2,7 +2,7 @@
 /**
  * Contains the customer email notification.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ class IT_Exchange_Customer_Email_Notification extends IT_Exchange_Email_Notifica
 	/**
 	 * Get the notification type.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param bool $label
 	 *

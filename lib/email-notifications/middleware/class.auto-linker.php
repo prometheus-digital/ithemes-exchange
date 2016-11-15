@@ -2,7 +2,7 @@
 /**
  * Contains middleware to autolink urls.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 use Windwalker\Dom\HtmlElement;
@@ -42,7 +42,7 @@ class IT_Exchange_Email_Middleware_Auto_Linker implements IT_Exchange_Email_Midd
 	/**
 	 * Handle a sendable object before it has been sent.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable_Mutable_Wrapper $sendable
 	 *

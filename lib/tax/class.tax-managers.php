@@ -2,7 +2,7 @@
 /**
  * Tax Managers class.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -20,7 +20,7 @@ final class ITE_Tax_Managers {
 	/**
 	 * Get a tax manager for a given cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 *
@@ -47,7 +47,7 @@ final class ITE_Tax_Managers {
 	/**
 	 * Register a tax provider.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Tax_Provider $provider
 	 */

@@ -2,7 +2,7 @@
 /**
  * Abstract purchase request handler class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -88,7 +88,7 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 	 * This is used to build the intermediary layer between the Gateway Request framework
 	 * and the legacy cart system.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 * @param array     $state
@@ -120,7 +120,7 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 	/**
 	 * Get the gateway for this handler.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Gateway
 	 */
@@ -155,7 +155,7 @@ HTML;
 	/**
 	 * Get the label for the payment button.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -166,7 +166,7 @@ HTML;
 	/**
 	 * Get the form action URL.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -175,7 +175,7 @@ HTML;
 	/**
 	 * Get the action of the nonce.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -184,7 +184,7 @@ HTML;
 	/**
 	 * Get a nonce.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -193,7 +193,7 @@ HTML;
 	/**
 	 * Output the payment button nonce.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -202,7 +202,7 @@ HTML;
 	/**
 	 * Get HTML to be rendered before the form is closed.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
@@ -228,7 +228,7 @@ HTML;
 	/**
 	 * Get the data for REST API Purchase endpoint.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *

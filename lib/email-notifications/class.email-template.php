@@ -2,7 +2,7 @@
 /**
  * Contains the email template class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -28,7 +28,7 @@ class IT_Exchange_Email_Template {
 	/**
 	 * Get the template HTML.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $context
 	 *
@@ -48,7 +48,7 @@ class IT_Exchange_Email_Template {
 	/**
 	 * Get the email template file.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $context
 	 *
@@ -64,7 +64,7 @@ class IT_Exchange_Email_Template {
 	/**
 	 * Get the template name.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -75,7 +75,7 @@ class IT_Exchange_Email_Template {
 	/**
 	 * Globalize the context for the theme API.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $context
 	 */
@@ -104,7 +104,7 @@ class IT_Exchange_Email_Template {
 		 *
 		 * This is mainly to be provided to the Theme API.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param array $context
 		 */

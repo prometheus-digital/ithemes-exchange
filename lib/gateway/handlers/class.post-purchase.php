@@ -2,7 +2,7 @@
 /**
  * POST Purchase Request.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ abstract class ITE_POST_Redirect_Purchase_Request_Handler extends ITE_Redirect_P
 	/**
 	 * Get a list of vars to POST to the gateway.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *

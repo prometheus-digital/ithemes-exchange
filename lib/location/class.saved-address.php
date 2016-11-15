@@ -2,7 +2,7 @@
 /**
  * Address class.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -23,7 +23,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	/**
 	 * Make this the primary address for the customer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -216,7 +216,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	/**
 	 * Get the address columns.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -230,7 +230,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	/**
 	 * Convert a location to a saved address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location         $location
 	 * @param \ITE_Location|null    $current
@@ -310,7 +310,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	/**
 	 * Is this address shared among different transactions.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -325,7 +325,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	/**
 	 * Validate a location.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location $location
 	 * @param string        $type
@@ -353,7 +353,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 
 		$array    = $location->to_array();
 		$filtered = apply_filters_deprecated(
-			"it_exchange_save_customer_{$type}_address", array( $array, $customer_id ), '1.36.0'
+			"it_exchange_save_customer_{$type}_address", array( $array, $customer_id ), '2.0.0'
 		);
 
 		if ( ! is_array( $filtered ) ) {

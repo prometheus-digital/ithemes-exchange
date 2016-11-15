@@ -2,7 +2,7 @@
 /**
  * Load the tag replacements.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -40,7 +40,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	/**
 	 * Register the default tags.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Tag_Replacer $replacer
 	 */
@@ -676,7 +676,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	/**
 	 * Replace the profile link tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string Replaced value
 	 */
@@ -687,7 +687,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	/**
 	 * Replace the company name tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */

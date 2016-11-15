@@ -2,7 +2,7 @@
 /**
  * Dialog Purchase Request Handler.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -23,7 +23,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 	/**
 	 * Get the purchase dialog options.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -40,7 +40,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 	/**
 	 * Get a purchase dialog controller.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \IT_Exchange_Purchase_Dialog
 	 */

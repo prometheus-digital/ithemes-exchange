@@ -2,7 +2,7 @@
 /**
  * Single Customer Route.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -55,7 +55,7 @@ class Customer extends Route\Base implements Getable {
 	/**
 	 * Linkify the response.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \WP_REST_Response     $response
 	 * @param \IT_Exchange_Customer $customer

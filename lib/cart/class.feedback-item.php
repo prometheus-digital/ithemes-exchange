@@ -2,7 +2,7 @@
 /**
  * Cart Feedback Item class.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -38,7 +38,7 @@ class ITE_Cart_Feedback_Item {
 	/**
 	 * Get the line item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item|null
 	 */

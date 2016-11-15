@@ -2,7 +2,7 @@
 /**
  * Serialize a transaction.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -21,7 +21,7 @@ class Serializer {
 	/**
 	 * Serialize a transaction.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Transaction $transaction
 	 * @param \IT_Exchange_Customer    $user
@@ -62,7 +62,7 @@ class Serializer {
 	/**
 	 * Generate links for a transaction.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Transaction       $transaction
 	 * @param \iThemes\Exchange\REST\Manager $manager
@@ -109,7 +109,7 @@ class Serializer {
 	/**
 	 * Get the transaction schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

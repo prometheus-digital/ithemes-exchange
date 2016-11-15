@@ -69,7 +69,7 @@ add_action( 'template_redirect', 'it_exchange_guest_checkout_init_login' );
 */
 function it_exchange_guest_checkout_guest_has_transaction( $has_transaction, $transaction_id, $user_id ) {
 
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
 	return $has_transaction;
 }
@@ -118,7 +118,7 @@ add_action( 'it_exchange_super_widget_ajax_top', 'it_exchange_handle_guest_check
 /**
  * Save the billing address to the guest checkout session for BC.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Cart $cart
  */
@@ -134,7 +134,7 @@ add_action( 'it_exchange_set_cart_billing_address', 'ite_save_main_billing_addre
 /**
  * Save the shipping address to the guest checkout session for BC.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Cart $cart
  */
@@ -158,7 +158,7 @@ add_action( 'it_exchange_set_cart_shipping_address', 'ite_save_main_shipping_add
  * @return string
 */
 function it_exchange_get_guest_checkout_transaction_email( $email, $transaction ) {
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
 	return $email;
 }
@@ -219,7 +219,7 @@ add_filter( 'it_exchange_transaction_detail_has_customer_profile', 'it_exchange_
 */
 function it_exchange_guest_checkout_set_customer_data( $data, $customer_id ) {
 
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
 	return $data;
 }
@@ -280,7 +280,7 @@ add_action( 'it_exchange_add_transaction_success', 'it_exchange_flag_transaction
 */
 function it_exchange_guest_checkout_filter_frontend_purchases( $args ) {
 
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
 	return $args;
 }
@@ -297,7 +297,7 @@ function it_exchange_guest_checkout_filter_frontend_purchases( $args ) {
 */
 function it_exchange_guest_checkout_modify_transaction_customer( $customer, $transaction ) {
 
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
 	if ( ! $transaction->is_guest_purchase() ) {
 		return $customer;
@@ -492,7 +492,7 @@ add_filter( 'it_exchange_print_downlods_page_link_in_email', 'it_exchange_guest_
  * @return string
 */
 function it_exchange_guest_checkout_modify_confirmation_email_address( $to_email, $transaction ) {
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
 	return $to_email;
 }

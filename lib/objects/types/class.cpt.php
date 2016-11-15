@@ -2,7 +2,7 @@
 /**
  * CPT Object Type.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -135,7 +135,7 @@ abstract class ITE_CPT_Object_Type implements ITE_Object_Type, ITE_Object_Type_W
 	/**
 	 * Convert a WP_Post object into the correct model.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param WP_Post $post
 	 *
@@ -146,7 +146,7 @@ abstract class ITE_CPT_Object_Type implements ITE_Object_Type, ITE_Object_Type_W
 	/**
 	 * Get the post type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */

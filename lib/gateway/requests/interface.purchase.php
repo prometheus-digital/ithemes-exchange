@@ -2,7 +2,7 @@
 /**
  * Purchase Request interface.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Gateway_Purchase_Request_Interface extends ITE_Gateway_Request {
 	/**
 	 * Get the cart being purchased.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Cart
 	 */
@@ -23,7 +23,7 @@ interface ITE_Gateway_Purchase_Request_Interface extends ITE_Gateway_Request {
 	/**
 	 * Get the HTTP request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -32,7 +32,7 @@ interface ITE_Gateway_Purchase_Request_Interface extends ITE_Gateway_Request {
 	/**
 	 * Get the nonce.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -41,7 +41,7 @@ interface ITE_Gateway_Purchase_Request_Interface extends ITE_Gateway_Request {
 	/**
 	 * Get the card being used for the purchase.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Gateway_Card|null
 	 */
@@ -50,7 +50,7 @@ interface ITE_Gateway_Purchase_Request_Interface extends ITE_Gateway_Request {
 	/**
 	 * Set the card to be used for the purchase.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Gateway_Card $card
 	 */
@@ -59,7 +59,7 @@ interface ITE_Gateway_Purchase_Request_Interface extends ITE_Gateway_Request {
 	/**
 	 * Get the payment token.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Payment_Token|null
 	 */
@@ -68,7 +68,7 @@ interface ITE_Gateway_Purchase_Request_Interface extends ITE_Gateway_Request {
 	/**
 	 * Set the payment token.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Payment_Token|null $token
 	 *
@@ -81,7 +81,7 @@ interface ITE_Gateway_Purchase_Request_Interface extends ITE_Gateway_Request {
 	 *
 	 * This might be used in scenarios like Guest Checkout.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Gateway_Tokenize_Request|null
 	 */
@@ -90,7 +90,7 @@ interface ITE_Gateway_Purchase_Request_Interface extends ITE_Gateway_Request {
 	/**
 	 * Set the tokenize request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Gateway_Tokenize_Request $tokenize
 	 */
@@ -99,7 +99,7 @@ interface ITE_Gateway_Purchase_Request_Interface extends ITE_Gateway_Request {
 	/**
 	 * Get the destination the customer should be redirected to after purchase.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -110,7 +110,7 @@ interface ITE_Gateway_Purchase_Request_Interface extends ITE_Gateway_Request {
 	 *
 	 * This defaults to the confirmation page.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $redirect_to
 	 */

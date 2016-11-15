@@ -2,7 +2,7 @@
 /**
  * Load the cart module.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 

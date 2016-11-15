@@ -2,7 +2,7 @@
 /**
  * Purchase handler for Zero Sum Checkout.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 

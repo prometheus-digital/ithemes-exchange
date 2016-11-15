@@ -2,7 +2,7 @@
 /**
  * Bank Account class.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -51,7 +51,7 @@ class ITE_Gateway_Bank_Account {
 	/**
 	 * Get the bank account holder's name.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -62,7 +62,7 @@ class ITE_Gateway_Bank_Account {
 	/**
 	 * Get the bank account type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -73,7 +73,7 @@ class ITE_Gateway_Bank_Account {
 	/**
 	 * Get the bank account number.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -84,7 +84,7 @@ class ITE_Gateway_Bank_Account {
 	/**
 	 * Get the routing number.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */

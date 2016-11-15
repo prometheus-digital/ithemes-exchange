@@ -2,7 +2,7 @@
 /**
  * Webhook Request.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -24,7 +24,7 @@ class ITE_Webhook_Gateway_Request implements ITE_Gateway_Request {
 	/**
 	 * Get webhook data.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -35,7 +35,7 @@ class ITE_Webhook_Gateway_Request implements ITE_Gateway_Request {
 	/**
 	 * Get the raw post data.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */

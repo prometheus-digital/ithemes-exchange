@@ -2,7 +2,7 @@
 /**
  * Contains the roles class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -31,7 +31,7 @@ class IT_Exchange_Roles {
 	/**
 	 * Get the capabilities manager.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Capabilities
 	 */
@@ -42,7 +42,7 @@ class IT_Exchange_Roles {
 	/**
 	 * Add the custom capabilities to the default roles.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	public function add_caps_to_roles() {
 
@@ -70,7 +70,7 @@ class IT_Exchange_Roles {
 		/**
 		 * Fires when custom capabilities should be added to roles.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
 		 * @param \IT_Exchange_Roles $this
 		 * @param \WP_Roles          $wp_roles

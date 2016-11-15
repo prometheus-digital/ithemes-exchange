@@ -2,7 +2,7 @@
 /**
  * K-Ary Tree Node.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -27,7 +27,7 @@ class ITE_Tree_Node {
 	/**
 	 * Get the data for the node.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return mixed
 	 */
@@ -38,7 +38,7 @@ class ITE_Tree_Node {
 	/**
 	 * Add a child to the node.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param mixed  $child The child element. If no `$key` provided, the child must have a `__toString()` method.
 	 * @param string $key   The key to identify the child by. Leave empty to use the `__toString()` method.
@@ -61,7 +61,7 @@ class ITE_Tree_Node {
 	/**
 	 * Remove a child from the node.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param mixed|string $child_or_key Object implementing `__toString()` or the identifier used when registering it.
 	 *
@@ -95,7 +95,7 @@ class ITE_Tree_Node {
 	/**
 	 * Get all child nodes.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Tree_Node[]
 	 */
@@ -106,7 +106,7 @@ class ITE_Tree_Node {
 	/**
 	 * Does the node have any children.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */

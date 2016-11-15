@@ -1055,7 +1055,7 @@ add_action( 'init', 'it_exchange_register_default_purchase_requirements' );
 /**
  * Check if the billing address purchase requirement is complete.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @return bool
  */
@@ -1213,7 +1213,7 @@ add_action( 'it_exchange_empty_cart', 'it_exchange_clear_billing_on_cart_empty' 
 /**
  * Clear the billing address when a user logs out.
  *
- * @since 1.36.0
+ * @since 2.0.0
  */
 function it_exchange_clear_billing_on_logout() {
 	it_exchange_remove_cart_data( 'billing-address' );
@@ -1421,7 +1421,7 @@ function it_exchange_admin_tooltip( $text, $echo=true, $indicator='i' ) {
 /**
  * Get the requested cart and check the auth value.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param string $cart_var
  * @param string $auth_var
@@ -1924,7 +1924,7 @@ add_action( 'it_exchange_trans_txn_garbage_collection', 'it_exchange_trans_txn_c
 /**
  * Mark a filter as deprecated and inform when it has been used.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param string $filter      The Filter that was called.
  * @param string $version     The version of WordPress that deprecated the function.
@@ -1935,7 +1935,7 @@ function it_exchange_deprecated_filter( $filter, $version, $replacement = null )
 	/**
 	 * Fires when a deprecated filter is called.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $filter    The function that was called.
 	 * @param string $replacement The function that should have been called.
@@ -1968,7 +1968,7 @@ function it_exchange_deprecated_filter( $filter, $version, $replacement = null )
 /**
  * Get System Info.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @return array
  */
@@ -2135,7 +2135,7 @@ function it_exchange_get_system_info() {
  *
  * Credit goes to Easy Digital Downloads
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @return string
  */

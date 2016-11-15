@@ -2,7 +2,7 @@
 /**
  * CC Payment Token.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -26,7 +26,7 @@ class ITE_Payment_Token_Card extends ITE_Payment_Token {
 	/**
 	 * Get the Card's brand.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -35,7 +35,7 @@ class ITE_Payment_Token_Card extends ITE_Payment_Token {
 	/**
 	 * Set the Card's brand.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $brand
 	 *
@@ -46,7 +46,7 @@ class ITE_Payment_Token_Card extends ITE_Payment_Token {
 	/**
 	 * Get the card's expiration month
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -55,7 +55,7 @@ class ITE_Payment_Token_Card extends ITE_Payment_Token {
 	/**
 	 * Set the Card's expiration month.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $month
 	 *
@@ -66,7 +66,7 @@ class ITE_Payment_Token_Card extends ITE_Payment_Token {
 	/**
 	 * Get the card's expiration year
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -75,7 +75,7 @@ class ITE_Payment_Token_Card extends ITE_Payment_Token {
 	/**
 	 * Set the Card's expiration year.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $year
 	 *
@@ -88,7 +88,7 @@ class ITE_Payment_Token_Card extends ITE_Payment_Token {
 	 *
 	 * Could be either 'credit' or 'debit'.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -97,7 +97,7 @@ class ITE_Payment_Token_Card extends ITE_Payment_Token {
 	/**
 	 * Set the Card's source of funding.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $funding
 	 *

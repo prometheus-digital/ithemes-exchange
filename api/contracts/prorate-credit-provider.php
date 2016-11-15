@@ -2,7 +2,7 @@
 /**
  * Credit provider interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -16,7 +16,7 @@ interface ITE_Contract_Prorate_Credit_Provider {
 	 *
 	 * Should set the amount of available credit on the request object.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Prorate_Credit_Request $request    Prorate credit request.
 	 * @param ITE_Daily_Price_Calculator $calculator Daily price calculator.
@@ -28,7 +28,7 @@ interface ITE_Contract_Prorate_Credit_Provider {
 	/**
 	 * Determine if this credit provider is able to accept this type of credit request.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Prorate_Credit_Request $request Prorate credit request.
 	 *

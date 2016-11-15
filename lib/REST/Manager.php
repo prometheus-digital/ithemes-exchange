@@ -2,7 +2,7 @@
 /**
  * REST Route Manager
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -61,7 +61,7 @@ class Manager {
 	/**
 	 * Register a route.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $route
 	 *
@@ -87,7 +87,7 @@ class Manager {
 	/**
 	 * Register a route provider.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route_Provider $provider
 	 *
@@ -105,7 +105,7 @@ class Manager {
 	/**
 	 * Get the first route matching a given class.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $class
 	 *
@@ -125,7 +125,7 @@ class Manager {
 	/**
 	 * Get all routes matching a given class.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $class
 	 *
@@ -166,7 +166,7 @@ class Manager {
 	/**
 	 * Get the manager namespace.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -177,7 +177,7 @@ class Manager {
 	/**
 	 * Get the Middleware Stack.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \iThemes\Exchange\REST\Middleware\Stack
 	 */
@@ -188,7 +188,7 @@ class Manager {
 	/**
 	 * Register a route with the server.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $route
 	 *
@@ -298,7 +298,7 @@ class Manager {
 	/**
 	 * Conform a request to a schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \WP_Error|\WP_HTTP_Response|null $response
 	 * @param \WP_REST_Request                 $request
@@ -389,7 +389,7 @@ class Manager {
 	/**
 	 * Transform a schema to properly adhere to JSON schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $schema
 	 *
@@ -419,7 +419,7 @@ class Manager {
 	/**
 	 * Generate the endpoint args for the server.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $route
 	 * @param string                       $verb
@@ -480,7 +480,7 @@ class Manager {
 	/**
 	 * Generate query args for the server.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $route
 	 *
@@ -509,7 +509,7 @@ class Manager {
 	 *
 	 * Ensures consistent description between endpoints, and populates enum from schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $route
 	 * @param array                        $args
@@ -547,7 +547,7 @@ class Manager {
 	/**
 	 * Is the request going to our endpoint.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -566,7 +566,7 @@ class Manager {
 	/**
 	 * Authenticate the user.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \WP_Error|null|bool $authed
 	 *

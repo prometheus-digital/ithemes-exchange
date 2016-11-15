@@ -2,7 +2,7 @@
 /**
  * DB Visitor.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 use Doctrine\Common\Collections\Expr\Comparison;
@@ -67,7 +67,7 @@ class ITE_DB_Visitor extends \Doctrine\Common\Collections\Expr\ExpressionVisitor
 	/**
 	 * Find the nearest parent composite expression from a given level.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param int $level
 	 *
@@ -89,7 +89,7 @@ class ITE_DB_Visitor extends \Doctrine\Common\Collections\Expr\ExpressionVisitor
 	/**
 	 * Do a comparison walk.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param FluentQuery  $query
 	 * @param Comparison   $comparison

@@ -2,7 +2,7 @@
 /**
  * Credit Cart Util.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -51,7 +51,7 @@ class ITE_Gateway_Card {
 	/**
 	 * Get the card holder's name.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -62,7 +62,7 @@ class ITE_Gateway_Card {
 	/**
 	 * Get the card number.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -73,7 +73,7 @@ class ITE_Gateway_Card {
 	/**
 	 * Get the card expiration month as two digits.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -84,7 +84,7 @@ class ITE_Gateway_Card {
 	/**
 	 * Get the card expiration year as four digits.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -95,7 +95,7 @@ class ITE_Gateway_Card {
 	/**
 	 * Get the card's cvc.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */

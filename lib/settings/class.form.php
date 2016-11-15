@@ -393,7 +393,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Print a preamble row.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $preamble
 	 */
@@ -473,7 +473,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Whether a field should be displayed based on the `show_if` rules.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $field
      * @param array $settings
@@ -551,7 +551,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Validate settings.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $values
      *
@@ -650,7 +650,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Generate show if JS.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	protected function generate_show_if_js() {
 

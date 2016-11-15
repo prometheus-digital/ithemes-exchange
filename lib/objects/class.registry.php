@@ -2,7 +2,7 @@
 /**
  * Object Type Registry.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPlv2
  */
 
@@ -17,7 +17,7 @@ class ITE_Object_Type_Registry {
 	/**
 	 * Register an object type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Object_Type $type
 	 *
@@ -33,7 +33,7 @@ class ITE_Object_Type_Registry {
 	/**
 	 * Get an object type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $slug
 	 *
@@ -46,7 +46,7 @@ class ITE_Object_Type_Registry {
 	/**
 	 * Get an object type or fail.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $slug
 	 *
@@ -61,7 +61,7 @@ class ITE_Object_Type_Registry {
 	/**
 	 * Get all object types.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Object_Type[]
 	 */
@@ -70,7 +70,7 @@ class ITE_Object_Type_Registry {
 	/**
 	 * Get all RESTful object types.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return ITE_RESTful_Object_Type[]
 	 */
@@ -81,7 +81,7 @@ class ITE_Object_Type_Registry {
 	/**
 	 * Get all object types with meta support.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Object_Type_With_Meta[]
 	 */
@@ -92,7 +92,7 @@ class ITE_Object_Type_Registry {
 	/**
 	 * Throw an object type not found exception.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $slug
 	 *

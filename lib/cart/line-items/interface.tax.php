@@ -2,7 +2,7 @@
 /**
  * Tax Line Item interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -16,7 +16,7 @@ interface ITE_Tax_Line_Item extends ITE_Aggregatable_Line_Item {
 	 *
 	 * Ex: 8.75
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return float
 	 */
@@ -25,7 +25,7 @@ interface ITE_Tax_Line_Item extends ITE_Aggregatable_Line_Item {
 	/**
 	 * Determine whether this tax applies to a given line item.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Taxable_Line_Item $item
 	 *
@@ -36,7 +36,7 @@ interface ITE_Tax_Line_Item extends ITE_Aggregatable_Line_Item {
 	/**
 	 * Clone this tax item to be applied to a given taxable item.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Taxable_Line_Item $item
 	 *

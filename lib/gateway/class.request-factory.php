@@ -2,7 +2,7 @@
 /**
  * Payment Gateway Request Factory.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ class ITE_Gateway_Request_Factory {
 	/**
 	 * Construct a request object.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 * @param array  $args
@@ -158,7 +158,7 @@ class ITE_Gateway_Request_Factory {
 				/**
 				 * Filter the gateway request for an unknown request type.
 				 *
-				 * @since 1.36.0
+				 * @since 2.0.0
 				 *
 				 * @param ITE_Gateway_Request $request
 				 * @param array               $args
@@ -183,7 +183,7 @@ class ITE_Gateway_Request_Factory {
 			/**
 			 * Filter the created gateway request.
 			 *
-			 * @since 1.36.0
+			 * @since 2.0.0
 			 *
 			 * @param ITE_Gateway_Request $request
 			 * @param array               $args
@@ -199,7 +199,7 @@ class ITE_Gateway_Request_Factory {
 		/**
 		 * Filter the created gateway request.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Gateway_Request $request
 		 * @param array                $args
@@ -217,7 +217,7 @@ class ITE_Gateway_Request_Factory {
 	/**
 	 * Build a card from an array.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $card
 	 *
@@ -236,7 +236,7 @@ class ITE_Gateway_Request_Factory {
 	/**
 	 * Build a bank account from an array.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $account
 	 *

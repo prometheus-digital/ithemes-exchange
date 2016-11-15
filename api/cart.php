@@ -13,7 +13,7 @@
  *
  * This is cached in a static variable.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param bool $create_if_not_started
  *
@@ -43,7 +43,7 @@ function it_exchange_get_current_cart( $create_if_not_started = true ) {
 /**
  * Get a cart by id.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param string $cart_id
  *
@@ -319,7 +319,7 @@ function it_exchange_empty_shopping_cart() {
  * Get a customer's cached cart if they are logged in
  *
  * @since 1.9.0
- * @since 1.36.0 Introduce `$session_only` parameter.
+ * @since 2.0.0 Introduce `$session_only` parameter.
  *
  * @param int|bool $customer_id The id of an exchange customer
  * @param bool $session_only    Only return the session data not an \ITE_Cart object.
@@ -600,7 +600,7 @@ function it_exchange_get_cart_weight( ITE_Cart $cart = null ) {
 /**
  * Get the shipping method for any line item.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Line_Item $item
  *
@@ -624,7 +624,7 @@ function it_exchange_get_shipping_method_for_item( ITE_Line_Item $item ) {
 /**
  * Determine if a cart is eligible for using multiple shipping methods.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Cart|null $cart
  *
@@ -664,7 +664,7 @@ function it_exchange_cart_is_eligible_for_multiple_shipping_methods( ITE_Cart $c
  *
  * @since 0.3.7
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @param array $product cart product
  * @param bool $format
@@ -855,7 +855,7 @@ function it_exchange_get_cart_description( $options = array() ) {
 		/**
 		 * Filter the description for an item.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
 		 * @param string         $string
 		 * @param \ITE_Line_Item $item
@@ -936,7 +936,7 @@ function it_exchange_get_cart_billing_address() {
 /**
  * Get the available transaction methods for a cart.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param ITE_Cart|null $cart
  *
@@ -988,7 +988,7 @@ function it_exchange_get_available_transaction_methods_for_cart( ITE_Cart $cart 
 	/**
 	 * Filter the available transaction methods for a given cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Gateway[] $methods
 	 * @param \ITE_Cart      $cart

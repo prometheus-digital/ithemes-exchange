@@ -2,7 +2,7 @@
 /**
  * Transaction Query class.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 use IronBound\DB\Query\FluentQuery;
@@ -38,7 +38,7 @@ class ITE_Transaction_Query {
 	/**
 	 * Return the total number of results, disregarding pagination.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -49,7 +49,7 @@ class ITE_Transaction_Query {
 	/**
 	 * Fetch the results.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Transaction[]|int
 	 */
@@ -65,7 +65,7 @@ class ITE_Transaction_Query {
 	/**
 	 * Get a query var.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $query_var
 	 * @param string $default
@@ -79,7 +79,7 @@ class ITE_Transaction_Query {
 	/**
 	 * Set a query var.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $query_var
 	 * @param mixed  $value
@@ -95,7 +95,7 @@ class ITE_Transaction_Query {
 	/**
 	 * Get the SQL statement for this query.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -106,7 +106,7 @@ class ITE_Transaction_Query {
 	/**
 	 * Get the default arguments.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -162,7 +162,7 @@ class ITE_Transaction_Query {
 	/**
 	 * Perform the query.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	protected function query() {
 
@@ -185,7 +185,7 @@ class ITE_Transaction_Query {
 	/**
 	 * Build the query based on the arguments.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	protected function build_query() {
 
@@ -260,7 +260,7 @@ class ITE_Transaction_Query {
 	 *
 	 * Checks against customer display names, item names, and item descriptions.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	protected function parse_search() {
 
@@ -292,7 +292,7 @@ class ITE_Transaction_Query {
 	/**
 	 * Parse an in or not in query.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $column Column name.
 	 * @param string $arg    Argument name.
@@ -322,7 +322,7 @@ class ITE_Transaction_Query {
 	 *
 	 * Automatically checks for the argument, and the argument appended with operators.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $column
 	 * @param string $arg
@@ -353,7 +353,7 @@ class ITE_Transaction_Query {
 	/**
 	 * Parse a location query.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $column
 	 * @param string $arg
@@ -374,7 +374,7 @@ class ITE_Transaction_Query {
 	/**
 	 * Parse an items query.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	protected function parse_items() {
 
@@ -400,7 +400,7 @@ class ITE_Transaction_Query {
 	/**
 	 * Build a transaction query from args that would be traditionally passed to `WP_Query`.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $wp_args
 	 *

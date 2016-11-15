@@ -2,7 +2,7 @@
 /**
  * Refunds Endpoint.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -136,7 +136,7 @@ class Refunds extends Base implements Getable, Postable {
 	/**
 	 * Perform a permissions request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
 	 * @param \IT_Exchange_Customer|null     $user

@@ -2,7 +2,7 @@
 /**
  * Middleware Interface.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -18,7 +18,7 @@ interface Middleware {
 	/**
 	 * Handle a REST request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request             $request
 	 * @param \iThemes\Exchange\REST\Middleware\Delegate $next

@@ -2,7 +2,7 @@
 /**
  * Load the REST module.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -33,7 +33,7 @@ use iThemes\Exchange\REST\Route\Transaction\Transaction;
 /**
  * Register the rest routes on libraries loaded.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @return \iThemes\Exchange\REST\Manager
  */
@@ -44,7 +44,7 @@ add_action( 'rest_api_init', function () {
 	/**
 	 * Fires when routes should be registered.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Manager $manager
 	 */
@@ -119,7 +119,7 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 /**
  * Get the rest url for a given route.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \iThemes\Exchange\REST\Route $route
  * @param array                        $path_parameters
@@ -158,7 +158,7 @@ function get_rest_url( Route $route, array $path_parameters ) {
 /**
  * Get the REST manager.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @return \iThemes\Exchange\REST\Manager
  */
@@ -184,7 +184,7 @@ function get_rest_manager() {
 /**
  * Transform a response to an array.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \WP_REST_Response $response
  *

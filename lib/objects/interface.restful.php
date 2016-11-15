@@ -2,7 +2,7 @@
 /**
  * RESTful object type.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_RESTful_Object_Type extends ITE_Object_Type {
 	/**
 	 * Get the collection route.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \iThemes\Exchange\REST\Getable
 	 */
@@ -23,7 +23,7 @@ interface ITE_RESTful_Object_Type extends ITE_Object_Type {
 	/**
 	 * Get the route for a single object.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $object_id
 	 *

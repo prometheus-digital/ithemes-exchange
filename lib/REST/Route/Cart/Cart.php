@@ -2,7 +2,7 @@
 /**
  * Contains the cart route.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -125,7 +125,7 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * Perform a permission check.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
 	 * @param \IT_Exchange_Customer          $user
@@ -162,7 +162,7 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * Prepare a cart for response.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 *

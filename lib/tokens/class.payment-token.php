@@ -2,7 +2,7 @@
 /**
  * Payment Token model.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 use IronBound\Cache\Cache;
@@ -40,7 +40,7 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object {
 	/**
 	 * Make this the primary payment token for the customer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -74,7 +74,7 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object {
 	/**
 	 * Make this a non-primary payment token.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 *
@@ -103,7 +103,7 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object {
 	 *
 	 * This should fallback to a default value if a user-provided value is not available.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -204,7 +204,7 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object {
 	/**
 	 * Get all payment tokens for a customer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Customer $customer
 	 *
@@ -244,7 +244,7 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object {
 	/**
 	 * Register a token type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 * @param string $class

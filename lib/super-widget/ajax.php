@@ -78,7 +78,7 @@ class IT_Exchange_Super_Widget_Ajax {
 	/**
 	 * Handle the AJAX Request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function handle() {
 
@@ -104,7 +104,7 @@ class IT_Exchange_Super_Widget_Ajax {
 	/**
 	 * Do an action.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $action
 	 *

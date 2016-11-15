@@ -141,7 +141,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	/**
 	 * Is this a REST request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -221,7 +221,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	/**
 	 * Remove the cookie.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function remove_cookie() {
 		unset( $_COOKIE[ IT_EXCHANGE_SESSION_COOKIE ] );
@@ -319,7 +319,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	/**
 	 * Transfer the session
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Session_Model|null $model
 	 * @param bool                    $migrate_data
@@ -343,7 +343,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	/**
 	 * Create the model.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Session_Model
 	 */

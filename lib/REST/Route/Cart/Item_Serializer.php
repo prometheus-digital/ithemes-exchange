@@ -2,7 +2,7 @@
 /**
  * Item Serializer.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -37,7 +37,7 @@ class Item_Serializer {
 	/**
 	 * Extend the Item Serializer without subclassing.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \Closure $extend
 	 *
@@ -52,7 +52,7 @@ class Item_Serializer {
 	/**
 	 * Get the schema for this item serializer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -61,7 +61,7 @@ class Item_Serializer {
 	/**
 	 * Serialize a line item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $item
 	 * @param \ITE_Cart      $cart
@@ -106,7 +106,7 @@ class Item_Serializer {
 	/**
 	 * Generate the schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

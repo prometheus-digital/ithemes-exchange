@@ -2,14 +2,14 @@
 /**
  * Contains deprecated functions and filters.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
 /**
  * Back-compat filter
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param string            $subject
  * @param IT_Exchange_Email $email
@@ -38,7 +38,7 @@ add_filter( 'it_exchange_email_receipt_subject', 'it_exchange_email_receipt_subj
 /**
  * Back-compat filter
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param string            $body
  * @param IT_Exchange_Email $email
@@ -67,7 +67,7 @@ add_filter( 'it_exchange_email_receipt_body', 'it_exchange_email_receipt_body_ba
 /**
  * Back-compat filter.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param array $headers
  *
@@ -90,7 +90,7 @@ add_filter( 'it_exchange_send_email_notification_wp_mail_headers', 'it_exchange_
 /**
  * Back-compat filter.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param array $body
  *

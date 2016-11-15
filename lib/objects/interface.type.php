@@ -2,7 +2,7 @@
 /**
  * Object Type interface.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -16,7 +16,7 @@ interface ITE_Object_Type {
 	 *
 	 * MUST be globally unique. Ex: 'transaction' or 'customer'.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -27,7 +27,7 @@ interface ITE_Object_Type {
 	 *
 	 * Ex: Transaction or Customer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -36,7 +36,7 @@ interface ITE_Object_Type {
 	/**
 	 * Create an object from a set of attributes.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $attributes
 	 *
@@ -47,7 +47,7 @@ interface ITE_Object_Type {
 	/**
 	 * Retrieve an object by its ID.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $id
 	 *
@@ -58,7 +58,7 @@ interface ITE_Object_Type {
 	/**
 	 * Retrieve objects matching the given criteria.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array|\Doctrine\Common\Collections\Criteria $criteria
 	 *
@@ -69,7 +69,7 @@ interface ITE_Object_Type {
 	/**
 	 * Delete an object by its ID.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $id
 	 *
@@ -80,7 +80,7 @@ interface ITE_Object_Type {
 	/**
 	 * Does this object type support meta.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -89,7 +89,7 @@ interface ITE_Object_Type {
 	/**
 	 * Is this object type RESTful.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */

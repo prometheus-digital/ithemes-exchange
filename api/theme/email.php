@@ -2,7 +2,7 @@
 /**
  * Contains the email theme API class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -63,7 +63,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Retrieve the API context.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -74,7 +74,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Returns the custom message for the email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -94,7 +94,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get a context item.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -116,7 +116,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Return the current date.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -140,7 +140,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Retrieve the logo.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -167,7 +167,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	 *
 	 * Either 'boxed' or 'full'.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -178,7 +178,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the background color for the <bode> element.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -196,7 +196,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Concatenated background styles.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -216,7 +216,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Retrieve the header logo.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -237,7 +237,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Retrieve the header logo size.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -248,7 +248,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Retrieve the header store name.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -268,7 +268,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Retrieve the font to use for the header.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -281,7 +281,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the store name font size.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -292,7 +292,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the store name color.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -303,7 +303,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the header image.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -327,7 +327,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the header background color.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -342,7 +342,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the body font.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -355,7 +355,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the body text color.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -370,7 +370,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	 *
 	 * @link  http://stackoverflow.com/a/1855903
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param int $r
 	 * @param int $g
@@ -388,7 +388,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Convert hex to RGB.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $hex
 	 *
@@ -413,7 +413,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the body highlight color.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -426,7 +426,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the body button color.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -448,7 +448,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the body font size.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -461,7 +461,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the body background color.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -476,7 +476,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the body border color.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -489,7 +489,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the footer text.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -509,7 +509,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the footer text color.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -522,7 +522,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the footer logo.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -543,7 +543,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the footer logo size.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -556,7 +556,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the footer background color.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -571,7 +571,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the background color.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -584,7 +584,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the background image.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -609,7 +609,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the background image position.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -622,7 +622,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Get the background image repeat.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -635,7 +635,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	/**
 	 * Make a font stack from a choice.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $choice
 	 *

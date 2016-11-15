@@ -2,7 +2,7 @@
 /**
  * Contains the contents of the system info page.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 

@@ -2,7 +2,7 @@
 /**
  * Line Item API Theme class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -17,7 +17,7 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	/**
 	 * IT_Theme_API_Line_Item constructor.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		$this->item = isset( $GLOBALS['it_exchange']['line-item'] ) ? $GLOBALS['it_exchange']['line-item'] : null;
@@ -50,7 +50,7 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	/**
 	 * Print the item name.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -78,7 +78,7 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	/**
 	 * Print the item's description.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -106,7 +106,7 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	/**
 	 * Print the item's amount.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -132,7 +132,7 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	/**
 	 * Print the item's total.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -229,7 +229,7 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	/**
 	 * Print the item's type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -250,7 +250,7 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	/**
 	 * Iterate over the item's children.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *

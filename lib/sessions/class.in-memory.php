@@ -2,7 +2,7 @@
 /**
  * In-Memory Session.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -154,7 +154,7 @@ class IT_Exchange_In_Memory_Session implements IT_Exchange_SessionInterface {
 	/**
 	 * Save the session if a saver method exists.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	protected final function save() {
 		if ( $this->save ) {
@@ -165,7 +165,7 @@ class IT_Exchange_In_Memory_Session implements IT_Exchange_SessionInterface {
 	/**
 	 * Set the save method.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param callable $save
 	 */

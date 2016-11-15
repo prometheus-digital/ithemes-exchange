@@ -2,7 +2,7 @@
 /**
  * REST Request.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -24,7 +24,7 @@ class Request extends \WP_REST_Request {
 	/**
 	 * Create a Request object from the WP_REST_Request object.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \WP_REST_Request $request
 	 *
@@ -57,7 +57,7 @@ class Request extends \WP_REST_Request {
 	/**
 	 * Get the matched route controller.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \iThemes\Exchange\REST\Route|null
 	 */
@@ -68,7 +68,7 @@ class Request extends \WP_REST_Request {
 	/**
 	 * Set the matched route controller.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $matched_route_controller
 	 *
@@ -83,7 +83,7 @@ class Request extends \WP_REST_Request {
 	/**
 	 * Get the cart being operated on in this request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Cart|null
 	 */
@@ -92,7 +92,7 @@ class Request extends \WP_REST_Request {
 	/**
 	 * Set the cart being operated on in this request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 *
@@ -107,7 +107,7 @@ class Request extends \WP_REST_Request {
 	/**
 	 * Retrieves a parameter from the request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key  Parameter name.
 	 * @param string $type Type of param to draw from.
@@ -132,7 +132,7 @@ class Request extends \WP_REST_Request {
 	 *
 	 * Iterates over the parameter order, excluding defaults.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 * @param array  $param_types_to_check Limit the check to certain parameter types.

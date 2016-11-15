@@ -90,7 +90,7 @@ function it_exchange_print_paypal_standard_secure_wizard_settings( $form ) {
 /**
  * Restrict PayPal Secure refunds to only be within 180 days.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param bool                     $eligible
  * @param \IT_Exchange_Transaction $transaction

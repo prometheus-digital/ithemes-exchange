@@ -2,7 +2,7 @@
 /**
  * Purchase Handler for PayPal Standard Secure.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -31,7 +31,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	/**
 	 * Generate an encrypted PayPal button.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
@@ -115,7 +115,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		/**
 		 * Filter the Button Vars that are passed to PayPal.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
 		 * @param array                                  $button_vars
 		 * @param ITE_Gateway_Purchase_Request_Interface $request
@@ -131,12 +131,12 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		/**
 		 * Filter the Button Vars that are passed to PayPal.
 		 *
-		 * @deprecated 1.36.0
+		 * @deprecated 2.0.0
 		 *
 		 * @param array $L_VARS
 		 */
 		$L_VARS = apply_filters_deprecated(
-			'it_exchange_paypal_standard_secure_button_vars', array( $L_VARS ), '1.36.0',
+			'it_exchange_paypal_standard_secure_button_vars', array( $L_VARS ), '2.0.0',
 			'it_exchange_paypal_standard_secure_get_button_vars'
 		);
 
@@ -150,7 +150,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		/**
 		 * Filter the full button request that is passed to PayPal.
 		 *
-		 * @since 1.36.0 Added the `$request` parameter.
+		 * @since 2.0.0 Added the `$request` parameter.
 		 *
 		 * @param array                                  $button_request
 		 * @param ITE_Gateway_Purchase_Request_Interface $request
@@ -190,7 +190,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	/**
 	 * Get the subscription button request to pass to PayPal.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
@@ -538,7 +538,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	/**
 	 * Get the details of a transaction in PayPal.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $paypal_id
 	 *

@@ -2,7 +2,7 @@
 /**
  * Gateway Request interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Gateway_Request {
 	/**
 	 * Get the customer associated with this request.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Customer
 	 */
@@ -23,7 +23,7 @@ interface ITE_Gateway_Request {
 	/**
 	 * Get the name of this request.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */

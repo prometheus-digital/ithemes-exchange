@@ -2,7 +2,7 @@
 /**
  * Parameter Bag backed by meta storage.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -116,7 +116,7 @@ class ITE_Meta_Parameter_Bag implements ITE_Parameter_Bag {
 	/**
 	 * Convert a parameter to a key.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -139,7 +139,7 @@ class ITE_Meta_Parameter_Bag implements ITE_Parameter_Bag {
 	/**
 	 * Transform a param into a meta key.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $param
 	 *

@@ -2,7 +2,7 @@
 /**
  * Load the Session table.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 use IronBound\DB\Table\Column\DateTime;

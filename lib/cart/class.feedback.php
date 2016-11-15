@@ -2,7 +2,7 @@
 /**
  * Cart Feedback Class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -20,7 +20,7 @@ class ITE_Cart_Feedback {
 	/**
 	 * Indicate a successful action to the user.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string              $message
 	 * @param \ITE_Line_Item|null $item
@@ -41,7 +41,7 @@ class ITE_Cart_Feedback {
 	/**
 	 * Indicate a failed action to the user.
 	 * 
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 * 
 	 * @param string              $message
 	 * @param \ITE_Line_Item|null $item
@@ -62,7 +62,7 @@ class ITE_Cart_Feedback {
 	/**
 	 * Get an iterator for all the errors.
 	 * 
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 * 
 	 * @return \Iterator|ITE_Cart_Feedback_Item[]
 	 */
@@ -73,7 +73,7 @@ class ITE_Cart_Feedback {
 	/**
 	 * Get an iterator for all the notices.
 	 * 
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 * 
 	 * @return \Iterator|ITE_Cart_Feedback_Item[]
 	 */
@@ -84,7 +84,7 @@ class ITE_Cart_Feedback {
 	/**
 	 * Clear all feedback items.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function clear() {
 		$this->clear_errors();
@@ -94,7 +94,7 @@ class ITE_Cart_Feedback {
 	/**
 	 * Clear only error items.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function clear_errors() {
 		$this->errors = array();
@@ -103,7 +103,7 @@ class ITE_Cart_Feedback {
 	/**
 	 * Clear only notices.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function clear_notices() {
 		$this->notices = array();

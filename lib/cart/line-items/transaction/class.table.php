@@ -9,7 +9,7 @@ use IronBound\DB\Table\TimestampedTable;
 /**
  * Transaction Line Item Table.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 class ITE_Transaction_Line_Item_Table extends BaseTable implements TimestampedTable {

@@ -2,7 +2,7 @@
 /**
  * Contains the delivery exception class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -36,7 +36,7 @@ class IT_Exchange_Email_Delivery_Exception extends Exception {
 	/**
 	 * Get the email object that failed to send.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Sendable
 	 */

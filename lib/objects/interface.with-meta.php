@@ -2,7 +2,7 @@
 /**
  * Object Type with Meta.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -16,7 +16,7 @@ interface ITE_Object_Type_With_Meta extends ITE_Object_Type {
 	 *
 	 * @see   add_metadata()
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $object_id
 	 * @param string $key    Metadata key.
@@ -33,7 +33,7 @@ interface ITE_Object_Type_With_Meta extends ITE_Object_Type {
 	 *
 	 * @see   update_metadata()
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $object_id
 	 * @param string $key        Metadata key.
@@ -49,7 +49,7 @@ interface ITE_Object_Type_With_Meta extends ITE_Object_Type {
 	 *
 	 * @see   get_metadata()
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $object_id
 	 * @param string $key    Metadata key. If not specified, retrieve all metadata from the object.
@@ -64,7 +64,7 @@ interface ITE_Object_Type_With_Meta extends ITE_Object_Type {
 	 *
 	 * @see   delete_metadata()
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $object_id
 	 * @param string $key        Metadata key.

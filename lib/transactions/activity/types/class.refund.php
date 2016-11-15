@@ -80,7 +80,7 @@ class IT_Exchange_Txn_Refund_Activity extends IT_Exchange_Txn_AbstractActivity {
 	/**
 	 * Get the refund model.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Refund|null
 	 */

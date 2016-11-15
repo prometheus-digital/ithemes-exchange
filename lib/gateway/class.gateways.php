@@ -2,7 +2,7 @@
 /**
  * Gateways registry.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -17,7 +17,7 @@ class ITE_Gateways {
 	/**
 	 * Register a gateway.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Gateway $gateway
 	 *
@@ -242,7 +242,7 @@ class ITE_Gateways {
 	/**
 	 * Get a gateway by its slug.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $slug
 	 *
@@ -255,7 +255,7 @@ class ITE_Gateways {
 	/**
 	 * Retrieve all registered gateways.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Gateway[]
 	 */
@@ -266,7 +266,7 @@ class ITE_Gateways {
 	/**
 	 * Retrieve all gateways accepting payments.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Gateway[]
 	 */
@@ -280,7 +280,7 @@ class ITE_Gateways {
 	/**
 	 * Get all gateways except Zero Sum Checkout.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Gateway[]
 	 */
@@ -294,7 +294,7 @@ class ITE_Gateways {
 	/**
 	 * Get all gateways that can handle a certain request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $request_name
 	 *

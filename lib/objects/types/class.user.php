@@ -2,7 +2,7 @@
 /**
  * User Object Type.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -113,7 +113,7 @@ abstract class ITE_User_Object_Type implements ITE_Object_Type, ITE_Object_Type_
 	/**
 	 * Convert a user object into the correct model.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param WP_User $user
 	 *

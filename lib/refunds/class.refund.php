@@ -2,7 +2,7 @@
 /**
  * Refund model.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 use IronBound\DB\Extensions\Meta\ModelWithMeta;
@@ -34,7 +34,7 @@ class ITE_Refund extends ModelWithMeta implements ITE_Object {
 			/**
 			 * Fires when a refund has been added to a transaction.
 			 *
-			 * @since 1.36.0
+			 * @since 2.0.0
 			 *
 			 * @param \ITE_Refund              $refund
 			 * @param \IT_Exchange_Transaction $this

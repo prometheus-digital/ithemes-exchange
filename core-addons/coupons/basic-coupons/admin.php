@@ -280,7 +280,7 @@ add_action( 'admin_init', 'it_exchange_basic_coupons_redirect_core_add_edit_scre
 /**
  * Perform a permissions check on the edit coupons page.
  *
- * @since 1.36
+ * @since 2.0.0
  */
 function it_exchange_basic_coupons_permissions_check() {
 

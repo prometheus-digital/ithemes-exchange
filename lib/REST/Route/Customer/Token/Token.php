@@ -2,7 +2,7 @@
 /**
  * Single Token Route.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -147,7 +147,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 	/**
 	 * Perform a permissions check.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
 	 * @param \IT_Exchange_Customer|null     $user

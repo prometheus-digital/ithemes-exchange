@@ -2,7 +2,7 @@
 /**
  * Refund Request.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -39,7 +39,7 @@ class ITE_Gateway_Refund_Request implements ITE_Gateway_Request {
 	/**
 	 * Get the transaction to refund.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \IT_Exchange_Transaction
 	 */
@@ -48,7 +48,7 @@ class ITE_Gateway_Refund_Request implements ITE_Gateway_Request {
 	/**
 	 * Get the total amount to refund.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return float
 	 */
@@ -57,7 +57,7 @@ class ITE_Gateway_Refund_Request implements ITE_Gateway_Request {
 	/**
 	 * Get the refund reason.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -66,7 +66,7 @@ class ITE_Gateway_Refund_Request implements ITE_Gateway_Request {
 	/**
 	 * Get the user who issued the refund.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \WP_User|null
 	 */
@@ -75,7 +75,7 @@ class ITE_Gateway_Refund_Request implements ITE_Gateway_Request {
 	/**
 	 * Set the user who issued the refund.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \WP_User $issued_by
 	 */

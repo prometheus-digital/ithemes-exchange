@@ -2,7 +2,7 @@
 /**
  * Contains the meta route.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -78,7 +78,7 @@ class Meta extends Base implements Getable, Putable {
 	/**
 	 * Format metadata for cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 *

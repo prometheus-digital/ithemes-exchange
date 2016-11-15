@@ -2,7 +2,7 @@
 /**
  * Location Validator interface.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Location_Validator {
 	/**
 	 * Get the name of this validator.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -23,7 +23,7 @@ interface ITE_Location_Validator {
 	/**
 	 * Validate a location.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location $location
 	 *
@@ -34,7 +34,7 @@ interface ITE_Location_Validator {
 	/**
 	 * Validate a location for a given cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location $location
 	 * @param \ITE_Cart     $cart
@@ -46,7 +46,7 @@ interface ITE_Location_Validator {
 	/**
 	 * Get the zone this validator can validate locations in.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Zone|null
 	 */

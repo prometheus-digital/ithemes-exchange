@@ -11,7 +11,7 @@ include( dirname( __FILE__ ) . '/functions.php' );
 /**
  * Register the simple taxes provider.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Tax_Managers $manager
  */

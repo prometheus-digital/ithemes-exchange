@@ -164,7 +164,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	/**
 	 * Get the customer's email address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -181,7 +181,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	/**
 	 * Get the customer's first name.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -192,7 +192,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	/**
 	 * Get the customer's last name.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -203,7 +203,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	/**
 	 * Get the customer's full name.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -214,7 +214,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	/**
 	 * Get the customer's display name.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -225,7 +225,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	/**
 	 * Get the customer's billing address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Location|null
 	 */
@@ -242,7 +242,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	 *
 	 * Any other `ITE_Location` instance will be converted to an `ITE_Saved_Address` and saved.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location $location
 	 *
@@ -263,7 +263,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	/**
 	 * Get the customer's shipping address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Location|null
 	 */
@@ -276,7 +276,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	 *
 	 * @see   IT_Exchange_Customer::set_billing_address() for more information.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location $location
 	 *
@@ -299,7 +299,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	 *
 	 * Will fire necessary deprecated hooks and filters dynamically based on type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $type Accepts either 'shipping' or 'billing'.
 	 *
@@ -337,7 +337,7 @@ class IT_Exchange_Customer implements ITE_Object {
 
 		if ( $filtered_address && $filtered_address !== $raw_address ) {
 			_deprecated_hook(
-				'it_exchange_get_customer_data', '1.36.0', '', "Filtering $type address with data filter is deprecated."
+				'it_exchange_get_customer_data', '2.0.0', '', "Filtering $type address with data filter is deprecated."
 			);
 
 			if ( $address ) {
@@ -352,7 +352,7 @@ class IT_Exchange_Customer implements ITE_Object {
 		}
 
 		$second_filtered = apply_filters_deprecated(
-			"it_exchange_get_customer_{$type}_address", array( $filtered_address, $this->id ), '1.36.0'
+			"it_exchange_get_customer_{$type}_address", array( $filtered_address, $this->id ), '2.0.0'
 		);
 
 		if ( $second_filtered && $second_filtered !== $filtered_address ) {
@@ -375,7 +375,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	/**
 	 * Persist an address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location      $location
 	 * @param \ITE_Location|null $current
@@ -421,7 +421,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	/**
 	 * Get the customer's purchase count.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -435,7 +435,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	/**
 	 * Get a customer's historical lifetime value.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return float
 	 */
@@ -465,7 +465,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	/**
 	 * Get all payment tokens for this customer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $gateway
 	 *
@@ -533,7 +533,7 @@ class _IT_Exchange_Customer_Data extends stdClass {
 	/**
 	 * Get a property.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $name
 	 *
@@ -554,7 +554,7 @@ class _IT_Exchange_Customer_Data extends stdClass {
 	/**
 	 * Magic set method.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $name
 	 * @param mixed  $value
@@ -569,7 +569,7 @@ class _IT_Exchange_Customer_Data extends stdClass {
 	/**
 	 * Magic isset method.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $name
 	 *

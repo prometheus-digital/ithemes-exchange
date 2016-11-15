@@ -108,7 +108,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Assert the post is valid.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param mixed $post
 	 *
@@ -123,7 +123,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Check if a value is post like.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param mixed $post
 	 *
@@ -158,7 +158,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Upgrade a transaction to be saved in the database table as well.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param WP_Post $post
 	 *
@@ -269,7 +269,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Get all items in this transaction.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 * @param bool   $flatten
@@ -291,7 +291,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Get a line item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 * @param string $id
@@ -309,19 +309,19 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 *
 	 * @since      0.3.2
 	 *
-	 * @deprecated 1.36.0
+	 * @deprecated 2.0.0
 	 *
 	 * @return void
 	 */
 	protected function set_transaction_supports_and_data() {
 
-		do_action_deprecated( 'it_exchange_set_transaction_supports_and_data', array( $this->ID ), '1.36.0' );
+		do_action_deprecated( 'it_exchange_set_transaction_supports_and_data', array( $this->ID ), '2.0.0' );
 	}
 
 	/**
 	 * Get the transaction ID.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -355,7 +355,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * There isn't a set list of transaction statuses available. Each payment gateway dynamically declares their own.
 	 *
 	 * @since 0.4.0
-	 * @since 1.36.0 Added $label parameter.
+	 * @since 2.0.0 Added $label parameter.
 	 *
 	 * @param bool $label
 	 *
@@ -379,7 +379,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * If the custom value is not set and we're on post-add.php, check for a URL param
 	 *
 	 * @since 0.4.0
-	 * @since 1.36.0 Add return value.
+	 * @since 2.0.0 Add return value.
 	 *
 	 * @param string $status
 	 *
@@ -436,7 +436,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Get the method used.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param bool $label
 	 *
@@ -458,7 +458,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Get the method ID.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -469,7 +469,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Update the method ID.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $method_id
 	 *
@@ -494,7 +494,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 			/**
 			 * Fires when the transaction method ID is updated.
 			 *
-			 * @since 1.36
+			 * @since 2.0.0
 			 *
 			 * @param IT_Exchange_Transaction $this
 			 * @param string                  $previous_method_id
@@ -508,7 +508,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Get the gateway used to pay for this transaction.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Gateway|null
 	 */
@@ -522,7 +522,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * This should always be used over the `cleared` property. The `cleared` property is a cached value for assistance
 	 * in querying.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -533,7 +533,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Get the transaction customer.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Customer|null
 	 */
@@ -556,7 +556,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Get the customer's email address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -567,7 +567,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Check if this transaction is a guest purchase.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -578,7 +578,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Does this transaction have a parent.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -589,7 +589,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Get the parent transaction.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Transaction
 	 */
@@ -600,7 +600,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Was this transaction purchased in live mode.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -609,7 +609,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Was this transaction purchased in sandbox mode.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -737,7 +737,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Get the billing address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Location|null
 	 */
@@ -749,7 +749,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 		$raw = $address ? $address->to_array() : array();
 
 		$filtered = apply_filters_deprecated(
-			'it_exchange_get_transaction_billing_address', array( $raw, $this ), '1.36'
+			'it_exchange_get_transaction_billing_address', array( $raw, $this ), '2.0.0'
 		);
 
 		if ( ! $filtered && ! $address ) {
@@ -768,7 +768,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Get the shipping address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Saved_Address|null
 	 */
@@ -780,7 +780,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 		$raw = $address ? $address->to_array() : array();
 
 		$filtered = apply_filters_deprecated(
-			'it_exchange_get_transaction_shipping_address', array( $raw, $this ), '1.36'
+			'it_exchange_get_transaction_shipping_address', array( $raw, $this ), '2.0.0'
 		);
 
 		if ( ! $filtered && ! $address ) {
@@ -919,7 +919,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 		do_action_deprecated(
 			'it_exchange_add_refund_to_transaction',
 			array( $this, $amount, $date, $options ),
-			'1.36.0',
+			'2.0.0',
 			'it_exchange_add_transaction_refund'
 		);
 
@@ -951,7 +951,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Returns the a sum of all the applied refund amounts for this transaction
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return float
 	 */
@@ -979,13 +979,13 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 *
 	 * @since      0.4.0
 	 *
-	 * @deprecated 1.36.0
+	 * @deprecated 2.0.0
 	 *
 	 * @return array
 	 */
 	public function get_transaction_refunds() {
 
-		_deprecated_function( __METHOD__, '1.36.0', 'IT_Exchange_Transaction::refunds' );
+		_deprecated_function( __METHOD__, '2.0.0', 'IT_Exchange_Transaction::refunds' );
 
 		$refunds = array();
 
@@ -997,13 +997,13 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 			);
 		}
 
-		return apply_filters_deprecated( 'it_exchange_get_transaction_refunds', array( $refunds, $this ), '1.36.0' );
+		return apply_filters_deprecated( 'it_exchange_get_transaction_refunds', array( $refunds, $this ), '2.0.0' );
 	}
 
 	/**
 	 * Get the customer's IP address for this transaction.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -1036,7 +1036,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * Gets the transactions children.
 	 *
 	 * @since 1.3.0
-	 * @since 1.36.0 Introduce `$return_transactions` parameter.
+	 * @since 2.0.0 Introduce `$return_transactions` parameter.
 	 *
 	 * @param array $args                Arguments to filter children.
 	 * @param bool  $return_transactions Return transaction objects.
@@ -1064,7 +1064,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Get the cart object for the transaction.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Cart
 	 */
@@ -1077,7 +1077,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Convert a cart object to line items.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -1205,7 +1205,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Post helper.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \WP_Post
 	 */
@@ -1220,7 +1220,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * is triggered when invoking inaccessible methods in an object context.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param $name      string
 	 * @param $arguments array
@@ -1249,7 +1249,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	/**
 	 * Provide backwards compatibility for deprecated properties.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $name
 	 *
@@ -1327,7 +1327,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * @deprecated
 	 */
 	public function set_add_edit_screen_supports() {
-		_deprecated_function( __METHOD__, '1.36' );
+		_deprecated_function( __METHOD__, '2.0.0' );
 	}
 
 	/**
@@ -1335,7 +1335,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 *
 	 * @since      1.3.0
 	 *
-	 * @deprecated 1.36.0
+	 * @deprecated 2.0.0
 	 */
 	function get_transaction_meta( $key, $single = true ) {
 		return $this->get_meta( $key, $single );
@@ -1346,7 +1346,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 *
 	 * @since      1.3.0
 	 *
-	 * @deprecated 1.36.0
+	 * @deprecated 2.0.0
 	 */
 	function update_transaction_meta( $key, $value ) {
 		$this->update_meta( $key, $value );
@@ -1357,7 +1357,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 *
 	 * @since      1.3.0
 	 *
-	 * @deprecated 1.36.0
+	 * @deprecated 2.0.0
 	 */
 	function delete_transaction_meta( $key, $value = '' ) {
 		$this->delete_meta( $key, $value );

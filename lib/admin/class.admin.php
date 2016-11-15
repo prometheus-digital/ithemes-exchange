@@ -510,7 +510,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Registers the callback for the gateway tab.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $default
 	 *
@@ -547,7 +547,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Prints the gateway tab for general settings.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $current_tab the current tab
 	 *
@@ -687,7 +687,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Print the tools tabs.
 	 * 
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	public function print_tools_tab() {
 
@@ -708,7 +708,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Print the system info tab.
 	 * 
-	 * @since 1.36
+	 * @since 2.0.0
 	 * 
 	 * @param string $current_tab
 	 */
@@ -725,7 +725,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Print the upgrades tab.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $current_tab
 	 */
@@ -755,7 +755,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Check if the user has permission to perform upgrades if on the upgrades tab.
 	 * 
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	public function upgrades_tab_permissions_check() {
 		
@@ -900,7 +900,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Add help tabs to the email screen.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param WP_Screen $screen
 	 */
@@ -913,7 +913,7 @@ class IT_Exchange_Admin {
 		$versions         = get_option( 'it-exchange-versions', array() );
 		$previous_version = empty( $versions['previous'] ) ? false : $versions['previous'];
 
-		if ( ! $previous_version || version_compare( $previous_version, '1.36.0', '>=' ) ) {
+		if ( ! $previous_version || version_compare( $previous_version, '2.0.0', '>=' ) ) {
 			return;
 		}
 
@@ -922,7 +922,7 @@ class IT_Exchange_Admin {
 			'id'    => 'new-email-templates',
 			'content' =>
 				'<p>' .
-	             __( 'Version 1.36.0 of Exchange now includes rich email templates that allow you to create specific branding and styling in your Exchange emails to match your site.', 'it-l10n-ithemes-exchange' ) . ' ' .
+	             __( 'Version 2.0.0 of Exchange now includes rich email templates that allow you to create specific branding and styling in your Exchange emails to match your site.', 'it-l10n-ithemes-exchange' ) . ' ' .
 	             __('Some templates already include the important information, such as the products ordered, price and shipping address.', 'it-l10n-ithemes-exchange' ) .
                  '</p><p>' .
 	             __( 'To use this new system, we’ve made some changes to how you create your Exchange emails which we think will make email creation simpler and faster.', 'it-l10n-ithemes-exchange' ) . ' ' .
@@ -1520,7 +1520,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Save core gateway settings.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function save_core_gateway_settings() {
 
@@ -1734,7 +1734,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Auto create WordPress pages with Exchange shortcodes.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	protected function auto_create_wordpress_pages() {
 

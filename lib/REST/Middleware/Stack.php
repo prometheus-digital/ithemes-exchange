@@ -2,7 +2,7 @@
 /**
  * Middleware Stack.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -26,7 +26,7 @@ class Stack {
 	/**
 	 * Push a bit of middleware onto the stack.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param Middleware $middleware
 	 * @param string     $named
@@ -53,7 +53,7 @@ class Stack {
 	/**
 	 * Add a piece of middleware to be executed before another piece of middleware.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param Middleware $middleware
 	 * @param string     $before
@@ -101,7 +101,7 @@ class Stack {
 	/**
 	 * Add a piece of middleware to be executed after another piece of middleware.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param Middleware $middleware
 	 * @param string     $after
@@ -151,7 +151,7 @@ class Stack {
 	/**
 	 * Add a piece of middleware so it is executed first.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param Middleware $middleware
 	 * @param string     $named
@@ -198,7 +198,7 @@ class Stack {
 	/**
 	 * Execute all middleware on a REST request.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \WP_REST_Request             $request
 	 * @param \iThemes\Exchange\REST\Route $route
@@ -241,7 +241,7 @@ class Stack {
 	/**
 	 * Cleanup any state left over from executing middleware.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	protected function cleanup() {
 		$this->skip = array();

@@ -2,7 +2,7 @@
 /**
  * Load the Session model.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -54,7 +54,7 @@ class ITE_Session_Model extends \IronBound\DB\Model {
 	/**
 	 * Retrieve a session by cart ID.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $cart_id
 	 *
@@ -89,7 +89,7 @@ class ITE_Session_Model extends \IronBound\DB\Model {
 	/**
 	 * Find the best model for a customer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Customer $customer
 	 *
@@ -110,7 +110,7 @@ class ITE_Session_Model extends \IronBound\DB\Model {
 	/**
 	 * Mark a cart as purchased.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param bool $purchased
 	 *

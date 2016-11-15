@@ -2,7 +2,7 @@
 /**
  * Object Interface.
  *
- * @since 1.36.0
+ * @since 2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Object {
 	/**
 	 * Get the object ID.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int|string
 	 */
@@ -25,7 +25,7 @@ interface ITE_Object {
 	 *
 	 * Should be a short string.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -34,7 +34,7 @@ interface ITE_Object {
 	/**
 	 * Get the object type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Object_Type
 	 */

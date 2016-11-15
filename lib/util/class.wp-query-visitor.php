@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\Expr\Value;
 /**
  * WP Query Constraints Visitor
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 

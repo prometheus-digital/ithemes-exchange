@@ -808,7 +808,7 @@ add_action( 'admin_init', 'it_exchange_process_offline_payments_recurring_paymen
 /**
  * Register the offline payments message email tag replacement.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param IT_Exchange_Email_Tag_Replacer $replacer
  */

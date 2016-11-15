@@ -217,7 +217,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array(), ITE
 	 * Your addon should output an it_exchange_add_message( 'error', $message )
 	 * letting the user know the coupon was not applied.
 	 *
-	 * @since 1.36.0 Add $cart parameter.
+	 * @since 2.0.0 Add $cart parameter.
 	 *
 	 * @param $addon_result  bool
 	 * @param $options       array
@@ -241,7 +241,7 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array(), ITE
 		// Add to session data
 		$data = array( $coupon['code'] => $coupon );
 		it_exchange_update_cart_data( 'basic_coupons', $data );
-		do_action_deprecated( 'it_exchange_basic_coupon_applied', array( $data ), '1.36.0', 'it_exchange_add_coupon_to_cart' );
+		do_action_deprecated( 'it_exchange_basic_coupon_applied', array( $data ), '2.0.0', 'it_exchange_add_coupon_to_cart' );
 	}
 
 	if ( $cart->is_current() ) {
@@ -413,7 +413,7 @@ add_filter( 'it_exchange_remove_cart_coupon_html', 'it_exchange_base_coupons_rem
  *
  * @since 0.4.0
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @param float $total
  *
@@ -421,7 +421,7 @@ add_filter( 'it_exchange_remove_cart_coupon_html', 'it_exchange_base_coupons_rem
 */
 function it_exchange_basic_coupons_apply_discount_to_cart_total( $total ) {
 
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
 	$total_discount = it_exchange_get_total_coupons_discount( 'cart', array( 'format_price' => false ) );
 	$total = $total - $total_discount;

@@ -2,7 +2,7 @@
 /**
  * Transaction Activity Serializer.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -13,7 +13,7 @@ class Serializer {
 	/**
 	 * Serialize the transaction activity item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Txn_Activity $activity
 	 * @param \WP_REST_Request          $request
@@ -55,7 +55,7 @@ class Serializer {
 	/**
 	 * Get the activity item schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

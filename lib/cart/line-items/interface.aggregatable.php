@@ -2,7 +2,7 @@
 /**
  * Aggregatable Line Item interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Aggregatable_Line_Item {
 	/**
 	 * Set the aggregate line item.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Aggregate_Line_Item $aggregate
 	 */
@@ -23,7 +23,7 @@ interface ITE_Aggregatable_Line_Item {
 	/**
 	 * Get the aggregate line item.
 	 * 
-	 * @since 1.36
+	 * @since 2.0.0
 	 * 
 	 * @return \ITE_Aggregate_Line_Item
 	 */

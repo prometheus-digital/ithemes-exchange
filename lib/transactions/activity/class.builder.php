@@ -152,7 +152,7 @@ final class IT_Exchange_Txn_Activity_Builder {
 	/**
 	 * Set the refund.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Refund $refund
 	 *
@@ -229,7 +229,7 @@ final class IT_Exchange_Txn_Activity_Builder {
 	/**
 	 * Attach metadata.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param int $ID
 	 */

@@ -2,7 +2,7 @@
 /**
  * Load the object types module.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -21,7 +21,7 @@ require_once dirname( __FILE__ ) . '/class.registry.php';
 /**
  * Get the object type registry.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @return ITE_Object_Type_Registry
  */
@@ -34,7 +34,7 @@ function it_exchange_object_type_registry() {
 		/**
 		 * Register Object Types.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Object_Type_Registry $registry
 		 */

@@ -2,7 +2,7 @@
 /**
  * Cached Session Repository.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -39,7 +39,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	/**
 	 * Retrieve the cached session from a customer.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Customer $customer
 	 *
@@ -57,7 +57,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	/**
 	 * Retrieve one of the customer's active sessions by its ID.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Customer $customer
 	 * @param string                $session_id
@@ -80,7 +80,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	/**
 	 * Initialize the repository by cart id.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $cart_id
 	 *
@@ -98,7 +98,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	/**
 	 * Setup the repository from a session model.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Session_Model    $session
 	 * @param \IT_Exchange_Customer $customer
@@ -134,7 +134,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	/**
 	 * Get the saver for the In Memory Session.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $session_id
 	 *
@@ -169,7 +169,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	/**
 	 * Get the cart ID.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -180,7 +180,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	/**
 	 * Get the repo's customer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \IT_Exchange_Customer
 	 */
@@ -191,7 +191,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	/**
 	 * Get the session model.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Session_Model
 	 */
@@ -207,6 +207,6 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 			$data,
 			$data['product_cart_id'],
 			array( 'use_cached_customer_cart' => $this->get_cart_id() )
-		), '1.36.0' );
+		), '2.0.0' );
 	}
 }

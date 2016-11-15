@@ -2,7 +2,7 @@
 /**
  * Tokenize Request.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -43,7 +43,7 @@ class ITE_Gateway_Tokenize_Request implements ITE_Gateway_Request {
 	 *
 	 * This could be
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Gateway_Card|ITE_Gateway_Bank_Account|mixed
 	 */
@@ -54,7 +54,7 @@ class ITE_Gateway_Tokenize_Request implements ITE_Gateway_Request {
 	/**
 	 * Get the customer label.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -67,7 +67,7 @@ class ITE_Gateway_Tokenize_Request implements ITE_Gateway_Request {
 	 *
 	 * If no other tokens exist, the token will be set as primary regardless of the value set in the request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return boolean
 	 */

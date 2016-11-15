@@ -2,7 +2,7 @@
 /**
  * Line Item Type class.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 use iThemes\Exchange\REST\Route\Cart\Item_Serializer;
@@ -83,7 +83,7 @@ class ITE_Line_Item_Type {
 	/**
 	 * Should line items of this type be shown in the REST API.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return boolean
 	 */
@@ -94,7 +94,7 @@ class ITE_Line_Item_Type {
 	/**
 	 * Is this line item type editable in REST.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return boolean
 	 */
@@ -105,7 +105,7 @@ class ITE_Line_Item_Type {
 	/**
 	 * Get the line item type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -116,7 +116,7 @@ class ITE_Line_Item_Type {
 	/**
 	 * Get the item type label.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -127,7 +127,7 @@ class ITE_Line_Item_Type {
 	/**
 	 * Get the rest serializer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \iThemes\Exchange\REST\Route\Cart\Item_Serializer
 	 */
@@ -138,7 +138,7 @@ class ITE_Line_Item_Type {
 	/**
 	 * Get additional schema properties.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -149,7 +149,7 @@ class ITE_Line_Item_Type {
 	/**
 	 * Create a line item from a REST Request object.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
 	 *

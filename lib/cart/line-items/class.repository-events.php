@@ -2,7 +2,7 @@
 /**
  * Consolidates repository events and filters.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ class ITE_Line_Item_Repository_Events {
 	/**
 	 * Fire actions when a line item is saved.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item            $item
 	 * @param \ITE_Line_Item|null       $old
@@ -24,7 +24,7 @@ class ITE_Line_Item_Repository_Events {
 		/**
 		 * Fires when a line item is saved.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Line_Item            $item
 		 * @param \ITE_Line_Item|null       $old
@@ -38,7 +38,7 @@ class ITE_Line_Item_Repository_Events {
 		 * The dynamic portion of this hook refers to the type of the line item being saved.
 		 * Ex: 'product' or 'tax'.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Line_Item            $item
 		 * @param \ITE_Line_Item|null       $old
@@ -50,7 +50,7 @@ class ITE_Line_Item_Repository_Events {
 	/**
 	 * Fire events when a line item is deleted.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item            $item
 	 * @param \ITE_Line_Item_Repository $repository
@@ -60,7 +60,7 @@ class ITE_Line_Item_Repository_Events {
 		/**
 		 * Fires when a line item is deleted.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Line_Item            $item
 		 * @param \ITE_Line_Item_Repository $repository
@@ -73,7 +73,7 @@ class ITE_Line_Item_Repository_Events {
 		 * The dynamic portion of this hook refers to the type of the line item being deleted.
 		 * Ex: 'product' or 'tax'.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Line_Item            $item
 		 * @param \ITE_Line_Item_Repository $repository
@@ -84,7 +84,7 @@ class ITE_Line_Item_Repository_Events {
 	/**
 	 * Filter a newly constructed line item.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item            $item
 	 * @param \ITE_Line_Item_Repository $repository
@@ -98,7 +98,7 @@ class ITE_Line_Item_Repository_Events {
 		/**
 		 * Filter a newly constructed line item.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Line_Item            $item
 		 * @param \ITE_Line_Item_Repository $repository
@@ -109,7 +109,7 @@ class ITE_Line_Item_Repository_Events {
 			$item = $_item;
 		} else {
 			_doing_it_wrong( 'it_exchange_get_line_item',
-				'Filter must return a sub-class or same class as the original item.', '1.36'
+				'Filter must return a sub-class or same class as the original item.', '2.0.0'
 			);
 		}
 
@@ -119,7 +119,7 @@ class ITE_Line_Item_Repository_Events {
 		 * The dynamic portion of this hook refers to the type of the line item being retrieved.
 		 * Ex: 'product' or 'tax'.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Line_Item            $item
 		 * @param \ITE_Line_Item_Repository $repository
@@ -130,7 +130,7 @@ class ITE_Line_Item_Repository_Events {
 			$item = $_item;
 		} else {
 			_doing_it_wrong( 'it_exchange_get_line_item',
-				'Filter must return a sub-class or same class as the original item.', '1.36'
+				'Filter must return a sub-class or same class as the original item.', '2.0.0'
 			);
 		}
 

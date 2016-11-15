@@ -719,7 +719,7 @@ function it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) 
  *
  * @since 0.4.0
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
@@ -727,7 +727,7 @@ function it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) 
  */
 function it_exchange_get_gateway_id_for_transaction( $transaction ) {
 
-	_deprecated_function( __FUNCTION__, '1.36.0', 'it_exchange_get_transaction_method_id' );
+	_deprecated_function( __FUNCTION__, '2.0.0', 'it_exchange_get_transaction_method_id' );
 
 	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
 		return;
@@ -1068,7 +1068,7 @@ function it_exchange_get_transaction_coupons_total_discount( $transaction, $form
 /**
  * Whether the given transaction can be refunded.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param IT_Exchange_Transaction|int $transaction
  *
@@ -1100,7 +1100,7 @@ function it_exchange_transaction_can_be_refunded( $transaction ) {
 	/**
 	 * Filter whether this transaction can be refunded.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param bool                     $eligible
 	 * @param \IT_Exchange_Transaction $transaction
@@ -1112,7 +1112,7 @@ function it_exchange_transaction_can_be_refunded( $transaction ) {
 	 *
 	 * The dynamic portion of this hook refers to the transaction method slug.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param bool                     $eligible
 	 * @param \IT_Exchange_Transaction $transaction
@@ -1142,7 +1142,7 @@ function it_exchange_add_refund_to_transaction( $transaction, $amount, $date = f
  *
  * @since 0.4.0
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
  *
@@ -1154,7 +1154,7 @@ function it_exchange_get_transaction_refunds( $transaction ) {
 		return $transaction->get_transaction_refunds();
 	}
 
-	return apply_filters_deprecated( 'it_exchange_get_transaction_refunds', array( false, $this ), '1.36.0' );
+	return apply_filters_deprecated( 'it_exchange_get_transaction_refunds', array( false, $this ), '2.0.0' );
 }
 
 /**
@@ -1692,7 +1692,7 @@ function it_exchange_doing_webhook( $webhook = '' ) {
 /**
  * Get a URL for a webhook.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param string $webhook_key
  *
@@ -1824,7 +1824,7 @@ function it_exchange_get_transaction_shipping_method( $transaction ) {
 /**
  * Check if a transaction has multiple shipping methods.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param int|IT_Exchange_Transaction $transaction
  *

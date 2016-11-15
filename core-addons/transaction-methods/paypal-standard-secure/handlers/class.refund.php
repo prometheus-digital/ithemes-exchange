@@ -2,7 +2,7 @@
 /**
  * PayPal Standard Secure Refund Request Handler.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -114,7 +114,7 @@ class ITE_PayPal_Standard_Secure_Refund_Request_Handler implements ITE_Gateway_R
 	/**
 	 * Get the gateway.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Gateway
 	 */

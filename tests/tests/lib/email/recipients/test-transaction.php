@@ -2,7 +2,7 @@
 /**
  * Contains the tests for the transaction recipient.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 

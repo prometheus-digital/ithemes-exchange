@@ -2,7 +2,7 @@
 /**
  * Contains upgrade routine for transaction table.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,18 +14,18 @@ class IT_Exchange_Upgrade_Routine_Txn_Table implements IT_Exchange_UpgradeInterf
 	/**
 	 * Get the iThemes Exchange version this upgrade applies to.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
 	public function get_version() {
-		return '1.36.0';
+		return '2.0.0';
 	}
 
 	/**
 	 * Get the name of this upgrade.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -36,7 +36,7 @@ class IT_Exchange_Upgrade_Routine_Txn_Table implements IT_Exchange_UpgradeInterf
 	/**
 	 * Get the slug for this upgrade. This should be globally unique.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -47,7 +47,7 @@ class IT_Exchange_Upgrade_Routine_Txn_Table implements IT_Exchange_UpgradeInterf
 	/**
 	 * Get the description for this upgrade. 1-3 sentences.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -63,7 +63,7 @@ class IT_Exchange_Upgrade_Routine_Txn_Table implements IT_Exchange_UpgradeInterf
 	 *
 	 * Example 'Core' or 'Membership'.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -76,7 +76,7 @@ class IT_Exchange_Upgrade_Routine_Txn_Table implements IT_Exchange_UpgradeInterf
 	 *
 	 * This is used to build the upgrade UI.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -106,7 +106,7 @@ class IT_Exchange_Upgrade_Routine_Txn_Table implements IT_Exchange_UpgradeInterf
 	/**
 	 * Get all transactions we need to upgrade.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param int $number
 	 *
@@ -138,7 +138,7 @@ class IT_Exchange_Upgrade_Routine_Txn_Table implements IT_Exchange_UpgradeInterf
 	/**
 	 * Upgrade a transaction.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param int                               $transaction_id
 	 * @param IT_Exchange_Upgrade_SkinInterface $skin
@@ -183,7 +183,7 @@ class IT_Exchange_Upgrade_Routine_Txn_Table implements IT_Exchange_UpgradeInterf
 	 *
 	 * The rate refers to how many items are upgraded in one step.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */

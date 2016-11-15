@@ -2,7 +2,7 @@
 /**
  * Contains the capabilities class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -25,7 +25,7 @@ class IT_Exchange_Capabilities {
 	/**
 	 * Map meta capabilities.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array  $caps    Primitive capabilities required.
 	 * @param string $cap     Meta capability requested.
@@ -111,7 +111,7 @@ class IT_Exchange_Capabilities {
 	/**
 	 * Get capabilities for the product post type.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -122,7 +122,7 @@ class IT_Exchange_Capabilities {
 	/**
 	 * Get capabilities for the transaction post type.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -133,7 +133,7 @@ class IT_Exchange_Capabilities {
 	/**
 	 * Get capabilities for the coupon post type.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -144,7 +144,7 @@ class IT_Exchange_Capabilities {
 	/**
 	 * Get post type capabilities for a given post type.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 *

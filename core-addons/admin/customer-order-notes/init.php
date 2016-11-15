@@ -189,7 +189,7 @@ add_action( 'it_exchange_add_transaction_success', 'it_exchange_customer_order_n
 /**
  * Register the customer order notes email tag replacement.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param IT_Exchange_Email_Tag_Replacer $replacer
  */

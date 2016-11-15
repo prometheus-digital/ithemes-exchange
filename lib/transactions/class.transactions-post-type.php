@@ -692,7 +692,7 @@ class IT_Exchange_Transaction_Post_Type {
 	/**
 	 * Resend receipt from transaction single view.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -727,7 +727,7 @@ class IT_Exchange_Transaction_Post_Type {
 	/**
 	 * Add a Refund from the transaction details page.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function ajax_add_refund() {
 

@@ -2,7 +2,7 @@
 /**
  * Line Items Collection.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -41,7 +41,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Clone this collection without items of a given type.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 *
@@ -64,7 +64,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Clone this collection with only items of a given type.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 *
@@ -87,7 +87,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Clone this collection with only items that are an instance of a given class or interface.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $class
 	 *
@@ -109,7 +109,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Return a collection with only summary line items.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item_Collection
 	 */
@@ -129,7 +129,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Return a collection with non summary only line items.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item_Collection
 	 */
@@ -149,7 +149,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Return a new collection with only the taxable line items.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item_Collection
 	 */
@@ -168,7 +168,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Return a new collection with only the discountable line items.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item_Collection
 	 */
@@ -188,7 +188,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Clone this collection with only items that pass the given callback.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param callable $callback
 	 *
@@ -203,7 +203,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * If no callback is given, uniques will be detected by the ID and type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param callable $callback
 	 *
@@ -230,7 +230,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Segment this collection into multiple collections based on a callaback function.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param callable $callback Receives a Line Item, should return a string to identify the bucket.
 	 *                           If none given, will segment by type.
@@ -261,7 +261,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Flatten the collection.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item_Collection
 	 */
@@ -283,7 +283,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Set the cart on all cart aware line items.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 *
@@ -304,7 +304,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Unravel an aggregate line item.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Aggregate_Line_Item $item
 	 *
@@ -327,7 +327,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Calculate the total of all items in this collection.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return float
 	 */
@@ -344,7 +344,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Freeze all of the items in this collection.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function freeze() {
 		foreach ( $this->items as $item ) {
@@ -357,7 +357,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Save all of the line items in the collection.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	public function save() {
 		$this->repository->save_many( $this->items );
@@ -366,7 +366,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Remove all of the items in this collection.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	public function delete() {
 		foreach ( $this->items as $item ) {
@@ -377,7 +377,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Get a single line item from the collection.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string     $type
 	 * @param string|int $id
@@ -397,7 +397,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Get the first item of this collection.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item
 	 */
@@ -408,7 +408,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Get the last item of this collection.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item
 	 */
@@ -419,7 +419,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Add a line item to the collection.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $item
 	 *
@@ -434,7 +434,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Remove a line item from the collection.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string     $type
 	 * @param string|int $id
@@ -456,7 +456,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	/**
 	 * Convert the collection to an array.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item[]
 	 */

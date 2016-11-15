@@ -2,7 +2,7 @@
 /**
  * Purchase Handler.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -128,7 +128,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	/**
 	 * Get the subscription args to pass to PayPal.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *

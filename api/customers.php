@@ -25,7 +25,7 @@ function it_exchange_register_customer( $customer_data, $args=array() ) {
  * Get a customer.
  *
  * @since 0.3.7
- * @since 1.36.0 Add support for retrieving a guest customer instance.
+ * @since 2.0.0 Add support for retrieving a guest customer instance.
  *
  * @param int|WP_User|string $customer_id User ID. User object. Or email address. If email given,
  *                                        a guest customer object will be returned.
@@ -137,7 +137,7 @@ function it_exchange_get_customer_transactions( $customer_id, array $args = arra
 	 * @param array $args
 	 * @param IT_Exchange_Customer $customer
 	 */
-	$filtered = apply_filters_deprecated( 'it_exchange_get_customer_transactions_args', array( $wp, $customer ), '1.36.0' );
+	$filtered = apply_filters_deprecated( 'it_exchange_get_customer_transactions_args', array( $wp, $customer ), '2.0.0' );
 
 	if ( $wp !== $filtered ) {
 		$transactions = it_exchange_get_transactions( $filtered, $total );

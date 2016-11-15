@@ -2,7 +2,7 @@
 /**
  * Filter the response by context.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -58,7 +58,7 @@ class Filter_By_Context implements Middleware {
 	/**
 	 * Filter an item by context according to the route's schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array  $item    The data being filtered.
 	 * @param string $context The context being adhered to.
@@ -105,7 +105,7 @@ class Filter_By_Context implements Middleware {
 	/**
 	 * Filter an object's properties according to a schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array  $object
 	 * @param array  $object_schema
@@ -135,7 +135,7 @@ class Filter_By_Context implements Middleware {
 	/**
 	 * Get a value schema for a complex entity.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $property The schema for just this value.
 	 * @param array $schema   The entire schema document.
@@ -161,7 +161,7 @@ class Filter_By_Context implements Middleware {
 	 *
 	 * #/definitions/object_title
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $property
 	 * @param array $schema
@@ -190,7 +190,7 @@ class Filter_By_Context implements Middleware {
 	/**
 	 * Handle a oneOf descriptor.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $property The schema for just this value.
 	 * @param array $schema   The entire schema document.

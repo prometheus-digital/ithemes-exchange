@@ -2,7 +2,7 @@
 /**
  * Contains the Sparkpost email sender.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -67,7 +67,7 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Send the email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable $email
 	 *
@@ -113,7 +113,7 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 		/**
 		 * Filter the data passed to SparkPost for sending a single email.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param array                                $data
 		 * @param IT_Exchange_Sendable_Mutable_Wrapper $email
@@ -126,7 +126,7 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Bulk send emails.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable[] $emails
 	 *
@@ -172,7 +172,7 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 	 * All emails must be the same, and have all of the differentiating factors contained
 	 * within the email tags, not the template HTML.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable_Mutable_Wrapper[] $emails
 	 *
@@ -242,7 +242,7 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 		/**
 		 * Filter the data passed to SparkPost for group sending.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param array                                  $data
 		 * @param IT_Exchange_Sendable_Mutable_Wrapper[] $emails
@@ -256,7 +256,7 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Build recipient attributes from a sendable object.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Recipient $recipient
 	 * @param array                       $substitutions
@@ -287,7 +287,7 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Build inline content attributes from a sendable object.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable $sendable
 	 * @param array                $headers
@@ -332,7 +332,7 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Make an API request to SparkPost.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array                     $data
 	 * @param IT_Exchange_Sendable|null $sendable
@@ -388,7 +388,7 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Get the configuration.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return stdClass
 	 */
@@ -397,7 +397,7 @@ class IT_Exchange_Email_SparkPost_Sender implements IT_Exchange_Email_Sender {
 		/**
 		 * Filter the SparkPost API Configuration.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param stdClass $config
 		 */

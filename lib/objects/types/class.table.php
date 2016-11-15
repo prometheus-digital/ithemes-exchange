@@ -2,14 +2,14 @@
 /**
  * Table Object Type.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
 /**
  * Class ITE_Table_Object_Type
  *
- * @since 1.36.0
+ * @since 2.0.0
  */
 abstract class ITE_Table_Object_Type implements ITE_Object_Type {
 
@@ -98,7 +98,7 @@ abstract class ITE_Table_Object_Type implements ITE_Object_Type {
 	/**
 	 * Get the model.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \IronBound\DB\Model|\IronBound\DB\Extensions\Meta\WithMeta
 	 */
