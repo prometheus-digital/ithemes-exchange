@@ -17,6 +17,9 @@ require_once dirname( __FILE__ ) . '/classes/load.php';
 //Util
 require_once dirname( __FILE__ ) . '/util/load.php';
 
+// Object Type API.
+require_once dirname( __FILE__ ) . '/objects/load.php';
+
 // Other Functions
 require_once dirname( __FILE__ ) . '/functions/functions.php';
 
@@ -54,6 +57,9 @@ require_once dirname( __FILE__ ) . '/tax/load.php';
 
 // Location
 require_once dirname( __FILE__ ) . '/location/load.php';
+
+// Activity
+require_once dirname( __FILE__ ) . '/activity/load.php';
 
 // Transaction Module
 require_once dirname( __FILE__ ) . '/transactions/load.php';

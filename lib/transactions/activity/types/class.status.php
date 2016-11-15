@@ -23,7 +23,7 @@ class IT_Exchange_Txn_Status_Activity extends IT_Exchange_Txn_AbstractActivity {
 	 * @param int                            $id
 	 * @param IT_Exchange_Txn_Activity_Actor $actor
 	 *
-	 * @return IT_Exchange_Txn_Note_Activity|null
+	 * @return IT_Exchange_Txn_Status_Activity|null
 	 */
 	public static function make( $id, IT_Exchange_Txn_Activity_Actor $actor = null ) {
 
