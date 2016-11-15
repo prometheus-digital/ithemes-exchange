@@ -16,6 +16,8 @@ require_once dirname( __FILE__ ) . '/types/class.table-with-meta.php';
 require_once dirname( __FILE__ ) . '/types/class.user.php';
 require_once dirname( __FILE__ ) . '/types/class.cpt.php';
 
+require_once dirname( __FILE__ ) . '/class.registry.php';
+
 /**
  * Get the object type registry.
  *
