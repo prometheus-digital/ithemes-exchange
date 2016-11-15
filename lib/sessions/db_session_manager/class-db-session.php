@@ -79,6 +79,10 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 
 		parent::__construct();
 
+		if ( ! function_exists( 'it_exchange_get_current_customer_id' ) ) {
+			return;
+		}
+
 		if ( isset( $_COOKIE[ IT_EXCHANGE_SESSION_COOKIE ] ) ) {
 			$cookie        = stripslashes( $_COOKIE[ IT_EXCHANGE_SESSION_COOKIE ] );
 			$cookie_crumbs = explode( '||', $cookie );
