@@ -40,7 +40,7 @@ interface ITE_Object_Type {
 	 *
 	 * @param array $attributes
 	 *
-	 * @return object
+	 * @return ITE_Object
 	 */
 	public function create_object( array $attributes );
 
@@ -51,7 +51,7 @@ interface ITE_Object_Type {
 	 *
 	 * @param string $id
 	 *
-	 * @return object|null Object or null if not found.
+	 * @return ITE_Object|null Object or null if not found.
 	 */
 	public function get_object_by_id( $id );
 
@@ -62,7 +62,7 @@ interface ITE_Object_Type {
 	 *
 	 * @param array|\Doctrine\Common\Collections\Criteria $criteria
 	 *
-	 * @return object[]
+	 * @return ITE_Object[]
 	 */
 	public function get_objects( \Doctrine\Common\Collections\Criteria $criteria = null );
 

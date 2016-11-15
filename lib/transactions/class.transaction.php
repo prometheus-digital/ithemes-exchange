@@ -34,7 +34,7 @@ use IronBound\DB\Relations\HasMany;
  * @property-read Collection|IT_Exchange_Transaction[] $children
  * @property-read Collection|ITE_Refund[]              $refunds
  */
-class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Credit_Provider {
+class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_Prorate_Credit_Provider {
 
 	const P_MODE_LIVE = 'live';
 	const P_MODE_SANDBOX = 'sandbox';
@@ -1143,6 +1143,20 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 
 	protected function _refunds_relation() {
 		return new HasMany( 'transaction', 'ITE_Refund', $this, 'refunds' );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __toString() {
+		return sprintf( __( 'Order %s', 'it-l10n-ithemes-exchange', $this->get_order_number() ) );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function get_object_type() {
+		return it_exchange_object_type_registry()->get( 'transaction' );
 	}
 
 	/**

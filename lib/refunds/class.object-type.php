@@ -42,4 +42,9 @@ class ITE_Refund_Object_Type extends ITE_Table_With_Meta_Object_Type implements 
 	public function get_label() {
 		return __( 'Refund', 'it-l10n-ithemes-exchange' );
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_slug() { return 'refund'; }
 }

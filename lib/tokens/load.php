@@ -24,5 +24,5 @@ ITE_Payment_Token::register_token_type( 'card', 'ITE_Payment_Token_Card' );
 ITE_Payment_Token::register_token_type( 'bank', 'ITE_Payment_Token_Bank_Account' );
 
 add_action( 'it_exchange_register_object_types', function ( ITE_Object_Type_Registry $registry ) {
-	$registry->register( new ITE_Token_Object_Type() );
+	$registry->register( new ITE_Payment_Token_Object_Type() );
 } );

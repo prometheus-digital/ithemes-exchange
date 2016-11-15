@@ -21,7 +21,7 @@ use IronBound\DB\Query\FluentQuery;
  * @property string                     $redacted
  * @property-read bool                  $primary
  */
-class ITE_Payment_Token extends ModelWithMeta {
+class ITE_Payment_Token extends ModelWithMeta implements ITE_Object {
 
 	/** @var array */
 	protected static $token_types = array();
@@ -117,6 +117,16 @@ class ITE_Payment_Token extends ModelWithMeta {
 	public function __toString() {
 		return $this->redacted;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_ID() { return $this->get_pk(); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function get_object_type() { return it_exchange_object_type_registry()->get( 'payment-token' ); }
 
 	/**
 	 * @inheritDoc

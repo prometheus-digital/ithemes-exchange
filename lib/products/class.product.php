@@ -11,7 +11,7 @@
  *
  * @since 0.3.2
 */
-class IT_Exchange_Product {
+class IT_Exchange_Product implements ITE_Object {
 
 	// WP Post Type Properties
 	var $ID;
@@ -135,14 +135,9 @@ class IT_Exchange_Product {
 	}
 
 	/**
-	 * The __toString method allows a class to decide how it will react when it is converted to a string.
-	 *
-	 * @return string
-	 * @link http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.tostring
+	 * @inheritdoc
 	 */
-	public function __toString() {
-		return (string) $this->ID;
-	}
+	public function __toString() { return get_the_title( $this->ID ); }
 
 	/**
 	 * Check if this product supports a feature.
@@ -198,6 +193,16 @@ class IT_Exchange_Product {
 	public function get_feature( $feature, $options = array() ) {
 		return it_exchange_get_product_feature( $this->ID, $feature, $options );
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_ID() { return $this->ID; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function get_object_type() { return it_exchange_object_type_registry()->get( 'product' ); }
 
 	/**
 	 * Sets the product_type property.

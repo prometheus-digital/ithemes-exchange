@@ -14,6 +14,11 @@ class ITE_Coupon_Object_Type extends ITE_CPT_Object_Type {
 	/**
 	 * @inheritDoc
 	 */
+	public function get_slug() { return 'coupon'; }
+
+	/**
+	 * @inheritDoc
+	 */
 	protected function get_post_type() { return 'it_exchange_coupon'; }
 
 	/**

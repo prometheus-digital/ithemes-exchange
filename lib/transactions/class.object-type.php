@@ -24,6 +24,11 @@ class ITE_Transaction_Object_Type extends ITE_Table_With_Meta_Object_Type implem
 	/**
 	 * @inheritDoc
 	 */
+	public function get_slug() { return 'transaction'; }
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_collection_route() {
 		return \iThemes\Exchange\REST\get_rest_manager()->get_first_route(
 			'iThemes\Exchange\REST\Route\Transaction\Transactions'

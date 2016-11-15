@@ -11,7 +11,7 @@
  *
  * @since 0.4.0
  */
-class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
+class IT_Exchange_Coupon implements ITE_Object, ArrayAccess, Countable, Iterator {
 
 	const TYPE_PERCENT = '%';
 	const TYPE_FLAT = 'amount';
@@ -132,6 +132,11 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 
 		_deprecated_constructor( __CLASS__, '1.24.0' );
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function get_object_type() { return it_exchange_object_type_registry()->get( 'coupon' ); }
 
 	/**
 	 * Get the type of this coupon.

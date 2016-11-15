@@ -9,7 +9,7 @@
 /**
  * Class ITE_Token_Object_Type
  */
-class ITE_Token_Object_Type extends ITE_Table_With_Meta_Object_Type implements ITE_RESTful_Object_Type {
+class ITE_Payment_Token_Object_Type extends ITE_Table_With_Meta_Object_Type implements ITE_RESTful_Object_Type {
 
 	/**
 	 * @inheritDoc
@@ -42,4 +42,9 @@ class ITE_Token_Object_Type extends ITE_Table_With_Meta_Object_Type implements I
 	public function get_label() {
 		return __( 'Payment Token', 'it-l10n-ithemes-exchange' );
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_slug() { return 'payment-token'; }
 }

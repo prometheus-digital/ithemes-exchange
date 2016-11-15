@@ -11,7 +11,7 @@
  *
  * @since 0.3.8
  */
-class IT_Exchange_Customer {
+class IT_Exchange_Customer implements ITE_Object {
 
 	/**
 	 * @var integer $id the customer id. corresponds with the WP user id
@@ -446,6 +446,21 @@ class IT_Exchange_Customer {
 		                              ->expression( 'SUM', 'subtotal', 'sum' )
 		                              ->results()->get( 'sum' );
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_ID() { return $this->ID; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __toString() { return $this->get_full_name(); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function get_object_type() { return it_exchange_object_type_registry()->get( 'customer' ); }
 
 	/**
 	 * Get all payment tokens for this customer.
