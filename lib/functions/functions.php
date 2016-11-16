@@ -262,6 +262,17 @@ function it_exchange_register_scripts() {
 		)
 	);
 
+	wp_localize_script(
+		'it-exchange-rest',
+		'ITExchangeRESTi18n',
+		array(
+			'visualCC' => array(
+				'name'   => _x( 'Name', 'Credit Card Holder Name', 'it-l10n-ithemes-exchange' ),
+				'number' => _x( 'Number', 'Credit Card Number', 'it-l10n-ithemes-exchange' ),
+			)
+		)
+	);
+
 	$js_tokenizers = array();
 
 	foreach ( ITE_Gateways::handles( 'tokenize' ) as $gateway ) {
