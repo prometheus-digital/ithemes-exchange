@@ -1,0 +1,21 @@
+<script type="text/template" id="tmpl-it-exchange-token-selector">
+    <ul class="it-exchange-payment-tokens-selector--list"></ul>
+
+    <# if ( data.showAddNew ) { #>
+        <div class="it-exchange-payment-tokens-selector--add-new-visual-cc-container"></div>
+    <# } #>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-token-selector-token">
+    <label>
+        <input type="radio" name="paymentToken" value="{{ data.id }}">
+        {{ data.label.rendered }}
+    </label>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-token-selector-add-new">
+    <label>
+        <input type="radio" name="paymentToken" value="add-new">
+        {{ data.i18n.addNewCard }}
+    </label>
+</script>

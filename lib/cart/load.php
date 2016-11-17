@@ -90,6 +90,8 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 			}
 		}
 
+		$data['image'] = it_exchange_get_product_cart_item_featured_image_url( $product );
+
 		return $data;
 	},
 	'schema'              => array(

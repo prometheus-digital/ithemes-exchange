@@ -28,6 +28,11 @@ class Cart implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function handle_get( Request $request ) {
+
+		if ( ! $request->get_cart() ) {
+			return new \WP_REST_Response( array(), 500 );
+		}
+
 		return $this->prepare_item_for_response( $request->get_cart() );
 	}
 

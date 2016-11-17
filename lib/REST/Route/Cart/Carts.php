@@ -49,7 +49,7 @@ class Carts extends Base implements Postable {
 			$cart = \ITE_Cart::create( $repo, $user );
 			$cart->set_meta( 'guest-email', $user->get_email() );
 			$session = \ITE_Session_Model::get( $session->ID );
-		} elseif ( $request['is_main'] ) {
+		} elseif ( $request['is_main'] === true ) {
 			try {
 				// Guard against multiple carts per customer.
 				$repo    = \ITE_Line_Item_Cached_Session_Repository::from_customer( $user );
@@ -97,6 +97,7 @@ class Carts extends Base implements Postable {
 		$location = r\get_rest_url( $this->cart, array( 'cart_id' => $cart->get_id() ) );
 		$request  = Request::from_url( $location );
 		$request->set_url_params( array( 'cart_id' => $cart->get_id() ) );
+		$request->set_cart( $cart );
 
 		$response = $this->cart->handle_get( $request );
 		$response->set_status( \WP_Http::CREATED );

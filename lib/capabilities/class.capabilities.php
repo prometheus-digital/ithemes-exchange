@@ -103,6 +103,19 @@ class IT_Exchange_Capabilities {
 				}
 
 				return array( 'it_edit_others_payment_tokens' );
+			case 'it_use_payment_token':
+
+				if ( ! $user_id || empty( $args[0] ) || ! $token = ITE_Payment_Token::get( $args[0] ) ) {
+					return array( 'do_not_allow' );
+				}
+
+				if ( $token->customer && $token->customer->ID === (int) $user_id ) {
+					return array(); // a user can edit use own payment tokens
+				}
+
+				// Necessary for a manual admin purchase
+				return array( 'it_use_others_payment_tokens' );
+
 		}
 
 		return $caps;

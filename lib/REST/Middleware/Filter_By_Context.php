@@ -153,7 +153,7 @@ class Filter_By_Context implements Middleware {
 			return $this->handle_one_of( $property, $schema, $value );
 		}
 
-		return null;
+		return $property;
 	}
 
 	/**

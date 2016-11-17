@@ -1075,3 +1075,81 @@ function it_exchange_doing_guest_checkout() {
 	$data = it_exchange_get_cart_data( 'guest-checkout' );
 	return ! empty( $data[0] );
 }
+
+/**
+ * Get the featured image for a product cart item.
+ *
+ * @since 1.36.0
+ *
+ * @param ITE_Cart_Product $item
+ * @param string|array     $size
+ *
+ * @return string
+ */
+function it_exchange_get_product_cart_item_featured_image_url( ITE_Cart_Product $item, $size = 'thumbnail' ) {
+
+	$product = $item->get_product();
+
+	if ( ! $product ) {
+		return '';
+	}
+
+	$product_id = $product->ID;
+	$itemized   = $item->get_itemized_data();
+
+	if ( ( it_exchange_product_supports_feature( $product_id, 'product-images' ) && it_exchange_product_has_feature( $product_id, 'product-images' ) ) ) {
+
+		if ( ! empty( $itemized['it_variant_combo_hash'] ) ) {
+			$combo_hash = $itemized['it_variant_combo_hash'];
+		}
+
+		$images_located = false;
+
+		if ( isset( $combo_hash ) && function_exists( 'it_exchange_variants_addon_get_product_feature_controller' ) ) {
+
+			$variant_combos_data = it_exchange_get_variant_combo_attributes_from_hash( $product_id, $combo_hash );
+			$combos_array        = empty( $variant_combos_data['combo'] ) ? array() : $variant_combos_data['combo'];
+			$alt_hashes          = it_exchange_addon_get_selected_variant_alts( $combos_array, $product_id );
+
+			$controller = it_exchange_variants_addon_get_product_feature_controller( $product_id, 'product-images', array( 'setting' => 'variants' ) );
+
+			if ( $variant_combos_data['hash'] == $combo_hash ) {
+				if ( ! empty( $controller->post_meta[ $combo_hash ]['value'] ) ) {
+					$product_images = $controller->post_meta[ $combo_hash ]['value'];
+					$images_located = true;
+				}
+			}
+			// Look for alt hashes if direct match was not found
+			if ( ! $images_located && ! empty( $alt_hashes ) ) {
+				foreach ( $alt_hashes as $alt_hash ) {
+					if ( ! empty( $controller->post_meta[ $alt_hash ]['value'] ) ) {
+						$product_images = $controller->post_meta[ $alt_hash ]['value'];
+						$images_located = true;
+					}
+				}
+			}
+		}
+
+		if ( ! $images_located || ! isset( $product_images ) ) {
+			$product_images = it_exchange_get_product_feature( $product_id, 'product-images' );
+		}
+
+		$feature_image = array(
+			'id'    => $product_images[0],
+			'thumb' => wp_get_attachment_thumb_url( $product_images[0] ),
+			'large' => wp_get_attachment_url( $product_images[0] ),
+		);
+
+		if ( is_array( $size ) ) {
+			$img_src = wp_get_attachment_image_url( $product_images[0], $options['size'] );
+		} elseif ( 'thumb' === $size ) {
+			$img_src = $feature_image['thumb'];
+		} else {
+			$img_src = $feature_image['large'];
+		}
+
+		return $img_src;
+	}
+
+	return '';
+}

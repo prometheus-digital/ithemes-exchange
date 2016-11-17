@@ -24,7 +24,7 @@ class Cart_Feedback implements Middleware {
 
 		$response = $next->next( $request );
 
-		if ( is_wp_error( $response ) || ! $response->get_data() || $request->get_method() === 'GET' ) {
+		if ( ! $response->get_data() || $request->get_method() === 'GET' ) {
 			return $response;
 		}
 

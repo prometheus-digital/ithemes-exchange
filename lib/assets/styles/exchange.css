@@ -1179,6 +1179,10 @@ a.it-exchange-button {
     padding: 0 .25em;
 }
 
+.it-exchange-visual-cc .it-exchange-cc-name-inner {
+    padding: .5em;
+}
+
 .it-exchange-visual-cc .it-exchange-visual-cc-number input {
     width: 100%;
     margin: 0;
@@ -1233,6 +1237,37 @@ a.it-exchange-button {
 .it-exchange-visual-cc .it-exchange-visual-cc-code input {
     width: 100%;
     font-family: Consolas, Monaco, Lucida Console, monospace;
+}
+
+/** -----------------------------------------------------:[ Payment Tokens ]:---------- */
+
+.it-exchange-payment-tokens-selector--list {
+    margin: 2em 0;
+    padding: 0;
+}
+
+.it-exchange-payment-tokens-selector--list li {
+    display: block;
+    border: 1px solid #ddd;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    transition: .2s ease-in opacity;
+}
+
+.it-exchange-payment-tokens-selector--list li:last-child {
+    margin-bottom: 0;
+}
+
+.it-exchange-payment-tokens-selector--list li:hover,
+.it-exchange-payment-tokens-selector--list li:focus {
+    opacity: .8;
+    cursor: pointer;
+}
+
+.it-exchange-payment-tokens-selector--list li label {
+    display: inline-block;
+    margin: 0 0 0 .5em;
+    vertical-align: middle;
 }
 
 /** -----------------------------------------------------:[ colorbox ]:---------- */
@@ -1464,6 +1499,99 @@ a.it-exchange-button {
 
 .it-exchange-colorbox-gallery.it-exchange-colorbox-light .it-exchange-thumbnail-images li img {
     display: block;
+}
+
+/** -----------------------------------------------------:[ Backbone Checkout ]:---------- */
+
+.it-exchange-checkout-line-items-container {
+    max-width: 400px;
+}
+
+.it-exchange-checkout-line-items {
+    margin-left: 0;
+}
+
+.it-exchange-checkout-line-items li {
+    list-style-type: none;
+    border-bottom: 1px solid #6b6b6b;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+}
+
+.it-exchange-checkout-line-items li span {
+    display: inline-block;
+}
+
+.it-exchange-checkout-line-items li .it-exchange-checkout-line-item--item-name {
+    width: 60%;
+}
+
+.it-exchange-checkout-line-items li .it-exchange-checkout-line-item--item-quantity {
+    width: 15%;
+    position: relative;
+    text-align: right;
+}
+
+.it-exchange-checkout-line-items li .it-exchange-checkout-line-item--item-quantity:before {
+    content: '\00d7';
+    position: absolute;
+    right: 8px;
+    bottom: .7px;
+    font-size: .8em;
+}
+
+.it-exchange-checkout-line-items li .it-exchange-checkout-line-item--item-total {
+    width: 20%;
+    text-align: right;
+    float: right;
+}
+
+.it-exchange-checkout-line-items li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.it-exchange-checkout-line-item-totals-container {
+    max-width: 400px;
+}
+
+.it-exchange-checkout-line-item-totals {
+    width: 100%;
+    margin-left: 0;
+}
+
+.it-exchange-checkout-line-item-totals li {
+    list-style-type: none;
+    border-bottom: 1px solid #6b6b6b;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+}
+
+.it-exchange-checkout-line-item-totals li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.it-exchange-checkout-line-item-totals li.it-exchange-checkout-line-items-total-total-line {
+    font-size: 1.2em;
+    margin-top: 4px;
+}
+
+.it-exchange-checkout-line-items-total--total {
+    float: right;
+    text-align: right;
+}
+
+.it-exchange-checkout-purchase-methods {
+    margin-left: 0;
+}
+
+.it-exchange-checkout-purchase-methods li {
+    list-style-type: none;
+    display: inline-block;
+    margin: 0 5px 5px 0;
 }
 
 /** ----------------------------------------:[ screen fixes ]:--- */
