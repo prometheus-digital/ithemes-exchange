@@ -953,24 +953,16 @@ function it_exchange_get_available_transaction_methods_for_cart( ITE_Cart $cart 
 			return false;
 		}
 
-		$product = $item->get_product();
+		$fees = $item->get_line_items()->with_only( 'fee' )->filter( function( ITE_Fee_Line_Item $fee ) {
+			return $fee->has_param( 'is_free_trial' ) || $fee->has_param( 'is_prorate_days' );
+		} );
 
-		if ( ! $product->has_feature( 'recurring-payments' ) ) {
-			return false;
-		}
-
-		if ( ! $product->get_feature( 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
-			return false;
-		}
-
-		if (
-			function_exists( 'it_exchange_is_customer_eligible_for_trial' ) &&
-			! it_exchange_is_customer_eligible_for_trial( $product, $cart->get_customer() )
-		) {
+		if ( $fees->count() === 0 ) {
 			return false;
 		}
 
 		return true;
+
 	} )->count() > 0;
 
 	$methods = array();

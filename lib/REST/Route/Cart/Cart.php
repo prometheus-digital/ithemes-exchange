@@ -182,7 +182,7 @@ class Cart implements Getable, Putable, Deletable {
 			'shipping_address' => null,
 			'billing_address'  => null,
 			'subtotal'         => it_exchange_get_cart_subtotal( false, array( 'cart' => $cart ) ),
-			'total'            => $cart->calculate_total(),
+			'total'            => it_exchange_get_cart_total( false, array( 'cart' => $cart ) ),
 		);
 
 		if ( $cart->get_billing_address() ) {
