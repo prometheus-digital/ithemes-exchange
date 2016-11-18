@@ -85,7 +85,7 @@ class Transactions extends Base implements Getable {
 
 		$response = new \WP_REST_Response( $data );
 		$response->header( 'X-WP-Total', $total );
-		$response->header( 'X-WP-TotalPages', $total ? ceil( $total / $total_pages ) : 0 );
+		$response->header( 'X-WP-TotalPages', $total_pages );
 
 		$first_link = add_query_arg( 'page', 1, $base_pagination_url );
 		$response->link_header( 'first', $first_link );

@@ -55,7 +55,7 @@ add_action( 'rest_api_init', function () {
 
 add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
-	$cart = new Route\Cart\Cart();
+	$cart  = new Route\Cart\Cart();
 	$carts = new Carts( $cart );
 
 	$manager->register_route( $cart );
@@ -114,6 +114,14 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
 	$refund = new Route\Transaction\Refunds\Refund( new RefundSerializer() );
 	$manager->register_route( $refund->set_parent( $refunds ) );
+
+	// --- Products --- //
+	$serializer = new Route\Product\Serializer();
+	$products   = new Route\Product\Products( $serializer );
+	$manager->register_route( $products );
+
+	$product = new Route\Product\Product( $serializer );
+	$manager->register_route( $product->set_parent( $products ) );
 } );
 
 /**

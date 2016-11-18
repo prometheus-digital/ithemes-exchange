@@ -95,7 +95,7 @@ class Filter_By_Context implements Middleware {
 			}
 
 			if ( 'object' === $v_schema['type'] && ! empty( $v_schema['properties'] ) ) {
-				$item[ $key ] = $this->filter_object( $value, $v_schema, $context );
+				$item[ $key ] = $this->filter_object( $value, $v_schema, $context, $schema );
 			}
 		}
 
@@ -110,21 +110,24 @@ class Filter_By_Context implements Middleware {
 	 * @param array  $object
 	 * @param array  $object_schema
 	 * @param string $context
+	 * @param array  $schema
 	 *
 	 * @return array
 	 */
-	protected function filter_object( $object, $object_schema, $context ) {
-		foreach ( $object_schema['properties'] as $attribute => $details ) {
+	protected function filter_object( $object, $object_schema, $context, $schema ) {
+		foreach ( $object_schema['properties'] as $attribute => $v_schema ) {
 
-			if ( $details['type'] === 'object' ) {
-				$object[ $attribute ] = $this->filter_object( $object[ $attribute ], $details, $context );
+			$v_schema = $this->get_complex_v_schema( $v_schema, $schema, $object );
+
+			if ( $v_schema['type'] === 'object' ) {
+				$object[ $attribute ] = $this->filter_object( $object[ $attribute ], $v_schema, $context, $schema );
 			}
 
-			if ( empty( $details ) || empty( $details['context'] ) ) {
+			if ( empty( $v_schema ) || empty( $v_schema['context'] ) ) {
 				continue;
 			}
 
-			if ( ! in_array( $context, $details['context'] ) ) {
+			if ( ! in_array( $context, $v_schema['context'] ) ) {
 				unset( $object[ $attribute ] );
 			}
 		}
