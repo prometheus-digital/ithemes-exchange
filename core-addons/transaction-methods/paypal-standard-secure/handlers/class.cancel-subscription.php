@@ -64,7 +64,7 @@ class ITE_PayPal_Standard_Secure_Cancel_Subscription_Handler implements ITE_Gate
 
 			parse_str( wp_remote_retrieve_body( $response ), $response_array );
 
-			if ( ! empty( $response_array['PROFILEID'] ) ) {
+			if ( ! empty( $response_array['ACK'] ) && $response_array['ACK'] === 'Success' ) {
 				$subscription->set_status( IT_Exchange_Subscription::STATUS_CANCELLED );
 
 				if ( $request->get_cancelled_by() ) {
