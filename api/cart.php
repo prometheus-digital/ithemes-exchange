@@ -741,20 +741,7 @@ function it_exchange_get_cart_subtotal( $format = true, $options = array() ) {
 		return $format ? it_exchange_format_price( 0 ) : 0;
 	}
 
-	$subtotal = 0;
-	$items    = $cart->get_items()->non_summary_only();
-
-	if ( ! $items->count() ) {
-		return $format ? it_exchange_format_price( 0 ) : 0;
-	}
-
-	foreach( $items as $item ) {
-		if ( ! $item instanceof ITE_Cart_Product || empty( $options['feature'] ) || $item->get_product()->get_feature( $options['feature'] ) ) {
-			$subtotal += $item->get_total();
-		}
-	}
-
-	$subtotal = apply_filters( 'it_exchange_get_cart_subtotal', $subtotal, $options, $cart );
+	$subtotal = $cart->get_subtotal( $options );
 
 	return $format ? it_exchange_format_price( $subtotal ) : $subtotal;
 }
@@ -793,11 +780,7 @@ function it_exchange_get_cart_total( $format = true, $options = array() ) {
 		return 0;
 	}
 
-	$total = it_exchange_get_cart_subtotal( false, $options );
-	$total += $cart->get_items( '', true )->without( 'product' )->summary_only()->total();
-
-	$total = apply_filters( 'it_exchange_get_cart_total', $total );
-	$total = max( 0, $total );
+	$total = $cart->get_total();
 
 	return $format ? it_exchange_format_price( $total ) : $total;
 }

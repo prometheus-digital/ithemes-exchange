@@ -351,8 +351,16 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 			$button_vars['t2'] = $trial_unit_2;
 		}
 
+		$total = $cart->get_total();
+		$fee   = $cart_product->get_line_items()->with_only( 'fee' )
+		                      ->having_param( 'is_free_trial', 'is_prorate_days' )->first();
+
+		if ( $fee ) {
+			$total += $fee->get_total() * - 1;
+		}
+
 		// Regular subscription price.
-		$button_vars['a3'] = number_format( it_exchange_get_cart_total( false, array( 'cart' => $cart ) ), 2, '.', '' );
+		$button_vars['a3'] = number_format( $total, 2, '.', '' );
 
 		// Subscription duration. Specify an integer value in the allowable range for the units of duration that you specify with t3.
 		$button_vars['p3'] = $duration;

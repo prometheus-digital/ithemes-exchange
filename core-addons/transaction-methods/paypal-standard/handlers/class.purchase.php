@@ -204,13 +204,21 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			}
 		}
 
+		$total = $cart->get_total();
+		$fee   = $cart_product->get_line_items()->with_only( 'fee' )
+		                      ->having_param( 'is_free_trial', 'is_prorate_days' )->first();
+
+		if ( $fee ) {
+			$total += $fee->get_total() * - 1;
+		}
+
 		// https://developer.paypal.com/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/
 		//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
 		//a2, t2, p2 are for the second trial period, which is not supported with the Recurring Payments add-on
 		//a3, t3, p3 are required for the actual subscription details
 		$args = array(
 			'cmd' => '_xclick-subscriptions',
-			'a3'  => number_format( it_exchange_get_cart_total( false, array( 'cart' => $cart ) ), 2, '.', '' ),
+			'a3'  => number_format( $total, 2, '.', '' ),
 			//Regular subscription price.
 			'p3'  => $duration,
 			//Subscription duration. Specify an int value in the allowed range for the duration units specified in t3
@@ -357,11 +365,9 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			} else {
 				return null;
 			}
-		}
-		catch ( IT_Exchange_Locking_Exception $e ) {
+		} catch ( IT_Exchange_Locking_Exception $e ) {
 			throw $e;
-		}
-		catch ( Exception $e ) {
+		} catch ( Exception $e ) {
 
 			if ( $cart ) {
 				$cart->get_feedback()->add_error( $e->getMessage() );

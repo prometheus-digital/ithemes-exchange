@@ -6,7 +6,7 @@
  * @package IT_Exchange
  */
 
-add_action( 'it_exchange_register_gateways', function( ITE_Gateways $gateways ) {
+add_action( 'it_exchange_register_gateways', function ( ITE_Gateways $gateways ) {
 	require_once dirname( __FILE__ ) . '/class.purchase-handler.php';
 	require_once dirname( __FILE__ ) . '/class.gateway.php';
 
@@ -71,7 +71,8 @@ function it_exchange_print_offline_payments_wizard_settings( $form ) {
 	?>
 	<div class="field offline-payments-wizard <?php echo $hide_if_js; ?>">
 		<?php if ( empty( $hide_if_js ) ) { ?>
-			<input class="enable-offline-payments" type="hidden" name="it-exchange-transaction-methods[]" value="offline-payments" />
+			<input class="enable-offline-payments" type="hidden" name="it-exchange-transaction-methods[]"
+			       value="offline-payments"/>
 		<?php } ?>
 		<?php $IT_Exchange_Offline_Payments_Add_On->get_offline_payment_form_table( $form, $form_values ); ?>
 	</div>
@@ -360,8 +361,7 @@ function it_exchange_offline_payments_mark_subscriptions_as_active_on_purchase( 
 			$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
 			remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 		}
-	}
-	catch ( Exception $e ) {
+	} catch ( Exception $e ) {
 		error_log( $e->getMessage() );
 	}
 }
@@ -416,6 +416,7 @@ add_action( 'it_exchange_update_transaction_status', 'it_exchange_offline_paymen
 
 /**
  * Class for Offline
+ *
  * @since 0.3.6
  */
 class IT_Exchange_Offline_Payments_Add_On {
@@ -454,6 +455,7 @@ class IT_Exchange_Offline_Payments_Add_On {
 	 * Class constructor
 	 *
 	 * Sets up the class.
+	 *
 	 * @since 0.3.6
 	 */
 	function __construct() {
@@ -513,22 +515,27 @@ class IT_Exchange_Offline_Payments_Add_On {
 			<h3><?php _e( 'Offline Payments', 'it-l10n-ithemes-exchange' ); ?></h3>
 		<?php endif; ?>
 		<p><?php _e( 'Offline payments allow customers to purchase products from your site using check or cash. Transactions can be set as pending until you receive payment.', 'it-l10n-ithemes-exchange' ); ?></p>
-		<p><?php _e( 'Video:', 'it-l10n-ithemes-exchange' ); ?>&nbsp;<a href="http://ithemes.com/tutorials/using-offline-payments-in-exchange/" target="_blank"><?php _e( 'Setting Up Offline Payments in Exchange', 'it-l10n-ithemes-exchange' ); ?></a>
+		<p><?php _e( 'Video:', 'it-l10n-ithemes-exchange' ); ?>&nbsp;<a
+				href="http://ithemes.com/tutorials/using-offline-payments-in-exchange/"
+				target="_blank"><?php _e( 'Setting Up Offline Payments in Exchange', 'it-l10n-ithemes-exchange' ); ?></a>
 		</p>
 		<p><?php _e( 'To process payments offline, complete the settings below.', 'it-l10n-ithemes-exchange' ); ?></p>
 		<table class="form-table">
 			<?php do_action( 'it_exchange_offline_payments_settings_table_top' ); ?>
 			<tr valign="top">
 				<th scope="row"><label for="offline-payments-title"><?php _e( 'Title', 'it-l10n-ithemes-exchange' ) ?>
-						<span class="tip" title="<?php _e( 'What would you like to title this payment option? eg: Check', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
+						<span class="tip"
+						      title="<?php _e( 'What would you like to title this payment option? eg: Check', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 				</th>
 				<td>
 					<?php $form->add_text_box( 'offline-payments-title', array( 'class' => 'normal-text' ) ); ?>                </td>
 			</tr>
 			<tr valign="top">
 				<th scope="row">
-					<label for="offline-payments-instructions"><?php _e( 'Instructions after purchase', 'it-l10n-ithemes-exchange' ) ?>
-						<span class="tip" title="<?php _e( 'This will be the notification customers see after using this method of payment.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
+					<label
+						for="offline-payments-instructions"><?php _e( 'Instructions after purchase', 'it-l10n-ithemes-exchange' ) ?>
+						<span class="tip"
+						      title="<?php _e( 'This will be the notification customers see after using this method of payment.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 				</th>
 				<td>
 					<?php $form->add_text_area( 'offline-payments-instructions', array(
@@ -540,8 +547,10 @@ class IT_Exchange_Offline_Payments_Add_On {
 			</tr>
 			<tr valign="top">
 				<th scope="row">
-					<label for="offline-payments-default-status"><?php _e( 'Default Payment Status', 'it-l10n-ithemes-exchange' ) ?>
-						<span class="tip" title="<?php _e( 'This is the default payment status applied to all offline payment transactions.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
+					<label
+						for="offline-payments-default-status"><?php _e( 'Default Payment Status', 'it-l10n-ithemes-exchange' ) ?>
+						<span class="tip"
+						      title="<?php _e( 'This is the default payment status applied to all offline payment transactions.', 'it-l10n-ithemes-exchange' ); ?>">i</span></label>
 				</th>
 				<td>
 					<?php $form->add_drop_down( 'offline-payments-default-status', $default_status_options ); ?>
@@ -728,18 +737,34 @@ add_filter( 'it_exchange_recurring_payments_handle_expired', 'it_exchange_offlin
  */
 function it_exchange_offline_payments_add_child_transaction( $parent_txn ) {
 
-	$customer_id = get_post_meta( $parent_txn->ID, '_it_exchange_customer_id', true );
-	if ( $customer_id ) {
+	$customer_id = $parent_txn->customer_id;
 
-		$uniqid                    = it_exchange_get_offline_transaction_uniqid();
-		$transaction_object        = new stdClass;
-		$transaction_object->total = $parent_txn->cart_details->total;
-		it_exchange_add_child_transaction( 'offline-payments', $uniqid, it_exchange_offline_payments_default_status(), $customer_id, $parent_txn->ID, $transaction_object );
-
-		return true;
+	if ( ! $customer_id ) {
+		return false;
 	}
 
-	return false;
+	$total = $parent_txn->get_total( false );
+	$fee   = $parent_txn->get_items()->flatten()->with_only( 'fee' )
+	                    ->having_param( 'is_free_trial', 'is_prorate_days' )->first();
+
+	if ( $fee ) {
+		$total += $fee->get_total() * -1;
+	}
+
+	$uniqid                    = it_exchange_get_offline_transaction_uniqid();
+	$transaction_object        = new stdClass;
+	$transaction_object->total = $total;
+
+	it_exchange_add_child_transaction(
+		'offline-payments',
+		$uniqid,
+		it_exchange_offline_payments_default_status(),
+		$customer_id,
+		$parent_txn->ID,
+		$transaction_object
+	);
+
+	return true;
 }
 
 /**

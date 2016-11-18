@@ -540,6 +540,51 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Check if the cart contains items of a given type. Either as child line items or top-level line items.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $type
+	 *
+	 * @return bool
+	 */
+	public function has_item_type( $type ) {
+
+		if ( $this->get_items( $type )->count() > 0 ) {
+			return true;
+		}
+
+		if ( $this->get_items()->flatten()->with_only( $type )->count() > 0 ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get all item types.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array
+	 */
+	public function get_item_types() {
+
+		$all_items  = $this->get_items()->flatten();
+		$item_types = array();
+
+		foreach ( $all_items as $item ) {
+			if ( ! in_array( $item->get_type(), $item_types, true ) ) {
+				$item_types[] = $item->get_type();
+			}
+		}
+
+		sort( $item_types );
+
+		return $item_types;
+	}
+
+	/**
 	 * Callback to perform custom processing when a cart product line item is added to the cart.
 	 *
 	 * @since 2.0.0
@@ -609,6 +654,69 @@ class ITE_Cart {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get the cart subtotal.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $options
+	 *
+	 * @return float
+	 */
+	public function get_subtotal( array $options = array() ) {
+
+		$subtotal = 0;
+		$items    = $this->get_items()->non_summary_only();
+
+		if ( ! $items->count() ) {
+			return 0;
+		}
+
+		foreach ( $items as $item ) {
+			if ( ! $item instanceof ITE_Cart_Product || empty( $options['feature'] ) || $item->get_product()->get_feature( $options['feature'] ) ) {
+				$subtotal += $item->get_total();
+			}
+		}
+
+		/**
+		 * Filter the cart subtotal.
+		 *
+		 * @since 1.0.0
+		 * @since 2.0.0 Add the $cart parameter.
+		 *
+		 * @param float     $subtotal
+		 * @param array     $options
+		 * @param \ITE_Cart $cart
+		 */
+		return (float) apply_filters( 'it_exchange_get_cart_subtotal', $subtotal, $options, $this );
+	}
+
+	/**
+	 * Get the cart total.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return float
+	 */
+	public function get_total() {
+
+		$total = $this->get_subtotal();
+		$total += $this->get_items( '', true )->without( 'product' )->summary_only()->total();
+
+		/**
+		 * Filter the cart total.
+		 *
+		 * @since 1.0.0
+		 * @since 2.0.0 Add the $cart parameter.
+		 *
+		 * @param float     $total
+		 * @param \ITE_Cart $cart
+		 */
+		$total = apply_filters( 'it_exchange_get_cart_total', $total, $this );
+
+		return (float) max( 0, $total );
 	}
 
 	/**
