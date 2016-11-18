@@ -79,7 +79,20 @@ class IT_Exchange_SW_Shortcode {
 
 		$screen = get_current_screen();
 
-		$post_type        = ! empty( $screen->post_type ) ? $screen->post_type : get_post_type();
+		$post_type = ! empty( $screen->post_type ) ? $screen->post_type : get_post_type();
+
+		/**
+		 * Filter whether to show the Embed Super Widget button.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param bool   $show
+		 * @param string $post_type
+		 */
+		if ( ! apply_filters( 'it_exchange_show_embed_sw_button', true, $post_type ) ) {
+			return;
+		}
+
 		$post_type_object = get_post_type_object( $post_type );
 
 		if ( $post_type_object && $post_type_object->public && $post_type != 'it_exchange_prod' ) {
@@ -101,9 +114,15 @@ class IT_Exchange_SW_Shortcode {
 		$screen = get_current_screen();
 
 		$post_type = ! empty( $screen->post_type ) ? $screen->post_type : get_post_type();
+
+		// This filter is documented in lib/shortcodes/shortcodes.php
+		if ( ! apply_filters( 'it_exchange_show_embed_sw_button', true, $post_type ) ) {
+			return;
+		}
+
 		$post_type = get_post_type_object( $post_type );
 
-		if ( ! $post_type || ! $post_type->public || $post_type == 'it_exchange_prod' ) {
+		if ( ! $post_type || ! $post_type->public || $post_type->name == 'it_exchange_prod' ) {
 			return;
 		}
 
