@@ -47,59 +47,61 @@ class ITE_Gateways {
 		}
 
 		if ( $gateway->is_currency_support_limited() ) {
-			add_action( "it_exchange_{$gateway->get_settings_name()}_top", function () use ( $gateway ) {
+			if ( is_admin() ) {
+				add_action( "it_exchange_{$gateway->get_settings_name()}_top", function () use ( $gateway ) {
 
-				$general_settings = it_exchange_get_option( 'settings_general' );
+					$general_settings = it_exchange_get_option( 'settings_general' );
 
-				if ( array_key_exists( $general_settings['default-currency'], $gateway->get_supported_currencies() ) ) {
-					return;
-				}
+					if ( array_key_exists( $general_settings['default-currency'], $gateway->get_supported_currencies() ) ) {
+						return;
+					}
 
-				echo '<div class="notice notice-error"><p>';
-				printf(
-					__( 'You are currently using a currency that is not supported by %1$s. %2$sPlease update your currency settings%3$s.', 'LION' ),
-					$gateway->get_name(),
-					'<a>' . admin_url( 'admin.php?page=it-exchange-settings' ),
-					'</a>'
-				);
-				echo '</p></div>';
-			} );
+					echo '<div class="notice notice-error"><p>';
+					printf(
+						__( 'You are currently using a currency that is not supported by %1$s. %2$sPlease update your currency settings%3$s.', 'LION' ),
+						$gateway->get_name(),
+						'<a>' . admin_url( 'admin.php?page=it-exchange-settings' ),
+						'</a>'
+					);
+					echo '</p></div>';
+				} );
 
-			add_filter( 'it_exchange_get_currencies', function ( $currencies ) use ( $gateway ) {
+				add_filter( 'it_exchange_get_currencies', function ( $currencies ) use ( $gateway ) {
 
-				if ( ! is_admin() || ! function_exists( 'get_current_screen' ) ) {
-					return $currencies;
-				}
+					if ( ! is_admin() || ! function_exists( 'get_current_screen' ) ) {
+						return $currencies;
+					}
 
-				$screen = get_current_screen();
+					$screen = get_current_screen();
 
-				if ( empty( $screen->base ) ) {
-					return $currencies;
-				}
+					if ( empty( $screen->base ) ) {
+						return $currencies;
+					}
 
-				$screens = array(
-					'exchange_page_it-exchange-settings',
-					'exchange_page_it-exchange-setup'
-				);
+					$screens = array(
+						'exchange_page_it-exchange-settings',
+						'exchange_page_it-exchange-setup'
+					);
 
-				if ( ! in_array( $screen->base, $screens, true ) ) {
-					return $currencies;
-				}
+					if ( ! in_array( $screen->base, $screens, true ) ) {
+						return $currencies;
+					}
 
-				$supported = $gateway->get_supported_currencies();
+					$supported = $gateway->get_supported_currencies();
 
-				if ( empty( $supported ) ) {
-					return $currencies;
-				}
+					if ( empty( $supported ) ) {
+						return $currencies;
+					}
 
-				return array_intersect_key( $currencies, array_flip( $supported ) );
-			} );
+					return array_intersect_key( $currencies, array_flip( $supported ) );
+				} );
+			}
 		}
 
 		if ( $fields = $gateway->get_settings_fields() ) {
 			$defaults = array();
 
-			foreach ( $gateway->get_settings_fields() as $field ) {
+			foreach ( $fields as $field ) {
 				if ( $field['type'] !== 'html' ) {
 					$defaults[ $field['slug'] ] = isset( $field['default'] ) ? $field['default'] : null;
 				}
@@ -110,7 +112,7 @@ class ITE_Gateways {
 			} );
 		}
 
-		if ( $wizard = $gateway->get_wizard_settings() ) {
+		if ( is_admin() && isset( $_GET['page'] ) && $_GET['page'] === 'it-exchange-setup' && $wizard = $gateway->get_wizard_settings() ) {
 			add_action( "it_exchange_print_{$gateway->get_slug()}_wizard_settings", function ( ITForm $form ) use ( $wizard, $gateway ) {
 				$form_values = ITUtility::merge_defaults( ITForm::get_post_data(), $gateway->settings()->all() );
 

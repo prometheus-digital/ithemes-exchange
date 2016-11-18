@@ -24,7 +24,7 @@ class Cart_Feedback implements Middleware {
 
 		$response = $next->next( $request );
 
-		if ( ! $response->get_data() || $request->get_method() === 'GET' ) {
+		if ( $request->get_method() === 'GET' || ( $response instanceof \WP_REST_Response && ! $response->get_data() ) ) {
 			return $response;
 		}
 
@@ -59,9 +59,13 @@ class Cart_Feedback implements Middleware {
 			);
 		}
 
-		$data = $response->get_data();
-		$data['feedback'] = $feedback;
-		$response->set_data( $data );
+		if ( $response instanceof \WP_REST_Response ) {
+			$data             = $response->get_data();
+			$data['feedback'] = $feedback;
+			$response->set_data( $data );
+		} else {
+			$response->add_data( $feedback );
+		}
 
 		return $response;
 	}

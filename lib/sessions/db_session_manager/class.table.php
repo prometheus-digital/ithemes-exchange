@@ -16,6 +16,9 @@ use IronBound\DB\Table\TimestampedTable;
  */
 class ITE_Sessions_Table extends \IronBound\DB\Table\BaseTable implements TimestampedTable {
 
+	/** @var array */
+	private $columns = array();
+
 	public function get_table_name( \wpdb $wpdb ) {
 		return $wpdb->prefix . 'ite_sessions';
 	}
@@ -25,7 +28,12 @@ class ITE_Sessions_Table extends \IronBound\DB\Table\BaseTable implements Timest
 	}
 
 	public function get_columns() {
-		return array(
+
+		if ( $this->columns ) {
+			return $this->columns;
+		}
+
+		$this->columns = array(
 			'ID'           => new StringBased( 'VARCHAR', 'ID', array( 'NOT NULL' ), array( 32 ) ),
 			'cart_id'      => new StringBased( 'VARCHAR', 'cart_id', array(), array( 32 ) ),
 			'customer'     => new ForeignUser( 'customer' ),
@@ -36,6 +44,8 @@ class ITE_Sessions_Table extends \IronBound\DB\Table\BaseTable implements Timest
 			'created_at'   => new DateTime( 'created_at' ),
 			'updated_at'   => new DateTime( 'updated_at' ),
 		);
+
+		return $this->columns;
 	}
 
 	public function get_column_defaults() {

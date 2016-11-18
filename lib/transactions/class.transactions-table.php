@@ -20,6 +20,10 @@ use IronBound\DB\Table\ForeignKey\DeleteConstrained;
  * Class ITE_Purchase_Table
  */
 class ITE_Transactions_Table extends BaseTable implements DeleteConstrained {
+
+	/** @var array */
+	private $columns = array();
+
 	/**
 	 * @inheritDoc
 	 */
@@ -38,7 +42,12 @@ class ITE_Transactions_Table extends BaseTable implements DeleteConstrained {
 	 * @inheritDoc
 	 */
 	public function get_columns() {
-		return array(
+
+		if ( $this->columns ) {
+			return $this->columns;
+		}
+
+		$this->columns = array(
 			'ID'             => new ForeignPost( 'ID' ),
 			'customer_id'    => new ForeignUser( 'customer_id' ),
 			'customer_email' => new StringBased( 'VARCHAR', 'customer_email', array(), array( 255 ) ),
@@ -57,6 +66,8 @@ class ITE_Transactions_Table extends BaseTable implements DeleteConstrained {
 			'shipping'       => new ForeignModel( 'shipping', 'ITE_Saved_Address', new ITE_Saved_Address_Table() ),
 			'parent'         => new ForeignModel( 'parent', 'IT_Exchange_Transaction', $this ),
 		);
+
+		return $this->columns;
 	}
 
 	/**

@@ -193,6 +193,8 @@ class IT_Exchange_Email_Register_Default_Tags {
 			)
 		);
 
+		$objects = array();
+
 		foreach ( $tags as $tag => $config ) {
 
 			$obj = new IT_Exchange_Email_Tag_Base( $tag, $config['name'], $config['desc'], array( $this, $tag ) );
@@ -205,8 +207,10 @@ class IT_Exchange_Email_Register_Default_Tags {
 				$obj->add_available_for( $notification );
 			}
 
-			$replacer->add_tag( $obj );
+			$objects[] = $obj;
 		}
+
+		$replacer->add_tags( $objects );
 	}
 
 	/**

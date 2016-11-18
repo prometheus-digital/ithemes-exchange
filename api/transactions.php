@@ -60,7 +60,10 @@ function it_exchange_get_transaction( $post ) {
 		return apply_filters( 'it_exchange_get_transaction', $post );
 
 	try {
-		$transaction = new IT_Exchange_Transaction( $post );
+
+		$ID = is_object( $post ) ? $post->ID : (int) $post;
+
+		$transaction = IT_Exchange_Transaction::get( $ID );
 	} catch ( Exception $e ) {
 		return false;
 	}

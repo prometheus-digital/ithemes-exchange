@@ -14,6 +14,9 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 	/** @var ITE_Gateway_Request_Handler[] */
 	private $handlers = array();
 
+	/** @var array */
+	private $fields = array();
+
 	/**
 	 * ITE_Gateway_Offline_Payments constructor.
 	 */
@@ -89,7 +92,12 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 	 * @inheritDoc
 	 */
 	public function get_settings_fields() {
-		return array(
+
+		if ( $this->fields ) {
+			return $this->fields;
+		}
+
+		$this->fields = array(
 			array(
 				'type' => 'html',
 				'slug' => 'preamble',
@@ -128,6 +136,8 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 				'tooltip' => __( 'This is the default payment status applied to all offline payment transactions.', 'it-l10n-ithemes-exchange' ),
 			),
 		);
+
+		return $this->fields;
 	}
 
 	/**

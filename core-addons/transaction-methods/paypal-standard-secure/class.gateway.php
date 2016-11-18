@@ -14,6 +14,9 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 	/** @var ITE_Gateway_Request_Handler[] */
 	private $handlers = array();
 
+	/** @var array */
+	private $fields = array();
+
 	/**
 	 * @inheritDoc
 	 */
@@ -145,7 +148,12 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 	 * @inheritDoc
 	 */
 	public function get_settings_fields() {
-		return array(
+
+		if ( $this->fields ) {
+			return $this->fields;
+		}
+
+		$this->fields = array(
 			array(
 				'type' => 'html',
 				'slug' => 'preamble',
@@ -250,6 +258,8 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 				'required' => true,
 			),
 		);
+
+		return $this->fields;
 	}
 
 	/**

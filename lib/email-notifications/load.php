@@ -40,10 +40,7 @@ require_once dirname( __FILE__ ) . '/middleware/interface.php';
 require_once dirname( __FILE__ ) . '/middleware/class.formatter.php';
 require_once dirname( __FILE__ ) . '/middleware/class.contextualizer.php';
 require_once dirname( __FILE__ ) . '/middleware/class.style-links.php';
-
-if ( version_compare( PHP_VERSION, '5.3', '>=' ) ) {
-	require_once dirname( __FILE__ ) . '/middleware/class.auto-linker.php';
-}
+require_once dirname( __FILE__ ) . '/middleware/class.auto-linker.php';
 
 require_once dirname( __FILE__ ) . '/tag-replacers/interface.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.base.php';

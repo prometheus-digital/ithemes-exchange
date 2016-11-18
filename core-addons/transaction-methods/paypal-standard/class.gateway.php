@@ -14,6 +14,9 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	/** @var ITE_Gateway_Request_Handler[] */
 	private $handlers;
 
+	/** @var array */
+	private $fields = array();
+
 	/**
 	 * ITE_PayPal_Standard_Gateway constructor.
 	 */
@@ -102,7 +105,12 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	 * @inheritDoc
 	 */
 	public function get_settings_fields() {
-		return array(
+
+		if ( $this->fields ) {
+			return $this->fields;
+		}
+
+		$this->fields = array(
 			array(
 				'type' => 'html',
 				'slug' => 'preamble',
@@ -145,6 +153,8 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 				'show_if' => array( 'field' => 'sandbox-mode', 'value' => true, 'compare' => '=' ),
 			),
 		);
+
+		return $this->fields;
 	}
 
 	/**

@@ -37,6 +37,17 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function add_tags( array $tags ) {
+		foreach ( $tags as $tag ) {
+			$this->tags[ $tag->get_tag() ] = $tag;
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Get a tag object for a given tag.
 	 *
 	 * @since 2.0.0

@@ -46,6 +46,17 @@ interface IT_Exchange_Email_Tag_Replacer extends IT_Exchange_Email_Middleware {
 	public function add_tag( IT_Exchange_Email_Tag $tag );
 
 	/**
+	 * Register multiple tags at once.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param IT_Exchange_Email_Tag[] $tags
+	 *
+	 * @return self
+	 */
+	public function add_tags( array $tags );
+
+	/**
 	 * Get a tag object for a given tag.
 	 *
 	 * @since 2.0.0

@@ -44,7 +44,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 *
 	 * @var array
 	 */
-	protected static $_eager_load = array( 'ID' );
+	//protected static $_eager_load = array( 'ID' );
 
 	/**
 	 * @var WP_Post
