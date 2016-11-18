@@ -31,7 +31,6 @@ class Item_Serializer {
 	 */
 	public function __construct( \ITE_Line_Item_Type $type ) {
 		$this->type   = $type;
-		$this->schema = $this->generate_schema();
 	}
 
 	/**
@@ -56,7 +55,14 @@ class Item_Serializer {
 	 *
 	 * @return array
 	 */
-	public function get_schema() { return $this->schema; }
+	public function get_schema() {
+
+		if ( ! $this->schema ) {
+			$this->schema = $this->generate_schema();
+		}
+
+		return $this->schema;
+	}
 
 	/**
 	 * Serialize a line item.
@@ -113,7 +119,7 @@ class Item_Serializer {
 	protected function generate_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => "cart_item_{$this->type->get_type()}",
+			'title'      => "cart-item-{$this->type->get_type()}",
 			'type'       => 'object',
 			'properties' => array(
 				'id'          => array(

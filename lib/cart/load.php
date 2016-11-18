@@ -122,6 +122,13 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 				),
 			)
 		),
+		'image'           => array(
+			'description' => __( 'A thumbnail of the product and variation.', 'it-l10n-ithemes-exchange' ),
+			'type'        => 'string',
+			'format'      => 'uri',
+			'context'     => array( 'view', 'edit' ),
+			'readonly'    => true,
+		),
 	),
 	'create_from_request' => function ( \iThemes\Exchange\REST\Request $request ) {
 

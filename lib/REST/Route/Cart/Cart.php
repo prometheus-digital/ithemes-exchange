@@ -266,12 +266,11 @@ class Cart implements Getable, Putable, Deletable {
 
 		foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
 
-			$type        = $item_type->get_type();
-			$title       = "cart_item_{$type}";
 			$item_schema = $item_type->get_rest_serializer()->get_schema();
+			$title       = $item_schema['title'];
 			unset( $item_schema['title'], $item_schema['$schema'] );
 
-			$item_references[]['$ref']  = "#definitions/{$title}";
+			$item_references[]['$ref']  = "#/definitions/{$title}";
 			$item_definitions[ $title ] = $item_schema;
 		}
 

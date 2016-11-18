@@ -160,7 +160,33 @@ class Manager {
 		add_filter( 'rest_authentication_errors', array( $this, 'authenticate' ), 20 );
 		add_filter( 'rest_dispatch_request', array( $this, 'conform_request_to_schema' ), 10, 4 );
 
+		$this->initialized = true;
+
 		return $this;
+	}
+
+	/**
+	 * Get a list of schemas.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $titles A list of schema titles to retrieve. If empty, all schemas will be returned.
+	 *
+	 * @return array
+	 */
+	public function get_schemas( $titles = array() ) {
+
+		$flipped = array_flip( $titles );
+		$schemas = array();
+
+		foreach ( $this->routes as $route ) {
+
+			if ( ( $schema = $route->get_schema() ) && ( isset( $flipped[ $schema['title'] ] ) || empty( $flipped ) ) ) {
+				$schemas[ $schema['title'] ] = $schema;
+			}
+		}
+
+		return $schemas;
 	}
 
 	/**

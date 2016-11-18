@@ -311,6 +311,44 @@ add_action( 'wp_enqueue_scripts', 'it_exchange_register_scripts', 1 );
 add_action( 'admin_enqueue_scripts', 'it_exchange_register_scripts', 1 );
 
 /**
+ * Maybe preload REST schemas.
+ *
+ * @since 2.0.0
+ */
+function it_exchange_maybe_preload_schemas() {
+
+	/**
+	 * Filter the schemas to preload.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param $preload bool|array True to preload all schemas. False to preload no schemas. An array of schema
+	 *                            document titles to only preload a selected amount of schemas.
+	 */
+	$preload = apply_filters( 'it_exchange_preload_schemas', false );
+
+	if ( $preload === false ) {
+		return;
+	}
+
+	$manager = \iThemes\Exchange\REST\get_rest_manager();
+
+	// This action is documented in lib/REST/load.php
+	do_action( 'it_exchange_register_rest_routes', $manager );
+
+	if ( $preload === true ) {
+		$schemas = $manager->get_schemas();
+	} else {
+		$schemas = $manager->get_schemas( $preload );
+	}
+
+	wp_localize_script( 'it-exchange-rest', 'ITExchangeRESTSchemas', $schemas );
+}
+
+add_action( 'wp_enqueue_scripts', 'it_exchange_maybe_preload_schemas', 99 );
+add_action( 'admin_enqueue_scripts', 'it_exchange_maybe_preload_schemas', 99 );
+
+/**
  * Loads functions.php in theme if it exists
  *
  * @since 1.2.0
