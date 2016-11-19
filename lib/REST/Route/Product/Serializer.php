@@ -178,7 +178,7 @@ class Serializer {
 						'rendered' => array(
 							'type'        => 'string',
 							'description' => __( 'The fully rendered description.', 'it-l10n-ithemes-exchange' ),
-							'context'     => array( 'view', 'edit' )
+							'context'     => array( 'view', 'edit', 'embed' )
 						)
 					)
 				),
