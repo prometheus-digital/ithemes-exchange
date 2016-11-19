@@ -349,6 +349,60 @@ add_action( 'wp_enqueue_scripts', 'it_exchange_maybe_preload_schemas', 99 );
 add_action( 'admin_enqueue_scripts', 'it_exchange_maybe_preload_schemas', 99 );
 
 /**
+ * Add inline script data.
+ *
+ * Intended as a fallback for wp_add_inline_script().
+ *
+ * @since 2.0.0
+ *
+ * @param string $handle
+ * @param string $data
+ */
+function it_exchange_add_inline_script( $handle, $data ) {
+
+	if ( function_exists( 'wp_add_inline_script' ) ) {
+		wp_add_inline_script( $handle, $data );
+	} else {
+
+		if ( ! isset( $GLOBALS['it_exchange']['inline-scripts'] ) ) {
+			$GLOBALS['it_exchange']['inline-scripts'] = array();
+		}
+
+		$GLOBALS['it_exchange']['inline-scripts'][ $handle ][] = $data;
+	}
+}
+
+/**
+ * Print inline scripts.
+ *
+ * @since 2.0.0
+ */
+function it_exchange_print_inline_scripts() {
+
+	if ( function_exists( 'wp_add_inline_script' ) ) {
+		return;
+	}
+
+	if ( ! isset( $GLOBALS['it_exchange']['inline-scripts'] ) ) {
+		return;
+	}
+
+	foreach ( $GLOBALS['it_exchange']['inline-scripts'] as $handle => $scripts ) {
+
+		if ( ! wp_script_is( $handle, 'done' ) ) {
+			continue;
+		}
+
+		foreach ( $scripts as $script ) {
+			printf( "<script type='text/javascript'>\n%s\n</script>\n", $script );
+		}
+	}
+}
+
+add_action( 'admin_footer', 'it_exchange_print_inline_scripts', 100 );
+add_action( 'wp_footer', 'it_exchange_print_inline_scripts', 100 );
+
+/**
  * Loads functions.php in theme if it exists
  *
  * @since 1.2.0
