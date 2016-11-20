@@ -67,6 +67,7 @@ require_once dirname( __FILE__ ) . '/class.meta-registry.php';
 
 ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 	'label'               => __( 'Product', 'it-l10n-ithemes-exchange' ),
+	'aggregate'           => true,
 	'show_in_rest'        => true,
 	'editable_in_rest'    => true,
 	'rest_serializer'     => function ( array $data, ITE_Cart_Product $product, array $schema, ITE_Cart $cart ) {
@@ -161,6 +162,8 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 
 ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'coupon', array(
 	'label'               => __( 'Coupon', 'it-l10n-ithemes-exchange' ),
+	'aggregate'           => true,
+	'aggregatable'        => true,
 	'show_in_rest'        => true,
 	'editable_in_rest'    => true,
 	'rest_serializer'     => function ( array $data, ITE_Coupon_Line_Item $coupon, array $schema, ITE_Cart $cart ) {
@@ -223,8 +226,19 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'coupon', array(
 
 ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'fee', array(
 	'label'            => __( 'Fee', 'it-l10n-ithemes-exchange' ),
+	'aggregate'        => true,
+	'aggregatable'     => true,
 	'show_in_rest'     => true,
 	'editable_in_rest' => false,
 ) ) );
-ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'tax', array( 'label' => __( 'Tax', 'it-l10n-ithemes-exchange' ) ) ) );
-ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'shipping', array( 'label' => __( 'Shipping', 'it-l10n-ithemes-exchange' ) ) ) );
+
+ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'tax', array(
+	'label'        => __( 'Tax', 'it-l10n-ithemes-exchange' ),
+	'aggregatable' => true,
+) ) );
+
+ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'shipping', array(
+	'label'        => __( 'Shipping', 'it-l10n-ithemes-exchange' ),
+	'aggregate'    => true,
+	'aggregatable' => true,
+) ) );

@@ -50,6 +50,46 @@ class ITE_Line_Item_Types {
 	}
 
 	/**
+	 * Get all line item types that are aggregates.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return \ITE_Line_Item_Type[]
+	 */
+	public static function aggregates() {
+
+		$types = array();
+
+		foreach ( static::$types as $type ) {
+			if ( $type->is_aggregate() ) {
+				$types[] = $type;
+			}
+		}
+
+		return $types;
+	}
+
+	/**
+	 * Get all line item types that are aggregatables.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return \ITE_Line_Item_Type[]
+	 */
+	public static function aggregatables() {
+
+		$types = array();
+
+		foreach ( static::$types as $type ) {
+			if ( $type->is_aggregatable() ) {
+				$types[] = $type;
+			}
+		}
+
+		return $types;
+	}
+
+	/**
 	 * Retrieve all line items that should be shown in REST.
 	 *
 	 * @since 2.0.0

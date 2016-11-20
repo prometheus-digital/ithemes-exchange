@@ -33,6 +33,12 @@ class ITE_Line_Item_Type {
 	/** @var array */
 	private $additional_schema_props = array();
 
+	/** @var bool */
+	private $aggregate = false;
+
+	/** @var bool */
+	private $aggregatable = false;
+
 	/**
 	 * ITE_Line_Item_Type constructor.
 	 *
@@ -45,6 +51,14 @@ class ITE_Line_Item_Type {
 
 		$this->type  = $type;
 		$this->label = ucfirst( $type );
+
+		if ( isset( $args['aggregate'] ) ) {
+			$this->aggregate = (bool) $args['aggregate'];
+		}
+
+		if ( isset( $args['aggregatable'] ) ) {
+			$this->aggregatable = (bool) $args['aggregatable'];
+		}
 
 		if ( isset( $args['show_in_rest'] ) ) {
 			$this->show_in_rest = (bool) $args['show_in_rest'];
@@ -78,6 +92,28 @@ class ITE_Line_Item_Type {
 		if ( ! empty( $args['create_from_request'] ) ) {
 			$this->create_from_request = $args['create_from_request'];
 		}
+	}
+
+	/**
+	 * Is this an aggregate line item type.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_aggregate() {
+		return $this->aggregate;
+	}
+
+	/**
+	 * Is this an aggregatable line item type.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_aggregatable() {
+		return $this->aggregatable;
 	}
 
 	/**

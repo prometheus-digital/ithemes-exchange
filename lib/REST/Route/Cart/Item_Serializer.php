@@ -30,7 +30,7 @@ class Item_Serializer {
 	 * @param \ITE_Line_Item_Type $type
 	 */
 	public function __construct( \ITE_Line_Item_Type $type ) {
-		$this->type   = $type;
+		$this->type = $type;
 	}
 
 	/**
@@ -94,6 +94,14 @@ class Item_Serializer {
 		if ( $item instanceof \ITE_Quantity_Modifiable_Item && $item->is_quantity_modifiable() ) {
 			$data['quantity']['max']      = ( $max = $item->get_max_quantity_available() ) && is_numeric( $max ) ? (int) $max : '';
 			$data['quantity']['editable'] = \ITE_Line_Item_Types::get( $item->get_type() )->is_editable_in_rest();
+		}
+
+		if ( $item instanceof \ITE_Aggregate_Line_Item ) {
+			$data['children'] = array();
+
+			foreach ( $item->get_line_items() as $child ) {
+				$data['children'][] = \ITE_Line_Item_Types::get( $child->get_type() )->get_rest_serializer()->serialize( $child, $cart );
+			}
 		}
 
 		foreach ( $data as $key => $_ ) {
@@ -190,6 +198,23 @@ class Item_Serializer {
 				),
 			),
 		);
+
+		if ( $this->type->is_aggregate() ) {
+			$schema['properties']['children'] = array(
+				'description' => __( 'Child line items of this item.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'array',
+				'items'       => array(
+					'oneOf' => array(),
+				),
+				'readonly'    => true,
+			);
+
+			foreach ( \ITE_Line_Item_Types::aggregatables() as $aggregatable ) {
+				$schema['properties']['children']['items']['oneOf'][] = array(
+					'$ref' => \iThemes\Exchange\REST\url_for_schema( "cart-item{$aggregatable->get_type()}" )
+				);
+			}
+		}
 
 		foreach ( $this->type->get_additional_schema_props() as $prop => $schema_prop ) {
 			$schema['properties'][ $prop ] = $schema_prop;

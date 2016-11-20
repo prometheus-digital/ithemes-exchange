@@ -209,3 +209,16 @@ function response_to_array( \WP_REST_Response $response ) {
 
 	return $data;
 }
+
+/**
+ * Get the URL for a schema title.
+ *
+ * @since 2.0.0
+ *
+ * @param string $title
+ *
+ * @return string
+ */
+function url_for_schema( $title ) {
+	return "https://api.ithemes.com/exchange/schemas/$title";
+}

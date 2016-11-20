@@ -261,25 +261,21 @@ class Cart implements Getable, Putable, Deletable {
 			return $this->schema;
 		}
 
-		$item_definitions = array();
-		$item_references  = array();
+		$item_references = array();
 
 		foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
 
 			$item_schema = $item_type->get_rest_serializer()->get_schema();
 			$title       = $item_schema['title'];
-			unset( $item_schema['title'], $item_schema['$schema'] );
 
-			$item_references[]['$ref']  = "#/definitions/{$title}";
-			$item_definitions[ $title ] = $item_schema;
+			$item_references[]['$ref'] = r\url_for_schema( $title );
 		}
 
 		$this->schema = array(
-			'$schema'     => 'http://json-schema.org/draft-04/schema#',
-			'definitions' => $item_definitions,
-			'title'       => 'cart',
-			'type'        => 'object',
-			'properties'  => array(
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => 'cart',
+			'type'       => 'object',
+			'properties' => array(
 				'id'               => array(
 					'description' => __( 'The unique id for this cart.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',

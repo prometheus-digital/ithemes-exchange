@@ -14,6 +14,8 @@ use JsonSchema\Constraints\Constraint;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\SchemaStorage;
 use JsonSchema\Uri\Retrievers\PredefinedArray;
+use JsonSchema\Uri\UriRetriever;
+use JsonSchema\UriResolverInterface;
 use JsonSchema\Validator;
 
 /**
@@ -35,6 +37,12 @@ class Manager {
 	/** @var SchemaStorage */
 	private $schema_storage;
 
+	/** @var UriResolverInterface */
+	private $uri_retreiver;
+
+	/** @var array */
+	private $schemas = array();
+
 	/** @var bool */
 	private $initialized = false;
 
@@ -53,9 +61,8 @@ class Manager {
 	 * @param \iThemes\Exchange\REST\Middleware\Stack $stack
 	 */
 	public function __construct( $namespace, Stack $stack ) {
-		$this->namespace      = $namespace;
-		$this->middleware     = $stack;
-		$this->schema_storage = new SchemaStorage();
+		$this->namespace  = $namespace;
+		$this->middleware = $stack;
 	}
 
 	/**
@@ -157,6 +164,18 @@ class Manager {
 			$this->register_with_server( $route );
 		}
 
+		$modified = array();
+
+		foreach ( $this->schemas as $id => $schema ) {
+			$modified[ url_for_schema( $id ) ] = $schema;
+		}
+
+		$strategy            = new PredefinedArray( $modified );
+		$this->uri_retreiver = new UriRetriever();
+		$this->uri_retreiver->setUriRetriever( $strategy );
+
+		$this->schema_storage = new SchemaStorage( $this->uri_retreiver );
+
 		add_filter( 'rest_authentication_errors', array( $this, 'authenticate' ), 20 );
 		add_filter( 'rest_dispatch_request', array( $this, 'conform_request_to_schema' ), 10, 4 );
 
@@ -223,9 +242,7 @@ class Manager {
 	private function register_with_server( Route $route ) {
 
 		if ( $schema = $route->get_schema() ) {
-			$transformed_schema = $this->transform_schema( $schema );
-			$schema_object      = json_decode( json_encode( $transformed_schema ) );
-			$this->schema_storage->addSchema( $transformed_schema['title'], $schema_object );
+			$this->schemas[ $schema['title'] ] = json_encode( $this->transform_schema( $schema ) );
 		}
 
 		$path     = '';
@@ -336,7 +353,7 @@ class Manager {
 	public function conform_request_to_schema( $response, $request, $route, $handler ) {
 
 		if ( $request->get_method() === 'DELETE' ) {
-			return null;
+			return $response;
 		}
 
 		if ( is_wp_error( $response ) ) {
@@ -363,11 +380,11 @@ class Manager {
 
 		$factory       = new Factory(
 			$this->schema_storage,
-			null, //new PredefinedArray( array() ),
+			$this->uri_retreiver,
 			Constraint::CHECK_MODE_TYPE_CAST | Constraint::CHECK_MODE_COERCE
 		);
 		$validator     = new Validator( $factory );
-		$schema_object = $this->schema_storage->getSchema( $schema['title'] );
+		$schema_object = $this->schema_storage->getSchema( url_for_schema( $schema['title'] ) );
 
 		$to_validate = array();
 
