@@ -52,8 +52,8 @@ class Transactions extends Base implements Getable {
 			$args['cleared'] = $request['cleared_for_delivery'];
 		}
 
-		if ( $request['s'] ) {
-			$args['s'] = $request['s'];
+		if ( $request['search'] ) {
+			$args['s'] = sanitize_text_field( $request['search'] );
 		}
 
 		$transactions = it_exchange_get_transactions( $args, $total );
@@ -207,8 +207,8 @@ class Transactions extends Base implements Getable {
 				'description' => __( 'Filter by method id.', 'it-l10n-ithemes-exchange' ),
 				'type'        => 'string',
 			),
-			's'                    => array(
-				'description' => __( 'Search transactions.', 'it-l10n-ithemes-exchange' ),
+			'search'               => array(
+				'description' => __( 'Limit results to those matching a string.', 'it-l10n-ithemes-exchange' ),
 				'type'        => 'string',
 				'minLength'   => 3,
 				'maxLength'   => 300,

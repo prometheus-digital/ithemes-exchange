@@ -45,6 +45,10 @@ class Products extends Base implements Getable {
 
 		$args['show_hidden'] = ! $request['visible_only'];
 
+		if ( $request['search'] ) {
+			$args['s'] = sanitize_text_field( $request['search'] );
+		}
+
 		$products = it_exchange_get_products( $args, $total );
 		$data     = array();
 
@@ -128,13 +132,13 @@ class Products extends Base implements Getable {
 	 */
 	public function get_query_args() {
 		return array(
-			'page'        => array(
+			'page'         => array(
 				'description' => __( 'Current page of the collection.', 'it-l10n-ithemes-exchange' ),
 				'type'        => 'integer',
 				'default'     => 1,
 				'minimum'     => 1,
 			),
-			'per_page'    => array(
+			'per_page'     => array(
 				'description' => __( 'Maximum number of items to be returned in result set.', 'it-l10n-ithemes-exchange' ),
 				'type'        => 'integer',
 				'default'     => 10,
@@ -145,7 +149,13 @@ class Products extends Base implements Getable {
 				'description' => __( 'Whether to only include products that are visible in the store.', 'it-l10n-ithemes-exchange' ),
 				'type'        => 'boolean',
 				'default'     => true,
-			)
+			),
+			'search'       => array(
+				'description' => __( 'Limit results to those matching a string.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'string',
+				'minLength'   => 3,
+				'maxLength'   => 300,
+			),
 		);
 	}
 
