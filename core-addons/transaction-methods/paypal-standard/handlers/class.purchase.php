@@ -331,7 +331,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 					return $transaction;
 				}
 
-				$txn_id = it_exchange_add_transaction( 'paypal-standard', $paypal_id, $paypal_status, $cart );
+				$txn_id = $this->add_transaction( $request, $paypal_id, $paypal_status );
 
 				it_exchange_release_lock( $lock );
 
@@ -357,7 +357,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 					return $transaction;
 				}
 
-				$txn_id = it_exchange_add_transaction( 'paypal-standard', $cart_id, 'Completed', $cart );
+				$txn_id = $this->add_transaction( $request, $cart_id, 'Completed' );
 
 				it_exchange_release_lock( $lock );
 
@@ -377,5 +377,26 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 			return null;
 		}
+	}
+
+	/**
+	 * Add the transaction in Exchange.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param string                                 $method_id
+	 * @param string                                 $status
+	 * @param array                                  $args
+	 *
+	 * @return int|false
+	 */
+	protected function add_transaction( ITE_Gateway_Purchase_Request_Interface $request, $method_id, $status, $args = array() ) {
+
+		if ( $p = $request->get_child_of() ) {
+			return it_exchange_add_child_transaction( 'paypal-standard', $method_id, $status, $request->get_cart(), $p->get_ID(), $args );
+		}
+
+		return it_exchange_add_transaction( 'paypal-standard', $method_id, $status, $request->get_cart(), null, $args );
 	}
 }
