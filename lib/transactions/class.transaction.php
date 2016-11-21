@@ -1206,6 +1206,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 
 	/**
 	 * @inheritdoc
+	 * @param ITE_Prorate_Forever_Credit_Request $request
 	 */
 	public static function handle_prorate_credit_request( ITE_Prorate_Credit_Request $request, ITE_Daily_Price_Calculator $calculator ) {
 
@@ -1213,20 +1214,19 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 			throw new DomainException( "This credit request can't be handled by this provider." );
 		}
 
-		/** @var IT_Exchange_Transaction $transaction */
 		$transaction = $request->get_transaction();
+		$for         = $request->get_product_providing_credit();
 
-		$for = $request->get_product_providing_credit();
+		$product_id   = $for->ID;
+		$cart_product = $transaction->get_items( 'product')->filter( function( ITE_Cart_Product $product ) use ( $product_id ) {
+			return $product->get_product() && $product->get_product()->ID == $product_id;
+		} )->first();
 
-		foreach ( $transaction->get_products() as $product ) {
-			if ( $product['product_id'] == $for->ID ) {
-				$amount = (float) $product['product_subtotal'];
-			}
+		if ( ! $cart_product ) {
+			throw new UnexpectedValueException( 'Could not determine the amount paid for the subscription.' );
 		}
 
-		if ( ! isset( $amount ) ) {
-			throw new InvalidArgumentException( "Product with ID '$for->ID' not found in transaction '$transaction->ID'." );
-		}
+		$amount = $cart_product->get_amount() * $cart_product->get_quantity();
 
 		if ( (float) $transaction->get_total( false ) < $amount ) {
 			$amount = (float) $transaction->get_total( false );
