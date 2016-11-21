@@ -464,9 +464,10 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 	);
 	$args = wp_parse_args( $args, $defaults );
 
-	$payment_token = empty( $args['payment_token'] ) ? 0 : $args['payment_token'];
 	/** @var ITE_Gateway_Card $card */
 	$card          = empty( $args['card'] ) ? null : $args['card'];
+	$payment_token = empty( $args['payment_token'] ) ? 0 : $args['payment_token'];
+
 	unset( $args['payment_token'], $args['card'] );
 
 	if ( $customer_or_cart instanceof ITE_Cart ) {
@@ -647,19 +648,40 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
  * @param string $method Transaction method (e.g. paypal, stripe, etc)
  * @param string $method_id ID from transaction method
  * @param string $status Transaction status
- * @param int $customer_id Customer ID
+ * @param int|ITE_Cart $customer_or_cart Customer ID
  * @param int $parent_tx_id Parent Transaction ID
- * @param stdClass $cart_object really just a dummy array to store the price information
+ * @param stdClass|array $txn_object_or_args really just a dummy array to store the price information
  * @param array $args same args passed to wp_insert_post plus any additional needed
  *
  * @return int|bool post id or false
  */
-function it_exchange_add_child_transaction( $method, $method_id, $status = 'pending', $customer_id, $parent_tx_id, $cart_object, $args = array() ) {
+function it_exchange_add_child_transaction( $method, $method_id, $status = 'pending', $customer_or_cart, $parent_tx_id, $txn_object_or_args = null, $args = array() ) {
 	$defaults = array(
 		'post_type'          => 'it_exchange_tran',
 		'post_status'        => 'publish',
 	);
 	$args = wp_parse_args( $args, $defaults );
+
+	if ( $customer_or_cart instanceof ITE_Cart ) {
+		$cart        = $customer_or_cart;
+		$customer    = $customer_or_cart->get_customer();
+		$txn_object_or_args = it_exchange_generate_transaction_object( $customer_or_cart );
+	} else {
+		$customer = it_exchange_get_customer( $customer_or_cart );
+		$cart     = null;
+	}
+
+	$customer_id = $customer ? $customer->get_ID() : 0;
+
+	if ( is_array( $txn_object_or_args ) ) {
+		$args = $txn_object_or_args;
+	}
+
+	/** @var ITE_Gateway_Card $card */
+	$card          = empty( $args['card'] ) ? null : $args['card'];
+	$payment_token = empty( $args['payment_token'] ) ? 0 : $args['payment_token'];
+
+	unset( $args['payment_token'], $args['card'] );
 
 	// If we don't have a title, create one
 	if ( empty( $args['post_title'] ) )
@@ -669,38 +691,81 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 
 	if ( $transaction_id = wp_insert_post( $args ) ) {
 
-		update_post_meta( $transaction_id, '_it_exchange_cart_object', $cart_object );
+		update_post_meta( $transaction_id, '_it_exchange_cart_object', $txn_object_or_args );
+
+		$gateway = ITE_Gateways::get( $method );
+
+		if ( $gateway && $gateway->is_sandbox_mode() ) {
+			$mode = IT_Exchange_Transaction::P_MODE_SANDBOX;
+		} elseif ( $gateway && ! $gateway->is_sandbox_mode() ) {
+			$mode = IT_Exchange_Transaction::P_MODE_LIVE;
+		} else {
+			$mode = '';
+		}
 
 		$purchase_args = array(
 			'ID'            => $transaction_id,
 			'status'        => $status,
 			'method'        => $method,
 			'method_id'     => $method_id,
-			'cart_id'       => isset( $cart_object->cart_id ) ? $cart_object->cart_id : 0,
-			'total'         => isset( $cart_object->total ) ? $cart_object->total : 0,
-			'subtotal'      => isset( $cart_object->sub_total ) ? $cart_object->sub_total : 0,
+			'cart_id'       => isset( $txn_object_or_args->cart_id ) ? $txn_object_or_args->cart_id : '',
+			'total'         => isset( $txn_object_or_args->total ) ? $txn_object_or_args->total : 0,
+			'subtotal'      => isset( $txn_object_or_args->sub_total ) ? $txn_object_or_args->sub_total : 0,
 			'order_date'    => current_time( 'mysql', true ),
 			'parent'        => $parent_tx_id,
 			'hash'          => it_exchange_generate_transaction_hash( $transaction_id, $customer_id ),
+			'mode'          => $mode,
 		);
 
-		if ( is_numeric( $customer_id ) ) {
+		if ( $customer instanceof IT_Exchange_Guest_Customer ) {
+			$purchase_args['customer_email'] = $customer->get_email();
+		} elseif ( $customer ) {
 			$purchase_args['customer_id'] = $customer_id;
-		} elseif ( is_email( $customer_id ) ) {
-			$purchase_args['customer_email'] = $customer_id;
 		}
 
-		IT_Exchange_Transaction::create( $purchase_args );
+		if ( $payment_token ) {
+			$purchase_args['payment_token'] = $payment_token;
+		}
+
+		if ( $card ) {
+			$purchase_args['card_redacted'] = $card->get_redacted_number();
+			$purchase_args['card_month']    = $card->get_expiration_month();
+			$purchase_args['card_year']     = $card->get_expiration_year();
+		}
+
+		$transaction = IT_Exchange_Transaction::create( $purchase_args );
+
+		if ( $cart ) {
+			$cart->get_items()->flatten()->freeze();
+			$cart->with_new_repository( new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction ) );
+		}
 
 		do_action( 'it_exchange_add_child_transaction_success', $transaction_id );
 
-		return apply_filters(
-			'it_exchange_add_child_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $parent_tx_id, $cart_object, $args
+		$r = apply_filters(
+			'it_exchange_add_child_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $parent_tx_id, $txn_object_or_args, $args
 		);
-	}
-	do_action( 'it_exchange_add_child_transaction_failed', $method, $method_id, $status, $customer_id, $parent_tx_id, $cart_object, $args );
 
-	return apply_filters( 'it_exchange_add_child_transaction', false, $method, $method_id, $status, $customer_id, $parent_tx_id, $cart_object, $args );
+		if ( $cart ) {
+			if ( ( $g = ITE_Gateways::get( $method ) ) && ! $g->requires_cart_after_purchase() ) {
+				if ( $cart->get_repository() instanceof ITE_Line_Item_Session_Repository ) {
+					$model = ITE_Session_Model::from_cart_id( $cart->get_id() );
+
+					if ( $model ) {
+						$model->delete();
+					}
+				}
+			}
+
+			$cart->destroy();
+		}
+
+		return $r;
+	}
+
+	do_action( 'it_exchange_add_child_transaction_failed', $method, $method_id, $status, $customer_id, $parent_tx_id, $txn_object_or_args, $args );
+
+	return apply_filters( 'it_exchange_add_child_transaction', false, $method, $method_id, $status, $customer_id, $parent_tx_id, $txn_object_or_args, $args );
 }
 
 /**

@@ -115,4 +115,22 @@ interface ITE_Gateway_Purchase_Request_Interface extends ITE_Gateway_Request {
 	 * @param string $redirect_to
 	 */
 	public function set_redirect_to( $redirect_to );
+
+	/**
+	 * Get the transaction this purchase should be a child of.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return IT_Exchange_Transaction
+	 */
+	public function get_child_of();
+
+	/**
+	 * Set the transaction this purchase should be a child of.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param IT_Exchange_Transaction $transaction
+	 */
+	public function set_child_of( IT_Exchange_Transaction $transaction );
 }

@@ -81,6 +81,16 @@ class ITE_Gateway_Request_Factory {
 					$request->set_tokenize( $tokenize );
 				}
 
+				if ( ! empty( $args['child_of'] ) ) {
+					$child_of = it_exchange_get_transaction( $args['child_of'] );
+
+					if ( ! $child_of instanceof IT_Exchange_Transaction ) {
+						throw new InvalidArgumentException( 'Invalid `child_of` option.' );
+					}
+
+					$request->set_child_of( $child_of );
+				}
+
 				if ( ! empty( $args['redirect_to'] ) ) {
 					$request->set_redirect_to( $args['redirect_to'] );
 				}
