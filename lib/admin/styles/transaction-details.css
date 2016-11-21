@@ -281,7 +281,7 @@
 	font-size: .6em;
 }
 
-#it-exchange-transaction-details .payment-method .payment-method-token {
+#it-exchange-transaction-details .payment-method .payment-method-source {
 	line-height: 1.4em;
 	font-size: 13px;
 }
