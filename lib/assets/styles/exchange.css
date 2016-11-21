@@ -182,6 +182,10 @@ a.it-exchange-button {
     margin-left: 2em;
 }
 
+#it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data .it-exchange-item-data-bottom div {
+    margin-left: 0;
+}
+
 #it-exchange-purchases .it-exchange-purchase-items .it-exchange-item-data .it-exchange-item-data-top {
     margin-bottom: 1em;
 }

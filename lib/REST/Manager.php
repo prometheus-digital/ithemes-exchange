@@ -454,7 +454,9 @@ class Manager {
 			unset( $config['required'] );
 		}
 
-		$schema['required'] = $required;
+		if ( $required ) {
+			$schema['required'] = $required;
+		}
 
 		return $schema;
 	}

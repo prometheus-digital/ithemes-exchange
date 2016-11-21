@@ -59,12 +59,15 @@ class ITE_Transactions_Table extends BaseTable implements DeleteConstrained {
 			'total'          => new DecimalBased( 'DECIMAL', 'total', array(), array( 16, 6 ) ),
 			'subtotal'       => new DecimalBased( 'DECIMAL', 'subtotal', array(), array( 16, 6 ) ),
 			'order_date'     => new DateTime( 'order_date' ),
-			'payment_token'  => new ForeignModel( 'payment_token', 'ITE_Payment_Token', new ITE_Payment_Tokens_Table() ),
 			'purchase_mode'  => new Enum( array( 'live', 'sandbox' ), 'purchase_mode' ),
 			'cleared'        => new IntegerBased( 'TINYINT', 'cleared', array(), array( 1 ) ),
 			'billing'        => new ForeignModel( 'billing', 'ITE_Saved_Address', new ITE_Saved_Address_Table() ),
 			'shipping'       => new ForeignModel( 'shipping', 'ITE_Saved_Address', new ITE_Saved_Address_Table() ),
 			'parent'         => new ForeignModel( 'parent', 'IT_Exchange_Transaction', $this ),
+			'payment_token'  => new ForeignModel( 'payment_token', 'ITE_Payment_Token', new ITE_Payment_Tokens_Table() ),
+			'card_redacted'  => new StringBased( 'VARCHAR', 'card_redacted', array(), array( 4 ) ),
+			'card_month'     => new StringBased( 'VARCHAR', 'card_month', array(), array( 2 ) ),
+			'card_year'      => new StringBased( 'VARCHAR', 'card_year', array(), array( 4 ) ),
 		);
 
 		return $this->columns;
@@ -86,12 +89,15 @@ class ITE_Transactions_Table extends BaseTable implements DeleteConstrained {
 			'total'          => 0.00,
 			'subtotal'       => 0.00,
 			'order_date'     => '',
-			'payment_token'  => 0,
 			'purchase_mode'  => '',
 			'cleared'        => false,
 			'billing'        => 0,
 			'shipping'       => 0,
 			'parent'         => 0,
+			'payment_token'  => 0,
+			'card_redacted'  => '',
+			'card_month'     => '',
+			'card_year'      => '',
 		);
 	}
 

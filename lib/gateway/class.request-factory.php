@@ -160,11 +160,12 @@ class ITE_Gateway_Request_Factory {
 				 *
 				 * @since 2.0.0
 				 *
-				 * @param ITE_Gateway_Request $request
-				 * @param array               $args
-				 * @param string              $type
+				 * @param ITE_Gateway_Request          $request
+				 * @param array                        $args
+				 * @param string                       $type
+				 * @param \ITE_Gateway_Request_Factory $this
 				 */
-				$request = apply_filters( "it_exchange_make_{$type}_gateway_request", null, $args, $type );
+				$request = apply_filters( "it_exchange_make_{$type}_gateway_request", null, $args, $type, $this );
 
 				if ( $request && ( ! $request instanceof ITE_Gateway_Request || $request->get_name() !== $type ) ) {
 					throw new UnexpectedValueException( "Unable to construct {$type} request." );
@@ -185,11 +186,12 @@ class ITE_Gateway_Request_Factory {
 			 *
 			 * @since 2.0.0
 			 *
-			 * @param ITE_Gateway_Request $request
-			 * @param array               $args
-			 * @param string              $type
+			 * @param ITE_Gateway_Request          $request
+			 * @param array                        $args
+			 * @param string                       $type
+			 * @param \ITE_Gateway_Request_Factory $this
 			 */
-			$filtered = apply_filters( "it_exchange_make_{$type}_gateway_request", $request, $args, $type );
+			$filtered = apply_filters( "it_exchange_make_{$type}_gateway_request", $request, $args, $type, $this );
 
 			if ( $filtered instanceof $request ) {
 				$request = $filtered;
@@ -201,11 +203,12 @@ class ITE_Gateway_Request_Factory {
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param \ITE_Gateway_Request $request
-		 * @param array                $args
-		 * @param string               $type
+		 * @param \ITE_Gateway_Request         $request
+		 * @param array                        $args
+		 * @param string                       $type
+		 * @param \ITE_Gateway_Request_Factory $this
 		 */
-		$filtered = apply_filters( 'it_exchange_make_gateway_request', $request, $args, $type );
+		$filtered = apply_filters( 'it_exchange_make_gateway_request', $request, $args, $type, $this );
 
 		if ( $filtered instanceof $request ) {
 			$request = $filtered;
@@ -223,7 +226,7 @@ class ITE_Gateway_Request_Factory {
 	 *
 	 * @return \ITE_Gateway_Card|null
 	 */
-	protected function build_card( array $card ) {
+	public function build_card( array $card ) {
 		if ( isset( $card['number'], $card['year'], $card['month'], $card['cvc'] ) ) {
 			$name = empty( $card['name'] ) ? '' : $card['name'];
 
@@ -244,7 +247,7 @@ class ITE_Gateway_Request_Factory {
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	protected function build_bank_account( array $account ) {
+	public function build_bank_account( array $account ) {
 
 		if ( isset( $account['name'], $account['number'], $account['type'] ) ) {
 			$routing = empty( $account['routing'] ) ? '' : $account['routing'];

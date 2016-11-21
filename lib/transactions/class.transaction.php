@@ -27,8 +27,11 @@ use IronBound\DB\Relations\HasMany;
  * @property-read float                                $total
  * @property-read float                                $subtotal
  * @property-read \DateTime                            $order_date
- * @property \ITE_Payment_Token|null                   $payment_token
  * @property string                                    $purchase_mode
+ * @property \ITE_Payment_Token|null                   $payment_token
+ * @property string                                    $card_redacted
+ * @property string                                    $card_month
+ * @property string                                    $card_year
  * @property-read \IT_Exchange_Transaction             $parent
  * @property-read stdClass                             $cart_object // Internal
  * @property-read Collection|IT_Exchange_Transaction[] $children
@@ -190,8 +193,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 						array_intersect_key( $cart_details->billing_address, ITE_Saved_Address::table()->get_column_defaults() ),
 						array( 'customer' => $customer_id, 'type' => ITE_Saved_Address::T_BILLING )
 					) );
-				}
-				catch ( Exception $e ) {
+				} catch ( Exception $e ) {
 
 				}
 			} else {
@@ -211,8 +213,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 						array_intersect_key( $cart_details->shipping_address, ITE_Saved_Address::table()->get_column_defaults() ),
 						array( 'customer' => $customer_id, 'type' => ITE_Saved_Address::T_SHIPPING )
 					) );
-				}
-				catch ( Exception $e ) {
+				} catch ( Exception $e ) {
 
 				}
 			} else {
@@ -874,6 +875,43 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 		$products = empty( $this->cart_details->products ) ? array() : $this->cart_details->products;
 
 		return apply_filters( 'it_exchange_get_transaction_products', $products, $this );
+	}
+
+	/**
+	 * Get the payment source used to make this transaction.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return ITE_Gateway_Payment_Source
+	 */
+	public function get_payment_source() {
+		if ( $this->payment_token ) {
+			return $this->payment_token;
+		}
+
+		return $this->get_card();
+	}
+
+	/**
+	 * Get the card used to make this payment.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return ITE_Gateway_Card|null
+	 */
+	public function get_card() {
+
+		if ( ! $this->card_redacted ) {
+			return null;
+		}
+
+		$name = '';
+
+		if ( $billing = $this->get_billing_address() ) {
+			$name = trim( $billing['first-name'] . ' ' . $billing['last-name'] );
+		}
+
+		return new ITE_Gateway_Card( $this->card_redacted, $this->card_year, $this->card_month, 0, $name );
 	}
 
 	/**

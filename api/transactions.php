@@ -465,7 +465,9 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 	$args = wp_parse_args( $args, $defaults );
 
 	$payment_token = empty( $args['payment_token'] ) ? 0 : $args['payment_token'];
-	unset( $args['payment_token'] );
+	/** @var ITE_Gateway_Card $card */
+	$card          = empty( $args['card'] ) ? null : $args['card'];
+	unset( $args['payment_token'], $args['card'] );
 
 	if ( $customer_or_cart instanceof ITE_Cart ) {
 		$cart_object = $customer_or_cart;
@@ -551,6 +553,12 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 
 		if ( $payment_token ) {
 			$purchase_args['payment_token'] = $payment_token;
+		}
+
+		if ( $card ) {
+			$purchase_args['card_redacted'] = $card->get_redacted_number();
+			$purchase_args['card_month']    = $card->get_expiration_month();
+			$purchase_args['card_year']     = $card->get_expiration_year();
 		}
 
 		if ( $customer ) {

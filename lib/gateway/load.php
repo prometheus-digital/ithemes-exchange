@@ -6,6 +6,7 @@
  * @license GPLv2
  */
 
+require_once dirname( __FILE__ ) . '/util/interface.payment-source.php';
 require_once dirname( __FILE__ ) . '/util/class.card.php';
 require_once dirname( __FILE__ ) . '/util/class.account.php';
 

@@ -31,6 +31,8 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	/** @var int */
 	private static $total;
 
+	public static $transactions = array();
+
 	/**
 	 * Deprecated PHP 4 style constructor.
 	 *
@@ -96,6 +98,7 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 
 				return true;
 			} else {
+				self::$transactions = $GLOBALS['it_exchange']['transactions'];
 				$GLOBALS['it_exchange']['transactions'] = array();
 				end( $GLOBALS['it_exchange']['transactions'] );
 				$GLOBALS['it_exchange']['transaction'] = false;
